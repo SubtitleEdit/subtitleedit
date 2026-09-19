@@ -327,6 +327,16 @@ public class PointSyncViaOtherWindow : Window
         dataGrid.WithLabeledBy(labelFileName); // the file name above the list is its heading (#12087)
         TableViewExtras.AttachListNavigation(dataGrid);
 
+        // Bring the initially selected line (the main window's selection) into view.
+        dataGrid.Loaded += (_, _) =>
+        {
+            if (vm.SelectedSubtitle is { } selected)
+            {
+                dataGrid.ScrollIntoView(selected);
+                TableViewExtras.CenterRow(dataGrid, selected);
+            }
+        };
+
         grid.Add(panelHeader, 0);
         grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 1);
 
