@@ -66,6 +66,11 @@ public class OpenSecondarySubtitleWindow : Window
         var comboBoxAlignment = UiUtil.MakeComboBox(vm.FontAlignments, vm, nameof(vm.SelectedFontAlignment)).WithMinWidth(160);
         var panelAlignment = UiUtil.MakeHorizontalPanel(labelAlignment, comboBoxAlignment);
 
+        // Justify row
+        var labelJustify = UiUtil.MakeLabel(Se.Language.Video.SecondarySubtitleJustifyLines).WithMinWidth(labelWidth);
+        var comboBoxJustify = UiUtil.MakeComboBox(vm.JustifyItems, vm, nameof(vm.SelectedJustify)).WithMinWidth(160);
+        var panelJustify = UiUtil.MakeHorizontalPanel(labelJustify, comboBoxJustify);
+
         var checkBoxOverrideStyle = UiUtil.MakeCheckBox(Se.Language.Video.SecondarySubtitleRememberSettings, vm, nameof(vm.OverrideStyle));
         var checkBoxDoNotShowAgain = UiUtil.MakeCheckBox(Se.Language.Video.SecondarySubtitleDoNotShowAgain, vm, nameof(vm.DoNotShowAgain));
         // Skipping the dialog applies the remembered settings, so there must be some.
@@ -82,6 +87,7 @@ public class OpenSecondarySubtitleWindow : Window
                 panelBold,
                 panelBorderStyle,
                 panelAlignment,
+                panelJustify,
                 checkBoxOverrideStyle,
                 checkBoxDoNotShowAgain,
             },

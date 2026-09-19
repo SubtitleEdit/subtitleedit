@@ -126,6 +126,13 @@ public class SeVideo
     public FontBoxType SecondarySubtitleBoxType { get; set; }
     public string SecondarySubtitleAlignment { get; set; }
 
+    /// <summary>
+    /// "auto", "left", "center", or "right" - independent of <see cref="MpvPreviewJustify"/>, which
+    /// is mpv's own single, player-wide setting and would otherwise also apply to the primary
+    /// subtitle.
+    /// </summary>
+    public string SecondarySubtitleJustify { get; set; }
+
     public SeVideo()
     {
         BurnIn = new();
@@ -177,5 +184,6 @@ public class SeVideo
         SecondarySubtitleColor = Colors.White.FromColorToHex();
         SecondarySubtitleBoxType = FontBoxType.None;
         SecondarySubtitleAlignment = "8"; // Top-center
+        SecondarySubtitleJustify = "auto";
     }
 }
