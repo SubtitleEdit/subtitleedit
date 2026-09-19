@@ -43,7 +43,7 @@ public static class SpeechIsolationModel
     /// </summary>
     public static string BuildDownmixArguments(string stemFileName, string outputWaveFileName)
     {
-        return $"-y -i \"{stemFileName}\" -vn -ar 16000 -ac 1 \"{outputWaveFileName}\"";
+        return $"-nostdin -y -i \"{stemFileName}\" -vn -ar 16000 -ac 1 \"{outputWaveFileName}\"";
     }
 
     public static WhisperModel ToWhisperModel() => new()

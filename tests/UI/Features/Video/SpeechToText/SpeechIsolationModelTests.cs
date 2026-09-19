@@ -41,7 +41,7 @@ public class SpeechIsolationModelTests
         var args = SpeechIsolationModel.BuildDownmixArguments("/tmp/a_vocals.wav", "/tmp/b.wav");
 
         Assert.Contains("-ar 16000 -ac 1", args);
-        Assert.StartsWith("-y -i \"/tmp/a_vocals.wav\"", args);
+        Assert.StartsWith("-nostdin -y -i \"/tmp/a_vocals.wav\"", args);
         Assert.EndsWith("\"/tmp/b.wav\"", args);
     }
 }

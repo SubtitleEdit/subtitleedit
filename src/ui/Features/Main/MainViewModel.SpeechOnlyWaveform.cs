@@ -20,6 +20,10 @@ namespace Nikse.SubtitleEdit.Features.Main;
 public partial class MainViewModel
 {
     private int _speechOnlyWaveformSequence;
+    private readonly Lock _speechOnlyWaveformLock = new();
+    private string? _speechOnlyWaveformRunningFor;
+    private int _speechOnlyWaveformRunningSequence;
+    private volatile bool _speechOnlyWaveformIndicatorShown;
     private Process? _speechOnlyWaveformProcess;
 
     /// <summary>
@@ -79,10 +83,22 @@ public partial class MainViewModel
         // normal peaks, which are always on disk by the time the speech-only ones were wanted.
         Interlocked.Increment(ref _speechOnlyWaveformSequence);
         var normalPeaks = File.Exists(peakWaveFileName) ? await Task.Run(() => TryLoadCachedPeaks(peakWaveFileName)) : null;
-        if (normalPeaks != null && AudioVisualizer != null && _videoFileName == videoFileName)
+        if (AudioVisualizer == null || _videoFileName != videoFileName)
+        {
+            return;
+        }
+
+        if (normalPeaks != null)
         {
             AudioVisualizer.WavePeaks = normalPeaks;
             _updateAudioVisualizer = true;
+        }
+        else if (!IsWaveformGenerating)
+        {
+            // The normal waveform was never made (auto-generate off) or its cache was cleared.
+            // Leaving the speech-only one up would be the option ignoring being switched off.
+            AudioVisualizer.WavePeaks = null;
+            ShowClickToGenerateWaveformHint();
         }
     }
 
@@ -100,6 +116,20 @@ public partial class MainViewModel
             return;
         }
 
+        // The normal peaks get shown more than once for the same video - the extraction finishing
+        // after the option was switched on, a regenerated spectrogram - and a generation that is
+        // minutes in must not be killed and started over for that.
+        var speechPeakFileName = SpeechOnlyWaveform.GetPeakFileName(peakWaveFileName);
+        lock (_speechOnlyWaveformLock)
+        {
+            if (_speechOnlyWaveformRunningFor == speechPeakFileName &&
+                _speechOnlyWaveformRunningSequence == Volatile.Read(ref _speechOnlyWaveformSequence) &&
+                _videoFileName == videoFileName)
+            {
+                return;
+            }
+        }
+
         var sequence = Interlocked.Increment(ref _speechOnlyWaveformSequence);
         bool IsStale() => sequence != Volatile.Read(ref _speechOnlyWaveformSequence) || _videoFileName != videoFileName;
 
@@ -107,12 +137,33 @@ public partial class MainViewModel
         {
             try
             {
-                var speechPeakFileName = SpeechOnlyWaveform.GetPeakFileName(peakWaveFileName);
                 var speechPeaks = File.Exists(speechPeakFileName) ? TryLoadCachedPeaks(speechPeakFileName) : null;
                 var generated = false;
                 if (speechPeaks == null)
                 {
-                    speechPeaks = await GenerateSpeechOnlyPeaksAsync(videoFileName, trackNumber, speechPeakFileName, IsStale);
+                    lock (_speechOnlyWaveformLock)
+                    {
+                        _speechOnlyWaveformRunningFor = speechPeakFileName;
+                        _speechOnlyWaveformRunningSequence = sequence;
+                    }
+
+                    try
+                    {
+                        speechPeaks = await GenerateSpeechOnlyPeaksAsync(videoFileName, trackNumber, speechPeakFileName, IsStale);
+                    }
+                    finally
+                    {
+                        lock (_speechOnlyWaveformLock)
+                        {
+                            if (_speechOnlyWaveformRunningSequence == sequence)
+                            {
+                                _speechOnlyWaveformRunningFor = null;
+                            }
+                        }
+
+                        ClearSpeechOnlyWaveformIndicator();
+                    }
+
                     generated = speechPeaks != null;
                 }
 
@@ -196,6 +247,17 @@ public partial class MainViewModel
         }
     }
 
+    private void ClearSpeechOnlyWaveformIndicator()
+    {
+        if (_speechOnlyWaveformIndicatorShown && _currentWaveExtractionProcess == null)
+        {
+            IsWaveformGenerating = false;
+            WaveformGeneratingText = string.Empty;
+        }
+
+        _speechOnlyWaveformIndicatorShown = false;
+    }
+
     private WavePeakData2? FailSpeechOnlyWaveform(Func<bool> isStale, string reason)
     {
         // A stale run was killed on purpose (video closed, option switched off) - not a failure.
@@ -245,12 +307,17 @@ public partial class MainViewModel
                 return -1;
             }
 
-            // The separator prints no progress, so the elapsed time is all there is to show.
+            // The separator prints no progress, so the elapsed time is all there is to show. It
+            // goes in the footer's waveform indicator, not the status bar: that has one slot, and
+            // a message every second for the length of a film would bury every other one. While
+            // a normal extraction runs the indicator is that extraction's.
             var second = stopwatch.ElapsedMilliseconds / 1000;
-            if (second != lastStatusSecond)
+            if (second != lastStatusSecond && _currentWaveExtractionProcess == null)
             {
                 lastStatusSecond = second;
-                ShowStatus(string.Format(Se.Language.Waveform.IsolatingSpeechForWaveformX, new TimeCode(stopwatch.ElapsedMilliseconds).ToShortDisplayString()));
+                _speechOnlyWaveformIndicatorShown = true;
+                WaveformGeneratingText = string.Format(Se.Language.Waveform.IsolatingSpeechForWaveformX, new TimeCode(stopwatch.ElapsedMilliseconds).ToShortDisplayString());
+                IsWaveformGenerating = true;
             }
 
             await Task.Delay(200);

@@ -42,6 +42,27 @@ public class SpeechEnvelopeTests
     }
 
     [Fact]
+    public void StartThatIsHalfASecondEarly_StillEndsWithTheSpeech()
+    {
+        // The aligner put the start at 1.0 but the line is only spoken from 1.6.
+        var envelope = Envelope(20, (1.6, 3.2));
+
+        var end = envelope.FindSpeechEnd(1.0, 6.0);
+
+        Assert.NotNull(end);
+        Assert.InRange(end.Value, 3.15, 3.25);
+    }
+
+    [Fact]
+    public void LinePlacedInSilence_GivesNoEnd_SoReadingTimeStands()
+    {
+        // A closing line the aligner could only estimate: nothing is spoken anywhere near it.
+        var envelope = Envelope(40, (1.0, 3.0));
+
+        Assert.Null(envelope.FindSpeechEnd(20.0, 24.0));
+    }
+
+    [Fact]
     public void SpeechThatNeverStopsBeforeTheLimit_GivesNoEnd()
     {
         var envelope = Envelope(20, (1.0, 12.0));

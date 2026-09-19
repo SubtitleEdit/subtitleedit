@@ -53,15 +53,27 @@ public sealed class SpeechEnvelope
         }
 
         var quietFramesNeeded = (int)Math.Round(QuietSeconds / FrameSeconds);
-        var first = Math.Max(0, (int)((startSeconds + MinimumSpeechSeconds) / FrameSeconds));
+        var first = Math.Max(0, (int)(startSeconds / FrameSeconds));
+        var earliestEnd = (int)((startSeconds + MinimumSpeechSeconds) / FrameSeconds);
         var last = Math.Min(_rms.Length, (int)(limitSeconds / FrameSeconds));
         var quietFrames = 0;
+        var speechHeard = false;
         for (var i = first; i < last; i++)
         {
-            quietFrames = _rms[i] < _quietThreshold ? quietFrames + 1 : 0;
-            if (quietFrames >= quietFramesNeeded)
+            if (_rms[i] >= _quietThreshold)
             {
-                return (i - quietFramesNeeded + 1) * FrameSeconds;
+                speechHeard = true;
+                quietFrames = 0;
+                continue;
+            }
+
+            // Quiet is only the end of the line once the line has been heard. A start that is
+            // a little early, or a closing line the aligner could only place by estimate, sits
+            // in silence - and "it went quiet" right away would cut it to the minimum duration.
+            quietFrames++;
+            if (speechHeard && i >= earliestEnd && quietFrames >= quietFramesNeeded)
+            {
+                return (i - quietFrames + 1) * FrameSeconds;
             }
         }
 

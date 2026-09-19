@@ -50,6 +50,7 @@ public static class SpeechIsolationModelDownload
                 viewModel.StartDownload();
             });
 
-        return vm.OkPressed;
+        // A download that was cancelled or failed must not start a run that then cannot find the model.
+        return vm.OkPressed && File.Exists(crispAsrEngine.GetModelForCmdLine(isolationModel.Name));
     }
 }
