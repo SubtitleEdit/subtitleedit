@@ -9,6 +9,12 @@ public class LanguageImproveTimeCodes
     public string MaxShiftHint { get; set; }
     public string AdjustStartTimes { get; set; }
     public string AdjustEndTimes { get; set; }
+    public string IsolateSpeech { get; set; }
+    public string IsolateSpeechHint { get; set; }
+    public string IsolatingSpeech { get; set; }
+    public string IsolateSpeechFailed { get; set; }
+    public string ShowSpeechOnly { get; set; }
+    public string ShowSpeechOnlyHint { get; set; }
     public string Align { get; set; }
     public string Original { get; set; }
     public string Aligned { get; set; }
@@ -46,6 +52,12 @@ public class LanguageImproveTimeCodes
         MaxShiftHint = "A line whose start would move further than this is left as it is and flagged; an end that would move further is kept. The subtitle has to be roughly in sync already - use Synchronization first if it is not.";
         AdjustStartTimes = "Adjust start times";
         AdjustEndTimes = "Adjust end times";
+        IsolateSpeech = "Isolate speech first (slow)";
+        IsolateSpeechHint = "Removes music and sound effects before aligning, so the aligner only hears the dialogue. Helps on lines spoken over loud music or action, but takes about as long as the audio itself with a GPU - and many times longer without one.";
+        IsolatingSpeech = "Isolating speech... (this takes a while)";
+        IsolateSpeechFailed = "Could not isolate the speech - aligned against the original audio instead.";
+        ShowSpeechOnly = "Show speech only";
+        ShowSpeechOnlyHint = "Draw the waveforms from the audio with music and sound effects removed. Available once the speech has been isolated - here, or with \"Show speech only\" in the main window's waveform.";
         Align = "Align";
         Original = "Original";
         Aligned = "Aligned";

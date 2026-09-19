@@ -7,6 +7,7 @@ public class SeImproveTimeCodes
     public double MaxShiftSeconds { get; set; }
     public bool AdjustStart { get; set; }
     public bool AdjustEnd { get; set; }
+    public bool IsolateSpeech { get; set; }
 
     public SeImproveTimeCodes()
     {

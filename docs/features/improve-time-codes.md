@@ -18,6 +18,7 @@ The subtitle has to be close to begin with: each line is looked for round its cu
   A model that is not installed yet says how much will be downloaded; the download starts when you press **Align**.
 - **Max shift (seconds)** — how far a time code may move (default 0.5). A line whose *start* would move further is left completely alone and flagged: the aligner did not find it where the subtitle says it is, usually because the text is not what is said. An *end* that would move further is simply kept - subtitles are often held long after the last word so they can be read, and that is not an error.
 - **Adjust start times / Adjust end times** — untick one to leave that side of every line alone.
+- **Isolate speech first (slow)** — removes music and sound effects before aligning, so the aligner only hears the dialogue. Worth it for lines spoken over loud music or action; on clean dialogue it changes little. It takes about as long as the audio itself with a GPU, and many times longer without one. The first use downloads the *Mel-Band RoFormer (vocals)* model (457 MB) - the same one as *Isolate speech* in [Speech to text](speech-to-text.md). If the isolation fails, the original audio is aligned instead and the status line says so. A successful run also produces the speech-only waveform for the preview (see below).
 - **Align** (bottom button bar, highlighted until there is a result) — extracts the audio and runs the aligner. Length is not a limit: the audio is processed in short windows of a few lines each, so long films use no more memory than short clips. **Cancel** stops a running alignment.
 
 ## Preview
@@ -26,6 +27,8 @@ Two stacked waveforms show the same stretch of audio:
 
 - **Original** (blue) — the time codes as they are now.
 - **Aligned** (green) — the time codes after alignment.
+
+**Show speech only** (top right of the waveforms) redraws both from the audio with music and sound effects removed - the same audio the aligner listened to when *Isolate speech first* was on, which makes it much easier to judge whether a cue starts and stops with the words. It becomes available as soon as the speech has been isolated once for this video, and is switched on automatically after such a run. The speech-only waveform is shared with *Show speech only* in the main window's [waveform](audio-visualizer.md): whichever of the two generates it first, the other reuses it.
 
 The line being looked at is amber in both. Scrolling or zooming either waveform moves the other, and clicking a line in a waveform selects it in the list. A small video player sits beside the line list, so you can watch as well as listen.
 
