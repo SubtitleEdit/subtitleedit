@@ -39,6 +39,10 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
     [ObservableProperty] private decimal _maxShiftSeconds;
     [ObservableProperty] private bool _adjustStart;
     [ObservableProperty] private bool _adjustEnd;
+    [ObservableProperty] private bool _isolateSpeech;
+    [ObservableProperty] private bool _isProgressIndeterminate;
+    [ObservableProperty] private bool _showSpeechOnly;
+    [ObservableProperty] private bool _isSpeechOnlyAvailable;
     [ObservableProperty] private bool _isAligning;
     [ObservableProperty] private bool _isIdle;
     [ObservableProperty] private double _progressValue;
@@ -73,6 +77,11 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
     private double? _playUntilSeconds;
     private long _playLineStartedTicks;
     private bool _centerOnSelection = true;
+
+    // Both sets of peaks for the same audio: as it is, and with music and effects removed.
+    private WavePeakData2? _normalPeaks;
+    private WavePeakData2? _speechPeaks;
+    private string _speechPeakFileName = string.Empty;
     private bool _disposed;
 
     public ImproveTimeCodesViewModel(IWindowService windowService)
@@ -90,6 +99,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         _maxShiftSeconds = (decimal)Math.Clamp(settings.MaxShiftSeconds, 0.1, 10.0);
         _adjustStart = settings.AdjustStart;
         _adjustEnd = settings.AdjustEnd;
+        _isolateSpeech = settings.IsolateSpeech;
     }
 
     /// <param name="subtitles">The lines to re-time, sorted by start time.</param>
@@ -137,9 +147,11 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
                 return;
             }
 
+            LoadPeaks(audioVisualizer);
+
             foreach (var av in new[] { AudioVisualizerOriginal, AudioVisualizerAligned })
             {
-                av.WavePeaks = audioVisualizer.WavePeaks;
+                av.WavePeaks = ShowSpeechOnly && _speechPeaks != null ? _speechPeaks : _normalPeaks;
                 av.ShotChanges = new List<double>(audioVisualizer.ShotChanges ?? new List<double>());
                 av.StartPositionSeconds = audioVisualizer.StartPositionSeconds;
                 av.ZoomFactor = audioVisualizer.ZoomFactor;
@@ -166,6 +178,52 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
             PushParagraphsToVisualizers();
             StartPositionTimer();
         });
+    }
+
+    /// <summary>
+    /// The speech-only peaks are the ones the main window's "Show speech only" caches next to the
+    /// normal peak file, so whichever of the two made them first, the other finds them.
+    /// </summary>
+    private void LoadPeaks(AudioVisualizer mainVisualizer)
+    {
+        _normalPeaks = mainVisualizer.WavePeaks;
+        var mainShowsSpeechOnly = Se.Settings.Waveform.ShowSpeechOnly;
+
+        try
+        {
+            var peakFileName = WavePeakGenerator2.GetPeakWaveFileName(_videoFileName, _audioTrackNumber);
+            _speechPeakFileName = SpeechOnlyWaveform.GetPeakFileName(peakFileName);
+            if (File.Exists(_speechPeakFileName))
+            {
+                _speechPeaks = WavePeakData2.FromDisk(_speechPeakFileName);
+            }
+
+            // When the main window is showing speech only, what it handed over is not the normal waveform.
+            if (mainShowsSpeechOnly && _speechPeaks != null && File.Exists(peakFileName))
+            {
+                _normalPeaks = WavePeakData2.FromDisk(peakFileName);
+            }
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Improve time codes: could not read cached waveform peaks");
+        }
+
+        IsSpeechOnlyAvailable = _speechPeaks != null;
+        ShowSpeechOnly = IsSpeechOnlyAvailable && mainShowsSpeechOnly;
+    }
+
+    partial void OnShowSpeechOnlyChanged(bool value)
+    {
+        var peaks = value && _speechPeaks != null ? _speechPeaks : _normalPeaks;
+        foreach (var av in new[] { AudioVisualizerOriginal, AudioVisualizerAligned })
+        {
+            if (av != null && peaks != null && !ReferenceEquals(av.WavePeaks, peaks))
+            {
+                av.WavePeaks = peaks;
+                av.InvalidateVisual();
+            }
+        }
     }
 
     private void ResetAligned()
@@ -300,8 +358,15 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
             return;
         }
 
+        if (IsolateSpeech &&
+            !await SpeechIsolationModelDownload.EnsureDownloadedAsync(Window, _windowService, _engine, l.IsolateSpeech))
+        {
+            return;
+        }
+
         SaveSettings();
 
+        var isolationFailed = false;
         IsAligning = true;
         IsIdle = false;
         HasResult = false;
@@ -320,6 +385,30 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
                 await MessageBox.Show(Window, Se.Language.General.Error, l.ExtractAudioFailed, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 StatusText = l.Intro;
                 return;
+            }
+
+            if (IsolateSpeech)
+            {
+                // The separator reports nothing to measure progress by, and takes a while.
+                StatusText = l.IsolatingSpeech;
+                IsProgressIndeterminate = true;
+                var speechFileName = await IsolateSpeechAsync(audioFileName, workFolder, cancellationToken);
+                IsProgressIndeterminate = false;
+                if (speechFileName != null)
+                {
+                    audioFileName = speechFileName;
+                }
+
+                if (_speechPeaks != null)
+                {
+                    // Show what the aligner hears - that is what the new time codes were fitted to.
+                    IsSpeechOnlyAvailable = true;
+                    ShowSpeechOnly = true;
+                }
+                else
+                {
+                    isolationFailed = true;
+                }
             }
 
             // We wrote this file ourselves: 16 kHz, mono, 16-bit, behind a 44 byte header.
@@ -353,6 +442,10 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
                 cancellationToken);
 
             ShowResults(results);
+            if (isolationFailed)
+            {
+                StatusText = l.IsolateSpeechFailed;
+            }
         }
         catch (OperationCanceledException)
         {
@@ -373,6 +466,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         finally
         {
             IsAligning = false;
+            IsProgressIndeterminate = false;
             IsIdle = true;
             _cancellation?.Dispose();
             _cancellation = null;
@@ -663,16 +757,106 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         var arguments =
             $"-hide_banner -nostats -loglevel error -y -i \"{_videoFileName}\" -vn {map} -ar 16000 -ac 1 -acodec pcm_s16le \"{audioFileName}\"";
 
+        var (exitCode, _) = await RunProcessAsync(GetFfmpegPath(), arguments, cancellationToken);
+        return exitCode == 0 && File.Exists(audioFileName);
+    }
+
+    /// <summary>
+    /// Splits the speech from music and sound effects with CrispASR's source separation, and
+    /// hands back the speech as 16 kHz mono - or null when that did not work out, in which case
+    /// the caller aligns against the audio it already has.
+    /// </summary>
+    private async Task<string?> IsolateSpeechAsync(string audioFileName, string workFolder, CancellationToken cancellationToken)
+    {
+        var executable = _engine.GetExecutable();
+        var arguments = SpeechIsolationModel.BuildSeparateArguments(
+            _engine.GetModelForCmdLine(SpeechIsolationModel.FileName), audioFileName, workFolder);
+        Se.WriteToolsLog($"{executable} {arguments}");
+
+        var (exitCode, output) = await RunProcessAsync(executable, arguments, cancellationToken, Path.GetDirectoryName(executable));
+        var stemFileName = SpeechIsolationModel.GetSpeechStemFileName(audioFileName, workFolder);
+        if (exitCode != 0 || !File.Exists(stemFileName))
+        {
+            Se.WriteToolsLog($"Speech isolation failed with exit code {exitCode}:{Environment.NewLine}{output}");
+            return null;
+        }
+
+        // The waveform of what the aligner is about to hear, made while the stem is still here -
+        // and cached where the main window's "Show speech only" looks for it.
+        try
+        {
+            var speechPeakFileName = _speechPeakFileName;
+            _speechPeaks = await Task.Run(
+                () =>
+                {
+                    using var generator = new WavePeakGenerator2(stemFileName);
+                    return generator.GeneratePeaks(0, speechPeakFileName);
+                },
+                cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Improve time codes: could not make the speech-only waveform");
+        }
+
+        var speechFileName = Path.Combine(workFolder, "speech.wav");
+        // ffmpeg writes a .wav as 16-bit PCM unless told otherwise, which is what the aligner wants.
+        var downmix = "-hide_banner -nostats -loglevel error " + SpeechIsolationModel.BuildDownmixArguments(stemFileName, speechFileName);
+        (exitCode, output) = await RunProcessAsync(GetFfmpegPath(), downmix, cancellationToken);
+
+        // The stem is 44.1 kHz stereo - over a gigabyte for a feature film - so it goes at once
+        // rather than with the work folder at the end.
+        try
+        {
+            File.Delete(stemFileName);
+        }
+        catch
+        {
+            // The work folder is removed afterwards anyway.
+        }
+
+        if (exitCode != 0 || !File.Exists(speechFileName))
+        {
+            Se.WriteToolsLog($"Speech isolation: ffmpeg could not convert the speech stem (exit code {exitCode}):{Environment.NewLine}{output}");
+            return null;
+        }
+
+        return speechFileName;
+    }
+
+    /// <summary>Runs a process to the end and returns its exit code and output; -1 when it would not start.</summary>
+    private static async Task<(int ExitCode, string Output)> RunProcessAsync(
+        string fileName, string arguments, CancellationToken cancellationToken, string? workingDirectory = null)
+    {
         using var process = new Process
         {
-            StartInfo = new ProcessStartInfo(GetFfmpegPath(), arguments)
+            StartInfo = new ProcessStartInfo(fileName, arguments)
             {
                 CreateNoWindow = true,
                 UseShellExecute = false,
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
+                WorkingDirectory = workingDirectory ?? string.Empty,
             },
         };
+
+        var output = new System.Text.StringBuilder();
+        DataReceivedEventHandler collect = (_, e) =>
+        {
+            if (!string.IsNullOrWhiteSpace(e.Data))
+            {
+                lock (output)
+                {
+                    output.AppendLine(e.Data);
+                }
+            }
+        };
+        process.OutputDataReceived += collect;
+        process.ErrorDataReceived += collect;
 
         try
         {
@@ -680,11 +864,11 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         }
         catch (Exception exception)
         {
-            Se.LogError(exception, "Could not start ffmpeg");
-            return false;
+            Se.LogError(exception, "Could not start " + fileName);
+            return (-1, exception.Message);
         }
 
-        // Drain both pipes, or a chatty ffmpeg blocks on a full buffer and never exits.
+        // Drain both pipes, or a chatty process blocks on a full buffer and never exits.
         process.BeginErrorReadLine();
         process.BeginOutputReadLine();
 
@@ -709,7 +893,10 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
             throw;
         }
 
-        return process.ExitCode == 0 && File.Exists(audioFileName);
+        lock (output)
+        {
+            return (process.ExitCode, output.ToString());
+        }
     }
 
     private static string GetFfmpegPath()
@@ -740,6 +927,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         settings.MaxShiftSeconds = (double)MaxShiftSeconds;
         settings.AdjustStart = AdjustStart;
         settings.AdjustEnd = AdjustEnd;
+        settings.IsolateSpeech = IsolateSpeech;
     }
 
     /// <summary>The input lines, in input order, carrying the accepted new times.</summary>

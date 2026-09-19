@@ -73,7 +73,9 @@ public class SubtitleRetimerIntegrationTests
             })
             .ToList();
 
-        var results = await new SubtitleRetimer(runner, audio).RetimeAsync(jittered, null, TestContext.Current.CancellationToken);
+        // The jitter is larger than the default max shift, which would (rightly) refuse to follow it.
+        var options = new SubtitleRetimer.Options { MaxShiftSeconds = 2.0 };
+        var results = await new SubtitleRetimer(runner, audio, options).RetimeAsync(jittered, null, TestContext.Current.CancellationToken);
         return (jittered, results);
     }
 }

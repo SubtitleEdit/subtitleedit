@@ -94,6 +94,7 @@ On audio with loud music the waveform is one solid block, and where a line start
 - It is off by default, and the setting is remembered. Turning it on the first time downloads the CrispASR runtime (if no CrispASR engine is installed yet) and a source separation model (Mel-Band RoFormer, 457 MB) - the same one [Speech to text](speech-to-text.md#isolate-speech-crisp-asr) and [Text to speech](text-to-speech.md#remove-the-original-speech-from-the-video) use.
 - The normal waveform always shows first. The speech-only one is made in the background and swapped in when it is ready - the status bar shows the elapsed time. Expect it to take about as long as the video itself on a GPU (Metal, CUDA, Vulkan), and many times longer on CPU only.
 - It is cached next to the normal waveform, so it is instant the next time the video is opened, and switching the option off and on again costs nothing.
+- [Improve time codes](improve-time-codes.md) shares that cache: a run there with *Isolate speech first* leaves the speech-only waveform ready for the main window, and the other way round.
 - The spectrogram and the shot changes are still made from the original audio.
 - Closing the video or switching the option off stops a generation that is still running.
 

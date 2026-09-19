@@ -95,11 +95,14 @@ public class ImproveTimeCodesWindow : Window
 
         var checkStart = UiUtil.MakeCheckBox(l.AdjustStartTimes, vm, nameof(vm.AdjustStart));
         var checkEnd = UiUtil.MakeCheckBox(l.AdjustEndTimes, vm, nameof(vm.AdjustEnd));
+        var checkIsolate = UiUtil.MakeCheckBox(l.IsolateSpeech, vm, nameof(vm.IsolateSpeech));
+        checkIsolate.Bind(IsEnabledProperty, new Binding(nameof(vm.IsIdle)) { Source = vm });
 
         if (Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(comboAligner, l.AlignerHint);
             ToolTip.SetTip(numericMaxShift, l.MaxShiftHint);
+            ToolTip.SetTip(checkIsolate, l.IsolateSpeechHint);
         }
 
         var left = new WrapPanel
@@ -111,7 +114,7 @@ public class ImproveTimeCodesWindow : Window
                 Group(engineDot, engineStatus, buttonEngineSettings),
                 Group(Label(l.Aligner), comboAligner),
                 Group(Label(l.MaxShift), numericMaxShift),
-                Group(checkStart, checkEnd),
+                Group(checkStart, checkEnd, checkIsolate),
             },
         };
 
@@ -166,7 +169,17 @@ public class ImproveTimeCodesWindow : Window
             RowDefinitions = new RowDefinitions("Auto,*,Auto,*"),
             ColumnDefinitions = new ColumnDefinitions("*"),
         };
+        var checkSpeechOnly = UiUtil.MakeCheckBox(l.ShowSpeechOnly, vm, nameof(vm.ShowSpeechOnly));
+        checkSpeechOnly.HorizontalAlignment = HorizontalAlignment.Right;
+        checkSpeechOnly.Bind(IsEnabledProperty, new Binding(nameof(vm.IsSpeechOnlyAvailable)) { Source = vm });
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(checkSpeechOnly, l.ShowSpeechOnlyHint);
+            ToolTip.SetShowOnDisabled(checkSpeechOnly, true); // the hint says how to make it available
+        }
+
         grid.Add(labelOriginal, 0, 0);
+        grid.Add(checkSpeechOnly, 0, 0);
         grid.Add(borderOriginal, 1, 0);
         grid.Add(labelAligned, 2, 0);
         grid.Add(borderAligned, 3, 0);
@@ -460,6 +473,7 @@ public class ImproveTimeCodesWindow : Window
         progress.VerticalAlignment = VerticalAlignment.Center;
         progress.Bind(RangeBase.ValueProperty, new Binding(nameof(vm.ProgressValue)) { Source = vm });
         progress.Bind(IsVisibleProperty, new Binding(nameof(vm.IsAligning)) { Source = vm });
+        progress.Bind(ProgressBar.IsIndeterminateProperty, new Binding(nameof(vm.IsProgressIndeterminate)) { Source = vm });
 
         var buttons = UiUtil.MakeButtonBar(buttonAlign, buttonOk, buttonCancel);
         // The bar takes all the room left of the buttons, with its text underneath.
