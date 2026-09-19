@@ -292,6 +292,7 @@ public static class InitNativeMacMenu
             Item(Clean(l.ApplyDurationLimits), v => v.ShowApplyDurationLimitsCommand),
             Item(Clean(l.BatchConvert), v => v.ShowToolsBatchConvertCommand),
             Item(Clean(l.BeautifyTimeCodes), v => v.ShowBeautifyTimeCodesCommand),
+            Item(Clean(l.ImproveTimeCodes), v => v.ShowImproveTimeCodesCommand),
             Item(Clean(l.BridgeGaps), v => v.ShowBridgeGapsCommand),
             Item(Clean(l.ApplyMinGap), v => v.ShowApplyMinGapCommand),
             Item(Clean(l.ChangeCasing), v => v.ShowToolsChangeCasingCommand),

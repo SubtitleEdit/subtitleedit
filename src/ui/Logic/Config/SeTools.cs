@@ -14,6 +14,7 @@ public class SeTools
     public SeAdjustDisplayDurations AdjustDurations { get; set; } = new();
     public SeApplyDurationLimits ApplyDurationLimits { get; set; } = new();
     public SeBridgeGaps BridgeGaps { get; set; } = new();
+    public SeImproveTimeCodes ImproveTimeCodes { get; set; } = new();
     public SeChangeFormatting ChangeFormatting { get; set; } = new();
     public SeBatchConvert BatchConvert { get; set; } = new();
     public SeChangeCasing ChangeCasing { get; set; } = new();
