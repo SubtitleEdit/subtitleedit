@@ -13,6 +13,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -387,10 +388,83 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
             return;
         }
 
-        await RunForcedAlignerAsync(setupVm.ExecutablePath, setupVm.AlignerModelPath);
+        await RunForcedAlignerAsync(setupVm.ExecutablePath, setupVm.AlignerModelPath, setupVm.EndsFromIsolatedSpeech);
     }
 
-    private async Task RunForcedAlignerAsync(string executable, string alignerPath)
+    /// <summary>
+    /// Separates the speech from the extracted audio and measures how loud it is over time, for
+    /// the end times. Not having it is not an error - the alignment then ends lines by reading
+    /// time, exactly as it does with the option off.
+    /// </summary>
+    private Process? _isolateSpeechProcess;
+    private volatile bool _windowClosing;
+
+    private async Task<SpeechEnvelope?> IsolateSpeechEnvelopeAsync(string executable, string audioFileName, string workFolder)
+    {
+        try
+        {
+            var modelFileName = new CrispAsrParakeet().GetModelForCmdLine(SpeechIsolationModel.FileName);
+            var arguments = SpeechIsolationModel.BuildSeparateArguments(modelFileName, audioFileName, workFolder);
+            Se.WriteToolsLog($"{executable} {arguments}");
+
+            using var process = new Process
+            {
+                StartInfo = new ProcessStartInfo(executable, arguments)
+                {
+                    WorkingDirectory = Path.GetDirectoryName(executable) ?? string.Empty,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                }
+            };
+
+#pragma warning disable CA1416
+            process.Start();
+#pragma warning restore CA1416
+            _isolateSpeechProcess = process;
+
+            // The separator prints no progress, so the elapsed time is all there is to show.
+            var stopwatch = Stopwatch.StartNew();
+            while (!process.HasExited)
+            {
+                AlignProgress = string.Format(
+                    Se.Language.File.Import.ForcedAlignerIsolatingSpeech,
+                    new TimeCode(stopwatch.ElapsedMilliseconds).ToShortDisplayString());
+                await Task.Delay(250);
+            }
+
+            _isolateSpeechProcess = null;
+            if (_windowClosing)
+            {
+                return null;
+            }
+
+            var stemFileName = SpeechIsolationModel.GetSpeechStemFileName(audioFileName, workFolder);
+            if (process.ExitCode == 0 && File.Exists(stemFileName))
+            {
+                var envelope = await Task.Run(() => SpeechEnvelope.FromWaveFile(stemFileName));
+
+                // Over a gigabyte for a feature film - not something to keep until the work
+                // folder is removed at the end of the alignment.
+                File.Delete(stemFileName);
+                if (envelope != null)
+                {
+                    return envelope;
+                }
+            }
+
+            Se.WriteToolsLog($"Forced aligner: speech isolation failed (exit code {process.ExitCode})", true);
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Forced aligner: speech isolation failed");
+        }
+
+        AlignProgress = Se.Language.File.Import.ForcedAlignerIsolatingSpeechFailed;
+        await Task.Delay(1500);
+        return null;
+    }
+
+    private async Task RunForcedAlignerAsync(string executable, string alignerPath, bool endsFromIsolatedSpeech)
     {
         var workFolder = Path.Combine(Path.GetTempPath(), "se-forced-align-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(workFolder);
@@ -428,7 +502,10 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
             var lines = Subtitles.ToList();
             using var audio = new FfmpegWindowAudioSource(GetFfmpegPath(), audioFileName, totalSeconds, workFolder);
             var runner = new CrispAsrAlignOnlyRunner(executable, alignerPath, Se.WriteToolsLog);
-            var forcedAligner = new ForcedAligner(runner, audio);
+            var speechEnvelope = endsFromIsolatedSpeech
+                ? await IsolateSpeechEnvelopeAsync(executable, audioFileName, workFolder)
+                : null;
+            var forcedAligner = new ForcedAligner(runner, audio, speechEnvelope: speechEnvelope);
 
             var progress = new Progress<ForcedAligner.Progress>(p => Dispatcher.UIThread.Post(() =>
             {
@@ -618,6 +695,23 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
     public void OnClosingCleanup()
     {
         _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
+
+        // The separation runs for minutes; nothing waits for it once the window is gone.
+        _windowClosing = true;
+        try
+        {
+            var process = _isolateSpeechProcess;
+            if (process != null && !process.HasExited)
+            {
+#pragma warning disable CA1416
+                process.Kill(true);
+#pragma warning restore CA1416
+            }
+        }
+        catch
+        {
+            // already gone or disposed
+        }
     }
 
     internal void KeyDown(object? sender, KeyEventArgs e)

@@ -39,6 +39,10 @@ public class LanguageImport
     public string ForcedAlignerProgress { get; set; }
     public string ForcedAlignerSetupTitle { get; set; }
     public string ForcedAlignerSetupIntro { get; set; }
+    public string ForcedAlignerEndsFromSpeech { get; set; }
+    public string ForcedAlignerEndsFromSpeechHint { get; set; }
+    public string ForcedAlignerIsolatingSpeech { get; set; }
+    public string ForcedAlignerIsolatingSpeechFailed { get; set; }
     public string ForcedAlignerModel { get; set; }
     public string ForcedAlignerDownloadEngine { get; set; }
 
@@ -85,6 +89,10 @@ Rules:
         ForcedAlignerProgress = "Aligning... window {0} of {1}, {2} of {3} lines";
         ForcedAlignerSetupTitle = "Align time codes via forced aligner";
         ForcedAlignerSetupIntro = "A forced aligner matches the subtitle text you already have against the audio, without transcribing it first. Long videos are aligned in chunks, so any length works.";
+        ForcedAlignerEndsFromSpeech = "Set end times from isolated speech (slow)";
+        ForcedAlignerEndsFromSpeechHint = "A forced aligner finds where a line starts, not where it ends, so end times normally come from reading time. With this on, music and sound effects are removed from the audio first and each line ends where its speech goes quiet. Takes about as long as the video itself with a GPU - and many times longer without one.";
+        ForcedAlignerIsolatingSpeech = "Isolating speech... {0}";
+        ForcedAlignerIsolatingSpeechFailed = "Could not isolate the speech - end times were set from reading time instead.";
         ForcedAlignerModel = "Aligner model";
         ForcedAlignerDownloadEngine = "Download / update engine...";
         CsvXlsxCustomColumnsDotDotDot = "CSV/XLSX/ODS with custom columns...";
