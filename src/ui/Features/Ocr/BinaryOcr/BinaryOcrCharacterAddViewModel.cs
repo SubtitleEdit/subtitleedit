@@ -337,7 +337,7 @@ public partial class BinaryOcrCharacterAddViewModel : ObservableObject
 
     private void SetTitle()
     {
-        Title = $"Add Binary OCR character for line  {_startFromNumber + 1}, character {_letters.IndexOf(_splitItem) + 1} of {_letters.Count} using database \"{Path.GetFileNameWithoutExtension(_db.FileName)}\"";
+        Title = string.Format(Se.Language.Ocr.AddBinaryOcrCharacterTitle, _startFromNumber + 1, _letters.IndexOf(_splitItem) + 1, _letters.Count, Path.GetFileNameWithoutExtension(_db.FileName));
     }
 
     internal void TextBoxNewOnKeyDown(object? sender, KeyEventArgs e)
