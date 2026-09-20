@@ -826,12 +826,26 @@ public class FfmpegGenerator
     // dts; packets that already have one (h264/hevc in mp4/mkv) are left untouched.
     private const string GeneratePtsForVideoCopy = "-fflags +genpts ";
 
+    // ffmpeg flags its TrueHD (and MLP) encoder as experimental and refuses to run it without
+    // "-strict -2" - the output was then a 0-byte file and no dub was added to the video (#15020).
+    private static string GetAddAudioTrackEncodingString(string audioEncoding)
+    {
+        if (string.IsNullOrEmpty(audioEncoding))
+        {
+            return string.Empty;
+        }
+
+        var isExperimental = string.Equals(audioEncoding, "truehd", StringComparison.OrdinalIgnoreCase) ||
+                             string.Equals(audioEncoding, "mlp", StringComparison.OrdinalIgnoreCase);
+        return "-c:a " + audioEncoding + (isExperimental ? " -strict -2 " : " ");
+    }
+
     public static Process AddAudioTrack(string inputFileName, string audioFileName, string outputFileName, string audioEncoding, bool? stereo, DataReceivedEventHandler? dataReceivedHandler = null)
     {
         // Empty encoding = let ffmpeg pick the container's default encoder (same as the ducking
         // variant below). It used to mean "-c:a copy", which muxed the merged TTS track - a PCM
         // wav - straight into .mp4, failing on ffmpeg builds older than 6.1.
-        var audioEncodingString = !string.IsNullOrEmpty(audioEncoding) ? "-c:a " + audioEncoding + " " : string.Empty;
+        var audioEncodingString = GetAddAudioTrackEncodingString(audioEncoding);
         var stereoString = stereo == true ? "-ac 2 " : string.Empty;
 
         var processMakeVideo = new Process
@@ -863,7 +877,7 @@ public class FfmpegGenerator
             audioEncoding = string.Empty;
         }
 
-        var audioEncodingString = !string.IsNullOrEmpty(audioEncoding) ? "-c:a " + audioEncoding + " " : string.Empty;
+        var audioEncodingString = GetAddAudioTrackEncodingString(audioEncoding);
         var stereoString = stereo == true ? "-ac 2 " : string.Empty;
         var volumeFactor = Math.Clamp(originalVolumePercent / 100.0, 0.0, 1.0).ToString("0.00", CultureInfo.InvariantCulture);
 
@@ -917,7 +931,7 @@ public class FfmpegGenerator
             audioEncoding = string.Empty;
         }
 
-        var audioEncodingString = !string.IsNullOrEmpty(audioEncoding) ? "-c:a " + audioEncoding + " " : string.Empty;
+        var audioEncodingString = GetAddAudioTrackEncodingString(audioEncoding);
         var stereoString = stereo == true ? "-ac 2 " : string.Empty;
         var volumeFactor = Math.Clamp(backgroundVolumePercent / 100.0, 0.0, 1.0).ToString("0.00", CultureInfo.InvariantCulture);
 
