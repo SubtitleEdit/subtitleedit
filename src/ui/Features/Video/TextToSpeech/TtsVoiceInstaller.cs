@@ -117,6 +117,18 @@ public static class TtsVoiceInstaller
             minVersionNote: "v0.8.31 or newer");
 
     /// <summary>
+    /// Ensures the CrispASR runtime that Supertonic (CrispASR) runs on is installed.
+    /// The supertonic backend ships in CrispASR v0.8.33 and newer; the version note names that
+    /// floor because older builds have no supertonic backend at all and abort on the unknown
+    /// --backend value.
+    /// </summary>
+    public static Task<bool> EnsureCrispAsrForSupertonic(Window? window, IWindowService windowService, bool forceRedownload)
+        => EnsureCrispAsrAsync(window, windowService, forceRedownload,
+            engineDisplayName: "Supertonic (CrispASR)",
+            extraCapabilityCheck: null,
+            minVersionNote: "v0.8.33 or newer");
+
+    /// <summary>
     /// Ensures the CrispASR runtime that Zonos TTS (CrispASR) runs on is installed.
     /// The zonos-tts backend's GGUFs (transformer + DAC codec) are staged into SE's
     /// CrispAsr/models folder by

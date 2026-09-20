@@ -181,6 +181,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Confucius4TtsCrispAsrSettin
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DotsTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.PocketTtsCrispAsrSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.SupertonicCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTts25License;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ModelLicense;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceCloneConsent;
@@ -309,6 +310,7 @@ public static class DependencyInjectionExtensions
         collection.AddHttpClientWithProxy<IVibeVoiceCrispAsrDownloadService, VibeVoiceCrispAsrDownloadService>();
         collection.AddHttpClientWithProxy<IIndexTtsCrispAsrDownloadService, IndexTtsCrispAsrDownloadService>();
         collection.AddHttpClientWithProxy<IPocketTtsCrispAsrDownloadService, PocketTtsCrispAsrDownloadService>();
+        collection.AddHttpClientWithProxy<ISupertonicCrispAsrDownloadService, SupertonicCrispAsrDownloadService>();
         collection.AddHttpClientWithProxy<IDotsTtsCrispAsrDownloadService, DotsTtsCrispAsrDownloadService>();
         collection.AddHttpClientWithProxy<IConfucius4TtsCrispAsrDownloadService, Confucius4TtsCrispAsrDownloadService>();
         collection.AddHttpClientWithProxy<IIndexTts25AudioCppDownloadService, IndexTts25AudioCppDownloadService>();
@@ -512,6 +514,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<VibeVoiceCrispAsrSettingsViewModel>();
         collection.AddTransient<IndexTtsCrispAsrSettingsViewModel>();
         collection.AddTransient<PocketTtsCrispAsrSettingsViewModel>();
+        collection.AddTransient<SupertonicCrispAsrSettingsViewModel>();
         collection.AddTransient<DotsTtsCrispAsrSettingsViewModel>();
         collection.AddTransient<Confucius4TtsCrispAsrSettingsViewModel>();
         collection.AddTransient<IndexTts25LicenseViewModel>();

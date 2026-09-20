@@ -73,6 +73,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     private Task? _downloadTaskMossTtsCrispAsrVoices;
     private Task? _downloadTaskOmniVoiceCrispAsrModels;
     private Task? _downloadTaskZonosTtsCrispAsrModels;
+    private Task? _downloadTaskSupertonicCrispAsrModels;
     private Task? _downloadTaskOmniVoice;
     private Task? _downloadTaskOmniVoices;
     private Task? _downloadTaskOmniVoiceModels;
@@ -116,6 +117,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     private readonly IMossTtsCrispAsrDownloadService _mossTtsCrispAsrDownloadService;
     private readonly IOmniVoiceCrispAsrDownloadService _omniVoiceCrispAsrDownloadService;
     private readonly IZonosTtsCrispAsrDownloadService _zonosTtsCrispAsrDownloadService;
+    private readonly ISupertonicCrispAsrDownloadService _supertonicCrispAsrDownloadService;
     private readonly IOmniVoiceDownloadService _omniVoiceDownloadService;
     private readonly CancellationTokenSource _cancellationTokenSource;
     private readonly MemoryStream _downloadStream;
@@ -159,6 +161,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         IMossTtsCrispAsrDownloadService mossTtsCrispAsrDownloadService,
         IOmniVoiceCrispAsrDownloadService omniVoiceCrispAsrDownloadService,
         IZonosTtsCrispAsrDownloadService zonosTtsCrispAsrDownloadService,
+        ISupertonicCrispAsrDownloadService supertonicCrispAsrDownloadService,
         IOmniVoiceDownloadService omniVoiceDownloadService)
     {
         _ttsDownloadService = ttsDownloadService;
@@ -186,6 +189,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         _mossTtsCrispAsrDownloadService = mossTtsCrispAsrDownloadService;
         _omniVoiceCrispAsrDownloadService = omniVoiceCrispAsrDownloadService;
         _zonosTtsCrispAsrDownloadService = zonosTtsCrispAsrDownloadService;
+        _supertonicCrispAsrDownloadService = supertonicCrispAsrDownloadService;
         _omniVoiceDownloadService = omniVoiceDownloadService;
         _zipUnpacker = zipUnpacker;
 
@@ -1588,6 +1592,32 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
             }
 
+            if (_downloadTaskSupertonicCrispAsrModels is { IsCompletedSuccessfully: true })
+            {
+                _timer.Stop();
+                _downloadTaskSupertonicCrispAsrModels = null;
+
+                // Model-only: the ten preset voices are inside the GGUF and the engine does not
+                // clone, so there is no reference-voice pack to fetch afterwards.
+                OkPressed = true;
+                Close();
+            }
+            else if (_downloadTaskSupertonicCrispAsrModels is { IsFaulted: true })
+            {
+                _timer.Stop();
+                var ex = _downloadTaskSupertonicCrispAsrModels.Exception?.InnerException ?? _downloadTaskSupertonicCrispAsrModels.Exception;
+                if (ex is OperationCanceledException)
+                {
+                    ProgressText = Se.Language.General.DownloadCanceled;
+                    Close();
+                }
+                else
+                {
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
+                }
+            }
+
             // CosyVoice3 supports both baked presets (8 voices in cosyvoice3-voices.gguf, which
             // CosyVoice3CrispAsrDownloadService stages with the rest of the bundle) AND zero-shot
             // cloning from user-supplied 16 kHz WAVs. After the model bundle finishes, chain the
@@ -2780,6 +2810,27 @@ public partial class DownloadTtsViewModel : ObservableObject
 
         _downloadTaskZonosTtsCrispAsrModels =
             _zonosTtsCrispAsrDownloadService.DownloadModels(ZonosTtsCrispAsr.GetSetModelsFolder(), downloadProgress, titleProgress, _cancellationTokenSource.Token);
+    }
+
+    public void StartDownloadSupertonicCrispAsrModels()
+    {
+        TitleText = string.Format(Se.Language.General.DownloadingX, $"Supertonic (CrispASR) model: {SupertonicCrispAsr.ModelFileName}");
+
+        var downloadProgress = new Progress<float>(number =>
+        {
+            var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
+            var pctString = percentage.ToString(CultureInfo.InvariantCulture);
+            ProgressValue = percentage;
+            ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
+        });
+
+        var titleProgress = new Action<string>(title =>
+        {
+            Dispatcher.UIThread.Post(() => TitleText = title);
+        });
+
+        _downloadTaskSupertonicCrispAsrModels =
+            _supertonicCrispAsrDownloadService.DownloadModels(SupertonicCrispAsr.GetSetModelsFolder(), downloadProgress, titleProgress, _cancellationTokenSource.Token);
     }
 
     public void StartDownloadCosyVoice3CrispAsrModels(string? modelKey = null)

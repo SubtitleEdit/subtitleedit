@@ -212,6 +212,13 @@ public static class DownloadHashManager
         public const string FrenchQ8_0 = "PocketTtsCrispAsr.FrenchQ8_0";
     }
 
+    public static class SupertonicCrispAsr
+    {
+        // SHA-256 of supertonic3-f16.gguf on cstr/supertonic-3-GGUF (HF LFS oid, confirmed
+        // against a local sha256sum of the downloaded file).
+        public const string ModelF16 = "SupertonicCrispAsr.ModelF16";
+    }
+
     public static class DotsTtsCrispAsr
     {
         // SHA-256 of the dots.tts SOAR GGUFs on cstr/dots-tts-soar-GGUF (HF LFS oid; the
@@ -1970,6 +1977,10 @@ public static class DownloadHashManager
             [IndexTtsCrispAsr.Codec] = new[]
             {
                 "fcba9a322d80ef318da8a17c01e8a5e7f299ccdf881c62a43abf62cb3c104268", // indextts-bigvgan.gguf
+            },
+            [SupertonicCrispAsr.ModelF16] = new[]
+            {
+                "46d3fed1cfd60bd631cdd9f618426c5c072f92b8fed3b0c3fdedf6e43869ceff", // supertonic3-f16.gguf
             },
             [PocketTtsCrispAsr.EnglishF16] = new[]
             {
