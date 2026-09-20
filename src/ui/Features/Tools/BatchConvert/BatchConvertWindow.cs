@@ -252,6 +252,8 @@ public class BatchConvertWindow : Window
         buttonTransportStreamSettings.WithBindIsVisible(vm, nameof(vm.IsTransportStreamSettingsVisible));
         var buttonSettings = UiUtil.MakeButton(vm.ShowOutputPropertiesCommand, IconNames.Settings, Se.Language.General.Settings).WithMarginLeft(15).WithMarginRight(5);
 
+        // Add/Remove/Clear are locked while converting: the run works on a snapshot of the list,
+        // so removed files would still be converted and added files silently skipped (#15116).
         var panelFileControls = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -260,11 +262,11 @@ public class BatchConvertWindow : Window
             Margin = new Thickness(0, 0, 0, 0),
             Children =
             {
-                UiUtil.MakeButton(vm.AddFilesCommand, IconNames.Plus, Se.Language.General.Add).WithMarginLeft(10),
-                UiUtil.MakeButton(vm.AddFolderCommand, IconNames.Folder, Se.Language.Tools.BatchConvert.AddFolderDotDotDot).WithMarginLeft(5),
-                UiUtil.MakeButton(vm.AddFolderRecursiveCommand, IconNames.FolderMultiple, Se.Language.Tools.BatchConvert.AddFolderRecursiveDotDotDot).WithMarginLeft(5),
-                UiUtil.MakeButton(vm.RemoveSelectedFilesCommand, IconNames.Trash, Se.Language.General.Remove).WithMarginLeft(5),
-                UiUtil.MakeButton(vm.ClearAllFilesCommand, IconNames.Close, Se.Language.General.Clear).WithMarginLeft(5),
+                UiUtil.MakeButton(vm.AddFilesCommand, IconNames.Plus, Se.Language.General.Add).WithMarginLeft(10).WithBindEnabled(nameof(vm.AreControlsEnabled)),
+                UiUtil.MakeButton(vm.AddFolderCommand, IconNames.Folder, Se.Language.Tools.BatchConvert.AddFolderDotDotDot).WithMarginLeft(5).WithBindEnabled(nameof(vm.AreControlsEnabled)),
+                UiUtil.MakeButton(vm.AddFolderRecursiveCommand, IconNames.FolderMultiple, Se.Language.Tools.BatchConvert.AddFolderRecursiveDotDotDot).WithMarginLeft(5).WithBindEnabled(nameof(vm.AreControlsEnabled)),
+                UiUtil.MakeButton(vm.RemoveSelectedFilesCommand, IconNames.Trash, Se.Language.General.Remove).WithMarginLeft(5).WithBindEnabled(nameof(vm.AreControlsEnabled)),
+                UiUtil.MakeButton(vm.ClearAllFilesCommand, IconNames.Close, Se.Language.General.Clear).WithMarginLeft(5).WithBindEnabled(nameof(vm.AreControlsEnabled)),
                 UiUtil.MakeLabel(Se.Language.General.TargetFormat).WithMarginLeft(15),
                 comboBoxSubtitleFormat,
                 buttonTargetFormatSettings,
