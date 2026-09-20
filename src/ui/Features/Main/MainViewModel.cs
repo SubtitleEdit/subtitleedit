@@ -27354,7 +27354,7 @@ public partial class MainViewModel :
                         }
 
                         var menuItem = new MenuItem();
-                        menuItem.Header = trackName;
+                        menuItem.Header = trackName.Replace("_", "__"); // a single "_" is an access-key marker
                         menuItem.Command = PickAudioTrackCommand;
                         menuItem.CommandParameter = audioTrack;
                         if (audioTrack.FfIndex == (_audioTrack?.FfIndex ?? -1))
