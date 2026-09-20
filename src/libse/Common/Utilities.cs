@@ -468,75 +468,92 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
             s = sb.ToString();
 
-            // check 3 lines
-            var pti = new PlainTextImporter(false, false, 1, ".?!", maximumLength, language);
-            var three = pti.SplitToThree(sb.ToString());
-            if (three.Count == 3 &&
-                three[0].Length < maximumLength &&
-                three[1].Length < maximumLength &&
-                three[2].Length < maximumLength)
+            // The fewest lines that fit, balanced over all the lines at once. A word longer than
+            // the maximum gets a line of its own, so one line per word always fits - which is
+            // also why the length based estimate is capped at the word count: with long words it
+            // can ask for more lines than there are words.
+            var wordCount = s.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Length;
+            var minimumLines = maximumLength > 0 ? Math.Max(2, (s.Length + maximumLength) / (maximumLength + 1)) : 2;
+            minimumLines = Math.Min(minimumLines, wordCount);
+            for (var numberOfLines = minimumLines; numberOfLines <= wordCount; numberOfLines++)
             {
-                return ReInsertHtmlTagsAndCleanUp(string.Join(" " + Environment.NewLine, three), htmlTags);
-            }
-
-            // check 4 lines
-            var four = pti.SplitToFour(sb.ToString());
-            if (four.Count == 4 &&
-                four[0].Length < maximumLength &&
-                four[1].Length < maximumLength &&
-                four[2].Length < maximumLength &&
-                four[3].Length < maximumLength)
-            {
-                return ReInsertHtmlTagsAndCleanUp(string.Join(" " + Environment.NewLine, four), htmlTags);
-            }
-
-            var words = s.Split(' ');
-            for (var numberOfLines = 3; numberOfLines < 9999; numberOfLines++)
-            {
-                var average = s.Length / numberOfLines + 1;
-                for (var len = average; len < maximumLength; len++)
+                var breaks = TextPartition.Split(s, numberOfLines, maximumLength, i => GetBreakCost(s, i, language));
+                if (breaks != null)
                 {
-                    var list = SplitToX(words, numberOfLines, len);
-                    var allOk = true;
-                    foreach (var lineLength in list)
+                    // keep the spaces - the html tag indices count them
+                    var lines = new StringBuilder(s);
+                    for (var i = breaks.Length - 1; i >= 0; i--)
                     {
-                        if (lineLength > maximumLength)
-                        {
-                            allOk = false;
-                        }
+                        lines.Insert(breaks[i] + 1, Environment.NewLine);
                     }
 
-                    if (allOk)
-                    {
-                        var index = 0;
-                        foreach (var item in list)
-                        {
-                            index += item;
-                            if (htmlTags.TryGetValue(index, out var v))
-                            {
-                                if (v.StartsWith("</", StringComparison.Ordinal))
-                                {
-                                    v = Environment.NewLine + v;
-                                }
-                                else
-                                {
-                                    v += Environment.NewLine;
-                                }
-
-                                htmlTags[index] = v;
-                            }
-                            else
-                            {
-                                htmlTags.Add(index, Environment.NewLine);
-                            }
-                        }
-
-                        return ReInsertHtmlTagsAndCleanUp(s, htmlTags);
-                    }
+                    return ReInsertHtmlTagsAndCleanUp(lines.ToString(), htmlTags);
                 }
             }
 
             return text;
+        }
+
+        /// <summary>
+        /// Breaking where <see cref="CanBreak"/> says no is a last resort, not forbidden - more
+        /// than any difference in line lengths.
+        /// </summary>
+        internal const double NoBreakCost = 1000000;
+
+        // Costs are in squared characters of line length deviation: moving a break by d
+        // characters costs about 2 x d x d, so these pull a break some 7 / 5 / 3 characters
+        // towards a dialog start / sentence end / comma - never past the maximum length.
+        private const double BreakBeforeDialogBonus = 100;
+        private const double BreakAfterSentenceEndBonus = 50;
+        private const double BreakAfterCommaBonus = 20;
+
+        /// <summary>
+        /// Cost of breaking at the space with this index: negative where a break reads well
+        /// (before a dialog dash, after a sentence end or a comma), <see cref="NoBreakCost"/>
+        /// where <see cref="CanBreak"/> says no.
+        /// </summary>
+        private static double GetBreakCost(string s, int index, string language)
+        {
+            if (!CanBreak(s, index, language))
+            {
+                return NoBreakCost;
+            }
+
+            if (index + 2 < s.Length && s[index + 1] == '-' && s[index + 2] == ' ')
+            {
+                return -BreakBeforeDialogBonus;
+            }
+
+            // the last character of the word before the space, closing quotes etc. skipped
+            var i = index - 1;
+            while (i > 0 && (s[i] == '"' || s[i] == '\'' || s[i] == '”' || s[i] == '’' || s[i] == '»' || s[i] == ')' || s[i] == ']' || s[i] == '♪'))
+            {
+                i--;
+            }
+
+            if (i < 0)
+            {
+                return 0;
+            }
+
+            switch (s[i])
+            {
+                case '.':
+                case '?':
+                case '!':
+                case '…':
+                case '。':
+                case '؟':
+                    return -BreakAfterSentenceEndBonus;
+                case ',':
+                case ';':
+                case ':':
+                case '،':
+                case '、':
+                    return -BreakAfterCommaBonus;
+                default:
+                    return 0;
+            }
         }
 
         private static void AddOrAppendHtmlTag(Dictionary<int, string> htmlTags, int index, string tag)
@@ -561,33 +578,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             s = s.Replace(Environment.NewLine + "</u>", "</u>" + Environment.NewLine);
             s = s.Replace(Environment.NewLine + "</font>", "</font>" + Environment.NewLine);
             return s.TrimEnd();
-        }
-
-        private static List<int> SplitToX(string[] words, int count, int average)
-        {
-            var list = new List<int>();
-            int currentIdx = 0;
-            int currentCount = 0;
-            foreach (string word in words)
-            {
-                if (currentCount + word.Length + 3 > average && currentIdx < count)
-                {
-                    list.Add(currentCount);
-                    currentIdx++;
-                    currentCount = 0;
-                }
-                currentCount += word.Length + 1;
-            }
-            if (currentIdx < count)
-            {
-                list.Add(currentCount);
-            }
-            else
-            {
-                list[list.Count - 1] += currentCount;
-            }
-
-            return list;
         }
 
         public static string AutoBreakLine(string text, int maximumLength, int mergeLinesShorterThan, string language)
