@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 
@@ -32,6 +33,45 @@ public class SeWindowPosition
         Y = y;
         Width = width;
         Height = height;
+    }
+
+    private const int MinimizedCoordinate = -32000;
+
+    /// <summary>
+    /// Windows parks a minimized window at (-32000, -32000) and reports that as its
+    /// position, so such a point is never a place the user put the window (#15106).
+    /// </summary>
+    public static bool IsMinimizedPosition(int x, int y)
+    {
+        return x <= MinimizedCoordinate || y <= MinimizedCoordinate;
+    }
+
+    /// <summary>
+    /// Replaces what was read from a minimized window with the position and state it had
+    /// before it was minimized. Returns false when nothing usable is known, in which case
+    /// the caller should keep whatever was saved earlier.
+    /// </summary>
+    public bool TryApplyStateBeforeMinimize(PixelPoint? lastPosition, WindowState? lastState, PixelRect? screenBounds)
+    {
+        if (lastPosition is not { } position || IsMinimizedPosition(position.X, position.Y))
+        {
+            return false;
+        }
+
+        X = position.X;
+        Y = position.Y;
+        IsFullScreen = lastState == WindowState.FullScreen;
+        IsMaximized = lastState == WindowState.Maximized;
+
+        if (screenBounds is { } bounds)
+        {
+            ScreenX = bounds.X;
+            ScreenY = bounds.Y;
+            ScreenWidth = bounds.Width;
+            ScreenHeight = bounds.Height;
+        }
+
+        return true;
     }
 
     public static SeWindowPosition SaveState(Window? window)
