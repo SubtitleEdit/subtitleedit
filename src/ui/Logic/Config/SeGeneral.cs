@@ -88,6 +88,9 @@ public class SeGeneral
     /// <summary>How far the "move selected lines X ms back/forward" shortcuts shift, in
     /// milliseconds (SE 4 had fixed 100 ms variants; #14789 asks for repeatable drift fixes).</summary>
     public int MoveSelectedLinesStepMs { get; set; }
+    /// <summary>"Move selected lines (and following) X ms": when the move would run into the line
+    /// before/after, shorten that line instead of overlapping it, like VisualSubSync (#15098).</summary>
+    public bool MoveLinesShortenNeighbor { get; set; }
     /// <summary>Per-shortcut step for the "move lines, custom milliseconds" shortcuts (two slots
     /// per scope, each used by its back and forward commands). Configured via the gear button in
     /// Options > Shortcuts, like the custom video seek amounts.</summary>
