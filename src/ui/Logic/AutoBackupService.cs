@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -196,13 +198,23 @@ public partial class AutoBackupService : IAutoBackupService
             return;
         }
 
-        var intervalDays = Math.Max(1, Se.Settings.General.SettingsBackupIntervalDays);
+        // 0 = back up on every start.
+        var intervalDays = Math.Max(0, Se.Settings.General.SettingsBackupIntervalDays);
         lock (SettingsBackupLocker)
         {
-            var newest = GetNewestSettingsBackupTime(Se.SettingsBackupFolder);
-            if (newest.HasValue && newest.Value > DateTime.Now.AddDays(-intervalDays))
+            var newestFileName = GetNewestSettingsBackupFile(Se.SettingsBackupFolder);
+            if (newestFileName != null)
             {
-                return;
+                var newest = ParseSettingsBackupTime(newestFileName);
+                if (newest.HasValue && newest.Value > DateTime.Now.AddDays(-intervalDays))
+                {
+                    return;
+                }
+
+                if (IsSameSettingsIgnoringRecentFiles(Se.GetSettingsFilePath(), newestFileName))
+                {
+                    return;
+                }
             }
 
             CopySettingsToBackupFolder();
@@ -253,6 +265,13 @@ public partial class AutoBackupService : IAutoBackupService
     /// </summary>
     internal static DateTime? GetNewestSettingsBackupTime(string folder)
     {
+        var newestFileName = GetNewestSettingsBackupFile(folder);
+        return newestFileName == null ? null : ParseSettingsBackupTime(newestFileName);
+    }
+
+    internal static string? GetNewestSettingsBackupFile(string folder)
+    {
+        string? newestFileName = null;
         DateTime? newest = null;
         foreach (var fileName in GetSettingsBackupFiles(folder))
         {
@@ -260,10 +279,46 @@ public partial class AutoBackupService : IAutoBackupService
             if (time.HasValue && (!newest.HasValue || time.Value > newest.Value))
             {
                 newest = time;
+                newestFileName = fileName;
             }
         }
 
-        return newest;
+        return newestFileName;
+    }
+
+    /// <summary>
+    /// True when the two settings files hold the same settings. The recent files lists change in
+    /// almost every session, so they are left out - otherwise every start would be "changed" and
+    /// the backups would rotate out without holding anything new. A file that cannot be read or
+    /// parsed counts as different, so it is the backup that is taken when in doubt.
+    /// </summary>
+    internal static bool IsSameSettingsIgnoringRecentFiles(string settingsFileName, string backupFileName)
+    {
+        try
+        {
+            var settings = LoadSettingsWithoutRecentFiles(settingsFileName);
+            var backup = LoadSettingsWithoutRecentFiles(backupFileName);
+            return settings != null && backup != null && JsonNode.DeepEquals(settings, backup);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or JsonException)
+        {
+            return false;
+        }
+    }
+
+    private static JsonNode? LoadSettingsWithoutRecentFiles(string fileName)
+    {
+        using var stream = File.OpenRead(fileName);
+        var root = JsonNode.Parse(stream);
+        foreach (var section in new[] { nameof(Se.File), nameof(Se.Video) })
+        {
+            if (root?[section] is JsonObject sectionObject)
+            {
+                sectionObject.Remove(nameof(SeFile.RecentFiles));
+            }
+        }
+
+        return root;
     }
 
     internal static DateTime? ParseSettingsBackupTime(string fileName)

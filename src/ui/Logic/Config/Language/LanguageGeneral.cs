@@ -7,6 +7,12 @@ public class LanguageGeneral
     public string Abort { get; set; }
     public string Actor { get; set; }
     public string Actors { get; set; }
+    public string SetActorDotDotDot { get; set; }
+    public string ActorPickerTitle { get; set; }
+    public string ActorPickerFilterHint { get; set; }
+    public string ActorPickerKeysHint { get; set; }
+    public string ActorPickerNewActorX { get; set; }
+    public string ActorPickerLinesSelectedX { get; set; }
     public string Add { get; set; }
     public string AddDotDotDot { get; set; }
     public string AddToNamesListCaseSensitive { get; set; }
@@ -781,7 +787,6 @@ public class LanguageGeneral
     public string ImageFiles { get; set; }
     public string OpenAiCompatibleSttEndpoint { get; set; }
     public string OpenAiCompatibleSttApiKey { get; set; }
-    public string OpenAiCompatibleSttModel { get; set; }
     public string OpenAiCompatibleSttExtraHeaders { get; set; }
     public string OpenAiCompatibleSttTimeout { get; set; }
     public string OpenAiCompatibleSttLanguage { get; set; }
@@ -819,6 +824,12 @@ public class LanguageGeneral
         Abort = "Abort";
         Actor = "Actor";
         Actors = "Actors";
+        SetActorDotDotDot = "Set actor...";
+        ActorPickerTitle = "Set actor";
+        ActorPickerFilterHint = "Type to filter, or type a new actor name";
+        ActorPickerKeysHint = "Press a number or Enter to set the actor. Alt+Up/Down changes the order, Delete removes the actor.";
+        ActorPickerNewActorX = "New actor \"{0}\"";
+        ActorPickerLinesSelectedX = "Lines selected: {0}";
         Add = "Add";
         AddDotDotDot = "Add...";
         AddToNamesListCaseSensitive = "Add to names list (case sensitive)";
@@ -1593,7 +1604,6 @@ public class LanguageGeneral
         ImageFiles = "Image files";
         OpenAiCompatibleSttEndpoint = "STT Endpoint URL";
         OpenAiCompatibleSttApiKey = "API Key";
-        OpenAiCompatibleSttModel = "Model";
         OpenAiCompatibleSttExtraHeaders = "Extra Headers";
         OpenAiCompatibleSttTimeout = "Timeout (seconds)";
         OpenAiCompatibleSttLanguage = "Language Hint";

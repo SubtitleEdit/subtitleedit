@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 
 namespace UITests.Features.Video.TextToSpeech.Engines;
 
@@ -53,6 +54,34 @@ public class TtsEngineCatalogTests
         // from the waveform menu would be re-enabling it by accident.
         Assert.DoesNotContain(engines, e => e is F5TtsCrispAsr);
         Assert.DoesNotContain(TtsEngineCatalog.CreateVoiceCloningEngines(), e => e is F5TtsCrispAsr);
+    }
+
+    [Fact]
+    public void ZonosIsOfferedButNotAsACloningEngine()
+    {
+        // CrispASR's zonos backend has no speaker encoder: --voice was always ignored (output
+        // with and without it is sample-identical) and v0.8.34 dropped its voice-cloning cap. It
+        // stays in the TTS window with its one default voice, and out of the clone menu, the
+        // Voice Manager and the consent gate - all of which key off SupportsVoiceCloning.
+        var zonos = Assert.Single(TtsEngineCatalog.CreateAll(null!), e => e is ZonosTtsCrispAsr);
+
+        Assert.False(zonos.SupportsVoiceCloning);
+        Assert.False(VoiceCloningConsent.RequiresConsent(zonos));
+        Assert.DoesNotContain(TtsEngineCatalog.CreateVoiceCloningEngines(), e => e is ZonosTtsCrispAsr);
+    }
+
+    [Fact]
+    public async Task ZonosListsItsSingleDefaultVoiceWithoutAnyReferenceFile()
+    {
+        // The combo used to be empty until a reference WAV was imported, and Speak threw without
+        // one. The voice must exist with no file behind it, and must not read as a clone.
+        var voice = Assert.Single(await new ZonosTtsCrispAsr().GetVoices(string.Empty));
+        var zonosVoice = Assert.IsType<ZonosTtsVoice>(voice.EngineVoice);
+
+        Assert.Equal(ZonosTtsCrispAsr.DefaultVoiceName, zonosVoice.Voice);
+        Assert.Empty(zonosVoice.FilePath);
+        Assert.False(VoiceCloningConsent.IsCloneVoice(voice));
+        Assert.False(VoiceFileRename.CanRename(voice));
     }
 
     [Fact]

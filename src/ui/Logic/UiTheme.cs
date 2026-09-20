@@ -77,8 +77,9 @@ public static class UiTheme
     /// <summary>
     /// Folder holding the current theme's images. These are unpacked from Themes.zip into
     /// <see cref="Se.ThemesFolder"/> at start-up - they are not embedded assets, so they cannot
-    /// be reached through an avares:// URI. Falls back to Dark when the active theme ships no
-    /// image folder of its own (Pastel, for instance), and an explicit icon theme wins over both.
+    /// be reached through an avares:// URI. A theme that ships no image folder of its own
+    /// (Pastel, for instance) falls back to Light - or Dark for a dark theme, as the Dark glyphs
+    /// are near-white and vanish on a light background. An explicit icon theme wins over both.
     /// </summary>
     public static string ImageFolder
     {
@@ -87,7 +88,7 @@ public static class UiTheme
             var folder = Path.Combine(Se.ThemesFolder, ThemeName);
             if (!Directory.Exists(folder))
             {
-                folder = Path.Combine(Se.ThemesFolder, ThemeNameDark);
+                folder = Path.Combine(Se.ThemesFolder, IsDarkThemeEnabled() ? ThemeNameDark : ThemeNameLight);
             }
 
             var iconTheme = Se.Settings.Appearance.IconTheme;
@@ -446,6 +447,14 @@ public static class UiTheme
             new Style(x => x.OfType<Avalonia.Controls.Primitives.ScrollBar>())
             {
                 Setters = { new Setter(Avalonia.Controls.Primitives.ScrollBar.AllowAutoHideProperty, allowAutoHide) }
+            },
+            // The TextBox template binds its inner ScrollViewer's AllowAutoHide to the attached
+            // property on the TextBox itself, and that template binding beats the ScrollViewer
+            // style above - so the text box needs the value too, or its scrollbar overlays the
+            // text (#15033).
+            new Style(x => x.Is<TextBox>())
+            {
+                Setters = { new Setter(ScrollViewer.AllowAutoHideProperty, allowAutoHide) }
             },
         };
 
@@ -976,13 +985,46 @@ public static class UiTheme
             return;
         }
 
-        // Soft pastel colors with a lavender background
-        var bgColor = Color.FromRgb(240, 235, 255); // Soft lavender
-        var lightPink = Color.FromRgb(255, 228, 225); // Misty rose
-        var lightBlue = Color.FromRgb(230, 245, 255); // Light azure
-        var lightGreen = Color.FromRgb(240, 255, 240); // Honeydew
-        var lightPurple = Color.FromRgb(245, 240, 255); // Lavender
-        var borderColor = Color.FromRgb(200, 180, 200); // Soft lavender border
+        // One lavender family for the chrome, with mint and sky as the secondary pastels and a
+        // violet accent. Keep bgColor in sync with PastelBackgroundColor.
+        var bgColor = PastelBackgroundColor; // Soft lavender
+        var surface = Color.FromRgb(251, 249, 255); // Lilac-tinted white for text input
+        var lilac = Color.FromRgb(227, 216, 250); // Buttons
+        var lilacHover = Color.FromRgb(214, 199, 247);
+        var lilacPressed = Color.FromRgb(198, 180, 241);
+        var sky = Color.FromRgb(228, 241, 255); // Combo boxes
+        var mint = Color.FromRgb(227, 246, 236); // Numeric / time code spinners
+        var header = Color.FromRgb(232, 222, 252); // Grid header
+        var borderColor = Color.FromRgb(196, 180, 232); // Lilac border
+        var accent = Color.FromRgb(142, 111, 216); // Violet
+
+        // Fluent derives selection, focus rings, check boxes, sliders, toggle buttons and
+        // progress bars from the accent colors - without these they stay Windows blue.
+        _resourceOverrides = new ResourceDictionary
+        {
+            ["SystemAccentColor"] = accent,
+            ["SystemAccentColorLight1"] = Color.FromRgb(164, 138, 226),
+            ["SystemAccentColorLight2"] = Color.FromRgb(189, 169, 236),
+            ["SystemAccentColorLight3"] = Color.FromRgb(214, 200, 245),
+            ["SystemAccentColorDark1"] = Color.FromRgb(122, 92, 196),
+            ["SystemAccentColorDark2"] = Color.FromRgb(102, 74, 174),
+            ["SystemAccentColorDark3"] = Color.FromRgb(82, 58, 150),
+
+            // Hover/pressed are template-level in Fluent, so a Background setter alone would
+            // leave them gray.
+            ["ButtonBackgroundPointerOver"] = new SolidColorBrush(lilacHover),
+            ["ButtonBackgroundPressed"] = new SolidColorBrush(lilacPressed),
+            ["ButtonBorderBrushPointerOver"] = new SolidColorBrush(accent),
+            ["ButtonBorderBrushPressed"] = new SolidColorBrush(accent),
+            ["ToggleButtonBackground"] = new SolidColorBrush(lilac),
+            ["ToggleButtonBackgroundPointerOver"] = new SolidColorBrush(lilacHover),
+            ["ToggleButtonBackgroundPressed"] = new SolidColorBrush(lilacPressed),
+            ["ToggleButtonBorderBrush"] = new SolidColorBrush(borderColor),
+
+            ["ControlCornerRadius"] = new CornerRadius(8),
+            ["OverlayCornerRadius"] = new CornerRadius(10),
+        };
+        Application.Current.Resources.MergedDictionaries.Add(_resourceOverrides);
 
         _themeOverrideStyle = new Styles
         {
@@ -995,88 +1037,104 @@ public static class UiTheme
                 }
             },
 
-            // TextBox with soft colors
             new Style(x => x.OfType<TextBox>())
             {
                 Setters =
                 {
-                    new Setter(TextBox.BackgroundProperty, new SolidColorBrush(lightBlue)),
+                    new Setter(TextBox.BackgroundProperty, new SolidColorBrush(surface)),
                     new Setter(TextBox.BorderBrushProperty, new SolidColorBrush(borderColor)),
                     new Setter(TextBox.BorderThicknessProperty, new Thickness(1))
                 }
             },
 
-            // Button with pastel colors
             new Style(x => x.OfType<Button>())
             {
                 Setters =
                 {
-                    new Setter(Button.BackgroundProperty, new SolidColorBrush(lightPink)),
+                    new Setter(Button.BackgroundProperty, new SolidColorBrush(lilac)),
                     new Setter(Button.BorderBrushProperty, new SolidColorBrush(borderColor))
                 }
             },
 
-            // NumericUpDown
             new Style(x => x.OfType<NumericUpDown>())
             {
                 Setters =
                 {
-                    new Setter(NumericUpDown.BackgroundProperty, new SolidColorBrush(lightGreen))
+                    new Setter(NumericUpDown.BackgroundProperty, new SolidColorBrush(mint)),
+                    new Setter(NumericUpDown.BorderBrushProperty, new SolidColorBrush(borderColor))
                 }
             },
 
-            // ComboBox
             new Style(x => x.OfType<ComboBox>())
             {
                 Setters =
                 {
-                    new Setter(ComboBox.BackgroundProperty, new SolidColorBrush(lightGreen))
+                    new Setter(ComboBox.BackgroundProperty, new SolidColorBrush(sky)),
+                    new Setter(ComboBox.BorderBrushProperty, new SolidColorBrush(borderColor))
                 }
             },
 
+            // Menus and flyouts pop up over the lavender window - plain white looks foreign
+            new Style(x => x.OfType<ContextMenu>())
+            {
+                Setters =
+                {
+                    new Setter(TemplatedControl.BackgroundProperty, new SolidColorBrush(surface)),
+                    new Setter(TemplatedControl.BorderBrushProperty, new SolidColorBrush(borderColor))
+                }
+            },
+            new Style(x => x.OfType<FlyoutPresenter>())
+            {
+                Setters =
+                {
+                    new Setter(TemplatedControl.BackgroundProperty, new SolidColorBrush(surface)),
+                    new Setter(TemplatedControl.BorderBrushProperty, new SolidColorBrush(borderColor))
+                }
+            },
 
             // TableView header
             new Style(x => x.OfType<TableViewColumnHeader>())
             {
                 Setters =
                 {
-                    new Setter(TableViewColumnHeader.BackgroundProperty, new SolidColorBrush(lightPurple))
+                    new Setter(TableViewColumnHeader.BackgroundProperty, new SolidColorBrush(header))
                 }
             },
 
-            // ButtonSpinner (used by TimeCodeUpDown) with soft pink
+            // ButtonSpinner (used by TimeCodeUpDown)
             new Style(x => x.OfType<ButtonSpinner>())
             {
                 Setters =
                 {
-                    new Setter(ButtonSpinner.BackgroundProperty, new SolidColorBrush(lightPink))
+                    new Setter(ButtonSpinner.BackgroundProperty, new SolidColorBrush(mint)),
+                    new Setter(ButtonSpinner.BorderBrushProperty, new SolidColorBrush(borderColor))
                 }
             },
 
-            // SecondsUpDown - soft pink by default (external bindings will override when needed)
+            // SecondsUpDown - mint by default (external bindings will override when needed)
             new Style(x => x.OfType<Nikse.SubtitleEdit.Controls.SecondsUpDown>())
             {
                 Setters =
                 {
-                    new Setter(Nikse.SubtitleEdit.Controls.SecondsUpDown.BackgroundProperty, new SolidColorBrush(lightPink))
+                    new Setter(Nikse.SubtitleEdit.Controls.SecondsUpDown.BackgroundProperty, new SolidColorBrush(mint))
                 }
             },
 
-            // TimeCodeUpDown - soft pink by default
+            // TimeCodeUpDown - mint by default
             new Style(x => x.OfType<Nikse.SubtitleEdit.Controls.TimeCodeUpDown>())
             {
                 Setters =
                 {
-                    new Setter(Nikse.SubtitleEdit.Controls.TimeCodeUpDown.BackgroundProperty, new SolidColorBrush(lightPink))
+                    new Setter(Nikse.SubtitleEdit.Controls.TimeCodeUpDown.BackgroundProperty, new SolidColorBrush(mint))
                 }
             },
 
-            // The source editor with soft blue
+            // The source editor
             new Style(x => x.OfType<SyntaxTextEditor>())
             {
                 Setters =
                 {
-                    new Setter(SyntaxTextEditor.BackgroundProperty, new SolidColorBrush(lightBlue))
+                    new Setter(SyntaxTextEditor.BackgroundProperty, new SolidColorBrush(surface))
                 }
             },
         };

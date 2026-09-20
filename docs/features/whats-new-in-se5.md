@@ -139,7 +139,7 @@ Text to speech now includes more local and cloud engines:
 - **Find voices in video and clone them all** — auto-cast every speaker from the video, or clone the voice of a single line from the video.
 - Chatterbox V3 in 23 languages (plus F16 and Q4_K model variants), and the CosyVoice3 RL talker models.
 - More engines on the **audio.cpp** runtime: **Higgs Audio v3**, **Fish Audio S2 Pro** and **FireRedTTS3**, sharing one install with IndexTTS 2.5.
-- More engines on the CrispASR runtime: **dots.tts**, **Confucius4-TTS**, **Pocket TTS**, **VibeVoice**, **VoxCPM2**, **MOSS-TTS** and **Zonos** (with a language picker).
+- More engines on the CrispASR runtime: **dots.tts**, **Confucius4-TTS**, **Pocket TTS**, **VibeVoice**, **VoxCPM2**, **MOSS-TTS**, **Zonos** (with a language picker) and **Supertonic** (very fast, 31 languages, ten preset voices).
 - **Per-line cloning** - *Clone from video (voice of each line)* on Qwen3 TTS, the audio.cpp engines, VibeVoice, MOSS-TTS, CosyVoice3 and VoxCPM2 - with a one-time consent prompt before the first clone.
 - **Speaker-name detection** moves `NAME:` style speakers from an SDH text into the actor field, sound and music lines can be **left silent**, and **custom Piper voices** (an `.onnx` + `.onnx.json` pair) can be imported.
 

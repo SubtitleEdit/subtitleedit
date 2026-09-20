@@ -73,7 +73,7 @@ public class WaveformPreviewControl : Control
         // ── Subtitle text label inside the paragraph ──────────────────
         var textBrush = new SolidColorBrush(_vm.TextColor);
         var typeface = new Typeface(FontFamily.Default);
-        var ft = new FormattedText("Sample subtitle text", System.Globalization.CultureInfo.CurrentCulture,
+        var ft = new FormattedText(Se.Language.General.SampleText, System.Globalization.CultureInfo.CurrentCulture,
             FlowDirection.LeftToRight, typeface, 11, textBrush);
         using (context.PushClip(new Rect(pLeft + 2, 0, pWidth - 4, height)))
         {

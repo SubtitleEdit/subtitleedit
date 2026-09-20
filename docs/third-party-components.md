@@ -157,7 +157,7 @@ The runtime behind **IndexTTS 2.5**, **Higgs Audio v3**, **Fish Audio S2 Pro** a
 *   **Models:** GGUF weights come straight from Hugging Face (`audio-cpp/audio.cpp-gguf`) and go into `[Data Folder]/audio.cpp/models/<family>-GGUF`: `IndexTTS2.5-GGUF`, `Higgs-Audio-v3-TTS-4B-GGUF`, `Fish-Audio-S2-Pro-GGUF` and `FireRedTTS3-Base-GGUF`. IndexTTS 2.5, Higgs Audio v3 and Fish Audio S2 Pro show a licence window before the first download.
 *   **Voices:** Reference recordings are kept per engine under `[Data Folder]/TextToSpeech/IndexTts25AudioCpp`, `HiggsTtsAudioCpp`, `FishTtsAudioCpp` and `FireRedTts3AudioCpp`.
 
-These are examples, not the full set — many more local engines are downloadable from the Text to speech window (IndexTTS, CosyVoice3, dots.tts, VoxCPM2, MOSS-TTS, Zonos, VibeVoice, Confucius4-TTS, Pocket TTS, and more), following the same layout: CrispASR-based engines share the `[Data Folder]/CrispASR` cache, the audio.cpp engines share `[Data Folder]/audio.cpp`, and the rest live under `[Data Folder]/TextToSpeech/<engine>`.
+These are examples, not the full set — many more local engines are downloadable from the Text to speech window (IndexTTS, CosyVoice3, dots.tts, VoxCPM2, MOSS-TTS, Zonos, VibeVoice, Confucius4-TTS, Pocket TTS, Supertonic, and more), following the same layout: CrispASR-based engines share the `[Data Folder]/CrispASR` cache, the audio.cpp engines share `[Data Folder]/audio.cpp`, and the rest live under `[Data Folder]/TextToSpeech/<engine>`.
 
 Use [Text to Speech](features/text-to-speech.md) for the full engine list and engine-specific options.
 

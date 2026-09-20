@@ -26,6 +26,7 @@ public partial class ForcedAlignerSetupViewModel : ObservableObject
     [ObservableProperty] private bool _isEngineInstalled;
     [ObservableProperty] private bool _isBusy;
     [ObservableProperty] private int _windowSeconds;
+    [ObservableProperty] private bool _endsFromIsolatedSpeech;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -56,6 +57,8 @@ public partial class ForcedAlignerSetupViewModel : ObservableObject
             option.Display = option.BaseDisplay;
             Aligners.Add(option);
         }
+
+        EndsFromIsolatedSpeech = Se.Settings.Tools.AudioToText.ForcedAlignerEndsFromIsolatedSpeech;
 
         var configured = ForcedAlignerOption.FromChoice(Se.Settings.Tools.AudioToText.CrispAsrForcedAligner);
         SelectedAligner = Aligners.FirstOrDefault(a => a.Choice == configured.Choice)
@@ -166,6 +169,14 @@ public partial class ForcedAlignerSetupViewModel : ObservableObject
                 return;
             }
         }
+
+        if (EndsFromIsolatedSpeech &&
+            !await SpeechIsolationModelDownload.EnsureDownloadedAsync(Window, _windowService, _engine, Se.Language.File.Import.ForcedAlignerEndsFromSpeech))
+        {
+            return;
+        }
+
+        Se.Settings.Tools.AudioToText.ForcedAlignerEndsFromIsolatedSpeech = EndsFromIsolatedSpeech;
 
         // Remember the choice so the next alignment - and speech-to-text - starts here.
         Se.Settings.Tools.AudioToText.CrispAsrForcedAligner = SelectedAligner.Choice;

@@ -71,6 +71,8 @@ public class SkiaAudioVisualizer : AudioVisualizer
         {
             context.Custom(drawOperation);
         }
+
+        RaiseRendered();
     }
 
     /// <summary>
@@ -243,7 +245,7 @@ public class SkiaAudioVisualizer : AudioVisualizer
                 continue;
             }
 
-            var prepared = GetPreparedParagraphText(showOriginal ? p.OriginalText : p.Text);
+            var prepared = GetPreparedParagraphText(!ShowParagraphText ? string.Empty : showOriginal ? p.OriginalText : p.Text);
             var item = new SkiaParagraph
             {
                 StartSeconds = start,

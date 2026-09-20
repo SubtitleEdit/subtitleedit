@@ -13,7 +13,7 @@ namespace UITests.Features.Main;
 
 /// <summary>
 /// Layouts 12 and 13 put the edit box directly under the video player instead of under the
-/// subtitle grid (issue #14812). Layout 14 is the old layout 12 (grid and text box only).
+/// subtitle grid (issue #14812). Layout 15 is the old layout 12 (grid and text box only).
 /// </summary>
 public class TextBoxBelowVideoLayoutTests
 {
@@ -64,17 +64,18 @@ public class TextBoxBelowVideoLayoutTests
     }
 
     [AvaloniaFact]
-    public void Layout14_IsTheNoVideoLayout()
+    public void Layout15_IsTheNoVideoLayout()
     {
         var (window, vm) = CreateMainViewModel();
         try
         {
-            Assert.Equal(14, InitLayout.LayoutWithoutVideo);
-            Assert.True(InitLayout.LayoutHasNoVideo(14));
+            Assert.Equal(15, InitLayout.LayoutWithoutVideo);
+            Assert.True(InitLayout.LayoutHasNoVideo(15));
             Assert.False(InitLayout.LayoutHasNoVideo(12));
             Assert.False(InitLayout.LayoutHasNoVideo(13));
+            Assert.False(InitLayout.LayoutHasNoVideo(14));
 
-            Assert.Equal(14, InitLayout.MakeLayout(vm.MainView!, vm, 14));
+            Assert.Equal(15, InitLayout.MakeLayout(vm.MainView!, vm, 15));
             Dispatcher.UIThread.RunJobs();
 
             Assert.Null(vm.AudioVisualizer?.GetLogicalParent());
@@ -88,15 +89,36 @@ public class TextBoxBelowVideoLayoutTests
     }
 
     [Fact]
-    public void MigrateLayoutNumber_MovesOldNoVideoLayoutTo14_Once()
+    public void MigrateLayoutNumber_MovesOldNoVideoLayoutToTheEnd_Once()
     {
+        // From before any migration: 12 was "no video", which is 15 today (via 14).
         var general = new SeGeneral { LayoutNumber = 12 };
         Se.MigrateLayoutNumber(general);
-        Assert.Equal(14, general.LayoutNumber);
+        Assert.Equal(15, general.LayoutNumber);
         Assert.Equal(Se.CurrentLayoutMigrationVersion, general.LayoutMigrationVersion);
 
         // A 12 chosen after the migration is the new text-box-below-video layout and stays.
         general.LayoutNumber = 12;
+        Se.MigrateLayoutNumber(general);
+        Assert.Equal(12, general.LayoutNumber);
+    }
+
+    [Fact]
+    public void MigrateLayoutNumber_MovesNoVideoLayout14To15_Once()
+    {
+        // Version 1 settings: 14 was "no video" until the editor-style layout took the number.
+        var general = new SeGeneral { LayoutNumber = 14, LayoutMigrationVersion = 1 };
+        Se.MigrateLayoutNumber(general);
+        Assert.Equal(15, general.LayoutNumber);
+        Assert.Equal(Se.CurrentLayoutMigrationVersion, general.LayoutMigrationVersion);
+
+        // A 14 chosen after the migration is the editor-style layout and stays.
+        general.LayoutNumber = 14;
+        Se.MigrateLayoutNumber(general);
+        Assert.Equal(14, general.LayoutNumber);
+
+        // The text-box-below-video layouts of version 1 are not the old "no video" 12.
+        general = new SeGeneral { LayoutNumber = 12, LayoutMigrationVersion = 1 };
         Se.MigrateLayoutNumber(general);
         Assert.Equal(12, general.LayoutNumber);
     }

@@ -21,6 +21,12 @@ public class LanguageWaveform
     public string ToggleShotChange { get; set; }
     public string ResetWaveformZoomAndSpeed { get; set; }
     public string ShowOriginalSubtitle { get; set; }
+    public string TimelineGroupTracksBy { get; set; }
+    public string TimelineShowThumbnails { get; set; }
+    public string ShowSpeechOnly { get; set; }
+    public string IsolatingSpeechForWaveformX { get; set; }
+    public string IsolatingSpeechForWaveformFailed { get; set; }
+    public string SpeechOnlyWaveformReady { get; set; }
     public object ShowOnlyWaveform { get; set; }
     public object ShowOnlySpectrogram { get; set; }
     public object ShowWaveformAndSpectrogram { get; set; }
@@ -58,6 +64,12 @@ public class LanguageWaveform
         ToggleShotChange = "Toggle shot change";
         ResetWaveformZoomAndSpeed = "Reset waveform zoom & speed";
         ShowOriginalSubtitle = "Show original subtitle";
+        TimelineGroupTracksBy = "Group subtitle tracks by";
+        TimelineShowThumbnails = "Show video thumbnails";
+        ShowSpeechOnly = "Show speech only (slow to generate)";
+        IsolatingSpeechForWaveformX = "Isolating speech for the waveform... {0}";
+        IsolatingSpeechForWaveformFailed = "Could not isolate the speech for the waveform - see the tools log";
+        SpeechOnlyWaveformReady = "The waveform now shows speech only";
         ShowOnlyWaveform = "Show only waveform";
         ShowOnlySpectrogram = "Show only spectrogram";
         ShowWaveformAndSpectrogram = "Show waveform and spectrogram";

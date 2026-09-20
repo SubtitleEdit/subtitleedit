@@ -419,6 +419,7 @@ public class SettingsPage : UserControl
             MakeNumericSettingInt(Se.Language.Options.Settings.NewEmptyDefaultMs, nameof(_vm.NewEmptyDefaultMs)),
             MakeNumericSettingInt(Se.Language.Options.Settings.TimeCodeUpDownStepMs, nameof(_vm.TimeCodeUpDownStepMs), 1, 5000),
             MakeNumericSettingInt(Se.Language.Options.Settings.MoveSelectedLinesStepMs, nameof(_vm.MoveSelectedLinesStepMs), 1, 60000),
+            MakeCheckboxSetting(Se.Language.Options.Settings.MoveLinesShortenNeighbor, nameof(_vm.MoveLinesShortenNeighbor)),
             MakeCheckboxSetting(Se.Language.Options.Settings.PromptBeforeDelete, nameof(_vm.PromptBeforeDelete)),
             MakeCheckboxSetting(Se.Language.Options.Settings.UseFrameMode, nameof(_vm.UseFrameMode)),
             MakeCheckboxSetting(Se.Language.Options.Settings.TextBoxLimitNewLines, nameof(_vm.TextBoxLimitNewLines)),
@@ -524,7 +525,7 @@ public class SettingsPage : UserControl
             MakeNumericSettingInt(Se.Language.Options.Settings.AutoBackupDeleteAfterDays, nameof(_vm.AutoBackupDeleteAfterDays), 1),
             MakeSeparator(),
             MakeCheckboxSetting(Se.Language.Options.Settings.SettingsBackupOn, nameof(_vm.SettingsBackupOn)),
-            MakeNumericSettingInt(Se.Language.Options.Settings.SettingsBackupIntervalDays, nameof(_vm.SettingsBackupIntervalDays), 1),
+            MakeNumericSettingInt(Se.Language.Options.Settings.SettingsBackupIntervalDays, nameof(_vm.SettingsBackupIntervalDays), 0),
             MakeNumericSettingInt(Se.Language.Options.Settings.SettingsBackupMaxCount, nameof(_vm.SettingsBackupMaxCount), 1),
         ]));
 
@@ -604,6 +605,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.FullscreenHideControls, nameof(_vm.FullscreenHideControls)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoOpenVideoFile, nameof(_vm.AutoOpenVideoFile)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowSecondarySubtitleDialog, nameof(_vm.ShowSecondarySubtitleDialog)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.RememberSecondarySubtitleFile, nameof(_vm.RememberSecondarySubtitleFile)),
             new SettingsItem(!_vm.IsLibMpvDownloadVisible, Se.Language.Options.Settings.DownloadMpv, () => new StackPanel
             {
                 Children =
@@ -908,15 +910,18 @@ public class SettingsPage : UserControl
                 }
             }),
             MakeCheckboxSetting(Se.Language.Options.Settings.SpellCheckEnglishTreatInApostropheAsIng, nameof(_vm.SpellCheckEnglishTreatInApostropheAsIng)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.SpellCheckRememberUseAlwaysList, nameof(_vm.SpellCheckRememberUseAlwaysList)),
             MakeCheckboxSetting(Se.Language.Options.Settings.OcrUseWordSplitList, nameof(_vm.OcrUseWordSplitList)),
             MakeCheckboxSetting(Se.Language.Options.Settings.OcrGuessUnknownWords, nameof(_vm.OcrGuessUnknownWords)),
             MakeCheckboxSetting(Se.Language.Options.Settings.SpeechToTextSelectedLinesPromptFirstTimeOnly, nameof(_vm.SpeechToTextSelectedLinesPromptFistTimeOnly)),
             MakeCheckboxSetting(Se.Language.Options.Settings.MultipleReplaceShowDotDotDotButtons, nameof(_vm.MultipleReplaceShowDotDotDotButtons)),
             MakeCheckboxSetting(Se.Language.Options.Settings.GridFocusTextboxAfterInsertNew, nameof(_vm.GridFocusTextboxAfterInsertNew)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.UndoRedoGoToChangedLine, nameof(_vm.UndoRedoGoToChangedLine)),
             MakeCheckboxSetting(Se.Language.Options.Settings.TextToSpeechPromptMergeContinuationLines, nameof(_vm.TextToSpeechPromptMergeContinuationLines)),
             MakeCheckboxSetting(Se.Language.Options.Settings.TextToSpeechPromptSkipNoiseLines, nameof(_vm.TextToSpeechPromptSkipNoiseLines)),
             MakeCheckboxSetting(Se.Language.Options.Settings.TextToSpeechPromptDetectSpeakers, nameof(_vm.TextToSpeechPromptDetectSpeakers)),
             MakeCheckboxSetting(Se.Language.Options.Settings.FixCommonErrorsSkipStep1, nameof(_vm.FixCommonErrorsSkipStep1)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.FixShortDisplayTimesAllowMoveStartTime, nameof(_vm.FixShortDisplayTimesAllowMoveStartTime)),
             new SettingsItem(Se.Language.Options.Settings.MusicSymbol,
                 () => UiUtil.MakeTextBox(120, _vm, nameof(_vm.MusicSymbol))),
             new SettingsItem(Se.Language.Options.Settings.MusicSymbolsToReplace,

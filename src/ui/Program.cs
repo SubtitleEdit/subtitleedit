@@ -407,11 +407,15 @@ namespace Nikse.SubtitleEdit
             // Cancel any tooltip that tries to open on a control whose top-level
             // Window isn't active. Also covers our own child windows: when a
             // dialog is open the inactive main window stops showing hints.
+            // Exception: with no modal dialog open, another SE window being the
+            // active one (e.g. the undocked waveform has focus while hovering a
+            // main window button) still means SE is foreground, so hints stay (#15046).
             ToolTip.IsOpenProperty.Changed.AddClassHandler<Control>((control, e) =>
             {
                 if (e.NewValue is true
                     && TopLevel.GetTopLevel(control) is Window window
-                    && !window.IsActive)
+                    && !window.IsActive
+                    && (WindowService.IsModalDialogOpen || !lifetime.Windows.Any(w => w.IsActive)))
                 {
                     ToolTip.SetIsOpen(control, false);
                 }

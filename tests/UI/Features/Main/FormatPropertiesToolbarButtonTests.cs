@@ -55,6 +55,17 @@ public class FormatPropertiesToolbarButtonTests
             // A format already covered by File > properties (DCinema interop) shows it too.
             SelectFormat(vm, typeof(DCinemaInterop));
             Assert.True(button.IsVisible);
+
+            // The startup refresh re-runs the handler with no added/removed items. It must go by
+            // the selected format - it used to hide the button until the format changed, so a
+            // default format with properties (WebVTT, EBU...) started without it (issue #15105).
+            vm.ComboBoxSubtitleFormatChanged(null, new SelectionChangedEventArgs(
+                Avalonia.Controls.Primitives.SelectingItemsControl.SelectionChangedEvent,
+                System.Array.Empty<object>(),
+                System.Array.Empty<object>()));
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(button.IsVisible);
+            Assert.Contains(new DCinemaInterop().Name, vm.FilePropertiesText);
         }
         finally
         {

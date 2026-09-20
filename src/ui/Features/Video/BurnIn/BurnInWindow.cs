@@ -334,7 +334,7 @@ public class BurnInWindow : Window
     protected override void OnClosing(WindowClosingEventArgs e)
     {
         base.OnClosing(e);
-        _vm.CleanupPreview();
+        _vm.OnClosing(); // stops a running ffmpeg too - the title-bar X does not go through Cancel
     }
 
     /// <summary>
@@ -998,10 +998,16 @@ public class BurnInWindow : Window
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedJobItem)) { Source = vm });
         vm.BatchGrid = dataGrid;
 
-        var buttonAdd = UiUtil.MakeButton(Se.Language.General.AddDotDotDot, vm.AddCommand);
-        var buttonRemove = UiUtil.MakeButton(Se.Language.General.Remove, vm.RemoveCommand);
-        var buttonClear = UiUtil.MakeButton(Se.Language.General.Clear, vm.ClearCommand);
-        var buttonPickSubtitle = UiUtil.MakeButton(Se.Language.General.PickSubtitleFile, vm.PickSubtitleCommand);
+        // Not while a batch runs: the run indexes into the list, so Clear made it throw on the
+        // ffmpeg reader thread and Remove put Done/Error on the wrong row.
+        var buttonAdd = UiUtil.MakeButton(Se.Language.General.AddDotDotDot, vm.AddCommand)
+            .WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
+        var buttonRemove = UiUtil.MakeButton(Se.Language.General.Remove, vm.RemoveCommand)
+            .WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
+        var buttonClear = UiUtil.MakeButton(Se.Language.General.Clear, vm.ClearCommand)
+            .WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
+        var buttonPickSubtitle = UiUtil.MakeButton(Se.Language.General.PickSubtitleFile, vm.PickSubtitleCommand)
+            .WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
 
         var panelFileControls = new StackPanel
         {

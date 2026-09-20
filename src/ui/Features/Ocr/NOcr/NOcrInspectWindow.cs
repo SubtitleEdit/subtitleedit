@@ -96,14 +96,22 @@ public class NOcrInspectWindow : Window
         {
             [!Image.SourceProperty] = new Binding(nameof(vm.SentenceBitmap)),
             Stretch = Stretch.Uniform,
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
             MaxWidth = 300,
             MaxHeight = 200,
         };
 
+        // subtitle bitmaps are light or dark text on transparent pixels, so without a backdrop they
+        // vanish into the window - white text on the light theme (#15111)
+        var imageBackdrop = new Border
+        {
+            Background = ImagePreviewBackground.CreateBrush(),
+            Child = image,
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+        };
+
         grid.Add(vm.PanelLines, 0);
-        grid.Add(image, 0, 1, 1);
+        grid.Add(imageBackdrop, 0, 1, 1);
 
         return UiUtil.MakeBorderForControl(grid).WithMarginBottom(10);
     }
@@ -146,7 +154,7 @@ public class NOcrInspectWindow : Window
 
         var panelCurrentImage = new StackPanel
         {
-            Background = new SolidColorBrush(Colors.LightGray),
+            Background = ImagePreviewBackground.CreateBrush(),
             Children = { image },
             HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
             Margin = new Thickness(0, 0, 0, 5),

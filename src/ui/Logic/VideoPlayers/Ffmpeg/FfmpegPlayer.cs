@@ -28,6 +28,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.Ffmpeg;
 /// Pictures are software decoded and handed to an Avalonia control through
 /// <see cref="CopyCurrentFrame"/>; see <see cref="FfmpegSoftwareControl"/>.
 /// </para>
+/// <para>
+/// Owning the pipeline is what makes frame work exact here. A background scan reads the time
+/// stamp of every picture into a <see cref="FfmpegFrameIndex"/>, so seeks land on real frames and
+/// <see cref="StepOneFrameForward"/> / <see cref="StepOneFrameBack"/> move by real frames, also in
+/// variable frame rate files. Steps do not seek: forward shows the next decoded picture, back
+/// takes one from the <see cref="VideoFrameHistory"/>. Seeks that arrive in a burst (a drag) are
+/// served at the nearest key frame and land exactly once the burst settles.
+/// </para>
 /// </summary>
 public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
 {
@@ -120,6 +128,18 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
             }
 
             return true;
+        }
+    }
+
+    /// <summary>Presentation time of the picture on screen, NaN when there is none.</summary>
+    private double CurrentFramePts
+    {
+        get
+        {
+            lock (_currentFrameLock)
+            {
+                return _currentFrame?.Pts ?? double.NaN;
+            }
         }
     }
 
@@ -341,6 +361,40 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
         }
     }
 
+    /// <summary>
+    /// The real presentation time of every frame in the file, or null while the background scan
+    /// is still running (or when the file has no usable time stamps). See <see cref="FfmpegFrameIndex"/>.
+    /// </summary>
+    public FfmpegFrameIndex? FrameIndex => _session?.FrameIndex;
+
+    /// <summary>Raised (on a worker thread) when <see cref="FrameIndex"/> becomes available for the loaded file.</summary>
+    public event Action? FrameIndexReady;
+
+    /// <summary>
+    /// Shows the next picture of the stream and stays paused. While the decoder is ahead (it
+    /// normally is) this is a buffer swap, so holding the key down steps at decode speed.
+    /// </summary>
+    public void StepOneFrameForward()
+    {
+        _session?.Step(forward: true);
+    }
+
+    /// <summary>
+    /// Shows the previous picture of the stream and stays paused. The last few pictures are kept
+    /// (see <see cref="VideoFrameHistory"/>), so stepping back is normally instant as well; when
+    /// the history runs out one exact seek refills it.
+    /// </summary>
+    public void StepOneFrameBack()
+    {
+        _session?.Step(forward: false);
+    }
+
+    internal int SeeksPerformed => _session?.SeeksPerformed ?? 0;
+    internal int FastSeeksPerformed => _session?.FastSeeksPerformed ?? 0;
+
+    /// <summary>Test hook: false keeps the background scan from running, as while it is still under way on a big file.</summary>
+    internal bool UseFrameIndex { get; set; } = true;
+
     public bool SupportsPlaybackRestartEvents => true;
 
     public bool HasPlaybackRestartedSince(long stopwatchTimestamp)
@@ -359,7 +413,8 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
         CloseFile();
     }
 
-    private void Present(VideoFrame frame, VideoFrameQueue pool)
+    /// <summary>Puts <paramref name="frame"/> on screen and hands back the picture it replaced; the caller owns that one now.</summary>
+    private VideoFrame? Present(VideoFrame frame)
     {
         VideoFrame? previous;
         lock (_currentFrameLock)
@@ -368,9 +423,9 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
             _currentFrame = frame;
         }
 
-        pool.Return(previous);
         Interlocked.Increment(ref _frameVersion);
         FrameReady?.Invoke();
+        return previous;
     }
 
     private static IAudioSink CreateAudioSink()
@@ -385,7 +440,14 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
             return new AudioQueueAudioSink();
         }
 
-        // No sink for Linux yet - playback stays in sync, just silent.
+        // Linux: PulseAudio, which on current distributions is PipeWire's pipewire-pulse. When
+        // no server answers, Open throws and the session carries on with the silent sink.
+        if (OperatingSystem.IsLinux() && PulseAudioSink.IsLibraryAvailable())
+        {
+            return new PulseAudioSink();
+        }
+
+        // No sound library - playback stays in sync, just silent.
         return new SilentAudioSink();
     }
 
@@ -453,6 +515,58 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
         private double _requestedTarget = -1;
         private bool _seekPending;
         private int _currentSerial; // serial the pipeline currently runs under
+        private bool _requestedFast; // the pending seek may land on a key frame (scrub burst)
+        private bool _previousSeekIssuedInFlight; // see ScrubSeekPolicy.JoinsBurst
+        private long _lastSeekRequestTimestamp;
+        private int _owesExactSerial; // a fast seek that still owes an exact landing, 0 if none
+        private bool _steppedSinceSeek; // frame steps moved the picture away from where the audio is queued
+        private bool _resumeAudioOnSeek; // Play came with a seek: start the device after the stale audio is dropped
+        private readonly Lock _audioStateLock = new(); // Pause against the deferred device start in PerformSeek
+        private SeekPlan _videoPlan; // how the video thread lands _currentSerial
+        private int _seeksPerformed;
+        private int _fastSeeksPerformed;
+
+        // Frame stepping. Steps are queued here and carried out by the presenter thread, which
+        // owns the picture hand-over; positive = forward.
+        private int _pendingSteps;
+        private long _stepRequestedTimestamp;
+        private readonly VideoFrameHistory _history;
+        private readonly Stack<VideoFrame> _future = new(); // pictures stepped back from, nearest on top (presenter thread only)
+        private readonly int _historyCapacity;
+
+        // Frame index, filled in by a background scan of the file.
+        private volatile FfmpegFrameIndex? _frameIndex;
+        private Thread? _indexThread;
+        private readonly CancellationTokenSource _indexCancel = new();
+
+        /// <summary>A key frame this many pictures (or fewer) before the target is decoded through even mid-burst - cheaper than a second seek.</summary>
+        private const int CheapExactFrames = 12;
+
+        private const int MaxPendingSteps = 3;
+        private const double StepStarvedSeconds = 0.3;
+
+        /// <summary>How the video thread treats the pictures of one seek serial.</summary>
+        private readonly struct SeekPlan
+        {
+            public SeekPlan(int serial, double landing, double tolerance, double historyFrom)
+            {
+                Serial = serial;
+                Landing = landing;
+                Tolerance = tolerance;
+                HistoryFrom = historyFrom;
+            }
+
+            public int Serial { get; }
+
+            /// <summary>Pictures before this time (less <see cref="Tolerance"/>) are skipped; negative shows the first picture decoded.</summary>
+            public double Landing { get; }
+
+            /// <summary>NaN when no frame index was there to say: half an average frame then.</summary>
+            public double Tolerance { get; }
+
+            /// <summary>Skipped pictures from this time on are kept for stepping back; NaN as for <see cref="Tolerance"/>.</summary>
+            public double HistoryFrom { get; }
+        }
 
         // Clock.
         private readonly Stopwatch _wallClock = new();
@@ -471,6 +585,10 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
 
         private volatile float _gain = 1f;
         private double _speed = 1.0;
+
+        public FfmpegFrameIndex? FrameIndex => _frameIndex;
+        public int SeeksPerformed => Volatile.Read(ref _seeksPerformed);
+        public int FastSeeksPerformed => Volatile.Read(ref _fastSeeksPerformed);
 
         public double Duration { get; }
         public int VideoWidth { get; }
@@ -546,6 +664,7 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                 }
             }
 
+            _history = new VideoFrameHistory(_videoFrames);
             _hasVideo = _videoStreamIndex >= 0;
             _hasAudio = _audioStreamIndex >= 0;
             if (!_hasVideo && !_hasAudio)
@@ -562,6 +681,8 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                 var sar = parameters->sample_aspect_ratio;
                 var sarValue = sar.num > 0 && sar.den > 0 ? ffmpeg.av_q2d(sar) : 1.0;
                 DisplayAspectRatio = VideoHeight > 0 ? VideoWidth * sarValue / VideoHeight : 0;
+                var (outputWidth, outputHeight) = OutputSize(VideoWidth, VideoHeight);
+                _historyCapacity = VideoFrameHistory.CapacityFor(VideoFrame.StrideFor(outputWidth), outputHeight);
             }
 
             var duration = format->duration == ffmpeg.AV_NOPTS_VALUE ? double.NaN : format->duration / (double)ffmpeg.AV_TIME_BASE;
@@ -618,10 +739,14 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                 }
 
                 _speed = value;
+                if (_demuxThread == null)
+                {
+                    return; // not started yet: nothing is queued under the old speed
+                }
 
                 // The queued audio was resampled for the old speed and the clocks were anchored
                 // under it; a seek to where we are re-anchors everything at the new speed.
-                Seek(Position);
+                RequestSeek(Position, userSeek: false);
             }
         }
 
@@ -643,6 +768,33 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                 _audioThread = new Thread(AudioLoop) { IsBackground = true, Name = "ffmpeg audio" };
                 _audioThread.Start();
             }
+
+            // The scan reads the whole file once; that is fine for a file on disk and the wrong
+            // thing to do to a stream.
+            if (_hasVideo && _owner.UseFrameIndex && !_fileName.Contains("://", StringComparison.Ordinal))
+            {
+                _indexThread = new Thread(IndexLoop) { IsBackground = true, Name = "ffmpeg frame index", Priority = ThreadPriority.BelowNormal };
+                _indexThread.Start();
+            }
+        }
+
+        private void IndexLoop()
+        {
+            try
+            {
+                var index = FfmpegFrameIndexer.Build(NativeMediaPath.ForMpv(_fileName), _videoStreamIndex, _startTimeSeconds, _indexCancel.Token);
+                if (index == null || index.Count == 0 || _closing)
+                {
+                    return;
+                }
+
+                _frameIndex = index;
+                _owner.FrameIndexReady?.Invoke();
+            }
+            catch (Exception exception)
+            {
+                Se.LogError(exception, "ffmpeg player frame index thread");
+            }
         }
 
         public void Play()
@@ -652,16 +804,34 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                 return;
             }
 
-            if (_endReached || (Duration > 0 && Position >= Duration - 0.01))
+            Interlocked.Exchange(ref _pendingSteps, 0);
+            bool stepped;
+            lock (_seekLock)
             {
-                Seek(0);
+                stepped = _steppedSinceSeek;
             }
 
+            var fromStart = _endReached || (Duration > 0 && Position >= Duration - 0.01);
             _endReached = false;
-            _playing = true;
+            _playing = true; // before any seek below, so the demux thread sees it when it starts the device
             _wallClockBase = _pausedPosition;
             _wallClock.Restart();
-            _audioSink.Resume();
+            if (fromStart)
+            {
+                RequestSeek(0, userSeek: false, resumeAudio: true);
+            }
+            else if (stepped)
+            {
+                // Frame steps moved the picture without touching the audio, which is still
+                // queued from where the last seek landed; start both from the picture on screen.
+                // The device is started by PerformSeek, once that stale audio is gone.
+                RequestSeek(_pausedPosition, userSeek: false, resumeAudio: true);
+            }
+            else
+            {
+                _audioSink.Resume();
+            }
+
             _presentWake.Set();
         }
 
@@ -673,9 +843,13 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
             }
 
             _pausedPosition = Clock();
-            _playing = false;
             _wallClock.Stop();
-            _audioSink.Pause();
+            lock (_audioStateLock)
+            {
+                _playing = false;
+                _audioSink.Pause();
+            }
+
             _presentWake.Set();
         }
 
@@ -704,16 +878,70 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
 
         public void Seek(double seconds)
         {
+            Interlocked.Exchange(ref _pendingSteps, 0); // a seek supersedes steps still waiting
+            RequestSeek(seconds, userSeek: true);
+        }
+
+        /// <summary>
+        /// Queues a seek for the demux thread. Seeks from outside (<paramref name="userSeek"/>)
+        /// that arrive in a burst - a slider drag, a wheel spin - are served at a key frame and
+        /// owe an exact landing once the burst settles, exactly the two-tier scheme the mpv player
+        /// uses (see <see cref="ScrubSeekPolicy"/>); the player's own seeks are always exact.
+        /// </summary>
+        private void RequestSeek(double seconds, bool userSeek, bool resumeAudio = false)
+        {
             lock (_seekLock)
             {
+                var now = Stopwatch.GetTimestamp();
+                var inFlight = _requestedSerial > 0 &&
+                               (_seekPending || _restartSerial < _requestedSerial) &&
+                               Stopwatch.GetElapsedTime(_lastSeekRequestTimestamp, now).TotalSeconds < ScrubSeekPolicy.MaxSeekInFlightSeconds;
+                var fast = userSeek && _hasVideo && ScrubSeekPolicy.JoinsBurst(inFlight, _previousSeekIssuedInFlight);
+                _previousSeekIssuedInFlight = userSeek && inFlight;
+                _lastSeekRequestTimestamp = now;
+
                 _requestedSerial++;
                 _requestedTarget = seconds;
+                _requestedFast = fast;
+                _owesExactSerial = fast ? _requestedSerial : 0;
                 _seekPending = true;
                 _pausedPosition = seconds;
+                _steppedSinceSeek = false;
+                _resumeAudioOnSeek |= resumeAudio; // sticky: a newer seek must not lose the Play that is waiting on it
             }
 
             _endReached = false;
             _demuxWake.Set();
+        }
+
+        /// <summary>Queues one frame step; the presenter thread carries it out (see <see cref="HandleStep"/>).</summary>
+        public void Step(bool forward)
+        {
+            if (!_hasVideo)
+            {
+                return;
+            }
+
+            Pause();
+            var pending = Volatile.Read(ref _pendingSteps);
+            if ((forward && pending < 0) || (!forward && pending > 0))
+            {
+                Interlocked.Exchange(ref _pendingSteps, 0); // changed direction: forget the other way
+                pending = 0;
+            }
+
+            if (Math.Abs(pending) >= MaxPendingSteps)
+            {
+                return; // key repeat outruns the decoder - do not queue up a backlog
+            }
+
+            if (pending == 0)
+            {
+                Interlocked.Exchange(ref _stepRequestedTimestamp, Stopwatch.GetTimestamp());
+            }
+
+            Interlocked.Add(ref _pendingSteps, forward ? 1 : -1);
+            _presentWake.Set();
         }
 
         public bool HasPlaybackRestartedSince(long stopwatchTimestamp)
@@ -739,7 +967,7 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
             var current = _audioStreamIndexes.IndexOf(_audioStreamIndex);
             var next = _audioStreamIndexes[(current + 1) % _audioStreamIndexes.Count];
             _audioStreamIndex = next;
-            Seek(Position); // flushes the queues; the audio thread reopens on the first packet of the new stream
+            RequestSeek(Position, userSeek: false); // flushes the queues; the audio thread reopens on the first packet of the new stream
 
             var stream = _format->streams[next];
             return new AudioTrackInfo
@@ -790,9 +1018,9 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
             {
                 while (!_closing)
                 {
-                    if (TryTakeSeek(out var target, out var serial))
+                    if (TryTakeSeek(out var target, out var serial, out var fast))
                     {
-                        PerformSeek(target, serial);
+                        PerformSeek(target, serial, fast);
                         eof = false;
                         continue;
                     }
@@ -849,7 +1077,7 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
             }
         }
 
-        private bool TryTakeSeek(out double target, out int serial)
+        private bool TryTakeSeek(out double target, out int serial, out bool fast)
         {
             lock (_seekLock)
             {
@@ -857,27 +1085,88 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                 {
                     target = 0;
                     serial = 0;
+                    fast = false;
                     return false;
                 }
 
                 _seekPending = false;
                 target = _requestedTarget;
                 serial = _requestedSerial;
+                fast = _requestedFast;
                 return true;
             }
         }
 
-        private void PerformSeek(double target, int serial)
+        private void PerformSeek(double target, int serial, bool fast)
         {
+            // Without the frame index: ask for the target time and let libavformat pick the key
+            // frame before it. With it, the landing frame and its key frame are known, so the
+            // demuxer is sent to exactly that key frame, in the stream's own time base.
+            var seekStream = -1;
             var timestamp = (long)((target + _startTimeSeconds) * ffmpeg.AV_TIME_BASE);
-            var result = ffmpeg.av_seek_frame(_format, -1, timestamp, ffmpeg.AVSEEK_FLAG_BACKWARD);
+            var landing = target;
+            var tolerance = double.NaN;
+            var historyFrom = double.NaN;
+            var audioTarget = target;
+
+            var index = _hasVideo ? _frameIndex : null;
+            var nearest = index?.NearestIndex(target) ?? -1;
+            if (index != null && nearest >= 0)
+            {
+                var keyFrame = index.KeyFrameAtOrBefore(nearest);
+                if (fast && keyFrame >= 0 && nearest - keyFrame <= CheapExactFrames)
+                {
+                    fast = false; // the target is a few pictures past its key frame: land on it right away
+                }
+
+                if (fast)
+                {
+                    keyFrame = index.NearestKeyFrame(target);
+                }
+
+                if (keyFrame >= 0)
+                {
+                    seekStream = _videoStreamIndex;
+                    timestamp = index.TicksAt(keyFrame);
+                    if (fast)
+                    {
+                        audioTarget = index.SecondsAt(keyFrame);
+                    }
+                }
+
+                landing = index.SecondsAt(nearest);
+                tolerance = index.MatchTolerance;
+                historyFrom = index.SecondsAt(Math.Max(0, nearest - _historyCapacity)) - tolerance;
+            }
+
+            if (fast)
+            {
+                landing = -1; // show the key frame itself; the exact landing follows when the burst settles
+            }
+
+            var result = ffmpeg.av_seek_frame(_format, seekStream, timestamp, ffmpeg.AVSEEK_FLAG_BACKWARD);
             if (result < 0)
             {
                 System.Diagnostics.Debug.WriteLine($"ffmpeg seek failed: {FfmpegLibraries.ErrorText(result)}");
             }
 
+            Interlocked.Increment(ref _seeksPerformed);
+            if (fast)
+            {
+                Interlocked.Increment(ref _fastSeeksPerformed);
+            }
+
+            bool resumeAudio;
             lock (_seekLock)
             {
+                if (!fast && _owesExactSerial == serial)
+                {
+                    _owesExactSerial = 0;
+                }
+
+                resumeAudio = _resumeAudioOnSeek;
+                _resumeAudioOnSeek = false;
+                _videoPlan = new SeekPlan(serial, landing, tolerance, historyFrom);
                 _currentSerial = serial;
                 _audioAnchorPts = double.NaN;
                 _audioAnchorSerial = -1;
@@ -894,9 +1183,20 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
             }
 
             _videoPackets.Flush(serial, target);
-            _audioPackets.Flush(serial, target);
+            _audioPackets.Flush(serial, audioTarget);
             _videoFrames.Flush();
             _audioSink.Reset();
+            if (resumeAudio)
+            {
+                lock (_audioStateLock)
+                {
+                    if (_playing)
+                    {
+                        _audioSink.Resume();
+                    }
+                }
+            }
+
             _presentWake.Set();
         }
 
@@ -907,12 +1207,8 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
             AVCodecContext* codec = null;
             AVFrame* frame = null;
             AVFrame* transferFrame = null; // hardware pictures are copied into this one
-            SwsContext* sws = null;
-            var swsSourceWidth = 0;
-            var swsSourceHeight = 0;
-            var swsSourceFormat = AVPixelFormat.AV_PIX_FMT_NONE;
-            var outputWidth = 0;
-            var outputHeight = 0;
+            AVFrame* heldFrame = null; // the newest picture skipped on the way to a seek target, unconverted
+            var converter = new BgraConverter();
 
             try
             {
@@ -923,6 +1219,7 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                 _owner._decoderName = hardware ? HardwareDeviceName(codec) : string.Empty;
                 frame = ffmpeg.av_frame_alloc();
                 transferFrame = ffmpeg.av_frame_alloc();
+                heldFrame = ffmpeg.av_frame_alloc();
                 var timeBase = stream->time_base;
                 var frameDuration = stream->avg_frame_rate.num > 0 && stream->avg_frame_rate.den > 0
                     ? 1.0 / ffmpeg.av_q2d(stream->avg_frame_rate)
@@ -930,8 +1227,12 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
 
                 var serial = -1;
                 var dropUntil = -1.0;
+                var keepFrom = double.MaxValue; // skipped pictures from here on go to the step-back history
                 var presentedForSerial = false;
-                VideoFrame? lastDropped = null; // kept so a target past the last picture still shows something
+                var heldPts = 0.0;
+                var lastIndexPosition = -1;
+                var indexHits = 0;
+                var indexMisses = 0;
 
                 while (!_closing)
                 {
@@ -944,10 +1245,30 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                     {
                         ffmpeg.avcodec_flush_buffers(codec);
                         serial = entry.Serial;
-                        dropUntil = entry.SeekTarget;
+                        SeekPlan plan;
+                        lock (_seekLock)
+                        {
+                            plan = _videoPlan;
+                        }
+
+                        if (plan.Serial == serial && plan.Landing >= 0)
+                        {
+                            var tolerance = double.IsNaN(plan.Tolerance) ? frameDuration * 0.5 : plan.Tolerance;
+                            dropUntil = plan.Landing - tolerance;
+                            keepFrom = double.IsNaN(plan.HistoryFrom)
+                                ? plan.Landing - (_historyCapacity + 0.5) * frameDuration
+                                : plan.HistoryFrom;
+                        }
+                        else
+                        {
+                            dropUntil = -1; // initial serial, or a fast seek: show the first picture
+                            keepFrom = double.MaxValue;
+                        }
+
                         presentedForSerial = false;
-                        _videoFrames.Return(lastDropped);
-                        lastDropped = null;
+                        ffmpeg.av_frame_unref(heldFrame);
+                        _history.Reset(serial);
+                        lastIndexPosition = -1;
                     }
 
                     var packet = entry.Packet;
@@ -979,86 +1300,55 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                             break;
                         }
 
-                        var picture = frame;
-                        if (frame->hw_frames_ctx != null)
-                        {
-                            // The picture lives in GPU memory (IOSurface, D3D11 texture, DXVA2
-                            // surface); pull it into system memory (NV12 typically) so swscale can
-                            // convert it like a software picture.
-                            receiveResult = ffmpeg.av_hwframe_transfer_data(transferFrame, frame, 0);
-                            if (receiveResult < 0)
-                            {
-                                ffmpeg.av_frame_unref(frame);
-                                hardwareFailed = true;
-                                break;
-                            }
-
-                            transferFrame->pts = frame->pts;
-                            transferFrame->best_effort_timestamp = frame->best_effort_timestamp;
-                            picture = transferFrame;
-                        }
-
-                        var pts = TimestampToSeconds(picture->best_effort_timestamp, timeBase);
+                        var pts = TimestampToSeconds(frame->best_effort_timestamp, timeBase);
                         if (double.IsNaN(pts))
                         {
-                            pts = TimestampToSeconds(picture->pts, timeBase);
+                            pts = TimestampToSeconds(frame->pts, timeBase);
                         }
 
                         pts = double.IsNaN(pts) ? 0 : pts - _startTimeSeconds;
+                        CheckFrameIndex(pts, ref lastIndexPosition, ref indexHits, ref indexMisses);
 
-                        var (targetWidth, targetHeight) = OutputSize(picture->width, picture->height);
-                        var format = (AVPixelFormat)picture->format;
-                        if (sws == null || swsSourceWidth != picture->width || swsSourceHeight != picture->height || swsSourceFormat != format ||
-                            outputWidth != targetWidth || outputHeight != targetHeight)
+                        var beforeTarget = dropUntil >= 0 && pts < dropUntil && !presentedForSerial;
+                        if (beforeTarget && pts < keepFrom)
                         {
-                            if (sws != null)
-                            {
-                                ffmpeg.sws_freeContext(sws);
-                            }
-
-                            const int swsBilinear = 2;
-                            sws = ffmpeg.sws_getContext(picture->width, picture->height, format, targetWidth, targetHeight,
-                                AVPixelFormat.AV_PIX_FMT_BGRA, swsBilinear, null, null, null);
-                            swsSourceWidth = picture->width;
-                            swsSourceHeight = picture->height;
-                            swsSourceFormat = format;
-                            outputWidth = targetWidth;
-                            outputHeight = targetHeight;
-                        }
-
-                        if (sws == null)
-                        {
-                            ffmpeg.av_frame_unref(frame);
-                            ffmpeg.av_frame_unref(transferFrame);
+                            // A picture between the key frame the seek landed on and the target:
+                            // decoded because the ones after it need it, never looked at - so not
+                            // fetched from GPU memory or converted either. The newest one is held
+                            // on to as it is, in case the stream ends before the target.
+                            ffmpeg.av_frame_unref(heldFrame);
+                            ffmpeg.av_frame_move_ref(heldFrame, frame);
+                            heldPts = pts;
                             continue;
                         }
 
-                        var beforeTarget = dropUntil >= 0 && pts < dropUntil - frameDuration * 0.5;
-                        if (beforeTarget && !presentedForSerial)
-                        {
-                            // Skip pictures between the key frame the seek landed on and the
-                            // target, but remember the last one in case the stream ends first.
-                            var dropped = ConvertFrame(picture, sws, targetWidth, targetHeight, serial, pts, reuse: lastDropped);
-                            if (dropped != null)
-                            {
-                                lastDropped = dropped;
-                            }
-
-                            ffmpeg.av_frame_unref(frame);
-                            ffmpeg.av_frame_unref(transferFrame);
-                            continue;
-                        }
-
-                        var converted = ConvertFrame(picture, sws, targetWidth, targetHeight, serial, pts, reuse: null);
+                        var converted = ToBgra(frame, transferFrame, converter, serial, pts, out var failure);
                         ffmpeg.av_frame_unref(frame);
-                        ffmpeg.av_frame_unref(transferFrame);
+                        if (failure == ConvertFailure.Transfer)
+                        {
+                            hardwareFailed = true;
+                            break;
+                        }
+
+                        if (failure == ConvertFailure.NoConverter)
+                        {
+                            continue;
+                        }
+
                         if (converted == null)
                         {
                             break; // queue closed or serial changed while waiting for a buffer
                         }
 
-                        _videoFrames.Return(lastDropped);
-                        lastDropped = null;
+                        ffmpeg.av_frame_unref(heldFrame);
+                        if (beforeTarget)
+                        {
+                            // One of the last few pictures before the target: kept converted, so
+                            // stepping back from the target is instant.
+                            _history.Add(converted);
+                            continue;
+                        }
+
                         presentedForSerial = true;
                         _videoFrames.Push(converted);
                         _presentWake.Set();
@@ -1071,20 +1361,30 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                         // the key frame.
                         FallBackToSoftware(ref codec, stream, 0, ref hardware);
                         serial = -1;
-                        Seek(Position);
+                        RequestSeek(Position, userSeek: false);
                         continue;
                     }
 
                     if (entry.IsEndOfStream)
                     {
-                        if (!presentedForSerial && lastDropped != null)
+                        if (!presentedForSerial)
                         {
-                            _videoFrames.Push(lastDropped);
-                            lastDropped = null;
-                            presentedForSerial = true;
+                            // The target lies past the last picture: show that one instead.
+                            var last = _history.TakeNewest(serial);
+                            if (last == null && heldFrame->width > 0)
+                            {
+                                last = ToBgra(heldFrame, transferFrame, converter, serial, heldPts, out _);
+                            }
+
+                            ffmpeg.av_frame_unref(heldFrame);
+                            if (last != null)
+                            {
+                                _videoFrames.Push(last);
+                                presentedForSerial = true;
+                            }
                         }
 
-                        var marker = _videoFrames.Rent(outputWidth, outputHeight, serial, ref _currentSerial);
+                        var marker = _videoFrames.Rent(converter.OutputWidth, converter.OutputHeight, serial, ref _currentSerial);
                         if (marker != null)
                         {
                             marker.Serial = serial;
@@ -1103,11 +1403,7 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
             }
             finally
             {
-                if (sws != null)
-                {
-                    ffmpeg.sws_freeContext(sws);
-                }
-
+                converter.Free();
                 if (frame != null)
                 {
                     ffmpeg.av_frame_free(&frame);
@@ -1118,10 +1414,52 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                     ffmpeg.av_frame_free(&transferFrame);
                 }
 
+                if (heldFrame != null)
+                {
+                    ffmpeg.av_frame_free(&heldFrame);
+                }
+
                 if (codec != null)
                 {
                     ffmpeg.avcodec_free_context(&codec);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Checks the frame index against what the decoder really produces. Consecutive pictures
+        /// must be consecutive index entries; when they keep not being (field-coded video, where
+        /// every field is a packet but every pair one picture; broken time stamps), the index
+        /// describes something other than the pictures on screen and is dropped - stepping and
+        /// seeking then fall back to the average frame rate, as before the scan finished.
+        /// </summary>
+        private void CheckFrameIndex(double pts, ref int lastPosition, ref int hits, ref int misses)
+        {
+            var index = _frameIndex;
+            if (index == null)
+            {
+                return;
+            }
+
+            var position = index.NearestIndex(pts);
+            var found = position >= 0 && Math.Abs(index.SecondsAt(position) - pts) <= index.MatchTolerance;
+            if (lastPosition >= 0)
+            {
+                if (found && position == lastPosition + 1)
+                {
+                    hits++;
+                }
+                else
+                {
+                    misses++;
+                }
+            }
+
+            lastPosition = found ? position : -1;
+            if (misses >= 10 && misses * 4 > hits)
+            {
+                Se.LogError($"ffmpeg player: frame index of '{_fileName}' does not match the decoded pictures ({misses} misses, {hits} hits) - not using it");
+                _frameIndex = null;
             }
         }
 
@@ -1153,29 +1491,102 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
             return (MaxOutputWidth, Math.Max(2, scaledHeight & ~1));
         }
 
-        private VideoFrame? ConvertFrame(AVFrame* frame, SwsContext* sws, int width, int height, int serial, double pts, VideoFrame? reuse)
+        private enum ConvertFailure
         {
-            var target = reuse != null && reuse.Width == width && reuse.Height == height
-                ? reuse
-                : _videoFrames.Rent(width, height, serial, ref _currentSerial);
-            if (target == null)
+            None,
+            Transfer, // the hardware picture could not be copied to system memory
+            NoConverter, // swscale has no path from this pixel format
+            NoBuffer, // queue closed, or the serial moved on while waiting for a buffer
+        }
+
+        /// <summary>The swscale context of the video thread, rebuilt when the picture size or format changes.</summary>
+        private sealed class BgraConverter
+        {
+            public SwsContext* Sws;
+            public int SourceWidth;
+            public int SourceHeight;
+            public AVPixelFormat SourceFormat = AVPixelFormat.AV_PIX_FMT_NONE;
+            public int OutputWidth;
+            public int OutputHeight;
+
+            public void Free()
             {
-                return null;
+                if (Sws != null)
+                {
+                    ffmpeg.sws_freeContext(Sws);
+                    Sws = null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// A decoded picture as a pooled BGRA frame. Only called for pictures that are going to be
+        /// looked at: the ones skipped on the way to a seek target never get here, which saves the
+        /// GPU read-back as well as the conversion for each of them.
+        /// </summary>
+        private VideoFrame? ToBgra(AVFrame* frame, AVFrame* transferFrame, BgraConverter converter, int serial, double pts, out ConvertFailure failure)
+        {
+            var picture = frame;
+            if (frame->hw_frames_ctx != null)
+            {
+                // The picture lives in GPU memory (IOSurface, D3D11 texture, DXVA2 surface); pull
+                // it into system memory (NV12 typically) so swscale can convert it like a
+                // software picture.
+                ffmpeg.av_frame_unref(transferFrame);
+                if (ffmpeg.av_hwframe_transfer_data(transferFrame, frame, 0) < 0)
+                {
+                    failure = ConvertFailure.Transfer;
+                    return null;
+                }
+
+                picture = transferFrame;
             }
 
-            if (reuse != null && !ReferenceEquals(reuse, target))
+            try
             {
-                _videoFrames.Return(reuse);
+                var (width, height) = OutputSize(picture->width, picture->height);
+                var format = (AVPixelFormat)picture->format;
+                if (converter.Sws == null || converter.SourceWidth != picture->width || converter.SourceHeight != picture->height ||
+                    converter.SourceFormat != format || converter.OutputWidth != width || converter.OutputHeight != height)
+                {
+                    converter.Free();
+                    const int swsBilinear = 2;
+                    converter.Sws = ffmpeg.sws_getContext(picture->width, picture->height, format, width, height,
+                        AVPixelFormat.AV_PIX_FMT_BGRA, swsBilinear, null, null, null);
+                    converter.SourceWidth = picture->width;
+                    converter.SourceHeight = picture->height;
+                    converter.SourceFormat = format;
+                    converter.OutputWidth = width;
+                    converter.OutputHeight = height;
+                }
+
+                if (converter.Sws == null)
+                {
+                    failure = ConvertFailure.NoConverter;
+                    return null;
+                }
+
+                var target = _videoFrames.Rent(width, height, serial, ref _currentSerial);
+                if (target == null)
+                {
+                    failure = ConvertFailure.NoBuffer;
+                    return null;
+                }
+
+                var destination = new byte*[] { (byte*)target.Data, null, null, null };
+                var destinationStride = new[] { target.Stride, 0, 0, 0 };
+                ffmpeg.sws_scale(converter.Sws, picture->data, picture->linesize, 0, picture->height, destination, destinationStride);
+
+                target.Pts = pts;
+                target.Serial = serial;
+                target.IsEndOfStream = false;
+                failure = ConvertFailure.None;
+                return target;
             }
-
-            var destination = new byte*[] { (byte*)target.Data, null, null, null };
-            var destinationStride = new[] { target.Stride, 0, 0, 0 };
-            ffmpeg.sws_scale(sws, frame->data, frame->linesize, 0, frame->height, destination, destinationStride);
-
-            target.Pts = pts;
-            target.Serial = serial;
-            target.IsEndOfStream = false;
-            return target;
+            finally
+            {
+                ffmpeg.av_frame_unref(transferFrame);
+            }
         }
 
         /// <summary>
@@ -1621,6 +2032,11 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
             {
                 while (!_closing)
                 {
+                    if (Volatile.Read(ref _pendingSteps) != 0 && HandleStep())
+                    {
+                        continue;
+                    }
+
                     var frame = _videoFrames.Peek();
                     if (frame == null)
                     {
@@ -1718,7 +2134,7 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                     if (firstOfSerial)
                     {
                         // The seek has landed: show it right away, playing or paused.
-                        ShowFrame(frame);
+                        ShowFrame(frame, contiguous: false);
                         continue;
                     }
 
@@ -1733,6 +2149,7 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                     if (delay <= 0.002)
                     {
                         // Late: drop everything but the last picture that is already due.
+                        var dropped = false;
                         while (true)
                         {
                             var next = PeekSecond();
@@ -1743,9 +2160,10 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
 
                             _videoFrames.Return(_videoFrames.Pop());
                             frame = next;
+                            dropped = true;
                         }
 
-                        ShowFrame(frame);
+                        ShowFrame(frame, contiguous: !dropped);
                         continue;
                     }
 
@@ -1780,7 +2198,9 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
             _audioSink.Pause();
         }
 
-        private void ShowFrame(VideoFrame frame)
+        /// <param name="frame">The head of the queue.</param>
+        /// <param name="contiguous">The picture follows the one on screen with nothing skipped in between, so that one can join the step-back history.</param>
+        private void ShowFrame(VideoFrame frame, bool contiguous)
         {
             var popped = _videoFrames.Pop();
             if (!ReferenceEquals(popped, frame))
@@ -1789,12 +2209,23 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                 return;
             }
 
+            var landed = false;
+            var owedExactTarget = double.NaN;
             lock (_seekLock)
             {
                 if (frame.Serial > _restartSerial)
                 {
+                    landed = true;
                     _restartSerial = frame.Serial;
-                    if (!_playing)
+                    if (_owesExactSerial == frame.Serial && _requestedSerial == frame.Serial)
+                    {
+                        // A scrub burst ended on this key frame. The position stays the spot that
+                        // was asked for - the key frame can be a whole GOP away from it - and the
+                        // exact landing is paid below.
+                        owedExactTarget = _requestedTarget;
+                        _owesExactSerial = 0;
+                    }
+                    else if (!_playing)
                     {
                         _pausedPosition = frame.Pts;
                     }
@@ -1808,7 +2239,225 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
             // Timestamp after the serial so HasPlaybackRestartedSince never sees a new
             // timestamp with an old serial.
             Interlocked.Exchange(ref _lastRestartTimestamp, Stopwatch.GetTimestamp());
-            _owner.Present(frame, _videoFrames);
+            if (landed)
+            {
+                ReturnFuture(); // pictures stepped back from belong to the position before the seek
+            }
+
+            var previous = _owner.Present(frame);
+            if (previous != null)
+            {
+                if (contiguous && previous.Serial == frame.Serial)
+                {
+                    _history.Add(previous);
+                }
+                else
+                {
+                    if (!landed)
+                    {
+                        _history.Clear(); // pictures were skipped: the history no longer leads up to this one
+                    }
+
+                    _videoFrames.Return(previous);
+                }
+            }
+
+            if (!double.IsNaN(owedExactTarget))
+            {
+                RequestSeek(owedExactTarget, userSeek: false);
+            }
+        }
+
+        private void ReturnFuture()
+        {
+            while (_future.Count > 0)
+            {
+                _videoFrames.Return(_future.Pop());
+            }
+        }
+
+        /// <summary>
+        /// Carries out one queued frame step (presenter thread). Returns false when the step has
+        /// to wait - for a seek to land, or for the decoder to deliver the next picture - and the
+        /// presenter should go on with its normal work meanwhile.
+        /// <para>
+        /// Forward takes the next picture from the decoded queue, back takes the newest one from
+        /// the history; neither touches the demuxer, so both are instant. Only when the history is
+        /// empty does a step back turn into an exact seek to the previous frame - and that seek
+        /// refills the history on its way, so the steps after it are instant again.
+        /// </para>
+        /// </summary>
+        private bool HandleStep()
+        {
+            var pending = Volatile.Read(ref _pendingSteps);
+            if (pending == 0)
+            {
+                return false;
+            }
+
+            if (_playing)
+            {
+                Interlocked.Exchange(ref _pendingSteps, 0); // Play came after the step request
+                return false;
+            }
+
+            var forward = pending > 0;
+            var waited = Stopwatch.GetElapsedTime(Interlocked.Read(ref _stepRequestedTimestamp)).TotalSeconds;
+            bool seekInFlight;
+            int currentSerial;
+            lock (_seekLock)
+            {
+                seekInFlight = _seekPending || _restartSerial < _requestedSerial;
+                currentSerial = _currentSerial;
+            }
+
+            if (seekInFlight)
+            {
+                // Step from where the seek lands, not from a picture that is about to be replaced.
+                if (waited > ScrubSeekPolicy.MaxSeekInFlightSeconds)
+                {
+                    Interlocked.Exchange(ref _pendingSteps, 0);
+                }
+
+                return false;
+            }
+
+            var currentPts = _owner.CurrentFramePts;
+            if (double.IsNaN(currentPts))
+            {
+                Interlocked.Exchange(ref _pendingSteps, 0);
+                return false;
+            }
+
+            VideoFrame? next = null;
+            if (forward)
+            {
+                if (_future.Count > 0)
+                {
+                    next = _future.Pop();
+                }
+                else
+                {
+                    var head = _videoFrames.Peek();
+                    if (head != null && head.Serial != currentSerial)
+                    {
+                        _videoFrames.Return(_videoFrames.Pop());
+                        return true;
+                    }
+
+                    if (head != null && head.IsEndOfStream)
+                    {
+                        Interlocked.Exchange(ref _pendingSteps, 0); // on the last picture
+                        return false;
+                    }
+
+                    if (head == null && waited < StepStarvedSeconds)
+                    {
+                        return false; // the decoder is about to deliver it
+                    }
+
+                    if (head != null)
+                    {
+                        next = _videoFrames.Pop();
+                        if (!ReferenceEquals(next, head))
+                        {
+                            _videoFrames.Return(next);
+                            return true; // flushed by a seek in between
+                        }
+                    }
+                }
+            }
+            else
+            {
+                next = _history.TakeNewest(currentSerial);
+            }
+
+            ConsumeStep(forward);
+            if (next == null)
+            {
+                var target = NeighbourFrameSeconds(currentPts, forward);
+                if (!double.IsNaN(target))
+                {
+                    RequestSeek(target, userSeek: false);
+                }
+
+                return true;
+            }
+
+            var previous = _owner.Present(next);
+            if (previous != null)
+            {
+                if (previous.Serial != next.Serial)
+                {
+                    _videoFrames.Return(previous);
+                }
+                else if (forward)
+                {
+                    _history.Add(previous);
+                }
+                else
+                {
+                    _future.Push(previous);
+                }
+            }
+
+            lock (_seekLock)
+            {
+                _pausedPosition = next.Pts;
+                _steppedSinceSeek = true;
+            }
+
+            Interlocked.Exchange(ref _lastRestartTimestamp, Stopwatch.GetTimestamp());
+            return true;
+        }
+
+        private void ConsumeStep(bool forward)
+        {
+            // Step() resets the counter when the direction changes, so only count down while the
+            // sign still matches.
+            int current;
+            int updated;
+            do
+            {
+                current = Volatile.Read(ref _pendingSteps);
+                if (current == 0 || current > 0 != forward)
+                {
+                    return;
+                }
+
+                updated = current + (forward ? -1 : 1);
+            }
+            while (Interlocked.CompareExchange(ref _pendingSteps, updated, current) != current);
+
+            if (updated != 0)
+            {
+                Interlocked.Exchange(ref _stepRequestedTimestamp, Stopwatch.GetTimestamp());
+            }
+        }
+
+        /// <summary>
+        /// Start of the frame next to the one at <paramref name="currentPts"/>: from the frame
+        /// index when there is one, else a step of the average frame duration. NaN at either end
+        /// of the file.
+        /// </summary>
+        private double NeighbourFrameSeconds(double currentPts, bool forward)
+        {
+            var index = _frameIndex;
+            if (index != null)
+            {
+                var neighbour = index.NeighbourIndex(currentPts, forward);
+                return neighbour < 0 ? double.NaN : index.SecondsAt(neighbour);
+            }
+
+            var rate = _format->streams[_videoStreamIndex]->avg_frame_rate;
+            var frameDuration = rate.num > 0 && rate.den > 0 ? 1.0 / ffmpeg.av_q2d(rate) : 1.0 / 25.0;
+            var target = currentPts + (forward ? frameDuration : -frameDuration);
+            if (target < -frameDuration * 0.5 || (Duration > 0 && target > Duration))
+            {
+                return double.NaN;
+            }
+
+            return Math.Max(0, target);
         }
 
         // ---------------------------------------------------------------- teardown
@@ -1838,10 +2487,19 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                 }
             }
 
+            _indexCancel.Cancel();
             var stopped = JoinThread(_demuxThread);
             stopped &= JoinThread(_videoThread);
             stopped &= JoinThread(_audioThread);
             stopped &= JoinThread(_presentThread);
+            if (JoinThread(_indexThread)) // has its own format context, so it cannot hold this one hostage
+            {
+                _indexCancel.Dispose();
+            }
+
+            // The frame queue is closed, so these go to their Dispose rather than back to a pool.
+            _history?.Reset(-1);
+            ReturnFuture();
 
             audioSink?.Dispose();
             _demuxWake.Dispose();

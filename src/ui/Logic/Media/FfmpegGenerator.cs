@@ -68,6 +68,15 @@ public class FfmpegGenerator
     }
 
     /// <summary>
+    /// Options for an overlay whose second input is a bitmap subtitle stream. When a sup ran out
+    /// before the video did, the overlay's default ("repeat") made ffmpeg emit one last frame
+    /// stamped ~4294967 s: .mp4/.mov output then aborted with "Error submitting a packet to the
+    /// muxer" (exit code 176) and .mkv output claimed a duration of 1193 hours. "pass" lets the
+    /// rest of the video through untouched instead.
+    /// </summary>
+    private const string ImageSubtitleOverlayOptions = "eof_action=pass";
+
+    /// <summary>
     /// The burn-in filter graph for frame-packed 3D video, the ffmpeg side of
     /// <see cref="Stereo3DImage"/>: the subtitles are rendered for the full frame, squeezed into
     /// each eye's half of it, and laid over that half moved sideways by the depth - the left (top)
@@ -86,7 +95,7 @@ public class FfmpegGenerator
         if (imageSubtitleChain != null)
         {
             sources = $"{videoChain},split[v3d1][v3d2];{imageSubtitleChain},split[s3d1][s3d2];";
-            alpha = string.Empty;
+            alpha = ":" + ImageSubtitleOverlayOptions;
         }
         else
         {
@@ -151,10 +160,18 @@ public class FfmpegGenerator
         var audioSettings = $"-c:a {audioEncoding}";
         if (audioEncoding != "copy")
         {
-            audioSettings += $" -ar {sampleRate}";
+            audioSettings += $" -ar {GetSupportedSampleRate(audioEncoding, sampleRate)}";
             if (forceStereo)
             {
                 audioSettings += " -ac 2";
+            }
+
+            // The bit rate box is always shown, but "-b:a" was only written together with a
+            // target file size - a plain quality-based encode ignored the choice and ran at the
+            // encoder's default.
+            if (!string.IsNullOrWhiteSpace(audioBitRate))
+            {
+                audioSettings += $" -b:a {audioBitRate}";
             }
         }
 
@@ -269,20 +286,10 @@ public class FfmpegGenerator
             // Single-pass average bit rate, used where two-pass is not available (VideoToolbox
             // writes no stats file, so its "pass 1" is wasted work - see #13401).
             passSettings = $" -b:v {twoPassBitRate}";
-
-            if (!string.IsNullOrWhiteSpace(audioBitRate))
-            {
-                passSettings += $" -b:a {audioBitRate}";
-            }
         }
         else if (!string.IsNullOrWhiteSpace(pass) && !string.IsNullOrWhiteSpace(twoPassBitRate))
         {
             passSettings = $" -b:v {twoPassBitRate} -pass {pass}";
-
-            if (!string.IsNullOrWhiteSpace(audioBitRate))
-            {
-                passSettings += $" -b:a {audioBitRate}";
-            }
 
             if (pass == "1")
             {
@@ -338,9 +345,9 @@ public class FfmpegGenerator
         string filterParameter;
         if (subtitleIsImage)
         {
-            imageSubtitleInput = $"{GetImageSubtitleOffset(cutStart)} -i \"{assaSubtitleFileName}\"";
+            imageSubtitleInput = $"{GetImageSubtitleOffset(cutStart, assaSubtitleFileName)} -i \"{assaSubtitleFileName}\"";
             withSubtitles = mode3D == Export3DMode.None
-                ? $"{mainVideoStream}scale={width}:{height}[video];[{inputCount}:s]scale={width}:{height}[subs];[video][subs]overlay"
+                ? $"{mainVideoStream}scale={width}:{height}[video];[{inputCount}:s]scale={width}:{height}[subs];[video][subs]overlay={ImageSubtitleOverlayOptions}"
                 : MakeStereo3DGraph($"{mainVideoStream}scale={width}:{height}", $"[{inputCount}:s]scale={width}:{height}", null, width, height, mode3D, depth3D);
             filterParameter = $"-filter_complex \"{withSubtitles}\"";
             inputCount++;
@@ -394,23 +401,103 @@ public class FfmpegGenerator
     }
 
     /// <summary>
-    /// The "-itsoffset" that keeps an image subtitle input in step with a video input that was
-    /// seeked with "-ss": the same time, negated. Empty when there is no cut.
+    /// The "-itsoffset" that puts an image subtitle input where it belongs on the video's clock.
+    /// ffmpeg restarts every input at zero: a video seeked with "-ss" begins at the cut, and a
+    /// sup begins at its first segment - so without an offset a sup whose first subtitle is at
+    /// 11:19 showed it on the first frame, and every later one that much too early. The offset
+    /// is the sup's own start minus the cut. Empty when that is zero.
     /// </summary>
-    private static string GetImageSubtitleOffset(string? cutStart)
+    private static string GetImageSubtitleOffset(string? cutStart, string imageSubtitleFileName)
     {
-        var seek = (cutStart ?? string.Empty).Trim();
-        if (!seek.StartsWith("-ss ", StringComparison.Ordinal))
+        var offset = GetFirstSupSegmentSeconds(imageSubtitleFileName) - GetSeekSeconds(cutStart);
+        if (Math.Abs(offset) < 0.0005)
         {
             return string.Empty;
         }
 
+        return $" -itsoffset {offset.ToString("0.###", CultureInfo.InvariantCulture)}";
+    }
+
+    private static double GetSeekSeconds(string? cutStart)
+    {
+        var seek = (cutStart ?? string.Empty).Trim();
+        if (!seek.StartsWith("-ss ", StringComparison.Ordinal))
+        {
+            return 0;
+        }
+
         var time = seek.Substring(4).Trim();
-        return string.IsNullOrEmpty(time) ? string.Empty : $" -itsoffset -{time}";
+        if (double.TryParse(time, NumberStyles.Float, CultureInfo.InvariantCulture, out var seconds))
+        {
+            return seconds;
+        }
+
+        return TimeSpan.TryParse(time, CultureInfo.InvariantCulture, out var timeSpan) ? timeSpan.TotalSeconds : 0;
+    }
+
+    /// <summary>
+    /// Presentation time of the first segment of a Blu-ray sup: "PG", then a 90 kHz time stamp.
+    /// This is the time ffmpeg takes as the start of the input. Zero when the file is not a sup.
+    /// </summary>
+    private static double GetFirstSupSegmentSeconds(string fileName)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
+            {
+                return 0;
+            }
+
+            using var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var header = new byte[6];
+            if (stream.Read(header, 0, header.Length) != header.Length || header[0] != 'P' || header[1] != 'G')
+            {
+                return 0;
+            }
+
+            var pts = ((uint)header[2] << 24) | ((uint)header[3] << 16) | ((uint)header[4] << 8) | header[5];
+            return pts / 90000.0;
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception);
+            return 0;
+        }
+    }
+
+    /// <summary>
+    /// The sample rate to ask an audio encoder for. Every rate in the list was passed on as it
+    /// was, and ffmpeg aborts on the ones an encoder cannot do: libopus takes 48000 (of the
+    /// rates offered) and nothing else - 44100 is the first entry and Opus one of only two
+    /// choices for .webm - ac3 and mp3 stop at 48000, and aac at 96000.
+    /// </summary>
+    internal static string GetSupportedSampleRate(string audioEncoding, string sampleRate)
+    {
+        if (!int.TryParse(sampleRate, NumberStyles.Integer, CultureInfo.InvariantCulture, out var rate))
+        {
+            return sampleRate;
+        }
+
+        if (audioEncoding == "libopus")
+        {
+            rate = 48000;
+        }
+
+        var maximum = audioEncoding switch
+        {
+            "ac3" or "mp3" or "libmp3lame" => 48000,
+            "aac" => 96000,
+            _ => int.MaxValue,
+        };
+
+        return Math.Min(rate, maximum).ToString(CultureInfo.InvariantCulture);
     }
 
     private static Process GetFFmpegProcess(string imageFileName, string outputFileName, int videoWidth, int videoHeight, int seconds, decimal frameRate, bool addTimeCode = false, string addTimeColor = "white")
     {
+        // "-pix_fmt yuv420p": a png is RGB, and libx264 then picks yuv444p - H.264 "High 4:4:4
+        // Predictive", which hardware decoders, browsers and QuickTime do not play. The solid
+        // color variant below already comes out as yuv420p.
         var drawText = MakeDrawText(addTimeCode, frameRate, addTimeColor, videoHeight);
 
         return new Process
@@ -418,7 +505,7 @@ public class FfmpegGenerator
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-t {seconds} -loop 1 -r {frameRate.ToString(CultureInfo.InvariantCulture)} -i \"{imageFileName}\" -c:v libx264 -tune stillimage -shortest -s {videoWidth}x{videoHeight}{drawText} \"{outputFileName}\"",
+                Arguments = $"-t {seconds} -loop 1 -r {frameRate.ToString(CultureInfo.InvariantCulture)} -i \"{imageFileName}\" -c:v libx264 -pix_fmt yuv420p -tune stillimage -shortest -s {videoWidth}x{videoHeight}{drawText} \"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             }
@@ -820,12 +907,32 @@ public class FfmpegGenerator
         return processMakeVideo;
     }
 
+    // Input option for the video that the AddAudioTrack* methods stream-copy. MPEG-4 ASP (XviD/DivX)
+    // with packed B-frames yields packets without a pts, and the muxer then aborts with "Can't write
+    // packet with unknown timestamp", leaving a stub output. genpts fills in the missing pts from the
+    // dts; packets that already have one (h264/hevc in mp4/mkv) are left untouched.
+    private const string GeneratePtsForVideoCopy = "-fflags +genpts ";
+
+    // ffmpeg flags its TrueHD (and MLP) encoder as experimental and refuses to run it without
+    // "-strict -2" - the output was then a 0-byte file and no dub was added to the video (#15020).
+    private static string GetAddAudioTrackEncodingString(string audioEncoding)
+    {
+        if (string.IsNullOrEmpty(audioEncoding))
+        {
+            return string.Empty;
+        }
+
+        var isExperimental = string.Equals(audioEncoding, "truehd", StringComparison.OrdinalIgnoreCase) ||
+                             string.Equals(audioEncoding, "mlp", StringComparison.OrdinalIgnoreCase);
+        return "-c:a " + audioEncoding + (isExperimental ? " -strict -2 " : " ");
+    }
+
     public static Process AddAudioTrack(string inputFileName, string audioFileName, string outputFileName, string audioEncoding, bool? stereo, DataReceivedEventHandler? dataReceivedHandler = null)
     {
         // Empty encoding = let ffmpeg pick the container's default encoder (same as the ducking
         // variant below). It used to mean "-c:a copy", which muxed the merged TTS track - a PCM
         // wav - straight into .mp4, failing on ffmpeg builds older than 6.1.
-        var audioEncodingString = !string.IsNullOrEmpty(audioEncoding) ? "-c:a " + audioEncoding + " " : string.Empty;
+        var audioEncodingString = GetAddAudioTrackEncodingString(audioEncoding);
         var stereoString = stereo == true ? "-ac 2 " : string.Empty;
 
         var processMakeVideo = new Process
@@ -833,7 +940,7 @@ public class FfmpegGenerator
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-nostdin -y -i \"{inputFileName}\" -i \"{audioFileName}\" -c:v copy -map 0:v:0 -map 1:a:0 {audioEncodingString}{stereoString}\"{outputFileName}\"",
+                Arguments = $"-nostdin -y {GeneratePtsForVideoCopy}-i \"{inputFileName}\" -i \"{audioFileName}\" -c:v copy -map 0:v:0 -map 1:a:0 {audioEncodingString}{stereoString}\"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             }
@@ -857,7 +964,7 @@ public class FfmpegGenerator
             audioEncoding = string.Empty;
         }
 
-        var audioEncodingString = !string.IsNullOrEmpty(audioEncoding) ? "-c:a " + audioEncoding + " " : string.Empty;
+        var audioEncodingString = GetAddAudioTrackEncodingString(audioEncoding);
         var stereoString = stereo == true ? "-ac 2 " : string.Empty;
         var volumeFactor = Math.Clamp(originalVolumePercent / 100.0, 0.0, 1.0).ToString("0.00", CultureInfo.InvariantCulture);
 
@@ -866,7 +973,61 @@ public class FfmpegGenerator
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-nostdin -y -i \"{inputFileName}\" -i \"{audioFileName}\" -filter_complex \"[0:a]volume={volumeFactor}[orig];[orig][1:a]amix=inputs=2:duration=longest:normalize=0[aout]\" -map 0:v:0 -map \"[aout]\" -c:v copy {audioEncodingString}{stereoString}\"{outputFileName}\"",
+                Arguments = $"-nostdin -y {GeneratePtsForVideoCopy}-i \"{inputFileName}\" -i \"{audioFileName}\" -filter_complex \"[0:a]volume={volumeFactor}[orig];[orig][1:a]amix=inputs=2:duration=longest:normalize=0[aout]\" -map 0:v:0 -map \"[aout]\" -c:v copy {audioEncodingString}{stereoString}\"{outputFileName}\"",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            }
+        };
+
+        SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+
+        return processMakeVideo;
+    }
+
+    /// <summary>
+    /// Extracts the first audio track as the 44.1 kHz stereo wav the source separation works in,
+    /// so the separated background keeps the full quality of the original sound.
+    /// </summary>
+    public static Process ExtractAudioForSeparation(string inputFileName, string outputWaveFileName, DataReceivedEventHandler? dataReceivedHandler = null)
+    {
+        var process = new Process
+        {
+            StartInfo =
+            {
+                FileName = GetFfmpegLocation(),
+                Arguments = $"-nostdin -y -i \"{inputFileName}\" -vn -map 0:a:0 -ar 44100 -ac 2 \"{outputWaveFileName}\"",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            }
+        };
+
+        SetupDataReceiveHandler(dataReceivedHandler, process);
+
+        return process;
+    }
+
+    /// <summary>
+    /// Add audio track to video, mixed over a separate background track (the original sound with
+    /// the speech removed) instead of over the video's own audio.
+    /// </summary>
+    public static Process AddAudioTrackWithBackground(string inputFileName, string backgroundFileName, string audioFileName, string outputFileName, string audioEncoding, bool? stereo, int backgroundVolumePercent, DataReceivedEventHandler? dataReceivedHandler = null)
+    {
+        // Same as the ducking variant: a filtergraph output cannot be stream-copied.
+        if (string.Equals(audioEncoding, "copy", StringComparison.OrdinalIgnoreCase))
+        {
+            audioEncoding = string.Empty;
+        }
+
+        var audioEncodingString = GetAddAudioTrackEncodingString(audioEncoding);
+        var stereoString = stereo == true ? "-ac 2 " : string.Empty;
+        var volumeFactor = Math.Clamp(backgroundVolumePercent / 100.0, 0.0, 1.0).ToString("0.00", CultureInfo.InvariantCulture);
+
+        var processMakeVideo = new Process
+        {
+            StartInfo =
+            {
+                FileName = GetFfmpegLocation(),
+                Arguments = $"-nostdin -y {GeneratePtsForVideoCopy}-i \"{inputFileName}\" -i \"{backgroundFileName}\" -i \"{audioFileName}\" -filter_complex \"[1:a]volume={volumeFactor}[bg];[bg][2:a]amix=inputs=2:duration=longest:normalize=0[aout]\" -map 0:v:0 -map \"[aout]\" -c:v copy {audioEncodingString}{stereoString}\"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             }
@@ -1157,6 +1318,7 @@ public class FfmpegGenerator
                 }
             }
             processMakeVideo = GetFFmpegProcess(tempImageFileName, previewFileName, width, height, seconds, frameRate, addTimeCode, addTimeColor);
+            DeleteFileOnExit(processMakeVideo, tempImageFileName);
         }
         else if (checkered)
         {
@@ -1181,6 +1343,7 @@ public class FfmpegGenerator
             }
 
             processMakeVideo = GetFFmpegProcess(tempImageFileName, previewFileName, width, height, seconds, frameRate, addTimeCode, addTimeColor);
+            DeleteFileOnExit(processMakeVideo, tempImageFileName);
         }
         else
         {
@@ -1190,6 +1353,26 @@ public class FfmpegGenerator
         SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
 
         return processMakeVideo;
+    }
+
+    /// <summary>
+    /// Removes a temporary input file once ffmpeg is done with it. The full-frame background
+    /// png of "generate blank video" was never deleted - one more in the temp folder per run.
+    /// </summary>
+    private static void DeleteFileOnExit(Process process, string fileName)
+    {
+        process.EnableRaisingEvents = true;
+        process.Exited += (_, _) =>
+        {
+            try
+            {
+                File.Delete(fileName);
+            }
+            catch
+            {
+                // ignore
+            }
+        };
     }
 
     public static SKBitmap ResizeBitmap(SKBitmap originalBitmap, int width, int height)
@@ -1336,117 +1519,31 @@ public class FfmpegGenerator
     string inputFileName,
     string outputFileName,
     List<SubtitleLineViewModel> segments,
-    bool hasVideo)
+    bool hasVideo,
+    bool hasAudio = true)
     {
-        outputFileName = $"\"{outputFileName}\"";
+        var ranges = segments
+            .Select(s => (Start: (double?)s.StartTime.TotalSeconds, End: (double?)s.EndTime.TotalSeconds))
+            .ToList();
 
-        var filterParts = new List<string>();
-        var concatInputs = new List<string>();
-
-        for (var i = 0; i < segments.Count; i++)
-        {
-            var s = segments[i];
-            var startSeconds = s.StartTime.TotalSeconds.ToString(CultureInfo.InvariantCulture);
-            var endSeconds = s.EndTime.TotalSeconds.ToString(CultureInfo.InvariantCulture);
-
-            if (hasVideo)
-            {
-                filterParts.Add(
-                    $"[0:v]trim=start={startSeconds}:end={endSeconds},setpts=PTS-STARTPTS[v{i}]; " +
-                    $"[0:a]atrim=start={startSeconds}:end={endSeconds},asetpts=PTS-STARTPTS[a{i}]"
-                );
-
-                concatInputs.Add($"[v{i}][a{i}]");
-            }
-            else
-            {
-                filterParts.Add(
-                    $"[0:a]atrim=start={startSeconds}:end={endSeconds},asetpts=PTS-STARTPTS[a{i}]"
-                );
-
-                concatInputs.Add($"[a{i}]");
-            }
-        }
-
-        string filterComplex;
-
-        if (hasVideo)
-        {
-            filterComplex = string.Join("; ", filterParts) + "; " +
-                            string.Join("", concatInputs) +
-                            $"concat=n={segments.Count}:v=1:a=1[outv][outa]";
-        }
-        else
-        {
-            filterComplex = string.Join("; ", filterParts) + "; " +
-                            string.Join("", concatInputs) +
-                            $"concat=n={segments.Count}:v=0:a=1[outa]";
-        }
-
-        var arguments =
-            $"-y -i \"{inputFileName}\" " +
-            $"-filter_complex \"{filterComplex}\" ";
-
-        if (hasVideo)
-        {
-            arguments +=
-                "-map \"[outv]\" -map \"[outa]\" " +
-                "-c:v libx264 -preset veryfast -crf 23 " +
-                "-c:a aac -b:a 192k " +
-                "-movflags +faststart -pix_fmt yuv420p ";
-        }
-        else
-        {
-            arguments +=
-                "-map \"[outa]\" " +
-                "-c:a libmp3lame -b:a 192k ";
-        }
-
-        arguments += outputFileName;
-
-        return arguments.Trim();
+        return GetConcatSegmentsParameters(inputFileName, outputFileName, ranges, hasVideo, hasAudio);
     }
 
     public static string GetRemoveSegmentsParameters(
     string inputFileName,
     string outputFileName,
     List<SubtitleLineViewModel> segments,
-    bool hasVideo)
+    bool hasVideo,
+    bool hasAudio = true)
     {
-        outputFileName = $"\"{outputFileName}\"";
-
-        var filterParts = new List<string>();
-        var concatInputs = new List<string>();
-
+        var ranges = new List<(double? Start, double? End)>();
         double lastEnd = 0;
-        int keepIndex = 0;
 
         foreach (var seg in segments)
         {
             if (seg.StartTime.TotalSeconds > lastEnd)
             {
-                string start = lastEnd.ToString(CultureInfo.InvariantCulture);
-                string end = seg.StartTime.TotalSeconds.ToString(CultureInfo.InvariantCulture);
-
-                if (hasVideo)
-                {
-                    filterParts.Add(
-                        $"[0:v]trim=start={start}:end={end},setpts=PTS-STARTPTS[v{keepIndex}]; " +
-                        $"[0:a]atrim=start={start}:end={end},asetpts=PTS-STARTPTS[a{keepIndex}]"
-                    );
-
-                    concatInputs.Add($"[v{keepIndex}][a{keepIndex}]");
-                }
-                else
-                {
-                    filterParts.Add(
-                        $"[0:a]atrim=start={start}:end={end},asetpts=PTS-STARTPTS[a{keepIndex}]"
-                    );
-
-                    concatInputs.Add($"[a{keepIndex}]");
-                }
-
-                keepIndex++;
+                ranges.Add((lastEnd, seg.StartTime.TotalSeconds));
             }
 
             // Never move the cursor backwards: cut segments are sorted by start but not merged,
@@ -1457,41 +1554,62 @@ public class FfmpegGenerator
         }
 
         // Keep remainder (from lastEnd → EOF)
-        string lastStart = lastEnd.ToString(CultureInfo.InvariantCulture);
+        ranges.Add((lastEnd, null));
 
-        if (hasVideo)
+        return GetConcatSegmentsParameters(inputFileName, outputFileName, ranges, hasVideo, hasAudio);
+    }
+
+    /// <summary>
+    /// The trim + concat command line shared by "merge segments" and "remove segments": every
+    /// range is cut out of the input and the pieces are joined in the order given. A range
+    /// without an end runs to the end of the file.
+    /// </summary>
+    private static string GetConcatSegmentsParameters(
+        string inputFileName,
+        string outputFileName,
+        List<(double? Start, double? End)> ranges,
+        bool hasVideo,
+        bool hasAudio)
+    {
+        // The graph used to reference "[0:a]" no matter what, so a video without an audio track
+        // (a screen recording, a blank video made here) failed with "Stream specifier ':a' ...
+        // matches no streams". A leg is only built for a stream the input has.
+        if (!hasVideo && !hasAudio)
         {
-            filterParts.Add(
-                $"[0:v]trim=start={lastStart},setpts=PTS-STARTPTS[v{keepIndex}]; " +
-                $"[0:a]atrim=start={lastStart},asetpts=PTS-STARTPTS[a{keepIndex}]"
-            );
-
-            concatInputs.Add($"[v{keepIndex}][a{keepIndex}]");
+            hasAudio = true;
         }
-        else
-        {
-            filterParts.Add(
-                $"[0:a]atrim=start={lastStart},asetpts=PTS-STARTPTS[a{keepIndex}]"
-            );
 
-            concatInputs.Add($"[a{keepIndex}]");
+        var filterParts = new List<string>();
+        var concatInputs = new List<string>();
+
+        for (var i = 0; i < ranges.Count; i++)
+        {
+            var trim = "start=" + ranges[i].Start.GetValueOrDefault().ToString(CultureInfo.InvariantCulture);
+            if (ranges[i].End.HasValue)
+            {
+                trim += ":end=" + ranges[i].End!.Value.ToString(CultureInfo.InvariantCulture);
+            }
+
+            var labels = string.Empty;
+            if (hasVideo)
+            {
+                filterParts.Add($"[0:v]trim={trim},setpts=PTS-STARTPTS[v{i}]");
+                labels += $"[v{i}]";
+            }
+
+            if (hasAudio)
+            {
+                filterParts.Add($"[0:a]atrim={trim},asetpts=PTS-STARTPTS[a{i}]");
+                labels += $"[a{i}]";
+            }
+
+            concatInputs.Add(labels);
         }
 
-        // Build filter_complex
-        string filterComplex;
-
-        if (hasVideo)
-        {
-            filterComplex = string.Join("; ", filterParts) + "; " +
+        var outputLabels = (hasVideo ? "[outv]" : string.Empty) + (hasAudio ? "[outa]" : string.Empty);
+        var filterComplex = string.Join("; ", filterParts) + "; " +
                             string.Join("", concatInputs) +
-                            $"concat=n={keepIndex + 1}:v=1:a=1[outv][outa]";
-        }
-        else
-        {
-            filterComplex = string.Join("; ", filterParts) + "; " +
-                            string.Join("", concatInputs) +
-                            $"concat=n={keepIndex + 1}:v=0:a=1[outa]";
-        }
+                            $"concat=n={ranges.Count}:v={(hasVideo ? 1 : 0)}:a={(hasAudio ? 1 : 0)}{outputLabels}";
 
         var arguments =
             $"-y -i \"{inputFileName}\" " +
@@ -1499,22 +1617,50 @@ public class FfmpegGenerator
 
         if (hasVideo)
         {
-            arguments +=
-                "-map \"[outv]\" -map \"[outa]\" " +
-                "-c:v libx264 -preset veryfast -crf 23 " +
-                "-c:a aac -b:a 192k " +
-                "-movflags +faststart -pix_fmt yuv420p ";
+            arguments += "-map \"[outv]\" ";
+        }
+
+        if (hasAudio)
+        {
+            arguments += "-map \"[outa]\" ";
+        }
+
+        if (hasVideo)
+        {
+            arguments += "-c:v libx264 -preset veryfast -crf 23 ";
+            if (hasAudio)
+            {
+                arguments += "-c:a aac -b:a 192k ";
+            }
+
+            arguments += "-movflags +faststart -pix_fmt yuv420p ";
         }
         else
         {
-            arguments +=
-                "-map \"[outa]\" " +
-                "-c:a libmp3lame -b:a 192k ";
+            arguments += GetCutAudioEncoding(outputFileName) + " ";
         }
 
-        arguments += outputFileName;
+        arguments += $"\"{outputFileName}\"";
 
         return arguments.Trim();
+    }
+
+    /// <summary>
+    /// Audio encoder for an audio-only cut, by output extension. It used to be libmp3lame for
+    /// everything, and a .wav input keeps its extension - the result was a WAV file holding an
+    /// MP3 stream (format tag 0x55), which most programs expecting PCM in a .wav refuse.
+    /// </summary>
+    private static string GetCutAudioEncoding(string outputFileName)
+    {
+        return Path.GetExtension(outputFileName).ToLowerInvariant() switch
+        {
+            ".wav" => "-c:a pcm_s16le",
+            ".mp3" => "-c:a libmp3lame -b:a 192k",
+            ".flac" => "-c:a flac",
+            ".ogg" or ".oga" => "-c:a libvorbis -b:a 192k",
+            ".opus" => "-c:a libopus -b:a 160k",
+            _ => "-c:a aac -b:a 192k",
+        };
     }
 
     /// <summary>
@@ -1703,14 +1849,21 @@ public class FfmpegGenerator
             $"-i \"{inputFileName}\"",
             $"-i \"{metadataFileName}\"",
 
-            // Take metadata from the ffmetadata input, which replaces any chapters already there.
-            "-map_metadata 1",
+            // The video keeps its own tags. This was "-map_metadata 1", and as the ffmetadata
+            // input holds nothing but chapters, the title, comment and every other global tag
+            // of the video were replaced with nothing.
+            "-map_metadata 0",
 
             // Chapters come from the ffmetadata input rather than being carried over from the video.
             "-map_chapters 1",
 
-            // Every stream of the video is kept, including subtitles and attachments.
+            // Every stream of the video is kept, including subtitles and attachments - except
+            // the chapter track an mp4/mov already has. ffmpeg reads that as a data stream and
+            // copies it like any other, and the muxer then writes the new chapter track next to
+            // it: one more stale track for every time the chapters were edited. It is a text
+            // track that is not a subtitle, so timecode tracks and real subtitles stay.
             "-map 0",
+            "-map -0:d:m:handler_name:SubtitleHandler",
             "-c copy",
             $"\"{outputFileName}\"",
         };
@@ -1735,10 +1888,14 @@ public class FfmpegGenerator
             args.Add($"-i \"{track.FileName}\"");
         }
 
-        // Map only the first video and first audio stream explicitly
-        // This avoids issues with multiple video streams and attached pictures
-        args.Add("-map 0:V:0");  // First actual video stream (not attached pic)
-        args.Add("-map 0:a:0?"); // First audio stream (optional)
+        // Everything that is not a subtitle is carried over as it is. This used to map only
+        // "0:V:0" and "0:a:0?", so a file with a second audio track (a dub, a commentary) came
+        // out with one, and the font attachments an ASS track is rendered with were dropped -
+        // with exit code 0 and nothing to tell the user. "0:V" leaves out attached pictures,
+        // which Matroska keeps as attachments and "0:t?" brings along.
+        args.Add("-map 0:V");
+        args.Add("-map 0:a?");
+        args.Add("-map 0:t?");
 
         // Output subtitle tracks follow the list order (the user can move tracks up/down),
         // so original and new tracks may be interleaved. Deleted tracks are dropped.
@@ -1768,13 +1925,17 @@ public class FfmpegGenerator
             var t = outputSubs[outIndex];
             if (!string.IsNullOrEmpty(t.LanguageOrTitle))
             {
-                var lang = t.LanguageOrTitle.Contains(' ') ? $"\"{t.LanguageOrTitle}\"" : t.LanguageOrTitle;
+                // Escaped like the title below: a quote in here ended the argument early.
+                var language = EscapeFfmpegArg(t.LanguageOrTitle);
+                var lang = language.Contains(' ') ? $"\"{language}\"" : language;
                 args.Add($"-metadata:s:s:{outIndex} language={lang}");
             }
 
             if (!string.IsNullOrEmpty(t.Name))
             {
-                args.Add($"-metadata:s:s:{outIndex} title=\"{t.Name}\"");
+                // The mp4 variant below always escaped the name; here a track called
+                // Director's "cut" closed the quoted argument and broke the command line.
+                args.Add($"-metadata:s:s:{outIndex} title=\"{EscapeFfmpegArg(t.Name)}\"");
             }
 
             var dispositions = new List<string>();
@@ -1829,10 +1990,11 @@ public class FfmpegGenerator
             args.Add($"-i \"{track.FileName}\"");
         }
 
-        // Keep first video + first audio from the source. The "0:V:0" form ignores attached
-        // pictures (cover art); 0:a:0? makes audio optional so audio-less inputs still work.
-        args.Add("-map 0:V:0");
-        args.Add("-map 0:a:0?");
+        // Keep the video and every audio track from the source - "0:a:0?" kept only the first,
+        // so a second language came out missing. The "0:V" form ignores attached pictures
+        // (cover art); "?" makes audio optional so audio-less inputs still work.
+        args.Add("-map 0:V");
+        args.Add("-map 0:a?");
 
         // Output subtitle tracks follow the list order (the user can move tracks up/down), so
         // original and new tracks may be interleaved. Original streams map by their

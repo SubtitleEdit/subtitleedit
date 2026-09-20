@@ -63,7 +63,7 @@ public partial class WaveformThemesViewModel : ObservableObject
         Themes.Add(MakeSolarizedDarkTheme());
         Themes.Add(new WaveformThemeDisplay
         {
-            Name = "Custom",
+            Name = Se.Language.General.Custom,
             TextColor = textColor,
             WaveformColor = waveformColor,
             BackgroundColor = backgroundColor,
@@ -122,7 +122,7 @@ public partial class WaveformThemesViewModel : ObservableObject
 
         _customThemeCount++;
         var vm = new PromptTextBoxViewModel();
-        vm.Initialize("Save custom theme", $"Custom {_customThemeCount}", 200, 30, returnSubmits: true);
+        vm.Initialize(Se.Language.Options.Settings.WaveformSaveCustomThemeTitle, $"{Se.Language.General.Custom} {_customThemeCount}", 200, 30, returnSubmits: true);
         var promptWindow = new PromptTextBoxWindow(vm);
         await WindowService.ShowModalAsync(Window, promptWindow);
 
@@ -185,7 +185,7 @@ public partial class WaveformThemesViewModel : ObservableObject
             AllowMultiple = false,
             FileTypeFilter = new List<FilePickerFileType>
             {
-                new FilePickerFileType("Subtitle Edit theme (*.seWaveformTheme)")
+                new FilePickerFileType($"{Se.Language.Options.Settings.WaveformThemeFileType} (*.seWaveformTheme)")
                 {
                     Patterns = new List<string> { "*.seWaveformTheme" }
                 },
@@ -263,7 +263,7 @@ public partial class WaveformThemesViewModel : ObservableObject
             DefaultExtension = "seWaveformTheme",
             FileTypeChoices = new List<FilePickerFileType>
             {
-                new FilePickerFileType("Subtitle Edit theme (*.seWaveformTheme)")
+                new FilePickerFileType($"{Se.Language.Options.Settings.WaveformThemeFileType} (*.seWaveformTheme)")
                 {
                     Patterns = new List<string> { "*.seWaveformTheme" }
                 },
@@ -303,7 +303,7 @@ public partial class WaveformThemesViewModel : ObservableObject
 
     private static WaveformThemeDisplay MakeDarkTheme() => new()
     {
-        Name = "Dark",
+        Name = Se.Language.General.Dark,
         TextColor = Colors.White,
         WaveformColor = Color.FromArgb(255, 0, 70, 0),
         BackgroundColor = Color.FromArgb(255, 0, 0, 0),
@@ -319,7 +319,7 @@ public partial class WaveformThemesViewModel : ObservableObject
 
     private static WaveformThemeDisplay MakeLightTheme() => new()
     {
-        Name = "Light",
+        Name = Se.Language.General.Light,
         TextColor = Colors.Black,
         WaveformColor = Color.FromArgb(255, 0, 80, 160),
         BackgroundColor = Color.FromArgb(255, 240, 240, 240),
@@ -335,7 +335,7 @@ public partial class WaveformThemesViewModel : ObservableObject
 
     private static WaveformThemeDisplay MakeHighContrastTheme() => new()
     {
-        Name = "High Contrast",
+        Name = Se.Language.Options.Settings.WaveformThemeHighContrast,
         TextColor = Colors.Yellow,
         WaveformColor = Color.FromArgb(255, 0, 255, 0),
         BackgroundColor = Color.FromArgb(255, 0, 0, 0),
@@ -351,7 +351,7 @@ public partial class WaveformThemesViewModel : ObservableObject
 
     private static WaveformThemeDisplay MakeOceanBlueTheme() => new()
     {
-        Name = "Ocean Blue",
+        Name = Se.Language.Options.Settings.WaveformThemeOceanBlue,
         TextColor = Colors.White,
         WaveformColor = Color.FromArgb(255, 0, 120, 200),
         BackgroundColor = Color.FromArgb(255, 0, 20, 50),
@@ -367,7 +367,7 @@ public partial class WaveformThemesViewModel : ObservableObject
 
     private static WaveformThemeDisplay MakeWarmSunsetTheme() => new()
     {
-        Name = "Warm Sunset",
+        Name = Se.Language.Options.Settings.WaveformThemeWarmSunset,
         TextColor = Colors.White,
         WaveformColor = Color.FromArgb(255, 200, 100, 0),
         BackgroundColor = Color.FromArgb(255, 30, 10, 0),
@@ -383,7 +383,7 @@ public partial class WaveformThemesViewModel : ObservableObject
 
     private static WaveformThemeDisplay MakeForestTheme() => new()
     {
-        Name = "Forest",
+        Name = Se.Language.Options.Settings.WaveformThemeForest,
         TextColor = Color.FromArgb(255, 200, 255, 200),
         WaveformColor = Color.FromArgb(255, 50, 160, 50),
         BackgroundColor = Color.FromArgb(255, 10, 30, 10),
@@ -399,7 +399,7 @@ public partial class WaveformThemesViewModel : ObservableObject
 
     private static WaveformThemeDisplay MakeMidnightPurpleTheme() => new()
     {
-        Name = "Midnight Purple",
+        Name = Se.Language.Options.Settings.WaveformThemeMidnightPurple,
         TextColor = Color.FromArgb(255, 220, 200, 255),
         WaveformColor = Color.FromArgb(255, 140, 80, 220),
         BackgroundColor = Color.FromArgb(255, 12, 8, 30),
@@ -415,7 +415,7 @@ public partial class WaveformThemesViewModel : ObservableObject
 
     private static WaveformThemeDisplay MakeRetroAmberTheme() => new()
     {
-        Name = "Retro Amber",
+        Name = Se.Language.Options.Settings.WaveformThemeRetroAmber,
         TextColor = Color.FromArgb(255, 255, 200, 80),
         WaveformColor = Color.FromArgb(255, 200, 140, 20),
         BackgroundColor = Color.FromArgb(255, 18, 12, 0),
@@ -431,7 +431,7 @@ public partial class WaveformThemesViewModel : ObservableObject
 
     private static WaveformThemeDisplay MakeIceTheme() => new()
     {
-        Name = "Ice",
+        Name = Se.Language.Options.Settings.WaveformThemeIce,
         TextColor = Color.FromArgb(255, 200, 230, 255),
         WaveformColor = Color.FromArgb(255, 100, 180, 240),
         BackgroundColor = Color.FromArgb(255, 10, 20, 40),

@@ -3,6 +3,83 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-beta7 (20th of September 2026)
+
+* Add "Improve time codes (forced alignment)" in Tools: re-time a roughly synced subtitle with a Crisp ASR forced aligner, with waveform preview
+* Add "Isolate speech" option to Crisp ASR speech-to-text (removes music/noise before transcribing)
+* Add "Show speech only" waveform option
+* Add "Remove original speech" option to text to speech
+* Add Supertonic-3 (Crisp ASR) text to speech engine
+* Add Voxtral F16 model to Crisp ASR speech-to-text
+* Add "Move text after cursor, go to next, play and pause at end" shortcut - thx kadrimarzouki
+* Add optional "initial text of selected line" box to the waveform toolbar - thx kadrimarzouki
+* Add two "line break" items to the waveform toolbar (choose where the toolbar wraps)
+* Remember the second subtitle file after restart - thx kadrimarzouki
+* Point sync: open at the line selected in the main window - thx TristisOris
+* Settings backup: interval 0 = backup at every start, unchanged settings are skipped - thx GrampaWildWilly
+* Spell check: accept capitalized lowercase-only words at sentence start (e.g. Dutch "Oktober") - thx fraternl
+* OCR word split and auto-break of 3+ lines now find the best split - thx ivandrofly
+* Zonos (Crisp ASR) is no longer presented as a voice-cloning engine
+* Fix Google Translate V2 API adding the detected source language to the translation - thx DaTim69
+* Fix waveform play-head jumping to the start when changing settings/docking - thx kadrimarzouki
+* Fix text to speech "add audio to video" failing with TrueHD audio - thx nielka98
+* Fix text to speech "generate video" failing on XviD video without time stamps
+* Fix white title bar on some dialogs in dark theme - thx Surlime
+* Fix tooltips not showing when another SE window is active (undocked) - thx GrampaWildWilly
+* Fix error log being written on every start with routine diagnostics - thx GrampaWildWilly
+* Fix plain text import "split to four lines" leaving long text unbroken
+* Fix seconv reading an MP4 without subtitle tracks as text - thx Ro-meo
+* Fix untranslatable strings in waveform themes and OCR "Add character" windows
+* Update Crisp ASR to v0.8.34 (Linux CUDA builds are back)
+* Update Japanese translation - thx hisui3393
+* Update Polish translation - thx potplayer-fanpack
+* Update Turkish translation - thx bilimiyorum
+
+-----------------------------------------------------------------------------------------------------
+
+v5.3.0-beta6 (19th of September 2026)
+
+* Add actor picker, actor shortcuts now work everywhere and keep a stable order - thx zbik1
+* Add optional "go to changed line" on undo/redo - thx kadrimarzouki
+* Add "Set end and go to next" and "Play from just before text" to the waveform toolbar - thx JonEvanCook
+* Add two missing SE4 options to Settings > Tools (remember "Use always" list, short display times may move start time) - thx ChocOranger
+* Spell check: accept Spanish imperative + pronoun forms (dímelo, cuéntame, ...) - thx fraternl
+* Text to speech: a failed per-line voice clone line falls back to a neighbouring line's reference clip - thx nielka98
+* Waveform toolbar wraps to a second row instead of clipping - thx JonEvanCook
+* Space always types in text boxes, even with single-letter shortcuts allowed - thx kadrimarzouki
+* Pastel theme: refresh palette
+* Fix auto-translate "No usable translation" with KoboldCpp (llama.cpp advanced engine) - thx Giorgio800
+* Fix edit text box scrollbar covering the text - thx kadrimarzouki
+* Fix invisible toolbar icons in the Pastel theme
+* Fix misspelled entries in the Spanish SE word list
+* Update Japanese translation - thx hisui3393
+* Update Polish translation - thx potplayer-fanpack
+
+-----------------------------------------------------------------------------------------------------
+
+v5.3.0-beta5 (18th of September 2026)
+
+* Add "Generate background music" (ACE-Step, local) in Video > More and in the text to speech window
+* Add "Delete selection (everywhere)" shortcut - thx ruonghieu
+* Add burn-in of subtitles into half side-by-side / top-bottom 3D video
+* Add 3D subtitle export at the depth from a 3D Blu-ray's 3D-Plane (.ofs) file
+* Add "Search rules..." box to Fix common errors - thx zcraber
+* Add search icon and clear button to all search/filter boxes
+* Add FFmpeg parameter editing and M4A input to Remux - thx pdjdev
+* Add reorder, undelete, context menu, file sizes and video drop to "Add/remove embedded subtitles"
+* Second subtitle dialog: remember style, optionally skip the dialog - thx kadrimarzouki, muaz978
+* Frame mode: snap re-timed lines to frames automatically - thx Ingo
+* Split at text cursor: cursor at the end now splits at the line break - thx hisui3393
+* Return focus to the opening control when a dialog closes - thx Shaima-Almarzooqi
+* Settings: Ctrl+PageUp/Down also works with focus on a setting - thx Shaima-Almarzooqi
+* Video OCR: "Test current frame" result readable by screen readers - thx Shaima-Almarzooqi
+* Fix Perplexity translate always returning no translation
+* Update audio.cpp runtime to v0.8.0
+* Update Italian translation - thx bovirus
+* Update Korean translation - thx 12si27
+
+-----------------------------------------------------------------------------------------------------
+
 v5.3.0-beta4 (17th of September 2026)
 
 * Add "Translate in place" option and a model drop-down to auto-translate - thx fointypinger

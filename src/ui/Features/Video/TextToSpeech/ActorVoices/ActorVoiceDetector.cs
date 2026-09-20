@@ -140,6 +140,12 @@ public static class ActorVoiceDetector
                 case KokoroTtsCpp when !File.Exists(KokoroTtsCpp.GetExecutableFileName())
                     || !KokoroTtsCpp.AreModelsInstalled():
                     continue;
+
+                // Its ten presets are always listed, so unlike the cloning engines (whose voice
+                // lists are empty until something is imported) it would be offered for casting
+                // with no runtime behind it. The model itself may still auto-download.
+                case SupertonicCrispAsr when !File.Exists(SupertonicCrispAsr.GetCrispAsrExecutable()):
+                    continue;
             }
 
             yield return engine;

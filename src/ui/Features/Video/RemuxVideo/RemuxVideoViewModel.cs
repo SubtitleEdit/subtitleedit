@@ -358,7 +358,17 @@ public partial class RemuxVideoViewModel : ObservableObject
         {
             var dir = Path.GetDirectoryName(OutputFileName) ?? string.Empty;
             var name = Path.GetFileNameWithoutExtension(OutputFileName);
-            OutputFileName = Path.Combine(dir, name + value);
+
+            // A name that was suggested here is suggested again for the new extension, so it
+            // steps past files that exist. Swapping the extension alone could land on an earlier
+            // "x_remuxed.mkv", which "-y" then overwrote without a word - and Cancel deleted.
+            var suggestedName = Path.GetFileNameWithoutExtension(VideoFileName ?? string.Empty) + "_remuxed";
+            var isSuggestedName = !string.IsNullOrWhiteSpace(VideoFileName) &&
+                                  (name == suggestedName || name.StartsWith(suggestedName + "_", StringComparison.Ordinal)) &&
+                                  string.Equals(dir, Path.GetDirectoryName(VideoFileName) ?? string.Empty, StringComparison.OrdinalIgnoreCase);
+            OutputFileName = isSuggestedName
+                ? MakeOutputFileName(VideoFileName!, value)
+                : Path.Combine(dir, name + value);
         }
         IsCompleted = false;
     }
@@ -821,8 +831,10 @@ public partial class RemuxVideoViewModel : ObservableObject
             var mapArgs = new StringBuilder();
             var metadataArgs = new StringBuilder();
 
-            // 1. Video input (index 0)
-            inputArgs.Append($"-i \"{VideoFileName}\" ");
+            // 1. Video input (index 0). "genpts": H.264 with B-frames in .avi has packets without
+            //    a pts, and copying those into .mkv aborts with "Can't write packet with unknown
+            //    timestamp". Packets that have a pts are left as they are.
+            inputArgs.Append($"-fflags +genpts -i \"{VideoFileName}\" ");
             mapArgs.Append("-map 0:v:0 ");
 
             // 2. Audio inputs - the video's own audio is mapped from input 0, every other
@@ -884,6 +896,22 @@ public partial class RemuxVideoViewModel : ObservableObject
             if (subFiles.Count > 0)
             {
                 subCodec = isMkv ? "-c:s copy" : "-c:s mov_text";
+
+                // Matroska has no codec id for MicroDVD, so a text .sub cannot be copied in
+                // ("Subtitle codec microdvd is not supported") - it goes in as SubRip. A .sub
+                // with an .idx next to it is VobSub, which can be copied.
+                if (isMkv)
+                {
+                    for (var j = 0; j < subFiles.Count; j++)
+                    {
+                        var subFileName = subFiles[j].FileName;
+                        if (string.Equals(Path.GetExtension(subFileName), ".sub", StringComparison.OrdinalIgnoreCase) &&
+                            !File.Exists(Path.ChangeExtension(subFileName, ".idx")))
+                        {
+                            subCodec += $" -c:s:{j.ToString(CultureInfo.InvariantCulture)} srt";
+                        }
+                    }
+                }
             }
 
             var fastStart = string.Equals(SelectedOutputFormat, ".mp4", StringComparison.OrdinalIgnoreCase)

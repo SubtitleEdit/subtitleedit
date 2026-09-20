@@ -40,6 +40,8 @@ public class SeVideoTextToSpeech
     public double IndexTtsCrispAsrSpeed { get; set; }
     public string PocketTtsCrispAsrModel { get; set; }
     public double PocketTtsCrispAsrSpeed { get; set; }
+    public string SupertonicCrispAsrLanguage { get; set; }
+    public double SupertonicCrispAsrSpeed { get; set; }
     public string DotsTtsCrispAsrModel { get; set; }
     // Flow-matching Euler steps for dots.tts (8-32, default 16). Higher is better and slower;
     // there is no CLI flag for it, so the engine passes it as CRISPASR_DOTS_ODE_STEPS.
@@ -124,6 +126,7 @@ public class SeVideoTextToSpeech
     // Audio ducking (mix original audio at reduced volume)
     public bool AudioDuckingEnabled { get; set; }
     public int AudioDuckingOriginalVolume { get; set; }
+    public bool RemoveOriginalSpeech { get; set; }
 
     // Edge-TTS prosody parameters
     public string EdgeTtsRate { get; set; }
@@ -197,6 +200,8 @@ public class SeVideoTextToSpeech
         IndexTtsCrispAsrSpeed = 1.0;
         PocketTtsCrispAsrModel = "English F16 (~219 MB)";
         PocketTtsCrispAsrSpeed = 1.0;
+        SupertonicCrispAsrLanguage = string.Empty;
+        SupertonicCrispAsrSpeed = 1.0;
         DotsTtsCrispAsrModel = "Q8_0 (~3.5 GB)";
         DotsTtsCrispAsrOdeSteps = 16;
         Confucius4TtsCrispAsrModel = "Q8_0 (~1.9 GB)";

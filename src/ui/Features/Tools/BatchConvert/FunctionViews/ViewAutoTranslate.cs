@@ -74,13 +74,13 @@ public static class ViewAutoTranslate
             ToolTip.SetTip(buttonEngineSettings, Se.Language.General.LlamaCppEngineSettings);
         }
 
-        var buttonAdvanced = UiUtil.MakeButton(Se.Language.Translate.AdvancedDotDotDot, vm.ShowLlamaCppAdvancedSettingsCommand)
+        var buttonAdvanced = UiUtil.MakeButton(Se.Language.General.AdvancedDotDotDot, vm.ShowLlamaCppAdvancedSettingsCommand)
             .WithMarginLeft(10)
-            .WithAccessibleName(Se.Language.Translate.AdvancedSettings);
+            .WithAccessibleName(Se.Language.General.AdvancedSettings);
         buttonAdvanced.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.LlamaCppAdvancedButtonIsVisible)));
         if (Se.Settings.Appearance.ShowHints)
         {
-            ToolTip.SetTip(buttonAdvanced, Se.Language.Translate.AdvancedSettings);
+            ToolTip.SetTip(buttonAdvanced, Se.Language.General.AdvancedSettings);
         }
 
         // Batch convert's own local/external llama-server switch (#14005) - independent of the one

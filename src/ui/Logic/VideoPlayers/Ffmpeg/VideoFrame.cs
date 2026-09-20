@@ -34,8 +34,14 @@ public sealed class VideoFrame : IDisposable
         // the vector size the last row overruns its exact byte length (32 bytes seen for a 680 px
         // BGRA picture). Align the stride and keep slack after the last row so that stays inside
         // the allocation; a tight buffer here silently corrupts the heap.
-        Stride = (width * 4 + StrideAlignment - 1) & ~(StrideAlignment - 1);
+        Stride = StrideFor(width);
         Data = width > 0 && height > 0 ? Marshal.AllocHGlobal(Stride * height + RowSlack) : IntPtr.Zero;
+    }
+
+    /// <summary>Bytes per row of a BGRA picture <paramref name="width"/> pixels wide, as allocated here.</summary>
+    public static int StrideFor(int width)
+    {
+        return (width * 4 + StrideAlignment - 1) & ~(StrideAlignment - 1);
     }
 
     public void Dispose()

@@ -15,6 +15,9 @@ public class LanguageMainWaveform
     public string SelectCurrentLineWhilePlayingHint { get; set; }
     public string VideoPosition { get; set; }
     public string VideoPositionTextBox { get; set; }
+    public string ToolbarLineBreakX { get; set; }
+    public string InitialText { get; set; }
+    public string InitialTextHint { get; set; }
     public string HideWaveformToolbar { get; set; }
     public string ResetZoomAndSpeed { get; set; }
     public string RemoveBlankLines { get; set; }
@@ -67,6 +70,9 @@ public class LanguageMainWaveform
         SelectCurrentLineWhilePlayingHint = "Select current subtitle while playing {0}";
         VideoPosition = "Video position {0}";
         VideoPositionTextBox = "Video position text box {0}";
+        ToolbarLineBreakX = "Line break {0} (rest of toolbar continues on a new row)";
+        InitialText = "Initial text of selected line";
+        InitialTextHint = "The text of the selected line as it was when the line was selected";
         HideWaveformToolbar = "Hide toolbar {0}";
         ResetZoomAndSpeed = "Reset zoom & playback speed {0}";
         RemoveBlankLines = "Remove blank lines {0}";

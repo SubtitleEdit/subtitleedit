@@ -519,7 +519,7 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
 
     private void SetTitle()
     {
-        Title = $"Add nOCR character for line  {_startFromNumber + 1}, character {_letters.IndexOf(_splitItem) + 1} of {_letters.Count} using database \"{Path.GetFileNameWithoutExtension(_nOcrDb.FileName)}\"";
+        Title = string.Format(Se.Language.Ocr.AddNOcrCharacterTitle, _startFromNumber + 1, _letters.IndexOf(_splitItem) + 1, _letters.Count, Path.GetFileNameWithoutExtension(_nOcrDb.FileName));
     }
 
     internal void TextBoxNewOnKeyDown(object? sender, KeyEventArgs e)

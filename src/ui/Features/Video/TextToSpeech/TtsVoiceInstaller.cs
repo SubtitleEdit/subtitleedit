@@ -67,6 +67,16 @@ public static class TtsVoiceInstaller
     /// backends), so the dialogs read with the right engine name and don't mention
     /// Chatterbox.
     /// </summary>
+    /// <summary>
+    /// Ensures the CrispASR runtime is installed for "Remove original speech" - its source
+    /// separation task is part of every CrispASR build SE has ever pinned.
+    /// </summary>
+    public static Task<bool> EnsureCrispAsrForSpeechRemoval(Window? window, IWindowService windowService, string featureName)
+        => EnsureCrispAsrAsync(window, windowService, forceRedownload: false,
+            engineDisplayName: featureName,
+            extraCapabilityCheck: null,
+            minVersionNote: null);
+
     public static Task<bool> EnsureCrispAsrForQwen3(Window? window, IWindowService windowService, bool forceRedownload)
         => EnsureCrispAsrAsync(window, windowService, forceRedownload,
             engineDisplayName: "Qwen3 TTS (CrispASR)",
@@ -105,6 +115,18 @@ public static class TtsVoiceInstaller
             engineDisplayName: "Pocket TTS (CrispASR)",
             extraCapabilityCheck: null,
             minVersionNote: "v0.8.31 or newer");
+
+    /// <summary>
+    /// Ensures the CrispASR runtime that Supertonic (CrispASR) runs on is installed.
+    /// The supertonic backend ships in CrispASR v0.8.33 and newer; the version note names that
+    /// floor because older builds have no supertonic backend at all and abort on the unknown
+    /// --backend value.
+    /// </summary>
+    public static Task<bool> EnsureCrispAsrForSupertonic(Window? window, IWindowService windowService, bool forceRedownload)
+        => EnsureCrispAsrAsync(window, windowService, forceRedownload,
+            engineDisplayName: "Supertonic (CrispASR)",
+            extraCapabilityCheck: null,
+            minVersionNote: "v0.8.33 or newer");
 
     /// <summary>
     /// Ensures the CrispASR runtime that Zonos TTS (CrispASR) runs on is installed.
@@ -166,7 +188,7 @@ public static class TtsVoiceInstaller
 
     /// <summary>
     /// Ensures the CrispASR runtime that MOSS-TTS (CrispASR) runs on is installed.
-    /// The moss-tts backend ships in CrispASR v0.8.13 and newer (SE pins v0.8.33).
+    /// The moss-tts backend ships in CrispASR v0.8.13 and newer (SE pins v0.8.34).
     /// </summary>
     public static Task<bool> EnsureCrispAsrForMossTts(Window? window, IWindowService windowService, bool forceRedownload)
         => EnsureCrispAsrAsync(window, windowService, forceRedownload,
@@ -176,7 +198,7 @@ public static class TtsVoiceInstaller
 
     /// <summary>
     /// Ensures the CrispASR runtime that dots.tts (CrispASR) runs on is installed.
-    /// The dots-tts backend ships in CrispASR v0.8.25 and newer (SE pins v0.8.33); the version
+    /// The dots-tts backend ships in CrispASR v0.8.25 and newer (SE pins v0.8.34); the version
     /// note names that floor because older builds have no dots-tts backend at all and abort on
     /// the unknown --backend value.
     /// </summary>

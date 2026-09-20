@@ -86,12 +86,15 @@ public class SpellCheckWordLists
         // falls back to "<twoLetter>_user.xml" when the five-letter file does not exist, and
         // Options > Word lists offers neutral cultures ("en"), so words genuinely land there.
         // Reading only the five-letter name made those words invisible to the spell checker.
+        // The two-letter "_se.xml" holds shipped words that apply to every variant of a language,
+        // e.g. "es_se.xml" for es_ES, es_MX, es_US and es_AR.
         var twoLetterName = fiveLetterName.Length >= 2 ? fiveLetterName.Substring(0, 2).ToLowerInvariant() : fiveLetterName;
         var paths = new[]
         {
             Path.Combine(_dictionaryFolder, fiveLetterName + "_user.xml"),
             Path.Combine(_dictionaryFolder, fiveLetterName + "_se.xml"),
             Path.Combine(_dictionaryFolder, twoLetterName + "_user.xml"),
+            Path.Combine(_dictionaryFolder, twoLetterName + "_se.xml"),
         }.Distinct().ToArray();
 
         var xmlDoc = new XmlDocument();
@@ -338,6 +341,11 @@ public class SpellCheckWordLists
 
     public bool IsWordInUserPhrases(int index, List<SpellCheckWord> words)
     {
+        if (_userPhraseList.Count == 0)
+        {
+            return false;
+        }
+
         string current = Utilities.NormalizeUserDictionaryWord(words[index].Text);
         string prev = "-";
         if (index > 0)
@@ -351,18 +359,10 @@ public class SpellCheckWordLists
             next = Utilities.NormalizeUserDictionaryWord(words[index + 1].Text);
         }
 
-        // Both phrases are the same for every entry in the list - building them inside the
-        // loop allocated two strings per user phrase, per word checked.
-        var withNext = current + " " + next;
-        var withPrev = prev + " " + current;
-        foreach (string userPhrase in _userPhraseList)
-        {
-            if (userPhrase == withNext || userPhrase == withPrev)
-            {
-                return true;
-            }
-        }
-        return false;
+        // _userPhraseList is a HashSet with the default (ordinal) comparer, so two lookups give
+        // the same answer as comparing both phrases against every entry - per word checked.
+        return _userPhraseList.Contains(current + " " + next) ||
+               _userPhraseList.Contains(prev + " " + current);
     }
 
     public bool AddName(string word)

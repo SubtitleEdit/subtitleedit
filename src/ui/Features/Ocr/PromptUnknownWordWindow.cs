@@ -52,14 +52,22 @@ public class PromptUnknownWordWindow : Window
         var image = new Image
         {
             Stretch = Stretch.Uniform,
-            HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Center,
             MaxHeight = 200,
             DataContext = vm,
         };
         image.Bind(Image.SourceProperty, new Binding(nameof(vm.Bitmap)));
 
-        grid.Add(image, 0, 0, 1, 2);
+        // subtitle bitmaps are light or dark text on transparent pixels, so without a backdrop they
+        // vanish into the window - white text on the light theme (#15111)
+        var imageBackdrop = new Border
+        {
+            Background = ImagePreviewBackground.CreateBrush(),
+            Child = image,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+
+        grid.Add(imageBackdrop, 0, 0, 1, 2);
         grid.Add(MakeWholeTextView(vm), 1, 0, 1, 2);
         grid.Add(MakeWordView(vm), 2);
         grid.Add(MakeWordSuggestionsView(vm), 2, 1);

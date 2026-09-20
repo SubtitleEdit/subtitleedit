@@ -224,6 +224,15 @@ View subtitle file statistics (character count, line count, reading speed, etc.)
 
 Restore a previously auto-saved backup of a subtitle file.
 
+- **Menu:** File → Restore auto-backup...
+
+The **Settings** tab lists the backups of `Settings.json` (your settings and shortcuts):
+
+- A backup is taken when Subtitle Edit starts, if the newest one is older than the **Settings backup interval (days)** from Options → Settings - `0` means every start. It is skipped when nothing but the recent files lists has changed since the newest backup.
+- **Back up now** takes a backup right away, e.g. before editing `Settings.json` by hand.
+- **Restore settings** replaces the current settings with the selected backup. The current settings are backed up first, so a restore can be undone. Some changes only take effect after restarting Subtitle Edit.
+- Only the newest backups are kept (30 by default).
+
 ## Open Containing Folder
 
 Open the folder containing the current subtitle file in the file manager.

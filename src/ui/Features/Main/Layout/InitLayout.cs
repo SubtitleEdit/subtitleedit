@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Features.Main.Layout;
 public static partial class InitLayout
 {
     public const int WaveFormHeight = 150;
-    public static int LayoutWithoutVideo = 14;
+    public static int LayoutWithoutVideo = 15;
 
     public class LayoutPositions
     {
@@ -195,6 +195,7 @@ public static partial class InitLayout
             12 => MakeLayout12(mainPage, vm),
             13 => MakeLayout13(mainPage, vm),
             14 => MakeLayout14(mainPage, vm),
+            15 => MakeLayout15(mainPage, vm),
             _ => MakeLayout1(mainPage, vm)
         };
     }
@@ -1097,13 +1098,119 @@ public static partial class InitLayout
         return videoOnLeft ? 13 : 12;
     }
 
+    /// <summary>
+    /// Layout 14, the editor-style layout: the arrangement of a video editor. Subtitle grid
+    /// (with the edit box under it) and video player side by side across the top, and a timeline
+    /// across the bottom with a video row (filmstrip), a subtitle row and the waveform as the
+    /// audio row.
+    /// </summary>
     private static int MakeLayout14(MainView mainPage, MainViewModel vm)
+    {
+        var contentGrid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition(GridLength.Star),
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(GridLength.Star)
+            }
+        };
+
+        // Top content (will hold the nested grid)
+        var topContent = new Border();
+        Grid.SetRow(topContent, 0);
+        contentGrid.Children.Add(topContent);
+
+        // Create a nested grid with columns (for vertical split)
+        var nestedGrid = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(GridLength.Star),
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(GridLength.Star)
+            }
+        };
+
+        // Left part of nested grid
+        var nestedLeft = new Border
+        {
+            Child = InitListViewAndEditBox.MakeLayoutListViewAndEditBox(mainPage, vm)
+        };
+        Grid.SetColumn(nestedLeft, 0);
+        nestedGrid.Children.Add(nestedLeft);
+
+        // Vertical GridSplitter
+        var nestedSplitter = new GridSplitter
+        {
+            Width = UiUtil.SplitterWidthOrHeight,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Stretch
+        };
+        Grid.SetColumn(nestedSplitter, 1);
+        nestedGrid.Children.Add(nestedSplitter);
+
+        // Right part of nested grid
+        var nestedRight = new Border
+        {
+            Child = InitVideoPlayer.MakeLayoutVideoPlayer(vm),
+        };
+        Grid.SetColumn(nestedRight, 2);
+        nestedGrid.Children.Add(nestedRight);
+
+        // Add nested grid to top content
+        topContent.Child = nestedGrid;
+
+        // Main GridSplitter (horizontal)
+        var splitter = new GridSplitter
+        {
+            Height = UiUtil.SplitterWidthOrHeight,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        Grid.SetRow(splitter, 1);
+        contentGrid.Children.Add(splitter);
+
+        // Bottom content: the timeline
+        var bottomContent = new Border
+        {
+            Child = InitWaveform.MakeWaveform(vm, withTimelineTracks: true, out var timelineTracks),
+            VerticalAlignment = VerticalAlignment.Stretch,
+            Height = double.NaN,
+        };
+        Grid.SetRow(bottomContent, 2);
+        contentGrid.Children.Add(bottomContent);
+
+        CleanupOldContent(vm.ContentGrid);
+        vm.ContentGrid.Children.Add(contentGrid);
+
+        // set timeline height: the usual waveform plus the rows on top of it
+        var timelineRow = contentGrid.RowDefinitions[2];
+        timelineRow.Height = new GridLength(WaveFormHeight + (timelineTracks?.Height ?? TimelineTracks.TotalHeight), GridUnitType.Pixel);
+
+        // Regrouping the rows or switching the thumbnails off adds or removes rows; the waveform
+        // keeps its height and the timeline as a whole grows or shrinks instead.
+        if (timelineTracks != null)
+        {
+            timelineTracks.HeightChangedByUser += delta =>
+            {
+                if (timelineRow.Height.IsAbsolute)
+                {
+                    timelineRow.Height = new GridLength(Math.Max(TimelineTracks.TotalHeight, timelineRow.Height.Value + delta), GridUnitType.Pixel);
+                }
+            };
+        }
+
+        return 14;
+    }
+
+    private static int MakeLayout15(MainView mainPage, MainViewModel vm)
     {
         // Detach the live video player from the old layout BEFORE cleaning it up. Otherwise
         // CleanupOldContent walks into it and sets Content = null / clears its inner grid, which
         // tears down the native mpv/VLC render host on the UI thread while the file is still open -
-        // freezing the UI. Layouts 1-13 avoid this by recreating the player via MakeLayoutVideoPlayer
-        // (which CloseFile()s the old one first); layout 14 reuses the live control, so it must be
+        // freezing the UI. Layouts 1-14 avoid this by recreating the player via MakeLayoutVideoPlayer
+        // (which CloseFile()s the old one first); layout 15 reuses the live control, so it must be
         // pulled out of the tree first.
         vm.VideoPlayerControl?.RemoveControlFromParent();
 
@@ -1117,7 +1224,7 @@ public static partial class InitLayout
             vm.VideoPlayerControl.IsVisible = false;
         }
 
-        return 14;
+        return 15;
     }
 
     internal static void MakeLayoutWithoutVideoKeepVideo(MainView mainPage, MainViewModel vm)

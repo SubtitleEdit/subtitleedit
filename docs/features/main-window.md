@@ -271,6 +271,8 @@ When enabled (toggle via shortcut or **Options → Shortcuts → Toggle waveform
 | **Center** | Toggle keeping the video position centered in the waveform |
 | **Video seek** | Seek back/forward buttons |
 | **More** | Menu: reset zoom and speed, configure toolbar items, hide the toolbar |
+| **Line break 1 / 2** | Not buttons (off by default): the toolbar continues on a new row from where a line break is placed, so you decide where a wide toolbar wraps |
+| **Initial text of selected line** | Not a button (off by default): a read-only box with the selected line's text as it was when the line was selected, so a machine translation stays readable (and can be selected and copied) while you type over it. Font size and **Width** are set in *Configure toolbar items*; put a line break before it to give it a row of its own |
 
 <!-- Screenshot: Waveform toolbar -->
 ![Waveform Toolbar](../screenshots/main-waveform-toolbar.png)
@@ -315,7 +317,7 @@ The status bar at the bottom shows:
 
 ## Layouts
 
-Subtitle Edit offers **14 predefined layouts** for arranging the main window areas. Choose a layout via the **Layout** button on the toolbar or the configurable keyboard shortcut.
+Subtitle Edit offers **15 predefined layouts** for arranging the main window areas. Choose a layout via the **Layout** button on the toolbar or the configurable keyboard shortcut.
 
 | Layout | Description |
 |--------|-------------|
@@ -332,7 +334,16 @@ Subtitle Edit offers **14 predefined layouts** for arranging the main window are
 | 11 | Video top, waveform middle, grid and text editor bottom |
 | 12 | Grid left, video right with the text editor under it, waveform bottom |
 | 13 | Video left with the text editor under it, grid right, waveform bottom |
-| 14 | Grid and text editor only; no video, no waveform |
+| 14 | Editor style: grid and text editor left, video right; a timeline across the bottom with a video row (filmstrip), a subtitle row, and the waveform |
+| 15 | Grid and text editor only; no video, no waveform |
+
+In layout 14 the rows above the waveform follow its zoom, scroll position and play-head:
+
+- **Video row** — frames from the video (extracted with FFmpeg as they scroll into view), with shot changes marked. Switch it off with **Show video thumbnails** in the waveform's right-click menu; the subtitle rows then move up into its place.
+- **Subtitle rows** — one block per line. Drag a block to move the line, drag its edge to change the start or end time; clicks, snapping, minimum gap, multi-selection and undo all work exactly as on the waveform. The layers button on the waveform toolbar (a regular toolbar item: show, hide or move it with **⋮ → Configure toolbar items...**; also **Group subtitle tracks by** in the waveform's right-click menu) splits the subtitles over several rows, by **layer**, **actor** or **style**, so overlapping lines (two speakers, signs over dialogue) get a row each instead of piling up.
+- **Original row** — shown while an original subtitle is loaded, with the original text of each line.
+
+Because the text has rows of its own, the waveform below shows only the timing of each line (its region, number and duration), not the text.
 
 <!-- Screenshot: Layout chooser window showing thumbnails -->
 ![Layout Chooser](../screenshots/layout-chooser.png)

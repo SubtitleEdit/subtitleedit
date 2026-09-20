@@ -169,7 +169,6 @@ public class VoiceCloningConsentTests
         [typeof(Qwen3TtsCrispAsr)] = () => new Qwen3TtsVoice("Ada", "/voices/ada.wav"),
         [typeof(VibeVoiceCrispAsr)] = () => new VibeVoice("Ada", "/voices/ada.wav"),
         [typeof(VoxCPM2CrispAsr)] = () => new VoxCPM2Voice("Ada", "/voices/ada.wav"),
-        [typeof(ZonosTtsCrispAsr)] = () => new ZonosTtsVoice("Ada", "/voices/ada.wav"),
     };
 
     public static TheoryData<object> CloneVoices() => new()
@@ -187,7 +186,6 @@ public class VoiceCloningConsentTests
         new Qwen3TtsVoice("Ada", "/voices/ada.wav"),
         new VibeVoice("Ada", "/voices/ada.wav"),
         new VoxCPM2Voice("Ada", "/voices/ada.wav"),
-        new ZonosTtsVoice("Ada", "/voices/ada.wav"),
     };
 
     public static TheoryData<object> PresetVoices() => new()

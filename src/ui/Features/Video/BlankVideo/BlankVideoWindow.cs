@@ -87,7 +87,8 @@ public class BlankVideoWindow : Window
     private Border MakeVideoSettingsView(BlankVideoViewModel vm)
     {
         var labelDuration = UiUtil.MakeLabel(Se.Language.General.DurationMinutes);
-        var numericUpDownDuration = UiUtil.MakeNumericUpDownInt(0, 10000, 0, 120, vm, nameof(vm.DurationMinutes));
+        // Minimum 1: a duration of 0 gives "-t 0", which newer ffmpeg reads as "no limit".
+        var numericUpDownDuration = UiUtil.MakeNumericUpDownInt(1, 10000, 1, 120, vm, nameof(vm.DurationMinutes));
         _numericUpDownDuration = numericUpDownDuration;
 
         var labelResolution = UiUtil.MakeLabel(Se.Language.General.Resolution);

@@ -115,6 +115,12 @@ public class ForcedAlignerSetupWindow : Window
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+        var checkEndsFromSpeech = UiUtil.MakeCheckBox(Se.Language.File.Import.ForcedAlignerEndsFromSpeech, vm, nameof(vm.EndsFromIsolatedSpeech));
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(checkEndsFromSpeech, Se.Language.File.Import.ForcedAlignerEndsFromSpeechHint);
+        }
+
         var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
         var grid = new Grid
@@ -126,6 +132,7 @@ public class ForcedAlignerSetupWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // engine status
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // aligner
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // aligner status
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // ends from isolated speech
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // buttons
             },
             ColumnDefinitions =
@@ -146,7 +153,8 @@ public class ForcedAlignerSetupWindow : Window
         grid.Add(labelAligner, 3, 0);
         grid.Add(comboAligner, 3, 1);
         grid.Add(labelAlignerStatus, 4, 0, 1, 2);
-        grid.Add(panelButtons, 5, 0, 1, 2);
+        grid.Add(checkEndsFromSpeech, 5, 0, 1, 2);
+        grid.Add(panelButtons, 6, 0, 1, 2);
 
         Content = grid;
 

@@ -41,32 +41,38 @@ internal static class ContainerSubtitleLoader
 
         if (ext is ".mp4" or ".m4v" or ".m4s" or ".3gp" or ".mov" or ".m4a" or ".m4b" or ".cmaf")
         {
+            long fileLength;
             try
             {
-                var fileLength = new FileInfo(filePath).Length;
-                if (fileLength > 10_000)
-                {
-                    return LoadMp4(filePath, options);
-                }
-
-                // Subtitle-only DASH/CMAF files (an init segment plus a few m4s fragments)
-                // are typically just a few KB. Try the MP4 parser, but on failure fall
-                // through to the text loader as the old 10 KB minimum did.
-                if (fileLength > 100)
-                {
-                    try
-                    {
-                        return LoadMp4(filePath, options);
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        // No tracks found; let the text loader try.
-                    }
-                }
+                fileLength = new FileInfo(filePath).Length;
             }
             catch
             {
                 // Ignore I/O race; let the text loader try.
+                fileLength = 0;
+            }
+
+            // A real video: "no subtitle tracks" is the answer. Swallowing it sent the whole
+            // movie through the text loader, which read gigabytes as lines only to report
+            // "Unable to determine subtitle format".
+            if (fileLength > 10_000)
+            {
+                return LoadMp4(filePath, options);
+            }
+
+            // Subtitle-only DASH/CMAF files (an init segment plus a few m4s fragments)
+            // are typically just a few KB. Try the MP4 parser, but on failure fall
+            // through to the text loader as the old 10 KB minimum did.
+            if (fileLength > 100)
+            {
+                try
+                {
+                    return LoadMp4(filePath, options);
+                }
+                catch (InvalidOperationException)
+                {
+                    // No tracks found; let the text loader try.
+                }
             }
         }
 
@@ -418,7 +424,8 @@ internal static class ContainerSubtitleLoader
 
         if (tracks.Count == 0)
         {
-            throw new InvalidOperationException($"No subtitle tracks in MP4 file: {filePath}");
+            throw new InvalidOperationException(
+                $"No subtitle tracks in MP4 file: {filePath}. Subtitles burned into the picture are not a track and cannot be extracted.");
         }
         return tracks;
     }

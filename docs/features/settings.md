@@ -46,6 +46,7 @@ The subtitle rules that drive error checking, the grid's warning colors, and too
 - **Save as behavior**, **Save as: append language code**, **Default save location** (with a custom folder)
 - **Auto-save** — Save the open file while editing
 - **Auto-backup** — Automatic backups at a set interval, with a restore dialog, and **Auto-backup retention (days)** for how long they are kept
+- **Auto-backup settings** — Keeps dated copies of `Settings.json` (settings and shortcuts). **Settings backup interval (days)** sets how often: the check runs when Subtitle Edit starts, and `0` means every start. A backup is skipped when nothing but the recent files lists has changed since the newest backup. **Settings backups to keep** sets how many copies are kept (default 30). Restore them from File → Restore auto-backup → Settings
 
 ## Subtitle Formats
 

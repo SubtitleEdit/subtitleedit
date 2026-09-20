@@ -44,7 +44,7 @@ public class PointSyncViaOtherGapTests
             Line(12000, 14000),
         };
 
-        vm.Initialize(lines, string.Empty, string.Empty, VideoPreviewSubtitleContext.Default);
+        vm.Initialize(lines, 0, string.Empty, string.Empty, VideoPreviewSubtitleContext.Default);
 
         // The first line's gap is measured from 00:00 - it too starts after "silence".
         Assert.Equal(4000, vm.Subtitles[0].PreviousGap, 3);
@@ -61,7 +61,7 @@ public class PointSyncViaOtherGapTests
             Line(1000, 3000),
             Line(5000, 6000),
         };
-        vm.Initialize(lines, string.Empty, string.Empty, VideoPreviewSubtitleContext.Default);
+        vm.Initialize(lines, 0, string.Empty, string.Empty, VideoPreviewSubtitleContext.Default);
 
         // One sync point moving the first line from 1000 ms to 2000 ms (+1000 ms shift).
         vm.SelectedSubtitle = vm.Subtitles[0];
@@ -80,7 +80,7 @@ public class PointSyncViaOtherGapTests
     {
         var vm = MakeViewModel();
         vm.Initialize(new List<SubtitleLineViewModel> { Line(1000, 3000) },
-            string.Empty, string.Empty, VideoPreviewSubtitleContext.Default);
+            0, string.Empty, string.Empty, VideoPreviewSubtitleContext.Default);
 
         var window = new PointSyncViaOtherWindow(vm);
         try

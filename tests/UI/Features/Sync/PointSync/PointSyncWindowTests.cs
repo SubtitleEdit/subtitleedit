@@ -81,7 +81,7 @@ public class PointSyncWindowTests : IDisposable
     {
         var vm = new PointSyncViewModel(new FileHelper(), new WindowService(new NullServiceProvider()));
         var lines = TwoLines();
-        vm.Initialize(lines, new List<SubtitleLineViewModel>(), string.Empty, string.Empty, VideoPreviewSubtitleContext.Default, null);
+        vm.Initialize(lines, 0, string.Empty, string.Empty, VideoPreviewSubtitleContext.Default, null);
 
         var window = Track(new PointSyncWindow(vm));
 
@@ -165,12 +165,64 @@ public class PointSyncWindowTests : IDisposable
         // The other subtitle stays the usual source, and the video is the fallback for lines it
         // does not cover - so both buttons have to be there.
         var vm = new PointSyncViaOtherViewModel(new FileHelper(), new WindowService(new NullServiceProvider()));
-        vm.Initialize(TwoLines(), string.Empty, string.Empty, VideoPreviewSubtitleContext.Default);
+        vm.Initialize(TwoLines(), 0, string.Empty, string.Empty, VideoPreviewSubtitleContext.Default);
 
         var window = Track(new PointSyncViaOtherWindow(vm));
 
         var texts = ButtonTexts(window).ToList();
         Assert.Contains(Se.Language.Sync.SetSyncPoint, texts);
         Assert.Contains(Se.Language.Sync.SetSyncPointViaVideo, texts);
+    }
+
+    private static List<SubtitleLineViewModel> ManyLines()
+        => Enumerable.Range(0, 300)
+            .Select(i => new SubtitleLineViewModel { StartTime = TimeSpan.FromSeconds(i * 4), EndTime = TimeSpan.FromSeconds(i * 4 + 2), Text = "Line " + i })
+            .ToList();
+
+    private static TableView LinesGrid(Window window)
+        => window.GetLogicalDescendants().OfType<TableView>()
+            .First(t => t.SelectedItem is SubtitleLineViewModel);
+
+    [AvaloniaFact]
+    public void PointSyncWindow_OpensAtTheMainWindowSelection()
+    {
+        // Retiming in several rounds reopens the dialog each time - it has to start where the
+        // user is, not at line 1 (issue #15062).
+        var vm = new PointSyncViewModel(new FileHelper(), new WindowService(new NullServiceProvider()));
+        var lines = ManyLines();
+        vm.Initialize(lines, 200, string.Empty, string.Empty, VideoPreviewSubtitleContext.Default, null);
+
+        var window = Track(new PointSyncWindow(vm));
+        window.Show();
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+
+        Assert.Same(lines[200], vm.SelectedSubtitle);
+        Assert.True(TableViewExtras.IsRowFullyVisible(LinesGrid(window), lines[200]));
+    }
+
+    [AvaloniaFact]
+    public void PointSyncViaOtherWindow_OpensAtTheMainWindowSelection()
+    {
+        var vm = new PointSyncViaOtherViewModel(new FileHelper(), new WindowService(new NullServiceProvider()));
+        var lines = ManyLines();
+        vm.Initialize(lines, 200, string.Empty, string.Empty, VideoPreviewSubtitleContext.Default);
+
+        var window = Track(new PointSyncViaOtherWindow(vm));
+        window.Show();
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+
+        Assert.Same(lines[200], vm.SelectedSubtitle);
+        Assert.True(TableViewExtras.IsRowFullyVisible(LinesGrid(window), lines[200]));
+    }
+
+    [AvaloniaFact]
+    public void PointSyncViewModel_OutOfRangeSelection_FallsBackIntoTheList()
+    {
+        var vm = new PointSyncViewModel(new FileHelper(), new WindowService(new NullServiceProvider()));
+        var lines = TwoLines();
+
+        vm.Initialize(lines, -1, string.Empty, string.Empty, VideoPreviewSubtitleContext.Default, null);
+
+        Assert.Same(lines[0], vm.SelectedSubtitle);
     }
 }

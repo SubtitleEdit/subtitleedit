@@ -72,6 +72,24 @@ public class ImagePreviewBackgroundTests
         Assert.DoesNotContain("GetCheckerboardBrush", source, StringComparison.Ordinal);
     }
 
+    // The OCR character dialogs show the same transparent bitmaps as the grids. With no backdrop
+    // (or a hard-coded light one) white text vanished on the light theme (#15111).
+    [Theory]
+    [InlineData("src/ui/Features/Ocr/NOcr/NOcrCharacterAddWindow.cs")]
+    [InlineData("src/ui/Features/Ocr/NOcr/NOcrInspectWindow.cs")]
+    [InlineData("src/ui/Features/Ocr/NOcr/NOcrCharacterHistoryWindow.cs")]
+    [InlineData("src/ui/Features/Ocr/BinaryOcr/BinaryOcrCharacterAddWindow.cs")]
+    [InlineData("src/ui/Features/Ocr/BinaryOcr/BinaryOcrInspectWindow.cs")]
+    [InlineData("src/ui/Features/Ocr/BinaryOcr/BinaryOcrCharacterHistoryWindow.cs")]
+    [InlineData("src/ui/Features/Ocr/PromptUnknownWordWindow.cs")]
+    public void OcrCharacterDialogs_PutSubtitleBitmapsOnTheSharedBackdrop(string relativePath)
+    {
+        var source = File.ReadAllText(Path.Combine(FindRepoRoot(), relativePath.Replace('/', Path.DirectorySeparatorChar)));
+
+        Assert.Contains("Background = ImagePreviewBackground.CreateBrush()", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("Colors.LightGray", source, StringComparison.Ordinal);
+    }
+
     private static string FindRepoRoot()
     {
         var dir = new DirectoryInfo(AppContext.BaseDirectory);
