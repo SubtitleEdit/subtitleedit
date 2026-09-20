@@ -625,11 +625,26 @@ public partial class CheckArteErrorsViewModel : ObservableObject
         }
 
         var first = subtitle.Paragraphs[0];
-        if (!string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(first.Text, true)))
+        var startTimeCodeMs = GetStartTimeCodeReference(subtitle);
+        var expectedEndMs = startTimeCodeMs + 200.0;
+        var isBlank = string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(first.Text, true));
+        var startsAtStartTimeCode =
+            Math.Abs(first.StartTime.TotalMilliseconds - startTimeCodeMs) < 0.01;
+
+        if (!isBlank)
         {
-            var firstFrame = Math.Max(0L, (long)Math.Floor(first.StartTime.TotalMilliseconds / 40.0));
-            var firstHourFrame = firstFrame / (25 * 60 * 60) * (25 * 60 * 60);
-            var blank = new Paragraph(string.Empty, firstHourFrame * 40.0, (firstHourFrame + 5) * 40.0)
+            if (startsAtStartTimeCode)
+            {
+                Fixes.Add(new ArteFixItem(
+                    false,
+                    1,
+                    first.Text,
+                    string.Empty,
+                    "The subtitle at the ARTE start time code must be an empty five-frame blank/control subtitle."));
+                return;
+            }
+
+            var blank = new Paragraph(string.Empty, startTimeCodeMs, expectedEndMs)
             {
                 MarginV = "0",
             };
@@ -638,11 +653,25 @@ public partial class CheckArteErrorsViewModel : ObservableObject
                 0,
                 "Missing",
                 FormatTimeRange(blank),
-                "Create a five-frame blank/control subtitle at the full hour before the first normal subtitle.",
+                "Create a five-frame blank/control subtitle at the start time code before the first normal subtitle.",
                 ArteFixKind.CreateBlankSubtitle)
             {
                 ProposedParagraph = blank,
             });
+            return;
+        }
+
+        var hasCorrectDuration =
+            Math.Abs(first.EndTime.TotalMilliseconds - expectedEndMs) < 0.01;
+        if (!hasCorrectDuration)
+        {
+            var expectedBlank = new Paragraph(string.Empty, startTimeCodeMs, expectedEndMs);
+            Fixes.Add(new ArteFixItem(
+                false,
+                1,
+                FormatTimeRange(first),
+                FormatTimeRange(expectedBlank),
+                "The ARTE blank/control subtitle must last exactly five frames."));
         }
     }
 

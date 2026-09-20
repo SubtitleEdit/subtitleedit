@@ -294,6 +294,40 @@ public class ArtePreviewTests
     }
 
     [AvaloniaFact]
+    public void BlankSubtitle_AtStartTimeCode_WithText_IsReportedWithoutAutomaticFix()
+    {
+        var source = new Subtitle();
+        source.Paragraphs.Add(new Paragraph("Must not be here", 10 * 60 * 60 * 1000, 10 * 60 * 60 * 1000 + 200));
+        var vm = Create(source, "ARTE blank subtitle");
+
+        var fix = Assert.Single(vm.Fixes, item => item.GroupName == "ARTE blank subtitle");
+        Assert.False(fix.CanBeFixed);
+        Assert.Contains("must be an empty five-frame blank/control subtitle", fix.Reason);
+    }
+
+    [AvaloniaFact]
+    public void BlankSubtitle_WithWrongDuration_IsReported()
+    {
+        var source = new Subtitle();
+        source.Paragraphs.Add(new Paragraph(string.Empty, 10 * 60 * 60 * 1000, 10 * 60 * 60 * 1000 + 400));
+        var vm = Create(source, "ARTE blank subtitle");
+
+        var fix = Assert.Single(vm.Fixes, item => item.GroupName == "ARTE blank subtitle");
+        Assert.False(fix.CanBeFixed);
+        Assert.Contains("last exactly five frames", fix.Reason);
+    }
+
+    [AvaloniaFact]
+    public void CorrectBlankSubtitle_ProducesNoBlankFix()
+    {
+        var source = new Subtitle();
+        source.Paragraphs.Add(new Paragraph(string.Empty, 10 * 60 * 60 * 1000, 10 * 60 * 60 * 1000 + 200));
+        var vm = Create(source, "ARTE blank subtitle");
+
+        Assert.DoesNotContain(vm.Fixes, item => item.GroupName == "ARTE blank subtitle");
+    }
+
+    [AvaloniaFact]
     public void AutomaticSplit_KeepsTextTimingAndLaterEdits()
     {
         var source = new Subtitle();
