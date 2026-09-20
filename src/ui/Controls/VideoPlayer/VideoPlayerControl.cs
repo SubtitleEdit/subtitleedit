@@ -16,6 +16,7 @@ using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using Optris.Icons.Avalonia;
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -217,6 +218,48 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         /// </summary>
         internal double PositionForRestore => _pendingRestorePositionSeconds ?? Position;
 
+        // When the pending restore was announced (Stopwatch ticks), and whether the sequence that
+        // announced it is still trying to get there. See PositionRestoreHoldSeconds.
+        private long _pendingRestoreStartedTs;
+        private bool _positionRestoreInFlight;
+
+        // An open+restore sequence is a bounded ready wait plus a bounded run of seeks (8 s at the
+        // defaults); past this the player is not going to arrive and the hold must let go.
+        private const double PositionRestoreHoldMaxSeconds = 10;
+
+        /// <summary>
+        /// Where the play-head should be shown while an open+restore sequence is still in flight,
+        /// or null when the live position is the truth. A player that is still loading reports 0,
+        /// and anything that follows the live position through that window - the waveform cursor,
+        /// the centered waveform scroll, "select current subtitle" - jumps to the start of the
+        /// video and back on every layout rebuild, dock/undock and fullscreen (issue #15027).
+        /// <para>
+        /// Unlike <see cref="PositionForRestore"/>, which deliberately keeps its target after a
+        /// restore that ran out of time, this lets go then - and after a hard cap for a sequence
+        /// nothing ever ended: a display held on a target the player never reaches would sit
+        /// frozen through playback.
+        /// </para>
+        /// </summary>
+        internal double? PositionRestoreHoldSeconds
+        {
+            get
+            {
+                if (!_positionRestoreInFlight || IsDisposed || _pendingRestorePositionSeconds is not { } pending)
+                {
+                    return null;
+                }
+
+                var elapsedSeconds = (Stopwatch.GetTimestamp() - _pendingRestoreStartedTs) / (double)Stopwatch.Frequency;
+                if (elapsedSeconds > PositionRestoreHoldMaxSeconds)
+                {
+                    _positionRestoreInFlight = false;
+                    return null;
+                }
+
+                return pending;
+            }
+        }
+
         /// <summary>
         /// Announces that an open+restore sequence heading for <paramref name="seconds"/> has
         /// started, so <see cref="PositionForRestore"/> reports that target instead of the 0 the
@@ -231,6 +274,8 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             if (seconds > 0)
             {
                 _pendingRestorePositionSeconds = seconds;
+                _pendingRestoreStartedTs = Stopwatch.GetTimestamp();
+                _positionRestoreInFlight = true;
             }
         }
 
@@ -241,6 +286,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         internal void EndPositionRestore()
         {
             _pendingRestorePositionSeconds = null;
+            _positionRestoreInFlight = false;
         }
 
         /// <summary>
@@ -1102,6 +1148,9 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
                 if (Environment.TickCount64 >= end)
                 {
+                    // The target stays for a rebuild to pick up, but nothing is heading for it
+                    // any more - stop holding the play-head display on it.
+                    _positionRestoreInFlight = false;
                     return;
                 }
 
@@ -1194,17 +1243,28 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                         pos = pos * 1000.0 / 1001.0; // SMPTE timing adjustment
                     }
 
-                    SetPositionDisplayOnly(pos);
-
                     // The player has arrived where the restore was heading - drop the pending
                     // target even if the restoring code never got to end it (an abandoned
                     // sequence would otherwise pin PositionForRestore for the rest of the
-                    // control's life).
+                    // control's life). Checked on the player's own position, before the hold
+                    // below replaces it for display.
                     if (_pendingRestorePositionSeconds is { } pending &&
                         Math.Abs(pos - pending) < PositionRestoreArrivedToleranceSeconds)
                     {
                         EndPositionRestore();
                     }
+
+                    // Still loading its way back after a rebuild: the player reports 0, which
+                    // showed as the time text and the slider dropping to 0:00 and jumping back
+                    // once the restore seek landed. Show where the video is going to be, like
+                    // the waveform play-head does (issue #15027). Display only - nothing here
+                    // reaches the player.
+                    if (PositionRestoreHoldSeconds is { } holdSeconds)
+                    {
+                        pos = holdSeconds;
+                    }
+
+                    SetPositionDisplayOnly(pos);
                 }
 
                 var fullDuration = TimeCode.FromSeconds(Duration + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0).ToDisplayString();
