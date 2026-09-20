@@ -135,6 +135,16 @@ public partial class ReEncodeVideoViewModel : ObservableObject
                         VideoHeight = (int)(mediaInfo.Dimension.Height * scaleFactor);
                         UseSourceResolution = false;
                     }
+                    else if (mediaInfo.Dimension.Width > 0 && mediaInfo.Dimension.Height > 0)
+                    {
+                        // A source that is already small keeps its size. Only the wide ones were
+                        // handled, so 1280x536 or 640x480 stayed on the constructor's 1280x720 and
+                        // came out stretched to 16:9 - and the small one upscaled, the opposite of
+                        // what this dialog is for.
+                        VideoWidth = mediaInfo.Dimension.Width;
+                        VideoHeight = mediaInfo.Dimension.Height;
+                        UseSourceResolution = false;
+                    }
                 });
             });
         }
@@ -150,9 +160,21 @@ public partial class ReEncodeVideoViewModel : ObservableObject
         if (_doAbort)
         {
             _timerGenerate.Stop();
+            try
+            {
 #pragma warning disable CA1416
-            _ffmpegProcess.Kill(true);
+                _ffmpegProcess.Kill(true);
 #pragma warning restore CA1416
+
+                // The half-written file is of no use, and left behind it made the next run
+                // suggest a "_2" name next to it.
+                _ffmpegProcess.WaitForExit(3000);
+                File.Delete(JobItems[_jobItemIndex].OutputVideoFileName);
+            }
+            catch
+            {
+                // ignore
+            }
 
             IsGenerating = false;
             return;
@@ -187,7 +209,12 @@ public partial class ReEncodeVideoViewModel : ObservableObject
 
         var jobItem = JobItems[_jobItemIndex];
 
-        if (!File.Exists(jobItem.OutputVideoFileName))
+        // The exit code counts too: ffmpeg leaves a 0-byte stub behind when it gives up (TrueHD
+        // audio copied into .mp4, exit code 88), and an overwritten file is still there after
+        // any failure - both used to be reported as "video file generated".
+        if (_ffmpegProcess.ExitCode != 0 ||
+            !File.Exists(jobItem.OutputVideoFileName) ||
+            new FileInfo(jobItem.OutputVideoFileName).Length == 0)
         {
             SeLogger.Error("Output video file not found: " + jobItem.OutputVideoFileName + Environment.NewLine +
                            "ffmpeg: " + _ffmpegProcess.StartInfo.FileName + Environment.NewLine +

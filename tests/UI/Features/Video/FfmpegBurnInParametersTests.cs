@@ -120,11 +120,11 @@ public class FfmpegBurnInParametersTests
     /// laid over the frames, scaled to the output size like the video - libass' "ass" filter
     /// renders text only. Overlapping lines are shown together this way (issue #14456).
     /// </summary>
-    private static string GenerateImage(string cutStart = "", bool inputIsAudioOnly = false, Nikse.SubtitleEdit.Features.Video.BurnIn.BurnInLogo? logo = null)
+    private static string GenerateImage(string cutStart = "", bool inputIsAudioOnly = false, Nikse.SubtitleEdit.Features.Video.BurnIn.BurnInLogo? logo = null, string subtitleFileName = "/tmp/subs.sup")
     {
         return FfmpegGenerator.GenerateHardcodedVideoFile(
             "input.mp4",
-            "/tmp/subs.sup",
+            subtitleFileName,
             "output.mp4",
             320,
             240,
@@ -153,7 +153,7 @@ public class FfmpegBurnInParametersTests
         var parameters = GenerateImage();
 
         Assert.Contains("-y -i \"input.mp4\" -i \"/tmp/subs.sup\"", parameters);
-        Assert.Contains("-filter_complex \"[0:v]scale=320:240[video];[1:s]scale=320:240[subs];[video][subs]overlay\"", parameters);
+        Assert.Contains("-filter_complex \"[0:v]scale=320:240[video];[1:s]scale=320:240[subs];[video][subs]overlay=eof_action=pass\"", parameters);
         Assert.DoesNotContain("ass=", parameters);
         Assert.DoesNotContain("-vf", parameters);
     }
@@ -167,7 +167,90 @@ public class FfmpegBurnInParametersTests
     {
         var parameters = GenerateImage(cutStart: "-ss 00:01:02.500");
 
-        Assert.Contains("-y -ss 00:01:02.500 -i \"input.mp4\" -itsoffset -00:01:02.500 -i \"/tmp/subs.sup\"", parameters);
+        Assert.Contains("-y -ss 00:01:02.500 -i \"input.mp4\" -itsoffset -62.5 -i \"/tmp/subs.sup\"", parameters);
+    }
+
+    /// <summary>
+    /// ffmpeg restarts the sup input at zero as well - at its first segment. A sup whose first
+    /// subtitle is at 11:19 showed it on the first frame of the video, and every later one that
+    /// much too early, so the input is moved forward by the time of that first segment.
+    /// </summary>
+    [Theory]
+    [InlineData("", " -itsoffset 679.762 -i ")]
+    [InlineData("-ss 00:10:00.000", " -itsoffset 79.762 -i ")]
+    [InlineData("-ss 00:11:19.762", "\"input.mp4\" -i ")]
+    public void ImageSubtitle_IsMovedToTheTimeOfItsFirstSegment(string cutStart, string expected)
+    {
+        var supFileName = Path.Combine(Path.GetTempPath(), $"se-test-{System.Guid.NewGuid()}.sup");
+        try
+        {
+            // "PG", a 90 kHz presentation time stamp (679.762 s), a decoding time stamp, and an
+            // empty END segment.
+            var pts = (uint)(679.762 * 90000);
+            File.WriteAllBytes(supFileName, new byte[]
+            {
+                (byte)'P', (byte)'G',
+                (byte)(pts >> 24), (byte)(pts >> 16), (byte)(pts >> 8), (byte)pts,
+                0, 0, 0, 0,
+                0x80, 0, 0,
+            });
+
+            var parameters = GenerateImage(cutStart: cutStart, subtitleFileName: supFileName);
+
+            Assert.Contains(expected, parameters);
+        }
+        finally
+        {
+            File.Delete(supFileName);
+        }
+    }
+
+    /// <summary>
+    /// When the sup ran out before the video, the overlay's default end-of-stream action made
+    /// ffmpeg write one last frame stamped ~4294967 s: .mp4 output aborted with exit code 176
+    /// and .mkv output claimed a duration of 1193 hours.
+    /// </summary>
+    [Fact]
+    public void ImageSubtitle_OverlayLetsTheVideoThroughWhenTheSubtitlesEnd()
+    {
+        Assert.Contains("[video][subs]overlay=eof_action=pass", GenerateImage());
+    }
+
+    /// <summary>
+    /// The audio bit rate box is always shown, but "-b:a" was only written for a target file size.
+    /// </summary>
+    [Theory]
+    [InlineData("", "")]
+    [InlineData("1", "500k")]
+    [InlineData("2", "500k")]
+    public void AudioBitRate_IsWrittenWheneverAudioIsEncoded(string pass, string twoPassBitRate)
+    {
+        var parameters = Generate("libx264", "aac", "output.mp4", pass, twoPassBitRate);
+
+        Assert.Single(System.Text.RegularExpressions.Regex.Matches(parameters, "-b:a 128k"));
+    }
+
+    [Fact]
+    public void AudioBitRate_IsLeftOutWhenAudioIsCopied()
+    {
+        Assert.DoesNotContain("-b:a", Generate("libx264", "copy", "output.mp4"));
+    }
+
+    /// <summary>
+    /// ffmpeg aborts on a sample rate the encoder cannot do: libopus takes 48000 only (of the
+    /// rates offered), ac3 and mp3 stop at 48000, aac at 96000.
+    /// </summary>
+    [Theory]
+    [InlineData("libopus", "44100", "48000")]
+    [InlineData("libopus", "96000", "48000")]
+    [InlineData("ac3", "96000", "48000")]
+    [InlineData("mp3", "192000", "48000")]
+    [InlineData("aac", "192000", "96000")]
+    [InlineData("aac", "44100", "44100")]
+    [InlineData("libvorbis", "96000", "96000")]
+    public void SampleRate_IsLimitedToWhatTheEncoderSupports(string audioEncoding, string sampleRate, string expected)
+    {
+        Assert.Equal(expected, FfmpegGenerator.GetSupportedSampleRate(audioEncoding, sampleRate));
     }
 
     [Fact]
@@ -203,7 +286,7 @@ public class FfmpegBurnInParametersTests
             var parameters = GenerateImage(logo: logo);
 
             Assert.Contains($"-i \"input.mp4\" -i \"/tmp/subs.sup\" -i \"{logoFileName}\"", parameters);
-            Assert.Contains("[0:v]scale=320:240[video];[1:s]scale=320:240[subs];[video][subs]overlay[withsubs];[2:v]scale=", parameters);
+            Assert.Contains("[0:v]scale=320:240[video];[1:s]scale=320:240[subs];[video][subs]overlay=eof_action=pass[withsubs];[2:v]scale=", parameters);
             Assert.Contains("[withsubs][logo]overlay=10:20", parameters);
         }
         finally
@@ -307,7 +390,7 @@ public class FfmpegBurnInParametersTests
             "-filter_complex \"[0:v]scale=1920:1080,split[v3d1][v3d2];[1:s]scale=1920:1080,split[s3d1][s3d2];" +
             "[s3d1]scale=1920:540[s3d1h];[s3d2]scale=1920:540[s3d2h];" +
             "[v3d1]crop=1920:540:0:0[e3d1];[v3d2]crop=1920:540:0:540[e3d2];" +
-            "[e3d1][s3d1h]overlay=x=-4:y=0[o3d1];[e3d2][s3d2h]overlay=x=4:y=0[o3d2];" +
+            "[e3d1][s3d1h]overlay=x=-4:y=0:eof_action=pass[o3d1];[e3d2][s3d2h]overlay=x=4:y=0:eof_action=pass[o3d2];" +
             "[o3d1][o3d2]vstack\"",
             parameters);
     }

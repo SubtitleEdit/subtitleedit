@@ -79,6 +79,15 @@ public partial class CutVideoViewModel : ObservableObject
     private SubtitleFormat? _subtitleFormat;
     private string _inputVideoFileName;
     private bool _updateAudioVisualizer;
+    private bool _isClosing;
+
+    // What is being generated, frozen when Generate starts: copies of the segments sorted by
+    // start time, plus the cut type. The ffmpeg arguments used to take the rows in grid order
+    // (SetStart/waveform edits can leave them out of time order) while the cut subtitle sorted
+    // them - and read the live rows at completion time, after the user may have edited them -
+    // so the video and its subtitle could be cut differently.
+    private List<SubtitleLineViewModel> _generateSegments = new();
+    private CutType _generateCutType;
 
     // ffmpeg's stdout and stderr readers both call OutputHandlerKeyFrames, on two thread pool
     // threads, while the waveform render thread walks AudioVisualizer.ShotChanges every frame.
@@ -337,9 +346,11 @@ public partial class CutVideoViewModel : ObservableObject
         if (_doAbort)
         {
             _timerGenerate.Stop();
-#pragma warning disable CA1416
-            _ffmpegProcess.Kill(true);
-#pragma warning restore CA1416
+
+            // The half-written output used to stay on disk after an abort, looking like a
+            // finished video. Remove it once ffmpeg is gone (it holds the file open until then).
+            KillFfmpegProcess();
+            DeletePartialOutputFile();
 
             IsGenerating = false;
             return;
@@ -347,14 +358,22 @@ public partial class CutVideoViewModel : ObservableObject
 
         if (!_ffmpegProcess.HasExited)
         {
-            var percentage = (int)Math.Round((double)_processedFrames / JobItems[_jobItemIndex].TotalFrames * 100.0,
-                MidpointRounding.AwayFromZero);
+            // TotalFrames is 0 for audio-only input (no frame rate) and nothing is processed in
+            // the first ticks - dividing by either gave NaN/Infinity.
+            var totalFrames = JobItems[_jobItemIndex].TotalFrames;
+            var percentage = totalFrames > 0
+                ? (int)Math.Round((double)_processedFrames / totalFrames * 100.0, MidpointRounding.AwayFromZero)
+                : 0;
             percentage = Math.Clamp(percentage, 0, 100);
 
-            var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
-            var msPerFrame = (float)durationMs / _processedFrames;
-            var estimatedTotalMs = msPerFrame * JobItems[_jobItemIndex].TotalFrames;
-            var estimatedLeft = ProgressHelper.ToProgressTime(estimatedTotalMs - durationMs);
+            var estimatedLeft = string.Empty;
+            if (totalFrames > 0 && _processedFrames > 0)
+            {
+                var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
+                var msPerFrame = (double)durationMs / _processedFrames;
+                var estimatedTotalMs = msPerFrame * totalFrames;
+                estimatedLeft = ProgressHelper.ToProgressTime(Math.Max(0, estimatedTotalMs - durationMs));
+            }
 
             if (JobItems.Count == 1)
             {
@@ -374,15 +393,25 @@ public partial class CutVideoViewModel : ObservableObject
 
         var jobItem = JobItems[_jobItemIndex];
 
-        if (!File.Exists(jobItem.OutputVideoFileName))
+        // "The output file exists" is not success: it also holds for a file the user chose to
+        // overwrite and for the 0-byte stub a failed ffmpeg leaves behind, and both were reported
+        // as "Video file generated". ffmpeg has exited here (HasExited above), so ExitCode is safe.
+        var exitCode = _ffmpegProcess.ExitCode;
+        var outputFileInfo = new FileInfo(jobItem.OutputVideoFileName);
+        if (exitCode != 0 || !outputFileInfo.Exists || outputFileInfo.Length == 0)
         {
-            SeLogger.Error("Output video file not found: " + jobItem.OutputVideoFileName + Environment.NewLine +
+            SeLogger.Error("Output video file not generated: " + jobItem.OutputVideoFileName + Environment.NewLine +
                                  "ffmpeg: " + _ffmpegProcess.StartInfo.FileName + Environment.NewLine +
                                  "Parameters: " + _ffmpegProcess.StartInfo.Arguments + Environment.NewLine +
                                  "OS: " + Environment.OSVersion + Environment.NewLine +
                                  "64-bit: " + Environment.Is64BitOperatingSystem + Environment.NewLine +
-                                 "ffmpeg exit code: " + _ffmpegProcess.ExitCode + Environment.NewLine +
+                                 "ffmpeg exit code: " + exitCode + Environment.NewLine +
                                  "ffmpeg log: " + _log);
+
+            if (_isClosing)
+            {
+                return; // the window killed ffmpeg on its way out - nobody is left to tell
+            }
 
             Dispatcher.UIThread.Invoke(async () =>
             {
@@ -452,47 +481,161 @@ public partial class CutVideoViewModel : ObservableObject
         });
     }
 
+    /// <summary>
+    /// Kills a still running ffmpeg and waits briefly for it to go away (it keeps the output
+    /// file open until then). Returns true when there was a running process to kill.
+    /// </summary>
+    private bool KillFfmpegProcess()
+    {
+        try
+        {
+            if (_ffmpegProcess == null || _ffmpegProcess.HasExited)
+            {
+                return false;
+            }
+
+#pragma warning disable CA1416
+            _ffmpegProcess.Kill(true);
+#pragma warning restore CA1416
+            _ffmpegProcess.WaitForExit(3000);
+            return true;
+        }
+        catch
+        {
+            // ignore - it may have exited in between
+            return false;
+        }
+    }
+
+    private void DeletePartialOutputFile()
+    {
+        if (_jobItemIndex < 0 || _jobItemIndex >= JobItems.Count)
+        {
+            return;
+        }
+
+        var outputFileName = JobItems[_jobItemIndex].OutputVideoFileName;
+        if (string.IsNullOrWhiteSpace(outputFileName) || !File.Exists(outputFileName))
+        {
+            return;
+        }
+
+        try
+        {
+            File.Delete(outputFileName);
+        }
+        catch
+        {
+            // ignore
+        }
+    }
+
     private void InitAndStartJobItem(int index)
     {
         _startTicks = DateTime.UtcNow.Ticks;
         _jobItemIndex = index;
         var jobItem = JobItems[index];
         var mediaInfo = FfmpegMediaInfo.Parse(jobItem.InputVideoFileName);
-        jobItem.TotalFrames = mediaInfo.GetTotalFrames();
+
+        // ffmpeg's "frame=" counts OUTPUT frames, so measuring it against the whole input made
+        // keeping one minute of sixty finish at ~2 %. Scale the frame total to what is kept.
+        // TotalSeconds stays the full input duration - the subtitle cutter needs it.
+        var inputFrames = mediaInfo.GetTotalFrames();
+        jobItem.TotalFrames = inputFrames > 0
+            ? Math.Max(1, (long)Math.Round(inputFrames * GetKeptFraction(mediaInfo.Duration.TotalSeconds)))
+            : 0;
         jobItem.TotalSeconds = mediaInfo.Duration.TotalSeconds;
         jobItem.Width = mediaInfo.Dimension.Width;
         jobItem.Height = mediaInfo.Dimension.Height;
         jobItem.UseTargetFileSize = false;
         jobItem.Status = Se.Language.General.Generating;
 
-        var result = RunEncoding(jobItem);
+        var result = RunEncoding(jobItem, mediaInfo);
         if (result)
         {
             _timerGenerate.Start();
         }
     }
 
-    private bool RunEncoding(BurnInJobItem jobItem)
+    /// <summary>
+    /// The share (0-1] of the input that ends up in the output: the summed segment durations for
+    /// "merge", the input minus the union of the segments for "remove". 1 when the input
+    /// duration is unknown.
+    /// </summary>
+    private double GetKeptFraction(double totalSeconds)
+    {
+        if (totalSeconds <= 0)
+        {
+            return 1;
+        }
+
+        double keptSeconds;
+        if (_generateCutType == CutType.MergeSegments)
+        {
+            // Every segment is encoded, overlapping or not, so this is a plain sum.
+            keptSeconds = _generateSegments.Sum(s => Math.Max(0, Math.Min(s.EndTime.TotalSeconds, totalSeconds) - Math.Max(0, s.StartTime.TotalSeconds)));
+        }
+        else
+        {
+            // Union of the removed ranges - _generateSegments is sorted by start time, and
+            // overlapping segments must not be subtracted twice.
+            var removedSeconds = 0d;
+            var position = 0d;
+            foreach (var segment in _generateSegments)
+            {
+                var start = Math.Max(position, segment.StartTime.TotalSeconds);
+                var end = Math.Min(totalSeconds, segment.EndTime.TotalSeconds);
+                if (end > start)
+                {
+                    removedSeconds += end - start;
+                    position = end;
+                }
+            }
+
+            keptSeconds = totalSeconds - removedSeconds;
+        }
+
+        // Merge can legitimately exceed the input (overlapping segments are encoded twice), so
+        // only the lower bound is clamped hard; above 1 the frame total simply grows with it.
+        return Math.Max(0.001, keptSeconds / totalSeconds);
+    }
+
+    private bool RunEncoding(BurnInJobItem jobItem, FfmpegMediaInfo mediaInfo)
     {
         string arguments;
 
-        var hasVideo = _inputVideoFileName.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) || 
-                       _inputVideoFileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase)
-            ? false
-            : true;
+        var inputIsAudioByExtension = Utilities.AudioFileExtensions.Contains(Path.GetExtension(_inputVideoFileName).ToLowerInvariant());
+        var outputIsAudio = jobItem.OutputVideoFileName.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) ||
+                            jobItem.OutputVideoFileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase);
 
-        if (hasVideo && (jobItem.OutputVideoFileName.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) || jobItem.OutputVideoFileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase)))
+        // Ask the file which streams it has. Going by an .mp3/.wav extension alone sent
+        // .flac/.m4a/.ogg/.opus/.mka down the video branch, where ffmpeg fails on [0:v], and a
+        // video without an audio track failed on [0:a] ("Stream specifier ':a' matches no
+        // streams"). Cover art is a "Video" stream too ("attached pic") - it is not a video.
+        var hasVideo = mediaInfo.Tracks.Any(t => t.TrackType == FfmpegTrackType.Video &&
+                                                 !t.TrackInfo.Contains("attached pic", StringComparison.OrdinalIgnoreCase)) &&
+                       !inputIsAudioByExtension;
+        var hasAudio = mediaInfo.Tracks.Any(t => t.TrackType == FfmpegTrackType.Audio);
+
+        if (!hasVideo && !hasAudio)
+        {
+            // No usable media info (ffmpeg could not be run or parsed) - go by the extension, as before.
+            hasVideo = !inputIsAudioByExtension;
+            hasAudio = true;
+        }
+
+        if (outputIsAudio)
         {
             hasVideo = false;
         }
 
-        if (SelectedCutType.CutType == CutType.MergeSegments)
+        if (_generateCutType == CutType.MergeSegments)
         {
-            arguments = FfmpegGenerator.GetMergeSegmentsParameters(jobItem.InputVideoFileName, jobItem.OutputVideoFileName, Segments.ToList(), hasVideo);
+            arguments = FfmpegGenerator.GetMergeSegmentsParameters(jobItem.InputVideoFileName, jobItem.OutputVideoFileName, _generateSegments, hasVideo, hasAudio);
         }
         else
         {
-            arguments = FfmpegGenerator.GetRemoveSegmentsParameters(jobItem.InputVideoFileName, jobItem.OutputVideoFileName, Segments.ToList(), hasVideo);
+            arguments = FfmpegGenerator.GetRemoveSegmentsParameters(jobItem.InputVideoFileName, jobItem.OutputVideoFileName, _generateSegments, hasVideo, hasAudio);
         }
 
         _ffmpegProcess = FfmpegGenerator.GetProcess(arguments, OutputHandler);
@@ -529,7 +672,12 @@ public partial class CutVideoViewModel : ObservableObject
         if (long.TryParse(arr[1].Trim(), out var f))
         {
             _processedFrames = f;
-            ProgressValue = _processedFrames * 100.0 / JobItems[_jobItemIndex].TotalFrames;
+
+            // A zero total (no frame rate known) made this Infinity/NaN on the progress bar.
+            var totalFrames = JobItems[_jobItemIndex].TotalFrames;
+            ProgressValue = totalFrames > 0
+                ? Math.Clamp(_processedFrames * 100.0 / totalFrames, 0, 100)
+                : 0;
         }
     }
 
@@ -548,12 +696,13 @@ public partial class CutVideoViewModel : ObservableObject
 
         try
         {
-            var segments = Segments
-                .OrderBy(p => p.StartTime.TotalMilliseconds)
+            // The segments the video was actually cut with - not the live rows, which the user
+            // may have edited while ffmpeg was running.
+            var segments = _generateSegments
                 .Select(p => (p.StartTime.TotalSeconds, p.EndTime.TotalSeconds))
                 .ToList();
 
-            var cut = SelectedCutType.CutType == CutType.MergeSegments
+            var cut = _generateCutType == CutType.MergeSegments
                 ? SubtitleSegmentCutter.KeepSegments(_currentSubtitle, segments)
                 : SubtitleSegmentCutter.RemoveSegments(_currentSubtitle, segments, totalDurationSeconds);
 
@@ -561,7 +710,18 @@ public partial class CutVideoViewModel : ObservableObject
                 ? new AdvancedSubStationAlpha()
                 : new SubRip();
 
+            // Never write over an existing file: with movie.mkv + movie.srt and an output named
+            // movie.mp4 this silently replaced the user's original movie.srt with the cut one.
             var fileName = Path.ChangeExtension(outputVideoFileName, format.Extension);
+            var i = 2;
+            while (File.Exists(fileName))
+            {
+                fileName = Path.Combine(
+                    Path.GetDirectoryName(outputVideoFileName) ?? string.Empty,
+                    $"{Path.GetFileNameWithoutExtension(outputVideoFileName)}_{i}{format.Extension}");
+                i++;
+            }
+
             File.WriteAllText(fileName, format.ToText(cut, string.Empty));
             return fileName;
         }
@@ -756,12 +916,33 @@ public partial class CutVideoViewModel : ObservableObject
             return;
         }
 
+        // Refuse the input as output, as the re-encode and remux dialogs do. ffmpeg refuses it
+        // too ("Output same as Input"), but the input is still there afterwards - which used to
+        // count as "video file generated".
+        if (string.Equals(Path.GetFullPath(outputVideoFileName), Path.GetFullPath(VideoFileName), StringComparison.OrdinalIgnoreCase))
+        {
+            await MessageBox.Show(
+                Window!,
+                Se.Language.General.Error,
+                Se.Language.General.OutputFileCannotBeTheInputFile,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return;
+        }
+
         JobItems = GetCurrentVideoAsJobItems(outputVideoFileName);
 
         if (JobItems.Count == 0)
         {
             return;
         }
+
+        // One snapshot for the whole run - see _generateSegments.
+        _generateSegments = Segments
+            .OrderBy(s => s.StartTime.TotalMilliseconds)
+            .Select(s => new SubtitleLineViewModel(s))
+            .ToList();
+        _generateCutType = SelectedCutType.CutType;
 
         _doAbort = false;
         _log.Clear();
@@ -983,9 +1164,18 @@ public partial class CutVideoViewModel : ObservableObject
         // removes them, and they used to pile up in the temp folder run after run (#13332).
         _tempSubtitleFiles.Delete();
 
+        _isClosing = true;
         _positionTimer.Stop();
         _timerGenerate.StopAndDispose(TimerGenerateElapsed);
         VideoPlayer.CloseAndDisposePlayer();
+
+        // Closing with the title-bar X while generating never goes through Cancel, so ffmpeg was
+        // left encoding in the background with nothing to stop it. Kill it, and drop the partial
+        // output it leaves.
+        if (KillFfmpegProcess())
+        {
+            DeletePartialOutputFile();
+        }
 
         if (_ffmpegListKeyFramesProcess != null && !_ffmpegListKeyFramesProcess.HasExited)
         {
