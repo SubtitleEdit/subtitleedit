@@ -648,6 +648,9 @@ public partial class MainViewModel :
     private SubtitleFormat? _lastOpenSaveFormat;
     private string? _videoFileName;
 
+    /// <summary>The loaded video or audio file, null or empty for none.</summary>
+    internal string? CurrentVideoFileName => _videoFileName;
+
     /// <summary>
     /// Chapters of the current video, in timeline order. Mirrored onto the waveform for drawing and
     /// persisted next to Subtitle Edit's data, not inside the video.

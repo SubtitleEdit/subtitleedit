@@ -71,6 +71,12 @@ public class SeWaveform
     public double SnapToShotChangeEndMaxSeconds { get; set; }
     public double SnapToShotChangeSameShotEndMaxSeconds { get; set; }
     public bool FocusOnMouseOver { get; set; }
+
+    /// <summary>How the editor-style layout splits the subtitle row into tracks: None, Layer, Actor or Style.</summary>
+    public string TimelineTrackGrouping { get; set; }
+
+    /// <summary>Whether the editor-style layout shows its row of video thumbnails.</summary>
+    public bool TimelineShowThumbnails { get; set; }
     public bool GuessTimeCodeStartFromBeginning { get; set; }
     public int GuessTimeCodeScanBlockSize { get; set; }
     public int GuessTimeCodeScanBlockAverageMin { get; set; }
@@ -123,6 +129,8 @@ public class SeWaveform
     {
         ShowToolbar = true;
         ShowOriginalSubtitle = false;
+        TimelineTrackGrouping = "None";
+        TimelineShowThumbnails = true;
         DrawGridLines = false;
         UseSkiaRenderer = false;
         FocusTextBoxAfterInsertNew = true;
@@ -216,6 +224,7 @@ public class SeWaveform
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.PlaybackSpeed, IsVisible = true, SortOrder = 130 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.AutoSelectOnPlay, IsVisible = true, SortOrder = 140 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.Center, IsVisible = true, SortOrder = 150 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.TimelineTrackGrouping, IsVisible = true, SortOrder = 155 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.More, IsVisible = true, SortOrder = 160 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.LineBreak1, IsVisible = false, SortOrder = 170 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.LineBreak2, IsVisible = false, SortOrder = 180 },

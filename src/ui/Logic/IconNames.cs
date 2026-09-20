@@ -41,6 +41,7 @@ internal class IconNames
     public const string DockTop = "mdi-dock-top";
     public const string DotsHorizontal = "mdi-dots-horizontal";
     public const string DotsVertical = "mdi-dots-vertical";
+    public const string LayersOutline = "mdi-layers-outline";
     public const string Duplicate = "mdi-content-duplicate";
     public const string Electron = "mdi-electron-framework";
     public const string Export = "mdi-export";
