@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.UiLogic.Translate;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -22,6 +23,17 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         public string Url => "https://github.com/CrispStrobe/CrispASR";
         public string Error { get; set; } = string.Empty;
         public int MaxCharacters => 1000;
+
+        /// <summary>
+        /// Output cap handed to crispasr as <c>--translate-max-tokens</c>. Left to the backend's
+        /// default, a full <see cref="MaxCharacters"/> batch is cut off mid-sentence: that default
+        /// was 256 tokens up to CrispASR v0.8.33 and dropped to 200 in v0.8.34, where an
+        /// 800-character English batch already loses its last lines in German and Hindi. 1024
+        /// covers a 1000-character batch in the token-hungry scripts too, and costs nothing on a
+        /// short line because decoding stops at end-of-sequence. The flag is as old as the madlad
+        /// backend itself (both arrived in v0.6.0), so no installed crispasr rejects it.
+        /// </summary>
+        internal const int MaxOutputTokens = 1024;
 
         private string _executablePath = string.Empty;
         private string _modelPath = string.Empty;
@@ -91,6 +103,8 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             startInfo.ArgumentList.Add(sourceLanguageCode);
             startInfo.ArgumentList.Add("-tl");
             startInfo.ArgumentList.Add(targetLanguageCode);
+            startInfo.ArgumentList.Add("--translate-max-tokens");
+            startInfo.ArgumentList.Add(MaxOutputTokens.ToString(CultureInfo.InvariantCulture));
             startInfo.ArgumentList.Add("--no-prints");
 
             using (var process = new Process { StartInfo = startInfo, EnableRaisingEvents = true })
