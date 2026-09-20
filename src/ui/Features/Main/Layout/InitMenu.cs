@@ -1207,7 +1207,7 @@ public static class InitMenu
             {
                 vm.MenuPlugins.Items.Add(new MenuItem
                 {
-                    Header = entry.Plugin.Manifest.Name,
+                    Header = entry.Plugin.Manifest.Name.Replace("_", "__"), // a single "_" is an access-key marker
                     Command = entry.Command,
                     IsEnabled = entry.Plugin.CanRun,
                 });
