@@ -28,7 +28,7 @@ public class DownloadTesseractModelWindow : Window
         var titleText = new TextBlock
         {
             Text = string.Format(Se.Language.General.DownloadingX, "Tesseract model"),
-            FontSize = 20,
+            FontSize = UiUtil.ScaledFontSize(20),
             FontWeight = FontWeight.Bold,
         };
         titleText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsProgressVisible)));
@@ -55,7 +55,7 @@ public class DownloadTesseractModelWindow : Window
                 UiUtil.MakeButton(Se.Language.General.Download, vm.DownloadCommand),
             }
         };
-        panelPickDictionary.Bind(Panel.IsVisibleProperty, new Binding(nameof(vm.IsProgressVisible)) { Converter = new InverseBooleanConverter() });
+        panelPickDictionary.Bind(Panel.IsVisibleProperty, new Binding(nameof(vm.IsProgressVisible)) { Converter = InverseBooleanConverter.Instance });
 
         var progressBar = UiUtil.MakeProgressBar();
         progressBar.MinWidth = 400;
@@ -83,10 +83,10 @@ public class DownloadTesseractModelWindow : Window
             }
         };
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             buttonCancel.Focus(); // hack to make OnKeyDown work
-        }; 
+        }); 
         KeyDown += (s, e) => vm.OnKeyDown(e);   
     }
 }

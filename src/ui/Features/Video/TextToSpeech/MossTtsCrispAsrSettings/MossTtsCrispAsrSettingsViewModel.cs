@@ -91,7 +91,7 @@ public partial class MossTtsCrispAsrSettingsViewModel : ObservableObject
         {
             EngineLabel = string.Format(Se.Language.Video.TtsEngineUpdateAvailable, "CrispASR");
             EngineBrush = Amber();
-            EngineDownloadButtonText = string.Format(Se.Language.Video.TtsUpdateX, "CrispASR");
+            EngineDownloadButtonText = string.Format(Se.Language.General.UpdateX, "CrispASR");
         }
         else
         {
@@ -247,6 +247,11 @@ public partial class MossTtsCrispAsrSettingsViewModel : ObservableObject
         {
             e.Handled = true;
             Window?.Close();
+        }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/text-to-speech", "engine-settings");
         }
     }
 }

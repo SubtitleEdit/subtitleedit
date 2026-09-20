@@ -249,6 +249,7 @@ public class BatchConvertConfig
         public bool IsActive { get; set; }
         public int MaxMillisecondsBetweenLines { get; set; }
         public bool IncludeIncrementingLines { get; set; }
+        public bool IncludeRollUpCaptions { get; set; }
 
         public MergeLinesWithSameTextsSettings()
         {
@@ -272,9 +273,12 @@ public class BatchConvertConfig
     public class BridgeGapsSettings
     {
         public bool IsActive { get; set; }
-        public int BridgeGapsSmallerThanMs { get; set; }
-        public int MinGapMs { get; set; }
+        public int BridgeGapsSmallerThanMsOrFrames { get; set; }
+        public int MinGapMsOrFrames { get; set; }
         public int PercentForLeft { get; set; }
+
+        /// <summary>The two gap values are frames (frame mode), converted at the batch frame rate.</summary>
+        public bool UseFrames { get; set; }
     }
 
     public class ApplyMinGapSettings

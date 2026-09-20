@@ -30,7 +30,7 @@ public class NetflixCheckNumberOfLines : INetflixQualityChecker
                     fixedParagraph = null; // cannot fix text
                 }
                 var comment = Se.Language.Tools.NetflixCheckAndFix.TwoLinesMaximum;
-                controller.AddRecord(p, fixedParagraph, comment);
+                controller.AddRecord(p, fixedParagraph, comment, string.Empty, fixedParagraph != null);
             }
             else if (p.Text.SplitToLines().Count == 2 && p.Text.Contains(Environment.NewLine) &&
                 p.Text.Replace(Environment.NewLine, " ").Replace("  ", " ").CountCharacters(false) <= controller.SingleLineMaxLength &&

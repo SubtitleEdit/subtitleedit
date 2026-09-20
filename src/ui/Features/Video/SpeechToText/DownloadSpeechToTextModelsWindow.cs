@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
@@ -43,6 +44,7 @@ public class DownloadSpeechToTextModelsWindow : Window
             Command = vm.OpenModelFolderCommand,
         };
         Attached.SetIcon(buttonOpenFolder, "fa-solid fa-folder-open");
+        AutomationProperties.SetName(buttonOpenFolder, Se.Language.General.OpenContainingFolder);
 
         var buttonAddCustomModel = UiUtil.MakeButton(Se.Language.Video.AudioToText.AddCustomModelDotDotDot, vm.AddCustomModelCommand);
         buttonAddCustomModel.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.SupportsCustomModels)));
@@ -84,6 +86,20 @@ public class DownloadSpeechToTextModelsWindow : Window
         statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
         statusText.Bind(TextBlock.OpacityProperty, new Binding(nameof(vm.ProgressOpacity)));
 
+        // The view models set Error on every failure path, but nothing rendered it - the user saw
+        // only the generic "Download failed" while the real cause was written to a property no
+        // window bound. DownloadVideoFromUrlWindow and DownloadCrispEmbedWindow show it this way.
+        var errorText = new TextBlock
+        {
+            Foreground = new SolidColorBrush(Color.FromRgb(0xC0, 0x39, 0x2B)),
+            TextWrapping = TextWrapping.Wrap,
+        };
+        errorText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.Error)));
+        errorText.Bind(IsVisibleProperty, new Binding(nameof(vm.Error))
+        {
+            Converter = new Avalonia.Data.Converters.FuncValueConverter<string?, bool>(s => !string.IsNullOrEmpty(s)),
+        });
+
         var fileText = new TextBlock
         {
             Margin = new Thickness(0, 1, 0, 1),
@@ -100,6 +116,7 @@ public class DownloadSpeechToTextModelsWindow : Window
             {
                 progressBar,
                 statusText,
+                errorText,
                 fileText,
             }
         };
@@ -149,10 +166,10 @@ public class DownloadSpeechToTextModelsWindow : Window
 
         Content = grid;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             buttonCancel.Focus(); // hack to make OnKeyDown work
-        };
+        });
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

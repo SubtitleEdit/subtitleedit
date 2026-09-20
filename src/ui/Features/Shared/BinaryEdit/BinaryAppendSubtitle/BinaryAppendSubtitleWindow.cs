@@ -63,7 +63,7 @@ public class BinaryAppendSubtitleWindow : Window
 
         Content = root;
 
-        Activated += delegate { radioAppend.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, radioAppend); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

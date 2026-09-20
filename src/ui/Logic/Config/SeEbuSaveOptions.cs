@@ -16,4 +16,11 @@ public class SeEbuSaveOptions
     public int NewLineRows { get; set; } = 2;
     public bool TeletextUseBox { get; set; } = true;
     public bool TeletextUseDoubleHeight { get; set; } = true;
+
+    /// <summary>
+    /// Font family the video preview draws EBU STL subtitles in, empty for the normal preview font.
+    /// Preview only - no font is written to an STL file, which carries a character table and leaves
+    /// the typeface to the decoder. Lets someone with a teletext face installed see the real thing.
+    /// </summary>
+    public string PreviewFontName { get; set; } = string.Empty;
 }

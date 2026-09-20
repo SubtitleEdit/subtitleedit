@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using SkiaSharp;
 using System;
 
@@ -45,6 +45,8 @@ namespace Nikse.SubtitleEdit.Core.Settings
 
         public bool EbuStlTeletextUseBox { get; set; }
         public bool EbuStlTeletextUseDoubleHeight { get; set; }
+        /// <summary>0=unchanged, 1=left, 2=centered, 3=right - the EBU justification code.</summary>
+        public int EbuStlJustificationCode { get; set; }
         public int EbuStlMarginTop { get; set; }
         public int EbuStlMarginBottom { get; set; }
         public int EbuStlNewLineRows { get; set; }
@@ -122,6 +124,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
 
             EbuStlTeletextUseBox = true;
             EbuStlTeletextUseDoubleHeight = true;
+            EbuStlJustificationCode = 2; // centered is the broadcast default
             EbuStlMarginTop = 0;
             EbuStlMarginBottom = 2;
             EbuStlNewLineRows = 2;

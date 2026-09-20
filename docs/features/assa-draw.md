@@ -24,7 +24,11 @@ A vector drawing tool for creating ASSA drawing commands (\p1 ... \p0) used in A
 - **Bézier Curve:** Draw smooth curves with control points.
 - **Rectangle:** Draw rectangles.
 - **Circle:** Draw circles/ellipses.
-- **Color Picker:** Pick a color from the canvas.
+
+### Toolbar Actions
+- **Save**, **Load**, **Copy to Clipboard** (`Ctrl+C`).
+- **Close Shape** (`F8`/`Enter`), **Delete Shape** (`Del`), **Clear All** (`Ctrl+N`).
+- **Zoom in**, **Zoom out**, **Reset View** (`Ctrl+0`), **Toggle Grid** (`Ctrl+G`).
 
 ### Canvas
 - Configurable canvas size (default 1920×1080).
@@ -35,7 +39,8 @@ A vector drawing tool for creating ASSA drawing commands (\p1 ... \p0) used in A
 ### Shape Management
 - Organize shapes in a tree view with layers.
 - Select, move, and delete shapes or individual points.
-- Set layer colors.
+- Set the layer color with the color swatch in the layer panel.
+- **Change Layer** moves the selected shape to another layer; **Use shape for erase (iclip)** turns it into an \iclip cut-out.
 - Edit exact X/Y coordinates for selected points.
 
 ### Import / Export

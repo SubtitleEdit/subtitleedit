@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 
 namespace Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 
@@ -299,6 +300,18 @@ public static class LlamaCppServerManager
             "https://huggingface.co/ggml-org/GLM-OCR-GGUF/resolve/main/GLM-OCR-Q8_0.gguf",
             MmprojFileName: "mmproj-GLM-OCR-Q8_0.gguf",
             MmprojUrl: "https://huggingface.co/ggml-org/GLM-OCR-GGUF/resolve/main/mmproj-GLM-OCR-Q8_0.gguf"),
+        // Liquid AI's general vision model (3B), not an OCR specialist. Measured 2026-09-05 on the
+        // same 14-image corpus: 0.00% character error - flawless across all eight scripts, italics,
+        // busy video backgrounds and small text, where GLM-OCR misread one Russian word - and with
+        // its own prompt 13/14 exact (its one miss over-splits a line; it never merges). Second,
+        // not first, because it is 2.5x the download (2.9 GB + 0.6 GB mmproj) and ~2.5x slower per
+        // image. It follows instructions literally, so it needs the PromptTemplate below: under the
+        // shared prompt it prefixes every answer with the line count it was asked to identify.
+        new LlamaCppModel("LFM2.5-VL 3B (Q8_0)", "LFM2.5-VL-3B-Q8_0.gguf", "3.5 GB",
+            "https://huggingface.co/LiquidAI/LFM2.5-VL-3B-GGUF/resolve/main/LFM2.5-VL-3B-Q8_0.gguf",
+            MmprojFileName: "mmproj-LFM2.5-VL-3B-Q8_0.gguf",
+            MmprojUrl: "https://huggingface.co/LiquidAI/LFM2.5-VL-3B-GGUF/resolve/main/mmproj-LFM2.5-VL-3B-Q8_0.gguf",
+            PromptTemplate: SeOcrDefaults.LlamaCppOcrPromptLfm25Vl),
         // PaddlePaddle's official llama.cpp package - 109 languages (NaViT + ERNIE-4.5).
         new LlamaCppModel("PaddleOCR-VL 1.6", "PaddleOCR-VL-1.6-GGUF.gguf", "1.8 GB",
             "https://huggingface.co/PaddlePaddle/PaddleOCR-VL-1.6-GGUF/resolve/main/PaddleOCR-VL-1.6-GGUF.gguf",
@@ -327,6 +340,26 @@ public static class LlamaCppServerManager
             MmprojFileName: "mmproj-LightOnOCR-1B-1025-Q8_0.gguf",
             MmprojUrl: "https://huggingface.co/ggml-org/LightOnOCR-1B-1025-GGUF/resolve/main/mmproj-LightOnOCR-1B-1025-Q8_0.gguf"),
     };
+
+    /// <summary>
+    /// The OCR prompt to send for <paramref name="model"/>: the model's own
+    /// <see cref="LlamaCppModel.PromptTemplate"/> when it has one and the user has left the shared
+    /// OCR prompt at its default, otherwise the user's prompt. A user who has edited the shared
+    /// prompt has opted into driving every model with it, so their wording wins even over a model
+    /// that ships a tuned prompt. Callers pass the model as the user picked it; a null model (a
+    /// user-managed server with an unknown model name) always gets the user's prompt.
+    /// </summary>
+    public static string ResolveOcrPrompt(LlamaCppModel? model, string? userPrompt)
+    {
+        var prompt = string.IsNullOrWhiteSpace(userPrompt) ? SeOcrDefaults.LlamaCppOcrPrompt : userPrompt;
+        if (model?.PromptTemplate is { Length: > 0 } modelPrompt &&
+            prompt.Trim() == SeOcrDefaults.LlamaCppOcrPrompt)
+        {
+            return modelPrompt;
+        }
+
+        return prompt;
+    }
 
     /// <summary>
     /// Root folder holding the llama-server executable and the <c>models</c> subfolder.

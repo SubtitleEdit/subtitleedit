@@ -39,8 +39,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 sb.Append(" ], ");
                 sb.Append($"\"index\":{count},");
-                sb.Append($"\"start\": {p.StartTime.TotalMilliseconds}, ");
-                sb.Append($"\"end\": {p.EndTime.TotalMilliseconds} ");
+                sb.Append($"\"start\": {(long)Math.Round(p.StartTime.TotalMilliseconds)}, ");
+                sb.Append($"\"end\": {(long)Math.Round(p.EndTime.TotalMilliseconds)} ");
                 sb.Append("}");
             }
             sb.AppendLine();

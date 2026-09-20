@@ -50,7 +50,7 @@ public class ImportPlainTextWindow : Window
         var buttonImportFiles = UiUtil.MakeButton(Se.Language.File.Import.ImportFilesDotDotDot, vm.FilesImportCommand).WithMinWidth(110);
         buttonImportFiles.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsImportFilesVisible)) { Source = vm });
         var buttonImportFile = UiUtil.MakeButton(Se.Language.General.ImportDotDotDot, vm.FileImportCommand).WithMinWidth(110);
-        buttonImportFile.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsImportFilesVisible)) { Source = vm, Converter = new InverseBooleanConverter() });
+        buttonImportFile.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsImportFilesVisible)) { Source = vm, Converter = InverseBooleanConverter.Instance });
         var checkBoxImportFiles = UiUtil.MakeCheckBox(Se.Language.File.Import.MultipleFiles, vm, nameof(vm.IsImportFilesVisible));
         checkBoxImportFiles.IsCheckedChanged += (s, e) => vm.CheckBoxImportFilesChanged();
         var panelImport = new StackPanel
@@ -74,7 +74,7 @@ public class ImportPlainTextWindow : Window
         labelNumberOfSubtitles.Bind(IsVisibleProperty, new Binding(nameof(vm.IsAligning))
         {
             Source = vm,
-            Converter = new InverseBooleanConverter(),
+            Converter = InverseBooleanConverter.Instance,
         });
 
         // Progress sits next to the line count; forced alignment of a long video runs for
@@ -121,7 +121,7 @@ public class ImportPlainTextWindow : Window
 
         Content = grid;
 
-        Activated += delegate { checkBoxImportFiles.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, checkBoxImportFiles); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
     }
 
@@ -155,14 +155,15 @@ public class ImportPlainTextWindow : Window
             DataContext = vm,
         };
         textBox.Bind(TextBox.TextProperty, new Binding(nameof(vm.PlainText)) { Mode = BindingMode.TwoWay });
-        textBox.Bind(TextBox.IsVisibleProperty, new Binding(nameof(vm.IsImportFilesVisible)) { Source = vm, Converter = new InverseBooleanConverter() });
+        textBox.WithAccessibleName(Se.Language.General.Text); // the pasted plain text, no visible label (#12087)
+        textBox.Bind(TextBox.IsVisibleProperty, new Binding(nameof(vm.IsImportFilesVisible)) { Source = vm, Converter = InverseBooleanConverter.Instance });
         textBox.TextChanged += (s, e) => vm.PlainTextChanged();
         var sizeConverter = new FileSizeConverter();
 
         // No header sorting (the DataGrid's CanUserSortColumns is not carried over):
         // the preview builds one subtitle line per file in collection order, so
         // reordering the backing collection would reorder the imported lines.
-        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false).WithAccessibleName(Se.Language.General.SubtitleFiles);
         dataGrid.Height = 348;
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.Files;
@@ -254,7 +255,7 @@ public class ImportPlainTextWindow : Window
         };
         comboBoxSplit.Bind(ComboBox.ItemsSourceProperty, new Binding(nameof(vm.SplitAtOptions)) { Source = vm });
         comboBoxSplit.Bind(ComboBox.SelectedItemProperty, new Binding(nameof(vm.SelectedSplitAtOption)) { Source = vm, Mode = BindingMode.TwoWay });
-        comboBoxSplit.Bind(ComboBox.IsEnabledProperty, new Binding(nameof(vm.IsImportFilesVisible)) { Source = vm, Converter = new InverseBooleanConverter() });
+        comboBoxSplit.Bind(ComboBox.IsEnabledProperty, new Binding(nameof(vm.IsImportFilesVisible)) { Source = vm, Converter = InverseBooleanConverter.Instance });
         comboBoxSplit.SelectionChanged += (s, e) => vm.SplitAtOptionChanged();
 
         var panelSplit = UiUtil.MakeHorizontalPanel(labelSplit, comboBoxSplit);
@@ -300,7 +301,7 @@ public class ImportPlainTextWindow : Window
 
         // No header sorting (the DataGrid's CanUserSortColumns is not carried over):
         // this is the subtitle preview, consumed by the caller in collection order.
-        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false).WithAccessibleName(Se.Language.General.Preview);
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.Subtitles;
         dataGrid.Columns.AddRange(new TableViewColumn[]
@@ -344,6 +345,7 @@ public class ImportPlainTextWindow : Window
                 CellTheme = UiUtil.TableViewCellTheme,
                 HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                 CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(SubtitleLineViewModel.Text)),
+                NameBinding = new Binding(nameof(SubtitleLineViewModel.Text)),
                 Width = new GridLength(1, GridUnitType.Star),
             },
         });

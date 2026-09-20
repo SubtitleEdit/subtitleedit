@@ -6,6 +6,8 @@ namespace Nikse.SubtitleEdit.Logic.ValueConverters;
 
 public class InverseBooleanConverter : IValueConverter
 {
+    public static readonly InverseBooleanConverter Instance = new();
+
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is bool boolValue)

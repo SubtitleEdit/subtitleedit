@@ -57,9 +57,9 @@ public class MessageBox : Window
     private readonly bool _hasOnlyOk;
     private readonly bool _hasNo;
     private readonly StackPanel _buttonPanel;
+    private readonly CheckBox? _doNotAskAgainCheckBox;
     private readonly KeyPressTracker _enterTracker = new();
     private readonly KeyPressTracker _spaceTracker = new();
-    private bool _initialFocusDone;
     private long _openedTimestamp;
 
     private bool IsInStartupGuardPeriod()
@@ -111,7 +111,7 @@ public class MessageBox : Window
         }
     }
 
-    private MessageBox(string title, string message, MessageBoxButtons buttons, MessageBoxIcon icon, string? custom1 = null, string? custom2 = null, string? custom3 = null, string? custom4 = null)
+    private MessageBox(string title, string message, MessageBoxButtons buttons, MessageBoxIcon icon, string? custom1 = null, string? custom2 = null, string? custom3 = null, string? custom4 = null, string? doNotAskAgainText = null)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = title;
@@ -131,6 +131,7 @@ public class MessageBox : Window
             RowDefinitions =
             {
                 new RowDefinition { Height = GridLength.Star },
+                new RowDefinition { Height = GridLength.Auto },
                 new RowDefinition { Height = GridLength.Auto },
             },
             ColumnDefinitions =
@@ -198,6 +199,19 @@ public class MessageBox : Window
             grid.Children.Add(textBlock);
             Grid.SetRow(textBlock, 0);
             Grid.SetColumn(textBlock, 1);
+        }
+
+        if (!string.IsNullOrEmpty(doNotAskAgainText))
+        {
+            _doNotAskAgainCheckBox = new CheckBox
+            {
+                Content = doNotAskAgainText,
+                Margin = new Thickness(10, 0, 10, 0),
+                HorizontalAlignment = HorizontalAlignment.Left,
+            };
+            grid.Children.Add(_doNotAskAgainCheckBox);
+            Grid.SetRow(_doNotAskAgainCheckBox, 1);
+            Grid.SetColumn(_doNotAskAgainCheckBox, 1);
         }
 
         var buttonPanel = new StackPanel
@@ -342,16 +356,12 @@ public class MessageBox : Window
         }, RoutingStrategies.Tunnel);
         Activated += delegate
         {
-            // Re-arm the guard on every activation (alt-tabbing back can bring a held key's
-            // auto-repeat along), but move focus only the first time so arrow-key navigation
-            // survives a focus round-trip to another window.
+            // Re-armed on every activation: alt-tabbing back can bring a held key's auto-repeat
+            // along. The initial focus below is deliberately not part of this - it must happen
+            // once, so arrow-key navigation survives a focus round-trip to another window.
             _openedTimestamp = Stopwatch.GetTimestamp();
-            if (!_initialFocusDone)
-            {
-                _initialFocusDone = true;
-                buttonPanel.Children[0].Focus();
-            }
         };
+        UiUtil.FocusOnFirstActivation(this, () => buttonPanel.Children[0].Focus());
         Deactivated += delegate
         {
             // Key releases go to the newly focused window, so presses counted here would
@@ -381,6 +391,28 @@ public class MessageBox : Window
         // was drawn on top but never activated on Windows in undocked mode: gray buttons, no
         // keyboard focus (#13325/#13405).
         return await WindowService.ShowModalAsync<MessageBoxResult>(owner, msgBox);
+    }
+
+    /// <summary>
+    /// Like <see cref="Show"/>, with a "Do not ask again" style check box under the message.
+    /// The caller decides what to persist; the check box state is returned unchanged even when
+    /// the box was cancelled, so callers should ignore it for a Cancel/None result.
+    /// </summary>
+    public static async Task<(MessageBoxResult Result, bool DoNotAskAgain)> ShowWithDoNotAskAgain(
+        Window owner,
+        string title,
+        string message,
+        string doNotAskAgainText,
+        MessageBoxButtons buttons = MessageBoxButtons.OK,
+        MessageBoxIcon icon = MessageBoxIcon.None,
+        string? custom1 = null,
+        string? custom2 = null,
+        string? custom3 = null,
+        string? custom4 = null)
+    {
+        var msgBox = new MessageBox(title, message, buttons, icon, custom1, custom2, custom3, custom4, doNotAskAgainText);
+        var result = await WindowService.ShowModalAsync<MessageBoxResult>(owner, msgBox);
+        return (result, msgBox._doNotAskAgainCheckBox?.IsChecked == true);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

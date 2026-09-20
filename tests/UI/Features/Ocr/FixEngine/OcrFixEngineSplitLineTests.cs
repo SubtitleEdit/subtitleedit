@@ -25,6 +25,37 @@ public class OcrFixEngineSplitLineTests
         Assert.DoesNotContain(result.Words, w => w.Word.Length == 0);
     }
 
+    // Tesseract emits the typographic apostrophe (U+2019) in "didn’t"; the splitter must keep the
+    // contraction as one word, or "didn" gets spell-checked on its own and flagged as unknown.
+    [Theory]
+    [InlineData("it didn’t take much", "didn’t")]
+    [InlineData("it didn't take much", "didn't")]
+    [InlineData("someone’s son", "someone’s")]
+    public void SplitLine_Apostrophe_KeepsContractionAsOneWord(string line, string expectedWord)
+    {
+        var result = OcrFixEngine.SplitLine(line, 0);
+
+        var words = result.Words.Where(w => w.LinePartType == OcrFixLinePartType.Word).Select(w => w.Word).ToList();
+        Assert.Contains(expectedWord, words);
+        Assert.Equal(line, string.Concat(result.Words.Select(w => w.Word)));
+    }
+
+    // Discussion #12929: Tesseract writes "‘cause" and "didn’t" with typographic quotes; the OCR
+    // output uses the plain apostrophe.
+    [Theory]
+    [InlineData("‘cause I promised", "'cause I promised")]
+    [InlineData("it didn’t take much", "it didn't take much")]
+    [InlineData("-'‘cause of the blood.", "-'cause of the blood.")]
+    [InlineData("Excuse me, ma‘'am.", "Excuse me, ma'am.")]
+    [InlineData("plain 'text' stays", "plain 'text' stays")]
+    [InlineData("“double” stays", "“double” stays")]
+    [InlineData("La lettera ‘E’ canta", "La lettera ‘E’ canta")] // opening + closing = a quotation
+    [InlineData("He said ''hi'' and didn’t leave.", "He said ''hi'' and didn't leave.")] // only the OCR's own pair collapses
+    public void NormalizeApostrophes_CurlySingleQuotes_BecomePlain(string input, string expected)
+    {
+        Assert.Equal(expected, OcrFixEngine.NormalizeApostrophes(input));
+    }
+
     [Fact]
     public void SplitLine_ValidTag_IsParsedAsTag()
     {

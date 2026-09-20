@@ -54,7 +54,7 @@ public class AssaPropertiesWindow : Window
         Content = grid;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
-        Activated += delegate { textBoxTitle.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, textBoxTitle);
         KeyDown += vm.KeyDown;
     }
 

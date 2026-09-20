@@ -79,7 +79,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
         var preview = AssaSetPositionViewModel.MakePreviewSubtitle(subtitle, MakeLine(subtitle));
 
         var p = Assert.Single(preview.Paragraphs);
-        Assert.Equal("Hello world", p.Text);
+        Assert.Equal(@"{\frz0}Hello world", p.Text); // rotation pinned: the dialog rotates the overlay itself
         Assert.Equal(0, p.StartTime.TotalSeconds);
         Assert.Equal(10, p.EndTime.TotalSeconds);
     }

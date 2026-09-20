@@ -61,6 +61,8 @@ public class SourceViewWindow : Window
             UiUtil.AttachMacContextFlyoutHandler(textEditor);
         }
 
+        Avalonia.Automation.AutomationProperties.SetName(vm.SourceViewTextBox.TextControl, Se.Language.General.Text);
+
         var contentBorder = new Border
         {
             VerticalAlignment = VerticalAlignment.Stretch,

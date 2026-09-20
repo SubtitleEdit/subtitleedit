@@ -78,6 +78,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private double _progressMaxValue;
     [ObservableProperty] private string _actionsSelected;
     [ObservableProperty] private bool _isTargetFormatSettingsVisible;
+    [ObservableProperty] private bool _isTransportStreamSettingsVisible;
     [ObservableProperty] private ObservableCollection<string> _filterItems;
     [ObservableProperty] private string? _selectedFilterItem;
     [ObservableProperty] private string _filterText;
@@ -192,6 +193,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     // Merge lines with same text
     [ObservableProperty] private int _mergeSameTextMaxMillisecondsBetweenLines;
     [ObservableProperty] private bool _mergeSameTextIncludeIncrementingLines;
+    [ObservableProperty] private bool _mergeSameTextIncludeRollUpCaptions;
 
     // Merge lines with same time codes
     [ObservableProperty] private int _mergeSameTimeMaxMillisecondsDifference;
@@ -230,9 +232,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private bool _convertColorsToDialogAddNewLines;
     [ObservableProperty] private bool _convertColorsToDialogReBreakLines;
 
-    // Bride gaps
-    [ObservableProperty] private int _bridgeGapsSmallerThanMs;
-    [ObservableProperty] private int _bridgeGapsMinGapMs;
+    // Bridge gaps - frames in frame mode, like the Bridge gaps dialog (#14959)
+    [ObservableProperty] private int _bridgeGapsSmallerThanMsOrFrames;
+    [ObservableProperty] private int _bridgeGapsMinGapMsOrFrames;
     [ObservableProperty] private int _bridgeGapsPercentForLeft;
 
     // Split/break long lines
@@ -442,6 +444,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             new OllamaTranslate(),
             new OllamaAdvancedTranslate(),
             new LibreTranslate(),
+            new OpenAiCompatibleTranslate(),
             new LmStudioTranslate(),
             new LlamaCppTranslate(),
             new LlamaCppAdvancedTranslate(),
@@ -719,6 +722,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         // Merge lines with same text / same time codes (shared with the standalone dialogs)
         Se.Settings.Tools.MergeSameText.MaxMillisecondsBetweenLines = MergeSameTextMaxMillisecondsBetweenLines;
         Se.Settings.Tools.MergeSameText.IncludeIncrementingLines = MergeSameTextIncludeIncrementingLines;
+        Se.Settings.Tools.MergeSameText.IncludeRollUpCaptions = MergeSameTextIncludeRollUpCaptions;
         Se.Settings.Tools.MergeSameTimeCode.MaxMillisecondsDifference = MergeSameTimeMaxMillisecondsDifference;
         Se.Settings.Tools.MergeSameTimeCode.MergeDialog = MergeSameTimeMergeDialog;
         Se.Settings.Tools.MergeSameTimeCode.AutoBreak = MergeSameTimeAutoBreak;
@@ -829,8 +833,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         // These were read in LoadSettings but never written back, so every number the user typed
         // into the bridge-gaps, min-gap and split/break function panels was discarded on close.
         // They go to the same keys the dedicated dialogs use.
-        Se.Settings.Tools.BridgeGaps.BridgeGapsSmallerThanMs = BridgeGapsSmallerThanMs;
-        Se.Settings.Tools.BridgeGaps.MinGapMs = BridgeGapsMinGapMs;
+        Se.Settings.Tools.BridgeGaps.SetBridgeGapsSmallerThan(BridgeGapsSmallerThanMsOrFrames, Se.Settings.General.UseFrameMode);
+        Se.Settings.Tools.BridgeGaps.SetMinGap(BridgeGapsMinGapMsOrFrames, Se.Settings.General.UseFrameMode);
         Se.Settings.Tools.BridgeGaps.PercentForLeft = BridgeGapsPercentForLeft;
         Se.Settings.Tools.ApplyMinGapMilliseconds = MinGapMs;
         Se.Settings.Tools.SplitRebalanceLongLinesSplit = SplitBreakSplitLongLines;
@@ -885,8 +889,11 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             SelectedSourceLanguage = sourceLanguage;
         }
 
-        var defaultTarget = AutoTranslateViewModel.EvaluateDefaultTargetLanguageCode(string.Empty, SelectedSourceLanguage?.Code ?? string.Empty);
-        SelectedTargetLanguage = TargetLanguages.FirstOrDefault(p => p.TwoLetterIsoLanguageName == defaultTarget);
+        SelectedTargetLanguage = AutoTranslateViewModel.FindDefaultTargetLanguage(
+            TargetLanguages,
+            SelectedSourceLanguage,
+            Se.Settings.AutoTranslate.AutoTranslateLastTarget,
+            Se.Language.CultureName);
         var targetLanguage = TargetLanguages.FirstOrDefault(p => p.TwoLetterIsoLanguageName == Se.Settings.Tools.BatchConvert.AutoTranslateTargetLanguage);
         if (targetLanguage != null)
         {
@@ -918,6 +925,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         MergeSameTextMaxMillisecondsBetweenLines = Se.Settings.Tools.MergeSameText.MaxMillisecondsBetweenLines;
         MergeSameTextIncludeIncrementingLines = Se.Settings.Tools.MergeSameText.IncludeIncrementingLines;
+        MergeSameTextIncludeRollUpCaptions = Se.Settings.Tools.MergeSameText.IncludeRollUpCaptions;
 
         MergeSameTimeMaxMillisecondsDifference = Se.Settings.Tools.MergeSameTimeCode.MaxMillisecondsDifference;
         MergeSameTimeMergeDialog = Se.Settings.Tools.MergeSameTimeCode.MergeDialog;
@@ -936,8 +944,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             RtlReverseStartEnd = true;
         }
 
-        BridgeGapsSmallerThanMs = Se.Settings.Tools.BridgeGaps.BridgeGapsSmallerThanMs;
-        BridgeGapsMinGapMs = Se.Settings.Tools.BridgeGaps.MinGapMs;
+        BridgeGapsSmallerThanMsOrFrames = Se.Settings.Tools.BridgeGaps.GetBridgeGapsSmallerThan(Se.Settings.General.UseFrameMode);
+        BridgeGapsMinGapMsOrFrames = Se.Settings.Tools.BridgeGaps.GetMinGap(Se.Settings.General.UseFrameMode);
         BridgeGapsPercentForLeft = Se.Settings.Tools.BridgeGaps.PercentForLeft;
 
         // "Apply minimum gap" was never loaded. Its editor passes the saved value only as the
@@ -1825,12 +1833,10 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         if (targetFormat == BatchConverter.FormatCustomTextFormat)
         {
-            var subtitles = new List<SubtitleLineViewModel>();
-            var p = new Paragraph("This is a sample text", 0, 1000);
-            subtitles.Add(new SubtitleLineViewModel(p, new SubRip()));
+            var paragraphs = new List<Paragraph> { new Paragraph("This is a sample text", 0, 1000) };
 
             var result = await _windowService.ShowDialogAsync<ExportCustomTextFormatWindow, ExportCustomTextFormatViewModel>(Window,
-                vm => { vm.Initialize(subtitles, string.Empty, string.Empty, true); });
+                vm => { vm.Initialize(paragraphs, string.Empty, string.Empty, true); });
 
             // Remember which custom format was chosen so batch convert uses it (not just the first one).
             if (result.OkPressed && result.SelectedCustomFormat != null)
@@ -1922,6 +1928,17 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private async Task AddFolder()
     {
+        await AddFolderAsync(Se.Settings.Tools.BatchConvert.ScanFolderRecursive);
+    }
+
+    [RelayCommand]
+    private async Task AddFolderRecursive()
+    {
+        await AddFolderAsync(recursive: true);
+    }
+
+    private async Task AddFolderAsync(bool recursive)
+    {
         if (Window == null)
         {
             return;
@@ -1933,7 +1950,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        await AddFilesAndFoldersAsync(Array.Empty<string>(), new[] { folder });
+        await AddFilesAndFoldersAsync(Array.Empty<string>(), new[] { folder }, recursive);
     }
 
     [RelayCommand]
@@ -1942,13 +1959,13 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         _addFilesCancellationTokenSource.Cancel();
     }
 
-    private async Task AddFilesAndFoldersAsync(IReadOnlyList<string> fileNames, IReadOnlyList<string> folders)
+    private async Task AddFilesAndFoldersAsync(IReadOnlyList<string> fileNames, IReadOnlyList<string> folders, bool? recursive = null)
     {
         var allFileNames = new List<string>(fileNames);
 
         if (folders.Count > 0)
         {
-            var scanned = await ScanFoldersAsync(folders);
+            var scanned = await ScanFoldersAsync(folders, recursive ?? Se.Settings.Tools.BatchConvert.ScanFolderRecursive);
             if (scanned == null)
             {
                 return; // cancelled during the scan - add nothing
@@ -1967,13 +1984,12 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
     /// <summary>
     /// Collects the files the batch converter can open from <paramref name="folders"/> (and their
-    /// subfolders when "include subfolders" is on). Walking a deep tree or a network share can take
-    /// a long time, so this runs off the UI thread behind the "please wait" overlay and can be
-    /// cancelled - returns null when it was.
+    /// subfolders when <paramref name="recursive"/> is set). Walking a deep tree or a network share
+    /// can take a long time, so this runs off the UI thread behind the "please wait" overlay and can
+    /// be cancelled - returns null when it was.
     /// </summary>
-    private async Task<List<string>?> ScanFoldersAsync(IReadOnlyList<string> folders)
+    private async Task<List<string>?> ScanFoldersAsync(IReadOnlyList<string> folders, bool recursive)
     {
-        var recursive = Se.Settings.Tools.BatchConvert.ScanFolderRecursive;
         _addFilesCancellationTokenSource = new CancellationTokenSource();
         var token = _addFilesCancellationTokenSource.Token;
 
@@ -2413,6 +2429,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         var total = _allBatchItems.Count;
         var shown = BatchItems.Count;
 
+        IsTransportStreamSettingsVisible = _allBatchItems.Any(p => p.Format != null && p.Format.StartsWith("Transport Stream", StringComparison.Ordinal));
+
         if (total == 0)
         {
             BatchItemsInfo = string.Empty;
@@ -2622,6 +2640,12 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     }
 
     [RelayCommand]
+    private async Task ShowTransportStreamSettings()
+    {
+        await _windowService.ShowDialogAsync<BatchConvertTsSettingsWindow, BatchConvertTsSettingsViewModel>(Window!);
+    }
+
+    [RelayCommand]
     private void SelectAll()
     {
         foreach (BatchConvertFunction batchConvertFunction in BatchFunctions)
@@ -2748,6 +2772,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             {
                 IsActive = activeFunctions.Contains(BatchConvertFunctionType.MergeLinesWithSameText),
                 IncludeIncrementingLines = MergeSameTextIncludeIncrementingLines,
+                IncludeRollUpCaptions = MergeSameTextIncludeRollUpCaptions,
                 MaxMillisecondsBetweenLines = MergeSameTextMaxMillisecondsBetweenLines,
             },
 
@@ -2801,8 +2826,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             BridgeGaps = new BatchConvertConfig.BridgeGapsSettings
             {
                 IsActive = activeFunctions.Contains(BatchConvertFunctionType.BridgeGaps),
-                BridgeGapsSmallerThanMs = BridgeGapsSmallerThanMs,
-                MinGapMs = BridgeGapsMinGapMs,
+                BridgeGapsSmallerThanMsOrFrames = BridgeGapsSmallerThanMsOrFrames,
+                MinGapMsOrFrames = BridgeGapsMinGapMsOrFrames,
+                UseFrames = Se.Settings.General.UseFrameMode,
                 PercentForLeft = BridgeGapsPercentForLeft,
             },
 
@@ -2970,6 +2996,28 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             {
                 Configuration.Settings.Tools.AutoTranslateLibreApiKey = Se.Settings.AutoTranslate.LibreTranslateApiKey;
             }
+        }
+
+        if (engineType == typeof(OpenAiCompatibleTranslate))
+        {
+            // The engine reads all three from Configuration.Settings.Tools, which SE5 never persists,
+            // so the durable copy is Se.Settings and both must be written (the prompt is seeded by
+            // BatchConverter.AutoTranslate together with the other engines' prompts).
+            var apiUrl = AutoTranslateUrl.Trim();
+            if (string.IsNullOrEmpty(apiUrl))
+            {
+                apiUrl = OpenAiCompatibleTranslate.DefaultUrl;
+            }
+
+            Configuration.Settings.Tools.OpenAiCompatibleTranslateUrl = apiUrl;
+            Se.Settings.AutoTranslate.OpenAiCompatibleUrl = apiUrl;
+
+            // Key and model may legitimately be empty (local server, single-model server), so an
+            // emptied field clears the stored value instead of keeping a stale one.
+            Configuration.Settings.Tools.OpenAiCompatibleTranslateApiKey = AutoTranslateApiKey.Trim();
+            Se.Settings.AutoTranslate.OpenAiCompatibleApiKey = AutoTranslateApiKey.Trim();
+            Configuration.Settings.Tools.OpenAiCompatibleTranslateModel = AutoTranslateModel.Trim();
+            Se.Settings.AutoTranslate.OpenAiCompatibleModel = AutoTranslateModel.Trim();
         }
 
         if (engineType == typeof(LmStudioTranslate))
@@ -3326,6 +3374,19 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             AutoTranslateApiKey = Se.Settings.AutoTranslate.LibreTranslateApiKey;
             AutoTranslateApiKeyIsVisible = true;
         }
+        else if (engine is OpenAiCompatibleTranslate)
+        {
+            // Any vLLM/llama-server/hosted "chat/completions" endpoint: URL, key and model are all
+            // user-typed. No model list to browse - the server decides which models exist, and a
+            // one-model server (llama.cpp, vLLM) may leave the model empty.
+            AutoTranslateModel = Se.Settings.AutoTranslate.OpenAiCompatibleModel;
+            AutoTranslateModelBrowseIsVisible = false;
+            AutoTranslateModelIsVisible = true;
+            AutoTranslateUrl = Se.Settings.AutoTranslate.OpenAiCompatibleUrl;
+            AutoTranslateUrlIsVisible = true;
+            AutoTranslateApiKey = Se.Settings.AutoTranslate.OpenAiCompatibleApiKey;
+            AutoTranslateApiKeyIsVisible = true;
+        }
         else if (engine is LmStudioTranslate)
         {
             AutoTranslateModel = string.Empty;
@@ -3456,42 +3517,11 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             TargetLanguages.Add(language);
         }
 
-        SelectedTargetLanguage = null;
-        var targetLanguageIsoCode = AutoTranslateViewModel.EvaluateDefaultTargetLanguageCode(SelectedTargetLanguage?.Code ?? string.Empty, SelectedSourceLanguage?.Code ?? string.Empty);
-        if (!string.IsNullOrEmpty(targetLanguageIsoCode))
-        {
-            var lang = TargetLanguages.FirstOrDefault(p => p.Code == targetLanguageIsoCode);
-            if (lang != null)
-            {
-                SelectedTargetLanguage = lang;
-            }
-        }
-
-        if (!string.IsNullOrEmpty(Se.Settings.AutoTranslate.AutoTranslateLastTarget))
-        {
-            var lang = TargetLanguages.FirstOrDefault(p => p.Code == Se.Settings.AutoTranslate.AutoTranslateLastTarget);
-            if ((SelectedSourceLanguage == null || lang == null || SelectedSourceLanguage.Code != lang.Code) && lang != null)
-            {
-                SelectedTargetLanguage = lang;
-            }
-        }
-
-        if (SelectedTargetLanguage == null && TargetLanguages.Count > 0)
-        {
-            SelectedTargetLanguage = TargetLanguages[0];
-        }
-
-        if (SelectedSourceLanguage == SelectedTargetLanguage && TargetLanguages.Count > 1)
-        {
-            if (SelectedSourceLanguage?.Code == "en")
-            {
-                SelectedTargetLanguage = TargetLanguages.FirstOrDefault(p => p.Code == "de");
-            }
-            else
-            {
-                SelectedTargetLanguage = TargetLanguages.FirstOrDefault(p => p.Code == "en");
-            }
-        }
+        SelectedTargetLanguage = AutoTranslateViewModel.FindDefaultTargetLanguage(
+            TargetLanguages,
+            SelectedSourceLanguage,
+            Se.Settings.AutoTranslate.AutoTranslateLastTarget,
+            Se.Language.CultureName);
     }
 
     internal void Onloaded(object? sender, RoutedEventArgs e)

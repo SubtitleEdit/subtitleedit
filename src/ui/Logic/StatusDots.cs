@@ -6,6 +6,7 @@ using Avalonia.Controls.Shapes;
 using Avalonia.Controls.Templates;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 
@@ -38,9 +39,9 @@ public enum DownloadDotStatus
 /// </summary>
 public static class StatusDots
 {
-    public static readonly IBrush Green = new SolidColorBrush(Color.FromRgb(0x4C, 0xAF, 0x50));
-    public static readonly IBrush Amber = new SolidColorBrush(Color.FromRgb(0xFF, 0x98, 0x00));
-    public static readonly IBrush Grey = new SolidColorBrush(Color.FromRgb(0x9E, 0x9E, 0x9E));
+    public static readonly IBrush Green = new ImmutableSolidColorBrush(Color.FromRgb(0x4C, 0xAF, 0x50));
+    public static readonly IBrush Amber = new ImmutableSolidColorBrush(Color.FromRgb(0xFF, 0x98, 0x00));
+    public static readonly IBrush Grey = new ImmutableSolidColorBrush(Color.FromRgb(0x9E, 0x9E, 0x9E));
 
     /// <summary>The fill for a status dot, or null when no dot should be shown.</summary>
     public static IBrush? BrushFor(DownloadDotStatus status) => status switch

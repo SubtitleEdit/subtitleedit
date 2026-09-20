@@ -65,7 +65,7 @@ public class MergeSameTimeCodesWindow : Window
 
         Content = grid;
 
-        Activated += delegate { _numericUpDownMaxDiff.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, _numericUpDownMaxDiff); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += _vm.OnKeyDown;
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
@@ -96,6 +96,7 @@ public class MergeSameTimeCodesWindow : Window
         dataGrid.Height = double.NaN;
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.MergeItems;
+        dataGrid.WithAccessibleName(Se.Language.General.MergeLinesWithSameTimeCodes); // no heading above the list (#12087)
         dataGrid.Columns.AddRange(new TableViewColumn[]
         {
                 new SeTableViewColumn
@@ -171,6 +172,7 @@ public class MergeSameTimeCodesWindow : Window
         dataGrid.Height = double.NaN;
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.MergeSubtitles;
+        dataGrid.WithAccessibleName(Se.Language.General.Preview);
         dataGrid.Columns.AddRange(new TableViewColumn[]
         {
                 new SeTableViewColumn
@@ -204,6 +206,7 @@ public class MergeSameTimeCodesWindow : Window
                     CellTheme = UiUtil.TableViewCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(SubtitleLineViewModel.Text)),
+                    NameBinding = new Binding(nameof(SubtitleLineViewModel.Text)),
                     Width = new GridLength(1, GridUnitType.Star),
                 },
                 new SeTableViewColumn

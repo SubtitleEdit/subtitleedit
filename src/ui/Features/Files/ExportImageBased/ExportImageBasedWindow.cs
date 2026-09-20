@@ -55,13 +55,15 @@ public class ExportImageBasedWindow : Window
 
         var buttonExport = UiUtil.MakeButton(Se.Language.General.ExportDotDotDot, vm.ExportCommand)
             .WithBindIsVisible(vm, nameof(vm.IsExportButtonVisible));
+        buttonExport.IsDefault = true; // the dialog's accept button - Enter runs it (#14586)
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand).WithBindIsVisible(nameof(vm.IsGenerating));
-        var buttonDone = UiUtil.MakeButtonDone(vm.CancelCommand).WithBindIsVisible(nameof(vm.IsGenerating), new InverseBooleanConverter());
+        var buttonDone = UiUtil.MakeButtonDone(vm.CancelCommand).WithBindIsVisible(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
         var panelButtons = UiUtil.MakeButtonBar(buttonExport, buttonDone, buttonCancel);
         
         var comboProfile = UiUtil.MakeComboBox(vm.Profiles, vm, nameof(vm.SelectedProfile));
         comboProfile.SelectionChanged += vm.ProfileChanged;
         var labelProfile = UiUtil.MakeLabel(Se.Language.General.Profile);
+        comboProfile.WithLabeledBy(labelProfile);
         var buttonProfileBrowse = UiUtil.MakeButtonBrowse(vm.ShowProfileCommand, accessibleName: Se.Language.General.Profile).WithMarginLeft(5);
         var panelProfile = new StackPanel
         {
@@ -99,7 +101,7 @@ public class ExportImageBasedWindow : Window
 
         Content = grid;
 
-        Activated += delegate { TableViewExtras.FocusRow(vm.SubtitleGrid); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, () => { TableViewExtras.FocusRow(vm.SubtitleGrid); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
         KeyUp += (_, e) => vm.OnKeyUp(e);
         Loaded += (_, e) => vm.OnLoaded();
@@ -111,7 +113,7 @@ public class ExportImageBasedWindow : Window
 
     private Border MakeSubtitlesView(ExportImageBasedViewModel vm)
     {
-        vm.SubtitleGrid = TableViewExtras.MakeTableView();
+        vm.SubtitleGrid = TableViewExtras.MakeTableView().WithAccessibleName(Se.Language.General.Lines); // #12087
         vm.SubtitleGrid.Height = double.NaN; // auto size inside scroll viewer
         vm.SubtitleGrid.Margin = new Thickness(2);
         vm.SubtitleGrid.ItemsSource = vm.Subtitles;
@@ -157,6 +159,7 @@ public class ExportImageBasedWindow : Window
             Width = new GridLength(90),
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            NameBinding = new Binding(nameof(SubtitleLineViewModel.Duration)) { Converter = shortTimeConverter },
             CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((value, nameScope) =>
             {
                 var border = new Border
@@ -183,6 +186,7 @@ public class ExportImageBasedWindow : Window
             Width = new GridLength(1, GridUnitType.Star),
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            NameBinding = new Binding(nameof(SubtitleLineViewModel.Text)),
             CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((value, nameScope) =>
             {
                 var border = new Border
@@ -253,6 +257,7 @@ public class ExportImageBasedWindow : Window
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
@@ -418,15 +423,19 @@ public class ExportImageBasedWindow : Window
 
         var comboPadLeft = UiUtil.MakeComboBox(vm.BoxPaddingValues, vm, nameof(vm.BoxPaddingLeft));
         ToolTip.SetTip(comboPadLeft, Se.Language.General.Left);
+        comboPadLeft.WithAccessibleName(Se.Language.General.Left); // the four box paddings only have tooltips (#12087)
         comboPadLeft.SelectionChanged += vm.ComboChanged;
         var comboPadRight = UiUtil.MakeComboBox(vm.BoxPaddingValues, vm, nameof(vm.BoxPaddingRight));
         ToolTip.SetTip(comboPadRight, Se.Language.General.Right);
+        comboPadRight.WithAccessibleName(Se.Language.General.Right);
         comboPadRight.SelectionChanged += vm.ComboChanged;
         var comboPadTop = UiUtil.MakeComboBox(vm.BoxPaddingValues, vm, nameof(vm.BoxPaddingTop));
         ToolTip.SetTip(comboPadTop, Se.Language.General.Top);
+        comboPadTop.WithAccessibleName(Se.Language.General.Top);
         comboPadTop.SelectionChanged += vm.ComboChanged;
         var comboPadBottom = UiUtil.MakeComboBox(vm.BoxPaddingValues, vm, nameof(vm.BoxPaddingBottom));
         ToolTip.SetTip(comboPadBottom, Se.Language.General.Bottom);
+        comboPadBottom.WithAccessibleName(Se.Language.General.Bottom);
         comboPadBottom.SelectionChanged += vm.ComboChanged;
         var panelBoxPadding = new StackPanel
         {
@@ -451,6 +460,26 @@ public class ExportImageBasedWindow : Window
         grid.Add(labelFrameRate, 6, 4);
         grid.Add(comboBoxFrameRate, 6, 5);
 
+        // SE4's "3D": the subtitle drawn once per eye for frame-packed 3D video. D-Cinema has only
+        // the depth, as the Z-position (see IsMode3DVisible).
+        var label3D = UiUtil.MakeLabel(Se.Language.File.Export.Stereo3D);
+        label3D.Bind(IsVisibleProperty, new Binding(nameof(vm.IsMode3DVisible)) { Source = vm });
+        var comboBox3D = UiUtil.MakeComboBox(vm.Modes3D, vm, nameof(vm.SelectedMode3D));
+        comboBox3D.Bind(IsVisibleProperty, new Binding(nameof(vm.IsMode3DVisible)) { Source = vm });
+        var labelDepth3D = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.Depth3DText));
+        var comboBoxDepth3D = UiUtil.MakeComboBox(vm.Depths3D, vm, nameof(vm.SelectedDepth3D));
+        comboBoxDepth3D.Bind(IsEnabledProperty, new Binding(nameof(vm.IsDepth3DEnabled)) { Source = vm });
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(comboBox3D, Se.Language.File.Export.Stereo3DHint);
+            ToolTip.SetTip(comboBoxDepth3D, Se.Language.File.Export.Depth3DHint);
+        }
+
+        grid.Add(label3D, 7, 0);
+        grid.Add(comboBox3D, 7, 1);
+        grid.Add(labelDepth3D, 7, 2);
+        grid.Add(comboBoxDepth3D, 7, 3);
+
         // Only shown for the formats that can use a frame-sized image (see IsFullFrameVisible).
         var checkBoxFullFrame = UiUtil.MakeCheckBox(Se.Language.File.Export.FullFrameImage, vm, nameof(vm.IsFullFrame));
         checkBoxFullFrame.IsCheckedChanged += vm.CheckBoxChanged;
@@ -469,7 +498,31 @@ public class ExportImageBasedWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Children = { checkBoxFullFrame, colorPickerFullFrame },
         }.WithBindIsVisible(vm, nameof(vm.IsFullFrameVisible));
-        grid.Add(panelFullFrame, 7, 0, 1, 6);
+        grid.Add(panelFullFrame, 7, 5, 1, 3);
+
+        // A 3D Blu-ray's own depth for each subtitle, from its 3D-Plane (see Stereo3DPlane).
+        var labelPlane3D = UiUtil.MakeLabel(Se.Language.File.Export.Plane3D);
+        var buttonBrowsePlane3D = UiUtil.MakeButton(vm.BrowsePlane3DCommand, IconNames.FolderOpen, Se.Language.File.Export.OpenPlane3DTitle);
+        buttonBrowsePlane3D.Bind(IsEnabledProperty, new Binding(nameof(vm.IsDepth3DEnabled)) { Source = vm });
+        var labelPlane3DFile = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.Plane3DText));
+        var buttonClearPlane3D = UiUtil.MakeButton(vm.ClearPlane3DCommand, IconNames.Close, Se.Language.General.Clear)
+            .WithBindIsVisible(vm, nameof(vm.IsPlane3DLoaded));
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(labelPlane3D, Se.Language.File.Export.Plane3DHint);
+        }
+
+        var panelPlane3D = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 5,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { buttonBrowsePlane3D, labelPlane3DFile, buttonClearPlane3D },
+        };
+        labelPlane3D.Bind(IsVisibleProperty, new Binding(nameof(vm.IsMode3DVisible)) { Source = vm });
+        panelPlane3D.Bind(IsVisibleProperty, new Binding(nameof(vm.IsMode3DVisible)) { Source = vm });
+        grid.Add(labelPlane3D, 8, 0);
+        grid.Add(panelPlane3D, 8, 1, 1, 7);
 
         return UiUtil.MakeBorderForControl(grid);
     }
@@ -561,7 +614,9 @@ public class ExportImageBasedWindow : Window
 
         var statusText = new TextBlock
         {
-            Margin = new Thickness(5, 20, 0, 0),
+            // The bar and the text shared one grid cell, with this top margin as the only
+            // thing keeping them apart - so they ended up touching. Own row, own breathing room.
+            Margin = new Thickness(5, 8, 0, 0),
         };
         statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
         statusText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsGenerating)));
@@ -570,7 +625,8 @@ public class ExportImageBasedWindow : Window
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -581,7 +637,7 @@ public class ExportImageBasedWindow : Window
         };
 
         grid.Add(progressBar, 0, 0);
-        grid.Add(statusText, 0, 0);
+        grid.Add(statusText, 1, 0);
 
         return grid;
     }

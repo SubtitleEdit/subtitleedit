@@ -33,7 +33,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 sb.AppendLine((i + 1).ToString(CultureInfo.InvariantCulture));
                 Paragraph p = subtitle.Paragraphs[i];
-                sb.AppendLine($"{EncodeTimeCode(p.StartTime)} {HtmlUtil.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, "\\N"), true)}");
+                // strip tags BEFORE inserting \N: RemoveHtmlTags(..., true) turns \N back into a
+                // line break, which the one-line reader then dropped
+                sb.AppendLine($"{EncodeTimeCode(p.StartTime)} {HtmlUtil.RemoveHtmlTags(p.Text, true).Replace(Environment.NewLine, "\\N")}");
                 sb.AppendLine();
             }
             sb.AppendLine("[END]");
@@ -79,6 +81,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         if (long.TryParse(line, out long l))
                         {
                             expecting = ExpectingLine.TimeAndText;
+                        }
+                        else if (line.Trim() == "ISUBTITLES MASTER" || line.Trim() == "[END]")
+                        {
+                            // header/footer written by ToText - counted as errors, a one- or two-cue file was never detected
                         }
                         else
                         {

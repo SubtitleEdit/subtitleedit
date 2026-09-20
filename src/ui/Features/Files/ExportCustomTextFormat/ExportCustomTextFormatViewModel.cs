@@ -3,7 +3,6 @@ using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -29,7 +28,7 @@ public partial class ExportCustomTextFormatViewModel : ObservableObject
     
     [ObservableProperty] private bool _isSaveButtonVisible;
 
-    private List<SubtitleLineViewModel> _subtitles;
+    private List<Paragraph> _paragraphs;
     private string? _subtitleFileNAme;
     private string? _videoFileName;
     private string _title;
@@ -51,7 +50,7 @@ public partial class ExportCustomTextFormatViewModel : ObservableObject
         SelectedEncoding = Encodings.FirstOrDefault(p => p.DisplayName == Se.Settings.General.DefaultEncoding) ??
                            Encodings[0];
         PreviewText = string.Empty;
-        _subtitles = new List<SubtitleLineViewModel>();
+        _paragraphs = new List<Paragraph>();
     }
 
     [RelayCommand]
@@ -79,7 +78,7 @@ public partial class ExportCustomTextFormatViewModel : ObservableObject
 
         var result = await _windowService.ShowDialogAsync<EditCustomTextFormatWindow, EditCustomTextFormatViewModel>(Window!, vm =>
         {
-            vm.Initialize(editCopy, Se.Language.File.Export.EditCustomFormat, _subtitles, _title, _videoFileName ?? string.Empty);
+            vm.Initialize(editCopy, Se.Language.File.Export.EditCustomFormat, _paragraphs, _title, _videoFileName ?? string.Empty);
         });
 
         if (result.OkPressed && result.SelectedCustomFormat != null)
@@ -142,7 +141,7 @@ public partial class ExportCustomTextFormatViewModel : ObservableObject
 
         var result = await _windowService.ShowDialogAsync<EditCustomTextFormatWindow, EditCustomTextFormatViewModel>(Window!, vm =>
         {
-            vm.Initialize(selected, Se.Language.File.Export.NewCustomFormat, _subtitles, _title, _videoFileName ?? string.Empty);
+            vm.Initialize(selected, Se.Language.File.Export.NewCustomFormat, _paragraphs, _title, _videoFileName ?? string.Empty);
         });
 
         if (result.OkPressed && result.SelectedCustomFormat != null)
@@ -200,6 +199,11 @@ public partial class ExportCustomTextFormatViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/file", "export-custom-text-format");
+        }
     }
 
     internal void OnCustomFormatGridDoubleTapped(object? sender, TappedEventArgs e)
@@ -222,7 +226,7 @@ public partial class ExportCustomTextFormatViewModel : ObservableObject
 
     private void GenerateText(CustomFormatItem customFormatItem)
     {
-        PreviewText = CustomTextFormatter.GenerateCustomText(customFormatItem.ToTemplate(), _subtitles.Where(s => s.Paragraph != null).Select(s => s.Paragraph!).ToList(), _title, _videoFileName ?? string.Empty);
+        PreviewText = CustomTextFormatter.GenerateCustomText(customFormatItem.ToTemplate(), _paragraphs, _title, _videoFileName ?? string.Empty);
     }
 
     internal async Task GridKeyDown(KeyEventArgs e)
@@ -234,9 +238,15 @@ public partial class ExportCustomTextFormatViewModel : ObservableObject
         }
     }
 
-    internal void Initialize(List<SubtitleLineViewModel> subtitles, string? subtitleFileName, string? videoFileName, bool hideSaveButton = false)
+    /// <param name="paragraphs">
+    /// The lines as they are right now, e.g. from GetUpdateSubtitle(). This used to take the grid
+    /// rows and read each row's load-time Paragraph object, which is never updated when the row's
+    /// times or text change - so every edit since the file was opened (a Synchronization shift,
+    /// a typed correction) was missing from the preview and the exported file.
+    /// </param>
+    internal void Initialize(List<Paragraph> paragraphs, string? subtitleFileName, string? videoFileName, bool hideSaveButton = false)
     {
-        _subtitles = subtitles;
+        _paragraphs = paragraphs;
         _subtitleFileNAme = subtitleFileName;
         _videoFileName = videoFileName;
         _title = subtitleFileName != null ? System.IO.Path.GetFileNameWithoutExtension(subtitleFileName) : Se.Language.General.Untitled;

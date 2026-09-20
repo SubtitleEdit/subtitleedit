@@ -64,7 +64,7 @@ public class ChaptersWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonCancel.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, buttonCancel); // hack to make OnKeyDown work
     }
 
     /// <summary>
@@ -78,7 +78,7 @@ public class ChaptersWindow : Window
         var title = new TextBlock
         {
             Text = Se.Language.Video.Chapters.Chapters,
-            FontSize = 15,
+            FontSize = UiUtil.ScaledFontSize(15),
             FontWeight = FontWeight.SemiBold,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(8, 0, 0, 0),
@@ -156,7 +156,7 @@ public class ChaptersWindow : Window
             Child = new TextBlock
             {
                 [!TextBlock.TextProperty] = textBinding,
-                FontSize = 10,
+                FontSize = UiUtil.ScaledFontSize(10),
                 FontWeight = FontWeight.SemiBold,
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Center,
@@ -301,7 +301,7 @@ public class ChaptersWindow : Window
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
             IsHitTestVisible = false,
-            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.HasChapters)) { Converter = new InverseBooleanConverter() },
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.HasChapters)) { Converter = InverseBooleanConverter.Instance },
         };
 
         return UiUtil.MakeBorderForControl(new Panel { Children = { tableView, emptyHint } });
@@ -397,7 +397,7 @@ public class ChaptersWindow : Window
         };
         AutomationProperties.SetName(shiftUpDown, language.ShiftAllTimes);
 
-        var buttonShift = UiUtil.MakeButton(language.Apply, vm.ApplyShiftCommand)
+        var buttonShift = UiUtil.MakeButton(Se.Language.General.Apply, vm.ApplyShiftCommand)
             .WithBindIsEnabled(nameof(vm.HasChapters));
 
         var comboFrom = UiUtil.MakeComboBox(vm.FromFrameRates, vm, nameof(vm.SelectedFromFrameRate));
@@ -415,7 +415,7 @@ public class ChaptersWindow : Window
             combo.HorizontalAlignment = HorizontalAlignment.Stretch;
         }
 
-        var buttonScale = UiUtil.MakeButton(language.Apply, vm.ApplyFrameRateScaleCommand)
+        var buttonScale = UiUtil.MakeButton(Se.Language.General.Apply, vm.ApplyFrameRateScaleCommand)
             .WithBindIsEnabled(nameof(vm.HasChapters));
 
         // One row: the two labels and the button take what they need, and the drop-downs share
@@ -471,7 +471,7 @@ public class ChaptersWindow : Window
             Text = text,
             TextWrapping = TextWrapping.Wrap,
             Opacity = 0.65,
-            FontSize = 11,
+            FontSize = UiUtil.ScaledFontSize(11),
             Margin = new Thickness(0, 0, 0, 8),
         };
     }

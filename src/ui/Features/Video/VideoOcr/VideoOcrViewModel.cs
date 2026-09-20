@@ -9,12 +9,15 @@ using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Ocr.CrispEmbedSettings;
 using Nikse.SubtitleEdit.Features.Ocr.Download;
 using Nikse.SubtitleEdit.Features.Ocr.Engines;
+using Nikse.SubtitleEdit.Features.Options.Settings;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Features.SpellCheck.GetDictionaries;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Download;
+using Nikse.SubtitleEdit.Features.Video.VideoOcr.EngineSettings;
 using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.Logic.Media;
 using SkiaSharp;
@@ -30,6 +33,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 using Nikse.SubtitleEdit.UiLogic.Media;
+using Nikse.SubtitleEdit.UiLogic.Ocr.AppleVision;
 using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
@@ -79,6 +83,7 @@ public partial class VideoOcrViewModel : ObservableObject
     [ObservableProperty] private bool _isOkEnabled;
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private string _progressText;
+    [ObservableProperty] private string _testOcrResult = string.Empty;
     [ObservableProperty] private Bitmap? _previewBitmap;
     [ObservableProperty] private double _previewPositionSeconds;
     [ObservableProperty] private double _durationSeconds;
@@ -201,6 +206,15 @@ public partial class VideoOcrViewModel : ObservableObject
 
             Dispatcher.UIThread.Post(async () =>
             {
+                // The probe can outlive the window (closed before ffmpeg answered). Showing the
+                // error box then throws "Cannot show a window with a closed owner" on the
+                // dispatcher - in the headless test suite that lands in whichever unrelated
+                // test pumps the queue next.
+                if (Window.IsClosing())
+                {
+                    return;
+                }
+
                 if (mediaInfo == null || mediaInfo.Dimension.Width <= 0 || mediaInfo.Dimension.Height <= 0 ||
                     mediaInfo.Duration == null)
                 {
@@ -311,22 +325,99 @@ public partial class VideoOcrViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Opens the CrispEmbed dialog: engine install state and hardware build, every backend's
-    /// models, and the (re-)download buttons for both. Re-downloading the engine there re-asks
-    /// CPU/Vulkan/CUDA, the only way to change hardware build after the first install (#13400).
+    /// Gear button next to the engine combo: every engine opens a settings/info dialog. CrispEmbed
+    /// and llama.cpp have dialogs of their own (engine build, models, prompt, timeout); the rest
+    /// share <see cref="VideoOcrEngineSettingsWindow"/> with install state, folder and website.
     /// </summary>
     [RelayCommand]
-    private async Task ShowCrispEmbedSettings()
+    private async Task ShowEngineSettings()
     {
         if (Window == null)
         {
             return;
         }
 
-        await _windowService.ShowDialogAsync<CrispEmbedSettingsWindow, CrispEmbedSettingsViewModel>(
-            Window, vm => vm.Initialize());
+        switch (SelectedEngine.EngineType)
+        {
+            case OcrEngineType.CrispEmbed:
+                // Engine install state and hardware build, every backend's models, and the
+                // (re-)download buttons for both. Re-downloading the engine there re-asks
+                // CPU/Vulkan/CUDA, the only way to change hardware build after the first install (#13400).
+                await _windowService.ShowDialogAsync<CrispEmbedSettingsWindow, CrispEmbedSettingsViewModel>(
+                    Window, vm => vm.Initialize());
+                break;
+
+            case OcrEngineType.LlamaCpp:
+                // Same dialog as the image OCR window: server URL, request timeout, prompt and the
+                // engine build's update status. The settings are shared with image OCR.
+                await _windowService.ShowDialogAsync<LlamaCppOcrSettingsWindow, LlamaCppOcrSettingsViewModel>(
+                    Window, vm => vm.Initialize(UpdateLlamaCppEngineAsync));
+                break;
+
+            default:
+                var engine = SelectedEngine;
+                Func<Task>? redownload = engine.EngineType == OcrEngineType.PaddleOcrStandalone
+                    ? RedownloadPaddleOcrAsync
+                    : null;
+                await _windowService.ShowDialogAsync<VideoOcrEngineSettingsWindow, VideoOcrEngineSettingsViewModel>(
+                    Window, vm => vm.Initialize(engine, redownload));
+                break;
+        }
 
         (Window as VideoOcrWindow)?.RefreshDownloadDots();
+    }
+
+    /// <summary>
+    /// Re-downloads the standalone Paddle engine (asking CPU/CUDA again, so this is also how the
+    /// build is switched) and then any missing models.
+    /// </summary>
+    private async Task RedownloadPaddleOcrAsync()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (await PaddleOcrInstallHelper.DownloadEngineAsync(Window, _windowService))
+        {
+            await PaddleOcrInstallHelper.EnsureInstalled(Window, _windowService, OcrEngineType.PaddleOcrStandalone);
+        }
+
+        (Window as VideoOcrWindow)?.RefreshDownloadDots();
+    }
+
+    /// <summary>
+    /// Stops the running llama-server (it holds the binary open and would keep serving a stale
+    /// build), re-downloads the matching llama.cpp build, and refreshes the model list and dots.
+    /// Wired to the download button in the llama.cpp OCR settings dialog.
+    /// </summary>
+    private async Task UpdateLlamaCppEngineAsync()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        LlamaCppServerManager.StopServer();
+        UpdateLlamaCppServerButtonText();
+
+        // Re-download the same backend that is installed (CPU/Vulkan/CUDA all unpack into one
+        // folder); when nothing is installed yet, DownloadAsync falls back to asking the user.
+        var folder = LlamaCppServerManager.GetAndCreateFolder();
+        var variant = LlamaCppServerManager.IsEngineInstalled() && OperatingSystem.IsWindows()
+            ? DownloadHashManager.DetectLlamaCppWindowsVariant(folder)
+            : null;
+
+        var model = SelectedLlamaCppModel?.Model;
+        var downloaded = await LlamaCppDownloadHelper.DownloadAsync(Window, _windowService, model, variant, forceEngineDownload: true);
+        if (downloaded != null)
+        {
+            var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
+            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.GetAllOcrModels(), selectName);
+        }
+
+        (Window as VideoOcrWindow)?.RefreshDownloadDots();
+        UpdateLlamaCppServerButtonText();
     }
 
     private async Task<bool> EnsureCrispEmbedReady()
@@ -557,7 +648,8 @@ public partial class VideoOcrViewModel : ObservableObject
     /// <summary>
     /// OCRs only the frame at the current preview position so the user can validate the scan
     /// area, engine, and settings without scanning the whole video. The result is shown in the
-    /// status text.
+    /// status text, and in <see cref="TestOcrResult"/> - the Test button's description, which a
+    /// screen reader reads when focus returns to the button (#12087).
     /// </summary>
     [RelayCommand]
     private async Task TestOcr()
@@ -582,6 +674,7 @@ public partial class VideoOcrViewModel : ObservableObject
 
         IsRunning = true;
         ProgressText = Se.Language.Video.VideoOcr.TestOcrRunning;
+        TestOcrResult = string.Empty;
 
         // Its own scratch folder, not the shared temp root: OcrGroups derives the masked-copy
         // folder from the frame's directory, so a brightness minimum wrote full-resolution
@@ -603,6 +696,7 @@ public partial class VideoOcrViewModel : ObservableObject
             ProgressText = string.IsNullOrWhiteSpace(group.Text)
                 ? Se.Language.Video.VideoOcr.TestOcrNoTextFound
                 : string.Format(Se.Language.Video.VideoOcr.TestOcrResultX, group.Text.ReplaceLineEndings(" | "));
+            TestOcrResult = ProgressText;
         }
         catch (OperationCanceledException)
         {
@@ -1082,7 +1176,7 @@ public partial class VideoOcrViewModel : ObservableObject
             var modelName = SelectedLlamaCppModel?.Model.FileName is { } fileName
                 ? Path.GetFileNameWithoutExtension(fileName)
                 : "glmocr";
-            var prompt = Se.Settings.Ocr.LlamaCppOcrPrompt;
+            var prompt = LlamaCppServerManager.ResolveOcrPrompt(SelectedLlamaCppModel?.Model, Se.Settings.Ocr.LlamaCppOcrPrompt);
             await RunLlmOcr(ocrGroups, group => OcrWithBitmap(group, bitmap =>
                     llamaCppOcr.Ocr(bitmap, url, modelName, LlamaCppLanguage, prompt, cancellationToken)),
                 () => llamaCppOcr.Error, reportProgress, addPreviewLine, cancellationToken, CountUnknownWords);
@@ -1766,7 +1860,7 @@ public partial class VideoOcrViewModel : ObservableObject
 
             if (answer == MessageBoxResult.Yes)
             {
-                _cancellationTokenSource.Cancel();
+                await _cancellationTokenSource.CancelAsync();
             }
 
             return;

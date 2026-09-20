@@ -31,6 +31,7 @@ public class MultipleReplaceWindowShortcutTests
     private static (MultipleReplaceViewModel Vm, Window Window, RuleTreeNode Category) OpenWithThreeFixes()
     {
         var vm = new MultipleReplaceViewModel(new WindowService(new NullServiceProvider()), new FileHelper());
+        vm.PreviewIntervalMs = 25; // the tests wait for the preview timer; see PreviewIntervalMs
         vm.Nodes.Clear();
 
         var category = new RuleTreeNode(true) { CategoryName = "c1", IsActive = true };

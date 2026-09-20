@@ -75,4 +75,25 @@ public class ApplyDurationLimitsViewModelTests : IDisposable
 
         Assert.Equal(2000, vm.AllSubtitlesFixed[1].Duration.TotalMilliseconds);
     }
+    [AvaloniaFact]
+    public async Task OnlySelectedIdsAreFixedAndTheRestPassThroughUnchanged()
+    {
+        var vm = new ApplyDurationLimitsViewModel();
+        var window = new ApplyDurationLimitsWindow(vm);
+        _windows.Add(window);
+        window.Show();
+        var subtitles = MakeSubtitles();
+        vm.Initialize(subtitles, new List<double>(), new HashSet<Guid> { subtitles[1].Id });
+        Dispatcher.UIThread.RunJobs();
+        vm.FixMinDurationMs = true;
+        vm.MinDurationMs = 1000;
+        vm.FixMaxDurationMs = true;
+        vm.MaxDurationMs = 5000;
+
+        await vm.OkCommand.ExecuteAsync(null);
+
+        Assert.Equal(2, vm.AllSubtitlesFixed.Count);
+        Assert.Equal(200, vm.AllSubtitlesFixed[0].Duration.TotalMilliseconds);
+        Assert.Equal(5000, vm.AllSubtitlesFixed[1].Duration.TotalMilliseconds);
+    }
 }

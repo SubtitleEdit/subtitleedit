@@ -48,9 +48,9 @@ public class ReEncodeVideoWindow : Window
                 }
             }
         };
-        buttonGenerate.Bind(SplitButton.IsEnabledProperty, new Binding(nameof(vm.IsGenerating)) { Converter = new InverseBooleanConverter() });
+        buttonGenerate.Bind(SplitButton.IsEnabledProperty, new Binding(nameof(vm.IsGenerating)) { Converter = InverseBooleanConverter.Instance });
 
-        var buttonDone = UiUtil.MakeButtonDone(vm.OkCommand).WithBindEnabled(nameof(vm.IsGenerating), new InverseBooleanConverter());
+        var buttonDone = UiUtil.MakeButtonDone(vm.OkCommand).WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
         var buttonPanel = UiUtil.MakeButtonBar(
             buttonGenerate,
             buttonDone,
@@ -82,7 +82,7 @@ public class ReEncodeVideoWindow : Window
 
         Content = grid;
 
-        Activated += delegate { _comboBoxFrameRate?.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, () => { _comboBoxFrameRate?.Focus(); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
     }
 
     private Border MakeVideoSettingsView(ReEncodeVideoViewModel vm)
@@ -103,7 +103,7 @@ public class ReEncodeVideoWindow : Window
                 textBoxHeight,
                 buttonResolution,
             }
-        }.WithBindVisible(vm, nameof(vm.UseSourceResolution), new InverseBooleanConverter());
+        }.WithBindVisible(vm, nameof(vm.UseSourceResolution), InverseBooleanConverter.Instance);
 
         var labelSourceResolution = UiUtil.MakeLabel(Se.Language.General.UseSourceResolution).WithBindVisible(vm, nameof(vm.UseSourceResolution));
         var buttonResolutionSource = UiUtil.MakeButtonBrowse(vm.BrowseResolutionCommand, accessibleName: Se.Language.General.Resolution);

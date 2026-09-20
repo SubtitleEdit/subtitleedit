@@ -16,6 +16,7 @@ using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using Optris.Icons.Avalonia;
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -180,7 +181,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         private readonly Button _buttonFullScreen;
         private readonly Button _buttonFullScreenCollapse;
         private readonly Icon _iconVolume;
-        private DispatcherTimer? _positionTimer;
+        private UiTickPump? _positionTimer; // posted ticks, not a DispatcherTimer - see UiTickPump
         private int _slowPollCounter;
         private IVideoPlayer _videoPlayerInstance;
         private string _videoFileName;
@@ -193,6 +194,144 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         private bool _isUserMovingPositionSlider;
         private ContentPresenter? _contentPresenter;
 
+        // Where an in-flight open+restore sequence is heading. See PositionForRestore.
+        private double? _pendingRestorePositionSeconds;
+
+        // How close the player has to be to the restore target to count as arrived. Same value
+        // for the arrival check in the position tick and for EndPositionRestoreIfArrived.
+        private const double PositionRestoreArrivedToleranceSeconds = 0.5;
+
+        /// <summary>
+        /// The position another player should be handed when this control is thrown away and
+        /// rebuilt (layout rebuild, dock/undock, fullscreen) - the pending restore target while
+        /// an open+restore sequence is still in flight, and the live <see cref="Position"/>
+        /// otherwise.
+        /// <para>
+        /// Never sample <see cref="Position"/> for that: <see cref="Open"/> zeroes the position
+        /// display before loading, and a freshly created player reports 0 until its core is up
+        /// and playback has restarted, so anything reading the live position during that window
+        /// (half a second plus the load, easily seconds on a big file) carries 0 forward and
+        /// rewinds the video to the start. Settings -> Apply -> OK does exactly that: Apply
+        /// rebuilds the player and OK rebuilds it again while the first restore is still
+        /// running (issue #14218).
+        /// </para>
+        /// </summary>
+        internal double PositionForRestore => _pendingRestorePositionSeconds ?? Position;
+
+        // When the pending restore was announced (Stopwatch ticks), and whether the sequence that
+        // announced it is still trying to get there. See PositionRestoreHoldSeconds.
+        private long _pendingRestoreStartedTs;
+        private bool _positionRestoreInFlight;
+
+        // An open+restore sequence is a bounded ready wait plus a bounded run of seeks (8 s at the
+        // defaults); past this the player is not going to arrive and the hold must let go.
+        private const double PositionRestoreHoldMaxSeconds = 10;
+
+        /// <summary>
+        /// Where the play-head should be shown while an open+restore sequence is still in flight,
+        /// or null when the live position is the truth. A player that is still loading reports 0,
+        /// and anything that follows the live position through that window - the waveform cursor,
+        /// the centered waveform scroll, "select current subtitle" - jumps to the start of the
+        /// video and back on every layout rebuild, dock/undock and fullscreen (issue #15027).
+        /// <para>
+        /// Unlike <see cref="PositionForRestore"/>, which deliberately keeps its target after a
+        /// restore that ran out of time, this lets go then - and after a hard cap for a sequence
+        /// nothing ever ended: a display held on a target the player never reaches would sit
+        /// frozen through playback.
+        /// </para>
+        /// </summary>
+        internal double? PositionRestoreHoldSeconds
+        {
+            get
+            {
+                if (!_positionRestoreInFlight || IsDisposed || _pendingRestorePositionSeconds is not { } pending)
+                {
+                    return null;
+                }
+
+                var elapsedSeconds = (Stopwatch.GetTimestamp() - _pendingRestoreStartedTs) / (double)Stopwatch.Frequency;
+                if (elapsedSeconds > PositionRestoreHoldMaxSeconds)
+                {
+                    _positionRestoreInFlight = false;
+                    return null;
+                }
+
+                return pending;
+            }
+        }
+
+        /// <summary>
+        /// Announces that an open+restore sequence heading for <paramref name="seconds"/> has
+        /// started, so <see cref="PositionForRestore"/> reports that target instead of the 0 the
+        /// not-yet-loaded player reports. <see cref="Open"/> calls this itself when given a start
+        /// position; callers that seek only after the open (the layout rebuild) call it first.
+        /// The pending value is dropped by <see cref="EndPositionRestore"/> /
+        /// <see cref="EndPositionRestoreIfArrived"/> and, as a safety net for restores that are
+        /// abandoned without one, as soon as the player actually reports the restored position.
+        /// </summary>
+        internal void BeginPositionRestore(double seconds)
+        {
+            if (seconds > 0)
+            {
+                _pendingRestorePositionSeconds = seconds;
+                _pendingRestoreStartedTs = Stopwatch.GetTimestamp();
+                _positionRestoreInFlight = true;
+            }
+        }
+
+        /// <summary>
+        /// Ends the restore announced by <see cref="BeginPositionRestore"/>: the player is where
+        /// it should be, so <see cref="PositionForRestore"/> follows the live position again.
+        /// </summary>
+        internal void EndPositionRestore()
+        {
+            _pendingRestorePositionSeconds = null;
+            _positionRestoreInFlight = false;
+        }
+
+        /// <summary>
+        /// Ends the restore announced by <see cref="BeginPositionRestore"/> only if the player
+        /// has actually arrived there. A restore sequence runs a fixed number of seeks after a
+        /// bounded ready wait, so it can run out while mpv is still loading (a big file, a busy
+        /// machine) - and ending the restore there hands <see cref="PositionForRestore"/> back to
+        /// a player that is still reporting 0, which is exactly the rewind
+        /// <see cref="BeginPositionRestore"/> exists to prevent (issue #14218). Keeping the target
+        /// in that case costs nothing: the position tick drops it the moment the player does
+        /// land, and until then the target is a far better answer for a rebuild than the 0 of a
+        /// player that never got where it was told to go.
+        /// </summary>
+        internal void EndPositionRestoreIfArrived()
+        {
+            // A torn-down player throws rather than reporting a position, and it has nothing left
+            // to say about where the video is anyway - leave the target alone (issue #13083).
+            if (IsDisposed)
+            {
+                return;
+            }
+
+            if (_pendingRestorePositionSeconds is { } pending &&
+                Math.Abs(_videoPlayerInstance.Position - pending) < PositionRestoreArrivedToleranceSeconds)
+            {
+                EndPositionRestore();
+            }
+        }
+
+        /// <summary>
+        /// A seek issued while an open+restore sequence is still in flight moves where the user
+        /// wants to be, so the pending target follows it. Dropping the target instead would
+        /// reopen the issue #14218 rewind (a still-loading player reports 0); keeping the old
+        /// one would make the next rebuild jump back to a spot the user has already left. The
+        /// restore sequence's own seeks re-announce the unchanged target, and the position tick
+        /// still ends the restore once the player lands near the (re)target.
+        /// </summary>
+        private void RetargetPositionRestore(double seconds)
+        {
+            if (_pendingRestorePositionSeconds != null)
+            {
+                _pendingRestorePositionSeconds = seconds;
+            }
+        }
+
         private void NotifyPositionChanged(double newPosition)
         {
             if (Math.Abs(_positionIgnore - newPosition) < 0.001)
@@ -200,13 +339,36 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 return;
             }
 
+            // Only a control that knows its duration reports trustworthy values here: until it is
+            // published, the bound position slider clamps every write, so this fires with the
+            // clamped echo of the restore sequence's own seeks - retargeting on that would hand
+            // the pending target the near-0 the guard exists to keep out (issue #14218).
+            if (Duration > 0)
+            {
+                RetargetPositionRestore(newPosition);
+            }
+
             // First update our property
             Position = newPosition;
 
-            _videoPlayerInstance.Position = newPosition;
+            _videoPlayerInstance.Position = UiToPlayerSeconds(newPosition);
 
             // Then notify listeners like the ViewModel
             PositionChanged?.Invoke(newPosition);
+        }
+
+        /// <summary>
+        /// UI position values (the <see cref="Position"/> property, the sliders, the waveform
+        /// time axis) run on the SMPTE drop-frame clock while <see cref="IsSmpteTimingEnabled"/>:
+        /// every read from the player is compressed by 1000/1001 (the position timer below, the
+        /// view model's playhead estimator, the waveform peaks). A seek must expand the UI value
+        /// back to the player's real clock, or every seek lands 0.1% early - proportional to the
+        /// absolute position, about a second per 17 minutes - and the playhead pin, whose arrive
+        /// check compares in UI space, then snaps the cursor back once its timeout expires.
+        /// </summary>
+        private double UiToPlayerSeconds(double seconds)
+        {
+            return IsSmpteTimingEnabled ? seconds * 1001.0 / 1000.0 : seconds;
         }
 
         public void SetPosition(double seconds)
@@ -230,6 +392,20 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         {
             _positionIgnore = seconds;
             Position = seconds;
+        }
+
+        /// <summary>
+        /// Seeks the player and moves the position display with it. Prefer this over assigning
+        /// <see cref="Position"/> when the seek must happen: the styled property drops an
+        /// assignment equal to the value it already holds, so a caller landing on the spot the
+        /// display happens to show (a frame step parking back where the last tick reported)
+        /// would silently never reach the player.
+        /// </summary>
+        public void SeekTo(double seconds)
+        {
+            RetargetPositionRestore(seconds);
+            SetPositionDisplayOnly(seconds);
+            _videoPlayerInstance.Position = UiToPlayerSeconds(seconds);
         }
 
         public int ContentWidth => _contentPresenter?.Bounds.Width > 0 ? (int)_contentPresenter.Bounds.Width : 0;
@@ -300,8 +476,8 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             _buttonPlay.Click += (_, _) =>
             {
                 var wasPlaying = _videoPlayerInstance.IsPlaying;
-                _videoPlayerInstance.PlayOrPause();
                 PlayPauseRequested?.Invoke(wasPlaying);
+                _videoPlayerInstance.PlayOrPause();
             };
             _buttonPlay.Bind(Button.CommandProperty, new Binding
             {
@@ -512,7 +688,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             {
                 VerticalAlignment = VerticalAlignment.Bottom,
                 HorizontalAlignment = HorizontalAlignment.Center,
-                FontSize = 12,
+                FontSize = UiUtil.ScaledFontSize(12),
                 FontWeight = FontWeight.Bold,
                 FontFeatures = FontFeatureCollection.Parse("tnum"),
             };
@@ -527,7 +703,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             {
                 VerticalAlignment = VerticalAlignment.Top,
                 HorizontalAlignment = HorizontalAlignment.Right,
-                FontSize = 9,
+                FontSize = UiUtil.ScaledFontSize(9),
                 FontWeight = FontWeight.Bold,
                 Opacity = 0.6,
             };
@@ -538,7 +714,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             {
                 VerticalAlignment = VerticalAlignment.Bottom,
                 HorizontalAlignment = HorizontalAlignment.Right,
-                FontSize = 9,
+                FontSize = UiUtil.ScaledFontSize(9),
                 FontWeight = FontWeight.Bold,
                 Opacity = 0.6,
                 TextAlignment = TextAlignment.Right,
@@ -614,8 +790,8 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             if (ClickToTogglePlay)
             {
                 var wasPlaying = _videoPlayerInstance.IsPlaying;
-                _videoPlayerInstance.PlayOrPause();
                 PlayPauseRequested?.Invoke(wasPlaying);
+                _videoPlayerInstance.PlayOrPause();
                 e.Handled = true;
             }
 
@@ -691,8 +867,16 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 newPosition = duration;
             }
 
-            NotifyPositionChanged(newPosition);
-            UserSeeked?.Invoke(newPosition);
+            // Wheeling past either end while already parked there clamps back onto the current
+            // position: there is nothing to seek (NotifyPositionChanged would drop it anyway), so
+            // don't raise UserSeeked either. Its playhead pin waits for the player to confirm a
+            // seek, and with no seek sent that only ends at the pin's 5 s cap - the cursor stayed
+            // stuck through the start of playback (issue #14894).
+            if (Math.Abs(newPosition - Position) >= 0.001)
+            {
+                NotifyPositionChanged(newPosition);
+                UserSeeked?.Invoke(newPosition);
+            }
 
             if (IsFullScreen)
             {
@@ -705,9 +889,11 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         /// <summary>
         /// Raised when the user toggles playback via this control (toolbar button, click on the
         /// video surface or <see cref="TogglePlayPause"/>). The argument is true when playback was
-        /// running, i.e. the request pauses. Captured before the toggle because the player's
-        /// IsPlaying lags the pause command (~100 ms for mpv), so owners can react on the request
-        /// itself — e.g. freeze the interpolated waveform cursor (issue #12233).
+        /// running, i.e. the request pauses. Raised before the toggle is sent to the player: the
+        /// player's IsPlaying lags the pause command (~100 ms for mpv), so owners react on the
+        /// request itself — e.g. freeze the interpolated waveform cursor (issue #12233) — and a
+        /// resume handler may reposition the paused player onto the drawn cursor, which must reach
+        /// the player before the play command so no audio from the old spot escapes first.
         /// </summary>
         public event Action<bool>? PlayPauseRequested;
         public event Action? StopRequested;
@@ -757,6 +943,12 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             {
                 return;
             }
+
+            // From here until the file is up and playback has restarted the position reads 0,
+            // so remember where this open is heading for anything that rebuilds the player
+            // meanwhile (issue #14218). Callers that seek only after the open have already
+            // announced their target - a start-less open must not clear it.
+            BeginPositionRestore(startPositionSeconds);
 
             // Reset slider state before LoadFile. Otherwise, when the new file's
             // Duration arrives on the next timer tick, the slider's Maximum drops
@@ -896,6 +1088,78 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             });
         }
 
+        /// <summary>
+        /// Seeks a freshly opened player back to <paramref name="seconds"/> and keeps at it until
+        /// it reports it is actually there, then ends the restore announced by
+        /// <see cref="BeginPositionRestore"/>.
+        /// <para>
+        /// Every rebuild path (layout rebuild, dock/undock, fullscreen) used to do this by hand,
+        /// by assigning <see cref="Position"/> ten times over 100 ms. Both halves of that were
+        /// wrong. The property reaches the player only through the bound position slider, whose
+        /// Maximum is this control's <see cref="Duration"/> - published from the position tick,
+        /// not by <see cref="WaitForPlayersReadyAsync"/>, which waits on the core's duration - so
+        /// a write landing in that gap is clamped and seeks the video to the start instead. And
+        /// once the duration is published the repeats stop happening at all: the property already
+        /// holds the value, so the styled-property layer drops the rest and they never reach the
+        /// slider - a 100 ms budget that is really one seek. mpv swallows seeks while it is still
+        /// loading, which a 43 minute file does for far longer than that, and nothing re-seeked
+        /// afterwards: the video stayed at 0:00 after Options/OK, and the waveform, which follows
+        /// the play-head, sat on the first line of the file (issue #14741).
+        /// </para>
+        /// <para>
+        /// Uses <see cref="SeekTo"/>, which writes the player directly and so is immune to both,
+        /// and gives up only after <paramref name="timeoutMs"/> - keeping the pending target when
+        /// it does, so a rebuild is still handed where the video should be rather than the 0 of a
+        /// player that never got there (issue #14218).
+        /// </para>
+        /// </summary>
+        internal async Task RestorePositionAsync(double seconds, int timeoutMs = 5000)
+        {
+            if (seconds <= 0)
+            {
+                EndPositionRestore();
+                return;
+            }
+
+            var end = Environment.TickCount64 + timeoutMs;
+            var delayMs = 10;
+            while (true)
+            {
+                if (IsDisposed)
+                {
+                    return;
+                }
+
+                SeekTo(seconds);
+                await Task.Delay(delayMs);
+
+                // A control torn down while this was awaiting has nothing left to seek, and its
+                // player throws rather than reporting a position (issue #13083).
+                if (IsDisposed)
+                {
+                    return;
+                }
+
+                if (Math.Abs(_videoPlayerInstance.Position - seconds) < PositionRestoreArrivedToleranceSeconds)
+                {
+                    EndPositionRestore();
+                    return;
+                }
+
+                if (Environment.TickCount64 >= end)
+                {
+                    // The target stays for a rebuild to pick up, but nothing is heading for it
+                    // any more - stop holding the play-head display on it.
+                    _positionRestoreInFlight = false;
+                    return;
+                }
+
+                // Back off: the first few tries cover a player that is merely settling, the
+                // slower ones a file still loading, without polling it flat out for seconds.
+                delayMs = Math.Min(delayMs * 2, 200);
+            }
+        }
+
         internal async Task WaitForPlayersReadyAsync(int timeoutMs = 2500)
         {
             var end = DateTime.UtcNow.AddMilliseconds(timeoutMs);
@@ -926,8 +1190,8 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         internal void TogglePlayPause()
         {
             var wasPlaying = _videoPlayerInstance.IsPlaying;
-            _videoPlayerInstance.PlayOrPause();
             PlayPauseRequested?.Invoke(wasPlaying);
+            _videoPlayerInstance.PlayOrPause();
         }
 
         internal AudioTrackInfo? ToggleAudioTrack()
@@ -937,7 +1201,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
         private void StartPositionTimer()
         {
-            _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(50) };
+            _positionTimer = new UiTickPump(TimeSpan.FromMilliseconds(50));
             _positionTimer.Tick += (s, e) =>
             {
                 // Duration and IsPlaying change infrequently — poll every 5th tick (~250 ms)
@@ -949,6 +1213,14 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                     _slowPollCounter = 0;
                     Duration = _videoPlayerInstance.Duration;
                     SetPlayPauseIcon(_videoPlayerInstance.IsPlaying);
+
+                    // The ffmpeg player only knows its decoder (hardware vs. software) once the
+                    // video thread has opened it, and may drop to software mid-playback.
+                    var playerName = _videoPlayerInstance.Name;
+                    if (_textBlockPlayerName.Text != playerName)
+                    {
+                        _textBlockPlayerName.Text = playerName;
+                    }
                 }
 
                 var postFix = IsSmpteTimingEnabled ? " (SMPTE)" : string.Empty;
@@ -969,6 +1241,27 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                     if (IsSmpteTimingEnabled)
                     {
                         pos = pos * 1000.0 / 1001.0; // SMPTE timing adjustment
+                    }
+
+                    // The player has arrived where the restore was heading - drop the pending
+                    // target even if the restoring code never got to end it (an abandoned
+                    // sequence would otherwise pin PositionForRestore for the rest of the
+                    // control's life). Checked on the player's own position, before the hold
+                    // below replaces it for display.
+                    if (_pendingRestorePositionSeconds is { } pending &&
+                        Math.Abs(pos - pending) < PositionRestoreArrivedToleranceSeconds)
+                    {
+                        EndPositionRestore();
+                    }
+
+                    // Still loading its way back after a rebuild: the player reports 0, which
+                    // showed as the time text and the slider dropping to 0:00 and jumping back
+                    // once the restore seek landed. Show where the video is going to be, like
+                    // the waveform play-head does (issue #15027). Display only - nothing here
+                    // reaches the player.
+                    if (PositionRestoreHoldSeconds is { } holdSeconds)
+                    {
+                        pos = holdSeconds;
                     }
 
                     SetPositionDisplayOnly(pos);

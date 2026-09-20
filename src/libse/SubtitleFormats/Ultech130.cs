@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     int y = 0x74 - (numberOfNewLines * 0x20);
                     for (int j = 0; j < text.Length; j++)
                     {
-                        if (text.Substring(j).StartsWith(Environment.NewLine, StringComparison.Ordinal))
+                        if (text.StartsWithAt(j, Environment.NewLine, StringComparison.Ordinal))
                         {
                             y += 0x20;
                             if (line.Length > 0)
@@ -232,7 +232,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             byte b2 = buffer[k + 1];
                             skipCount = 1;
-                            if (sb.Length > 0 && !sb.ToString().EndsWith(Environment.NewLine, StringComparison.Ordinal) && !sb.EndsWith('>'))
+                            if (sb.Length > 0 && !sb.EndsWith(Environment.NewLine) && !sb.EndsWith('>'))
                             {
                                 if (italics)
                                 {

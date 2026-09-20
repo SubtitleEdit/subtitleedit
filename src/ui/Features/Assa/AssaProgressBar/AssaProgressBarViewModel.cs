@@ -124,6 +124,15 @@ public partial class AssaProgressBarViewModel : ObservableObject, IClosingCleanu
         
         Dispatcher.UIThread.Post(() =>
         {
+            // Closed before this post ran: OnClosing has already stopped the (placeholder) pump
+            // and disposed the player, so the pump started below would never be stopped and
+            // would poll the dead player for the rest of the session - every poll an
+            // error-log entry.
+            if (_isClosing)
+            {
+                return;
+            }
+
             if (!string.IsNullOrEmpty(videoFileName) && VideoPlayerControl != null)
             {
                 _ = VideoPlayerControl.Open(videoFileName);
@@ -586,7 +595,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
         try
         {
-            VideoPlayerControl?.Close();
+            VideoPlayerControl?.CloseAndDisposePlayer();
         }
         catch
         {

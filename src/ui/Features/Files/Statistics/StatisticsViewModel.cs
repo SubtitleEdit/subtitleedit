@@ -152,7 +152,7 @@ https://github.com/SubtitleEdit/subtitleedit
         }
 
         var statistic = string.Format(WriteFormat, TextGeneral, TextMostUsedWords, TextMostUsedLines);
-        System.IO.File.WriteAllText(textFileName, statistic);
+        await System.IO.File.WriteAllTextAsync(textFileName, statistic);
 
         _ = await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window!, vm =>
         {
@@ -807,12 +807,14 @@ https://github.com/SubtitleEdit/subtitleedit
         var sb = new StringBuilder();
         if (sortedTable.Count > 0)
         {
-            var temp = string.Empty;
-            foreach (KeyValuePair<string, string> item in sortedTable)
+            // Most frequent first: the table sorts ascending, so emit it back to front. This was
+            // a prepend concatenation per entry - quadratic in the size of the word/line table.
+            foreach (var item in sortedTable.Reverse())
             {
-                temp = item.Value + Environment.NewLine + temp;
+                sb.Append(item.Value).Append(Environment.NewLine);
             }
-            sb.AppendLine(temp);
+
+            sb.AppendLine();
         }
         else
         {
@@ -851,12 +853,14 @@ https://github.com/SubtitleEdit/subtitleedit
         var sb = new StringBuilder();
         if (sortedTable.Count > 0)
         {
-            var temp = string.Empty;
-            foreach (KeyValuePair<string, string> item in sortedTable)
+            // Most frequent first: the table sorts ascending, so emit it back to front. This was
+            // a prepend concatenation per entry - quadratic in the size of the word/line table.
+            foreach (var item in sortedTable.Reverse())
             {
-                temp = item.Value + Environment.NewLine + temp;
+                sb.Append(item.Value).Append(Environment.NewLine);
             }
-            sb.AppendLine(temp);
+
+            sb.AppendLine();
         }
         else
         {

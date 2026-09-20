@@ -27,7 +27,7 @@ public class CopyPasteTranslateBlockWindow : Window
             Padding = new Thickness(15),
             Margin = new Thickness(15),
             FontWeight = Avalonia.Media.FontWeight.Bold,
-            FontSize = 16,
+            FontSize = UiUtil.ScaledFontSize(16),
             Command = vm.CopyFromClipboardCommand,
         };
 
@@ -60,7 +60,7 @@ public class CopyPasteTranslateBlockWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonCancel.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, buttonCancel); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
         Loaded += vm.Loaded;
     }

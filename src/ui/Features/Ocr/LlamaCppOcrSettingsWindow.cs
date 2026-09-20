@@ -58,7 +58,7 @@ public class LlamaCppOcrSettingsWindow : Window
 
         var hintPrompt = UiUtil.MakeTextBlock(Se.Language.Ocr.LlamaCppOcrPromptHint);
         hintPrompt.Opacity = 0.7;
-        hintPrompt.FontSize = 12;
+        hintPrompt.FontSize = UiUtil.ScaledFontSize(12);
         hintPrompt.Margin = new Thickness(0, 2, 0, 0);
 
         var promptLabel = MakeLabel(Se.Language.General.OpenAiCompatibleSttPrompt);
@@ -142,7 +142,7 @@ public class LlamaCppOcrSettingsWindow : Window
 
         Content = rootGrid;
 
-        Activated += delegate { textBoxUrl.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, textBoxUrl);
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
@@ -151,13 +151,13 @@ public class LlamaCppOcrSettingsWindow : Window
         var title = new TextBlock
         {
             Text = Se.Language.Ocr.LlamaCppOcr,
-            FontSize = 18,
+            FontSize = UiUtil.ScaledFontSize(18),
             FontWeight = FontWeight.SemiBold,
         };
         var subtitle = new TextBlock
         {
             Text = Se.Language.Ocr.LlamaCppOcrDescription,
-            FontSize = 12,
+            FontSize = UiUtil.ScaledFontSize(12),
             Opacity = 0.75,
             Margin = new Thickness(0, 2, 0, 0),
         };

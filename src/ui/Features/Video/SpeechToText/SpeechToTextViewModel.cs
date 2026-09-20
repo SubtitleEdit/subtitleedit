@@ -12,6 +12,7 @@ using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.GetAudioClips;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.EngineSettings;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenRouter;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -80,6 +81,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<CrispAsrEngineBase> _crispAsrBackends;
     [ObservableProperty] private CrispAsrEngineBase? _selectedCrispAsrBackend;
     [ObservableProperty] private bool _isForcedAlignerVisible;
+    [ObservableProperty] private bool _doIsolateSpeech;
     [ObservableProperty] private ObservableCollection<ForcedAlignerOption> _forcedAligners;
     [ObservableProperty] private ForcedAlignerOption? _selectedForcedAligner;
     [ObservableProperty] private double _progressOpacity;
@@ -125,6 +127,16 @@ public partial class SpeechToTextViewModel : ObservableObject
     [ObservableProperty] private bool _dashScopeSttEnableWords;
     [ObservableProperty] private int _dashScopeSttTimeoutSeconds;
     public ObservableCollection<string> DashScopeSttRegions { get; } = new(new[] { "international", "china" });
+
+    [ObservableProperty] private bool _isGoogleCloudSttVisible;
+    [ObservableProperty] private string? _googleCloudSttKeyFile;
+    [ObservableProperty] private string? _googleCloudSttRegion;
+    [ObservableProperty] private string? _googleCloudSttModel;
+    [ObservableProperty] private string? _googleCloudSttLanguage;
+    [ObservableProperty] private int _googleCloudSttTimeoutSeconds;
+    [ObservableProperty] private string? _googleCloudSttProjectId;
+    [ObservableProperty] private string? _googleCloudSttBucketName;
+    [ObservableProperty] private bool _googleCloudSttDynamicBatching;
 
     public Window? Window { get; set; }
 
@@ -189,6 +201,11 @@ public partial class SpeechToTextViewModel : ObservableObject
         new(@"^\[\d\d:\d\d:\d\d[\.,]\d\d\d --> \d\d:\d\d:\d\d[\.,]\d\d\d]", RegexOptions.Compiled);
 
     private readonly Regex _pctWhisper = new(@"^\d+%\|", RegexOptions.Compiled);
+
+    // WhisperX (verbose, its default) prints one "Transcript: [1101.31 --> 1130.774]  text" line
+    // per VAD chunk as it is decoded, with plain seconds rather than a time code.
+    private static readonly Regex WhisperXTranscriptRegex =
+        new(@"^Transcript: \[(\d+(?:\.\d+)?) --> (\d+(?:\.\d+)?)\]", RegexOptions.Compiled);
     private readonly Regex _pctWhisperFaster = new(@"^\s*\d+%\s*\|", RegexOptions.Compiled);
 
     // Sentence chunks with trailing terminator (+ closing quotes/brackets), or a
@@ -199,6 +216,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private Process _whisperProcess = new();
     private Process? _audioExtractProcess;
     private readonly System.Timers.Timer _timerAudioExtract = new();
+    private volatile bool _windowClosing;
     private Stopwatch _sw = new();
     private StringBuilder _ffmpegLog = new();
     private readonly Lock _lockObj = new();
@@ -219,6 +237,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private static bool _crispAsrUpdatePromptShown;
     private static bool _whisperCppUpdatePromptShown;
     private static bool _qwen3AsrCppUpdatePromptShown;
+    private static bool _whisperXUpdatePromptShown;
 
     /// <summary>
     /// Hook the view wires up so the engine combobox can re-evaluate its install-status dots
@@ -273,6 +292,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         // Online STT services reachable on all platforms
         Engines.Add(new OpenRouterSttEngine());
         Engines.Add(new DashScopeQwen3SttEngine());
+        Engines.Add(new GoogleCloudSttEngine());
 
         if (OperatingSystem.IsWindows() ||
             OperatingSystem.IsLinux() ||
@@ -339,6 +359,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         DoTranslateToEnglish = false;
         DoAdjustTimings = Se.Settings.Tools.AudioToText.WhisperAutoAdjustTimings;
         DoPostProcessing = Se.Settings.Tools.AudioToText.PostProcessing;
+        DoIsolateSpeech = Se.Settings.Tools.AudioToText.CrispAsrIsolateSpeech;
         AddLanguageCodeToFileName = Se.Settings.Tools.AudioToText.WhisperAddLanguageCodeToFileName;
 
         OpenAiCompatibleSttUrl = Se.Settings.Tools.OpenAiCompatibleSttUrl;
@@ -367,6 +388,15 @@ public partial class SpeechToTextViewModel : ObservableObject
         DashScopeSttRegion = DashScopeSttRegions.Contains(savedRegion) ? savedRegion : "international";
         DashScopeSttEnableWords = Se.Settings.Tools.DashScopeSttEnableWords;
         DashScopeSttTimeoutSeconds = Se.Settings.Tools.DashScopeSttTimeoutSeconds;
+
+        GoogleCloudSttKeyFile = Se.Settings.Tools.GoogleCloudSttKeyFile;
+        GoogleCloudSttRegion = Se.Settings.Tools.GoogleCloudSttRegion;
+        GoogleCloudSttModel = Se.Settings.Tools.GoogleCloudSttModel;
+        GoogleCloudSttLanguage = Se.Settings.Tools.GoogleCloudSttLanguage;
+        GoogleCloudSttTimeoutSeconds = Se.Settings.Tools.GoogleCloudSttTimeoutSeconds;
+        GoogleCloudSttProjectId = Se.Settings.Tools.GoogleCloudSttProjectId;
+        GoogleCloudSttBucketName = Se.Settings.Tools.GoogleCloudSttBucketName;
+        GoogleCloudSttDynamicBatching = Se.Settings.Tools.GoogleCloudSttDynamicBatching;
 
         var savedChoice = Se.Settings.Tools.AudioToText.WhisperChoice;
         var whisperCppEngine = Engines.OfType<WhisperCppEngine>().FirstOrDefault();
@@ -397,6 +427,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     {
         Se.Settings.Tools.AudioToText.WhisperAutoAdjustTimings = DoAdjustTimings;
         Se.Settings.Tools.AudioToText.PostProcessing = DoPostProcessing;
+        Se.Settings.Tools.AudioToText.CrispAsrIsolateSpeech = DoIsolateSpeech;
         Se.Settings.Tools.AudioToText.WhisperAddLanguageCodeToFileName = AddLanguageCodeToFileName;
         var engine = GetEffectiveSelectedEngine();
         engine.CommandLineParameter = Parameters;
@@ -446,6 +477,15 @@ public partial class SpeechToTextViewModel : ObservableObject
         Se.Settings.Tools.DashScopeSttRegion = DashScopeSttRegion ?? "international";
         Se.Settings.Tools.DashScopeSttEnableWords = DashScopeSttEnableWords;
         Se.Settings.Tools.DashScopeSttTimeoutSeconds = DashScopeSttTimeoutSeconds;
+
+        Se.Settings.Tools.GoogleCloudSttKeyFile = GoogleCloudSttKeyFile ?? string.Empty;
+        Se.Settings.Tools.GoogleCloudSttRegion = GoogleCloudSttRegion ?? "us";
+        Se.Settings.Tools.GoogleCloudSttModel = GoogleCloudSttModel ?? "chirp_3";
+        Se.Settings.Tools.GoogleCloudSttLanguage = GoogleCloudSttLanguage ?? string.Empty;
+        Se.Settings.Tools.GoogleCloudSttTimeoutSeconds = GoogleCloudSttTimeoutSeconds;
+        Se.Settings.Tools.GoogleCloudSttProjectId = GoogleCloudSttProjectId?.Trim() ?? string.Empty;
+        Se.Settings.Tools.GoogleCloudSttBucketName = GoogleCloudSttBucketName?.Trim() ?? string.Empty;
+        Se.Settings.Tools.GoogleCloudSttDynamicBatching = GoogleCloudSttDynamicBatching;
 
         Se.SaveSettings();
     }
@@ -933,7 +973,10 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// subtitles and said so, which is all the user was told in #14038. The concrete case there
     /// was the crispasr v0.8.29 GPU packages, built with AVX-512 against a CI runner that had it
     /// (CrispASR #374) - every CPU without AVX-512 got this on the CUDA/Vulkan build while the CPU
-    /// build ran fine, so naming the installed package is most of the answer.
+    /// build ran fine, so naming the installed package is most of the answer. That build flaw is
+    /// fixed from v0.8.30 (SE now pins v0.8.34), but the message still earns its keep: a pre-AVX2 CPU
+    /// hits the same silent death on the AVX2 CPU package, and an install predating the pin bump
+    /// keeps the broken GPU binary until the user downloads the engine again.
     /// </summary>
     /// <param name="exitCode">The engine process exit code, or null when it could not be read.</param>
     /// <param name="variant">
@@ -1199,52 +1242,22 @@ public partial class SpeechToTextViewModel : ObservableObject
             // still get a result.
             var jsonText = JsonRepair.FixCommaDecimalSeparators(JsonRepair.EscapeControlCharsInStrings(rawJson));
             var jsonDoc = JsonDocument.Parse(jsonText);
-            var words = jsonDoc.RootElement.GetProperty("words");
-
-            var subtitle = new Subtitle();
-            var currentText = new StringBuilder();
-            var startTime = 0.0;
-            var endTime = 0.0;
-            var first = true;
-
-            foreach (var word in words.EnumerateArray())
+            var words = new List<Qwen3AsrWord>();
+            foreach (var word in jsonDoc.RootElement.GetProperty("words").EnumerateArray())
             {
-                var text = word.GetProperty("word").GetString() ?? string.Empty;
-                var start = word.GetProperty("start").GetDouble();
-                var end = word.GetProperty("end").GetDouble();
-
-                if (first)
-                {
-                    startTime = start;
-                    first = false;
-                }
-
-                var newParagraph = false;
-                if (currentText.Length > 0 && (start - endTime > 0.5 || currentText.Length + text.Length > 80))
-                {
-                    newParagraph = true;
-                }
-
-                if (newParagraph)
-                {
-                    subtitle.Paragraphs.Add(new Paragraph(currentText.ToString().Trim(), startTime * 1000.0, endTime * 1000.0));
-                    currentText.Clear();
-                    startTime = start;
-                }
-
-                if (currentText.Length > 0)
-                {
-                    currentText.Append(' ');
-                }
-
-                currentText.Append(text);
-                endTime = end;
+                words.Add(new Qwen3AsrWord(
+                    word.GetProperty("word").GetString() ?? string.Empty,
+                    word.GetProperty("start").GetDouble(),
+                    word.GetProperty("end").GetDouble()));
             }
 
-            if (currentText.Length > 0)
-            {
-                subtitle.Paragraphs.Add(new Paragraph(currentText.ToString().Trim(), startTime * 1000.0, endTime * 1000.0));
-            }
+            // Sentence-aware cue building (issue #14631): the old loop split only on a 0.5 s
+            // gap or 80 chars and joined every token with a space, which turned Chinese
+            // output into one space-riddled blob cut mid-sentence.
+            var subtitle = Qwen3AsrWordSegmenter.BuildSubtitle(
+                words,
+                Configuration.Settings.General.SubtitleLineMaximumLength * 2,
+                Qwen3AsrWordSegmenter.DefaultMaxCharsCjk);
 
             FixNegativeDuration(subtitle);
             var postProcessedSubtitle = PostProcess(subtitle);
@@ -1442,7 +1455,8 @@ public partial class SpeechToTextViewModel : ObservableObject
             });
 
             var audioSizeBytes = new FileInfo(audioFileName).Length;
-            if (audioSizeBytes > engine.UploadThresholdBytes && _videoInfo.TotalSeconds > 0)
+            var exceedsDurationCap = engine.MaxChunkSeconds > 0 && _videoInfo.TotalSeconds > engine.MaxChunkSeconds;
+            if ((audioSizeBytes > engine.UploadThresholdBytes || exceedsDurationCap) && _videoInfo.TotalSeconds > 0)
             {
                 LogToConsole($"Audio file is {audioSizeBytes / (1024 * 1024)} MB — splitting into chunks to stay under the upload cap");
                 await TranscribeInChunksAsync(service, engine, audioFileName, language, subtitle, segmentProgress, cancellationToken);
@@ -1740,6 +1754,10 @@ public partial class SpeechToTextViewModel : ObservableObject
         var totalSeconds = _videoInfo.TotalSeconds;
         var fileSize = new FileInfo(audioFileName).Length;
         var chunkCount = OpenAiSttChunker.ComputeChunkCount(fileSize, engine.ChunkSizeBytes);
+        if (engine.MaxChunkSeconds > 0)
+        {
+            chunkCount = Math.Max(chunkCount, (int)Math.Ceiling(totalSeconds / engine.MaxChunkSeconds));
+        }
 
         var ffmpegPath = Se.Settings.General.FfmpegPath;
         if (!File.Exists(ffmpegPath))
@@ -2152,6 +2170,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             OpenRouterSttEngine => Se.Settings.Tools.OpenRouterSttLanguage,
             DashScopeQwen3SttEngine => Se.Settings.Tools.DashScopeSttLanguage,
+            GoogleCloudSttEngine => Se.Settings.Tools.GoogleCloudSttLanguage,
             OpenAiCompatibleSttEngine => Se.Settings.Tools.OpenAiCompatibleSttLanguage,
             _ => null,
         };
@@ -2172,6 +2191,16 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// "en" — so a full name is mapped back to its whisper language code. The
     /// first non-empty value wins; later chunks don't overwrite it.
     /// </summary>
+    [RelayCommand]
+    private async Task BrowseGoogleCloudSttKeyFile()
+    {
+        var fileName = await _fileHelper.PickOpenFile(Window!, Se.Language.General.KeyFile, "json files", "*.json");
+        if (!string.IsNullOrEmpty(fileName))
+        {
+            GoogleCloudSttKeyFile = fileName;
+        }
+    }
+
     private void RememberDetectedLanguage(OpenAiCompatibleSttResponse response)
     {
         if (!string.IsNullOrEmpty(_onlineDetectedLanguage) || string.IsNullOrWhiteSpace(response.Language))
@@ -2382,7 +2411,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         return true;
     }
 
-    private static List<string> GetResultFileCandidates(string ext, string waveFileName, string videoFileName, string whisperFolder, ConcurrentQueue<string> outputText, string? sttTempFolder = null)
+    internal static List<string> GetResultFileCandidates(string ext, string waveFileName, string videoFileName, string whisperFolder, ConcurrentQueue<string> outputText, string? sttTempFolder = null)
     {
         var candidates = new List<string>
         {
@@ -2408,8 +2437,12 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             // A pre-extracted 16 kHz WAV skips extraction, so the engines' contained output lands
             // in the per-run folder under the USER'S file name - no other candidate covers that.
-            candidates.Add(Path.Combine(sttTempFolder, Path.GetFileNameWithoutExtension(videoFileName) + ext));
-            candidates.Add(Path.Combine(sttTempFolder, Path.GetFileNameWithoutExtension(waveFileName) + ext));
+            // The per-run folder is where SE told the engine to write, so it must be probed BEFORE
+            // the folder of the user's own file: with the wave-dir candidate first, a stale
+            // "<name>.srt" already sitting next to the user's WAV was picked up as the result and
+            // then deleted as one of SE's temp files.
+            candidates.Insert(0, Path.Combine(sttTempFolder, Path.GetFileNameWithoutExtension(waveFileName) + ext));
+            candidates.Insert(0, Path.Combine(sttTempFolder, Path.GetFileNameWithoutExtension(videoFileName) + ext));
         }
 
         if (!string.IsNullOrEmpty(whisperFolder))
@@ -2627,7 +2660,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         var vm = await _windowService.ShowDialogAsync<SpeechToTextQualityReportWindow, SpeechToTextQualityReportViewModel>(
-            Window, viewModel => viewModel.Initialize(report));
+            Window, viewModel => viewModel.Initialize(report, _videoFileName));
 
         if (vm.DoNotShowAgain)
         {
@@ -2728,6 +2761,12 @@ public partial class SpeechToTextViewModel : ObservableObject
                 return;
             }
 
+            if (ShouldIsolateSpeech())
+            {
+                StartSpeechIsolation(_audioFileName, _videoFileName);
+                return;
+            }
+
             var startOk = TranscribeViaWhisper(_audioFileName, _videoFileName);
             if (!startOk)
             {
@@ -2736,6 +2775,180 @@ public partial class SpeechToTextViewModel : ObservableObject
                 Dispatcher.UIThread.Invoke(async () => { await ShowUnableToStartEngineErrorAsync(); });
             }
         }
+    }
+
+    /// <summary>
+    /// "Isolate speech" is a CrispASR task, so it is only offered - and only runs - with a Crisp
+    /// ASR engine selected; the remembered checkbox value must not leak into other engines.
+    /// </summary>
+    private bool ShouldIsolateSpeech()
+    {
+        return DoIsolateSpeech && GetEffectiveSelectedEngine() is ICrispAsrEngine;
+    }
+
+    private Task<bool> EnsureSpeechIsolationModelDownloadedAsync(ISpeechToTextEngine engine)
+    {
+        return SpeechIsolationModelDownload.EnsureDownloadedAsync(Window!, _windowService, engine, Se.Language.Video.AudioToText.IsolateSpeech);
+    }
+
+    /// <summary>
+    /// Runs between the audio extraction and the engine: splits the speech from music and sound
+    /// effects and hands the engine the speech stem. A failed separation is not a failed job -
+    /// the run carries on with the audio it already has.
+    /// </summary>
+    private void StartSpeechIsolation(string audioFileName, string videoFileName)
+    {
+        ProgressText = Se.Language.Video.AudioToText.IsolatingSpeech;
+
+        _ = Task.Run(async () =>
+        {
+            string? speechFileName = null;
+            try
+            {
+                speechFileName = await IsolateSpeechAsync(audioFileName);
+            }
+            catch (Exception e)
+            {
+                SeLogger.Error(e, "Speech isolation failed");
+            }
+
+            if (_windowClosing)
+            {
+                return;
+            }
+
+            if (_abort)
+            {
+                ProgressOpacity = 0;
+                IsTranscribeEnabled = true;
+                return;
+            }
+
+            if (speechFileName == null)
+            {
+                LogToConsole(Se.Language.Video.AudioToText.IsolateSpeechFailed + Environment.NewLine);
+            }
+
+            lock (_lockObj)
+            {
+                if (speechFileName != null)
+                {
+                    // The result lookup and the retry without VAD both go by _audioFileName, so
+                    // the speech stem has to take over as "the extracted audio" from here on.
+                    _audioFileName = speechFileName;
+                    _filesToDelete.Add(speechFileName);
+                }
+
+                var startOk = TranscribeViaWhisper(_audioFileName, videoFileName);
+                if (!startOk)
+                {
+                    IsTranscribeEnabled = true;
+                    ProgressOpacity = 0;
+                    Dispatcher.UIThread.Post(async () => { await ShowUnableToStartEngineErrorAsync(); });
+                }
+            }
+        });
+    }
+
+    /// <returns>A 16 kHz mono WAV with the speech only, or null when it could not be made.</returns>
+    private async Task<string?> IsolateSpeechAsync(string audioFileName)
+    {
+        if (GetEffectiveSelectedEngine() is not ICrispAsrEngine engine)
+        {
+            return null;
+        }
+
+        var outputFolder = GetSttTempFolder();
+        var separateArguments = SpeechIsolationModel.BuildSeparateArguments(
+            engine.GetModelForCmdLine(SpeechIsolationModel.FileName), audioFileName, outputFolder);
+        var executable = engine.GetExecutable();
+        Se.WriteToolsLog($"{executable} {separateArguments}");
+        LogToConsole($"Isolating speech with : {executable} {separateArguments}{Environment.NewLine}");
+
+        // Kept for the tools log only: the separator prints no progress worth showing, but when
+        // it fails its output is the only clue to why.
+        var separateLog = new StringBuilder();
+        DataReceivedEventHandler logHandler = (_, args) =>
+        {
+            if (!string.IsNullOrWhiteSpace(args.Data))
+            {
+                lock (separateLog)
+                {
+                    separateLog.AppendLine(args.Data);
+                }
+            }
+        };
+
+        using (var separateProcess = StartEngineProcess(executable, separateArguments, logHandler))
+        {
+            if (!await WaitForExitOrAbortAsync(separateProcess))
+            {
+                if (!_abort)
+                {
+                    lock (separateLog)
+                    {
+                        Se.WriteToolsLog($"Speech isolation failed with exit code {separateProcess.ExitCode}:{Environment.NewLine}{separateLog}");
+                    }
+                }
+
+                return null;
+            }
+        }
+
+        var stemFileName = SpeechIsolationModel.GetSpeechStemFileName(audioFileName, outputFolder);
+        if (!File.Exists(stemFileName))
+        {
+            Se.WriteToolsLog("Speech isolation wrote no stem: " + stemFileName);
+            return null;
+        }
+
+        var ffmpeg = File.Exists(Se.Settings.General.FfmpegPath) ? Se.Settings.General.FfmpegPath : "ffmpeg";
+        var speechFileName = Path.Combine(outputFolder, Guid.NewGuid() + ".wav");
+        using (var downmixProcess = StartEngineProcess(ffmpeg, SpeechIsolationModel.BuildDownmixArguments(stemFileName, speechFileName), null))
+        {
+            if (!await WaitForExitOrAbortAsync(downmixProcess))
+            {
+                if (!_abort)
+                {
+                    Se.WriteToolsLog($"Speech isolation: ffmpeg could not convert the speech stem (exit code {downmixProcess.ExitCode})");
+                }
+
+                return null;
+            }
+        }
+
+        // The stem is 44.1 kHz stereo - over a gigabyte for a feature film - so do not leave it
+        // for the end-of-run cleanup of the temp folder.
+        try
+        {
+            File.Delete(stemFileName);
+        }
+        catch
+        {
+            // ignore
+        }
+
+        return File.Exists(speechFileName) ? speechFileName : null;
+    }
+
+    private async Task<bool> WaitForExitOrAbortAsync(Process process)
+    {
+        while (!process.HasExited)
+        {
+            if (_abort)
+            {
+#pragma warning disable CA1416
+                process.Kill(true);
+#pragma warning restore CA1416
+                return false;
+            }
+
+            var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
+            ElapsedText = $"Time elapsed: {new TimeCode(durationMs).ToShortDisplayString()}";
+            await Task.Delay(100);
+        }
+
+        return process.ExitCode == 0;
     }
 
     /// <summary>
@@ -2838,8 +3051,6 @@ public partial class SpeechToTextViewModel : ObservableObject
                model.Name == "distil-large-v2" ||
                model.Name == "distil-large-v3";
     }
-
-
 
     [RelayCommand]
     private void ShowWebLink()
@@ -2992,6 +3203,13 @@ public partial class SpeechToTextViewModel : ObservableObject
             _ => "vulkan",
         };
 
+        if (crispVariant == "cuda")
+        {
+            // Upstream added a Windows CUDA 13 build alongside the CUDA 12 one in v0.8.31, so
+            // Windows now gets the same follow-up Linux has had since v0.8.30 (#14343).
+            return await PromptCrispAsrCudaVersionAsync();
+        }
+
         if (crispVariant == "cpu")
         {
             return await PromptCrispAsrCpuFlavorAsync();
@@ -3041,7 +3259,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         if (answer == MessageBoxResult.Custom3)
         {
-            return await PromptCrispAsrLinuxCudaVersionAsync();
+            return await PromptCrispAsrCudaVersionAsync();
         }
 
         return answer switch
@@ -3054,10 +3272,11 @@ public partial class SpeechToTextViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Follow-up prompt after the user picks "CUDA" in the Linux CrispASR variant selector.
+    /// Follow-up prompt after the user picks "CUDA" in the CrispASR variant selector, on both
+    /// Windows and Linux - upstream ships a CUDA 12 and a CUDA 13 build for each.
     /// Returns "cuda" (CUDA 12 build) or "cuda13", or null when the user cancels.
     /// </summary>
-    private async Task<string?> PromptCrispAsrLinuxCudaVersionAsync()
+    private async Task<string?> PromptCrispAsrCudaVersionAsync()
     {
         var answer = await MessageBox.Show(
             Window!,
@@ -3268,7 +3487,6 @@ public partial class SpeechToTextViewModel : ObservableObject
             Se.Settings.Tools.AudioToText.WhisperPostProcessingChangeUnderlineToColorColor = vm.ChangeUnderlineToColorColor.FromColorToHex();
         }
     }
-
 
     [RelayCommand]
     private async Task DownloadModel()
@@ -3634,6 +3852,11 @@ public partial class SpeechToTextViewModel : ObservableObject
                 }
             }
 
+            if (ShouldIsolateSpeech() && !await EnsureSpeechIsolationModelDownloadedAsync(engine))
+            {
+                return;
+            }
+
             if (language.Code != "en" && IsModelEnglishOnly(model.Model))
             {
                 var answer = await MessageBox.Show(
@@ -3698,7 +3921,6 @@ public partial class SpeechToTextViewModel : ObservableObject
                 BatchGrid.ScrollIntoView(jobItem);
             });
         }
-
 
         _videoFileName = _jobItems[0].InputVideoFileName;
         _videoInfo.TotalMilliseconds = _jobItems[0].MediaInfo.Duration.TotalMilliseconds;
@@ -3807,7 +4029,11 @@ public partial class SpeechToTextViewModel : ObservableObject
         ProgressOpacity = 1;
         ProgressText = GetProgressText();
 
-        _useCenterChannelOnly = false; // FFmpeg center-channel extraction is not configurable in SE 5 yet
+        // Same gate as WaveFileExtractor: the setting alone is not enough, the picked track must
+        // actually have a front center channel or "pan=mono|c0=FC" would fail on a stereo source.
+        _useCenterChannelOnly = Se.Settings.General.FfmpegUseCenterChannelOnly &&
+                                !string.IsNullOrEmpty(_videoFileName) &&
+                                FfmpegMediaInfo.Parse(_videoFileName).HasFrontCenterAudio(_audioTrackNumber);
 
         //Delete invalid preprocessor_config.json file
         if (settings.WhisperChoice is WhisperChoice.PurfviewFasterWhisperXxl)
@@ -4053,20 +4279,41 @@ public partial class SpeechToTextViewModel : ObservableObject
                 $"{languageArgX}--model \"{model}\" --output_format srt --output_dir \"{outputDir}\" " +
                 $"{taskArg}{whisperXArgs} \"{waveFileName}\"";
 
-            // The generic launch path is bypassed here, so repeat the two pieces of its setup a
-            // PyInstaller-frozen Python engine needs: the glibc 2.41+ executable-stack repair,
-            // and the Python UTF-8/unbuffered variables - without them Windows decodes piped
-            // output with the ANSI code page (mojibake, or a UnicodeEncodeError killing the run)
-            // and stdout block-buffers so the log sits empty until the process exits.
-            EnsureExecutableStackCleared(whisperX, whisperX.GetAndCreateWhisperFolder());
+            // The generic launch path is bypassed here, so repeat the piece of its setup a
+            // PyInstaller-frozen Python engine needs: the glibc 2.41+ executable-stack repair.
+            //
+            // No PYTHONUNBUFFERED/PYTHONUTF8/PYTHONIOENCODING/PYTHONWARNINGS here: a frozen
+            // build runs with an isolated interpreter config and ignores every PYTHON* variable
+            // (#15096 - the "Transcript:" lines only arrived once transcription was over, so
+            // the progress never moved and a long CPU run looked hung, and the torchcodec
+            // warning stayed in the log). The whisperx-standalone-102 build does all of that
+            // in-process instead: UTF-8 line-buffered stdout/stderr, torchcodec warning filtered.
+            var whisperXFolder = whisperX.GetAndCreateWhisperFolder();
+            EnsureExecutableStackCleared(whisperX, whisperXFolder);
+
+            // Matplotlib (pulled in by pyannote) builds a font cache on first run and, when
+            // it cannot find one, prints "building the font cache" and writes it next to the
+            // user's home config. Point it at a folder inside the engine install so the cache
+            // is built once in a known place and removed together with the engine.
+            var matplotlibCacheFolder = Path.Combine(whisperXFolder, "matplotlib-cache");
+            try
+            {
+                Directory.CreateDirectory(matplotlibCacheFolder);
+            }
+            catch
+            {
+                matplotlibCacheFolder = string.Empty;
+            }
 
             Se.WriteToolsLog($"{exe} {parametersX}");
             return StartEngineProcess(exe, parametersX, dataReceivedHandler, startInfo =>
             {
                 AddFfmpegToPath(startInfo);
-                startInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
-                startInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
-                startInfo.EnvironmentVariables["PYTHONUNBUFFERED"] = "1";
+
+                if (!string.IsNullOrEmpty(matplotlibCacheFolder))
+                {
+                    startInfo.EnvironmentVariables["MPLCONFIGDIR"] = matplotlibCacheFolder;
+                }
             });
         }
 
@@ -4390,7 +4637,9 @@ public partial class SpeechToTextViewModel : ObservableObject
         // cap on long audio — skip the short-circuit and transcode through
         // ffmpeg into the chosen compressed format.
         var isOpenAiEngine = GetEffectiveSelectedEngine() is IOnlineSttEngine;
-        if (!isOpenAiEngine && videoFileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
+        // "Isolate speech" always goes through the extraction, so it never works on (or writes its
+        // stems next to) the user's own file.
+        if (!isOpenAiEngine && !ShouldIsolateSpeech() && videoFileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
         {
             try
             {
@@ -4417,10 +4666,28 @@ public partial class SpeechToTextViewModel : ObservableObject
         // 2-hour WAV blows past that. When an online engine is selected,
         // transcode to a compressed format so the upload stays under the limit;
         // the OpenAI-compatible engine honors the user's chosen format, the
-        // others default to mp3. Local engines (whisper.cpp, faster-whisper, ...)
-        // keep getting WAV because they read the file locally and expect PCM.
+        // others default to mp3 - except OpenRouter's Chirp models, which reject
+        // mp3 outright (see OpenRouterSttService.RequiresWavAudio) and need wav
+        // instead. Local engines (whisper.cpp, faster-whisper, ...) keep getting
+        // WAV because they read the file locally and expect PCM.
+        //
+        // Reads the ViewModel's own OpenRouterSttModel property, not
+        // Se.Settings.Tools.OpenRouterSttModel - Transcribe() runs SaveSettings()
+        // only later, inside ProcessOnlineSttTranscription, after this extraction
+        // has already started, so the settings object is still stale here.
+        var effectiveEngine = GetEffectiveSelectedEngine();
         var sttAudioFormat = isOpenAiEngine
-            ? (GetEffectiveSelectedEngine() is OpenAiCompatibleSttEngine ? OpenAiCompatibleSttAudioFormat : "mp3")
+            ? (effectiveEngine is OpenAiCompatibleSttEngine
+                ? OpenAiCompatibleSttAudioFormat
+                : effectiveEngine is OpenRouterSttEngine && OpenRouterSttService.RequiresWavAudio(OpenRouterSttModel)
+                    ? "wav"
+                    // Google Cloud uploads to a Cloud Storage bucket rather than through a
+                    // request body, so OpenAI's 25 MB limit (the reason the other online
+                    // engines compress to ~32 kbit/s) does not apply. Send it lossless: an
+                    // 18 minute chunk is about 20 MB as flac, which is nothing for a bucket.
+                    : effectiveEngine is GoogleCloudSttEngine
+                        ? "flac"
+                        : "mp3")
             : "wav";
         var extension = OpenAiSttService.GetFileExtensionForFormat(sttAudioFormat);
         // Place the extracted audio in a dedicated per-run subfolder. Engines like
@@ -4515,6 +4782,20 @@ public partial class SpeechToTextViewModel : ObservableObject
                 // "[hh:mm:ss.mmm --> hh:mm:ss.mmm]  text"
                 AddResultTextFromLine(line, startIndex: 1, timeLength: 12, endIndex: 18, textIndex: 31, language.Code);
             }
+            else if (TryParseWhisperXTranscriptEndSeconds(line, out var whisperXEndSeconds))
+            {
+                // WhisperX streams no percentage unless --print_progress is set, and even then it
+                // restarts at 0% for the alignment pass, so the chunk end time is the usable live
+                // signal: it drives the progress bar and the time estimate the same way the
+                // "[mm:ss.mmm --> mm:ss.mmm]" segment lines of the other engines do. The chunks
+                // are not added to the result list - the SRT WhisperX writes has the aligned,
+                // sentence-split segments, and these ~30 s VAD chunks would only get in the way
+                // of that.
+                if (_showProgressPct < 0 && whisperXEndSeconds > _endSeconds)
+                {
+                    _endSeconds = whisperXEndSeconds;
+                }
+            }
             else if (line.StartsWith("whisper_full: progress =", StringComparison.OrdinalIgnoreCase))
             {
                 var arr = line.Split('=');
@@ -4590,6 +4871,17 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         _resultList.Add(rt);
+    }
+
+    /// <summary>
+    /// Reads the chunk end time from a WhisperX "Transcript: [start --> end]  text" line.
+    /// </summary>
+    internal static bool TryParseWhisperXTranscriptEndSeconds(string line, out double endSeconds)
+    {
+        endSeconds = 0;
+        var match = WhisperXTranscriptRegex.Match(line);
+        return match.Success &&
+               double.TryParse(match.Groups[2].Value, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out endSeconds);
     }
 
     private void LogToConsole(string s, bool skipOutputText = false)
@@ -4727,6 +5019,13 @@ public partial class SpeechToTextViewModel : ObservableObject
         return normalized switch
         {
             "mp3" => "-i \"{0}\" -vn -ar 16000 " + channelArgs + " -c:a libmp3lame -b:a 32k -f mp3 {2} \"{1}\"",
+            // Lossless, and about 40% smaller than the equivalent wav. For engines that
+            // upload to their own storage rather than through a request body there is no
+            // upload cap to design around, so there is nothing to buy by compressing.
+            // "-sample_fmt s16" is not optional: without it ffmpeg encodes 24-bit flac from
+            // an AAC source, which is 78% larger than the 16-bit file and larger than the
+            // raw PCM it replaces (measured on ffmpeg 8.1 and 9.0.1).
+            "flac" => "-i \"{0}\" -vn -ar 16000 " + channelArgs + " -c:a flac -sample_fmt s16 -compression_level 8 -f flac {2} \"{1}\"",
             "m4a" => "-i \"{0}\" -vn -ar 16000 " + channelArgs + " -c:a aac -b:a 32k -f ipod {2} \"{1}\"",
             "webm" => "-i \"{0}\" -vn -ar 16000 " + channelArgs + " -c:a libopus -b:a 28k -f webm {2} \"{1}\"",
             // pcm_s16le is already ffmpeg's default for wav, but spell it out: SE's own peak reader
@@ -4858,6 +5157,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         IsOpenAiCompatibleSttVisible = engine is OpenAiCompatibleSttEngine;
         IsOpenRouterSttVisible = engine is OpenRouterSttEngine;
         IsDashScopeSttVisible = engine is DashScopeQwen3SttEngine;
+        IsGoogleCloudSttVisible = engine is GoogleCloudSttEngine;
         IsAdvancedSettingsVisible = !isOnlineSttEngine;
 
         IsTranslateVisible = IsTranslateAvailable(engine);
@@ -4880,6 +5180,10 @@ public partial class SpeechToTextViewModel : ObservableObject
         else if (engine is Qwen3AsrCppEngine && !_qwen3AsrCppUpdatePromptShown)
         {
             Dispatcher.UIThread.Post(async () => await CheckQwen3AsrCppForUpdateAsync());
+        }
+        else if (engine is WhisperEngineWhisperX && !_whisperXUpdatePromptShown)
+        {
+            Dispatcher.UIThread.Post(async () => await CheckWhisperXForUpdateAsync());
         }
     }
 
@@ -5118,6 +5422,55 @@ public partial class SpeechToTextViewModel : ObservableObject
         RefreshEngineCombo?.Invoke();
     }
 
+    private async Task CheckWhisperXForUpdateAsync()
+    {
+        if (_whisperXUpdatePromptShown || Window == null)
+        {
+            return;
+        }
+
+        var engine = GetEffectiveSelectedEngine();
+        if (engine is not WhisperEngineWhisperX || !engine.IsEngineInstalled())
+        {
+            return;
+        }
+
+        // Sidecar only: every released build that could install WhisperX also wrote one, so
+        // there is no older install to recognize by hashing the executable.
+        if (TryReadSidecarHash(engine.GetAndCreateWhisperFolder()) is not var (key, hash))
+        {
+            return;
+        }
+
+        if (DownloadHashManager.GetStatus(key, hash) != DownloadHashManager.UpdateStatus.UpdateAvailable)
+        {
+            return;
+        }
+
+        _whisperXUpdatePromptShown = true;
+
+        var answer = await MessageBox.Show(
+            Window!,
+            string.Format(Se.Language.Video.AudioToText.UpdateXTitle, engine.Name),
+            string.Format(Se.Language.Video.AudioToText.UpdateXMessage, engine.Name, Environment.NewLine),
+            MessageBoxButtons.YesNoCancel,
+            MessageBoxIcon.Question);
+
+        if (answer != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
+            Window!, viewModel =>
+            {
+                viewModel.Engine = engine;
+                viewModel.StartDownload();
+            });
+
+        RefreshEngineCombo?.Invoke();
+    }
+
     private static (string key, string hash)? TryHashWhisperCppExecutable(ISpeechToTextEngine engine)
     {
         try
@@ -5318,6 +5671,11 @@ public partial class SpeechToTextViewModel : ObservableObject
     {
         _timerWhisper.StopAndDispose(OnTimerWhisperOnElapsed);
         _timerAudioExtract.StopAndDispose(OnTimerAudioExtractOnElapsed);
+
+        // The speech isolation runs on its own task, not on one of the timers: _abort is what
+        // makes it kill its process and stop before it would start the engine on a closed window.
+        _windowClosing = true;
+        _abort = true;
 
         // With the timers gone nothing will ever reap a still-running engine or
         // ffmpeg process - kill them so closing the window mid-run doesn't leave

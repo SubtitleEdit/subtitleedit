@@ -1,7 +1,10 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Controls.Documents;
 using Avalonia.Controls.Primitives;
+using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -74,8 +77,9 @@ public static class UiTheme
     /// <summary>
     /// Folder holding the current theme's images. These are unpacked from Themes.zip into
     /// <see cref="Se.ThemesFolder"/> at start-up - they are not embedded assets, so they cannot
-    /// be reached through an avares:// URI. Falls back to Dark when the active theme ships no
-    /// image folder of its own (Pastel, for instance), and an explicit icon theme wins over both.
+    /// be reached through an avares:// URI. A theme that ships no image folder of its own
+    /// (Pastel, for instance) falls back to Light - or Dark for a dark theme, as the Dark glyphs
+    /// are near-white and vanish on a light background. An explicit icon theme wins over both.
     /// </summary>
     public static string ImageFolder
     {
@@ -84,7 +88,7 @@ public static class UiTheme
             var folder = Path.Combine(Se.ThemesFolder, ThemeName);
             if (!Directory.Exists(folder))
             {
-                folder = Path.Combine(Se.ThemesFolder, ThemeNameDark);
+                folder = Path.Combine(Se.ThemesFolder, IsDarkThemeEnabled() ? ThemeNameDark : ThemeNameLight);
             }
 
             var iconTheme = Se.Settings.Appearance.IconTheme;
@@ -149,22 +153,51 @@ public static class UiTheme
 
         ApplyMenuScaleStyle(Se.Settings.Appearance.LayoutScale);
         ApplyLayoutScaleToAllWindows();
+        ApplyScaleToExistingMenus(Se.Settings.Appearance.LayoutScale);
     }
 
     public static Action? SystemThemeChangedCallback { get; set; }
 
     private static void OnActualThemeVariantChanged(object? sender, EventArgs e)
     {
-        if (Se.Settings.Appearance.Theme == ThemeNameSystem && Application.Current != null)
+        if (Se.Settings.Appearance.Theme != ThemeNameSystem || Application.Current == null)
         {
-            SetCurrentTheme();
-            SystemThemeChangedCallback?.Invoke();
+            return;
         }
+
+        // Follow the variant that just became active; do not re-enter SetCurrentTheme here.
+        // That reset RequestedThemeVariant to Default, which is a no-op while the OS drives
+        // the variant but silently undoes any explicit RequestedThemeVariant assignment made
+        // while this handler is subscribed (the headless tests do that - the subscription
+        // outlives the ApplySettings call that made it and turned an unrelated theme test
+        // order-dependent).
+        RemoveLighterDark();
+        if (ThemeName == ThemeNameDark)
+        {
+            ApplyLighterDark();
+        }
+
+        SystemThemeChangedCallback?.Invoke();
     }
 
     public const double ScaleStep = 0.1;
     public const double MinScale = 0.5;
     public const double MaxScale = 2.0;
+
+    /// <summary>
+    /// Font scale (#14812): scales text only, leaving layout metrics alone, unlike
+    /// <see cref="ApplyScaleToWindow"/>'s layout transform. Applied through the inherited
+    /// window <see cref="TemplatedControl.FontSize"/>, so controls that set an explicit
+    /// FontSize keep it. Kept to a modest range as fixed-width controls clip at large values.
+    /// </summary>
+    public const double MinFontScale = 0.8;
+    public const double MaxFontScale = 1.5;
+    private const double DefaultFontSize = 14.0;
+
+    public static double FontScale => Math.Clamp(Se.Settings.Appearance.FontScale <= 0 ? 1.0 : Se.Settings.Appearance.FontScale, MinFontScale, MaxFontScale);
+
+    /// <summary>Font size for popup menu/combo items rendered outside the layout transform.</summary>
+    private static double PopupFontSize(double layoutFactor) => DefaultFontSize * layoutFactor * FontScale;
 
     /// <summary>
     /// Returns the logical content of a window, unwrapping the
@@ -186,6 +219,28 @@ public static class UiTheme
         ApplyTitleBarTheme(window);
 
         var factor = Se.Settings.Appearance.LayoutScale;
+
+        // Font scale rides on FontSize inheritance: every control without an explicit FontSize
+        // picks it up from the window. Clearing back to the theme default at 100% keeps
+        // windows with locally restyled fonts untouched.
+        if (Math.Abs(FontScale - 1.0) < 0.0001)
+        {
+            window.ClearValue(TemplatedControl.FontSizeProperty);
+        }
+        else
+        {
+            window.FontSize = DefaultFontSize * FontScale;
+        }
+
+        // Explicit sizes are baked in at creation; long-lived controls that opted in via
+        // DesignFontSize get theirs re-derived here.
+        foreach (var control in window.GetVisualDescendants().OfType<Control>())
+        {
+            if (control.IsSet(UiUtil.DesignFontSizeProperty))
+            {
+                control.SetValue(TextElement.FontSizeProperty, UiUtil.ScaledFontSize(control.GetValue(UiUtil.DesignFontSizeProperty)));
+            }
+        }
 
         if (window.Content is LayoutTransformControl ltc)
         {
@@ -285,13 +340,13 @@ public static class UiTheme
 
         // Scale MenuItems in popups/context menus (outside LayoutTransformControl)
         var menuItemStyle = new Style(x => x.OfType<MenuItem>());
-        menuItemStyle.Setters.Add(new Setter(TemplatedControl.FontSizeProperty, 14.0 * factor));
+        menuItemStyle.Setters.Add(new Setter(TemplatedControl.FontSizeProperty, PopupFontSize(factor)));
         menuItemStyle.Setters.Add(new Setter(Layoutable.MinHeightProperty, 32.0 * factor));
         styles.Add(menuItemStyle);
 
         // Reset MenuItems inside LayoutTransformControl (already scaled by transform)
         var ltcMenuItemStyle = new Style(x => x.OfType<LayoutTransformControl>().Descendant().OfType<MenuItem>());
-        ltcMenuItemStyle.Setters.Add(new Setter(TemplatedControl.FontSizeProperty, 14.0));
+        ltcMenuItemStyle.Setters.Add(new Setter(TemplatedControl.FontSizeProperty, DefaultFontSize * FontScale));
         ltcMenuItemStyle.Setters.Add(new Setter(Layoutable.MinHeightProperty, 32.0));
         styles.Add(ltcMenuItemStyle);
 
@@ -299,11 +354,26 @@ public static class UiTheme
         // LayoutTransformControl, so the window scale transform never reaches it (#13010).
         // ComboBoxItems only ever appear inside that popup, so no LTC reset counterpart is
         // needed. Skipped at 100% so windows with locally restyled combos keep their look.
-        if (Math.Abs(factor - 1.0) > 0.0001)
+        if (Math.Abs(factor - 1.0) > 0.0001 || Math.Abs(FontScale - 1.0) > 0.0001)
         {
             var comboBoxItemStyle = new Style(x => x.OfType<ComboBoxItem>());
-            comboBoxItemStyle.Setters.Add(new Setter(TemplatedControl.FontSizeProperty, 14.0 * factor));
+            comboBoxItemStyle.Setters.Add(new Setter(TemplatedControl.FontSizeProperty, PopupFontSize(factor)));
             styles.Add(comboBoxItemStyle);
+        }
+
+        // Font scale must not grow icons (#14812): an Icon sizes its glyph from the inherited
+        // FontSize, so the scaled window font would enlarge every icon button. A style beats
+        // inheritance, so re-derive the icon size from the nearest ancestor, undoing the scale.
+        // Icons with their own explicit FontSize keep it (local value beats style).
+        if (Math.Abs(FontScale - 1.0) > 0.0001)
+        {
+            var iconStyle = new Style(x => x.OfType<Optris.Icons.Avalonia.Icon>());
+            iconStyle.Setters.Add(new Setter(TemplatedControl.FontSizeProperty, new Binding(nameof(TemplatedControl.FontSize))
+            {
+                RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor) { AncestorType = typeof(Control) },
+                Converter = new IconFontSizeConverter(FontScale),
+            }));
+            styles.Add(iconStyle);
         }
 
         _layoutScaleMenuStyle = styles;
@@ -317,6 +387,27 @@ public static class UiTheme
         // font size above, so 150%+ layouts do not clip again; popups still size to their
         // content, so short menus are unaffected.
         Application.Current.Resources["FlyoutThemeMaxWidth"] = 680d * factor;
+    }
+
+    /// <summary>
+    /// Divides an icon's inherited font size by the font scale: every explicit size goes through
+    /// <see cref="UiUtil.ScaledFontSize"/> and the window default is scaled too, so this lands
+    /// icons back on their design-time size.
+    /// </summary>
+    private sealed class IconFontSizeConverter(double fontScale) : IValueConverter
+    {
+        public object? Convert(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
+        {
+            if (value is not double size)
+            {
+                return value;
+            }
+
+            return size / fontScale;
+        }
+
+        public object? ConvertBack(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
+            => throw new NotSupportedException();
     }
 
     private static Styles? _scrollBarStyle;
@@ -356,6 +447,14 @@ public static class UiTheme
             new Style(x => x.OfType<Avalonia.Controls.Primitives.ScrollBar>())
             {
                 Setters = { new Setter(Avalonia.Controls.Primitives.ScrollBar.AllowAutoHideProperty, allowAutoHide) }
+            },
+            // The TextBox template binds its inner ScrollViewer's AllowAutoHide to the attached
+            // property on the TextBox itself, and that template binding beats the ScrollViewer
+            // style above - so the text box needs the value too, or its scrollbar overlays the
+            // text (#15033).
+            new Style(x => x.Is<TextBox>())
+            {
+                Setters = { new Setter(ScrollViewer.AllowAutoHideProperty, allowAutoHide) }
             },
         };
 
@@ -420,7 +519,7 @@ public static class UiTheme
         {
             if (obj is MenuItem item)
             {
-                item.FontSize = 14.0 * factor;
+                item.FontSize = PopupFontSize(factor);
                 item.MinHeight = 32.0 * factor;
                 ScaleChildMenuItems(item, factor);
             }
@@ -433,7 +532,7 @@ public static class UiTheme
         {
             if (obj is MenuItem item)
             {
-                item.FontSize = 14.0 * factor;
+                item.FontSize = PopupFontSize(factor);
                 item.MinHeight = 32.0 * factor;
                 ScaleMenuItems(item, factor);
             }
@@ -446,7 +545,7 @@ public static class UiTheme
         {
             if (obj is MenuItem item)
             {
-                item.FontSize = 14.0 * factor;
+                item.FontSize = PopupFontSize(factor);
                 item.MinHeight = 32.0 * factor;
                 ScaleMenuItems(item, factor);
             }
@@ -886,13 +985,46 @@ public static class UiTheme
             return;
         }
 
-        // Soft pastel colors with a lavender background
-        var bgColor = Color.FromRgb(240, 235, 255); // Soft lavender
-        var lightPink = Color.FromRgb(255, 228, 225); // Misty rose
-        var lightBlue = Color.FromRgb(230, 245, 255); // Light azure
-        var lightGreen = Color.FromRgb(240, 255, 240); // Honeydew
-        var lightPurple = Color.FromRgb(245, 240, 255); // Lavender
-        var borderColor = Color.FromRgb(200, 180, 200); // Soft lavender border
+        // One lavender family for the chrome, with mint and sky as the secondary pastels and a
+        // violet accent. Keep bgColor in sync with PastelBackgroundColor.
+        var bgColor = PastelBackgroundColor; // Soft lavender
+        var surface = Color.FromRgb(251, 249, 255); // Lilac-tinted white for text input
+        var lilac = Color.FromRgb(227, 216, 250); // Buttons
+        var lilacHover = Color.FromRgb(214, 199, 247);
+        var lilacPressed = Color.FromRgb(198, 180, 241);
+        var sky = Color.FromRgb(228, 241, 255); // Combo boxes
+        var mint = Color.FromRgb(227, 246, 236); // Numeric / time code spinners
+        var header = Color.FromRgb(232, 222, 252); // Grid header
+        var borderColor = Color.FromRgb(196, 180, 232); // Lilac border
+        var accent = Color.FromRgb(142, 111, 216); // Violet
+
+        // Fluent derives selection, focus rings, check boxes, sliders, toggle buttons and
+        // progress bars from the accent colors - without these they stay Windows blue.
+        _resourceOverrides = new ResourceDictionary
+        {
+            ["SystemAccentColor"] = accent,
+            ["SystemAccentColorLight1"] = Color.FromRgb(164, 138, 226),
+            ["SystemAccentColorLight2"] = Color.FromRgb(189, 169, 236),
+            ["SystemAccentColorLight3"] = Color.FromRgb(214, 200, 245),
+            ["SystemAccentColorDark1"] = Color.FromRgb(122, 92, 196),
+            ["SystemAccentColorDark2"] = Color.FromRgb(102, 74, 174),
+            ["SystemAccentColorDark3"] = Color.FromRgb(82, 58, 150),
+
+            // Hover/pressed are template-level in Fluent, so a Background setter alone would
+            // leave them gray.
+            ["ButtonBackgroundPointerOver"] = new SolidColorBrush(lilacHover),
+            ["ButtonBackgroundPressed"] = new SolidColorBrush(lilacPressed),
+            ["ButtonBorderBrushPointerOver"] = new SolidColorBrush(accent),
+            ["ButtonBorderBrushPressed"] = new SolidColorBrush(accent),
+            ["ToggleButtonBackground"] = new SolidColorBrush(lilac),
+            ["ToggleButtonBackgroundPointerOver"] = new SolidColorBrush(lilacHover),
+            ["ToggleButtonBackgroundPressed"] = new SolidColorBrush(lilacPressed),
+            ["ToggleButtonBorderBrush"] = new SolidColorBrush(borderColor),
+
+            ["ControlCornerRadius"] = new CornerRadius(8),
+            ["OverlayCornerRadius"] = new CornerRadius(10),
+        };
+        Application.Current.Resources.MergedDictionaries.Add(_resourceOverrides);
 
         _themeOverrideStyle = new Styles
         {
@@ -905,88 +1037,104 @@ public static class UiTheme
                 }
             },
 
-            // TextBox with soft colors
             new Style(x => x.OfType<TextBox>())
             {
                 Setters =
                 {
-                    new Setter(TextBox.BackgroundProperty, new SolidColorBrush(lightBlue)),
+                    new Setter(TextBox.BackgroundProperty, new SolidColorBrush(surface)),
                     new Setter(TextBox.BorderBrushProperty, new SolidColorBrush(borderColor)),
                     new Setter(TextBox.BorderThicknessProperty, new Thickness(1))
                 }
             },
 
-            // Button with pastel colors
             new Style(x => x.OfType<Button>())
             {
                 Setters =
                 {
-                    new Setter(Button.BackgroundProperty, new SolidColorBrush(lightPink)),
+                    new Setter(Button.BackgroundProperty, new SolidColorBrush(lilac)),
                     new Setter(Button.BorderBrushProperty, new SolidColorBrush(borderColor))
                 }
             },
 
-            // NumericUpDown
             new Style(x => x.OfType<NumericUpDown>())
             {
                 Setters =
                 {
-                    new Setter(NumericUpDown.BackgroundProperty, new SolidColorBrush(lightGreen))
+                    new Setter(NumericUpDown.BackgroundProperty, new SolidColorBrush(mint)),
+                    new Setter(NumericUpDown.BorderBrushProperty, new SolidColorBrush(borderColor))
                 }
             },
 
-            // ComboBox
             new Style(x => x.OfType<ComboBox>())
             {
                 Setters =
                 {
-                    new Setter(ComboBox.BackgroundProperty, new SolidColorBrush(lightGreen))
+                    new Setter(ComboBox.BackgroundProperty, new SolidColorBrush(sky)),
+                    new Setter(ComboBox.BorderBrushProperty, new SolidColorBrush(borderColor))
                 }
             },
 
+            // Menus and flyouts pop up over the lavender window - plain white looks foreign
+            new Style(x => x.OfType<ContextMenu>())
+            {
+                Setters =
+                {
+                    new Setter(TemplatedControl.BackgroundProperty, new SolidColorBrush(surface)),
+                    new Setter(TemplatedControl.BorderBrushProperty, new SolidColorBrush(borderColor))
+                }
+            },
+            new Style(x => x.OfType<FlyoutPresenter>())
+            {
+                Setters =
+                {
+                    new Setter(TemplatedControl.BackgroundProperty, new SolidColorBrush(surface)),
+                    new Setter(TemplatedControl.BorderBrushProperty, new SolidColorBrush(borderColor))
+                }
+            },
 
             // TableView header
             new Style(x => x.OfType<TableViewColumnHeader>())
             {
                 Setters =
                 {
-                    new Setter(TableViewColumnHeader.BackgroundProperty, new SolidColorBrush(lightPurple))
+                    new Setter(TableViewColumnHeader.BackgroundProperty, new SolidColorBrush(header))
                 }
             },
 
-            // ButtonSpinner (used by TimeCodeUpDown) with soft pink
+            // ButtonSpinner (used by TimeCodeUpDown)
             new Style(x => x.OfType<ButtonSpinner>())
             {
                 Setters =
                 {
-                    new Setter(ButtonSpinner.BackgroundProperty, new SolidColorBrush(lightPink))
+                    new Setter(ButtonSpinner.BackgroundProperty, new SolidColorBrush(mint)),
+                    new Setter(ButtonSpinner.BorderBrushProperty, new SolidColorBrush(borderColor))
                 }
             },
 
-            // SecondsUpDown - soft pink by default (external bindings will override when needed)
+            // SecondsUpDown - mint by default (external bindings will override when needed)
             new Style(x => x.OfType<Nikse.SubtitleEdit.Controls.SecondsUpDown>())
             {
                 Setters =
                 {
-                    new Setter(Nikse.SubtitleEdit.Controls.SecondsUpDown.BackgroundProperty, new SolidColorBrush(lightPink))
+                    new Setter(Nikse.SubtitleEdit.Controls.SecondsUpDown.BackgroundProperty, new SolidColorBrush(mint))
                 }
             },
 
-            // TimeCodeUpDown - soft pink by default
+            // TimeCodeUpDown - mint by default
             new Style(x => x.OfType<Nikse.SubtitleEdit.Controls.TimeCodeUpDown>())
             {
                 Setters =
                 {
-                    new Setter(Nikse.SubtitleEdit.Controls.TimeCodeUpDown.BackgroundProperty, new SolidColorBrush(lightPink))
+                    new Setter(Nikse.SubtitleEdit.Controls.TimeCodeUpDown.BackgroundProperty, new SolidColorBrush(mint))
                 }
             },
 
-            // The source editor with soft blue
+            // The source editor
             new Style(x => x.OfType<SyntaxTextEditor>())
             {
                 Setters =
                 {
-                    new Setter(SyntaxTextEditor.BackgroundProperty, new SolidColorBrush(lightBlue))
+                    new Setter(SyntaxTextEditor.BackgroundProperty, new SolidColorBrush(surface))
                 }
             },
         };

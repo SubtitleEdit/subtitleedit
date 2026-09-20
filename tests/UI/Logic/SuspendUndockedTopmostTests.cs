@@ -65,4 +65,78 @@ public class SuspendUndockedTopmostTests : IDisposable
         outer.Dispose();
         Assert.Equal([false, true], _calls);
     }
+
+    [Fact]
+    public void LiveQuery_FollowsOutstandingSuspensions()
+    {
+        Assert.False(WindowService.IsUndockedTopmostSuspended);
+
+        var suspension = WindowService.SuspendUndockedTopmost();
+        Assert.True(WindowService.IsUndockedTopmostSuspended);
+
+        suspension.Dispose();
+        Assert.False(WindowService.IsUndockedTopmostSuspended);
+    }
+
+    [Fact]
+    public void SuspensionWhoseOwnerClosedWithoutReleasing_IsHealedOnTheNextQuery()
+    {
+        // A menu that raised Opened but never Closed (#14622): the token stays undisposed, but
+        // its owner reports closed, so the next consultation must drop it and restore topmost.
+        var menuIsOpen = true;
+        _ = WindowService.SuspendUndockedTopmost(() => menuIsOpen, "test menu");
+        Assert.True(WindowService.IsUndockedTopmostSuspended);
+        Assert.Equal([false], _calls);
+
+        menuIsOpen = false;
+        Assert.False(WindowService.IsUndockedTopmostSuspended);
+        Assert.Equal([false, true], _calls);
+    }
+
+    [Fact]
+    public void LeakedSuspension_IsHealedWhenAnotherSuspensionIsReleased()
+    {
+        // The reporter's Ctrl+N after the leak: the "save changes?" prompt takes and releases
+        // its own suspension, and that release must be enough to bring the tool windows back.
+        var flyoutIsOpen = true;
+        _ = WindowService.SuspendUndockedTopmost(() => flyoutIsOpen, "test flyout");
+        flyoutIsOpen = false;
+
+        var prompt = WindowService.SuspendUndockedTopmost();
+        Assert.Equal([false], _calls);
+
+        prompt.Dispose();
+        Assert.Equal([false, true], _calls);
+    }
+
+    [Fact]
+    public void SuspensionTakenBeforeItsOwnerOpens_IsNotTreatedAsLeaked()
+    {
+        // Flyouts take the suspension at Opening, before IsOpen flips - "not open yet" must not
+        // read as "closed without releasing".
+        var flyoutIsOpen = false;
+        var suspension = WindowService.SuspendUndockedTopmost(() => flyoutIsOpen, "test flyout");
+
+        Assert.True(WindowService.IsUndockedTopmostSuspended);
+        Assert.Equal([false], _calls);
+
+        flyoutIsOpen = true;
+        Assert.True(WindowService.IsUndockedTopmostSuspended);
+
+        suspension.Dispose();
+        Assert.Equal([false, true], _calls);
+    }
+
+    [Fact]
+    public void SuspensionWithoutLivenessCheck_IsNeverHealedAway()
+    {
+        // Modal dialogs hold their token in a using block; nothing but its disposal may end it.
+        var dialog = WindowService.SuspendUndockedTopmost();
+        Assert.True(WindowService.IsUndockedTopmostSuspended);
+        Assert.True(WindowService.IsUndockedTopmostSuspended);
+        Assert.Equal([false], _calls);
+
+        dialog.Dispose();
+        Assert.Equal([false, true], _calls);
+    }
 }

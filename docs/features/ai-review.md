@@ -10,9 +10,11 @@ Proofread the subtitle text with a local (or remote) large language model - typo
 
 ## Engines
 
-- **llama.cpp** — a managed local server. Pick a model from the curated list (Qwen 3.5, Gemma 3, Llama 3.1, EuroLLM, Phi-4 mini); Subtitle Edit downloads the engine and model on first use. A green dot marks models that are already downloaded. Custom `*.gguf` files placed in the llama.cpp models folder also appear.
+- **llama.cpp** — a managed local server. Pick a model from the curated list (Qwen 3.5, Qwen 3.6, Gemma 3, Gemma 4, Llama 3.1, EuroLLM, Phi-4 mini, Granite 4.1); Subtitle Edit downloads the engine and model on first use. A green dot marks models that are already downloaded. Custom `*.gguf` files placed in the llama.cpp models folder also appear.
 - **Ollama** — uses a running [Ollama](https://ollama.com) instance; type a model name or pick one from the server.
 - **OpenAI-compatible** — any endpoint that speaks the OpenAI chat API: LM Studio, KoboldCpp, vLLM, a llama.cpp server on another machine, or cloud APIs (OpenAI, Groq, OpenRouter, DeepSeek, Mistral, Gemini). Enter the URL, model name, and an API key if the service needs one.
+
+Next to the llama.cpp model list is a **Start server** / **Stop server** button. An idle `llama-server` keeps the model's VRAM until Subtitle Edit closes, so stop it here when you want the GPU back without leaving the window; the next review starts it again. Stopping a running review, or closing the window, also stops a server Subtitle Edit started.
 
 ### Using a cloud model
 
@@ -53,7 +55,7 @@ The buttons next to it are the usual pair: **OK** applies the checked suggestion
 
 ### Listening to a line
 
-When a video is loaded, a **Play current** button appears at the bottom left. It plays the selected suggestion's line in the video player and pauses at the end of the line, so you can hear what was actually said before deciding on a fix. Double-clicking a suggestion does the same, as does F5 (or Ctrl/Cmd+Space) - F5 follows your *Play selected lines* shortcut. Space is not used for playback here: it toggles the **Apply** checkbox of the selected row.
+When a video is loaded, a **Play current** button appears at the bottom left. It plays the selected suggestion's line in the video player and pauses at the end of the line, so you can hear what was actually said before deciding on a fix. Double-clicking a suggestion does the same, as does F5 (or Ctrl+Space) - F5 and Ctrl+Space follow your *Play selected lines* and secondary *Toggle play/pause* shortcuts. Space is not used for playback here: it toggles the **Apply** checkbox of the selected row.
 
 ## Sentences across multiple lines
 

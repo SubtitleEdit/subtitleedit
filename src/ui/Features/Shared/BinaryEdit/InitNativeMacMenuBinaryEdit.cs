@@ -20,7 +20,10 @@ public static class InitNativeMacMenuBinaryEdit
         Add(exportMenu, Se.Language.General.BdnXml, vm.ExportBdnXmlCommand);
         Add(exportMenu, Se.Language.General.BdnXml8Bit, vm.ExportBdnXml8BitCommand);
         Add(exportMenu, Se.Language.File.Export.TitleExportImscImage, vm.ExportImscImageCommand);
+        Add(exportMenu, Se.Language.File.Export.TitleExportDCinemaInteropPng, vm.ExportDCinemaInteropPngCommand);
+        Add(exportMenu, Se.Language.File.Export.TitleExportDCinemaSmpte2014Png, vm.ExportDCinemaSmpte2014PngCommand);
         Add(exportMenu, Se.Language.File.Export.TitleExportDostPng, vm.ExportDostPngCommand);
+        Add(exportMenu, Se.Language.File.Export.TitleExportDvdSup, vm.ExportDvdSupCommand);
         Add(exportMenu, Se.Language.File.Export.TitleExportFcpImage, vm.ExportFcpPngCommand);
         Add(exportMenu, Se.Language.General.ImagesWithHtmlIndex, vm.ExportHtmlIndexCommand);
         Add(exportMenu, Se.Language.General.ImagesWithTimeCode, vm.ExportImagesWithTimeCodeCommand);
@@ -42,6 +45,8 @@ public static class InitNativeMacMenuBinaryEdit
         toolsMenu.Items.Add(new NativeMenuItemSeparator());
         Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.ResizeImagesDotDotDot, vm.ResizeImagesCommand);
         Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.CropImages, vm.CropCommand);
+        Add(toolsMenu, Se.Language.General.VideoResolution + "...", vm.ChangeResolutionCommand);
+        Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.MoveCaptionsDotDotDot, vm.MoveCaptionsCommand);
         toolsMenu.Items.Add(new NativeMenuItemSeparator());
         Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.AdjustBrightnessDotDotDot, vm.AdjustBrightnessCommand);
         Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.AdjustAlphaDotDotDot, vm.AdjustAlphaCommand);
@@ -51,6 +56,7 @@ public static class InitNativeMacMenuBinaryEdit
         Add(toolsMenu, l.ApplyDurationLimits, vm.ApplyDurationLimitsCommand);
         toolsMenu.Items.Add(new NativeMenuItemSeparator());
         Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.SortByStartTime, vm.SortByStartTimeCommand);
+        Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.RemoveFadeInOut, vm.RemoveFadesCommand);
         Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.AppendSubtitleDotDotDot, vm.AppendSubtitleCommand);
         root.Items.Add(new NativeMenuItem(Clean(l.Tools)) { Menu = toolsMenu });
 
@@ -65,6 +71,9 @@ public static class InitNativeMacMenuBinaryEdit
         var videoMenu = new NativeMenu();
         Add(videoMenu, l.OpenVideo, vm.OpenVideoCommand);
         Add(videoMenu, l.CloseVideoFile, vm.CloseVideoCommand);
+        videoMenu.Items.Add(new NativeMenuItemSeparator());
+        Add(videoMenu, l.GenerateBurnIn, vm.GenerateBurnInCommand);
+        videoMenu.Items.Add(new NativeMenuItemSeparator());
         var selectSubtitleWhilePlayingItem = new NativeMenuItem(Clean(l.SelectSubtitleWhilePlaying))
         {
             ToggleType = MenuItemToggleType.CheckBox,

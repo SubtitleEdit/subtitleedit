@@ -51,6 +51,11 @@ public class OpenSecondarySubtitleWindow : Window
         var numericFontSize = UiUtil.MakeNumericUpDownInt(6, 200, 46, 120, vm, nameof(vm.FontSize));
         var panelFontSize = UiUtil.MakeHorizontalPanel(labelFontSize, numericFontSize);
 
+        // Bold row
+        var labelBold = UiUtil.MakeLabel(string.Empty).WithMinWidth(labelWidth);
+        var checkBoxBold = UiUtil.MakeCheckBox(Se.Language.General.Bold, vm, nameof(vm.FontBold));
+        var panelBold = UiUtil.MakeHorizontalPanel(labelBold, checkBoxBold);
+
         // Border style row
         var labelBorderStyle = UiUtil.MakeLabel(Se.Language.General.BorderStyle).WithMinWidth(labelWidth);
         var comboBoxBorderStyle = UiUtil.MakeComboBox(vm.FontBoxTypes, vm, nameof(vm.SelectedFontBoxType)).WithMinWidth(160);
@@ -61,6 +66,11 @@ public class OpenSecondarySubtitleWindow : Window
         var comboBoxAlignment = UiUtil.MakeComboBox(vm.FontAlignments, vm, nameof(vm.SelectedFontAlignment)).WithMinWidth(160);
         var panelAlignment = UiUtil.MakeHorizontalPanel(labelAlignment, comboBoxAlignment);
 
+        var checkBoxOverrideStyle = UiUtil.MakeCheckBox(Se.Language.Video.SecondarySubtitleRememberSettings, vm, nameof(vm.OverrideStyle));
+        var checkBoxDoNotShowAgain = UiUtil.MakeCheckBox(Se.Language.Video.SecondarySubtitleDoNotShowAgain, vm, nameof(vm.DoNotShowAgain));
+        // Skipping the dialog applies the remembered settings, so there must be some.
+        checkBoxDoNotShowAgain.Bind(IsEnabledProperty, new Binding(nameof(vm.OverrideStyle)) { Source = vm });
+
         // Left panel with settings
         var leftPanel = new StackPanel
         {
@@ -69,8 +79,11 @@ public class OpenSecondarySubtitleWindow : Window
             {
                 panelColor,
                 panelFontSize,
+                panelBold,
                 panelBorderStyle,
                 panelAlignment,
+                checkBoxOverrideStyle,
+                checkBoxDoNotShowAgain,
             },
         };
 
@@ -82,6 +95,7 @@ public class OpenSecondarySubtitleWindow : Window
             vm.Paragraphs, vm, nameof(SubtitleDisplayItem.Text), nameof(vm.SelectedParagraphIndex));
         comboBoxParagraphs.Width = double.NaN;
         comboBoxParagraphs.HorizontalAlignment = HorizontalAlignment.Stretch;
+        comboBoxParagraphs.WithAccessibleName(Se.Language.General.Lines); // no visible label (#12087)
         vm.ComboBoxParagraphs = comboBoxParagraphs;
         comboBoxParagraphs.SelectionChanged += vm.ComboBoxParagraphsChanged;
 
@@ -117,7 +131,7 @@ public class OpenSecondarySubtitleWindow : Window
         Content = mainGrid;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
-        Activated += delegate { numericFontSize.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, numericFontSize);
         AddHandler(KeyDownEvent, (_, e) => vm.OnKeyDown(e),
             RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
         Loaded += (_, _) => vm.OnLoaded();

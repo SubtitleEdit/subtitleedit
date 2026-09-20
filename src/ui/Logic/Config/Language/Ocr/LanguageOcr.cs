@@ -36,6 +36,8 @@ public class LanguageOcr
     public string NOcrDatabase { get; set; }
     public string DrawMode { get; set; }
     public string AddNewCharcter { get; set; }
+    public string AddNOcrCharacterTitle { get; set; }
+    public string AddBinaryOcrCharacterTitle { get; set; }
     public string LineIndexX { get; set; }
     public string InspectNOcrAdditions { get; set; }
     public string OcrSelectedLines { get; set; }
@@ -189,6 +191,8 @@ public class LanguageOcr
         NOcrDatabase = "nOCR database";
         DrawMode = "Draw mode:";
         AddNewCharcter = "Add new character";
+        AddNOcrCharacterTitle = "Add nOCR character for line {0}, character {1} of {2} using database \"{3}\"";
+        AddBinaryOcrCharacterTitle = "Add binary OCR character for line {0}, character {1} of {2} using database \"{3}\"";
         LineIndexX = "Line {0}";
         InspectNOcrAdditions = "Inspect new nOCR additions";
         OcrSelectedLines = "OCR selected lines";

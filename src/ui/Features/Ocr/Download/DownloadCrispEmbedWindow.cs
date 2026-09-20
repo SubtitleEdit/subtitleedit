@@ -22,7 +22,7 @@ public class DownloadCrispEmbedWindow : Window
 
         var titleText = new TextBlock
         {
-            FontSize = 20,
+            FontSize = UiUtil.ScaledFontSize(20),
             FontWeight = FontWeight.Bold,
         }.WithBindText(vm, nameof(vm.TitleText));
 

@@ -123,7 +123,7 @@ public class SyntaxColorTooWideSettingsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { comboFont.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, comboFont); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

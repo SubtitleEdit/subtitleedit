@@ -37,7 +37,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static void MergeLinesWithSameTimeCodes(Subtitle subtitle)
         {
-            for (var index = 0; index < subtitle.Paragraphs.Count-1; index++)
+            // Walk backwards so a run of three or more records with the same start folds into the
+            // FIRST one - forwards, the third record was merged into the already-blanked second.
+            for (var index = subtitle.Paragraphs.Count - 2; index >= 0; index--)
             {
                 var p = subtitle.Paragraphs[index];
                 var next = subtitle.GetParagraphOrDefault(index + 1);

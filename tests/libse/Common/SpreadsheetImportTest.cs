@@ -243,7 +243,7 @@ public class SpreadsheetImportTest
         });
     }
 
-    private static byte[] MakeXlsxWithSheets(string workbookXml, string relsXml, params (string Name, string Sheet)[] sheets)
+    private static byte[] MakeXlsxWithSheets(string? workbookXml, string? relsXml, params (string Name, string Sheet)[] sheets)
     {
         using var stream = new MemoryStream();
         using (var archive = new ZipArchive(stream, ZipArchiveMode.Create, true))

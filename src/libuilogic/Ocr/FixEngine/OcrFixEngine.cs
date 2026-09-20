@@ -31,6 +31,7 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
     private Subtitle _subtitle;
     private HashSet<string> _wordSkipList = new HashSet<string>();
     private Dictionary<string, string> _changeAllDictionary;
+    private HashSet<string> _abbreviations = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
     private readonly ISpellChecker _spellCheckManager;
 
@@ -68,6 +69,7 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         var names = ReloadNames();
         _wordSplitList = StringWithoutSpaceSplitToWords.LoadWordSplitList(SpellCheckConfig.DictionariesFolder(), _threeLetterIsoLanguageName, names);
         _ocrFixReplaceList = OcrFixReplaceList2.FromLanguageId(_threeLetterIsoLanguageName);
+        _abbreviations = AbbreviationList.Load(SpellCheckConfig.DictionariesFolder(), _fiveLetterName);
     }
 
     public OcrFixLineResult FixOcrErrors(int index, string text, bool doTryToGuessUnknownWords)
@@ -75,6 +77,12 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         var wordsToIgnore = new List<string>();
 
         var replacedLine = ReplaceLineFixes(index, text, wordsToIgnore);
+        if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
+        {
+            replacedLine = NormalizeApostrophes(replacedLine);
+        }
+
+        replacedLine = FixStartWithUppercaseLetterAfterSentenceEnd(index, replacedLine);
         var splitLine = SplitLine(replacedLine, index);
         if (replacedLine != text)
         {
@@ -101,6 +109,129 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         }
 
         return splitLine;
+    }
+
+    /// <summary>
+    /// A line that follows a finished sentence starts with an uppercase letter (SE4 parity: OCR
+    /// often drops the case of the first glyph, "you're out of luck." after "Yes.", and Tesseract
+    /// reads a leading "I" as "l"). Only high-confidence cases are touched:
+    /// - the previous line ends directly in . ! or ? - a trailing quote ("...Mother!" you're...)
+    ///   can be a quotation inside a running sentence, so it does not count; neither do "..." or
+    ///   an abbreviation ("Mr.");
+    /// - the previous line is text OCR actually produced, so the first line and a run started
+    ///   from the middle are left alone;
+    /// - the capitalized first word is one the dictionary knows.
+    /// </summary>
+    internal string FixStartWithUppercaseLetterAfterSentenceEnd(int index, string text)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return text;
+        }
+
+        var previous = index > 0 ? _subtitle.GetParagraphOrDefault(index - 1) : null;
+        if (previous == null || !IsConfidentSentenceEnd(previous.Text))
+        {
+            return text; // no previous line (or not OCR'd yet) = no evidence a sentence ended
+        }
+
+        var st = new StrippableText(text);
+        if (st.StrippedText.Length == 0 || !char.IsLower(st.StrippedText[0]) ||
+            st.Pre.EndsWith('[') || st.Pre.EndsWith('(') || st.Pre.EndsWith('\'') ||
+            st.Pre.Contains("...", StringComparison.Ordinal) || st.Pre.Contains('…') ||
+            HtmlUtil.StartsWithUrl(st.StrippedText))
+        {
+            return text;
+        }
+
+        var firstWord = GetFirstWord(st.StrippedText);
+        var uppercaseLetter = char.ToUpperInvariant(firstWord[0]);
+        if (uppercaseLetter == 'L' && (firstWord == "l" || firstWord.StartsWith("l'", StringComparison.Ordinal)))
+        {
+            uppercaseLetter = 'I'; // "l said" / "l'm" are a misread "I said" / "I'm"
+        }
+
+        var fixedFirstWord = uppercaseLetter + firstWord.Substring(1);
+        if (!_spellCheckManager.IsWordCorrect(fixedFirstWord) && !_spellCheckWordLists.HasName(fixedFirstWord))
+        {
+            return text;
+        }
+
+        st.StrippedText = fixedFirstWord + st.StrippedText.Substring(firstWord.Length);
+        return st.Pre + st.StrippedText + st.Post;
+    }
+
+    private bool IsConfidentSentenceEnd(string previousText)
+    {
+        if (string.IsNullOrWhiteSpace(previousText))
+        {
+            return false;
+        }
+
+        var lastLine = HtmlUtil.RemoveHtmlTags(previousText, true).Trim('♪', '♫', ' ');
+        if (lastLine.Length < 2 || lastLine.EndsWith("...", StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        var last = lastLine[lastLine.Length - 1];
+        if (last != '.' && last != '!' && last != '?')
+        {
+            return false;
+        }
+
+        return last != '.' || !EndsWithAbbreviation(lastLine);
+    }
+
+    private static string GetFirstWord(string text)
+    {
+        var i = 0;
+        while (i < text.Length && (char.IsLetter(text[i]) || text[i] == '\'' || text[i] == '’'))
+        {
+            i++;
+        }
+
+        return i == 0 ? text.Substring(0, 1) : text.Substring(0, i);
+    }
+
+    private bool EndsWithAbbreviation(string lastLine)
+    {
+        if (_abbreviations.Count == 0)
+        {
+            return false;
+        }
+
+        var lastSpace = lastLine.LastIndexOf(' ');
+        var lastWord = lastSpace < 0 ? lastLine : lastLine.Substring(lastSpace + 1);
+        return _abbreviations.Contains(lastWord);
+    }
+
+    /// <summary>
+    /// Tesseract emits typographic single quotes for apostrophes ("‘cause", "didn’t"); subtitles
+    /// use the plain apostrophe. A line holding both an opening and a closing curly quote is
+    /// quoting something ("La lettera ‘E’") and is left alone. Runs after the replace list so
+    /// entries written with the curly forms still match. Like the per-word straightening in
+    /// <see cref="OcrFixReplaceList2.FixCommonWordErrors"/> it is one of the hardcoded rules, so
+    /// "use hardcoded rules" turns both off together.
+    /// </summary>
+    internal static string NormalizeApostrophes(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return text;
+        }
+
+        var hasOpening = text.IndexOf('‘') >= 0;
+        var hasClosing = text.IndexOf('’') >= 0;
+        if (hasOpening == hasClosing)
+        {
+            return text; // neither, or a quotation pair
+        }
+
+        // Tesseract also emits both forms side by side ("'‘cause", "ma‘'am") - collapse that pair,
+        // but only that pair: a straight '' elsewhere on the line is not the OCR's doing.
+        return text.Replace("'‘", "'").Replace("‘'", "'").Replace("'’", "'").Replace("’'", "'")
+            .Replace('‘', '\'').Replace('’', '\'');
     }
 
     private string ReplaceLineFixes(int index, string text, List<string> wordsToIgnore)
@@ -189,8 +320,10 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
             if (char.IsLetterOrDigit(line[i]) && line[i] != '"')
             {
                 var wordStart = i;
+                // U+2019 is the apostrophe Tesseract emits for "didn’t"; without it the word split
+                // into "didn" + "’" + "t" and "didn" was flagged as unknown.
                 while (i < line.Length &&
-                       (char.IsLetterOrDigit(line[i]) || line[i] == '\'' || line[i] == '-'))
+                       (char.IsLetterOrDigit(line[i]) || line[i] == '\'' || line[i] == '’' || line[i] == '-'))
                 {
                     i++;
                 }

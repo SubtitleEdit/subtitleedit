@@ -30,10 +30,10 @@ namespace Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
 public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 {
     // A scan often takes only a frame or two, so "Analyzing..." has to be held for a moment to be seen at all.
-    private const int AnalysingMinimumVisibleMilliseconds = 250;
+    internal static int AnalysingMinimumVisibleMilliseconds = 250; // static, not const: tests zero it
 
     // Long enough for the dispatcher to get a frame out before the scan blocks the UI thread again.
-    private const int AnalysingPaintDelayMilliseconds = 20;
+    internal static int AnalysingPaintDelayMilliseconds = 20;
 
     [ObservableProperty] private string _searchText;
     [ObservableProperty] private ObservableCollection<LanguageDisplayItem> _languages;
@@ -81,7 +81,9 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     // PropertyChanged handler skips its summary recount; the loop runs one recount at the end.
     private bool _suppressFixesSummaryUpdate;
     public List<int> DeleteIndices = new();
-    private List<FixDisplayItem> _oldFixes = new();
+    // The previous scan's fixes by (paragraph id, action), first one wins - a rescan asks for
+    // the old fix of every new fix, and a list search made that quadratic in the fix count.
+    private Dictionary<(Guid? ParagraphId, string Action), FixDisplayItem> _oldFixes = new();
     private HashSet<(Guid? id, string action)>? _allowedFixLookup;
     private FixRuleDisplayItem? _currentRunningRule;
     private bool _nothingToFix;
@@ -622,7 +624,12 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 
     private void RefreshFixes()
     {
-        _oldFixes = new List<FixDisplayItem>(Fixes);
+        _oldFixes = new Dictionary<(Guid? ParagraphId, string Action), FixDisplayItem>(Fixes.Count);
+        foreach (var fix in Fixes)
+        {
+            _oldFixes.TryAdd((fix.Paragraph.Id, fix.Action), fix);
+        }
+
         Fixes.Clear();
         VisibleFixes.Clear();
         _previewMode = true;
@@ -961,26 +968,72 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         }
     }
 
-    internal void TextBoxSearch_TextChanged(object? sender, TextChangedEventArgs e)
+    partial void OnSearchTextChanged(string value)
     {
-        if (SelectedProfile == null)
+        ApplyRuleFilter();
+    }
+
+    partial void OnSelectedProfileChanged(ProfileDisplayItem? value)
+    {
+        // Each profile has its own grid collection - keep the search text applied to it.
+        ApplyRuleFilter();
+    }
+
+    /// <summary>
+    /// Shows the selected profile's rules whose name contains the search text (#14893).
+    /// </summary>
+    internal void ApplyRuleFilter()
+    {
+        var profile = SelectedProfile;
+        if (profile == null)
         {
             return;
         }
 
         // Filter from the profile's full rule list, never from the already-filtered grid
         // collection - filtering that one is one-way and permanently loses rules.
-        if (SelectedProfile.AllFixRules.Count == 0)
+        if (profile.AllFixRules.Count == 0)
         {
-            SelectedProfile.AllFixRules = SelectedProfile.FixRules.ToList();
+            profile.AllFixRules = profile.FixRules.ToList();
         }
 
-        SelectedProfile.FixRules.Clear();
-        foreach (var rule in SelectedProfile.AllFixRules)
+        SyncDisplayOrder(profile);
+
+        var search = SearchText?.Trim() ?? string.Empty;
+        var matches = search.Length == 0
+            ? profile.AllFixRules
+            : profile.AllFixRules.Where(rule => rule.Name.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+
+        if (matches.Count == profile.FixRules.Count && matches.SequenceEqual(profile.FixRules))
         {
-            if (string.IsNullOrEmpty(SearchText) || rule.Name.ToLowerInvariant().Contains(SearchText.ToLowerInvariant()))
+            return;
+        }
+
+        profile.FixRules.Clear();
+        foreach (var rule in matches)
+        {
+            profile.FixRules.Add(rule);
+        }
+    }
+
+    // A header click sorts the grid collection (FixRules) in place, which may be a filtered
+    // subset. Write that display order back into the slots those rules hold in AllFixRules, so
+    // the next keystroke does not drop the sort. AllFixRules order is cosmetic only: apply runs
+    // rules in canonical order and profiles persist rule names.
+    private static void SyncDisplayOrder(ProfileDisplayItem profile)
+    {
+        if (profile.FixRules.Count < 2)
+        {
+            return;
+        }
+
+        var visible = new HashSet<FixRuleDisplayItem>(profile.FixRules);
+        var next = 0;
+        for (var i = 0; i < profile.AllFixRules.Count && next < profile.FixRules.Count; i++)
+        {
+            if (visible.Contains(profile.AllFixRules[i]))
             {
-                SelectedProfile.FixRules.Add(rule);
+                profile.AllFixRules[i] = profile.FixRules[next++];
             }
         }
     }
@@ -1074,7 +1127,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             return;
         }
 
-        var oldFix = _oldFixes.FirstOrDefault(f => f.Paragraph.Id == p.Id && f.Action == action);
+        _oldFixes.TryGetValue((p.Id, action), out var oldFix);
         var isSelected = oldFix is not { IsSelected: false };
 
         AddFix(MakeFixDisplayItem(p, action, before, after, isSelected));
@@ -1087,7 +1140,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             return;
         }
 
-        var oldFix = _oldFixes.FirstOrDefault(f => f.Paragraph.Id == p.Id && f.Action == action);
+        _oldFixes.TryGetValue((p.Id, action), out var oldFix);
         var isSelected = isChecked;
         if (oldFix is { IsSelected: false })
         {

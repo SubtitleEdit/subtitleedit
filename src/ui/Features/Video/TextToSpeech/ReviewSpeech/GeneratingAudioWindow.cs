@@ -27,7 +27,7 @@ public class GeneratingAudioWindow : Window
         var titleText = new TextBlock
         {
             Text = Se.Language.General.PleaseWait,
-            FontSize = 18,
+            FontSize = UiUtil.ScaledFontSize(18),
             HorizontalAlignment = HorizontalAlignment.Center,
             Margin = new Avalonia.Thickness(0, 0, 0, 8),
         };

@@ -22,7 +22,7 @@ public class FindRuleWindow : Window
         DataContext = vm;
 
         var labelSearch = UiUtil.MakeLabel(Se.Language.General.Search);
-        var textBoxSearch = UiUtil.MakeTextBox(300, vm, nameof(vm.SearchText));
+        var textBoxSearch = UiUtil.MakeTextBox(300, vm, nameof(vm.SearchText)).WithSearchAndClearIcons();
 
         var searchPanel = new StackPanel
         {
@@ -60,7 +60,7 @@ public class FindRuleWindow : Window
 
         Content = grid;
 
-        Activated += delegate { textBoxSearch.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, textBoxSearch);
         KeyDown += vm.OnKeyDown;
     }
 
@@ -74,7 +74,7 @@ public class FindRuleWindow : Window
             Header = Se.Language.General.Category,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding("Parent.CategoryName"),
+            Binding = new Binding($"{nameof(RuleTreeNode.Parent)}.{nameof(RuleTreeNode.CategoryName)}"),
             Width = new GridLength(1, GridUnitType.Star),
         };
         var columnFind = new SeTableViewColumn

@@ -109,6 +109,7 @@ internal static class SubtitleGridCopyPasteHelper
             if (item.IsMine(lines, string.Empty))
             {
                 item.LoadSubtitle(subtitle, lines, string.Empty);
+                subtitle.OriginalFormat = item;
                 return subtitle;
             }
         }
@@ -145,6 +146,7 @@ internal static class SubtitleGridCopyPasteHelper
         var clipboardSubtitle = ParseClipboardSubtitle(text, subtitleFormat);
         if (clipboardSubtitle != null)
         {
+            ShiftToAvoidOverlap(subtitles, index, subtitleFormat, clipboardSubtitle);
             return LoadParagraphs(subtitles, index, subtitleFormat, clipboardSubtitle);
         }
 
@@ -169,6 +171,48 @@ internal static class SubtitleGridCopyPasteHelper
         }
 
         return insertedLines;
+    }
+
+    /// <summary>
+    /// Moves the pasted block in time so it does not overlap the line it is pasted below, the way
+    /// SE4's Ctrl+V did: copying a line and pasting it must produce a line that starts after the
+    /// selected one, not a duplicate on top of it (#14667). The whole block is shifted by one delta
+    /// computed from its first paragraph, so the spacing inside the block is kept - and only when
+    /// it would actually overlap; time codes that already fit are left alone, so pasting lines
+    /// that were copied from elsewhere in the same file keeps their timing.
+    /// ASSA into an ASSA file is the exception, also from SE4: events are pasted as-is.
+    /// </summary>
+    private static void ShiftToAvoidOverlap(ObservableCollection<SubtitleLineViewModel> subtitles, int index, SubtitleFormat subtitleFormat, Subtitle clipboardSubtitle)
+    {
+        if (clipboardSubtitle.Paragraphs.Count == 0 || index <= 0 || index > subtitles.Count)
+        {
+            return;
+        }
+
+        // The clipboard payload is bare Dialogue lines (no header, #10476), which parse as plain
+        // SSA rather than ASSA - so the whole SSA family counts here.
+        if (subtitleFormat is AdvancedSubStationAlpha or SubStationAlpha &&
+            clipboardSubtitle.OriginalFormat is AdvancedSubStationAlpha or SubStationAlpha)
+        {
+            return;
+        }
+
+        var previous = subtitles[index - 1];
+        var next = index < subtitles.Count ? subtitles[index] : null;
+        var pastedStart = clipboardSubtitle.Paragraphs[0].StartTime.TotalMilliseconds;
+        var overlapsPrevious = previous.EndTime.TotalMilliseconds > pastedStart;
+        var overlapsNext = next != null && next.StartTime.TotalMilliseconds < pastedStart;
+        if (!overlapsPrevious && !overlapsNext)
+        {
+            return;
+        }
+
+        var addMs = previous.EndTime.TotalMilliseconds - pastedStart + Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        foreach (var p in clipboardSubtitle.Paragraphs)
+        {
+            p.StartTime.TotalMilliseconds += addMs;
+            p.EndTime.TotalMilliseconds += addMs;
+        }
     }
 
     private static List<SubtitleLineViewModel> LoadParagraphs(ObservableCollection<SubtitleLineViewModel> subtitles, int index, SubtitleFormat subtitleFormat, Subtitle subtitle)

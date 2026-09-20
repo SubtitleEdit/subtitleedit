@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 line.AppendChild(stream);
 
                 XmlNode timeMS = xml.CreateElement("TimeMs");
-                timeMS.InnerText = p.StartTime.TotalMilliseconds.ToString();
+                timeMS.InnerText = ((long)Math.Round(p.StartTime.TotalMilliseconds)).ToString(System.Globalization.CultureInfo.InvariantCulture);
                 line.AppendChild(timeMS);
 
                 XmlNode pageNo = xml.CreateElement("PageNo");

@@ -16,6 +16,8 @@ Add one or more sort criteria from the available properties:
 - Hide (end time)
 - Duration
 - Text
+- Text total length
+- Text single line max length
 - Original text
 - Style
 - Actor
@@ -25,4 +27,4 @@ Add one or more sort criteria from the available properties:
 - Words/min
 - Pixel width
 
-Each criterion can be set to ascending or descending, and multiple criteria are applied in order (drag or use the up/down buttons to reorder).
+Each criterion can be set to ascending or descending (**Toggle direction**), and multiple criteria are applied in order — use **Move up** / **Move down** to reorder them, or **Clear** to start over.

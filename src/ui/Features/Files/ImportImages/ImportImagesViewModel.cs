@@ -7,6 +7,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -139,6 +140,11 @@ public partial class ImportImagesViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             Close();
+        }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/file", "images-for-ocr");
         }
     }
 

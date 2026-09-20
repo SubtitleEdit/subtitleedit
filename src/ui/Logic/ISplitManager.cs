@@ -9,17 +9,40 @@ using System.Linq;
 
 namespace Nikse.SubtitleEdit.Logic;
 
+/// <summary>
+/// How to split the editable original text of a row along with its translation (#14434).
+/// </summary>
+/// <param name="TextIndex">
+/// Caret position in the original text, or -1 to auto-split the original on its own line break
+/// (or auto-break). The original never shares the translation's caret: the natural split point
+/// differs between the two languages.
+/// </param>
+/// <param name="LanguageCode">Two-letter language of the original; dialog-dash and auto-break rules depend on it.</param>
+public sealed record OriginalSplit(int TextIndex, string LanguageCode);
+
 public interface ISplitManager
 {
     void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, string languageCode);
     void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, double videoPositionSeconds, string languageCode);
     void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, double videoPositionSeconds, int textIndex, string languageCode);
     void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, int textIndex, string languageCode);
+
+    /// <summary>
+    /// Splits <paramref name="subtitle"/> and, when <paramref name="original"/> is given, its
+    /// <see cref="SubtitleLineViewModel.OriginalText"/> too. With null the original is copied
+    /// whole onto both halves, which is what a read-only reference wants.
+    /// </summary>
+    void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, double videoPositionSeconds, int textIndex, string languageCode, OriginalSplit? original);
 }
 
 public class SplitManager : ISplitManager
 {
     public void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, double videoPositionSeconds, int textIndex, string languageCode)
+    {
+        Split(subtitles, subtitle, videoPositionSeconds, textIndex, languageCode, original: null);
+    }
+
+    public void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, double videoPositionSeconds, int textIndex, string languageCode, OriginalSplit? original)
     {
         var idx = subtitles.IndexOf(subtitle);
         if (idx < 0 || idx >= subtitles.Count)
@@ -36,118 +59,19 @@ public class SplitManager : ISplitManager
             && videoPositionSeconds > subtitle.StartTime.TotalSeconds
             && videoPositionSeconds < subtitle.EndTime.TotalSeconds;
 
-        var text = subtitle.Text;
-        var lines = text.SplitToLines();
-        if (textIndex > 0 && textIndex <= subtitle.Text.Length)
+        var (firstText, secondText) = SplitText(subtitle.Text, textIndex, languageCode);
+        subtitle.Text = firstText;
+        newSubtitle.Text = secondText;
+
+        // An editable original is split by the same rules, at its own caret or on its own line
+        // break. Before #14434 the copy constructor above left the complete original on both
+        // halves, so every split desynchronized the two columns.
+        if (original != null && !string.IsNullOrEmpty(subtitle.OriginalText))
         {
-            subtitle.Text = text.Substring(0, textIndex).Trim();
-            newSubtitle.Text = text.Substring(textIndex).Trim();
-
-            if (lines.Count == 2)
-            {
-                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = languageCode };
-                if (dialogHelper.IsDialog(lines))
-                {
-                    subtitle.Text = DialogSplitMerge.RemoveStartDash(subtitle.Text);
-                    newSubtitle.Text = DialogSplitMerge.RemoveStartDash(newSubtitle.Text);
-                }
-            }
-
-            // SE 4 parity (#11245 follow-up): if either half ends up with a single line
-            // longer than the configured max, auto-break it. Cursor-split at the middle
-            // of a long single-line subtitle would otherwise leave a too-wide line.
-            subtitle.Text = AutoBreakIfTooLong(subtitle.Text, languageCode);
-            newSubtitle.Text = AutoBreakIfTooLong(newSubtitle.Text, languageCode);
+            var (firstOriginal, secondOriginal) = SplitText(subtitle.OriginalText, original.TextIndex, original.LanguageCode);
+            subtitle.OriginalText = firstOriginal;
+            newSubtitle.OriginalText = secondOriginal;
         }
-        else if (lines.Count == 2)
-        {
-            var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = languageCode };
-            if (dialogHelper.IsDialog(lines))
-            {
-                newSubtitle.Text = lines[1].TrimStart(' ', DialogSplitMerge.GetDashChar(), DialogSplitMerge.GetAlternateDashChar()).Trim();
-                subtitle.Text = lines[0].TrimStart(' ', DialogSplitMerge.GetDashChar(), DialogSplitMerge.GetAlternateDashChar()).Trim();
-            }
-            else
-            {
-                newSubtitle.Text = lines[1].Trim();
-                subtitle.Text = lines[0].Trim();
-            }
-        }
-        else if (lines.Count > 2)
-        {
-            var splitIndex = lines.Count / 2;
-
-            if (lines.Count % 2 == 1) // odd number of lines
-            {
-                if (Se.Settings.Tools.SplitOddLinesAction == nameof(SplitOddLinesActionType.WeightTop))
-                {
-                    splitIndex = splitIndex + 1;
-                }
-                else if (Se.Settings.Tools.SplitOddLinesAction == nameof(SplitOddLinesActionType.WeightBottom))
-                {
-                    // no changes
-                }
-                else // SplitUnevenLineActionType.Smart
-                {
-                    var try1First = string.Join(Environment.NewLine, lines.GetRange(0, splitIndex + 1)).Trim();
-                    var try1Second = string.Join(Environment.NewLine, lines.GetRange(splitIndex + 1, lines.Count - (splitIndex + 1))).Trim();
-
-                    var try2First = string.Join(Environment.NewLine, lines.GetRange(0, splitIndex)).Trim();
-                    var try2Second = string.Join(Environment.NewLine, lines.GetRange(splitIndex, lines.Count - splitIndex)).Trim();
-
-                    if (try1First.EndsWith('.') && !try2First.EndsWith('.'))
-                    {
-                        splitIndex = splitIndex + 1;
-                    }
-                    else if (!try1First.EndsWith(".") && try2First.EndsWith('.'))
-                    {
-                        // no changes
-                    }
-                    else if (Math.Abs(try1First.Length - try1Second.Length) < Math.Abs(try2First.Length - try2Second.Length))
-                    {
-                        splitIndex = splitIndex + 1;
-                    }
-                }
-            }
-
-            subtitle.Text = string.Join(Environment.NewLine, lines.GetRange(0, splitIndex)).Trim();
-            newSubtitle.Text = string.Join(Environment.NewLine, lines.GetRange(splitIndex, lines.Count - splitIndex)).Trim();
-        }
-        else
-        {
-            var brokenLines = Utilities.AutoBreakLine(text, Se.Settings.General.SubtitleLineMaximumLength, 0, languageCode).SplitToLines();
-            if (brokenLines.Count == 2)
-            {
-                subtitle.Text = brokenLines[0].Trim();
-                newSubtitle.Text = brokenLines[1].Trim();
-            }
-            else
-            {
-                subtitle.Text = text;
-                newSubtitle.Text = string.Empty;
-            }
-        }
-
-        // SE 4 parity (#12195): "Split line at cursor" applies the configured continuation
-        // style (e.g. "Ellipses (trailing only)") to the halves - a trailing ellipsis on
-        // the first line, and a leading marker on the second for leading styles - instead
-        // of a clean cut.
-        if (!string.IsNullOrWhiteSpace(subtitle.Text)
-            && !string.IsNullOrWhiteSpace(newSubtitle.Text)
-            && Enum.TryParse<ContinuationStyle>(Se.Settings.General.ContinuationStyle, out var continuationStyle)
-            && continuationStyle != ContinuationStyle.None)
-        {
-            var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
-            if (ContinuationUtilities.ShouldAddSuffix(subtitle.Text, continuationProfile))
-            {
-                subtitle.Text = ContinuationUtilities.AddSuffixIfNeeded(subtitle.Text, continuationProfile, false);
-                newSubtitle.Text = ContinuationUtilities.AddPrefixIfNeeded(newSubtitle.Text, continuationProfile, false);
-            }
-        }
-
-        var (s1, s2) = FixTags(subtitle.Text, newSubtitle.Text);
-        subtitle.Text = s1;
-        newSubtitle.Text = s2;
 
         // Time split — done AFTER the text split so we can weight the divide point
         // by the resulting text-length ratio when no user video position was given.
@@ -231,6 +155,134 @@ public class SplitManager : ISplitManager
         subtitles.Insert(idx + 1, newSubtitle);
     }
 
+    /// <summary>
+    /// Splits one text into two halves: at <paramref name="textIndex"/> when it is inside the
+    /// text, otherwise on the line break (two lines), a weighted line count (more), or an
+    /// auto-break (one line). Dialog dashes, continuation style and tag balancing are applied
+    /// the same way for the translation and the original.
+    /// </summary>
+    private static (string First, string Second) SplitText(string text, int textIndex, string languageCode)
+    {
+        var first = text;
+        var second = string.Empty;
+        var lines = text.SplitToLines();
+
+        // A caret with no text on one side (e.g. still at the end of the text) would leave one
+        // half empty, so it falls back to the line break just like a caret at the start (#14962).
+        if (textIndex > 0 && textIndex <= text.Length &&
+            !string.IsNullOrWhiteSpace(text.Substring(0, textIndex)) &&
+            !string.IsNullOrWhiteSpace(text.Substring(textIndex)))
+        {
+            first = text.Substring(0, textIndex).Trim();
+            second = text.Substring(textIndex).Trim();
+
+            if (lines.Count == 2)
+            {
+                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = languageCode };
+                if (dialogHelper.IsDialog(lines))
+                {
+                    first = DialogSplitMerge.RemoveStartDash(first);
+                    second = DialogSplitMerge.RemoveStartDash(second);
+                }
+            }
+
+            // SE 4 parity (#11245 follow-up): if either half ends up with a single line
+            // longer than the configured max, auto-break it. Cursor-split at the middle
+            // of a long single-line subtitle would otherwise leave a too-wide line.
+            first = AutoBreakIfTooLong(first, languageCode);
+            second = AutoBreakIfTooLong(second, languageCode);
+        }
+        else if (lines.Count == 2)
+        {
+            var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = languageCode };
+            if (dialogHelper.IsDialog(lines))
+            {
+                // #14800: RemoveStartDash skips leading {\...}/<...> tags, so a formatted
+                // dialog line like "{\i1}- Hi!{\i0}" loses its dash too.
+                second = DialogSplitMerge.RemoveStartDash(lines[1].Trim());
+                first = DialogSplitMerge.RemoveStartDash(lines[0].Trim());
+            }
+            else
+            {
+                second = lines[1].Trim();
+                first = lines[0].Trim();
+            }
+        }
+        else if (lines.Count > 2)
+        {
+            var splitIndex = lines.Count / 2;
+
+            if (lines.Count % 2 == 1) // odd number of lines
+            {
+                if (Se.Settings.Tools.SplitOddLinesAction == nameof(SplitOddLinesActionType.WeightTop))
+                {
+                    splitIndex = splitIndex + 1;
+                }
+                else if (Se.Settings.Tools.SplitOddLinesAction == nameof(SplitOddLinesActionType.WeightBottom))
+                {
+                    // no changes
+                }
+                else // SplitUnevenLineActionType.Smart
+                {
+                    var try1First = string.Join(Environment.NewLine, lines.GetRange(0, splitIndex + 1)).Trim();
+                    var try1Second = string.Join(Environment.NewLine, lines.GetRange(splitIndex + 1, lines.Count - (splitIndex + 1))).Trim();
+
+                    var try2First = string.Join(Environment.NewLine, lines.GetRange(0, splitIndex)).Trim();
+                    var try2Second = string.Join(Environment.NewLine, lines.GetRange(splitIndex, lines.Count - splitIndex)).Trim();
+
+                    if (try1First.EndsWith('.') && !try2First.EndsWith('.'))
+                    {
+                        splitIndex = splitIndex + 1;
+                    }
+                    else if (!try1First.EndsWith(".") && try2First.EndsWith('.'))
+                    {
+                        // no changes
+                    }
+                    else if (Math.Abs(try1First.Length - try1Second.Length) < Math.Abs(try2First.Length - try2Second.Length))
+                    {
+                        splitIndex = splitIndex + 1;
+                    }
+                }
+            }
+
+            first = string.Join(Environment.NewLine, lines.GetRange(0, splitIndex)).Trim();
+            second = string.Join(Environment.NewLine, lines.GetRange(splitIndex, lines.Count - splitIndex)).Trim();
+        }
+        else
+        {
+            var brokenLines = Utilities.AutoBreakLine(text, Se.Settings.General.SubtitleLineMaximumLength, 0, languageCode).SplitToLines();
+            if (brokenLines.Count == 2)
+            {
+                first = brokenLines[0].Trim();
+                second = brokenLines[1].Trim();
+            }
+            else
+            {
+                first = text;
+                second = string.Empty;
+            }
+        }
+
+        // SE 4 parity (#12195): "Split line at cursor" applies the configured continuation
+        // style (e.g. "Ellipses (trailing only)") to the halves - a trailing ellipsis on
+        // the first line, and a leading marker on the second for leading styles - instead
+        // of a clean cut.
+        if (!string.IsNullOrWhiteSpace(first)
+            && !string.IsNullOrWhiteSpace(second)
+            && Enum.TryParse<ContinuationStyle>(Se.Settings.General.ContinuationStyle, out var continuationStyle)
+            && continuationStyle != ContinuationStyle.None)
+        {
+            var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
+            if (ContinuationUtilities.ShouldAddSuffix(first, continuationProfile))
+            {
+                first = ContinuationUtilities.AddSuffixIfNeeded(first, continuationProfile, false);
+                second = ContinuationUtilities.AddPrefixIfNeeded(second, continuationProfile, false);
+            }
+        }
+
+        return FixTags(first, second);
+    }
+
     // Strip HTML/ASSA tags and ALL line-break variants for length measurement.
     // Subtitle text may contain CRLF, LF, CR, or Unicode line separator (U+2028)
     // regardless of platform — these are all recognised by SplitToLines — and
@@ -285,6 +337,7 @@ public class SplitManager : ISplitManager
         ("<b>", "</b>"),
         ("<i>", "</i>"),
         ("<u>", "</u>"),
+        ("<box>", "</box>"), // EBU STL teletext boxing
     ];
 
     private static readonly string[] CompoundHtmlOpenPrefixes = ["<font", "<color"];
@@ -300,7 +353,7 @@ public class SplitManager : ISplitManager
         var closingToAppend = new List<string>();
         var openingToPrepend = new List<string>();
 
-        // Handle simple HTML tags: <b>, <i>, <u>
+        // Handle simple HTML tags: <b>, <i>, <u>, <box>
         foreach (var (open, close) in SimpleHtmlTags)
         {
             var openCount = CountOccurrences(text1, open);
@@ -424,31 +477,87 @@ public class SplitManager : ISplitManager
 
     private static string PropagateAssaTags(string text1, string text2)
     {
-        // For each ASSA toggle tag {\b1}, {\i1}, {\u1} active in text1 (opened but not closed with {\b0} etc.),
-        // prepend the corresponding tag to text2.
-        var assaToggles = new[] { ("\\b1}", "\\b0}"), ("\\i1}", "\\i0}"), ("\\u1}", "\\u0}") };
-        var tagsToAdd = new List<string>();
-        foreach (var (onSuffix, offSuffix) in assaToggles)
+        // Walk every {\...} override block of text1 in order and track which state is still
+        // active at its end, then re-open that state at the start of text2.
+        //
+        // #14800: the ASSA reader merges adjacent blocks ("{\i1}{\c&H00ff00&}" becomes
+        // "{\i1\c&H00ff00&}"), so matching on the literal "\i1}" missed a toggle that was
+        // not last in its block and the italic never reached the second half. Tags are
+        // parsed per block here, so position inside the block no longer matters.
+        string? bold = null;
+        string? italic = null;
+        string? underline = null;
+        string? fontName = null;
+        string? color = null;
+
+        foreach (var block in GetAssaBlocks(text1))
         {
-            var onCount = CountOccurrences(text1, onSuffix);
-            var offCount = CountOccurrences(text1, offSuffix);
-            if (onCount > offCount)
+            foreach (var tag in SplitAssaBlock(block))
             {
-                tagsToAdd.Add("{" + onSuffix);
+                if (tag == "r" || tag.StartsWith("r", StringComparison.Ordinal) && !tag.StartsWith("rnd", StringComparison.Ordinal))
+                {
+                    // {\r} / {\rStyle} resets every override
+                    bold = italic = underline = fontName = color = null;
+                }
+                else if (tag == "b1")
+                {
+                    bold = "{\\b1}";
+                }
+                else if (tag == "b0")
+                {
+                    bold = null;
+                }
+                else if (tag == "i1")
+                {
+                    italic = "{\\i1}";
+                }
+                else if (tag == "i0")
+                {
+                    italic = null;
+                }
+                else if (tag == "u1")
+                {
+                    underline = "{\\u1}";
+                }
+                else if (tag == "u0")
+                {
+                    underline = null;
+                }
+                else if (tag.StartsWith("fn", StringComparison.Ordinal))
+                {
+                    fontName = tag.Length > 2 ? "{\\" + tag + "}" : null;
+                }
+                else if (tag == "c" || tag == "1c")
+                {
+                    color = null;
+                }
+                else if (tag.StartsWith("c&H", StringComparison.Ordinal) || tag.StartsWith("1c&H", StringComparison.Ordinal))
+                {
+                    color = "{\\" + tag + "}";
+                }
             }
         }
 
-        // Propagate last active \fn and \c tags
-        var fnTag = GetLastAssaTag(text1, "\\fn");
-        if (fnTag != null)
+        var tagsToAdd = new List<string>();
+        if (bold != null)
         {
-            tagsToAdd.Add(fnTag);
+            tagsToAdd.Add(bold);
         }
-
-        var colorTag = GetLastAssaTag(text1, "\\c&H");
-        if (colorTag != null)
+        if (italic != null)
         {
-            tagsToAdd.Add(colorTag);
+            tagsToAdd.Add(italic);
+        }
+        if (underline != null)
+        {
+            tagsToAdd.Add(underline);
+        }
+        if (fontName != null)
+        {
+            tagsToAdd.Add(fontName);
+        }
+        if (color != null)
+        {
+            tagsToAdd.Add(color);
         }
 
         if (tagsToAdd.Count == 0)
@@ -456,45 +565,45 @@ public class SplitManager : ISplitManager
             return text2;
         }
 
-        // Each entry in tagsToAdd is already a complete "{...}" block, so concatenate them as-is.
-        // The previous version stripped each block's leading "{" but kept its trailing "}", then
-        // prepended a single "{" - which produced malformed markup for two or more tags, e.g.
-        // "{\i1}\c&HFF0000&}Hello": the "{\i1}" parsed but "\c&HFF0000&}" showed as literal text
-        // and the color was lost.
+        // Each entry is a complete "{...}" block, so concatenate them as-is.
         return string.Concat(tagsToAdd) + text2;
     }
 
-    private static string? GetLastAssaTag(string text, string prefix)
+    /// <summary>Returns the inner text of every "{\...}" block in order (without the braces).</summary>
+    private static IEnumerable<string> GetAssaBlocks(string text)
     {
-        var lastIdx = -1;
         var idx = 0;
-        while ((idx = text.IndexOf(prefix, idx, StringComparison.Ordinal)) >= 0)
+        while (idx < text.Length)
         {
-            lastIdx = idx;
-            idx += prefix.Length;
-        }
+            var start = text.IndexOf("{\\", idx, StringComparison.Ordinal);
+            if (start < 0)
+            {
+                yield break;
+            }
 
-        if (lastIdx < 0)
+            var end = text.IndexOf('}', start);
+            if (end < 0)
+            {
+                yield break;
+            }
+
+            yield return text.Substring(start + 1, end - start - 1);
+            idx = end + 1;
+        }
+    }
+
+    /// <summary>Splits the inner text of an override block into its tags, e.g. "\i1\c&H00ff00&" → ["i1", "c&H00ff00&"].</summary>
+    private static IEnumerable<string> SplitAssaBlock(string block)
+    {
+        var parts = block.Split('\\', StringSplitOptions.RemoveEmptyEntries);
+        foreach (var part in parts)
         {
-            return null;
+            var tag = part.Trim();
+            if (tag.Length > 0)
+            {
+                yield return tag;
+            }
         }
-
-        var blockStart = text.LastIndexOf('{', lastIdx);
-        var blockEnd = text.IndexOf('}', lastIdx);
-        if (blockStart < 0 || blockEnd < 0)
-        {
-            return null;
-        }
-
-        // Extract only the specific tag from within the block
-        var tagStart = lastIdx;
-        var tagEnd = text.IndexOf('}', tagStart);
-        if (tagEnd < 0)
-        {
-            return null;
-        }
-
-        return "{" + text.Substring(tagStart, tagEnd - tagStart + 1);
     }
 
     public void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, string languageCode)

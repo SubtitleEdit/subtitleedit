@@ -95,8 +95,8 @@ public class LambdaCapTest
     [InlineData("＠横上", "{\\an8}")]
     [InlineData("＠縦右\t＠行頭", "{\\an9}")]
     [InlineData("＠縦左\t＠行頭", "{\\an7}")]
-    [InlineData("＠縦右", "{\\an3}")]
-    [InlineData("＠縦左", "{\\an1}")]
+    [InlineData("＠縦右", "{\\an6}")]
+    [InlineData("＠縦左", "{\\an4}")]
     public void LayoutCodesBecomeAlignment(string codes, string expectedTag)
     {
         var text = LoadText("1\t01002619/01002902\tテスト\t" + codes);
@@ -169,6 +169,69 @@ public class LambdaCapTest
 
         Assert.Single(reloaded.Paragraphs);
         Assert.Equal(expected, reloaded.Paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void ConvertingToNetflixImsc11JapaneseKeepsRubyAndTateChuYoko()
+    {
+        var subtitle = Load("1\t01002619/01002902\t＠ルビ上［炉心溶融｜メルトダウン］＠を起こしかけている\t＠横下\t＠中頭",
+                            "2\t01003000/01003200\t＠組［２０１２］＠年10月５日\t＠縦右");
+        var imsc = new NetflixImsc11Japanese();
+
+        new LambdaCap().RemoveNativeFormatting(subtitle, imsc);
+        var xml = System.Text.RegularExpressions.Regex.Replace(imsc.ToText(subtitle, "test"), @">\s+<", "><");
+
+        Assert.Contains("<span style=\"ruby-container\"><span style=\"ruby-base\">炉心溶融</span><span style=\"ruby-text\">メルトダウン</span></span>", xml);
+        Assert.Contains("<span style=\"horizontalDigit\">２０１２</span>", xml);
+    }
+
+    [Theory]
+    [InlineData("＠縦右", "right")]
+    [InlineData("＠縦左", "left")]
+    [InlineData("＠縦右\t＠行頭", "right")]
+    [InlineData("＠縦左\t＠行頭", "left")]
+    public void VerticalCueIsExportedToVerticalRegion(string codes, string expectedRegion)
+    {
+        var subtitle = Load("1\t01002619/01002902\tテスト\t" + codes);
+
+        var xml = new NetflixImsc11Japanese().ToText(subtitle, "test");
+
+        Assert.Contains("region=\"" + expectedRegion + "\"", xml);
+    }
+
+    [Theory]
+    [InlineData("＠縦右")]
+    [InlineData("＠縦左")]
+    [InlineData("＠縦右\t＠行頭")]
+    [InlineData("＠縦左\t＠行頭")]
+    public void VerticalCodesRoundTrip(string codes)
+    {
+        var saved = Save(LoadText("1\t01002619/01002902\tテスト\t" + codes));
+
+        Assert.Contains("テスト\t" + codes + Environment.NewLine, saved);
+    }
+
+    [Fact]
+    public void ConvertingFromNetflixImsc11JapaneseKeepsRuby()
+    {
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph("<ruby-container><ruby-base>成都</ruby-base><ruby-text>せいと</ruby-text></ruby-container>", 0, 1000));
+        subtitle.Renumber();
+
+        new NetflixImsc11Japanese().RemoveNativeFormatting(subtitle, new LambdaCap());
+        var text = new LambdaCap().ToText(subtitle, "test");
+
+        Assert.Contains("＠ルビ上［成都｜せいと］＠", text);
+    }
+
+    [Fact]
+    public void ConvertingToPlainTextFormatStillRemovesMarkup()
+    {
+        var subtitle = Load("1\t01002619/01002902\t＠ルビ上［成都｜せいと］＠\t＠横下");
+
+        new LambdaCap().RemoveNativeFormatting(subtitle, new SubRip());
+
+        Assert.Equal("成都せいと", subtitle.Paragraphs[0].Text);
     }
 
     [Fact]

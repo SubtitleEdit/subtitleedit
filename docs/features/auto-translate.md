@@ -12,24 +12,24 @@ Automatically translate subtitles using various translation engines and AI servi
 
 1. Open **Translate → Auto-translate...**
 2. Select a translation engine
-3. Select the source and target languages
+3. Select the source and target languages (the button between them swaps the two)
 4. Click **Translate** to start
 5. Review the translations in the grid
 6. Click **OK** to apply
 
 ## Supported Engines
 
-- **Google Translate V1 API** — Free Google Translate
+- **Google Translate V1 API** — Free Google Translate. When Google answers with its "unusual traffic" block page, Subtitle Edit retries the request through a fallback endpoint (`clients5.google.com`) before giving up; a block is on Google's side and is usually lifted again after minutes to a few hours
 - **Google Translate V2 API** — Google Cloud Translation (requires API key)
 - **Bing Microsoft Translator** — Azure Cognitive Services (requires API key)
-- **DeepL V2 translate** — DeepL translation (requires API key)
+- **DeepL V2 translate** — DeepL translation (requires API key). Every language the DeepL API offers is listed, as source and as target (including the target-only regional variants such as fr-CA and de-CH). A **Formality** dropdown — Default, More formal, Less formal, More formal (fall back to default), Less formal (fall back to default) — appears for target languages that support it
 - **LibreTranslate** — Open-source, self-hosted translation
 - **MyMemory Translate** — Free translation memory
 - **ChatGPT** — OpenAI AI translation (requires API key)
 - **LM Studio (local LLM)** — Local LLM translation
 - **Ollama (local LLM)** — Local LLM-based translation
 - **Ollama advanced (local LLM)** — Ollama translated in batches with surrounding context, a synopsis and a glossary; see [Advanced local engines](auto-translate-advanced.md)
-- **llama.cpp (local LLM)** — Server-managed local LLM translation; Subtitle Edit downloads llama.cpp and a curated model (TranslateGemma, Qwen or Aya Expanse) and runs a local `llama-server` for you. See [Using your own model](#llamacpp-using-your-own-model) to run a model we don't ship, such as TranslateGemma 27B
+- **llama.cpp (local LLM)** — Server-managed local LLM translation; Subtitle Edit downloads llama.cpp and a curated model (TranslateGemma, Gemma 4, Qwen, Aya Expanse, MiLMMT or Hy-MT2) and runs a local `llama-server` for you. See [Using your own model](#llamacpp-using-your-own-model) to run a model we don't ship, such as TranslateGemma 27B
 - **llama.cpp advanced (local LLM)** — The managed llama.cpp server translated in batches with surrounding context, a synopsis and a glossary; see [Advanced local engines](auto-translate-advanced.md)
 - **OpenAI Compatible API** — Generic engine for any service exposing an OpenAI-compatible `chat/completions` endpoint (vLLM, KoboldCpp, a llama.cpp server on another machine, cloud providers, ...); configure URL, model, prompt, and an optional API key
 - **Anthropic Claude** — AI translation (requires API key)
@@ -50,7 +50,7 @@ Automatically translate subtitles using various translation engines and AI servi
 ## llama.cpp: using your own model
 
 The models offered in the download list are deliberately kept small enough to run on an ordinary
-machine (around 8 GB or less). You are not limited to them — larger models such as TranslateGemma
+machine (mostly under 8 GB, the largest around 12 GB). You are not limited to them — larger models such as TranslateGemma
 27B work fine if your hardware can handle them.
 
 Two ways to use one:
@@ -70,8 +70,8 @@ choice and the jump to 27B buys less than the size difference suggests.
 
 ## Prompts: chat models and completion models
 
-Every local-LLM engine (LM Studio, Ollama, KoboldCpp, llama.cpp, OpenAI Compatible API) has a
-**prompt** you can edit. `{0}` is replaced with the source language and `{1}` with the target
+Every local-LLM engine (LM Studio, Ollama, llama.cpp, OpenAI Compatible API) has a
+**prompt** you can edit in the engine's Settings dialog (gear button). `{0}` is replaced with the source language and `{1}` with the target
 language, both as English names.
 
 By default the prompt is an instruction and Subtitle Edit appends the subtitle text after it — what
@@ -91,8 +91,8 @@ Translate this from {0} to {1}:
 
 The trailing `{1}:` cue is what makes such a model translate at all — without it, it tends to echo
 the source. Set the model's temperature to 0 where the engine offers it. Curated MiLMMT models in
-the llama.cpp engine's download list carry this prompt already; for LM Studio, KoboldCpp, Ollama or
-your own OpenAI-compatible server, paste it into the engine's prompt field.
+the llama.cpp engine's download list carry this prompt already; for LM Studio, Ollama or
+your own OpenAI-compatible server (vLLM, KoboldCpp, ...), paste it into the engine's prompt field.
 
 Headless runs take the same prompt via `seconv --translate-prompt:<text|file>` — see
 [Auto-translate (command line)](../reference/command-line.md#custom-prompt).
@@ -105,11 +105,17 @@ Depending on the selected engine, you may need to provide:
 - **API URL** — Custom endpoint URL (for self-hosted services)
 - **Model** — Specific model to use (for AI engines)
 
+The gear button opens the engine's **Settings** dialog with **Line merge**, **Delay in seconds between requests**, **Max bytes per request** and, for engines that have one, the **Prompt text** with a reset-to-default button.
+
 The **llama.cpp advanced** and **Ollama advanced** engines translate in batches with context, synopsis, and glossary support — see [Advanced Local Engines](auto-translate-advanced.md).
 
 ## Translation Review
 
 The translation grid shows the original text alongside the translated text. You can edit individual translations before accepting them.
+
+Engines keep the source's line breaks and often add their own, so a two-line source can come back as three short lines that no long-line tool would touch. After translating, a row with more lines than the *maximum number of lines* or a line longer than the single-line limit is un-broken and auto-broken again with the target language's rules. Rows that already fit are left alone, and lyrics (♪) and CJK targets are never re-broken.
+
+Switching engine to compare results keeps the source and target languages you picked, as long as the new engine offers them - only then does the default derived from the subtitle take over.
 
 ## Keyboard Shortcuts
 

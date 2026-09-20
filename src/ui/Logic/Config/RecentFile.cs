@@ -4,6 +4,7 @@ public class RecentFile
 {
     public string SubtitleFileName { get; set; } = string.Empty;
     public string SubtitleFileNameOriginal { get; set; } = string.Empty;
+    public string SubtitleFileNameSecondary { get; set; } = string.Empty;
     public string VideoFileName { get; set; } = string.Empty;
     public int SelectedLine { get; set; }
     public string Encoding { get; set; } = string.Empty;

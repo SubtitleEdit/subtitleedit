@@ -59,13 +59,13 @@ public class PickRuleProfileWindow : Window
 
         Content = grid;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             if (_profileGrid != null)
             {
                 TableViewExtras.FocusRow(_profileGrid); // hack to make OnKeyDown work
             }
-        };
+        });
         KeyDown += vm.KeyDown;
     }
 

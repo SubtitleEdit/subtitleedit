@@ -25,8 +25,12 @@ namespace UITests.Features.Edit;
 /// even in an unticked category": validation must not be what builds the RegexOptions.Compiled
 /// regex, or opening the dialog emits IL for every rule in the file.
 /// </summary>
-public class MultipleReplaceRegexTimeoutTests
+public class MultipleReplaceRegexTimeoutTests : IDisposable
 {
+    private readonly ShortRegexTimeout _shortRegexTimeout = new();
+
+    public void Dispose() => _shortRegexTimeout.Dispose();
+
     private sealed class NullServiceProvider : IServiceProvider
     {
         public object? GetService(Type serviceType) => null;
@@ -43,6 +47,7 @@ public class MultipleReplaceRegexTimeoutTests
     private static MultipleReplaceViewModel NewViewModel()
     {
         var vm = new MultipleReplaceViewModel(new WindowService(new NullServiceProvider()), new FileHelper());
+        vm.PreviewIntervalMs = 25; // the tests wait for the preview timer; see PreviewIntervalMs
         vm.Nodes.Clear();
         return vm;
     }

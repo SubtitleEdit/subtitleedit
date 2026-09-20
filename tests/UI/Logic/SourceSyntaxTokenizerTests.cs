@@ -181,6 +181,33 @@ public class SourceSyntaxTokenizerTests
     }
 
     [Fact]
+    public void JsonStringValueAfterPropertyNameIsColored()
+    {
+        const string text = "  \"text\": \"Hi\"";
+        var spans = SourceSyntaxTokenizer.Tokenize(text, new JsonSourceSyntaxHighlighting());
+
+        var property = Assert.Single(spans, s => text.Substring(s.Start, s.Length) == "\"text\"");
+        var value = Assert.Single(spans, s => text.Substring(s.Start, s.Length) == "\"Hi\"");
+        Assert.NotEqual(property.Color, value.Color);
+    }
+
+    [Fact]
+    public void JsonStringsInArrayAndAfterPropertyNameShareOneColor()
+    {
+        const string text = "{\"a\": \"x\", \"b\": [\"Hi\", \"Yo\"]}";
+        var spans = SourceSyntaxTokenizer.Tokenize(text, new JsonSourceSyntaxHighlighting());
+
+        string At(SourceSyntaxSpan s) => text.Substring(s.Start, s.Length);
+        var x = Assert.Single(spans, s => At(s) == "\"x\"");
+        var hi = Assert.Single(spans, s => At(s) == "\"Hi\"");
+        var yo = Assert.Single(spans, s => At(s) == "\"Yo\"");
+        var a = Assert.Single(spans, s => At(s) == "\"a\"");
+        Assert.Equal(x.Color, hi.Color);
+        Assert.Equal(x.Color, yo.Color);
+        Assert.NotEqual(a.Color, x.Color);
+    }
+
+    [Fact]
     public void SingleLineXmlIsReformattedButMultiLineXmlIsLeftAlone()
     {
         var singleLine = "<tt>" + string.Concat(Enumerable.Repeat("<p begin=\"1\">hi</p>", 30)) + "</tt>";

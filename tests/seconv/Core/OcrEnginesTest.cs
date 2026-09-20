@@ -1,4 +1,6 @@
+using Nikse.SubtitleEdit.UiLogic.Ocr.AppleVision;
 using SeConv.Core;
+using SkiaSharp;
 using Xunit;
 
 namespace SeConvTests.Core;
@@ -78,7 +80,66 @@ public class OcrEnginesTest : IDisposable
         Assert.Contains("binaryocr", ex.Message);
         Assert.Contains("ollama", ex.Message);
         Assert.Contains("paddle", ex.Message);
+        Assert.Contains("applevision", ex.Message);
     }
+
+    [Fact]
+    public void Factory_AppleVisionRouted()
+    {
+        if (!AppleVisionRecognizer.IsAvailable())
+        {
+            var ex = Assert.Throws<InvalidOperationException>(() => OcrEngineFactory.Create(Opts("applevision")));
+            Assert.Contains("macOS", ex.Message);
+        }
+        else
+        {
+            // Opts() passes Tesseract's "eng", which has to land on Vision's own tag.
+            using var engine = OcrEngineFactory.Create(Opts("apple-vision"));
+            Assert.Equal("applevision", engine.Name);
+            Assert.Equal("en-US", ((AppleVisionOcrEngine)engine).Language);
+        }
+    }
+
+    [Theory]
+    [InlineData(null, "en-US")]
+    [InlineData("", "en-US")]
+    [InlineData("de-DE", "de-DE")]
+    [InlineData("DE-de", "de-DE")]
+    [InlineData("de", "de-DE")]
+    [InlineData("deu", "de-DE")]
+    [InlineData("eng", "en-US")]
+    [InlineData("German", "de-DE")]
+    [InlineData("zh-Hant", "zh-Hant")]
+    public void AppleVision_ResolveLanguage_MapsOntoVisionTags(string? requested, string expected)
+    {
+        Assert.Equal(expected, AppleVisionOcrEngine.ResolveLanguage(requested, VisionTags));
+    }
+
+    [Fact]
+    public void AppleVision_ResolveLanguage_AmbiguousLanguageNamesTheCandidates()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(() => AppleVisionOcrEngine.ResolveLanguage("zh", VisionTags));
+        Assert.Contains("zh-Hans", ex.Message);
+        Assert.Contains("zh-Hant", ex.Message);
+    }
+
+    [Fact]
+    public void AppleVision_ResolveLanguage_UnknownLanguageListsWhatIsSupported()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(() => AppleVisionOcrEngine.ResolveLanguage("Klingon", VisionTags));
+        Assert.Contains("Klingon", ex.Message);
+        Assert.Contains("en-US", ex.Message);
+    }
+
+    [Fact]
+    public void AppleVision_ResolveLanguage_NoLanguageListLeavesTheChoiceToVision()
+    {
+        Assert.Null(AppleVisionOcrEngine.ResolveLanguage(null, []));
+        Assert.Equal("de-DE", AppleVisionOcrEngine.ResolveLanguage("de-DE", []));
+    }
+
+    /// <summary>A slice of what Vision reports on macOS 15, so the mapping is testable on any OS.</summary>
+    private static readonly string[] VisionTags = ["en-US", "fr-FR", "de-DE", "pt-BR", "zh-Hans", "zh-Hant", "ja-JP"];
 
     [Fact]
     public void Factory_TesseractRouted()
@@ -119,23 +180,38 @@ public class OcrEnginesTest : IDisposable
         Assert.Equal("ollama", engine.Name);
     }
 
+    // Results are read from the "<stem>_res.json" files PaddleOCR writes under --save_path,
+    // so every run needs that flag - a run without it produces no results at all.
     [Fact]
-    public void Paddle_ParseStdout_ExtractsTextLines()
+    public void Paddle_BuildArguments_AlwaysAsksForResultFiles()
     {
-        // Real paddleocr output sample
-        var stdout = """
-            [[10, 20], [100, 20], [100, 40], [10, 40]] ('Hello world', 0.95)
-            [[10, 50], [100, 50], [100, 70], [10, 70]] ('second line', 0.91)
-            """;
-        var text = PaddleOcrEngine.ParseStdout(stdout);
-        Assert.Contains("Hello world", text);
-        Assert.Contains("second line", text);
+        if (PaddleOcrEngine.Detect() is null)
+        {
+            Assert.Skip("PaddleOCR not installed");
+        }
+
+        using var engine = PaddleOcrEngine.Create("en");
+        var args = engine.BuildArguments(@"C:\in", @"C:\out");
+
+        var savePath = args.IndexOf("--save_path");
+        Assert.True(savePath >= 0, "--save_path missing: " + string.Join(' ', args));
+        Assert.Equal(@"C:\out", args[savePath + 1]);
+
+        var input = args.IndexOf("-i");
+        Assert.True(input >= 0);
+        Assert.Equal(@"C:\in", args[input + 1]);
     }
 
     [Fact]
-    public void Paddle_ParseStdout_NoMatches_ReturnsEmpty()
+    public void Paddle_RecognizeBatch_NoImages_DoesNotStartTheEngine()
     {
-        Assert.Equal(string.Empty, PaddleOcrEngine.ParseStdout("no recognized text here"));
-        Assert.Equal(string.Empty, PaddleOcrEngine.ParseStdout(""));
+        if (PaddleOcrEngine.Detect() is null)
+        {
+            Assert.Skip("PaddleOCR not installed");
+        }
+
+        // Nothing to do must not cost a process start - the whole point of batching.
+        using var engine = PaddleOcrEngine.Create("en");
+        Assert.Empty(engine.RecognizeBatch(Array.Empty<SKBitmap>()));
     }
 }

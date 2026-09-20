@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Logic;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -34,27 +35,27 @@ public class TranscriptionProgressWindow : Window
 
         var connectionInfoText = new TextBlock
         {
-            FontSize = 11,
+            FontSize = UiUtil.ScaledFontSize(11),
             Foreground = Brushes.Gray,
             Margin = new Thickness(0, 0, 0, 2),
             TextWrapping = TextWrapping.Wrap
         };
-        connectionInfoText.Bind(TextBlock.TextProperty, new Binding("ServerUrl") { StringFormat = Se.Language.General.TranscriptionProgressServerFormat });
+        connectionInfoText.Bind(TextBlock.TextProperty, new Binding(nameof(TranscriptionProgressViewModel.ServerUrl)) { StringFormat = Se.Language.General.TranscriptionProgressServerFormat });
 
         var modelInfoText = new TextBlock
         {
-            FontSize = 11,
+            FontSize = UiUtil.ScaledFontSize(11),
             Foreground = Brushes.Gray,
             Margin = new Thickness(0, 0, 0, 10)
         };
-        modelInfoText.Bind(TextBlock.TextProperty, new Binding("ModelName") { StringFormat = Se.Language.General.TranscriptionProgressModelFormat });
+        modelInfoText.Bind(TextBlock.TextProperty, new Binding(nameof(TranscriptionProgressViewModel.ModelName)) { StringFormat = Se.Language.General.TranscriptionProgressModelFormat });
 
         var statusText = new TextBlock
         {
             FontWeight = FontWeight.Bold,
             Margin = new Thickness(0, 0, 0, 10)
         };
-        statusText.Bind(TextBlock.TextProperty, new Binding("StatusText"));
+        statusText.Bind(TextBlock.TextProperty, new Binding(nameof(TranscriptionProgressViewModel.StatusText)));
 
         var streamedTextBlock = new TextBlock
         {
@@ -69,14 +70,17 @@ public class TranscriptionProgressWindow : Window
             Padding = new Thickness(5),
             Child = new ScrollViewer { Content = streamedTextBlock }
         };
-        streamedTextBlock.Bind(TextBlock.TextProperty, new Binding("StreamedText"));
+        streamedTextBlock.Bind(TextBlock.TextProperty, new Binding(nameof(TranscriptionProgressViewModel.StreamedText)));
 
         var segmentsList = new ListBox
         {
             MaxHeight = 150,
             Margin = new Thickness(0, 5, 0, 0)
         };
-        segmentsList.Bind(ItemsControl.ItemsSourceProperty, new Binding("ReceivedSegments"));
+        segmentsList.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(TranscriptionProgressViewModel.ReceivedSegments)));
+        // Same text as the expander header, so the list is announced as "Received segments (N)" (#12087).
+        segmentsList.Bind(Avalonia.Automation.AutomationProperties.NameProperty,
+            new Binding(nameof(TranscriptionProgressViewModel.SegmentCount)) { StringFormat = Se.Language.General.TranscriptionProgressReceivedSegmentsFormat });
 
         var expander = new Expander
         {
@@ -85,7 +89,7 @@ public class TranscriptionProgressWindow : Window
             Content = segmentsList
         };
         expander.Bind(HeaderedContentControl.HeaderProperty,
-            new Binding("SegmentCount") { StringFormat = Se.Language.General.TranscriptionProgressReceivedSegmentsFormat });
+            new Binding(nameof(TranscriptionProgressViewModel.SegmentCount)) { StringFormat = Se.Language.General.TranscriptionProgressReceivedSegmentsFormat });
 
         var cancelButton = new Button
         {
@@ -93,8 +97,8 @@ public class TranscriptionProgressWindow : Window
             HorizontalAlignment = HorizontalAlignment.Right,
             Margin = new Thickness(0, 10, 0, 0)
         };
-        cancelButton.Bind(Button.CommandProperty, new Binding("CancelCommand"));
-        cancelButton.Bind(Button.IsVisibleProperty, new Binding("!IsCompleted"));
+        cancelButton.Bind(Button.CommandProperty, new Binding(nameof(TranscriptionProgressViewModel.CancelCommand)));
+        cancelButton.Bind(Button.IsVisibleProperty, new Binding("!" + nameof(TranscriptionProgressViewModel.IsCompleted)));
 
         var closeButton = new Button
         {
@@ -103,8 +107,8 @@ public class TranscriptionProgressWindow : Window
             Margin = new Thickness(0, 10, 0, 0),
             IsDefault = true
         };
-        closeButton.Bind(Button.CommandProperty, new Binding("CloseCommand"));
-        closeButton.Bind(Button.IsVisibleProperty, new Binding("IsCompleted"));
+        closeButton.Bind(Button.CommandProperty, new Binding(nameof(TranscriptionProgressViewModel.CloseCommand)));
+        closeButton.Bind(Button.IsVisibleProperty, new Binding(nameof(TranscriptionProgressViewModel.IsCompleted)));
 
         var buttonPanel = new StackPanel
         {

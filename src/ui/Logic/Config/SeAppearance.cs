@@ -15,6 +15,7 @@ public class SeAppearance
     public string IconTheme { get; set; }
     public bool MatchIconColorToDarkTheme { get; set; }
     public double LayoutScale { get; set; }
+    public double FontScale { get; set; }
     public string FontName { get; set; }
     public double SubtitleGridFontSize { get; set; }
     public bool SubtitleGridTextSingleLine { get; set; }
@@ -33,6 +34,13 @@ public class SeAppearance
     public int SubtitleGridFormattingType { get; set; }
     public bool SubtitleGridLiveSpellCheck { get; set; }
 
+    /// <summary>
+    /// Backdrop behind subtitle bitmap thumbnails in the OCR and binary-edit grids, as
+    /// #AARRGGBB. Empty means <see cref="Logic.ImagePreviewBackground.DefaultColor"/>.
+    /// </summary>
+    public string ImagePreviewBackgroundColor { get; set; }
+    public bool SubtitleGridCenterText { get; set; }
+
     public bool SubtitleTextBoxCenterText { get; set; }
     public bool SubtitleTextBoxLiveSpellCheck { get; set; }
     public bool ShowHints { get; set; }
@@ -47,6 +55,12 @@ public class SeAppearance
     public string GridAlternatingRowColor { get; set; }
     public string GridAlternatingRowColorDark { get; set; }
     public bool ShowHorizontalLineAboveToolbar { get; set; }
+
+    /// <summary>
+    /// Color of the flagged word highlighted in the "whole line" preview of the spell check
+    /// and OCR "unknown word" dialogs, as #AARRGGBB.
+    /// </summary>
+    public string SpellCheckHighlightColor { get; set; }
 
     public bool ToolbarShowFileNew { get; set; }
     public bool ToolbarShowFileOpen { get; set; }
@@ -100,6 +114,7 @@ public class SeAppearance
         IconTheme = string.Empty;
         MatchIconColorToDarkTheme = false;
         LayoutScale = 1.0;
+        FontScale = 1.0;
         // On macOS default to Helvetica Neue rather than the hidden system font (.AppleSystemUIFont /
         // San Francisco): SetFontName applies this family explicitly to every control, and Helvetica
         // Neue avoids Avalonia's caret-misplacement with San Francisco's overhanging glyphs (#12009).
@@ -113,6 +128,8 @@ public class SeAppearance
         SubtitleTextBoxColorTags = true;
         ShowHints = true;
         SubtitleTextBoxCenterText = false;
+        ImagePreviewBackgroundColor = string.Empty;
+        SubtitleGridCenterText = false;
         SubtitleTextBoxLiveSpellCheck = false;
         SubtitleGridFormattingType = (int)SubtitleGridFormattingTypes.ShowFormatting;
         GridLinesAppearance = SeGridLinesVisibility.None.ToString();
@@ -124,6 +141,7 @@ public class SeAppearance
         UseFocusedButtonBackgroundColor = true;
         FocusedButtonBackgroundColor = new Color(99, 30, 144, 255).FromColorToHex();
         BookmarkColor = Color.Parse("#C07800").FromColorToHex();
+        SpellCheckHighlightColor = Colors.Red.FromColorToHex();
         GridCompactMode = true;
         ShowLayer = true;
         ShowUpDownStartTime = true;

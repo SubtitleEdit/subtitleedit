@@ -16,18 +16,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var sb = new StringBuilder();
-            foreach (string line in lines)
-            {
-                sb.AppendLine(line);
-            }
+            var allText = JoinLines(lines);
 
-            if (sb.ToString().Contains(Environment.NewLine + "SP_NUMBER\tSTART\tEND\tFILE_NAME"))
+            if (allText.Contains(Environment.NewLine + "SP_NUMBER\tSTART\tEND\tFILE_NAME"))
             {
                 return false; // SON
             }
 
-            if (sb.ToString().Contains(Environment.NewLine + "SP_NUMBER     START        END       FILE_NAME"))
+            if (allText.Contains(Environment.NewLine + "SP_NUMBER     START        END       FILE_NAME"))
             {
                 return false; // SON
             }

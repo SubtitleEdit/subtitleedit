@@ -48,7 +48,7 @@ ST 0 EB 3.10
 
         private static string EncodeTimeCode(TimeCode time)
         {
-            return $"{time.TotalSeconds:00000}.{MillisecondsToFramesMaxFrameRate(time.Milliseconds):00}";
+            return $"{(int)time.TotalSeconds:00000}.{MillisecondsToFramesMaxFrameRate(time.Milliseconds):00}"; // truncate: "{0:00000}" rounded 1.5 s up to 00002
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

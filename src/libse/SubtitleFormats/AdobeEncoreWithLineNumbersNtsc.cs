@@ -16,13 +16,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var sb = new StringBuilder();
-            foreach (string line in lines)
-            {
-                sb.AppendLine(line);
-            }
+            var allText = JoinLines(lines);
 
-            if (sb.ToString().Contains("#INPOINT OUTPOINT PATH"))
+            if (allText.Contains("#INPOINT OUTPOINT PATH"))
             {
                 return false; // Pinnacle Impression
             }

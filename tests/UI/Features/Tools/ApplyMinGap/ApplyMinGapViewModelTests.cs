@@ -6,11 +6,17 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Tools.ApplyMinGap;
+using Nikse.SubtitleEdit.Logic;
 
 namespace UITests.Features.Tools.ApplyMinGap;
 
 public class ApplyMinGapViewModelTests : IDisposable
 {
+    private sealed class NullServiceProvider : IServiceProvider
+    {
+        public object? GetService(Type serviceType) => null;
+    }
+
     private readonly List<Window> _windows = new();
 
     public void Dispose()
@@ -32,7 +38,7 @@ public class ApplyMinGapViewModelTests : IDisposable
 
     private ApplyMinGapViewModel ShowWindow()
     {
-        var vm = new ApplyMinGapViewModel();
+        var vm = new ApplyMinGapViewModel(new WindowService(new NullServiceProvider()));
         var window = new ApplyMinGapWindow(vm);
         _windows.Add(window);
         window.Show();
@@ -54,6 +60,31 @@ public class ApplyMinGapViewModelTests : IDisposable
         Assert.Equal(new[] { "One", "Two", "Three" }, vm.FixedSubtitles.Select(p => p.Text));
         Assert.Equal(1900, vm.FixedSubtitles[0].EndTime.TotalMilliseconds);
         Assert.Equal(3000, vm.FixedSubtitles[1].EndTime.TotalMilliseconds);
+    }
+
+    [AvaloniaFact]
+    public void ShortLineIsSkippedRatherThanGivenANegativeDuration()
+    {
+        // Pulling the end back to next.Start - gap can land BEFORE the line's own start when the
+        // line is short and the next one starts soon after. That used to be applied anyway and
+        // counted as a fix, so a negative-duration line reached the grid and the saved file.
+        var vm = new ApplyMinGapViewModel(new WindowService(new NullServiceProvider()));
+        var window = new ApplyMinGapWindow(vm);
+        _windows.Add(window);
+        window.Show();
+        vm.Initialize(new List<SubtitleLineViewModel>
+        {
+            new() { Text = "Short", StartTime = TimeSpan.FromMilliseconds(1000), EndTime = TimeSpan.FromMilliseconds(1050) },
+            new() { Text = "Next", StartTime = TimeSpan.FromMilliseconds(1060), EndTime = TimeSpan.FromMilliseconds(3000) },
+        });
+        Dispatcher.UIThread.RunJobs();
+
+        vm.MinGapMsOrFrames = 100;
+        vm.OkCommand.Execute(null);
+
+        Assert.All(vm.FixedSubtitles, p =>
+            Assert.True(p.EndTime > p.StartTime, $"'{p.Text}' ended at or before its start"));
+        Assert.Equal(1050, vm.FixedSubtitles[0].EndTime.TotalMilliseconds);
     }
 
     [AvaloniaFact]

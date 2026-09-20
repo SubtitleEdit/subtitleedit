@@ -3,6 +3,8 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.Media;
+using Avalonia.Threading;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -30,9 +32,9 @@ public class BlankVideoWindow : Window
         var progressView = MakeProgressView(vm);
 
         var buttonGenerate = UiUtil.MakeButton(Se.Language.General.Generate, vm.GenerateCommand)
-            .WithBindEnabled(nameof(vm.IsGenerating), new InverseBooleanConverter());
+            .WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindEnabled(nameof(vm.IsGenerating), new InverseBooleanConverter());
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
         var buttonPanel = UiUtil.MakeButtonBar(
             buttonGenerate,
             buttonOk,
@@ -64,13 +66,29 @@ public class BlankVideoWindow : Window
 
         Content = grid;
 
-        Activated += delegate { _numericUpDownDuration?.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, () => { _numericUpDownDuration?.Focus(); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
+
+        // Fit to content once, then freeze: the progress text that appears while generating is
+        // wider than the settings, and with SizeToContent still active the window re-fit itself
+        // on every progress update.
+        Opened += (_, _) => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        {
+            var width = ClientSize.Width;
+            var height = ClientSize.Height;
+            SizeToContent = SizeToContent.Manual;
+            if (width > 0 && height > 0)
+            {
+                Width = width;
+                Height = height;
+            }
+        }, DispatcherPriority.Loaded);
     }
 
     private Border MakeVideoSettingsView(BlankVideoViewModel vm)
     {
         var labelDuration = UiUtil.MakeLabel(Se.Language.General.DurationMinutes);
-        var numericUpDownDuration = UiUtil.MakeNumericUpDownInt(0, 10000, 0, 120, vm, nameof(vm.DurationMinutes));
+        // Minimum 1: a duration of 0 gives "-t 0", which newer ffmpeg reads as "no limit".
+        var numericUpDownDuration = UiUtil.MakeNumericUpDownInt(1, 10000, 1, 120, vm, nameof(vm.DurationMinutes));
         _numericUpDownDuration = numericUpDownDuration;
 
         var labelResolution = UiUtil.MakeLabel(Se.Language.General.Resolution);
@@ -89,7 +107,7 @@ public class BlankVideoWindow : Window
                 textBoxHeight,
                 buttonResolution,
             }
-        }.WithBindVisible(vm, nameof(vm.UseSourceResolution), new InverseBooleanConverter());
+        }.WithBindVisible(vm, nameof(vm.UseSourceResolution), InverseBooleanConverter.Instance);
 
         var labelSourceResolution = UiUtil.MakeLabel(Se.Language.General.UseSourceResolution).WithBindVisible(vm, nameof(vm.UseSourceResolution));
         var buttonResolutionSource = UiUtil.MakeButtonBrowse(vm.BrowseResolutionCommand, accessibleName: Se.Language.General.Resolution);
@@ -217,6 +235,7 @@ public class BlankVideoWindow : Window
         {
             Margin = new Thickness(5, 18, 0, 0),
             VerticalAlignment = VerticalAlignment.Top,
+            TextTrimming = TextTrimming.CharacterEllipsis,
         };
         statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
         statusText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsGenerating)));
@@ -232,6 +251,7 @@ public class BlankVideoWindow : Window
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
             Width = double.NaN,
+            Height = 44, // reserve the row while idle so the window height does not jump when generating starts
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 

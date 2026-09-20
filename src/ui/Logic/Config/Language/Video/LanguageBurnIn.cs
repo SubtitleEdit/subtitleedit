@@ -11,6 +11,7 @@ public class LanguageBurnIn
     public string SampleRate { get; set; }
     public string Audio { get; set; }
     public string Preset { get; set; }
+    public string Tune { get; set; }
     public string PixelFormat { get; set; }
     public string Crf { get; set; }
     public string UseSource { get; set; }
@@ -23,6 +24,8 @@ public class LanguageBurnIn
     public string VideoFileSize { get; set; }
     public string OneBox { get; set; }
     public string LogoInfo { get; set; }
+    public string NoSubtitlesGenerateAnyway { get; set; }
+    public string NoSubtitlesInXItemsGenerateAnyway { get; set; }
 
     public LanguageBurnIn()
     {
@@ -35,6 +38,7 @@ public class LanguageBurnIn
         SampleRate = "Sample rate";
         Audio = "Audio";
         Preset = "Preset";
+        Tune = "Tune";
         PixelFormat = "Pixel format";
         Crf = "CRF";
         UseSource = "Use source";
@@ -47,5 +51,7 @@ public class LanguageBurnIn
         VideoFileSize = "Video file size";
         OneBox = "One box";
         LogoInfo = "Pick a PNG image and drag it to position it on the video.";
+        NoSubtitlesGenerateAnyway = "There are no subtitle lines to burn in.\n\nGenerate the video without subtitles?";
+        NoSubtitlesInXItemsGenerateAnyway = "{0} batch item(s) have no subtitle lines to burn in.\n\nGenerate those videos without subtitles?";
     }
 }

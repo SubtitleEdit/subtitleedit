@@ -107,6 +107,7 @@ public class PointSyncWindow : Window
         });
 
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedSyncPoint)));
+        dataGrid.WithAccessibleName(Se.Language.Sync.SyncPoints);
         TableViewExtras.AttachListNavigation(dataGrid);
 
         var menuItemDelete = new MenuItem
@@ -181,11 +182,23 @@ public class PointSyncWindow : Window
                 CellTheme = UiUtil.TableViewCellTheme,
                 HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                 CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(SubtitleLineViewModel.Text)),
+                NameBinding = new Binding(nameof(SubtitleLineViewModel.Text)),
                 Width = new GridLength(1, GridUnitType.Star),
             },
         });
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedSubtitle)));
+        dataGrid.WithAccessibleName(Se.Language.General.Lines);
         TableViewExtras.AttachListNavigation(dataGrid);
+
+        // Bring the initially selected line (the main window's selection) into view.
+        dataGrid.Loaded += (_, _) =>
+        {
+            if (vm.SelectedSubtitle is { } selected)
+            {
+                dataGrid.ScrollIntoView(selected);
+                TableViewExtras.CenterRow(dataGrid, selected);
+            }
+        };
 
         return UiUtil.MakeBorderForControlNoPadding(dataGrid);
     }

@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Logic;
 using System.Collections.ObjectModel;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech;
@@ -17,6 +18,9 @@ public abstract partial class SelectLinesViewModelBase<TRow> : ObservableObject 
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
+
+    /// <summary>Section of docs/features/text-to-speech.md the help key opens for this dialog.</summary>
+    protected abstract string HelpAnchor { get; }
 
     protected SelectLinesViewModelBase()
     {
@@ -65,6 +69,11 @@ public abstract partial class SelectLinesViewModelBase<TRow> : ObservableObject 
         {
             e.Handled = true;
             Window?.Close();
+        }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/text-to-speech", HelpAnchor);
         }
     }
 }

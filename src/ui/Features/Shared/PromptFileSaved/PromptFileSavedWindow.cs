@@ -44,7 +44,7 @@ public class PromptFileSavedWindow : Window
 
         var labelHeadline = new TextBlock
         {
-            FontSize = 14.5,
+            FontSize = UiUtil.ScaledFontSize(14.5),
             FontWeight = FontWeight.SemiBold,
             Margin = new Thickness(0, 2, 0, 6),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.Title)) { Mode = BindingMode.OneWay },
@@ -61,7 +61,7 @@ public class PromptFileSavedWindow : Window
 
         var labelFolder = new TextBlock
         {
-            FontSize = 11.5,
+            FontSize = UiUtil.ScaledFontSize(11.5),
             Opacity = 0.65,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
@@ -145,7 +145,7 @@ public class PromptFileSavedWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonDone.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, buttonDone); // hack to make OnKeyDown work
         KeyDown += (s, e) => vm.OnKeyDown(e);
     }
 
@@ -161,7 +161,7 @@ public class PromptFileSavedWindow : Window
             Background = new SolidColorBrush(Color.FromArgb(28, 128, 128, 128)),
             Child = new TextBlock
             {
-                FontSize = 11,
+                FontSize = UiUtil.ScaledFontSize(11),
                 FontWeight = emphasized ? FontWeight.SemiBold : FontWeight.Normal,
                 Opacity = emphasized ? 0.9 : 0.75,
                 [!TextBlock.TextProperty] = new Binding(textPropertyPath) { Mode = BindingMode.OneWay },

@@ -86,6 +86,25 @@ namespace Nikse.SubtitleEdit.Core.Common
             return false;
         }
 
+        /// <summary>
+        /// "Does the text at <paramref name="index"/> start with <paramref name="value"/>" without
+        /// allocating the remainder - the <c>s.Substring(index).StartsWith(value)</c> the tag-walking
+        /// writer loops used copied the whole rest of the line for every probe of every character.
+        /// </summary>
+        public static bool StartsWithAt(this string s, int index, string value, StringComparison comparison)
+        {
+            return s.AsSpan(index).StartsWith(value.AsSpan(), comparison);
+        }
+
+        /// <summary>
+        /// "Does the text before <paramref name="endExclusive"/> end with <paramref name="value"/>"
+        /// without allocating the prefix (<c>s.Substring(0, end).EndsWith(value)</c>).
+        /// </summary>
+        public static bool EndsWithAt(this string s, int endExclusive, string value, StringComparison comparison)
+        {
+            return s.AsSpan(0, endExclusive).EndsWith(value.AsSpan(), comparison);
+        }
+
         public static bool StartsWith(this string s, char c)
         {
             return s.Length > 0 && s[0] == c;
@@ -1100,6 +1119,42 @@ namespace Nikse.SubtitleEdit.Core.Common
             return value.HasSentenceEnding(string.Empty);
         }
 
+        /// <summary>
+        /// A quote character that can close a quotation in some language and so may trail the
+        /// sentence-ending punctuation: "…" and “…” (English), «…» (Italian, French, Spanish,
+        /// Russian), »…« (German, Danish), „…“ (German), ‚…‘ and ‘…’ (single quotes), 「…」 and
+        /// 『…』 (Japanese, Chinese). Translation engines switch freely between these, so a check
+        /// that only knows the English pair leaves the quote of a translated row behind (#14866).
+        /// </summary>
+        public static bool IsClosingQuoteChar(this char c)
+        {
+            switch (c)
+            {
+                case '"':
+                case '\u201C': // “
+                case '\u201D': // ”
+                case '\u00AB': // «
+                case '\u00BB': // »
+                case '\'':
+                case '\u2018': // ‘
+                case '\u2019': // ’
+                case '\u300D': // 」
+                case '\u300F': // 』
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// No-break space (U+00A0) or narrow no-break space (U+202F), as French typography puts
+        /// between a sentence and its closing guillemet: "feu. »".
+        /// </summary>
+        public static bool IsNoBreakSpace(this char c)
+        {
+            return c == '\u00A0' || c == '\u202F';
+        }
+
         private static bool IsNeutralSentenceEndingChar(char c)
         {
             switch (c)
@@ -1135,8 +1190,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             var len = value.Length;
             var checkIndex = len - 1;
 
-            // skip quotes
-            while (checkIndex >= 0 && (value[checkIndex] == '"' || value[checkIndex] == '”'))
+            // skip closing quotes, and the no-break space French puts before its closing guillemet ("feu. »")
+            while (checkIndex >= 0 && (value[checkIndex].IsClosingQuoteChar() || value[checkIndex].IsNoBreakSpace()))
             {
                 checkIndex--;
             }

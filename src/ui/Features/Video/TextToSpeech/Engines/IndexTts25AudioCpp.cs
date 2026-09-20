@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
+﻿using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
@@ -25,7 +25,8 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 ///
 /// Unlike <see cref="IndexTtsCrispAsr"/> (IndexTTS-1.5 via CrispASR), audio.cpp's server
 /// honours a per-request <c>voice_ref</c>, so switching voice does NOT restart the server —
-/// only a model or backend change does. Everything else follows the same server-mode shape:
+/// only a model or backend change does — which is also what makes per-line cloning ("Clone
+/// from video") free here. Everything else follows the same server-mode shape:
 /// one persistent process on a loopback port, OpenAI-style POST /v1/audio/speech.
 ///
 /// The model is a single self-describing GGUF (the package spec is embedded), so no sidecar
@@ -35,7 +36,7 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// under the bilibili Model Use License, which is not OSI-approved and has to be accepted by
 /// the user before the first download — see <see cref="IsLicenseAccepted"/>.
 /// </summary>
-public class IndexTts25AudioCpp : ITtsEngine
+public class IndexTts25AudioCpp : ITtsEngine, IPerLineCloneEngine
 {
     public string Name => "IndexTTS 2.5 (audio.cpp)";
     public string Description => "IndexTTS-2.5 (Bilibili / IndexTeam) voice cloning in 5 languages, via audio.cpp";
@@ -45,7 +46,7 @@ public class IndexTts25AudioCpp : ITtsEngine
     public bool HasModel => true;
     public bool HasKeyFile => false;
     public bool SupportsVoiceCloning => true;
-    public bool SupportsPerLineVoiceCloning => false;
+    public bool SupportsPerLineVoiceCloning => true;
 
     // The Q8_0 GGUF is the default: same 22.05 kHz output as F16 at 1 GB less on disk. The
     // "orig" dtype build (7.3 GB) is deliberately not offered — it is a debugging artifact.
@@ -115,6 +116,7 @@ public class IndexTts25AudioCpp : ITtsEngine
     // Only the model and the backend are baked into the running server — voice is per request.
     private static string? _serverModelKey;
     private static string? _serverBackend;
+    private static string? _serverExeStamp;
     private static bool _processExitHooked;
     private static readonly StringBuilder _serverLog = new();
 
@@ -125,20 +127,10 @@ public class IndexTts25AudioCpp : ITtsEngine
     public override string ToString() => Name;
 
     /// <summary>
-    /// Where the audio.cpp binaries live: <c>&lt;data&gt;/audio.cpp/</c>, a top-level folder like
-    /// CrispASR and llama.cpp. audio.cpp is a whole runtime rather than one model's engine, so
-    /// a second audio.cpp-backed engine reuses this install instead of downloading its own.
+    /// The shared audio.cpp install — see <see cref="AudioCppRuntime"/>. Kept as a local alias
+    /// because everything in this class reads it.
     /// </summary>
-    public static string GetSetEngineFolder()
-    {
-        var folder = Se.AudioCppFolder;
-        if (!Directory.Exists(folder))
-        {
-            Directory.CreateDirectory(folder);
-        }
-
-        return folder;
-    }
+    public static string GetSetEngineFolder() => AudioCppRuntime.GetSetEngineFolder();
 
     /// <summary>
     /// Per-engine working folder under TextToSpeech (voices, synthesis output), matching where
@@ -229,8 +221,7 @@ public class IndexTts25AudioCpp : ITtsEngine
         }
     }
 
-    public static string GetServerExecutable() =>
-        Path.Combine(GetSetEngineFolder(), OperatingSystem.IsWindows() ? "audiocpp_server.exe" : "audiocpp_server");
+    public static string GetServerExecutable() => AudioCppRuntime.GetServerExecutable();
 
     public static string GetModelPath(string? modelKey = null) =>
         Path.Combine(GetSetModelsFolder(), GetModelFileName(modelKey));
@@ -285,20 +276,10 @@ public class IndexTts25AudioCpp : ITtsEngine
     }
 
     /// <summary>
-    /// ggml backend the installed archive was built for. Stored at install time by
-    /// <see cref="AudioCppDownloadService"/>; falls back to the only backend that can be
-    /// assumed per platform when the marker is missing.
+    /// ggml backend the shared audio.cpp install was built for — see
+    /// <see cref="AudioCppRuntime.GetBackend"/>.
     /// </summary>
-    public static string GetBackend()
-    {
-        var saved = Se.Settings.Video.TextToSpeech.IndexTts25AudioCppBackend;
-        if (!string.IsNullOrEmpty(saved))
-        {
-            return saved;
-        }
-
-        return OperatingSystem.IsMacOS() ? "metal" : "cpu";
-    }
+    public static string GetBackend() => AudioCppRuntime.GetBackend();
 
     public async Task<Voice[]> GetVoices(string language)
     {
@@ -344,6 +325,28 @@ public class IndexTts25AudioCpp : ITtsEngine
 
     public Task<Voice[]> RefreshVoices(string language, CancellationToken cancellationToken) =>
         GetVoices(language);
+
+    /// <summary>
+    /// <see cref="IPerLineCloneEngine"/>: the server takes <c>voice_ref</c> as a path per request,
+    /// so the voice simply points at the cut clip - nothing is staged into this engine's own
+    /// folders. audio.cpp resamples the reference itself, so the 24 kHz clip is used as cut.
+    /// </summary>
+    public Voice? MakePerLineCloneVoice(string clipFileName, string voiceName) =>
+        new Voice(new IndexTtsVoice(voiceName, clipFileName));
+
+    /// <summary>The clip's own path, which is exactly what the voice carries.</summary>
+    public string? GetPerLineReferenceClip(Voice voice) =>
+        voice.EngineVoice is IndexTtsVoice indexVoice && !string.IsNullOrEmpty(indexVoice.FilePath)
+            ? indexVoice.FilePath
+            : null;
+
+    /// <summary>
+    /// <see cref="IPerLineCloneEngine"/>: nothing is ever staged (the voice points straight at
+    /// the clip), so there is nothing to clear between runs.
+    /// </summary>
+    public void ResetStagedPerLineReferences()
+    {
+    }
 
     public async Task<TtsResult> Speak(
         string text,
@@ -520,10 +523,12 @@ public class IndexTts25AudioCpp : ITtsEngine
     private static async Task EnsureServerRunningAsync(string modelKey, CancellationToken ct)
     {
         var backend = GetBackend();
+        var exeStamp = AudioCppRuntime.GetServerExecutableStamp();
 
         if (_serverProcess is { HasExited: false } && _serverPort != 0
             && string.Equals(_serverModelKey, modelKey, StringComparison.OrdinalIgnoreCase)
-            && string.Equals(_serverBackend, backend, StringComparison.OrdinalIgnoreCase))
+            && string.Equals(_serverBackend, backend, StringComparison.OrdinalIgnoreCase)
+            && string.Equals(_serverExeStamp, exeStamp, StringComparison.Ordinal))
         {
             return;
         }
@@ -533,7 +538,8 @@ public class IndexTts25AudioCpp : ITtsEngine
         {
             if (_serverProcess is { HasExited: false } && _serverPort != 0
                 && string.Equals(_serverModelKey, modelKey, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(_serverBackend, backend, StringComparison.OrdinalIgnoreCase))
+                && string.Equals(_serverBackend, backend, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(_serverExeStamp, exeStamp, StringComparison.Ordinal))
             {
                 return;
             }
@@ -606,6 +612,7 @@ public class IndexTts25AudioCpp : ITtsEngine
             _serverPort = port;
             _serverModelKey = modelKey;
             _serverBackend = backend;
+            _serverExeStamp = AudioCppRuntime.GetServerExecutableStamp();
             HookProcessExitOnce();
 
             // The config uses lazy_load, so /health answers within a second or two — the 3.3 GB
@@ -626,6 +633,7 @@ public class IndexTts25AudioCpp : ITtsEngine
                     _serverLaunchCommand = null;
                     _serverModelKey = null;
                     _serverBackend = null;
+                    _serverExeStamp = null;
                     throw new InvalidOperationException(
                         $"audiocpp_server exited during startup (code {exitCode}). "
                         + DescribeStartupExit(exitCode, backend)
@@ -654,33 +662,20 @@ public class IndexTts25AudioCpp : ITtsEngine
         }
     }
 
-    /// <summary>
-    /// Turns the exit codes that mean "this build cannot run on this machine" into an
-    /// actionable message, since the process dies in the loader before it can print anything
-    /// useful of its own:
-    ///  - Windows 0xC0000135 / -1073741515 (STATUS_DLL_NOT_FOUND): a GPU build without its
-    ///    runtime. The Vulkan binaries import vulkan-1.dll (from the GPU driver) at load time.
-    ///  - Linux 127: the dynamic loader could not find a shared library. The Linux CUDA
-    ///    archive does NOT bundle libcudart.so.12 / libcublas.so.12 the way the Windows CUDA
-    ///    zip bundles its DLLs, so it needs a system CUDA 12 runtime.
-    /// </summary>
-    private static string DescribeStartupExit(int exitCode, string backend) => exitCode switch
-    {
-        -1073741515 => $"The {backend} build could not load its GPU runtime library. "
-            + "Re-download the engine and pick the CPU variant.",
-        -1073741795 => "The CPU build uses instructions this processor does not have.",
-        127 when string.Equals(backend, "cuda", StringComparison.OrdinalIgnoreCase) =>
-            "The Linux CUDA build needs the CUDA 12 runtime (libcudart.so.12 and libcublas.so.12) "
-            + "installed on this system. Install the CUDA 12 runtime, or re-download the engine "
-            + "and pick the CPU or Vulkan variant.",
-        127 => $"The {backend} build could not load a shared library it needs.",
-        _ => string.Empty,
-    };
+    private static string DescribeStartupExit(int exitCode, string backend) =>
+        AudioCppRuntime.DescribeStartupExit(exitCode, backend);
 
     /// <summary>
     /// Writes the audio.cpp server config next to the binary. lazy_load keeps startup instant;
     /// the model is read on first use and then stays resident until the server is stopped.
     /// </summary>
+    /// <remarks>
+    /// The model entry names the GGUF file, not its folder. Given a folder, audio.cpp picks
+    /// model.gguf or the sole *.gguf and refuses a folder holding several - so a user who had
+    /// downloaded both quantizations could not start the server until one was moved out of
+    /// sight (#14480). The file path is unambiguous, and auxiliary paths still resolve against
+    /// its parent.
+    /// </remarks>
     private static string WriteServerConfig(int port, string backend, string modelKey)
     {
         var config = new Dictionary<string, object>
@@ -696,7 +691,7 @@ public class IndexTts25AudioCpp : ITtsEngine
                 {
                     ["id"] = ServerModelId,
                     ["family"] = FamilyName,
-                    ["path"] = GetSetModelsFolder(),
+                    ["path"] = GetModelPath(modelKey),
                     ["task"] = "clon",
                     ["mode"] = "offline",
                 },
@@ -809,6 +804,7 @@ public class IndexTts25AudioCpp : ITtsEngine
         _serverLaunchCommand = null;
         _serverModelKey = null;
         _serverBackend = null;
+        _serverExeStamp = null;
         if (p == null)
         {
             return;

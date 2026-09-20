@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Features.Video.VideoOcr;
+using Nikse.SubtitleEdit.UiLogic.Ocr.AppleVision;
 using SkiaSharp;
 
 namespace UITests.Features.Video.VideoOcr;

@@ -83,7 +83,7 @@ public class ReviewSpeechWindow : Window
         // focused element) without arming any button: a focused button fires OnClick on bare
         // Space/Enter, and OK used to be focused here - so the first Space a user pressed
         // published the whole session instead of playing the selected line (#12093).
-        Activated += delegate { TableViewExtras.FocusRow(vm.LineGrid); };
+        UiUtil.FocusOnFirstActivation(this, () => { TableViewExtras.FocusRow(vm.LineGrid); });
 
         // Tunnel-stage handlers: see Space/R before the focused control does. KeyDown alone is
         // not enough - Avalonia's Button fires OnClick from OnKeyUp on Space (unconditionally
@@ -151,7 +151,7 @@ public class ReviewSpeechWindow : Window
                 buttonHistory.Bind(Button.OpacityProperty, new Binding(nameof(ReviewRow.HistoryButtonOpacity)));
 
                 var buttonPlay = UiUtil.MakeButton(vm.PlayRowCommand,"fa-solid fa-play")
-                .WithBindIsVisible(nameof(item.IsPlaying), new InverseBooleanConverter())
+                .WithBindIsVisible(nameof(item.IsPlaying), InverseBooleanConverter.Instance)
                 .WithBindEnabled(nameof(item.IsPlayingEnabled));
                 buttonPlay.CommandParameter = item;
 
@@ -235,6 +235,7 @@ public class ReviewSpeechWindow : Window
         {
             textBox.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
         }
+        textBox.WithAccessibleName(Se.Language.General.Text); // edits the selected row's text; no visible label (#12087)
 
         var grid = new Grid
         {
@@ -673,6 +674,15 @@ public class ReviewSpeechWindow : Window
             if (e.Property == AudioVisualizer.WavePeaksProperty)
             {
                 vm.RefreshWaveformPosition();
+            }
+            else if (e.Property == AudioVisualizer.StartPositionSecondsProperty ||
+                     e.Property == AudioVisualizer.ZoomFactorProperty ||
+                     e.Property == BoundsProperty)
+            {
+                // The control only draws the blocks around the view it was last handed, and
+                // nothing here feeds it on a timer like the main window does - so scrolling,
+                // zooming out or widening the window ran past them into empty waveform (#15102).
+                vm.ReloadWaveformParagraphs();
             }
         };
 

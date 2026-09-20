@@ -20,8 +20,9 @@ public class PlaySelectionItem
 
     public SubtitleLineViewModel? GetNextSubtitle(double playerPositionInSeconds)
     {
-        // find the first subtitle after the current position
-        var nextIndex = Subtitles.FindIndex(s => s.EndTime.TotalSeconds >= playerPositionInSeconds);
+        // Start after the current subtitle and require the candidate to extend beyond the playhead.
+        // At an exact end boundary, selecting the current subtitle again can seek back to its start.
+        var nextIndex = Subtitles.FindIndex(Index + 1, s => s.EndTime.TotalSeconds > playerPositionInSeconds);
         if (nextIndex >= 0)
         {
             Index = nextIndex;

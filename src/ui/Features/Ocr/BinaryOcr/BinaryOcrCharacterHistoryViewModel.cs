@@ -164,6 +164,7 @@ public partial class BinaryOcrCharacterHistoryViewModel : ObservableObject
     {
         if (e.Key == Key.Enter && !string.IsNullOrWhiteSpace(TextBoxNew.Text))
         {
+            e.Handled = true; // the OK button is IsDefault and would run OK again on the same Enter
             Ok();
         }
         else if (e.Key == Key.Escape)

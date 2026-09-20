@@ -96,65 +96,242 @@ public static class TextDiffHighlighter
 
     public static (TextBlock left, TextBlock right) Compare(string text1, string text2)
     {
+        return Compare(text1, text2, false, false);
+    }
+
+    /// <summary>
+    /// Renders both texts with no marking at all. Used when the compare options have already
+    /// decided the two lines count as equal - the cell must not contradict the row, which is
+    /// left uncolored in that case (#14299).
+    /// </summary>
+    public static (TextBlock left, TextBlock right) MakePlainText(string text1, string text2)
+    {
         text1 = NormalizeNewLines(text1);
         text2 = NormalizeNewLines(text2);
 
         var left = MakeTextBlock(text1);
         var right = MakeTextBlock(text2);
 
+        // Don't set Foreground - a null brush draws nothing, and the theme color is inherited (#13501).
+        left.Inlines?.Add(new Run(text1));
+        right.Inlines?.Add(new Run(text2));
+
+        return (left, right);
+    }
+
+    /// <summary>
+    /// Marks up the two texts against each other. A difference the caller asked to ignore is not
+    /// marked at all: leaving it red - and leaving the whole line washed in the "this line
+    /// differs" background - contradicted the row coloring, which had already dropped the line
+    /// (#14299).
+    /// </summary>
+    public static (TextBlock left, TextBlock right) Compare(string text1, string text2, bool ignoreWhiteSpace, bool ignoreFormatting)
+    {
+        var (t1, t2, isDiff1, isDiff2) = ComputeDiffMasks(text1, text2, ignoreWhiteSpace, ignoreFormatting);
+
+        var left = MakeTextBlock(t1);
+        var right = MakeTextBlock(t2);
+
         if (left.Inlines == null || right.Inlines == null)
         {
             return (left, right);
         }
 
-        if (string.IsNullOrEmpty(text1) && string.IsNullOrEmpty(text2))
+        if (isDiff1 == null || isDiff2 == null)
         {
-            return (left, right);
-        }
-
-        if (string.IsNullOrEmpty(text1))
-        {
-            right.Inlines.Add(new Run(text2)
+            // Nothing to mark - don't set Foreground to allow theme color inheritance
+            if (t1.Length > 0)
             {
-                Foreground = GetForegroundDifferenceColor(),
-                Background = GetBackDifferenceColor()
-            });
-            return (left, right);
-        }
+                left.Inlines.Add(new Run(t1));
+            }
 
-        if (string.IsNullOrEmpty(text2))
-        {
-            left.Inlines.Add(new Run(text1)
+            if (t2.Length > 0)
             {
-                Foreground = GetForegroundDifferenceColor(),
-                Background = GetBackDifferenceColor()
-            });
-            return (left, right);
-        }
+                right.Inlines.Add(new Run(t2));
+            }
 
-        // Use longest common substring to find the best match
-        var (commonStart, commonEnd, middleCommon1, middleCommon2) = FindCommonParts(text1, text2);
-
-        // Compare the strings directly: deriving this from commonStart/commonEnd missed the
-        // pure-append case ("Hello" vs "Hello world"), where the whole of text1 is the common
-        // prefix - so the appended tail was rendered with no highlighting at all.
-        var hasDifferences = text1 != text2;
-
-        if (!hasDifferences)
-        {
-            // Texts are identical - don't set Foreground to allow theme color inheritance
-            left.Inlines.Add(new Run(text1));
-            right.Inlines.Add(new Run(text2));
             return (left, right);
         }
 
         // Build the visual representation
         var redFg = GetForegroundDifferenceColor();
         var redBg = GetBackDifferenceColor();
-        BuildDiffRuns(left, text1, commonStart, commonEnd, middleCommon1, hasDifferences, redFg, redBg);
-        BuildDiffRuns(right, text2, commonStart, commonEnd, middleCommon2, hasDifferences, redFg, redBg);
+        AddDiffRuns(left, t1, isDiff1, redFg, redBg);
+        AddDiffRuns(right, t2, isDiff2, redFg, redBg);
 
         return (left, right);
+    }
+
+    // Light-palette colors of the marked-up text, as CSS: the exported page is white with black
+    // text whatever theme the window uses (same reasoning as CompareColors.GetExportColor).
+    private const string HtmlDifferenceStyle = "color:#B71C1C;background-color:#FFEBEE";
+    private const string HtmlCommonStyle = "background-color:#E6FFED";
+
+    /// <summary>
+    /// The same markup as <see cref="Compare(string, string, bool, bool)"/> as HTML for the
+    /// compare export: differing runs in red on pink, the rest of a differing line on the pale
+    /// green the window uses. Text is HTML-encoded and line breaks become &lt;br /&gt;.
+    /// </summary>
+    public static (string left, string right) CompareToHtml(string text1, string text2, bool ignoreWhiteSpace, bool ignoreFormatting)
+    {
+        var (t1, t2, isDiff1, isDiff2) = ComputeDiffMasks(text1, text2, ignoreWhiteSpace, ignoreFormatting);
+        if (isDiff1 == null || isDiff2 == null)
+        {
+            return (ToHtml(t1), ToHtml(t2));
+        }
+
+        return (DiffRunsToHtml(t1, isDiff1), DiffRunsToHtml(t2, isDiff2));
+    }
+
+    private static string ToHtml(string text)
+    {
+        return HtmlUtil.EncodeNamed(text).Replace("\n", "<br />");
+    }
+
+    private static string DiffRunsToHtml(string text, bool[] isDiff)
+    {
+        var sb = new System.Text.StringBuilder();
+        var pos = 0;
+        while (pos < text.Length)
+        {
+            var diff = isDiff[pos];
+            var end = pos + 1;
+            while (end < text.Length && isDiff[end] == diff)
+            {
+                end++;
+            }
+
+            sb.Append("<span style=\"").Append(diff ? HtmlDifferenceStyle : HtmlCommonStyle).Append("\">")
+              .Append(ToHtml(text.Substring(pos, end - pos)))
+              .Append("</span>");
+            pos = end;
+        }
+
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// Newline-normalized texts plus one "this character differs" mask per side, or null masks
+    /// when there is nothing to mark - both empty, or every difference falls under an ignore
+    /// option. A one-sided text is marked whole.
+    /// </summary>
+    private static (string text1, string text2, bool[]? isDiff1, bool[]? isDiff2) ComputeDiffMasks(string text1, string text2, bool ignoreWhiteSpace, bool ignoreFormatting)
+    {
+        text1 = NormalizeNewLines(text1);
+        text2 = NormalizeNewLines(text2);
+
+        if (string.IsNullOrEmpty(text1) && string.IsNullOrEmpty(text2))
+        {
+            return (text1, text2, null, null);
+        }
+
+        if (string.IsNullOrEmpty(text1) || string.IsNullOrEmpty(text2))
+        {
+            var only1 = new bool[text1.Length];
+            var only2 = new bool[text2.Length];
+            Array.Fill(only1, true);
+            Array.Fill(only2, true);
+            return (text1, text2, only1, only2);
+        }
+
+        // Use longest common substring to find the best match
+        var (commonStart, commonEnd, middleCommon1, middleCommon2) = FindCommonParts(text1, text2);
+
+        var isDiff1 = MakeDiffMask(text1, commonStart, commonEnd, middleCommon1);
+        var isDiff2 = MakeDiffMask(text2, commonStart, commonEnd, middleCommon2);
+
+        ClearIgnoredDifferences(text1, isDiff1, ignoreWhiteSpace, ignoreFormatting);
+        ClearIgnoredDifferences(text2, isDiff2, ignoreWhiteSpace, ignoreFormatting);
+
+        // Read off the marked characters rather than comparing the strings: with an ignore option
+        // on, two texts can be unequal and still have nothing left worth marking. It also covers
+        // the pure-append case ("Hello" vs "Hello world"), where the whole of text1 is the common
+        // prefix - deriving this from commonStart/commonEnd left the appended tail unhighlighted.
+        if (!HasAnyDifference(isDiff1) && !HasAnyDifference(isDiff2))
+        {
+            return (text1, text2, null, null);
+        }
+
+        return (text1, text2, isDiff1, isDiff2);
+    }
+
+    /// <summary>
+    /// Unmarks every character the ignore options say is not a real difference: whitespace, and
+    /// the characters making up an HTML or ASSA formatting tag.
+    /// </summary>
+    private static void ClearIgnoredDifferences(string text, bool[] isDiff, bool ignoreWhiteSpace, bool ignoreFormatting)
+    {
+        if (ignoreWhiteSpace)
+        {
+            for (var i = 0; i < text.Length; i++)
+            {
+                if (char.IsWhiteSpace(text[i]))
+                {
+                    isDiff[i] = false;
+                }
+            }
+        }
+
+        if (ignoreFormatting)
+        {
+            ClearFormattingTags(text, isDiff);
+        }
+    }
+
+    /// <summary>
+    /// Unmarks the spans held by an HTML tag (&lt;i&gt;, &lt;font ...&gt;) or an ASSA override
+    /// block ({\an8}, {Kara Effector...}) - the same two shapes HtmlUtil.RemoveHtmlTags strips
+    /// when it is told to take the ASSA tags too.
+    /// </summary>
+    private static void ClearFormattingTags(string text, bool[] isDiff)
+    {
+        var i = 0;
+        while (i < text.Length)
+        {
+            var c = text[i];
+            if (c != '{' && c != '<')
+            {
+                i++;
+                continue;
+            }
+
+            var closing = text.IndexOf(c == '{' ? '}' : '>', i + 1);
+            if (closing < 0)
+            {
+                i++;
+                continue;
+            }
+
+            // A brace only opens an override block when a tag actually follows - "{ the sign }"
+            // is spoken text, and marking it as formatting would hide a real difference.
+            if (c == '{' &&
+                text[i + 1] != '\\' &&
+                !text.AsSpan(i, closing - i + 1).StartsWith("{Kara Effector".AsSpan()))
+            {
+                i++;
+                continue;
+            }
+
+            for (var j = i; j <= closing; j++)
+            {
+                isDiff[j] = false;
+            }
+
+            i = closing + 1;
+        }
+    }
+
+    private static bool HasAnyDifference(bool[] isDiff)
+    {
+        foreach (var diff in isDiff)
+        {
+            if (diff)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static (TextBlock before, TextBlock after) CompareReplacement(string text1, string text2)
@@ -207,9 +384,15 @@ public static class TextDiffHighlighter
     private static void BuildDiffRuns(TextBlock textBlock, string text, int commonStart, int commonEnd,
         List<(int start, int length)> middleCommon, bool hasDifferences, IBrush diffForeground, IBrush diffBackground)
     {
-        // Mark which characters differ first, then emit one run per stretch. Going through a
-        // mask instead of straight to runs is what lets the boundaries be moved (see
-        // SnapToWordBoundaries) before anything is rendered.
+        var isDiff = MakeDiffMask(text, commonStart, commonEnd, middleCommon);
+        AddDiffRuns(textBlock, text, isDiff, diffForeground, diffBackground, hasDifferences);
+    }
+
+    // Mark which characters differ first, then emit one run per stretch. Going through a
+    // mask instead of straight to runs is what lets the boundaries be moved (see
+    // SnapToWordBoundaries, ClearIgnoredDifferences) before anything is rendered.
+    private static bool[] MakeDiffMask(string text, int commonStart, int commonEnd, List<(int start, int length)> middleCommon)
+    {
         var isDiff = BuildDiffMask(text, commonStart, commonEnd, middleCommon);
 
         if (LanguageAutoDetect.ContainsRightToLeftLetter(text))
@@ -217,6 +400,11 @@ public static class TextDiffHighlighter
             SnapToWordBoundaries(text, isDiff);
         }
 
+        return isDiff;
+    }
+
+    private static void AddDiffRuns(TextBlock textBlock, string text, bool[] isDiff, IBrush diffForeground, IBrush diffBackground, bool hasDifferences = true)
+    {
         var commonBackground = hasDifferences ? GetDiffBackgroundColor() : null;
 
         var pos = 0;

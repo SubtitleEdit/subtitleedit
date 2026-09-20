@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
-                string text = HtmlUtil.RemoveHtmlTags(p.Text);
+                string text = HtmlUtil.RemoveHtmlTags(p.Text).Replace(Environment.NewLine, Environment.NewLine + "\t\t"); // continuation lines start with two tabs (see the reader)
                 sb.AppendLine($"{count.ToString().PadLeft(5, ' ')}\t{MakeTimeCode(p.StartTime)}\t{text}\t");
                 sb.AppendLine("\t\t\t\t");
                 Paragraph next = subtitle.GetParagraphOrDefault(i + 1);

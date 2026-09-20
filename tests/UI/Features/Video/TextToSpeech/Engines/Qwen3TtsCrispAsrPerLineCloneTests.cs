@@ -53,6 +53,8 @@ public class Qwen3TtsCrispAsrPerLineCloneTests
     {
         // The backend answers a reference without ref-text with an HTTP 500, so the line is
         // better off falling back to an ordinary voice - which is what null means to the caller.
+        // (A placeholder transcript is not an option either: verified against the real server,
+        // it sends the talker into a runaway. See the StagePerLineReference remarks.)
         using var clips = new TempFolder();
         using var voices = new TempFolder();
         var clip = clips.WriteClip("line-0008", transcript: null);

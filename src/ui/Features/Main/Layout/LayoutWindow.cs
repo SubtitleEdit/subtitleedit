@@ -18,6 +18,7 @@ public class LayoutWindow : Window
 {
     private readonly LayoutViewModel _vm;
     private List<Border> _borders = new List<Border>();
+    private const int LayoutCount = 15;
     private int _focusedLayout = -1;
 
     public LayoutWindow(LayoutViewModel viewViewModel)
@@ -25,7 +26,7 @@ public class LayoutWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         _vm = viewViewModel;
         Title = Se.Language.Options.Shortcuts.GeneralChooseLayout;
-        Width = 925;
+        Width = 1150;
         Height = 500;
         CanResize = false;
 
@@ -37,7 +38,7 @@ public class LayoutWindow : Window
             Margin = new Thickness(10)
         };
 
-        for (var i = 1; i <= 12; i++)
+        for (var i = 1; i <= LayoutCount; i++)
         {
             var uri = new Uri($"avares://SubtitleEdit/Assets/Layout/Layout{i:D2}.png");
 
@@ -54,7 +55,7 @@ public class LayoutWindow : Window
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
                 Foreground = Brushes.White,
-                FontSize = 34,
+                FontSize = UiUtil.ScaledFontSize(34),
                 FontWeight = FontWeight.Bold,
                 Opacity = 0.7,
             };
@@ -117,6 +118,13 @@ public class LayoutWindow : Window
             return;
         }
 
+        if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/main-window", "layouts");
+            return;
+        }
+
         if (e.Key == Key.Enter)
         {
             e.Handled = true;
@@ -144,7 +152,7 @@ public class LayoutWindow : Window
             {
                 ResetOldLayout();
 
-                _focusedLayout = 11;
+                _focusedLayout = LayoutCount - 1;
                 _borders[_focusedLayout].RenderTransform = new ScaleTransform(1.1, 1.1);
                 _borders[_focusedLayout].Background = Brushes.DarkSeaGreen;
             }
@@ -154,7 +162,7 @@ public class LayoutWindow : Window
         if (e.Key == Key.Right)
         {
             e.Handled = true;
-            if (_focusedLayout < 11)
+            if (_focusedLayout < LayoutCount - 1)
             {
                 ResetOldLayout();
                 _focusedLayout++;

@@ -32,10 +32,11 @@ The checker can report common Netflix delivery issues, including:
 
 1. Open **Tools → Check and fix Netflix errors...**.
 2. Select the subtitle language.
-3. Enable the checks you want to run.
-4. Review the proposed fixes in the preview grid.
-5. Edit a proposed replacement if needed.
-6. Click **OK** to apply the selected text fixes.
+3. Tick **Children's program** and/or **SDH** if they apply — both change the limits Netflix allows (reading speed, line length).
+4. Enable the checks you want to run (**Select all** / **Invert selection** flip many at once).
+5. Review the proposed fixes in the preview grid. Each row has an **Apply** checkbox and a **Reason** column explaining which rule flagged it.
+6. Edit a proposed replacement if needed.
+7. Click **OK** to apply the selected text fixes.
 
 The tool does not blindly rewrite the subtitle. It shows the original and proposed text so you can review each change first.
 

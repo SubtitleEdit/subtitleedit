@@ -28,6 +28,10 @@ public partial class NOcrTrainFontItem : ObservableObject
         Name = name;
         IsSelected = isSelected;
     }
+
+    // A list row or combo box value is announced by ToString() unless its template is a bare
+    // text block - without this a screen reader reads the class name (#12087).
+    public override string ToString() => Name;
 }
 
 public partial class NOcrTrainViewModel : ObservableObject
@@ -236,6 +240,11 @@ public partial class NOcrTrainViewModel : ObservableObject
         {
             e.Handled = true;
             Done();
+        }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/ocr", "nocr-nikse-ocr");
         }
     }
 

@@ -7,6 +7,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
@@ -121,6 +122,8 @@ public partial class SettingsViewModel : ObservableObject
 
     [ObservableProperty] private int? _newEmptyDefaultMs;
     [ObservableProperty] private int? _timeCodeUpDownStepMs;
+    [ObservableProperty] private int? _moveSelectedLinesStepMs;
+    [ObservableProperty] private bool _moveLinesShortenNeighbor;
     [ObservableProperty] private bool _promptBeforeDelete;
     [ObservableProperty] private bool _lockTimeCodes;
     [ObservableProperty] private bool _rememberPositionAndSize;
@@ -139,6 +142,9 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _autoBackupOn;
     [ObservableProperty] private int? _autoBackupIntervalMinutes;
     [ObservableProperty] private int? _autoBackupDeleteAfterDays;
+    [ObservableProperty] private bool _settingsBackupOn;
+    [ObservableProperty] private int? _settingsBackupIntervalDays;
+    [ObservableProperty] private int? _settingsBackupMaxCount;
 
     [ObservableProperty] private ObservableCollection<string> _defaultSubtitleFormats;
     [ObservableProperty] private string _selectedDefaultSubtitleFormat;
@@ -150,6 +156,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string? _selectedFavoriteSubtitleFormat;
 
     [ObservableProperty] private bool _webVttUseXTimestampMap;
+    [ObservableProperty] private bool _assaAutoSetResolution;
+    [ObservableProperty] private bool _assaAutoSetResolutionPrompt;
 
     [ObservableProperty] private ObservableCollection<PickLanguageDisplay> _favoriteLanguages;
     [ObservableProperty] private PickLanguageDisplay? _selectedFavoriteLanguage;
@@ -184,6 +192,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _selectedSaveAsAppendLanguageCode;
 
     [ObservableProperty] private bool _allowSingleLetterShortcutsInTextbox;
+    [ObservableProperty] private bool _allowTextNavigationShortcutsInTextbox;
     [ObservableProperty] private bool _goToLineNumberAlsoSetVideoPosition;
     [ObservableProperty] private bool _adjustAllTimesRememberLineSelectionChoice;
     [ObservableProperty] private bool _mergeKeepEndTime;
@@ -191,10 +200,13 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<string> _splitOddNumberOfLinesActions;
     [ObservableProperty] private string _selectedSplitOddNumberOfLinesAction;
     [ObservableProperty] private bool _ocrUseWordSplitList;
+    [ObservableProperty] private bool _spellCheckRememberUseAlwaysList;
+    [ObservableProperty] private bool _fixShortDisplayTimesAllowMoveStartTime;
     [ObservableProperty] private bool _ocrGuessUnknownWords;
     [ObservableProperty] private bool _speechToTextSelectedLinesPromptFistTimeOnly;
     [ObservableProperty] private bool _multipleReplaceShowDotDotDotButtons;
     [ObservableProperty] private bool _gridFocusTextboxAfterInsertNew;
+    [ObservableProperty] private bool _undoRedoGoToChangedLine;
     [ObservableProperty] private bool _textToSpeechPromptMergeContinuationLines;
     [ObservableProperty] private bool _textToSpeechPromptSkipNoiseLines;
     [ObservableProperty] private bool _textToSpeechPromptDetectSpeakers;
@@ -208,34 +220,9 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _showUpDownDuration;
     [ObservableProperty] private bool _showUpDownLabels;
 
-    [ObservableProperty] private bool _showToolbarNew;
-    [ObservableProperty] private bool _showToolbarOpen;
-    [ObservableProperty] private bool _showToolbarVideoFileOpen;
-    [ObservableProperty] private bool _showToolbarSave;
-    [ObservableProperty] private bool _showToolbarSaveAs;
-    [ObservableProperty] private bool _showToolbarFind;
-    [ObservableProperty] private bool _showToolbarReplace;
-    [ObservableProperty] private bool _showToolbarMultipleReplace;
-    [ObservableProperty] private bool _showToolbarSpellCheck;
-    [ObservableProperty] private bool _showToolbarFixCommonErrors;
-    [ObservableProperty] private bool _showToolbarRemoveTextForHi;
-    [ObservableProperty] private bool _showToolbarVisualSync;
-    [ObservableProperty] private bool _showToolbarPointSync;
-    [ObservableProperty] private bool _showToolbarBeautifyTimeCodes;
-    [ObservableProperty] private bool _showToolbarBurnIn;
-    [ObservableProperty] private bool _showToolbarAutoTranslate;
-    [ObservableProperty] private bool _showToolbarSpeechToText;
+    public IReadOnlyList<ToolbarSettingItem> ToolbarItems { get; } = ToolbarSettingItem.CreateItems();
+
     [ObservableProperty] private bool _fixCommonErrorsSkipStep1;
-    [ObservableProperty] private bool _showToolbarSettings;
-    [ObservableProperty] private bool _showToolbarLayout;
-    [ObservableProperty] private bool _showToolbarSourceView;
-    [ObservableProperty] private bool _showToolbarHelp;
-    [ObservableProperty] private bool _showToolbarEncoding;
-    [ObservableProperty] private bool _showToolbarFrameRate;
-    [ObservableProperty] private bool _showToolbarStyleManager;
-    [ObservableProperty] private bool _showToolbarProperties;
-    [ObservableProperty] private bool _showToolbarAttachments;
-    [ObservableProperty] private bool _showToolbarAssaDraw;
 
     [ObservableProperty] private bool _showPluginsMenu;
 
@@ -266,8 +253,13 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _showFullscreenButton;
     [ObservableProperty] private bool _fullscreenHideControls;
     [ObservableProperty] private bool _autoOpenVideoFile;
+    [ObservableProperty] private bool _showSecondarySubtitleDialog;
+    [ObservableProperty] private bool _rememberSecondarySubtitleFile;
 
     [ObservableProperty] private bool _waveformDrawGridLines;
+    [ObservableProperty] private bool _waveformUseSkiaRenderer;
+    [ObservableProperty] private bool _waveformShowNumberAndDuration;
+    [ObservableProperty] private bool _waveformShowCps;
     [ObservableProperty] private bool _waveformFocusOnMouseOver;
     [ObservableProperty] private bool _waveformCenterVideoPosition;
     [ObservableProperty] private bool _waveformCenterVideoPositionAlsoWhenPaused;
@@ -283,6 +275,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private int _waveformSpectrogramCombinedWaveformHeight;
 
     [ObservableProperty] private bool _waveformShowToolbar;
+    [ObservableProperty] private bool _waveformShowOriginalSubtitle;
 
     [ObservableProperty] private bool _waveformFocusTextboxAfterInsertNew;
     [ObservableProperty] private string _waveformSpaceInfo;
@@ -291,6 +284,9 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _libVlcStatus;
     [ObservableProperty] private bool _isLibMpvDownloadVisible;
     [ObservableProperty] private bool _isLibVlcDownloadVisible;
+    [ObservableProperty] private string _ffmpegLibsStatus;
+    [ObservableProperty] private bool _isFfmpegLibsDownloadVisible;
+    [ObservableProperty] private bool _isFileTypeAssociationsVisible;
     [ObservableProperty] private string _ffmpegPath;
     [ObservableProperty] private string _ffmpegStatus;
     [ObservableProperty] private string _proxyAddress = string.Empty;
@@ -324,6 +320,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private decimal _waveformSnapToShotChangeStartMaxSeconds;
     [ObservableProperty] private decimal _waveformSnapToShotChangeEndMaxSeconds;
     [ObservableProperty] private decimal _waveformSnapToShotChangeSameShotEndMaxSeconds;
+    [ObservableProperty] private int _waveformGuessStartOffsetMs;
+    [ObservableProperty] private int _waveformGuessEndOffsetMs;
     [ObservableProperty] private bool _waveformShotChangesAutoGenerate;
     [ObservableProperty] private bool _waveformAllowOverlap;
     [ObservableProperty] private bool _waveformSetVideoPositionOnMoveStartEnd;
@@ -370,6 +368,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _selectedWaveformExtractAudioSampleRate;
     [ObservableProperty] private ObservableCollection<string> _waveformExtractAudioBitRates;
     [ObservableProperty] private string _selectedWaveformExtractAudioBitRate;
+    [ObservableProperty] private bool _ffmpegUseCenterChannelOnly;
 
     [ObservableProperty] private bool _waveformRightClickSelectsSubtitle;
     [ObservableProperty] private ObservableCollection<string> _themes;
@@ -378,6 +377,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _selectedIconTheme;
     [ObservableProperty] private bool _matchIconColorToDarkTheme;
     [ObservableProperty] private int _layoutScale;
+    [ObservableProperty] private int _fontScale;
     [ObservableProperty] private ObservableCollection<string> _fontNames;
     [ObservableProperty] private string _selectedFontName;
     [ObservableProperty] private double _subtitleGridFontSize;
@@ -391,6 +391,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _textBoxColorTags;
     [ObservableProperty] private bool _textBoxLiveSpellCheck;
     [ObservableProperty] private bool _subtitleGridLiveSpellCheck;
+    [ObservableProperty] private bool _subtitleGridCenterText;
     [ObservableProperty] private bool _textBoxCenterText;
     [ObservableProperty] private bool _showButtonHints;
     [ObservableProperty] private bool _gridCompactMode;
@@ -406,6 +407,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _useFocusedButtonBackgroundColor;
     [ObservableProperty] private Color _focusedButtonBackgroundColor;
     [ObservableProperty] private Color _bookmarkColor;
+    [ObservableProperty] private Color _spellCheckHighlightColor;
     [ObservableProperty] private Color _gridAlternatingRowColor;
     [ObservableProperty] private Color _gridAlternatingRowColorDark;
     [ObservableProperty] private bool _isEditCustomContinuationStyleVisible;
@@ -438,9 +440,25 @@ public partial class SettingsViewModel : ObservableObject
     };
 
     public bool OkPressed { get; set; }
+
+    /// <summary>
+    /// The settings as they stood after the last Apply, or null when Apply was never pressed.
+    /// The caller compares the settings at OK against this so that an Apply followed by OK does
+    /// not apply - and rebuild - everything twice (issue #14218).
+    /// </summary>
+    public string? AppliedSettingsSnapshot { get; private set; }
+
     public Window? Window { get; internal set; }
     public ScrollViewer ScrollView { get; internal set; }
     public List<SettingsSection> Sections { get; internal set; }
+
+    /// <summary>
+    /// The category shown in the content area. With no search filter the page shows only this
+    /// section, so Tab stays within one category and its heading is the first thing announced
+    /// when it is entered - one long page of every setting gave a screen reader user no way to
+    /// tell where a section ended or to get back to the categories (#12087).
+    /// </summary>
+    [ObservableProperty] private SettingsSection? _selectedSection;
 
     private readonly IWindowService _windowService;
     private readonly IFolderHelper _folderHelper;
@@ -470,6 +488,7 @@ public partial class SettingsViewModel : ObservableObject
         MpvPreviewJustifyItems = new ObservableCollection<MpvJustifyDisplay>(MpvJustifyDisplay.GetAll());
         MpvPreviewSelectedJustify = MpvPreviewJustifyItems[0];
         LibVlcStatus = string.Empty;
+        FfmpegLibsStatus = string.Empty;
 
         UpdateChannels =
         [
@@ -502,6 +521,7 @@ public partial class SettingsViewModel : ObservableObject
             Se.Language.Options.Settings.SubtitleGridFormattingShowFormatting,
             Se.Language.Options.Settings.SubtitleGridFormattingShowTags,
             Se.Language.Options.Settings.SubtitleGridFormattingHideTags,
+            Se.Language.Options.Settings.SubtitleGridFormattingShowFormattingKeepTags,
         };
         SubtitleGridFormatting = SubtitleGridFormattings[0];
 
@@ -686,6 +706,8 @@ public partial class SettingsViewModel : ObservableObject
         LibMpvPath = string.Empty;
         IsLibMpvDownloadVisible = OperatingSystem.IsWindows();
         IsLibVlcDownloadVisible = OperatingSystem.IsWindows();
+        IsFfmpegLibsDownloadVisible = OperatingSystem.IsWindows();
+        IsFileTypeAssociationsVisible = OperatingSystem.IsWindows();
 
         MpvPreviewFontName = FontNames.First();
         MpvPreviewSelectedBorderType = MpvPreviewBorderTypes.First();
@@ -770,6 +792,8 @@ public partial class SettingsViewModel : ObservableObject
         TextBoxLimitNewLines = general.SubtitleTextBoxLimitNewLines;
         NewEmptyDefaultMs = general.NewEmptyDefaultMs;
         TimeCodeUpDownStepMs = general.TimeCodeUpDownStepMs;
+        MoveSelectedLinesStepMs = general.MoveSelectedLinesStepMs;
+        MoveLinesShortenNeighbor = general.MoveLinesShortenNeighbor;
         PromptBeforeDelete = general.PromptBeforeDelete;
         LockTimeCodes = general.LockTimeCodes;
         RememberPositionAndSize = general.RememberPositionAndSize;
@@ -778,6 +802,9 @@ public partial class SettingsViewModel : ObservableObject
         AutoBackupOn = general.AutoBackupOn;
         AutoBackupIntervalMinutes = general.AutoBackupIntervalMinutes;
         AutoBackupDeleteAfterDays = general.AutoBackupDeleteAfterDays;
+        SettingsBackupOn = general.SettingsBackupOn;
+        SettingsBackupIntervalDays = general.SettingsBackupIntervalDays;
+        SettingsBackupMaxCount = general.SettingsBackupMaxCount;
         DefaultEncoding = Encodings.FirstOrDefault(e => e.DisplayName == general.DefaultEncoding) ?? Encodings.First();
         SelectedSubtitleEnterKeyActionType = MapFromSelectedSubtitleEnterKeyAction(Se.Settings.General.SubtitleEnterKeyAction);
         SelectedSubtitleSingleClickActionType = MapFromSelectedSubtitleSingleClickAction(Se.Settings.General.SubtitleSingleClickAction);
@@ -806,6 +833,8 @@ public partial class SettingsViewModel : ObservableObject
         }
 
         WebVttUseXTimestampMap = Se.Settings.Formats.WebVttUseXTimestampMap;
+        AssaAutoSetResolution = Se.Settings.Assa.AutoSetResolution;
+        AssaAutoSetResolutionPrompt = Se.Settings.Assa.AutoSetResolutionPrompt;
 
         // Clear unconditionally, the way FavoriteLanguages does below: LoadSettings runs again
         // after importing a settings file, so with the Clear() inside the guard an import that
@@ -836,6 +865,7 @@ public partial class SettingsViewModel : ObservableObject
         }
 
         AllowSingleLetterShortcutsInTextbox = Se.Settings.Tools.AllowSingleLetterShortcutsInTextbox;
+        AllowTextNavigationShortcutsInTextbox = Se.Settings.Tools.AllowTextNavigationShortcutsInTextbox;
         SpellCheckEnglishTreatInApostropheAsIng = Se.Settings.Tools.SpellCheckEnglishTreatInApostropheAsIng;
         GoToLineNumberAlsoSetVideoPosition = Se.Settings.Tools.GoToLineNumberAlsoSetVideoPosition;
         AdjustAllTimesRememberLineSelectionChoice = Se.Settings.Synchronization.AdjustAllTimesRememberLineSelectionChoice;
@@ -844,10 +874,13 @@ public partial class SettingsViewModel : ObservableObject
         SelectedSplitOddNumberOfLinesAction = MapFromSplitOddActionToLanguageCode(Se.Settings.Tools.SplitOddLinesAction);
         SelectedSpellCheckEngine = MapFromSpellCheckEngine(Se.Settings.SpellCheck.SpellCheckProvider);
         OcrUseWordSplitList = Se.Settings.Ocr.UseWordSplitList;
+        SpellCheckRememberUseAlwaysList = Se.Settings.Tools.SpellCheckRememberUseAlwaysList;
+        FixShortDisplayTimesAllowMoveStartTime = Se.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime;
         OcrGuessUnknownWords = Se.Settings.Ocr.DoTryToGuessUnknownWords;
         SpeechToTextSelectedLinesPromptFistTimeOnly = Se.Settings.Tools.SpeechToTextSelectedLinesPromptFirstTimeOnly;
         MultipleReplaceShowDotDotDotButtons = Se.Settings.Tools.MultipleReplaceShowDotDotDotButtons;
         GridFocusTextboxAfterInsertNew = Se.Settings.Tools.GridFocusTextboxAfterInsertNew;
+        UndoRedoGoToChangedLine = Se.Settings.Tools.UndoRedoGoToChangedLine;
         TextToSpeechPromptMergeContinuationLines = Se.Settings.Tools.TextToSpeechPromptMergeContinuationLines;
         TextToSpeechPromptSkipNoiseLines = Se.Settings.Tools.TextToSpeechPromptSkipNoiseLines;
         TextToSpeechPromptDetectSpeakers = Se.Settings.Tools.TextToSpeechPromptDetectSpeakers;
@@ -860,6 +893,7 @@ public partial class SettingsViewModel : ObservableObject
         SelectedIconTheme = IconThemes.FirstOrDefault(p => p == appearance.IconTheme) ?? IconThemes.First();
         MatchIconColorToDarkTheme = appearance.MatchIconColorToDarkTheme;
         LayoutScale = (int)Math.Round(appearance.LayoutScale * 100.0, MidpointRounding.AwayFromZero);
+        FontScale = (int)Math.Round(appearance.FontScale * 100.0, MidpointRounding.AwayFromZero);
         if (OperatingSystem.IsMacOS())
         {
             SelectedFontName = MapMacOsFontNameForDisplay(appearance.FontName, FontNames);
@@ -868,39 +902,17 @@ public partial class SettingsViewModel : ObservableObject
         {
             SelectedFontName = FontNames.FirstOrDefault(p => p == appearance.FontName) ?? FontNames.First();
         }
-        ShowToolbarNew = appearance.ToolbarShowFileNew;
-        ShowToolbarOpen = appearance.ToolbarShowFileOpen;
-        ShowToolbarVideoFileOpen = appearance.ToolbarShowVideoFileOpen;
-        ShowToolbarSave = appearance.ToolbarShowSave;
-        ShowToolbarSaveAs = appearance.ToolbarShowSaveAs;
-        ShowToolbarFind = appearance.ToolbarShowFind;
-        ShowToolbarReplace = appearance.ToolbarShowReplace;
-        ShowToolbarMultipleReplace = appearance.ToolbarShowMultipleReplace;
-        ShowToolbarSpellCheck = appearance.ToolbarShowSpellCheck;
-        ShowToolbarFixCommonErrors = appearance.ToolbarShowFixCommonErrors;
-        ShowToolbarRemoveTextForHi = appearance.ToolbarShowRemoveTextForHi;
-        ShowToolbarVisualSync = appearance.ToolbarShowVisualSync;
-        ShowToolbarPointSync = appearance.ToolbarShowPointSync;
-        ShowToolbarBeautifyTimeCodes = appearance.ToolbarShowBeautifyTimeCodes;
-        ShowToolbarBurnIn = appearance.ToolbarShowBurnIn;
-        ShowToolbarAutoTranslate = appearance.ToolbarShowAutoTranslate;
-        ShowToolbarSpeechToText = appearance.ToolbarShowSpeechToText;
-        ShowToolbarSettings = appearance.ToolbarShowSettings;
-        ShowToolbarLayout = appearance.ToolbarShowLayout;
-        ShowToolbarSourceView = appearance.ToolbarShowSourceView;
-        ShowToolbarHelp = appearance.ToolbarShowHelp;
-        ShowToolbarEncoding = appearance.ToolbarShowEncoding;
-        ShowToolbarFrameRate = appearance.ToolbarShowFrameRate;
-        ShowToolbarStyleManager = appearance.ToolbarShowStyleManager;
-        ShowToolbarProperties = appearance.ToolbarShowProperties;
-        ShowToolbarAttachments = appearance.ToolbarShowAttachments;
-        ShowToolbarAssaDraw = appearance.ToolbarShowAssaDraw;
+        foreach (var item in ToolbarItems)
+        {
+            item.Load(appearance);
+        }
         ShowPluginsMenu = appearance.ShowPluginsMenu;
         SubtitleGridFontSize = appearance.SubtitleGridFontSize;
         SubtitleGridTextSingleLine = appearance.SubtitleGridTextSingleLine;
         SubtitleGridTextSingleLineSeparator = appearance.SubtitleGridTextSingleLineSeparator;
         SubtitleGridFormatting = MapGridFormattingToText(appearance.SubtitleGridFormattingType);
         SubtitleGridLiveSpellCheck = appearance.SubtitleGridLiveSpellCheck;
+        SubtitleGridCenterText = appearance.SubtitleGridCenterText;
         SubtitleTextBoxAndGridFontName = appearance.SubtitleTextBoxAndGridFontName;
         TextBoxFontSize = appearance.SubtitleTextBoxFontSize;
         TextBoxFontBold = appearance.SubtitleTextBoxFontBold;
@@ -925,6 +937,7 @@ public partial class SettingsViewModel : ObservableObject
         UseFocusedButtonBackgroundColor = appearance.UseFocusedButtonBackgroundColor;
         FocusedButtonBackgroundColor = appearance.FocusedButtonBackgroundColor.FromHexToColor();
         BookmarkColor = appearance.BookmarkColor.FromHexToColor();
+        SpellCheckHighlightColor = appearance.SpellCheckHighlightColor.FromHexToColor();
         GridAlternatingRowColor = appearance.GridAlternatingRowColor.FromHexToColor();
         GridAlternatingRowColorDark = appearance.GridAlternatingRowColorDark.FromHexToColor();
         ShowUpDownStartTime = appearance.ShowUpDownStartTime;
@@ -933,10 +946,14 @@ public partial class SettingsViewModel : ObservableObject
         ShowUpDownLabels = appearance.ShowUpDownLabels;
 
         WaveformDrawGridLines = Se.Settings.Waveform.DrawGridLines;
+        WaveformUseSkiaRenderer = Se.Settings.Waveform.UseSkiaRenderer;
+        WaveformShowNumberAndDuration = Se.Settings.Waveform.WaveformShowNumberAndDuration;
+        WaveformShowCps = Se.Settings.Waveform.WaveformShowCps;
         WaveformFocusOnMouseOver = Se.Settings.Waveform.FocusOnMouseOver;
         WaveformCenterVideoPosition = Se.Settings.Waveform.CenterVideoPosition;
         WaveformCenterVideoPositionAlsoWhenPaused = Se.Settings.Waveform.CenterVideoPositionAlsoWhenPaused;
         WaveformShowToolbar = Se.Settings.Waveform.ShowToolbar;
+        WaveformShowOriginalSubtitle = Se.Settings.Waveform.ShowOriginalSubtitle;
 
         if (Se.Settings.Waveform.WaveformDrawStyle == WaveformDrawStyle.Classic.ToString())
         {
@@ -1017,6 +1034,8 @@ public partial class SettingsViewModel : ObservableObject
         WaveformSnapToShotChangeStartMaxSeconds = (decimal)Se.Settings.Waveform.SnapToShotChangeStartMaxSeconds;
         WaveformSnapToShotChangeEndMaxSeconds = (decimal)Se.Settings.Waveform.SnapToShotChangeEndMaxSeconds;
         WaveformSnapToShotChangeSameShotEndMaxSeconds = (decimal)Se.Settings.Waveform.SnapToShotChangeSameShotEndMaxSeconds;
+        WaveformGuessStartOffsetMs = Se.Settings.Waveform.GuessStartOffsetMs;
+        WaveformGuessEndOffsetMs = Se.Settings.Waveform.GuessEndOffsetMs;
         WaveformShotChangesAutoGenerate = Se.Settings.Waveform.ShotChangesAutoGenerate;
         WaveformAllowOverlap = Se.Settings.Waveform.AllowOverlap;
         WaveformSetVideoPositionOnMoveStartEnd = Se.Settings.Waveform.SetVideoPositionOnMoveStartEnd;
@@ -1031,6 +1050,7 @@ public partial class SettingsViewModel : ObservableObject
         SelectedWaveformExtractAudioBitRate = string.IsNullOrEmpty(Se.Settings.Waveform.ExtractAudioBitRate)
             ? "192k"
             : Se.Settings.Waveform.ExtractAudioBitRate;
+        FfmpegUseCenterChannelOnly = Se.Settings.General.FfmpegUseCenterChannelOnly;
 
         WaveformRightClickSelectsSubtitle = Se.Settings.Waveform.RightClickSelectsSubtitle;
 
@@ -1061,6 +1081,8 @@ public partial class SettingsViewModel : ObservableObject
         ShowFullscreenButton = video.ShowFullscreenButton;
         FullscreenHideControls = video.FullscreenHideControls;
         AutoOpenVideoFile = video.AutoOpen;
+        ShowSecondarySubtitleDialog = video.SecondarySubtitleShowDialog;
+        RememberSecondarySubtitleFile = video.SecondarySubtitleRememberFile;
 
         MpvPreviewFontName = video.MpvPreviewFontName;
         MpvPreviewFontSize = video.MpvPreviewFontSize;
@@ -1093,6 +1115,7 @@ public partial class SettingsViewModel : ObservableObject
         SetFfmpegStatus();
         SetLibMpvStatus();
         SetLibVlcStatus();
+        SetFfmpegLibsStatus();
         LoadFileTypeAssociations();
 
         ExistsErrorLogFile = File.Exists(Se.GetErrorLogFilePath());
@@ -1443,6 +1466,10 @@ public partial class SettingsViewModel : ObservableObject
         {
             return Se.Language.Options.Settings.SubtitleGridFormattingHideTags;
         }
+        else if (subtitleGridFormattingType == (int)SubtitleGridFormattingTypes.ShowFormattingKeepTags)
+        {
+            return Se.Language.Options.Settings.SubtitleGridFormattingShowFormattingKeepTags;
+        }
         else
         {
             return Se.Language.Options.Settings.SubtitleGridFormattingNone;
@@ -1462,6 +1489,10 @@ public partial class SettingsViewModel : ObservableObject
         else if (translation == Se.Language.Options.Settings.SubtitleGridFormattingHideTags)
         {
             return (int)SubtitleGridFormattingTypes.HideTags;
+        }
+        else if (translation == Se.Language.Options.Settings.SubtitleGridFormattingShowFormattingKeepTags)
+        {
+            return (int)SubtitleGridFormattingTypes.ShowFormattingKeepTags;
         }
         else
         {
@@ -1657,6 +1688,8 @@ public partial class SettingsViewModel : ObservableObject
         general.SubtitleTextBoxLimitNewLines = TextBoxLimitNewLines;
         general.NewEmptyDefaultMs = NewEmptyDefaultMs ?? general.NewEmptyDefaultMs;
         general.TimeCodeUpDownStepMs = TimeCodeUpDownStepMs ?? general.TimeCodeUpDownStepMs;
+        general.MoveSelectedLinesStepMs = MoveSelectedLinesStepMs ?? general.MoveSelectedLinesStepMs;
+        general.MoveLinesShortenNeighbor = MoveLinesShortenNeighbor;
         general.PromptBeforeDelete = PromptBeforeDelete;
         general.LockTimeCodes = LockTimeCodes;
         general.RememberPositionAndSize = RememberPositionAndSize;
@@ -1665,6 +1698,9 @@ public partial class SettingsViewModel : ObservableObject
         general.AutoBackupOn = AutoBackupOn;
         general.AutoBackupIntervalMinutes = AutoBackupIntervalMinutes ?? general.AutoBackupIntervalMinutes;
         general.AutoBackupDeleteAfterDays = AutoBackupDeleteAfterDays ?? general.AutoBackupDeleteAfterDays;
+        general.SettingsBackupOn = SettingsBackupOn;
+        general.SettingsBackupIntervalDays = SettingsBackupIntervalDays ?? general.SettingsBackupIntervalDays;
+        general.SettingsBackupMaxCount = SettingsBackupMaxCount ?? general.SettingsBackupMaxCount;
         general.DefaultEncoding = DefaultEncoding?.DisplayName ?? Encodings.First().DisplayName;
         general.SubtitleEnterKeyAction = MapToSelectedSubtitleEnterKeyAction(SelectedSubtitleEnterKeyActionType);
         general.SubtitleSingleClickAction = MapToSelectedSubtitleSingleClickAction(SelectedSubtitleSingleClickActionType);
@@ -1684,6 +1720,8 @@ public partial class SettingsViewModel : ObservableObject
         general.DefaultSaveAsFormat = SelectedSaveSubtitleFormat;
 
         Se.Settings.Formats.WebVttUseXTimestampMap = WebVttUseXTimestampMap;
+        Se.Settings.Assa.AutoSetResolution = AssaAutoSetResolution;
+        Se.Settings.Assa.AutoSetResolutionPrompt = AssaAutoSetResolutionPrompt;
 
         var sbFavorites = new StringBuilder();
         foreach (var format in FavoriteSubtitleFormats)
@@ -1695,6 +1733,7 @@ public partial class SettingsViewModel : ObservableObject
         general.FavoriteLanguages = string.Join(";", FavoriteLanguages.Select(l => l.Code));
 
         Se.Settings.Tools.AllowSingleLetterShortcutsInTextbox = AllowSingleLetterShortcutsInTextbox;
+        Se.Settings.Tools.AllowTextNavigationShortcutsInTextbox = AllowTextNavigationShortcutsInTextbox;
         Se.Settings.Tools.SpellCheckEnglishTreatInApostropheAsIng = SpellCheckEnglishTreatInApostropheAsIng;
         Se.Settings.Tools.GoToLineNumberAlsoSetVideoPosition = GoToLineNumberAlsoSetVideoPosition;
         Se.Settings.Synchronization.AdjustAllTimesRememberLineSelectionChoice = AdjustAllTimesRememberLineSelectionChoice;
@@ -1703,10 +1742,13 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Tools.SplitOddLinesAction = MapFromSplitOddActionTranslationToCode(SelectedSplitOddNumberOfLinesAction);
         Se.Settings.SpellCheck.SpellCheckProvider = MapFromUISpellCheckEngineToCode(SelectedSpellCheckEngine);
         Se.Settings.Ocr.UseWordSplitList = OcrUseWordSplitList;
+        Se.Settings.Tools.SpellCheckRememberUseAlwaysList = SpellCheckRememberUseAlwaysList;
+        Se.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime = FixShortDisplayTimesAllowMoveStartTime;
         Se.Settings.Ocr.DoTryToGuessUnknownWords = OcrGuessUnknownWords;
         Se.Settings.Tools.SpeechToTextSelectedLinesPromptFirstTimeOnly = SpeechToTextSelectedLinesPromptFistTimeOnly;
         Se.Settings.Tools.MultipleReplaceShowDotDotDotButtons = MultipleReplaceShowDotDotDotButtons;
         Se.Settings.Tools.GridFocusTextboxAfterInsertNew = GridFocusTextboxAfterInsertNew;
+        Se.Settings.Tools.UndoRedoGoToChangedLine = UndoRedoGoToChangedLine;
         Se.Settings.Tools.TextToSpeechPromptMergeContinuationLines = TextToSpeechPromptMergeContinuationLines;
         Se.Settings.Tools.TextToSpeechPromptSkipNoiseLines = TextToSpeechPromptSkipNoiseLines;
         Se.Settings.Tools.TextToSpeechPromptDetectSpeakers = TextToSpeechPromptDetectSpeakers;
@@ -1720,6 +1762,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.IconTheme = SelectedIconTheme;
         appearance.MatchIconColorToDarkTheme = MatchIconColorToDarkTheme;
         appearance.LayoutScale = LayoutScale / 100.0;
+        appearance.FontScale = FontScale / 100.0;
         if (OperatingSystem.IsMacOS())
         {
             appearance.FontName = SelectedFontName == "System Font"
@@ -1732,39 +1775,17 @@ public partial class SettingsViewModel : ObservableObject
                 ? new Label().FontFamily.Name
                 : SelectedFontName;
         }
-        appearance.ToolbarShowFileNew = ShowToolbarNew;
-        appearance.ToolbarShowFileOpen = ShowToolbarOpen;
-        appearance.ToolbarShowVideoFileOpen = ShowToolbarVideoFileOpen;
-        appearance.ToolbarShowSave = ShowToolbarSave;
-        appearance.ToolbarShowSaveAs = ShowToolbarSaveAs;
-        appearance.ToolbarShowFind = ShowToolbarFind;
-        appearance.ToolbarShowReplace = ShowToolbarReplace;
-        appearance.ToolbarShowMultipleReplace = ShowToolbarMultipleReplace;
-        appearance.ToolbarShowSpellCheck = ShowToolbarSpellCheck;
-        appearance.ToolbarShowFixCommonErrors = ShowToolbarFixCommonErrors;
-        appearance.ToolbarShowRemoveTextForHi = ShowToolbarRemoveTextForHi;
-        appearance.ToolbarShowVisualSync = ShowToolbarVisualSync;
-        appearance.ToolbarShowPointSync = ShowToolbarPointSync;
-        appearance.ToolbarShowBeautifyTimeCodes = ShowToolbarBeautifyTimeCodes;
-        appearance.ToolbarShowBurnIn = ShowToolbarBurnIn;
-        appearance.ToolbarShowAutoTranslate = ShowToolbarAutoTranslate;
-        appearance.ToolbarShowSpeechToText = ShowToolbarSpeechToText;
-        appearance.ToolbarShowSettings = ShowToolbarSettings;
-        appearance.ToolbarShowLayout = ShowToolbarLayout;
-        appearance.ToolbarShowSourceView = ShowToolbarSourceView;
-        appearance.ToolbarShowHelp = ShowToolbarHelp;
-        appearance.ToolbarShowEncoding = ShowToolbarEncoding;
-        appearance.ToolbarShowFrameRate = ShowToolbarFrameRate;
-        appearance.ToolbarShowStyleManager = ShowToolbarStyleManager;
-        appearance.ToolbarShowProperties = ShowToolbarProperties;
-        appearance.ToolbarShowAttachments = ShowToolbarAttachments;
-        appearance.ToolbarShowAssaDraw = ShowToolbarAssaDraw;
+        foreach (var item in ToolbarItems)
+        {
+            item.Save(appearance);
+        }
         appearance.ShowPluginsMenu = ShowPluginsMenu;
         appearance.SubtitleGridFontSize = SubtitleGridFontSize;
         appearance.SubtitleGridTextSingleLine = SubtitleGridTextSingleLine;
         appearance.SubtitleGridTextSingleLineSeparator = SubtitleGridTextSingleLineSeparator;
         appearance.SubtitleGridFormattingType = MapGridFormattingToCode(SubtitleGridFormatting);
         appearance.SubtitleGridLiveSpellCheck = SubtitleGridLiveSpellCheck;
+        appearance.SubtitleGridCenterText = SubtitleGridCenterText;
         appearance.SubtitleTextBoxAndGridFontName = string.IsNullOrEmpty(SubtitleTextBoxAndGridFontName) ? new Label().FontFamily.Name : SubtitleTextBoxAndGridFontName;
         appearance.SubtitleTextBoxFontSize = TextBoxFontSize;
         appearance.SubtitleTextBoxFontBold = TextBoxFontBold;
@@ -1783,6 +1804,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.UseFocusedButtonBackgroundColor = UseFocusedButtonBackgroundColor;
         appearance.FocusedButtonBackgroundColor = FocusedButtonBackgroundColor.FromColorToHex();
         appearance.BookmarkColor = BookmarkColor.FromColorToHex();
+        appearance.SpellCheckHighlightColor = SpellCheckHighlightColor.FromColorToHex();
         appearance.GridAlternatingRowColor = GridAlternatingRowColor.FromColorToHex();
         appearance.GridAlternatingRowColorDark = GridAlternatingRowColorDark.FromColorToHex();
         appearance.ShowUpDownStartTime = ShowUpDownStartTime;
@@ -1797,6 +1819,9 @@ public partial class SettingsViewModel : ObservableObject
         appearance.ShowHorizontalLineAboveToolbar = ShowHorizontalLineAboveToolbar;
 
         Se.Settings.Waveform.DrawGridLines = WaveformDrawGridLines;
+        Se.Settings.Waveform.UseSkiaRenderer = WaveformUseSkiaRenderer;
+        Se.Settings.Waveform.WaveformShowNumberAndDuration = WaveformShowNumberAndDuration;
+        Se.Settings.Waveform.WaveformShowCps = WaveformShowCps;
         Se.Settings.Waveform.FocusOnMouseOver = WaveformFocusOnMouseOver;
         Se.Settings.Waveform.CenterVideoPosition = WaveformCenterVideoPosition;
         Se.Settings.Waveform.CenterVideoPositionAlsoWhenPaused = WaveformCenterVideoPositionAlsoWhenPaused;
@@ -1841,6 +1866,7 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Waveform.SpectrogramCombinedWaveformHeight = WaveformSpectrogramCombinedWaveformHeight;
 
         Se.Settings.Waveform.ShowToolbar = WaveformShowToolbar;
+        Se.Settings.Waveform.ShowOriginalSubtitle = WaveformShowOriginalSubtitle;
         Se.Settings.Waveform.ToolbarItems = _waveformToolbarItems;
 
         Se.Settings.Waveform.WaveformTextFontSize = WaveformTextFontSize;
@@ -1865,6 +1891,8 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Waveform.SnapToShotChangeStartMaxSeconds = (double)WaveformSnapToShotChangeStartMaxSeconds;
         Se.Settings.Waveform.SnapToShotChangeEndMaxSeconds = (double)WaveformSnapToShotChangeEndMaxSeconds;
         Se.Settings.Waveform.SnapToShotChangeSameShotEndMaxSeconds = (double)WaveformSnapToShotChangeSameShotEndMaxSeconds;
+        Se.Settings.Waveform.GuessStartOffsetMs = WaveformGuessStartOffsetMs;
+        Se.Settings.Waveform.GuessEndOffsetMs = WaveformGuessEndOffsetMs;
         Se.Settings.Waveform.ShotChangesAutoGenerate = WaveformShotChangesAutoGenerate;
         Se.Settings.Waveform.AllowOverlap = WaveformAllowOverlap;
         Se.Settings.Waveform.SetVideoPositionOnMoveStartEnd = WaveformSetVideoPositionOnMoveStartEnd;
@@ -1878,6 +1906,7 @@ public partial class SettingsViewModel : ObservableObject
                 ? extractRate
                 : 0; // "Original" (non-numeric) keeps the source sample rate
         Se.Settings.Waveform.ExtractAudioBitRate = SelectedWaveformExtractAudioBitRate;
+        Se.Settings.General.FfmpegUseCenterChannelOnly = FfmpegUseCenterChannelOnly;
 
         Se.Settings.Waveform.RightClickSelectsSubtitle = WaveformRightClickSelectsSubtitle;
 
@@ -1902,6 +1931,8 @@ public partial class SettingsViewModel : ObservableObject
         video.ShowFullscreenButton = ShowFullscreenButton;
         video.FullscreenHideControls = FullscreenHideControls;
         video.AutoOpen = AutoOpenVideoFile;
+        video.SecondarySubtitleShowDialog = ShowSecondarySubtitleDialog;
+        video.SecondarySubtitleRememberFile = RememberSecondarySubtitleFile;
 
         video.MpvPreviewFontName = MpvPreviewFontName;
         video.MpvPreviewFontSize = MpvPreviewFontSize;
@@ -2136,7 +2167,40 @@ public partial class SettingsViewModel : ObservableObject
         });
     }
 
-    public async void ScrollElementIntoView(ScrollViewer scrollViewer, Control target)
+    private void SetFfmpegLibsStatus()
+    {
+        _ = Task.Run(() =>
+        {
+            var canLoad = Logic.VideoPlayers.Ffmpeg.FfmpegLibraries.IsAvailable();
+            Dispatcher.UIThread.Post(() =>
+            {
+                FfmpegLibsStatus = canLoad ? Se.Language.General.Installed : Se.Language.General.NotInstalled;
+            });
+        });
+    }
+
+    [RelayCommand]
+    private async Task DownloadFfmpegLibs()
+    {
+        var result = await _windowService.ShowDialogAsync<DownloadFfmpegLibsWindow, DownloadFfmpegLibsViewModel>(Window!);
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        Logic.VideoPlayers.Ffmpeg.FfmpegLibraries.LibraryPath = Se.FfmpegLibFolder;
+        Logic.VideoPlayers.Ffmpeg.FfmpegLibraries.Reset();
+        SetFfmpegLibsStatus();
+    }
+
+    /// <summary>
+    /// Fade the page out and in around the jump to a section. Headless tests turn this off: the
+    /// animation clock only advances on render ticks there and can stall mid-fade, which left
+    /// the focus move after it untested.
+    /// </summary>
+    internal static bool AnimateScrollToSection { get; set; } = true;
+
+    public async void ScrollElementIntoView(ScrollViewer scrollViewer, Control target, NavigationMethod? focusFirstControl = null)
     {
         await Dispatcher.UIThread.InvokeAsync(async () =>
         {
@@ -2144,7 +2208,10 @@ public partial class SettingsViewModel : ObservableObject
 
             // Fade out
             //await FadeToAsync(ScrollView, 0, TimeSpan.FromMilliseconds(100));
-            await RunFadeAnimation(ScrollView, from: 1, to: 0, TimeSpan.FromMilliseconds(100));
+            if (AnimateScrollToSection)
+            {
+                await RunFadeAnimation(ScrollView, from: 1, to: 0, TimeSpan.FromMilliseconds(100));
+            }
 
 
             await Task.Yield(); // Ensures target has been laid out
@@ -2157,9 +2224,24 @@ public partial class SettingsViewModel : ObservableObject
                 scrollViewer.Offset = new Vector(scrollViewer.Offset.X, targetPosition.Value.Y);
             }
 
+            if (focusFirstControl.HasValue)
+            {
+                FocusFirstTabStop(target, focusFirstControl.Value);
+            }
+
             await Task.Yield(); // Ensures target has been laid out
-            await RunFadeAnimation(ScrollView, from: 0, to: 1, TimeSpan.FromMilliseconds(200));
+            if (AnimateScrollToSection)
+            {
+                await RunFadeAnimation(ScrollView, from: 0, to: 1, TimeSpan.FromMilliseconds(200));
+            }
         }, DispatcherPriority.Background);
+    }
+
+    private static void FocusFirstTabStop(Control container, NavigationMethod navigationMethod)
+    {
+        var first = container.GetVisualDescendants().OfType<InputElement>().FirstOrDefault(e =>
+            e.Focusable && e.IsEffectivelyEnabled && e.IsEffectivelyVisible && KeyboardNavigation.GetIsTabStop(e));
+        first?.Focus(navigationMethod);
     }
 
     private static Task RunFadeAnimation(Control control, double from, double to, TimeSpan duration)
@@ -2485,6 +2567,21 @@ public partial class SettingsViewModel : ObservableObject
     {
         if (Directory.Exists(Se.WaveformsFolder))
         {
+            // Cache files are written through a "<name>.tmp" file next to the destination, so a
+            // crashed extraction can leave one behind; sweep those too, or "Delete" would leave
+            // the folder holding files the size info below still counts.
+            foreach (var file in Directory.GetFiles(Se.WaveformsFolder, "*.wav" + WaveCacheFile.TempSuffix).ToList())
+            {
+                try
+                {
+                    File.Delete(file);
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+
             foreach (var file in Directory.GetFiles(Se.WaveformsFolder, "*.wav").ToList())
             {
                 try
@@ -2500,6 +2597,18 @@ public partial class SettingsViewModel : ObservableObject
 
         if (Directory.Exists(Se.SpectrogramsFolder))
         {
+            foreach (var file in Directory.GetFiles(Se.SpectrogramsFolder, "*.spectrogram" + WaveCacheFile.TempSuffix).ToList())
+            {
+                try
+                {
+                    File.Delete(file);
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+
             foreach (var file in Directory.GetFiles(Se.SpectrogramsFolder, "*.spectrogram").ToList())
             {
                 try
@@ -2520,10 +2629,12 @@ public partial class SettingsViewModel : ObservableObject
         if (Directory.Exists(Se.WaveformsFolder))
         {
             files.AddRange(Directory.GetFiles(Se.WaveformsFolder, "*.wav"));
+            files.AddRange(Directory.GetFiles(Se.WaveformsFolder, "*.wav" + WaveCacheFile.TempSuffix));
         }
         if (Directory.Exists(Se.SpectrogramsFolder))
         {
             files.AddRange(Directory.GetFiles(Se.SpectrogramsFolder, "*.spectrogram", SearchOption.AllDirectories));
+            files.AddRange(Directory.GetFiles(Se.SpectrogramsFolder, "*.spectrogram" + WaveCacheFile.TempSuffix, SearchOption.AllDirectories));
         }
         return files;
     }
@@ -2563,11 +2674,51 @@ public partial class SettingsViewModel : ObservableObject
     [RelayCommand]
     private void ScrollToSection(string title)
     {
-        var section = Sections.FirstOrDefault(section => section.IsVisible && section.Title == title);
-        if (section != null)
+        var section = Sections.FirstOrDefault(section => section.Title == title);
+        if (section == null)
         {
-            ScrollElementIntoView(ScrollView, section.Panel!);
+            return;
         }
+
+        // The focus rectangle follows only when the category was picked from the keyboard.
+        var pickedFromKeyboard = Window?.FocusManager?.GetFocusedElement() is Control focused
+                                 && focused.Classes.Contains(":focus-visible");
+        ShowSection(section, pickedFromKeyboard ? NavigationMethod.Tab : NavigationMethod.Unspecified);
+    }
+
+    /// <summary>
+    /// Ctrl+PageDown / Ctrl+PageUp switch to the next / previous category from anywhere in the
+    /// window, so a keyboard user several controls into a section need not Shift+Tab all the
+    /// way back to the category buttons (#12087).
+    /// </summary>
+    internal void SelectAdjacentSection(int direction)
+    {
+        var candidates = Sections.Where(s => s.IsVisible).ToList();
+        if (candidates.Count == 0)
+        {
+            return;
+        }
+
+        var index = SelectedSection == null ? -1 : candidates.IndexOf(SelectedSection);
+        index = index < 0
+            ? (direction > 0 ? 0 : candidates.Count - 1)
+            : (index + direction + candidates.Count) % candidates.Count;
+        ShowSection(candidates[index], NavigationMethod.Tab);
+    }
+
+    private void ShowSection(SettingsSection section, NavigationMethod navigationMethod)
+    {
+        SelectedSection = section; // the page rebuilds the content to this section
+
+        // Hidden by the search filter (no matching settings) - nothing to scroll or focus.
+        if (section.Panel == null || !section.IsVisible)
+        {
+            return;
+        }
+
+        // Move focus into the section, not only the view - with focus left on the category
+        // button, the categories did nothing for a screen reader or keyboard user (#12087).
+        ScrollElementIntoView(ScrollView, section.Panel, navigationMethod);
     }
 
     [RelayCommand]
@@ -2632,6 +2783,7 @@ public partial class SettingsViewModel : ObservableObject
             if (result.ResetRecentFiles)
             {
                 Se.Settings.File.RecentFiles = new List<RecentFile>();
+                Se.Settings.Video.RecentFiles = new List<string>();
             }
 
             if (result.ResetWindowPositionAndSize)
@@ -2759,6 +2911,18 @@ public partial class SettingsViewModel : ObservableObject
 
         await FileTypeAssociationsManager.SaveFileTypeAssociationsAsync(FileTypeAssociations, Window);
         _mainViewModel?.ApplySettings();
+
+        // Everything up to here is now applied, so this is the baseline the OK press must be
+        // compared against - without it OK re-applies every change this Apply already made and
+        // rebuilds the layout (and the video player) a second time (issue #14218).
+        AppliedSettingsSnapshot = SettingsChangeSnapshot.Take();
+
+        // Icon theme and recoloring can change without changing the actual theme variant.
+        if (Window != null &&
+            UiTheme.GetUnscaledContent(Window) is SettingsPage page)
+        {
+            page.RefreshSections();
+        }
     }
 
     [RelayCommand]
@@ -2948,6 +3112,20 @@ public partial class SettingsViewModel : ObservableObject
         {
             e.Handled = true;
             UiUtil.ShowHelp("features/settings");
+        }
+    }
+
+    /// <summary>
+    /// Runs on the tunnel pass: the content's ScrollViewer, text boxes and combo boxes handle
+    /// PageUp/PageDown themselves, so a bubbling handler only saw Ctrl+PageUp/PageDown while focus
+    /// was on the category buttons, not on a setting inside the section (#12087).
+    /// </summary>
+    public void OnPreviewKeyDown(KeyEventArgs e)
+    {
+        if (e.KeyModifiers == KeyModifiers.Control && e.Key is Key.PageDown or Key.PageUp)
+        {
+            e.Handled = true;
+            SelectAdjacentSection(e.Key == Key.PageDown ? 1 : -1);
         }
     }
 

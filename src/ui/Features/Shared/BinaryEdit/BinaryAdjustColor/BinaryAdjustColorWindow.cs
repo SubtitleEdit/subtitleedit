@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
@@ -56,7 +57,7 @@ public class BinaryAdjustColorWindow : Window
 
         Content = mainGrid;
 
-        Activated += delegate { buttonCancel.Focus(); }; // initial focus on a safe button, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, buttonCancel); // initial focus on a safe button, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
@@ -81,6 +82,8 @@ public class BinaryAdjustColorWindow : Window
                 CornerRadius = new CornerRadius(4),
                 [!Border.BackgroundProperty] = new Binding(nameof(vm.ColorSwatchBrush)),
             },
+            // The swatch is the whole content, so name the button or it reads as "Border" (#12087).
+            [AutomationProperties.NameProperty] = Se.Language.Tools.ColorPickerTitle,
         };
         panel.Children.Add(swatchButton);
 
@@ -89,7 +92,7 @@ public class BinaryAdjustColorWindow : Window
             Text = Se.Language.Tools.ImageBasedEdit.ColorAdjustmentInfo,
             TextWrapping = TextWrapping.Wrap,
             Margin = new Thickness(0, 4, 0, 0),
-            FontSize = 11,
+            FontSize = UiUtil.ScaledFontSize(11),
             Foreground = Brushes.Gray,
         };
         panel.Children.Add(infoText);

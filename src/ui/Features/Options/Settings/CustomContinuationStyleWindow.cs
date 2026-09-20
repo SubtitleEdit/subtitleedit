@@ -56,7 +56,7 @@ public class CustomContinuationStyleWindow : Window
 
         Content = grid;
 
-        Activated += delegate { comboBoxFirstInput.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, comboBoxFirstInput); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
     }
 

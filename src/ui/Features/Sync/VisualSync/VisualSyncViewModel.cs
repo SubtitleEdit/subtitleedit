@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -53,7 +53,8 @@ public partial class VisualSyncViewModel : ObservableObject
 
     private string? _videoFileName;
     private string? _wavePeaksVideoFileName;
-    private DispatcherTimer _positionTimer = new DispatcherTimer();
+    private bool _closed; // set by OnClosing; stops the posted half of Initialize from starting a pump on a disposed player
+    private UiTickPump _positionTimer = new(TimeSpan.FromMilliseconds(150)); // posted ticks, not a DispatcherTimer - see UiTickPump
     private List<SubtitleLineViewModel> _subtitleLines = new List<SubtitleLineViewModel>();
     private VideoPreviewSubtitleContext _previewContext = VideoPreviewSubtitleContext.Default;
     private bool _updateAudioVisualizer;
@@ -129,6 +130,15 @@ public partial class VisualSyncViewModel : ObservableObject
 
         Dispatcher.UIThread.Post(() =>
         {
+            // Closed before this post ran: OnClosing has already stopped the (placeholder) pump
+            // and disposed the player, so the pump started below would never be stopped and
+            // would poll the dead player for the rest of the session - every poll an
+            // error-log entry.
+            if (_closed)
+            {
+                return;
+            }
+
             if (!string.IsNullOrEmpty(videoFileName))
             {
                 _ = OpenPlayersAsync(videoFileName, audioTrackId);
@@ -198,9 +208,12 @@ public partial class VisualSyncViewModel : ObservableObject
 
     }
 
+    /// <summary>Test hook: whether the position pump is ticking.</summary>
+    internal bool IsPositionTimerRunning => _positionTimer.IsRunning;
+
     private void StartTitleTimer()
     {
-        _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(150) };
+        _positionTimer = new UiTickPump(TimeSpan.FromMilliseconds(150));
         _positionTimer.Tick += (s, e) =>
         {
             UpdateAudioVisualizer(VideoPlayerControlLeft.VideoPlayer, AudioVisualizerLeft, SelectedParagraphLeftIndex);
@@ -565,9 +578,10 @@ public partial class VisualSyncViewModel : ObservableObject
     internal void OnClosing()
     {
         UiUtil.SaveWindowPosition(Window);
+        _closed = true;
         _positionTimer.Stop();
-        VideoPlayerControlLeft.VideoPlayer.CloseFile();
-        VideoPlayerControlRight.VideoPlayer.CloseFile();
+        VideoPlayerControlLeft.CloseAndDisposePlayer();
+        VideoPlayerControlRight.CloseAndDisposePlayer();
 
         // Deletes the temp subtitle files handed to the two players.
         _previewSubtitleLeft.Reset();
@@ -727,6 +741,16 @@ public partial class VisualSyncViewModel : ObservableObject
                 VideoPlayerControlLeft.Position += 0.5;
                 _updateAudioVisualizer = true;
             }
+            else if ((e.Key == Key.Add || e.Key == Key.OemPlus) && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            {
+                e.Handled = true;
+                WaveformVerticalZoomIn(AudioVisualizerLeft);
+            }
+            else if ((e.Key == Key.Subtract || e.Key == Key.OemMinus) && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            {
+                e.Handled = true;
+                WaveformVerticalZoomOut(AudioVisualizerLeft);
+            }
         }
         else if (IsRightFocused())
         {
@@ -759,6 +783,41 @@ public partial class VisualSyncViewModel : ObservableObject
                 VideoPlayerControlRight.Position += 0.5;
                 _updateAudioVisualizer = true;
             }
+            else if ((e.Key == Key.Add || e.Key == Key.OemPlus) && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            {
+                e.Handled = true;
+                WaveformVerticalZoomIn(AudioVisualizerRight);
+            }
+            else if ((e.Key == Key.Subtract || e.Key == Key.OemMinus) && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            {
+                e.Handled = true;
+                WaveformVerticalZoomOut(AudioVisualizerRight);
+            }
         }
+    }
+
+    /// <summary>
+    /// Mirrors the main window's waveform vertical zoom (Shift +/-) for whichever pane has focus:
+    /// scales that waveform's amplitude in place instead of resizing the split panel, so zooming
+    /// in does not eat into the video area (#14419 comment).
+    /// </summary>
+    private void WaveformVerticalZoomIn(AudioVisualizer audioVisualizer)
+    {
+        if (!IsAudioVisualizerVisible)
+        {
+            return;
+        }
+
+        audioVisualizer.VerticalZoomFactor = Math.Max(Math.Min(audioVisualizer.VerticalZoomFactor - 0.1, AudioVisualizer.MaxZoomFactor), AudioVisualizer.MinZoomFactor);
+    }
+
+    private void WaveformVerticalZoomOut(AudioVisualizer audioVisualizer)
+    {
+        if (!IsAudioVisualizerVisible)
+        {
+            return;
+        }
+
+        audioVisualizer.VerticalZoomFactor = Math.Max(Math.Min(audioVisualizer.VerticalZoomFactor + 0.1, AudioVisualizer.MaxZoomFactor), AudioVisualizer.MinZoomFactor);
     }
 }

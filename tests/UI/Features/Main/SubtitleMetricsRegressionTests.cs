@@ -90,7 +90,7 @@ public class SubtitleMetricsRegressionTests
                 EndTime = TimeSpan.FromSeconds(2),
             };
 
-            var brush = Assert.IsType<SolidColorBrush>(vm.TextBackgroundBrush);
+            var brush = Assert.IsAssignableFrom<ISolidColorBrush>(vm.TextBackgroundBrush);
 
             Assert.Equal(Colors.Transparent, brush.Color);
             Assert.DoesNotContain(vm.GetErrorList(null, null), e => e.Type == LineErrorType.LineTooLong);

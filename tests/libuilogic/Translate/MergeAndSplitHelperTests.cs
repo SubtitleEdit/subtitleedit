@@ -1,4 +1,5 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.UiLogic.Translate;
 
@@ -66,5 +67,577 @@ public class MergeAndSplitHelperTests
         // count: a failed split (count 0) must not leave partial garbage in the rows.
         var rowsWithText = rows.Count(r => !string.IsNullOrEmpty(r.TranslatedText));
         Assert.Equal(count, rowsWithText);
+    }
+
+    // Issue #14230: two lines are merged and translated as one sentence, and the reply contains
+    // a clock time written with a period ("04.00 uur") where the English source had a colon
+    // ("4:00am"). The split back over the two rows must not mistake that period for the end of
+    // a sentence and cut the number in half.
+    [Fact]
+    public async Task MergeAndTranslateIfPossible_DoesNotSplitInsideANumber()
+    {
+        var rows = MakeRows("and Carl Wilsher back to Chislehurst", "together at around 4:00am.");
+        var translator = new FixedResultTranslator
+        {
+            Result = "en Carl Wilsher rond 04.00 uur samen terug naar Chislehurst heeft gereden.",
+        };
+
+        var count = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+            rows,
+            new TranslationPair("English", "en"),
+            new TranslationPair("Dutch", "nl"),
+            0,
+            translator,
+            forceSingleLineMode: false,
+            CancellationToken.None);
+
+        Assert.Equal(2, count);
+        Assert.DoesNotContain("04." + Environment.NewLine, string.Join(Environment.NewLine, rows.Select(r => r.TranslatedText)));
+        Assert.Contains("04.00 uur", rows[0].TranslatedText + " " + rows[1].TranslatedText);
+    }
+
+    // Issue #14484: "Frau Meier." comes back as "Mrs. Meier." - one period more than the source.
+    // The split must not cut that row off at "Mrs." and shift every later row by a sentence.
+    private sealed class FixedAbbreviations : IDisposable
+    {
+        private readonly Func<string, HashSet<string>> _previous = MergeAndSplitHelper.AbbreviationsForLanguage;
+
+        public FixedAbbreviations(Dictionary<string, string[]> perLanguage)
+        {
+            MergeAndSplitHelper.AbbreviationsForLanguage = code =>
+                perLanguage.TryGetValue(code, out var list)
+                    ? new HashSet<string>(list, StringComparer.OrdinalIgnoreCase)
+                    : new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        }
+
+        public void Dispose() => MergeAndSplitHelper.AbbreviationsForLanguage = _previous;
+    }
+
+    private static readonly Dictionary<string, string[]> NoAbbreviations = new();
+
+    private static readonly Dictionary<string, string[]> GermanEnglishAbbreviations = new()
+    {
+        ["de"] = ["Dr.", "usw."],
+        ["en"] = ["Mr.", "Mrs.", "Dr.", "etc."],
+    };
+
+    private static async Task<int> TranslateGermanToEnglish(ObservableCollection<TranslateRow> rows, string reply)
+    {
+        return await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+            rows,
+            new TranslationPair("German", "de"),
+            new TranslationPair("English", "en"),
+            0,
+            new FixedResultTranslator { Result = reply },
+            forceSingleLineMode: false,
+            CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task MergeAndTranslateIfPossible_AbbreviationPeriodInReplyDoesNotShiftRows()
+    {
+        using var _ = new FixedAbbreviations(GermanEnglishAbbreviations);
+        var rows = MakeRows("Wer?", "Frau Meier.", "Er wollte eine Frau.", "Was ist los?");
+
+        var count = await TranslateGermanToEnglish(rows, "Who? Mrs. Meier. He wanted a woman. What's wrong?");
+
+        Assert.Equal(4, count);
+        Assert.Equal(["Who?", "Mrs. Meier.", "He wanted a woman.", "What's wrong?"], rows.Select(r => r.TranslatedText));
+    }
+
+    [Fact]
+    public async Task MergeAndTranslateIfPossible_AbbreviationPeriodInSourceDoesNotShiftRows()
+    {
+        using var _ = new FixedAbbreviations(GermanEnglishAbbreviations);
+        var rows = MakeRows("Herr Dr. Meier ist hier.", "Er wollte eine Frau.", "Was ist los?");
+
+        var count = await TranslateGermanToEnglish(rows, "Mr. Dr. Meier is here. He wanted a woman. What's wrong?");
+
+        Assert.Equal(3, count);
+        Assert.Equal(["Mr. Dr. Meier is here.", "He wanted a woman.", "What's wrong?"], rows.Select(r => r.TranslatedText));
+    }
+
+    [Fact]
+    public async Task MergeAndTranslateIfPossible_AbbreviationAtEndOfRowStillEndsTheRow()
+    {
+        using var _ = new FixedAbbreviations(GermanEnglishAbbreviations);
+        var rows = MakeRows("Äpfel, Birnen usw.", "Was ist los?");
+
+        var count = await TranslateGermanToEnglish(rows, "Apples, pears, etc." + Environment.NewLine + "What's wrong?");
+
+        Assert.Equal(2, count);
+        Assert.Equal(["Apples, pears, etc.", "What's wrong?"], rows.Select(r => r.TranslatedText));
+    }
+
+    // An abbreviation the lists do not know still shifts the split. The relaxed strategy used
+    // to accept the shifted result whenever the block ended in a rarer character like '?',
+    // because the final row swallowed everything left over. It must fail instead, so the
+    // caller falls back to translating the rows one by one.
+    [Fact]
+    public async Task MergeAndTranslateIfPossible_UnknownAbbreviationDoesNotProduceShiftedRows()
+    {
+        using var _ = new FixedAbbreviations(NoAbbreviations);
+        var rows = MakeRows("Wer?", "Frau Meier.", "Er wollte eine Frau.", "Was ist los?");
+
+        var count = await TranslateGermanToEnglish(rows, "Who? Mrs. Meier. He wanted a woman. What's wrong?");
+
+        Assert.Equal(0, count);
+        Assert.All(rows, r => Assert.Equal(string.Empty, r.TranslatedText));
+    }
+
+    // The relaxed strategy must keep accepting a split whose period counts differ for a
+    // harmless reason: here the extra period sits inside a row that ends in '?'.
+    [Fact]
+    public async Task MergeAndTranslateIfPossible_ExtraPeriodInsideQuestionRowIsAccepted()
+    {
+        using var _ = new FixedAbbreviations(NoAbbreviations);
+        var rows = MakeRows("Wer ist diese Frau Meier?", "Er wollte eine Frau.");
+
+        var count = await TranslateGermanToEnglish(rows, "Who is this Mrs. Meier? He wanted a woman.");
+
+        Assert.Equal(2, count);
+        Assert.Equal(["Who is this Mrs. Meier?", "He wanted a woman."], rows.Select(r => r.TranslatedText));
+    }
+
+    // Issue #14484, second report: a row ending in a closing quote anchored the split on the
+    // quote character, so one stray or curly quote in the reply shifted every later row by a
+    // sentence while the period counts still matched. The anchor is the punctuation inside.
+    [Theory]
+    [InlineData("\"NCK1 to Central.\" - \"\"Central, go ahead.\" \"The motorhome operation in Filderstadt has failed.\" \"The suspects have swapped plates.\"",
+        "\"NCK1 to Central.\" - \"\"Central, go ahead.\"")]
+    [InlineData("\u201cNCK1 to Central.\u201d - \u201cCentral, go ahead.\u201d \u201cThe motorhome operation in Filderstadt has failed.\u201d \u201cThe suspects have swapped plates.\u201d",
+        "\u201cNCK1 to Central.\u201d - \u201cCentral, go ahead.\u201d")]
+    public async Task MergeAndTranslateIfPossible_QuotedRowsSplitOnThePunctuationInsideTheQuotes(string reply, string expectedFirstRow)
+    {
+        using var _ = new FixedAbbreviations(NoAbbreviations);
+        var rows = MakeRows(
+            "\"NCK1 an Zentrale.\"" + Environment.NewLine + "- \"Zentrale hört.\"",
+            "\"Wohnmobileinsatz in Filderstadt fehlgeschlagen.\"",
+            "\"Gesuchte haben Kennzeichen ausgetauscht.\"");
+
+        var count = await TranslateGermanToEnglish(rows, reply);
+
+        Assert.Equal(3, count);
+        Assert.Equal(expectedFirstRow, rows[0].TranslatedText.Replace(Environment.NewLine, " "));
+        Assert.EndsWith("has failed." + reply[^1], rows[1].TranslatedText);
+        Assert.EndsWith("swapped plates." + reply[^1], rows[2].TranslatedText);
+    }
+
+    // Ellipsis periods keep counting on both sides, so a row ending in "..." still splits.
+    [Fact]
+    public async Task MergeAndTranslateIfPossible_EllipsisRowStillSplits()
+    {
+        using var _ = new FixedAbbreviations(GermanEnglishAbbreviations);
+        var rows = MakeRows("Warte...", "Was ist los?");
+
+        var count = await TranslateGermanToEnglish(rows, "Wait... What's wrong?");
+
+        Assert.Equal(2, count);
+        Assert.Equal(["Wait...", "What's wrong?"], rows.Select(r => r.TranslatedText));
+    }
+
+    [Theory]
+    [InlineData("Who? Mrs. Meier.", 1)]
+    [InlineData("Mr. Dr. Meier is here.", 1)]
+    [InlineData("Apples, pears, etc.", 1)]
+    [InlineData("Apples, pears, etc.\nWhat's wrong?", 1)]
+    [InlineData("At 5 p.m. we leave.", 1)]
+    [InlineData("Dr.Meier is here.", 1)]
+    [InlineData("Wait... What?", 3)]
+    [InlineData("Warte...", 3)]
+    [InlineData("Wait. .. What?", 3)]
+    [InlineData("One. Two. Three.", 3)]
+    [InlineData("No period here", 0)]
+    public void CountSentencePeriods_SkipsAbbreviationPeriods(string text, int expected)
+    {
+        var abbreviations = new HashSet<string>(["Mr.", "Mrs.", "Dr.", "etc."], StringComparer.OrdinalIgnoreCase);
+
+        Assert.Equal(expected, MergeAndSplitHelper.CountSentencePeriods(text, abbreviations));
+    }
+
+    // Issue #14484: a row holding "I told you so. Kira Dorn." was re-broken after the period,
+    // but "Who? Kira Dorn." stayed on one line - every sentence ending should count.
+    [Fact]
+    public async Task MergeAndTranslateIfPossible_LineCountSplitBreaksAfterQuestionMarkToo()
+    {
+        using var _ = new FixedAbbreviations(NoAbbreviations);
+        var rows = MakeRows("Ein Stadtflitzer? Wirklich, ich meine es ernst.", "Ja, Herr Schmidt.");
+
+        // Same line count as the request, but a period more ("Mr."), so the line-count
+        // strategy is the one that applies.
+        var count = await TranslateGermanToEnglish(rows, "A city runabout? Really, I mean it." + Environment.NewLine + "Yes, Mr. Smith.");
+
+        Assert.Equal(2, count);
+        Assert.Equal("A city runabout?" + Environment.NewLine + "Really, I mean it.", rows[0].TranslatedText);
+        Assert.Equal("Yes, Mr. Smith.", rows[1].TranslatedText);
+    }
+
+    [Fact]
+    public async Task MergeAndTranslateIfPossible_ThreeLineReplyIsRebalancedToProfile()
+    {
+        // #14673: a two-line source whose first line ends in a comma is not un-broken, the
+        // engine keeps the break and adds one of its own, and the 47-char result sat on
+        // three lines that no long-line tool would touch.
+        var previousMaxLines = Configuration.Settings.General.MaxNumberOfLines;
+        var previousMaxLength = Configuration.Settings.General.SubtitleLineMaximumLength;
+        Configuration.Settings.General.MaxNumberOfLines = 2;
+        Configuration.Settings.General.SubtitleLineMaximumLength = 42;
+        try
+        {
+            var rows = MakeRows("Comme vous le savez," + Environment.NewLine + "personne ne peut aller au-delà du récif.");
+            var translator = new FixedResultTranslator { Result = "Zoals je weet," + Environment.NewLine + "kan niemand" + Environment.NewLine + "voorbij het rif komen." };
+
+            var count = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+                rows,
+                new TranslationPair("French", "fr"),
+                new TranslationPair("Dutch", "nl"),
+                0,
+                translator,
+                false,
+                CancellationToken.None);
+
+            Assert.Equal(1, count);
+            Assert.Equal("Zoals je weet, kan niemand" + Environment.NewLine + "voorbij het rif komen.", rows[0].TranslatedText);
+        }
+        finally
+        {
+            Configuration.Settings.General.MaxNumberOfLines = previousMaxLines;
+            Configuration.Settings.General.SubtitleLineMaximumLength = previousMaxLength;
+        }
+    }
+
+    [Theory]
+    [InlineData("Zoals je weet, kan niemand\nvoorbij het rif komen.")]
+    [InlineData("- Ga je mee?\n- Nee, ik blijf hier.")]
+    [InlineData("<i>Zoals je weet,</i>\nkan niemand het.")]
+    public void RebalanceLines_LeavesResultsThatFitTheProfileAlone(string text)
+    {
+        var previousMaxLines = Configuration.Settings.General.MaxNumberOfLines;
+        var previousMaxLength = Configuration.Settings.General.SubtitleLineMaximumLength;
+        Configuration.Settings.General.MaxNumberOfLines = 2;
+        Configuration.Settings.General.SubtitleLineMaximumLength = 42;
+        try
+        {
+            var input = text.Replace("\n", Environment.NewLine);
+            Assert.Equal(input, MergeAndSplitHelper.RebalanceLines(input, new TranslationPair("Dutch", "nl")));
+        }
+        finally
+        {
+            Configuration.Settings.General.MaxNumberOfLines = previousMaxLines;
+            Configuration.Settings.General.SubtitleLineMaximumLength = previousMaxLength;
+        }
+    }
+
+    [Theory]
+    [InlineData("zh-Hans")]
+    [InlineData("zh-HK")]
+    [InlineData("yue")]
+    [InlineData("ko")]
+    [InlineData("th")]
+    public void RebalanceLines_SkipsEveryCjkTargetCode(string code)
+    {
+        var previousMaxLines = Configuration.Settings.General.MaxNumberOfLines;
+        Configuration.Settings.General.MaxNumberOfLines = 2;
+        try
+        {
+            var input = "abc" + Environment.NewLine + "def" + Environment.NewLine + "ghi";
+            Assert.Equal(input, MergeAndSplitHelper.RebalanceLines(input, new TranslationPair("X", code)));
+        }
+        finally
+        {
+            Configuration.Settings.General.MaxNumberOfLines = previousMaxLines;
+        }
+    }
+
+    [Fact]
+    public void RebalanceLines_SkipsCjkTextWhateverTheCode()
+    {
+        var previousMaxLines = Configuration.Settings.General.MaxNumberOfLines;
+        Configuration.Settings.General.MaxNumberOfLines = 2;
+        try
+        {
+            var input = "你好世界" + Environment.NewLine + "我很好" + Environment.NewLine + "谢谢你";
+            Assert.Equal(input, MergeAndSplitHelper.RebalanceLines(input, new TranslationPair("Dutch", "nl")));
+        }
+        finally
+        {
+            Configuration.Settings.General.MaxNumberOfLines = previousMaxLines;
+        }
+    }
+
+    [Fact]
+    public void RebalanceLines_LeavesLyricsAlone()
+    {
+        var previousMaxLines = Configuration.Settings.General.MaxNumberOfLines;
+        Configuration.Settings.General.MaxNumberOfLines = 2;
+        try
+        {
+            var input = "♪ La la la ♪" + Environment.NewLine + "♪ La la ♪" + Environment.NewLine + "♪ La ♪";
+            Assert.Equal(input, MergeAndSplitHelper.RebalanceLines(input, new TranslationPair("French", "fr")));
+        }
+        finally
+        {
+            Configuration.Settings.General.MaxNumberOfLines = previousMaxLines;
+        }
+    }
+
+    [Fact]
+    public void RebalanceLines_SkipsCjkTargets()
+    {
+        var previousMaxLines = Configuration.Settings.General.MaxNumberOfLines;
+        Configuration.Settings.General.MaxNumberOfLines = 2;
+        try
+        {
+            var input = "一" + Environment.NewLine + "二" + Environment.NewLine + "三";
+            Assert.Equal(input, MergeAndSplitHelper.RebalanceLines(input, new TranslationPair("Chinese", "zh")));
+        }
+        finally
+        {
+            Configuration.Settings.General.MaxNumberOfLines = previousMaxLines;
+        }
+    }
+    // Issue #14803: a sentence spread over two continuous rows. An engine that keeps line
+    // breaks (DeepL) gets the row boundary as a line break and hands it back at the matching
+    // place in the translation, so the reply is split on it instead of by the length and
+    // duration heuristics, which cut it at the first comma and left row 2 with five words for
+    // 2.2 seconds and row 3 with twenty for 2.9.
+    private sealed class LineBreakPreservingTranslator : IAutoTranslator, ILineBreakPreservingTranslator
+    {
+        public string Result { get; set; } = string.Empty;
+        public string SentText { get; private set; } = string.Empty;
+
+        public string Name => "LineBreakPreservingTranslator";
+        public string Url => "https://example.com";
+        public string Error { get; set; } = string.Empty;
+        public int MaxCharacters => 1500;
+
+        public void Initialize()
+        {
+        }
+
+        public List<TranslationPair> GetSupportedSourceLanguages() => new() { new TranslationPair("English", "en") };
+
+        public List<TranslationPair> GetSupportedTargetLanguages() => new() { new TranslationPair("Dutch", "nl") };
+
+        public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+        {
+            SentText = text;
+            return Task.FromResult(Result);
+        }
+    }
+
+    private static ObservableCollection<TranslateRow> MakeIssue14803Rows()
+    {
+        return new ObservableCollection<TranslateRow>
+        {
+            new() { Number = 1, Show = TimeSpan.FromMilliseconds(220), Hide = TimeSpan.FromMilliseconds(1660), Text = "Tell me about Jonathan Gower." },
+            new() { Number = 2, Show = TimeSpan.FromMilliseconds(1780), Hide = TimeSpan.FromMilliseconds(4020), Text = "I wrapped him up in a rug," + Environment.NewLine + "and I dug a hole for him" },
+            new() { Number = 3, Show = TimeSpan.FromMilliseconds(4140), Hide = TimeSpan.FromMilliseconds(7076), Text = "in that little patch of wasteland" + Environment.NewLine + "just behind the repair shop." },
+        };
+    }
+
+    [Fact]
+    public async Task MergeAndTranslateIfPossible_LineBreakPreservingEngineGetsRowBoundaryAsLineBreak()
+    {
+        var rows = MakeIssue14803Rows();
+        var translator = new LineBreakPreservingTranslator
+        {
+            // What DeepL answers for the request asserted below (split_sentences=nonewlines).
+            Result = "Vertel me eens over Jonathan Gower." + Environment.NewLine +
+                     "Ik heb hem in een tapijt gewikkeld," + Environment.NewLine +
+                     "en ik heb een gat voor hem gegraven" + Environment.NewLine +
+                     "op dat kleine stukje braakliggend terrein vlak achter de reparatiewerkplaats.",
+        };
+
+        var count = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+            rows,
+            new TranslationPair("English", "en"),
+            new TranslationPair("Dutch", "nl"),
+            0,
+            translator,
+            forceSingleLineMode: false,
+            CancellationToken.None);
+
+        // Row 2 keeps its own break (line 1 ends in a comma), row 3 is un-broken before sending.
+        Assert.Equal(
+            "Tell me about Jonathan Gower." + Environment.NewLine +
+            "I wrapped him up in a rug," + Environment.NewLine +
+            "and I dug a hole for him" + Environment.NewLine +
+            "in that little patch of wasteland just behind the repair shop.",
+            translator.SentText);
+
+        Assert.Equal(3, count);
+        Assert.Equal("Vertel me eens over Jonathan Gower.", rows[0].TranslatedText);
+        Assert.Equal("Ik heb hem in een tapijt gewikkeld," + Environment.NewLine + "en ik heb een gat voor hem gegraven", rows[1].TranslatedText);
+        Assert.Equal("op dat kleine stukje braakliggend" + Environment.NewLine + "terrein vlak achter de reparatiewerkplaats.", rows[2].TranslatedText);
+    }
+
+    [Fact]
+    public async Task MergeAndTranslateIfPossible_LineBreakPreservingEngineThatDropsTheBreakStillFillsEveryRow()
+    {
+        var rows = MakeIssue14803Rows();
+        var translator = new LineBreakPreservingTranslator
+        {
+            Result = "Vertel me eens over Jonathan Gower." + Environment.NewLine +
+                     "Ik heb hem in een tapijt gewikkeld, en ik heb een gat voor hem gegraven op dat stukje braakliggend terrein vlak achter de garage.",
+        };
+
+        var count = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+            rows,
+            new TranslationPair("English", "en"),
+            new TranslationPair("Dutch", "nl"),
+            0,
+            translator,
+            forceSingleLineMode: false,
+            CancellationToken.None);
+
+        Assert.Equal(3, count);
+        Assert.All(rows, r => Assert.False(string.IsNullOrWhiteSpace(r.TranslatedText)));
+        Assert.Equal(translator.Result.Replace(Environment.NewLine, " "), string.Join(" ", rows.Select(r => r.TranslatedText.Replace(Environment.NewLine, " "))));
+    }
+
+    [Fact]
+    public async Task MergeAndTranslateIfPossible_OtherEnginesStillGetTheSentenceOnOneLine()
+    {
+        var rows = MakeIssue14803Rows();
+        var sent = string.Empty;
+        var translator = new CapturingTranslator(text => sent = text)
+        {
+            Result = "Vertel me eens over Jonathan Gower." + Environment.NewLine +
+                     "Ik heb hem in een tapijt gewikkeld, en ik heb een gat voor hem gegraven op dat stukje braakliggend terrein vlak achter de garage.",
+        };
+
+        var count = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+            rows,
+            new TranslationPair("English", "en"),
+            new TranslationPair("Dutch", "nl"),
+            0,
+            translator,
+            forceSingleLineMode: false,
+            CancellationToken.None);
+
+        Assert.Contains("for him in that little patch", sent);
+        Assert.Equal(3, count);
+    }
+
+    private sealed class CapturingTranslator : IAutoTranslator
+    {
+        private readonly Action<string> _onTranslate;
+
+        public CapturingTranslator(Action<string> onTranslate)
+        {
+            _onTranslate = onTranslate;
+        }
+
+        public string Result { get; set; } = string.Empty;
+        public string Name => "CapturingTranslator";
+        public string Url => "https://example.com";
+        public string Error { get; set; } = string.Empty;
+        public int MaxCharacters => 1500;
+
+        public void Initialize()
+        {
+        }
+
+        public List<TranslationPair> GetSupportedSourceLanguages() => new() { new TranslationPair("English", "en") };
+
+        public List<TranslationPair> GetSupportedTargetLanguages() => new() { new TranslationPair("Dutch", "nl") };
+
+        public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+        {
+            _onTranslate(text);
+            return Task.FromResult(Result);
+        }
+    }
+
+    // Issue #14866: DeepL renders an English "…" as «…» in Italian. The split cut row 309 at
+    // the period inside the quote but only knew "…" and “…” as closing quotes, so the » was
+    // left behind and became the first line of row 310 - and again for row 311 into 312.
+    private static ObservableCollection<TranslateRow> MakeIssue14866Rows()
+    {
+        var nl = Environment.NewLine;
+        return new ObservableCollection<TranslateRow>
+        {
+            new() { Number = 308, Show = TimeSpan.Parse("00:20:23.458"), Hide = TimeSpan.Parse("00:20:26.166"), Text = "\"never having seen the beauty" + nl + "of my sky behind Mount." },
+            new() { Number = 309, Show = TimeSpan.Parse("00:20:26.250"), Hide = TimeSpan.Parse("00:20:28.625"), Text = "\"Perhaps a single glance" + nl + "would have quelled her fire.\"" },
+            new() { Number = 310, Show = TimeSpan.Parse("00:20:29.041"), Hide = TimeSpan.Parse("00:20:30.125"), Text = "Yo-yo's sleeping." },
+            new() { Number = 311, Show = TimeSpan.Parse("00:20:30.208"), Hide = TimeSpan.Parse("00:20:32.417"), Text = "\"Never having seen the beauty" + nl + "of my sky behind Mount.\"" },
+            new() { Number = 312, Show = TimeSpan.Parse("00:20:32.500"), Hide = TimeSpan.Parse("00:20:34.750"), Text = "I think that's where Bianchi was born." },
+            new() { Number = 313, Show = TimeSpan.Parse("00:20:34.834"), Hide = TimeSpan.Parse("00:20:37.750"), Text = "I got an idea." + nl + "Why don't we all go to Mount?" },
+        };
+    }
+
+    [Theory]
+    [InlineData("\u00AB", "\u00BB")] // «…» Italian, Spanish, Russian
+    [InlineData("\u00AB", "\u00A0\u00BB")] // « … » French, no-break space before the closing guillemet
+    [InlineData("\u00BB", "\u00AB")] // »…« German, Danish
+    [InlineData("\u201E", "\u201C")] // „…“ German
+    [InlineData("\u2018", "\u2019")] // ‘…’ single curly quotes
+    public async Task MergeAndTranslateIfPossible_ClosingQuoteOfAnyStyleStaysWithItsRow(string open, string close)
+    {
+        using var _ = new FixedAbbreviations(NoAbbreviations);
+        var nl = Environment.NewLine;
+        var translator = new LineBreakPreservingTranslator
+        {
+            Result = string.Join(nl,
+                open + "senza aver mai visto la bellezza", "del mio cielo dietro il Monte.",
+                open + "Forse un solo sguardo", "avrebbe placato il suo fuoco." + close,
+                "Yo-yo sta dormendo.",
+                open + "Senza aver mai visto la bellezza", "del mio cielo dietro il Monte." + close,
+                "Credo che sia lì che è nato Bianchi.",
+                "Mi è venuta un'idea.", "Perché non andiamo tutti al Monte?"),
+        };
+        var rows = MakeIssue14866Rows();
+
+        var count = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+            rows,
+            new TranslationPair("English", "en"),
+            new TranslationPair("Italian", "it"),
+            0,
+            translator,
+            forceSingleLineMode: false,
+            CancellationToken.None);
+
+        // The line re-breaking downstream may turn the French no-break space into a plain one;
+        // what matters here is which row the quote lands in.
+        static string PlainSpaces(string text) => text.Replace('\u00A0', ' ');
+
+        Assert.Equal(6, count);
+        Assert.EndsWith(PlainSpaces("fuoco." + close), PlainSpaces(rows[1].TranslatedText));
+        Assert.Equal("Yo-yo sta dormendo.", rows[2].TranslatedText);
+        Assert.EndsWith(PlainSpaces("Monte." + close), PlainSpaces(rows[3].TranslatedText));
+        Assert.Equal("Credo che sia lì che è nato Bianchi.", rows[4].TranslatedText);
+    }
+
+    // The same quote styles on the source side: a row ending in ".»" is a finished sentence,
+    // so the next row is not glued on as its continuation, and the split anchors on the period
+    // rather than on a guillemet the engine will not echo.
+    [Fact]
+    public async Task MergeAndTranslateIfPossible_GuillemetQuotedSourceRowsAnchorOnThePunctuationInside()
+    {
+        using var _ = new FixedAbbreviations(NoAbbreviations);
+        var nl = Environment.NewLine;
+        var rows = MakeRows(
+            "\u00ABForse un solo sguardo" + nl + "avrebbe placato il suo fuoco.\u00BB",
+            "Yo-yo sta dormendo.",
+            "Credo che sia lì che è nato Bianchi.");
+        var translator = new FixedResultTranslator
+        {
+            Result = "\"Perhaps a single glance would have quelled her fire.\" Yo-yo's sleeping. I think that's where Bianchi was born.",
+        };
+
+        var count = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+            rows,
+            new TranslationPair("Italian", "it"),
+            new TranslationPair("English", "en"),
+            0,
+            translator,
+            forceSingleLineMode: false,
+            CancellationToken.None);
+
+        Assert.Equal(3, count);
+        Assert.Equal("\"Perhaps a single glance would have quelled her fire.\"", rows[0].TranslatedText.Replace(nl, " "));
+        Assert.Equal("Yo-yo's sleeping.", rows[1].TranslatedText);
+        Assert.Equal("I think that's where Bianchi was born.", rows[2].TranslatedText);
     }
 }

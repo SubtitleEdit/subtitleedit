@@ -472,10 +472,11 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        var ssaStyles = FileStyles.Where(p => p.UsageCount > 0 && p.Name != selectedStyle.Name).Select(p => p.ToSsaStyle()).ToList();
+        var usedStyles = FileStyles.Where(p => p.UsageCount > 0 && p.Name != selectedStyle.Name).ToList();
         var result = await _windowService.ShowDialogAsync<AssaStylePickerWindow, AssaStylePickerViewModel>(Window, vm =>
         {
-            var styles = ssaStyles.Select(p => new StyleDisplay(p)).ToList();
+            // ToSsaStyle() does not carry the usage count, which is the column this picker shows
+            var styles = usedStyles.Select(p => new StyleDisplay(p.ToSsaStyle()) { UsageCount = p.UsageCount }).ToList();
             vm.Initialize(Se.Language.Assa.TakeUsagesFromDotDotDot, styles, Se.Language.General.Ok, true);
         });
 

@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
@@ -86,7 +87,7 @@ public class FixNetflixErrorsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { _comboBoxLanguage.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, _comboBoxLanguage); // initial focus on an input, not an action button - a focused button clicks on bare Space
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
@@ -142,6 +143,7 @@ public class FixNetflixErrorsWindow : Window
                 {
                     Focusable = false,
                     [!ToggleButton.IsCheckedProperty] = new Binding(nameof(NetflixCheckDisplayItem.IsSelected)) { Mode = BindingMode.TwoWay },
+                    [!AutomationProperties.NameProperty] = new Binding(nameof(NetflixCheckDisplayItem.Name)),
                     HorizontalAlignment = HorizontalAlignment.Center,
                 };
                 cb.IsCheckedChanged += (_, __) => vm.SetDirty();
@@ -155,6 +157,7 @@ public class FixNetflixErrorsWindow : Window
             // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
             Width = new GridLength(70)
         });
+        dataGrid.WithAccessibleName(Se.Language.General.Rules); // the list of checks has no heading (#12087)
 
         dataGrid.Columns.Add(new SeTableViewColumn
         {
@@ -211,6 +214,7 @@ public class FixNetflixErrorsWindow : Window
                         {
                             Focusable = false,
                             [!ToggleButton.IsCheckedProperty] = new Binding(nameof(FixNetflixErrorsItem.Apply)) { Mode = BindingMode.TwoWay },
+                            [AutomationProperties.NameProperty] = Se.Language.General.Apply,
                             HorizontalAlignment = HorizontalAlignment.Center,
                         };
                         cb.IsEnabled = item.CanBeFixed;
@@ -238,6 +242,7 @@ public class FixNetflixErrorsWindow : Window
                     Header = Se.Language.General.Before,
                     CellTheme = UiUtil.TableViewNoPaddingCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                    NameBinding = new Binding(nameof(FixNetflixErrorsItem.Before)),
                     CellTemplate = new FuncDataTemplate<FixNetflixErrorsItem>((item, _) =>
                     {
                         if (item == null)
@@ -260,6 +265,7 @@ public class FixNetflixErrorsWindow : Window
                     Header = Se.Language.General.After,
                     CellTheme = UiUtil.TableViewNoPaddingCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                    NameBinding = new Binding(nameof(FixNetflixErrorsItem.After)),
                     CellTemplate = new FuncDataTemplate<FixNetflixErrorsItem>((item, _) =>
                     {
                         if (item == null)
@@ -287,6 +293,7 @@ public class FixNetflixErrorsWindow : Window
                 },
         });
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(_vm.SelectedFix)));
+        dataGrid.WithAccessibleName(Se.Language.Tools.FixCommonErrors.Fixes); // no heading above the fixes list (#12087)
 
         // Extended selection is native ListBox behavior on TableView; only the
         // Space-toggles-checkbox piece of the old CheckboxMultiSelect needs wiring.

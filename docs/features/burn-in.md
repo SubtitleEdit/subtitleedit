@@ -16,7 +16,7 @@ Hardcode (burn-in) subtitles permanently into a video file using FFmpeg.
 4. Configure video encoding settings (encoder, preset, CRF, pixel format)
 5. Configure audio settings (encoder, sample rate, bit rate, stereo)
 6. Select an output folder
-7. Click **Generate** to start encoding
+7. Click **Generate** to start encoding (or use the **Generate** split-button item **Prompt for ffmpeg parameters and generate** to edit the FFmpeg command line first)
 
 ## Font Settings
 
@@ -31,11 +31,20 @@ Hardcode (burn-in) subtitles permanently into a video file using FFmpeg.
 - **Spacing** — Letter spacing, from -20 to 100. The preview is rendered by libass, so it shows the real spacing
 - **Alignment** — Subtitle alignment position
 - **Margins** — Horizontal and vertical margin offsets
-- **Fix RTL** — Fix right-to-left text rendering
+
+## Effect and Logo
+
+- **Effect** — Browse button opening a picker with one entry to apply to every line: **Fix right-to-left**, **Fade in/out**, **Slow font size change**, **Increase font kerning**, **Scroll up**, **Scroll down**, **Rotate in**, **Tilt bounce** and **Font size bounce in**. The selected effect is shown next to the button
+- **Logo** — Browse button opening a dialog to pick a PNG watermark and place it by dragging it over the video; the file name and position are shown next to the button
+
+## Image-based subtitles
+
+A Blu-ray sup can be burned in as it is. Open it in **Edit image-based subtitle** and choose **Video → Generate video with burned-in subtitles...**, or add a `.sup` file as the subtitle of a batch item (a `.sup` next to the video is picked up automatically, after `.srt` and `.ass`). The bitmaps are laid over the video with FFmpeg's overlay filter and scaled with it, so the result matches the exported file - lines that overlap in time are shown together, the way a Blu-ray shows them. The font settings do not apply to bitmaps and are hidden; the logo, resolution, cut and encoding settings work as for text.
 
 ## Video Settings
 
 - **Resolution** — Output video width and height
+- **3D** — For half side-by-side or half top/bottom 3D video, see [3D video](#3d-video)
 - **Encoding** — Video codec (H.264, H.265, VP9, etc.)
 - **Pixel format** — Output pixel format
 - **Preset** — Encoding speed/quality preset
@@ -44,6 +53,10 @@ Hardcode (burn-in) subtitles permanently into a video file using FFmpeg.
 The output container follows the codec, because ffmpeg refuses some combinations outright: H.264
 and H.265 can be written to `.mkv`, `.mp4`, `.mov` or `.ts`, VP9 to `.mkv`, `.webm` or `.mp4`, and
 ProRes to `.mov` or `.mkv`.
+
+## 3D video
+
+A half side-by-side or half top/bottom 3D video holds a squeezed view for each eye, so a normal burn-in would put the subtitle across both views, cut in half. Set **3D** to *Half side-by-side* or *Half top/bottom* to burn the subtitle into each eye's view instead. It is rendered for the full frame and squeezed the same way as the video, so the player stretches it back to normal. **Depth** moves the two copies apart: positive values bring the subtitle out of the screen, negative values push it back. A copy never crosses into the other eye's view. This works for text and for Blu-ray sup subtitles, and matches the **3D** option when exporting image-based subtitles. The preview shows the flat subtitle.
 
 ## Hardware Acceleration
 
@@ -66,8 +79,24 @@ the full list is kept.
 | `h264_amf` / `hevc_amf` | AMD GPU | **Quality** 0–10 (lower is better) |
 | `h264_qsv` / `hevc_qsv` | Intel Quick Sync | **CRF** (lower is better) |
 
-NVENC takes its own preset list (`p1`–`p7`, `hq`, `ll`, …) instead of the x264 presets. AMF has
-no preset. Quality is left blank by default, which lets FFmpeg pick a bitrate.
+NVENC takes its own preset list (`slow`, `medium`, `fast` and `p1`–`p7`) instead of the x264
+presets. The old aliases (`hq`, `ll`, `lossless`, …) were removed in FFmpeg 9.0 and are no longer
+offered — a saved one is moved to its `p1`–`p7` equivalent. AMF has no preset. Quality is left
+blank by default, which lets FFmpeg pick a bitrate.
+
+NVENC also has a **Tune** list, which is what those old aliases really set on top of a preset.
+The row is shown for the NVIDIA encoders only:
+
+| Tune | Meaning |
+|------|---------|
+| *(blank)* | FFmpeg's default — high quality |
+| `hq` | High quality (the default, stated explicitly) |
+| `ll` / `ull` | Low latency / ultra low latency — for streaming, not for burn-in |
+| `lossless` | Lossless encoding |
+
+`lossless` pins the encoder to constant QP 0, so the **CQ** value is left out of the command line
+when it is picked — FFmpeg would ignore it anyway. Not every GPU can encode losslessly; where it
+cannot, FFmpeg stops with *"Lossless encoding not supported"*.
 
 All HEVC output is tagged `hvc1` so it plays in QuickTime and other Apple players, which reject
 the `hev1` tag FFmpeg writes by default.
@@ -102,9 +131,14 @@ builds all include VideoToolbox.
 - **Bit rate** — Audio bit rate
 - **Stereo** — Stereo or mono output
 
+## Cut and Target File Size
+
+- **Cut** — Encode only the part between **From time** and **To time** (the browse buttons pick the times from the video)
+- **Target file size (requires 2 pass encoding)** — Two-pass encode aimed at **File size in MB**; **Match source video size** takes the target from each input file's own size instead (also per file in batch mode)
+
 ## Batch Mode
 
-Multiple video/subtitle pairs can be queued as jobs for batch processing.
+Click **Batch mode** to queue several video/subtitle pairs (**Single mode** switches back). The list shows file name, size, subtitle file and status, with **Add...**, **Remove**, **Clear** and **Pick subtitle file...** buttons. **Output properties...** sets the output folder and naming; the chosen folder (or **Use source folder**) is shown next to it.
 
 ## Keyboard Shortcuts
 

@@ -153,11 +153,27 @@ The bundled dylibs and their upstream projects / licenses:
 
 
 --------------------------------------------------------------------------------
+3. libvoikko + voikko-fi (Contents/Frameworks/libvoikko.1.dylib, Contents/Resources/voikko)
+--------------------------------------------------------------------------------
+
+Project:        libvoikko 4.3.3       https://voikko.puimula.org/
+License:        GPL-2.0-or-later (see LICENSE.CORE in the source tarball)
+Copyright:      (C) Harri Pitkänen and contributors
+
+Project:        voikko-fi (Suomi-malaga / Joukahainen) standard dictionary,
+                dictionary format 5, snapshot 2024-06-18
+License:        GPL-2.0-or-later
+Copyright:      (C) Hannu Väisänen, Harri Pitkänen and contributors
+
+Built by Subtitle Edit without the HFST and VISL CG-3 backends so the library
+links only libc++ and libSystem. Used for Finnish spell checking.
+
+--------------------------------------------------------------------------------
 Source code availability (GPL components)
 --------------------------------------------------------------------------------
 
 For the GPL-licensed components above (FFmpeg, x264, x265, librubberband,
-libdvdread/libdvdnav, libvidstab), the corresponding source code is available
+libdvdread/libdvdnav, libvidstab, libvoikko, voikko-fi), the corresponding source code is available
 from each project's upstream website linked in the section above. Subtitle
 Edit does not modify these binaries.
 

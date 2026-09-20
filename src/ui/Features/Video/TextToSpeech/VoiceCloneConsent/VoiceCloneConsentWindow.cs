@@ -28,6 +28,7 @@ public class VoiceCloneConsentWindow : Window
         DataContext = vm;
 
         Content = BuildContent(vm);
+        KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
     private static Border BuildContent(VoiceCloneConsentViewModel vm)
@@ -61,7 +62,7 @@ public class VoiceCloneConsentWindow : Window
         var title = new TextBlock
         {
             Text = Se.Language.Video.TextToSpeech.VoiceCloneConsentHeader,
-            FontSize = 18,
+            FontSize = UiUtil.ScaledFontSize(18),
             FontWeight = FontWeight.SemiBold,
             TextWrapping = TextWrapping.Wrap,
         };
@@ -69,7 +70,7 @@ public class VoiceCloneConsentWindow : Window
         var subtitle = new TextBlock
         {
             Text = Se.Language.Video.TextToSpeech.VoiceCloneConsentIntro,
-            FontSize = 12,
+            FontSize = UiUtil.ScaledFontSize(12),
             Opacity = 0.75,
             TextWrapping = TextWrapping.Wrap,
             Margin = new Thickness(0, 4, 0, 0),

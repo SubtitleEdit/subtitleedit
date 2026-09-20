@@ -59,9 +59,11 @@ jobs:
           dotnet test SubtitleEdit.sln --no-build --logger "trx;LogFileName=tests-retry.trx"
 
       # Uploaded whenever the first run failed - also on a green retry, so flakes can be
-      # diagnosed without re-running locally.
+      # diagnosed without re-running locally. Needs !cancelled(): without a status function
+      # the condition is implicitly ANDed with success(), so a failed retry step skipped the
+      # upload - exactly the run whose trx files were needed.
       - name: Upload test results
-        if: steps.test.outcome == 'failure'
+        if: ${{ !cancelled() && steps.test.outcome == 'failure' }}
         uses: actions/upload-artifact@v5
         with:
           name: test-results

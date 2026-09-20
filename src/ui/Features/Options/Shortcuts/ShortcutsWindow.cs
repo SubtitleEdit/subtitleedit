@@ -46,7 +46,7 @@ public class ShortcutsWindow : Window
             Margin = new Thickness(10),
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
+        }.WithSearchAndClearIcons();
         _searchBox.Bind(TextBox.TextProperty, new Binding(nameof(vm.SearchText)) { Source = vm });
         // Give the interactive controls accessible names so screen readers announce them instead of
         // reading a generic "edit"/"combo box"/"check box" (issue #11745).
@@ -64,7 +64,7 @@ public class ShortcutsWindow : Window
             Child = new TextBlock
             {
                 [!TextBlock.TextProperty] = new Binding(nameof(vm.FlatNodes) + ".Count") { Source = vm, Mode = BindingMode.OneWay, Converter = new NumberToStringWithThousandSeparator() },
-                FontSize = 10,
+                FontSize = UiUtil.ScaledFontSize(10),
                 FontWeight = FontWeight.SemiBold,
                 VerticalAlignment = VerticalAlignment.Center,
                 Foreground = new SolidColorBrush(accentColor),
@@ -128,7 +128,7 @@ public class ShortcutsWindow : Window
             {
                 var icon = new ContentControl
                 {
-                    FontSize = 17,
+                    FontSize = UiUtil.ScaledFontSize(17),
                     Foreground = Brushes.White,
                     HorizontalAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Center,
@@ -151,7 +151,7 @@ public class ShortcutsWindow : Window
 
                 var name = new TextBlock
                 {
-                    FontSize = 11,
+                    FontSize = UiUtil.ScaledFontSize(11),
                     HorizontalAlignment = HorizontalAlignment.Center,
                     TextAlignment = TextAlignment.Center,
                 };
@@ -159,7 +159,7 @@ public class ShortcutsWindow : Window
 
                 var count = new TextBlock
                 {
-                    FontSize = 10,
+                    FontSize = UiUtil.ScaledFontSize(10),
                     Opacity = 0.6,
                     HorizontalAlignment = HorizontalAlignment.Center,
                 };
@@ -223,7 +223,7 @@ public class ShortcutsWindow : Window
             {
                 var text = new TextBlock
                 {
-                    FontSize = 11,
+                    FontSize = UiUtil.ScaledFontSize(11),
                     VerticalAlignment = VerticalAlignment.Center,
                 };
                 text.Bind(TextBlock.TextProperty, new Binding(nameof(ShortcutTreeNode.ActiveIn)));
@@ -255,7 +255,7 @@ public class ShortcutsWindow : Window
             {
                 var icon = new ContentControl
                 {
-                    FontSize = 16,
+                    FontSize = UiUtil.ScaledFontSize(16),
                     HorizontalAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Center,
                 };
@@ -290,7 +290,7 @@ public class ShortcutsWindow : Window
                 // (text variant: darkened on the light theme for contrast, #12778).
                 var text = new TextBlock
                 {
-                    FontSize = 12,
+                    FontSize = UiUtil.ScaledFontSize(12),
                     FontWeight = FontWeight.Medium,
                     VerticalAlignment = VerticalAlignment.Center,
                     Margin = new Thickness(2, 0, 14, 0),
@@ -332,7 +332,7 @@ public class ShortcutsWindow : Window
                     {
                         var keyText = new TextBlock
                         {
-                            FontSize = 11,
+                            FontSize = UiUtil.ScaledFontSize(11),
                             FontWeight = FontWeight.SemiBold,
                             HorizontalAlignment = HorizontalAlignment.Center,
                         };
@@ -355,7 +355,7 @@ public class ShortcutsWindow : Window
                 var notSet = new TextBlock
                 {
                     Text = Se.Language.Options.Shortcuts.Unassigned,
-                    FontSize = 11,
+                    FontSize = UiUtil.ScaledFontSize(11),
                     FontStyle = FontStyle.Italic,
                     Opacity = 0.45,
                     HorizontalAlignment = HorizontalAlignment.Right,
@@ -374,6 +374,7 @@ public class ShortcutsWindow : Window
         };
 
         var shortcutsGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        shortcutsGrid.WithAccessibleName(Se.Language.General.Shortcuts);
         shortcutsGrid.DataContext = vm;
         shortcutsGrid.ItemsSource = vm.FlatNodes;
         shortcutsGrid.Columns.Add(columnActiveIn);

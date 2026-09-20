@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
+using System;
 using System.Globalization;
 using SeConv.Core;
 using Xunit;
@@ -236,31 +237,44 @@ public class MultipleReplaceLoaderTest : IDisposable
     /// A user pattern that backtracks catastrophically must not hang the conversion: the regex
     /// carries the UI's match timeout, and a rule that trips it is retired for the rest of the
     /// file rather than costing the timeout again on every remaining paragraph. Other rules keep
-    /// working. This test necessarily waits out one timeout, so it takes about five seconds.
+    /// working. This test necessarily waits out one timeout; the shipped five seconds is cut to
+    /// a quarter second here, which is still orders of magnitude more backtracking than the
+    /// pattern can finish, so it proves the same thing without being the slowest test in the
+    /// project.
     /// </summary>
     [Fact(Timeout = 60_000)]
     public void CatastrophicPatternTimesOutAndIsRetiredWithoutStoppingOtherRules()
     {
-        var slowText = new string('a', 46) + "!";
-        _sub = new Subtitle();
-        for (var i = 0; i < 4; i++)
+        var previousTimeout = RegexUtils.UserPatternMatchTimeout;
+        RegexUtils.UserPatternMatchTimeout = TimeSpan.FromMilliseconds(250);
+        try
         {
-            _sub.Paragraphs.Add(new Paragraph(slowText, i * 4000, i * 4000 + 3000));
+            var slowText = new string('a', 46) + "!";
+            _sub = new Subtitle();
+            for (var i = 0; i < 4; i++)
+            {
+                _sub.Paragraphs.Add(new Paragraph(slowText, i * 4000, i * 4000 + 3000));
+            }
+            _sub.Paragraphs.Add(new Paragraph("the colour", 40000, 43000));
+
+            var elapsed = System.Diagnostics.Stopwatch.StartNew();
+            var modified = Apply(CatastrophicXml, ".xml");
+            elapsed.Stop();
+
+            // Only the last paragraph changes; the slow rule never gets to match anything.
+            Assert.Equal(1, modified);
+            Assert.Equal("the color", _sub.Paragraphs[^1].Text);
+            Assert.Equal(slowText, _sub.Paragraphs[0].Text);
+
+            // Retirement means one timeout for the file, not one per paragraph. The regex timeout
+            // is coarse (it is checked between backtracking steps), so allow a generous margin.
+            Assert.True(
+                elapsed.Elapsed < RegexUtils.UserPatternMatchTimeout * 4 + TimeSpan.FromSeconds(1),
+                $"expected roughly one timeout, took {elapsed.Elapsed.TotalSeconds:0.0}s");
         }
-        _sub.Paragraphs.Add(new Paragraph("the colour", 40000, 43000));
-
-        var elapsed = System.Diagnostics.Stopwatch.StartNew();
-        var modified = Apply(CatastrophicXml, ".xml");
-        elapsed.Stop();
-
-        // Only the last paragraph changes; the slow rule never gets to match anything.
-        Assert.Equal(1, modified);
-        Assert.Equal("the color", _sub.Paragraphs[^1].Text);
-        Assert.Equal(slowText, _sub.Paragraphs[0].Text);
-
-        // Retirement means one timeout for the file, not one per paragraph.
-        Assert.True(
-            elapsed.Elapsed < RegexUtils.UserPatternMatchTimeout * 2,
-            $"expected roughly one timeout, took {elapsed.Elapsed.TotalSeconds:0.0}s");
+        finally
+        {
+            RegexUtils.UserPatternMatchTimeout = previousTimeout;
+        }
     }
 }

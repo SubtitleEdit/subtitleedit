@@ -50,6 +50,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--input-folder:<folder name>", "Input folder path");
         ShowParameter(console, "--offset:hh:mm:ss:ms", "Time offset");
         ShowParameter(console, "--output-filename:<file name>", "Output file name (for single file only)");
+        ShowParameter(console, "--output-filename-append:<text>", "Text appended to the output file name stem, e.g. _fixed (ignored with --output-filename)");
         ShowParameter(console, "--output-folder:<folder name>", "Output folder path");
         ShowParameter(console, "--overwrite", "Overwrite existing files");
         ShowParameter(console, "--keep-timestamp", "Give output files the source file's modified/created date instead of the conversion time");
@@ -61,14 +62,15 @@ internal static class HelpDisplay
         ShowParameter(console, "--teletext-only", "Process teletext only");
         ShowParameter(console, "--teletext-only-page:<page number>", "Teletext page number");
         ShowParameter(console, "--track-number:<track list>", "Comma separated track number list");
-        ShowParameter(console, "--ocr-engine:<engine>", "OCR engine: tesseract | nocr | binaryocr | ollama | llamacpp | paddle");
+        ShowParameter(console, "--ocr-engine:<engine>", "OCR engine: tesseract | nocr | binaryocr | ollama | llamacpp | paddle | applevision (macOS)");
         ShowParameter(console, "--ocr-language:<lang>", "Language for OCR (e.g. eng, deu, spa)");
         ShowParameter(console, "--ocr-db:<path>", ".nocr (--ocr-engine=nocr) or .db (--ocr-engine=binaryocr)");
         ShowParameter(console, "--ocr-model:<model>", "llamacpp OCR .gguf file name/path (default: first downloaded OCR model)");
+        ShowParameter(console, "--ocr-prompt:<text|file>", "prompt for llamacpp/ollama OCR; {language} = --ocr-language (default: same as the OCR window)");
         ShowParameter(console, "--ocr-url:<url>", "Endpoint of an already-running llama-server for OCR (skips the auto-start)");
         ShowParameter(console, "--time-codes-only", "Image sources (.sup/VobSub/PGS/DVB/XSUB) -> text with time codes only; skips OCR");
         ShowParameter(console, "--no-vobsub-isolate-colors", "Disable VobSub OCR colour isolation (on by default; isolation binarises to black-on-white, dropping outline colours)");
-        ShowParameter(console, "--no-pgs-isolate-colors", "Disable PGS/DVB-sub OCR colour isolation (on by default; isolation binarises to black-on-white so the white glyph fill survives the OCR canvas)");
+        ShowParameter(console, "--no-pgs-isolate-colors", "Disable PGS/DVB-sub OCR colour isolation (on by default, except for applevision; isolation binarises to black-on-white so the white glyph fill survives the OCR canvas)");
         ShowParameter(console, "--ollama-url:<url>", "Ollama API endpoint (default: http://localhost:11434/api/chat)");
         ShowParameter(console, "--ollama-model:<model>", "Ollama vision model (default: llama3.2-vision)");
         ShowParameter(console, "--translate-to:<lang>", "Auto-translate to this language (code or English name, e.g. de or German)");
@@ -106,9 +108,15 @@ internal static class HelpDisplay
         ShowParameter(console, "--box-padding:<px>", "Box padding in pixels; one value for all sides or left,right,top,bottom (default: 5,5,3,3)");
         ShowParameter(console, "--line-spacing:<percent>", "Extra gap between lines as percent of line height (default: 0)");
         ShowParameter(console, "--alignment:<position>", "Screen position, e.g. bottom-center (default), top-left, middle-right");
-        ShowParameter(console, "--content-alignment:<mode>", "Multi-line text justification: left | center (default) | right");
+        ShowParameter(console, "--content-alignment:<mode>", "Multi-line text justification: left | center (default) | right | from-alignment");
         ShowParameter(console, "--bottom-top-margin:<px>", "Vertical screen-edge margin in pixels (default: 5% of height)");
         ShowParameter(console, "--left-right-margin:<px>", "Horizontal screen-edge margin in pixels (default: 5% of width)");
+        ShowParameter(console, "--override-position:<x|y|xy>", "Image → image: ignore the source bitmap position on that axis and place it by --alignment and margins");
+        ShowParameter(console, "--full-frame", "Draw each subtitle on a frame-sized image (place at 0,0 in an editing timeline); only fcpimage and bluraysup");
+        ShowParameter(console, "--full-frame-background-color:<colour>", "Background of the full frame image (default: transparent)");
+        ShowParameter(console, "--mode-3d:<mode>", "3D video, one copy per eye: none (default) | half-side-by-side (sbs) | half-top-bottom (tab); also image → image");
+        ShowParameter(console, "--depth-3d:<px>", "3D depth -100..100; positive brings the subtitle out of the screen. D-Cinema: the Z-position");
+        ShowParameter(console, "--plane-3d:<file.ofs>", "3D Blu-ray 3D-Plane: each subtitle gets the disc's depth for its frames (--depth-3d where it has none)");
 
         console.WriteLine();
         console.MarkupLine("[bold cyan]Operations:[/]");

@@ -304,28 +304,51 @@ namespace Nikse.SubtitleEdit.Core.Common
                 emphasis2Buffer[3] = emphasis2.Alpha;
             }
 
-            for (int i = 0; i < _bitmapData.Length; i += 4)
+            // One 32-bit read and one 32-bit write per pixel. The loop used to index the byte
+            // array eight times per candidate colour and then call Buffer.BlockCopy to store the
+            // four result bytes - a full call per pixel of every exported VobSub/DVD image.
+            var packedBackground = PackBgra(backgroundBuffer[0], backgroundBuffer[1], backgroundBuffer[2], backgroundBuffer[3]);
+            var packedPattern = PackBgra(patternBuffer[0], patternBuffer[1], patternBuffer[2], patternBuffer[3]);
+            var packedEmphasis1 = PackBgra(emphasis1Buffer[0], emphasis1Buffer[1], emphasis1Buffer[2], emphasis1Buffer[3]);
+            var packedEmphasis2 = PackBgra(emphasis2Buffer[0], emphasis2Buffer[1], emphasis2Buffer[2], emphasis2Buffer[3]);
+            var backgroundIsTransparent = backgroundBuffer[3] == 0;
+
+            // The four reference colours as plain locals: read out of the byte arrays they were
+            // indexed out of twelve times per pixel, each with its own bounds check.
+            int patternB = patternBuffer[0], patternG = patternBuffer[1], patternR = patternBuffer[2], patternA = patternBuffer[3];
+            int e1B = emphasis1Buffer[0], e1G = emphasis1Buffer[1], e1R = emphasis1Buffer[2], e1A = emphasis1Buffer[3];
+            int e2B = emphasis2Buffer[0], e2G = emphasis2Buffer[1], e2R = emphasis2Buffer[2], e2A = emphasis2Buffer[3];
+
+            var pixels = MemoryMarshal.Cast<byte, uint>(_bitmapData.AsSpan());
+
+            for (var p = 0; p < pixels.Length; p++)
             {
-                int smallestDiff = 10000;
-                byte[] buffer = backgroundBuffer;
-                if (backgroundBuffer[3] == 0 && _bitmapData[i + 3] < 10) // transparent
+                var pixel = pixels[p];
+                int blue = (byte)pixel;
+                int green = (byte)(pixel >> 8);
+                int red = (byte)(pixel >> 16);
+                int alpha = (byte)(pixel >> 24);
+
+                var smallestDiff = 10000;
+                var result = packedBackground;
+                if (backgroundIsTransparent && alpha < 10) // transparent
                 {
                 }
                 else
                 {
-                    int patternDiff = Math.Abs(patternBuffer[0] - _bitmapData[i]) + Math.Abs(patternBuffer[1] - _bitmapData[i + 1]) + Math.Abs(patternBuffer[2] - _bitmapData[i + 2]) + Math.Abs(patternBuffer[3] - _bitmapData[i + 3]);
+                    var patternDiff = Math.Abs(patternB - blue) + Math.Abs(patternG - green) + Math.Abs(patternR - red) + Math.Abs(patternA - alpha);
                     if (patternDiff < smallestDiff)
                     {
                         smallestDiff = patternDiff;
-                        buffer = patternBuffer;
+                        result = packedPattern;
                     }
 
-                    int emphasis1Diff = Math.Abs(emphasis1Buffer[0] - _bitmapData[i]) + Math.Abs(emphasis1Buffer[1] - _bitmapData[i + 1]) + Math.Abs(emphasis1Buffer[2] - _bitmapData[i + 2]) + Math.Abs(emphasis1Buffer[3] - _bitmapData[i + 3]);
+                    var emphasis1Diff = Math.Abs(e1B - blue) + Math.Abs(e1G - green) + Math.Abs(e1R - red) + Math.Abs(e1A - alpha);
                     if (useInnerAntialize)
                     {
                         if (emphasis1Diff - 20 < smallestDiff)
                         {
-                            buffer = emphasis1Buffer;
+                            result = packedEmphasis1;
                         }
                     }
                     else
@@ -333,21 +356,22 @@ namespace Nikse.SubtitleEdit.Core.Common
                         if (emphasis1Diff < smallestDiff)
                         {
                             smallestDiff = emphasis1Diff;
-                            buffer = emphasis1Buffer;
+                            result = packedEmphasis1;
                         }
 
-                        int emphasis2Diff = Math.Abs(emphasis2Buffer[0] - _bitmapData[i]) + Math.Abs(emphasis2Buffer[1] - _bitmapData[i + 1]) + Math.Abs(emphasis2Buffer[2] - _bitmapData[i + 2]) + Math.Abs(emphasis2Buffer[3] - _bitmapData[i + 3]);
+                        var emphasis2Diff = Math.Abs(e2B - blue) + Math.Abs(e2G - green) + Math.Abs(e2R - red) + Math.Abs(e2A - alpha);
                         if (emphasis2Diff < smallestDiff)
                         {
-                            buffer = emphasis2Buffer;
+                            result = packedEmphasis2;
                         }
-                        else if (_bitmapData[i + 3] >= 10 && _bitmapData[i + 3] < 90) // anti-alias
+                        else if (alpha >= 10 && alpha < 90) // anti-alias
                         {
-                            buffer = emphasis2Buffer;
+                            result = packedEmphasis2;
                         }
                     }
                 }
-                Buffer.BlockCopy(buffer, 0, _bitmapData, i, 4);
+
+                pixels[p] = result;
             }
 
             if (useInnerAntialize)

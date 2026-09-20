@@ -28,7 +28,11 @@ public class ApplyMinGapWindow : Window
         var numericUpDownMinGap = UiUtil.MakeNumericUpDownInt(0, 1000, Se.Settings.Tools.BridgeGaps.MinGapMs, 130, vm, nameof(vm.MinGapMsOrFrames));
         numericUpDownMinGap.ValueChanged += vm.ValueChanged;
 
-        var panelControls = UiUtil.MakeHorizontalPanel(labelMinXBetweenLines, numericUpDownMinGap);
+        var buttonCalculate = UiUtil.MakeButtonBrowse(vm.CalculateMinGapMsCommand,
+                accessibleName: Se.Language.Options.Settings.MinGapCalculateDotDotDot)
+            .WithBindIsVisible(vm, nameof(vm.IsMsMode));
+
+        var panelControls = UiUtil.MakeHorizontalPanel(labelMinXBetweenLines, numericUpDownMinGap, buttonCalculate);
 
         var subtitleView = MakeSubtitleView(vm);
 
@@ -64,7 +68,7 @@ public class ApplyMinGapWindow : Window
 
         Content = grid;
 
-        Activated += delegate { numericUpDownMinGap.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, numericUpDownMinGap); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };

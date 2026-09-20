@@ -80,6 +80,7 @@ public class EmbedTrackPreviewWindow : Window
         dataGridSubtitle.Height = double.NaN;
         dataGridSubtitle.DataContext = vm;
         dataGridSubtitle.ItemsSource = vm.Rows;
+        dataGridSubtitle.WithAccessibleName(Se.Language.General.Preview); // the window title is set later, after loading (#12087)
         dataGridSubtitle.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.NumberSymbol,
@@ -110,6 +111,7 @@ public class EmbedTrackPreviewWindow : Window
             Width = new GridLength(1, GridUnitType.Star),
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            NameBinding = new Binding(nameof(MatroskaSubtitleCueDisplay.Text)),
             CellTemplate = new FuncDataTemplate<MatroskaSubtitleCueDisplay>((item, _) =>
             {
                 var stackPanel = new StackPanel

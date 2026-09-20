@@ -32,6 +32,10 @@ public class LanguagePlugins
     public string ApplyToAllLinesX { get; set; }
     public string UpdateAllXAvailable { get; set; }
     public string UpdatingXOfY { get; set; }
+    public string DoNotAskAgain { get; set; }
+    public string ApplyPluginsTo { get; set; }
+    public string AskEachTime { get; set; }
+    public string AllLines { get; set; }
 
     public LanguagePlugins()
     {
@@ -65,5 +69,9 @@ public class LanguagePlugins
         ApplyToAllLinesX = "All lines ({0})";
         UpdateAllXAvailable = "Update all ({0})";
         UpdatingXOfY = "Updating {0}/{1}...";
+        DoNotAskAgain = "Do not ask again (change in Manage plugins)";
+        ApplyPluginsTo = "Apply plugins to";
+        AskEachTime = "Ask each time";
+        AllLines = "All lines";
     }
 }

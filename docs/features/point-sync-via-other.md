@@ -11,8 +11,15 @@ Synchronize a subtitle file using another subtitle file as reference.
 
 1. Open the subtitle you want to sync
 2. Open **Sync → Point sync via other subtitle...**
-3. Select the reference subtitle file
-4. Match corresponding lines between the two files
-5. Click **OK** to apply
+3. Click the browse button in the right pane to load the reference subtitle
+4. Select a line in your subtitle and the matching line in the other subtitle, then click **Set sync point** — or **Set sync point via video...** to pick the time from the video for a line the other subtitle does not cover
+5. Repeat for more sync points; they are listed in the middle and can be removed with right-click **Delete** or the Delete/Backspace key
+6. Click **Apply** to apply the sync points and keep working, or **OK** to apply and close
+
+Both grids have a **Gap** column with the silence before each line; lines starting after 3+ seconds of silence are highlighted, as they often make reliable sync points. **Find text** above each grid searches that subtitle.
+
+The sync point list in the middle is kept in subtitle order, and a line has at most one sync point - setting one again for the same line re-points it. **Delete** in the list's right-click menu, or Delete/Backspace with the list focused, removes the selected point; **OK** and **Apply** need at least one point.
+
+**Set sync point via video...** opens the same window as [Point sync](point-sync.md#set-sync-point-window): the video with the subtitle drawn on it, playing the audio track selected in the main window, and a **Sync point time code** box that follows the video and can be edited by hand. Opened from here the window has no waveform pane.
 
 The window remembers its size and position between sessions.

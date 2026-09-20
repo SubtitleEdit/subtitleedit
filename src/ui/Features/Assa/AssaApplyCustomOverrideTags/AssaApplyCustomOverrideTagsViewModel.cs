@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -51,7 +51,8 @@ public partial class AssaApplyCustomOverrideTagsViewModel : ObservableObject
     private string? _header;
     private string? _footer;
     private string? _videoFileName;
-    private DispatcherTimer _positionTimer = new DispatcherTimer();
+    private bool _closed; // set by OnClosing; stops the posted half of Initialize from starting a pump on a disposed player
+    private UiTickPump _positionTimer = new(TimeSpan.FromMilliseconds(500)); // posted ticks, not a DispatcherTimer - see UiTickPump
     private List<SubtitleLineViewModel> _subtitleLines = new List<SubtitleLineViewModel>();
     private List<SubtitleLineViewModel> _selectedSubtitleLines = new List<SubtitleLineViewModel>();
 
@@ -102,6 +103,15 @@ public partial class AssaApplyCustomOverrideTagsViewModel : ObservableObject
 
         Dispatcher.UIThread.Post(() =>
         {
+            // Closed before this post ran: OnClosing has already stopped the (placeholder) pump
+            // and disposed the player, so the pump started below would never be stopped and
+            // would poll the dead player for the rest of the session - every poll an
+            // error-log entry.
+            if (_closed)
+            {
+                return;
+            }
+
             if (!string.IsNullOrEmpty(videoFileName))
             {
                 _ = VideoPlayerControl.Open(videoFileName);
@@ -122,7 +132,7 @@ public partial class AssaApplyCustomOverrideTagsViewModel : ObservableObject
 
     private void StartTitleTimer()
     {
-        _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(500) };
+        _positionTimer = new UiTickPump(TimeSpan.FromMilliseconds(500));
         _positionTimer.Tick += (s, e) =>
         {
             if (_mpvPlayer == null)
@@ -315,8 +325,9 @@ public partial class AssaApplyCustomOverrideTagsViewModel : ObservableObject
 
     internal void OnClosing()
     {
+        _closed = true;
         _positionTimer.Stop();
-        VideoPlayerControl.VideoPlayer.CloseFile();
+        VideoPlayerControl.CloseAndDisposePlayer();
         try
         {
             if (File.Exists(_tempSubtitleFileName))

@@ -245,6 +245,22 @@ public static class VideoOcrTimingRefiner
         }
 
         var files = Directory.GetFiles(folder, "*.jpg").OrderBy(p => p, StringComparer.Ordinal).ToList();
+        if (files.Count == 0)
+        {
+            // CleanUp works off the first frame's path, so with no frames the folder was never
+            // removed - one leaked "refine_<guid>" directory per boundary ffmpeg produced nothing for.
+            try
+            {
+                Directory.Delete(folder, true);
+            }
+            catch
+            {
+                // ignore
+            }
+
+            return new List<(string, double)>();
+        }
+
         var result = new List<(string, double)>(files.Count);
         for (var i = 0; i < files.Count; i++)
         {

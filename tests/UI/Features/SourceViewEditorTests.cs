@@ -53,6 +53,13 @@ public class SourceViewEditorTests : IDisposable
             Action<TWindow>? configureWindow = null)
             where TWindow : Window where TViewModel : class
             => throw new NotSupportedException();
+
+        public Task<TViewModel> ShowWithOwnerHiddenAsync<TWindow, TViewModel>(
+            Window owner,
+            IReadOnlyList<Window?> companions,
+            Action<TViewModel>? configureViewModel = null)
+            where TWindow : Window where TViewModel : class
+            => throw new NotSupportedException();
     }
 
     private static (SourceViewViewModel Vm, Subtitle Subtitle, string Text) MakeSourceView()

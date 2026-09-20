@@ -30,9 +30,8 @@ Add styled background boxes behind subtitle text using ASSA drawing commands.
 - **Outline color:** Border/outline color around the box.
 - **Shadow color:** Shadow color.
 
-### Outline and Shadow
+### Outline
 - Adjustable outline width.
-- Adjustable shadow distance.
 
 ### Fill Width
 - Option to fill the full width of the video with configurable left and right margins.

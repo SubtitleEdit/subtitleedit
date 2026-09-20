@@ -9,6 +9,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Platform;
+using Avalonia.Styling;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
@@ -19,6 +20,8 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Optris.Icons.Avalonia;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.UiLogic.Common;
 
 namespace Nikse.SubtitleEdit.Features.Options.Settings;
@@ -28,11 +31,13 @@ public class SettingsPage : UserControl
     private readonly TextBox _searchBox;
     private readonly StackPanel _contentPanel;
     private readonly SettingsViewModel _vm;
+    private readonly Dictionary<SettingsSection, Button> _menuButtons = new();
 
     public SettingsPage(SettingsViewModel vm)
     {
         _vm = vm;
         _vm.Sections = CreateSections();
+        _vm.SelectedSection ??= _vm.Sections.FirstOrDefault();
 
         _searchBox = new TextBox
         {
@@ -45,7 +50,7 @@ public class SettingsPage : UserControl
             // The placeholder text is not exposed as the UIA Name, so screen readers announce a
             // bare "edit" without this (#12087).
             [AutomationProperties.NameProperty] = Se.Language.Options.Settings.SearchSettingsDotDotDot,
-        };
+        }.WithSearchAndClearIcons();
 
         _contentPanel = new StackPanel
         {
@@ -83,7 +88,9 @@ public class SettingsPage : UserControl
         };
         foreach (var section in _vm.Sections)
         {
-            menu.Children.Add(MakeMenuItem(section, vm.ScrollToSectionCommand));
+            var menuItem = MakeMenuItem(section, vm.ScrollToSectionCommand);
+            _menuButtons[section] = menuItem;
+            menu.Children.Add(menuItem);
         }
 
         grid.Children.Add(menu);
@@ -128,6 +135,19 @@ public class SettingsPage : UserControl
         UpdateVisibleSections(string.Empty);
 
         _searchBox.TextChanged += (_, e) => UpdateVisibleSections(_searchBox.Text ?? string.Empty);
+        ActualThemeVariantChanged += (_, _) => Dispatcher.UIThread.Post(RefreshSections);
+        _vm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(SettingsViewModel.SelectedSection))
+            {
+                RefreshSections();
+            }
+        };
+    }
+
+    public void RefreshSections()
+    {
+        UpdateVisibleSections(_searchBox.Text ?? string.Empty);
     }
 
     public void FocusSearchBox()
@@ -147,7 +167,7 @@ public class SettingsPage : UserControl
         // Icon on a colored rounded square, matching the section header in the scroll view.
         var image = new ContentControl
         {
-            FontSize = 13,
+            FontSize = UiUtil.ScaledFontSize(13),
             Foreground = Brushes.White,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
@@ -189,18 +209,146 @@ public class SettingsPage : UserControl
         return link;
     }
 
+    /// <summary>
+    /// One category at a time, like SE4: with no search filter only the selected section is in
+    /// the content area, so Tab stays within a category and the next Tab after its last setting
+    /// reaches the buttons, not the first setting of an unannounced next category (#12087).
+    /// A search shows every section with a match, whichever category is selected.
+    /// </summary>
     private void UpdateVisibleSections(string filter)
     {
         _contentPanel.Children.Clear();
+        var showAllSections = !string.IsNullOrWhiteSpace(filter);
 
         foreach (var section in _vm.Sections)
         {
             section.Filter(filter);
-            if (section.IsVisible)
+            if (section.IsVisible && (showAllSections || section == _vm.SelectedSection))
             {
                 _contentPanel.Children.Add(section.Build());
             }
+            else
+            {
+                section.Panel = null; // not in the tree - nothing to scroll to or focus
+            }
         }
+
+        UpdateMenuHighlight();
+    }
+
+    private void UpdateMenuHighlight()
+    {
+        foreach (var (section, button) in _menuButtons)
+        {
+            if (section == _vm.SelectedSection)
+            {
+                button.Background = new SolidColorBrush(((SolidColorBrush)section.Brush).Color, 0.18);
+            }
+            else
+            {
+                button.ClearValue(BackgroundProperty);
+            }
+        }
+    }
+
+    private static SettingsItem MakeToolbarSetting(ToolbarSettingItem item)
+    {
+        if (item.ImageName == null)
+        {
+            return new SettingsItem(item.Name, () =>
+            {
+                var checkBox = new CheckBox();
+                checkBox.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(item.IsVisible))
+                {
+                    Source = item,
+                    Mode = BindingMode.TwoWay,
+                });
+                return checkBox;
+            }) { IsFullWidth = true };
+        }
+
+        return new SettingsItem(item.Name, () =>
+        {
+            var icon = InitToolbar.MakeImage(item.ImageName);
+            icon.Width = 32;
+            icon.Height = 32;
+            icon.HorizontalAlignment = HorizontalAlignment.Center;
+            icon.VerticalAlignment = VerticalAlignment.Center;
+
+            var check = new TextBlock
+            {
+                Text = "✓",
+                FontSize = UiUtil.ScaledFontSize(16),
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Top,
+            };
+            check.Bind(IsVisibleProperty, new Binding(nameof(item.IsVisible)) { Source = item });
+
+            var content = new StackPanel
+            {
+                Spacing = 6,
+                VerticalAlignment = VerticalAlignment.Center,
+                Children =
+                {
+                    icon,
+                    new TextBlock
+                    {
+                        Text = item.Name,
+                        FontSize = UiUtil.ScaledFontSize(12),
+                        LineHeight = 15,
+                        MaxLines = 2,
+                        TextWrapping = TextWrapping.Wrap,
+                        TextTrimming = TextTrimming.CharacterEllipsis,
+                        TextAlignment = TextAlignment.Center,
+                    },
+                },
+            };
+            var toggle = new ToggleButton
+            {
+                Width = 120,
+                Height = 85,
+                Margin = new Thickness(0, 0, 8, 8),
+                Padding = new Thickness(8),
+                CornerRadius = new CornerRadius(8),
+                HorizontalContentAlignment = HorizontalAlignment.Stretch,
+                VerticalContentAlignment = VerticalAlignment.Stretch,
+                Content = new Grid { Children = { content, check } },
+                [AutomationProperties.NameProperty] = item.Name,
+            };
+            if (Se.Settings.Appearance.ShowHints)
+            {
+                ToolTip.SetTip(toggle, item.Name);
+            }
+
+            toggle.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(item.IsVisible))
+            {
+                Source = item,
+                Mode = BindingMode.TwoWay,
+            });
+
+            var accent = UiUtil.GetAccentBrush();
+            var accentColor = accent is ISolidColorBrush accentSolid ? accentSolid.Color : Colors.DodgerBlue;
+            var background = new SolidColorBrush(Color.Parse("#3f808080"));
+            var selectedBackground = new SolidColorBrush(accentColor, 0x26 / 255.0);
+            var lightResources = new ResourceDictionary();
+            var darkResources = new ResourceDictionary();
+            toggle.Resources.ThemeDictionaries[ThemeVariant.Light] = lightResources;
+            toggle.Resources.ThemeDictionaries[ThemeVariant.Dark] = darkResources;
+            check.Foreground = accent;
+            foreach (var state in new[] { "", "PointerOver", "Pressed" })
+            {
+                toggle.Resources["ToggleButtonBackground" + state] = background;
+                toggle.Resources["ToggleButtonBackgroundChecked" + state] = selectedBackground;
+                lightResources["ToggleButtonForeground" + state] = Brushes.Black;
+                lightResources["ToggleButtonForegroundChecked" + state] = Brushes.Black;
+                darkResources["ToggleButtonForeground" + state] = Brushes.White;
+                darkResources["ToggleButtonForegroundChecked" + state] = Brushes.White;
+                toggle.Resources["ToggleButtonBorderBrush" + state] = Brushes.Transparent;
+                toggle.Resources["ToggleButtonBorderBrushChecked" + state] = accent;
+            }
+
+            return toggle;
+        });
     }
 
     private List<SettingsSection> CreateSections()
@@ -270,6 +418,8 @@ public class SettingsPage : UserControl
         [
             MakeNumericSettingInt(Se.Language.Options.Settings.NewEmptyDefaultMs, nameof(_vm.NewEmptyDefaultMs)),
             MakeNumericSettingInt(Se.Language.Options.Settings.TimeCodeUpDownStepMs, nameof(_vm.TimeCodeUpDownStepMs), 1, 5000),
+            MakeNumericSettingInt(Se.Language.Options.Settings.MoveSelectedLinesStepMs, nameof(_vm.MoveSelectedLinesStepMs), 1, 60000),
+            MakeCheckboxSetting(Se.Language.Options.Settings.MoveLinesShortenNeighbor, nameof(_vm.MoveLinesShortenNeighbor)),
             MakeCheckboxSetting(Se.Language.Options.Settings.PromptBeforeDelete, nameof(_vm.PromptBeforeDelete)),
             MakeCheckboxSetting(Se.Language.Options.Settings.UseFrameMode, nameof(_vm.UseFrameMode)),
             MakeCheckboxSetting(Se.Language.Options.Settings.TextBoxLimitNewLines, nameof(_vm.TextBoxLimitNewLines)),
@@ -373,6 +523,10 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoBackupOn, nameof(_vm.AutoBackupOn)),
             MakeNumericSettingInt(Se.Language.Options.Settings.AutoBackupIntervalMinutes, nameof(_vm.AutoBackupIntervalMinutes), 1),
             MakeNumericSettingInt(Se.Language.Options.Settings.AutoBackupDeleteAfterDays, nameof(_vm.AutoBackupDeleteAfterDays), 1),
+            MakeSeparator(),
+            MakeCheckboxSetting(Se.Language.Options.Settings.SettingsBackupOn, nameof(_vm.SettingsBackupOn)),
+            MakeNumericSettingInt(Se.Language.Options.Settings.SettingsBackupIntervalDays, nameof(_vm.SettingsBackupIntervalDays), 0),
+            MakeNumericSettingInt(Se.Language.Options.Settings.SettingsBackupMaxCount, nameof(_vm.SettingsBackupMaxCount), 1),
         ]));
 
         sections.Add(new SettingsSection(Se.Language.General.SubtitleFormats, IconNames.ClosedCaption, "#7fa8f0",
@@ -402,6 +556,9 @@ public class SettingsPage : UserControl
             new SettingsItem(Se.Language.Options.Settings.FavoriteSubtitleFormats, () => MakeFavoritesGrid(_vm)),
             new SettingsItem(Se.Language.Options.Settings.FavoriteLanguages, () => MakeLanguageFavoritesGrid(_vm)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WebVttUseXTimestampMap, nameof(_vm.WebVttUseXTimestampMap)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.AssaAutoSetResolution, nameof(_vm.AssaAutoSetResolution)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.AssaAutoSetResolutionPrompt, nameof(_vm.AssaAutoSetResolutionPrompt),
+                new Binding(nameof(_vm.AssaAutoSetResolution)) { Source = _vm }),
         ]));
 
         sections.Add(new SettingsSection(Se.Language.General.SyntaxColoring, IconNames.Palette, "#d966a0",
@@ -447,6 +604,8 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowFullscreenButton, nameof(_vm.ShowFullscreenButton)),
             MakeCheckboxSetting(Se.Language.Options.Settings.FullscreenHideControls, nameof(_vm.FullscreenHideControls)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoOpenVideoFile, nameof(_vm.AutoOpenVideoFile)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowSecondarySubtitleDialog, nameof(_vm.ShowSecondarySubtitleDialog)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.RememberSecondarySubtitleFile, nameof(_vm.RememberSecondarySubtitleFile)),
             new SettingsItem(!_vm.IsLibMpvDownloadVisible, Se.Language.Options.Settings.DownloadMpv, () => new StackPanel
             {
                 Children =
@@ -457,7 +616,7 @@ public class SettingsPage : UserControl
                         Spacing = 10,
                         Children =
                         {
-                            UiUtil.MakeButton(Se.Language.General.Download, _vm.DownloadLibMpvCommand),
+                            MakeDownloadButton(Se.Language.Options.Settings.DownloadMpv, _vm.DownloadLibMpvCommand, nameof(_vm.LibMpvStatus)),
                             new TextBlock
                             {
                                 DataContext = _vm,
@@ -475,7 +634,7 @@ public class SettingsPage : UserControl
                         Margin = new Thickness(10, 0, 0, 0),
                         VerticalAlignment = VerticalAlignment.Center,
                         Opacity = 0.5,
-                        FontSize = 10,
+                        FontSize = UiUtil.ScaledFontSize(10),
                     }
                 },
             }),
@@ -490,12 +649,34 @@ public class SettingsPage : UserControl
                         Spacing = 10,
                         Children =
                         {
-                            UiUtil.MakeButton(Se.Language.General.Download, _vm.DownloadLibVlcCommand),
+                            MakeDownloadButton(Se.Language.Options.Settings.DownloadVlc, _vm.DownloadLibVlcCommand, nameof(_vm.LibVlcStatus)),
                             new TextBlock
                             {
                                 DataContext = _vm,
                                 [!TextBlock.TextProperty] = new Binding(nameof(_vm.LibVlcStatus)),
                                 Margin = new Thickness(0, 0, 0, 0),
+                                VerticalAlignment = VerticalAlignment.Center,
+                                HorizontalAlignment = HorizontalAlignment.Left,
+                            }
+                        }
+                    },
+                },
+            }),
+            new SettingsItem(!_vm.IsFfmpegLibsDownloadVisible, Se.Language.Options.Settings.DownloadFfmpegLibs, () => new StackPanel
+            {
+                Children =
+                {
+                    new StackPanel
+                    {
+                        Orientation = Orientation.Horizontal,
+                        Spacing = 10,
+                        Children =
+                        {
+                            MakeDownloadButton(Se.Language.Options.Settings.DownloadFfmpegLibs, _vm.DownloadFfmpegLibsCommand, nameof(_vm.FfmpegLibsStatus)),
+                            new TextBlock
+                            {
+                                DataContext = _vm,
+                                [!TextBlock.TextProperty] = new Binding(nameof(_vm.FfmpegLibsStatus)),
                                 VerticalAlignment = VerticalAlignment.Center,
                                 HorizontalAlignment = HorizontalAlignment.Left,
                             }
@@ -519,6 +700,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformShowToolbar, nameof(_vm.WaveformShowToolbar)),
             new SettingsItem(Se.Language.Options.Settings.WaveformShowToolbarEditLabel,
                 () => UiUtil.MakeButton(Se.Language.Options.Settings.WaveformShowToolbarEdit, _vm.EditWaveformToolbarPropertiesCommand)),
+            MakeCheckboxSetting(Se.Language.Waveform.ShowOriginalSubtitle, nameof(_vm.WaveformShowOriginalSubtitle)),
 
             new SettingsItem(Se.Language.Options.Settings.WaveformSingleClickAction, () => new ComboBox
             {
@@ -548,6 +730,9 @@ public class SettingsPage : UserControl
                 () => UiUtil.MakeComboBox(_vm.WaveformExtractAudioSampleRates, _vm, nameof(_vm.SelectedWaveformExtractAudioSampleRate))),
             new SettingsItem(Se.Language.Options.Settings.WaveformExtractAudioBitRate,
                 () => UiUtil.MakeComboBox(_vm.WaveformExtractAudioBitRates, _vm, nameof(_vm.SelectedWaveformExtractAudioBitRate))),
+            // SE 4 parity (#14804): waveform, speech to text and audio clips take only the front
+            // center (dialogue) channel when the picked track is 5.1/7.1; other layouts are unaffected.
+            MakeCheckboxSetting(Se.Language.Options.Settings.FfmpegUseCenterChannelOnly, nameof(_vm.FfmpegUseCenterChannelOnly)),
 
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformRightClickSelectsSubtitle, nameof(_vm.WaveformRightClickSelectsSubtitle)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformAllowOverlap, nameof(_vm.WaveformAllowOverlap)),
@@ -570,6 +755,10 @@ public class SettingsPage : UserControl
                 0, 10, 120, _vm, nameof(_vm.WaveformSnapToShotChangeEndMaxSeconds), defaultValue: 1.5m)),
             new SettingsItem(Se.Language.Options.Settings.WaveformSnapToShotChangeSameShotEndMaxSeconds, () => UiUtil.MakeNumericUpDownOneDecimal(
                 0, 10, 120, _vm, nameof(_vm.WaveformSnapToShotChangeSameShotEndMaxSeconds), defaultValue: 0.5m)),
+            new SettingsItem(Se.Language.Options.Settings.WaveformGuessStartOffsetMs, () => UiUtil.MakeNumericUpDownInt(
+                0, 1000, 0, 120, _vm, nameof(_vm.WaveformGuessStartOffsetMs))),
+            new SettingsItem(Se.Language.Options.Settings.WaveformGuessEndOffsetMs, () => UiUtil.MakeNumericUpDownInt(
+                0, 1000, 0, 120, _vm, nameof(_vm.WaveformGuessEndOffsetMs))),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformShotChangesAutoGenerate, nameof(_vm.WaveformShotChangesAutoGenerate)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformFocusOnMouseOver, nameof(_vm.WaveformFocusOnMouseOver)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformFocusTextboxAfterInsertNew, nameof(_vm.WaveformFocusTextboxAfterInsertNew)),
@@ -579,6 +768,12 @@ public class SettingsPage : UserControl
                 () => UiUtil.MakeComboBox(_vm.WaveformMouseWheelVideoPositionSteps, _vm, nameof(_vm.SelectedWaveformMouseWheelVideoPositionStep))),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformCenterVideoPositionAlsoWhenPaused, nameof(_vm.WaveformCenterVideoPositionAlsoWhenPaused)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformDrawGridLines, nameof(_vm.WaveformDrawGridLines)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.WaveformUseSkiaRenderer, nameof(_vm.WaveformUseSkiaRenderer)),
+            // SE 4 parity: the per-paragraph footer in the waveform ("#43  01:10" and the
+            // chars/sec line above it) can be turned off - some users find it noisy (#14707).
+            // Composed from existing strings so no new translatable text is needed.
+            MakeCheckboxSetting($"{Se.Language.General.Show} {Se.Language.General.NumberSymbol} + {Se.Language.General.Duration}", nameof(_vm.WaveformShowNumberAndDuration)),
+            MakeCheckboxSetting($"{Se.Language.General.Show} {Se.Language.General.CharsPerSec}", nameof(_vm.WaveformShowCps)),
             new SettingsItem(Se.Language.Options.Settings.WaveformTextFontSize, () => UiUtil.MakeNumericUpDownInt(
                 10 ,
                 100,
@@ -610,7 +805,7 @@ public class SettingsPage : UserControl
                         Spacing = 10,
                         Children =
                         {
-                            UiUtil.MakeButton(Se.Language.General.Download, _vm.DownloadFfmpegCommand),
+                            MakeDownloadButton(Se.Language.Options.Settings.DownloadFfmpeg, _vm.DownloadFfmpegCommand, nameof(_vm.FfmpegStatus)),
                             new TextBlock
                             {
                                 DataContext = _vm,
@@ -628,7 +823,7 @@ public class SettingsPage : UserControl
                         Margin = new Thickness(10, 0, 0, 0),
                         VerticalAlignment = VerticalAlignment.Center,
                         Opacity = 0.5,
-                        FontSize = 10,
+                        FontSize = UiUtil.ScaledFontSize(10),
                     }
                 }
             }),
@@ -652,6 +847,7 @@ public class SettingsPage : UserControl
         sections.Add(new SettingsSection(Se.Language.General.Tools, IconNames.Tools, "#f0885a",
         [
             MakeCheckboxSetting(Se.Language.Options.Settings.AllowSingleLetterShortcutsInTextbox, nameof(_vm.AllowSingleLetterShortcutsInTextbox)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.AllowTextNavigationShortcutsInTextbox, nameof(_vm.AllowTextNavigationShortcutsInTextbox)),
             MakeCheckboxSetting(Se.Language.Options.Settings.GoToLineNumberSetsVideoPosition, nameof(_vm.GoToLineNumberAlsoSetVideoPosition)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AdjustAllTimesRememberLineSelectionChoice, nameof(_vm.AdjustAllTimesRememberLineSelectionChoice)),
             MakeCheckboxSetting(Se.Language.Options.Settings.MergeKeepEndTime, nameof(_vm.MergeKeepEndTime)),
@@ -714,15 +910,18 @@ public class SettingsPage : UserControl
                 }
             }),
             MakeCheckboxSetting(Se.Language.Options.Settings.SpellCheckEnglishTreatInApostropheAsIng, nameof(_vm.SpellCheckEnglishTreatInApostropheAsIng)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.SpellCheckRememberUseAlwaysList, nameof(_vm.SpellCheckRememberUseAlwaysList)),
             MakeCheckboxSetting(Se.Language.Options.Settings.OcrUseWordSplitList, nameof(_vm.OcrUseWordSplitList)),
             MakeCheckboxSetting(Se.Language.Options.Settings.OcrGuessUnknownWords, nameof(_vm.OcrGuessUnknownWords)),
             MakeCheckboxSetting(Se.Language.Options.Settings.SpeechToTextSelectedLinesPromptFirstTimeOnly, nameof(_vm.SpeechToTextSelectedLinesPromptFistTimeOnly)),
             MakeCheckboxSetting(Se.Language.Options.Settings.MultipleReplaceShowDotDotDotButtons, nameof(_vm.MultipleReplaceShowDotDotDotButtons)),
             MakeCheckboxSetting(Se.Language.Options.Settings.GridFocusTextboxAfterInsertNew, nameof(_vm.GridFocusTextboxAfterInsertNew)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.UndoRedoGoToChangedLine, nameof(_vm.UndoRedoGoToChangedLine)),
             MakeCheckboxSetting(Se.Language.Options.Settings.TextToSpeechPromptMergeContinuationLines, nameof(_vm.TextToSpeechPromptMergeContinuationLines)),
             MakeCheckboxSetting(Se.Language.Options.Settings.TextToSpeechPromptSkipNoiseLines, nameof(_vm.TextToSpeechPromptSkipNoiseLines)),
             MakeCheckboxSetting(Se.Language.Options.Settings.TextToSpeechPromptDetectSpeakers, nameof(_vm.TextToSpeechPromptDetectSpeakers)),
             MakeCheckboxSetting(Se.Language.Options.Settings.FixCommonErrorsSkipStep1, nameof(_vm.FixCommonErrorsSkipStep1)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.FixShortDisplayTimesAllowMoveStartTime, nameof(_vm.FixShortDisplayTimesAllowMoveStartTime)),
             new SettingsItem(Se.Language.Options.Settings.MusicSymbol,
                 () => UiUtil.MakeTextBox(120, _vm, nameof(_vm.MusicSymbol))),
             new SettingsItem(Se.Language.Options.Settings.MusicSymbolsToReplace,
@@ -741,6 +940,13 @@ public class SettingsPage : UserControl
                 120,
                 _vm,
                 nameof(_vm.LayoutScale))),
+            new SettingsItem(Se.Language.Options.Settings.FontScale, () => UiUtil.MakeNumericUpDownInt(
+                (int)Math.Round(UiTheme.MinFontScale * 100.0, MidpointRounding.AwayFromZero),
+                (int)Math.Round(UiTheme.MaxFontScale * 100.0, MidpointRounding.AwayFromZero),
+                100,
+                120,
+                _vm,
+                nameof(_vm.FontScale))),
             new SettingsItem(Se.Language.Options.Settings.DarkThemeForegroundColor, () => new StackPanel
             {
                 Orientation = Orientation.Horizontal,
@@ -779,6 +985,7 @@ public class SettingsPage : UserControl
             new SettingsItem(Se.Language.Options.Settings.SubtitleGridTextDisplay, () => UiUtil.MakeComboBox(_vm.SubtitleGridTextDisplayModes, _vm, nameof(_vm.SelectedSubtitleGridTextDisplayMode))),
             new SettingsItem(Se.Language.Options.Settings.SubtitleGridShowFormatting, () => UiUtil.MakeComboBox(_vm.SubtitleGridFormattings, _vm, nameof(_vm.SubtitleGridFormatting))),
             MakeCheckboxSetting(Se.Language.Options.Settings.SubtitleGridLiveSpellCheck, nameof(_vm.SubtitleGridLiveSpellCheck)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.SubtitleGridCenterText, nameof(_vm.SubtitleGridCenterText)),
             MakeNumericSetting(Se.Language.Options.Settings.TextBoxFontSize, nameof(_vm.TextBoxFontSize)),
             MakeCheckboxSetting(Se.Language.Options.Settings.TextBoxFontBold, nameof(_vm.TextBoxFontBold)),
             MakeCheckboxSetting(Se.Language.Options.Settings.TextBoxColorTags, nameof(_vm.TextBoxColorTags)),
@@ -803,41 +1010,14 @@ public class SettingsPage : UserControl
             new SettingsItem(Se.Language.Options.Settings.GridAlternatingRowColorDark, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.GridAlternatingRowColorDark))),
             new SettingsItem(Se.Language.Options.Settings.ShowGridLines, () => UiUtil.MakeComboBox(_vm.GridLinesVisibilities, _vm, nameof(_vm.SelectedGridLinesVisibility))),
             new SettingsItem(Se.Language.Options.Settings.BookmarkColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.BookmarkColor))),
+            new SettingsItem(Se.Language.Options.Settings.SpellCheckHighlightColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.SpellCheckHighlightColor))),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowAssaLayer, nameof(_vm.ShowAssaLayer)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowHorizontalLineAboveToolbar, nameof(_vm.ShowHorizontalLineAboveToolbar)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowPluginsMenu, nameof(_vm.ShowPluginsMenu)),
         ]));
 
         sections.Add(new SettingsSection(Se.Language.General.Toolbar, IconNames.DotsHorizontal, "#58c9b4",
-        [
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarNew, nameof(_vm.ShowToolbarNew)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarOpen, nameof(_vm.ShowToolbarOpen)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarVideoFileOpen, nameof(_vm.ShowToolbarVideoFileOpen)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarSave, nameof(_vm.ShowToolbarSave)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarSaveAs, nameof(_vm.ShowToolbarSaveAs)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarFind, nameof(_vm.ShowToolbarFind)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarReplace, nameof(_vm.ShowToolbarReplace)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarMultipleReplace, nameof(_vm.ShowToolbarMultipleReplace)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarSpellCheck, nameof(_vm.ShowToolbarSpellCheck)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarFixCommonErrors, nameof(_vm.ShowToolbarFixCommonErrors)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarRemoveTextForHi, nameof(_vm.ShowToolbarRemoveTextForHi)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarVisualSync, nameof(_vm.ShowToolbarVisualSync)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarPointSync, nameof(_vm.ShowToolbarPointSync)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarBeautifyTimeCodes, nameof(_vm.ShowToolbarBeautifyTimeCodes)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarBurnIn, nameof(_vm.ShowToolbarBurnIn)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarAutoTranslate, nameof(_vm.ShowToolbarAutoTranslate)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarSpeechToText, nameof(_vm.ShowToolbarSpeechToText)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarSettings, nameof(_vm.ShowToolbarSettings)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarLayout, nameof(_vm.ShowToolbarLayout)),
-            MakeCheckboxSetting(Se.Language.Options.Shortcuts.SourceView, nameof(_vm.ShowToolbarSourceView)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarHelp, nameof(_vm.ShowToolbarHelp)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarEncoding, nameof(_vm.ShowToolbarEncoding)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarFrameRate, nameof(_vm.ShowToolbarFrameRate)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarStyleManager, nameof(_vm.ShowToolbarStyleManager)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarProperties, nameof(_vm.ShowToolbarProperties)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarAttachments, nameof(_vm.ShowToolbarAttachments)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarAssaDraw, nameof(_vm.ShowToolbarAssaDraw)),
-        ]));
+            _vm.ToolbarItems.Select(MakeToolbarSetting)) { WrapItems = true });
 
         sections.Add(new SettingsSection(Se.Language.Options.Settings.Network, IconNames.Network, "#6bb84e",
         [
@@ -878,13 +1058,16 @@ public class SettingsPage : UserControl
 
         sections.Add(new SettingsSection(Se.Language.Options.Settings.Updates, IconNames.CloudDownload, "#d0a24e", updateItems));
 
-        if (OperatingSystem.IsWindows())
+        if (_vm.IsFileTypeAssociationsVisible)
         {
             sections.Add(new SettingsSection(Se.Language.Options.Settings.FileTypeAssociations, IconNames.FileCog, "#b98a5a",
             [
                 new SettingsItem(string.Empty, () => new ItemsControl
                 {
                     DataContext = _vm,
+                    // The row has no label, so the list and its check boxes are named here -
+                    // NVDA announced "list" and then nameless "check box, checked" (#12087).
+                    [AutomationProperties.NameProperty] = Se.Language.Options.Settings.FileTypeAssociations,
                     [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(_vm.FileTypeAssociations)),
                     ItemTemplate = new FuncDataTemplate<FileTypeAssociationViewModel>((fileType, _) =>
                         new StackPanel
@@ -895,6 +1078,7 @@ public class SettingsPage : UserControl
                             {
                                 new CheckBox
                                 {
+                                    [AutomationProperties.NameProperty] = fileType.Extension,
                                     [!ToggleButton.IsCheckedProperty] = new Binding(nameof(FileTypeAssociationViewModel.IsAssociated))
                                     {
                                         Source = fileType, Mode = BindingMode.TwoWay
@@ -958,6 +1142,7 @@ public class SettingsPage : UserControl
             DataContext = vm,
             Height = 250,
             Width = 250,
+            [AutomationProperties.NameProperty] = Se.Language.Options.Settings.FavoriteSubtitleFormats,
             [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(vm.FavoriteSubtitleFormats)),
             [!SelectingItemsControl.SelectedItemProperty] = new Binding(nameof(vm.SelectedFavoriteSubtitleFormat)) { Mode = BindingMode.TwoWay },
             ItemTemplate = new FuncDataTemplate<string>((f, _) =>
@@ -968,6 +1153,7 @@ public class SettingsPage : UserControl
         var buttonRemove = UiUtil.MakeButton(Se.Language.General.Remove, vm.RemoveFavoriteSubtitleFormatCommand).WithMinWidth(100);
         var buttonMoveUp = UiUtil.MakeButton(Se.Language.General.MoveUp, vm.MoveUpFavoriteSubtitleFormatCommand).WithMinWidth(100);
         var buttonMoveDown = UiUtil.MakeButton(Se.Language.General.MoveDown, vm.MoveDownFavoriteSubtitleFormatCommand).WithMinWidth(100);
+        NameListButtons(Se.Language.Options.Settings.FavoriteSubtitleFormats, buttonAdd, buttonRemove, buttonMoveUp, buttonMoveDown);
 
         var buttonStack = new StackPanel
         {
@@ -1006,6 +1192,7 @@ public class SettingsPage : UserControl
             DataContext = vm,
             Height = 250,
             Width = 250,
+            [AutomationProperties.NameProperty] = Se.Language.Options.Settings.FavoriteLanguages,
             [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(vm.FavoriteLanguages)),
             [!SelectingItemsControl.SelectedItemProperty] = new Binding(nameof(vm.SelectedFavoriteLanguage)) { Mode = BindingMode.TwoWay },
             ItemTemplate = new FuncDataTemplate<PickLanguageDisplay>((l, _) =>
@@ -1016,6 +1203,7 @@ public class SettingsPage : UserControl
         var buttonRemove = UiUtil.MakeButton(Se.Language.General.Remove, vm.RemoveFavoriteLanguageCommand).WithMinWidth(100);
         var buttonMoveUp = UiUtil.MakeButton(Se.Language.General.MoveUp, vm.MoveUpFavoriteLanguageCommand).WithMinWidth(100);
         var buttonMoveDown = UiUtil.MakeButton(Se.Language.General.MoveDown, vm.MoveDownFavoriteLanguageCommand).WithMinWidth(100);
+        NameListButtons(Se.Language.Options.Settings.FavoriteLanguages, buttonAdd, buttonRemove, buttonMoveUp, buttonMoveDown);
 
         var buttonStack = new StackPanel
         {
@@ -1031,27 +1219,54 @@ public class SettingsPage : UserControl
         return grid;
     }
 
+    /// <summary>
+    /// Names the Add/Remove/Move buttons next to a list after that list ("Favorite languages:
+    /// Add"). An empty list is not a tab stop, so a screen reader user tabbing from one favorites
+    /// list to the next heard a second "Add, Remove, Move up, Move down" with nothing saying
+    /// which list it belonged to (#12087).
+    /// </summary>
+    private static void NameListButtons(string listName, params Button[] buttons)
+    {
+        foreach (var button in buttons)
+        {
+            AutomationProperties.SetName(button, $"{listName}: {button.Content}");
+        }
+    }
+
+    /// <summary>
+    /// A "Download" button named after its setting ("Download mpv") with the install status
+    /// ("Not installed", a version) as its description - the caption alone told a screen reader
+    /// user nothing about what would be downloaded (#12087).
+    /// </summary>
+    private Button MakeDownloadButton(string settingName, IRelayCommand command, string statusProperty)
+    {
+        var button = UiUtil.MakeButton(Se.Language.General.Download, command);
+        AutomationProperties.SetName(button, settingName);
+        button.Bind(AutomationProperties.HelpTextProperty, new Binding(statusProperty) { Source = _vm });
+        return button;
+    }
+
     private Control MakeMpvPreviewSettings(SettingsViewModel vm)
     {
         var labelFontName = UiUtil.MakeLabel(Se.Language.General.FontName);
-        var comboBoxFontName = UiUtil.MakeComboBox(vm.Fonts, vm, nameof(vm.MpvPreviewFontName)).WithMinWidth(150);
+        var comboBoxFontName = UiUtil.MakeComboBox(vm.Fonts, vm, nameof(vm.MpvPreviewFontName)).WithMinWidth(150).WithLabeledBy(labelFontName);
 
         var labelFontSize = UiUtil.MakeLabel(Se.Language.General.FontSize);
-        var numericUpDownFontSize = UiUtil.MakeNumericUpDownOneDecimal(1, 1000, 130, vm, nameof(vm.MpvPreviewFontSize));
+        var numericUpDownFontSize = UiUtil.MakeNumericUpDownOneDecimal(1, 1000, 130, vm, nameof(vm.MpvPreviewFontSize)).WithLabeledBy(labelFontSize);
         numericUpDownFontSize.Increment = 1;
 
         var checkBoxBold = UiUtil.MakeCheckBox(Se.Language.General.Bold, vm, nameof(vm.MpvPreviewFontBold));
 
         var labelAlignment = UiUtil.MakeLabel(Se.Language.General.Alignment);
-        var comboBoxAlignment = UiUtil.MakeComboBox(vm.MpvPreviewFontAlignments, vm, nameof(vm.MpvPreviewSelectedFontAlignment));
+        var comboBoxAlignment = UiUtil.MakeComboBox(vm.MpvPreviewFontAlignments, vm, nameof(vm.MpvPreviewSelectedFontAlignment)).WithLabeledBy(labelAlignment);
 
         var labelJustify = UiUtil.MakeLabel(Se.Language.Options.Settings.TextJustify);
-        var comboBoxJustify = UiUtil.MakeComboBox(vm.MpvPreviewJustifyItems, vm, nameof(vm.MpvPreviewSelectedJustify));
+        var comboBoxJustify = UiUtil.MakeComboBox(vm.MpvPreviewJustifyItems, vm, nameof(vm.MpvPreviewSelectedJustify)).WithLabeledBy(labelJustify);
 
         var checkBoxUsePositionFromFile = UiUtil.MakeCheckBox(Se.Language.Options.Settings.UsePositionFromSubtitleFile, vm, nameof(vm.MpvPreviewUsePositionFromFile));
 
         var labelMargin = UiUtil.MakeLabel(Se.Language.General.Margin);
-        var numericUpDownMargin = UiUtil.MakeNumericUpDownOneDecimal(1, 1000, 130, vm, nameof(vm.MpvPreviewMargin));
+        var numericUpDownMargin = UiUtil.MakeNumericUpDownOneDecimal(0, 1000, 130, vm, nameof(vm.MpvPreviewMargin)).WithLabeledBy(labelMargin);
         numericUpDownMargin.Increment = 1;
 
         var checkBoxMarginIsPartOfSubtitleArea = UiUtil.MakeCheckBox(
@@ -1153,17 +1368,17 @@ public class SettingsPage : UserControl
         var label = UiUtil.MakeLabel(Se.Language.General.BorderStyle);
         grid.Add(label, 1, 0);
 
-        var comboBoxBorderType = UiUtil.MakeComboBox(vm.MpvPreviewBorderTypes, vm, nameof(vm.MpvPreviewSelectedBorderType));
+        var comboBoxBorderType = UiUtil.MakeComboBox(vm.MpvPreviewBorderTypes, vm, nameof(vm.MpvPreviewSelectedBorderType)).WithLabeledBy(label);
         grid.Add(comboBoxBorderType, 2, 0, 1, 2);
 
         var labelOutlineWidth = UiUtil.MakeLabel(Se.Language.General.OutlineWidth);
-        var numericUpDownOutlineWidth = UiUtil.MakeNumericUpDownOneDecimal(0, 100, 130, vm, nameof(vm.MpvPreviewOutlineWidth));
+        var numericUpDownOutlineWidth = UiUtil.MakeNumericUpDownOneDecimal(0, 100, 130, vm, nameof(vm.MpvPreviewOutlineWidth)).WithLabeledBy(labelOutlineWidth);
         numericUpDownOutlineWidth.Increment = 0.5m;
         grid.Add(labelOutlineWidth, 3, 0);
         grid.Add(numericUpDownOutlineWidth, 3, 1);
 
         var labelShadowWidth = UiUtil.MakeLabel(Se.Language.General.ShadowWidth);
-        var numericUpDownShadowWidth = UiUtil.MakeNumericUpDownOneDecimal(0, 100, 130, vm, nameof(vm.MpvPreviewShadowWidth));
+        var numericUpDownShadowWidth = UiUtil.MakeNumericUpDownOneDecimal(0, 100, 130, vm, nameof(vm.MpvPreviewShadowWidth)).WithLabeledBy(labelShadowWidth);
         numericUpDownShadowWidth.Increment = 0.5m;
         grid.Add(labelShadowWidth, 4, 0);
         grid.Add(numericUpDownShadowWidth, 4, 1);
@@ -1321,7 +1536,7 @@ public class SettingsPage : UserControl
         textBox[!Control.IsEnabledProperty] = new Binding(nameof(_vm.ProxyUseDefaultCredentials))
         {
             Source = _vm,
-            Converter = new InverseBooleanConverter(),
+            Converter = InverseBooleanConverter.Instance,
         };
 
         return textBox;

@@ -1,6 +1,8 @@
 using Nikse.SubtitleEdit.Features.Files.ExportPlainText;
 using Nikse.SubtitleEdit.Features.Tools.ApplyDurationLimits;
 using Nikse.SubtitleEdit.Features.Tools.ApplyMinGap;
+using Nikse.SubtitleEdit.Logic;
+using System;
 using Nikse.SubtitleEdit.Features.Tools.MergeShortLines;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Reflection;
@@ -19,6 +21,11 @@ namespace UITests.Features;
 /// </summary>
 public class SettingsPersistenceTests
 {
+    private sealed class NullServiceProvider : IServiceProvider
+    {
+        public object? GetService(Type serviceType) => null;
+    }
+
     private static void Invoke(object vm, string method) =>
         vm.GetType().GetMethod(method, BindingFlags.Instance | BindingFlags.NonPublic)!.Invoke(vm, null);
 
@@ -40,14 +47,14 @@ public class SettingsPersistenceTests
         Se.Settings.General.MinimumBetweenLines.Milliseconds = 24;
         Se.Settings.General.UseFrameMode = false;
 
-        var vm = new ApplyMinGapViewModel();
+        var vm = new ApplyMinGapViewModel(new WindowService(new NullServiceProvider()));
         Invoke(vm, "LoadSettings");
         Assert.Equal(24, Get(vm, "MinGapMsOrFrames")); // falls back to the general default
 
         Set(vm, "MinGapMsOrFrames", 120);
         Invoke(vm, "SaveSettings");
 
-        var reopened = new ApplyMinGapViewModel();
+        var reopened = new ApplyMinGapViewModel(new WindowService(new NullServiceProvider()));
         Invoke(reopened, "LoadSettings");
         Assert.Equal(120, Get(reopened, "MinGapMsOrFrames"));
 
@@ -76,14 +83,14 @@ public class SettingsPersistenceTests
         Se.Settings.General.MinimumBetweenLines.Frames = 2;
 
         Se.Settings.General.UseFrameMode = false;
-        var msVm = new ApplyMinGapViewModel();
+        var msVm = new ApplyMinGapViewModel(new WindowService(new NullServiceProvider()));
         Invoke(msVm, "LoadSettings");
         Set(msVm, "MinGapMsOrFrames", 120);
         Invoke(msVm, "SaveSettings");
 
         // Switching to frame mode must not read the 120 back as a frame count.
         Se.Settings.General.UseFrameMode = true;
-        var frameVm = new ApplyMinGapViewModel();
+        var frameVm = new ApplyMinGapViewModel(new WindowService(new NullServiceProvider()));
         Invoke(frameVm, "LoadSettings");
         Assert.Equal(2, Get(frameVm, "MinGapMsOrFrames")); // the general frame default
 
@@ -92,12 +99,12 @@ public class SettingsPersistenceTests
 
         // ...and back again: each unit remembers its own last value.
         Se.Settings.General.UseFrameMode = false;
-        var backToMs = new ApplyMinGapViewModel();
+        var backToMs = new ApplyMinGapViewModel(new WindowService(new NullServiceProvider()));
         Invoke(backToMs, "LoadSettings");
         Assert.Equal(120, Get(backToMs, "MinGapMsOrFrames"));
 
         Se.Settings.General.UseFrameMode = true;
-        var backToFrames = new ApplyMinGapViewModel();
+        var backToFrames = new ApplyMinGapViewModel(new WindowService(new NullServiceProvider()));
         Invoke(backToFrames, "LoadSettings");
         Assert.Equal(3, Get(backToFrames, "MinGapMsOrFrames"));
     }

@@ -310,9 +310,14 @@ public class Qwen3TtsCrispAsr : ITtsEngine, IPerLineCloneEngine
     /// the ref-text sidecar and fails. It is a plain copy and not an ffmpeg pass because the
     /// clips are cut as 24 kHz mono PCM16 already - exactly what the Base backend demands.
     ///
-    /// Null when there is no usable transcript beside the clip: the backend answers a reference
-    /// without ref-text with "ref-text not set" (HTTP 500), so the caller is better off falling
-    /// back to an ordinary voice for that line than failing it.
+    /// Null when there is no usable transcript beside the clip: the crispasr qwen3-tts backend
+    /// (v0.8.32) refuses a WAV reference without ref-text (HTTP 500), so the caller is better
+    /// off falling back to an ordinary voice for that line than failing it. Do NOT paper over
+    /// that with a placeholder transcript the way the Fish engine does: the ICL prefill pairs
+    /// the reference speech with its text, and a single-space ref_text sent to the real server
+    /// made the talker run away to the 75 s frame cap for a one-sentence line, while the true
+    /// transcript gave 3.5 s. The way out is upstream - the backend transcribing the clip
+    /// itself, as its cosyvoice3 backend already does - not a stand-in written here.
     /// </remarks>
     public static string? StagePerLineReference(string clipFileName)
     {

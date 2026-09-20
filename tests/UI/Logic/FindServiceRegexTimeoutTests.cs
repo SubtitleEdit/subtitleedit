@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -7,8 +8,12 @@ namespace UITests.Logic;
 // A user-entered pattern with catastrophic backtracking used to run on the UI thread with no
 // timeout at all, so find/replace hung the program until it was killed. SE 4 gave the same
 // patterns five seconds; the timeout now comes back as "no match" instead of an exception.
-public class FindServiceRegexTimeoutTests
+public class FindServiceRegexTimeoutTests : IDisposable
 {
+    private readonly ShortRegexTimeout _shortRegexTimeout = new();
+
+    public void Dispose() => _shortRegexTimeout.Dispose();
+
     // 30 a's and no "b": "(a+)+b" has to try every way of splitting them before giving up.
     private const string EvilPattern = "(a+)+b";
     private static readonly string EvilLine = new string('a', 30) + "c";

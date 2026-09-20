@@ -62,12 +62,12 @@ WB,GDMX,1:33,4x3
             text = text.Replace("#", string.Empty);
             while (i < text.Length)
             {
-                if (text.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
+                if (text.StartsWithAt(i, "<i>", StringComparison.OrdinalIgnoreCase))
                 {
                     sb.Append("#");
                     i += 3;
                 }
-                else if (text.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase))
+                else if (text.StartsWithAt(i, "</i>", StringComparison.OrdinalIgnoreCase))
                 {
                     sb.Append("#");
                     i += 4;

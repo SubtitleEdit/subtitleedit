@@ -18,7 +18,7 @@ public class LlamaCppAdvancedSettingsWindow : Window
     public LlamaCppAdvancedSettingsWindow(LlamaCppAdvancedSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Translate.AdvancedSettings;
+        Title = Se.Language.General.AdvancedSettings;
         // Explicit width: WidthAndHeight sizing comes out too wide on macOS.
         Width = 680;
         SizeToContent = SizeToContent.Height;
@@ -40,14 +40,14 @@ public class LlamaCppAdvancedSettingsWindow : Window
             {
                 new TextBlock
                 {
-                    Text = Se.Language.Translate.AdvancedSettings,
-                    FontSize = 18,
+                    Text = Se.Language.General.AdvancedSettings,
+                    FontSize = UiUtil.ScaledFontSize(18),
                     FontWeight = FontWeight.SemiBold,
                 },
                 new TextBlock
                 {
                     Text = Se.Language.Translate.AdvancedSettingsSubtitle,
-                    FontSize = 12,
+                    FontSize = UiUtil.ScaledFontSize(12),
                     Opacity = 0.75,
                     Margin = new Thickness(0, 2, 0, 0),
                 },
@@ -95,6 +95,8 @@ public class LlamaCppAdvancedSettingsWindow : Window
         promptBox.PlaceholderText = LlamaCppAdvancedProtocol.DefaultPrompt;
         SetHint(promptBox, Se.Language.Translate.CustomPromptHint);
         // The prompt label carries the reset button, so the editor column keeps its full width.
+        var promptTextLabel = MakeSmallLabel(Se.Language.Translate.PromptText);
+        promptBox.WithLabeledBy(promptTextLabel); // wrapped in a panel, so not auto-linked (#12087)
         var promptLabel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -102,7 +104,7 @@ public class LlamaCppAdvancedSettingsWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Children =
             {
-                MakeSmallLabel(Se.Language.Translate.PromptText),
+                promptTextLabel,
                 UiUtil.MakeButton(vm.ResetPromptCommand, IconNames.Restore, Se.Language.Translate.ResetPromptToDefault),
             },
         };

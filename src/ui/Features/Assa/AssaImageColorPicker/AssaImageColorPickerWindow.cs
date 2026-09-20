@@ -116,7 +116,7 @@ public class AssaImageColorPickerWindow : Window
                 new TextBlock
                 {
                     [!TextBlock.TextProperty] = new Binding(nameof(vm.CurrentMouseColorHex)),
-                    FontSize = 14,
+                    FontSize = UiUtil.ScaledFontSize(14),
                 }
             }
         };
@@ -151,7 +151,7 @@ public class AssaImageColorPickerWindow : Window
                 new TextBlock
                 {
                     [!TextBlock.TextProperty] = new Binding(nameof(vm.ClickedColorHex)),
-                    FontSize = 14,
+                    FontSize = UiUtil.ScaledFontSize(14),
                 }
             }
         };
@@ -174,7 +174,7 @@ public class AssaImageColorPickerWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, buttonOk);
         KeyDown += vm.KeyDown;
     }
 }

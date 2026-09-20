@@ -621,15 +621,27 @@ public class UndoRedoManagerTests
         manager.SetupChangeDetection(client, TimeSpan.FromHours(1));
         manager.StartChangeDetection();
 
-        var firstTick = Task.Run(() => manager.CheckForChanges(null), cancellationToken);
-        Assert.True(client.HashEntered.Wait(TimeSpan.FromSeconds(10), cancellationToken));
+        // A dedicated thread, not Task.Run: the first tick must be inside the client before the
+        // overlapping one is issued, and a queued thread-pool work item can sit behind blocked
+        // pool threads left by earlier tests for longer than the wait below (CI flake: HashEntered
+        // never set within 10 s while the tick had not even started).
+        var firstTick = new Thread(() => manager.CheckForChanges(null)) { IsBackground = true, Name = "undo-first-tick" };
+        firstTick.Start();
+        try
+        {
+            Assert.True(client.HashEntered.Wait(TimeSpan.FromSeconds(10), cancellationToken), "the first tick never reached the client");
 
-        manager.CheckForChanges(null); // overlapping tick while the first is blocked
+            manager.CheckForChanges(null); // overlapping tick while the first is blocked
 
-        Assert.Equal(1, Volatile.Read(ref client.HashCalls));
+            Assert.Equal(1, Volatile.Read(ref client.HashCalls));
+        }
+        finally
+        {
+            client.ReleaseHash.Set();
+            Assert.True(firstTick.Join(TimeSpan.FromSeconds(10)), "the first tick did not finish after release");
+        }
 
-        client.ReleaseHash.Set();
-        await firstTick.WaitAsync(TimeSpan.FromSeconds(10), cancellationToken);
+        await Task.CompletedTask;
     }
 
     // -----------------------------------------------------------------------
@@ -651,6 +663,65 @@ public class UndoRedoManagerTests
 
         Assert.Equal(0, manager.UndoCount);
         Assert.Equal(0, manager.RedoCount);
+    }
+
+    // -----------------------------------------------------------------------
+    // OnChangeDetected
+    // -----------------------------------------------------------------------
+
+    /// <summary>Normalizes the edit when change detection calls it, like frame mode snapping.</summary>
+    private sealed class NormalizingClient : IUndoRedoClient
+    {
+        public int Hash { get; set; }
+        public SubtitleLineViewModel[] Subtitles { get; set; } = [];
+        public List<UndoRedoItem?> Calls { get; } = new();
+
+        public int GetFastHash() => Hash;
+        public bool IsUserEditing() => false;
+        public UndoRedoItem MakeUndoRedoObject(string description) =>
+            MakeItem(description, Hash, Subtitles.Select(p => new SubtitleLineViewModel(p)).ToArray());
+
+        public void OnChangeDetected(UndoRedoItem? lastRecorded)
+        {
+            Calls.Add(lastRecorded);
+            foreach (var line in Subtitles)
+            {
+                line.SetTimes(TimeSpan.FromMilliseconds(1000), line.EndTime);
+            }
+        }
+    }
+
+    [Fact]
+    public void CheckForChanges_LetsTheClientNormalizeBeforeTheSnapshot()
+    {
+        var client = new NormalizingClient { Hash = 1, Subtitles = [MakeLine("hello")] };
+        var manager = new UndoRedoManager();
+        manager.SetupChangeDetection(client, TimeSpan.FromHours(1));
+        manager.StartChangeDetection();
+        var initial = MakeItem("initial", 1, [new SubtitleLineViewModel(client.Subtitles[0])]);
+        manager.Do(initial);
+
+        client.Hash = 2;
+        client.Subtitles[0].SetTimes(TimeSpan.FromMilliseconds(1013), TimeSpan.FromMilliseconds(2500));
+        manager.CheckForChanges(null);
+
+        Assert.Same(initial, Assert.Single(client.Calls));
+        Assert.Equal(2, manager.UndoCount);
+        Assert.Equal(1000, manager.UndoList[^1].Subtitles[0].StartTime.TotalMilliseconds);
+    }
+
+    [Fact]
+    public void CheckForChanges_DoesNotCallTheClient_WhenNothingChanged()
+    {
+        var client = new NormalizingClient { Hash = 1, Subtitles = [MakeLine("hello")] };
+        var manager = new UndoRedoManager();
+        manager.SetupChangeDetection(client, TimeSpan.FromHours(1));
+        manager.StartChangeDetection();
+        manager.Do(MakeItem("initial", 1, client.Subtitles));
+
+        manager.CheckForChanges(null);
+
+        Assert.Empty(client.Calls);
     }
 
     // -----------------------------------------------------------------------

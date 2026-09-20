@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -7,6 +7,7 @@ using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
+using Avalonia.LogicalTree;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -15,6 +16,7 @@ using Avalonia.Styling;
 using Avalonia.VisualTree;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Controls.SyntaxTextEditorControl;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Platform.Windows;
@@ -398,9 +400,17 @@ public static class UiUtil
     {
         var (displayText, accessKey) = ParseAccessKey(text);
 
+        // Keep the `_` marker in the rendered label so the access letter is underlined while Alt is
+        // held (#14716): the HotKey below fires the command, but with plain-string content nothing
+        // ever told the user that Alt+F / Alt+R existed. AccessText owns the underline; it is not
+        // handed the access key itself, so the chord keeps firing exactly once through the HotKey.
+        object content = accessKey.HasValue
+            ? new AccessText { Text = text, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center }
+            : displayText;
+
         var button = new Button
         {
-            Content = displayText,
+            Content = content,
             Margin = new Thickness(4, 0),
             Padding = new Thickness(12, 6),
             MinWidth = 80,
@@ -466,6 +476,53 @@ public static class UiUtil
         return TryGetAccessKey(accessChar, out var key) ? (display, key) : (display, null);
     }
 
+    /// <summary>
+    /// WinForms fired a button mnemonic on the bare letter whenever the focused control did not
+    /// consume text, so SE4 users clicked "Find" once and then tapped F / R / A with the focus
+    /// resting on the buttons (discussion #14716). Mirror that: with no modifier held and focus
+    /// outside any text input, a key matching a button's Alt access key runs that button.
+    /// Returns true when a button was invoked.
+    /// </summary>
+    internal static bool TryInvokeBareAccessKey(Window? window, KeyEventArgs e)
+    {
+        if (window == null || e.Handled || e.KeyModifiers != KeyModifiers.None)
+        {
+            return false;
+        }
+
+        var focused = TopLevel.GetTopLevel(window)?.FocusManager?.GetFocusedElement();
+        if (focused is TextBox || focused is AutoCompleteBox || focused is ComboBox { IsEditable: true })
+        {
+            return false;
+        }
+
+        foreach (var button in window.GetLogicalDescendants().OfType<Button>())
+        {
+            if (button.HotKey is not { KeyModifiers: KeyModifiers.Alt } gesture || gesture.Key != e.Key)
+            {
+                continue;
+            }
+
+            if (!button.IsEffectivelyEnabled || !button.IsEffectivelyVisible)
+            {
+                return false;
+            }
+
+            var parameter = button.CommandParameter;
+            if (button.Command?.CanExecute(parameter) != true)
+            {
+                return false;
+            }
+
+            e.Handled = true;
+            button.Focus();
+            button.Command.Execute(parameter);
+            return true;
+        }
+
+        return false;
+    }
+
     private static bool TryGetAccessKey(char c, out Key key)
     {
         var upper = char.ToUpperInvariant(c);
@@ -498,14 +555,47 @@ public static class UiUtil
         };
     }
 
+    /// <summary>
+    /// Gives a card-style button a green-ish background while hovered, focused or pressed,
+    /// so the active choice stands out (used by the assisted split/move option cards).
+    /// </summary>
+    public static Button WithGreenishActiveBackground(this Button button)
+    {
+        var activeBrush = new SolidColorBrush(Color.FromArgb(0x50, 0x4C, 0xAF, 0x50));
+        var pressedBrush = new SolidColorBrush(Color.FromArgb(0x78, 0x4C, 0xAF, 0x50));
+        foreach (var (pseudoClass, brush) in new[] { (":pointerover", activeBrush), (":focus", activeBrush), (":pressed", pressedBrush) })
+        {
+            button.Styles.Add(new Style(x => x.OfType<Button>().Class(pseudoClass).Template().OfType<ContentPresenter>())
+            {
+                Setters = { new Setter(ContentPresenter.BackgroundProperty, brush) },
+            });
+        }
+
+        return button;
+    }
+
+    /// <summary>
+    /// The dialog's accept button. <see cref="Button.IsDefault"/> makes it click on an unhandled
+    /// Enter anywhere in the window - the role WinForms' AcceptButton had in Subtitle Edit 4.
+    /// Initial focus deliberately does not land on this button (a focused button also clicks on
+    /// bare Space, see <see cref="FocusOnFirstActivation"/>), so without this Enter would reach OK
+    /// only after tabbing to it (#14586). Controls that give Enter their own meaning - a multi-line
+    /// TextBox, an open ComboBox, a focused Cancel button - mark the key handled first and win.
+    /// A window key handler that runs OK on Enter itself must also set Handled, or OK runs twice
+    /// (InitialFocusConventionTests checks that).
+    /// </summary>
     public static Button MakeButtonOk(IRelayCommand? command)
     {
-        return MakeButton(Se.Language.General.Ok, command);
+        var button = MakeButton(Se.Language.General.Ok, command);
+        button.IsDefault = true;
+        return button;
     }
 
     public static Button MakeButtonDone(IRelayCommand? command)
     {
-        return MakeButton(Se.Language.General.Done, command);
+        var button = MakeButton(Se.Language.General.Done, command);
+        button.IsDefault = true;
+        return button;
     }
 
     public static Button MakeButtonCancel(IRelayCommand? command)
@@ -538,7 +628,7 @@ public static class UiUtil
             HorizontalContentAlignment = HorizontalAlignment.Center,
             VerticalContentAlignment = VerticalAlignment.Center,
             Command = command,
-            FontSize = fontSize,
+            FontSize = ScaledFontSize(fontSize),
         };
 
         Attached.SetIcon(button, iconName);
@@ -570,6 +660,41 @@ public static class UiUtil
         }
 
         return button;
+    }
+
+    /// <summary>
+    /// A small "i" icon that shows <paramref name="hint"/> on hover - the compact alternative to a
+    /// wall of description text under every option (#14331). The icon only carries a tooltip, so it
+    /// is hidden outright when hints are turned off; the text is still handed to screen readers via
+    /// the described control's help text, which does not depend on the hint setting.
+    /// </summary>
+    /// <param name="hint">The explanation to show.</param>
+    /// <param name="describes">The control the hint belongs to, so screen readers announce it too.</param>
+    public static Control MakeHintIcon(string hint, Control? describes = null)
+    {
+        var icon = new ContentControl
+        {
+            Width = 16,
+            Height = 16,
+            VerticalAlignment = VerticalAlignment.Center,
+            Opacity = 0.7,
+            IsVisible = Se.Settings.Appearance.ShowHints,
+        };
+
+        Attached.SetIcon(icon, IconNames.Information);
+        AutomationProperties.SetName(icon, hint);
+
+        if (describes != null)
+        {
+            AutomationProperties.SetHelpText(describes, hint);
+        }
+
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            AttachHoverTooltip(icon, hint);
+        }
+
+        return icon;
     }
 
     // On macOS, Avalonia's built-in ToolTip hover service does not open on hover inside modal
@@ -757,7 +882,7 @@ public static class UiUtil
             comboBox.Bind(ComboBox.IsVisibleProperty, new Binding
             {
                 Path = propertyIsVisiblePath,
-                Mode = BindingMode.TwoWay,
+                Mode = BindingMode.OneWay,
             });
         }
 
@@ -932,7 +1057,7 @@ public static class UiUtil
             textBox.Bind(TextBox.IsVisibleProperty, new Binding
             {
                 Path = propertyIsVisiblePath,
-                Mode = BindingMode.TwoWay,
+                Mode = BindingMode.OneWay,
             });
         }
 
@@ -1001,7 +1126,7 @@ public static class UiUtil
             textBlock.Bind(TextBlock.TextProperty, new Binding
             {
                 Path = textPropertyPath,
-                Mode = BindingMode.TwoWay,
+                Mode = BindingMode.OneWay,
             });
         }
 
@@ -1010,7 +1135,7 @@ public static class UiUtil
             textBlock.Bind(TextBlock.IsVisibleProperty, new Binding
             {
                 Path = visibilityPropertyPath,
-                Mode = BindingMode.TwoWay,
+                Mode = BindingMode.OneWay,
             });
         }
 
@@ -1125,7 +1250,7 @@ public static class UiUtil
         link.Bind(TextBlock.TextProperty, new Binding
         {
             Path = propertyTextPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return link;
@@ -1319,6 +1444,12 @@ public static class UiUtil
 
         control.Content = stackPanelApplyFixes;
 
+        // Same as WithIconLeft: the panel content has no UIA name of its own, keep the text.
+        if (!string.IsNullOrEmpty(label.Text))
+        {
+            AutomationProperties.SetName(control, label.Text);
+        }
+
         return control;
     }
 
@@ -1352,9 +1483,17 @@ public static class UiUtil
         return control;
     }
 
-    // Like WithIconLeft, but the text is bound to a view-model property instead of being fixed,
-    // so the caption can change at runtime (e.g. "Download" vs "Re-download").
-    public static Button WithIconLeftBindText(this Button control, string iconName, string textPropertyPath)
+    /// <summary>
+    /// Like WithIconLeft, but the text is bound to a view-model property instead of being fixed,
+    /// so the caption can change at runtime (e.g. "Download" vs "Re-download").
+    /// </summary>
+    /// <param name="accessibleNamePropertyPath">
+    /// Optional view-model property with a fuller name for screen readers than the caption -
+    /// a row of "Download" buttons needs "Download &lt;model&gt;" to tell them apart (#12087).
+    /// Defaults to the caption.
+    /// </param>
+    public static Button WithIconLeftBindText(this Button control, string iconName, string textPropertyPath,
+        string? accessibleNamePropertyPath = null)
     {
         var label = new TextBlock { Padding = new Thickness(4, 0, 0, 0) };
         label.Bind(TextBlock.TextProperty, new Binding { Path = textPropertyPath });
@@ -1367,6 +1506,11 @@ public static class UiUtil
             Orientation = Orientation.Horizontal,
             Children = { image, label },
         };
+
+        // A button whose content is a panel has no text for UI Automation to use, so its name
+        // falls back to the content's type and NVDA announces "Avalonia.Controls.StackPanel"
+        // (#12087). Bind the caption (or a fuller name) as the accessible name instead.
+        control.Bind(AutomationProperties.NameProperty, new Binding { Path = accessibleNamePropertyPath ?? textPropertyPath });
 
         return control;
     }
@@ -1388,7 +1532,7 @@ public static class UiUtil
         control.Bind(Button.IsEnabledProperty, new Binding
         {
             Path = isEnabledPropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
@@ -1399,7 +1543,7 @@ public static class UiUtil
         control.Bind(SplitButton.IsEnabledProperty, new Binding
         {
             Path = isEnabledPropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
@@ -1410,7 +1554,7 @@ public static class UiUtil
         control.Bind(SplitButton.IsVisibleProperty, new Binding
         {
             Path = isVisiblePropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
@@ -1421,7 +1565,7 @@ public static class UiUtil
         control.Bind(ComboBox.IsEnabledProperty, new Binding
         {
             Path = isEnabledPropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
@@ -1432,7 +1576,7 @@ public static class UiUtil
         control.Bind(ComboBox.IsVisibleProperty, new Binding
         {
             Path = isVisiblePropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
@@ -1449,7 +1593,7 @@ public static class UiUtil
         control.Bind(NumericUpDown.IsEnabledProperty, new Binding
         {
             Path = isEnabledPropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
@@ -1460,7 +1604,7 @@ public static class UiUtil
         control.Bind(Button.ContentProperty, new Binding
         {
             Path = contentPropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
@@ -1471,7 +1615,7 @@ public static class UiUtil
         control.Bind(CheckBox.IsEnabledProperty, new Binding
         {
             Path = isEnabledPropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
@@ -1482,7 +1626,7 @@ public static class UiUtil
         control.Bind(TextBox.IsEnabledProperty, new Binding
         {
             Path = isEnabledPropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
@@ -1494,7 +1638,7 @@ public static class UiUtil
         {
             Converter = converter,
             Path = isEnabledPropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
@@ -1506,7 +1650,7 @@ public static class UiUtil
         {
             Converter = converter,
             Path = isEnabledPropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
@@ -1517,7 +1661,7 @@ public static class UiUtil
         control.Bind(TextBox.IsVisibleProperty, new Binding
         {
             Path = isVisiblePropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
@@ -1530,7 +1674,7 @@ public static class UiUtil
         {
             Converter = converter,
             Path = isEnabledPropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
@@ -1541,7 +1685,7 @@ public static class UiUtil
         control.Bind(Button.IsVisibleProperty, new Binding
         {
             Path = isVisiblePropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
@@ -1553,7 +1697,7 @@ public static class UiUtil
         control.Bind(Button.IsVisibleProperty, new Binding
         {
             Path = isVisiblePropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
@@ -1564,7 +1708,7 @@ public static class UiUtil
         control.Bind(Button.IsVisibleProperty, new Binding
         {
             Path = isVisiblePropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
             Converter = converter,
         });
 
@@ -1576,7 +1720,7 @@ public static class UiUtil
         control.Bind(Border.IsVisibleProperty, new Binding
         {
             Path = isVisiblePropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
             Converter = converter,
         });
 
@@ -1588,7 +1732,7 @@ public static class UiUtil
         control.Bind(Border.IsVisibleProperty, new Binding
         {
             Path = isVisiblePropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
@@ -1616,12 +1760,23 @@ public static class UiUtil
         return control;
     }
 
+    public static T WithBindIsEnabled<T>(this T control, string isEnabledPropertyPath) where T : Control
+    {
+        control.Bind(InputElement.IsEnabledProperty, new Binding
+        {
+            Path = isEnabledPropertyPath,
+            Mode = BindingMode.OneWay,
+        });
+
+        return control;
+    }
+
     public static Button WithBindIsEnabled(this Button control, string isEnabledPropertyPath)
     {
         control.Bind(Button.IsEnabledProperty, new Binding
         {
             Path = isEnabledPropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
@@ -1632,7 +1787,7 @@ public static class UiUtil
         control.Bind(Button.IsEnabledProperty, new Binding
         {
             Path = isEnabledPropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
             Converter = converter,
         });
 
@@ -1672,9 +1827,30 @@ public static class UiUtil
         return control;
     }
 
+    /// <summary>
+    /// Scales a design-time font size by the user's "Font scale (%)" setting (#14812). Route every
+    /// explicit control font size through this so it follows the setting; the window-inherited
+    /// default is scaled by <see cref="UiTheme.ApplyScaleToWindow"/>. Icons undo this again via
+    /// the icon style in <see cref="UiTheme"/>, so icon sizes stay put.
+    /// </summary>
+    public static double ScaledFontSize(double fontSize)
+    {
+        return fontSize * UiTheme.FontScale;
+    }
+
+    /// <summary>
+    /// Design-time font size for controls that outlive a font scale change (the main window's
+    /// hint labels, which are not rebuilt in undocked mode). <see cref="UiTheme.ApplyScaleToWindow"/>
+    /// walks every open window and re-applies <see cref="ScaledFontSize"/> for each control
+    /// carrying this, so the new scale shows without a restart. Set it next to FontSize:
+    /// <c>FontSize = UiUtil.ScaledFontSize(12), [UiUtil.DesignFontSizeProperty] = 12</c>.
+    /// </summary>
+    public static readonly AttachedProperty<double> DesignFontSizeProperty =
+        AvaloniaProperty.RegisterAttached<Control, double>("DesignFontSize", typeof(UiUtil), double.NaN);
+
     public static TextBlock WithFontSize(this TextBlock control, double fontSize)
     {
-        control.FontSize = fontSize;
+        control.FontSize = ScaledFontSize(fontSize);
         return control;
     }
 
@@ -1787,7 +1963,7 @@ public static class UiUtil
 
     public static Label WithFontSize(this Label control, int fontSize)
     {
-        control.FontSize = fontSize;
+        control.FontSize = ScaledFontSize(fontSize);
         return control;
     }
 
@@ -1828,7 +2004,7 @@ public static class UiUtil
 
     public static Button WithFontSize(this Button control, double fontSize)
     {
-        control.FontSize = fontSize;
+        control.FontSize = ScaledFontSize(fontSize);
         return control;
     }
 
@@ -1907,6 +2083,61 @@ public static class UiUtil
     {
         AutomationProperties.SetName(control, name);
         return control;
+    }
+
+    /// <summary>
+    /// Decorates a search/filter box with a magnifier icon on the left and an "x" button on the
+    /// right that clears the text. The button only shows while there is text, is not a tab stop,
+    /// and returns focus to the box. Clearing sets Text, so bindings and TextChanged handlers
+    /// re-run the filter just as when the user deletes the text.
+    /// </summary>
+    public static T WithSearchAndClearIcons<T>(this T textBox) where T : TextBox
+    {
+        textBox.InnerLeftContent = new Icon
+        {
+            Value = IconNames.Find,
+            FontSize = 14,
+            Margin = new Thickness(6, 0, 0, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+            Foreground = GetTextColor(0.6d),
+        };
+
+        var clearButton = new Button
+        {
+            Content = new Icon
+            {
+                Value = IconNames.Close,
+                FontSize = 14,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Foreground = GetTextColor(0.6d),
+            },
+            Width = 24,
+            Height = 24,
+            Padding = new Thickness(0),
+            Margin = new Thickness(0, 0, 2, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+            Background = Brushes.Transparent,
+            BorderBrush = null,
+            Focusable = false,
+            Cursor = new Cursor(StandardCursorType.Hand),
+        }.WithAccessibleName(Se.Language.General.Clear);
+
+        // Explicit Source: inner content only gets a DataContext once the TextBox template is applied.
+        clearButton.Bind(Visual.IsVisibleProperty, new Binding(nameof(TextBox.Text)) { Source = textBox, Converter = StringConverters.IsNotNullOrEmpty });
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(clearButton, Se.Language.General.Clear);
+        }
+
+        clearButton.Click += (_, _) =>
+        {
+            textBox.Text = string.Empty;
+            textBox.Focus();
+        };
+
+        textBox.InnerRightContent = clearButton;
+        return textBox;
     }
 
     /// <summary>
@@ -2088,7 +2319,7 @@ public static class UiUtil
         control.Bind(Visual.IsVisibleProperty, new Binding
         {
             Path = visibilityPropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
@@ -2341,7 +2572,7 @@ public static class UiUtil
             Label.IsVisibleProperty,
             CompiledBinding.Create(
                 isVisibleExpression,
-                mode: BindingMode.TwoWay
+                mode: BindingMode.OneWay
             )
         );
 
@@ -2482,7 +2713,7 @@ public static class UiUtil
             control.Bind(NumericUpDown.IsVisibleProperty, new Binding
             {
                 Path = propertyIsVisiblePath,
-                Mode = BindingMode.TwoWay,
+                Mode = BindingMode.OneWay,
             });
         }
 
@@ -2526,7 +2757,7 @@ public static class UiUtil
             control.Bind(NumericUpDown.IsVisibleProperty, new Binding
             {
                 Path = propertyIsVisiblePath,
-                Mode = BindingMode.TwoWay,
+                Mode = BindingMode.OneWay,
             });
         }
 
@@ -2567,7 +2798,7 @@ public static class UiUtil
             control.Bind(NumericUpDown.IsVisibleProperty, new Binding
             {
                 Path = propertyIsVisiblePath,
-                Mode = BindingMode.TwoWay,
+                Mode = BindingMode.OneWay,
             });
         }
 
@@ -2606,7 +2837,7 @@ public static class UiUtil
             control.Bind(NumericUpDown.IsVisibleProperty, new Binding
             {
                 Path = propertyIsVisiblePath,
-                Mode = BindingMode.TwoWay,
+                Mode = BindingMode.OneWay,
             });
         }
 
@@ -2646,7 +2877,7 @@ public static class UiUtil
             control.Bind(NumericUpDown.IsVisibleProperty, new Binding
             {
                 Path = propertyIsVisiblePath,
-                Mode = BindingMode.TwoWay,
+                Mode = BindingMode.OneWay,
             });
         }
 
@@ -2680,8 +2911,8 @@ public static class UiUtil
     }
 
     /// <summary>
-    /// Forwards the accessible name set on a <see cref="NumericUpDown"/> to its inner
-    /// PART_TextBox. The text box is the element that actually receives keyboard focus,
+    /// Forwards the accessible name (and LabeledBy link) set on a <see cref="NumericUpDown"/>
+    /// to its inner PART_TextBox. The text box is the element that actually receives keyboard focus,
     /// so without this a screen reader would announce the focused field with no name
     /// (issue #11553). Callers just set <c>AutomationProperties.Name</c> on the control.
     /// </summary>
@@ -2691,7 +2922,36 @@ public static class UiUtil
         {
             var textBox = e.NameScope.Find<TextBox>("PART_TextBox");
             textBox?.Bind(AutomationProperties.NameProperty, control.GetObservable(AutomationProperties.NameProperty));
+            textBox?.Bind(AutomationProperties.LabeledByProperty, control.GetObservable(AutomationProperties.LabeledByProperty));
+
+            var spinner = e.NameScope.Find<ButtonSpinner>("PART_Spinner");
+            if (spinner != null)
+            {
+                spinner.TemplateApplied += (_, spinnerArgs) => NameSpinnerButtons(spinnerArgs.NameScope);
+            }
         };
+    }
+
+    /// <summary>
+    /// The Fluent ButtonSpinner template gives its increase/decrease buttons a PathIcon as
+    /// content and no accessible name, so a screen reader announced them as
+    /// "Avalonia.Controls.PathIcon button" (#12087). Name them, and take them out of the tab
+    /// order: the text box already changes the value with the Up/Down arrows, so the two
+    /// extra tab stops per field only added noise for keyboard users.
+    /// </summary>
+    private static void NameSpinnerButtons(INameScope nameScope)
+    {
+        if (nameScope.Find<InputElement>("PART_IncreaseButton") is { } increase)
+        {
+            AutomationProperties.SetName(increase, Se.Language.General.Increase);
+            KeyboardNavigation.SetIsTabStop(increase, false);
+        }
+
+        if (nameScope.Find<InputElement>("PART_DecreaseButton") is { } decrease)
+        {
+            AutomationProperties.SetName(decrease, Se.Language.General.Decrease);
+            KeyboardNavigation.SetIsTabStop(decrease, false);
+        }
     }
 
     public static Label WithBindText(this Label control, object viewModel, string contentPropertyPath)
@@ -2700,7 +2960,7 @@ public static class UiUtil
         control.Bind(Label.ContentProperty, new Binding
         {
             Path = contentPropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
@@ -2730,7 +2990,7 @@ public static class UiUtil
         control.Bind(Label.ContentProperty, new Binding
         {
             Path = contentPropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
             Converter = valueConverter,
         });
 
@@ -2752,7 +3012,7 @@ public static class UiUtil
         control.Bind(TextBlock.TextProperty, new Binding
         {
             Path = contentPropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
@@ -2764,7 +3024,7 @@ public static class UiUtil
         control.Bind(Label.IsVisibleProperty, new Binding
         {
             Path = visiblePropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
@@ -2801,7 +3061,7 @@ public static class UiUtil
         control.Bind(Grid.IsVisibleProperty, new Binding
         {
             Path = visiblePropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
@@ -2813,7 +3073,7 @@ public static class UiUtil
         control.Bind(TextBlock.IsVisibleProperty, new Binding
         {
             Path = visiblePropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
@@ -2825,7 +3085,7 @@ public static class UiUtil
         control.Bind(TextBlock.IsEnabledProperty, new Binding
         {
             Path = visiblePropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
@@ -2838,7 +3098,7 @@ public static class UiUtil
         control.Bind(Label.IsVisibleProperty, new Binding
         {
             Path = visiblePropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
             Converter = converter,
         });
 
@@ -2851,7 +3111,7 @@ public static class UiUtil
         control.Bind(StackPanel.IsVisibleProperty, new Binding
         {
             Path = visiblePropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
@@ -2864,14 +3124,14 @@ public static class UiUtil
         control.Bind(StackPanel.IsVisibleProperty, new Binding
         {
             Path = visiblePropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
             Converter = converter,
         });
 
         return control;
     }
 
-    private static bool IsDarkTheme()
+    public static bool IsDarkTheme()
     {
         var app = Application.Current;
         if (app == null)
@@ -2975,6 +3235,17 @@ public static class UiUtil
             Setters =
             {
                 new Setter(ComboBox.FontFamilyProperty, FontFamilyHelper.Make(fontName)),
+            }
+        });
+
+        // The source editor (source view, batch convert ASSA) draws its own text, so it is not
+        // covered by the TextBox style above and would stay in Avalonia's default sans (#14457).
+        // The format preview sets a monospace family locally, which wins over this style.
+        Application.Current.Styles.Add(new Style(x => x.OfType<SyntaxTextEditor>())
+        {
+            Setters =
+            {
+                new Setter(SyntaxTextEditor.FontFamilyProperty, FontFamilyHelper.Make(fontName)),
             }
         });
     }
@@ -3158,6 +3429,36 @@ public static class UiUtil
         return title + " - " + System.IO.Path.GetFileName(fileName);
     }
 
+    /// <summary>
+    /// Gives <paramref name="control"/> the initial keyboard focus, once, the first time the
+    /// window is activated.
+    ///
+    /// The usual "Activated += delegate { x.Focus(); }" fires on <em>every</em> activation, so
+    /// Alt+Tabbing away and back yanks focus out of whatever the user had moved it to and
+    /// drops it back on the same control (#14313). Only the first activation is the initial
+    /// one; after that the window's own focus memory is the right answer.
+    /// </summary>
+    internal static void FocusOnFirstActivation(Window window, Control control)
+    {
+        FocusOnFirstActivation(window, () => control.Focus());
+    }
+
+    /// <summary>
+    /// Runs <paramref name="setInitialFocus"/> once, on the first activation of the window.
+    /// The overload to use when the initial focus is more than one control's Focus() call -
+    /// a row in a grid, a choice between two controls, a select-all before the focus.
+    /// </summary>
+    internal static void FocusOnFirstActivation(Window window, Action setInitialFocus)
+    {
+        void OnActivated(object? sender, EventArgs e)
+        {
+            window.Activated -= OnActivated;
+            setInitialFocus();
+        }
+
+        window.Activated += OnActivated;
+    }
+
     internal static void InitializeWindow(Window window, string name)
     {
         window.Icon = GetSeIcon();
@@ -3201,6 +3502,10 @@ public static class UiUtil
                     ClampToWorkingArea(window);
                 }
             }, DispatcherPriority.Background);
+
+            // Name every input after its visible label for screen readers - once, here,
+            // instead of in each of the ~300 windows (#12087). See AccessibleLabels.
+            AccessibleLabels.Apply(window);
         };
     }
 
@@ -3457,6 +3762,25 @@ public static class UiUtil
                string.Equals(ShortcutManager.GetShortcutKey(e).ToString(), keyName, StringComparison.OrdinalIgnoreCase);
     }
 
+    private static readonly ConditionalWeakTable<Window, Func<bool>> WindowSystemMenuOverrides = new();
+
+    /// <summary>
+    /// Lets a window claim Alt+Space for itself: while <paramref name="isOverridden"/> returns
+    /// true, <see cref="TryHandleWindowSystemMenu"/> leaves the key event alone instead of
+    /// opening the Windows system menu. The main window uses this so a user-assigned Alt+Space
+    /// shortcut wins over the Windows convention (#14536), mirroring the F10 rule; the shortcut
+    /// key-capture window uses it so the chord can be recorded at all.
+    /// </summary>
+    internal static void SetWindowSystemMenuOverride(Window window, Func<bool> isOverridden)
+    {
+        WindowSystemMenuOverrides.AddOrUpdate(window, isOverridden);
+    }
+
+    internal static bool IsWindowSystemMenuOverridden(Window window)
+    {
+        return WindowSystemMenuOverrides.TryGetValue(window, out var isOverridden) && isOverridden();
+    }
+
     internal static bool TryHandleWindowSystemMenu(KeyEventArgs e, Window? window)
     {
         if (!OperatingSystem.IsWindows() || window == null)
@@ -3466,6 +3790,12 @@ public static class UiUtil
 
         if (e.Key == Key.Space && e.KeyModifiers == KeyModifiers.Alt)
         {
+            if (IsWindowSystemMenuOverridden(window))
+            {
+                return false;
+            }
+
+
             SystemMenu.Show(window);
             e.Handled = true;
             return true;

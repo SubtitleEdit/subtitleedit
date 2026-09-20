@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     public class Csv : SubtitleFormat
     {
         private const string Separator = ";";
-        private static readonly Regex CsvLine = new Regex(@"^""?\d+""?" + Separator + @"""?\d+""?" + Separator + @"""?\d+""?" + Separator + @"""?[^""]*""?$", RegexOptions.Compiled);
+        private static readonly Regex CsvLine = new Regex(@"^""?\d+""?" + Separator + @"""?\d+""?" + Separator + @"""?\d+""?" + Separator + @".*$", RegexOptions.Compiled); // the text may hold quotes
 
         public override string Extension => ".csv";
 
@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             sb.AppendLine(string.Format(format, Separator, "Number", "Start time in milliseconds", "End time in milliseconds", "Text"));
             foreach (var p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format(format, Separator, p.Number, (long)Math.Round(p.StartTime.TotalMilliseconds, MidpointRounding.AwayFromZero), (long)Math.Round(p.EndTime.TotalMilliseconds, MidpointRounding.AwayFromZero), p.Text.Replace(Environment.NewLine, "\n")));
+                sb.AppendLine(string.Format(format, Separator, p.Number, (long)Math.Round(p.StartTime.TotalMilliseconds, MidpointRounding.AwayFromZero), (long)Math.Round(p.EndTime.TotalMilliseconds, MidpointRounding.AwayFromZero), p.Text.Replace("\"", "\"\"").Replace(Environment.NewLine, "\n"))); // CSV doubles an embedded quote
             }
             return sb.ToString().Trim();
         }
@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             var start = Convert.ToInt32(Utilities.FixQuotes(parts[1]));
                             var end = Convert.ToInt32(Utilities.FixQuotes(parts[2]));
-                            var text = Utilities.FixQuotes(parts[3]);
+                            var text = Utilities.FixQuotes(parts[3]).Replace("\"\"", "\"");
                             p = new Paragraph(text, start, end);
                             subtitle.Paragraphs.Add(p);
                             continuation = parts[3].StartsWith('"') && !parts[3].EndsWith('"');
@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         if (p.Text.Length < 300)
                         {
-                            p.Text = (p.Text + Environment.NewLine + line.TrimEnd('"')).Trim();
+                            p.Text = (p.Text + Environment.NewLine + line.TrimEnd('"').Replace("\"\"", "\"")).Trim();
                         }
 
                         continuation = !line.TrimEnd().EndsWith('"');

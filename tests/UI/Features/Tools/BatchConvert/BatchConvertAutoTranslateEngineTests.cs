@@ -1,4 +1,4 @@
-using Avalonia.Automation;
+﻿using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.LogicalTree;
@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Features.Tools.BatchConvert;
 using Nikse.SubtitleEdit.Features.Tools.BatchConvert.FunctionViews;
 using Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 
 namespace UITests.Features.Tools.BatchConvert;
 
@@ -41,7 +42,7 @@ public class BatchConvertAutoTranslateEngineTests
         var view = ViewAutoTranslate.Make(viewModel);
 
         var button = view.GetLogicalDescendants().OfType<Button>().FirstOrDefault(b =>
-            AutomationProperties.GetName(b) == Se.Language.Translate.AdvancedSettings);
+            AutomationProperties.GetName(b) == Se.Language.General.AdvancedSettings);
         Assert.NotNull(button);
 
         foreach (var engine in viewModel.AutoTranslators)
@@ -76,6 +77,31 @@ public class BatchConvertAutoTranslateEngineTests
         Assert.False(viewModel.AutoTranslateApiKeyIsVisible);
         Assert.Equal("http://example.local:11434/v1/chat/completions", viewModel.AutoTranslateUrl);
         Assert.Equal("qwen3:8b", viewModel.AutoTranslateModel);
+    }
+
+    /// <summary>
+    /// The generic OpenAI-compatible engine (vLLM, a hand-started llama-server, hosted providers)
+    /// has no model list to browse, so all three of URL, API key and model are free-text and come
+    /// from its own settings.
+    /// </summary>
+    [AvaloniaFact]
+    public void OpenAiCompatible_ShowsUrlApiKeyAndFreeTextModel()
+    {
+        var viewModel = MakeViewModel();
+        Se.Settings.AutoTranslate.OpenAiCompatibleUrl = "http://example.local:8000/v1/chat/completions";
+        Se.Settings.AutoTranslate.OpenAiCompatibleApiKey = "sk-test";
+        Se.Settings.AutoTranslate.OpenAiCompatibleModel = "gemma-3-12b";
+
+        viewModel.SelectedAutoTranslator = viewModel.AutoTranslators.First(t => t is OpenAiCompatibleTranslate);
+        viewModel.OnAutoTranslatorChanged();
+
+        Assert.True(viewModel.AutoTranslateUrlIsVisible);
+        Assert.True(viewModel.AutoTranslateApiKeyIsVisible);
+        Assert.True(viewModel.AutoTranslateModelIsVisible);
+        Assert.False(viewModel.AutoTranslateModelBrowseIsVisible);
+        Assert.Equal("http://example.local:8000/v1/chat/completions", viewModel.AutoTranslateUrl);
+        Assert.Equal("sk-test", viewModel.AutoTranslateApiKey);
+        Assert.Equal("gemma-3-12b", viewModel.AutoTranslateModel);
     }
 
     private static BatchConvertViewModel MakeViewModel()

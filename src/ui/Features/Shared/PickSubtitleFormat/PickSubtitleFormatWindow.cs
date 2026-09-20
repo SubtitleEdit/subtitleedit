@@ -28,7 +28,7 @@ public class PickSubtitleFormatWindow : Window
             PlaceholderText = Se.Language.General.SearchSubtitleFormats,
             Margin = new Thickness(5, 0, 0, 0),
             Width = 250,
-        };
+        }.WithSearchAndClearIcons();
         textBoxSearch.Bind(TextBox.TextProperty, new Binding(nameof(vm.SearchText)) { Source = vm });
         textBoxSearch.TextChanged += (_, _) => vm.SearchTextChanged();
         
@@ -105,10 +105,10 @@ public class PickSubtitleFormatWindow : Window
 
         Content = grid;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             textBoxSearch.Focus();
-        };
+        });
         
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }

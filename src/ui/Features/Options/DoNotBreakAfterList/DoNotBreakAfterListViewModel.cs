@@ -294,5 +294,10 @@ public partial class DoNotBreakAfterListViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/settings", "tools");
+        }
     }
 }

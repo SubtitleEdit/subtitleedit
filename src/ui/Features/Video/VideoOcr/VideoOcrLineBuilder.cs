@@ -12,6 +12,12 @@ namespace Nikse.SubtitleEdit.Features.Video.VideoOcr;
 /// </summary>
 public static class VideoOcrLineBuilder
 {
+    // A subtitle frame is usually 1-2 lines, but burned-in narration (vertical Japanese, scrolling
+    // text) holds a whole paragraph - up to 18 lines in one frame (#14920). The fence, prompt-echo
+    // and repeat filters in CleanOcrResult remove model garbage, so this only guards against
+    // runaway output; it is not a subtitle shape assumption.
+    internal const int MaxLinesPerFrame = 32;
+
     public class OcrLine
     {
         public double StartMs { get; set; }
@@ -154,7 +160,7 @@ public static class VideoOcrLineBuilder
             lastLine = line;
             kept.Add(line);
 
-            if (kept.Count >= 4) // a subtitle is at most a few short lines
+            if (kept.Count >= MaxLinesPerFrame)
             {
                 break;
             }

@@ -83,5 +83,10 @@ public partial class CheckForUpdatesViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/settings", "updates");
+        }
     }
 }

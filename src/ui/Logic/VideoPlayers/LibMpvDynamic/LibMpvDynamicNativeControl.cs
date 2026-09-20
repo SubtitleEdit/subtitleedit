@@ -10,7 +10,7 @@ using System.Timers;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 
-public class LibMpvDynamicNativeControl : NativeControlHost
+public partial class LibMpvDynamicNativeControl : NativeControlHost
 {
     private LibMpvDynamicPlayer? _mpvPlayer;
     private bool _isInitialized;
@@ -284,14 +284,15 @@ public class LibMpvDynamicNativeControl : NativeControlHost
         return handle.ToString();
     }
 
-    [DllImport("user32.dll")]
-    private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
-    [DllImport("user32.dll")]
-    private static extern IntPtr SetCursor(IntPtr hCursor);
+    [LibraryImport("user32.dll")]
+    private static partial IntPtr SetCursor(IntPtr hCursor);
 
-    [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-    private static extern IntPtr CreateWindowExW(
+    [LibraryImport("user32.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+    private static partial IntPtr CreateWindowExW(
         uint dwExStyle,
         string lpClassName,
         string lpWindowName,
@@ -305,45 +306,47 @@ public class LibMpvDynamicNativeControl : NativeControlHost
         IntPtr hInstance,
         IntPtr lpParam);
 
-    [DllImport("user32.dll", SetLastError = true)]
+    [LibraryImport("user32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    private static extern bool DestroyWindow(IntPtr hWnd);
+    private static partial bool DestroyWindow(IntPtr hWnd);
 
-    [DllImport("user32.dll", SetLastError = true)]
-    private static extern IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+    [LibraryImport("user32.dll", EntryPoint = "SetWindowLongPtrW", SetLastError = true)]
+    private static partial IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
 
-    [DllImport("user32.dll")]
-    private static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+    [LibraryImport("user32.dll", EntryPoint = "CallWindowProcW")]
+    private static partial IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 
-    [DllImport("user32.dll")]
-    private static extern bool GetClientRect(IntPtr hWnd, ref RECT lpRect);
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool GetClientRect(IntPtr hWnd, ref RECT lpRect);
 
-    [DllImport("user32.dll")]
-    private static extern int FillRect(IntPtr hDC, ref RECT lprc, IntPtr hbr);
+    [LibraryImport("user32.dll")]
+    private static partial int FillRect(IntPtr hDC, ref RECT lprc, IntPtr hbr);
 
-    [DllImport("user32.dll")]
-    private static extern IntPtr BeginPaint(IntPtr hWnd, ref PAINTSTRUCT lpPaint);
+    [LibraryImport("user32.dll")]
+    private static partial IntPtr BeginPaint(IntPtr hWnd, ref PAINTSTRUCT lpPaint);
 
-    [DllImport("user32.dll")]
-    private static extern bool EndPaint(IntPtr hWnd, ref PAINTSTRUCT lpPaint);
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool EndPaint(IntPtr hWnd, ref PAINTSTRUCT lpPaint);
 
     [StructLayout(LayoutKind.Sequential)]
-    private struct PAINTSTRUCT
+    private unsafe struct PAINTSTRUCT
     {
         public IntPtr hdc;
-        public bool fErase;
+        public int fErase;
         public RECT rcPaint;
-        public bool fRestore;
-        public bool fIncUpdate;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
-        public byte[] rgbReserved;
+        public int fRestore;
+        public int fIncUpdate;
+        public fixed byte rgbReserved[32];
     }
 
-    [DllImport("gdi32.dll")]
-    private static extern IntPtr CreateSolidBrush(uint crColor);
+    [LibraryImport("gdi32.dll")]
+    private static partial IntPtr CreateSolidBrush(uint crColor);
 
-    [DllImport("gdi32.dll")]
-    private static extern bool DeleteObject(IntPtr hObject);
+    [LibraryImport("gdi32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool DeleteObject(IntPtr hObject);
 
     [StructLayout(LayoutKind.Sequential)]
     private struct RECT

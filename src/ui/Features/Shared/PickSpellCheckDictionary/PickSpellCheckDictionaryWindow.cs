@@ -25,6 +25,7 @@ public class PickSpellCheckDictionaryWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             MinWidth = 180,
             Margin = new Thickness(0, 10, 10, 2),
+            [Avalonia.Automation.AutomationProperties.NameProperty] = Se.Language.General.Dictionary,
             [!ComboBox.SelectedValueProperty] = new Binding(nameof(vm.SelectedDictionary)),
         };
 
@@ -70,7 +71,7 @@ public class PickSpellCheckDictionaryWindow : Window
 
         Content = grid;
 
-        Activated += delegate { combo.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, combo); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

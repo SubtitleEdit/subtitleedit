@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -27,6 +27,7 @@ public class ExportPlainTextWindow : Window
             .WithMinWidth(180)
             .WithMarginRight(10);
         var buttonSaveAs = UiUtil.MakeButton(Se.Language.General.SaveDotDotDot, vm.SaveAsCommand);
+        buttonSaveAs.IsDefault = true; // the dialog's accept button - Enter runs it (#14586)
         var buttonDone = UiUtil.MakeButtonDone(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar( labelEncoding, comboBoxEncoding, buttonSaveAs, buttonDone);
 
@@ -55,7 +56,7 @@ public class ExportPlainTextWindow : Window
 
         Content = grid;
 
-        Activated += delegate { comboBoxEncoding.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, comboBoxEncoding); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.OnKeyDown;
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
@@ -200,7 +201,8 @@ public class ExportPlainTextWindow : Window
         var textBox = new TextBox
         {
             AcceptsReturn = true,
-            AcceptsTab = true,
+            // Read-only preview - see ManualChosenEncodingWindow (#14313).
+            AcceptsTab = false,
             IsReadOnly = true,
             TextWrapping = TextWrapping.Wrap,
             Width = double.NaN,

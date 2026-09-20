@@ -53,7 +53,7 @@ public class CopyPasteTranslateWindow : Window
 
         Content = grid;
 
-        Activated += delegate { TableViewExtras.FocusRow(vm.SubtitleGrid); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, () => { TableViewExtras.FocusRow(vm.SubtitleGrid); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
     }
 

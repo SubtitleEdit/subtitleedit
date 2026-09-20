@@ -17,7 +17,7 @@ public static class ViewApplyMinGap
         };
 
         var labelMinXBetweenLines = UiUtil.MakeLabel(Se.Language.Tools.ApplyMinGaps.MinMsBetweenLines);
-        var numericUpDownMinGap = UiUtil.MakeNumericUpDownInt(0, 1000, Se.Settings.Tools.BridgeGaps.MinGapMs, 130, vm, nameof(vm.MinGapMs));
+        var numericUpDownMinGap = UiUtil.MakeNumericUpDownInt(0, 1000, Se.Settings.Tools.ApplyMinGapMilliseconds, 130, vm, nameof(vm.MinGapMs));
 
         var panelControls = UiUtil.MakeHorizontalPanel(labelMinXBetweenLines, numericUpDownMinGap);
 

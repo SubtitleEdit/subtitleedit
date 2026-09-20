@@ -60,7 +60,7 @@ public class BinaryAdjustBrightnessWindow : Window
 
         Content = mainGrid;
 
-        Activated += delegate { brightnessInputSlider.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, brightnessInputSlider); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
@@ -181,7 +181,7 @@ public class BinaryAdjustBrightnessWindow : Window
             Text = Se.Language.Tools.ImageBasedEdit.BrightnessAdjustmentInfo,
             TextWrapping = Avalonia.Media.TextWrapping.Wrap,
             Margin = new Thickness(0, 20, 0, 0),
-            FontSize = 11,
+            FontSize = UiUtil.ScaledFontSize(11),
             Foreground = Avalonia.Media.Brushes.Gray,
         };
         panel.Children.Add(infoText);

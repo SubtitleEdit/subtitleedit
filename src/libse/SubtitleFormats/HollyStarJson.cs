@@ -68,8 +68,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.AppendLine("\t\t\t],");
 
                 sb.AppendLine($"\t\t\t\"ClassName\": \"{language}\", ");
-                sb.AppendLine($"\t\t\t\"ShowTime\": {p.StartTime.TotalMilliseconds}, ");
-                sb.AppendLine($"\t\t\t\"HideTime\": {p.EndTime.TotalMilliseconds}");
+                sb.AppendLine($"\t\t\t\"ShowTime\": {(long)Math.Round(p.StartTime.TotalMilliseconds)}, ");
+                sb.AppendLine($"\t\t\t\"HideTime\": {(long)Math.Round(p.EndTime.TotalMilliseconds)}");
                 sb.AppendLine("\t\t}");
             }
 

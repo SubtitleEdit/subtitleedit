@@ -444,8 +444,16 @@ public class StringExtensionsTest
         Assert.True("foobar--</i>".HasSentenceEnding());
         Assert.True("foobar—".HasSentenceEnding()); // em dash
         Assert.True("foobar—</i>".HasSentenceEnding()); // em dash
+        Assert.True("foobar.\u00BB".HasSentenceEnding()); // «…» Italian, Spanish, Russian (#14866)
+        Assert.True("foobar.\u00A0\u00BB".HasSentenceEnding()); // « … » French, no-break space before the guillemet
+        Assert.True("foobar.\u00AB".HasSentenceEnding()); // »…« German, Danish
+        Assert.True("foobar.\u201C".HasSentenceEnding()); // „…“ German
+        Assert.True("foobar.\u2019".HasSentenceEnding()); // ‘…’
+        Assert.True("foobar?'".HasSentenceEnding());
 
         Assert.False("\"".HasSentenceEnding());
+        Assert.False("\u00BB".HasSentenceEnding());
+        Assert.False("goin'".HasSentenceEnding());
         Assert.False("foobar>".HasSentenceEnding());
         Assert.False("How are you{\\i0}".HasSentenceEnding());
         Assert.False("".HasSentenceEnding());

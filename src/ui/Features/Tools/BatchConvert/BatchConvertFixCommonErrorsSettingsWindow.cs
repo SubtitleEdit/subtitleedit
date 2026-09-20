@@ -32,7 +32,8 @@ public class BatchConvertFixCommonErrorsSettingsWindow : Window
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var comboProfile = UiUtil.MakeComboBox(vm.Profiles, vm, nameof(vm.SelectedProfile));
+        var comboProfile = UiUtil.MakeComboBox(vm.Profiles, vm, nameof(vm.SelectedProfile))
+            .WithAccessibleName(Se.Language.General.Profile);
         var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
         var grid = new Grid
@@ -58,7 +59,7 @@ public class BatchConvertFixCommonErrorsSettingsWindow : Window
         grid.Add(panelButtons, 1, 0);
         Content = grid;
 
-        Activated += delegate { comboProfile.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, comboProfile); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 

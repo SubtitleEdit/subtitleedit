@@ -17,10 +17,10 @@ using System.Linq;
 namespace UITests.Features.Video.VideoOcr;
 
 /// <summary>
-/// The Video OCR window builds its settings column in code, so the CrispEmbed gear button that
+/// The Video OCR window builds its settings column in code, so the engine gear button that
 /// replaced the two small download icon buttons is only proven to exist once the window is
-/// constructed. These tests assert it reaches the logical tree, follows the engine selection,
-/// and that the CrispEmbed dialog it opens lists every downloadable model.
+/// constructed. These tests assert it reaches the logical tree, stays visible for every engine
+/// (it opens a per-engine dialog), and that the CrispEmbed dialog lists every downloadable model.
 /// </summary>
 public class VideoOcrCrispEmbedSettingsButtonTests : IDisposable
 {
@@ -61,28 +61,22 @@ public class VideoOcrCrispEmbedSettingsButtonTests : IDisposable
     }
 
     private static string SettingsButtonName =>
-        $"{CrispEmbedEngine.StaticName} - {Se.Language.General.Settings}";
+        $"{Se.Language.Video.VideoOcr.Engine} - {Se.Language.General.Settings}";
 
     [AvaloniaFact]
-    public void Window_HasCrispEmbedSettingsButton_HiddenUntilCrispEmbedIsSelected()
+    public void Window_HasEngineSettingsButton_VisibleForEveryEngine()
     {
-        if (!CrispEmbedEngine.CanBeDownloaded())
-        {
-            return;
-        }
-
         var window = BuildWindow(out var viewModel);
         try
         {
-            viewModel.SelectedEngine = viewModel.Engines.First(p => p.EngineType != OcrEngineType.CrispEmbed);
-
             var button = FindButton(window, SettingsButtonName);
             Assert.NotNull(button);
-            Assert.False(button!.IsVisible);
 
-            viewModel.SelectedEngine = viewModel.Engines.First(p => p.EngineType == OcrEngineType.CrispEmbed);
-
-            Assert.True(button.IsVisible);
+            foreach (var engine in viewModel.Engines)
+            {
+                viewModel.SelectedEngine = engine;
+                Assert.True(button!.IsVisible);
+            }
         }
         finally
         {

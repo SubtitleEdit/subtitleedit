@@ -7,6 +7,7 @@ using Avalonia.Threading;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
+using Nikse.SubtitleEdit.Logic.VideoPlayers.Ffmpeg;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
 
@@ -31,7 +32,12 @@ public static class InitVideoPlayer
         if (vm.VideoPlayerControl != null)
         {
             mediaFile = vm.VideoPlayerControl.VideoPlayer.FileName;
-            position = vm.VideoPlayerControl.VideoPlayer.Position;
+
+            // Not VideoPlayer.Position: the outgoing control may still be restoring a position
+            // itself (Options/Apply rebuilt it moments ago), and a player that has not finished
+            // loading reports 0 - which would be carried forward here as a rewind to the start
+            // of the video (issue #14218).
+            position = vm.VideoPlayerControl.PositionForRestore;
 
             // The old control is replaced by the one built below and never used again, so tear
             // it down completely. Closing the file alone left its 50 ms position timer running
@@ -61,23 +67,25 @@ public static class InitVideoPlayer
         };
         if (!string.IsNullOrEmpty(mediaFile))
         {
+            // Announced before the open so a rebuild that lands while this restore is still
+            // running gets the position it is heading for rather than the 0 of a player that
+            // has not loaded yet (issue #14218).
+            control.BeginPositionRestore(position);
+
             Dispatcher.UIThread.Post(async () =>
             {
-                await control.Open(mediaFile);
+                // Opened at the position, like the fullscreen and undocked players: a file
+                // opened at 0 and seeked afterwards shows the first frame for a moment and
+                // then jumps (#13329, issue #15027).
+                await control.Open(mediaFile, position);
                 await control.WaitForPlayersReadyAsync();
 
-                // A second rebuild within the ready wait (Options/OK, dock/undock) disposes
-                // this control's player via the block above - stop restoring into it (#13083).
-                for (var i = 0; i < 10; i++)
-                {
-                    await System.Threading.Tasks.Task.Delay(10);
-                    if (control.IsDisposed)
-                    {
-                        return;
-                    }
-
-                    control.Position = position;
-                }
+                // Seeks until the player reports it arrived, and bails out when a second rebuild
+                // within the ready wait (Options/OK, dock/undock) disposes this control's player
+                // via the block above (#13083). Doing this by hand here - ten assignments to
+                // Position - is what left the video, and with it the waveform, at 0:00 after a
+                // settings change on a long file (issue #14741).
+                await control.RestorePositionAsync(position);
             });
         }
 
@@ -89,6 +97,7 @@ public static class InitVideoPlayer
         control.VideoFileNamePointerPressed += vm.VideoPlayerControlPointerPressed;
         control.SurfacePointerPressed += (_, _) => vm.VideoPlayerAreaPointerPressed();
         control.UserSeeked += vm.OnVideoPlayerUserSeeked;
+        control.PositionChanged += vm.OnVideoPlayerPositionSet;
         // Freeze the interpolated waveform cursor the instant a pause is requested from the
         // player itself (toolbar button / click on the video); without this the cursor keeps
         // gliding until mpv's IsPlaying flips ~100 ms later (issue #12233).
@@ -121,6 +130,16 @@ public static class InitVideoPlayer
                 if (player.CanLoad())
                 {
                     var view = new LibVlcDynamicNativeControl(player);
+                    return MakeVideoPlayerControl(player, view);
+                }
+            }
+
+            if (Se.Settings.Video.VideoPlayer.Equals(VideoPlayerName.Ffmpeg, StringComparison.OrdinalIgnoreCase))
+            {
+                var player = new FfmpegPlayer();
+                if (player.CanLoad())
+                {
+                    var view = new FfmpegSoftwareControl(player);
                     return MakeVideoPlayerControl(player, view);
                 }
             }
@@ -174,7 +193,7 @@ public static class InitVideoPlayer
     /// </summary>
     public static VideoPlayerControl MakeVideoPlayerPreferNonNative()
     {
-        if (OperatingSystem.IsWindows() && Se.Settings.Video.VideoPlayer != VideoPlayerName.MpvOpenGl)
+        if (OperatingSystem.IsWindows() && Se.Settings.Video.VideoPlayer != VideoPlayerName.MpvOpenGl && Se.Settings.Video.VideoPlayer != VideoPlayerName.Ffmpeg)
         {
             var player = new LibMpvDynamicPlayer();
             if (player.CanLoad())

@@ -33,7 +33,7 @@ public class Qwen3TtsSettingsWindow : Window
         Content = BuildContent(vm);
 
         var ok = UiUtil.MakeButtonOk(vm.OkCommand);
-        Activated += delegate { ok.Focus(); }; // ensure OnKeyDown fires
+        UiUtil.FocusOnFirstActivation(this, ok); // ensure OnKeyDown fires
     }
 
     private Border BuildContent(Qwen3TtsSettingsViewModel vm)
@@ -67,14 +67,14 @@ public class Qwen3TtsSettingsWindow : Window
         var title = new TextBlock
         {
             Text = "Qwen3 TTS",
-            FontSize = 18,
+            FontSize = UiUtil.ScaledFontSize(18),
             FontWeight = FontWeight.SemiBold,
         };
 
         var subtitle = new TextBlock
         {
             Text = new Qwen3TtsCpp().Description,
-            FontSize = 12,
+            FontSize = UiUtil.ScaledFontSize(12),
             Opacity = 0.75,
             Margin = new Thickness(0, 2, 0, 0),
         };
@@ -135,7 +135,7 @@ public class Qwen3TtsSettingsWindow : Window
         var releaseText = new TextBlock
         {
             FontFamily = new FontFamily("Cascadia Mono,Consolas,Menlo,Monaco,monospace"),
-            FontSize = 12,
+            FontSize = UiUtil.ScaledFontSize(12),
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ReleaseTag)),
         };
@@ -150,7 +150,7 @@ public class Qwen3TtsSettingsWindow : Window
             Background = Brushes.Transparent,
             Padding = new Thickness(0),
             VerticalContentAlignment = VerticalAlignment.Center,
-            FontSize = 12,
+            FontSize = UiUtil.ScaledFontSize(12),
             [!TextBox.TextProperty] = new Binding(nameof(vm.InstallFolder)),
         };
         grid.Add(folderText, 3, 1);

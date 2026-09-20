@@ -113,5 +113,10 @@ public partial class BinaryOcrSettingsViewModel : ObservableObject
         {
             Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/ocr", "binary-ocr");
+        }
     }
 }

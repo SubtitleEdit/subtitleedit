@@ -13,6 +13,29 @@ namespace Nikse.SubtitleEdit.Core.Common
     public class UnknownFormatImporter
     {
         private static readonly char[] ExpectedSplitChars = { '.', ',', ';', ':' };
+        private static readonly char[] BracketChars = { '-', '>', '{', '}', '[', ']' };
+
+        // One pass instead of six chained Replace(char, char) calls, each of which allocates a
+        // copy of the line whether or not the character occurs - run per line during auto-detect.
+        private static string ReplaceBracketsWithSpaces(string line)
+        {
+            if (line.IndexOfAny(BracketChars) < 0)
+            {
+                return line;
+            }
+
+            var chars = line.ToCharArray();
+            for (var i = 0; i < chars.Length; i++)
+            {
+                if (Array.IndexOf(BracketChars, chars[i]) >= 0)
+                {
+                    chars[i] = ' ';
+                }
+            }
+
+            return new string(chars);
+        }
+
 
         // Static: RegexOptions.Compiled emits IL on construction, so building these per call
         // paid the compile cost every time and never amortized it.
@@ -298,7 +321,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 if (allNumbers && lineWithPerhapsOnlyNumbers.Length > 2)
                 {
-                    string[] arr = line.Replace('-', ' ').Replace('>', ' ').Replace('{', ' ').Replace('}', ' ').Replace('[', ' ').Replace(']', ' ').Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] arr = ReplaceBracketsWithSpaces(line).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (arr.Length == 2)
                     {
                         string[] start = arr[0].Trim().Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
@@ -753,7 +776,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         line = line.RemoveChar(' ');
                     }
 
-                    string[] arr = line.Replace('-', ' ').Replace('>', ' ').Replace('{', ' ').Replace('}', ' ').Replace('[', ' ').Replace(']', ' ').Trim().Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
+                    string[] arr = ReplaceBracketsWithSpaces(line).Trim().Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                     if (arr.Length == 2)
                     {
                         string[] start = arr[0].Trim().Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
@@ -868,7 +891,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 if (allNumbers && lineWithPerhapsOnlyNumbers.Length > 5)
                 {
-                    string[] arr = line.Replace('-', ' ').Replace('>', ' ').Replace('{', ' ').Replace('}', ' ').Replace('[', ' ').Replace(']', ' ').Trim().Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
+                    string[] arr = ReplaceBracketsWithSpaces(line).Trim().Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
                     if (arr.Length == 2)
                     {
                         string[] start = arr[0].Trim().Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);

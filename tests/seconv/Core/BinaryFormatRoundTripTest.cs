@@ -33,6 +33,7 @@ public class BinaryFormatRoundTripTest : IDisposable
     [Theory]
     [InlineData("pac", ".pac", 16)]
     [InlineData("ebustl", ".stl", 1024)]   // EBU STL has 1024-byte GSI block + TTI blocks
+    [InlineData("dvbteletext", ".dvbttx", 1000)] // XML preamble + teletext PES payloads
     [InlineData("cavena890", ".890", 16)]
     [InlineData("cheetahcaption", ".cap", 16)]
     [InlineData("capmakerplus", ".cap", 16)]
@@ -76,6 +77,43 @@ public class BinaryFormatRoundTripTest : IDisposable
 
         Assert.True(result.Success, string.Join("; ", result.Errors));
         Assert.Single(Directory.GetFiles(_tempRoot, "in.pac"));
+    }
+
+    [Fact]
+    public async Task ConvertAsync_DvbTeletextToSrt_ReadsTextAndColorsBack()
+    {
+        // Source detection for .dvbttx goes through the binary format list - a full round trip
+        // proves both directions, including a Level 2.5 colour past the basic teletext eight.
+        var input = Path.Combine(_tempRoot, "in.srt");
+        var srt = """
+            1
+            00:00:01,000 --> 00:00:04,000
+            <font color="#ff8822">Level 2.5 orange</font>
+
+            """;
+        await File.WriteAllTextAsync(input, srt, TestContext.Current.CancellationToken);
+
+        var converter = new SubtitleConverter();
+        var toDvbttx = await converter.ConvertAsync(new ConversionOptions
+        {
+            Patterns = [input],
+            Format = "dvbteletext",
+            OutputFolder = _tempRoot,
+            Overwrite = true,
+        });
+        Assert.True(toDvbttx.Success, string.Join("; ", toDvbttx.Errors));
+
+        var backToSrt = await converter.ConvertAsync(new ConversionOptions
+        {
+            Patterns = [Path.Combine(_tempRoot, "in.dvbttx")],
+            Format = "subrip",
+            OutputFolder = Path.Combine(_tempRoot, "back"),
+            Overwrite = true,
+        });
+        Assert.True(backToSrt.Success, string.Join("; ", backToSrt.Errors));
+
+        var text = await File.ReadAllTextAsync(Path.Combine(_tempRoot, "back", "in.srt"), TestContext.Current.CancellationToken);
+        Assert.Contains("<font color=\"#ff8822\">Level 2.5 orange</font>", text);
     }
 
     [Fact]

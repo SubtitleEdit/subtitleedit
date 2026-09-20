@@ -262,6 +262,11 @@ public class ShortcutManager : IShortcutManager
             Key.LeftAlt or Key.RightAlt or
             Key.LWin or Key.RWin or Key.NumLock))
         {
+            // Only the most recent non-modifier key counts: a key-up can be lost when a
+            // shortcut moves focus (e.g. undo reloading the grid), and a stale key would
+            // otherwise block every following chord until the user releases everything.
+            _activeKeys.Clear();
+            _activeKeyNames.Clear();
             _activeKeys.Add(key);
             _activeKeyNames.Add(GetShortcutKeyName(e));
         }
@@ -320,6 +325,44 @@ public class ShortcutManager : IShortcutManager
         foreach (var shortcut in _shortcuts)
         {
             if (shortcut.Keys.Count == 1 && shortcut.Keys[0].Equals(keyName, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// True when any registered shortcut is bound to exactly this chord (order-insensitive,
+    /// modifier tokens as stored: "Control", "Alt", "Shift", "Win"), regardless of which
+    /// control the shortcut is scoped to.
+    /// </summary>
+    public bool HasShortcut(params string[] keys)
+    {
+        if (keys.Length == 0)
+        {
+            return false;
+        }
+
+        foreach (var shortcut in _shortcuts)
+        {
+            if (shortcut.Keys.Count != keys.Length)
+            {
+                continue;
+            }
+
+            var all = true;
+            foreach (var key in keys)
+            {
+                if (!shortcut.Keys.Contains(key, StringComparer.OrdinalIgnoreCase))
+                {
+                    all = false;
+                    break;
+                }
+            }
+
+            if (all)
             {
                 return true;
             }

@@ -23,6 +23,7 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -100,9 +101,11 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
     private readonly Timer _timerAnalyze;
     private readonly Timer _timerGenerate;
     private bool _doAbort;
+    private volatile bool _isClosing;
     private int _jobItemIndex = -1;
     private SubtitleFormat? _subtitleFormat;
     private string _inputVideoFileName;
+    private const string StatusSkipped = "Skipped";
     private List<BurnInEffectItem> _selectedEffects;
 
     public VideoPlayerControl? VideoPlayerControl { get; set; }
@@ -110,6 +113,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
     private LibMpvDynamicPlayer? _mpvPreviewPlayer;
     private DispatcherTimer? _previewTimer;
     private string _oldPreviewAssa = string.Empty;
+    private bool _previewDirty = true; // true = preview ASSA must be regenerated on the next timer tick
     private readonly string _tempPreviewAssaFileName;
     private bool _isPreviewSubtitleLoaded;
 
@@ -180,6 +184,8 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         _timerAnalyze.Interval = 100;
 
         _loading = false;
+
+        _previewDirty = true;
         _inputVideoFileName = string.Empty;
         LoadSettings();
         BoxTypeChanged();
@@ -192,6 +198,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         _inputVideoFileName = videoFileName;
         _subtitle = new Subtitle(subtitle, false);
         _subtitleFormat = subtitleFormat;
+        _previewDirty = true;
 
         var fileExists = !string.IsNullOrWhiteSpace(videoFileName) && File.Exists(videoFileName);
         if (fileExists)
@@ -204,7 +211,6 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
                 {
                     VideoWidth = mediaInfo.Dimension.Width;
                     VideoHeight = mediaInfo.Dimension.Height;
-                    UseSourceResolution = false;
                 });
             });
         }
@@ -216,7 +222,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
 
     private void TimerAnalyzeElapsed(object? sender, ElapsedEventArgs e)
     {
-        if (_ffmpegProcess == null)
+        if (_ffmpegProcess == null || _isClosing)
         {
             return;
         }
@@ -234,8 +240,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
 
         if (!_ffmpegProcess.HasExited)
         {
-            var percentage = (int)Math.Round((double)_processedFrames / JobItems[_jobItemIndex].TotalFrames * 100.0,
-                MidpointRounding.AwayFromZero);
+            var percentage = (int)Math.Round(GetProgressPercentage(JobItems[_jobItemIndex]), MidpointRounding.AwayFromZero);
             percentage = Math.Clamp(percentage, 0, 100);
 
             var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
@@ -263,8 +268,12 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
             {
                 var jobItem = JobItems[_jobItemIndex];
                 var process = await GetFfmpegProcess(jobItem);
-                if (process == null)
+                if (process == null || _isClosing)
                 {
+                    // No process and no timer running: nothing else would reset the generating state.
+                    jobItem.Status = Se.Language.General.Error;
+                    IsGenerating = false;
+                    ProgressValue = 0;
                     return;
                 }
 
@@ -286,7 +295,9 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
 
     private void TimerGenerateElapsed(object? sender, ElapsedEventArgs e)
     {
-        if (_ffmpegProcess == null)
+        // A tick already queued when the window closed must not report on the killed process
+        // or start the next batch item.
+        if (_ffmpegProcess == null || _isClosing)
         {
             return;
         }
@@ -304,8 +315,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
 
         if (!_ffmpegProcess.HasExited)
         {
-            var percentage = (int)Math.Round((double)_processedFrames / JobItems[_jobItemIndex].TotalFrames * 100.0,
-                MidpointRounding.AwayFromZero);
+            var percentage = (int)Math.Round(GetProgressPercentage(JobItems[_jobItemIndex]), MidpointRounding.AwayFromZero);
             percentage = Math.Clamp(percentage, 0, 100);
 
             var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
@@ -331,22 +341,35 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
 
         var jobItem = JobItems[_jobItemIndex];
 
-        if (!File.Exists(jobItem.OutputVideoFileName))
+        // The output file existing is not proof that this run produced it: a failed ffmpeg can
+        // leave an empty or truncated file behind, and that was reported as "Done". The process
+        // has exited here (HasExited above), so the exit code can be read.
+        var process = _ffmpegProcess;
+        var exitCode = process.ExitCode;
+        if (exitCode != 0 || !OutputFileHasContent(jobItem.OutputVideoFileName))
         {
-            Se.WriteToolsLog("Output video file not found: " + jobItem.OutputVideoFileName + Environment.NewLine +
-                             "ffmpeg: " + _ffmpegProcess.StartInfo.FileName + Environment.NewLine +
-                             "Parameters: " + _ffmpegProcess.StartInfo.Arguments + Environment.NewLine +
+            Se.WriteToolsLog("Output video file not generated: " + jobItem.OutputVideoFileName + Environment.NewLine +
+                             "ffmpeg: " + process.StartInfo.FileName + Environment.NewLine +
+                             "Parameters: " + process.StartInfo.Arguments + Environment.NewLine +
                              "OS: " + Environment.OSVersion + Environment.NewLine +
                              "64-bit: " + Environment.Is64BitOperatingSystem + Environment.NewLine +
-                             "ffmpeg exit code: " + _ffmpegProcess.ExitCode + Environment.NewLine +
+                             "ffmpeg exit code: " + exitCode + Environment.NewLine +
                              "ffmpeg log: " + _log);
+
+            jobItem.Status = Se.Language.General.Error;
 
             Dispatcher.UIThread.Invoke(async () =>
             {
+                if (_isClosing)
+                {
+                    return;
+                }
+
                 await MessageBox.Show(Window!,
                     "Unable to generate video",
                     "Output video file not generated: " + jobItem.OutputVideoFileName + Environment.NewLine +
-                    "Parameters: " + _ffmpegProcess.StartInfo.Arguments,
+                    "ffmpeg exit code: " + exitCode + Environment.NewLine +
+                    "Parameters: " + process.StartInfo.Arguments,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
 
@@ -361,48 +384,90 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
 
         Dispatcher.UIThread.Invoke(async () =>
         {
-            ProgressValue = 0;
-
-            if (_jobItemIndex < JobItems.Count - 1)
-            {
-                await InitAndStartJobItem(_jobItemIndex + 1);
-                return;
-            }
-
-            IsGenerating = false;
-
-            if (JobItems.Count == 1)
-            {
-                await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window!, vm =>
-                {
-                    vm.Initialize(
-                        Se.Language.General.VideoFileGenerated,
-                        string.Format(Se.Language.General.VideoFileGeneratedX, jobItem.OutputVideoFileName),
-                        jobItem.OutputVideoFileName,
-                        true,
-                        true);
-                });
-            }
-            else
-            {
-                var sb = new StringBuilder($"Generated files ({JobItems.Count}):" + Environment.NewLine + Environment.NewLine);
-                foreach (var item in JobItems)
-                {
-                    sb.AppendLine($"{item.OutputVideoFileName} ==> {item.Status}");
-                }
-
-                await MessageBox.Show(Window!,
-                    "Generating done",
-                    sb.ToString(),
-                    MessageBoxButtons.OK);
-            }
+            await ContinueWithNextJobItemOrFinish();
         });
+    }
+
+    /// <summary>
+    /// Starts the next batch item, or ends the run with the "done" dialog. Called on the UI thread
+    /// after an item finished - or was skipped before ffmpeg was ever started.
+    /// </summary>
+    private async Task ContinueWithNextJobItemOrFinish()
+    {
+        // The window is closing (or closed): do not start another ffmpeg, and there is no
+        // window left to show a dialog on.
+        if (_isClosing)
+        {
+            return;
+        }
+
+        ProgressValue = 0;
+
+        if (_jobItemIndex < JobItems.Count - 1)
+        {
+            await InitAndStartJobItem(_jobItemIndex + 1);
+            return;
+        }
+
+        IsGenerating = false;
+
+        var jobItem = JobItems[_jobItemIndex];
+        if (JobItems.Count == 1 && jobItem.Status != StatusSkipped)
+        {
+            await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window!, vm =>
+            {
+                vm.Initialize(
+                    Se.Language.General.VideoFileGenerated,
+                    string.Format(Se.Language.General.VideoFileGeneratedX, jobItem.OutputVideoFileName),
+                    jobItem.OutputVideoFileName,
+                    true,
+                    true);
+            });
+        }
+        else
+        {
+            var sb = new StringBuilder($"Generated files ({JobItems.Count}):" + Environment.NewLine + Environment.NewLine);
+            foreach (var item in JobItems)
+            {
+                sb.AppendLine($"{item.OutputVideoFileName} ==> {item.Status}");
+            }
+
+            await MessageBox.Show(Window!,
+                "Generating done",
+                sb.ToString(),
+                MessageBoxButtons.OK);
+        }
+    }
+
+    private static bool OutputFileHasContent(string fileName)
+    {
+        try
+        {
+            return File.Exists(fileName) && new FileInfo(fileName).Length > 0;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private double GetProgressPercentage(BurnInJobItem jobItem)
+    {
+        // Guard the division: a zero frame total made the progress value NaN/Infinity.
+        if (jobItem.TotalFrames <= 0)
+        {
+            return 0;
+        }
+
+        return _processedFrames * 100.0 / jobItem.TotalFrames;
     }
 
     private async Task InitAndStartJobItem(int index)
     {
         _startTicks = DateTime.UtcNow.Ticks;
         _jobItemIndex = index;
+        // The frame count of the previous batch item made the next one briefly show 100 %.
+        _processedFrames = 0;
         var jobItem = JobItems[index];
 
         // Transparent video is generated by ffmpeg from scratch (lavfi color source) - the input
@@ -430,6 +495,17 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         jobItem.UseTargetFileSize = UseTargetFileSize;
         jobItem.TargetFileSize = UseTargetFileSize ? TargetFileSize ?? 0 : 0;
         jobItem.AssaSubtitleFileName = MakeAssa(jobItem.SubtitleFileName);
+        if (string.IsNullOrEmpty(jobItem.AssaSubtitleFileName))
+        {
+            // An unreadable subtitle file used to be marked "Skipped" and then encoded anyway,
+            // with an empty "subtitles=f=" file name that ffmpeg rejects - and that error ended
+            // the whole batch.
+            jobItem.Status = StatusSkipped;
+            Se.WriteToolsLog($"Transparent video: skipped - subtitle file \"{jobItem.SubtitleFileName}\" could not be read");
+            await ContinueWithNextJobItemOrFinish();
+            return;
+        }
+
         jobItem.Status = Se.Language.General.Generating;
 
         var outputBase = !string.IsNullOrWhiteSpace(jobItem.InputVideoFileName)
@@ -442,12 +518,20 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         {
             _timerGenerate.Start();
         }
+        else
+        {
+            // No process and no timer running (the "ffmpeg parameters" prompt was cancelled):
+            // nothing would ever reset the generating state, leaving Generate/OK disabled.
+            jobItem.Status = Se.Language.General.Error;
+            IsGenerating = false;
+            ProgressValue = 0;
+        }
     }
 
     private async Task<bool> RunEncoding(BurnInJobItem jobItem)
     {
         var process = await GetFfmpegProcess(jobItem);
-        if (process == null)
+        if (process == null || _isClosing)
         {
             return false;
         }
@@ -593,7 +677,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         if (FfmpegProgressTracker.TryGetFrame(outLine.Data, out var frame))
         {
             _processedFrames = frame;
-            ProgressValue = _processedFrames * 100.0 / JobItems[_jobItemIndex].TotalFrames;
+            ProgressValue = GetProgressPercentage(JobItems[_jobItemIndex]);
             return;
         }
 
@@ -631,7 +715,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(subtitleFileName) || !File.Exists(subtitleFileName))
         {
-            JobItems[_jobItemIndex].Status = "Skipped";
+            JobItems[_jobItemIndex].Status = StatusSkipped;
             return string.Empty;
         }
 
@@ -640,7 +724,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         var subtitle = Subtitle.Parse(subtitleFileName);
         if (subtitle == null)
         {
-            JobItems[_jobItemIndex].Status = "Skipped";
+            JobItems[_jobItemIndex].Status = StatusSkipped;
             return string.Empty;
         }
 
@@ -871,9 +955,14 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
     [RelayCommand]
     private async Task BrowseResolution()
     {
+        // No "use source resolution" here: the video is generated from scratch, so there is no
+        // source video for it to refer to.
         var result =
             await _windowService
-                .ShowDialogAsync<BurnInResolutionPickerWindow, BurnInResolutionPickerViewModel>(Window!);
+                .ShowDialogAsync<BurnInResolutionPickerWindow, BurnInResolutionPickerViewModel>(Window!, vm =>
+                {
+                    vm.RemoveUseSourceResolution();
+                });
         if (!result.OkPressed || result.SelectedResolution == null)
         {
             return;
@@ -890,15 +979,9 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
             var mediaInfo = FfmpegMediaInfo2.Parse(videoFileName);
             VideoWidth = mediaInfo.Dimension.Width;
             VideoHeight = mediaInfo.Dimension.Height;
-            UseSourceResolution = false;
-        }
-        else if (result.SelectedResolution.ItemType == ResolutionItemType.UseSource)
-        {
-            UseSourceResolution = true;
         }
         else if (result.SelectedResolution.ItemType == ResolutionItemType.Resolution)
         {
-            UseSourceResolution = false;
             VideoWidth = result.SelectedResolution.Width;
             VideoHeight = result.SelectedResolution.Height;
         }
@@ -1028,10 +1111,15 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         OutputFolder = settings.OutputFolder;
         UseOutputFolderVisible = settings.UseOutputFolder;
         UseSourceFolderVisible = !settings.UseOutputFolder;
-        UseSourceResolution = settings.UseSourceResolution;
+
+        // Burn-in's "use source resolution" is deliberately not loaded (or saved): there is no
+        // source video here, so it hid the width/height boxes while the video was still generated
+        // at those values - and saving it back switched the burn-in dialog's setting off.
+        UseSourceResolution = false;
 
         var effectsAsStringArray = settings.Effects?.Split(',') ?? [];
         _selectedEffects = BurnInEffectItem.List().Where(p => effectsAsStringArray.Contains(p.Name)).ToList();
+        _previewDirty = true;
         DisplayEffect = string.Join(", ", _selectedEffects.Select(p => p.Name));
 
         // The frame rate is a real encoding parameter and the extension picks the container, but
@@ -1061,7 +1149,6 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         settings.NonAssaShadowColor = FontShadowColor.FromColorToHex();
         settings.NonAssaFixRtlUnicode = FontFixRtl;
         settings.NonAssaAlignment = SelectedFontAlignment.Code;
-        settings.UseSourceResolution = UseSourceResolution;
         settings.GenTransparentVideoExtension = SelectedVideoExtension;
         Se.Settings.Video.Transparent.FrameRate = SelectedFrameRate;
 
@@ -1117,6 +1204,8 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         }
 
         _selectedEffects = result.SelectedEffects.ToList();
+
+        _previewDirty = true;
         DisplayEffect = string.Join(", ", _selectedEffects.Select(p => p.Name));
     }
 
@@ -1125,7 +1214,9 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
-            Window?.Close();
+            // Route through Cancel so Escape during generation aborts the encode
+            // instead of closing the window over a running ffmpeg.
+            Cancel();
         }
         else if (UiUtil.IsHelp(e))
         {
@@ -1443,6 +1534,13 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
                 return;
             }
 
+            if (!_previewDirty)
+            {
+                return;
+            }
+
+            _previewDirty = false;
+
             string? assaText;
             try
             {
@@ -1450,6 +1548,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
             }
             catch
             {
+                _previewDirty = true;
                 return; // ignore transient errors while the user is editing settings
             }
 
@@ -1483,7 +1582,34 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         _mpvPreviewPlayer = mpv;
         _isPreviewSubtitleLoaded = alreadyHasSubtitle;
         _oldPreviewAssa = string.Empty;
+        _previewDirty = true;
     }
+
+    /// <summary>
+    /// Any view-model property may feed the styled preview (font, colors, margins, effects,
+    /// video size, subtitle format ...), so every change marks it dirty except the pure
+    /// output/progress properties that the generate/analyze timers write themselves.
+    /// </summary>
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+
+        if (!PreviewNeutralProperties.Contains(e.PropertyName ?? string.Empty))
+        {
+            _previewDirty = true;
+        }
+    }
+
+    private static readonly HashSet<string> PreviewNeutralProperties =
+    [
+        nameof(ProgressText),
+        nameof(ProgressValue),
+        nameof(IsGenerating),
+        nameof(ImagePreview),
+        nameof(SelectedJobItem),
+        nameof(JobItems),
+        nameof(VideoFileSize),
+    ];
 
     [RelayCommand]
     private void PreviewFullScreen()
@@ -1538,6 +1664,36 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         });
     }
 
+    internal void OnClosing()
+    {
+        // Stop the poll timers and any still-running encode - closing the window (title bar X)
+        // used to leave the ffmpeg process encoding to completion in the background, and in
+        // batch mode the timer went on to start the remaining jobs and then tried to show the
+        // "done" dialog on the closed window.
+        _isClosing = true;
+        _doAbort = true;
+        _timerGenerate.StopAndDispose(TimerGenerateElapsed);
+        _timerAnalyze.StopAndDispose(TimerAnalyzeElapsed);
+        if (_ffmpegProcess != null)
+        {
+            try
+            {
+                if (!_ffmpegProcess.HasExited)
+                {
+#pragma warning disable CA1416
+                    _ffmpegProcess.Kill(true);
+#pragma warning restore CA1416
+                }
+            }
+            catch
+            {
+                // ignore - it may have exited in between, or never started
+            }
+        }
+
+        CleanupPreview();
+    }
+
     public void CleanupPreview()
     {
         // The subtitle files handed to ffmpeg live as long as the window does - nothing else
@@ -1550,7 +1706,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
 
         try
         {
-            VideoPlayerControl?.Close();
+            VideoPlayerControl?.CloseAndDisposePlayer();
         }
         catch
         {

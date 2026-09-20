@@ -60,7 +60,7 @@ public class MergeSameTextWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonCancel.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, buttonCancel); // hack to make OnKeyDown work
         KeyDown += vm.OnKeyDown;
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
@@ -74,7 +74,9 @@ public class MergeSameTextWindow : Window
         numericUpDownGap.ValueChanged += (s, e) => { vm.SetDirty(); };
         var checkBoxIncludeIncrementText = UiUtil.MakeCheckBox(Se.Language.Tools.MergeLinesWithSameText.IncludeIncrementingLines, vm, nameof(vm.IncludeIncrementingLines));
         checkBoxIncludeIncrementText.IsCheckedChanged += (s, e) => { vm.SetDirty(); };
-        var panelGap = UiUtil.MakeHorizontalPanel(labelGap, numericUpDownGap, checkBoxIncludeIncrementText);
+        var checkBoxIncludeRollUp = UiUtil.MakeCheckBox(Se.Language.Tools.MergeLinesWithSameText.IncludeRollUpCaptions, vm, nameof(vm.IncludeRollUpCaptions));
+        checkBoxIncludeRollUp.IsCheckedChanged += (s, e) => { vm.SetDirty(); };
+        var panelGap = UiUtil.MakeHorizontalPanel(labelGap, numericUpDownGap, checkBoxIncludeIncrementText, checkBoxIncludeRollUp);
 
         return panelGap;
     }
@@ -88,6 +90,7 @@ public class MergeSameTextWindow : Window
         dataGrid.Height = double.NaN;
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.MergeItems;
+        dataGrid.WithAccessibleName(Se.Language.General.MergeLinesWithSameText); // no heading above the list (#12087)
         dataGrid.Columns.AddRange(new TableViewColumn[]
         {
                 new SeTableViewColumn
@@ -163,6 +166,7 @@ public class MergeSameTextWindow : Window
         dataGrid.Height = double.NaN;
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.MergeSubtitles;
+        dataGrid.WithAccessibleName(Se.Language.General.Preview);
         dataGrid.Columns.AddRange(new TableViewColumn[]
         {
                 new SeTableViewColumn
@@ -196,6 +200,7 @@ public class MergeSameTextWindow : Window
                     CellTheme = UiUtil.TableViewCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(SubtitleLineViewModel.Text)),
+                    NameBinding = new Binding(nameof(SubtitleLineViewModel.Text)),
                     Width = new GridLength(1, GridUnitType.Star),
                 },
                 new SeTableViewColumn

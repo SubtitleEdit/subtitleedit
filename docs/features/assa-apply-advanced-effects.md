@@ -27,6 +27,17 @@ Effects range from text animations (typewriter, karaoke, bounce-in) to visual en
 
 > Note: Audio-reactive effects (like **Audio text pulse**) are only shown when waveform/audio peak data is available.
 
+## Effect Settings
+
+Some effects show their own settings next to the effect description in the list:
+
+- **Infinite snow** — **Flake count**
+- **Infinite starfield** — **Star count**, **Speed**
+- **Karaoke** — **Right-to-left**
+- **Karaoke - active word pop** — **Auto-detect active word**, **Right-to-left**, **Active word glow** (with a glow color), **Active color**, **Inactive color**
+- **Lower third** — **Accent color**
+- **Word spacing** — **Spacing (pixels)**
+
 ## Available Effects
 
 ### Text Animation Effects

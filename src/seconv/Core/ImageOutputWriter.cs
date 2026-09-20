@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
+using SkiaSharp;
 using Nikse.SubtitleEdit.UiLogic.Export;
 
 namespace SeConv.Core;
@@ -67,6 +68,7 @@ internal static class ImageOutputWriter
         handler.WriteHeader(filePath, firstParam);
         firstParam.Bitmap?.Dispose();
 
+        var apply3D = Stereo3DImage.IsModeSupported(handler.ExportImageType);
         for (var i = 0; i < subtitle.Paragraphs.Count; i++)
         {
             var p = subtitle.Paragraphs[i];
@@ -74,6 +76,12 @@ internal static class ImageOutputWriter
             ip.Bitmap = ImageRenderer.GenerateBitmap(ip);
             // Needs the rendered size, so it cannot happen in BuildParameter.
             ExportTextTags.ApplyPositionTag(ip, p.Text, scriptWidth, scriptHeight);
+            if (apply3D)
+            {
+                // Last: each eye's copy goes where the flat subtitle ended up.
+                Stereo3DImage.Apply(ip);
+            }
+
             handler.CreateParagraph(ip);
             handler.WriteParagraph(ip);
             ip.Bitmap?.Dispose();
@@ -107,16 +115,62 @@ internal static class ImageOutputWriter
         var firstParam = BuildPreservedParameter(first, 0, defaultWidth, defaultHeight, options);
         handler.WriteHeader(filePath, firstParam);
 
+        var apply3D = Stereo3DImage.IsModeSupported(handler.ExportImageType);
         for (var i = 0; i < items.Count; i++)
         {
             var item = items[i];
             var ip = BuildPreservedParameter(item, i, defaultWidth, defaultHeight, options);
+            if (apply3D)
+            {
+                // A 2D Blu-ray/DVB/VobSub track made into a 3D one - from where the source put it.
+                Stereo3DImage.Apply(ip, disposeSource: false);
+            }
+
             handler.CreateParagraph(ip);
             handler.WriteParagraph(ip);
             // We do NOT dispose item.Bitmap here — ownership stays with BitmapSubtitleItem;
             // the caller disposes the whole list when done. Disposing twice would crash.
+            // A 3D image made above is ours, though.
+            if (!ReferenceEquals(ip.Bitmap, item.Bitmap))
+            {
+                ip.Bitmap.Dispose();
+            }
         }
         handler.WriteFooter();
+    }
+
+    /// <summary>
+    /// SE4's transport-stream "override original X/Y position": replace one or both axes of the
+    /// source position with the spot <see cref="ImageExportStyle.Alignment"/> and the margins
+    /// would put the bitmap at. An axis that is not overridden keeps the source value; when
+    /// there is no usable source position, that axis is placed by alignment as well.
+    /// </summary>
+    internal static SKPointI? ApplyPositionOverride(SKPointI? sourcePosition, SKBitmap bitmap, int screenWidth, int screenHeight, ImageExportStyle style)
+    {
+        if (!style.OverridePositionX && !style.OverridePositionY)
+        {
+            return sourcePosition;
+        }
+
+        var leftRightMargin = style.LeftRightMargin ?? (int)(screenWidth * 0.05);
+        var bottomTopMargin = style.BottomTopMargin ?? (int)(screenHeight * 0.05);
+
+        var alignedX = style.Alignment switch
+        {
+            ExportAlignment.TopLeft or ExportAlignment.MiddleLeft or ExportAlignment.BottomLeft => leftRightMargin,
+            ExportAlignment.TopRight or ExportAlignment.MiddleRight or ExportAlignment.BottomRight => screenWidth - leftRightMargin - bitmap.Width,
+            _ => (screenWidth - bitmap.Width) / 2,
+        };
+        var alignedY = style.Alignment switch
+        {
+            ExportAlignment.TopLeft or ExportAlignment.TopCenter or ExportAlignment.TopRight => bottomTopMargin,
+            ExportAlignment.MiddleLeft or ExportAlignment.MiddleCenter or ExportAlignment.MiddleRight => (screenHeight - bitmap.Height) / 2,
+            _ => screenHeight - bottomTopMargin - bitmap.Height,
+        };
+
+        var x = style.OverridePositionX || sourcePosition is null ? alignedX : sourcePosition.Value.X;
+        var y = style.OverridePositionY || sourcePosition is null ? alignedY : sourcePosition.Value.Y;
+        return new SKPointI(Math.Max(0, x), Math.Max(0, y));
     }
 
     private static ImageParameter BuildPreservedParameter(
@@ -140,6 +194,7 @@ internal static class ImageOutputWriter
         }
 
         var style = options.ImageStyle;
+        position = ApplyPositionOverride(position, item.Bitmap, screenWidth, screenHeight, style);
         return new ImageParameter
         {
             Index = index,
@@ -173,7 +228,11 @@ internal static class ImageOutputWriter
             FramesPerSecond = options.TargetFps ?? options.Fps ?? 25.0,
             IsRightToLeft = false,
             IsForced = false,
-            IsFullFrame = false,
+            IsFullFrame = style.IsFullFrame,
+            FullFrameBackgroundColor = style.FullFrameBackgroundColor,
+            Mode3D = style.Mode3D,
+            Depth3D = style.Depth3D,
+            Plane3D = style.Plane3D,
             Error = string.Empty,
         };
     }
@@ -220,7 +279,13 @@ internal static class ImageOutputWriter
             FramesPerSecond = options.TargetFps ?? options.Fps ?? 25.0,
             IsRightToLeft = false,
             IsForced = false,
-            IsFullFrame = false,
+            // "Full frame" pads the cropped bitmap out to the video frame - only the FCP and
+            // Blu-Ray sup handlers act on it, the rest ignore it (SubtitleConverter warns).
+            IsFullFrame = style.IsFullFrame,
+            FullFrameBackgroundColor = style.FullFrameBackgroundColor,
+            Mode3D = style.Mode3D,
+            Depth3D = style.Depth3D,
+            Plane3D = style.Plane3D,
             Error = string.Empty,
         };
 

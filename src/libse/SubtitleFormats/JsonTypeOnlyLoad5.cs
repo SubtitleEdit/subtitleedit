@@ -48,11 +48,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var vAlign = parser.GetFirstObject(subtitleItem, "VAlign");
                 foreach (var line in paragraphLines)
                 {
-                    if (vAlign == "Top")
-                    {
-                        content.Append("{\\an8}");
-                    }
-
                     var textLine = parser.GetFirstObject(line, "Text");
                     if (!string.IsNullOrEmpty(textLine))
                     {
@@ -67,6 +62,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var caption = Json.DecodeJsonText(content.ToString().Trim());
                     caption = caption.Replace("<br />", Environment.NewLine);
                     caption = FixItalic(caption);
+                    if (vAlign == "Top")
+                    {
+                        // once per paragraph, and after DecodeJsonText - it used to be appended per
+                        // line and then decoded, which left "{an8}" (no backslash) on every line
+                        caption = "{\\an8}" + caption;
+                    }
                     var p = new Paragraph(TimeCode.FromSeconds(startSeconds), TimeCode.FromSeconds(endSeconds), caption);
                     subtitle.Paragraphs.Add(p);
                 }

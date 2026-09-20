@@ -29,6 +29,7 @@ public class LanguageSync
     public string SyncPoints { get; set; }
     public string PointSync { get; set; }
     public string PointSyncViaOther { get; set; }
+    public string SyncPointCandidateInfo { get; set; }
     public string AdjustAllShortcuts { get; set; }
     public string AdjustAllShortcutsFrames { get; set; }
     public string OffsetInSeconds { get; set; }
@@ -62,6 +63,7 @@ public class LanguageSync
         SyncPoints = "Sync points";
         PointSync = "Point sync";
         PointSyncViaOther = "Point sync via other subtitle";
+        SyncPointCandidateInfo = "Lines starting after {0}+ seconds of silence are highlighted - they often make reliable sync points";
         AdjustAllShortcuts = "Keyboard shortcuts:\r\n\r\n• Shift + Left/Right: Move 10 ms\r\n• Ctrl + Left/Right: Move 100 ms\r\n• Alt + Left/Right: Move 500 ms";
         AdjustAllShortcutsFrames = "Keyboard shortcuts:\r\n\r\n• Shift + Left/Right: Move 1 frame\r\n• Ctrl + Left/Right: Move 10 frames\r\n• Alt + Left/Right: Move 1 second";
         OffsetInSeconds = "Offset in seconds";

@@ -61,10 +61,10 @@ public class NOcrInspectWindow : Window
 
         vm.TextBoxNew.KeyDown += vm.TextBoxNewOnKeyDown;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             vm.TextBoxNew.Focus(); // hack to make OnKeyDown work
-        };
+        });
 
         PointerWheelChanged += vm.PointerWheelChanged;
     }

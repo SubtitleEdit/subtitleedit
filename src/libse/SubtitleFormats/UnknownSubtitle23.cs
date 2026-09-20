@@ -105,8 +105,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     sb.AppendLine(s.Trim());
                 }
-                else if (!string.IsNullOrWhiteSpace(s))
+                else if (subtitle.Paragraphs.Count > 0 && !string.IsNullOrWhiteSpace(s))
                 {
+                    // lines before the first time code are the file header (ToText writes a dozen of
+                    // them) - counting those as errors rejected every file with fewer cues than header lines
                     _errorCount++;
                 }
             }

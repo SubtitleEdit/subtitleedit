@@ -41,12 +41,12 @@ public class AssaApplyAdvancedEffectWindow : Window
             {
                 var panel = new StackPanel { Margin = new Thickness(4, 6, 4, 6), Spacing = 3 };
 
-                var nameBlock = new TextBlock { FontWeight = FontWeight.SemiBold, FontSize = 13 };
+                var nameBlock = new TextBlock { FontWeight = FontWeight.SemiBold, FontSize = UiUtil.ScaledFontSize(13) };
                 nameBlock.Bind(TextBlock.TextProperty, new Binding(nameof(IAdvancedEffectDisplay.Name)));
 
                 var descBlock = new TextBlock
                 {
-                    FontSize = 11,
+                    FontSize = UiUtil.ScaledFontSize(11),
                     Opacity = 0.65,
                     TextWrapping = TextWrapping.Wrap,
                 };
@@ -58,17 +58,17 @@ public class AssaApplyAdvancedEffectWindow : Window
                 if (item is AdvancedEffectSnow snowItem)
                 {
                     var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 6, 0, 0) };
-                    row.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectSnowFlakeCount, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+                    row.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectSnowFlakeCount, VerticalAlignment = VerticalAlignment.Center, FontSize = UiUtil.ScaledFontSize(12) });
                     row.Children.Add(UiUtil.MakeNumericUpDownInt(10, 3000, 200, 130, snowItem, nameof(AdvancedEffectSnow.FlakeCount)));
                     panel.Children.Add(row);
                 }
                 else if (item is AdvancedEffectStarfield starfieldItem)
                 {
                     var starCountRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 6, 0, 0) };
-                    starCountRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectStarfieldStarCount, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+                    starCountRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectStarfieldStarCount, VerticalAlignment = VerticalAlignment.Center, FontSize = UiUtil.ScaledFontSize(12) });
                     starCountRow.Children.Add(UiUtil.MakeNumericUpDownInt(50, 3000, 650, 130, starfieldItem, nameof(AdvancedEffectStarfield.StarCount)));
                     var speedRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
-                    speedRow.Children.Add(new TextBlock { Text = Se.Language.General.Speed, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+                    speedRow.Children.Add(new TextBlock { Text = Se.Language.General.Speed, VerticalAlignment = VerticalAlignment.Center, FontSize = UiUtil.ScaledFontSize(12) });
                     speedRow.Children.Add(UiUtil.MakeNumericUpDownOneDecimal(0.1m, 10.0m, 130, starfieldItem, nameof(AdvancedEffectStarfield.SpeedMultiplier)));
                     var settingsStack = new StackPanel { Spacing = 4 };
                     settingsStack.Children.Add(starCountRow);
@@ -78,22 +78,22 @@ public class AssaApplyAdvancedEffectWindow : Window
                 else if (item is AdvancedEffectKaraoke karaokeItem)
                 {
                     var rightToLeftRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 6, 0, 0) };
-                    rightToLeftRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectKaraokeRightToLeft, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+                    rightToLeftRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectKaraokeRightToLeft, VerticalAlignment = VerticalAlignment.Center, FontSize = UiUtil.ScaledFontSize(12) });
                     rightToLeftRow.Children.Add(UiUtil.MakeCheckBox(karaokeItem, nameof(AdvancedEffectKaraoke.RightToLeft)));
                     panel.Children.Add(rightToLeftRow);
                 }
                 else if (item is AdvancedEffectFancyKaraoke fancyKaraokeItem)
                 {
                     var autoDetectActiveWordRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 6, 0, 0) };
-                    autoDetectActiveWordRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectFancyKaraokeAutoDetectActiveWord, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+                    autoDetectActiveWordRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectFancyKaraokeAutoDetectActiveWord, VerticalAlignment = VerticalAlignment.Center, FontSize = UiUtil.ScaledFontSize(12) });
                     autoDetectActiveWordRow.Children.Add(UiUtil.MakeCheckBox(fancyKaraokeItem, nameof(AdvancedEffectFancyKaraoke.AutoDetectActiveWord)));
 
                     var rightToLeftRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 4, 0, 0) };
-                    rightToLeftRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectKaraokeRightToLeft, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+                    rightToLeftRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectKaraokeRightToLeft, VerticalAlignment = VerticalAlignment.Center, FontSize = UiUtil.ScaledFontSize(12) });
                     rightToLeftRow.Children.Add(UiUtil.MakeCheckBox(fancyKaraokeItem, nameof(AdvancedEffectFancyKaraoke.RightToLeft)));
 
                     var activeGlowRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 4, 0, 0) };
-                    activeGlowRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectFancyKaraokeGlow, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+                    activeGlowRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectFancyKaraokeGlow, VerticalAlignment = VerticalAlignment.Center, FontSize = UiUtil.ScaledFontSize(12) });
                     var applyGlowCheckBox = UiUtil.MakeCheckBox(fancyKaraokeItem, nameof(AdvancedEffectFancyKaraoke.ApplyGlow));
                     activeGlowRow.Children.Add(applyGlowCheckBox);
                     var activeGlowColorButton = UiUtil.MakeColorPickerButton(fancyKaraokeItem, nameof(AdvancedEffectFancyKaraoke.GlowColor), false);
@@ -102,11 +102,11 @@ public class AssaApplyAdvancedEffectWindow : Window
                     activeGlowRow.Children.Add(activeGlowColorButton);
 
                     var activeColorRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 4, 0, 0) };
-                    activeColorRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectFancyKaraokeActiveColor, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+                    activeColorRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectFancyKaraokeActiveColor, VerticalAlignment = VerticalAlignment.Center, FontSize = UiUtil.ScaledFontSize(12) });
                     activeColorRow.Children.Add(UiUtil.MakeColorPickerButton(fancyKaraokeItem, nameof(AdvancedEffectFancyKaraoke.ActiveWordColor), false));
 
                     var inactiveColorRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 4, 0, 0) };
-                    inactiveColorRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectFancyKaraokeInactiveColor, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+                    inactiveColorRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectFancyKaraokeInactiveColor, VerticalAlignment = VerticalAlignment.Center, FontSize = UiUtil.ScaledFontSize(12) });
                     inactiveColorRow.Children.Add(UiUtil.MakeColorPickerButton(fancyKaraokeItem, nameof(AdvancedEffectFancyKaraoke.InactiveWordColor), true));
 
                     var settingsStack = new StackPanel { Spacing = 2 };
@@ -120,14 +120,14 @@ public class AssaApplyAdvancedEffectWindow : Window
                 else if (item is AdvancedEffectLowerThird lowerThirdItem)
                 {
                     var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 6, 0, 0) };
-                    row.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectLowerThirdAccentColor, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+                    row.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectLowerThirdAccentColor, VerticalAlignment = VerticalAlignment.Center, FontSize = UiUtil.ScaledFontSize(12) });
                     row.Children.Add(UiUtil.MakeColorPickerButton(lowerThirdItem, nameof(AdvancedEffectLowerThird.AccentColor), false));
                     panel.Children.Add(row);
                 }
                 else if (item is AdvancedEffectWordSpacing wordSpacingItem)
                 {
                     var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 6, 0, 0) };
-                    row.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectWordSpacingPixels, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+                    row.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectWordSpacingPixels, VerticalAlignment = VerticalAlignment.Center, FontSize = UiUtil.ScaledFontSize(12) });
                     row.Children.Add(UiUtil.MakeNumericUpDownOneDecimal(0m, 100m, 130, wordSpacingItem, nameof(AdvancedEffectWordSpacing.SpacingPixels)));
                     panel.Children.Add(row);
                 }
@@ -180,6 +180,7 @@ public class AssaApplyAdvancedEffectWindow : Window
         comboBoxLeft.Width = double.NaN;
         comboBoxLeft.MinHeight = 50;
         comboBoxLeft.HorizontalAlignment = HorizontalAlignment.Stretch;
+        comboBoxLeft.WithAccessibleName(Se.Language.General.Lines); // subtitle line picker under the video, no visible label (#12087)
         vm.ComboBoxLeft = comboBoxLeft;
         comboBoxLeft.SelectionChanged += vm.ComboBoxParagraphsChanged;
 
@@ -215,7 +216,7 @@ public class AssaApplyAdvancedEffectWindow : Window
         Content = mainGrid;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
-        Activated += delegate { effectListBox.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, effectListBox);
         AddHandler(KeyDownEvent, vm.OnKeyDownHandler,
             RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
         Loaded += (_, _) => vm.OnLoaded();

@@ -30,12 +30,18 @@ Built-in trainable OCR engine.
 - Train character databases for specific fonts
 - Very accurate once trained
 - Best for consistent fonts (like DVD/Blu-ray subtitles)
+- **Train nOCR database...** - a database can also be trained from installed fonts instead of being taught during OCR. Open the nOCR database settings (the settings button next to the database list) and right-click anywhere in that dialog to reach it. Pick one or more fonts, a font size, the characters to train (or **Import characters from subtitle file...**), letter combinations that might end up in one image, whether to include bold and italic, and the number of line segments; **Start training** renders every character in every selected font and saves the result as a new `.nocr` database in the OCR folder, ready to pick from the database list
 
 ### Binary OCR
-Binary image comparison engine.
+Binary image comparison engine, listed as **Binary image compare** in the engine dropdown.
 - Compares against a database of known character images
 - Fast and accurate for known fonts
 - Supports database editing, character history, max error percentage, and pixels-are-space tuning
+
+### Apple Vision
+Built-in OCR on macOS using Apple's Vision framework.
+- macOS only; nothing to download or configure
+- Good accuracy on clean subtitle images
 
 ### Google Lens Sharp / Google Lens Standalone
 Cloud-based OCR using Google Lens (free, but capped).
@@ -53,7 +59,7 @@ Local LLM-based OCR via an Ollama server (e.g. with a vision model).
 ### llama.cpp
 Local LLM-based OCR using a llama.cpp-compatible server. Subtitle Edit can download llama.cpp and the model for you, or talk to a server you run yourself.
 - Default endpoint: `http://127.0.0.1:8080/v1/chat/completions`
-- Curated vision models, listed best-first for subtitles: **GLM-OCR 0.9B** (Q8_0, about 1.4 GB — the default, and the most accurate on subtitle images), **PaddleOCR-VL 1.6** (about 1.8 GB, 109 languages), **HunyuanOCR 1.5** (Q8_0, about 1.3 GB) and **LightOnOCR 1B** (Q8_0, about 1.2 GB — the least accurate and much the slowest). Custom vision models also appear in the list: put the `*.gguf` in the llama.cpp models folder together with its `mmproj` vision projector, named either `mmproj-<file>.gguf` or `<file>-mmproj.gguf` (the two naming schemes used on Hugging Face). A `*.gguf` without a projector next to it is not offered — it cannot see the image
+- Curated vision models, listed best-first for subtitles: **GLM-OCR 0.9B** (Q8_0, about 1.4 GB — the default, and the most accurate on subtitle images), **LFM2.5-VL 3B** (Q8_0, about 3.5 GB — a general vision model with flawless character recognition, slower and a bigger download; it uses its own prompt as long as the shared prompt below is unedited), **PaddleOCR-VL 1.6** (about 1.8 GB, 109 languages), **HunyuanOCR 1.5** (Q8_0, about 1.3 GB) and **LightOnOCR 1B** (Q8_0, about 1.2 GB — the least accurate and much the slowest). Custom vision models also appear in the list: put the `*.gguf` in the llama.cpp models folder together with its `mmproj` vision projector, named either `mmproj-<file>.gguf` or `<file>-mmproj.gguf` (the two naming schemes used on Hugging Face). A `*.gguf` without a projector next to it is not offered — it cannot see the image
 - The settings dialog has a download/update button for the llama.cpp engine itself; the dot next to it turns amber when a newer build than the one installed is available
 
 ### CrispEmbed
@@ -69,9 +75,9 @@ Cloud-based OCR using Mistral API.
 - Requires a Mistral API key
 
 ### Paddle OCR Standalone / Paddle OCR Python
-Local OCR engine.
+Local OCR engine, based on Paddle OCR 3.7 with the PP-OCRv6 recognition models.
 - Standalone (downloadable CPU/GPU builds) is available on Windows and Linux.
-- The Python variant works anywhere a Paddle OCR Python install is available.
+- The Python variant works anywhere a Paddle OCR Python install is available. It uses the same downloaded models, so it needs `paddleocr` 3.7 or newer - older versions do not know the PP-OCRv6 model names.
 
 ## Engine Setup Notes
 
@@ -91,6 +97,39 @@ Local OCR engine.
 5. Click **Start OCR**
 6. Review and correct any errors
 7. Click **OK** to import the text subtitles
+
+After **OK**, the matching video is opened as well (unless auto-opening the video is turned off in the settings): a container source (`.mkv`, `.mp4`, `.ts`) is opened as the video itself; for a stand-alone image subtitle (`.sup`, `.sub`/`.idx`, ...) a video passed together with the file (drag and drop, command line) is used first, then the video the subtitle was last opened with, then a video file with the same name next to the subtitle.
+
+## Language Auto-detection
+
+When the OCR window opens, the OCR language for every engine - and through it the spell check dictionary - is pre-selected from the source's declared language: the stream language in a VobSub `.idx`, the track language of a Matroska or MP4 subtitle track, or a language tag in the file name. Two file-name patterns are recognised: a bracketed ISO 639 code such as `movie_track3_[dut].sup` (the naming used by Subtitle Edit's own Matroska track export; the last valid code wins), and a trailing dot-separated tag such as `movie.nl.sub` or `movie.dut.forced.sub` - the `hi`, `sdh`, `cc` and `forced` markers are skipped, only the last two remaining tokens are considered, three-letter codes must be lowercase, and `hi` is read as hearing impaired rather than Hindi. A detected language wins over the last-used one; a source without language information keeps the previous selection.
+
+## Options
+
+Checkboxes below the engine settings:
+
+- **Fix OCR errors**, **Prompt for unknown words**, **Try to guess unknown words** — Shown once a dictionary is loaded
+- **Auto break if more than X lines** — X is the *Max number of lines* rule from Settings
+
+Toggle buttons above the image:
+
+- **Auto-detect ASSA alignment** — Capture top alignment
+- **Image pre-processing** — Opens the [pre-processing](#pre-processing) settings
+- **VobSub/DVD colors...** — VobSub/DVD input only
+- **Fallback OCR database** — nOCR and Binary image compare only
+- **Show only forced subtitles** — Only when the file has forced subtitles
+
+## Subtitle List Menu
+
+Right-click the subtitle list for:
+
+- **OCR selected lines**
+- **Inspect line...** — nOCR and Binary image compare only
+- **Show image**, **Save image as...**, **Copy image to clipboard**
+- **Delete**, and **Fill selected lines with clipboard text** when several lines are selected
+- **Italic**, **Bold**
+- **Edit/export...**, **Import text from subtitle...**, **Export text as subtitle...**
+- **Save all images with HTML index...** — See [Saving the Images](#saving-the-images)
 
 ## Saving the Images
 
@@ -162,6 +201,8 @@ When the OCR engine encounters uncertain characters, you can:
 - Choose from suggested alternatives
 - Type the correct text
 - Add to the OCR fix dictionary for automatic correction
+
+The unknown-words list in the OCR window has buttons for the selected word: **Add to names list (case sensitive)**, **Add to user dictionary**, **Add to OCR replace pairs** and **Google it**.
 
 ### What is remembered
 

@@ -27,7 +27,7 @@ public class TranslationErrorWindow : Window
         var errorIcon = new TextBlock
         {
             Text = "⚠",
-            FontSize = 32,
+            FontSize = UiUtil.ScaledFontSize(32),
             Foreground = new SolidColorBrush(Color.Parse("#E8A020")),
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 0, 12, 0),
@@ -35,7 +35,7 @@ public class TranslationErrorWindow : Window
 
         var titleBlock = new TextBlock
         {
-            FontSize = 16,
+            FontSize = UiUtil.ScaledFontSize(16),
             FontWeight = FontWeight.Bold,
             VerticalAlignment = VerticalAlignment.Center,
             TextWrapping = TextWrapping.Wrap,
@@ -74,7 +74,7 @@ public class TranslationErrorWindow : Window
             TextWrapping = TextWrapping.Wrap,
             MaxHeight = 200,
             FontFamily = new FontFamily("Consolas,Menlo,monospace"),
-            FontSize = 11,
+            FontSize = UiUtil.ScaledFontSize(11),
             Margin = new Thickness(0),
         };
         detailsTextBox.Bind(TextBox.TextProperty, new Binding(nameof(vm.TechnicalDetails)));
@@ -126,7 +126,7 @@ public class TranslationErrorWindow : Window
 
         Content = content;
 
-        Activated += delegate { buttonOk.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, buttonOk);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

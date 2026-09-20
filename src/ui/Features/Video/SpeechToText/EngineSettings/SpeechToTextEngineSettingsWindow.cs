@@ -32,7 +32,7 @@ public class SpeechToTextEngineSettingsWindow : Window
         Content = BuildContent(vm);
 
         var ok = UiUtil.MakeButtonOk(vm.OkCommand);
-        Activated += delegate { ok.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, ok);
     }
 
     private Border BuildContent(SpeechToTextEngineSettingsViewModel vm)
@@ -65,14 +65,14 @@ public class SpeechToTextEngineSettingsWindow : Window
     {
         var title = new TextBlock
         {
-            FontSize = 18,
+            FontSize = UiUtil.ScaledFontSize(18),
             FontWeight = FontWeight.SemiBold,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.TitleText)),
         };
 
         var subtitle = new TextBlock
         {
-            FontSize = 12,
+            FontSize = UiUtil.ScaledFontSize(12),
             Opacity = 0.75,
             Margin = new Thickness(0, 2, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.SubtitleText)),
@@ -141,7 +141,7 @@ public class SpeechToTextEngineSettingsWindow : Window
             Background = Brushes.Transparent,
             Padding = new Thickness(0),
             VerticalContentAlignment = VerticalAlignment.Center,
-            FontSize = 12,
+            FontSize = UiUtil.ScaledFontSize(12),
             [!TextBox.TextProperty] = new Binding(nameof(vm.InstallFolder)),
         };
         grid.Add(folderText, 2, 1);

@@ -64,7 +64,7 @@ public class TextToSpeechWindow : Window
                     videoChipIcon,
                     new TextBlock
                     {
-                        FontSize = 11.5,
+                        FontSize = UiUtil.ScaledFontSize(11.5),
                         Opacity = 0.8,
                         VerticalAlignment = VerticalAlignment.Center,
                         [!TextBlock.TextProperty] = new Binding(nameof(vm.VideoInfo)) { Mode = BindingMode.OneWay },
@@ -91,7 +91,7 @@ public class TextToSpeechWindow : Window
         // checkboxes are read once after generation, and toggling them mid-run is useful
         // (e.g. remembering to enable review during a long run).
         var engineLayout = MakeEngineControls(vm);
-        engineLayout.Bind(InputElement.IsEnabledProperty, new Binding(nameof(vm.IsNotGenerating)));
+        engineLayout.Bind(InputElement.IsEnabledProperty, new Binding("!" + nameof(vm.IsGenerating)));
 
         var settingsLayout = MakeSettingsControls(vm);
 
@@ -101,12 +101,12 @@ public class TextToSpeechWindow : Window
 
         // OK accepts the session (the main window applies merged lines and review text edits);
         // Cancel stops a running generation, or - when idle - closes discarding those changes.
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindIsVisible(nameof(vm.IsNotGenerating));
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindIsVisible("!" + nameof(vm.IsGenerating));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttonCast = UiUtil.MakeButton(string.Empty, vm.ShowCastCommand)
             .WithIconLeftBindText(IconNames.PoliceBadge, nameof(vm.CastButtonText))
             .WithBindIsVisible(nameof(vm.HasCast))
-            .WithBindIsEnabled(nameof(vm.IsNotGenerating));
+            .WithBindIsEnabled("!" + nameof(vm.IsGenerating));
         if (Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(buttonCast, Se.Language.Video.TextToSpeech.SetupCastHint);
@@ -115,12 +115,12 @@ public class TextToSpeechWindow : Window
         // all buttons had identical weight and Generate sat first in the row.
         var buttonGenerate = UiUtil.MakeButton(Se.Language.Video.TextToSpeech.GenerateSpeechFromText, vm.GenerateTtsCommand)
             .WithIconLeft(IconNames.Waveform)
-            .WithBindIsEnabled(nameof(vm.IsNotGenerating));
+            .WithBindIsEnabled("!" + nameof(vm.IsGenerating));
         buttonGenerate.Classes.Add("accent");
 
         var buttonPanel = UiUtil.MakeButtonBar(
             buttonCast,
-            UiUtil.MakeButton(Se.Language.General.ImportDotDotDot, vm.ImportCommand).WithBindIsEnabled(nameof(vm.IsNotGenerating)),
+            UiUtil.MakeButton(Se.Language.General.ImportDotDotDot, vm.ImportCommand).WithBindIsEnabled("!" + nameof(vm.IsGenerating)),
             buttonOk,
             buttonCancel,
             buttonGenerate
@@ -162,7 +162,7 @@ public class TextToSpeechWindow : Window
 
         Content = grid;
 
-        Activated += delegate { _comboBoxEngines?.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, () => { _comboBoxEngines?.Focus(); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
     }
 
     // Install-status dot for the engine combo: green = ready, amber = a newer build is available,
@@ -184,10 +184,22 @@ public class TextToSpeechWindow : Window
                 return StatusDots.From(engine.IsInstalled(null).Result, VibeVoiceCrispAsr.GetEngineUpdateStatus());
             case IndexTtsCrispAsr:
                 return StatusDots.From(engine.IsInstalled(null).Result, IndexTtsCrispAsr.GetEngineUpdateStatus());
+            case PocketTtsCrispAsr:
+                return StatusDots.From(engine.IsInstalled(null).Result, PocketTtsCrispAsr.GetEngineUpdateStatus());
+            case SupertonicCrispAsr:
+                return StatusDots.From(engine.IsInstalled(null).Result, SupertonicCrispAsr.GetEngineUpdateStatus());
             case DotsTtsCrispAsr:
                 return StatusDots.From(engine.IsInstalled(null).Result, DotsTtsCrispAsr.GetEngineUpdateStatus());
+            case Confucius4TtsCrispAsr:
+                return StatusDots.From(engine.IsInstalled(null).Result, Confucius4TtsCrispAsr.GetEngineUpdateStatus());
             case IndexTts25AudioCpp:
                 return StatusDots.From(engine.IsInstalled(null).Result, IndexTts25AudioCpp.GetEngineUpdateStatus());
+            case HiggsTtsAudioCpp:
+                return StatusDots.From(engine.IsInstalled(null).Result, HiggsTtsAudioCpp.GetEngineUpdateStatus());
+            case FishTtsAudioCpp:
+                return StatusDots.From(engine.IsInstalled(null).Result, FishTtsAudioCpp.GetEngineUpdateStatus());
+            case FireRedTts3AudioCpp:
+                return StatusDots.From(engine.IsInstalled(null).Result, FireRedTts3AudioCpp.GetEngineUpdateStatus());
             case CosyVoice3CrispAsr:
                 return StatusDots.From(engine.IsInstalled(null).Result, CosyVoice3CrispAsr.GetEngineUpdateStatus());
             case F5TtsCrispAsr:
@@ -257,7 +269,7 @@ public class TextToSpeechWindow : Window
                 new TextBlock
                 {
                     Text = hint,
-                    FontSize = 11.5,
+                    FontSize = UiUtil.ScaledFontSize(11.5),
                     Opacity = 0.65,
                     Margin = new Thickness(28, 0, 0, 10),
                     TextWrapping = TextWrapping.Wrap,
@@ -318,7 +330,7 @@ public class TextToSpeechWindow : Window
         // every engine carries a description that was previously shown nowhere.
         var labelEngineDescription = new TextBlock
         {
-            FontSize = 11.5,
+            FontSize = UiUtil.ScaledFontSize(11.5),
             Opacity = 0.65,
             Margin = new Thickness(labelMinWidth + 5, 2, 0, 0),
             TextTrimming = TextTrimming.CharacterEllipsis,
@@ -345,6 +357,33 @@ public class TextToSpeechWindow : Window
             return textBlock;
         }, true);
 
+        // Right-click: rename a user-imported clone voice (the file the engine lists it from).
+        // Presets and built-in speakers have no file, so the item is disabled for those.
+        var menuItemRenameVoice = new Avalonia.Controls.MenuItem
+        {
+            Header = Se.Language.Video.TextToSpeech.RenameVoiceDotDotDot,
+            Command = vm.RenameVoiceCommand,
+        };
+        var menuItemDeleteVoice = new Avalonia.Controls.MenuItem
+        {
+            Header = Se.Language.Video.TextToSpeech.DeleteVoiceDotDotDot,
+            Command = vm.DeleteVoiceCommand,
+        };
+        var menuItemVoiceManager = new Avalonia.Controls.MenuItem
+        {
+            Header = Se.Language.Video.TextToSpeech.VoiceManagerDotDotDot,
+            Command = vm.ShowVoiceManagerCommand,
+        };
+        var voiceFlyout = new MenuFlyout { Items = { menuItemRenameVoice, menuItemDeleteVoice, new Separator(), menuItemVoiceManager } };
+        voiceFlyout.Opening += (_, _) =>
+        {
+            var isFileVoice = vm.CanRenameSelectedVoice();
+            menuItemRenameVoice.IsEnabled = isFileVoice;
+            menuItemDeleteVoice.IsEnabled = isFileVoice;
+        };
+        comboBoxVoices.ContextFlyout = voiceFlyout;
+        UiUtil.AttachMacContextFlyoutHandler(comboBoxVoices);
+
         var panelVoice = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -366,7 +405,7 @@ public class TextToSpeechWindow : Window
                     Background = new SolidColorBrush(Color.FromArgb(28, 128, 128, 128)),
                     Child = new TextBlock
                     {
-                        FontSize = 11.5,
+                        FontSize = UiUtil.ScaledFontSize(11.5),
                         Opacity = 0.8,
                         [!TextBlock.TextProperty] = new Binding($"{nameof(vm.Voices)}.{nameof(vm.Voices.Count)}")
                         {
@@ -378,6 +417,7 @@ public class TextToSpeechWindow : Window
                 },
                 buttonTestVoice,
                 UiUtil.MakeButton(vm.ShowTestVoiceSettingsCommand, IconNames.Settings, $"{Se.Language.Video.TextToSpeech.TestVoice} - {Se.Language.General.Settings}"),
+                UiUtil.MakeButton(vm.ShowVoiceManagerCommand, IconNames.AccountVoice, Se.Language.Video.TextToSpeech.VoiceManagerDotDotDot),
             }
         };
 
@@ -652,6 +692,25 @@ public class TextToSpeechWindow : Window
         };
         var panelAddAudioWithHint = WithCheckBoxHint(panelAddAudioToVideoFile, Se.Language.Video.TextToSpeech.AddAudioToVideoFileHint);
 
+        var checkBoxAddBackgroundMusic = new CheckBox
+        {
+            Content = Se.Language.Video.BackgroundMusic.AddBackgroundMusic,
+            VerticalAlignment = VerticalAlignment.Top,
+            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.DoAddBackgroundMusic)) { Mode = BindingMode.TwoWay }
+        };
+        var panelAddBackgroundMusic = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Top,
+            Children =
+            {
+                checkBoxAddBackgroundMusic,
+                UiUtil.MakeButton(vm.ShowBackgroundMusicSettingsCommand, IconNames.Settings, $"{Se.Language.Video.BackgroundMusic.AddBackgroundMusic} - {Se.Language.General.Settings}")
+                      .WithMarginLeft(5).WithMarginTop(0).WithTopAlignment(),
+            }
+        };
+        var panelAddBackgroundMusicWithHint = WithCheckBoxHint(panelAddBackgroundMusic, Se.Language.Video.BackgroundMusic.AddBackgroundMusicHint);
+
         var buttonAdvanced = UiUtil.MakeButton(Se.Language.General.AdvancedDotDotDot, vm.ShowAdvancedSettingsCommand)
             .WithMarginTop(5);
         // MakeButton defaults to Center; the right-side settings panel reads more cleanly with
@@ -662,6 +721,7 @@ public class TextToSpeechWindow : Window
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
@@ -678,7 +738,8 @@ public class TextToSpeechWindow : Window
 
         grid.Add(panelReviewAudioClips, 0, 0);
         grid.Add(panelAddAudioWithHint, 1, 0);
-        grid.Add(buttonAdvanced, 2, 0);
+        grid.Add(panelAddBackgroundMusicWithHint, 2, 0);
+        grid.Add(buttonAdvanced, 3, 0);
 
         return UiUtil.MakeBorderForControl(grid);
     }
@@ -724,7 +785,7 @@ public class TextToSpeechWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             HorizontalAlignment = HorizontalAlignment.Right,
             Opacity = 0.7,
-            FontSize = 12,
+            FontSize = UiUtil.ScaledFontSize(12),
             Margin = new Thickness(8, 6, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ProgressEtaText)) { Mode = BindingMode.OneWay },
         };

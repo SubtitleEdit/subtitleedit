@@ -14,6 +14,7 @@ public class SeGeneral
     public string Version { get; set; }
     public string Language { get; set; }
     public int LayoutNumber { get; set; } = 0;
+    public int? LayoutMigrationVersion { get; set; }
 
     public string CurrentProfile { get; set; }
     public List<RulesProfile> Profiles { get; set; }
@@ -84,6 +85,21 @@ public class SeGeneral
     /// <summary>How much the time up/down controls change per step when the caret is on the
     /// milliseconds part. Frame mode always steps one frame (#12506).</summary>
     public int TimeCodeUpDownStepMs { get; set; }
+    /// <summary>How far the "move selected lines X ms back/forward" shortcuts shift, in
+    /// milliseconds (SE 4 had fixed 100 ms variants; #14789 asks for repeatable drift fixes).</summary>
+    public int MoveSelectedLinesStepMs { get; set; }
+    /// <summary>"Move selected lines (and following) X ms": when the move would run into the line
+    /// before/after, shorten that line instead of overlapping it, like VisualSubSync (#15098).</summary>
+    public bool MoveLinesShortenNeighbor { get; set; }
+    /// <summary>Per-shortcut step for the "move lines, custom milliseconds" shortcuts (two slots
+    /// per scope, each used by its back and forward commands). Configured via the gear button in
+    /// Options > Shortcuts, like the custom video seek amounts.</summary>
+    public int MoveSelectedLinesCustom1Ms { get; set; }
+    public int MoveSelectedLinesCustom2Ms { get; set; }
+    public int MoveSelectedLinesAndForwardCustom1Ms { get; set; }
+    public int MoveSelectedLinesAndForwardCustom2Ms { get; set; }
+    public int MoveAllLinesCustom1Ms { get; set; }
+    public int MoveAllLinesCustom2Ms { get; set; }
     public bool PromptBeforeDelete { get; set; }
     public bool LockTimeCodes { get; set; }
 
@@ -107,6 +123,9 @@ public class SeGeneral
     public bool AutoBackupOn { get; set; }
     public int AutoBackupIntervalMinutes { get; set; }
     public int AutoBackupDeleteAfterDays { get; set; }
+    public bool SettingsBackupOn { get; set; }
+    public int SettingsBackupIntervalDays { get; set; }
+    public int SettingsBackupMaxCount { get; set; }
     public bool ForceCrLfOnSave { get; set; }
 
     /// <summary>
@@ -158,10 +177,21 @@ public class SeGeneral
     public bool ShowColumnPixelWidth { get; set; }
     public bool ShowColumnLayer { get; set; }
 
+    /// <summary>
+    /// The forced-narrative column (#14322). Off by default - only dubbing/localization
+    /// workflows that have to deliver a separate forced file need it.
+    /// </summary>
+    public bool ShowColumnForced { get; set; }
+
     // Subtitle grid column widths (pixels) keyed by column key (DataGridColumn.Tag),
     // snapshotted on exit and restored on startup. The stretchy Text/OriginalText
     // columns are intentionally not stored so they keep filling the window (#11415).
     public Dictionary<string, double> SubtitleGridColumnWidths { get; set; } = new();
+
+    // Subtitle grid column order as column keys (DataGridColumn.Tag), set from the
+    // "Columns..." dialog (#14369). Empty = the built-in default order. Keys missing
+    // from the list (columns added in a later version) keep their default position.
+    public List<string> SubtitleGridColumnOrder { get; set; } = new();
 
     public bool SelectCurrentSubtitleWhilePlaying { get; set; }
     public bool WriteAn2Tag { get; set; }
@@ -175,6 +205,13 @@ public class SeGeneral
 
     public long CurrentVideoOffsetInMs = 0;
     public bool CurrentVideoIsSmpte = false;
+
+    /// <summary>
+    /// Video offsets the user has applied, most recently used first, so the "Set video offset"
+    /// dialog can offer them for one-click reuse instead of retyping the same time code every
+    /// time (SE 4 parity). Capped at ten entries by the dialog.
+    /// </summary>
+    public List<long> VideoOffsetHistoryInMs { get; set; } = new List<long>();
 
     public SeGeneral()
     {
@@ -238,10 +275,20 @@ public class SeGeneral
         AutoGuessAnsiEncoding = true;
         NewEmptyDefaultMs = 2000;
         TimeCodeUpDownStepMs = 100;
+        MoveSelectedLinesStepMs = 100;
+        MoveSelectedLinesCustom1Ms = 10;
+        MoveSelectedLinesCustom2Ms = 1000;
+        MoveSelectedLinesAndForwardCustom1Ms = 10;
+        MoveSelectedLinesAndForwardCustom2Ms = 1000;
+        MoveAllLinesCustom1Ms = 10;
+        MoveAllLinesCustom2Ms = 1000;
         PromptBeforeDelete = true;
         AutoBackupOn = true;
         AutoBackupIntervalMinutes = 5;
         AutoBackupDeleteAfterDays = 90;
+        SettingsBackupOn = true;
+        SettingsBackupIntervalDays = 1;
+        SettingsBackupMaxCount = 30;
         DefaultSaveAsFormat = new SubRip().FriendlyName;
         FavoriteSubtitleFormats = new SubRip().FriendlyName + ";" + new AdvancedSubStationAlpha().FriendlyName;
         FavoriteLanguages = string.Empty;

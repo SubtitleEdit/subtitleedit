@@ -2,8 +2,8 @@
 
 Edit the subtitle as raw text in the current subtitle format — time codes, tags, headers and all. Useful for fixing something the grid cannot express, for pasting a whole file in at once, or just for seeing exactly what will be written to disk.
 
-- **Menu:** Edit → Source view
-- **Shortcut:** F2
+- **Shortcut:** F2 (default; there is no menu entry)
+- **Toolbar:** optional **Source view** button, enabled in **Options → Settings → Toolbar**
 
 The editor is virtualizing: only the lines on screen are colored and laid out, so even a very large file opens and scrolls instantly.
 
@@ -27,8 +27,9 @@ If you have edited the text, **Cancel**, **Escape** and the window's close butto
 
 ## Find and Replace
 
-Press **Ctrl+F** (find) or **Ctrl+H** (replace) to open the search bar below the editor. It searches the source text — including time codes and tags — not the subtitle lines.
+Press **Ctrl+F** (find) or **Ctrl+H** (replace) to open the search bar below the editor. On macOS replace is **Cmd+Alt+F**, since Cmd+H hides the application. It searches the source text — including time codes and tags — not the subtitle lines.
 
+- **F3** / **Shift+F3** find the next / previous match (F3 opens the search bar when nothing has been searched yet)
 - **Case sensitive**, **Whole word** and **Regular expression** can be combined
 - Searching wraps around at the end (and at the top, going backwards)
 - With **Regular expression** on, the replacement supports group references (`$1`, `$2`, …). Without it, `$` is literal

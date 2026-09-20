@@ -192,6 +192,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         ? cells[8].SelectSingleNode("ss:Data", xmlNamespaceManager)?.InnerText
                         : null;
 
+                    if (string.IsNullOrEmpty(start) || !char.IsDigit(start.TrimStart()[0]))
+                    {
+                        // the header row ("Start", "End", ...) - it was counted as an error, so a
+                        // one-cue workbook (1 cue, 1 error) was never detected
+                        continue;
+                    }
+
                     try
                     {
                         text = string.Join(Environment.NewLine, text.SplitToLines().ToArray());

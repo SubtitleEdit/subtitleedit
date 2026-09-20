@@ -209,7 +209,7 @@ public class BatchConvertSettingsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { comboBoxTargetEncoding.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, comboBoxTargetEncoding); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (s, e) => vm.OnKeyDown(e);
     }
 

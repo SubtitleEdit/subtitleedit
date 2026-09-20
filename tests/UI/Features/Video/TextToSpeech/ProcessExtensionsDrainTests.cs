@@ -31,8 +31,9 @@ public class ProcessExtensionsDrainTests
         await process.StartAndWaitAsync(TestContext.Current.CancellationToken);
 
         // The events only arrive when the async read was started - which is also what keeps the
-        // pipe from filling up and wedging the child.
-        Assert.Contains("hello-from-stderr", received);
+        // pipe from filling up and wedging the child. cmd.exe echoes the space before "1>&2" as
+        // part of the line, hence the trim.
+        Assert.Contains("hello-from-stderr", received.Select(line => line.Trim()));
     }
 
     [Fact]

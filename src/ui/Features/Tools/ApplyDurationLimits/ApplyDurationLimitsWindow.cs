@@ -63,7 +63,7 @@ public class ApplyDurationLimitsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { _checkBoxFixMinDuration.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, _checkBoxFixMinDuration); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };

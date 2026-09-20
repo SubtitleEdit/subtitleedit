@@ -69,7 +69,9 @@ public class MalformedSccTest : IDisposable
         Assert.IsType<ScenaristClosedCaptions>(format);
         var paragraph = Assert.Single(subtitle.Paragraphs);
         Assert.Equal("Hello world", paragraph.Text);
-        Assert.Equal(1000, paragraph.StartTime.TotalMilliseconds, precision: 0);
+        // The display code (942f) is byte pair 14 of the line and CEA-608 sends one pair per
+        // frame, so the caption shows 14 frames after the line's 00:00:01:00 (#14703).
+        Assert.Equal(1000 + SubtitleFormat.FramesToMilliseconds(14), paragraph.StartTime.TotalMilliseconds, precision: 0);
         Assert.Equal(3000, paragraph.EndTime.TotalMilliseconds, precision: 0);
         Assert.Empty(warnings);
     }

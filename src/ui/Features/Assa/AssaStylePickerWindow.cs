@@ -51,6 +51,7 @@ public class AssaStylePickerWindow : Window
         var labelFontsAndImages = UiUtil.MakeLabel(Se.Language.General.Styles);
 
         var buttonImport = UiUtil.MakeButton(string.Empty, vm.OkCommand).WithBindContent(nameof(vm.ButtonAcceptText));
+        buttonImport.IsDefault = true; // the dialog's accept button - Enter runs it (#14586)
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonImport, buttonCancel);
 
@@ -61,7 +62,7 @@ public class AssaStylePickerWindow : Window
         Content = grid;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
-        Activated += delegate { TableViewExtras.FocusRow(stylesGrid); };
+        UiUtil.FocusOnFirstActivation(this, () => { TableViewExtras.FocusRow(stylesGrid); });
         KeyDown += vm.KeyDown;
     }
 
@@ -72,7 +73,7 @@ public class AssaStylePickerWindow : Window
             Header = Se.Language.General.Usages,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(StyleDisplay.FontSize)),
+            Binding = new Binding(nameof(StyleDisplay.UsageCount)),
             Width = new GridLength(90),
         };
         usagesColumn.Bind(SeTableViewColumn.IsVisibleProperty, new Binding(nameof(vm.ShowUsageCount))

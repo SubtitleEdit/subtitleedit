@@ -11,6 +11,7 @@ public class LanguageVideo
     public LanguageShotChanges ShotChanges { get; set; } = new();
     public LanguageChapters Chapters { get; set; } = new();
     public LanguageVideoOcr VideoOcr { get; set; } = new();
+    public LanguageBackgroundMusic BackgroundMusic { get; set; } = new();
     public string GoToVideoPosition { get; set; }
     public string GoToVideoPositionDotDotDot { get; set; }
     public string GenerateBlankVideoDotDotDot { get; set; }
@@ -20,8 +21,32 @@ public class LanguageVideo
     public string OpenSecondarySubtitleOnVideoPlayerDotDotDot { get; set; }
     public string OpenSecondarySubtitleOnVideoPlayer { get; set; }
     public string RemoveSecondarySubtitleOnVideoPlayer { get; set; }
+    public string SecondarySubtitleRememberSettings { get; set; }
+    public string SecondarySubtitleDoNotShowAgain { get; set; }
+    public string OpenRecentVideo { get; set; }
+    public string ClearRecentVideos { get; set; }
     public string CutVideoTitle { get; set; }
     public string CutVideoDotDotDot { get; set; }
+    public string RemuxVideoTitle { get; set; }
+    public string RemuxVideoDotDotDot { get; set; }
+    public string RemuxVideoInputVideo { get; set; }
+    public string RemuxVideoMultipleTracksRequiresMkv { get; set; }
+    public string RemuxVideoOutputFormat { get; set; }
+    public string RemuxVideoOutputFile { get; set; }
+    public string RemuxVideoRemuxing { get; set; }
+    public string RemuxVideoCompleted { get; set; }
+    public string RemuxVideoFailed { get; set; }
+    public string RemuxVideoPleaseSelectBoth { get; set; }
+    public string RemuxVideoAssRequiresMkv { get; set; }
+    public string RemuxVideoSelectAudioTrack { get; set; }
+    public string RemuxVideoSelectAudioTrackFor { get; set; }
+    public string RemuxVideoSelectAudioTrackPrompt { get; set; }
+    public string RemuxVideoVideoFile { get; set; }
+    public string RemuxVideoAudioFile { get; set; }
+    public string RemuxVideoAudioFiles { get; set; }
+    public string RemuxVideoSubtitleFiles { get; set; }
+    public string RemuxVideoSelectAudioTrackDotDotDot { get; set; }
+    public string RemuxVideoFilesX { get; set; }
     public string EmbedSubtitlesDotDotDot { get; set; }
     public string GenerateTimeCodes { get; set; }
     public string CheckeredImage { get; set; }
@@ -46,6 +71,7 @@ public class LanguageVideo
     public string EmbeddedTrackGeneratingVideoXY { get; set; }
     public string EmbeddedTrackGeneratingVideo { get; set; }
     public string Mp4FilesFilter { get; set; }
+    public string EmbeddedTracksPickVideoHint { get; set; }
     public string ViewMatroskaTrackX { get; set; }
     public string ResolutionSeparator { get; set; }
     public string OpenFromUrlTitle { get; set; }
@@ -97,7 +123,6 @@ public class LanguageVideo
     public string TalkerX { get; set; }
     public string BaseModel { get; set; }
     public string TurboModel { get; set; }
-    public string TtsUpdateX { get; set; }
     public string TtsEngineNotInstalled { get; set; }
     public string TtsEngineUpdateAvailable { get; set; }
     public string TtsEngineTooOldUpdateRequired { get; set; }
@@ -111,11 +136,35 @@ public class LanguageVideo
         GenerateBlankVideoDotDotDot = "Generate blank video...";
         ReEncodeVideoForBetterSubtitlingTitle = "Re-encode video for better subtitling";
         ReEncodeVideoForBetterSubtitlingDotDotDot = "Re-encode video for better subtitling...";
-        OpenSecondarySubtitleOnVideoPlayer = "Secondary subtitle (on video player)";
-        OpenSecondarySubtitleOnVideoPlayerDotDotDot = "Secondary subtitle on video player, open...";
-        RemoveSecondarySubtitleOnVideoPlayer = "Secondary subtitle on video player, remove";
+        OpenSecondarySubtitleOnVideoPlayer = "Second subtitle file (on video player)";
+        OpenSecondarySubtitleOnVideoPlayerDotDotDot = "Open second subtitle file...";
+        RemoveSecondarySubtitleOnVideoPlayer = "Remove second subtitle file";
+        SecondarySubtitleRememberSettings = "Remember these settings";
+        SecondarySubtitleDoNotShowAgain = "Do not show this dialog again";
+        OpenRecentVideo = "Open recent video";
+        ClearRecentVideos = "Clear recent videos";
         CutVideoTitle = "Cut video";
         CutVideoDotDotDot = "Cut video...";
+        RemuxVideoTitle = "Remux video";
+        RemuxVideoDotDotDot = "Remux video...";
+        RemuxVideoInputVideo = "Input video:";
+        RemuxVideoMultipleTracksRequiresMkv = "Multiple audio or subtitle tracks require the MKV container. Output format has been automatically switched to .mkv.";
+        RemuxVideoOutputFormat = "Output format:";
+        RemuxVideoOutputFile = "Output file:";
+        RemuxVideoRemuxing = "Remuxing video and audio...";
+        RemuxVideoCompleted = "Video remuxed successfully.";
+        RemuxVideoFailed = "Failed to remux video.";
+        RemuxVideoPleaseSelectBoth = "Please select both video and audio files.";
+        RemuxVideoAssRequiresMkv = "ASS/SSA subtitles require the MKV container to preserve all formatting and styles.";
+        RemuxVideoSelectAudioTrack = "Select audio track";
+        RemuxVideoSelectAudioTrackFor = "Select audio track for {0}";
+        RemuxVideoSelectAudioTrackPrompt = "The file '{0}' contains {1} audio tracks. Please select the audio track to remux:";
+        RemuxVideoVideoFile = "video";
+        RemuxVideoAudioFile = "audio";
+        RemuxVideoAudioFiles = "Audio files:";
+        RemuxVideoSubtitleFiles = "Subtitle files (optional, soft subtitles):";
+        RemuxVideoSelectAudioTrackDotDotDot = "Select audio track...";
+        RemuxVideoFilesX = "{0} files";
         EmbedSubtitlesDotDotDot = "Add/remove embedded subtitles...";
         GenerateTimeCodes = "Generate time codes";
         CheckeredImage = "Checkered image";
@@ -140,6 +189,7 @@ public class LanguageVideo
         EmbeddedTrackGeneratingVideoXY = "Generating video... {0}%     {1}";
         EmbeddedTrackGeneratingVideo = "Generating video...";
         Mp4FilesFilter = "MP4 files";
+        EmbeddedTracksPickVideoHint = "Choose a video file, or drop one here, to see its subtitle tracks.";
         ViewMatroskaTrackX = "View Matroska track - {0}";
         ResolutionSeparator = "x";
         OpenFromUrlTitle = "Open video file from URL";
@@ -182,7 +232,6 @@ public class LanguageVideo
         TalkerX = "Talker {0}";
         BaseModel = "Base model";
         TurboModel = "Turbo model";
-        TtsUpdateX = "Update {0}";
         TtsEngineNotInstalled = "{0} not installed";
         TtsEngineUpdateAvailable = "{0} - update available";
         TtsEngineTooOldUpdateRequired = "{0} too old - update required";

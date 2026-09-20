@@ -35,6 +35,37 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
         private readonly byte[] _dataBuffer;
 
+        private DvbSubPes(byte[] dataBuffer, ulong presentationTimestamp)
+        {
+            _dataBuffer = dataBuffer;
+            Length = dataBuffer.Length;
+            PresentationTimestamp = presentationTimestamp;
+        }
+
+        /// <summary>
+        /// Wraps a teletext PES payload (data_identifier followed by data units) that arrives
+        /// without a PES header of its own - e.g. from a Manzanita "private_stream_1" dump,
+        /// where the packet boundaries and time stamps come from the XML data index instead.
+        /// </summary>
+        public static DvbSubPes FromTeletextPayload(byte[] payload, ulong presentationTimestamp)
+        {
+            return new DvbSubPes(payload, presentationTimestamp);
+        }
+
+        /// <summary>
+        /// True if the buffer starts with an EBU teletext data_identifier (ETSI EN 300 472)
+        /// followed by a teletext or stuffing data unit of the mandatory 44-byte size.
+        /// </summary>
+        public static bool IsTeletextPayload(byte[] buffer)
+        {
+            return buffer.Length >= 46 &&
+                   buffer[0] >= 0x10 && buffer[0] <= 0x1f &&
+                   (buffer[1] == (int)Teletext.DataUnitT.DataUnitEbuTeletextNonSubtitle ||
+                    buffer[1] == (int)Teletext.DataUnitT.DataUnitEbuTeletextSubtitle ||
+                    buffer[1] == (int)Teletext.DataUnitT.DataUnitStuffing) &&
+                   buffer[2] == 44;
+        }
+
         public DvbSubPes(byte[] buffer, int index)
             : this(buffer, index, buffer.Length)
         {

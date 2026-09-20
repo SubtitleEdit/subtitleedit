@@ -40,6 +40,43 @@ internal sealed class ImageExportStyle
     /// <summary>Extra gap between lines as percent of line height. 0 = single spacing (matches the GUI export default).</summary>
     public int LineSpacingPercent { get; set; }
 
+    /// <summary>
+    /// Draw each subtitle onto a frame-sized canvas instead of a bitmap cropped to the text,
+    /// so every image can be placed at 0,0 in an editing timeline. Only the FCP and Blu-Ray sup
+    /// handlers act on it (<see cref="FullFrameImage"/>); the other image formats ignore it.
+    /// </summary>
+    public bool IsFullFrame { get; set; }
+
+    /// <summary>
+    /// Background of the frame-sized image made when <see cref="IsFullFrame"/> is set. Separate
+    /// from <see cref="BackgroundColor"/>, which is the box behind the text - transparent by
+    /// default, because the images normally go on a track above the video.
+    /// </summary>
+    public SKColor FullFrameBackgroundColor { get; set; } = SKColors.Transparent;
+
+    /// <summary>
+    /// Draw each subtitle for a frame-packed 3D video, once per eye (<see cref="Stereo3DImage"/>).
+    /// Applies to text → image and image → image alike; D-Cinema has no packed frame and ignores it.
+    /// </summary>
+    public Export3DMode Mode3D { get; set; }
+
+    /// <summary>
+    /// Pixels the two eyes' copies are moved apart - positive brings the subtitle out of the
+    /// screen. D-Cinema writes it as the image's Z-position instead.
+    /// </summary>
+    public int Depth3D { get; set; }
+
+    /// <summary>
+    /// A 3D Blu-ray's depth for every frame: each subtitle gets the depth of the frames it is shown
+    /// on, and <see cref="Depth3D"/> is used where the 3D-Plane has none. Needs a 3D mode.
+    /// </summary>
+    public Stereo3DPlane? Plane3D { get; set; }
+
+    public static bool IsValidDepth3D(int depth)
+    {
+        return depth is >= Stereo3DImage.MinDepth and <= Stereo3DImage.MaxDepth;
+    }
+
     public ExportAlignment Alignment { get; set; } = ExportAlignment.BottomCenter;
     public ExportContentAlignment ContentAlignment { get; set; } = ExportContentAlignment.Center;
 
@@ -48,6 +85,19 @@ internal sealed class ImageExportStyle
 
     /// <summary>Horizontal screen-edge margin in pixels. Null = 5% of screen width.</summary>
     public int? LeftRightMargin { get; set; }
+
+    /// <summary>
+    /// Image → image only (DVB-sub, PGS, VobSub pass-through): discard the source bitmap's
+    /// horizontal position and place it from <see cref="Alignment"/> + <see cref="LeftRightMargin"/>.
+    /// Matches SE4's "override original X position" transport-stream setting.
+    /// </summary>
+    public bool OverridePositionX { get; set; }
+
+    /// <summary>
+    /// Image → image only: discard the source bitmap's vertical position and place it from
+    /// <see cref="Alignment"/> + <see cref="BottomTopMargin"/>. Matches SE4's "override original Y position".
+    /// </summary>
+    public bool OverridePositionY { get; set; }
 
     public ExportBoxType EffectiveBoxType =>
         BoxType ?? (BackgroundColor.Alpha > 0 ? ExportBoxType.OneBox : ExportBoxType.None);
@@ -99,6 +149,37 @@ internal sealed class ImageExportStyle
     {
         alignment = ExportContentAlignment.Center;
         return Enum.TryParse(Normalize(value), ignoreCase: true, out alignment) && Enum.IsDefined(alignment);
+    }
+
+    /// <summary>
+    /// <c>none</c>, <c>half-side-by-side</c> (also <c>sbs</c>, <c>half-sbs</c>) or
+    /// <c>half-top-bottom</c> (also <c>tb</c>, <c>tab</c>, <c>half-tab</c>, <c>half-ou</c>).
+    /// </summary>
+    public static bool TryParseMode3D(string value, out Export3DMode mode)
+    {
+        mode = Export3DMode.None;
+        var normalized = Normalize(value).Replace("/", string.Empty).ToLowerInvariant();
+        switch (normalized)
+        {
+            case "sbs":
+            case "halfsbs":
+            case "hsbs":
+            case "sidebyside":
+                mode = Export3DMode.HalfSideBySide;
+                return true;
+            case "tb":
+            case "tab":
+            case "halftb":
+            case "halftab":
+            case "htab":
+            case "ou":
+            case "halfou":
+            case "topbottom":
+                mode = Export3DMode.HalfTopBottom;
+                return true;
+        }
+
+        return Enum.TryParse(normalized, ignoreCase: true, out mode) && Enum.IsDefined(mode);
     }
 
     // Accept "box-per-line" / "box_per_line" / "BoxPerLine" alike.

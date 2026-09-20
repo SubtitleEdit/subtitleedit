@@ -132,6 +132,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     paragraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
                 }
+                else
+                {
+                    // the last cue has no successor - it reloaded with EndTime 0
+                    paragraph.EndTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(paragraph.Text);
+                }
                 index++;
             }
 

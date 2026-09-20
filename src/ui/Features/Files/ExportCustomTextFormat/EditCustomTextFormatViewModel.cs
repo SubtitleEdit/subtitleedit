@@ -2,7 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -58,7 +58,7 @@ public partial class EditCustomTextFormatViewModel : ObservableObject, IClosingC
         "{bookmark}",
     };
 
-    private List<SubtitleLineViewModel> _subtitles;
+    private List<Paragraph> _paragraphs;
     private string _subtitleTitle;
     private string? _videoFileName;
     private readonly System.Timers.Timer _previewTimer;
@@ -77,7 +77,7 @@ public partial class EditCustomTextFormatViewModel : ObservableObject, IClosingC
         TextBoxHeader = new TextBox();
         TextBoxParagraph = new TextBox();
         TextBoxFooter = new TextBox();
-        _subtitles = new List<SubtitleLineViewModel>();
+        _paragraphs = new List<Paragraph>();
         _subtitleTitle = string.Empty;
 
         _previewTimer = new System.Timers.Timer(500);
@@ -92,7 +92,7 @@ public partial class EditCustomTextFormatViewModel : ObservableObject, IClosingC
             return;
         }
 
-        PreviewText = CustomTextFormatter.GenerateCustomText(SelectedCustomFormat.ToTemplate(), _subtitles.Where(s => s.Paragraph != null).Select(s => s.Paragraph!).ToList(), _subtitleTitle, _videoFileName ?? string.Empty);
+        PreviewText = CustomTextFormatter.GenerateCustomText(SelectedCustomFormat.ToTemplate(), _paragraphs, _subtitleTitle, _videoFileName ?? string.Empty);
     }
 
     public void OnClosingCleanup()
@@ -169,6 +169,11 @@ public partial class EditCustomTextFormatViewModel : ObservableObject, IClosingC
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/file", "export-custom-text-format");
+        }
     }
 
     /// <param name="title">The window caption.</param>
@@ -176,11 +181,11 @@ public partial class EditCustomTextFormatViewModel : ObservableObject, IClosingC
     /// The subtitle's own title, i.e. what "{title}" expands to. Without it the live preview here
     /// rendered "{title}" as empty while the parent window's preview showed the real name.
     /// </param>
-    internal void Initialize(CustomFormatItem selected, string title, List<SubtitleLineViewModel> subtitles, string subtitleTitle, string videoFileName)
+    internal void Initialize(CustomFormatItem selected, string title, List<Paragraph> paragraphs, string subtitleTitle, string videoFileName)
     {
         SelectedCustomFormat = selected;
         Title = title;
-        _subtitles = subtitles.Take(50).ToList();
+        _paragraphs = paragraphs.Take(50).ToList();
         _subtitleTitle = subtitleTitle;
         _videoFileName = videoFileName;
         _previewTimer.Start();

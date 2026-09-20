@@ -1,3 +1,4 @@
+using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -42,16 +43,6 @@ public class TransparentSubtitlesWindow : Window
             Children = { subtitleSettingsView, videoSettingsView },
         };
 
-        // Same overflow guard as the burn-in window: when the window is shorter than its content
-        // minimum, a bare StackPanel draws its overflow through the progress row below it
-        // (issue #13904). Measures exactly like the panel, so no normal size changes.
-        var leftPanelScroller = new ScrollViewer
-        {
-            Content = leftPanel,
-            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
-        };
-
         var cutView = MakeCutView(vm);
         var previewView = MakePreviewView(vm);
         var batchView = MakeBatchView(vm);
@@ -74,15 +65,15 @@ public class TransparentSubtitlesWindow : Window
                 }
             }
         };
-        buttonGenerate.Bind(SplitButton.IsEnabledProperty, new Binding(nameof(vm.IsGenerating)) { Converter = new InverseBooleanConverter() });
+        buttonGenerate.Bind(SplitButton.IsEnabledProperty, new Binding(nameof(vm.IsGenerating)) { Converter = InverseBooleanConverter.Instance });
 
         var buttonBatchMode = UiUtil.MakeButton(Se.Language.General.BatchMode, vm.BatchModeCommand)
-            .WithBindIsVisible(nameof(vm.IsBatchMode), new InverseBooleanConverter())
-            .WithBindEnabled(nameof(vm.IsGenerating), new InverseBooleanConverter());
+            .WithBindIsVisible(nameof(vm.IsBatchMode), InverseBooleanConverter.Instance)
+            .WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
         var buttonSingleMode = UiUtil.MakeButton(Se.Language.General.SingleMode, vm.SingleModeCommand)
             .WithBindIsVisible(nameof(vm.IsSingleModeVisible))
-            .WithBindEnabled(nameof(vm.IsGenerating), new InverseBooleanConverter());
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindEnabled(nameof(vm.IsGenerating), new InverseBooleanConverter());
+            .WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
         var buttonPanel = UiUtil.MakeButtonBar(
             buttonGenerate,
             buttonBatchMode,
@@ -97,15 +88,13 @@ public class TransparentSubtitlesWindow : Window
         var previewColumn = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
         var batchColumn = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) };
 
-        var grid = new Grid
+        var settingsGrid = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // cut
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // preview + batch list
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // video info
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // progress bar
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // buttons
             },
             ColumnDefinitions =
             {
@@ -113,18 +102,57 @@ public class TransparentSubtitlesWindow : Window
                 previewColumn, // cut/preview/video info
                 batchColumn, // batch mode
             },
+            Width = double.NaN,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+        };
+
+        settingsGrid.Add(leftPanel, 0, 0, 3, 1);
+        settingsGrid.Add(cutView, 0, 1);
+        settingsGrid.Add(previewView, 1, 1);
+        settingsGrid.Add(videoInfoView, 2, 1);
+        settingsGrid.Add(batchView, 0, 3, 3, 1);
+
+        // Same guard as the burn-in window (issues #13904, #14360): on a screen too short for the
+        // dialog UiUtil clamps the window to the working area, and whatever did not fit - the
+        // "Generate" button row above all - was clipped off and unreachable. The settings area
+        // scrolls instead, with the progress bar and the buttons kept outside the scroll viewer.
+        // Pinning the grid's MinHeight to the viewport keeps the star preview row filling tall
+        // windows exactly as before; only a viewport shorter than the content minimum scrolls.
+        var settingsScroller = new ScrollViewer
+        {
+            Content = settingsGrid,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+        };
+        settingsScroller.SizeChanged += (_, e) =>
+        {
+            var viewportHeight = Math.Max(0, e.NewSize.Height);
+            if (Math.Abs(settingsGrid.MinHeight - viewportHeight) > 0.5)
+            {
+                settingsGrid.MinHeight = viewportHeight;
+            }
+        };
+
+        var grid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // settings + preview (scrolls when the window is too short)
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // progress bar
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // buttons
+            },
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+            },
             Margin = UiUtil.MakeWindowMargin(),
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(leftPanelScroller, 0, 0, 3, 1);
-        grid.Add(cutView, 0, 1);
-        grid.Add(previewView, 1, 1);
-        grid.Add(videoInfoView, 2, 1);
-        grid.Add(batchView, 0, 3, 3, 1);
-        grid.Add(progressView, 3, 0, 1, 3);
-        grid.Add(buttonPanel, 4, 0, 1, 3);
+        grid.Add(settingsScroller, 0, 0);
+        grid.Add(progressView, 1, 0);
+        grid.Add(buttonPanel, 2, 0);
 
         Content = grid;
 
@@ -151,7 +179,7 @@ public class TransparentSubtitlesWindow : Window
         };
         UpdateGrowAreas();
 
-        Activated += delegate { _comboBoxFontName?.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, () => { _comboBoxFontName?.Focus(); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
         Loaded += (_, _) => vm.Loaded();
 
         Opened += (_, _) => LockMinimumToContentSize();
@@ -160,7 +188,7 @@ public class TransparentSubtitlesWindow : Window
     protected override void OnClosing(WindowClosingEventArgs e)
     {
         base.OnClosing(e);
-        _vm.CleanupPreview();
+        _vm.OnClosing();
     }
 
     private void LockMinimumToContentSize()
@@ -380,7 +408,7 @@ public class TransparentSubtitlesWindow : Window
                 textBoxHeight,
                 buttonResolution,
             }
-        }.WithBindVisible(vm, nameof(vm.UseSourceResolution), new InverseBooleanConverter());
+        }.WithBindVisible(vm, nameof(vm.UseSourceResolution), InverseBooleanConverter.Instance);
 
         var labelSourceResolution = UiUtil.MakeLabel("Use source resolution").WithBindVisible(vm, nameof(vm.UseSourceResolution));
         var buttonResolutionSource = UiUtil.MakeButtonBrowse(vm.BrowseResolutionCommand, accessibleName: Se.Language.General.Resolution);
@@ -507,7 +535,7 @@ public class TransparentSubtitlesWindow : Window
         vm.VideoPlayerControl.HorizontalAlignment = HorizontalAlignment.Stretch;
         vm.VideoPlayerControl.VerticalAlignment = VerticalAlignment.Stretch;
         vm.VideoPlayerControl.Bind(Visual.IsVisibleProperty,
-            new Binding(nameof(vm.IsBatchMode)) { Source = vm, Converter = new InverseBooleanConverter() });
+            new Binding(nameof(vm.IsBatchMode)) { Source = vm, Converter = InverseBooleanConverter.Instance });
 
         // Batch mode fallback: batch items are separate files (possibly with no video at
         // all), so show a static image rendered from the current style settings instead.
@@ -698,7 +726,7 @@ public class TransparentSubtitlesWindow : Window
         grid.Add(labelVideoSizeValue, 1, 1);
 
         return UiUtil.MakeBorderForControl(grid)
-            .WithBindIsVisible(nameof(vm.IsBatchMode), new InverseBooleanConverter())
+            .WithBindIsVisible(nameof(vm.IsBatchMode), InverseBooleanConverter.Instance)
             .WithMarginRight(5);
     }
 

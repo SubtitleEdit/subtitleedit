@@ -92,7 +92,7 @@ public class ActorVoiceMappingWindow : Window
         var title = new TextBlock
         {
             Text = Se.Language.Video.TextToSpeech.ActorVoicesTitle,
-            FontSize = 16,
+            FontSize = UiUtil.ScaledFontSize(16),
             FontWeight = FontWeight.SemiBold,
             VerticalAlignment = VerticalAlignment.Center,
         };
@@ -100,14 +100,14 @@ public class ActorVoiceMappingWindow : Window
         var subtitle = new TextBlock
         {
             Text = Se.Language.Video.TextToSpeech.ActorVoicesSubtitle,
-            FontSize = 12,
+            FontSize = UiUtil.ScaledFontSize(12),
             Foreground = UiUtil.GetTextColor(0.6d),
             TextWrapping = TextWrapping.Wrap,
         };
 
         var status = new TextBlock
         {
-            FontSize = 11,
+            FontSize = UiUtil.ScaledFontSize(11),
             Foreground = UiUtil.GetTextColor(0.55d),
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 4, 0, 0),

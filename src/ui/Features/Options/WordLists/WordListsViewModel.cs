@@ -256,8 +256,11 @@ public partial class WordListsViewModel : ObservableObject
             return;
         }
 
-        if (OcrFixes.Any(f => f.Find.Equals(fixFind, StringComparison.OrdinalIgnoreCase)))
+        // The OCR fix list is case-sensitive (both storage and lookup), so
+        // "word", "Word" and "WORD" are distinct entries and must all be allowed.
+        if (OcrFixes.Any(f => f.Find.Equals(fixFind, StringComparison.Ordinal)))
         {
+            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Options.WordLists.UnableToAddItem, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
@@ -431,6 +434,16 @@ public partial class WordListsViewModel : ObservableObject
         {
             result.Add(new OcrFixItem(item.Key, item.Value));
         }
+
+        // AddWordOrPartial routes any "find" containing a space into the partial-line list, so
+        // reading only the whole-word list left those entries invisible here - saved, but
+        // impossible to see or remove from this window.
+        foreach (var item in list.PartialLineWordBoundaryReplaceList)
+        {
+            result.Add(new OcrFixItem(item.Key, item.Value));
+        }
+
+        result.Sort((a, b) => string.Compare(a.Find, b.Find, StringComparison.OrdinalIgnoreCase));
 
         return result;
     }

@@ -9,6 +9,7 @@ public class LanguageTools
     public LanguageApplyDurationLimits ApplyDurationLimits { get; set; } = new();
     public LanguageApplyMinGaps ApplyMinGaps { get; set; } = new();
     public LanguageBeautifyTimeCodes BeautifyTimeCodes { get; set; } = new();
+    public LanguageImproveTimeCodes ImproveTimeCodes { get; set; } = new();
     public LanguageBeautifyTimeCodesProfile BeautifyTimeCodesProfile { get; set; } = new();
     public LanguageBridgeGaps BridgeGaps { get; set; } = new();
     public LanguageRenumber Renumber { get; set; } = new();

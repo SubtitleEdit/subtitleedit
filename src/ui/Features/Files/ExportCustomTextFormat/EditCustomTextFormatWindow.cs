@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
@@ -58,7 +58,7 @@ public class EditCustomTextFormatWindow : Window
 
         Content = grid;
 
-        Activated += delegate { textBoxName.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, textBoxName); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.OnKeyDown;
     }
 
@@ -226,7 +226,8 @@ public class EditCustomTextFormatWindow : Window
         var textBox = new TextBox
         {
             AcceptsReturn = true,
-            AcceptsTab = true,
+            // Read-only preview - see ManualChosenEncodingWindow (#14313).
+            AcceptsTab = false,
             IsReadOnly = true,
             Width = double.NaN,
             Height = double.NaN,

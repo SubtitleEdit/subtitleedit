@@ -55,7 +55,7 @@ public partial class SummaryCard : ObservableObject
         var count = new TextBlock
         {
             Text = card.Count.ToString(),
-            FontSize = 24,
+            FontSize = UiUtil.ScaledFontSize(24),
             FontWeight = FontWeight.Bold,
             Foreground = card.Brush,
             VerticalAlignment = VerticalAlignment.Center,
@@ -63,7 +63,7 @@ public partial class SummaryCard : ObservableObject
         var label = new TextBlock
         {
             Text = card.Label,
-            FontSize = 12,
+            FontSize = UiUtil.ScaledFontSize(12),
             Opacity = 0.85,
             VerticalAlignment = VerticalAlignment.Center,
         };

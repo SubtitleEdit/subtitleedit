@@ -162,7 +162,8 @@ public partial class ConvertActorsViewModel : ObservableObject, IClosingCleanup
         }
 
         var statusText = string.Format(Se.Language.Tools.ConvertActors.NumberOfConversionsX, count);
-        Dispatcher.UIThread.Post(() =>
+
+        void Apply()
         {
             Subtitles.Clear();
             foreach (var item in items)
@@ -171,7 +172,18 @@ public partial class ConvertActorsViewModel : ObservableObject, IClosingCleanup
             }
 
             StatusText = statusText;
-        });
+        }
+
+        // Apply inline when already on the UI thread so Ok() can refresh synchronously; posting
+        // unconditionally meant a refresh requested from Ok ran only after Ok had finished.
+        if (Dispatcher.UIThread.CheckAccess())
+        {
+            Apply();
+        }
+        else
+        {
+            Dispatcher.UIThread.Post(Apply);
+        }
     }
 
     /// <summary>
@@ -285,6 +297,16 @@ public partial class ConvertActorsViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private void Ok()
     {
+        // Apply what the CURRENT settings produce, not what the 500 ms preview timer last
+        // computed: clicking OK right after changing the from/to type, colour or casing applied
+        // the previous settings' conversions while SaveSettings persisted the new ones (and
+        // before the first tick it applied nothing at all). Every sibling dialog in this folder
+        // already does this.
+        if (_dirty)
+        {
+            UpdatePreview();
+        }
+
         var checkedChanges = Subtitles
             .Where(s => s.IsChecked && !s.IsNextParagraph)
             .ToDictionary(s => s.OriginalId, s => s);

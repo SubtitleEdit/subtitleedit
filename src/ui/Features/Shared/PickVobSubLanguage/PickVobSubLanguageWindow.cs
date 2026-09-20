@@ -22,6 +22,8 @@ public class PickVobSubLanguageWindow : Window
         MinHeight = 500;
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         DataContext = vm;
 
         var languagesView = MakeLanguagesView(vm);
@@ -70,6 +72,7 @@ public class PickVobSubLanguageWindow : Window
     private static Border MakeLanguagesView(PickVobSubLanguageViewModel vm)
     {
         var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.WithAccessibleName(Se.Language.General.Language);
         dataGrid.Width = double.NaN;
         dataGrid.Height = double.NaN;
         dataGrid.DataContext = vm;
@@ -126,6 +129,7 @@ public class PickVobSubLanguageWindow : Window
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
         var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        dataGrid.WithAccessibleName(Se.Language.General.Preview);
         dataGrid.Width = double.NaN;
         dataGrid.Height = double.NaN;
         dataGrid.DataContext = vm;

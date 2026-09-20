@@ -135,7 +135,7 @@ public class BinarySettingsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { numericUpDownMarginLeft.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, numericUpDownMarginLeft); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

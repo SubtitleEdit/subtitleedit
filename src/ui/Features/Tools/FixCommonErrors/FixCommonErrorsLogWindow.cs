@@ -73,7 +73,7 @@ public class FixCommonErrorsLogWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonDone.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, buttonDone);
         KeyDown += (s, e) => vm.OnKeyDown(e);
     }
 }

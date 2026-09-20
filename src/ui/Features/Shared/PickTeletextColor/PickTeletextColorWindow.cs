@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Layout;
@@ -43,9 +44,6 @@ public class PickTeletextColorWindow : Window
                 item));
         }
 
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonCancel);
-
         var panel = new StackPanel
         {
             Margin = UiUtil.MakeWindowMargin(),
@@ -53,13 +51,45 @@ public class PickTeletextColorWindow : Window
             Children =
             {
                 tilePanel,
-                panelButtons,
             },
         };
 
+        if (vm.IsLevel25)
+        {
+            // A full teletext stream also reaches the CLUT 1 half intensity colors, and any
+            // other color through a redefinable colour map entry (Level 2.5).
+            var halfPanel = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 4,
+            };
+
+            foreach (var item in vm.HalfIntensityColors)
+            {
+                halfPanel.Children.Add(MakeTile(
+                    MakeColorSwatch(item.Color, vm.CurrentColor == item.Color),
+                    item.DisplayName,
+                    vm.PickColorCommand,
+                    item));
+            }
+
+            panel.Children.Add(halfPanel);
+        }
+
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+        if (vm.IsLevel25)
+        {
+            var buttonCustom = UiUtil.MakeButton(Se.Language.General.ChooseColorDotDotDot, vm.PickCustomColorCommand);
+            panel.Children.Add(UiUtil.MakeButtonBar(buttonCustom, buttonCancel));
+        }
+        else
+        {
+            panel.Children.Add(UiUtil.MakeButtonBar(buttonCancel));
+        }
+
         Content = panel;
 
-        Activated += delegate { buttonCancel.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, buttonCancel);
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
@@ -81,6 +111,8 @@ public class PickTeletextColorWindow : Window
                 Children = { swatch, label },
             },
             Padding = new Thickness(8, 6),
+            // Swatch + caption panel as content: name the tile after its caption (#12087).
+            [AutomationProperties.NameProperty] = text,
         };
     }
 

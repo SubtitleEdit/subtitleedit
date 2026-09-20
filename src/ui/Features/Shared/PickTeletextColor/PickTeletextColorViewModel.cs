@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Features.Shared.PickTeletextColor;
@@ -43,6 +44,34 @@ public partial class PickTeletextColorViewModel : ObservableObject
     ];
 
     /// <summary>
+    /// The half intensity colors of teletext CLUT 1, plus gray - reachable in a full teletext
+    /// stream (DVB teletext, Level 2.5) through an X/26 foreground color triplet, but not in an
+    /// EBU STL file. The hex values are the map defaults widened the 0x11-step way, so they
+    /// round-trip without touching a redefinable colour map entry.
+    /// </summary>
+    public List<TeletextColorItem> HalfIntensityColors { get; } =
+    [
+        new TeletextColorItem("HalfRed", Se.Language.General.ColorHalfRed, Color.FromRgb(0x77, 0x00, 0x00)),
+        new TeletextColorItem("HalfGreen", Se.Language.General.ColorHalfGreen, Color.FromRgb(0x00, 0x77, 0x00)),
+        new TeletextColorItem("HalfYellow", Se.Language.General.ColorHalfYellow, Color.FromRgb(0x77, 0x77, 0x00)),
+        new TeletextColorItem("HalfBlue", Se.Language.General.ColorHalfBlue, Color.FromRgb(0x00, 0x00, 0x77)),
+        new TeletextColorItem("HalfMagenta", Se.Language.General.ColorHalfMagenta, Color.FromRgb(0x77, 0x00, 0x77)),
+        new TeletextColorItem("HalfCyan", Se.Language.General.ColorHalfCyan, Color.FromRgb(0x00, 0x77, 0x77)),
+        new TeletextColorItem("Gray", Se.Language.General.ColorGray, Color.FromRgb(0x77, 0x77, 0x77)),
+    ];
+
+    /// <summary>
+    /// Level 2.5 teletext (DVB teletext): also offer the CLUT 1 half intensity colors and a
+    /// free color choice - the writer puts a free color in a redefinable colour map entry.
+    /// </summary>
+    public bool IsLevel25 { get; private set; }
+
+    /// <summary>
+    /// True when the user asked for the full color picker instead of a palette color.
+    /// </summary>
+    public bool CustomPressed { get; private set; }
+
+    /// <summary>
     /// The teletext color the selected line currently uses, or null when it has no
     /// explicit color code ("no color" is the current state).
     /// </summary>
@@ -54,6 +83,12 @@ public partial class PickTeletextColorViewModel : ObservableObject
 
     public void Initialize(string? currentText)
     {
+        Initialize(currentText, level25: false);
+    }
+
+    public void Initialize(string? currentText, bool level25)
+    {
+        IsLevel25 = level25;
         CurrentColor = null;
         if (string.IsNullOrEmpty(currentText))
         {
@@ -67,7 +102,8 @@ public partial class PickTeletextColorViewModel : ObservableObject
         }
 
         var value = match.Groups[1].Value.Trim().TrimStart('#');
-        foreach (var item in TeletextColors)
+        var items = level25 ? TeletextColors.Concat(HalfIntensityColors) : TeletextColors.AsEnumerable();
+        foreach (var item in items)
         {
             var hex = $"{item.Color.R:X2}{item.Color.G:X2}{item.Color.B:X2}";
             if (value.Equals(item.EnglishName, StringComparison.OrdinalIgnoreCase) ||
@@ -91,6 +127,14 @@ public partial class PickTeletextColorViewModel : ObservableObject
     private void PickNoColor()
     {
         NoColorPressed = true;
+        OkPressed = true;
+        Window?.Close();
+    }
+
+    [RelayCommand]
+    private void PickCustomColor()
+    {
+        CustomPressed = true;
         OkPressed = true;
         Window?.Close();
     }

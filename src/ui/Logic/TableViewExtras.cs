@@ -9,6 +9,7 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using System;
 using System.Collections.Generic;
@@ -49,6 +50,14 @@ public class SeTableViewColumn : TableViewColumn
     public object? Tag { get; set; }
 
     public double MinWidth { get; set; }
+
+    /// <summary>
+    /// What a screen reader should say for this column's cell when reading the row. Defaults
+    /// to <see cref="TableViewColumn.Binding"/>; set it for columns that render through a
+    /// <see cref="TableViewColumn.CellTemplate"/> (which UI Automation cannot read back) -
+    /// see <see cref="TableViewExtras.ApplyDefaultRowNames"/>.
+    /// </summary>
+    public BindingBase? NameBinding { get; set; }
 }
 
 /// <summary>
@@ -141,6 +150,23 @@ public sealed class TableViewHeaderSorter
         if (selectedSet.Count > 0)
         {
             _tableView.Selection.BeginBatchUpdate();
+
+            // Select the anchor FIRST - the first Select in the batch sets SelectedIndex, so the
+            // current row is restored without a later "SelectedItem =" assignment. That
+            // assignment routes to Selection.SelectedIndex, which REPLACES the selection, so
+            // clicking a column header collapsed a restored multi-row selection down to one row
+            // (contradicting this class's own "selection is preserved" contract).
+            // MoveSelectedRows below uses the same ordering and explains it.
+            if (selectedItem != null)
+            {
+                var anchorIndex = sorted.IndexOf(selectedItem);
+                if (anchorIndex >= 0)
+                {
+                    _tableView.Selection.Select(anchorIndex);
+                    selectedSet.Remove(selectedItem);
+                }
+            }
+
             for (var i = 0; i < sorted.Count && selectedSet.Count > 0; i++)
             {
                 if (selectedSet.Remove(sorted[i]))
@@ -151,8 +177,11 @@ public sealed class TableViewHeaderSorter
 
             _tableView.Selection.EndBatchUpdate();
         }
+        else
+        {
+            _tableView.SelectedItem = selectedItem;
+        }
 
-        _tableView.SelectedItem = selectedItem;
         if (selectedItem != null)
         {
             _tableView.ScrollIntoView(selectedItem);
@@ -204,6 +233,52 @@ public sealed class TableViewColumnManager
             };
         }
 
+        Sync();
+    }
+
+    /// <summary>
+    /// Reorders the managed columns to match <paramref name="keys"/> (matched against
+    /// <see cref="SeTableViewColumn.Tag"/>). Columns whose key is not in the list keep
+    /// their current position - a saved order from an older version must not hide or
+    /// displace columns added since. A null/empty list leaves the order untouched.
+    /// </summary>
+    public void ApplyOrder(IReadOnlyList<string>? keys)
+    {
+        if (keys == null || keys.Count == 0)
+        {
+            return;
+        }
+
+        var ordered = new List<TableViewColumn>();
+        foreach (var key in keys)
+        {
+            var column = _columns.FirstOrDefault(c => c is SeTableViewColumn se && se.Tag as string == key);
+            if (column != null && !ordered.Contains(column))
+            {
+                ordered.Add(column);
+            }
+        }
+
+        if (ordered.Count == 0)
+        {
+            return;
+        }
+
+        for (var i = 0; i < _columns.Count; i++)
+        {
+            var column = _columns[i];
+            if (!ordered.Contains(column))
+            {
+                ordered.Insert(Math.Min(i, ordered.Count), column);
+            }
+        }
+
+        _columns.Clear();
+        _columns.AddRange(ordered);
+
+        // Sync() can only insert missing columns, not permute existing ones, so clear the
+        // live list first and let it rebuild in the new order.
+        _tableView.Columns.Clear();
         Sync();
     }
 
@@ -282,6 +357,8 @@ public static class TableViewExtras
         };
 
         UiUtil.ApplyTableViewRowStyle(tableView);
+
+        tableView.Columns.CollectionChanged += (_, _) => ApplyDefaultRowNames(tableView);
 
         // SelectionMode.AlwaysSelected picks row 0 the moment ItemsSource is assigned, but that
         // pick only reaches the internal selection model (and SelectedItem/SelectedIndex) - the
@@ -363,6 +440,74 @@ public static class TableViewExtras
             [!TextBlock.TextProperty] = new Binding(propertyPath) { Mode = BindingMode.OneWay },
             [!TextBlock.FlowDirectionProperty] = new Binding(propertyPath) { Converter = TextToFlowDirection, Mode = BindingMode.OneWay },
         });
+    }
+
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<TableView, Style> DefaultRowNameStyles = new();
+
+    /// <summary>
+    /// Names every row for screen readers from its cells. Without a name UI Automation
+    /// falls back to the item's ToString(), so NVDA read
+    /// "Nikse.SubtitleEdit.Features.Video.VideoOcr.VideoOcrLineItem" for each row (#12087).
+    /// The name is the column values joined with ", " in column order, taken from each
+    /// column's <see cref="SeTableViewColumn.NameBinding"/> or <see cref="TableViewColumn.Binding"/>;
+    /// template-only columns without a NameBinding are skipped. Rebuilt whenever the columns
+    /// change. The style is kept first in the table's Styles so a window's own
+    /// <see cref="BindRowProperty"/> name (added later) wins.
+    /// </summary>
+    public static void ApplyDefaultRowNames(TableView tableView)
+    {
+        if (DefaultRowNameStyles.TryGetValue(tableView, out var existing))
+        {
+            tableView.Styles.Remove(existing);
+            DefaultRowNameStyles.Remove(tableView);
+        }
+
+        var multiBinding = new MultiBinding { Converter = JoinCellTextConverter.Instance, Mode = BindingMode.OneWay };
+        foreach (var column in tableView.Columns)
+        {
+            var binding = (column as SeTableViewColumn)?.NameBinding ?? column.Binding;
+            if (binding != null)
+            {
+                multiBinding.Bindings.Add(binding);
+            }
+        }
+
+        if (multiBinding.Bindings.Count == 0)
+        {
+            return;
+        }
+
+        var style = new Style(x => x.OfType<TableViewRow>())
+        {
+            Setters = { new Setter(Avalonia.Automation.AutomationProperties.NameProperty, multiBinding) },
+        };
+        tableView.Styles.Insert(0, style);
+        DefaultRowNameStyles.Add(tableView, style);
+    }
+
+    private sealed class JoinCellTextConverter : Avalonia.Data.Converters.IMultiValueConverter
+    {
+        public static readonly JoinCellTextConverter Instance = new();
+
+        public object? Convert(IList<object?> values, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
+        {
+            var parts = new List<string>();
+            foreach (var value in values)
+            {
+                if (value is null or Avalonia.Data.BindingNotification or Avalonia.UnsetValueType)
+                {
+                    continue;
+                }
+
+                var text = value is bool b ? (b ? "\u2713" : string.Empty) : value.ToString();
+                if (!string.IsNullOrWhiteSpace(text))
+                {
+                    parts.Add(text);
+                }
+            }
+
+            return string.Join(", ", parts);
+        }
     }
 
     /// <summary>
@@ -476,7 +621,8 @@ public static class TableViewExtras
     {
         tableView.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
-            if (e.Key != Key.Space)
+            // A cell being edited in place (AI review's After column) must keep its spaces.
+            if (e.Key != Key.Space || e.Source is TextBox)
             {
                 return;
             }
@@ -826,6 +972,41 @@ public static class TableViewExtras
     }
 
     /// <summary>
+    /// Where <paramref name="item"/>'s row sits right now: its top edge in viewport coordinates
+    /// (negative while scrolled into), or null when the row is not realized. Pair with
+    /// <see cref="PlaceRowAtViewportTop"/> to put a row back where the user saw it after the
+    /// grid has been rebuilt from scratch.
+    /// </summary>
+    public static double? GetRowViewportTop(TableView tableView, object item)
+    {
+        var scrollViewer = tableView.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
+        if (scrollViewer == null || scrollViewer.Viewport.Height <= 0)
+        {
+            return null;
+        }
+
+        if (tableView.ContainerFromItem(item) is not { } row || row.Bounds.Height <= 0)
+        {
+            return null;
+        }
+
+        return row.TranslatePoint(new Point(0, 0), ViewportOrigin(scrollViewer))?.Y;
+    }
+
+    /// <summary>
+    /// Scrolls so <paramref name="item"/>'s row has its top edge at <paramref name="top"/>
+    /// viewport pixels - the position <see cref="GetRowViewportTop"/> reported for the row that
+    /// stood there before. Undo/redo replace every row object (and detach the ItemsSource on the
+    /// way, which drops the offset to 0), so nothing else can keep the view still across them;
+    /// this puts the restored row back at the same height instead of letting ScrollIntoView
+    /// park it at the viewport edge (#14517).
+    /// </summary>
+    public static void PlaceRowAtViewportTop(TableView tableView, object item, double top)
+    {
+        AdjustScrollForRow(tableView, item, (rowTop, _, _) => rowTop - top);
+    }
+
+    /// <summary>
     /// Whether <paramref name="item"/>'s row is realized and entirely inside the viewport right
     /// now. Callers use it to leave the scroll offset alone when the row they are about to select
     /// is already on screen - deleting a line, for example, makes the next line current, and that
@@ -1004,6 +1185,128 @@ public static class TableViewExtras
 /// raise its own changed notifications) via <paramref name="applyRange"/>; this class
 /// owns the pointer/timer state machine.
 /// </summary>
+/// <summary>
+/// Turns a grid cell into a text editor in place: a click on the cell of the row that is
+/// already selected swaps the display control for a TextBox holding the current text. Enter or
+/// focus loss commits, Shift+Enter inserts a line break, Escape drops the edit. The first click
+/// on a row only selects it (that click belongs to the grid), so editing never gets in the way
+/// of plain row selection, and a double-click on the editor stays in the editor (word selection)
+/// instead of reaching the grid's DoubleTapped. Used by AI review's After column and the
+/// translation column of Auto-translate.
+/// </summary>
+public sealed class TableViewInlineTextEditor
+{
+    private readonly Border _cell;
+    private readonly TableView _grid;
+    private readonly Func<string> _getText;
+    private readonly Action<string> _setText;
+    private readonly Func<Control> _makeDisplay;
+    private readonly Func<bool>? _canEdit;
+
+    public bool IsEditing { get; private set; }
+
+    /// <param name="cell">The cell's root; its Child is replaced while editing. Gets an I-beam cursor.</param>
+    /// <param name="grid">The owning grid - only the selected row's cell opens the editor, and focus returns to the row afterwards.</param>
+    /// <param name="getText">The current text the editor starts from.</param>
+    /// <param name="setText">Called with the edited text on commit (only when it changed).</param>
+    /// <param name="makeDisplay">Builds the read-only cell content; called initially, after every edit and from <see cref="Refresh"/>.</param>
+    /// <param name="canEdit">Optional gate, e.g. "not while a translation is running".</param>
+    /// <param name="hint">Optional tooltip, shown only when hints are enabled in the settings.</param>
+    public TableViewInlineTextEditor(Border cell, TableView grid, Func<string> getText, Action<string> setText,
+        Func<Control> makeDisplay, Func<bool>? canEdit = null, string? hint = null)
+    {
+        _cell = cell;
+        _grid = grid;
+        _getText = getText;
+        _setText = setText;
+        _makeDisplay = makeDisplay;
+        _canEdit = canEdit;
+
+        // A transparent background is what makes the empty part of the cell hit-testable.
+        cell.Background ??= Brushes.Transparent;
+        cell.Cursor = new Cursor(StandardCursorType.Ibeam);
+        if (hint != null && Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(cell, hint);
+        }
+
+        cell.Child = makeDisplay();
+        cell.PointerReleased += OnCellPointerReleased;
+    }
+
+    /// <summary>
+    /// Rebuilds the read-only content from <paramref name="makeDisplay"/> - a no-op while the
+    /// editor is open, so a model-side change never replaces the text being typed.
+    /// </summary>
+    public void Refresh()
+    {
+        if (!IsEditing)
+        {
+            _cell.Child = _makeDisplay();
+        }
+    }
+
+    private void OnCellPointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        if (IsEditing ||
+            e.InitialPressMouseButton != MouseButton.Left ||
+            _cell.DataContext == null ||
+            !ReferenceEquals(_grid.SelectedItem, _cell.DataContext) ||
+            _canEdit?.Invoke() == false)
+        {
+            return;
+        }
+
+        IsEditing = true;
+        var textBox = new TextBox
+        {
+            Text = _getText(),
+            AcceptsReturn = true,
+            TextWrapping = TextWrapping.Wrap,
+            MinHeight = 0,
+            Padding = new Thickness(4, 2),
+        };
+
+        void Finish(bool commit)
+        {
+            if (!IsEditing)
+            {
+                return;
+            }
+
+            IsEditing = false;
+            if (commit && textBox.Text != null && textBox.Text != _getText())
+            {
+                _setText(textBox.Text);
+            }
+
+            _cell.Child = _makeDisplay();
+            TableViewExtras.FocusRow(_grid);
+        }
+
+        textBox.LostFocus += (_, _) => Finish(commit: true);
+        textBox.DoubleTapped += (_, e2) => e2.Handled = true;
+        textBox.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e2) =>
+        {
+            if (e2.Key == Key.Escape)
+            {
+                e2.Handled = true;
+                Finish(commit: false);
+            }
+            else if (e2.Key == Key.Enter && e2.KeyModifiers == KeyModifiers.None)
+            {
+                e2.Handled = true;
+                Finish(commit: true);
+            }
+        }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
+
+        _cell.Child = textBox;
+        textBox.Focus();
+        textBox.SelectAll();
+        e.Handled = true;
+    }
+}
+
 public sealed class TableViewDragSelect
 {
     private const double AutoScrollEdgeSize = 28;

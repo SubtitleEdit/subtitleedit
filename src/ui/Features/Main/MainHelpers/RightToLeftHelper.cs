@@ -90,6 +90,13 @@ internal static class RightToLeftHelper
         foreach (var child in grid.Children)
         {
             Grid.SetColumn(child, last - Grid.GetColumn(child));
+
+            // Keep horizontal margins (the gap between the two text boxes) on the inner side.
+            var margin = child.Margin;
+            if (margin.Left != margin.Right)
+            {
+                child.Margin = new Thickness(margin.Right, margin.Top, margin.Left, margin.Bottom);
+            }
         }
     }
 

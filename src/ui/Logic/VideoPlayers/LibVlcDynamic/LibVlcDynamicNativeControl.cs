@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 /// Native window control for LibVLC that embeds VLC's video output directly into a native window handle.
 /// This approach uses platform-specific window embedding (HWND on Windows, X11 window on Linux, NSView on macOS).
 /// </summary>
-public class LibVlcDynamicNativeControl : NativeControlHost
+public partial class LibVlcDynamicNativeControl : NativeControlHost
 {
     private LibVlcDynamicPlayer? _vlcPlayer;
     private bool _isInitialized;
@@ -226,8 +226,8 @@ public class LibVlcDynamicNativeControl : NativeControlHost
         }, DispatcherPriority.Background);
     }
 
-    [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-    private static extern IntPtr CreateWindowExW(
+    [LibraryImport("user32.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+    private static partial IntPtr CreateWindowExW(
         uint dwExStyle,
         string lpClassName,
         string lpWindowName,
@@ -241,24 +241,24 @@ public class LibVlcDynamicNativeControl : NativeControlHost
         IntPtr hInstance,
         IntPtr lpParam);
 
-    [DllImport("user32.dll", SetLastError = true)]
+    [LibraryImport("user32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    private static extern bool DestroyWindow(IntPtr hWnd);
+    private static partial bool DestroyWindow(IntPtr hWnd);
 
-    [DllImport("libX11.so.6")]
-    private static extern IntPtr XOpenDisplay(IntPtr display);
+    [LibraryImport("libX11.so.6")]
+    private static partial IntPtr XOpenDisplay(IntPtr display);
 
-    [DllImport("libX11.so.6")]
-    private static extern int XCloseDisplay(IntPtr display);
+    [LibraryImport("libX11.so.6")]
+    private static partial int XCloseDisplay(IntPtr display);
 
-    [DllImport("libX11.so.6")]
-    private static extern int XDefaultScreen(IntPtr display);
+    [LibraryImport("libX11.so.6")]
+    private static partial int XDefaultScreen(IntPtr display);
 
-    [DllImport("libX11.so.6")]
-    private static extern UIntPtr XBlackPixel(IntPtr display, int screenNumber);
+    [LibraryImport("libX11.so.6")]
+    private static partial UIntPtr XBlackPixel(IntPtr display, int screenNumber);
 
-    [DllImport("libX11.so.6")]
-    private static extern IntPtr XCreateSimpleWindow(
+    [LibraryImport("libX11.so.6")]
+    private static partial IntPtr XCreateSimpleWindow(
         IntPtr display,
         IntPtr parent,
         int x,
@@ -269,14 +269,14 @@ public class LibVlcDynamicNativeControl : NativeControlHost
         UIntPtr border,
         UIntPtr background);
 
-    [DllImport("libX11.so.6")]
-    private static extern int XMapWindow(IntPtr display, IntPtr window);
+    [LibraryImport("libX11.so.6")]
+    private static partial int XMapWindow(IntPtr display, IntPtr window);
 
-    [DllImport("libX11.so.6")]
-    private static extern int XDestroyWindow(IntPtr display, IntPtr window);
+    [LibraryImport("libX11.so.6")]
+    private static partial int XDestroyWindow(IntPtr display, IntPtr window);
 
-    [DllImport("libX11.so.6")]
-    private static extern int XSync(IntPtr display, [MarshalAs(UnmanagedType.Bool)] bool discard);
+    [LibraryImport("libX11.so.6")]
+    private static partial int XSync(IntPtr display, [MarshalAs(UnmanagedType.Bool)] bool discard);
 
     public async void LoadFile(string path)
     {

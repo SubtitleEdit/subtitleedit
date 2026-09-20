@@ -5,15 +5,15 @@ using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Logic.Platform.Windows;
 
-internal static class FileTypeAssociationsHelper
+internal static partial class FileTypeAssociationsHelper
 {
     // Shell notification constants
     private const int SHCNE_ASSOCCHANGED = 0x08000000;
     private const uint SHCNF_IDLIST = 0x0000;
     private const uint SHCNF_FLUSH = 0x1000;
 
-    [DllImport("Shell32.dll", SetLastError = true)]
-    private static extern void SHChangeNotify(int eventId, uint flags, nint item1, nint item2);
+    [LibraryImport("Shell32.dll", SetLastError = true)]
+    private static partial void SHChangeNotify(int eventId, uint flags, nint item1, nint item2);
 
     /// <summary>
     /// Checks if the app is currently the default handler for a specific extension.
@@ -30,10 +30,14 @@ internal static class FileTypeAssociationsHelper
             // This key is read-only for apps, but we can read it to see who won the 'war'.
             using (var userChoice = Registry.CurrentUser.OpenSubKey($@"Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\{ext}\UserChoice"))
             {
+                // UserChoice is authoritative when present: it is what Explorer's "Always open
+                // with" writes. Only falling through on a MATCH meant that after the user
+                // reassigned the extension to another app, the legacy Software\Classes default -
+                // which SE wrote itself when it registered - still answered "yes, SE is default".
                 var progIdValue = userChoice?.GetValue("Progid") as string;
-                if (progIdValue == progId)
+                if (!string.IsNullOrEmpty(progIdValue))
                 {
-                    return true;
+                    return progIdValue == progId;
                 }
             }
 

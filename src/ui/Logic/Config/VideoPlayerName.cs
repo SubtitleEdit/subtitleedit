@@ -6,4 +6,5 @@ public static class VideoPlayerName
     public const string MpvWid = "mpv-wid";
     public const string MpvSw = "mpv-sw";
     public const string Vlc = "vlc";
+    public const string Ffmpeg = "ffmpeg";
 }

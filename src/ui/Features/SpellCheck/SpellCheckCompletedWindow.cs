@@ -32,7 +32,7 @@ public class SpellCheckCompletedWindow : Window
                 new TextBlock
                 {
                     Text = Se.Language.SpellCheck.SpellCheckCompleted,
-                    FontSize = 17,
+                    FontSize = UiUtil.ScaledFontSize(17),
                     FontWeight = FontWeight.SemiBold,
                     VerticalAlignment = VerticalAlignment.Center,
                 },
@@ -66,7 +66,7 @@ public class SpellCheckCompletedWindow : Window
 
         var checkBoxDoNotShowAgain = new CheckBox
         {
-            Content = new TextBlock { Text = Se.Language.SpellCheck.DoNotShowThisAgain, FontSize = 13 },
+            Content = new TextBlock { Text = Se.Language.SpellCheck.DoNotShowThisAgain, FontSize = UiUtil.ScaledFontSize(13) },
             Opacity = 0.8,
             [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.DoNotShowAgain)) { Mode = BindingMode.TwoWay },
         };
@@ -107,7 +107,7 @@ public class SpellCheckCompletedWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonDone.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, buttonDone); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
@@ -144,7 +144,7 @@ public class SpellCheckCompletedWindow : Window
 
     private static Control MakeCountRow(string iconName, string textPropertyPath, string? visiblePropertyPath)
     {
-        var text = new TextBlock { VerticalAlignment = VerticalAlignment.Center, FontSize = 15 };
+        var text = new TextBlock { VerticalAlignment = VerticalAlignment.Center, FontSize = UiUtil.ScaledFontSize(15) };
         text.Bind(TextBlock.TextProperty, new Binding(textPropertyPath));
 
         var row = new StackPanel

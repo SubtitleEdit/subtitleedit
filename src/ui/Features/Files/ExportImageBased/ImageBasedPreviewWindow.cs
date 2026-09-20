@@ -20,13 +20,13 @@ public class ImageBasedPreviewWindow : Window
 
         var image = new Image
         {
-            [!Image.SourceProperty] = new Binding(nameof(vm.BitmapPreview)) { Mode = BindingMode.TwoWay },
+            [!Image.SourceProperty] = new Binding(nameof(vm.BitmapPreview)) { Mode = BindingMode.OneWay },
         };
         vm.ImagePreview = image;
 
         Content = image;
 
-        Activated += delegate { Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, () => { Focus(); }); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

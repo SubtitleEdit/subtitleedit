@@ -34,7 +34,6 @@ public partial class AiAssistantViewModel : ObservableObject
     [ObservableProperty] private string _resultText;
     [ObservableProperty] private string _statusText;
     [ObservableProperty] private bool _isBusy;
-    [ObservableProperty] private bool _isNotBusy = true;
     [ObservableProperty] private bool _hasResult;
     [ObservableProperty] private string _thinkText = string.Empty;
     [ObservableProperty] private bool _hasThink;
@@ -117,11 +116,6 @@ public partial class AiAssistantViewModel : ObservableObject
     partial void OnSelectedEngineChanged(string value)
     {
         UpdateEngineVisibility();
-    }
-
-    partial void OnIsBusyChanged(bool value)
-    {
-        IsNotBusy = !value;
     }
 
     partial void OnResultTextChanged(string value)

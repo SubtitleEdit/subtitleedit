@@ -5,10 +5,16 @@ using System.Collections.Generic;
 namespace Nikse.SubtitleEdit.Logic;
 
 /// <summary>
-/// A styled range of source text: a foreground color plus an optional bold flag.
-/// Spans are sorted and never overlap; text not covered by a span keeps the default foreground.
+/// A styled range of source text: a foreground color plus an optional bold flag, and whether the
+/// span is drawn in the platform default font rather than the editor's. Spans are sorted and never
+/// overlap; text not covered by a span keeps the default foreground.
 /// </summary>
-public readonly record struct SourceSyntaxSpan(int Start, int Length, Color Color, bool Bold);
+/// <remarks>
+/// <see cref="DefaultFont"/> is for line numbers and time codes: the appearance font is right for
+/// the subtitle text, but a text face with old-style numerals (Georgia) makes digits hard to scan,
+/// so those stay in the default UI font.
+/// </remarks>
+public readonly record struct SourceSyntaxSpan(int Start, int Length, Color Color, bool Bold, bool DefaultFont = false);
 
 /// <summary>
 /// The syntax rules of one source format, expressed per line and independent of the control that
@@ -37,13 +43,15 @@ public interface ISourceSyntaxDocumentFormatter
 /// Collects the styles of one line and flattens them into sorted, non-overlapping spans.
 ///
 /// Styles are applied per character and per property: a later <see cref="Apply"/> replaces the
-/// color of the characters it covers, and bold, once set, stays set (no rule ever clears it).
+/// color of the characters it covers, and bold and default font, once set, stay set (no rule ever
+/// clears them).
 /// </summary>
 public sealed class SourceSyntaxLineStyler
 {
     private Color[] _colors = Array.Empty<Color>();
     private bool[] _hasColor = Array.Empty<bool>();
     private bool[] _bold = Array.Empty<bool>();
+    private bool[] _defaultFont = Array.Empty<bool>();
     private int _length;
 
     /// <summary>
@@ -58,21 +66,24 @@ public sealed class SourceSyntaxLineStyler
             _colors = new Color[capacity];
             _hasColor = new bool[capacity];
             _bold = new bool[capacity];
+            _defaultFont = new bool[capacity];
         }
         else
         {
             Array.Clear(_hasColor, 0, _length);
             Array.Clear(_bold, 0, _length);
+            Array.Clear(_defaultFont, 0, _length);
         }
 
         _length = length;
     }
 
     /// <summary>
-    /// Colors [start, start+length) - out of range parts are clipped away. Bold is only ever
-    /// turned on: pass false to recolor a range without touching the weight set by an earlier rule.
+    /// Colors [start, start+length) - out of range parts are clipped away. Bold and default font
+    /// are only ever turned on: pass false to recolor a range without touching what an earlier
+    /// rule set.
     /// </summary>
-    public void Apply(int start, int length, Color color, bool bold = false)
+    public void Apply(int start, int length, Color color, bool bold = false, bool defaultFont = false)
     {
         var end = Math.Min(start + length, _length);
         for (var i = Math.Max(start, 0); i < end; i++)
@@ -82,6 +93,11 @@ public sealed class SourceSyntaxLineStyler
             if (bold)
             {
                 _bold[i] = true;
+            }
+
+            if (defaultFont)
+            {
+                _defaultFont[i] = true;
             }
         }
     }
@@ -104,13 +120,14 @@ public sealed class SourceSyntaxLineStyler
             var runStart = i;
             var color = _colors[i];
             var bold = _bold[i];
+            var defaultFont = _defaultFont[i];
             i++;
-            while (i < _length && _hasColor[i] && _colors[i] == color && _bold[i] == bold)
+            while (i < _length && _hasColor[i] && _colors[i] == color && _bold[i] == bold && _defaultFont[i] == defaultFont)
             {
                 i++;
             }
 
-            target.Add(new SourceSyntaxSpan(offset + runStart, i - runStart, color, bold));
+            target.Add(new SourceSyntaxSpan(offset + runStart, i - runStart, color, bold, defaultFont));
         }
     }
 }

@@ -286,7 +286,7 @@ public partial class PickMp4TrackViewModel : ObservableObject
 
         Rows.Clear();
         var subtitles = GetTrackParagraphs(selectedTrack);
-        SubtitleCountText = string.Format(Se.Language.File.Import.NumberOfSubtitlesX, subtitles.Count);
+        SubtitleCountText = string.Format(Se.Language.File.Import.NumberOfSubtitlesX, subtitles.Count.ToString("N0"));
         var i = 0;
         foreach (var item in subtitles)
         {

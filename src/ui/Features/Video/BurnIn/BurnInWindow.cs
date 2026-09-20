@@ -11,6 +11,7 @@ using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
+using Nikse.SubtitleEdit.UiLogic.Export;
 using System;
 
 namespace Nikse.SubtitleEdit.Features.Video.BurnIn;
@@ -19,6 +20,13 @@ public class BurnInWindow : Window
 {
     private readonly BurnInViewModel _vm;
     private ComboBox? _comboBoxFontName;
+
+    /// <summary>
+    /// The grid of text settings (font, colors, box, alignment, effect) - hidden for image
+    /// subtitles, which are burned in as they are.
+    /// </summary>
+    internal const string TextSettingsName = "BurnInTextSettings";
+    private const string LabelColumnGroup = "BurnInSettingsLabels";
 
     public BurnInWindow(BurnInViewModel vm)
     {
@@ -47,30 +55,15 @@ public class BurnInWindow : Window
 
         // The left column (subtitle + video settings + target size) is taller than the middle
         // column's cut/preview/audio/video-info rows. Keeping all three boxes in one packed
-        // panel preserves the v5.1.0 look (no gaps), and the preview row's MinHeight below
-        // guarantees the panel fits in rows 0-3 - so it can never overflow into the
-        // progress-bar row (which used to draw the bar through the "File size in MB" field)
-        // - and the preview box never gets shorter than its label + player, so the player
-        // cannot spill over the audio settings box.
+        // panel preserves the v5.1.0 look (no gaps); the settings grid has a single star row, so
+        // the panel can never overflow into the progress-bar row (which used to draw the bar
+        // through the "File size in MB" field). The player has a fixed height, so the preview
+        // box hugs it and cannot spill over the audio settings box.
         var leftPanel = new StackPanel
         {
             Orientation = Orientation.Vertical,
             VerticalAlignment = VerticalAlignment.Top,
             Children = { subtitleSettingsView, videoSettingsView, targetFileSizeView },
-        };
-
-        // Rows 0-3 hold the panel at any size the window can normally reach, but not when the
-        // window ends up shorter than its own content minimum - which happens on screens too
-        // short for the dialog, where UiUtil lowers the minimum to keep the window on the working
-        // area. A StackPanel draws its overflow straight through whatever is below it, so the
-        // last box ("File size in MB") ended up under the progress bar (issue #13904). The scroll
-        // viewer keeps that overflow inside the cell and still reachable; it measures exactly like
-        // the panel, so at every normal size the layout is unchanged and no scroll bar appears.
-        var leftPanelScroller = new ScrollViewer
-        {
-            Content = leftPanel,
-            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
         };
 
         var buttonGenerate = new SplitButton
@@ -89,16 +82,16 @@ public class BurnInWindow : Window
                 }
             }
         };
-        buttonGenerate.Bind(SplitButton.IsEnabledProperty, new Binding(nameof(vm.IsGenerating)) { Converter = new InverseBooleanConverter() });
+        buttonGenerate.Bind(SplitButton.IsEnabledProperty, new Binding(nameof(vm.IsGenerating)) { Converter = InverseBooleanConverter.Instance });
 
         var buttonBatchMode = UiUtil.MakeButton(Se.Language.General.BatchMode, vm.BatchModeCommand)
-            .WithBindIsVisible(nameof(vm.IsBatchMode), new InverseBooleanConverter())
-            .WithBindEnabled(nameof(vm.IsGenerating), new InverseBooleanConverter());
+            .WithBindIsVisible(nameof(vm.IsBatchMode), InverseBooleanConverter.Instance)
+            .WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
         var buttonHelp = UiUtil.MakeButton(Se.Language.General.Help, vm.HelpCommand);
         var buttonSingleMode = UiUtil.MakeButton(Se.Language.General.SingleMode, vm.SingleModeCommand)
             .WithBindIsVisible(nameof(vm.IsSingleModeVisible))
-            .WithBindEnabled(nameof(vm.IsGenerating), new InverseBooleanConverter());
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindEnabled(nameof(vm.IsGenerating), new InverseBooleanConverter());
+            .WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
         var buttonPanel = UiUtil.MakeButtonBar(
             buttonGenerate,
             buttonHelp,
@@ -114,16 +107,36 @@ public class BurnInWindow : Window
         var previewColumn = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
         var batchColumn = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) };
 
-        var grid = new Grid
+        // The middle column has its own grid: the left panel must not span rows of a grid with
+        // a star row, since a spanning child's whole height is pushed into the star row, making
+        // the grid (and the window) as tall as the auto rows PLUS the left panel.
+        var middleColumn = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // cut
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star), MinHeight = 400 }, // preview + batch list (never smaller than the preview box needs)
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // preview (sized by the fixed-height player)
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // audio
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // video info + target file size
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // progress bar
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // buttons
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // video info
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // filler: takes the extra height so the preview box hugs the player
+            },
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+            },
+            Width = double.NaN,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+        };
+        middleColumn.Add(cutView, 0, 0);
+        middleColumn.Add(previewView, 1, 0);
+        middleColumn.Add(audioSettingsView, 2, 0);
+        middleColumn.Add(videoInfoView, 3, 0);
+
+        var settingsGrid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
             },
             ColumnDefinitions =
             {
@@ -131,19 +144,61 @@ public class BurnInWindow : Window
                 previewColumn, // cut/preview/audio settings
                 batchColumn, // batch mode
             },
+            Width = double.NaN,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+        };
+
+        settingsGrid.Add(leftPanel, 0, 0);
+        settingsGrid.Add(middleColumn, 0, 1);
+        settingsGrid.Add(batchView, 0, 2);
+
+        // The settings area is taller than what a small or scaled screen can show (a maximized
+        // window on a 1366x768 laptop leaves about 700 DIPs; the preview row alone needs 400).
+        // UiUtil lowers the window minimum to the working area, so the rows below the fold - the
+        // "Generate" button row above all - were simply clipped off and unreachable (issues
+        // #13904, #14360). Scrolling the settings area, with the progress bar and the buttons
+        // kept outside the scroll viewer, keeps every control reachable on any screen.
+        //
+        // A ScrollViewer measures its content with unbounded height, which would turn the star
+        // preview row into an auto row and stop the preview from growing with the window. Pinning
+        // the content's MinHeight to the viewport height restores the fill: when the window is
+        // tall enough the grid fills it exactly like before (no scroll bar), and only when the
+        // viewport is shorter than the content minimum does the area scroll.
+        var settingsScroller = new ScrollViewer
+        {
+            Content = settingsGrid,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+        };
+        settingsScroller.SizeChanged += (_, e) =>
+        {
+            var viewportHeight = Math.Max(0, e.NewSize.Height);
+            if (Math.Abs(settingsGrid.MinHeight - viewportHeight) > 0.5)
+            {
+                settingsGrid.MinHeight = viewportHeight;
+            }
+        };
+
+        var grid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // settings + preview (scrolls when the window is too short)
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // progress bar
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // buttons
+            },
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+            },
             Margin = UiUtil.MakeWindowMargin(),
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(leftPanelScroller, 0, 0, 4, 1);  // rows 0-3 (cut + preview + audio + video info)
-        grid.Add(cutView, 0, 1);
-        grid.Add(previewView, 1, 1);
-        grid.Add(audioSettingsView, 2, 1);
-        grid.Add(videoInfoView, 3, 1);
-        grid.Add(batchView, 0, 2, 4, 1);
-        grid.Add(progressView, 4, 0, 1, 3);
-        grid.Add(buttonPanel, 5, 0, 1, 3);
+        grid.Add(settingsScroller, 0, 0);
+        grid.Add(progressView, 1, 0);
+        grid.Add(buttonPanel, 2, 0);
 
         Content = grid;
 
@@ -172,11 +227,11 @@ public class BurnInWindow : Window
             else
             {
                 player.Width = double.NaN;
-                player.Height = double.NaN;
-                player.MinWidth = 480;
-                player.MinHeight = 270;
+                player.Height = SinglePlayerHeight;
+                player.MinWidth = 400;
+                player.MinHeight = 0;
                 player.HorizontalAlignment = HorizontalAlignment.Stretch;
-                player.VerticalAlignment = VerticalAlignment.Stretch;
+                player.VerticalAlignment = VerticalAlignment.Top;
             }
         }
 
@@ -196,7 +251,7 @@ public class BurnInWindow : Window
         };
         UpdateGrowAreas();
 
-        Activated += delegate { _comboBoxFontName?.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, () => { _comboBoxFontName?.Focus(); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
         Loaded += (_, _) => vm.Loaded();
         KeyDown += (_, e) => vm.OnKeyDown(e);
 
@@ -279,7 +334,7 @@ public class BurnInWindow : Window
     protected override void OnClosing(WindowClosingEventArgs e)
     {
         base.OnClosing(e);
-        _vm.CleanupPreview();
+        _vm.OnClosing(); // stops a running ffmpeg too - the title-bar X does not go through Cancel
     }
 
     /// <summary>
@@ -498,7 +553,6 @@ public class BurnInWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -557,7 +611,7 @@ public class BurnInWindow : Window
                 {
                     Content = Se.Language.Video.AssaStyleWillBeUsed,
                     FontWeight = FontWeight.Bold,
-                    FontSize = 22,
+                    FontSize = UiUtil.ScaledFontSize(22),
                     HorizontalAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Center,
                     HorizontalContentAlignment = HorizontalAlignment.Center,
@@ -567,10 +621,40 @@ public class BurnInWindow : Window
         }.WithBindVisible(vm, nameof(vm.ShowAssaOnlyBox));
         grid.Add(panel, 0, 0, 9, 2);
 
-        grid.Add(labelLogo, 10, 0);
-        grid.Add(panelLogo, 10, 1);
+        // The text settings mean nothing for an image subtitle (a Blu-ray sup burned in as it
+        // is), so they go away then; the logo still applies. The shared column keeps the logo
+        // label aligned with the text rows when both are shown.
+        grid.Name = TextSettingsName;
+        grid.ColumnDefinitions[0].SharedSizeGroup = LabelColumnGroup;
+        grid.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsImageSubtitle)) { Converter = InverseBooleanConverter.Instance });
 
-        return UiUtil.MakeBorderForControl(grid).WithMarginBottom(5).WithMarginRight(5);
+        var logoGrid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+            },
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto), SharedSizeGroup = LabelColumnGroup },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+            },
+            ColumnSpacing = 5,
+            Width = double.NaN,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+        };
+        logoGrid.Add(labelLogo, 0, 0);
+        logoGrid.Add(panelLogo, 0, 1);
+
+        var settings = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Spacing = 5,
+            Children = { grid, logoGrid },
+        };
+        Grid.SetIsSharedSizeScope(settings, true);
+
+        return UiUtil.MakeBorderForControl(settings).WithMarginBottom(5).WithMarginRight(5);
     }
 
     private static Border MakeVideoSettingsView(BurnInViewModel vm)
@@ -595,7 +679,7 @@ public class BurnInWindow : Window
                 textBoxHeight,
                 buttonResolution,
             }
-        }.WithBindVisible(vm, nameof(vm.UseSourceResolution), new InverseBooleanConverter());
+        }.WithBindVisible(vm, nameof(vm.UseSourceResolution), InverseBooleanConverter.Instance);
 
         var labelSourceResolution = UiUtil.MakeLabel("Use source resolution").WithBindVisible(vm, nameof(vm.UseSourceResolution));
         var buttonResolutionSource = UiUtil.MakeButtonBrowse(vm.BrowseResolutionCommand, accessibleName: Se.Language.General.Resolution);
@@ -610,6 +694,27 @@ public class BurnInWindow : Window
             }
         }.WithBindVisible(vm, nameof(vm.UseSourceResolution));
 
+        // For frame-packed 3D video: the subtitles are burned in once per eye (see
+        // FfmpegGenerator.MakeStereo3DGraph), moved apart by the depth.
+        var label3D = UiUtil.MakeLabel(Se.Language.File.Export.Stereo3D);
+        var comboBox3D = UiUtil.MakeComboBox(vm.Modes3D, vm, nameof(vm.SelectedMode3D));
+        var labelDepth3D = UiUtil.MakeLabel(Se.Language.File.Export.Depth3D);
+        var numericUpDownDepth3D = UiUtil.MakeNumericUpDownInt(Stereo3DImage.MinDepth, Stereo3DImage.MaxDepth, 0, 130, vm, nameof(vm.Depth3D))
+            .WithBindEnabled(nameof(vm.IsDepth3DEnabled));
+        numericUpDownDepth3D.WithAccessibleName(Se.Language.File.Export.Depth3D);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(comboBox3D, Se.Language.File.Export.Stereo3DHint);
+            ToolTip.SetTip(numericUpDownDepth3D, Se.Language.File.Export.Depth3DHint);
+        }
+
+        var panel3D = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 5,
+            Children = { comboBox3D, labelDepth3D, numericUpDownDepth3D },
+        };
+
         var labelEncoding = UiUtil.MakeLabel(Se.Language.General.Encoding);
         var comboBoxEncoding = UiUtil.MakeComboBox(vm.VideoEncodings, vm, nameof(vm.SelectedVideoEncoding));
         comboBoxEncoding.SelectionChanged += vm.VideoEncodingChanged;
@@ -617,10 +722,17 @@ public class BurnInWindow : Window
         var labelPreset = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.VideoPresetText));
         var comboBoxPreset = UiUtil.MakeComboBox(vm.VideoPresets, vm, nameof(vm.SelectedVideoPreset));
 
+        // Only the NVIDIA encoders have a tuning mode, so the row is hidden for the rest - an
+        // always-present blank combo box would just make the dialog taller for everyone else.
+        var labelTune = UiUtil.MakeLabel(Se.Language.Video.BurnIn.Tune)
+            .WithBindVisible(vm, nameof(vm.IsVideoTuneVisible));
+        var comboBoxTune = UiUtil.MakeComboBox(vm.VideoTunes, vm, nameof(vm.SelectedVideoTune))
+            .WithBindVisible(nameof(vm.IsVideoTuneVisible));
+
         var labelCrf = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.VideoCrfText));
         var comboBoxCrf = UiUtil.MakeComboBox(vm.VideoCrf, vm, nameof(vm.SelectedVideoCrf));
         var labelCrfHint = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.VideoCrfHint)).WithMarginLeft(5);
-        labelCrfHint.FontSize = 10;
+        labelCrfHint.FontSize = UiUtil.ScaledFontSize(10);
         labelCrfHint.Opacity = 0.7;
         var panelCrf = new StackPanel
         {
@@ -651,6 +763,8 @@ public class BurnInWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -667,20 +781,26 @@ public class BurnInWindow : Window
         grid.Add(panelResolution, 0, 1);
         grid.Add(panelResolutionSource, 0, 1);
 
-        grid.Add(labelEncoding, 1, 0);
-        grid.Add(comboBoxEncoding, 1, 1);
+        grid.Add(label3D, 1, 0);
+        grid.Add(panel3D, 1, 1);
 
-        grid.Add(labelPreset, 2, 0);
-        grid.Add(comboBoxPreset, 2, 1);
+        grid.Add(labelEncoding, 2, 0);
+        grid.Add(comboBoxEncoding, 2, 1);
 
-        grid.Add(labelCrf, 3, 0);
-        grid.Add(panelCrf, 3, 1);
+        grid.Add(labelPreset, 3, 0);
+        grid.Add(comboBoxPreset, 3, 1);
 
-        grid.Add(labelPixelFormat, 4, 0);
-        grid.Add(comboBoxPixelFormat, 4, 1);
+        grid.Add(labelTune, 4, 0);
+        grid.Add(comboBoxTune, 4, 1);
 
-        grid.Add(labelVideoExtension, 5, 0);
-        grid.Add(comboBoxVideoExtension, 5, 1);
+        grid.Add(labelCrf, 5, 0);
+        grid.Add(panelCrf, 5, 1);
+
+        grid.Add(labelPixelFormat, 6, 0);
+        grid.Add(comboBoxPixelFormat, 6, 1);
+
+        grid.Add(labelVideoExtension, 7, 0);
+        grid.Add(comboBoxVideoExtension, 7, 1);
 
         return UiUtil.MakeBorderForControl(grid).WithMarginBottom(5).WithMarginRight(5);
     }
@@ -742,6 +862,8 @@ public class BurnInWindow : Window
         return UiUtil.MakeBorderForControl(grid).WithMarginBottom(5).WithMarginRight(5);
     }
 
+    private const double SinglePlayerHeight = 360;
+
     private static Border MakePreviewView(BurnInViewModel vm)
     {
 
@@ -753,17 +875,21 @@ public class BurnInWindow : Window
         vm.VideoPlayerControl = InitVideoPlayer.MakeVideoPlayer();
         vm.VideoPlayerControl.FullScreenIsVisible = true;
         vm.VideoPlayerControl.FullScreenCommand = vm.PreviewFullScreenCommand;
-        vm.VideoPlayerControl.MinWidth = 480;
-        vm.VideoPlayerControl.MinHeight = 270;
+        // Fixed height, stretched width: a stretching player made the preview box taller than
+        // the settings column (forcing the window to scroll), and a capped-but-centred one left
+        // empty bands above and below the video.
+        vm.VideoPlayerControl.MinWidth = 400;
+        vm.VideoPlayerControl.MinHeight = 0;
+        vm.VideoPlayerControl.Height = SinglePlayerHeight;
         vm.VideoPlayerControl.HorizontalAlignment = HorizontalAlignment.Stretch;
-        vm.VideoPlayerControl.VerticalAlignment = VerticalAlignment.Stretch;
+        vm.VideoPlayerControl.VerticalAlignment = VerticalAlignment.Top;
 
         var grid = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // video player grows
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // video player (fixed height)
             },
             ColumnDefinitions =
             {
@@ -872,10 +998,16 @@ public class BurnInWindow : Window
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedJobItem)) { Source = vm });
         vm.BatchGrid = dataGrid;
 
-        var buttonAdd = UiUtil.MakeButton(Se.Language.General.AddDotDotDot, vm.AddCommand);
-        var buttonRemove = UiUtil.MakeButton(Se.Language.General.Remove, vm.RemoveCommand);
-        var buttonClear = UiUtil.MakeButton(Se.Language.General.Clear, vm.ClearCommand);
-        var buttonPickSubtitle = UiUtil.MakeButton(Se.Language.General.PickSubtitleFile, vm.PickSubtitleCommand);
+        // Not while a batch runs: the run indexes into the list, so Clear made it throw on the
+        // ffmpeg reader thread and Remove put Done/Error on the wrong row.
+        var buttonAdd = UiUtil.MakeButton(Se.Language.General.AddDotDotDot, vm.AddCommand)
+            .WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
+        var buttonRemove = UiUtil.MakeButton(Se.Language.General.Remove, vm.RemoveCommand)
+            .WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
+        var buttonClear = UiUtil.MakeButton(Se.Language.General.Clear, vm.ClearCommand)
+            .WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
+        var buttonPickSubtitle = UiUtil.MakeButton(Se.Language.General.PickSubtitleFile, vm.PickSubtitleCommand)
+            .WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
 
         var panelFileControls = new StackPanel
         {
@@ -952,9 +1084,9 @@ public class BurnInWindow : Window
         var labelTargetFileSize = UiUtil.MakeLabel(Se.Language.Video.BurnIn.FileSizeMb).WithMarginLeft(10);
         var numericUpDownTargetFileSize = UiUtil.MakeNumericUpDownInt(1, 1000_000_000, 0, 150, vm, nameof(vm.TargetFileSize));
         numericUpDownTargetFileSize.ValueChanged += vm.NumericUpDownTargetFileSizeChanged;
-        numericUpDownTargetFileSize.Bind(NumericUpDown.IsEnabledProperty, new Binding(nameof(vm.MatchSourceVideoSize)) { Converter = new InverseBooleanConverter() });
+        numericUpDownTargetFileSize.Bind(NumericUpDown.IsEnabledProperty, new Binding(nameof(vm.MatchSourceVideoSize)) { Converter = InverseBooleanConverter.Instance });
         var labelVideoBitRate = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.TargetVideoBitRateInfo));
-        labelVideoBitRate.FontSize = 10;
+        labelVideoBitRate.FontSize = UiUtil.ScaledFontSize(10);
         labelVideoBitRate.Opacity = 0.7;
         var panelTargetFileSize = new StackPanel
         {
@@ -1030,7 +1162,7 @@ public class BurnInWindow : Window
         grid.Add(labelVideoSizeValue, 1, 1);
 
         return UiUtil.MakeBorderForControl(grid)
-            .WithBindIsVisible(nameof(vm.IsBatchMode), new InverseBooleanConverter())
+            .WithBindIsVisible(nameof(vm.IsBatchMode), InverseBooleanConverter.Instance)
             .WithMarginBottom(5)
             .WithMarginRight(5);
     }

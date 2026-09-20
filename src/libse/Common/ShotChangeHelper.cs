@@ -123,10 +123,28 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <param name="shotChangeDirectory">Directory where shot change files are stored</param>
         public static void DeleteShotChanges(string videoFileName, string shotChangeDirectory)
         {
+            // Delete every file FromDisk could load, not just the canonical name: the hash is
+            // computed from the video's CONTENT, so a renamed video still finds its old
+            // "{hash}_{oldName}.shotchanges" through the wildcard in FindShotChangesFileName -
+            // while this method used to build "{hash}_{newName}.shotchanges", find nothing, and
+            // leave the shot changes to come straight back.
             var shotChangesFileName = GetShotChangesFileName(videoFileName, shotChangeDirectory);
             if (File.Exists(shotChangesFileName))
             {
                 File.Delete(shotChangesFileName);
+            }
+
+            var hash = MovieHasher.GenerateHash(videoFileName);
+            foreach (var fileName in Directory.GetFiles(shotChangeDirectory, $"{hash}*.shotchanges"))
+            {
+                try
+                {
+                    File.Delete(fileName);
+                }
+                catch
+                {
+                    // a file we cannot delete must not abort the rest
+                }
             }
         }
 

@@ -216,7 +216,7 @@ public partial class PickSubtitleFormatViewModel : ObservableObject
             VerticalAlignment = VerticalAlignment.Stretch,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             FontFamily = new FontFamily("Courier New, Consolas, monospace"),
-            FontSize = 12,
+            FontSize = UiUtil.ScaledFontSize(12),
         };
     }
 

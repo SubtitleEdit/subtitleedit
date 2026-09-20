@@ -161,7 +161,7 @@ public class SpeechToTextPostProcessingWindow : Window
 
         Content = outerGrid;
 
-        Activated += delegate { Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, () => { Focus(); }); // hack to make OnKeyDown work
     }
 
     private static void SetHint(Control label, Control checkBox, string hint)

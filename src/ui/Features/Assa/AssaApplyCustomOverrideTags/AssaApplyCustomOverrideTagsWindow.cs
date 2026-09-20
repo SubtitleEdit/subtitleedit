@@ -51,6 +51,8 @@ public class AssaApplyCustomOverrideTagsWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
         textBoxCurrent.Bind(TextBox.TextProperty, new Binding(nameof(vm.CurrentTag)));
+        textBoxCurrent.WithAccessibleName(Se.Language.Assa.ApplyOverrideTags); // the chosen tags, no visible label (#12087)
+        comboBoxOverrideTags.WithLabeledBy(labelOverrideTag);
         
         var panelRadioButtons = new StackPanel
         {
@@ -84,6 +86,7 @@ public class AssaApplyCustomOverrideTagsWindow : Window
         comboBoxLeft.Width = double.NaN;
         comboBoxLeft.MinHeight = 50;
         comboBoxLeft.HorizontalAlignment = HorizontalAlignment.Stretch;
+        comboBoxLeft.WithAccessibleName(Se.Language.General.Lines); // subtitle line picker under the video, no visible label (#12087)
         vm.ComboBoxLeft = comboBoxLeft;
         comboBoxLeft.SelectionChanged += vm.ComboBoxParagraphsChanged;
 
@@ -147,7 +150,7 @@ public class AssaApplyCustomOverrideTagsWindow : Window
         Content = grid;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
-        Activated += delegate { comboBoxOverrideTags.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, comboBoxOverrideTags);
 
         AddHandler(KeyDownEvent, vm.OnKeyDownHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
         Loaded += (_, _) => vm.OnLoaded();

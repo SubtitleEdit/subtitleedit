@@ -98,6 +98,13 @@ public partial class VideoPlayerUndockedViewModel : ObservableObject
             return;
         }
 
+        if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/main-window", "undocking");
+            return;
+        }
+
         MainViewModel?.OnKeyDownHandler(sender, e);
         if (e.Handled)
         {
@@ -179,6 +186,12 @@ public partial class VideoPlayerUndockedViewModel : ObservableObject
 
         if (!string.IsNullOrEmpty(_originalVideoFileName))
         {
+            // Announced here rather than left to Open below: this control is already published
+            // as the undocked video player, so a rebuild landing before the posted open has run
+            // (Settings -> Apply followed by OK) would read the live position of a player that
+            // has not been given a file yet - 0 - and rewind the video (issue #14218).
+            videoPlayerControl.BeginPositionRestore(_originalPosition);
+
             Dispatcher.UIThread.Post(async () =>
             {
                 await Task.Delay(100);
@@ -197,7 +210,14 @@ public partial class VideoPlayerUndockedViewModel : ObservableObject
                 }
 
                 videoPlayerControl.Volume = _originalVolume;
-                videoPlayerControl.Position = _originalPosition;
+
+                // Seeks until the player is where it belongs, and only then lets a rebuild read
+                // the live position again (issue #14218). If it never gets there (mpv still
+                // loading), the target stays - handing a rebuild the 0 of a player that never
+                // arrived is the rewind this guards against. Assigning Position instead, as this
+                // did, reaches the player through the position slider, which clamps the write to
+                // a duration that may not be published yet (issue #14741).
+                await videoPlayerControl.RestorePositionAsync(_originalPosition);
 
                 // Undocking opens the video in a new player, which starts on mpv's default audio
                 // track - re-apply the track the user picked in the main window (issue #12844).

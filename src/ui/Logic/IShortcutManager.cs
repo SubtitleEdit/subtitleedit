@@ -11,6 +11,7 @@ public interface IShortcutManager
     void ClearKeys();
     void RegisterShortcut(ShortCut shortcut);
     bool HasSingleKeyShortcut(string keyName);
+    bool HasShortcut(params string[] keys);
     IRelayCommand? CheckShortcuts(KeyEventArgs keyEventArgs, string activeControl);
     void ClearShortcuts();
     HashSet<Key> GetActiveKeys();

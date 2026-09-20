@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         private string _languageCode;
 
         private NameList _namesList;
-        private List<string> _nameListInclMulti;
+        private HashSet<string> _nameListInclMulti;
 
         public bool ToSquare { get; set; }
         public bool ToParentheses { get; set; }
@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             _subtitleFormat = subtitleFormat;
             _languageCode = languageCode;
             _namesList = new NameList(Configuration.DictionariesDirectory, languageCode, false, string.Empty);
-            _nameListInclMulti = _namesList.GetAllNames();
+            _nameListInclMulti = new HashSet<string>(_namesList.GetAllNames(), StringComparer.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -381,7 +381,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return false;
             }
 
-            if (_nameListInclMulti.Contains(s, StringComparer.OrdinalIgnoreCase))
+            if (_nameListInclMulti.Contains(s))
             {
                 return true;
             }
@@ -403,7 +403,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return false;
                 }
 
-                if (!_nameListInclMulti.Contains(word, StringComparer.OrdinalIgnoreCase))
+                if (!_nameListInclMulti.Contains(word))
                 {
                     return false;
                 }

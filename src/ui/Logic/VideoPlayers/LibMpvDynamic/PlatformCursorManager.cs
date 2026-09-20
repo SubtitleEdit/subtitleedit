@@ -7,15 +7,15 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 /// Platform-specific cursor management for forcing cursor updates.
 /// Used to work around cursor display issues with native window embedding (libmpv with wid).
 /// </summary>
-public static class PlatformCursorManager
+public static partial class PlatformCursorManager
 {
     #region Windows API
 
-    [DllImport("user32.dll")]
-    private static extern IntPtr SetCursor(IntPtr hCursor);
+    [LibraryImport("user32.dll")]
+    private static partial IntPtr SetCursor(IntPtr hCursor);
 
-    [DllImport("user32.dll")]
-    private static extern IntPtr LoadCursor(IntPtr hInstance, int lpCursorName);
+    [LibraryImport("user32.dll", EntryPoint = "LoadCursorW")]
+    private static partial IntPtr LoadCursor(IntPtr hInstance, int lpCursorName);
 
     private const int IDC_ARROW = 32512;
 
@@ -23,17 +23,17 @@ public static class PlatformCursorManager
 
     #region Linux X11 API
 
-    [DllImport("libX11.so.6", EntryPoint = "XDefineCursor")]
-    private static extern int XDefineCursor(IntPtr display, IntPtr window, IntPtr cursor);
+    [LibraryImport("libX11.so.6", EntryPoint = "XDefineCursor")]
+    private static partial int XDefineCursor(IntPtr display, IntPtr window, IntPtr cursor);
 
-    [DllImport("libX11.so.6", EntryPoint = "XCreateFontCursor")]
-    private static extern IntPtr XCreateFontCursor(IntPtr display, uint shape);
+    [LibraryImport("libX11.so.6", EntryPoint = "XCreateFontCursor")]
+    private static partial IntPtr XCreateFontCursor(IntPtr display, uint shape);
 
-    [DllImport("libX11.so.6", EntryPoint = "XOpenDisplay")]
-    private static extern IntPtr XOpenDisplay(IntPtr display);
+    [LibraryImport("libX11.so.6", EntryPoint = "XOpenDisplay")]
+    private static partial IntPtr XOpenDisplay(IntPtr display);
 
-    [DllImport("libX11.so.6", EntryPoint = "XDefaultRootWindow")]
-    private static extern IntPtr XDefaultRootWindow(IntPtr display);
+    [LibraryImport("libX11.so.6", EntryPoint = "XDefaultRootWindow")]
+    private static partial IntPtr XDefaultRootWindow(IntPtr display);
 
     private const uint XC_LEFT_PTR = 68; // Standard arrow cursor in X11
 

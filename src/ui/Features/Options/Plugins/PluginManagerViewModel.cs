@@ -25,6 +25,14 @@ public partial class PluginManagerViewModel : ObservableObject
     [ObservableProperty] private int _updateAvailableCount;
     [ObservableProperty] private bool _isUpdating;
     [ObservableProperty] private string _updateAllButtonText = string.Empty;
+    [ObservableProperty] private ObservableCollection<ApplyToLinesItem> _applyToLinesOptions;
+    [ObservableProperty] private ApplyToLinesItem _selectedApplyToLines;
+
+    /// <summary>A choice for which lines plugins run on; the value is stored in <see cref="SePlugins.ApplyToLines"/>.</summary>
+    public sealed record ApplyToLinesItem(string Value, string Text)
+    {
+        public override string ToString() => Text;
+    }
 
     public bool HasUpdates => UpdateAvailableCount > 0;
     public bool CanUpdateAll => HasUpdates && !IsUpdating;
@@ -45,7 +53,25 @@ public partial class PluginManagerViewModel : ObservableObject
         _folderHelper = folderHelper;
         _windowService = windowService;
         _plugins = new ObservableCollection<PluginDisplayItem>();
+        _applyToLinesOptions = new ObservableCollection<ApplyToLinesItem>
+        {
+            new(SePlugins.ApplyToLinesAsk, Se.Language.Plugins.AskEachTime),
+            new(SePlugins.ApplyToLinesSelected, Se.Language.General.SelectedLines),
+            new(SePlugins.ApplyToLinesAll, Se.Language.Plugins.AllLines),
+        };
+        _selectedApplyToLines = _applyToLinesOptions.FirstOrDefault(p => p.Value == Se.Settings.Plugins.ApplyToLines) ?? _applyToLinesOptions[0];
         RefreshUpdateAllButtonText();
+    }
+
+    partial void OnSelectedApplyToLinesChanged(ApplyToLinesItem value)
+    {
+        if (value == null || Se.Settings.Plugins.ApplyToLines == value.Value)
+        {
+            return;
+        }
+
+        Se.Settings.Plugins.ApplyToLines = value.Value;
+        Se.SaveSettings();
     }
 
     public void Initialize()

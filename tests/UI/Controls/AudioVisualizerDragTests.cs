@@ -7,6 +7,7 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
@@ -28,8 +29,28 @@ namespace UITests.Controls;
 /// as a clipped overlay instead. The fancy style bakes selection into per-column colors, so it
 /// still rebuilds.
 /// </summary>
-public class AudioVisualizerDragTests
+public class AudioVisualizerDragTests : IDisposable
 {
+    // A window left open outlives the test: it keeps the application-wide activation and focused
+    // element, so a later test's click or key press is delivered to it instead. The tests close
+    // their window on the last line, which leaks one whenever an assertion above it fails - and one
+    // stranded window is enough to take the rest of the class down with it.
+    private readonly List<Window> _windows = new();
+    private readonly bool _snapToFrames = Se.Settings.Waveform.SnapToFrames;
+    private readonly double _frameRate = Se.Settings.General.CurrentFrameRate;
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+        Se.Settings.Waveform.SnapToFrames = _snapToFrames;
+        Se.Settings.General.CurrentFrameRate = _frameRate;
+    }
+
     private const int SampleRate = 126; // Se.Settings.Waveform.WaveformMinimumSampleRate default
     private const double WidthPx = 800;
     private const double HeightPx = 200;
@@ -52,7 +73,7 @@ public class AudioVisualizerDragTests
         EndTime = TimeSpan.FromSeconds(endSeconds),
     };
 
-    private static (Window Window, AudioVisualizer Av, List<SubtitleLineViewModel> Lines) Open(params SubtitleLineViewModel[] lines)
+    private (Window Window, AudioVisualizer Av, List<SubtitleLineViewModel> Lines) Open(params SubtitleLineViewModel[] lines)
     {
         var av = new AudioVisualizer
         {
@@ -70,6 +91,7 @@ public class AudioVisualizerDragTests
             Height = HeightPx,
             Content = av,
         };
+        _windows.Add(window);
         window.Show();
         Dispatcher.UIThread.RunJobs();
         window.UpdateLayout();
@@ -385,5 +407,84 @@ public class AudioVisualizerDragTests
         var after = FirstCachedWaveformGeometry(av);
 
         Assert.NotSame(before, after);
+    }
+
+    // A frame project with a 2-frame minimum gap (Amazon): dragging the previous line's end
+    // toward the next in-cue stopped at 3 frames. The clamp set the end to "next start minus gap
+    // minus 1 ms" and then floored to a frame, so the 1 ms nudge always cost a whole frame.
+    [AvaloniaFact]
+    public void ResizeRight_ClampsToExactlyMinGap_WhenSnappingToFrames()
+    {
+        Se.Settings.Waveform.SnapToFrames = true;
+        Se.Settings.General.CurrentFrameRate = 25; // one frame = 40 ms
+
+        var (window, av, _) = Open(Line(1, 3), Line(4, 6));
+        av.MinGapSeconds = 0.08; // 2 frames
+        var line = av.SelectedParagraph!;
+
+        // Right edge of the first line at x = 3 s * 126 = 378; drag it to ~3.97 s, inside the gap.
+        window.MouseDown(new Point(378, 100), MouseButton.Left, RawInputModifiers.None);
+        window.MouseMove(new Point(500, 100), RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
+
+        // 4000 ms - 2 frames = frame 98 = 3920 ms (the old clamp gave frame 97 = 3880 ms).
+        Assert.Equal(3920, line.EndTime.TotalMilliseconds);
+
+        window.MouseUp(new Point(500, 100), MouseButton.Left, RawInputModifiers.None);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void ResizeRight_ClampsToExactlyMinGap_AtNonIntegerFrameRate()
+    {
+        // Times are stored as whole milliseconds, so at 29.97 fps frame 101 is 3370 ms (true
+        // 3370.03). A plain floor of (3370 - 67) / 33.37 = 98.99 dropped to frame 98 even without
+        // the 1 ms nudge; the bound must be compared at whole-ms resolution.
+        Se.Settings.Waveform.SnapToFrames = true;
+        Se.Settings.General.CurrentFrameRate = 29.97;
+
+        var next = new SubtitleLineViewModel
+        {
+            Text = "text",
+            StartTime = TimeSpan.FromMilliseconds(3370),
+            EndTime = TimeSpan.FromMilliseconds(5000),
+        };
+        var (window, av, _) = Open(Line(1, 3), next);
+        av.MinGapSeconds = 0.067; // 2 frames, as SubtitleFormat.FramesToMilliseconds rounds them
+        var line = av.SelectedParagraph!;
+
+        window.MouseDown(new Point(378, 100), MouseButton.Left, RawInputModifiers.None);
+        window.MouseMove(new Point(422, 100), RawInputModifiers.None); // ~3.35 s, inside the gap
+        Dispatcher.UIThread.RunJobs();
+
+        // Frame 99 = 3303.3 ms -> 3303 ms, exactly 67 ms before the next start.
+        Assert.Equal(3303, line.EndTime.TotalMilliseconds);
+
+        window.MouseUp(new Point(422, 100), MouseButton.Left, RawInputModifiers.None);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void ResizeLeft_ClampsToExactlyMinGap_WhenSnappingToFrames()
+    {
+        // The mirror clamp: "previous end plus gap plus 1 ms", then ceiling to a frame, opened the
+        // gap to 3 frames when the next line's in-cue was dragged back toward the previous out-cue.
+        Se.Settings.Waveform.SnapToFrames = true;
+        Se.Settings.General.CurrentFrameRate = 25;
+
+        var second = Line(4, 6);
+        var (window, av, _) = Open(Line(1, 3), second);
+        av.MinGapSeconds = 0.08;
+
+        // Left edge of the second line at x = 4 s * 126 = 504; drag it to ~3.05 s, inside the gap.
+        window.MouseDown(new Point(504, 100), MouseButton.Left, RawInputModifiers.None);
+        window.MouseMove(new Point(384, 100), RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
+
+        // 3000 ms + 2 frames = frame 77 = 3080 ms (the old clamp gave frame 78 = 3120 ms).
+        Assert.Equal(3080, second.StartTime.TotalMilliseconds);
+
+        window.MouseUp(new Point(384, 100), MouseButton.Left, RawInputModifiers.None);
+        window.Close();
     }
 }

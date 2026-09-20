@@ -21,6 +21,11 @@ public class LanguageExport
     public string ExportCavenaTranslator { get; set; }
     public string ExportCavenaComment { get; set; }
     public string ExportCavenaStartOfProgramme { get; set; }
+    public string TitleExportDvbTeletext { get; set; }
+    public string ExportDvbTeletextPageNumber { get; set; }
+    public string ExportDvbTeletextSubtitleType { get; set; }
+    public string ExportDvbTeletextSubtitleTypeNormal { get; set; }
+    public string ExportDvbTeletextSubtitleTypeHearingImpaired { get; set; }
     public string CustomTextFormatsDotDotDot { get; set; }
     public string PlainTextDotDotDot { get; set; }
     public string CustomTextFormats { get; set; }
@@ -43,6 +48,18 @@ public class LanguageExport
     public string ImageBasedSubtitleSaved { get; set; }
     public string FullFrameImage { get; set; }
     public string FullFrameImageHint { get; set; }
+    public string Stereo3D { get; set; }
+    public string Stereo3DHint { get; set; }
+    public string HalfSideBySide { get; set; }
+    public string HalfTopBottom { get; set; }
+    public string Depth3D { get; set; }
+    public string Depth3DHint { get; set; }
+    public string Plane3D { get; set; }
+    public string Plane3DHint { get; set; }
+    public string OpenPlane3DTitle { get; set; }
+    public string UnableToLoadPlane3DX { get; set; }
+    public string Plane3DXDepthYToZ { get; set; }
+    public string Plane3DXNoDepth { get; set; }
     public string TextEffect { get; set; }
     public string TextEffectSettingsTitle { get; set; }
     public string TextEffectPreset { get; set; }
@@ -92,6 +109,11 @@ public class LanguageExport
         ExportCavenaTranslator = "Translator";
         ExportCavenaComment = "Comment";
         ExportCavenaStartOfProgramme = "Start of programme";
+        TitleExportDvbTeletext = "DVB teletext (Manzanita)";
+        ExportDvbTeletextPageNumber = "Teletext page number";
+        ExportDvbTeletextSubtitleType = "Subtitle type";
+        ExportDvbTeletextSubtitleTypeNormal = "Normal";
+        ExportDvbTeletextSubtitleTypeHearingImpaired = "Hearing impaired";
         CustomTextFormatsDotDotDot = "_Custom text formats...";
         PlainTextDotDotDot = "_Plain text...";
         CustomTextFormats = "Custom text formats";
@@ -114,6 +136,18 @@ public class LanguageExport
         ImageBasedSubtitleSaved = "Image-based subtitle saved";
         FullFrameImage = "Full frame image";
         FullFrameImageHint = "Make each image the size of the video frame, with the subtitle in its place";
+        Stereo3D = "3D";
+        Stereo3DHint = "For 3D video: draw the subtitle once in each eye's half of the frame";
+        HalfSideBySide = "Half side-by-side";
+        HalfTopBottom = "Half top/bottom";
+        Depth3D = "Depth";
+        Depth3DHint = "How far the subtitle stands out of the screen - positive brings it closer, negative pushes it back";
+        Plane3D = "3D-Plane";
+        Plane3DHint = "Give each subtitle the depth a 3D Blu-ray stores for it, from a 3D-Plane (.ofs) file made by BD3D2MK3D or OFSExtractor. Depth is used where the 3D-Plane has none";
+        OpenPlane3DTitle = "Open 3D-Plane file";
+        UnableToLoadPlane3DX = "Unable to load 3D-Plane: {0}";
+        Plane3DXDepthYToZ = "{0} (depth {1} to {2})";
+        Plane3DXNoDepth = "{0} (no depth values)";
         TextEffect = "Text effect";
         TextEffectSettingsTitle = "Text effect settings";
         TextEffectPreset = "Preset";

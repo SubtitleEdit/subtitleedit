@@ -23,6 +23,7 @@ public class BinaryAdjustAllTimesWindow : Window
         {
             DataContext = vm,
             Margin = new Thickness(0, 0, 0, 10),
+            [Avalonia.Automation.AutomationProperties.NameProperty] = Se.Language.General.Adjustment,
             [!TimeCodeUpDown.ValueProperty] = new Binding(nameof(vm.Adjustment))
             {
                 Mode = BindingMode.TwoWay,
@@ -108,7 +109,7 @@ public class BinaryAdjustAllTimesWindow : Window
 
         Content = grid;
 
-        Activated += delegate { timeCodeUpDown.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, timeCodeUpDown); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

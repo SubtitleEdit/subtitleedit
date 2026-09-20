@@ -35,7 +35,7 @@ public class NetflixCheckGlyph : INetflixQualityChecker
         var glyphFileName = Path.Combine(Se.DataFolder, "netflix_glyphs.txt");
         if (!File.Exists(glyphFileName))
         {
-            using var _ = Unpack();
+            Unpack();
         }
 
         var lines = File.ReadAllText(glyphFileName).SplitToLines();
@@ -70,10 +70,15 @@ public class NetflixCheckGlyph : INetflixQualityChecker
         return _netflixGlyphs;
     }
 
-    private static async Task Unpack()
+    /// <summary>
+    /// Synchronous on purpose: nothing in here is actually asynchronous, and the caller reads the
+    /// unpacked file on the very next line. As an async Task it was started and never awaited
+    /// (`using var _ = Unpack();` also disposed a Task that may not have completed, which throws).
+    /// </summary>
+    private static void Unpack()
     {
         var zipUri = new Uri("avares://SubtitleEdit/Assets/NetflixGlyphs.zip");
-        await using var zipStream = AssetLoader.Open(zipUri);
+        using var zipStream = AssetLoader.Open(zipUri);
         var zipUnpacker = new ZipUnpacker();
         zipUnpacker.UnpackZipStream(zipStream, Se.DataFolder);
     }

@@ -92,7 +92,7 @@ public partial class ChaptersViewModel : ObservableObject
         CanWriteToVideo = IsVideoLoaded && VideoChapterReader.IsSupportedContainer(_videoFileName);
         VideoFileNameDisplay = IsVideoLoaded
             ? Path.GetFileName(_videoFileName)
-            : Se.Language.Video.Chapters.NoVideoLoaded;
+            : Se.Language.General.NoVideoLoaded;
 
         if (frameRate > 1)
         {
@@ -516,6 +516,11 @@ public partial class ChaptersViewModel : ObservableObject
         {
             e.Handled = true;
             Cancel();
+        }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/chapters");
         }
     }
 

@@ -78,7 +78,7 @@ public class StatisticsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, buttonOk); // hack to make OnKeyDown work
         KeyDown += vm.KeyDown;
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
@@ -138,7 +138,7 @@ public class StatisticsWindow : Window
         var feedback = new TextBlock
         {
             Text = Se.Language.General.CopiedToClipboard,
-            FontSize = 11,
+            FontSize = UiUtil.ScaledFontSize(11),
             FontWeight = FontWeight.SemiBold,
             Foreground = goodBrush,
             VerticalAlignment = VerticalAlignment.Center,
@@ -146,7 +146,7 @@ public class StatisticsWindow : Window
         };
 
         var button = UiUtil.MakeButton(command, IconNames.Copy, Se.Language.General.CopyToClipboard);
-        button.FontSize = 14;
+        button.FontSize = UiUtil.ScaledFontSize(14);
         button.Padding = new Thickness(6, 3);
 
         // Brief confirmation: green check + "Copied to clipboard" next to the button,
@@ -183,8 +183,8 @@ public class StatisticsWindow : Window
             {
                 Children =
                 {
-                    new TextBlock { Text = label, FontSize = 11, FontWeight = FontWeight.SemiBold, Opacity = 0.65 },
-                    new TextBlock { Text = value, FontSize = 26, FontWeight = FontWeight.Bold, Margin = new Thickness(0, 2, 0, 0) },
+                    new TextBlock { Text = label, FontSize = UiUtil.ScaledFontSize(11), FontWeight = FontWeight.SemiBold, Opacity = 0.65 },
+                    new TextBlock { Text = value, FontSize = UiUtil.ScaledFontSize(26), FontWeight = FontWeight.Bold, Margin = new Thickness(0, 2, 0, 0) },
                 }
             },
         };
@@ -199,13 +199,13 @@ public class StatisticsWindow : Window
             Margin = new Thickness(12, 4, 8, 4),
             MinHeight = 30,
         };
-        header.Add(new TextBlock { Text = title, FontSize = 13, FontWeight = FontWeight.SemiBold, VerticalAlignment = VerticalAlignment.Center }, 0, 0);
+        header.Add(new TextBlock { Text = title, FontSize = UiUtil.ScaledFontSize(13), FontWeight = FontWeight.SemiBold, VerticalAlignment = VerticalAlignment.Center }, 0, 0);
         if (!string.IsNullOrEmpty(subTitle))
         {
             header.Add(new TextBlock
             {
                 Text = subTitle,
-                FontSize = 11,
+                FontSize = UiUtil.ScaledFontSize(11),
                 Opacity = 0.6,
                 VerticalAlignment = VerticalAlignment.Center,
             }, 0, 1);
@@ -249,10 +249,10 @@ public class StatisticsWindow : Window
                 Margin = new Thickness(0, 2),
             };
 
-            row.Add(new TextBlock { Text = range.Label, FontSize = 12, VerticalAlignment = VerticalAlignment.Bottom, Margin = new Thickness(0, 0, 0, 3) }, 0, 0);
-            row.Add(new TextBlock { Text = range.MinText, FontSize = 11, Opacity = 0.6, HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Bottom, Margin = new Thickness(0, 0, 0, 4) }, 0, 1);
+            row.Add(new TextBlock { Text = range.Label, FontSize = UiUtil.ScaledFontSize(12), VerticalAlignment = VerticalAlignment.Bottom, Margin = new Thickness(0, 0, 0, 3) }, 0, 0);
+            row.Add(new TextBlock { Text = range.MinText, FontSize = UiUtil.ScaledFontSize(11), Opacity = 0.6, HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Bottom, Margin = new Thickness(0, 0, 0, 4) }, 0, 1);
             row.Add(MakeRangeTrack(range, accentColor), 0, 2);
-            row.Add(new TextBlock { Text = range.MaxText, FontSize = 11, Opacity = 0.6, VerticalAlignment = VerticalAlignment.Bottom, Margin = new Thickness(0, 0, 0, 4) }, 0, 3);
+            row.Add(new TextBlock { Text = range.MaxText, FontSize = UiUtil.ScaledFontSize(11), Opacity = 0.6, VerticalAlignment = VerticalAlignment.Bottom, Margin = new Thickness(0, 0, 0, 4) }, 0, 3);
 
             panel.Children.Add(row);
         }
@@ -313,7 +313,7 @@ public class StatisticsWindow : Window
                 new TextBlock
                 {
                     Text = range.AvgText,
-                    FontSize = 10,
+                    FontSize = UiUtil.ScaledFontSize(10),
                     FontWeight = FontWeight.SemiBold,
                     // The pin panel is zero-width, so the label needs its own width to
                     // measure - centered it then sits exactly over the average dot.
@@ -363,7 +363,7 @@ public class StatisticsWindow : Window
 
             var icon = new ContentControl
             {
-                FontSize = 12,
+                FontSize = UiUtil.ScaledFontSize(12),
                 Foreground = new SolidColorBrush(color),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
@@ -384,11 +384,11 @@ public class StatisticsWindow : Window
                 VerticalAlignment = VerticalAlignment.Center,
                 Child = icon,
             }, 0, 0);
-            row.Add(new TextBlock { Text = check.Label, FontSize = 12, VerticalAlignment = VerticalAlignment.Center }, 0, 1);
+            row.Add(new TextBlock { Text = check.Label, FontSize = UiUtil.ScaledFontSize(12), VerticalAlignment = VerticalAlignment.Center }, 0, 1);
             row.Add(new TextBlock
             {
                 Text = check.Count.ToString("#,##0", CultureInfo.CurrentCulture),
-                FontSize = 12,
+                FontSize = UiUtil.ScaledFontSize(12),
                 FontWeight = FontWeight.SemiBold,
                 Foreground = new SolidColorBrush(color),
                 VerticalAlignment = VerticalAlignment.Center,
@@ -418,7 +418,7 @@ public class StatisticsWindow : Window
         yLabels.Children.Add(new TextBlock
         {
             Text = maxBin.ToString("#,##0", CultureInfo.CurrentCulture),
-            FontSize = 9.5,
+            FontSize = UiUtil.ScaledFontSize(9.5),
             Opacity = 0.6,
             HorizontalAlignment = HorizontalAlignment.Right,
             VerticalAlignment = VerticalAlignment.Top,
@@ -437,7 +437,7 @@ public class StatisticsWindow : Window
             yLabels.Children.Add(new TextBlock
             {
                 Text = System.Math.Round(maxBin * (1 - fraction)).ToString("#,##0", CultureInfo.CurrentCulture),
-                FontSize = 9.5,
+                FontSize = UiUtil.ScaledFontSize(9.5),
                 Opacity = 0.6,
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Top,
@@ -498,7 +498,7 @@ public class StatisticsWindow : Window
             axis.Add(new TextBlock
             {
                 Text = (i * StatCpsHistogram.BinSize).ToString("0.#", CultureInfo.CurrentCulture),
-                FontSize = 9.5,
+                FontSize = UiUtil.ScaledFontSize(9.5),
                 Opacity = 0.6,
                 HorizontalAlignment = HorizontalAlignment.Left,
             }, 0, i);
@@ -548,7 +548,7 @@ public class StatisticsWindow : Window
                 new TextBlock
                 {
                     Text = cps.ToString("0.##", CultureInfo.CurrentCulture),
-                    FontSize = 10,
+                    FontSize = UiUtil.ScaledFontSize(10),
                     FontWeight = FontWeight.SemiBold,
                     Foreground = new SolidColorBrush(color),
                     // Fixed width so the label measures inside the zero-width pin panel.
@@ -567,7 +567,7 @@ public class StatisticsWindow : Window
     {
         if (vm.TopWords.Count == 0)
         {
-            return new TextBlock { Text = Se.Language.File.Statistics.NothingFound, FontSize = 12, Opacity = 0.6 };
+            return new TextBlock { Text = Se.Language.File.Statistics.NothingFound, FontSize = UiUtil.ScaledFontSize(12), Opacity = 0.6 };
         }
 
         var accentBrush = UiUtil.GetAccentBrush();
@@ -585,7 +585,7 @@ public class StatisticsWindow : Window
             row.Add(new TextBlock
             {
                 Text = word.Text,
-                FontSize = 12,
+                FontSize = UiUtil.ScaledFontSize(12),
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Center,
                 TextTrimming = TextTrimming.CharacterEllipsis,
@@ -613,7 +613,7 @@ public class StatisticsWindow : Window
             row.Add(new TextBlock
             {
                 Text = word.Count.ToString("#,##0", CultureInfo.CurrentCulture),
-                FontSize = 11,
+                FontSize = UiUtil.ScaledFontSize(11),
                 Opacity = 0.6,
                 VerticalAlignment = VerticalAlignment.Center,
             }, 0, 2);
@@ -628,7 +628,7 @@ public class StatisticsWindow : Window
     {
         if (vm.TopLines.Count == 0)
         {
-            return new TextBlock { Text = Se.Language.File.Statistics.NothingFound, FontSize = 12, Opacity = 0.6 };
+            return new TextBlock { Text = Se.Language.File.Statistics.NothingFound, FontSize = UiUtil.ScaledFontSize(12), Opacity = 0.6 };
         }
 
         var accentColor = UiUtil.GetAccentBrush() is ISolidColorBrush accentSolid ? accentSolid.Color : Colors.DodgerBlue;
@@ -650,7 +650,7 @@ public class StatisticsWindow : Window
                 Child = new TextBlock
                 {
                     Text = line.Count.ToString("#,##0", CultureInfo.CurrentCulture) + "×",
-                    FontSize = 10.5,
+                    FontSize = UiUtil.ScaledFontSize(10.5),
                     FontWeight = FontWeight.SemiBold,
                     Foreground = new SolidColorBrush(accentColor),
                 },
@@ -658,7 +658,7 @@ public class StatisticsWindow : Window
             row.Add(new TextBlock
             {
                 Text = line.Text,
-                FontSize = 12.5,
+                FontSize = UiUtil.ScaledFontSize(12.5),
                 FontStyle = FontStyle.Italic,
                 VerticalAlignment = VerticalAlignment.Center,
                 TextTrimming = TextTrimming.CharacterEllipsis,

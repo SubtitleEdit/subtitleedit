@@ -183,4 +183,67 @@ public class StringBuilderExtensionsTest
         sb.AppendNumber(int.MinValue, 2);
         Assert.Equal("-2147483648", sb.ToString());
     }
+
+    [Fact]
+    public void EndsWithAnyMatchesLastChar()
+    {
+        var sb = new StringBuilder("Hello,");
+        Assert.True(sb.EndsWithAny(",;:"));
+    }
+
+    [Fact]
+    public void EndsWithAnyNoMatch()
+    {
+        var sb = new StringBuilder("Hello");
+        Assert.False(sb.EndsWithAny(",;:"));
+    }
+
+    [Fact]
+    public void EndsWithAnyEmpty()
+    {
+        var sb = new StringBuilder();
+        Assert.False(sb.EndsWithAny(".!?"));
+    }
+
+    [Fact]
+    public void EndsWithAnySkipsTrailingClosingMarks()
+    {
+        var sb = new StringBuilder("He said \"Hello!\"");
+        Assert.True(sb.EndsWithAny(".!?", "\"')]"));
+    }
+
+    [Fact]
+    public void EndsWithAnyOnlySkippedChars()
+    {
+        var sb = new StringBuilder("\"\"");
+        Assert.False(sb.EndsWithAny(".!?", "\"')]"));
+    }
+
+    [Fact]
+    public void EndsWithStringMatches()
+    {
+        var sb = new StringBuilder("Hello world");
+        Assert.True(sb.EndsWith("world"));
+    }
+
+    [Fact]
+    public void EndsWithStringNoMatch()
+    {
+        var sb = new StringBuilder("Hello world");
+        Assert.False(sb.EndsWith("World"));
+    }
+
+    [Fact]
+    public void EndsWithStringLongerThanBuilder()
+    {
+        var sb = new StringBuilder("no");
+        Assert.False(sb.EndsWith("nono"));
+    }
+
+    [Fact]
+    public void EndsWithStringEmptyValue()
+    {
+        var sb = new StringBuilder("Hello");
+        Assert.True(sb.EndsWith(string.Empty));
+    }
 }

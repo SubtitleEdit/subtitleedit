@@ -17,7 +17,15 @@ public partial class ChatterboxModelStatusViewModel : ObservableObject
 
     [ObservableProperty] private string _statusLabel = string.Empty;
     [ObservableProperty] private IBrush _statusBrush = Brushes.Gray;
-    [ObservableProperty] private string _downloadButtonText = string.Empty;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DownloadButtonAccessibleName))]
+    private string _downloadButtonText = string.Empty;
+
+    /// <summary>
+    /// Screen-reader name for the download button: the caption alone is the same on every
+    /// row, so the model name is added ("Download Multilingual") (#12087).
+    /// </summary>
+    public string DownloadButtonAccessibleName => $"{DownloadButtonText} {DisplayName}";
 
     public IAsyncRelayCommand DownloadCommand { get; }
 

@@ -1,6 +1,8 @@
 ﻿using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Assa;
+using Nikse.SubtitleEdit.Features.Video.BurnIn;
 using System;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 
@@ -10,6 +12,7 @@ public class SeVideo
     public SeVideoTransparent Transparent { get; set; }
     public SeVideoTextToSpeech TextToSpeech { get; set; }
     public SeVideoOcr VideoOcr { get; set; }
+    public SeVideoBackgroundMusic BackgroundMusic { get; set; }
     public string VideoPlayer { get; set; }
     public double Volume { get; set; }
     public bool ShowStopButton { get; set; }
@@ -17,6 +20,8 @@ public class SeVideo
     public bool FullscreenHideControls { get; set; }
     public bool AutoOpen { get; set; }
     public bool OpenSearchParentFolder { get; set; }
+    public int RecentFilesMaximum { get; set; } = 25;
+    public List<string> RecentFiles { get; set; } = new();
     public string CutType { get; set; }
     public string ShowChangesFFmpegArguments { get; set; }
     public bool VideoPlayerDisplayTimeLeft { get; set; }
@@ -68,12 +73,58 @@ public class SeVideo
     public string MpvPreviewJustify { get; set; }
 
     /// <summary>
-    /// mpv's "audio-buffer" option in seconds, applied when a player core is created. mpv's
-    /// own default is 0.2 s, and that buffer is why pause/resume/seek take effect ~200 ms
-    /// late - the residual the waveform playhead code has to mask. Kept small here; raise it
-    /// (or set 0 to use mpv's default) if audio stutters on slow hardware or Bluetooth audio.
+    /// mpv's "audio-buffer" option in seconds, applied when a player core is created. Zero (the
+    /// default) leaves mpv's own 0.2 s buffer alone. SE shipped 0.05 for a while: with a buffer
+    /// that small any hiccup on mpv's audio thread empties the device, mpv stops the output,
+    /// waits for the buffer to refill and restarts it - and mpv's clock (time-pos) stands still
+    /// meanwhile, so the waveform cursor and the time display froze for up to a second or two,
+    /// worst right after pause/resume (#14523). mpv's manual marks the option as for testing
+    /// only. Pause and resume are hardware pause/unpause on the device (WASAPI, CoreAudio) and
+    /// do not wait for the buffer, so a small value bought nothing there.
     /// </summary>
     public double MpvAudioBufferSeconds { get; set; }
+
+    /// <summary>
+    /// mpv's "audio-stream-silence" option, applied when a player core is created. mpv normally
+    /// stops the audio device when playback pauses and resets it on every seek - on Windows that
+    /// is IAudioClient::Stop(). Over HDMI to an A/V receiver the link then goes idle (the receiver
+    /// reports no signal) and restarting it costs a re-handshake, heard as a second or two of
+    /// missing audio on resume (#14330). With this on, mpv keeps the device running and writes
+    /// silence instead, so the link never drops.
+    /// <para>Off by default, and deliberately not in the settings UI: mpv's own manual calls this
+    /// option "strongly discouraged" because it changes A/V-sync and underrun handling, and it
+    /// only helps the HDMI-receiver case. Set it by hand if that is your setup.</para>
+    /// </summary>
+    public bool MpvAudioStreamSilence { get; set; }
+
+    /// <summary>
+    /// Start the "Second subtitle file (on video player)" dialog from the style below instead of
+    /// its built-in defaults, and save the dialog's choices back here on OK (#14842).
+    /// </summary>
+    public bool SecondarySubtitleOverrideStyle { get; set; }
+
+    /// <summary>
+    /// Off skips the "Second subtitle file" dialog and applies the saved style directly - only
+    /// when <see cref="SecondarySubtitleOverrideStyle"/> is on, as there is nothing else to apply.
+    /// </summary>
+    public bool SecondarySubtitleShowDialog { get; set; }
+
+    /// <summary>
+    /// Bring the second subtitle file back when its subtitle is opened again (#15044). The file
+    /// name is kept on the recent-file entry either way; this only gates the restore.
+    /// </summary>
+    public bool SecondarySubtitleRememberFile { get; set; }
+
+    /// <summary>
+    /// In <c>AdvancedSubStationAlpha.DefaultHeight</c> units, like <see cref="MpvPreviewFontSize"/>,
+    /// so it scales to whatever video is loaded. Decimal so the dialog's pixel size survives the
+    /// round trip exactly.
+    /// </summary>
+    public decimal SecondarySubtitleFontSize { get; set; }
+    public bool SecondarySubtitleFontBold { get; set; }
+    public string SecondarySubtitleColor { get; set; }
+    public FontBoxType SecondarySubtitleBoxType { get; set; }
+    public string SecondarySubtitleAlignment { get; set; }
 
     public SeVideo()
     {
@@ -81,6 +132,7 @@ public class SeVideo
         Transparent = new();
         TextToSpeech = new();
         VideoOcr = new();
+        BackgroundMusic = new();
         VideoPlayer = OperatingSystem.IsWindows() ? VideoPlayerName.MpvWid : VideoPlayerName.MpvOpenGl;
         Volume = 60;
         ShowStopButton = true;
@@ -115,6 +167,15 @@ public class SeVideo
         MpvPreviewBorderType = (int)BorderStyleType.Outline;
         MpvPreviewUsePositionFromFile = true;
         MpvPreviewJustify = "auto";
-        MpvAudioBufferSeconds = 0.05;
+        MpvAudioBufferSeconds = 0;
+        MpvAudioStreamSilence = false;
+        SecondarySubtitleOverrideStyle = false;
+        SecondarySubtitleShowDialog = true;
+        SecondarySubtitleRememberFile = true;
+        SecondarySubtitleFontSize = 20;
+        SecondarySubtitleFontBold = true;
+        SecondarySubtitleColor = Colors.White.FromColorToHex();
+        SecondarySubtitleBoxType = FontBoxType.None;
+        SecondarySubtitleAlignment = "8"; // Top-center
     }
 }

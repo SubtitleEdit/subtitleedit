@@ -246,6 +246,45 @@ namespace Nikse.SubtitleEdit.Core.Common
             return text.IndexOf(' ', clamped);
         }
 
+        /// <summary>
+        /// A period between two digits ("04.00 uur", "1.500 euro") is a decimal/time separator, not a
+        /// sentence ending - treating it as one broke a subtitle mid-number (issue #14230).
+        /// </summary>
+        private static bool IsSentenceEndingAt(string text, int index)
+        {
+            return text[index] != '.' ||
+                   index <= 0 ||
+                   index >= text.Length - 1 ||
+                   !char.IsDigit(text[index - 1]) ||
+                   !char.IsDigit(text[index + 1]);
+        }
+
+        private static int LastSentenceEndingIndex(string text)
+        {
+            for (var i = text.Length - 1; i >= 0; i--)
+            {
+                if (Array.IndexOf(PeriodQuestionExclamation, text[i]) >= 0 && IsSentenceEndingAt(text, i))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        private static int FirstSentenceEndingIndex(string text)
+        {
+            for (var i = 0; i < text.Length; i++)
+            {
+                if (Array.IndexOf(PeriodQuestionExclamation, text[i]) >= 0 && IsSentenceEndingAt(text, i))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
         public static Subtitle TryForWholeSentences(Subtitle inputSubtitle, string language, int lineMaxLength)
         {
             var s = new Subtitle(inputSubtitle);
@@ -279,7 +318,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
 
                 // check for period in last part of current
-                var lastPeriodIdx = p.Text.LastIndexOfAny(PeriodQuestionExclamation);
+                var lastPeriodIdx = LastSentenceEndingIndex(p.Text);
                 if (lastPeriodIdx > 3 && lastPeriodIdx > p.Text.Length - maxMoveChunkSize)
                 {
                     var newCurrentText = p.Text.Substring(0, lastPeriodIdx + 1).Trim();
@@ -320,7 +359,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
 
                 // check for period in beginning of next
-                var firstPeriodIdx = next.Text.IndexOfAny(PeriodQuestionExclamation);
+                var firstPeriodIdx = FirstSentenceEndingIndex(next.Text);
                 if (firstPeriodIdx >= 3 && firstPeriodIdx < maxMoveChunkSize)
                 {
                     var newCurrentText = next.Text.Substring(0, firstPeriodIdx + 1).Trim();

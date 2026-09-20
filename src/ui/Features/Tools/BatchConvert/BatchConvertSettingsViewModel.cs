@@ -419,6 +419,11 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/batch-convert", "settings");
+        }
     }
 
     internal void OnOcrEngineChanged()

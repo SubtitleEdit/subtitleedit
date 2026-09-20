@@ -27,7 +27,7 @@ public class PleaseWaitWindow : Window
 
         var titleText = new TextBlock
         {
-            FontSize = 18,
+            FontSize = UiUtil.ScaledFontSize(18),
             HorizontalAlignment = HorizontalAlignment.Center,
             TextAlignment = Avalonia.Media.TextAlignment.Center,
             TextWrapping = Avalonia.Media.TextWrapping.Wrap,

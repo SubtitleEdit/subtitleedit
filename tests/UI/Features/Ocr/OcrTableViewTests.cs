@@ -338,4 +338,109 @@ public class OcrTableViewTests
 
         window.Close();
     }
+
+    [AvaloniaFact]
+    public void OcrWindow_DeleteSelectedLine_SelectsTheRowThatTakesItsPlace()
+    {
+        var vm = MakeViewModel(6);
+        var window = ShowWindow(vm);
+        var tableView = GetTableView(window);
+
+        tableView.SelectedIndex = 2;
+        Dispatcher.UIThread.RunJobs();
+        var survivor = vm.OcrSubtitleItems[3];
+
+        vm.DeleteSelectedLinesCommand.Execute(null);
+        Dispatcher.UIThread.RunJobs();
+        window.UpdateLayout();
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(5, vm.OcrSubtitleItems.Count);
+        Assert.Same(survivor, vm.SelectedOcrSubtitleItem);
+        Assert.Equal(2, tableView.SelectedIndex);
+        Assert.Single(tableView.SelectedItems!);
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void OcrWindow_DeleteLastLine_SelectsTheNewLastRow()
+    {
+        var vm = MakeViewModel(4);
+        var window = ShowWindow(vm);
+        var tableView = GetTableView(window);
+
+        tableView.SelectedIndex = 3;
+        Dispatcher.UIThread.RunJobs();
+        var survivor = vm.OcrSubtitleItems[2];
+
+        vm.DeleteSelectedLinesCommand.Execute(null);
+        Dispatcher.UIThread.RunJobs();
+        window.UpdateLayout();
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(3, vm.OcrSubtitleItems.Count);
+        Assert.Same(survivor, vm.SelectedOcrSubtitleItem);
+        Assert.Equal(2, tableView.SelectedIndex);
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void OcrWindow_DeleteMultipleLines_SelectsRowAfterTheBlock()
+    {
+        var vm = MakeViewModel(8);
+        var window = ShowWindow(vm);
+        var tableView = GetTableView(window);
+
+        tableView.SelectedItems!.Clear();
+        tableView.SelectedItems.Add(vm.OcrSubtitleItems[4]);
+        tableView.SelectedItems.Add(vm.OcrSubtitleItems[2]);
+        tableView.SelectedItems.Add(vm.OcrSubtitleItems[3]);
+        Dispatcher.UIThread.RunJobs();
+        var survivor = vm.OcrSubtitleItems[5];
+
+        vm.DeleteSelectedLinesCommand.Execute(null);
+        Dispatcher.UIThread.RunJobs();
+        window.UpdateLayout();
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(5, vm.OcrSubtitleItems.Count);
+        Assert.Same(survivor, vm.SelectedOcrSubtitleItem);
+        Assert.Equal(2, tableView.SelectedIndex);
+        Assert.Single(tableView.SelectedItems);
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void OcrWindow_DeleteLineFarDown_KeepsTheViewportWhereItWas()
+    {
+        var vm = MakeViewModel(400);
+        var window = ShowWindow(vm);
+        var tableView = GetTableView(window);
+        var scrollViewer = tableView.GetVisualDescendants().OfType<ScrollViewer>().First();
+
+        tableView.ScrollIntoView(250);
+        Dispatcher.UIThread.RunJobs();
+        window.UpdateLayout();
+        tableView.SelectedIndex = 250;
+        Dispatcher.UIThread.RunJobs();
+        window.UpdateLayout();
+        var topBefore = FirstVisibleIndex(tableView, scrollViewer);
+        Assert.True(topBefore > 200, $"Expected to be scrolled near row 250, top row was {topBefore}");
+
+        vm.DeleteSelectedLinesCommand.Execute(null);
+        Dispatcher.UIThread.RunJobs();
+        window.UpdateLayout();
+        Dispatcher.UIThread.RunJobs();
+        window.UpdateLayout();
+
+        // The row below took the deleted one's place and the list did not jump to the top.
+        Assert.Equal(250, tableView.SelectedIndex);
+        var topAfter = FirstVisibleIndex(tableView, scrollViewer);
+        Assert.True(Math.Abs(topAfter - topBefore) <= 2, $"Viewport moved from row {topBefore} to row {topAfter}");
+
+        window.Close();
+    }
 }

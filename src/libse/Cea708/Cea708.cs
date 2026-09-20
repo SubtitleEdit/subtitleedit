@@ -307,7 +307,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             { 0x7F, "┌" },
         };
 
-        private static Dictionary<string, byte[]> _textLookupTable;
+        private static Dictionary<char, byte[]> _textLookupTable;
 
         public static string Decode(int lineIndex, byte[] bytes, CommandState state, bool flush)
         {
@@ -721,20 +721,22 @@ namespace Nikse.SubtitleEdit.Core.Cea708
         {
             if (_textLookupTable == null)
             {
-                var dic = new Dictionary<string, byte[]>();
+                // Keyed by char: the lookup below is per character, so multi-char table
+                // values could never match, and the string key allocated per character.
+                var dic = new Dictionary<char, byte[]>();
                 foreach (var kvp in SingleCharLookupTable)
                 {
-                    if (!string.IsNullOrEmpty(kvp.Value) && !dic.ContainsKey(kvp.Value))
+                    if (kvp.Value?.Length == 1 && !dic.ContainsKey(kvp.Value[0]))
                     {
-                        dic.Add(kvp.Value, new[] { kvp.Key });
+                        dic.Add(kvp.Value[0], new[] { kvp.Key });
                     }
                 }
 
                 foreach (var kvp in G2CharLookupTable)
                 {
-                    if (!string.IsNullOrEmpty(kvp.Value) && !dic.ContainsKey(kvp.Value))
+                    if (kvp.Value?.Length == 1 && !dic.ContainsKey(kvp.Value[0]))
                     {
-                        dic.Add(kvp.Value, new byte[] { 0x10, kvp.Key }); // EXT1 + G2 code
+                        dic.Add(kvp.Value[0], new byte[] { 0x10, kvp.Key }); // EXT1 + G2 code
                     }
                 }
 
@@ -744,7 +746,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             var bytes = new List<byte>();
             foreach (var ch in input)
             {
-                if (_textLookupTable.TryGetValue(ch.ToString(), out var b))
+                if (_textLookupTable.TryGetValue(ch, out var b))
                 {
                     bytes.AddRange(b);
                 }

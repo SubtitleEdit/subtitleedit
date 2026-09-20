@@ -1151,7 +1151,9 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 //FALCONE:<i> I didn't think</i><br /><i>it was going to be you,</i>
                 var colIdx = text.IndexOf(':');
-                if (colIdx >= 0 && Utilities.CountTagInText(text, beginTag) + Utilities.CountTagInText(text, endTag) == 4 && text.Length > colIdx + 1 && !char.IsDigit(text[colIdx + 1]))
+                // index is -1 for a text broken with a bare "\n" on Windows (GetNumberOfLines counts
+                // '\n'), and Substring(0, -1) threw - same guard as the sibling branches.
+                if (index > 0 && colIdx >= 0 && Utilities.CountTagInText(text, beginTag) + Utilities.CountTagInText(text, endTag) == 4 && text.Length > colIdx + 1 && !char.IsDigit(text[colIdx + 1]))
                 {
                     var firstLine = text.Substring(0, index);
                     var secondLine = text.Substring(index).TrimStart();
@@ -1186,7 +1188,11 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             //<i>- You think they're they gone?<i>
             //<i>- That can't be.</i>
-            if (italicBeginTagCount == 3 && italicEndTagCount == 1 && noOfLines == 2)
+            // GetNumberOfLines counts '\n', so noOfLines is 2 for a text broken with a bare "\n"
+            // too - and on Windows IndexOf(Environment.NewLine) then returns -1 and Substring
+            // threw. The sibling branches in this method all guard the index the same way.
+            if (italicBeginTagCount == 3 && italicEndTagCount == 1 && noOfLines == 2 &&
+                text.IndexOf(Environment.NewLine, StringComparison.Ordinal) > 0)
             {
                 var newLineIdx = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
                 var firstLine = text.Substring(0, newLineIdx).Trim();

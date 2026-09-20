@@ -72,7 +72,7 @@ public static class Se4SetupApplier
             }
 
             result.ShortcutsImported = imported.Shortcuts.Count;
-            result.ShortcutsSkipped = imported.SkippedNoMapping;
+            result.ShortcutsSkipped = imported.SkippedNoMapping + imported.SkippedDuplicate;
             return;
         }
 

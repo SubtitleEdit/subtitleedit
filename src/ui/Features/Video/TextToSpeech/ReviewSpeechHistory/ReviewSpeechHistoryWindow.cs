@@ -53,14 +53,14 @@ public class ReviewSpeechHistoryWindow : Window
 
         Content = grid;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             // initial focus on an input, not an action button - a focused button clicks on bare Space
             if (_tableView != null)
             {
                 TableViewExtras.FocusRow(_tableView);
             }
-        };
+        });
         KeyDown += (s, e) => vm.OnKeyDown(e);
         Closing += (s, e) => vm.OnWindowClosing(e); 
         Loaded += (s, e) => vm.OnWindowLoaded();
@@ -99,7 +99,7 @@ public class ReviewSpeechHistoryWindow : Window
             CellTemplate = new FuncDataTemplate<ReviewHistoryRow>((item, _) =>
             {
                 var buttonPlay = UiUtil.MakeButton(vm.PlayItemCommand,"fa-solid fa-play")
-                    .WithBindIsVisible(nameof(item.IsPlaying), new InverseBooleanConverter())
+                    .WithBindIsVisible(nameof(item.IsPlaying), InverseBooleanConverter.Instance)
                     .WithBindEnabled(nameof(item.IsPlayingEnabled));
                 buttonPlay.CommandParameter = item;
 

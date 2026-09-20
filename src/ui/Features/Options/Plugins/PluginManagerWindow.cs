@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
@@ -35,6 +36,9 @@ public class PluginManagerWindow : Window
             var checkBox = new CheckBox { VerticalAlignment = VerticalAlignment.Center };
             checkBox.Bind(CheckBox.IsCheckedProperty, new Binding(nameof(PluginDisplayItem.IsEnabled)) { Mode = BindingMode.TwoWay });
             checkBox.Bind(IsEnabledProperty, new Binding(nameof(PluginDisplayItem.CanRun)));
+            // The plugin name is in a separate text block - name the check box too, or a screen
+            // reader announces a bare "check box" (#12087).
+            checkBox.Bind(AutomationProperties.NameProperty, new Binding(nameof(PluginDisplayItem.Name)));
 
             var name = new TextBlock { FontWeight = FontWeight.Bold };
             name.Bind(TextBlock.TextProperty, new Binding(nameof(PluginDisplayItem.Name)));
@@ -54,7 +58,7 @@ public class PluginManagerWindow : Window
             var description = new TextBlock { Opacity = 0.8, TextWrapping = TextWrapping.Wrap };
             description.Bind(TextBlock.TextProperty, new Binding(nameof(PluginDisplayItem.Description)));
 
-            var status = new TextBlock { Opacity = 0.6, FontSize = 11 };
+            var status = new TextBlock { Opacity = 0.6, FontSize = UiUtil.ScaledFontSize(11) };
             status.Bind(TextBlock.TextProperty, new Binding(nameof(PluginDisplayItem.StatusText)));
 
             var textPanel = new StackPanel
@@ -122,6 +126,13 @@ public class PluginManagerWindow : Window
         contentGrid.Add(listBox, 0, 0);
         contentGrid.Add(sidePanel, 0, 1);
 
+        // Where plugins run when only some lines are selected - the "Do not ask again" choice
+        // from the apply-plugin prompt lands here so it can be changed back (#14844).
+        var labelApplyTo = UiUtil.MakeLabel(Se.Language.Plugins.ApplyPluginsTo);
+        var comboBoxApplyTo = UiUtil.MakeComboBox(vm.ApplyToLinesOptions, vm, nameof(vm.SelectedApplyToLines))
+            .WithMinWidth(180);
+        var panelApplyTo = UiUtil.MakeControlBarLeft(labelApplyTo, comboBoxApplyTo);
+
         var buttonClose = UiUtil.MakeButton(Se.Language.General.Close, vm.CloseCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonClose);
 
@@ -131,17 +142,19 @@ public class PluginManagerWindow : Window
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             Margin = UiUtil.MakeWindowMargin(),
             RowSpacing = 10,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
         grid.Add(contentGrid, 0, 0);
-        grid.Add(panelButtons, 1, 0);
+        grid.Add(panelApplyTo, 1, 0);
+        grid.Add(panelButtons, 2, 0);
 
         Content = grid;
 
-        Activated += delegate { buttonClose.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, buttonClose);
         KeyDown += (_, e) => vm.OnKeyDown(e);
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };

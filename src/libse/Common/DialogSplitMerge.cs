@@ -447,10 +447,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             var pre = new StringBuilder();
             var s = input;
-            if (s.StartsWith("{\\") && s.Contains('}'))
+            while (s.StartsWith("{\\") && s.Contains('}'))
             {
-                pre.Append(s.Substring(0, s.IndexOf('}') + 1));
-                s = s.Remove(0, pre.Length);
+                var assaPre = s.Substring(0, s.IndexOf('}') + 1);
+                s = s.Remove(0, assaPre.Length);
+                pre.Append(assaPre);
             }
 
             while (s.StartsWith("<") && s.Contains('>'))

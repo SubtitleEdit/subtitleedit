@@ -67,7 +67,7 @@ public static class SelectLinesWindowBuilder
         // Space only toggles a row while focus is inside it - with OK focused the very first
         // Space activated the button and accepted the dialog with every line still pre-checked.
         // ProfilesWindow spells out the same rule ("a focused button clicks on bare Space").
-        window.Activated += delegate
+        UiUtil.FocusOnFirstActivation(window, () =>
         {
             if (rowsView is TableView tableView)
             {
@@ -77,7 +77,7 @@ public static class SelectLinesWindowBuilder
             {
                 buttonOk.Focus();
             }
-        };
+        });
         window.KeyDown += vm.KeyDown;
 
         window.Closing += delegate { UiUtil.SaveWindowPosition(window); };

@@ -129,7 +129,7 @@ public class BurnInResolutionPickerWindow : Window
 
         Content = grid;
 
-        Activated += delegate { listBoxResolutions.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, listBoxResolutions); // initial focus on an input, not an action button - a focused button clicks on bare Space
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

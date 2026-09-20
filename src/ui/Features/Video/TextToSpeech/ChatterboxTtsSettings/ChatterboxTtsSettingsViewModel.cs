@@ -104,13 +104,13 @@ public partial class ChatterboxTtsSettingsViewModel : ObservableObject
         {
             EngineLabel = string.Format(Se.Language.Video.TtsEngineTooOldUpdateRequired, "CrispASR");
             EngineBrush = new SolidColorBrush(Color.FromRgb(0xFF, 0x98, 0x00)); // amber
-            EngineDownloadButtonText = string.Format(Se.Language.Video.TtsUpdateX, "CrispASR");
+            EngineDownloadButtonText = string.Format(Se.Language.General.UpdateX, "CrispASR");
         }
         else if (ChatterboxTtsCpp.GetEngineUpdateStatus() == DownloadHashManager.UpdateStatus.UpdateAvailable)
         {
             EngineLabel = string.Format(Se.Language.Video.TtsEngineUpdateAvailable, "CrispASR");
             EngineBrush = new SolidColorBrush(Color.FromRgb(0xFF, 0x98, 0x00)); // amber
-            EngineDownloadButtonText = string.Format(Se.Language.Video.TtsUpdateX, "CrispASR");
+            EngineDownloadButtonText = string.Format(Se.Language.General.UpdateX, "CrispASR");
         }
         else
         {
@@ -233,6 +233,11 @@ public partial class ChatterboxTtsSettingsViewModel : ObservableObject
         {
             e.Handled = true;
             Window?.Close();
+        }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/text-to-speech", "chatterbox-tts-crispasr");
         }
     }
 }

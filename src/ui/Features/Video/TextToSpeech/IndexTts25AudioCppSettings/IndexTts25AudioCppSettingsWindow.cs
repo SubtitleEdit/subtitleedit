@@ -33,7 +33,7 @@ public class IndexTts25AudioCppSettingsWindow : Window
         Content = BuildContent(vm);
 
         var ok = UiUtil.MakeButtonOk(vm.OkCommand);
-        Activated += delegate { ok.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, ok);
     }
 
     private Border BuildContent(IndexTts25AudioCppSettingsViewModel vm)
@@ -60,14 +60,14 @@ public class IndexTts25AudioCppSettingsWindow : Window
         var title = new TextBlock
         {
             Text = "IndexTTS 2.5 (audio.cpp)",
-            FontSize = 18,
+            FontSize = UiUtil.ScaledFontSize(18),
             FontWeight = FontWeight.SemiBold,
         };
 
         var subtitle = new TextBlock
         {
             Text = new IndexTts25AudioCpp().Description,
-            FontSize = 12,
+            FontSize = UiUtil.ScaledFontSize(12),
             Opacity = 0.75,
             Margin = new Thickness(0, 2, 0, 0),
         };
@@ -107,9 +107,8 @@ public class IndexTts25AudioCppSettingsWindow : Window
         grid.Add(MakeLabel(Se.Language.General.Engine), 0, 0);
         var enginePanel = MakeStatusPanel(nameof(vm.EngineBrush), nameof(vm.EngineLabel));
         var engineButton = UiUtil.MakeButton(string.Empty, vm.RedownloadEngineCommand)
-            .WithIconLeft(IconNames.Download)
+            .WithIconLeftBindText(IconNames.Download, nameof(vm.EngineDownloadButtonText))
             .WithMarginLeft(12);
-        engineButton.Bind(ContentControl.ContentProperty, new Binding(nameof(vm.EngineDownloadButtonText)));
         enginePanel.Children.Add(engineButton);
         grid.Add(enginePanel, 0, 1);
 
@@ -160,7 +159,7 @@ public class IndexTts25AudioCppSettingsWindow : Window
             Background = Brushes.Transparent,
             Padding = new Thickness(0),
             VerticalContentAlignment = VerticalAlignment.Center,
-            FontSize = 12,
+            FontSize = UiUtil.ScaledFontSize(12),
             [!TextBox.TextProperty] = new Binding(nameof(vm.ModelsFolder)),
         }, 7, 1);
 

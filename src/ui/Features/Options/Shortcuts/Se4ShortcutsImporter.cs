@@ -21,6 +21,31 @@ public static class Se4ShortcutsImporter
         public List<SeShortCut> Shortcuts { get; } = new();
         public int SkippedNoMapping { get; set; }
         public int SkippedEmpty { get; set; }
+
+        /// <summary>
+        /// SE 4 actions that map onto an SE 5 command another entry already claimed. SE 4 has
+        /// more action slots than SE 5, so several of its actions share one SE 5 command
+        /// (four SE 4 actions land on "recalculate duration" alone). Only one key can be bound
+        /// per command, so the first entry in the file wins and the rest are reported here -
+        /// they used to be handed to the caller anyway, where each silently replaced the one
+        /// before it while still being counted as imported.
+        /// </summary>
+        public int SkippedDuplicate { get; set; }
+
+        /// <summary>
+        /// SE 4's "toggle custom tags" characters, kept in General settings rather than with the
+        /// shortcut itself (<c>TagsInToggleCustomTags</c>, one string of "startÆend"). Null when
+        /// the file has no usable pair - an exported SE_Shortcuts.xml carries no General section.
+        /// </summary>
+        public string? CustomTagsStart { get; set; }
+        public string? CustomTagsEnd { get; set; }
+
+        /// <summary>
+        /// SE 4's custom search slots (<c>VideoControls/CustomSearchTextN</c> +
+        /// <c>CustomSearchUrlN</c>), keyed by slot number. Empty for an exported SE_Shortcuts.xml,
+        /// which carries no VideoControls section.
+        /// </summary>
+        public Dictionary<int, (string Name, string Url)> CustomSearches { get; } = new();
     }
 
     // Exposed for tests: every mapped SE 5 command must stay registered in the shortcut
@@ -159,6 +184,7 @@ public static class Se4ShortcutsImporter
         ["MainListViewItalic"] = nameof(MainViewModel.ToggleLinesItalicOrSelectedTextCommand),
         ["MainListViewBold"] = nameof(MainViewModel.ToggleLinesBoldOrSelectedTextCommand),
         ["MainListViewUnderline"] = nameof(MainViewModel.ToggleLinesUnderlineOrSelectedTextCommand),
+        ["MainListViewBox"] = nameof(MainViewModel.ToggleLinesBoxOrSelectedTextCommand),
         ["MainListViewAlignment"] = nameof(MainViewModel.ShowAlignmentPickerCommand),
         ["MainListViewAlignmentN1"] = nameof(MainViewModel.DoAlignmentAn1Command),
         ["MainListViewAlignmentN2"] = nameof(MainViewModel.DoAlignmentAn2Command),
@@ -229,7 +255,10 @@ public static class Se4ShortcutsImporter
         ["MainTextBoxMoveLastWordDownCurrent"] = nameof(MainViewModel.MoveLastWordFromFirstLineDownCurrentSubtitleCommand),
         ["MainTextBoxMoveFirstWordUpCurrent"] = nameof(MainViewModel.MoveFirstWordFromNextLineUpCurrentSubtitleCommand),
         ["MainTextBoxMoveFirstWordFromNextUp"] = nameof(MainViewModel.FetchFirstWordFromNextSubtitleCommand),
+        ["MainTextBoxMoveFirstWordToPrev"] = nameof(MainViewModel.MoveFirstWordToPreviousSubtitleCommand),
         ["MainTextBoxMoveFromCursorToNextAndGoToNext"] = nameof(MainViewModel.MoveTextFromCursorToNextAndGoToNextCommand),
+        ["MainTextBoxBreakAtPosition"] = nameof(MainViewModel.BreakAtFirstSpaceFromCursorCommand),
+        ["MainTextBoxBreakAtPositionAndGoToNext"] = nameof(MainViewModel.BreakAtFirstSpaceFromCursorAndGoToNextCommand),
         ["MainTextBoxSelectionToggleCasing"] = nameof(MainViewModel.ToggleCasingCommand),
         ["MainTextBoxSelectionToLower"] = nameof(MainViewModel.SelectionToLowerCommand),
         ["MainTextBoxSelectionToUpper"] = nameof(MainViewModel.SelectionToUpperCommand),
@@ -268,8 +297,10 @@ public static class Se4ShortcutsImporter
         ["MainAdjustExtendNextLineStartToCurrentEnd"] = nameof(MainViewModel.ExtendNextStartToSelectedEndCommand),
         ["MainAdjustExtendToNextShotChange"] = nameof(MainViewModel.ExtendSelectedLinesToNextShotChangeOrNextSubtitleCommand),
         ["MainAdjustExtendToPreviousShotChange"] = nameof(MainViewModel.ExtendSelectedLinesToPreviousShotChangeCommand),
-        ["MainAdjustSelected100MsBack"] = nameof(MainViewModel.Video100MsBackCommand),
-        ["MainAdjustSelected100MsForward"] = nameof(MainViewModel.Video100MsForwardCommand),
+        // SE 4's fixed 100 ms nudges of the selected lines; SE 5's step is configurable
+        // (General.MoveSelectedLinesStepMs, default 100), so the import keeps the old feel.
+        ["MainAdjustSelected100MsBack"] = nameof(MainViewModel.MoveSelectedLinesXMsBackCommand),
+        ["MainAdjustSelected100MsForward"] = nameof(MainViewModel.MoveSelectedLinesXMsForwardCommand),
         ["MainAdjustSnapStartToNextShotChange"] = nameof(MainViewModel.SnapSelectedLinesStartToNextShotChangeCommand),
         ["MainAdjustSnapEndToPreviousShotChange"] = nameof(MainViewModel.SnapSelectedLinesEndToPreviousShotChangeCommand),
         ["MainSetInCueToClosestShotChangeLeftGreenZone"] = nameof(MainViewModel.SetInCueToClosestShotChangeLeftGreenZoneCommand),
@@ -303,6 +334,11 @@ public static class Se4ShortcutsImporter
         ["MainTranslateAutoSelectedLines"] = nameof(MainViewModel.AutoTranslateSelectedLinesCommand),
         ["MainTranslateGoogleTranslateIt"] = nameof(MainViewModel.ShowTranslateViaCopyPasteCommand),
         ["MainTranslateGoogleIt"] = nameof(MainViewModel.GoogleItCommand),
+        ["MainTranslateCustomSearch1"] = nameof(MainViewModel.CustomSearch1Command),
+        ["MainTranslateCustomSearch2"] = nameof(MainViewModel.CustomSearch2Command),
+        ["MainTranslateCustomSearch3"] = nameof(MainViewModel.CustomSearch3Command),
+        ["MainTranslateCustomSearch4"] = nameof(MainViewModel.CustomSearch4Command),
+        ["MainTranslateCustomSearch5"] = nameof(MainViewModel.CustomSearch5Command),
 
         // Waveform
         ["WaveformAdd"] = nameof(MainViewModel.WaveformInsertAtPositionAndFocusTextBoxCommand),
@@ -346,11 +382,10 @@ public static class Se4ShortcutsImporter
         ["GeneralTogglePreviewOnVideo"] = nameof(MainViewModel.ToggleSubtitlesOnVideoPlayerCommand),
         ["GeneralSwitchOriginalAndTranslation"] = nameof(MainViewModel.SwitchOriginalAndTranslationTextSelectedLinesCommand),
         ["GeneralAutoCalcCurrentDuration"] = nameof(MainViewModel.RecalculateDurationSelectedLinesCommand),
-        // SE 4's single "toggle custom tags" pair became three configurable surround-with slots,
-        // whose characters are edited from the shortcut itself. The key lands on the first slot;
-        // its characters are SE 5's own default, not the pair SE 4 kept in General settings, and
-        // the shortcut list spells them out ("Surround with X and Y") so the difference is
-        // visible rather than silent (#13907).
+        // SE 4's single "toggle custom tags" pair became the configurable surround-with slots,
+        // whose characters are edited from the shortcut itself. The key lands on the first slot
+        // here; the caller moves it onto whichever slot ends up holding SE 4's own characters
+        // (#13907, #14232).
         ["MainListViewToggleCustomTags"] = nameof(MainViewModel.SurroundWith1Command),
         // SE 4 offered the same recalculation at three reading speeds. SE 5's "recalculate
         // duration" is the optimal-reading-speed one (text length / optimal CPS), and "set
@@ -383,6 +418,7 @@ public static class Se4ShortcutsImporter
         ["GeneralMergeSelectedLinesBilingual"] = nameof(MainViewModel.MergeSelectedLinesBilingualCommand),
         ["GeneralMergeOriginalAndTranslation"] = nameof(MainViewModel.MergeOriginalIntoTranslationSelectedLinesCommand),
         ["GeneralToggleTranslationMode"] = nameof(MainViewModel.ToggleTranslationModeCommand),
+        ["MainEditToggleTranslationOriginalInPreviews"] = nameof(MainViewModel.ToggleOriginalTextInPreviewCommand),
         ["GeneralMergeWithNext"] = nameof(MainViewModel.MergeWithLineAfterCommand),
         ["GeneralMergeWithPrevious"] = nameof(MainViewModel.MergeWithLineBeforeCommand),
         ["GeneralApplyAssaOverrideTags"] = nameof(MainViewModel.ShowAssaApplyCustomOverrideTagsCommand),
@@ -428,6 +464,7 @@ public static class Se4ShortcutsImporter
     public static ImportResult ImportFromXml(string xml)
     {
         var result = new ImportResult();
+        var mappedCommands = new HashSet<string>(StringComparer.Ordinal);
         var doc = XDocument.Parse(xml);
 
         // SE 4 ships two layouts of the same data: the full Settings.xml has
@@ -467,10 +504,77 @@ public static class Se4ShortcutsImporter
                 continue;
             }
 
+            // First one in the file wins - see ImportResult.SkippedDuplicate.
+            if (!mappedCommands.Add(se5Name))
+            {
+                result.SkippedDuplicate++;
+                continue;
+            }
+
             result.Shortcuts.Add(new SeShortCut(se5Name, keys));
         }
 
+        ReadCustomTags(doc, result);
+        ReadCustomSearches(doc, result);
+
         return result;
+    }
+
+    // <General><TagsInToggleCustomTags> holds the pair as one "startÆend" string; SE 4 reads a
+    // single field as both sides. Only present in a full Settings.xml - an exported
+    // SE_Shortcuts.xml is rooted at <Shortcuts> and has no General section.
+    private static void ReadCustomTags(XDocument doc, ImportResult result)
+    {
+        var value = doc.Root?.Element("General")?.Element("TagsInToggleCustomTags")?.Value;
+        if (string.IsNullOrEmpty(value))
+        {
+            return;
+        }
+
+        var tags = value.Split('Æ');
+        var start = tags.Length switch
+        {
+            1 or 2 => tags[0],
+            _ => string.Empty,
+        };
+        var end = tags.Length switch
+        {
+            1 => tags[0],
+            2 => tags[1],
+            _ => string.Empty,
+        };
+
+        if (start.Length == 0 && end.Length == 0)
+        {
+            return;
+        }
+
+        result.CustomTagsStart = start;
+        result.CustomTagsEnd = end;
+    }
+
+    // <VideoControls><CustomSearchTextN>/<CustomSearchUrlN> hold the name and the URL template of
+    // SE 4's five custom search slots - the same layout SE 5 uses, so they carry over slot for slot.
+    // Only present in a full Settings.xml.
+    private static void ReadCustomSearches(XDocument doc, ImportResult result)
+    {
+        var videoControls = doc.Root?.Element("VideoControls");
+        if (videoControls == null)
+        {
+            return;
+        }
+
+        for (var slot = 1; slot <= Se.CustomSearchSlotCount; slot++)
+        {
+            var url = videoControls.Element("CustomSearchUrl" + slot)?.Value ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                continue;
+            }
+
+            var name = videoControls.Element("CustomSearchText" + slot)?.Value ?? string.Empty;
+            result.CustomSearches[slot] = (name.Trim(), url.Trim());
+        }
     }
 
     private static List<string> ParseShortcutValue(string value)

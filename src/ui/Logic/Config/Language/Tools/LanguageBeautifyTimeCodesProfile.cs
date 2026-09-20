@@ -8,7 +8,6 @@ public class LanguageBeautifyTimeCodesProfile
     public string PresetNetflix { get; set; } = "Netflix";
     public string PresetSdi { get; set; } = "SDI";
 
-    public string General { get; set; } = "General";
     public string Gap { get; set; } = "Gap";
     public string GapSuffix { get; set; } = "frames (also updates non-zero gap fields below)";
     public string Milliseconds { get; set; } = "ms";

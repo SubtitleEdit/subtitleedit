@@ -67,7 +67,7 @@ public class SyntaxTextView : Control
 
     private readonly SourceSyntaxLineStyler _styler = new();
     private readonly List<SourceSyntaxSpan> _spanScratch = new();
-    private readonly Dictionary<(Color Color, bool Bold), GenericTextRunProperties> _runPropertiesCache = new();
+    private readonly Dictionary<(Color Color, bool Bold, bool DefaultFont), GenericTextRunProperties> _runPropertiesCache = new();
 
     private readonly List<UndoEntry> _undoStack = new();
     private readonly List<UndoEntry> _redoStack = new();
@@ -78,6 +78,11 @@ public class SyntaxTextView : Control
 
     private Typeface _typeface;
     private Typeface _boldTypeface;
+
+    // Line numbers and time codes are drawn in the platform default font whatever the editor's
+    // family is - see SourceSyntaxSpan.DefaultFont.
+    private Typeface _defaultFontTypeface;
+    private Typeface _defaultFontBoldTypeface;
     private GenericTextRunProperties? _defaultRunProperties;
     private double _measuredFontSize;
     private FontFamily? _measuredFontFamily;
@@ -419,6 +424,8 @@ public class SyntaxTextView : Control
         _measuredDarkTheme = isDarkTheme;
         _typeface = new Typeface(FontFamily);
         _boldTypeface = new Typeface(FontFamily, FontStyle.Normal, FontWeight.Bold);
+        _defaultFontTypeface = new Typeface(FontFamily.Default);
+        _defaultFontBoldTypeface = new Typeface(FontFamily.Default, FontStyle.Normal, FontWeight.Bold);
 
         // The syntax colors are theme dependent, so the cached layouts and run properties have to
         // go with the theme.
@@ -556,18 +563,21 @@ public class SyntaxTextView : Control
             foregroundBrush: Foreground ?? Brushes.Black);
     }
 
-    private GenericTextRunProperties GetRunProperties(Color color, bool bold)
+    private GenericTextRunProperties GetRunProperties(Color color, bool bold, bool defaultFont)
     {
-        if (_runPropertiesCache.TryGetValue((color, bold), out var properties))
+        if (_runPropertiesCache.TryGetValue((color, bold, defaultFont), out var properties))
         {
             return properties;
         }
 
+        var typeface = defaultFont
+            ? (bold ? _defaultFontBoldTypeface : _defaultFontTypeface)
+            : (bold ? _boldTypeface : _typeface);
         properties = new GenericTextRunProperties(
-            bold ? _boldTypeface : _typeface,
+            typeface,
             FontSize,
             foregroundBrush: new ImmutableSolidColorBrush(color));
-        _runPropertiesCache[(color, bold)] = properties;
+        _runPropertiesCache[(color, bold, defaultFont)] = properties;
         return properties;
     }
 
@@ -603,7 +613,7 @@ public class SyntaxTextView : Control
                 spans.Add(new ValueSpan<TextRunProperties>(position, span.Start - position, defaultProperties));
             }
 
-            spans.Add(new ValueSpan<TextRunProperties>(span.Start, span.Length, GetRunProperties(span.Color, span.Bold)));
+            spans.Add(new ValueSpan<TextRunProperties>(span.Start, span.Length, GetRunProperties(span.Color, span.Bold, span.DefaultFont)));
             position = span.Start + span.Length;
         }
 

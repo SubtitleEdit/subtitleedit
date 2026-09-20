@@ -161,6 +161,19 @@
         /// </summary>
         public static string GetCharForByte(int byteValue)
         {
+            // One string per decoded character; the byte domain is small, so keep the strings.
+            if (byteValue >= 0 && byteValue < CharForByteCache.Length)
+            {
+                return CharForByteCache[byteValue] ?? (CharForByteCache[byteValue] = MakeCharForByte(byteValue));
+            }
+
+            return MakeCharForByte(byteValue);
+        }
+
+        private static readonly string[] CharForByteCache = new string[256];
+
+        private static string MakeCharForByte(int byteValue)
+        {
             if (Constants.ExtendedCharCodes.TryGetValue(byteValue, out var v))
             {
                 return char.ConvertFromUtf32(v);

@@ -59,7 +59,7 @@ public class SplitBreakLongLinesWindow : Window
 
         Content = grid;
 
-        Activated += delegate { _checkBoxSplitLongLines.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, _checkBoxSplitLongLines); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
         Loaded += (_, _)  => vm.Loaded();
 
@@ -240,7 +240,7 @@ public class SplitBreakLongLinesWindow : Window
                                 Child = new TextBlock
                                 {
                                     Text = item.Name,
-                                    FontSize = 12,
+                                    FontSize = UiUtil.ScaledFontSize(12),
                                     Foreground = new SolidColorBrush(color),
                                     VerticalAlignment = VerticalAlignment.Center,
                                 },

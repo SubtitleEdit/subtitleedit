@@ -58,7 +58,7 @@ public class SplitSubtitleWindow : Window
 
         Content = grid;
 
-        Activated += delegate { _textBoxOutputFolder.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, _textBoxOutputFolder); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
     }
 

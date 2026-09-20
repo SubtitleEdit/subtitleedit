@@ -172,23 +172,35 @@ public class CrispAsrTtsProvenanceTests
         // freezing the app on every CrispASR TTS generation. Every other test here stubs
         // HelpTextProvider, which is exactly why this went unnoticed; this one runs the real thing.
         //
-        // 1 MB is past any platform's pipe buffer (4 KB on Windows, 64 KB on Unix), so the old
+        // 256 KB is past any platform's pipe buffer (4 KB on Windows, 64 KB on Unix), so the old
         // sequential read deadlocks here regardless of where the suite runs.
         if (OperatingSystem.IsWindows())
         {
             Assert.Skip("Needs a shebang stub; Process.Start cannot launch a .cmd with UseShellExecute=false.");
         }
 
-        const int payloadBytes = 1024 * 1024;
+        const int payloadBytes = 256 * 1024;
         using var stub = ShellStub.WritingToStdErr(payloadBytes);
 
-        var probe = Task.Run(() => CrispAsrTtsProvenance.HelpTextProvider(stub.Path));
-        var finished = await Task.WhenAny(
-            probe,
-            Task.Delay(TimeSpan.FromSeconds(30), TestContext.Current.CancellationToken));
+        // The probe's own timeout would turn a slow drain on a loaded machine into a null result,
+        // which looks exactly like the deadlock (flaked locally at 15 s). The 30 s guard below is
+        // the deadlock detector here, so keep the product timeout out of its way.
+        var savedTimeout = CrispAsrTtsProvenance.HelpProbeTimeoutMs;
+        CrispAsrTtsProvenance.HelpProbeTimeoutMs = 120_000;
+        try
+        {
+            var probe = Task.Run(() => CrispAsrTtsProvenance.HelpTextProvider(stub.Path));
+            var finished = await Task.WhenAny(
+                probe,
+                Task.Delay(TimeSpan.FromSeconds(30), TestContext.Current.CancellationToken));
 
-        Assert.True(ReferenceEquals(finished, probe), "the --help probe deadlocked");
-        Assert.Equal(payloadBytes, (await probe)?.Length);
+            Assert.True(ReferenceEquals(finished, probe), "the --help probe deadlocked");
+            Assert.Equal(payloadBytes, (await probe)?.Length);
+        }
+        finally
+        {
+            CrispAsrTtsProvenance.HelpProbeTimeoutMs = savedTimeout;
+        }
     }
 }
 
@@ -209,10 +221,15 @@ internal sealed class ShellStub : IDisposable
 
         // Generate the payload rather than embedding it, so the script stays small and the byte
         // count exact. Nothing is written to stdout - that is the half of the shape that matters.
+        // A kilobyte at a time, not a byte at a time: the one-printf-per-byte version spent about
+        // seven seconds inside awk, which made this the slowest test in the suite by a wide margin.
         File.WriteAllText(
             Path,
             "#!/bin/sh\n"
-            + $"awk 'BEGIN {{ for (i = 0; i < {stdErrBytes}; i++) printf \"x\" }}' 1>&2\n");
+            + $"awk -v n={stdErrBytes} 'BEGIN {{ "
+            + "chunk = sprintf(\"%1024s\", \"\"); gsub(/ /, \"x\", chunk); "
+            + "while (n >= 1024) { printf \"%s\", chunk; n -= 1024 } "
+            + "if (n > 0) printf \"%s\", substr(chunk, 1, n) }' 1>&2\n");
         if (!OperatingSystem.IsWindows())
         {
             File.SetUnixFileMode(

@@ -96,7 +96,12 @@ public class AssaTagRtlAvaloniaCanaryTests : IDisposable
         var backslashLeft = line.GetTextBounds(1, 1).Single().Rectangle.Left;
         var letterRunRight = line.GetTextBounds(2, 3).Max(b => b.Rectangle.Right);
 
-        Assert.True(backslashLeft >= letterRunRight,
+        // Displaced, the backslash sits immediately to the right of "an8", so the two edges are
+        // the same glyph boundary and the comparison is an equality of two independently rounded
+        // sub-pixel values (51.57 vs 51.57 here). A hair of tolerance keeps that from flipping
+        // the canary; the fixed rendering moves the backslash a whole glyph width to the left.
+        Assert.True(backslashLeft >= letterRunRight - 0.5,
+            $"backslashLeft={backslashLeft:F3} letterRunRight={letterRunRight:F3}: " +
             "The ASSA tag backslash now renders in its true spot in RTL lines - Avalonia has fixed " +
             "the bidi ordering (AvaloniaUI/Avalonia#21792), and the workaround from PR #12567 is " +
             "either unnecessary or can be resurrected. Re-evaluate RTL tag rendering.");

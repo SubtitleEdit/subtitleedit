@@ -29,6 +29,7 @@ public class MultipleReplaceMoveTests
     private static MultipleReplaceViewModel BuildViewModel()
     {
         var vm = new MultipleReplaceViewModel(new WindowService(new NullServiceProvider()), new FileHelper());
+        vm.PreviewIntervalMs = 25; // the tests wait for the preview timer; see PreviewIntervalMs
         vm.Nodes.Clear();
 
         for (var c = 1; c <= 3; c++)

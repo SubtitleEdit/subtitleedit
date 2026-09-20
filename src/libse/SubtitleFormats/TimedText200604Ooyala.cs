@@ -241,22 +241,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     _errorCount++;
                 }
             }
-            bool allBelow100 = true;
+            // See TimedText200604: the "all ms < 100 -> x10" pass only corrupted correct times.
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 p.Text = Utilities.RemoveUnneededSpaces(p.Text, null).Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                if (p.StartTime.Milliseconds >= 100 || p.EndTime.Milliseconds >= 100)
-                {
-                    allBelow100 = false;
-                }
-            }
-            if (allBelow100)
-            {
-                foreach (Paragraph p in subtitle.Paragraphs)
-                {
-                    p.StartTime.Milliseconds *= 10;
-                    p.EndTime.Milliseconds *= 10;
-                }
             }
             subtitle.Renumber();
         }

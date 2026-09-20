@@ -5,6 +5,7 @@ public class LanguageAssa
     // ASSA Draw
     public string AssaDraw { get; set; }
     public string DrawSelectTool { get; set; }
+    public string DrawUseShapeForErase { get; set; }
     public string DrawLineTool { get; set; }
     public string DrawBezierTool { get; set; }
     public string DrawRectangleTool { get; set; }
@@ -86,6 +87,8 @@ public class LanguageAssa
     public string ResolutionResamplerFromVideo { get; set; }
     public string ResolutionResamplerSourceAndTargetEqual { get; set; }
     public string ResolutionResamplerNothingSelected { get; set; }
+    public string ResolutionResamplerVideoDiffers { get; set; }
+    public string ResolutionResamplerAskOnVideoOpen { get; set; }
 
     // Background Box Generator
     public string BackgroundBoxGenerator { get; set; }
@@ -246,6 +249,7 @@ public class LanguageAssa
         // ASSA Draw
         AssaDraw = "ASSA Draw";
         DrawSelectTool = "Select (move points)";
+        DrawUseShapeForErase = "Use shape for erase (iclip)";
         DrawLineTool = "Line Tool (F4)";
         DrawBezierTool = "Bezier Curve (F5)";
         DrawRectangleTool = "Rectangle (F6)";
@@ -323,6 +327,8 @@ public class LanguageAssa
         ResolutionResamplerFromVideo = "From video...";
         ResolutionResamplerSourceAndTargetEqual = "Source and target resolution are the same - nothing to do.";
         ResolutionResamplerNothingSelected = "Please select at least one option to change.";
+        ResolutionResamplerVideoDiffers = "The subtitle resolution ({0}x{1}) differs from the video resolution ({2}x{3}).\nChange the subtitle to match the video?";
+        ResolutionResamplerAskOnVideoOpen = "Ask when a video with a different resolution is opened";
 
         // Background Box Generator
         BackgroundBoxGenerator = "ASSA background box generator";

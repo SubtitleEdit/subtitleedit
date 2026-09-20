@@ -14,6 +14,7 @@ public class SeTools
     public SeAdjustDisplayDurations AdjustDurations { get; set; } = new();
     public SeApplyDurationLimits ApplyDurationLimits { get; set; } = new();
     public SeBridgeGaps BridgeGaps { get; set; } = new();
+    public SeImproveTimeCodes ImproveTimeCodes { get; set; } = new();
     public SeChangeFormatting ChangeFormatting { get; set; } = new();
     public SeBatchConvert BatchConvert { get; set; } = new();
     public SeChangeCasing ChangeCasing { get; set; } = new();
@@ -126,9 +127,11 @@ public class SeTools
     // guards every load/save of "<lang>_UseAlways.xml" with. Nothing in SE5 ever set that flag, so
     // "Change all" in spell check was a no-op that never survived the session.
     public bool SpellCheckRememberUseAlwaysList { get; set; }
+    public bool FixShortDisplayTimesAllowMoveStartTime { get; set; }
     public bool SpeechToTextSelectedLinesPromptFirstTimeOnly { get; set; }
     public bool MultipleReplaceShowDotDotDotButtons { get; set; }
     public bool GridFocusTextboxAfterInsertNew { get; set; }
+    public bool UndoRedoGoToChangedLine { get; set; }
     public bool TextToSpeechPromptMergeContinuationLines { get; set; }
     public bool TextToSpeechPromptSkipNoiseLines { get; set; }
     public bool TextToSpeechPromptDetectSpeakers { get; set; }
@@ -160,8 +163,37 @@ public class SeTools
     public bool DashScopeSttEnableWords { get; set; }
     public int DashScopeSttTimeoutSeconds { get; set; } = 3600;
 
+    public string GoogleCloudSttKeyFile { get; set; } = string.Empty;
+    public string GoogleCloudSttRegion { get; set; } = "us";
+    public string GoogleCloudSttModel { get; set; } = "chirp_3";
+    public string GoogleCloudSttLanguage { get; set; } = string.Empty;
+    public string GoogleCloudSttBucketName { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Only needed when signing in with Application Default Credentials, which usually do
+    /// not name a project. A service account key carries its own and this stays empty.
+    /// </summary>
+    public string GoogleCloudSttProjectId { get; set; } = string.Empty;
+    public int GoogleCloudSttTimeoutSeconds { get; set; } = 3600;
+
+    /// <summary>
+    /// Bills at roughly a fifth of the normal rate, $0.003 against $0.016 per minute, so a
+    /// 2.5 hour episode costs about $0.44 instead of $2.32. On by default: the saving is
+    /// large, it is money the user spends without ever being asked, and it measured 13.6x
+    /// realtime on a 140 minute episode. Google gives no latency guarantee for it, so set
+    /// this off in the speech-to-text window if a run needs to come back as fast as possible.
+    /// </summary>
+    public bool GoogleCloudSttDynamicBatching { get; set; } = true;
+
     public List<string> FindHistory { get; set; } = new List<string>();
     public bool AllowSingleLetterShortcutsInTextbox { get; set; }
+
+    /// <summary>
+    /// Let shortcuts bound to the text-navigation chords (Ctrl+Left/Right, Home/End with or
+    /// without Ctrl/Shift) fire while a text input has focus, instead of reserving those keys
+    /// for caret movement (#11357). Off by default; Settings > Tools (#14654).
+    /// </summary>
+    public bool AllowTextNavigationShortcutsInTextbox { get; set; }
 
     // Auto-break (auto br) - defaults must match libse ToolsSettings
     public bool AutoBreakLineEndingEarly { get; set; } = false;
@@ -243,6 +275,7 @@ public class SeTools
         MultipleReplaceShowDotDotDotButtons = true;
         GridFocusTextboxAfterInsertNew = true;
         AllowSingleLetterShortcutsInTextbox = false;
+        AllowTextNavigationShortcutsInTextbox = false;
         TextToSpeechPromptMergeContinuationLines = true;
         TextToSpeechPromptSkipNoiseLines = true;
         TextToSpeechPromptDetectSpeakers = true;

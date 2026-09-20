@@ -557,21 +557,26 @@ public partial class FindService : IFindService
             return ReplaceWholeWordWithStringComparison(line, searchText, replaceText, startIndex, maxReplacements, comparison);
         }
 
-        string workingLine = line;
+        // Single pass: the line is copied once into the builder instead of being rebuilt (two
+        // Substrings and a concat) for every match, which was quadratic on lines with many hits.
+        StringBuilder? result = null;
         int totalReplacements = 0;
+        int copiedUpTo = 0;
         int currentIndex = startIndex;
 
-        while (currentIndex < workingLine.Length && (maxReplacements == -1 || totalReplacements < maxReplacements))
+        while (currentIndex < line.Length && (maxReplacements == -1 || totalReplacements < maxReplacements))
         {
-            var index = workingLine.IndexOf(searchText, currentIndex, comparison);
+            var index = line.IndexOf(searchText, currentIndex, comparison);
             if (index == -1)
             {
                 break;
             }
 
-            workingLine = workingLine.Substring(0, index) + replaceText + workingLine.Substring(index + searchText.Length);
+            result ??= new StringBuilder(line.Length);
+            result.Append(line, copiedUpTo, index - copiedUpTo).Append(replaceText);
+            copiedUpTo = index + searchText.Length;
             totalReplacements++;
-            currentIndex = index + replaceText.Length;
+            currentIndex = copiedUpTo;
 
             // For single replacement, break after first replacement
             if (maxReplacements == 1)
@@ -580,7 +585,13 @@ public partial class FindService : IFindService
             }
         }
 
-        return (totalReplacements > 0, workingLine, totalReplacements);
+        if (result == null)
+        {
+            return (false, line, 0);
+        }
+
+        result.Append(line, copiedUpTo, line.Length - copiedUpTo);
+        return (true, result.ToString(), totalReplacements);
     }
 
     private (bool replaced, string newText, int replacementCount) ReplaceWholeWordWithStringComparison(string line, string searchText, string replaceText, int startIndex, int maxReplacements, StringComparison comparison)

@@ -14,6 +14,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
+            // LoadSubtitle produces no paragraph (so IsMine is false) unless the text starts
+            // with '{'/'[' and every one of these tags is present - test that before the full parse.
+            var allText = JoinLinesTrimmed(lines);
+            if (!(allText.StartsWith('{') || allText.StartsWith('[')) ||
+                !allText.Contains("start_time", StringComparison.Ordinal) ||
+                !allText.Contains("end_time", StringComparison.Ordinal) ||
+                !allText.Contains("text", StringComparison.Ordinal))
+            {
+                return false;
+            }
+
             var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
             if (_errorCount >= subtitle.Paragraphs.Count)

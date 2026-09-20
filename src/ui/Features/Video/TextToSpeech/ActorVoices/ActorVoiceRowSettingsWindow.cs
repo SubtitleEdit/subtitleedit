@@ -71,7 +71,7 @@ public class ActorVoiceRowSettingsWindow : Window
     {
         var title = new TextBlock
         {
-            FontSize = 15,
+            FontSize = UiUtil.ScaledFontSize(15),
             FontWeight = FontWeight.SemiBold,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.Actor))
             {
@@ -82,7 +82,7 @@ public class ActorVoiceRowSettingsWindow : Window
 
         var sub = new TextBlock
         {
-            FontSize = 11,
+            FontSize = UiUtil.ScaledFontSize(11),
             Foreground = UiUtil.GetTextColor(0.6d),
             [!TextBlock.TextProperty] = new MultiBinding
             {
@@ -125,7 +125,7 @@ public class ActorVoiceRowSettingsWindow : Window
         var hint = new TextBlock
         {
             Text = Se.Language.Video.TextToSpeech.VoiceInstructionFreeTextHint,
-            FontSize = 11,
+            FontSize = UiUtil.ScaledFontSize(11),
             Foreground = UiUtil.GetTextColor(0.55d),
             TextWrapping = TextWrapping.Wrap,
         };
@@ -188,7 +188,7 @@ public class ActorVoiceRowSettingsWindow : Window
         {
             Text = Se.Language.Video.TextToSpeech.VoiceInstructionClonedVoiceNote,
             TextWrapping = TextWrapping.Wrap,
-            FontSize = 11,
+            FontSize = UiUtil.ScaledFontSize(11),
             Foreground = UiUtil.GetTextColor(0.7d),
             Margin = new Thickness(0, 6, 0, 0),
             [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsClonedVoiceNoteVisible)) { Mode = BindingMode.OneWay },

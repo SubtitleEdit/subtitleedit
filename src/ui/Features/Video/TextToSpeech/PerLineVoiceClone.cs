@@ -35,6 +35,20 @@ public static class PerLineVoiceClone
     /// </summary>
     internal const double PreferredReferenceSeconds = 3.0;
 
+    /// <summary>
+    /// The shortest reference clip handed to an engine, in seconds. A line that is shorter and
+    /// has no silence to grow into (neighbouring lines on both sides) is padded with trailing
+    /// silence up to this instead of being sent as cut.
+    /// </summary>
+    /// <remarks>
+    /// Higgs Audio v3's reference encoder in audio.cpp (higgs_audio_tts/codec.cpp) pads its
+    /// 24 kHz acoustic branch up to one second but not its 16 kHz semantic branch, so every
+    /// reference under roughly 965 ms fails the "frame counts do not match" check with a 500
+    /// and the line goes missing from the dub (#14480). One second of audio clears it for all
+    /// lengths; the added silence is inaudible in the clone.
+    /// </remarks>
+    internal const double MinimumReferenceSeconds = 1.0;
+
     /// <summary>Reference clips are cut at the rate the cloning models work at.</summary>
     private const int ReferenceSampleRate = 24000;
 
@@ -61,7 +75,10 @@ public static class PerLineVoiceClone
     /// </summary>
     /// <param name="referenceTextOf">
     /// What is spoken in the video for a paragraph - the original-language line when a source
-    /// subtitle is loaded, which is what the reference clip actually contains.
+    /// subtitle is loaded, which is what the reference clip actually contains - or null when
+    /// that is unknown. Unknown gets no sidecar; the line's own (possibly translated) text is
+    /// never written as a stand-in, because a transcript that is the translation of the clip
+    /// makes the engines replay the clip instead of speaking the line (#14480).
     /// </param>
     /// <returns>
     /// The clip per paragraph. Paragraphs whose cut failed are absent rather than mapped to a
@@ -70,7 +87,7 @@ public static class PerLineVoiceClone
     public static async Task<Dictionary<Paragraph, string>> CutReferenceClipsAsync(
         string videoFileName,
         IReadOnlyList<Paragraph> paragraphs,
-        Func<Paragraph, string> referenceTextOf,
+        Func<Paragraph, string?> referenceTextOf,
         string outputFolder,
         double videoDurationSeconds,
         int audioTrackFfIndex,
@@ -120,14 +137,15 @@ public static class PerLineVoiceClone
     }
 
     /// <summary>
-    /// Cuts the reference clip for one paragraph and writes its transcript sidecar. Returns null
-    /// when the clip could not be produced - the caller decides what that line falls back to.
+    /// Cuts the reference clip for one paragraph and writes its transcript sidecar when
+    /// <paramref name="referenceText"/> is known. Returns null when the clip could not be
+    /// produced - the caller decides what that line falls back to.
     /// </summary>
     public static async Task<string?> CutReferenceClipAsync(
         string videoFileName,
         IReadOnlyList<Paragraph> paragraphs,
         int index,
-        string referenceText,
+        string? referenceText,
         string outputFolder,
         double videoDurationSeconds,
         int audioTrackFfIndex,
@@ -139,15 +157,25 @@ public static class PerLineVoiceClone
 
             var range = GetReferenceRange(paragraphs, index, videoDurationSeconds);
             var clipFileName = Path.Combine(outputFolder, $"line-{index + 1:0000}.wav");
-            if (!await CutClipAsync(videoFileName, range.StartSeconds, range.DurationSeconds, clipFileName, audioTrackFfIndex, cancellationToken))
+            if (!await CutClipAsync(videoFileName, range.StartSeconds, range.DurationSeconds, clipFileName, audioTrackFfIndex, cancellationToken, MinimumReferenceSeconds))
             {
                 return null;
             }
 
             // The engines that clone from a recording read what is spoken in it from a sibling
-            // .txt (omnivoice-tts refuses --ref-wav without one). We know it exactly here, so
-            // nobody has to type it or run speech-to-text over the clip.
-            await File.WriteAllTextAsync(Path.ChangeExtension(clipFileName, ".txt"), referenceText, cancellationToken);
+            // .txt. When the caller knows it (an original-language subtitle is loaded) nobody
+            // has to type it or run speech-to-text over the clip; when it does not, no sidecar
+            // is written and each engine decides what an unknown transcript means to it - a
+            // stale .txt from an earlier cut into the same folder must not survive either.
+            var sidecar = Path.ChangeExtension(clipFileName, ".txt");
+            if (!string.IsNullOrWhiteSpace(referenceText))
+            {
+                await File.WriteAllTextAsync(sidecar, referenceText, cancellationToken);
+            }
+            else if (File.Exists(sidecar))
+            {
+                File.Delete(sidecar);
+            }
 
             return clipFileName;
         }
@@ -165,6 +193,11 @@ public static class PerLineVoiceClone
     /// <summary>
     /// Cuts exactly the given range out of the video as a cloning-ready mono clip.
     /// </summary>
+    /// <param name="minimumSeconds">
+    /// Pad the clip with trailing silence up to this length when the range is shorter; zero
+    /// keeps the range as is. The per-line references pass <see cref="MinimumReferenceSeconds"/>;
+    /// the auto-cast parts do not, since they are joined into one long reference anyway.
+    /// </param>
     /// <returns>False when ffmpeg failed or produced no audio; the caller decides what that means.</returns>
     public static async Task<bool> CutClipAsync(
         string videoFileName,
@@ -172,7 +205,8 @@ public static class PerLineVoiceClone
         double durationSeconds,
         string outputFileName,
         int audioTrackFfIndex,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        double minimumSeconds = 0)
     {
         var arguments = FfmpegGenerator.ExtractCloneReferenceClipParameters(
             videoFileName,
@@ -180,7 +214,8 @@ public static class PerLineVoiceClone
             durationSeconds,
             outputFileName,
             audioTrackFfIndex,
-            ReferenceSampleRate);
+            ReferenceSampleRate,
+            minimumSeconds);
 
         try
         {
@@ -254,6 +289,49 @@ public static class PerLineVoiceClone
         }
 
         return (start, Math.Max(0.1, end - start));
+    }
+
+    /// <summary>How many other lines' clips are tried for a line that fails on its own clip.</summary>
+    internal const int MaxFallbackReferences = 2;
+
+    /// <summary>
+    /// The clips to try, in order, when line <paramref name="index"/> cannot be synthesised from
+    /// its own clip: the nearest other lines, the same speaker's first when speakers are known.
+    /// </summary>
+    /// <remarks>
+    /// A reference can make a line fail however often it is retried - Higgs Audio v3 never
+    /// reaches its end-of-audio token on some clips cut from a film's mixed audio (#15020) - and
+    /// every retry of the line reuses that clip. The nearest line is the best guess at the same
+    /// speaker in the same scene; when it is somebody else, a line in a neighbour's voice is
+    /// still a better dub than a line that is missing.
+    /// </remarks>
+    /// <param name="actorOf">The speaker of a paragraph, or null/empty when unknown.</param>
+    internal static List<string> GetFallbackReferenceClips(
+        IReadOnlyList<Paragraph> paragraphs,
+        int index,
+        IReadOnlyDictionary<Paragraph, string> clips,
+        Func<Paragraph, string?> actorOf,
+        int maxCount = MaxFallbackReferences)
+    {
+        if (index < 0 || index >= paragraphs.Count)
+        {
+            return new List<string>();
+        }
+
+        var actor = actorOf(paragraphs[index]);
+        clips.TryGetValue(paragraphs[index], out var ownClip);
+
+        return paragraphs
+            .Select((paragraph, i) => (paragraph, i))
+            .Where(p => p.i != index
+                        && clips.TryGetValue(p.paragraph, out var clip)
+                        && !string.Equals(clip, ownClip, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(p => !string.IsNullOrEmpty(actor) && string.Equals(actorOf(p.paragraph), actor, StringComparison.OrdinalIgnoreCase) ? 0 : 1)
+            .ThenBy(p => Math.Abs(p.i - index))
+            .ThenBy(p => p.i)
+            .Select(p => clips[p.paragraph])
+            .Take(maxCount)
+            .ToList();
     }
 
     /// <summary>

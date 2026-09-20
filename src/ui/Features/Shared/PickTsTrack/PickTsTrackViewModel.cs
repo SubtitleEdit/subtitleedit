@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -9,6 +9,7 @@ using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -111,6 +112,27 @@ public partial class PickTsTrackViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Teletext pages from a Manzanita dump, which is a single elementary stream and so has no
+    /// program map table to take packet ids or languages from.
+    /// </summary>
+    internal void Initialize(Dictionary<int, List<Paragraph>> teletextPages, string fileName)
+    {
+        _fileName = fileName;
+        WindowTitle = string.Format(Se.Language.File.PickTransportStreamTrackX, fileName);
+
+        foreach (var page in teletextPages)
+        {
+            Tracks.Add(new TsTrackInfoDisplay
+            {
+                TrackNumber = page.Key,
+                Teletext = page.Value,
+                Codec = "Teletext",
+                IsTeletext = true,
+            });
+        }
+    }
+
     private void Close()
     {
         Dispatcher.UIThread.Post(() =>
@@ -157,7 +179,7 @@ public partial class PickTsTrackViewModel : ObservableObject
     private bool TrackChanged()
     {
         var selectedTrack = SelectedTrack;
-        if (selectedTrack == null || _tsParser == null)
+        if (selectedTrack == null)
         {
             SubtitleCountText = string.Empty;
             return false;
@@ -170,7 +192,7 @@ public partial class PickTsTrackViewModel : ObservableObject
            var subtitle = new Subtitle(selectedTrack.Teletext);
             subtitle.Renumber();
             TeletextSubtitle = subtitle;
-            SubtitleCountText = string.Format(Se.Language.File.Import.NumberOfSubtitlesX, subtitle.Paragraphs.Count);
+            SubtitleCountText = string.Format(Se.Language.File.Import.NumberOfSubtitlesX, subtitle.Paragraphs.Count.ToString("N0"));
             foreach (var p in subtitle.Paragraphs.Take(20))
             {
                 var cue = new TsSubtitleCueDisplay()
@@ -187,6 +209,12 @@ public partial class PickTsTrackViewModel : ObservableObject
             return true;
         }
 
+        if (_tsParser == null)
+        {
+            SubtitleCountText = string.Empty;
+            return false;
+        }
+
         // GetDvbSubtitles returns null for a packet id it decoded no images for - a subtitle PID
         // announced by the stream is not a guarantee that anything came out of it.
         var subtitles = _tsParser.GetDvbSubtitles(selectedTrack.TrackNumber);
@@ -196,7 +224,7 @@ public partial class PickTsTrackViewModel : ObservableObject
             return false;
         }
 
-        SubtitleCountText = string.Format(Se.Language.File.Import.NumberOfSubtitlesX, subtitles.Count);
+        SubtitleCountText = string.Format(Se.Language.File.Import.NumberOfSubtitlesX, subtitles.Count.ToString("N0"));
         for (var i = 0; i < 20 && i < subtitles.Count; i++)
         {
             var item = subtitles[i];

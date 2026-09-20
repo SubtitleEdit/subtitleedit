@@ -69,7 +69,7 @@ public class EditWholeTextWindow : Window
 
         Content = grid;
 
-        Activated += delegate { textBoxWholeText.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, textBoxWholeText); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

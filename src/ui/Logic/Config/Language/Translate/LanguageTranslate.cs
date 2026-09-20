@@ -27,11 +27,10 @@ public class LanguageTranslate
     public string ReadyToTranslate { get; set; }
     public string Translating { get; set; }
     public string TranslationComplete { get; set; }
+    public string TranslateInPlaceNoOriginal { get; set; }
     public string TranslationCancelled { get; set; }
     public string SwapLanguages { get; set; }
     public string XIsAlreadyDownloadedReDownload { get; set; }
-    public string AdvancedDotDotDot { get; set; }
-    public string AdvancedSettings { get; set; }
     public string AdvancedSettingsSubtitle { get; set; }
     public string Context { get; set; }
     public string Synopsis { get; set; }
@@ -55,6 +54,7 @@ public class LanguageTranslate
     public string UseOnlyExtraServerParametersHint { get; set; }
     public string ServerRunningAtX { get; set; }
     public string CustomPromptHint { get; set; }
+    public string EditTranslationHint { get; set; }
     public string LlamaCppDownloadEngineAndModelPrompt { get; set; }
     public string LlamaCppDownloadEnginePrompt { get; set; }
     public string LlamaCppDownloadModelPrompt { get; set; }
@@ -86,11 +86,10 @@ public class LanguageTranslate
         ReadyToTranslate = "Ready to translate";
         Translating = "Translating...";
         TranslationComplete = "Translation complete";
+        TranslateInPlaceNoOriginal = "Translate in place (do not create original)";
         TranslationCancelled = "Translation cancelled";
         SwapLanguages = "Swap source and target languages";
         XIsAlreadyDownloadedReDownload = "{0} is already downloaded. Re-download?";
-        AdvancedDotDotDot = "Advanced...";
-        AdvancedSettings = "Advanced settings";
         AdvancedSettingsSubtitle = "Batch, context and sampling options for the advanced llama.cpp engine";
         Context = "Context";
         Synopsis = "Synopsis";
@@ -114,6 +113,7 @@ public class LanguageTranslate
         UseOnlyExtraServerParametersHint = "Start llama-server with the parameters above instead of Subtitle Edit's own tuning - only the model, host and port are still set";
         ServerRunningAtX = "Server running at {0}";
         CustomPromptHint = "Custom instructions ({0} = source language, {1} = target language); empty = built-in prompt";
+        EditTranslationHint = "Click the selected row's translation to edit it (Enter saves, Escape cancels)";
         LlamaCppDownloadEngineAndModelPrompt = "llama.cpp requires the llama-server engine and a translation model to be downloaded. Download now?";
         LlamaCppDownloadEnginePrompt = "llama.cpp requires the llama-server engine to be downloaded. Download now?";
         LlamaCppDownloadModelPrompt = "llama.cpp requires the selected translation model to be downloaded. Download now?";

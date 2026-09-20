@@ -4,6 +4,9 @@ using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
+using Avalonia.LogicalTree;
+using Nikse.SubtitleEdit.Logic;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Options.Settings;
 
@@ -16,6 +19,7 @@ public class SettingsItem
     public bool IsVisible { get; private set; } = true;
     public string? IsVisibleBinding { get; set; }
     public bool IsHidden { get; set; } = false;
+    public bool IsFullWidth { get; init; }
 
     public SettingsItem(string label, Func<Control> controlFactory, string? isVisibleBinding = null, bool isHidden = false)
     {
@@ -53,8 +57,13 @@ public class SettingsItem
                     _label.Contains(filter, StringComparison.OrdinalIgnoreCase);
     }
 
-    public Control Build()
+    public Control Build(bool includeLabel = true)
     {
+        if (!includeLabel)
+        {
+            return _controlFactory();
+        }
+
         var labelTextBlock = new TextBlock
         {
             Text = _label,
@@ -78,7 +87,27 @@ public class SettingsItem
         // (issue #11745). A live LabeledBy link also keeps the name correct for bound/localized labels.
         if (!string.IsNullOrEmpty(_label) || _labelBindingPath != null)
         {
-            AutomationProperties.SetLabeledBy(control, labelTextBlock);
+            // A colour swatch button (content is a Border) needs an explicit name rather than
+            // a link - see AccessibleLabels.LinkToLabel.
+            AccessibleLabels.LinkToLabel(control, labelTextBlock);
+
+            // When the factory returns a wrapper (a numeric field plus a browse button, a text
+            // box with a hint, a check box plus an edit button, a bordered grid of sub-settings,
+            // ...) the link above lands on the wrapper, not on the input a screen reader user
+            // actually focuses - label the unnamed inputs and content buttons inside it too
+            // (#12087). A control with its own label inside the wrapper (a grid row "Outline:
+            // [swatch]") gets that label; the rest get the item's.
+            if (control is Panel or Decorator)
+            {
+                foreach (var input in control.GetLogicalDescendants().OfType<Control>().ToList())
+                {
+                    if ((AccessibleLabels.IsInput(input) || AccessibleLabels.IsContentButton(input))
+                        && input.TemplatedParent == null && !AccessibleLabels.HasAccessibleName(input))
+                    {
+                        AccessibleLabels.LinkToLabel(input, AccessibleLabels.FindLabel(input) ?? labelTextBlock);
+                    }
+                }
+            }
         }
 
         var stackPanel = new StackPanel

@@ -52,10 +52,10 @@ public class FixCommonErrorsWindow : Window
         labelStep2.Bind(IsVisibleProperty, new Binding(nameof(vm.Step2IsVisible)));
 
         var textBoxSearch = UiUtil.MakeTextBox(250, vm, nameof(vm.SearchText)).WithMarginRight(25)
-            .WithAccessibleName(Se.Language.Tools.FixCommonErrors.SearchRulesDotDotDot);
+            .WithAccessibleName(Se.Language.Tools.FixCommonErrors.SearchRulesDotDotDot)
+            .WithSearchAndClearIcons();
         textBoxSearch.PlaceholderText = Se.Language.Tools.FixCommonErrors.SearchRulesDotDotDot;
         textBoxSearch.Bind(IsVisibleProperty, new Binding(nameof(vm.Step1IsVisible)));
-        textBoxSearch.TextChanged += vm.TextBoxSearch_TextChanged;
         // Off by default (#12441) - keep it reachable here, next to the language it depends on,
         // instead of only in the OCR window where a Fix-common-errors user would never look.
         var checkBoxGuessUnknownWords = UiUtil.MakeCheckBox(Se.Language.Ocr.TryToGuessUnknownWords, vm, nameof(vm.TryToGuessUnknownWords))
@@ -69,6 +69,8 @@ public class FixCommonErrorsWindow : Window
             HorizontalAlignment = HorizontalAlignment.Right,
             Children =
             {
+                // Filters the step 1 rule list by name (#14893); step 2 shows the checkbox instead.
+                textBoxSearch,
                 checkBoxGuessUnknownWords,
                 UiUtil.MakeTextBlock(Se.Language.General.Language).WithMarginRight(5),
                 UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage))
@@ -357,7 +359,7 @@ public class FixCommonErrorsWindow : Window
             }
         };
 
-        Activated += delegate { FocusStepButton(); };
+        UiUtil.FocusOnFirstActivation(this, () => { FocusStepButton(); });
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
@@ -448,7 +450,7 @@ public class FixCommonErrorsWindow : Window
                         Child = new TextBlock
                         {
                             Text = item.ActionDisplay,
-                            FontSize = 12,
+                            FontSize = UiUtil.ScaledFontSize(12),
                             Foreground = _vm.GetActionBrush(item.ActionDisplay),
                             VerticalAlignment = VerticalAlignment.Center,
                         },
@@ -868,7 +870,7 @@ public class FixCommonErrorsWindow : Window
         {
             HorizontalAlignment = HorizontalAlignment.Right,
             VerticalAlignment = VerticalAlignment.Top,
-            FontSize = 12,
+            FontSize = UiUtil.ScaledFontSize(12),
             Padding = new Thickness(2),
         };
         totalLengthLabel.Bind(TextBlock.TextProperty, new Binding(nameof(_vm.EditTextTotalLength)) { Source = _vm });

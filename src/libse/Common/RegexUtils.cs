@@ -12,7 +12,13 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// matches on the UI thread that means a frozen program with no way out. SE 4 used the same five
         /// seconds in its find/replace helper; callers treat the timeout as "no match".
         /// </summary>
-        public static readonly TimeSpan UserPatternMatchTimeout = TimeSpan.FromSeconds(5);
+        /// <remarks>
+        /// Settable only so the tests that prove the timeout works do not have to wait it out - fourteen
+        /// of them sat on the full five seconds, close to half the whole UI suite. Nothing in the program
+        /// writes it; callers read it when they build the Regex, so a test sets it before the pattern is
+        /// compiled and puts it back afterwards.
+        /// </remarks>
+        public static TimeSpan UserPatternMatchTimeout { get; set; } = TimeSpan.FromSeconds(5);
 
         // Others classes may want to use this regex.
 #if NET7_0_OR_GREATER

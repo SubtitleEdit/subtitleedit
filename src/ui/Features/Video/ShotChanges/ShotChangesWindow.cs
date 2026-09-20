@@ -29,7 +29,7 @@ public class ShotChangesWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).BindIsEnabled(vm, nameof(vm.IsGenerating), new InverseBooleanConverter());
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).BindIsEnabled(vm, nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
@@ -75,14 +75,14 @@ public class ShotChangesWindow : Window
 
         Content = grid;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             // initial focus on an input, not an action button - a focused button clicks on bare Space
             if (vm.FfmpegLinesGrid != null)
             {
                 TableViewExtras.FocusRow(vm.FfmpegLinesGrid);
             }
-        };
+        });
     }
 
     private static Grid MakeGenerateView(ShotChangesViewModel vm)
@@ -110,6 +110,7 @@ public class ShotChangesWindow : Window
         tableView.Margin = new Thickness(2);
         tableView.ItemsSource = vm.FfmpegLines;
         tableView.DataContext = vm;
+        tableView.WithAccessibleName(Se.Language.Video.ShotChanges.ShotChangesList);
         tableView.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.NumberSymbol,
@@ -144,12 +145,12 @@ public class ShotChangesWindow : Window
         });
         sliderSensitivity.Bind(Slider.IsEnabledProperty, new Binding(nameof(vm.IsGenerating))
         {
-            Converter = new InverseBooleanConverter(),
+            Converter = InverseBooleanConverter.Instance,
             Source = vm,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
         var labelSensitivityValue = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(ShotChangesViewModel.Sensitivity), new DoubleToTwoDecimalConverter());
-        var buttonGenerate = UiUtil.MakeButton(Se.Language.Video.ShotChanges.GenerateShotChangesWithFfmpeg, vm.GenerateShotChangesFfmpegCommand).WithBindEnabled(nameof(vm.IsGenerating), new InverseBooleanConverter());
+        var buttonGenerate = UiUtil.MakeButton(Se.Language.Video.ShotChanges.GenerateShotChangesWithFfmpeg, vm.GenerateShotChangesFfmpegCommand).WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
         var panelSensitivity = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -243,6 +244,7 @@ public class ShotChangesWindow : Window
             IsReadOnly = true,
         };
         textBoxImport.Bind(TextBox.TextProperty, new Binding(nameof(ShotChangesViewModel.ImportText)) { Source = vm, Mode = BindingMode.TwoWay });
+        textBoxImport.WithAccessibleName(Se.Language.Video.ShotChanges.ImportShotChanges); // the tab header; the box has no label (#12087)
 
         grid.Add(textBoxImport, 0);
         grid.Add(panelTimeCodeFormat, 1);

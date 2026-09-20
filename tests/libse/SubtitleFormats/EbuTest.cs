@@ -49,6 +49,20 @@ public class EbuTest
         Assert.False(Ebu.IsStlHeader("STL25".PadRight(1024)));
     }
 
+    // The main grid flags rows wider than a teletext page (37 cells) only for teletext STL. An open
+    // subtitling STL has no page, so its rows are checked against the general maximum (Ingo's
+    // 42-character project showed 37-character errors the EBU save dialog did not).
+    [Fact]
+    public void IsTeletextHeader_TrueOnlyForTeletextDisplayStandard()
+    {
+        Assert.False(Ebu.IsTeletextHeader(null));
+        Assert.False(Ebu.IsTeletextHeader("WEBVTT"));
+        Assert.False(Ebu.IsTeletextHeader(new Ebu.EbuGeneralSubtitleInformation { DisplayStandardCode = "0" }.ToString()));
+        Assert.False(Ebu.IsTeletextHeader(new Ebu.EbuGeneralSubtitleInformation { DisplayStandardCode = " " }.ToString()));
+        Assert.True(Ebu.IsTeletextHeader(new Ebu.EbuGeneralSubtitleInformation { DisplayStandardCode = "1" }.ToString()));
+        Assert.True(Ebu.IsTeletextHeader(new Ebu.EbuGeneralSubtitleInformation { DisplayStandardCode = "2" }.ToString()));
+    }
+
     // Regression for #11910: EBU STL Save produced a 14-byte invalid file ("Not supported!")
     // because the binary format went through the text save path. The binary writer must emit a real
     // EBU file (1024-byte GSI header + TTI blocks) that reads back.
@@ -239,5 +253,47 @@ public class EbuTest
         var textField = new byte[112];
         Array.Copy(bytes, 1024 + 16, textField, 0, 112);
         Assert.Contains((byte)0x03, textField);
+    }
+
+    // An STL file carries eight teletext colors, so the writer snaps anything else to the nearest
+    // one. The UI asks the same question before it writes a color tag, so what the grid and the
+    // video preview show is what the file will get - these are the answers it relies on.
+    [Theory]
+    [InlineData("#FF0000", "Red")]
+    [InlineData("ff0000", "Red")]
+    [InlineData("Red", "Red")]
+    [InlineData("#FFA500", "Yellow")]  // orange
+    [InlineData("#FFC0CB", "White")]   // pink
+    [InlineData("#003300", "Black")]   // very dark green
+    [InlineData("#00FFFF", "Cyan")]
+    public void GetNearestColorName_SnapsToTheEightTeletextColors(string color, string expected)
+    {
+        Assert.Equal(expected, Ebu.GetNearestColorName(color));
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("not a color")]
+    [InlineData("#12345")]
+    public void GetNearestColorName_IsNullWhenTheValueIsNotAColor(string color)
+    {
+        Assert.Null(Ebu.GetNearestColorName(color));
+    }
+
+    // Switching the format in the toolbar (or converting in batch convert) leaves the STL specific
+    // bits behind: the box tags used to show up as text in the video preview and in the saved file,
+    // and a teletext row in MarginV counts as an ASSA pixel margin.
+    [Fact]
+    public void RemoveNativeFormatting_DropsBoxTagsAndTeletextRows()
+    {
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph("<box>Hello world</box>", 1000, 3000) { MarginV = "20" });
+        subtitle.Paragraphs.Add(new Paragraph("<i>Second line</i>", 4000, 6000) { MarginV = "18" });
+
+        new Ebu().RemoveNativeFormatting(subtitle, new SubRip());
+
+        Assert.Equal("Hello world", subtitle.Paragraphs[0].Text);
+        Assert.Equal("<i>Second line</i>", subtitle.Paragraphs[1].Text);
+        Assert.All(subtitle.Paragraphs, p => Assert.Null(p.MarginV));
     }
 }

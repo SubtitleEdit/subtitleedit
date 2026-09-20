@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.UiLogic.Export;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 using Spectre.Console;
 
@@ -17,6 +18,71 @@ internal class SubtitleConverter
     // one mkv would otherwise silently overwrite each other).
     private readonly HashSet<string> _usedOutputFileNames = new(StringComparer.OrdinalIgnoreCase);
 
+    /// <summary>
+    /// "Full frame" reaches only <see cref="ExportHandlerFcp"/> and
+    /// <see cref="ExportHandlerBluRaySup"/>; the other image handlers ignore
+    /// <see cref="ImageParameter.IsFullFrame"/> and write the cropped bitmap. Silently doing
+    /// nothing is worse on a command line than in the export dialog - the setting often comes
+    /// from a shared --settings profile - so say it was dropped (issue #14376). A text target
+    /// ignores every image styling option, not just this one, so it warns for image targets only.
+    /// </summary>
+    private static void WarnIfFullFrameIgnored(ConversionOptions options, ConversionResult result)
+    {
+        if (!options.ImageStyle.IsFullFrame)
+        {
+            return;
+        }
+
+        var handler = ImageOutputWriter.TryCreateHandler(LibSEIntegration.NormalizeFormatName(options.Format));
+        if (handler is null || handler.ExportImageType is ExportImageType.Fcp or ExportImageType.BluRaySup)
+        {
+            return;
+        }
+
+        result.Warnings.Add(
+            $"Full frame image is not supported by '{options.Format}' and was ignored - it applies to fcpimage and bluraysup.");
+    }
+
+    /// <summary>
+    /// The 3D options can reach a target that has no use for them the same way: D-Cinema has no
+    /// packed frame to draw a 3D image into (it only takes the depth, as the Z-position), and
+    /// everywhere else a depth without a 3D mode moves nothing.
+    /// </summary>
+    private static void WarnIf3DIgnored(ConversionOptions options, ConversionResult result)
+    {
+        var style = options.ImageStyle;
+        if (style.Mode3D == Export3DMode.None && style.Depth3D == 0 && style.Plane3D == null)
+        {
+            return;
+        }
+
+        var handler = ImageOutputWriter.TryCreateHandler(LibSEIntegration.NormalizeFormatName(options.Format));
+        if (handler is null)
+        {
+            return;
+        }
+
+        if (!Stereo3DImage.IsModeSupported(handler.ExportImageType))
+        {
+            if (style.Mode3D != Export3DMode.None)
+            {
+                result.Warnings.Add(
+                    $"3D mode is not supported by '{options.Format}' and was ignored - D-Cinema writes the 3D depth as the Z-position instead.");
+            }
+
+            if (style.Plane3D != null)
+            {
+                result.Warnings.Add($"3D-Plane is not supported by '{options.Format}' and was ignored.");
+            }
+        }
+        else if (style.Mode3D == Export3DMode.None)
+        {
+            result.Warnings.Add(style.Plane3D != null
+                ? "3D-Plane has no effect without a 3D mode (--mode-3d) and was ignored."
+                : "3D depth has no effect without a 3D mode (--mode-3d) and was ignored.");
+        }
+    }
+
     public async Task<ConversionResult> ConvertAsync(ConversionOptions options)
     {
         var result = new ConversionResult();
@@ -28,6 +94,9 @@ internal class SubtitleConverter
             {
                 _translateRunner = AutoTranslateRunner.Create(options);
             }
+
+            WarnIfFullFrameIgnored(options, result);
+            WarnIf3DIgnored(options, result);
 
             // Get input files
             var inputFiles = GetInputFiles(options);
@@ -872,7 +941,10 @@ internal class SubtitleConverter
         // the current frame rate in that case, and the image path here already does the same.
         if (options.TargetFps is > 0)
         {
-            subtitle.ChangeFrameRate(options.Fps ?? Configuration.Settings.General.CurrentFrameRate, options.TargetFps.Value);
+            // Whole milliseconds: scaling start and end independently leaves fractional times in
+            // everything seconv writes, and rounds two equal-length cues to different lengths.
+            // The Change frame rate dialog was fixed the same way for #14056.
+            subtitle.ChangeFrameRateWholeMilliseconds(options.Fps ?? Configuration.Settings.General.CurrentFrameRate, options.TargetFps.Value);
         }
 
         // Scale all times by 100/percent (matches Sync > Change Speed in the UI)
@@ -1006,7 +1078,7 @@ internal class SubtitleConverter
         }
         else
         {
-            var fileName = Path.GetFileNameWithoutExtension(inputFile);
+            var fileName = Path.GetFileNameWithoutExtension(inputFile) + options.OutputFilenameAppend;
             var extension = LibSEIntegration.GetExtensionForFormat(options.Format);
             var outputFolder = string.IsNullOrEmpty(options.OutputFolder)
                 ? Path.GetDirectoryName(inputFile) ?? Directory.GetCurrentDirectory()
@@ -1036,7 +1108,7 @@ internal class SubtitleConverter
         // For container collisions, try inserting the track number first
         if (trackNumber.HasValue && !string.IsNullOrEmpty(languageSuffix))
         {
-            var fileName = Path.GetFileNameWithoutExtension(inputFile);
+            var fileName = Path.GetFileNameWithoutExtension(inputFile) + options.OutputFilenameAppend;
             var withTrack = Path.Combine(dir, $"{fileName}.#{trackNumber.Value}.{languageSuffix}{ext}");
             if ((options.Overwrite || !File.Exists(withTrack)) && usedNames?.Contains(withTrack) != true)
             {
@@ -1149,6 +1221,9 @@ internal record class ConversionOptions
     /// Resolved from defaults + the settings JSON's <c>exportImages</c> section + CLI flags.
     /// </summary>
     public ImageExportStyle ImageStyle { get; init; } = new();
+
+    /// <summary>Appended to the output file name stem (before any language/track suffix). Ignored with <see cref="OutputFilename"/>.</summary>
+    public string? OutputFilenameAppend { get; init; }
     public string? AssaStyleFile { get; init; }
     public int? PacCodePage { get; init; }
     public string? EbuHeaderFile { get; init; }
@@ -1157,7 +1232,7 @@ internal record class ConversionOptions
     public IReadOnlyList<int> TrackNumbers { get; init; } = [];
     public bool ForcedOnly { get; init; }
 
-    /// <summary>OCR engine identifier: <c>tesseract</c> | <c>nocr</c> | <c>ollama</c> | <c>paddle</c>.</summary>
+    /// <summary>OCR engine identifier: <c>tesseract</c> | <c>nocr</c> | <c>binaryocr</c> | <c>ollama</c> | <c>llamacpp</c> | <c>paddle</c> | <c>applevision</c>.</summary>
     public string OcrEngine { get; init; } = "tesseract";
 
     /// <summary>Language code or human name passed to the OCR engine (Tesseract: ISO 639-2 like <c>eng</c>; Paddle: <c>en</c>; Ollama: human name like <c>English</c>).</summary>
@@ -1196,7 +1271,8 @@ internal record class ConversionOptions
     /// white fill with a black outline on transparency; composited onto the opaque white OCR
     /// canvas the fill vanishes and Tesseract receives hollow outline rings, which garbles
     /// some entries deterministically (issue #12291). On by default; disable with
-    /// <c>--no-pgs-isolate-colors</c> to OCR the raw bitmap. Ignored in
+    /// <c>--no-pgs-isolate-colors</c> to OCR the raw bitmap. The CLI always turns it off for
+    /// <c>applevision</c>, which reads the raw bitmap better. Ignored in
     /// <see cref="TimeCodesOnly"/> mode.
     /// </summary>
     public bool PgsIsolateColors { get; init; } = true;
@@ -1212,6 +1288,12 @@ internal record class ConversionOptions
 
     /// <summary>llama.cpp OCR model: curated <c>.gguf</c> file name or full path (default: first installed OCR model).</summary>
     public string? OcrModel { get; init; }
+
+    /// <summary>
+    /// Prompt for the prompt-driven OCR engines (llamacpp, ollama); <c>{language}</c> is replaced
+    /// with <see cref="OcrLanguage"/>. Null = each engine's built-in default.
+    /// </summary>
+    public string? OcrPrompt { get; init; }
 
     /// <summary>Auto-translate target language (code or English name). Non-null enables translation.</summary>
     public string? TranslateTo { get; init; }

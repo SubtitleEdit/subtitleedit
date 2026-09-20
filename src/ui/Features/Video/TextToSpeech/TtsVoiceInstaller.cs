@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
@@ -67,6 +67,16 @@ public static class TtsVoiceInstaller
     /// backends), so the dialogs read with the right engine name and don't mention
     /// Chatterbox.
     /// </summary>
+    /// <summary>
+    /// Ensures the CrispASR runtime is installed for "Remove original speech" - its source
+    /// separation task is part of every CrispASR build SE has ever pinned.
+    /// </summary>
+    public static Task<bool> EnsureCrispAsrForSpeechRemoval(Window? window, IWindowService windowService, string featureName)
+        => EnsureCrispAsrAsync(window, windowService, forceRedownload: false,
+            engineDisplayName: featureName,
+            extraCapabilityCheck: null,
+            minVersionNote: null);
+
     public static Task<bool> EnsureCrispAsrForQwen3(Window? window, IWindowService windowService, bool forceRedownload)
         => EnsureCrispAsrAsync(window, windowService, forceRedownload,
             engineDisplayName: "Qwen3 TTS (CrispASR)",
@@ -94,6 +104,29 @@ public static class TtsVoiceInstaller
             engineDisplayName: "IndexTTS (CrispASR)",
             extraCapabilityCheck: null,
             minVersionNote: null);
+
+    /// <summary>
+    /// Ensures the CrispASR runtime that Pocket TTS (CrispASR) runs on is installed.
+    /// The pocket-tts backend is older, but the per-language backends and model routing SE
+    /// relies on (pocket-tts-de/es/it/pt/fr) ship in CrispASR v0.8.31+.
+    /// </summary>
+    public static Task<bool> EnsureCrispAsrForPocketTts(Window? window, IWindowService windowService, bool forceRedownload)
+        => EnsureCrispAsrAsync(window, windowService, forceRedownload,
+            engineDisplayName: "Pocket TTS (CrispASR)",
+            extraCapabilityCheck: null,
+            minVersionNote: "v0.8.31 or newer");
+
+    /// <summary>
+    /// Ensures the CrispASR runtime that Supertonic (CrispASR) runs on is installed.
+    /// The supertonic backend ships in CrispASR v0.8.33 and newer; the version note names that
+    /// floor because older builds have no supertonic backend at all and abort on the unknown
+    /// --backend value.
+    /// </summary>
+    public static Task<bool> EnsureCrispAsrForSupertonic(Window? window, IWindowService windowService, bool forceRedownload)
+        => EnsureCrispAsrAsync(window, windowService, forceRedownload,
+            engineDisplayName: "Supertonic (CrispASR)",
+            extraCapabilityCheck: null,
+            minVersionNote: "v0.8.33 or newer");
 
     /// <summary>
     /// Ensures the CrispASR runtime that Zonos TTS (CrispASR) runs on is installed.
@@ -155,7 +188,7 @@ public static class TtsVoiceInstaller
 
     /// <summary>
     /// Ensures the CrispASR runtime that MOSS-TTS (CrispASR) runs on is installed.
-    /// The moss-tts backend ships in CrispASR v0.8.13 and newer (SE pins v0.8.29).
+    /// The moss-tts backend ships in CrispASR v0.8.13 and newer (SE pins v0.8.34).
     /// </summary>
     public static Task<bool> EnsureCrispAsrForMossTts(Window? window, IWindowService windowService, bool forceRedownload)
         => EnsureCrispAsrAsync(window, windowService, forceRedownload,
@@ -165,7 +198,7 @@ public static class TtsVoiceInstaller
 
     /// <summary>
     /// Ensures the CrispASR runtime that dots.tts (CrispASR) runs on is installed.
-    /// The dots-tts backend ships in CrispASR v0.8.25 and newer (SE pins v0.8.29); the version
+    /// The dots-tts backend ships in CrispASR v0.8.25 and newer (SE pins v0.8.34); the version
     /// note names that floor because older builds have no dots-tts backend at all and abort on
     /// the unknown --backend value.
     /// </summary>
@@ -176,6 +209,18 @@ public static class TtsVoiceInstaller
             minVersionNote: "v0.8.25 or newer");
 
     /// <summary>
+    /// Ensures the CrispASR runtime that Confucius4-TTS (CrispASR) runs on is installed.
+    /// The confucius4-tts backend ships in CrispASR v0.8.30 and newer; the version note names
+    /// that floor because older builds have no confucius4-tts backend at all and abort on the
+    /// unknown --backend value.
+    /// </summary>
+    public static Task<bool> EnsureCrispAsrForConfucius4Tts(Window? window, IWindowService windowService, bool forceRedownload)
+        => EnsureCrispAsrAsync(window, windowService, forceRedownload,
+            engineDisplayName: "Confucius4-TTS (CrispASR)",
+            extraCapabilityCheck: null,
+            minVersionNote: "v0.8.30 or newer");
+
+    /// <summary>
     /// Shared CrispASR install/update flow used by all TTS engines that sit on the
     /// CrispASR runtime. Prompts refer to <paramref name="engineDisplayName"/> so users
     /// see the right engine name. <paramref name="extraCapabilityCheck"/> lets the caller
@@ -184,22 +229,49 @@ public static class TtsVoiceInstaller
     /// even when CrispASR itself looks up to date.
     /// </summary>
     /// <summary>
-    /// Ensures the audio.cpp runtime that IndexTTS 2.5 runs on is installed. Unlike the
-    /// CrispASR engines, these binaries are built by SubtitleEdit itself (upstream ships
-    /// Windows-only prebuilts), and the archive is per backend: Metal on Apple Silicon, and
-    /// CPU / Vulkan / CUDA on Windows and Linux x64.
+    /// Ensures the shared audio.cpp runtime is installed — the same binaries back IndexTTS
+    /// 2.5, Higgs Audio v3 and Fish Audio S2 Pro, so whichever engine asks first downloads
+    /// for all of them. Unlike the CrispASR engines, these binaries are built by SubtitleEdit
+    /// itself (upstream ships Windows-only prebuilts), and the archive is per backend: Metal
+    /// on Apple Silicon, and CPU / Vulkan / CUDA on Windows and Linux x64.
     /// </summary>
-    public static async Task<bool> EnsureAudioCppForIndexTts25(Window? window, IWindowService windowService, bool forceRedownload)
+    /// <param name="engineDisplayName">The engine that asked, for the prompts ("IndexTTS 2.5").</param>
+    /// <param name="requiredFamily">
+    /// The audio.cpp model family that engine needs (its <c>FamilyName</c>). An installed runtime
+    /// that predates the family is not "installed" for this engine: the user is asked to update
+    /// it, since the old binary would only fail later with "unsupported model family hint".
+    /// </param>
+    public static async Task<bool> EnsureAudioCppRuntime(Window? window, IWindowService windowService, bool forceRedownload, string engineDisplayName, string requiredFamily)
     {
         if (window == null)
         {
             return false;
         }
 
-        var isInstalled = File.Exists(IndexTts25AudioCpp.GetServerExecutable());
-        if (!forceRedownload && isInstalled)
+        var isInstalled = File.Exists(AudioCppRuntime.GetServerExecutable());
+        var isCapable = isInstalled && AudioCppRuntime.SupportsFamily(requiredFamily);
+        if (!forceRedownload && isCapable)
         {
             return true;
+        }
+
+        // Installed but built before this engine's family existed: confirm the update and keep
+        // the backend the user picked the first time — no reason to ask CPU/Vulkan/CUDA again.
+        var isUpdateRequired = isInstalled && !isCapable && !forceRedownload;
+        var savedBackend = Se.Settings.Video.TextToSpeech.IndexTts25AudioCppBackend;
+        if (isUpdateRequired)
+        {
+            var updateAnswer = await MessageBox.Show(
+                window,
+                "audio.cpp update required",
+                $"{Environment.NewLine}\"{engineDisplayName}\" needs a newer audio.cpp runtime than the one installed. Re-download it now?",
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question);
+
+            if (updateAnswer != MessageBoxResult.Yes)
+            {
+                return false;
+            }
         }
 
         string backend;
@@ -209,17 +281,17 @@ public static class TtsVoiceInstaller
             {
                 await MessageBox.Show(
                     window,
-                    "IndexTTS 2.5",
-                    $"{Environment.NewLine}IndexTTS 2.5 (audio.cpp) requires an Apple Silicon Mac.",
+                    engineDisplayName,
+                    $"{Environment.NewLine}\"{engineDisplayName}\" (audio.cpp) requires an Apple Silicon Mac.",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
                 return false;
             }
 
-            var answer = await MessageBox.Show(
+            var answer = isUpdateRequired ? MessageBoxResult.Yes : await MessageBox.Show(
                 window,
                 "Download audio.cpp?",
-                $"{Environment.NewLine}\"IndexTTS 2.5\" runs through the audio.cpp runtime. Download and install now?",
+                $"{Environment.NewLine}\"{engineDisplayName}\" runs through the audio.cpp runtime. Download and install now?",
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
 
@@ -236,34 +308,42 @@ public static class TtsVoiceInstaller
             {
                 await MessageBox.Show(
                     window,
-                    "IndexTTS 2.5",
-                    $"{Environment.NewLine}IndexTTS 2.5 (audio.cpp) is only built for x86-64 on Windows and Linux.",
+                    engineDisplayName,
+                    $"{Environment.NewLine}\"{engineDisplayName}\" (audio.cpp) is only built for x86-64 on Windows and Linux.",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
                 return false;
             }
 
-            var variantAnswer = await MessageBox.Show(
+            var variantAnswer = isUpdateRequired && !string.IsNullOrEmpty(savedBackend)
+                ? MessageBoxResult.None
+                : await MessageBox.Show(
                 window,
                 "Download audio.cpp?",
-                $"{Environment.NewLine}\"IndexTTS 2.5\" runs through the audio.cpp runtime. Select a build to download:",
+                $"{Environment.NewLine}\"{engineDisplayName}\" runs through the audio.cpp runtime. Select a build to download:",
                 MessageBoxButtons.Cancel,
                 MessageBoxIcon.Question,
                 "CPU",
                 "Vulkan",
                 "CUDA");
 
-            if (variantAnswer == MessageBoxResult.None || variantAnswer == MessageBoxResult.Cancel)
+            if (isUpdateRequired && !string.IsNullOrEmpty(savedBackend))
+            {
+                backend = savedBackend;
+            }
+            else if (variantAnswer == MessageBoxResult.None || variantAnswer == MessageBoxResult.Cancel)
             {
                 return false;
             }
-
-            backend = variantAnswer switch
+            else
             {
-                MessageBoxResult.Custom2 => IndexTts25AudioCppDownloadService.BackendVulkan,
-                MessageBoxResult.Custom3 => IndexTts25AudioCppDownloadService.BackendCuda,
-                _ => IndexTts25AudioCppDownloadService.BackendCpu,
-            };
+                backend = variantAnswer switch
+                {
+                    MessageBoxResult.Custom2 => IndexTts25AudioCppDownloadService.BackendVulkan,
+                    MessageBoxResult.Custom3 => IndexTts25AudioCppDownloadService.BackendCuda,
+                    _ => IndexTts25AudioCppDownloadService.BackendCpu,
+                };
+            }
 
             // The GPU builds import their runtime at load time, so a missing driver is not a
             // slow fallback — the process dies in the loader before printing anything.
@@ -287,10 +367,19 @@ public static class TtsVoiceInstaller
             return false;
         }
 
+        // The four audio.cpp engines share this binary. A server started from the old build
+        // must go before the archive is extracted: on Windows the running exe cannot be
+        // overwritten at all, and elsewhere the stale process would keep answering requests
+        // (and reject any model family the new build added) until Subtitle Edit restarts.
+        IndexTts25AudioCpp.StopServer();
+        HiggsTtsAudioCpp.StopServer();
+        FishTtsAudioCpp.StopServer();
+        FireRedTts3AudioCpp.StopServer();
+
         var dlResult = await windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(
             window, vm => vm.StartDownloadIndexTts25AudioCppEngine(backend));
 
-        if (!dlResult.OkPressed || !File.Exists(IndexTts25AudioCpp.GetServerExecutable()))
+        if (!dlResult.OkPressed || !File.Exists(AudioCppRuntime.GetServerExecutable()))
         {
             return false;
         }
@@ -387,6 +476,20 @@ public static class TtsVoiceInstaller
                 MessageBoxResult.Custom3 => "cuda",
                 _ => "vulkan",
             };
+
+            if (crispVariant == "cuda")
+            {
+                // Upstream added a Windows CUDA 13 build alongside the CUDA 12 one in v0.8.31, so
+                // Windows gets the same follow-up Linux has (#14343) - without it a fresh install
+                // from here can only ever land on CUDA 12.
+                var cudaAnswer = await PromptCrispAsrCudaVersionAsync(window);
+                if (cudaAnswer == null)
+                {
+                    return false;
+                }
+
+                crispVariant = cudaAnswer;
+            }
 
             if (crispVariant == "cpu")
             {
@@ -507,21 +610,7 @@ public static class TtsVoiceInstaller
 
         if (answer == MessageBoxResult.Custom3)
         {
-            var cudaAnswer = await MessageBox.Show(
-                window,
-                "CrispASR CUDA build",
-                $"{Environment.NewLine}CUDA 12 works with most current NVIDIA drivers.{Environment.NewLine}{Environment.NewLine}Pick CUDA 13 only if your driver stack is built for CUDA 13.",
-                MessageBoxButtons.Cancel,
-                MessageBoxIcon.Question,
-                "CUDA 12",
-                "CUDA 13");
-
-            return cudaAnswer switch
-            {
-                MessageBoxResult.Custom1 => "cuda",
-                MessageBoxResult.Custom2 => "cuda13",
-                _ => null,
-            };
+            return await PromptCrispAsrCudaVersionAsync(window);
         }
 
         return answer switch
@@ -529,6 +618,30 @@ public static class TtsVoiceInstaller
             MessageBoxResult.Custom1 => string.Empty,
             MessageBoxResult.Custom2 => "vulkan",
             MessageBoxResult.Custom4 => "hip",
+            _ => null,
+        };
+    }
+
+    /// <summary>
+    /// Follow-up prompt after the user picks "CUDA" in the CrispASR variant selector, on both
+    /// Windows and Linux - upstream ships a CUDA 12 and a CUDA 13 build for each.
+    /// Returns "cuda" (CUDA 12 build) or "cuda13", or null when the user cancels.
+    /// </summary>
+    private static async Task<string?> PromptCrispAsrCudaVersionAsync(Window window)
+    {
+        var cudaAnswer = await MessageBox.Show(
+            window,
+            "CrispASR CUDA build",
+            $"{Environment.NewLine}CUDA 12 works with most current NVIDIA drivers.{Environment.NewLine}{Environment.NewLine}Pick CUDA 13 only if your driver stack is built for CUDA 13.",
+            MessageBoxButtons.Cancel,
+            MessageBoxIcon.Question,
+            "CUDA 12",
+            "CUDA 13");
+
+        return cudaAnswer switch
+        {
+            MessageBoxResult.Custom1 => "cuda",
+            MessageBoxResult.Custom2 => "cuda13",
             _ => null,
         };
     }

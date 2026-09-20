@@ -38,7 +38,7 @@ public class LlamaCppOcr : IDisposable
             //System.IO.File.WriteAllBytes("c:\\temp\\ollama-ocr-image.png", pngBytes);
 
             var template = string.IsNullOrWhiteSpace(promptTemplate)
-                ? "Extract all text exactly as written. The language is {language}. Preserve line breaks."
+                ? SeOcrDefaults.LlamaCppOcrPrompt
                 : promptTemplate;
             var prompt = template
                 .Replace("{language}", language)

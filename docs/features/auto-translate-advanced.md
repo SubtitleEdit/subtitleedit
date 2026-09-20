@@ -28,6 +28,8 @@ With an advanced engine selected, click **Advanced...** in the engine settings r
 - **Top-p**, **Top-k**, **Repeat penalty** — Standard sampling options, passed through when set
 - **Max tokens per reply** — Response length cap; unset means no cap is sent
 - **Server context size (tokens)** — The context window for the locally started llama.cpp server (default 16384). Bigger batches, more history, and a long synopsis/glossary need more context. Only affects the local llama.cpp server; Ollama manages its own context
+- **Extra server parameters** — Additional `llama-server` command-line arguments, e.g. `-ngl 30 --no-mmap`, applied when the local server starts. They are appended after Subtitle Edit's own flags, so a repeated flag overrides Subtitle Edit's value
+- **Use only these parameters** — Start `llama-server` with the parameters above instead of Subtitle Edit's own tuning; only the model, host and port are still set. Ignored while the field is empty
 
 ## llama.cpp Engine Settings
 

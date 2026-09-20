@@ -29,7 +29,6 @@ public class LanguageChapters
     public string ScaleTimesDescription { get; set; }
     public string FromFrameRate { get; set; }
     public string ToFrameRate { get; set; }
-    public string Apply { get; set; }
     public string WriteToVideo { get; set; }
     public string WriteToVideoTitle { get; set; }
     public string WriteToVideoDescription { get; set; }
@@ -39,7 +38,6 @@ public class LanguageChapters
     public string WrittenToX { get; set; }
     public string UnableToWriteChapters { get; set; }
     public string ChaptersSavedToX { get; set; }
-    public string NoVideoLoaded { get; set; }
     public string EmptyListCallToAction { get; set; }
 
     public LanguageChapters()
@@ -71,7 +69,6 @@ public class LanguageChapters
         ScaleTimesDescription = "Scale every chapter time from one frame rate to another.";
         FromFrameRate = "From";
         ToFrameRate = "To";
-        Apply = "Apply";
         WriteToVideo = "Write to video...";
         WriteToVideoTitle = "Write chapters to video";
         WriteToVideoDescription = "The chapters are written into a copy of the video file. Nothing is re-encoded, so this is quick and lossless.";
@@ -81,7 +78,6 @@ public class LanguageChapters
         WrittenToX = "Chapters written to {0}";
         UnableToWriteChapters = "Unable to write chapters to the video file.";
         ChaptersSavedToX = "Chapters saved to {0}";
-        NoVideoLoaded = "No video loaded";
         EmptyListCallToAction = "No chapters yet - add one at the video position, or import them from a video or file.";
     }
 }

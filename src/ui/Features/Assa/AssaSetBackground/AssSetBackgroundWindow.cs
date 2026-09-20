@@ -87,7 +87,7 @@ public class AssSetBackgroundWindow : Window
         Content = mainGrid;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
-        Activated += delegate { paddingLeftBox.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, paddingLeftBox);
         AddHandler(KeyDownEvent, vm.KeyDown, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
         Loaded += (_, _) => vm.OnLoaded();
         Closing += (_, _) => vm.OnClosing();

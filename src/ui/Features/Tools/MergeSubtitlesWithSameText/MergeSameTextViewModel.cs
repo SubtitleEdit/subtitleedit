@@ -7,6 +7,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -19,6 +20,7 @@ public partial class MergeSameTextViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private MergeDisplayItem? _selectedMergeItem;
     [ObservableProperty] private int _maxMillisecondsBetweenLines;
     [ObservableProperty] private bool _includeIncrementingLines;
+    [ObservableProperty] private bool _includeRollUpCaptions;
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _mergeSubtitles;
     [ObservableProperty] private MergeDisplayItem? _selectedMergeSubtitle;
     [ObservableProperty] private bool _isOkEnabled;
@@ -102,6 +104,12 @@ public partial class MergeSameTextViewModel : ObservableObject, IClosingCleanup
         var fixIncrementing = IncludeIncrementingLines;
         var numberOfMerges = 0;
         Paragraph? p = null;
+
+        if (IncludeRollUpCaptions)
+        {
+            AddRollUpMerges(maxMsBetween, removed);
+        }
+
         for (var i = 1; i < _subtitles.Count; i++)
         {
             if (removed.Contains(i - 1))
@@ -178,6 +186,40 @@ public partial class MergeSameTextViewModel : ObservableObject, IClosingCleanup
         IsOkEnabled = MergeItems.Count > 0;
     }
 
+    /// <summary>
+    /// Roll-up (scrolling) caption chains are claimed first, so the plain same-text /
+    /// incrementing loop never sees their members (they are added to <paramref name="removed"/>).
+    /// </summary>
+    private void AddRollUpMerges(int maxMsBetween, HashSet<int> removed)
+    {
+        var paragraphs = _subtitles
+            .Select(s => new Paragraph(s.Text, s.StartTime.TotalMilliseconds, s.EndTime.TotalMilliseconds) { Number = s.Number })
+            .ToList();
+        var maxLines = Math.Max(1, Configuration.Settings.General.MaxNumberOfLines);
+        var i = 0;
+        while (i < paragraphs.Count)
+        {
+            if (!MergeLinesSameTextUtils.TryGetRollUpChain(paragraphs, i, maxMsBetween, maxLines, out var endIndex, out var merged))
+            {
+                i++;
+                continue;
+            }
+
+            var group = (MergeItems.Count + 1).ToString();
+            var linesToMerge = new List<SubtitleLineViewModel>();
+            for (var idx = i; idx <= endIndex; idx++)
+            {
+                linesToMerge.Add(_subtitles[idx]);
+                MergeSubtitles.Add(new SubtitleLineViewModel(_subtitles[idx]) { Extra = group });
+                removed.Add(idx);
+            }
+
+            var mergedText = string.Join(" | ", merged.Select(m => m.Text.Replace(Environment.NewLine, " / ")));
+            MergeItems.Add(new MergeDisplayItem(true, linesToMerge, mergedText, group) { ResultParagraphs = merged });
+            i = endIndex + 1;
+        }
+    }
+
     private bool IsFixAllowed(Paragraph p)
     {
         foreach (var mi in MergeItems.Where(p => !p.Apply))
@@ -198,12 +240,14 @@ public partial class MergeSameTextViewModel : ObservableObject, IClosingCleanup
     {
         MaxMillisecondsBetweenLines = Se.Settings.Tools.MergeSameText.MaxMillisecondsBetweenLines;
         IncludeIncrementingLines = Se.Settings.Tools.MergeSameText.IncludeIncrementingLines;
+        IncludeRollUpCaptions = Se.Settings.Tools.MergeSameText.IncludeRollUpCaptions;
     }
 
     private void SaveSettings()
     {
         Se.Settings.Tools.MergeSameText.MaxMillisecondsBetweenLines = MaxMillisecondsBetweenLines;
         Se.Settings.Tools.MergeSameText.IncludeIncrementingLines = IncludeIncrementingLines;
+        Se.Settings.Tools.MergeSameText.IncludeRollUpCaptions = IncludeRollUpCaptions;
 
         Se.SaveSettings();
     }
@@ -222,6 +266,22 @@ public partial class MergeSameTextViewModel : ObservableObject, IClosingCleanup
             }
 
             var match = MergeItems.FirstOrDefault(p => p.Apply && p.LinesToMerge.Contains(s));
+            if (match != null && match.ResultParagraphs != null)
+            {
+                for (var k = 0; k < match.ResultParagraphs.Count; k++)
+                {
+                    var rp = match.ResultParagraphs[k];
+                    var merged = new SubtitleLineViewModel(s, generateNewId: k > 0);
+                    merged.Text = rp.Text;
+                    merged.StartTime = TimeSpan.FromMilliseconds(rp.StartTime.TotalMilliseconds);
+                    merged.EndTime = TimeSpan.FromMilliseconds(rp.EndTime.TotalMilliseconds);
+                    result.Add(merged);
+                }
+
+                skipCount += match.LinesToMerge.Count - 1;
+                continue;
+            }
+
             if (match != null)
             {
                 var merged = new SubtitleLineViewModel(s);

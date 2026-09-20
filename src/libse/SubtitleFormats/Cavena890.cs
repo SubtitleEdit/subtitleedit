@@ -17,6 +17,27 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static readonly string Cp1252FillerChar = Encoding.GetEncoding(1252).GetString(new byte[] { 0x7F });
         private static readonly string Cp1252DashChar = Encoding.GetEncoding(1252).GetString(new byte[] { 0xBE });
 
+        // FixText ran ~150 `encoding.GetString(new byte[] { .. })` calls per paragraph, each a
+        // byte[] plus a string, to build the same one- and two-byte cp1252 strings every time.
+        private static readonly Encoding Cp1252Encoding = Encoding.GetEncoding(1252);
+        private static readonly string[] Cp1252Single = new string[256];
+        private static readonly System.Collections.Concurrent.ConcurrentDictionary<int, string> Cp1252Pairs = new System.Collections.Concurrent.ConcurrentDictionary<int, string>();
+
+        private static string Cp1252(byte b)
+        {
+            return Cp1252Single[b] ??= Cp1252Encoding.GetString(new[] { b });
+        }
+
+        private static string Cp1252(byte a, byte b)
+        {
+            return Cp1252Pairs.GetOrAdd((a << 8) | b, DecodeCp1252Pair);
+        }
+
+        private static string DecodeCp1252Pair(int key)
+        {
+            return Cp1252Encoding.GetString(new[] { (byte)(key >> 8), (byte)key });
+        }
+
         public const int LanguageIdDanish = 0x07;
         public const int LanguageIdSwedish = 0x28;
         public const int LanguageIdNorwegian = 0x1e;
@@ -983,12 +1004,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         buffer[index] = (byte)HebrewCodes[letterIndex];
                     }
-                    else if (i + 3 < text.Length && text.Substring(i, 3) == "<i>")
+                    else if (i + 3 < text.Length && text.StartsWithAt(i, "<i>", StringComparison.Ordinal))
                     {
                         buffer[index] = 0x88;
                         skipCount = 2;
                     }
-                    else if (i + 4 <= text.Length && text.Substring(i, 4) == "</i>")
+                    else if (i + 4 <= text.Length && text.StartsWithAt(i, "</i>", StringComparison.Ordinal))
                     {
                         buffer[index] = 0x98;
                         skipCount = 3;
@@ -1022,7 +1043,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     // code wrote only the high byte of each character (dropping the low byte)
                     // and lone italic-marker bytes, so nothing could round-trip.
                     encoding = Encoding.GetEncoding(1201);
-                    if (i + 3 < text.Length && text.Substring(i, 3) == "<i>")
+                    if (i + 3 < text.Length && text.StartsWithAt(i, "<i>", StringComparison.Ordinal))
                     {
                         // In-band control code as a 0x00 XX pair - decodes to U+0088,
                         // which FixText maps back to "<i>".
@@ -1035,7 +1056,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                         skipCount = 2;
                     }
-                    else if (i + 4 <= text.Length && text.Substring(i, 4) == "</i>")
+                    else if (i + 4 <= text.Length && text.StartsWithAt(i, "</i>", StringComparison.Ordinal))
                     {
                         if (index + 2 <= buffer.Length)
                         {
@@ -1604,12 +1625,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             buffer[index] = IsScandinavian(languageId) ? (byte)'?' : (byte)0xE6;
                         }
-                        else if (i + 3 < text.Length && text.Substring(i, 3) == "<i>")
+                        else if (i + 3 < text.Length && text.StartsWithAt(i, "<i>", StringComparison.Ordinal))
                         {
                             buffer[index] = 0x88;
                             skipCount = 2;
                         }
-                        else if (i + 4 <= text.Length && text.Substring(i, 4) == "</i>")
+                        else if (i + 4 <= text.Length && text.StartsWithAt(i, "</i>", StringComparison.Ordinal))
                         {
                             buffer[index] = 0x98;
                             skipCount = 3;
@@ -2082,181 +2103,181 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 // Raw-byte remappings must run before the control-code mappings below - those
                 // produce the same characters (å/æ/â...), and running these replaces later
                 // would clobber them (e.g. 0x1D -> "å" -> "[").
-                text = text.Replace(encoding.GetString(new byte[] { 0xE2 }), "@");
+                text = text.Replace(Cp1252(0xE2), "@");
                 if (languageId != LanguageIdSwedish &&
                     languageId != LanguageIdNorwegian &&
                     languageId != LanguageIdDanish)
                 {
-                    text = text.Replace(encoding.GetString(new byte[] { 0xE5 }), "[");
-                    text = text.Replace(encoding.GetString(new byte[] { 0xE6 }), "]");
+                    text = text.Replace(Cp1252(0xE5), "[");
+                    text = text.Replace(Cp1252(0xE6), "]");
                 }
 
-                text = text.Replace(encoding.GetString(new byte[] { 0x02 }), "Đ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x1B }), "æ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x1C }), "ø");
-                text = text.Replace(encoding.GetString(new byte[] { 0x1D }), "å");
-                text = text.Replace(encoding.GetString(new byte[] { 0x1E }), "Æ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x1F }), "Ø");
+                text = text.Replace(Cp1252(0x02), "Đ");
+                text = text.Replace(Cp1252(0x1B), "æ");
+                text = text.Replace(Cp1252(0x1C), "ø");
+                text = text.Replace(Cp1252(0x1D), "å");
+                text = text.Replace(Cp1252(0x1E), "Æ");
+                text = text.Replace(Cp1252(0x1F), "Ø");
 
-                text = text.Replace(encoding.GetString(new byte[] { 0x5B }), "Æ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x5C }), "Ø");
-                text = text.Replace(encoding.GetString(new byte[] { 0x5D }), "Å");
-                text = text.Replace(encoding.GetString(new byte[] { 0x7C }), "ł");
-                text = text.Replace(encoding.GetString(new byte[] { 0x7D }), "đ");
+                text = text.Replace(Cp1252(0x5B), "Æ");
+                text = text.Replace(Cp1252(0x5C), "Ø");
+                text = text.Replace(Cp1252(0x5D), "Å");
+                text = text.Replace(Cp1252(0x7C), "ł");
+                text = text.Replace(Cp1252(0x7D), "đ");
 
-                text = text.Replace(encoding.GetString(new byte[] { 0xEB }), "♪");
+                text = text.Replace(Cp1252(0xEB), "♪");
 
                 // capitals with accent grave
-                text = text.Replace(encoding.GetString(new byte[] { 0x80, 0x43 }), "C");
-                text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x41 }), "À");
-                text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x45 }), "È");
-                text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x49 }), "Ì");
-                text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x4f }), "Ò");
-                text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x55 }), "Ù");
+                text = text.Replace(Cp1252(0x80, 0x43), "C");
+                text = text.Replace(Cp1252(0x81, 0x41), "À");
+                text = text.Replace(Cp1252(0x81, 0x45), "È");
+                text = text.Replace(Cp1252(0x81, 0x49), "Ì");
+                text = text.Replace(Cp1252(0x81, 0x4f), "Ò");
+                text = text.Replace(Cp1252(0x81, 0x55), "Ù");
 
                 // lowercase with accent grave
-                text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x61 }), "à");
-                text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x65 }), "è");
-                text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x69 }), "ì");
-                text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x6F }), "ò");
-                text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x75 }), "ù");
+                text = text.Replace(Cp1252(0x81, 0x61), "à");
+                text = text.Replace(Cp1252(0x81, 0x65), "è");
+                text = text.Replace(Cp1252(0x81, 0x69), "ì");
+                text = text.Replace(Cp1252(0x81, 0x6F), "ò");
+                text = text.Replace(Cp1252(0x81, 0x75), "ù");
 
                 // capitals with accent aigu
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x41 }), "Á");
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x43 }), "Ć");
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x45 }), "É");
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x49 }), "Í");
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x4C }), "Ĺ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x4E }), "Ń");
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x4F }), "Ó");
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x52 }), "Ŕ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x53 }), "Ś");
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x55 }), "Ú");
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x57 }), "Ẃ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x59 }), "Ý");
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x5A }), "Ź");
+                text = text.Replace(Cp1252(0x82, 0x41), "Á");
+                text = text.Replace(Cp1252(0x82, 0x43), "Ć");
+                text = text.Replace(Cp1252(0x82, 0x45), "É");
+                text = text.Replace(Cp1252(0x82, 0x49), "Í");
+                text = text.Replace(Cp1252(0x82, 0x4C), "Ĺ");
+                text = text.Replace(Cp1252(0x82, 0x4E), "Ń");
+                text = text.Replace(Cp1252(0x82, 0x4F), "Ó");
+                text = text.Replace(Cp1252(0x82, 0x52), "Ŕ");
+                text = text.Replace(Cp1252(0x82, 0x53), "Ś");
+                text = text.Replace(Cp1252(0x82, 0x55), "Ú");
+                text = text.Replace(Cp1252(0x82, 0x57), "Ẃ");
+                text = text.Replace(Cp1252(0x82, 0x59), "Ý");
+                text = text.Replace(Cp1252(0x82, 0x5A), "Ź");
 
                 // lowercase with accent aigu
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x61 }), "á");
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x63 }), "ć");
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x65 }), "é");
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x69 }), "í");
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x6C }), "ĺ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x6E }), "ń");
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x6F }), "ó");
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x72 }), "ŕ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x73 }), "ś");
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x75 }), "ú");
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x77 }), "ẃ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x79 }), "ý");
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x7A }), "ź");
+                text = text.Replace(Cp1252(0x82, 0x61), "á");
+                text = text.Replace(Cp1252(0x82, 0x63), "ć");
+                text = text.Replace(Cp1252(0x82, 0x65), "é");
+                text = text.Replace(Cp1252(0x82, 0x69), "í");
+                text = text.Replace(Cp1252(0x82, 0x6C), "ĺ");
+                text = text.Replace(Cp1252(0x82, 0x6E), "ń");
+                text = text.Replace(Cp1252(0x82, 0x6F), "ó");
+                text = text.Replace(Cp1252(0x82, 0x72), "ŕ");
+                text = text.Replace(Cp1252(0x82, 0x73), "ś");
+                text = text.Replace(Cp1252(0x82, 0x75), "ú");
+                text = text.Replace(Cp1252(0x82, 0x77), "ẃ");
+                text = text.Replace(Cp1252(0x82, 0x79), "ý");
+                text = text.Replace(Cp1252(0x82, 0x7A), "ź");
 
                 // capitals with accent circonflexe
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x41 }), "Â");
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x43 }), "Ĉ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x45 }), "Ê");
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x47 }), "Ĝ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x48 }), "Ĥ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x49 }), "Î");
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x4A }), "Ĵ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x4F }), "Ô");
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x53 }), "Ŝ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x55 }), "Û");
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x57 }), "Ŵ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x59 }), "Ŷ");
+                text = text.Replace(Cp1252(0x83, 0x41), "Â");
+                text = text.Replace(Cp1252(0x83, 0x43), "Ĉ");
+                text = text.Replace(Cp1252(0x83, 0x45), "Ê");
+                text = text.Replace(Cp1252(0x83, 0x47), "Ĝ");
+                text = text.Replace(Cp1252(0x83, 0x48), "Ĥ");
+                text = text.Replace(Cp1252(0x83, 0x49), "Î");
+                text = text.Replace(Cp1252(0x83, 0x4A), "Ĵ");
+                text = text.Replace(Cp1252(0x83, 0x4F), "Ô");
+                text = text.Replace(Cp1252(0x83, 0x53), "Ŝ");
+                text = text.Replace(Cp1252(0x83, 0x55), "Û");
+                text = text.Replace(Cp1252(0x83, 0x57), "Ŵ");
+                text = text.Replace(Cp1252(0x83, 0x59), "Ŷ");
 
                 // lowercase with accent circonflexe
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x61 }), "â");
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x63 }), "ĉ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x65 }), "ê");
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x67 }), "ĝ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x68 }), "ĥ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x69 }), "î");
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x6A }), "ĵ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x6F }), "ô");
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x73 }), "ŝ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x75 }), "û");
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x77 }), "ŵ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x79 }), "ŷ");
+                text = text.Replace(Cp1252(0x83, 0x61), "â");
+                text = text.Replace(Cp1252(0x83, 0x63), "ĉ");
+                text = text.Replace(Cp1252(0x83, 0x65), "ê");
+                text = text.Replace(Cp1252(0x83, 0x67), "ĝ");
+                text = text.Replace(Cp1252(0x83, 0x68), "ĥ");
+                text = text.Replace(Cp1252(0x83, 0x69), "î");
+                text = text.Replace(Cp1252(0x83, 0x6A), "ĵ");
+                text = text.Replace(Cp1252(0x83, 0x6F), "ô");
+                text = text.Replace(Cp1252(0x83, 0x73), "ŝ");
+                text = text.Replace(Cp1252(0x83, 0x75), "û");
+                text = text.Replace(Cp1252(0x83, 0x77), "ŵ");
+                text = text.Replace(Cp1252(0x83, 0x79), "ŷ");
 
                 // capitals with caron
-                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x41 }), "Ǎ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x43 }), "Č");
-                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x44 }), "Ď");
-                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x45 }), "Ě");
-                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x47 }), "Ǧ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x49 }), "Ǐ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x4C }), "Ľ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x4E }), "Ň");
-                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x52 }), "Ř");
-                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x53 }), "Š");
-                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x54 }), "Ť");
-                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x5A }), "Ž");
+                text = text.Replace(Cp1252(0x84, 0x41), "Ǎ");
+                text = text.Replace(Cp1252(0x84, 0x43), "Č");
+                text = text.Replace(Cp1252(0x84, 0x44), "Ď");
+                text = text.Replace(Cp1252(0x84, 0x45), "Ě");
+                text = text.Replace(Cp1252(0x84, 0x47), "Ǧ");
+                text = text.Replace(Cp1252(0x84, 0x49), "Ǐ");
+                text = text.Replace(Cp1252(0x84, 0x4C), "Ľ");
+                text = text.Replace(Cp1252(0x84, 0x4E), "Ň");
+                text = text.Replace(Cp1252(0x84, 0x52), "Ř");
+                text = text.Replace(Cp1252(0x84, 0x53), "Š");
+                text = text.Replace(Cp1252(0x84, 0x54), "Ť");
+                text = text.Replace(Cp1252(0x84, 0x5A), "Ž");
 
                 // lowercase with caron
-                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x61 }), "ǎ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x63 }), "č");
-                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x64 }), "ď");
-                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x65 }), "ě");
-                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x67 }), "ǧ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x69 }), "ǐ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x6C }), "ľ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x6E }), "ň");
-                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x72 }), "ř");
-                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x73 }), "š");
-                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x74 }), "ť");
-                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x7A }), "ž");
+                text = text.Replace(Cp1252(0x84, 0x61), "ǎ");
+                text = text.Replace(Cp1252(0x84, 0x63), "č");
+                text = text.Replace(Cp1252(0x84, 0x64), "ď");
+                text = text.Replace(Cp1252(0x84, 0x65), "ě");
+                text = text.Replace(Cp1252(0x84, 0x67), "ǧ");
+                text = text.Replace(Cp1252(0x84, 0x69), "ǐ");
+                text = text.Replace(Cp1252(0x84, 0x6C), "ľ");
+                text = text.Replace(Cp1252(0x84, 0x6E), "ň");
+                text = text.Replace(Cp1252(0x84, 0x72), "ř");
+                text = text.Replace(Cp1252(0x84, 0x73), "š");
+                text = text.Replace(Cp1252(0x84, 0x74), "ť");
+                text = text.Replace(Cp1252(0x84, 0x7A), "ž");
 
                 // capitals with tilde
-                text = text.Replace(encoding.GetString(new byte[] { 0x85, 0x41 }), "Ã");
-                text = text.Replace(encoding.GetString(new byte[] { 0x85, 0x49 }), "Ĩ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x85, 0x4E }), "Ñ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x85, 0x4F }), "Õ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x85, 0x55 }), "Ũ");
+                text = text.Replace(Cp1252(0x85, 0x41), "Ã");
+                text = text.Replace(Cp1252(0x85, 0x49), "Ĩ");
+                text = text.Replace(Cp1252(0x85, 0x4E), "Ñ");
+                text = text.Replace(Cp1252(0x85, 0x4F), "Õ");
+                text = text.Replace(Cp1252(0x85, 0x55), "Ũ");
 
                 // lowercase with tilde
-                text = text.Replace(encoding.GetString(new byte[] { 0x85, 0x61 }), "ã");
-                text = text.Replace(encoding.GetString(new byte[] { 0x85, 0x69 }), "ĩ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x85, 0x6E }), "ñ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x85, 0x6F }), "õ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x85, 0x75 }), "ũ");
+                text = text.Replace(Cp1252(0x85, 0x61), "ã");
+                text = text.Replace(Cp1252(0x85, 0x69), "ĩ");
+                text = text.Replace(Cp1252(0x85, 0x6E), "ñ");
+                text = text.Replace(Cp1252(0x85, 0x6F), "õ");
+                text = text.Replace(Cp1252(0x85, 0x75), "ũ");
 
                 // capitals with trema
-                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x41 }), "Ä");
-                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x45 }), "Ë");
-                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x49 }), "Ï");
-                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x4F }), "Ö");
-                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x55 }), "Ü");
-                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x59 }), "Ÿ");
+                text = text.Replace(Cp1252(0x86, 0x41), "Ä");
+                text = text.Replace(Cp1252(0x86, 0x45), "Ë");
+                text = text.Replace(Cp1252(0x86, 0x49), "Ï");
+                text = text.Replace(Cp1252(0x86, 0x4F), "Ö");
+                text = text.Replace(Cp1252(0x86, 0x55), "Ü");
+                text = text.Replace(Cp1252(0x86, 0x59), "Ÿ");
 
                 // lowercase with trema
-                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x61 }), "ä");
-                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x65 }), "ë");
-                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x69 }), "ï");
-                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x6F }), "ö");
-                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x75 }), "ü");
-                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x79 }), "ÿ");
+                text = text.Replace(Cp1252(0x86, 0x61), "ä");
+                text = text.Replace(Cp1252(0x86, 0x65), "ë");
+                text = text.Replace(Cp1252(0x86, 0x69), "ï");
+                text = text.Replace(Cp1252(0x86, 0x6F), "ö");
+                text = text.Replace(Cp1252(0x86, 0x75), "ü");
+                text = text.Replace(Cp1252(0x86, 0x79), "ÿ");
 
                 // with ring
-                text = text.Replace(encoding.GetString(new byte[] { 0x8C, 0x61 }), "å");
-                text = text.Replace(encoding.GetString(new byte[] { 0x8C, 0x41 }), "Å");
+                text = text.Replace(Cp1252(0x8C, 0x61), "å");
+                text = text.Replace(Cp1252(0x8C, 0x41), "Å");
 
-                text = text.Replace(encoding.GetString(new byte[] { 0x88 }), "<i>");
-                text = text.Replace(encoding.GetString(new byte[] { 0x98 }), "</i>");
+                text = text.Replace(Cp1252(0x88), "<i>");
+                text = text.Replace(Cp1252(0x98), "</i>");
 
                 // ăĂ şŞ ţŢ (romanian)
-                text = text.Replace(encoding.GetString(new byte[] { 0x89, 0x61 }), "ă");
-                text = text.Replace(encoding.GetString(new byte[] { 0x89, 0x41 }), "Ă");
-                text = text.Replace(encoding.GetString(new byte[] { 0x87, 0x73 }), "ş");
-                text = text.Replace(encoding.GetString(new byte[] { 0x87, 0x53 }), "Ş");
-                text = text.Replace(encoding.GetString(new byte[] { 0x87, 0x74 }), "ţ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x87, 0x54 }), "Ţ");
+                text = text.Replace(Cp1252(0x89, 0x61), "ă");
+                text = text.Replace(Cp1252(0x89, 0x41), "Ă");
+                text = text.Replace(Cp1252(0x87, 0x73), "ş");
+                text = text.Replace(Cp1252(0x87, 0x53), "Ş");
+                text = text.Replace(Cp1252(0x87, 0x74), "ţ");
+                text = text.Replace(Cp1252(0x87, 0x54), "Ţ");
 
-                text = text.Replace(encoding.GetString(new byte[] { 0x8e, 0x5a }), "Ż");
-                text = text.Replace(encoding.GetString(new byte[] { 0x8e, 0x7a }), "ż");
-                text = text.Replace(encoding.GetString(new byte[] { 0x8f, 0x41 }), "Ą");
-                text = text.Replace(encoding.GetString(new byte[] { 0x8f, 0x61 }), "ą");
-                text = text.Replace(encoding.GetString(new byte[] { 0x8f, 0x65 }), "ę");
+                text = text.Replace(Cp1252(0x8e, 0x5a), "Ż");
+                text = text.Replace(Cp1252(0x8e, 0x7a), "ż");
+                text = text.Replace(Cp1252(0x8f, 0x41), "Ą");
+                text = text.Replace(Cp1252(0x8f, 0x61), "ą");
+                text = text.Replace(Cp1252(0x8f, 0x65), "ę");
 
                 if (text.Contains("<i></i>"))
                 {
@@ -2276,10 +2297,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Encoding encoding = Encoding.GetEncoding(1252);
             bool fontColorOn = false;
             var sb = new StringBuilder();
+            // One cp1252 byte decodes to one char; decode the eight colour markers once instead
+            // of a one-char string plus up to eight fresh decodes for every character.
+            var marker = new char[9];
+            for (var b = 0xf1; b <= 0xf8; b++)
+            {
+                marker[b - 0xf0] = encoding.GetString(new[] { (byte)b })[0];
+            }
+
             for (int i = 0; i < text.Length; i++)
             {
-                var s = text.Substring(i, 1);
-                if (s == encoding.GetString(new byte[] { 0xf1 }))
+                var s = text[i];
+                if (s == marker[1])
                 {
                     if (fontColorOn)
                     {
@@ -2288,7 +2317,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     sb.Append("<font color=\"#FF797D\">"); // red
                     fontColorOn = true;
                 }
-                else if (s == encoding.GetString(new byte[] { 0xf2 }))
+                else if (s == marker[2])
                 {
                     if (fontColorOn)
                     {
@@ -2297,7 +2326,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     sb.Append("<font color=\"#AAEF9E\">"); // green
                     fontColorOn = true;
                 }
-                else if (s == encoding.GetString(new byte[] { 0xf3 }))
+                else if (s == marker[3])
                 {
                     if (fontColorOn)
                     {
@@ -2306,7 +2335,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     sb.Append("<font color=\"#FAFAA8\">"); // yellow
                     fontColorOn = true;
                 }
-                else if (s == encoding.GetString(new byte[] { 0xf4 }))
+                else if (s == marker[4])
                 {
                     if (fontColorOn)
                     {
@@ -2315,7 +2344,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     sb.Append("<font color=\"#9999FF\">"); // purple
                     fontColorOn = true;
                 }
-                else if (s == encoding.GetString(new byte[] { 0xf5 }))
+                else if (s == marker[5])
                 {
                     if (fontColorOn)
                     {
@@ -2324,7 +2353,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     sb.Append("<font color=\"#FFABFB\">"); // magenta
                     fontColorOn = true;
                 }
-                else if (s == encoding.GetString(new byte[] { 0xf6 }))
+                else if (s == marker[6])
                 {
                     if (fontColorOn)
                     {
@@ -2333,7 +2362,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     sb.Append("<font color=\"#A2FEFE\">"); // cyan
                     fontColorOn = true;
                 }
-                else if (s == encoding.GetString(new byte[] { 0xf7 }))
+                else if (s == marker[7])
                 {
                     if (fontColorOn)
                     {
@@ -2341,7 +2370,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         fontColorOn = false;
                     }
                 }
-                else if (s == encoding.GetString(new byte[] { 0xf8 }))
+                else if (s == marker[8])
                 {
                     sb.Append("<font color=\"#FCC786\">"); // orange
                     fontColorOn = true;

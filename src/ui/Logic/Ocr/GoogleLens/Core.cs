@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.UiLogic.Http;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -105,8 +106,8 @@ public class Core
             { "s", "4" },
             { "re", "df" },
             { "stcs", DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString() },
-            { "vpw", HeaderData.Config["viewport"].ToString()! },
-            { "vph", HeaderData.Config["viewport"].ToString()! },
+            { "vpw", HeaderData.ViewportWidth.ToString(CultureInfo.InvariantCulture) },
+            { "vph", HeaderData.ViewportHeight.ToString(CultureInfo.InvariantCulture) },
             { "ep", "subb" }
         };
 

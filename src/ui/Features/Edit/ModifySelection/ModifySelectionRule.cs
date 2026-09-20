@@ -245,6 +245,11 @@ public class ModifySelectionRule
             },
             new()
             {
+                RuleType = RuleType.Forced,
+                Name = l.Forced,
+            },
+            new()
+            {
                 RuleType = RuleType.BlankLines,
                 Name = l.BlankLines,
             },
@@ -427,6 +432,9 @@ public class ModifySelectionRule
                 }
 
                 return HasMatchCase && MatchCase ? item.Bookmark.Contains(Text) : item.Bookmark.IndexOf(Text, StringComparison.OrdinalIgnoreCase) >= 0;
+
+            case RuleType.Forced:
+                return item.Forced;
 
             case RuleType.BlankLines:
                 return string.IsNullOrWhiteSpace(text);

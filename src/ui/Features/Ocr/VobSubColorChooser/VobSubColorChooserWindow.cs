@@ -28,7 +28,7 @@ public class VobSubColorChooserWindow : Window
         var headerText = new TextBlock
         {
             Text = Se.Language.Ocr.VobSubColorsHeader,
-            FontSize = 14,
+            FontSize = UiUtil.ScaledFontSize(14),
             FontWeight = FontWeight.SemiBold,
             Margin = new Thickness(0, 0, 0, 4),
         };
@@ -115,7 +115,7 @@ public class VobSubColorChooserWindow : Window
         Content = rootPanel;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
-        Activated += delegate { buttonCancel.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, buttonCancel);
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
@@ -167,7 +167,7 @@ public class VobSubColorChooserWindow : Window
         {
             HorizontalAlignment = HorizontalAlignment.Center,
             Opacity = 0.7,
-            FontSize = 11,
+            FontSize = UiUtil.ScaledFontSize(11),
         };
         hexBlock.Bind(TextBlock.TextProperty, new Binding(hexProperty));
 

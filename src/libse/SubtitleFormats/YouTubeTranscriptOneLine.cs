@@ -10,6 +10,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d{1,3}:\d\d.+$", RegexOptions.Compiled);
         private static readonly Regex RegexTimeCodesHours = new Regex(@"^\d{1,2}:\d{1,3}:\d\d$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodesHoursWithText = new Regex(@"^\d{1,2}:\d\d:\d\d[ \t]", RegexOptions.Compiled);
 
         public override string Extension => ".txt";
 
@@ -43,7 +44,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             char[] trimChars = { '–', '.', ';', ':' };
             foreach (var line in lines)
             {
-                if (RegexTimeCodes.IsMatch(line))
+                if (RegexTimeCodesHoursWithText.IsMatch(line))
+                {
+                    // "1:01:01 text" also matches the minutes:seconds regex below, which took
+                    // "1:01" as the time and left ":01 text" as the text - so test hours first.
+                    var splitter = line.IndexOf(':', line.IndexOf(':') + 1) + 3;
+                    var text = line.Remove(0, splitter);
+                    var p = new Paragraph(DecodeTimeCodeHours(line.Substring(0, splitter)), new TimeCode(), text);
+                    subtitle.Paragraphs.Add(p);
+                    text = text.Trim().Trim(trimChars).Trim();
+                    if (text.Length > 0 && char.IsDigit(text[0]))
+                    {
+                        _errorCount++;
+                    }
+                }
+                else if (RegexTimeCodes.IsMatch(line))
                 {
                     var splitter = line.IndexOf(':') + 3;
                     var text = line.Remove(0, splitter);

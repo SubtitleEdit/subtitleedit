@@ -20,8 +20,23 @@ namespace UITests.Controls;
 // Repro for "when moving end in the waveform, the duration box time is not changing":
 // dragging a cue edge mutates the shared SubtitleLineViewModel, and a SecondsUpDown bound
 // TwoWay to its Duration must tick live during the drag.
-public partial class AudioVisualizerDragDurationBoxTests
+public partial class AudioVisualizerDragDurationBoxTests : IDisposable
 {
+    // A window left open outlives the test: it keeps the application-wide activation and focused
+    // element, so a later test's click or key press is delivered to it instead. Closing here rather
+    // than at the end of each test also covers the tests that stop early on a failed assertion.
+    private readonly List<Window> _windows = new();
+
+    public void Dispose()
+    {
+        foreach (var window in _windows)
+        {
+            window.Close();
+        }
+
+        _windows.Clear();
+    }
+
     private const int SampleRate = 126;
     private const double WidthPx = 800;
     private const double HeightPx = 200;
@@ -85,6 +100,7 @@ public partial class AudioVisualizerDragDurationBoxTests
             panel.Children.Add(av);
             panel.Children.Add(durationBox);
             var window = new Window { Width = WidthPx, Height = HeightPx + 40, Content = panel };
+            _windows.Add(window);
             window.Show();
             Dispatcher.UIThread.RunJobs();
             window.UpdateLayout();
@@ -145,6 +161,7 @@ public partial class AudioVisualizerDragDurationBoxTests
             panel.Children.Add(av);
             panel.Children.Add(durationBox);
             var window = new Window { Width = WidthPx, Height = HeightPx + 40, Content = panel };
+            _windows.Add(window);
             window.Show();
             Dispatcher.UIThread.RunJobs();
             window.UpdateLayout();

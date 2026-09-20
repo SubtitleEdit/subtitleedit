@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -73,12 +74,33 @@ namespace Nikse.SubtitleEdit.Logic
             Action<TViewModel>? configureViewModel = null, Action<TWindow>? configureWindow = null)
             where TWindow : Window
             where TViewModel : class;
+
+        /// <summary>
+        /// Shows a window of type TWindow as a stand-alone top-level window while
+        /// <paramref name="owner"/> - and any of <paramref name="companions"/> currently on
+        /// screen - are hidden, and brings them back once it closes. This is how SE4 ran
+        /// Batch convert: the editor disappears and only the tool window remains (#14502).
+        ///
+        /// It can't be a modal dialog: Avalonia's <see cref="Window.Hide"/> cascades to every
+        /// owned window (the dialog would vanish with its owner) and
+        /// <see cref="Window.ShowDialog(Window)"/> refuses a hidden owner. Minimizing the owner
+        /// is no better - on Windows an owner's owned windows go with it.
+        /// </summary>
+        /// <param name="owner">The window to hide for the tool window's lifetime.</param>
+        /// <param name="companions">Further windows to hide along with the owner when they are
+        /// visible (the undocked video/waveform tool windows); hidden ones stay hidden.</param>
+        Task<TViewModel> ShowWithOwnerHiddenAsync<TWindow, TViewModel>(
+            Window owner,
+            IReadOnlyList<Window?> companions,
+            Action<TViewModel>? configureViewModel = null)
+            where TWindow : Window
+            where TViewModel : class;
     }
 
     /// <summary>
     /// Implementation of the window service that uses dependency injection to create windows.
     /// </summary>
-    public class WindowService : IWindowService
+    public partial class WindowService : IWindowService
     {
         private readonly IServiceProvider _serviceProvider;
 
@@ -210,6 +232,90 @@ namespace Nikse.SubtitleEdit.Logic
             return viewModel;
         }
 
+        /// <inheritdoc />
+        public async Task<TViewModel> ShowWithOwnerHiddenAsync<TWindow, TViewModel>(
+            Window owner,
+            IReadOnlyList<Window?> companions,
+            Action<TViewModel>? configureViewModel = null)
+            where TWindow : Window
+            where TViewModel : class
+        {
+            var viewModel = _serviceProvider.GetRequiredService<TViewModel>();
+            configureViewModel?.Invoke(viewModel);
+
+            var w = Activator.CreateInstance(typeof(TWindow), viewModel);
+            if (w == null)
+            {
+                throw new InvalidOperationException($"Failed to create window of type {typeof(TWindow).Name} with constructor param {typeof(TViewModel).Name}");
+            }
+
+            var window = (TWindow)w;
+
+            // No owner to center on; a remembered position (RestoreWindowPosition in the
+            // window's Loaded handler) still wins over this.
+            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
+            // Must run before Show() - see the note in ShowWindow<T>. (#12665)
+            ApplyRightToLeftSettings(window);
+            UiTheme.ApplyScaleToWindow(window);
+
+            var windowsToHide = new List<Window?>(companions.Count + 1) { owner };
+            windowsToHide.AddRange(companions);
+            await ShowWithWindowsHiddenAsync(window, windowsToHide, activateAfterwards: owner);
+
+            return viewModel;
+        }
+
+        /// <summary>
+        /// Shows <paramref name="window"/> as a top-level window with every visible window in
+        /// <paramref name="windowsToHide"/> hidden until it closes, then re-shows them in the
+        /// given order and activates <paramref name="activateAfterwards"/>. Windows that were
+        /// not visible to begin with are left alone. Restoration runs even if showing the
+        /// window throws, so the hidden windows can never be lost.
+        /// </summary>
+        public static async Task ShowWithWindowsHiddenAsync(Window window, IReadOnlyList<Window?> windowsToHide, Window? activateAfterwards)
+        {
+            var hidden = new List<Window>();
+            foreach (var candidate in windowsToHide)
+            {
+                if (candidate is { IsVisible: true } && !hidden.Contains(candidate))
+                {
+                    hidden.Add(candidate);
+                }
+            }
+
+            var closed = new TaskCompletionSource();
+            window.Closed += (_, _) => closed.TrySetResult();
+
+            foreach (var w in hidden)
+            {
+                w.Hide();
+            }
+
+            try
+            {
+                window.Show();
+                await closed.Task;
+            }
+            finally
+            {
+                foreach (var w in hidden)
+                {
+                    w.Show();
+                }
+
+                if (activateAfterwards != null)
+                {
+                    if (activateAfterwards.WindowState == WindowState.Minimized)
+                    {
+                        activateAfterwards.WindowState = WindowState.Normal;
+                    }
+
+                    activateAfterwards.Activate();
+                }
+            }
+        }
+
         /// <summary>
         /// Shows an already-constructed window as a modal dialog with the shared foreground
         /// handling every modal in SE needs: kept above the undocked tool windows (#11971),
@@ -234,6 +340,13 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static async Task RunModalAsync(Window owner, Window dialog, Func<Task> showDialog)
         {
+            // Hand-built dialogs come straight here without passing ShowDialogAsync, so apply the
+            // window chrome (dark title bar, layout scale, right-to-left) for them too. Must run
+            // before ShowDialog - see the note in ShowWindow<T>. Both calls are safe to repeat for
+            // the callers that already applied them. (#15066)
+            ApplyRightToLeftSettings(dialog);
+            UiTheme.ApplyScaleToWindow(dialog);
+
             // Keep the dialog above undocked tool windows (audio visualizer / video player), which
             // float on top of the main window via the same helper. Without this the dialog opens
             // behind them in undocked mode. (#11971)
@@ -244,6 +357,8 @@ namespace Nikse.SubtitleEdit.Logic
             using var undockedSuspension = SuspendUndockedTopmost();
             var foregroundEnforcement = EnforceModalForegroundWhileOpen(dialog, owner);
             var minimizeMirror = MirrorMinimizeWithOwner(dialog, owner);
+
+            var ownerFocus = CaptureOwnerFocus(owner);
 
             _openModalCount++;
             try
@@ -256,7 +371,77 @@ namespace Nikse.SubtitleEdit.Logic
                 _openModalCount--;
                 minimizeMirror.Dispose();
                 foregroundEnforcement.Dispose();
+                RestoreOwnerFocusIfLost(owner, dialog, ownerFocus);
             }
+        }
+
+        private readonly record struct OwnerFocus(InputElement Element, bool FocusVisible);
+
+        private static OwnerFocus? CaptureOwnerFocus(Window owner)
+        {
+            // The focused element is app-global - only remember it when it lives in the owner.
+            return owner.FocusManager?.GetFocusedElement() is InputElement element &&
+                   element != owner &&
+                   TopLevel.GetTopLevel(element) == owner
+                ? new OwnerFocus(element, element.Classes.Contains(":focus-visible"))
+                : null;
+        }
+
+        /// <summary>
+        /// Puts keyboard focus back on the control that had it before the dialog opened - typically
+        /// the button that opened it - when closing the dialog left focus nowhere.
+        ///
+        /// On Windows the owner is re-activated with focus on the bare window, so a keyboard or
+        /// screen reader user closing e.g. Settings > Toolbar items was sent back to the top of
+        /// Settings instead of the button they used (#12087). Only a lost focus is repaired (the
+        /// window itself, a detached control, or a control in the closed dialog): a caller that
+        /// moves focus on purpose, or the user clicking elsewhere first, wins. Runs once more on
+        /// the owner's activation for when the OS re-activates it after the dialog task completed.
+        /// </summary>
+        private static void RestoreOwnerFocusIfLost(Window owner, Window dialog, OwnerFocus? ownerFocus)
+        {
+            if (ownerFocus is not { } previous)
+            {
+                return;
+            }
+
+            void Restore()
+            {
+                if (!owner.IsActive || IsDisabledByOpenModal(owner))
+                {
+                    return; // a follow-up dialog is open - its own close runs this again
+                }
+
+                if (owner.FocusManager?.GetFocusedElement() is Visual focused && focused != owner)
+                {
+                    var focusedTopLevel = TopLevel.GetTopLevel(focused);
+                    if (focusedTopLevel != null && focusedTopLevel != dialog)
+                    {
+                        return; // focus is on a live control - leave it be
+                    }
+                }
+
+                var element = previous.Element;
+                if (TopLevel.GetTopLevel(element) == owner &&
+                    element.IsEffectivelyVisible &&
+                    element.IsEffectivelyEnabled)
+                {
+                    element.Focus(previous.FocusVisible ? NavigationMethod.Tab : NavigationMethod.Unspecified);
+                }
+            }
+
+            void OnOwnerActivated(object? sender, EventArgs e)
+            {
+                owner.Activated -= OnOwnerActivated;
+                Dispatcher.UIThread.Post(Restore, DispatcherPriority.Background);
+            }
+
+            if (!owner.IsActive)
+            {
+                owner.Activated += OnOwnerActivated;
+            }
+
+            Dispatcher.UIThread.Post(Restore, DispatcherPriority.Background);
         }
 
         // When a dialog is launched from a context menu item, the command runs synchronously while the
@@ -278,12 +463,19 @@ namespace Nikse.SubtitleEdit.Logic
         // would be covered. MainViewModel registers the setter; the count makes nested
         // suspensions safe (menu -> dialog -> message box).
         private static Action<bool>? _setUndockedWindowsTopmost;
-        private static int _undockedTopmostSuspendCount;
+        private static readonly List<UndockedTopmostSuspension> _undockedTopmostSuspensions = new();
+        private static bool _undockedTopmostSuppressed;
+
+        // How long a suspension may report "owner not open" before it counts as leaked. A flyout
+        // takes its suspension at Opening, before IsOpen flips; a stalled UI thread can stretch
+        // that gap, and treating it as a leak too early would put the tool windows back over the
+        // popup it was taken for. Nothing legitimately stays in that state for this long.
+        private const long UndockedTopmostLeakGraceMs = 5000;
 
         /// <summary>
         /// Registers the callback that applies (true) or suppresses (false) the undocked tool
         /// windows' topmost state. Registered by MainViewModel; consulted by
-        /// <see cref="SuspendUndockedTopmost"/>.
+        /// <see cref="SuspendUndockedTopmost()"/>.
         /// </summary>
         public static void RegisterUndockedTopmostSetter(Action<bool>? setTopmost)
         {
@@ -296,26 +488,127 @@ namespace Nikse.SubtitleEdit.Logic
         /// </summary>
         internal static void ResetUndockedTopmostSuspensionsForTests()
         {
-            _undockedTopmostSuspendCount = 0;
+            _undockedTopmostSuspensions.Clear();
+            _undockedTopmostSuppressed = false;
+        }
+
+        /// <summary>
+        /// True while something that must not be covered by the undocked tool windows is open.
+        /// This is the live answer, not a remembered flag: reading it drops any suspension whose
+        /// owner has closed without releasing it (see <see cref="ReconcileUndockedTopmostSuspensions"/>),
+        /// so a leaked suspension can never keep the tool windows down for the rest of the session.
+        /// </summary>
+        public static bool IsUndockedTopmostSuspended
+        {
+            get
+            {
+                ReconcileUndockedTopmostSuspensions();
+                return _undockedTopmostSuppressed;
+            }
         }
 
         /// <summary>
         /// Drops the undocked tool windows' topmost state until the returned token is disposed.
-        /// Re-entrant: the state is restored when the last outstanding token is disposed.
+        /// Re-entrant: the state is restored when the last outstanding token is disposed. For a
+        /// suspension whose owner can be asked whether it is still open, prefer
+        /// <see cref="SuspendUndockedTopmost(Func{bool}, string)"/>.
         /// </summary>
         public static IDisposable SuspendUndockedTopmost()
         {
-            if (++_undockedTopmostSuspendCount == 1)
+            return SuspendUndockedTopmost(null, "modal dialog");
+        }
+
+        /// <summary>
+        /// Same as <see cref="SuspendUndockedTopmost()"/>, with a liveness check. A token whose
+        /// <paramref name="isStillOpen"/> reports false after its owner has been seen open (or
+        /// for longer than any open takes) is treated as leaked the next time the suspensions
+        /// are consulted: it is released, and the leak is logged with the stack that took it.
+        /// </summary>
+        /// <param name="isStillOpen">Whether the menu, flyout, or dialog the token was taken for is still open.</param>
+        /// <param name="origin">What took the suspension - named in the leak log entry.</param>
+        public static IDisposable SuspendUndockedTopmost(Func<bool>? isStillOpen, string origin)
+        {
+            var suspension = new UndockedTopmostSuspension(isStillOpen, origin);
+            _undockedTopmostSuspensions.Add(suspension);
+            ReconcileUndockedTopmostSuspensions();
+            return suspension;
+        }
+
+        /// <summary>
+        /// Brings the tool windows' topmost state in line with the suspensions that are actually
+        /// outstanding. The suspension used to be a bare count, and a single token that never got
+        /// disposed - an Opened without its Closed, a flyout torn down under its popup - kept the
+        /// undocked audio visualizer behind the main window until SE was restarted, with nothing
+        /// left in the log to say what had taken it (#14622). Now every owner that can be asked
+        /// is asked, a token whose owner is gone is dropped and logged, and the state is
+        /// re-derived from what remains.
+        /// </summary>
+        private static void ReconcileUndockedTopmostSuspensions()
+        {
+            for (var i = _undockedTopmostSuspensions.Count - 1; i >= 0; i--)
             {
-                _setUndockedWindowsTopmost?.Invoke(false);
+                var suspension = _undockedTopmostSuspensions[i];
+                if (!suspension.IsLeaked())
+                {
+                    continue;
+                }
+
+                _undockedTopmostSuspensions.RemoveAt(i);
+                Se.LogError(
+                    $"Undocked topmost suspension leaked: the {suspension.Origin} that took it is no longer open " +
+                    $"but never released it - released now. Taken at:{Environment.NewLine}{suspension.TakenAt}");
             }
 
-            return new UndockedTopmostSuspension();
+            var suppress = _undockedTopmostSuspensions.Count > 0;
+            if (suppress == _undockedTopmostSuppressed)
+            {
+                return;
+            }
+
+            _undockedTopmostSuppressed = suppress;
+            _setUndockedWindowsTopmost?.Invoke(!suppress);
         }
 
         private sealed class UndockedTopmostSuspension : IDisposable
         {
+            private readonly Func<bool>? _isStillOpen;
+            private readonly long _takenAtTick = Environment.TickCount64;
+            private bool _seenOpen;
             private bool _disposed;
+
+            public UndockedTopmostSuspension(Func<bool>? isStillOpen, string origin)
+            {
+                _isStillOpen = isStillOpen;
+                Origin = origin;
+                TakenAt = Environment.StackTrace;
+            }
+
+            public string Origin { get; }
+
+            public string TakenAt { get; }
+
+            /// <summary>
+            /// True when the owner is no longer open but the token was never disposed. An owner
+            /// legitimately reports "not open" right after taking the suspension (a flyout takes
+            /// it at Opening, before IsOpen flips), so that only counts once the owner has been
+            /// seen open, or after a grace period long enough for any open to have gone through.
+            /// A token without a liveness check is never leaked by this rule.
+            /// </summary>
+            public bool IsLeaked()
+            {
+                if (_isStillOpen == null)
+                {
+                    return false;
+                }
+
+                if (_isStillOpen())
+                {
+                    _seenOpen = true;
+                    return false;
+                }
+
+                return _seenOpen || Environment.TickCount64 - _takenAtTick > UndockedTopmostLeakGraceMs;
+            }
 
             public void Dispose()
             {
@@ -325,10 +618,8 @@ namespace Nikse.SubtitleEdit.Logic
                 }
 
                 _disposed = true;
-                if (--_undockedTopmostSuspendCount == 0)
-                {
-                    _setUndockedWindowsTopmost?.Invoke(true);
-                }
+                _undockedTopmostSuspensions.Remove(this);
+                ReconcileUndockedTopmostSuspensions();
             }
         }
 
@@ -350,7 +641,7 @@ namespace Nikse.SubtitleEdit.Logic
             IDisposable? suspension = null;
             flyout.Opening += (_, _) =>
             {
-                suspension ??= SuspendUndockedTopmost();
+                suspension ??= SuspendUndockedTopmost(() => flyout.IsOpen, "flyout");
 
                 // A subclass can cancel the open in OnOpening after the event has been raised;
                 // Closed then never fires and the suspension would leak, leaving the tool
@@ -380,7 +671,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static void SuspendUndockedTopmostWhileOpen(MenuBase menu)
         {
             IDisposable? suspension = null;
-            menu.Opened += (_, _) => suspension ??= SuspendUndockedTopmost();
+            menu.Opened += (_, _) => suspension ??= SuspendUndockedTopmost(() => menu.IsOpen, "main menu");
             menu.Closed += (_, _) =>
             {
                 suspension?.Dispose();
@@ -768,8 +1059,9 @@ namespace Nikse.SubtitleEdit.Logic
             return handle == IntPtr.Zero ? window.IsVisible : IsWindowVisible(handle);
         }
 
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        private static extern bool IsWindowVisible(IntPtr hWnd);
+        [LibraryImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static partial bool IsWindowVisible(IntPtr hWnd);
 
         /// <summary>
         /// Hands the foreground and the keyboard back to <paramref name="dialog"/> after the
@@ -950,7 +1242,7 @@ namespace Nikse.SubtitleEdit.Logic
                         return;
                     }
 
-                    child.Topmost = suppress?.Invoke() != true && (owner.IsActive || child.IsActive);
+                    SetTopmost(child, suppress?.Invoke() != true && (owner.IsActive || child.IsActive), owner);
                 });
             }
 
@@ -958,16 +1250,208 @@ namespace Nikse.SubtitleEdit.Logic
             owner.Deactivated += OnFocusChanged;
             child.Activated += OnFocusChanged;
             child.Deactivated += OnFocusChanged;
+            // A topmost owned window promotes its owner chain to WS_EX_TOPMOST on Windows, and
+            // the promotion outlives the child: closing it while it is still topmost - the normal
+            // end of any dialog the user finishes with SE in the foreground - leaves the main
+            // window above every other application until a minimize/restore rebuilds its z-order
+            // state (#14736, the close-time half of #14564). Demote at Closing, not Closed: by
+            // Closed the child's HWND is gone and the owner can no longer be demoted through it.
+            // Windows makes the owners of a window that is made non-topmost non-topmost too, so
+            // this hands the whole stack back.
+            child.Closing += (_, _) =>
+            {
+                if (child.Topmost)
+                {
+                    SetTopmost(child, false, owner);
+                }
+            };
             child.Closed += (_, _) =>
             {
                 owner.Activated -= OnFocusChanged;
                 owner.Deactivated -= OnFocusChanged;
                 child.Activated -= OnFocusChanged;
                 child.Deactivated -= OnFocusChanged;
+
+                // Backstop for a child closed without Closing ever being raised, and for nested
+                // modals, where the promotion can come from more than one level of the chain.
+                ClearStrayTopmost(owner);
             };
 
-            child.Topmost = suppress?.Invoke() != true && (owner.IsActive || child.IsActive);
+            SetTopmost(child, suppress?.Invoke() != true && (owner.IsActive || child.IsActive), owner);
         }
+
+        /// <summary>
+        /// Applies <paramref name="topmost"/> to <paramref name="window"/> - and, when dropping it
+        /// because another application took the foreground, keeps the window beneath that
+        /// application's window.
+        ///
+        /// Avalonia's Win32 backend implements Topmost=false as SetWindowPos(HWND_NOTOPMOST),
+        /// which Windows defines as "above all non-topmost windows": the demoted window lands at
+        /// the top of the normal band. The drop is posted from Deactivated, so it usually runs
+        /// after Windows has already raised the window the user clicked - and re-inserts ours
+        /// right above it. The other application is active but covered, and clicking its
+        /// taskbar button now minimizes it; only minimizing SE gets it out of the way (#14564,
+        /// the "some always on top setting?" half of #14283 - the TTS dialog is simply the
+        /// modal users leave open long enough to notice). The same band re-insertion is why
+        /// flyouts suspend the undocked topmost at Opening rather than Opened (#13493).
+        ///
+        /// So after the drop, when the foreground window belongs to another process and already
+        /// sits above <paramref name="owner"/> in the z-order, ours is moved directly beneath it.
+        /// The "already above" check keeps the race benign in the other order: if the foreign
+        /// window has not been raised yet, its own raise puts it on top, and re-ordering early
+        /// would drop the unowned undocked tool windows behind the main window. A topmost
+        /// foreign window is left alone - inserting after a topmost window makes the inserted
+        /// window topmost too, and it is above us anyway. Without SWP_NOOWNERZORDER an owned
+        /// dialog takes its owner along, so the whole SE stack ends up below the other
+        /// application in the order it had. No-op off Windows, where Topmost maps to a window
+        /// level and ordering between applications is the OS's own.
+        /// </summary>
+        internal static void SetTopmost(Window window, bool topmost, Window? owner)
+        {
+            window.Topmost = topmost;
+            if (topmost)
+            {
+                EnsureOsTopmost(window);
+            }
+            else
+            {
+                KeepBelowForeignForegroundWindow(window, owner ?? window);
+            }
+        }
+
+        /// <summary>
+        /// Avalonia's Win32 backend only issues SetWindowPos(HWND_TOPMOST) when its own cached
+        /// Topmost value changes, so a window whose WS_EX_TOPMOST the OS has dropped behind
+        /// Avalonia's back stays non-topmost no matter how often Topmost=true is re-asserted. If
+        /// the OS disagrees with the property after asserting it, force the round trip - that
+        /// desync is one of the two states that leave an undocked tool window permanently behind
+        /// the main window (#14622). Not logged: it is repaired right here and happens routinely,
+        /// so it only produced error logs on sessions where nothing went wrong (#14904).
+        /// </summary>
+        private static void EnsureOsTopmost(Window window)
+        {
+            if (!OperatingSystem.IsWindows())
+            {
+                return;
+            }
+
+            var handle = window.TryGetPlatformHandle()?.Handle ?? IntPtr.Zero;
+            if (handle == IntPtr.Zero || (GetWindowLongW(handle, GwlExStyle) & WsExTopmost) != 0)
+            {
+                return;
+            }
+
+            window.Topmost = false;
+            window.Topmost = true;
+        }
+
+        /// <summary>
+        /// Drops a stray WS_EX_TOPMOST the OS put on <paramref name="window"/> behind Avalonia's
+        /// back. Windows promotes the owner of a topmost window to topmost as well, and when the
+        /// owned window is destroyed rather than demoted first, that promotion simply stays -
+        /// with Avalonia's own Topmost still false, so nothing in the managed layer clears it,
+        /// and SE floats above every other application for the rest of the session (#14736).
+        /// No-op when the window is meant to be topmost, and off Windows.
+        /// </summary>
+        private static void ClearStrayTopmost(Window window)
+        {
+            if (!OperatingSystem.IsWindows() || window.Topmost)
+            {
+                return;
+            }
+
+            var handle = window.TryGetPlatformHandle()?.Handle ?? IntPtr.Zero;
+            if (handle == IntPtr.Zero || (GetWindowLongW(handle, GwlExStyle) & WsExTopmost) == 0)
+            {
+                return;
+            }
+
+            SetWindowPos(handle, HwndNoTopmost, 0, 0, 0, 0, SwpNoSize | SwpNoMove | SwpNoActivate);
+        }
+
+        private static void KeepBelowForeignForegroundWindow(Window window, Window reference)
+        {
+            if (!OperatingSystem.IsWindows())
+            {
+                return;
+            }
+
+            var handle = window.TryGetPlatformHandle()?.Handle ?? IntPtr.Zero;
+            var referenceHandle = reference.TryGetPlatformHandle()?.Handle ?? IntPtr.Zero;
+            var foreground = GetForegroundWindow();
+            if (handle == IntPtr.Zero || referenceHandle == IntPtr.Zero ||
+                foreground == IntPtr.Zero || foreground == handle || foreground == referenceHandle)
+            {
+                return;
+            }
+
+            GetWindowThreadProcessId(foreground, out var foregroundProcessId);
+            if (foregroundProcessId == Environment.ProcessId)
+            {
+                return; // an SE window (a dialog, a tool window) - the normal in-app churn
+            }
+
+            if ((GetWindowLongW(foreground, GwlExStyle) & WsExTopmost) != 0)
+            {
+                return; // stays above us on its own; inserting after it would make us topmost
+            }
+
+            if (!IsAboveInZOrder(foreground, referenceHandle))
+            {
+                return; // not raised (yet) - its own raise puts it on top
+            }
+
+            SetWindowPos(handle, foreground, 0, 0, 0, 0, SwpNoSize | SwpNoMove | SwpNoActivate);
+        }
+
+        /// <summary>
+        /// True when <paramref name="hwnd"/> is above <paramref name="below"/> in the z-order,
+        /// walking upwards from <paramref name="below"/>. Bounded, since the desktop's window
+        /// list includes every hidden top-level window of every process.
+        /// </summary>
+        private static bool IsAboveInZOrder(IntPtr hwnd, IntPtr below)
+        {
+            var current = below;
+            for (var i = 0; i < 4096; i++)
+            {
+                current = GetWindow(current, GwHwndPrev);
+                if (current == IntPtr.Zero)
+                {
+                    return false;
+                }
+
+                if (current == hwnd)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private const int GwlExStyle = -20;
+        private const int WsExTopmost = 0x0008;
+        private const uint GwHwndPrev = 3;
+        private const uint SwpNoSize = 0x0001;
+        private const uint SwpNoMove = 0x0002;
+        private const uint SwpNoActivate = 0x0010;
+        private static readonly IntPtr HwndNoTopmost = new IntPtr(-2);
+
+        [LibraryImport("user32.dll")]
+        private static partial IntPtr GetForegroundWindow();
+
+        [LibraryImport("user32.dll")]
+        private static partial uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+
+        [LibraryImport("user32.dll")]
+        private static partial int GetWindowLongW(IntPtr hWnd, int nIndex);
+
+        [LibraryImport("user32.dll")]
+        private static partial IntPtr GetWindow(IntPtr hWnd, uint uCmd);
+
+        [LibraryImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static partial bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, uint uFlags);
 
         /// <summary>
         /// Creates a window instance using the service provider.

@@ -398,6 +398,40 @@ modules:
         url: https://github.com/OpenMathLib/OpenBLAS/releases/download/v0.3.34/OpenBLAS-0.3.34.tar.gz
         sha256: cd7e129868320cc2d033afa920e31202dfe0b8066a5b66661900ccc0f197dfed
 
+  # --- libvoikko + voikko-fi (Finnish spell check) ---
+  #
+  # Finnish morphology does not fit Hunspell's affix model, so SE checks Finnish through
+  # libvoikko (SE 4 did the same). The app loads libvoikko.so.1 at runtime from the sandbox
+  # library path and finds the "format 5" dictionary in /app/share/voikko (both are also
+  # probed explicitly by VoikkoSpellChecker). HFST/VISL CG-3 backends are off: the Finnish
+  # dictionary is VFST and the extra backends pull in libraries the runtime does not have.
+  - name: libvoikko
+    config-opts:
+      - --disable-hfst
+      - --disable-buildtools
+      - --disable-testtools
+      - --with-dictionary-path=/app/share/voikko
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+    sources:
+      - type: archive
+        url: https://github.com/SubtitleEdit/support-files/releases/download/voikko-4.3-fi-2024-06/libvoikko-4.3.3.tar.gz
+        sha256: d1162965c61de44f72162fd87ec1394bd4f90f87bc8152d13fe4ae692fdc73fa
+
+  # voikko-fi standard dictionary (Joukahainen snapshot 2024-06-18, dictionary format 5),
+  # mirrored from https://www.puimula.org/htp/testing/voikko-snapshot-v5/dict.zip
+  - name: voikko-fi-dict
+    buildsystem: simple
+    build-commands:
+      - mkdir -p /app/share/voikko
+      - cp -r 5 /app/share/voikko/
+    sources:
+      - type: archive
+        url: https://github.com/SubtitleEdit/support-files/releases/download/voikko-4.3-fi-2024-06/dict.zip
+        sha256: 98f26bb67e08288910fbf1aa92521f28bee79538ba86aefa267713333e7fa537
+        strip-components: 0
+
   # --- SubtitleEdit application ---
 
   - name: subtitleedit

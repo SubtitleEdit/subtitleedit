@@ -2,11 +2,13 @@ using Avalonia.Headless.XUnit;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.Ocr;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
 
 namespace UITests.Features.SpellCheck;
 
@@ -15,8 +17,21 @@ namespace UITests.Features.SpellCheck;
 /// player - on speech-to-text output the audio is often the only thing that says what an unknown
 /// word should be, and until this you had to close the window to listen (issue #14145).
 /// </summary>
-public class SpellCheckPlayCurrentLineTests
+public class SpellCheckPlayCurrentLineTests : IDisposable
 {
+    private readonly string _dictionariesFolder = Se.DictionariesFolder;
+
+    public SpellCheckPlayCurrentLineTests()
+    {
+        // The CI runner has no dictionaries installed; make the local run take the same path.
+        Se.DictionariesFolder = Path.Combine(Path.GetTempPath(), "se-spellcheck-test-no-dictionaries");
+    }
+
+    public void Dispose()
+    {
+        Se.DictionariesFolder = _dictionariesFolder;
+    }
+
     private sealed class NullServiceProvider : IServiceProvider
     {
         public object? GetService(Type serviceType) => null;
@@ -41,12 +56,24 @@ public class SpellCheckPlayCurrentLineTests
 
     private static SpellCheckViewModel MakeViewModel()
     {
-        return new SpellCheckViewModel(
+        var vm = new SpellCheckViewModel(
             new SpellCheckManager(),
             new WindowService(new NullServiceProvider()),
             new FileHelper(),
             new BluRayHelper(),
             new OcrImageSourceHolder());
+
+        // With no dictionary installed (the CI runner) Initialize posts the "get dictionaries"
+        // dialog at Background priority; the null service provider then throws inside that
+        // posted job, on whichever test happens to pump the dispatcher next - this class or a
+        // later one. A dictionary entry whose file does not exist is enough to skip the dialog:
+        // the spell checker fails to load it and the scan finds nothing.
+        vm.Dictionaries.Add(new SpellCheckDictionaryDisplay
+        {
+            Name = "English",
+            DictionaryFileName = Path.Combine(Path.GetTempPath(), "se-spellcheck-test-missing", "en_US.dic"),
+        });
+        return vm;
     }
 
     [AvaloniaFact]

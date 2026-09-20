@@ -532,6 +532,8 @@ jobs:
             arch_label: ARM64
             runtime: osx-arm64
             ffmpeg_url: https://www.osxexperts.net/ffmpeg81arm.zip
+            voikko_url: https://github.com/SubtitleEdit/support-files/releases/download/voikko-4.3-fi-2024-06/libvoikko-4.3.3-macos-arm64.zip
+            voikko_sha256: 21a131d6a972890384c7900f2aace608a6c8baa14da8c63863ee7433def9bb2b
             ffmpeg_sha256: ebb82529562b71170807bbc6b0e7eb4f0b13af8cbb0e085bb9e8f6fe709598ad
             dmg_format: UDBZ
             expected_arch: arm64
@@ -539,6 +541,8 @@ jobs:
             arch_label: x64
             runtime: osx-x64
             ffmpeg_url: https://www.osxexperts.net/ffmpeg80intel.zip
+            voikko_url: https://github.com/SubtitleEdit/support-files/releases/download/voikko-4.3-fi-2024-06/libvoikko-4.3.3-macos-x64.zip
+            voikko_sha256: fbd458122536708192a4f56f98f34d28a399547e628ce17d14d4cc6534b7a62b
             ffmpeg_sha256: 2d24d22db78c87f394a5822867acd5c5dc5e762cd261a44bd26923f3a5af3e07
             dmg_format: UDZO
             expected_arch: x86_64
@@ -628,6 +632,29 @@ jobs:
           }
           echo "Extracted $(ls libmpv-temp | wc -l) dylibs ($(du -sh libmpv-temp | cut -f1))"
 
+      # libvoikko for Finnish spell check: self-contained build of libvoikko 4.3.3 (no HFST,
+      # links only libc++/libSystem, install name @rpath/libvoikko.1.dylib) plus the voikko-fi
+      # "format 5" dictionary. The dylib joins the Frameworks payload (signed with the rest),
+      # the dictionary goes to Contents/Resources/voikko where VoikkoSpellChecker probes.
+      - name: Download + verify libvoikko + voikko-fi dictionary (${{ matrix.arch }})
+        run: |
+          set -e
+          curl -fL -o libvoikko.zip "${{ matrix.voikko_url }}"
+          echo "${{ matrix.voikko_sha256 }}  libvoikko.zip" | shasum -a 256 -c -
+          unzip -o libvoikko.zip -d libmpv-temp
+          rm libvoikko.zip
+          archs=$(lipo -archs libmpv-temp/libvoikko.1.dylib)
+          if [ "$archs" != "${{ matrix.expected_arch }}" ]; then
+            echo "ERROR: libvoikko archs are '$archs', expected exactly '${{ matrix.expected_arch }}'"
+            exit 1
+          fi
+          curl -fL -o voikko-dict.zip "https://github.com/SubtitleEdit/support-files/releases/download/voikko-4.3-fi-2024-06/dict.zip"
+          echo "98f26bb67e08288910fbf1aa92521f28bee79538ba86aefa267713333e7fa537  voikko-dict.zip" | shasum -a 256 -c -
+          mkdir -p voikko-dict-temp
+          unzip -o voikko-dict.zip -d voikko-dict-temp
+          rm voikko-dict.zip
+          [ -f voikko-dict-temp/5/mor-standard/mor.vfst ] || { echo "ERROR: voikko dictionary layout changed"; exit 1; }
+
       - name: Setup code signing (if certificates available)
         run: |
           if [ -n "${{ secrets.MACOS_CERTIFICATE }}" ] && [ -n "${{ secrets.APPLE_ID_USER }}" ]; then
@@ -697,6 +724,10 @@ jobs:
           cp "./libmpv-temp/"*.dylib "$app/Contents/Frameworks/"
           chmod -R 755 "$app/Contents/Frameworks/"
           rm -rf "./libmpv-temp"
+
+          mkdir -p "$app/Contents/Resources/voikko"
+          cp -R "./voikko-dict-temp/5" "$app/Contents/Resources/voikko/"
+          rm -rf "./voikko-dict-temp"
 
           # Point the SE executable at the bundled Frameworks for @rpath resolution.
           # The dylibs themselves already use @rpath/* internally (IINA's CI fixed

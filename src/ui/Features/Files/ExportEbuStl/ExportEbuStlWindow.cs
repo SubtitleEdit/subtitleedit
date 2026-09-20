@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Controls;
@@ -68,7 +69,7 @@ public class ExportEbuStlWindow : Window
 
         Content = grid;
 
-        Activated += delegate { comboBoxCodePage.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, comboBoxCodePage); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.OnKeyDown;
     }
 
@@ -266,6 +267,10 @@ public class ExportEbuStlWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -298,11 +303,31 @@ public class ExportEbuStlWindow : Window
 
         var labelTeletext = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.Teletext);
 
-        var labelUseBox = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.UseBox);
-        var checkBoxUseBox = UiUtil.MakeCheckBox(vm, nameof(vm.UseBox));
+        // Both are teletext control codes: "0 Open subtitling" writes neither, so leaving them
+        // enabled there only promises a box the file and the video preview never show.
+        var labelUseBox = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.UseBox).WithBindIsEnabled(nameof(vm.IsTeletext));
+        var checkBoxUseBox = UiUtil.MakeCheckBox(vm, nameof(vm.UseBox)).WithBindIsEnabled(nameof(vm.IsTeletext));
 
-        var labelUseDoubleHeight = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.DoubleHeight);
-        var checkBoxUseDoubleHeight = UiUtil.MakeCheckBox(vm, nameof(vm.UseDoubleHeight));
+        var labelUseDoubleHeight = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.DoubleHeight).WithBindIsEnabled(nameof(vm.IsTeletext));
+        var checkBoxUseDoubleHeight = UiUtil.MakeCheckBox(vm, nameof(vm.UseDoubleHeight)).WithBindIsEnabled(nameof(vm.IsTeletext));
+
+        // Not a save option: an STL file carries a character table, not a typeface. It is here so
+        // someone with a teletext face installed can have the preview look like a decoder.
+        var labelVideoPreview = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.VideoPreview);
+
+        var labelPreviewFont = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.PreviewFont);
+        var comboBoxPreviewFont = UiUtil.MakeComboBox(vm.PreviewFonts, vm, nameof(vm.SelectedPreviewFont)).WithMinWidth(textBoxWidth);
+        var buttonPreviewFont = UiUtil.MakeButtonBrowse(vm.PickPreviewFontCommand, null, Se.Language.Tools.PickFontNameTitle);
+        var panelPreviewFont = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 5,
+            Children = { comboBoxPreviewFont, buttonPreviewFont },
+        };
+
+        // The drop-down is a name; this shows what the name looks like, in the font itself.
+        var labelPreviewFontSample = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.PreviewFontSample));
+        labelPreviewFontSample.Bind(TemplatedControl.FontFamilyProperty, new Binding(nameof(vm.PreviewFontFamily)) { Source = vm });
 
 
         grid.Add(labelJustification, 0, 0);
@@ -327,6 +352,13 @@ public class ExportEbuStlWindow : Window
 
         grid.Add(labelUseDoubleHeight, 9, 0);
         grid.Add(checkBoxUseDoubleHeight, 9, 1);
+
+        grid.Add(labelVideoPreview, 11, 0);
+
+        grid.Add(labelPreviewFont, 12, 0);
+        grid.Add(panelPreviewFont, 12, 1);
+
+        grid.Add(labelPreviewFontSample, 13, 1);
 
         return UiUtil.MakeBorderForControl(grid).WithMinWidth(944).WithMinHeight(465);
     }

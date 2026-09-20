@@ -17,7 +17,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             sb.Append(Environment.NewLine);
             foreach (var p in subtitle.Paragraphs)
             {
-                sb.Append($"{GetTimeCodeString(p)}{Environment.NewLine}DG @015 A {p.Text}{Environment.NewLine}");
+                // one "DG @015 A" line per text line - the reader drops any line without the prefix
+                sb.Append($"{GetTimeCodeString(p)}{Environment.NewLine}");
+                foreach (var line in p.Text.SplitToLines())
+                {
+                    sb.Append($"DG @015 A {line}{Environment.NewLine}");
+                }
             }
             sb.Append("\u001a\u001a");
 

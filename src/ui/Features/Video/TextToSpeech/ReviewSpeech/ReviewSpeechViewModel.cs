@@ -121,7 +121,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
     // ResolvePerLineCloneVoiceAsync). Supplied by the TTS window, which knows the original-language
     // subtitle a translation was dubbed from; null when it does not, and the line's own text is
     // then the best guess left.
-    public Func<Paragraph, string>? ReferenceTextOf { get; set; }
+    public Func<Paragraph, string?>? ReferenceTextOf { get; set; }
 
     public bool OkPressed { get; private set; }
 
@@ -756,6 +756,27 @@ public partial class ReviewSpeechViewModel : ObservableObject
         av.InvalidateVisual();
     }
 
+    // Hands the visualizer the blocks for wherever it is looking now, without moving the view or
+    // the playhead. It only keeps the blocks around the view it was last given, so the window
+    // calls this whenever the user scrolls, zooms or resizes (#15102).
+    public void ReloadWaveformParagraphs()
+    {
+        var av = AudioVisualizer;
+        if (av == null || WavePeakData == null || WaveformParagraphs.Count == 0)
+        {
+            return;
+        }
+
+        var selected = SelectedLine?.WaveformParagraph;
+        var index = selected == null ? -1 : WaveformParagraphs.IndexOf(selected);
+        av.SetPosition(
+            av.StartPositionSeconds,
+            WaveformParagraphs,
+            av.CurrentVideoPositionSeconds,
+            index,
+            index < 0 ? new List<SubtitleLineViewModel>() : new List<SubtitleLineViewModel> { selected! });
+    }
+
     [RelayCommand]
     private async Task Export()
     {
@@ -1124,20 +1145,16 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
     /// <summary>
     /// What the video says during a line - the transcript a freshly cut reference clip needs. The
-    /// original-language text when the TTS window supplied a lookup for it (a dub is generated
-    /// from a translation, and the clip holds what was said, not its translation), otherwise the
-    /// line's own text as it entered this window.
+    /// original-language text when the TTS window supplied a lookup for it and it knows (a dub
+    /// is generated from a translation, and the clip holds what was said, not its translation),
+    /// otherwise null. The line's own text is deliberately not a fallback: handing an engine the
+    /// translation as the clip's transcript makes it replay the clip instead of speaking the
+    /// line (#14480).
     /// </summary>
-    private string SpokenTextInVideo(ReviewRow line)
+    private string? SpokenTextInVideo(ReviewRow line)
     {
         var fromOriginal = ReferenceTextOf?.Invoke(line.StepResult.Paragraph);
-        if (!string.IsNullOrWhiteSpace(fromOriginal))
-        {
-            return fromOriginal;
-        }
-
-        var text = string.IsNullOrWhiteSpace(line.OriginalText) ? line.Text : line.OriginalText;
-        return Utilities.UnbreakLine(HtmlUtil.RemoveHtmlTags(text ?? string.Empty, alsoSsaTags: true));
+        return string.IsNullOrWhiteSpace(fromOriginal) ? null : fromOriginal;
     }
 
     /// <summary>
@@ -1585,9 +1602,11 @@ public partial class ReviewSpeechViewModel : ObservableObject
         // Step 1: Trim silence from start and end. A failed trim (misconfigured/failing ffmpeg)
         // must fall back to the untrimmed audio - adopting the missing output blindly made
         // FfmpegMediaInfo.Parse below return a null Duration and the factor math NRE'd.
+        // Silence threshold relative to the clip's peak - same as the main pipeline (#14480).
+        var peakDbfs = await TtsSilenceThreshold.MeasurePeakDbfsAsync(item.CurrentFileName, _cancellationToken);
         var outputFileNameTrim = Path.Combine(_waveFolder, Guid.NewGuid() + ".wav");
         _tempAudioFiles.Add(outputFileNameTrim);
-        var trimProcess = FfmpegGenerator.TrimSilenceStartAndEnd(item.CurrentFileName, outputFileNameTrim);
+        var trimProcess = FfmpegGenerator.TrimSilenceStartAndEnd(item.CurrentFileName, outputFileNameTrim, TtsSilenceThreshold.Amplitude(peakDbfs));
         await trimProcess.StartAndWaitAsync(_cancellationToken);
 
         var currentFile = File.Exists(outputFileNameTrim) && new FileInfo(outputFileNameTrim).Length > 0
@@ -1599,7 +1618,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
         {
             var vadOutput = Path.Combine(_waveFolder, $"vad_{Guid.NewGuid()}.wav");
             _tempAudioFiles.Add(vadOutput);
-            var vadProcess = FfmpegGenerator.CompressInternalSilence(currentFile, vadOutput, vadMaxSilence);
+            var vadProcess = FfmpegGenerator.CompressInternalSilence(currentFile, vadOutput, vadMaxSilence, TtsSilenceThreshold.DbLiteral(peakDbfs));
             await vadProcess.StartAndWaitAsync(_cancellationToken);
 
             if (File.Exists(vadOutput) && new FileInfo(vadOutput).Length > 0)
@@ -1992,6 +2011,8 @@ public partial class ReviewSpeechViewModel : ObservableObject
                               ?? Languages.FirstOrDefault(),
         Qwen3TtsCrispAsr => Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrLanguage)
                             ?? Languages.FirstOrDefault(),
+        Confucius4TtsCrispAsr => Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.Confucius4TtsCrispAsrLanguage)
+                                 ?? Languages.FirstOrDefault(),
         _ => Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.ElevenLabsLanguage)
              ?? Languages.FirstOrDefault(p => p.Code == "en")
              ?? Languages.FirstOrDefault(),

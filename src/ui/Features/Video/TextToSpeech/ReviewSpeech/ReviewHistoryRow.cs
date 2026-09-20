@@ -23,6 +23,9 @@ public partial class ReviewHistoryRow : ObservableObject
 
     public ReviewHistoryRow()
     {
+        // The history dialog's only writer of this is StopPlay, which first runs from a watchdog
+        // timer tick - so every play button opened disabled and clicks in that window did nothing.
+        IsPlayingEnabled = true;
         FileName = string.Empty;
         VoiceName = string.Empty;
         EngineName = string.Empty;

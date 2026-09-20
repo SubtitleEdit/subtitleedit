@@ -57,14 +57,14 @@ public class ModifySelectionWindow : Window
 
         Content = grid;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             buttonOk.Focus();
             if (textbox.IsVisible)
             {
                 textbox.Focus();
             }
-        };
+        });
         KeyDown += vm.KeyDown;
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
@@ -90,11 +90,13 @@ public class ModifySelectionWindow : Window
             VerticalAlignment = VerticalAlignment.Top,
         };
 
-        var comboBoxRules = UiUtil.MakeComboBox(vm.Rules, vm, nameof(vm.SelectedRule)).WithWidth(230).WithTopAlignment();
+        var comboBoxRules = UiUtil.MakeComboBox(vm.Rules, vm, nameof(vm.SelectedRule)).WithWidth(230).WithTopAlignment()
+            .WithAccessibleName(Se.Language.General.Rules); // #12087: the rule row has no visible labels
         comboBoxRules.SelectionChanged += (sender, args) => vm.OnRuleChanged();
 
         textBoxRuleText = UiUtil.MakeTextBox(150, vm, nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.Text));
         textBoxRuleText.BindIsVisible(vm, nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.HasText));
+        textBoxRuleText.WithAccessibleName(Se.Language.General.Text);
         textBoxRuleText.TextChanged += (sender, args) => vm.OnRuleChanged();
 
         var numericUpDownRuleNumber = UiUtil.MakeNumericUpDownInt(0, 10000, 0, 150, vm);
@@ -105,9 +107,17 @@ public class ModifySelectionWindow : Window
             Converter = new NullableDoubleConverter(),
         });
         numericUpDownRuleNumber.BindIsVisible(vm, nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.HasNumber));
+        numericUpDownRuleNumber.WithAccessibleName(Se.Language.General.Number);
         numericUpDownRuleNumber.ValueChanged += (sender, args) => vm.OnRuleChanged();
 
         var dataGridMultiSelect = TableViewExtras.MakeTableView(multiSelect: false);
+        // The list holds the styles or the actors depending on the rule, so the rule name names it (#12087).
+        dataGridMultiSelect.Bind(Avalonia.Automation.AutomationProperties.NameProperty, new Binding(nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.Name))
+        {
+            Source = vm,
+            FallbackValue = Se.Language.General.Rules, // no rule selected until Initialize
+            TargetNullValue = Se.Language.General.Rules,
+        });
         dataGridMultiSelect.CanUserResizeColumns = false;
         dataGridMultiSelect.Width = 280;
         dataGridMultiSelect.MaxHeight = 200;
@@ -217,7 +227,7 @@ public class ModifySelectionWindow : Window
         // No header sorting (the DataGrid's CanUserSortColumns is not carried over):
         // this is a subtitle-line preview in subtitle order, and Ok() iterates the
         // collection in order to build the selection.
-        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false).WithAccessibleName(Se.Language.General.Preview);
         dataGrid.DataContext = vm;
         dataGrid.Columns.AddRange(new TableViewColumn[]
         {

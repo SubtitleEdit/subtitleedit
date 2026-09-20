@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.Input;
@@ -54,6 +54,7 @@ public static class InitNativeMacMenu
         public PropertyChangedEventHandler? Handler;
 
         public NativeMenuItem? ReopenItem;
+        public NativeMenuItem? RecentVideosItem;
         public NativeMenuItem? PluginsItem;
         public NativeMenuItem? AudioTracksItem;
         public NativeMenuItem? WindowListItem;
@@ -207,6 +208,7 @@ public static class InitNativeMacMenu
         fileItems.Items.Add(new NativeMenuItemSeparator());
         fileItems.Items.Add(Item(Clean(l.Save), v => v.CommandFileSaveCommand));
         fileItems.Items.Add(Item(Clean(l.SaveAs), v => v.CommandFileSaveAsCommand));
+        fileItems.Items.Add(Item(Clean(Se.Language.General.SaveForcedLinesAs), v => v.SaveForcedLinesAsCommand));
         fileItems.Items.Add(new NativeMenuItemSeparator());
 
         var filePropsItem = new NativeMenuItem(string.Empty);
@@ -244,6 +246,7 @@ public static class InitNativeMacMenu
         exportItems.Items.Add(Item(CheetahCaption.NameOfFormat, v => v.ExportCheetahCaptionCommand));
         exportItems.Items.Add(Item(CheetahCaptionOld.NameOfFormat, v => v.ExportCheetahCaptionOldCommand));
         exportItems.Items.Add(Item(Cavena890.NameOfFormat, v => v.ExportCavena890Command));
+        exportItems.Items.Add(Item(lExport.TitleExportDvbTeletext, v => v.ExportDvbTeletextCommand));
         exportItems.Items.Add(Item(lExport.TitleExportDCinemaInteropPng, v => v.ExportDCinemaInteropPngCommand));
         exportItems.Items.Add(Item(lExport.TitleExportDCinemaSmpte2014Png, v => v.ExportDCinemaSmpte2014PngCommand));
         exportItems.Items.Add(Item(Ebu.NameOfFormat, v => v.ExportEbuStlCommand));
@@ -289,6 +292,7 @@ public static class InitNativeMacMenu
             Item(Clean(l.ApplyDurationLimits), v => v.ShowApplyDurationLimitsCommand),
             Item(Clean(l.BatchConvert), v => v.ShowToolsBatchConvertCommand),
             Item(Clean(l.BeautifyTimeCodes), v => v.ShowBeautifyTimeCodesCommand),
+            Item(Clean(l.ImproveTimeCodes), v => v.ShowImproveTimeCodesCommand),
             Item(Clean(l.BridgeGaps), v => v.ShowBridgeGapsCommand),
             Item(Clean(l.ApplyMinGap), v => v.ShowApplyMinGapCommand),
             Item(Clean(l.ChangeCasing), v => v.ShowToolsChangeCasingCommand),
@@ -334,7 +338,19 @@ public static class InitNativeMacMenu
         var videoItems = new NativeMenu();
         videoItems.Items.Add(Item(Clean(l.OpenVideo), v => v.CommandVideoOpenCommand));
         videoItems.Items.Add(Item(Clean(l.OpenVideoFromUrl), v => v.ShowVideoOpenFromUrlCommand));
+
+        state.RecentVideosItem = new NativeMenuItem(Clean(Se.Language.Video.OpenRecentVideo)) { Menu = new NativeMenu() };
+        videoItems.Items.Add(state.RecentVideosItem);
+
         videoItems.Items.Add(Item(Clean(l.CloseVideoFile), v => v.CommandVideoCloseCommand));
+
+        // Same spot and wording as SE4's Video menu, so it can be found by anyone
+        // looking for it there (#14389). Only meaningful with a video to draw on.
+        // Stays available while a second subtitle is shown: opening again replaces it (#13492).
+        videoItems.Items.Add(Conditional(Clean(Se.Language.Video.OpenSecondarySubtitleOnVideoPlayerDotDotDot), v => v.OpenSecondarySubtitleCommand,
+            v => v.IsVideoLoaded, nameof(MainViewModel.IsVideoLoaded)));
+        videoItems.Items.Add(Conditional(Clean(Se.Language.Video.RemoveSecondarySubtitleOnVideoPlayer), v => v.ClearSecondarySubtitleCommand,
+            v => v.IsVideoLoaded && v.IsSubtitleSecondaryVisible, nameof(MainViewModel.IsVideoLoaded), nameof(MainViewModel.IsSubtitleSecondaryVisible)));
 
         state.AudioTracksItem = new NativeMenuItem(Clean(l.AudioTracks)) { Menu = new NativeMenu() };
         state.Visibilities.Add((state.AudioTracksItem, v => v.IsAudioTracksVisible, [nameof(MainViewModel.IsAudioTracksVisible)]));
@@ -345,6 +361,7 @@ public static class InitNativeMacMenu
         videoItems.Items.Add(new NativeMenuItemSeparator());
         videoItems.Items.Add(Item(Clean(l.SpeechToText), v => v.ShowSpeechToTextWhisperCommand));
         videoItems.Items.Add(Item(Clean(l.TextToSpeech), v => v.ShowVideoTextToSpeechCommand));
+        videoItems.Items.Add(Item(Clean(Se.Language.Video.TextToSpeech.VoiceManagerMenuItem), v => v.ShowVideoVoiceManagerCommand));
         videoItems.Items.Add(Item(Clean(l.VideoOcr), v => v.ShowVideoOcrCommand));
         videoItems.Items.Add(new NativeMenuItemSeparator());
         videoItems.Items.Add(Item(Clean(l.GenerateBurnIn), v => v.ShowVideoBurnInCommand));
@@ -368,12 +385,10 @@ public static class InitNativeMacMenu
         var lVideo = Se.Language.Video;
         var videoMoreList = new List<NativeMenuItem>
         {
-            Conditional(Clean(lVideo.OpenSecondarySubtitleOnVideoPlayerDotDotDot), v => v.OpenSecondarySubtitleCommand,
-                v => !v.IsSubtitleSecondaryVisible, nameof(MainViewModel.IsSubtitleSecondaryVisible)),
-            Conditional(Clean(lVideo.RemoveSecondarySubtitleOnVideoPlayer), v => v.ClearSecondarySubtitleCommand,
-                v => v.IsSubtitleSecondaryVisible, nameof(MainViewModel.IsSubtitleSecondaryVisible)),
             Item(Clean(lVideo.ReEncodeVideoForBetterSubtitlingDotDotDot), v => v.VideoReEncodeCommand),
             Item(Clean(lVideo.CutVideoDotDotDot), v => v.VideoCutCommand),
+            Item(Clean(lVideo.BackgroundMusic.GenerateBackgroundMusicDotDotDot), v => v.ShowVideoBackgroundMusicCommand),
+            Item(Clean(lVideo.RemuxVideoDotDotDot), v => v.ShowVideoRemuxVideoCommand),
 
             // Finds who speaks in the video, clones each of them and assigns the cast, so the
             // whole thing can be dubbed in its own voices (#13698).
@@ -582,7 +597,7 @@ public static class InitNativeMacMenu
                 }
 
                 var title = string.IsNullOrWhiteSpace(window.Title) ? "Subtitle Edit" : window.Title;
-                var item = new NativeMenuItem(title)
+                var item = new NativeMenuItem(Literal(title))
                 {
                     ToggleType = MenuItemToggleType.CheckBox,
                     IsChecked = ReferenceEquals(other, _active),
@@ -636,6 +651,7 @@ public static class InitNativeMacMenu
         state.Vm = vm;
 
         vm.NativeMenuReopen = state.ReopenItem;
+        vm.NativeMenuRecentVideos = state.RecentVideosItem;
         vm.NativeMenuPlugins = state.PluginsItem;
         vm.NativeMenuAudioTracks = state.AudioTracksItem;
 
@@ -652,10 +668,7 @@ public static class InitNativeMacMenu
         foreach (var (item, getHeader, _) in state.DynamicHeaders)
             item.Header = getHeader(vm);
 
-        if (state.PluginsItem != null)
-        {
-            state.PluginsItem.IsEnabled = Se.Settings.Appearance.ShowPluginsMenu;
-        }
+        UpdatePluginsMenuVisibility(vm);
 
         state.Handler = (s, e) =>
         {
@@ -682,56 +695,107 @@ public static class InitNativeMacMenu
         vm.PropertyChanged += state.Handler;
 
         UpdateRecentFiles(vm);
+        UpdateRecentVideos(vm);
         UpdatePluginsMenu(vm);
     }
 
     // ── Dynamic submenu updaters ──────────────────────────────────────────────
 
-    public static void UpdateRecentFiles(MainViewModel vm)
+    private static void PopulateRecentNativeMenu<T>(
+        NativeMenuItem? parentItem,
+        IReadOnlyList<T> items,
+        Func<T, (string Header, Action ClickAction)> itemFactory,
+        string clearHeader,
+        Action clearAction)
     {
-        if (vm.NativeMenuReopen?.Menu is not NativeMenu menu)
+        if (parentItem?.Menu is not NativeMenu menu)
         {
             return;
         }
 
         menu.Items.Clear();
+        parentItem.IsEnabled = items.Count > 0;
 
-        var files = Se.Settings.File.RecentFiles
-            .Where(p => !string.IsNullOrEmpty(p.SubtitleFileName) && System.IO.File.Exists(p.SubtitleFileName))
-            .ToList();
-
-        vm.NativeMenuReopen.IsEnabled = files.Count > 0;
-
-        if (files.Count == 0)
+        if (items.Count == 0)
         {
             return;
         }
 
-        foreach (var file in files)
+        foreach (var item in items)
         {
-            var header = file.SubtitleFileName ?? string.Empty;
-            if (!string.IsNullOrEmpty(file.SubtitleFileNameOriginal) && System.IO.File.Exists(file.SubtitleFileNameOriginal))
-            {
-                header += " + ";
-                header += System.IO.Path.GetDirectoryName(file.SubtitleFileName) == System.IO.Path.GetDirectoryName(file.SubtitleFileNameOriginal)
-                    ? System.IO.Path.GetFileName(file.SubtitleFileNameOriginal)
-                    : file.SubtitleFileNameOriginal;
-            }
+            var (header, clickAction) = itemFactory(item);
             if (header.Length > 80)
             {
                 header = "…" + header[^77..];
             }
 
-            var recentItem = new NativeMenuItem(header);
-            var captured = file;
-            recentItem.Click += (_, _) => vm.CommandFileReopenCommand.Execute(captured);
+            var recentItem = new NativeMenuItem(Literal(header));
+            recentItem.Click += (_, _) => clickAction();
             menu.Items.Add(recentItem);
         }
 
         menu.Items.Add(new NativeMenuItemSeparator());
-        var clearItem = new NativeMenuItem(Clean(Se.Language.Main.Menu.ClearRecentFiles));
-        clearItem.Click += (_, _) => vm.CommandFileClearRecentFilesCommand.Execute(null);
+        var clearItem = new NativeMenuItem(Clean(clearHeader));
+        clearItem.Click += (_, _) => clearAction();
         menu.Items.Add(clearItem);
+    }
+
+    public static void UpdateRecentFiles(MainViewModel vm)
+    {
+        var files = Se.Settings.File.RecentFiles
+            .Where(p => !string.IsNullOrEmpty(p.SubtitleFileName) && System.IO.File.Exists(p.SubtitleFileName))
+            .ToList();
+
+        PopulateRecentNativeMenu(
+            vm.NativeMenuReopen,
+            files,
+            file =>
+            {
+                var header = file.SubtitleFileName ?? string.Empty;
+                if (!string.IsNullOrEmpty(file.SubtitleFileNameOriginal) && System.IO.File.Exists(file.SubtitleFileNameOriginal))
+                {
+                    header += " + ";
+                    header += System.IO.Path.GetDirectoryName(file.SubtitleFileName) == System.IO.Path.GetDirectoryName(file.SubtitleFileNameOriginal)
+                        ? System.IO.Path.GetFileName(file.SubtitleFileNameOriginal)
+                        : file.SubtitleFileNameOriginal;
+                }
+                var captured = file;
+                return (header, () => vm.CommandFileReopenCommand.Execute(captured));
+            },
+            Se.Language.Main.Menu.ClearRecentFiles,
+            () => vm.CommandFileClearRecentFilesCommand.Execute(null));
+    }
+
+    public static void UpdateRecentVideos(MainViewModel vm)
+    {
+        var files = Se.Settings.Video.RecentFiles
+            .Where(f => !string.IsNullOrWhiteSpace(f))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        PopulateRecentNativeMenu(
+            vm.NativeMenuRecentVideos,
+            files,
+            file =>
+            {
+                var captured = file;
+                return (captured, () => vm.CommandVideoReopenCommand.Execute(captured));
+            },
+            Se.Language.Video.ClearRecentVideos,
+            () => vm.CommandVideoClearRecentFilesCommand.Execute(null));
+    }
+
+    /// <summary>
+    /// Show/hide the top-level Plugins menu from the "Show Plugins menu" setting. Must be
+    /// IsVisible, not IsEnabled: macOS ignores the enabled state of a top-level title that
+    /// carries a submenu, so a disabled item stayed on the menu bar (issue #14524).
+    /// </summary>
+    public static void UpdatePluginsMenuVisibility(MainViewModel vm)
+    {
+        if (vm.NativeMenuPlugins != null)
+        {
+            vm.NativeMenuPlugins.IsVisible = Se.Settings.Appearance.ShowPluginsMenu;
+        }
     }
 
     public static void UpdatePluginsMenu(MainViewModel vm)
@@ -743,10 +807,7 @@ public static class InitNativeMacMenu
 
         menu.Items.Clear();
 
-        var enabled = vm.GetInstalledPlugins()
-            .Where(p => !Se.Settings.Plugins.DisabledPluginNames.Contains(p.Manifest.Name))
-            .OrderBy(p => p.Manifest.Name)
-            .ToList();
+        var enabled = vm.PluginShortcutEntries;
 
         if (enabled.Count == 0)
         {
@@ -754,11 +815,16 @@ public static class InitNativeMacMenu
         }
         else
         {
-            foreach (var plugin in enabled)
+            var shortcuts = ShortcutsMain.GetUsedShortcuts(vm);
+            foreach (var entry in enabled)
             {
-                var pluginItem = new NativeMenuItem(plugin.Manifest.Name) { IsEnabled = plugin.CanRun };
-                var captured = plugin;
-                pluginItem.Click += (_, _) => vm.RunPluginCommand.Execute(captured);
+                var pluginItem = new NativeMenuItem(Literal(entry.Plugin.Manifest.Name))
+                {
+                    IsEnabled = entry.Plugin.CanRun,
+                    Gesture = FindGesture(entry.Command, shortcuts),
+                };
+                var captured = entry.Command;
+                pluginItem.Click += (_, _) => captured.Execute(null);
                 menu.Items.Add(pluginItem);
             }
         }
@@ -791,7 +857,7 @@ public static class InitNativeMacMenu
                 trackName += $" - {track.Title}";
             }
 
-            var item = new NativeMenuItem(trackName);
+            var item = new NativeMenuItem(Literal(trackName));
             item.ToggleType = MenuItemToggleType.CheckBox;
             item.IsChecked = track.FfIndex == (current?.FfIndex ?? -1);
             var captured = track;
@@ -811,6 +877,10 @@ public static class InitNativeMacMenu
         var shortcuts = ShortcutsMain.GetUsedShortcuts(vm);
         foreach (var (getCmd, item) in state.GestureItems)
             item.Gesture = FindGesture(getCmd(vm), shortcuts);
+
+        // Plugin items are rebuilt rather than tracked in GestureItems, so refresh
+        // them here too for the Shortcuts window to update their gestures.
+        UpdatePluginsMenu(vm);
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
@@ -894,4 +964,11 @@ public static class InitNativeMacMenu
     }
 
     private static string Clean(string? s) => s?.Replace("_", string.Empty) ?? string.Empty;
+
+    /// <summary>
+    /// For text that is not ours (file names, window titles, track and plugin names): Avalonia
+    /// strips the first "_" from a native menu title as an access-key marker, so
+    /// "my_file_name.srt" shows as "myfile_name.srt". Doubling each one keeps them all.
+    /// </summary>
+    private static string Literal(string? s) => s?.Replace("_", "__") ?? string.Empty;
 }

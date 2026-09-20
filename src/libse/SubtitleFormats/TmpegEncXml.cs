@@ -425,7 +425,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var cdataText = text.Replace(Environment.NewLine, "\\n");
                 if (cdataText.Contains("]]>", StringComparison.Ordinal))
                 {
-                    paragraph.InnerText = cdataText;
+                    // cannot be expressed in one CDATA section - keep the <Text> element the reader requires
+                    var textNode = xml.CreateElement("Text");
+                    textNode.InnerText = cdataText;
+                    paragraph.AppendChild(textNode);
                 }
                 else
                 {

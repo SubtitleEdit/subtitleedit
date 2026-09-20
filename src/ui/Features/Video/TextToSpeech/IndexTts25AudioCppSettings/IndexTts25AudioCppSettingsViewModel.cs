@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -135,7 +135,7 @@ public partial class IndexTts25AudioCppSettingsViewModel : ObservableObject
         {
             EngineLabel = string.Format(Se.Language.Video.TtsEngineUpdateAvailable, "audio.cpp" + backendSuffix);
             EngineBrush = Amber();
-            EngineDownloadButtonText = string.Format(Se.Language.Video.TtsUpdateX, "audio.cpp");
+            EngineDownloadButtonText = string.Format(Se.Language.General.UpdateX, "audio.cpp");
         }
         else
         {
@@ -201,7 +201,7 @@ public partial class IndexTts25AudioCppSettingsViewModel : ObservableObject
             return;
         }
 
-        await TtsVoiceInstaller.EnsureAudioCppForIndexTts25(Window, _windowService, forceRedownload: true);
+        await TtsVoiceInstaller.EnsureAudioCppRuntime(Window, _windowService, forceRedownload: true, "IndexTTS 2.5", IndexTts25AudioCpp.FamilyName);
         Refresh();
     }
 
@@ -280,6 +280,11 @@ public partial class IndexTts25AudioCppSettingsViewModel : ObservableObject
         {
             e.Handled = true;
             Window?.Close();
+        }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/text-to-speech", "engine-settings");
         }
     }
 }

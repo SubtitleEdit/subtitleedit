@@ -233,7 +233,19 @@ public sealed class NOcrTrainer
 
         var x = padding + OutlineWidth;
         var baseline = padding + OutlineWidth - metrics.Ascent;
-        using var textPath = font.GetTextPath(text, new SKPoint(x, baseline));
+
+        // Glyph advances are fractional, so the same letter lands on a different subpixel
+        // offset depending on what precedes it - and a one-column shift of a thin stem (the
+        // "i" in Segoe UI is 4 px wide) is more than any nOCR error budget absorbs, so a glyph
+        // trained from "H   i" would not be recognized inside "Subtitle". Snapping every glyph
+        // origin to a whole pixel makes a glyph render identically wherever it sits.
+        var positions = font.GetGlyphPositions(text, new SKPoint(x, baseline));
+        for (var i = 0; i < positions.Length; i++)
+        {
+            positions[i] = new SKPoint(MathF.Round(positions[i].X), positions[i].Y);
+        }
+
+        using var textPath = font.GetTextPath(text, positions);
 
         using var outlinePaint = new SKPaint
         {

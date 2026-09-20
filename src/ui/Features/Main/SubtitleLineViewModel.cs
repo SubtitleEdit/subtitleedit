@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Avalonia.Media.Immutable;
 
 namespace Nikse.SubtitleEdit.Features.Main;
 
@@ -52,6 +53,16 @@ public partial class SubtitleLineViewModel : ObservableObject
 
     [ObservableProperty]
     private string? _bookmark;
+
+    /// <summary>
+    /// The forced-narrative mark: a line that must also go into the separate forced subtitle
+    /// many clients ask for alongside the full file (#14322). Observable so the "Forced"
+    /// column follows the toggle, undo and reload. Kept in the same sidecar as the bookmarks
+    /// (<see cref="Nikse.SubtitleEdit.UiLogic.Common.SubtitleMarksPersistence"/>) - almost no subtitle format has
+    /// anywhere to put it, though the image formats do (Blu-ray sup, VobSub, BDN xml).
+    /// </summary>
+    [ObservableProperty]
+    private bool _forced;
 
     [ObservableProperty]
     private TimeSpan _startTime;
@@ -157,8 +168,9 @@ public partial class SubtitleLineViewModel : ObservableObject
     }
 
     /// <summary>
-    /// True while an EBU STL subtitle is open, so a row wider than a teletext page counts as a
-    /// "text too long" error. Set from MainViewModel when the format changes.
+    /// True while a teletext subtitle is open (DVB teletext, or EBU STL whose header says teletext
+    /// rather than open subtitling), so a row wider than a teletext page counts as a "text too long"
+    /// error. Set from MainViewModel when the format, the file or the EBU header changes.
     /// </summary>
     public static bool UseTeletextLineLength { get; set; }
 
@@ -194,7 +206,6 @@ public partial class SubtitleLineViewModel : ObservableObject
     }
 
     public bool NewSection { get; set; }
-    public bool Forced { get; set; }
     public Guid Id { get; set; }
     public bool IsCpsColumnVisible { get; set; } = true;
     public bool IsDefault => Text == string.Empty && Number == 0 && Duration == TimeSpan.Zero && StartTime == TimeSpan.Zero;
@@ -202,15 +213,15 @@ public partial class SubtitleLineViewModel : ObservableObject
 
     private bool _skipUpdate = false;
 
-    private static SolidColorBrush _errorBrush = new SolidColorBrush(Se.Settings.General.ErrorColor.FromHexToColor());
-    private static SolidColorBrush _transparentBrush = new SolidColorBrush(Colors.Transparent);
+    private static IBrush _errorBrush = new ImmutableSolidColorBrush(Se.Settings.General.ErrorColor.FromHexToColor());
+    private static readonly IBrush _transparentBrush = new ImmutableSolidColorBrush(Colors.Transparent);
     public static Color ErrorColor
     {
         get => field;
         set
         {
             field = value;
-            _errorBrush = new SolidColorBrush(value);
+            _errorBrush = new ImmutableSolidColorBrush(value);
         }
     } = Se.Settings.General.ErrorColor.FromHexToColor();
 
@@ -259,7 +270,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         MarginR = p.MarginR;
         MarginV = p.MarginV;
         NewSection = p.NewSection;
-        Forced = p.Forced;
+        _forced = p.Forced;
         _bookmark = p.Bookmark;
         _isReferenceOnly = p.IsReferenceOnly;
         ReferenceParagraphId = p.ReferenceParagraphId;
@@ -305,15 +316,15 @@ public partial class SubtitleLineViewModel : ObservableObject
 
     public Paragraph ToParagraph(SubtitleFormat? subtitleFormat = null)
     {
-        var p = new Paragraph()
+        // The (start, end, text) constructor: "new Paragraph()" makes two TimeCodes of its own
+        // that the initializer then replaced - and this runs for every row on every
+        // GetUpdateSubtitle.
+        // TrimEnd: the edit text box is bound raw, so a trailing Enter lives in Text
+        // until the row loses selection - it must never reach saved files or tools
+        // (SE4 kept the same invariant by trimming in the TextChanged handler) - #13389.
+        var p = new Paragraph(new TimeCode(StartTime), new TimeCode(EndTime), Text.TrimEnd())
         {
             Number = Number,
-            StartTime = new TimeCode(StartTime),
-            EndTime = new TimeCode(EndTime),
-            // TrimEnd: the edit text box is bound raw, so a trailing Enter lives in Text
-            // until the row loses selection - it must never reach saved files or tools
-            // (SE4 kept the same invariant by trimming in the TextChanged handler) - #13389.
-            Text = Text.TrimEnd(),
             Actor = Actor,
             Style = Style,
             Language = Language,
@@ -339,12 +350,9 @@ public partial class SubtitleLineViewModel : ObservableObject
 
     public Paragraph ToParagraphOriginal(SubtitleFormat? subtitleFormat = null)
     {
-        var p = new Paragraph
+        var p = new Paragraph(new TimeCode(StartTime), new TimeCode(EndTime), OriginalText.TrimEnd())
         {
             Number = Number,
-            StartTime = new TimeCode(StartTime),
-            EndTime = new TimeCode(EndTime),
-            Text = OriginalText.TrimEnd(),
             Actor = Actor,
             Style = Style,
             Language = Language,
@@ -526,6 +534,45 @@ public partial class SubtitleLineViewModel : ObservableObject
             }
 
             return _cpsCacheValue;
+        }
+    }
+
+    private string? _cpsOriginalCacheText;
+    private TimeSpan _cpsOriginalCacheStart;
+    private TimeSpan _cpsOriginalCacheEnd;
+    private double _cpsOriginalCacheValue;
+
+    /// <summary>
+    /// Characters per second of the original text - what the waveform footer shows while it draws
+    /// the original instead of the translation ("toggle translation and original in video/audio
+    /// preview", #14252). Memoized exactly like <see cref="CharactersPerSecond"/>: the footer reads
+    /// it for every visible paragraph on every painted frame.
+    /// </summary>
+    public double OriginalCharactersPerSecond
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(OriginalText))
+            {
+                return 0;
+            }
+
+            if (Duration.TotalMilliseconds <= 1.0)
+            {
+                return 999.0;
+            }
+
+            if (!ReferenceEquals(_cpsOriginalCacheText, OriginalText) ||
+                _cpsOriginalCacheStart != StartTime ||
+                _cpsOriginalCacheEnd != EndTime)
+            {
+                _cpsOriginalCacheText = OriginalText;
+                _cpsOriginalCacheStart = StartTime;
+                _cpsOriginalCacheEnd = EndTime;
+                _cpsOriginalCacheValue = SubtitleTextInfoHelper.GetCharactersPerSecond(OriginalText, StartTime, EndTime);
+            }
+
+            return _cpsOriginalCacheValue;
         }
     }
 
@@ -1198,7 +1245,7 @@ public partial class SubtitleLineViewModel : ObservableObject
     /// The CPS the error rules compare against. The cell tints have to use this too, or a row can
     /// be painted red and still be invisible to "list errors" and to error navigation.
     /// </summary>
-    private double CpsRounded => Math.Round(CharactersPerSecond, 2, MidpointRounding.AwayFromZero);
+    private double CpsRounded => CpsHelper.Round(CharactersPerSecond);
 
     public bool HasErrors(SubtitleLineViewModel? prev, SubtitleLineViewModel? next)
     {

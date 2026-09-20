@@ -30,7 +30,7 @@ public class AboutWindow : Window
         var titleText = new TextBlock
         {
             Text = vm.TitleText,
-            FontSize = 20,
+            FontSize = UiUtil.ScaledFontSize(20),
             FontWeight = FontWeight.Bold,
             TextWrapping = TextWrapping.Wrap,
         };
@@ -38,7 +38,7 @@ public class AboutWindow : Window
         var translatedByText = new TextBlock
         {
             Text = vm.TranslatedBy,
-            FontSize = 12,
+            FontSize = UiUtil.ScaledFontSize(12),
             TextWrapping = TextWrapping.Wrap,
         };
         translatedByText.IsVisible = !string.IsNullOrEmpty(Se.Language.TranslatedBy);
@@ -187,7 +187,7 @@ public class AboutWindow : Window
             }
         };
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, buttonOk); // hack to make OnKeyDown work
         KeyDown += vm.OnKeyDown;
     }
 }

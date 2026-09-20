@@ -659,8 +659,10 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
+        // Parse returns NULL when no format matches - typing prose into the source view and
+        // pressing OK threw a NullReferenceException instead of reaching the message below.
         subtitle = Subtitle.Parse(lines, ".srt");
-        if (subtitle.Paragraphs.Count > 0)
+        if (subtitle != null && subtitle.Paragraphs.Count > 0)
         {
             ApplyParsedSubtitle(subtitle);
             OkPressed = true;

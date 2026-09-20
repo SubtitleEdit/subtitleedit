@@ -10,7 +10,7 @@ Cross-platform (Windows, Linux, macOS); only needs the .NET 10 runtime.
 - 380+ subtitle formats (text, binary, image-based)
 - Container input: Matroska (.mkv/.mks), MP4, MCC, MXF, AVI (.avi/.divx), transport stream teletext
 - OCR for image-based sources (Blu-ray .sup, VobSub .sub/.idx, MKV PGS/VobSub, MP4 VobSub, TS DVB-sub, AVI XSUB)
-  via five engines: Tesseract, nOCR, BinaryOCR, Ollama, PaddleOCR — or `--time-codes-only` to skip OCR
+  via seven engines: Tesseract, nOCR, BinaryOCR, Ollama, llama.cpp, PaddleOCR, Apple Vision (macOS) — or `--time-codes-only` to skip OCR
 - Image-based output and image-to-image conversion (preserve source bitmaps, no OCR)
 - Full operation pipeline: offset, fps change, renumber, adjust-duration, fix-common-errors,
   merge/split, balance, redo casing, RTL fixes, multiple-replace, custom-text format, plain text
@@ -33,6 +33,7 @@ seconv *.srt webvtt                                               # SRT → WebV
 seconv movie.srt subrip --encoding:source --fix-common-errors    # keep encoding, clean up
 seconv movie.mkv subrip --track-number:3                         # extract MKV text track #3
 seconv movie.sup subrip --ocr-engine:tesseract --ocr-language:eng # OCR a Blu-ray .sup
+seconv *.mkv subrip --ocr-engine:applevision                     # macOS: OCR MKV PGS tracks with built-in Vision
 seconv movie.sup subrip --time-codes-only                        # timing only, no OCR
 seconv movie.avi subrip --ocr-engine:tesseract --ocr-language:eng # OCR the XSUB subtitles of an .avi
 seconv subs.srt bluraysup --resolution:1920x1080                 # render text → Blu-ray sup

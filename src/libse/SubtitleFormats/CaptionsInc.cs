@@ -12,6 +12,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => "Caption Inc";
 
+        private static readonly Encoding Cp1252 = Encoding.GetEncoding(1252);
+
         public static void Save(string fileName, Subtitle subtitle)
         {
             using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
@@ -35,6 +37,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 fs.Write(buffer, 0, buffer.Length);
 
                 // paragraphs
+                var cp1252 = Cp1252;
+                var oneChar = new char[1];
+                var oneByte = new byte[4];
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {
                     buffer = new byte[] { 0x0D, 0x0A, 0xFE }; // header
@@ -50,7 +55,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         foreach (char ch in line)
                         {
-                            text.Add(Encoding.GetEncoding(1252).GetBytes(new[] { ch })[0]);
+                            // Was Encoding.GetEncoding(1252).GetBytes(new[] { ch })[0] per character.
+                            oneChar[0] = ch;
+                            cp1252.GetBytes(oneChar, 0, 1, oneByte, 0);
+                            text.Add(oneByte[0]);
                         }
                         text.Add(0x14);
                         text.Add(0x74);
@@ -196,7 +204,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                         else if (buffer[i] <= 0x17)
                         {
-                            if (!sb.ToString().EndsWith(Environment.NewLine, StringComparison.Ordinal))
+                            if (!sb.EndsWith(Environment.NewLine))
                             {
                                 sb.Append(Environment.NewLine);
                             }
@@ -205,7 +213,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                         else
                         {
-                            sb.Append(Encoding.GetEncoding(1252).GetString(buffer, i, 1));
+                            sb.Append(Cp1252.GetString(buffer, i, 1));
                         }
 
                         i++;

@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// startup <c>--voice</c> flag — the server logs "loaded reference audio '&lt;path&gt;'" and
 /// resamples it to 16 kHz — and the request carries no <c>voice</c> field.
 /// </summary>
-public class VoxCPM2CrispAsr : ITtsEngine
+public class VoxCPM2CrispAsr : ITtsEngine, IPerLineCloneEngine
 {
     public string Name => "VoxCPM2 (CrispASR)";
     public string Description => "VoxCPM2 48 kHz multilingual TTS with zero-shot voice cloning, via CrispASR";
@@ -55,7 +55,11 @@ public class VoxCPM2CrispAsr : ITtsEngine
     public bool HasModel => true;
     public bool HasKeyFile => false;
     public bool SupportsVoiceCloning => true;
-    public bool SupportsPerLineVoiceCloning => false;
+    // Per-line clones are sent as a per-request `voice` file name, which the voxcpm2 backend
+    // opens as a path relative to the server's working directory - the voices folder - and
+    // clones from on every request without a restart. Ordinary imported voices stay on the
+    // startup --voice flag; see Speak and EnsureServerRunningAsync.
+    public bool SupportsPerLineVoiceCloning => true;
 
     // Two quants — Q4_K is the lightweight default (~1.7 GB), F16 the reference (~5 GB). The
     // label total includes the tiny shared voxcpm2-ref.gguf companion.
@@ -154,6 +158,9 @@ public class VoxCPM2CrispAsr : ITtsEngine
     // restart so the new --voice path takes effect.
     private static string? _serverVoicePath;
     private static string? _serverRefText;
+    // True when the running server was started for a per-line clone run: every line then sends
+    // its own reference in the request, so a new staged clip is not a restart.
+    private static bool _serverPerLine;
     private static bool _processExitHooked;
     private static readonly StringBuilder _serverLog = new();
 
@@ -371,6 +378,13 @@ public class VoxCPM2CrispAsr : ITtsEngine
         {
             foreach (var file in Directory.GetFiles(voicesFolder, "*.wav"))
             {
+                // The per-line clone's own references live here too; they belong to one line of
+                // one run, not in a combo.
+                if (PerLineReferenceStaging.IsStaged(file))
+                {
+                    continue;
+                }
+
                 var name = Path.GetFileNameWithoutExtension(file).Replace('_', ' ');
                 result.Add(new Voice(new VoxCPM2Voice(name, file)));
             }
@@ -378,6 +392,41 @@ public class VoxCPM2CrispAsr : ITtsEngine
 
         return result.ToArray();
     }
+
+    /// <summary>
+    /// <see cref="IPerLineCloneEngine"/>: the clip is staged into the voices folder, which is the
+    /// server's working directory, so its bare file name is what <see cref="Speak"/> sends as the
+    /// request's <c>voice</c>. Cloning is from audio alone, so a clip without a transcript is as
+    /// good as one with; staging only fails on a missing clip.
+    /// </summary>
+    public Voice? MakePerLineCloneVoice(string clipFileName, string voiceName) =>
+        StagePerLineReference(clipFileName) is { } staged
+            ? new Voice(new VoxCPM2Voice(voiceName, staged))
+            : null;
+
+    /// <summary>
+    /// The staged copy in the voices folder, which is the only reference this engine ever
+    /// speaks from - exporting it is what lets an imported session be re-dubbed on a machine
+    /// that no longer has the video.
+    /// </summary>
+    public string? GetPerLineReferenceClip(Voice voice) =>
+        voice.EngineVoice is VoxCPM2Voice voxVoice && !string.IsNullOrEmpty(voxVoice.FilePath)
+            ? voxVoice.FilePath
+            : null;
+
+    /// <summary>
+    /// <see cref="IPerLineCloneEngine"/>: see <see cref="ClearStagedPerLineReferences"/>.
+    /// </summary>
+    public void ResetStagedPerLineReferences() => ClearStagedPerLineReferences();
+
+    public static string? StagePerLineReference(string clipFileName) =>
+        PerLineReferenceStaging.Stage(clipFileName, GetSetVoicesFolder(), "VoxCPM2 (CrispASR)");
+
+    /// <summary>
+    /// Removes every staged per-line reference, leaving the user's imported voices alone.
+    /// </summary>
+    public static void ClearStagedPerLineReferences() =>
+        PerLineReferenceStaging.Clear(Path.Combine(GetSetFolder(), "voices"), "VoxCPM2 (CrispASR)");
 
     public bool IsVoiceInstalled(Voice voice) => true;
 
@@ -415,24 +464,15 @@ public class VoxCPM2CrispAsr : ITtsEngine
 
         var refText = TryReadRefText(voxVoice.FilePath);
         var modelKey = ResolveModelKey(model);
-        await EnsureServerRunningAsync(modelKey, voxVoice.FilePath, refText, cancellationToken);
+        // A per-line clone's reference is sent per request, so the server is keyed on the model
+        // only for those; an ordinary voice keeps the startup flag and its restart-on-change.
+        var isPerLineClone = PerLineReferenceStaging.IsStaged(voxVoice.FilePath);
+        await EnsureServerRunningAsync(modelKey, voxVoice.FilePath, refText, isPerLineClone, cancellationToken);
 
         var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetFolder), Guid.NewGuid() + ".wav");
 
         var speed = Math.Clamp(Se.Settings.Video.TextToSpeech.VoxCPM2CrispAsrSpeed, 0.25, 4.0);
-        // Deliberately NO `voice` / `ref_text` field: the voxcpm2 backend treats a per-request
-        // `voice` as a FILE PATH (read_wav_mono_pcm16) that OVERRIDES the startup --voice, so the
-        // bare stem SE used to send failed to load and silently fell back to zero-shot — a random
-        // speaker per line, the same bug MOSS-TTS had (#12757). With the field omitted the backend
-        // falls back to the init-time --voice path (server mode never sets tts_voice_clone_consent,
-        // so the empty-voice branch resolves to voice_path_) and clones the reference. The server
-        // restarts on (voice, ref-text) change — see EnsureServerRunningAsync.
-        var payload = new Dictionary<string, object>
-        {
-            ["input"] = text,
-            ["response_format"] = "wav",
-            ["speed"] = speed,
-        };
+        var payload = BuildSpeakPayload(text, speed, isPerLineClone ? Path.GetFileName(voxVoice.FilePath) : null);
 
         // Attests the user's own imported reference and the AI-disclosure duty; see
         // CrispAsrTtsProvenance. Skipped when voice cloning has not been accepted in settings.
@@ -553,12 +593,51 @@ public class VoxCPM2CrispAsr : ITtsEngine
         }
     }
 
-    private static async Task EnsureServerRunningAsync(string modelKey, string voicePath, string refText, CancellationToken ct)
+    /// <summary>
+    /// Builds the <c>/v1/audio/speech</c> JSON payload. Extracted so the voice-field rule is
+    /// unit-testable without a running crispasr server.
+    /// </summary>
+    /// <param name="perLineVoiceFileName">
+    /// The bare file name of a staged per-line reference to send as the request's <c>voice</c>,
+    /// or null for an ordinary voice. The backend reads a per-request <c>voice</c> as a FILE PATH
+    /// that overrides the startup --voice, relative to its working directory - which
+    /// <see cref="EnsureServerRunningAsync"/> sets to the voices folder; the server rejects
+    /// anything with a path separator (HTTP 400), so it cannot be the full path.
+    /// </param>
+    /// <remarks>
+    /// For ordinary voices, deliberately sends NO <c>voice</c> / <c>ref_text</c> field: the bare
+    /// stem SE used to send failed to load and silently fell back to zero-shot — a random speaker
+    /// per line, the same bug MOSS-TTS had (#12757). With the field omitted the backend falls back
+    /// to the init-time --voice path (server mode never sets tts_voice_clone_consent, so the
+    /// empty-voice branch resolves to voice_path_) and clones the reference. The server restarts
+    /// on (voice, ref-text) change — see <see cref="EnsureServerRunningAsync"/>.
+    /// </remarks>
+    internal static Dictionary<string, object> BuildSpeakPayload(string text, double speed, string? perLineVoiceFileName)
     {
+        var payload = new Dictionary<string, object>
+        {
+            ["input"] = text,
+            ["response_format"] = "wav",
+            ["speed"] = speed,
+        };
+
+        if (!string.IsNullOrEmpty(perLineVoiceFileName))
+        {
+            payload["voice"] = perLineVoiceFileName;
+        }
+
+        return payload;
+    }
+
+    private static async Task EnsureServerRunningAsync(string modelKey, string voicePath, string refText, bool perLine, CancellationToken ct)
+    {
+        // A per-line clone run carries its reference in every request, so within such a run the
+        // server is keyed on the model alone; the first clip still goes on the startup flag.
         bool MatchesCurrent() =>
             _serverProcess is { HasExited: false } && _serverPort != 0
             && string.Equals(_serverModelKey, modelKey, StringComparison.OrdinalIgnoreCase)
             && (!UseStartupVoiceFlags
+                || (perLine && _serverPerLine)
                 || (string.Equals(_serverVoicePath, voicePath, StringComparison.OrdinalIgnoreCase)
                     && string.Equals(_serverRefText, refText, StringComparison.Ordinal)));
 
@@ -594,7 +673,12 @@ public class VoxCPM2CrispAsr : ITtsEngine
             var port = FindFreeLoopbackPort();
             var psi = new ProcessStartInfo
             {
-                WorkingDirectory = Path.GetDirectoryName(exe) ?? GetSetFolder(),
+                // Run in the voices folder: the backend opens a per-request `voice` as a literal
+                // path relative to its working directory (it does not resolve it against
+                // --voice-dir), and the server rejects a `voice` with path separators - so this is
+                // what lets a per-line clone's staged clip be found by its bare file name. Every
+                // path passed below is absolute, so nothing else depends on the working directory.
+                WorkingDirectory = GetSetVoicesFolder(),
                 FileName = exe,
                 UseShellExecute = false,
                 CreateNoWindow = true,
@@ -660,6 +744,7 @@ public class VoxCPM2CrispAsr : ITtsEngine
             _serverModelKey = modelKey;
             _serverVoicePath = voicePath;
             _serverRefText = refText;
+            _serverPerLine = perLine;
             HookProcessExitOnce();
 
             // First-run auto-download (the main GGUF is up to ~5 GB) needs a generous timeout.
@@ -678,6 +763,7 @@ public class VoxCPM2CrispAsr : ITtsEngine
                     _serverModelKey = null;
                     _serverVoicePath = null;
                     _serverRefText = null;
+                    _serverPerLine = false;
                     throw new InvalidOperationException(
                         $"crispasr (voxcpm2-tts) exited during startup (code {exitCode}). Output: {tail}"
                         + LaunchCmdSuffix(exitedLaunchCommand));
@@ -761,6 +847,7 @@ public class VoxCPM2CrispAsr : ITtsEngine
         _serverModelKey = null;
         _serverVoicePath = null;
         _serverRefText = null;
+        _serverPerLine = false;
         if (p == null)
         {
             return;

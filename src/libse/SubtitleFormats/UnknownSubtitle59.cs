@@ -29,7 +29,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (var p in subtitle.Paragraphs)
             {
                 var lines = HtmlUtil.RemoveHtmlTags(p.Text).SplitToLines();
-                sb.AppendLine(EncodeTimeCode(p.StartTime) + "\t" + lines[0].Trim());
+                // the end time is part of the format (see the header comment and RegexTimeCodes);
+                // without it every cue reloaded with EndTime 0
+                sb.AppendLine(EncodeTimeCode(p.StartTime) + "\t" + lines[0].Trim() + "\t" + EncodeTimeCode(p.EndTime));
                 for (int i = 1; i < lines.Count; i++)
                 {
                     sb.AppendLine("\t" + lines[i].Trim());
@@ -57,7 +59,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (RegexTimeCodes.IsMatch(s) || RegexTimeCodes2.IsMatch(s))
                     {
-                        if (RegexTimeCodes2.IsMatch(s))
+                        // RegexTimeCodes2 is a superset of RegexTimeCodes, so every well-formed line counted
+                        // as an error and the format could never be detected (errors == cues).
+                        if (!RegexTimeCodes.IsMatch(s) && RegexTimeCodes2.IsMatch(s))
                         {
                             _errorCount++;
                         }

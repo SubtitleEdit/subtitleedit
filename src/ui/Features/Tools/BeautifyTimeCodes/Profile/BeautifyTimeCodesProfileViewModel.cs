@@ -233,6 +233,11 @@ public partial class BeautifyTimeCodesProfileViewModel : ObservableObject
             e.Handled = true;
             Cancel();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/beautify-time-codes", "profile-editor");
+        }
     }
 
     // GapMs property used by NumericUpDown bindings — derived from frame count

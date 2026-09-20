@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.ContainerFormats.Chapters;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
@@ -101,6 +102,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static string ToFfmpegMetadata(IList<Chapter> chapters)
         {
+            return ToFfmpegMetadata(chapters, 0);
+        }
+
+        /// <summary>
+        /// Chapters for a video that is <paramref name="durationMilliseconds"/> long (zero or
+        /// less: unknown). The last chapter has no next one to end at, and its made-up end could
+        /// lie past the end of the video - older ffmpeg versions then stretched the container's
+        /// duration to it - or only four seconds into an hour-long last chapter. With a known
+        /// duration every chapter ends inside the video, the last one at its end, and a chapter
+        /// that starts at or after the end is left out.
+        /// </summary>
+        public static string ToFfmpegMetadata(IList<Chapter> chapters, double durationMilliseconds)
+        {
+            if (durationMilliseconds > 0)
+            {
+                chapters = chapters.Where(c => c.StartMilliseconds < durationMilliseconds).ToList();
+            }
+
             var sb = new StringBuilder();
             sb.AppendLine(Header);
 
@@ -108,6 +127,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 var chapter = chapters[i];
                 var end = ChapterHelper.GetEndMilliseconds(chapters, i);
+                if (durationMilliseconds > 0 && (i == chapters.Count - 1 || end > durationMilliseconds))
+                {
+                    end = durationMilliseconds;
+                }
 
                 sb.AppendLine();
                 sb.AppendLine("[CHAPTER]");

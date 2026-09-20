@@ -23,19 +23,21 @@ public interface IWhisperDownloadService
 public class WhisperDownloadService : IWhisperDownloadService
 {
     private readonly HttpClient _httpClient;
-    private const string WindowsUrl = "https://github.com/ggml-org/whisper.cpp/releases/download/v1.9.2/whisper-blas-bin-x64.zip";
-    private const string MacArmUrl = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-192/whisper-mac.zip";
-    private const string MacX64Url = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-192/whisper-mac.zip";
+    // Upstream now tags nightly builds llama.cpp style (b5130) and only attaches binaries to
+    // those; the semantic v1.9.4 tag points at the same commit but carries no assets.
+    private const string WindowsUrl = "https://github.com/ggml-org/whisper.cpp/releases/download/b5130/whisper-blas-bin-x64.zip";
+    private const string MacArmUrl = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-194/whisper-mac.zip";
+    private const string MacX64Url = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-194/whisper-mac.zip";
     // The Linux archives are SE rebuilds (upstream ships no Linux binaries). They must carry
     // libwhisper.so.1 / libggml.so.0 next to whisper-cli, staged under their SONAMEs with
     // $ORIGIN RPATHs - whispercpp-184 through -191 shipped without them and the engine died on
     // startup with "error while loading shared libraries" (issue #13680). The build workflow in
-    // SubtitleEdit/support-files verifies this now, so plain whispercpp-192 is fine here.
-    private const string LinuxUrl = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-192/whisper-vulkan-linux64.zip";
+    // SubtitleEdit/support-files verifies this now, so plain whispercpp-194 is fine here.
+    private const string LinuxUrl = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-194/whisper-vulkan-linux64.zip";
 
-    private const string WindowsUrlCuBlass = "https://github.com/ggml-org/whisper.cpp/releases/download/v1.9.2/whisper-cublas-12.4.0-bin-x64.zip";
-    private const string WindowsUrlCppVulkan = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-192/whisper-vulkan-x64.zip";
-    private const string LinuxUrlCuBlass = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-192/whisper-cuda-linux64.zip";
+    private const string WindowsUrlCuBlass = "https://github.com/ggml-org/whisper.cpp/releases/download/b5130/whisper-cublas-12.4.0-bin-x64.zip";
+    private const string WindowsUrlCppVulkan = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-194/whisper-vulkan-x64.zip";
+    private const string LinuxUrlCuBlass = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-194/whisper-cuda-linux64.zip";
     
     private const string DownloadUrlConstMe = "https://github.com/Const-me/Whisper/releases/download/1.12.0/cli.zip";
     private const string SileroVadUrl = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-184/ggml-silero-v6.2.0.zip";
@@ -50,10 +52,12 @@ public class WhisperDownloadService : IWhisperDownloadService
 
     // Built by support-files' build-whisperx-standalone-release.yml from a pinned ref of
     // https://github.com/muaz978/subtitleedit-whisperx-standalone (v1.0.1), so every install
-    // of a given SE version gets the exact same, known-good build.
-    private const string MacArmWhisperX = "https://github.com/SubtitleEdit/support-files/releases/download/whisperx-standalone-101/whisperx-standalone-macos-arm64.7z";
-    private const string LinuxWhisperX = "https://github.com/SubtitleEdit/support-files/releases/download/whisperx-standalone-101/whisperx-standalone-linux-x64.7z";
-    private const string WindowsWhisperX = "https://github.com/SubtitleEdit/support-files/releases/download/whisperx-standalone-101/whisperx-standalone-windows-x64.7z";
+    // of a given SE version gets the exact same, known-good build. Release 102 is the same
+    // source plus the workflow's entry-point prelude: UTF-8 line-buffered output (live
+    // progress) and no torchcodec warning - see #15096.
+    private const string MacArmWhisperX = "https://github.com/SubtitleEdit/support-files/releases/download/whisperx-standalone-102/whisperx-standalone-macos-arm64.7z";
+    private const string LinuxWhisperX = "https://github.com/SubtitleEdit/support-files/releases/download/whisperx-standalone-102/whisperx-standalone-linux-x64.7z";
+    private const string WindowsWhisperX = "https://github.com/SubtitleEdit/support-files/releases/download/whisperx-standalone-102/whisperx-standalone-windows-x64.7z";
 
     public WhisperDownloadService(HttpClient httpClient)
     {

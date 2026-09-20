@@ -53,6 +53,17 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
             assaSubtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(assaSubtitle.Header, styles);
 
+            // Looked up per paragraph / per cue-class tag below; the old code scanned both lists with LINQ each time.
+            var ssaStyleNames = new HashSet<string>(ssaStyles.Select(p => p.Name));
+            var webVttStylesByName = new Dictionary<string, WebVttStyle>();
+            foreach (var style in webVttStyles)
+            {
+                if (style.Name != null && !webVttStylesByName.ContainsKey(style.Name))
+                {
+                    webVttStylesByName.Add(style.Name, style);
+                }
+            }
+
             var layer = 0;
             foreach (var paragraph in assaSubtitle.Paragraphs)
             {
@@ -87,7 +98,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     paragraph.Text.EndsWith("</c>", StringComparison.Ordinal))
                 {
                     var tag = matches[0].Value.TrimEnd('>', ' ').Remove(0, 2);
-                    if (ssaStyles.Any(p => p.Name == tag))
+                    if (ssaStyleNames.Contains(tag))
                     {
                         paragraph.Extra = tag;
                         paragraph.Text = paragraph.Text.Remove(matches[0].Index, matches[0].Length);
@@ -96,7 +107,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                 }
 
-                paragraph.Text = SetInlineStyles(paragraph.Text, ssaStyles, webVttStyles);
+                paragraph.Text = SetInlineStyles(paragraph.Text, webVttStylesByName);
 
                 paragraph.Text = GetAlignment(paragraph, width, height);
             }
@@ -250,7 +261,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return null;
         }
 
-        private static string SetInlineStyles(string input, List<SsaStyle> ssaStyles, List<WebVttStyle> webVttStyles)
+        private static string SetInlineStyles(string input, Dictionary<string, WebVttStyle> webVttStylesByName)
         {
             var allInlineStyles = new List<WebVttStyle>();
             var start = 0;
@@ -285,8 +296,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     var arr = match.Value.Remove(0, 3).TrimEnd('>').Split('.');
                     foreach (var styleName in arr)
                     {
-                        var styleFound = webVttStyles.FirstOrDefault(p => p.Name == "." + styleName);
-                        if (styleFound != null)
+                        if (webVttStylesByName.TryGetValue("." + styleName, out var styleFound))
                         {
                             webVttStyle = ApplyStyle(styleFound, webVttStyle);
                         }

@@ -49,6 +49,11 @@ public interface IVideoPlayer
     /// Whether playback output has (re)started - a seek finished or a file started -
     /// since the given Stopwatch timestamp. Only meaningful when
     /// <see cref="SupportsPlaybackRestartEvents"/> is true.
+    /// <para>
+    /// While a seek issued through <see cref="Position"/> is still outstanding this answers for
+    /// that seek: it stays false until the restart caused by the newest seek has been seen, so a
+    /// restart from something else cannot be mistaken for "the seek has landed".
+    /// </para>
     /// </summary>
     bool HasPlaybackRestartedSince(long stopwatchTimestamp) => false;
 }

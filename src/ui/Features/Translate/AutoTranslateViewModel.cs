@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Declarative;
@@ -88,6 +88,11 @@ public partial class AutoTranslateViewModel : ObservableObject
     [ObservableProperty] private bool _modelBrowseIsVisible;
     [ObservableProperty] private string _modelText;
     [ObservableProperty] private bool _buttonModelIsVisible;
+    [ObservableProperty] private ObservableCollection<string> _modelPresets = new();
+    [ObservableProperty] private bool _modelComboIsVisible;
+    [ObservableProperty] private bool _modelTextBoxIsVisible;
+    [ObservableProperty] private bool _translateInPlaceIsVisible;
+    [ObservableProperty] private bool _translateInPlace;
     [ObservableProperty] private bool _buttonDownloadIsVisible;
     [ObservableProperty] private ObservableCollection<SpeechToTextModelDisplay> _crispAsrModels = new();
     [ObservableProperty] private SpeechToTextModelDisplay? _selectedCrispAsrModel;
@@ -163,6 +168,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             new AnthropicTranslate(),
             new GroqTranslate(),
             new OpenRouterTranslate(),
+            new ApiRouteTranslate(),
             new LaraTranslate(),
             new PerplexityTranslate(),
             new GeminiTranslate(),
@@ -200,6 +206,16 @@ public partial class AutoTranslateViewModel : ObservableObject
         LoadSettings();
     }
 
+    /// <summary>
+    /// For "Selected lines > Auto translate" with no original loaded: offers translating the lines in
+    /// place instead of making the subtitle the original (#14926). The choice is remembered.
+    /// </summary>
+    public void OfferTranslateInPlace()
+    {
+        TranslateInPlaceIsVisible = true;
+        TranslateInPlace = Se.Settings.AutoTranslate.TranslateSelectedLinesInPlace;
+    }
+
     private void LoadSettings()
     {
         Configuration.Settings.Tools.OllamaApiUrl = Se.Settings.AutoTranslate.OllamaUrl;
@@ -213,6 +229,11 @@ public partial class AutoTranslateViewModel : ObservableObject
         // The url is saved but was the only field of these two engines never bridged back, so both
         // the url box and the translator fell back to the built-in endpoint on the next start.
         Configuration.Settings.Tools.OpenRouterUrl = Se.Settings.AutoTranslate.OpenRouterUrl;
+
+        Configuration.Settings.Tools.ApiRouteApiKey = Se.Settings.AutoTranslate.ApiRouteApiKey;
+        Configuration.Settings.Tools.ApiRouteUrl = Se.Settings.AutoTranslate.ApiRouteUrl;
+        Configuration.Settings.Tools.ApiRouteModel = Se.Settings.AutoTranslate.ApiRouteModel;
+        Configuration.Settings.Tools.ApiRoutePrompt = Se.Settings.AutoTranslate.ApiRoutePrompt;
 
         Configuration.Settings.Tools.ChatGptApiKey = Se.Settings.AutoTranslate.ChatGptApiKey;
         Configuration.Settings.Tools.ChatGptUrl = Se.Settings.AutoTranslate.ChatGptUrl;
@@ -468,6 +489,14 @@ public partial class AutoTranslateViewModel : ObservableObject
             Se.Settings.AutoTranslate.OpenRouterUrl = apiUrl.Trim();
         }
 
+        if (engineType == typeof(ApiRouteTranslate))
+        {
+            Configuration.Settings.Tools.ApiRouteApiKey = apiKey.Trim();
+            Configuration.Settings.Tools.ApiRouteModel = apiModel.Trim();
+            Configuration.Settings.Tools.ApiRouteUrl = apiUrl.Trim();
+            Se.Settings.AutoTranslate.ApiRouteUrl = apiUrl.Trim();
+        }
+
         if (engineType == typeof(GeminiTranslate))
         {
             Configuration.Settings.Tools.GeminiProApiKey = apiKey.Trim();
@@ -509,6 +538,10 @@ public partial class AutoTranslateViewModel : ObservableObject
 
 
         Se.Settings.AutoTranslate.AutoTranslateLastName = SelectedAutoTranslator.Name;
+        if (TranslateInPlaceIsVisible)
+        {
+            Se.Settings.AutoTranslate.TranslateSelectedLinesInPlace = TranslateInPlace;
+        }
         Se.Settings.AutoTranslate.AutoTranslateLastSource = SelectedSourceLanguage?.Code ?? string.Empty;
         Se.Settings.AutoTranslate.AutoTranslateLastTarget = SelectedTargetLanguage?.Code ?? string.Empty;
 
@@ -519,6 +552,11 @@ public partial class AutoTranslateViewModel : ObservableObject
         Se.Settings.AutoTranslate.OpenRouterApiKey = Configuration.Settings.Tools.OpenRouterApiKey;
         Se.Settings.AutoTranslate.OpenRouterModel = Configuration.Settings.Tools.OpenRouterModel;
         Se.Settings.AutoTranslate.OpenRouterPrompt = Configuration.Settings.Tools.OpenRouterPrompt;
+
+        Se.Settings.AutoTranslate.ApiRouteApiKey = Configuration.Settings.Tools.ApiRouteApiKey;
+        Se.Settings.AutoTranslate.ApiRouteUrl = Configuration.Settings.Tools.ApiRouteUrl;
+        Se.Settings.AutoTranslate.ApiRouteModel = Configuration.Settings.Tools.ApiRouteModel;
+        Se.Settings.AutoTranslate.ApiRoutePrompt = Configuration.Settings.Tools.ApiRoutePrompt;
 
         Se.Settings.AutoTranslate.ChatGptApiKey = Configuration.Settings.Tools.ChatGptApiKey;
         Se.Settings.AutoTranslate.ChatGptUrl = Configuration.Settings.Tools.ChatGptUrl;
@@ -681,52 +719,11 @@ public partial class AutoTranslateViewModel : ObservableObject
             TargetLanguages.Add(language);
         }
 
-        SelectedTargetLanguage = null;
-        var targetLanguageIsoCode = EvaluateDefaultTargetLanguageCode(SelectedTargetLanguage?.Code ?? string.Empty, SelectedSourceLanguage?.Code ?? string.Empty);
-        if (!string.IsNullOrEmpty(targetLanguageIsoCode))
-        {
-            var lang = TargetLanguages.FirstOrDefault(p => p.Code == targetLanguageIsoCode);
-            if (lang != null)
-            {
-                SelectedTargetLanguage = lang;
-            }
-        }
-
-        var languageName = Iso639Dash2LanguageCode.List.FirstOrDefault(l => l.TwoLetterCode.Equals(targetLanguageIsoCode, StringComparison.InvariantCultureIgnoreCase))?.EnglishName;
-        if (SelectedTargetLanguage == null && !string.IsNullOrEmpty(languageName))
-        {
-            var lang = TargetLanguages.FirstOrDefault(p => p.Name == languageName);
-            if (lang != null)
-            {
-                SelectedTargetLanguage = lang;
-            }
-        }
-
-        if (!string.IsNullOrEmpty(Se.Settings.AutoTranslate.AutoTranslateLastTarget))
-        {
-            var lang = TargetLanguages.FirstOrDefault(p => p.Code == Se.Settings.AutoTranslate.AutoTranslateLastTarget);
-            if ((SelectedSourceLanguage == null || lang == null || SelectedSourceLanguage.Code != lang.Code) && lang != null)
-            {
-                SelectedTargetLanguage = lang;
-            }
-        }
-
-        if (SelectedTargetLanguage == null && TargetLanguages.Count > 0)
-        {
-            SelectedTargetLanguage = TargetLanguages[0];
-        }
-
-        if (SelectedSourceLanguage?.Name == SelectedTargetLanguage?.Name && TargetLanguages.Count > 1)
-        {
-            if (SelectedSourceLanguage?.Code == "en" || SelectedSourceLanguage?.Name == "English")
-            {
-                SelectedTargetLanguage = TargetLanguages.FirstOrDefault(p => p.Code == "de");
-            }
-            else
-            {
-                SelectedTargetLanguage = TargetLanguages.FirstOrDefault(p => p.Code == "en");
-            }
-        }
+        SelectedTargetLanguage = FindDefaultTargetLanguage(
+            TargetLanguages,
+            SelectedSourceLanguage,
+            Se.Settings.AutoTranslate.AutoTranslateLastTarget,
+            Se.Language.CultureName);
     }
 
     [RelayCommand]
@@ -1751,6 +1748,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             AnthropicTranslate => settings.AnthropicApiUrl,
             GroqTranslate => settings.GroqUrl,
             OpenRouterTranslate => settings.OpenRouterUrl,
+            ApiRouteTranslate => settings.ApiRouteUrl,
             LaraTranslate => settings.LaraUrl,
             PerplexityTranslate => settings.PerplexityUrl,
             NvidiaTranslate => settings.NvidiaUrl,
@@ -1895,6 +1893,23 @@ public partial class AutoTranslateViewModel : ObservableObject
     }
 
     private void SetAutoTranslatorEngine(IAutoTranslator translator)
+    {
+        SetAutoTranslatorEngineFields(translator);
+
+        // Each engine's known models used to be collected here and then never shown - the model
+        // was a bare text box, so the names had to be typed from memory (#14926). They are now the
+        // drop-down of an editable combo; engines without a list keep the plain text box.
+        var presets = _apiModels.Where(m => !string.IsNullOrWhiteSpace(m)).Select(m => m.Trim()).Distinct().ToList();
+        if (!ModelPresets.SequenceEqual(presets))
+        {
+            ModelPresets = new ObservableCollection<string>(presets);
+        }
+
+        ModelComboIsVisible = ModelIsVisible && ModelPresets.Count > 0;
+        ModelTextBoxIsVisible = ModelIsVisible && ModelPresets.Count == 0;
+    }
+
+    private void SetAutoTranslatorEngineFields(IAutoTranslator translator)
     {
         SelectedAutoTranslator = translator;
         AutoTranslatorLinkText = translator.Name;
@@ -2294,6 +2309,24 @@ public partial class AutoTranslateViewModel : ObservableObject
             return;
         }
 
+        if (engineType == typeof(ApiRouteTranslate))
+        {
+            FillUrls(new List<string>
+            {
+                Configuration.Settings.Tools.ApiRouteUrl,
+            });
+
+            ApiKeyText = Configuration.Settings.Tools.ApiRouteApiKey;
+            ApiKeyIsVisible = true;
+
+            _apiModels = ApiRouteTranslate.Models.ToList();
+            ModelIsVisible = true;
+            ButtonModelIsVisible = true;
+            ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.ApiRouteModel) ? _apiModels[0] : Configuration.Settings.Tools.ApiRouteModel;
+
+            return;
+        }
+
         if (engineType == typeof(GeminiTranslate))
         {
             ApiKeyText = Configuration.Settings.Tools.GeminiProApiKey;
@@ -2416,7 +2449,16 @@ public partial class AutoTranslateViewModel : ObservableObject
 
         if (string.IsNullOrEmpty(defaultSourceLanguageCode))
         {
-            defaultSourceLanguageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle); // Guess language based on subtitle contents
+            defaultSourceLanguageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle); // Guess language based on subtitle contents
+        }
+
+        // Nothing recognizable - typically a line or two picked for "Selected lines > Auto translate".
+        // Assuming English then pushed an English target off the target combo, which skips the source
+        // language, so it opened on German instead (#14926). The last source is a better guess.
+        if (string.IsNullOrEmpty(defaultSourceLanguageCode))
+        {
+            var lastSource = Se.Settings.AutoTranslate.AutoTranslateLastSource;
+            return string.IsNullOrEmpty(lastSource) ? "en" : lastSource;
         }
 
         if (!string.IsNullOrEmpty(Se.Settings.AutoTranslate.AutoTranslateLastSource) &&
@@ -2429,92 +2471,72 @@ public partial class AutoTranslateViewModel : ObservableObject
         return defaultSourceLanguageCode;
     }
 
-    public static string EvaluateDefaultTargetLanguageCode(string defaultSourceLanguage, string sourceLanguage)
+    /// <summary>
+    /// The target language a freshly built target combo starts on: the last target used, then the
+    /// UI language, then English - skipping any that is the source language (#14903).
+    ///
+    /// The old default only matched on <see cref="TranslationPair.Code"/> and guessed the user's
+    /// language from the region part of the OS culture ("US" in "en-US"). The LLM engines keep the
+    /// English name in Code ("Chinese") while the last target may have been saved as an ISO code
+    /// ("zh"), so nothing matched and the combo fell back to its first entry - Abkhaz.
+    /// </summary>
+    internal static TranslationPair? FindDefaultTargetLanguage(
+        IList<TranslationPair> targetLanguages,
+        TranslationPair? sourceLanguage,
+        string? lastTarget,
+        string? uiCultureName)
     {
-        var installedLanguages = new List<string>(); // Get installed languages
-
-        var currentCulture = CultureInfo.CurrentCulture;
-        var currentLanguage = currentCulture.Name.Split('-').LastOrDefault();
-        if (!string.IsNullOrEmpty(currentLanguage))
+        if (targetLanguages.Count == 0)
         {
-            var cultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
-            var cultureByName = cultures.FirstOrDefault(p => p.Name.EndsWith(currentLanguage));
-            if (cultureByName != null)
+            return null;
+        }
+
+        var candidates = new List<string?> { lastTarget, uiCultureName };
+        if (!string.IsNullOrEmpty(uiCultureName) && uiCultureName.Contains('-'))
+        {
+            candidates.Add(uiCultureName.Substring(0, uiCultureName.IndexOf('-')));
+        }
+
+        candidates.Add("en");
+        candidates.Add("de");
+
+        foreach (var candidate in candidates)
+        {
+            var language = FindLanguage(targetLanguages, candidate);
+            if (language != null && !IsSameLanguage(language, sourceLanguage))
             {
-                installedLanguages.Add(cultureByName.TwoLetterISOLanguageName);
+                return language;
             }
         }
 
-        var uiCultureTargetLanguage = Se.Settings.AutoTranslate.AutoTranslateLastTarget;
-        if (uiCultureTargetLanguage == sourceLanguage && installedLanguages.Count > 0 && installedLanguages[0] != sourceLanguage)
+        return targetLanguages.FirstOrDefault(p => !IsSameLanguage(p, sourceLanguage)) ?? targetLanguages[0];
+    }
+
+    /// <summary>
+    /// The entry for a saved code or name, however the engine spells it: a code ("zh-CN",
+    /// "zho_Hans"), an English name ("Chinese"), or the ISO code behind either.
+    /// </summary>
+    private static TranslationPair? FindLanguage(IList<TranslationPair> languages, string? codeOrName)
+    {
+        if (string.IsNullOrWhiteSpace(codeOrName))
         {
-            return installedLanguages[0];
+            return null;
         }
 
-        var sourceLanguageCode = Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(sourceLanguage);
-        if (!string.IsNullOrEmpty(sourceLanguageCode) && uiCultureTargetLanguage == sourceLanguageCode && installedLanguages.Count > 0 && installedLanguages[0] != sourceLanguageCode)
-        {
-            return installedLanguages[0];
-        }
+        var englishName = Iso639Dash2LanguageCode.List
+            .FirstOrDefault(l => l.TwoLetterCode.Equals(codeOrName, StringComparison.OrdinalIgnoreCase))?.EnglishName;
 
-        if (uiCultureTargetLanguage == defaultSourceLanguage)
-        {
-            foreach (var s in Utilities.GetDictionaryLanguages())
-            {
-                var temp = s.Replace("[", string.Empty).Replace("]", string.Empty);
-                if (temp.Length > 4)
-                {
-                    temp = temp.Substring(temp.Length - 5, 2).ToLowerInvariant();
-                    if (temp != defaultSourceLanguage && installedLanguages.Any(p => p.Contains(temp)))
-                    {
-                        uiCultureTargetLanguage = temp;
-                        break;
-                    }
-                }
-            }
-        }
+        return languages.FirstOrDefault(p => codeOrName.Equals(p.Code, StringComparison.OrdinalIgnoreCase))
+               ?? languages.FirstOrDefault(p => codeOrName.Equals(p.Name, StringComparison.OrdinalIgnoreCase))
+               ?? languages.FirstOrDefault(p => codeOrName.Equals(p.TwoLetterIsoLanguageName, StringComparison.OrdinalIgnoreCase))
+               ?? (englishName == null ? null : languages.FirstOrDefault(p => englishName.Equals(p.Name, StringComparison.OrdinalIgnoreCase)));
+    }
 
-        if (uiCultureTargetLanguage == defaultSourceLanguage)
-        {
-            foreach (var language in installedLanguages)
-            {
-                if (language != defaultSourceLanguage)
-                {
-                    uiCultureTargetLanguage = language;
-                    break;
-                }
-            }
-        }
-
-        if (uiCultureTargetLanguage == defaultSourceLanguage)
-        {
-            var name = CultureInfo.CurrentCulture.Name;
-            if (name.Length > 2)
-            {
-                name = name.Remove(0, name.Length - 2);
-            }
-            var iso = IsoCountryCodes.ThreeToTwoLetterLookup.FirstOrDefault(p => p.Value == name);
-            if (!iso.Equals(default(KeyValuePair<string, string>)))
-            {
-                var iso639 = Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(iso.Key);
-                if (!string.IsNullOrEmpty(iso639))
-                {
-                    uiCultureTargetLanguage = iso639;
-                }
-            }
-        }
-
-        // Set target language to something different than source language
-        if (uiCultureTargetLanguage == defaultSourceLanguage && (defaultSourceLanguage == "en" || defaultSourceLanguage == "English"))
-        {
-            uiCultureTargetLanguage = "es";
-        }
-        else if (uiCultureTargetLanguage == defaultSourceLanguage)
-        {
-            uiCultureTargetLanguage = "en";
-        }
-
-        return uiCultureTargetLanguage;
+    private static bool IsSameLanguage(TranslationPair language, TranslationPair? other)
+    {
+        return other != null &&
+               ((!string.IsNullOrEmpty(language.Code) && language.Code.Equals(other.Code, StringComparison.OrdinalIgnoreCase)) ||
+                (!string.IsNullOrEmpty(language.Name) && language.Name.Equals(other.Name, StringComparison.OrdinalIgnoreCase)));
     }
 
     public void KeyDown(KeyEventArgs e)
@@ -2523,10 +2545,72 @@ public partial class AutoTranslateViewModel : ObservableObject
         {
             Cancel();
         }
+        else if (e.Key == Key.Enter && e.KeyModifiers == KeyModifiers.None)
+        {
+            RunDefaultButton(e);
+        }
         else if (UiUtil.IsHelp(e))
         {
             e.Handled = true;
             UiUtil.ShowHelp("features/auto-translate");
+        }
+    }
+
+    /// <summary>
+    /// The row grid marks Enter as handled without doing anything with it, so a key press made
+    /// with a line selected never reached the window. Take it while the event tunnels down when
+    /// the grid has the keyboard - everything else that uses Enter (a focused button, an open
+    /// combo box drop-down) is left alone and answered by <see cref="KeyDown"/> on the way back up.
+    /// </summary>
+    public void PreviewKeyDown(KeyEventArgs e)
+    {
+        // e.Source is TextBox: the translation column's in-place editor owns Enter (it commits).
+        if (e.Key == Key.Enter && e.KeyModifiers == KeyModifiers.None && RowGrid?.IsKeyboardFocusWithin == true && e.Source is not TextBox)
+        {
+            RunDefaultButton(e);
+        }
+    }
+
+    internal enum DefaultButtonAction
+    {
+        None,
+        Translate,
+        Ok,
+    }
+
+    /// <summary>
+    /// What Enter does in the window - the same rule that gives one of the footer buttons the
+    /// accent colour: Translate until something has been translated, then OK. Nothing while a
+    /// translation is running, as both buttons are disabled then.
+    /// </summary>
+    internal DefaultButtonAction GetDefaultButtonAction()
+    {
+        if (IsOkPrimary)
+        {
+            return DefaultButtonAction.Ok;
+        }
+
+        return IsTranslatePrimary ? DefaultButtonAction.Translate : DefaultButtonAction.None;
+    }
+
+    /// <summary>
+    /// Avalonia has no WinForms-style AcceptButton, so the accented button only looked like the
+    /// default one: Enter did nothing unless that button also had keyboard focus. Anything that
+    /// uses Enter itself - a focused button, an open combo box drop-down - has already marked the
+    /// key handled before it reaches the window.
+    /// </summary>
+    private void RunDefaultButton(KeyEventArgs e)
+    {
+        switch (GetDefaultButtonAction())
+        {
+            case DefaultButtonAction.Ok:
+                e.Handled = true;
+                Ok();
+                break;
+            case DefaultButtonAction.Translate:
+                e.Handled = true;
+                TranslateCommand.Execute(null);
+                break;
         }
     }
 
@@ -2568,9 +2652,9 @@ public partial class AutoTranslateViewModel : ObservableObject
             Rows.Clear();
             Rows.AddRange(rows);
 
-            UpdateSourceLanguages(SelectedAutoTranslator);
-            UpdateTargetLanguages(SelectedAutoTranslator);
-
+            // Restore the engine before building its language lists. Building them for the
+            // constructor's default engine first let the engine-change carry-over (#13943) replace
+            // the saved target with whatever that other engine had fallen back to (#14903).
             if (!string.IsNullOrEmpty(Se.Settings.AutoTranslate.AutoTranslateLastName))
             {
                 var autoTranslator = AutoTranslators.FirstOrDefault(x => x.Name == Se.Settings.AutoTranslate.AutoTranslateLastName);
@@ -2579,6 +2663,9 @@ public partial class AutoTranslateViewModel : ObservableObject
                     SetAutoTranslatorEngine(autoTranslator);
                 }
             }
+
+            UpdateSourceLanguages(SelectedAutoTranslator);
+            UpdateTargetLanguages(SelectedAutoTranslator);
 
             if (Rows.Count > 0)
             {

@@ -18,6 +18,7 @@ public static class ViewMergeLinesWithSameText
         var labelGap = UiUtil.MakeLabel(Se.Language.Tools.MergeLinesWithSameText.MaxMsBetweenLines);
         var numericUpDownGap = UiUtil.MakeNumericUpDownInt(0, 10000, Se.Settings.Tools.MergeSameText.MaxMillisecondsBetweenLines, 130, vm, nameof(vm.MergeSameTextMaxMillisecondsBetweenLines));
         var checkBoxIncludeIncrementText = UiUtil.MakeCheckBox(Se.Language.Tools.MergeLinesWithSameText.IncludeIncrementingLines, vm, nameof(vm.MergeSameTextIncludeIncrementingLines));
+        var checkBoxIncludeRollUp = UiUtil.MakeCheckBox(Se.Language.Tools.MergeLinesWithSameText.IncludeRollUpCaptions, vm, nameof(vm.MergeSameTextIncludeRollUpCaptions));
         var panelGap = UiUtil.MakeHorizontalPanel(labelGap, numericUpDownGap);
 
 
@@ -29,6 +30,7 @@ public static class ViewMergeLinesWithSameText
                 labelHeader,
                 panelGap,
                 checkBoxIncludeIncrementText,
+                checkBoxIncludeRollUp,
             }
         };
 

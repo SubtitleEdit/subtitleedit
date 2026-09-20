@@ -271,29 +271,41 @@
             {
                 var text = Utilities.UnbreakLine(input);
                 var three = SplitToThree(text);
-                var four = SplitToFour(text);
-                if (three.Count == 3)
+                if (three.Count == 3 && AllLinesFit(three))
                 {
-                    return three[0].Length < _singleLineMaxLength &&
-                           three[1].Length < _singleLineMaxLength &&
-                           three[2].Length < _singleLineMaxLength
-                        ? three
-                        : new List<string> { text };
+                    return three;
                 }
-                if (four.Count == 4)
+
+                var four = SplitToFour(text);
+                if (four.Count == 4 && AllLinesFit(four))
                 {
                     return four;
                 }
+
                 return new List<string> { text };
+            }
+
+            private bool AllLinesFit(List<string> lines)
+            {
+                foreach (var line in lines)
+                {
+                    if (line.Length >= _singleLineMaxLength)
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
             }
 
             public List<string> SplitToFour(string text)
             {
                 var lines = Utilities.AutoBreakLinePrivate(text.Trim(), _singleLineMaxLength, Configuration.Settings.General.MergeLinesShorterThan, _language, true).SplitToLines();
-                var list = new List<string>(lines.Count);
+                var list = new List<string>(4);
                 foreach (var line in lines)
                 {
-                    list.Add(Utilities.AutoBreakLinePrivate(line, _singleLineMaxLength, Configuration.Settings.General.MergeLinesShorterThan, _language, true));
+                    // each half is broken again - add the individual lines, not the re-broken string
+                    list.AddRange(Utilities.AutoBreakLinePrivate(line, _singleLineMaxLength, Configuration.Settings.General.MergeLinesShorterThan, _language, true).SplitToLines());
                 }
                 return list;
             }

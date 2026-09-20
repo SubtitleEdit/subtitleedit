@@ -24,7 +24,7 @@ public class DownloadLlamaCppWindow : Window
 
         var titleText = new TextBlock
         {
-            FontSize = 20,
+            FontSize = UiUtil.ScaledFontSize(20),
             FontWeight = FontWeight.Bold,
         };
         titleText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.TitleText)));
@@ -59,7 +59,7 @@ public class DownloadLlamaCppWindow : Window
             }
         };
 
-        Activated += delegate { buttonCancel.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, buttonCancel);
         KeyDown += (s, e) => vm.OnKeyDown(e);
     }
 }

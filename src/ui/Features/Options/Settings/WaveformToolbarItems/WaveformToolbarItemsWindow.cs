@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
@@ -30,6 +31,9 @@ public class WaveformToolbarItemsWindow : Window
         {
             var checkBox = new CheckBox();
             checkBox.Bind(CheckBox.IsCheckedProperty, new Binding(nameof(ToolbarItemDisplay.IsVisible)) { Mode = BindingMode.TwoWay });
+            // Shift+Tab back into the list lands on this check box rather than the row, and a
+            // check box with no content is announced as a nameless "check box" (#12087).
+            checkBox.Bind(AutomationProperties.NameProperty, new Binding(nameof(ToolbarItemDisplay.Name)));
 
             var textBlock = new TextBlock { Margin = new Thickness(5, 0, 0, 0), VerticalAlignment = VerticalAlignment.Center };
             textBlock.Bind(TextBlock.TextProperty, new Binding(nameof(ToolbarItemDisplay.Name)));
@@ -43,6 +47,21 @@ public class WaveformToolbarItemsWindow : Window
 
         var buttonMoveUp = UiUtil.MakeButton(Se.Language.General.MoveUp, vm.MoveUpCommand).WithMinWidth(100);
         var buttonMoveDown = UiUtil.MakeButton(Se.Language.General.MoveDown, vm.MoveDownCommand).WithMinWidth(100);
+
+        // Only the items that have a width (the initial text box) show the setting.
+        var numericUpDownWidth = UiUtil.MakeNumericUpDownInt(100, 3000, 400, 120, vm, nameof(vm.SelectedWidth));
+        numericUpDownWidth.Increment = 10;
+        var panelWidth = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Spacing = 2,
+            Children =
+            {
+                UiUtil.MakeLabel(Se.Language.General.Width),
+                numericUpDownWidth,
+            },
+        };
+        panelWidth.Bind(IsVisibleProperty, new Binding(nameof(vm.IsWidthVisible)));
 
         var sidePanel = new StackPanel
         {
@@ -85,6 +104,7 @@ public class WaveformToolbarItemsWindow : Window
                         UiUtil.MakeNumericUpDownInt(0, 100, 5, 120, vm, nameof(vm.SelectedRightMargin)),
                     },
                 },
+                panelWidth,
             },
         };
 
@@ -120,7 +140,7 @@ public class WaveformToolbarItemsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { listBox.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, listBox); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

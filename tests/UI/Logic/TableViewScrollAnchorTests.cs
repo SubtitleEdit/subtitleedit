@@ -207,6 +207,118 @@ public class TableViewScrollAnchorTests : IDisposable
     }
 
     [AvaloniaFact]
+    public void CutOfTheTopRowThenAutoBreak_DoesNotJumpToTheEndOfTheList()
+    {
+        // Issue #14231: near the end of the file, cutting the selected line (the row at the
+        // top of the viewport) removed the anchor item, so the next extent re-estimate -
+        // triggered by auto-break growing a row - had nothing to restore to and the clamped
+        // offset landed at the very bottom of the list.
+        var (window, grid, scrollViewer, items) = BuildShownGrid();
+
+        grid.ScrollIntoView(RowCount - 20);
+        Settle(window);
+
+        var before = FirstVisibleIndex(grid, scrollViewer);
+        Assert.True(before > RowCount - 40, "sanity: the test runs near the end of the list");
+
+        // Cut: the row at the top of the viewport goes away; the row below it takes its index.
+        var survivor = items[before + 1];
+        items.RemoveAt(before);
+        Settle(window);
+
+        // Auto-break: a visible one-line row gains a second line, changing its height and
+        // making the panel re-estimate the extent.
+        var oneLine = Enumerable.Range(items.IndexOf(survivor), 5).First(i => !items[i].Text.Contains('\n'));
+        items[oneLine].Text = "Byl jsem v jeho mysli, Rhiannon.\nZnam ho.";
+        Settle(window);
+
+        // The view must stay on the surviving neighbor, not jump to the last rows.
+        var first = FirstVisibleIndex(grid, scrollViewer);
+        Assert.InRange(first, items.IndexOf(survivor) - 1, items.IndexOf(survivor) + 1);
+    }
+
+    [AvaloniaFact]
+    public void RowGrowingNearAShortTail_DoesNotJumpToTheEndOfTheList()
+    {
+        // Issue #14231, second round ("still persists closer to the end of the list"). The
+        // reporter's recording has no cut in it: row 612 of 645 gains two lines on auto-break
+        // and the grid lands on rows 630-645. The last rows of a subtitle file are short, so
+        // once the realized window reaches into them the panel's average row height drops.
+        // After the height change the panel re-anchors from offset / average, that index runs
+        // past the end of the list and is clamped to the last row, and the ScrollViewer coerces
+        // the offset down to the new maximum in the same pass - an offset change the anchor
+        // used to read as a scroll, so it never restored.
+        const int rows = 645;
+        const int edited = 627;
+        var items = new ObservableCollection<Row>(Enumerable.Range(1, rows).Select(i =>
+        {
+            var lines = i > rows - 30 ? 1 : 1 + (int)((uint)(i * 2654435761u) % 3);
+            return new Row
+            {
+                Number = i,
+                Text = string.Join("\n", Enumerable.Range(0, lines).Select(k => $"Line {i} part {k} some longer subtitle text")),
+            };
+        }));
+        items[edited].Text = "Line 628 still on one line";
+
+        var grid = new TableView
+        {
+            ItemsSource = items,
+            Columns =
+            {
+                new TableViewColumn { Header = "#", Binding = new Avalonia.Data.Binding(nameof(Row.Number)) },
+                new TableViewColumn { Header = "Text", Binding = new Avalonia.Data.Binding(nameof(Row.Text)) },
+            },
+        };
+        TableViewScrollAnchor.Attach(grid);
+        var window = new Window { Content = new TableViewIndexScrollBar(grid), Width = 700, Height = 420 };
+        _windows.Add(window);
+        window.Show();
+        Settle(window);
+        var scrollViewer = grid.GetVisualDescendants().OfType<ScrollViewer>().First();
+
+        // The way the video playhead brings a line into view.
+        TableViewExtras.PrePositionScroll(grid, edited);
+        grid.SelectedItem = items[edited];
+        grid.ScrollIntoView(edited);
+        TableViewExtras.CenterRow(grid, items[edited]);
+        Settle(window);
+        Settle(window);
+
+        var before = FirstVisibleIndex(grid, scrollViewer);
+        Assert.InRange(before, rows - 40, edited);
+
+        items[edited].Text = "Line 628 part 0 some longer subtitle text\nLine 628 part 1\nLine 628 part 2";
+        Settle(window);
+        Settle(window);
+
+        Assert.InRange(FirstVisibleIndex(grid, scrollViewer), before - 2, before + 2);
+    }
+
+    [AvaloniaFact]
+    public void RemovingRowsAboveTheAnchor_KeepsTheSameRowInView()
+    {
+        var (window, grid, scrollViewer, items) = BuildShownGrid();
+
+        var before = FirstVisibleIndex(grid, scrollViewer);
+        var anchorItem = items[before];
+
+        // A delete far above the viewport shifts every index but must not move the view
+        // off the anchored item when the extent re-estimates afterwards.
+        for (var i = 0; i < 5; i++)
+        {
+            items.RemoveAt(10);
+        }
+
+        Settle(window);
+
+        items[items.IndexOf(anchorItem) + 2].Text = "Byl jsem v jeho mysli, Rhiannon.\nZnam ho.";
+        Settle(window);
+
+        Assert.InRange(FirstVisibleIndex(grid, scrollViewer), items.IndexOf(anchorItem) - 1, items.IndexOf(anchorItem) + 1);
+    }
+
+    [AvaloniaFact]
     public void OrdinarysScrolling_StillMovesTheView()
     {
         var (window, grid, scrollViewer, _) = BuildShownGrid();

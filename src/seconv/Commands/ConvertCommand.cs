@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.UiLogic.Export;
 using Spectre.Console;
 using Spectre.Console.Cli;
 using System.ComponentModel;
@@ -96,11 +97,11 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public bool PlainTextNoBlankLine { get; init; }
 
         [CommandOption("--ocr-engine|--ocrengine")]
-        [Description("OCR engine: tesseract | nocr | binaryocr | ollama | llamacpp | paddle (default: tesseract)")]
+        [Description("OCR engine: tesseract | nocr | binaryocr | ollama | llamacpp | paddle | applevision (default: tesseract)")]
         public string? OcrEngine { get; init; }
 
         [CommandOption("--ocr-language|--ocrlanguage")]
-        [Description("Language for OCR (Tesseract: ISO 639-2 like eng/deu; Paddle: en/de; Ollama/llama.cpp: human name like English)")]
+        [Description("Language for OCR (Tesseract: ISO 639-2 like eng/deu; Paddle: en/de; Ollama/llama.cpp: human name like English; Apple Vision: en-US/de-DE)")]
         public string? OcrLanguage { get; init; }
 
         [CommandOption("--ocr-db|--ocrdb")]
@@ -115,6 +116,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("llama.cpp OCR: endpoint of an already-running llama-server; skips the local auto-start")]
         public string? OcrUrl { get; init; }
 
+        [CommandOption("--ocr-prompt|--ocrprompt")]
+        [Description("Prompt for --ocr-engine=llamacpp/ollama (or a path to a text file holding it); {language} is replaced with --ocr-language. Default: the same prompt as the OCR window")]
+        public string? OcrPrompt { get; init; }
+
         [CommandOption("--dictionary-folder|--dictionaryfolder")]
         [Description("Folder with Hunspell dictionaries + *_OCRFixReplaceList.xml; enables the 'Fix common OCR errors' pass of --fix-common-errors")]
         public string? DictionaryFolder { get; init; }
@@ -128,7 +133,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public bool NoVobSubIsolateColors { get; init; }
 
         [CommandOption("--no-pgs-isolate-colors|--nopgsisolatecolors")]
-        [Description("Disable PGS/DVB-sub OCR colour isolation (on by default)")]
+        [Description("Disable PGS/DVB-sub OCR colour isolation (on by default, except for --ocr-engine:applevision)")]
         public bool NoPgsIsolateColors { get; init; }
 
         [CommandOption("--ollama-url")]
@@ -166,6 +171,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [CommandOption("--offset")]
         [Description("Offset time (hh:mm:ss:ms)")]
         public string? Offset { get; init; }
+
+        [CommandOption("--output-filename-append|--outputfilenameappend")]
+        [Description("Text appended to the output file name stem, e.g. \"_fixed\" turns movie.ts into movie_fixed.srt (ignored with --output-filename)")]
+        public string? OutputFilenameAppend { get; init; }
 
         [CommandOption("--output-filename|--outputfilename")]
         [Description("Output file name (for single file only)")]
@@ -266,7 +275,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public string? Alignment { get; init; }
 
         [CommandOption("--content-alignment|--contentalignment")]
-        [Description("Image output: multi-line text justification: left | center (default) | right")]
+        [Description("Image output: multi-line text justification: left | center (default) | right | from-alignment")]
         public string? ContentAlignment { get; init; }
 
         [CommandOption("--bottom-top-margin|--bottomtopmargin")]
@@ -276,6 +285,30 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [CommandOption("--left-right-margin|--leftrightmargin")]
         [Description("Image output: horizontal screen-edge margin in pixels (default: 5% of width)")]
         public int? LeftRightMargin { get; init; }
+
+        [CommandOption("--override-position|--overrideposition")]
+        [Description("Image → image output (DVB-sub/PGS/VobSub pass-through): ignore the source bitmap position and place it by --alignment and margins: x | y | xy")]
+        public string? OverridePosition { get; init; }
+
+        [CommandOption("--full-frame|--fullframe")]
+        [Description("Image output: draw each subtitle on a frame-sized image (place at 0,0 in an editing timeline). Only fcpimage and bluraysup use it")]
+        public bool FullFrame { get; init; }
+
+        [CommandOption("--full-frame-background-color|--fullframebackgroundcolor")]
+        [Description("Image output: background of the full frame image (default: transparent)")]
+        public string? FullFrameBackgroundColor { get; init; }
+
+        [CommandOption("--mode-3d|--mode3d")]
+        [Description("Image output: draw each subtitle for frame-packed 3D video, once per eye: none | half-side-by-side (sbs) | half-top-bottom (tab). Also for image → image")]
+        public string? Mode3D { get; init; }
+
+        [CommandOption("--depth-3d|--depth3d")]
+        [Description("Image output: 3D depth in pixels, -100 to 100; positive brings the subtitle out of the screen (default: 0). D-Cinema writes it as the Z-position")]
+        public int? Depth3D { get; init; }
+
+        [CommandOption("--plane-3d|--plane3d")]
+        [Description("Image output: 3D Blu-ray 3D-Plane (.ofs) - each subtitle gets the depth of the frames it is shown on; --depth-3d is used where it has none")]
+        public string? Plane3D { get; init; }
 
         [CommandOption("--teletext-only|--teletextonly")]
         [Description("Teletext only")]
@@ -419,15 +452,32 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                     "List the valid names with: seconv formats --json");
             }
 
-            // Validate --ocr-engine: tesseract | nocr | binaryocr | ollama | llamacpp | paddle
-            var supportedEngines = new[] { "tesseract", "nocr", "binaryocr", "binary", "ollama", "llamacpp", "llama.cpp", "llama", "paddle", "paddleocr" };
+            // Validate --ocr-engine: tesseract | nocr | binaryocr | ollama | llamacpp | paddle | applevision
+            var supportedEngines = new[] { "tesseract", "nocr", "binaryocr", "binary", "ollama", "llamacpp", "llama.cpp", "llama", "paddle", "paddleocr", "applevision", "apple-vision" };
             if (!string.IsNullOrWhiteSpace(settings.OcrEngine) &&
                 !supportedEngines.Contains(settings.OcrEngine, StringComparer.OrdinalIgnoreCase))
             {
                 return Fail(
                     settings,
                     $"OCR engine '{settings.OcrEngine}' is not supported (pass via --ocr-engine). " +
-                    "Use one of: tesseract, nocr, binaryocr, ollama, llamacpp, paddle.");
+                    "Use one of: tesseract, nocr, binaryocr, ollama, llamacpp, paddle, applevision.");
+            }
+
+            // Apple Vision is macOS-only, and returns nothing for a language it does not know.
+            // Check both before the first file: at OCR time a failure only surfaces as a
+            // per-track warning, and a wrong language as a run of empty subtitles.
+            if (!settings.TimeCodesOnly &&
+                !string.IsNullOrWhiteSpace(settings.OcrEngine) &&
+                settings.OcrEngine.Trim().ToLowerInvariant() is "applevision" or "apple-vision")
+            {
+                try
+                {
+                    AppleVisionOcrEngine.Create(settings.OcrLanguage).Dispose();
+                }
+                catch (InvalidOperationException ex)
+                {
+                    return Fail(settings, ex.Message);
+                }
             }
 
             // --ocr-model/--ocr-url only apply to the llama.cpp OCR engine - fail fast instead
@@ -437,6 +487,29 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             if ((!string.IsNullOrWhiteSpace(settings.OcrModel) || !string.IsNullOrWhiteSpace(settings.OcrUrl)) && !isLlamaCppOcr)
             {
                 return Fail(settings, "--ocr-model/--ocr-url require --ocr-engine:llamacpp.");
+            }
+
+            // --ocr-prompt only means something to the two prompt-driven OCR engines; tesseract,
+            // nOCR, binary image compare and Paddle have no prompt at all. Fail instead of
+            // silently ignoring it, and read the prompt (it may be a file) up front so a typo'd
+            // path never costs a conversion - same contract as --translate-prompt.
+            if (!string.IsNullOrWhiteSpace(settings.OcrPrompt))
+            {
+                var isOllamaOcr = !string.IsNullOrWhiteSpace(settings.OcrEngine) &&
+                                  settings.OcrEngine.Trim().Equals("ollama", StringComparison.OrdinalIgnoreCase);
+                if (!isLlamaCppOcr && !isOllamaOcr)
+                {
+                    return Fail(settings, "--ocr-prompt requires --ocr-engine:llamacpp or --ocr-engine:ollama.");
+                }
+
+                try
+                {
+                    AutoTranslateRunner.ReadPromptOption(settings.OcrPrompt, "--ocr-prompt", "{language}");
+                }
+                catch (Exception ex)
+                {
+                    return Fail(settings, ex.Message);
+                }
             }
 
             // Validate the translate options: --translate-to is the trigger, the rest refine it.
@@ -694,6 +767,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 InputFolder = settings.InputFolder,
                 OutputFolder = settings.OutputFolder,
                 OutputFilename = settings.OutputFilename,
+                OutputFilenameAppend = settings.OutputFilenameAppend,
                 Encoding = settings.Encoding,
                 InputEncodingFallback = settings.InputEncodingFallback,
                 Fps = settings.Fps,
@@ -735,11 +809,16 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 DictionaryFolder = settings.DictionaryFolder,
                 TimeCodesOnly = settings.TimeCodesOnly,
                 VobSubIsolateColors = !settings.NoVobSubIsolateColors,
-                PgsIsolateColors = !settings.NoPgsIsolateColors,
+                // Apple Vision reads the original PGS/DVB-sub images better than binarised ones -
+                // binarising costs it umlauts and trailing punctuation - and the GUI never
+                // binarises for it either, so isolation stays off for that engine.
+                PgsIsolateColors = !settings.NoPgsIsolateColors &&
+                                   settings.OcrEngine?.Trim().ToLowerInvariant() is not ("applevision" or "apple-vision"),
                 OllamaUrl = settings.OllamaUrl,
                 OllamaModel = settings.OllamaModel,
                 OcrUrl = settings.OcrUrl,
                 OcrModel = settings.OcrModel,
+                OcrPrompt = AutoTranslateRunner.ReadPromptOption(settings.OcrPrompt, "--ocr-prompt", "{language}"),
                 TranslateTo = settings.TranslateTo,
                 TranslateFrom = settings.TranslateFrom,
                 TranslateEngine = settings.TranslateEngine,
@@ -757,53 +836,9 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             var extension = LibSEIntegration.GetExtensionForFormat(settings.Format);
             var formatDisplay = $"{normalizedFormat} (*{extension})";
 
-            var table = new Table();
-            table.AddColumn("[yellow]Parameter[/]");
-            table.AddColumn("[green]Value[/]");
-            table.AddRow("Pattern", string.Join(", ", settings.Pattern));
-            table.AddRow("Format", formatDisplay);
-
-            if (!string.IsNullOrEmpty(settings.InputFolder))
-                table.AddRow("Input Folder", settings.InputFolder);
-
-            if (!string.IsNullOrEmpty(settings.OutputFolder))
-                table.AddRow("Output Folder", settings.OutputFolder);
-
-            if (settings.Fps.HasValue)
-                table.AddRow("FPS", settings.Fps.Value.ToString());
-
-            if (settings.TargetFps.HasValue)
-                table.AddRow("Target FPS", settings.TargetFps.Value.ToString());
-
-            if (!string.IsNullOrEmpty(settings.Encoding))
-                table.AddRow("Encoding", settings.Encoding);
-
-            if (string.IsNullOrEmpty(settings.Encoding) && !string.IsNullOrEmpty(settings.InputEncodingFallback))
-                table.AddRow("Input encoding fallback", settings.InputEncodingFallback);
-
-            if (operations.Count > 0)
-                table.AddRow("Operations", string.Join(", ", operations));
-
-            if (!string.IsNullOrWhiteSpace(settings.TranslateTo))
-            {
-                var translateEngine = string.IsNullOrWhiteSpace(settings.TranslateEngine) ? "llamacpp" : settings.TranslateEngine.Trim().ToLowerInvariant();
-                var translateFrom = string.IsNullOrWhiteSpace(settings.TranslateFrom) ? "auto" : settings.TranslateFrom;
-                var customPrompt = string.IsNullOrWhiteSpace(settings.TranslatePrompt) ? string.Empty : ", custom prompt";
-                table.AddRow("Translate", $"{translateFrom} -> {settings.TranslateTo} ({translateEngine}{customPrompt})");
-            }
-
-            if (settings.DeleteFirst.HasValue)
-                table.AddRow("Delete First", settings.DeleteFirst.Value.ToString());
-
-            if (settings.DeleteLast.HasValue)
-                table.AddRow("Delete Last", settings.DeleteLast.Value.ToString());
-
-            if (!string.IsNullOrEmpty(settings.DeleteContains))
-                table.AddRow("Delete Contains", settings.DeleteContains);
-
             if (!silent)
             {
-                AnsiConsole.Write(table);
+                AnsiConsole.Write(BuildSummaryTable(settings, operations, formatDisplay));
                 AnsiConsole.WriteLine();
             }
 
@@ -895,6 +930,65 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             }
             return 1;
         }
+    }
+
+    /// <summary>
+    /// Builds the "Parameter / Value" table shown before a conversion. Every user-supplied
+    /// value is escaped: Spectre parses table cells as markup, so an unescaped path such as
+    /// "input [test].json" threw "Could not find color or style 'test'" (issue #14692).
+    /// </summary>
+    internal static Table BuildSummaryTable(Settings settings, IReadOnlyList<string> operations, string formatDisplay)
+    {
+        var table = new Table();
+        table.AddColumn("[yellow]Parameter[/]");
+        table.AddColumn("[green]Value[/]");
+        AddRow(table, "Pattern", string.Join(", ", settings.Pattern));
+        AddRow(table, "Format", formatDisplay);
+
+        if (!string.IsNullOrEmpty(settings.InputFolder))
+            AddRow(table, "Input Folder", settings.InputFolder);
+
+        if (!string.IsNullOrEmpty(settings.OutputFolder))
+            AddRow(table, "Output Folder", settings.OutputFolder);
+
+        if (settings.Fps.HasValue)
+            AddRow(table, "FPS", settings.Fps.Value.ToString());
+
+        if (settings.TargetFps.HasValue)
+            AddRow(table, "Target FPS", settings.TargetFps.Value.ToString());
+
+        if (!string.IsNullOrEmpty(settings.Encoding))
+            AddRow(table, "Encoding", settings.Encoding);
+
+        if (string.IsNullOrEmpty(settings.Encoding) && !string.IsNullOrEmpty(settings.InputEncodingFallback))
+            AddRow(table, "Input encoding fallback", settings.InputEncodingFallback);
+
+        if (operations.Count > 0)
+            AddRow(table, "Operations", string.Join(", ", operations));
+
+        if (!string.IsNullOrWhiteSpace(settings.TranslateTo))
+        {
+            var translateEngine = string.IsNullOrWhiteSpace(settings.TranslateEngine) ? "llamacpp" : settings.TranslateEngine.Trim().ToLowerInvariant();
+            var translateFrom = string.IsNullOrWhiteSpace(settings.TranslateFrom) ? "auto" : settings.TranslateFrom;
+            var customPrompt = string.IsNullOrWhiteSpace(settings.TranslatePrompt) ? string.Empty : ", custom prompt";
+            AddRow(table, "Translate", $"{translateFrom} -> {settings.TranslateTo} ({translateEngine}{customPrompt})");
+        }
+
+        if (settings.DeleteFirst.HasValue)
+            AddRow(table, "Delete First", settings.DeleteFirst.Value.ToString());
+
+        if (settings.DeleteLast.HasValue)
+            AddRow(table, "Delete Last", settings.DeleteLast.Value.ToString());
+
+        if (!string.IsNullOrEmpty(settings.DeleteContains))
+            AddRow(table, "Delete Contains", settings.DeleteContains);
+
+        return table;
+    }
+
+    private static void AddRow(Table table, string name, string value)
+    {
+        table.AddRow(new Text(name), new Text(value));
     }
 
     /// <summary>
@@ -1143,7 +1237,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         {
             if (!ImageExportStyle.TryParseContentAlignment(settings.ContentAlignment, out var contentAlignment))
             {
-                return $"Unknown content alignment '{settings.ContentAlignment}' for --content-alignment. Use: left, center, or right.";
+                return $"Unknown content alignment '{settings.ContentAlignment}' for --content-alignment. Use: left, center, right, or from-alignment.";
             }
             style.ContentAlignment = contentAlignment;
         }
@@ -1156,6 +1250,76 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         if (settings.LeftRightMargin.HasValue)
         {
             style.LeftRightMargin = settings.LeftRightMargin.Value;
+        }
+
+        if (!string.IsNullOrWhiteSpace(settings.OverridePosition))
+        {
+            switch (settings.OverridePosition.Trim().ToLowerInvariant())
+            {
+                case "x":
+                    style.OverridePositionX = true;
+                    break;
+                case "y":
+                    style.OverridePositionY = true;
+                    break;
+                case "xy":
+                case "yx":
+                case "both":
+                    style.OverridePositionX = true;
+                    style.OverridePositionY = true;
+                    break;
+                default:
+                    return $"Unknown value '{settings.OverridePosition}' for --override-position. Use: x, y, or xy.";
+            }
+        }
+
+        if (settings.FullFrame)
+        {
+            style.IsFullFrame = true;
+        }
+
+        if (!string.IsNullOrWhiteSpace(settings.FullFrameBackgroundColor))
+        {
+            if (!ImageExportStyle.TryParseColor(settings.FullFrameBackgroundColor, out var fullFrameBackgroundColor))
+            {
+                return $"Unknown colour '{settings.FullFrameBackgroundColor}' for --full-frame-background-color.";
+            }
+            style.FullFrameBackgroundColor = fullFrameBackgroundColor;
+        }
+
+        if (!string.IsNullOrWhiteSpace(settings.Mode3D))
+        {
+            if (!ImageExportStyle.TryParseMode3D(settings.Mode3D, out var mode3D))
+            {
+                return $"Unknown value '{settings.Mode3D}' for --mode-3d. Use: none, half-side-by-side, or half-top-bottom.";
+            }
+            style.Mode3D = mode3D;
+        }
+
+        if (settings.Depth3D.HasValue)
+        {
+            if (!ImageExportStyle.IsValidDepth3D(settings.Depth3D.Value))
+            {
+                return $"--depth-3d must be between -100 and 100, got {settings.Depth3D.Value}.";
+            }
+            style.Depth3D = settings.Depth3D.Value;
+        }
+
+        if (!string.IsNullOrWhiteSpace(settings.Plane3D))
+        {
+            if (!File.Exists(settings.Plane3D))
+            {
+                return $"3D-Plane file not found: {settings.Plane3D}";
+            }
+
+            try
+            {
+                style.Plane3D = Stereo3DPlane.Load(settings.Plane3D);
+            }
+            catch (Exception exception) when (exception is InvalidDataException or IOException or UnauthorizedAccessException)
+            {
+                return $"Unable to read 3D-Plane '{settings.Plane3D}': {exception.Message}";
+            }
         }
 
         return null;

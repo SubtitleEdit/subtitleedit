@@ -34,6 +34,8 @@ public class SeExportImagesProfile
     public bool IsForced { get; set; }
     public bool IsFullFrame { get; set; }
     public string FullFrameBackgroundColor { get; set; }
+    public Export3DMode Mode3D { get; set; }
+    public int Depth3D { get; set; }
     public double FramesPerSecond { get; set; }
     public int PaddingLeftRight { get; set; }
     public int PaddingTopBottom { get; set; }

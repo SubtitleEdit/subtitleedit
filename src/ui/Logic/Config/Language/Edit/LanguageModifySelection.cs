@@ -26,6 +26,7 @@ public class LanguageModifySelection
     public string ExactlyTwoLines { get; set; }
     public string MoreThanTwoLines { get; set; }
     public string Bookmarked { get; set; }
+    public string Forced { get; set; } = string.Empty;
     public string BookmarkContains { get; set; }
     public string BlankLines { get; set; }
     public string HearingImpaired { get; set; }
@@ -67,6 +68,7 @@ public class LanguageModifySelection
         ExactlyTwoLines = "Exactly two lines";
         MoreThanTwoLines = "More than two lines";
         Bookmarked = "Bookmarked";
+        Forced = "Forced";
         BookmarkContains = "Bookmark contains";
         BlankLines = "Blank lines";
         HearingImpaired = "Hearing impaired (SDH)";

@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Shapes;
@@ -218,8 +218,23 @@ public class BinaryEditWindow : Window
                         },
                         new MenuItem
                         {
+                            Header = Se.Language.File.Export.TitleExportDCinemaInteropPng,
+                            Command = vm.ExportDCinemaInteropPngCommand,
+                        },
+                        new MenuItem
+                        {
+                            Header = Se.Language.File.Export.TitleExportDCinemaSmpte2014Png,
+                            Command = vm.ExportDCinemaSmpte2014PngCommand,
+                        },
+                        new MenuItem
+                        {
                             Header = Se.Language.File.Export.TitleExportDostPng,
                             Command = vm.ExportDostPngCommand,
+                        },
+                        new MenuItem
+                        {
+                            Header = Se.Language.File.Export.TitleExportDvdSup,
+                            Command = vm.ExportDvdSupCommand,
                         },
                         new MenuItem
                         {
@@ -300,6 +315,16 @@ public class BinaryEditWindow : Window
                     Header = Se.Language.Tools.ImageBasedEdit.CropImages,
                     Command = vm.CropCommand,
                 },
+                new MenuItem
+                {
+                    Header = Se.Language.General.VideoResolution + "...",
+                    Command = vm.ChangeResolutionCommand,
+                },
+                new MenuItem
+                {
+                    Header = Se.Language.Tools.ImageBasedEdit.MoveCaptionsDotDotDot,
+                    Command = vm.MoveCaptionsCommand,
+                },
                 new Separator(),
                 new MenuItem
                 {
@@ -332,6 +357,11 @@ public class BinaryEditWindow : Window
                 {
                     Header = Se.Language.Tools.ImageBasedEdit.SortByStartTime,
                     Command = vm.SortByStartTimeCommand,
+                },
+                new MenuItem
+                {
+                    Header = Se.Language.Tools.ImageBasedEdit.RemoveFadeInOut,
+                    Command = vm.RemoveFadesCommand,
                 },
                 new MenuItem
                 {
@@ -382,6 +412,14 @@ public class BinaryEditWindow : Window
                     Header = l.CloseVideoFile,
                     Command = vm.CloseVideoCommand,
                 },
+                new Separator(),
+                new MenuItem
+                {
+                    // Where the main window has it too (its Video menu).
+                    Header = l.GenerateBurnIn,
+                    Command = vm.GenerateBurnInCommand,
+                },
+                new Separator(),
                 new MenuItem
                 {
                     Header = l.ToggleSelectSubtitleWhilePlayingCurrentlyOn,
@@ -394,7 +432,7 @@ public class BinaryEditWindow : Window
                     Command = vm.ToggleCurrentSubtitleWhilePlayingCommand,
                     [!MenuItem.IsVisibleProperty] = new Binding(nameof(vm.SelectCurrentSubtitleWhilePlaying))
                     {
-                        Converter = new InverseBooleanConverter(),
+                        Converter = InverseBooleanConverter.Instance,
                     },
                 },
             },
@@ -420,6 +458,9 @@ public class BinaryEditWindow : Window
 
     private static Grid MakeLayoutListViewAndEditBox(BinaryEditViewModel vm, out Grid controlsGrid)
     {
+        // One brush for every preview cell in this window, so recolouring repaints them all.
+        var previewBackground = ImagePreviewBackground.CreateBrush();
+
         var mainGrid = new Grid
         {
             RowDefinitions =
@@ -583,6 +624,15 @@ public class BinaryEditWindow : Window
         flyout.Items.Add(menuItemCropSelectedLines);
         menuItemCropSelectedLines.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.HasSelection)));
 
+        var menuItemMoveCaptionsSelectedLines = new MenuItem
+        {
+            Header = Se.Language.Tools.ImageBasedEdit.MoveCaptionsDotDotDot,
+            DataContext = vm,
+            Command = vm.MoveCaptionsSelectedLinesCommand,
+        };
+        flyout.Items.Add(menuItemMoveCaptionsSelectedLines);
+        menuItemMoveCaptionsSelectedLines.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.HasSelection)));
+
         flyout.Items.Add(new Separator());
 
         var menuItemAdjustBrightnessSelectedLines = new MenuItem
@@ -655,6 +705,9 @@ public class BinaryEditWindow : Window
         };
         flyout.Items.Add(menuItemDelete);
         menuItemDelete.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.HasSelection)));
+
+        flyout.Items.Add(new Separator());
+        flyout.Items.Add(ImagePreviewBackground.MakeMenuItem(vm.WindowService, () => vm.Window, previewBackground));
 
         vm.SubtitleGrid = dataGrid;
         dataGrid.SelectionChanged += vm.SubtitleGridSelectionChanged;
@@ -762,11 +815,13 @@ public class BinaryEditWindow : Window
                 };
 
                 // Subtitle bitmaps are light or dark text on a transparent background, both
-                // invisible on a matching flat row backdrop - use the mid-gray checkerboard
-                // so any content shows in either theme (issue #12692).
+                // invisible on a matching flat row backdrop, so they get one of their own. This
+                // was the mid-gray checkerboard (issue #12692), whose light squares left light
+                // subtitles unreadable (#14328); it is now the same configurable colour the OCR
+                // grid uses, changeable from the context menu in either window.
                 return new Border
                 {
-                    Background = UiUtil.GetCheckerboardBrush(),
+                    Background = previewBackground,
                     CornerRadius = new CornerRadius(3),
                     Padding = new Thickness(2),
                     HorizontalAlignment = HorizontalAlignment.Left,

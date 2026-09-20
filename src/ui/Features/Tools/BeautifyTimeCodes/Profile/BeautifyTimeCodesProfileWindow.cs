@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
@@ -35,9 +35,9 @@ public class BeautifyTimeCodesProfileWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = _l.Title;
         CanResize = true;
-        Width = 1100;
+        Width = 1220;
         Height = 760;
-        MinWidth = 980;
+        MinWidth = 1180;
         MinHeight = 640;
         vm.Window = this;
         DataContext = vm;
@@ -80,7 +80,7 @@ public class BeautifyTimeCodesProfileWindow : Window
         outerGrid.Add(buttonBar, 1, 0);
         Content = outerGrid;
 
-        Activated += delegate { ok.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, ok);
         KeyDown += (_, e) => vm.OnKeyDown(e);
 
         // Push initial values into the preview controls once they're attached
@@ -191,10 +191,10 @@ public class BeautifyTimeCodesProfileWindow : Window
             Orientation = Orientation.Horizontal,
             Spacing = 6,
             VerticalAlignment = VerticalAlignment.Center,
-            Children = { labelGap, nudGap, suffix, MakeHintIcon(_l.HintGap) },
+            Children = { labelGap, nudGap, suffix, UiUtil.MakeHintIcon(_l.HintGap) },
         };
 
-        return MakeGroupBox(_l.General, content);
+        return MakeGroupBox(Se.Language.General.General, content);
     }
 
     private Control BuildInCuesGroup()
@@ -271,7 +271,7 @@ public class BeautifyTimeCodesProfileWindow : Window
         {
             Orientation = Orientation.Horizontal,
             Spacing = 6,
-            Children = { labelGap, nudGapInLeft, nudGapInRight, nudGapOutLeft, nudGapOutRight, MakeHintIcon(_l.HintConnected) },
+            Children = { labelGap, nudGapInLeft, nudGapInRight, nudGapOutLeft, nudGapOutRight, UiUtil.MakeHintIcon(_l.HintConnected) },
         };
 
         var rowZones = MakeZonesRow(
@@ -314,7 +314,7 @@ public class BeautifyTimeCodesProfileWindow : Window
         {
             [!SelectingItemsControl.SelectedIndexProperty] = new Binding(nameof(_vm.SelectedChainingTabIndex)) { Source = _vm, Mode = BindingMode.TwoWay },
         };
-        tabs.Items.Add(new TabItem { Header = MakeTabHeader(_l.General) });
+        tabs.Items.Add(new TabItem { Header = MakeTabHeader(Se.Language.General.General) });
         tabs.Items.Add(new TabItem { Header = MakeTabHeader(_l.InCueOnShot) });
         tabs.Items.Add(new TabItem { Header = MakeTabHeader(_l.OutCueOnShot) });
         tabs.SelectionChanged += (_, _) =>
@@ -423,6 +423,11 @@ public class BeautifyTimeCodesProfileWindow : Window
         {
             nudFields.Children.Add(MakeFrameNud(rightGreenPath));
         }
+        // Only the first field would inherit the "Zones" radio as its label; name them all (#12087).
+        foreach (var nud in nudFields.Children)
+        {
+            nud.WithAccessibleName(_l.Zones);
+        }
         nudFields.Bind(IsEnabledProperty, new Binding(useZonesPath) { Source = _vm });
         var zonesRow = new StackPanel
         {
@@ -448,7 +453,7 @@ public class BeautifyTimeCodesProfileWindow : Window
             {
                 Orientation = Orientation.Horizontal,
                 Spacing = 6,
-                Children = { labelBehavior, combo, MakeHintIcon(_l.HintChaining) },
+                Children = { labelBehavior, combo, UiUtil.MakeHintIcon(_l.HintChaining) },
             };
             stack.Children.Add(behaviorRow);
         }
@@ -494,7 +499,7 @@ public class BeautifyTimeCodesProfileWindow : Window
                 MakeZoneNud(leftRedPath, isGreen: false),
                 MakeZoneNud(rightRedPath, isGreen: false),
                 MakeZoneNud(rightGreenPath, isGreen: true),
-                MakeHintIcon(_l.HintZones),
+                UiUtil.MakeHintIcon(_l.HintZones),
             },
         };
     }
@@ -502,14 +507,14 @@ public class BeautifyTimeCodesProfileWindow : Window
     private static TextBlock MakeTabHeader(string text) => new()
     {
         Text = text,
-        FontSize = 12,
+        FontSize = UiUtil.ScaledFontSize(12),
     };
 
     private NumericUpDown MakeFrameNud(string bindingPath)
     {
         return new NumericUpDown
         {
-            Width = 100,
+            Width = 115,
             Minimum = 0,
             Maximum = 100,
             Increment = 1,
@@ -537,22 +542,8 @@ public class BeautifyTimeCodesProfileWindow : Window
     {
         var nud = MakeFrameNud(bindingPath);
         nud.Background = new SolidColorBrush(isGreen ? Color.FromArgb(80, 0, 160, 0) : Color.FromArgb(80, 200, 30, 30));
-        nud.Width = 95;
+        nud.Width = 110;
         return nud;
-    }
-
-    private Control MakeHintIcon(string tip)
-    {
-        var icon = new ContentControl
-        {
-            Width = 16,
-            Height = 16,
-            VerticalAlignment = VerticalAlignment.Center,
-            Opacity = 0.7,
-            [ToolTip.TipProperty] = tip,
-        };
-        Attached.SetIcon(icon, IconNames.Information);
-        return icon;
     }
 
     private static Control MakeGroupBox(string title, Control content)

@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
+﻿using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.UiLogic;
 using System;
 using System.Collections.Generic;
@@ -33,7 +33,11 @@ public class IndexTts25AudioCppDownloadService : IIndexTts25AudioCppDownloadServ
 {
     private readonly HttpClient _httpClient;
 
-    private const string ReleaseTag = "audiocpp-indextts25-2026-08-18";
+    // 2026-09-17b: upstream v0.8.0 @ 4af14322 (same source as 2026-09-17), compiled with the
+    // index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step families. ace_step is
+    // new, for background music generation (Video > More and the TTS window); the four TTS
+    // engines run the same code as before.
+    private const string ReleaseTag = "audiocpp-indextts25-2026-09-17b";
     private const string ReleaseBase =
         "https://github.com/SubtitleEdit/support-files/releases/download/" + ReleaseTag + "/";
 

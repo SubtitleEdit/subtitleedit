@@ -9,6 +9,7 @@ using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Main;
@@ -18,7 +19,7 @@ public static class Locator
     public static IServiceProvider Services { get; set; } = default!;
 }
 
-public class MainView : ViewBase
+public partial class MainView : ViewBase
 {
     private MainViewModel? _vm;
 
@@ -53,6 +54,8 @@ public class MainView : ViewBase
         if (hostWindow != null)
         {
             _vm.Window = hostWindow;
+            // A user-assigned Alt+Space shortcut beats the Windows system menu (#14536).
+            UiUtil.SetWindowSystemMenuOverride(hostWindow, _vm.HasAltSpaceShortcut);
             _vm.Window.Closing += _vm.OnClosing;
             _vm.Window.Deactivated += _vm.OnWindowDeactivated;
             _vm.Window.Activated += _vm.OnWindowActivated;
@@ -60,6 +63,9 @@ public class MainView : ViewBase
             {
                 _vm.OnLoaded();
             };
+            _vm.Window.Closed += (_, _) => _vm.StopBackgroundWork();
+
+            AttachKeyHandlers(hostWindow, _vm);
 
             // Clipboard-manager compatibility (Ditto, CopyQ, ClipClip, ...) - see the
             // hook for what it intercepts and why (#13822).
@@ -126,15 +132,22 @@ public class MainView : ViewBase
 
         root.Children.Add(_vm.ContentGrid);
 
-        AddHandler(KeyDownEvent, _vm.OnKeyDownHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
-        AddHandler(KeyUpEvent, _vm.OnKeyUpHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: true);
+        return root;
+    }
+
+    /// <summary>
+    /// Key and pointer handlers live on the window rather than on this control so shortcuts
+    /// keep working when focus lands outside the user control (window root, layout host).
+    /// </summary>
+    private static void AttachKeyHandlers(Window window, MainViewModel vm)
+    {
+        window.AddHandler(KeyDownEvent, vm.OnKeyDownHandler, RoutingStrategies.Tunnel, handledEventsToo: false);
+        window.AddHandler(KeyUpEvent, vm.OnKeyUpHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: true);
 
         // Tunnelling, and handledEventsToo since controls like the waveform mark their presses handled:
         // needed to see that Alt was held for a mouse gesture and cancel the menu-bar activation that
         // would otherwise fire on the Alt release (discussion #11744).
-        AddHandler(PointerPressedEvent, _vm.OnPointerPressedHandler, RoutingStrategies.Tunnel, handledEventsToo: true);
-
-        return root;
+        window.AddHandler(PointerPressedEvent, vm.OnPointerPressedHandler, RoutingStrategies.Tunnel, handledEventsToo: true);
     }
 
     // Whether the window has seen (and passed through) an Alt key-down whose release is still
@@ -227,8 +240,8 @@ public class MainView : ViewBase
         return IntPtr.Zero;
     }
 
-    [System.Runtime.InteropServices.DllImport("user32.dll")]
-    private static extern short GetKeyState(int keyCode);
+    [LibraryImport("user32.dll")]
+    private static partial short GetKeyState(int keyCode);
 
     internal async Task OpenFile(string fileName)
     {

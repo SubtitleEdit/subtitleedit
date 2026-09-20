@@ -47,6 +47,7 @@ public class PickOllamaModelWindow : Window
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
+            [Avalonia.Automation.AutomationProperties.NameProperty] = Se.Language.General.Models,
             [!ListBox.ItemsSourceProperty] = new Binding(nameof(vm.Models)) { Mode = BindingMode.OneWay },
             [!ListBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedModel)) { Mode = BindingMode.TwoWay },
             Width = double.NaN,
@@ -65,7 +66,7 @@ public class PickOllamaModelWindow : Window
         Content = grid;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
-        Activated += delegate { listBox.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, listBox);
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

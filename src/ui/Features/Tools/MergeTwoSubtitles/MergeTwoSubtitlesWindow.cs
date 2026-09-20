@@ -77,14 +77,14 @@ public class MergeTwoSubtitlesWindow : Window
 
         Content = grid;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             // initial focus on an input, not an action button - a focused button clicks on bare Space
             if (_tableViewSubtitle1 != null)
             {
                 TableViewExtras.FocusRow(_tableViewSubtitle1);
             }
-        };
+        });
         KeyDown += vm.KeyDown;
     }
 
@@ -173,6 +173,7 @@ public class MergeTwoSubtitlesWindow : Window
 
         dataGrid.Bind(TableView.ItemsSourceProperty, new Binding(itemsPath) { Source = vm });
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(selectedItemPath) { Source = vm });
+        dataGrid.WithLabeledBy(labelTitle);
         dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
             if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0 &&
@@ -324,7 +325,7 @@ public class MergeTwoSubtitlesWindow : Window
         {
             Source = vm,
             Mode = BindingMode.TwoWay,
-            Converter = new InverseBooleanConverter(),
+            Converter = InverseBooleanConverter.Instance,
         });
         var alignPanel = new StackPanel
         {

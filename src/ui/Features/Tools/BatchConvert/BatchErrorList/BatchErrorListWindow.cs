@@ -38,12 +38,12 @@ public class BatchErrorListWindow : Window
         var labelTitle = new TextBlock
         {
             Text = l.Title,
-            FontSize = 20,
+            FontSize = UiUtil.ScaledFontSize(20),
             FontWeight = FontWeight.Bold,
         };
         var labelSummary = new TextBlock
         {
-            FontSize = 14,
+            FontSize = UiUtil.ScaledFontSize(14),
             Opacity = 0.75,
             Margin = new Thickness(0, 4, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.Summary)),
@@ -85,7 +85,7 @@ public class BatchErrorListWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonCancel.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, buttonCancel); // hack to make OnKeyDown work
 
         KeyDown += (s, e) => vm.OnKeyDown(e);
     }

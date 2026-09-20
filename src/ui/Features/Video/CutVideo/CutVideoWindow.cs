@@ -53,10 +53,10 @@ public class CutVideoWindow : Window
         checkBoxCutSubtitle[!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsCutSubtitleVisible));
 
         var buttonGenerate = UiUtil.MakeButton(Se.Language.General.Generate, vm.GenerateCommand)
-            .WithBindEnabled(nameof(vm.IsGenerating), new InverseBooleanConverter());
+            .WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
         var buttonConfig = UiUtil.MakeButton(vm.OkCommand, IconNames.Settings, Se.Language.General.Settings)
             .WithMarginRight(5)
-            .WithBindEnabled(nameof(vm.IsGenerating), new InverseBooleanConverter());
+            .WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
         var buttonPanel = UiUtil.MakeButtonBar(
             checkBoxCutSubtitle,
             comboBoxCutType,
@@ -95,14 +95,14 @@ public class CutVideoWindow : Window
 
         Content = grid;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             // initial focus on an input, not an action button - a focused button clicks on bare Space
             if (vm.SegmentGrid != null)
             {
                 TableViewExtras.FocusRow(vm.SegmentGrid);
             }
-        };
+        });
         Loaded += (s, e) => vm.OnLoaded();
         Closing += (s, e) => vm.OnClosing();
         AddHandler(KeyDownEvent, vm.OnKeyDownHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);

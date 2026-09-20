@@ -43,6 +43,7 @@ You can chain multiple conversion functions:
 - Sort by
 - Change resolution — the [ASSA resolution resampler](assa-resolution-resampler.md) applied to every file
 - Change style — swap one ASSA style for another, or import styles from a file, optionally trimming unused ones
+- Change style properties — set font, size, colors, outline and other properties of the ASSA styles in every file
 - Embed fonts — embed the fonts an ASSA file uses as attachments, optionally [trimmed](assa-attachments.md) to the characters actually used
 - Adjust image brightness/alpha/color — for image-based subtitles
 - Auto translate
@@ -74,11 +75,26 @@ Supported OCR engines in Batch Convert:
 - BinaryOcr
 - Tesseract
 - Ollama
-- llama.cpp (curated OCR vision models, best-first — GLM-OCR, PaddleOCR-VL, HunyuanOCR 1.5, LightOnOCR; a local `llama-server` is started automatically)
+- llama.cpp (curated OCR vision models, best-first — GLM-OCR, LFM2.5-VL 3B, PaddleOCR-VL, HunyuanOCR 1.5, LightOnOCR; a local `llama-server` is started automatically)
 - CrispEmbed (local, multiple model backends — see [OCR](ocr.md#crispembed))
 - PaddleOCR (Windows and Linux only)
+- Apple Vision (macOS only — pick a language, nothing to download)
 
 Subtitle Edit 5 can auto-detect language and pixels-are-space settings for nOcr/BinaryOcr in many batch workflows. This reduces the amount of manual setup needed when converting many image-based subtitle files with similar fonts.
+
+## Transport Stream Input
+
+A transport stream (`.ts`, `.m2ts`, `.mts`, or `.mpg`/`.mpeg` containing one) is listed as one item, and every subtitle track in it is converted: each DVB image track, every teletext page on every PID - one PID can carry several pages, e.g. 888 and 889 for a second language, and each page becomes its own output file - and ARIB STD-B24 caption tracks. Each output is named from the source file plus the file name ending template below, e.g. `movie.en.srt`; a track without a language code in the stream gets its PID or teletext page number instead, so two language-less tracks never collide.
+
+When a transport stream is in the list, a **Transport Stream settings...** button appears:
+
+- **Override original X position** - replace the DVB subtitle's own horizontal position with an alignment (left, center, right) and a left/right margin in percent of the screen width
+- **Override original Y position** - replace the vertical position with a bottom margin in percent of the screen height
+- **Override original video size** - scale the screen size, bitmaps and positions to the width and height you enter (**Get size from video...** reads them from a video file)
+- **File name ending** - text added before the extension for every extracted track, with placeholders for the two- or three-letter language code in lowercase or uppercase; the default is `.{two-letter-country-code}`. Leave it empty to use the regular language post fix instead
+- **Only teletext** - skip the DVB image tracks and convert only the teletext (and other text) tracks
+
+Position and video size only affect DVB image tracks exported to an image-based format.
 
 ## Speech to Text in Batch Mode
 
@@ -90,5 +106,7 @@ Speech-to-text batch mode can transcribe multiple media files and save the resul
 - **Output folder** — Where converted files are saved
 - **Overwrite existing** — Whether to overwrite files
 - **Encoding** — Text encoding for output files
+- **Keep source file timestamp** — Give the output file the modification time of the source file
+- **Language post fix** — Append the detected language code (2- or 3-letter) to the output file name, e.g. `movie.en.srt`
 
 For headless batch conversion, see [Command Line (seconv)](../reference/command-line.md).

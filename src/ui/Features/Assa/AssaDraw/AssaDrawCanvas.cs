@@ -5,6 +5,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 
 namespace Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 
@@ -18,6 +19,37 @@ public class AssaDrawCanvas : Control
     private float _panY;
     private Point? _lastMousePosition;
     private bool _isPanning;
+
+    private static readonly ImmutableSolidColorBrush CheckerBrush1 = new(Color.FromRgb(60, 60, 60));
+    private static readonly ImmutableSolidColorBrush CheckerBrush2 = new(Color.FromRgb(80, 80, 80));
+
+    private readonly Dictionary<Color, IBrush> _brushCache = new();
+    private readonly Dictionary<(Color Color, double Thickness, PenLineCap LineCap, PenLineJoin LineJoin, bool Dashed), IPen> _penCache = new();
+
+    private static readonly ImmutableDashStyle DashedStyle = new ImmutableDashStyle(DashStyle.Dash.Dashes, DashStyle.Dash.Offset);
+
+    private IBrush GetBrush(Color color)
+    {
+        if (!_brushCache.TryGetValue(color, out var brush))
+        {
+            brush = new ImmutableSolidColorBrush(color);
+            _brushCache[color] = brush;
+        }
+
+        return brush;
+    }
+
+    private IPen GetPen(Color color, double thickness, PenLineCap lineCap = PenLineCap.Flat, PenLineJoin lineJoin = PenLineJoin.Miter, bool dashed = false)
+    {
+        var key = (color, thickness, lineCap, lineJoin, dashed);
+        if (!_penCache.TryGetValue(key, out var pen))
+        {
+            pen = new ImmutablePen((ImmutableSolidColorBrush)GetBrush(color), thickness, dashed ? DashedStyle : null, lineCap, lineJoin);
+            _penCache[key] = pen;
+        }
+
+        return pen;
+    }
 
     public static readonly StyledProperty<List<DrawShape>> ShapesProperty =
         AvaloniaProperty.Register<AssaDrawCanvas, List<DrawShape>>(nameof(Shapes), []);
@@ -172,25 +204,42 @@ public class AssaDrawCanvas : Control
         DrawResolutionBorder(context);
 
         // Draw all shapes
-        foreach (var shape in Shapes.Where(s => !s.Hidden))
+        var shapes = Shapes;
+        var selectedShapes = SelectedShapes;
+        var selectedSet = selectedShapes.Count > 4 ? new HashSet<DrawShape>(selectedShapes) : null;
+        var activeShape = ActiveShape;
+        var selectedShape = SelectedShape;
+        var activeShapeInList = false;
+        for (var idx = 0; idx < shapes.Count; idx++)
         {
-            var isSelected = SelectedShapes.Contains(shape);
-            var isActive = shape == ActiveShape || shape == SelectedShape || isSelected;
-            DrawShape(context, shape, isActive, isSelected);
+            var shape = shapes[idx];
+            if (shape == activeShape)
+            {
+                activeShapeInList = true;
+            }
+
+            if (shape.Hidden)
+            {
+                continue;
+            }
+
+            var isSelected = selectedSet != null ? selectedSet.Contains(shape) : selectedShapes.Contains(shape);
+            var isActive = shape == activeShape || shape == selectedShape || isSelected;
+            DrawShape(context, shape, isActive, isSelected, isInShapes: true);
             DrawShapePoints(context, shape);
         }
 
         // Draw active shape being created (not yet in Shapes list)
-        if (ActiveShape != null && !Shapes.Contains(ActiveShape))
+        if (ActiveShape != null && !activeShapeInList)
         {
-            DrawShape(context, ActiveShape, true, false);
+            DrawShape(context, ActiveShape, true, false, isInShapes: false);
             DrawShapePoints(context, ActiveShape);
 
             // Draw preview to current mouse position
             if (CurrentX > float.MinValue && CurrentY > float.MinValue && ActiveShape.Points.Count > 0)
             {
                 var lastPoint = ActiveShape.Points[^1];
-                var pen = new Pen(new SolidColorBrush(DrawSettings.ActiveShapeLineColor), 2, lineCap: PenLineCap.Round);
+                var pen = GetPen(DrawSettings.ActiveShapeLineColor, 2, lineCap: PenLineCap.Round);
 
                 if (CurrentTool == DrawingTool.Circle && ActiveShape.Points.Count == 1)
                 {
@@ -232,7 +281,7 @@ public class AssaDrawCanvas : Control
         if (ActivePoint != null)
         {
             var pointColor = new Color(255, ActivePoint.PointColor.R, ActivePoint.PointColor.G, ActivePoint.PointColor.B);
-            var pen = new Pen(new SolidColorBrush(pointColor), 3);
+            var pen = GetPen(pointColor, 3);
             var x = ToZoomFactorX(ActivePoint.X);
             var y = ToZoomFactorY(ActivePoint.Y);
             context.DrawLine(pen, new Point(x - 8, y), new Point(x + 8, y));
@@ -243,15 +292,13 @@ public class AssaDrawCanvas : Control
     private void DrawCheckerBackground(DrawingContext context, Rect bounds)
     {
         const int size = 10;
-        var color1 = Color.FromRgb(60, 60, 60);
-        var color2 = Color.FromRgb(80, 80, 80);
 
         for (var y = 0; y < bounds.Height; y += size)
         {
             for (var x = 0; x < bounds.Width; x += size)
             {
                 var isEven = ((x / size) + (y / size)) % 2 == 0;
-                var brush = new SolidColorBrush(isEven ? color1 : color2);
+                var brush = isEven ? CheckerBrush1 : CheckerBrush2;
                 context.FillRectangle(brush, new Rect(x, y, size, size));
             }
         }
@@ -259,14 +306,14 @@ public class AssaDrawCanvas : Control
 
     private void DrawCanvasArea(DrawingContext context)
     {
-        var brush = new SolidColorBrush(DrawSettings.BackgroundColor);
+        var brush = GetBrush(DrawSettings.BackgroundColor);
         var rect = new Rect(_panX, _panY, CanvasWidth * _zoomFactor, CanvasHeight * _zoomFactor);
         context.FillRectangle(brush, rect);
     }
 
     private void DrawGrid(DrawingContext context)
     {
-        var pen = new Pen(new SolidColorBrush(DrawSettings.GridColor), 0.5);
+        var pen = GetPen(DrawSettings.GridColor, 0.5);
         var gridSize = DrawSettings.GridSize * _zoomFactor;
 
         for (float x = _panX; x < _panX + CanvasWidth * _zoomFactor; x += gridSize)
@@ -282,12 +329,12 @@ public class AssaDrawCanvas : Control
 
     private void DrawResolutionBorder(DrawingContext context)
     {
-        var pen = new Pen(new SolidColorBrush(DrawSettings.ScreenSizeColor), 2);
+        var pen = GetPen(DrawSettings.ScreenSizeColor, 2);
         var rect = new Rect(_panX - 1, _panY - 1, CanvasWidth * _zoomFactor + 2, CanvasHeight * _zoomFactor + 2);
         context.DrawRectangle(null, pen, rect);
     }
 
-    private void DrawShape(DrawingContext context, DrawShape shape, bool isActive, bool isSelected)
+    private void DrawShape(DrawingContext context, DrawShape shape, bool isActive, bool isSelected, bool isInShapes)
     {
         if (shape.Points.Count == 0)
         {
@@ -303,11 +350,7 @@ public class AssaDrawCanvas : Control
         }
 
         // Use dashed lines for eraser shapes
-        var pen = new Pen(new SolidColorBrush(color), 2, lineCap: PenLineCap.Round);
-        if (shape.IsEraser)
-        {
-            pen.DashStyle = DashStyle.Dash;
-        }
+        var pen = GetPen(color, 2, lineCap: PenLineCap.Round, dashed: shape.IsEraser);
 
         var i = 0;
         while (i < shape.Points.Count)
@@ -349,10 +392,7 @@ public class AssaDrawCanvas : Control
                     // Draw control point lines (guides)
                     if (isActive)
                     {
-                        var guidePen = new Pen(new SolidColorBrush(Colors.Gray), 1, lineJoin: PenLineJoin.Round)
-                        {
-                            DashStyle = DashStyle.Dash
-                        };
+                        var guidePen = GetPen(Colors.Gray, 1, lineJoin: PenLineJoin.Round, dashed: true);
                         context.DrawLine(guidePen, ToZoomFactorPoint(startPoint), ToZoomFactorPoint(control1));
                         context.DrawLine(guidePen, ToZoomFactorPoint(endPoint), ToZoomFactorPoint(control2));
                     }
@@ -371,7 +411,7 @@ public class AssaDrawCanvas : Control
         }
 
         // Close the shape by drawing line from last to first point
-        if (shape.Points.Count > 2 && Shapes.Contains(shape))
+        if (shape.Points.Count > 2 && isInShapes)
         {
             var first = shape.Points[0];
             var last = shape.Points[^1];
@@ -383,7 +423,7 @@ public class AssaDrawCanvas : Control
     {
         foreach (var point in shape.Points)
         {
-            var pen = new Pen(new SolidColorBrush(point.PointColor), 2);
+            var pen = GetPen(point.PointColor, 2);
             var x = ToZoomFactorX(point.X);
             var y = ToZoomFactorY(point.Y);
 

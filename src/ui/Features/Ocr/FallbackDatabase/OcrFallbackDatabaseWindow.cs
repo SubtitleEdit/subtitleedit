@@ -61,7 +61,7 @@ public class OcrFallbackDatabaseWindow : Window
 
         Content = grid;
 
-        Activated += delegate { comboBoxDatabases.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, comboBoxDatabases);
         KeyDown += vm.KeyDown;
     }
 }

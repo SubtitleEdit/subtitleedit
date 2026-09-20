@@ -70,7 +70,7 @@ public class WordListsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { comboLanguages.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, comboLanguages); // initial focus on an input, not an action button - a focused button clicks on bare Space
         Closing += (s, e) => _vm.Closing();
         Loaded += (s, e) => vm.Loaded();
 
@@ -86,7 +86,7 @@ public class WordListsWindow : Window
 
         var icon = new ContentControl
         {
-            FontSize = 13,
+            FontSize = UiUtil.ScaledFontSize(13),
             Foreground = Brushes.White,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
@@ -116,7 +116,7 @@ public class WordListsWindow : Window
             Child = new TextBlock
             {
                 [!TextBlock.TextProperty] = countBinding,
-                FontSize = 10,
+                FontSize = UiUtil.ScaledFontSize(10),
                 FontWeight = FontWeight.SemiBold,
                 VerticalAlignment = VerticalAlignment.Center,
                 Foreground = new SolidColorBrush(color),
@@ -134,6 +134,7 @@ public class WordListsWindow : Window
 
         var listBox = new ListBox
         {
+            [Avalonia.Automation.AutomationProperties.NameProperty] = Se.Language.Options.WordLists.NameAndIgnoreList,
             [!ListBox.ItemsSourceProperty] = new Binding(nameof(vm.Names)) { Mode = BindingMode.OneWay },
             [!ListBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedName)) { Mode = BindingMode.TwoWay },
             VerticalAlignment = VerticalAlignment.Top,
@@ -143,7 +144,7 @@ public class WordListsWindow : Window
             ItemContainerTheme = MakeListBoxTheme()
         };
 
-        var textBox = UiUtil.MakeTextBox(110, vm, nameof(vm.NewName));
+        var textBox = UiUtil.MakeTextBox(110, vm, nameof(vm.NewName)).WithAccessibleName(Se.Language.Options.WordLists.AddName);
         textBox.KeyDown += (s, e) => vm.NameTextBoxKeyDown(e);
         var buttonAdd = UiUtil.MakeButton(vm.AddNameCommand, IconNames.Plus, Se.Language.General.New);
         var buttonRemove = UiUtil.MakeButton(vm.RemoveNameCommand, IconNames.Trash, Se.Language.General.Remove);
@@ -192,6 +193,7 @@ public class WordListsWindow : Window
 
         var listBox = new ListBox
         {
+            [Avalonia.Automation.AutomationProperties.NameProperty] = Se.Language.Options.WordLists.UserWords,
             [!ListBox.ItemsSourceProperty] = new Binding(nameof(vm.UserWords)) { Mode = BindingMode.OneWay },
             [!ListBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedUserWord)) { Mode = BindingMode.TwoWay },
             VerticalAlignment = VerticalAlignment.Top,
@@ -201,7 +203,7 @@ public class WordListsWindow : Window
             ItemContainerTheme = MakeListBoxTheme()
         };
 
-        var textBox = UiUtil.MakeTextBox(110, vm, nameof(vm.NewUserWord));
+        var textBox = UiUtil.MakeTextBox(110, vm, nameof(vm.NewUserWord)).WithAccessibleName(Se.Language.General.AddToUserDictionary);
         textBox.KeyDown += (s, e) => vm.UserWordTextBoxKeyDown(e);
         var buttonAdd = UiUtil.MakeButton(vm.AddWordCommand, IconNames.Plus, Se.Language.General.New);
         var buttonRemove = UiUtil.MakeButton(vm.RemoveWordCommand, IconNames.Trash, Se.Language.General.Remove);
@@ -237,6 +239,7 @@ public class WordListsWindow : Window
 
         var listBox = new ListBox
         {
+            [Avalonia.Automation.AutomationProperties.NameProperty] = Se.Language.Options.WordLists.OcrFixList,
             [!ListBox.ItemsSourceProperty] = new Binding(nameof(vm.OcrFixes)) { Mode = BindingMode.OneWay },
             [!ListBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedOcrFix)) { Mode = BindingMode.TwoWay },
             VerticalAlignment = VerticalAlignment.Top,
@@ -246,8 +249,8 @@ public class WordListsWindow : Window
             ItemContainerTheme = MakeListBoxTheme()
         };
 
-        var textBoxFind = UiUtil.MakeTextBox(110, vm, nameof(vm.NewOcrFixFind));
-        var textBoxReplace = UiUtil.MakeTextBox(110, vm, nameof(vm.NewOcrFixReplace));
+        var textBoxFind = UiUtil.MakeTextBox(110, vm, nameof(vm.NewOcrFixFind)).WithAccessibleName(Se.Language.General.Find);
+        var textBoxReplace = UiUtil.MakeTextBox(110, vm, nameof(vm.NewOcrFixReplace)).WithAccessibleName(Se.Language.General.ReplaceWith);
         textBoxReplace.KeyDown += (s, e) => vm.OcrFixTextBoxKeyDown(e);
         var buttonAdd = UiUtil.MakeButton(vm.AddOcrFixCommand, IconNames.Plus, Se.Language.General.New);
         var buttonRemove = UiUtil.MakeButton(vm.RemoveOcrFixCommand, IconNames.Trash, Se.Language.General.Remove);

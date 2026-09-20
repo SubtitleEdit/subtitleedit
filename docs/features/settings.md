@@ -11,7 +11,7 @@ Configure application preferences, rules and profiles, appearance, video player,
 ## How to Use
 
 1. Open **Options → Settings...**
-2. Pick a section from the icons on the left
+2. Pick a section from the icons on the left, or type in the **Search for settings...** box at the top to jump to a setting by name
 3. Adjust settings as needed
 4. Click **OK** to save
 
@@ -31,51 +31,68 @@ The subtitle rules that drive error checking, the grid's warning colors, and too
 
 ## General
 
+- **Default new subtitle duration (ms)** - The duration a newly inserted subtitle gets, e.g. when inserting at the video position
+- **Time up/down increment (ms)** - The step of the start/end/duration up-down boxes in millisecond mode
 - **Prompt before delete**, **Lock time codes**, **Remember window position and size**
 - **Use frame mode (hh.mm.ss.ff)** — Show times as frames instead of milliseconds
 - **Limit number of lines in subtitle text box**
 - **Open last recent file on start**
 - **Auto-convert encoding to UTF-8 on open**, **Force CR+LF on save**, **Auto-trim white-space**
+- **Warn on save when lines exceed the format's limits (e.g. SCC 32 chars/line)**
 - **Remove blank lines when opening a subtitle** — Off by default
 - **Default encoding**
 - **Subtitle grid Enter-key / single-click / double-click action** — What each gesture does to the video position and focus
 - **Subtitle grid, center when selecting prev/next row**
 - **Save as behavior**, **Save as: append language code**, **Default save location** (with a custom folder)
 - **Auto-save** — Save the open file while editing
-- **Auto-backup** — Automatic backups at a set interval, with a restore dialog
+- **Auto-backup** — Automatic backups at a set interval, with a restore dialog, and **Auto-backup retention (days)** for how long they are kept
+- **Auto-backup settings** — Keeps dated copies of `Settings.json` (settings and shortcuts). **Settings backup interval (days)** sets how often: the check runs when Subtitle Edit starts, and `0` means every start. A backup is skipped when nothing but the recent files lists has changed since the newest backup. **Settings backups to keep** sets how many copies are kept (default 30). Restore them from File → Restore auto-backup → Settings
 
 ## Subtitle Formats
 
 - **Default format** and **default save-as format**
 - **Favorite subtitle formats** and **favorite languages** — These float to the top of the pickers
 - **WebVTT: use X-TIMESTAMP-MAP** — Offset time codes on load
+- **ASSA: set resolution (PlayResX/PlayResY) from the video when a video is opened**, and **ASSA: ask before changing the resolution to match the video (otherwise resample automatically)**
 
 ## Syntax Coloring
 
-- **Color text if too wide (pixels)** — With its own settings for how the width is measured
+- **Color duration if too short**, **Color duration if too long**
+- **Color text if too long**, **Color text if too wide (pixels)** — the latter with its own settings for how the width is measured, **Color text if more than X lines**
+- **Color characters/sec if too high**, **Color words/min if too high**
+- **Color time code overlap**
+- **Color if gap is too short**
 - **Error background color**
 
 ## Video Player
 
 - **Video player** — Which player to use, plus **Download mpv** / **Download VLC** when the library is missing
+- **Show stop button**, **Show full-screen button**, **Hide video controls in full-screen**, **Auto-open video file when opening subtitle**
 - **Subtitle preview properties** — Font name, size and bold, primary/outline/shadow colors, border style and outline/shadow width for the subtitle drawn on the video
 
 ## Waveform / Spectrogram
 
-- **Waveform draw style** and **spectrogram mode**
-- **Toolbar items** — Which timing buttons the waveform toolbar shows, and in which order
+- **Waveform draw style**, **Auto-generate waveform when opening a video**, **Generate spectrogram**, **spectrogram mode** and **Waveform/spectrogram combined, waveform height %**
+- **Show toolbar** and **Toolbar items** — Which timing buttons the waveform toolbar shows, and in which order
 - **Waveform single-click / double-click action**
 - **Extract audio format, sample rate and bitrate** — What the audio Subtitle Edit extracts for the waveform looks like
+- **Select subtitle on right click**, **Allow overlap (when moving/resizing)**, **Set video position when moving start/end**
 - **Snap to shot changes (hold Shift to override)** and **Snap to frames**
 - **Snap distance when dragging (pixels)** — how close a dragged cue has to come to a shot change before it snaps; in pixels, so it feels the same at every zoom
 - **Snap to nearest shot change: max start / end distance (seconds)**, and the tighter **max end distance when start and end share a cut** — how far the *Snap selected lines to nearest shot change* shortcut looks for a cut. Where a snapped cue lands is set by the beautify profile's in/out cues gap (gear icon next to the snap toggle)
-- **Mouse-wheel video position step**
-- **Waveform text font size** and the full color set — text, waveform, subtitle background, background, selected subtitle background, selected, cursor/head, shot change, left/right border, fancy high color. Color themes can be imported and exported
+- **Guess start time from waveform: place start earlier by (ms)** / **Guess end time from waveform: place end later by (ms)** — padding added to the speech boundary the *Guess start/end time from waveform* shortcuts detect, for when the guess feels too tight against the audio. A nearby shot change still wins over the padded position
+- **Shot changes auto-generate**
+- **Focus on mouse over**, **Focus text box after insert**
+- **Invert mouse-wheel**, **Mouse-wheel sets video position**, **Mouse-wheel video position step**
+- **Center video position also while paused**, **Draw grid lines**
+- **Waveform text font size**, **Waveform text font bold** and the full color set — text, waveform, subtitle background, background, selected subtitle background, selected, cursor/head, shot change, left/right border, fancy high color. Color themes can be imported and exported
+- **Auto-transcribe new waveform selection via speech-to-text**
 - **Download ffmpeg** and a **disk space** readout for the extracted audio
 
 ## Tools
 
 - **Allow single-letter shortcuts in text box**
+- **Allow shortcuts on text-navigation keys (Ctrl+Left/Right, Home/End) in text box** - Off by default, so the keys keep moving the caret even when a shortcut is bound to them
 - **Go-to-line-number also sets video position**
 - **Adjust all times, remember line selection choice**
 - **Merge lines: keep end time (allow overlap with next subtitle)**, and the variant that limits it to ASSA files
@@ -86,6 +103,7 @@ The subtitle rules that drive error checking, the grid's warning colors, and too
 - **Multiple replace: show context menu buttons**
 - **Grid: focus text box after insert new subtitle**
 - **Text to speech: prompt to merge continuation lines**
+- **Text to speech: prompt to skip sound/music lines**, **Text to speech: prompt to detect speaker names in the text**
 - **Fix common errors: skip step 1 (choose fixes)**
 - **Music symbol** and **music symbols to replace**
 
@@ -94,18 +112,19 @@ The subtitle rules that drive error checking, the grid's warning colors, and too
 - **Theme**, **icon theme**, **match icon color to dark theme foreground color**, **UI scale (%)**
 - **Dark theme foreground / background color**, **focused button background color**
 - **UI font**, and a separate font for the subtitle text box and grid
-- **Grid** — Show subtitle text as single line (with the separator to use), text fit, [show formatted text](subtitle-grid.md#formatting-display), live spell check, compact mode, alternating row colors (light and dark), grid lines, bookmark color
+- **Grid** — Show subtitle text as single line (with the separator to use), text fit, [show formatted text](subtitle-grid.md#formatting-display), live spell check, **Center text in subtitle grid** (centers the text column, as Subtitle Edit 4 could), compact mode, alternating row colors (light and dark), grid lines, bookmark color
+- **Spell check highlight color** - The color of the unknown word highlighted in the spell check and OCR unknown-word windows (red by default; pick a lighter color for the dark theme)
 - **Subtitle text box** — Bold text, color tags, live spell check, centered text, and which buttons are shown (auto-break, unbreak, italic, color, remove formatting, AI assistant), the up/down start/end/duration controls and their labels
 - **Show button hints** — Turns the tooltips on and off
 - **Show ASSA layer box**, **show horizontal line above toolbar**, **show Plugins menu**
 
 ## Toolbar
 
-One checkbox per toolbar button, so the main toolbar can be trimmed to what you use: new, open, open video, save, save as, find, replace, multiple replace, spell check, fix common errors, remove text for hearing impaired, visual sync, point sync, beautify time codes, burn-in, auto-translate, speech to text, settings, layout, source view, help, encoding, frame rate, and the format-specific icons (style manager, properties, attachments, ASSA draw) that only appear for ASSA/SSA/WebVTT files.
+Toggle the icon tiles to choose which buttons appear on the main toolbar: new, open, open video, save, save as, find, replace, multiple replace, spell check, fix common errors, remove text for hearing impaired, visual sync, point sync, beautify time codes, burn-in, auto-translate, speech to text, settings, layout, source view, help, and the format-specific icons (style manager, properties, attachments, ASSA draw) that only appear for ASSA/SSA/WebVTT files. Selected tiles show a check mark. Separate checkboxes control the encoding and frame rate selectors.
 
 ## Network
 
-Proxy settings for every download and online engine: **address**, **username**, **password**, **domain**, **bypass proxy for**, and what to **notify about**.
+Proxy settings for every download and online engine: **address**, **username**, **password**, **domain**, **bypass proxy for**, and **Use system credentials**.
 
 ## Updates
 

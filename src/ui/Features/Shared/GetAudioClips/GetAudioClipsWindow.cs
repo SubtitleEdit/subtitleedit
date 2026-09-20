@@ -24,7 +24,7 @@ public class GetAudioClipsWindow : Window
         var titleText = new TextBlock
         {
             Text = Se.Language.General.ExtractingAudioClips,
-            FontSize = 20,
+            FontSize = UiUtil.ScaledFontSize(20),
             FontWeight = FontWeight.Bold,
         };
 
@@ -51,7 +51,7 @@ public class GetAudioClipsWindow : Window
             }
         };
 
-        Activated += delegate { buttonCancel.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, buttonCancel); // hack to make OnKeyDown work
 
         // Loaded, not Activated: Activated fires again every time the window regains focus, which
         // started a second extraction loop from line one on top of the running one (#13777).

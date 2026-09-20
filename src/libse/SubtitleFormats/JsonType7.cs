@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
-                sb.Append(p.StartTime.TotalMilliseconds);
+                sb.Append((long)Math.Round(p.StartTime.TotalMilliseconds));
                 if (i < subtitle.Paragraphs.Count - 1)
                 {
                     sb.Append(',');
@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
-                sb.Append(p.EndTime.TotalMilliseconds);
+                sb.Append((long)Math.Round(p.EndTime.TotalMilliseconds));
                 if (i < subtitle.Paragraphs.Count - 1)
                 {
                     sb.Append(',');

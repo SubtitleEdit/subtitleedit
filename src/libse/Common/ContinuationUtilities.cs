@@ -56,6 +56,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         // const (not static readonly) so MusicSymbolRegexes above can reference it from its
         // field initializer regardless of declaration order.
         private const string MusicSymbols = "♪♫#*¶";
+        private static readonly char[] MusicSymbolChars = MusicSymbols.ToCharArray();
         private static readonly string ExplanationQuotes = "'\"“”‘’«»‹›";
 
         private static readonly List<string> LanguagesWithoutCaseDistinction = new List<string>
@@ -92,13 +93,30 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return input;
             }
 
+            // Each pattern needs its opening character; most lines have none of them, so a
+            // char probe skips the regex scan (Regex.Replace returns the input unchanged then).
             var checkString = input;
-            checkString = HtmlTagRegex.Replace(checkString, string.Empty);
-            checkString = ParenthesesRegex.Replace(checkString, string.Empty);
-            checkString = SquareBracketsRegex.Replace(checkString, string.Empty);
-            checkString = CurlyBracesRegex.Replace(checkString, string.Empty);
+            if (checkString.Contains('<'))
+            {
+                checkString = HtmlTagRegex.Replace(checkString, string.Empty);
+            }
 
-            if (Configuration.Settings.General.FixContinuationStyleIgnoreLyrics)
+            if (checkString.Contains('('))
+            {
+                checkString = ParenthesesRegex.Replace(checkString, string.Empty);
+            }
+
+            if (checkString.Contains('['))
+            {
+                checkString = SquareBracketsRegex.Replace(checkString, string.Empty);
+            }
+
+            if (checkString.Contains('{'))
+            {
+                checkString = CurlyBracesRegex.Replace(checkString, string.Empty);
+            }
+
+            if (Configuration.Settings.General.FixContinuationStyleIgnoreLyrics && checkString.IndexOfAny(MusicSymbolChars) >= 0)
             {
                 foreach (var regex in MusicSymbolRegexes)
                 {
@@ -224,7 +242,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static string ExtractParagraphOnly(string input, bool removeDashes)
         {
             var checkString = input;
-            checkString = CurlyBracesRegex.Replace(checkString, string.Empty);
+            if (checkString.Contains('{'))
+            {
+                checkString = CurlyBracesRegex.Replace(checkString, string.Empty);
+            }
+
             checkString = checkString.Trim();
 
             // Remove string elevation

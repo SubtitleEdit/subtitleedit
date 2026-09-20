@@ -7,11 +7,13 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Features.Options.Settings.MinGapCalculate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Tools.ApplyMinGap;
 
@@ -22,7 +24,12 @@ public partial class ApplyMinGapViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private string _minXBetweenLines;
     [ObservableProperty] private int _minGapMsOrFrames;
     [ObservableProperty] private string _statusText;
-    
+
+    /// <summary>The calculator gives milliseconds, so it is only offered when the box holds milliseconds.</summary>
+    public bool IsMsMode { get; }
+
+    private readonly IWindowService _windowService;
+
     public List<SubtitleLineViewModel> FixedSubtitles{ get; set; }
     public Window? Window { get; set; }
 
@@ -33,8 +40,10 @@ public partial class ApplyMinGapViewModel : ObservableObject, IClosingCleanup
     private bool _dirty;
     private readonly List<SubtitleLineViewModel> _allSubtitles;
 
-    public ApplyMinGapViewModel()
+    public ApplyMinGapViewModel(IWindowService windowService)
     {
+        _windowService = windowService;
+        IsMsMode = !Se.Settings.General.UseFrameMode;
         Subtitles = new ObservableCollection<ApplyMinGapItem>();
         FixedSubtitles = new List<SubtitleLineViewModel>();
         MinGapMsOrFrames = 10;
@@ -129,11 +138,24 @@ public partial class ApplyMinGapViewModel : ObservableObject, IClosingCleanup
                 continue;
             }
 
+            var newEndMs = next.StartTime.TotalMilliseconds - minMsBetweenLines;
+
+            // Skip only when the new end would land at or before this line's own start. That
+            // happens for a short line followed closely by the next one (a 50 ms line, next at
+            // +10 ms, gap 100), and produced a negative duration that was still counted as a fix
+            // and reached the grid and the saved file.
+            // Deliberately NOT the minimum-display threshold that BatchConverter.ApplyMinGap
+            // uses: shortening a line below it is this dialog's normal, intended behaviour.
+            var newDuration = newEndMs - current.StartTime.TotalMilliseconds;
+            if (newDuration <= 0)
+            {
+                continue;
+            }
+
             fixedCount++;
 
             var before = new TimeCode(gapMs).ToShortDisplayString();
 
-            var newEndMs = next.StartTime.TotalMilliseconds - minMsBetweenLines;
             current.EndTime = TimeSpan.FromMilliseconds(newEndMs);
             var newGapMs = next.StartTime.TotalMilliseconds - current.EndTime.TotalMilliseconds;
 
@@ -201,6 +223,29 @@ public partial class ApplyMinGapViewModel : ObservableObject, IClosingCleanup
         SaveSettings();
         OkPressed = true;
         Window?.Close();
+    }
+
+    /// <summary>
+    /// SE4's dialog had a "frame info" group turning frames at a frame rate into milliseconds.
+    /// Reuse the settings' calculator for that instead of a second copy of the controls (#14827).
+    /// </summary>
+    [RelayCommand]
+    private async Task CalculateMinGapMs()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var viewModel = await _windowService.ShowDialogAsync<MinGapCalculateWindow, MinGapCalculateViewModel>(
+            Window,
+            vm => vm.Initialize(Se.Settings.General.MinimumBetweenLines.Frames > 0 ? Se.Settings.General.MinimumBetweenLines.Frames : 2));
+
+        if (viewModel.OkPressed)
+        {
+            MinGapMsOrFrames = viewModel.MinGapMs;
+            _dirty = true;
+        }
     }
 
     [RelayCommand]

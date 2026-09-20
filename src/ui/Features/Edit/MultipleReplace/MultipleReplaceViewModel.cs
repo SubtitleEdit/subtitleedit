@@ -59,6 +59,16 @@ public partial class MultipleReplaceViewModel : ObservableObject
     // compiled cache: see GetRegexError.
     private readonly ConcurrentDictionary<string, string?> _regExErrors;
     private readonly Timer _timerReplace;
+
+    /// <summary>
+    /// The preview debounce (250 ms). Internal so the headless tests, which can only observe the
+    /// preview by waiting for this timer, can shorten it instead of sleeping through it.
+    /// </summary>
+    internal double PreviewIntervalMs
+    {
+        get => _timerReplace.Interval;
+        set => _timerReplace.Interval = value;
+    }
     private readonly object _previewLock = new();
     private volatile bool _dirty;
     private volatile bool _closed;
@@ -518,7 +528,10 @@ public partial class MultipleReplaceViewModel : ObservableObject
     [RelayCommand]
     private async Task CategoryAddCategory(RuleTreeNode? node)
     {
-        var category = new RuleTreeNode(node, string.Empty, new ObservableCollection<RuleTreeNode>(), true);
+        // Categories are always top-level (they are added to, removed from and reordered inside
+        // Nodes), so the new one has no parent - passing the node whose context menu was used
+        // left a root category claiming another category as its Parent.
+        var category = new RuleTreeNode(null, string.Empty, new ObservableCollection<RuleTreeNode>(), true);
         var result = await _windowService.ShowDialogAsync<EditCategoryWindow, EditCategoryViewModel>(Window!,
             vm =>
             {
@@ -612,7 +625,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
         List<RuleTreeNode>? imported = null;
         try
         {
-            var content = System.IO.File.ReadAllText(fileName);
+            var content = await System.IO.File.ReadAllTextAsync(fileName);
 
             CategoryImportExportItem? temp;
 
@@ -743,12 +756,12 @@ public partial class MultipleReplaceViewModel : ObservableObject
         if (fileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
         {
             // UTF-8 with BOM so Excel opens non-ASCII rules correctly.
-            System.IO.File.WriteAllText(fileName, CsvExporter.Export(export), new System.Text.UTF8Encoding(true));
+            await System.IO.File.WriteAllTextAsync(fileName, CsvExporter.Export(export), new System.Text.UTF8Encoding(true));
         }
         else
         {
             var json = JsonSerializer.Serialize(export, new JsonSerializerOptions { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
-            System.IO.File.WriteAllText(fileName, json);
+            await System.IO.File.WriteAllTextAsync(fileName, json);
         }
 
         _ = await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window,
@@ -1067,6 +1080,15 @@ public partial class MultipleReplaceViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (e.Key == Key.Enter && e.KeyModifiers == KeyModifiers.None)
+        {
+            // Initial focus is on the rules tree, not the OK button (a focused button clicks on bare
+            // Space), so Enter has to reach OK from the window - the rules tree and preview grid do
+            // not use Enter themselves. A focused Cancel/Apply button consumes Enter before it bubbles
+            // here, so those keep their own meaning (#14586).
+            e.Handled = true;
+            Ok();
+        }
         else if (e.Key == Key.N && e.KeyModifiers == KeyModifiers.Control)
         {
             e.Handled = true;
@@ -1336,7 +1358,12 @@ public partial class MultipleReplaceViewModel : ObservableObject
                     {
                         // Match against line-feed-normalized text so a pattern's \n line break matches even
                         // when the paragraph text uses \r\n (the pattern is FixNewLine'd to \n) (#11956).
-                        if (r.IsMatch(string.Join("\n", newText.SplitToLines())))
+                        // Text without a \r or \u2028 is already in that form - and this runs per
+                        // regex rule, per line, so skip the split and join for it.
+                        var lineFeedText = newText.AsSpan().IndexOfAny('\r', '\u2028') < 0
+                            ? newText
+                            : string.Join("\n", newText.SplitToLines());
+                        if (r.IsMatch(lineFeedText))
                         {
                             var replaced = RegexUtils.ReplaceNewLineSafe(r, newText, item.ReplaceWith);
                             hit = true;

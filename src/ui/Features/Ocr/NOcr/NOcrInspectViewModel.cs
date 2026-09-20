@@ -474,6 +474,7 @@ public partial class NOcrInspectViewModel : ObservableObject
     {
         if (e.Key == Key.Enter)
         {
+            e.Handled = true; // the OK button is IsDefault and would run OK again on the same Enter
             Ok();
         }
     }
@@ -646,6 +647,11 @@ public partial class NOcrInspectViewModel : ObservableObject
             {
                 Cancel();
             }
+        }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/ocr", "nocr-nikse-ocr");
         }
         else if (e.Key == Key.Left)
         {

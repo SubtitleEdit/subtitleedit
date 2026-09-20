@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
@@ -29,7 +29,7 @@ public class ManualChosenEncodingWindow : Window
             Margin = new Thickness(10),
             Width = 200,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
+        }.WithSearchAndClearIcons();
         searchBox.Bind(TextBox.TextProperty, new Binding(nameof(vm.SearchText)) { Source = vm });
         searchBox.TextChanged += (s, e) => vm.SearchTextChanged();
         var panelSearch = new StackPanel
@@ -74,7 +74,7 @@ public class ManualChosenEncodingWindow : Window
 
         Content = grid;
 
-        Activated += delegate { searchBox.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, searchBox); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
@@ -89,7 +89,7 @@ public class ManualChosenEncodingWindow : Window
             Header = Se.Language.File.ManualChosenEncoding.CodePage,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding("Encoding.CodePage"),
+            Binding = new Binding($"{nameof(TextEncoding.Encoding)}.{nameof(System.Text.Encoding.CodePage)}"),
             // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
             Width = new GridLength(100),
         };
@@ -106,7 +106,7 @@ public class ManualChosenEncodingWindow : Window
             Header = Se.Language.General.Group,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding("Encoding.BodyName"),
+            Binding = new Binding($"{nameof(TextEncoding.Encoding)}.{nameof(System.Text.Encoding.BodyName)}"),
             Width = new GridLength(180),
         };
         dataGrid.Columns.AddRange(new TableViewColumn[] { columnCodePage, columnName, columnGroup });
@@ -158,7 +158,9 @@ public class ManualChosenEncodingWindow : Window
         var textBox = new TextBox
         {
             AcceptsReturn = true,
-            AcceptsTab = true,
+            // Read-only: a typed tab could never land here anyway, and accepting it only
+            // swallowed Tab/Shift+Tab so the box could not be left from the keyboard (#14313).
+            AcceptsTab = false,
             IsReadOnly = true,
             Margin = new Thickness(0, 0, 0, 0),
             Width = double.NaN,

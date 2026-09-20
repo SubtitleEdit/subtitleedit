@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -49,7 +49,8 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
     private WavePeakData2? _wavePeaks;
     private Subtitle _subtitle;
     private string? _videoFileName;
-    private DispatcherTimer _positionTimer = new DispatcherTimer();
+    private bool _closed; // set by OnClosing; stops the posted half of Initialize from starting a pump on a disposed player
+    private UiTickPump _positionTimer = new(TimeSpan.FromMilliseconds(750)); // posted ticks, not a DispatcherTimer - see UiTickPump
     private List<SubtitleLineViewModel> _subtitleLines = new List<SubtitleLineViewModel>();
     private List<SubtitleLineViewModel> _selectedSubtitleLines = new List<SubtitleLineViewModel>();
     private FfmpegMediaInfo2? _mediaInfo;
@@ -145,6 +146,15 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
 
         Dispatcher.UIThread.Post(() =>
         {
+            // Closed before this post ran: OnClosing has already stopped the (placeholder) pump
+            // and disposed the player, so the pump started below would never be stopped and
+            // would poll the dead player for the rest of the session - every poll an
+            // error-log entry.
+            if (_closed)
+            {
+                return;
+            }
+
             if (!string.IsNullOrEmpty(videoFileName))
             {
                 _ = VideoPlayerControl.Open(videoFileName);
@@ -165,7 +175,7 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
 
     private void StartTitleTimer()
     {
-        _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(750) };
+        _positionTimer = new UiTickPump(TimeSpan.FromMilliseconds(750));
         _positionTimer.Tick += async (s, e) =>
         {
             if (_mpvPlayer == null)
@@ -313,8 +323,9 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
 
     internal void OnClosing()
     {
+        _closed = true;
         _positionTimer.Stop();
-        VideoPlayerControl.VideoPlayer.CloseFile();
+        VideoPlayerControl.CloseAndDisposePlayer();
         try
         {
             if (File.Exists(_tempSubtitleFileName))

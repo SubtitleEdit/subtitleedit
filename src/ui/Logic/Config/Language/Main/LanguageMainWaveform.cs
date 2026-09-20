@@ -15,6 +15,9 @@ public class LanguageMainWaveform
     public string SelectCurrentLineWhilePlayingHint { get; set; }
     public string VideoPosition { get; set; }
     public string VideoPositionTextBox { get; set; }
+    public string ToolbarLineBreakX { get; set; }
+    public string InitialText { get; set; }
+    public string InitialTextHint { get; set; }
     public string HideWaveformToolbar { get; set; }
     public string ResetZoomAndSpeed { get; set; }
     public string RemoveBlankLines { get; set; }
@@ -28,6 +31,29 @@ public class LanguageMainWaveform
     public string TextPlayHint { get; set; }
     public string TextPauseHint { get; set; }
     public string TextNextHint { get; set; }
+    public string MoveSelectedLines { get; set; }
+    public string MoveSelectedLinesAndFollowing { get; set; }
+    public string MoveAllLines { get; set; }
+    public string MoveSelectedLinesBackHint { get; set; }
+    public string MoveSelectedLinesForwardHint { get; set; }
+    public string MoveSelectedLinesAndFollowingBackHint { get; set; }
+    public string MoveSelectedLinesAndFollowingForwardHint { get; set; }
+    public string MoveAllLinesBackHint { get; set; }
+    public string MoveAllLinesForwardHint { get; set; }
+    public string GuessStartNoLineSelected { get; set; }
+    public string GuessStartTimeCodesLocked { get; set; }
+    public string GuessStartNoWaveform { get; set; }
+    public string GuessStartNoRoomBeforePreviousLineX { get; set; }
+    public string GuessStartLineXAlreadyAtBoundary { get; set; }
+    public string GuessStartNoSilenceFoundNearLineX { get; set; }
+    public string GuessStartMovedLineXByYMs { get; set; }
+    public string GuessEndNoLineSelected { get; set; }
+    public string GuessEndTimeCodesLocked { get; set; }
+    public string GuessEndNoWaveform { get; set; }
+    public string GuessEndNoRoomBeforeNextLineX { get; set; }
+    public string GuessEndLineXAlreadyAtBoundary { get; set; }
+    public string GuessEndNoSilenceFoundNearLineX { get; set; }
+    public string GuessEndMovedLineXByYMs { get; set; }
 
     public LanguageMainWaveform()
     {
@@ -44,6 +70,9 @@ public class LanguageMainWaveform
         SelectCurrentLineWhilePlayingHint = "Select current subtitle while playing {0}";
         VideoPosition = "Video position {0}";
         VideoPositionTextBox = "Video position text box {0}";
+        ToolbarLineBreakX = "Line break {0} (rest of toolbar continues on a new row)";
+        InitialText = "Initial text of selected line";
+        InitialTextHint = "The text of the selected line as it was when the line was selected";
         HideWaveformToolbar = "Hide toolbar {0}";
         ResetZoomAndSpeed = "Reset zoom & playback speed {0}";
         RemoveBlankLines = "Remove blank lines {0}";
@@ -57,5 +86,28 @@ public class LanguageMainWaveform
         TextPlayHint = "Play current subtitle and stop at end {0}";
         TextPauseHint = "Pause playback {0}";
         TextNextHint = "Play next subtitle and stop at end {0}";
+        MoveSelectedLines = "Move selected lines (back/forward buttons)";
+        MoveSelectedLinesAndFollowing = "Move selected lines and all following (back/forward buttons)";
+        MoveAllLines = "Move all lines (back/forward buttons)";
+        MoveSelectedLinesBackHint = "Move selected lines {0} ms back {1}";
+        MoveSelectedLinesForwardHint = "Move selected lines {0} ms forward {1}";
+        MoveSelectedLinesAndFollowingBackHint = "Move selected lines and all following {0} ms back {1}";
+        MoveSelectedLinesAndFollowingForwardHint = "Move selected lines and all following {0} ms forward {1}";
+        MoveAllLinesBackHint = "Move all lines {0} ms back {1}";
+        MoveAllLinesForwardHint = "Move all lines {0} ms forward {1}";
+        GuessStartNoLineSelected = "Guess start: no line selected";
+        GuessStartTimeCodesLocked = "Guess start: time codes are locked";
+        GuessStartNoWaveform = "Guess start: no waveform";
+        GuessStartNoRoomBeforePreviousLineX = "Guess start: line {0} has no room before the previous line";
+        GuessStartLineXAlreadyAtBoundary = "Guess start: line {0} already starts where the speech begins";
+        GuessStartNoSilenceFoundNearLineX = "Guess start: no silence found near line {0}";
+        GuessStartMovedLineXByYMs = "Guess start: line {0} start moved {1} ms";
+        GuessEndNoLineSelected = "Guess end: no line selected";
+        GuessEndTimeCodesLocked = "Guess end: time codes are locked";
+        GuessEndNoWaveform = "Guess end: no waveform";
+        GuessEndNoRoomBeforeNextLineX = "Guess end: line {0} has no room before the next line";
+        GuessEndLineXAlreadyAtBoundary = "Guess end: line {0} already ends where the speech stops";
+        GuessEndNoSilenceFoundNearLineX = "Guess end: no silence found near line {0}";
+        GuessEndMovedLineXByYMs = "Guess end: line {0} end moved {1} ms";
     }
 }

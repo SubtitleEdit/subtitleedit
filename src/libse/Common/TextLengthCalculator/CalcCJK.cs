@@ -1,4 +1,9 @@
-﻿using System.Globalization;
+﻿#if NET8_0_OR_GREATER
+using System.Buffers;
+#else
+using System.Collections.Generic;
+#endif
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
@@ -16,67 +21,122 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
             }
 
             var s = HtmlUtil.RemoveHtmlTags(text, true);
+            return Count(s, skipSpace: false, includeJapaneseFullWidth: true);
+        }
 
-            const char zeroWidthSpace = '\u200B';
-            const char zeroWidthNoBreakSpace = '\uFEFF';
+        /// <summary>
+        /// Shared body of the CJK calculators. Runs per grid-row repaint, per keystroke and per
+        /// waveform frame, so the common case - every char its own text element - counts the
+        /// chars directly instead of walking StringInfo.GetTextElementEnumerator (an enumerator
+        /// plus one string per element), and set membership is a SearchValues lookup rather than
+        /// a linear scan over each literal per character.
+        /// </summary>
+        /// <param name="s">Text to measure.</param>
+        /// <param name="skipSpace">CalcCjkNoSpace: ' ' scores 0.</param>
+        /// <param name="includeJapaneseFullWidth">CalcCjk also scores <see cref="JapaneseFullWidthCharacters"/> as full width (single-char elements only, as before).</param>
+        internal static decimal Count(string s, bool skipSpace, bool includeJapaneseFullWidth)
+        {
             decimal length = 0;
+
+            if (TextElements.AreAllSingleChar(s, out var crLfCount))
+            {
+                foreach (var c in s)
+                {
+                    length += CharWeight(c, skipSpace, includeJapaneseFullWidth);
+                }
+
+                // "\r\n" is the one multi-char element that survives the probe. Its chars are
+                // controls, so the loop above added nothing for them - but the element walk
+                // below scores the pair like any other unknown multi-char element: 0.5.
+                for (var i = 0; i < crLfCount; i++)
+                {
+                    length += 0.5m;
+                }
+
+                return length;
+            }
+
             for (var en = StringInfo.GetTextElementEnumerator(s); en.MoveNext();)
             {
                 var element = en.GetTextElement();
                 if (element.Length == 1)
                 {
-                    var ch = element[0];
-                    if (!char.IsControl(ch) &&
-                        ch != zeroWidthSpace &&
-                        ch != zeroWidthNoBreakSpace &&
-                        ch != '\u200E' &&
-                        ch != '\u200F' &&
-                        ch != '\u202A' &&
-                        ch != '\u202B' &&
-                        ch != '\u202C' &&
-                        ch != '\u202D' &&
-                        ch != '\u202E')
-                    {
-                        if (JapaneseHalfWidthCharacters.Contains(ch))
-                        {
-                            length += 0.5m;
-                        }
-                        else if (ChineseFullWidthPunctuations.Contains(ch) ||
-                                 JapaneseFullWidthCharacters.Contains(ch) ||
-                                 LanguageAutoDetect.Letters.Japanese.Contains(ch) ||
-                                 LanguageAutoDetect.Letters.Korean.Contains(ch) ||
-                                 IsCjk(ch))
-                        {
-                            length++;
-                        }
-                        else
-                        {
-                            length += 0.5m;
-                        }
-                    }
+                    length += CharWeight(element[0], skipSpace, includeJapaneseFullWidth);
                 }
                 else
                 {
-                    if (JapaneseHalfWidthCharacters.Contains(element))
-                    {
-                        length += 0.5m;
-                    }
-                    else if (ChineseFullWidthPunctuations.Contains(element) ||
-                             LanguageAutoDetect.Letters.Japanese.Contains(element) ||
-                             LanguageAutoDetect.Letters.Korean.Contains(element) ||
-                             CjkCharRegex.IsMatch(element))
-                    {
-                        length++;
-                    }
-                    else
-                    {
-                        length += 0.5m;
-                    }
+                    length += ElementWeight(element);
                 }
             }
 
             return length;
         }
+
+        private static decimal CharWeight(char ch, bool skipSpace, bool includeJapaneseFullWidth)
+        {
+            const char zeroWidthSpace = '\u200B';
+            const char zeroWidthNoBreakSpace = '\uFEFF';
+            if (char.IsControl(ch) ||
+                skipSpace && ch == ' ' ||
+                ch == zeroWidthSpace ||
+                ch == zeroWidthNoBreakSpace ||
+                ch == '\u200E' ||
+                ch == '\u200F' ||
+                ch == '\u202A' ||
+                ch == '\u202B' ||
+                ch == '\u202C' ||
+                ch == '\u202D' ||
+                ch == '\u202E')
+            {
+                return 0;
+            }
+
+            if (JapaneseHalfWidthSet.Contains(ch))
+            {
+                return 0.5m;
+            }
+
+            // Pure OR, so the cheap range test goes first.
+            if (IsCjk(ch) || (includeJapaneseFullWidth ? FullWidthWithJapaneseSet : FullWidthSet).Contains(ch))
+            {
+                return 1;
+            }
+
+            return 0.5m;
+        }
+
+        /// <summary>
+        /// Multi-char text element (grapheme cluster). Kept as the substring probes it always was
+        /// (<c>string.Contains(string)</c>) - this is the rare path.
+        /// </summary>
+        private static decimal ElementWeight(string element)
+        {
+            if (JapaneseHalfWidthCharacters.Contains(element))
+            {
+                return 0.5m;
+            }
+
+            if (ChineseFullWidthPunctuations.Contains(element) ||
+                LanguageAutoDetect.Letters.Japanese.Contains(element) ||
+                LanguageAutoDetect.Letters.Korean.Contains(element) ||
+                CjkCharRegex.IsMatch(element))
+            {
+                return 1;
+            }
+
+            return 0.5m;
+        }
+
+#if NET8_0_OR_GREATER
+        private static readonly SearchValues<char> JapaneseHalfWidthSet = SearchValues.Create(JapaneseHalfWidthCharacters);
+        private static readonly SearchValues<char> FullWidthSet = SearchValues.Create(ChineseFullWidthPunctuations + LanguageAutoDetect.Letters.Japanese + LanguageAutoDetect.Letters.Korean);
+        private static readonly SearchValues<char> FullWidthWithJapaneseSet = SearchValues.Create(ChineseFullWidthPunctuations + JapaneseFullWidthCharacters + LanguageAutoDetect.Letters.Japanese + LanguageAutoDetect.Letters.Korean);
+#else
+        // netstandard2.1 has no SearchValues; a HashSet still beats the linear scan per character.
+        private static readonly HashSet<char> JapaneseHalfWidthSet = new HashSet<char>(JapaneseHalfWidthCharacters);
+        private static readonly HashSet<char> FullWidthSet = new HashSet<char>(ChineseFullWidthPunctuations + LanguageAutoDetect.Letters.Japanese + LanguageAutoDetect.Letters.Korean);
+        private static readonly HashSet<char> FullWidthWithJapaneseSet = new HashSet<char>(ChineseFullWidthPunctuations + JapaneseFullWidthCharacters + LanguageAutoDetect.Letters.Japanese + LanguageAutoDetect.Letters.Korean);
+#endif
 
         public const string JapaneseHalfWidthCharacters = "｡｢｣､･ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞﾟ";
         public const string JapaneseFullWidthCharacters = "ぁあぃいぅうぇえぉおァアィイゥウェエォオㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹ一二三四五六七八九十学校日本、。・「」々〆〇";

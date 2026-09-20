@@ -6,6 +6,7 @@ using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -153,6 +154,7 @@ public class SecondsUpDown : TemplatedControl
             // so the accessible name set on this control must be forwarded to it for
             // screen readers to announce it (e.g. "Duration") instead of just the value.
             _textBox.Bind(AutomationProperties.NameProperty, this.GetObservable(AutomationProperties.NameProperty));
+            _textBox.Bind(AutomationProperties.LabeledByProperty, this.GetObservable(AutomationProperties.LabeledByProperty));
 
             // Screen readers deliberately stay quiet when a plain edit control's value changes,
             // so stepping with Up/Down was inaudible; announced as a spinner, every value change
@@ -271,6 +273,11 @@ public class SecondsUpDown : TemplatedControl
                 var totalMs = seconds * 1000 + SubtitleFormat.FramesToMilliseconds(frames);
                 return TimeSpanExtensions.FromMillisecondsWholeMilliseconds(totalMs);
             }
+
+            if (TryParseSecondsAndFramesWithoutSeparator(text.Trim(), out var separatorLessMs))
+            {
+                return TimeSpanExtensions.FromMillisecondsWholeMilliseconds(separatorLessMs);
+            }
         }
         else
         {
@@ -285,6 +292,49 @@ public class SecondsUpDown : TemplatedControl
         }
 
         return TimeSpan.Zero;
+    }
+
+    /// <summary>
+    /// Accepts a frame-mode duration typed without the colon, like the masked start/end time
+    /// fields do: "300" is three seconds and zero frames. One or two digits are read as whole
+    /// seconds ("5" is five seconds, not five frames), longer input has its last two digits
+    /// read as frames.
+    /// </summary>
+    private static bool TryParseSecondsAndFramesWithoutSeparator(string text, out double totalMilliseconds)
+    {
+        totalMilliseconds = 0;
+
+        if (text.Length == 0 || text.Length > 8)
+        {
+            return false;
+        }
+
+        foreach (var c in text)
+        {
+            if (!char.IsAsciiDigit(c))
+            {
+                return false;
+            }
+        }
+
+        var secondsText = text.Length <= 2 ? text : text.Substring(0, text.Length - 2);
+        var framesText = text.Length <= 2 ? "0" : text.Substring(text.Length - 2);
+        if (!int.TryParse(secondsText, NumberStyles.Integer, CultureInfo.InvariantCulture, out var seconds) ||
+            !int.TryParse(framesText, NumberStyles.Integer, CultureInfo.InvariantCulture, out var frames))
+        {
+            return false;
+        }
+
+        // A frame number the frame rate cannot hold ("199" at 25 fps) would otherwise silently
+        // add a second - keep it inside the last second instead.
+        var maxFrames = (int)(Configuration.Settings.General.CurrentFrameRate - 0.01);
+        if (frames > maxFrames)
+        {
+            frames = maxFrames;
+        }
+
+        totalMilliseconds = seconds * 1000.0 + SubtitleFormat.FramesToMilliseconds(frames);
+        return true;
     }
 
     private static string FormatTime(TimeSpan ts)

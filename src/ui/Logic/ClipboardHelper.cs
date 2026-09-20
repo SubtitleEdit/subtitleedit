@@ -9,63 +9,68 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Logic;
 
-public static class ClipboardHelper
+public static partial class ClipboardHelper
 {
     // Win32 API declarations
-    [DllImport("user32.dll", SetLastError = true)]
-    private static extern bool OpenClipboard(IntPtr hWndNewOwner);
+    [LibraryImport("user32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool OpenClipboard(IntPtr hWndNewOwner);
 
-    [DllImport("user32.dll", SetLastError = true)]
-    private static extern bool CloseClipboard();
+    [LibraryImport("user32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool CloseClipboard();
 
-    [DllImport("user32.dll", SetLastError = true)]
-    private static extern bool EmptyClipboard();
+    [LibraryImport("user32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool EmptyClipboard();
 
-    [DllImport("user32.dll", SetLastError = true)]
-    private static extern IntPtr SetClipboardData(uint uFormat, IntPtr hMem);
+    [LibraryImport("user32.dll", SetLastError = true)]
+    private static partial IntPtr SetClipboardData(uint uFormat, IntPtr hMem);
 
-    [DllImport("user32.dll", SetLastError = true)]
-    private static extern uint RegisterClipboardFormatW([MarshalAs(UnmanagedType.LPWStr)] string lpszFormat);
+    [LibraryImport("user32.dll", SetLastError = true)]
+    private static partial uint RegisterClipboardFormatW([MarshalAs(UnmanagedType.LPWStr)] string lpszFormat);
 
-    [DllImport("kernel32.dll", SetLastError = true)]
-    private static extern IntPtr GlobalAlloc(uint uFlags, UIntPtr dwBytes);
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    private static partial IntPtr GlobalAlloc(uint uFlags, UIntPtr dwBytes);
 
-    [DllImport("kernel32.dll", SetLastError = true)]
-    private static extern IntPtr GlobalLock(IntPtr hMem);
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    private static partial IntPtr GlobalLock(IntPtr hMem);
 
-    [DllImport("kernel32.dll", SetLastError = true)]
-    private static extern bool GlobalUnlock(IntPtr hMem);
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool GlobalUnlock(IntPtr hMem);
 
-    [DllImport("kernel32.dll", SetLastError = true)]
-    private static extern IntPtr GlobalFree(IntPtr hMem);
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    private static partial IntPtr GlobalFree(IntPtr hMem);
 
-    [DllImport("gdi32.dll")]
-    private static extern IntPtr CreateCompatibleDC(IntPtr hdc);
+    [LibraryImport("gdi32.dll")]
+    private static partial IntPtr CreateCompatibleDC(IntPtr hdc);
 
-    [DllImport("gdi32.dll")]
-    private static extern IntPtr CreateDIBSection(IntPtr hdc, ref BITMAPINFO pbmi, uint usage, out IntPtr ppvBits, IntPtr hSection, uint offset);
+    [LibraryImport("gdi32.dll")]
+    private static partial IntPtr CreateDIBSection(IntPtr hdc, ref BITMAPINFO pbmi, uint usage, out IntPtr ppvBits, IntPtr hSection, uint offset);
 
-    [DllImport("gdi32.dll")]
-    private static extern IntPtr SelectObject(IntPtr hdc, IntPtr h);
+    [LibraryImport("gdi32.dll")]
+    private static partial IntPtr SelectObject(IntPtr hdc, IntPtr h);
 
-    [DllImport("gdi32.dll")]
-    private static extern bool DeleteObject(IntPtr ho);
+    [LibraryImport("gdi32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool DeleteObject(IntPtr ho);
 
-    [DllImport("gdi32.dll")]
-    private static extern bool DeleteDC(IntPtr hdc);
+    [LibraryImport("gdi32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool DeleteDC(IntPtr hdc);
 
-    [DllImport("user32.dll")]
-    private static extern IntPtr GetDC(IntPtr hwnd);
+    [LibraryImport("user32.dll")]
+    private static partial IntPtr GetDC(IntPtr hwnd);
 
-    [DllImport("user32.dll")]
-    private static extern int ReleaseDC(IntPtr hwnd, IntPtr hdc);
+    [LibraryImport("user32.dll")]
+    private static partial int ReleaseDC(IntPtr hwnd, IntPtr hdc);
 
     [StructLayout(LayoutKind.Sequential)]
     private struct BITMAPINFO
     {
         public BITMAPINFOHEADER bmiHeader;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)]
-        public RGBQUAD[] bmiColors;
+        public RGBQUAD bmiColors;
     }
 
     [StructLayout(LayoutKind.Sequential)]

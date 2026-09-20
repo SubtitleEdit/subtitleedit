@@ -1187,7 +1187,7 @@ public class PerfHuntRound14Benchmarks
         return d;
     }
 
-    private static string GetCodeFromLetter_Current(string letter)
+    private static string? GetCodeFromLetter_Current(string letter)
     {
         var code = SccLetters.FirstOrDefault(x => x.Value == letter);
         if (code.Equals(new KeyValuePair<string, string>()))
@@ -1198,7 +1198,7 @@ public class PerfHuntRound14Benchmarks
         return code.Key;
     }
 
-    private static string GetCodeFromLetter_Candidate(string letter)
+    private static string? GetCodeFromLetter_Candidate(string letter)
     {
         return SccReverse.TryGetValue(letter, out var code) ? code : null;
     }

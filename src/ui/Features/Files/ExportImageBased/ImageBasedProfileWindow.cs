@@ -69,7 +69,7 @@ public class ImageBasedProfileWindow : Window
                             CommandParameter = profile,
                             DataContext = vm,
                         };
-                        deleteButton.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.IsProfileDeleteEnabled)) { Mode = BindingMode.TwoWay });
+                        deleteButton.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.IsProfileDeleteEnabled)) { Mode = BindingMode.OneWay });
                         Attached.SetIcon(deleteButton, "fa-solid fa-trash");
                         Grid.SetColumn(deleteButton, 1);
                         grid.Children.Add(deleteButton);
@@ -94,7 +94,7 @@ public class ImageBasedProfileWindow : Window
         var heading = new TextBlock
         {
             Text = Se.Language.General.ProfileName,
-            FontSize = 20,
+            FontSize = UiUtil.ScaledFontSize(20),
             Padding = new Thickness(0, 25, 0, 0),
         };
         editorGrid.Children.Add(heading);
@@ -127,7 +127,7 @@ public class ImageBasedProfileWindow : Window
 
         Content = grid;
 
-        Activated += delegate { Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, () => { Focus(); }); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

@@ -14,14 +14,15 @@ Subtitle Edit can automatically transcribe audio to text using Whisper-based and
 | Whisper CPP | Windows, Linux, macOS | Local CPU engine. On Windows the cuBLAS (NVIDIA CUDA) and Vulkan GPU backends can also be selected from the Whisper CPP backend dropdown. |
 | Purfview Faster Whisper XXL | Windows, Linux | Fast local engine, often used with NVIDIA CUDA |
 | Whisper CTranslate2 | Windows, Linux (x64), macOS (Apple Silicon) | CPU / NVIDIA CUDA depending on installation; CUDA requires [CUDA 12.x](https://developer.nvidia.com/cuda-12-0-0-download-archive) |
-| MLX Whisper | macOS (Apple Silicon) | Runs Whisper on the Apple GPU / Neural Engine via Apple's MLX. Not downloaded by Subtitle Edit — install the `mlx-whisper` Python package yourself (see notes below) |
 | Whisper Const-me | Windows | DirectX-based engine |
+| WhisperX | Windows (x64), Linux (x64), macOS (Apple Silicon) | Faster-Whisper with wav2vec2 word-level alignment, packaged as a standalone build (no Python install needed). Progress and the decoded lines are shown live while it runs |
 | Whisper OpenAI | All | Python-based OpenAI Whisper workflow |
 | OpenAI Compatible Server | All | Connect to any OpenAI-compatible speech-to-text endpoint |
 | OpenRouter | All | Online. One API key routes to Whisper, gpt-4o-transcribe, Groq and Google Chirp |
 | Alibaba Qwen3-ASR | All | Online Qwen3-ASR via Alibaba Model Studio (DashScope) |
-| Qwen3 ASR CPP | Windows, Linux | Local Qwen3 ASR engine with downloadable GGUF models |
-| Crisp ASR | Windows, Linux, macOS | Single engine with selectable backends: Parakeet, Canary, Cohere, Fire Red, Fun-ASR Nano, Fun-ASR MLT Nano, GigaAM, GLM, Granite, Qwen3, Mega, MOSS Diarize, Omni, Kyutai, SenseVoice, ARK, Voxtral |
+| Google Cloud Speech-to-Text | All | Online Google Cloud Speech-to-Text v2 (Chirp models) with word-level timings. Needs a service account key file (JSON) - the v2 API does not accept API keys |
+| Qwen3 ASR CPP | Windows, Linux, macOS | Local Qwen3 ASR engine with downloadable GGUF models |
+| Crisp ASR | Windows, Linux, macOS | Single engine with selectable backends: Parakeet, Canary, Cohere, Fire Red, Fun-ASR Nano, GigaAM, GLM, Granite, Qwen3, Mega, MOSS Diarize, Omni, Kyutai, SenseVoice, ARK, Voxtral |
 
 Engines and models are downloaded automatically on first use.
 
@@ -29,10 +30,10 @@ Engines and models are downloaded automatically on first use.
 
 - **Whisper CPP** is shown as a single entry; the CPU / cuBLAS / Vulkan backends are selected from a secondary dropdown when Whisper CPP is selected.
 - **Qwen3 ASR CPP** includes 0.6B and 1.7B model options, plus a forced-aligner model used for timing workflows.
-- **Crisp ASR** is exposed as one engine that wraps multiple backends (Parakeet, Canary, Cohere, Fire Red, Fun-ASR Nano, Fun-ASR MLT Nano, GigaAM, GLM, Granite, Qwen3, Mega, MOSS Diarize, Omni, Kyutai, SenseVoice, ARK, Voxtral). Pick the backend from the Crisp ASR backend dropdown - see [Crisp ASR backends](#crisp-asr-backends) for what each one is good at.
-- **MLX Whisper** (Apple Silicon Macs) is not bundled or auto-downloaded — it drives Apple's `mlx-whisper` Python package. Install it once with `pip3 install mlx-whisper` (or `pipx install mlx-whisper`); models download from Hugging Face on first use. Subtitle Edit detects the install by finding a Python that can `import mlx_whisper` — it probes Homebrew, python.org, pyenv and system interpreters, and (for pipx / virtual-env / conda installs, which isolate the package) reads the `mlx_whisper` command found on your PATH or at `~/.local/bin/mlx_whisper` to locate the matching interpreter. If it reports "not found" after a pipx/venv install, make sure `which mlx_whisper` resolves.
+- **Crisp ASR** is exposed as one engine that wraps multiple backends (Parakeet, Canary, Cohere, Fire Red, Fun-ASR Nano, GigaAM, GLM, Granite, Qwen3, Mega, MOSS Diarize, Omni, Kyutai, SenseVoice, ARK, Voxtral). Pick the backend from the Crisp ASR backend dropdown - see [Crisp ASR backends](#crisp-asr-backends) for what each one is good at.
 - A **Forced aligner** option is shown for Crisp ASR backends and exposes the built-in aligner, Canary CTC, Qwen3, and the wav2vec2 zoo (12 language-specific CTC aligners that run on top of any Crisp ASR backend).
-- Several newer engines support automatic language selection.
+- Automatic language detection: the Whisper engines (Whisper CPP, Purfview Faster Whisper XXL, CTranslate2, WhisperX, Const-me and OpenAI) and every Crisp ASR backend have an **Auto detect** entry at the top of the language list - except the Russian-only GigaAM and MOSS Diarize, which keep their fixed languages.
+- **Google Cloud Speech-to-Text** is Google's v2 API, which does not take API keys. In the Google Cloud console, create a project with billing, enable the Speech-to-Text API, create a service account with the *Cloud Speech Client* and *Storage Admin* roles, add a JSON key to it and pick that file as the **Key file**. If your organisation does not allow service account keys, leave the key file empty, run `gcloud auth application-default login` and fill in the **Project ID**. The other fields are **Region** (`us` or `eu` for chirp_3, or a specific region for other models), **Model** (`chirp_3`, `chirp_2`, `long`, `latest_long`...), a **Language** hint (leave it empty for automatic detection with the Chirp models), the Cloud Storage **bucket name** long audio is uploaded to (one named `<project>-subtitle-edit-stt` is created on first use, and uploads are deleted after each run), **Dynamic batching** (on by default - about a fifth of the price, but Google gives no latency guarantee) and a timeout.
 - Each engine can have separate advanced command-line parameters.
 
 ## Crisp ASR backends
@@ -45,7 +46,7 @@ The languages column counts what the backend dropdown offers (an *auto* entry is
 
 | Backend | Languages | Output | Model size range | Good for |
 |---------|-----------|------------|------------------|----------|
-| **Parakeet** | 13 (European + zh, ja, ko) | Native timings | 75 MB - 2.14 GB | The fast default. NVIDIA Parakeet TDT/RNN-T in 0.6B, 1.1B and a 110M tdt_ctc model - the smallest Crisp ASR model of all. Has a Japanese fine-tune |
+| **Parakeet** | 13 (European + zh, ja, ko) | Native timings | 75 MB - 2.14 GB | The fast default. NVIDIA Parakeet TDT and RNN-T in 0.6B (v2 and v3) and 1.1B, plus the hybrid TDT+CTC models: `parakeet-tdt_ctc-110m` (the smallest Crisp ASR model of all) and `parakeet-tdt_ctc-1.1b` in q4_k, q8_0 and unquantized - same decoding and native timestamps as `parakeet-tdt-1.1b`, with a CTC head available to the runtime. Has a Japanese fine-tune |
 | **Canary** | 25 (European) | Native timings | 705 MB - 1.97 GB | NVIDIA Canary 1B v2. Broad European coverage with its own timings; also usable as a CTC forced aligner for other backends |
 | **Cohere** | 14 | Native timings | 1.51 - 4.14 GB | Cohere Transcribe. Separate Arabic and Japanese fine-tunes. VAD is on by default (see the VAD section below) |
 | **GigaAM** | 1 (Russian) | Native timings; punctuation + casing on `e2e` only | 151 - 452 MB | Russian only, and very small. Use an `e2e` revision - those emit punctuation and capitalisation, the plain `ctc` / `rnnt` heads return bare lowercase text |
@@ -56,12 +57,11 @@ The languages column counts what the backend dropdown offers (an *auto* entry is
 | **GLM** | 17 | Needs aligner | 1.3 - 4.5 GB | GLM-ASR Nano, Chinese-first with a wide second tier of languages |
 | **SenseVoice** | 5 (zh, yue, en, ja, ko) | Needs aligner | 136 - 469 MB | Tiny and quick for CJK audio - useful on machines where the larger backends are too slow |
 | **Fun-ASR Nano** | 5 (en, zh, yue, ja, ko) | Needs aligner | 0.90 - 1.98 GB | CJK-focused Fun-ASR |
-| **Fun-ASR MLT Nano** | 31 | Needs aligner | 0.90 - 1.98 GB | The multilingual sibling of Fun-ASR Nano at the same size |
 | **Mega** | 2 (en, zh) | Needs aligner | 1.3 - 4.4 GB | Mega-ASR 1.7B. VAD is on by default (see the VAD section below) |
 | **Granite** | 6 (en, fr, de, es, pt, ja) | Needs aligner | 1.54 - 5.58 GB | IBM Granite Speech 4.1 2B. The `plus` models are the newer revision; `mini` and `f16enc` trade encoder precision for size |
 | **ARK** | 19 (European + zh, ja, ko) | Needs aligner | 3.52 - 7.51 GB | A 3B model - the heaviest backend here, so only worth it when the smaller ones fall short |
 | **Kyutai** | 2 (en, fr) | Needs aligner | 0.67 - 5.01 GB | Kyutai STT in 1B and 2.6B |
-| **Voxtral** | 8 | Needs aligner | 2.65 - 4.99 GB | Mistral Voxtral Mini 3B. The backend has no built-in aligner entry at all, so a CTC aligner is always used |
+| **Voxtral** | 8 | Needs aligner | 2.65 - 9.36 GB | Mistral Voxtral Mini 3B. The backend has no built-in aligner entry at all, so a CTC aligner is always used |
 
 ### Picking a quantization
 
@@ -85,6 +85,7 @@ These models live under the **Crisp ASR** engine, not under the standalone Qwen3
 | Crisp ASR Qwen3 | `qwen3-asr-1.7b-ja-anime-q8_0.gguf` (or `-q4_k.gguf`) | Fine-tuned on anime / visual novel speech - the best starting point for anime audio |
 | Crisp ASR Cohere | `cohere-asr-ja-q8_0.gguf` (also q4_k / q6_k / f16) | Japanese fine-tune covering general and anime domains |
 | Crisp ASR Parakeet | `parakeet-tdt-0.6b-ja-q8_0.gguf` (also q4_k / unquantized) | Fast Japanese model |
+| Whisper CPP, Purfview Faster Whisper XXL, Whisper CTranslate2, WhisperX | `anime.ja` | anime-whisper, a kotoba-whisper fine-tune for anime / visual novel dialogue - a Whisper model, so it is under the Whisper engines rather than Crisp ASR |
 
 The general `qwen3-asr-1.7b` and Whisper `large-v3-turbo` models are also strong on Japanese if you prefer a single model for mixed content.
 
@@ -92,13 +93,12 @@ The general `qwen3-asr-1.7b` and Whisper `large-v3-turbo` models are also strong
 
 1. Open a video file in Subtitle Edit
 2. Go to **Video → Speech to text...**
-3. Select an **Engine** from the dropdown
+3. Select an **Engine** from the dropdown. Next to it are buttons for the engine website, engine download (when it is not installed yet) and engine settings (backend and update status, for installed local engines). A **Backend** dropdown appears below for Whisper CPP and Crisp ASR
 4. Select a **Model** (larger models usually improve accuracy but take more time and disk space)
 5. Select the **Language** of the audio, or use auto-language when the selected engine supports it
 6. Optionally enable:
    - **Translate to English** — Translate non-English audio to English
-   - **Adjust timings** — Post-process timing using waveform data
-   - **Post-processing** — Fix casing, merge lines, add periods, etc.
+   - **Post-processing** — Adjust timings, fix casing, merge lines, add periods, etc. (the settings button next to it opens the options)
 7. Click **Transcribe**
 
 ## Models
@@ -110,7 +110,7 @@ Each engine has its own set of models. Common model sizes:
 - **medium** — High accuracy
 - **large** / **large-v2** / **large-v3** — Best accuracy, slowest
 
-Models ending in `.en` are English-only and perform better for English audio.
+Models ending in `.en` are English-only and perform better for English audio. Models with another language suffix are fine-tunes for that language: the Swedish `.sv` and Norwegian `.nb` models, and `anime.ja` - [anime-whisper](https://huggingface.co/litagin/anime-whisper), a Japanese fine-tune for anime and visual novel dialogue, offered by Whisper CPP, Purfview Faster Whisper XXL, Whisper CTranslate2 and WhisperX.
 
 ## Batch Mode
 
@@ -119,6 +119,8 @@ Transcribe multiple video files at once:
 2. Add video files
 3. Click **Transcribe**
 4. Results are saved as `.srt` files next to the video files
+
+**Add language code to file name** names the output `video.en.srt` instead of `video.srt`.
 
 ## Advanced Settings
 
@@ -137,6 +139,19 @@ VAD usually gives tighter timings, but on some material it drops quiet speech an
 
 To keep VAD and only change how it behaves, put `--vad` in the advanced parameters yourself (the **Enable VAD** button fills in the flag and the model path). An explicit `--vad` wins over `--chunk-seconds`, so the two can be combined.
 
+If a Crisp ASR run with VAD comes back with no lines at all - Silero can reject a short clip as non-speech - Subtitle Edit retries once with VAD suppressed before reporting an empty result.
+
+## Isolate speech (Crisp ASR)
+
+With a Crisp ASR engine selected, **Isolate speech (slow)** splits the speech from music and sound effects before the audio is transcribed. The engine - and its voice activity detection - then only hears the dialogue.
+
+Use it for audio with loud or constant music: trailers, music videos, action scenes, anime. On such audio it recovers lines that are otherwise dropped, stops line starts from being clipped, and keeps a subtitle from stretching across a musical passage. On plain dialogue it changes little and is not worth the wait.
+
+- The first use downloads a source separation model (Mel-Band RoFormer, 457 MB) into the Crisp ASR models folder.
+- It is slow: about as long as the audio itself on a GPU (Metal, CUDA, Vulkan), and many times longer on CPU only.
+- There is no progress percentage while the speech is being isolated - only the elapsed time.
+- If the separation fails, the original audio is transcribed instead and the console log says so.
+
 ## Post-Processing Settings
 
 Click the **Post-processing** button to configure:
@@ -146,7 +161,22 @@ Click the **Post-processing** button to configure:
 - Add periods
 - Merge short lines
 - Split long lines
+- Remove non-speech lines (lines that only describe sound, like "[Music]")
+- Remove repeated lines (lines that repeat the previous line word for word)
+- Show quality report after transcription (see below)
 - Change underline to color (useful for highlight spoken words)
+
+## Transcription Quality Report
+
+With **Show quality report after transcription** ticked (the default), a report window opens after a transcription that has something to flag - nothing opens for a clean result. It checks the finished subtitle against your general timing settings, so it agrees with what the main grid colors as errors:
+
+- **Too short** - display time below the minimum, or reading speed above the maximum
+- **Too long** - display time above the maximum, or a long span with almost no text (the typical hallucination: two or three words stretched over 10-30 seconds)
+- **Overlap** - a line that ends after the next one starts
+- **Non-speech** - lines that only describe sound, like `[Music]` or `(laughs)`
+- **Repeated** - the same text as the previous line (an engine loop)
+
+Summary cards at the top filter the table by category; each row shows the line number, time codes, a detail (duration, cps or overlap) and the text. Lines the post-processor already dropped - when **Remove non-speech lines** or **Remove repeated lines** is on - are listed as *removed*, so you can tell what was fixed from what is still there. **Export...** copies the report to the clipboard or saves it as text, an Excel file or a web page. *Do not show again* turns the report off; it is the same setting as the post-processing checkbox.
 
 ## Console Log
 
@@ -157,6 +187,6 @@ The console log at the bottom shows real-time output from the Whisper process, u
 - For NVIDIA GPU users, use the **Whisper CPP** cuBLAS backend or **Purfview Faster Whisper XXL** for fastest transcription
 - If you get "CUDA out of memory" errors, try a smaller model
 - The `--standard` parameter is automatically added for Purfview Faster Whisper XXL
-- You can re-download an engine by right-clicking the engine area
+- Right-click the window for **View tools log file** and, for downloadable engines, a re-download item
 - If an engine executable has gone missing (typically quarantined by antivirus software), Subtitle Edit detects it when transcription starts, names the missing file, and offers to re-download the engine
 - If a new engine has no model installed yet, let Subtitle Edit download both the engine and the selected model before starting transcription

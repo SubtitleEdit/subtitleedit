@@ -209,16 +209,6 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
                     subtitle = FixCasing(subtitle, TwoLetterLanguageCode, engine);
                 }
 
-                if (fixShortDuration)
-                {
-                    subtitle = FixShortDuration(subtitle);
-
-                    // Engines hand back overlapping segments, and extending short
-                    // lines can create more - straighten them out so the result
-                    // does not arrive in the grid full of red overlaps (issue #13973).
-                    subtitle = FixOverlaps(subtitle);
-                }
-
                 if (splitLines && !IsNonStandardLineTerminationLanguage(TwoLetterLanguageCode) && AllowLineContentMove(engine))
                 {
                     var totalMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * Configuration.Settings.General.MaxNumberOfLines;
@@ -231,6 +221,19 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
                 {
                     subtitle = MergeShortLines(subtitle, TwoLetterLanguageCode);
                     subtitle = AutoBalanceLines(subtitle, TwoLetterLanguageCode);
+                }
+
+                // Runs last: splitting long lines divides their time and creates
+                // new short lines, so fixing durations before split/merge left
+                // those untouched (discussion #12929).
+                if (fixShortDuration)
+                {
+                    subtitle = FixShortDuration(subtitle);
+
+                    // Engines hand back overlapping segments, and extending short
+                    // lines can create more - straighten them out so the result
+                    // does not arrive in the grid full of red overlaps (issue #13973).
+                    subtitle = FixOverlaps(subtitle);
                 }
             }
 

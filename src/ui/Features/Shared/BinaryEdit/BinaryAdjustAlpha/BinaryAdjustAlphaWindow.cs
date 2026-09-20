@@ -59,7 +59,7 @@ public class BinaryAdjustAlphaWindow : Window
 
         Content = mainGrid;
 
-        Activated += delegate { alphaAdjustmentSlider.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, alphaAdjustmentSlider); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
@@ -140,7 +140,7 @@ public class BinaryAdjustAlphaWindow : Window
         {
             Text = Se.Language.Tools.ImageBasedEdit.AlphaThresholdInfo,
             TextWrapping = Avalonia.Media.TextWrapping.Wrap,
-            FontSize = 10,
+            FontSize = UiUtil.ScaledFontSize(10),
             Foreground = Avalonia.Media.Brushes.Gray,
             Margin = new Thickness(0, 2, 0, 0),
         };
@@ -158,7 +158,7 @@ public class BinaryAdjustAlphaWindow : Window
             Text = Se.Language.Tools.ImageBasedEdit.AlphaAdjustmentInfo,
             TextWrapping = Avalonia.Media.TextWrapping.Wrap,
             Margin = new Thickness(0, 20, 0, 0),
-            FontSize = 11,
+            FontSize = UiUtil.ScaledFontSize(11),
             Foreground = Avalonia.Media.Brushes.Gray,
         };
         panel.Children.Add(infoText);

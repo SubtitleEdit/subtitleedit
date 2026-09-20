@@ -45,9 +45,13 @@ public class LanguageMain
     public string LineXTimingChanged { get; set; }
     public string LoadingWaveInfoFromCache { get; set; }
     public string ClickToGenerateWaveform { get; set; }
+    public string WaveformFfmpegNotFoundClickToSetUp { get; set; }
     public string NoTextInClipboard { get; set; }
     public string NumberOfLinesEvenlyDistributedX { get; set; }
     public string OneLineCopiedFromOriginal { get; set; }
+    public string OneLineCopiedToOriginal { get; set; }
+    public string OnlineOnlyVideo { get; set; }
+    public string OnlineOnlyVideoXSizeYDownloadAndOpen { get; set; }
     public string OneLineMerged { get; set; }
     public string OneLineSwitched { get; set; }
     public string OverwriteExistingCells { get; set; }
@@ -77,7 +81,9 @@ public class LanguageMain
     public string UnbreakHint { get; set; }
     public string UndoPerformed { get; set; }
     public string UndoPerformedXActionLeft { get; set; }
+    public string VideoAndWaveformPreviewTextX { get; set; }
     public string XLinesCopiedFromOriginal { get; set; }
+    public string XLinesCopiedToOriginal { get; set; }
     public string XLinesMerged { get; set; }
     public string XLinesSelectedOfY { get; set; }
     public string XLinesSwitched { get; set; }
@@ -147,6 +153,7 @@ public class LanguageMain
     public string LiveSpellCheckLanguageXLoaded { get; set; }
     public string DownloadFfmpegTitle { get; set; }
     public string DownloadFfmpegQuestion { get; set; }
+    public string FfmpegNotFoundInstallHint { get; set; }
     public string SelectCurrentSubtitleWhilePlayingOn  { get; set; }
     public string SelectCurrentSubtitleWhilePlayingOff  { get; set; }
     public string SetUpLikeSe4Question { get; set; }
@@ -198,9 +205,13 @@ public class LanguageMain
         LineXTimingChanged = "Line {0}: Timing changed";
         LoadingWaveInfoFromCache = "Loading wave info from cache...";
         ClickToGenerateWaveform = "Click to generate waveform";
+        WaveformFfmpegNotFoundClickToSetUp = "FFmpeg not found - click the waveform to set up FFmpeg and generate the waveform";
         NoTextInClipboard = "No text in clipboard";
         NumberOfLinesEvenlyDistributedX = "Evenly distributed {0} lines";
         OneLineCopiedFromOriginal = "One line copied from original subtitle";
+        OneLineCopiedToOriginal = "One line copied to original subtitle";
+        OnlineOnlyVideo = "Online-only video";
+        OnlineOnlyVideoXSizeYDownloadAndOpen = "The video file \"{0}\" ({1}) is stored online only, for example in Dropbox or iCloud Drive, and has to be downloaded before it can be opened.\n\nDownload and open it now?";
         OneLineMerged = "One line merged";
         OneLineSwitched = "One line switched";
         OverwriteExistingCells = "Overwrite existing cells";
@@ -230,7 +241,9 @@ public class LanguageMain
         UnbreakHint = "Unbreak selected lines";
         UndoPerformed = "Undo performed";
         UndoPerformedXActionLeft = "Undo performed (actions left: {0})";
+        VideoAndWaveformPreviewTextX = "Video/waveform preview: {0}";
         XLinesCopiedFromOriginal = "{0} lines copied from original subtitle";
+        XLinesCopiedToOriginal = "{0} lines copied to original subtitle";
         XLinesMerged = "{0} lines merged";
         XLinesSelectedOfY = "{0} lines selected of {1}";
         XLinesSwitched = "{0} lines switched";
@@ -300,6 +313,7 @@ public class LanguageMain
         LiveSpellCheckLanguageXLoaded = "Live spell check language {0} loaded";
         DownloadFfmpegTitle = "Download FFmpeg?";
         DownloadFfmpegQuestion = "FFmpeg is required for playing online videos and for some video editing features.\n\nDownload FFmpeg now?";
+        FfmpegNotFoundInstallHint = "FFmpeg was not found.\n\nPlease install FFmpeg (e.g. via your package manager) so it is available on the PATH, or set the FFmpeg path in Options -> Settings.";
         SelectCurrentSubtitleWhilePlayingOn = "Select current subtitle while playing: ON";
         SelectCurrentSubtitleWhilePlayingOff = "Select current subtitle while playing: OFF";
         SetUpLikeSe4Question = "This will import Subtitle Edit 4 shortcuts and replace rules and apply the Subtitle Edit 4 theme, toolbar and waveform look.\n\nContinue?";

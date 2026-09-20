@@ -186,6 +186,8 @@ public class SpellCheckManager : SpellChecker, ISpellCheckManager
             }
         }
 
+        isCorrect = isCorrect || IsLowercaseOnlyWordAtSentenceStart(spellCheckWord, text);
+
         if (ChangeAllDictionary.ContainsKey(word) && NotSameSpecialEnding(words[wordIndex], ChangeAllDictionary[word], text))
         {
             ChangeWord(word, ChangeAllDictionary[word], words[wordIndex], p);

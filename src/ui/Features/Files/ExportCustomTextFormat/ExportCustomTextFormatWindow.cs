@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -32,6 +32,7 @@ public class ExportCustomTextFormatWindow : Window
 
         var buttonSaveAs = UiUtil.MakeButton(Se.Language.General.SaveDotDotDot, vm.SaveAsCommand)
             .WithBindIsVisible(vm, nameof(vm.IsSaveButtonVisible));
+        buttonSaveAs.IsDefault = true; // the dialog's accept button - Enter runs it (#14586)
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
@@ -62,7 +63,7 @@ public class ExportCustomTextFormatWindow : Window
 
         Content = grid;
 
-        Activated += delegate { TableViewExtras.FocusRow(formatsGrid); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, () => { TableViewExtras.FocusRow(formatsGrid); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.OnKeyDown;
     }
 
@@ -187,7 +188,8 @@ public class ExportCustomTextFormatWindow : Window
         var textBox = new TextBox
         {
             AcceptsReturn = true,
-            AcceptsTab = true,
+            // Read-only preview - see ManualChosenEncodingWindow (#14313).
+            AcceptsTab = false,
             IsReadOnly = true,
             Width = double.NaN,
             Height = double.NaN,

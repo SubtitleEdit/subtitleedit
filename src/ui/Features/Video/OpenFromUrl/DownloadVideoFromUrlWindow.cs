@@ -27,7 +27,7 @@ public class DownloadVideoFromUrlWindow : Window
         var heading = new TextBlock
         {
             Text = Se.Language.Video.OpenFromUrlDownloadingTitle,
-            FontSize = 18,
+            FontSize = UiUtil.ScaledFontSize(18),
             FontWeight = FontWeight.SemiBold,
         };
 

@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 XmlNode paragraph = xml.CreateElement("CuePoint");
 
                 XmlNode startTime = xml.CreateElement("Time");
-                startTime.InnerText = p.StartTime.TotalMilliseconds.ToString();
+                startTime.InnerText = ((long)Math.Round(p.StartTime.TotalMilliseconds)).ToString(System.Globalization.CultureInfo.InvariantCulture);
                 paragraph.AppendChild(startTime);
 
                 XmlNode paragraphType = xml.CreateElement("Type");
@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 name = xml.CreateElement("Name");
                 name.InnerText = "duration";
                 value = xml.CreateElement("Value");
-                value.InnerText = p.DurationTotalMilliseconds.ToString();
+                value.InnerText = ((long)Math.Round(p.DurationTotalMilliseconds)).ToString(System.Globalization.CultureInfo.InvariantCulture);
                 parameter.AppendChild(name);
                 parameter.AppendChild(value);
                 parameters.AppendChild(parameter);

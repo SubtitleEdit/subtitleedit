@@ -7119,7 +7119,7 @@
     <!-- ============================================================ -->
 
     <!-- trailing i→l (viei → viel, Viei → Viel) -->
-    <RegEx find="\b([A-ZÄÖÜa-zäöüß][a-zäöüß]*)i\b" spellCheck="$1l" replaceWith="$1l" />
+    <RegEx find="\b([A-ZÄÖÜa-zäöüß][a-zäöüß]{3,})i\b" spellCheck="$1l" replaceWith="$1l" />
 
     <!-- double ii→ll (soii → soll, woiien → wollen, Müii → Müll) -->
     <RegEx find="\b([A-ZÄÖÜa-zäöüß][a-zäöüß]*)ii([a-zäöüß]*)\b" spellCheck="$1ll$2" replaceWith="$1ll$2" />

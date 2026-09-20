@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
@@ -80,6 +80,70 @@ public class FixShortDisplayTimesTest
         finally
         {
             Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds = oldMax;
+            Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime = oldMove;
+        }
+    }
+
+    // Extending a line can only lower its chars/sec, so a cps that is still over the
+    // maximum at the minimum duration must not stop the extension (discussion #12929).
+    [Fact]
+    public void ShortLine_StillTooFastAtMinimum_IsExtendedAnyway()
+    {
+        var oldMax = Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds;
+        var oldMin = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
+        try
+        {
+            Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds = 25.0;
+            Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds = 1000;
+
+            // 40 chars in 200 ms; at 1000 ms it is still 40 cps.
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph("This line has exactly forty characters!!", 0, 200) { Number = 1 });
+            subtitle.Paragraphs.Add(new Paragraph("next", 10000, 12000) { Number = 2 });
+
+            var cb = new RecordingCallback();
+            new FixShortDisplayTimes().Fix(subtitle, cb);
+
+            Assert.NotEmpty(cb.FixesAdded);
+            var p = subtitle.Paragraphs[0];
+            Assert.True(p.DurationTotalMilliseconds >= 1000, $"duration was {p.DurationTotalMilliseconds}");
+            Assert.True(p.GetCharactersPerSecond() <= 25.0, $"cps was {p.GetCharactersPerSecond()}");
+        }
+        finally
+        {
+            Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds = oldMax;
+            Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds = oldMin;
+        }
+    }
+
+    // Back-to-back lines: the full minimum does not fit, but the gap that is there
+    // should still be used instead of leaving the line untouched (discussion #12929).
+    [Fact]
+    public void ShortLine_WithoutRoomForMinimum_IsExtendedToTheGap()
+    {
+        var oldMin = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
+        var oldGap = Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+        var oldMove = Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime;
+        try
+        {
+            Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds = 1000;
+            Configuration.Settings.General.MinimumMillisecondsBetweenLines = 24;
+            Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime = false;
+
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph("Hi", 0, 300) { Number = 1 });
+            subtitle.Paragraphs.Add(new Paragraph("next", 800, 3000) { Number = 2 });
+
+            var cb = new RecordingCallback();
+            new FixShortDisplayTimes().Fix(subtitle, cb);
+
+            Assert.Equal(776, (int)subtitle.Paragraphs[0].EndTime.TotalMilliseconds);
+            Assert.Equal(800, (int)subtitle.Paragraphs[1].StartTime.TotalMilliseconds);
+        }
+        finally
+        {
+            Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds = oldMin;
+            Configuration.Settings.General.MinimumMillisecondsBetweenLines = oldGap;
             Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime = oldMove;
         }
     }

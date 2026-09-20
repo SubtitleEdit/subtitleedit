@@ -124,12 +124,17 @@ public class WaveformThemesWindow : Window
 
         Content = mainGrid;
 
-        Activated += delegate { themeComboBox.Focus(); }; // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, themeComboBox); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) =>
         {
             if (e.Key == Key.Escape)
             {
                 vm.CancelCommand.Execute(null);
+            }
+            else if (UiUtil.IsHelp(e))
+            {
+                e.Handled = true;
+                UiUtil.ShowHelp("features/audio-visualizer", "waveform-themes");
             }
         };
     }

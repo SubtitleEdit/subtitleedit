@@ -48,10 +48,10 @@ public class BinaryOcrSettingsWindow : Window
 
         Content = grid;
 
-        Activated += delegate
+        UiUtil.FocusOnFirstActivation(this, () =>
         {
             buttonEdit.Focus(); // hack to make OnKeyDown work
-        };
+        });
         KeyDown += (_, e) => vm.KeyDown(e);
     }
 }
