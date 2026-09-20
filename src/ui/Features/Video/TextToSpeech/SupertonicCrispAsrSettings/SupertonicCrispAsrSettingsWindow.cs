@@ -181,7 +181,7 @@ public class SupertonicCrispAsrSettingsWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             FontWeight = FontWeight.SemiBold,
             Margin = new Thickness(8, 0, 0, 0),
-            Width = 80,
+            Width = 100,
             [!TextBlock.TextProperty] = new Binding(nameof(SupertonicCrispAsrSettingsViewModel.SpeedLabel)),
         };
         return new StackPanel
