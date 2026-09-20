@@ -49,6 +49,20 @@ public class EbuTest
         Assert.False(Ebu.IsStlHeader("STL25".PadRight(1024)));
     }
 
+    // The main grid flags rows wider than a teletext page (37 cells) only for teletext STL. An open
+    // subtitling STL has no page, so its rows are checked against the general maximum (Ingo's
+    // 42-character project showed 37-character errors the EBU save dialog did not).
+    [Fact]
+    public void IsTeletextHeader_TrueOnlyForTeletextDisplayStandard()
+    {
+        Assert.False(Ebu.IsTeletextHeader(null));
+        Assert.False(Ebu.IsTeletextHeader("WEBVTT"));
+        Assert.False(Ebu.IsTeletextHeader(new Ebu.EbuGeneralSubtitleInformation { DisplayStandardCode = "0" }.ToString()));
+        Assert.False(Ebu.IsTeletextHeader(new Ebu.EbuGeneralSubtitleInformation { DisplayStandardCode = " " }.ToString()));
+        Assert.True(Ebu.IsTeletextHeader(new Ebu.EbuGeneralSubtitleInformation { DisplayStandardCode = "1" }.ToString()));
+        Assert.True(Ebu.IsTeletextHeader(new Ebu.EbuGeneralSubtitleInformation { DisplayStandardCode = "2" }.ToString()));
+    }
+
     // Regression for #11910: EBU STL Save produced a 14-byte invalid file ("Not supported!")
     // because the binary format went through the text save path. The binary writer must emit a real
     // EBU file (1024-byte GSI header + TTI blocks) that reads back.

@@ -32873,6 +32873,36 @@ public partial class MainViewModel :
         _updateAudioVisualizer = true;
     }
 
+    /// <summary>
+    /// A teletext page is narrower than the general line-length limit, so for the teletext formats
+    /// an over-wide row counts as a text error (red Text cell, error list, next-error). EBU STL is
+    /// only teletext when its header says so: an open subtitling STL (the export dialog's default)
+    /// has no 40 cell page, and its rows are checked against the general maximum instead - the
+    /// same split the EBU save options dialog makes. Without a header the writer invents one, which
+    /// is teletext exactly when the subtitle carries colours (see the header fallback in Ebu.Save).
+    /// </summary>
+    private void UpdateTeletextLineLength()
+    {
+        var useTeletextLineLength = SelectedSubtitleFormat is DvbTeletext;
+        if (SelectedSubtitleFormat is Ebu)
+        {
+            useTeletextLineLength = Ebu.IsStlHeader(_subtitle.Header)
+                ? Ebu.IsTeletextHeader(_subtitle.Header)
+                : Subtitles.Any(row => row.Text.Contains("<font color", StringComparison.OrdinalIgnoreCase));
+        }
+
+        if (SubtitleLineViewModel.UseTeletextLineLength == useTeletextLineLength)
+        {
+            return;
+        }
+
+        SubtitleLineViewModel.UseTeletextLineLength = useTeletextLineLength;
+        foreach (var row in Subtitles)
+        {
+            row.RefreshAfterSettingsChanged();
+        }
+    }
+
     internal void ComboBoxSubtitleFormatChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (!_changingFormatProgrammatically)
@@ -32888,16 +32918,7 @@ public partial class MainViewModel :
         IsFormatEbu = SelectedSubtitleFormat is Ebu;
         IsFormatTeletext = SelectedSubtitleFormat is Ebu or DvbTeletext;
 
-        // A teletext page is narrower than the general line-length limit, so for the teletext
-        // formats an over-wide row counts as a text error (red Text cell, error list, next-error).
-        if (SubtitleLineViewModel.UseTeletextLineLength != IsFormatTeletext)
-        {
-            SubtitleLineViewModel.UseTeletextLineLength = IsFormatTeletext;
-            foreach (var row in Subtitles)
-            {
-                row.RefreshAfterSettingsChanged();
-            }
-        }
+        UpdateTeletextLineLength();
 
         UpdateTemporaryFrameMode();
 
