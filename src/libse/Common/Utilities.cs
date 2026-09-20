@@ -469,12 +469,15 @@ namespace Nikse.SubtitleEdit.Core.Common
             s = sb.ToString();
 
             // The fewest lines that fit, balanced over all the lines at once. A word longer than
-            // the maximum gets a line of its own, so one line per word always fits.
+            // the maximum gets a line of its own, so one line per word always fits - which is
+            // also why the length based estimate is capped at the word count: with long words it
+            // can ask for more lines than there are words.
             var wordCount = s.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Length;
             var minimumLines = maximumLength > 0 ? Math.Max(2, (s.Length + maximumLength) / (maximumLength + 1)) : 2;
+            minimumLines = Math.Min(minimumLines, wordCount);
             for (var numberOfLines = minimumLines; numberOfLines <= wordCount; numberOfLines++)
             {
-                var breaks = TextPartition.Split(s, numberOfLines, maximumLength, i => CanBreak(s, i, language) ? 0 : NoBreakCost);
+                var breaks = TextPartition.Split(s, numberOfLines, maximumLength, i => GetBreakCost(s, i, language));
                 if (breaks != null)
                 {
                     // keep the spaces - the html tag indices count them
@@ -496,6 +499,62 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// than any difference in line lengths.
         /// </summary>
         internal const double NoBreakCost = 1000000;
+
+        // Costs are in squared characters of line length deviation: moving a break by d
+        // characters costs about 2 x d x d, so these pull a break some 7 / 5 / 3 characters
+        // towards a dialog start / sentence end / comma - never past the maximum length.
+        private const double BreakBeforeDialogBonus = 100;
+        private const double BreakAfterSentenceEndBonus = 50;
+        private const double BreakAfterCommaBonus = 20;
+
+        /// <summary>
+        /// Cost of breaking at the space with this index: negative where a break reads well
+        /// (before a dialog dash, after a sentence end or a comma), <see cref="NoBreakCost"/>
+        /// where <see cref="CanBreak"/> says no.
+        /// </summary>
+        private static double GetBreakCost(string s, int index, string language)
+        {
+            if (!CanBreak(s, index, language))
+            {
+                return NoBreakCost;
+            }
+
+            if (index + 2 < s.Length && s[index + 1] == '-' && s[index + 2] == ' ')
+            {
+                return -BreakBeforeDialogBonus;
+            }
+
+            // the last character of the word before the space, closing quotes etc. skipped
+            var i = index - 1;
+            while (i > 0 && (s[i] == '"' || s[i] == '\'' || s[i] == '”' || s[i] == '’' || s[i] == '»' || s[i] == ')' || s[i] == ']' || s[i] == '♪'))
+            {
+                i--;
+            }
+
+            if (i < 0)
+            {
+                return 0;
+            }
+
+            switch (s[i])
+            {
+                case '.':
+                case '?':
+                case '!':
+                case '…':
+                case '。':
+                case '؟':
+                    return -BreakAfterSentenceEndBonus;
+                case ',':
+                case ';':
+                case ':':
+                case '،':
+                case '、':
+                    return -BreakAfterCommaBonus;
+                default:
+                    return 0;
+            }
+        }
 
         private static void AddOrAppendHtmlTag(Dictionary<int, string> htmlTags, int index, string tag)
         {

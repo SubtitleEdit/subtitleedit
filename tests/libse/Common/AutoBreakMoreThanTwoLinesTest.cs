@@ -56,6 +56,41 @@ public class AutoBreakMoreThanTwoLinesTest
     }
 
     [Fact]
+    public void FewerWordsThanTheLengthAsksFor_OneLinePerWord()
+    {
+        // 80 characters at max 20 asks for four lines, but there are only two words.
+        var lines = Break("Pneumonoultramicroscopicsilicovolcanoconiosis Supercalifragilisticexpialidocious", 20);
+
+        Assert.Equal(new List<string> { "Pneumonoultramicroscopicsilicovolcanoconiosis", "Supercalifragilisticexpialidocious" }, lines);
+    }
+
+    [Fact]
+    public void PrefersBreakingAfterPunctuation()
+    {
+        // Balance alone gives "It was the best of times, it" / "was the worst of times, it" / ...
+        var lines = Break("It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness.", 37);
+
+        Assert.Equal(new List<string>
+        {
+            "It was the best of times,",
+            "it was the worst of times,",
+            "it was the age of wisdom,",
+            "it was the age of foolishness.",
+        }, lines);
+    }
+
+    [Fact]
+    public void DialogDashStartsALine()
+    {
+        var lines = Break("- Did you see Mr. Smith at the station yesterday? - No, I was with Dr. Jones the whole afternoon at the clinic.", 37);
+
+        Assert.Equal(4, lines.Count);
+        Assert.Contains(lines, line => line.StartsWith("- No, I was"));
+        Assert.DoesNotContain(lines, line => line.EndsWith("Mr.") || line.EndsWith("Dr.") || line.EndsWith("-"));
+        Assert.All(lines, line => Assert.True(line.Length <= 37));
+    }
+
+    [Fact]
     public void NoEmptyLines()
     {
         var lines = Break("Supercalifragilisticexpialidocious is a word that Mr. Banks never wanted to hear in his house again, not even once, not ever.", 37);
