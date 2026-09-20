@@ -61,6 +61,15 @@ public class CrispAsrVoxtral : CrispAsrEngineBase
                     "https://huggingface.co/cstr/voxtral-mini-3b-2507-GGUF/resolve/main/voxtral-mini-3b-2507-q8_0.gguf"
                 ],
             },
+            new WhisperModel
+            {
+                Name = "voxtral-mini-3b-2507-f16.gguf",
+                Size = "9.36 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/voxtral-mini-3b-2507-GGUF/resolve/main/voxtral-mini-3b-2507-f16.gguf"
+                ],
+            },
        };
 
     public override string Extension => string.Empty;
