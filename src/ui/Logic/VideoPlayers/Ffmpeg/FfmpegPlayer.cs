@@ -385,7 +385,14 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
             return new AudioQueueAudioSink();
         }
 
-        // No sink for Linux yet - playback stays in sync, just silent.
+        // Linux: PulseAudio, which on current distributions is PipeWire's pipewire-pulse. When
+        // no server answers, Open throws and the session carries on with the silent sink.
+        if (OperatingSystem.IsLinux() && PulseAudioSink.IsLibraryAvailable())
+        {
+            return new PulseAudioSink();
+        }
+
+        // No sound library - playback stays in sync, just silent.
         return new SilentAudioSink();
     }
 
