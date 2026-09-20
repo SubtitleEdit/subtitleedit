@@ -68,11 +68,15 @@ public class VideoPlayerControlRestorePositionSeekTests
         public bool IsPlaying => false;
         public bool IsPaused => true;
 
+        /// <summary>Every write to <see cref="Position"/>, taken or swallowed.</summary>
+        public int SeekCount { get; private set; }
+
         public double Position
         {
             get => _position;
             set
             {
+                SeekCount++;
                 if (!SwallowEverySeek && Environment.TickCount64 >= _acceptSeeksFromTicks)
                 {
                     _position = value;
@@ -170,6 +174,54 @@ public class VideoPlayerControlRestorePositionSeekTests
         // reaches would sit frozen through playback.
         Assert.Equal(54, control.PositionForRestore);
         Assert.Null(control.PositionRestoreHoldSeconds);
+    }
+
+    /// <summary>
+    /// The control's own time text and slider follow the same hold: they used to drop to 0:00
+    /// while the rebuilt player was loading and jump back when the restore seek landed.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task TheTimeTextAndSliderShowTheRestoreTargetWhileThePlayerLoads()
+    {
+        var player = new SlowToSeekVideoPlayer { SwallowEverySeek = true };
+        var control = new VideoPlayerControl(player);
+        control.BeginPositionRestore(54);
+        await control.Open("fake.mkv");
+
+        await WaitForAsync(() => control.ProgressText?.Contains("00:54") == true);
+
+        Assert.Equal(0, player.Position, 3); // still loading
+        Assert.Equal(54, control.Position, 3); // what the slider is bound to
+        Assert.Contains("00:54", control.ProgressText);
+
+        // Display only: holding it must not reach the player as a seek (a clamped slider echo
+        // doing that is how a restore used to rewind the video, issue #14741).
+        Assert.Equal(0, player.SeekCount);
+    }
+
+    [AvaloniaFact]
+    public async Task TheTimeTextGoesBackToThePlayerWhenTheRestoreGivesUp()
+    {
+        var player = new SlowToSeekVideoPlayer { SwallowEverySeek = true };
+        var control = new VideoPlayerControl(player);
+        control.BeginPositionRestore(54);
+        await control.Open("fake.mkv");
+        await WaitForAsync(() => control.ProgressText?.Contains("00:54") == true);
+
+        await control.RestorePositionAsync(54, 100);
+
+        await WaitForAsync(() => Math.Abs(control.Position) < 0.001);
+        Assert.Equal(0, control.Position, 3);
+        Assert.DoesNotContain("00:54 /", control.ProgressText);
+    }
+
+    private static async Task WaitForAsync(Func<bool> condition, int timeoutMs = 3000)
+    {
+        var end = Environment.TickCount64 + timeoutMs;
+        while (!condition() && Environment.TickCount64 < end)
+        {
+            await Task.Delay(25);
+        }
     }
 
     [AvaloniaFact]

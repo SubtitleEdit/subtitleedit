@@ -1243,17 +1243,28 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                         pos = pos * 1000.0 / 1001.0; // SMPTE timing adjustment
                     }
 
-                    SetPositionDisplayOnly(pos);
-
                     // The player has arrived where the restore was heading - drop the pending
                     // target even if the restoring code never got to end it (an abandoned
                     // sequence would otherwise pin PositionForRestore for the rest of the
-                    // control's life).
+                    // control's life). Checked on the player's own position, before the hold
+                    // below replaces it for display.
                     if (_pendingRestorePositionSeconds is { } pending &&
                         Math.Abs(pos - pending) < PositionRestoreArrivedToleranceSeconds)
                     {
                         EndPositionRestore();
                     }
+
+                    // Still loading its way back after a rebuild: the player reports 0, which
+                    // showed as the time text and the slider dropping to 0:00 and jumping back
+                    // once the restore seek landed. Show where the video is going to be, like
+                    // the waveform play-head does (issue #15027). Display only - nothing here
+                    // reaches the player.
+                    if (PositionRestoreHoldSeconds is { } holdSeconds)
+                    {
+                        pos = holdSeconds;
+                    }
+
+                    SetPositionDisplayOnly(pos);
                 }
 
                 var fullDuration = TimeCode.FromSeconds(Duration + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0).ToDisplayString();
