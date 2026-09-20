@@ -1290,16 +1290,34 @@ public class Se
         LogError(exception.Message + Environment.NewLine + message + Environment.NewLine + exception.StackTrace);
     }
 
+    private static readonly ErrorLogThrottle ErrorThrottle = new();
+
     public static void LogError(string error)
     {
         try
         {
+            // An error raised from a timer repeats at 6-60 Hz - see ErrorLogThrottle.
+            if (!ErrorThrottle.ShouldLog(error, Environment.TickCount64, out var suppressedBefore, out var isLastInWindow))
+            {
+                return;
+            }
+
             var filePath = GetErrorLogFilePath();
             using var writer = new StreamWriter(filePath, true, Encoding.UTF8);
             writer.WriteLine("-----------------------------------------------------------------------------");
             writer.WriteLine($"Date: {DateTime.Now.ToString(CultureInfo.InvariantCulture)}");
             writer.WriteLine($"SE: {GetSeInfo()}");
             writer.WriteLine(error);
+            if (suppressedBefore > 0)
+            {
+                writer.WriteLine($"(This error occurred {suppressedBefore.ToString(CultureInfo.InvariantCulture)} more times since it was last logged)");
+            }
+
+            if (isLastInWindow)
+            {
+                writer.WriteLine($"(Logged {ErrorLogThrottle.MaxEntriesPerWindow} times within a minute - for the rest of that minute identical errors are only counted)");
+            }
+
             writer.WriteLine();
         }
         catch
