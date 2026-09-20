@@ -18,7 +18,7 @@ public class LayoutWindow : Window
 {
     private readonly LayoutViewModel _vm;
     private List<Border> _borders = new List<Border>();
-    private const int LayoutCount = 14;
+    private const int LayoutCount = 15;
     private int _focusedLayout = -1;
 
     public LayoutWindow(LayoutViewModel viewViewModel)

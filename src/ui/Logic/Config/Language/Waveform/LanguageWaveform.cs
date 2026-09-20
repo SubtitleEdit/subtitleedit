@@ -21,6 +21,8 @@ public class LanguageWaveform
     public string ToggleShotChange { get; set; }
     public string ResetWaveformZoomAndSpeed { get; set; }
     public string ShowOriginalSubtitle { get; set; }
+    public string TimelineGroupTracksBy { get; set; }
+    public string TimelineShowThumbnails { get; set; }
     public string ShowSpeechOnly { get; set; }
     public string IsolatingSpeechForWaveformX { get; set; }
     public string IsolatingSpeechForWaveformFailed { get; set; }
@@ -62,6 +64,8 @@ public class LanguageWaveform
         ToggleShotChange = "Toggle shot change";
         ResetWaveformZoomAndSpeed = "Reset waveform zoom & speed";
         ShowOriginalSubtitle = "Show original subtitle";
+        TimelineGroupTracksBy = "Group subtitle tracks by";
+        TimelineShowThumbnails = "Show video thumbnails";
         ShowSpeechOnly = "Show speech only (slow to generate)";
         IsolatingSpeechForWaveformX = "Isolating speech for the waveform... {0}";
         IsolatingSpeechForWaveformFailed = "Could not isolate the speech for the waveform - see the tools log";

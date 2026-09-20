@@ -61,6 +61,7 @@ public partial class ToolbarItemDisplay : ObservableObject
             SeWaveformToolbarItemType.LineBreak1 => string.Format(w.ToolbarLineBreakX, 1),
             SeWaveformToolbarItemType.LineBreak2 => string.Format(w.ToolbarLineBreakX, 2),
             SeWaveformToolbarItemType.InitialText => w.InitialText,
+            SeWaveformToolbarItemType.TimelineTrackGrouping => Se.Language.Waveform.TimelineGroupTracksBy,
             _ => type.ToString(),
         };
     }

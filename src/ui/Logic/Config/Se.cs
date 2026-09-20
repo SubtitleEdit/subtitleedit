@@ -19,7 +19,7 @@ public class Se
 {
     internal const int CurrentMacOsFontMigrationVersion = 1;
     internal const int CurrentShortcutsMigrationVersion = 4;
-    internal const int CurrentLayoutMigrationVersion = 1;
+    internal const int CurrentLayoutMigrationVersion = 2;
 
     public static string Version { get; set; } = "v5.3.0-beta7";
 
@@ -708,17 +708,28 @@ public class Se
     /// Version 1: layouts 12 and 13 (text box below the video player, issue #14812) were inserted
     /// before the "no video" layout, which moved from 12 to 14. A persisted 12 from before that
     /// still means "no video", so it is moved along once.
+    /// <para>
+    /// Version 2: the editor-style layout (timeline with video and subtitle rows) took number 14,
+    /// and "no video" moved on to 15 to stay last in the picker. The steps run in order, so a
+    /// settings file from before version 1 goes 12 -> 14 -> 15.
+    /// </para>
     /// </summary>
     internal static void MigrateLayoutNumber(SeGeneral general)
     {
-        if (general.LayoutMigrationVersion.GetValueOrDefault() >= CurrentLayoutMigrationVersion)
+        var version = general.LayoutMigrationVersion.GetValueOrDefault();
+        if (version >= CurrentLayoutMigrationVersion)
         {
             return;
         }
 
-        if (general.LayoutNumber == 12)
+        if (version < 1 && general.LayoutNumber == 12)
         {
             general.LayoutNumber = 14;
+        }
+
+        if (version < 2 && general.LayoutNumber == 14)
+        {
+            general.LayoutNumber = 15;
         }
 
         general.LayoutMigrationVersion = CurrentLayoutMigrationVersion;

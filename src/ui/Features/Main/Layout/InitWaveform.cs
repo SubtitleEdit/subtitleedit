@@ -35,6 +35,17 @@ public class InitWaveform
 
     public static Grid MakeWaveform(MainViewModel vm)
     {
+        return MakeWaveform(vm, withTimelineTracks: false, out _);
+    }
+
+    /// <summary>
+    /// Builds the waveform panel. With <paramref name="withTimelineTracks"/> the video and
+    /// subtitle rows of the editor-style layout (<see cref="TimelineTracks"/>) sit directly on
+    /// top of the waveform, inside the same margins so the three rows share one time axis.
+    /// </summary>
+    internal static Grid MakeWaveform(MainViewModel vm, bool withTimelineTracks, out TimelineTracks? timelineTracks)
+    {
+        timelineTracks = null;
         var languageHints = Se.Language.Main.Waveform;
         var settings = Se.Settings.Waveform;
         var shortcuts = ShortcutsMain.GetUsedShortcuts(vm);
@@ -116,6 +127,10 @@ public class InitWaveform
         {
             vm.AudioVisualizer.RemoveControlFromParent();
         }
+
+        // With the track rows on top, the subtitle text lives in its own row; the control is
+        // reused across layouts, so this is set on every build, not only on creation.
+        vm.AudioVisualizer.ShowParagraphText = !withTimelineTracks;
 
         // The waveform is a focusable custom control with no text content, so without an
         // accessible name screen readers announce it as a bare generic Avalonia control (#12087).
@@ -403,8 +418,46 @@ public class InitWaveform
             vm.AudioVisualizer.MenuFlyout = flyout;
         }
 
-        Grid.SetRow(vm.AudioVisualizer, 0);
-        mainGrid.Children.Add(vm.AudioVisualizer);
+        if (withTimelineTracks)
+        {
+            var tracks = new TimelineTracks
+            {
+                Source = vm.AudioVisualizer,
+                GetVideoFileName = () => vm.CurrentVideoFileName,
+                GetAllParagraphs = () => vm.Subtitles,
+                GetHasOriginal = () => vm.ShowColumnOriginalText,
+                TextLabel = Se.Language.General.Text,
+                OriginalLabel = Se.Language.General.OriginalText,
+                LayerLabel = Se.Language.General.Layer,
+                NoneLabel = Se.Language.General.None,
+                Grouping = Enum.TryParse<TimelineTrackGrouping>(settings.TimelineTrackGrouping, out var grouping) ? grouping : TimelineTrackGrouping.None,
+                ShowVideoRow = settings.TimelineShowThumbnails,
+            };
+            timelineTracks = tracks;
+
+            var timelineGrid = new Grid
+            {
+                // The floor keeps a tall stack of rows from squeezing the waveform away to nothing.
+                RowDefinitions =
+                {
+                    new RowDefinition(GridLength.Auto),
+                    new RowDefinition(GridLength.Star) { MinHeight = 40 },
+                },
+            };
+            Grid.SetRow(tracks, 0);
+            timelineGrid.Children.Add(tracks);
+            Grid.SetRow(vm.AudioVisualizer, 1);
+            timelineGrid.Children.Add(vm.AudioVisualizer);
+
+
+            Grid.SetRow(timelineGrid, 0);
+            mainGrid.Children.Add(timelineGrid);
+        }
+        else
+        {
+            Grid.SetRow(vm.AudioVisualizer, 0);
+            mainGrid.Children.Add(vm.AudioVisualizer);
+        }
 
         // Footer
         // A WrapPanel so a toolbar wider than the waveform pane continues on a second row instead
@@ -1119,6 +1172,59 @@ public class InitWaveform
         SetAccessibleName(toggleButtonCenter, languageHints.CenterWaveformHint);
         AutomationProperties.SetName(buttonMore, Se.Language.General.More);
 
+        // Row grouping for the editor-style layout: a configurable toolbar item that only
+        // exists there, and the same choice in the context menu for when it is switched off.
+        Button? buttonTimelineGrouping = null;
+        if (timelineTracks != null)
+        {
+            var groupingItems = new List<(MenuItem Item, TimelineTrackGrouping Grouping)>();
+            var settingGrouping = GetToolbarSettingFor(SeWaveformToolbarItemType.TimelineTrackGrouping);
+            buttonTimelineGrouping = new NonSpaceButton
+            {
+                Margin = new Thickness(settingGrouping.LeftMargin, 0, settingGrouping.RightMargin, 0),
+                FontSize = settingGrouping.FontSize,
+            };
+            Attached.SetIcon(buttonTimelineGrouping, IconNames.LayersOutline);
+            AutomationProperties.SetName(buttonTimelineGrouping, Se.Language.Waveform.TimelineGroupTracksBy);
+            if (Se.Settings.Appearance.ShowHints)
+            {
+                ToolTip.SetTip(buttonTimelineGrouping, Se.Language.Waveform.TimelineGroupTracksBy);
+            }
+
+            var flyoutGrouping = new MenuFlyout();
+            foreach (var item in MakeTimelineGroupingMenuItems(timelineTracks, groupingItems))
+            {
+                flyoutGrouping.Items.Add(item);
+            }
+
+            buttonTimelineGrouping.Flyout = flyoutGrouping;
+            WindowService.SuspendUndockedTopmostWhileOpen(flyoutGrouping);
+
+            var contextMenuGrouping = new MenuItem { Header = Se.Language.Waveform.TimelineGroupTracksBy };
+            foreach (var item in MakeTimelineGroupingMenuItems(timelineTracks, groupingItems))
+            {
+                contextMenuGrouping.Items.Add(item);
+            }
+
+            var tracksForMenu = timelineTracks;
+            var contextMenuThumbnails = new MenuItem
+            {
+                Header = Se.Language.Waveform.TimelineShowThumbnails,
+                ToggleType = MenuItemToggleType.CheckBox,
+                IsChecked = tracksForMenu.ShowVideoRow,
+            };
+            contextMenuThumbnails.Click += (_, _) =>
+            {
+                tracksForMenu.ShowVideoRow = !tracksForMenu.ShowVideoRow;
+                Se.Settings.Waveform.TimelineShowThumbnails = tracksForMenu.ShowVideoRow;
+                contextMenuThumbnails.IsChecked = tracksForMenu.ShowVideoRow;
+            };
+
+            vm.AudioVisualizer.MenuFlyout.Items.Add(new Separator());
+            vm.AudioVisualizer.MenuFlyout.Items.Add(contextMenuGrouping);
+            vm.AudioVisualizer.MenuFlyout.Items.Add(contextMenuThumbnails);
+        }
+
         var sortableButtons = MakeCustomSortableButtons(
             settings,
             buttonPlay,
@@ -1151,7 +1257,8 @@ public class InitWaveform
             toggleButtonCenter,
             panelVideoSeek,
             textBoxInitialText,
-            buttonMore
+            buttonMore,
+            buttonTimelineGrouping
         );
         foreach (var sortedButton in sortableButtons)
         {
@@ -1169,6 +1276,47 @@ public class InitWaveform
         vm.AudioVisualizer.AddHandler(DragDrop.DropEvent, vm.VideoOnDrop, RoutingStrategies.Bubble);
 
         return mainGrid;
+    }
+
+    /// <summary>
+    /// The choice of how the editor-style layout splits the subtitles over rows - one row, or a
+    /// row per layer, actor or style. It is offered twice, on the waveform toolbar and in the
+    /// waveform's context menu (the toolbar can be hidden), so both sets of radio items are kept
+    /// in step through <paramref name="allItems"/>.
+    /// </summary>
+    private static List<MenuItem> MakeTimelineGroupingMenuItems(TimelineTracks tracks, List<(MenuItem Item, TimelineTrackGrouping Grouping)> allItems)
+    {
+        var choices = new (TimelineTrackGrouping Grouping, string Text)[]
+        {
+            (TimelineTrackGrouping.None, Se.Language.General.None),
+            (TimelineTrackGrouping.Layer, Se.Language.General.Layer),
+            (TimelineTrackGrouping.Actor, Se.Language.General.Actor),
+            (TimelineTrackGrouping.Style, Se.Language.General.Style),
+        };
+
+        var items = new List<MenuItem>();
+        foreach (var choice in choices)
+        {
+            var item = new MenuItem
+            {
+                Header = choice.Text,
+                ToggleType = MenuItemToggleType.Radio,
+                IsChecked = tracks.Grouping == choice.Grouping,
+            };
+            item.Click += (_, _) =>
+            {
+                tracks.Grouping = choice.Grouping;
+                Se.Settings.Waveform.TimelineTrackGrouping = choice.Grouping.ToString();
+                foreach (var other in allItems)
+                {
+                    other.Item.IsChecked = other.Grouping == choice.Grouping;
+                }
+            };
+            allItems.Add((item, choice.Grouping));
+            items.Add(item);
+        }
+
+        return items;
     }
 
     private static SeWaveformToolbarItem GetToolbarSettingFor(SeWaveformToolbarItemType type)
@@ -1333,7 +1481,8 @@ public class InitWaveform
         ToggleButton toggleButtonCenter,
         StackPanel panelVideoSeek,
         TextBox textBoxInitialText,
-        Button buttonMore)
+        Button buttonMore,
+        Button? buttonTimelineGrouping)
     {
         var toolbarButtonForSort = new List<SortedControl>();
 
@@ -1434,6 +1583,14 @@ public class InitWaveform
                     break;
                 case SeWaveformToolbarItemType.InitialText:
                     toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = textBoxInitialText });
+                    break;
+                case SeWaveformToolbarItemType.TimelineTrackGrouping:
+                    // Null outside the editor-style layout: there are no rows to group.
+                    if (buttonTimelineGrouping != null)
+                    {
+                        toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = buttonTimelineGrouping });
+                    }
+
                     break;
                 case SeWaveformToolbarItemType.LineBreak1:
                 case SeWaveformToolbarItemType.LineBreak2:

@@ -223,6 +223,13 @@ public class AudioVisualizer : Control
     // video/audio preview" (#14252). Only the main window sets it, and only while an original
     // subtitle is loaded; the dialogs that host a waveform keep showing the text they were given.
     public bool ShowOriginalText { get; set; }
+
+    /// <summary>
+    /// False where the subtitle text has a row of its own above the waveform (the editor-style
+    /// layout's <see cref="TimelineTracks"/>): the paragraph regions, their borders and the
+    /// number/duration footer stay, so timing still works here, but the text is not drawn twice.
+    /// </summary>
+    public bool ShowParagraphText { get; set; } = true;
     public bool ShowOriginalSubtitleOverlay { get; set; }
 
     private readonly List<WaveformOriginalSubtitleCue> _originalSubtitleCues = new();
@@ -306,6 +313,38 @@ public class AudioVisualizer : Control
     {
         get => _shotChanges;
         set { _shotChanges = value; }
+    }
+
+    /// <summary>
+    /// Raised at the end of every repaint, so a companion control drawn on the same time axis
+    /// (<see cref="TimelineTracks"/>) can follow changes that move no property - a drag, a text
+    /// edit, a new selection. Raised inside the render pass: a handler must not invalidate a
+    /// visual directly, only post it.
+    /// </summary>
+    public event EventHandler? Rendered;
+
+    private protected void RaiseRendered() => Rendered?.Invoke(this, EventArgs.Empty);
+
+    /// <summary>
+    /// Narrows pointer hit-testing to the paragraphs it accepts; null for all. The hit test
+    /// looks at x only, which is right for the waveform itself, but <see cref="TimelineTracks"/>
+    /// hands its pointer input over to this control and there the row under the pointer says
+    /// which of two overlapping subtitles is meant. Only consulted while finding the paragraph
+    /// under the pointer: a drag that has started keeps its paragraph.
+    /// </summary>
+    internal Func<SubtitleLineViewModel, bool>? HitTestFilter { get; set; }
+
+    /// <summary>Samples per second of the loaded peaks, 0 without any - the x axis scale.</summary>
+    internal int SampleRate => WavePeaks?.SampleRate ?? 0;
+
+    /// <summary>Copies the paragraphs currently drawn (the visible range plus a margin).</summary>
+    internal void CopyDisplayableParagraphs(List<SubtitleLineViewModel> target)
+    {
+        lock (_lock)
+        {
+            target.Clear();
+            target.AddRange(_displayableParagraphs);
+        }
     }
 
     private List<WaveformChapter> _chapters = new List<WaveformChapter>();
@@ -2047,9 +2086,15 @@ public class AudioVisualizer : Control
         bool isClosestEdgeLeft = false;
         int closestEdgeIndex = -1;
 
+        var filter = HitTestFilter;
         for (var i = 0; i < _displayableParagraphs.Count; i++)
         {
             var p = _displayableParagraphs[i];
+            if (filter != null && !filter(p))
+            {
+                continue;
+            }
+
             var left = ToX(p.StartTime.TotalSeconds - startPosSeconds);
             var right = ToX(p.EndTime.TotalSeconds - startPosSeconds);
 
@@ -2091,7 +2136,7 @@ public class AudioVisualizer : Control
                 var prevRight = ToX(prev.EndTime.TotalSeconds - startPosSeconds);
                 var distToPrevRight = Math.Abs(pointX - prevRight);
 
-                if (distToPrevRight <= ResizeMargin && distToPrevRight < closestEdgeDistance)
+                if (distToPrevRight <= ResizeMargin && distToPrevRight < closestEdgeDistance && (filter == null || filter(prev)))
                 {
                     return prev;
                 }
@@ -2103,7 +2148,7 @@ public class AudioVisualizer : Control
                 var nextLeft = ToX(next.StartTime.TotalSeconds - startPosSeconds);
                 var distToNextLeft = Math.Abs(pointX - nextLeft);
 
-                if (distToNextLeft <= ResizeMargin && distToNextLeft < closestEdgeDistance)
+                if (distToNextLeft <= ResizeMargin && distToNextLeft < closestEdgeDistance && (filter == null || filter(next)))
                 {
                     return next;
                 }
@@ -2217,6 +2262,8 @@ public class AudioVisualizer : Control
                 context.DrawRectangle(null, _paintPenSelected, boundsRect);
             }
         }
+
+        RaiseRendered();
     }
 
     // The "click to generate" hint is drawn while a video is loaded but its waveform has not been
@@ -3513,9 +3560,12 @@ public class AudioVisualizer : Control
 
         var textBounds = new Rect(currentRegionLeft + 1, contentTop, currentRegionWidth - 3, contentHeight);
 
-        using (context.PushClip(textBounds))
+        if (ShowParagraphText)
         {
-            DrawParagraphText(context, text, currentRegionLeft + 3, contentTop + 14);
+            using (context.PushClip(textBounds))
+            {
+                DrawParagraphText(context, text, currentRegionLeft + 3, contentTop + 14);
+            }
         }
 
         // Keep CPS and number/duration at the bottom of the full paragraph region.

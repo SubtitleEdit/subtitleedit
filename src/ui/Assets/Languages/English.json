@@ -2917,6 +2917,8 @@
     "toggleShotChange": "Toggle shot change",
     "resetWaveformZoomAndSpeed": "Reset waveform zoom & speed",
     "showOriginalSubtitle": "Show original subtitle",
+    "timelineGroupTracksBy": "Group subtitle tracks by",
+    "timelineShowThumbnails": "Show video thumbnails",
     "showSpeechOnly": "Show speech only (slow to generate)",
     "isolatingSpeechForWaveformX": "Isolating speech for the waveform... {0}",
     "isolatingSpeechForWaveformFailed": "Could not isolate the speech for the waveform - see the tools log",
