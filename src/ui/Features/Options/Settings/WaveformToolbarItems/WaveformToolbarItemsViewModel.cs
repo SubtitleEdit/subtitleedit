@@ -17,6 +17,8 @@ public partial class WaveformToolbarItemsViewModel : ObservableObject
     [ObservableProperty] private int _selectedFontSize;
     [ObservableProperty] private int _selectedLeftMargin;
     [ObservableProperty] private int _selectedRightMargin;
+    [ObservableProperty] private int _selectedWidth = SeWaveformToolbarItem.GetDefaultWidth(SeWaveformToolbarItemType.InitialText);
+    [ObservableProperty] private bool _isWidthVisible;
 
     public List<SeWaveformToolbarItem> ResultToolbarItems { get; set; } = new List<SeWaveformToolbarItem>();
 
@@ -47,6 +49,14 @@ public partial class WaveformToolbarItemsViewModel : ObservableObject
             SelectedFontSize = value?.FontSize ?? 12;
             SelectedLeftMargin = value?.LeftMargin ?? 5;
             SelectedRightMargin = value?.RightMargin ?? 5;
+            IsWidthVisible = value != null && SeWaveformToolbarItem.HasWidth(value.Type);
+
+            // An item without a width keeps the last value in the (hidden) box: 0 is below the
+            // box's minimum and would be coerced and written back.
+            if (IsWidthVisible)
+            {
+                SelectedWidth = value!.Width;
+            }
         }
         finally
         {
@@ -81,6 +91,15 @@ public partial class WaveformToolbarItemsViewModel : ObservableObject
         SelectedToolbarItem.RightMargin = value;
     }
 
+    partial void OnSelectedWidthChanged(int value)
+    {
+        if (_updatingFromSelection || SelectedToolbarItem == null || !IsWidthVisible)
+        {
+            return;
+        }
+        SelectedToolbarItem.Width = value;
+    }
+
     internal void Initialize(List<SeWaveformToolbarItem> toolbarItems)
     {
         _initialToolbarItems = toolbarItems.OrderBy(x => x.SortOrder).ToList();
@@ -88,7 +107,7 @@ public partial class WaveformToolbarItemsViewModel : ObservableObject
         ToolbarItems.Clear();
         foreach (var item in _initialToolbarItems)
         {
-            ToolbarItems.Add(new ToolbarItemDisplay(item.Type, item.IsVisible, item.FontSize, item.LeftMargin, item.RightMargin));
+            ToolbarItems.Add(new ToolbarItemDisplay(item.Type, item.IsVisible, item.FontSize, item.LeftMargin, item.RightMargin, item.GetWidthOrDefault()));
         }
 
         SelectedToolbarItem = ToolbarItems.FirstOrDefault();
@@ -128,7 +147,8 @@ public partial class WaveformToolbarItemsViewModel : ObservableObject
                 a.IsVisible != b.IsVisible ||
                 a.FontSize != b.FontSize ||
                 a.LeftMargin != b.LeftMargin ||
-                a.RightMargin != b.RightMargin)
+                a.RightMargin != b.RightMargin ||
+                a.GetWidthOrDefault() != b.GetWidthOrDefault())
             {
                 return false;
             }
