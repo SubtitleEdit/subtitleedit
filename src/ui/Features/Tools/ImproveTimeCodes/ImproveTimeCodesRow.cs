@@ -11,6 +11,7 @@ namespace Nikse.SubtitleEdit.Features.Tools.ImproveTimeCodes;
 
 public partial class ImproveTimeCodesRow : ObservableObject
 {
+    private static readonly IBrush Blue = new SolidColorBrush(Color.FromRgb(0x42, 0x8F, 0xDC)).ToImmutable();
     private static readonly IBrush Red = new SolidColorBrush(Color.FromRgb(0xE5, 0x39, 0x35)).ToImmutable();
 
     [ObservableProperty] private bool _apply;
@@ -61,8 +62,12 @@ public partial class ImproveTimeCodesRow : ObservableObject
         EndShiftMs = (result.EndSeconds - _endSeconds) * 1000.0;
 
         _settingResult = true;
-        IsChanged = result.Status == SubtitleRetimer.LineStatus.Retimed;
-        Apply = IsChanged;
+        IsChanged = result.Status is SubtitleRetimer.LineStatus.Retimed
+            or SubtitleRetimer.LineStatus.MovedWithNeighbours
+            or SubtitleRetimer.LineStatus.LargeMoveUnconfirmed;
+
+        // An unconfirmed move is offered, not made: the user listens and ticks it.
+        Apply = IsChanged && result.Status != SubtitleRetimer.LineStatus.LargeMoveUnconfirmed;
         _settingResult = false;
 
         StartShift = IsChanged ? FormatShift(StartShiftMs) : string.Empty;
@@ -71,6 +76,8 @@ public partial class ImproveTimeCodesRow : ObservableObject
         (StatusText, StatusBrush) = result.Status switch
         {
             SubtitleRetimer.LineStatus.Retimed => (l.StatusRetimed, StatusDots.Green),
+            SubtitleRetimer.LineStatus.MovedWithNeighbours => (l.StatusMovedWithNeighbours, Blue),
+            SubtitleRetimer.LineStatus.LargeMoveUnconfirmed => (l.StatusLargeMoveUnconfirmed, StatusDots.Amber),
             SubtitleRetimer.LineStatus.Unchanged => (l.StatusUnchanged, StatusDots.Grey),
             SubtitleRetimer.LineStatus.NoSpeech => (l.StatusNoSpeech, StatusDots.Grey),
             SubtitleRetimer.LineStatus.ShiftTooLarge => (l.StatusShiftTooLarge, StatusDots.Amber),

@@ -152,7 +152,7 @@ public class SubtitleRetimerTests : IDisposable
     }
 
     [Fact]
-    public async Task Retime_AnEndHeldForReading_IsLeftAlone_WhileTheStartStillMoves()
+    public async Task Retime_AnEndHeldForReading_IsNotPulledInToTheSpeech_ItTravelsWithTheStart()
     {
         var lines = MakeLines(3);
         var audio = new FakeAudio(_folder);
@@ -169,7 +169,7 @@ public class SubtitleRetimerTests : IDisposable
 
         Assert.Equal(SubtitleRetimer.LineStatus.Retimed, results[1].Status);
         Assert.Equal(lines[1].StartSeconds + 0.2, results[1].StartSeconds, 2);
-        Assert.Equal(lines[1].EndSeconds, results[1].EndSeconds, 2);
+        Assert.Equal(lines[1].EndSeconds + 0.2, results[1].EndSeconds, 2);
     }
 
     [Fact]
@@ -202,7 +202,7 @@ public class SubtitleRetimerTests : IDisposable
         var results = await new SubtitleRetimer(runner, audio).RetimeAsync(lines, null, TestContext.Current.CancellationToken);
 
         Assert.Equal(lines[1].StartSeconds + 0.2, results[1].StartSeconds, 2);
-        Assert.Equal(lines[1].EndSeconds, results[1].EndSeconds, 2);
+        Assert.Equal(lines[1].EndSeconds + 0.2, results[1].EndSeconds, 2); // not measured, so it keeps the duration
     }
 
     [Fact]
@@ -225,6 +225,90 @@ public class SubtitleRetimerTests : IDisposable
         Assert.Equal(10.1, results[0].StartSeconds, 2);
         Assert.Equal(12.35, results[0].EndSeconds, 2);
         Assert.Equal(12.5, results[1].StartSeconds, 2);
+    }
+
+    private static (List<SubtitleRetimer.Line> Lines, SubtitleRetimer.LineResult[] Results) MakeShifted(params double?[] shifts)
+    {
+        var lines = MakeLines(shifts.Length);
+        var results = lines
+            .Select((l, i) => shifts[i] is { } shift
+                ? new SubtitleRetimer.LineResult(l.StartSeconds + shift, l.EndSeconds + shift, SubtitleRetimer.LineStatus.Retimed)
+                : new SubtitleRetimer.LineResult(l.StartSeconds, l.EndSeconds, SubtitleRetimer.LineStatus.ShiftTooLarge))
+            .ToArray();
+        return (lines, results);
+    }
+
+    [Fact]
+    public void FollowNeighbours_ALineThatLeavesAConsistentNeighbourhood_GetsTheNeighboursOffset()
+    {
+        // The subtitle is a second late throughout; line 3's text opens after words it leaves out.
+        var (lines, results) = MakeShifted(-1.0, -1.05, -0.95, -0.2, -1.0, -1.1, -0.9);
+
+        SubtitleRetimer.FollowNeighbours(lines, results, new SubtitleRetimer.Options { MaxShiftSeconds = 2.0 });
+
+        Assert.Equal(SubtitleRetimer.LineStatus.MovedWithNeighbours, results[3].Status);
+        Assert.Equal(lines[3].StartSeconds - 1.0, results[3].StartSeconds, 2);
+        Assert.Equal(lines[3].EndSeconds - 1.0, results[3].EndSeconds, 2);
+        Assert.All(results.Where((_, i) => i != 3), r => Assert.Equal(SubtitleRetimer.LineStatus.Retimed, r.Status));
+    }
+
+    [Fact]
+    public void FollowNeighbours_ALineRefusedForGoingTooFar_StillGetsTheOffset()
+    {
+        var (lines, results) = MakeShifted(-1.0, -1.05, null, -0.95, -1.0);
+
+        SubtitleRetimer.FollowNeighbours(lines, results, new SubtitleRetimer.Options { MaxShiftSeconds = 2.0 });
+
+        Assert.Equal(SubtitleRetimer.LineStatus.MovedWithNeighbours, results[2].Status);
+        Assert.Equal(lines[2].StartSeconds - 1.0, results[2].StartSeconds, 2);
+    }
+
+    [Fact]
+    public void FollowNeighbours_InASubtitleThatIsInSync_ALoneLargeMoveIsOfferedNotMade()
+    {
+        var (lines, results) = MakeShifted(0.05, -0.04, 0.02, 0.8, 0.03, -0.05, 0.04);
+
+        SubtitleRetimer.FollowNeighbours(lines, results, new SubtitleRetimer.Options { MaxShiftSeconds = 2.0 });
+
+        Assert.Equal(SubtitleRetimer.LineStatus.LargeMoveUnconfirmed, results[3].Status);
+        Assert.Equal(lines[3].StartSeconds + 0.8, results[3].StartSeconds, 2); // the aligner's answer is kept
+    }
+
+    [Fact]
+    public void Tidy_KeepsClearOfBothPositionsOfAnUnconfirmedLine()
+    {
+        var lines = new List<SubtitleRetimer.Line> { new("First line", 10, 12), new("Second line", 12.1, 14) };
+        var results = new[]
+        {
+            new SubtitleRetimer.LineResult(10.2, 12.6, SubtitleRetimer.LineStatus.Retimed),
+            new SubtitleRetimer.LineResult(12.9, 14.8, SubtitleRetimer.LineStatus.LargeMoveUnconfirmed),
+        };
+
+        SubtitleRetimer.Tidy(lines, results, new SubtitleRetimer.Options { MinGapSeconds = 0.1 }, 0);
+
+        Assert.Equal(12.0, results[0].EndSeconds, 3); // the second line may yet stay at 12.1
+    }
+
+    [Fact]
+    public void FollowNeighbours_WhenTheNeighboursDisagree_TheAlignerIsBelieved()
+    {
+        var (lines, results) = MakeShifted(-1.2, 0.9, -0.4, 1.4, 0.6, -0.9, 0.1);
+        var before = results.ToArray();
+
+        SubtitleRetimer.FollowNeighbours(lines, results, new SubtitleRetimer.Options { MaxShiftSeconds = 2.0 });
+
+        Assert.Equal(before, results);
+    }
+
+    [Fact]
+    public void FollowNeighbours_SmallDifferencesBetweenLines_AreLeftToTheAligner()
+    {
+        var (lines, results) = MakeShifted(-0.2, 0.15, -0.1, 0.3, 0.1, -0.25, 0.2);
+        var before = results.ToArray();
+
+        SubtitleRetimer.FollowNeighbours(lines, results, new SubtitleRetimer.Options());
+
+        Assert.Equal(before, results);
     }
 
     [Fact]
