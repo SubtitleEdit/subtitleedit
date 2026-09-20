@@ -237,6 +237,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private static bool _crispAsrUpdatePromptShown;
     private static bool _whisperCppUpdatePromptShown;
     private static bool _qwen3AsrCppUpdatePromptShown;
+    private static bool _whisperXUpdatePromptShown;
 
     /// <summary>
     /// Hook the view wires up so the engine combobox can re-evaluate its install-status dots
@@ -4278,11 +4279,15 @@ public partial class SpeechToTextViewModel : ObservableObject
                 $"{languageArgX}--model \"{model}\" --output_format srt --output_dir \"{outputDir}\" " +
                 $"{taskArg}{whisperXArgs} \"{waveFileName}\"";
 
-            // The generic launch path is bypassed here, so repeat the two pieces of its setup a
-            // PyInstaller-frozen Python engine needs: the glibc 2.41+ executable-stack repair,
-            // and the Python UTF-8/unbuffered variables - without them Windows decodes piped
-            // output with the ANSI code page (mojibake, or a UnicodeEncodeError killing the run)
-            // and stdout block-buffers so the log sits empty until the process exits.
+            // The generic launch path is bypassed here, so repeat the piece of its setup a
+            // PyInstaller-frozen Python engine needs: the glibc 2.41+ executable-stack repair.
+            //
+            // No PYTHONUNBUFFERED/PYTHONUTF8/PYTHONIOENCODING/PYTHONWARNINGS here: a frozen
+            // build runs with an isolated interpreter config and ignores every PYTHON* variable
+            // (#15096 - the "Transcript:" lines only arrived once transcription was over, so
+            // the progress never moved and a long CPU run looked hung, and the torchcodec
+            // warning stayed in the log). The whisperx-standalone-102 build does all of that
+            // in-process instead: UTF-8 line-buffered stdout/stderr, torchcodec warning filtered.
             var whisperXFolder = whisperX.GetAndCreateWhisperFolder();
             EnsureExecutableStackCleared(whisperX, whisperXFolder);
 
@@ -4304,15 +4309,6 @@ public partial class SpeechToTextViewModel : ObservableObject
             return StartEngineProcess(exe, parametersX, dataReceivedHandler, startInfo =>
             {
                 AddFfmpegToPath(startInfo);
-                startInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
-                startInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
-                startInfo.EnvironmentVariables["PYTHONUNBUFFERED"] = "1";
-
-                // pyannote warns that torchcodec is missing on every run, but WhisperX never
-                // uses pyannote's decoder (it feeds ffmpeg-decoded audio in memory), so the
-                // warning is pure noise in the log. Only UserWarning is silenced; real errors
-                // and the whisperx INFO lines still come through.
-                startInfo.EnvironmentVariables["PYTHONWARNINGS"] = "ignore::UserWarning";
 
                 if (!string.IsNullOrEmpty(matplotlibCacheFolder))
                 {
@@ -5185,6 +5181,10 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             Dispatcher.UIThread.Post(async () => await CheckQwen3AsrCppForUpdateAsync());
         }
+        else if (engine is WhisperEngineWhisperX && !_whisperXUpdatePromptShown)
+        {
+            Dispatcher.UIThread.Post(async () => await CheckWhisperXForUpdateAsync());
+        }
     }
 
     private void UpdateEngineStatusUi(ISpeechToTextEngine engine)
@@ -5399,6 +5399,55 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         _whisperCppUpdatePromptShown = true;
+
+        var answer = await MessageBox.Show(
+            Window!,
+            string.Format(Se.Language.Video.AudioToText.UpdateXTitle, engine.Name),
+            string.Format(Se.Language.Video.AudioToText.UpdateXMessage, engine.Name, Environment.NewLine),
+            MessageBoxButtons.YesNoCancel,
+            MessageBoxIcon.Question);
+
+        if (answer != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
+            Window!, viewModel =>
+            {
+                viewModel.Engine = engine;
+                viewModel.StartDownload();
+            });
+
+        RefreshEngineCombo?.Invoke();
+    }
+
+    private async Task CheckWhisperXForUpdateAsync()
+    {
+        if (_whisperXUpdatePromptShown || Window == null)
+        {
+            return;
+        }
+
+        var engine = GetEffectiveSelectedEngine();
+        if (engine is not WhisperEngineWhisperX || !engine.IsEngineInstalled())
+        {
+            return;
+        }
+
+        // Sidecar only: every released build that could install WhisperX also wrote one, so
+        // there is no older install to recognize by hashing the executable.
+        if (TryReadSidecarHash(engine.GetAndCreateWhisperFolder()) is not var (key, hash))
+        {
+            return;
+        }
+
+        if (DownloadHashManager.GetStatus(key, hash) != DownloadHashManager.UpdateStatus.UpdateAvailable)
+        {
+            return;
+        }
+
+        _whisperXUpdatePromptShown = true;
 
         var answer = await MessageBox.Show(
             Window!,
