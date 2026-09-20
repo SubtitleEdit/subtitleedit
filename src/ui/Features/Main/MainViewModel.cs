@@ -20624,7 +20624,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void VideoOneFrameBack()
     {
-        if (TryStepVideoFrameSnapped(forward: false))
+        if (TryStepFfmpegFrame(forward: false) || TryStepVideoFrameSnapped(forward: false))
         {
             return;
         }
@@ -20650,7 +20650,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void VideoOneFrameForward()
     {
-        if (TryStepVideoFrameSnapped(forward: true))
+        if (TryStepFfmpegFrame(forward: true) || TryStepVideoFrameSnapped(forward: true))
         {
             return;
         }
@@ -20799,6 +20799,35 @@ public partial class MainViewModel :
     {
         _frameStepPlayBlipping = false;
         _frameStepPlayAnchorSeconds = null;
+    }
+
+    /// <summary>
+    /// The ffmpeg player steps by the real frames of the file - from its frame index, so variable
+    /// frame rate and a project frame rate that does not match the video are both handled - and
+    /// does it without a seek (the next picture is already decoded, the previous ones are kept).
+    /// That beats stepping along the project frame grid even when "Snap to frames" is on: on a
+    /// constant frame rate video the two agree, and where they do not, the grid is the one that
+    /// skips or repeats pictures.
+    /// </summary>
+    private bool TryStepFfmpegFrame(bool forward)
+    {
+        if (GetVideoPlayerControl()?.VideoPlayer is not FfmpegPlayer ffmpeg || string.IsNullOrEmpty(_videoFileName))
+        {
+            return false;
+        }
+
+        _relativeSeekTargetSeconds = null; // the next relative move starts from the frame stepped to
+        BeginFrameStepPlayheadFollow();
+        if (forward)
+        {
+            ffmpeg.StepOneFrameForward();
+        }
+        else
+        {
+            ffmpeg.StepOneFrameBack();
+        }
+
+        return true;
     }
 
     /// <summary>
