@@ -19,7 +19,7 @@ The subtitle has to be close to begin with: each line is looked for round its cu
   3. the *Qwen3 forced aligner* — for the languages only it covers (e.g. Korean).
 
   A model that is not installed yet says how much will be downloaded; the download starts when you press **Align**.
-- **Max shift (seconds)** — how far a time code may move (default 0.5). A line whose *start* would move further is left completely alone and flagged: the aligner did not find it where the subtitle says it is, usually because the text is not what is said. An *end* that would move further is simply kept - subtitles are often held long after the last word so they can be read, and that is not an error.
+- **Max shift (seconds)** — how far the subtitle may be out of sync (default 0.5). A line whose *start* would move further is left alone and flagged. An *end* that would move further is not pulled in to the speech - subtitles are often held long after the last word so they can be read - it travels with the start, so the line keeps its duration. Raise the value for a file that is off by a second or so; it is safe to do so, because single lines are checked against their neighbours (see [Large moves](#large-moves)).
 - **Adjust start times / Adjust end times** — untick one to leave that side of every line alone.
 - **Isolate speech first (slow)** — removes music and sound effects before aligning, so the aligner only hears the dialogue. Worth it for lines spoken over loud music or action; on clean dialogue it changes little. It takes about as long as the audio itself with a GPU, and many times longer without one. The first use downloads the *Mel-Band RoFormer (vocals)* model (457 MB) - the same one as *Isolate speech* in [Speech to text](speech-to-text.md). If the isolation fails, the original audio is aligned instead and the status line says so. A successful run also produces the speech-only waveform for the preview (see below).
 - **Align** (bottom button bar, highlighted until there is a result) — extracts the audio and runs the aligner. Length is not a limit: the audio is processed in short windows of a few lines each, so long films use no more memory than short clips. **Cancel** stops a running alignment.
@@ -49,6 +49,8 @@ One row per subtitle line, with the shift of its start and end in milliseconds a
 | Status | Meaning |
 |---|---|
 | Re-timed | The aligner moved the line. |
+| Moved with its neighbours | The lines round it all moved by about the same amount, but the aligner wanted this one somewhere else - or further than *Max shift*. It was given the neighbours' offset instead. |
+| Large move - listen, tick to apply | The line wants to move more than half a second while its neighbours stay put. The new time codes are the aligner's, but the row is **not ticked**: play ▶ Original and ▶ Aligned and tick it if the move is right. |
 | Already in place | The aligner agrees with the current time codes. |
 | No speech | Nothing to listen for - blank lines, `[sound descriptions]`, `(sighs)`, `♪`. These lines are never moved. |
 | Kept - shift too large | The start would have moved more than *Max shift*, so the line was left alone. |
@@ -58,10 +60,22 @@ Untick **Apply** on a row to keep that line's original time codes; the green wav
 
 Press **OK** to write the ticked changes to the subtitle (one undo step), or **Cancel** to discard.
 
+## Large moves
+
+A forced aligner places exactly the words it is given. Subtitles are often not exactly what is said: a condensed line may drop the "Okay, and, uh," the speaker opens with, or the line before may trail off in a "you know" that was never subtitled. The aligner then puts the line confidently in the wrong place - starting late, after the dropped words, or early, on the stray ones - and does so identically every time, so it cannot be caught by running it twice.
+
+With a small *Max shift* such a line is simply refused. With a larger one it would be moved wrong, so every move of more than half a second is checked against the lines round it:
+
+- **The neighbours all moved by about the same amount** - the subtitle is out of sync by that much. A line that went somewhere else (or was refused for going too far) is *moved with its neighbours* instead.
+- **The neighbours stayed where they were** - the line is either genuinely mistimed or has unsubtitled speech beside it, and the audio cannot say which. It is listed as *Large move* and left unticked for you to judge by ear. The status line says how many there are.
+- **The neighbours moved all over the place** - there is nothing to measure against, and the aligner is believed.
+
+Isolating the speech first does not help with this: the extra words are speech too.
+
 ## How the new time codes are chosen
 
 - The start is where the first word of the line begins.
-- The end is where the last word ends - but a line is never cut shorter than the minimum display time or the optimal reading speed from Settings → General, as long as that does not run past where the line used to end or into the next line.
+- The end is where the last word ends - but a line is never cut shorter than the minimum display time or the optimal reading speed from Settings → General, as long as that does not show it for longer than it used to be shown or run into the next line.
 - Overlaps that were in the subtitle on purpose are left alone; the tool never creates new ones.
 
 Run [Beautify time codes](beautify-time-codes.md) afterwards to snap the result to frames and shot changes.

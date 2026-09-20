@@ -65,6 +65,38 @@ public class ImproveTimeCodesViewModelTests
     }
 
     [Fact]
+    public void AnUnconfirmedLargeMove_IsListedButNotTicked()
+    {
+        var lines = Enumerable.Range(0, 2).Select(i => new SubtitleLineViewModel
+        {
+            Number = i + 1,
+            Text = $"Line {i}",
+            StartTime = TimeSpan.FromSeconds(10 + (i * 3)),
+            EndTime = TimeSpan.FromSeconds(12 + (i * 3)),
+        }).ToList();
+        var vm = new ImproveTimeCodesViewModel(new StubWindowService());
+        vm.Initialize(lines, new AudioVisualizer(), "video.mkv", -1, "en");
+
+        typeof(ImproveTimeCodesViewModel)
+            .GetMethod("ShowResults", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .Invoke(vm, new object[]
+            {
+                new List<SubtitleRetimer.LineResult>
+                {
+                    new(10.1, 12.1, SubtitleRetimer.LineStatus.Retimed),
+                    new(13.9, 15.9, SubtitleRetimer.LineStatus.LargeMoveUnconfirmed),
+                },
+            });
+
+        Assert.True(vm.Rows[1].IsChanged);
+        Assert.False(vm.Rows[1].Apply);
+        Assert.Equal(lines[1].StartTime, vm.GetAlignedSubtitles()[1].StartTime);
+
+        vm.Rows[1].Apply = true;
+        Assert.Equal(13.9, vm.GetAlignedSubtitles()[1].StartTime.TotalSeconds, 3);
+    }
+
+    [Fact]
     public void ChangeNavigation_StepsOverRetimedLinesOnly()
     {
         var (vm, _) = MakeWithResults();

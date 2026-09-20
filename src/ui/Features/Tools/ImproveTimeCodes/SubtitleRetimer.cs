@@ -61,12 +61,43 @@ public sealed partial class SubtitleRetimer
         public double ReadingCharsPerSecond { get; init; } = 0;
 
         public double MinGapSeconds { get; init; } = 0.0;
+
+        /// <summary>
+        /// How far a line may move on its own. A subtitle that is out of sync is out of sync by
+        /// much the same amount from one line to the next, so <see cref="MaxShiftSeconds"/> is
+        /// really an allowance for that shared offset. A line that goes further than this from
+        /// where its neighbours went has usually been pulled off by speech that is not in its
+        /// text, and is moved along with the neighbours instead.
+        /// </summary>
+        public double MaxOwnShiftSeconds { get; init; } = 0.5;
+
+        /// <summary>Lines looked at on each side when working out where the neighbours went.</summary>
+        public int NeighbourLines { get; init; } = 4;
+
+        /// <summary>Neighbours further away than this say nothing about the offset here.</summary>
+        public double NeighbourSeconds { get; init; } = 45.0;
+
+        /// <summary>The neighbours only count as agreeing when their shifts lie this close together.</summary>
+        public double NeighbourSpreadSeconds { get; init; } = 0.25;
     }
 
     public enum LineStatus
     {
         /// <summary>Re-timed by the aligner.</summary>
         Retimed,
+
+        /// <summary>
+        /// The aligner's own answer stood apart from an otherwise consistent neighbourhood, so
+        /// the line was moved by the same amount as the lines round it.
+        /// </summary>
+        MovedWithNeighbours,
+
+        /// <summary>
+        /// The aligner wants to move this line a long way while the lines round it stay put.
+        /// That is either a line that really was mistimed or speech that is not in its text -
+        /// the times are the aligner's, but it is for the user to confirm them.
+        /// </summary>
+        LargeMoveUnconfirmed,
 
         /// <summary>Aligned, but already where the aligner puts it.</summary>
         Unchanged,
@@ -169,6 +200,7 @@ public sealed partial class SubtitleRetimer
                   ?? new ForcedAlignerException(lastError.Message, lastError.ToString());
         }
 
+        FollowNeighbours(lines, results, _options);
         Tidy(lines, results, _options, _audio.TotalSeconds);
         return results;
     }
@@ -261,11 +293,14 @@ public sealed partial class SubtitleRetimer
             }
 
             // An end is different: subtitles are routinely held long after the last word so they
-            // can be read, so an end far from the speech end is normal. It is simply left alone.
+            // can be read, so an end far from the speech end is normal. Such an end is not pulled
+            // in to the speech - it travels with the start, and the line keeps its duration.
             var end = line.EndSeconds;
-            if (_options.AdjustEnd && endMeasured && Math.Abs(newEnd - line.EndSeconds) <= _options.MaxShiftSeconds)
+            if (_options.AdjustEnd)
             {
-                end = newEnd;
+                end = endMeasured && Math.Abs(newEnd - line.EndSeconds) <= _options.MaxShiftSeconds
+                    ? newEnd
+                    : line.EndSeconds + (start - line.StartSeconds);
             }
 
             if (end <= start)
@@ -307,22 +342,123 @@ public sealed partial class SubtitleRetimer
         return batches;
     }
 
+    /// <summary>
+    /// Checks every large move against the lines round it.
+    ///
+    /// A forced aligner places exactly the words it is given. Where the text is not quite what
+    /// is said - a condensed line whose speech opens with words the subtitle drops, a stray
+    /// "you know" from the line before - it places them confidently in the wrong spot, and the
+    /// error is the same on every run, so re-aligning cannot expose it. What can is the
+    /// neighbourhood: when the surrounding lines all moved by about the same amount, that is
+    /// the offset of the subtitle, and a line that went somewhere else by more than
+    /// <see cref="Options.MaxOwnShiftSeconds"/> is given that offset instead - as is a line
+    /// that was refused for wanting to go too far. When the neighbours stayed where they were,
+    /// the lone large move is kept as an unconfirmed proposal. Where the neighbours do not agree
+    /// among themselves there is nothing to measure against, and the aligner's answers stand.
+    /// </summary>
+    internal static void FollowNeighbours(IReadOnlyList<Line> lines, LineResult[] results, Options options)
+    {
+        if (!options.AdjustStart)
+        {
+            return;
+        }
+
+        // Taken before anything is changed, so one corrected line never vouches for the next.
+        var shifts = new double?[results.Length];
+        for (var i = 0; i < results.Length; i++)
+        {
+            if (results[i].Status == LineStatus.Retimed)
+            {
+                shifts[i] = results[i].StartSeconds - lines[i].StartSeconds;
+            }
+        }
+
+        for (var i = 0; i < results.Length; i++)
+        {
+            var status = results[i].Status;
+            if (status != LineStatus.Retimed && status != LineStatus.ShiftTooLarge)
+            {
+                continue;
+            }
+
+            var neighbours = new List<double>();
+            for (var step = -1; step <= 1; step += 2)
+            {
+                var found = 0;
+                for (var k = i + step; k >= 0 && k < results.Length && found < options.NeighbourLines; k += step)
+                {
+                    if (Math.Abs(lines[k].StartSeconds - lines[i].StartSeconds) > options.NeighbourSeconds)
+                    {
+                        break;
+                    }
+
+                    if (shifts[k] is { } shift)
+                    {
+                        neighbours.Add(shift);
+                        found++;
+                    }
+                }
+            }
+
+            if (neighbours.Count < 3)
+            {
+                continue;
+            }
+
+            var offset = Median(neighbours);
+            var spread = Median(neighbours.Select(n => Math.Abs(n - offset)).ToList());
+            if (spread > options.NeighbourSpreadSeconds)
+            {
+                continue;
+            }
+
+            if (shifts[i] is { } own && Math.Abs(own - offset) <= options.MaxOwnShiftSeconds)
+            {
+                continue;
+            }
+
+            // An offset only exists when it stands clear of the scatter it was measured in.
+            var isOffset = Math.Abs(offset) > Math.Max(0.15, spread * 3.0);
+            if (isOffset)
+            {
+                results[i] = new LineResult(
+                    Math.Max(0, lines[i].StartSeconds + offset),
+                    lines[i].EndSeconds + offset,
+                    LineStatus.MovedWithNeighbours);
+            }
+            else if (status == LineStatus.Retimed)
+            {
+                // The neighbours are where they were, and this line alone wants to go far. Nothing
+                // here can tell a mistimed line from one with unsubtitled speech beside it, so
+                // the aligner's answer is kept as a proposal rather than applied or thrown away.
+                results[i] = results[i] with { Status = LineStatus.LargeMoveUnconfirmed };
+            }
+        }
+    }
+
+    private static double Median(List<double> values)
+    {
+        var sorted = values.OrderBy(v => v).ToList();
+        var middle = sorted.Count / 2;
+        return sorted.Count % 2 == 1 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2.0;
+    }
+
     /// <summary>True when the gap after line <paramref name="index"/> is long enough to cut at.</summary>
     private static bool IsBreak(IReadOnlyList<Line> lines, int index, Options options)
         => lines[index + 1].StartSeconds - lines[index].EndSeconds > options.BreakGapSeconds;
 
     /// <summary>
     /// The aligner reports where speech starts and stops; a subtitle also has to stay up long
-    /// enough to be read and must not collide with its neighbours. Only lines the aligner
-    /// moved are touched, and a line is never extended past where it originally ended unless
-    /// it would otherwise fall below the minimum duration.
+    /// enough to be read and must not collide with its neighbours. Only lines that were moved
+    /// are touched, and a line is never shown for longer than it originally was unless it
+    /// would otherwise fall below the minimum duration.
     /// </summary>
     internal static void Tidy(IReadOnlyList<Line> lines, LineResult[] results, Options options, double audioSeconds)
     {
         for (var i = 0; i < results.Length; i++)
         {
             var result = results[i];
-            if (result.Status != LineStatus.Retimed)
+            if (result.Status is not (LineStatus.Retimed or LineStatus.MovedWithNeighbours or LineStatus.LargeMoveUnconfirmed))
             {
                 continue;
             }
@@ -333,13 +469,13 @@ public sealed partial class SubtitleRetimer
             // Overlaps the user made on purpose are left alone; only ones introduced here are undone.
             if (i > 0 && lines[i].StartSeconds >= lines[i - 1].EndSeconds)
             {
-                start = Math.Max(start, results[i - 1].EndSeconds + options.MinGapSeconds);
+                start = Math.Max(start, SettledEnd(lines, results, i - 1) + options.MinGapSeconds);
             }
 
             var room = double.MaxValue;
             if (i + 1 < results.Length && lines[i + 1].StartSeconds >= lines[i].EndSeconds)
             {
-                room = results[i + 1].StartSeconds - options.MinGapSeconds;
+                room = SettledStart(lines, results, i + 1) - options.MinGapSeconds;
             }
 
             if (audioSeconds > 0)
@@ -353,8 +489,9 @@ public sealed partial class SubtitleRetimer
                 wanted = Math.Max(wanted, GetSpokenText(lines[i].Text).Length / options.ReadingCharsPerSecond);
             }
 
-            // Reading time may hold a line up to where it used to end, never beyond.
-            var readingEnd = Math.Min(start + wanted, Math.Max(lines[i].EndSeconds, start + options.MinDurationSeconds));
+            // Reading time may hold a line for as long as it used to be shown, never longer.
+            var originalDuration = lines[i].EndSeconds - lines[i].StartSeconds;
+            var readingEnd = start + Math.Min(wanted, Math.Max(originalDuration, options.MinDurationSeconds));
             end = Math.Min(Math.Max(end, readingEnd), room);
 
             if (end <= start)
@@ -364,9 +501,21 @@ public sealed partial class SubtitleRetimer
             }
 
             var moved = Math.Abs(start - lines[i].StartSeconds) >= 0.001 || Math.Abs(end - lines[i].EndSeconds) >= 0.001;
-            results[i] = new LineResult(start, end, moved ? LineStatus.Retimed : LineStatus.Unchanged);
+            results[i] = new LineResult(start, end, moved ? result.Status : LineStatus.Unchanged);
         }
     }
+
+    // An unconfirmed line may end up at either of its two positions, so its neighbours keep
+    // clear of both.
+    private static double SettledStart(IReadOnlyList<Line> lines, LineResult[] results, int index)
+        => results[index].Status == LineStatus.LargeMoveUnconfirmed
+            ? Math.Min(results[index].StartSeconds, lines[index].StartSeconds)
+            : results[index].StartSeconds;
+
+    private static double SettledEnd(IReadOnlyList<Line> lines, LineResult[] results, int index)
+        => results[index].Status == LineStatus.LargeMoveUnconfirmed
+            ? Math.Max(results[index].EndSeconds, lines[index].EndSeconds)
+            : results[index].EndSeconds;
 
     /// <summary>
     /// What is actually said in a line: no tags, no sound descriptions, no music symbols, no

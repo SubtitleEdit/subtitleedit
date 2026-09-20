@@ -486,19 +486,21 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         RebuildAligned();
 
         var l = Se.Language.Tools.ImproveTimeCodes;
-        var retimed = Rows.Where(r => r.IsChanged).ToList();
+        var retimed = Rows.Where(r => r.IsChanged && r.Apply).ToList();
+        var toCheck = Rows.Count(r => r.Status == SubtitleRetimer.LineStatus.LargeMoveUnconfirmed);
         var noSpeech = Rows.Count(r => r.Status == SubtitleRetimer.LineStatus.NoSpeech);
         var meanShiftMs = retimed.Count == 0
             ? 0
             : retimed.Average(r => (Math.Abs(r.StartShiftMs) + Math.Abs(r.EndShiftMs)) / 2.0);
 
-        SummaryLine = string.Format(l.SummaryXRetimedYKeptZSkipped, retimed.Count, Rows.Count - retimed.Count - noSpeech, noSpeech) +
+        SummaryLine = string.Format(l.SummaryXRetimedYKeptZSkipped, retimed.Count, Rows.Count - retimed.Count - toCheck - noSpeech, noSpeech) +
+                      (toCheck > 0 ? "   ·   " + string.Format(l.ToCheckX, toCheck) : string.Empty) +
                       "   ·   " + string.Format(l.MeanShiftX, meanShiftMs.ToString("0", CultureInfo.InvariantCulture));
-        StatusText = string.Empty;
+        StatusText = toCheck > 0 ? string.Format(l.LargeMovesToCheckX, toCheck) : string.Empty;
         ProgressValue = 100;
         HasResult = retimed.Count > 0;
 
-        SelectedRow = retimed.FirstOrDefault();
+        SelectedRow = Rows.FirstOrDefault(r => r.IsChanged);
         if (SelectedRow == null)
         {
             UpdateChangeNavigation();
