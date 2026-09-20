@@ -685,5 +685,10 @@ public partial class ExportEbuStlViewModel : ObservableObject
             e.Handled = true;
             Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/file", "export-to-ebu-stl");
+        }
     }
 }

@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Layout;
@@ -110,6 +111,8 @@ public class PickTeletextColorWindow : Window
                 Children = { swatch, label },
             },
             Padding = new Thickness(8, 6),
+            // Swatch + caption panel as content: name the tile after its caption (#12087).
+            [AutomationProperties.NameProperty] = text,
         };
     }
 
