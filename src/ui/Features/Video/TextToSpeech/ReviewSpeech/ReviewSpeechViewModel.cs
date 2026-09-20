@@ -756,6 +756,27 @@ public partial class ReviewSpeechViewModel : ObservableObject
         av.InvalidateVisual();
     }
 
+    // Hands the visualizer the blocks for wherever it is looking now, without moving the view or
+    // the playhead. It only keeps the blocks around the view it was last given, so the window
+    // calls this whenever the user scrolls, zooms or resizes (#15102).
+    public void ReloadWaveformParagraphs()
+    {
+        var av = AudioVisualizer;
+        if (av == null || WavePeakData == null || WaveformParagraphs.Count == 0)
+        {
+            return;
+        }
+
+        var selected = SelectedLine?.WaveformParagraph;
+        var index = selected == null ? -1 : WaveformParagraphs.IndexOf(selected);
+        av.SetPosition(
+            av.StartPositionSeconds,
+            WaveformParagraphs,
+            av.CurrentVideoPositionSeconds,
+            index,
+            index < 0 ? new List<SubtitleLineViewModel>() : new List<SubtitleLineViewModel> { selected! });
+    }
+
     [RelayCommand]
     private async Task Export()
     {
