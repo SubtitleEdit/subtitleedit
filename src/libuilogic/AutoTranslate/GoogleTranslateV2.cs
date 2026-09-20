@@ -315,6 +315,15 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 throw new Exception(message, webException);
             }
 
+            return ParseTranslations(content, targetLanguageCode);
+        }
+
+        /// <summary>
+        /// Reads the "translatedText" of each entry in data.translations. The entries carry other string
+        /// properties too ("detectedSourceLanguage", "model"), which must not end up in the subtitle text.
+        /// </summary>
+        internal static string ParseTranslations(string content, string targetLanguageCode)
+        {
             var resultList = new List<string>();
             var parser = new JsonParser();
             var x = (Dictionary<string, object>)parser.Parse(content);
@@ -328,26 +337,22 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                         {
                             foreach (var o2 in l)
                             {
-                                if (o2 is Dictionary<string, object> v2)
+                                if (o2 is Dictionary<string, object> v2 &&
+                                    v2.TryGetValue("translatedText", out var value) &&
+                                    value is string translatedText)
                                 {
-                                    foreach (var innerKey2 in v2.Keys)
+                                    try
                                     {
-                                        if (v2[innerKey2] is string translatedText)
-                                        {
-                                            try
-                                            {
-                                                translatedText = Regex.Unescape(translatedText);
-                                            }
-                                            catch
-                                            {
-                                                translatedText = translatedText.Replace("\\n", "\n");
-                                            }
-
-                                            translatedText = string.Join(Environment.NewLine, translatedText.SplitToLines());
-                                            translatedText = TranslationHelper.PostTranslate(translatedText, targetLanguageCode);
-                                            resultList.Add(translatedText);
-                                        }
+                                        translatedText = Regex.Unescape(translatedText);
                                     }
+                                    catch
+                                    {
+                                        translatedText = translatedText.Replace("\\n", "\n");
+                                    }
+
+                                    translatedText = string.Join(Environment.NewLine, translatedText.SplitToLines());
+                                    translatedText = TranslationHelper.PostTranslate(translatedText, targetLanguageCode);
+                                    resultList.Add(translatedText);
                                 }
                             }
                         }
