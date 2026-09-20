@@ -188,7 +188,7 @@ public class TransparentSubtitlesWindow : Window
     protected override void OnClosing(WindowClosingEventArgs e)
     {
         base.OnClosing(e);
-        _vm.CleanupPreview();
+        _vm.OnClosing();
     }
 
     private void LockMinimumToContentSize()

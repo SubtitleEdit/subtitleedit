@@ -10,6 +10,7 @@ using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.UiLogic.Media;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -122,10 +123,14 @@ public partial class WriteChaptersToVideoViewModel : ObservableObject, IClosingC
 
         try
         {
+            // The video's length, so that the last chapter ends where the video does.
+            var videoFileName = _videoFileName;
+            var durationMilliseconds = await Task.Run(() => FfmpegMediaInfo.Parse(videoFileName).Duration?.TotalMilliseconds ?? 0);
+
             _metadataFileName = Path.Combine(Path.GetTempPath(), $"se_chapters_{Guid.NewGuid():N}.ffmeta");
             await File.WriteAllTextAsync(
                 _metadataFileName,
-                FfmpegMetadataChapters.ToFfmpegMetadata(_chapters),
+                FfmpegMetadataChapters.ToFfmpegMetadata(_chapters, durationMilliseconds),
                 new UTF8Encoding(false));
         }
         catch (Exception exception)

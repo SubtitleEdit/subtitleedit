@@ -59,6 +59,7 @@ public partial class BlankVideoViewModel : ObservableObject
     private Process? _ffmpegProcess;
     private readonly Timer _timerGenerate;
     private bool _doAbort;
+    private volatile bool _isClosing;
     private int _jobItemIndex = -1;
     private SubtitleFormat? _subtitleFormat;
     private string _fullBackgroundImageFileName;
@@ -97,7 +98,11 @@ public partial class BlankVideoViewModel : ObservableObject
 
         _subtitleFileName = string.Empty;
         _fullBackgroundImageFileName = string.Empty;
-        LoadSettings();
+
+        // Burn-in's "use source resolution" is deliberately not loaded (or saved): there is no
+        // source video here, so it hid the width/height boxes while the video was still generated
+        // at those values.
+        UseSourceResolution = false;
     }
 
     public void Initialize(string subtitleFileName, SubtitleFormat subtitleFormat)
@@ -108,7 +113,8 @@ public partial class BlankVideoViewModel : ObservableObject
 
     private void TimerGenerateElapsed(object? sender, ElapsedEventArgs e)
     {
-        if (_ffmpegProcess == null)
+        // A tick already queued when the window closed must not report on the killed process.
+        if (_ffmpegProcess == null || _isClosing)
         {
             return;
         }
@@ -126,8 +132,7 @@ public partial class BlankVideoViewModel : ObservableObject
 
         if (!_ffmpegProcess.HasExited)
         {
-            var percentage = (int)Math.Round((double)_processedFrames / JobItems[_jobItemIndex].TotalFrames * 100.0,
-                MidpointRounding.AwayFromZero);
+            var percentage = (int)Math.Round(GetProgressPercentage(JobItems[_jobItemIndex]), MidpointRounding.AwayFromZero);
             percentage = Math.Clamp(percentage, 0, 100);
 
             var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
@@ -153,22 +158,35 @@ public partial class BlankVideoViewModel : ObservableObject
 
         var jobItem = JobItems[_jobItemIndex];
 
-        if (!File.Exists(jobItem.OutputVideoFileName))
+        // The output file existing is not proof that this run produced it: a failed ffmpeg can
+        // leave an empty or truncated file behind, and that was reported as "Done". The process
+        // has exited here (HasExited above), so the exit code can be read.
+        var process = _ffmpegProcess;
+        var exitCode = process.ExitCode;
+        if (exitCode != 0 || !OutputFileHasContent(jobItem.OutputVideoFileName))
         {
-            SeLogger.Error("Output video file not found: " + jobItem.OutputVideoFileName + Environment.NewLine +
-                                 "ffmpeg: " + _ffmpegProcess.StartInfo.FileName + Environment.NewLine +
-                                 "Parameters: " + _ffmpegProcess.StartInfo.Arguments + Environment.NewLine +
+            SeLogger.Error("Output video file not generated: " + jobItem.OutputVideoFileName + Environment.NewLine +
+                                 "ffmpeg: " + process.StartInfo.FileName + Environment.NewLine +
+                                 "Parameters: " + process.StartInfo.Arguments + Environment.NewLine +
                                  "OS: " + Environment.OSVersion + Environment.NewLine +
                                  "64-bit: " + Environment.Is64BitOperatingSystem + Environment.NewLine +
-                                 "ffmpeg exit code: " + _ffmpegProcess.ExitCode + Environment.NewLine +
+                                 "ffmpeg exit code: " + exitCode + Environment.NewLine +
                                  "ffmpeg log: " + _log);
+
+            jobItem.Status = Se.Language.General.Error;
 
             Dispatcher.UIThread.Invoke(async () =>
             {
+                if (_isClosing)
+                {
+                    return;
+                }
+
                 await MessageBox.Show(Window!,
                     "Unable to generate blank video",
                     "Output video file not generated: " + jobItem.OutputVideoFileName + Environment.NewLine +
-                    "Parameters: " + _ffmpegProcess.StartInfo.Arguments,
+                    "ffmpeg exit code: " + exitCode + Environment.NewLine +
+                    "Parameters: " + process.StartInfo.Arguments,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
 
@@ -183,6 +201,13 @@ public partial class BlankVideoViewModel : ObservableObject
 
         Dispatcher.UIThread.Invoke(async () =>
         {
+            // The window is closing (or closed): do not start another ffmpeg, and there is no
+            // window left to show a dialog on.
+            if (_isClosing)
+            {
+                return;
+            }
+
             ProgressValue = 0;
 
             if (_jobItemIndex < JobItems.Count - 1)
@@ -219,6 +244,29 @@ public partial class BlankVideoViewModel : ObservableObject
                     MessageBoxButtons.OK);
             }
         });
+    }
+
+    private static bool OutputFileHasContent(string fileName)
+    {
+        try
+        {
+            return File.Exists(fileName) && new FileInfo(fileName).Length > 0;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private double GetProgressPercentage(BurnInJobItem jobItem)
+    {
+        // Guard the division: a zero frame total (duration 0) made the progress value NaN/Infinity.
+        if (jobItem.TotalFrames <= 0)
+        {
+            return 0;
+        }
+
+        return _processedFrames * 100.0 / jobItem.TotalFrames;
     }
 
     private bool RunEncoding(BurnInJobItem jobItem)
@@ -260,18 +308,27 @@ public partial class BlankVideoViewModel : ObservableObject
             }
         }
 
-        return FfmpegGenerator.GenerateVideoFile(
-               VideoFileName,
-               DurationMinutes * 60,
-               jobItem.Width,
-               jobItem.Height,
-               SolidColor,
-               UseCheckedImage,
-               (decimal)SelectedFrameRate,
-               bmp,
-               OutputHandler,
-               GenerateTimeCodes,
-               addTimeColor);
+        try
+        {
+            return FfmpegGenerator.GenerateVideoFile(
+                   VideoFileName,
+                   DurationMinutes * 60,
+                   jobItem.Width,
+                   jobItem.Height,
+                   SolidColor,
+                   UseCheckedImage,
+                   (decimal)SelectedFrameRate,
+                   bmp,
+                   OutputHandler,
+                   GenerateTimeCodes,
+                   addTimeColor);
+        }
+        finally
+        {
+            // GenerateVideoFile has copied the image to a temp png before it returns, so the
+            // bitmap - never disposed before - is no longer needed.
+            bmp?.Dispose();
+        }
     }
 
     private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
@@ -298,7 +355,7 @@ public partial class BlankVideoViewModel : ObservableObject
         if (long.TryParse(arr[1].Trim(), out var f))
         {
             _processedFrames = f;
-            ProgressValue = _processedFrames * 100.0 / JobItems[_jobItemIndex].TotalFrames;
+            ProgressValue = GetProgressPercentage(JobItems[_jobItemIndex]);
         }
     }
 
@@ -364,7 +421,12 @@ public partial class BlankVideoViewModel : ObservableObject
     [RelayCommand]
     private async Task BrowseResolution()
     {
-        var result = await _windowService.ShowDialogAsync<BurnInResolutionPickerWindow, BurnInResolutionPickerViewModel>(Window!);
+        // No "use source resolution" here: the video is generated from scratch, so there is no
+        // source video for it to refer to.
+        var result = await _windowService.ShowDialogAsync<BurnInResolutionPickerWindow, BurnInResolutionPickerViewModel>(Window!, vm =>
+        {
+            vm.RemoveUseSourceResolution();
+        });
         if (!result.OkPressed || result.SelectedResolution == null)
         {
             return;
@@ -381,25 +443,34 @@ public partial class BlankVideoViewModel : ObservableObject
             var mediaInfo = FfmpegMediaInfo2.Parse(videoFileName);
             VideoWidth = mediaInfo.Dimension.Width;
             VideoHeight = mediaInfo.Dimension.Height;
-            UseSourceResolution = false;
-        }
-        else if (result.SelectedResolution.ItemType == ResolutionItemType.UseSource)
-        {
-            UseSourceResolution = true;
         }
         else if (result.SelectedResolution.ItemType == ResolutionItemType.Resolution)
         {
-            UseSourceResolution = false;
             VideoWidth = result.SelectedResolution.Width;
             VideoHeight = result.SelectedResolution.Height;
         }
-
-        SaveSettings();
     }
 
     [RelayCommand]
     private async Task Generate()
     {
+        // A duration of 0 gave "-t 0", which newer ffmpeg reads as "no limit" - the encode never
+        // ended - and a zero frame total. Non-positive dimensions make ffmpeg fail outright.
+        if (DurationMinutes < 1)
+        {
+            DurationMinutes = 1;
+        }
+
+        if (VideoWidth <= 0)
+        {
+            VideoWidth = 1280;
+        }
+
+        if (VideoHeight <= 0)
+        {
+            VideoHeight = 720;
+        }
+
         if (UseBackgroundImage && string.IsNullOrEmpty(_fullBackgroundImageFileName))
         {
             await MessageBox.Show(Window!, "Background image file not selected", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -426,9 +497,24 @@ public partial class BlankVideoViewModel : ObservableObject
         }
 
         VideoFileName = videoFileName;
-        if (File.Exists(VideoFileName))
+        try
         {
-            File.Delete(VideoFileName);
+            if (File.Exists(VideoFileName))
+            {
+                File.Delete(VideoFileName);
+            }
+        }
+        catch (Exception ex)
+        {
+            // On Windows the delete throws while the previous blank video is still open in the
+            // video player - unguarded, that was an unhandled exception in the command.
+            Se.LogError(ex, "Unable to delete existing blank video: " + VideoFileName);
+            await MessageBox.Show(Window!,
+                Se.Language.General.Error,
+                "Unable to overwrite file (is it open in the video player?): " + VideoFileName,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return;
         }
 
         JobItems = GetCurrentVideoAsJobItems();
@@ -443,7 +529,6 @@ public partial class BlankVideoViewModel : ObservableObject
         IsGenerating = true;
         _processedFrames = 0;
         ProgressValue = 0;
-        SaveSettings();
         InitAndStartJobItem(0);
     }
 
@@ -451,6 +536,8 @@ public partial class BlankVideoViewModel : ObservableObject
     {
         _startTicks = DateTime.UtcNow.Ticks;
         _jobItemIndex = index;
+        // The frame count of the previous item made the next one briefly show 100 %.
+        _processedFrames = 0;
         var jobItem = JobItems[index];
         var totalFrames = (long)Math.Round(SelectedFrameRate * DurationMinutes * 60.0f);
         jobItem.TotalFrames = totalFrames;
@@ -465,20 +552,6 @@ public partial class BlankVideoViewModel : ObservableObject
         {
             _timerGenerate.Start();
         }
-    }
-
-    private void LoadSettings()
-    {
-        var settings = Se.Settings.Video.BurnIn;
-        UseSourceResolution = settings.UseSourceResolution;
-    }
-
-    private void SaveSettings()
-    {
-        var settings = Se.Settings.Video.BurnIn;
-        settings.UseSourceResolution = UseSourceResolution;
-
-        Se.SaveSettings();
     }
 
     [RelayCommand]
@@ -508,18 +581,23 @@ public partial class BlankVideoViewModel : ObservableObject
 
         // Stop the poll timer and any still-running encode - closing the window used to
         // leave the ffmpeg process encoding to completion in the background.
+        _isClosing = true;
+        _doAbort = true;
         _timerGenerate.StopAndDispose(TimerGenerateElapsed);
-        if (_ffmpegProcess != null && !_ffmpegProcess.HasExited)
+        if (_ffmpegProcess != null)
         {
             try
             {
+                if (!_ffmpegProcess.HasExited)
+                {
 #pragma warning disable CA1416
-                _ffmpegProcess.Kill(true);
+                    _ffmpegProcess.Kill(true);
 #pragma warning restore CA1416
+                }
             }
             catch
             {
-                // ignore - it may have exited in between
+                // ignore - it may have exited in between, or never started
             }
         }
     }

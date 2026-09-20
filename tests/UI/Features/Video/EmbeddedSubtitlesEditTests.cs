@@ -90,6 +90,45 @@ public class EmbeddedSubtitlesEditTests : IDisposable
             "-metadata:s:s:3 language=nor");
     }
 
+    /// <summary>
+    /// Only "0:V:0" and "0:a:0?" used to be mapped: a second audio track and the font attachments
+    /// of an ASS track were gone from the output, with exit code 0 and no warning.
+    /// </summary>
+    [Fact]
+    public void AlterEmbeddedTracksMatroska_KeepsEveryAudioTrackAndTheAttachments()
+    {
+        var args = FfmpegGenerator.AlterEmbeddedTracksMatroska(MakeInterleavedTracks(), new List<EmbeddedTrack>(), "in.mkv", "out.mkv");
+
+        AssertInOrder(args, "-map 0:V ", "-map 0:a? ", "-map 0:t? ", "-map 0:s:1");
+        Assert.DoesNotContain("0:a:0", args);
+    }
+
+    [Fact]
+    public void AlterEmbeddedTracksMp4_KeepsEveryAudioTrack()
+    {
+        var args = FfmpegGenerator.AlterEmbeddedTracksMp4(MakeInterleavedTracks(), new List<EmbeddedTrack>(), "in.mp4", "out.mp4");
+
+        AssertInOrder(args, "-map 0:V ", "-map 0:a? ", "-map 0:s:1");
+        Assert.DoesNotContain("0:a:0", args);
+    }
+
+    /// <summary>
+    /// The mp4 variant escaped track names, the Matroska one wrote them as they were - a quote
+    /// in a name ended the argument early and broke the command line.
+    /// </summary>
+    [Fact]
+    public void AlterEmbeddedTracksMatroska_EscapesQuotesInTheTrackName()
+    {
+        var tracks = new List<EmbeddedTrack>
+        {
+            new() { Number = 0, Name = "Director's \"cut\"", LanguageOrTitle = "eng" },
+        };
+
+        var args = FfmpegGenerator.AlterEmbeddedTracksMatroska(tracks, new List<EmbeddedTrack>(), "in.mkv", "out.mkv");
+
+        Assert.Contains("-metadata:s:s:0 title=\"Director's 'cut'\"", args);
+    }
+
     [AvaloniaFact]
     public void MoveUpDown_ReordersTracksAndKeepsSelection()
     {
