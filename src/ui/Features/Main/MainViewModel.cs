@@ -34081,15 +34081,17 @@ public partial class MainViewModel :
             }
         }
 
-        IsFilePropertiesVisible = false;
-        if (e.AddedItems.Count == 1)
+        // Falls back to the selected format: the startup call passes no added items, which used to
+        // hide the properties button and menu item until the format was changed (issue #15105).
+        var propertiesFormat = e.AddedItems.Count == 1 ? e.AddedItems[0] as SubtitleFormat : SelectedSubtitleFormat;
+        if (propertiesFormat is TimedTextImsc11 or ItunesTimedText or TimedText10 or TimedTextImscRosetta or TmpegEncXml or DCinemaSmpte2007 or DCinemaSmpte2010 or DCinemaSmpte2014 or DCinemaInterop or WebVTT or WebVTTFileWithLineNumber or Ebu or DvbTeletext)
         {
-            var format = e.AddedItems[0] as SubtitleFormat;
-            if (format is TimedTextImsc11 or ItunesTimedText or TimedText10 or TimedTextImscRosetta or TmpegEncXml or DCinemaSmpte2007 or DCinemaSmpte2010 or DCinemaSmpte2014 or DCinemaInterop or WebVTT or WebVTTFileWithLineNumber or Ebu or DvbTeletext)
-            {
-                IsFilePropertiesVisible = true;
-                FilePropertiesText = string.Format(Se.Language.Main.XPropertiesDotDotDot, format.Name);
-            }
+            IsFilePropertiesVisible = true;
+            FilePropertiesText = string.Format(Se.Language.Main.XPropertiesDotDotDot, propertiesFormat.Name);
+        }
+        else
+        {
+            IsFilePropertiesVisible = false;
         }
 
         if (restoreSelection)
