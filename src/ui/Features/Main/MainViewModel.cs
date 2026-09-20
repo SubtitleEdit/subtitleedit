@@ -31467,6 +31467,24 @@ public partial class MainViewModel :
 
         var nowTimestamp = Stopwatch.GetTimestamp();
 
+        // The video player is being reloaded (a layout rebuild after Options/OK, dock/undock,
+        // fullscreen) and has not got back to where the video was yet. A loading player reports
+        // 0, and following that sent the cursor to the start of the waveform and back - dragging
+        // the view along in center mode, and the grid selection with "select current subtitle"
+        // (issue #15027). Hold the play-head on the spot the restore is heading for instead; the
+        // control stops offering it once the player has arrived or the restore has given up.
+        if (vp.PositionRestoreHoldSeconds is { } restoreTarget)
+        {
+            _playheadLastRealSeconds = rawPosition;
+            _playheadLastTimestamp = nowTimestamp;
+            _playheadLastRawChangeTs = nowTimestamp;
+            _playheadEstimateSeconds = restoreTarget;
+            _playheadValid = true;
+            _playheadPausedSettled = true; // the cursor is authoritative here, as after a pinned seek
+            _playheadWasPlaying = false; // a player that loads unpaused must not read as a play -> pause edge
+            return restoreTarget;
+        }
+
         // A "one frame back/forward with play" blip is running (see VideoOneFrameWithPlay): mpv is
         // genuinely playing, but only for the length of the frame that was just stepped to, and the
         // cursor belongs on that frame. Letting it track playback made it glide a few frames forward

@@ -117,4 +117,69 @@ public class VideoPlayerControlRestorePositionSeekTests
         // never got where it was told to go (issue #14218).
         Assert.Equal(54, control.PositionForRestore);
     }
+
+    /// <summary>
+    /// Issue #15027: while the rebuilt player is still loading it reports 0, and the waveform
+    /// cursor followed that to the start of the waveform and back. The control offers the restore
+    /// target to hold the play-head on instead - for as long as the restore is really under way.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task ThePlayheadHoldIsOfferedWhileTheRestoreIsInFlightAndDroppedOnArrival()
+    {
+        var player = new SlowToSeekVideoPlayer();
+        var control = new VideoPlayerControl(player);
+        Assert.Null(control.PositionRestoreHoldSeconds);
+
+        control.BeginPositionRestore(54);
+        await control.Open("fake.mkv");
+
+        // Loading: the player says 0, the hold says where the video is going to be.
+        Assert.Equal(0, player.Position, 3);
+        Assert.Equal(54, control.PositionRestoreHoldSeconds);
+
+        await control.RestorePositionAsync(54);
+
+        Assert.Equal(54, player.Position, 3);
+        Assert.Null(control.PositionRestoreHoldSeconds);
+    }
+
+    [AvaloniaFact]
+    public async Task ThePlayheadHoldFollowsASeekMadeDuringTheRestore()
+    {
+        var player = new SlowToSeekVideoPlayer();
+        var control = new VideoPlayerControl(player);
+        control.BeginPositionRestore(54);
+        await control.Open("fake.mkv");
+
+        control.SeekTo(120);
+
+        Assert.Equal(120, control.PositionRestoreHoldSeconds);
+    }
+
+    [AvaloniaFact]
+    public async Task ARestoreThatNeverLandsLetsGoOfThePlayheadHold()
+    {
+        var player = new SlowToSeekVideoPlayer { SwallowEverySeek = true };
+        var control = new VideoPlayerControl(player);
+        control.BeginPositionRestore(54);
+        await control.Open("fake.mkv");
+
+        await control.RestorePositionAsync(54, 300);
+
+        // The rebuild target stays (issue #14218), but a cursor held on a spot the player never
+        // reaches would sit frozen through playback.
+        Assert.Equal(54, control.PositionForRestore);
+        Assert.Null(control.PositionRestoreHoldSeconds);
+    }
+
+    [AvaloniaFact]
+    public void ADisposedControlOffersNoPlayheadHold()
+    {
+        var control = new VideoPlayerControl(new SlowToSeekVideoPlayer());
+        control.BeginPositionRestore(54);
+
+        control.CloseAndDisposePlayer();
+
+        Assert.Null(control.PositionRestoreHoldSeconds);
+    }
 }
