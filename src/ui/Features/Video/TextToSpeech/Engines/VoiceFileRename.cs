@@ -38,7 +38,6 @@ public static class VoiceFileRename
             Qwen3TtsVoice v => v.FilePath,
             VibeVoice v => v.FilePath,
             VoxCPM2Voice v => v.FilePath,
-            ZonosTtsVoice v => v.FilePath,
             _ => string.Empty,
         };
 

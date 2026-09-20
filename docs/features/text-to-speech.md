@@ -77,7 +77,7 @@ Lines that contain only sounds or music — `♪`, `[door slams]`, `(sighs)`, or
 - **IndexTTS 2.5 (audio.cpp)** — IndexTTS-2.5 on the audio.cpp runtime: cloning in Chinese, English, Japanese, Spanish and Arabic, with emotion and speaking-rate control. The reference voice is sent per request, so switching voice does not restart the server
 - **VoxCPM2 (CrispASR)** — Tokenizer-free diffusion engine at 48 kHz, about 30 languages, with zero-shot cloning
 - **MOSS-TTS (CrispASR)** — MOSS-TTS v1.5 (Qwen3-8B backbone, 24 kHz) with zero-shot cloning
-- **Zonos TTS (CrispASR)** — Zonos-v0.1 at 44.1 kHz with cloning from a reference recording
+- **Zonos TTS (CrispASR)** — Zonos-v0.1 at 44.1 kHz in 100+ languages, with one built-in default voice. It does not clone: the CrispASR backend has no speaker encoder yet, so there are no voices to import or pick
 - **OmniVoice TTS (CrispASR)** — The OmniVoice model on the shared CrispASR runtime, run as a persistent server so the model loads once instead of once per line
 - **dots.tts (CrispASR)** — dots.tts SOAR 2B rendered at 48 kHz by a BigVGAN vocoder, with zero-shot cloning
 - **VibeVoice (CrispASR)** — Microsoft VibeVoice 1.5B via the CrispASR runtime, with voice cloning; a single GGUF with no separate codec file
@@ -103,7 +103,7 @@ Several of the local engines above are different models on the same CrispASR run
 | **IndexTTS (CrispASR)** | 24 kHz | Follows the text | Zero-shot | 24 kHz mono | ~600 MB - 2.4 GB |
 | **CosyVoice3 (CrispASR)** | 24 kHz | 9, plus 18 Mandarin dialects as voices | 8 baked-in presets + zero-shot | 16 kHz mono + a transcript sidecar | ~1.6 - 2.5 GB |
 | **MOSS-TTS (CrispASR)** | 24 kHz | 20 | Zero-shot | 24 kHz mono | ~10.5 - 20.5 GB incl. codec |
-| **Zonos TTS (CrispASR)** | 44.1 kHz | 100+ via the language picker (trained on English, Japanese, Chinese, French and German; the rest rely on eSpeak pronunciation) | From a reference recording | 24 kHz mono | ~1.8 GB |
+| **Zonos TTS (CrispASR)** | 44.1 kHz | 100+ via the language picker (trained on English, Japanese, Chinese, French and German; the rest rely on eSpeak pronunciation) | None - one built-in voice | - | ~1.8 GB |
 | **VoxCPM2 (CrispASR)** | 48 kHz | ~30 | Zero-shot | 24 kHz mono (upsampled internally) | ~1.7 - 5 GB |
 | **dots.tts (CrispASR)** | 48 kHz | Follows the text | Zero-shot | 24 kHz mono | ~2.4 - 5 GB |
 | **VibeVoice (CrispASR)** | 24 kHz | Follows the text | Zero-shot | 24 kHz mono | ~1.6 - 5 GB |
@@ -152,7 +152,7 @@ Right-click the voice combo box for **Rename voice...** and **Delete voice...**.
 - **Rename voice...** moves the recording together with its sidecar files (the `.txt` transcript, engine JSON) and the cached prepared copy, so nothing is left behind as an orphan. Spaces are stored as underscores, which is what the engines show as spaces.
 - **Delete voice...** asks for confirmation, then removes the recording and its files from disk.
 
-Supported for every file-backed cloning voice: the CrispASR engines (Chatterbox, Confucius4-TTS, CosyVoice3, dots.tts, IndexTTS, MOSS-TTS, OmniVoice, Pocket TTS, Qwen3 TTS, VibeVoice, VoxCPM2, Zonos), the standalone OmniVoice TTS, and the audio.cpp engines (IndexTTS 2.5, Higgs Audio v3, Fish Audio S2 Pro, FireRedTTS3).
+Supported for every file-backed cloning voice: the CrispASR engines (Chatterbox, Confucius4-TTS, CosyVoice3, dots.tts, IndexTTS, MOSS-TTS, OmniVoice, Pocket TTS, Qwen3 TTS, VibeVoice, VoxCPM2), the standalone OmniVoice TTS, and the audio.cpp engines (IndexTTS 2.5, Higgs Audio v3, Fish Audio S2 Pro, FireRedTTS3).
 
 ### Voice Manager
 
