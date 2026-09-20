@@ -4779,7 +4779,10 @@ public partial class MainViewModel :
         // other save does.
         var result = await ShowDialogAsync<ExportCustomTextFormatWindow, ExportCustomTextFormatViewModel>(vm =>
         {
-            vm.Initialize(GetSaveSubtitle().Paragraphs.ToList(), _subtitleFileName, _videoFileName);
+            var lines = GetSaveSubtitle().Paragraphs
+                .Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat))
+                .ToList();
+            vm.Initialize(lines, _subtitleFileName, _videoFileName);
         });
     }
 
