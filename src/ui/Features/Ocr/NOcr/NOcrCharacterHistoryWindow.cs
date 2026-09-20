@@ -114,7 +114,7 @@ public class NOcrCharacterHistoryWindow : Window
 
         var panelCurrentImage = new StackPanel
         {
-            Background = new SolidColorBrush(Colors.LightGray),
+            Background = ImagePreviewBackground.CreateBrush(),
             Children = { image },
             HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
             Margin = new Thickness(5, 2, 0, 5),
