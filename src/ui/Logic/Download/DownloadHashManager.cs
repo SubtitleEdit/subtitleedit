@@ -2517,15 +2517,18 @@ public static class DownloadHashManager
             // https://github.com/SubtitleEdit/support-files/releases (build-whisperx-standalone-release.yml)
             [WhisperX.Windows] = new[]
             {
-                "439776243a3040693e9a2767a3efb4b8dd7549244bb6695ce0ef7209e5456bf3", // whisperx-standalone-101 / v1.0.1 (current download URL)
+                "43c83f731389f1d84fd1f03e311c9a1a7ed8f08b1fa295a1264570ef41db2ccd", // whisperx-standalone-102 / v1.0.1 + output prelude, #15096 (current download URL)
+                "439776243a3040693e9a2767a3efb4b8dd7549244bb6695ce0ef7209e5456bf3", // whisperx-standalone-101 / v1.0.1
             },
             [WhisperX.MacArm64] = new[]
             {
-                "89ff2f2dd120c8a2ab51c21e6be34a16c954965d4646ecdff77d0911ac6a2c27", // whisperx-standalone-101 / v1.0.1 (current download URL)
+                "bd8b18786896f1cd0e3bff3cce9ca55017eced8a4e3b540ec38e73d340fb3b9c", // whisperx-standalone-102 / v1.0.1 + output prelude, #15096 (current download URL)
+                "89ff2f2dd120c8a2ab51c21e6be34a16c954965d4646ecdff77d0911ac6a2c27", // whisperx-standalone-101 / v1.0.1
             },
             [WhisperX.LinuxX64] = new[]
             {
-                "46070b23bfa7c152c259264ac2a135406b4462b2b979ea126510a9c6f44f80e2", // whisperx-standalone-101 / v1.0.1 (current download URL)
+                "31d90c9ca7c465eea831507d8aa675a8a412fc209c96c1f95fb3284e271b38fe", // whisperx-standalone-102 / v1.0.1 + output prelude, #15096 (current download URL)
+                "46070b23bfa7c152c259264ac2a135406b4462b2b979ea126510a9c6f44f80e2", // whisperx-standalone-101 / v1.0.1
             },
         };
 
