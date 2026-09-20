@@ -625,6 +625,22 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         Push(AudioVisualizerAligned, _alignedSubtitles, index);
     }
 
+    // Same as PushParagraphsToVisualizers for one waveform. A visualizer only keeps the blocks
+    // around the view it was last given, so the window calls this when that view moves -
+    // scrolling or zooming past the selected line otherwise shows waveform with no blocks (#15102).
+    public void ReloadWaveformParagraphs(AudioVisualizer av)
+    {
+        var index = SelectedRow?.Index ?? -1;
+        if (ReferenceEquals(av, AudioVisualizerOriginal))
+        {
+            Push(av, _originalSubtitles, index);
+        }
+        else if (ReferenceEquals(av, AudioVisualizerAligned))
+        {
+            Push(av, _alignedSubtitles, index);
+        }
+    }
+
     private static void Push(AudioVisualizer? av, List<SubtitleLineViewModel> subtitles, int selectedIndex)
     {
         if (av == null)

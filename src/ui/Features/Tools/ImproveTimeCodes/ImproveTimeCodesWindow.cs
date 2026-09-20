@@ -163,6 +163,8 @@ public class ImproveTimeCodesWindow : Window
         // the value it already has raises nothing, so the two handlers do not ping-pong.
         Mirror(avOriginal, avAligned);
         Mirror(avAligned, avOriginal);
+        ReloadParagraphsWhenViewMoves(avOriginal, vm);
+        ReloadParagraphsWhenViewMoves(avAligned, vm);
 
         var grid = new Grid
         {
@@ -201,6 +203,21 @@ public class ImproveTimeCodesWindow : Window
             else if (e.Property.Name == nameof(AudioVisualizer.VerticalZoomFactor))
             {
                 target.VerticalZoomFactor = source.VerticalZoomFactor;
+            }
+        };
+    }
+
+    // Each waveform reloads its own blocks: the mirrored one gets the same property change a
+    // moment later and reloads itself then.
+    private static void ReloadParagraphsWhenViewMoves(AudioVisualizer av, ImproveTimeCodesViewModel vm)
+    {
+        av.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == AudioVisualizer.StartPositionSecondsProperty ||
+                e.Property == AudioVisualizer.ZoomFactorProperty ||
+                e.Property == BoundsProperty)
+            {
+                vm.ReloadWaveformParagraphs(av);
             }
         };
     }

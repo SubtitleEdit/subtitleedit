@@ -675,6 +675,15 @@ public class ReviewSpeechWindow : Window
             {
                 vm.RefreshWaveformPosition();
             }
+            else if (e.Property == AudioVisualizer.StartPositionSecondsProperty ||
+                     e.Property == AudioVisualizer.ZoomFactorProperty ||
+                     e.Property == BoundsProperty)
+            {
+                // The control only draws the blocks around the view it was last handed, and
+                // nothing here feeds it on a timer like the main window does - so scrolling,
+                // zooming out or widening the window ran past them into empty waveform (#15102).
+                vm.ReloadWaveformParagraphs();
+            }
         };
 
         // Clicking or grabbing a block selects its row (#14000). The control only raises
