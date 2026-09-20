@@ -15175,10 +15175,111 @@ public partial class MainViewModel :
             deltaMs = Math.Max(deltaMs, -minStartMs);
         }
 
+        var neighbors = new List<(SubtitleLineViewModel Moved, SubtitleLineViewModel Neighbor)>();
+        if (Se.Settings.General.MoveLinesShortenNeighbor && scope != MoveLinesScope.All)
+        {
+            neighbors = GetMoveLinesNeighbors(scope, back: deltaMs < 0);
+            deltaMs = ClampMoveToNeighborMinimumDuration(deltaMs, neighbors);
+            if (Math.Abs(deltaMs) < 0.01)
+            {
+                return;
+            }
+        }
+
         Adjust(TimeSpan.FromMilliseconds(deltaMs),
             adjustAll: scope == MoveLinesScope.All,
             adjustSelectedLines: scope == MoveLinesScope.Selected,
             adjustSelectedLinesAndForward: scope == MoveLinesScope.SelectedAndForward);
+
+        ShortenMoveLinesNeighbors(neighbors, back: deltaMs < 0);
+    }
+
+    /// <summary>
+    /// The lines a move runs towards (#15098): for every moved line, the working row before it
+    /// (moving back) or after it (moving forward) that is not itself moving. A neighbor the line
+    /// already overlaps is left out - that overlap was not made by this move (and is wanted in
+    /// e.g. ASSA signs over dialogue), so it is not this move's to repair.
+    /// </summary>
+    private List<(SubtitleLineViewModel Moved, SubtitleLineViewModel Neighbor)> GetMoveLinesNeighbors(MoveLinesScope scope, bool back)
+    {
+        var result = new List<(SubtitleLineViewModel Moved, SubtitleLineViewModel Neighbor)>();
+        var affected = new HashSet<SubtitleLineViewModel>(GetAffectedLines(scope));
+        for (var i = 0; i < Subtitles.Count; i++)
+        {
+            var line = Subtitles[i];
+            if (line.IsReferenceOnly || !affected.Contains(line))
+            {
+                continue;
+            }
+
+            var neighbor = back ? GetPreviousWorkingRow(i) : GetNextWorkingRow(i);
+            if (neighbor == null || affected.Contains(neighbor))
+            {
+                continue;
+            }
+
+            var overlapsAlready = back
+                ? neighbor.EndTime.TotalMilliseconds > line.StartTime.TotalMilliseconds
+                : neighbor.StartTime.TotalMilliseconds < line.EndTime.TotalMilliseconds;
+            if (!overlapsAlready)
+            {
+                result.Add((line, neighbor));
+            }
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Limits a move so that shortening a neighbor never takes it below the minimum duration (a
+    /// neighbor already shorter than that is not shortened at all) - the moved line stops against
+    /// it instead, like the "keep gap" nudges refuse to squeeze their neighbor.
+    /// </summary>
+    private static double ClampMoveToNeighborMinimumDuration(double deltaMs, List<(SubtitleLineViewModel Moved, SubtitleLineViewModel Neighbor)> neighbors)
+    {
+        var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        var minDurMs = Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
+        foreach (var (moved, neighbor) in neighbors)
+        {
+            if (deltaMs < 0)
+            {
+                var minEndMs = Math.Min(neighbor.EndTime.TotalMilliseconds, neighbor.StartTime.TotalMilliseconds + minDurMs);
+                var limit = minEndMs + gapMs - moved.StartTime.TotalMilliseconds;
+                deltaMs = Math.Max(deltaMs, Math.Min(limit, 0));
+            }
+            else
+            {
+                var maxStartMs = Math.Max(neighbor.StartTime.TotalMilliseconds, neighbor.EndTime.TotalMilliseconds - minDurMs);
+                var limit = maxStartMs - gapMs - moved.EndTime.TotalMilliseconds;
+                deltaMs = Math.Min(deltaMs, Math.Max(limit, 0));
+            }
+        }
+
+        return deltaMs;
+    }
+
+    private static void ShortenMoveLinesNeighbors(List<(SubtitleLineViewModel Moved, SubtitleLineViewModel Neighbor)> neighbors, bool back)
+    {
+        var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        foreach (var (moved, neighbor) in neighbors)
+        {
+            if (back)
+            {
+                var endMs = moved.StartTime.TotalMilliseconds - gapMs;
+                if (neighbor.EndTime.TotalMilliseconds > endMs)
+                {
+                    neighbor.EndTime = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(endMs);
+                }
+            }
+            else
+            {
+                var startMs = moved.EndTime.TotalMilliseconds + gapMs;
+                if (neighbor.StartTime.TotalMilliseconds < startMs)
+                {
+                    neighbor.SetStartTimeOnly(TimeSpanExtensions.FromMillisecondsWholeMilliseconds(startMs));
+                }
+            }
+        }
     }
 
     private IEnumerable<SubtitleLineViewModel> GetAffectedLines(MoveLinesScope scope)

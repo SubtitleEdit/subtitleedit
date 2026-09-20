@@ -3121,6 +3121,7 @@
       "newEmptyDefaultMs": "Default new subtitle duration (ms)",
       "timeCodeUpDownStepMs": "Time up/down increment (ms)",
       "moveSelectedLinesStepMs": "Move selected lines shortcut step (ms)",
+      "moveLinesShortenNeighbor": "Move lines: shorten previous/next line instead of overlapping it",
       "promptBeforeDelete": "Prompt before delete",
       "rememberPositionAndSize": "Remember window position and size",
       "openLastFileOnStart": "Open last recent file on start",
