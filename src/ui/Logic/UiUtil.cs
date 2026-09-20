@@ -3593,6 +3593,21 @@ public static class UiUtil
 
         var state = SeWindowPosition.SaveState(window);
 
+        // A minimized window reports where the OS parked it (-32000, -32000 on Windows), not
+        // where the user left it - and the undocked windows minimize instead of closing, so
+        // quitting with one of them minimized is common. Save where it was before. (#15106)
+        if (window.WindowState == WindowState.Minimized)
+        {
+            LastNormalWindowStates.TryGetValue(window, out var last);
+            var screenBounds = last?.Position is { } lastPosition
+                ? window.Screens.ScreenFromPoint(lastPosition)?.Bounds
+                : null;
+            if (!state.TryApplyStateBeforeMinimize(last?.Position, last?.State, screenBounds))
+            {
+                return; // nothing better known - keep what was saved earlier
+            }
+        }
+
         var existing = Se.Settings.General.WindowPositions.FirstOrDefault(wp => wp.WindowName == state.WindowName);
         if (existing != null)
         {
@@ -3602,12 +3617,59 @@ public static class UiUtil
         Se.Settings.General.WindowPositions.Add(state);
     }
 
+    private sealed class LastNormalWindowState
+    {
+        public PixelPoint? Position { get; set; }
+        public WindowState State { get; set; }
+    }
+
+    private static readonly ConditionalWeakTable<Window, LastNormalWindowState> LastNormalWindowStates = new();
+
+    /// <summary>
+    /// Remembers the position and state the window has while it is not minimized, so
+    /// <see cref="SaveWindowPosition"/> has something to save for a minimized window.
+    /// </summary>
+    private static void TrackLastNormalWindowState(Window window)
+    {
+        if (LastNormalWindowStates.TryGetValue(window, out _))
+        {
+            return;
+        }
+
+        var last = new LastNormalWindowState();
+        LastNormalWindowStates.Add(window, last);
+
+        void Update(PixelPoint position)
+        {
+            if (window.WindowState == WindowState.Minimized ||
+                SeWindowPosition.IsMinimizedPosition(position.X, position.Y))
+            {
+                return;
+            }
+
+            last.Position = position;
+            last.State = window.WindowState;
+        }
+
+        Update(window.Position);
+        window.PositionChanged += (_, e) => Update(e.Point);
+        window.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == Window.WindowStateProperty)
+            {
+                Update(window.Position);
+            }
+        };
+    }
+
     public static void RestoreWindowPosition(Window? window)
     {
         if (!Se.Settings.General.RememberPositionAndSize || window == null)
         {
             return;
         }
+
+        TrackLastNormalWindowState(window);
 
         var existing = Se.Settings.General.WindowPositions.FirstOrDefault(wp => wp.WindowName == window.Name);
         if (existing == null)
