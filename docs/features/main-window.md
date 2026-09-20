@@ -272,6 +272,7 @@ When enabled (toggle via shortcut or **Options → Shortcuts → Toggle waveform
 | **Video seek** | Seek back/forward buttons |
 | **More** | Menu: reset zoom and speed, configure toolbar items, hide the toolbar |
 | **Line break 1 / 2** | Not buttons (off by default): the toolbar continues on a new row from where a line break is placed, so you decide where a wide toolbar wraps |
+| **Initial text of selected line** | Not a button (off by default): a read-only box with the selected line's text as it was when the line was selected, so a machine translation stays readable (and can be selected and copied) while you type over it. Font size and **Width** are set in *Configure toolbar items*; put a line break before it to give it a row of its own |
 
 <!-- Screenshot: Waveform toolbar -->
 ![Waveform Toolbar](../screenshots/main-waveform-toolbar.png)

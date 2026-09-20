@@ -9,11 +9,12 @@ public partial class ToolbarItemDisplay : ObservableObject
     [ObservableProperty] private int _fontSize;
     [ObservableProperty] private int _leftMargin;
     [ObservableProperty] private int _rightMargin;
+    [ObservableProperty] private int _width;
 
     public string Name { get; }
     public SeWaveformToolbarItemType Type { get; }
 
-    public ToolbarItemDisplay(SeWaveformToolbarItemType type, bool isVisible, int fontSize, int leftMargin, int rightMargin)
+    public ToolbarItemDisplay(SeWaveformToolbarItemType type, bool isVisible, int fontSize, int leftMargin, int rightMargin, int width)
     {
         Type = type;
         Name = GetDisplayName(type);
@@ -21,6 +22,7 @@ public partial class ToolbarItemDisplay : ObservableObject
         _fontSize = fontSize;
         _leftMargin = leftMargin;
         _rightMargin = rightMargin;
+        _width = width;
     }
 
     private static string GetDisplayName(SeWaveformToolbarItemType type)

@@ -1054,7 +1054,7 @@ public class InitWaveform
         {
             IsReadOnly = true,
             AcceptsReturn = false,
-            Width = 400,
+            Width = settingInitialText.GetWidthOrDefault(),
             VerticalAlignment = VerticalAlignment.Center,
             FontSize = settingInitialText.FontSize,
             Margin = new Thickness(settingInitialText.LeftMargin, 0, settingInitialText.RightMargin, 0),
