@@ -143,6 +143,32 @@ public class ContainerLoaderTest : IDisposable
     }
 
     [Fact]
+    public async Task ConvertAsync_Mp4WithoutUsableTrack_ReportsNoSubtitleTracks()
+    {
+        var input = Fixtures.Path("container_text.mp4");
+        Assert.True(File.Exists(input), $"Fixture missing: {input}");
+        var outputFolder = Path.Combine(_tempRoot, "out");
+        Directory.CreateDirectory(outputFolder);
+
+        var converter = new SubtitleConverter();
+        var result = await converter.ConvertAsync(new ConversionOptions
+        {
+            Patterns = [input],
+            Format = "SubRip",
+            OutputFolder = outputFolder,
+            Overwrite = true,
+            TrackNumbers = [9999],
+        });
+
+        // The MP4 error must surface as-is. It used to be swallowed, and the video was then
+        // read as a text file and failed with "Unable to determine subtitle format".
+        Assert.False(result.Success);
+        Assert.Equal(0, result.SuccessfulFiles);
+        Assert.Contains(result.Errors, e => e.Contains("No subtitle tracks in MP4 file"));
+        Assert.DoesNotContain(result.Errors, e => e.Contains("Unable to determine subtitle format"));
+    }
+
+    [Fact]
     public async Task ConvertAsync_TrackNumberFilter_ExcludesNonMatching()
     {
         var input = Fixtures.Path("container_text.mkv");
