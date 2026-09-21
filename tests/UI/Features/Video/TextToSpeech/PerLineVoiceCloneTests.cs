@@ -175,6 +175,56 @@ public class PerLineVoiceCloneTests
     }
 
     [Fact]
+    public void OnlyTheEnginesThatRefuseAClipWithoutATranscriptAskForOne()
+    {
+        // These three return null from MakePerLineCloneVoice for a clip with no transcript, so a
+        // run with no original subtitle loaded is offered speech-to-text up front (#15145).
+        Assert.True(PerLineVoiceClone.NeedsTranscript(new OmniVoiceTtsCpp()));
+        Assert.True(PerLineVoiceClone.NeedsTranscript(new FireRedTts3AudioCpp()));
+        Assert.True(PerLineVoiceClone.NeedsTranscript(new Qwen3TtsCrispAsr()));
+
+        // Cloning from the audio alone, transcribing server-side, or not cloning per line at all.
+        Assert.False(PerLineVoiceClone.NeedsTranscript(new HiggsTtsAudioCpp()));
+        Assert.False(PerLineVoiceClone.NeedsTranscript(new CosyVoice3CrispAsr()));
+        Assert.False(PerLineVoiceClone.NeedsTranscript(new EdgeTts()));
+    }
+
+    [Fact]
+    public void OnlyClipsWithoutAUsableTranscriptAreSentToSpeechToText()
+    {
+        using var clips = new ClipFolder();
+        var known = clips.WriteClip("line-0001", "What the video says at that line.");
+        var missing = clips.WriteClip("line-0002", null);
+        var blank = clips.WriteClip("line-0003", "  ");
+
+        Assert.Equal(new[] { missing, blank }, PerLineVoiceClone.GetClipsWithoutTranscript(new[] { known, missing, blank }));
+    }
+
+    [Fact]
+    public void ATranscribedClipGetsItsSidecarAndBecomesAVoice()
+    {
+        using var clips = new ClipFolder();
+        var heard = clips.WriteClip("line-0001", null);
+        var silent = clips.WriteClip("line-0002", null);
+
+        var written = PerLineVoiceClone.WriteTranscripts(
+            new[]
+            {
+                (heard, (IEnumerable<string>)new[] { "Where were you", "yesterday?" }),
+                (silent, Array.Empty<string>()),
+            },
+            TextToSpeechViewModel.BuildRefTextFromTranscription);
+
+        Assert.Equal(1, written);
+        Assert.Equal("Where were you yesterday?", File.ReadAllText(Path.ChangeExtension(heard, ".txt")));
+        Assert.NotNull(PerLineVoiceClone.MakeVoiceForClip(new OmniVoiceTtsCpp(), heard));
+
+        // Nothing heard, so no sidecar - and that line falls back to an ordinary voice.
+        Assert.False(File.Exists(Path.ChangeExtension(silent, ".txt")));
+        Assert.Null(PerLineVoiceClone.MakeVoiceForClip(new OmniVoiceTtsCpp(), silent));
+    }
+
+    [Fact]
     public void EveryEngineThatOffersPerLineCloningKnowsHowToBuildItsVoice()
     {
         // The capability flag and IPerLineCloneEngine only work as a pair: the flag offers

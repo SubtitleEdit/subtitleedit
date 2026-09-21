@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Shared.GetAudioClips;
 using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 using Nikse.SubtitleEdit.Features.Tools.MergeContinuationLines;
@@ -3747,19 +3748,30 @@ public partial class TextToSpeechViewModel : ObservableObject
             return false;
         }
 
-        // FireRedTTS3 and OmniVoice TTS refuse a clip without a transcript (MakePerLineCloneVoice
-        // returns null), and the transcripts come from the original-language subtitle. Without
-        // one loaded every line would silently fall back to an ordinary voice - a run that "does
-        // not clone" (#14480, #15145). Say so up front instead of after minutes of generation.
-        if (engine is FireRedTts3AudioCpp or OmniVoiceTtsCpp && (_originalSubtitle == null || _originalSubtitle.Paragraphs.Count == 0))
+        // FireRedTTS3, OmniVoice TTS and Qwen3 refuse a clip without a transcript
+        // (MakePerLineCloneVoice returns null), and the transcripts come from the
+        // original-language subtitle. Without one loaded every line would silently fall back to
+        // an ordinary voice - a run that "does not clone" (#14480) - so ask up front, while the
+        // user is still there, whether speech-to-text should supply them (#15145).
+        var transcribeClips = false;
+        if (PerLineVoiceClone.NeedsTranscript(engine))
         {
-            await MessageBox.Show(
-                Window!,
-                Se.Language.General.Error,
-                string.Format(Se.Language.Video.TextToSpeech.CloneVoicePerLineNeedsOriginalSubtitleX, engine.Name),
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
-            return false;
+            var linesWithoutTranscript = _subtitle.Paragraphs.Count(p => GetSpokenTextInVideo(p) == null);
+            if (linesWithoutTranscript > 0)
+            {
+                var answer = await MessageBox.Show(
+                    Window!,
+                    Se.Language.Video.TextToSpeech.VoiceCloneTranscriptTitle,
+                    string.Format(Se.Language.Video.TextToSpeech.CloneVoicePerLineTranscribeClipsXYZ, engine.Name, linesWithoutTranscript, _subtitle.Paragraphs.Count),
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+                if (answer != MessageBoxResult.Yes && answer != MessageBoxResult.No)
+                {
+                    return false;
+                }
+
+                transcribeClips = answer == MessageBoxResult.Yes;
+            }
         }
 
         // A fresh folder per run: the clips of a previous run belong to whatever the subtitle
@@ -3794,6 +3806,11 @@ public partial class TextToSpeechViewModel : ObservableObject
             // left it pinned at 0 for the whole clip-cutting phase).
             progress: (done, total) => ProgressValue = total == 0 ? 0 : (double)done / total * 100.0,
             cancellationToken);
+
+        if (transcribeClips && !await TranscribePerLineCloneClipsAsync())
+        {
+            return false;
+        }
 
         if (_perLineCloneClips.Count > 0)
         {
@@ -3836,6 +3853,45 @@ public partial class TextToSpeechViewModel : ObservableObject
             cancellationToken);
 
         return clipFileName == null ? null : PerLineVoiceClone.MakeVoiceForClip(engine, clipFileName);
+    }
+
+    /// <summary>
+    /// Runs speech-to-text over the reference clips that have no transcript and writes what it
+    /// hears as their sidecars. False when the user backed out of it, which stops the run.
+    /// </summary>
+    /// <remarks>
+    /// Per clip rather than once over the whole video: the transcript has to be what is said in
+    /// that clip and nothing else, and a clip is often wider than its line (a short line borrows
+    /// from the silence around it), so no cue of a whole-video transcription lines up with it. A
+    /// clip nothing was heard in keeps no sidecar and its line falls back to an ordinary voice.
+    /// </remarks>
+    private async Task<bool> TranscribePerLineCloneClipsAsync()
+    {
+        var clipFileNames = PerLineVoiceClone.GetClipsWithoutTranscript(_perLineCloneClips.Values);
+        if (clipFileNames.Count == 0 || Window == null)
+        {
+            return true;
+        }
+
+        var audioClips = clipFileNames
+            .Select(clip => new AudioClip(clip, new SubtitleLineViewModel()))
+            .ToList();
+
+        // No auto-start and no language hint: the language spoken in the video is not the one
+        // picked in this window (that is the language of the dub), so the user has to say.
+        var result = await _windowService.ShowDialogAsync<SpeechToTextWindow, SpeechToTextViewModel>(Window, vm =>
+        {
+            vm.InitializeBatch(audioClips, -1, autoStart: false, language: null);
+        });
+
+        // Whatever was transcribed is kept even when the dialog was closed on a failed clip -
+        // OkPressed only tells a run that was abandoned before it produced anything.
+        var written = PerLineVoiceClone.WriteTranscripts(
+            result.ResultAudioClips.Select(clip => (clip.AudioFileName, clip.Transcription.Paragraphs.Select(p => p.Text))),
+            BuildRefTextFromTranscription);
+        Se.WriteToolsLog($"Per-line voice clone: speech-to-text gave {written} of {clipFileNames.Count} reference clips a transcript");
+
+        return result.OkPressed || written > 0;
     }
 
     /// <summary>

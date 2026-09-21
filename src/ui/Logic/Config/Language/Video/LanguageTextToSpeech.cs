@@ -107,7 +107,7 @@ public class LanguageTextToSpeech
     public string CloneVoicePerLinePreparing { get; set; }
     public string CloneVoicePerLineNeedsVideo { get; set; }
     public string CloneVoicePerLineNoClips { get; set; }
-    public string CloneVoicePerLineNeedsOriginalSubtitleX { get; set; }
+    public string CloneVoicePerLineTranscribeClipsXYZ { get; set; }
 
     // First-clone consent dialog
     public string VoiceCloneConsentTitle { get; set; }
@@ -311,7 +311,7 @@ public class LanguageTextToSpeech
         CloneVoicePerLinePreparing = "Taking the voice of each line from the video...";
         CloneVoicePerLineNeedsVideo = "Cloning the voice of each line needs the video the subtitle belongs to. Open the video and try again.";
         CloneVoicePerLineNoClips = "No audio could be taken from the video, so there is nothing to clone from. Check that the video has an audio track.";
-        CloneVoicePerLineNeedsOriginalSubtitleX = "{0} can only clone a line when it knows what is said in the video at that line, which comes from the original-language subtitle. No original subtitle is loaded, so every line would be spoken by the first imported voice instead of the voice in the video.\n\nOpen the original subtitle (File > Open original...) next to the translation, then generate again.";
+        CloneVoicePerLineTranscribeClipsXYZ = "{0} can only clone a line when it knows what is said in the video at that line. That is not known for {1} of {2} lines - it normally comes from the original-language subtitle (File > Open original...).\n\nTranscribe those lines from the video with speech-to-text now?\n\nYes: pick the engine and the language spoken in the video, and the reference clips are transcribed before the speech is generated.\nNo: generate anyway - those lines are spoken by an ordinary voice instead of the voice in the video.";
         VoiceCloneConsentTitle = "Voice cloning - before you start";
         VoiceCloneConsentHeader = "You are about to clone a voice";
         VoiceCloneConsentIntro = "Cloning copies a real person's voice. That comes with rules in most places, and in the EU with legal duties that fall on you, not on Subtitle Edit. Please read this once.";

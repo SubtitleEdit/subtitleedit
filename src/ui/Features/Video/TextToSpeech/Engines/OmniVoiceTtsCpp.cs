@@ -33,6 +33,7 @@ public class OmniVoiceTtsCpp : ITtsEngine, IPerLineCloneEngine
     // Each line is a fresh omnivoice-tts run taking --ref-wav/--ref-text, so a per-line
     // reference costs nothing beyond cutting the clip.
     public bool SupportsPerLineVoiceCloning => true;
+    public bool PerLineCloneNeedsTranscript => true;
 
     /// <summary>
     /// <see cref="IPerLineCloneEngine"/>: each line is a fresh omnivoice-tts run taking the
