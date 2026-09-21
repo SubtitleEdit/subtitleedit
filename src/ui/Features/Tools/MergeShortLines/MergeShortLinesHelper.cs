@@ -41,6 +41,7 @@ public static class MergeShortLinesHelper
         var mergeCount = 0;
         var maxCharactersPerSubtitle = maxNumberOfLines * singleLineMaxLength;
 
+        var sortedShotChanges = SortShotChanges(shotChanges);
         var result = new List<SubtitleLineViewModel>(subtitles.Count);
 
         for (var index = 0; index < subtitles.Count; index++)
@@ -54,8 +55,7 @@ public static class MergeShortLinesHelper
                 var next = subtitles[j];
 
                 // stop if there is a shot change between current and next
-                var hasShotChangeBetween = shotChanges != null && shotChanges.Any(s =>
-                    s > current.EndTime.TotalSeconds && s < next.StartTime.TotalSeconds);
+                var hasShotChangeBetween = HasShotChangeBetween(sortedShotChanges, current.EndTime.TotalSeconds, next.StartTime.TotalSeconds);
                 if (hasShotChangeBetween)
                 {
                     break;
@@ -128,6 +128,43 @@ public static class MergeShortLinesHelper
         return new MergeShortLinesResult(result, fixes, mergeCount);
     }
 
+    private static double[] SortShotChanges(List<double>? shotChanges)
+    {
+        if (shotChanges == null || shotChanges.Count == 0)
+        {
+            return Array.Empty<double>();
+        }
+
+        var sorted = shotChanges.ToArray();
+        Array.Sort(sorted);
+        return sorted;
+    }
+
+    /// <summary>
+    /// True when a shot change lies strictly between the two times. A film has thousands of shot
+    /// changes and this is asked once per adjacent line pair, so it is a binary search for the
+    /// first shot change after <paramref name="afterSeconds"/> instead of a scan of the list.
+    /// </summary>
+    internal static bool HasShotChangeBetween(double[] sortedShotChanges, double afterSeconds, double beforeSeconds)
+    {
+        var low = 0;
+        var high = sortedShotChanges.Length;
+        while (low < high)
+        {
+            var mid = low + ((high - low) >> 1);
+            if (sortedShotChanges[mid] > afterSeconds)
+            {
+                high = mid;
+            }
+            else
+            {
+                low = mid + 1;
+            }
+        }
+
+        return low < sortedShotChanges.Length && sortedShotChanges[low] < beforeSeconds;
+    }
+
     /// <param name="excludedLineIds">See <see cref="Merge"/>.</param>
     public static MergeShortLinesResult MergeWithHighlights(
         List<SubtitleLineViewModel> subtitles,
@@ -142,6 +179,7 @@ public static class MergeShortLinesHelper
         var mergeCount = 0;
         var maxCharactersPerSubtitle = maxNumberOfLines * singleLineMaxLength;
 
+        var sortedShotChanges = SortShotChanges(shotChanges);
         var result = new List<SubtitleLineViewModel>(subtitles.Count);
 
         for (var index = 0; index < subtitles.Count; index++)
@@ -160,8 +198,7 @@ public static class MergeShortLinesHelper
 
                 // stop if there is a shot change between current and next
                 var lastInGroup = mergeGroup[^1];
-                var hasShotChangeBetween = shotChanges != null && shotChanges.Any(s =>
-                    s > lastInGroup.EndTime.TotalSeconds && s < next.StartTime.TotalSeconds);
+                var hasShotChangeBetween = HasShotChangeBetween(sortedShotChanges, lastInGroup.EndTime.TotalSeconds, next.StartTime.TotalSeconds);
                 if (hasShotChangeBetween)
                 {
                     break;
