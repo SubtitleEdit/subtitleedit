@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<OCRFixReplaceList>
+  <WholeWords />
+  <PartialWordsAlways>
+    <!-- Will be replaced always -->
+    <!-- Romanian is written with s and t comma below (U+0219, U+021B). The cedilla letters -->
+    <!-- (U+015F, U+0163) are Turkish look-alikes left over from old code pages and from OCR  -->
+    <!-- engines; no Romanian word has them, and the spell check dictionary only knows the    -->
+    <!-- comma below forms.                                                                  -->
+    <WordPart from="ş" to="ș" />
+    <WordPart from="ţ" to="ț" />
+    <WordPart from="Ş" to="Ș" />
+    <WordPart from="Ţ" to="Ț" />
+  </PartialWordsAlways>
+  <PartialWords />
+  <WholeLines />
+  <PartialLinesAlways />
+  <PartialLines />
+  <BeginLines />
+  <EndLines />
+  <RegularExpressions />
+  <RegularExpressionsIfSpelledCorrectly />
+</OCRFixReplaceList>
