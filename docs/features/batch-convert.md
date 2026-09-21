@@ -82,6 +82,16 @@ Supported OCR engines in Batch Convert:
 
 Subtitle Edit 5 can auto-detect language and pixels-are-space settings for nOcr/BinaryOcr in many batch workflows. This reduces the amount of manual setup needed when converting many image-based subtitle files with similar fonts.
 
+### OCR language per file
+
+A batch often holds the tracks of one disc in several languages. For the engines that take a language (Tesseract, PaddleOCR, Apple Vision, Ollama and llama.cpp), the language the source declares wins over the language chosen in the batch settings:
+
+- the track language of a Matroska/MP4/transport stream track
+- the language of a VobSub `.idx` file that holds a single language
+- a language tag in the file name, e.g. `Movie [fra].sup`, `Movie [ron].sup` or `movie.it.sup` (two- or three-letter ISO 639 codes)
+
+The language from the batch settings is used when the source declares nothing, or when the engine does not have the language - for Tesseract that means the language model is not installed.
+
 ## Transport Stream Input
 
 A transport stream (`.ts`, `.m2ts`, `.mts`, or `.mpg`/`.mpeg` containing one) is listed as one item, and every subtitle track in it is converted: each DVB image track, every teletext page on every PID - one PID can carry several pages, e.g. 888 and 889 for a second language, and each page becomes its own output file - and ARIB STD-B24 caption tracks. Each output is named from the source file plus the file name ending template below, e.g. `movie.en.srt`; a track without a language code in the stream gets its PID or teletext page number instead, so two language-less tracks never collide.
