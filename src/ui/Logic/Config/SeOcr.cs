@@ -66,6 +66,12 @@ public class SeOcr
     public bool CaptureAssaPosition { get; set; }
     public bool DoFixOcrErrors { get; set; }
     public string LastLanguageDictionaryFile { get; set; }
+
+    /// <summary>
+    /// The dictionary last used for each language (two-letter code -> dictionary file name
+    /// without path), so picking "en_US" once is not undone by the next switch to English.
+    /// </summary>
+    public Dictionary<string, string> LastDictionaryFilePerLanguage { get; set; } = new();
     public decimal TextBoxFontSize { get; set; }
     public bool TextBoxFontBold { get; set; }
     public string TextBoxFontName { get; set; }

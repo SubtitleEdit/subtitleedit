@@ -483,15 +483,58 @@ public partial class OcrViewModel : ObservableObject
         var threeLetter = code.Length == 3 ? code : Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(code);
         var twoLetter = code.Length == 2 ? code : Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(code);
 
-        var match = Dictionaries.FirstOrDefault(d =>
+        var candidates = Dictionaries.Where(d =>
             d.Name != GetDictionaryNameNone() &&
             ((!string.IsNullOrEmpty(threeLetter) && d.GetThreeLetterCode() == threeLetter) ||
-             (!string.IsNullOrEmpty(twoLetter) && SpellCheckDictionaryDisplay.GetTwoLetterLanguageCode(d) == twoLetter)));
+             (!string.IsNullOrEmpty(twoLetter) && SpellCheckDictionaryDisplay.GetTwoLetterLanguageCode(d) == twoLetter))).ToList();
 
+        var match = PickDictionaryForLanguage(candidates, SelectedDictionary, Se.Settings.Ocr.LastDictionaryFilePerLanguage);
         if (match != null && !ReferenceEquals(match, SelectedDictionary))
         {
             SelectedDictionary = match;
         }
+    }
+
+    /// <summary>
+    /// Picks among the installed dictionaries of one language. A language can have several
+    /// ("en_AU", "en_GB", "en_US"), and taking the first one threw away the user's regional choice
+    /// on every OCR language change: the dictionary remembered for the language wins, then the
+    /// current selection when it already is of that language, then the first installed one.
+    /// </summary>
+    internal static SpellCheckDictionaryDisplay? PickDictionaryForLanguage(
+        List<SpellCheckDictionaryDisplay> candidates,
+        SpellCheckDictionaryDisplay? current,
+        Dictionary<string, string>? lastDictionaryFilePerLanguage)
+    {
+        if (candidates.Count == 0)
+        {
+            return null;
+        }
+
+        var twoLetter = SpellCheckDictionaryDisplay.GetTwoLetterLanguageCode(candidates[0]);
+        if (lastDictionaryFilePerLanguage != null &&
+            lastDictionaryFilePerLanguage.TryGetValue(twoLetter, out var rememberedFile))
+        {
+            var remembered = candidates.FirstOrDefault(d =>
+                Path.GetFileName(d.DictionaryFileName).Equals(rememberedFile, StringComparison.OrdinalIgnoreCase));
+            if (remembered != null)
+            {
+                return remembered;
+            }
+        }
+
+        return current != null && candidates.Contains(current) ? current : candidates[0];
+    }
+
+    partial void OnSelectedDictionaryChanged(SpellCheckDictionaryDisplay? value)
+    {
+        if (value == null || string.IsNullOrEmpty(value.DictionaryFileName))
+        {
+            return;
+        }
+
+        Se.Settings.Ocr.LastDictionaryFilePerLanguage ??= new Dictionary<string, string>();
+        Se.Settings.Ocr.LastDictionaryFilePerLanguage[SpellCheckDictionaryDisplay.GetTwoLetterLanguageCode(value)] = Path.GetFileName(value.DictionaryFileName);
     }
 
     /// <summary>
