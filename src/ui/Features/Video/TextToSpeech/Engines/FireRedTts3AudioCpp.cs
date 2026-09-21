@@ -59,6 +59,7 @@ public class FireRedTts3AudioCpp : ITtsEngine, IPerLineCloneEngine
     public bool HasKeyFile => false;
     public bool SupportsVoiceCloning => true;
     public bool SupportsPerLineVoiceCloning => true;
+    public bool PerLineCloneNeedsTranscript => true;
 
     // Q8_0 is the default: same 24 kHz output as the original-precision file at 7.6 GB less on
     // disk. audio.cpp names the unquantized package "orig" rather than bf16/f16 because the

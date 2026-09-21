@@ -14,6 +14,14 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 public interface IPerLineCloneEngine
 {
     /// <summary>
+    /// True when <see cref="MakePerLineCloneVoice"/> refuses a clip with no transcript beside it,
+    /// so the run is worth nothing without them: the user is then asked, before the run starts,
+    /// whether the clips that have none should be transcribed with speech-to-text. False for the
+    /// engines that clone from the audio alone, or that transcribe the clip themselves.
+    /// </summary>
+    bool PerLineCloneNeedsTranscript => false;
+
+    /// <summary>
     /// Wraps a cut reference clip as a voice this engine can speak with, staging the clip into
     /// the engine's own folders when the backend can only read it from there. Null when the clip
     /// cannot be used as a reference (e.g. no transcript beside it) - the caller then falls back

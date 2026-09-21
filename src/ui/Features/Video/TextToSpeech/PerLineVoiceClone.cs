@@ -343,6 +343,50 @@ public static class PerLineVoiceClone
         TtsEngineCatalog.CreateVoiceCloningEngines().OfType<IPerLineCloneEngine>().ToArray());
 
     /// <summary>
+    /// True when <paramref name="engine"/> cannot clone from a clip that has no transcript beside
+    /// it (see <see cref="IPerLineCloneEngine.PerLineCloneNeedsTranscript"/>).
+    /// </summary>
+    public static bool NeedsTranscript(ITtsEngine engine) =>
+        engine is IPerLineCloneEngine { PerLineCloneNeedsTranscript: true };
+
+    /// <summary>
+    /// The cut clips that have no usable transcript sidecar - the ones a transcript-needing engine
+    /// would refuse. A clip gets its sidecar from the original-language subtitle, so these are the
+    /// lines with no original loaded, or none that lines up with them.
+    /// </summary>
+    public static List<string> GetClipsWithoutTranscript(IEnumerable<string> clipFileNames) =>
+        clipFileNames
+            .Where(clip => string.IsNullOrWhiteSpace(Qwen3TtsCrispAsr.TryReadUsableTranscript(clip)))
+            .ToList();
+
+    /// <summary>
+    /// Writes each clip's transcription as its transcript sidecar and returns how many got one. A
+    /// clip nothing was heard in gets none, so the engine still sees it as having no transcript.
+    /// </summary>
+    /// <param name="toRefText">Flattens a transcription's cues into one plain sentence.</param>
+    public static int WriteTranscripts(
+        IEnumerable<(string ClipFileName, IEnumerable<string> CueTexts)> transcriptions,
+        Func<IEnumerable<string?>, string> toRefText)
+    {
+        var written = 0;
+        foreach (var (clipFileName, cueTexts) in transcriptions)
+        {
+            var transcript = toRefText(cueTexts);
+            if (Qwen3TtsCrispAsr.LooksLikeUnusableTranscript(transcript))
+            {
+                continue;
+            }
+
+            if (Qwen3TtsCrispAsr.TryWriteRefTextSidecar(clipFileName, transcript))
+            {
+                written++;
+            }
+        }
+
+        return written;
+    }
+
+    /// <summary>
     /// Wraps a cut clip as a voice <paramref name="engine"/> understands.
     /// </summary>
     /// <remarks>
