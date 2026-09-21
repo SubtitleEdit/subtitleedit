@@ -295,15 +295,14 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
 
     private int GetVideoHeight()
     {
-        return _mediaInfo?.Dimension.Height ?? 1080;
+        return SecondarySubtitleStyler.GetVideoSize(_mediaInfo).Height;
     }
 
     private Subtitle BuildAssaSubtitle(bool mergeWithSubtitle)
     {
         var style = SecondarySubtitleStyler.MakeStyle(_styleName, FontSize, FontBold, SubtitleColor, SelectedFontBoxType.BoxType, SelectedFontAlignment.Code);
 
-        var width = _mediaInfo?.Dimension.Width ?? 1920;
-        var height = GetVideoHeight();
+        var (width, height) = SecondarySubtitleStyler.GetVideoSize(_mediaInfo);
         var result = new Subtitle(_secondarySubtitle);
         SecondarySubtitleStyler.SetHeader(result, style, width, height);
 

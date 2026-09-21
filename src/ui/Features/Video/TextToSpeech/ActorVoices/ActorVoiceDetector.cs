@@ -146,6 +146,11 @@ public static class ActorVoiceDetector
                 // with no runtime behind it. The model itself may still auto-download.
                 case SupertonicCrispAsr when !File.Exists(SupertonicCrispAsr.GetCrispAsrExecutable()):
                     continue;
+
+                // Lists its one fixed speaker always, since it stopped posing as a cloning engine.
+                case ZonosTtsCrispAsr when !File.Exists(ZonosTtsCrispAsr.GetCrispAsrExecutable())
+                    || !ZonosTtsCrispAsr.AreModelsInstalled():
+                    continue;
             }
 
             yield return engine;

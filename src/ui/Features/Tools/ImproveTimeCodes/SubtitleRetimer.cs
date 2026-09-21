@@ -421,9 +421,10 @@ public sealed partial class SubtitleRetimer
             var isOffset = Math.Abs(offset) > Math.Max(0.15, spread * 3.0);
             if (isOffset)
             {
+                // "Adjust end times" off: the end stays, only the start takes the offset
                 results[i] = new LineResult(
                     Math.Max(0, lines[i].StartSeconds + offset),
-                    lines[i].EndSeconds + offset,
+                    options.AdjustEnd ? lines[i].EndSeconds + offset : lines[i].EndSeconds,
                     LineStatus.MovedWithNeighbours);
             }
             else if (status == LineStatus.Retimed)
@@ -489,10 +490,12 @@ public sealed partial class SubtitleRetimer
                 wanted = Math.Max(wanted, GetSpokenText(lines[i].Text).Length / options.ReadingCharsPerSecond);
             }
 
-            // Reading time may hold a line for as long as it used to be shown, never longer.
+            // Reading time may hold a line for as long as it used to be shown, never longer. With
+            // "Adjust end times" off the end is not held at all - it only gives way to the next
+            // line - or every line whose start moved later had its end moved along after all.
             var originalDuration = lines[i].EndSeconds - lines[i].StartSeconds;
             var readingEnd = start + Math.Min(wanted, Math.Max(originalDuration, options.MinDurationSeconds));
-            end = Math.Min(Math.Max(end, readingEnd), room);
+            end = Math.Min(options.AdjustEnd ? Math.Max(end, readingEnd) : end, room);
 
             if (end <= start)
             {

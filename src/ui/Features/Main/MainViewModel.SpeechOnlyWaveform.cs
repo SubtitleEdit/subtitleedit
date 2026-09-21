@@ -90,7 +90,8 @@ public partial class MainViewModel
 
         if (normalPeaks != null)
         {
-            AudioVisualizer.WavePeaks = normalPeaks;
+            // only the peaks: the shot changes and the spectrogram are on the SMPTE time line already
+            AudioVisualizer.WavePeaks = IsSmpteTimingEnabled ? Controls.AudioVisualizerControl.AudioVisualizer.ToSmpteDropFrameTime(normalPeaks) : normalPeaks;
             _updateAudioVisualizer = true;
         }
         else if (!IsWaveformGenerating)
@@ -179,7 +180,9 @@ public partial class MainViewModel
                         return;
                     }
 
-                    AudioVisualizer.WavePeaks = speechPeaks;
+                    // With SMPTE timing on, the peaks they replace were compressed - raw ones
+                    // drift some 3.6 seconds per hour against the subtitles and shot changes.
+                    AudioVisualizer.WavePeaks = IsSmpteTimingEnabled ? Controls.AudioVisualizerControl.AudioVisualizer.ToSmpteDropFrameTime(speechPeaks) : speechPeaks;
                     _updateAudioVisualizer = true;
                     if (generated)
                     {

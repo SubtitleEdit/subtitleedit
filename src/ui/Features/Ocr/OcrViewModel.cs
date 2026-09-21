@@ -649,9 +649,10 @@ public partial class OcrViewModel : ObservableObject
         // Trailing dot-separated language tag like "movie.nl.sub" or "movie.dut.forced.sub"
         // (the extension is already removed). Walk backwards past common non-language subtitle
         // markers; "hi" is treated as hearing-impaired, not Hindi, as that reading is far more
-        // common in subtitle file names. Three-letter tokens must be lowercase so capitalized
-        // title words ("Big.Ben") are not mistaken for language codes; only the last two
-        // candidate tokens are considered so tokens deep inside the title cannot match.
+        // common in subtitle file names. Three-letter tokens must be lowercase, and two-letter
+        // ones must not be capitalized, so title words ("Big.Ben", "Dr.No") are not mistaken
+        // for language codes; only the last two candidate tokens are considered so tokens deep
+        // inside the title cannot match.
         var tokens = name.Split('.');
         var checkedTokens = 0;
         for (var i = tokens.Length - 1; i > 0 && checkedTokens < 2; i--)
@@ -669,6 +670,13 @@ public partial class OcrViewModel : ObservableObject
             }
 
             if (token.Length == 3 && token != token.ToLowerInvariant())
+            {
+                continue;
+            }
+
+            // A two-letter tag is "nl" or "NL". "No", "It", "Be", "Am", "Is", "My" are title words
+            // ("Dr.No", "Let.It.Be") - and batch convert OCRs with whatever comes back from here.
+            if (token.Length == 2 && char.IsUpper(token[0]) && char.IsLower(token[1]))
             {
                 continue;
             }

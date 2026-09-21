@@ -150,6 +150,7 @@ public partial class BackgroundMusicViewModel : ObservableObject
         MusicVolumePercent = Math.Clamp(Se.Settings.Video.BackgroundMusic.TextToSpeechMusicVolumePercent, 0, 200);
         Initialize(videoFileName);
 
+        // no target: the video's length is still being read, and it is the video the clip was made for
         if (previous != null && previous.Matches(Prompt, Bpm, GenerateSeconds))
         {
             Generated = previous;
@@ -257,7 +258,6 @@ public partial class BackgroundMusicViewModel : ObservableObject
         var seed = UseRandomSeed ? Random.Shared.NextInt64(1, int.MaxValue) : Seed;
         Seed = seed;
         var target = TargetSeconds;
-        var generateSeconds = BackgroundMusicGenerator.GetGenerateSeconds(GenerateSeconds, target);
 
         HasMusic = false;
         _music = null;
@@ -280,7 +280,7 @@ public partial class BackgroundMusicViewModel : ObservableObject
                 };
             });
 
-            var generated = await BackgroundMusicGenerator.GenerateAsync(Prompt, Bpm, generateSeconds, seed, _tempFolder, progress, token);
+            var generated = await BackgroundMusicGenerator.GenerateAsync(Prompt, Bpm, GenerateSeconds, target, seed, _tempFolder, progress, token);
             _phaseText = l.CreatingLoop;
             var music = await Task.Run(() => generated.Render(target), token);
 

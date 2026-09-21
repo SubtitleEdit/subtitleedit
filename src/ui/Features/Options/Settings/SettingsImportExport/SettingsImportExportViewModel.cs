@@ -368,6 +368,8 @@ public partial class SettingsImportExportViewModel : ObservableObject
         // those customizations was silently dropped on export/import (#14232).
         var exportShortcuts = ExportImportAll || ExportImportShortcuts;
         exportData.Shortcuts = exportShortcuts ? currentSettings.Shortcuts : null!;
+        // So the import side knows which shortcut migrations these bindings have been through.
+        exportData.ShortcutsMigrationVersion = exportShortcuts ? currentSettings.ShortcutsMigrationVersion : null;
         CopyShortcutSlots(exportShortcuts ? currentSettings : null, exportData);
         exportData.AutoTranslate = ExportImportAll || ExportImportAutoTranslate ? currentSettings.AutoTranslate : null!;
         exportData.SpellCheck = ExportImportAll ? currentSettings.SpellCheck : null!;
@@ -485,13 +487,7 @@ public partial class SettingsImportExportViewModel : ObservableObject
         {
             if (importData.Shortcuts != null)
             {
-                if (_importSourceOs != null &&
-                    !string.Equals(_importSourceOs, GetCurrentOsName(), StringComparison.Ordinal))
-                {
-                    NormalizeShortcutModifiersForCurrentOs(importData.Shortcuts);
-                }
-
-                Se.Settings.Shortcuts = importData.Shortcuts;
+                ApplyImportedShortcuts(Se.Settings, importData.Shortcuts, importData.ShortcutsMigrationVersion, _importSourceOs, GetCurrentOsName());
             }
 
             if (_importHasShortcutSlots)
@@ -559,6 +555,36 @@ public partial class SettingsImportExportViewModel : ObservableObject
         Se.SaveSettings();
     }
 
+    // Imported shortcuts replace the list the shortcut migrations have already run on, so the
+    // migrations are owed again - from the version the file was exported at (files from before
+    // that was written: from the start; every step only touches bindings still on an old
+    // default). Without this a file from before #14941 brought Cmd+H for Replace and the other
+    // old macOS defaults back for good. The macOS-only defaults also have to be translated when
+    // the file crosses to or from macOS, which renaming Ctrl <-> Cmd alone does not do.
+    internal static void ApplyImportedShortcuts(Se settings, List<SeShortCut> shortcuts, int? exportedMigrationVersion, string? sourceOs, string currentOs)
+    {
+        const string macOs = "MacOS";
+        var isMacOs = currentOs == macOs;
+        var version = exportedMigrationVersion.GetValueOrDefault();
+        if (sourceOs != null && !string.Equals(sourceOs, currentOs, StringComparison.Ordinal))
+        {
+            if (sourceOs == macOs)
+            {
+                Se.RevertMacOsDefaultShortcuts(shortcuts);
+            }
+            else if (isMacOs)
+            {
+                version = Math.Min(version, 2); // steps 3 and 4 are macOS only and never ran there
+            }
+
+            NormalizeShortcutModifiers(shortcuts, isMacOs);
+        }
+
+        settings.Shortcuts = shortcuts;
+        settings.ShortcutsMigrationVersion = version;
+        settings.MigrateShortcuts(isMacOs);
+    }
+
     // Default shortcuts use "Win" as the modifier on macOS (the Cmd/⌘ key) and
     // "Ctrl" on Windows/Linux — see ShortcutsMain.GetDefaultShortcuts. Only called
     // when the import file is known to have come from a different OS, so we
@@ -572,7 +598,11 @@ public partial class SettingsImportExportViewModel : ObservableObject
     // every case.
     private static void NormalizeShortcutModifiersForCurrentOs(List<SeShortCut> shortcuts)
     {
-        var isMac = OperatingSystem.IsMacOS();
+        NormalizeShortcutModifiers(shortcuts, OperatingSystem.IsMacOS());
+    }
+
+    private static void NormalizeShortcutModifiers(List<SeShortCut> shortcuts, bool isMac)
+    {
         // From-set is matched as a group; we always emit the OS-default token.
         var fromTokens = isMac
             ? new[] { "Ctrl", "Control" }
