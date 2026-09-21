@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Features.Video.BurnIn;
 /// <remarks>
 /// ffmpeg 9.0 dropped the deprecated nvenc preset aliases ("default", "hp", "hq", "bd", "ll",
 /// "llhq", "llhp", "lossless", "losslesshp") - passing one now fails the encode outright with
-/// "exit code -22" instead of warning, and ffmpeg 9.0.1 is what Subtitle Edit downloads on
+/// "exit code -22" instead of warning, and ffmpeg 9.0.x is what Subtitle Edit downloads on
 /// Windows, so every one of those entries was a dead end (issue #14927). Only the names that
 /// ffmpeg still has are offered; they have existed since ffmpeg 4.4, so this also works with an
 /// older ffmpeg the user may have on PATH.

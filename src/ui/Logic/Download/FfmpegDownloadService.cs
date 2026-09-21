@@ -16,7 +16,7 @@ public interface IFfmpegDownloadService
 public class FfmpegDownloadService : IFfmpegDownloadService
 {
     private readonly HttpClient _httpClient;
-    private const string WindowsUrl = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v9-1/ffmpeg901.zip";
+    private const string WindowsUrl = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v9-2/ffmpeg902.zip";
 
     // Intel is still 8.0: osxexperts.net, where both macOS builds come from, has not published an
     // Intel build past 8.0.
