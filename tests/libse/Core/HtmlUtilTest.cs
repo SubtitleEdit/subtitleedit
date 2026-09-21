@@ -209,4 +209,18 @@ public class HtmlUtilTest
         Assert.Equal("&#128512;", HtmlUtil.EncodeNumeric("😀"));
     }
 
+    // A font color can be a CSS function (WebVTT "::cue" colors, #15125). The attribute used to be
+    // cut off at the "(", leaving "<font (235,235,235,1.000000)">" behind.
+    [Theory]
+    [InlineData("<font color=\"rgba(235,235,235,1.000000)\">Hello there.</font>", "Hello there.")]
+    [InlineData("<font color=\"rgb(255, 0, 0)\">Hello there.</font>", "Hello there.")]
+    [InlineData("<font color='hsl(120, 100%, 50%)'>Hello</font> and <font color=rgb(0,0,255)>there</font>", "Hello and there")]
+    [InlineData("<font face=\"Arial\" color=\"rgba(235,235,235,0.5)\">Hello there.</font>", "<font face=\"Arial\">Hello there.</font>")]
+    [InlineData("<font color=\"#ff0000\">Hello there.</font>", "Hello there.")]
+    [InlineData("<font color=\"red\">Hello</font> (there)", "Hello (there)")]
+    public void RemoveColorTagsHandlesCssColorFunctions(string input, string expected)
+    {
+        Assert.Equal(expected, HtmlUtil.RemoveColorTags(input));
+    }
+
 }

@@ -1565,11 +1565,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
 #if NET7_0_OR_GREATER
-        [GeneratedRegex("[ ]*(COLOR|color|Color)=[\"']*[#\\dA-Za-z]*[\"']*[ ]*")]
+        [GeneratedRegex("[ ]*(COLOR|color|Color)=[\"']*[#\\dA-Za-z]*(?:\\([^()<>\"']*\\))?[\"']*[ ]*")]
         private static partial Regex ColorAttributeRegexGen();
         private static readonly Regex ColorAttributeRegex = ColorAttributeRegexGen();
 #else
-        private static readonly Regex ColorAttributeRegex = new Regex("[ ]*(COLOR|color|Color)=[\"']*[#\\dA-Za-z]*[\"']*[ ]*", RegexOptions.Compiled);
+        private static readonly Regex ColorAttributeRegex = new Regex("[ ]*(COLOR|color|Color)=[\"']*[#\\dA-Za-z]*(?:\\([^()<>\"']*\\))?[\"']*[ ]*", RegexOptions.Compiled);
 #endif
 
         /// <summary>
