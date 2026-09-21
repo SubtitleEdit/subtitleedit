@@ -26,6 +26,28 @@ public static class OcrAssaAlignment
             return (text, false);
         }
 
+        // DVB subtitles come as an image of the whole frame with the text drawn in place, plus
+        // the position of that text. Adding the two counted the offset twice and pushed every
+        // line to the right/bottom third, so go by the ink alone.
+        if (bitmap.Width >= screenWidth && bitmap.Height >= screenHeight)
+        {
+            var ink = BitmapInkBounds.Crop(bitmap);
+            if (ink is null)
+            {
+                return (text, false);
+            }
+
+            using var inkBitmap = ink.Value.Bitmap;
+            return DetectFromPlacedImage(
+                inkBitmap, ink.Value.Position.X, ink.Value.Position.Y, screenWidth, screenHeight, text, writeAn2Tag);
+        }
+
+        return DetectFromPlacedImage(bitmap, positionX, positionY, screenWidth, screenHeight, text, writeAn2Tag);
+    }
+
+    private static (string Text, bool AlignmentAdded) DetectFromPlacedImage(
+        SKBitmap bitmap, int positionX, int positionY, int screenWidth, int screenHeight, string text, bool writeAn2Tag)
+    {
         // Check if image height is larger than approximately 1/3 of screen height
         var imageHeightRatio = (double)bitmap.Height / screenHeight;
         if (imageHeightRatio > 0.33)

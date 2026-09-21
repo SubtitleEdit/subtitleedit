@@ -77,6 +77,39 @@ public class OcrAssaAlignmentTests
         Assert.Equal("{\\an8}Top\n{\\an2}Bottom", result.Text);
     }
 
+    // DVB subtitles: the bitmap is the whole frame and the position is where its text is.
+    // Adding the two scored every line as right/bottom ({\an3}) or right/middle ({\an6}).
+    [Theory]
+    [InlineData(200, 490, "Hello")]        // bottom centre
+    [InlineData(200, 30, "{\\an8}Hello")]   // top centre
+    [InlineData(20, 260, "{\\an4}Hello")]   // left middle, a narrow sign
+    public void Detect_FrameSizedImage_GoesByTheInk(int inkLeft, int inkTop, string expected)
+    {
+        using var bitmap = new SKBitmap(new SKImageInfo(720, 576, SKColorType.Rgba8888, SKAlphaType.Unpremul));
+        bitmap.Erase(SKColors.Transparent);
+        var inkWidth = inkLeft == 20 ? 120 : 320;
+        using (var canvas = new SKCanvas(bitmap))
+        using (var paint = new SKPaint { Color = SKColors.White })
+        {
+            canvas.DrawRect(inkLeft, inkTop, inkWidth, 40, paint);
+        }
+
+        var result = OcrAssaAlignment.Detect(bitmap, inkLeft, inkTop, 720, 576, "Hello", writeAn2Tag: false);
+
+        Assert.Equal(expected, result.Text);
+    }
+
+    [Fact]
+    public void Detect_FrameSizedImageFullOfInk_IsCentered()
+    {
+        using var bitmap = new SKBitmap(new SKImageInfo(720, 576, SKColorType.Rgba8888, SKAlphaType.Unpremul));
+        bitmap.Erase(SKColors.White);
+
+        var result = OcrAssaAlignment.Detect(bitmap, 0, 0, 720, 576, "Hello", writeAn2Tag: false);
+
+        Assert.Equal("{\\an5}Hello", result.Text);
+    }
+
     [Fact]
     public void SplitTextByAlignmentGroups_DifferentTags_SplitsPerAlignment()
     {
