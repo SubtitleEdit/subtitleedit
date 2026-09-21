@@ -133,7 +133,7 @@ public class StringHelperFastPathTest
     // ---------------------------------------------------------------- HtmlUtil.RemoveColorTags
 
     private static readonly Regex ColorAttributeRegex =
-        new Regex("[ ]*(COLOR|color|Color)=[\"']*[#\\dA-Za-z]*[\"']*[ ]*", RegexOptions.Compiled);
+        new Regex("[ ]*(COLOR|color|Color)=[\"']*[#\\dA-Za-z]*(?:\\([^()<>\"']*\\))?[\"']*[ ]*", RegexOptions.Compiled);
 
     private static string ReferenceRemoveColorTags(string input)
     {
@@ -191,6 +191,7 @@ public class StringHelperFastPathTest
             "<font COLOR='red'>Hello there.</font>",
             "<font Color=red>Hello</font> and <font color=blue>there</font>",
             "Hello there.",
+            "<font color=\"rgba(235,235,235,1.000000)\">Hello there.</font>",
             " color=red without any tag ",
             "<i>Hello</i>",
             string.Empty,
