@@ -238,7 +238,7 @@ public static class LlamaCppDownloadHelper
 
     /// <summary>
     /// Follow-up prompt after the user picks "CUDA" in the Windows build selector - llama.cpp ships
-    /// both a CUDA 12.4 and a CUDA 13.3 build. Returns "cuda" (CUDA 12) or "cuda13", or null when
+    /// both a CUDA 12.4 and a CUDA 13.4 build. Returns "cuda" (CUDA 12) or "cuda13", or null when
     /// the user cancels. Mirrors the CrispASR CUDA version prompt.
     /// </summary>
     private static async Task<string?> PromptCudaVersionAsync(Window owner)
