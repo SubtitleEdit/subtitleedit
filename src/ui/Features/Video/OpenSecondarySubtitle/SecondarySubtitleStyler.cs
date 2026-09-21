@@ -111,7 +111,8 @@ public static class SecondarySubtitleStyler
             Colors.White,
             FontBoxType.None,
             "8"); // Top-center
-        return Build(secondarySubtitle, style, width, height);
+        // "auto": the dialog's own default, which leaves the lines as they are.
+        return Build(secondarySubtitle, style, width, height, "auto");
     }
 
     /// <summary>
