@@ -124,10 +124,13 @@ public class PerLineVoiceCloneTests
     [Fact]
     public void AClipBecomesAVoiceOnlyForEnginesThatKnowHowToUseOne()
     {
-        var voice = PerLineVoiceClone.MakeVoiceForClip(new OmniVoiceTtsCpp(), "/tmp/refs/line-0007.wav");
+        using var clips = new ClipFolder();
+        var clip = clips.WriteClip("line-0007", "What the video says at that line.");
+
+        var voice = PerLineVoiceClone.MakeVoiceForClip(new OmniVoiceTtsCpp(), clip);
 
         Assert.NotNull(voice);
-        Assert.Equal("/tmp/refs/line-0007.wav", Assert.IsType<OmniVoice>(voice!.EngineVoice).FilePath);
+        Assert.Equal(clip, Assert.IsType<OmniVoice>(voice!.EngineVoice).FilePath);
 
         // An engine that does not clone per line (no IPerLineCloneEngine) must come back as null
         // so the caller falls back, rather than getting some other engine's voice type.
@@ -148,9 +151,27 @@ public class PerLineVoiceCloneTests
     {
         // The exported clip may have been renamed to avoid a collision in the export folder; the
         // line should still show the voice it was generated with, not the file it came back as.
-        var voice = PerLineVoiceClone.MakeVoiceForClip(new OmniVoiceTtsCpp(), "/tmp/refs/line-0007_1.wav", "line-0007");
+        using var clips = new ClipFolder();
+        var clip = clips.WriteClip("line-0007_1", "What the video says at that line.");
+
+        var voice = PerLineVoiceClone.MakeVoiceForClip(new OmniVoiceTtsCpp(), clip, "line-0007");
 
         Assert.Equal("line-0007", voice!.Name);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void AnOmniVoiceClipWithoutATranscriptFallsBackInsteadOfFailingTheLine(string? transcript)
+    {
+        // omnivoice-tts insists on --ref-text, and a blank one makes it drop words from the line.
+        // With no original-language subtitle loaded the clips have no transcript, and Speak used
+        // to throw "requires a transcript file" for every single line (#15145).
+        using var clips = new ClipFolder();
+        var clip = clips.WriteClip("line-0001", transcript);
+
+        Assert.Null(PerLineVoiceClone.MakeVoiceForClip(new OmniVoiceTtsCpp(), clip));
     }
 
     [Fact]
@@ -220,5 +241,39 @@ public class PerLineVoiceCloneTests
         var clips = new Dictionary<Paragraph, string> { [lines[0]] = "line-0001.wav" };
 
         Assert.Empty(PerLineVoiceClone.GetFallbackReferenceClips(lines, 0, clips, _ => null));
+    }
+
+    private sealed class ClipFolder : IDisposable
+    {
+        private readonly string _path = Path.Combine(Path.GetTempPath(), "se-per-line-clone-" + Guid.NewGuid().ToString("N"));
+
+        public ClipFolder()
+        {
+            Directory.CreateDirectory(_path);
+        }
+
+        public string WriteClip(string name, string? transcript)
+        {
+            var wav = Path.Combine(_path, name + ".wav");
+            File.WriteAllText(wav, "not really a wav, and nothing here reads it");
+            if (transcript != null)
+            {
+                File.WriteAllText(Path.ChangeExtension(wav, ".txt"), transcript);
+            }
+
+            return wav;
+        }
+
+        public void Dispose()
+        {
+            try
+            {
+                Directory.Delete(_path, recursive: true);
+            }
+            catch
+            {
+                // Best effort.
+            }
+        }
     }
 }

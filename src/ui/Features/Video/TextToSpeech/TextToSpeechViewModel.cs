@@ -3747,11 +3747,11 @@ public partial class TextToSpeechViewModel : ObservableObject
             return false;
         }
 
-        // FireRedTTS3 refuses a clip without a transcript (MakePerLineCloneVoice returns null),
-        // and the transcripts come from the original-language subtitle. Without one loaded every
-        // line would silently fall back to the first imported voice - a run that "does not
-        // clone" (#14480). Say so up front instead of after minutes of generation.
-        if (engine is FireRedTts3AudioCpp && (_originalSubtitle == null || _originalSubtitle.Paragraphs.Count == 0))
+        // FireRedTTS3 and OmniVoice TTS refuse a clip without a transcript (MakePerLineCloneVoice
+        // returns null), and the transcripts come from the original-language subtitle. Without
+        // one loaded every line would silently fall back to an ordinary voice - a run that "does
+        // not clone" (#14480, #15145). Say so up front instead of after minutes of generation.
+        if (engine is FireRedTts3AudioCpp or OmniVoiceTtsCpp && (_originalSubtitle == null || _originalSubtitle.Paragraphs.Count == 0))
         {
             await MessageBox.Show(
                 Window!,
