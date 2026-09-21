@@ -12,21 +12,20 @@ public static class ViewMergeLinesWithSameText
         {
             Content = Se.Language.General.MergeLinesWithSameText,
             FontWeight = Avalonia.Media.FontWeight.Bold,
-            Margin = new Avalonia.Thickness(0,0,0, 10),
+            Margin = new Avalonia.Thickness(0, 0, 0, 10),
         };
-        
+
         var labelGap = UiUtil.MakeLabel(Se.Language.Tools.MergeLinesWithSameText.MaxMsBetweenLines);
         var numericUpDownGap = UiUtil.MakeNumericUpDownInt(0, 10000, Se.Settings.Tools.MergeSameText.MaxMillisecondsBetweenLines, 130, vm, nameof(vm.MergeSameTextMaxMillisecondsBetweenLines));
         var checkBoxIncludeIncrementText = UiUtil.MakeCheckBox(Se.Language.Tools.MergeLinesWithSameText.IncludeIncrementingLines, vm, nameof(vm.MergeSameTextIncludeIncrementingLines));
         var checkBoxIncludeRollUp = UiUtil.MakeCheckBox(Se.Language.Tools.MergeLinesWithSameText.IncludeRollUpCaptions, vm, nameof(vm.MergeSameTextIncludeRollUpCaptions));
         var panelGap = UiUtil.MakeHorizontalPanel(labelGap, numericUpDownGap);
 
-
         var panel = new StackPanel
         {
             Orientation = Avalonia.Layout.Orientation.Vertical,
-            Children = 
-            { 
+            Children =
+            {
                 labelHeader,
                 panelGap,
                 checkBoxIncludeIncrementText,

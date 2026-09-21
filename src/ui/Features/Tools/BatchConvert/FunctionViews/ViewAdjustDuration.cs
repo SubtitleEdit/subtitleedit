@@ -28,13 +28,8 @@ public static class ViewAdjustDuration
             ItemsSource = vm.AdjustTypes,
             VerticalAlignment = VerticalAlignment.Center,
             MinWidth = 180,
+            [!ComboBox.SelectedValueProperty] = new Binding(nameof(vm.SelectedAdjustType)) { Mode = BindingMode.TwoWay }
         };
-        combo.Bind(ComboBox.SelectedValueProperty, new Binding
-        {
-            Path = nameof(vm.SelectedAdjustType),
-            Mode = BindingMode.TwoWay,
-            Source = vm,
-        });
 
         var panelSeconds = MakeAdjustSeconds(vm);
         var panelPercent = MakeAdjustPercent(vm);

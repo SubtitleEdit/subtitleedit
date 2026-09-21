@@ -12,7 +12,7 @@ public static class ViewMergeShortLines
         {
             Content = Se.Language.Tools.MergeShortLines.Title,
             FontWeight = Avalonia.Media.FontWeight.Bold,
-            Margin = new Avalonia.Thickness(0, 0, 0, 10),
+            Margin = new Avalonia.Thickness(0, 0, 0, 20),
         };
 
         var labelMaxChars = UiUtil.MakeLabel(Se.Language.Tools.MergeShortLines.MaxCharacters);
@@ -27,7 +27,7 @@ public static class ViewMergeShortLines
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(20, GridUnitType.Pixel) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },

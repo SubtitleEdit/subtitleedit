@@ -18,7 +18,7 @@ public static class ViewChangeSpeed
             VerticalAlignment = VerticalAlignment.Center,
             FontWeight = Avalonia.Media.FontWeight.Bold
         };
-        
+
         var label = new Label
         {
             Content = Se.Language.Sync.SpeedInPercentage,
