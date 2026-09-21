@@ -1731,6 +1731,42 @@ public class FfmpegGenerator
         return $"-y -f concat -safe 0 -i \"{concatListFileName}\" -c copy \"{outputFileName}\"";
     }
 
+    /// <summary>The shortest clip duration handed to ffmpeg's "-t", see <see cref="HasClipDuration"/>.</summary>
+    internal const double MinimumClipSeconds = 0.001;
+
+    /// <summary>
+    /// False for a range ffmpeg cannot cut a clip from: a line whose end lies at or before its
+    /// start. Callers check this first and skip the line - the clamp in the parameter builders
+    /// only keeps a bad value away from ffmpeg, it does not make a usable clip.
+    /// </summary>
+    /// <remarks>
+    /// A negative "-t" fails ("durationi out of range" up to ffmpeg 9.0.1, rejected while parsing
+    /// the options from 9.0.2), and "-t 0.000" is worse: zero means "no limit", so the clip
+    /// becomes the whole rest of the file - hours of audio for a line near the start of a movie.
+    /// </remarks>
+    internal static bool HasClipDuration(double durationSeconds)
+    {
+        return durationSeconds >= MinimumClipSeconds;
+    }
+
+    private static string FormatClipDuration(double durationSeconds)
+    {
+        var seconds = HasClipDuration(durationSeconds) ? durationSeconds : MinimumClipSeconds;
+        return seconds.ToString("0.000", CultureInfo.InvariantCulture);
+    }
+
+    /// <summary>
+    /// Writes a failed clip extraction to the error log: what was being cut, the command line,
+    /// the exit code and the last lines ffmpeg wrote.
+    /// </summary>
+    internal static void LogClipFailure(string what, string arguments, int exitCode, FfmpegOutputTail? output = null)
+    {
+        var tail = output?.ToString();
+        Se.LogError($"{what}: ffmpeg exit code {exitCode}{Environment.NewLine}" +
+                    $"ffmpeg {arguments}" +
+                    (string.IsNullOrEmpty(tail) ? string.Empty : Environment.NewLine + tail));
+    }
+
     /// <summary>
     /// Build ffmpeg parameters for cutting a voice-cloning reference clip out of a video: the
     /// requested range as mono PCM16 at <paramref name="sampleRate"/>.
@@ -1756,7 +1792,7 @@ public class FfmpegGenerator
         double minimumSeconds = 0)
     {
         var start = startSeconds.ToString("0.000", CultureInfo.InvariantCulture);
-        var duration = durationSeconds.ToString("0.000", CultureInfo.InvariantCulture);
+        var duration = FormatClipDuration(durationSeconds);
 
         var args = $"-y -ss {start} -t {duration} -i \"{videoFileName}\"";
         if (audioTrackFfIndex >= 0)
@@ -1797,7 +1833,7 @@ public class FfmpegGenerator
        string audioBitRate = "32k")
     {
         var start = startSeconds.ToString("0.000", CultureInfo.InvariantCulture);
-        var duration = durationSeconds.ToString("0.000", CultureInfo.InvariantCulture);
+        var duration = FormatClipDuration(durationSeconds);
 
         // Base parameters
         var args = $"-y -ss {start} -t {duration} -i \"{videoFileName}\"";

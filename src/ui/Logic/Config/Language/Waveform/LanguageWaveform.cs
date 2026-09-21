@@ -18,6 +18,8 @@ public class LanguageWaveform
     public string CloneVoiceTo { get; set; }
     public string CloneVoiceNameTitle { get; set; }
     public string CloneVoiceExtractFailed { get; set; }
+    public string LineXHasNoDuration { get; set; }
+    public string AudioClipsSkippedLinesX { get; set; }
     public string ToggleShotChange { get; set; }
     public string ResetWaveformZoomAndSpeed { get; set; }
     public string ShowOriginalSubtitle { get; set; }
@@ -59,6 +61,8 @@ public class LanguageWaveform
         CloneVoiceTo = "Clone voice to";
         CloneVoiceNameTitle = "Name of new voice";
         CloneVoiceExtractFailed = "Could not extract audio for the selected line.";
+        LineXHasNoDuration = "Line {0} has no duration (the end time is not after the start time), so there is no audio to extract.";
+        AudioClipsSkippedLinesX = "No audio could be extracted for these lines, so they were skipped: {0}";
         MinSilenceDurationSeconds = "Min. silence duration (seconds):";
         MaxSilenceVolume = "Max. silence volume (0.0 - 1.0):";
         ToggleShotChange = "Toggle shot change";
