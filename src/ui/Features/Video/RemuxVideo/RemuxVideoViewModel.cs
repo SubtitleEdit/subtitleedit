@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -43,6 +43,7 @@ public partial class RemuxVideoViewModel : ObservableObject
 
     [ObservableProperty] private string _videoFileName = string.Empty;
     [ObservableProperty] private string _videoFileSize = string.Empty;
+    private TimeSpan? _videoDuration;
     [ObservableProperty] private ObservableCollection<RemuxFileItem> _audioFiles = new();
     [ObservableProperty] private RemuxFileItem? _selectedAudioFile;
     [ObservableProperty] private string _audioFilesInfo = string.Empty;
@@ -106,14 +107,27 @@ public partial class RemuxVideoViewModel : ObservableObject
         UpdateCanRemux();
     }
 
-    private void UpdateVideoInfo()
+    private void UpdateVideoInfo(TimeSpan? duration = null)
     {
+        if (duration.HasValue)
+        {
+            _videoDuration = duration;
+        }
+
         if (!string.IsNullOrWhiteSpace(VideoFileName) && File.Exists(VideoFileName))
         {
             try
             {
                 var length = new FileInfo(VideoFileName).Length;
-                VideoFileSize = Utilities.FormatBytesToDisplayFileSize(length);
+                var size = Utilities.FormatBytesToDisplayFileSize(length);
+                if (_videoDuration.HasValue && _videoDuration.Value.TotalMilliseconds > 0)
+                {
+                    VideoFileSize = $"{RemuxFileItem.FormatDuration(_videoDuration.Value)} - {size}";
+                }
+                else
+                {
+                    VideoFileSize = size;
+                }
             }
             catch
             {
@@ -160,9 +174,14 @@ public partial class RemuxVideoViewModel : ObservableObject
 
         var totalBytes = files.Sum(f => f.SizeBytes);
         var size = Utilities.FormatBytesToDisplayFileSize(totalBytes);
-        return files.Count == 1
-            ? size
-            : $"{string.Format(Se.Language.Video.RemuxVideoFilesX, files.Count)} ({size})";
+        if (files.Count == 1)
+        {
+            return !string.IsNullOrEmpty(files[0].DurationDisplay)
+                ? $"{files[0].DurationDisplay} ({size})"
+                : size;
+        }
+
+        return $"{string.Format(Se.Language.Video.RemuxVideoFilesX, files.Count)} ({size})";
     }
 
     private void UpdateCanRemux()
@@ -271,6 +290,7 @@ public partial class RemuxVideoViewModel : ObservableObject
 
     async partial void OnVideoFileNameChanged(string value)
     {
+        _videoDuration = null;
         UpdateVideoInfo();
         if (string.IsNullOrWhiteSpace(OutputFileName) && !string.IsNullOrWhiteSpace(value))
         {
@@ -289,15 +309,21 @@ public partial class RemuxVideoViewModel : ObservableObject
         var onlyVideoAudio = AudioFiles.Count == 0 ||
                              (AudioFiles.Count == 1 && string.Equals(AudioFiles[0].FileName, _lastVideoAudioFileName, StringComparison.OrdinalIgnoreCase));
         _lastVideoAudioFileName = value;
-        if (!onlyVideoAudio)
-        {
-            return;
-        }
 
         try
         {
             var mediaInfo = await Task.Run(() => FfmpegMediaInfo2.Parse(value));
             if (value != VideoFileName)
+            {
+                return;
+            }
+
+            if (mediaInfo.Duration != null && mediaInfo.Duration.TotalMilliseconds > 0)
+            {
+                UpdateVideoInfo(mediaInfo.Duration.TimeSpan);
+            }
+
+            if (!onlyVideoAudio)
             {
                 return;
             }
@@ -321,6 +347,10 @@ public partial class RemuxVideoViewModel : ObservableObject
 
             AudioFiles.Clear();
             var item = new RemuxFileItem(value);
+            if (mediaInfo.Duration != null && mediaInfo.Duration.TotalMilliseconds > 0)
+            {
+                item.SetDuration(mediaInfo.Duration.TimeSpan);
+            }
             item.SetTracks(audioTracks, selectedTrack);
             AudioFiles.Add(item);
             SelectedAudioFile = item;
@@ -452,6 +482,10 @@ public partial class RemuxVideoViewModel : ObservableObject
         try
         {
             var mediaInfo = await Task.Run(() => FfmpegMediaInfo2.Parse(fileName));
+            if (mediaInfo.Duration != null && mediaInfo.Duration.TotalMilliseconds > 0)
+            {
+                item.SetDuration(mediaInfo.Duration.TimeSpan);
+            }
             var audioTracks = ReadAudioTracks(mediaInfo);
             AudioTrackOption? selected = null;
             if (audioTracks.Count > 1)
@@ -718,6 +752,35 @@ public partial class RemuxVideoViewModel : ObservableObject
         }
     }
 
+    public static string FormatElapsed(TimeSpan elapsed)
+    {
+        var totalHours = (int)elapsed.TotalHours;
+        return totalHours > 0
+            ? $"{totalHours}:{elapsed.Minutes:00}:{elapsed.Seconds:00}"
+            : $"{elapsed.Minutes:00}:{elapsed.Seconds:00}";
+    }
+
+    public static string FormatProgressTime(TimeSpan elapsed, double percent)
+    {
+        var elapsedStr = FormatElapsed(elapsed);
+        if (percent <= 0 || percent >= 100 || elapsed.TotalSeconds < 1)
+        {
+            return elapsedStr;
+        }
+
+        var remainingSeconds = elapsed.TotalSeconds * (100.0 - percent) / percent;
+        var remaining = TimeSpan.FromSeconds(Math.Max(0, remainingSeconds));
+        var remainingStr = FormatElapsed(remaining);
+
+        var pattern = Se.Language?.Video?.TextToSpeech?.XElapsedYLeft;
+        if (!string.IsNullOrEmpty(pattern) && pattern.Contains("{0}") && pattern.Contains("{1}"))
+        {
+            return string.Format(pattern, elapsedStr, remainingStr);
+        }
+
+        return $"{elapsedStr} · ~{remainingStr} left";
+    }
+
     [RelayCommand]
     private async Task Remux()
     {
@@ -806,6 +869,8 @@ public partial class RemuxVideoViewModel : ObservableObject
             return;
         }
 
+        DispatcherTimer? elapsedTimer = null;
+        Stopwatch? stopwatch = null;
         try
         {
             double durationSeconds = 0;
@@ -942,6 +1007,20 @@ public partial class RemuxVideoViewModel : ObservableObject
             ProgressText = Se.Language.Video.RemuxVideoRemuxing;
             _log.Clear();
 
+            stopwatch = Stopwatch.StartNew();
+            elapsedTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+            elapsedTimer.Tick += (_, _) =>
+            {
+                if (IsRemuxing)
+                {
+                    var timeStr = FormatProgressTime(stopwatch.Elapsed, ProgressValue);
+                    ProgressText = ProgressValue > 0
+                        ? $"{Se.Language.Video.RemuxVideoRemuxing} {Math.Round(ProgressValue)}% ({timeStr})"
+                        : $"{Se.Language.Video.RemuxVideoRemuxing} ({timeStr})";
+                }
+            };
+            elapsedTimer.Start();
+
             var tcs = new TaskCompletionSource<bool>();
 
             _ffmpegProcess = FfmpegGenerator.GetProcess(arguments, (_, e) =>
@@ -958,7 +1037,8 @@ public partial class RemuxVideoViewModel : ObservableObject
                     Dispatcher.UIThread.Post(() =>
                     {
                         ProgressValue = pct;
-                        ProgressText = $"{Se.Language.Video.RemuxVideoRemuxing} {pct}%";
+                        var timeStr = FormatProgressTime(stopwatch.Elapsed, pct);
+                        ProgressText = $"{Se.Language.Video.RemuxVideoRemuxing} {pct}% ({timeStr})";
                     });
                 }
             });
@@ -975,6 +1055,10 @@ public partial class RemuxVideoViewModel : ObservableObject
 
             await tcs.Task;
 
+            elapsedTimer.Stop();
+            stopwatch.Stop();
+            var totalElapsedStr = FormatElapsed(stopwatch.Elapsed);
+
             if (_isCancelled)
             {
                 ProgressText = Se.Language.General.Cancelled;
@@ -988,7 +1072,7 @@ public partial class RemuxVideoViewModel : ObservableObject
             if (exitCode == 0 && fileSuccess)
             {
                 ProgressValue = 100;
-                ProgressText = Se.Language.Video.RemuxVideoCompleted;
+                ProgressText = $"{Se.Language.Video.RemuxVideoCompleted} ({totalElapsedStr})";
                 IsCompleted = true;
 
                 await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window, vm =>
@@ -998,7 +1082,8 @@ public partial class RemuxVideoViewModel : ObservableObject
                         string.Format(Se.Language.General.VideoFileGeneratedX, OutputFileName),
                         OutputFileName,
                         true,
-                        true);
+                        false,
+                        totalElapsedStr);
                 });
             }
             else
@@ -1038,6 +1123,8 @@ public partial class RemuxVideoViewModel : ObservableObject
         }
         finally
         {
+            elapsedTimer?.Stop();
+            stopwatch?.Stop();
             IsRemuxing = false;
         }
     }

@@ -11532,7 +11532,14 @@ public partial class MainViewModel :
         _windowService.ShowWindow<RemuxVideoWindow, RemuxVideoViewModel>(Window, (window, vm) =>
         {
             _remuxVideoWindow = window;
-            window.Closed += (_, _) => _remuxVideoWindow = null;
+            window.Closed += async (_, _) =>
+            {
+                _remuxVideoWindow = null;
+                if (vm.IsCompleted && !string.IsNullOrWhiteSpace(vm.OutputFileName) && File.Exists(vm.OutputFileName))
+                {
+                    await VideoOpenFile(vm.OutputFileName);
+                }
+            };
             WindowService.KeepTopmostWhileOwnerActive(window, Window);
             vm.Initialize(_videoFileName);
         });

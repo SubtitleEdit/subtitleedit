@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -27,9 +27,11 @@ public partial class PromptFileSavedViewModel : ObservableObject
     [ObservableProperty] private string _extensionChip;
     [ObservableProperty] private string _fileSizeChip;
     [ObservableProperty] private string _durationChip;
+    [ObservableProperty] private string _elapsedChip = string.Empty;
     [ObservableProperty] private bool _hasExtensionChip;
     [ObservableProperty] private bool _hasFileSizeChip;
     [ObservableProperty] private bool _hasDurationChip;
+    [ObservableProperty] private bool _hasElapsedChip;
 
     public Window? Window { get; set; }
     public Button? CopyPathButton { get; internal set; }
@@ -62,6 +64,7 @@ public partial class PromptFileSavedViewModel : ObservableObject
         ExtensionChip = string.Empty;
         FileSizeChip = string.Empty;
         DurationChip = string.Empty;
+        ElapsedChip = string.Empty;
         OpenFileButtonText = Se.Language.General.OpenFile;
     }
 
@@ -70,13 +73,21 @@ public partial class PromptFileSavedViewModel : ObservableObject
     /// caller passes a "saved to path" sentence whose content the window now shows structured -
     /// headline (<paramref name="title"/>), file name, folder and meta chips.
     /// </summary>
-    internal void Initialize(string title, string text, string fileName, bool isShowInFolderVisible, bool isShowFileVisible)
+    internal void Initialize(string title, string text, string fileName, bool isShowInFolderVisible, bool isShowFileVisible, string? elapsed = null)
     {
         Title = title;
         Text = text;
         _fileName = fileName;
         IsShowInFolderVisible = isShowInFolderVisible;
         IsShowFileVisible = isShowFileVisible;
+
+        if (!string.IsNullOrWhiteSpace(elapsed))
+        {
+            ElapsedChip = elapsed.EndsWith("elapsed", StringComparison.OrdinalIgnoreCase)
+                ? elapsed
+                : $"{elapsed} elapsed";
+            HasElapsedChip = true;
+        }
 
         FileNameDisplay = Path.GetFileName(fileName);
         var folder = Path.GetDirectoryName(fileName);
