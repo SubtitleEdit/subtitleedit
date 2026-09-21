@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -83,9 +83,7 @@ public partial class PromptFileSavedViewModel : ObservableObject
 
         if (!string.IsNullOrWhiteSpace(elapsed))
         {
-            ElapsedChip = elapsed.EndsWith("elapsed", StringComparison.OrdinalIgnoreCase)
-                ? elapsed
-                : $"{elapsed} elapsed";
+            ElapsedChip = string.Format(Se.Language.Video.TextToSpeech.XElapsed, elapsed);
             HasElapsedChip = true;
         }
 
