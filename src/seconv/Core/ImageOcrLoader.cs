@@ -497,7 +497,7 @@ internal static class ImageOcrLoader
             if (ocr is not null && detectAlignment && !string.IsNullOrWhiteSpace(text))
             {
                 var item = items[i];
-                var frame = item.PositionFrame ?? new SKSizeI(item.ScreenWidth ?? 0, item.ScreenHeight ?? 0);
+                var frame = new SKSizeI(item.ScreenWidth ?? 0, item.ScreenHeight ?? 0);
                 if (item.Position is null || frame.Width <= 0 || frame.Height <= 0)
                 {
                     noFrameCount++;
