@@ -140,6 +140,95 @@ public partial class CheckArteErrorsViewModel : ObservableObject
     [ObservableProperty] private bool _shiftWholeFileToStartTimeCode;
     [ObservableProperty] private TimeSpan _targetStartTimeCode;
 
+    [ObservableProperty] private int _teletextMaxCells = 37;
+    [ObservableProperty] private int _minimumGapFrames = 5;
+    [ObservableProperty] private double _readingDurationTolerancePercent = 15.0;
+    [ObservableProperty] private bool _acceptShortDurations;
+    [ObservableProperty] private int _shortMinimumFrames = 18;
+
+    public bool IsArtePresetActive =>
+        TeletextMaxCells == 37 &&
+        MinimumGapFrames == 5 &&
+        Math.Abs(ReadingDurationTolerancePercent - 15.0) < 0.001 &&
+        !AcceptShortDurations &&
+        ShortMinimumFrames == 18;
+
+    private double MinimumGapMilliseconds => MinimumGapFrames * 40.0;
+
+    partial void OnTeletextMaxCellsChanged(int value)
+    {
+        if (value < 1)
+        {
+            TeletextMaxCells = 1;
+            return;
+        }
+
+        OnPropertyChanged(nameof(IsArtePresetActive));
+        if (_sourceSnapshot != null)
+        {
+            Analyze();
+        }
+    }
+
+    partial void OnMinimumGapFramesChanged(int value)
+    {
+        if (value < 0)
+        {
+            MinimumGapFrames = 0;
+            return;
+        }
+
+        var minimumGap = Se.Settings.General.MinimumBetweenLines;
+        minimumGap.Frames = value;
+        minimumGap.Milliseconds = (int)Math.Round(value * 40.0, MidpointRounding.AwayFromZero);
+        Se.SaveSettings();
+
+        OnPropertyChanged(nameof(IsArtePresetActive));
+        if (_sourceSnapshot != null)
+        {
+            Analyze();
+        }
+    }
+
+    partial void OnReadingDurationTolerancePercentChanged(double value)
+    {
+        if (value < 0)
+        {
+            ReadingDurationTolerancePercent = 0;
+            return;
+        }
+
+        OnPropertyChanged(nameof(IsArtePresetActive));
+        if (_sourceSnapshot != null)
+        {
+            Analyze();
+        }
+    }
+
+    partial void OnAcceptShortDurationsChanged(bool value)
+    {
+        OnPropertyChanged(nameof(IsArtePresetActive));
+        if (_sourceSnapshot != null)
+        {
+            Analyze();
+        }
+    }
+
+    partial void OnShortMinimumFramesChanged(int value)
+    {
+        if (value < 1)
+        {
+            ShortMinimumFrames = 1;
+            return;
+        }
+
+        OnPropertyChanged(nameof(IsArtePresetActive));
+        if (_sourceSnapshot != null && AcceptShortDurations)
+        {
+            Analyze();
+        }
+    }
+
     partial void OnShiftWholeFileToStartTimeCodeChanged(bool value)
     {
         if (_sourceSnapshot != null)
@@ -309,17 +398,14 @@ public partial class CheckArteErrorsViewModel : ObservableObject
 
     public void Initialize(Subtitle subtitle)
     {
-        // ARTE UT Norm: minimum gap is five frames at 25 fps. Keep both stored
-        // representations in sync because Subtitle Edit can use frame or ms mode.
-        // This is intentionally persisted as the global Subtitle Edit setting.
-        const int arteGapFrames = 5;
-
+        // Use Subtitle Edit's existing minimum-gap setting as the single source of truth.
+        // Opening the ARTE checker must not silently replace the user's configured value.
         var minimumGap = Se.Settings.General.MinimumBetweenLines;
-        if (minimumGap.Frames != arteGapFrames)
-        {
-            minimumGap.Frames = arteGapFrames;
-            Se.SaveSettings();
-        }
+        _minimumGapFrames = Se.Settings.General.UseFrameMode
+            ? Math.Max(0, minimumGap.Frames)
+            : Math.Max(0, (int)Math.Round(minimumGap.Milliseconds / 40.0, MidpointRounding.AwayFromZero));
+        OnPropertyChanged(nameof(MinimumGapFrames));
+        OnPropertyChanged(nameof(IsArtePresetActive));
 
         // Every ARTE target session starts neutral: source 25 fps to target 25 fps.
         // A different source rate is selected explicitly by the user.
@@ -444,6 +530,30 @@ public partial class CheckArteErrorsViewModel : ObservableObject
                 fix.Apply = !fix.Apply;
             }
         }
+    }
+
+    [RelayCommand]
+    private void FixesClearSelection()
+    {
+        foreach (var fix in Fixes)
+        {
+            if (fix.CanBeFixed)
+            {
+                fix.Apply = false;
+            }
+        }
+    }
+
+    [RelayCommand]
+    private void ApplyArtePreset()
+    {
+        // ARTE working preset: 37 visible cells, five 25-fps frames,
+        // 15% reading-duration tolerance, and strict short-duration checking.
+        TeletextMaxCells = 37;
+        MinimumGapFrames = 5;
+        ReadingDurationTolerancePercent = 15.0;
+        AcceptShortDurations = false;
+        ShortMinimumFrames = 18;
     }
 
     [RelayCommand]
@@ -770,7 +880,10 @@ public partial class CheckArteErrorsViewModel : ObservableObject
             var characters = HtmlUtil.RemoveHtmlTags(paragraph.Text, true).Count(character => character is not '\r' and not '\n');
             var readingMinimum = maximumCps > 0 ? characters * 1000.0 / maximumCps : 0;
             var requiredMinimum = Math.Max(minimumMs, readingMinimum);
-            var isTooShort = duration < requiredMinimum;
+            var toleratedMinimum = requiredMinimum * Math.Max(0, 1.0 - ReadingDurationTolerancePercent / 100.0);
+            var shortMinimum = ShortMinimumFrames * 40.0;
+            var acceptedMinimum = AcceptShortDurations ? shortMinimum : toleratedMinimum;
+            var isTooShort = duration < acceptedMinimum;
             var isTooLong = maximumMs > 0 && duration > maximumMs;
             if (!isTooShort && !isTooLong)
             {
@@ -778,15 +891,19 @@ public partial class CheckArteErrorsViewModel : ObservableObject
             }
 
             var desiredEnd = isTooShort
-                ? RoundToArteFrame(paragraph.StartTime.TotalMilliseconds + requiredMinimum)
+                ? RoundToArteFrame(paragraph.StartTime.TotalMilliseconds +
+                    (AcceptShortDurations ? shortMinimum : requiredMinimum))
                 : RoundToArteFrame(paragraph.StartTime.TotalMilliseconds + maximumMs);
             var nextStart = i + 1 < subtitle.Paragraphs.Count
-                ? subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds - 200
+                ? subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds - MinimumGapMilliseconds
                 : double.PositiveInfinity;
             var canFix = desiredEnd > paragraph.StartTime.TotalMilliseconds && desiredEnd <= nextStart &&
                          (!isTooLong || desiredEnd >= requiredMinimum + paragraph.StartTime.TotalMilliseconds);
             var issue = isTooShort
-                ? $"Duration {FormatFrames(duration)} is below the required {FormatFrames(requiredMinimum)}."
+                ? AcceptShortDurations
+                    ? $"Duration {FormatFrames(duration)} is below the accepted short-duration minimum of {ShortMinimumFrames} frames."
+                    : $"Duration {FormatFrames(duration)} is below the tolerated minimum {FormatFrames(toleratedMinimum)} " +
+                      $"({ReadingDurationTolerancePercent:0.#}% tolerance; configured requirement {FormatFrames(requiredMinimum)})."
                 : $"Duration {FormatFrames(duration)} exceeds the configured maximum {FormatFrames(maximumMs)}.";
             Fixes.Add(new ArteFixItem(canFix, i + 1, FormatFrames(duration),
                 canFix ? FormatFrames(desiredEnd - paragraph.StartTime.TotalMilliseconds) : string.Empty,
@@ -801,7 +918,7 @@ public partial class CheckArteErrorsViewModel : ObservableObject
     private void AnalyzeMinimumGaps(Subtitle subtitle)
     {
         const double arteFrameRate = 25.0;
-        const int minimumGapFrames = 5;
+        var minimumGapFrames = MinimumGapFrames;
 
         for (var i = 1; i < subtitle.Paragraphs.Count; i++)
         {
@@ -818,7 +935,7 @@ public partial class CheckArteErrorsViewModel : ObservableObject
             }
 
             var newEndMs = Math.Round(current.StartTime.TotalMilliseconds / 40,
-                MidpointRounding.AwayFromZero) * 40 - 200;
+                MidpointRounding.AwayFromZero) * 40 - MinimumGapMilliseconds;
             var split = Fixes.FirstOrDefault(f => f.Index == i && f.SplitParagraphs != null);
             var lastStart = split?.SplitParagraphs![^1].StartTime.TotalMilliseconds ?? previous.StartTime.TotalMilliseconds;
             var lastText = split?.SplitParagraphs![^1].Text ?? previous.Text;
@@ -829,9 +946,9 @@ public partial class CheckArteErrorsViewModel : ObservableObject
                 (Se.Settings.General.SubtitleMaximumCharactersPerSeconds > 0 && cps > Se.Settings.General.SubtitleMaximumCharactersPerSeconds));
             Fixes.Add(new ArteFixItem(canFix, i,
                 $"{gapFrames} frame{(Math.Abs(gapFrames) == 1 ? string.Empty : "s")}",
-                canFix ? "5 frames" : string.Empty,
-                canFix ? $"Shorten TC Out of UT {i} to leave five frames before UT {i + 1}." :
-                    $"ALARM: Cannot create five-frame gap before UT {i + 1} without eliminating the previous subtitle.",
+                canFix ? $"{minimumGapFrames} frame{(minimumGapFrames == 1 ? string.Empty : "s")}" : string.Empty,
+                canFix ? $"Shorten TC Out of UT {i} to leave {minimumGapFrames} frame{(minimumGapFrames == 1 ? string.Empty : "s")} before UT {i + 1}." :
+                    $"ALARM: Cannot create {minimumGapFrames}-frame gap before UT {i + 1} without eliminating the previous subtitle.",
                 ArteFixKind.MinimumGap)
             {
                 ProposedEndMs = canFix ? newEndMs : null,
@@ -986,7 +1103,7 @@ public partial class CheckArteErrorsViewModel : ObservableObject
                         run.Start < lineStart + line.Length &&
                         run.End > lineStart);
 
-                var maximum = Math.Max(1, 37 - colorCodeCount - coloredBoxControlCount);
+                var maximum = Math.Max(1, TeletextMaxCells - colorCodeCount - coloredBoxControlCount);
 
                 if (line.Length > maximum)
                 {
@@ -1038,7 +1155,7 @@ public partial class CheckArteErrorsViewModel : ObservableObject
         }
     }
 
-    private static bool FitsTeletext(string text)
+    private bool FitsTeletext(string text)
     {
         var projection = FlowInlineColorProjection.Parse(RemoveItalicTags(text).Replace("\r\n", "\n").Replace('\r', '\n'));
         var lines = projection.VisibleText.Split('\n');
@@ -1052,7 +1169,7 @@ public partial class CheckArteErrorsViewModel : ObservableObject
         foreach (var line in lines)
         {
             var controls = projection.ColorRuns.Count(run => run.Start < start + line.Length && run.End > start);
-            if (line.Length + controls + coloredBoxControlCount > 37)
+            if (line.Length + controls + coloredBoxControlCount > TeletextMaxCells)
             {
                 return false;
             }
@@ -1071,7 +1188,7 @@ public partial class CheckArteErrorsViewModel : ObservableObject
         }
 
         string? proposed = null;
-        for (var width = 37; width >= 1; width--)
+        for (var width = TeletextMaxCells; width >= 1; width--)
         {
             var candidate = Utilities.AutoBreakLine(paragraph.Text, width, width + 1, _languageCode);
             if (candidate != paragraph.Text && FitsTeletext(candidate))
@@ -1212,7 +1329,7 @@ public partial class CheckArteErrorsViewModel : ObservableObject
         {
             return text;
         }
-        for (var width = 37; width >= 1; width--)
+        for (var width = TeletextMaxCells; width >= 1; width--)
         {
             var candidate = Utilities.AutoBreakLine(text, width, width + 1, _languageCode);
             if (FitsTeletext(candidate))
@@ -1239,8 +1356,8 @@ public partial class CheckArteErrorsViewModel : ObservableObject
         var source = new Paragraph(paragraph) { Text = RemoveItalicTags(paragraph.Text) };
         // Method 1: use existing line boundaries, then rebalance each resulting subtitle.
         var parts = SplitBreakLongLinesViewModel.Split(
-            new SubtitleLineViewModel(source, new Ebu()), 74, 37,
-            new SplitBreakLongLinesViewModel.SplitOptions { MinimumGapMs = 200 });
+            new SubtitleLineViewModel(source, new Ebu()), TeletextMaxCells * 2, TeletextMaxCells,
+            new SplitBreakLongLinesViewModel.SplitOptions { MinimumGapMs = (int)MinimumGapMilliseconds });
         if (parts.Count < 2)
         {
             return Alarm("No valid split found.");
@@ -1263,7 +1380,7 @@ public partial class CheckArteErrorsViewModel : ObservableObject
         if (!ArteSplitTiming.TryFit(proposals, paragraph.StartTime.TotalMilliseconds,
                 paragraph.EndTime.TotalMilliseconds, Se.Settings.General.SubtitleMinimumDisplayMilliseconds,
                 Se.Settings.General.SubtitleMaximumDisplayMilliseconds,
-                Se.Settings.General.SubtitleMaximumCharactersPerSeconds, out var timingError))
+                Se.Settings.General.SubtitleMaximumCharactersPerSeconds, MinimumGapFrames, out var timingError))
         {
             return Alarm(timingError);
         }

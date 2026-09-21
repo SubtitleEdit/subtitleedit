@@ -7,9 +7,9 @@ namespace Nikse.SubtitleEdit.Features.Tools.CheckArteErrors;
 
 internal static class ArteSplitTiming
 {
-    // Allocate whole 25-fps frames, reserving five frames for each internal gap.
+    // Allocate whole 25-fps frames, reserving the configured gap for each internal gap.
     internal static bool TryFit(IReadOnlyList<Paragraph> parts, double startMs, double endMs,
-        double minimumMs, double maximumMs, double maxCps, out string error)
+        double minimumMs, double maximumMs, double maxCps, int minimumGapFrames, out string error)
     {
         error = string.Empty;
         if (parts.Count == 0 || !double.IsFinite(startMs) || !double.IsFinite(endMs) || endMs <= startMs)
@@ -20,7 +20,8 @@ internal static class ArteSplitTiming
         // Same conversion as Fit selected subtitles to time range: round to whole frames.
         startMs = Math.Round(startMs / 40, MidpointRounding.AwayFromZero) * 40;
         endMs = Math.Round(endMs / 40, MidpointRounding.AwayFromZero) * 40;
-        var available = (int)Math.Round((endMs - startMs) / 40) - 5 * (parts.Count - 1);
+        minimumGapFrames = Math.Max(0, minimumGapFrames);
+        var available = (int)Math.Round((endMs - startMs) / 40) - minimumGapFrames * (parts.Count - 1);
         var weights = parts.Select(p => Math.Max(1, HtmlUtil.RemoveHtmlTags(p.Text, true)
             .Count(c => c != '\r' && c != '\n'))).ToArray();
         var durations = weights.Select(count => (int)Math.Ceiling(Math.Max(40,
@@ -28,7 +29,7 @@ internal static class ArteSplitTiming
         var maximum = maximumMs > 0 ? (int)Math.Floor(maximumMs / 40) : Math.Max(1, available);
         if (available < parts.Count)
         {
-            error = "Not enough frames for one frame per subtitle plus five-frame gaps.";
+            error = $"Not enough frames for one frame per subtitle plus {minimumGapFrames}-frame gaps.";
             return false;
         }
         var needsFit = durations.Any(d => d > maximum) || durations.Sum() > available ||
@@ -36,7 +37,7 @@ internal static class ArteSplitTiming
         if (needsFit)
         {
             // Fit-in-range fallback: distribute the available frames proportionally,
-            // retaining at least one frame per subtitle and all five-frame gaps.
+            // retaining at least one frame per subtitle and all configured gaps.
             var budget = available - parts.Count;
             var totalWeight = weights.Sum();
             var exact = weights.Select(w => budget * (double)w / totalWeight).ToArray();
@@ -70,7 +71,7 @@ internal static class ArteSplitTiming
         {
             parts[i].StartTime = new TimeCode(cursor);
             parts[i].EndTime = new TimeCode(cursor + durations[i] * 40);
-            cursor += durations[i] * 40 + 200;
+            cursor += durations[i] * 40 + minimumGapFrames * 40;
         }
         return true;
     }

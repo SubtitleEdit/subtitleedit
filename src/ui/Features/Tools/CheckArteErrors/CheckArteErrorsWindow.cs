@@ -40,16 +40,47 @@ public class CheckArteErrorsWindow : Window
         var settingsView = MakeSettingsView(vm);
         var fixesView = MakeFixesView(vm);
 
-        var buttonGenerateReport = UiUtil.MakeButton("Generate report", vm.GenerateReportCommand);
-        var buttonAnalyze = UiUtil.MakeButton("Analyze", vm.AnalyzeCommand);
-        var buttonOk = UiUtil.MakeButton("Start correction", vm.OkCommand);
-        var panelButtons = UiUtil.MakeButtonBar(
-            buttonGenerateReport,
-            buttonAnalyze,
-            UiUtil.MakeButton("Undo", vm.UndoCommand),
-            buttonOk,
-            UiUtil.MakeButton("Close", vm.CancelCommand)
-        );
+        var closeButton = UiUtil.MakeButton("Close", vm.CancelCommand);
+        var topBar = new Grid
+        {
+            ColumnDefinitions = new ColumnDefinitions("*,Auto"),
+        };
+        topBar.Add(new TextBlock
+        {
+            Text = "Check and fix ARTE Errors",
+            FontSize = 20,
+            FontWeight = FontWeight.SemiBold,
+            VerticalAlignment = VerticalAlignment.Center,
+        }, 0, 0);
+        topBar.Add(closeButton, 0, 1);
+
+        var runChecksButton = UiUtil.MakeButton("Run checks", vm.AnalyzeCommand);
+        runChecksButton.HorizontalAlignment = HorizontalAlignment.Stretch;
+        var applyCorrectionsButton = UiUtil.MakeButton("Apply corrections", vm.OkCommand);
+        applyCorrectionsButton.HorizontalAlignment = HorizontalAlignment.Stretch;
+
+        var runChecksBorder = new Border
+        {
+            BorderBrush = Brushes.DodgerBlue,
+            BorderThickness = new Thickness(2),
+            CornerRadius = new CornerRadius(3),
+            Child = runChecksButton,
+        };
+        var applyCorrectionsBorder = new Border
+        {
+            BorderBrush = Brushes.LimeGreen,
+            BorderThickness = new Thickness(2),
+            CornerRadius = new CornerRadius(3),
+            Child = applyCorrectionsButton,
+        };
+
+        var primaryActions = new Grid
+        {
+            ColumnDefinitions = new ColumnDefinitions("*,*"),
+            ColumnSpacing = 10,
+        };
+        primaryActions.Add(runChecksBorder, 0, 0);
+        primaryActions.Add(applyCorrectionsBorder, 0, 1);
 
         var summaryText = new TextBlock
         {
@@ -60,36 +91,27 @@ public class CheckArteErrorsWindow : Window
         };
         summaryText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.FixesSummaryText)));
 
-        var buttonSelectPanel = UiUtil.MakeButtonBar(
-            UiUtil.MakeButton(Se.Language.General.SelectAll, vm.ChecksSelectAllCommand),
-            UiUtil.MakeButton(Se.Language.General.InvertSelection, vm.ChecksInverseSelectionCommand)
-        ).WithAlignmentLeft().WithAlignmentTop();
-
         var grid = new Grid
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(340, GridUnitType.Pixel) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
             Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
             RowSpacing = 10,
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(settingsView, 0, 0);
-        grid.Add(fixesView, 0, 1);
-        grid.Add(buttonSelectPanel, 1);
-        grid.Add(panelButtons, 1, 1);
-        grid.Add(summaryText, 2, 0, 1, 2);
+        grid.Add(topBar, 0, 0);
+        grid.Add(settingsView, 1, 0);
+        grid.Add(primaryActions, 2, 0);
+        grid.Add(summaryText, 3, 0);
+        grid.Add(fixesView, 4, 0);
 
         Content = grid;
 
@@ -101,8 +123,7 @@ public class CheckArteErrorsWindow : Window
     private Border MakeSettingsView(CheckArteErrorsViewModel vm)
     {
         _comboBoxLanguage = UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage));
-        _comboBoxLanguage.MinWidth = 110;
-        _comboBoxLanguage.MaxWidth = 130;
+        _comboBoxLanguage.MinWidth = 170;
 
         var sdh = new CheckBox
         {
@@ -111,81 +132,122 @@ public class CheckArteErrorsWindow : Window
         };
         sdh.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(vm.IsSdh)) { Mode = BindingMode.TwoWay });
 
-        var ebuOptions = UiUtil.MakeButton(
-            vm.OpenEbuOptionsCommand,
-            IconNames.Cogs,
-            "EBU STL header/options");
-
-        // This lives in a 336 px settings column. A horizontal StackPanel lets the
-        // language picker grow past that column and leaves the gear visually stranded
-        // beside the result view. A grid keeps every control inside the setup area.
-        var languagePanel = new Grid
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnSpacing = 6,
-        };
-        languagePanel.Add(new TextBlock { Text = "Language", VerticalAlignment = VerticalAlignment.Center }, 0, 0);
-        languagePanel.Add(_comboBoxLanguage, 0, 1);
-        languagePanel.Add(sdh, 0, 2);
-        languagePanel.Add(ebuOptions, 0, 3);
+        var ebuOptions = UiUtil.MakeButton("Header Info", vm.OpenEbuOptionsCommand);
 
         var sourceFrameRate = UiUtil.MakeComboBox(vm.SourceFrameRates, vm, nameof(vm.SelectedSourceFrameRate));
-        sourceFrameRate.MinWidth = 90;
+        sourceFrameRate.MinWidth = 150;
 
-        var frameRatePanel = new StackPanel
+        var maxCells = new NumericUpDown { Minimum = 1, Maximum = 100, Increment = 1, Width = 118 };
+        maxCells.Bind(NumericUpDown.ValueProperty, new Binding(nameof(vm.TeletextMaxCells)) { Mode = BindingMode.TwoWay });
+
+        var minimumGapFrames = new NumericUpDown { Minimum = 0, Maximum = 250, Increment = 1, Width = 118 };
+        minimumGapFrames.Bind(NumericUpDown.ValueProperty, new Binding(nameof(vm.MinimumGapFrames)) { Mode = BindingMode.TwoWay });
+
+        var tolerance = new NumericUpDown { Minimum = 0, Maximum = 100, Increment = 1, Width = 118 };
+        tolerance.Bind(NumericUpDown.ValueProperty, new Binding(nameof(vm.ReadingDurationTolerancePercent)) { Mode = BindingMode.TwoWay });
+
+        var acceptShort = new CheckBox
         {
-            Orientation = Orientation.Horizontal,
-            Spacing = 8,
+            Content = "Accept short durations",
             VerticalAlignment = VerticalAlignment.Center,
-            Children =
+        };
+        acceptShort.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(vm.AcceptShortDurations)) { Mode = BindingMode.TwoWay });
+
+        var shortMinimumFrames = new NumericUpDown { Minimum = 1, Maximum = 250, Increment = 1, Width = 104 };
+        shortMinimumFrames.Bind(NumericUpDown.ValueProperty, new Binding(nameof(vm.ShortMinimumFrames)) { Mode = BindingMode.TwoWay });
+        shortMinimumFrames.Bind(InputElement.IsEnabledProperty, new Binding(nameof(vm.AcceptShortDurations)));
+
+        var artePreset = UiUtil.MakeButton("Preset 37 / 5 / 15%", vm.ApplyArtePresetCommand);
+        artePreset.IsEnabled = !vm.IsArtePresetActive;
+        vm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(vm.IsArtePresetActive))
             {
-                new TextBlock { Text = "Frame rate", VerticalAlignment = VerticalAlignment.Center },
-                sourceFrameRate,
-                new TextBlock { Text = "→ 25 fps", VerticalAlignment = VerticalAlignment.Center },
-            },
+                artePreset.IsEnabled = !vm.IsArtePresetActive;
+            }
         };
 
         var shiftToStart = new CheckBox
         {
-            Content = "Shift file to TC In",
+            Content = "Shift whole file to",
             VerticalAlignment = VerticalAlignment.Center,
         };
         shiftToStart.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(vm.ShiftWholeFileToStartTimeCode)) { Mode = BindingMode.TwoWay });
 
-        var targetStartTimeCode = new TimeCodeUpDown
-        {
-            MinWidth = 112,
-        };
+        var targetStartTimeCode = new TimeCodeUpDown { MinWidth = 130 };
         targetStartTimeCode.Bind(TimeCodeUpDown.ValueProperty, new Binding(nameof(vm.TargetStartTimeCode)) { Mode = BindingMode.TwoWay });
         targetStartTimeCode.Bind(IsEnabledProperty, new Binding(nameof(vm.ShiftWholeFileToStartTimeCode)));
+
+        StackPanel Pair(string label, Control control) => new()
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 6,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children =
+            {
+                new TextBlock { Text = label, VerticalAlignment = VerticalAlignment.Center },
+                control,
+            },
+        };
+
+        var row1 = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 14,
+            Children =
+            {
+                Pair("Language", _comboBoxLanguage),
+                sdh,
+                ebuOptions,
+                Pair("Frame rate", sourceFrameRate),
+                new TextBlock { Text = "→ 25 fps", VerticalAlignment = VerticalAlignment.Center },
+            },
+        };
+
+        var row2 = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 14,
+            Children =
+            {
+                Pair("Teletext max cells", maxCells),
+                Pair("Minimum GAP (frames)", minimumGapFrames),
+                Pair("Reading duration tolerance (%)", tolerance),
+            },
+        };
+
+        var shortMinPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 5,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children =
+            {
+                new TextBlock { Text = "Min", VerticalAlignment = VerticalAlignment.Center },
+                shortMinimumFrames,
+                new TextBlock { Text = "fr", VerticalAlignment = VerticalAlignment.Center },
+            },
+        };
 
         var shiftPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 8,
+            Spacing = 6,
             VerticalAlignment = VerticalAlignment.Center,
             Children = { shiftToStart, targetStartTimeCode },
         };
 
-        var panelTop = new StackPanel
+        var row3 = new StackPanel
         {
-            Orientation = Orientation.Vertical,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Margin = new Thickness(8),
-            Spacing = 4,
+            Orientation = Orientation.Horizontal,
+            Spacing = 14,
             Children =
             {
-                languagePanel,
+                acceptShort,
+                shortMinPanel,
+                artePreset,
                 shiftPanel,
-                frameRatePanel,
-            }
+            },
         };
 
         var dataGrid = TableViewExtras.MakeTableView();
@@ -209,7 +271,6 @@ public class CheckArteErrorsWindow : Window
                         },
                     HorizontalAlignment = HorizontalAlignment.Center,
                 };
-
                 return new Border
                 {
                     Background = Brushes.Transparent,
@@ -234,23 +295,44 @@ public class CheckArteErrorsWindow : Window
             item => item.IsSelected,
             (item, value) => { if (item.IsImplemented) item.IsSelected = value; });
 
-        var grid = new Grid
+        var checksButtons = UiUtil.MakeButtonBar(
+            UiUtil.MakeButton("Select all fixable", vm.FixesSelectAllCommand),
+            UiUtil.MakeButton("Clear selection", vm.FixesClearSelectionCommand),
+            UiUtil.MakeButton("Undo last change", vm.UndoCommand)
+        ).WithAlignmentLeft();
+
+        var checksPanel = new Grid
         {
-            RowDefinitions =
+            RowDefinitions = new RowDefinitions("Auto,*"),
+            RowSpacing = 6,
+            MinHeight = 180,
+        };
+        checksPanel.Add(checksButtons, 0, 0);
+        checksPanel.Add(dataGrid, 1, 0);
+
+        var checksExpander = new Expander
+        {
+            Header = "Checks",
+            IsExpanded = false,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            HorizontalContentAlignment = HorizontalAlignment.Stretch,
+            Content = checksPanel,
+        };
+
+        var panel = new StackPanel
+        {
+            Spacing = 10,
+            Margin = new Thickness(8),
+            Children =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(336, GridUnitType.Pixel) },
+                row1,
+                row2,
+                row3,
+                checksExpander,
             },
         };
 
-        grid.Add(panelTop, 0, 0);
-        grid.Add(dataGrid, 1, 0);
-
-        return UiUtil.MakeBorderForControlNoPadding(grid);
+        return UiUtil.MakeBorderForControlNoPadding(panel);
     }
 
     private static Control MakeSubtitlePreview(CheckArteErrorsViewModel.ArteFixItem item, bool after)
