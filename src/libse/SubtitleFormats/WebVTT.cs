@@ -834,6 +834,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var cueStyles = GetCueStyles(subtitle.Header);
             var italicStyles = GetStylesWith(cueStyles, "font-style:italic;");
             var boldStyles = GetStylesWith(cueStyles, "font-weight:bold;");
+            var skipColor = HasOnlyDefaultTextColor(subtitle, cueStyles);
 
             foreach (var p in subtitle.Paragraphs)
             {
@@ -848,7 +849,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         var styles = GetStyles(match.Value);
                         var hasItalic = italicStyles.Any(st => styles.Contains(st));
                         var hasBold = boldStyles.Any(st => styles.Contains(st));
-                        var colorTag = FindBestColorTagOrDefault(styles.ToList(), cueStyles);
+                        var colorTag = skipColor ? null : FindBestColorTagOrDefault(styles.ToList(), cueStyles);
                         if (hasItalic)
                         {
                             text = text.Insert(match.Index, "<i>");
@@ -888,6 +889,53 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     text = RegexTagsPlusWhiteSpace.Replace(text, "$1");
                     p.Text = text;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Streaming services often put one class with their player's near-white text color on every
+        /// cue (e.g. "color_EBEBEB" or "gainsboro"). Such a color says nothing about speakers or emphasis,
+        /// so it should not end up as a font tag around every line in the target format.
+        /// A single color that is not near-white (e.g. all text in gold) is a choice and is kept.
+        /// </summary>
+        private static bool HasOnlyDefaultTextColor(Subtitle subtitle, Dictionary<string, string> cueStyles)
+        {
+            var colors = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var p in subtitle.Paragraphs)
+            {
+                if (!p.Text.Contains("<c.", StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                var match = RegexRemoveCTags.Match(p.Text);
+                while (match.Success)
+                {
+                    var colorTag = FindBestColorTagOrDefault(GetStyles(match.Value).ToList(), cueStyles);
+                    if (colorTag != null && colors.Add(colorTag) && colors.Count > 1)
+                    {
+                        return false;
+                    }
+
+                    match = match.NextMatch();
+                }
+            }
+
+            return colors.Count == 1 && IsNearWhite(colors.First());
+        }
+
+        private static bool IsNearWhite(string color)
+        {
+            try
+            {
+                var c = DefaultColorClasses.TryGetValue(color, out var defaultColor) ? defaultColor : ColorTranslator.FromHtml(color);
+                var max = Math.Max(c.Red, Math.Max(c.Green, c.Blue));
+                var min = Math.Min(c.Red, Math.Min(c.Green, c.Blue));
+                return min >= 200 && max - min <= 16;
+            }
+            catch
+            {
+                return false;
             }
         }
 
@@ -1013,7 +1061,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 // e.g. `::cue(.styledotAB9216) { color:#AB9216;font-weight:bold }`.
                 if (cueStyles != null && cueStyles.TryGetValue(s, out var css))
                 {
-                    var color = ExtractColorFromCueCss(css);
+                    var color = ToFontColor(ExtractColorFromCueCss(css));
                     if (color != null)
                     {
                         return color;
@@ -1022,6 +1070,42 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// CSS "rgb(r,g,b)" / "rgba(r,g,b,a)" is not understood in a font tag by most players, so make
+        /// it "#RRGGBB". Fully transparent text gets no color. Other values (hex, names) are kept as is.
+        /// </summary>
+        private static string ToFontColor(string cssColor)
+        {
+            if (cssColor == null || !cssColor.StartsWith("rgb", StringComparison.OrdinalIgnoreCase))
+            {
+                return cssColor;
+            }
+
+            var start = cssColor.IndexOf('(');
+            if (start < 0 || !cssColor.EndsWith(')'))
+            {
+                return null;
+            }
+
+            var arr = cssColor.Substring(start + 1, cssColor.Length - start - 2).Split(',');
+            if (arr.Length < 3 || arr.Length > 4 ||
+                !byte.TryParse(arr[0], NumberStyles.None, CultureInfo.InvariantCulture, out var r) ||
+                !byte.TryParse(arr[1], NumberStyles.None, CultureInfo.InvariantCulture, out var g) ||
+                !byte.TryParse(arr[2], NumberStyles.None, CultureInfo.InvariantCulture, out var b))
+            {
+                return null;
+            }
+
+            if (arr.Length == 4 &&
+                double.TryParse(arr[3], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var alpha) &&
+                alpha <= 0)
+            {
+                return null;
+            }
+
+            return $"#{r:X2}{g:X2}{b:X2}";
         }
 
         private static string ExtractColorFromCueCss(string css)
