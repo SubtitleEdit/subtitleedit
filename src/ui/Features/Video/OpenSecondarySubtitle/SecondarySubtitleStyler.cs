@@ -80,8 +80,7 @@ public static class SecondarySubtitleStyler
     public static Subtitle BuildFromSettings(Subtitle secondarySubtitle, FfmpegMediaInfo2? mediaInfo)
     {
         var video = Se.Settings.Video;
-        var width = mediaInfo?.Dimension.Width ?? 1920;
-        var height = mediaInfo?.Dimension.Height ?? 1080;
+        var (width, height) = GetVideoSize(mediaInfo);
         var style = MakeStyle(
             "Style" + Guid.NewGuid().ToString().Replace("-", string.Empty),
             GetFontSizeFromSettings(height),
@@ -103,8 +102,7 @@ public static class SecondarySubtitleStyler
             return BuildFromSettings(secondarySubtitle, mediaInfo);
         }
 
-        var width = mediaInfo?.Dimension.Width ?? 1920;
-        var height = mediaInfo?.Dimension.Height ?? 1080;
+        var (width, height) = GetVideoSize(mediaInfo);
         var style = MakeStyle(
             "Style" + Guid.NewGuid().ToString().Replace("-", string.Empty),
             AssaResampler.Resample(AdvancedSubStationAlpha.DefaultHeight, height, Se.Settings.Video.MpvPreviewFontSize),
@@ -113,6 +111,19 @@ public static class SecondarySubtitleStyler
             FontBoxType.None,
             "8"); // Top-center
         return Build(secondarySubtitle, style, width, height);
+    }
+
+    /// <summary>
+    /// The video's size, or 1920x1080 when there is none - also for an audio file, where the
+    /// media info is there but its dimension is 0x0 (a zero height made "Remember these
+    /// settings" divide by zero, and gave PlayResY 0 with font size 1).
+    /// </summary>
+    public static (int Width, int Height) GetVideoSize(FfmpegMediaInfo2? mediaInfo)
+    {
+        var dimension = mediaInfo?.Dimension;
+        return dimension is { Width: > 0, Height: > 0 }
+            ? (dimension.Value.Width, dimension.Value.Height)
+            : (1920, 1080);
     }
 
     public static int GetFontSizeFromSettings(int videoHeight)

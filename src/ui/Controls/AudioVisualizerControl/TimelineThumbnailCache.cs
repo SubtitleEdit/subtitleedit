@@ -108,7 +108,7 @@ internal sealed class TimelineThumbnailCache
                 generation = _generation;
             }
 
-            var bitmap = ExtractFrame(videoFileName, milliseconds);
+            var bitmap = ExtractFrame(videoFileName, milliseconds, out var failed);
 
             lock (_lock)
             {
@@ -122,8 +122,20 @@ internal sealed class TimelineThumbnailCache
                     _thumbnails.Clear();
                 }
 
+                // No picture without a failure is a spot past the end of the video - the view
+                // runs past it for a short clip, and zoomed in at the end. Those must not count:
+                // they are taken first (newest request first), and five of them used to switch
+                // the filmstrip off for the rest of the video.
                 _thumbnails[milliseconds] = bitmap;
-                _consecutiveFailures = bitmap == null ? _consecutiveFailures + 1 : 0;
+                if (bitmap != null)
+                {
+                    _consecutiveFailures = 0;
+                }
+                else if (failed)
+                {
+                    _consecutiveFailures++;
+                }
+
                 if (_consecutiveFailures >= MaxConsecutiveFailures)
                 {
                     _pending.Clear();
@@ -137,8 +149,9 @@ internal sealed class TimelineThumbnailCache
         }
     }
 
-    private static Bitmap? ExtractFrame(string videoFileName, long milliseconds)
+    private static Bitmap? ExtractFrame(string videoFileName, long milliseconds, out bool failed)
     {
+        failed = true;
         try
         {
             if (!File.Exists(videoFileName))
@@ -185,11 +198,15 @@ internal sealed class TimelineThumbnailCache
             process.WaitForExit();
             if (stream.Length == 0)
             {
+                // ffmpeg exits with 0 and writes nothing when the seek is past the last frame
+                failed = process.ExitCode != 0 || timeout.IsCancellationRequested;
                 return null;
             }
 
             stream.Position = 0;
-            return new Bitmap(stream);
+            var bitmap = new Bitmap(stream);
+            failed = false;
+            return bitmap;
         }
         catch
         {

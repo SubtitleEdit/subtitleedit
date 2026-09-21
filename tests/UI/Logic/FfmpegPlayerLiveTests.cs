@@ -408,6 +408,28 @@ public sealed class FfmpegPlayerLiveTests : IDisposable
     }
 
     [Fact]
+    public void StepBack_AfterPlayingToTheEnd_LeavesTheEnd()
+    {
+        var index = Load(ConstantRateClip, 29.0);
+        _player.Volume = 0;
+        _player.Play();
+        Assert.True(WaitFor(() => !_player.IsPlaying && _player.Position >= _player.Duration - 0.0005, 15_000), "playback never reached the end");
+
+        _player.StepOneFrameBack();
+
+        // Position kept reporting the duration - "at the end" outlived the step - and Play then
+        // started over from 0 instead of from the frame stepped to.
+        Assert.True(WaitFor(() => _player.Position < _player.Duration - 0.02, 5_000),
+            $"position is still {_player.Position:0.0000} of {_player.Duration:0.0000}");
+        var from = _player.Position;
+        Assert.InRange(from, index.SecondsAt(index.Count - 4), index.SecondsAt(index.Count - 1));
+
+        _player.Play();
+        Assert.True(WaitFor(() => !_player.IsPlaying, 5_000), "playback from the last frames never ended");
+        Assert.True(_player.Position >= from, "Play started over from the beginning");
+    }
+
+    [Fact]
     public void Play_AfterStepping_StartsFromThePictureOnScreen()
     {
         var index = Load(ConstantRateClip);

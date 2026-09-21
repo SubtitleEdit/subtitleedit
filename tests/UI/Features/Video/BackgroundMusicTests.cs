@@ -116,6 +116,46 @@ public class BackgroundMusicTests
         Assert.Equal(value, v);
     }
 
+    private static GeneratedMusic MakeGenerated(int generateSeconds, int preferredSeconds) => new()
+    {
+        Clip = new Nikse.SubtitleEdit.UiLogic.Media.MusicAudio(8000, 1, new float[8000]),
+        Loop = new Nikse.SubtitleEdit.UiLogic.Media.MusicLoop(),
+        Prompt = "calm piano",
+        Bpm = 90,
+        GenerateSeconds = generateSeconds,
+        PreferredSeconds = preferredSeconds,
+        Seed = 1,
+    };
+
+    [Fact]
+    public void GeneratedMusic_MadeInTheDialog_IsReusedForAShorterSpeechTarget()
+    {
+        // dialog without a video: 60 s generated; the TTS run with 30 s of speech would ask for 40
+        var music = MakeGenerated(generateSeconds: 60, preferredSeconds: 60);
+
+        Assert.True(music.Matches(" calm piano ", 90, 60, targetSeconds: 30));
+    }
+
+    [Fact]
+    public void GeneratedMusic_MadeForAShortVideo_IsRecognisedWhenTheDialogReopens()
+    {
+        var music = MakeGenerated(generateSeconds: 40, preferredSeconds: 60); // 30 s video
+
+        Assert.True(music.Matches("calm piano", 90, 60));
+        Assert.True(music.Matches("calm piano", 90, 60, targetSeconds: 30));
+        Assert.False(music.Matches("calm piano", 90, 60, targetSeconds: 300)); // a long target wants the full 60 s
+    }
+
+    [Fact]
+    public void GeneratedMusic_ChangedSettings_DoNotMatch()
+    {
+        var music = MakeGenerated(generateSeconds: 60, preferredSeconds: 60);
+
+        Assert.False(music.Matches("calm piano", 100, 60, 30));
+        Assert.False(music.Matches("upbeat", 90, 60, 30));
+        Assert.False(music.Matches("calm piano", 90, 120, 30));
+    }
+
     [Fact]
     public void AddToVideo_RemoveExistingAudio_MapsVideoAndMusicOnly()
     {

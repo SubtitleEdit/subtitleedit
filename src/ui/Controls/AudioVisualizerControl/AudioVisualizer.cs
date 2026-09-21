@@ -377,20 +377,30 @@ public class AudioVisualizer : Control
 
     public double ChapterSnapSeconds { get; set; } = 0.2;
 
+    /// <summary>
+    /// The peaks on the SMPTE drop frame time line (every 1001st peak dropped). For peaks that
+    /// replace the ones on show while SMPTE timing is on - <see cref="UseSmpteDropFrameTime"/>
+    /// would compress the shot changes and the spectrogram a second time.
+    /// </summary>
+    public static WavePeakData2 ToSmpteDropFrameTime(WavePeakData2 wavePeaks)
+    {
+        var list = new List<WavePeak2>(wavePeaks.Peaks.Count);
+        for (var i = 0; i < wavePeaks.Peaks.Count; i++)
+        {
+            if (i % 1001 != 0)
+            {
+                list.Add(wavePeaks.Peaks[i]);
+            }
+        }
+
+        return new WavePeakData2(wavePeaks.SampleRate, list);
+    }
+
     public void UseSmpteDropFrameTime()
     {
         if (WavePeaks != null)
         {
-            var list = new List<WavePeak2>(WavePeaks.Peaks.Count);
-            for (var i = 0; i < WavePeaks.Peaks.Count; i++)
-            {
-                if (i % 1001 != 0)
-                {
-                    list.Add(WavePeaks.Peaks[i]);
-                }
-            }
-
-            WavePeaks = new WavePeakData2(WavePeaks.SampleRate, list);
+            WavePeaks = ToSmpteDropFrameTime(WavePeaks);
 
             if (_shotChanges?.Count > 0)
             {

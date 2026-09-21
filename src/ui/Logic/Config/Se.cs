@@ -533,6 +533,46 @@ public class Se
             }
         }
 
+        ApplyShortcutMoves(Shortcuts, moves);
+    }
+
+    /// <summary>
+    /// The way back, for shortcuts exported on macOS and imported on Windows/Linux: bindings on a
+    /// macOS-only default (<see cref="ShortcutsMain.MacOsDefaultChanges"/>, and the Control added
+    /// to "open data folder" in version 3) go to the default every system shares - still with the
+    /// macOS modifier names, the caller renames those. Without it Cmd+G (find next) and Ctrl+G
+    /// (go to line) both became Ctrl+G, and Delete no longer deleted lines.
+    /// </summary>
+    internal static void RevertMacOsDefaultShortcuts(List<SeShortCut> shortcuts)
+    {
+        var moves = new List<(SeShortCut Shortcut, string[] NewKeys)>();
+        foreach (var shortcut in shortcuts)
+        {
+            if (shortcut.Keys == null)
+            {
+                continue;
+            }
+
+            foreach (var change in ShortcutsMain.MacOsDefaultChanges)
+            {
+                if (change.NewKeys.Length > 0 && shortcut.ActionName == change.ActionName && IsSameKeys(shortcut.Keys, change.NewKeys))
+                {
+                    moves.Add((shortcut, change.OldKeys));
+                }
+            }
+
+            if (shortcut.ActionName == nameof(MainViewModel.OpenDataFolderCommand) &&
+                IsSameKeys(shortcut.Keys, ["Ctrl", "Win", "Alt", "Shift", "D"]))
+            {
+                moves.Add((shortcut, ["Win", "Alt", "Shift", "D"]));
+            }
+        }
+
+        ApplyShortcutMoves(shortcuts, moves);
+    }
+
+    private static void ApplyShortcutMoves(List<SeShortCut> shortcuts, List<(SeShortCut Shortcut, string[] NewKeys)> moves)
+    {
         // Never create a duplicate binding: skip a move whose new keys are held by an action that
         // stays put. Skipping one can block another (Cmd+G only frees up when go-to-line moves),
         // so repeat until nothing changes.
@@ -543,7 +583,7 @@ public class Se
             foreach (var move in moves.ToList())
             {
                 if (move.NewKeys.Length > 0 &&
-                    Shortcuts.Any(s => !moves.Any(m => ReferenceEquals(m.Shortcut, s)) && IsSameKeys(s.Keys, move.NewKeys)))
+                    shortcuts.Any(s => s.Keys != null && !moves.Any(m => ReferenceEquals(m.Shortcut, s)) && IsSameKeys(s.Keys, move.NewKeys)))
                 {
                     moves.Remove(move);
                     skipped = true;

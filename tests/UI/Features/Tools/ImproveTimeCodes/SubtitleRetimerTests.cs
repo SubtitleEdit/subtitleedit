@@ -290,6 +290,30 @@ public class SubtitleRetimerTests : IDisposable
     }
 
     [Fact]
+    public void Tidy_AdjustEndOff_LeavesTheEndWhereItWas()
+    {
+        // 40 characters at 15 per second want 2.67 s - more than the line ever had
+        var lines = new List<SubtitleRetimer.Line> { new("This line takes a good while to read out", 10, 12) };
+        var results = new[] { new SubtitleRetimer.LineResult(10.3, 12, SubtitleRetimer.LineStatus.Retimed) };
+
+        SubtitleRetimer.Tidy(lines, results, new SubtitleRetimer.Options { AdjustEnd = false, ReadingCharsPerSecond = 15 }, 0);
+
+        Assert.Equal(10.3, results[0].StartSeconds, 3);
+        Assert.Equal(12.0, results[0].EndSeconds, 3);
+    }
+
+    [Fact]
+    public void Tidy_AdjustEndOn_HoldsTheLineForItsOriginalDuration()
+    {
+        var lines = new List<SubtitleRetimer.Line> { new("This line takes a good while to read out", 10, 12) };
+        var results = new[] { new SubtitleRetimer.LineResult(10.3, 12, SubtitleRetimer.LineStatus.Retimed) };
+
+        SubtitleRetimer.Tidy(lines, results, new SubtitleRetimer.Options { ReadingCharsPerSecond = 15 }, 0);
+
+        Assert.Equal(12.3, results[0].EndSeconds, 3);
+    }
+
+    [Fact]
     public void FollowNeighbours_WhenTheNeighboursDisagree_TheAlignerIsBelieved()
     {
         var (lines, results) = MakeShifted(-1.2, 0.9, -0.4, 1.4, 0.6, -0.9, 0.1);

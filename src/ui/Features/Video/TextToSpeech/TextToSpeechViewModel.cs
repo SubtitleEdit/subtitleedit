@@ -2349,9 +2349,8 @@ public partial class TextToSpeechViewModel : ObservableObject
                 return;
             }
 
-            var generateSeconds = BackgroundMusicGenerator.GetGenerateSeconds(settings.GenerateSeconds, target);
             var music = _backgroundMusic;
-            if (music == null || !music.Matches(prompt, settings.Bpm, generateSeconds))
+            if (music == null || !music.Matches(prompt, settings.Bpm, settings.GenerateSeconds, target))
             {
                 ProgressText = l.GeneratingBackgroundMusicDotDotDot;
                 ProgressValue = 0;
@@ -2361,7 +2360,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                     ProgressValue = p.Percent;
                     ProgressText = $"{l.GeneratingBackgroundMusicDotDotDot} {Math.Floor(p.Percent).ToString(CultureInfo.CurrentCulture)}%";
                 });
-                music = await BackgroundMusicGenerator.GenerateAsync(prompt, settings.Bpm, generateSeconds, seed, tempFolder, progress, cancellationToken);
+                music = await BackgroundMusicGenerator.GenerateAsync(prompt, settings.Bpm, settings.GenerateSeconds, target, seed, tempFolder, progress, cancellationToken);
                 _backgroundMusic = music;
             }
 

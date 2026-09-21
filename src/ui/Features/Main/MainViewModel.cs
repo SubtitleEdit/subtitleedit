@@ -10958,6 +10958,10 @@ public partial class MainViewModel :
             }
 
             LoadChapters();
+
+            // The normal peaks were just put back (undocking, SMPTE timing off) - with "Show
+            // speech only" on, that left the full mix on show under a checked menu item.
+            ApplySpeechOnlyWaveformIfEnabled(_videoFileName, _audioTrack?.FfIndex ?? -1, peakWaveFileName);
         }
     }
 
@@ -20866,6 +20870,11 @@ public partial class MainViewModel :
         if (GetVideoPlayerControl()?.VideoPlayer is not FfmpegPlayer ffmpeg || string.IsNullOrEmpty(_videoFileName))
         {
             return false;
+        }
+
+        if (!ffmpeg.HasVideo)
+        {
+            return false; // audio only: no frames to step through, so move by time like the other players
         }
 
         _relativeSeekTargetSeconds = null; // the next relative move starts from the frame stepped to

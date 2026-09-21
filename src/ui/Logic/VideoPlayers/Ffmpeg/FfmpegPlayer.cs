@@ -99,6 +99,9 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
     public int VideoWidth => _session?.VideoWidth ?? 0;
     public int VideoHeight => _session?.VideoHeight ?? 0;
 
+    /// <summary>False for audio-only files (and cover art only): there are no frames to step through.</summary>
+    public bool HasVideo => _session?.HasVideo ?? false;
+
     /// <summary>Display aspect ratio of the video (sample aspect ratio applied), or 0 when unknown.</summary>
     public double DisplayAspectRatio => _session?.DisplayAspectRatio ?? 0;
 
@@ -591,6 +594,7 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
         public int FastSeeksPerformed => Volatile.Read(ref _fastSeeksPerformed);
 
         public double Duration { get; }
+        public bool HasVideo => _hasVideo;
         public int VideoWidth { get; }
         public int VideoHeight { get; }
         public double DisplayAspectRatio { get; }
@@ -2406,6 +2410,10 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                 _pausedPosition = next.Pts;
                 _steppedSinceSeek = true;
             }
+
+            // A step back from the end is no longer at the end: Position reports Duration while
+            // this is set, and Play would start over from 0 instead of from the frame shown.
+            _endReached = false;
 
             Interlocked.Exchange(ref _lastRestartTimestamp, Stopwatch.GetTimestamp());
             return true;
