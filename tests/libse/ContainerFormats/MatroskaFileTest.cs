@@ -1,5 +1,7 @@
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using System;
 using System.IO;
+using System.Linq;
 
 namespace LibSETests.ContainerFormats;
 
@@ -95,6 +97,65 @@ public class MatroskaFileTest
         finally
         {
             File.Delete(tempFileName);
+        }
+    }
+
+    /// <summary>
+    /// A read may return fewer bytes than asked for without being at the end of the file - it
+    /// happens on a busy network share (#14940). The fixed-length integer reads gave up on such
+    /// a read and left the stream mid-element, so the rest of the file was parsed as garbage
+    /// and no subtitles came out. Parsing must not depend on how the bytes are chunked.
+    /// </summary>
+    [Theory]
+    [InlineData("sample_MKV_SRT.mkv")]
+    [InlineData("sample_MKV_VobSub_PGS.mkv")]
+    public void ShortReadsGiveSameSubtitles(string fileName)
+    {
+        var path = Path.Combine(Directory.GetCurrentDirectory(), "Files", fileName);
+
+        using var expected = new MatroskaFile(path);
+        using var actual = new MatroskaFile(new ShortReadStream(new MemoryStream(File.ReadAllBytes(path))));
+        Assert.True(actual.IsValid);
+
+        var expectedTracks = expected.GetTracks(subtitleOnly: true);
+        var actualTracks = actual.GetTracks(subtitleOnly: true);
+        Assert.Equal(expectedTracks.Select(t => t.TrackNumber), actualTracks.Select(t => t.TrackNumber));
+
+        foreach (var track in expectedTracks)
+        {
+            var expectedSubtitles = expected.GetSubtitle(track.TrackNumber, null);
+            var actualSubtitles = actual.GetSubtitle(track.TrackNumber, null);
+            Assert.NotEmpty(expectedSubtitles);
+            Assert.Equal(expectedSubtitles.Select(s => (s.Start, s.Duration)), actualSubtitles.Select(s => (s.Start, s.Duration)));
+        }
+    }
+
+    /// <summary>Hands out one byte per read, the shortest read a stream is allowed to make.</summary>
+    private sealed class ShortReadStream : Stream
+    {
+        private readonly Stream _inner;
+
+        public ShortReadStream(Stream inner) => _inner = inner;
+
+        public override bool CanRead => true;
+        public override bool CanSeek => true;
+        public override bool CanWrite => false;
+        public override long Length => _inner.Length;
+        public override long Position { get => _inner.Position; set => _inner.Position = value; }
+        public override int Read(byte[] buffer, int offset, int count) => _inner.Read(buffer, offset, Math.Min(count, 1));
+        public override long Seek(long offset, SeekOrigin origin) => _inner.Seek(offset, origin);
+        public override void Flush() { }
+        public override void SetLength(long value) => throw new NotSupportedException();
+        public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _inner.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
     }
 }
