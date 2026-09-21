@@ -6259,6 +6259,26 @@ public partial class MainViewModel :
         return rounded > 0 ? "+" + rounded.ToString(CultureInfo.InvariantCulture) : rounded.ToString(CultureInfo.InvariantCulture);
     }
 
+    /// <summary>
+    /// False, after telling the user, when the line has no audio to cut a clip from - its end is
+    /// not after its start. See <see cref="FfmpegGenerator.HasClipDuration"/>.
+    /// </summary>
+    private async Task<bool> RequireClipDuration(SubtitleLineViewModel line)
+    {
+        if (FfmpegGenerator.HasClipDuration(line.Duration.TotalSeconds))
+        {
+            return true;
+        }
+
+        Se.LogError($"Audio clip: line {line.Number} has no duration ({line.StartTime} --> {line.EndTime})");
+        if (Window != null)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error, string.Format(Se.Language.Waveform.LineXHasNoDuration, line.Number), MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        return false;
+    }
+
     [RelayCommand]
     private async Task WaveformExtractAudio()
     {
@@ -6280,6 +6300,10 @@ public partial class MainViewModel :
         }
 
         var line = selectedItems[0];
+        if (!await RequireClipDuration(line))
+        {
+            return;
+        }
 
         // Offer the configured format first in the Save dialog, then the rest; the
         // user can still switch the type there (issues #11235 / #11237).
@@ -6311,7 +6335,8 @@ public partial class MainViewModel :
                 sampleRate,
                 bitRate);
 
-            using var process = FfmpegGenerator.GetProcess(arguments, (_, _) => { });
+            var output = new FfmpegOutputTail();
+            using var process = FfmpegGenerator.GetProcess(arguments, output.Handler);
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
@@ -6319,6 +6344,7 @@ public partial class MainViewModel :
 
             if (process.ExitCode != 0 || !File.Exists(outputFileName))
             {
+                FfmpegGenerator.LogClipFailure($"Extract audio: line {line.Number}", arguments, process.ExitCode, output);
                 await MessageBox.Show(Window, Se.Language.General.Error, "Could not extract audio clip from video.", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
@@ -6394,6 +6420,10 @@ public partial class MainViewModel :
         }
 
         var line = selectedItems[0];
+        if (!await RequireClipDuration(line))
+        {
+            return;
+        }
 
         // Asked before anything else happens, so a user who declines is not first made to name a
         // voice. Shown once ever - see VoiceCloningConsent.
@@ -6445,7 +6475,8 @@ public partial class MainViewModel :
                 0,
                 string.Empty);
 
-            using (var process = FfmpegGenerator.GetProcess(arguments, (_, _) => { }))
+            var output = new FfmpegOutputTail();
+            using (var process = FfmpegGenerator.GetProcess(arguments, output.Handler))
             {
                 process.Start();
                 process.BeginOutputReadLine();
@@ -6454,6 +6485,7 @@ public partial class MainViewModel :
 
                 if (process.ExitCode != 0 || !File.Exists(clipFileName))
                 {
+                    FfmpegGenerator.LogClipFailure($"Clone voice: line {line.Number}", arguments, process.ExitCode, output);
                     await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Waveform.CloneVoiceExtractFailed, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
@@ -10051,11 +10083,12 @@ public partial class MainViewModel :
         var newLines = new List<SubtitleLineViewModel>();
         var deleteLines = new List<SubtitleLineViewModel>();
         var sb = new StringBuilder();
-        for (var i = 0; i < selectedItems.Count; i++)
+        // By the clip's own line, not by index: a selected line without a clip (no duration, or
+        // ffmpeg failed on it) is skipped, so the clips are not parallel to the selection.
+        foreach (var transcribedLine in resultSpeechToText.ResultAudioClips)
         {
-            var selectedLine = selectedItems[i];
-            var transcribedLine = resultSpeechToText.ResultAudioClips[i];
-            if (transcribedLine != null)
+            var selectedLine = transcribedLine?.Line;
+            if (transcribedLine != null && selectedLine != null)
             {
                 if (selectedLine.Duration.TotalSeconds > 10 && transcribedLine.Transcription.Paragraphs.Count > 1)
                 {
@@ -32961,6 +32994,12 @@ public partial class MainViewModel :
         {
             cancellationToken.ThrowIfCancellationRequested();
 
+            // Nothing to transcribe, and no message: this runs by itself on a new selection.
+            if (!FfmpegGenerator.HasClipDuration(paragraph.Duration.TotalSeconds))
+            {
+                return;
+            }
+
             var ffmpegOk = await RequireFfmpegOk();
             if (!ffmpegOk)
             {
@@ -32994,6 +33033,14 @@ public partial class MainViewModel :
                 return;
             }
 
+            // Both pipes are redirected, so both are read: the last lines go to the error log when
+            // the cut fails, and an unread pipe that fills up would stall ffmpeg.
+            var output = new FfmpegOutputTail();
+            process.OutputDataReceived += output.Handler;
+            process.ErrorDataReceived += output.Handler;
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+
             try
             {
                 await process.WaitForExitAsync(cancellationToken);
@@ -33006,6 +33053,7 @@ public partial class MainViewModel :
 
             if (process.ExitCode != 0 || !File.Exists(outputFileName))
             {
+                FfmpegGenerator.LogClipFailure($"Auto transcribe: line {paragraph.Number}", arguments, process.ExitCode, output);
                 return;
             }
 
