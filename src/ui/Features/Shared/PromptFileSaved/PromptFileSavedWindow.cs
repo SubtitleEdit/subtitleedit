@@ -91,6 +91,7 @@ public class PromptFileSavedWindow : Window
                 MakeChip(nameof(vm.ExtensionChip), nameof(vm.HasExtensionChip), emphasized: true),
                 MakeChip(nameof(vm.FileSizeChip), nameof(vm.HasFileSizeChip), emphasized: false),
                 MakeChip(nameof(vm.DurationChip), nameof(vm.HasDurationChip), emphasized: false),
+                MakeChip(nameof(vm.ElapsedChip), nameof(vm.HasElapsedChip), emphasized: false),
             },
         };
 

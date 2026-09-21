@@ -11532,7 +11532,26 @@ public partial class MainViewModel :
         _windowService.ShowWindow<RemuxVideoWindow, RemuxVideoViewModel>(Window, (window, vm) =>
         {
             _remuxVideoWindow = window;
-            window.Closed += (_, _) => _remuxVideoWindow = null;
+            window.Closed += async (_, _) =>
+            {
+                _remuxVideoWindow = null;
+
+                // The dialog is owned by the main window, so it also closes (after CleanUp) when
+                // the app shuts down - never open a video into a player that is being torn down.
+                if (_isCleanedUp || !vm.ShouldLoadOutputOnClose(_videoFileName))
+                {
+                    return;
+                }
+
+                try
+                {
+                    await VideoOpenFile(vm.OutputFileName);
+                }
+                catch (Exception ex)
+                {
+                    Se.LogError(ex, $"Could not open remuxed video \"{vm.OutputFileName}\"");
+                }
+            };
             WindowService.KeepTopmostWhileOwnerActive(window, Window);
             vm.Initialize(_videoFileName);
         });
@@ -26452,8 +26471,11 @@ public partial class MainViewModel :
         }
     }
 
+    private bool _isCleanedUp;
+
     private void CleanUp()
     {
+        _isCleanedUp = true;
         StopBackgroundWork();
         StopSpeechOnlyWaveform();
 
