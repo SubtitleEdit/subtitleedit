@@ -172,7 +172,10 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
             return;
         }
 
-        var fileName = await _fileHelper.PickOpenSubtitleFile(Window, Se.Language.General.OpenSubtitleFileTitle);
+        // Start in the folder of the other subtitle if one is already picked, else where the
+        // current subtitle lives - the other file is normally right next to it (#13488).
+        var startPath = string.IsNullOrEmpty(FileNameOther) ? FileName : FileNameOther;
+        var fileName = await _fileHelper.PickOpenSubtitleFile(Window, Se.Language.General.OpenSubtitleFileTitle, lastOpenedFilePath: startPath);
         if (string.IsNullOrEmpty(fileName))
         {
             return;
