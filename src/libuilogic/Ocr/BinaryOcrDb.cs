@@ -144,6 +144,106 @@ public class BinaryOcrDb
                Math.Abs(match.Y - newBob.Y) <= MaxCommaQuoteTopDiff;
     }
 
+    // The matcher asks for "every compare image of exactly this size" up to 44 times per glyph
+    // (11 size variants x 4 nudged targets). CompareImages is a public list that the UI adds to
+    // and removes from, so the index is checked against the list on every use and rebuilt when
+    // the list no longer looks like the one it was built from. Buckets keep list order - the
+    // matcher's "first best match wins" depends on it - and are never modified once published,
+    // so a thread that is still walking one is not disturbed by a rebuild (batch convert shares
+    // the nOCR fallback database between its workers).
+    private sealed class SizeIndex
+    {
+        public readonly Dictionary<long, List<BinaryOcrBitmap>> BySize = new Dictionary<long, List<BinaryOcrBitmap>>();
+        public readonly List<BinaryOcrBitmap> Source;
+        public readonly int Count;
+        public readonly BinaryOcrBitmap? First;
+        public readonly BinaryOcrBitmap? Last;
+
+        public SizeIndex(List<BinaryOcrBitmap> list)
+        {
+            Source = list;
+            Count = list.Count;
+            First = list.Count > 0 ? list[0] : null;
+            Last = list.Count > 0 ? list[list.Count - 1] : null;
+            foreach (var b in list)
+            {
+                var key = SizeKey(b.Width, b.Height);
+                if (!BySize.TryGetValue(key, out var bucket))
+                {
+                    bucket = new List<BinaryOcrBitmap>();
+                    BySize.Add(key, bucket);
+                }
+
+                bucket.Add(b);
+            }
+        }
+
+        public bool IsBuiltFrom(List<BinaryOcrBitmap> list)
+        {
+            return ReferenceEquals(Source, list) &&
+                   Count == list.Count &&
+                   (Count == 0 || (ReferenceEquals(First, list[0]) && ReferenceEquals(Last, list[list.Count - 1])));
+        }
+    }
+
+    private SizeIndex? _sizeIndex;
+    private readonly object _sizeIndexLock = new object();
+    private static readonly List<BinaryOcrBitmap> EmptyBucket = new List<BinaryOcrBitmap>();
+
+    private static long SizeKey(int width, int height) => ((long)width << 32) | (uint)height;
+
+    /// <summary>
+    /// The compare images with exactly this size, in <see cref="CompareImages"/> order.
+    /// The returned list belongs to the index - do not modify it.
+    /// </summary>
+    public List<BinaryOcrBitmap> GetCompareImagesBySize(int width, int height)
+    {
+        SizeIndex index;
+        lock (_sizeIndexLock)
+        {
+            var list = CompareImages;
+            if (_sizeIndex == null || !_sizeIndex.IsBuiltFrom(list))
+            {
+                _sizeIndex = new SizeIndex(list);
+            }
+
+            index = _sizeIndex;
+        }
+
+        return index.BySize.TryGetValue(SizeKey(width, height), out var result) ? result : EmptyBucket;
+    }
+
+    /// <summary>
+    /// Same pick as <see cref="FindExactMatch"/> (first match in list order), without the scan of
+    /// the whole list - for callers that want the image, not its position.
+    /// </summary>
+    public BinaryOcrBitmap? FindExactMatchItem(BinaryOcrBitmap bob)
+    {
+        var bobHash = bob.Hash;
+        foreach (var b in GetCompareImagesBySize(bob.Width, bob.Height))
+        {
+            if (bobHash == b.Hash && bob.NumberOfColoredPixels == b.NumberOfColoredPixels && AllowEqual(b, bob))
+            {
+                return b;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>Moves a hot compare image to the start of <see cref="CompareImages"/>.</summary>
+    public void MoveToFront(BinaryOcrBitmap item)
+    {
+        lock (_sizeIndexLock)
+        {
+            if (CompareImages.Remove(item))
+            {
+                CompareImages.Insert(0, item);
+                _sizeIndex = null; // the order inside the item's bucket changed
+            }
+        }
+    }
+
     public int FindExactMatch(BinaryOcrBitmap bob)
     {
         var bobHash = bob.Hash;
