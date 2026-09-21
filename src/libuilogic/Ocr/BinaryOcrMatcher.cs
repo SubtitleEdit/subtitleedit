@@ -80,7 +80,6 @@ public class BinaryOcrMatcher : IBinaryOcrMatcher
                                          double maxErrorPercent)
     {
         secondBestGuess = null;
-        int index = 0;
         int smallestDifference = 10000;
         var target = targetItem.NikseBitmap;
         if (binaryOcrDb == null || target == null)
@@ -182,23 +181,23 @@ public class BinaryOcrMatcher : IBinaryOcrMatcher
             }
         }
 
-        FindBestMatch(ref index, ref smallestDifference, out var hit, target, binaryOcrDb, bob, maxErrorPercent);
+        FindBestMatch(ref smallestDifference, out var hit, target, binaryOcrDb, bob, maxErrorPercent);
         if (maxErrorPercent > 0)
         {
             if (target.Width > 16 && target.Height > 16 && (hit == null || smallestDifference * 100.0 / (target.Width * target.Height) > maxErrorPercent))
             {
                 var t2 = target.CopyRectangle(new NikseRectangle(0, 1, target.Width, target.Height));
-                FindBestMatch(ref index, ref smallestDifference, out hit, t2, binaryOcrDb, bob, maxErrorPercent);
+                FindBestMatch(ref smallestDifference, out hit, t2, binaryOcrDb, bob, maxErrorPercent);
             }
             if (target.Width > 16 && target.Height > 16 && (hit == null || smallestDifference * 100.0 / (target.Width * target.Height) > maxErrorPercent))
             {
                 var t2 = target.CopyRectangle(new NikseRectangle(1, 0, target.Width, target.Height));
-                FindBestMatch(ref index, ref smallestDifference, out hit, t2, binaryOcrDb, bob, maxErrorPercent);
+                FindBestMatch(ref smallestDifference, out hit, t2, binaryOcrDb, bob, maxErrorPercent);
             }
             if (target.Width > 16 && target.Height > 16 && (hit == null || smallestDifference * 100.0 / (target.Width * target.Height) > maxErrorPercent))
             {
                 var t2 = target.CopyRectangle(new NikseRectangle(0, 0, target.Width - 1, target.Height));
-                FindBestMatch(ref index, ref smallestDifference, out hit, t2, binaryOcrDb, bob, maxErrorPercent);
+                FindBestMatch(ref smallestDifference, out hit, t2, binaryOcrDb, bob, maxErrorPercent);
             }
         }
 
@@ -414,16 +413,14 @@ public class BinaryOcrMatcher : IBinaryOcrMatcher
         return lowercaseHeight;
     }
 
-    private static void FindBestMatch(ref int index, ref int smallestDifference, out BinaryOcrBitmap? hit, NikseBitmap2 target, BinaryOcrDb binOcrDb, BinaryOcrBitmap bob, double maxDiff)
+    private static void FindBestMatch(ref int smallestDifference, out BinaryOcrBitmap? hit, NikseBitmap2 target, BinaryOcrDb binOcrDb, BinaryOcrBitmap bob, double maxDiff)
     {
         hit = null;
-        var bobExactMatch = binOcrDb.FindExactMatch(bob);
-        if (bobExactMatch >= 0)
+        var bobExactMatch = binOcrDb.FindExactMatchItem(bob);
+        if (bobExactMatch != null)
         {
-            var m = binOcrDb.CompareImages[bobExactMatch];
-            index = bobExactMatch;
             smallestDifference = 0;
-            hit = m;
+            hit = bobExactMatch;
             return;
         }
 
@@ -437,7 +434,7 @@ public class BinaryOcrMatcher : IBinaryOcrMatcher
         int numberOfForegroundColors = bob.NumberOfColoredPixels;
         const int minForeColorMatch = 90;
 
-        foreach (var compareItem in binOcrDb.CompareImages)
+        foreach (var compareItem in binOcrDb.GetCompareImagesBySize(tWidth, tHeight))
         {
             if (compareItem.Width == tWidth && compareItem.Height == tHeight) // precise math in size
             {
@@ -464,7 +461,7 @@ public class BinaryOcrMatcher : IBinaryOcrMatcher
 
         if (smallestDifference > 1)
         {
-            foreach (var compareItem in binOcrDb.CompareImages)
+            foreach (var compareItem in binOcrDb.GetCompareImagesBySize(tWidth, tHeight))
             {
                 if (compareItem.Width == tWidth && compareItem.Height == tHeight) // precise math in size
                 {
@@ -492,7 +489,7 @@ public class BinaryOcrMatcher : IBinaryOcrMatcher
 
         if (tWidth > 16 && tHeight > 16 && smallestDifference > 2) // for other than very narrow letter (like 'i' and 'l' and 'I'), try more sizes
         {
-            foreach (var compareItem in binOcrDb.CompareImages)
+            foreach (var compareItem in binOcrDb.GetCompareImagesBySize(tWidth, tHeight - 1))
             {
                 if (compareItem.Width == tWidth && compareItem.Height == tHeight - 1)
                 {
@@ -519,7 +516,7 @@ public class BinaryOcrMatcher : IBinaryOcrMatcher
 
             if (smallestDifference > 2)
             {
-                foreach (var compareItem in binOcrDb.CompareImages)
+                foreach (var compareItem in binOcrDb.GetCompareImagesBySize(tWidth, tHeight + 1))
                 {
                     if (compareItem.Width == tWidth && compareItem.Height == tHeight + 1)
                     {
@@ -547,7 +544,7 @@ public class BinaryOcrMatcher : IBinaryOcrMatcher
 
             if (smallestDifference > 3)
             {
-                foreach (var compareItem in binOcrDb.CompareImages)
+                foreach (var compareItem in binOcrDb.GetCompareImagesBySize(tWidth + 1, tHeight + 1))
                 {
                     if (compareItem.Width == tWidth + 1 && compareItem.Height == tHeight + 1)
                     {
@@ -575,7 +572,7 @@ public class BinaryOcrMatcher : IBinaryOcrMatcher
 
             if (smallestDifference > 5)
             {
-                foreach (var compareItem in binOcrDb.CompareImages)
+                foreach (var compareItem in binOcrDb.GetCompareImagesBySize(tWidth - 1, tHeight - 1))
                 {
                     if (compareItem.Width == tWidth - 1 && compareItem.Height == tHeight - 1)
                     {
@@ -603,7 +600,7 @@ public class BinaryOcrMatcher : IBinaryOcrMatcher
 
             if (smallestDifference > 5)
             {
-                foreach (var compareItem in binOcrDb.CompareImages)
+                foreach (var compareItem in binOcrDb.GetCompareImagesBySize(tWidth + 1, tHeight))
                 {
                     if (compareItem.Width - 1 == tWidth && compareItem.Height == tHeight)
                     {
@@ -631,7 +628,7 @@ public class BinaryOcrMatcher : IBinaryOcrMatcher
 
             if (smallestDifference > 9 && tWidth > 11)
             {
-                foreach (var compareItem in binOcrDb.CompareImages)
+                foreach (var compareItem in binOcrDb.GetCompareImagesBySize(tWidth - 2, tHeight))
                 {
                     if (compareItem.Width == tWidth - 2 && compareItem.Height == tHeight)
                     {
@@ -659,7 +656,7 @@ public class BinaryOcrMatcher : IBinaryOcrMatcher
 
             if (smallestDifference > 9 && tWidth > 14)
             {
-                foreach (var compareItem in binOcrDb.CompareImages)
+                foreach (var compareItem in binOcrDb.GetCompareImagesBySize(tWidth - 3, tHeight))
                 {
                     if (compareItem.Width == tWidth - 3 && compareItem.Height == tHeight)
                     {
@@ -687,7 +684,7 @@ public class BinaryOcrMatcher : IBinaryOcrMatcher
 
             if (smallestDifference > 9 && tWidth > 14)
             {
-                foreach (var compareItem in binOcrDb.CompareImages)
+                foreach (var compareItem in binOcrDb.GetCompareImagesBySize(tWidth, tHeight - 3))
                 {
                     if (compareItem.Width == tWidth && compareItem.Height == tHeight - 3)
                     {
@@ -715,7 +712,7 @@ public class BinaryOcrMatcher : IBinaryOcrMatcher
 
             if (smallestDifference > 9 && tWidth > 14)
             {
-                foreach (var compareItem in binOcrDb.CompareImages)
+                foreach (var compareItem in binOcrDb.GetCompareImagesBySize(tWidth + 2, tHeight))
                 {
                     if (compareItem.Width - 2 == tWidth && compareItem.Height == tHeight)
                     {
@@ -744,13 +741,13 @@ public class BinaryOcrMatcher : IBinaryOcrMatcher
 
         if (smallestDifference == 0)
         {
-            if (hit != null && binOcrDb.CompareImages.IndexOf(hit) > 200)
+            // "not among the first 201" - the same test as IndexOf(hit) > 200 for an image that is in the list
+            var compareImages = binOcrDb.CompareImages;
+            if (hit != null && compareImages.IndexOf(hit, 0, Math.Min(201, compareImages.Count)) < 0)
             {
                 lock (BinOcrDbMoveFirstLock)
                 {
-                    binOcrDb.CompareImages.Remove(hit);
-                    binOcrDb.CompareImages.Insert(0, hit);
-                    index = 0;
+                    binOcrDb.MoveToFront(hit);
                 }
             }
         }

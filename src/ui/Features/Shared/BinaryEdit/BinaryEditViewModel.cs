@@ -3218,13 +3218,26 @@ public partial class BinaryEditViewModel : ObservableObject
                 }
             }
 
-            var firstRemovedIndex = itemsToRemove.Count > 0
-                ? itemsToRemove.Min(item => Subtitles.IndexOf(item))
-                : -1;
+            // One pass, bottom up: IndexOf + Remove per selected row is a scan of the collection
+            // each, which made select all + delete O(rows * rows) on a full Blu-ray sup.
+            var firstRemovedIndex = -1;
+            var removeSet = new HashSet<BinarySubtitleItem>(itemsToRemove);
+            for (var i = Subtitles.Count - 1; i >= 0 && removeSet.Count > 0; i--)
+            {
+                if (removeSet.Remove(Subtitles[i]))
+                {
+                    Subtitles.RemoveAt(i);
+                    firstRemovedIndex = i;
+                }
+            }
+
+            if (removeSet.Count > 0)
+            {
+                firstRemovedIndex = -1; // a row that was not in the list: IndexOf gave -1, and Min picked it
+            }
 
             foreach (var item in itemsToRemove)
             {
-                Subtitles.Remove(item);
                 item.Bitmap?.Dispose();
             }
 

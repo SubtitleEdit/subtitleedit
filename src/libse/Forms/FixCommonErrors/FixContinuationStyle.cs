@@ -19,6 +19,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         private ContinuationUtilities.ContinuationProfile _continuationProfile;
         private List<string> _names;
+        private HashSet<string> _nameSet;
+        private int _nameMaxLength;
         public string FixAction { get; set; }
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
@@ -291,9 +293,25 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 }
             }
 
-            foreach (var name in _names)
+            if (_nameSet == null)
             {
-                if (input.StartsWith(name + " ", StringComparison.Ordinal) || input.StartsWith(name + ",", StringComparison.Ordinal) || input.StartsWith(name + ":", StringComparison.Ordinal))
+                _nameSet = new HashSet<string>(StringComparer.Ordinal);
+                foreach (var name in _names)
+                {
+                    var n = name ?? string.Empty;
+                    _nameSet.Add(n);
+                    _nameMaxLength = Math.Max(_nameMaxLength, n.Length);
+                }
+            }
+
+            // "Starts with a name followed by space, comma or colon": look the text before each
+            // such character up in the set, instead of three StartsWith (and three string
+            // concatenations) for every one of the thousands of names.
+            var max = Math.Min(input.Length - 1, _nameMaxLength);
+            for (var i = 0; i <= max; i++)
+            {
+                var ch = input[i];
+                if ((ch == ' ' || ch == ',' || ch == ':') && _nameSet.Contains(input.Substring(0, i)))
                 {
                     return true;
                 }
