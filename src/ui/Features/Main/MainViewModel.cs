@@ -545,6 +545,27 @@ public partial class MainViewModel :
     /// </summary>
     private bool IsCurrentRowReferenceOnly => SelectedSubtitle?.IsReferenceOnly == true;
 
+    /// <summary>
+    /// Row -> index in <see cref="Subtitles"/>, for commands that need the position of every
+    /// selected row: one pass here instead of an IndexOf scan per row (select all + a timing
+    /// command was O(rows * rows)). Only valid while no row is inserted, removed or moved.
+    /// </summary>
+    private Dictionary<SubtitleLineViewModel, int> BuildSubtitleIndexMap()
+    {
+        var map = new Dictionary<SubtitleLineViewModel, int>(Subtitles.Count);
+        for (var i = 0; i < Subtitles.Count; i++)
+        {
+            map.TryAdd(Subtitles[i], i); // first position wins, like IndexOf
+        }
+
+        return map;
+    }
+
+    private static int IndexFromMap(Dictionary<SubtitleLineViewModel, int> map, SubtitleLineViewModel row)
+    {
+        return map.TryGetValue(row, out var index) ? index : -1;
+    }
+
     private List<SubtitleLineViewModel> GetSelectedSubtitlesInOrder(bool includeReferenceOnly)
     {
         var selected = SubtitleGrid.SelectedItems;
@@ -6701,9 +6722,10 @@ public partial class MainViewModel :
             return;
         }
 
+        var indexMap = BuildSubtitleIndexMap();
         foreach (var selectedLine in selectedLines)
         {
-            var idx = Subtitles.IndexOf(selectedLine);
+            var idx = IndexFromMap(indexMap, selectedLine);
             if (idx < 0)
             {
                 continue;
@@ -6757,9 +6779,10 @@ public partial class MainViewModel :
             return;
         }
 
+        var indexMap = BuildSubtitleIndexMap();
         foreach (var selectedLine in selectedLines)
         {
-            var idx = Subtitles.IndexOf(selectedLine);
+            var idx = IndexFromMap(indexMap, selectedLine);
             if (idx < 0)
             {
                 continue;
@@ -11916,9 +11939,10 @@ public partial class MainViewModel :
 
         var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
         var maxDurationMs = Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
+        var indexMap = BuildSubtitleIndexMap();
         foreach (var line in selectedLines)
         {
-            var idx = Subtitles.IndexOf(line);
+            var idx = IndexFromMap(indexMap, line);
             var next = GetNextWorkingRow(idx);
 
             var newEndMs = ShotChangesHelper.GetExtendedEndMs(
@@ -12003,9 +12027,10 @@ public partial class MainViewModel :
 
         var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
         var maxDurationMs = Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
+        var indexMap = BuildSubtitleIndexMap();
         foreach (var line in selectedLines)
         {
-            var idx = Subtitles.IndexOf(line);
+            var idx = IndexFromMap(indexMap, line);
             var prev = GetPreviousWorkingRow(idx);
 
             var newStartMs = ShotChangesHelper.GetExtendedStartMs(
@@ -12165,9 +12190,10 @@ public partial class MainViewModel :
         var selectedSet = new HashSet<SubtitleLineViewModel>(selectedLines);
         var adjustedNeighbors = new HashSet<SubtitleLineViewModel>();
         var changed = 0;
+        var indexMap = BuildSubtitleIndexMap();
         foreach (var line in selectedLines)
         {
-            var idx = Subtitles.IndexOf(line);
+            var idx = IndexFromMap(indexMap, line);
             var originalCueMs = isInCue ? line.StartTime.TotalMilliseconds : line.EndTime.TotalMilliseconds;
             var cue = isInCue ? line.StartTime : line.EndTime;
             var closestShotChange = ShotChangeHelper.GetClosestShotChange(AudioVisualizer.ShotChanges, new TimeCode(cue));
@@ -12553,9 +12579,10 @@ public partial class MainViewModel :
             return;
         }
 
+        var indexMap = BuildSubtitleIndexMap();
         var selectedIndices = SubtitleGridSelectedItems
             .Cast<SubtitleLineViewModel>()
-            .Select(x => Subtitles.IndexOf(x))
+            .Select(x => IndexFromMap(indexMap, x))
             .Where(i => i >= 0)
             .OrderBy(i => i)
             .ToList();
@@ -20983,12 +21010,13 @@ public partial class MainViewModel :
         }
 
         var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        var indexMap = BuildSubtitleIndexMap();
         foreach (var item in selectedItems)
         {
             // "The previous line" means the previous line of the subtitle being edited, not a
             // display-only reference row of a mismatched original (#13962) - which is what the
             // raw grid predecessor could be. Every sibling timing command uses these helpers.
-            var idx = Subtitles.IndexOf(item);
+            var idx = IndexFromMap(indexMap, item);
             if (idx < 0)
             {
                 continue;
@@ -21016,9 +21044,10 @@ public partial class MainViewModel :
         }
 
         var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        var indexMap = BuildSubtitleIndexMap();
         foreach (var item in selectedItems)
         {
-            var idx = Subtitles.IndexOf(item);
+            var idx = IndexFromMap(indexMap, item);
             if (idx < 0)
             {
                 continue;
@@ -21298,9 +21327,15 @@ public partial class MainViewModel :
         var clipboardSubtitle = SubtitleGridCopyPasteHelper.ParseClipboardSubtitle(text, SelectedSubtitleFormat);
         if (clipboardSubtitle is { Paragraphs.Count: > 0 })
         {
-            foreach (var item in selectedItems)
+            // Bottom up with RemoveAt: Remove(item) is a scan of the collection per row, which
+            // made select all + paste O(rows * rows).
+            var removeSet = new HashSet<SubtitleLineViewModel>(selectedItems);
+            for (var i = Subtitles.Count - 1; i >= 0 && removeSet.Count > 0; i--)
             {
-                Subtitles.Remove(item);
+                if (removeSet.Remove(Subtitles[i]))
+                {
+                    Subtitles.RemoveAt(i);
+                }
             }
 
             // Nothing above the topmost selected row was removed, so it is still the row to insert
@@ -28798,7 +28833,8 @@ public partial class MainViewModel :
 
         // The merged line always lands in the lowest selected row, so keep the
         // selection there regardless of the order the rows were clicked in.
-        var first = selectedItems.MinBy(item => Subtitles.IndexOf(item))!;
+        var indexMap = BuildSubtitleIndexMap();
+        var first = selectedItems.MinBy(item => IndexFromMap(indexMap, item))!;
 
         var countBefore = Subtitles.Count;
         _mergeManager.MergeSelectedLines(Subtitles, selectedItems, breakMode: breakMode, keepEndTime: MergeManager.ShouldKeepEndTime(SelectedSubtitleFormat));
@@ -28834,8 +28870,9 @@ public partial class MainViewModel :
             return;
         }
 
+        var indexMap = BuildSubtitleIndexMap();
         var ordered = selectedItems
-            .Select(item => (Item: item, Index: Subtitles.IndexOf(item)))
+            .Select(item => (Item: item, Index: IndexFromMap(indexMap, item)))
             .Where(p => p.Index >= 0)
             .OrderBy(p => p.Index)
             .ToList();
@@ -28864,9 +28901,11 @@ public partial class MainViewModel :
 
         first.EndTime = last.EndTime;
 
+        // Bottom up by position: the indexes were just checked to be contiguous, and the rows
+        // above the one being removed do not move.
         for (var i = ordered.Count - 1; i >= 1; i--)
         {
-            Subtitles.Remove(ordered[i].Item);
+            Subtitles.RemoveAt(ordered[i].Index);
         }
 
         Renumber();
