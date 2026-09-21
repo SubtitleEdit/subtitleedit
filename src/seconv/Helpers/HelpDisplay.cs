@@ -71,6 +71,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--time-codes-only", "Image sources (.sup/VobSub/PGS/DVB/XSUB) -> text with time codes only; skips OCR");
         ShowParameter(console, "--no-vobsub-isolate-colors", "Disable VobSub OCR colour isolation (on by default; isolation binarises to black-on-white, dropping outline colours)");
         ShowParameter(console, "--no-pgs-isolate-colors", "Disable PGS/DVB-sub OCR colour isolation (on by default, except for applevision; isolation binarises to black-on-white so the white glyph fill survives the OCR canvas)");
+        ShowParameter(console, "--ocr-auto-detect-assa-alignment", "OCR: add an ASSA alignment tag ({\\an8} = top centre, ...) from each image's position in the frame (bottom-centre gets no tag)");
         ShowParameter(console, "--ollama-url:<url>", "Ollama API endpoint (default: http://localhost:11434/api/chat)");
         ShowParameter(console, "--ollama-model:<model>", "Ollama vision model (default: llama3.2-vision)");
         ShowParameter(console, "--translate-to:<lang>", "Auto-translate to this language (code or English name, e.g. de or German)");
