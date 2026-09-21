@@ -1256,178 +1256,133 @@ public static class UiUtil
         return link;
     }
 
-    public static TextBlock WithMarginRight(this TextBlock control, int marginRight)
+    public static TControl WithMarginRight<TControl>(this TControl control, int marginRight) where TControl : Layoutable
     {
         var m = control.Margin;
         control.Margin = new Thickness(m.Left, m.Top, marginRight, m.Bottom);
         return control;
     }
 
-    public static TextBox WithMarginRight(this TextBox control, int marginRight)
-    {
-        var m = control.Margin;
-        control.Margin = new Thickness(m.Left, m.Top, marginRight, m.Bottom);
-        return control;
-    }
-
-    public static TextBox WithMarginLeft(this TextBox control, int marginLeft)
+    public static TControl WithMarginLeft<TControl>(this TControl control, int marginLeft) where TControl : Layoutable
     {
         var m = control.Margin;
         control.Margin = new Thickness(marginLeft, m.Top, m.Right, m.Bottom);
         return control;
     }
 
-    public static TextBox WithMargin(this TextBox control, int margin)
+    public static TControl WithMargin<TControl>(this TControl control, int margin) where TControl : Layoutable
     {
         control.Margin = new Thickness(margin);
         return control;
     }
 
-    public static SplitButton WithMarginLeft(this SplitButton control, int marginLeft)
+    public static TControl WithMarginTop<TControl>(this TControl control, int marginTop) where TControl : Layoutable
     {
         var m = control.Margin;
-        control.Margin = new Thickness(marginLeft, m.Top, m.Right, m.Bottom);
+        control.Margin = new Thickness(m.Left, marginTop, m.Right, m.Bottom);
         return control;
     }
 
-    public static TextBox WithHeight(this TextBox control, double height)
-    {
-        var m = control.Margin;
-        control.Height = height;
-        return control;
-    }
-
-    public static TextBlock WithMarginLeft(this TextBlock control, int marginLeft)
-    {
-        var m = control.Margin;
-        control.Margin = new Thickness(marginLeft, m.Top, m.Right, m.Bottom);
-        return control;
-    }
-
-    public static TextBlock WithAlignmentLeft(this TextBlock control)
-    {
-        control.HorizontalAlignment = HorizontalAlignment.Left;
-        return control;
-    }
-
-    public static TextBlock WithAlignmentTop(this TextBlock control)
-    {
-        control.VerticalAlignment = VerticalAlignment.Top;
-        return control;
-    }
-
-    public static TextBlock WithMarginBottom(this TextBlock control, int marginBottom)
+    public static TControl WithMarginBottom<TControl>(this TControl control, int marginBottom) where TControl : Layoutable
     {
         var m = control.Margin;
         control.Margin = new Thickness(m.Left, m.Top, m.Right, marginBottom);
         return control;
     }
 
-    public static Label WithMarginBottom(this Label control, int marginBottom)
-    {
-        var m = control.Margin;
-        control.Margin = new Thickness(m.Left, m.Top, m.Right, marginBottom);
-        return control;
-    }
-
-    public static Border WithMarginBottom(this Border control, int marginBottom)
-    {
-        var m = control.Margin;
-        control.Margin = new Thickness(m.Left, m.Top, m.Right, marginBottom);
-        return control;
-    }
-
-    public static Border WithMinWidth(this Border control, int minWidth)
-    {
-        control.MinWidth = minWidth;
-        return control;
-    }
-
-    public static Border WithMinHeight(this Border control, int minHeight)
-    {
-        control.MinHeight = minHeight;
-        return control;
-    }
-
-    public static Border WithHeight(this Border control, int height)
-    {
-        control.Height = height;
-        return control;
-    }
-
-    public static Border WithMarginRight(this Border control, int marginRight)
-    {
-        var m = control.Margin;
-        control.Margin = new Thickness(m.Left, m.Top, marginRight, m.Bottom);
-        return control;
-    }
-
-    public static TextBlock WithMarginTop(this TextBlock control, int topBottom)
-    {
-        var m = control.Margin;
-        control.Margin = new Thickness(m.Left, topBottom, m.Right, m.Bottom);
-        return control;
-    }
-
-    public static ComboBox WithMarginBottom(this ComboBox control, int marginBottom)
-    {
-        var m = control.Margin;
-        control.Margin = new Thickness(m.Left, m.Top, m.Right, marginBottom);
-        return control;
-    }
-
-    public static ComboBox WithMargin(this ComboBox control, int left, int top, int right, int bottom)
+    public static TControl WithMargin<TControl>(this TControl control, int left, int top, int right, int bottom) where TControl : Layoutable
     {
         control.Margin = new Thickness(left, top, right, bottom);
         return control;
     }
 
-    public static Button WithMarginBottom(this Button control, int marginBottom)
+    public static TControl WithWidth<TControl>(this TControl control, double width) where TControl : Layoutable
     {
-        var m = control.Margin;
-        control.Margin = new Thickness(m.Left, m.Top, m.Right, marginBottom);
+        control.Width = width;
+        return control;
+    }
+
+    public static TControl WithHeight<TControl>(this TControl control, double height) where TControl : Layoutable
+    {
+        control.Height = height;
+        return control;
+    }
+
+    public static TControl WithMinWidth<TControl>(this TControl control, double minWidth) where TControl : Layoutable
+    {
+        control.MinWidth = minWidth;
+        return control;
+    }
+
+    public static TControl WithMinHeight<TControl>(this TControl control, double minHeight) where TControl : Layoutable
+    {
+        control.MinHeight = minHeight;
+        return control;
+    }
+
+    public static TControl WithAlignmentLeft<TControl>(this TControl control) where TControl : Layoutable
+    {
+        control.HorizontalAlignment = HorizontalAlignment.Left;
+        return control;
+    }
+
+    public static TControl WithAlignmentRight<TControl>(this TControl control) where TControl : Layoutable
+    {
+        control.HorizontalAlignment = HorizontalAlignment.Right;
+        return control;
+    }
+
+    public static TControl WithAlignmentCenter<TControl>(this TControl control) where TControl : Layoutable
+    {
+        control.HorizontalAlignment = HorizontalAlignment.Center;
+        return control;
+    }
+
+    public static TControl WithAlignmentTop<TControl>(this TControl control) where TControl : Layoutable
+    {
+        control.VerticalAlignment = VerticalAlignment.Top;
+        return control;
+    }
+
+    public static TControl WithAlignmentBottom<TControl>(this TControl control) where TControl : Layoutable
+    {
+        control.VerticalAlignment = VerticalAlignment.Bottom;
+        return control;
+    }
+
+    public static TControl WithLeftAlignment<TControl>(this TControl control) where TControl : Layoutable
+    {
+        control.HorizontalAlignment = HorizontalAlignment.Left;
+        return control;
+    }
+
+    public static TControl WithRightAlignment<TControl>(this TControl control) where TControl : Layoutable
+    {
+        control.HorizontalAlignment = HorizontalAlignment.Right;
+        return control;
+    }
+
+    public static TControl WithTopAlignment<TControl>(this TControl control) where TControl : Layoutable
+    {
+        control.VerticalAlignment = VerticalAlignment.Top;
+        return control;
+    }
+
+    public static TControl WithCenterAlignment<TControl>(this TControl control) where TControl : Layoutable
+    {
+        control.VerticalAlignment = VerticalAlignment.Center;
+        return control;
+    }
+
+    public static TControl WithBottomAlignment<TControl>(this TControl control) where TControl : Layoutable
+    {
+        control.VerticalAlignment = VerticalAlignment.Bottom;
         return control;
     }
 
     public static TextBlock WithBackgroundColor(this TextBlock control, IBrush brush)
     {
         control.Background = brush;
-        return control;
-    }
-
-    public static Button WithLeftAlignment(this Button control)
-    {
-        control.HorizontalAlignment = HorizontalAlignment.Left;
-        return control;
-    }
-
-    public static SplitButton WithLeftAlignment(this SplitButton control)
-    {
-        control.HorizontalAlignment = HorizontalAlignment.Left;
-        return control;
-    }
-
-    public static Button WithRightAlignment(this Button control)
-    {
-        control.HorizontalAlignment = HorizontalAlignment.Right;
-        return control;
-    }
-
-    public static Button WithTopAlignment(this Button control)
-    {
-        control.VerticalAlignment = VerticalAlignment.Top;
-        return control;
-    }
-
-    public static Button WithCenterAlignment(this Button control)
-    {
-        control.VerticalAlignment = VerticalAlignment.Center;
-        return control;
-    }
-
-    public static Button WithBottomAlignment(this Button control)
-    {
-        control.VerticalAlignment = VerticalAlignment.Bottom;
         return control;
     }
 
@@ -1512,18 +1467,6 @@ public static class UiUtil
         // (#12087). Bind the caption (or a fuller name) as the accessible name instead.
         control.Bind(AutomationProperties.NameProperty, new Binding { Path = accessibleNamePropertyPath ?? textPropertyPath });
 
-        return control;
-    }
-
-    public static ComboBox WithLeftAlignment(this ComboBox control)
-    {
-        control.HorizontalAlignment = HorizontalAlignment.Left;
-        return control;
-    }
-
-    public static ComboBox WithTopAlignment(this ComboBox control)
-    {
-        control.VerticalAlignment = VerticalAlignment.Top;
         return control;
     }
 
@@ -1815,12 +1758,6 @@ public static class UiUtil
         return control;
     }
 
-    public static TextBlock WithMargin(this TextBlock control, int margin)
-    {
-        control.Margin = new Thickness(margin);
-        return control;
-    }
-
     public static TextBlock WithPadding(this TextBlock control, int padding)
     {
         control.Padding = new Thickness(padding);
@@ -1854,59 +1791,9 @@ public static class UiUtil
         return control;
     }
 
-    public static StackPanel WithMarginTop(this StackPanel control, int marginTop)
-    {
-        var m = control.Margin;
-        control.Margin = new Thickness(m.Left, marginTop, m.Right, m.Bottom);
-        return control;
-    }
-
-    public static StackPanel WithMarginBottom(this StackPanel control, int marginBottom)
-    {
-        var m = control.Margin;
-        control.Margin = new Thickness(m.Left, m.Top, m.Right, marginBottom);
-        return control;
-    }
-
-    public static StackPanel WithAlignmentLeft(this StackPanel control)
-    {
-        control.HorizontalAlignment = HorizontalAlignment.Left;
-        return control;
-    }
-
     public static StackPanel WithSpacing(this StackPanel control, int spacing)
     {
         control.Spacing = spacing;
-        return control;
-    }
-
-    public static StackPanel WithAlignmentTop(this StackPanel control)
-    {
-        control.VerticalAlignment = VerticalAlignment.Top;
-        return control;
-    }
-
-    public static Label WithAlignmentTop(this Label control)
-    {
-        control.VerticalAlignment = VerticalAlignment.Top;
-        return control;
-    }
-
-    public static Label WithAlignmentBottom(this Label control)
-    {
-        control.VerticalAlignment = VerticalAlignment.Bottom;
-        return control;
-    }
-
-    public static Label WithAlignmentRight(this Label control)
-    {
-        control.HorizontalAlignment = HorizontalAlignment.Right;
-        return control;
-    }
-
-    public static Label WithAlignmentCenter(this Label control)
-    {
-        control.HorizontalAlignment = HorizontalAlignment.Center;
         return control;
     }
 
@@ -1922,42 +1809,9 @@ public static class UiUtil
         return control;
     }
 
-    public static Label WithMarginLeft(this Label control, int marginLeft)
-    {
-        var m = control.Margin;
-        control.Margin = new Thickness(marginLeft, m.Top, m.Right, m.Bottom);
-        return control;
-    }
-
     public static Label WithOpacity(this Label control, double opacity)
     {
         control.Opacity = opacity;
-        return control;
-    }
-
-    public static Label WithMinWidth(this Label control, int minWidth)
-    {
-        control.MinWidth = minWidth;
-        return control;
-    }
-
-    public static Label WithMinHeight(this Label control, int minHeight)
-    {
-        control.MinHeight = minHeight;
-        return control;
-    }
-
-    public static Label WithMarginRight(this Label control, int marginRight)
-    {
-        var m = control.Margin;
-        control.Margin = new Thickness(m.Left, m.Top, marginRight, m.Bottom);
-        return control;
-    }
-
-    public static Label WithMarginTop(this Label control, int marginTop)
-    {
-        var m = control.Margin;
-        control.Margin = new Thickness(m.Left, marginTop, m.Right, m.Bottom);
         return control;
     }
 
@@ -1967,73 +1821,9 @@ public static class UiUtil
         return control;
     }
 
-    public static ComboBox WithMarginTop(this ComboBox control, int marginTop)
-    {
-        var m = control.Margin;
-        control.Margin = new Thickness(m.Left, marginTop, m.Right, m.Bottom);
-        return control;
-    }
-
-    public static ComboBox WithMarginLeft(this ComboBox control, int marginLeft)
-    {
-        var m = control.Margin;
-        control.Margin = new Thickness(marginLeft, m.Top, m.Right, m.Bottom);
-        return control;
-    }
-
-    public static ComboBox WithMarginRight(this ComboBox control, int marginRight)
-    {
-        var m = control.Margin;
-        control.Margin = new Thickness(m.Left, m.Top, marginRight, m.Bottom);
-        return control;
-    }
-
-    public static Button WithMarginTop(this Button control, int marginTop)
-    {
-        var m = control.Margin;
-        control.Margin = new Thickness(m.Left, marginTop, m.Right, m.Bottom);
-        return control;
-    }
-
-    public static SplitButton WithMarginTop(this SplitButton control, int marginTop)
-    {
-        var m = control.Margin;
-        control.Margin = new Thickness(m.Left, marginTop, m.Right, m.Bottom);
-        return control;
-    }
-
     public static Button WithFontSize(this Button control, double fontSize)
     {
         control.FontSize = ScaledFontSize(fontSize);
-        return control;
-    }
-
-    public static Button WithMarginLeft(this Button control, int marginLeft)
-    {
-        var m = control.Margin;
-        control.Margin = new Thickness(marginLeft, m.Top, m.Right, m.Bottom);
-        return control;
-    }
-
-
-    public static CheckBox WithMarginLeft(this CheckBox control, int marginLeft)
-    {
-        var m = control.Margin;
-        control.Margin = new Thickness(marginLeft, m.Top, m.Right, m.Bottom);
-        return control;
-    }
-
-    public static Button WithMarginRight(this Button control, int marginRight)
-    {
-        var m = control.Margin;
-        control.Margin = new Thickness(m.Left, m.Top, marginRight, m.Bottom);
-        return control;
-    }
-
-    public static CheckBox WithMarginRight(this CheckBox control, int marginRight)
-    {
-        var m = control.Margin;
-        control.Margin = new Thickness(m.Left, m.Top, marginRight, m.Bottom);
         return control;
     }
 
@@ -2045,33 +1835,15 @@ public static class UiUtil
         return control;
     }
 
-    public static Button WithMargin(this Button control, int margin)
-    {
-        control.Margin = new Thickness(margin);
-        return control;
-    }
-
     public static Button WithPadding(this Button control, int padding)
     {
         control.Padding = new Thickness(padding);
         return control;
     }
 
-    public static Button WithMargin(this Button control, int left, int top, int right, int bottom)
-    {
-        control.Margin = new Thickness(left, top, right, bottom);
-        return control;
-    }
-
     public static Button WithBold(this Button control)
     {
         control.FontWeight = FontWeight.Bold;
-        return control;
-    }
-
-    public static TextBlock WithMinwidth(this TextBlock control, int width)
-    {
-        control.MinWidth = width;
         return control;
     }
 
@@ -2151,39 +1923,9 @@ public static class UiUtil
         return control;
     }
 
-    public static Button WithMinWidth(this Button control, int width)
-    {
-        control.MinWidth = width;
-        return control;
-    }
-
-    public static SplitButton WithMinWidth(this SplitButton control, int width)
-    {
-        control.MinWidth = width;
-        return control;
-    }
-
-    public static Button WithMinHeight(this Button control, int height)
-    {
-        control.MinHeight = height;
-        return control;
-    }
-
     public static Button WithParameter(this Button control, object parameter)
     {
         control.CommandParameter = parameter;
-        return control;
-    }
-
-    public static ComboBox WithMinWidth(this ComboBox control, int width)
-    {
-        control.MinWidth = width;
-        return control;
-    }
-
-    public static ComboBox WithWidth(this ComboBox control, int width)
-    {
-        control.Width = width;
         return control;
     }
 
