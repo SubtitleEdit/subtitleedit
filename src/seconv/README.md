@@ -35,6 +35,7 @@ seconv movie.mkv subrip --track-number:3                         # extract MKV t
 seconv movie.sup subrip --ocr-engine:tesseract --ocr-language:eng # OCR a Blu-ray .sup
 seconv *.mkv subrip --ocr-engine:applevision                     # macOS: OCR MKV PGS tracks with built-in Vision
 seconv movie.sup subrip --time-codes-only                        # timing only, no OCR
+seconv movie.sup subrip --ocr-auto-detect-assa-alignment         # OCR + {\an8} etc. from each image's position
 seconv movie.avi subrip --ocr-engine:tesseract --ocr-language:eng # OCR the XSUB subtitles of an .avi
 seconv subs.srt bluraysup --resolution:1920x1080                 # render text → Blu-ray sup
 seconv dump-settings > my.json                                   # starter --settings file (libse defaults)

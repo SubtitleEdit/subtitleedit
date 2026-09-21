@@ -136,6 +136,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("Disable PGS/DVB-sub OCR colour isolation (on by default, except for --ocr-engine:applevision)")]
         public bool NoPgsIsolateColors { get; init; }
 
+        [CommandOption("--ocr-auto-detect-assa-alignment|--ocrautodetectassaalignment")]
+        [Description("OCR: add an ASSA alignment tag ({\\an8} = top centre, ...) from where each image sits in the video frame - same as 'Auto-detect ASSA alignment' in the OCR window. Bottom-centre lines get no tag")]
+        public bool OcrAutoDetectAssaAlignment { get; init; }
+
         [CommandOption("--ollama-url")]
         [Description("Ollama API endpoint (default: http://localhost:11434/api/chat)")]
         public string? OllamaUrl { get; init; }
@@ -814,6 +818,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 // binarises for it either, so isolation stays off for that engine.
                 PgsIsolateColors = !settings.NoPgsIsolateColors &&
                                    settings.OcrEngine?.Trim().ToLowerInvariant() is not ("applevision" or "apple-vision"),
+                OcrAutoDetectAssaAlignment = settings.OcrAutoDetectAssaAlignment,
                 OllamaUrl = settings.OllamaUrl,
                 OllamaModel = settings.OllamaModel,
                 OcrUrl = settings.OcrUrl,

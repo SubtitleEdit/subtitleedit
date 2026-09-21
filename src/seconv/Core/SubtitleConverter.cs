@@ -1277,6 +1277,14 @@ internal record class ConversionOptions
     /// </summary>
     public bool PgsIsolateColors { get; init; } = true;
 
+    /// <summary>
+    /// OCR only: prefix each recognised text with the ASSA alignment tag (<c>{\an8}</c>, ...)
+    /// matching where its image sits in the video frame - the OCR window's "Auto-detect ASSA
+    /// alignment". Bottom-centre (an2) is the default and gets no tag. Sources that do not
+    /// report a frame size are left untagged. Ignored in <see cref="TimeCodesOnly"/> mode.
+    /// </summary>
+    public bool OcrAutoDetectAssaAlignment { get; init; }
+
     /// <summary>Ollama API endpoint (default <c>http://localhost:11434/api/chat</c>).</summary>
     public string? OllamaUrl { get; init; }
 

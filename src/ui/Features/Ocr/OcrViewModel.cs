@@ -2284,7 +2284,7 @@ public partial class OcrViewModel : ObservableObject
         for (var i = 0; i < OcrSubtitleItems.Count; i++)
         {
             var item = OcrSubtitleItems[i];
-            foreach (var groupText in SplitTextByAlignmentGroups(item.Text))
+            foreach (var groupText in OcrAssaAlignment.SplitTextByAlignmentGroups(item.Text))
             {
                 OcredSubtitle.Add(new SubtitleLineViewModel
                 {
@@ -2297,58 +2297,6 @@ public partial class OcrViewModel : ObservableObject
         }
 
         Close();
-    }
-
-    private static readonly Regex AlignmentTagRegex = new(@"^\{\\an[1-9]\}", RegexOptions.Compiled);
-
-    // Splits text into groups of lines sharing the same leading {\anN} alignment tag.
-    // A line without a tag continues the current group. Returns the original text as a single
-    // group when fewer than two distinct alignments are present.
-    private static List<string> SplitTextByAlignmentGroups(string text)
-    {
-        if (string.IsNullOrEmpty(text))
-        {
-            return new List<string> { text };
-        }
-
-        var lines = text.SplitToLines();
-        var groups = new List<List<string>>();
-        var currentTag = string.Empty;
-        var currentLines = new List<string>();
-
-        foreach (var line in lines)
-        {
-            var match = AlignmentTagRegex.Match(line);
-            var tag = match.Success ? match.Value : string.Empty;
-
-            if (currentLines.Count == 0)
-            {
-                currentTag = tag;
-                currentLines.Add(line);
-            }
-            else if (tag.Length > 0 && tag != currentTag)
-            {
-                groups.Add(currentLines);
-                currentTag = tag;
-                currentLines = new List<string> { line };
-            }
-            else
-            {
-                currentLines.Add(line);
-            }
-        }
-
-        if (currentLines.Count > 0)
-        {
-            groups.Add(currentLines);
-        }
-
-        if (groups.Count <= 1)
-        {
-            return new List<string> { text };
-        }
-
-        return groups.Select(g => string.Join("\n", g)).ToList();
     }
 
     [RelayCommand]
@@ -5808,64 +5756,12 @@ public partial class OcrViewModel : ObservableObject
 
         try
         {
-            // Get image position and screen dimensions
             var position = item.GetPosition();
             var screenSize = item.GetScreenSize();
             using var bitmap = item.GetSkBitmapClean(); // fresh bitmap each call; dispose to avoid a native leak
 
-            if (bitmap == null || screenSize.Width == 0 || screenSize.Height == 0)
-            {
-                return (item.Text, false);
-            }
-
-            // Check if image height is larger than approximately 1/3 of screen height
-            var imageHeightRatio = (double)bitmap.Height / screenSize.Height;
-            if (imageHeightRatio > 0.33)
-            {
-                // Try to split lines and set alignment for each line
-                var lines = textToUse.Trim().SplitToLines();
-                if (lines.Count > 1 && textToUse.Length < 40)
-                {
-                    // Similar logic to RunGoogleLensOcr method
-                    var nbmp = new NikseBitmap2(bitmap);
-                    nbmp.MakeOneColor(SKColors.White);
-                    var lineImages = NikseBitmapImageSplitter2.SplitToLinesTransparentOrBlack(nbmp);
-                    var lineImages2 = NikseBitmapImageSplitter2.SplitToLines(nbmp, 20);
-
-                    if (lineImages.Count > 1 || lineImages2.Count > 1)
-                    {
-                        // Multiple lines detected - apply alignment to each line
-                        var lineAlignments = new List<string>();
-                        var multiLineCenterX = position.X + bitmap.Width / 2.0;
-                        var multiLineRelativeX = multiLineCenterX / screenSize.Width;
-
-                        for (int i = 0; i < lines.Count; i++)
-                        {
-                            // Calculate relative Y position for each line
-                            var lineHeight = bitmap.Height / (double)lines.Count;
-                            var lineY = position.Y + (i * lineHeight) + (lineHeight / 2.0);
-                            var lineRelativeY = lineY / screenSize.Height;
-
-                            // Get alignment for this specific line position
-                            lineAlignments.Add(GetAssaPositionFromScreen(multiLineRelativeX, lineRelativeY));
-                        }
-
-                        return ApplyLineAlignmentTags(lines, lineAlignments, textToUse, Se.Settings.General.WriteAn2Tag);
-                    }
-                }
-            }
-
-            // Calculate center point of the image on screen
-            var centerX = position.X + bitmap.Width / 2.0;
-            var centerY = position.Y + bitmap.Height / 2.0;
-
-            // Convert to relative position (0.0 = left/top, 1.0 = right/bottom)
-            var relativeX = centerX / screenSize.Width;
-            var relativeY = centerY / screenSize.Height;
-
-            // Map to ASSA alignment positions (An1-An9)
-            var assaPosition = GetAssaPositionFromScreen(relativeX, relativeY);
-            return ApplyAlignmentTag(textToUse, assaPosition, Se.Settings.General.WriteAn2Tag);
+            return OcrAssaAlignment.Detect(
+                bitmap, position.X, position.Y, screenSize.Width, screenSize.Height, textToUse, Se.Settings.General.WriteAn2Tag);
         }
         catch
         {
@@ -5873,82 +5769,20 @@ public partial class OcrViewModel : ObservableObject
         }
     }
 
-    // "an2" is the default bottom-center alignment, so no tag is needed for it (#12393)
+    // The alignment logic is shared with seconv - see OcrAssaAlignment.
     internal static (string Text, bool AlignmentAdded) ApplyAlignmentTag(string text, string assaPosition, bool writeAn2Tag)
     {
-        if (assaPosition == "an2" && !writeAn2Tag)
-        {
-            return (text, false);
-        }
-
-        return ($"{{\\{assaPosition}}}{text}", true);
+        return OcrAssaAlignment.ApplyAlignmentTag(text, assaPosition, writeAn2Tag);
     }
 
     internal static (string Text, bool AlignmentAdded) ApplyLineAlignmentTags(List<string> lines, List<string> lineAlignments, string originalText, bool writeAn2Tag)
     {
-        if (!writeAn2Tag && lineAlignments.All(p => p == "an2"))
-        {
-            return (originalText, false);
-        }
-
-        var perLine = new List<string>();
-        for (var i = 0; i < lines.Count; i++)
-        {
-            perLine.Add($"{{\\{lineAlignments[i]}}}{lines[i].Trim()}");
-        }
-
-        return (string.Join("\n", perLine), true);
+        return OcrAssaAlignment.ApplyLineAlignmentTags(lines, lineAlignments, originalText, writeAn2Tag);
     }
 
     internal static string GetAssaPositionFromScreen(double relativeX, double relativeY)
     {
-        // Map screen coordinates to 3x3 grid for ASSA positions
-        // relativeX: 0.0 = left, 1.0 = right
-        // relativeY: 0.0 = top, 1.0 = bottom
-
-        string horizontal;
-        if (relativeX < 0.33)
-        {
-            horizontal = "left";   // An1, An4, An7
-        }
-        else if (relativeX > 0.67)
-        {
-            horizontal = "right";  // An3, An6, An9
-        }
-        else
-        {
-            horizontal = "center"; // An2, An5, An8
-        }
-
-        string vertical;
-        if (relativeY < 0.33)
-        {
-            vertical = "bottom";   // An7, An8, An9 (in ASSA, these are at top)
-        }
-        else if (relativeY > 0.67)
-        {
-            vertical = "top";      // An1, An2, An3 (in ASSA, these are at bottom)
-        }
-        else
-        {
-            vertical = "middle";   // An4, An5, An6
-        }
-
-        // Map to ASSA position numbers
-        // Note: ASSA coordinate system has origin at bottom-left
-        return (vertical, horizontal) switch
-        {
-            ("top", "left") => "an1",     // bottom-left
-            ("top", "center") => "an2",   // bottom-center
-            ("top", "right") => "an3",    // bottom-right
-            ("middle", "left") => "an4",  // middle-left
-            ("middle", "center") => "an5", // middle-center
-            ("middle", "right") => "an6", // middle-right
-            ("bottom", "left") => "an7",  // top-left
-            ("bottom", "center") => "an8", // top-center
-            ("bottom", "right") => "an9", // top-right
-            _ => "an5" // default to center
-        };
+        return OcrAssaAlignment.GetAssaPositionFromScreen(relativeX, relativeY);
     }
 
     private List<OcrSubtitleItem> SplitImageToLines(OcrSubtitleItem item)

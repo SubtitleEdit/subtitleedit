@@ -28,6 +28,12 @@ internal static class BitmapSubtitleLoader
     /// sources carry it per event (a top-positioned caption, a sign at the left edge), and
     /// without it every re-export was re-centred at the bottom of the frame.
     /// </para>
+    /// <para>
+    /// <see cref="PositionFrame"/> is the frame <see cref="Position"/> is measured in, for
+    /// sources that know it but leave <see cref="ScreenWidth"/> / <see cref="ScreenHeight"/>
+    /// null so the export resolution stays the caller's pick. Only OCR alignment detection
+    /// reads it.
+    /// </para>
     /// </summary>
     public sealed record BitmapSubtitleItem(
         TimeCode StartTime,
@@ -35,7 +41,8 @@ internal static class BitmapSubtitleLoader
         SKBitmap Bitmap,
         int? ScreenWidth = null,
         int? ScreenHeight = null,
-        SKPointI? Position = null) : IDisposable
+        SKPointI? Position = null,
+        SKSizeI? PositionFrame = null) : IDisposable
     {
         public void Dispose() => Bitmap.Dispose();
     }
@@ -435,11 +442,13 @@ internal static class BitmapSubtitleLoader
             }
 
             var position = pes.GetPosition();
+            var frame = pes.GetScreenSize();
             items.Add(new BitmapSubtitleItem(
                 new TimeCode(start),
                 new TimeCode(end),
                 bmp,
-                Position: new SKPointI(position.Left, position.Top)));
+                Position: new SKPointI(position.Left, position.Top),
+                PositionFrame: new SKSizeI((int)frame.Width, (int)frame.Height)));
         }
 
         WarnSkippedBitmaps(skipped, "MKV DVB-sub");
