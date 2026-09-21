@@ -218,6 +218,10 @@ public class AutoTranslateRunnerTest : IDisposable
     [InlineData("translate_gemma4_sub-E4B-Q4_K_XL.gguf", null, false, true)]
     // "translategemma-4b" is TranslateGemma at 4B, not Gemma 4 - it still needs the gemma template.
     [InlineData("translategemma-4b_Q6_K.gguf", "gemma", true, false)]
+    // TranslatePsy-AfriSLM is a Qwen 3.5 fine-tune that thinks by default, without "qwen" in the
+    // file name - the curated 4B and the smaller sizes we do not list.
+    [InlineData("TranslatePsy-AfriSLM-4B-Q4_K_M-imat.gguf", null, false, true)] // curated
+    [InlineData("TranslatePsy-AfriSLM-2B-Q8_0-imat.gguf", null, false, true)]   // uncurated size
     public void InferChatTemplate_PicksFlagsByFamily(string fileName, string? expectedTemplate, bool expectedNoJinja, bool expectedNoThinking)
     {
         var (chatTemplate, noJinja, noThinking) = LlamaCppServerManager.InferChatTemplate(fileName);

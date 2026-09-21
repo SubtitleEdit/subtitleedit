@@ -140,4 +140,24 @@ public class LlamaCppServerArgumentsTests
         Assert.All(qwen, m => Assert.Null(m.ChatTemplate));
         Assert.All(qwen, m => Assert.False(m.NoJinja));
     }
+
+    /// <summary>
+    /// TranslatePsy-AfriSLM is a Qwen 3.5 fine-tune that inherits the thinking template: without
+    /// "--reasoning off" 12 of 16 test lines came back empty. Its file names carry no "qwen", so
+    /// the Qwen test above does not cover it. It must also stay on SE's generic prompt - the
+    /// model card's own prompt drops line breaks and pads short lines with invented sentences.
+    /// </summary>
+    [Fact]
+    public void CuratedAfriSlmModels_DisableThinkingAndUseTheGenericPrompt()
+    {
+        var afriSlm = LlamaCppServerManager.TranslateModels
+            .Where(m => m.FileName.Contains("afrislm", System.StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        Assert.NotEmpty(afriSlm);
+        Assert.All(afriSlm, m => Assert.True(m.NoThinking, m.DisplayName + " must set NoThinking"));
+        Assert.All(afriSlm, m => Assert.Null(m.PromptTemplate));
+        Assert.All(afriSlm, m => Assert.Null(m.ChatTemplate));
+        Assert.All(afriSlm, m => Assert.False(m.NoJinja));
+    }
 }
