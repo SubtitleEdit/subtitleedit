@@ -4,7 +4,7 @@ using Nikse.SubtitleEdit.Logic.Download;
 namespace UITests.Logic.Download;
 
 /// <summary>
-/// llama.cpp ships two CUDA builds (12.4 and 13.3) that unpack into the same folder and share the
+/// llama.cpp ships two CUDA builds (12.4 and 13.4) that unpack into the same folder and share the
 /// same ggml-cuda.dll name, so the only thing telling them apart on disk is the cudart
 /// redistributable. These tests pin that detection plus the variant/hash-key round-trip, because
 /// getting either wrong silently re-downloads the other CUDA build on an engine update.
