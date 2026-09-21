@@ -3,6 +3,31 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-beta8 (21st of September 2026)
+
+* Add editor-style layout 14 with a track timeline (video row and subtitle rows above the waveform)
+* Add sound on Linux to the FFmpeg video player (PulseAudio / PipeWire)
+* FFmpeg video player: real frame index, seek-free frame stepping (also variable frame rate) and faster scrubbing
+* Add "Move lines: shorten previous/next line instead of overlapping it" option - thx gambar3
+* Add width setting for the "initial text of selected line" waveform toolbar box - thx kadrimarzouki
+* WhisperX: new standalone build with live output (no more "hang" at "Performing transcription..."), and an update prompt - thx gambar3
+* Batch convert: lock Add/Remove/Clear while converting - thx yozongu
+* OCR "Add character" windows: show subtitle images on the image preview background - thx Nino-kun
+* Fix many ffmpeg video generation bugs (burn-in, cut, re-encode, remux, write chapters, blank video, add/remove embedded subtitles)
+* Fix "Add/remove embedded subtitles" dropping extra audio tracks and font attachments
+* Fix burn-in of Blu-ray sup showing subtitles too early when the first subtitle starts late
+* Fix window position lost when closing SE with a minimized window - thx GrampaWildWilly
+* Fix format properties button missing after restart - thx GrampaWildWilly
+* Fix waveform subtitle blocks vanishing when scrolling in TTS review / Improve time codes - thx gambar3
+* Fix underscores missing from file, audio track and plugin names in menus
+* Fix error log flooded with "disposed mpv player" entries after closing Visual sync / Point sync
+* Update Chinese (Simplified) translation - thx emsb8888-prog
+* Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
+* Update Polish translation - thx potplayer-fanpack
+
+-----------------------------------------------------------------------------------------------------
+
 v5.3.0-beta7 (20th of September 2026)
 
 * Add "Improve time codes (forced alignment)" in Tools: re-time a roughly synced subtitle with a Crisp ASR forced aligner, with waveform preview
