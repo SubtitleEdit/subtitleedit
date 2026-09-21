@@ -62,8 +62,10 @@ public static class BatchStatics
 
             var subtitle = batchItem.Subtitle;
 
-            foreach (var p in subtitle.Paragraphs)
+            // By position: GetIndex(p) is an IndexOf scan, which made this O(lines * lines) per file.
+            for (var paragraphIndex = 0; paragraphIndex < subtitle.Paragraphs.Count; paragraphIndex++)
             {
+                var p = subtitle.Paragraphs[paragraphIndex];
                 allText.Append(p.Text);
 
                 var len = GetLineLength(p);
@@ -86,7 +88,7 @@ public static class BatchStatics
                 maximumWpm = Math.Max(wpm, maximumWpm);
                 totalWpm += wpm;
 
-                var next = subtitle.GetParagraphOrDefault(subtitle.GetIndex(p) + 1);
+                var next = subtitle.GetParagraphOrDefault(paragraphIndex + 1);
                 if (next != null)
                 {
                     var gap = next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds;
