@@ -88,7 +88,7 @@ public partial class OmniVoiceCrispAsrSettingsViewModel : ObservableObject
         {
             EngineLabel = string.Format(Se.Language.Video.TtsEngineUpdateAvailable, "CrispASR");
             EngineBrush = Amber();
-            EngineDownloadButtonText = string.Format(Se.Language.Video.TtsUpdateX, "CrispASR");
+            EngineDownloadButtonText = string.Format(Se.Language.General.UpdateX, "CrispASR");
         }
         else
         {

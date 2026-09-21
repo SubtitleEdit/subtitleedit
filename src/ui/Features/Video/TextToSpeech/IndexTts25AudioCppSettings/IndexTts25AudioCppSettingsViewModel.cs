@@ -135,7 +135,7 @@ public partial class IndexTts25AudioCppSettingsViewModel : ObservableObject
         {
             EngineLabel = string.Format(Se.Language.Video.TtsEngineUpdateAvailable, "audio.cpp" + backendSuffix);
             EngineBrush = Amber();
-            EngineDownloadButtonText = string.Format(Se.Language.Video.TtsUpdateX, "audio.cpp");
+            EngineDownloadButtonText = string.Format(Se.Language.General.UpdateX, "audio.cpp");
         }
         else
         {

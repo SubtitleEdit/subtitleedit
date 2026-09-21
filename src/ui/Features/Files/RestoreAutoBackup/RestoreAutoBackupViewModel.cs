@@ -117,9 +117,12 @@ public partial class RestoreAutoBackupViewModel : ObservableObject
 
         var l = Se.Language.File.RestoreAutoBackup;
         var general = Se.Settings.General;
-        SettingsBackupInfo = general.SettingsBackupOn
-            ? string.Format(l.SettingsBackupInfo, Math.Max(1, general.SettingsBackupIntervalDays), Math.Max(1, general.SettingsBackupMaxCount))
-            : l.SettingsBackupOff;
+        var maxCount = Math.Max(1, general.SettingsBackupMaxCount);
+        SettingsBackupInfo = !general.SettingsBackupOn
+            ? l.SettingsBackupOff
+            : general.SettingsBackupIntervalDays <= 0
+                ? string.Format(l.SettingsBackupInfoEveryStart, maxCount)
+                : string.Format(l.SettingsBackupInfo, general.SettingsBackupIntervalDays, maxCount);
         LastSettingsBackupText = SelectedSettingsFile != null
             ? string.Format(l.LastSettingsBackupX, SettingsFiles[0].DateAndTime)
             : l.NoSettingsBackupsYet;

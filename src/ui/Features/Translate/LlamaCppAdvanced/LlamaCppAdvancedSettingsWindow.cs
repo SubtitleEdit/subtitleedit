@@ -18,7 +18,7 @@ public class LlamaCppAdvancedSettingsWindow : Window
     public LlamaCppAdvancedSettingsWindow(LlamaCppAdvancedSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Translate.AdvancedSettings;
+        Title = Se.Language.General.AdvancedSettings;
         // Explicit width: WidthAndHeight sizing comes out too wide on macOS.
         Width = 680;
         SizeToContent = SizeToContent.Height;
@@ -40,7 +40,7 @@ public class LlamaCppAdvancedSettingsWindow : Window
             {
                 new TextBlock
                 {
-                    Text = Se.Language.Translate.AdvancedSettings,
+                    Text = Se.Language.General.AdvancedSettings,
                     FontSize = UiUtil.ScaledFontSize(18),
                     FontWeight = FontWeight.SemiBold,
                 },

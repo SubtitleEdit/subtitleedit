@@ -8,6 +8,13 @@ public class SeWaveformToolbarItem
     public int FontSize { get; set; }
     public int LeftMargin { get; set; }
     public int RightMargin { get; set; }
+
+    /// <summary>
+    /// Width in pixels for the items that have one (see <see cref="GetDefaultWidth"/>); 0 means
+    /// the item's default, which is also what a settings file from before the setting loads as.
+    /// </summary>
+    public int Width { get; set; }
+
     public int SortOrder { get; set; }
     public SeWaveformToolbarItemType Type { get; set; }
 
@@ -26,6 +33,7 @@ public class SeWaveformToolbarItem
         FontSize = item.FontSize;
         LeftMargin = item.LeftMargin;
         RightMargin = item.RightMargin;
+        Width = item.Width;
         SortOrder = item.SortOrder;
         Type = item.Type;
     }
@@ -36,6 +44,27 @@ public class SeWaveformToolbarItem
         FontSize = item.FontSize;
         LeftMargin = item.LeftMargin;
         RightMargin = item.RightMargin;
+        Width = item.Width;
         Type = item.Type;
+    }
+
+    /// <summary>
+    /// The width an item of the given type has until the user sets one; 0 for the items without
+    /// a width setting (buttons and the like size to their content).
+    /// </summary>
+    public static int GetDefaultWidth(SeWaveformToolbarItemType type)
+    {
+        return type == SeWaveformToolbarItemType.InitialText ? 400 : 0;
+    }
+
+    public static bool HasWidth(SeWaveformToolbarItemType type)
+    {
+        return GetDefaultWidth(type) > 0;
+    }
+
+    public int GetWidthOrDefault()
+    {
+        var defaultWidth = GetDefaultWidth(Type);
+        return Width > 0 && defaultWidth > 0 ? Width : defaultWidth;
     }
 }

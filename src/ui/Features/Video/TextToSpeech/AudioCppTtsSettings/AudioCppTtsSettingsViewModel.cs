@@ -152,7 +152,7 @@ public partial class AudioCppTtsSettingsViewModel : ObservableObject
             // A build that predates this engine's family is flagged too, even without a sidecar.
             EngineLabel = string.Format(Se.Language.Video.TtsEngineUpdateAvailable, "audio.cpp" + backendSuffix);
             EngineBrush = Amber();
-            EngineDownloadButtonText = string.Format(Se.Language.Video.TtsUpdateX, "audio.cpp");
+            EngineDownloadButtonText = string.Format(Se.Language.General.UpdateX, "audio.cpp");
         }
         else
         {

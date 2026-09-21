@@ -291,6 +291,49 @@ public static class PerLineVoiceClone
         return (start, Math.Max(0.1, end - start));
     }
 
+    /// <summary>How many other lines' clips are tried for a line that fails on its own clip.</summary>
+    internal const int MaxFallbackReferences = 2;
+
+    /// <summary>
+    /// The clips to try, in order, when line <paramref name="index"/> cannot be synthesised from
+    /// its own clip: the nearest other lines, the same speaker's first when speakers are known.
+    /// </summary>
+    /// <remarks>
+    /// A reference can make a line fail however often it is retried - Higgs Audio v3 never
+    /// reaches its end-of-audio token on some clips cut from a film's mixed audio (#15020) - and
+    /// every retry of the line reuses that clip. The nearest line is the best guess at the same
+    /// speaker in the same scene; when it is somebody else, a line in a neighbour's voice is
+    /// still a better dub than a line that is missing.
+    /// </remarks>
+    /// <param name="actorOf">The speaker of a paragraph, or null/empty when unknown.</param>
+    internal static List<string> GetFallbackReferenceClips(
+        IReadOnlyList<Paragraph> paragraphs,
+        int index,
+        IReadOnlyDictionary<Paragraph, string> clips,
+        Func<Paragraph, string?> actorOf,
+        int maxCount = MaxFallbackReferences)
+    {
+        if (index < 0 || index >= paragraphs.Count)
+        {
+            return new List<string>();
+        }
+
+        var actor = actorOf(paragraphs[index]);
+        clips.TryGetValue(paragraphs[index], out var ownClip);
+
+        return paragraphs
+            .Select((paragraph, i) => (paragraph, i))
+            .Where(p => p.i != index
+                        && clips.TryGetValue(p.paragraph, out var clip)
+                        && !string.Equals(clip, ownClip, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(p => !string.IsNullOrEmpty(actor) && string.Equals(actorOf(p.paragraph), actor, StringComparison.OrdinalIgnoreCase) ? 0 : 1)
+            .ThenBy(p => Math.Abs(p.i - index))
+            .ThenBy(p => p.i)
+            .Select(p => clips[p.paragraph])
+            .Take(maxCount)
+            .ToList();
+    }
+
     /// <summary>
     /// Every engine that knows how to clone per line. Taken from the shared catalog rather than
     /// listed here, so an engine added there (implementing <see cref="IPerLineCloneEngine"/>) is
@@ -298,6 +341,50 @@ public static class PerLineVoiceClone
     /// </summary>
     private static readonly Lazy<IPerLineCloneEngine[]> CloneEngines = new(() =>
         TtsEngineCatalog.CreateVoiceCloningEngines().OfType<IPerLineCloneEngine>().ToArray());
+
+    /// <summary>
+    /// True when <paramref name="engine"/> cannot clone from a clip that has no transcript beside
+    /// it (see <see cref="IPerLineCloneEngine.PerLineCloneNeedsTranscript"/>).
+    /// </summary>
+    public static bool NeedsTranscript(ITtsEngine engine) =>
+        engine is IPerLineCloneEngine { PerLineCloneNeedsTranscript: true };
+
+    /// <summary>
+    /// The cut clips that have no usable transcript sidecar - the ones a transcript-needing engine
+    /// would refuse. A clip gets its sidecar from the original-language subtitle, so these are the
+    /// lines with no original loaded, or none that lines up with them.
+    /// </summary>
+    public static List<string> GetClipsWithoutTranscript(IEnumerable<string> clipFileNames) =>
+        clipFileNames
+            .Where(clip => string.IsNullOrWhiteSpace(Qwen3TtsCrispAsr.TryReadUsableTranscript(clip)))
+            .ToList();
+
+    /// <summary>
+    /// Writes each clip's transcription as its transcript sidecar and returns how many got one. A
+    /// clip nothing was heard in gets none, so the engine still sees it as having no transcript.
+    /// </summary>
+    /// <param name="toRefText">Flattens a transcription's cues into one plain sentence.</param>
+    public static int WriteTranscripts(
+        IEnumerable<(string ClipFileName, IEnumerable<string> CueTexts)> transcriptions,
+        Func<IEnumerable<string?>, string> toRefText)
+    {
+        var written = 0;
+        foreach (var (clipFileName, cueTexts) in transcriptions)
+        {
+            var transcript = toRefText(cueTexts);
+            if (Qwen3TtsCrispAsr.LooksLikeUnusableTranscript(transcript))
+            {
+                continue;
+            }
+
+            if (Qwen3TtsCrispAsr.TryWriteRefTextSidecar(clipFileName, transcript))
+            {
+                written++;
+            }
+        }
+
+        return written;
+    }
 
     /// <summary>
     /// Wraps a cut clip as a voice <paramref name="engine"/> understands.

@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 using Nikse.SubtitleEdit.UiLogic.Ocr.Paddle;
 using SkiaSharp;
 using Spectre.Console;
@@ -48,7 +49,7 @@ internal static class ImageOcrLoader
             AnsiConsole.MarkupLine($"[dim]Running {ocr.Name} OCR on {pcsList.Count} Blu-Ray sup image(s){isolationNote}...[/]");
         }
 
-        return PcsListToSubtitle(pcsList, ocr, options.PgsIsolateColors, options.Quiet);
+        return PcsListToSubtitle(pcsList, ocr, options.PgsIsolateColors, options.Quiet, options.OcrAutoDetectAssaAlignment);
     }
 
     /// <summary>
@@ -80,7 +81,7 @@ internal static class ImageOcrLoader
             AnsiConsole.MarkupLine($"[dim]Running {ocr.Name} OCR on {pcsList.Count} MKV PGS image(s) (track #{track.TrackNumber}){isolationNote}...[/]");
         }
 
-        return PcsListToSubtitle(pcsList, ocr, options.PgsIsolateColors, options.Quiet);
+        return PcsListToSubtitle(pcsList, ocr, options.PgsIsolateColors, options.Quiet, options.OcrAutoDetectAssaAlignment);
     }
 
     /// <summary>
@@ -142,8 +143,18 @@ internal static class ImageOcrLoader
                         continue;
                     }
 
-                    subtitle.Paragraphs.Add(new LibSeParagraph(
-                        text, dvbSubtitles[i].StartMilliseconds, dvbSubtitles[i].EndMilliseconds));
+                    var dvb = dvbSubtitles[i];
+                    if (ocr is not null && options.OcrAutoDetectAssaAlignment)
+                    {
+                        var position = dvb.GetPosition();
+                        var frame = dvb.GetScreenSize();
+                        AddWithAlignment(
+                            subtitle, text, dvb.StartMilliseconds, dvb.EndMilliseconds, dvb.GetBitmap, callerOwnsBitmap: false,
+                            new SKPointI(position.Left, position.Top), new SKSizeI((int)frame.Width, (int)frame.Height));
+                        continue;
+                    }
+
+                    subtitle.Paragraphs.Add(new LibSeParagraph(text, dvb.StartMilliseconds, dvb.EndMilliseconds));
                 }
 
                 if (showProgress)
@@ -258,7 +269,8 @@ internal static class ImageOcrLoader
                 AnsiConsole.MarkupLine($"[dim]Running {ocr.Name} OCR on {what}{isolationNote}...[/]");
             }
 
-            return BitmapItemsToSubtitle(items, ocr, options.VobSubIsolateColors, options.Quiet);
+            return BitmapItemsToSubtitle(
+                items, ocr, options.VobSubIsolateColors, options.Quiet, options.OcrAutoDetectAssaAlignment);
         }
         finally
         {
@@ -397,6 +409,47 @@ internal static class ImageOcrLoader
     }
 
     /// <summary>
+    /// <c>--ocr-auto-detect-assa-alignment</c>: adds a recognised text with the ASSA alignment
+    /// tag for where its image sits in <paramref name="frame"/> - the OCR window's logic, via
+    /// <see cref="OcrAssaAlignment"/>. Like the OCR window's OK button, a text whose lines got
+    /// different tags (a tall image with a line at the top and one at the bottom) becomes one
+    /// paragraph per alignment, all with the same time codes. An unknown frame leaves the text
+    /// untagged.
+    /// </summary>
+    /// <param name="rentBitmap">The image as it sits in the frame - never the colour-isolated copy.</param>
+    /// <param name="callerOwnsBitmap">False when <paramref name="rentBitmap"/> decodes a fresh bitmap we must release.</param>
+    internal static void AddWithAlignment(
+        Subtitle subtitle, string text, double startMilliseconds, double endMilliseconds,
+        Func<SKBitmap?> rentBitmap, bool callerOwnsBitmap, SKPointI position, SKSizeI frame)
+    {
+        var aligned = text;
+        if (frame.Width > 0 && frame.Height > 0)
+        {
+            var bitmap = rentBitmap();
+            try
+            {
+                // writeAn2Tag false: bottom-centre is the default, so it needs no tag (#12393).
+                aligned = OcrAssaAlignment.Detect(
+                    bitmap, position.X, position.Y, frame.Width, frame.Height, text, writeAn2Tag: false).Text;
+            }
+            finally
+            {
+                if (!callerOwnsBitmap)
+                {
+                    bitmap?.Dispose();
+                }
+            }
+        }
+
+        foreach (var group in OcrAssaAlignment.SplitTextByAlignmentGroups(aligned))
+        {
+            // The tagged lines are joined with "\n"; paragraphs use the platform line break.
+            var paragraphText = string.Join(Environment.NewLine, group.SplitToLines());
+            subtitle.Paragraphs.Add(new LibSeParagraph(paragraphText, startMilliseconds, endMilliseconds));
+        }
+    }
+
+    /// <summary>
     /// Time-codes-only: empty text for every index that has an image, null for the rest, so
     /// the entries that survive are exactly the ones a real OCR run would have kept.
     /// </summary>
@@ -424,10 +477,11 @@ internal static class ImageOcrLoader
     /// </summary>
     private static Subtitle BitmapItemsToSubtitle(
         IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem> items, IOcrEngine? ocr, bool isolateColors = false,
-        bool quiet = false)
+        bool quiet = false, bool detectAlignment = false)
     {
         var subtitle = new Subtitle();
         var blankCount = 0;
+        var noFrameCount = 0;
         // Time-codes-only mode is instant, so only a real OCR run reports progress (#14267).
         var showProgress = ocr is not null && !quiet;
 
@@ -440,7 +494,20 @@ internal static class ImageOcrLoader
         for (var i = 0; i < items.Count; i++)
         {
             var text = texts[i] ?? string.Empty;
-            if (ocr is null || !string.IsNullOrWhiteSpace(text))
+            if (ocr is not null && detectAlignment && !string.IsNullOrWhiteSpace(text))
+            {
+                var item = items[i];
+                var frame = new SKSizeI(item.ScreenWidth ?? 0, item.ScreenHeight ?? 0);
+                if (item.Position is null || frame.Width <= 0 || frame.Height <= 0)
+                {
+                    noFrameCount++;
+                }
+
+                AddWithAlignment(
+                    subtitle, text, item.StartTime.TotalMilliseconds, item.EndTime.TotalMilliseconds, () => item.Bitmap,
+                    callerOwnsBitmap: true, item.Position ?? default, item.Position is null ? default : frame);
+            }
+            else if (ocr is null || !string.IsNullOrWhiteSpace(text))
             {
                 subtitle.Paragraphs.Add(new LibSeParagraph(
                     text, items[i].StartTime.TotalMilliseconds, items[i].EndTime.TotalMilliseconds));
@@ -465,6 +532,12 @@ internal static class ImageOcrLoader
                 $"[yellow]Note: {blankCount} image(s) produced no OCR text and were dropped.[/]");
         }
 
+        if (noFrameCount > 0 && !quiet)
+        {
+            AnsiConsole.MarkupLine(
+                $"[yellow]Note: {noFrameCount} image(s) carry no position or video frame size, so no ASSA alignment was detected for them.[/]");
+        }
+
         subtitle.Renumber();
         return subtitle;
     }
@@ -476,7 +549,7 @@ internal static class ImageOcrLoader
     /// Entries whose bitmap is null (e.g. clear-screen commands) are skipped in both modes.
     /// </summary>
     private static Subtitle PcsListToSubtitle(List<BluRaySupParser.PcsData> pcsList, IOcrEngine? ocr,
-        bool isolateColors = false, bool quiet = false)
+        bool isolateColors = false, bool quiet = false, bool detectAlignment = false)
     {
         var subtitle = new Subtitle();
         // Time-codes-only mode is instant, so only a real OCR run reports progress (#14267).
@@ -499,7 +572,18 @@ internal static class ImageOcrLoader
                 continue;
             }
 
-            subtitle.Paragraphs.Add(new LibSeParagraph(text, pcsList[i].StartTime / 90.0, pcsList[i].EndTime / 90.0));
+            var pcs = pcsList[i];
+            if (ocr is not null && detectAlignment)
+            {
+                var position = pcs.GetPosition();
+                var frame = pcs.GetScreenSize();
+                AddWithAlignment(
+                    subtitle, text, pcs.StartTime / 90.0, pcs.EndTime / 90.0, pcs.GetBitmap, callerOwnsBitmap: false,
+                    new SKPointI(position.Left, position.Top), new SKSizeI((int)frame.Width, (int)frame.Height));
+                continue;
+            }
+
+            subtitle.Paragraphs.Add(new LibSeParagraph(text, pcs.StartTime / 90.0, pcs.EndTime / 90.0));
         }
 
         if (showProgress)

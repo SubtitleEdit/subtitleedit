@@ -24,6 +24,10 @@ public class OcrSourceLanguageDetectionTests
     [InlineData("")]
     [InlineData("movie_[cd1].sub")] // bracketed token that is not a language
     [InlineData("Big.Ben.sub")] // capitalized three-letter title word is not a language tag
+    [InlineData("Dr.No.sup")] // capitalized two-letter title words are not language tags either
+    [InlineData("Let.It.Be.sup")]
+    [InlineData("I.Am.Legend.sup")]
+    [InlineData("This.Is.Us.sup")]
     [InlineData("movie.hi.sub")] // lone "hi" reads as hearing-impaired, so no detection
     [InlineData("The.Movie.2004.sub")]
     public void DetectLanguageCodeFromFileName_NoLanguage(string fileName)

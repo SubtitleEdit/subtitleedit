@@ -74,7 +74,7 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
         _originalSubtitles = new List<SubtitleLineViewModel>();
     }
 
-    public void Initialize(List<SubtitleLineViewModel> subtitles, string videoFileName, string fileName, VideoPreviewSubtitleContext previewContext, int audioTrackId = -1)
+    public void Initialize(List<SubtitleLineViewModel> subtitles, int selectedIndex, string videoFileName, string fileName, VideoPreviewSubtitleContext previewContext, int audioTrackId = -1)
     {
         _audioTrackId = audioTrackId;
         Subtitles.Clear();
@@ -87,7 +87,8 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
 
         if (Subtitles.Count > 0)
         {
-            SelectedSubtitle = Subtitles[0];
+            // Start at the line selected in the main window (issue #15062).
+            SelectedSubtitle = Subtitles[Math.Clamp(selectedIndex, 0, Subtitles.Count - 1)];
         }
     }
 
@@ -171,7 +172,10 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
             return;
         }
 
-        var fileName = await _fileHelper.PickOpenSubtitleFile(Window, Se.Language.General.OpenSubtitleFileTitle);
+        // Start in the folder of the other subtitle if one is already picked, else where the
+        // current subtitle lives - the other file is normally right next to it (#13488).
+        var startPath = string.IsNullOrEmpty(FileNameOther) ? FileName : FileNameOther;
+        var fileName = await _fileHelper.PickOpenSubtitleFile(Window, Se.Language.General.OpenSubtitleFileTitle, lastOpenedFilePath: startPath);
         if (string.IsNullOrEmpty(fileName))
         {
             return;

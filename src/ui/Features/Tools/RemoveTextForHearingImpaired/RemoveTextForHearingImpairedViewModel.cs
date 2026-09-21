@@ -84,6 +84,13 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject, I
     private RemoveTextForHI? _removeTextForHiLib;
     private readonly Timer _timer;
     private volatile bool _isClosing;
+
+    // The preview pass runs the whole HI removal over every line on the UI thread, so the 500 ms
+    // timer only does it when an input changed (options, language, interjection lists).
+    private volatile bool _isDirty = true;
+
+    /// <summary>Test hook: whether the next timer tick will regenerate the preview.</summary>
+    internal bool IsPreviewDirty => _isDirty;
     private readonly IWindowService _windowService;
     private Action<Subtitle>? _applyCallback;
 
@@ -184,11 +191,18 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject, I
     {
         var result = new Subtitle(_subtitle, false);
         result.Paragraphs.Clear();
+
+        // first fix wins per index, like the FirstOrDefault scan this replaces
+        var fixByIndex = new Dictionary<int, RemoveItem>(Fixes.Count);
+        foreach (var fix in Fixes)
+        {
+            fixByIndex.TryAdd(fix.Index, fix);
+        }
+
         for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
         {
             var p = _subtitle.Paragraphs[index];
-            var fixedParagraph = Fixes.FirstOrDefault(ri => ri.Index == index);
-            if (fixedParagraph is { Apply: true })
+            if (fixByIndex.TryGetValue(index, out var fixedParagraph) && fixedParagraph.Apply)
             {
                 p.Text = fixedParagraph.After;
             }
@@ -308,6 +322,22 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject, I
         { 
             vm.Initialize(SelectedLanguage); 
         });
+
+        _isDirty = true;
+    }
+
+    protected override void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+
+        // Everything but the fix list itself and its selection feeds the preview.
+        if (e.PropertyName != nameof(Fixes) &&
+            e.PropertyName != nameof(SelectedFix) &&
+            e.PropertyName != nameof(FixText) &&
+            e.PropertyName != nameof(FixTextEnabled))
+        {
+            _isDirty = true;
+        }
     }
 
     private void TimerElapsed(object? sender, ElapsedEventArgs e)
@@ -319,13 +349,16 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject, I
 
         _timer.Stop();
 
-        try
+        if (_isDirty)
         {
-            Dispatcher.UIThread.Invoke(GeneratePreview);
-        }
-        catch
-        {
-            return;
+            try
+            {
+                Dispatcher.UIThread.Invoke(GeneratePreview);
+            }
+            catch
+            {
+                return;
+            }
         }
 
         // Guard the restart: OnClosingCleanup may have disposed the timer while this handler ran,
@@ -357,6 +390,7 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject, I
             return;
         }
 
+        _isDirty = false;
         _removeTextForHiLib.Settings = GetSettings(_subtitle);
         _removeTextForHiLib.Warnings = [];
         
@@ -365,6 +399,21 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject, I
         var list = interjections?.Interjections ?? new List<string>();
         var skipList = interjections?.SkipStartList ?? new List<string>();
         _removeTextForHiLib.ReloadInterjection(list, skipList);
+
+        // first fix wins per id, like the FirstOrDefault scan this replaces
+        var oldApplyById = new Dictionary<Guid, bool>(Fixes.Count);
+        var oldApplyWithoutId = (bool?)null;
+        foreach (var fix in Fixes)
+        {
+            if (fix.Paragraph.Id is { } id)
+            {
+                oldApplyById.TryAdd(id, fix.Apply);
+            }
+            else
+            {
+                oldApplyWithoutId ??= fix.Apply;
+            }
+        }
 
         var newFixes = new List<RemoveItem>();
         var twoLetterIsoLanguageName = SelectedLanguage == null ? "en" : SelectedLanguage.Code;
@@ -378,11 +427,18 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject, I
                 // Carry the checkbox state over by paragraph id, not by index: applying fixes that
                 // remove whole lines shifts every later index, which re-checked unchecked items (#13839).
                 var apply = true;
-                var oldItem = Fixes.FirstOrDefault(f => f.Paragraph.Id == p.Id);
-                if (oldItem != null)
+                if (p.Id is { } id)
                 {
-                    apply = oldItem.Apply;
+                    if (oldApplyById.TryGetValue(id, out var oldApply))
+                    {
+                        apply = oldApply;
+                    }
                 }
+                else if (oldApplyWithoutId.HasValue)
+                {
+                    apply = oldApplyWithoutId.Value;
+                }
+
                 newFixes.Add(new RemoveItem(apply, index, p.Text, newText, p));
             }
         }

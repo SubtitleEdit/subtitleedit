@@ -14,6 +14,7 @@ public class SeTools
     public SeAdjustDisplayDurations AdjustDurations { get; set; } = new();
     public SeApplyDurationLimits ApplyDurationLimits { get; set; } = new();
     public SeBridgeGaps BridgeGaps { get; set; } = new();
+    public SeImproveTimeCodes ImproveTimeCodes { get; set; } = new();
     public SeChangeFormatting ChangeFormatting { get; set; } = new();
     public SeBatchConvert BatchConvert { get; set; } = new();
     public SeChangeCasing ChangeCasing { get; set; } = new();
@@ -126,9 +127,11 @@ public class SeTools
     // guards every load/save of "<lang>_UseAlways.xml" with. Nothing in SE5 ever set that flag, so
     // "Change all" in spell check was a no-op that never survived the session.
     public bool SpellCheckRememberUseAlwaysList { get; set; }
+    public bool FixShortDisplayTimesAllowMoveStartTime { get; set; }
     public bool SpeechToTextSelectedLinesPromptFirstTimeOnly { get; set; }
     public bool MultipleReplaceShowDotDotDotButtons { get; set; }
     public bool GridFocusTextboxAfterInsertNew { get; set; }
+    public bool UndoRedoGoToChangedLine { get; set; }
     public bool TextToSpeechPromptMergeContinuationLines { get; set; }
     public bool TextToSpeechPromptSkipNoiseLines { get; set; }
     public bool TextToSpeechPromptDetectSpeakers { get; set; }

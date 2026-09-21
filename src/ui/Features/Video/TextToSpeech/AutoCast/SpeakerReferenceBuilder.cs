@@ -43,9 +43,15 @@ public static class SpeakerReferenceBuilder
 
         // Nothing long enough: fall back to the longest line there is, however short. A poor
         // reference still clones something; no reference clones nothing.
+        // "However short" still means some audio: a line whose end is not after its start has none
+        // to cut (see FfmpegGenerator.HasClipDuration).
         if (usable.Count == 0)
         {
-            usable = speakerLines.OrderByDescending(p => p.Duration.TotalSeconds).Take(1).ToList();
+            usable = speakerLines
+                .Where(p => FfmpegGenerator.HasClipDuration(p.Duration.TotalSeconds))
+                .OrderByDescending(p => p.Duration.TotalSeconds)
+                .Take(1)
+                .ToList();
         }
 
         var picked = new List<Paragraph>();

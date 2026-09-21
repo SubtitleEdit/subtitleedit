@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -31,6 +32,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     private volatile bool _renderContextNeedsGraphicsContext;
     private volatile bool _disposePendingRenderContextFree;
     private volatile bool _disposed;
+    private int _calledAfterDisposeLogged; // 1 once EnsureNotDisposed has reported this player
     private volatile bool _coreInitialized;
     private string _fileName = string.Empty;
     private double? _audioEndBound;
@@ -839,6 +841,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
             var prefix = message.prefix == IntPtr.Zero ? string.Empty : Marshal.PtrToStringUTF8(message.prefix);
             var level = message.level == IntPtr.Zero ? string.Empty : Marshal.PtrToStringUTF8(message.level);
+            if (IsExpectedMpvLogMessage(level, prefix, text))
+            {
+                return;
+            }
+
             _forwardedMpvLogMessages++;
             var suffix = _forwardedMpvLogMessages == MaxForwardedMpvLogMessages
                 ? " (further mpv messages from this player are not logged)"
@@ -851,6 +858,24 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         {
             // diagnostics only - never let logging disturb the event loop
         }
+    }
+
+    /// <summary>
+    /// mpv warnings that say nothing about a playback problem, so they must not produce an error
+    /// log on a session where nothing went wrong (#14904): the notice mpv prints whenever
+    /// "audio-stream-silence" is on - an option SE sets on purpose - and ffmpeg's demuxer
+    /// grumbling about a file's metadata ("UDTA parsing failed retrying raw"). Errors are always
+    /// kept. Pure so the rule can be tested.
+    /// </summary>
+    internal static bool IsExpectedMpvLogMessage(string? level, string? prefix, string text)
+    {
+        if (!string.Equals(level, "warn", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        return text.Contains("--audio-stream-silence", StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(prefix, "ffmpeg/demuxer", StringComparison.OrdinalIgnoreCase);
     }
 
     /// <summary>
@@ -1806,11 +1831,20 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         }
     }
 
+    /// <summary>
+    /// Reports a call that arrives after <see cref="Dispose"/> - once per player. Such a caller
+    /// is almost always a timer that outlived its window and polls at 6-60 Hz, and one entry
+    /// per poll took the error log to 100 MB. The exception is never thrown and so carries no
+    /// stack trace; the caller's is logged instead, since it is the only way to tell which
+    /// timer it was.
+    /// </summary>
     private void EnsureNotDisposed()
     {
-        if (_disposed)
+        if (_disposed && Interlocked.Exchange(ref _calledAfterDisposeLogged, 1) == 0)
         {
-            Se.LogError(new ObjectDisposedException(nameof(LibMpvDynamicPlayer)), "LibMpvDynamicPlayer method called after disposal");
+            Se.LogError(new ObjectDisposedException(nameof(LibMpvDynamicPlayer)),
+                "LibMpvDynamicPlayer method called after disposal (further calls on this player are not logged)" +
+                Environment.NewLine + new StackTrace(1, true));
         }
     }
 

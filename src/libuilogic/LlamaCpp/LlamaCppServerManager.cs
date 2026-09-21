@@ -190,6 +190,26 @@ public static class LlamaCppServerManager
             "https://huggingface.co/tencent/Hy-MT2-1.8B-GGUF/resolve/main/Hy-MT2-1.8B-Q8_0.gguf",
             PromptTemplate: HyMt2PromptTemplate, Temperature: 0.7, TopP: 0.6, TopK: 20, RepeatPenalty: 1.05),
 
+        // TranslatePsy-AfriSLM 4B (Tether/QVAC, 2026) - a Qwen 3.5 4B fine-tune for English <-> 19
+        // Sub-Saharan African languages (Afrikaans, Amharic, Hausa, Igbo, Kinyarwanda, Lingala,
+        // Luganda, Malagasy, Nyanja, Oromo, Shona, Somali, Southern Sotho, Swahili, Tswana, Wolof,
+        // Xhosa, Yoruba, Zulu), official GGUFs, Apache-2.0. Fills a real gap: the base Qwen 3.5 4B
+        // writes fluent-looking nonsense in Zulu/Yoruba (16 subtitle lines, back-translated: 1-2 of
+        // 16 recognizable vs 15-16 of 16 for this model). Verified 2026-09-21 on b10840:
+        // - NoThinking is mandatory - it inherits Qwen 3.5's thinking template and without
+        //   "--reasoning off" 12 of 16 lines came back empty (answer in reasoning_content).
+        // - No PromptTemplate on purpose: the model card's prompt ("Please translate the following
+        //   {0} text into {1}: {2}.\n\nTranslation:") drops line breaks and, translating INTO
+        //   English, pads short lines with invented sentences ("Yeah." -> "Yes. Yes, that's
+        //   right."); SE's generic prompt has neither problem. The advanced engine's JSON batch
+        //   protocol works as well (all lines translated, all line breaks kept).
+        new LlamaCppModel("TranslatePsy-AfriSLM 4B (Q4_K_M) - English <-> 19 African languages", "TranslatePsy-AfriSLM-4B-Q4_K_M-imat.gguf", "3.1 GB",
+            "https://huggingface.co/qvac/TranslatePsy-AfriSLM-4B-Q4-GGUF/resolve/main/TranslatePsy-AfriSLM-4B-Q4_K_M-imat.gguf",
+            NoThinking: true),
+        new LlamaCppModel("TranslatePsy-AfriSLM 4B (Q8_0) - English <-> 19 African languages", "TranslatePsy-AfriSLM-4B-Q8_0-imat.gguf", "5.2 GB",
+            "https://huggingface.co/qvac/TranslatePsy-AfriSLM-4B-Q8-GGUF/resolve/main/TranslatePsy-AfriSLM-4B-Q8_0-imat.gguf",
+            NoThinking: true),
+
         // Aya Expanse 8B (Cohere) - a dedicated multilingual model (23 languages), a good translation
         // alternative to the Gemma/Qwen families. Uses its own embedded (Cohere) chat template, so we
         // leave ChatTemplate/NoJinja at their defaults instead of forcing gemma/chatml. Kept to <= 8 GB.
@@ -496,7 +516,10 @@ public static class LlamaCppServerManager
             return ("gemma", true, false);
         }
 
-        if (fileName.Contains("qwen", StringComparison.OrdinalIgnoreCase))
+        // "afrislm": TranslatePsy-AfriSLM is a Qwen 3.5 fine-tune that thinks by default just like
+        // its base, but no file of that family carries "qwen" in its name.
+        if (fileName.Contains("qwen", StringComparison.OrdinalIgnoreCase) ||
+            fileName.Contains("afrislm", StringComparison.OrdinalIgnoreCase))
         {
             return (null, false, true);
         }

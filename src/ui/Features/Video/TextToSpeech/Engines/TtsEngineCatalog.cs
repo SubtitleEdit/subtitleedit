@@ -37,6 +37,16 @@ public static class TtsEngineCatalog
         engines.Add(new GoogleSpeech(ttsDownloadService));
         engines.Add(new KokoroTtsCpp());
 
+        // Supertonic-3 (CrispASR) — ten fixed preset voices and no cloning, so it sits with the
+        // fixed-voice engines rather than in the CrispASR cloning group below. 31 languages from
+        // one 200 MB GGUF, and by far the fastest local engine here (RTF ~0.09 on an M4).
+        engines.Add(new SupertonicCrispAsr());
+
+        // Zonos (CrispASR) — not a cloning engine: the zonos backend has no speaker encoder, so
+        // it speaks with one fixed default voice (CrispASR v0.8.34 dropped its voice-cloning
+        // cap). Move it back into CreateVoiceCloningEngines when upstream ports the encoder.
+        engines.Add(new ZonosTtsCrispAsr());
+
         engines.AddRange(CreateVoiceCloningEngines());
 
         return engines;
@@ -126,8 +136,6 @@ public static class TtsEngineCatalog
             // MOSS-TTS (CrispASR) — Qwen3-8B backbone + 1.6B transformer codec at 24 kHz with
             // zero-shot voice cloning, via the moss-tts backend (#12617).
             new MossTtsCrispAsr(),
-
-            new ZonosTtsCrispAsr(),
 
             // OmniVoice (CrispASR) — the same model family as the standalone OmniVoice TTS
             // above, but on the shared CrispASR runtime and as a persistent server, so the

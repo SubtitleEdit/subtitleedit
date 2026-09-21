@@ -74,7 +74,10 @@ public static class InitVideoPlayer
 
             Dispatcher.UIThread.Post(async () =>
             {
-                await control.Open(mediaFile);
+                // Opened at the position, like the fullscreen and undocked players: a file
+                // opened at 0 and seeked afterwards shows the first frame for a moment and
+                // then jumps (#13329, issue #15027).
+                await control.Open(mediaFile, position);
                 await control.WaitForPlayersReadyAsync();
 
                 // Seeks until the player reports it arrived, and bails out when a second rebuild

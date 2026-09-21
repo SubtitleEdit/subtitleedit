@@ -71,6 +71,38 @@ public class SettingsBackupTests
     }
 
     [Fact]
+    public void IsSameSettingsIgnoringRecentFiles_OnlyRecentFilesMayDiffer()
+    {
+        var folder = Path.Combine(Path.GetTempPath(), "se-settings-backup-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(folder);
+        try
+        {
+            string Write(string name, string json)
+            {
+                var path = Path.Combine(folder, name);
+                File.WriteAllText(path, json);
+                return path;
+            }
+
+            var backup = Write("backup.json", """{"File":{"RecentFilesMaximum":25,"RecentFiles":[{"SubtitleFileName":"a.srt"}]},"Video":{"RecentFiles":["a.mkv"]},"General":{"FontSize":12}}""");
+            var recentOnly = Write("recent.json", """{ "File": { "RecentFilesMaximum": 25, "RecentFiles": [] }, "Video": { "RecentFiles": ["b.mkv", "a.mkv"] }, "General": { "FontSize": 12 } }""");
+            var changed = Write("changed.json", """{"File":{"RecentFilesMaximum":25,"RecentFiles":[{"SubtitleFileName":"a.srt"}]},"Video":{"RecentFiles":["a.mkv"]},"General":{"FontSize":13}}""");
+            var broken = Write("broken.json", """{"File":{"RecentFilesMaximum":25""");
+
+            Assert.True(AutoBackupService.IsSameSettingsIgnoringRecentFiles(recentOnly, backup));
+            Assert.False(AutoBackupService.IsSameSettingsIgnoringRecentFiles(changed, backup));
+
+            // When in doubt, take the backup.
+            Assert.False(AutoBackupService.IsSameSettingsIgnoringRecentFiles(broken, backup));
+            Assert.False(AutoBackupService.IsSameSettingsIgnoringRecentFiles(Path.Combine(folder, "missing.json"), backup));
+        }
+        finally
+        {
+            Directory.Delete(folder, recursive: true);
+        }
+    }
+
+    [Fact]
     public void GetNewestSettingsBackupTime_IsNullForMissingFolder()
     {
         Assert.Null(AutoBackupService.GetNewestSettingsBackupTime(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"))));

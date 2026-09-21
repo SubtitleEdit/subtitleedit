@@ -94,6 +94,7 @@ public class LanguageSettingsShortcuts
     public string MoveFirstWordFromNextLineUpCurrentSubtitle { get; set; }
     public string MoveTextFromCursorToNextAndGoToNext { get; set; }
     public string MoveTextFromCursorToNextAndGoToNextAndPlay { get; set; }
+    public string MoveTextFromCursorToNextAndGoToNextAndPlayAndPause { get; set; }
     public string BreakAtFirstSpaceFromCursor { get; set; }
     public string BreakAtFirstSpaceFromCursorAndGoToNext { get; set; }
     public string ToggleFocusGridAndWaveform { get; set; }
@@ -267,9 +268,8 @@ public class LanguageSettingsShortcuts
     public string SelectionToSentenceCase { get; set; }
     public string SelectionToggleCasing { get; set; }
     public string GoogleIt { get; set; }
-    public string SetActorXY { get; set; }
+    public string SetActorX { get; set; }
     public string SetNewActor { get; set; }
-    public string SetActorSlotXTitle { get; set; }
     public string ToggleDialogDashes { get; set; }
     public string MergeWithLineBeforeAsDialog { get; set; }
     public string MergeWithLineAfterAsDialog { get; set; }
@@ -390,6 +390,7 @@ public class LanguageSettingsShortcuts
         MoveFirstWordFromNextLineUpCurrentSubtitle = "Move first word from next line up (current subtitle)";
         MoveTextFromCursorToNextAndGoToNext = "Move text after cursor position to next subtitle and go to next";
         MoveTextFromCursorToNextAndGoToNextAndPlay = "Move text after cursor position to next subtitle, go to next and play";
+        MoveTextFromCursorToNextAndGoToNextAndPlayAndPause = "Move text after cursor position to next subtitle, go to next, play it and pause at its end";
         BreakAtFirstSpaceFromCursor = "Break at first space from cursor position";
         BreakAtFirstSpaceFromCursorAndGoToNext = "Break at first space from cursor position and go to next";
         ToggleFocusGridAndWaveform = "Toggle focus between subtitle grid and waveform/spectrogram";
@@ -563,9 +564,8 @@ public class LanguageSettingsShortcuts
         SelectionToSentenceCase = "Text box: Selection to Sentence case";
         SelectionToggleCasing = "Text box: Toggle casing (UPPER -> lower -> Title Case)";
         GoogleIt = "Google it (selected text)";
-        SetActorXY = "Set actor {0}: {1}";
+        SetActorX = "Set actor: {0}";
         SetNewActor = "Set new actor...";
-        SetActorSlotXTitle = "Actor slot {0}";
         ToggleDialogDashes = "Toggle dialog dashes";
         MergeWithLineBeforeAsDialog = "Merge with line before as dialog";
         MergeWithLineAfterAsDialog = "Merge with line after as dialog";

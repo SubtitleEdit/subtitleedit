@@ -53,4 +53,13 @@ public class FfmpegGeneratorCloneReferenceClipTests
         Assert.True(range.DurationSeconds < PerLineVoiceClone.MinimumReferenceSeconds);
         Assert.Equal(0.4, range.DurationSeconds, 3);
     }
+
+    [Fact]
+    public void CloneReferenceClip_NegativeDuration_IsClampedAwayFromFfmpeg()
+    {
+        var args = FfmpegGenerator.ExtractCloneReferenceClipParameters("video.mp4", 12.5, -2.0, "clip.wav");
+
+        Assert.Contains("-ss 12.500 -t 0.001 -i", args);
+        Assert.DoesNotContain("-t -", args);
+    }
 }

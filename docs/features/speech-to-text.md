@@ -61,7 +61,7 @@ The languages column counts what the backend dropdown offers (an *auto* entry is
 | **Granite** | 6 (en, fr, de, es, pt, ja) | Needs aligner | 1.54 - 5.58 GB | IBM Granite Speech 4.1 2B. The `plus` models are the newer revision; `mini` and `f16enc` trade encoder precision for size |
 | **ARK** | 19 (European + zh, ja, ko) | Needs aligner | 3.52 - 7.51 GB | A 3B model - the heaviest backend here, so only worth it when the smaller ones fall short |
 | **Kyutai** | 2 (en, fr) | Needs aligner | 0.67 - 5.01 GB | Kyutai STT in 1B and 2.6B |
-| **Voxtral** | 8 | Needs aligner | 2.65 - 4.99 GB | Mistral Voxtral Mini 3B. The backend has no built-in aligner entry at all, so a CTC aligner is always used |
+| **Voxtral** | 8 | Needs aligner | 2.65 - 9.36 GB | Mistral Voxtral Mini 3B. The backend has no built-in aligner entry at all, so a CTC aligner is always used |
 
 ### Picking a quantization
 
@@ -140,6 +140,17 @@ VAD usually gives tighter timings, but on some material it drops quiet speech an
 To keep VAD and only change how it behaves, put `--vad` in the advanced parameters yourself (the **Enable VAD** button fills in the flag and the model path). An explicit `--vad` wins over `--chunk-seconds`, so the two can be combined.
 
 If a Crisp ASR run with VAD comes back with no lines at all - Silero can reject a short clip as non-speech - Subtitle Edit retries once with VAD suppressed before reporting an empty result.
+
+## Isolate speech (Crisp ASR)
+
+With a Crisp ASR engine selected, **Isolate speech (slow)** splits the speech from music and sound effects before the audio is transcribed. The engine - and its voice activity detection - then only hears the dialogue.
+
+Use it for audio with loud or constant music: trailers, music videos, action scenes, anime. On such audio it recovers lines that are otherwise dropped, stops line starts from being clipped, and keeps a subtitle from stretching across a musical passage. On plain dialogue it changes little and is not worth the wait.
+
+- The first use downloads a source separation model (Mel-Band RoFormer, 457 MB) into the Crisp ASR models folder.
+- It is slow: about as long as the audio itself on a GPU (Metal, CUDA, Vulkan), and many times longer on CPU only.
+- There is no progress percentage while the speech is being isolated - only the elapsed time.
+- If the separation fails, the original audio is transcribed instead and the console log says so.
 
 ## Post-Processing Settings
 

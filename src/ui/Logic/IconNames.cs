@@ -41,6 +41,7 @@ internal class IconNames
     public const string DockTop = "mdi-dock-top";
     public const string DotsHorizontal = "mdi-dots-horizontal";
     public const string DotsVertical = "mdi-dots-vertical";
+    public const string LayersOutline = "mdi-layers-outline";
     public const string Duplicate = "mdi-content-duplicate";
     public const string Electron = "mdi-electron-framework";
     public const string Export = "mdi-export";
@@ -99,9 +100,11 @@ internal class IconNames
     public const string Plus = "mdi-plus";
     public const string PoliceBadge = "mdi-police-badge";
     public const string RayEnd = "mdi-ray-end";
+    public const string RayEndArrow = "mdi-ray-end-arrow";
     public const string RayStart = "mdi-ray-start";
     public const string Recycle = "mdi-recycle";
     public const string Regex = "mdi-regex";
+    public const string Replay = "mdi-replay";
     public const string Repeat = "mdi-repeat";
     public const string Refresh = "mdi-refresh";
     public const string Restore = "mdi-restore";

@@ -163,11 +163,6 @@ public class RemuxVideoWindow : Window
             .WithMarginRight(5);
         buttonOpenFolder.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsCompleted)));
 
-        var buttonPlay = UiUtil.MakeButton(Se.Language.General.Play, vm.PlayCommand)
-            .WithIconLeft(IconNames.Play)
-            .WithMarginRight(5);
-        buttonPlay.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsCompleted)));
-
         var buttonRemux = new SplitButton
         {
             Content = l.RemuxVideoTitle,
@@ -192,7 +187,7 @@ public class RemuxVideoWindow : Window
 
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOpenFolder, buttonPlay, buttonRemux, buttonDone, buttonCancel);
+        var buttonPanel = UiUtil.MakeButtonBar(buttonOpenFolder, buttonRemux, buttonDone, buttonCancel);
 
         var grid = new Grid
         {

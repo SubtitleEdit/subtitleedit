@@ -279,6 +279,63 @@ public class WebVttTest
         Assert.Contains("</font>", converted);
     }
 
+    // #15125: streaming services put one class with the player's near-white text color on every
+    // cue. That is not formatting worth keeping, so the SubRip text must come out clean.
+    [Fact]
+    public void RemoveNativeFormatting_OnlyNearWhiteRgbaColor_AddsNoFontTags()
+    {
+        const string c = "<c.background-color_transparent.color_EBEBEB.font-family_default.font-style_normal.font-weight_normal.text-shadow_#101010-1px>";
+        var vtt = "WEBVTT\r\n\r\nSTYLE\r\n" +
+                  "::cue(.background-color_transparent) {\r\n  background-color: rgba(255,255,255,0.0);\r\n}\r\n" +
+                  "::cue(.color_EBEBEB) {\r\n  color: rgba(235,235,235,1.000000);\r\n}\r\n" +
+                  "::cue(.font-style_normal) {\r\n  font-style: normal;\r\n}\r\n" +
+                  "::cue(.text-shadow_#101010-1px) {\r\n  text-shadow: #101010 1px;\r\n}\r\n" +
+                  "::cue(.font-style_italic) {\r\n  font-style: italic;\r\n}\r\n\r\n" +
+                  "00:00:06.975 --> 00:00:10.975 line:81.11% align:center\r\n" + c + "First line,\r\nsecond line.</c>\r\n\r\n" +
+                  "00:00:22.558 --> 00:00:23.600 line:85.56% align:center\r\n" + c + "<c.font-style_italic>Italic line.</c></c>\r\n";
+        var subtitle = LoadWebVttSubtitle(vtt);
+
+        new WebVTT().RemoveNativeFormatting(subtitle, new SubRip());
+
+        Assert.Equal("First line," + Environment.NewLine + "second line.", subtitle.Paragraphs[0].Text);
+        Assert.Equal("<i>Italic line.</i>", subtitle.Paragraphs[1].Text);
+    }
+
+    [Fact]
+    public void RemoveNativeFormatting_OnlyNearWhiteNamedColor_AddsNoFontTags()
+    {
+        var vtt = "WEBVTT\r\n\r\nSTYLE\r\n::cue(.gainsboro) { color:gainsboro; }\r\n\r\n" +
+                  "00:00:06.590 --> 00:00:08.592 position:50%\r\n<c.gainsboro>Line one</c>\r\n<c.gainsboro>Line two</c>\r\n\r\n" +
+                  "00:00:08.675 --> 00:00:10.052 position:50%\r\n<c.gainsboro>Line three</c>\r\n";
+        var subtitle = LoadWebVttSubtitle(vtt);
+
+        new WebVTT().RemoveNativeFormatting(subtitle, new SubRip());
+
+        Assert.Equal("Line one" + Environment.NewLine + "Line two", subtitle.Paragraphs[0].Text);
+        Assert.Equal("Line three", subtitle.Paragraphs[1].Text);
+    }
+
+    // A near-white color next to other colors tells speakers apart, so it stays - and a CSS rgba()
+    // value becomes "#RRGGBB", which is what players understand in a font tag.
+    [Fact]
+    public void RemoveNativeFormatting_NearWhiteAmongOtherColors_KeepsFontTagsAsHex()
+    {
+        var vtt = "WEBVTT\r\n\r\nSTYLE\r\n" +
+                  "::cue(.one) { color: rgba(235,235,235,1.000000); }\r\n" +
+                  "::cue(.two) { color: rgb(255, 255, 0); }\r\n" +
+                  "::cue(.hidden) { color: rgba(255,0,0,0.0); }\r\n\r\n" +
+                  "00:00:01.000 --> 00:00:02.000\r\n<c.one>First speaker</c>\r\n\r\n" +
+                  "00:00:03.000 --> 00:00:04.000\r\n<c.two>Second speaker</c>\r\n\r\n" +
+                  "00:00:05.000 --> 00:00:06.000\r\n<c.hidden>Transparent</c>\r\n";
+        var subtitle = LoadWebVttSubtitle(vtt);
+
+        new WebVTT().RemoveNativeFormatting(subtitle, new SubRip());
+
+        Assert.Equal("<font color=\"#EBEBEB\">First speaker</font>", subtitle.Paragraphs[0].Text);
+        Assert.Equal("<font color=\"#FFFF00\">Second speaker</font>", subtitle.Paragraphs[1].Text);
+        Assert.Equal("Transparent", subtitle.Paragraphs[2].Text);
+    }
+
     // yt-dlp "--write-auto-subs" output for a YouTube video: roll-up captions where each spoken
     // line first appears with per-word time codes and then again as the top line of the next cue,
     // joined by 10 ms bridge cues, all tagged "align:start position:0%".

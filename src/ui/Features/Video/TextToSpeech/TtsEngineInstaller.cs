@@ -265,6 +265,43 @@ public static class TtsEngineInstaller
             return true;
         }
 
+        if (engine is SupertonicCrispAsr)
+        {
+            if (!await TtsVoiceInstaller.EnsureCrispAsrForSupertonic(window, windowService, forceRedownload: false))
+            {
+                return false;
+            }
+
+            if (!SupertonicCrispAsr.IsModelInstalled())
+            {
+                var answer = await MessageBox.Show(
+                    window,
+                    "Download Supertonic (CrispASR) model?",
+                    $"{Environment.NewLine}\"Supertonic (CrispASR)\" requires a model (~200 MB).{Environment.NewLine}{Environment.NewLine}Download model?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (answer != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+
+                var dlResult = await windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(window, vm => vm.StartDownloadSupertonicCrispAsrModels());
+                if (!dlResult.OkPressed || !SupertonicCrispAsr.IsModelInstalled())
+                {
+                    return false;
+                }
+
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    await refreshVoices();
+                });
+                return true;
+            }
+
+            return true;
+        }
+
         if (engine is PocketTtsCrispAsr)
         {
             if (!await TtsVoiceInstaller.EnsureCrispAsrForPocketTts(window, windowService, forceRedownload: false))

@@ -186,6 +186,8 @@ public class TextToSpeechWindow : Window
                 return StatusDots.From(engine.IsInstalled(null).Result, IndexTtsCrispAsr.GetEngineUpdateStatus());
             case PocketTtsCrispAsr:
                 return StatusDots.From(engine.IsInstalled(null).Result, PocketTtsCrispAsr.GetEngineUpdateStatus());
+            case SupertonicCrispAsr:
+                return StatusDots.From(engine.IsInstalled(null).Result, SupertonicCrispAsr.GetEngineUpdateStatus());
             case DotsTtsCrispAsr:
                 return StatusDots.From(engine.IsInstalled(null).Result, DotsTtsCrispAsr.GetEngineUpdateStatus());
             case Confucius4TtsCrispAsr:

@@ -105,4 +105,50 @@ public class PlainTextImporterTest
             }
         }
     }
+
+    private const string ThreeLineText = "The quick brown fox jumps over the lazy dog and then runs back through the quiet forest to find its den";
+    private const string FourLineText = ThreeLineText + " before the heavy rain starts falling on the hills";
+    private const string TooLongForFourLinesText = FourLineText + " while the old farmer watches from the porch of his wooden house and wonders about tomorrow";
+
+    [Fact]
+    public void PlainTextImportAutoSplit_Text_Fitting_Three_Lines()
+    {
+        var importer = new PlainTextImporter(splitAtBlankLines: true, removeLinesWithoutLetters: false, numberOfLines: 6, endChars: ".!?", singleLineMaxLength: 43, language: "en");
+        var result = importer.ImportAutoSplit(new List<string> { ThreeLineText });
+        Assert.Equal(3, result.Count);
+        Assert.Equal("The quick brown fox jumps over the", result[0]);
+        Assert.Equal("lazy dog and then runs back through", result[1]);
+        Assert.Equal("the quiet forest to find its den", result[2]);
+    }
+
+    [Fact]
+    public void PlainTextImportAutoSplit_Text_Needing_Four_Lines()
+    {
+        var importer = new PlainTextImporter(splitAtBlankLines: true, removeLinesWithoutLetters: false, numberOfLines: 6, endChars: ".!?", singleLineMaxLength: 43, language: "en");
+        var result = importer.ImportAutoSplit(new List<string> { FourLineText });
+        Assert.Equal(4, result.Count);
+        Assert.Equal("The quick brown fox jumps over the", result[0]);
+        Assert.Equal("lazy dog and then runs back through the", result[1]);
+        Assert.Equal("quiet forest to find its den before", result[2]);
+        Assert.Equal("the heavy rain starts falling on the hills", result[3]);
+    }
+
+    [Fact]
+    public void PlainTextImportAutoSplit_Text_Too_Long_For_Four_Lines()
+    {
+        var importer = new PlainTextImporter(splitAtBlankLines: true, removeLinesWithoutLetters: false, numberOfLines: 6, endChars: ".!?", singleLineMaxLength: 43, language: "en");
+        var result = importer.ImportAutoSplit(new List<string> { TooLongForFourLinesText });
+        Assert.Single(result);
+        Assert.Equal(TooLongForFourLinesText, result[0].Trim());
+    }
+
+    [Fact]
+    public void SplitToFour_Returns_Individual_Lines()
+    {
+        var importer = new PlainTextImporter(splitAtBlankLines: true, removeLinesWithoutLetters: false, numberOfLines: 6, endChars: ".!?", singleLineMaxLength: 43, language: "en");
+        var result = importer.SplitToFour(FourLineText);
+        Assert.Equal(4, result.Count);
+        Assert.DoesNotContain(result, p => p.Contains('\n'));
+        Assert.Equal(FourLineText, string.Join(" ", result));
+    }
 }

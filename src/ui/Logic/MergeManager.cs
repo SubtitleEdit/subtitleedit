@@ -176,10 +176,17 @@ namespace Nikse.SubtitleEdit.Logic
             // loop below rewrites continuation marks in the live view-models as it goes, so
             // refusing mid-loop would leave the first lines (and the unselected line right
             // after them) already mutated.
-            var selectedGridIndices = selectedItems.Select(inputSubtitle.IndexOf).ToList();
-            for (var i = 0; i < selectedGridIndices.Count; i++)
+            // One IndexOf for the first row, then a look at the rows that must follow it - not
+            // an IndexOf scan per selected row (select all + merge was O(rows * rows)).
+            var firstSelectedIndex = inputSubtitle.IndexOf(selectedItems[0]);
+            if (firstSelectedIndex < 0 || firstSelectedIndex + selectedItems.Count > inputSubtitle.Count)
             {
-                if (selectedGridIndices[i] < 0 || (i > 0 && selectedGridIndices[i] != selectedGridIndices[0] + i))
+                return;
+            }
+
+            for (var i = 1; i < selectedItems.Count; i++)
+            {
+                if (!ReferenceEquals(inputSubtitle[firstSelectedIndex + i], selectedItems[i]))
                 {
                     return;
                 }
@@ -200,9 +207,9 @@ namespace Nikse.SubtitleEdit.Logic
             string? language = null;
             string DetectLanguage() => language ?? (language = inputSubtitle.AutoDetectGoogleLanguage());
 
-            foreach (var selectedItem in selectedItems)
+            for (var selectedIndex = 0; selectedIndex < selectedItems.Count; selectedIndex++)
             {
-                var index = inputSubtitle.IndexOf(selectedItem);
+                var index = firstSelectedIndex + selectedIndex; // validated above; the loop does not move rows
                 if (first)
                 {
                     firstIndex = index;

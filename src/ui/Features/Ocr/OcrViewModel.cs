@@ -483,15 +483,58 @@ public partial class OcrViewModel : ObservableObject
         var threeLetter = code.Length == 3 ? code : Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(code);
         var twoLetter = code.Length == 2 ? code : Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(code);
 
-        var match = Dictionaries.FirstOrDefault(d =>
+        var candidates = Dictionaries.Where(d =>
             d.Name != GetDictionaryNameNone() &&
             ((!string.IsNullOrEmpty(threeLetter) && d.GetThreeLetterCode() == threeLetter) ||
-             (!string.IsNullOrEmpty(twoLetter) && SpellCheckDictionaryDisplay.GetTwoLetterLanguageCode(d) == twoLetter)));
+             (!string.IsNullOrEmpty(twoLetter) && SpellCheckDictionaryDisplay.GetTwoLetterLanguageCode(d) == twoLetter))).ToList();
 
+        var match = PickDictionaryForLanguage(candidates, SelectedDictionary, Se.Settings.Ocr.LastDictionaryFilePerLanguage);
         if (match != null && !ReferenceEquals(match, SelectedDictionary))
         {
             SelectedDictionary = match;
         }
+    }
+
+    /// <summary>
+    /// Picks among the installed dictionaries of one language. A language can have several
+    /// ("en_AU", "en_GB", "en_US"), and taking the first one threw away the user's regional choice
+    /// on every OCR language change: the dictionary remembered for the language wins, then the
+    /// current selection when it already is of that language, then the first installed one.
+    /// </summary>
+    internal static SpellCheckDictionaryDisplay? PickDictionaryForLanguage(
+        List<SpellCheckDictionaryDisplay> candidates,
+        SpellCheckDictionaryDisplay? current,
+        Dictionary<string, string>? lastDictionaryFilePerLanguage)
+    {
+        if (candidates.Count == 0)
+        {
+            return null;
+        }
+
+        var twoLetter = SpellCheckDictionaryDisplay.GetTwoLetterLanguageCode(candidates[0]);
+        if (lastDictionaryFilePerLanguage != null &&
+            lastDictionaryFilePerLanguage.TryGetValue(twoLetter, out var rememberedFile))
+        {
+            var remembered = candidates.FirstOrDefault(d =>
+                Path.GetFileName(d.DictionaryFileName).Equals(rememberedFile, StringComparison.OrdinalIgnoreCase));
+            if (remembered != null)
+            {
+                return remembered;
+            }
+        }
+
+        return current != null && candidates.Contains(current) ? current : candidates[0];
+    }
+
+    partial void OnSelectedDictionaryChanged(SpellCheckDictionaryDisplay? value)
+    {
+        if (value == null || string.IsNullOrEmpty(value.DictionaryFileName))
+        {
+            return;
+        }
+
+        Se.Settings.Ocr.LastDictionaryFilePerLanguage ??= new Dictionary<string, string>();
+        Se.Settings.Ocr.LastDictionaryFilePerLanguage[SpellCheckDictionaryDisplay.GetTwoLetterLanguageCode(value)] = Path.GetFileName(value.DictionaryFileName);
     }
 
     /// <summary>
@@ -606,9 +649,10 @@ public partial class OcrViewModel : ObservableObject
         // Trailing dot-separated language tag like "movie.nl.sub" or "movie.dut.forced.sub"
         // (the extension is already removed). Walk backwards past common non-language subtitle
         // markers; "hi" is treated as hearing-impaired, not Hindi, as that reading is far more
-        // common in subtitle file names. Three-letter tokens must be lowercase so capitalized
-        // title words ("Big.Ben") are not mistaken for language codes; only the last two
-        // candidate tokens are considered so tokens deep inside the title cannot match.
+        // common in subtitle file names. Three-letter tokens must be lowercase, and two-letter
+        // ones must not be capitalized, so title words ("Big.Ben", "Dr.No") are not mistaken
+        // for language codes; only the last two candidate tokens are considered so tokens deep
+        // inside the title cannot match.
         var tokens = name.Split('.');
         var checkedTokens = 0;
         for (var i = tokens.Length - 1; i > 0 && checkedTokens < 2; i--)
@@ -626,6 +670,13 @@ public partial class OcrViewModel : ObservableObject
             }
 
             if (token.Length == 3 && token != token.ToLowerInvariant())
+            {
+                continue;
+            }
+
+            // A two-letter tag is "nl" or "NL". "No", "It", "Be", "Am", "Is", "My" are title words
+            // ("Dr.No", "Let.It.Be") - and batch convert OCRs with whatever comes back from here.
+            if (token.Length == 2 && char.IsUpper(token[0]) && char.IsLower(token[1]))
             {
                 continue;
             }
@@ -2284,7 +2335,7 @@ public partial class OcrViewModel : ObservableObject
         for (var i = 0; i < OcrSubtitleItems.Count; i++)
         {
             var item = OcrSubtitleItems[i];
-            foreach (var groupText in SplitTextByAlignmentGroups(item.Text))
+            foreach (var groupText in OcrAssaAlignment.SplitTextByAlignmentGroups(item.Text))
             {
                 OcredSubtitle.Add(new SubtitleLineViewModel
                 {
@@ -2297,58 +2348,6 @@ public partial class OcrViewModel : ObservableObject
         }
 
         Close();
-    }
-
-    private static readonly Regex AlignmentTagRegex = new(@"^\{\\an[1-9]\}", RegexOptions.Compiled);
-
-    // Splits text into groups of lines sharing the same leading {\anN} alignment tag.
-    // A line without a tag continues the current group. Returns the original text as a single
-    // group when fewer than two distinct alignments are present.
-    private static List<string> SplitTextByAlignmentGroups(string text)
-    {
-        if (string.IsNullOrEmpty(text))
-        {
-            return new List<string> { text };
-        }
-
-        var lines = text.SplitToLines();
-        var groups = new List<List<string>>();
-        var currentTag = string.Empty;
-        var currentLines = new List<string>();
-
-        foreach (var line in lines)
-        {
-            var match = AlignmentTagRegex.Match(line);
-            var tag = match.Success ? match.Value : string.Empty;
-
-            if (currentLines.Count == 0)
-            {
-                currentTag = tag;
-                currentLines.Add(line);
-            }
-            else if (tag.Length > 0 && tag != currentTag)
-            {
-                groups.Add(currentLines);
-                currentTag = tag;
-                currentLines = new List<string> { line };
-            }
-            else
-            {
-                currentLines.Add(line);
-            }
-        }
-
-        if (currentLines.Count > 0)
-        {
-            groups.Add(currentLines);
-        }
-
-        if (groups.Count <= 1)
-        {
-            return new List<string> { text };
-        }
-
-        return groups.Select(g => string.Join("\n", g)).ToList();
     }
 
     [RelayCommand]
@@ -2372,9 +2371,18 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
+        // Row -> index once: a Contains here plus a Remove per row below searched the whole
+        // collection for every selected row, which froze a select-all delete on a long OCR job.
+        var rowIndexes = new Dictionary<OcrSubtitleItem, int>(OcrSubtitleItems.Count);
+        for (var i = 0; i < OcrSubtitleItems.Count; i++)
+        {
+            rowIndexes.TryAdd(OcrSubtitleItems[i], i);
+        }
+
         var itemsToRemove = selectedItems
             .OfType<OcrSubtitleItem>()
-            .Where(item => OcrSubtitleItems.Contains(item))
+            .Where(item => rowIndexes.ContainsKey(item))
+            .Distinct()
             .ToList();
         if (itemsToRemove.Count == 0)
         {
@@ -2395,18 +2403,22 @@ public partial class OcrViewModel : ObservableObject
             SubtitleGrid.SelectedItem = survivor;
         }
 
-        foreach (var item in itemsToRemove)
+        // Bottom up, so the indexes of the rows still to go stay valid.
+        foreach (var index in itemsToRemove.Select(item => rowIndexes[item]).OrderByDescending(index => index))
         {
-            OcrSubtitleItems.Remove(item);
-            _allOcrSubtitleItems.Remove(item);
+            OcrSubtitleItems.RemoveAt(index);
         }
+
+        var removed = new HashSet<OcrSubtitleItem>(itemsToRemove);
+        _allOcrSubtitleItems.RemoveAll(removed.Contains);
 
         Renumber();
 
+        var remaining = new HashSet<OcrSubtitleItem>(_allOcrSubtitleItems);
         var toRemove = new List<UnknownWordItem>();
         foreach (var unknownWord in UnknownWords)
         {
-            if (!_allOcrSubtitleItems.Contains(unknownWord.Item)) // OcrSubtitleItems may be filtered to forced-only
+            if (!remaining.Contains(unknownWord.Item)) // OcrSubtitleItems may be filtered to forced-only
             {
                 toRemove.Add(unknownWord);
             }
@@ -5795,64 +5807,12 @@ public partial class OcrViewModel : ObservableObject
 
         try
         {
-            // Get image position and screen dimensions
             var position = item.GetPosition();
             var screenSize = item.GetScreenSize();
             using var bitmap = item.GetSkBitmapClean(); // fresh bitmap each call; dispose to avoid a native leak
 
-            if (bitmap == null || screenSize.Width == 0 || screenSize.Height == 0)
-            {
-                return (item.Text, false);
-            }
-
-            // Check if image height is larger than approximately 1/3 of screen height
-            var imageHeightRatio = (double)bitmap.Height / screenSize.Height;
-            if (imageHeightRatio > 0.33)
-            {
-                // Try to split lines and set alignment for each line
-                var lines = textToUse.Trim().SplitToLines();
-                if (lines.Count > 1 && textToUse.Length < 40)
-                {
-                    // Similar logic to RunGoogleLensOcr method
-                    var nbmp = new NikseBitmap2(bitmap);
-                    nbmp.MakeOneColor(SKColors.White);
-                    var lineImages = NikseBitmapImageSplitter2.SplitToLinesTransparentOrBlack(nbmp);
-                    var lineImages2 = NikseBitmapImageSplitter2.SplitToLines(nbmp, 20);
-
-                    if (lineImages.Count > 1 || lineImages2.Count > 1)
-                    {
-                        // Multiple lines detected - apply alignment to each line
-                        var lineAlignments = new List<string>();
-                        var multiLineCenterX = position.X + bitmap.Width / 2.0;
-                        var multiLineRelativeX = multiLineCenterX / screenSize.Width;
-
-                        for (int i = 0; i < lines.Count; i++)
-                        {
-                            // Calculate relative Y position for each line
-                            var lineHeight = bitmap.Height / (double)lines.Count;
-                            var lineY = position.Y + (i * lineHeight) + (lineHeight / 2.0);
-                            var lineRelativeY = lineY / screenSize.Height;
-
-                            // Get alignment for this specific line position
-                            lineAlignments.Add(GetAssaPositionFromScreen(multiLineRelativeX, lineRelativeY));
-                        }
-
-                        return ApplyLineAlignmentTags(lines, lineAlignments, textToUse, Se.Settings.General.WriteAn2Tag);
-                    }
-                }
-            }
-
-            // Calculate center point of the image on screen
-            var centerX = position.X + bitmap.Width / 2.0;
-            var centerY = position.Y + bitmap.Height / 2.0;
-
-            // Convert to relative position (0.0 = left/top, 1.0 = right/bottom)
-            var relativeX = centerX / screenSize.Width;
-            var relativeY = centerY / screenSize.Height;
-
-            // Map to ASSA alignment positions (An1-An9)
-            var assaPosition = GetAssaPositionFromScreen(relativeX, relativeY);
-            return ApplyAlignmentTag(textToUse, assaPosition, Se.Settings.General.WriteAn2Tag);
+            return OcrAssaAlignment.Detect(
+                bitmap, position.X, position.Y, screenSize.Width, screenSize.Height, textToUse, Se.Settings.General.WriteAn2Tag);
         }
         catch
         {
@@ -5860,82 +5820,20 @@ public partial class OcrViewModel : ObservableObject
         }
     }
 
-    // "an2" is the default bottom-center alignment, so no tag is needed for it (#12393)
+    // The alignment logic is shared with seconv - see OcrAssaAlignment.
     internal static (string Text, bool AlignmentAdded) ApplyAlignmentTag(string text, string assaPosition, bool writeAn2Tag)
     {
-        if (assaPosition == "an2" && !writeAn2Tag)
-        {
-            return (text, false);
-        }
-
-        return ($"{{\\{assaPosition}}}{text}", true);
+        return OcrAssaAlignment.ApplyAlignmentTag(text, assaPosition, writeAn2Tag);
     }
 
     internal static (string Text, bool AlignmentAdded) ApplyLineAlignmentTags(List<string> lines, List<string> lineAlignments, string originalText, bool writeAn2Tag)
     {
-        if (!writeAn2Tag && lineAlignments.All(p => p == "an2"))
-        {
-            return (originalText, false);
-        }
-
-        var perLine = new List<string>();
-        for (var i = 0; i < lines.Count; i++)
-        {
-            perLine.Add($"{{\\{lineAlignments[i]}}}{lines[i].Trim()}");
-        }
-
-        return (string.Join("\n", perLine), true);
+        return OcrAssaAlignment.ApplyLineAlignmentTags(lines, lineAlignments, originalText, writeAn2Tag);
     }
 
     internal static string GetAssaPositionFromScreen(double relativeX, double relativeY)
     {
-        // Map screen coordinates to 3x3 grid for ASSA positions
-        // relativeX: 0.0 = left, 1.0 = right
-        // relativeY: 0.0 = top, 1.0 = bottom
-
-        string horizontal;
-        if (relativeX < 0.33)
-        {
-            horizontal = "left";   // An1, An4, An7
-        }
-        else if (relativeX > 0.67)
-        {
-            horizontal = "right";  // An3, An6, An9
-        }
-        else
-        {
-            horizontal = "center"; // An2, An5, An8
-        }
-
-        string vertical;
-        if (relativeY < 0.33)
-        {
-            vertical = "bottom";   // An7, An8, An9 (in ASSA, these are at top)
-        }
-        else if (relativeY > 0.67)
-        {
-            vertical = "top";      // An1, An2, An3 (in ASSA, these are at bottom)
-        }
-        else
-        {
-            vertical = "middle";   // An4, An5, An6
-        }
-
-        // Map to ASSA position numbers
-        // Note: ASSA coordinate system has origin at bottom-left
-        return (vertical, horizontal) switch
-        {
-            ("top", "left") => "an1",     // bottom-left
-            ("top", "center") => "an2",   // bottom-center
-            ("top", "right") => "an3",    // bottom-right
-            ("middle", "left") => "an4",  // middle-left
-            ("middle", "center") => "an5", // middle-center
-            ("middle", "right") => "an6", // middle-right
-            ("bottom", "left") => "an7",  // top-left
-            ("bottom", "center") => "an8", // top-center
-            ("bottom", "right") => "an9", // top-right
-            _ => "an5" // default to center
-        };
+        return OcrAssaAlignment.GetAssaPositionFromScreen(relativeX, relativeY);
     }
 
     private List<OcrSubtitleItem> SplitImageToLines(OcrSubtitleItem item)

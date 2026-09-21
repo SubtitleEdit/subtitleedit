@@ -52,10 +52,12 @@ public class WhisperDownloadService : IWhisperDownloadService
 
     // Built by support-files' build-whisperx-standalone-release.yml from a pinned ref of
     // https://github.com/muaz978/subtitleedit-whisperx-standalone (v1.0.1), so every install
-    // of a given SE version gets the exact same, known-good build.
-    private const string MacArmWhisperX = "https://github.com/SubtitleEdit/support-files/releases/download/whisperx-standalone-101/whisperx-standalone-macos-arm64.7z";
-    private const string LinuxWhisperX = "https://github.com/SubtitleEdit/support-files/releases/download/whisperx-standalone-101/whisperx-standalone-linux-x64.7z";
-    private const string WindowsWhisperX = "https://github.com/SubtitleEdit/support-files/releases/download/whisperx-standalone-101/whisperx-standalone-windows-x64.7z";
+    // of a given SE version gets the exact same, known-good build. Release 102 is the same
+    // source plus the workflow's entry-point prelude: UTF-8 line-buffered output (live
+    // progress) and no torchcodec warning - see #15096.
+    private const string MacArmWhisperX = "https://github.com/SubtitleEdit/support-files/releases/download/whisperx-standalone-102/whisperx-standalone-macos-arm64.7z";
+    private const string LinuxWhisperX = "https://github.com/SubtitleEdit/support-files/releases/download/whisperx-standalone-102/whisperx-standalone-linux-x64.7z";
+    private const string WindowsWhisperX = "https://github.com/SubtitleEdit/support-files/releases/download/whisperx-standalone-102/whisperx-standalone-windows-x64.7z";
 
     public WhisperDownloadService(HttpClient httpClient)
     {

@@ -53,6 +53,7 @@ public partial class VisualSyncViewModel : ObservableObject
 
     private string? _videoFileName;
     private string? _wavePeaksVideoFileName;
+    private bool _closed; // set by OnClosing; stops the posted half of Initialize from starting a pump on a disposed player
     private UiTickPump _positionTimer = new(TimeSpan.FromMilliseconds(150)); // posted ticks, not a DispatcherTimer - see UiTickPump
     private List<SubtitleLineViewModel> _subtitleLines = new List<SubtitleLineViewModel>();
     private VideoPreviewSubtitleContext _previewContext = VideoPreviewSubtitleContext.Default;
@@ -129,6 +130,15 @@ public partial class VisualSyncViewModel : ObservableObject
 
         Dispatcher.UIThread.Post(() =>
         {
+            // Closed before this post ran: OnClosing has already stopped the (placeholder) pump
+            // and disposed the player, so the pump started below would never be stopped and
+            // would poll the dead player for the rest of the session - every poll an
+            // error-log entry.
+            if (_closed)
+            {
+                return;
+            }
+
             if (!string.IsNullOrEmpty(videoFileName))
             {
                 _ = OpenPlayersAsync(videoFileName, audioTrackId);
@@ -197,6 +207,9 @@ public partial class VisualSyncViewModel : ObservableObject
         });
 
     }
+
+    /// <summary>Test hook: whether the position pump is ticking.</summary>
+    internal bool IsPositionTimerRunning => _positionTimer.IsRunning;
 
     private void StartTitleTimer()
     {
@@ -565,6 +578,7 @@ public partial class VisualSyncViewModel : ObservableObject
     internal void OnClosing()
     {
         UiUtil.SaveWindowPosition(Window);
+        _closed = true;
         _positionTimer.Stop();
         VideoPlayerControlLeft.CloseAndDisposePlayer();
         VideoPlayerControlRight.CloseAndDisposePlayer();

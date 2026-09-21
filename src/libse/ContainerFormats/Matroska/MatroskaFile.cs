@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
     {
         public delegate void LoadMatroskaCallback(long position, long total);
 
-        private readonly FileStream _stream;
+        private readonly Stream _stream;
         private readonly byte[] _buffer = new byte[8];
         private int _pixelWidth, _pixelHeight;
         private double _frameRate;
@@ -37,10 +37,23 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         public string Path { get; }
 
         public MatroskaFile(string path)
+            : this(new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, GetReadBufferSize(path)), path)
+        {
+        }
+
+        /// <summary>
+        /// Reads a Matroska file from a seekable stream; the stream is disposed with this instance.
+        /// </summary>
+        public MatroskaFile(Stream stream)
+            : this(stream, string.Empty)
+        {
+        }
+
+        private MatroskaFile(Stream stream, string path)
         {
             Path = path;
 
-            _stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, GetReadBufferSize(path));
+            _stream = stream;
 
             // read header
             var headerElement = ReadElement();
@@ -1044,7 +1057,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             // the count and folded stale _buffer bytes left over from prior
             // reads into the integer — silent garbage track numbers / pixel
             // dimensions / durations on truncated MKV files.
-            var bytesRead = _stream.Read(_buffer, 0, (int)length);
+            // A short read is not the end of the file though: on a busy network share a
+            // read can come back with only part of the integer, and giving up there left
+            // the stream in the middle of the element, so everything after it was parsed
+            // as garbage and no subtitles came out (#14940). Read until the integer is
+            // complete; only a real end of stream yields 0.
+            var bytesRead = _stream.ReadFully(_buffer, 0, (int)length);
             if (bytesRead < length)
             {
                 return 0;
@@ -1070,7 +1088,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         private static long ReadUIntAsLong(Stream stream, byte[] buffer, long length)
         {
             // Same short-read concern as ReadUIntAsInt above.
-            var bytesRead = stream.Read(buffer, 0, (int)length);
+            var bytesRead = stream.ReadFully(buffer, 0, (int)length);
             if (bytesRead < length)
             {
                 return 0L;

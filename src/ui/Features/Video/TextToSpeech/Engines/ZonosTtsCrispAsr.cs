@@ -3,12 +3,10 @@ using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
-using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
@@ -21,43 +19,53 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 
 /// <summary>
 /// Zonos-v0.1 (Zyphra) run through the CrispASR runtime. 26-layer GQA autoregressive
-/// transformer (2B) emitting 9 DAC codebooks @ 44.1 kHz, CFG-guided, with voice cloning
-/// from a reference WAV. Apache-2.0.
+/// transformer (2B) emitting 9 DAC codebooks @ 44.1 kHz, CFG-guided. Apache-2.0.
 ///
 /// Two GGUFs are needed (same talker + companion split as the other CrispASR TTS engines):
 ///  - zonos-v0.1-transformer-q8_0.gguf : the AR transformer (the actual TTS model)
 ///  - dac-44khz-f16.gguf               : the Descript DAC 44 kHz codec (vocoder)
 ///
-/// Voice cloning only — no built-in voice bank. Zonos transcribes the reference internally
-/// (eSpeak phonemisation), so unlike Qwen3 CustomVoice there is no .txt ref-text sidecar.
-/// This is a minimal engine: a single Q8_0 quant, no model dropdown, no per-engine settings
-/// dialog. Mirrors <see cref="IndexTtsCrispAsr"/>.
+/// NOT a cloning engine, although the model is one and SE presented it as one until CrispASR
+/// v0.8.34 said otherwise: the backend's <c>zonos_tts_set_voice()</c> is a stub (the ResNet293
+/// speaker encoder is not ported), so <c>--voice</c> was always ignored - output with and
+/// without it is sample-identical on v0.8.33. What speaks instead is a 128-d Gaussian speaker
+/// embedding drawn once at model load from a constant RNG state, which makes it one fixed
+/// voice: the same on every line and across server restarts. (<c>--seed N</c> at startup draws
+/// a different one, of very uneven quality.) So this engine offers that single default voice,
+/// passes no <c>--voice</c>, asks for no cloning consent and sends no cloning attestations.
+/// Put cloning back only when upstream re-declares <c>voice-cloning</c> in
+/// <c>--list-backends-json</c>.
 ///
-/// Unlike most cloning engines, Zonos is NOT language-agnostic: the input text goes through
+/// This is a minimal engine: a single Q8_0 quant, no model dropdown, no per-engine settings
+/// dialog.
+///
+/// Zonos is NOT language-agnostic: the input text goes through
 /// eSpeak G2P in whatever language the backend is told, and the model carries a language
 /// conditioner on top. CrispASR defaults both to en-us when the request has no
 /// <c>language</c> field, so a Czech line came out phonemised as English (#14433). The main
 /// window's language combo (<see cref="ZonosLanguages"/>) is passed as the server's startup
-/// <c>-l</c> flag: the zonos backend reads the language once at init, so - exactly like the
-/// voice - a language change restarts the server (verified against v0.8.31: the request body's
+/// <c>-l</c> flag: the zonos backend reads the language once at init, so a language change
+/// restarts the server (verified against v0.8.31: the request body's
 /// <c>language</c> / <c>target_lang</c> fields leave zonos on en-us).
 /// </summary>
 public class ZonosTtsCrispAsr : ITtsEngine
 {
     public string Name => "Zonos TTS (CrispASR)";
-    public string Description => "Zyphra Zonos-v0.1 with voice cloning, via CrispASR";
+    public string Description => "Zyphra Zonos-v0.1 at 44.1 kHz, one default voice, via CrispASR";
     public bool HasLanguageParameter => true;
     public bool HasApiKey => false;
     public bool HasRegion => false;
     public bool HasModel => false;
     public bool HasKeyFile => false;
-    public bool SupportsVoiceCloning => true;
+    public bool SupportsVoiceCloning => false;
     public bool SupportsPerLineVoiceCloning => false;
 
     public const string TalkerFileName = "zonos-v0.1-transformer-q8_0.gguf";
     public const string CodecFileName = "dac-44khz-f16.gguf";
 
     public const string BackendName = "zonos-tts";
+
+    public const string DefaultVoiceName = "Default";
 
     // Exact byte sizes on cstr's HuggingFace repos (X-Linked-Size). Used to reject truncated
     // files that crispasr's --auto-download may have left behind — same trap that bit Qwen3
@@ -98,13 +106,8 @@ public class ZonosTtsCrispAsr : ITtsEngine
     private static Process? _serverProcess;
     private static int _serverPort;
     private static string? _serverLaunchCommand;
-    // Tracks the --voice path the running server was started with. CrispASR's TTS server
-    // backends ignore the request body's `voice` field in server mode and only load the
-    // reference audio from the startup --voice flag, so a voice change requires us to tear
-    // down and restart the server. Same as IndexTTS — see PR #11210 discussion.
-    private static string? _serverVoicePath;
     // The -l language the running server was started with (empty = backend default en-us).
-    // Same story as the voice: zonos reads it at init only, so a change restarts the server.
+    // zonos reads it at init only, so a change restarts the server.
     private static string _serverLanguage = string.Empty;
     private static bool _processExitHooked;
     private static readonly StringBuilder _serverLog = new();
@@ -174,62 +177,6 @@ public class ZonosTtsCrispAsr : ITtsEngine
         return modelsFolder;
     }
 
-    public static string GetSetVoicesFolder()
-    {
-        var voicesFolder = Path.Combine(GetSetFolder(), "voices");
-        if (!Directory.Exists(voicesFolder))
-        {
-            Directory.CreateDirectory(voicesFolder);
-        }
-
-        SeedVoicesFromQwen3TtsCppIfEmpty(voicesFolder);
-        return voicesFolder;
-    }
-
-    private static bool _voiceSeedAttempted;
-
-    /// <summary>
-    /// One-time best-effort seed of WAV reference voices from qwen3-tts.cpp's voices folder.
-    /// The qwen3-tts.cpp voice pack ships at 16 kHz mono; resample to 24 kHz mono on seed via
-    /// ffmpeg (same path ImportVoice uses) so crispasr doesn't upsample lossily on every synth.
-    /// </summary>
-    private static void SeedVoicesFromQwen3TtsCppIfEmpty(string voicesFolder)
-    {
-        if (_voiceSeedAttempted)
-        {
-            return;
-        }
-        _voiceSeedAttempted = true;
-
-        try
-        {
-            if (Directory.EnumerateFiles(voicesFolder, "*.wav").Any())
-            {
-                return;
-            }
-
-            var sourceFolder = Qwen3TtsCpp.GetSetVoicesFolder();
-            if (!Directory.Exists(sourceFolder) || !Directory.EnumerateFiles(sourceFolder, "*.wav").Any())
-            {
-                return;
-            }
-
-            foreach (var src in Directory.GetFiles(sourceFolder, "*.wav"))
-            {
-                var dest = Path.Combine(voicesFolder, Path.GetFileName(src));
-                // Go through the shared helper like the other ten CrispASR engines. The
-                // hand-rolled loop here checked no exit code (so a failed ffmpeg left a truncated
-                // WAV that the File.Exists skip above made permanent), waited without a timeout,
-                // and leaked one Process per voice.
-                VoiceSeedHelper.CopyOrResample(src, dest, 24000, "Zonos TTS (CrispASR)");
-            }
-        }
-        catch (Exception ex)
-        {
-            Se.LogError(ex, "Zonos TTS (CrispASR): voice seeding from qwen3-tts.cpp folder failed");
-        }
-    }
-
     public static string GetTalkerPath() =>
         Path.Combine(GetSetModelsFolder(), TalkerFileName);
 
@@ -285,21 +232,10 @@ public class ZonosTtsCrispAsr : ITtsEngine
 
     public Task<Voice[]> GetVoices(string language)
     {
-        var result = new List<Voice>();
-
-        // Voice cloning only — no built-in default voice. The combo is empty until the user
-        // imports a reference WAV (or the qwen3-tts.cpp voice seed runs above).
-        var voicesFolder = GetSetVoicesFolder();
-        if (Directory.Exists(voicesFolder))
-        {
-            foreach (var file in Directory.GetFiles(voicesFolder, "*.wav"))
-            {
-                var name = Path.GetFileNameWithoutExtension(file).Replace('_', ' ');
-                result.Add(new Voice(new ZonosTtsVoice(name, file)));
-            }
-        }
-
-        return Task.FromResult(result.ToArray());
+        // The backend's one fixed speaker - see the class summary. Reference WAVs that earlier
+        // versions imported or seeded into the engine's voices folder are left on disk but no
+        // longer listed: the backend never used them.
+        return Task.FromResult(new[] { new Voice(new ZonosTtsVoice(DefaultVoiceName, string.Empty)) });
     }
 
     public bool IsVoiceInstalled(Voice voice) => true;
@@ -331,31 +267,18 @@ public class ZonosTtsCrispAsr : ITtsEngine
             throw new ArgumentException("Voice is not a ZonosTtsVoice");
         }
 
-        if (string.IsNullOrEmpty(zonosVoice.FilePath))
-        {
-            throw new InvalidOperationException(
-                "Zonos TTS (CrispASR) requires a reference voice WAV. "
-                + "Import one via the voice settings, then pick it in the voice combo. "
-                + "Reference WAV should be 24 kHz mono (a few seconds of clean speech).");
-        }
-
         // The language to speak: picks the eSpeak G2P voice and the model's language
         // conditioner. Nothing = the backend's en-us default, which is what every line got
         // before #14433 - fine for English, English-phonemised gibberish for the rest.
         var languageArg = ZonosLanguages.ResolveLanguageArg(language);
 
-        await EnsureServerRunningAsync(zonosVoice.FilePath, languageArg, cancellationToken);
+        await EnsureServerRunningAsync(languageArg, cancellationToken);
 
         var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetFolder), Guid.NewGuid() + ".wav");
         var inputText = text;
 
-        // OpenAI-compatible /v1/audio/speech payload. Zonos transcribes the reference internally
-        // (eSpeak), so there is no `ref-text` parameter.
-        // Deliberately NO `voice` field: the server rejects absolute paths outright (HTTP 400,
-        // "'voice' must not contain … path separators" — path-traversal guard), so sending
-        // zonosVoice.FilePath failed every synthesis. The zonos backend loads the reference at
-        // init from the startup --voice flag, and the server restarts on voice change — see
-        // EnsureServerRunningAsync. Same bug family as MOSS-TTS #12757.
+        // OpenAI-compatible /v1/audio/speech payload. No `voice` field: the backend has a
+        // single speaker and no way to pick another per request.
         var payload = new Dictionary<string, object>
         {
             ["input"] = inputText,
@@ -370,9 +293,9 @@ public class ZonosTtsCrispAsr : ITtsEngine
             payload["language"] = languageArg;
         }
 
-        // Attests the user's own imported reference and the AI-disclosure duty; see
-        // CrispAsrTtsProvenance. Skipped when voice cloning has not been accepted in settings.
-        CrispAsrTtsProvenance.AddSpeechAttestations(payload);
+        // No CrispAsrTtsProvenance.AddSpeechAttestations: nothing is cloned, so there is no
+        // reference to attest consent for, and the server adds its spoken AI disclosure only to
+        // clones and real-person presets - not to this synthetic speaker.
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
@@ -467,19 +390,16 @@ public class ZonosTtsCrispAsr : ITtsEngine
         }
     }
 
-    private static bool IsServerRunningWith(string voicePath, string languageArg) =>
+    private static bool IsServerRunningWith(string languageArg) =>
         _serverProcess is { HasExited: false } && _serverPort != 0
-        && string.Equals(_serverVoicePath, voicePath, StringComparison.OrdinalIgnoreCase)
         && string.Equals(_serverLanguage, languageArg, StringComparison.OrdinalIgnoreCase);
 
-    private static async Task EnsureServerRunningAsync(string voicePath, string languageArg, CancellationToken ct)
+    private static async Task EnsureServerRunningAsync(string languageArg, CancellationToken ct)
     {
-        // CrispASR's TTS server backends don't honour the per-request `voice` field — they
-        // only read the reference audio from the --voice path passed at server startup. The
-        // zonos backend reads its language (-l) at init the same way. So we restart the server
-        // every time the selected voice or language changes. Tracked next to _serverProcess so
-        // an already-running server with the matching pair is reused.
-        if (IsServerRunningWith(voicePath, languageArg))
+        // The zonos backend reads its language (-l) at init, so the server is restarted when
+        // the selected language changes. Tracked next to _serverProcess so an already-running
+        // server with the matching language is reused.
+        if (IsServerRunningWith(languageArg))
         {
             return;
         }
@@ -487,7 +407,7 @@ public class ZonosTtsCrispAsr : ITtsEngine
         await ServerLock.WaitAsync(ct);
         try
         {
-            if (IsServerRunningWith(voicePath, languageArg))
+            if (IsServerRunningWith(languageArg))
             {
                 return;
             }
@@ -544,13 +464,8 @@ public class ZonosTtsCrispAsr : ITtsEngine
             psi.ArgumentList.Add("127.0.0.1");
             psi.ArgumentList.Add("--port");
             psi.ArgumentList.Add(port.ToString());
-            // /v1/audio/speech gates the `voice` field on --voice-dir being set. Same as IndexTTS.
-            psi.ArgumentList.Add("--voice-dir");
-            psi.ArgumentList.Add(GetSetVoicesFolder());
-            // Server-mode voice cloning only respects the startup --voice path; skipping this
-            // means the request's `voice` is ignored and the synth produces the wrong speaker.
-            psi.ArgumentList.Add("--voice");
-            psi.ArgumentList.Add(voicePath);
+            // No --voice / --voice-dir: the backend cannot clone (see the class summary), and
+            // v0.8.34 answers --voice with a "NOT supported ... RANDOM speaker" warning.
             // The language to speak, as the eSpeak code from the model's own table (see
             // ZonosLanguages). Omitted = the backend's en-us default. The CLI lowercases it.
             if (!string.IsNullOrEmpty(languageArg))
@@ -583,7 +498,6 @@ public class ZonosTtsCrispAsr : ITtsEngine
 
             _serverProcess = process;
             _serverPort = port;
-            _serverVoicePath = voicePath;
             _serverLanguage = languageArg;
             HookProcessExitOnce();
 
@@ -600,7 +514,6 @@ public class ZonosTtsCrispAsr : ITtsEngine
                     _serverProcess = null;
                     _serverPort = 0;
                     _serverLaunchCommand = null;
-                    _serverVoicePath = null;
                     _serverLanguage = string.Empty;
                     throw new InvalidOperationException(
                         $"crispasr (zonos-tts) exited during startup (code {exitCode}). Output: {tail}"
@@ -687,7 +600,6 @@ public class ZonosTtsCrispAsr : ITtsEngine
         _serverProcess = null;
         _serverPort = 0;
         _serverLaunchCommand = null;
-        _serverVoicePath = null;
         _serverLanguage = string.Empty;
         if (p == null)
         {
@@ -711,53 +623,9 @@ public class ZonosTtsCrispAsr : ITtsEngine
         }
     }
 
-    private static string GetUniqueDestinationFileName(string folder, string baseName)
-    {
-        var candidate = Path.Combine(folder, baseName + ".wav");
-        if (!File.Exists(candidate))
-        {
-            return candidate;
-        }
-
-        var number = 1;
-        do
-        {
-            candidate = Path.Combine(folder, $"{baseName}_{number}.wav");
-            number++;
-        } while (File.Exists(candidate));
-
-        return candidate;
-    }
-
-    public bool ImportVoice(string fileName)
-    {
-        if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
-        {
-            return false;
-        }
-
-        var voicesFolder = GetSetVoicesFolder();
-        var baseName = Path.GetFileNameWithoutExtension(fileName);
-        var destinationFileName = GetUniqueDestinationFileName(voicesFolder, baseName);
-
-        // Zonos clones from a reference WAV and transcribes it internally. Resample on import
-        // via ffmpeg to 24 kHz mono regardless of source format. No .txt sidecar needed.
-        try
-        {
-            var process = FfmpegGenerator.ConvertToMono24kHzWav(fileName, destinationFileName);
-            if (!process.Start())
-            {
-                return false;
-            }
-
-            process.WaitForExit();
-        }
-        catch (Exception ex)
-        {
-            Se.LogError(ex, "Zonos TTS (CrispASR) voice import failed (ffmpeg conversion).");
-            return false;
-        }
-
-        return File.Exists(destinationFileName);
-    }
+    /// <summary>
+    /// Nothing to import: the backend has no speaker encoder, so a reference recording cannot
+    /// become a voice. Unreachable from the UI while <see cref="SupportsVoiceCloning"/> is false.
+    /// </summary>
+    public bool ImportVoice(string fileName) => false;
 }

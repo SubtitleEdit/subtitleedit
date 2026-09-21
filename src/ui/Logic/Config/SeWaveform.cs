@@ -71,6 +71,12 @@ public class SeWaveform
     public double SnapToShotChangeEndMaxSeconds { get; set; }
     public double SnapToShotChangeSameShotEndMaxSeconds { get; set; }
     public bool FocusOnMouseOver { get; set; }
+
+    /// <summary>How the editor-style layout splits the subtitle row into tracks: None, Layer, Actor or Style.</summary>
+    public string TimelineTrackGrouping { get; set; }
+
+    /// <summary>Whether the editor-style layout shows its row of video thumbnails.</summary>
+    public bool TimelineShowThumbnails { get; set; }
     public bool GuessTimeCodeStartFromBeginning { get; set; }
     public int GuessTimeCodeScanBlockSize { get; set; }
     public int GuessTimeCodeScanBlockAverageMin { get; set; }
@@ -85,6 +91,7 @@ public class SeWaveform
     public double SeekSilenceMaxVolume { get; set; }
     public bool SeekSilenceSeekForward { get; set; }
     public bool GenerateSpectrogram { get; set; }
+    public bool ShowSpeechOnly { get; set; }
 
     // Hidden setting (Settings.json only, no UI yet): when false, the waveform/peaks are not
     // generated automatically when a video is opened. Cached peaks still load, so previously
@@ -122,6 +129,8 @@ public class SeWaveform
     {
         ShowToolbar = true;
         ShowOriginalSubtitle = false;
+        TimelineTrackGrouping = "None";
+        TimelineShowThumbnails = true;
         DrawGridLines = false;
         UseSkiaRenderer = false;
         FocusTextBoxAfterInsertNew = true;
@@ -195,11 +204,13 @@ public class SeWaveform
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.Play, IsVisible = true, SortOrder = 10 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.PlayNext, IsVisible = false, SortOrder = 20 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.PlaySelection, IsVisible = false, SortOrder = 30 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.PlayFromJustBeforeText, IsVisible = false, SortOrder = 35 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.Repeat, IsVisible = true, SortOrder = 40 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.RemoveBlankLines, IsVisible = false, SortOrder = 50 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.New, IsVisible = true, SortOrder = 60 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.SetStart, IsVisible = true, SortOrder = 70 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.SetEnd, IsVisible = true, SortOrder = 80 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.SetEndAndGoToNext, IsVisible = false, SortOrder = 85 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.SetStartAndOffsetTheRest, IsVisible = true, SortOrder = 90 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.MoveSelectedLines, IsVisible = false, SortOrder = 91 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.MoveSelectedLinesAndFollowing, IsVisible = false, SortOrder = 92 },
@@ -213,7 +224,11 @@ public class SeWaveform
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.PlaybackSpeed, IsVisible = true, SortOrder = 130 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.AutoSelectOnPlay, IsVisible = true, SortOrder = 140 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.Center, IsVisible = true, SortOrder = 150 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.TimelineTrackGrouping, IsVisible = true, SortOrder = 155 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.More, IsVisible = true, SortOrder = 160 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.LineBreak1, IsVisible = false, SortOrder = 170 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.LineBreak2, IsVisible = false, SortOrder = 180 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.InitialText, IsVisible = false, SortOrder = 190 },
         ];
     }
 

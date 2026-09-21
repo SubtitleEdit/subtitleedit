@@ -5,6 +5,7 @@ using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.VobSub;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 using SkiaSharp;
 using System.Text;
 
@@ -427,19 +428,14 @@ internal static class BitmapSubtitleLoader
                 end = pesList[i + 1].Start - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
             }
 
-            var bmp = pes.GetImageFull();
-            if (bmp is null)
+            var item = DvbFrameToItem(pes.GetImageFull(), new TimeCode(start), new TimeCode(end));
+            if (item is null)
             {
                 skipped++;
                 continue;
             }
 
-            var position = pes.GetPosition();
-            items.Add(new BitmapSubtitleItem(
-                new TimeCode(start),
-                new TimeCode(end),
-                bmp,
-                Position: new SKPointI(position.Left, position.Top)));
+            items.Add(item);
         }
 
         WarnSkippedBitmaps(skipped, "MKV DVB-sub");
@@ -516,17 +512,33 @@ internal static class BitmapSubtitleLoader
             var items = new List<BitmapSubtitleItem>(dvbSubtitles.Count);
             foreach (var dvb in dvbSubtitles)
             {
+                if (dvb.IsDvbSub)
+                {
+                    var item = DvbFrameToItem(dvb.GetBitmap(), dvb.StartTimeCode, dvb.EndTimeCode);
+                    if (item is not null)
+                    {
+                        items.Add(item);
+                    }
+
+                    continue;
+                }
+
+                // A Blu-ray sup carried in the stream: a tight bitmap with its own position.
                 var bmp = dvb.GetBitmap();
                 if (bmp is null)
                 {
                     continue;
                 }
+
                 var position = dvb.GetPosition();
+                var screenSize = dvb.GetScreenSize();
                 items.Add(new BitmapSubtitleItem(
-                    new TimeCode(dvb.StartMilliseconds),
-                    new TimeCode(dvb.EndMilliseconds),
+                    dvb.StartTimeCode,
+                    dvb.EndTimeCode,
                     bmp,
-                    Position: new SKPointI(position.Left, position.Top)));
+                    screenSize.Width > 0 ? (int)screenSize.Width : null,
+                    screenSize.Height > 0 ? (int)screenSize.Height : null,
+                    new SKPointI(position.Left, position.Top)));
             }
             if (items.Count > 0)
             {
@@ -534,6 +546,33 @@ internal static class BitmapSubtitleLoader
             }
         }
         return results;
+    }
+
+    /// <summary>
+    /// A DVB subtitle decodes to an image of the whole video frame with the text drawn in place.
+    /// Handing that on together with the text's position placed a frame-sized image at an offset
+    /// (the offset counted twice), in whatever frame <c>--resolution</c> said. Crop to the ink
+    /// instead: a tight bitmap, its position, and the frame both belong to - what the PGS and
+    /// VobSub loaders produce. Takes ownership of <paramref name="fullFrame"/>; null = no image.
+    /// </summary>
+    internal static BitmapSubtitleItem? DvbFrameToItem(SKBitmap? fullFrame, TimeCode start, TimeCode end)
+    {
+        if (fullFrame is null)
+        {
+            return null;
+        }
+
+        using (fullFrame)
+        {
+            var ink = BitmapInkBounds.Crop(fullFrame);
+            if (ink is null)
+            {
+                return null;
+            }
+
+            // The decoder sizes the image by the stream's display definition, so the image is the frame.
+            return new BitmapSubtitleItem(start, end, ink.Value.Bitmap, fullFrame.Width, fullFrame.Height, ink.Value.Position);
+        }
     }
 
     private static IReadOnlyList<BitmapSubtitleItem> PcsListToItems(IReadOnlyList<BluRaySupParser.PcsData> pcsList)

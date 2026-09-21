@@ -116,7 +116,6 @@ public static class VoiceCloningConsent
         Qwen3TtsVoice v => !string.IsNullOrEmpty(v.FilePath),
         VibeVoice v => !string.IsNullOrEmpty(v.FilePath),
         VoxCPM2Voice v => !string.IsNullOrEmpty(v.FilePath),
-        ZonosTtsVoice v => !string.IsNullOrEmpty(v.FilePath),
         _ => false,
     };
 }

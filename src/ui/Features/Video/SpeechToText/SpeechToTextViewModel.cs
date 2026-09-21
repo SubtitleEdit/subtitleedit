@@ -81,6 +81,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<CrispAsrEngineBase> _crispAsrBackends;
     [ObservableProperty] private CrispAsrEngineBase? _selectedCrispAsrBackend;
     [ObservableProperty] private bool _isForcedAlignerVisible;
+    [ObservableProperty] private bool _doIsolateSpeech;
     [ObservableProperty] private ObservableCollection<ForcedAlignerOption> _forcedAligners;
     [ObservableProperty] private ForcedAlignerOption? _selectedForcedAligner;
     [ObservableProperty] private double _progressOpacity;
@@ -215,6 +216,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private Process _whisperProcess = new();
     private Process? _audioExtractProcess;
     private readonly System.Timers.Timer _timerAudioExtract = new();
+    private volatile bool _windowClosing;
     private Stopwatch _sw = new();
     private StringBuilder _ffmpegLog = new();
     private readonly Lock _lockObj = new();
@@ -235,6 +237,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private static bool _crispAsrUpdatePromptShown;
     private static bool _whisperCppUpdatePromptShown;
     private static bool _qwen3AsrCppUpdatePromptShown;
+    private static bool _whisperXUpdatePromptShown;
 
     /// <summary>
     /// Hook the view wires up so the engine combobox can re-evaluate its install-status dots
@@ -356,6 +359,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         DoTranslateToEnglish = false;
         DoAdjustTimings = Se.Settings.Tools.AudioToText.WhisperAutoAdjustTimings;
         DoPostProcessing = Se.Settings.Tools.AudioToText.PostProcessing;
+        DoIsolateSpeech = Se.Settings.Tools.AudioToText.CrispAsrIsolateSpeech;
         AddLanguageCodeToFileName = Se.Settings.Tools.AudioToText.WhisperAddLanguageCodeToFileName;
 
         OpenAiCompatibleSttUrl = Se.Settings.Tools.OpenAiCompatibleSttUrl;
@@ -423,6 +427,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     {
         Se.Settings.Tools.AudioToText.WhisperAutoAdjustTimings = DoAdjustTimings;
         Se.Settings.Tools.AudioToText.PostProcessing = DoPostProcessing;
+        Se.Settings.Tools.AudioToText.CrispAsrIsolateSpeech = DoIsolateSpeech;
         Se.Settings.Tools.AudioToText.WhisperAddLanguageCodeToFileName = AddLanguageCodeToFileName;
         var engine = GetEffectiveSelectedEngine();
         engine.CommandLineParameter = Parameters;
@@ -969,7 +974,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// was the crispasr v0.8.29 GPU packages, built with AVX-512 against a CI runner that had it
     /// (CrispASR #374) - every CPU without AVX-512 got this on the CUDA/Vulkan build while the CPU
     /// build ran fine, so naming the installed package is most of the answer. That build flaw is
-    /// fixed from v0.8.30 (SE now pins v0.8.33), but the message still earns its keep: a pre-AVX2 CPU
+    /// fixed from v0.8.30 (SE now pins v0.8.34), but the message still earns its keep: a pre-AVX2 CPU
     /// hits the same silent death on the AVX2 CPU package, and an install predating the pin bump
     /// keeps the broken GPU binary until the user downloads the engine again.
     /// </summary>
@@ -2756,6 +2761,12 @@ public partial class SpeechToTextViewModel : ObservableObject
                 return;
             }
 
+            if (ShouldIsolateSpeech())
+            {
+                StartSpeechIsolation(_audioFileName, _videoFileName);
+                return;
+            }
+
             var startOk = TranscribeViaWhisper(_audioFileName, _videoFileName);
             if (!startOk)
             {
@@ -2764,6 +2775,180 @@ public partial class SpeechToTextViewModel : ObservableObject
                 Dispatcher.UIThread.Invoke(async () => { await ShowUnableToStartEngineErrorAsync(); });
             }
         }
+    }
+
+    /// <summary>
+    /// "Isolate speech" is a CrispASR task, so it is only offered - and only runs - with a Crisp
+    /// ASR engine selected; the remembered checkbox value must not leak into other engines.
+    /// </summary>
+    private bool ShouldIsolateSpeech()
+    {
+        return DoIsolateSpeech && GetEffectiveSelectedEngine() is ICrispAsrEngine;
+    }
+
+    private Task<bool> EnsureSpeechIsolationModelDownloadedAsync(ISpeechToTextEngine engine)
+    {
+        return SpeechIsolationModelDownload.EnsureDownloadedAsync(Window!, _windowService, engine, Se.Language.Video.AudioToText.IsolateSpeech);
+    }
+
+    /// <summary>
+    /// Runs between the audio extraction and the engine: splits the speech from music and sound
+    /// effects and hands the engine the speech stem. A failed separation is not a failed job -
+    /// the run carries on with the audio it already has.
+    /// </summary>
+    private void StartSpeechIsolation(string audioFileName, string videoFileName)
+    {
+        ProgressText = Se.Language.Video.AudioToText.IsolatingSpeech;
+
+        _ = Task.Run(async () =>
+        {
+            string? speechFileName = null;
+            try
+            {
+                speechFileName = await IsolateSpeechAsync(audioFileName);
+            }
+            catch (Exception e)
+            {
+                SeLogger.Error(e, "Speech isolation failed");
+            }
+
+            if (_windowClosing)
+            {
+                return;
+            }
+
+            if (_abort)
+            {
+                ProgressOpacity = 0;
+                IsTranscribeEnabled = true;
+                return;
+            }
+
+            if (speechFileName == null)
+            {
+                LogToConsole(Se.Language.Video.AudioToText.IsolateSpeechFailed + Environment.NewLine);
+            }
+
+            lock (_lockObj)
+            {
+                if (speechFileName != null)
+                {
+                    // The result lookup and the retry without VAD both go by _audioFileName, so
+                    // the speech stem has to take over as "the extracted audio" from here on.
+                    _audioFileName = speechFileName;
+                    _filesToDelete.Add(speechFileName);
+                }
+
+                var startOk = TranscribeViaWhisper(_audioFileName, videoFileName);
+                if (!startOk)
+                {
+                    IsTranscribeEnabled = true;
+                    ProgressOpacity = 0;
+                    Dispatcher.UIThread.Post(async () => { await ShowUnableToStartEngineErrorAsync(); });
+                }
+            }
+        });
+    }
+
+    /// <returns>A 16 kHz mono WAV with the speech only, or null when it could not be made.</returns>
+    private async Task<string?> IsolateSpeechAsync(string audioFileName)
+    {
+        if (GetEffectiveSelectedEngine() is not ICrispAsrEngine engine)
+        {
+            return null;
+        }
+
+        var outputFolder = GetSttTempFolder();
+        var separateArguments = SpeechIsolationModel.BuildSeparateArguments(
+            engine.GetModelForCmdLine(SpeechIsolationModel.FileName), audioFileName, outputFolder);
+        var executable = engine.GetExecutable();
+        Se.WriteToolsLog($"{executable} {separateArguments}");
+        LogToConsole($"Isolating speech with : {executable} {separateArguments}{Environment.NewLine}");
+
+        // Kept for the tools log only: the separator prints no progress worth showing, but when
+        // it fails its output is the only clue to why.
+        var separateLog = new StringBuilder();
+        DataReceivedEventHandler logHandler = (_, args) =>
+        {
+            if (!string.IsNullOrWhiteSpace(args.Data))
+            {
+                lock (separateLog)
+                {
+                    separateLog.AppendLine(args.Data);
+                }
+            }
+        };
+
+        using (var separateProcess = StartEngineProcess(executable, separateArguments, logHandler))
+        {
+            if (!await WaitForExitOrAbortAsync(separateProcess))
+            {
+                if (!_abort)
+                {
+                    lock (separateLog)
+                    {
+                        Se.WriteToolsLog($"Speech isolation failed with exit code {separateProcess.ExitCode}:{Environment.NewLine}{separateLog}");
+                    }
+                }
+
+                return null;
+            }
+        }
+
+        var stemFileName = SpeechIsolationModel.GetSpeechStemFileName(audioFileName, outputFolder);
+        if (!File.Exists(stemFileName))
+        {
+            Se.WriteToolsLog("Speech isolation wrote no stem: " + stemFileName);
+            return null;
+        }
+
+        var ffmpeg = File.Exists(Se.Settings.General.FfmpegPath) ? Se.Settings.General.FfmpegPath : "ffmpeg";
+        var speechFileName = Path.Combine(outputFolder, Guid.NewGuid() + ".wav");
+        using (var downmixProcess = StartEngineProcess(ffmpeg, SpeechIsolationModel.BuildDownmixArguments(stemFileName, speechFileName), null))
+        {
+            if (!await WaitForExitOrAbortAsync(downmixProcess))
+            {
+                if (!_abort)
+                {
+                    Se.WriteToolsLog($"Speech isolation: ffmpeg could not convert the speech stem (exit code {downmixProcess.ExitCode})");
+                }
+
+                return null;
+            }
+        }
+
+        // The stem is 44.1 kHz stereo - over a gigabyte for a feature film - so do not leave it
+        // for the end-of-run cleanup of the temp folder.
+        try
+        {
+            File.Delete(stemFileName);
+        }
+        catch
+        {
+            // ignore
+        }
+
+        return File.Exists(speechFileName) ? speechFileName : null;
+    }
+
+    private async Task<bool> WaitForExitOrAbortAsync(Process process)
+    {
+        while (!process.HasExited)
+        {
+            if (_abort)
+            {
+#pragma warning disable CA1416
+                process.Kill(true);
+#pragma warning restore CA1416
+                return false;
+            }
+
+            var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
+            ElapsedText = $"Time elapsed: {new TimeCode(durationMs).ToShortDisplayString()}";
+            await Task.Delay(100);
+        }
+
+        return process.ExitCode == 0;
     }
 
     /// <summary>
@@ -3667,6 +3852,11 @@ public partial class SpeechToTextViewModel : ObservableObject
                 }
             }
 
+            if (ShouldIsolateSpeech() && !await EnsureSpeechIsolationModelDownloadedAsync(engine))
+            {
+                return;
+            }
+
             if (language.Code != "en" && IsModelEnglishOnly(model.Model))
             {
                 var answer = await MessageBox.Show(
@@ -4089,11 +4279,15 @@ public partial class SpeechToTextViewModel : ObservableObject
                 $"{languageArgX}--model \"{model}\" --output_format srt --output_dir \"{outputDir}\" " +
                 $"{taskArg}{whisperXArgs} \"{waveFileName}\"";
 
-            // The generic launch path is bypassed here, so repeat the two pieces of its setup a
-            // PyInstaller-frozen Python engine needs: the glibc 2.41+ executable-stack repair,
-            // and the Python UTF-8/unbuffered variables - without them Windows decodes piped
-            // output with the ANSI code page (mojibake, or a UnicodeEncodeError killing the run)
-            // and stdout block-buffers so the log sits empty until the process exits.
+            // The generic launch path is bypassed here, so repeat the piece of its setup a
+            // PyInstaller-frozen Python engine needs: the glibc 2.41+ executable-stack repair.
+            //
+            // No PYTHONUNBUFFERED/PYTHONUTF8/PYTHONIOENCODING/PYTHONWARNINGS here: a frozen
+            // build runs with an isolated interpreter config and ignores every PYTHON* variable
+            // (#15096 - the "Transcript:" lines only arrived once transcription was over, so
+            // the progress never moved and a long CPU run looked hung, and the torchcodec
+            // warning stayed in the log). The whisperx-standalone-102 build does all of that
+            // in-process instead: UTF-8 line-buffered stdout/stderr, torchcodec warning filtered.
             var whisperXFolder = whisperX.GetAndCreateWhisperFolder();
             EnsureExecutableStackCleared(whisperX, whisperXFolder);
 
@@ -4115,15 +4309,6 @@ public partial class SpeechToTextViewModel : ObservableObject
             return StartEngineProcess(exe, parametersX, dataReceivedHandler, startInfo =>
             {
                 AddFfmpegToPath(startInfo);
-                startInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
-                startInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
-                startInfo.EnvironmentVariables["PYTHONUNBUFFERED"] = "1";
-
-                // pyannote warns that torchcodec is missing on every run, but WhisperX never
-                // uses pyannote's decoder (it feeds ffmpeg-decoded audio in memory), so the
-                // warning is pure noise in the log. Only UserWarning is silenced; real errors
-                // and the whisperx INFO lines still come through.
-                startInfo.EnvironmentVariables["PYTHONWARNINGS"] = "ignore::UserWarning";
 
                 if (!string.IsNullOrEmpty(matplotlibCacheFolder))
                 {
@@ -4452,7 +4637,9 @@ public partial class SpeechToTextViewModel : ObservableObject
         // cap on long audio — skip the short-circuit and transcode through
         // ffmpeg into the chosen compressed format.
         var isOpenAiEngine = GetEffectiveSelectedEngine() is IOnlineSttEngine;
-        if (!isOpenAiEngine && videoFileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
+        // "Isolate speech" always goes through the extraction, so it never works on (or writes its
+        // stems next to) the user's own file.
+        if (!isOpenAiEngine && !ShouldIsolateSpeech() && videoFileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
         {
             try
             {
@@ -4994,6 +5181,10 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             Dispatcher.UIThread.Post(async () => await CheckQwen3AsrCppForUpdateAsync());
         }
+        else if (engine is WhisperEngineWhisperX && !_whisperXUpdatePromptShown)
+        {
+            Dispatcher.UIThread.Post(async () => await CheckWhisperXForUpdateAsync());
+        }
     }
 
     private void UpdateEngineStatusUi(ISpeechToTextEngine engine)
@@ -5231,6 +5422,55 @@ public partial class SpeechToTextViewModel : ObservableObject
         RefreshEngineCombo?.Invoke();
     }
 
+    private async Task CheckWhisperXForUpdateAsync()
+    {
+        if (_whisperXUpdatePromptShown || Window == null)
+        {
+            return;
+        }
+
+        var engine = GetEffectiveSelectedEngine();
+        if (engine is not WhisperEngineWhisperX || !engine.IsEngineInstalled())
+        {
+            return;
+        }
+
+        // Sidecar only: every released build that could install WhisperX also wrote one, so
+        // there is no older install to recognize by hashing the executable.
+        if (TryReadSidecarHash(engine.GetAndCreateWhisperFolder()) is not var (key, hash))
+        {
+            return;
+        }
+
+        if (DownloadHashManager.GetStatus(key, hash) != DownloadHashManager.UpdateStatus.UpdateAvailable)
+        {
+            return;
+        }
+
+        _whisperXUpdatePromptShown = true;
+
+        var answer = await MessageBox.Show(
+            Window!,
+            string.Format(Se.Language.Video.AudioToText.UpdateXTitle, engine.Name),
+            string.Format(Se.Language.Video.AudioToText.UpdateXMessage, engine.Name, Environment.NewLine),
+            MessageBoxButtons.YesNoCancel,
+            MessageBoxIcon.Question);
+
+        if (answer != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
+            Window!, viewModel =>
+            {
+                viewModel.Engine = engine;
+                viewModel.StartDownload();
+            });
+
+        RefreshEngineCombo?.Invoke();
+    }
+
     private static (string key, string hash)? TryHashWhisperCppExecutable(ISpeechToTextEngine engine)
     {
         try
@@ -5431,6 +5671,11 @@ public partial class SpeechToTextViewModel : ObservableObject
     {
         _timerWhisper.StopAndDispose(OnTimerWhisperOnElapsed);
         _timerAudioExtract.StopAndDispose(OnTimerAudioExtractOnElapsed);
+
+        // The speech isolation runs on its own task, not on one of the timers: _abort is what
+        // makes it kill its process and stop before it would start the engine on a closed window.
+        _windowClosing = true;
+        _abort = true;
 
         // With the timers gone nothing will ever reap a still-running engine or
         // ffmpeg process - kill them so closing the window mid-run doesn't leave

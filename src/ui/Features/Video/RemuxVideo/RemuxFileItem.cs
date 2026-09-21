@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Nikse.SubtitleEdit.Core.Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -15,6 +16,8 @@ public partial class RemuxFileItem : ObservableObject
     public string Name => Path.GetFileName(FileName);
     public string Size { get; }
     public long SizeBytes { get; }
+    public TimeSpan? Duration { get; private set; }
+    public string DurationDisplay { get; private set; } = string.Empty;
 
     public List<AudioTrackOption> Tracks { get; } = new();
 
@@ -38,25 +41,52 @@ public partial class RemuxFileItem : ObservableObject
         _details = Size;
     }
 
+    public static string FormatDuration(TimeSpan duration)
+    {
+        var totalHours = (int)duration.TotalHours;
+        return totalHours > 0
+            ? $"{totalHours}:{duration.Minutes:00}:{duration.Seconds:00}"
+            : $"{duration.Minutes:00}:{duration.Seconds:00}";
+    }
+
+    public void SetDuration(TimeSpan? duration)
+    {
+        Duration = duration;
+        DurationDisplay = duration.HasValue && duration.Value.TotalMilliseconds > 0
+            ? FormatDuration(duration.Value)
+            : string.Empty;
+        UpdateDetails();
+    }
+
     public void SetTracks(List<AudioTrackOption> tracks, AudioTrackOption? selected)
     {
         Tracks.Clear();
         Tracks.AddRange(tracks);
         HasMultipleTracks = tracks.Count > 1;
         SelectedTrack = selected ?? (tracks.Count > 0 ? tracks[0] : null);
+        UpdateDetails();
     }
 
     partial void OnSelectedTrackChanged(AudioTrackOption? value)
     {
-        if (value == null)
+        UpdateDetails();
+    }
+
+    private void UpdateDetails()
+    {
+        var baseInfo = string.IsNullOrEmpty(DurationDisplay)
+            ? Size
+            : (string.IsNullOrEmpty(Size) ? DurationDisplay : $"{DurationDisplay}  -  {Size}");
+
+        if (SelectedTrack == null)
         {
-            Details = Size;
+            Details = baseInfo;
             return;
         }
 
         Details = Tracks.Count > 1
-            ? $"{Size}  -  {value.DisplayName}"
-            : string.IsNullOrWhiteSpace(value.Details) ? Size : $"{Size}  -  {value.Details}";
+            ? $"{baseInfo}  -  {SelectedTrack.DisplayName}"
+            : string.IsNullOrWhiteSpace(SelectedTrack.Details) ? baseInfo : $"{baseInfo}  -  {SelectedTrack.Details}";
     }
 
     // A list row or combo box value is announced by ToString() unless its template is a bare

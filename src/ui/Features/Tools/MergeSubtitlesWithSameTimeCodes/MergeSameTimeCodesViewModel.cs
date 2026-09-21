@@ -280,6 +280,20 @@ public partial class MergeSameTimeCodesViewModel : ObservableObject, IClosingCle
         var result = new List<SubtitleLineViewModel>();
         var skipCount = 0;
 
+        // Line id -> the first ticked merge item that holds it (what the FirstOrDefault scan of
+        // all merge items per line found), built once.
+        var mergeItemByLineId = new Dictionary<Guid, MergeDisplayItem>();
+        foreach (var mergeItem in MergeItems)
+        {
+            if (mergeItem.Apply)
+            {
+                foreach (var line in mergeItem.LinesToMerge)
+                {
+                    mergeItemByLineId.TryAdd(line.Id, mergeItem);
+                }
+            }
+        }
+
         foreach (var s in _subtitles)
         {
             if (skipCount > 0)
@@ -288,7 +302,7 @@ public partial class MergeSameTimeCodesViewModel : ObservableObject, IClosingCle
                 continue;
             }
 
-            var match = MergeItems.FirstOrDefault(p => p.Apply && p.LinesToMerge.Any(p => p.Id == s.Id));
+            mergeItemByLineId.TryGetValue(s.Id, out var match);
             if (match != null)
             {
                 var merged = new SubtitleLineViewModel(s);

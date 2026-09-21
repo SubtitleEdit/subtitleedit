@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using WeCantSpell.Hunspell;
 
@@ -35,6 +36,7 @@ public class SpellChecker : ISpellChecker, IDoSpell
     protected readonly HashSet<string> SkipAllList = new(StringComparer.OrdinalIgnoreCase);
     protected readonly Dictionary<string, string> ChangeAllDictionary = new();
     private string _twoLetterLanguageCode = string.Empty;
+    private HashSet<string> _abbreviations = new(StringComparer.OrdinalIgnoreCase);
 
     public List<SpellCheckDictionaryDisplay> GetDictionaryLanguages(string dictionaryFolder)
     {
@@ -148,6 +150,10 @@ public class SpellChecker : ISpellChecker, IDoSpell
             var affixFile = Path.ChangeExtension(dictionaryFile, ".aff");
             _hunspellWeCantSpell = LoadHunspell(dictionaryFile, affixFile);
         }
+
+        _abbreviations = AbbreviationList.Load(
+            Path.GetDirectoryName(dictionaryFile) ?? string.Empty,
+            SpellCheckDictionaryDisplay.GetFiveLetterLanguageName(Path.GetFileNameWithoutExtension(dictionaryFile)) ?? _twoLetterLanguageCode);
 
         if (string.IsNullOrEmpty(twoLetterLanguageCode))
         {
@@ -403,7 +409,76 @@ public class SpellChecker : ISpellChecker, IDoSpell
             }
         }
 
-        return isCorrect;
+        return isCorrect || IsLowercaseOnlyWordAtSentenceStart(spellCheckWord, text);
+    }
+
+    /// <summary>
+    /// Some dictionaries mark lowercase words with KEEPCASE, so Hunspell rejects the capitalized form -
+    /// e.g. the Dutch month names ("oktober/Kc"). That is right mid-sentence, but the first word of a
+    /// sentence must be capitalized, so accept "Oktober" there when "oktober" is a correct word. (#15047)
+    /// </summary>
+    protected bool IsLowercaseOnlyWordAtSentenceStart(SpellCheckWord spellCheckWord, string text)
+    {
+        var word = spellCheckWord.Text.Trim('\'');
+        if (word.Length < 2 || !char.IsUpper(word[0]) || char.IsUpper(word[1]))
+        {
+            return false;
+        }
+
+        return IsAtSentenceStart(spellCheckWord.Index, text, _abbreviations) &&
+               DoSpell(char.ToLower(word[0]) + word.Substring(1));
+    }
+
+    internal static bool IsAtSentenceStart(int index, string text, HashSet<string>? abbreviations = null)
+    {
+        var i = Math.Min(index, text.Length) - 1;
+        while (i >= 0)
+        {
+            var ch = text[i];
+            if (ch == '>' || ch == '}')
+            {
+                // skip html / ASSA tag
+                var start = text.LastIndexOf(ch == '>' ? '<' : '{', i);
+                if (start < 0)
+                {
+                    return false;
+                }
+
+                i = start - 1;
+            }
+            else if (char.IsWhiteSpace(ch) || "-‐–—'\"“”‘’„«»¿¡([♪♫#".Contains(ch))
+            {
+                i--;
+            }
+            else
+            {
+                return ".!?…:".Contains(ch) && !(ch == '.' && EndsWithAbbreviation(text, i, abbreviations));
+            }
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// True when the period at <paramref name="periodIndex"/> ends an abbreviation ("bijv.", "o.a.")
+    /// and not a sentence, so the following word is not a sentence start.
+    /// </summary>
+    private static bool EndsWithAbbreviation(string text, int periodIndex, HashSet<string>? abbreviations)
+    {
+        var start = periodIndex;
+        while (start > 0 && (char.IsLetter(text[start - 1]) || text[start - 1] == '.'))
+        {
+            start--;
+        }
+
+        var token = text.Substring(start, periodIndex - start + 1);
+        if (token.Length < 2 || token.EndsWith("..", StringComparison.Ordinal))
+        {
+            return false; // lone period or ellipsis
+        }
+
+        return token.IndexOf('.') < token.Length - 1 || // inner period, e.g. "o.a."
+               (abbreviations != null && abbreviations.Contains(token));
     }
 
     public bool DoSpell(string word)

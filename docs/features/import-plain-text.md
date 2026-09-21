@@ -42,6 +42,16 @@ Setup dialog:
 
 Missing models are downloaded automatically when you press OK. Progress is shown per window and line while aligning. If the script is longer than the speech in the video, the trailing lines cannot be aligned and a warning tells you how many lines were matched.
 
+#### Set end times from isolated speech
+
+A forced aligner is precise about where a line **starts** - and has no idea where it ends: it ends every line where the next one begins, so the last line before a stretch of music "lasts" until the music is over. Subtitle Edit therefore normally sets the end from reading time.
+
+With **Set end times from isolated speech (slow)** ticked in the forced aligner setup, music and sound effects are first removed from the audio, and each line ends where its speech actually goes quiet (a quarter of a second of silence). If the speech does not go quiet within twice the reading time - someone else talking over it, or singing - reading time is used as before, and the minimum and maximum durations and the gap to the next line apply either way.
+
+Measured against hand-timed subtitles on a trailer with wall-to-wall music, the median end-time error went from 310 ms to 196 ms, and lines more than half a second off from 5 to 2 of 29. On the audio *with* its music the same detection is useless - music never goes quiet - which is why the separation is needed.
+
+It uses the same source separation model (Mel-Band RoFormer, 457 MB, downloaded on first use) as [Isolate speech](speech-to-text.md#isolate-speech-crisp-asr), and costs the same: about as long as the video itself on a GPU, many times longer on CPU only. If the separation fails, the alignment carries on with reading-time ends.
+
 ### Align time codes via "Speech to text"...
 
 Runs normal [speech to text](speech-to-text.md) on the video, then matches your script against the transcript. Useful when the forced aligner does not support your language. Lines that cannot be matched get interpolated time codes.

@@ -178,6 +178,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     {
 
         IOcrSubtitle? imageSubtitle = null;
+        List<string>? idxLanguageCodes = null;
         if (item.Format == FormatBluRaySup)
         {
             var log = new StringBuilder();
@@ -195,6 +196,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             vobSubParser.OpenSubIdx(item.FileName, idxFileName);
             var vobSubMergedPackList = vobSubParser.MergeVobSubPacks();
             var palette = vobSubParser.IdxPalette;
+            idxLanguageCodes = vobSubParser.IdxLanguageCodes;
             vobSubParser.VobSubPacks.Clear();
             imageSubtitle = new OcrSubtitleVobSub(vobSubMergedPackList, palette)
             {
@@ -370,6 +372,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         if (imageSubtitle != null && !_config.IsTargetFormatImageBased)
         {
             item.Status = Se.Language.General.OcrDotDotDot;
+            var ocrSourceLanguage = BatchOcrLanguage.ResolveSourceLanguage(item, idxLanguageCodes);
             if (Se.Settings.Tools.BatchConvert.OcrEngine.Equals("nOcr", StringComparison.OrdinalIgnoreCase))
             {
                 RunNOcr(imageSubtitle, item, cancellationToken);
@@ -380,7 +383,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             }
             else if (Se.Settings.Tools.BatchConvert.OcrEngine.Equals("PaddleOCR", StringComparison.OrdinalIgnoreCase))
             {
-                if (!await RunPaddleOcr(imageSubtitle, item, cancellationToken))
+                if (!await RunPaddleOcr(imageSubtitle, item, ocrSourceLanguage, cancellationToken))
                 {
                     return;
                 }
@@ -390,14 +393,14 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 // A false return means the runner already set a terminal status (engine not
                 // downloaded, startup failure, cancelled, every line blank) - stop here so the
                 // save path below cannot overwrite it with "Converted" or a generic error.
-                if (!await RunOllamaOcr(imageSubtitle, item, cancellationToken))
+                if (!await RunOllamaOcr(imageSubtitle, item, ocrSourceLanguage, cancellationToken))
                 {
                     return;
                 }
             }
             else if (Se.Settings.Tools.BatchConvert.OcrEngine.Equals("llama.cpp", StringComparison.OrdinalIgnoreCase))
             {
-                if (!await RunLlamaCppOcr(imageSubtitle, item, cancellationToken))
+                if (!await RunLlamaCppOcr(imageSubtitle, item, ocrSourceLanguage, cancellationToken))
                 {
                     return;
                 }
@@ -411,14 +414,14 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             }
             else if (Se.Settings.Tools.BatchConvert.OcrEngine.Equals(AppleVisionOcr.StaticName, StringComparison.OrdinalIgnoreCase))
             {
-                if (!RunAppleVisionOcr(imageSubtitle, item, cancellationToken))
+                if (!RunAppleVisionOcr(imageSubtitle, item, ocrSourceLanguage, cancellationToken))
                 {
                     return;
                 }
             }
             else
             {
-                await RunOcrTesseract(imageSubtitle, item, cancellationToken);
+                await RunOcrTesseract(imageSubtitle, item, ocrSourceLanguage, cancellationToken);
             }
 
             // The OCR runners build paragraphs with "new Paragraph(text, start, end)", which leaves
@@ -812,10 +815,11 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         return true;
     }
 
-    private static async Task RunOcrTesseract(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
+    private static async Task RunOcrTesseract(IOcrSubtitle imageSubtitles, BatchConvertItem item, Iso639Dash2LanguageCode? sourceLanguage, CancellationToken cancellationToken)
     {
         var tesseractOcr = new TesseractOcr();
         var language = string.IsNullOrEmpty(Se.Settings.Tools.BatchConvert.TesseractLanguage) ? "eng" : Se.Settings.Tools.BatchConvert.TesseractLanguage;
+        language = BatchOcrLanguage.ForTesseract(sourceLanguage, language, Se.TesseractModelFolder);
         var engineMode = Se.Settings.Tools.BatchConvert.TesseractEngineMode;
         item.Subtitle = new Subtitle();
         for (var i = 0; i < imageSubtitles.Count; i++)
@@ -1338,11 +1342,12 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     private readonly Lock _paddleLock = new Lock();
 
     /// <inheritdoc cref="RunOllamaOcr"/>
-    private async Task<bool> RunPaddleOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
+    private async Task<bool> RunPaddleOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, Iso639Dash2LanguageCode? sourceLanguage, CancellationToken cancellationToken)
     {
         var numberOfImages = imageSubtitles.Count;
         var ocrEngine = new PaddleOcr();
         var language = string.IsNullOrEmpty(Se.Settings.Tools.BatchConvert.PaddleLanguage) ? "en" : Se.Settings.Tools.BatchConvert.PaddleLanguage;
+        language = BatchOcrLanguage.ForTwoLetterEngine(sourceLanguage, language, PaddleOcr.GetLanguages().Select(p => p.Code));
         var mode = Se.Settings.Ocr.PaddleOcrMode;
         var ocrCount = 0;
         item.Subtitle = new Subtitle();
@@ -1467,12 +1472,12 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     /// runner already set a terminal status (not downloaded, startup failure, cancelled, every
     /// line blank) that the save path must not overwrite.
     /// </returns>
-    private async Task<bool> RunOllamaOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
+    private async Task<bool> RunOllamaOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, Iso639Dash2LanguageCode? sourceLanguage, CancellationToken cancellationToken)
     {
         using var ollamaOcr = new OllamaOcr();
         var url = Se.Settings.Ocr.OllamaUrl;
         var model = Se.Settings.Ocr.OllamaModel;
-        var language = Se.Settings.Ocr.OllamaLanguage;
+        var language = BatchOcrLanguage.ForLanguageNameEngine(sourceLanguage, Se.Settings.Ocr.OllamaLanguage);
         item.Subtitle = new Subtitle();
         var cancelled = false;
         for (var i = 0; i < imageSubtitles.Count; i++)
@@ -1509,7 +1514,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     /// <inheritdoc cref="RunOllamaOcr"/>
     public bool UsedLocalLlamaCppOcr { get; private set; }
 
-    private async Task<bool> RunLlamaCppOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
+    private async Task<bool> RunLlamaCppOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, Iso639Dash2LanguageCode? sourceLanguage, CancellationToken cancellationToken)
     {
         // Curated or self-supplied OCR model from settings (picked in batch convert settings /
         // the OCR window). The batch run never downloads - the settings dialog prompts for that on OK.
@@ -1540,7 +1545,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         using var engine = new LlamaCppOcr(Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
         var url = LlamaCppServerManager.ApiUrl;
         var modelName = Path.GetFileNameWithoutExtension(model.FileName);
-        var language = Se.Settings.Ocr.OllamaLanguage;
+        var language = BatchOcrLanguage.ForLanguageNameEngine(sourceLanguage, Se.Settings.Ocr.OllamaLanguage);
         var prompt = LlamaCppServerManager.ResolveOcrPrompt(model, Se.Settings.Ocr.LlamaCppOcrPrompt);
         item.Subtitle = new Subtitle();
         var cancelled = false;
@@ -1668,9 +1673,9 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     /// </summary>
     /// <returns>False when the run was cancelled or every line came back blank, in which case a
     /// terminal status is already set on the item.</returns>
-    private bool RunAppleVisionOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
+    private bool RunAppleVisionOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, Iso639Dash2LanguageCode? sourceLanguage, CancellationToken cancellationToken)
     {
-        var languageCode = Se.Settings.Tools.BatchConvert.AppleVisionLanguage;
+        var languageCode = BatchOcrLanguage.ForBcp47Engine(sourceLanguage, Se.Settings.Tools.BatchConvert.AppleVisionLanguage, AppleVisionOcr.GetLanguages().Select(p => p.Code));
 
         item.Status = Se.Language.General.OcrDotDotDot;
         item.Subtitle = new Subtitle();

@@ -19,9 +19,9 @@ public class Se
 {
     internal const int CurrentMacOsFontMigrationVersion = 1;
     internal const int CurrentShortcutsMigrationVersion = 4;
-    internal const int CurrentLayoutMigrationVersion = 1;
+    internal const int CurrentLayoutMigrationVersion = 2;
 
-    public static string Version { get; set; } = "v5.3.0-beta4";
+    public static string Version { get; set; } = "v5.3.0-beta8";
 
     public SeGeneral General { get; set; } = new();
     public List<SeShortCut> Shortcuts { get; set; } = new();
@@ -60,16 +60,6 @@ public class Se
     public string CustomSearch4Url { get; set; } = string.Empty;
     public string CustomSearch5Name { get; set; } = string.Empty;
     public string CustomSearch5Url { get; set; } = string.Empty;
-    public string Actor1 { get; set; } = "Actor 1";
-    public string Actor2 { get; set; } = "Actor 2";
-    public string Actor3 { get; set; } = "Actor 3";
-    public string Actor4 { get; set; } = "Actor 4";
-    public string Actor5 { get; set; } = "Actor 5";
-    public string Actor6 { get; set; } = "Actor 6";
-    public string Actor7 { get; set; } = "Actor 7";
-    public string Actor8 { get; set; } = "Actor 8";
-    public string Actor9 { get; set; } = "Actor 9";
-    public string Actor10 { get; set; } = "Actor 10";
     public SeFile File { get; set; } = new();
     public SeEdit Edit { get; set; } = new();
     public SeTools Tools { get; set; } = new();
@@ -543,6 +533,46 @@ public class Se
             }
         }
 
+        ApplyShortcutMoves(Shortcuts, moves);
+    }
+
+    /// <summary>
+    /// The way back, for shortcuts exported on macOS and imported on Windows/Linux: bindings on a
+    /// macOS-only default (<see cref="ShortcutsMain.MacOsDefaultChanges"/>, and the Control added
+    /// to "open data folder" in version 3) go to the default every system shares - still with the
+    /// macOS modifier names, the caller renames those. Without it Cmd+G (find next) and Ctrl+G
+    /// (go to line) both became Ctrl+G, and Delete no longer deleted lines.
+    /// </summary>
+    internal static void RevertMacOsDefaultShortcuts(List<SeShortCut> shortcuts)
+    {
+        var moves = new List<(SeShortCut Shortcut, string[] NewKeys)>();
+        foreach (var shortcut in shortcuts)
+        {
+            if (shortcut.Keys == null)
+            {
+                continue;
+            }
+
+            foreach (var change in ShortcutsMain.MacOsDefaultChanges)
+            {
+                if (change.NewKeys.Length > 0 && shortcut.ActionName == change.ActionName && IsSameKeys(shortcut.Keys, change.NewKeys))
+                {
+                    moves.Add((shortcut, change.OldKeys));
+                }
+            }
+
+            if (shortcut.ActionName == nameof(MainViewModel.OpenDataFolderCommand) &&
+                IsSameKeys(shortcut.Keys, ["Ctrl", "Win", "Alt", "Shift", "D"]))
+            {
+                moves.Add((shortcut, ["Win", "Alt", "Shift", "D"]));
+            }
+        }
+
+        ApplyShortcutMoves(shortcuts, moves);
+    }
+
+    private static void ApplyShortcutMoves(List<SeShortCut> shortcuts, List<(SeShortCut Shortcut, string[] NewKeys)> moves)
+    {
         // Never create a duplicate binding: skip a move whose new keys are held by an action that
         // stays put. Skipping one can block another (Cmd+G only frees up when go-to-line moves),
         // so repeat until nothing changes.
@@ -553,7 +583,7 @@ public class Se
             foreach (var move in moves.ToList())
             {
                 if (move.NewKeys.Length > 0 &&
-                    Shortcuts.Any(s => !moves.Any(m => ReferenceEquals(m.Shortcut, s)) && IsSameKeys(s.Keys, move.NewKeys)))
+                    shortcuts.Any(s => s.Keys != null && !moves.Any(m => ReferenceEquals(m.Shortcut, s)) && IsSameKeys(s.Keys, move.NewKeys)))
                 {
                     moves.Remove(move);
                     skipped = true;
@@ -718,17 +748,28 @@ public class Se
     /// Version 1: layouts 12 and 13 (text box below the video player, issue #14812) were inserted
     /// before the "no video" layout, which moved from 12 to 14. A persisted 12 from before that
     /// still means "no video", so it is moved along once.
+    /// <para>
+    /// Version 2: the editor-style layout (timeline with video and subtitle rows) took number 14,
+    /// and "no video" moved on to 15 to stay last in the picker. The steps run in order, so a
+    /// settings file from before version 1 goes 12 -> 14 -> 15.
+    /// </para>
     /// </summary>
     internal static void MigrateLayoutNumber(SeGeneral general)
     {
-        if (general.LayoutMigrationVersion.GetValueOrDefault() >= CurrentLayoutMigrationVersion)
+        var version = general.LayoutMigrationVersion.GetValueOrDefault();
+        if (version >= CurrentLayoutMigrationVersion)
         {
             return;
         }
 
-        if (general.LayoutNumber == 12)
+        if (version < 1 && general.LayoutNumber == 12)
         {
             general.LayoutNumber = 14;
+        }
+
+        if (version < 2 && general.LayoutNumber == 14)
+        {
+            general.LayoutNumber = 15;
         }
 
         general.LayoutMigrationVersion = CurrentLayoutMigrationVersion;
@@ -1125,6 +1166,7 @@ public class Se
         ss.DCinemaFadeUpTime = dc.DCinemaFadeUpTime;
         ss.DCinemaFadeDownTime = dc.DCinemaFadeDownTime;
         Configuration.Settings.Tools.RememberUseAlwaysList = Settings.Tools.SpellCheckRememberUseAlwaysList;
+        Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime = Settings.Tools.FixShortDisplayTimesAllowMoveStartTime;
     }
 
     /// <summary>
@@ -1288,16 +1330,34 @@ public class Se
         LogError(exception.Message + Environment.NewLine + message + Environment.NewLine + exception.StackTrace);
     }
 
+    private static readonly ErrorLogThrottle ErrorThrottle = new();
+
     public static void LogError(string error)
     {
         try
         {
+            // An error raised from a timer repeats at 6-60 Hz - see ErrorLogThrottle.
+            if (!ErrorThrottle.ShouldLog(error, Environment.TickCount64, out var suppressedBefore, out var isLastInWindow))
+            {
+                return;
+            }
+
             var filePath = GetErrorLogFilePath();
             using var writer = new StreamWriter(filePath, true, Encoding.UTF8);
             writer.WriteLine("-----------------------------------------------------------------------------");
             writer.WriteLine($"Date: {DateTime.Now.ToString(CultureInfo.InvariantCulture)}");
             writer.WriteLine($"SE: {GetSeInfo()}");
             writer.WriteLine(error);
+            if (suppressedBefore > 0)
+            {
+                writer.WriteLine($"(This error occurred {suppressedBefore.ToString(CultureInfo.InvariantCulture)} more times since it was last logged)");
+            }
+
+            if (isLastInWindow)
+            {
+                writer.WriteLine($"(Logged {ErrorLogThrottle.MaxEntriesPerWindow} times within a minute - for the rest of that minute identical errors are only counted)");
+            }
+
             writer.WriteLine();
         }
         catch

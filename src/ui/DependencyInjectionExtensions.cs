@@ -40,6 +40,7 @@ using Nikse.SubtitleEdit.Features.Help.About;
 using Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Main.AssistedMove;
+using Nikse.SubtitleEdit.Features.Main.ActorPicker;
 using Nikse.SubtitleEdit.Features.Main.AssistedSplit;
 using Nikse.SubtitleEdit.Features.Main.GridColumns;
 using Nikse.SubtitleEdit.Features.Main.Layout;
@@ -180,6 +181,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Confucius4TtsCrispAsrSettin
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DotsTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.PocketTtsCrispAsrSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.SupertonicCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTts25License;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ModelLicense;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceCloneConsent;
@@ -308,6 +310,7 @@ public static class DependencyInjectionExtensions
         collection.AddHttpClientWithProxy<IVibeVoiceCrispAsrDownloadService, VibeVoiceCrispAsrDownloadService>();
         collection.AddHttpClientWithProxy<IIndexTtsCrispAsrDownloadService, IndexTtsCrispAsrDownloadService>();
         collection.AddHttpClientWithProxy<IPocketTtsCrispAsrDownloadService, PocketTtsCrispAsrDownloadService>();
+        collection.AddHttpClientWithProxy<ISupertonicCrispAsrDownloadService, SupertonicCrispAsrDownloadService>();
         collection.AddHttpClientWithProxy<IDotsTtsCrispAsrDownloadService, DotsTtsCrispAsrDownloadService>();
         collection.AddHttpClientWithProxy<IConfucius4TtsCrispAsrDownloadService, Confucius4TtsCrispAsrDownloadService>();
         collection.AddHttpClientWithProxy<IIndexTts25AudioCppDownloadService, IndexTts25AudioCppDownloadService>();
@@ -366,6 +369,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<BatchConvertViewModel>();
         collection.AddTransient<BatchErrorListViewModel>();
         collection.AddTransient<BeautifyTimeCodesViewModel>();
+        collection.AddTransient<Nikse.SubtitleEdit.Features.Tools.ImproveTimeCodes.ImproveTimeCodesViewModel>();
         collection.AddTransient<Nikse.SubtitleEdit.Features.Tools.BeautifyTimeCodes.Profile.BeautifyTimeCodesProfileViewModel>();
         collection.AddTransient<BinaryAdjustAllTimesViewModel>();
         collection.AddTransient<BinaryAdjustAlphaViewModel>();
@@ -510,6 +514,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<VibeVoiceCrispAsrSettingsViewModel>();
         collection.AddTransient<IndexTtsCrispAsrSettingsViewModel>();
         collection.AddTransient<PocketTtsCrispAsrSettingsViewModel>();
+        collection.AddTransient<SupertonicCrispAsrSettingsViewModel>();
         collection.AddTransient<DotsTtsCrispAsrSettingsViewModel>();
         collection.AddTransient<Confucius4TtsCrispAsrSettingsViewModel>();
         collection.AddTransient<IndexTts25LicenseViewModel>();
@@ -530,6 +535,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<PickOnlineSubtitleViewModel>();
         collection.AddTransient<OpenSecondarySubtitleViewModel>();
         collection.AddTransient<PartsSavedViewModel>();
+        collection.AddTransient<ActorPickerViewModel>();
         collection.AddTransient<AssistedSplitViewModel>();
         collection.AddTransient<AssistedMoveViewModel>();
         collection.AddTransient<PickAlignmentViewModel>();

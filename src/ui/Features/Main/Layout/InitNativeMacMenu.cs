@@ -292,6 +292,7 @@ public static class InitNativeMacMenu
             Item(Clean(l.ApplyDurationLimits), v => v.ShowApplyDurationLimitsCommand),
             Item(Clean(l.BatchConvert), v => v.ShowToolsBatchConvertCommand),
             Item(Clean(l.BeautifyTimeCodes), v => v.ShowBeautifyTimeCodesCommand),
+            Item(Clean(l.ImproveTimeCodes), v => v.ShowImproveTimeCodesCommand),
             Item(Clean(l.BridgeGaps), v => v.ShowBridgeGapsCommand),
             Item(Clean(l.ApplyMinGap), v => v.ShowApplyMinGapCommand),
             Item(Clean(l.ChangeCasing), v => v.ShowToolsChangeCasingCommand),
@@ -596,7 +597,7 @@ public static class InitNativeMacMenu
                 }
 
                 var title = string.IsNullOrWhiteSpace(window.Title) ? "Subtitle Edit" : window.Title;
-                var item = new NativeMenuItem(title)
+                var item = new NativeMenuItem(Literal(title))
                 {
                     ToggleType = MenuItemToggleType.CheckBox,
                     IsChecked = ReferenceEquals(other, _active),
@@ -728,7 +729,7 @@ public static class InitNativeMacMenu
                 header = "…" + header[^77..];
             }
 
-            var recentItem = new NativeMenuItem(header);
+            var recentItem = new NativeMenuItem(Literal(header));
             recentItem.Click += (_, _) => clickAction();
             menu.Items.Add(recentItem);
         }
@@ -817,7 +818,7 @@ public static class InitNativeMacMenu
             var shortcuts = ShortcutsMain.GetUsedShortcuts(vm);
             foreach (var entry in enabled)
             {
-                var pluginItem = new NativeMenuItem(entry.Plugin.Manifest.Name)
+                var pluginItem = new NativeMenuItem(Literal(entry.Plugin.Manifest.Name))
                 {
                     IsEnabled = entry.Plugin.CanRun,
                     Gesture = FindGesture(entry.Command, shortcuts),
@@ -856,7 +857,7 @@ public static class InitNativeMacMenu
                 trackName += $" - {track.Title}";
             }
 
-            var item = new NativeMenuItem(trackName);
+            var item = new NativeMenuItem(Literal(trackName));
             item.ToggleType = MenuItemToggleType.CheckBox;
             item.IsChecked = track.FfIndex == (current?.FfIndex ?? -1);
             var captured = track;
@@ -963,4 +964,11 @@ public static class InitNativeMacMenu
     }
 
     private static string Clean(string? s) => s?.Replace("_", string.Empty) ?? string.Empty;
+
+    /// <summary>
+    /// For text that is not ours (file names, window titles, track and plugin names): Avalonia
+    /// strips the first "_" from a native menu title as an access-key marker, so
+    /// "my_file_name.srt" shows as "myfile_name.srt". Doubling each one keeps them all.
+    /// </summary>
+    private static string Literal(string? s) => s?.Replace("_", "__") ?? string.Empty;
 }

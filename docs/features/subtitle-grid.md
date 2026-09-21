@@ -61,6 +61,19 @@ Right-click a line to access:
 - Selected lines... (Speech to text, Auto translate, Change casing, Set layer, Fix common errors, Save as..., etc.)
 - Save forced lines as...
 
+## Setting Actors (ASS/SSA)
+
+For ASS/SSA files the context menu has an **Actors** submenu, and these shortcuts can be assigned in **Options → Shortcuts**. They all work with focus in the grid, the text box or the waveform:
+
+- **Set actor...** opens the actor picker: every actor in the file with its number key, line count and "Set actor N" shortcut.
+  - Press <kbd>1</kbd>–<kbd>9</kbd> or <kbd>0</kbd> to set one of the first ten actors on the selected lines.
+  - Type to filter a long cast, then press <kbd>Enter</kbd> to set the highlighted actor. A name that does not exist yet can be added as a new actor.
+  - <kbd>Alt</kbd>+<kbd>Up</kbd>/<kbd>Down</kbd> moves the highlighted actor, e.g. to put the main characters on the number keys. <kbd>Delete</kbd> removes the actor from the selected lines.
+- **Set actor: 1** … **Set actor: 10** set the first ten actors directly.
+- **Set new actor...** and **Actor - Remove**.
+
+The actor order is alphabetical when a file is opened. Actors added while working are appended at the end, so a number keeps pointing at the same actor for the rest of the session.
+
 ## Keyboard Shortcuts (Grid)
 
 | Shortcut | Action |

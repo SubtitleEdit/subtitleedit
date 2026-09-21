@@ -58,6 +58,8 @@ public class Qwen3TtsCrispAsr : ITtsEngine, IPerLineCloneEngine
     /// switches this on, and it re-pulls the voice list on every change.
     /// </summary>
     public bool SupportsPerLineVoiceCloning => IsCloneModel(null);
+    // The Base backend refuses a WAV without ref-text, so a clip with no transcript is not staged.
+    public bool PerLineCloneNeedsTranscript => true;
 
     public const string ModelKeyVoiceDesign = "1.7B VoiceDesign";
     public const string ModelKeyCustomVoice = "1.7B CustomVoice";

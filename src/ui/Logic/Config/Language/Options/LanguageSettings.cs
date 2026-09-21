@@ -99,6 +99,7 @@ public class LanguageSettings
     public string NewEmptyDefaultMs { get; set; }
     public string TimeCodeUpDownStepMs { get; set; }
     public string MoveSelectedLinesStepMs { get; set; }
+    public string MoveLinesShortenNeighbor { get; set; }
     public string PromptBeforeDelete { get; set; }
     public string RememberPositionAndSize { get; set; }
     public string OpenLastFileOnStart { get; set; }
@@ -186,6 +187,7 @@ public class LanguageSettings
     public string ShowFullscreenButton { get; set; }
     public string FullscreenHideControls { get; set; }
     public string ShowSecondarySubtitleDialog { get; set; }
+    public string RememberSecondarySubtitleFile { get; set; }
     public string AutoOpenVideoFile { get; set; }
     public string DownloadMpv { get; set; }
     public string DownloadVlc { get; set; }
@@ -295,9 +297,12 @@ public class LanguageSettings
     public string SplitOddLinesAction { get; set; }
     public string OcrUseWordSplitList { get; set; }
     public string OcrGuessUnknownWords { get; set; }
+    public string SpellCheckRememberUseAlwaysList { get; set; }
+    public string FixShortDisplayTimesAllowMoveStartTime { get; set; }
     public string SpeechToTextSelectedLinesPromptFirstTimeOnly { get; set; }
     public string MultipleReplaceShowDotDotDotButtons { get; set; }
     public string GridFocusTextboxAfterInsertNew { get; set; }
+    public string UndoRedoGoToChangedLine { get; set; }
     public string MusicSymbol { get; set; }
     public string MusicSymbolsToReplace { get; set; }
     public string TextToSpeechPromptMergeContinuationLines { get; set; }
@@ -333,6 +338,15 @@ public class LanguageSettings
     public string WaveformSaveAsCustomTheme { get; set; }
     public string WaveformLoadThemeDotDotDot { get; set; }
     public string WaveformExportThemeDotDotDot { get; set; }
+    public string WaveformSaveCustomThemeTitle { get; set; }
+    public string WaveformThemeFileType { get; set; }
+    public string WaveformThemeHighContrast { get; set; }
+    public string WaveformThemeOceanBlue { get; set; }
+    public string WaveformThemeWarmSunset { get; set; }
+    public string WaveformThemeForest { get; set; }
+    public string WaveformThemeMidnightPurple { get; set; }
+    public string WaveformThemeRetroAmber { get; set; }
+    public string WaveformThemeIce { get; set; }
 
     public LanguageSettings()
     {
@@ -429,6 +443,7 @@ public class LanguageSettings
         NewEmptyDefaultMs = "Default new subtitle duration (ms)";
         TimeCodeUpDownStepMs = "Time up/down increment (ms)";
         MoveSelectedLinesStepMs = "Move selected lines shortcut step (ms)";
+        MoveLinesShortenNeighbor = "Move lines: shorten previous/next line instead of overlapping it";
         PromptBeforeDelete = "Prompt before delete";
         RememberPositionAndSize = "Remember window position and size";
         OpenLastFileOnStart = "Open last recent file on start";
@@ -437,7 +452,7 @@ public class LanguageSettings
         AutoBackupIntervalMinutes = "Auto-backup interval (minutes)";
         AutoBackupDeleteAfterDays = "Auto-backup retention (days)";
         SettingsBackupOn = "Auto-backup settings";
-        SettingsBackupIntervalDays = "Settings backup interval (days)";
+        SettingsBackupIntervalDays = "Settings backup interval (days, 0 = every start)";
         SettingsBackupMaxCount = "Settings backups to keep";
         AutoConvertToUtf8 = "Auto-convert encoding to UTF-8 on open";
         AutoTrimWhiteSpace = "Auto-trim white-space";
@@ -509,6 +524,7 @@ public class LanguageSettings
         ShowFullscreenButton = "Show full-screen button";
         FullscreenHideControls = "Hide video controls in full-screen";
         ShowSecondarySubtitleDialog = "Show style dialog when opening a second subtitle file";
+        RememberSecondarySubtitleFile = "Remember second subtitle file";
         AutoOpenVideoFile = "Auto-open video file when opening subtitle";
         DownloadMpv = "Download mpv";
         DownloadVlc = "Download VLC";
@@ -624,9 +640,12 @@ public class LanguageSettings
         SplitOddLinesAction = "Split odd lines action";
         OcrUseWordSplitList = "OCR: use word split list";
         OcrGuessUnknownWords = "OCR: try to guess unknown words";
+        SpellCheckRememberUseAlwaysList = "Spell check: remember \"Use always\" list";
+        FixShortDisplayTimesAllowMoveStartTime = "Fix common errors: fix short display times may move start time";
         SpeechToTextSelectedLinesPromptFirstTimeOnly = "Speech to text: selected lines, prompt for language/engine first time only";
         MultipleReplaceShowDotDotDotButtons = "Multiple replace: show context menu buttons";
         GridFocusTextboxAfterInsertNew = "Grid: focus text box after insert new subtitle";
+        UndoRedoGoToChangedLine = "Undo/redo: go to changed line (and video position)";
         MusicSymbol = "Music symbol";
         MusicSymbolsToReplace = "Music symbols to replace (separated by comma)";
         TextToSpeechPromptMergeContinuationLines = "Text to speech: prompt to merge continuation lines";
@@ -662,6 +681,15 @@ public class LanguageSettings
         WaveformSaveAsCustomTheme = "Save as custom theme...";
         WaveformLoadThemeDotDotDot = "Load theme...";
         WaveformExportThemeDotDotDot = "Export theme...";
+        WaveformSaveCustomThemeTitle = "Save custom theme";
+        WaveformThemeFileType = "Subtitle Edit waveform theme";
+        WaveformThemeHighContrast = "High Contrast";
+        WaveformThemeOceanBlue = "Ocean Blue";
+        WaveformThemeWarmSunset = "Warm Sunset";
+        WaveformThemeForest = "Forest";
+        WaveformThemeMidnightPurple = "Midnight Purple";
+        WaveformThemeRetroAmber = "Retro Amber";
+        WaveformThemeIce = "Ice";
     }
 
     public string GetContinuationStyleName(ContinuationStyle continuationStyle)

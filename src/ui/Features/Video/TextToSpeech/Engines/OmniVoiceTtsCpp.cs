@@ -33,14 +33,33 @@ public class OmniVoiceTtsCpp : ITtsEngine, IPerLineCloneEngine
     // Each line is a fresh omnivoice-tts run taking --ref-wav/--ref-text, so a per-line
     // reference costs nothing beyond cutting the clip.
     public bool SupportsPerLineVoiceCloning => true;
+    public bool PerLineCloneNeedsTranscript => true;
 
     /// <summary>
     /// <see cref="IPerLineCloneEngine"/>: each line is a fresh omnivoice-tts run taking the
     /// clip's own path as --ref-wav (with its sibling .txt as --ref-text), so the voice simply
     /// points at the clip - nothing is staged into this engine's own folders.
     /// </summary>
-    public Voice? MakePerLineCloneVoice(string clipFileName, string voiceName) =>
-        new Voice(new OmniVoice(voiceName, clipFileName));
+    /// <remarks>
+    /// Null for a clip with no usable transcript beside it (no original-language subtitle loaded,
+    /// so what the video says at that line is unknown). omnivoice-tts insists on --ref-text, and a
+    /// blank one is no way out: the prompt is "ref_text + text" over the reference audio, so with
+    /// the transcript missing the model takes the clip for the start of the line and drops words
+    /// from what it speaks (8 of 9 test runs on a 3.5 s clip, against 0 with the real
+    /// transcript) (#15145).
+    /// </remarks>
+    public Voice? MakePerLineCloneVoice(string clipFileName, string voiceName)
+    {
+        if (string.IsNullOrWhiteSpace(Qwen3TtsCrispAsr.TryReadUsableTranscript(clipFileName)))
+        {
+            Se.WriteToolsLog(
+                $"OmniVoice TTS: no usable transcript beside '{clipFileName}' - not cloning this line "
+                + "(load the original-language subtitle so the clips get their transcripts)");
+            return null;
+        }
+
+        return new Voice(new OmniVoice(voiceName, clipFileName));
+    }
 
     /// <summary>The clip's own path, which is exactly what the voice carries.</summary>
     public string? GetPerLineReferenceClip(Voice voice) =>

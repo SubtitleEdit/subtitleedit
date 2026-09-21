@@ -29,6 +29,34 @@ public class MergeShortLinesHelperTests
     private static MergeShortLinesResult MergeWithHighlights(List<SubtitleLineViewModel> subtitles, ISet<Guid>? excluded = null) =>
         MergeShortLinesHelper.MergeWithHighlights(subtitles, new List<double>(), singleLineMaxLength: 50, maxNumberOfLines: 2, gapThresholdMs: 500, unbreakLinesShorterThan: 10, excluded);
 
+    [Theory]
+    [InlineData(2.0, 2.1, false)]  // 2.05 lies between
+    [InlineData(2.05, 2.1, true)]  // on the end of the first line: strictly after only
+    [InlineData(2.0, 2.05, true)]  // on the start of the next line: strictly before only
+    [InlineData(3.0, 3.1, true)]   // nothing in that gap
+    public void HasShotChangeBetween_IsStrictOnBothSides(double afterSeconds, double beforeSeconds, bool expectNone)
+    {
+        var sorted = new[] { 0.5, 2.05, 9.0 };
+
+        Assert.Equal(!expectNone, MergeShortLinesHelper.HasShotChangeBetween(sorted, afterSeconds, beforeSeconds));
+        Assert.False(MergeShortLinesHelper.HasShotChangeBetween(Array.Empty<double>(), afterSeconds, beforeSeconds));
+    }
+
+    [Fact]
+    public void Merge_UnsortedShotChanges_StillStopAtTheCut()
+    {
+        // The list is sorted internally for the binary search - the caller's order must not matter.
+        var shotChanges = new List<double> { 50.0, 3.05, 0.2 };
+
+        var result = MergeShortLinesHelper.Merge(ThreeMergeableLines(), shotChanges, singleLineMaxLength: 50, maxNumberOfLines: 2, gapThresholdMs: 500, unbreakLinesShorterThan: 10);
+        var highlighted = MergeShortLinesHelper.MergeWithHighlights(ThreeMergeableLines(), shotChanges, singleLineMaxLength: 50, maxNumberOfLines: 2, gapThresholdMs: 500, unbreakLinesShorterThan: 10);
+
+        Assert.Equal(2, result.MergedSubtitles.Count); // one + two merged, three behind the cut at 3.05
+        Assert.Equal(1, result.MergeCount);
+        Assert.Equal(1, highlighted.MergeCount);
+        Assert.Equal(new List<double> { 50.0, 3.05, 0.2 }, shotChanges); // the caller's list is left alone
+    }
+
     [Fact]
     public void Merge_NoExclusions_MergesChain()
     {

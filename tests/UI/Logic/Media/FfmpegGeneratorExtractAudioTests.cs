@@ -53,4 +53,46 @@ public class FfmpegGeneratorExtractAudioTests
         Assert.Contains("-ar 48000", args);
         Assert.DoesNotContain("-b:a", args);
     }
+
+    [Theory]
+    [InlineData(-1.5)] // end before start: ffmpeg 9.0.2 rejects a negative -t, older ones fail in atrim
+    [InlineData(0.0)]  // "-t 0.000" means "no limit" - the clip would be the whole rest of the file
+    [InlineData(0.0004)] // rounds to "0.000"
+    [InlineData(double.NaN)]
+    public void ExtractAudio_NoDuration_NeverReachesFfmpegAsZeroOrNegative(double durationSeconds)
+    {
+        Assert.False(FfmpegGenerator.HasClipDuration(durationSeconds));
+
+        var args = FfmpegGenerator.ExtractAudioClipFromVideoParameters(
+            "video.mp4", 10.0, durationSeconds, useCenterChannelOnly: false, "clip.wav");
+
+        Assert.Contains("-ss 10.000 -t 0.001 -i", args);
+    }
+
+    [Fact]
+    public void ExtractAudio_ShortButRealDuration_IsKept()
+    {
+        Assert.True(FfmpegGenerator.HasClipDuration(0.04));
+
+        var args = FfmpegGenerator.ExtractAudioClipFromVideoParameters(
+            "video.mp4", 10.0, 0.04, useCenterChannelOnly: false, "clip.wav");
+
+        Assert.Contains("-t 0.040 -i", args);
+    }
+
+    [Fact]
+    public void OutputTail_KeepsOnlyTheLastLines()
+    {
+        var tail = new FfmpegOutputTail();
+        for (var i = 1; i <= 40; i++)
+        {
+            tail.Add("line " + i);
+        }
+
+        var lines = tail.ToString().Split(Environment.NewLine);
+
+        Assert.Equal(15, lines.Length);
+        Assert.Equal("line 26", lines[0]);
+        Assert.Equal("line 40", lines[^1]);
+    }
 }

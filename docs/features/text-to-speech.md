@@ -20,6 +20,18 @@ Generate speech audio from subtitle text using various TTS engines.
 
 The bottom bar holds **Set up cast** (when speakers are present), **Import...**, **OK**, **Cancel** and **Generate speech from text**. OK is hidden while generating, and Cancel then stops the generation.
 
+## Remove the Original Speech From the Video
+
+By default **Add audio to video file** replaces the video's sound with the new speech, so music and sound effects are lost. **Audio ducking** (under **Advanced...**) keeps them by mixing the speech over the original track turned down - but the original voices are then still faintly audible under the new ones.
+
+**Remove original speech (slow)** (also under **Advanced...**) gets rid of just the voices: it splits the video's sound into speech and everything else, throws the speech away, and mixes the new speech over the music and sound effects. That is what a dub normally sounds like.
+
+- The first use downloads the CrispASR runtime (if no CrispASR engine is installed yet) and a source separation model (Mel-Band RoFormer, 457 MB). Speech to text's **Isolate speech** uses the same model.
+- It is slow: about as long as the video itself on a GPU (Metal, CUDA, Vulkan), and many times longer on CPU only.
+- The music and effects play at full volume. Turn on **Audio ducking** as well to lower them - its volume then applies to the music and effects.
+- The video's first audio track is used.
+- If the separation fails, the speech is added to the video the normal way and the tools log says why.
+
 ## Set Up Cast: One Voice per Speaker
 
 When the subtitle carries speaker names — the **Actor** field in ASSA/SSA, or `<v Name>` voices in WebVTT — a **Set up cast** button appears (with the speaker count). It opens a dialog where each actor is assigned an engine, voice, and optionally a model and voice instruction of their own. Lines without an actor use the globally selected voice. The cast is remembered between sessions, so the same actors open already assigned next time.
@@ -57,6 +69,7 @@ Lines that contain only sounds or music — `♪`, `[door slams]`, `(sighs)`, or
 - **Murf** — Cloud TTS (requires API key)
 - **GoogleSpeech** — Google cloud TTS (requires key file)
 - **Kokoro TTS** — Local downloadable Kokoro TTS server and models
+- **Supertonic (CrispASR)** — Supertone Supertonic-3 via the CrispASR runtime: 31 languages and ten preset voices (five female, five male) from one 200 MB model, at 44.1 kHz. It does not clone, and it is by far the fastest local engine - a line takes a second or less
 - **OmniVoice TTS** — Local CPU TTS with voice cloning and many languages
 - **Qwen3 TTS (CrispASR)** — Local Qwen3 TTS running through the CrispASR runtime (VoiceDesign, CustomVoice, and Voice clone 1.7B models)
 - **Chatterbox TTS (CrispASR)** — Chatterbox TTS via the CrispASR runtime, with voice cloning (multilingual Base or English-only Turbo model)
@@ -65,7 +78,7 @@ Lines that contain only sounds or music — `♪`, `[door slams]`, `(sighs)`, or
 - **IndexTTS 2.5 (audio.cpp)** — IndexTTS-2.5 on the audio.cpp runtime: cloning in Chinese, English, Japanese, Spanish and Arabic, with emotion and speaking-rate control. The reference voice is sent per request, so switching voice does not restart the server
 - **VoxCPM2 (CrispASR)** — Tokenizer-free diffusion engine at 48 kHz, about 30 languages, with zero-shot cloning
 - **MOSS-TTS (CrispASR)** — MOSS-TTS v1.5 (Qwen3-8B backbone, 24 kHz) with zero-shot cloning
-- **Zonos TTS (CrispASR)** — Zonos-v0.1 at 44.1 kHz with cloning from a reference recording
+- **Zonos TTS (CrispASR)** — Zonos-v0.1 at 44.1 kHz in 100+ languages, with one built-in default voice. It does not clone: the CrispASR backend has no speaker encoder yet, so there are no voices to import or pick
 - **OmniVoice TTS (CrispASR)** — The OmniVoice model on the shared CrispASR runtime, run as a persistent server so the model loads once instead of once per line
 - **dots.tts (CrispASR)** — dots.tts SOAR 2B rendered at 48 kHz by a BigVGAN vocoder, with zero-shot cloning
 - **VibeVoice (CrispASR)** — Microsoft VibeVoice 1.5B via the CrispASR runtime, with voice cloning; a single GGUF with no separate codec file
@@ -91,20 +104,22 @@ Several of the local engines above are different models on the same CrispASR run
 | **IndexTTS (CrispASR)** | 24 kHz | Follows the text | Zero-shot | 24 kHz mono | ~600 MB - 2.4 GB |
 | **CosyVoice3 (CrispASR)** | 24 kHz | 9, plus 18 Mandarin dialects as voices | 8 baked-in presets + zero-shot | 16 kHz mono + a transcript sidecar | ~1.6 - 2.5 GB |
 | **MOSS-TTS (CrispASR)** | 24 kHz | 20 | Zero-shot | 24 kHz mono | ~10.5 - 20.5 GB incl. codec |
-| **Zonos TTS (CrispASR)** | 44.1 kHz | 100+ via the language picker (trained on English, Japanese, Chinese, French and German; the rest rely on eSpeak pronunciation) | From a reference recording | 24 kHz mono | ~1.8 GB |
+| **Zonos TTS (CrispASR)** | 44.1 kHz | 100+ via the language picker (trained on English, Japanese, Chinese, French and German; the rest rely on eSpeak pronunciation) | None - one built-in voice | - | ~1.8 GB |
 | **VoxCPM2 (CrispASR)** | 48 kHz | ~30 | Zero-shot | 24 kHz mono (upsampled internally) | ~1.7 - 5 GB |
 | **dots.tts (CrispASR)** | 48 kHz | Follows the text | Zero-shot | 24 kHz mono | ~2.4 - 5 GB |
 | **VibeVoice (CrispASR)** | 24 kHz | Follows the text | Zero-shot | 24 kHz mono | ~1.6 - 5 GB |
 | **Confucius4-TTS (CrispASR)** | 22.05 kHz | 14 | Zero-shot (required - no default voice) | 22.05 kHz mono | ~1.9 - 2.6 GB |
 | **Pocket TTS (CrispASR)** | 24 kHz | 6 (one model per language) | Zero-shot, per request | 24 kHz mono | ~124 - 365 MB per language |
+| **Supertonic (CrispASR)** | 44.1 kHz | 31 via the language picker | None - 10 preset voices | - | ~200 MB |
 
 "Follows the text" means the engine has no language picker - it speaks whatever script it is given, taking its accent from the reference voice.
 
 Notes on picking one:
 
 - **Smallest download that still clones:** Pocket TTS at 124-365 MB per language; IndexTTS (about 600 MB - 870 MB) is the smallest that covers many languages with one model.
+- **Fastest, and the smallest download overall:** Supertonic at about 200 MB. It is not autoregressive, so a five-second line renders in under half a second on a GPU and in about a second on CPU - but it has preset voices only. Pick the language explicitly: it cannot detect it, and text read under the wrong language comes out garbled.
 - **Most languages:** OmniVoice, at 646.
-- **Highest output rate:** VoxCPM2 and dots.tts at 48 kHz, then Zonos at 44.1 kHz.
+- **Highest output rate:** VoxCPM2 and dots.tts at 48 kHz, then Zonos and Supertonic at 44.1 kHz.
 - **MOSS-TTS is by far the largest** because its Qwen3-8B backbone needs a ~3.5 GB codec companion on top of the backbone quant. Check free disk space before selecting it.
 - Quantized engines follow the same rule as the speech-to-text models: `Q4_K` is the small fast default, `Q8_0` is close to full precision, and `F16` is rarely worth the extra gigabytes.
 - **Most of the CrispASR engines load their reference voice at server start**, so switching voice reloads the model. The exceptions are **Pocket TTS**, **VibeVoice**, **MOSS-TTS**, **CosyVoice3** and **VoxCPM2** (per-request reference) and **Qwen3 TTS** with the Voice clone model — those, the four audio.cpp engines (**IndexTTS 2.5**, **Higgs Audio v3**, **Fish Audio S2 Pro**, **FireRedTTS3**) and the standalone OmniVoice TTS engine are what [Clone From Video (Voice of Each Line)](#clone-from-video-voice-of-each-line) can use.
@@ -140,7 +155,7 @@ Right-click the voice combo box for **Rename voice...** and **Delete voice...**.
 - **Rename voice...** moves the recording together with its sidecar files (the `.txt` transcript, engine JSON) and the cached prepared copy, so nothing is left behind as an orphan. Spaces are stored as underscores, which is what the engines show as spaces.
 - **Delete voice...** asks for confirmation, then removes the recording and its files from disk.
 
-Supported for every file-backed cloning voice: the CrispASR engines (Chatterbox, Confucius4-TTS, CosyVoice3, dots.tts, IndexTTS, MOSS-TTS, OmniVoice, Pocket TTS, Qwen3 TTS, VibeVoice, VoxCPM2, Zonos), the standalone OmniVoice TTS, and the audio.cpp engines (IndexTTS 2.5, Higgs Audio v3, Fish Audio S2 Pro, FireRedTTS3).
+Supported for every file-backed cloning voice: the CrispASR engines (Chatterbox, Confucius4-TTS, CosyVoice3, dots.tts, IndexTTS, MOSS-TTS, OmniVoice, Pocket TTS, Qwen3 TTS, VibeVoice, VoxCPM2), the standalone OmniVoice TTS, and the audio.cpp engines (IndexTTS 2.5, Higgs Audio v3, Fish Audio S2 Pro, FireRedTTS3).
 
 ### Voice Manager
 

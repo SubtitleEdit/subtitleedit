@@ -360,6 +360,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         DeleteLineNumbers = new ObservableCollection<int>();
         BatchItemsInfo = string.Empty;
+        AreControlsEnabled = true;
         AddingFilesStatus = string.Empty;
         ProgressText = string.Empty;
         ActionsSelected = string.Empty;

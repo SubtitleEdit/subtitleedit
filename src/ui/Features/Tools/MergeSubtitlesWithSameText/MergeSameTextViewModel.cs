@@ -257,6 +257,20 @@ public partial class MergeSameTextViewModel : ObservableObject, IClosingCleanup
         var result = new List<SubtitleLineViewModel>();
         var skipCount = 0;
 
+        // Line -> the first ticked merge item that holds it (what the FirstOrDefault scan of all
+        // merge items per line found), built once.
+        var mergeItemByLine = new Dictionary<SubtitleLineViewModel, MergeDisplayItem>();
+        foreach (var mergeItem in MergeItems)
+        {
+            if (mergeItem.Apply)
+            {
+                foreach (var line in mergeItem.LinesToMerge)
+                {
+                    mergeItemByLine.TryAdd(line, mergeItem);
+                }
+            }
+        }
+
         foreach (var s in _subtitles)
         {
             if (skipCount > 0)
@@ -265,7 +279,7 @@ public partial class MergeSameTextViewModel : ObservableObject, IClosingCleanup
                 continue;
             }
 
-            var match = MergeItems.FirstOrDefault(p => p.Apply && p.LinesToMerge.Contains(s));
+            mergeItemByLine.TryGetValue(s, out var match);
             if (match != null && match.ResultParagraphs != null)
             {
                 for (var k = 0; k < match.ResultParagraphs.Count; k++)

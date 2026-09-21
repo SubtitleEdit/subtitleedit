@@ -83,6 +83,19 @@ public class SpeakerReferenceBuilderTests
     }
 
     [Fact]
+    public void TheShortLineFallbackNeverPicksALineWithoutDuration()
+    {
+        // End before start (or equal to it): there is no audio to cut, and a negative "-t" is an
+        // ffmpeg error. Such a speaker gets no reference rather than a failed cut.
+        Assert.Empty(SpeakerReferenceBuilder.PickReferenceLines(Lines((5, 4), (10, 10))));
+
+        var picked = SpeakerReferenceBuilder.PickReferenceLines(Lines((5, 4), (10, 10.3)));
+
+        Assert.Single(picked);
+        Assert.Equal(0.3, picked[0].Duration.TotalSeconds, 1);
+    }
+
+    [Fact]
     public void LinesWithNoTextAreNotUsed()
     {
         // An empty line has no words for the reference transcript, so it only adds silence.

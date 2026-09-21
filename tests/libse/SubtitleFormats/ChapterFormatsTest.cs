@@ -83,6 +83,31 @@ public class ChapterFormatsTest
         Assert.Contains("END=10000", text);
     }
 
+    /// <summary>
+    /// The last chapter has no next one to end at. Its made-up end (start + 4 s) could lie past
+    /// the end of the video, or four seconds into a last chapter that runs for an hour.
+    /// </summary>
+    [Fact]
+    public void FfmpegMetadataChapters_WithADuration_TheLastChapterEndsWithTheVideo()
+    {
+        var text = FfmpegMetadataChapters.ToFfmpegMetadata(MakeChapters(), 5_000_000);
+
+        Assert.Contains("START=3725500", text);
+        Assert.Contains("END=5000000", text);
+        Assert.DoesNotContain("END=3729500", text);
+    }
+
+    [Fact]
+    public void FfmpegMetadataChapters_WithADuration_ChaptersPastTheEndAreLeftOut()
+    {
+        var text = FfmpegMetadataChapters.ToFfmpegMetadata(MakeChapters(), 60_000);
+        var chapters = LoadChapters(new FfmpegMetadataChapters(), text);
+
+        Assert.Equal(2, chapters.Count);
+        Assert.Contains("END=60000", text);
+        Assert.DoesNotContain("START=3725500", text);
+    }
+
     [Fact]
     public void FfmpegMetadataChapters_EscapesReservedCharacters()
     {

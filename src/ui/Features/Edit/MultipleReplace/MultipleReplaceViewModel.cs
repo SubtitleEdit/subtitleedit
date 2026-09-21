@@ -1358,7 +1358,12 @@ public partial class MultipleReplaceViewModel : ObservableObject
                     {
                         // Match against line-feed-normalized text so a pattern's \n line break matches even
                         // when the paragraph text uses \r\n (the pattern is FixNewLine'd to \n) (#11956).
-                        if (r.IsMatch(string.Join("\n", newText.SplitToLines())))
+                        // Text without a \r or \u2028 is already in that form - and this runs per
+                        // regex rule, per line, so skip the split and join for it.
+                        var lineFeedText = newText.AsSpan().IndexOfAny('\r', '\u2028') < 0
+                            ? newText
+                            : string.Join("\n", newText.SplitToLines());
+                        if (r.IsMatch(lineFeedText))
                         {
                             var replaced = RegexUtils.ReplaceNewLineSafe(r, newText, item.ReplaceWith);
                             hit = true;

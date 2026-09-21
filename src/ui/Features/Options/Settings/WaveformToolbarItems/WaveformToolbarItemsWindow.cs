@@ -48,6 +48,21 @@ public class WaveformToolbarItemsWindow : Window
         var buttonMoveUp = UiUtil.MakeButton(Se.Language.General.MoveUp, vm.MoveUpCommand).WithMinWidth(100);
         var buttonMoveDown = UiUtil.MakeButton(Se.Language.General.MoveDown, vm.MoveDownCommand).WithMinWidth(100);
 
+        // Only the items that have a width (the initial text box) show the setting.
+        var numericUpDownWidth = UiUtil.MakeNumericUpDownInt(100, 3000, 400, 120, vm, nameof(vm.SelectedWidth));
+        numericUpDownWidth.Increment = 10;
+        var panelWidth = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Spacing = 2,
+            Children =
+            {
+                UiUtil.MakeLabel(Se.Language.General.Width),
+                numericUpDownWidth,
+            },
+        };
+        panelWidth.Bind(IsVisibleProperty, new Binding(nameof(vm.IsWidthVisible)));
+
         var sidePanel = new StackPanel
         {
             Orientation = Orientation.Vertical,
@@ -89,6 +104,7 @@ public class WaveformToolbarItemsWindow : Window
                         UiUtil.MakeNumericUpDownInt(0, 100, 5, 120, vm, nameof(vm.SelectedRightMargin)),
                     },
                 },
+                panelWidth,
             },
         };
 

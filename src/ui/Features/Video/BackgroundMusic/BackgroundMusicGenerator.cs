@@ -25,14 +25,25 @@ public sealed class GeneratedMusic
     public required string Prompt { get; init; }
     public required int Bpm { get; init; }
     public required int GenerateSeconds { get; init; }
+
+    /// <summary>The "seconds to generate" setting it was made with - <see cref="GenerateSeconds"/> is that capped for the target it was made for.</summary>
+    public required int PreferredSeconds { get; init; }
     public required long Seed { get; init; }
 
     /// <summary>Looped (or trimmed) to <paramref name="targetSeconds"/>, faded out and normalized.</summary>
     public MusicAudio Render(double targetSeconds) =>
         MusicLooper.Normalize(MusicLooper.Render(Clip, Loop, targetSeconds));
 
-    public bool Matches(string prompt, int bpm, int generateSeconds) =>
-        Prompt == prompt.Trim() && Bpm == bpm && GenerateSeconds == generateSeconds;
+    /// <summary>
+    /// True when this clip was made with these settings and is long enough for
+    /// <paramref name="targetSeconds"/> (null = any target). The generated length is not compared
+    /// as such: it depends on the target, and the dialog (video length) and the text-to-speech run
+    /// (speech length) have different targets - which threw away the music just listened to and
+    /// made another, different clip.
+    /// </summary>
+    public bool Matches(string prompt, int bpm, int preferredSeconds, double? targetSeconds = null) =>
+        Prompt == prompt.Trim() && Bpm == bpm && PreferredSeconds == preferredSeconds &&
+        (targetSeconds == null || GenerateSeconds >= BackgroundMusicGenerator.GetGenerateSeconds(preferredSeconds, targetSeconds.Value));
 }
 
 /// <summary>Shared by Video &gt; Generate background music and the TTS window.</summary>
@@ -102,12 +113,14 @@ public static class BackgroundMusicGenerator
     public static async Task<GeneratedMusic> GenerateAsync(
         string prompt,
         int bpm,
-        int generateSeconds,
+        int preferredSeconds,
+        double targetSeconds,
         long seed,
         string tempFolder,
         IProgress<MusicGenerationProgress>? progress,
         CancellationToken cancellationToken)
     {
+        var generateSeconds = GetGenerateSeconds(preferredSeconds, targetSeconds);
         Directory.CreateDirectory(tempFolder);
         var rawFileName = Path.Combine(tempFolder, "generated-" + Guid.NewGuid().ToString("N") + ".wav");
         try
@@ -136,6 +149,7 @@ public static class BackgroundMusicGenerator
                     Prompt = request.Prompt,
                     Bpm = bpm,
                     GenerateSeconds = generateSeconds,
+                    PreferredSeconds = preferredSeconds,
                     Seed = seed,
                 };
             }, cancellationToken);

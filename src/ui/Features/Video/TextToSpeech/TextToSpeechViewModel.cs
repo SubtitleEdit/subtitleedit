@@ -8,11 +8,13 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Shared.GetAudioClips;
 using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 using Nikse.SubtitleEdit.Features.Tools.MergeContinuationLines;
 using Nikse.SubtitleEdit.Features.Video.BackgroundMusic;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AdvancedTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ChatterboxTtsSettings;
@@ -28,6 +30,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.MossTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DotsTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.PocketTtsCrispAsrSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.SupertonicCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTts25AudioCppSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DetectSpeakers;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.KokoroTtsSettings;
@@ -428,6 +431,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         else if (SelectedEngine is ZonosTtsCrispAsr)
         {
             Se.Settings.Video.TextToSpeech.ZonosTtsCrispAsrLanguage = SelectedLanguage?.Name ?? string.Empty;
+        }
+        else if (SelectedEngine is SupertonicCrispAsr)
+        {
+            Se.Settings.Video.TextToSpeech.SupertonicCrispAsrLanguage = SelectedLanguage?.Name ?? string.Empty;
         }
         else if (SelectedEngine is KokoroTtsCpp)
         {
@@ -1104,6 +1111,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         Qwen3TtsCrispAsr => Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrLanguage,
         ChatterboxTtsCpp => Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrLanguage,
         ZonosTtsCrispAsr => Se.Settings.Video.TextToSpeech.ZonosTtsCrispAsrLanguage,
+        SupertonicCrispAsr => Se.Settings.Video.TextToSpeech.SupertonicCrispAsrLanguage,
         FireRedTts3AudioCpp => Se.Settings.Video.TextToSpeech.FireRedTts3AudioCppLanguage,
         ElevenLabs => Se.Settings.Video.TextToSpeech.ElevenLabsLanguage,
         _ => null,
@@ -1351,6 +1359,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             PocketTtsCrispAsr.StopServer();
         }
+        if (keepAlive is not SupertonicCrispAsr)
+        {
+            SupertonicCrispAsr.StopServer();
+        }
         if (keepAlive is not DotsTtsCrispAsr)
         {
             DotsTtsCrispAsr.StopServer();
@@ -1486,6 +1498,13 @@ public partial class TextToSpeechViewModel : ObservableObject
         // Checked before the speech run, not after it: a missing music model found once all the
         // lines are synthesised would leave the user choosing between a 6 GB download and redoing it.
         if (DoAddBackgroundMusic && !await EnsureBackgroundMusicInstalled())
+        {
+            ResetGeneratingUiState();
+            return;
+        }
+
+        // Same reasoning: ask for the separation runtime and model now, not after the speech run.
+        if (ShouldRemoveOriginalSpeech() && !await EnsureSpeechRemovalInstalled())
         {
             ResetGeneratingUiState();
             return;
@@ -1701,6 +1720,9 @@ public partial class TextToSpeechViewModel : ObservableObject
             case ZonosTtsCrispAsr:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadZonosTtsCrispAsrModels());
                 break;
+            case SupertonicCrispAsr:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadSupertonicCrispAsrModels());
+                break;
             case ChatterboxTtsCpp:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadChatterboxModels(ChatterboxTtsCpp.ResolveModelKey(SelectedModel)));
                 break;
@@ -1790,6 +1812,9 @@ public partial class TextToSpeechViewModel : ObservableObject
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             ZonosTtsCrispAsr => ZonosTtsCrispAsr.AreModelsInstalled()
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            SupertonicCrispAsr => SupertonicCrispAsr.IsModelInstalled()
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             ChatterboxTtsCpp => ChatterboxTtsCpp.AreModelsInstalled(modelKey)
@@ -2204,6 +2229,70 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
     }
 
+    private bool ShouldRemoveOriginalSpeech()
+    {
+        return Se.Settings.Video.TextToSpeech.RemoveOriginalSpeech &&
+               DoGenerateVideoFile &&
+               !string.IsNullOrEmpty(_videoFileName) &&
+               File.Exists(_videoFileName);
+    }
+
+    private async Task<bool> EnsureSpeechRemovalInstalled()
+    {
+        var featureName = Se.Language.Video.TextToSpeech.RemoveOriginalSpeech;
+        if (!await TtsVoiceInstaller.EnsureCrispAsrForSpeechRemoval(Window, _windowService, featureName))
+        {
+            return false;
+        }
+
+        return await SpeechIsolationModelDownload.EnsureDownloadedAsync(Window!, _windowService, new CrispAsrCohere(), featureName);
+    }
+
+    /// <summary>
+    /// The original sound of the video without its speech - music and sound effects only - as a
+    /// 44.1 kHz stereo wav in <paramref name="workFolder"/>, or null when it could not be made.
+    /// </summary>
+    private async Task<string?> MakeSpeechFreeBackground(string workFolder, CancellationToken cancellationToken)
+    {
+        var crispAsr = new CrispAsrCohere();
+        var executable = crispAsr.GetExecutable();
+        var modelFileName = crispAsr.GetModelForCmdLine(SpeechIsolationModel.FileName);
+        if (!File.Exists(executable) || !File.Exists(modelFileName))
+        {
+            return null;
+        }
+
+        var originalAudioFileName = Path.Combine(workFolder, "original.wav");
+        await FfmpegGenerator.ExtractAudioForSeparation(_videoFileName, originalAudioFileName).StartAndWaitAsync(cancellationToken);
+        if (!File.Exists(originalAudioFileName))
+        {
+            Se.WriteToolsLog($"TTS remove original speech: ffmpeg could not extract the audio of \"{_videoFileName}\"", true);
+            return null;
+        }
+
+        var arguments = SpeechIsolationModel.BuildSeparateArguments(modelFileName, originalAudioFileName, workFolder, SpeechIsolationModel.BackgroundStem);
+        Se.WriteToolsLog($"{executable} {arguments}");
+        using var separateProcess = new Process
+        {
+            StartInfo = new ProcessStartInfo(executable, arguments)
+            {
+                WorkingDirectory = Path.GetDirectoryName(executable),
+                UseShellExecute = false,
+                CreateNoWindow = true,
+            }
+        };
+        await separateProcess.StartAndWaitAsync(cancellationToken);
+
+        var backgroundFileName = SpeechIsolationModel.GetStemFileName(originalAudioFileName, workFolder, SpeechIsolationModel.BackgroundStem);
+        if (separateProcess.ExitCode != 0 || !File.Exists(backgroundFileName))
+        {
+            Se.WriteToolsLog($"TTS remove original speech: separation failed with exit code {separateProcess.ExitCode}", true);
+            return null;
+        }
+
+        return backgroundFileName;
+    }
+
     private async Task<bool> EnsureBackgroundMusicInstalled()
     {
         var l = Se.Language.Video.BackgroundMusic;
@@ -2260,9 +2349,8 @@ public partial class TextToSpeechViewModel : ObservableObject
                 return;
             }
 
-            var generateSeconds = BackgroundMusicGenerator.GetGenerateSeconds(settings.GenerateSeconds, target);
             var music = _backgroundMusic;
-            if (music == null || !music.Matches(prompt, settings.Bpm, generateSeconds))
+            if (music == null || !music.Matches(prompt, settings.Bpm, settings.GenerateSeconds, target))
             {
                 ProgressText = l.GeneratingBackgroundMusicDotDotDot;
                 ProgressValue = 0;
@@ -2272,7 +2360,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                     ProgressValue = p.Percent;
                     ProgressText = $"{l.GeneratingBackgroundMusicDotDotDot} {Math.Floor(p.Percent).ToString(CultureInfo.CurrentCulture)}%";
                 });
-                music = await BackgroundMusicGenerator.GenerateAsync(prompt, settings.Bpm, generateSeconds, seed, tempFolder, progress, cancellationToken);
+                music = await BackgroundMusicGenerator.GenerateAsync(prompt, settings.Bpm, settings.GenerateSeconds, target, seed, tempFolder, progress, cancellationToken);
                 _backgroundMusic = music;
             }
 
@@ -2964,10 +3052,52 @@ public partial class TextToSpeechViewModel : ObservableObject
             stereo = true;
         }
 
-        var addAudioProcess = Se.Settings.Video.TextToSpeech.AudioDuckingEnabled
-            ? FfmpegGenerator.AddAudioTrackWithDucking(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo, Se.Settings.Video.TextToSpeech.AudioDuckingOriginalVolume)
-            : FfmpegGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo);
-        await addAudioProcess.StartAndWaitAsync(cancellationToken);
+        var ducking = Se.Settings.Video.TextToSpeech.AudioDuckingEnabled;
+        var duckingVolume = Se.Settings.Video.TextToSpeech.AudioDuckingOriginalVolume;
+
+        // The separation works in 44.1 kHz stereo - over a gigabyte of wav for a feature film -
+        // so its files get a folder of their own that is gone as soon as the video is written.
+        string? separationFolder = null;
+        try
+        {
+            string? backgroundFileName = null;
+            if (ShouldRemoveOriginalSpeech())
+            {
+                ProgressText = Se.Language.Video.TextToSpeech.RemovingOriginalSpeech;
+                separationFolder = Path.Combine(Path.GetTempPath(), "se-tts-separation-" + Guid.NewGuid());
+                Directory.CreateDirectory(separationFolder);
+                backgroundFileName = await MakeSpeechFreeBackground(separationFolder, cancellationToken);
+                if (backgroundFileName == null)
+                {
+                    Se.WriteToolsLog(Se.Language.Video.TextToSpeech.RemoveOriginalSpeechFailed, true);
+                }
+
+                ProgressText = Se.Language.Video.TextToSpeech.AddingAudioToVideoFileDotDotDot;
+            }
+
+            // With the speech gone there is nothing left for the new speech to compete with, so
+            // the music and effects play at full volume unless ducking asks for less.
+            var addAudioProcess = backgroundFileName != null
+                ? FfmpegGenerator.AddAudioTrackWithBackground(_videoFileName, backgroundFileName, audioFileName, outputFileName, audioEncoding, stereo, ducking ? duckingVolume : 100)
+                : ducking
+                    ? FfmpegGenerator.AddAudioTrackWithDucking(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo, duckingVolume)
+                    : FfmpegGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo);
+            await addAudioProcess.StartAndWaitAsync(cancellationToken);
+        }
+        finally
+        {
+            if (separationFolder != null)
+            {
+                try
+                {
+                    Directory.Delete(separationFolder, true);
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+        }
 
         ProgressText = string.Empty;
 
@@ -3232,6 +3362,17 @@ public partial class TextToSpeechViewModel : ObservableObject
                 await Task.Run(() => StopOtherCrispAsrServers(resolution.Engine));
                 var speakResult = await SpeakOneParagraphAsync(
                     resolution, language, region, model, cancellationToken);
+                if (speakResult.Error || string.IsNullOrEmpty(speakResult.FileName))
+                {
+                    var swapped = await SpeakWithFallbackReferenceAsync(
+                        resolution, index, language, region, model, cancellationToken);
+                    if (swapped != null)
+                    {
+                        resolution = swapped.Value.Resolution;
+                        speakResult = swapped.Value.Result;
+                    }
+                }
+
                 if (speakResult.Error && !string.IsNullOrEmpty(speakResult.ErrorMessage) && !errorMessages.Contains(speakResult.ErrorMessage))
                 {
                     errorMessages.Add(speakResult.ErrorMessage);
@@ -3463,6 +3604,77 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// A "Clone from video" line that failed on its own clip is tried again on the clips of the
+    /// lines around it. Returns null when the line is not a per-line clone, there is no other
+    /// clip, or the other clips fail too - the caller then records the line as failed.
+    /// </summary>
+    /// <remarks>
+    /// Every retry in <see cref="SpeakOneParagraphAsync"/> and inside the engines reuses the
+    /// line's own clip, which does nothing for a line whose clip is the problem: Higgs Audio v3
+    /// ran to max_tokens four times in a row on one film line's reference (#15020). See
+    /// <see cref="PerLineVoiceClone.GetFallbackReferenceClips"/> for which clips are tried.
+    /// Skipped once the engine looks broken rather than unlucky, like the retries are.
+    /// </remarks>
+    private async Task<(ResolvedVoice Resolution, TtsResult Result)?> SpeakWithFallbackReferenceAsync(
+        ResolvedVoice resolution,
+        int index,
+        TtsLanguage? language,
+        string? region,
+        string? model,
+        CancellationToken cancellationToken)
+    {
+        var paragraph = _subtitle.Paragraphs[index];
+        if (_speakRetryFailures >= 2
+            || !_perLineCloneClips.TryGetValue(paragraph, out var ownClip)
+            || !string.Equals(PerLineVoiceClone.TryGetReferenceClip(resolution.Voice), ownClip, StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        var fallbackClips = PerLineVoiceClone.GetFallbackReferenceClips(
+            _subtitle.Paragraphs,
+            index,
+            _perLineCloneClips,
+            p => ActorVoiceDetector.GetParagraphActor(p, _castKind));
+
+        foreach (var clipFileName in fallbackClips)
+        {
+            var voice = PerLineVoiceClone.MakeVoiceForClip(resolution.Engine, clipFileName);
+            if (voice == null)
+            {
+                continue;
+            }
+
+            try
+            {
+                var result = await TtsInstructionSwap.RunAsync(
+                    resolution.Engine,
+                    resolution.Instruction,
+                    () => resolution.Engine.Speak(resolution.Text, _waveFolder, voice,
+                        language, region, model, cancellationToken));
+                if (result.Error || string.IsNullOrEmpty(result.FileName))
+                {
+                    continue;
+                }
+
+                _speakRetryFailures = 0;
+                Se.WriteToolsLog($"TTS generation: line {index + 1} failed on its own reference clip and was cloned from {Path.GetFileName(clipFileName)} instead", true);
+                return (new ResolvedVoice(resolution.Engine, voice, resolution.Model, resolution.Text, resolution.Instruction), result);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
+            catch (Exception exception)
+            {
+                SeLogger.Error(exception, $"TextToSpeech: line {index + 1} also failed on the reference clip {Path.GetFileName(clipFileName)}.");
+            }
+        }
+
+        return null;
+    }
+
     private sealed class CastContext
     {
         public Dictionary<string, ActorVoiceMapping> ByActor { get; init; } = new(StringComparer.OrdinalIgnoreCase);
@@ -3535,19 +3747,30 @@ public partial class TextToSpeechViewModel : ObservableObject
             return false;
         }
 
-        // FireRedTTS3 refuses a clip without a transcript (MakePerLineCloneVoice returns null),
-        // and the transcripts come from the original-language subtitle. Without one loaded every
-        // line would silently fall back to the first imported voice - a run that "does not
-        // clone" (#14480). Say so up front instead of after minutes of generation.
-        if (engine is FireRedTts3AudioCpp && (_originalSubtitle == null || _originalSubtitle.Paragraphs.Count == 0))
+        // FireRedTTS3, OmniVoice TTS and Qwen3 refuse a clip without a transcript
+        // (MakePerLineCloneVoice returns null), and the transcripts come from the
+        // original-language subtitle. Without one loaded every line would silently fall back to
+        // an ordinary voice - a run that "does not clone" (#14480) - so ask up front, while the
+        // user is still there, whether speech-to-text should supply them (#15145).
+        var transcribeClips = false;
+        if (PerLineVoiceClone.NeedsTranscript(engine))
         {
-            await MessageBox.Show(
-                Window!,
-                Se.Language.General.Error,
-                string.Format(Se.Language.Video.TextToSpeech.CloneVoicePerLineNeedsOriginalSubtitleX, engine.Name),
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
-            return false;
+            var linesWithoutTranscript = _subtitle.Paragraphs.Count(p => GetSpokenTextInVideo(p) == null);
+            if (linesWithoutTranscript > 0)
+            {
+                var answer = await MessageBox.Show(
+                    Window!,
+                    Se.Language.Video.TextToSpeech.VoiceCloneTranscriptTitle,
+                    string.Format(Se.Language.Video.TextToSpeech.CloneVoicePerLineTranscribeClipsXYZ, engine.Name, linesWithoutTranscript, _subtitle.Paragraphs.Count),
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+                if (answer != MessageBoxResult.Yes && answer != MessageBoxResult.No)
+                {
+                    return false;
+                }
+
+                transcribeClips = answer == MessageBoxResult.Yes;
+            }
         }
 
         // A fresh folder per run: the clips of a previous run belong to whatever the subtitle
@@ -3582,6 +3805,11 @@ public partial class TextToSpeechViewModel : ObservableObject
             // left it pinned at 0 for the whole clip-cutting phase).
             progress: (done, total) => ProgressValue = total == 0 ? 0 : (double)done / total * 100.0,
             cancellationToken);
+
+        if (transcribeClips && !await TranscribePerLineCloneClipsAsync())
+        {
+            return false;
+        }
 
         if (_perLineCloneClips.Count > 0)
         {
@@ -3624,6 +3852,45 @@ public partial class TextToSpeechViewModel : ObservableObject
             cancellationToken);
 
         return clipFileName == null ? null : PerLineVoiceClone.MakeVoiceForClip(engine, clipFileName);
+    }
+
+    /// <summary>
+    /// Runs speech-to-text over the reference clips that have no transcript and writes what it
+    /// hears as their sidecars. False when the user backed out of it, which stops the run.
+    /// </summary>
+    /// <remarks>
+    /// Per clip rather than once over the whole video: the transcript has to be what is said in
+    /// that clip and nothing else, and a clip is often wider than its line (a short line borrows
+    /// from the silence around it), so no cue of a whole-video transcription lines up with it. A
+    /// clip nothing was heard in keeps no sidecar and its line falls back to an ordinary voice.
+    /// </remarks>
+    private async Task<bool> TranscribePerLineCloneClipsAsync()
+    {
+        var clipFileNames = PerLineVoiceClone.GetClipsWithoutTranscript(_perLineCloneClips.Values);
+        if (clipFileNames.Count == 0 || Window == null)
+        {
+            return true;
+        }
+
+        var audioClips = clipFileNames
+            .Select(clip => new AudioClip(clip, new SubtitleLineViewModel()))
+            .ToList();
+
+        // No auto-start and no language hint: the language spoken in the video is not the one
+        // picked in this window (that is the language of the dub), so the user has to say.
+        var result = await _windowService.ShowDialogAsync<SpeechToTextWindow, SpeechToTextViewModel>(Window, vm =>
+        {
+            vm.InitializeBatch(audioClips, -1, autoStart: false, language: null);
+        });
+
+        // Whatever was transcribed is kept even when the dialog was closed on a failed clip -
+        // OkPressed only tells a run that was abandoned before it produced anything.
+        var written = PerLineVoiceClone.WriteTranscripts(
+            result.ResultAudioClips.Select(clip => (clip.AudioFileName, clip.Transcription.Paragraphs.Select(p => p.Text))),
+            BuildRefTextFromTranscription);
+        Se.WriteToolsLog($"Per-line voice clone: speech-to-text gave {written} of {clipFileNames.Count} reference clips a transcript");
+
+        return result.OkPressed || written > 0;
     }
 
     /// <summary>
@@ -4396,6 +4663,10 @@ public partial class TextToSpeechViewModel : ObservableObject
                     // detect a language), so the first-entry fallback is the backend default.
                     ZonosTtsCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.ZonosTtsCrispAsrLanguage)
                                         ?? Languages.FirstOrDefault(),
+                    // Supertonic leads with English too: it cannot detect a language, and English
+                    // is the backend's own default.
+                    SupertonicCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.SupertonicCrispAsrLanguage)
+                                          ?? Languages.FirstOrDefault(),
                     // FireRedTTS3 leads with English too: no detection, and audio.cpp's own
                     // fallback for an unset tag is Chinese.
                     FireRedTts3AudioCpp => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.FireRedTts3AudioCppLanguage)
@@ -4627,6 +4898,12 @@ public partial class TextToSpeechViewModel : ObservableObject
             {
                 // Minimal engine: single fixed quant (no model dropdown) and no settings
                 // dialog. Show only the model-download button so the user can fetch the GGUFs.
+                IsModelDownloadVisible = true;
+            }
+            else if (SelectedEngine is SupertonicCrispAsr)
+            {
+                // One fixed GGUF (no model dropdown); the settings dialog carries the speed.
+                IsEngineSettingsVisible = true;
                 IsModelDownloadVisible = true;
             }
             else if (SelectedEngine is ChatterboxTtsCpp)
