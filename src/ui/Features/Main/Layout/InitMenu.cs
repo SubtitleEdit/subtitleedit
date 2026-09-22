@@ -743,19 +743,12 @@ public static class InitMenu
                     [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsVideoLoaded)),
                 },
                 // Re-styles the current second subtitle without the file picker (#15110).
+                // Shown whenever there is a second subtitle to edit.
                 new MenuItem
                 {
                     Header = Se.Language.Video.EditSecondarySubtitleSettingsDotDotDot,
                     Command = vm.EditSecondarySubtitleSettingsCommand,
-                    [!Visual.IsVisibleProperty] = new MultiBinding
-                    {
-                        Converter = BoolConverters.And,
-                        Bindings =
-                        {
-                            new Binding(nameof(vm.IsVideoLoaded)),
-                            new Binding(nameof(vm.IsSubtitleSecondaryVisible)),
-                        },
-                    },
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsSubtitleSecondaryVisible)),
                 },
                 new MenuItem
                 {

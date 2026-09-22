@@ -133,7 +133,11 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
 
         var video = Se.Settings.Video;
         video.SecondarySubtitleOverrideStyle = OverrideStyle;
-        video.SecondarySubtitleShowDialog = !(OverrideStyle && DoNotShowAgain);
+        if (!IsEditingSettings)
+        {
+            video.SecondarySubtitleShowDialog = !(OverrideStyle && DoNotShowAgain);
+        }
+
         if (OverrideStyle)
         {
             SecondarySubtitleStyler.SaveToSettings(FontSize, GetVideoHeight(), FontBold, SubtitleColor, SelectedFontBoxType.BoxType, SelectedFontAlignment.Code);
