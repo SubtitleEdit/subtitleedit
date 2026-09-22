@@ -32,6 +32,14 @@ public interface ISpeechToTextEngine
     bool IsModelInstalled(WhisperModel model);
 
     /// <summary>
+    /// True when the engine fetches its own models on first use (WhisperX pulls them into the
+    /// Hugging Face cache itself). Subtitle Edit must then never offer its own model download
+    /// for it - that lands in a folder the engine never reads - and <see cref="IsModelInstalled"/>
+    /// is informational only (the model dot), never a reason to prompt.
+    /// </summary>
+    bool DownloadsOwnModels => false;
+
+    /// <summary>
     /// True when the user can add their own model to this engine's model folder and have
     /// it picked up automatically (whisper.cpp, Purfview Faster-Whisper-XXL, CTranslate2).
     /// </summary>

@@ -89,15 +89,110 @@ public class WhisperEngineWhisperX : ISpeechToTextEngine
         return OperatingSystem.IsWindows() ? "whisperx-standalone.exe" : "whisperx-standalone";
     }
 
+    // WhisperX owns its models: the bare model name goes on the command line and the
+    // faster-whisper backend fetches it into the Hugging Face hub cache on first use, showing
+    // its progress in the console log. SE's own model downloader must never run for this
+    // engine - it lands in Purfview's model folder, which whisperx never reads, so the user
+    // paid for gigabytes twice and the prompt came back on every run (#15170 history).
+    public bool DownloadsOwnModels => true;
+
     public bool IsModelInstalled(WhisperModel model)
     {
-        // WhisperX owns the Hugging Face cache and downloads the selected Whisper/alignment
-        // model itself on first use, showing its progress in the console log. Reporting
-        // "not installed" here made SE offer its own model download, which lands in Purfview's
-        // model folder - a folder whisperx never reads, since only the bare model name goes on
-        // the command line - so the user paid for gigabytes twice and the prompt came back on
-        // every run. Always "installed": the engine's own downloader is the only real one.
-        return true;
+        // Purely informational (the model dot): SE never downloads for this engine, see
+        // DownloadsOwnModels. The models come from the same Hugging Face repos as
+        // WhisperEngineCTranslate2/Purfview (same backend), so a complete snapshot for that
+        // repo id in the hub cache is what "downloaded" means here (#15170 - reporting every
+        // model as installed showed a green dot for models never downloaded).
+        return IsModelInHubCache(model, GetHuggingFaceHubCacheDir());
+    }
+
+    internal static bool IsModelInHubCache(WhisperModel model, string hubCacheDir)
+    {
+        var repoId = GetHuggingFaceRepoId(model);
+        if (string.IsNullOrEmpty(repoId))
+        {
+            return false;
+        }
+
+        // huggingface_hub layout: <cache>/models--<org>--<name>/snapshots/<revision>/<files>.
+        // An interrupted download leaves the repo folder with ".incomplete" blobs and no
+        // model.bin in any snapshot, so require the weights file rather than the folder.
+        var snapshots = Path.Combine(hubCacheDir, "models--" + repoId.Replace("/", "--"), "snapshots");
+        if (!Directory.Exists(snapshots))
+        {
+            return false;
+        }
+
+        try
+        {
+            return Directory.EnumerateDirectories(snapshots)
+                .Any(snapshot => File.Exists(Path.Combine(snapshot, "model.bin")));
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    // e.g. "https://huggingface.co/Systran/faster-whisper-tiny/resolve/main/model.bin"
+    //   -> "Systran/faster-whisper-tiny". Custom models found in Purfview's model folder have
+    // no URL, so they get no repo id and no green dot.
+    internal static string? GetHuggingFaceRepoId(WhisperModel model)
+    {
+        var url = model.Urls?.FirstOrDefault();
+        if (string.IsNullOrEmpty(url))
+        {
+            return null;
+        }
+
+        const string marker = "huggingface.co/";
+        var idx = url.IndexOf(marker, StringComparison.OrdinalIgnoreCase);
+        if (idx < 0)
+        {
+            return null;
+        }
+
+        var parts = url[(idx + marker.Length)..].Split('/');
+        return parts.Length >= 2 && parts[0].Length > 0 && parts[1].Length > 0
+            ? $"{parts[0]}/{parts[1]}"
+            : null;
+    }
+
+    internal static string GetHuggingFaceHubCacheDir()
+    {
+        return GetHuggingFaceHubCacheDir(Environment.GetEnvironmentVariable);
+    }
+
+    // Mirrors huggingface_hub's constants.py resolution order: HF_HUB_CACHE wins, then
+    // HF_HOME/hub, then the legacy HUGGINGFACE_HUB_CACHE, then XDG_CACHE_HOME/huggingface/hub,
+    // and finally ~/.cache/huggingface/hub (on Windows "~" is the user profile folder, the
+    // same as Python's expanduser).
+    internal static string GetHuggingFaceHubCacheDir(Func<string, string?> getEnvironmentVariable)
+    {
+        var hubCache = getEnvironmentVariable("HF_HUB_CACHE");
+        if (!string.IsNullOrWhiteSpace(hubCache))
+        {
+            return hubCache;
+        }
+
+        var hfHome = getEnvironmentVariable("HF_HOME");
+        if (!string.IsNullOrWhiteSpace(hfHome))
+        {
+            return Path.Combine(hfHome, "hub");
+        }
+
+        var legacyHubCache = getEnvironmentVariable("HUGGINGFACE_HUB_CACHE");
+        if (!string.IsNullOrWhiteSpace(legacyHubCache))
+        {
+            return legacyHubCache;
+        }
+
+        var xdgCacheHome = getEnvironmentVariable("XDG_CACHE_HOME");
+        var cacheHome = !string.IsNullOrWhiteSpace(xdgCacheHome)
+            ? xdgCacheHome
+            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache");
+
+        return Path.Combine(cacheHome, "huggingface", "hub");
     }
 
     public string GetModelForCmdLine(string modelName) => modelName;

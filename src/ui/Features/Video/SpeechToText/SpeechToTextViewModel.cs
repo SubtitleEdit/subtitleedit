@@ -3771,7 +3771,10 @@ public partial class SpeechToTextViewModel : ObservableObject
                 RefreshEngineCombo?.Invoke();
             }
 
-            if (!engine.IsModelInstalled(model.Model))
+            // Engines that download their own models (WhisperX) are never routed through SE's
+            // downloader: it would fill a folder the engine does not read and re-prompt on
+            // every run. Their IsModelInstalled only drives the model dot.
+            if (!engine.DownloadsOwnModels && !engine.IsModelInstalled(model.Model))
             {
                 var answer = await MessageBox.Show(
                     Window!,
