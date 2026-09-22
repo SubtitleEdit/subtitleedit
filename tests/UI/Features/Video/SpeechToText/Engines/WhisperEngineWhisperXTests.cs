@@ -17,13 +17,88 @@ public class WhisperEngineWhisperXTests
     }
 
     [Fact]
-    public void ModelsAreAlwaysReportedInstalled_WhisperXDownloadsThemItself()
+    public void WhisperXDownloadsItsOwnModels_SoSeMustNeverOfferItsDownloader()
     {
-        // Reporting "not installed" made SE offer its own model download into a folder
-        // whisperx never reads, re-prompting on every run - the engine owns its models.
-        var engine = new WhisperEngineWhisperX();
+        // SE's model downloader lands in Purfview's folder, which whisperx never reads; the
+        // transcribe path checks this flag before IsModelInstalled so the prompt never shows.
+        ISpeechToTextEngine engine = new WhisperEngineWhisperX();
 
-        Assert.All(engine.Models, m => Assert.True(engine.IsModelInstalled(m)));
+        Assert.True(engine.DownloadsOwnModels);
+    }
+
+    [Fact]
+    public void RepoIdComesFromTheModelUrl()
+    {
+        var model = new WhisperModel
+        {
+            Name = "large-v1",
+            Urls = new[] { "https://huggingface.co/Systran/faster-whisper-large-v1/resolve/main/model.bin" },
+        };
+
+        Assert.Equal("Systran/faster-whisper-large-v1", WhisperEngineWhisperX.GetHuggingFaceRepoId(model));
+    }
+
+    [Fact]
+    public void CustomModelsWithoutUrlHaveNoRepoId()
+    {
+        // Custom models found in Purfview's model folder carry no URL - no repo, no green dot.
+        var custom = new WhisperModel { Name = "my-model", Urls = System.Array.Empty<string>(), Folder = "my-model" };
+        var other = new WhisperModel { Name = "x", Urls = new[] { "https://example.com/model.bin" } };
+
+        Assert.Null(WhisperEngineWhisperX.GetHuggingFaceRepoId(custom));
+        Assert.Null(WhisperEngineWhisperX.GetHuggingFaceRepoId(other));
+    }
+
+    [Fact]
+    public void HubCacheDirFollowsHuggingFaceResolutionOrder()
+    {
+        static string Resolve(params (string Key, string Value)[] env) =>
+            WhisperEngineWhisperX.GetHuggingFaceHubCacheDir(key => env.FirstOrDefault(e => e.Key == key).Value);
+
+        var home = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile);
+        var sep = System.IO.Path.DirectorySeparatorChar;
+
+        Assert.Equal($"{sep}hub-cache", Resolve(("HF_HUB_CACHE", $"{sep}hub-cache"), ("HF_HOME", $"{sep}hf-home")));
+        Assert.Equal(System.IO.Path.Combine($"{sep}hf-home", "hub"), Resolve(("HF_HOME", $"{sep}hf-home"), ("HUGGINGFACE_HUB_CACHE", $"{sep}legacy")));
+        Assert.Equal($"{sep}legacy", Resolve(("HUGGINGFACE_HUB_CACHE", $"{sep}legacy"), ("XDG_CACHE_HOME", $"{sep}xdg")));
+        Assert.Equal(System.IO.Path.Combine($"{sep}xdg", "huggingface", "hub"), Resolve(("XDG_CACHE_HOME", $"{sep}xdg")));
+        Assert.Equal(System.IO.Path.Combine(home, ".cache", "huggingface", "hub"), Resolve());
+        Assert.Equal(System.IO.Path.Combine(home, ".cache", "huggingface", "hub"), Resolve(("HF_HOME", "  ")));
+    }
+
+    [Fact]
+    public void ModelIsInstalledOnlyWhenASnapshotHoldsTheWeights()
+    {
+        // #15170: every model showed a green dot because IsModelInstalled was hardcoded true.
+        // "Downloaded" means a complete faster-whisper snapshot in the Hugging Face hub cache;
+        // an interrupted download leaves the repo folder without model.bin in any snapshot.
+        var cache = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "se-hf-cache-" + System.Guid.NewGuid().ToString("N"));
+        try
+        {
+            var tiny = new WhisperModel { Name = "tiny", Urls = new[] { "https://huggingface.co/Systran/faster-whisper-tiny/resolve/main/model.bin" } };
+            var baseModel = new WhisperModel { Name = "base", Urls = new[] { "https://huggingface.co/Systran/faster-whisper-base/resolve/main/model.bin" } };
+            var small = new WhisperModel { Name = "small", Urls = new[] { "https://huggingface.co/Systran/faster-whisper-small/resolve/main/model.bin" } };
+
+            var tinySnapshot = System.IO.Path.Combine(cache, "models--Systran--faster-whisper-tiny", "snapshots", "d90ca5fe");
+            System.IO.Directory.CreateDirectory(tinySnapshot);
+            System.IO.File.WriteAllText(System.IO.Path.Combine(tinySnapshot, "model.bin"), "weights");
+
+            // Interrupted: repo folder and blobs exist, no snapshot with weights.
+            System.IO.Directory.CreateDirectory(System.IO.Path.Combine(cache, "models--Systran--faster-whisper-base", "blobs"));
+            System.IO.Directory.CreateDirectory(System.IO.Path.Combine(cache, "models--Systran--faster-whisper-base", "snapshots", "abc"));
+
+            Assert.True(WhisperEngineWhisperX.IsModelInHubCache(tiny, cache));
+            Assert.False(WhisperEngineWhisperX.IsModelInHubCache(baseModel, cache));
+            Assert.False(WhisperEngineWhisperX.IsModelInHubCache(small, cache));
+            Assert.False(WhisperEngineWhisperX.IsModelInHubCache(tiny, System.IO.Path.Combine(cache, "missing")));
+        }
+        finally
+        {
+            if (System.IO.Directory.Exists(cache))
+            {
+                System.IO.Directory.Delete(cache, true);
+            }
+        }
     }
 
     [Fact]
