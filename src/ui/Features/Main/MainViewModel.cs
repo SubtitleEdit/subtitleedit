@@ -1974,55 +1974,80 @@ public partial class MainViewModel :
             return;
         }
 
-        var result = await ShowDialogAsync<AssaStylesWindow, AssaStylesViewModel>(vm =>
+        // GetUpdateSubtitle: the dialog needs paragraphs with Extra set to the grid rows'
+        // current styles - a stale _subtitle breaks usage counts and the re-apply of
+        // styles on OK (#13101).
+        var subtitle = GetUpdateSubtitleWithRowMap(out var rowByParagraphId);
+        _styleDialogRowByParagraphId = rowByParagraphId;
+        try
         {
-            // GetUpdateSubtitle: the dialog needs paragraphs with Extra set to the grid rows'
-            // current styles - a stale _subtitle breaks usage counts and the positional
-            // re-apply of styles on OK (#13101).
-            vm.Initialize(GetUpdateSubtitle(), SelectedSubtitleFormat, _subtitleFileName ?? string.Empty,
-                SelectedSubtitle?.Style ?? string.Empty, this);
-        });
-
-        if (result.OkPressed)
-        {
-            ApplyAssaStyles(result);
-            _subtitle.Footer = result.ResultSubtitle.Footer;
-
-            var styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
-            foreach (var s in Subtitles)
+            var result = await ShowDialogAsync<AssaStylesWindow, AssaStylesViewModel>(vm =>
             {
-                if (!styles.Contains(s.Style))
-                {
-                    s.Style = styles.FirstOrDefault() ?? "Default";
-                }
-            }
+                vm.Initialize(subtitle, SelectedSubtitleFormat, _subtitleFileName ?? string.Empty,
+                    SelectedSubtitle?.Style ?? string.Empty, this);
+            });
 
-            RefreshSubtitlePreview();
+            if (result.OkPressed)
+            {
+                ApplyAssaStyles(result);
+                _subtitle.Footer = result.ResultSubtitle.Footer;
+            }
+        }
+        finally
+        {
+            _styleDialogRowByParagraphId = null;
         }
     }
 
     public void ApplyAssaStyles(AssaStylesViewModel result)
     {
-        _subtitle.Header = result.Header;
+        ApplyStylesFromDialog(result.Header, result.ResultSubtitle, _styleDialogRowByParagraphId);
+    }
+
+    /// <summary>
+    /// The grid rows the open ASSA/SSA styles dialog was built from, by the id of the paragraph
+    /// each row became. The dialog's Apply button hands its result back through
+    /// <see cref="IApplyAssaStyles"/>/<see cref="IApplySsaStyles"/> without a map, so the one made
+    /// when the dialog opened is kept here for it. Null while no styles dialog is open.
+    /// </summary>
+    private IReadOnlyDictionary<Guid, SubtitleLineViewModel>? _styleDialogRowByParagraphId;
+
+    /// <summary>
+    /// Writes the styles dialog's header and per-line style assignments back to the grid.
+    ///
+    /// Lines are matched to rows by paragraph id, never by position: the dialog's subtitle has
+    /// no entry for the display-only original rows, so with an original loaded, index i names a
+    /// different line in the two lists from the first such row on - every later row took a
+    /// neighbour's style after a plain font size change (#15126).
+    /// </summary>
+    private void ApplyStylesFromDialog(
+        string header,
+        Subtitle resultSubtitle,
+        IReadOnlyDictionary<Guid, SubtitleLineViewModel>? rowByParagraphId)
+    {
+        _subtitle.Header = header;
+
+        if (rowByParagraphId != null)
+        {
+            foreach (var p in resultSubtitle.Paragraphs)
+            {
+                if (p.Id is { } id && !string.IsNullOrEmpty(p.Extra) && rowByParagraphId.TryGetValue(id, out var row))
+                {
+                    row.Style = p.Extra.TrimStart('*');
+                }
+            }
+        }
+
+        // A line whose style was deleted or renamed away in the dialog falls back to the first
+        // style in the file. Display-only original rows are not part of the working subtitle
+        // and carry no style to repair.
         var styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
         var first = styles.FirstOrDefault() ?? "Default";
-
-        for (var i = 0; i < Subtitles.Count; i++)
+        foreach (var row in Subtitles)
         {
-            var s = Subtitles[i];
-
-            if (string.IsNullOrEmpty(s.Style) || !styles.Contains(s.Style))
+            if (!row.IsReferenceOnly && (string.IsNullOrEmpty(row.Style) || !styles.Contains(row.Style)))
             {
-                s.Style = first;
-            }
-
-            if (i < result.ResultSubtitle.Paragraphs.Count)
-            {
-                var extra = result.ResultSubtitle.Paragraphs[i].Extra;
-                if (!string.IsNullOrEmpty(extra))
-                {
-                    s.Style = extra.TrimStart('*');
-                }
+                row.Style = first;
             }
         }
 
@@ -2037,28 +2062,26 @@ public partial class MainViewModel :
             return;
         }
 
-        var result = await ShowDialogAsync<SsaStylesWindow, SsaStylesViewModel>(vm =>
+        // See ShowAssaStyles (#13101, #15126).
+        var subtitle = GetUpdateSubtitleWithRowMap(out var rowByParagraphId);
+        _styleDialogRowByParagraphId = rowByParagraphId;
+        try
         {
-            // GetUpdateSubtitle: see ShowAssaStyles (#13101).
-            vm.Initialize(GetUpdateSubtitle(), SelectedSubtitleFormat, _subtitleFileName ?? string.Empty,
-                SelectedSubtitle?.Style ?? string.Empty, this);
-        });
-
-        if (result.OkPressed)
-        {
-            ApplySsaStyles(result);
-            _subtitle.Footer = result.ResultSubtitle.Footer;
-
-            var styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
-            foreach (var s in Subtitles)
+            var result = await ShowDialogAsync<SsaStylesWindow, SsaStylesViewModel>(vm =>
             {
-                if (!styles.Contains(s.Style))
-                {
-                    s.Style = styles.FirstOrDefault() ?? "Default";
-                }
-            }
+                vm.Initialize(subtitle, SelectedSubtitleFormat, _subtitleFileName ?? string.Empty,
+                    SelectedSubtitle?.Style ?? string.Empty, this);
+            });
 
-            RefreshSubtitlePreview();
+            if (result.OkPressed)
+            {
+                ApplySsaStyles(result);
+                _subtitle.Footer = result.ResultSubtitle.Footer;
+            }
+        }
+        finally
+        {
+            _styleDialogRowByParagraphId = null;
         }
     }
 
@@ -2280,30 +2303,7 @@ public partial class MainViewModel :
 
     public void ApplySsaStyles(SsaStylesViewModel result)
     {
-        _subtitle.Header = result.Header;
-        var styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
-        var first = styles.FirstOrDefault() ?? "Default";
-
-        for (var i = 0; i < Subtitles.Count; i++)
-        {
-            var s = Subtitles[i];
-
-            if (string.IsNullOrEmpty(s.Style) || !styles.Contains(s.Style))
-            {
-                s.Style = first;
-            }
-
-            if (i < result.ResultSubtitle.Paragraphs.Count)
-            {
-                var extra = result.ResultSubtitle.Paragraphs[i].Extra;
-                if (!string.IsNullOrEmpty(extra))
-                {
-                    s.Style = extra.TrimStart('*');
-                }
-            }
-        }
-
-        RefreshSubtitlePreview();
+        ApplyStylesFromDialog(result.Header, result.ResultSubtitle, _styleDialogRowByParagraphId);
     }
 
     [RelayCommand]
