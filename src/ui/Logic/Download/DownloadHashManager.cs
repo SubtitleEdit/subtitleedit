@@ -2535,17 +2535,20 @@ public static class DownloadHashManager
             // https://github.com/SubtitleEdit/support-files/releases (build-whisperx-standalone-release.yml)
             [WhisperX.Windows] = new[]
             {
-                "43c83f731389f1d84fd1f03e311c9a1a7ed8f08b1fa295a1264570ef41db2ccd", // whisperx-standalone-102 / v1.0.1 + output prelude, #15096 (current download URL)
+                "ec1d0e9eff0c2abfbb7331ee321618823b247190323d38aa577f228262c9254d", // whisperx-standalone-103 / v1.0.1 + prelude + migrated VAD checkpoint, #15170 (current download URL)
+                "43c83f731389f1d84fd1f03e311c9a1a7ed8f08b1fa295a1264570ef41db2ccd", // whisperx-standalone-102 / v1.0.1 + output prelude, #15096
                 "439776243a3040693e9a2767a3efb4b8dd7549244bb6695ce0ef7209e5456bf3", // whisperx-standalone-101 / v1.0.1
             },
             [WhisperX.MacArm64] = new[]
             {
-                "bd8b18786896f1cd0e3bff3cce9ca55017eced8a4e3b540ec38e73d340fb3b9c", // whisperx-standalone-102 / v1.0.1 + output prelude, #15096 (current download URL)
+                "02b413559216fff54c810f971badc42f9891be18587ebb6ab70687ba0e391ca1", // whisperx-standalone-103 / v1.0.1 + prelude + migrated VAD checkpoint, #15170 (current download URL)
+                "bd8b18786896f1cd0e3bff3cce9ca55017eced8a4e3b540ec38e73d340fb3b9c", // whisperx-standalone-102 / v1.0.1 + output prelude, #15096
                 "89ff2f2dd120c8a2ab51c21e6be34a16c954965d4646ecdff77d0911ac6a2c27", // whisperx-standalone-101 / v1.0.1
             },
             [WhisperX.LinuxX64] = new[]
             {
-                "31d90c9ca7c465eea831507d8aa675a8a412fc209c96c1f95fb3284e271b38fe", // whisperx-standalone-102 / v1.0.1 + output prelude, #15096 (current download URL)
+                "1ef965a48910a6e0a921cf1a442c04914eb73e9dc34b771ce90b262959a5f5a9", // whisperx-standalone-103 / v1.0.1 + prelude + migrated VAD checkpoint, #15170 (current download URL)
+                "31d90c9ca7c465eea831507d8aa675a8a412fc209c96c1f95fb3284e271b38fe", // whisperx-standalone-102 / v1.0.1 + output prelude, #15096
                 "46070b23bfa7c152c259264ac2a135406b4462b2b979ea126510a9c6f44f80e2", // whisperx-standalone-101 / v1.0.1
             },
         };
