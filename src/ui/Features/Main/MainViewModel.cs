@@ -2027,13 +2027,33 @@ public partial class MainViewModel :
     {
         _subtitle.Header = header;
 
+        // Style names are matched on the header's spelling: the writer looks a line's style up
+        // by exact name, so a row must carry the name as the header has it. The SSA "*Name"
+        // convention and case differences are tolerated on the way in (the dialog counts usages
+        // that way too), but never invented on the way out - stripping the star here while the
+        // header kept it made every line "unknown" and sent the whole file to the first style.
+        var styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
+        var first = styles.FirstOrDefault() ?? "Default";
+        var styleByName = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var style in styles)
+        {
+            styleByName.TryAdd(style.TrimStart('*'), style);
+        }
+
+        string Resolve(string? name)
+        {
+            return !string.IsNullOrEmpty(name) && styleByName.TryGetValue(name.TrimStart('*'), out var known)
+                ? known
+                : first;
+        }
+
         if (rowByParagraphId != null)
         {
             foreach (var p in resultSubtitle.Paragraphs)
             {
                 if (p.Id is { } id && !string.IsNullOrEmpty(p.Extra) && rowByParagraphId.TryGetValue(id, out var row))
                 {
-                    row.Style = p.Extra.TrimStart('*');
+                    row.Style = Resolve(p.Extra);
                 }
             }
         }
@@ -2041,13 +2061,11 @@ public partial class MainViewModel :
         // A line whose style was deleted or renamed away in the dialog falls back to the first
         // style in the file. Display-only original rows are not part of the working subtitle
         // and carry no style to repair.
-        var styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
-        var first = styles.FirstOrDefault() ?? "Default";
         foreach (var row in Subtitles)
         {
-            if (!row.IsReferenceOnly && (string.IsNullOrEmpty(row.Style) || !styles.Contains(row.Style)))
+            if (!row.IsReferenceOnly)
             {
-                row.Style = first;
+                row.Style = Resolve(row.Style);
             }
         }
 
