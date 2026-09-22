@@ -23,6 +23,7 @@ public partial class ReplaceViewModel : ObservableObject
     [ObservableProperty] private bool _wholeWord;
     [ObservableProperty] private string _replaceText;
     [ObservableProperty] private string _countResult;
+    [ObservableProperty] private string _resultIcon;
     [ObservableProperty] private ObservableCollection<ReplaceScopeDisplay> _scopes;
     [ObservableProperty] private ReplaceScopeDisplay _selectedScope;
 
@@ -50,6 +51,12 @@ public partial class ReplaceViewModel : ObservableObject
     public bool ReplaceAllPressed { get; private set; }
     public bool ResultFound { get; set; }
 
+    /// <summary>
+    /// Occurrences replaced with the current search text: the Replace all total, plus one per
+    /// Replace &amp; find next that changed something (#15165 asked for a running tally there).
+    /// </summary>
+    public int ReplacedCount { get; private set; }
+
     private IFindService? _findService;
     private List<string> _subs = new List<string>();
     private List<string>? _originalSubs;
@@ -61,6 +68,7 @@ public partial class ReplaceViewModel : ObservableObject
         SearchText = string.Empty;
         ReplaceText = string.Empty;
         CountResult = string.Empty;
+        ResultIcon = IconNames.Information;
         Scopes = new ObservableCollection<ReplaceScopeDisplay>(ReplaceScopeDisplay.List());
         SelectedScope = Scopes[0];
 
@@ -85,6 +93,51 @@ public partial class ReplaceViewModel : ObservableObject
             _ => FindScope.TextAndOriginal
         };
         SelectedScope = Scopes.First(p => p.Scope == scope);
+    }
+
+    [RelayCommand]
+    private void ShowHistory(string text)
+    {
+        SearchText = text;
+        FocusSearchBox?.Invoke();
+    }
+
+    /// <summary>
+    /// Called by the main window after Replace all: shows the total in the window itself, where the
+    /// user is looking - the status bar underneath the dialog was easy to miss (#15165).
+    /// </summary>
+    public void ReportReplaceAll(int count)
+    {
+        ReplacedCount = count;
+        ShowReplacedCount();
+    }
+
+    /// <summary>
+    /// Called by the main window for each Replace &amp; find next that actually changed a line.
+    /// </summary>
+    public void ReportReplaced(int count)
+    {
+        if (count <= 0)
+        {
+            return;
+        }
+
+        ReplacedCount += count;
+        ShowReplacedCount();
+    }
+
+    private void ShowReplacedCount()
+    {
+        ResultIcon = FindResultText.Icon(ReplacedCount);
+        CountResult = FindResultText.Replaced(ReplacedCount);
+    }
+
+    // A new search text starts a new tally; a stale "Replaced 12 occurrences" would then
+    // describe a search that no longer exists.
+    partial void OnSearchTextChanged(string value)
+    {
+        ReplacedCount = 0;
+        CountResult = string.Empty;
     }
 
     [RelayCommand]
@@ -116,6 +169,7 @@ public partial class ReplaceViewModel : ObservableObject
     [RelayCommand]
     private async Task FindNext()
     {
+        CountResult = string.Empty;
         ReplacePressed = false;
         ReplaceAllPressed = false;
         FindNextPressed = true;
@@ -138,19 +192,8 @@ public partial class ReplaceViewModel : ObservableObject
         }
 
         var count = _findService.Count(SearchText, _subs, WholeWord, FindMode, _originalSubs, EffectiveScope);
-
-        if (count <= 0)
-        {
-            CountResult = Se.Language.General.FoundNoMatches;
-        }
-        else if (count == 1)
-        {
-            CountResult = Se.Language.General.FoundOneMatch;
-        }
-        else
-        {
-            CountResult = string.Format(Se.Language.General.FoundXMatches, count);
-        }
+        ResultIcon = FindResultText.Icon(count);
+        CountResult = FindResultText.Found(count);
     }
 
     internal void SaveSettings()

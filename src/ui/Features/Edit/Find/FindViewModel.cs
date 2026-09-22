@@ -19,6 +19,7 @@ public partial class FindViewModel : ObservableObject
     [ObservableProperty] private string _searchText;
     [ObservableProperty] private bool _wholeWord;
     [ObservableProperty] private string _countResult;
+    [ObservableProperty] private string _resultIcon;
 
     [ObservableProperty]
     public partial FindMode FindMode { get; set; }
@@ -40,6 +41,7 @@ public partial class FindViewModel : ObservableObject
         SearchHistory = new ObservableCollection<string>(new List<string>());
         SearchText = string.Empty;
         CountResult = string.Empty;
+        ResultIcon = IconNames.Information;
         LoadSettings();
     }
 
@@ -106,19 +108,8 @@ public partial class FindViewModel : ObservableObject
         }
 
         var count = _findService.Count(SearchText, _subs, WholeWord, FindMode, _originalSubs);
-
-        if (count <= 0)
-        {
-            CountResult = Se.Language.General.FoundNoMatches;
-        }
-        else if (count == 1)
-        {
-            CountResult = Se.Language.General.FoundOneMatch;
-        }
-        else
-        {
-            CountResult = string.Format(Se.Language.General.FoundXMatches, count);
-        }
+        ResultIcon = FindResultText.Icon(count);
+        CountResult = FindResultText.Found(count);
     }
 
     public void OnKeyDown(object? sender, KeyEventArgs e)

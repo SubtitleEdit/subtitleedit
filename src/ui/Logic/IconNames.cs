@@ -33,6 +33,7 @@ internal class IconNames
     public const string ContentCut = "mdi-content-cut";
     public const string ContentSave = "mdi-content-save";
     public const string Copy = "mdi-content-copy";
+    public const string Counter = "mdi-counter";
     public const string Creation = "mdi-creation";
     public const string CheckCircle = "mdi-check-circle";
     public const string Download = "mdi-download";
@@ -51,6 +52,7 @@ internal class IconNames
     public const string FileCog = "mdi-file-cog";
     public const string FileMultiple = "mdi-file-multiple";
     public const string FileOutline = "mdi-file-outline";
+    public const string FileReplaceOutline = "mdi-file-replace-outline";
     public const string Filter = "mdi-filter";
     public const string Find = "mdi-magnify";
     public const string FindReplace = "mdi-find-replace";

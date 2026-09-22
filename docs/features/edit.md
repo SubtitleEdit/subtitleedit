@@ -52,7 +52,9 @@ Find and replace text in the subtitle.
 - **Menu:** Edit → Replace
 - **Shortcut:** `Ctrl+H` (`Cmd+Option+F` on macOS, since Cmd+H hides the app)
 
-The buttons have Alt accelerators, underlined while Alt is held: `Alt+F` **Find next**, `Alt+R` **Replace & find next**, `Alt+A` **Replace all**. As in Subtitle Edit 4, the bare letter (`F`, `R`, `A`) also works once the focus has left the text boxes, e.g. after clicking a button. The Find window has `Alt+F` **Find next** and `Alt+P` **Find previous** the same way. `Ctrl+Delete` removes the current search text from the search history.
+The buttons have Alt accelerators, underlined while Alt is held: `Alt+F` **Find next**, `Alt+R` **Replace & find next**, `Alt+A` **Replace all**. As in Subtitle Edit 4, the bare letter (`F`, `R`, `A`) also works once the focus has left the text boxes, e.g. after clicking a button. The Find window has `Alt+F` **Find next** and `Alt+P` **Find previous** the same way. The history button next to the search box lists recent searches; `Ctrl+Delete` removes the current search text from the search history.
+
+The line under the buttons reports the outcome: **Count** shows how many matches there are, **Replace all** shows how many occurrences were replaced, and **Replace & find next** keeps a running total of the occurrences replaced with the current search text. Typing a new search text starts the count over.
 
 With an editable original subtitle loaded, a **Replace/search in** drop-down appears with three choices:
 

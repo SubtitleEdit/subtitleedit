@@ -34,47 +34,8 @@ public class FindWindow : Window
         }.WithAccessibleName(Se.Language.General.Find); // AutoCompleteBox has no watermark-derived name (#12087)
         textBoxFind.KeyDown += vm.FindTextBoxKeyDown;
 
-        // SE4-style "most recent find text" dropdown: the AutoCompleteBox only reveals history
-        // while typing a matching prefix, so recent searches were invisible until this button.
-        var historyFlyout = new MenuFlyout();
-        var buttonHistory = UiUtil.MakeButton(null, IconNames.History, Se.Language.General.ShowHistory);
-        buttonHistory.Margin = new Thickness(3, 0, 0, 3);
-        buttonHistory.Flyout = historyFlyout;
-
-        // The items must exist BEFORE the flyout opens: items added from the Opening
-        // event come too late for the popup's initial measure, so the menu displayed
-        // as an empty sliver on Windows. Build eagerly and rebuild on history changes.
-        void RebuildHistoryMenu()
-        {
-            historyFlyout.Items.Clear();
-            foreach (var text in vm.SearchHistory)
-            {
-                historyFlyout.Items.Add(new MenuItem
-                {
-                    // TextBlock header: a plain string header would eat '_' as an access-key marker.
-                    Header = new TextBlock { Text = text },
-                    Command = vm.ShowHistoryCommand,
-                    CommandParameter = text,
-                });
-            }
-
-            buttonHistory.IsVisible = vm.SearchHistory.Count > 0;
-        }
-
-        vm.SearchHistory.CollectionChanged += (_, _) => RebuildHistoryMenu();
-        RebuildHistoryMenu();
-
-        var panelFind = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        panelFind.Add(textBoxFind, 0, 0);
-        panelFind.Add(buttonHistory, 0, 1);
+        var buttonHistory = FindWindowParts.MakeHistoryButton(vm.SearchHistory, vm.ShowHistoryCommand);
+        var panelFind = FindWindowParts.MakeSearchPanel(textBoxFind, buttonHistory);
 
         var checkBoxWholeWord = new CheckBox
         {
@@ -136,24 +97,22 @@ public class FindWindow : Window
         };
 
         var buttonFindPrevious = UiUtil.MakeButton(Se.Language.Edit.Find.FindPrevious, vm.FindPreviousCommand)
+            .WithIconLeft(IconNames.ChevronLeft)
             .WithLeftAlignment()
             .WithMinWidth(150)
             .WithMargin(0, 0, 0, 10);
         var buttonFindNext = UiUtil.MakeButton(Se.Language.Edit.Find.FindNext, vm.FindNextCommand)
+            .WithIconLeft(IconNames.ChevronRight)
             .WithLeftAlignment()
             .WithMinWidth(150)
             .WithMargin(0, 0, 0, 10);
         var buttonCount = UiUtil.MakeButton(Se.Language.General.Count, vm.CountCommand)
+            .WithIconLeft(IconNames.Counter)
             .WithLeftAlignment()
             .WithMinWidth(150)
             .WithMargin(0, 0, 0, 10);
 
-        var textBlockCountResult = new TextBlock
-        {
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.CountResult)) { Mode = BindingMode.OneWay },
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 0, 0)
-        };
+        var panelResult = FindWindowParts.MakeResultPanel(nameof(vm.CountResult), nameof(vm.ResultIcon));
 
         var panelButtons = new StackPanel
         {
@@ -165,7 +124,7 @@ public class FindWindow : Window
                 buttonFindNext,
                 buttonFindPrevious,
                 buttonCount,
-                textBlockCountResult
+                panelResult
             }
         };
 
