@@ -1,7 +1,10 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Optris.Icons.Avalonia;
 
 namespace Nikse.SubtitleEdit.Features.Sync.ChangeFrameRate;
 
@@ -15,6 +18,31 @@ public class ChangeFrameRateWindow : Window
         CanResize = false;
         vm.Window = this;
         DataContext = vm;
+
+        // Where the preset "from" rate came from: the loaded video's name and detected frame rate.
+        var videoIcon = new ContentControl
+        {
+            Width = 16,
+            Height = 16,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 0, 6, 0),
+        };
+        Attached.SetIcon(videoIcon, IconNames.MovieOpenOutline);
+        var textVideoInfo = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            MaxWidth = 420,
+        }.WithBindText(vm, nameof(vm.VideoInfoText));
+        var panelVideoInfo = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Opacity = 0.85,
+            Margin = new Thickness(0, 0, 0, 4),
+            Children = { videoIcon, textVideoInfo },
+        }.WithBindIsVisible(nameof(vm.HasVideo));
+        ToolTip.SetTip(panelVideoInfo, vm.VideoFileName);
+        ToolTip.SetTip(textVideoInfo, vm.VideoFileName);
 
         var labelFromFrameRate = new Label
         {
@@ -61,6 +89,7 @@ public class ChangeFrameRateWindow : Window
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
             },
             ColumnDefinitions =
@@ -78,6 +107,9 @@ public class ChangeFrameRateWindow : Window
         };
 
         var row = 0;
+        grid.Add(panelVideoInfo, row, 0, 1, 4);
+        row++;
+
         grid.Add(labelFromFrameRate, row, 0);
         grid.Add(comboFromFrameRate, row, 1);
         grid.Add(buttonFromFrameRate, row, 2);

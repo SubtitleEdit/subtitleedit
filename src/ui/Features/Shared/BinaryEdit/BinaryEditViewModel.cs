@@ -2107,7 +2107,18 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var result = await _windowService.ShowDialogAsync<ChangeFrameRateWindow, ChangeFrameRateViewModel>(Window, vm => { });
+        // SE 4 parity: the current frame rate is the "from" rate, and the loaded video (if any)
+        // is shown with its detected rate so the user can see where that number came from.
+        var videoFileName = VideoPlayerControl?.VideoPlayer.FileName;
+        var videoFrameRate = 0.0;
+        if (!string.IsNullOrEmpty(videoFileName) && File.Exists(videoFileName))
+        {
+            videoFrameRate = await Task.Run(() => (double)FfmpegMediaInfo2.Parse(videoFileName).FramesRate);
+        }
+
+        var currentFrameRate = Se.Settings.General.CurrentFrameRate;
+        var result = await _windowService.ShowDialogAsync<ChangeFrameRateWindow, ChangeFrameRateViewModel>(Window,
+            vm => { vm.Initialize(videoFileName, videoFrameRate, currentFrameRate); });
 
         if (!result.OkPressed)
         {
