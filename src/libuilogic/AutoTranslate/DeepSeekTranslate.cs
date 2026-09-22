@@ -29,8 +29,9 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         /// </summary>
         public static string[] Models => new[]
         {
-            "deepseek-v4-flash",
+            "deepseek-flash", // DeepSeek-V4.1-Flash (2026-09-10)
             "deepseek-v4-pro",
+            "deepseek-v4-flash", // legacy id, routed to V4.1-Flash by DeepSeek
         };
 
         /// <summary>
@@ -73,7 +74,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             }
             else if (model == "deepseek-chat") // removed 2026/07/24
             {
-                model = "deepseek-v4-flash";
+                model = "deepseek-flash";
                 Configuration.Settings.Tools.DeepSeekModel = model;
             }
             else if (model == "deepseek-reasoner") // removed 2026/07/24
