@@ -17,7 +17,9 @@ public class OpenSecondarySubtitleWindow : Window
     public OpenSecondarySubtitleWindow(OpenSecondarySubtitleViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Video.OpenSecondarySubtitleOnVideoPlayer;
+        Title = vm.IsEditingSettings
+            ? Se.Language.Video.EditSecondarySubtitleSettings
+            : Se.Language.Video.OpenSecondarySubtitleOnVideoPlayer;
         CanResize = true;
         Width = 1100;
         Height = 700;

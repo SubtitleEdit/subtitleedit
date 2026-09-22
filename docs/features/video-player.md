@@ -69,7 +69,9 @@ You can undock the video player into a separate window for multi-monitor setups:
 
 You can open a secondary subtitle on the video player and remove it again from the Video menu. This is useful when checking a translation against the original subtitle while previewing video playback.
 
-**Video → Open second subtitle file...** sits in the same spot as in Subtitle Edit 4, right after the open/close video items (it is shown while a video is loaded), and **Remove second subtitle file** appears below it while one is shown. Only one second subtitle is shown at a time: opening another file replaces the current one, and the file picker starts at the current second subtitle, so re-opening it is also the way to adjust its style without removing it first.
+**Video → Open second subtitle file...** sits in the same spot as in Subtitle Edit 4, right after the open/close video items (it is shown while a video is loaded). While a second subtitle is shown, **Edit second subtitle settings...** and **Remove second subtitle file** appear below it. Only one second subtitle is shown at a time: opening another file replaces the current one.
+
+**Edit second subtitle settings...** re-opens the style dialog (color, font size, bold, border style, alignment) for the second subtitle that is already on the video player, with no file picker, so its look can be adjusted without removing it and opening the file again. It always shows the dialog, even when "Do not show this dialog again" has been chosen. Both commands can be given a shortcut in **Options → Shortcuts** (Video group).
 
 ## Embedded Subtitles
 
