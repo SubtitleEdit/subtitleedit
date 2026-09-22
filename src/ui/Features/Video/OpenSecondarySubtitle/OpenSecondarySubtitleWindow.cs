@@ -17,7 +17,9 @@ public class OpenSecondarySubtitleWindow : Window
     public OpenSecondarySubtitleWindow(OpenSecondarySubtitleViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Video.OpenSecondarySubtitleOnVideoPlayer;
+        Title = vm.IsEditingSettings
+            ? Se.Language.Video.EditSecondarySubtitleSettings
+            : Se.Language.Video.OpenSecondarySubtitleOnVideoPlayer;
         CanResize = true;
         Width = 1100;
         Height = 700;
@@ -70,6 +72,9 @@ public class OpenSecondarySubtitleWindow : Window
         var checkBoxDoNotShowAgain = UiUtil.MakeCheckBox(Se.Language.Video.SecondarySubtitleDoNotShowAgain, vm, nameof(vm.DoNotShowAgain));
         // Skipping the dialog applies the remembered settings, so there must be some.
         checkBoxDoNotShowAgain.Bind(IsEnabledProperty, new Binding(nameof(vm.OverrideStyle)) { Source = vm });
+        // "Do not show again" is about opening a file; editing the current second subtitle
+        // always shows this dialog, so the option has no meaning there (#15110).
+        checkBoxDoNotShowAgain.IsVisible = !vm.IsEditingSettings;
 
         // Left panel with settings
         var leftPanel = new StackPanel

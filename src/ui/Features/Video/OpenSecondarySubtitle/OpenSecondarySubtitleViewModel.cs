@@ -62,6 +62,13 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
 
+    /// <summary>
+    /// True when re-styling the second subtitle already on the video player (Video > Edit second
+    /// subtitle settings, #15110) rather than opening a new file. Set in Initialize, so the window
+    /// can pick its title from it.
+    /// </summary>
+    public bool IsEditingSettings { get; private set; }
+
     public OpenSecondarySubtitleViewModel(IWindowService windowService)
     {
         _windowService = windowService;
@@ -126,7 +133,11 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
 
         var video = Se.Settings.Video;
         video.SecondarySubtitleOverrideStyle = OverrideStyle;
-        video.SecondarySubtitleShowDialog = !(OverrideStyle && DoNotShowAgain);
+        if (!IsEditingSettings)
+        {
+            video.SecondarySubtitleShowDialog = !(OverrideStyle && DoNotShowAgain);
+        }
+
         if (OverrideStyle)
         {
             SecondarySubtitleStyler.SaveToSettings(FontSize, GetVideoHeight(), FontBold, SubtitleColor, SelectedFontBoxType.BoxType, SelectedFontAlignment.Code);
@@ -143,8 +154,9 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
         Window?.Close();
     }
 
-    public void Initialize(Subtitle secondarySubtitle, Subtitle subtitle, SubtitleFormat subtitleFormat, Logic.Media.FfmpegMediaInfo2? mediaInfo, string? videoFileName)
+    public void Initialize(Subtitle secondarySubtitle, Subtitle subtitle, SubtitleFormat subtitleFormat, Logic.Media.FfmpegMediaInfo2? mediaInfo, string? videoFileName, bool isEditingSettings = false)
     {
+        IsEditingSettings = isEditingSettings;
         _secondarySubtitle = secondarySubtitle;
         _subtitle = subtitle;
         _subtitleFormat = subtitleFormat;

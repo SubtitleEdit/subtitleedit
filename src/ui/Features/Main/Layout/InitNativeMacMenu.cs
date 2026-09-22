@@ -349,6 +349,10 @@ public static class InitNativeMacMenu
         // Stays available while a second subtitle is shown: opening again replaces it (#13492).
         videoItems.Items.Add(Conditional(Clean(Se.Language.Video.OpenSecondarySubtitleOnVideoPlayerDotDotDot), v => v.OpenSecondarySubtitleCommand,
             v => v.IsVideoLoaded, nameof(MainViewModel.IsVideoLoaded)));
+        // Re-styles the current second subtitle without the file picker (#15110).
+        // Shown whenever there is a second subtitle to edit.
+        videoItems.Items.Add(Conditional(Clean(Se.Language.Video.EditSecondarySubtitleSettingsDotDotDot), v => v.EditSecondarySubtitleSettingsCommand,
+            v => v.IsSubtitleSecondaryVisible, nameof(MainViewModel.IsSubtitleSecondaryVisible)));
         videoItems.Items.Add(Conditional(Clean(Se.Language.Video.RemoveSecondarySubtitleOnVideoPlayer), v => v.ClearSecondarySubtitleCommand,
             v => v.IsVideoLoaded && v.IsSubtitleSecondaryVisible, nameof(MainViewModel.IsVideoLoaded), nameof(MainViewModel.IsSubtitleSecondaryVisible)));
 
