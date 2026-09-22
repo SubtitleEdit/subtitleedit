@@ -29,6 +29,23 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         public int BufferSize => _data.Length;
         private readonly byte[] _data;
         public SKRectI ImageDisplayArea;
+
+        /// <summary>
+        /// How far the ink starts in from the top-left of <see cref="ImageDisplayArea"/>, as
+        /// found by the last <see cref="GetBitmap"/> call - the offset the cropped bitmap was
+        /// cut at. Many discs declare a display area far larger than the text (some the whole
+        /// frame), so pairing the cropped bitmap with the display area's origin puts it in the
+        /// wrong place; use <see cref="ImagePosition"/> for where the cropped bitmap sits.
+        /// </summary>
+        public SKPointI ImageCropOffset { get; private set; }
+
+        /// <summary>
+        /// Screen position of the bitmap <see cref="GetBitmap"/> returns with cropping on
+        /// (the default): the display area's origin plus <see cref="ImageCropOffset"/>.
+        /// Only meaningful after <see cref="GetBitmap"/> has run, which fills in both.
+        /// </summary>
+        public SKPointI ImagePosition => new SKPointI(ImageDisplayArea.Left + ImageCropOffset.X, ImageDisplayArea.Top + ImageCropOffset.Y);
+
         public bool Forced { get; private set; }
         private readonly int _pixelDataAddressOffset;
         private readonly int _startDisplayControlSequenceTableAddress;
@@ -76,6 +93,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         private SKBitmap ParseDisplayControlCommands(bool createBitmap, List<SKColor> colorLookUpTable, List<SKColor> fourColors, bool useCustomColors, bool crop)
         {
             ImageDisplayArea = new SKRectI();
+            ImageCropOffset = new SKPointI();
             SKBitmap bmp = null;
             var displayControlSequenceTableAddresses = new List<int>();
             var imageTopFieldDataAddress = 0;
@@ -255,13 +273,16 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             fastBmp.LockImage();
             GenerateBitmap(_data, fastBmp, 0, imageTopFieldDataAddress, fourColors, 2);
             GenerateBitmap(_data, fastBmp, 1, imageBottomFieldDataAddress, fourColors, 2);
-            var cropped = CropBitmapAndUnlock(fastBmp, fourColors[0], crop);
+            var cropped = CropBitmapAndUnlock(fastBmp, fourColors[0], crop, out var cropOffset);
+            ImageCropOffset = cropOffset;
             bmp.Dispose();
             return cropped;
         }
 
-        private static SKBitmap CropBitmapAndUnlock(FastBitmap bmp, SKColor backgroundColor, bool crop)
+        // cropOffset: where the returned bitmap's top-left sits inside bmp (zero when nothing was cropped).
+        private static SKBitmap CropBitmapAndUnlock(FastBitmap bmp, SKColor backgroundColor, bool crop, out SKPointI cropOffset)
         {
+            cropOffset = new SKPointI();
             var y = 0;
             var c = backgroundColor;
             var minX = 0;
@@ -328,6 +349,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
 
             if (bmpImage.Width > 1 && bmpImage.Height > 1 && maxX - minX > 0 && maxY - minY > 0)
             {
+                cropOffset = new SKPointI(minX, minY);
                 return Crop(bmpImage, minX, minY, maxX - minX, maxY - minY);
             }
 

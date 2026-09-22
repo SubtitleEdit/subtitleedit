@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.BluRaySup;
+﻿using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
@@ -122,8 +122,8 @@ internal static class BitmapSubtitleLoader
             // 1115 zero-duration cues in the .sup export). MergeVobSubPacks has already
             // repaired EndTime for missing/negative/over-long delays — the same times the
             // GUI shows.
-            // GetPosition reads SubPicture.ImageDisplayArea, which is only filled in while
-            // decoding - so after GetBitmap above, never before.
+            // GetPosition reads SubPicture.ImageDisplayArea and the crop offset, which are
+            // only filled in while decoding - so after GetBitmap above, never before.
             var position = pack.GetPosition();
             items.Add(new BitmapSubtitleItem(
                 new TimeCode(pack.StartTime.TotalMilliseconds),
@@ -345,10 +345,11 @@ internal static class BitmapSubtitleLoader
             {
                 continue;
             }
-            // ImageDisplayArea is filled in by GetBitmap above.
-            var displayArea = subPictures[i].ImageDisplayArea;
+            // ImagePosition is filled in by GetBitmap above: the display area's origin plus
+            // the crop offset, so it matches the cropped bitmap.
+            var position = subPictures[i].ImagePosition;
             items.Add(new BitmapSubtitleItem(paragraphs[i].StartTime, paragraphs[i].EndTime, bmp,
-                Position: new SKPointI(displayArea.Left, displayArea.Top)));
+                Position: position));
         }
         if (items.Count == 0)
         {

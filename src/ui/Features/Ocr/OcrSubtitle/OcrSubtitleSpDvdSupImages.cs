@@ -77,7 +77,9 @@ public class OcrSubtitleSpDvdSupImages : IOcrSubtitle
 
     public SKPointI GetPosition(int index)
     {
-        return new SKPointI(_spList[index].Picture.ImageDisplayArea.Left, _spList[index].Picture.ImageDisplayArea.Top);
+        // GetBitmap crops to the ink, so pair it with the cropped position rather than the
+        // display area's origin (which can be the whole frame on some discs).
+        return _spList[index].Picture.ImagePosition;
     }
 
     public SKSizeI GetScreenSize(int index)
