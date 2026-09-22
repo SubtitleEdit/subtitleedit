@@ -23,9 +23,9 @@ public class SpeechToTextInstallRecordTests
     private const string CTranslate2MacArm64 = "f1c67d47be9216e9998df53d32a59fdaa0310f3e576fa4d9135aa1d579a71f86";
     private const string CTranslate2LinuxX64 = "02c6c1b738a10b8f72fbd581febbbc4f4e60abe96ad1fab76e1b432e2cce041b";
     private const string ConstMeWindows = "baa9b70c824e50fe91f1858006a24b870b7637135659f17fc42beb1af57bd447";
-    private const string WhisperXWindows = "43c83f731389f1d84fd1f03e311c9a1a7ed8f08b1fa295a1264570ef41db2ccd";
-    private const string WhisperXMacArm64 = "bd8b18786896f1cd0e3bff3cce9ca55017eced8a4e3b540ec38e73d340fb3b9c";
-    private const string WhisperXLinuxX64 = "31d90c9ca7c465eea831507d8aa675a8a412fc209c96c1f95fb3284e271b38fe";
+    private const string WhisperXWindows = "ec1d0e9eff0c2abfbb7331ee321618823b247190323d38aa577f228262c9254d";
+    private const string WhisperXMacArm64 = "02b413559216fff54c810f971badc42f9891be18587ebb6ab70687ba0e391ca1";
+    private const string WhisperXLinuxX64 = "1ef965a48910a6e0a921cf1a442c04914eb73e9dc34b771ce90b262959a5f5a9";
 
     [Theory]
     [InlineData(DownloadHashManager.PurfviewFasterWhisperXxl.Windows, PurfviewWindows)]
@@ -48,11 +48,16 @@ public class SpeechToTextInstallRecordTests
     [InlineData(DownloadHashManager.WhisperX.Windows, "439776243a3040693e9a2767a3efb4b8dd7549244bb6695ce0ef7209e5456bf3")]
     [InlineData(DownloadHashManager.WhisperX.MacArm64, "89ff2f2dd120c8a2ab51c21e6be34a16c954965d4646ecdff77d0911ac6a2c27")]
     [InlineData(DownloadHashManager.WhisperX.LinuxX64, "46070b23bfa7c152c259264ac2a135406b4462b2b979ea126510a9c6f44f80e2")]
-    public void GetStatus_WhisperX101Archive_IsUpdateAvailable(string key, string hash)
+    [InlineData(DownloadHashManager.WhisperX.Windows, "43c83f731389f1d84fd1f03e311c9a1a7ed8f08b1fa295a1264570ef41db2ccd")]
+    [InlineData(DownloadHashManager.WhisperX.MacArm64, "bd8b18786896f1cd0e3bff3cce9ca55017eced8a4e3b540ec38e73d340fb3b9c")]
+    [InlineData(DownloadHashManager.WhisperX.LinuxX64, "31d90c9ca7c465eea831507d8aa675a8a412fc209c96c1f95fb3284e271b38fe")]
+    public void GetStatus_OlderWhisperXArchive_IsUpdateAvailable(string key, string hash)
     {
         // whisperx-standalone-101 ignored SE's PYTHON* variables, so its output only arrived
-        // once transcription was over and a long run looked hung (#15096). The update prompt
-        // in the speech-to-text window only fires if those installs stay recognized as older.
+        // once transcription was over and a long run looked hung (#15096); 102 still told every
+        // user to run a Lightning checkpoint upgrade command they cannot run (#15170). The
+        // update prompt in the speech-to-text window only fires if those installs stay
+        // recognized as older.
         Assert.Equal(DownloadHashManager.UpdateStatus.UpdateAvailable, DownloadHashManager.GetStatus(key, hash));
     }
 
