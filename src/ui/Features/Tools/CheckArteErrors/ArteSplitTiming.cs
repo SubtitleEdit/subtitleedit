@@ -9,7 +9,9 @@ internal static class ArteSplitTiming
 {
     // Allocate whole 25-fps frames, reserving the configured gap for each internal gap.
     internal static bool TryFit(IReadOnlyList<Paragraph> parts, double startMs, double endMs,
-        double minimumMs, double maximumMs, double maxCps, int minimumGapFrames, out string error)
+        double minimumMs, double maximumMs, double maxCps, int minimumGapFrames,
+        double readingDurationTolerancePercent, bool acceptShortDurations, int shortMinimumFrames,
+        out string error)
     {
         error = string.Empty;
         if (parts.Count == 0 || !double.IsFinite(startMs) || !double.IsFinite(endMs) || endMs <= startMs)
@@ -17,42 +19,52 @@ internal static class ArteSplitTiming
             error = "The original time range is invalid.";
             return false;
         }
-        // Same conversion as Fit selected subtitles to time range: round to whole frames.
+
         startMs = Math.Round(startMs / 40, MidpointRounding.AwayFromZero) * 40;
         endMs = Math.Round(endMs / 40, MidpointRounding.AwayFromZero) * 40;
         minimumGapFrames = Math.Max(0, minimumGapFrames);
+        shortMinimumFrames = Math.Max(1, shortMinimumFrames);
+        readingDurationTolerancePercent = Math.Max(0, readingDurationTolerancePercent);
+
         var available = (int)Math.Round((endMs - startMs) / 40) - minimumGapFrames * (parts.Count - 1);
         var weights = parts.Select(p => Math.Max(1, HtmlUtil.RemoveHtmlTags(p.Text, true)
             .Count(c => c != '\r' && c != '\n'))).ToArray();
-        var durations = weights.Select(count => (int)Math.Ceiling(Math.Max(40,
-            Math.Max(minimumMs, maxCps > 0 ? count / maxCps * 1000 : 0)) / 40)).ToArray();
-        var maximum = maximumMs > 0 ? (int)Math.Floor(maximumMs / 40) : Math.Max(1, available);
-        if (available < parts.Count)
+        var requiredFrames = weights.Select(count =>
         {
-            error = $"Not enough frames for one frame per subtitle plus {minimumGapFrames}-frame gaps.";
+            var readingMinimum = maxCps > 0 ? count / maxCps * 1000.0 : 0;
+            return Math.Max(1, (int)Math.Ceiling(Math.Max(minimumMs, readingMinimum) / 40.0));
+        }).ToArray();
+        var minimumAcceptedFrames = requiredFrames.Select(required => acceptShortDurations
+            ? shortMinimumFrames
+            : Math.Max(1, (int)Math.Ceiling(required * Math.Max(0, 1.0 - readingDurationTolerancePercent / 100.0))))
+            .ToArray();
+
+        if (available < minimumAcceptedFrames.Sum())
+        {
+            error = acceptShortDurations
+                ? $"Not enough time for {shortMinimumFrames}-frame subtitle minimums plus {minimumGapFrames}-frame gaps."
+                : $"Not enough time for the tolerated subtitle minimums plus {minimumGapFrames}-frame gaps.";
             return false;
         }
-        var needsFit = durations.Any(d => d > maximum) || durations.Sum() > available ||
-                       (long)maximum * parts.Count < available;
-        if (needsFit)
+
+        var maximum = maximumMs > 0 ? Math.Max(1, (int)Math.Floor(maximumMs / 40.0)) : Math.Max(1, available);
+        var durations = requiredFrames.Select(required => Math.Min(required, maximum)).ToArray();
+        if (requiredFrames.Any(required => required > maximum) || durations.Sum() > available)
         {
-            // Fit-in-range fallback: distribute the available frames proportionally,
-            // retaining at least one frame per subtitle and all configured gaps.
-            var budget = available - parts.Count;
-            var totalWeight = weights.Sum();
-            var exact = weights.Select(w => budget * (double)w / totalWeight).ToArray();
-            durations = exact.Select(value => 1 + (int)Math.Floor(value)).ToArray();
-            var left = available - durations.Sum();
-            foreach (var i in Enumerable.Range(0, parts.Count)
-                         .OrderByDescending(i => exact[i] - Math.Floor(exact[i])).ThenBy(i => i).Take(left))
+            durations = minimumAcceptedFrames.ToArray();
+            var remaining = available - durations.Sum();
+            var desiredExtra = requiredFrames.Select((required, i) => Math.Max(0, Math.Min(required, maximum) - durations[i])).ToArray();
+            while (remaining > 0 && desiredExtra.Any(extra => extra > 0))
             {
-                durations[i]++;
+                var best = Enumerable.Range(0, parts.Count).Where(i => desiredExtra[i] > 0)
+                    .OrderBy(i => (double)durations[i] / weights[i]).ThenBy(i => i).First();
+                durations[best]++;
+                desiredExtra[best]--;
+                remaining--;
             }
             error = "Zeitlich knappe Darstellung (Fit in TC range).";
-            maximum = available;
         }
-        // Give each remaining frame to the part with the shortest duration per character,
-        // without exceeding the maximum duration. Minimum durations are never compressed.
+
         for (var remaining = available - durations.Sum(); remaining > 0; remaining--)
         {
             var best = -1;
@@ -64,8 +76,13 @@ internal static class ArteSplitTiming
                     best = i;
                 }
             }
+            if (best < 0)
+            {
+                break;
+            }
             durations[best]++;
         }
+
         var cursor = startMs;
         for (var i = 0; i < parts.Count; i++)
         {

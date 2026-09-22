@@ -177,8 +177,7 @@ public partial class SubtitleLineViewModel : ObservableObject
     // the first few; a colour change costs one more. These are the safe widths rather than the
     // header's MaximumNumberOfDisplayableCharactersInAnyTextRow, which is not reachable from a
     // per-line view model.
-    private const int TeletextMaxCharacters = 37;
-    private const int TeletextMaxCharactersWithColor = 36;
+    public static int TeletextMaxCharacters { get; set; } = 37;
 
     public TextAlignment TeletextTextAlignment
     {
@@ -624,7 +623,8 @@ public partial class SubtitleLineViewModel : ObservableObject
         bool ColorTextTooManyLines,
         int MaxNumberOfLines,
         string? LengthStrategy,
-        bool UseTeletextLineLength)
+        bool UseTeletextLineLength,
+        int TeletextMaxCharacters)
     {
         public static TextErrorSettings Current()
         {
@@ -640,7 +640,8 @@ public partial class SubtitleLineViewModel : ObservableObject
                 general.MaxNumberOfLines,
                 // GetLineLength counts through this strategy, so it belongs in the key too.
                 Configuration.Settings.General.CpsLineLengthStrategy,
-                SubtitleLineViewModel.UseTeletextLineLength);
+                SubtitleLineViewModel.UseTeletextLineLength,
+                SubtitleLineViewModel.TeletextMaxCharacters);
         }
     }
 
@@ -708,7 +709,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         if (settings.UseTeletextLineLength)
         {
             var maxCharacters = Text.Contains("<font color=", StringComparison.OrdinalIgnoreCase)
-                ? TeletextMaxCharactersWithColor
+                ? Math.Max(0, TeletextMaxCharacters - 1)
                 : TeletextMaxCharacters;
 
             foreach (var line in GetStrippedLines())
@@ -1366,7 +1367,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         if (UseTeletextLineLength)
         {
             var maxCharacters = Text.Contains("<font color=", StringComparison.OrdinalIgnoreCase)
-                ? TeletextMaxCharactersWithColor
+                ? Math.Max(0, TeletextMaxCharacters - 1)
                 : TeletextMaxCharacters;
 
             foreach (var line in GetStrippedLines())

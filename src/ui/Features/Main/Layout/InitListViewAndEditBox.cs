@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows.Input;
 using Avalonia;
@@ -1191,14 +1191,12 @@ public static partial class InitListViewAndEditBox
 
         var fitSelectedToTimeRangeMenuItem = new MenuItem
         {
-            Header = "Fit selected subtitles to time range...",
+            Header = Se.Language.Tools.CheckArteErrors.FitSelectedToTimeRangeDots,
             DataContext = vm,
             Command = vm.FitSelectedSubtitlesToTimeRangeCommand,
         };
-        fitSelectedToTimeRangeMenuItem.Bind(
-            Visual.IsVisibleProperty,
-            new Binding(nameof(vm.HasMultipleLinesSelected)));
         flyout.Items.Add(fitSelectedToTimeRangeMenuItem);
+        vm.MenuItemFitSelectedToTimeRange = fitSelectedToTimeRangeMenuItem;
 
         var mergeSelectedAsDialogMenuItem = new MenuItem { Header = Se.Language.General.MergeSelectedAsDialog, DataContext = vm };
         mergeSelectedAsDialogMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridDataMenuVisible)));
@@ -1305,7 +1303,7 @@ public static partial class InitListViewAndEditBox
 
         var teletextBoxMenuItem = new MenuItem
         {
-            Header = "Force Teletext box color (SDH)",
+            Header = Se.Language.Tools.CheckArteErrors.ForceTeletextBoxColorSdh,
             DataContext = vm,
         };
         foreach (var boxColor in new[] { "White", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan" })
@@ -1754,7 +1752,7 @@ public static partial class InitListViewAndEditBox
 
         var flowGapBeforeLabel = new TextBlock
         {
-            Text = "Gap before",
+            Text = Se.Language.Tools.CheckArteErrors.GapBefore,
             FontWeight = FontWeight.Bold,
         };
 
@@ -1895,7 +1893,7 @@ public static partial class InitListViewAndEditBox
 
         var flowGapAfterLabel = new TextBlock
         {
-            Text = "Gap after",
+            Text = Se.Language.Tools.CheckArteErrors.GapAfter,
             FontWeight = FontWeight.Bold,
         };
 
@@ -1924,6 +1922,38 @@ public static partial class InitListViewAndEditBox
 
         var updatingFlowGapControls =
             false;
+
+        TimeSpan GetFlowGap(TimeSpan later, TimeSpan earlier)
+        {
+            if (!Se.Settings.General.UseFrameMode)
+            {
+                return later - earlier;
+            }
+
+            var frameRate = Se.Settings.General.CurrentFrameRate;
+            if (frameRate <= 0)
+            {
+                frameRate = Se.Settings.General.DefaultFrameRate;
+            }
+
+            if (frameRate <= 0)
+            {
+                return later - earlier;
+            }
+
+            // Compare the absolute frame numbers, not the already converted TimeSpan
+            // difference. Two cues displayed on the same frame are GAP 0; one frame
+            // of overlap is GAP -1.
+            var laterFrame = (long)Math.Round(
+                later.TotalMilliseconds * frameRate / 1000.0,
+                MidpointRounding.AwayFromZero);
+            var earlierFrame = (long)Math.Round(
+                earlier.TotalMilliseconds * frameRate / 1000.0,
+                MidpointRounding.AwayFromZero);
+
+            return TimeSpan.FromMilliseconds(
+                (laterFrame - earlierFrame) * 1000.0 / frameRate);
+        }
 
         string FormatFlowGapForConfirmation(
             TimeSpan gap)
@@ -2073,13 +2103,9 @@ public static partial class InitListViewAndEditBox
                             selectedIndex - 1];
 
                     var gapBefore =
-                        selected.StartTime -
-                        previous.EndTime;
+                        GetFlowGap(selected.StartTime, previous.EndTime);
 
-                    flowGapBeforeUpDown.Value =
-                        gapBefore < TimeSpan.Zero
-                            ? TimeSpan.Zero
-                            : gapBefore;
+                    flowGapBeforeUpDown.Value = gapBefore;
 
                     flowGapBeforeUpDown.IsEnabled =
                         vm.AreTimeCodesEditable;
@@ -2111,13 +2137,9 @@ public static partial class InitListViewAndEditBox
                             selectedIndex + 1];
 
                     var gapAfter =
-                        next.StartTime -
-                        selected.EndTime;
+                        GetFlowGap(next.StartTime, selected.EndTime);
 
-                    flowGapAfterUpDown.Value =
-                        gapAfter < TimeSpan.Zero
-                            ? TimeSpan.Zero
-                            : gapAfter;
+                    flowGapAfterUpDown.Value = gapAfter;
 
                     flowGapAfterUpDown.IsEnabled =
                         vm.AreTimeCodesEditable;
@@ -2161,18 +2183,16 @@ public static partial class InitListViewAndEditBox
                 if (selectedIndex > 0)
                 {
                     var previous = vm.Subtitles[selectedIndex - 1];
-                    var gapBefore = selected.StartTime - previous.EndTime;
-                    flowGapBeforeUpDown.Value =
-                        gapBefore < TimeSpan.Zero ? TimeSpan.Zero : gapBefore;
+                    var gapBefore = GetFlowGap(selected.StartTime, previous.EndTime);
+                    flowGapBeforeUpDown.Value = gapBefore;
                     flowGapBeforeUpDown.RefreshDisplayFormat();
                 }
 
                 if (selectedIndex < vm.Subtitles.Count - 1)
                 {
                     var next = vm.Subtitles[selectedIndex + 1];
-                    var gapAfter = next.StartTime - selected.EndTime;
-                    flowGapAfterUpDown.Value =
-                        gapAfter < TimeSpan.Zero ? TimeSpan.Zero : gapAfter;
+                    var gapAfter = GetFlowGap(next.StartTime, selected.EndTime);
+                    flowGapAfterUpDown.Value = gapAfter;
                     flowGapAfterUpDown.RefreshDisplayFormat();
                 }
             }
@@ -2532,7 +2552,7 @@ public static partial class InitListViewAndEditBox
 
         var flowEditingButton = new Button
         {
-            Content = "Flow",
+            Content = Se.Language.Tools.CheckArteErrors.Flow,
             Margin = new Thickness(8, 0, 0, 0),
             Padding = new Thickness(8, 2),
             VerticalAlignment = VerticalAlignment.Center,
@@ -2547,6 +2567,135 @@ public static partial class InitListViewAndEditBox
             });
 
         panelForTextLabel.Children.Add(flowEditingButton);
+
+        var arteToolbar = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(12, 0, 0, 0),
+            Spacing = 5,
+        };
+
+        arteToolbar.Bind(
+            Visual.IsVisibleProperty,
+            new Binding(nameof(vm.IsFormatEbu))
+            {
+                Source = vm,
+                Mode = BindingMode.OneWay,
+            });
+
+        arteToolbar.Children.Add(new TextBlock
+        {
+            Text = Se.Language.Tools.CheckArteErrors.MaxCells,
+            VerticalAlignment = VerticalAlignment.Center,
+        });
+
+        var maxCellsValue = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            [!TextBlock.TextProperty] =
+                new Binding(nameof(vm.WorkingTeletextMaxCells))
+                {
+                    Source = vm,
+                    Mode = BindingMode.OneWay,
+                },
+        };
+        arteToolbar.Children.Add(maxCellsValue);
+
+        arteToolbar.Children.Add(new TextBlock
+        {
+            Text = "·",
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(3, 0),
+        });
+
+        var gapLabel = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+
+        void RefreshArteToolbar()
+        {
+            gapLabel.Text = $"Gap: {vm.WorkingMinimumGapFrames}f";
+        }
+
+        RefreshArteToolbar();
+        arteToolbar.Children.Add(gapLabel);
+
+        var artePresetButton = new Button
+        {
+            Content = Se.Language.Tools.CheckArteErrors.ArtePreset,
+            Padding = new Thickness(8, 2),
+            VerticalAlignment = VerticalAlignment.Center,
+            IsEnabled = !vm.IsWorkingArtePresetActive,
+        };
+
+        artePresetButton.Click += (_, _) =>
+        {
+            vm.ApplyWorkingArtePreset();
+            RefreshArteToolbar();
+            artePresetButton.IsEnabled =
+                !vm.IsWorkingArtePresetActive;
+        };
+
+        arteToolbar.Children.Add(artePresetButton);
+
+        arteToolbar.Children.Add(new TextBlock
+        {
+            Text = Se.Language.Tools.CheckArteErrors.GoTo,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(8, 0, 0, 0),
+        });
+
+        var goToSubtitleTextBox = new TextBox
+        {
+            Text = string.Empty,
+            Width = 58,
+            MaxLength = 4,
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalContentAlignment = HorizontalAlignment.Right,
+        };
+
+        arteToolbar.Children.Add(goToSubtitleTextBox);
+
+        var goToSubtitleButton = new Button
+        {
+            Content = Se.Language.Tools.CheckArteErrors.Go,
+            Padding = new Thickness(8, 2),
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+
+        goToSubtitleButton.Click += (_, _) =>
+        {
+            if (int.TryParse(goToSubtitleTextBox.Text, out var number) &&
+                number is >= 1 and <= 9999)
+            {
+                vm.GoToSubtitleNumber(number);
+            }
+        };
+
+        arteToolbar.Children.Add(goToSubtitleButton);
+
+        vm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName ==
+                    nameof(vm.WorkingTeletextMaxCells) ||
+                e.PropertyName ==
+                    nameof(vm.IsWorkingArtePresetActive))
+            {
+                artePresetButton.IsEnabled =
+                    !vm.IsWorkingArtePresetActive;
+            }
+
+            if (e.PropertyName ==
+                nameof(vm.WorkingMinimumGapFrames))
+            {
+                RefreshArteToolbar();
+            }
+        };
+
+        panelForTextLabel.Children.Add(arteToolbar);
 
         textEditGrid.Children.Add(panelForTextLabel);
 
@@ -2591,6 +2740,9 @@ public static partial class InitListViewAndEditBox
             {
                 activate = false;
             }
+
+            // ARTE/Flow controls belong to the Flow editor only.
+            arteToolbar.IsVisible = activate;
 
             if (savePreference)
             {
@@ -2672,34 +2824,6 @@ public static partial class InitListViewAndEditBox
             }
         }
 
-        var flowRestoreGeneration = 0;
-
-        void RestoreRememberedFlowEditingDeferred()
-        {
-            var generation =
-                ++flowRestoreGeneration;
-
-            // FlowEditingView listens to subtitle collection changes. If Flow is
-            // made visible while an EBU STL file is still being imported, the view
-            // can be rebuilt repeatedly as subtitles arrive. Queue the remembered
-            // Flow restore behind the current UI/import work instead.
-            Dispatcher.UIThread.Post(
-                () =>
-                {
-                    if (generation != flowRestoreGeneration ||
-                        !vm.IsFormatEbu)
-                    {
-                        return;
-                    }
-
-                    SetFlowEditingActive(
-                        Se.Settings.Appearance
-                            .EbuStlFlowEditingEnabled,
-                        savePreference: false);
-                },
-                DispatcherPriority.Background);
-        }
-
         vm.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName !=
@@ -2708,59 +2832,30 @@ public static partial class InitListViewAndEditBox
                 return;
             }
 
-            if (!vm.IsFormatEbu)
+            // EBU STL always opens in the normal Text editor.
+            // Flow is activated manually or by ARTE Run checks.
+            SetFlowEditingActive(
+                activate: false,
+                savePreference: false);
+        };
+
+        vm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName ==
+                nameof(MainViewModel.ArteRunChecksGeneration))
             {
-                // Cancel any queued EBU restore, but keep the remembered EBU
-                // Flow/Text preference for the next EBU STL file.
-                flowRestoreGeneration++;
-
                 SetFlowEditingActive(
-                    activate: false,
+                    activate: true,
                     savePreference: false);
-
-                return;
             }
-
-            // Keep the lightweight text editor active while the EBU STL import finishes,
-// but reserve the Flow timing layout immediately so Show/Hide/Gap controls
-// do not visibly jump into place when Flow is restored.
-flowEditingView.IsVisible = false;
-textEditor.IsVisible = true;
-
-var restoreFlow =
-    Se.Settings.Appearance.EbuStlFlowEditingEnabled;
-
-timeControlsPanel.IsVisible =
-    !restoreFlow;
-
-flowTimingPanel.IsVisible =
-    restoreFlow;
-
-if (restoreFlow)
-{
-    RefreshFlowGapDisplay();
-}
-
-RestoreRememberedFlowEditingDeferred();
         };
 
         flowEditingButton.Click += (_, _) =>
         {
-            // A manual choice wins over a queued automatic restore.
-            flowRestoreGeneration++;
-
             SetFlowEditingActive(
                 activate: !flowEditingView.IsVisible,
                 savePreference: true);
         };
-
-        // The layout can also be built while an EBU STL file is already open.
-        // Use the same deferred path instead of constructing Flow synchronously.
-        if (vm.IsFormatEbu &&
-            Se.Settings.Appearance.EbuStlFlowEditingEnabled)
-        {
-            RestoreRememberedFlowEditingDeferred();
-        }
 
         var textTotalLengthLabel = new TextBlock
         {

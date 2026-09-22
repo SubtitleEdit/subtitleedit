@@ -26,6 +26,7 @@ public class LanguageTools
     public LanguageMergeLineswithSameText MergeLinesWithSameText { get; set; } = new();
     public LanguageMergeLineswithSameTimeCodes MergeLinesWithSameTimeCodes { get; set; } = new();
     public LanguageNetflixCheckAndFix NetflixCheckAndFix { get; set; } = new();
+    public LanguageCheckArteErrors CheckArteErrors { get; set; } = new();
     public LanguageImageBasedEdit ImageBasedEdit { get; set; } = new();
     public LanguageRemoveTextForHearingImpaired RemoveTextForHearingImpaired { get; set; } = new();
     public LanguageRemoveUnicodeCharacters RemoveUnicodeCharacters { get; set; } = new();

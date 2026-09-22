@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Threading;
@@ -7,11 +7,13 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Files.ExportEbuStl;
+using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.PickFontName;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
@@ -201,6 +203,15 @@ public partial class ExportEbuStlViewModel : ObservableObject
         ErrorTitle = Se.Language.File.EbuSaveOptions.Errors;
     }
 
+    private IReadOnlyList<string> _additionalErrorEntries = Array.Empty<string>();
+    private int _additionalErrorCount;
+
+    public void SetAdditionalErrorEntries(IReadOnlyList<string>? entries, int errorCount = 0)
+    {
+        _additionalErrorEntries = entries ?? Array.Empty<string>();
+        _additionalErrorCount = Math.Max(0, errorCount);
+    }
+
     public void Initialize(Subtitle? subtitle)
     {
         _subtitle = subtitle ?? new Subtitle();
@@ -328,8 +339,32 @@ public partial class ExportEbuStlViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Ok()
+    private async Task Ok()
     {
+        if (_subtitle != null && IsTeletext)
+        {
+            var overflows = GetTeletextCellOverflowErrors(_subtitle);
+            if (overflows.Count > 0)
+            {
+                CheckErrors(_subtitle);
+
+                if (Window != null)
+                {
+                    await MessageBox.Show(
+                        Window,
+                        Se.Language.General.Error,
+                        "EBU STL Teletext rows are limited to 40 cells."
+                        + Environment.NewLine + Environment.NewLine
+                        + string.Join(Environment.NewLine, overflows)
+                        + Environment.NewLine + Environment.NewLine
+                        + "Correct these rows before saving as EBU STL. No text has been truncated or changed.",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+
+                return;
+            }
+        }
         _header.CodePageNumber = SelectedCodePage?.CodePage ?? string.Empty;
         if (_header.CodePageNumber.Length < 3)
         {
@@ -612,6 +647,44 @@ public partial class ExportEbuStlViewModel : ObservableObject
         return index >= 0 ? input.Substring(0, index).TrimEnd() : input;
     }
 
+    private List<string> GetTeletextCellOverflowErrors(Subtitle subtitle)
+    {
+        var result = new List<string>();
+
+        if (!IsTeletext)
+        {
+            return result;
+        }
+
+        var codePageNumber = SelectedCodePage?.CodePage ?? "850";
+        var characterCodeTableNumber =
+            "0" + CharacterTables.IndexOf(SelectedCharacterTable ?? CharacterTables[0])
+                .ToString(CultureInfo.InvariantCulture);
+
+        for (var paragraphIndex = 0; paragraphIndex < subtitle.Paragraphs.Count; paragraphIndex++)
+        {
+            var paragraph = subtitle.Paragraphs[paragraphIndex];
+            var counts = Ebu.GetTeletextLineCellCounts(
+                paragraph.Text,
+                codePageNumber,
+                characterCodeTableNumber,
+                UseBox,
+                UseDoubleHeight);
+
+            for (var lineIndex = 0; lineIndex < counts.Count; lineIndex++)
+            {
+                if (counts[lineIndex] > 40)
+                {
+                    result.Add(
+                        string.Format(Se.Language.File.EbuSaveOptions.TeletextCellOverflowLine,
+                        paragraphIndex + 1, lineIndex + 1, counts[lineIndex]));
+                }
+            }
+        }
+
+        return result;
+    }
+
     private void CheckErrors(Subtitle subtitle)
     {
         if (subtitle.Paragraphs.Count == 0)
@@ -623,6 +696,20 @@ public partial class ExportEbuStlViewModel : ObservableObject
         var errorCount = 0;
         var i = 1;
         var isTeletext = SelectedDisplayStandardCode?.Contains("teletext", StringComparison.OrdinalIgnoreCase) ?? false;
+
+        if (isTeletext)
+        {
+            foreach (var error in GetTeletextCellOverflowErrors(subtitle))
+            {
+                sb.AppendLine(error);
+                errorCount++;
+            }
+
+            if (errorCount > 0)
+            {
+                sb.AppendLine();
+            }
+        }
         foreach (var p in subtitle.Paragraphs)
         {
             var arr = p.Text.SplitToLines();
@@ -664,6 +751,22 @@ public partial class ExportEbuStlViewModel : ObservableObject
             }
 
             i++;
+        }
+
+        if (_additionalErrorEntries.Count > 0)
+        {
+            if (sb.Length > 0)
+            {
+                sb.AppendLine();
+            }
+
+            foreach (var entry in _additionalErrorEntries)
+            {
+                sb.AppendLine(entry);
+                sb.AppendLine();
+            }
+
+            errorCount += _additionalErrorCount;
         }
 
         ErrorLog = sb.ToString();

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -23,7 +23,7 @@ public class CheckArteErrorsWindow : Window
     public CheckArteErrorsWindow(CheckArteErrorsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = UiUtil.MakeWindowTitle("Check and fix ARTE errors");
+        Title = UiUtil.MakeWindowTitle(Se.Language.Tools.CheckArteErrors.Title);
         Width = 1100;
         Height = 680;
         MinWidth = 900;
@@ -47,16 +47,16 @@ public class CheckArteErrorsWindow : Window
         };
         topBar.Add(new TextBlock
         {
-            Text = "Check and fix ARTE Errors",
+            Text = Se.Language.Tools.CheckArteErrors.Title,
             FontSize = 20,
             FontWeight = FontWeight.SemiBold,
             VerticalAlignment = VerticalAlignment.Center,
         }, 0, 0);
         topBar.Add(closeButton, 0, 1);
 
-        var runChecksButton = UiUtil.MakeButton("Run checks", vm.AnalyzeCommand);
+        var runChecksButton = UiUtil.MakeButton(Se.Language.Tools.CheckArteErrors.RunChecks, vm.RunChecksCommand);
         runChecksButton.HorizontalAlignment = HorizontalAlignment.Stretch;
-        var applyCorrectionsButton = UiUtil.MakeButton("Apply corrections", vm.OkCommand);
+        var applyCorrectionsButton = UiUtil.MakeButton(Se.Language.Tools.CheckArteErrors.ApplyCorrections, vm.OkCommand);
         applyCorrectionsButton.HorizontalAlignment = HorizontalAlignment.Stretch;
 
         var runChecksBorder = new Border
@@ -82,6 +82,30 @@ public class CheckArteErrorsWindow : Window
         primaryActions.Add(runChecksBorder, 0, 0);
         primaryActions.Add(applyCorrectionsBorder, 0, 1);
 
+        var resultsSeparator = new Border
+        {
+            Height = 2,
+            Background = Brushes.Orange,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+        };
+
+        var fixesButtons = UiUtil.MakeButtonBar(
+            UiUtil.MakeButton(Se.Language.Tools.CheckArteErrors.SelectAllFixable, vm.FixesSelectAllCommand),
+            UiUtil.MakeButton(Se.Language.Tools.CheckArteErrors.ClearSelection, vm.FixesClearSelectionCommand),
+            UiUtil.MakeButton(Se.Language.Tools.CheckArteErrors.UndoLastChange, vm.UndoCommand),
+            UiUtil.MakeButton(Se.Language.Tools.CheckArteErrors.DownloadErrorReport, vm.DownloadErrorReportCommand)
+        ).WithAlignmentLeft();
+
+        var resultsHeader = new StackPanel
+        {
+            Spacing = 8,
+            Children =
+            {
+                resultsSeparator,
+                fixesButtons,
+            },
+        };
+
         var summaryText = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
@@ -99,6 +123,7 @@ public class CheckArteErrorsWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
             },
             Margin = UiUtil.MakeWindowMargin(),
@@ -110,8 +135,9 @@ public class CheckArteErrorsWindow : Window
         grid.Add(topBar, 0, 0);
         grid.Add(settingsView, 1, 0);
         grid.Add(primaryActions, 2, 0);
-        grid.Add(summaryText, 3, 0);
-        grid.Add(fixesView, 4, 0);
+        grid.Add(resultsHeader, 3, 0);
+        grid.Add(summaryText, 4, 0);
+        grid.Add(fixesView, 5, 0);
 
         Content = grid;
 
@@ -132,7 +158,7 @@ public class CheckArteErrorsWindow : Window
         };
         sdh.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(vm.IsSdh)) { Mode = BindingMode.TwoWay });
 
-        var ebuOptions = UiUtil.MakeButton("Header Info", vm.OpenEbuOptionsCommand);
+        var ebuOptions = UiUtil.MakeButton(Se.Language.Tools.CheckArteErrors.HeaderInfo, vm.OpenEbuOptionsCommand);
 
         var sourceFrameRate = UiUtil.MakeComboBox(vm.SourceFrameRates, vm, nameof(vm.SelectedSourceFrameRate));
         sourceFrameRate.MinWidth = 150;
@@ -148,7 +174,7 @@ public class CheckArteErrorsWindow : Window
 
         var acceptShort = new CheckBox
         {
-            Content = "Accept short durations",
+            Content = Se.Language.Tools.CheckArteErrors.AcceptShortDurations,
             VerticalAlignment = VerticalAlignment.Center,
         };
         acceptShort.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(vm.AcceptShortDurations)) { Mode = BindingMode.TwoWay });
@@ -157,7 +183,7 @@ public class CheckArteErrorsWindow : Window
         shortMinimumFrames.Bind(NumericUpDown.ValueProperty, new Binding(nameof(vm.ShortMinimumFrames)) { Mode = BindingMode.TwoWay });
         shortMinimumFrames.Bind(InputElement.IsEnabledProperty, new Binding(nameof(vm.AcceptShortDurations)));
 
-        var artePreset = UiUtil.MakeButton("Preset 37 / 5 / 15%", vm.ApplyArtePresetCommand);
+        var artePreset = UiUtil.MakeButton(Se.Language.Tools.CheckArteErrors.Preset, vm.ApplyArtePresetCommand);
         artePreset.IsEnabled = !vm.IsArtePresetActive;
         vm.PropertyChanged += (_, e) =>
         {
@@ -169,7 +195,7 @@ public class CheckArteErrorsWindow : Window
 
         var shiftToStart = new CheckBox
         {
-            Content = "Shift whole file to",
+            Content = Se.Language.Tools.CheckArteErrors.ShiftWholeFileTo,
             VerticalAlignment = VerticalAlignment.Center,
         };
         shiftToStart.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(vm.ShiftWholeFileToStartTimeCode)) { Mode = BindingMode.TwoWay });
@@ -196,10 +222,10 @@ public class CheckArteErrorsWindow : Window
             Spacing = 14,
             Children =
             {
-                Pair("Language", _comboBoxLanguage),
+                Pair(Se.Language.Tools.CheckArteErrors.Language, _comboBoxLanguage),
                 sdh,
                 ebuOptions,
-                Pair("Frame rate", sourceFrameRate),
+                Pair(Se.Language.Tools.CheckArteErrors.FrameRate, sourceFrameRate),
                 new TextBlock { Text = "→ 25 fps", VerticalAlignment = VerticalAlignment.Center },
             },
         };
@@ -210,9 +236,9 @@ public class CheckArteErrorsWindow : Window
             Spacing = 14,
             Children =
             {
-                Pair("Teletext max cells", maxCells),
-                Pair("Minimum GAP (frames)", minimumGapFrames),
-                Pair("Reading duration tolerance (%)", tolerance),
+                Pair(Se.Language.Tools.CheckArteErrors.TeletextMaxCells, maxCells),
+                Pair(Se.Language.Tools.CheckArteErrors.MinimumGapFrames, minimumGapFrames),
+                Pair(Se.Language.Tools.CheckArteErrors.ReadingDurationTolerance, tolerance),
             },
         };
 
@@ -223,9 +249,9 @@ public class CheckArteErrorsWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Children =
             {
-                new TextBlock { Text = "Min", VerticalAlignment = VerticalAlignment.Center },
+                new TextBlock { Text = Se.Language.Tools.CheckArteErrors.Minimum, VerticalAlignment = VerticalAlignment.Center },
                 shortMinimumFrames,
-                new TextBlock { Text = "fr", VerticalAlignment = VerticalAlignment.Center },
+                new TextBlock { Text = Se.Language.Tools.CheckArteErrors.FramesShort, VerticalAlignment = VerticalAlignment.Center },
             },
         };
 
@@ -295,24 +321,16 @@ public class CheckArteErrorsWindow : Window
             item => item.IsSelected,
             (item, value) => { if (item.IsImplemented) item.IsSelected = value; });
 
-        var checksButtons = UiUtil.MakeButtonBar(
-            UiUtil.MakeButton("Select all fixable", vm.FixesSelectAllCommand),
-            UiUtil.MakeButton("Clear selection", vm.FixesClearSelectionCommand),
-            UiUtil.MakeButton("Undo last change", vm.UndoCommand)
-        ).WithAlignmentLeft();
-
         var checksPanel = new Grid
         {
-            RowDefinitions = new RowDefinitions("Auto,*"),
-            RowSpacing = 6,
+            RowDefinitions = new RowDefinitions("*"),
             MinHeight = 180,
         };
-        checksPanel.Add(checksButtons, 0, 0);
-        checksPanel.Add(dataGrid, 1, 0);
+        checksPanel.Add(dataGrid, 0, 0);
 
         var checksExpander = new Expander
         {
-            Header = "Checks",
+            Header = Se.Language.Tools.CheckArteErrors.Checks,
             IsExpanded = false,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             HorizontalContentAlignment = HorizontalAlignment.Stretch,
@@ -514,7 +532,7 @@ public class CheckArteErrorsWindow : Window
 
         var noErrorsText = new TextBlock
         {
-            Text = "No ARTE errors detected.",
+            Text = Se.Language.Tools.CheckArteErrors.NoErrorsDetected,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
             FontSize = 18,
@@ -535,25 +553,7 @@ public class CheckArteErrorsWindow : Window
         resultsGrid.Children.Add(groupScroll);
         resultsGrid.Children.Add(noErrorsText);
 
-        var fixesSelectPanel = UiUtil.MakeButtonBar(
-            UiUtil.MakeButton(Se.Language.General.SelectAll, vm.FixesSelectAllCommand),
-            UiUtil.MakeButton(Se.Language.General.InvertSelection, vm.FixesInverseSelectionCommand)
-        ).WithAlignmentLeft().WithAlignmentTop();
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            RowSpacing = 6,
-        };
-
-        grid.Add(fixesSelectPanel, 0, 0);
-        grid.Add(resultsGrid, 1, 0);
-
-        return UiUtil.MakeBorderForControlNoPadding(grid);
+        return UiUtil.MakeBorderForControlNoPadding(resultsGrid);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

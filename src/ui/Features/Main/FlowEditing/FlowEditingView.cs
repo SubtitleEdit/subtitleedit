@@ -2915,7 +2915,7 @@ public sealed class FlowEditingView : Border
         if (lineIndex < 0 ||
             lineIndex >= lines.Length)
         {
-            return 37;
+            return SubtitleLineViewModel.TeletextMaxCharacters;
         }
 
         var lineStart =
@@ -2939,7 +2939,7 @@ public sealed class FlowEditingView : Border
 
         return Math.Max(
             0,
-            37 - colorCodeCount);
+            SubtitleLineViewModel.TeletextMaxCharacters - colorCodeCount);
     }
 
     private static bool IsValidTeletextTypingText(

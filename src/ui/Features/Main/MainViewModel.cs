@@ -811,6 +811,7 @@ public partial class MainViewModel :
     public MenuItem MenuItemExtendToLineBefore { get; internal set; }
     public MenuItem MenuItemExtendToLineAfter { get; internal set; }
     public MenuItem MenuItemMerge { get; internal set; }
+    public MenuItem MenuItemFitSelectedToTimeRange { get; internal set; } = null!;
     public MenuItem MenuItemAudioVisualizerInsertNewSelection { get; set; }
     public MenuItem MenuItemAudioVisualizerPasteNewSelection { get; set; }
     public MenuItem MenuIteminsertSubtitleFileAtPositionMenuItem { get; set; }
@@ -5093,10 +5094,16 @@ public partial class MainViewModel :
     /// the dialog stores the resulting 1024-character STL header on the working subtitle, so
     /// later saves write the options the user chose. Returns false when the dialog was cancelled.
     /// </summary>
-    private async Task<bool> ShowEbuOptionsDialog()
+    private async Task<bool> ShowEbuOptionsDialog(
+        IReadOnlyList<string>? additionalErrorEntries = null,
+        int additionalErrorCount = 0)
     {
         var result = await ShowDialogAsync<ExportEbuStlWindow, ExportEbuStlViewModel>(
-            vm => { vm.Initialize(GetUpdateSubtitle()); },
+            vm =>
+            {
+                vm.SetAdditionalErrorEntries(additionalErrorEntries, additionalErrorCount);
+                vm.Initialize(GetUpdateSubtitle());
+            },
             w => { w.Title = Se.Language.File.EbuSaveOptions.Title; });
 
         if (!result.OkPressed)
@@ -14718,6 +14725,23 @@ public partial class MainViewModel :
         return Math.Round(seconds / frameDur, MidpointRounding.AwayFromZero) * frameDur;
     }
 
+    private bool AreSelectedWorkingRowsContiguous(IReadOnlyList<SubtitleLineViewModel> selectedItems)
+    {
+        if (selectedItems.Count < 2)
+        {
+            return false;
+        }
+
+        var workingRows = Subtitles.Where(p => !p.IsReferenceOnly).ToList();
+        var selectedIndices = selectedItems
+            .Select(item => workingRows.IndexOf(item))
+            .OrderBy(index => index)
+            .ToList();
+
+        return selectedIndices.All(index => index >= 0) &&
+               selectedIndices.Zip(selectedIndices.Skip(1), (a, b) => b - a).All(diff => diff == 1);
+    }
+
     [RelayCommand]
     private async Task FitSelectedSubtitlesToTimeRange()
     {
@@ -14727,7 +14751,7 @@ public partial class MainViewModel :
         }
 
         var selectedItems = SubtitleGridSelectedItems;
-        if (selectedItems.Count < 2)
+        if (!AreSelectedWorkingRowsContiguous(selectedItems))
         {
             return;
         }
@@ -14776,14 +14800,14 @@ public partial class MainViewModel :
 
         var applyButton = new Button
         {
-            Content = "Apply",
+            Content = Se.Language.General.Apply,
             MinWidth = 90,
             IsDefault = true,
         };
 
         var cancelButton = new Button
         {
-            Content = "Cancel",
+            Content = Se.Language.General.Cancel,
             MinWidth = 90,
             IsCancel = true,
         };
@@ -14829,8 +14853,7 @@ public partial class MainViewModel :
             else
             {
                 availableDurationLabel.Text = "—";
-                validationLabel.Text =
-                    "The selected time range is too short for the subtitles and the requested gaps.";
+                validationLabel.Text = Se.Language.Tools.CheckArteErrors.TimeRangeTooShort;
                 validationLabel.IsVisible = true;
                 applyButton.IsEnabled = false;
             }
@@ -14864,11 +14887,11 @@ public partial class MainViewModel :
             fields.Children.Add(control);
         }
 
-        AddField(0, "Start time code:", startTimeCode);
-        AddField(1, "End time code:", endTimeCode);
-        AddField(2, "Gap:", gapTimeCode);
-        AddField(3, "Selected subtitles:", selectedCountLabel);
-        AddField(4, "Available duration:", availableDurationLabel);
+        AddField(0, Se.Language.Tools.CheckArteErrors.StartTimeCode, startTimeCode);
+        AddField(1, Se.Language.Tools.CheckArteErrors.EndTimeCode, endTimeCode);
+        AddField(2, Se.Language.General.Gap + ":", gapTimeCode);
+        AddField(3, Se.Language.Tools.CheckArteErrors.SelectedSubtitles, selectedCountLabel);
+        AddField(4, Se.Language.Tools.CheckArteErrors.AvailableDuration, availableDurationLabel);
 
         var buttons = new StackPanel
         {
@@ -14896,7 +14919,7 @@ public partial class MainViewModel :
 
         var dialog = new Window
         {
-            Title = "Fit selected subtitles to time range",
+            Title = Se.Language.Tools.CheckArteErrors.FitSelectedToTimeRange,
             Content = content,
             SizeToContent = SizeToContent.WidthAndHeight,
             CanResize = false,
@@ -24914,6 +24937,63 @@ public partial class MainViewModel :
             return false;
         }
 
+        // A loaded teletext STL normally bypasses the EBU options dialog on Save, so apply the
+        // same 40-cell safety rule here before the existing file can be overwritten.
+        if (binaryFormat is Ebu && Ebu.IsTeletextHeader(_subtitle.Header))
+        {
+            var header = Ebu.ReadHeader(
+                Ebu.GetEncoding(_subtitle.Header.Substring(0, 3)).GetBytes(_subtitle.Header));
+            var overflowErrors = new List<string>();
+            var subtitle = GetSaveSubtitle();
+
+            for (var paragraphIndex = 0; paragraphIndex < subtitle.Paragraphs.Count; paragraphIndex++)
+            {
+                var paragraph = subtitle.Paragraphs[paragraphIndex];
+                var counts = Ebu.GetTeletextLineCellCounts(
+                    paragraph.Text,
+                    header.CodePageNumber,
+                    header.CharacterCodeTableNumber,
+                    Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox,
+                    Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight);
+
+                for (var lineIndex = 0; lineIndex < counts.Count; lineIndex++)
+                {
+                    if (counts[lineIndex] > 40)
+                    {
+                        overflowErrors.Add(
+                            string.Format(Se.Language.File.EbuSaveOptions.TeletextCellOverflowLine,
+                            paragraphIndex + 1, lineIndex + 1, counts[lineIndex]));
+                    }
+                }
+            }
+
+            if (overflowErrors.Count > 0)
+            {
+                var message =
+                    "EBU STL Teletext rows are limited to 40 cells." +
+                    Environment.NewLine + Environment.NewLine +
+                    string.Join(Environment.NewLine, overflowErrors) +
+                    Environment.NewLine + Environment.NewLine +
+                    "Correct these rows before saving as EBU STL. No text has been truncated or changed.";
+
+                if (isAutoSave)
+                {
+                    ShowStatus(message);
+                }
+                else
+                {
+                    await MessageBox.Show(
+                        Window!,
+                        Se.Language.General.Error,
+                        message,
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+
+                return false;
+            }
+        }
+
         try
         {
             // EBU STL needs a UI helper to resolve its header; reuse the same one as File > Export.
@@ -28273,6 +28353,7 @@ public partial class MainViewModel :
         var selectedCount = SubtitleGridSelectedCount;
         MenuItemMergeAsDialog.IsVisible = selectedCount == 2;
         MenuItemMerge.IsVisible = selectedCount > 1;
+        MenuItemFitSelectedToTimeRange.IsEnabled = AreSelectedWorkingRowsContiguous(SubtitleGridSelectedItems);
         // With 2+ lines selected at least one of them has a neighbor on either side,
         // so the focused-index boundary check only applies to single selection (#12981)
         MenuItemExtendToLineBefore.IsVisible = Subtitles.Count > 1 &&

@@ -412,7 +412,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         textBytes.AddRange(new byte[] { 0x0d }); // d=double height
                     }
                 }
-                EncodeText(textBytes, TextField, encoding, header.DisplayStandardCode, header.CharacterCodeTableNumber);
+                EncodeText(
+                    textBytes,
+                    TextField,
+                    encoding,
+                    header.DisplayStandardCode,
+                    header.CharacterCodeTableNumber,
+                    Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox,
+                    Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight);
 
                 var bytes = textBytes.ToArray();
 
@@ -503,7 +510,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             //TODO: Use bytes directly and not encoding
-            private static void EncodeText(List<byte> textBytes, string input, Encoding encoding, string displayStandardCode, string characterCodeTableNumber)
+            private static void EncodeText(
+                List<byte> textBytes,
+                string input,
+                Encoding encoding,
+                string displayStandardCode,
+                string characterCodeTableNumber,
+                bool teletextUseBox,
+                bool teletextUseDoubleHeight)
             {
                 // italic/underline
                 var italicOn = (byte)0x80;
@@ -515,11 +529,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 // newline
                 var newline = new byte[] { 0x8a, 0x8a };
-                if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox && Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)
+                if (teletextUseBox && teletextUseDoubleHeight)
                 {
                     newline = new byte[] { 0x0a, 0x0a, 0x8a, 0x8a, 0x0d, 0x0b, 0x0b }; // 0a==end box, 0d==double height, 0b==start box
                 }
-                else if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox)
+                else if (teletextUseBox)
                 {
                     var temp = new List<byte>
                     {
@@ -534,7 +548,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     temp.Add(0x0b);
                     newline = temp.ToArray();
                 }
-                else if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)
+                else if (teletextUseDoubleHeight)
                 {
                     newline = new byte[] { 0x8a, 0x8a, 0x0d, 0x0d }; // 0d==double height
                 }
@@ -833,12 +847,128 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
 
-                if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox && displayStandardCode != "0")
+                if (teletextUseBox && displayStandardCode != "0")
                 {
                     textBytes.AddRange(new byte[] { 0x0a, 0x0a }); //a=end box
                 }
             }
 
+
+            /// <summary>
+            /// Returns the number of Teletext cells occupied by each encoded text row.
+            /// This deliberately uses the same EncodeText method as the STL writer, so colour,
+            /// box and double-height control codes cannot drift away from the actual export.
+            ///
+            /// ISO-6937 combining sequences (C1-CF + base character) occupy one displayed cell,
+            /// although they need two bytes in the STL text field. EBU row separators and the
+            /// writer's end-box sequence do not occupy a character position in the text row.
+            /// </summary>
+            internal static IReadOnlyList<int> GetTeletextLineCellCounts(
+                string input,
+                string codePageNumber,
+                string characterCodeTableNumber,
+                bool teletextUseBox,
+                bool teletextUseDoubleHeight)
+            {
+                var encoding = GetEncoding(codePageNumber);
+
+                if (characterCodeTableNumber == "00")
+                {
+                    try
+                    {
+                        encoding = Encoding.GetEncoding(20269);
+                    }
+                    catch
+                    {
+                        encoding = Encoding.ASCII;
+                    }
+                }
+                else if (characterCodeTableNumber == "01")
+                {
+                    encoding = Encoding.GetEncoding("ISO-8859-5");
+                }
+                else if (characterCodeTableNumber == "02")
+                {
+                    encoding = Encoding.GetEncoding("ISO-8859-6");
+                }
+                else if (characterCodeTableNumber == "03")
+                {
+                    encoding = Encoding.GetEncoding("ISO-8859-7");
+                }
+                else if (characterCodeTableNumber == "04")
+                {
+                    encoding = Encoding.GetEncoding("ISO-8859-8");
+                }
+
+                var bytes = new List<byte>();
+
+                if (teletextUseBox && teletextUseDoubleHeight)
+                {
+                    bytes.AddRange(new byte[] { 0x0d, 0x0b, 0x0b });
+                }
+                else if (teletextUseBox)
+                {
+                    bytes.AddRange(new byte[] { 0x0b, 0x0b });
+                }
+                else if (teletextUseDoubleHeight)
+                {
+                    bytes.Add(0x0d);
+                }
+
+                EncodeText(
+                    bytes,
+                    input,
+                    encoding,
+                    "2",
+                    characterCodeTableNumber,
+                    teletextUseBox,
+                    teletextUseDoubleHeight);
+
+                var result = new List<int>();
+                var cells = 0;
+
+                for (var i = 0; i < bytes.Count; i++)
+                {
+                    var b = bytes[i];
+
+                    // 8A is the EBU row separator. Teletext double-height writes it twice;
+                    // consecutive separators still mean one transition to the next text row.
+                    if (b == 0x8a)
+                    {
+                        if (i == 0 || bytes[i - 1] != 0x8a)
+                        {
+                            result.Add(cells);
+                            cells = 0;
+                        }
+
+                        continue;
+                    }
+
+                    // 0A is the writer's end-box control emitted immediately before a row
+                    // separator and at the end of the subtitle. It closes the box but does not
+                    // consume one of the row's display character positions.
+                    if (b == 0x0a)
+                    {
+                        continue;
+                    }
+
+                    // ISO-6937 diacritic prefix + following base character = one display cell.
+                    if (characterCodeTableNumber == "00" &&
+                        b >= 0xc1 && b <= 0xcf &&
+                        i + 1 < bytes.Count &&
+                        bytes[i + 1] != 0x8a)
+                    {
+                        cells++;
+                        i++;
+                        continue;
+                    }
+
+                    cells++;
+                }
+
+                result.Add(cells);
+                return result;
+            }
 
             /// <summary>
             /// Appends one encoded character. This was encoding.GetBytes(line.Substring(i, 1)) -
@@ -1018,6 +1148,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Counts the Teletext cells that the EBU STL encoder will require for each row.
+        /// The 40-cell export validation uses this instead of estimating from visible text.
+        /// </summary>
+        public static IReadOnlyList<int> GetTeletextLineCellCounts(
+            string text,
+            string codePageNumber,
+            string characterCodeTableNumber,
+            bool teletextUseBox,
+            bool teletextUseDoubleHeight)
+        {
+            return EbuTextTimingInformation.GetTeletextLineCellCounts(
+                text,
+                codePageNumber,
+                characterCodeTableNumber,
+                teletextUseBox,
+                teletextUseDoubleHeight);
         }
 
         public bool Save(string fileName, Subtitle subtitle)
