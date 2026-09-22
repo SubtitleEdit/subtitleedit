@@ -19,7 +19,7 @@ public class OutputFileNameTest : IDisposable
             Directory.Delete(_tempRoot, recursive: true);
     }
 
-    private ConversionOptions Opts(bool overwrite = false, string? outputFilename = null) =>
+    private ConversionOptions Opts(bool overwrite = false, string? outputFilename = null, bool noLanguageSuffix = false) =>
         new()
         {
             Patterns = ["dummy.srt"],
@@ -27,6 +27,7 @@ public class OutputFileNameTest : IDisposable
             OutputFolder = _tempRoot,
             Overwrite = overwrite,
             OutputFilename = outputFilename,
+            NoLanguageSuffix = noLanguageSuffix,
         };
 
     [Fact]
@@ -220,5 +221,55 @@ public class OutputFileNameTest : IDisposable
         };
 
         Assert.Equal(Path.Combine(_tempRoot, "out.vtt"), SubtitleConverter.ResolveOutputFileName(input, opts));
+    }
+
+    [Fact]
+    public void Resolve_LanguageSuffix_InsertedBeforeExtension()
+    {
+        var input = Path.Combine(_tempRoot, "input.srt");
+        File.WriteAllText(input, "");
+
+        var result = SubtitleConverter.ResolveOutputFileName(input, Opts(), "en");
+
+        Assert.Equal(Path.Combine(_tempRoot, "input.en.vtt"), result);
+    }
+
+    [Fact]
+    public void Resolve_NoLanguageSuffixWithOverwrite_TranslatesInPlace()
+    {
+        // #15156: --no-language-suffix --overwrite --translate-to must hand back the
+        // input's own name (same format) instead of input.en.vtt.
+        var input = Path.Combine(_tempRoot, "input.vtt");
+        File.WriteAllText(input, "");
+
+        var result = SubtitleConverter.ResolveOutputFileName(input, Opts(overwrite: true, noLanguageSuffix: true), "en");
+
+        Assert.Equal(input, result);
+    }
+
+    [Fact]
+    public void Resolve_NoLanguageSuffixWithoutOverwrite_RotatesInsteadOfClobberingInput()
+    {
+        var input = Path.Combine(_tempRoot, "input.vtt");
+        File.WriteAllText(input, "");
+
+        var result = SubtitleConverter.ResolveOutputFileName(input, Opts(overwrite: false, noLanguageSuffix: true), "en");
+
+        Assert.Equal(Path.Combine(_tempRoot, "input_2.vtt"), result);
+    }
+
+    [Fact]
+    public void Resolve_NoLanguageSuffix_ContainerTrackCollisionUsesCounter()
+    {
+        var input = Path.Combine(_tempRoot, "video.mkv");
+        File.WriteAllText(input, "");
+        var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var opts = Opts(overwrite: true, noLanguageSuffix: true);
+
+        var first = SubtitleConverter.ResolveOutputFileName(input, opts, "en", 3, used);
+        var second = SubtitleConverter.ResolveOutputFileName(input, opts, "en", 4, used);
+
+        Assert.Equal(Path.Combine(_tempRoot, "video.vtt"), first);
+        Assert.Equal(Path.Combine(_tempRoot, "video_2.vtt"), second);
     }
 }
