@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.3.0-beta7",
+  "version": "v5.3.0-beta8",
   "translatedBy": "",
   "cultureName": "jp-JP",
   "general": {
@@ -2917,6 +2917,8 @@
     "toggleShotChange": "カット変更を切り替え",
     "resetWaveformZoomAndSpeed": "波形のズームと速度をリセット",
     "showOriginalSubtitle": "波形に元の字幕を表示",
+    "timelineGroupTracksBy": "字幕トラックのグループ化",
+    "timelineShowThumbnails": "動画サムネイルを表示",
     "showSpeechOnly": "音声のみを表示（生成に時間がかかります）",
     "isolatingSpeechForWaveformX": "波形用に音声を分離中... {0}",
     "isolatingSpeechForWaveformFailed": "波形用に音声を分離できませんでした。ツールログを確認してください",
@@ -3119,6 +3121,7 @@
       "newEmptyDefaultMs": "新しい字幕のデフォルト表示時間 (ms)",
       "timeCodeUpDownStepMs": "時間増減幅 (ms)",
       "moveSelectedLinesStepMs": "選択した行を移動するショートカットの移動幅（ms）",
+      "moveLinesShortenNeighbor": "字幕を移動：重複させず、前後の字幕を短くする",
       "promptBeforeDelete": "削除前に確認メッセージを表示する",
       "rememberPositionAndSize": "ウィンドウの位置とサイズを記憶する",
       "openLastFileOnStart": "起動時に最後に開いたファイルを開く",
@@ -3159,7 +3162,7 @@
       "waveformMouseWheelStepOneSecond": "1秒",
       "waveformMouseWheelStepMilliseconds": "{0} ミリ秒",
       "waveformSnapToShotChanges": "カット検出位置に自動で吸着",
-      "waveformSnapToFrames": "波形をフレーム単位に合わせる",
+      "waveformSnapToFrames": "キューをフレームに合わせる",
       "waveformSnapToShotChangesPixels": "ドラッグ時のスナップ距離（ピクセル）",
       "waveformSnapToShotChangeStartMaxSeconds": "最も近いカット点にスナップ：開始位置の最大距離（秒）",
       "waveformSnapToShotChangeEndMaxSeconds": "最も近いカット点にスナップ：終了位置の最大距離（秒）",
