@@ -1955,109 +1955,7 @@ public static partial class InitListViewAndEditBox
                 (laterFrame - earlierFrame) * 1000.0 / frameRate);
         }
 
-        string FormatFlowGapForConfirmation(
-            TimeSpan gap)
-        {
-            var frameRate =
-                Se.Settings.General.CurrentFrameRate;
 
-            if (frameRate <= 0)
-            {
-                frameRate =
-                    Se.Settings.General.DefaultFrameRate;
-            }
-
-            if (frameRate <= 0)
-            {
-                return gap.ToString(
-                    @"hh\:mm\:ss\.fff",
-                    System.Globalization.CultureInfo.InvariantCulture);
-            }
-
-            var totalSeconds =
-                Math.Max(
-                    0.0,
-                    gap.TotalSeconds);
-
-            var wholeSeconds =
-                (long)Math.Floor(
-                    totalSeconds);
-
-            var fraction =
-                totalSeconds -
-                wholeSeconds;
-
-            var frame =
-                (int)Math.Round(
-                    fraction * frameRate,
-                    MidpointRounding.AwayFromZero);
-
-            var nominalFrameCount =
-                Math.Max(
-                    1,
-                    (int)Math.Round(
-                        frameRate));
-
-            if (frame >= nominalFrameCount)
-            {
-                wholeSeconds++;
-                frame = 0;
-            }
-
-            var hours =
-                wholeSeconds / 3600;
-
-            var minutes =
-                (wholeSeconds % 3600) / 60;
-
-            var seconds =
-                wholeSeconds % 60;
-
-            return string.Format(
-                System.Globalization.CultureInfo.InvariantCulture,
-                "{0:00}:{1:00}:{2:00}:{3:00}",
-                hours,
-                minutes,
-                seconds,
-                frame);
-        }
-
-        void ShiftFlowSubtitles(
-            int firstIndex,
-            TimeSpan shift)
-        {
-            if (shift == TimeSpan.Zero ||
-                firstIndex < 0 ||
-                firstIndex >= vm.Subtitles.Count)
-            {
-                return;
-            }
-
-            for (var i = firstIndex;
-                 i < vm.Subtitles.Count;
-                 i++)
-            {
-                var subtitle =
-                    vm.Subtitles[i];
-
-                if (subtitle.IsReferenceOnly)
-                {
-                    continue;
-                }
-
-                var oldStart =
-                    subtitle.StartTime;
-
-                var oldEnd =
-                    subtitle.EndTime;
-
-                subtitle.StartTime =
-                    oldStart + shift;
-
-                subtitle.EndTime =
-                    oldEnd + shift;
-            }
-        }
 
         void RefreshFlowGapDisplay(SubtitleLineViewModel? selectedOverride = null)
         {
@@ -2202,8 +2100,6 @@ public static partial class InitListViewAndEditBox
             }
         }
 
-        var flowGapBeforeDirty = false;
-        var flowGapAfterDirty = false;
         SubtitleLineViewModel? flowGapBeforeEditedSubtitle = null;
         SubtitleLineViewModel? flowGapAfterEditedSubtitle = null;
         var committingFlowGapBefore = false;
@@ -2219,7 +2115,6 @@ public static partial class InitListViewAndEditBox
             committingFlowGapBefore = true;
             try
             {
-                flowGapBeforeDirty = false;
 
                 var selected =
                     flowGapBeforeEditedSubtitle ??
@@ -2298,7 +2193,6 @@ public static partial class InitListViewAndEditBox
             committingFlowGapAfter = true;
             try
             {
-                flowGapAfterDirty = false;
 
                 var selected =
                     flowGapAfterEditedSubtitle ??
@@ -2378,7 +2272,6 @@ public static partial class InitListViewAndEditBox
                     return;
                 }
 
-                flowGapBeforeDirty = true;
                 flowGapBeforeEditedSubtitle = vm.SelectedSubtitle;
                 await CommitFlowGapBeforeAsync();
             };
@@ -2392,7 +2285,6 @@ public static partial class InitListViewAndEditBox
                     return;
                 }
 
-                flowGapAfterDirty = true;
                 flowGapAfterEditedSubtitle = vm.SelectedSubtitle;
                 await CommitFlowGapAfterAsync();
             };

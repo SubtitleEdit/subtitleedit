@@ -160,15 +160,11 @@ public partial class CheckArteErrorsViewModel : ObservableObject
         bool acceptShortDurations,
         int shortMinimumFrames)
     {
-        _teletextMaxCells = Math.Max(1, teletextMaxCells);
-        _readingDurationTolerancePercent = Math.Max(0, readingDurationTolerancePercent);
-        _acceptShortDurations = acceptShortDurations;
-        _shortMinimumFrames = Math.Max(1, shortMinimumFrames);
+        TeletextMaxCells = Math.Max(1, teletextMaxCells);
+        ReadingDurationTolerancePercent = Math.Max(0, readingDurationTolerancePercent);
+        AcceptShortDurations = acceptShortDurations;
+        ShortMinimumFrames = Math.Max(1, shortMinimumFrames);
 
-        OnPropertyChanged(nameof(TeletextMaxCells));
-        OnPropertyChanged(nameof(ReadingDurationTolerancePercent));
-        OnPropertyChanged(nameof(AcceptShortDurations));
-        OnPropertyChanged(nameof(ShortMinimumFrames));
         OnPropertyChanged(nameof(IsArtePresetActive));
     }
 
@@ -351,12 +347,14 @@ public partial class CheckArteErrorsViewModel : ObservableObject
 
     private void SetSourceFrameRateWithoutAnalysis(double value)
     {
+#pragma warning disable MVVMTK0034 // Intentionally bypass generated setter to avoid Analyze().
         if (Math.Abs(_selectedSourceFrameRate - value) <= 0.001)
         {
             return;
         }
 
         _selectedSourceFrameRate = value;
+#pragma warning restore MVVMTK0034
         OnPropertyChanged(nameof(SelectedSourceFrameRate));
     }
 
@@ -461,10 +459,9 @@ public partial class CheckArteErrorsViewModel : ObservableObject
         // Use Subtitle Edit's existing minimum-gap setting as the single source of truth.
         // Opening the ARTE checker must not silently replace the user's configured value.
         var minimumGap = Se.Settings.General.MinimumBetweenLines;
-        _minimumGapFrames = Se.Settings.General.UseFrameMode
+        MinimumGapFrames = Se.Settings.General.UseFrameMode
             ? Math.Max(0, minimumGap.Frames)
             : Math.Max(0, (int)Math.Round(minimumGap.Milliseconds / 40.0, MidpointRounding.AwayFromZero));
-        OnPropertyChanged(nameof(MinimumGapFrames));
         OnPropertyChanged(nameof(IsArtePresetActive));
 
         // Every ARTE target session starts neutral: source 25 fps to target 25 fps.
@@ -481,7 +478,9 @@ public partial class CheckArteErrorsViewModel : ObservableObject
             var referenceMs = hasLeadingBlank
                 ? first.StartTime.TotalMilliseconds
                 : Math.Floor(first.StartTime.TotalMilliseconds / 3_600_000.0) * 3_600_000.0;
+#pragma warning disable MVVMTK0034 // Intentionally bypass generated setter during initialization.
             _targetStartTimeCode = TimeSpan.FromMilliseconds(referenceMs);
+#pragma warning restore MVVMTK0034
             OnPropertyChanged(nameof(TargetStartTimeCode));
         }
         if (Ebu.IsStlHeader(subtitle.Header))
@@ -519,6 +518,7 @@ public partial class CheckArteErrorsViewModel : ObservableObject
         };
         var language = Languages.FirstOrDefault(item => item.Code == languageCode);
 
+#pragma warning disable MVVMTK0034 // Intentionally bypass generated setters while synchronizing from the STL header.
         if (_isSdh != isSdh)
         {
             _isSdh = isSdh;
@@ -530,6 +530,7 @@ public partial class CheckArteErrorsViewModel : ObservableObject
             _selectedLanguage = language;
             OnPropertyChanged(nameof(SelectedLanguage));
         }
+#pragma warning restore MVVMTK0034
     }
 
     [RelayCommand]
