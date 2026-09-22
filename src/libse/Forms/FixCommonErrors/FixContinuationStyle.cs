@@ -282,15 +282,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         private bool StartsWithName(string input, string language)
         {
+            _names ??= new NameList(Configuration.DictionariesDirectory, language, false, string.Empty).GetAllNames();
             if (_names == null)
             {
-                var nameList = new NameList(Configuration.DictionariesDirectory, language, false, string.Empty);
-                _names = nameList.GetAllNames();
-
-                if (_names == null)
-                {
-                    return false;
-                }
+                return false;
             }
 
             if (_nameSet == null)
@@ -299,8 +294,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 foreach (var name in _names)
                 {
                     var n = name ?? string.Empty;
-                    _nameSet.Add(n);
-                    _nameMaxLength = Math.Max(_nameMaxLength, n.Length);
+                    if (_nameSet.Add(n))
+                    {
+                        _nameMaxLength = Math.Max(_nameMaxLength, n.Length);
+                    }
                 }
             }
 
@@ -308,7 +305,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             // such character up in the set, instead of three StartsWith (and three string
             // concatenations) for every one of the thousands of names.
             var max = Math.Min(input.Length - 1, _nameMaxLength);
-            for (var i = 0; i <= max; i++)
+            for (var i = 1; i <= max; i++)
             {
                 var ch = input[i];
                 if ((ch == ' ' || ch == ',' || ch == ':') && _nameSet.Contains(input.Substring(0, i)))

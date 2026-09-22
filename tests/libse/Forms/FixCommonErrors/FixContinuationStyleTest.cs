@@ -1,6 +1,7 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
+using System.Reflection;
 
 namespace LibSETests.Forms.FixCommonErrors;
 
@@ -38,5 +39,28 @@ public class FixContinuationStyleTest
         {
             Configuration.Settings.General.ContinuationStyle = previousStyle;
         }
+    }
+
+    // A null entry in the name list is stored as "" in the name set. Looking up the text before a
+    // separator at index 0 would find that "", so any line starting with a space, comma or colon
+    // counted as starting with a name. Calls are repeated to pin that the lookup keeps working
+    // after the set is built on the first call.
+    [Theory]
+    [InlineData(" hello there", false)]
+    [InlineData(", hello there", false)]
+    [InlineData(": hello there", false)]
+    [InlineData("Marty is still there", true)]
+    [InlineData("Marty, wait", true)]
+    public void StartsWithNameIgnoresEmptyName(string input, bool expected)
+    {
+        var fix = new FixContinuationStyle();
+        typeof(FixContinuationStyle)
+            .GetField("_names", BindingFlags.NonPublic | BindingFlags.Instance)!
+            .SetValue(fix, new List<string> { null, "Marty" });
+        var startsWithName = typeof(FixContinuationStyle)
+            .GetMethod("StartsWithName", BindingFlags.NonPublic | BindingFlags.Instance)!;
+
+        Assert.Equal(expected, (bool)startsWithName.Invoke(fix, new object[] { input, "en" })!);
+        Assert.Equal(expected, (bool)startsWithName.Invoke(fix, new object[] { input, "en" })!);
     }
 }
