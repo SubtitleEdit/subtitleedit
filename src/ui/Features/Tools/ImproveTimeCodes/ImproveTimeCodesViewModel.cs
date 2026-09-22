@@ -391,7 +391,8 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
 
             if (IsolateSpeech)
             {
-                // The separator reports nothing to measure progress by, and takes a while.
+                // Indeterminate until the separator's first chunk line arrives - the GPU path
+                // prints none, and is quick.
                 StatusText = l.IsolatingSpeech;
                 IsProgressIndeterminate = true;
                 var speechFileName = await IsolateSpeechAsync(audioFileName, workFolder, cancellationToken);
@@ -793,7 +794,21 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
             _engine.GetModelForCmdLine(SpeechIsolationModel.FileName), audioFileName, workFolder);
         Se.WriteToolsLog($"{executable} {arguments}");
 
-        var (exitCode, output) = await RunProcessAsync(executable, arguments, cancellationToken, Path.GetDirectoryName(executable));
+        // The separator's per-chunk lines are its only progress (#15176); the audio's length
+        // says how many chunks there will be.
+        var progress = new SpeechIsolationProgress(SpeechIsolationProgress.GetChunkCountFromWaveFile(audioFileName));
+        var (exitCode, output) = await RunProcessAsync(executable, arguments, cancellationToken, Path.GetDirectoryName(executable), line =>
+        {
+            if (progress.TryUpdate(line) && progress.Percent is { } percent)
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    IsProgressIndeterminate = false;
+                    ProgressValue = percent;
+                    StatusText = $"{Se.Language.Tools.ImproveTimeCodes.IsolatingSpeech} {percent}%";
+                });
+            }
+        });
         var stemFileName = SpeechIsolationModel.GetSpeechStemFileName(audioFileName, workFolder);
         if (exitCode != 0 || !File.Exists(stemFileName))
         {
@@ -850,7 +865,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
 
     /// <summary>Runs a process to the end and returns its exit code and output; -1 when it would not start.</summary>
     private static async Task<(int ExitCode, string Output)> RunProcessAsync(
-        string fileName, string arguments, CancellationToken cancellationToken, string? workingDirectory = null)
+        string fileName, string arguments, CancellationToken cancellationToken, string? workingDirectory = null, Action<string>? onOutputLine = null)
     {
         using var process = new Process
         {
@@ -873,6 +888,8 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
                 {
                     output.AppendLine(e.Data);
                 }
+
+                onOutputLine?.Invoke(e.Data);
             }
         };
         process.OutputDataReceived += collect;

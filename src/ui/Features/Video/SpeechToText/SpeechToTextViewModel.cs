@@ -2865,17 +2865,35 @@ public partial class SpeechToTextViewModel : ObservableObject
         Se.WriteToolsLog($"{executable} {separateArguments}");
         LogToConsole($"Isolating speech with : {executable} {separateArguments}{Environment.NewLine}");
 
-        // Kept for the tools log only: the separator prints no progress worth showing, but when
-        // it fails its output is the only clue to why.
+        // The output is kept for the tools log - when the separator fails it is the only clue to
+        // why - and its per-chunk lines are the progress (#15176): on a machine without a GPU
+        // the separation takes minutes per minute of audio, so the bar has to move.
         var separateLog = new StringBuilder();
+        var progress = new SpeechIsolationProgress(SpeechIsolationProgress.GetChunkCountFromWaveFile(audioFileName));
         DataReceivedEventHandler logHandler = (_, args) =>
         {
-            if (!string.IsNullOrWhiteSpace(args.Data))
+            if (string.IsNullOrWhiteSpace(args.Data))
             {
-                lock (separateLog)
+                return;
+            }
+
+            lock (separateLog)
+            {
+                separateLog.AppendLine(args.Data);
+            }
+
+            if (progress.TryUpdate(args.Data) && progress.Percent is { } percent)
+            {
+                Dispatcher.UIThread.Post(() =>
                 {
-                    separateLog.AppendLine(args.Data);
-                }
+                    if (_abort || _windowClosing)
+                    {
+                        return;
+                    }
+
+                    ProgressValue = percent;
+                    ProgressText = $"{Se.Language.Video.AudioToText.IsolatingSpeech} {percent}%";
+                });
             }
         };
 

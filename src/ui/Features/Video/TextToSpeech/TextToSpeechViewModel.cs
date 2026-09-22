@@ -58,6 +58,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -2272,6 +2273,27 @@ public partial class TextToSpeechViewModel : ObservableObject
 
         var arguments = SpeechIsolationModel.BuildSeparateArguments(modelFileName, originalAudioFileName, workFolder, SpeechIsolationModel.BackgroundStem);
         Se.WriteToolsLog($"{executable} {arguments}");
+
+        // The separator's per-chunk lines on stderr are the only measure of how far it is - and
+        // on a machine without a GPU it is minutes per minute of video (#15176). They drive the
+        // percentage and the time-left estimate; the GPU path prints none and is quick. The
+        // output is also kept: when the separator fails it is the only clue to why.
+        var progress = new SpeechIsolationProgress(SpeechIsolationProgress.GetChunkCountFromWaveFile(originalAudioFileName));
+        var separateLog = new StringBuilder();
+        DataReceivedEventHandler onLine = (_, args) =>
+        {
+            if (string.IsNullOrWhiteSpace(args.Data))
+            {
+                return;
+            }
+
+            lock (separateLog)
+            {
+                separateLog.AppendLine(args.Data);
+            }
+
+            ReportSpeechRemovalProgress(progress, args.Data);
+        };
         using var separateProcess = new Process
         {
             StartInfo = new ProcessStartInfo(executable, arguments)
@@ -2279,18 +2301,42 @@ public partial class TextToSpeechViewModel : ObservableObject
                 WorkingDirectory = Path.GetDirectoryName(executable),
                 UseShellExecute = false,
                 CreateNoWindow = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
             }
         };
+        separateProcess.OutputDataReceived += onLine;
+        separateProcess.ErrorDataReceived += onLine;
         await separateProcess.StartAndWaitAsync(cancellationToken);
 
         var backgroundFileName = SpeechIsolationModel.GetStemFileName(originalAudioFileName, workFolder, SpeechIsolationModel.BackgroundStem);
         if (separateProcess.ExitCode != 0 || !File.Exists(backgroundFileName))
         {
-            Se.WriteToolsLog($"TTS remove original speech: separation failed with exit code {separateProcess.ExitCode}", true);
+            lock (separateLog)
+            {
+                Se.WriteToolsLog($"TTS remove original speech: separation failed with exit code {separateProcess.ExitCode}:{Environment.NewLine}{separateLog}", true);
+            }
+
             return null;
         }
 
         return backgroundFileName;
+    }
+
+    private void ReportSpeechRemovalProgress(SpeechIsolationProgress progress, string? line)
+    {
+        if (!progress.TryUpdate(line) || progress.Fraction is not { } fraction)
+        {
+            return;
+        }
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (IsGenerating)
+            {
+                ProgressValue = fraction * 100.0;
+            }
+        });
     }
 
     private async Task<bool> EnsureBackgroundMusicInstalled()
@@ -3064,6 +3110,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             if (ShouldRemoveOriginalSpeech())
             {
                 ProgressText = Se.Language.Video.TextToSpeech.RemovingOriginalSpeech;
+                ProgressValue = 0; // a stage of its own: the bar and the time-left estimate restart here
                 separationFolder = Path.Combine(Path.GetTempPath(), "se-tts-separation-" + Guid.NewGuid());
                 Directory.CreateDirectory(separationFolder);
                 backgroundFileName = await MakeSpeechFreeBackground(separationFolder, cancellationToken);
