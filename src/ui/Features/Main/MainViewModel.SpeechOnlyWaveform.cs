@@ -227,7 +227,8 @@ public partial class MainViewModel
 
             var separateArguments = SpeechIsolationModel.BuildSeparateArguments(modelFileName, audioFileName, workFolder);
             Se.WriteToolsLog($"{executable} {separateArguments}");
-            var separateExitCode = await RunSpeechOnlyWaveformProcessAsync(executable, separateArguments, stopwatch, isStale);
+            var progress = new SpeechIsolationProgress(SpeechIsolationProgress.GetChunkCountFromWaveFile(audioFileName));
+            var separateExitCode = await RunSpeechOnlyWaveformProcessAsync(executable, separateArguments, stopwatch, isStale, progress);
             var stemFileName = SpeechIsolationModel.GetSpeechStemFileName(audioFileName, workFolder);
             if (separateExitCode != 0 || !File.Exists(stemFileName))
             {
@@ -274,7 +275,11 @@ public partial class MainViewModel
     }
 
     /// <returns>The exit code, or -1 when the run went stale and the process was killed.</returns>
-    private async Task<int> RunSpeechOnlyWaveformProcessAsync(string executable, string arguments, Stopwatch stopwatch, Func<bool> isStale)
+    /// <param name="progress">
+    /// Fed the process output when the process is the separator, whose per-chunk lines are its
+    /// only progress (#15176). Null for ffmpeg, whose output is drained and dropped.
+    /// </param>
+    private async Task<int> RunSpeechOnlyWaveformProcessAsync(string executable, string arguments, Stopwatch stopwatch, Func<bool> isStale, SpeechIsolationProgress? progress = null)
     {
         using var process = new Process
         {
@@ -283,12 +288,20 @@ public partial class MainViewModel
                 WorkingDirectory = Path.GetDirectoryName(executable) ?? string.Empty,
                 UseShellExecute = false,
                 CreateNoWindow = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
             }
         };
+
+        DataReceivedEventHandler onLine = (_, args) => progress?.TryUpdate(args.Data);
+        process.OutputDataReceived += onLine;
+        process.ErrorDataReceived += onLine;
 
 #pragma warning disable CA1416
         process.Start();
 #pragma warning restore CA1416
+        process.BeginOutputReadLine();
+        process.BeginErrorReadLine();
         _speechOnlyWaveformProcess = process;
 
         var lastStatusSecond = -1L;
@@ -310,16 +323,20 @@ public partial class MainViewModel
                 return -1;
             }
 
-            // The separator prints no progress, so the elapsed time is all there is to show. It
-            // goes in the footer's waveform indicator, not the status bar: that has one slot, and
-            // a message every second for the length of a film would bury every other one. While
-            // a normal extraction runs the indicator is that extraction's.
+            // Elapsed time, plus the separator's percentage once it has one (the GPU path never
+            // prints any, and is quick). It goes in the footer's waveform indicator, not the status
+            // bar: that has one slot, and a message every second for the length of a film would
+            // bury every other one. While a normal extraction runs the indicator is that
+            // extraction's.
             var second = stopwatch.ElapsedMilliseconds / 1000;
             if (second != lastStatusSecond && _currentWaveExtractionProcess == null)
             {
                 lastStatusSecond = second;
                 _speechOnlyWaveformIndicatorShown = true;
-                WaveformGeneratingText = string.Format(Se.Language.Waveform.IsolatingSpeechForWaveformX, new TimeCode(stopwatch.ElapsedMilliseconds).ToShortDisplayString());
+                var elapsed = new TimeCode(stopwatch.ElapsedMilliseconds).ToShortDisplayString();
+                WaveformGeneratingText = string.Format(
+                    Se.Language.Waveform.IsolatingSpeechForWaveformX,
+                    progress?.Percent is { } percent ? $"{elapsed} - {percent}%" : elapsed);
                 IsWaveformGenerating = true;
             }
 
