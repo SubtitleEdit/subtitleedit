@@ -289,6 +289,16 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
         return _session?.ToggleAudioTrack();
     }
 
+    public List<AudioTrackInfo> GetAudioTracks()
+    {
+        return _session?.GetAudioTracks() ?? [];
+    }
+
+    public void SetAudioTrack(int trackId)
+    {
+        _session?.SetAudioTrack(trackId);
+    }
+
     public bool IsPlaying => _session?.IsPlaying ?? false;
     public bool IsPaused => !IsPlaying;
 
@@ -491,7 +501,7 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
         private readonly string _fileName;
         private AVFormatContext* _format;
         private readonly int _videoStreamIndex = -1;
-        private int _audioStreamIndex = -1;
+        private volatile int _audioStreamIndex = -1; // written by the UI thread on a track switch, read by the demux thread
         private readonly List<int> _audioStreamIndexes = new();
         private readonly double _startTimeSeconds;
 
@@ -970,17 +980,54 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
 
             var current = _audioStreamIndexes.IndexOf(_audioStreamIndex);
             var next = _audioStreamIndexes[(current + 1) % _audioStreamIndexes.Count];
-            _audioStreamIndex = next;
-            RequestSeek(Position, userSeek: false); // flushes the queues; the audio thread reopens on the first packet of the new stream
+            SwitchAudioStream(next);
+            return AudioTrack(next);
+        }
 
-            var stream = _format->streams[next];
+        public List<AudioTrackInfo> GetAudioTracks()
+        {
+            var tracks = new List<AudioTrackInfo>(_audioStreamIndexes.Count);
+            foreach (var streamIndex in _audioStreamIndexes)
+            {
+                tracks.Add(AudioTrack(streamIndex));
+            }
+
+            return tracks;
+        }
+
+        /// <summary>Selects the audio track by its 1-based number; unknown numbers are ignored.</summary>
+        public void SetAudioTrack(int trackId)
+        {
+            if (trackId < 1 || trackId > _audioStreamIndexes.Count)
+            {
+                return;
+            }
+
+            var streamIndex = _audioStreamIndexes[trackId - 1];
+            if (streamIndex == _audioStreamIndex)
+            {
+                return; // already playing this track - a seek would only flush the pipeline
+            }
+
+            SwitchAudioStream(streamIndex);
+        }
+
+        private void SwitchAudioStream(int streamIndex)
+        {
+            _audioStreamIndex = streamIndex;
+            RequestSeek(Position, userSeek: false); // flushes the queues; the audio thread reopens on the first packet of the new stream
+        }
+
+        private AudioTrackInfo AudioTrack(int streamIndex)
+        {
+            var stream = _format->streams[streamIndex];
             return new AudioTrackInfo
             {
-                Id = _audioStreamIndexes.IndexOf(next) + 1,
-                FfIndex = next,
+                Id = _audioStreamIndexes.IndexOf(streamIndex) + 1,
+                FfIndex = streamIndex,
                 Language = DictionaryValue(stream->metadata, "language"),
                 Title = DictionaryValue(stream->metadata, "title"),
-                IsSelected = true,
+                IsSelected = streamIndex == _audioStreamIndex,
                 IsDefault = (stream->disposition & ffmpeg.AV_DISPOSITION_DEFAULT) != 0,
                 Codec = ffmpeg.avcodec_get_name(stream->codecpar->codec_id),
                 Channels = stream->codecpar->ch_layout.nb_channels,

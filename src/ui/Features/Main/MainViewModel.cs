@@ -1467,9 +1467,9 @@ public partial class MainViewModel :
                 // that the player is really playing (same reasoning as fullscreen, #13407).
                 RefreshSubtitlePreview();
 
-                if (savedAudioTrack != null && vp.VideoPlayer is LibMpvDynamicPlayer mpv)
+                if (savedAudioTrack != null && vp.VideoPlayer != null)
                 {
-                    mpv.SetAudioTrack(savedAudioTrack.Id);
+                    vp.VideoPlayer.SetAudioTrack(savedAudioTrack.Id);
                     var _ = Task.Run(LoadAudioTrackMenuItems);
                 }
             });
@@ -1500,12 +1500,12 @@ public partial class MainViewModel :
     internal void ReapplySelectedAudioTrack(VideoPlayerControl? player)
     {
         var audioTrack = _audioTrack;
-        if (audioTrack == null || player?.VideoPlayer is not LibMpvDynamicPlayer mpv)
+        if (audioTrack == null || player?.VideoPlayer == null)
         {
             return;
         }
 
-        mpv.SetAudioTrack(audioTrack.Id);
+        player.VideoPlayer.SetAudioTrack(audioTrack.Id);
     }
 
     private void RefreshSubtitlePreview()
@@ -4277,9 +4277,9 @@ public partial class MainViewModel :
 
         var vp = GetVideoPlayerControl();
 
-        if (vp != null && vp.VideoPlayer is LibMpvDynamicPlayer mpv)
+        if (vp?.VideoPlayer != null)
         {
-            var audioTracks = mpv.GetAudioTracks();
+            var audioTracks = vp.VideoPlayer.GetAudioTracks();
             var desiredTrack = audioTracks.FirstOrDefault(p => p.Id == recentFile.AudioTrack);
 
             // Only switch track and reload the waveform if different from current; PickAudioTrack
@@ -9174,7 +9174,7 @@ public partial class MainViewModel :
             return;
         }
 
-        if (vp.VideoPlayer is LibMpvDynamicPlayer mpv && parameter is AudioTrackInfo audioTrack)
+        if (vp.VideoPlayer != null && parameter is AudioTrackInfo audioTrack)
         {
             // No-op when the picked track is already active (e.g. re-picking it from the
             // Video -> Audio tracks menu) so the waveform isn't cleared and reloaded for nothing.
@@ -9183,7 +9183,7 @@ public partial class MainViewModel :
                 return;
             }
 
-            mpv.SetAudioTrack(audioTrack.Id);
+            vp.VideoPlayer.SetAudioTrack(audioTrack.Id);
             _audioTrack = audioTrack;
             var _ = Task.Run(LoadAudioTrackMenuItems);
             ShowStatus(string.Format(Se.Language.Main.AudioTrackIsNowX, _audioTrack));
@@ -27000,17 +27000,17 @@ public partial class MainViewModel :
 
         IsVideoLoaded = true;
 
-        // Wait until mpv has actually parsed the file before reading the track list.
-        // GetAudioTracks() reads "track-list/count" which is 0 until the file is loaded,
-        // so racing past it produces a bare-hash peak filename ({hash}.wav) on the first
-        // open vs. a track-suffixed one ({hash}-N.wav) on later opens, causing the
-        // waveform to be regenerated on re-open.
+        // Wait until the player has actually parsed the file before reading the track list.
+        // GetAudioTracks() is empty until the file is loaded (mpv's "track-list/count" is 0,
+        // the ffmpeg player opens on a worker), so racing past it produces a bare-hash peak
+        // filename ({hash}.wav) on the first open vs. a track-suffixed one ({hash}-N.wav) on
+        // later opens, causing the waveform to be regenerated on re-open.
         await vp.WaitForPlayersReadyAsync();
 
         // Resolve _audioTrack before LoadWaveformAndSpectrogram so it sees the right FfIndex (and we don't race LoadAudioTrackMenuItems).
-        if (vp.VideoPlayer is LibMpvDynamicPlayer mpv)
+        if (vp.VideoPlayer != null)
         {
-            var tracks = mpv.GetAudioTracks();
+            var tracks = vp.VideoPlayer.GetAudioTracks();
             if (tracks.Count > 0)
             {
                 var chosen = desiredAudioTrackId >= 0
@@ -27026,12 +27026,12 @@ public partial class MainViewModel :
                     ?? tracks.FirstOrDefault(t => t.IsDefault)
                     ?? tracks[0];
 
-                // Switch mpv to the chosen track when it isn't already the selected one (e.g. a
-                // track restored from recent files) so playback, the track menu and the waveform
-                // picker all agree on the same track.
+                // Switch the player to the chosen track when it isn't already the selected one
+                // (e.g. a track restored from recent files) so playback, the track menu and the
+                // waveform picker all agree on the same track.
                 if (chosen.Id != -1 && !chosen.IsSelected)
                 {
-                    mpv.SetAudioTrack(chosen.Id);
+                    vp.VideoPlayer.SetAudioTrack(chosen.Id);
                 }
 
                 _audioTrack = chosen;
@@ -27534,9 +27534,9 @@ public partial class MainViewModel :
         try
         {
             var vp = GetVideoPlayerControl();
-            if (vp?.VideoPlayer is LibMpvDynamicPlayer mpv)
+            if (vp?.VideoPlayer != null)
             {
-                var audioTracks = mpv.GetAudioTracks();
+                var audioTracks = vp.VideoPlayer.GetAudioTracks();
                 if (audioTracks.Count == 0)
                 {
                     Dispatcher.UIThread.Post(() =>

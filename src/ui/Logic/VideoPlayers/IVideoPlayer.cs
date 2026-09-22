@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers;
@@ -27,6 +28,19 @@ public interface IVideoPlayer
     void Pause();
     void Stop();
     AudioTrackInfo? ToggleAudioTrack();
+
+    /// <summary>
+    /// The audio tracks of the open file, or an empty list when the player cannot enumerate
+    /// them. <see cref="AudioTrackInfo.Id"/> is the 1-based track number among the audio tracks
+    /// (mpv's "aid"), which is what recent files remember; <see cref="AudioTrackInfo.FfIndex"/>
+    /// is the stream index ffmpeg uses for waveform extraction.
+    /// </summary>
+    List<AudioTrackInfo> GetAudioTracks() => [];
+
+    /// <summary>Switches playback to the audio track with the given <see cref="AudioTrackInfo.Id"/>.</summary>
+    void SetAudioTrack(int trackId)
+    {
+    }
 
     bool IsPlaying { get; }
     bool IsPaused { get; }

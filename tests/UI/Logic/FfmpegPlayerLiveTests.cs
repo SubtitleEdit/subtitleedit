@@ -30,6 +30,9 @@ public sealed class FfmpegPlayerLiveTests : IDisposable
     /// <summary>30 fps with two of every five pictures removed: frames at 0, 33, 67, 167, 200, 233, 333 ms ...</summary>
     private static string VariableRateClip => Path.Combine(Clips(), "vfr.mkv");
 
+    /// <summary>Two audio tracks: an English "Main" default track at stream 1 and a Danish "Commentary" track at stream 2.</summary>
+    private static string TwoAudioTracksClip => Path.Combine(Clips(), "two-audio.mkv");
+
     private static string Clips()
     {
         lock (ClipLock)
@@ -70,7 +73,12 @@ public sealed class FfmpegPlayerLiveTests : IDisposable
                      "-c:v libx264 -preset ultrafast -g 250 -keyint_min 250 -sc_threshold 0 -bf 3 -pix_fmt yuv420p -c:a aac -shortest cfr.mp4") &&
                  Run(ffmpeg, folder,
                      "-v error -y -f lavfi -i testsrc2=size=320x180:rate=30:duration=20 -vf select='lt(mod(n\\,5)\\,3)' " +
-                     "-c:v libx264 -preset ultrafast -g 120 -bf 2 -pix_fmt yuv420p vfr.mkv");
+                     "-c:v libx264 -preset ultrafast -g 120 -bf 2 -pix_fmt yuv420p vfr.mkv") &&
+                 Run(ffmpeg, folder,
+                     "-v error -y -f lavfi -i testsrc2=size=320x180:rate=25:duration=10 -f lavfi -i sine=frequency=440:duration=10 -f lavfi -i sine=frequency=880:duration=10 " +
+                     "-map 0:v -map 1:a -map 2:a -c:v libx264 -preset ultrafast -pix_fmt yuv420p -c:a aac " +
+                     "-metadata:s:a:0 language=eng -metadata:s:a:0 title=Main -disposition:a:0 default " +
+                     "-metadata:s:a:1 language=dan -metadata:s:a:1 title=Commentary -disposition:a:1 0 two-audio.mkv");
         if (!ok)
         {
             _clipError = $"'{ffmpeg}' could not generate the test clips (no libx264?).";
@@ -162,6 +170,58 @@ public sealed class FfmpegPlayerLiveTests : IDisposable
     {
         Assert.True(WaitFor(() => Math.Abs(_player.Position - expected) < 0.0005, 5_000),
             $"{what}: expected {expected:0.0000}, position is {_player.Position:0.0000}");
+    }
+
+    [Fact]
+    public void AudioTracks_AreListedAndSwitchable()
+    {
+        Load(TwoAudioTracksClip);
+
+        var tracks = _player.GetAudioTracks();
+
+        Assert.Equal(2, tracks.Count);
+        Assert.Equal(1, tracks[0].Id);
+        Assert.Equal(1, tracks[0].FfIndex);
+        Assert.Equal("eng", tracks[0].Language);
+        Assert.Equal("Main", tracks[0].Title);
+        Assert.Equal("aac", tracks[0].Codec);
+        Assert.True(tracks[0].IsDefault);
+        Assert.True(tracks[0].IsSelected);
+        Assert.Equal(2, tracks[1].Id);
+        Assert.Equal(2, tracks[1].FfIndex);
+        Assert.Equal("dan", tracks[1].Language);
+        Assert.Equal("Commentary", tracks[1].Title);
+        Assert.False(tracks[1].IsDefault);
+        Assert.False(tracks[1].IsSelected);
+
+        var started = Stopwatch.GetTimestamp();
+        _player.SetAudioTrack(2);
+        Assert.True(WaitFor(() => _player.HasPlaybackRestartedSince(started)), "the track switch never restarted playback");
+        tracks = _player.GetAudioTracks();
+        Assert.False(tracks[0].IsSelected);
+        Assert.True(tracks[1].IsSelected);
+
+        _player.SetAudioTrack(99); // unknown ids are ignored
+        Assert.True(_player.GetAudioTracks()[1].IsSelected);
+
+        var toggled = _player.ToggleAudioTrack();
+        Assert.NotNull(toggled);
+        Assert.Equal(1, toggled.Id);
+        Assert.True(toggled.IsSelected);
+        Assert.True(_player.GetAudioTracks()[0].IsSelected);
+    }
+
+    [Fact]
+    public void AudioTracks_SingleTrack_ListsOneAndCannotToggle()
+    {
+        Load(ConstantRateClip);
+
+        var tracks = _player.GetAudioTracks();
+
+        Assert.Single(tracks);
+        Assert.Equal(1, tracks[0].Id);
+        Assert.True(tracks[0].IsSelected);
+        Assert.Null(_player.ToggleAudioTrack());
     }
 
     [Fact]
