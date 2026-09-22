@@ -3,6 +3,41 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-beta9 (22nd of September 2026)
+
+* Add TranslatePsy-AfriSLM 4B (English <-> 19 African languages) to the llama.cpp auto-translate models
+* Add Romanian OCR fix replace list (cedilla ş/ţ to comma below ș/ț) - thx Gabriel
+* Batch convert: OCR language per file from the container track or file name (e.g. "Movie [fra].sup") - thx Gabriel
+* Remux: show durations, elapsed/remaining time, and load the remuxed video when done - thx ghostminhtoan
+* OCR: remember the spell check dictionary per language (no more jumping back to "English (Australia)") - thx Gabriel
+* Clone from video: offer speech-to-text for the clips when the TTS engine needs transcripts (OmniVoice) - thx nielka98
+* Point sync via other subtitle: browse from the current subtitle's folder - thx fraternl
+* seconv: add --ocr-auto-detect-assa-alignment - thx gambar3
+* seconv: add --no-language-suffix to write auto-translated files without the language code - thx Mafuyu0
+* Improve performance of binary OCR matching, select-all timing commands, merge lines and the "Remove text for HI" dialog
+* Fix ASSA/SSA styles dialog changing the style of other lines when an original subtitle is loaded - thx hisui3393
+* Fix "Remove text for hearing impaired" changing dashes/spaces with no option selected - thx kadrimarzouki
+* Fix WebVTT to SubRip wrapping every line in a font tag with the player's default text color - thx maknol
+* Fix "Remove color tags" leaving garbage for rgba() colors
+* Fix Matroska subtitle extraction failing on busy network shares (short reads) - thx shotfirer
+* Fix seconv DVB-sub image export placing images at twice the offset, and MKV DVB-sub going through OCR
+* Fix audio clip extraction on zero/negative duration lines (ffmpeg -t 0 = whole file) in extract audio, clone voice and speech-to-text on selected lines
+* Fix FFmpeg video player stuck at the end after playing to it, and frame step keys dead on audio-only files
+* Fix layout 14 filmstrip going blank near the end of the video
+* Fix "Show speech only" waveform reverting to the full mix after undocking, and drifting with SMPTE timing
+* Fix second subtitle "Remember these settings" failing with audio-only media
+* Fix settings import bringing back old shortcut defaults (e.g. Cmd+H for Replace on macOS)
+* Fix OCR language auto-detect taking title words like "No"/"It"/"Be" for language codes (Dr.No.sup as Norwegian)
+* Fix "Generate background music" discarding the clip just listened to and generating a new one
+* Fix "Improve time codes" moving end times with "Adjust end times" off
+* Fix text to speech casting listing Zonos without an install
+* Update llama.cpp to b11070
+* Update FFmpeg (Windows) to 9.0.2
+* Update Italian translation - thx bovirus
+* Update Polish translation - thx potplayer-fanpack
+
+-----------------------------------------------------------------------------------------------------
+
 v5.3.0-beta8 (21st of September 2026)
 
 * Add editor-style layout 14 with a track timeline (video row and subtitle rows above the waveform)
