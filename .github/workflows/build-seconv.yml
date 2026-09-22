@@ -121,7 +121,7 @@ jobs:
       - name: Upload Windows ZIP packages
         uses: actions/upload-artifact@v4
         with:
-          name: windows-zip-packages
+          name: seconv-windows-zip-packages
           path: |
             ./SeConv-Windows-x64.zip
             ./SeConv-Windows-ARM64.zip
@@ -192,7 +192,7 @@ jobs:
       - name: Upload macOS ZIP packages
         uses: actions/upload-artifact@v4
         with:
-          name: macos-zip-packages
+          name: seconv-macos-zip-packages
           path: |
             ./SeConv-macOS-x64.zip
             ./SeConv-macOS-ARM64.zip
@@ -271,7 +271,7 @@ jobs:
       - name: Upload Linux TAR packages
         uses: actions/upload-artifact@v4
         with:
-          name: linux-tar-packages
+          name: seconv-linux-tar-packages
           path: |
             ./SeConv-Linux-x64.tar.gz
             ./SeConv-Linux-ARM64.tar.gz
@@ -297,9 +297,14 @@ jobs:
             echo "tag=pre-release-${timestamp}" >> $GITHUB_OUTPUT
           fi
 
-      - name: Download all artifacts
+      # Only the seconv artifacts: when this workflow is called from build-ui.yml the run
+      # also holds the UI artifacts, and a name shared with one of those (windows-zip-packages
+      # was shared) made "download all" keep whichever was listed first - the seconv Windows
+      # zips were missing from v5.3.0-beta9.
+      - name: Download seconv artifacts
         uses: actions/download-artifact@v4
         with:
+          pattern: seconv-*
           path: ./artifacts
 
       - name: Prepare release assets
@@ -307,9 +312,9 @@ jobs:
           mkdir -p ./release-assets
 
           # Copy ZIP/TAR packages to release assets
-          cp ./artifacts/windows-zip-packages/*.zip ./release-assets/
-          cp ./artifacts/macos-zip-packages/*.zip ./release-assets/
-          cp ./artifacts/linux-tar-packages/*.tar.gz ./release-assets/
+          cp ./artifacts/seconv-windows-zip-packages/*.zip ./release-assets/
+          cp ./artifacts/seconv-macos-zip-packages/*.zip ./release-assets/
+          cp ./artifacts/seconv-linux-tar-packages/*.tar.gz ./release-assets/
 
           # List all files that will be uploaded
           echo "Release assets:"
