@@ -1059,6 +1059,9 @@ internal class SubtitleConverter
     /// A name in <paramref name="usedNames"/> was handed out earlier in this run (e.g.
     /// the first of two "eng" tracks) and always counts as taken - --overwrite only
     /// clobbers files from before the run, never the run's own output.
+    /// --no-language-suffix drops the language token altogether (#15156): with
+    /// --overwrite a --translate-to run then writes back to the input's own name, without
+    /// it the counter keeps the input safe.
     /// </summary>
     internal static string ResolveOutputFileName(
         string inputFile,
@@ -1067,6 +1070,11 @@ internal class SubtitleConverter
         int? trackNumber = null,
         ISet<string>? usedNames = null)
     {
+        if (options.NoLanguageSuffix)
+        {
+            languageSuffix = null;
+        }
+
         string baseName;
         string ext;
         if (!string.IsNullOrEmpty(options.OutputFilename))
@@ -1177,6 +1185,12 @@ internal record class ConversionOptions
     public double? Fps { get; init; }
     public double? TargetFps { get; init; }
     public bool Overwrite { get; init; }
+
+    /// <summary>
+    /// --no-language-suffix: never insert a language code (translation target or container
+    /// track language) between the output stem and its extension.
+    /// </summary>
+    public bool NoLanguageSuffix { get; init; }
 
     /// <summary>--keep-timestamp: copy the source file's creation/last-write time onto every output file.</summary>
     public bool KeepTimestamp { get; init; }

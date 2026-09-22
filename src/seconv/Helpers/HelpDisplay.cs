@@ -53,6 +53,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--output-filename-append:<text>", "Text appended to the output file name stem, e.g. _fixed (ignored with --output-filename)");
         ShowParameter(console, "--output-folder:<folder name>", "Output folder path");
         ShowParameter(console, "--overwrite", "Overwrite existing files");
+        ShowParameter(console, "--no-language-suffix", "Do not add the language code to the output name (movie.srt, not movie.en.srt); with --overwrite and --translate-to the file is translated in place");
         ShowParameter(console, "--keep-timestamp", "Give output files the source file's modified/created date instead of the conversion time");
         ShowParameter(console, "--pac-codepage:<code page>", "PAC code page");
         ShowParameter(console, "--profile:<profile name>", "Profile name");

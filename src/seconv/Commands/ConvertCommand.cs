@@ -192,6 +192,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("Overwrite existing files")]
         public bool Overwrite { get; init; }
 
+        [CommandOption("--no-language-suffix|--nolanguagesuffix")]
+        [Description("Do not insert the language code before the extension (movie.srt instead of movie.en.srt) - with --overwrite and --translate-to the source file is translated in place")]
+        public bool NoLanguageSuffix { get; init; }
+
         [CommandOption("--keep-timestamp|--keep-timestamps")]
         [Description("Give output files the source file's modified/created date instead of now")]
         public bool KeepTimestamp { get; init; }
@@ -777,6 +781,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 Fps = settings.Fps,
                 TargetFps = settings.TargetFps,
                 Overwrite = settings.Overwrite,
+                NoLanguageSuffix = settings.NoLanguageSuffix,
                 KeepTimestamp = settings.KeepTimestamp,
                 Operations = operations,
                 FixCommonErrorsRules = fceRules,
