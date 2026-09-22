@@ -28,7 +28,8 @@ public static class ViewChangeFrameRate
             SelectedValue = vm.SelectedFromFrameRate,
             VerticalAlignment = VerticalAlignment.Center,
             MinWidth = 90,
-        }.WithBindSelected(nameof(vm.SelectedFromFrameRate));
+        }.WithFrameRateDisplay()
+         .WithBindSelected(nameof(vm.SelectedFromFrameRate));
 
         //var buttonFromFrameRate = UiUtil.MakeButtonBrowse(vm.BrowseFromFrameRateCommand);
 
@@ -46,7 +47,8 @@ public static class ViewChangeFrameRate
             SelectedValue = vm.SelectedToFrameRate,
             VerticalAlignment = VerticalAlignment.Center,
             MinWidth = 90,
-        }.WithBindSelected(nameof(vm.SelectedToFrameRate));
+        }.WithFrameRateDisplay()
+         .WithBindSelected(nameof(vm.SelectedToFrameRate));
 
         //var buttonToFrameRate = UiUtil.MakeButtonBrowse(vm.BrowseToFrameRateCommand);
         

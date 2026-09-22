@@ -119,7 +119,7 @@ public class ReEncodeVideoWindow : Window
         }.WithBindVisible(vm, nameof(vm.UseSourceResolution));
 
         var labelFrameRate = UiUtil.MakeLabel(Se.Language.General.FrameRate);
-        var comboBoxFrameRate = UiUtil.MakeComboBox(vm.FrameRates, vm, nameof(vm.SelectedFrameRate));
+        var comboBoxFrameRate = UiUtil.MakeComboBox(vm.FrameRates, vm, nameof(vm.SelectedFrameRate)).WithFrameRateDisplay();
         _comboBoxFrameRate = comboBoxFrameRate;
 
         var labelVideoExtension = UiUtil.MakeLabel(Se.Language.General.VideoExtension);

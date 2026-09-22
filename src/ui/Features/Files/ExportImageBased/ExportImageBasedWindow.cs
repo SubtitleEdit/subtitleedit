@@ -455,7 +455,7 @@ public class ExportImageBasedWindow : Window
         grid.Add(comboBoxBoxType, 5, 5);
         
         var labelFrameRate = UiUtil.MakeLabel(Se.Language.General.FrameRate);
-        var comboBoxFrameRate = UiUtil.MakeComboBox(vm.FrameRates, vm, nameof(vm.SelectedFrameRate));
+        var comboBoxFrameRate = UiUtil.MakeComboBox(vm.FrameRates, vm, nameof(vm.SelectedFrameRate)).WithFrameRateDisplay();
         comboBoxFrameRate.SelectionChanged += vm.ComboChanged;
         grid.Add(labelFrameRate, 6, 4);
         grid.Add(comboBoxFrameRate, 6, 5);

@@ -123,7 +123,7 @@ public class BlankVideoWindow : Window
         }.WithBindVisible(vm, nameof(vm.UseSourceResolution));
 
         var labelFrameRate = UiUtil.MakeLabel(Se.Language.General.FrameRate);
-        var comboBoxFrameRate = UiUtil.MakeComboBox(vm.FrameRates, vm, nameof(vm.SelectedFrameRate));
+        var comboBoxFrameRate = UiUtil.MakeComboBox(vm.FrameRates, vm, nameof(vm.SelectedFrameRate)).WithFrameRateDisplay();
 
         var checkBoxGenerateTimeCodes = UiUtil.MakeCheckBox(Se.Language.Video.GenerateTimeCodes, vm, nameof(vm.GenerateTimeCodes));
 

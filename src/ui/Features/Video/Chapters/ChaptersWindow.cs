@@ -400,8 +400,8 @@ public class ChaptersWindow : Window
         var buttonShift = UiUtil.MakeButton(Se.Language.General.Apply, vm.ApplyShiftCommand)
             .WithBindIsEnabled(nameof(vm.HasChapters));
 
-        var comboFrom = UiUtil.MakeComboBox(vm.FromFrameRates, vm, nameof(vm.SelectedFromFrameRate));
-        var comboTo = UiUtil.MakeComboBox(vm.ToFrameRates, vm, nameof(vm.SelectedToFrameRate));
+        var comboFrom = UiUtil.MakeComboBox(vm.FromFrameRates, vm, nameof(vm.SelectedFromFrameRate)).WithFrameRateDisplay();
+        var comboTo = UiUtil.MakeComboBox(vm.ToFrameRates, vm, nameof(vm.SelectedToFrameRate)).WithFrameRateDisplay();
         AutomationProperties.SetName(comboFrom, language.FromFrameRate);
         AutomationProperties.SetName(comboTo, language.ToFrameRate);
 

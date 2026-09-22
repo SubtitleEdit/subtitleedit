@@ -24,6 +24,7 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Optris.Icons.Avalonia;
 using SkiaSharp;
 using System;
+using System.Globalization;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -1772,6 +1773,23 @@ public static class UiUtil
             Path = selectedPropertyBinding,
             Mode = BindingMode.TwoWay,
         });
+
+        return control;
+    }
+
+    /// <summary>
+    /// For a combo box whose items are frame rates as <see cref="double"/>: print them with a
+    /// decimal point ("23.976") whatever the OS decimal separator, like the toolbar frame rate
+    /// combo (which holds invariant strings) - a bare double item would show "23,976" on a
+    /// comma-decimal locale. Applies to the dropdown items and the selection box alike.
+    /// </summary>
+    public static ComboBox WithFrameRateDisplay(this ComboBox control)
+    {
+        control.DisplayMemberBinding = new Binding(".")
+        {
+            StringFormat = "{0:0.###}",
+            ConverterCulture = CultureInfo.InvariantCulture,
+        };
 
         return control;
     }
