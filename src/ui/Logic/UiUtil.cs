@@ -1388,7 +1388,7 @@ public static class UiUtil
 
     public static Button WithIconRight(this Button control, string iconName)
     {
-        var label = new TextBlock() { Text = control.Content?.ToString(), Padding = new Thickness(0, 0, 4, 0) };
+        var (label, accessibleName) = MakeIconButtonLabel(DetachContent(control), new Thickness(0, 0, 4, 0));
         var image = new ContentControl();
         Attached.SetIcon(image, iconName);
         var stackPanelApplyFixes = new StackPanel
@@ -1400,9 +1400,9 @@ public static class UiUtil
         control.Content = stackPanelApplyFixes;
 
         // Same as WithIconLeft: the panel content has no UIA name of its own, keep the text.
-        if (!string.IsNullOrEmpty(label.Text))
+        if (!string.IsNullOrEmpty(accessibleName))
         {
-            AutomationProperties.SetName(control, label.Text);
+            AutomationProperties.SetName(control, accessibleName);
         }
 
         return control;
@@ -1410,7 +1410,7 @@ public static class UiUtil
 
     public static Button WithIconLeft(this Button control, string iconName)
     {
-        var label = new TextBlock() { Text = control.Content?.ToString(), Padding = new Thickness(4, 0, 0, 0) };
+        var (label, accessibleName) = MakeIconButtonLabel(DetachContent(control), new Thickness(4, 0, 0, 0));
         var image = new ContentControl();
         Attached.SetIcon(image, iconName);
         var stackPanelApplyFixes = new StackPanel
@@ -1424,12 +1424,40 @@ public static class UiUtil
         // Replacing the text content with an icon+text panel loses the button's computed UIA
         // name - keep the original text as the accessible name so screen readers still
         // announce it (#11745/#12087 accessibility work).
-        if (!string.IsNullOrEmpty(label.Text))
+        if (!string.IsNullOrEmpty(accessibleName))
         {
-            AutomationProperties.SetName(control, label.Text);
+            AutomationProperties.SetName(control, accessibleName);
         }
 
         return control;
+    }
+
+    /// <summary>
+    /// The label for an icon+text button. A button made by <see cref="MakeButton(string, IRelayCommand?, object?)"/>
+    /// from a label with an access key holds an <see cref="AccessText"/>, not a string: keep that
+    /// control so the Alt underline survives - flattening it with ToString() would print the type
+    /// name as the caption. The accessible name is the caption without the `_` marker.
+    /// </summary>
+    // An AccessText content is a logical child of the button; it has to leave the button before the
+    // icon panel adopts it, or it ends up in the panel with no logical parent and the window
+    // throws while attaching to the tree.
+    private static object? DetachContent(Button control)
+    {
+        var content = control.Content;
+        control.Content = null;
+        return content;
+    }
+
+    private static (TextBlock Label, string? AccessibleName) MakeIconButtonLabel(object? content, Thickness padding)
+    {
+        if (content is AccessText accessText)
+        {
+            accessText.Padding = padding;
+            return (accessText, ParseAccessKey(accessText.Text ?? string.Empty).Display);
+        }
+
+        var text = content?.ToString();
+        return (new TextBlock { Text = text, Padding = padding }, text);
     }
 
     public static Button WithCommandParameter<T>(this Button control, T parameter)

@@ -35,6 +35,9 @@ public class ReplaceWindow : Window
         }.WithAccessibleName(Se.Language.General.Find); // AutoCompleteBox has no watermark-derived name (#12087)
         textBoxFind.KeyDown += vm.FindTextBoxKeyDown;
 
+        var buttonHistory = FindWindowParts.MakeHistoryButton(vm.SearchHistory, vm.ShowHistoryCommand);
+        var panelSearch = FindWindowParts.MakeSearchPanel(textBoxFind, buttonHistory);
+
         var checkBoxWholeWord = new CheckBox
         {
             Content = Se.Language.Edit.Find.WholeWord,
@@ -50,7 +53,7 @@ public class ReplaceWindow : Window
             Margin = new Thickness(0, 0, 0, 3),
             Children =
             {
-                textBoxFind,
+                panelSearch,
                 checkBoxWholeWord
             }
         };
@@ -155,27 +158,26 @@ public class ReplaceWindow : Window
         };
 
         var buttonFindNext = UiUtil.MakeButton(Se.Language.Edit.Find.FindNext, vm.FindNextCommand)
+            .WithIconLeft(IconNames.ChevronRight)
             .WithLeftAlignment()
             .WithMinWidth(150)
             .WithMargin(0, 0, 0, 10);
         var buttonReplace = UiUtil.MakeButton(Se.Language.Edit.Find.ReplaceAndFindNext, vm.ReplaceCommand)
+            .WithIconLeft(IconNames.FindReplace)
             .WithLeftAlignment()
             .WithMinWidth(150)
             .WithMargin(0, 0, 0, 10);
         var buttonReplaceAll = UiUtil.MakeButton(Se.Language.Edit.Find.ReplaceAll, vm.ReplaceAllCommand)
+            .WithIconLeft(IconNames.FileReplaceOutline)
             .WithLeftAlignment()
             .WithMinWidth(150)
             .WithMargin(0, 0, 0, 10);
         var buttonCount = UiUtil.MakeButton(Se.Language.General.Count, vm.CountCommand)
+            .WithIconLeft(IconNames.Counter)
             .WithLeftAlignment()
             .WithMinWidth(150)
             .WithMargin(0, 0, 0, 10);
-        var textBlockCountResult = new TextBlock
-        {
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.CountResult)) { Mode = BindingMode.OneWay },
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 0, 0)
-        };
+        var panelResult = FindWindowParts.MakeResultPanel(nameof(vm.CountResult), nameof(vm.ResultIcon));
 
         var panelButtons = new StackPanel
         {
@@ -188,7 +190,7 @@ public class ReplaceWindow : Window
                 buttonReplace,
                 buttonReplaceAll,
                 buttonCount,
-                textBlockCountResult,
+                panelResult,
             }
         };
 

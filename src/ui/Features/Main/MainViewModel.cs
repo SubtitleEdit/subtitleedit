@@ -17338,6 +17338,7 @@ public partial class MainViewModel :
                 }
 
                 ShowStatus(string.Format(Se.Language.Main.ReplacedXWithYCountZ, result.SearchText, result.ReplaceText, replaceCount));
+                result.ReportReplaceAll(replaceCount);
                 return;
             }
             else // replace requested
@@ -17375,6 +17376,7 @@ public partial class MainViewModel :
                             nextStartLine = savedFoundLine;
                             nextStartIndex = savedFoundIndex + replaced.Value;
                             nextStartInOriginal = savedFoundInOriginal;
+                            result.ReportReplaced(1);
                         }
                     }
                 }
