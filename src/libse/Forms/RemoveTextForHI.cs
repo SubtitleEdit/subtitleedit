@@ -1322,7 +1322,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 text = "<i>" + text.Remove(0, removeText.Length).TrimStart(' ');
             }
 
-            if (input != text)
+            // Collapsing double spaces and trimming above is a side effect of rebuilding the text,
+            // not an HI fix. A file that centers its lines with leading spaces came out of the
+            // rebuild "changed" on every line, which woke the dash fixer below and stripped or
+            // added dialog dashes with no option selected (#15157).
+            var whiteSpaceOnlyChange = IsWhiteSpaceOnlyChange(originalAfterU2010Replace, text);
+            if (input != text && !whiteSpaceOnlyChange)
             {
                 // insert spaces before "-"
                 text = text.Replace(Environment.NewLine + "- <i>", Environment.NewLine + "<i>- ");
@@ -1359,8 +1364,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 }
             }
 
-            // keep U2010 dashes if no changes
-            if (originalAfterU2010Replace == text)
+            // keep U2010 dashes (and the original white space) if no changes
+            if (originalAfterU2010Replace == text || whiteSpaceOnlyChange)
             {
                 return inputWithoutUnicodeReplace;
             }
@@ -1371,6 +1376,41 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
 
             return text.Trim();
+        }
+
+        /// <summary>
+        /// True when the two texts differ only in white space: padding, double spaces, trailing
+        /// blanks or line break style.
+        /// </summary>
+        internal static bool IsWhiteSpaceOnlyChange(string before, string after)
+        {
+            var i = 0;
+            var j = 0;
+            while (true)
+            {
+                while (i < before.Length && char.IsWhiteSpace(before[i]))
+                {
+                    i++;
+                }
+
+                while (j < after.Length && char.IsWhiteSpace(after[j]))
+                {
+                    j++;
+                }
+
+                if (i >= before.Length || j >= after.Length)
+                {
+                    return i >= before.Length && j >= after.Length;
+                }
+
+                if (before[i] != after[j])
+                {
+                    return false;
+                }
+
+                i++;
+                j++;
+            }
         }
 
         private static string RemoveEmptyFontTag(string text)
