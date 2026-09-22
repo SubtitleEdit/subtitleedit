@@ -10,6 +10,7 @@ public static partial class SystemMenu
     private const uint WM_SYSCOMMAND = 0x0112;
     private const uint TPM_LEFTALIGN = 0x0000;
     private const uint TPM_RETURNCMD = 0x0100;
+    private const uint TPM_WORKAREA = 0x10000;
 
     [LibraryImport("user32.dll")]
     private static partial IntPtr GetSystemMenu(IntPtr hWnd, [MarshalAs(UnmanagedType.Bool)] bool bRevert);
@@ -19,7 +20,11 @@ public static partial class SystemMenu
     private static partial bool GetCursorPos(out POINT lpPoint);
 
     [LibraryImport("user32.dll")]
-    private static partial uint TrackPopupMenu(IntPtr hMenu, uint uFlags, int x, int y, int nReserved, IntPtr hWnd, IntPtr prcRect);
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool ClientToScreen(IntPtr hWnd, ref POINT lpPoint);
+
+    [LibraryImport("user32.dll")]
+    private static partial uint TrackPopupMenuEx(IntPtr hMenu, uint uFlags, int x, int y, IntPtr hWnd, IntPtr lptpm);
 
     [LibraryImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
@@ -66,9 +71,19 @@ public static partial class SystemMenu
             return;
         }
 
-        GetCursorPos(out var point);
+        // Anchor at the top-left of the client area, just below the caption, which is where
+        // Windows itself opens the Alt+Space menu. Anchoring at the cursor put the menu on
+        // whichever monitor the mouse was on, and with the mouse over the taskbar the menu
+        // was clamped to the monitor instead of the work area and lost its last item behind
+        // the taskbar (#15128). TPM_WORKAREA keeps it inside the work area regardless.
+        var point = new POINT();
+        if (!ClientToScreen(hwnd, ref point))
+        {
+            GetCursorPos(out point);
+        }
+
         SetForegroundWindow(hwnd);
-        var cmd = TrackPopupMenu(menu, TPM_LEFTALIGN | TPM_RETURNCMD, point.X, point.Y, 0, hwnd, IntPtr.Zero);
+        var cmd = TrackPopupMenuEx(menu, TPM_LEFTALIGN | TPM_RETURNCMD | TPM_WORKAREA, point.X, point.Y, hwnd, IntPtr.Zero);
         if (cmd != 0)
         {
             PostMessage(hwnd, WM_SYSCOMMAND, (IntPtr)cmd, IntPtr.Zero);
