@@ -26,7 +26,8 @@ public static class ViewSnapTimeCodesToFrames
             SelectedValue = vm.SelectedSnapTimeCodesToFramesFrameRate,
             VerticalAlignment = VerticalAlignment.Center,
             MinWidth = 90,
-        }.WithBindSelected(nameof(vm.SelectedSnapTimeCodesToFramesFrameRate))
+        }.WithFrameRateDisplay()
+         .WithBindSelected(nameof(vm.SelectedSnapTimeCodesToFramesFrameRate))
          .WithBindEnabled(nameof(vm.SnapTimeCodesToFramesUseFixedFrameRate));
 
         var panelFrameRateFixed = new StackPanel

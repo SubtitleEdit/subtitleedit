@@ -28,7 +28,8 @@ public static class ViewBeautifyTimeCodes
             SelectedValue = vm.SelectedBeautifyTimeCodesFrameRate,
             VerticalAlignment = VerticalAlignment.Center,
             MinWidth = 90,
-        }.WithBindSelected(nameof(vm.SelectedBeautifyTimeCodesFrameRate))
+        }.WithFrameRateDisplay()
+         .WithBindSelected(nameof(vm.SelectedBeautifyTimeCodesFrameRate))
          .WithBindEnabled(nameof(vm.BeautifyTimeCodesUseFixedFrameRate));
 
         var panelFrameRateFixed = new StackPanel
