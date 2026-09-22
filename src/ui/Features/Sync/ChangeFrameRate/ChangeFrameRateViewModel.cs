@@ -10,6 +10,8 @@ using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.UiLogic.Media;
@@ -23,6 +25,10 @@ public partial class ChangeFrameRateViewModel : ObservableObject
 
     [ObservableProperty] private ObservableCollection<double> _toFrameRates;
     [ObservableProperty] private double _selectedToFrameRate;
+
+    [ObservableProperty] private bool _hasVideo;
+    [ObservableProperty] private string _videoFileName = string.Empty;
+    [ObservableProperty] private string _videoInfoText = string.Empty;
 
     private static readonly List<double> StandardFrameRates = new List<double> { 23.976, 24, 25, 29.97, 30, 50, 59.94, 60 };
 
@@ -49,25 +55,46 @@ public partial class ChangeFrameRateViewModel : ObservableObject
         SelectedToFrameRate = GetClosestFrameRate(ToFrameRates, savedTo);
     }
 
-    public void Initialize(string? videoFileName, FfmpegMediaInfo2? mediaInfo)
+    /// <summary>
+    /// Presets the dialog the way SE 4 did (#15177): the current frame rate - the toolbar value,
+    /// which follows the loaded video - is the <b>from</b> rate, because a subtitle demuxed from
+    /// that video was authored at it. <b>To</b> keeps the last used value, unless that equals
+    /// <b>from</b>, where the PAL/NTSC-film counterpart beats a no-op conversion. The video line
+    /// shows which file the detected rate came from.
+    /// </summary>
+    public void Initialize(string? videoFileName, double videoFrameRate, double currentFrameRate)
     {
-        if (mediaInfo == null || mediaInfo.FramesRate <= 0)
+        if (!string.IsNullOrEmpty(videoFileName) && videoFrameRate > 0)
+        {
+            VideoFileName = videoFileName;
+            VideoInfoText = string.Format(Se.Language.Sync.VideoXFrameRateY, Path.GetFileName(videoFileName),
+                videoFrameRate.ToString("0.###", CultureInfo.InvariantCulture));
+            HasVideo = true;
+            FromFrameRates = WithRate(FromFrameRates, videoFrameRate);
+            ToFrameRates = WithRate(ToFrameRates, videoFrameRate);
+        }
+
+        var fromRate = currentFrameRate > 0 ? currentFrameRate : videoFrameRate;
+        if (fromRate <= 0)
         {
             return;
         }
 
-        var detectedRate = (double)mediaInfo.FramesRate;
-
-        FromFrameRates = new ObservableCollection<double>(FromFrameRates.Append(detectedRate).Distinct().OrderBy(r => r));
-        ToFrameRates = new ObservableCollection<double>(ToFrameRates.Append(detectedRate).Distinct().OrderBy(r => r));
-
-        SelectedToFrameRate = GetClosestFrameRate(ToFrameRates, detectedRate);
-
-        var preferredFromRate = Math.Abs(SelectedToFrameRate - 25.0) < 0.01 ? 23.976 : 25.0;
-        SelectedFromFrameRate = GetClosestFrameRate(FromFrameRates, preferredFromRate);
-
-        _autoToRate = SelectedToFrameRate;
+        FromFrameRates = WithRate(FromFrameRates, fromRate);
+        SelectedFromFrameRate = GetClosestFrameRate(FromFrameRates, fromRate);
         _autoFromRate = SelectedFromFrameRate;
+
+        if (Math.Abs(SelectedToFrameRate - SelectedFromFrameRate) < 0.001)
+        {
+            var counterpart = Math.Abs(SelectedFromFrameRate - 25.0) < 0.01 ? 23.976 : 25.0;
+            SelectedToFrameRate = GetClosestFrameRate(ToFrameRates, counterpart);
+            _autoToRate = SelectedToFrameRate;
+        }
+    }
+
+    private static ObservableCollection<double> WithRate(IEnumerable<double> rates, double rate)
+    {
+        return new ObservableCollection<double>(rates.Append(rate).Distinct().OrderBy(r => r));
     }
 
     [RelayCommand]

@@ -1,7 +1,12 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
+using Avalonia.Data;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Optris.Icons.Avalonia;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Features.Sync.ChangeFrameRate;
 
@@ -16,6 +21,31 @@ public class ChangeFrameRateWindow : Window
         vm.Window = this;
         DataContext = vm;
 
+        // Where the preset "from" rate came from: the loaded video's name and detected frame rate.
+        var videoIcon = new ContentControl
+        {
+            Width = 16,
+            Height = 16,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 0, 6, 0),
+        };
+        Attached.SetIcon(videoIcon, IconNames.MovieOpenOutline);
+        var textVideoInfo = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            MaxWidth = 420,
+        }.WithBindText(vm, nameof(vm.VideoInfoText));
+        var panelVideoInfo = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Opacity = 0.85,
+            Margin = new Thickness(0, 0, 0, 4),
+            Children = { videoIcon, textVideoInfo },
+        }.WithBindIsVisible(nameof(vm.HasVideo));
+        ToolTip.SetTip(panelVideoInfo, vm.VideoFileName);
+        ToolTip.SetTip(textVideoInfo, vm.VideoFileName);
+
         var labelFromFrameRate = new Label
         {
             Content = Se.Language.Sync.FromFrameRate,
@@ -26,6 +56,7 @@ public class ChangeFrameRateWindow : Window
         {
             VerticalAlignment = VerticalAlignment.Center,
             MinWidth = 90,
+            DisplayMemberBinding = FrameRateDisplayBinding(),
         }
         .WithBindItemsSource(nameof(vm.FromFrameRates))
         .WithBindSelected(nameof(vm.SelectedFromFrameRate));
@@ -45,6 +76,7 @@ public class ChangeFrameRateWindow : Window
         {
             VerticalAlignment = VerticalAlignment.Center,
             MinWidth = 90,
+            DisplayMemberBinding = FrameRateDisplayBinding(),
         }
         .WithBindItemsSource(nameof(vm.ToFrameRates))
         .WithBindSelected(nameof(vm.SelectedToFrameRate));
@@ -59,6 +91,7 @@ public class ChangeFrameRateWindow : Window
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
@@ -78,6 +111,9 @@ public class ChangeFrameRateWindow : Window
         };
 
         var row = 0;
+        grid.Add(panelVideoInfo, row, 0, 1, 4);
+        row++;
+
         grid.Add(labelFromFrameRate, row, 0);
         grid.Add(comboFromFrameRate, row, 1);
         grid.Add(buttonFromFrameRate, row, 2);
@@ -97,5 +133,18 @@ public class ChangeFrameRateWindow : Window
         Loaded += (_, _) => UiUtil.RestoreWindowPosition(this);
         Closing += (_, _) => UiUtil.SaveWindowPosition(this);
         KeyDown += (_, e) => vm.OnKeyDown(e);
+    }
+
+    /// <summary>
+    /// Frame rates always print with a decimal point ("23.976"), like the toolbar combo and the
+    /// video line - a bare double item would take the OS decimal separator ("23,976").
+    /// </summary>
+    private static Binding FrameRateDisplayBinding()
+    {
+        return new Binding(".")
+        {
+            StringFormat = "{0:0.###}",
+            ConverterCulture = CultureInfo.InvariantCulture,
+        };
     }
 }
