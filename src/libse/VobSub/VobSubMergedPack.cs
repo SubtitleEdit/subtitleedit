@@ -36,9 +36,16 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             return new SKSize(720, 480);
         }
 
+        /// <summary>
+        /// Where the bitmap from <see cref="GetBitmap"/> sits on screen. That bitmap is cropped
+        /// to the ink, so this is the display area's origin plus the crop offset - the display
+        /// area alone can be the whole frame on some discs, which put every cue at the top-left.
+        /// Call after <see cref="GetBitmap"/>, which is what decodes both.
+        /// </summary>
         public Position GetPosition()
         {
-            return new Position(SubPicture.ImageDisplayArea.Left, SubPicture.ImageDisplayArea.Top);
+            var position = SubPicture.ImagePosition;
+            return new Position(position.X, position.Y);
         }
 
         public TimeCode StartTimeCode
