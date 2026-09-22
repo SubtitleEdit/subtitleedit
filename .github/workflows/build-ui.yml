@@ -391,6 +391,7 @@ jobs:
         run: |
           dotnet publish src/ui/UI.csproj -c ${{ inputs.build_configuration }} -r win-x64 --self-contained true `
             -p:PublishSingleFile=true `
+            -p:PublishReadyToRun=true `
             -p:DebugSymbols=false `
             -p:DebugType=none `
             -p:Version=$env:APP_VER_FULL `
@@ -407,6 +408,7 @@ jobs:
         run: |
           dotnet publish src/ui/UI.csproj -c ${{ inputs.build_configuration }} -r win-arm64 --self-contained true `
             -p:PublishSingleFile=true `
+            -p:PublishReadyToRun=true `
             -p:DebugSymbols=false `
             -p:DebugType=none `
             -p:Version=$env:APP_VER_FULL `
@@ -450,6 +452,7 @@ jobs:
         run: |
           dotnet publish src/ui/UI.csproj -c ${{ inputs.build_configuration }} -r win-x64 --self-contained false `
             -p:PublishSingleFile=true `
+            -p:PublishReadyToRun=true `
             -p:DebugSymbols=false `
             -p:DebugType=none `
             -p:Version=$env:APP_VER_FULL `
@@ -677,6 +680,7 @@ jobs:
           set -e
           dotnet publish src/ui/UI.csproj -c ${{ inputs.build_configuration }} -r ${{ matrix.runtime }} --self-contained true \
             -p:PublishSingleFile=true \
+            -p:PublishReadyToRun=true \
             -p:DebugSymbols=false \
             -p:DebugType=none \
             -p:Version="$APP_VER_FULL" \
@@ -861,6 +865,7 @@ jobs:
         run: |
           dotnet publish src/ui/UI.csproj -c ${{ inputs.build_configuration }} -r linux-x64 --self-contained true \
             -p:PublishSingleFile=true \
+            -p:PublishReadyToRun=true \
             -p:DebugSymbols=false \
             -p:DebugType=none \
             -p:Version="$APP_VER_FULL" \
@@ -875,6 +880,7 @@ jobs:
         run: |
           dotnet publish src/ui/UI.csproj -c ${{ inputs.build_configuration }} -r linux-arm64 --self-contained true \
             -p:PublishSingleFile=true \
+            -p:PublishReadyToRun=true \
             -p:DebugSymbols=false \
             -p:DebugType=none \
             -p:Version="$APP_VER_FULL" \
