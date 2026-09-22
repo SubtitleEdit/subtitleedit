@@ -14,7 +14,6 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
-using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -402,9 +401,9 @@ public partial class SetSyncPointViewModel : ObservableObject
 
     private void ApplySelectedAudioTrack()
     {
-        if (_audioTrackId > 0 && VideoPlayerControl.VideoPlayer is LibMpvDynamicPlayer mpv)
+        if (_audioTrackId > 0)
         {
-            mpv.SetAudioTrack(_audioTrackId);
+            VideoPlayerControl.VideoPlayer?.SetAudioTrack(_audioTrackId);
         }
     }
 

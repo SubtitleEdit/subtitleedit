@@ -13,7 +13,6 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
-using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -171,15 +170,8 @@ public partial class VisualSyncViewModel : ObservableObject
             return;
         }
 
-        if (VideoPlayerControlLeft.VideoPlayer is LibMpvDynamicPlayer mpvLeft)
-        {
-            mpvLeft.SetAudioTrack(audioTrackId);
-        }
-
-        if (VideoPlayerControlRight.VideoPlayer is LibMpvDynamicPlayer mpvRight)
-        {
-            mpvRight.SetAudioTrack(audioTrackId);
-        }
+        VideoPlayerControlLeft.VideoPlayer?.SetAudioTrack(audioTrackId);
+        VideoPlayerControlRight.VideoPlayer?.SetAudioTrack(audioTrackId);
     }
 
     private void SetVideoInFo(string? videoFileName)
