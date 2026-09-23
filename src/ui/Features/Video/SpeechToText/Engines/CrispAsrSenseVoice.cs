@@ -112,7 +112,32 @@ public class CrispAsrSenseVoice : CrispAsrEngineBase
             return false;
         }
 
-        return new FileInfo(modelFile).Length > 10_000_000;
+        var length = new FileInfo(modelFile).Length;
+        return length > 10_000_000 && !PreCmvnModelSizes.Contains(length);
+    }
+
+    /// <summary>
+    /// Byte sizes of the GGUFs published before 2026-09-23, when cstr/sensevoice-small-GGUF
+    /// was re-converted with the am.mvn CMVN tensors (sensevoice.cmvn_shift/scale) that
+    /// CrispASR v0.8.36 applies. The old files still transcribe but crispasr warns on every run
+    /// and their emotion/event tags are wrong, so they count as not installed: the model dot
+    /// goes grey and Transcribe offers the download, which replaces the file. The re-converted
+    /// files are exactly 4,608 bytes larger, so the size alone tells them apart.
+    /// </summary>
+    private static readonly HashSet<long> PreCmvnModelSizes =
+    [
+        135_549_024, // sensevoice-small-q4_k.gguf
+        251_670_368, // sensevoice-small-q8_0.gguf
+        469_397_824, // sensevoice-small-f16.gguf
+    ];
+
+    /// <summary>
+    /// True when the model file exists but is one of the pre-CMVN conversions.
+    /// </summary>
+    public bool IsModelOutdated(WhisperModel model)
+    {
+        var modelFile = GetModelForCmdLine(model.Name);
+        return File.Exists(modelFile) && PreCmvnModelSizes.Contains(new FileInfo(modelFile).Length);
     }
 
     public override string GetModelForCmdLine(string modelName)

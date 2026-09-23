@@ -3932,7 +3932,9 @@ public partial class SpeechToTextViewModel : ObservableObject
                 var answer = await MessageBox.Show(
                     Window!,
                     $"Download {model}?",
-                    $"Download and use {model.Model.Name}?",
+                    (engine as CrispAsrEngine)?.SelectedBackend is CrispAsrSenseVoice senseVoice && senseVoice.IsModelOutdated(model.Model)
+                        ? $"An updated {model.Model.Name} is available (re-converted for Crisp ASR v0.8.36).\nDownload and use it?"
+                        : $"Download and use {model.Model.Name}?",
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
