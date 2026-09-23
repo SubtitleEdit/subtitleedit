@@ -5,6 +5,7 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -216,7 +217,7 @@ public class NOcrInspectWindow : Window
             }
         };
 
-        var buttonClear = new SplitButton
+        var buttonClear = new SeSplitButton
         {
             Content = Se.Language.General.Clear,
             Command = vm.ClearDrawCommand,

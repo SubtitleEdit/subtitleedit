@@ -136,6 +136,45 @@ public class InitialFocusConventionTests
             string.Join(Environment.NewLine, offenders));
     }
 
+    /// <summary>
+    /// Avalonia's SplitButton clicks on Enter key-up and leaves the key-down unhandled, so in a
+    /// window with an IsDefault OK/Done button Enter on the focused split button runs OK/Done
+    /// instead (#15197). SeSplitButton handles Enter on key-down; use it everywhere.
+    /// </summary>
+    [Fact]
+    public void NoPlainSplitButton()
+    {
+        var offenders = new List<string>();
+
+        foreach (var file in UiSourceFiles())
+        {
+            if (Path.GetFileName(file) == "SeSplitButton.cs")
+            {
+                continue;
+            }
+
+            var text = File.ReadAllText(file);
+            foreach (Match match in Regex.Matches(text, @"\bnew SplitButton\b"))
+            {
+                if (IsInsideComment(text, match.Index))
+                {
+                    continue;
+                }
+
+                var line = text.Take(match.Index).Count(c => c == '\n') + 1;
+                offenders.Add($"{Relative(file)}:{line}");
+            }
+        }
+
+        Assert.True(
+            offenders.Count == 0,
+            "A plain SplitButton is created. Enter on it reaches the window's IsDefault button " +
+            "before the split button clicks (it clicks on key-up), so Enter runs OK/Done instead. " +
+            "Use SeSplitButton." +
+            Environment.NewLine +
+            string.Join(Environment.NewLine, offenders));
+    }
+
     /// <summary>The block that starts at the first "{" after <paramref name="index"/>.</summary>
     private static string ReadBlockAfter(string text, int index)
     {

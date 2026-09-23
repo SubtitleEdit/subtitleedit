@@ -6,6 +6,7 @@ using Avalonia.Data.Converters;
 using Avalonia.Layout;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Config.Language.Tools;
@@ -163,7 +164,7 @@ public class BeautifyTimeCodesProfileWindow : Window
 
     private Control BuildPresetButton()
     {
-        return new SplitButton
+        return new SeSplitButton
         {
             Content = _l.LoadPreset,
             HorizontalAlignment = HorizontalAlignment.Left,

@@ -49,7 +49,7 @@ public class TransparentSubtitlesWindow : Window
         var videoInfoView = MakeVideoInfoView(vm);
         var progressView = MakeProgressView(vm);
 
-        var buttonGenerate = new SplitButton
+        var buttonGenerate = new SeSplitButton
         {
             Content = Se.Language.General.Generate,
             Command = vm.GenerateCommand,

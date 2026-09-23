@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -235,7 +236,7 @@ public class NOcrCharacterAddWindow : Window
         var comboBoxAlgorithm = UiUtil.MakeComboBox(vm.LineAlgorithms, vm, nameof(vm.SelectedLineAlgorithm));
         ToolTip.SetTip(comboBoxAlgorithm, "Algorithm used by Auto-draw to generate foreground/background lines");
 
-        var buttonClear = new SplitButton
+        var buttonClear = new SeSplitButton
         {
             Content = Se.Language.General.Clear,
             Command = vm.ClearDrawCommand,

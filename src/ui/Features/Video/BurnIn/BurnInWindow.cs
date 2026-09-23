@@ -66,7 +66,7 @@ public class BurnInWindow : Window
             Children = { subtitleSettingsView, videoSettingsView, targetFileSizeView },
         };
 
-        var buttonGenerate = new SplitButton
+        var buttonGenerate = new SeSplitButton
         {
             Content = Se.Language.General.Generate,
             Command = vm.GenerateCommand,
