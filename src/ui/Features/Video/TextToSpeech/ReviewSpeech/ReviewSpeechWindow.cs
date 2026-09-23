@@ -76,6 +76,7 @@ public class ReviewSpeechWindow : Window
         grid.Add(waveform, 1, 0, 1, 2);
         grid.Add(panelButtons, 2, 0, 1, 2);
         grid.Add(checkBoxAutoContinue, 2, 0);
+        grid.Add(MakePositionLabel(vm), 2, 0, 1, 2);
 
         Content = grid;
 
@@ -634,6 +635,35 @@ public class ReviewSpeechWindow : Window
         return grid;
     }
 
+    private static TextBlock MakePositionLabel(ReviewSpeechViewModel vm)
+    {
+        var label = new TextBlock
+        {
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.PositionText)),
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            FontSize = 16,
+            FontFeatures = new FontFeatureCollection { FontFeature.Parse("tnum") },
+            Background = Brushes.Transparent, // hit-testable between the digits
+            Cursor = new Cursor(StandardCursorType.Hand),
+        };
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(label, Se.Language.Video.GoToVideoPositionDotDotDot);
+        }
+
+        label.PointerPressed += (_, e) =>
+        {
+            if (e.GetCurrentPoint(label).Properties.IsLeftButtonPressed)
+            {
+                e.Handled = true;
+                vm.ShowGoToPositionCommand.Execute(null);
+            }
+        };
+
+        return label;
+    }
+
     private static Border MakeWaveform(ReviewSpeechViewModel vm)
     {
         // Mirror the main window's waveform theme so the review waveform looks the same as the
@@ -674,6 +704,10 @@ public class ReviewSpeechWindow : Window
             if (e.Property == AudioVisualizer.WavePeaksProperty)
             {
                 vm.RefreshWaveformPosition();
+            }
+            else if (e.Property == AudioVisualizer.CurrentVideoPositionSecondsProperty)
+            {
+                vm.UpdatePositionText(audioVisualizer.CurrentVideoPositionSeconds);
             }
             else if (e.Property == AudioVisualizer.StartPositionSecondsProperty ||
                      e.Property == AudioVisualizer.ZoomFactorProperty ||
