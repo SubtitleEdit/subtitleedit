@@ -85,6 +85,24 @@ public class RemuxVideoWindow : Window
             vm,
             (vm.SelectAudioTrackCommand, nameof(vm.IsAudioSelectTrackVisible)));
 
+        // Mix all audio files into one track, each at its own volume (shown for two or more files)
+        var checkBoxMixAudio = UiUtil.MakeCheckBox(l.RemuxVideoMixAudio, vm, nameof(vm.MixAudio));
+        checkBoxMixAudio.Bind(CheckBox.IsEnabledProperty, notRemuxing);
+        var labelVolume = UiUtil.MakeLabel(l.RemuxVideoVolumePercent);
+        labelVolume.Bind(Label.IsEnabledProperty, new Binding(nameof(vm.IsVolumeEnabled)));
+        var numericVolume = UiUtil.MakeNumericUpDownInt(0, 200, 100, 130, vm, $"{nameof(vm.SelectedAudioFile)}.{nameof(RemuxFileItem.VolumePercent)}")
+            .WithAccessibleName(l.RemuxVideoVolumePercent);
+        numericVolume.Bind(NumericUpDown.IsEnabledProperty, new Binding(nameof(vm.IsVolumeEnabled)));
+        var panelMix = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            Children = { checkBoxMixAudio, labelVolume, numericVolume },
+        };
+        panelMix.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsMixAudioVisible)));
+        panelAudio.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+        panelAudio.Add(panelMix, 3);
+
         // 3. Subtitle files
         var panelSubtitle = MakeFileListSection(
             IconNames.SubtitlesOutline,

@@ -196,4 +196,87 @@ public class RemuxVideoViewModelTests
 
         Assert.False(vm.ShouldLoadOutputOnClose(input));
     }
+
+    private static (RemuxVideoViewModel Vm, RemuxFileItem VideoAudio, RemuxFileItem Narration) BuildMixViewModel(bool mix)
+    {
+        var vm = BuildViewModel();
+        var video = Path.Combine(Path.GetTempPath(), "remux-mix-video-does-not-exist.mp4");
+        vm.VideoFileName = video;
+        vm.OutputFileName = Path.Combine(Path.GetTempPath(), "remux-mix-out.mp4");
+        vm.MixAudio = mix;
+        var videoAudio = new RemuxFileItem(video);
+        var narration = new RemuxFileItem(Path.Combine(Path.GetTempPath(), "remux-mix-narration-does-not-exist.mp3"));
+        vm.AudioFiles.Add(videoAudio);
+        vm.AudioFiles.Add(narration);
+        return (vm, videoAudio, narration);
+    }
+
+    [AvaloniaFact]
+    public void BuildFfmpegArguments_Mix_MixesEverySourceAtItsVolumeIntoOneTrack()
+    {
+        var (vm, videoAudio, narration) = BuildMixViewModel(true);
+        videoAudio.VolumePercent = 15;
+        narration.VolumePercent = 120;
+
+        var args = vm.BuildFfmpegArguments([.. vm.AudioFiles], []);
+
+        Assert.Contains("-filter_complex \"[0:a:0]volume=0.15[a0];[1:a:0]volume=1.20[a1];[a0][a1]amix=inputs=2:duration=longest:normalize=0[aout]\"", args);
+        Assert.Contains("-map 0:v:0 -map \"[aout]\" ", args);
+        Assert.DoesNotContain("-map 0:a:", args);
+        Assert.Contains("-c:a aac", args);
+        Assert.Contains("-metadata:s:a:0 title=", args);
+        Assert.DoesNotContain("-metadata:s:a:1", args);
+    }
+
+    [AvaloniaFact]
+    public void BuildFfmpegArguments_NoMix_KeepsOneCopiedTrackPerFile()
+    {
+        var (vm, videoAudio, _) = BuildMixViewModel(false);
+        videoAudio.VolumePercent = 15; // ignored without mixing
+
+        var args = vm.BuildFfmpegArguments([.. vm.AudioFiles], []);
+
+        Assert.DoesNotContain("-filter_complex", args);
+        Assert.Contains("-map 0:v:0 -map 0:a:0 -map 1:a:0 ", args);
+        Assert.Contains("-c:a copy", args);
+    }
+
+    [AvaloniaFact]
+    public void MixAudio_TwoFilesStayInMp4_UncheckingSwitchesToMkv()
+    {
+        var (vm, videoAudio, _) = BuildMixViewModel(true);
+        Assert.Equal(".mp4", vm.SelectedOutputFormat);
+        Assert.True(vm.IsMixAudioVisible);
+        Assert.True(videoAudio.ShowVolume);
+
+        vm.MixAudio = false;
+
+        Assert.Equal(".mkv", vm.SelectedOutputFormat);
+        Assert.False(videoAudio.ShowVolume);
+    }
+
+    [AvaloniaFact]
+    public void MixAudio_VolumeIsEnabledOnlyWithASelectedFile()
+    {
+        var (vm, videoAudio, _) = BuildMixViewModel(true);
+        vm.SelectedAudioFile = null;
+        Assert.False(vm.IsVolumeEnabled);
+
+        vm.SelectedAudioFile = videoAudio;
+        Assert.True(vm.IsVolumeEnabled);
+
+        vm.AudioFiles.RemoveAt(1); // one file left - nothing to mix
+        Assert.False(vm.IsMixAudioVisible);
+        Assert.False(vm.IsVolumeEnabled);
+    }
+
+    [Theory]
+    [InlineData(100, "1.00")]
+    [InlineData(15, "0.15")]
+    [InlineData(250, "2.00")]
+    [InlineData(-5, "0.00")]
+    public void FormatVolumeFactor_ClampsToZeroTo200Percent(int percent, string expected)
+    {
+        Assert.Equal(expected, RemuxVideoViewModel.FormatVolumeFactor(percent));
+    }
 }
