@@ -39,6 +39,36 @@ public class WhisperEngineWhisperXTests
     }
 
     [Fact]
+    public void RepoIdFollowsFasterWhispersNameMapWhereItDiffersFromTheDownloadUrl()
+    {
+        // SE downloads distil-large-v3.5 from Purfview's repo for the other engines, but
+        // faster-whisper maps the name to distil-whisper's - that is where whisperx caches it.
+        var model = new WhisperEngineWhisperX().Models.Single(m => m.Name == "distil-large-v3.5");
+
+        Assert.Equal("distil-whisper/distil-large-v3.5-ct2", WhisperEngineWhisperX.GetHuggingFaceRepoId(model));
+    }
+
+    [Fact]
+    public void ModelsFasterWhisperHasNoNameForGoOnTheCommandLineAsRepoIds()
+    {
+        // faster-whisper rejects "anime.ja" ("Invalid model size") but accepts a repo id.
+        var engine = new WhisperEngineWhisperX();
+
+        Assert.Equal("large-v3", engine.GetModelForCmdLine("large-v3"));
+        Assert.Equal("distil-large-v3.5", engine.GetModelForCmdLine("distil-large-v3.5"));
+        Assert.Equal("quantumcookie/anime-whisper-ct2-int8", engine.GetModelForCmdLine("anime.ja"));
+        Assert.Equal("my-custom-model", engine.GetModelForCmdLine("my-custom-model"));
+
+        // Guards the next model added to the shared list: every entry must reach faster-whisper
+        // as a name it knows or as a repo id.
+        Assert.All(engine.Models, m =>
+        {
+            var arg = engine.GetModelForCmdLine(m.Name);
+            Assert.True(WhisperEngineWhisperX.FasterWhisperModelNames.Contains(arg) || arg.Contains('/'), m.Name);
+        });
+    }
+
+    [Fact]
     public void CustomModelsWithoutUrlHaveNoRepoId()
     {
         // Custom models found in Purfview's model folder carry no URL - no repo, no green dot.

@@ -134,11 +134,34 @@ public class WhisperEngineWhisperX : ISpeechToTextEngine
         }
     }
 
+    // faster-whisper's own model names (faster_whisper/utils.py _MODELS). whisperx hands the
+    // --model value to faster-whisper, which accepts these names or a Hugging Face repo id
+    // (anything with a "/") and rejects everything else with "Invalid model size".
+    internal static readonly HashSet<string> FasterWhisperModelNames = new(StringComparer.Ordinal)
+    {
+        "tiny.en", "tiny", "base.en", "base", "small.en", "small", "medium.en", "medium",
+        "large-v1", "large-v2", "large-v3", "large", "distil-large-v2", "distil-medium.en",
+        "distil-small.en", "distil-large-v3", "distil-large-v3.5", "large-v3-turbo", "turbo",
+    };
+
+    // Where faster-whisper's name map differs from the URL SE downloads from for the
+    // CTranslate2/Purfview engines: the name resolves to another repo, so the hub cache
+    // holds it under that repo's folder.
+    private static readonly Dictionary<string, string> FasterWhisperRepoOverrides = new(StringComparer.Ordinal)
+    {
+        ["distil-large-v3.5"] = "distil-whisper/distil-large-v3.5-ct2",
+    };
+
     // e.g. "https://huggingface.co/Systran/faster-whisper-tiny/resolve/main/model.bin"
     //   -> "Systran/faster-whisper-tiny". Custom models found in Purfview's model folder have
     // no URL, so they get no repo id and no green dot.
     internal static string? GetHuggingFaceRepoId(WhisperModel model)
     {
+        if (FasterWhisperRepoOverrides.TryGetValue(model.Name, out var overrideRepoId))
+        {
+            return overrideRepoId;
+        }
+
         var url = model.Urls?.FirstOrDefault();
         if (string.IsNullOrEmpty(url))
         {
@@ -208,7 +231,18 @@ public class WhisperEngineWhisperX : ISpeechToTextEngine
         return path;
     }
 
-    public string GetModelForCmdLine(string modelName) => modelName;
+    // A model faster-whisper has no name for (e.g. "anime.ja") goes on the command line as its
+    // repo id, which faster-whisper downloads into the same hub cache the model dot checks.
+    public string GetModelForCmdLine(string modelName)
+    {
+        if (FasterWhisperModelNames.Contains(modelName))
+        {
+            return modelName;
+        }
+
+        var model = Models.FirstOrDefault(m => m.Name == modelName);
+        return (model != null ? GetHuggingFaceRepoId(model) : null) ?? modelName;
+    }
 
     public async Task<string> GetHelpText()
     {
