@@ -1,6 +1,7 @@
 ﻿using Avalonia.Threading;
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace Nikse.SubtitleEdit.Logic;
@@ -18,8 +19,21 @@ namespace Nikse.SubtitleEdit.Logic;
 /// depend on the timer message, and executing it also promotes the dispatcher's other due
 /// timers (the 50 ms position/display timers), so those stop freezing too.
 /// </para>
+/// <para>
+/// The wait itself must not be a plain <see cref="Thread.Sleep(int)"/> on Windows: a sleep is
+/// only as fine as the process's timer resolution, which defaults to 15.6 ms, so "sleep 16 ms"
+/// wakes on the second timer interrupt at a steady 31 ms and the 16 ms cursor tick lands on
+/// every other display frame. Nothing in Subtitle Edit or Avalonia raises the resolution, and
+/// libmpv raises it only for the duration of its own short sleeps (NtSetTimerResolution in
+/// mpv's timer-win32.c), so the tick rate flickered between 60 and 32 Hz with what mpv's
+/// threads happened to be doing, and stayed at 32 Hz with the FFmpeg player (#14909: waveform
+/// "shaking" that varied with nothing changed and was worse with FFmpeg). The pump therefore
+/// waits on a high-resolution waitable timer (Windows 10 1803+, sub-millisecond without touching
+/// the system timer resolution), and on older Windows raises the resolution to 1 ms for as long
+/// as the loop runs.
+/// </para>
 /// </summary>
-public sealed class UiTickPump : IDisposable
+public sealed partial class UiTickPump : IDisposable
 {
     private readonly TimeSpan _interval;
     private Action _tick;
@@ -81,6 +95,7 @@ public sealed class UiTickPump : IDisposable
 
     private void Loop(int generation)
     {
+        using var waiter = TickWaiter.Create();
         var intervalTicks = (long)(_interval.TotalSeconds * Stopwatch.Frequency);
         var next = Stopwatch.GetTimestamp() + intervalTicks;
         while (_running && generation == Volatile.Read(ref _generation))
@@ -89,7 +104,7 @@ public sealed class UiTickPump : IDisposable
             var waitMs = (next - now) * 1000.0 / Stopwatch.Frequency;
             if (waitMs > 0)
             {
-                Thread.Sleep((int)Math.Ceiling(waitMs));
+                waiter.Wait(waitMs);
                 continue;
             }
 
@@ -109,6 +124,143 @@ public sealed class UiTickPump : IDisposable
         if (_running)
         {
             _tick();
+        }
+    }
+
+    /// <summary>
+    /// The platform wait behind the loop. Windows gets a high-resolution waitable timer, or a
+    /// 1 ms timer resolution for the loop's lifetime when that timer is unavailable; other
+    /// platforms sleep, which is already millisecond-accurate there.
+    /// </summary>
+    internal abstract partial class TickWaiter : IDisposable
+    {
+        public static TickWaiter Create()
+        {
+            if (OperatingSystem.IsWindows())
+            {
+                var timer = WindowsHighResolutionTimerWaiter.TryCreate();
+                if (timer != null)
+                {
+                    return timer;
+                }
+
+                return new WindowsTimerResolutionWaiter();
+            }
+
+            return new SleepWaiter();
+        }
+
+        /// <summary>Which wait is in use - for tests and diagnostics.</summary>
+        public abstract string Kind { get; }
+
+        public abstract void Wait(double milliseconds);
+
+        public virtual void Dispose()
+        {
+        }
+
+        private sealed class SleepWaiter : TickWaiter
+        {
+            public override string Kind => "sleep";
+
+            public override void Wait(double milliseconds)
+            {
+                Thread.Sleep((int)Math.Ceiling(milliseconds));
+            }
+        }
+
+        private sealed partial class WindowsHighResolutionTimerWaiter : TickWaiter
+        {
+            private const uint CreateWaitableTimerHighResolution = 0x00000002;
+            private const uint TimerAllAccess = 0x001F0003;
+            private const uint WaitObject0 = 0;
+
+            private readonly IntPtr _handle;
+
+            private WindowsHighResolutionTimerWaiter(IntPtr handle)
+            {
+                _handle = handle;
+            }
+
+            public override string Kind => "high-resolution timer";
+
+            public static WindowsHighResolutionTimerWaiter? TryCreate()
+            {
+                // CREATE_WAITABLE_TIMER_HIGH_RESOLUTION needs Windows 10 1803; older builds fail
+                // the call and get the timer-resolution fallback instead.
+                var handle = CreateWaitableTimerExW(IntPtr.Zero, IntPtr.Zero, CreateWaitableTimerHighResolution, TimerAllAccess);
+                return handle == IntPtr.Zero ? null : new WindowsHighResolutionTimerWaiter(handle);
+            }
+
+            public override void Wait(double milliseconds)
+            {
+                // Due time in 100 ns units; negative = relative to now.
+                var dueTime = -(long)Math.Ceiling(milliseconds * 10000);
+                if (!SetWaitableTimer(_handle, ref dueTime, 0, IntPtr.Zero, IntPtr.Zero, false))
+                {
+                    Thread.Sleep((int)Math.Ceiling(milliseconds));
+                    return;
+                }
+
+                // The timeout only guards against a timer that never fires; the timer itself is
+                // what paces the wait.
+                var timeoutMs = (uint)Math.Ceiling(milliseconds) + 100;
+                if (WaitForSingleObject(_handle, timeoutMs) != WaitObject0)
+                {
+                    Thread.Sleep((int)Math.Ceiling(milliseconds));
+                }
+            }
+
+            public override void Dispose()
+            {
+                CloseHandle(_handle);
+            }
+
+            [LibraryImport("kernel32.dll", SetLastError = true)]
+            private static partial IntPtr CreateWaitableTimerExW(IntPtr timerAttributes, IntPtr timerName, uint flags, uint desiredAccess);
+
+            [LibraryImport("kernel32.dll", SetLastError = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            private static partial bool SetWaitableTimer(IntPtr timer, ref long dueTime, int period, IntPtr completionRoutine, IntPtr argToCompletionRoutine, [MarshalAs(UnmanagedType.Bool)] bool resume);
+
+            [LibraryImport("kernel32.dll", SetLastError = true)]
+            private static partial uint WaitForSingleObject(IntPtr handle, uint milliseconds);
+
+            [LibraryImport("kernel32.dll", SetLastError = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            private static partial bool CloseHandle(IntPtr handle);
+        }
+
+        private sealed partial class WindowsTimerResolutionWaiter : TickWaiter
+        {
+            private const uint PeriodMs = 1;
+            private readonly bool _raised;
+
+            public WindowsTimerResolutionWaiter()
+            {
+                _raised = timeBeginPeriod(PeriodMs) == 0;
+            }
+
+            public override string Kind => _raised ? "sleep at 1 ms timer resolution" : "sleep";
+
+            public override void Wait(double milliseconds)
+            {
+                Thread.Sleep((int)Math.Ceiling(milliseconds));
+            }
+
+            public override void Dispose()
+            {
+                if (_raised)
+                {
+                    timeEndPeriod(PeriodMs);
+                }
+            }
+
+            [LibraryImport("winmm.dll")]
+            private static partial uint timeBeginPeriod(uint period);
+
+            [LibraryImport("winmm.dll")]
+            private static partial uint timeEndPeriod(uint period);
         }
     }
 }
