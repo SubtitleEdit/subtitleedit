@@ -11,6 +11,9 @@ public class SeBatchConvert
 
     /// <summary>Give output files the source file's modified/created date instead of the conversion time.</summary>
     public bool KeepSourceTimestamp { get; set; }
+
+    /// <summary>Keep the computer from going to sleep on idle while a batch runs (#15222).</summary>
+    public bool PreventSleep { get; set; }
     public string TargetFormat { get; set; }
     public string CustomTextFormatName { get; set; } = string.Empty;
     public string TargetEncoding { get; set; }
@@ -201,6 +204,7 @@ public class SeBatchConvert
         NOcrBinaryOcrFallbackDatabase = string.Empty;
         BinaryOcrNOcrFallbackDatabase = string.Empty;
         VobSubIsolateColors = true;
+        PreventSleep = true;
         OffsetTimeCodesForward = true;
         AdjustVia = "Seconds";
         AdjustDurationSeconds = 0.1;
