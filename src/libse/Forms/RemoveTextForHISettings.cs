@@ -28,6 +28,16 @@ namespace Nikse.SubtitleEdit.Core.Forms
         public NameList NameList { get; set; }
 
         public RemoveTextForHISettings(Subtitle subtitle)
+            : this(LoadNameList(subtitle))
+        {
+        }
+
+        /// <summary>
+        /// Settings with a name list the caller already has - the one the subtitle constructor
+        /// would load (see <see cref="LoadNameList"/>). Lets a preview that is regenerated per
+        /// option change skip the language detection and the names.xml parse each time.
+        /// </summary>
+        public RemoveTextForHISettings(NameList nameList)
         {
             OnlyIfInSeparateLine = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenOnlySeparateLines;
             RemoveIfAllUppercase = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfAllUppercase;
@@ -56,8 +66,14 @@ namespace Nikse.SubtitleEdit.Core.Forms
             RemoveIfOnlyMusicSymbols = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfOnlyMusicSymbols;
             CustomStart = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustomBefore;
             CustomEnd = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustomAfter;
+            NameList = nameList;
+        }
+
+        /// <summary>The name list for the subtitle's auto-detected language.</summary>
+        public static NameList LoadNameList(Subtitle subtitle)
+        {
             var languageName = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
-            NameList = new NameList(Configuration.DictionariesDirectory, languageName, false, string.Empty);
+            return new NameList(Configuration.DictionariesDirectory, languageName, false, string.Empty);
         }
 
     }

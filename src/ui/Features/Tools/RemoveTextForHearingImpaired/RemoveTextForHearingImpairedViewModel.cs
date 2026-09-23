@@ -1,10 +1,11 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Features.Files.RestoreAutoBackup;
 using Nikse.SubtitleEdit.Logic;
@@ -82,6 +83,14 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject, I
 
     private Subtitle _subtitle;
     private RemoveTextForHI? _removeTextForHiLib;
+
+    // The name list GetSettings hands out, and the subtitle it was detected from. Every preview
+    // used to re-detect the language over the whole subtitle and re-parse names.xml; the working
+    // subtitle is only replaced (never edited) between previews, so one load per instance is
+    // the same list.
+    private NameList? _nameList;
+    private Subtitle? _nameListSubtitle;
+
     private readonly Timer _timer;
     private volatile bool _isClosing;
 
@@ -491,7 +500,13 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject, I
         var uppercaseWhitelist = (UppercaseWhitelist ?? string.Empty).Split([',', ';'], StringSplitOptions.RemoveEmptyEntries)
             .Select(p => p.Trim()).Where(p => p.Length > 0).ToList();
 
-        var settings = new RemoveTextForHISettings(subtitle)
+        if (_nameList == null || !ReferenceEquals(_nameListSubtitle, subtitle))
+        {
+            _nameList = RemoveTextForHISettings.LoadNameList(subtitle);
+            _nameListSubtitle = subtitle;
+        }
+
+        var settings = new RemoveTextForHISettings(_nameList)
         {
             OnlyIfInSeparateLine = IsOnlySeparateLine,
             RemoveIfAllUppercase = IsRemoveTextUppercaseLineOn,

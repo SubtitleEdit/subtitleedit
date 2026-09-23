@@ -48,6 +48,11 @@ public partial class AssaApplyCustomOverrideTagsViewModel : ObservableObject
     private LibMpvDynamicPlayer? _mpvPlayer;
     private bool _isSubtitleLoaded;
     private string _oldSubtitleText;
+
+    // What the last preview was built from. The lines, header and selection are fixed once the
+    // dialog is open, so while these are unchanged the tick has nothing to do - it used to copy,
+    // tag and serialize the whole subtitle every 500 ms just to find the text unchanged.
+    private (string Tag, bool All, bool Selected, bool Forward, LibMpvDynamicPlayer Player)? _previewKey;
     private string? _header;
     private string? _footer;
     private string? _videoFileName;
@@ -140,10 +145,17 @@ public partial class AssaApplyCustomOverrideTagsViewModel : ObservableObject
                 return;
             }
 
+            var key = (CurrentTag, AdjustAll, AdjustSelectedLines, AdjustSelectedLinesAndForward, _mpvPlayer);
+            if (_previewKey == key)
+            {
+                return;
+            }
+
             var subtitle = BuildTaggedSubtitle();
             var text = _assaFormat.ToText(subtitle, string.Empty);
             if (_oldSubtitleText == text)
             {
+                _previewKey = key;
                 return;
             }
 
@@ -159,6 +171,7 @@ public partial class AssaApplyCustomOverrideTagsViewModel : ObservableObject
             }
 
             _oldSubtitleText = text;
+            _previewKey = key;
         };
 
         _positionTimer.Start();

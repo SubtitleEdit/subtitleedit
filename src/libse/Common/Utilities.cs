@@ -2341,7 +2341,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                 int i = 0;
                 while (i < s.Length)
                 {
-                    if (s.Substring(i).StartsWith(Environment.NewLine, StringComparison.Ordinal))
+                    // A span, not Substring(i): that copied the rest of the line at every
+                    // character, twice per line pair on every Compare refresh.
+                    if (s.AsSpan(i).StartsWith(Environment.NewLine.AsSpan()))
                     {
                         if (word.Length > 0)
                         {
