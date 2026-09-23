@@ -2870,6 +2870,11 @@ public partial class SpeechToTextViewModel : ObservableObject
         // the separation takes minutes per minute of audio, so the bar has to move.
         var separateLog = new StringBuilder();
         var progress = new SpeechIsolationProgress(SpeechIsolationProgress.GetChunkCountFromWaveFile(audioFileName));
+
+        // HasExited does not wait for the async stderr reader, so a last progress line can be
+        // posted after the separator is done - it must not put the bar back up once
+        // transcription has taken it over.
+        var separating = true;
         DataReceivedEventHandler logHandler = (_, args) =>
         {
             if (string.IsNullOrWhiteSpace(args.Data))
@@ -2886,7 +2891,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             {
                 Dispatcher.UIThread.Post(() =>
                 {
-                    if (_abort || _windowClosing)
+                    if (_abort || _windowClosing || !Volatile.Read(ref separating))
                     {
                         return;
                     }
@@ -2897,8 +2902,9 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
         };
 
-        using (var separateProcess = StartEngineProcess(executable, separateArguments, logHandler))
+        try
         {
+            using var separateProcess = StartEngineProcess(executable, separateArguments, logHandler);
             if (!await WaitForExitOrAbortAsync(separateProcess))
             {
                 if (!_abort)
@@ -2911,6 +2917,10 @@ public partial class SpeechToTextViewModel : ObservableObject
 
                 return null;
             }
+        }
+        finally
+        {
+            Volatile.Write(ref separating, false);
         }
 
         var stemFileName = SpeechIsolationModel.GetSpeechStemFileName(audioFileName, outputFolder);
@@ -4045,7 +4055,10 @@ public partial class SpeechToTextViewModel : ObservableObject
         settings.WhisperChoice = engine.Choice;
         SaveSettings();
 
+        // SetProgressBarPct only moves the bar forward, so a value left by an earlier stage
+        // (speech isolation ends at 100%) would pin it there for the whole transcription.
         _showProgressPct = -1;
+        ProgressValue = 0;
         IsTranscribeEnabled = false;
         ProgressOpacity = 1;
         ProgressText = GetProgressText();
