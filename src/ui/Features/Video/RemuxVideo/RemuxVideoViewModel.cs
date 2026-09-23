@@ -1049,6 +1049,11 @@ public partial class RemuxVideoViewModel : ObservableObject
                 {
                     Dispatcher.UIThread.Post(() =>
                     {
+                        if (tcs.Task.IsCompleted)
+                        {
+                            return; // stderr can drain after the exit; don't restart the animation
+                        }
+
                         IsFinalizing = true;
                         UpdateProgressText(stopwatch.Elapsed);
                     });
@@ -1077,6 +1082,9 @@ public partial class RemuxVideoViewModel : ObservableObject
 
             await tcs.Task;
 
+            // Stop the indeterminate bar now, not in finally: the "file saved" prompt and the
+            // error box below are awaited, and the bar kept cycling behind them (#15214).
+            IsFinalizing = false;
             elapsedTimer.Stop();
             stopwatch.Stop();
             var totalElapsedStr = RemuxFileItem.FormatDuration(stopwatch.Elapsed);
@@ -1128,6 +1136,7 @@ public partial class RemuxVideoViewModel : ObservableObject
         }
         catch (Exception ex)
         {
+            IsFinalizing = false;
             if (_isCancelled)
             {
                 ProgressText = Se.Language.General.Cancelled;
