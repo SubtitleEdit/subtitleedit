@@ -23673,6 +23673,24 @@ public partial class MainViewModel :
             var fileEncoding = textEncoding?.Encoding ?? LanguageAutoDetect.GetEncodingFromFile(fileName);
             Subtitle? subtitle = null;
 
+            // An audio file is never the subtitle file, even when a subtitle is found in it. Its
+            // lyrics tags (e.g., LYRICS, UNSYNCED LYRICS) are read first: parsing the raw bytes as
+            // text also "finds" LRC lines in an .opus/.flac comment block, minus the first line,
+            // which is glued to "LYRICS=" (#15213).
+            var isAudioFile = Utilities.AudioFileExtensions.Contains(ext.ToLowerInvariant());
+            if (isAudioFile && fileSize > 100)
+            {
+                var lyrics = GetLyricsFromAudioFile(fileName);
+                if (!string.IsNullOrEmpty(lyrics))
+                {
+                    var lyricsSubtitle = Subtitle.Parse(lyrics.SplitToLines(), ".lrc");
+                    if (lyricsSubtitle != null && lyricsSubtitle.Paragraphs.Count > 0)
+                    {
+                        subtitle = lyricsSubtitle;
+                    }
+                }
+            }
+
             // For .csv files, try the multi-column CSV importer first. It only succeeds when there is a
             // recognizable header (start/end/text/etc.), so single-text-column CSV formats fall through to Subtitle.Parse.
             if (string.Equals(ext, ".csv", StringComparison.OrdinalIgnoreCase))
@@ -23749,21 +23767,6 @@ public partial class MainViewModel :
                         f.LoadSubtitle(subtitle, null, fileName);
                         subtitle.OriginalFormat = f;
                         break; // format found, exit the loop
-                    }
-                }
-
-                // check for lyrics in their metadata tags (e.g., LYRICS, UNSYNCED LYRICS) in audio files: mp3, m4a, opus, flac
-                if (subtitle == null && fileSize > 100 && (ext == ".mp3" || ext == ".m4a" || ext == ".opus" || ext == ".flac"))
-                {
-                    var lyrics = GetLyricsFromAudioFile(fileName);
-                    if (!string.IsNullOrEmpty(lyrics))
-                    {
-                        var lyricsSubtitle = Subtitle.Parse(lyrics.SplitToLines(), ".lrc");
-                        if (lyricsSubtitle != null && lyricsSubtitle.Paragraphs.Count > 0)
-                        {
-                            subtitle = lyricsSubtitle;
-                            _converted = true;
-                        }
                     }
                 }
 
@@ -23942,6 +23945,17 @@ public partial class MainViewModel :
             _subtitleFileName = fileName;
             _subtitle = subtitle;
             _lastOpenSaveFormat = subtitle.OriginalFormat;
+
+            // Never save back over the audio file: ResetSubtitle() above cleared _converted, and
+            // the loaded format (LRC) matches the selected one, so Ctrl+S (or auto-save) wrote the
+            // LRC text over the .opus (#15213). Suggest a subtitle file next to it and route Save
+            // through "Save as".
+            if (isAudioFile)
+            {
+                _subtitleFileName = Path.ChangeExtension(fileName, SelectedSubtitleFormat.Extension);
+                _converted = true;
+            }
+
             SetSubtitles(_subtitle);
             _changeSubtitleHash = GetFastHash();
             ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
@@ -24021,7 +24035,12 @@ public partial class MainViewModel :
             // Pass the index explicitly: SelectAndScrollToRow applies the selection via a
             // dispatcher post that may not have run yet, so reading SelectedSubtitleIndex
             // here could persist 0 and erase the remembered line.
-            AddToRecentFiles(true, selectedSubtitleIndex);
+            // Not for an audio file: the suggested subtitle file does not exist yet - like the
+            // other import paths, the entry is added on "Save as".
+            if (!isAudioFile)
+            {
+                AddToRecentFiles(true, selectedSubtitleIndex);
+            }
         }
         finally
         {
