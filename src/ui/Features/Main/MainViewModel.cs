@@ -721,6 +721,7 @@ public partial class MainViewModel :
     private UiTickPump _positionTimer = new(TimeSpan.FromMilliseconds(50)); // posted ticks, not a DispatcherTimer - see UiTickPump
     private DispatcherTimer _slowTimer = new();
     private UiTickPump? _cursorTimer; // ~60 fps; drives only the waveform/video playhead cursor (a posted tick, not a DispatcherTimer - see UiTickPump)
+    private volatile bool _backgroundWorkRunning; // between StartBackgroundWork and StopBackgroundWork; the tick pumps also need a video
 
     // Playhead interpolation state. When mpv resumes after a paused seek its time-pos stalls
     // for ~one audio-buffer interval (~200 ms) and then resyncs forward, which makes the
@@ -26890,7 +26891,7 @@ public partial class MainViewModel :
 
             // The window can be gone again within that second (a test host, or a New window
             // closed at once); StopBackgroundWork has run then and the poll must stay off.
-            if (_positionTimer.IsRunning)
+            if (_backgroundWorkRunning)
             {
                 _undoRedoManager.StartChangeDetection();
             }
@@ -32541,9 +32542,27 @@ public partial class MainViewModel :
     /// </summary>
     internal void StartBackgroundWork()
     {
-        _positionTimer.Start();
-        _cursorTimer?.Start();
+        _backgroundWorkRunning = true;
+        UpdateVideoTickPumps();
         _slowTimer.Start();
+    }
+
+    // Both tick bodies are no-ops without an open video, yet their pumps woke the UI thread
+    // ~80 times a second for the whole session - so they only run while a video is loaded.
+    partial void OnIsVideoLoadedChanged(bool value) => UpdateVideoTickPumps();
+
+    private void UpdateVideoTickPumps()
+    {
+        if (_backgroundWorkRunning && IsVideoLoaded)
+        {
+            _positionTimer.Start();
+            _cursorTimer?.Start();
+        }
+        else
+        {
+            _positionTimer.Stop();
+            _cursorTimer?.Stop();
+        }
     }
 
     /// <summary>
@@ -32555,6 +32574,7 @@ public partial class MainViewModel :
     /// </summary>
     internal void StopBackgroundWork()
     {
+        _backgroundWorkRunning = false;
         _positionTimer.Stop();
         _cursorTimer?.Stop();
         _slowTimer.Stop();

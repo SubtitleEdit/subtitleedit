@@ -27,6 +27,7 @@ public sealed class UiTickPump : IDisposable
     private readonly Action _postedTick;
     private Thread? _thread;
     private volatile bool _running;
+    private int _generation; // bumped per Start, so a thread from before a quick Stop/Start exits
     private int _tickPending; // 1 while a posted tick has not run yet: never queue a backlog
 
     public UiTickPump(TimeSpan interval, Action tick, DispatcherPriority priority)
@@ -63,7 +64,8 @@ public sealed class UiTickPump : IDisposable
         }
 
         _running = true;
-        _thread = new Thread(Loop) { IsBackground = true, Name = "ui-tick-pump" };
+        var generation = Interlocked.Increment(ref _generation);
+        _thread = new Thread(() => Loop(generation)) { IsBackground = true, Name = "ui-tick-pump" };
         _thread.Start();
     }
 
@@ -77,11 +79,11 @@ public sealed class UiTickPump : IDisposable
         Stop();
     }
 
-    private void Loop()
+    private void Loop(int generation)
     {
         var intervalTicks = (long)(_interval.TotalSeconds * Stopwatch.Frequency);
         var next = Stopwatch.GetTimestamp() + intervalTicks;
-        while (_running)
+        while (_running && generation == Volatile.Read(ref _generation))
         {
             var now = Stopwatch.GetTimestamp();
             var waitMs = (next - now) * 1000.0 / Stopwatch.Frequency;
