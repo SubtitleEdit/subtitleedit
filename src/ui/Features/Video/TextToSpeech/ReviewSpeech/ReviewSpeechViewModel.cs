@@ -7,6 +7,7 @@ using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Video.GoToVideoPosition;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings;
@@ -59,6 +60,8 @@ public partial class ReviewSpeechViewModel : ObservableObject
     [ObservableProperty] private bool _autoContinue;
     [ObservableProperty] private bool _isPlayVisible;
     [ObservableProperty] private bool _isStopVisible;
+    // Waveform playhead as a time code, so a spot can be compared with the original video (#15211).
+    [ObservableProperty] private string _positionText = FormatPosition(0);
     [ObservableProperty] private bool _isElevenLabsEngineV3Selected;
     // Whether the picked engine has a settings dialog. The knobs in there (emotion, speed,
     // instruction) change how a regenerated line sounds, so they belong next to Regenerate.
@@ -625,6 +628,62 @@ public partial class ReviewSpeechViewModel : ObservableObject
         }
 
         return SelectedLine;
+    }
+
+    public void UpdatePositionText(double seconds)
+    {
+        PositionText = FormatPosition(seconds);
+    }
+
+    // Same text as the main window's video position: follows frame mode and the video offset.
+    private static string FormatPosition(double seconds)
+    {
+        return TimeCode.FromSeconds(seconds + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0).ToDisplayString();
+    }
+
+    // Opened by clicking the position text or the main window's "Go to video position" shortcut
+    // (#15211). The dialog works in displayed time, so the video offset goes on and comes off here.
+    [RelayCommand]
+    private async Task ShowGoToPosition()
+    {
+        var av = AudioVisualizer;
+        if (Window == null || av == null || WavePeakData == null)
+        {
+            return;
+        }
+
+        var offsetSeconds = Se.Settings.General.CurrentVideoOffsetInMs / 1000.0;
+        var result = await _windowService.ShowDialogAsync<GoToVideoPositionWindow, GoToVideoPositionViewModel>(Window,
+            vm => vm.Time = TimeSpan.FromSeconds(av.CurrentVideoPositionSeconds + offsetSeconds));
+        if (!result.OkPressed || result.Time.TotalMicroseconds < 0)
+        {
+            return;
+        }
+
+        GoToPosition(result.Time.TotalSeconds - offsetSeconds);
+    }
+
+    internal void GoToPosition(double seconds)
+    {
+        var av = AudioVisualizer;
+        if (av == null)
+        {
+            return;
+        }
+
+        if (_playingRow != null)
+        {
+            Stop();
+        }
+
+        seconds = Math.Max(0, seconds);
+        if (seconds < av.StartPositionSeconds || seconds > av.EndPositionSeconds)
+        {
+            // Same 2 s lead-in as selecting a row, so the spot isn't glued to the left edge.
+            av.StartPositionSeconds = Math.Max(0, seconds - 2.0);
+        }
+
+        SetWaveformPlayhead(seconds);
     }
 
     // A left-click on empty waveform just parks the playhead there; the review window has no
@@ -1762,6 +1821,11 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
             e.Handled = true;
             TogglePlayPauseSelectedRow();
+        }
+        else if (MainShortcutKeys.Matches(e, nameof(MainViewModel.ShowGoToVideoPositionCommand), []))
+        {
+            e.Handled = true;
+            _ = ShowGoToPosition();
         }
         else if (e.Key == Key.R && e.KeyModifiers == KeyModifiers.None && !isTextBoxFocused)
         {
