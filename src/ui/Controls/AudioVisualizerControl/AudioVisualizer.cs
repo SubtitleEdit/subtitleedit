@@ -13,6 +13,7 @@ using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using SkiaSharp;
 using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -2221,6 +2222,78 @@ public class AudioVisualizer : Control
         public double SpectrogramHeight { get; internal set; }
     }
 
+    // Render-time playhead motion. The cursor tick runs every 16 ms and the display refreshes
+    // every 16.7 ms, so a frame drawn from "the estimate at the last tick" is 0-16 ms stale by a
+    // varying amount, and once every ~25 frames a frame carries two ticks of motion (6 px instead
+    // of 3 px at a 2 s zoom): a small, regular judder that survives a perfectly paced tick. The
+    // tick therefore also hands over its timestamp and the estimator's own velocity, and Render
+    // extends that motion by the time elapsed since the tick - by at most two ticks, so a stalled
+    // tick holds instead of running ahead. Everything else about the position (pins, freezes,
+    // forward-only correction) stays with the estimator: the velocity is measured from what it
+    // did, and is 0 whenever it did not advance.
+    private double _playheadBaseSeconds;
+    private double _playheadBaseStartSeconds;
+    private long _playheadBaseTimestamp;
+    private double _playheadVelocity;
+    private bool _playheadScrollsView;
+    private double _playheadLastRenderedSeconds;
+    private double _playheadLastRenderedBaseSeconds;
+    private const double MaxPlayheadExtrapolationSeconds = 0.034;
+
+    /// <summary>
+    /// Called by the cursor tick after it set <see cref="CurrentVideoPositionSeconds"/> (and, in
+    /// center mode, <see cref="StartPositionSeconds"/>): <paramref name="velocity"/> is the
+    /// estimator's advance in media seconds per wall-clock second over the last tick (0 when it
+    /// did not advance), <paramref name="scrollsView"/> whether the view was centered on the
+    /// position this tick, so the render-time motion applies to the view start as well.
+    /// </summary>
+    public void SetPlayheadMotion(long timestamp, double velocity, bool scrollsView)
+    {
+        _playheadBaseSeconds = CurrentVideoPositionSeconds;
+        _playheadBaseStartSeconds = StartPositionSeconds;
+        _playheadBaseTimestamp = timestamp;
+        _playheadVelocity = velocity > 0 ? velocity : 0;
+        _playheadScrollsView = scrollsView;
+    }
+
+    internal (double PositionSeconds, double StartPositionSeconds) GetRenderTimePlayhead(long now)
+    {
+        var position = CurrentVideoPositionSeconds;
+        var start = StartPositionSeconds;
+
+        // Any other writer of the position (wheel scrub, click, seek) since the tick means the
+        // tick's motion no longer describes it - and a base that moved backwards is a seek, which
+        // also resets the "never draw the cursor behind where it was" guard below.
+        if (_playheadVelocity <= 0 || position != _playheadBaseSeconds || start != _playheadBaseStartSeconds)
+        {
+            _playheadLastRenderedSeconds = position;
+            _playheadLastRenderedBaseSeconds = position;
+            return (position, start);
+        }
+
+        var elapsed = (now - _playheadBaseTimestamp) / (double)Stopwatch.Frequency;
+        var delta = Math.Clamp(elapsed, 0, MaxPlayheadExtrapolationSeconds) * _playheadVelocity;
+        var rendered = position + delta;
+
+        // The estimator may slow between ticks (drift correction easing off), which would draw the
+        // cursor a pixel behind the previous frame; hold instead, as the estimator itself does.
+        if (position >= _playheadLastRenderedBaseSeconds && rendered < _playheadLastRenderedSeconds)
+        {
+            rendered = _playheadLastRenderedSeconds;
+            delta = rendered - position;
+        }
+
+        _playheadLastRenderedSeconds = rendered;
+        _playheadLastRenderedBaseSeconds = position;
+
+        if (_playheadScrollsView && start > 0)
+        {
+            start = Math.Min(start + delta, MaxStartPositionSeconds);
+        }
+
+        return (rendered, start);
+    }
+
     public override void Render(DrawingContext context)
     {
         var width = Bounds.Width;
@@ -2234,14 +2307,15 @@ public class AudioVisualizer : Control
         context.DrawRectangle(_paintBackground, null, boundsRect);
 
         var waveformHeight = height * (WaveformHeightPercentage / 100.0);
+        var playhead = GetRenderTimePlayhead(Stopwatch.GetTimestamp());
         var renderCtx = new RenderContext
         {
             Width = width,
             Height = height,
-            StartPositionSeconds = StartPositionSeconds,
+            StartPositionSeconds = playhead.StartPositionSeconds,
             ZoomFactor = ZoomFactor,
             VerticalZoomFactor = VerticalZoomFactor,
-            CurrentVideoPositionSeconds = CurrentVideoPositionSeconds,
+            CurrentVideoPositionSeconds = playhead.PositionSeconds,
             SampleRate = WavePeaks?.SampleRate ?? 0,
             HighestPeak = WavePeaks?.HighestPeak ?? 1.0,
             BoundsRect = boundsRect,
@@ -2325,7 +2399,7 @@ public class AudioVisualizer : Control
         using var skBitmapCombined = new SKBitmap(width, _spectrogram.FftSize / 2);
         using var skCanvas = new SKCanvas(skBitmapCombined);
 
-        var left = (int)Math.Round(StartPositionSeconds / _spectrogram.SampleDuration);
+        var left = (int)Math.Round(renderCtx.StartPositionSeconds / _spectrogram.SampleDuration);
         var offset = 0;
         var imageIndex = left / _spectrogram.ImageWidth;
 

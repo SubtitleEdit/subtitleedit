@@ -743,6 +743,12 @@ public partial class MainViewModel :
     // "Center video position also while paused": paused centering/selection only reacts to
     // position *changes*, so they track the last seen play-head position between timer ticks.
     private double _pausedCenterLastSeconds = -1;
+
+    // Render-time playhead motion (AudioVisualizer.SetPlayheadMotion): the estimate and wall-clock
+    // stamp of the previous cursor tick, from which the tick measures the estimator's velocity.
+    private double _playheadTickPrevEstimate = -1;
+    private long _playheadTickPrevTimestamp;
+    private double _playheadPlaybackSpeed = 1.0;
     private double _pausedSelectLastSeconds = -1;
 
     // Scrub-seek throttle for waveform-driven position changes (wheel scrubbing in center mode,
@@ -1489,6 +1495,7 @@ public partial class MainViewModel :
             double.TryParse(SelectedSpeed.Trim('x'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var speed))
         {
             GetVideoPlayerControl()?.SetSpeed(speed);
+            _playheadPlaybackSpeed = speed;
         }
     }
 
@@ -20102,6 +20109,7 @@ public partial class MainViewModel :
         }
 
         vp.SetSpeed(1.0);
+        _playheadPlaybackSpeed = 1.0;
         SelectedSpeed = Speeds.FirstOrDefault(p => p == "1.0x") ?? Speeds[2];
         AudioVisualizer.ZoomFactor = 1.0;
         AudioVisualizer.VerticalZoomFactor = 1.0;
@@ -32469,6 +32477,23 @@ public partial class MainViewModel :
             var isPlaying = vp.IsPlaying;
             var est = UpdatePlayheadEstimate(vp, isPlaying);
 
+            // The estimator's velocity over this tick, for the waveform's render-time motion. 0
+            // when it did not advance (paused, pinned, frozen clock), and bounded to a little over
+            // the playback speed so a forward snap is not extended past where playback really is.
+            var tickTimestamp = Stopwatch.GetTimestamp();
+            var playheadVelocity = 0.0;
+            if (isPlaying && _playheadTickPrevEstimate >= 0 && est > _playheadTickPrevEstimate)
+            {
+                var tickSeconds = (tickTimestamp - _playheadTickPrevTimestamp) / (double)Stopwatch.Frequency;
+                if (tickSeconds > 0 && tickSeconds < 0.2)
+                {
+                    playheadVelocity = Math.Min((est - _playheadTickPrevEstimate) / tickSeconds, Math.Max(1.0, _playheadPlaybackSpeed) * 1.5);
+                }
+            }
+
+            _playheadTickPrevEstimate = est;
+            _playheadTickPrevTimestamp = tickTimestamp;
+
             var av = AudioVisualizer;
             if (av != null)
             {
@@ -32493,12 +32518,14 @@ public partial class MainViewModel :
                                          Se.Settings.Waveform.CenterVideoPositionAlsoWhenPaused &&
                                          !av.IsEditingWithPointer &&
                                          Math.Abs(est - _pausedCenterLastSeconds) > 0.001;
-                if (WaveformCenter && av.WavePeaks != null && (isPlaying || centerPausedChange))
+                var centered = WaveformCenter && av.WavePeaks != null && (isPlaying || centerPausedChange);
+                if (centered)
                 {
                     var halfSeconds = (av.EndPositionSeconds - av.StartPositionSeconds) / 2.0;
                     av.StartPositionSeconds = Math.Max(0, est - halfSeconds);
                 }
 
+                av.SetPlayheadMotion(tickTimestamp, playheadVelocity, centered && isPlaying);
                 _pausedCenterLastSeconds = est;
             }
         }, DispatcherPriority.Normal);
