@@ -3,6 +3,34 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-beta10 (23rd of September 2026)
+
+* Add "Edit second subtitle settings..." to the Video menu (restyle the second subtitle without the file picker) - thx GrampaWildWilly
+* Add EBU STL to the "Save as" format list - thx Triathlon-rally
+* Add audio track picker for the FFmpeg video player - thx fraternl
+* Find/Replace: show the replace count in the window, add button icons and a search history dropdown - thx fraternl
+* Remux: show each audio/subtitle file's folder, and a "finalizing" phase while the mp4 index is moved to the front - thx GrampaWildWilly
+* Speech separation ("Remove original speech", "Isolate speech", speech-only waveform): show progress and time left - thx to285
+* Shot changes: allow sensitivity 0.05-0.95 in 0.01 steps like SE 4 - thx kadrimarzouki
+* seconv: --no-language-suffix keeps "forced" and stream labels, drops only the language code - thx Mafuyu0
+* Refresh auto-translate API model lists (DeepSeek, Anthropic, Gemini, OpenAI, Perplexity)
+* Improve idle performance: main window tick pumps only run while a video is loaded - thx ivandrofly
+* Fix waveform shaking/jerky cursor on Windows (16 ms tick pump ran at 31 ms with the default timer resolution) - thx mariajuferreira1958-creator
+* Fix keyboard focus staying in the main window when a non-modal window (e.g. Remux) opens - thx GrampaWildWilly
+* Fix Enter on a split button (Remux, Burn-in, Batch convert, ...) running the window's default button instead - thx GrampaWildWilly
+* Fix Alt+Space system menu opening partially off-screen or on the wrong monitor - thx GrampaWildWilly
+* Fix change frame rate "From" not preset with the current frame rate, and frame rate combo boxes using the OS decimal separator - thx fointypinger
+* Fix ASSA styles dialog losing every style for headers without an exact "ScriptType: v4.00+" and for "*"-prefixed style names - thx hisui3393
+* Fix VobSub position ignoring the image crop (seconv ASSA alignment auto-detect tagged every cue {\an7}/{\an8}) - thx gambar3
+* Fix WhisperX model dots always green, redundant download button, distil-large-v3.5/anime.ja model names, and the Lightning checkpoint message - thx GitGianluc
+* Update WhisperX standalone to build 103
+* Update Avalonia to 12.1.3
+* Update Czech translation - thx Matěj Fouma
+* Update Italian translation - thx bovirus
+* Update Chinese Traditional translation - thx love80312
+
+-----------------------------------------------------------------------------------------------------
+
 v5.3.0-beta9 (22nd of September 2026)
 
 * Add TranslatePsy-AfriSLM 4B (English <-> 19 African languages) to the llama.cpp auto-translate models
