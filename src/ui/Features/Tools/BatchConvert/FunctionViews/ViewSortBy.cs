@@ -25,7 +25,7 @@ public static class ViewSortBy
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(20, GridUnitType.Pixel) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
@@ -39,10 +39,10 @@ public static class ViewSortBy
             RowSpacing = 10,
         };
 
-        grid.Add(labelHeader, 0, 0, 2);
+        grid.Add(labelHeader, 0, 0, 1, 2);
         grid.Add(labelSortBy, 1);
         grid.Add(comboSortBy, 1, 1);
-        grid.Add(checkBoxDescending, 2, 0, 2);
+        grid.Add(checkBoxDescending, 2, 0, 1, 2);
 
         return grid;
     }

@@ -12,7 +12,7 @@ public static class ViewMergeShortLines
         {
             Content = Se.Language.Tools.MergeShortLines.Title,
             FontWeight = Avalonia.Media.FontWeight.Bold,
-            Margin = new Avalonia.Thickness(0, 0, 0, 20),
+            Margin = new Avalonia.Thickness(0, 0, 0, 10),
         };
 
         var labelMaxChars = UiUtil.MakeLabel(Se.Language.Tools.MergeShortLines.MaxCharacters);
@@ -27,7 +27,7 @@ public static class ViewMergeShortLines
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(20, GridUnitType.Pixel) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
@@ -42,12 +42,12 @@ public static class ViewMergeShortLines
             RowSpacing = 10,
         };
 
-        grid.Add(labelHeader, 0, 0, 2);
+        grid.Add(labelHeader, 0, 0, 1, 2);
         grid.Add(labelMaxChars, 1);
         grid.Add(numericMaxChars, 1, 1);
         grid.Add(labelMaxMs, 2);
         grid.Add(numericMaxMs, 2, 1);
-        grid.Add(checkBoxOnlyContinuation, 3, 0, 2);
+        grid.Add(checkBoxOnlyContinuation, 3, 0, 1, 2);
 
         return grid;
     }
