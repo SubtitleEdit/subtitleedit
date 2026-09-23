@@ -267,12 +267,19 @@ namespace Nikse.SubtitleEdit.UiLogic.AudioToText
             // novel dialogue (#14656), here as the int8 CTranslate2 conversion. The repo ships
             // "vocabulary.json" but no "vocabulary.txt"; that 404 is expected and handled by
             // DownloadSpeechToTextModelsViewModel.OptionalFileNames.
+            // It has 2 decoder layers, but the conversion's config.json kept large-v3's alignment
+            // heads (layers 7-25), so word timestamps - which XXL's default "--standard" turns on -
+            // died with std::bad_alloc and no text (#15223); FasterWhisperAlignmentHeads repairs it.
+            // Fine-tuned on transcription only, so it ignores the translate task.
             new WhisperModel
             {
                 Name = "anime.ja",
                 Size = "768 MB Japanese",
                 Urls = MakeUrls("https://huggingface.co/quantumcookie/anime-whisper-ct2-int8/resolve/main"),
                 Folder = "faster-whisper-anime.ja",
+                TranscribeOnly = true,
+                DecoderLayers = 2,
+                DecoderAttentionHeads = 20,
             },
         };
 

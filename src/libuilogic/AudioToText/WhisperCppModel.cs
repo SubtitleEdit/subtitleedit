@@ -298,6 +298,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AudioToText
             {
                 Name = "anime.ja",
                 Rename = true,
+                TranscribeOnly = true,
                 Size = "538 MB Japanese",
                 Urls = new []{ "https://huggingface.co/Aratako/anime-whisper-ggml/resolve/main/ggml-anime-whisper-q5_0.bin" },
             },
