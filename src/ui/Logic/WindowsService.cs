@@ -152,10 +152,78 @@ namespace Nikse.SubtitleEdit.Logic
             ApplyRightToLeftSettings(window);
             UiTheme.ApplyScaleToWindow(window);
 
+            EnsureKeyboardFocusOnOpen(window);
             window.Show(owner);
             window.Focus();
 
             return viewModel;
+        }
+
+        /// <summary>
+        /// Makes sure the keyboard follows a non-modal owned window when it opens.
+        ///
+        /// A window can come up with an active-looking title bar while Tab still walks the
+        /// main window underneath: nothing inside the new window took keyboard focus, so
+        /// Avalonia's focused element stayed where it was. The Settings, Shortcuts and GetKey
+        /// windows each needed an explicit Activate() plus a deferred focus for that (#13185);
+        /// the remux dialog was the next report (#15197). Modal dialogs have their own
+        /// foreground enforcer; this is the counterpart for the ShowWindow path.
+        ///
+        /// Posted at Input priority from Opened so it runs after the window's own focus code
+        /// (Opened/Loaded handlers, UiUtil.FocusOnFirstActivation) - it is only a backstop:
+        /// it activates the window if it is not active, and focuses the first tab stop only
+        /// when nothing in the window has focus yet. A window that has already placed focus
+        /// keeps it.
+        /// </summary>
+        internal static void EnsureKeyboardFocusOnOpen(Window window)
+        {
+            window.Opened += (_, _) =>
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    if (window.IsClosing())
+                    {
+                        return;
+                    }
+
+                    if (!window.IsActive)
+                    {
+                        window.Activate();
+                    }
+
+                    if (HasKeyboardFocusInside(window))
+                    {
+                        return;
+                    }
+
+                    FirstTabStop(window)?.Focus();
+                }, DispatcherPriority.Input);
+            };
+        }
+
+        /// <summary>True when a control inside <paramref name="window"/> (not the window itself) has keyboard focus.</summary>
+        internal static bool HasKeyboardFocusInside(Window window)
+        {
+            var focused = window.FocusManager?.GetFocusedElement() as Visual;
+            return focused != null && focused != window && TopLevel.GetTopLevel(focused) == window;
+        }
+
+        /// <summary>
+        /// The first control in visual order that Tab would stop on. Avalonia's own tab
+        /// navigation helper is internal; visual order is the tab order for these dialogs.
+        /// </summary>
+        private static InputElement? FirstTabStop(Visual root)
+        {
+            foreach (var visual in root.GetVisualDescendants())
+            {
+                if (visual is InputElement { Focusable: true, IsEffectivelyEnabled: true, IsEffectivelyVisible: true } element &&
+                    KeyboardNavigation.GetIsTabStop(element))
+                {
+                    return element;
+                }
+            }
+
+            return null;
         }
 
         /// <inheritdoc />
