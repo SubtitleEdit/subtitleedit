@@ -130,13 +130,17 @@ public class ShotChangesWindow : Window
         vm.FfmpegLinesGrid = tableView;
 
         var labelSensitivity = UiUtil.MakeLabel(Se.Language.General.Sensitivity);
+        // Same range and step as the SE 4 numeric box (0.05 - 0.95 in 0.01 steps). A floor of 0.1
+        // silently dropped about half the cuts for users who relied on 0.05 (issue #15190).
         var sliderSensitivity = new Slider
         {
-            Minimum = 0.1,
-            Maximum = 0.9,
+            Minimum = 0.05,
+            Maximum = 0.95,
+            TickFrequency = 0.01,
+            IsSnapToTickEnabled = true,
             Width = 200,
             HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,            
+            VerticalAlignment = VerticalAlignment.Center,
         };
         sliderSensitivity.Bind(Slider.ValueProperty, new Binding(nameof(ShotChangesViewModel.Sensitivity))
         {

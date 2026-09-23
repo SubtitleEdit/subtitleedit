@@ -85,7 +85,7 @@ public partial class ShotChangesViewModel : ObservableObject, IClosingCleanup
 
     private void SaveSettings()
     {
-        Se.Settings.Waveform.ShotChangesSensitivity = Sensitivity;
+        Se.Settings.Waveform.ShotChangesSensitivity = Math.Round(Sensitivity, 2);
 
         var timeCodeFormat = "Seconds";
         if (TimeCodeFrames)
@@ -156,7 +156,8 @@ public partial class ShotChangesViewModel : ObservableObject, IClosingCleanup
 
         IsGenerating = true;
 
-        var threshold = Sensitivity.ToString(CultureInfo.InvariantCulture);
+        // Tick snapping leaves float noise (0.30000000000000004); ffmpeg gets the two decimals the label shows.
+        var threshold = Math.Round(Sensitivity, 2).ToString(CultureInfo.InvariantCulture);
         var argumentsFormat = Se.Settings.Video.ShowChangesFFmpegArguments;
         var arguments = string.Format(argumentsFormat, _videoFileName, threshold);
 
