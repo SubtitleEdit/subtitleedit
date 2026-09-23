@@ -295,6 +295,28 @@ public class RemuxVideoWindow : Window
                 textName.Bind(TextBlock.TextProperty, new Binding(nameof(RemuxFileItem.Name)));
                 ToolTip.SetTip(textName, new Binding(nameof(RemuxFileItem.FileName)));
 
+                // The folder after the name, trimmed from the front so the nearest folders stay
+                // readable - the same information the video box shows in its full path.
+                var textFolder = new TextBlock
+                {
+                    Opacity = 0.6,
+                    TextTrimming = TextTrimming.PrefixCharacterEllipsis,
+                    VerticalAlignment = VerticalAlignment.Bottom,
+                    Margin = new Thickness(8, 0, 0, 0),
+                };
+                textFolder.Bind(TextBlock.TextProperty, new Binding(nameof(RemuxFileItem.Folder)));
+
+                var nameRow = new Grid
+                {
+                    ColumnDefinitions =
+                    {
+                        new ColumnDefinition { Width = GridLength.Auto },
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                    },
+                };
+                nameRow.Add(textName, 0, 0);
+                nameRow.Add(textFolder, 0, 1);
+
                 var textDetails = new TextBlock { FontSize = UiUtil.ScaledFontSize(11), Opacity = 0.7, TextTrimming = TextTrimming.CharacterEllipsis };
                 textDetails.Bind(TextBlock.TextProperty, new Binding(nameof(RemuxFileItem.Details)));
 
@@ -302,14 +324,22 @@ public class RemuxVideoWindow : Window
                 {
                     Spacing = 1,
                     VerticalAlignment = VerticalAlignment.Center,
-                    Children = { textName, textDetails },
+                    Children = { nameRow, textDetails },
                 };
 
-                return new StackPanel
+                // A Grid, not a horizontal StackPanel: the text column must be width-bound for
+                // the folder's prefix trimming to happen at all.
+                var row = new Grid
                 {
-                    Orientation = Orientation.Horizontal,
-                    Children = { icon, textPanel },
+                    ColumnDefinitions =
+                    {
+                        new ColumnDefinition { Width = GridLength.Auto },
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                    },
                 };
+                row.Add(icon, 0, 0);
+                row.Add(textPanel, 0, 1);
+                return row;
             }, true),
         };
         listBox.Bind(ListBox.ItemsSourceProperty, new Binding(itemsPropertyPath));

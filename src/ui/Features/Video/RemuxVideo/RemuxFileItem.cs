@@ -14,6 +14,13 @@ public partial class RemuxFileItem : ObservableObject
 {
     public string FileName { get; }
     public string Name => Path.GetFileName(FileName);
+
+    /// <summary>
+    /// The file's folder. Shown in the list row next to the name: the video box shows its full
+    /// path, and an audio file picked from another folder was otherwise only told apart by a
+    /// tooltip, which a keyboard user never sees (#15197).
+    /// </summary>
+    public string Folder => Path.GetDirectoryName(FileName) ?? string.Empty;
     public string Size { get; }
     public long SizeBytes { get; }
     public TimeSpan? Duration { get; private set; }
