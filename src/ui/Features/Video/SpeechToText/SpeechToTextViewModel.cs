@@ -1885,12 +1885,37 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Sets a batch row's status from its transcription result. A row with no text must be
+    /// marked Error here, not left alone: the batch list is reused between runs, so a row
+    /// left untouched keeps the Converted of an earlier run and is counted as converted
+    /// in the closing summary (#15206).
+    /// </summary>
+    internal static void ApplyBatchItemResult(SpeechToTextJobItem item, Subtitle? transcribedSubtitle)
+    {
+        item.Status = transcribedSubtitle != null && transcribedSubtitle.Paragraphs.Count > 0
+            ? Se.Language.General.Converted
+            : Se.Language.General.Error;
+    }
+
+    /// <summary>
+    /// Clears every row's status before a new batch run, so statuses from an earlier run
+    /// (e.g. a CPU run before a failing CUDA run, #15206) do not look like results of this one.
+    /// </summary>
+    internal static void ResetBatchStatuses(IEnumerable<SpeechToTextJobItem> items)
+    {
+        foreach (var item in items)
+        {
+            item.Status = string.Empty;
+        }
+    }
+
     private void StartNext(Subtitle? transcribedSubtitle)
     {
         var currentItem = _jobItems[_batchIndex];
-        if (transcribedSubtitle != null && transcribedSubtitle.Paragraphs.Count > 0)
+        ApplyBatchItemResult(currentItem, transcribedSubtitle);
+        if (currentItem.Status == Se.Language.General.Converted)
         {
-            currentItem.Status = Se.Language.General.Converted;
             var languageCode = AddLanguageCodeToFileName ? GetFileNameLanguageCode(transcribedSubtitle) : null;
             var subtitleFileName = GetSubtitleFileName(currentItem.InputVideoFileName, languageCode, _batchOutputFolder);
             var format = new SubRip();
@@ -3936,6 +3961,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         else
         {
             _jobItems = BatchItems;
+            ResetBatchStatuses(_jobItems);
         }
 
         _batchIndex = 0;
