@@ -42,12 +42,12 @@ public static class ViewMergeShortLines
             RowSpacing = 10,
         };
 
-        grid.Add(labelHeader, 0, 0, 2);
+        grid.Add(labelHeader, 0, 0, 1, 2);
         grid.Add(labelMaxChars, 1);
         grid.Add(numericMaxChars, 1, 1);
         grid.Add(labelMaxMs, 2);
         grid.Add(numericMaxMs, 2, 1);
-        grid.Add(checkBoxOnlyContinuation, 3, 0, 2);
+        grid.Add(checkBoxOnlyContinuation, 3, 0, 1, 2);
 
         return grid;
     }

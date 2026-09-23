@@ -12,11 +12,12 @@ public static class ViewDeleteLines
         {
             Content = Se.Language.General.DeleteLines,
             FontWeight = Avalonia.Media.FontWeight.Bold,
-            Margin = new Avalonia.Thickness(0, 0, 0, 10),
+            Margin = new Avalonia.Thickness(0, 0, 0, 20),
         };
 
         var labelDeleteContains = UiUtil.MakeLabel(Se.Language.General.DeleteLinesContainingText);
-        var textBoxDeleteContains = UiUtil.MakeTextBox(400, vm, nameof(vm.DeleteLinesContains));
+        var textBoxDeleteContains = UiUtil.MakeTextBox(400, vm, nameof(vm.DeleteLinesContains))
+            .WithMarginLeft(10);
         var panelDeleteContains = new StackPanel
         {
             Orientation = Avalonia.Layout.Orientation.Horizontal,
@@ -25,7 +26,8 @@ public static class ViewDeleteLines
         };
 
         var labelDeleteFirstLines = UiUtil.MakeLabel(Se.Language.General.DeleteFirstLines);
-        var numericUpDownDeleteFirstLines = UiUtil.MakeNumericUpDownInt(0, 100, 0, 150, vm, nameof(vm.DeleteXFirstLines));
+        var numericUpDownDeleteFirstLines = UiUtil.MakeNumericUpDownInt(0, 100, 0, 150, vm, nameof(vm.DeleteXFirstLines))
+            .WithMarginLeft(10);
         var panelDeleteFirstLines = new StackPanel
         {
             Orientation = Avalonia.Layout.Orientation.Horizontal,
@@ -34,7 +36,8 @@ public static class ViewDeleteLines
         };
 
         var labelDeleteLastLines = UiUtil.MakeLabel(Se.Language.General.DeleteLastLines);
-        var numericUpDownDeleteLastLines = UiUtil.MakeNumericUpDownInt(0, 100, 0, 150, vm, nameof(vm.DeleteXLastLines));
+        var numericUpDownDeleteLastLines = UiUtil.MakeNumericUpDownInt(0, 100, 0, 150, vm, nameof(vm.DeleteXLastLines))
+            .WithMarginLeft(10);
         var panelDeleteLastLines = new StackPanel
         {
             Orientation = Avalonia.Layout.Orientation.Horizontal,
@@ -48,7 +51,7 @@ public static class ViewDeleteLines
         {
             Orientation = Avalonia.Layout.Orientation.Vertical,
             Children = { labelDeleteActorsOrStyles, textBoxDeleteActorsOrStyles },
-            Margin = new Avalonia.Thickness(0, 10, 0, 10),
+            Margin = new Avalonia.Thickness(0, 10, 0, 0),
         };
 
         var panel = new StackPanel

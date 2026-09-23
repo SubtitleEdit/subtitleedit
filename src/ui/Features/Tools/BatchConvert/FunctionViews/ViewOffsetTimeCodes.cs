@@ -14,22 +14,26 @@ public static class ViewOffsetTimeCodes
         {
             Content = Se.Language.General.OffsetTimeCodes,
             FontWeight = Avalonia.Media.FontWeight.Bold,
-            Margin = new Avalonia.Thickness(0,0,0, 10),
+            Margin = new Avalonia.Thickness(0, 0, 0, 20),
         };
 
         var labelTimeCodeFormat = new Label
         {
             Content = Se.Language.General.Offset,
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
         };
 
-        var timeUpDown = new TimeCodeUpDown() { DataContext = vm };
+        var timeUpDown = new TimeCodeUpDown
+        {
+            DataContext = vm,
+        }.WithMarginLeft(10);
         timeUpDown.Bind(TimeCodeUpDown.ValueProperty, new Binding { Path = nameof(vm.OffsetTimeCodesTime), Mode = BindingMode.TwoWay });
 
         var panelTimeCode = new StackPanel
         {
             Orientation = Avalonia.Layout.Orientation.Horizontal,
-            Children = 
-            { 
+            Children =
+            {
                 labelTimeCodeFormat,
                 timeUpDown
             }
@@ -42,8 +46,8 @@ public static class ViewOffsetTimeCodes
         var panel = new StackPanel
         {
             Orientation = Avalonia.Layout.Orientation.Vertical,
-            Children = 
-            { 
+            Children =
+            {
                 labelHeader,
                 panelTimeCode,
                 radioForward,

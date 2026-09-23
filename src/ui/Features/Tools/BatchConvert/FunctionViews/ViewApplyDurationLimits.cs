@@ -39,7 +39,7 @@ public static class ViewApplyDurationLimits
             RowSpacing = 10,
         };
 
-        grid.Add(labelHeader, 0, 0, 2);
+        grid.Add(labelHeader, 0, 0, 1, 2);
         grid.Add(checkBoxFixMin, 1);
         grid.Add(numericMin, 1, 1);
         grid.Add(checkBoxFixMax, 2);
