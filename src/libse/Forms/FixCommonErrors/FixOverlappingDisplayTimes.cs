@@ -25,9 +25,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
-                var oldP = new Paragraph(p);
                 if (p.DurationTotalMilliseconds < 0) // negative display time...
                 {
+                    var oldP = new Paragraph(p);
                     bool isFixed = false;
                     string status = string.Format(Language.StartTimeLaterThanEndTime, i + 1, p.StartTime, p.EndTime, p.Text, Environment.NewLine);
 
@@ -78,26 +78,28 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             }
 
             // overlapping display time
+            bool canBeEqual = callbacks.Format != null && (callbacks.Format.GetType() == typeof(AdvancedSubStationAlpha) || callbacks.Format.GetType() == typeof(SubStationAlpha));
+            if (!canBeEqual)
+            {
+                canBeEqual = Configuration.Settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart;
+            }
+
             for (int i = 1; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
                 Paragraph prev = subtitle.GetParagraphOrDefault(i - 1);
                 Paragraph target = prev;
-                string oldCurrent = p.ToString();
-                string oldPrevious = prev.ToString();
-                double prevWantedDisplayTime = Utilities.GetOptimalDisplayMilliseconds(prev.Text, Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds);
-                double currentWantedDisplayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text, Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds);
-                double prevOptimalDisplayTime = Utilities.GetOptimalDisplayMilliseconds(prev.Text);
-                double currentOptimalDisplayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text);
-                bool canBeEqual = callbacks.Format != null && (callbacks.Format.GetType() == typeof(AdvancedSubStationAlpha) || callbacks.Format.GetType() == typeof(SubStationAlpha));
-                if (!canBeEqual)
-                {
-                    canBeEqual = Configuration.Settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart;
-                }
-
                 double diff = prev.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds;
                 if (!prev.StartTime.IsMaxTime && !p.StartTime.IsMaxTime && diff >= 0 && !(canBeEqual && Math.Abs(diff) < 0.001))
                 {
+                    // Only built for lines that overlap - two ToString()s and four display-time
+                    // calculations per line were paid for every line, and almost none overlap.
+                    string oldCurrent = p.ToString();
+                    string oldPrevious = prev.ToString();
+                    double prevWantedDisplayTime = Utilities.GetOptimalDisplayMilliseconds(prev.Text, Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds);
+                    double currentWantedDisplayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text, Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds);
+                    double prevOptimalDisplayTime = Utilities.GetOptimalDisplayMilliseconds(prev.Text);
+                    double currentOptimalDisplayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text);
                     int diffHalf = (int)(diff / 2);
                     if (!Configuration.Settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart && Math.Abs(p.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds) < 0.001 &&
                         prev.DurationTotalMilliseconds > 100)

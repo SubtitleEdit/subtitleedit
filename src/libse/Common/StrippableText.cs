@@ -148,17 +148,25 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             string lower = StrippedText.ToLowerInvariant();
+            GetNameStartMask(lower, out var startMaskLow, out var startMaskHigh);
             int idName = 0;
             foreach (string name in nameList)
             {
+                // A name can only be replaced where it starts at a name start (see "startOk"
+                // below), so a name whose first letter is at none of them can be skipped without
+                // searching - the name list has thousands of entries, and this loop used to scan
+                // the line once for every one of them.
+                if (name.Length > 0 && name[0] < 128 && !MayStartName(name[0], startMaskLow, startMaskHigh))
+                {
+                    continue;
+                }
+
                 // "lower" is already lower case, so an ignore-case search finds the same
                 // positions as the lower-cased name did - without allocating one string per name.
                 int start = lower.IndexOf(name, StringComparison.OrdinalIgnoreCase);
                 while (start >= 0 && start < lower.Length)
                 {
-                    bool startOk = (start == 0) || (lower[start - 1] == ' ') || (lower[start - 1] == '-') ||
-                                   (lower[start - 1] == '"') || (lower[start - 1] == '\'') || (lower[start - 1] == '>') || (lower[start - 1] == '[') || (lower[start - 1] == '“') ||
-                                   Environment.NewLine.EndsWith(lower[start - 1]);
+                    bool startOk = start == 0 || IsNameStartBoundary(lower[start - 1]);
 
                     if (startOk && string.CompareOrdinal(name, "Don") == 0 && lower.AsSpan(start).StartsWith("don't".AsSpan(), StringComparison.Ordinal))
                     {
@@ -199,6 +207,65 @@ namespace Nikse.SubtitleEdit.Core.Common
                 Post = "." + Post;
                 StrippedText = StrippedText.TrimEnd('.');
             }
+        }
+
+        private const string AsciiUpperLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+        private static bool IsNameStartBoundary(char c) =>
+            c == ' ' || c == '-' || c == '"' || c == '\'' || c == '>' || c == '[' || c == '“' || Environment.NewLine.EndsWith(c);
+
+        /// <summary>
+        /// Builds a 128 bit set of the ASCII characters, upper-cased, that an ordinal ignore-case
+        /// match could see at a name start in "lower". Removing names never creates a new name
+        /// start - the inserted id begins with "_", which is always in the set, and the char before
+        /// every other position is unchanged - so the set stays valid while names are replaced.
+        /// </summary>
+        private static void GetNameStartMask(string lower, out ulong low, out ulong high)
+        {
+            low = 0;
+            high = 1UL << ('_' - 64);
+            for (var i = 0; i < lower.Length; i++)
+            {
+                if (i > 0 && !IsNameStartBoundary(lower[i - 1]))
+                {
+                    continue;
+                }
+
+                var c = lower[i];
+                if (c < 128)
+                {
+                    SetMaskBit(char.ToUpperInvariant(c), ref low, ref high);
+                }
+                else if (char.IsLetter(c))
+                {
+                    // A few non-ASCII letters (like the long s) fold to an ASCII letter.
+                    for (var k = 0; k < AsciiUpperLetters.Length; k++)
+                    {
+                        if (string.Compare(lower, i, AsciiUpperLetters, k, 1, StringComparison.OrdinalIgnoreCase) == 0)
+                        {
+                            SetMaskBit(AsciiUpperLetters[k], ref low, ref high);
+                        }
+                    }
+                }
+            }
+        }
+
+        private static void SetMaskBit(char c, ref ulong low, ref ulong high)
+        {
+            if (c < 64)
+            {
+                low |= 1UL << c;
+            }
+            else
+            {
+                high |= 1UL << (c - 64);
+            }
+        }
+
+        private static bool MayStartName(char first, ulong low, ulong high)
+        {
+            first = char.ToUpperInvariant(first);
+            return first < 64 ? (low & (1UL << first)) != 0 : (high & (1UL << (first - 64))) != 0;
         }
 
         private void ReplaceAssaTagsRemove(List<string> replaceIds, List<string> replaceNames, List<string> originalNames)

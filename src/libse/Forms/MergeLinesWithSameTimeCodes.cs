@@ -14,6 +14,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
             bool lastMerged = false;
             Paragraph p = null;
             var lineNumbers = new StringBuilder();
+
+            // Set mirrors of the caller's lists and of the numbers in "lineNumbers": the
+            // Contains calls below ran once per line, so a file with many merges was quadratic.
+            var mergedIndexSet = new HashSet<int>(mergedIndexes);
+            var removedSet = new HashSet<int>(removed);
+            var lineNumberSet = new HashSet<int>();
             for (int i = 1; i < subtitle.Paragraphs.Count; i++)
             {
                 if (!lastMerged)
@@ -53,23 +59,24 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                         lastMerged = true;
                         removed.Add(i);
+                        removedSet.Add(i);
                         numberOfMerges++;
-                        if (!mergedIndexes.Contains(i))
+                        if (mergedIndexSet.Add(i))
                         {
                             mergedIndexes.Add(i);
                         }
 
-                        if (!mergedIndexes.Contains(i - 1))
+                        if (mergedIndexSet.Add(i - 1))
                         {
                             mergedIndexes.Add(i - 1);
                         }
 
-                        if (!("," + lineNumbers).Contains("," + p.Number + ","))
+                        if (lineNumberSet.Add(p.Number))
                         {
                             lineNumbers.Append(p.Number);
                             lineNumbers.Append(',');
                         }
-                        if (!("," + lineNumbers).Contains("," + next.Number + ","))
+                        if (lineNumberSet.Add(next.Number))
                         {
                             lineNumbers.Append(next.Number);
                             lineNumbers.Append(',');
@@ -85,10 +92,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     lastMerged = false;
                 }
 
-                if (!removed.Contains(i) && lineNumbers.Length > 0 && clearFixes)
+                if (!removedSet.Contains(i) && lineNumbers.Length > 0 && clearFixes)
                 {
                     info.Paragraphs.Add(new Paragraph(p) { Extra = lineNumbers.ToString() });
                     lineNumbers.Clear();
+                    lineNumberSet.Clear();
                 }
             }
 

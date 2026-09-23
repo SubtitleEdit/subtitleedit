@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
         private readonly List<KeyValuePair<string, string>> _partialWordReplaceList;
         private readonly Dictionary<string, string> _regExList;
         private readonly List<SpellCheckRegex> _regExSpellCheckList;
-        private List<Regex>? _replaceRegExes;
+        private RegexEntry[]? _regexEntries;
         private readonly string _replaceListXmlFileName;
 
         // Every entry in these two lists used to cost a full substring scan of the line, for every
@@ -467,6 +467,204 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             }
         }
 
+        /// <summary>
+        /// A "RegularExpressions" entry plus the signature bit of a literal every match must
+        /// contain (-1 when none could be found), and the expression, compiled on first use.
+        /// </summary>
+        private sealed class RegexEntry
+        {
+            public readonly string Pattern;
+            public readonly string Replacement;
+            public readonly int Bit;
+            public Regex? Regex;
+
+            public RegexEntry(string pattern, string replacement)
+            {
+                Pattern = pattern;
+                Replacement = replacement;
+                var literal = GetRequiredLiteral(pattern);
+                Bit = literal != null ? BigramSignature.BitIndex(literal[0], literal[1]) : -1;
+            }
+        }
+
+        private RegexEntry[] GetRegexEntries()
+        {
+            var entries = _regexEntries;
+            if (entries == null || entries.Length != _regExList.Count)
+            {
+                entries = new RegexEntry[_regExList.Count];
+                var i = 0;
+                foreach (var kv in _regExList)
+                {
+                    entries[i++] = new RegexEntry(kv.Key, kv.Value);
+                }
+
+                _regexEntries = entries;
+            }
+
+            return entries;
+        }
+
+        /// <summary>
+        /// Returns the first run of at least two literal characters that every match of the
+        /// (case-sensitive) pattern must contain, or null if there is none or the pattern uses
+        /// anything this does not understand. Only top-level characters count: nothing inside a
+        /// group, no character followed by "?", "*" or "{", and no pattern with a top-level "|".
+        /// </summary>
+        internal static string? GetRequiredLiteral(string pattern)
+        {
+            string? best = null;
+            var run = new StringBuilder();
+            var depth = 0;
+
+            void EndRun()
+            {
+                if (best == null && run.Length >= 2)
+                {
+                    best = run.ToString();
+                }
+
+                run.Clear();
+            }
+
+            for (var i = 0; i < pattern.Length; i++)
+            {
+                var c = pattern[i];
+                if (c == '\\')
+                {
+                    if (i + 1 >= pattern.Length)
+                    {
+                        return null;
+                    }
+
+                    var next = pattern[i + 1];
+                    if (depth == 0)
+                    {
+                        EndRun();
+
+                        // Anchors, classes and simple one-letter escapes are two characters
+                        // long; the rest (\p{..}, \x41, \u0041, \k<..>, back-references) are not.
+                        if (char.IsLetterOrDigit(next) && "bBAzZGsSdDwWntrfve".IndexOf(next) < 0)
+                        {
+                            return null;
+                        }
+                    }
+
+                    i++;
+                    continue;
+                }
+
+                if (c == '[')
+                {
+                    var j = i + 1;
+                    if (j < pattern.Length && pattern[j] == '^')
+                    {
+                        j++;
+                    }
+
+                    if (j < pattern.Length && pattern[j] == ']')
+                    {
+                        j++;
+                    }
+
+                    while (j < pattern.Length && pattern[j] != ']')
+                    {
+                        if (pattern[j] == '\\')
+                        {
+                            j++;
+                        }
+                        else if (pattern[j] == '[')
+                        {
+                            return null; // class subtraction
+                        }
+
+                        j++;
+                    }
+
+                    if (j >= pattern.Length)
+                    {
+                        return null;
+                    }
+
+                    if (depth == 0)
+                    {
+                        EndRun();
+                    }
+
+                    i = j;
+                    continue;
+                }
+
+                if (c == '(')
+                {
+                    if (depth == 0)
+                    {
+                        EndRun();
+                    }
+
+                    // Inline options like "(?i)" change how the rest of the pattern matches.
+                    if (i + 2 < pattern.Length && pattern[i + 1] == '?' && "imnsx-".IndexOf(pattern[i + 2]) >= 0)
+                    {
+                        return null;
+                    }
+
+                    depth++;
+                    continue;
+                }
+
+                if (c == ')')
+                {
+                    depth--;
+                    if (depth < 0)
+                    {
+                        return null;
+                    }
+
+                    continue;
+                }
+
+                if (depth > 0)
+                {
+                    continue;
+                }
+
+                switch (c)
+                {
+                    case '|':
+                    case '{':
+                        return null;
+                    case '?':
+                    case '*':
+                        if (run.Length > 0)
+                        {
+                            run.Length--; // the character before is optional
+                        }
+
+                        EndRun();
+                        break;
+                    case '+':
+                    case '.':
+                    case '^':
+                    case '$':
+                    case ']':
+                    case '}':
+                        EndRun();
+                        break;
+                    default:
+                        run.Append(c);
+                        break;
+                }
+            }
+
+            if (depth != 0)
+            {
+                return null;
+            }
+
+            EndRun();
+            return best;
+        }
+
         private static ReplaceEntry[] BuildEntries(Dictionary<string, string> list)
         {
             var entries = new ReplaceEntry[list.Count];
@@ -612,24 +810,24 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                 }
             }
 
-            if (_replaceRegExes == null || _regExList.Count != _replaceRegExes.Count)
+            // Same idea as the partial lines above: hrv ships 1843 expressions, and every one of
+            // them used to run over every line - and all of them were compiled on the first line.
+            // Now an expression whose required literal cannot be in the line is skipped, and an
+            // expression is only compiled the first time a line may match it.
+            var regexSignature = BigramSignature.FromText(newText);
+            foreach (var entry in GetRegexEntries())
             {
-                _replaceRegExes = new List<Regex>(_regExList.Count);
-                foreach (var kv in _regExList)
+                if (!regexSignature.MayContain(entry.Bit))
                 {
-                    var regex = new Regex(kv.Key, RegexOptions.Multiline | RegexOptions.Compiled);
-                    _replaceRegExes.Add(regex);
-                    newText = regex.Replace(newText, kv.Value);
+                    continue;
                 }
-            }
-            else
-            {
-                var i = 0;
-                foreach (var kv in _regExList)
+
+                var regex = entry.Regex ??= new Regex(entry.Pattern, RegexOptions.Multiline | RegexOptions.Compiled);
+                var replaced = regex.Replace(newText, entry.Replacement);
+                if (!ReferenceEquals(replaced, newText))
                 {
-                    var regex = _replaceRegExes[i];
-                    newText = regex.Replace(newText, kv.Value);
-                    i++;
+                    newText = replaced;
+                    regexSignature = BigramSignature.FromText(newText);
                 }
             }
 

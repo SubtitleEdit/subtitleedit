@@ -55,6 +55,11 @@ public partial class VisualSyncViewModel : ObservableObject
     private bool _closed; // set by OnClosing; stops the posted half of Initialize from starting a pump on a disposed player
     private UiTickPump _positionTimer = new(TimeSpan.FromMilliseconds(150)); // posted ticks, not a DispatcherTimer - see UiTickPump
     private List<SubtitleLineViewModel> _subtitleLines = new List<SubtitleLineViewModel>();
+
+    // _subtitleLines by start time, for the two waveforms. Sorting on every 150 ms tick (twice -
+    // once per waveform) cost milliseconds and a large-object-heap array each time, so it is
+    // built on demand and dropped wherever the time codes can change.
+    private List<SubtitleLineViewModel>? _sortedLines;
     private VideoPreviewSubtitleContext _previewContext = VideoPreviewSubtitleContext.Default;
     private bool _updateAudioVisualizer;
     private double _lastManualOffsetSeconds;
@@ -122,6 +127,7 @@ public partial class VisualSyncViewModel : ObservableObject
         Paragraphs = new ObservableCollection<SubtitleDisplayItem>(paragraphs.Select(p => new SubtitleDisplayItem(p)));
         _videoFileName = videoFileName;
         _subtitleLines = paragraphs;
+        _sortedLines = null;
 
         // Carried in so the subtitle drawn on the two videos looks like the one on the main
         // window's video.
@@ -257,7 +263,7 @@ public partial class VisualSyncViewModel : ObservableObject
             ? null
             : Paragraphs[selectedParagraphIndex];
 
-        var subtitle = _subtitleLines.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
+        var subtitle = _sortedLines ??= _subtitleLines.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
         var firstSelectedIndex = -1;
 
         var mediaPlayerSeconds = vp.Position;
@@ -462,6 +468,9 @@ public partial class VisualSyncViewModel : ObservableObject
             vm.Initialize(new ObservableCollection<SubtitleLineViewModel>(_subtitleLines), _lastManualOffsetSeconds, _lastManualSpeedFactor);
         });
 
+        // The dialog gets the same line objects - don't trust the sorted copy after it.
+        _sortedLines = null;
+
         if (!result.OkPressed)
         {
             return;
@@ -505,6 +514,7 @@ public partial class VisualSyncViewModel : ObservableObject
         }
 
         // The time codes moved, so the subtitle on both videos has to be pushed again.
+        _sortedLines = null;
         _previewSubtitleLeft.Invalidate();
         _previewSubtitleRight.Invalidate();
 

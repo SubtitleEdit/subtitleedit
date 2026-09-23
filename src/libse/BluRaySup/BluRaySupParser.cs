@@ -1125,6 +1125,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 // Merge images that are the same (probably due to fade)
                 // First we find groups with same pixels
                 var removeIndices = new List<DeleteIndex>();
+
+                // What "removeIndices" holds, for the duplicate checks below - scanning the list
+                // there made a long SUP with fades quadratic.
+                var removeIndexSet = new HashSet<(int Number, int Index)>();
                 var deleteNo = 0;
                 for (var pcsIndex = pcsList.Count - 1; pcsIndex > 0; pcsIndex--)
                 {
@@ -1160,11 +1164,11 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
                             if (remove)
                             {
-                                if (!removeIndices.Any(p => p.Number == deleteNo && p.Index == pcsIndex - 1))
+                                if (removeIndexSet.Add((deleteNo, pcsIndex - 1)))
                                 {
                                     removeIndices.Add(new DeleteIndex { Number = deleteNo, Index = pcsIndex - 1 });
                                 }
-                                if (!removeIndices.Any(p => p.Number == deleteNo && p.Index == pcsIndex))
+                                if (removeIndexSet.Add((deleteNo, pcsIndex)))
                                 {
                                     removeIndices.Add(new DeleteIndex { Number = deleteNo, Index = pcsIndex });
                                 }
