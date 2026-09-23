@@ -108,9 +108,17 @@ public sealed partial class UiTickPump : IDisposable
                 continue;
             }
 
-            // Schedule the next tick from now rather than from the missed due time, so a UI
-            // thread that was busy is not hit with a burst of catch-up ticks.
-            next = Stopwatch.GetTimestamp() + intervalTicks;
+            // Keep the cadence anchored to the due time, so the wake-up latency and the cost of
+            // the post do not accumulate into the period (scheduling from "now" made a 16 ms
+            // pump run at ~58 Hz). Only when the loop is a whole interval late - the UI thread
+            // was busy, or the wait overslept - re-anchor to now, so the pump does not fire a
+            // burst of catch-up ticks.
+            next += intervalTicks;
+            if (next <= now)
+            {
+                next = now + intervalTicks;
+            }
+
             if (Interlocked.CompareExchange(ref _tickPending, 1, 0) == 0)
             {
                 Dispatcher.UIThread.Post(_postedTick, _priority);
