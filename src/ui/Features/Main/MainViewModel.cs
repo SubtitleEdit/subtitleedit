@@ -4187,14 +4187,14 @@ public partial class MainViewModel :
                 _mpvReloader.Reset();
                 // Through RunPreviewRefresh so a rejected push (player just recreated, mpv not
                 // playing yet) arms the dirty-flag retry instead of being lost (#13407).
-                _ = RunPreviewRefresh(() => _mpvReloader.RefreshMpv(mpv, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat));
+                _ = RunPreviewRefresh(mpv, GetVideoPreviewSubtitle(), static (vm, mpv, sub) => vm._mpvReloader.RefreshMpv(mpv, sub, vm._subtitleSecondary, vm.SelectedSubtitleFormat));
             }
             else if (vp.VideoPlayer is LibVlcDynamicPlayer vlc)
             {
                 _vlcReloader.Reset();
-                _ = RunPreviewRefresh(async () =>
+                _ = RunPreviewRefresh(vlc, GetVideoPreviewSubtitle(), static async (vm, vlc, sub) =>
                 {
-                    await _vlcReloader.RefreshVlc(vlc, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
+                    await vm._vlcReloader.RefreshVlc(vlc, sub, vm._subtitleSecondary, vm.SelectedSubtitleFormat);
                     return true;
                 });
             }
@@ -17606,7 +17606,7 @@ public partial class MainViewModel :
         if (vp.VideoPlayer is LibMpvDynamicPlayer mpv)
         {
             _mpvReloader.Reset();
-            _ = RunPreviewRefresh(() => _mpvReloader.RefreshMpv(mpv, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat));
+            _ = RunPreviewRefresh(mpv, GetVideoPreviewSubtitle(), static (vm, mpv, sub) => vm._mpvReloader.RefreshMpv(mpv, sub, vm._subtitleSecondary, vm.SelectedSubtitleFormat));
         }
         else if (vp.VideoPlayer is LibVlcDynamicPlayer vlc)
         {
@@ -32672,40 +32672,21 @@ public partial class MainViewModel :
             return;
         }
 
-        // Filter once instead of: Where().ToList() + Clear + AddRange (which
-        // allocates an extra List and walks the paragraphs three times).
-        // Verified with BenchmarkDotNet at ~1.7-2x faster and 0-45 % less
-        // allocation across 100/1000/5000-line subtitles.
-        var hideLayers = _visibleLayers != null && Se.Settings.Assa.HideLayersFromVideoPreview;
-
-        // The mpv lambda captures a branch-local copy: a pattern variable declared in a top-level
-        // `if` is method-scoped, so its closure was allocated on every call - ~60 a second from the
-        // cursor timer, almost all of them taking the early returns above. The `else if` pattern
-        // variables below are scoped to their branch, so they only allocate when that branch runs.
         if (vp.VideoPlayer is LibMpvDynamicPlayer mpvPlayer)
         {
-            var mpv = mpvPlayer;
             var subtitle = GetVideoPreviewSubtitle();
             _mpvPreviewDirty = false; // clear only after subtitle snapshot is successfully obtained
-            if (hideLayers)
-            {
-                subtitle.Paragraphs.RemoveAll(p => !_visibleLayers!.Contains(p.Layer));
-            }
-
-            _ = RunPreviewRefresh(() => _mpvReloader.RefreshMpv(mpv, subtitle, _subtitleSecondary, SelectedSubtitleFormat));
+            RemoveHiddenLayers(subtitle.Paragraphs);
+            _ = RunPreviewRefresh(mpvPlayer, subtitle, static (vm, mpv, sub) => vm._mpvReloader.RefreshMpv(mpv, sub, vm._subtitleSecondary, vm.SelectedSubtitleFormat));
         }
-        else if (vp.VideoPlayer is LibVlcDynamicPlayer vlc)
+        else if (vp.VideoPlayer is LibVlcDynamicPlayer vlcPlayer)
         {
             var subtitle = GetVideoPreviewSubtitle();
             _mpvPreviewDirty = false; // clear only after subtitle snapshot is successfully obtained
-            if (hideLayers)
+            RemoveHiddenLayers(subtitle.Paragraphs);
+            _ = RunPreviewRefresh(vlcPlayer, subtitle, static async (vm, vlc, sub) =>
             {
-                subtitle.Paragraphs.RemoveAll(p => !_visibleLayers!.Contains(p.Layer));
-            }
-
-            _ = RunPreviewRefresh(async () =>
-            {
-                await _vlcReloader.RefreshVlc(vlc, subtitle, _subtitleSecondary, SelectedSubtitleFormat);
+                await vm._vlcReloader.RefreshVlc(vlc, sub, vm._subtitleSecondary, vm.SelectedSubtitleFormat);
                 return true;
             });
         }
@@ -32713,12 +32694,25 @@ public partial class MainViewModel :
         {
             var subtitle = GetVideoPreviewSubtitle();
             _mpvPreviewDirty = false;
-            if (hideLayers)
-            {
-                subtitle.Paragraphs.RemoveAll(p => !_visibleLayers!.Contains(p.Layer));
-            }
-
+            RemoveHiddenLayers(subtitle.Paragraphs);
             PushFfmpegPreview(ffmpeg, subtitle);
+        }
+    }
+
+    private void RemoveHiddenLayers(List<Paragraph> paragraphs)
+    {
+        var visibleLayers = _visibleLayers;
+        if (visibleLayers == null || !Se.Settings.Assa.HideLayersFromVideoPreview)
+        {
+            return;
+        }
+
+        for (var i = paragraphs.Count - 1; i >= 0; i--)
+        {
+            if (!visibleLayers.Contains(paragraphs[i].Layer))
+            {
+                paragraphs.RemoveAt(i);
+            }
         }
     }
 
@@ -32728,12 +32722,12 @@ public partial class MainViewModel :
     /// nothing else re-pushes during plain playback, so one lost push left fullscreen without
     /// subtitles for the whole session (issue #13407).
     /// </param>
-    private async Task RunPreviewRefresh(Func<Task<bool>> refresh)
+    private async Task RunPreviewRefresh<TVideoPlayer>(TVideoPlayer videoPlayer, Subtitle subtitle, Func<MainViewModel, TVideoPlayer, Subtitle, Task<bool>> refresh)
     {
         _mpvPreviewRefreshBusy = true;
         try
         {
-            if (!await refresh())
+            if (!await refresh(this, videoPlayer, subtitle))
             {
                 RetryPreviewRefreshLater();
             }
