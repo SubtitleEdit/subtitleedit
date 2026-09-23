@@ -241,8 +241,9 @@ public class OutputFileNameTest : IDisposable
         // input's own name (same format) instead of input.en.vtt.
         var input = Path.Combine(_tempRoot, "input.vtt");
         File.WriteAllText(input, "");
+        var opts = Opts(overwrite: true, noLanguageSuffix: true);
 
-        var result = SubtitleConverter.ResolveOutputFileName(input, Opts(overwrite: true, noLanguageSuffix: true), "en");
+        var result = SubtitleConverter.ResolveOutputFileName(input, opts, SubtitleConverter.LanguageToken(opts, "en"));
 
         Assert.Equal(input, result);
     }
@@ -252,8 +253,9 @@ public class OutputFileNameTest : IDisposable
     {
         var input = Path.Combine(_tempRoot, "input.vtt");
         File.WriteAllText(input, "");
+        var opts = Opts(overwrite: false, noLanguageSuffix: true);
 
-        var result = SubtitleConverter.ResolveOutputFileName(input, Opts(overwrite: false, noLanguageSuffix: true), "en");
+        var result = SubtitleConverter.ResolveOutputFileName(input, opts, SubtitleConverter.LanguageToken(opts, "en"));
 
         Assert.Equal(Path.Combine(_tempRoot, "input_2.vtt"), result);
     }
@@ -266,10 +268,29 @@ public class OutputFileNameTest : IDisposable
         var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var opts = Opts(overwrite: true, noLanguageSuffix: true);
 
-        var first = SubtitleConverter.ResolveOutputFileName(input, opts, "en", 3, used);
-        var second = SubtitleConverter.ResolveOutputFileName(input, opts, "en", 4, used);
+        var first = SubtitleConverter.ResolveOutputFileName(input, opts, SubtitleConverter.LanguageToken(opts, "en"), 3, used);
+        var second = SubtitleConverter.ResolveOutputFileName(input, opts, SubtitleConverter.LanguageToken(opts, "en"), 4, used);
 
         Assert.Equal(Path.Combine(_tempRoot, "video.vtt"), first);
         Assert.Equal(Path.Combine(_tempRoot, "video_2.vtt"), second);
+    }
+
+    [Fact]
+    public void Resolve_NoLanguageSuffix_KeepsForcedTokenAndStreamLabels()
+    {
+        // Only the language goes: a forced track must stay recognisable next to the full
+        // track of the same language, and DVB/XSUB stream labels are not languages.
+        var input = Path.Combine(_tempRoot, "video.mkv");
+        File.WriteAllText(input, "");
+        var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var opts = Opts(overwrite: true, noLanguageSuffix: true);
+
+        var full = SubtitleConverter.ResolveOutputFileName(input, opts, SubtitleConverter.AppendForcedToken(SubtitleConverter.LanguageToken(opts, "eng"), false), 3, used);
+        var forced = SubtitleConverter.ResolveOutputFileName(input, opts, SubtitleConverter.AppendForcedToken(SubtitleConverter.LanguageToken(opts, "eng"), true), 4, used);
+        var dvb = SubtitleConverter.ResolveOutputFileName(input, opts, "dvb_pid301", 301, used);
+
+        Assert.Equal(Path.Combine(_tempRoot, "video.vtt"), full);
+        Assert.Equal(Path.Combine(_tempRoot, "video.forced.vtt"), forced);
+        Assert.Equal(Path.Combine(_tempRoot, "video.dvb_pid301.vtt"), dvb);
     }
 }

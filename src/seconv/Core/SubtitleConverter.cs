@@ -154,7 +154,7 @@ internal class SubtitleConverter
                     // --translate-to rewrites the content's language, so the output name
                     // carries the target code ("way.zh-CN.srt") instead of the source
                     // track's - and a plain file no longer collides with its own input.
-                    var translateToSuffix = _translateRunner?.TargetLanguageCode;
+                    var translateToSuffix = LanguageToken(options, _translateRunner?.TargetLanguageCode);
 
                     var tracks = ContainerSubtitleLoader.TryLoadTracks(inputFile, options);
                     if (tracks is null)
@@ -195,7 +195,7 @@ internal class SubtitleConverter
 
                         foreach (var track in tracks)
                         {
-                            var outputFile = ResolveOutputFileName(inputFile, options, AppendForcedToken(translateToSuffix ?? track.LanguageCode, track.IsForced), track.TrackNumber, _usedOutputFileNames);
+                            var outputFile = ResolveOutputFileName(inputFile, options, AppendForcedToken(translateToSuffix ?? LanguageToken(options, track.LanguageCode), track.IsForced), track.TrackNumber, _usedOutputFileNames);
                             var trackLabel = track.TrackNumber.HasValue ? $"#{track.TrackNumber.Value} " : string.Empty;
                             var langLabel = string.IsNullOrEmpty(track.LanguageCode) ? string.Empty : $"[{track.LanguageCode}] ";
                             if (!options.Quiet)
@@ -547,7 +547,7 @@ internal class SubtitleConverter
             var isVobSub = track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase);
             var isDvbSub = track.CodecId.Equals("S_DVBSUB", StringComparison.OrdinalIgnoreCase);
             var outputFile = ResolveOutputFileName(
-                inputFile, options, AppendForcedToken(ContainerSubtitleLoader.SanitizeLang(track.Language), track.IsForced), track.TrackNumber, _usedOutputFileNames);
+                inputFile, options, AppendForcedToken(LanguageToken(options, ContainerSubtitleLoader.SanitizeLang(track.Language)), track.IsForced), track.TrackNumber, _usedOutputFileNames);
 
             if (!options.Quiet)
             {
@@ -1036,6 +1036,16 @@ internal class SubtitleConverter
     }
 
     /// <summary>
+    /// The language part of an output name, or null with --no-language-suffix (#15156).
+    /// Only the language is dropped: the "forced" token and stream labels (dvb_pid,
+    /// xsub_track) still tell same-language outputs apart.
+    /// </summary>
+    internal static string? LanguageToken(ConversionOptions options, string? language)
+    {
+        return options.NoLanguageSuffix ? null : language;
+    }
+
+    /// <summary>
     /// Appends the player convention's "forced" name token (<c>movie.eng.forced.srt</c>)
     /// for forced tracks - MKV forced-display flag, or MP4 tx3g forced displayFlags -
     /// so a forced track no longer collides with its same-language full track.
@@ -1059,9 +1069,9 @@ internal class SubtitleConverter
     /// A name in <paramref name="usedNames"/> was handed out earlier in this run (e.g.
     /// the first of two "eng" tracks) and always counts as taken - --overwrite only
     /// clobbers files from before the run, never the run's own output.
-    /// --no-language-suffix drops the language token altogether (#15156): with
-    /// --overwrite a --translate-to run then writes back to the input's own name, without
-    /// it the counter keeps the input safe.
+    /// --no-language-suffix is applied by the callers (<see cref="LanguageToken"/>), so
+    /// with --overwrite a --translate-to run writes back to the input's own name (#15156),
+    /// without it the counter keeps the input safe.
     /// </summary>
     internal static string ResolveOutputFileName(
         string inputFile,
@@ -1070,11 +1080,6 @@ internal class SubtitleConverter
         int? trackNumber = null,
         ISet<string>? usedNames = null)
     {
-        if (options.NoLanguageSuffix)
-        {
-            languageSuffix = null;
-        }
-
         string baseName;
         string ext;
         if (!string.IsNullOrEmpty(options.OutputFilename))
