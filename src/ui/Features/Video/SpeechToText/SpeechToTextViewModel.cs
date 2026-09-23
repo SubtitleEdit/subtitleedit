@@ -157,6 +157,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private bool _unknownArgument;
     private bool _cudaOutOfMemory;
     private bool _cudaComputeTypeNotSupported;
+    private bool _torchWithoutCuda;
     private bool _incompleteModel;
     private string? _missingSharedLibrary;
 
@@ -884,6 +885,11 @@ public partial class SpeechToTextViewModel : ObservableObject
                     await ShowCudaComputeTypeNotSupported(engine);
                     hasError = true;
                 }
+                else if (_torchWithoutCuda)
+                {
+                    await ShowTorchWithoutCuda(engine);
+                    hasError = true;
+                }
 
                 if (!hasError && GetResultFromSrt(_audioFileName, _videoFileName!, out var resultTexts, _outputText, _filesToDelete))
                 {
@@ -1121,6 +1127,62 @@ public partial class SpeechToTextViewModel : ObservableObject
             : parameters.Trim() + " " + computeTypeArgument;
         engine.CommandLineParameter = Parameters;
         SaveSettings();
+    }
+
+    /// <summary>
+    /// True for the line a CPU-only build prints when asked for "--device cuda". The WhisperX
+    /// standalone build SE downloads has a CPU-only torch: on Windows it dies loading the voice
+    /// activity model with the torch message (#15206); on macOS the CTranslate2 package has no
+    /// CUDA either and fails first, with its own message.
+    /// </summary>
+    internal static bool IsNoCudaBuildError(string line)
+    {
+        return line.Contains("Torch not compiled with CUDA enabled", StringComparison.OrdinalIgnoreCase) ||
+               line.Contains("CTranslate2 package was not compiled with CUDA support", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private async Task ShowTorchWithoutCuda(ISpeechToTextEngine engine)
+    {
+        const string title = "CUDA not available";
+        var nl = Environment.NewLine;
+        var cause = engine is WhisperEngineWhisperX
+            ? $"This WhisperX build runs on the CPU only - it cannot use \"--device cuda\", so no text was transcribed.{nl}{nl}"
+            : $"This engine was built without CUDA support, so it cannot run on the GPU and no text was transcribed.{nl}{nl}";
+
+        var parameters = Parameters ?? string.Empty;
+        var cpuParameters = RemoveGpuParameters(parameters);
+        if (cpuParameters == parameters.Trim())
+        {
+            await MessageBox.Show(Window!, title, cause + "Remove any GPU settings from the parameters, or run on CPU.");
+            return;
+        }
+
+        var shownParameters = string.IsNullOrEmpty(cpuParameters) ? "(none)" : cpuParameters;
+        var answer = await MessageBox.Show(Window!, title,
+            cause + $"Remove the GPU settings from the parameters so it runs on the CPU?{nl}{nl}" +
+            $"New parameters: {shownParameters}",
+            MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+        if (answer != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        Parameters = cpuParameters;
+        engine.CommandLineParameter = Parameters;
+        SaveSettings();
+    }
+
+    /// <summary>
+    /// Removes the arguments that only work on a GPU: "--device" / "--device_index" with their
+    /// values, and the half-precision compute types, which CTranslate2 refuses on a CPU
+    /// ("--compute_type float16" was the other half of the #15206 command line).
+    /// </summary>
+    internal static string RemoveGpuParameters(string parameters)
+    {
+        var result = Regex.Replace(parameters, @"(^|\s)--device(_index)?(\s+|=)\S+", " ", RegexOptions.IgnoreCase);
+        result = Regex.Replace(result, @"(^|\s)--compute_type(\s+|=)(float16|bfloat16|int8_float16|int8_bfloat16)(?=\s|$)", " ", RegexOptions.IgnoreCase);
+        return Regex.Replace(result, @"\s{2,}", " ").Trim();
     }
 
     /// <summary>
@@ -3733,6 +3795,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             _unknownArgument = false;
             _cudaOutOfMemory = false;
             _cudaComputeTypeNotSupported = false;
+            _torchWithoutCuda = false;
             _incompleteModel = false;
             _missingSharedLibrary = null;
             _loadedFromStdOut = false;
@@ -4829,6 +4892,10 @@ public partial class SpeechToTextViewModel : ObservableObject
             // encode() and leaves no output at all, so without this the user just gets an empty
             // result (issue #13902).
             _cudaComputeTypeNotSupported = true;
+        }
+        else if (IsNoCudaBuildError(outLine.Data))
+        {
+            _torchWithoutCuda = true;
         }
         //if (outLine.Data.Contains("running on: CUDA", StringComparison.OrdinalIgnoreCase))
         //{
