@@ -161,7 +161,7 @@ public class SpeechToTextWindow : Window
             .WithMarginTop(10)
             .WithMarginLeft(5)
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
-            .BindIsVisible(vm, nameof(vm.IsModelSelectionVisible));
+            .BindIsVisible(vm, nameof(vm.IsModelDownloadVisible));
 
         var panelModelControls = new StackPanel
         {
