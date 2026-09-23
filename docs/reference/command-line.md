@@ -136,7 +136,7 @@ seconv lint *.srt --json             # CI-friendly: exit 1 on any issue
 | `--output-filename:<name>` | Output file name (single input only) |
 | `--output-filename-append:<text>` | Text appended to the output file name stem, before any language/track suffix: `movie.ts` → `movie_fixed.eng.srt`. Ignored with `--output-filename` |
 | `--overwrite` | Overwrite existing files (default: rotate to `name_2.ext`, `_3.ext`, ...) |
-| `--no-language-suffix` | Do not insert the language code before the extension (`movie.srt` instead of `movie.en.srt` for container tracks and `--translate-to`). With `--overwrite` and `--translate-to` the file is translated in place |
+| `--no-language-suffix` | Do not insert the language code before the extension (`movie.srt` instead of `movie.en.srt` for container tracks and `--translate-to`). A forced track keeps its marker (`movie.forced.srt`). With `--overwrite` and `--translate-to` the file is translated in place |
 | `--keep-timestamp` (also `--keep-timestamps`) | Give output files the source file's modified/created date instead of the conversion time |
 | `--encoding:<name>` | Encoding name or codepage. Special values: `utf-8`, `utf-8-no-bom` (also `utf-8-nobom`, `utf8-nobom`), a code page number, or `source` to keep the input file's detected encoding. Defaults: auto-detect on input, UTF-8 BOM on output |
 | `--input-encoding-fallback:<name>` | Encoding to assume when the input is not UTF-8 / has no BOM, instead of the ANSI auto-detection (names as in `seconv list-encodings`). Ignored when `--encoding` is set |
