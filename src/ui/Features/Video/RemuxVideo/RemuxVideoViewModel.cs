@@ -56,6 +56,7 @@ public partial class RemuxVideoViewModel : ObservableObject
     [ObservableProperty] private string _progressText = string.Empty;
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private bool _isRemuxing;
+    [ObservableProperty] private bool _isFinalizing;
     [ObservableProperty] private bool _isNotRemuxing = true;
     [ObservableProperty] private bool _canRemux;
     [ObservableProperty] private bool _isCompleted;
@@ -761,6 +762,16 @@ public partial class RemuxVideoViewModel : ObservableObject
 
     private void UpdateProgressText(TimeSpan elapsed)
     {
+        if (IsFinalizing)
+        {
+            // ffmpeg is copying the whole file to move the mp4 index to the front (faststart);
+            // there are no progress lines for that, so no percentage or time left - just the
+            // elapsed time, so the user can see it is still alive (#15197).
+            var elapsedOnly = string.Format(Se.Language.Video.TextToSpeech.XElapsed, RemuxFileItem.FormatDuration(elapsed));
+            ProgressText = $"{Se.Language.Video.RemuxVideoFinalizing} ({elapsedOnly})";
+            return;
+        }
+
         var time = FormatProgressTime(elapsed, ProgressValue);
         ProgressText = ProgressValue > 0
             ? $"{Se.Language.Video.RemuxVideoRemuxing} {(int)ProgressValue}% ({time})"
@@ -1006,6 +1017,7 @@ public partial class RemuxVideoViewModel : ObservableObject
             arguments = FfmpegProgressTracker.ProgressArguments + " " + arguments;
             IsRemuxing = true;
             IsCompleted = false;
+            IsFinalizing = false;
             _isCancelled = false;
             ProgressValue = 0;
             ProgressText = Se.Language.Video.RemuxVideoRemuxing;
@@ -1032,6 +1044,16 @@ public partial class RemuxVideoViewModel : ObservableObject
                 }
 
                 _log.AppendLine(e.Data);
+
+                if (FfmpegProgressTracker.IsFinalizingLine(e.Data))
+                {
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        IsFinalizing = true;
+                        UpdateProgressText(stopwatch.Elapsed);
+                    });
+                    return;
+                }
 
                 if (_progressTracker != null && _progressTracker.TryGetNewPercent(e.Data, out var pct))
                 {
@@ -1126,6 +1148,7 @@ public partial class RemuxVideoViewModel : ObservableObject
             elapsedTimer?.Stop();
             stopwatch?.Stop();
             IsRemuxing = false;
+            IsFinalizing = false;
         }
     }
 

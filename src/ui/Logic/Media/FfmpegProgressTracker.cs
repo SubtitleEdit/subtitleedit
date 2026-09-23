@@ -98,6 +98,20 @@ public sealed class FfmpegProgressTracker
     }
 
     /// <summary>
+    /// True when the line is the mp4 muxer's "Starting second pass: moving the moov atom to the
+    /// beginning of the file" notice (stderr, info level; "-nostats" does not silence it). With
+    /// "-movflags +faststart" ffmpeg rewrites the whole output after the last packet to move
+    /// the index to the front - a full copy of the file with no progress lines at all, so the
+    /// percentage sits at 100 for as long as the copy takes (half a minute for a 3-hour opera,
+    /// #15197). Callers switch to an indeterminate "finalizing" state on this line.
+    /// </summary>
+    public static bool IsFinalizingLine(string? line)
+    {
+        return !string.IsNullOrEmpty(line) &&
+               line.Contains("Starting second pass: moving the moov atom", StringComparison.Ordinal);
+    }
+
+    /// <summary>
     /// True when the line is part of a "-progress" key/value block (so callers can keep the
     /// twice-a-second progress spam out of logs shown to the user).
     /// </summary>

@@ -149,6 +149,7 @@ public class RemuxVideoWindow : Window
         };
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
         progressBar.Bind(ProgressBar.IsVisibleProperty, new Binding(nameof(vm.IsRemuxing)));
+        progressBar.Bind(ProgressBar.IsIndeterminateProperty, new Binding(nameof(vm.IsFinalizing)));
 
         var labelProgress = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.ProgressText));
 

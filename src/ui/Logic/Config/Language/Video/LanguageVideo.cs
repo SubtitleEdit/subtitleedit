@@ -36,6 +36,7 @@ public class LanguageVideo
     public string RemuxVideoOutputFormat { get; set; }
     public string RemuxVideoOutputFile { get; set; }
     public string RemuxVideoRemuxing { get; set; }
+    public string RemuxVideoFinalizing { get; set; }
     public string RemuxVideoCompleted { get; set; }
     public string RemuxVideoFailed { get; set; }
     public string RemuxVideoPleaseSelectBoth { get; set; }
@@ -156,6 +157,7 @@ public class LanguageVideo
         RemuxVideoOutputFormat = "Output format:";
         RemuxVideoOutputFile = "Output file:";
         RemuxVideoRemuxing = "Remuxing video and audio...";
+        RemuxVideoFinalizing = "Finalizing output file (moving index to the start)...";
         RemuxVideoCompleted = "Video remuxed successfully.";
         RemuxVideoFailed = "Failed to remux video.";
         RemuxVideoPleaseSelectBoth = "Please select both video and audio files.";

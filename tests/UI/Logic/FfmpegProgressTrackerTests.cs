@@ -72,4 +72,18 @@ public class FfmpegProgressTrackerTests
     {
         Assert.Equal(expected, FfmpegProgressTracker.IsProgressLine(line));
     }
+
+    // The mp4 faststart second pass: no progress lines while ffmpeg copies the whole file to
+    // move the index to the front, so the UI needs a "finalizing" phase (#15197).
+    [Theory]
+    [InlineData("[mp4 @ 0x7f8a1c00] Starting second pass: moving the moov atom to the beginning of the file", true)]
+    [InlineData("Starting second pass: moving the moov atom to the beginning of the file", true)]
+    [InlineData("out_time_us=1000000", false)]
+    [InlineData("progress=end", false)]
+    [InlineData("", false)]
+    [InlineData(null, false)]
+    public void IsFinalizingLine_MatchesOnlyTheMoovSecondPassNotice(string? line, bool expected)
+    {
+        Assert.Equal(expected, FfmpegProgressTracker.IsFinalizingLine(line));
+    }
 }
