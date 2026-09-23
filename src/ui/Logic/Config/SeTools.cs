@@ -78,6 +78,8 @@ public class SeTools
     // every one of these is >= 1 in the UI. Same shape as the split/rebalance keys above (#13514).
     public int MergeShortLinesSingleLineMaxLength { get; set; }
     public int MergeShortLinesMaxNumberOfLines { get; set; }
+    public int MergeContinuationLinesMaxGapMs { get; set; } // 0 is a valid gap, so this one defaults to 500
+    public int MergeContinuationLinesMaxCharacters { get; set; }
     public int ApplyDurationLimitsMinDurationMs { get; set; }
     public int ApplyDurationLimitsMaxDurationMs { get; set; }
 
@@ -277,6 +279,7 @@ public class SeTools
         AllowSingleLetterShortcutsInTextbox = false;
         AllowTextNavigationShortcutsInTextbox = false;
         TextToSpeechPromptMergeContinuationLines = true;
+        MergeContinuationLinesMaxGapMs = 500;
         TextToSpeechPromptSkipNoiseLines = true;
         TextToSpeechPromptDetectSpeakers = true;
 
