@@ -32631,9 +32631,10 @@ public partial class MainViewModel :
         // allocation across 100/1000/5000-line subtitles.
         var hideLayers = _visibleLayers != null && Se.Settings.Assa.HideLayersFromVideoPreview;
 
-        // The lambdas below capture branch-local copies: a captured `is` pattern variable is
-        // method-scoped, so its closure was allocated on every call - ~60 a second from the
-        // cursor timer, almost all of them taking the early returns above.
+        // The mpv lambda captures a branch-local copy: a pattern variable declared in a top-level
+        // `if` is method-scoped, so its closure was allocated on every call - ~60 a second from the
+        // cursor timer, almost all of them taking the early returns above. The `else if` pattern
+        // variables below are scoped to their branch, so they only allocate when that branch runs.
         if (vp.VideoPlayer is LibMpvDynamicPlayer mpvPlayer)
         {
             var mpv = mpvPlayer;
@@ -32646,9 +32647,8 @@ public partial class MainViewModel :
 
             _ = RunPreviewRefresh(() => _mpvReloader.RefreshMpv(mpv, subtitle, _subtitleSecondary, SelectedSubtitleFormat));
         }
-        else if (vp.VideoPlayer is LibVlcDynamicPlayer vlcPlayer)
+        else if (vp.VideoPlayer is LibVlcDynamicPlayer vlc)
         {
-            var vlc = vlcPlayer;
             var subtitle = GetVideoPreviewSubtitle();
             _mpvPreviewDirty = false; // clear only after subtitle snapshot is successfully obtained
             if (hideLayers)
