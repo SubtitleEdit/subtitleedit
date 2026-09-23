@@ -2895,7 +2895,19 @@
     "ttsEngineNotInstalled": "{0} not installed",
     "ttsEngineUpdateAvailable": "{0} - update available",
     "ttsEngineTooOldUpdateRequired": "{0} too old - update required",
-    "ttsEngineChatterboxCapable": "{0} (Chatterbox-capable)"
+    "ttsEngineChatterboxCapable": "{0} (Chatterbox-capable)",
+    "addAudioToVideoTitle": "Add audio to video / audio",
+    "addAudioToVideoDotDotDot": "Add audio to video / audio...",
+    "addAudioInputMediaFile": "Input video / audio file:",
+    "addAudioAudioFileToAdd": "Audio file to add:",
+    "addAudioDucking": "Audio ducking (reduce original volume)",
+    "addAudioDuckingVolume": "Original volume %:",
+    "addAudioAddedVolume": "Added audio volume %:",
+    "addAudioReplaceOriginal": "Replace original audio",
+    "addAudioOutputFile": "Output file:",
+    "addAudioPleaseSelectBoth": "Please select both input file and audio file to add.",
+    "addAudioCompleted": "Audio added successfully.",
+    "addAudioFailed": "Failed to add audio."
   },
   "waveform": {
     "guessTimeCodes": "Guess time codes",

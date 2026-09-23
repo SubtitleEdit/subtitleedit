@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Nikse.SubtitleEdit.Logic.Config.Language.Tools;
 
@@ -127,9 +127,33 @@ public class LanguageVideo
     public string TtsEngineUpdateAvailable { get; set; }
     public string TtsEngineTooOldUpdateRequired { get; set; }
     public string TtsEngineChatterboxCapable { get; set; }
+    public string AddAudioToVideoTitle { get; set; }
+    public string AddAudioToVideoDotDotDot { get; set; }
+    public string AddAudioInputMediaFile { get; set; }
+    public string AddAudioAudioFileToAdd { get; set; }
+    public string AddAudioDucking { get; set; }
+    public string AddAudioDuckingVolume { get; set; }
+    public string AddAudioAddedVolume { get; set; }
+    public string AddAudioReplaceOriginal { get; set; }
+    public string AddAudioOutputFile { get; set; }
+    public string AddAudioPleaseSelectBoth { get; set; }
+    public string AddAudioCompleted { get; set; }
+    public string AddAudioFailed { get; set; }
 
     public LanguageVideo()
     {
+        AddAudioToVideoTitle = "Add audio to video / audio";
+        AddAudioToVideoDotDotDot = "Add audio to video / audio...";
+        AddAudioInputMediaFile = "Input video / audio file:";
+        AddAudioAudioFileToAdd = "Audio file to add:";
+        AddAudioDucking = "Audio ducking (reduce original volume)";
+        AddAudioDuckingVolume = "Original volume %:";
+        AddAudioAddedVolume = "Added audio volume %:";
+        AddAudioReplaceOriginal = "Replace original audio";
+        AddAudioOutputFile = "Output file:";
+        AddAudioPleaseSelectBoth = "Please select both input file and audio file to add.";
+        AddAudioCompleted = "Audio added successfully.";
+        AddAudioFailed = "Failed to add audio.";
         GoToVideoPosition = "Go to video position";
         GoToVideoPositionDotDotDot = "Go to video position...";
         GenerateBlankVideoTitle = "Generate blank video";

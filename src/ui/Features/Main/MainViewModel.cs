@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.UiLogic.Export;
+using Nikse.SubtitleEdit.UiLogic.Export;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -154,6 +154,7 @@ using Nikse.SubtitleEdit.Features.Main.AssistedSplit;
 using Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 using Nikse.SubtitleEdit.Features.Tools.SplitSubtitle;
 using Nikse.SubtitleEdit.Features.Translate;
+using Nikse.SubtitleEdit.Features.Video.AddAudioToVideo;
 using Nikse.SubtitleEdit.Features.Video.BackgroundMusic;
 using Nikse.SubtitleEdit.Features.Video.BlankVideo;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
@@ -11538,6 +11539,48 @@ public partial class MainViewModel :
                 if (vm.IsCompleted && !string.IsNullOrWhiteSpace(vm.OutputFileName) && File.Exists(vm.OutputFileName))
                 {
                     await VideoOpenFile(vm.OutputFileName);
+                }
+            };
+            WindowService.KeepTopmostWhileOwnerActive(window, Window);
+            vm.Initialize(_videoFileName);
+        });
+    }
+
+    private Window? _addAudioToVideoWindow;
+
+    [RelayCommand]
+    private async Task ShowVideoAddAudio()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var ffmpegOk = await RequireFfmpegOk();
+        if (!ffmpegOk)
+        {
+            return;
+        }
+
+        if (_addAudioToVideoWindow != null)
+        {
+            _addAudioToVideoWindow.Activate();
+            _addAudioToVideoWindow.Focus();
+            return;
+        }
+
+        _windowService.ShowWindow<AddAudioToVideoWindow, AddAudioToVideoViewModel>(Window, (window, vm) =>
+        {
+            _addAudioToVideoWindow = window;
+            window.Closed += async (_, _) =>
+            {
+                _addAudioToVideoWindow = null;
+                if (vm.IsCompleted && !string.IsNullOrWhiteSpace(vm.OutputFileName) && File.Exists(vm.OutputFileName))
+                {
+                    if (vm.IsVideoInput)
+                    {
+                        await VideoOpenFile(vm.OutputFileName);
+                    }
                 }
             };
             WindowService.KeepTopmostWhileOwnerActive(window, Window);

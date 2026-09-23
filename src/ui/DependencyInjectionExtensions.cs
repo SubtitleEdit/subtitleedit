@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect;
 using Nikse.SubtitleEdit.Features.Assa.AssaApplyCustomOverrideTags;
@@ -149,6 +149,7 @@ using Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 using Nikse.SubtitleEdit.Features.Tools.SplitSubtitle;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Features.Translate.LlamaCppEngineSettings;
+using Nikse.SubtitleEdit.Features.Video.AddAudioToVideo;
 using Nikse.SubtitleEdit.Features.Video.BackgroundMusic;
 using Nikse.SubtitleEdit.Features.Video.BlankVideo;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
@@ -570,6 +571,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<OpenOriginalMismatchViewModel>();
         collection.AddTransient<PromptTextBoxViewModel>();
         collection.AddTransient<PromptUnknownWordViewModel>();
+        collection.AddTransient<AddAudioToVideoViewModel>();
         collection.AddTransient<ReEncodeVideoViewModel>();
         collection.AddTransient<RemuxVideoViewModel>();
         collection.AddTransient<PickAudioTrackViewModel>();
