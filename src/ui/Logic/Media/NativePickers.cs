@@ -20,25 +20,34 @@ namespace Nikse.SubtitleEdit.Logic.Media;
 /// owner vanish behind the main window, reachable only via the taskbar (#12093). Dropping
 /// Topmost for the picker's lifetime avoids that; the previous values are restored afterwards
 /// (and the owner's re-activation re-asserts the correct state via KeepTopmostWhileOwnerActive).
+///
+/// While the picker is open, <see cref="FileDialogPlacement"/> also keeps it inside the work area
+/// of its owner's monitor, since Windows opens it anchored to the owner at its remembered size
+/// without clamping it to the screen (#13515).
 /// </summary>
 public static class NativePickers
 {
     public static Task<IReadOnlyList<IStorageFile>> OpenFilePickerAsync(TopLevel topLevel, FilePickerOpenOptions options)
     {
-        return RunWithTopmostSuspendedAsync(() => topLevel.StorageProvider.OpenFilePickerAsync(options));
+        return RunWithTopmostSuspendedAsync(topLevel, () => topLevel.StorageProvider.OpenFilePickerAsync(options));
     }
 
     public static Task<IStorageFile?> SaveFilePickerAsync(TopLevel topLevel, FilePickerSaveOptions options)
     {
-        return RunWithTopmostSuspendedAsync(() => topLevel.StorageProvider.SaveFilePickerAsync(options));
+        return RunWithTopmostSuspendedAsync(topLevel, () => topLevel.StorageProvider.SaveFilePickerAsync(options));
     }
 
     public static Task<IReadOnlyList<IStorageFolder>> OpenFolderPickerAsync(TopLevel topLevel, FolderPickerOpenOptions options)
     {
-        return RunWithTopmostSuspendedAsync(() => topLevel.StorageProvider.OpenFolderPickerAsync(options));
+        return RunWithTopmostSuspendedAsync(topLevel, () => topLevel.StorageProvider.OpenFolderPickerAsync(options));
     }
 
-    private static async Task<T> RunWithTopmostSuspendedAsync<T>(Func<Task<T>> showNativeDialog)
+    public static Task<SaveFilePickerResult> SaveFilePickerWithResultAsync(TopLevel topLevel, FilePickerSaveOptions options)
+    {
+        return RunWithTopmostSuspendedAsync(topLevel, () => topLevel.StorageProvider.SaveFilePickerWithResultAsync(options));
+    }
+
+    private static async Task<T> RunWithTopmostSuspendedAsync<T>(TopLevel topLevel, Func<Task<T>> showNativeDialog)
     {
         var suspended = new List<Window>();
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
@@ -53,6 +62,7 @@ public static class NativePickers
             }
         }
 
+        using var placement = FileDialogPlacement.Start(topLevel);
         try
         {
             return await showNativeDialog();
