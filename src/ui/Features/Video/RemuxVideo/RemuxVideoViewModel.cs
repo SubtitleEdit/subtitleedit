@@ -68,6 +68,9 @@ public partial class RemuxVideoViewModel : ObservableObject
     [ObservableProperty] private bool _isSubtitleMoveUpEnabled;
     [ObservableProperty] private bool _isSubtitleMoveDownEnabled;
     [ObservableProperty] private bool _promptForFfmpegParameters;
+    [ObservableProperty] private bool _mixAudio;
+    [ObservableProperty] private bool _isMixAudioVisible;
+    [ObservableProperty] private bool _isVolumeEnabled;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -141,9 +144,15 @@ public partial class RemuxVideoViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Mixing only happens with two or more audio files; the checkbox is hidden below that, and
+    /// a single file is remuxed as it is (its volume setting is ignored).
+    /// </summary>
+    private bool IsMixing => MixAudio && AudioFiles.Count > 1;
+
     private bool RequiresMkv(out string reason)
     {
-        if (AudioFiles.Count > 1 || SubtitleFiles.Count > 1)
+        if ((AudioFiles.Count > 1 && !IsMixing) || SubtitleFiles.Count > 1)
         {
             reason = Se.Language.Video.RemuxVideoMultipleTracksRequiresMkv;
             return true;
@@ -232,6 +241,24 @@ public partial class RemuxVideoViewModel : ObservableObject
         IsAudioMoveUpEnabled = index > 0;
         IsAudioMoveDownEnabled = index >= 0 && index < AudioFiles.Count - 1;
         IsAudioSelectTrackVisible = SelectedAudioFile?.HasMultipleTracks == true;
+        UpdateMixState();
+    }
+
+    private void UpdateMixState()
+    {
+        IsMixAudioVisible = AudioFiles.Count > 1;
+        IsVolumeEnabled = IsMixing && SelectedAudioFile != null;
+        foreach (var item in AudioFiles)
+        {
+            item.ShowVolume = IsMixing;
+        }
+    }
+
+    partial void OnMixAudioChanged(bool value)
+    {
+        IsCompleted = false;
+        UpdateMixState();
+        EnforceMkvIfRequired();
     }
 
     private void UpdateSubtitleListState()
@@ -730,6 +757,11 @@ public partial class RemuxVideoViewModel : ObservableObject
         return value.Replace("\\", "_").Replace("\"", "'");
     }
 
+    internal static string FormatVolumeFactor(int volumePercent)
+    {
+        return (Math.Clamp(volumePercent, 0, 200) / 100.0).ToString("0.00", CultureInfo.InvariantCulture);
+    }
+
     [RelayCommand]
     private async Task PromptFfmpegParametersAndRemux()
     {
@@ -904,100 +936,7 @@ public partial class RemuxVideoViewModel : ObservableObject
 
             _progressTracker = new FfmpegProgressTracker(durationSeconds);
 
-            var isMkv = string.Equals(SelectedOutputFormat, ".mkv", StringComparison.OrdinalIgnoreCase);
-            var videoFullPath = Path.GetFullPath(VideoFileName);
-
-            var inputArgs = new StringBuilder();
-            var mapArgs = new StringBuilder();
-            var metadataArgs = new StringBuilder();
-
-            // 1. Video input (index 0). "genpts": H.264 with B-frames in .avi has packets without
-            //    a pts, and copying those into .mkv aborts with "Can't write packet with unknown
-            //    timestamp". Packets that have a pts are left as they are.
-            inputArgs.Append($"-fflags +genpts -i \"{VideoFileName}\" ");
-            mapArgs.Append("-map 0:v:0 ");
-
-            // 2. Audio inputs - the video's own audio is mapped from input 0, every other
-            //    file becomes its own input; the selected track decides the stream index.
-            var currentInputIndex = 1;
-            for (var k = 0; k < audioFiles.Count; k++)
-            {
-                var audioFile = audioFiles[k];
-                var streamIndex = audioFile.SelectedTrack?.Index ?? 0;
-                var isVideoAudio = string.Equals(Path.GetFullPath(audioFile.FileName), videoFullPath, StringComparison.OrdinalIgnoreCase);
-                if (isVideoAudio)
-                {
-                    mapArgs.Append($"-map 0:a:{streamIndex} ");
-                }
-                else
-                {
-                    inputArgs.Append($"-i \"{audioFile.FileName}\" ");
-                    mapArgs.Append($"-map {currentInputIndex}:a:{streamIndex} ");
-                    currentInputIndex++;
-                }
-
-                var track = audioFile.SelectedTrack;
-                var trackTitle = track != null && audioFile.Tracks.Count > 1
-                    ? track.DisplayName
-                    : Path.GetFileNameWithoutExtension(audioFile.FileName);
-                metadataArgs.Append($"-metadata:s:a:{k} title=\"{EscapeFfmpegMetadata(trackTitle)}\" ");
-                if (track != null && !string.IsNullOrWhiteSpace(track.Language) && track.Language != "und")
-                {
-                    metadataArgs.Append($"-metadata:s:a:{k} language=\"{track.Language}\" ");
-                }
-            }
-
-            // 3. Subtitle inputs
-            for (var j = 0; j < subFiles.Count; j++)
-            {
-                var subFile = subFiles[j];
-                inputArgs.Append($"-i \"{subFile.FileName}\" ");
-                mapArgs.Append($"-map {currentInputIndex}:s:0 ");
-                var subTitle = Path.GetFileNameWithoutExtension(subFile.FileName);
-                metadataArgs.Append($"-metadata:s:s:{j} title=\"{EscapeFfmpegMetadata(subTitle)}\" ");
-                currentInputIndex++;
-            }
-
-            // 4. Codecs
-            var videoCodec = "-c:v copy";
-
-            string audioCodec;
-            if (isMkv)
-            {
-                audioCodec = "-c:a copy";
-            }
-            else
-            {
-                var hasWav = audioFiles.Any(f => string.Equals(Path.GetExtension(f.FileName), ".wav", StringComparison.OrdinalIgnoreCase));
-                audioCodec = hasWav ? "-c:a aac -b:a 192k" : "-c:a copy";
-            }
-
-            var subCodec = string.Empty;
-            if (subFiles.Count > 0)
-            {
-                subCodec = isMkv ? "-c:s copy" : "-c:s mov_text";
-
-                // Matroska has no codec id for MicroDVD, so a text .sub cannot be copied in
-                // ("Subtitle codec microdvd is not supported") - it goes in as SubRip. A .sub
-                // with an .idx next to it is VobSub, which can be copied.
-                if (isMkv)
-                {
-                    for (var j = 0; j < subFiles.Count; j++)
-                    {
-                        var subFileName = subFiles[j].FileName;
-                        if (string.Equals(Path.GetExtension(subFileName), ".sub", StringComparison.OrdinalIgnoreCase) &&
-                            !File.Exists(Path.ChangeExtension(subFileName, ".idx")))
-                        {
-                            subCodec += $" -c:s:{j.ToString(CultureInfo.InvariantCulture)} srt";
-                        }
-                    }
-                }
-            }
-
-            var fastStart = string.Equals(SelectedOutputFormat, ".mp4", StringComparison.OrdinalIgnoreCase)
-                ? "-movflags +faststart "
-                : string.Empty;
-            var arguments = $"-y {inputArgs}{mapArgs}{videoCodec} {audioCodec} {subCodec} {metadataArgs}{fastStart}\"{OutputFileName}\"".Trim();
+            var arguments = BuildFfmpegArguments(audioFiles, subFiles);
 
             if (PromptForFfmpegParameters)
             {
@@ -1150,6 +1089,152 @@ public partial class RemuxVideoViewModel : ObservableObject
             IsRemuxing = false;
             IsFinalizing = false;
         }
+    }
+
+    /// <summary>
+    /// The ffmpeg arguments for remuxing the video with <paramref name="audioFiles"/> and
+    /// <paramref name="subFiles"/> into <see cref="OutputFileName"/> (without the progress arguments).
+    /// </summary>
+    internal string BuildFfmpegArguments(List<RemuxFileItem> audioFiles, List<RemuxFileItem> subFiles)
+    {
+        var isMkv = string.Equals(SelectedOutputFormat, ".mkv", StringComparison.OrdinalIgnoreCase);
+        var videoFullPath = Path.GetFullPath(VideoFileName);
+
+        var inputArgs = new StringBuilder();
+        var mapArgs = new StringBuilder();
+        var metadataArgs = new StringBuilder();
+
+        // 1. Video input (index 0). "genpts": H.264 with B-frames in .avi has packets without
+        //    a pts, and copying those into .mkv aborts with "Can't write packet with unknown
+        //    timestamp". Packets that have a pts are left as they are.
+        inputArgs.Append($"-fflags +genpts -i \"{VideoFileName}\" ");
+        mapArgs.Append("-map 0:v:0 ");
+
+        // 2. Audio inputs - the video's own audio is mapped from input 0, every other
+        //    file becomes its own input; the selected track decides the stream index.
+        //    When mixing, each source goes through a volume filter into one amix track.
+        var isMixing = IsMixing;
+        var filterArgs = string.Empty;
+        var mixFilter = new StringBuilder();
+        var currentInputIndex = 1;
+        for (var k = 0; k < audioFiles.Count; k++)
+        {
+            var audioFile = audioFiles[k];
+            var streamIndex = audioFile.SelectedTrack?.Index ?? 0;
+            var isVideoAudio = string.Equals(Path.GetFullPath(audioFile.FileName), videoFullPath, StringComparison.OrdinalIgnoreCase);
+            string streamSpecifier;
+            if (isVideoAudio)
+            {
+                streamSpecifier = $"0:a:{streamIndex}";
+            }
+            else
+            {
+                inputArgs.Append($"-i \"{audioFile.FileName}\" ");
+                streamSpecifier = $"{currentInputIndex}:a:{streamIndex}";
+                currentInputIndex++;
+            }
+
+            if (isMixing)
+            {
+                mixFilter.Append($"[{streamSpecifier}]volume={FormatVolumeFactor(audioFile.VolumePercent)}[a{k}];");
+                continue;
+            }
+
+            mapArgs.Append($"-map {streamSpecifier} ");
+
+            var track = audioFile.SelectedTrack;
+            var trackTitle = track != null && audioFile.Tracks.Count > 1
+                ? track.DisplayName
+                : Path.GetFileNameWithoutExtension(audioFile.FileName);
+            metadataArgs.Append($"-metadata:s:a:{k} title=\"{EscapeFfmpegMetadata(trackTitle)}\" ");
+            if (track != null && !string.IsNullOrWhiteSpace(track.Language) && track.Language != "und")
+            {
+                metadataArgs.Append($"-metadata:s:a:{k} language=\"{track.Language}\" ");
+            }
+        }
+
+        if (isMixing)
+        {
+            for (var k = 0; k < audioFiles.Count; k++)
+            {
+                mixFilter.Append($"[a{k}]");
+            }
+
+            // normalize=0: amix otherwise divides every input by the input count, so each
+            // source would play at 1/n of the volume set for it.
+            mixFilter.Append($"amix=inputs={audioFiles.Count}:duration=longest:normalize=0[aout]");
+            filterArgs = $"-filter_complex \"{mixFilter}\" ";
+            mapArgs.Append("-map \"[aout]\" ");
+
+            var mixedTitle = string.Join(" + ", audioFiles.Select(f => Path.GetFileNameWithoutExtension(f.FileName)));
+            metadataArgs.Append($"-metadata:s:a:0 title=\"{EscapeFfmpegMetadata(mixedTitle)}\" ");
+            var languages = audioFiles
+                .Select(f => f.SelectedTrack?.Language)
+                .Where(lang => !string.IsNullOrWhiteSpace(lang) && lang != "und")
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+            if (languages.Count == 1)
+            {
+                metadataArgs.Append($"-metadata:s:a:0 language=\"{languages[0]}\" ");
+            }
+        }
+
+        // 3. Subtitle inputs
+        for (var j = 0; j < subFiles.Count; j++)
+        {
+            var subFile = subFiles[j];
+            inputArgs.Append($"-i \"{subFile.FileName}\" ");
+            mapArgs.Append($"-map {currentInputIndex}:s:0 ");
+            var subTitle = Path.GetFileNameWithoutExtension(subFile.FileName);
+            metadataArgs.Append($"-metadata:s:s:{j} title=\"{EscapeFfmpegMetadata(subTitle)}\" ");
+            currentInputIndex++;
+        }
+
+        // 4. Codecs
+        var videoCodec = "-c:v copy";
+
+        string audioCodec;
+        if (isMixing)
+        {
+            // Audio coming out of a filter graph cannot be stream-copied.
+            audioCodec = "-c:a aac -b:a 192k";
+        }
+        else if (isMkv)
+        {
+            audioCodec = "-c:a copy";
+        }
+        else
+        {
+            var hasWav = audioFiles.Any(f => string.Equals(Path.GetExtension(f.FileName), ".wav", StringComparison.OrdinalIgnoreCase));
+            audioCodec = hasWav ? "-c:a aac -b:a 192k" : "-c:a copy";
+        }
+
+        var subCodec = string.Empty;
+        if (subFiles.Count > 0)
+        {
+            subCodec = isMkv ? "-c:s copy" : "-c:s mov_text";
+
+            // Matroska has no codec id for MicroDVD, so a text .sub cannot be copied in
+            // ("Subtitle codec microdvd is not supported") - it goes in as SubRip. A .sub
+            // with an .idx next to it is VobSub, which can be copied.
+            if (isMkv)
+            {
+                for (var j = 0; j < subFiles.Count; j++)
+                {
+                    var subFileName = subFiles[j].FileName;
+                    if (string.Equals(Path.GetExtension(subFileName), ".sub", StringComparison.OrdinalIgnoreCase) &&
+                        !File.Exists(Path.ChangeExtension(subFileName, ".idx")))
+                    {
+                        subCodec += $" -c:s:{j.ToString(CultureInfo.InvariantCulture)} srt";
+                    }
+                }
+            }
+        }
+
+        var fastStart = string.Equals(SelectedOutputFormat, ".mp4", StringComparison.OrdinalIgnoreCase)
+            ? "-movflags +faststart "
+            : string.Empty;
+        return $"-y {inputArgs}{filterArgs}{mapArgs}{videoCodec} {audioCodec} {subCodec} {metadataArgs}{fastStart}\"{OutputFileName}\"".Trim();
     }
 
     [RelayCommand]

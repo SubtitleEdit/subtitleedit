@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,6 +32,17 @@ public partial class RemuxFileItem : ObservableObject
     [ObservableProperty] private AudioTrackOption? _selectedTrack;
     [ObservableProperty] private string _details = string.Empty;
     [ObservableProperty] private bool _hasMultipleTracks;
+
+    /// <summary>
+    /// Volume of this file in the mixed track (0-200). Only used when the audio files are mixed
+    /// into one track; a plain remux copies the audio as it is.
+    /// </summary>
+    [ObservableProperty] private int _volumePercent = 100;
+
+    /// <summary>
+    /// Whether the details line shows <see cref="VolumePercent"/> - set while mixing is on.
+    /// </summary>
+    [ObservableProperty] private bool _showVolume;
 
     public RemuxFileItem(string fileName)
     {
@@ -79,21 +91,37 @@ public partial class RemuxFileItem : ObservableObject
         UpdateDetails();
     }
 
+    partial void OnVolumePercentChanged(int value)
+    {
+        UpdateDetails();
+    }
+
+    partial void OnShowVolumeChanged(bool value)
+    {
+        UpdateDetails();
+    }
+
     private void UpdateDetails()
     {
         var baseInfo = string.IsNullOrEmpty(DurationDisplay)
             ? Size
             : (string.IsNullOrEmpty(Size) ? DurationDisplay : $"{DurationDisplay}  -  {Size}");
 
+        string details;
         if (SelectedTrack == null)
         {
-            Details = baseInfo;
-            return;
+            details = baseInfo;
+        }
+        else
+        {
+            details = Tracks.Count > 1
+                ? $"{baseInfo}  -  {SelectedTrack.DisplayName}"
+                : string.IsNullOrWhiteSpace(SelectedTrack.Details) ? baseInfo : $"{baseInfo}  -  {SelectedTrack.Details}";
         }
 
-        Details = Tracks.Count > 1
-            ? $"{baseInfo}  -  {SelectedTrack.DisplayName}"
-            : string.IsNullOrWhiteSpace(SelectedTrack.Details) ? baseInfo : $"{baseInfo}  -  {SelectedTrack.Details}";
+        Details = ShowVolume
+            ? $"{details}  -  {string.Format(Se.Language.Video.RemuxVideoVolumeX, VolumePercent)}"
+            : details;
     }
 
     // A list row or combo box value is announced by ToString() unless its template is a bare
