@@ -10,6 +10,7 @@ using Avalonia.Layout;
 using Avalonia.Threading;
 using Avalonia.Media;
 using System.Collections;
+using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -53,7 +54,7 @@ public class BatchConvertWindow : Window
         };
         panelInfo.WithBindVisible(vm, nameof(vm.IsConverting), InverseBooleanConverter.Instance);
 
-        var buttonConvert = new SplitButton
+        var buttonConvert = new SeSplitButton
         {
             Content = Se.Language.General.Convert,
             Command = vm.ConvertCommand,

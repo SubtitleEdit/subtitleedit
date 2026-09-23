@@ -8,6 +8,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -48,7 +49,7 @@ internal static class EmbeddedTracksUi
     /// <param name="addEnabledPath">Optional view model property gating Add (off while generating; MP4 also waits for the track scan).</param>
     public static StackPanel MakeButtons(Commands commands, string? addEnabledPath)
     {
-        var buttonAdd = new SplitButton
+        var buttonAdd = new SeSplitButton
         {
             Content = MakeIconText(IconNames.Plus, Se.Language.General.Add),
             Command = commands.Add,

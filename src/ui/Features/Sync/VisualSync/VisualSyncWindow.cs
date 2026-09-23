@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Logic;
@@ -114,7 +115,7 @@ public class VisualSyncWindow : Window
         };
 
         var labelInfo = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.AdjustInfo));
-        var buttonSync = new SplitButton
+        var buttonSync = new SeSplitButton
         {
             Content = Se.Language.General.Sync,
             Command = vm.SyncCommand,

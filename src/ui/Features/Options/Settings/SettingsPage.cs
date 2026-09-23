@@ -12,6 +12,7 @@ using Avalonia.Platform;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
 using Nikse.SubtitleEdit.Features.Shared.PickLanguage;
 using Nikse.SubtitleEdit.Logic;
@@ -101,7 +102,7 @@ public class SettingsPage : UserControl
         Grid.SetRow(scrollViewer, 1);
         Grid.SetColumn(scrollViewer, 1);
 
-        var buttonReset = new SplitButton
+        var buttonReset = new SeSplitButton
         {
             Content = Se.Language.General.Reset,
             Command = vm.ResetAllSettingsCommand,

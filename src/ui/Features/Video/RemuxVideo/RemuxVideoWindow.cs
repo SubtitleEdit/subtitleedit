@@ -6,6 +6,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -163,7 +164,7 @@ public class RemuxVideoWindow : Window
             .WithMarginRight(5);
         buttonOpenFolder.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsCompleted)));
 
-        var buttonRemux = new SplitButton
+        var buttonRemux = new SeSplitButton
         {
             Content = l.RemuxVideoTitle,
             Command = vm.RemuxCommand,

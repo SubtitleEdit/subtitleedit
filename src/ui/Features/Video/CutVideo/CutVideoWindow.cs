@@ -5,6 +5,7 @@ using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Styling;
+using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Main.Layout;
@@ -162,7 +163,7 @@ public class CutVideoWindow : Window
         var buttonSetStart = UiUtil.MakeButton(Se.Language.General.SetStart, vm.SetStartCommand).WithBindIsEnabled(nameof(vm.IsSetStartEnabled));
         var buttonSetEnd = UiUtil.MakeButton(Se.Language.General.SetEnd, vm.SetEndCommand).WithBindIsEnabled(nameof(vm.IsSetEndEnabled));
         var buttonDelete = UiUtil.MakeButton(Se.Language.General.Delete, vm.DeleteCommand).WithBindIsEnabled(nameof(vm.IsDeleteEnabled));
-        var buttonImport = new SplitButton
+        var buttonImport = new SeSplitButton
         {
             Content = Se.Language.General.ImportDotDotDot,
             Command = vm.ImportCommand,
