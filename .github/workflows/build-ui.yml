@@ -402,6 +402,9 @@ jobs:
           # Native PDBs (libSkiaSharp.pdb, libHarfBuzzSharp.pdb, ...) come from the SkiaSharp
           # runtime NuGet packages and aren't suppressed by -p:DebugType=none.
           Get-ChildItem -Path "./publish/windows-x64" -Filter "*.pdb" -Recurse -File | Remove-Item -Force
+          # libse.xml is libse's API documentation (GenerateDocumentationFile, for the NuGet package);
+          # the app never reads it, and users updating by hand wondered if it held settings.
+          Remove-Item -Path "./publish/windows-x64/libse.xml" -Force -ErrorAction SilentlyContinue
 
       - name: Publish Windows ARM64 app
         run: |
@@ -417,6 +420,7 @@ jobs:
           # The zip also carries libmpv's vulkan-1.dll dependency (+ its license) - copy everything (#13856).
           Copy-Item "libmpv-arm64-temp/*" "./publish/windows-arm64/"
           Get-ChildItem -Path "./publish/windows-arm64" -Filter "*.pdb" -Recurse -File | Remove-Item -Force
+          Remove-Item -Path "./publish/windows-arm64/libse.xml" -Force -ErrorAction SilentlyContinue
 
       # - name: Setup WiX
       #   run: |
@@ -684,6 +688,7 @@ jobs:
             -p:InformationalVersion="$APP_VER_DISPLAY" \
             -o ./publish/macos-${{ matrix.arch }}
           find ./publish/macos-${{ matrix.arch }} -name "*.pdb" -delete
+          rm -f ./publish/macos-${{ matrix.arch }}/libse.xml
           # Arch sanity on the cross-published SE executable (lipo: exact match).
           file ./publish/macos-${{ matrix.arch }}/SubtitleEdit
           archs=$(lipo -archs ./publish/macos-${{ matrix.arch }}/SubtitleEdit)
@@ -870,6 +875,7 @@ jobs:
 
           # Native PDBs from the SkiaSharp runtime NuGet aren't suppressed by -p:DebugType=none.
           find ./publish/linux-x64 -name "*.pdb" -delete
+          rm -f ./publish/linux-x64/libse.xml
 
       - name: Publish Linux ARM64 app
         run: |
@@ -883,6 +889,7 @@ jobs:
             -o ./publish/linux-arm64
 
           find ./publish/linux-arm64 -name "*.pdb" -delete
+          rm -f ./publish/linux-arm64/libse.xml
 
       - name: Create Linux TAR packages
         run: |
