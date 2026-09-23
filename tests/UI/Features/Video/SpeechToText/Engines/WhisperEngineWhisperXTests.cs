@@ -59,8 +59,12 @@ public class WhisperEngineWhisperXTests
         var sep = System.IO.Path.DirectorySeparatorChar;
 
         Assert.Equal($"{sep}hub-cache", Resolve(("HF_HUB_CACHE", $"{sep}hub-cache"), ("HF_HOME", $"{sep}hf-home")));
-        Assert.Equal(System.IO.Path.Combine($"{sep}hf-home", "hub"), Resolve(("HF_HOME", $"{sep}hf-home"), ("HUGGINGFACE_HUB_CACHE", $"{sep}legacy")));
-        Assert.Equal($"{sep}legacy", Resolve(("HUGGINGFACE_HUB_CACHE", $"{sep}legacy"), ("XDG_CACHE_HOME", $"{sep}xdg")));
+        Assert.Equal($"{sep}hub-cache", Resolve(("HF_HUB_CACHE", $"{sep}hub-cache"), ("HUGGINGFACE_HUB_CACHE", $"{sep}legacy")));
+        // The legacy variable is the default for HF_HUB_CACHE in huggingface_hub, so it beats HF_HOME.
+        Assert.Equal($"{sep}legacy", Resolve(("HF_HOME", $"{sep}hf-home"), ("HUGGINGFACE_HUB_CACHE", $"{sep}legacy")));
+        Assert.Equal(System.IO.Path.Combine($"{sep}hf-home", "hub"), Resolve(("HF_HOME", $"{sep}hf-home"), ("XDG_CACHE_HOME", $"{sep}xdg")));
+        Assert.Equal(System.IO.Path.Combine(home, "hf", "hub"), Resolve(("HF_HOME", "~/hf")));
+        Assert.Equal(System.IO.Path.Combine(home, "hub-cache"), Resolve(("HF_HUB_CACHE", "~/hub-cache")));
         Assert.Equal(System.IO.Path.Combine($"{sep}xdg", "huggingface", "hub"), Resolve(("XDG_CACHE_HOME", $"{sep}xdg")));
         Assert.Equal(System.IO.Path.Combine(home, ".cache", "huggingface", "hub"), Resolve());
         Assert.Equal(System.IO.Path.Combine(home, ".cache", "huggingface", "hub"), Resolve(("HF_HOME", "  ")));

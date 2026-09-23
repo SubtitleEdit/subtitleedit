@@ -163,36 +163,49 @@ public class WhisperEngineWhisperX : ISpeechToTextEngine
         return GetHuggingFaceHubCacheDir(Environment.GetEnvironmentVariable);
     }
 
-    // Mirrors huggingface_hub's constants.py resolution order: HF_HUB_CACHE wins, then
-    // HF_HOME/hub, then the legacy HUGGINGFACE_HUB_CACHE, then XDG_CACHE_HOME/huggingface/hub,
-    // and finally ~/.cache/huggingface/hub (on Windows "~" is the user profile folder, the
-    // same as Python's expanduser).
+    // Mirrors huggingface_hub's constants.py: HF_HUB_CACHE wins, then the legacy
+    // HUGGINGFACE_HUB_CACHE, then HF_HOME/hub, then XDG_CACHE_HOME/huggingface/hub, and finally
+    // ~/.cache/huggingface/hub (on Windows "~" is the user profile folder, the same as Python's
+    // expanduser). Like the library, a leading "~" in the result is expanded.
     internal static string GetHuggingFaceHubCacheDir(Func<string, string?> getEnvironmentVariable)
     {
         var hubCache = getEnvironmentVariable("HF_HUB_CACHE");
-        if (!string.IsNullOrWhiteSpace(hubCache))
+        if (string.IsNullOrWhiteSpace(hubCache))
         {
-            return hubCache;
+            hubCache = getEnvironmentVariable("HUGGINGFACE_HUB_CACHE");
         }
 
-        var hfHome = getEnvironmentVariable("HF_HOME");
-        if (!string.IsNullOrWhiteSpace(hfHome))
+        if (string.IsNullOrWhiteSpace(hubCache))
         {
-            return Path.Combine(hfHome, "hub");
+            var hfHome = getEnvironmentVariable("HF_HOME");
+            if (string.IsNullOrWhiteSpace(hfHome))
+            {
+                var xdgCacheHome = getEnvironmentVariable("XDG_CACHE_HOME");
+                var cacheHome = !string.IsNullOrWhiteSpace(xdgCacheHome)
+                    ? xdgCacheHome
+                    : Path.Combine("~", ".cache");
+                hfHome = Path.Combine(cacheHome, "huggingface");
+            }
+
+            hubCache = Path.Combine(hfHome, "hub");
         }
 
-        var legacyHubCache = getEnvironmentVariable("HUGGINGFACE_HUB_CACHE");
-        if (!string.IsNullOrWhiteSpace(legacyHubCache))
+        return ExpandUser(hubCache);
+    }
+
+    private static string ExpandUser(string path)
+    {
+        if (path == "~")
         {
-            return legacyHubCache;
+            return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         }
 
-        var xdgCacheHome = getEnvironmentVariable("XDG_CACHE_HOME");
-        var cacheHome = !string.IsNullOrWhiteSpace(xdgCacheHome)
-            ? xdgCacheHome
-            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache");
+        if (path.StartsWith("~/", StringComparison.Ordinal) || path.StartsWith("~\\", StringComparison.Ordinal))
+        {
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), path[2..]);
+        }
 
-        return Path.Combine(cacheHome, "huggingface", "hub");
+        return path;
     }
 
     public string GetModelForCmdLine(string modelName) => modelName;

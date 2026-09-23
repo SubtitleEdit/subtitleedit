@@ -73,6 +73,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     [ObservableProperty] private bool _isTranslateVisible;
     [ObservableProperty] private bool _isBackendSelectionVisible;
     [ObservableProperty] private bool _isModelSelectionVisible;
+    [ObservableProperty] private bool _isModelDownloadVisible;
     [ObservableProperty] private bool _isLanguageSelectionVisible;
     [ObservableProperty] private bool _isWhisperCppSelected;
     [ObservableProperty] private ObservableCollection<ISpeechToTextEngine> _whisperCppBackends;
@@ -329,6 +330,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         IsTranslateVisible = IsTranslateAvailable(GetEffectiveSelectedEngine());
         IsBackendSelectionVisible = false;
         IsModelSelectionVisible = true;
+        IsModelDownloadVisible = true;
         IsWhisperCppSelected = false;
         IsCrispAsrSelected = false;
         Parameters = string.Empty;
@@ -3519,6 +3521,11 @@ public partial class SpeechToTextViewModel : ObservableObject
     [RelayCommand]
     private async Task DownloadModel()
     {
+        if (GetEffectiveSelectedEngine().DownloadsOwnModels)
+        {
+            return;
+        }
+
         var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
             Window!, viewModel => { viewModel.SetModels(Models, GetEffectiveSelectedEngine(), SelectedModel); });
 
@@ -5181,6 +5188,10 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             SelectedModel = null;
         }
+
+        // SE's downloader saves into a folder an engine that downloads its own models never
+        // reads (WhisperX: the Hugging Face hub cache), so offering it only wastes gigabytes.
+        IsModelDownloadVisible = IsModelSelectionVisible && !engine.DownloadsOwnModels;
 
         IsLanguageSelectionVisible = !isOnlineSttEngine;
         if (!IsLanguageSelectionVisible)
