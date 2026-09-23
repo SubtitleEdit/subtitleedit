@@ -30,6 +30,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
     [ObservableProperty] private string _outputFolder;
     [ObservableProperty] private bool _overwrite;
     [ObservableProperty] private bool _keepSourceTimestamp;
+    [ObservableProperty] private bool _preventSleep;
     [ObservableProperty] private bool _scanFolderRecursive;
     [ObservableProperty] private ObservableCollection<string> _targetEncodings;
     [ObservableProperty] private string? _selectedTargetEncoding;
@@ -208,6 +209,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         OutputFolder = Se.Settings.Tools.BatchConvert.OutputFolder;
         Overwrite = Se.Settings.Tools.BatchConvert.Overwrite;
         KeepSourceTimestamp = Se.Settings.Tools.BatchConvert.KeepSourceTimestamp;
+        PreventSleep = Se.Settings.Tools.BatchConvert.PreventSleep;
         SelectedTargetEncoding = TargetEncodings.FirstOrDefault(p => p == Se.Settings.Tools.BatchConvert.TargetEncoding)
             ?? TargetEncodings.FirstOrDefault(p => p == TextEncoding.Utf8WithBom)
             ?? TargetEncodings.First();
@@ -222,6 +224,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         Se.Settings.Tools.BatchConvert.OutputFolder = OutputFolder;
         Se.Settings.Tools.BatchConvert.Overwrite = Overwrite;
         Se.Settings.Tools.BatchConvert.KeepSourceTimestamp = KeepSourceTimestamp;
+        Se.Settings.Tools.BatchConvert.PreventSleep = PreventSleep;
         Se.Settings.Tools.BatchConvert.TargetEncoding = SelectedTargetEncoding ?? TextEncoding.Utf8WithBom;
         Se.Settings.Tools.BatchConvert.LanguagePostFix = SelectedLanguagePostFix ?? Se.Language.General.TwoLetterLanguageCode;
         Se.Settings.Tools.BatchConvert.OcrEngine = SelectedOcrEngine ?? "nOcr";

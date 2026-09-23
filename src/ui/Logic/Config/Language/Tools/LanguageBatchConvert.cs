@@ -59,6 +59,7 @@ public class LanguageBatchConvert
     public string SelectFolderToConvert { get; set; }
     public string IncludeSubfolders { get; set; }
     public string KeepSourceFileTimestamp { get; set; }
+    public string PreventSleepWhileConverting { get; set; }
     public string ScanningFolderX { get; set; }
     public string TransportStreamSettings { get; set; }
     public string TransportStreamSettingsDotDotDot { get; set; }
@@ -130,6 +131,7 @@ public class LanguageBatchConvert
         SelectFolderToConvert = "Select folder with files to convert";
         IncludeSubfolders = "Include subfolders when adding a folder";
         KeepSourceFileTimestamp = "Keep source file date/time on output files";
+        PreventSleepWhileConverting = "Prevent computer from sleeping while converting";
         ScanningFolderX = "Scanning {0}...";
         TransportStreamSettings = "Transport Stream settings";
         TransportStreamSettingsDotDotDot = "Transport Stream settings...";
