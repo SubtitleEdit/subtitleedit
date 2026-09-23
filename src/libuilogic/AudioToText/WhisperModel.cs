@@ -14,6 +14,21 @@ namespace Nikse.SubtitleEdit.UiLogic.AudioToText
         public long Bytes { get; set; }
         public bool Dynamic { get; set; }
 
+        /// <summary>
+        /// True for a fine-tune trained on transcription only: it ignores the "translate" task
+        /// and keeps writing the source language, so "Translate to English" is not offered.
+        /// </summary>
+        public bool TranscribeOnly { get; set; }
+
+        /// <summary>
+        /// Decoder layer count of a CTranslate2 conversion whose config.json still carries the
+        /// base model's alignment heads (0 = trust the file). See FasterWhisperAlignmentHeads.
+        /// </summary>
+        public int DecoderLayers { get; set; }
+
+        /// <summary>Attention heads per decoder layer; used together with DecoderLayers.</summary>
+        public int DecoderAttentionHeads { get; set; }
+
         public override string ToString()
         {
             return $"{(AlreadyDownloaded ? "* " : string.Empty)}{Name} ({Size})";

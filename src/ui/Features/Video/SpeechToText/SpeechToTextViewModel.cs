@@ -538,6 +538,36 @@ public partial class SpeechToTextViewModel : ObservableObject
         return engine is not Qwen3AsrCppEngine and not ICrispAsrEngine and not IOnlineSttEngine;
     }
 
+    private void UpdateTranslateVisibility()
+    {
+        IsTranslateVisible = IsTranslateAvailable(GetEffectiveSelectedEngine()) &&
+                             SelectedModel?.Model is not { TranscribeOnly: true };
+        if (!IsTranslateVisible)
+        {
+            DoTranslateToEnglish = false;
+        }
+    }
+
+    partial void OnSelectedModelChanged(SpeechToTextModelDisplay? value)
+    {
+        UpdateTranslateVisibility();
+    }
+
+    private static void RepairAlignmentHeads(string modelFolder, WhisperModel model)
+    {
+        try
+        {
+            if (FasterWhisperAlignmentHeads.Repair(modelFolder, model.DecoderLayers, model.DecoderAttentionHeads))
+            {
+                Se.WriteToolsLog($"Repaired alignment_heads in \"{Path.Combine(modelFolder, "config.json")}\" for {model.DecoderLayers} decoder layers");
+            }
+        }
+        catch (Exception e)
+        {
+            SeLogger.Error(e, $"Unable to repair alignment_heads for speech-to-text model \"{model.Name}\"");
+        }
+    }
+
     private void UpdateBackendSelectionUi()
     {
         UpdateWhisperCppBackendUi();
@@ -4544,6 +4574,18 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
         }
 
+        var whisperModel = engine.Models.FirstOrDefault(p => p.Name == model);
+        if (whisperModel is { TranscribeOnly: true })
+        {
+            // It would ignore the task and write the source language anyway (#15223).
+            translate = false;
+        }
+
+        if (engine is WhisperEnginePurfviewFasterWhisperXxl purfviewEngine && whisperModel is { DecoderLayers: > 0 })
+        {
+            RepairAlignmentHeads(purfviewEngine.GetAndCreateWhisperModelFolder(whisperModel), whisperModel);
+        }
+
         var translateToEnglish = translate ? GetWhisperTranslateParameter(engine) : string.Empty;
         if (language.ToLowerInvariant() == "english" || language.ToLowerInvariant() == "en")
         {
@@ -5298,7 +5340,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         IsGoogleCloudSttVisible = engine is GoogleCloudSttEngine;
         IsAdvancedSettingsVisible = !isOnlineSttEngine;
 
-        IsTranslateVisible = IsTranslateAvailable(engine);
+        UpdateTranslateVisibility();
 
         Parameters = engine.CommandLineParameter;
 
