@@ -147,9 +147,13 @@ $@"
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text";
 
             // Pre-size: header + roughly one "Dialogue:" prefix, timecodes, style/margins and
-            // text per paragraph. Growing from the 16-char default instead re-copies the whole
-            // multi-hundred-KB buffer on every doubling.
-            var sb = new StringBuilder((subtitle.Header?.Length ?? 1024) + subtitle.Paragraphs.Count * 100);
+            // text per paragraph - but capped below the large object heap threshold (85,000
+            // bytes). StringBuilder grows by linking new chunks of at most 8,000 chars without
+            // re-copying, so a big single pre-sized buffer bought nothing and put ~200 KB per
+            // 1,000 lines on the LOH on every save and every mpv preview refresh, doubling the
+            // Gen2 collections (the final string still lands there for big files).
+            const int maxInitialCapacity = 40_000;
+            var sb = new StringBuilder(Math.Min((subtitle.Header?.Length ?? 1024) + subtitle.Paragraphs.Count * 100, maxInitialCapacity));
             var isValidAssHeader = !string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]");
             var styles = new List<string>();
             if (isValidAssHeader)
