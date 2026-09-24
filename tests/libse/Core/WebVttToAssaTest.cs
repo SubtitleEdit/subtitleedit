@@ -110,4 +110,42 @@ public class WebVttToAssaTest
         var text = converted.ToText(new AdvancedSubStationAlpha());
         Assert.Contains("Hallo {\\u1}underline{\\u0} world.", text);
     }
+
+    [Fact]
+    public void DefaultBorderStyleIsKept()
+    {
+        var subtitle = new Subtitle { Header = "WEBVTT" };
+        var converted = WebVttToAssa.Convert(subtitle, new SsaStyle { BorderStyle = "4" }, 1920, 1080);
+        var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(converted.Header);
+
+        Assert.Equal("4", styles[0].BorderStyle);
+    }
+
+    [Fact]
+    public void CueStylesUseOneBoxWhenDefaultIsOneBox()
+    {
+        var subtitle = new Subtitle();
+        subtitle.Header = "WEBVTT\r\n\r\nSTYLE\r\n::cue(.bg_red) {\r\n  background-color: #FF0000;\r\n}\r\n::cue(.yellow) {\r\n  color: yellow;\r\n}";
+        var defaultStyle = new SsaStyle { BorderStyle = "4", Background = SkiaSharp.SKColors.Blue };
+        var converted = WebVttToAssa.Convert(subtitle, defaultStyle, 1920, 1080);
+        var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(converted.Header);
+
+        Assert.Equal("4", styles[1].BorderStyle);
+        Assert.Equal(255, styles[1].Background.Red);
+        Assert.Equal(0, styles[1].Background.Blue);
+        Assert.Equal("4", styles[2].BorderStyle);
+        Assert.Equal(255, styles[2].Background.Blue);
+    }
+
+    [Fact]
+    public void CueStylesUseBoxPerLineWhenDefaultIsNotOneBox()
+    {
+        var subtitle = new Subtitle();
+        subtitle.Header = "WEBVTT\r\n\r\nSTYLE\r\n::cue(.bg_red) {\r\n  background-color: #FF0000;\r\n}";
+        var converted = WebVttToAssa.Convert(subtitle, new SsaStyle(), 1920, 1080);
+        var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(converted.Header);
+
+        Assert.Equal("3", styles[1].BorderStyle);
+        Assert.Equal(255, styles[1].Outline.Red);
+    }
 }
