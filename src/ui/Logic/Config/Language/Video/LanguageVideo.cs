@@ -63,6 +63,34 @@ public class LanguageVideo
     public string CutVideoSplitSegments { get; set; }
     public string CutVideoAlsoCutSubtitle { get; set; }
     public string CutVideoSubtitleFileGeneratedX { get; set; }
+    public string CutVideoTransition { get; set; }
+    public string CutVideoTransitionDurationSeconds { get; set; }
+    public string CutVideoFadeInSeconds { get; set; }
+    public string CutVideoFadeOutSeconds { get; set; }
+    public string CutVideoPreviewTransition { get; set; }
+    public string CutVideoPreviewTransitionTitle { get; set; }
+    public string CutVideoPreviewNeedsJoin { get; set; }
+    public string CutVideoTransitionInfoX { get; set; }
+    public string CutVideoTransitionFade { get; set; }
+    public string CutVideoTransitionFadeBlack { get; set; }
+    public string CutVideoTransitionFadeWhite { get; set; }
+    public string CutVideoTransitionFadeGrays { get; set; }
+    public string CutVideoTransitionDissolve { get; set; }
+    public string CutVideoTransitionWipeLeft { get; set; }
+    public string CutVideoTransitionWipeRight { get; set; }
+    public string CutVideoTransitionWipeUp { get; set; }
+    public string CutVideoTransitionWipeDown { get; set; }
+    public string CutVideoTransitionSlideLeft { get; set; }
+    public string CutVideoTransitionSlideRight { get; set; }
+    public string CutVideoTransitionSlideUp { get; set; }
+    public string CutVideoTransitionSlideDown { get; set; }
+    public string CutVideoTransitionSmoothLeft { get; set; }
+    public string CutVideoTransitionSmoothRight { get; set; }
+    public string CutVideoTransitionCircleOpen { get; set; }
+    public string CutVideoTransitionCircleClose { get; set; }
+    public string CutVideoTransitionRadial { get; set; }
+    public string CutVideoTransitionPixelize { get; set; }
+    public string CutVideoTransitionBlur { get; set; }
     public string ImportCurrentSubtitle { get; set; }
     public string AddRemoveEmbeddedSubtitlesTitle { get; set; }
     public string AddRemoveEmbeddedSubtitlesMp4Title { get; set; }
@@ -188,6 +216,34 @@ public class LanguageVideo
         CutVideoSplitSegments = "Save segments individually";
         CutVideoAlsoCutSubtitle = "Also cut subtitle";
         CutVideoSubtitleFileGeneratedX = "Subtitle file generated: {0}";
+        CutVideoTransition = "Transition between segments";
+        CutVideoTransitionDurationSeconds = "Duration (seconds)";
+        CutVideoFadeInSeconds = "Fade from black at start (seconds)";
+        CutVideoFadeOutSeconds = "Fade to black at end (seconds)";
+        CutVideoPreviewTransition = "Preview transition";
+        CutVideoPreviewTransitionTitle = "Transition preview";
+        CutVideoPreviewNeedsJoin = "There is no join to preview - add at least two segments to merge, or a segment to cut out of the middle.";
+        CutVideoTransitionInfoX = "Each transition overlaps the parts it joins, so the output gets {0} seconds shorter per join. A cut subtitle is re-timed to match.";
+        CutVideoTransitionFade = "Fade";
+        CutVideoTransitionFadeBlack = "Fade through black";
+        CutVideoTransitionFadeWhite = "Fade through white";
+        CutVideoTransitionFadeGrays = "Fade through gray";
+        CutVideoTransitionDissolve = "Dissolve";
+        CutVideoTransitionWipeLeft = "Wipe left";
+        CutVideoTransitionWipeRight = "Wipe right";
+        CutVideoTransitionWipeUp = "Wipe up";
+        CutVideoTransitionWipeDown = "Wipe down";
+        CutVideoTransitionSlideLeft = "Slide left";
+        CutVideoTransitionSlideRight = "Slide right";
+        CutVideoTransitionSlideUp = "Slide up";
+        CutVideoTransitionSlideDown = "Slide down";
+        CutVideoTransitionSmoothLeft = "Smooth left";
+        CutVideoTransitionSmoothRight = "Smooth right";
+        CutVideoTransitionCircleOpen = "Circle open";
+        CutVideoTransitionCircleClose = "Circle close";
+        CutVideoTransitionRadial = "Radial";
+        CutVideoTransitionPixelize = "Pixelize";
+        CutVideoTransitionBlur = "Blur";
         ImportCurrentSubtitle = "Import current subtitle";
         AddRemoveEmbeddedSubtitlesTitle = "Add/remove embedded subtitles";
         AddRemoveEmbeddedSubtitlesMp4Title = "Add/remove embedded subtitles (MP4)";

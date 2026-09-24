@@ -20,16 +20,34 @@ public static class SubtitleSegmentCutter
     /// </summary>
     public static Subtitle KeepSegments(Subtitle subtitle, IReadOnlyList<(double StartSeconds, double EndSeconds)> segments)
     {
+        return KeepSegments(subtitle, segments, 0);
+    }
+
+    /// <summary>
+    /// <see cref="KeepSegments(Subtitle, IReadOnlyList{ValueTuple{double, double}})"/> for a video
+    /// joined with transitions (see <see cref="CutVideoTransitionPlan"/>): every join overlaps the
+    /// two segments by <paramref name="transitionSeconds"/>, so each segment starts that much
+    /// earlier on the output timeline than the one before it ends. Lines switch over at the middle
+    /// of the transition - the outgoing segment's lines end there and the incoming one's start
+    /// there - so the two never overlap.
+    /// </summary>
+    public static Subtitle KeepSegments(Subtitle subtitle, IReadOnlyList<(double StartSeconds, double EndSeconds)> segments, double transitionSeconds)
+    {
         var ordered = segments.Where(s => s.EndSeconds > s.StartSeconds).OrderBy(s => s.StartSeconds).ToList();
         var result = new Subtitle { Header = subtitle.Header, Footer = subtitle.Footer };
+        var halfTransition = Math.Max(0, transitionSeconds) / 2.0;
 
         var offsetSeconds = 0d;
-        foreach (var (segmentStart, segmentEnd) in ordered)
+        for (var index = 0; index < ordered.Count; index++)
         {
+            var (segmentStart, segmentEnd) = ordered[index];
+            var visibleStart = index > 0 ? segmentStart + halfTransition : segmentStart;
+            var visibleEnd = index < ordered.Count - 1 ? segmentEnd - halfTransition : segmentEnd;
+
             foreach (var paragraph in subtitle.Paragraphs)
             {
-                var clippedStart = Math.Max(paragraph.StartTime.TotalSeconds, segmentStart);
-                var clippedEnd = Math.Min(paragraph.EndTime.TotalSeconds, segmentEnd);
+                var clippedStart = Math.Max(paragraph.StartTime.TotalSeconds, visibleStart);
+                var clippedEnd = Math.Min(paragraph.EndTime.TotalSeconds, visibleEnd);
                 if (clippedEnd - clippedStart < 0.001)
                 {
                     continue;
@@ -41,7 +59,7 @@ public static class SubtitleSegmentCutter
                 result.Paragraphs.Add(p);
             }
 
-            offsetSeconds += segmentEnd - segmentStart;
+            offsetSeconds += segmentEnd - segmentStart - (index < ordered.Count - 1 ? 2 * halfTransition : 0);
         }
 
         result.Paragraphs.Sort((a, b) => a.StartTime.TotalMilliseconds.CompareTo(b.StartTime.TotalMilliseconds));
