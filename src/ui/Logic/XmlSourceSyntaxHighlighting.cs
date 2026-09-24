@@ -222,17 +222,11 @@ public class XmlSourceSyntaxHighlighting : ISourceSyntaxHighlighter, ISourceSynt
             if (c == '<' && i + 3 < len && lineText[i + 1] == '!' && lineText[i + 2] == '-' && lineText[i + 3] == '-')
             {
                 int start = i;
-                i += 4;
+                var close = lineText.IndexOf("-->", i + 4, StringComparison.Ordinal);
 
-                while (i < len - 2)
-                {
-                    if (lineText[i] == '-' && lineText[i + 1] == '-' && lineText[i + 2] == '>')
-                    {
-                        i += 3;
-                        break;
-                    }
-                    i++;
-                }
+                // An unclosed comment runs to the end of the line - stopping the scan two short of
+                // it left the last two characters uncolored.
+                i = close >= 0 ? close + 3 : len;
 
                 styler.Apply(start, i - start, CommentColor);
                 continue;
