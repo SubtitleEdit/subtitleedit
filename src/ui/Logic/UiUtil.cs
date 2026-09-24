@@ -2974,71 +2974,62 @@ public static class UiUtil
         }
     }
 
+    private static Styles? _uiFontStyles;
+
     public static void SetFontName(string fontName)
     {
-        if (Application.Current == null || string.IsNullOrEmpty(Se.Settings.Appearance.FontName))
+        if (Application.Current == null)
         {
             return;
         }
 
-        Application.Current.Styles.Add(new Style(x => x.OfType<TextBlock>())
+        // Replace (not append) the font styles, so Settings OK/Apply does not pile up styles and
+        // switching back to the default font takes effect without a restart.
+        if (_uiFontStyles != null)
+        {
+            Application.Current.Styles.Remove(_uiFontStyles);
+            _uiFontStyles = null;
+        }
+
+        if (string.IsNullOrEmpty(fontName))
+        {
+            return;
+        }
+
+        var fontFamily = FontFamilyHelper.Make(fontName);
+        var styles = new Styles();
+
+        // All templated controls, incl. windows and popups: CheckBox/RadioButton/ToggleSwitch/TabItem etc.
+        // render plain string content without a TextBlock, so a TextBlock style alone misses them (#15255).
+        styles.Add(new Style(x => x.Is<TemplatedControl>())
         {
             Setters =
             {
-                new Setter(TextBlock.FontFamilyProperty, FontFamilyHelper.Make(fontName)),
+                new Setter(TemplatedControl.FontFamilyProperty, fontFamily),
             }
         });
 
-        Application.Current.Styles.Add(new Style(x => x.OfType<TextBox>())
+        styles.Add(new Style(x => x.Is<TextBlock>())
         {
             Setters =
             {
-                new Setter(TextBox.FontFamilyProperty, FontFamilyHelper.Make(fontName)),
-            }
-        });
-
-        Application.Current.Styles.Add(new Style(x => x.OfType<Button>())
-        {
-            Setters =
-            {
-                new Setter(Button.FontFamilyProperty, FontFamilyHelper.Make(fontName)),
-            }
-        });
-
-        Application.Current.Styles.Add(new Style(x => x.OfType<Avalonia.Controls.MenuItem>())
-        {
-            Setters =
-            {
-                new Setter(Avalonia.Controls.MenuItem.FontFamilyProperty, FontFamilyHelper.Make(fontName)),
-            }
-        });
-
-        Application.Current.Styles.Add(new Style(x => x.OfType<Label>())
-        {
-            Setters =
-            {
-                new Setter(Label.FontFamilyProperty, FontFamilyHelper.Make(fontName)),
-            }
-        });
-
-        Application.Current.Styles.Add(new Style(x => x.OfType<ComboBox>())
-        {
-            Setters =
-            {
-                new Setter(ComboBox.FontFamilyProperty, FontFamilyHelper.Make(fontName)),
+                new Setter(TextBlock.FontFamilyProperty, fontFamily),
             }
         });
 
         // The source editor (source view, batch convert ASSA) draws its own text, so it is not
-        // covered by the TextBox style above and would stay in Avalonia's default sans (#14457).
+        // covered by the styles above and would stay in Avalonia's default sans (#14457).
         // The format preview sets a monospace family locally, which wins over this style.
-        Application.Current.Styles.Add(new Style(x => x.OfType<SyntaxTextEditor>())
+        styles.Add(new Style(x => x.OfType<SyntaxTextEditor>())
         {
             Setters =
             {
-                new Setter(SyntaxTextEditor.FontFamilyProperty, FontFamilyHelper.Make(fontName)),
+                new Setter(SyntaxTextEditor.FontFamilyProperty, fontFamily),
             }
         });
+
+        _uiFontStyles = styles;
+        Application.Current.Styles.Add(styles);
     }
 
     public static StackPanel MakeHorizontalPanel(params Control[] controls)
