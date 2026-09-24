@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Features.Options.Settings;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Features.Sync.VisualSync;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
@@ -33,11 +34,13 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<SubtitleDisplayItem> _paragraphs;
     [ObservableProperty] private int _selectedParagraphIndex = -1;
     [ObservableProperty] private AlignmentItem _selectedFontAlignment;
+    [ObservableProperty] private MpvJustifyDisplay _selectedJustify;
     [ObservableProperty] private bool _overrideStyle;
     [ObservableProperty] private bool _doNotShowAgain;
 
     public ObservableCollection<FontBoxItem> FontBoxTypes { get; }
     public ObservableCollection<AlignmentItem> FontAlignments { get; }
+    public ObservableCollection<MpvJustifyDisplay> JustifyItems { get; }
     public VideoPlayerControl VideoPlayerControl { get; set; }
     public ComboBox ComboBoxParagraphs { get; set; }
 
@@ -84,6 +87,8 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
         SelectedFontBoxType = FontBoxTypes[0];
         FontAlignments = new ObservableCollection<AlignmentItem>(AlignmentItem.Alignments);
         SelectedFontAlignment = AlignmentItem.Alignments[1]; // an8 = Top-center
+        JustifyItems = new ObservableCollection<MpvJustifyDisplay>(MpvJustifyDisplay.GetAll());
+        SelectedJustify = JustifyItems[0]; // auto
 
         // Start from the saved style instead of the defaults above, so re-opening the dialog to
         // adjust the second subtitle doesn't reset it (#14842). Font size needs the video height,
@@ -96,6 +101,7 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
             FontBold = video.SecondarySubtitleFontBold;
             SelectedFontBoxType = FontBoxTypes.FirstOrDefault(p => p.BoxType == video.SecondarySubtitleBoxType) ?? FontBoxTypes[0];
             SelectedFontAlignment = FontAlignments.FirstOrDefault(p => p.Code == video.SecondarySubtitleAlignment) ?? FontAlignments[1];
+            SelectedJustify = JustifyItems.FirstOrDefault(p => p.Code == video.SecondarySubtitleJustify) ?? JustifyItems[0];
             DoNotShowAgain = !video.SecondarySubtitleShowDialog;
         }
 
@@ -140,7 +146,7 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
 
         if (OverrideStyle)
         {
-            SecondarySubtitleStyler.SaveToSettings(FontSize, GetVideoHeight(), FontBold, SubtitleColor, SelectedFontBoxType.BoxType, SelectedFontAlignment.Code);
+            SecondarySubtitleStyler.SaveToSettings(FontSize, GetVideoHeight(), FontBold, SubtitleColor, SelectedFontBoxType.BoxType, SelectedFontAlignment.Code, SelectedJustify.Code);
         }
 
         Se.SaveSettings();
@@ -315,7 +321,11 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
         var style = SecondarySubtitleStyler.MakeStyle(_styleName, FontSize, FontBold, SubtitleColor, SelectedFontBoxType.BoxType, SelectedFontAlignment.Code);
 
         var (width, height) = SecondarySubtitleStyler.GetVideoSize(_mediaInfo);
+        var secondaryParagraphs = SecondarySubtitleJustifier.Apply(_secondarySubtitle.Paragraphs, style, SelectedJustify.Code, width, height);
+
         var result = new Subtitle(_secondarySubtitle);
+        result.Paragraphs.Clear();
+        result.Paragraphs.AddRange(secondaryParagraphs);
         SecondarySubtitleStyler.SetHeader(result, style, width, height);
 
         if (mergeWithSubtitle)
@@ -327,7 +337,7 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
                 styles.Add(style);
                 result.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(_subtitle.Header, styles);
 
-                foreach (var p in _secondarySubtitle.Paragraphs)
+                foreach (var p in secondaryParagraphs)
                 {
                     p.Extra = style.Name;
                     p.Layer = -1;

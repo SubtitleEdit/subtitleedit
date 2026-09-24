@@ -25,6 +25,7 @@ public class LanguageVideo
     public string EditSecondarySubtitleSettingsDotDotDot { get; set; }
     public string SecondarySubtitleRememberSettings { get; set; }
     public string SecondarySubtitleDoNotShowAgain { get; set; }
+    public string SecondarySubtitleJustifyLines { get; set; }
     public string OpenRecentVideo { get; set; }
     public string ClearRecentVideos { get; set; }
     public string CutVideoTitle { get; set; }
@@ -149,6 +150,7 @@ public class LanguageVideo
         EditSecondarySubtitleSettingsDotDotDot = "Edit second subtitle settings...";
         SecondarySubtitleRememberSettings = "Remember these settings";
         SecondarySubtitleDoNotShowAgain = "Do not show this dialog again";
+        SecondarySubtitleJustifyLines = "Justify lines";
         OpenRecentVideo = "Open recent video";
         ClearRecentVideos = "Clear recent videos";
         CutVideoTitle = "Cut video";
