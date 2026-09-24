@@ -30,7 +30,7 @@ public class GenericSourceSyntaxHighlightingTests
     public void FormatsWithoutOwnRulesGetTheGenericOnes()
     {
         Assert.IsType<GenericSourceSyntaxHighlighting>(SourceSyntaxHighlighterFactory.ForFormat("{1}{25}Hi", new MicroDvd()));
-        Assert.IsType<GenericSourceSyntaxHighlighting>(SourceSyntaxHighlighterFactory.ForFormat("[00:01.00]Hi", new Lrc()));
+        Assert.IsType<GenericSourceSyntaxHighlighting>(SourceSyntaxHighlighterFactory.ForFormat("00:00:01.00,00:00:02.00", new SubViewer20()));
     }
 
     [AvaloniaTheory]

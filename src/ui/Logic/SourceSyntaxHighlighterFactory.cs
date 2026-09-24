@@ -44,6 +44,11 @@ public static class SourceSyntaxHighlighterFactory
             return new JsonSourceSyntaxHighlighting();
         }
 
+        if (subtitleFormat is Lrc || subtitleFormat is Lrc3DigitsMs || subtitleFormat is LrcNoEndTime)
+        {
+            return new LrcSourceSyntaxHighlighting();
+        }
+
         // Every other text format: time codes and markup, which nearly all of them share
         return new GenericSourceSyntaxHighlighting();
     }
