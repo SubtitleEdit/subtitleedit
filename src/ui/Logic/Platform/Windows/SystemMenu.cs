@@ -8,6 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.Platform.Windows;
 public static partial class SystemMenu
 {
     private const uint WM_SYSCOMMAND = 0x0112;
+    private const int SC_MINIMIZE = 0xF020;
     private const uint TPM_LEFTALIGN = 0x0000;
     private const uint TPM_RETURNCMD = 0x0100;
     private const uint TPM_WORKAREA = 0x10000;
@@ -61,6 +62,27 @@ public static partial class SystemMenu
         // fail immediately (return 0) if called while Avalonia's input dispatch
         // is still active or while a modifier key (e.g. Alt) is still held down.
         Dispatcher.UIThread.Post(() => ShowMenu(hwnd), DispatcherPriority.Background);
+    }
+
+    /// <summary>
+    /// Minimizes the window the way the system menu's Minimize does. Setting
+    /// WindowState = Minimized makes Avalonia leave full screen first, so a full screen
+    /// window comes back as a normal window; a native minimize keeps full screen (#15127).
+    /// </summary>
+    public static bool Minimize(Window window)
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            return false;
+        }
+
+        var platformHandle = window.TryGetPlatformHandle();
+        if (platformHandle == null)
+        {
+            return false;
+        }
+
+        return PostMessage(platformHandle.Handle, WM_SYSCOMMAND, SC_MINIMIZE, IntPtr.Zero);
     }
 
     private static void ShowMenu(IntPtr hwnd)
