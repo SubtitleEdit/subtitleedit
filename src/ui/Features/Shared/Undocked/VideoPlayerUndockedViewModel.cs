@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Platform.Windows;
 using System;
 using System.Threading.Tasks;
 
@@ -73,7 +74,8 @@ public partial class VideoPlayerUndockedViewModel : ObservableObject
         {
             e.Cancel = true;
 
-            if (Window != null)
+            if (Window != null &&
+                !(Window.WindowState == WindowState.FullScreen && SystemMenu.Minimize(Window)))
             {
                 Window.WindowState = WindowState.Minimized;
             }
