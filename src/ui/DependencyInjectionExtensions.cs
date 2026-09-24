@@ -415,6 +415,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<CopyPasteTranslateViewModel>();
         collection.AddTransient<CustomContinuationStyleViewModel>();
         collection.AddTransient<CutVideoViewModel>();
+        collection.AddTransient<CutVideoPreviewViewModel>();
         collection.AddTransient<VideoOcrViewModel>();
         collection.AddTransient<DCinemaInteropPropertiesViewModel>();
         collection.AddTransient<DCinemaSmptePropertiesViewModel>();

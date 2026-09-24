@@ -58,6 +58,18 @@ public partial class CutVideoViewModel : ObservableObject
     [ObservableProperty] private bool _isDeleteEnabled;
     [ObservableProperty] private bool _cutSubtitleToo;
     [ObservableProperty] private bool _isCutSubtitleVisible;
+    [ObservableProperty] private bool _transitionEnabled;
+    [ObservableProperty] private ObservableCollection<CutTransitionDisplay> _transitions;
+    [ObservableProperty] private CutTransitionDisplay _selectedTransition;
+    [ObservableProperty] private double? _transitionDuration;
+    [ObservableProperty] private bool _fadeInEnabled;
+    [ObservableProperty] private double? _fadeInDuration;
+    [ObservableProperty] private bool _fadeOutEnabled;
+    [ObservableProperty] private double? _fadeOutDuration;
+    [ObservableProperty] private string _transitionInfo;
+    [ObservableProperty] private bool _isPreviewing;
+    [ObservableProperty] private bool _isPreviewTransitionEnabled;
+    [ObservableProperty] private bool _isStatusTextVisible;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -88,6 +100,10 @@ public partial class CutVideoViewModel : ObservableObject
     // so the video and its subtitle could be cut differently.
     private List<SubtitleLineViewModel> _generateSegments = new();
     private CutType _generateCutType;
+
+    // The transition/fade settings of the run, completed with the input's frame rate and
+    // duration once the job starts - the video and the cut subtitle are both built from them.
+    private CutVideoTransitionOptions _generateTransitions = new();
 
     // ffmpeg's stdout and stderr readers both call OutputHandlerKeyFrames, on two thread pool
     // threads, while the waveform render thread walks AudioVisualizer.ShotChanges every frame.
@@ -137,6 +153,10 @@ public partial class CutVideoViewModel : ObservableObject
 
         CutTypes = new ObservableCollection<CutTypeDisplay>(CutTypeDisplay.GetCutTypes());
         SelectedCutType = CutTypes[0];
+
+        Transitions = new ObservableCollection<CutTransitionDisplay>(CutTransitionDisplay.GetTransitions());
+        SelectedTransition = Transitions[0];
+        TransitionInfo = string.Empty;
 
         JobItems = new ObservableCollection<BurnInJobItem>();
         VideoPlayer = new VideoPlayerControl(new EmptyVideoPlayer());
@@ -545,6 +565,8 @@ public partial class CutVideoViewModel : ObservableObject
             ? Math.Max(1, (long)Math.Round(inputFrames * GetKeptFraction(mediaInfo.Duration.TotalSeconds)))
             : 0;
         jobItem.TotalSeconds = mediaInfo.Duration.TotalSeconds;
+        _generateTransitions.FrameRate = (double)mediaInfo.FramesRate;
+        _generateTransitions.InputDurationSeconds = mediaInfo.Duration.TotalSeconds;
         jobItem.Width = mediaInfo.Dimension.Width;
         jobItem.Height = mediaInfo.Dimension.Height;
         jobItem.UseTargetFileSize = false;
@@ -595,6 +617,13 @@ public partial class CutVideoViewModel : ObservableObject
             keptSeconds = totalSeconds - removedSeconds;
         }
 
+        // Every transition overlaps the two parts it joins.
+        if (_generateTransitions.HasEffects)
+        {
+            var plan = CutVideoTransitionPlan.Create(GetGenerateRanges(), _generateTransitions);
+            keptSeconds -= Math.Max(0, plan.Ranges.Count - 1) * plan.TransitionSeconds;
+        }
+
         // Merge can legitimately exceed the input (overlapping segments are encoded twice), so
         // only the lower bound is clamped hard; above 1 the frame total simply grows with it.
         return Math.Max(0.001, keptSeconds / totalSeconds);
@@ -604,9 +633,32 @@ public partial class CutVideoViewModel : ObservableObject
     {
         string arguments;
 
-        var inputIsAudioByExtension = Utilities.AudioFileExtensions.Contains(Path.GetExtension(_inputVideoFileName).ToLowerInvariant());
         var outputIsAudio = jobItem.OutputVideoFileName.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) ||
                             jobItem.OutputVideoFileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase);
+        var (hasVideo, hasAudio) = GetStreams(mediaInfo, outputIsAudio);
+
+        if (_generateCutType == CutType.MergeSegments)
+        {
+            arguments = FfmpegGenerator.GetMergeSegmentsParameters(jobItem.InputVideoFileName, jobItem.OutputVideoFileName, _generateSegments, hasVideo, hasAudio, _generateTransitions);
+        }
+        else
+        {
+            arguments = FfmpegGenerator.GetRemoveSegmentsParameters(jobItem.InputVideoFileName, jobItem.OutputVideoFileName, _generateSegments, hasVideo, hasAudio, _generateTransitions);
+        }
+
+        _ffmpegProcess = FfmpegGenerator.GetProcess(arguments, OutputHandler);
+#pragma warning disable CA1416 // Validate platform compatibility
+        _ffmpegProcess.Start();
+#pragma warning restore CA1416 // Validate platform compatibility
+        _ffmpegProcess.BeginOutputReadLine();
+        _ffmpegProcess.BeginErrorReadLine();
+
+        return true;
+    }
+
+    private (bool HasVideo, bool HasAudio) GetStreams(FfmpegMediaInfo mediaInfo, bool outputIsAudio)
+    {
+        var inputIsAudioByExtension = Utilities.AudioFileExtensions.Contains(Path.GetExtension(_inputVideoFileName).ToLowerInvariant());
 
         // Ask the file which streams it has. Going by an .mp3/.wav extension alone sent
         // .flac/.m4a/.ogg/.opus/.mka down the video branch, where ffmpeg fails on [0:v], and a
@@ -629,23 +681,14 @@ public partial class CutVideoViewModel : ObservableObject
             hasVideo = false;
         }
 
-        if (_generateCutType == CutType.MergeSegments)
-        {
-            arguments = FfmpegGenerator.GetMergeSegmentsParameters(jobItem.InputVideoFileName, jobItem.OutputVideoFileName, _generateSegments, hasVideo, hasAudio);
-        }
-        else
-        {
-            arguments = FfmpegGenerator.GetRemoveSegmentsParameters(jobItem.InputVideoFileName, jobItem.OutputVideoFileName, _generateSegments, hasVideo, hasAudio);
-        }
+        return (hasVideo, hasAudio);
+    }
 
-        _ffmpegProcess = FfmpegGenerator.GetProcess(arguments, OutputHandler);
-#pragma warning disable CA1416 // Validate platform compatibility
-        _ffmpegProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-        _ffmpegProcess.BeginOutputReadLine();
-        _ffmpegProcess.BeginErrorReadLine();
-
-        return true;
+    private List<(double? Start, double? End)> GetGenerateRanges()
+    {
+        return _generateCutType == CutType.MergeSegments
+            ? FfmpegGenerator.GetMergeRanges(_generateSegments)
+            : FfmpegGenerator.GetRemoveRanges(_generateSegments);
     }
 
     private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
@@ -702,9 +745,24 @@ public partial class CutVideoViewModel : ObservableObject
                 .Select(p => (p.StartTime.TotalSeconds, p.EndTime.TotalSeconds))
                 .ToList();
 
-            var cut = _generateCutType == CutType.MergeSegments
-                ? SubtitleSegmentCutter.KeepSegments(_currentSubtitle, segments)
-                : SubtitleSegmentCutter.RemoveSegments(_currentSubtitle, segments, totalDurationSeconds);
+            Subtitle cut;
+            if (_generateTransitions.HasEffects)
+            {
+                // The video was cut from the plan's ranges (whole frames, joins overlapping by
+                // the transition) - re-time the subtitle from exactly the same ones.
+                var plan = CutVideoTransitionPlan.Create(GetGenerateRanges(), _generateTransitions);
+                var lastParagraphEnd = _currentSubtitle.Paragraphs.Max(p => p.EndTime.TotalSeconds);
+                var kept = plan.Ranges
+                    .Select(r => (r.Start, r.End ?? Math.Max(totalDurationSeconds, lastParagraphEnd)))
+                    .ToList();
+                cut = SubtitleSegmentCutter.KeepSegments(_currentSubtitle, kept, plan.TransitionSeconds);
+            }
+            else
+            {
+                cut = _generateCutType == CutType.MergeSegments
+                    ? SubtitleSegmentCutter.KeepSegments(_currentSubtitle, segments)
+                    : SubtitleSegmentCutter.RemoveSegments(_currentSubtitle, segments, totalDurationSeconds);
+            }
 
             SubtitleFormat format = _subtitleFormat is { Name: AdvancedSubStationAlpha.NameOfFormat }
                 ? new AdvancedSubStationAlpha()
@@ -943,6 +1001,7 @@ public partial class CutVideoViewModel : ObservableObject
             .Select(s => new SubtitleLineViewModel(s))
             .ToList();
         _generateCutType = SelectedCutType.CutType;
+        _generateTransitions = MakeTransitionOptions();
 
         _doAbort = false;
         _log.Clear();
@@ -962,6 +1021,13 @@ public partial class CutVideoViewModel : ObservableObject
             ? settings.CutDefaultVideoExtension
             : VideoExtensions[0];
         CutSubtitleToo = settings.CutAlsoCutSubtitle;
+        TransitionEnabled = settings.CutTransitionEnabled;
+        SelectedTransition = Transitions.FirstOrDefault(t => t.Code == settings.CutTransition) ?? Transitions[0];
+        TransitionDuration = settings.CutTransitionDuration;
+        FadeInEnabled = settings.CutFadeIn;
+        FadeInDuration = settings.CutFadeInDuration;
+        FadeOutEnabled = settings.CutFadeOut;
+        FadeOutDuration = settings.CutFadeOutDuration;
     }
 
     private void SaveSettings()
@@ -970,7 +1036,173 @@ public partial class CutVideoViewModel : ObservableObject
         settings.CutType = SelectedCutType.CutType.ToString();
         settings.CutDefaultVideoExtension = SelectedVideoExtension;
         settings.CutAlsoCutSubtitle = CutSubtitleToo;
+        settings.CutTransitionEnabled = TransitionEnabled;
+        settings.CutTransition = SelectedTransition.Code;
+        settings.CutTransitionDuration = TransitionDuration ?? settings.CutTransitionDuration;
+        settings.CutFadeIn = FadeInEnabled;
+        settings.CutFadeInDuration = FadeInDuration ?? settings.CutFadeInDuration;
+        settings.CutFadeOut = FadeOutEnabled;
+        settings.CutFadeOutDuration = FadeOutDuration ?? settings.CutFadeOutDuration;
         Se.SaveSettings();
+    }
+
+    /// <summary>
+    /// The transition and the fades from/to black as set in the window (frame rate and input
+    /// duration are filled in when the input is probed). The fades are independent of the
+    /// transition - they only touch the start and the end of the output.
+    /// </summary>
+    private CutVideoTransitionOptions MakeTransitionOptions()
+    {
+        return new CutVideoTransitionOptions
+        {
+            Transition = TransitionEnabled ? SelectedTransition.Code : string.Empty,
+            TransitionSeconds = TransitionEnabled ? TransitionDuration ?? 0 : 0,
+            FadeInSeconds = FadeInEnabled ? FadeInDuration ?? 0 : 0,
+            FadeOutSeconds = FadeOutEnabled ? FadeOutDuration ?? 0 : 0,
+        };
+    }
+
+    partial void OnIsGeneratingChanged(bool value) => UpdatePreviewState();
+    partial void OnIsPreviewingChanged(bool value) => UpdatePreviewState();
+    partial void OnTransitionEnabledChanged(bool value) => UpdatePreviewState();
+
+    private void UpdatePreviewState()
+    {
+        IsPreviewTransitionEnabled = TransitionEnabled && !IsGenerating && !IsPreviewing;
+        IsStatusTextVisible = IsGenerating || IsPreviewing;
+    }
+
+    partial void OnTransitionDurationChanged(double? value)
+    {
+        TransitionInfo = string.Format(Se.Language.Video.CutVideoTransitionInfoX, (value ?? 0).ToString("0.0##", CultureInfo.CurrentCulture));
+    }
+
+    /// <summary>
+    /// Renders the join nearest the selected segment (or the play head) with the chosen transition
+    /// into a short temporary clip and plays it.
+    /// </summary>
+    [RelayCommand]
+    private async Task PreviewTransition()
+    {
+        if (IsPreviewing || IsGenerating || Window == null)
+        {
+            return;
+        }
+
+        var segments = Segments
+            .OrderBy(s => s.StartTime.TotalMilliseconds)
+            .Select(s => new SubtitleLineViewModel(s))
+            .ToList();
+        var cutType = SelectedCutType.CutType;
+        var ranges = cutType == CutType.MergeSegments
+            ? FfmpegGenerator.GetMergeRanges(segments)
+            : FfmpegGenerator.GetRemoveRanges(segments);
+
+        IsPreviewing = true;
+        ProgressText = Se.Language.General.Generating;
+        string? previewFileName = null;
+        try
+        {
+            var inputFileName = _inputVideoFileName;
+            var mediaInfo = await Task.Run(() => FfmpegMediaInfo.Parse(inputFileName));
+            var options = MakeTransitionOptions();
+            options.FadeInSeconds = 0;
+            options.FadeOutSeconds = 0;
+            options.FrameRate = (double)mediaInfo.FramesRate;
+            options.InputDurationSeconds = mediaInfo.Duration.TotalSeconds;
+
+            var plan = CutVideoTransitionPlan.Create(ranges, options);
+            if (plan.Ranges.Count < 2)
+            {
+                ProgressText = string.Empty;
+                await MessageBox.Show(Window, Se.Language.Video.CutVideoPreviewTransition, Se.Language.Video.CutVideoPreviewNeedsJoin, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            // The join nearest what the user looks at: for "merge" a join is where a selected
+            // segment ends, for "cut" where the cut-out segment starts.
+            var reference = VideoPlayer.Position;
+            if (SelectedSegment is { } selected)
+            {
+                reference = cutType == CutType.MergeSegments ? selected.EndTime.TotalSeconds : selected.StartTime.TotalSeconds;
+            }
+
+            var joinIndex = 0;
+            for (var i = 1; i < plan.Ranges.Count - 1; i++)
+            {
+                if (Math.Abs(plan.Ranges[i].End!.Value - reference) < Math.Abs(plan.Ranges[joinIndex].End!.Value - reference))
+                {
+                    joinIndex = i;
+                }
+            }
+
+            var (hasVideo, hasAudio) = GetStreams(mediaInfo, outputIsAudio: false);
+            previewFileName = Path.Combine(Path.GetTempPath(), "se_cut_preview_" + Guid.NewGuid() + (hasVideo ? ".mp4" : ".wav"));
+            options.TransitionSeconds = plan.TransitionSeconds;
+            var arguments = FfmpegGenerator.GetCutTransitionPreviewParameters(
+                inputFileName,
+                previewFileName,
+                plan.Ranges[joinIndex],
+                plan.Ranges[joinIndex + 1],
+                2,
+                hasVideo,
+                hasAudio,
+                options);
+
+            var log = new StringBuilder();
+            var process = FfmpegGenerator.GetProcess(arguments, (_, e) =>
+            {
+                lock (log)
+                {
+                    log.AppendLine(e.Data);
+                }
+            });
+#pragma warning disable CA1416 // Validate platform compatibility
+            process.Start();
+#pragma warning restore CA1416 // Validate platform compatibility
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+            await process.WaitForExitAsync();
+
+            ProgressText = string.Empty;
+            if (_isClosing)
+            {
+                return;
+            }
+
+            if (process.ExitCode != 0 || !File.Exists(previewFileName))
+            {
+                SeLogger.Error("Cut video transition preview failed: " + arguments + Environment.NewLine + log);
+                await MessageBox.Show(Window, Se.Language.General.Error, "Unable to generate preview" + Environment.NewLine + Environment.NewLine + arguments, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            VideoPlayer.VideoPlayer.Pause();
+            var fileName = previewFileName;
+            await _windowService.ShowDialogAsync<CutVideoPreviewWindow, CutVideoPreviewViewModel>(Window, vm => vm.Initialize(fileName));
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Cut video transition preview failed");
+            ProgressText = string.Empty;
+            await MessageBox.Show(Window, Se.Language.General.Error, exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        finally
+        {
+            IsPreviewing = false;
+            ProgressText = string.Empty;
+            if (previewFileName != null)
+            {
+                try
+                {
+                    File.Delete(previewFileName);
+                }
+                catch
+                {
+                    // ignore - the player may still hold it; it is in the temp folder
+                }
+            }
+        }
     }
 
     [RelayCommand]
