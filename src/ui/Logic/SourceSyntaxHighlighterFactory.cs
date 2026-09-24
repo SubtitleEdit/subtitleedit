@@ -49,6 +49,12 @@ public static class SourceSyntaxHighlighterFactory
             return new LrcSourceSyntaxHighlighting();
         }
 
+        // Drop frame derives from ScenaristClosedCaptions
+        if (subtitleFormat is ScenaristClosedCaptions)
+        {
+            return new SccSourceSyntaxHighlighting();
+        }
+
         // Every other text format: time codes and markup, which nearly all of them share
         return new GenericSourceSyntaxHighlighting();
     }
