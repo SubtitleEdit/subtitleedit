@@ -3,6 +3,31 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-beta11 (24th of September 2026)
+
+* Add syntax highlighting in Source view for WebVTT, LRC and SCC, and basic coloring for every other text format
+* Remux: mix audio files into one track with per-file volume - thx ghostminhtoan
+* TTS review: show the waveform position, click it to go to a position - thx subof
+* Batch convert: prevent sleep while converting - thx verbal666
+* Remember "Merge continuation lines" max gap and max characters
+* SenseVoice: offer to re-download models from before the CMVN fix
+* Speech to text: explain a CUDA run on a CPU-only build - thx Marooo1122
+* Improve performance of OCR fix, fix casing and video preview ticks
+* Fix saving a subtitle opened from an audio file overwriting the audio - thx MG240
+* Fix LRC header replaced by the default header, and Source view losing an edited header/footer - thx MG240
+* Fix Source view: crash on OK when the format throws, silently taking lines that parse as another format, and a deleted header coming back
+* Fix Source view highlighting: a number-only SubRip text line styled as a cue number, unclosed XML comments
+* Fix speech to text with Purfview Faster Whisper XXL and the "anime.ja" model (and hide translate for it) - thx dustwanderer
+* Fix speech to text batch statuses not reset on each run - thx Marooo1122
+* Fix undocked full screen video player leaving full screen when Alt+F4 minimizes it - thx GrampaWildWilly
+* Fix native file pickers opening off screen / on another monitor - thx GrampaWildWilly
+* Fix Remux "finalizing" progress animation not stopping when ffmpeg exits - thx GrampaWildWilly
+* Update CrispASR to v0.8.36
+* Update llama.cpp to b11149
+* Update Japanese translation - thx hisui3393
+
+-----------------------------------------------------------------------------------------------------
+
 v5.3.0-beta10 (23rd of September 2026)
 
 * Add "Edit second subtitle settings..." to the Video menu (restyle the second subtitle without the file picker) - thx GrampaWildWilly
