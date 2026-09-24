@@ -31,6 +31,19 @@ public interface ISourceSyntaxHighlighter
 }
 
 /// <summary>
+/// Implemented by highlighters whose colors for a line depend on the line above it - an .srt line
+/// holding only a number is a cue number after a blank line, but subtitle text ("1984") after a
+/// time code. Renderers call this overload instead and re-style the line below an edited one.
+/// </summary>
+public interface ISourceSyntaxPreviousLineHighlighter : ISourceSyntaxHighlighter
+{
+    /// <param name="lineText">One line, without its newline characters.</param>
+    /// <param name="previousLine">The line above, or null for the first line of the document.</param>
+    /// <param name="styler">Collects the styles; offsets are relative to the line start.</param>
+    void HighlightLine(string lineText, string? previousLine, SourceSyntaxLineStyler styler);
+}
+
+/// <summary>
 /// Implemented by highlighters that also reflow the whole document before it is shown (XML that
 /// arrives on a single line).
 /// </summary>
@@ -148,6 +161,8 @@ public static class SourceSyntaxTokenizer
         }
 
         var styler = new SourceSyntaxLineStyler();
+        var previousLineHighlighter = highlighter as ISourceSyntaxPreviousLineHighlighter;
+        string? previousLine = null;
         var lineStart = 0;
         while (lineStart <= text.Length)
         {
@@ -157,13 +172,23 @@ public static class SourceSyntaxTokenizer
                 lineEnd++;
             }
 
-            if (lineEnd > lineStart)
+            var lineText = text.Substring(lineStart, lineEnd - lineStart);
+            if (lineText.Length > 0)
             {
-                var lineText = text.Substring(lineStart, lineEnd - lineStart);
                 styler.Reset(lineText.Length);
-                highlighter.HighlightLine(lineText, styler);
+                if (previousLineHighlighter != null)
+                {
+                    previousLineHighlighter.HighlightLine(lineText, previousLine, styler);
+                }
+                else
+                {
+                    highlighter.HighlightLine(lineText, styler);
+                }
+
                 styler.Flatten(lineStart, spans);
             }
+
+            previousLine = lineText;
 
             if (lineEnd >= text.Length)
             {

@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic;
 /// <summary>
 /// Syntax highlighting for SubRip (.srt) and WebVTT (.vtt) subtitle formats
 /// </summary>
-public partial class SubRipSourceSyntaxHighlighting : ISourceSyntaxHighlighter
+public partial class SubRipSourceSyntaxHighlighting : ISourceSyntaxPreviousLineHighlighter
 {
     // SubRip-specific colors. Unlike the tag pastels below these mark the structure of the file,
     // not de-emphasized markup, so they get a darker variant for a white background: the
@@ -41,15 +41,22 @@ public partial class SubRipSourceSyntaxHighlighting : ISourceSyntaxHighlighter
     [GeneratedRegex(@"\d{2}:\d{2}:\d{2}[,\.]\d{3}\s*-->\s*\d{2}:\d{2}:\d{2}[,\.]\d{3}")]
     private static partial Regex SubRipTimecodeRegex();
 
-    public void HighlightLine(string lineText, SourceSyntaxLineStyler styler)
+    /// <summary>Without the line above, a line holding only a number is taken as a cue number.</summary>
+    public void HighlightLine(string lineText, SourceSyntaxLineStyler styler) => HighlightLine(lineText, string.Empty, styler);
+
+    public void HighlightLine(string lineText, string? previousLine, SourceSyntaxLineStyler styler)
     {
         if (string.IsNullOrEmpty(lineText))
         {
             return;
         }
 
+        // A cue number starts a block: it follows a blank line or opens the file. A number-only
+        // line under a time code or text is subtitle text ("1984") and gets the text rules.
+        var canBeCueNumber = string.IsNullOrWhiteSpace(previousLine);
+
         // First, colorize SubRip-specific elements (numbers and timecodes)
-        if (ColorizeSubRipFormat(lineText, styler))
+        if (ColorizeSubRipFormat(lineText, canBeCueNumber, styler))
         {
             return; // This line is a number or timecode, skip HTML coloring
         }
@@ -58,11 +65,11 @@ public partial class SubRipSourceSyntaxHighlighting : ISourceSyntaxHighlighter
         ColorizeHtmlAndAssTags(lineText, styler);
     }
 
-    private static bool ColorizeSubRipFormat(string lineText, SourceSyntaxLineStyler styler)
+    private static bool ColorizeSubRipFormat(string lineText, bool canBeCueNumber, SourceSyntaxLineStyler styler)
     {
         // Colorize SubRip sequence numbers
         var numberMatch = SubRipNumberRegex().Match(lineText);
-        if (numberMatch.Success && numberMatch.Value == lineText.Trim())
+        if (canBeCueNumber && numberMatch.Success && numberMatch.Value == lineText.Trim())
         {
             styler.Apply(0, lineText.Length, NumberColor, bold: true, defaultFont: true);
             return true;

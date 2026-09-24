@@ -300,6 +300,9 @@ public class SyntaxTextView : Control
             if (e.LineCountDelta == 0)
             {
                 _lineLayouts.Remove(e.StartLine);
+
+                // The line below may be styled by what is above it (ISourceSyntaxPreviousLineHighlighter).
+                _lineLayouts.Remove(e.StartLine + 1);
             }
             else
             {
@@ -492,7 +495,7 @@ public class SyntaxTextView : Control
             FontSize,
             Foreground ?? Brushes.Black,
             flowDirection: FlowDirection,
-            textStyleOverrides: BuildLineSpans(text));
+            textStyleOverrides: BuildLineSpans(text, line));
 
         _lineLayouts[line] = layout;
         LayoutsCreated++;
@@ -585,7 +588,7 @@ public class SyntaxTextView : Control
     /// Sorted, non-overlapping style spans covering the line. The gaps between colored tokens have
     /// to be filled with the default style, otherwise a token's color bleeds into the text after it.
     /// </summary>
-    private IReadOnlyList<ValueSpan<TextRunProperties>>? BuildLineSpans(string lineText)
+    private IReadOnlyList<ValueSpan<TextRunProperties>>? BuildLineSpans(string lineText, int line)
     {
         if (_sourceHighlighter == null || lineText.Length == 0)
         {
@@ -593,7 +596,15 @@ public class SyntaxTextView : Control
         }
 
         _styler.Reset(lineText.Length);
-        _sourceHighlighter.HighlightLine(lineText, _styler);
+        if (_sourceHighlighter is ISourceSyntaxPreviousLineHighlighter previousLineHighlighter)
+        {
+            var previousLine = line > 0 ? _document.GetLine(line - 1) : null;
+            previousLineHighlighter.HighlightLine(lineText, previousLine, _styler);
+        }
+        else
+        {
+            _sourceHighlighter.HighlightLine(lineText, _styler);
+        }
         _spanScratch.Clear();
         _styler.Flatten(0, _spanScratch);
 
