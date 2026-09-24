@@ -1616,7 +1616,7 @@ public class FfmpegGenerator
         bool hasAudio,
         CutVideoTransitionOptions? transitions)
     {
-        if (transitions is { HasEffects: true })
+        if (transitions is { UsesPlan: true })
         {
             var plan = CutVideoTransitionPlan.Create(ranges, transitions);
             if (plan.Ranges.Count > 0)

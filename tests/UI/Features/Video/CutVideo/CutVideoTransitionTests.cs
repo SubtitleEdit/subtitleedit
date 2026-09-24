@@ -43,6 +43,31 @@ public class CutVideoTransitionTests
         Assert.Equal(plain, withEmptyOptions);
     }
 
+    /// <summary>
+    /// A plain cut trimmed before making the video constant rate: a cut point inside a held picture
+    /// dropped that picture, so the part's video ran up to the length of the hold ahead of its audio.
+    /// </summary>
+    [Fact]
+    public void PlainCut_WithKnownFrameRate_MakesTheVideoConstantRateBeforeTrimming()
+    {
+        var options = new CutVideoTransitionOptions { FrameRate = 50, InputDurationSeconds = 60 };
+        var args = FfmpegGenerator.GetRemoveSegmentsParameters("in.mp4", "out.mp4", MakeSegments((10, 20)), true, true, options);
+
+        Assert.Contains("[0:v]fps=50:start_time=0,trim=start=0:end=9.99,setpts=PTS-STARTPTS,settb=AVTB,format=yuv420p[v0]", args);
+        Assert.Contains("[0:v]fps=50:start_time=0,trim=start=19.99:end=59.99,", args); // the open end is the input duration
+        Assert.Contains("[v0][a0][v1][a1]concat=n=2:v=1:a=1[vc][ac]; [vc]null[outv]; [ac]anull[outa]", args);
+        Assert.DoesNotContain("xfade", args);
+    }
+
+    [Fact]
+    public void PlainCut_WithUnknownFrameRate_KeepsThePlainConcatCommandLine()
+    {
+        var options = new CutVideoTransitionOptions { InputDurationSeconds = 60 };
+        var plain = FfmpegGenerator.GetRemoveSegmentsParameters("in.mp4", "out.mp4", MakeSegments((10, 20)), hasVideo: true);
+
+        Assert.Equal(plain, FfmpegGenerator.GetRemoveSegmentsParameters("in.mp4", "out.mp4", MakeSegments((10, 20)), true, true, options));
+    }
+
     [Fact]
     public void Merge_ChainsXfadeAndAcrossfadeAtTheRunningOutputLength()
     {
