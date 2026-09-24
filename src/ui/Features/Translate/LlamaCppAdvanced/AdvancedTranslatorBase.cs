@@ -71,7 +71,21 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
     {
         var settings = Se.Settings.AutoTranslate.LlamaCppAdvanced;
         var batchSize = Math.Clamp(settings.BatchSize, 1, 50);
-        var count = Math.Min(batchSize, rows.Count - index);
+        if (MergeAndSplitHelper.IsKeptUntranslated(rows[index].Text))
+        {
+            var row = rows[index];
+            Dispatcher.UIThread.Invoke(() => row.TranslatedText = row.Text);
+            return 1;
+        }
+
+        // Stop the batch before the next music line kept in the source language (#9969).
+        var count = 1;
+        var maxCount = Math.Min(batchSize, rows.Count - index);
+        while (count < maxCount && !MergeAndSplitHelper.IsKeptUntranslated(rows[index + count].Text))
+        {
+            count++;
+        }
+
         return await TranslateChunkAsync(rows, index, count, sourceLanguageCode, targetLanguageCode, cancellationToken);
     }
 

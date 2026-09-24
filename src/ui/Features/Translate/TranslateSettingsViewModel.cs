@@ -21,6 +21,7 @@ public partial class TranslateSettingsViewModel : ObservableObject
 
     [ObservableProperty] private decimal? _serverDelaySeconds;
     [ObservableProperty] private int? _maxBytesRequest;
+    [ObservableProperty] private bool _keepMusicLinesUntranslated;
 
     [ObservableProperty] private string _promptText;
     [ObservableProperty] private bool _promptIsVisible;
@@ -119,6 +120,8 @@ public partial class TranslateSettingsViewModel : ObservableObject
         // reads only Configuration.Settings.Tools.AutoTranslateMaxBytes, so without this the
         // value was persisted and redisplayed but never actually capped a request.
         Configuration.Settings.Tools.AutoTranslateMaxBytes = MaxBytesRequest ?? 0;
+        Se.Settings.AutoTranslate.KeepMusicLinesUntranslated = KeepMusicLinesUntranslated;
+        Configuration.Settings.Tools.AutoTranslateKeepMusicLines = KeepMusicLinesUntranslated;
         Se.Settings.AutoTranslate.EngineStrategies[AutoTranslator.Name] =
             SelectedMergeOptions == Se.Language.Translate.TranslateEachLineSeparately
                 ? nameof(TranslateStrategy.TranslateEachLineSeparately)
@@ -216,6 +219,7 @@ public partial class TranslateSettingsViewModel : ObservableObject
 
         ServerDelaySeconds = Se.Settings.AutoTranslate.RequestDelaySeconds;
         MaxBytesRequest = (int)Se.Settings.AutoTranslate.RequestMaxBytes;
+        KeepMusicLinesUntranslated = Se.Settings.AutoTranslate.KeepMusicLinesUntranslated;
         PromptText = string.Empty;
         PromptIsVisible = true;
 

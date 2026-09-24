@@ -53,6 +53,12 @@ public class SeAutoTranslate
     public decimal RequestDelaySeconds { get; set; }
 
     /// <summary>
+    /// Keep lines wrapped in music symbols (e.g. "♪ lyrics ♪") in the source language instead of
+    /// sending them to the translator (#9969).
+    /// </summary>
+    public bool KeepMusicLinesUntranslated { get; set; }
+
+    /// <summary>
     /// Line-merge strategy per translation engine, keyed by engine name.
     /// A missing entry means <see cref="TranslateStrategy.Default"/>.
     /// </summary>

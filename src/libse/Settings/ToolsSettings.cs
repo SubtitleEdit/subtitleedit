@@ -105,6 +105,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string BaiduApiKey { get; set; }
         public int AutoTranslateDelaySeconds { get; set; }
         public int AutoTranslateMaxBytes { get; set; }
+        public bool AutoTranslateKeepMusicLines { get; set; }
         public string GeminiProApiKey { get; set; }
         public string GeminiModel { get; set; }
         public string GeminiPrompt { get; set; }

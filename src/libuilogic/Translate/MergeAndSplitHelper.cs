@@ -57,6 +57,13 @@ public static partial class MergeAndSplitHelper
     {
         applyRowUpdate ??= action => action();
 
+        if (index < rows.Count && IsKeptUntranslated(rows[index].Text))
+        {
+            var row = rows[index];
+            applyRowUpdate(() => row.TranslatedText = row.Text);
+            return 1;
+        }
+
         var noSentenceEndingSource = IsNonMergeLanguage(source);
         var noSentenceEndingTarget = IsNonMergeLanguage(target);
 
@@ -86,6 +93,30 @@ public static partial class MergeAndSplitHelper
 
         return TrySplitStrategies(rows, target, index, tempSubtitle, formattingList, mergeResult, mergedTranslation, applyRowUpdate);
     }
+
+    /// <summary>
+    /// True when the "do not translate lines in music symbols" setting is on and the text is a
+    /// music line: once tags are removed, it both starts and ends with ♪ or ♫. Such a row is
+    /// copied as-is instead of being sent to the translator, so lyrics stay in the original
+    /// language and do not use up the engine's quota (#9969).
+    /// </summary>
+    public static bool IsKeptUntranslated(string? text)
+    {
+        return Configuration.Settings.Tools.AutoTranslateKeepMusicLines && IsMusicLine(text);
+    }
+
+    public static bool IsMusicLine(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return false;
+        }
+
+        var s = HtmlUtil.RemoveHtmlTags(text, true).Trim();
+        return s.Length > 0 && IsMusicSymbol(s[0]) && IsMusicSymbol(s[^1]);
+    }
+
+    private static bool IsMusicSymbol(char c) => c is '♪' or '♫';
 
     /// <summary>
     /// Honours the user's "delay in seconds between requests" setting by waiting until that delay
@@ -598,6 +629,12 @@ public static partial class MergeAndSplitHelper
         for (var i = index + 1; i < sourceSubtitle.Length; i++)
         {
             var currentRow = sourceSubtitle[i];
+
+            // A music line kept in the source language ends the request; the next call copies it.
+            if (IsKeptUntranslated(currentRow.Text))
+            {
+                break;
+            }
 
             if (ExceedsMaxSize(result, context, currentRow, maxTextSize))
             {

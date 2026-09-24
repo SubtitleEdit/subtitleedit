@@ -14,6 +14,7 @@ public class LanguageTranslate
     public string LineMerge { get; set; }
     public string DelayInSecondsBetweenRequests { get; set; }
     public string MaxBytesPerRequest { get; set; }
+    public string KeepMusicLinesUntranslated { get; set; }
     public string PromptText { get; set; }
     public string ResetPromptToDefault { get; set; }
     public string TranslateEachLineSeparately { get; set; }
@@ -73,6 +74,7 @@ public class LanguageTranslate
         LineMerge = "Line merge";
         DelayInSecondsBetweenRequests = "Delay in seconds between requests";
         MaxBytesPerRequest = "Max bytes per request";
+        KeepMusicLinesUntranslated = "Do not translate lines in music symbols (♪ ... ♪)";
         PromptText = "Prompt text";
         ResetPromptToDefault = "Reset prompt to default";
         TranslateEachLineSeparately = "Translate each line separately";
