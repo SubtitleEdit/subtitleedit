@@ -1971,12 +1971,21 @@ public partial class MainViewModel :
 
             // The dialog parses into its own subtitle; SetSubtitles copies only the lines, so a
             // header edited or pasted in source view (LRC tags, ASSA [Script Info]) was lost (#15212).
-            if (!string.IsNullOrEmpty(result.Subtitle.Header))
+            // An empty one means "unchanged" unless the user deleted it in the source.
+            if (result.HeaderRemoved)
+            {
+                _subtitle.Header = string.Empty;
+            }
+            else if (!string.IsNullOrEmpty(result.Subtitle.Header))
             {
                 _subtitle.Header = result.Subtitle.Header;
             }
 
-            if (!string.IsNullOrEmpty(result.Subtitle.Footer))
+            if (result.FooterRemoved)
+            {
+                _subtitle.Footer = string.Empty;
+            }
+            else if (!string.IsNullOrEmpty(result.Subtitle.Footer))
             {
                 _subtitle.Footer = result.Subtitle.Footer;
             }
