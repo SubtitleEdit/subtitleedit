@@ -331,6 +331,7 @@ public class CutVideoWindow : Window
     private static Grid MakeProgressView(CutVideoViewModel vm)
     {
         var progressBar = UiUtil.MakeProgressBar();
+        progressBar.VerticalAlignment = VerticalAlignment.Top;
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
         progressBar.Bind(ProgressBar.IsVisibleProperty, new Binding(nameof(vm.IsGenerating)));
 
