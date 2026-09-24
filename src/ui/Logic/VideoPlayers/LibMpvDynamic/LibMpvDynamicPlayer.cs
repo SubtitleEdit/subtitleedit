@@ -460,9 +460,12 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
     private bool LoadLibraryInternal()
     {
-        foreach (var libName in GetLibraryNames())
+        // Folders outer, names inner: folder order is the precedence. Names-outer let a system
+        // /opt/homebrew/lib/libmpv.dylib symlink win over the app bundle's Frameworks/libmpv.2.dylib
+        // on macOS, loading an untested libmpv (issue #15249).
+        foreach (var libPath in GetLibraryPaths())
         {
-            foreach (var libPath in GetLibraryPaths())
+            foreach (var libName in GetLibraryNames())
             {
                 var fullPath = Path.Combine(libPath, libName);
                 if (File.Exists(fullPath))
