@@ -104,6 +104,67 @@ public class CrispAsrParakeet : CrispAsrEngineBase
                     "https://huggingface.co/cstr/parakeet-tdt-0.6b-ja-GGUF/resolve/main/parakeet-tdt-0.6b-ja.gguf",
                 ],
             },
+
+            // ReazonSpeech NeMo v2 - Japanese-only FastConformer-RNNT trained on ~35k hours
+            // of Japanese audio. Runs on the parakeet backend (RNNT decode path picked from
+            // the GGUF metadata); q8_0 is upstream's recommended default.
+            new WhisperModel
+            {
+                Name = "reazonspeech-nemo-v2-q4_k.gguf",
+                Size = "406 MB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/reazonspeech-nemo-v2-GGUF/resolve/main/reazonspeech-nemo-v2-q4_k.gguf",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "reazonspeech-nemo-v2-q8_0.gguf",
+                Size = "667 MB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/reazonspeech-nemo-v2-GGUF/resolve/main/reazonspeech-nemo-v2-q8_0.gguf",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "reazonspeech-nemo-v2-f16.gguf",
+                Size = "1.24 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/reazonspeech-nemo-v2-GGUF/resolve/main/reazonspeech-nemo-v2-f16.gguf",
+                ],
+            },
+
+            // Japanese fine-tune of parakeet-ctc-1.1b - CTC head, so it is far less sensitive
+            // to quantization than the small ja TDT decoder (which can loop).
+            new WhisperModel
+            {
+                Name = "parakeet-ctc-1.1b-ja-q4_k.gguf",
+                Size = "672 MB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/parakeet-ctc-1.1b-ja-GGUF/resolve/main/parakeet-ctc-1.1b-ja-q4_k.gguf",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "parakeet-ctc-1.1b-ja-q8_0.gguf",
+                Size = "1.14 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/parakeet-ctc-1.1b-ja-GGUF/resolve/main/parakeet-ctc-1.1b-ja-q8_0.gguf",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "parakeet-ctc-1.1b-ja-f16.gguf",
+                Size = "2.13 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/parakeet-ctc-1.1b-ja-GGUF/resolve/main/parakeet-ctc-1.1b-ja-f16.gguf",
+                ],
+            },
             new WhisperModel
             {
                 Name = "parakeet-rnnt-0.6b-q4_k.gguf",
