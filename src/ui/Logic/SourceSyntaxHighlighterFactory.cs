@@ -44,7 +44,7 @@ public static class SourceSyntaxHighlighterFactory
             return new JsonSourceSyntaxHighlighting();
         }
 
-        // No syntax highlighting for other formats
-        return null;
+        // Every other text format: time codes and markup, which nearly all of them share
+        return new GenericSourceSyntaxHighlighting();
     }
 }
