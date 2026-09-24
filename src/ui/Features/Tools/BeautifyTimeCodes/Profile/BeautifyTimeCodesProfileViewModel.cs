@@ -4,10 +4,15 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Settings;
+using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BeautifyTimeCodes.Profile;
 
@@ -76,8 +81,11 @@ public partial class BeautifyTimeCodesProfileViewModel : ObservableObject
     [ObservableProperty] private int _selectedConnectedTabIndex;
     [ObservableProperty] private int _selectedChainingTabIndex;
 
-    public BeautifyTimeCodesProfileViewModel()
+    private readonly IWindowService _windowService;
+
+    public BeautifyTimeCodesProfileViewModel(IWindowService windowService)
     {
+        _windowService = windowService;
         var lang = Se.Language.Tools.BeautifyTimeCodesProfile;
         ShotChangeBehaviors = new ObservableCollection<string>
         {
@@ -208,6 +216,84 @@ public partial class BeautifyTimeCodesProfileViewModel : ObservableObject
 
     [RelayCommand]
     private void LoadPresetSdi() => LoadFrom(new BeautifyTimeCodesSettings.BeautifyTimeCodesProfile(BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset.SDI));
+
+    public IReadOnlyList<SeBeautifyTimeCodesCustomProfile> CustomProfiles => Se.Settings.BeautifyTimeCodes.CustomProfiles;
+
+    public void LoadCustomProfile(SeBeautifyTimeCodesCustomProfile customProfile)
+    {
+        var profile = new BeautifyTimeCodesSettings.BeautifyTimeCodesProfile(BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset.Default);
+        customProfile.ApplyProfileTo(profile);
+        LoadFrom(profile);
+    }
+
+    /// <summary>
+    /// Saves the values currently in the editor as a named profile (#11541). The profile list is
+    /// written right away - it is a library of profiles, not part of this edit, so Cancel does
+    /// not undo it.
+    /// </summary>
+    [RelayCommand]
+    private async Task SaveAsProfile()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var lang = Se.Language.Tools.BeautifyTimeCodesProfile;
+        var result = await _windowService.ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(Window, vm =>
+        {
+            vm.Initialize(lang.ProfileName, string.Empty, 300, 20, returnSubmits: true);
+        });
+
+        var name = result.Text?.Trim() ?? string.Empty;
+        if (!result.OkPressed || name.Length == 0)
+        {
+            return;
+        }
+
+        var profiles = Se.Settings.BeautifyTimeCodes.CustomProfiles;
+        var existing = profiles.FirstOrDefault(p => string.Equals(p.Name, name, StringComparison.OrdinalIgnoreCase));
+        if (existing != null)
+        {
+            var answer = await MessageBox.Show(Window, lang.SaveAsProfile, string.Format(lang.OverwriteProfileX, existing.Name), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (answer != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            profiles.Remove(existing);
+        }
+
+        // Start from the current profile so values the editor does not show (the in/out-cue
+        // shot change behaviors) are kept, then apply what is in the editor.
+        var customProfile = new SeBeautifyTimeCodesCustomProfile { Name = name };
+        customProfile.CopyProfileFrom(Configuration.Settings.BeautifyTimeCodes.Profile);
+        var values = new BeautifyTimeCodesSettings.BeautifyTimeCodesProfile(BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.Preset.Default);
+        customProfile.ApplyProfileTo(values);
+        SaveTo(values);
+        customProfile.CopyProfileFrom(values);
+        profiles.Add(customProfile);
+        profiles.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.CurrentCultureIgnoreCase));
+        Se.SaveSettings();
+    }
+
+    public async Task DeleteCustomProfile(SeBeautifyTimeCodesCustomProfile customProfile)
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var lang = Se.Language.Tools.BeautifyTimeCodesProfile;
+        var answer = await MessageBox.Show(Window, lang.DeleteProfile, string.Format(lang.DeleteProfileX, customProfile.Name), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+        if (answer != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        Se.Settings.BeautifyTimeCodes.CustomProfiles.Remove(customProfile);
+        Se.SaveSettings();
+    }
 
     [RelayCommand]
     private void Ok()
