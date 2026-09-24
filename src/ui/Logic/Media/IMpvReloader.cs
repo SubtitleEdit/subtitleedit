@@ -9,7 +9,9 @@ public interface IMpvReloader
 {
     /// <returns>False when mpv did not take the subtitle and the caller should retry - see
     /// <see cref="MpvReloader.RefreshMpv"/>.</returns>
-    Task<bool> RefreshMpv(LibMpvDynamicPlayer mpv, Subtitle subtitle, Subtitle? subtitleSecondary, SubtitleFormat uiFormat);
+    /// <param name="subtitleIsOwned">True when nothing else holds <paramref name="subtitle"/>, so
+    /// it may be mutated and read off the UI thread without the defensive deep copy.</param>
+    Task<bool> RefreshMpv(LibMpvDynamicPlayer mpv, Subtitle subtitle, Subtitle? subtitleSecondary, SubtitleFormat uiFormat, bool subtitleIsOwned = false);
     void Reset();
     bool SmpteMode { get; set; }
     bool SubtitlesVisible { get; set; }

@@ -38,7 +38,7 @@ public class MpvReloader : IMpvReloader
     /// counted as done either way, so a single mistimed refresh left the video without
     /// subtitles until the next edit (issue #13407).
     /// </returns>
-    public async Task<bool> RefreshMpv(LibMpvDynamicPlayer mpvContext, Subtitle subtitle, Subtitle? subtitleSecondary, SubtitleFormat uiFormat)
+    public async Task<bool> RefreshMpv(LibMpvDynamicPlayer mpvContext, Subtitle subtitle, Subtitle? subtitleSecondary, SubtitleFormat uiFormat, bool subtitleIsOwned = false)
     {
         if (subtitle.Paragraphs.Count == 0 && subtitleSecondary == null)
         {
@@ -81,8 +81,12 @@ public class MpvReloader : IMpvReloader
 
             // Deep copy on the calling (UI) thread: the caller usually passes the live
             // GetUpdateSubtitle() instance, which other UI code clears and repopulates at
-            // will, so it must not be touched from the background serialize below.
-            subtitle = new Subtitle(subtitle, false);
+            // will, so it must not be touched from the background serialize below. A caller
+            // that built a throw-away subtitle just for the preview hands it over instead.
+            if (!subtitleIsOwned)
+            {
+                subtitle = new Subtitle(subtitle, false);
+            }
 
             // Prime the lazy style-header memo while still on the UI thread, so the
             // background thread only ever reads the field (UpdateMpvStyle writes it
