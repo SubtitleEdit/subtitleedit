@@ -440,12 +440,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             var result = new List<SsaStyle>();
             defaultStyle.Name = "Default";
             result.Add(defaultStyle);
-            ;
+            var oneBox = defaultStyle.BorderStyle == "4";
             foreach (var style in styles)
             {
                 var newStyle = new SsaStyle
                 {
-                    BorderStyle = "3", // box per line (background color is outline)
+                    BorderStyle = oneBox ? "4" : "3", // "3" = box per line (background color is outline), "4" = one box (background color is back colour)
                     Name = style.Name,
                     FontName = style.FontName ?? defaultStyle.FontName,
                     FontSize = style.FontSize ?? defaultStyle.FontSize,
@@ -459,7 +459,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                     Secondary = style.ShadowColor ?? defaultStyle.Secondary,
                 };
 
-                if (newStyle.Outline.Alpha == 0 && style.BackgroundColor.HasValue)
+                if (oneBox)
+                {
+                    newStyle.Background = style.BackgroundColor ?? defaultStyle.Background;
+                }
+                else if (newStyle.Outline.Alpha == 0 && style.BackgroundColor.HasValue)
                 {
                     newStyle.Background = newStyle.Outline;
                 }

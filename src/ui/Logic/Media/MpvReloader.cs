@@ -202,7 +202,6 @@ public class MpvReloader : IMpvReloader
         if (uiFormatType == typeof(WebVTT) || uiFormatType == typeof(WebVTTFileWithLineNumber))
         {
             var defaultStyle = GetMpvPreviewStyle(Se.Settings.Video);
-            defaultStyle.BorderStyle = "3";
             // No extra copy here: "subtitle" is already RefreshMpv's private copy, and
             // Convert deep-copies its input again internally without mutating it.
             subtitle = WebVttToAssa.Convert(subtitle, defaultStyle, VideoWidth, VideoHeight);
