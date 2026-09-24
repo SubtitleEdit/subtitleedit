@@ -217,6 +217,50 @@ public class SecondarySubtitleJustifierTests
     }
 
     [Fact]
+    public void Apply_ItalicSpanningLines_IsRepeatedOnTheLaterLines()
+    {
+        var paragraphs = new[] { new Paragraph("{\\i1}first\nsecond{\\i0}", 0, 1000) };
+
+        var result = SecondarySubtitleJustifier.Apply(paragraphs, MakeStyle(), "left", 1920, 1080);
+
+        Assert.Matches(@"^\{\\an7\\pos\([^)]*\)\}\{\\i1\}first$", result[0].Text);
+        Assert.Matches(@"^\{\\an7\\pos\([^)]*\)\\i1\}second\{\\i0\}$", result[1].Text);
+    }
+
+    [Fact]
+    public void Apply_HtmlItalicSpanningLines_IsRepeatedOnTheLaterLines()
+    {
+        var paragraphs = new[] { new Paragraph("<i>first\nsecond</i>", 0, 1000) };
+
+        var result = SecondarySubtitleJustifier.Apply(paragraphs, MakeStyle(), "left", 1920, 1080);
+
+        Assert.EndsWith("{\\i1}first", result[0].Text);
+        Assert.Matches(@"^\{\\an7\\pos\([^)]*\)\\i1\}second\{\\i0\}$", result[1].Text);
+    }
+
+    [Fact]
+    public void Apply_ItalicClosedOnItsOwnLine_IsNotCarriedButStaysInOrder()
+    {
+        // "\i1\i0" on the next line still ends up upright: the later tag wins, as in one event.
+        var paragraphs = new[] { new Paragraph("{\\i1}first{\\i0}\nsecond\nthird", 0, 1000) };
+
+        var result = SecondarySubtitleJustifier.Apply(paragraphs, MakeStyle(), "left", 1920, 1080);
+
+        Assert.Matches(@"^\{\\an7\\pos\([^)]*\)\\i1\\i0\}second$", result[1].Text);
+        Assert.Matches(@"^\{\\an7\\pos\([^)]*\)\\i1\\i0\}third$", result[2].Text);
+    }
+
+    [Fact]
+    public void Apply_EventWideAndAnimationTags_AreNotCarried()
+    {
+        var paragraphs = new[] { new Paragraph("{\\an8\\pos(1,2)\\fad(100,100)\\t(0,500,\\fs30)\\k20\\c&H0000FF&\\alpha&H80&}first\nsecond", 0, 1000) };
+
+        var result = SecondarySubtitleJustifier.Apply(paragraphs, MakeStyle(), "left", 1920, 1080);
+
+        Assert.Matches(@"^\{\\an7\\pos\([^)]*\)\\c&H0000FF&\\alpha&H80&\}second$", result[1].Text);
+    }
+
+    [Fact]
     public void Apply_LargerPlayResX_ScalesRightJustifiedPositionAccordingly()
     {
         var paragraphs = new[] { new Paragraph("only one line here", 0, 1000) };

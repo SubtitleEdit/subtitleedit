@@ -1,9 +1,11 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using SkiaSharp;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.Media;
 
@@ -37,6 +39,11 @@ public static class SecondarySubtitleJustifier
                 continue;
             }
 
+            // One tag syntax: "<i>" and "<font>" become "{\i1}" and "{\c...}" now rather than at
+            // save - on the whole text, where each tag still has its closing tag - so the
+            // carried-over state below sees them too.
+            lines = AdvancedSubStationAlpha.FormatText(p.Text!).SplitToLines();
+
             // libass sizes a font so its line height (ascent + descent) equals the style's font
             // size, while Skia's size is the em size - so scale Skia's widths down to libass's,
             // and step one font size per line, or the block drifts and the lines spread out.
@@ -54,16 +61,97 @@ public static class SecondarySubtitleJustifier
             var blockLeftX = BlockLeftX(HorizontalOf(style.Alignment), playResX, style.MarginLeft, style.MarginRight, blockWidth);
             var blockTopY = BlockTopY(VerticalOf(style.Alignment), playResY, style.MarginVertical, blockHeight);
 
+            // Each line becomes its own event, so a tag left open on an earlier line (italic
+            // across "{\i1}one\Ntwo{\i0}") has to be repeated to still apply to the later ones.
+            var carried = new StringBuilder();
             for (var i = 0; i < lines.Count; i++)
             {
                 var lineX = LineX(targetHorizontal.Value, blockLeftX, blockWidth, lineWidths[i]);
                 var lineY = blockTopY + i * lineHeight;
-                var pos = "{\\an7\\pos(" + lineX.ToString("0.###", CultureInfo.InvariantCulture) + "," + lineY.ToString("0.###", CultureInfo.InvariantCulture) + ")}";
+                var pos = "{\\an7\\pos(" + lineX.ToString("0.###", CultureInfo.InvariantCulture) + "," + lineY.ToString("0.###", CultureInfo.InvariantCulture) + ")" + carried + "}";
                 result.Add(new Paragraph(p) { Text = pos + lines[i] });
+                AppendCarriedTags(lines[i], carried);
             }
         }
 
         return result;
+    }
+
+    /// <summary>
+    /// Appends the override tags in <paramref name="line"/> that keep applying to the text after
+    /// them (style tags like \i, \b, \c, \fn, \r) - in order, so a later tag still wins, just
+    /// as it would have in one event. Tags that belong to the whole event (\pos, \an, \fad,
+    /// \clip, ...), karaoke timing, animations and drawings are left out.
+    /// </summary>
+    private static void AppendCarriedTags(string line, StringBuilder carried)
+    {
+        var blockStart = line.IndexOf('{');
+        while (blockStart >= 0)
+        {
+            var blockEnd = line.IndexOf('}', blockStart + 1);
+            if (blockEnd < 0)
+            {
+                return;
+            }
+
+            var block = line.Substring(blockStart + 1, blockEnd - blockStart - 1);
+            var tagStart = block.IndexOf('\\');
+            while (tagStart >= 0)
+            {
+                // A tag runs to the next backslash outside parentheses: "\t(\i1)" is one tag.
+                var tagEnd = tagStart + 1;
+                var depth = 0;
+                while (tagEnd < block.Length && (depth > 0 || block[tagEnd] != '\\'))
+                {
+                    if (block[tagEnd] == '(')
+                    {
+                        depth++;
+                    }
+                    else if (block[tagEnd] == ')' && depth > 0)
+                    {
+                        depth--;
+                    }
+
+                    tagEnd++;
+                }
+
+                var tag = block.Substring(tagStart, tagEnd - tagStart).TrimEnd();
+                if (IsCarriedTag(tag.Substring(1)))
+                {
+                    carried.Append(tag);
+                }
+
+                tagStart = tagEnd < block.Length ? tagEnd : -1;
+            }
+
+            blockStart = line.IndexOf('{', blockEnd + 1);
+        }
+    }
+
+    private static bool IsCarriedTag(string tag)
+    {
+        if (tag.Length == 0 ||
+            tag.StartsWith("pos", StringComparison.Ordinal) ||
+            tag.StartsWith("move", StringComparison.Ordinal) ||
+            tag.StartsWith("an", StringComparison.Ordinal) ||
+            tag.StartsWith("org", StringComparison.Ordinal) ||
+            tag.StartsWith("fad", StringComparison.Ordinal) ||
+            tag.StartsWith("clip", StringComparison.Ordinal) ||
+            tag.StartsWith("iclip", StringComparison.Ordinal) ||
+            tag.StartsWith("t(", StringComparison.Ordinal) ||
+            tag.StartsWith("k", StringComparison.OrdinalIgnoreCase) ||
+            tag[0] == 'q')
+        {
+            return false;
+        }
+
+        // Legacy "\a5" alignment and "\p1" drawing mode (but not "\alpha" or "\pbo").
+        if ((tag[0] == 'a' || tag[0] == 'p') && tag.Length > 1 && char.IsDigit(tag[1]))
+        {
+            return false;
+        }
+
+        return true;
     }
 
     private static Horizontal? ParseHorizontal(string justifyCode)
