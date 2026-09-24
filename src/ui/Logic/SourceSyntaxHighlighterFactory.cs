@@ -9,12 +9,14 @@ public static class SourceSyntaxHighlighterFactory
 {
     public static ISourceSyntaxHighlighter? ForFormat(string text, SubtitleFormat subtitleFormat)
     {
-        // SubRip (.srt) and WebVTT (.vtt) use similar time code formats
-        if (subtitleFormat is SubRip ||
-            subtitleFormat is WebVTT ||
-            subtitleFormat is WebVTTFileWithLineNumber)
+        if (subtitleFormat is SubRip)
         {
             return new SubRipSourceSyntaxHighlighting();
+        }
+
+        if (subtitleFormat is WebVTT || subtitleFormat is WebVTTFileWithLineNumber)
+        {
+            return new WebVttSourceSyntaxHighlighting();
         }
 
         // Advanced SubStation Alpha (.ass) and SubStation Alpha (.ssa) formats

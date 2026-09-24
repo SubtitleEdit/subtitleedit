@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 namespace Nikse.SubtitleEdit.Logic;
 
 /// <summary>
-/// Syntax highlighting for SubRip (.srt) and WebVTT (.vtt) subtitle formats
+/// Syntax highlighting for SubRip (.srt) - WebVTT has its own, see WebVttSourceSyntaxHighlighting
 /// </summary>
 public partial class SubRipSourceSyntaxHighlighting : ISourceSyntaxPreviousLineHighlighter
 {
@@ -20,9 +20,9 @@ public partial class SubRipSourceSyntaxHighlighting : ISourceSyntaxPreviousLineH
     private static readonly Color TimeSeparatorColorLight = Color.FromRgb(140, 70, 150);
 
     // Resolved per use so a theme switch is picked up
-    private static Color NumberColor => UiTheme.IsDarkThemeEnabled() ? NumberColorDark : NumberColorLight;
-    private static Color TimeColor => UiTheme.IsDarkThemeEnabled() ? TimeColorDark : TimeColorLight;
-    private static Color TimeSeparatorColor => UiTheme.IsDarkThemeEnabled() ? TimeSeparatorColorDark : TimeSeparatorColorLight;
+    internal static Color NumberColor => UiTheme.IsDarkThemeEnabled() ? NumberColorDark : NumberColorLight;
+    internal static Color TimeColor => UiTheme.IsDarkThemeEnabled() ? TimeColorDark : TimeColorLight;
+    internal static Color TimeSeparatorColor => UiTheme.IsDarkThemeEnabled() ? TimeSeparatorColorDark : TimeSeparatorColorLight;
 
     // HTML/ASS syntax highlighting colors (the shared, theme-dependent scheme from
     // SubtitleSyntaxTokenizer) - resolved per use so a theme switch is picked up.
@@ -124,7 +124,7 @@ public partial class SubRipSourceSyntaxHighlighting : ISourceSyntaxPreviousLineH
         return false;
     }
 
-    private static void ColorizeHtmlAndAssTags(string lineText, SourceSyntaxLineStyler styler)
+    internal static void ColorizeHtmlAndAssTags(string lineText, SourceSyntaxLineStyler styler)
     {
         var inComment = false;
         var inHtmlTag = false;
