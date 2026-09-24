@@ -37,11 +37,11 @@ public class PickSubtitleFormatPreviewTests
     }
 
     [AvaloniaFact]
-    public void FormatWithoutSyntaxRulesIsShownWithoutColoring()
+    public void FormatWithoutOwnSyntaxRulesGetsTheGenericOnes()
     {
         var editor = ShowPreview(new UnknownSubtitle1());
 
-        Assert.Null(editor.SourceHighlighter);
+        Assert.IsType<GenericSourceSyntaxHighlighting>(editor.SourceHighlighter);
         Assert.True(editor.IsReadOnly);
         Assert.False(string.IsNullOrEmpty(editor.Text));
     }
