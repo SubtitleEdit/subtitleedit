@@ -1,7 +1,7 @@
 {
   "title": "SubtitleEdit",
-  "version": "v. 5.3.0-beta9",
-  "translatedBy": "v. 22.09.2026 di bovirus e GitGianluc",
+  "version": "v. 5.3.0-beta11",
+  "translatedBy": "v. 23.09.2026 di bovirus e GitGianluc",
   "cultureName": "it-IT",
   "general": {
     "abort": "Annulla",
@@ -1932,7 +1932,6 @@
       "playAligned": "Allineato",
       "playOriginalHint": "Riproduci la riga selezionata con i time code originali",
       "playAlignedHint": "Riproduci la riga selezionata con i time code allineati",
-      "playAlignedHint": "Riproduci la riga selezionata con i time code allineati",
       "apply": "Applica",
       "applyHint": "Per mantenere i time code originali deseleziona una riga. Per riprodurla fai doppio clic su una riga."
     },
@@ -2817,6 +2816,9 @@
     "remuxVideoSubtitleFiles": "File sottotitoli (opzionale, sottotitoli soft):",
     "remuxVideoSelectAudioTrackDotDotDot": "Seleziona traccia audio...",
     "remuxVideoFilesX": "{0} file",
+    "remuxVideoMixAudio": "Mixa audio in una traccia",
+    "remuxVideoVolumePercent": "% volume:",
+    "remuxVideoVolumeX": "Volume {0}%",
     "embedSubtitlesDotDotDot": "Aggiungi/rimuovi sottotitoli incorporati...",
     "generateTimeCodes": "Genera time code",
     "checkeredImage": "Immagine a scacchi",
