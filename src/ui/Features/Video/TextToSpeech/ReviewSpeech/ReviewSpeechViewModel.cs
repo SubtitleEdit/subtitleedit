@@ -47,6 +47,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
     [ObservableProperty] private TtsLanguage? _selectedLanguage;
     [ObservableProperty] private ObservableCollection<string> _regions;
     [ObservableProperty] private string? _selectedRegion;
+    [ObservableProperty] private string _regionLabel = Se.Language.General.Region;
     [ObservableProperty] private ObservableCollection<string> _models;
     [ObservableProperty] private string? _selectedModel;
     [ObservableProperty] private ObservableCollection<string> _styles;
@@ -2005,6 +2006,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
         IsElevenLabsControlsVisible = false;
         UpdateInstructionVisibility();
         LoadInstructionForEngine();
+        RegionLabel = engine is OpenAiCompatibleSpeech ? Se.Language.Video.TextToSpeech.Provider : Se.Language.General.Region;
         if (engine is AzureSpeech)
         {
             SelectedRegion = Se.Settings.Video.TextToSpeech.AzureRegion;
@@ -2012,6 +2014,12 @@ public partial class ReviewSpeechViewModel : ObservableObject
             {
                 SelectedRegion = "westeurope";
             }
+        }
+        else if (engine is OpenAiCompatibleSpeech)
+        {
+            // The voice list was loaded for the saved provider and model - match them.
+            SelectedRegion = OpenAiCompatibleSpeech.SavedProvider;
+            SelectedModel = Models.FirstOrDefault(p => p == OpenAiCompatibleSpeech.GetSavedModel(OpenAiCompatibleSpeech.SavedProvider)) ?? Models.FirstOrDefault();
         }
         else if (engine is ElevenLabs)
         {

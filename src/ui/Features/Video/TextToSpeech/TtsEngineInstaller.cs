@@ -1125,6 +1125,7 @@ public static class TtsEngineInstaller
         ElevenLabs => Se.Settings.Video.TextToSpeech.ElevenLabsApiKey,
         Murf => Se.Settings.Video.TextToSpeech.MurfApiKey,
         MistralSpeech => Se.Settings.Video.TextToSpeech.MistralApiKey,
+        OpenAiCompatibleSpeech => OpenAiCompatibleSpeech.GetApiKey(OpenAiCompatibleSpeech.SavedProvider),
         _ => string.Empty,
     };
 }

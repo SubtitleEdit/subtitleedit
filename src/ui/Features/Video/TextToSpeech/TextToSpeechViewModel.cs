@@ -88,6 +88,7 @@ public partial class TextToSpeechViewModel : ObservableObject
     [ObservableProperty] private string _apiKey;
     [ObservableProperty] private bool _hasRegion;
     [ObservableProperty] private string _region;
+    [ObservableProperty] private string _regionLabel;
     [ObservableProperty] private bool _hasModel;
     [ObservableProperty] private bool _isVoiceCountVisible;
     [ObservableProperty] private string _linesInfo = string.Empty;
@@ -197,6 +198,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         Languages = new ObservableCollection<TtsLanguage>();
         ApiKey = string.Empty;
         Region = string.Empty;
+        RegionLabel = Se.Language.General.Region;
         ProgressText = string.Empty;
         IsVoiceTestEnabled = true;
         IsVoiceComboEnabled = true;
@@ -267,6 +269,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             HasLanguageParameter = SelectedEngine.HasLanguageParameter;
             HasApiKey = SelectedEngine.HasApiKey;
             HasRegion = SelectedEngine.HasRegion;
+            RegionLabel = GetRegionLabel(SelectedEngine);
             HasModel = SelectedEngine.HasModel;
             HasKeyFile = SelectedEngine.HasKeyFile;
             IsEdgeTtsEngine = SelectedEngine is EdgeTts;
@@ -302,6 +305,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         else if (SelectedEngine is MistralSpeech)
         {
             ApiKey = Se.Settings.Video.TextToSpeech.MistralApiKey;
+        }
+        else if (SelectedEngine is OpenAiCompatibleSpeech)
+        {
+            ApiKey = OpenAiCompatibleSpeech.GetApiKey(OpenAiCompatibleSpeech.SavedProvider);
         }
         else if (SelectedEngine is Murf)
         {
@@ -339,6 +346,16 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             Se.Settings.Video.TextToSpeech.MistralApiKey = ApiKey;
             Se.Settings.Video.TextToSpeech.MistralModel = SelectedModel ?? "voxtral-mini-tts-2603";
+        }
+        else if (SelectedEngine is OpenAiCompatibleSpeech)
+        {
+            var provider = OpenAiCompatibleSpeech.ResolveProvider(SelectedRegion ?? OpenAiCompatibleSpeech.SavedProvider);
+            Se.Settings.Video.TextToSpeech.OpenAiCompatibleProvider = provider;
+            OpenAiCompatibleSpeech.SetApiKey(provider, ApiKey);
+            if (!string.IsNullOrEmpty(SelectedModel))
+            {
+                OpenAiCompatibleSpeech.SetSavedModel(provider, SelectedModel);
+            }
         }
         else if (SelectedEngine is Qwen3TtsCpp)
         {
@@ -520,10 +537,98 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
     }
 
+    private static string GetRegionLabel(ITtsEngine engine) =>
+        engine is OpenAiCompatibleSpeech ? Se.Language.Video.TextToSpeech.Provider : Se.Language.General.Region;
+
+    partial void OnSelectedRegionChanged(string? value)
+    {
+        // For the OpenAI-compatible engine the region combo picks the provider. Each provider
+        // keeps its own API key and model, so stash the typed key under the old provider and
+        // load the new provider's key, models and voices.
+        if (SelectedEngine is not OpenAiCompatibleSpeech || string.IsNullOrEmpty(value))
+        {
+            return;
+        }
+
+        var oldProvider = OpenAiCompatibleSpeech.SavedProvider;
+        var newProvider = OpenAiCompatibleSpeech.ResolveProvider(value);
+        if (newProvider == oldProvider)
+        {
+            return;
+        }
+
+        OpenAiCompatibleSpeech.SetApiKey(oldProvider, ApiKey);
+        Se.Settings.Video.TextToSpeech.OpenAiCompatibleProvider = newProvider;
+        Dispatcher.UIThread.PostSafe(async () => await ReloadOpenAiCompatibleAsync(providerChanged: true));
+    }
+
+    private async Task ReloadOpenAiCompatibleAsync(bool providerChanged)
+    {
+        if (SelectedEngine is not OpenAiCompatibleSpeech engine)
+        {
+            return;
+        }
+
+        var provider = OpenAiCompatibleSpeech.SavedProvider;
+        if (providerChanged)
+        {
+            ApiKey = OpenAiCompatibleSpeech.GetApiKey(provider);
+
+            var models = await engine.GetModels();
+            var savedModel = OpenAiCompatibleSpeech.GetSavedModel(provider);
+            var model = models.FirstOrDefault(m => m == savedModel) ?? models.FirstOrDefault();
+
+            // Saved first, so the SelectedModel assignment below is a no-op for
+            // OnSelectedModelChanged instead of a second voice reload.
+            OpenAiCompatibleSpeech.SetSavedModel(provider, model);
+            Models.Clear();
+            foreach (var m in models)
+            {
+                Models.Add(m);
+            }
+
+            SelectedModel = model;
+        }
+
+        Voice[] voices;
+        try
+        {
+            voices = await engine.GetVoices(string.Empty);
+        }
+        catch (Exception ex)
+        {
+            SeLogger.Error(ex, "OpenAI-compatible TTS: loading voices failed");
+            voices = [];
+        }
+
+        var currentVoiceName = SelectedVoice?.Name;
+        Voices.Clear();
+        foreach (var voice in voices)
+        {
+            Voices.Add(voice);
+        }
+
+        IsVoiceCountVisible = Voices.Count > 0;
+        SelectedVoice = Voices.FirstOrDefault(v => v.Name == currentVoiceName)
+                        ?? Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice)
+                        ?? Voices.FirstOrDefault();
+    }
+
     partial void OnSelectedModelChanged(string? value)
     {
         RefreshInstructionVisibility();
         UpdateVoiceLock();
+
+        // OpenAI (tts-1 vs gpt-4o-mini-tts) and every OpenRouter model have their own voice
+        // list. GetVoices reads the saved model, so persist it before reloading. The equality
+        // check skips the engine-switch restore, which selects the saved model itself.
+        if (SelectedEngine is OpenAiCompatibleSpeech
+            && !string.IsNullOrEmpty(value)
+            && value != OpenAiCompatibleSpeech.GetSavedModel(OpenAiCompatibleSpeech.SavedProvider))
+        {
+            OpenAiCompatibleSpeech.SetSavedModel(OpenAiCompatibleSpeech.SavedProvider, value);
+            Dispatcher.UIThread.PostSafe(async () => await ReloadOpenAiCompatibleAsync(providerChanged: false));
+        }
 
         // Qwen3 (CrispASR) returns a different voice list per model — VoiceDesign exposes
         // "Default", CustomVoice exposes the nine fixed built-in speakers, and Voice clone
@@ -1614,7 +1719,19 @@ public partial class TextToSpeechViewModel : ObservableObject
     [RelayCommand]
     private async Task ShowEngineSettings()
     {
+        if (SelectedEngine is OpenAiCompatibleSpeech)
+        {
+            // The reload below reads the key back from settings - don't lose one just typed.
+            OpenAiCompatibleSpeech.SetApiKey(OpenAiCompatibleSpeech.SavedProvider, ApiKey);
+        }
+
         await TtsEngineSettingsDialog.ShowAsync(SelectedEngine, Window!, _windowService);
+
+        // The custom server's URL, models and voices are edited in the settings dialog.
+        if (SelectedEngine is OpenAiCompatibleSpeech)
+        {
+            await ReloadOpenAiCompatibleAsync(providerChanged: true);
+        }
 
         // An engine may have been (re)downloaded inside its settings dialog - re-check the
         // install-status dots in the engine and model combos.
@@ -4635,6 +4752,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             HasLanguageParameter = engine.HasLanguageParameter;
             HasApiKey = engine.HasApiKey;
             HasRegion = engine.HasRegion;
+            RegionLabel = GetRegionLabel(engine);
             HasModel = engine.HasModel;
             HasKeyFile = engine.HasKeyFile;
             IsEdgeTtsEngine = engine is EdgeTts;
@@ -4738,7 +4856,11 @@ public partial class TextToSpeechViewModel : ObservableObject
                     Regions.Add(region);
                 }
 
-                SelectedRegion = Regions.FirstOrDefault();
+                // The OpenAI-compatible engine's "region" is its provider; start on the saved
+                // one so OnSelectedRegionChanged doesn't read the default as a provider switch.
+                SelectedRegion = engine is OpenAiCompatibleSpeech
+                    ? OpenAiCompatibleSpeech.SavedProvider
+                    : Regions.FirstOrDefault();
             }
 
             if (HasModel)
@@ -4750,7 +4872,9 @@ public partial class TextToSpeechViewModel : ObservableObject
                     Models.Add(model);
                 }
 
-                SelectedModel = Models.FirstOrDefault();
+                SelectedModel = engine is OpenAiCompatibleSpeech
+                    ? Models.FirstOrDefault(p => p == OpenAiCompatibleSpeech.GetSavedModel(OpenAiCompatibleSpeech.SavedProvider)) ?? Models.FirstOrDefault()
+                    : Models.FirstOrDefault();
             }
 
             if (SelectedEngine is AzureSpeech)
@@ -4780,6 +4904,11 @@ public partial class TextToSpeechViewModel : ObservableObject
                 {
                     SelectedModel = Models.FirstOrDefault();
                 }
+            }
+            else if (SelectedEngine is OpenAiCompatibleSpeech)
+            {
+                ApiKey = OpenAiCompatibleSpeech.GetApiKey(OpenAiCompatibleSpeech.SavedProvider);
+                IsEngineSettingsVisible = true;
             }
             else if (SelectedEngine is Qwen3TtsCpp)
             {

@@ -28,6 +28,20 @@ public class SeVideoTextToSpeech
     public string MurfStyle { get; set; }
     public string MistralApiKey { get; set; }
     public string MistralModel { get; set; }
+    // OpenAI-compatible /v1/audio/speech engine: "OpenAI", "OpenRouter" or "Custom".
+    public string OpenAiCompatibleProvider { get; set; }
+    public string OpenAiApiKey { get; set; }
+    public string OpenAiModel { get; set; }
+    public string OpenRouterTtsApiKey { get; set; }
+    public string OpenRouterTtsModel { get; set; }
+    public string OpenAiCompatibleCustomUrl { get; set; }
+    public string OpenAiCompatibleCustomApiKey { get; set; }
+    public string OpenAiCompatibleCustomModel { get; set; }
+    // Comma-separated; the custom server's model and voice names can't be discovered.
+    public string OpenAiCompatibleCustomModels { get; set; }
+    public string OpenAiCompatibleCustomVoices { get; set; }
+    public string OpenAiCompatibleInstructions { get; set; }
+    public double OpenAiCompatibleSpeed { get; set; }
     public string Qwen3TtsCppModel { get; set; }
     public string Qwen3TtsCppVulkanPath { get; set; }
     public string Qwen3TtsCppInstruction { get; set; }
@@ -189,6 +203,18 @@ public class SeVideoTextToSpeech
         MurfStyle = "Conversational";
         MistralApiKey = string.Empty;
         MistralModel = "voxtral-mini-tts-2603";
+        OpenAiCompatibleProvider = "OpenAI";
+        OpenAiApiKey = string.Empty;
+        OpenAiModel = "gpt-4o-mini-tts";
+        OpenRouterTtsApiKey = string.Empty;
+        OpenRouterTtsModel = string.Empty;
+        OpenAiCompatibleCustomUrl = "http://localhost:8880/v1/audio/speech";
+        OpenAiCompatibleCustomApiKey = string.Empty;
+        OpenAiCompatibleCustomModel = string.Empty;
+        OpenAiCompatibleCustomModels = "tts-1";
+        OpenAiCompatibleCustomVoices = "alloy";
+        OpenAiCompatibleInstructions = string.Empty;
+        OpenAiCompatibleSpeed = 1.0;
         Qwen3TtsCppModel = "0.6B";
         Qwen3TtsCppVulkanPath = string.Empty;
         Qwen3TtsCppInstruction = string.Empty;

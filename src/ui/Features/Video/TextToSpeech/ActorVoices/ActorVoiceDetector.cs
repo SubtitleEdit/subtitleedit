@@ -130,6 +130,7 @@ public static class ActorVoiceDetector
                 case AzureSpeech when string.IsNullOrWhiteSpace(s.AzureApiKey):
                 case GoogleSpeech when string.IsNullOrWhiteSpace(s.GoogleKeyFile):
                 case MistralSpeech when string.IsNullOrWhiteSpace(s.MistralApiKey):
+                case OpenAiCompatibleSpeech when !OpenAiCompatibleSpeech.IsConfigured():
                     continue;
 
                 case Qwen3TtsCpp when !File.Exists(Qwen3TtsCpp.GetExecutableFileName())

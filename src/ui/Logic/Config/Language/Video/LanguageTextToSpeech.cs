@@ -28,6 +28,17 @@ public class LanguageTextToSpeech
     public string VideoEncodingSettings { get; set; }
     public string ElevenLabsSettings { get; set; }
     public string ElevenLabsSettingsResetHint { get; set; }
+    public string Provider { get; set; }
+    public string OpenAiCompatibleSettings { get; set; }
+    public string CustomServerUrl { get; set; }
+    public string CustomServerUrlHint { get; set; }
+    public string CustomModels { get; set; }
+    public string CustomModelsHint { get; set; }
+    public string CustomVoices { get; set; }
+    public string CustomVoicesHint { get; set; }
+    public string Instructions { get; set; }
+    public string InstructionsHint { get; set; }
+    public string OpenAiSpeedHint { get; set; }
     public string RegenerateAudio { get; set; }
     public string AutoContinuePlaying { get; set; }
     public string PlayLine { get; set; }
@@ -237,6 +248,17 @@ public class LanguageTextToSpeech
         VideoEncodingSettings = "TTS - Video encoding settings";
         ElevenLabsSettings = "TTS - ElevenLabs settings";
         ElevenLabsSettingsResetHint = "Reset ElevenLabs settings to default values";
+        Provider = "Provider";
+        OpenAiCompatibleSettings = "TTS - OpenAI-compatible settings";
+        CustomServerUrl = "Custom server URL";
+        CustomServerUrlHint = "Full speech endpoint of an OpenAI-compatible server, used when the provider is \"Custom\", e.g. http://localhost:8880/v1/audio/speech";
+        CustomModels = "Custom models";
+        CustomModelsHint = "Comma-separated model names offered when the provider is \"Custom\"";
+        CustomVoices = "Custom voices";
+        CustomVoicesHint = "Comma-separated voice names, used by the \"Custom\" provider and by OpenRouter models that publish no voice list";
+        Instructions = "Instructions";
+        InstructionsHint = "Optional speaking style, e.g. \"Speak in a calm, warm voice\". Sent only to models that support it (not tts-1/tts-1-hd)";
+        OpenAiSpeedHint = "Speech speed from 0.25 to 4.0 (1.0 is normal). Not every model supports it";
         RegenerateAudio = "Regenerate audio";
         AutoContinuePlaying = "Auto-continue playing";
         PlayLine = "Play line";

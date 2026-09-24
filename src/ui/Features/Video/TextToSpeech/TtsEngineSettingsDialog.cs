@@ -14,6 +14,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.KokoroTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.MossTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OmniVoiceCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OmniVoiceSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OpenAiCompatibleSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.PiperSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.PocketTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.SupertonicCrispAsrSettings;
@@ -35,7 +36,7 @@ public static class TtsEngineSettingsDialog
 {
     /// <summary>
     /// Whether this engine has a settings dialog worth showing a button for. Cloud engines
-    /// other than ElevenLabs have nothing to configure here.
+    /// other than ElevenLabs and OpenAI-compatible have nothing to configure here.
     /// </summary>
     public static bool HasSettings(ITtsEngine? engine) => engine is
         OmniVoiceTtsCpp or
@@ -59,6 +60,7 @@ public static class TtsEngineSettingsDialog
         KokoroTtsCpp or
         ChatterboxTtsCpp or
         Piper or
+        OpenAiCompatibleSpeech or
         ElevenLabs;
 
     public static async Task ShowAsync(ITtsEngine? engine, Window window, IWindowService windowService)
@@ -146,6 +148,10 @@ public static class TtsEngineSettingsDialog
         else if (engine is Piper)
         {
             await windowService.ShowDialogAsync<PiperSettingsWindow, PiperSettingsViewModel>(window, vm => vm.Initialize());
+        }
+        else if (engine is OpenAiCompatibleSpeech)
+        {
+            await windowService.ShowDialogAsync<OpenAiCompatibleSettingsWindow, OpenAiCompatibleSettingsViewModel>(window, vm => { });
         }
         else
         {

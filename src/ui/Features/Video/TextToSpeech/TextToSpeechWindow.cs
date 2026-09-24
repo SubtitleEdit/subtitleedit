@@ -455,8 +455,8 @@ public class TextToSpeechWindow : Window
             {
                 new Label
                 {
-                    Content = Se.Language.General.Region,
                     MinWidth = labelMinWidth,
+                    [!ContentProperty] = new Binding(nameof(vm.RegionLabel)) { Mode = BindingMode.OneWay },
                 },
                 UiUtil.MakeComboBox(vm.Regions, vm, nameof(vm.SelectedRegion)).WithWidth(controlMinWidth),
             },
