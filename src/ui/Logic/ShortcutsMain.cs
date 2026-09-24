@@ -511,6 +511,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.MergeWithLineAfterCommand), Se.Language.General.MergeWithLineAfterAndAutoBreak },
         { nameof(MainViewModel.MergeWithLineBeforeKeepBreaksCommand), Se.Language.General.MergeWithLineBeforeKeepBreaks },
         { nameof(MainViewModel.MergeWithLineAfterKeepBreaksCommand), Se.Language.General.MergeWithLineAfterKeepBreaks },
+        { nameof(MainViewModel.MergeWithLineAfterAndUnbreakCommand), Se.Language.General.MergeWithLineAfterAndUnbreak },
         { nameof(MainViewModel.MergeWithLineBeforeAsDialogCommand), Se.Language.Options.Shortcuts.MergeWithLineBeforeAsDialog },
         { nameof(MainViewModel.MergeWithLineAfterAsDialogCommand), Se.Language.Options.Shortcuts.MergeWithLineAfterAsDialog },
         { nameof(MainViewModel.ToggleDialogDashesCommand), Se.Language.Options.Shortcuts.ToggleDialogDashes },
@@ -990,6 +991,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.MergeSelectedLinesCommand, nameof(vm.MergeSelectedLinesCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MergeWithLineBeforeKeepBreaksCommand, nameof(vm.MergeWithLineBeforeKeepBreaksCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MergeWithLineAfterKeepBreaksCommand, nameof(vm.MergeWithLineAfterKeepBreaksCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MergeWithLineAfterAndUnbreakCommand, nameof(vm.MergeWithLineAfterAndUnbreakCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MergeWithLineBeforeAsDialogCommand, nameof(vm.MergeWithLineBeforeAsDialogCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MergeWithLineAfterAsDialogCommand, nameof(vm.MergeWithLineAfterAsDialogCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ToggleDialogDashesCommand, nameof(vm.ToggleDialogDashesCommand), ShortcutCategory.SubtitleGridAndTextBox);

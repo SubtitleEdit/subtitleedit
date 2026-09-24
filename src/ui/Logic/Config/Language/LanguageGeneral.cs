@@ -345,6 +345,7 @@ public class LanguageGeneral
     public string MergeSelectedLinesDialog { get; set; }
     public string MergeWithLineAfterAndAutoBreak { get; set; }
     public string MergeWithLineAfterKeepBreaks { get; set; }
+    public string MergeWithLineAfterAndUnbreak { get; set; }
     public string MergeWithLineBeforeAndAutoBreak { get; set; }
     public string MergeWithLineBeforeKeepBreaks { get; set; }
     public string MiddleCenter { get; set; }
@@ -1170,6 +1171,7 @@ public class LanguageGeneral
         MergeSelectedLinesDialog = "Merge selected lines as dialog";
         MergeWithLineAfterAndAutoBreak = "Merge with line after and auto-break";
         MergeWithLineAfterKeepBreaks = "Merge with line after (keep breaks)";
+        MergeWithLineAfterAndUnbreak = "Merge with line after and unbreak";
         MergeWithLineBeforeAndAutoBreak = "Merge with line before and auto-break";
         MergeWithLineBeforeKeepBreaks = "Merge with line before (keep breaks)";
         MiddleCenter = "Middle-Center";
