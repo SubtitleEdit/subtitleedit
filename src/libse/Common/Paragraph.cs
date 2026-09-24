@@ -59,9 +59,36 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public bool IsDefault => Math.Abs(StartTime.TotalMilliseconds) < 0.01 && Math.Abs(EndTime.TotalMilliseconds) < 0.01 && string.IsNullOrEmpty(Text);
 
+        // Ids only have to be unique within this process - they are compared, never persisted - so
+        // they do not need Guid.NewGuid's cryptographic randomness, which costs ~200 ns on macOS
+        // (about 90 % of building a paragraph from a grid row, paid per line on every
+        // GetUpdateSubtitle, preview refresh and file load). An RFC 9562 version 8 ("custom")
+        // Guid instead: a counter in the first 60 bits and a per-process random tail. The version
+        // nibble can never be 4, so these never equal a random Guid.NewGuid() either - the grid
+        // rows, which share the id space (SubtitleLineViewModel), still use those.
+        private static readonly ulong IdRandomTail = CreateIdRandomTail();
+        private static long _idCounter;
+
+        private static ulong CreateIdRandomTail()
+        {
+            Span<byte> bytes = stackalloc byte[16];
+            Guid.NewGuid().TryWriteBytes(bytes);
+            var tail = BitConverter.ToUInt64(bytes.Slice(8));
+
+            // RFC 9562 variant bits (10xx) in the top of byte 8.
+            return (tail & 0x3FFF_FFFF_FFFF_FFFFUL) | 0x8000_0000_0000_0000UL;
+        }
+
         private static Guid GenerateId()
         {
-            return Guid.NewGuid();
+            var counter = (ulong)System.Threading.Interlocked.Increment(ref _idCounter);
+            var tail = IdRandomTail;
+            return new Guid(
+                (uint)(counter >> 28),
+                (ushort)(counter >> 12),
+                (ushort)(0x8000 | (counter & 0x0FFF)), // version 8
+                (byte)(tail >> 56), (byte)(tail >> 48), (byte)(tail >> 40), (byte)(tail >> 32),
+                (byte)(tail >> 24), (byte)(tail >> 16), (byte)(tail >> 8), (byte)tail);
         }
 
         public Paragraph() : this(new TimeCode(), new TimeCode(), string.Empty)
