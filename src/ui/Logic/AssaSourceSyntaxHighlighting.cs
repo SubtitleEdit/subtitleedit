@@ -27,12 +27,12 @@ public partial class AssaSourceSyntaxHighlighting : ISourceSyntaxHighlighter
     private static readonly Color NumberColorLight = Color.Parse("#33691E");
 
     // Resolved per use so a theme switch is picked up
-    private static Color SectionColor => UiTheme.IsDarkThemeEnabled() ? SectionColorDark : SectionColorLight;
-    private static Color KeywordColor => UiTheme.IsDarkThemeEnabled() ? KeywordColorDark : KeywordColorLight;
+    internal static Color SectionColor => UiTheme.IsDarkThemeEnabled() ? SectionColorDark : SectionColorLight;
+    internal static Color KeywordColor => UiTheme.IsDarkThemeEnabled() ? KeywordColorDark : KeywordColorLight;
     private static Color TimeColor => UiTheme.IsDarkThemeEnabled() ? TimeColorDark : TimeColorLight;
-    private static Color PropertyColor => UiTheme.IsDarkThemeEnabled() ? PropertyColorDark : PropertyColorLight;
-    private static Color ValueColor => UiTheme.IsDarkThemeEnabled() ? ValueColorDark : ValueColorLight;
-    private static Color CommentColor => UiTheme.IsDarkThemeEnabled() ? CommentColorDark : CommentColorLight;
+    internal static Color PropertyColor => UiTheme.IsDarkThemeEnabled() ? PropertyColorDark : PropertyColorLight;
+    internal static Color ValueColor => UiTheme.IsDarkThemeEnabled() ? ValueColorDark : ValueColorLight;
+    internal static Color CommentColor => UiTheme.IsDarkThemeEnabled() ? CommentColorDark : CommentColorLight;
     private static Color NumberColor => UiTheme.IsDarkThemeEnabled() ? NumberColorDark : NumberColorLight;
 
     // Section headers like [Script Info], [V4+ Styles], [Events]
