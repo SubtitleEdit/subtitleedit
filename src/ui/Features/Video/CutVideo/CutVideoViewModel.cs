@@ -618,7 +618,7 @@ public partial class CutVideoViewModel : ObservableObject
         }
 
         // Every transition overlaps the two parts it joins.
-        if (_generateTransitions.HasEffects)
+        if (_generateTransitions.UsesPlan)
         {
             var plan = CutVideoTransitionPlan.Create(GetGenerateRanges(), _generateTransitions);
             keptSeconds -= Math.Max(0, plan.Ranges.Count - 1) * plan.TransitionSeconds;
@@ -746,7 +746,7 @@ public partial class CutVideoViewModel : ObservableObject
                 .ToList();
 
             Subtitle cut;
-            if (_generateTransitions.HasEffects)
+            if (_generateTransitions.UsesPlan)
             {
                 // The video was cut from the plan's ranges (whole frames, joins overlapping by
                 // the transition) - re-time the subtitle from exactly the same ones.

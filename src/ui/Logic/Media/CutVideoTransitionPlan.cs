@@ -25,6 +25,15 @@ public class CutVideoTransitionOptions
 
     public bool HasTransition => !string.IsNullOrEmpty(Transition) && TransitionSeconds > 0;
     public bool HasEffects => HasTransition || FadeInSeconds > 0 || FadeOutSeconds > 0;
+
+    /// <summary>
+    /// True when the cut goes through <see cref="CutVideoTransitionPlan"/>: with effects, and for a
+    /// plain cut whenever the frame rate is known. Trimming before making the video constant rate
+    /// drops a held picture (a first frame shown for 1.6 s, a still, a screen recording that only
+    /// writes changes) and puts the next frame at the start of the part - the picture ran up to
+    /// the length of the hold ahead of the sound, then froze until the next part.
+    /// </summary>
+    public bool UsesPlan => HasEffects || FrameRate > 0;
 }
 
 /// <summary>
