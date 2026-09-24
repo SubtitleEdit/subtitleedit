@@ -18,7 +18,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Features.SpellCheck.GetDictionaries;
@@ -41,9 +40,6 @@ public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanu
     public bool OkPressed { get; private set; }
     public SpellCheckDictionaryDisplay? SpellCheckDictionary { get; private set; }
 
-    private Task? _downloadTask;
-    private bool _done;
-    private readonly System.Timers.Timer _timer;
     private readonly CancellationTokenSource _cancellationTokenSource;
 
     private readonly ISpellCheckDictionaryDownloadService _spellCheckDictionaryDownloadService;
@@ -98,72 +94,6 @@ public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanu
 
         LoadDictionaries();
         RefreshInstalledStatus();
-        _timer = new System.Timers.Timer(500);
-        _timer.Elapsed += OnTimerOnElapsed;
-        _timer.Start();
-    }
-
-    private readonly Lock _lockObj = new();
-
-    private void OnTimerOnElapsed(object? sender, ElapsedEventArgs args)
-    {
-        lock (_lockObj)
-        {
-            if (_done || _downloadTask == null)
-            {
-                return;
-            }
-
-            var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
-            if (_downloadTask.IsCanceled || ex is OperationCanceledException)
-            {
-                _timer.Stop();
-                _done = true;
-                Dispatcher.UIThread.Post(() =>
-                {
-                    StatusText = Se.Language.General.DownloadCanceled;
-                    Close();
-                });
-            }
-            else if (_downloadTask is { IsFaulted: true })
-            {
-                HandleDownloadFailure();
-            }
-            else if (_downloadTask is { IsCompletedSuccessfully: true })
-            {
-                if (SpellCheckDictionary == null)
-                {
-                    HandleDownloadFailure();
-                }
-                else
-                {
-                    _timer.Stop();
-                    _done = true;
-                    Dispatcher.UIThread.Post(() =>
-                    {
-                        OkPressed = true;
-                        Close();
-                    });
-                }
-            }
-        }
-    }
-
-    /// <summary>
-    /// Resets the window to its idle state after a failed download so the user can
-    /// retry or close it normally. The timer keeps running to pick up a retry.
-    /// </summary>
-    private void HandleDownloadFailure()
-    {
-        _downloadTask = null;
-        Dispatcher.UIThread.Post(() =>
-        {
-            StatusText = Se.Language.General.DownloadFailed;
-            Progress = 0;
-            ProgressOpacity = 0;
-            IsProgressVisible = false;
-            IsDownloadEnabled = true;
-        });
     }
 
     private void Close()
@@ -173,7 +103,7 @@ public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanu
 
     public void OnClosingCleanup()
     {
-        _timer.StopAndDispose(OnTimerOnElapsed);
+        _cancellationTokenSource.Cancel();
     }
 
     /// <summary>
@@ -446,7 +376,7 @@ public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanu
     }
 
     [RelayCommand]
-    private void Download()
+    private async Task DownloadAsync()
     {
         var selected = SelectedDictionary;
         if (selected == null || selected.Files.Count == 0)
@@ -467,7 +397,36 @@ public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanu
             StatusText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
         });
 
-        _downloadTask = DownloadAndUnpackAsync(selected, downloadProgress, _cancellationTokenSource.Token);
+        try
+        {
+            await DownloadAndUnpackAsync(selected, downloadProgress, _cancellationTokenSource.Token);
+            if (SpellCheckDictionary == null)
+            {
+                StatusText = Se.Language.General.DownloadFailed;
+            }
+            else
+            {
+                // Keep the window open so more dictionaries can be downloaded.
+                OkPressed = true;
+                StatusText = Se.Language.General.DownloadComplete;
+                RefreshInstalledStatus();
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            StatusText = Se.Language.General.DownloadCanceled;
+        }
+        catch (Exception)
+        {
+            StatusText = Se.Language.General.DownloadFailed;
+        }
+        finally
+        {
+            Progress = 0;
+            ProgressOpacity = 0;
+            IsProgressVisible = false;
+            IsDownloadEnabled = true;
+        }
     }
 
     [RelayCommand]
@@ -491,7 +450,6 @@ public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanu
     private void Cancel()
     {
         _cancellationTokenSource.Cancel();
-        _done = true;
         Close();
     }
 
