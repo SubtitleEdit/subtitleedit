@@ -170,6 +170,57 @@ public class SourceViewEditorTests : IDisposable
         window.Close();
     }
 
+    private const string AssaSource =
+        "[Script Info]\nScriptType: v4.00+\nTitle: Pasted\n\n" +
+        "[V4+ Styles]\nFormat: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\n" +
+        "Style: Default,Arial,20,&H00FFFFFF,&H0300FFFF,&H00000000,&H02000000,0,0,0,0,100,100,0,0,1,2,1,2,10,10,10,1\n\n" +
+        "[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n" +
+        "Dialogue: 0,0:00:01.00,0:00:03.00,Default,,0,0,0,,From ASSA\n";
+
+    private Window ShowInWindow(SourceViewViewModel vm)
+    {
+        var window = new Window { Content = new Border { Child = vm.SourceViewTextBox.ContentControl } };
+        _windows.Add(window);
+        vm.Window = window;
+        window.Show();
+        window.UpdateLayout();
+        return window;
+    }
+
+    [AvaloniaFact]
+    public async Task OkAsksBeforeTakingLinesThatOnlyParseAsAnotherFormat()
+    {
+        var (vm, _, _) = MakeSourceView();
+        ShowInWindow(vm);
+        SubtitleFormat? asked = null;
+        vm.ConfirmUseOtherFormat = format =>
+        {
+            asked = format;
+            return Task.FromResult(false);
+        };
+
+        ViewOf(vm).ReplaceAllText(AssaSource);
+        await vm.OkCommand.ExecuteAsync(null);
+
+        Assert.IsType<AdvancedSubStationAlpha>(asked);
+        Assert.False(vm.OkPressed); // "No" keeps the dialog open with the text as typed
+    }
+
+    [AvaloniaFact]
+    public async Task AcceptingAnotherFormatTakesTheLinesButNotItsHeader()
+    {
+        var (vm, _, _) = MakeSourceView();
+        ShowInWindow(vm);
+        vm.ConfirmUseOtherFormat = _ => Task.FromResult(true);
+
+        ViewOf(vm).ReplaceAllText(AssaSource);
+        await vm.OkCommand.ExecuteAsync(null);
+
+        Assert.True(vm.OkPressed);
+        Assert.Equal("From ASSA", Assert.Single(vm.Subtitle.Paragraphs).Text);
+        Assert.True(string.IsNullOrEmpty(vm.Subtitle.Header)); // an ASSA header is no use to SubRip
+    }
+
     // ----------------------------------------------------------------------------------------
     // Unsaved changes
     // ----------------------------------------------------------------------------------------
