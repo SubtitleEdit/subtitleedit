@@ -71,27 +71,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            var header = Lrc.RemoveSoftwareAndVersion(subtitle.Header);
             var sb = new StringBuilder();
-            if (!string.IsNullOrEmpty(header) && (header.Contains("[ar:") || header.Contains("[ti:") || header.Contains("[by:") || header.Contains("[id:")))
-            {
-                sb.AppendLine(header.Trim());
-            }
-            else if (!string.IsNullOrEmpty(title))
-            {
-                sb.AppendLine("[ti:" + title.Replace("[", string.Empty).Replace("]", string.Empty) + "]");
-            }
-
-            if (header != null && !header.Contains("[re:", StringComparison.Ordinal))
-            {
-                sb.AppendLine($"[re: {BySeText}]");
-            }
-
-            if (header != null && !header.Contains("[ve:", StringComparison.Ordinal))
-            {
-                sb.AppendLine($"[ve: {Utilities.AssemblyVersion}]");
-            }
-
+            sb.Append(Lrc.GetHeaderOrDefault(subtitle.Header, title, BySeText));
             sb.AppendLine();
 
             const string timeCodeFormat = "[{0:00}:{1:00}.{2:00}]{3}";
@@ -236,19 +217,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     header.AppendLine(line);
                 }
-            }
-
-            header = new StringBuilder(Lrc.RemoveSoftwareAndVersion(header.ToString()));
-            header.AppendLine();
-
-            if (!header.ToString().Contains("[re:", StringComparison.Ordinal))
-            {
-                header.AppendLine($"[re: {BySeText}]");
-            }
-
-            if (!header.ToString().Contains("[ve:", StringComparison.Ordinal))
-            {
-                header.AppendLine($"[ve: {Utilities.AssemblyVersion}]");
             }
 
             subtitle.Header = header.ToString();

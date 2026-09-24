@@ -25,6 +25,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     public class Lrc : SubtitleFormat
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\[\d+:\d\d\.\d\d\].*$", RegexOptions.Compiled);
+        private static readonly Regex RegexHeaderTag = new Regex(@"^\[[A-Za-z]+:.*\]$", RegexOptions.Compiled);
 
         public override string Extension => ".lrc";
 
@@ -65,27 +66,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            var header = RemoveSoftwareAndVersion(subtitle.Header);
             var sb = new StringBuilder();
-            if (!string.IsNullOrEmpty(header) && (header.Contains("[ar:") || header.Contains("[ti:") || header.Contains("[by:") || header.Contains("[id:")))
-            {
-                sb.AppendLine(header);
-            }
-            else if (!string.IsNullOrEmpty(title))
-            {
-                sb.AppendLine("[ti:" + title.Replace("[", string.Empty).Replace("]", string.Empty) + "]");
-            }
-
-            if (!header.Contains("[re:", StringComparison.Ordinal))
-            {
-                sb.AppendLine("[re: Subtitle Edit]");
-            }
-
-            if (!header.Contains("[ve:", StringComparison.Ordinal))
-            {
-                sb.AppendLine($"[ve: {Utilities.AssemblyVersion}]");
-            }
-
+            sb.Append(GetHeaderOrDefault(subtitle.Header, title, "Subtitle Edit"));
             sb.AppendLine();
 
             const string timeCodeFormat = "[{0:00}:{1:00}.{2:00}]{3}";
@@ -128,25 +110,37 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return sb.ToString().Trim();
         }
 
-        public static string RemoveSoftwareAndVersion(string s)
+        /// <summary>
+        /// The header to write: the tag lines the subtitle already has ([ti:], [ar:], [re:], ...),
+        /// exactly as they are, or - when it has none - a default header with the title and
+        /// the software/version stamp. A header read from a file is written back unchanged
+        /// (#15212). [offset:] is left out: the reader has already applied it to the time codes.
+        /// </summary>
+        public static string GetHeaderOrDefault(string header, string title, string software)
         {
-            if (string.IsNullOrEmpty(s))
-            {
-                return string.Empty;
-            }
-
             var sb = new StringBuilder();
-            foreach (var line in s.SplitToLines())
+            foreach (var line in (header ?? string.Empty).SplitToLines())
             {
-                if (line.Trim().StartsWith("[re:") || line.Trim().StartsWith("[ve:"))
+                var s = line.Trim();
+                if (RegexHeaderTag.IsMatch(s) && !s.StartsWith("[offset:", StringComparison.Ordinal))
                 {
-                    continue;
+                    sb.AppendLine(s);
                 }
-
-                sb.AppendLine(line.Trim());
             }
 
-            return sb.ToString().Trim();
+            if (sb.Length > 0)
+            {
+                return sb.ToString();
+            }
+
+            if (!string.IsNullOrEmpty(title))
+            {
+                sb.AppendLine("[ti:" + title.Replace("[", string.Empty).Replace("]", string.Empty) + "]");
+            }
+
+            sb.AppendLine($"[re: {software}]");
+            sb.AppendLine($"[ve: {Utilities.AssemblyVersion}]");
+            return sb.ToString();
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -270,19 +264,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     header.AppendLine(line);
                 }
-            }
-
-            header = new StringBuilder(Lrc.RemoveSoftwareAndVersion(header.ToString()));
-            header.AppendLine();
-
-            if (!header.ToString().Contains("[re:", StringComparison.Ordinal))
-            {
-                header.AppendLine("[re: Subtitle Edit]");
-            }
-
-            if (!header.ToString().Contains("[ve:", StringComparison.Ordinal))
-            {
-                header.AppendLine($"[ve: {Utilities.AssemblyVersion}]");
             }
 
             subtitle.Header = header.ToString();

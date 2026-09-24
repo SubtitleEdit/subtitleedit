@@ -66,27 +66,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            var header = RemoveSoftwareAndVersion(subtitle.Header);
             var sb = new StringBuilder();
-            if (!string.IsNullOrEmpty(header) && (header.Contains("[ar:") || header.Contains("[ti:") || header.Contains("[by:") || header.Contains("[id:")))
-            {
-                sb.AppendLine(header);
-            }
-            else if (!string.IsNullOrEmpty(title))
-            {
-                sb.AppendLine("[ti:" + title.Replace("[", string.Empty).Replace("]", string.Empty) + "]");
-            }
-
-            if (!header.Contains("[re:", StringComparison.Ordinal))
-            {
-                sb.AppendLine("[re: Subtitle Edit]");
-            }
-
-            if (!header.Contains("[ve:", StringComparison.Ordinal))
-            {
-                sb.AppendLine($"[ve: {Utilities.AssemblyVersion}]");
-            }
-
+            sb.Append(Lrc.GetHeaderOrDefault(subtitle.Header, title, "Subtitle Edit"));
             sb.AppendLine();
 
             const string timeCodeFormat = "[{0:00}:{1:00}.{2:000}]{3}";
@@ -104,27 +85,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var tc = new TimeCode(p.EndTime.TotalMilliseconds);
                     sb.AppendLine(string.Format(timeCodeFormat, tc.Hours * 60 + tc.Minutes, tc.Seconds, tc.Milliseconds, string.Empty));
                 }
-            }
-
-            return sb.ToString().Trim();
-        }
-
-        public static string RemoveSoftwareAndVersion(string s)
-        {
-            if (string.IsNullOrEmpty(s))
-            {
-                return string.Empty;
-            }
-
-            var sb = new StringBuilder();
-            foreach (var line in s.SplitToLines())
-            {
-                if (line.Trim().StartsWith("[re:") || line.Trim().StartsWith("[ve:"))
-                {
-                    continue;
-                }
-
-                sb.AppendLine(line.Trim());
             }
 
             return sb.ToString().Trim();
@@ -249,19 +209,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     header.AppendLine(line);
                 }
-            }
-
-            header = new StringBuilder(Lrc.RemoveSoftwareAndVersion(header.ToString()));
-            header.AppendLine();
-
-            if (!header.ToString().Contains("[re:", StringComparison.Ordinal))
-            {
-                header.AppendLine("[re: Subtitle Edit]");
-            }
-
-            if (!header.ToString().Contains("[ve:", StringComparison.Ordinal))
-            {
-                header.AppendLine($"[ve: {Utilities.AssemblyVersion}]");
             }
 
             subtitle.Header = header.ToString();
