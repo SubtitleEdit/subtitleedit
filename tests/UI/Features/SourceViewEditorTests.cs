@@ -221,6 +221,58 @@ public class SourceViewEditorTests : IDisposable
         Assert.True(string.IsNullOrEmpty(vm.Subtitle.Header)); // an ASSA header is no use to SubRip
     }
 
+    private SourceViewViewModel MakeLrcSourceView(out string text)
+    {
+        text = "[ar:Artist]\n[ti:Song]\n[00:01.00]First line\n[00:03.00]Second line\n[00:06.00]\n";
+        var format = new Lrc();
+        var subtitle = new Subtitle();
+        format.LoadSubtitle(subtitle, text.SplitToLines(), string.Empty);
+
+        var vm = new SourceViewViewModel(new NoWindowService());
+        vm.Initialize("Source view", text, format, subtitle, 0);
+        ShowInWindow(vm);
+        return vm;
+    }
+
+    [AvaloniaFact]
+    public async Task DeletingTheHeaderIsReportedSoTheCallerCanClearIt()
+    {
+        var vm = MakeLrcSourceView(out var text);
+
+        ViewOf(vm).ReplaceAllText(text.Replace("[ar:Artist]\n[ti:Song]\n", string.Empty));
+        await vm.OkCommand.ExecuteAsync(null);
+
+        Assert.True(vm.OkPressed);
+        Assert.True(vm.HeaderRemoved);
+    }
+
+    [AvaloniaFact]
+    public async Task EditingTheHeaderIsNotARemoval()
+    {
+        var vm = MakeLrcSourceView(out var text);
+
+        ViewOf(vm).ReplaceAllText(text.Replace("[ti:Song]", "[ti:Other song]"));
+        await vm.OkCommand.ExecuteAsync(null);
+
+        Assert.True(vm.OkPressed);
+        Assert.False(vm.HeaderRemoved);
+        Assert.Contains("[ti:Other song]", vm.Subtitle.Header);
+    }
+
+    [AvaloniaFact]
+    public async Task LinesReadAsAnotherFormatDoNotRemoveTheHeader()
+    {
+        var vm = MakeLrcSourceView(out _);
+        vm.ConfirmUseOtherFormat = _ => Task.FromResult(true);
+
+        // SubRip has no header: that is not the user deleting the LRC one.
+        ViewOf(vm).ReplaceAllText("1\n00:00:01,000 --> 00:00:03,000\nPasted\n");
+        await vm.OkCommand.ExecuteAsync(null);
+
+        Assert.True(vm.OkPressed);
+        Assert.False(vm.HeaderRemoved);
+    }
+
     // ----------------------------------------------------------------------------------------
     // Unsaved changes
     // ----------------------------------------------------------------------------------------

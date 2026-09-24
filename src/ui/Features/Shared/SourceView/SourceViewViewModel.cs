@@ -46,6 +46,14 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
     public bool OkPressed { get; private set; }
     public Subtitle Subtitle { get; private set; }
 
+    /// <summary>
+    /// True when the source opened with a header (footer) and the user deleted it. An empty
+    /// <see cref="Subtitle"/> header otherwise means "unchanged", so the caller needs this to
+    /// clear its own instead of keeping the old one.
+    /// </summary>
+    public bool HeaderRemoved { get; private set; }
+    public bool FooterRemoved { get; private set; }
+
     public SubtitleFormat _subtitleFormat { get; private set; }
     public ITextBoxWrapper SourceViewTextBox { get; set; }
     public IRelayCommand CutCommand { get; }
@@ -72,6 +80,15 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
 
     /// <summary>Set once the user confirmed the discard, so the second Close() goes through.</summary>
     private bool _discardConfirmed;
+
+    /// <summary>
+    /// Whether the source had a header / footer when the dialog opened - taken from the first
+    /// validation, which parses the unedited text. Stays false above the validation size limit,
+    /// where a removed header is then kept as before.
+    /// </summary>
+    private bool _hadHeader;
+    private bool _hadFooter;
+    private bool _baselineTaken;
 
     public SourceViewViewModel(IWindowService windowService)
     {
@@ -288,6 +305,13 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         finally
         {
             Configuration.Settings.General.CurrentFrameRate = oldFrameRate;
+        }
+
+        if (!_baselineTaken)
+        {
+            _baselineTaken = true;
+            _hadHeader = !string.IsNullOrWhiteSpace(subtitle.Header);
+            _hadFooter = !string.IsNullOrWhiteSpace(subtitle.Footer);
         }
 
         if (subtitle.Paragraphs.Count == 0)
@@ -649,7 +673,7 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         var subtitle = LoadWithCurrentFormat(lines);
         if (subtitle.Paragraphs.Count > 0)
         {
-            ApplyParsedSubtitle(subtitle);
+            ApplyParsedSubtitle(subtitle, parsedWithCurrentFormat: true);
             OkPressed = true;
             Window?.Close();
             return;
@@ -685,7 +709,7 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
                 other.Footer = string.Empty;
             }
 
-            ApplyParsedSubtitle(other);
+            ApplyParsedSubtitle(other, parsedWithCurrentFormat: otherFormat == null || otherFormat.Name == _subtitleFormat.Name);
             OkPressed = true;
             Window?.Close();
             return;
@@ -718,9 +742,14 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
     /// Copies the parsed result back over the subtitle the caller holds - header and footer
     /// included. Copying only the paragraphs silently discarded any edit the user made to an
     /// ASSA [Script Info] / [V4+ Styles] block while accepting their dialogue edits.
+    /// A header gone from a source read with the dialog's own format was deleted by the user; one
+    /// missing because the lines were read as another format says nothing about the old header.
     /// </summary>
-    private void ApplyParsedSubtitle(Subtitle parsed)
+    private void ApplyParsedSubtitle(Subtitle parsed, bool parsedWithCurrentFormat)
     {
+        HeaderRemoved = parsedWithCurrentFormat && _hadHeader && string.IsNullOrWhiteSpace(parsed.Header);
+        FooterRemoved = parsedWithCurrentFormat && _hadFooter && string.IsNullOrWhiteSpace(parsed.Footer);
+
         Subtitle.Paragraphs.Clear();
         Subtitle.Paragraphs.AddRange(parsed.Paragraphs);
         if (!string.IsNullOrEmpty(parsed.Header))
