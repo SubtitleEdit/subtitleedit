@@ -33,6 +33,7 @@ public static class TtsEngineCatalog
         engines.Add(new ElevenLabs(ttsDownloadService));
         engines.Add(new AzureSpeech(ttsDownloadService));
         engines.Add(new MistralSpeech(ttsDownloadService));
+        engines.Add(new OpenAiCompatibleSpeech(ttsDownloadService));
         engines.Add(new Murf(ttsDownloadService));
         engines.Add(new GoogleSpeech(ttsDownloadService));
         engines.Add(new KokoroTtsCpp());

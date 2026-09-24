@@ -172,6 +172,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ChatterboxTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.KokoroTtsSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OpenAiCompatibleSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.PiperSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OmniVoiceSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Qwen3TtsSettings;
@@ -440,6 +441,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<EditRuleViewModel>();
         collection.AddTransient<EditWholeTextViewModel>();
         collection.AddTransient<ElevenLabsSettingsViewModel>();
+        collection.AddTransient<OpenAiCompatibleSettingsViewModel>();
         collection.AddTransient<EmbedTrackPreviewViewModel>();
         collection.AddTransient<EmbeddedSubtitlesEditViewModel>();
         collection.AddTransient<EmbeddedSubtitlesEditMp4ViewModel>();

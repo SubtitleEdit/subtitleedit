@@ -74,6 +74,15 @@ public interface ITtsDownloadService
         MemoryStream stream,
         IProgress<float>? progress,
         CancellationToken cancellationToken);
+
+    Task DownloadOpenRouterTtsModelList(MemoryStream stream, CancellationToken cancellationToken);
+
+    Task<(bool Ok, string Error)> DownloadOpenAiCompatibleSpeak(
+        string url,
+        string apiKey,
+        string jsonBody,
+        MemoryStream stream,
+        CancellationToken cancellationToken);
 }
 
 public class TtsDownloadService : ITtsDownloadService
@@ -825,5 +834,77 @@ public class TtsDownloadService : ITtsDownloadService
         var audioBytes = Convert.FromBase64String(audioData);
         await stream.WriteAsync(audioBytes, cancellationToken);
         return true;
+    }
+
+    public async Task DownloadOpenRouterTtsModelList(MemoryStream ms, CancellationToken cancellationToken)
+    {
+        // Public endpoint - no API key needed to list models (and their supported voices).
+        var url = "https://openrouter.ai/api/v1/models?output_modalities=speech";
+
+        using var requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
+        requestMessage.Headers.TryAddWithoutValidation("Accept", "application/json");
+
+        var result = await _httpClient.SendAsync(requestMessage, cancellationToken);
+
+        // Throw instead of returning an empty stream - the caller overwrites its cached list.
+        if (!result.IsSuccessStatusCode)
+        {
+            SeLogger.Error($"OpenRouter TTS model list failed calling API address {url} : Status code={result.StatusCode}");
+            throw new HttpRequestException($"OpenRouter model list request failed: HTTP {(int)result.StatusCode} {result.StatusCode}");
+        }
+
+        await result.Content.CopyToAsync(ms, cancellationToken);
+    }
+
+    public async Task<(bool Ok, string Error)> DownloadOpenAiCompatibleSpeak(
+        string url,
+        string apiKey,
+        string jsonBody,
+        MemoryStream stream,
+        CancellationToken cancellationToken)
+    {
+        using var requestMessage = new HttpRequestMessage(HttpMethod.Post, url);
+        requestMessage.Content = new StringContent(jsonBody, Encoding.UTF8);
+        requestMessage.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+        if (!string.IsNullOrWhiteSpace(apiKey))
+        {
+            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", apiKey.Trim());
+        }
+
+        HttpResponseMessage result;
+        try
+        {
+            result = await _httpClient.SendAsync(requestMessage, cancellationToken);
+        }
+        catch (HttpRequestException ex)
+        {
+            SeLogger.Error(ex, $"OpenAI-compatible TTS failed calling API at {url}");
+            return (false, ex.Message);
+        }
+
+        var responseBytes = await result.Content.ReadAsByteArrayAsync(cancellationToken);
+        var mediaType = result.Content.Headers.ContentType?.MediaType ?? string.Empty;
+
+        // The response body is the raw audio; a JSON body (even with 200) is an error object.
+        if (!result.IsSuccessStatusCode || mediaType.Contains("json", StringComparison.OrdinalIgnoreCase))
+        {
+            var error = Encoding.UTF8.GetString(responseBytes).Trim();
+            SeLogger.Error($"OpenAI-compatible TTS failed calling API at {url} : Status code={result.StatusCode} {error}");
+            var message = $"HTTP {(int)result.StatusCode} {result.StatusCode}";
+            if (!string.IsNullOrEmpty(error))
+            {
+                message += ": " + (error.Length > 500 ? error[..500] : error);
+            }
+
+            return (false, message);
+        }
+
+        if (responseBytes.Length == 0)
+        {
+            return (false, "Empty audio response");
+        }
+
+        await stream.WriteAsync(responseBytes, cancellationToken);
+        return (true, string.Empty);
     }
 }
