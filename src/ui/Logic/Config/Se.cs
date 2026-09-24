@@ -1010,6 +1010,8 @@ public class Se
             Settings.BeautifyTimeCodes = new();
         }
 
+        Settings.BeautifyTimeCodes.CustomProfiles ??= new();
+
         if (Settings.Ocr == null)
         {
             Settings.Ocr = new();

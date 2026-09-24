@@ -12,6 +12,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Config.Language.Tools;
 using Optris.Icons.Avalonia;
 using System.Globalization;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BeautifyTimeCodes.Profile;
 
@@ -164,21 +165,54 @@ public class BeautifyTimeCodesProfileWindow : Window
 
     private Control BuildPresetButton()
     {
+        var flyout = new MenuFlyout();
+        flyout.Opening += (_, _) => FillPresetMenu(flyout);
+        FillPresetMenu(flyout);
+
         return new SeSplitButton
         {
             Content = _l.LoadPreset,
             HorizontalAlignment = HorizontalAlignment.Left,
             Margin = new Thickness(0, 0, 20, 0),
-            Flyout = new MenuFlyout
-            {
-                Items =
-                {
-                    new Avalonia.Controls.MenuItem { Header = _l.PresetDefault, Command = _vm.LoadPresetDefaultCommand },
-                    new Avalonia.Controls.MenuItem { Header = _l.PresetNetflix, Command = _vm.LoadPresetNetflixCommand },
-                    new Avalonia.Controls.MenuItem { Header = _l.PresetSdi, Command = _vm.LoadPresetSdiCommand },
-                },
-            },
+            Flyout = flyout,
         };
+    }
+
+    // Rebuilt on every open: saved profiles can be added or deleted while the window is up (#11541).
+    private void FillPresetMenu(MenuFlyout flyout)
+    {
+        flyout.Items.Clear();
+        flyout.Items.Add(new Avalonia.Controls.MenuItem { Header = _l.PresetDefault, Command = _vm.LoadPresetDefaultCommand });
+        flyout.Items.Add(new Avalonia.Controls.MenuItem { Header = _l.PresetNetflix, Command = _vm.LoadPresetNetflixCommand });
+        flyout.Items.Add(new Avalonia.Controls.MenuItem { Header = _l.PresetSdi, Command = _vm.LoadPresetSdiCommand });
+
+        var customProfiles = _vm.CustomProfiles.ToList();
+        if (customProfiles.Count > 0)
+        {
+            flyout.Items.Add(new Separator());
+            foreach (var customProfile in customProfiles)
+            {
+                var item = new Avalonia.Controls.MenuItem { Header = customProfile.Name };
+                item.Click += (_, _) => _vm.LoadCustomProfile(customProfile);
+                flyout.Items.Add(item);
+            }
+        }
+
+        flyout.Items.Add(new Separator());
+        flyout.Items.Add(new Avalonia.Controls.MenuItem { Header = _l.SaveAsProfile, Command = _vm.SaveAsProfileCommand });
+
+        if (customProfiles.Count > 0)
+        {
+            var deleteMenu = new Avalonia.Controls.MenuItem { Header = _l.DeleteProfile };
+            foreach (var customProfile in customProfiles)
+            {
+                var item = new Avalonia.Controls.MenuItem { Header = customProfile.Name };
+                item.Click += async (_, _) => await _vm.DeleteCustomProfile(customProfile);
+                deleteMenu.Items.Add(item);
+            }
+
+            flyout.Items.Add(deleteMenu);
+        }
     }
 
     private Control BuildGeneralSection()

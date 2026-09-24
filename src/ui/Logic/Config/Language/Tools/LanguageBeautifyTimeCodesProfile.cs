@@ -7,6 +7,11 @@ public class LanguageBeautifyTimeCodesProfile
     public string PresetDefault { get; set; } = "Default";
     public string PresetNetflix { get; set; } = "Netflix";
     public string PresetSdi { get; set; } = "SDI";
+    public string SaveAsProfile { get; set; } = "Save as profile...";
+    public string DeleteProfile { get; set; } = "Delete profile";
+    public string ProfileName { get; set; } = "Profile name";
+    public string OverwriteProfileX { get; set; } = "A profile named \"{0}\" already exists. Overwrite it?";
+    public string DeleteProfileX { get; set; } = "Delete profile \"{0}\"?";
 
     public string Gap { get; set; } = "Gap";
     public string GapSuffix { get; set; } = "frames (also updates non-zero gap fields below)";

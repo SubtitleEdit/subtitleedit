@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
@@ -8,7 +9,7 @@ namespace Nikse.SubtitleEdit.Logic.Config;
 /// reads <see cref="Configuration.Settings"/>, so we sync this onto libse at load time
 /// and copy back from libse after the user clicks OK in the profile editor.
 /// </summary>
-public class SeBeautifyTimeCodes
+public class SeBeautifyTimeCodes : SeBeautifyTimeCodesProfileValues
 {
     /// <summary>True once the user has saved the profile at least once. Until then we let
     /// libse's built-in default-preset values stand instead of clobbering them with zeros.</summary>
@@ -19,6 +20,38 @@ public class SeBeautifyTimeCodes
     public bool SnapToShotChanges { get; set; }
     public int OverlapThreshold { get; set; }
 
+    /// <summary>User-named profiles saved from the profile editor (#11541).</summary>
+    public List<SeBeautifyTimeCodesCustomProfile> CustomProfiles { get; set; } = new();
+
+    public void CopyFrom(BeautifyTimeCodesSettings source)
+    {
+        Saved = true;
+        AlignTimeCodes = source.AlignTimeCodes;
+        ExtractExactTimeCodes = source.ExtractExactTimeCodes;
+        SnapToShotChanges = source.SnapToShotChanges;
+        OverlapThreshold = source.OverlapThreshold;
+        CopyProfileFrom(source.Profile);
+    }
+
+    public void ApplyTo(BeautifyTimeCodesSettings target)
+    {
+        target.AlignTimeCodes = AlignTimeCodes;
+        target.ExtractExactTimeCodes = ExtractExactTimeCodes;
+        target.SnapToShotChanges = SnapToShotChanges;
+        target.OverlapThreshold = OverlapThreshold;
+        ApplyProfileTo(target.Profile);
+    }
+}
+
+/// <summary>A named copy of the profile values, saved by the user (#11541).</summary>
+public class SeBeautifyTimeCodesCustomProfile : SeBeautifyTimeCodesProfileValues
+{
+    public string Name { get; set; } = string.Empty;
+}
+
+/// <summary>The profile values (gaps, zones, chaining) - shared by the active profile and saved custom profiles.</summary>
+public class SeBeautifyTimeCodesProfileValues
+{
     // General
     public int Gap { get; set; }
 
@@ -68,15 +101,8 @@ public class SeBeautifyTimeCodes
     public int ChainingOutCueOnShotShotChangeBehavior { get; set; }
     public bool ChainingOutCueOnShotCheckGeneral { get; set; }
 
-    public void CopyFrom(BeautifyTimeCodesSettings source)
+    public void CopyProfileFrom(BeautifyTimeCodesSettings.BeautifyTimeCodesProfile p)
     {
-        Saved = true;
-        AlignTimeCodes = source.AlignTimeCodes;
-        ExtractExactTimeCodes = source.ExtractExactTimeCodes;
-        SnapToShotChanges = source.SnapToShotChanges;
-        OverlapThreshold = source.OverlapThreshold;
-
-        var p = source.Profile;
         Gap = p.Gap;
         InCuesGap = p.InCuesGap;
         InCuesLeftGreenZone = p.InCuesLeftGreenZone;
@@ -116,14 +142,8 @@ public class SeBeautifyTimeCodes
         ChainingOutCueOnShotCheckGeneral = p.ChainingOutCueOnShotCheckGeneral;
     }
 
-    public void ApplyTo(BeautifyTimeCodesSettings target)
+    public void ApplyProfileTo(BeautifyTimeCodesSettings.BeautifyTimeCodesProfile p)
     {
-        target.AlignTimeCodes = AlignTimeCodes;
-        target.ExtractExactTimeCodes = ExtractExactTimeCodes;
-        target.SnapToShotChanges = SnapToShotChanges;
-        target.OverlapThreshold = OverlapThreshold;
-
-        var p = target.Profile;
         p.Gap = Gap;
         p.InCuesGap = InCuesGap;
         p.InCuesLeftGreenZone = InCuesLeftGreenZone;
