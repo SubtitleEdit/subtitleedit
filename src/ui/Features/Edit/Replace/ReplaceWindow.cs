@@ -160,22 +160,22 @@ public class ReplaceWindow : Window
         var buttonFindNext = UiUtil.MakeButton(Se.Language.Edit.Find.FindNext, vm.FindNextCommand)
             .WithIconLeft(IconNames.ChevronRight)
             .WithLeftAlignment()
-            .WithMinWidth(150)
+            .WithMinWidth(180)
             .WithMargin(0, 0, 0, 10);
         var buttonReplace = UiUtil.MakeButton(Se.Language.Edit.Find.ReplaceAndFindNext, vm.ReplaceCommand)
             .WithIconLeft(IconNames.FindReplace)
             .WithLeftAlignment()
-            .WithMinWidth(150)
+            .WithMinWidth(180)
             .WithMargin(0, 0, 0, 10);
         var buttonReplaceAll = UiUtil.MakeButton(Se.Language.Edit.Find.ReplaceAll, vm.ReplaceAllCommand)
             .WithIconLeft(IconNames.FileReplaceOutline)
             .WithLeftAlignment()
-            .WithMinWidth(150)
+            .WithMinWidth(180)
             .WithMargin(0, 0, 0, 10);
         var buttonCount = UiUtil.MakeButton(Se.Language.General.Count, vm.CountCommand)
             .WithIconLeft(IconNames.Counter)
             .WithLeftAlignment()
-            .WithMinWidth(150)
+            .WithMinWidth(180)
             .WithMargin(0, 0, 0, 10);
         var panelResult = FindWindowParts.MakeResultPanel(nameof(vm.CountResult), nameof(vm.ResultIcon));
 
