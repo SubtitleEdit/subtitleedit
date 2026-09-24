@@ -15023,6 +15023,20 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void MergeWithLineAfterAndUnbreak()
+    {
+        if (IsCurrentRowReferenceOnly)
+        {
+            return;
+        }
+
+        RunWithoutChangeDetection(() =>
+        {
+            WithoutReferenceOnlyRows(() => MergeLineAfterWithBreakMode(MergeManager.BreakMode.Unbreak));
+        });
+    }
+
+    [RelayCommand]
     private void MergeWithLineAfterAsDialog()
     {
         if (IsCurrentRowReferenceOnly)
@@ -28912,6 +28926,11 @@ public partial class MainViewModel :
 
     private void MergeLineAfterKeepBreaks()
     {
+        MergeLineAfterWithBreakMode(MergeManager.BreakMode.KeepBreaks);
+    }
+
+    private void MergeLineAfterWithBreakMode(MergeManager.BreakMode breakMode)
+    {
         // A display-only reference row can be the current row (it is selectable so its text can
         // be read), but it is not a line of the working subtitle: WithoutReferenceOnlyRows has
         // detached it, so IndexOf is -1 and "the line after" resolved to the first line of the
@@ -28933,7 +28952,7 @@ public partial class MainViewModel :
                 selectedItem,
                 next
             };
-            _mergeManager.MergeSelectedLines(Subtitles, list, breakMode: MergeManager.BreakMode.KeepBreaks, keepEndTime: MergeManager.ShouldKeepEndTime(SelectedSubtitleFormat));
+            _mergeManager.MergeSelectedLines(Subtitles, list, breakMode: breakMode, keepEndTime: MergeManager.ShouldKeepEndTime(SelectedSubtitleFormat));
             Renumber();
             SelectAndScrollToRow(selectedItem);
             _updateAudioVisualizer = true;

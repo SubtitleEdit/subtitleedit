@@ -174,9 +174,28 @@ public class SubtitleGridDeleteInsertFocusScrollTests : IDisposable
         // Used to throw ArgumentOutOfRangeException (IndexOf -1 on the detached row).
         vm.MergeWithLineAfterCommand.Execute(null);
         vm.MergeWithLineAfterKeepBreaksCommand.Execute(null);
+        vm.MergeWithLineAfterAndUnbreakCommand.Execute(null);
         await SettleAsync(window);
 
         Assert.Equal(textsBefore, vm.Subtitles.Select(p => p.Text).ToList());
+    }
+
+    [AvaloniaFact]
+    public async Task MergeWithLineAfterAndUnbreak_JoinsBothLinesIntoOneLine()
+    {
+        var (window, vm) = CreateMainViewModel();
+        AddLine(vm, "One" + Environment.NewLine + "two", string.Empty, 0, 1000);
+        AddLine(vm, "three" + Environment.NewLine + "four", string.Empty, 2000, 3000);
+        AddLine(vm, "Five", string.Empty, 4000, 5000);
+        var first = vm.Subtitles[0];
+        vm.SelectedSubtitle = first;
+        Settle(window);
+
+        vm.MergeWithLineAfterAndUnbreakCommand.Execute(null);
+        await SettleAsync(window);
+
+        Assert.Equal(new[] { "One two three four", "Five" }, vm.Subtitles.Select(p => p.Text));
+        Assert.Same(first, vm.SelectedSubtitle);
     }
 
     [AvaloniaFact]
