@@ -1104,6 +1104,7 @@ public class Se
 
 
         Configuration.Settings.Tools.AutoTranslateDelaySeconds = (int)Math.Round(Settings.AutoTranslate.RequestDelaySeconds, MidpointRounding.AwayFromZero);
+        Configuration.Settings.Tools.AutoTranslateKeepMusicLines = Settings.AutoTranslate.KeepMusicLinesUntranslated;
         if (Settings.AutoTranslate.RequestMaxBytes > 0)
         {
             Configuration.Settings.Tools.AutoTranslateMaxBytes = (int)Math.Round(Settings.AutoTranslate.RequestMaxBytes, MidpointRounding.AwayFromZero);

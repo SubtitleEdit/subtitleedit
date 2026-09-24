@@ -27,7 +27,7 @@ public class TranslateSettingsWindow : Window
         if (!vm.PromptIsVisible)
         {
             Width = MinWidth = 400;
-            Height = MinHeight = 220;
+            Height = MinHeight = 250;
             CanResize = false;
         }
 
@@ -57,6 +57,8 @@ public class TranslateSettingsWindow : Window
         var maxBytesNumericUpDown = UiUtil.MakeNumericUpDownInt(0, 100_000, 1000, 150, vm, nameof(vm.MaxBytesRequest));
         maxBytesNumericUpDown.Increment = 100;
         maxBytesNumericUpDown.FormatString = "#,###,##0";
+
+        var checkBoxKeepMusicLines = UiUtil.MakeCheckBox(Se.Language.Translate.KeepMusicLinesUntranslated, vm, nameof(vm.KeepMusicLinesUntranslated));
 
         var labelPrompt = UiUtil.MakeTextBlock(Se.Language.Translate.PromptText);
         var buttonResetPrompt = UiUtil.MakeButton(vm.ResetPromptCommand, IconNames.Restore, Se.Language.Translate.ResetPromptToDefault);
@@ -88,7 +90,7 @@ public class TranslateSettingsWindow : Window
 
         var grid = new Grid
         {
-            RowDefinitions = new RowDefinitions("Auto,Auto,Auto,Auto,*,Auto"),
+            RowDefinitions = new RowDefinitions("Auto,Auto,Auto,Auto,Auto,*,Auto"),
             ColumnDefinitions = new ColumnDefinitions("Auto,*"),
             Margin = new Thickness(UiUtil.WindowMarginWidth),
             ColumnSpacing = 10,
@@ -118,6 +120,12 @@ public class TranslateSettingsWindow : Window
         grid.Children.Add(maxBytesNumericUpDown);
         Grid.SetRow(maxBytesNumericUpDown, row);
         Grid.SetColumn(maxBytesNumericUpDown, 1);
+        row++;
+
+        grid.Children.Add(checkBoxKeepMusicLines);
+        Grid.SetRow(checkBoxKeepMusicLines, row);
+        Grid.SetColumn(checkBoxKeepMusicLines, 0);
+        Grid.SetColumnSpan(checkBoxKeepMusicLines, 2);
         row++;
 
         grid.Children.Add(panelPrompt);
