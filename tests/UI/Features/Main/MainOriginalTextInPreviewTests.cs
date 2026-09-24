@@ -74,6 +74,37 @@ public class MainOriginalTextInPreviewTests
         }
     }
 
+    /// <summary>
+    /// The reloaders skip their defensive deep copy for the preview subtitle, so it must be one
+    /// only the preview holds - never the live working subtitle, whose paragraphs other UI code
+    /// clears and refills, and which the hidden-layer filter must not remove lines from.
+    /// </summary>
+    [AvaloniaFact]
+    public void PreviewSubtitle_IsNotTheWorkingSubtitle()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            AddLine(vm, "Line one", string.Empty, 0, 2000);
+            AddLine(vm, "Line two", string.Empty, 2000, 4000);
+
+            var preview = GetVideoPreviewSubtitle(vm);
+            var working = vm.GetUpdateSubtitle();
+
+            Assert.NotSame(working, preview);
+            Assert.NotSame(working.Paragraphs, preview.Paragraphs);
+            Assert.Equal(working.Paragraphs.Select(p => p.Text), preview.Paragraphs.Select(p => p.Text));
+            Assert.All(preview.Paragraphs, p => Assert.DoesNotContain(p, working.Paragraphs));
+
+            preview.Paragraphs.RemoveAt(0);
+            Assert.Equal(2, vm.GetUpdateSubtitle().Paragraphs.Count);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
     [AvaloniaFact]
     public void Toggle_WithoutAnOriginal_StaysOnTheTranslation()
     {

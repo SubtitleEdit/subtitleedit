@@ -4208,14 +4208,14 @@ public partial class MainViewModel :
                 _mpvReloader.Reset();
                 // Through RunPreviewRefresh so a rejected push (player just recreated, mpv not
                 // playing yet) arms the dirty-flag retry instead of being lost (#13407).
-                _ = RunPreviewRefresh(() => _mpvReloader.RefreshMpv(mpv, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat));
+                _ = RunPreviewRefresh(() => _mpvReloader.RefreshMpv(mpv, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat, subtitleIsOwned: true));
             }
             else if (vp.VideoPlayer is LibVlcDynamicPlayer vlc)
             {
                 _vlcReloader.Reset();
                 _ = RunPreviewRefresh(async () =>
                 {
-                    await _vlcReloader.RefreshVlc(vlc, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
+                    await _vlcReloader.RefreshVlc(vlc, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat, subtitleIsOwned: true);
                     return true;
                 });
             }
@@ -13854,12 +13854,12 @@ public partial class MainViewModel :
             if (vp.VideoPlayer is LibMpvDynamicPlayer mpv)
             {
                 _mpvReloader.Reset();
-                _mpvReloader.RefreshMpv(mpv, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
+                _mpvReloader.RefreshMpv(mpv, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat, subtitleIsOwned: true);
             }
             else if (vp.VideoPlayer is LibVlcDynamicPlayer vlc)
             {
                 _vlcReloader.Reset();
-                _vlcReloader.RefreshVlc(vlc, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
+                _vlcReloader.RefreshVlc(vlc, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat, subtitleIsOwned: true);
             }
             else if (vp.VideoPlayer is FfmpegPlayer ffmpeg)
             {
@@ -17627,12 +17627,12 @@ public partial class MainViewModel :
         if (vp.VideoPlayer is LibMpvDynamicPlayer mpv)
         {
             _mpvReloader.Reset();
-            _ = RunPreviewRefresh(() => _mpvReloader.RefreshMpv(mpv, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat));
+            _ = RunPreviewRefresh(() => _mpvReloader.RefreshMpv(mpv, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat, subtitleIsOwned: true));
         }
         else if (vp.VideoPlayer is LibVlcDynamicPlayer vlc)
         {
             _vlcReloader.Reset();
-            _vlcReloader.RefreshVlc(vlc, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
+            _vlcReloader.RefreshVlc(vlc, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat, subtitleIsOwned: true);
         }
         else if (vp.VideoPlayer is FfmpegPlayer ffmpeg)
         {
@@ -26080,14 +26080,14 @@ public partial class MainViewModel :
     /// <see cref="GetUpdateSubtitleOriginal"/>: that one owns <see cref="_subtitleOriginal"/>, the
     /// instance that gets saved, and re-stamps every row's reference id - far too much for
     /// something a timer calls whenever the preview is dirty.
+    /// The working variant is a throw-away too, not the live <see cref="GetUpdateSubtitle"/>
+    /// instance: the preview owns it, so the reloaders are told to skip their defensive deep
+    /// copy (one Paragraph + two TimeCodes per line on every refresh), and the hidden-layer
+    /// filter in <see cref="TryRefreshVideoPreview"/> no longer removes lines from the working
+    /// subtitle.
     /// </summary>
     private Subtitle GetVideoPreviewSubtitle()
     {
-        if (!ShowOriginalTextInPreview)
-        {
-            return GetUpdateSubtitle();
-        }
-
         var subtitle = new Subtitle
         {
             Header = _subtitle.Header,
@@ -26095,6 +26095,21 @@ public partial class MainViewModel :
             OriginalFormat = _subtitle.OriginalFormat,
             FileName = _subtitle.FileName,
         };
+        subtitle.Paragraphs.Capacity = Subtitles.Count;
+
+        if (!ShowOriginalTextInPreview)
+        {
+            foreach (var line in Subtitles)
+            {
+                // Same gate as GetUpdateSubtitle (#13449).
+                if (!line.IsReferenceOnly)
+                {
+                    subtitle.Paragraphs.Add(line.ToParagraph(SelectedSubtitleFormat));
+                }
+            }
+
+            return subtitle;
+        }
 
         foreach (var line in Subtitles)
         {
@@ -32732,7 +32747,7 @@ public partial class MainViewModel :
                 subtitle.Paragraphs.RemoveAll(p => !_visibleLayers!.Contains(p.Layer));
             }
 
-            _ = RunPreviewRefresh(() => _mpvReloader.RefreshMpv(mpv, subtitle, _subtitleSecondary, SelectedSubtitleFormat));
+            _ = RunPreviewRefresh(() => _mpvReloader.RefreshMpv(mpv, subtitle, _subtitleSecondary, SelectedSubtitleFormat, subtitleIsOwned: true));
         }
         else if (vp.VideoPlayer is LibVlcDynamicPlayer vlc)
         {
@@ -32745,7 +32760,7 @@ public partial class MainViewModel :
 
             _ = RunPreviewRefresh(async () =>
             {
-                await _vlcReloader.RefreshVlc(vlc, subtitle, _subtitleSecondary, SelectedSubtitleFormat);
+                await _vlcReloader.RefreshVlc(vlc, subtitle, _subtitleSecondary, SelectedSubtitleFormat, subtitleIsOwned: true);
                 return true;
             });
         }
