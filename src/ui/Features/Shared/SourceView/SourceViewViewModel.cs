@@ -14,6 +14,7 @@ using Nikse.SubtitleEdit.Features.Shared.TextBoxUtils;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -274,19 +275,13 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        var subtitle = new Subtitle();
-
         // A few formats pick the frame rate up from the source header. Validation runs on every
         // idle tick, so it must not leave that behind in the global settings.
         var oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
+        Subtitle subtitle;
         try
         {
-            _subtitleFormat.LoadSubtitle(subtitle, source.SplitToLines(), string.Empty);
-        }
-        catch
-        {
-            // A format that throws on malformed input is just an unparsable source here.
-            subtitle.Paragraphs.Clear();
+            subtitle = LoadWithCurrentFormat(source.SplitToLines());
         }
         finally
         {
@@ -649,8 +644,7 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         }
 
         var lines = sourceText.SplitToLines();
-        var subtitle = new Subtitle();
-        _subtitleFormat.LoadSubtitle(subtitle, lines, string.Empty);
+        var subtitle = LoadWithCurrentFormat(lines);
         if (subtitle.Paragraphs.Count > 0)
         {
             ApplyParsedSubtitle(subtitle);
@@ -671,6 +665,26 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         }
 
         await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.General.NoSubtitlesFound, MessageBoxButtons.OK, MessageBoxIcon.Error);
+    }
+
+    /// <summary>
+    /// Parses with the dialog's format. A format that throws on malformed input counts as "no
+    /// subtitles" - validation already reported such a source as unparsable, and Ok must then fall
+    /// through to the other formats and the error message instead of crashing.
+    /// </summary>
+    private Subtitle LoadWithCurrentFormat(List<string> lines)
+    {
+        var subtitle = new Subtitle();
+        try
+        {
+            _subtitleFormat.LoadSubtitle(subtitle, lines, string.Empty);
+        }
+        catch
+        {
+            subtitle.Paragraphs.Clear();
+        }
+
+        return subtitle;
     }
 
     /// <summary>

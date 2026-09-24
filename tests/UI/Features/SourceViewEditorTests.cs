@@ -127,6 +127,49 @@ public class SourceViewEditorTests : IDisposable
         window.Close();
     }
 
+    /// <summary>SubRip that throws on a marker line, like a format choking on malformed input.</summary>
+    private sealed class ThrowingSubRip : SubRip
+    {
+        public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
+        {
+            if (lines.Exists(line => line.Contains("BOOM", StringComparison.Ordinal)))
+            {
+                throw new InvalidOperationException("malformed");
+            }
+
+            base.LoadSubtitle(subtitle, lines, fileName);
+        }
+    }
+
+    [AvaloniaFact]
+    public async Task OkSurvivesAFormatThatThrowsOnTheEditedSource()
+    {
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph("First line", 1000, 3000));
+        var format = new ThrowingSubRip();
+        var vm = new SourceViewViewModel(new NoWindowService());
+        vm.Initialize("Source view", subtitle.ToText(format), format, subtitle, 0);
+
+        var window = new Window { Content = new Border { Child = vm.SourceViewTextBox.ContentControl } };
+        _windows.Add(window);
+        vm.Window = window;
+        window.Show();
+        window.UpdateLayout();
+
+        // Validation already treated the throw as "does not parse"; Ok used to let it escape.
+        ViewOf(vm).ReplaceAllText("1\n00:00:01,000 --> 00:00:03,000\nBOOM\n");
+        vm.Validate();
+        Assert.True(vm.IsValidationError);
+
+        await vm.OkCommand.ExecuteAsync(null);
+
+        // The other formats still get their turn - plain SubRip reads it fine.
+        Assert.True(vm.OkPressed);
+        Assert.Equal("BOOM", vm.Subtitle.Paragraphs[0].Text);
+
+        window.Close();
+    }
+
     // ----------------------------------------------------------------------------------------
     // Unsaved changes
     // ----------------------------------------------------------------------------------------
