@@ -98,6 +98,8 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         DuplicateLineCommand = new RelayCommand(() => _editor?.DuplicateSelectedLines());
         DeleteLineCommand = new RelayCommand(() => _editor?.DeleteSelectedLines());
 
+        ConfirmUseOtherFormat = ConfirmUseOtherFormatWithMessageBox;
+
         _validationTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(400) };
         _validationTimer.Tick += ValidationTimerTick;
     }
@@ -655,10 +657,35 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
 
         // Parse returns NULL when no format matches - typing prose into the source view and
         // pressing OK threw a NullReferenceException instead of reaching the message below.
-        subtitle = Subtitle.Parse(lines, ".srt");
-        if (subtitle != null && subtitle.Paragraphs.Count > 0)
+        Subtitle? other = null;
+        try
         {
-            ApplyParsedSubtitle(subtitle);
+            other = Subtitle.Parse(lines, ".srt");
+        }
+        catch
+        {
+            // A format that throws on this input is just one that does not match.
+        }
+
+        if (other != null && other.Paragraphs.Count > 0)
+        {
+            var otherFormat = other.OriginalFormat;
+            if (otherFormat != null && otherFormat.Name != _subtitleFormat.Name)
+            {
+                // The lines are read as another format but will be saved as the current one, so
+                // say so instead of converting silently.
+                if (!await ConfirmUseOtherFormat(otherFormat))
+                {
+                    return;
+                }
+
+                // A header or footer of the other format (an ASSA [Script Info] pasted into an
+                // .srt) means nothing to the current format.
+                other.Header = string.Empty;
+                other.Footer = string.Empty;
+            }
+
+            ApplyParsedSubtitle(other);
             OkPressed = true;
             Window?.Close();
             return;
@@ -742,6 +769,29 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
         }
 
         return text[start..(end + 1)].Trim();
+    }
+
+    /// <summary>
+    /// Asks whether to accept a source that only parses as another format. A seam so tests can
+    /// answer without a message box.
+    /// </summary>
+    internal Func<SubtitleFormat, Task<bool>> ConfirmUseOtherFormat { get; set; }
+
+    private async Task<bool> ConfirmUseOtherFormatWithMessageBox(SubtitleFormat otherFormat)
+    {
+        if (Window == null)
+        {
+            return false;
+        }
+
+        var result = await MessageBox.Show(
+            Window,
+            Se.Language.General.Warning,
+            string.Format(Se.Language.SourceView.ReadAsXUseAsY, otherFormat.Name, _subtitleFormat.Name),
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+
+        return result == MessageBoxResult.Yes;
     }
 
     [RelayCommand]

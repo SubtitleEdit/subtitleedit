@@ -7,6 +7,7 @@ public class LanguageSourceView
     public string XLinesYSubtitles { get; set; }
     public string XLinesYSubtitlesZErrors { get; set; }
     public string CouldNotParseAsX { get; set; }
+    public string ReadAsXUseAsY { get; set; }
     public string SelectedXCharactersYLines { get; set; }
     public string ReplacedXOccurrences { get; set; }
     public string InvalidRegularExpression { get; set; }
@@ -24,6 +25,7 @@ public class LanguageSourceView
         XLinesYSubtitles = "{0} lines, {1} subtitles";
         XLinesYSubtitlesZErrors = "{0} lines, {1} subtitles, {2} error(s)";
         CouldNotParseAsX = "Could not parse as {0}";
+        ReadAsXUseAsY = "The source could not be read as {1}, but it could be read as {0}." + System.Environment.NewLine + "Use the lines and keep saving as {1}?";
         SelectedXCharactersYLines = "Selected: {0} characters in {1} line(s)";
         ReplacedXOccurrences = "Replaced {0} occurrence(s)";
         InvalidRegularExpression = "Invalid regular expression";
