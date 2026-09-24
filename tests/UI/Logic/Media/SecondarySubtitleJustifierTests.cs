@@ -142,6 +142,18 @@ public class SecondarySubtitleJustifierTests
     }
 
     [Fact]
+    public void Apply_StepsDownByTheFontSize_LikeLibass()
+    {
+        // libass makes the line height equal the style's font size; Skia's ascent + descent is
+        // larger, which spread justified lines further apart than unjustified ones.
+        var paragraphs = new[] { new Paragraph("first\nsecond", 0, 1000) };
+
+        var result = SecondarySubtitleJustifier.Apply(paragraphs, MakeStyle("7"), "left", 1920, 1080);
+
+        Assert.Equal(20m, ExtractPosY(result[1]) - ExtractPosY(result[0]), 2);
+    }
+
+    [Fact]
     public void Apply_MultipleParagraphs_EachSplitIndependently()
     {
         var paragraphs = new[]

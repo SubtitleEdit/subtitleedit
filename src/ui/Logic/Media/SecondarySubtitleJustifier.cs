@@ -1,7 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using SkiaSharp;
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -38,13 +37,16 @@ public static class SecondarySubtitleJustifier
                 continue;
             }
 
+            // libass sizes a font so its line height (ascent + descent) equals the style's font
+            // size, while Skia's size is the em size - so scale Skia's widths down to libass's,
+            // and step one font size per line, or the block drifts and the lines spread out.
             var lineWidths = new decimal[lines.Count];
-            var lineHeight = 0m;
+            var lineHeight = (decimal)style.FontSize;
             for (var i = 0; i < lines.Count; i++)
             {
                 var size = Nikse.SubtitleEdit.Logic.TextMeasurer.MeasureString(Utilities.RemoveSsaTags(lines[i]), style.FontName, (float)style.FontSize, weight);
-                lineWidths[i] = (decimal)size.Width + 2 * style.OutlineWidth;
-                lineHeight = Math.Max(lineHeight, (decimal)size.Height);
+                var scale = size.Height > 0 ? lineHeight / (decimal)size.Height : 1m;
+                lineWidths[i] = (decimal)size.Width * scale;
             }
 
             var blockWidth = lineWidths.Max();
