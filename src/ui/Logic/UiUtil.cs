@@ -2568,6 +2568,7 @@ public static class UiUtil
             Maximum = max,
             Increment = 0.01m,
             FormatString = "F2", // Force two decimals
+            TextConverter = new NumericUpDownDecimalTextConverter("F2"),
             Foreground = GetTextColor(),
         };
 
@@ -2608,7 +2609,8 @@ public static class UiUtil
             Minimum = min,
             Maximum = max,
             Increment = 0.01m,
-            FormatString = "F3" // Force three decimals
+            FormatString = "F3", // Force three decimals
+            TextConverter = new NumericUpDownDecimalTextConverter("F3"),
         };
 
         if (propertyValuePath != null)
@@ -2648,6 +2650,7 @@ public static class UiUtil
             Maximum = max,
             Increment = 0.1m,
             FormatString = "F1",
+            TextConverter = new NumericUpDownDecimalTextConverter("F1"),
         };
 
         if (propertyValuePath != null)
