@@ -2999,8 +2999,8 @@ public partial class MainViewModel :
     {
         var selectedIndex = SelectedSubtitleIndex ?? 0;
 
-        var fileName =
-            await _fileHelper.PickOpenSubtitleFile(Window!, Se.Language.General.OpenOriginalSubtitleFileTitle);
+        var fileName = await _fileHelper.PickOpenSubtitleFile(Window!, Se.Language.General.OpenOriginalSubtitleFileTitle,
+            lastOpenedFilePath: GetOpenFileStartPath());
         if (string.IsNullOrEmpty(fileName))
         {
             _shortcutManager.ClearKeys();
@@ -5604,7 +5604,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var fileName = await _fileHelper.PickOpenSubtitleFile(Window, Se.Language.General.OpenSubtitleFileTitle, false);
+        var fileName = await _fileHelper.PickOpenSubtitleFile(Window, Se.Language.General.OpenSubtitleFileTitle, false, GetOpenFileStartPath());
         if (string.IsNullOrEmpty(fileName))
         {
             _shortcutManager.ClearKeys();
@@ -5670,7 +5670,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var fileName = await _fileHelper.PickOpenSubtitleFile(Window, Se.Language.General.OpenSubtitleFileTitle, false);
+        var fileName = await _fileHelper.PickOpenSubtitleFile(Window, Se.Language.General.OpenSubtitleFileTitle, false, GetOpenFileStartPath());
         if (string.IsNullOrEmpty(fileName))
         {
             _shortcutManager.ClearKeys();
@@ -5770,7 +5770,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var fileName = await _fileHelper.PickOpenSubtitleFile(Window, Se.Language.General.OpenSubtitleFileTitle, false);
+        var fileName = await _fileHelper.PickOpenSubtitleFile(Window, Se.Language.General.OpenSubtitleFileTitle, false, GetOpenFileStartPath());
         if (string.IsNullOrEmpty(fileName))
         {
             _shortcutManager.ClearKeys();
@@ -5842,7 +5842,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var fileName = await _fileHelper.PickOpenSubtitleFile(Window, Se.Language.General.OpenSubtitleFileTitle, false);
+        var fileName = await _fileHelper.PickOpenSubtitleFile(Window, Se.Language.General.OpenSubtitleFileTitle, false, GetOpenFileStartPath());
         if (string.IsNullOrEmpty(fileName))
         {
             _shortcutManager.ClearKeys();
@@ -5899,7 +5899,7 @@ public partial class MainViewModel :
         }
 
         var fileName =
-            await _fileHelper.PickOpenSubtitleFile(Window!, Se.Language.General.OpenSubtitleFileTitle, false);
+            await _fileHelper.PickOpenSubtitleFile(Window!, Se.Language.General.OpenSubtitleFileTitle, false, GetOpenFileStartPath());
         if (string.IsNullOrEmpty(fileName))
         {
             return;
@@ -7180,7 +7180,7 @@ public partial class MainViewModel :
         }
 
         var fileName =
-            await _fileHelper.PickOpenSubtitleFile(Window!, Se.Language.General.OpenSubtitleFileTitle, false);
+            await _fileHelper.PickOpenSubtitleFile(Window!, Se.Language.General.OpenSubtitleFileTitle, false, GetOpenFileStartPath());
         if (string.IsNullOrEmpty(fileName))
         {
             return;
@@ -26381,6 +26381,16 @@ public partial class MainViewModel :
         var result = await SaveSubtitle();
         AddToRecentFiles(true);
         return result;
+    }
+
+    /// <summary>
+    /// File the open pickers for the loaded subtitle's companions (original, import, insert) start
+    /// next to: the current subtitle, else the video. Without it the OS picker opens in whatever
+    /// folder it was last used in, which may be another drive (#15272).
+    /// </summary>
+    private string? GetOpenFileStartPath()
+    {
+        return !string.IsNullOrEmpty(_subtitleFileName) ? _subtitleFileName : _videoFileName;
     }
 
     /// <summary>
