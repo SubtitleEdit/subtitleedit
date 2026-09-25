@@ -103,6 +103,7 @@ using Nikse.SubtitleEdit.Features.Shared.PickSubtitleFormat;
 using Nikse.SubtitleEdit.Features.Shared.PickTsTrack;
 using Nikse.SubtitleEdit.Features.Shared.PickVobSubLanguage;
 using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
+using Nikse.SubtitleEdit.Features.Shared.PromptFilesSaved;
 using Nikse.SubtitleEdit.Features.Shared.OpenOriginalMismatch;
 using Nikse.SubtitleEdit.Features.Shared.PromptCheckBox;
 using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
@@ -569,6 +570,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<ProfilesExportViewModel>();
         collection.AddTransient<ProfilesViewModel>();
         collection.AddTransient<PromptFileSavedViewModel>();
+        collection.AddTransient<PromptFilesSavedViewModel>();
         collection.AddTransient<PromptCheckBoxViewModel>();
         collection.AddTransient<OpenOriginalMismatchViewModel>();
         collection.AddTransient<PromptTextBoxViewModel>();

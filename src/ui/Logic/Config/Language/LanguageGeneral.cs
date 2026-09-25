@@ -731,6 +731,11 @@ public class LanguageGeneral
     public string VideoFile { get; set; }
     public string VideoFileGenerated { get; set; }
     public string VideoFileGeneratedX { get; set; }
+    public string VideoFilesGenerated { get; set; }
+    public string XVideosGenerated { get; set; }
+    public string XOfYVideosGenerated { get; set; }
+    public string SavedInX { get; set; }
+    public string SavedInXFolders { get; set; }
     public string VideoFiles { get; set; }
     public string VideoAndAudioFiles { get; set; }
     public string VideoOffset { get; set; }
@@ -1549,6 +1554,11 @@ public class LanguageGeneral
         VideoFile = "Video file";
         VideoFileGenerated = "Video file generated";
         VideoFileGeneratedX = "Video file generated: \"{0}\"";
+        VideoFilesGenerated = "Video files generated";
+        XVideosGenerated = "{0} videos generated";
+        XOfYVideosGenerated = "{0} of {1} videos generated";
+        SavedInX = "Saved in {0}";
+        SavedInXFolders = "Saved in {0} folders";
         VideoFiles = "Video files";
         VideoAndAudioFiles = "Video and audio files";
         VideoOffset = "Video offset";
