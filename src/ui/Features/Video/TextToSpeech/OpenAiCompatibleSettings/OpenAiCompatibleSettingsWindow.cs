@@ -34,6 +34,8 @@ public class OpenAiCompatibleSettingsWindow : Window
         textBoxInstructions.TextWrapping = TextWrapping.Wrap;
         textBoxInstructions.Height = 70;
         var numericSpeed = UiUtil.MakeNumericUpDownTwoDecimals(0.25m, 4.0m, 120, vm, nameof(vm.Speed), defaultValue: 1.0m);
+        var comboBoxResponseFormat = UiUtil.MakeComboBox(vm.ResponseFormats, vm, nameof(vm.SelectedResponseFormat));
+        comboBoxResponseFormat.MinWidth = 120;
 
         var buttonWeb = UiUtil.MakeButton(Se.Language.General.MoreInfo, vm.ShowMoreOnWebCommand).WithIconLeft(IconNames.Web);
         var buttonReset = UiUtil.MakeButton(Se.Language.General.Reset, vm.ResetCommand).WithIconLeft(IconNames.Repeat);
@@ -60,6 +62,7 @@ public class OpenAiCompatibleSettingsWindow : Window
         AddRow(grid, ref row, l.CustomVoices, textBoxVoices, l.CustomVoicesHint);
         AddRow(grid, ref row, l.Instructions, textBoxInstructions, l.InstructionsHint);
         AddRow(grid, ref row, Se.Language.General.Speed, numericSpeed, l.OpenAiSpeedHint);
+        AddRow(grid, ref row, l.OutputFormat, comboBoxResponseFormat, l.OutputFormatHint);
 
         grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
         grid.Add(panelButtons, row, 0, 1, 3);

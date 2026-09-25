@@ -77,7 +77,8 @@ public interface ITtsDownloadService
 
     Task DownloadOpenRouterTtsModelList(MemoryStream stream, CancellationToken cancellationToken);
 
-    Task<(bool Ok, string Error)> DownloadOpenAiCompatibleSpeak(
+    // ContentType is the full response header (e.g. "audio/pcm;rate=24000") - raw pcm carries no header of its own.
+    Task<(bool Ok, string Error, string ContentType)> DownloadOpenAiCompatibleSpeak(
         string url,
         string apiKey,
         string jsonBody,
@@ -856,7 +857,7 @@ public class TtsDownloadService : ITtsDownloadService
         await result.Content.CopyToAsync(ms, cancellationToken);
     }
 
-    public async Task<(bool Ok, string Error)> DownloadOpenAiCompatibleSpeak(
+    public async Task<(bool Ok, string Error, string ContentType)> DownloadOpenAiCompatibleSpeak(
         string url,
         string apiKey,
         string jsonBody,
@@ -879,7 +880,7 @@ public class TtsDownloadService : ITtsDownloadService
         catch (HttpRequestException ex)
         {
             SeLogger.Error(ex, $"OpenAI-compatible TTS failed calling API at {url}");
-            return (false, ex.Message);
+            return (false, ex.Message, string.Empty);
         }
 
         var responseBytes = await result.Content.ReadAsByteArrayAsync(cancellationToken);
@@ -896,15 +897,15 @@ public class TtsDownloadService : ITtsDownloadService
                 message += ": " + (error.Length > 500 ? error[..500] : error);
             }
 
-            return (false, message);
+            return (false, message, string.Empty);
         }
 
         if (responseBytes.Length == 0)
         {
-            return (false, "Empty audio response");
+            return (false, "Empty audio response", string.Empty);
         }
 
         await stream.WriteAsync(responseBytes, cancellationToken);
-        return (true, string.Empty);
+        return (true, string.Empty, result.Content.Headers.ContentType?.ToString() ?? string.Empty);
     }
 }
