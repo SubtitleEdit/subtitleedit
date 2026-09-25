@@ -78,6 +78,7 @@ public partial class VideoOcrViewModel : ObservableObject
     [ObservableProperty] private int _maxGapMs;
     [ObservableProperty] private int _minDurationMs;
     [ObservableProperty] private bool _addAssaPositionTag;
+    [ObservableProperty] private bool _isRandomized; 
     [ObservableProperty] private ObservableCollection<VideoOcrLineItem> _lines;
     [ObservableProperty] private bool _isRunning;
     [ObservableProperty] private bool _isOkEnabled;
@@ -322,6 +323,40 @@ public partial class VideoOcrViewModel : ObservableObject
         // list changed the saved engine and model even when the window was cancelled. SaveSettings
         // persists the final choice on OK.
         _lastCrispEmbedModelName = value.Model.Name;
+    }
+
+    partial void OnIsRandomizedChanged(bool value)
+    {
+        if (Lines.Count == 0)
+        {
+            return;
+        }
+
+        if (value)
+        {
+            // Shuffle the UI list
+            var rng = new Random();
+            var shuffled = Lines.OrderBy(x => rng.Next()).ToList();
+
+            Lines.Clear();
+            foreach (var item in shuffled)
+            {
+                Lines.Add(item);
+            }
+        }
+        else
+        {
+            // Restore chronological order based on the item's native start time
+            var sorted = Lines.OrderBy(x => x.StartTime.TotalMilliseconds).ToList();
+
+            Lines.Clear();
+            var number = 1;
+            foreach (var item in sorted)
+            {
+                item.Number = number++; // Ensures clean numbering if user deleted lines while shuffled
+                Lines.Add(item);
+            }
+        }
     }
 
     /// <summary>
@@ -795,6 +830,7 @@ public partial class VideoOcrViewModel : ObservableObject
         IsRunning = true;
         IsOkEnabled = false;
         ProgressValue = 0;
+        IsRandomized = false;
         Lines.Clear();
 
         var framesFolder = Path.Combine(Path.GetTempPath(), "se_video_ocr_" + Guid.NewGuid());
@@ -1629,10 +1665,13 @@ public partial class VideoOcrViewModel : ObservableObject
             Lines.Remove(item);
         }
 
-        var number = 1;
-        foreach (var line in Lines)
+        if (!IsRandomized)
         {
-            line.Number = number++;
+            var number = 1;
+            foreach (var line in Lines)
+            {
+                line.Number = number++;
+            }
         }
 
         IsOkEnabled = Lines.Count > 0;

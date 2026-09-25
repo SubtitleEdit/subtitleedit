@@ -353,6 +353,9 @@ public class VideoOcrWindow : Window
             Se.Language.Video.VideoOcr.MinDurationHint));
         panel.Children.Add(UiUtil.MakeCheckBox(Se.Language.Video.VideoOcr.AddAssaPositionTag, vm, nameof(vm.AddAssaPositionTag)));
         panel.Children.Add(UiUtil.MakeCheckBox(Se.Language.Video.VideoOcr.FixOcrErrors, vm, nameof(vm.DoFixOcrErrors)));
+        var cbRandomize = UiUtil.MakeCheckBox("Randomize order (anti-spoiler)", vm, nameof(vm.IsRandomized))
+                                .WithBindEnabled(nameof(vm.IsOkEnabled));
+        panel.Children.Add(cbRandomize);
         var buttonDownloadDictionary = UiUtil.MakeButton("...", vm.DownloadDictionaryCommand)
             .WithBindEnabled(nameof(vm.DoFixOcrErrors));
         if (Se.Settings.Appearance.ShowHints)
