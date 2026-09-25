@@ -147,6 +147,10 @@ public class RemuxVideoWindow : Window
         gridOutput.Add(textBoxOutput, 0, 2);
         gridOutput.Add(buttonBrowseOutput, 0, 3);
 
+        var checkBoxFastStart = UiUtil.MakeCheckBox(l.RemuxVideoFastStart, vm, nameof(vm.FastStart));
+        checkBoxFastStart.Bind(CheckBox.IsEnabledProperty, notRemuxing);
+        checkBoxFastStart.Bind(CheckBox.IsVisibleProperty, new Binding(nameof(vm.IsFastStartVisible)));
+
         var panelOutput = new StackPanel
         {
             Spacing = 4,
@@ -154,6 +158,7 @@ public class RemuxVideoWindow : Window
             {
                 MakeSectionHeader(IconNames.ContentSave, l.RemuxVideoOutputFile, vm, null),
                 gridOutput,
+                checkBoxFastStart,
             },
         };
 

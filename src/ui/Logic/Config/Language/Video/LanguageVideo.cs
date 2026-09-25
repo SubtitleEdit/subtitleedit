@@ -54,6 +54,7 @@ public class LanguageVideo
     public string RemuxVideoMixAudio { get; set; }
     public string RemuxVideoVolumePercent { get; set; }
     public string RemuxVideoVolumeX { get; set; }
+    public string RemuxVideoFastStart { get; set; }
     public string EmbedSubtitlesDotDotDot { get; set; }
     public string GenerateTimeCodes { get; set; }
     public string CheckeredImage { get; set; }
@@ -207,6 +208,7 @@ public class LanguageVideo
         RemuxVideoMixAudio = "Mix audio into one track";
         RemuxVideoVolumePercent = "Volume %:";
         RemuxVideoVolumeX = "Volume {0}%";
+        RemuxVideoFastStart = "Optimize for web streaming (move index to front - slower)";
         EmbedSubtitlesDotDotDot = "Add/remove embedded subtitles...";
         GenerateTimeCodes = "Generate time codes";
         CheckeredImage = "Checkered image";

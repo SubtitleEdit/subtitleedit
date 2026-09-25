@@ -241,6 +241,28 @@ public class RemuxVideoViewModelTests
         Assert.Contains("-c:a copy", args);
     }
 
+    [AvaloniaTheory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void BuildFfmpegArguments_FastStart_FollowsCheckBox(bool fastStart)
+    {
+        var (vm, _, _) = BuildMixViewModel(true);
+        var saved = Nikse.SubtitleEdit.Logic.Config.Se.Settings.Video.RemuxFastStart;
+        try
+        {
+            vm.FastStart = fastStart;
+
+            var args = vm.BuildFfmpegArguments([.. vm.AudioFiles], []);
+
+            Assert.Equal(fastStart, args.Contains("-movflags +faststart"));
+            Assert.Equal(fastStart, Nikse.SubtitleEdit.Logic.Config.Se.Settings.Video.RemuxFastStart);
+        }
+        finally
+        {
+            Nikse.SubtitleEdit.Logic.Config.Se.Settings.Video.RemuxFastStart = saved;
+        }
+    }
+
     [AvaloniaFact]
     public void MixAudio_TwoFilesStayInMp4_UncheckingSwitchesToMkv()
     {

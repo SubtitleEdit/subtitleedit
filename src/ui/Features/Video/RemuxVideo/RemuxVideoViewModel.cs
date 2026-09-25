@@ -71,6 +71,8 @@ public partial class RemuxVideoViewModel : ObservableObject
     [ObservableProperty] private bool _mixAudio;
     [ObservableProperty] private bool _isMixAudioVisible;
     [ObservableProperty] private bool _isVolumeEnabled;
+    [ObservableProperty] private bool _fastStart;
+    [ObservableProperty] private bool _isFastStartVisible = true;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -90,6 +92,7 @@ public partial class RemuxVideoViewModel : ObservableObject
         _windowService = windowService;
         OutputFormats = new ObservableCollection<string> { ".mp4", ".mkv" };
         SelectedOutputFormat = OutputFormats[0];
+        FastStart = Se.Settings.Video.RemuxFastStart;
 
         AudioFiles.CollectionChanged += AudioFilesOnCollectionChanged;
         SubtitleFiles.CollectionChanged += SubtitleFilesOnCollectionChanged;
@@ -397,8 +400,15 @@ public partial class RemuxVideoViewModel : ObservableObject
         UpdateCanRemux();
     }
 
+    partial void OnFastStartChanged(bool value)
+    {
+        IsCompleted = false;
+        Se.Settings.Video.RemuxFastStart = value;
+    }
+
     partial void OnSelectedOutputFormatChanged(string value)
     {
+        IsFastStartVisible = string.Equals(value, ".mp4", StringComparison.OrdinalIgnoreCase);
         if (string.Equals(value, ".mp4", StringComparison.OrdinalIgnoreCase) && RequiresMkv(out var reason))
         {
             Dispatcher.UIThread.Post(async () =>
@@ -953,6 +963,7 @@ public partial class RemuxVideoViewModel : ObservableObject
                 arguments = result.Text.Trim();
             }
 
+            Se.SaveSettings();
             arguments = FfmpegProgressTracker.ProgressArguments + " " + arguments;
             IsRemuxing = true;
             IsCompleted = false;
@@ -1240,7 +1251,9 @@ public partial class RemuxVideoViewModel : ObservableObject
             }
         }
 
-        var fastStart = string.Equals(SelectedOutputFormat, ".mp4", StringComparison.OrdinalIgnoreCase)
+        // "+faststart" moves the mp4 index to the front for web streaming, but ffmpeg then has to
+        // rewrite the whole file after the last packet - optional, as local players don't need it (#15253).
+        var fastStart = FastStart && string.Equals(SelectedOutputFormat, ".mp4", StringComparison.OrdinalIgnoreCase)
             ? "-movflags +faststart "
             : string.Empty;
         return $"-y {inputArgs}{filterArgs}{mapArgs}{videoCodec} {audioCodec} {subCodec} {metadataArgs}{fastStart}\"{OutputFileName}\"".Trim();
