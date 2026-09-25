@@ -505,6 +505,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.ExtendPreviousEndToSelectedStartCommand),  Se.Language.General.ExtendPreviousEndToSelectedStart },
         { nameof(MainViewModel.ExtendNextStartToSelectedEndCommand),  Se.Language.General.ExtendNextStartToSelectedEnd },
         { nameof(MainViewModel.ToggleLockTimeCodesCommand), Se.Language.Options.Shortcuts.ToggleLockTimeCodes },
+        { nameof(MainViewModel.ToggleScreenPrivacyCommand), Se.Language.Options.Shortcuts.ToggleScreenPrivacy },
         { nameof(MainViewModel.ShowHelpCommand), Se.Language.General.Help },
         { nameof(MainViewModel.ShowSourceViewCommand), Se.Language.Options.Shortcuts.SourceView },
         { nameof(MainViewModel.MergeWithLineBeforeCommand), Se.Language.General.MergeWithLineBeforeAndAutoBreak },
@@ -984,6 +985,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.ExtendPreviousEndToSelectedStartCommand, nameof(vm.ExtendPreviousEndToSelectedStartCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ExtendNextStartToSelectedEndCommand, nameof(vm.ExtendNextStartToSelectedEndCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ToggleLockTimeCodesCommand, nameof(vm.ToggleLockTimeCodesCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.ToggleScreenPrivacyCommand, nameof(vm.ToggleScreenPrivacyCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowHelpCommand, nameof(vm.ShowHelpCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowSourceViewCommand, nameof(vm.ShowSourceViewCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MergeWithLineBeforeCommand, nameof(vm.MergeWithLineBeforeCommand), ShortcutCategory.General);

@@ -76,6 +76,10 @@ public class LanguageSettingsShortcuts
     public string ResetShortcutsDetail { get; set; }
     public string TogglePlayPause { get; set; }
     public string ToggleLockTimeCodes { get; set; }
+    public string ToggleScreenPrivacy { get; set; }
+    public string ScreenPrivacyFileNamesHidden { get; set; }
+    public string ScreenPrivacyFileNamesAndTextsHidden { get; set; }
+    public string ScreenPrivacyOff { get; set; }
     public string DuplicateSelectedLines { get; set; }
     public string SourceView { get; set; }
     public string AddOrEditBookmark { get; set; }
@@ -372,6 +376,10 @@ public class LanguageSettingsShortcuts
         ResetShortcuts = "Reset shortcuts";
         ResetShortcutsDetail = "Do you want to reset all shortcuts to default values?";
         ToggleLockTimeCodes = "Toggle lock time codes";
+        ToggleScreenPrivacy = "Toggle screen privacy (hide file names, then also texts)";
+        ScreenPrivacyFileNamesHidden = "Screen privacy: file names hidden";
+        ScreenPrivacyFileNamesAndTextsHidden = "Screen privacy: file names and texts hidden";
+        ScreenPrivacyOff = "Screen privacy: off";
         DuplicateSelectedLines = "Duplicate selected lines";
         SourceView = "Source view";
         AddOrEditBookmark = "Add or edit bookmark";

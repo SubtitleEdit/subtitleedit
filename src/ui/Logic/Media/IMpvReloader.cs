@@ -15,4 +15,12 @@ public interface IMpvReloader
     void Reset();
     bool SmpteMode { get; set; }
     bool SubtitlesVisible { get; set; }
+
+    /// <summary>
+    /// Hides the subtitles on the video regardless of <see cref="SubtitlesVisible"/>, without
+    /// changing the user's own choice (screen privacy mode, #15300).
+    /// </summary>
+    bool SubtitlesForceHidden { get; set; }
+
+    bool SubtitlesEffectivelyVisible { get; }
 }

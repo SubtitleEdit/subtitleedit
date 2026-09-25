@@ -135,6 +135,7 @@ public class SkiaAudioVisualizer : AudioVisualizer
         f.FontSize = (float)settings.Waveform.WaveformTextFontSize;
         f.FontBold = settings.Waveform.WaveformTextFontBold;
         f.UnwrapText = settings.Waveform.WaveformUnwrapText;
+        f.BlurText = BlurText;
 
         f.DrawGridLines = DrawGridLines;
         f.FrameMode = settings.General.UseFrameMode;
@@ -491,6 +492,7 @@ internal sealed class SkiaWaveformFrame
     public float FontSize;
     public bool FontBold;
     public bool UnwrapText;
+    public bool BlurText;
 
     public bool DrawGridLines;
     public bool FrameMode;
