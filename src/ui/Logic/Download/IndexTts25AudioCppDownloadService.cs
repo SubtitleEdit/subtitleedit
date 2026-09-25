@@ -33,11 +33,12 @@ public class IndexTts25AudioCppDownloadService : IIndexTts25AudioCppDownloadServ
 {
     private readonly HttpClient _httpClient;
 
-    // 2026-09-17b: upstream v0.8.0 @ 4af14322 (same source as 2026-09-17), compiled with the
-    // index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step families. ace_step is
-    // new, for background music generation (Video > More and the TTS window); the four TTS
-    // engines run the same code as before.
-    private const string ReleaseTag = "audiocpp-indextts25-2026-09-17b";
+    // 2026-09-25: upstream v0.8.2-audio8-perf-hotfix @ ac16661d, compiled with the index_tts2 +
+    // higgs_audio_tts + fish_audio + fireredtts3 + ace_step families (same set as 2026-09-17b).
+    // Picks up the CLI's --out-format, so ACE-Step background music is written as float WAV
+    // instead of clipping at 16-bit (see AceStepAudioCpp.SupportsFloatOutput), and the Higgs
+    // CUDA KV-cache speedup.
+    private const string ReleaseTag = "audiocpp-indextts25-2026-09-25";
     private const string ReleaseBase =
         "https://github.com/SubtitleEdit/support-files/releases/download/" + ReleaseTag + "/";
 
