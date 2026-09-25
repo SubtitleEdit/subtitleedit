@@ -296,6 +296,38 @@ public class FfmpegBurnInParametersTests
     }
 
     /// <summary>
+    /// A logo placed on a 640x480 preview must stay in the frame of a 320x240 batch video - its
+    /// fixed pixel position put a top-right logo outside every smaller video.
+    /// </summary>
+    [Fact]
+    public void Logo_PlacedAtOtherResolution_IsScaledToTheOutput()
+    {
+        var logoFileName = Path.GetTempFileName();
+        try
+        {
+            var logo = new Nikse.SubtitleEdit.Features.Video.BurnIn.BurnInLogo
+            {
+                LogoFileName = logoFileName,
+                X = 500,
+                Y = 20,
+                Size = 100,
+                Alpha = 100,
+                ReferenceWidth = 640,
+                ReferenceHeight = 480,
+            };
+
+            var parameters = GenerateImage(logo: logo);
+
+            Assert.Contains("[2:v]scale=iw*50/100:ih*50/100,", parameters);
+            Assert.Contains("[withsubs][logo]overlay=250:10", parameters);
+        }
+        finally
+        {
+            File.Delete(logoFileName);
+        }
+    }
+
+    /// <summary>
     /// The text path is what every existing user runs; the image switch must not touch it.
     /// </summary>
     [Fact]
