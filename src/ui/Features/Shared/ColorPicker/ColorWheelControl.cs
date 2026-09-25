@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Platform;
@@ -14,16 +15,29 @@ namespace Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 
 public class ColorWheelControl : Control
 {
-    public static readonly StyledProperty<Color> SelectedColorProperty =
-        AvaloniaProperty.Register<ColorWheelControl, Color>(nameof(SelectedColor), Colors.White);
+    public static readonly StyledProperty<double> HueProperty =
+        AvaloniaProperty.Register<ColorWheelControl, double>(nameof(Hue), defaultBindingMode: BindingMode.TwoWay);
 
-    public Color SelectedColor
+    public static readonly StyledProperty<double> SaturationProperty =
+        AvaloniaProperty.Register<ColorWheelControl, double>(nameof(Saturation), defaultBindingMode: BindingMode.TwoWay);
+
+    /// <summary>
+    /// Hue in degrees (0-360).
+    /// </summary>
+    public double Hue
     {
-        get => GetValue(SelectedColorProperty);
-        set => SetValue(SelectedColorProperty, value);
+        get => GetValue(HueProperty);
+        set => SetValue(HueProperty, value);
     }
 
-    public event EventHandler<Color>? ColorChanged;
+    /// <summary>
+    /// Saturation (0-1), the distance from the wheel center.
+    /// </summary>
+    public double Saturation
+    {
+        get => GetValue(SaturationProperty);
+        set => SetValue(SaturationProperty, value);
+    }
 
     private Point _center;
     private double _radius;
@@ -33,7 +47,7 @@ public class ColorWheelControl : Control
 
     static ColorWheelControl()
     {
-        AffectsRender<ColorWheelControl>(SelectedColorProperty);
+        AffectsRender<ColorWheelControl>(HueProperty, SaturationProperty);
     }
 
     public ColorWheelControl()
@@ -51,7 +65,7 @@ public class ColorWheelControl : Control
     {
         base.OnPropertyChanged(change);
 
-        if (change.Property == SelectedColorProperty)
+        if (change.Property == HueProperty || change.Property == SaturationProperty)
         {
             UpdateSelectedPoint();
             InvalidateVisual();
@@ -114,28 +128,15 @@ public class ColorWheelControl : Control
             angle += 360;
         }
 
-        // Convert to HSV
-        var hue = (int)(angle / 360 * 255);
-        var saturation = (int)(distance / _radius * 255);
-        var value = 255; // Full brightness
-
-        // Convert HSV to RGB
-        var color = HsvToColor(SelectedColor.A, hue, saturation, value);
-        SelectedColor = color;
-        ColorChanged?.Invoke(this, color);
+        SetCurrentValue(HueProperty, angle);
+        SetCurrentValue(SaturationProperty, distance / _radius);
         InvalidateVisual();
     }
 
     private void UpdateSelectedPoint()
     {
-        // Convert current color to HSV to get position
-        var hsv = RgbToHsv(SelectedColor);
-
-        // Calculate angle from hue
-        var angle = (double)hsv.Hue / 255 * 360 * Math.PI / 180;
-
-        // Calculate distance from saturation
-        var distance = (double)hsv.Saturation / 255 * _radius;
+        var angle = Hue * Math.PI / 180;
+        var distance = Math.Clamp(Saturation, 0, 1) * _radius;
 
         // Calculate point
         _selectedPoint = new Point(
@@ -265,85 +266,5 @@ public class ColorWheelControl : Control
             paint.StrokeWidth = 1;
             canvas.DrawCircle((float)_selectedPoint.X, (float)_selectedPoint.Y, 6, paint);
         }
-    }
-
-    private static Color HsvToColor(byte alpha, int hue, int saturation, int value)
-    {
-        double r = 0, g = 0, b = 0;
-
-        var h = ((double)hue / 255 * 360) % 360;
-        var s = (double)saturation / 255;
-        var v = (double)value / 255;
-
-        if (Math.Abs(s) < 0.01)
-        {
-            r = g = b = v;
-        }
-        else
-        {
-            var sectorPos = h / 60;
-            var sectorNumber = (int)Math.Floor(sectorPos);
-            var fractionalSector = sectorPos - sectorNumber;
-
-            var p = v * (1 - s);
-            var q = v * (1 - (s * fractionalSector));
-            var t = v * (1 - (s * (1 - fractionalSector)));
-
-            switch (sectorNumber)
-            {
-                case 0: r = v; g = t; b = p; break;
-                case 1: r = q; g = v; b = p; break;
-                case 2: r = p; g = v; b = t; break;
-                case 3: r = p; g = q; b = v; break;
-                case 4: r = t; g = p; b = v; break;
-                case 5: r = v; g = p; b = q; break;
-            }
-        }
-
-        return Color.FromArgb(alpha, (byte)(r * 255), (byte)(g * 255), (byte)(b * 255));
-    }
-
-    private static (int Hue, int Saturation, int Value) RgbToHsv(Color color)
-    {
-        var r = (double)color.R / 255;
-        var g = (double)color.G / 255;
-        var b = (double)color.B / 255;
-
-        var min = Math.Min(Math.Min(r, g), b);
-        var max = Math.Max(Math.Max(r, g), b);
-
-        double h, s;
-        var v = max;
-        var delta = max - min;
-
-        if (Math.Abs(max) < 0.01 || Math.Abs(delta) < 0.01)
-        {
-            s = 0;
-            h = 0;
-        }
-        else
-        {
-            s = delta / max;
-            if (Math.Abs(r - max) < 0.01)
-            {
-                h = (g - b) / delta;
-            }
-            else if (Math.Abs(g - max) < 0.01)
-            {
-                h = 2 + (b - r) / delta;
-            }
-            else
-            {
-                h = 4 + (r - g) / delta;
-            }
-        }
-
-        h *= 60;
-        if (h < 0)
-        {
-            h += 360;
-        }
-
-        return ((int)(h / 360 * 255), (int)(s * 255), (int)(v * 255));
     }
 }
