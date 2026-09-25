@@ -3094,7 +3094,9 @@ public partial class MainViewModel :
 
             var prompt = await ShowDialogAsync<OpenOriginalMismatchWindow, OpenOriginalMismatchViewModel>(vm =>
             {
-                vm.Initialize(subtitle.Paragraphs.Count, Subtitles.Count, originalWithTextCount, match.Unmatched.Count);
+                // Empty original lines never become display-only rows (see InsertReferenceOnlyRows),
+                // so they are not counted as lines the choice would show or hide either.
+                vm.Initialize(subtitle.Paragraphs.Count, Subtitles.Count, originalWithTextCount, match.Unmatched.Count(p => !string.IsNullOrWhiteSpace(p.Text)));
             });
 
             if (!prompt.OkPressed)
@@ -3199,6 +3201,15 @@ public partial class MainViewModel :
         var insertAt = 0;
         foreach (var p in unmatched)
         {
+            // An original line without text (some files carry hundreds of blank cues) has nothing to
+            // show, and a display-only row cannot be deleted - so it would just be an empty row the
+            // user is stuck with (#15299). Matched rows with an empty original are not captured back
+            // into an editable original either, so skipping these here keeps the two consistent.
+            if (string.IsNullOrWhiteSpace(p.Text))
+            {
+                continue;
+            }
+
             while (insertAt < Subtitles.Count &&
                    Subtitles[insertAt].StartTime.TotalMilliseconds <= p.StartTime.TotalMilliseconds)
             {
