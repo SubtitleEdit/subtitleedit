@@ -816,6 +816,40 @@ public class MainReadOnlyOriginalTests
     }
 
     /// <summary>
+    /// An unmatched original line with no text has nothing to show, and a reference-only row cannot
+    /// be deleted - so it must not become one. A file with hundreds of blank cues left the user with
+    /// hundreds of undeletable empty rows (#15299).
+    /// </summary>
+    [AvaloniaFact]
+    public void ImportAsReadOnlyReference_SkipsEmptyUnmatchedLines()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            AddLine(vm, "Translated one", string.Empty, 0, 2000);
+            AddLine(vm, "Translated two", string.Empty, 4000, 6000);
+
+            var reference = BuildSampleReference();
+            reference.Paragraphs.Insert(0, new Paragraph(string.Empty, 10000, 11000));
+            reference.Paragraphs.Add(new Paragraph(" ", 12000, 13000));
+            reference.Paragraphs.Sort((a, b) => a.StartTime.TotalMilliseconds.CompareTo(b.StartTime.TotalMilliseconds));
+            ImportReference(vm, reference);
+
+            var referenceRow = Assert.Single(vm.Subtitles, p => p.IsReferenceOnly);
+            Assert.Equal("Reference only - no translation", referenceRow.OriginalText);
+            Assert.Equal(3, vm.Subtitles.Count);
+
+            // Still a re-apply no-op: the blank lines stay unclaimed, but are not brought back as rows.
+            InvokeReapplyReadOnlyReference(vm);
+            Assert.Equal(3, vm.Subtitles.Count);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>
     /// The waveform stays editable while the non-matching lines are shown - the sticky links mean
     /// dragging a paragraph edge cannot shuffle the reference rows onto other lines (#13594).
     /// </summary>
