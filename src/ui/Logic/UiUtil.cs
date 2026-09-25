@@ -456,6 +456,15 @@ public static class UiUtil
         return _focusedButtonBackgroundBrush;
     }
 
+    /// <summary>
+    /// The label without its `_` access-key marker, for showing a button caption as plain text
+    /// (e.g. "_Done" as a batch row status, which showed the underscore).
+    /// </summary>
+    public static string RemoveAccessKey(string text)
+    {
+        return ParseAccessKey(text).Display;
+    }
+
     // Parses a single `_` access-key marker out of a button label and returns the visible text plus
     // the matching Avalonia Key. Mirrors the WinForms `&` convention used in the language files
     // (e.g. "_OK" → display "OK", Alt+O; "C_ancel" → display "Cancel", Alt+A).

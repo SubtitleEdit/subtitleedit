@@ -239,7 +239,7 @@ public partial class ReEncodeVideoViewModel : ObservableObject
             return;
         }
 
-        JobItems[_jobItemIndex].Status = Se.Language.General.Done;
+        JobItems[_jobItemIndex].Status = UiUtil.RemoveAccessKey(Se.Language.General.Done);
 
         Dispatcher.UIThread.Invoke(async () =>
         {
