@@ -4,8 +4,8 @@ Subtitle Edit Changelog
 -----------------------------------------------------------------------------------------------------
 
 v5.3.0-beta12 (25th of September 2026)
- - thx laszlolaszlo
-* Add OpenAI-compatible text to speech engine (OpenAI, OpenRouter, custom server)
+
+* Add OpenAI-compatible text to speech engine (OpenAI, OpenRouter, custom server) - thx laszlolaszlo
 * Add Cut video transitions between segments and fade from/to black
 * Add Crisp ASR Parakeet ReazonSpeech and parakeet-ctc-1.1b-ja Japanese models - thx jodilife
 * Add Beautify time codes: save, load and delete custom profiles - thx TB54
