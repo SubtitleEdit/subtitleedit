@@ -5,6 +5,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -126,6 +127,9 @@ public class BurnInLogoWindow : Window
         var videoPlayerControl = InitVideoPlayer.MakeVideoPlayerPreferNonNative();
         videoPlayerControl.HorizontalAlignment = HorizontalAlignment.Stretch;
         videoPlayerControl.VerticalAlignment = VerticalAlignment.Stretch;
+        // The player's fullscreen button had no command, so it did nothing. A real fullscreen
+        // player would lose the draggable logo overlay - maximizing this window keeps it.
+        videoPlayerControl.FullScreenCommand = new RelayCommand(ToggleMaximized);
         vm.VideoPlayerControl = videoPlayerControl;
         videoGrid.Children.Add(videoPlayerControl);
 
@@ -241,6 +245,11 @@ public class BurnInLogoWindow : Window
         Content = grid;
 
         UiUtil.FocusOnFirstActivation(this, sliderAlpha); // initial focus on an input, not an action button - a focused button clicks on bare Space
+    }
+
+    private void ToggleMaximized()
+    {
+        WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
     }
 
     protected override void OnLoaded(RoutedEventArgs e)
