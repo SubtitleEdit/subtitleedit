@@ -608,7 +608,7 @@ public partial class BurnInViewModel : ObservableObject
             return;
         }
 
-        JobItems[_jobItemIndex].Status = Se.Language.General.Done;
+        JobItems[_jobItemIndex].Status = UiUtil.RemoveAccessKey(Se.Language.General.Done);
 
         Dispatcher.UIThread.Invoke(async () =>
         {
@@ -664,7 +664,7 @@ public partial class BurnInViewModel : ObservableObject
             var files = JobItems
                 .Select(p => new SavedFileItem(
                     p.OutputVideoFileName,
-                    p.Status == Se.Language.General.Done && File.Exists(p.OutputVideoFileName),
+                    p.Status == UiUtil.RemoveAccessKey(Se.Language.General.Done) && File.Exists(p.OutputVideoFileName),
                     p.Status))
                 .ToList();
             var doneCount = files.Count(p => p.IsSuccess);
