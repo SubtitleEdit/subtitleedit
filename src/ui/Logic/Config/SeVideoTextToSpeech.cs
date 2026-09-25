@@ -42,6 +42,8 @@ public class SeVideoTextToSpeech
     public string OpenAiCompatibleCustomVoices { get; set; }
     public string OpenAiCompatibleInstructions { get; set; }
     public double OpenAiCompatibleSpeed { get; set; }
+    // "auto", "mp3" or "pcm" - some models (e.g. Gemini TTS on OpenRouter) only return pcm.
+    public string OpenAiCompatibleResponseFormat { get; set; }
     public string Qwen3TtsCppModel { get; set; }
     public string Qwen3TtsCppVulkanPath { get; set; }
     public string Qwen3TtsCppInstruction { get; set; }
@@ -215,6 +217,7 @@ public class SeVideoTextToSpeech
         OpenAiCompatibleCustomVoices = "alloy";
         OpenAiCompatibleInstructions = string.Empty;
         OpenAiCompatibleSpeed = 1.0;
+        OpenAiCompatibleResponseFormat = "auto";
         Qwen3TtsCppModel = "0.6B";
         Qwen3TtsCppVulkanPath = string.Empty;
         Qwen3TtsCppInstruction = string.Empty;

@@ -124,6 +124,73 @@ public class OpenAiCompatibleSpeechTests
     }
 
     [Fact]
+    public void RequestBodyCarriesTheResponseFormat()
+    {
+        using var doc = JsonDocument.Parse(OpenAiCompatibleSpeech.BuildRequestJson("x", "google/gemini-3.8-flash-tts", "Charon", OpenAiCompatibleSpeech.FormatPcm));
+        Assert.Equal("pcm", doc.RootElement.GetProperty("response_format").GetString());
+    }
+
+    [Fact]
+    public void GeminiMp3RejectionIsRecognized()
+    {
+        const string error = "HTTP 400 BadRequest: {\"error\":{\"message\":\"Gemini TTS only supports response_format=\\\"pcm\\\". Got \\\"mp3\\\".\",\"code\":400}}";
+        Assert.True(OpenAiCompatibleSpeech.IsMp3NotSupportedError(error));
+        Assert.False(OpenAiCompatibleSpeech.IsMp3NotSupportedError("HTTP 401 Unauthorized: {\"error\":{\"message\":\"No auth credentials found\"}}"));
+        Assert.False(OpenAiCompatibleSpeech.IsMp3NotSupportedError(null));
+    }
+
+    [Fact]
+    public void RawPcmIsWrappedInAWavHeader()
+    {
+        var pcm = new byte[4801]; // odd trailing byte is dropped
+        var (data, extension) = OpenAiCompatibleSpeech.ToAudioFile(pcm, OpenAiCompatibleSpeech.FormatPcm, "audio/pcm");
+
+        Assert.Equal(".wav", extension);
+        Assert.Equal(44 + 4800, data.Length);
+        Assert.Equal("RIFF", System.Text.Encoding.ASCII.GetString(data, 0, 4));
+        Assert.Equal(24000, BitConverter.ToInt32(data, 24)); // sample rate
+        Assert.Equal(1, BitConverter.ToInt16(data, 22)); // channels
+        Assert.Equal(16, BitConverter.ToInt16(data, 34)); // bits per sample
+        Assert.Equal(4800, BitConverter.ToInt32(data, 40)); // data size
+    }
+
+    [Fact]
+    public void PcmSampleRateAndChannelsComeFromTheContentType()
+    {
+        var (data, _) = OpenAiCompatibleSpeech.ToAudioFile(new byte[800], OpenAiCompatibleSpeech.FormatMp3, "audio/pcm; rate=16000; channels=2");
+
+        Assert.Equal(16000, BitConverter.ToInt32(data, 24));
+        Assert.Equal(2, BitConverter.ToInt16(data, 22));
+    }
+
+    [Fact]
+    public void AudioWithAContainerIsKeptAsIs()
+    {
+        // A server may ignore response_format - trust the bytes over what was asked for.
+        var mp3 = new byte[] { (byte)'I', (byte)'D', (byte)'3', 4, 0, 0 };
+        var (mp3Data, mp3Extension) = OpenAiCompatibleSpeech.ToAudioFile(mp3, OpenAiCompatibleSpeech.FormatPcm, "audio/mpeg");
+        Assert.Equal(".mp3", mp3Extension);
+        Assert.Same(mp3, mp3Data);
+
+        var wav = new byte[44];
+        System.Text.Encoding.ASCII.GetBytes("RIFF").CopyTo(wav, 0);
+        var (wavData, wavExtension) = OpenAiCompatibleSpeech.ToAudioFile(wav, OpenAiCompatibleSpeech.FormatPcm, "audio/wav");
+        Assert.Equal(".wav", wavExtension);
+        Assert.Same(wav, wavData);
+    }
+
+    [Theory]
+    [InlineData(null, "auto")]
+    [InlineData("", "auto")]
+    [InlineData("PCM", "pcm")]
+    [InlineData("mp3", "mp3")]
+    [InlineData("flac", "auto")]
+    public void ResponseFormatSettingIsResolved(string? saved, string expected)
+    {
+        Assert.Equal(expected, OpenAiCompatibleSpeech.ResolveResponseFormat(saved));
+    }
+
+    [Fact]
     public void UnknownProviderFallsBackToOpenAi()
     {
         Assert.Equal(OpenAiCompatibleSpeech.ProviderOpenAi, OpenAiCompatibleSpeech.ResolveProvider(null));
