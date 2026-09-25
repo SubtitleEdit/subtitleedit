@@ -49,6 +49,8 @@ public partial class BurnInLogoViewModel : ObservableObject
         // Save logo settings - the caller adopts BurnInLogo only when OkPressed, and it is its own
         // copy, so X/Y/Alpha/Size edited in the window are committed here and dropped on Cancel.
         BurnInLogo.LogoFileName = LogoFileName;
+        BurnInLogo.ReferenceWidth = VideoWidth;
+        BurnInLogo.ReferenceHeight = VideoHeight;
 
         OkPressed = true;
         Window?.Close();

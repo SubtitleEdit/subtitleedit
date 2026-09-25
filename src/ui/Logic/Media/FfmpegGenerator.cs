@@ -132,6 +132,25 @@ public class FfmpegGenerator
     /// <summary>
     /// Generate ffmpeg parameters for a video with a burned-in Advanced Sub Station Alpha subtitle.
     /// </summary>
+    /// <summary>
+    /// Logo X/Y/Size are picked against one resolution (<see cref="Features.Video.BurnIn.BurnInLogo.ReferenceWidth"/>),
+    /// but a batch job with "source resolution" renders each video at its own size - unscaled, a
+    /// top-right logo on a smaller video lands outside the frame and silently disappears.
+    /// </summary>
+    internal static (int X, int Y, double SizePercent) ScaleLogoToOutput(Features.Video.BurnIn.BurnInLogo logo, int width, int height)
+    {
+        if (logo.ReferenceWidth <= 0 || logo.ReferenceHeight <= 0 || width <= 0 || height <= 0 ||
+            (logo.ReferenceWidth == width && logo.ReferenceHeight == height))
+        {
+            return (logo.X, logo.Y, logo.Size);
+        }
+
+        var factorX = (double)width / logo.ReferenceWidth;
+        var factorY = (double)height / logo.ReferenceHeight;
+        var sizePercent = Math.Round(logo.Size * Math.Min(factorX, factorY), 2);
+        return ((int)Math.Round(logo.X * factorX), (int)Math.Round(logo.Y * factorY), sizePercent);
+    }
+
     public static string GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName, int width, int height, string videoEncoding, string preset, string pixelFormat, string crf, string audioEncoding, bool forceStereo, string sampleRate, string tune, string audioBitRate, string pass, string twoPassBitRate, string? cutStart = null, string? cutEnd = null, string audioCutTrack = "", Features.Video.BurnIn.BurnInLogo? burnInLogo = null, bool inputIsAudioOnly = false, bool subtitleIsImage = false, Export3DMode mode3D = Export3DMode.None, int depth3D = 0)
     {
         if (width % 2 == 1)
@@ -379,7 +398,8 @@ public class FfmpegGenerator
 
             // Convert alpha percentage (0-100) to 0.0-1.0
             var alphaValue = (burnInLogo.Alpha / 100.0).ToString(CultureInfo.InvariantCulture);
-            var sizePercent = burnInLogo.Size.ToString(CultureInfo.InvariantCulture);
+            var (logoX, logoY, logoSize) = ScaleLogoToOutput(burnInLogo, width, height);
+            var sizePercent = logoSize.ToString(CultureInfo.InvariantCulture);
 
             // Build filter_complex for video with logo overlay
             // 1. Scale main video (or the generated canvas for audio-only input) and apply subtitles
@@ -387,7 +407,7 @@ public class FfmpegGenerator
             // 3. Overlay logo at specified X, Y position
             var filterComplex = $"{withSubtitles}[withsubs];" +
                                $"{logoVideoStream}scale=iw*{sizePercent}/100:ih*{sizePercent}/100,format=rgba,colorchannelmixer=aa={alphaValue}[logo];" +
-                               $"[withsubs][logo]overlay={burnInLogo.X}:{burnInLogo.Y}";
+                               $"[withsubs][logo]overlay={logoX}:{logoY}";
 
             filterParameter = $"-filter_complex \"{filterComplex}\"";
         }

@@ -10,6 +10,14 @@ public partial class BurnInLogo : ObservableObject
     [ObservableProperty] private int _alpha;
     [ObservableProperty] private int _size;
 
+    /// <summary>
+    /// The video resolution X/Y/Size were picked against. Batch jobs (and a resolution changed
+    /// after placing the logo) can render at another size, so the overlay is scaled to it -
+    /// fixed pixels put a top-right logo outside a smaller video.
+    /// </summary>
+    public int ReferenceWidth { get; set; }
+    public int ReferenceHeight { get; set; }
+
     public BurnInLogo()
     {
         LogoFileName = string.Empty;
@@ -30,6 +38,8 @@ public partial class BurnInLogo : ObservableObject
             Y = Y,
             Alpha = Alpha,
             Size = Size,
+            ReferenceWidth = ReferenceWidth,
+            ReferenceHeight = ReferenceHeight,
         };
     }
 }
