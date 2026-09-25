@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.3.0-beta10",
+  "version": "v5.3.0-beta11",
   "translatedBy": "",
   "cultureName": "jp-JP",
   "general": {
@@ -2816,6 +2816,9 @@
     "remuxVideoSubtitleFiles": "字幕ファイル（任意、ソフト字幕）：",
     "remuxVideoSelectAudioTrackDotDotDot": "音声トラックを選択...",
     "remuxVideoFilesX": "{0} 個のファイル",
+    "remuxVideoMixAudio": "音声を1つのトラックにミックス",
+    "remuxVideoVolumePercent": "音量 %:",
+    "remuxVideoVolumeX": "音量 {0}%",
     "embedSubtitlesDotDotDot": "埋め込み字幕の追加/削除",
     "generateTimeCodes": "表示タイミングの生成",
     "checkeredImage": "チェック柄の画像",
