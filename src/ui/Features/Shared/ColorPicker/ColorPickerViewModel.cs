@@ -34,6 +34,13 @@ public partial class ColorPickerViewModel : ObservableObject
 
     [ObservableProperty] private bool _showAlpha = true;
 
+    // HSV state for the color wheel (hue/saturation) and the brightness bar. Kept separately
+    // from RGB so hue and saturation survive dragging the brightness down to black and back.
+    [ObservableProperty] private double _hue;
+    [ObservableProperty] private double _saturation;
+    [ObservableProperty] private double _brightness = 1;
+    [ObservableProperty] private Color _brightnessTopColor = Colors.White;
+
     [ObservableProperty] private Color _lastColorPickerColor;
     [ObservableProperty] private Color _lastColorPickerColor1;
     [ObservableProperty] private Color _lastColorPickerColor2;
@@ -117,15 +124,121 @@ public partial class ColorPickerViewModel : ObservableObject
         }
     }
 
-    public void UpdateFromColorWheel(Color color)
+    partial void OnHueChanged(double value)
     {
-        if (!_isUpdating)
+        UpdateColorFromHsv();
+    }
+
+    partial void OnSaturationChanged(double value)
+    {
+        UpdateColorFromHsv();
+    }
+
+    partial void OnBrightnessChanged(double value)
+    {
+        UpdateColorFromHsv();
+    }
+
+    private void UpdateColorFromHsv()
+    {
+        if (_isUpdating)
         {
-            _isUpdating = true;
-            SelectedColor = Color.FromArgb(Alpha, color.R, color.G, color.B);
-            UpdateFromColor(SelectedColor);
-            _isUpdating = false;
+            return;
         }
+
+        _isUpdating = true;
+        var color = HsvToColor(Alpha, Hue, Saturation, Brightness);
+        SelectedColor = color;
+        Red = color.R;
+        Green = color.G;
+        Blue = color.B;
+        BrightnessTopColor = HsvToColor(255, Hue, Saturation, 1);
+        UpdateHexColor();
+        _isUpdating = false;
+    }
+
+    private void UpdateHsvFromColor(Color color)
+    {
+        var (hue, saturation, value) = ColorToHsv(color);
+
+        // Hue is undefined for grays and saturation is undefined for black - keep the
+        // previous values so the wheel marker doesn't jump to the center/right.
+        if (value > 0 && saturation > 0)
+        {
+            Hue = hue;
+        }
+
+        if (value > 0)
+        {
+            Saturation = saturation;
+        }
+
+        Brightness = value;
+        BrightnessTopColor = HsvToColor(255, Hue, Saturation, 1);
+    }
+
+    internal static Color HsvToColor(byte alpha, double hue, double saturation, double value)
+    {
+        var h = (hue % 360 + 360) % 360 / 60;
+        var s = Math.Clamp(saturation, 0, 1);
+        var v = Math.Clamp(value, 0, 1);
+
+        var c = v * s;
+        var x = c * (1 - Math.Abs(h % 2 - 1));
+        var m = v - c;
+
+        var (r, g, b) = (int)h switch
+        {
+            0 => (c, x, 0.0),
+            1 => (x, c, 0.0),
+            2 => (0.0, c, x),
+            3 => (0.0, x, c),
+            4 => (x, 0.0, c),
+            _ => (c, 0.0, x),
+        };
+
+        return Color.FromArgb(alpha, ToByte(r + m), ToByte(g + m), ToByte(b + m));
+    }
+
+    internal static (double Hue, double Saturation, double Value) ColorToHsv(Color color)
+    {
+        var r = color.R / 255.0;
+        var g = color.G / 255.0;
+        var b = color.B / 255.0;
+
+        var max = Math.Max(r, Math.Max(g, b));
+        var min = Math.Min(r, Math.Min(g, b));
+        var delta = max - min;
+
+        double hue = 0;
+        if (delta > 0)
+        {
+            if (max == r)
+            {
+                hue = 60 * ((g - b) / delta % 6);
+            }
+            else if (max == g)
+            {
+                hue = 60 * ((b - r) / delta + 2);
+            }
+            else
+            {
+                hue = 60 * ((r - g) / delta + 4);
+            }
+        }
+
+        if (hue < 0)
+        {
+            hue += 360;
+        }
+
+        var saturation = max > 0 ? delta / max : 0;
+        return (hue, saturation, max);
+    }
+
+    private static byte ToByte(double value)
+    {
+        return (byte)Math.Clamp(Math.Round(value * 255), 0, 255);
     }
 
     public void SelectRecentColor(Color color)
@@ -144,6 +257,7 @@ public partial class ColorPickerViewModel : ObservableObject
         _isUpdating = true;
         SelectedColor = Color.FromArgb(Alpha, Red, Green, Blue);
         OnPropertyChanged(nameof(SelectedColor));
+        UpdateHsvFromColor(SelectedColor);
         UpdateHexColor();
         _isUpdating = false;
     }
@@ -158,6 +272,7 @@ public partial class ColorPickerViewModel : ObservableObject
         OnPropertyChanged(nameof(Blue));
         Alpha = color.A;
         OnPropertyChanged(nameof(Alpha));
+        UpdateHsvFromColor(color);
         UpdateHexColor();
     }
 

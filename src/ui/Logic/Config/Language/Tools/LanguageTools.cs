@@ -34,6 +34,7 @@ public class LanguageTools
     public string PickFontNameInstalledFonts { get; set; }
     public string PickFontNameCollectedFonts { get; set; }
     public string ColorPickerTitle { get; set; }
+    public string ColorPickerBrightness { get; set; }
     public string FilterLayersTitle { get; set; }
     public string FilterLayersHideFromWaveform { get; set; }
     public string FilterLayersHideFromSubtitleGrid { get; set; }
@@ -49,6 +50,7 @@ public class LanguageTools
         PickFontNameInstalledFonts = "Installed fonts";
         PickFontNameCollectedFonts = "Collected fonts";
         ColorPickerTitle = "Choose color";
+        ColorPickerBrightness = "Brightness";
         FilterLayersTitle = "Filter layers for display";
         FilterLayersHideFromWaveform = "Hide from waveform/spectrogram";
         FilterLayersHideFromSubtitleGrid = "Hide from subtitle grid";

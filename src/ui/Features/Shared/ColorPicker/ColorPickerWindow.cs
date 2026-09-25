@@ -64,15 +64,41 @@ public class ColorPickerWindow : Window
             Height = 200,
             Margin = new Thickness(10),
         };
-        colorWheel.Bind(ColorWheelControl.SelectedColorProperty, new Binding
+        colorWheel.Bind(ColorWheelControl.HueProperty, new Binding
         {
             Source = vm,
-            Path = nameof(vm.SelectedColor),
+            Path = nameof(vm.Hue),
             Mode = BindingMode.TwoWay
         });
-        colorWheel.ColorChanged += (s, color) =>
+        colorWheel.Bind(ColorWheelControl.SaturationProperty, new Binding
         {
-            vm.UpdateFromColorWheel(color);
+            Source = vm,
+            Path = nameof(vm.Saturation),
+            Mode = BindingMode.TwoWay
+        });
+
+        // Brightness (tone) bar, like the Subtitle Edit 4 color dialog (issue #15296)
+        var brightnessBar = new ColorBrightnessBar
+        {
+            Height = 200,
+            Margin = new Thickness(0, 10, 10, 10),
+        };
+        brightnessBar.Bind(ColorBrightnessBar.ValueProperty, new Binding
+        {
+            Source = vm,
+            Path = nameof(vm.Brightness),
+            Mode = BindingMode.TwoWay
+        });
+        brightnessBar.Bind(ColorBrightnessBar.TopColorProperty, new Binding
+        {
+            Source = vm,
+            Path = nameof(vm.BrightnessTopColor),
+        });
+
+        var wheelPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Children = { colorWheel, brightnessBar }
         };
 
         // Selected color preview
@@ -95,7 +121,7 @@ public class ColorPickerWindow : Window
         var leftPanel = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            Children = { colorWheel, selectedColorBorder }
+            Children = { wheelPanel, selectedColorBorder }
         };
         Grid.SetColumn(leftPanel, 0);
         Grid.SetRow(leftPanel, 0);
