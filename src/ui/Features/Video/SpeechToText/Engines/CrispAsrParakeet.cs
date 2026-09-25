@@ -75,6 +75,38 @@ public class CrispAsrParakeet : CrispAsrEngineBase
                     "https://huggingface.co/cstr/parakeet-tdt-0.6b-v3-GGUF/resolve/main/parakeet-tdt-0.6b-v3.gguf",
                 ],
             },
+
+            // Parakeet Ultra - moondream's post-trained parakeet-tdt-0.6b-v3 (same architecture,
+            // tokenizer and 25 languages, CC-BY-4.0). Lower WER than v3 on every benchmark on its
+            // model card, most on FLEURS and long-form audio. q4_k is upstream's registry default.
+            new WhisperModel
+            {
+                Name = "parakeet-ultra-q4_k.gguf",
+                Size = "402 MB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/parakeet-ultra-GGUF/resolve/main/parakeet-ultra-q4_k.gguf",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "parakeet-ultra-q8_0.gguf",
+                Size = "674 MB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/parakeet-ultra-GGUF/resolve/main/parakeet-ultra-q8_0.gguf",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "parakeet-ultra-f16.gguf",
+                Size = "1.26 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/parakeet-ultra-GGUF/resolve/main/parakeet-ultra-f16.gguf",
+                ],
+            },
+
             new WhisperModel
             {
                 Name = "parakeet-tdt-0.6b-ja-q4_k.gguf",
