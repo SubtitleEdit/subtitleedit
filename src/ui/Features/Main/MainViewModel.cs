@@ -234,6 +234,10 @@ public partial class MainViewModel :
     [ObservableProperty] private IBrush _editTextCharactersPerSecondBackground;
     [ObservableProperty] private string _editTextTotalLength;
     [ObservableProperty] private string _initialLineText = string.Empty;
+
+    // Blur for subtitle text controls (grid text cells, text boxes) while the screen privacy
+    // mode hides texts (#15300); null otherwise.
+    [ObservableProperty] private IEffect? _subtitleTextEffect;
     [ObservableProperty] private IBrush _editTextTotalLengthBackground;
 
     [ObservableProperty] private string _editTextOriginal;
@@ -1925,6 +1929,54 @@ public partial class MainViewModel :
     private void TogglePlayPause2()
     {
         TogglePlayPause();
+    }
+
+    /// <summary>
+    /// Cycles the screen privacy mode (#15300): off -> hide file names -> hide file names and
+    /// subtitle texts -> off.
+    /// </summary>
+    [RelayCommand]
+    private void ToggleScreenPrivacy()
+    {
+        UiUtil.ScreenPrivacy = UiUtil.ScreenPrivacy switch
+        {
+            ScreenPrivacyLevel.Off => ScreenPrivacyLevel.HideFileNames,
+            ScreenPrivacyLevel.HideFileNames => ScreenPrivacyLevel.HideFileNamesAndTexts,
+            _ => ScreenPrivacyLevel.Off,
+        };
+
+        var vp = GetVideoPlayerControl();
+        if (vp != null)
+        {
+            vp.IsFileNameHidden = UiUtil.HideFileNames;
+        }
+
+        SubtitleTextEffect = UiUtil.HideTexts ? new ImmutableBlurEffect(8) : null;
+
+        if (AudioVisualizer != null)
+        {
+            AudioVisualizer.BlurText = UiUtil.HideTexts;
+            AudioVisualizer.InvalidateVisual();
+        }
+
+        // mpv/ffmpeg draw the subtitles into the video frame, so they can't be blurred - hide them.
+        _mpvReloader.SubtitlesForceHidden = UiUtil.HideTexts;
+        if (vp?.VideoPlayer is LibMpvDynamicPlayer mpv)
+        {
+            mpv.SetSubtitleVisibility(_mpvReloader.SubtitlesEffectivelyVisible);
+        }
+        else if (vp?.VideoPlayer is FfmpegPlayer ffmpeg)
+        {
+            ffmpeg.PreviewSubtitlesVisible = _mpvReloader.SubtitlesEffectivelyVisible;
+        }
+
+        var l = Se.Language.Options.Shortcuts;
+        ShowStatus(UiUtil.ScreenPrivacy switch
+        {
+            ScreenPrivacyLevel.HideFileNames => l.ScreenPrivacyFileNamesHidden,
+            ScreenPrivacyLevel.HideFileNamesAndTexts => l.ScreenPrivacyFileNamesAndTextsHidden,
+            _ => l.ScreenPrivacyOff,
+        });
     }
 
     [RelayCommand]
@@ -4232,7 +4284,7 @@ public partial class MainViewModel :
     /// </summary>
     private void PushFfmpegPreview(FfmpegPlayer ffmpeg, Subtitle subtitle)
     {
-        ffmpeg.PreviewSubtitlesVisible = _mpvReloader.SubtitlesVisible;
+        ffmpeg.PreviewSubtitlesVisible = _mpvReloader.SubtitlesEffectivelyVisible;
         ffmpeg.PreviewSubtitle = FfmpegPreviewSubtitle.Build(subtitle, _subtitleSecondary, _mpvReloader.SmpteMode);
     }
 
@@ -4578,7 +4630,7 @@ public partial class MainViewModel :
         if (vp?.VideoPlayer is FfmpegPlayer ffmpeg)
         {
             _mpvReloader.SubtitlesVisible = !_mpvReloader.SubtitlesVisible;
-            ffmpeg.PreviewSubtitlesVisible = _mpvReloader.SubtitlesVisible;
+            ffmpeg.PreviewSubtitlesVisible = _mpvReloader.SubtitlesEffectivelyVisible;
             ShowStatus(_mpvReloader.SubtitlesVisible ? Se.Language.Video.SubtitlesOnVideoPlayerOn : Se.Language.Video.SubtitlesOnVideoPlayerOff);
             _shortcutManager.ClearKeys();
             return;
@@ -4590,7 +4642,7 @@ public partial class MainViewModel :
         }
 
         _mpvReloader.SubtitlesVisible = !_mpvReloader.SubtitlesVisible;
-        mpv.SetSubtitleVisibility(_mpvReloader.SubtitlesVisible);
+        mpv.SetSubtitleVisibility(_mpvReloader.SubtitlesEffectivelyVisible);
 
         if (_mpvReloader.SubtitlesVisible)
         {
@@ -18647,11 +18699,11 @@ public partial class MainViewModel :
             // player, so the docked player must be brought back in line with the shared state.
             if (control!.VideoPlayer is LibMpvDynamicPlayer dockedMpv)
             {
-                dockedMpv.SetSubtitleVisibility(_mpvReloader.SubtitlesVisible);
+                dockedMpv.SetSubtitleVisibility(_mpvReloader.SubtitlesEffectivelyVisible);
             }
             else if (control.VideoPlayer is FfmpegPlayer dockedFfmpeg)
             {
-                dockedFfmpeg.PreviewSubtitlesVisible = _mpvReloader.SubtitlesVisible;
+                dockedFfmpeg.PreviewSubtitlesVisible = _mpvReloader.SubtitlesEffectivelyVisible;
             }
 
             // And the subtitle itself: entering fullscreen reset the reloader, which deleted
@@ -33007,7 +33059,10 @@ public partial class MainViewModel :
             }
         }
 
-        text = text + " - " + Se.Language.Title + " " + Se.Version;
+        // #15300: no file names in the title bar while recording/screenshotting.
+        text = UiUtil.HideFileNames
+            ? Se.Language.Title + " " + Se.Version
+            : text + " - " + Se.Language.Title + " " + Se.Version;
         if (_changeSubtitleHash != mainHash)
         {
             text = "*" + text;

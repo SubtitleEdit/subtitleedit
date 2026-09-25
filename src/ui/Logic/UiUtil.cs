@@ -3165,6 +3165,19 @@ public static class UiUtil
     private static int _subtitleFileNameInTitleSuppressions;
 
     /// <summary>
+    /// Session-only screen privacy mode (#15300), cycled via a shortcut so a screen recording or
+    /// screenshot does not reveal what is being worked on:
+    /// <see cref="ScreenPrivacyLevel.HideFileNames"/> keeps subtitle and video file names out of
+    /// the main window title, dialog titles and the video player;
+    /// <see cref="ScreenPrivacyLevel.HideFileNamesAndTexts"/> also blurs/hides the subtitle text.
+    /// </summary>
+    internal static ScreenPrivacyLevel ScreenPrivacy { get; set; }
+
+    internal static bool HideFileNames => ScreenPrivacy != ScreenPrivacyLevel.Off;
+
+    internal static bool HideTexts => ScreenPrivacy == ScreenPrivacyLevel.HideFileNamesAndTexts;
+
+    /// <summary>
     /// Suppresses the file-name suffix for the dialogs opened inside the returned scope. Batch
     /// convert reuses main-window dialogs as settings editors over a whole list of files - naming
     /// the main window's subtitle in their title bar claims a file they have nothing to do with.
@@ -3200,7 +3213,7 @@ public static class UiUtil
     /// </summary>
     internal static string MakeWindowTitle(string title)
     {
-        if (_subtitleFileNameInTitleSuppressions > 0)
+        if (_subtitleFileNameInTitleSuppressions > 0 || HideFileNames)
         {
             return title;
         }

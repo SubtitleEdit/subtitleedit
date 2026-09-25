@@ -446,6 +446,7 @@ public static partial class InitListViewAndEditBox
                     },
                     // Lets the subtitle grid context menu find the word under the pointer (live spell check)
                     Tag = SubtitleGridColumnKeys.Text,
+                    [!Visual.EffectProperty] = new Binding(nameof(vm.SubtitleTextEffect)) { Source = vm, Mode = BindingMode.OneWay },
                     [!TextBlock.InlinesProperty] = new Binding(nameof(SubtitleLineViewModel.Text)) { Converter = syntaxHighlightingConverter, Mode = BindingMode.OneWay },
                     [!TextBlock.FlowDirectionProperty] = new Binding(nameof(SubtitleLineViewModel.Text)) { Converter = textToFlowDirectionConverter, Mode = BindingMode.OneWay },
                 };
@@ -483,6 +484,7 @@ public static partial class InitListViewAndEditBox
 
                     // Lets the subtitle grid context menu find the word under the pointer (live spell check)
                     Tag = SubtitleGridColumnKeys.OriginalText,
+                    [!Visual.EffectProperty] = new Binding(nameof(vm.SubtitleTextEffect)) { Source = vm, Mode = BindingMode.OneWay },
                     [!TextBlock.InlinesProperty] = new Binding(nameof(SubtitleLineViewModel.OriginalText)) { Converter = syntaxHighlightingConverter, Mode = BindingMode.OneWay },
                     [!TextBlock.FlowDirectionProperty] = new Binding(nameof(SubtitleLineViewModel.OriginalText)) { Converter = textToFlowDirectionConverter, Mode = BindingMode.OneWay },
                 };
@@ -2290,6 +2292,7 @@ public static partial class InitListViewAndEditBox
             Mode = BindingMode.TwoWay
         };
         textBox[AutomationProperties.NameProperty] = Se.Language.General.Text;
+        textBox[!Visual.EffectProperty] = new Binding(nameof(vm.SubtitleTextEffect)) { Source = vm, Mode = BindingMode.OneWay };
 
         // A reference-only row IS editable: typing the missing translation into it is how the line
         // is adopted from the reference - the first character promotes the row to an ordinary
@@ -2480,6 +2483,7 @@ public static partial class InitListViewAndEditBox
         {
             Mode = BindingMode.TwoWay
         };
+        textBox[!Visual.EffectProperty] = new Binding(nameof(vm.SubtitleTextEffect)) { Source = vm, Mode = BindingMode.OneWay };
 
         // An original opened as a read-only reference must not be typed into (issue #13449).
         textBox.Bind(TextBox.IsReadOnlyProperty, new Binding(nameof(vm.IsOriginalReadOnly))

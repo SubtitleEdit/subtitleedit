@@ -635,9 +635,11 @@ public class TimelineTracks : Control, IDisposable
         }
 
         var text = GetText(paragraph, original);
+        var textPosition = new Point(block.X + 5, block.Y + (block.Height - text.Height) / 2);
         using (context.PushClip(block.Deflate(new Thickness(4, 0, 3, 0))))
+        using (_source?.BlurText == true ? context.PushEffect(AudioVisualizer.TextBlurEffect, new Rect(textPosition, new Size(text.Width, text.Height))) : (IDisposable?)null)
         {
-            context.DrawText(text, new Point(block.X + 5, block.Y + (block.Height - text.Height) / 2));
+            context.DrawText(text, textPosition);
         }
     }
 

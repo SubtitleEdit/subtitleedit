@@ -231,6 +231,14 @@ public class AudioVisualizer : Control
     /// number/duration footer stay, so timing still works here, but the text is not drawn twice.
     /// </summary>
     public bool ShowParagraphText { get; set; } = true;
+
+    /// <summary>
+    /// Screen privacy mode (#15300): blur all subtitle text - paragraphs, original-subtitle cues
+    /// and the timeline tracks above the waveform. Call InvalidateVisual after changing it.
+    /// </summary>
+    public bool BlurText { get; set; }
+
+    internal static readonly IEffect TextBlurEffect = new ImmutableBlurEffect(6);
     public bool ShowOriginalSubtitleOverlay { get; set; }
 
     private readonly List<WaveformOriginalSubtitleCue> _originalSubtitleCues = new();
@@ -3725,15 +3733,37 @@ public class AudioVisualizer : Control
         var prepared = GetPreparedParagraphText(text);
         if (Se.Settings.Waveform.WaveformUnwrapText)
         {
-            context.DrawText(GetCachedParagraphText(prepared.Unwrapped, prepared.RightToLeft), new Point(x, y));
+            var unwrapped = GetCachedParagraphText(prepared.Unwrapped, prepared.RightToLeft);
+            using (BlurText ? context.PushEffect(TextBlurEffect, new Rect(x, y, unwrapped.Width, unwrapped.Height)) : (IDisposable?)null)
+            {
+                context.DrawText(unwrapped, new Point(x, y));
+            }
+
             return;
         }
 
-        foreach (var line in prepared.Lines)
+        IDisposable? blur = null;
+        if (BlurText)
         {
-            var formattedText = GetCachedParagraphText(line, prepared.RightToLeft);
-            context.DrawText(formattedText, new Point(x, y));
-            y += formattedText.Height;
+            double width = 0, height = 0;
+            foreach (var line in prepared.Lines)
+            {
+                var formattedText = GetCachedParagraphText(line, prepared.RightToLeft);
+                width = Math.Max(width, formattedText.Width);
+                height += formattedText.Height;
+            }
+
+            blur = context.PushEffect(TextBlurEffect, new Rect(x, y, width, height));
+        }
+
+        using (blur)
+        {
+            foreach (var line in prepared.Lines)
+            {
+                var formattedText = GetCachedParagraphText(line, prepared.RightToLeft);
+                context.DrawText(formattedText, new Point(x, y));
+                y += formattedText.Height;
+            }
         }
     }
 

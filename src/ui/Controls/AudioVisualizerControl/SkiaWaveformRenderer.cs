@@ -57,6 +57,7 @@ internal sealed class SkiaWaveformRenderer
     private readonly SKPaint _vertices = new() { Color = SKColors.White };
     private readonly SKPaint _image = new() { IsAntialias = false };
     private readonly SKPaint _text = new() { IsAntialias = true };
+    private readonly SKImageFilter _textBlur = SKImageFilter.CreateBlur(4, 4);
     private readonly SKPath _path = new();
     private readonly SKPath _wavePath = new();
     private readonly SKPathEffect _dashShotChange = SKPathEffect.CreateDash(new[] { 4f, 4f }, 0);
@@ -816,6 +817,21 @@ internal sealed class SkiaWaveformRenderer
     }
 
     private void DrawParagraphText(SKCanvas canvas, SkiaWaveformFrame f, SkiaParagraph p, float x, float y, byte alpha)
+    {
+        // Screen privacy mode (#15300) blurs the subtitle text; the shared text paint is reset
+        // below so numbers, durations and time labels stay sharp.
+        _text.ImageFilter = f.BlurText ? _textBlur : null;
+        try
+        {
+            DrawParagraphTextLines(canvas, f, p, x, y, alpha);
+        }
+        finally
+        {
+            _text.ImageFilter = null;
+        }
+    }
+
+    private void DrawParagraphTextLines(SKCanvas canvas, SkiaWaveformFrame f, SkiaParagraph p, float x, float y, byte alpha)
     {
         var color = f.TextColor.WithAlpha((byte)(f.TextColor.Alpha * alpha / 255));
         if (f.UnwrapText)

@@ -723,6 +723,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 MaxLines = 1,
             };
             _gridProgress.Add(_textBlockVideoFileName, 0, 1, 1, 3);
+            IsFileNameHidden = UiUtil.HideFileNames;
             _textBlockVideoFileName.PointerPressed += (_, e) => { VideoFileNamePointerPressed?.Invoke(e); };
 
             // Resize the file-name label with the window: cap its width to the space to the
@@ -987,6 +988,15 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
             _textBlockVideoFileName.Text = System.IO.Path.GetFileName(videoFileName);
             UpdateVideoFileNameMaxWidth();
+        }
+
+        /// <summary>
+        /// Blurs the video file name label so it can't be read in a screen recording (#15300).
+        /// </summary>
+        public bool IsFileNameHidden
+        {
+            get => _textBlockVideoFileName.Effect != null;
+            set => _textBlockVideoFileName.Effect = value ? new BlurEffect { Radius = 8 } : null;
         }
 
         // Cap the file-name label to the width available to the right of the centered

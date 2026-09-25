@@ -131,6 +131,7 @@ public class InitWaveform
         // With the track rows on top, the subtitle text lives in its own row; the control is
         // reused across layouts, so this is set on every build, not only on creation.
         vm.AudioVisualizer.ShowParagraphText = !withTimelineTracks;
+        vm.AudioVisualizer.BlurText = UiUtil.HideTexts;
 
         // The waveform is a focusable custom control with no text content, so without an
         // accessible name screen readers announce it as a bare generic Avalonia control (#12087).
@@ -1112,6 +1113,7 @@ public class InitWaveform
             FontSize = settingInitialText.FontSize,
             Margin = new Thickness(settingInitialText.LeftMargin, 0, settingInitialText.RightMargin, 0),
             [!TextBox.TextProperty] = new Binding(nameof(vm.InitialLineText)) { Source = vm, Mode = BindingMode.OneWay },
+            [!Visual.EffectProperty] = new Binding(nameof(vm.SubtitleTextEffect)) { Source = vm, Mode = BindingMode.OneWay },
             [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.InitialTextHint, shortcuts),
             [AutomationProperties.NameProperty] = languageHints.InitialText,
         };
