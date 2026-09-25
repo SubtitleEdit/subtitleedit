@@ -190,6 +190,17 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
             return postProcessed;
         }
 
+        /// <summary>
+        /// Longest text a merged cue may hold: the rule profile's line length times its
+        /// number of lines. A fixed "times two" merged one-line profiles (TikTok/Shorts)
+        /// back into two-line cues (issue #15295).
+        /// </summary>
+        public static int GetParagraphMaxChars()
+        {
+            var general = Configuration.Settings.General;
+            return general.SubtitleLineMaximumLength * Math.Max(1, general.MaxNumberOfLines);
+        }
+
         internal static bool IsNonStandardLineTerminationLanguage(string language)
         {
             return language is "jp" or "ja" or "zh" or "cn" or "yue";
@@ -378,9 +389,10 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
                             MergeNextIntoP(language, pNew, next);
                             var textNoHtml = HtmlUtil.RemoveHtmlTags(pNew.Text, true);
                             var arr = textNoHtml.SplitToLines();
+                            var tooManyLines = arr.Count > Math.Max(1, Configuration.Settings.General.MaxNumberOfLines);
                             foreach (var line in arr)
                             {
-                                if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
+                                if (tooManyLines || line.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
                                 {
                                     var text = Utilities.AutoBreakLine(pNew.Text, language);
                                     arr = text.SplitToLines();
@@ -476,7 +488,9 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
                 var arr = newText.SplitToLines();
                 if (arr.Count == 2)
                 {
-                    if (arr[0].CountCharacters(false) < Configuration.Settings.General.SubtitleLineMaximumLength &&
+                    // Joining into one two-line cue is only allowed when the profile has two lines.
+                    if (Configuration.Settings.General.MaxNumberOfLines >= 2 &&
+                        arr[0].CountCharacters(false) < Configuration.Settings.General.SubtitleLineMaximumLength &&
                         arr[1].CountCharacters(false) < Configuration.Settings.General.SubtitleLineMaximumLength)
                     {
                         p.Text = newText;

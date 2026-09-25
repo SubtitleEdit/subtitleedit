@@ -254,4 +254,69 @@ public class SpeechToTextQualityReportTests
             Configuration.Settings.General.MinimumMillisecondsBetweenLines = oldMinGap;
         }
     }
+
+    // Issue #15295: a one-line profile (TikTok/Shorts) must not get its short cues merged
+    // back into two-line cues - the merge cap was line length times two, whatever the
+    // profile's number of lines.
+    [Theory]
+    [InlineData(14, 1, 14)]
+    [InlineData(42, 2, 84)]
+    [InlineData(20, 0, 20)]
+    public void GetParagraphMaxChars_UsesLineLengthTimesNumberOfLines(int maxLength, int maxLines, int expected)
+    {
+        var oldMaxLen = Configuration.Settings.General.SubtitleLineMaximumLength;
+        var oldMaxLines = Configuration.Settings.General.MaxNumberOfLines;
+        try
+        {
+            Configuration.Settings.General.SubtitleLineMaximumLength = maxLength;
+            Configuration.Settings.General.MaxNumberOfLines = maxLines;
+
+            Assert.Equal(expected, SpeechToTextPostProcessor.GetParagraphMaxChars());
+        }
+        finally
+        {
+            Configuration.Settings.General.SubtitleLineMaximumLength = oldMaxLen;
+            Configuration.Settings.General.MaxNumberOfLines = oldMaxLines;
+        }
+    }
+
+    [Fact]
+    public void Fix_OneLineProfile_MergeKeepsCuesOnOneLine()
+    {
+        var oldMaxLen = Configuration.Settings.General.SubtitleLineMaximumLength;
+        var oldMaxLines = Configuration.Settings.General.MaxNumberOfLines;
+        var oldMergeShorter = Configuration.Settings.General.MergeLinesShorterThan;
+        try
+        {
+            Configuration.Settings.General.SubtitleLineMaximumLength = 14;
+            Configuration.Settings.General.MaxNumberOfLines = 1;
+            Configuration.Settings.General.MergeLinesShorterThan = 15; // one-line profile: break only above the line length
+
+            // Word-sized cues back to back, no sentence endings - all qualify for merging.
+            var subtitle = Make(
+                ("so this is", 0, 600),
+                ("how we", 600, 1000),
+                ("make the", 1000, 1500),
+                ("short", 1500, 1800),
+                ("captions for", 1800, 2400),
+                ("the video", 2400, 3000),
+                ("today", 3000, 3400),
+                ("and more", 3400, 4000));
+
+            var pp = new SpeechToTextPostProcessor("en") { ParagraphMaxChars = SpeechToTextPostProcessor.GetParagraphMaxChars() };
+            var result = pp.Fix(subtitle, true, false, true, false, false, true, SpeechToTextPostProcessor.Engine.Whisper);
+
+            foreach (var p in result.Paragraphs)
+            {
+                Assert.DoesNotContain("\n", p.Text);
+                Assert.True(p.Text.Length <= 14, $"'{p.Text}' is longer than the 14-char line");
+            }
+        }
+        finally
+        {
+            Configuration.Settings.General.SubtitleLineMaximumLength = oldMaxLen;
+            Configuration.Settings.General.MaxNumberOfLines = oldMaxLines;
+            Configuration.Settings.General.MergeLinesShorterThan = oldMergeShorter;
+        }
+    }
 }
