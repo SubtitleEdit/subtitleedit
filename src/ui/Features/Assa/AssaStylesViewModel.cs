@@ -76,6 +76,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     private readonly System.Timers.Timer _timerUpdatePreview;
     private readonly List<string> _extraCategories = new();
     private readonly FileStyleRenameTracker _renameTracker;
+    private bool _isSyncingStorageOrder;
 
     public AssaStylesViewModel(IFileHelper fileHelper, IWindowService windowService)
     {
@@ -103,7 +104,13 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         _renameTracker = new FileStyleRenameTracker(FileStyles, () => _subtitle, UpdateUsages);
 
         StorageStylesView = new ObservableCollection<StyleDisplay>();
-        StorageStyles.CollectionChanged += (_, _) => RefreshStorageStylesView();
+        StorageStyles.CollectionChanged += (_, _) =>
+        {
+            if (!_isSyncingStorageOrder)
+            {
+                RefreshStorageStylesView();
+            }
+        };
         RefreshStorageStylesView();
         RebuildStorageCategories();
 
@@ -387,6 +394,60 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     }
 
     [RelayCommand]
+    private void StorageMoveUp() => MoveStorageStyles(ListMoveDirection.Up);
+
+    [RelayCommand]
+    private void StorageMoveDown() => MoveStorageStyles(ListMoveDirection.Down);
+
+    [RelayCommand]
+    private void StorageMoveToTop() => MoveStorageStyles(ListMoveDirection.Top);
+
+    [RelayCommand]
+    private void StorageMoveToBottom() => MoveStorageStyles(ListMoveDirection.Bottom);
+
+    /// <summary>
+    /// Reorders the selected storage styles (#15312) - saved to settings in list order on OK.
+    /// The grid shows a category-filtered view, so the rows move within the view and the
+    /// view's new order is written back into the slots those styles hold in the full list;
+    /// styles of other categories keep their positions.
+    /// </summary>
+    private void MoveStorageStyles(ListMoveDirection direction)
+    {
+        TableViewExtras.MoveSelectedRows(StorageStyleGrid, StorageStylesView, direction);
+
+        var slots = new List<int>();
+        for (var i = 0; i < StorageStyles.Count; i++)
+        {
+            if (IsStyleInSelectedCategory(StorageStyles[i]))
+            {
+                slots.Add(i);
+            }
+        }
+
+        if (slots.Count != StorageStylesView.Count)
+        {
+            RefreshStorageStylesView();
+            return;
+        }
+
+        _isSyncingStorageOrder = true;
+        try
+        {
+            for (var i = 0; i < slots.Count; i++)
+            {
+                if (!ReferenceEquals(StorageStyles[slots[i]], StorageStylesView[i]))
+                {
+                    StorageStyles[slots[i]] = StorageStylesView[i];
+                }
+            }
+        }
+        finally
+        {
+            _isSyncingStorageOrder = false;
+        }
+    }
+
+    [RelayCommand]
     private void FilesDuplicate()
     {
         var selectedItems = FileStyleGrid.SelectedItems?.Cast<StyleDisplay>().ToList() ?? new List<StyleDisplay>();
@@ -447,7 +508,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     }
 
     [RelayCommand]
-    private void FileCopyToStorage()
+    private async Task FileCopyToStorage()
     {
         var selectedItems = FileStyleGrid.SelectedItems?.Cast<StyleDisplay>().ToList() ?? new List<StyleDisplay>();
         if (Window == null || selectedItems.Count == 0)
@@ -455,11 +516,89 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        foreach (var item in selectedItems)
+        await CopyStyles(
+            selectedItems,
+            StorageStyles,
+            Se.Language.Assa.StyleXAlreadyExistsInStorage,
+            style => new StyleDisplay(style) { Category = CategoryForNewStyle() });
+    }
+
+    /// <summary>
+    /// Copies styles between the file and storage lists. A name clash asks whether to
+    /// overwrite the existing style or keep both - always adding a "_2" copy made it
+    /// impossible to update a saved style from an edited file style (#15312). An overwrite
+    /// keeps the target's position, name, category and default flag.
+    /// </summary>
+    private async Task CopyStyles(
+        List<StyleDisplay> sourceStyles,
+        ObservableCollection<StyleDisplay> target,
+        string alreadyExistsFormat,
+        Func<SsaStyle, StyleDisplay> makeNew)
+    {
+        var conflictCount = sourceStyles.Count(s => target.Any(t => t.Name.Equals(s.Name, StringComparison.OrdinalIgnoreCase)));
+        MessageBoxResult? answerForAll = null;
+
+        foreach (var item in sourceStyles)
         {
-            var style = item.ToSsaStyle();
-            style.Name = MakeUniqueName(style.Name, StorageStyles);
-            StorageStyles.Add(new StyleDisplay(style) { Category = CategoryForNewStyle() });
+            var existing = target.FirstOrDefault(p => p.Name.Equals(item.Name, StringComparison.OrdinalIgnoreCase));
+            if (existing == null)
+            {
+                target.Add(makeNew(item.ToSsaStyle()));
+                continue;
+            }
+
+            var answer = answerForAll;
+            if (answer == null)
+            {
+                var message = string.Format(alreadyExistsFormat, item.Name);
+                if (conflictCount > 1)
+                {
+                    var (result, doForAll) = await MessageBox.ShowWithDoNotAskAgain(
+                        Window!,
+                        Se.Language.General.OverwriteQuestion,
+                        message,
+                        Se.Language.Assa.DoThisForAllConflictingStyles,
+                        MessageBoxButtons.Cancel,
+                        MessageBoxIcon.Question,
+                        Se.Language.Assa.Overwrite,
+                        Se.Language.Assa.KeepBoth);
+                    answer = result;
+                    if (doForAll)
+                    {
+                        answerForAll = result;
+                    }
+                }
+                else
+                {
+                    answer = await MessageBox.Show(
+                        Window!,
+                        Se.Language.General.OverwriteQuestion,
+                        message,
+                        MessageBoxButtons.Cancel,
+                        MessageBoxIcon.Question,
+                        Se.Language.Assa.Overwrite,
+                        Se.Language.Assa.KeepBoth);
+                }
+            }
+
+            if (answer == MessageBoxResult.Custom1)
+            {
+                existing.CopyFormattingFrom(item);
+                if (ReferenceEquals(existing, CurrentStyle))
+                {
+                    SelectedBorderType = existing.BorderStyle;
+                }
+            }
+            else if (answer == MessageBoxResult.Custom2)
+            {
+                var style = item.ToSsaStyle();
+                style.Name = MakeUniqueName(style.Name, target);
+                target.Add(makeNew(style));
+            }
+            else
+            {
+                return;
+            }
         }
     }
 
@@ -761,7 +900,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     }
 
     [RelayCommand]
-    private void StorageCopyToFiles()
+    private async Task StorageCopyToFiles()
     {
         var selectedItems = StorageStyleGrid.SelectedItems?.Cast<StyleDisplay>().ToList() ?? new List<StyleDisplay>();
         if (Window == null || selectedItems.Count == 0)
@@ -769,12 +908,12 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        foreach (var item in selectedItems)
-        {
-            var style = item.ToSsaStyle();
-            style.Name = MakeUniqueName(style.Name, FileStyles);
-            FileStyles.Add(new StyleDisplay(style));
-        }
+        await CopyStyles(
+            selectedItems,
+            FileStyles,
+            Se.Language.Assa.StyleXAlreadyExistsInFile,
+            style => new StyleDisplay(style));
+        UpdateUsages();
     }
 
     [RelayCommand]
@@ -1446,6 +1585,25 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         }
     }
 
+    internal void StorageStylesMoveKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.KeyModifiers != KeyModifiers.Control || e.Source is TextBox)
+        {
+            return;
+        }
+
+        if (e.Key == Key.Up)
+        {
+            MoveStorageStyles(ListMoveDirection.Up);
+            e.Handled = true;
+        }
+        else if (e.Key == Key.Down)
+        {
+            MoveStorageStyles(ListMoveDirection.Down);
+            e.Handled = true;
+        }
+    }
+
     private void DeleteFileStyle(StyleDisplay? selectedStyle)
     {
         if (selectedStyle == null)
@@ -1570,5 +1728,6 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     {
         IsDeleteAllVisible = StorageStyles.Count > 0;
         IsDeleteVisible = SelectedStorageStyle != null;
+        IsMoveVisible = StorageStylesView.Count > 1 && StorageStyleGrid.SelectedItems?.Count > 0;
     }
 }

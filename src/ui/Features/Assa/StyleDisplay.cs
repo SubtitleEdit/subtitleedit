@@ -260,6 +260,36 @@ public partial class StyleDisplay : ObservableObject
         SetAlignment(style.Alignment);
     }
 
+    /// <summary>
+    /// Takes over every formatting property of <paramref name="other"/>, keeping this style's
+    /// identity (name, category, default flag, usage count). Used when a copy between file and
+    /// storage overwrites an existing style of the same name (#15312).
+    /// </summary>
+    internal void CopyFormattingFrom(StyleDisplay other)
+    {
+        FontName = other.FontName;
+        FontSize = other.FontSize;
+        ColorPrimary = other.ColorPrimary;
+        ColorSecondary = other.ColorSecondary;
+        ColorOutline = other.ColorOutline;
+        ColorShadow = other.ColorShadow;
+        OutlineWidth = other.OutlineWidth;
+        ShadowWidth = other.ShadowWidth;
+        Bold = other.Bold;
+        Italic = other.Italic;
+        Underline = other.Underline;
+        Strikeout = other.Strikeout;
+        ScaleX = other.ScaleX;
+        ScaleY = other.ScaleY;
+        Spacing = other.Spacing;
+        Angle = other.Angle;
+        MarginLeft = other.MarginLeft;
+        MarginRight = other.MarginRight;
+        MarginVertical = other.MarginVertical;
+        BorderStyle = other.BorderStyle;
+        SetAlignment(other.GetAlignment());
+    }
+
     internal SsaStyle ToSsaStyle()
     {
         return new SsaStyle
