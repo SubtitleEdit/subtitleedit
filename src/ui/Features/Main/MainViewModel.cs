@@ -226,6 +226,9 @@ public partial class MainViewModel :
 {
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _subtitles;
     [ObservableProperty] private SubtitleLineViewModel? _selectedSubtitle;
+    // The grid's selection as the selection machinery sees it - display-only reference rows included,
+    // so the edit boxes can follow the user onto one. Commands that change lines must read
+    // GetSelectedEditableSubtitles() instead.
     private List<SubtitleLineViewModel>? _selectedSubtitles;
     [ObservableProperty] private int? _selectedSubtitleIndex;
 
@@ -610,6 +613,32 @@ public partial class MainViewModel :
         }
 
         return ordered;
+    }
+
+    /// <summary>
+    /// The cached selection without the display-only reference rows, in grid order. A command that
+    /// writes to the selected lines must use this rather than <c>_selectedSubtitles</c>: text set on
+    /// a reference row does not promote it, so it stayed unnumbered and outside the working subtitle
+    /// - "surround with" left <c>""</c> in rows that were never saved (#15299).
+    /// </summary>
+    private List<SubtitleLineViewModel> GetSelectedEditableSubtitles()
+    {
+        var selected = _selectedSubtitles;
+        if (selected == null || selected.Count == 0)
+        {
+            return [];
+        }
+
+        var result = new List<SubtitleLineViewModel>(selected.Count);
+        foreach (var line in selected)
+        {
+            if (!line.IsReferenceOnly)
+            {
+                result.Add(line);
+            }
+        }
+
+        return result;
     }
 
     public TableViewColumnManager? SubtitleGridColumnManager { get; set; }
@@ -15700,7 +15729,7 @@ public partial class MainViewModel :
     {
         if (IsSubtitleGridFocused())
         {
-            var selectedItems = _selectedSubtitles?.ToList() ?? [];
+            var selectedItems = GetSelectedEditableSubtitles();
             if (selectedItems.Count == 0)
             {
                 return;
@@ -15920,7 +15949,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void ToggleLinesItalicOrSelectedText()
     {
-        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0)
         {
             return;
@@ -15945,7 +15974,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void ToggleLinesBoldOrSelectedText()
     {
-        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0)
         {
             return;
@@ -15969,7 +15998,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void ToggleLinesUnderlineOrSelectedText()
     {
-        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0)
         {
             return;
@@ -15998,7 +16027,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0)
         {
             return;
@@ -16287,7 +16316,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task ShowFontNamePicker()
     {
-        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0)
         {
             return;
@@ -16305,7 +16334,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task ShowColorPicker()
     {
-        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0)
         {
             return;
@@ -16401,7 +16430,7 @@ public partial class MainViewModel :
 
     private void ToggleColor(Color color)
     {
-        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0)
         {
             return;
@@ -16488,7 +16517,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void RemoveColor()
     {
-        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0)
         {
             return;
@@ -16499,7 +16528,7 @@ public partial class MainViewModel :
 
     private void SurroundWith(string surroundLeft, string surroundRight)
     {
-        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0)
         {
             return;
@@ -16619,7 +16648,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void RemoveFormattingAll()
     {
-        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0)
         {
             return;
@@ -16636,7 +16665,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void RemoveFormattingItalic()
     {
-        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0)
         {
             return;
@@ -16658,7 +16687,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void RemoveFormattingBold()
     {
-        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0)
         {
             return;
@@ -16680,7 +16709,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void RemoveFormattingUnderline()
     {
-        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0)
         {
             return;
@@ -16702,7 +16731,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void RemoveFormattingColor()
     {
-        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0)
         {
             return;
@@ -16716,7 +16745,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void RemoveFormattingFontName()
     {
-        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0)
         {
             return;
@@ -16730,7 +16759,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void RemoveFormattingAligment()
     {
-        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0)
         {
             return;
@@ -21100,7 +21129,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void ExtendSelectedToPrevious()
     {
-        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0 || AreTimeCodesLocked)
         {
             return;
@@ -21134,7 +21163,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void ExtendSelectedToNext()
     {
-        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0 || AreTimeCodesLocked)
         {
             return;
@@ -28504,7 +28533,7 @@ public partial class MainViewModel :
         // The selection may span display-only reference rows (they are selectable so their text
         // can be read), but they belong to the original, not the working subtitle - deleting one
         // would permanently drop that line from an editable original on the next capture.
-        var selectedItems = _selectedSubtitles?.Where(p => !p.IsReferenceOnly).ToList() ?? [];
+        var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0)
         {
             return;
@@ -28705,7 +28734,7 @@ public partial class MainViewModel :
     private async Task RippleDeleteSelectedItems()
     {
         // Same reference-row rule as DeleteSelectedItems: display-only rows are not ours to delete.
-        var selectedItems = _selectedSubtitles?.Where(p => !p.IsReferenceOnly).ToList() ?? [];
+        var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0)
         {
             return;
@@ -29079,7 +29108,7 @@ public partial class MainViewModel :
 
     private void ToggleItalic()
     {
-        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0)
         {
             return;
@@ -29138,7 +29167,7 @@ public partial class MainViewModel :
 
     private void ToggleBold()
     {
-        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0)
         {
             return;
@@ -29198,7 +29227,7 @@ public partial class MainViewModel :
     // SE 4 parity: the third of the list view formatting toggles (italic/bold/underline).
     private void ToggleUnderline()
     {
-        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0)
         {
             return;
@@ -29265,7 +29294,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0)
         {
             return;
@@ -29286,7 +29315,7 @@ public partial class MainViewModel :
 
     private void SetAlignmentToSelected(string alignment, bool allowToggle = false)
     {
-        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0)
         {
             return;
