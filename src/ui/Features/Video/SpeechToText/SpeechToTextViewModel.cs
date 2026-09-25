@@ -1350,7 +1350,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             // output into one space-riddled blob cut mid-sentence.
             var subtitle = Qwen3AsrWordSegmenter.BuildSubtitle(
                 words,
-                Configuration.Settings.General.SubtitleLineMaximumLength * 2,
+                SpeechToTextPostProcessor.GetParagraphMaxChars(),
                 Qwen3AsrWordSegmenter.DefaultMaxCharsCjk);
 
             FixNegativeDuration(subtitle);
@@ -2234,7 +2234,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         var postProcessor = new SpeechToTextPostProcessor(DoTranslateToEnglish ? "en" : languageCode)
         {
-            ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
+            ParagraphMaxChars = SpeechToTextPostProcessor.GetParagraphMaxChars(),
             RemoveNonSpeechLines = Se.Settings.Tools.AudioToText.WhisperPostProcessingRemoveNonSpeechLines,
             RemoveRepeatedLines = Se.Settings.Tools.AudioToText.WhisperPostProcessingRemoveRepeatedLines,
             // The engine's own parameters, so word-highlighted output is left alone by the
