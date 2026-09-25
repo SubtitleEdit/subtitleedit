@@ -304,9 +304,9 @@ public partial class ColorPickerViewModel : ObservableObject
 
     private void SaveSettings()
     {
-        var color = SelectedColor.FromColorToHex();
         var colorList = new List<string>
         {
+            SelectedColor.FromColorToHex(),
             Se.Settings.Tools.LastColorPickerColor,
             Se.Settings.Tools.LastColorPickerColor1,
             Se.Settings.Tools.LastColorPickerColor2,
@@ -317,9 +317,17 @@ public partial class ColorPickerViewModel : ObservableObject
             Se.Settings.Tools.LastColorPickerColor7,
         };
 
-        colorList = colorList.Where(c => c != color).ToList();
+        // Compare parsed colors (not hex text), so "#ffffff", "#FFFFFF" and "#FFFFFFFF" count as
+        // the same color, and remove duplicates from the whole list - not only the new color (#15296).
+        colorList = colorList
+            .Where(c => !string.IsNullOrWhiteSpace(c))
+            .Select(c => c.FromHexToColor())
+            .Distinct()
+            .Select(c => c.FromColorToHex())
+            .ToList();
+
         var random = new Random();
-        while (colorList.Count < 7)
+        while (colorList.Count < 8)
         {
             colorList.Add(
                 new Color(
@@ -331,14 +339,14 @@ public partial class ColorPickerViewModel : ObservableObject
             );
         }
 
-        Se.Settings.Tools.LastColorPickerColor = color;
-        Se.Settings.Tools.LastColorPickerColor1 = colorList[0];
-        Se.Settings.Tools.LastColorPickerColor2 = colorList[1];
-        Se.Settings.Tools.LastColorPickerColor3 = colorList[2];
-        Se.Settings.Tools.LastColorPickerColor4 = colorList[3];
-        Se.Settings.Tools.LastColorPickerColor5 = colorList[4];
-        Se.Settings.Tools.LastColorPickerColor6 = colorList[5];
-        Se.Settings.Tools.LastColorPickerColor7 = colorList[6];
+        Se.Settings.Tools.LastColorPickerColor = colorList[0];
+        Se.Settings.Tools.LastColorPickerColor1 = colorList[1];
+        Se.Settings.Tools.LastColorPickerColor2 = colorList[2];
+        Se.Settings.Tools.LastColorPickerColor3 = colorList[3];
+        Se.Settings.Tools.LastColorPickerColor4 = colorList[4];
+        Se.Settings.Tools.LastColorPickerColor5 = colorList[5];
+        Se.Settings.Tools.LastColorPickerColor6 = colorList[6];
+        Se.Settings.Tools.LastColorPickerColor7 = colorList[7];
 
         Se.SaveSettings();
     }
