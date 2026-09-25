@@ -2999,13 +2999,16 @@ public static class UiUtil
         var fontFamily = FontFamilyHelper.Make(fontName);
         var styles = new Styles();
 
-        // All templated controls, incl. windows and popups: CheckBox/RadioButton/ToggleSwitch/TabItem etc.
-        // render plain string content without a TextBlock, so a TextBlock style alone misses them (#15255).
-        styles.Add(new Style(x => x.Is<TemplatedControl>())
+        // Set the font on windows and popup roots only and let it inherit down: CheckBox/RadioButton/
+        // ToggleSwitch/TabItem etc. render plain string content without a TextBlock, so a TextBlock
+        // style alone misses them (#15255). Do not style every TemplatedControl - that also hits
+        // template parts like a TextBox's ScrollViewer and cuts off a font set locally on the control
+        // (e.g. the subtitle text box font), so the TextPresenter fell back to the UI font.
+        styles.Add(new Style(x => x.Is<TopLevel>())
         {
             Setters =
             {
-                new Setter(TemplatedControl.FontFamilyProperty, fontFamily),
+                new Setter(TopLevel.FontFamilyProperty, fontFamily),
             }
         });
 
