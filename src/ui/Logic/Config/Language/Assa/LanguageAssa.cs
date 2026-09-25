@@ -130,6 +130,11 @@ public class LanguageAssa
     public string Graphics { get; set; }
     public string CopyToStorageStyles { get; set; }
     public string CopyToFileStyles { get; set; }
+    public string StyleXAlreadyExistsInStorage { get; set; }
+    public string StyleXAlreadyExistsInFile { get; set; }
+    public string Overwrite { get; set; }
+    public string KeepBoth { get; set; }
+    public string DoThisForAllConflictingStyles { get; set; }
     public string SetStyleAsDefault { get; set; }
     public string TakeUsagesFromDotDotDot { get; set; }
     public string ReplaceStyleWithDotDotDot { get; set; }
@@ -371,6 +376,11 @@ public class LanguageAssa
         Graphics = "Graphics";
         CopyToStorageStyles = "Copy to storage styles";
         CopyToFileStyles = "Copy to file styles";
+        StyleXAlreadyExistsInStorage = "A style named \"{0}\" already exists in storage.\n\nOverwrite it, or keep both (the copy gets a new name)?";
+        StyleXAlreadyExistsInFile = "A style named \"{0}\" already exists in the file.\n\nOverwrite it, or keep both (the copy gets a new name)?";
+        Overwrite = "Overwrite";
+        KeepBoth = "Keep both";
+        DoThisForAllConflictingStyles = "Do this for all conflicting styles";
         SetStyleAsDefault = "Set style as default";
         TakeUsagesFromDotDotDot = "Take usages from...";
         ReplaceStyleWithDotDotDot = "Replace style with...";

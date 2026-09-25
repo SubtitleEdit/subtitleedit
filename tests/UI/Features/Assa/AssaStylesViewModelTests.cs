@@ -202,4 +202,72 @@ public class AssaStylesViewModelTests
         Assert.Equal("Project A", style.CategoryDisplay);
         Assert.Contains(nameof(StyleDisplay.CategoryDisplay), changed);
     }
+
+    /// <summary>
+    /// Storage styles can be reordered (#15312). The grid shows a category-filtered view, so a
+    /// move within the view must reorder only that category's styles in the saved list and
+    /// leave the other categories' styles where they are.
+    /// </summary>
+    [AvaloniaFact]
+    public void StorageMoveUp_InFilteredCategory_ReordersOnlyThatCategory()
+    {
+        var services = new ServiceCollection();
+        services.AddSubtitleEditServices();
+        using var provider = services.BuildServiceProvider();
+        var vm = provider.GetRequiredService<AssaStylesViewModel>();
+
+        vm.StorageStyles.Clear();
+        var a = new StyleDisplay { Name = "A", Category = "X" };
+        var b = new StyleDisplay { Name = "B", Category = "Y" };
+        var c = new StyleDisplay { Name = "C", Category = "X" };
+        vm.StorageStyles.Add(a);
+        vm.StorageStyles.Add(b);
+        vm.StorageStyles.Add(c);
+        vm.StorageCategories.Add("X");
+        vm.SelectedStorageCategory = "X";
+
+        var grid = vm.StorageStyleGrid;
+        grid.Columns.Add(new Avalonia.Controls.TableViewColumn { Header = "Name", Binding = new Avalonia.Data.Binding(nameof(StyleDisplay.Name)) });
+        grid.ItemsSource = vm.StorageStylesView;
+        var window = new Avalonia.Controls.Window { Width = 400, Height = 300, Content = grid };
+        window.Show();
+        try
+        {
+            Assert.Equal(new[] { a, c }, vm.StorageStylesView);
+            grid.SelectedItem = c;
+
+            vm.StorageMoveUpCommand.Execute(null);
+
+            Assert.Equal(new[] { c, a }, vm.StorageStylesView);
+            Assert.Equal(new[] { c, b, a }, vm.StorageStyles);
+            Assert.Same(c, grid.SelectedItem);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    /// <summary>
+    /// Overwriting an existing style on copy between file and storage (#15312) takes the
+    /// formatting but keeps the target's identity: name, category and default flag.
+    /// </summary>
+    [Fact]
+    public void StyleDisplay_CopyFormattingFrom_KeepsIdentity()
+    {
+        var target = new StyleDisplay { Name = "Title", Category = "Project A", IsDefault = true, FontSize = 20 };
+        var source = new StyleDisplay { Name = "title", FontSize = 42, Bold = true, OutlineWidth = 3, FontName = "Arial" };
+        source.SetAlignment("8");
+
+        target.CopyFormattingFrom(source);
+
+        Assert.Equal("Title", target.Name);
+        Assert.Equal("Project A", target.Category);
+        Assert.True(target.IsDefault);
+        Assert.Equal(42, target.FontSize);
+        Assert.True(target.Bold);
+        Assert.Equal(3, target.OutlineWidth);
+        Assert.Equal("Arial", target.FontName);
+        Assert.Equal("8", target.GetAlignment());
+    }
 }
