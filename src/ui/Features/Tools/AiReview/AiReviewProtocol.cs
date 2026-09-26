@@ -37,9 +37,22 @@ public static class AiReviewProtocol
         "\"orig\" must be the exact original text of line \"n\" - it is used to verify the line number. " +
         "Include only lines that actually need a correction; if none do, answer {\"changes\":[]}.";
 
-    public static string BuildSystemPrompt(string instructions, string languageName)
+    public const string ContextHeading =
+        "Reference information about this video (authoritative for the spelling of names and terms - use it as context only, never copy it into the subtitles):";
+
+    /// <summary>
+    /// The user's instructions, then the optional reference context (names, terms, synopsis), then
+    /// the fixed protocol - the protocol stays last so neither the prompt nor the context can
+    /// override the answer format.
+    /// </summary>
+    public static string BuildSystemPrompt(string instructions, string languageName, string? context = null)
     {
         var prompt = (instructions ?? string.Empty).Replace("{language}", languageName);
+        if (!string.IsNullOrWhiteSpace(context))
+        {
+            prompt += "\n\n" + ContextHeading + "\n" + context.Trim();
+        }
+
         return prompt + ProtocolText;
     }
 

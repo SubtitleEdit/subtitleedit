@@ -27,6 +27,21 @@ public class LanguageAiReview
     public string EngineError { get; set; }
     public string PlayCurrentLineHint { get; set; }
     public string EditAfterHint { get; set; }
+    public string Template { get; set; }
+    public string TemplatePlaceholder { get; set; }
+    public string TemplateStandard { get; set; }
+    public string TemplateSpeechToText { get; set; }
+    public string TemplateMachineTranslation { get; set; }
+    public string TemplateSdh { get; set; }
+    public string ReferenceContext { get; set; }
+    public string ReferenceContextInfo { get; set; }
+    public string ReferenceContextPlaceholder { get; set; }
+    public string GenerateContext { get; set; }
+    public string GenerateContextHint { get; set; }
+    public string GeneratingContextPartXOfY { get; set; }
+    public string GeneratingContextSynopsis { get; set; }
+    public string ReplaceContextQuestion { get; set; }
+    public string NoContextGenerated { get; set; }
 
     public LanguageAiReview()
     {
@@ -55,5 +70,20 @@ public class LanguageAiReview
         EngineError = "The AI engine could not be reached: {0}";
         PlayCurrentLineHint = "Play the selected line in the video player and pause at its end (also double-click a line)";
         EditAfterHint = "Click the selected row's text to edit the fix before applying it (Enter saves, Escape cancels)";
+        Template = "Template";
+        TemplatePlaceholder = "Choose a template to replace the prompt";
+        TemplateStandard = "Standard proofreading";
+        TemplateSpeechToText = "Speech-to-text cleanup";
+        TemplateMachineTranslation = "Machine translation fix";
+        TemplateSdh = "SDH / hearing impaired";
+        ReferenceContext = "Reference context";
+        ReferenceContextInfo = "Optional. Names, characters, glossary, synopsis or style notes - the model treats this as the authority for names and terms. Sent with every batch.";
+        ReferenceContextPlaceholder = "Names: Kaito, Aunt Mei, Dr. Hollis\nTerms: Shinkansen, warp core\nSynopsis: Kaito travels to Tokyo to find his missing father.";
+        GenerateContext = "Generate with AI";
+        GenerateContextHint = "Let the selected AI engine read the subtitle and draft names, terms and a synopsis - check the result before use";
+        GeneratingContextPartXOfY = "Reading part {0} of {1}...";
+        GeneratingContextSynopsis = "Writing synopsis...";
+        ReplaceContextQuestion = "Replace the current reference context?";
+        NoContextGenerated = "The AI engine returned no usable reference information.";
     }
 }

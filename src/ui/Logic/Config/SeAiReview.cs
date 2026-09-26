@@ -10,6 +10,9 @@ public class SeAiReview
     public string OpenAiCompatibleModel { get; set; }
     public string OpenAiCompatibleApiKey { get; set; }
     public string Prompt { get; set; }
+
+    /// <summary>Optional reference information (names, terms, synopsis) appended to every review prompt.</summary>
+    public string Context { get; set; }
     public int MaxLinesPerBatch { get; set; }
     public int RequestDelaySeconds { get; set; }
 
@@ -32,6 +35,7 @@ public class SeAiReview
         OpenAiCompatibleModel = string.Empty;
         OpenAiCompatibleApiKey = string.Empty;
         Prompt = DefaultPrompt;
+        Context = string.Empty;
         MaxLinesPerBatch = 15;
         RequestDelaySeconds = 0;
     }
