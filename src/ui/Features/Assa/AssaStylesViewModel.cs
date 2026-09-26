@@ -313,7 +313,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         return StyleFileImportHelper.LoadStyles(fileName, new AdvancedSubStationAlpha());
     }
 
-    private static string MakeUniqueName(string name, ObservableCollection<StyleDisplay> styles)
+    private static string MakeUniqueName(string name, IEnumerable<StyleDisplay> styles)
     {
         var newName = name;
         if (styles.Any(p => p.Name.Equals(newName, StringComparison.OrdinalIgnoreCase)))
@@ -520,11 +520,13 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
+        var category = CategoryForNewStyle();
         await CopyStyles(
             selectedItems,
             StorageStyles,
+            s => IsInStorageCategory(s, category),
             Se.Language.Assa.StyleXAlreadyExistsInStorage,
-            style => new StyleDisplay(style) { Category = CategoryForNewStyle() });
+            style => new StyleDisplay(style) { Category = category });
     }
 
     /// <summary>
@@ -532,19 +534,22 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     /// overwrite the existing style or keep both - always adding a "_2" copy made it
     /// impossible to update a saved style from an edited file style (#15312). An overwrite
     /// keeps the target's position, name, category and default flag.
+    /// Only the target styles matching <paramref name="isInConflictScope"/> can clash - in storage
+    /// that is the category the copies land in, as names only need to be unique per category (#15332).
     /// </summary>
     private async Task CopyStyles(
         List<StyleDisplay> sourceStyles,
         ObservableCollection<StyleDisplay> target,
+        Func<StyleDisplay, bool> isInConflictScope,
         string alreadyExistsFormat,
         Func<SsaStyle, StyleDisplay> makeNew)
     {
-        var conflictCount = sourceStyles.Count(s => target.Any(t => t.Name.Equals(s.Name, StringComparison.OrdinalIgnoreCase)));
+        var conflictCount = sourceStyles.Count(s => target.Any(t => isInConflictScope(t) && t.Name.Equals(s.Name, StringComparison.OrdinalIgnoreCase)));
         MessageBoxResult? answerForAll = null;
 
         foreach (var item in sourceStyles)
         {
-            var existing = target.FirstOrDefault(p => p.Name.Equals(item.Name, StringComparison.OrdinalIgnoreCase));
+            var existing = target.FirstOrDefault(p => isInConflictScope(p) && p.Name.Equals(item.Name, StringComparison.OrdinalIgnoreCase));
             if (existing == null)
             {
                 target.Add(makeNew(item.ToSsaStyle()));
@@ -596,7 +601,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
             else if (answer == MessageBoxResult.Custom2)
             {
                 var style = item.ToSsaStyle();
-                style.Name = MakeUniqueName(style.Name, target);
+                style.Name = MakeUniqueName(style.Name, target.Where(isInConflictScope));
                 target.Add(makeNew(style));
             }
             else
@@ -716,9 +721,15 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         }
 
         var format = new AdvancedSubStationAlpha();
-        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.Assa.OpenStyleImportFile, format.Name, "*" + format.Extension, "Aegisub style file", "*.sty");
+        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.Assa.OpenStyleImportFile, Se.Language.Assa.StyleImportFiles, "*" + format.Extension + ";*.sty;*" + StyleFileImportHelper.Se4CategoriesTemplateExtension);
         if (string.IsNullOrEmpty(fileName))
         {
+            return;
+        }
+
+        if (StyleFileImportHelper.IsSe4CategoriesTemplate(fileName))
+        {
+            await StorageImportSe4Template(fileName);
             return;
         }
 
@@ -734,9 +745,10 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
+        var category = CategoryForNewStyle();
         var result = await _windowService.ShowDialogAsync<AssaStylePickerWindow, AssaStylePickerViewModel>(Window, vm =>
         {
-            vm.Initialize(Se.Language.General.Import, ssaStyles.Select(p => new StyleDisplay(p) { IsSelected = true, Name = MakeUniqueName(p.Name, StorageStyles) }).ToList(), Se.Language.General.Import, false);
+            vm.Initialize(Se.Language.General.Import, ssaStyles.Select(p => new StyleDisplay(p) { IsSelected = true, Name = MakeUniqueName(p.Name, StorageStylesInCategory(category)) }).ToList(), Se.Language.General.Import, false);
         });
 
         var selectedStyles = result.Styles.Where(p => p.IsSelected).ToList();
@@ -745,7 +757,6 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        var category = CategoryForNewStyle();
         foreach (var style in selectedStyles)
         {
             style.Category = category;
@@ -756,24 +767,94 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         UpdateUsages();
     }
 
+    /// <summary>
+    /// Imports a Subtitle Edit 4 category export (#15332) - each style goes to the category it had
+    /// in SE 4, so a whole category set can be restored in one go.
+    /// </summary>
+    private async Task StorageImportSe4Template(string fileName)
+    {
+        var categories = StyleFileImportHelper.LoadSe4CategoriesTemplate(fileName);
+        var importStyles = MakeSe4TemplateImportStyles(categories, StorageStyles);
+        if (importStyles.Count == 0)
+        {
+            await MessageBox.Show(
+                Window!,
+                Se.Language.General.Error,
+                "Nothing to import",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<AssaStylePickerWindow, AssaStylePickerViewModel>(Window!, vm =>
+        {
+            vm.Initialize(Se.Language.General.Import, importStyles, Se.Language.General.Import, false, showCategory: true);
+        });
+
+        var selectedStyles = result.Styles.Where(p => p.IsSelected).ToList();
+        if (!result.OkPressed || selectedStyles.Count == 0)
+        {
+            return;
+        }
+
+        StorageStyles.AddRange(selectedStyles);
+        RebuildStorageCategories();
+        UpdateUsages();
+    }
+
+    /// <summary>
+    /// Turns SE 4 template categories into storage styles. SE 4's "Default" category is the
+    /// built-in Default category here (empty category name). A name that is already taken within
+    /// the style's category gets a "_2" suffix, like the other storage imports.
+    /// </summary>
+    internal static List<StyleDisplay> MakeSe4TemplateImportStyles(List<Se4StyleCategory> categories, IEnumerable<StyleDisplay> storageStyles)
+    {
+        var existing = storageStyles.ToList();
+        var result = new List<StyleDisplay>();
+        foreach (var category in categories)
+        {
+            var storedCategory = category.Name.Equals("Default", StringComparison.OrdinalIgnoreCase) ||
+                                 category.Name.Equals(Se.Language.General.Default, StringComparison.OrdinalIgnoreCase) ||
+                                 category.Name.Equals(Se.Language.Assa.AllCategories, StringComparison.OrdinalIgnoreCase)
+                ? string.Empty
+                : category.Name;
+
+            foreach (var style in category.Styles)
+            {
+                var sameCategory = existing.Concat(result)
+                    .Where(p => string.Equals(p.Category ?? string.Empty, storedCategory, StringComparison.OrdinalIgnoreCase));
+                result.Add(new StyleDisplay(style)
+                {
+                    IsSelected = true,
+                    Name = MakeUniqueName(style.Name, sameCategory),
+                    Category = storedCategory,
+                });
+            }
+        }
+
+        return result;
+    }
+
     [RelayCommand]
     private void StorageNew()
     {
+        var category = CategoryForNewStyle();
+        var categoryStyles = StorageStylesInCategory(category).ToList();
         var name = Se.Language.General.New;
-        if (StorageStyles.Any(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
+        if (categoryStyles.Any(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
         {
             var count = 2;
             var doRepeat = true;
             while (doRepeat)
             {
                 name = Se.Language.General.New + count;
-                doRepeat = StorageStyles.Any(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+                doRepeat = categoryStyles.Any(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
                 count++;
             }
         }
 
         var style = new SsaStyle { Name = name };
-        StorageStyles.Add(new StyleDisplay(style) { Category = CategoryForNewStyle() });
+        StorageStyles.Add(new StyleDisplay(style) { Category = category });
     }
 
     [RelayCommand]
@@ -854,24 +935,25 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
+        var category = CategoryForNewStyle();
         foreach (var selectedStyle in selectedItems)
         {
             var name = selectedStyle.Name + " - " + Se.Language.General.Copy;
-            if (StorageStyles.Any(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
+            if (StorageStylesInCategory(category).Any(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
             {
                 var count = 2;
                 var doRepeat = true;
                 while (doRepeat)
                 {
                     name = selectedStyle.Name + " - " + Se.Language.General.Copy + count;
-                    doRepeat = StorageStyles.Any(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+                    doRepeat = StorageStylesInCategory(category).Any(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
                     count++;
                 }
             }
 
             var style = selectedStyle.ToSsaStyle();
             style.Name = name;
-            StorageStyles.Add(new StyleDisplay(style) { Category = CategoryForNewStyle() });
+            StorageStyles.Add(new StyleDisplay(style) { Category = category });
         }
     }
 
@@ -915,6 +997,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         await CopyStyles(
             selectedItems,
             FileStyles,
+            _ => true,
             Se.Language.Assa.StyleXAlreadyExistsInFile,
             style => new StyleDisplay(style));
         UpdateUsages();
@@ -952,6 +1035,14 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
 
     private string CategoryForNewStyle()
         => SelectedStorageCategory == AllCategoriesLabel ? string.Empty : CategoryLabelToStored(SelectedStorageCategory);
+
+    // Categories are independent style sets, so a style name only has to be unique within its
+    // category - the same name in another category is not a clash (#15332).
+    private static bool IsInStorageCategory(StyleDisplay style, string storedCategory)
+        => string.Equals(style.Category ?? string.Empty, storedCategory, StringComparison.OrdinalIgnoreCase);
+
+    private IEnumerable<StyleDisplay> StorageStylesInCategory(string storedCategory)
+        => StorageStyles.Where(s => IsInStorageCategory(s, storedCategory));
 
     private void RebuildStorageCategories()
     {
