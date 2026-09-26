@@ -17,6 +17,7 @@ public partial class AssaStylePickerViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<StyleDisplay> _styles;
     [ObservableProperty] private StyleDisplay? _selectedStyle;
     [ObservableProperty] private bool _showUsageCount;
+    [ObservableProperty] private bool _showCategory;
 
     public Window? Window { get; internal set; }
     public bool OkPressed { get; private set; }
@@ -52,7 +53,7 @@ public partial class AssaStylePickerViewModel : ObservableObject
         });
     }
 
-    public void Initialize(string title, List<StyleDisplay> styles, string buttonAcceptText, bool showUsageCount)
+    public void Initialize(string title, List<StyleDisplay> styles, string buttonAcceptText, bool showUsageCount, bool showCategory = false)
     {
         Title = title;
         Styles.AddRange(styles);
@@ -64,6 +65,7 @@ public partial class AssaStylePickerViewModel : ObservableObject
 
         ButtonAcceptText = buttonAcceptText;
         ShowUsageCount = showUsageCount;
+        ShowCategory = showCategory;
     }
     
     internal void KeyDown(object? sender, KeyEventArgs e)
