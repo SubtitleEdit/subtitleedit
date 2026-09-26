@@ -82,6 +82,20 @@ public class AssaStylePickerWindow : Window
             Source = vm,
         });
 
+        var categoryColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Category,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(StyleDisplay.CategoryDisplay)),
+            Width = new GridLength(140),
+        };
+        categoryColumn.Bind(SeTableViewColumn.IsVisibleProperty, new Binding(nameof(vm.ShowCategory))
+        {
+            Mode = BindingMode.OneWay,
+            Source = vm,
+        });
+
         // No header sorting: the checked styles are imported/applied in list order
         // (e.g. appended to the file's style list, which is written to the header),
         // so the collection order is not presentation-only.
@@ -90,7 +104,7 @@ public class AssaStylePickerWindow : Window
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.Styles;
 
-        // The usages column has a bound visibility, so all columns go through a
+        // The usages and category columns have a bound visibility, so all columns go through a
         // TableViewColumnManager (TableView itself has no column IsVisible).
         var columnManager = new TableViewColumnManager(dataGrid);
         columnManager.Add(new SeTableViewColumn
@@ -120,6 +134,7 @@ public class AssaStylePickerWindow : Window
             Binding = new Binding(nameof(StyleDisplay.Name)),
             Width = new GridLength(1, GridUnitType.Star),
         });
+        columnManager.Add(categoryColumn);
         columnManager.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.FontName,
