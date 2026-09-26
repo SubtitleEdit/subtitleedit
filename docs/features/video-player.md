@@ -26,6 +26,16 @@ Subtitle Edit includes an integrated video player for previewing subtitles with 
 
 > **Note:** When a "play and stop" playback stops, the video parks on the **last visible frame** of the line (one frame before its end time) rather than exactly on the end time. This keeps the line you just played visible on the video — stopping exactly on the end time would show a blank frame, or the next line when two lines share a boundary. The played line also stays selected in the subtitle grid.
 
+## Video Controls
+
+The row of controls under the video can be customized in **Options → Settings → Video player → Edit video controls...**. The dialog shows a live preview; check or uncheck an item to show or hide it, and use **Move up** / **Move down** to change the order. **Reset** restores the default layout.
+
+- **Play**, **Stop**, **Full screen**, **Video position** (the slider) and **Volume** are laid out left to right in list order. The position slider takes the remaining width.
+- **Position / duration text** and **Video file name** are drawn under the controls. With the position text first (default) it is centered under the slider and the file name is right-aligned; put the file name first to show it on the left and the position text on the right.
+- **Video player name** is the small label in the top right corner.
+
+The layout applies to every video player, including the ones in dialogs like **Set sync point**.
+
 ## Navigation
 
 | Shortcut | Action |
@@ -86,7 +96,7 @@ Configure the video player backend in **Options → Settings → Video player**:
 - **libVLC - Native Window ID rendering** — alternative backend (Windows and Linux only)
 
 The same settings page also has:
-- **Show stop button** / **Show full-screen button**
+- **Video controls** — see [Video Controls](#video-controls)
 - **Hide video controls in full-screen**
 - **Auto-open video file when opening subtitle**
 - **Download mpv** / **Download VLC** — fetch the player library when it is not installed

@@ -816,6 +816,28 @@ public class Se
     /// (the output goes to "-f null -"), so removing it changes nothing on older ffmpeg builds.
     /// A user who has edited the arguments in any other way keeps their own version.
     /// </summary>
+    /// <summary>
+    /// Makes sure the video controls layout has one item per type, and moves the old "Show stop
+    /// button" / "Show full-screen button" settings into the items' visibility (#15286).
+    /// </summary>
+    internal static void MigrateVideoControlsItems(SeVideo video)
+    {
+        video.ControlsItems = SeVideoControlsItem.Normalize(video.ControlsItems);
+
+        if (video.ShowStopButton == false)
+        {
+            video.ControlsItems.First(p => p.Type == SeVideoControlsItemType.Stop).IsVisible = false;
+        }
+
+        if (video.ShowFullscreenButton == false)
+        {
+            video.ControlsItems.First(p => p.Type == SeVideoControlsItemType.FullScreen).IsVisible = false;
+        }
+
+        video.ShowStopButton = null;
+        video.ShowFullscreenButton = null;
+    }
+
     internal static void MigrateShotChangesFfmpegArguments(SeVideo video)
     {
         var arguments = video.ShowChangesFFmpegArguments;
@@ -1013,6 +1035,8 @@ public class Se
 
         MigrateShotChangesFfmpegArguments(Settings.Video);
         MigrateMpvAudioBuffer(Settings.Video);
+
+        MigrateVideoControlsItems(Settings.Video);
 
         if (Settings.Waveform == null)
         {

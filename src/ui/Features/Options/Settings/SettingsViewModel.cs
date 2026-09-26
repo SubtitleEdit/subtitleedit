@@ -22,6 +22,7 @@ using Nikse.SubtitleEdit.Features.Options.Settings.MinGapCalculate;
 using Nikse.SubtitleEdit.Features.Options.Settings.SyntaxColorTooWideSettings;
 using Nikse.SubtitleEdit.Features.Tools.BeautifyTimeCodes.Profile;
 using Nikse.SubtitleEdit.Features.Options.Settings.WaveformThemes;
+using Nikse.SubtitleEdit.Features.Options.Settings.VideoControlsItems;
 using Nikse.SubtitleEdit.Features.Options.Settings.WaveformToolbarItems;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.PickLanguage;
@@ -249,8 +250,6 @@ public partial class SettingsViewModel : ObservableObject
 
     [ObservableProperty] private ObservableCollection<VideoPlayerItem> _videoPlayers;
     [ObservableProperty] private VideoPlayerItem _selectedVideoPlayer;
-    [ObservableProperty] private bool _showStopButton;
-    [ObservableProperty] private bool _showFullscreenButton;
     [ObservableProperty] private bool _fullscreenHideControls;
     [ObservableProperty] private bool _autoOpenVideoFile;
     [ObservableProperty] private bool _showSecondarySubtitleDialog;
@@ -466,6 +465,7 @@ public partial class SettingsViewModel : ObservableObject
     private List<ProfileDisplay> _profilesForEdit;
     private bool _skipRuleValueChanged = false;
     private List<SeWaveformToolbarItem> _waveformToolbarItems = new List<SeWaveformToolbarItem>();
+    private List<SeVideoControlsItem> _videoControlsItems = new List<SeVideoControlsItem>();
 
     public SettingsViewModel(IWindowService windowService, IFolderHelper folderHelper)
     {
@@ -1077,8 +1077,7 @@ public partial class SettingsViewModel : ObservableObject
             SelectedVideoPlayer = videoPlayer;
         }
 
-        ShowStopButton = video.ShowStopButton;
-        ShowFullscreenButton = video.ShowFullscreenButton;
+        _videoControlsItems = SeVideoControlsItem.Normalize(video.ControlsItems);
         FullscreenHideControls = video.FullscreenHideControls;
         AutoOpenVideoFile = video.AutoOpen;
         ShowSecondarySubtitleDialog = video.SecondarySubtitleShowDialog;
@@ -1927,8 +1926,7 @@ public partial class SettingsViewModel : ObservableObject
         general.CustomContinuationStyle = new CustomContinuationStyle(_editCustomContinuationStyle);
 
         video.VideoPlayer = SelectedVideoPlayer.Code;
-        video.ShowStopButton = ShowStopButton;
-        video.ShowFullscreenButton = ShowFullscreenButton;
+        video.ControlsItems = _videoControlsItems.Select(p => new SeVideoControlsItem(p)).ToList();
         video.FullscreenHideControls = FullscreenHideControls;
         video.AutoOpen = AutoOpenVideoFile;
         video.SecondarySubtitleShowDialog = ShowSecondarySubtitleDialog;
@@ -2374,6 +2372,25 @@ public partial class SettingsViewModel : ObservableObject
         if (result.OkPressed && result.HasChanges)
         {
             _waveformToolbarItems = result.ResultToolbarItems;
+        }
+    }
+
+    [RelayCommand]
+    private async Task EditVideoControls()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<VideoControlsItemsWindow, VideoControlsItemsViewModel>(Window, vm =>
+        {
+            vm.Initialize(_videoControlsItems);
+        });
+
+        if (result.OkPressed)
+        {
+            _videoControlsItems = result.ResultItems;
         }
     }
 

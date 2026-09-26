@@ -3208,8 +3208,6 @@
       "FavoriteSubtitleFormats": "Formatos favoritos",
       "FavoriteLanguages": "Idiomas favoritos",
       "WebVttUseXTimestampMap": "WebVTT: usar X-TIMESTAMP-MAP (desfasar códigos de tiempo al cargar)",
-      "ShowStopButton": "Botón parar",
-      "ShowFullscreenButton": "Botón pantalla completa",
       "FullscreenHideControls": "Ocultar los controles de vídeo en pantalla completa",
       "AutoOpenVideoFile": "Abrir vídeo al abrir subtítulos",
       "DownloadMpv": "Descargar mpv",

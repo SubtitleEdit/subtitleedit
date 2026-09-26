@@ -3208,8 +3208,6 @@
       "FavoriteSubtitleFormats": "Favoritt undertekstformater",
       "FavoriteLanguages": "Favorittspråk",
       "WebVttUseXTimestampMap": "WebVTT: bruk X-TIMESTAMP-MAP (forskyv tidskoder ved innlasting)",
-      "ShowStopButton": "Vis stopp-knapp",
-      "ShowFullscreenButton": "Vis fullskjermsknapp",
       "FullscreenHideControls": "Skjul videokontroller i fullskjerm",
       "AutoOpenVideoFile": "Åpne videofil automatisk når undertekst åpnes",
       "DownloadMpv": "Last ned mpv",
