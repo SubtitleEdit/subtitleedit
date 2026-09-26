@@ -697,6 +697,10 @@ public partial class MainViewModel :
     private string? _saveAsFileNameSuggestion;
     private Subtitle _subtitle;
     private Subtitle? _subtitleSecondary;
+    // The second subtitle as parsed from its file, before styling. "Edit second subtitle
+    // settings" re-styles from this: the styled copy can't be styled again, as justified lines
+    // are split into single-line events with a baked-in \pos for the old alignment (#15316).
+    private Subtitle? _subtitleSecondarySource;
     private string? _subtitleSecondaryFileName;
     private Subtitle _subtitleOriginal;
     private SubtitleFormat? _lastOpenSaveFormat;
@@ -4219,6 +4223,7 @@ public partial class MainViewModel :
             _subtitleSecondary = styled;
         }
 
+        _subtitleSecondarySource = subtitle;
         _subtitleSecondaryFileName = fileName;
         PushSecondarySubtitle();
 
@@ -4235,12 +4240,13 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task EditSecondarySubtitleSettings()
     {
-        if (Window == null || _subtitleSecondary == null)
+        if (Window == null || _subtitleSecondary == null || _subtitleSecondarySource == null)
         {
             return;
         }
 
-        var styled = await ShowSecondarySubtitleDialog(SecondarySubtitleStyler.Unstyle(_subtitleSecondary), isEditingSettings: true);
+        // A copy, so the source stays as parsed whatever the dialog does with its input.
+        var styled = await ShowSecondarySubtitleDialog(new Subtitle(_subtitleSecondarySource), isEditingSettings: true);
         if (styled == null)
         {
             return;
@@ -4284,6 +4290,7 @@ public partial class MainViewModel :
             }
 
             _subtitleSecondary = SecondarySubtitleStyler.BuildRemembered(subtitle, _mediaInfo);
+            _subtitleSecondarySource = subtitle;
             _subtitleSecondaryFileName = fileName;
             PushSecondarySubtitle();
         }
@@ -4338,6 +4345,7 @@ public partial class MainViewModel :
     {
         IsSubtitleSecondaryVisible = false;
         _subtitleSecondary = null;
+        _subtitleSecondarySource = null;
         _subtitleSecondaryFileName = null;
         RefreshSubtitlePreview(); // push the removal, or the cleared secondary stays on the video
     }

@@ -75,24 +75,6 @@ public static class SecondarySubtitleStyler
     }
 
     /// <summary>
-    /// A copy of a styled second subtitle with the styling stripped again, as if it had just been
-    /// parsed from its file: what the dialog expects as input when re-styling the second subtitle
-    /// already on the video player (#15110). A copy, because the dialog's preview mutates the
-    /// paragraphs it is given (style name, layer) and the original stays on the player until OK.
-    /// </summary>
-    public static Subtitle Unstyle(Subtitle styled)
-    {
-        var result = new Subtitle(styled) { Header = string.Empty };
-        foreach (var p in result.Paragraphs)
-        {
-            p.Extra = null;
-            p.Layer = 0;
-        }
-
-        return result;
-    }
-
-    /// <summary>
     /// Builds the second subtitle from the style saved in <see cref="SeVideo"/>, for opening it
     /// without the dialog.
     /// </summary>
