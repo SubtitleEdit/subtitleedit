@@ -936,15 +936,25 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     private string DefaultCategoryLabel => Se.Language.General.Default;
     private string AllCategoriesLabel => Se.Language.Assa.AllCategories;
 
+    // Category names are case-insensitive everywhere - the category list, and the default
+    // template (AssaStyleStorageHelper), already merged "Anime" and "anime", so the filter,
+    // rename and delete must too, or a style moved to "anime" was shown under no category.
+    private static bool IsSameCategoryLabel(string? a, string? b)
+        => string.Equals(a, b, StringComparison.OrdinalIgnoreCase);
+
+    // The spelling of an existing category that matches the label, or the label itself
+    private string CanonicalCategoryLabel(string label)
+        => StorageCategories.FirstOrDefault(c => IsSameCategoryLabel(c, label)) ?? label;
+
     private string CategoryLabelToStored(string label)
-        => label == DefaultCategoryLabel || label == AllCategoriesLabel ? string.Empty : label;
+        => IsSameCategoryLabel(label, DefaultCategoryLabel) || IsSameCategoryLabel(label, AllCategoriesLabel) ? string.Empty : label;
 
     private string StoredToCategoryLabel(string stored)
         => string.IsNullOrEmpty(stored) ? DefaultCategoryLabel : stored;
 
     private bool IsStyleInSelectedCategory(StyleDisplay style)
-        => SelectedStorageCategory == AllCategoriesLabel ||
-           StoredToCategoryLabel(style.Category) == SelectedStorageCategory;
+        => IsSameCategoryLabel(SelectedStorageCategory, AllCategoriesLabel) ||
+           IsSameCategoryLabel(StoredToCategoryLabel(style.Category), SelectedStorageCategory);
 
     private string CategoryForNewStyle()
         => SelectedStorageCategory == AllCategoriesLabel ? string.Empty : CategoryLabelToStored(SelectedStorageCategory);
@@ -956,7 +966,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         var labels = StorageStyles
             .Select(s => StoredToCategoryLabel(s.Category))
             .Concat(_extraCategories)
-            .Where(l => l != DefaultCategoryLabel && l != AllCategoriesLabel)
+            .Where(l => !IsSameCategoryLabel(l, DefaultCategoryLabel) && !IsSameCategoryLabel(l, AllCategoriesLabel))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(l => l, StringComparer.OrdinalIgnoreCase)
             .ToList();
@@ -969,13 +979,13 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
             StorageCategories.Add(label);
         }
 
-        SelectedStorageCategory = StorageCategories.Contains(previous) ? previous : AllCategoriesLabel;
+        SelectedStorageCategory = StorageCategories.FirstOrDefault(c => IsSameCategoryLabel(c, previous)) ?? AllCategoriesLabel;
     }
 
     partial void OnSelectedStorageCategoryChanged(string value)
     {
         RefreshStorageStylesView();
-        IsCategoryActionVisible = value != AllCategoriesLabel && value != DefaultCategoryLabel;
+        IsCategoryActionVisible = !IsSameCategoryLabel(value, AllCategoriesLabel) && !IsSameCategoryLabel(value, DefaultCategoryLabel);
     }
 
     private void RefreshStorageStylesView()
@@ -1011,7 +1021,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         }
 
         var name = result.Text.Trim();
-        if (name == AllCategoriesLabel || name == DefaultCategoryLabel)
+        if (IsSameCategoryLabel(name, AllCategoriesLabel) || IsSameCategoryLabel(name, DefaultCategoryLabel))
         {
             return;
         }
@@ -1045,13 +1055,16 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         }
 
         var newName = result.Text.Trim();
-        if (newName == oldName || newName == AllCategoriesLabel || newName == DefaultCategoryLabel)
+        if (newName == oldName || IsSameCategoryLabel(newName, AllCategoriesLabel) || IsSameCategoryLabel(newName, DefaultCategoryLabel))
         {
             return;
         }
 
+        // renaming into another existing category merges into it, with its spelling
+        // (a case-only rename of this category keeps the new spelling)
+        newName = StorageCategories.FirstOrDefault(c => IsSameCategoryLabel(c, newName) && !IsSameCategoryLabel(c, oldName)) ?? newName;
         var newStored = CategoryLabelToStored(newName);
-        foreach (var style in StorageStyles.Where(s => StoredToCategoryLabel(s.Category) == oldName))
+        foreach (var style in StorageStyles.Where(s => IsSameCategoryLabel(StoredToCategoryLabel(s.Category), oldName)))
         {
             style.Category = newStored;
         }
@@ -1089,7 +1102,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
                 return;
             }
 
-            foreach (var style in StorageStyles.Where(s => StoredToCategoryLabel(s.Category) == name))
+            foreach (var style in StorageStyles.Where(s => IsSameCategoryLabel(StoredToCategoryLabel(s.Category), name)))
             {
                 style.Category = string.Empty;
             }
@@ -1119,7 +1132,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        var label = result.Text.Trim();
+        var label = CanonicalCategoryLabel(result.Text.Trim());
         var stored = CategoryLabelToStored(label);
         if (!string.IsNullOrEmpty(stored) && !_extraCategories.Contains(label, StringComparer.OrdinalIgnoreCase))
         {
@@ -1132,7 +1145,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         }
 
         RebuildStorageCategories();
-        SelectedStorageCategory = StorageCategories.Contains(label) ? label : SelectedStorageCategory;
+        SelectedStorageCategory = StorageCategories.FirstOrDefault(c => IsSameCategoryLabel(c, label)) ?? SelectedStorageCategory;
         RefreshStorageStylesView();
     }
 

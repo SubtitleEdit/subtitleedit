@@ -249,6 +249,33 @@ public class AssaStylesViewModelTests
     }
 
     /// <summary>
+    /// Category names are case-insensitive: the category list shows "Anime" and "anime" as one
+    /// category, so the filter must show the styles of both spellings. A style moved to "anime"
+    /// used to be shown under no category but [All].
+    /// </summary>
+    [AvaloniaFact]
+    public void StorageCategoryFilter_IsCaseInsensitive()
+    {
+        var services = new ServiceCollection();
+        services.AddSubtitleEditServices();
+        using var provider = services.BuildServiceProvider();
+        var vm = provider.GetRequiredService<AssaStylesViewModel>();
+
+        vm.StorageStyles.Clear();
+        var a = new StyleDisplay { Name = "A", Category = "Anime" };
+        var b = new StyleDisplay { Name = "B", Category = "anime" };
+        var c = new StyleDisplay { Name = "C", Category = string.Empty };
+        vm.StorageStyles.Add(a);
+        vm.StorageStyles.Add(b);
+        vm.StorageStyles.Add(c);
+        vm.StorageCategories.Add("Anime");
+        vm.SelectedStorageCategory = "Anime";
+
+        Assert.Equal(new[] { a, b }, vm.StorageStylesView);
+        Assert.True(vm.IsCategoryActionVisible);
+    }
+
+    /// <summary>
     /// Overwriting an existing style on copy between file and storage (#15312) takes the
     /// formatting but keeps the target's identity: name, category and default flag.
     /// </summary>
