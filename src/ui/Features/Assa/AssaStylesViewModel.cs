@@ -1037,18 +1037,22 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        var styles = new List<SsaStyle>();
-        foreach (var style in StorageStyles)
-        {
-            styles.Add(style.ToSsaStyle());
-        }
+        await System.IO.File.WriteAllTextAsync(fileName, MakeStorageExportText());
+    }
 
+    /// <summary>
+    /// The storage styles shown in the grid as an .ass style file - with a category selected,
+    /// only that category. Exporting the whole storage mixed the categories, and same-named
+    /// styles of different categories ended up in one styles section.
+    /// </summary>
+    internal string MakeStorageExportText()
+    {
+        var styles = StorageStylesView.Select(p => p.ToSsaStyle()).ToList();
         var s = new Subtitle();
         s.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(
             AdvancedSubStationAlpha.DefaultHeader,
             styles);
-        var text = s.ToText(new AdvancedSubStationAlpha());
-        await System.IO.File.WriteAllTextAsync(fileName, text);
+        return s.ToText(new AdvancedSubStationAlpha());
     }
 
     [RelayCommand]

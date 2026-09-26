@@ -461,6 +461,31 @@ public class AssaStylesViewModelTests
     }
 
     /// <summary>
+    /// Storage Export writes the shown styles - with a category selected, only that category.
+    /// </summary>
+    [AvaloniaFact]
+    public void StorageExport_InFilteredCategory_ExportsOnlyThatCategory()
+    {
+        var services = new ServiceCollection();
+        services.AddSubtitleEditServices();
+        using var provider = services.BuildServiceProvider();
+        var vm = provider.GetRequiredService<AssaStylesViewModel>();
+
+        vm.StorageStyles.Clear();
+        vm.StorageStyles.Add(new StyleDisplay { Name = "Default", FontName = "Arial", Category = string.Empty });
+        vm.StorageStyles.Add(new StyleDisplay { Name = "Default", FontName = "Verdana", Category = "Anime" });
+        vm.StorageStyles.Add(new StyleDisplay { Name = "Signs", FontName = "Verdana", Category = "Anime" });
+        vm.StorageCategories.Add("Anime");
+        vm.SelectedStorageCategory = "Anime";
+
+        var text = vm.MakeStorageExportText();
+        var styles = Nikse.SubtitleEdit.Core.SubtitleFormats.AdvancedSubStationAlpha.GetSsaStylesFromHeader(text);
+
+        Assert.Equal(new[] { "Default", "Signs" }, styles.Select(p => p.Name));
+        Assert.All(styles, p => Assert.Equal("Verdana", p.FontName));
+    }
+
+    /// <summary>
     /// Overwriting an existing style on copy between file and storage (#15312) takes the
     /// formatting but keeps the target's identity: name, category and default flag.
     /// </summary>
