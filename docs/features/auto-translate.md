@@ -35,6 +35,7 @@ Automatically translate subtitles using various translation engines and AI servi
 - **Anthropic Claude** — AI translation (requires API key)
 - **Groq** — AI translation (requires API key)
 - **OpenRouter** — AI translation (requires API key)
+- **Cheaper Inference** — AI translation via an OpenAI-compatible gateway (requires API key). Each model costs 15–60% less than the list price of its lab.
 - **Lara** — AI translation (requires API key)
 - **Perplexity** — AI translation (requires API key)
 - **Google Gemini** — AI translation (requires API key)
