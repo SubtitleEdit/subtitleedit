@@ -55,6 +55,31 @@ public class ItalicTextMergerTests
     }
 
     [Fact]
+    public void SpacedColonAfterUprightSpeakerStaysOutsideItalic()
+    {
+        // The colon is its own word, and it must follow the upright speaker name, not the italic speech after it.
+        var chars = Chars("MAN 1 : Hey, you", "......iiiiiiiiii");
+
+        Assert.Equal("MAN 1 : <i>Hey, you</i>", ItalicTextMerger.MergeWithItalicTags(chars));
+    }
+
+    [Fact]
+    public void SpacedQuestionMarkAfterItalicWordStaysInsideItalic()
+    {
+        var chars = Chars("Really ? No", "iiiiii.i...");
+
+        Assert.Equal("<i>Really ?</i> No", ItalicTextMerger.MergeWithItalicTags(chars));
+    }
+
+    [Fact]
+    public void LeadingDashStillFollowsNextWord()
+    {
+        var chars = Chars("Yes\n- Go", "...i..ii");
+
+        Assert.Equal("Yes\n<i>- Go</i>", ItalicTextMerger.MergeWithItalicTags(chars));
+    }
+
+    [Fact]
     public void PunctuationDoesNotFollowWordOnNextLine()
     {
         var chars = Chars("Wait ...\nthere", ".....iii.iiiii");
