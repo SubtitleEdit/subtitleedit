@@ -107,63 +107,7 @@ internal static class ImageOcrLoader
         {
             foreach (var pid in parser.SubtitlePacketIds)
             {
-                var dvbSubtitles = parser.GetDvbSubtitles(pid);
-                if (dvbSubtitles.Count == 0)
-                {
-                    continue;
-                }
-
-                if (!options.Quiet)
-                {
-                    AnsiConsole.MarkupLine(ocr is null
-                        ? $"[dim]Extracting time codes from {dvbSubtitles.Count} DVB-sub image(s) (PID {pid}, no OCR)...[/]"
-                        : $"[dim]Running {ocr.Name} OCR on {dvbSubtitles.Count} DVB-sub image(s) (PID {pid})...[/]");
-                }
-
-                // Recognition is the slow part, so report it per image (issue #14267).
-                var showProgress = ocr is not null && !options.Quiet;
-                var subtitle = new Subtitle();
-
-                // ocr == null → time-codes-only: keep every entry that has an image, with
-                // empty text, without decoding a bitmap for recognition.
-                // Same antialiased binarisation as the PGS path (issue #12291).
-                Func<SKBitmap, SKBitmap>? isolate =
-                    options.PgsIsolateColors ? (b => VobSubColorIsolation.BinarizeForOcr(b)) : null;
-                var texts = ocr is null
-                    ? TimeCodesOnlyTexts(dvbSubtitles.Count, i => dvbSubtitles[i].GetBitmap())
-                    : RecognizeAll(
-                        ocr, dvbSubtitles.Count, i => dvbSubtitles[i].GetBitmap(),
-                        callerOwnsBitmap: false, isolate, quiet: !showProgress);
-
-                for (var i = 0; i < dvbSubtitles.Count; i++)
-                {
-                    var text = texts[i];
-                    if (text is null || (ocr is not null && string.IsNullOrWhiteSpace(text)))
-                    {
-                        continue;
-                    }
-
-                    var dvb = dvbSubtitles[i];
-                    if (ocr is not null && options.OcrAutoDetectAssaAlignment)
-                    {
-                        var position = dvb.GetPosition();
-                        var frame = dvb.GetScreenSize();
-                        AddWithAlignment(
-                            subtitle, text, dvb.StartMilliseconds, dvb.EndMilliseconds, dvb.GetBitmap, callerOwnsBitmap: false,
-                            new SKPointI(position.Left, position.Top), new SKSizeI((int)frame.Width, (int)frame.Height));
-                        continue;
-                    }
-
-                    subtitle.Paragraphs.Add(new LibSeParagraph(text, dvb.StartMilliseconds, dvb.EndMilliseconds));
-                }
-
-                if (showProgress)
-                {
-                    ProgressLine.Report("OCR", dvbSubtitles.Count, dvbSubtitles.Count);
-                    ProgressLine.Finish();
-                }
-
-                subtitle.Renumber();
+                var subtitle = RecognizeDvbSubtitles(ocr, parser.GetDvbSubtitles(pid), options, $"PID {pid}");
                 if (subtitle.Paragraphs.Count > 0)
                 {
                     results.Add((subtitle, pid));
@@ -175,6 +119,93 @@ internal static class ImageOcrLoader
             ocr?.Dispose();
         }
         return results;
+    }
+
+    /// <summary>
+    /// DVB bitmap subtitles of a Manzanita "private_stream_1" dump (type="dvb_subtitle") → text
+    /// via the configured OCR engine, or time codes only when
+    /// <see cref="ConversionOptions.TimeCodesOnly"/> is set.
+    /// </summary>
+    public static Subtitle LoadManzanitaDvbSub(string filePath, ConversionOptions options)
+    {
+        var parser = new ManzanitaTransportStreamParser();
+        parser.Parse(filePath);
+        var dvbSubtitles = parser.GetDvbSup();
+        if (dvbSubtitles.Count == 0)
+        {
+            return new Subtitle();
+        }
+
+        IOcrEngine? ocr = options.TimeCodesOnly ? null : OcrEngineFactory.Create(options);
+        try
+        {
+            return RecognizeDvbSubtitles(ocr, dvbSubtitles, options, "Manzanita");
+        }
+        finally
+        {
+            ocr?.Dispose();
+        }
+    }
+
+    private static Subtitle RecognizeDvbSubtitles(IOcrEngine? ocr, List<TransportStreamSubtitle> dvbSubtitles, ConversionOptions options, string sourceLabel)
+    {
+        var subtitle = new Subtitle();
+        if (dvbSubtitles.Count == 0)
+        {
+            return subtitle;
+        }
+
+        if (!options.Quiet)
+        {
+            AnsiConsole.MarkupLine(ocr is null
+                ? $"[dim]Extracting time codes from {dvbSubtitles.Count} DVB-sub image(s) ({sourceLabel}, no OCR)...[/]"
+                : $"[dim]Running {ocr.Name} OCR on {dvbSubtitles.Count} DVB-sub image(s) ({sourceLabel})...[/]");
+        }
+
+        // Recognition is the slow part, so report it per image (issue #14267).
+        var showProgress = ocr is not null && !options.Quiet;
+
+        // ocr == null → time-codes-only: keep every entry that has an image, with
+        // empty text, without decoding a bitmap for recognition.
+        // Same antialiased binarisation as the PGS path (issue #12291).
+        Func<SKBitmap, SKBitmap>? isolate =
+            options.PgsIsolateColors ? (b => VobSubColorIsolation.BinarizeForOcr(b)) : null;
+        var texts = ocr is null
+            ? TimeCodesOnlyTexts(dvbSubtitles.Count, i => dvbSubtitles[i].GetBitmap())
+            : RecognizeAll(
+                ocr, dvbSubtitles.Count, i => dvbSubtitles[i].GetBitmap(),
+                callerOwnsBitmap: false, isolate, quiet: !showProgress);
+
+        for (var i = 0; i < dvbSubtitles.Count; i++)
+        {
+            var text = texts[i];
+            if (text is null || (ocr is not null && string.IsNullOrWhiteSpace(text)))
+            {
+                continue;
+            }
+
+            var dvb = dvbSubtitles[i];
+            if (ocr is not null && options.OcrAutoDetectAssaAlignment)
+            {
+                var position = dvb.GetPosition();
+                var frame = dvb.GetScreenSize();
+                AddWithAlignment(
+                    subtitle, text, dvb.StartMilliseconds, dvb.EndMilliseconds, dvb.GetBitmap, callerOwnsBitmap: false,
+                    new SKPointI(position.Left, position.Top), new SKSizeI((int)frame.Width, (int)frame.Height));
+                continue;
+            }
+
+            subtitle.Paragraphs.Add(new LibSeParagraph(text, dvb.StartMilliseconds, dvb.EndMilliseconds));
+        }
+
+        if (showProgress)
+        {
+            ProgressLine.Report("OCR", dvbSubtitles.Count, dvbSubtitles.Count);
+            ProgressLine.Finish();
+        }
+
+        subtitle.Renumber();
+        return subtitle;
     }
 
     /// <summary>

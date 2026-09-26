@@ -22,6 +22,31 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         public const string TeletextStreamType = "dvb_teletext";
 
         /// <summary>
+        /// The "type" attribute of a Manzanita file carrying DVB bitmap subtitles (they need OCR).
+        /// </summary>
+        public const string DvbSubtitleStreamType = "dvb_subtitle";
+
+        /// <summary>
+        /// The "type" attribute of a Manzanita file ("dvb_teletext", "dvb_subtitle", ...), or an
+        /// empty string when the preamble has none or cannot be read.
+        /// </summary>
+        public static string GetStreamType(string fileName)
+        {
+            try
+            {
+                using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    GetDataIndicesAndPesStart(fs, out _, out var streamType);
+                    return streamType;
+                }
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
+        }
+
+        /// <summary>
         /// The "teletext_type" values of a dvb_teletext_content descriptor entry that carry
         /// subtitles: EN 300 468 teletext_type 0x02 (subtitle page) and 0x05 (subtitle page for
         /// the hearing impaired), spelled the way Manzanita's XML preamble does.
