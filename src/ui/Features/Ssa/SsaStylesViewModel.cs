@@ -124,8 +124,13 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
     }
 
     [RelayCommand]
-    private void Ok()
+    private async Task Ok()
     {
+        if (!await ValidateFileStyleNames())
+        {
+            return;
+        }
+
         OkPressed = true;
         SaveFileStylesToHeader();
         SaveSettings();
@@ -138,11 +143,40 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
     /// edits made after Apply.
     /// </summary>
     [RelayCommand]
-    private void Apply()
+    private async Task Apply()
     {
+        if (!await ValidateFileStyleNames())
+        {
+            return;
+        }
+
         SaveFileStylesToHeader();
         SaveSettings();
         _applySsaStyles?.ApplySsaStyles(this);
+    }
+
+    // An empty or duplicate name would be written to the header as is (see FileStyleNameValidator).
+    // The offending style is selected so it can be fixed.
+    private async Task<bool> ValidateFileStyleNames()
+    {
+        var invalid = FileStyleNameValidator.FindInvalidName(FileStyles);
+        if (invalid == null)
+        {
+            return true;
+        }
+
+        SelectedFileStyle = invalid.Value.Style;
+        if (Window != null)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                invalid.Value.Message,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+        }
+
+        return false;
     }
 
     [RelayCommand]

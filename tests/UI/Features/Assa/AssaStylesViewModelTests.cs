@@ -426,6 +426,41 @@ public class AssaStylesViewModelTests
     }
 
     /// <summary>
+    /// OK must not write an empty or duplicate file style name to the header - the rename
+    /// tracker leaves the lines alone in those states, so they fell back to the first style.
+    /// </summary>
+    [AvaloniaTheory]
+    [InlineData("default")]
+    [InlineData("")]
+    [InlineData("  ")]
+    public async Task Ok_WithInvalidFileStyleName_DoesNotClose(string newName)
+    {
+        var vm = MakeInitializedVm(out var subtitle);
+        var headerBefore = subtitle.Header;
+        var top = vm.FileStyles.Single(p => p.Name == "Top");
+
+        top.Name = newName;
+        await vm.OkCommand.ExecuteAsync(null);
+
+        Assert.False(vm.OkPressed);
+        Assert.Same(top, vm.SelectedFileStyle);
+        Assert.Equal(headerBefore, vm.Header);
+    }
+
+    [Fact]
+    public void FileStyleNameValidator_FindsEmptyAndDuplicateNames()
+    {
+        var a = new StyleDisplay { Name = "Default" };
+        var b = new StyleDisplay { Name = "Top" };
+        var c = new StyleDisplay { Name = "DEFAULT" };
+        var d = new StyleDisplay { Name = " " };
+
+        Assert.Null(FileStyleNameValidator.FindInvalidName(new[] { a, b }));
+        Assert.Same(c, FileStyleNameValidator.FindInvalidName(new[] { a, b, c })!.Value.Style);
+        Assert.Same(d, FileStyleNameValidator.FindInvalidName(new[] { a, d })!.Value.Style);
+    }
+
+    /// <summary>
     /// Overwriting an existing style on copy between file and storage (#15312) takes the
     /// formatting but keeps the target's identity: name, category and default flag.
     /// </summary>
