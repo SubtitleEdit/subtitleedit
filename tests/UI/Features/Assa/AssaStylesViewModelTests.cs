@@ -249,6 +249,32 @@ public class AssaStylesViewModelTests
     }
 
     /// <summary>
+    /// Importing an SE 4 category export (#15332) keeps each style's category - SE 4's "Default"
+    /// category is the built-in Default category - and only renames a style whose name is
+    /// already taken in its own category.
+    /// </summary>
+    [Fact]
+    public void MakeSe4TemplateImportStyles_KeepsCategoriesAndRenamesOnlyWithinCategory()
+    {
+        var categories = new List<Se4StyleCategory>
+        {
+            new("Default", true, new List<SsaStyle> { new() { Name = "Default" }, new() { Name = "Top" } }),
+            new("Anime", false, new List<SsaStyle> { new() { Name = "Default" }, new() { Name = "Top" } }),
+        };
+        var storage = new List<StyleDisplay>
+        {
+            new() { Name = "Default", Category = string.Empty },
+            new() { Name = "Signs", Category = "Anime" },
+        };
+
+        var styles = AssaStylesViewModel.MakeSe4TemplateImportStyles(categories, storage);
+
+        Assert.Equal(new[] { "Default_2", "Top", "Default", "Top" }, styles.Select(p => p.Name));
+        Assert.Equal(new[] { "", "", "Anime", "Anime" }, styles.Select(p => p.Category));
+        Assert.All(styles, p => Assert.True(p.IsSelected));
+    }
+
+    /// <summary>
     /// Overwriting an existing style on copy between file and storage (#15312) takes the
     /// formatting but keeps the target's identity: name, category and default flag.
     /// </summary>

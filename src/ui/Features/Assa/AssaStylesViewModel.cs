@@ -309,7 +309,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         return StyleFileImportHelper.LoadStyles(fileName, new AdvancedSubStationAlpha());
     }
 
-    private static string MakeUniqueName(string name, ObservableCollection<StyleDisplay> styles)
+    private static string MakeUniqueName(string name, IEnumerable<StyleDisplay> styles)
     {
         var newName = name;
         if (styles.Any(p => p.Name.Equals(newName, StringComparison.OrdinalIgnoreCase)))
@@ -712,9 +712,15 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         }
 
         var format = new AdvancedSubStationAlpha();
-        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.Assa.OpenStyleImportFile, format.Name, "*" + format.Extension, "Aegisub style file", "*.sty");
+        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.Assa.OpenStyleImportFile, Se.Language.Assa.StyleImportFiles, "*" + format.Extension + ";*.sty;*" + StyleFileImportHelper.Se4CategoriesTemplateExtension);
         if (string.IsNullOrEmpty(fileName))
         {
+            return;
+        }
+
+        if (StyleFileImportHelper.IsSe4CategoriesTemplate(fileName))
+        {
+            await StorageImportSe4Template(fileName);
             return;
         }
 
@@ -750,6 +756,74 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         StorageStyles.AddRange(selectedStyles);
 
         UpdateUsages();
+    }
+
+    /// <summary>
+    /// Imports a Subtitle Edit 4 category export (#15332) - each style goes to the category it had
+    /// in SE 4, so a whole category set can be restored in one go.
+    /// </summary>
+    private async Task StorageImportSe4Template(string fileName)
+    {
+        var categories = StyleFileImportHelper.LoadSe4CategoriesTemplate(fileName);
+        var importStyles = MakeSe4TemplateImportStyles(categories, StorageStyles);
+        if (importStyles.Count == 0)
+        {
+            await MessageBox.Show(
+                Window!,
+                Se.Language.General.Error,
+                "Nothing to import",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<AssaStylePickerWindow, AssaStylePickerViewModel>(Window!, vm =>
+        {
+            vm.Initialize(Se.Language.General.Import, importStyles, Se.Language.General.Import, false, showCategory: true);
+        });
+
+        var selectedStyles = result.Styles.Where(p => p.IsSelected).ToList();
+        if (!result.OkPressed || selectedStyles.Count == 0)
+        {
+            return;
+        }
+
+        StorageStyles.AddRange(selectedStyles);
+        RebuildStorageCategories();
+        UpdateUsages();
+    }
+
+    /// <summary>
+    /// Turns SE 4 template categories into storage styles. SE 4's "Default" category is the
+    /// built-in Default category here (empty category name). A name that is already taken within
+    /// the style's category gets a "_2" suffix, like the other storage imports.
+    /// </summary>
+    internal static List<StyleDisplay> MakeSe4TemplateImportStyles(List<Se4StyleCategory> categories, IEnumerable<StyleDisplay> storageStyles)
+    {
+        var existing = storageStyles.ToList();
+        var result = new List<StyleDisplay>();
+        foreach (var category in categories)
+        {
+            var storedCategory = category.Name.Equals("Default", StringComparison.OrdinalIgnoreCase) ||
+                                 category.Name.Equals(Se.Language.General.Default, StringComparison.OrdinalIgnoreCase) ||
+                                 category.Name.Equals(Se.Language.Assa.AllCategories, StringComparison.OrdinalIgnoreCase)
+                ? string.Empty
+                : category.Name;
+
+            foreach (var style in category.Styles)
+            {
+                var sameCategory = existing.Concat(result)
+                    .Where(p => string.Equals(p.Category ?? string.Empty, storedCategory, StringComparison.OrdinalIgnoreCase));
+                result.Add(new StyleDisplay(style)
+                {
+                    IsSelected = true,
+                    Name = MakeUniqueName(style.Name, sameCategory),
+                    Category = storedCategory,
+                });
+            }
+        }
+
+        return result;
     }
 
     [RelayCommand]
