@@ -594,6 +594,12 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static string AutoDetectGoogleLanguage(string text, int bestCount)
         {
+            return AutoDetectGoogleLanguage(text, bestCount, out _);
+        }
+
+        /// <param name="score">The number of keyword hits for the returned language.</param>
+        private static string AutoDetectGoogleLanguage(string text, int bestCount, out int score)
+        {
             // Score-based selection instead of first-match-wins: every language block below is
             // evaluated and records a candidate via Consider(); the candidate with the most
             // keyword hits wins (ties keep the earlier/higher-priority language via strict '>').
@@ -1031,6 +1037,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 Consider("is", count);
             }
 
+            score = bestScore;
             return best;
         }
 
@@ -1345,6 +1352,21 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return languageId;
+        }
+
+        /// <summary>
+        /// Like <see cref="AutoDetectGoogleLanguageOrNull"/>, but only from dictionary words -
+        /// without the letter-statistics fallback, which also "recognizes" text decoded with the
+        /// wrong code page (Arabic read as Cyrillic still looks like Russian letters).
+        /// </summary>
+        /// <param name="subtitle">Subtitle to detect the language of.</param>
+        /// <param name="score">Keyword hits for the returned language - higher is more certain.</param>
+        public static string AutoDetectGoogleLanguageFromWordsOrNull(Subtitle subtitle, out int score)
+        {
+            var s = new Subtitle(subtitle);
+            s.RemoveEmptyLines();
+            var languageId = AutoDetectGoogleLanguage(s.GetAllTexts(500000).TrimEnd(), s.Paragraphs.Count / 14, out score);
+            return string.IsNullOrEmpty(languageId) ? null : languageId;
         }
 
         /// <summary>
