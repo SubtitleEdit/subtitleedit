@@ -16,7 +16,9 @@ using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using Optris.Icons.Avalonia;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -180,6 +182,12 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         private readonly Button _buttonPlay;
         private readonly Button _buttonFullScreen;
         private readonly Button _buttonFullScreenCollapse;
+        private readonly Button _buttonStop;
+        private readonly StackPanel _panelFullScreen;
+        private readonly Slider _sliderPosition;
+        private readonly StackPanel _panelVolume;
+        private int _captionColumn; // the position slider's (star) column, where the captions start
+        private bool _isVideoFileNameLeftOfPositionText;
         private readonly Icon _iconVolume;
         private UiTickPump? _positionTimer; // posted ticks, not a DispatcherTimer - see UiTickPump
         private int _slowPollCounter;
@@ -439,10 +447,10 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             mainGrid.Children.Add(contentPresenter);
             Grid.SetRow(contentPresenter, 0);
 
-            // Row with buttons + position slider + volume slider
+            // Row with buttons + position slider + volume slider - the columns are made by
+            // ApplyControlsLayout, from the user's order and visibility (#15286)
             _gridProgress = new Grid
             {
-                ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto,Auto"),
                 Margin = new Thickness(10, 4)
             };
             Grid.SetRow(_gridProgress, 1);
@@ -456,20 +464,12 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             // Scrub the video by scrolling the mouse wheel over the video surface (issue #11080).
             this.AddHandler(InputElement.PointerWheelChangedEvent, OnVideoWheelChanged, RoutingStrategies.Bubble, handledEventsToo: true);
 
-            // Buttons
-            var stackPanel = new StackPanel
-            {
-                Orientation = Orientation.Horizontal,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Center
-            };
-
             // Play
             // NonSpaceButton: a focused Button would otherwise consume/duplicate the global
             // play/pause Space shortcut once clicked with the mouse (issue #12759).
             _buttonPlay = new NonSpaceButton
             {
-                Margin = new Thickness(0, 0, 3, 0),
+                VerticalAlignment = VerticalAlignment.Center,
                 [AutomationProperties.NameProperty] = Se.Language.General.Play,
             };
             Attached.SetIcon(_buttonPlay, "fa-solid fa-play");
@@ -489,12 +489,11 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 ToolTip.SetTip(_buttonPlay, Se.Language.General.Play);
             }
 
-            stackPanel.Children.Add(_buttonPlay);
 
             // Stop
             var buttonStop = new NonSpaceButton
             {
-                Margin = new Thickness(0, 0, 3, 0),
+                VerticalAlignment = VerticalAlignment.Center,
                 [AutomationProperties.NameProperty] = Se.Language.General.Stop,
             };
             buttonStop.Bind(Button.IsVisibleProperty, new Binding
@@ -512,7 +511,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             {
                 ToolTip.SetTip(buttonStop, Se.Language.General.Stop);
             }
-            stackPanel.Children.Add(buttonStop);
+            _buttonStop = buttonStop;
             buttonStop.Bind(Button.CommandProperty, new Binding
             {
                 Path = nameof(StopCommand),
@@ -522,7 +521,6 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             // Fullscreen
             _buttonFullScreen = new NonSpaceButton
             {
-                Margin = new Thickness(0, 0, 3, 0),
                 [AutomationProperties.NameProperty] = Se.Language.General.FullScreen,
             };
             _buttonFullScreen.Bind(IsVisibleProperty, new Binding
@@ -536,7 +534,6 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             {
                 ToolTip.SetTip(_buttonFullScreen, Se.Language.General.FullScreen);
             }
-            stackPanel.Children.Add(_buttonFullScreen);
             _buttonFullScreen.Bind(Button.CommandProperty, new Binding
             {
                 Path = nameof(FullScreenCommand),
@@ -546,7 +543,6 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
             _buttonFullScreenCollapse = new NonSpaceButton()
             {
-                Margin = new Thickness(0, 0, 3, 0),
                 IsVisible = false,
                 [AutomationProperties.NameProperty] = Se.Language.General.ExitFullScreen,
             };
@@ -556,15 +552,18 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             {
                 ToolTip.SetTip(_buttonFullScreenCollapse, Se.Language.General.ExitFullScreen);
             }
-            stackPanel.Children.Add(_buttonFullScreenCollapse);
 
-            _gridProgress.Children.Add(stackPanel);
-            Grid.SetColumn(stackPanel, 0);
+            // Full screen and exit full screen share a spot - only one of them is shown.
+            _panelFullScreen = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                VerticalAlignment = VerticalAlignment.Center,
+                Children = { _buttonFullScreen, _buttonFullScreenCollapse },
+            };
 
             var sliderPosition = new Slider
             {
                 Minimum = 0,
-                Margin = new Thickness(2, 0, 0, 0),
                 [AutomationProperties.NameProperty] = Se.Language.General.VideoPosition,
             };
             if (Se.Settings.Appearance.ShowHints)
@@ -629,17 +628,14 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 }
             };
 
-            _gridProgress.Children.Add(sliderPosition);
-            Grid.SetColumn(sliderPosition, 1);
+            _sliderPosition = sliderPosition;
 
             _iconVolume = new Icon
             {
                 Value = "fa-solid fa-volume-up",
                 VerticalAlignment = VerticalAlignment.Center,
-                Margin = new Thickness(10, 0, 4, 0)
+                Margin = new Thickness(0, 0, 4, 0)
             };
-            _gridProgress.Children.Add(_iconVolume);
-            Grid.SetColumn(_iconVolume, 2);
 
             var sliderVolume = new Slider
             {
@@ -679,8 +675,12 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 ToolTip.SetTip(sliderVolume, $"{Se.Language.General.Volume} {sliderVolume.Value:0}%");
             };
 
-            _gridProgress.Children.Add(sliderVolume);
-            Grid.SetColumn(sliderVolume, 3);
+            _panelVolume = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                VerticalAlignment = VerticalAlignment.Center,
+                Children = { _iconVolume, sliderVolume },
+            };
 
 
             // ProgressText
@@ -694,8 +694,6 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             };
             _textBlockProgress = progressText;
             progressText.Bind(TextBlock.TextProperty, this.GetObservable(ProgressTextProperty));
-            _gridProgress.Children.Add(progressText);
-            Grid.SetColumn(progressText, 1);
             ProgressText = string.Empty;
             progressText.PointerPressed += (_, _) => ToggleDisplayProgressTextModeRequested?.Invoke();
 
@@ -707,8 +705,6 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 FontWeight = FontWeight.Bold,
                 Opacity = 0.6,
             };
-            _gridProgress.Children.Add(_textBlockPlayerName);
-            Grid.SetColumn(_textBlockPlayerName, 3);
 
             _textBlockVideoFileName = new TextBlock
             {
@@ -722,7 +718,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 TextTrimming = TextTrimming.PrefixCharacterEllipsis,
                 MaxLines = 1,
             };
-            _gridProgress.Add(_textBlockVideoFileName, 0, 1, 1, 3);
+            ApplyControlsLayout(Se.Settings.Video.ControlsItems);
             IsFileNameHidden = UiUtil.HideFileNames;
             _textBlockVideoFileName.PointerPressed += (_, e) => { VideoFileNamePointerPressed?.Invoke(e); };
 
@@ -999,26 +995,178 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             set => _textBlockVideoFileName.Effect = value ? new BlurEffect { Radius = 8 } : null;
         }
 
-        // Cap the file-name label to the width available to the right of the centered
-        // position/duration text. The label is right-aligned, so this lets it fill the
-        // free space and grow/shrink with the window while its PrefixCharacterEllipsis
-        // trims the start when the name is too long to fit.
+        /// <summary>
+        /// Lays out the controls row from the user's order and visibility (#15286). Called once
+        /// from the constructor and again when the settings change, so it only rearranges the
+        /// existing controls - no new player or native window.
+        /// </summary>
+        public void ApplyControlsLayout(IEnumerable<SeVideoControlsItem>? items)
+        {
+            var ordered = SeVideoControlsItem.Normalize(items);
+
+            _gridProgress.Children.Clear();
+            _gridProgress.ColumnDefinitions.Clear();
+            _captionColumn = 0;
+            SeVideoControlsItemType? previousType = null;
+
+            foreach (var item in ordered)
+            {
+                Control? control = item.Type switch
+                {
+                    SeVideoControlsItemType.Play => _buttonPlay,
+                    SeVideoControlsItemType.Stop => _buttonStop,
+                    SeVideoControlsItemType.FullScreen => _panelFullScreen,
+                    SeVideoControlsItemType.PositionSlider => _sliderPosition,
+                    SeVideoControlsItemType.Volume => _panelVolume,
+                    _ => null,
+                };
+
+                if (control == null)
+                {
+                    continue;
+                }
+
+                var column = _gridProgress.ColumnDefinitions.Count;
+                if (item.Type == SeVideoControlsItemType.PositionSlider)
+                {
+                    // A hidden slider still leaves its stretching column, so the items after it
+                    // keep to the right and the captions keep their place.
+                    _gridProgress.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
+                    _captionColumn = column;
+                    if (!item.IsVisible)
+                    {
+                        continue;
+                    }
+                }
+                else if (!item.IsVisible)
+                {
+                    continue;
+                }
+                else
+                {
+                    _gridProgress.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto));
+                }
+
+                // The spacing goes with the neighbors, so any order is spaced like the default.
+                control.Margin = previousType == null
+                    ? new Thickness(0)
+                    : new Thickness(GetControlsSpacing(previousType.Value, item.Type), 0, 0, 0);
+                previousType = item.Type;
+
+                _gridProgress.Add(control, 0, column);
+            }
+
+            var captionSpan = _gridProgress.ColumnDefinitions.Count - _captionColumn;
+            var positionText = ordered.First(p => p.Type == SeVideoControlsItemType.PositionText);
+            var videoFileName = ordered.First(p => p.Type == SeVideoControlsItemType.VideoFileName);
+            _isVideoFileNameLeftOfPositionText = positionText.IsVisible && videoFileName.IsVisible &&
+                                                 videoFileName.SortOrder < positionText.SortOrder;
+
+            if (positionText.IsVisible)
+            {
+                if (_isVideoFileNameLeftOfPositionText)
+                {
+                    _textBlockProgress.HorizontalAlignment = HorizontalAlignment.Right;
+                    _gridProgress.Add(_textBlockProgress, 0, _captionColumn, 1, captionSpan);
+                }
+                else
+                {
+                    // Centered under the position slider.
+                    _textBlockProgress.HorizontalAlignment = HorizontalAlignment.Center;
+                    _gridProgress.Add(_textBlockProgress, 0, _captionColumn);
+                }
+            }
+
+            if (videoFileName.IsVisible)
+            {
+                if (_isVideoFileNameLeftOfPositionText)
+                {
+                    _textBlockVideoFileName.HorizontalAlignment = HorizontalAlignment.Left;
+                    _textBlockVideoFileName.TextAlignment = TextAlignment.Left;
+                }
+                else
+                {
+                    _textBlockVideoFileName.HorizontalAlignment = HorizontalAlignment.Right;
+                    _textBlockVideoFileName.TextAlignment = TextAlignment.Right;
+                }
+
+                _gridProgress.Add(_textBlockVideoFileName, 0, _captionColumn, 1, captionSpan);
+            }
+
+            if (ordered.First(p => p.Type == SeVideoControlsItemType.PlayerName).IsVisible)
+            {
+                _gridProgress.Add(_textBlockPlayerName, 0, _gridProgress.ColumnDefinitions.Count - 1);
+            }
+
+            UpdateVideoFileNameMaxWidth();
+        }
+
+        private static double GetControlsSpacing(SeVideoControlsItemType left, SeVideoControlsItemType right)
+        {
+            static bool IsButton(SeVideoControlsItemType type) =>
+                type is SeVideoControlsItemType.Play or SeVideoControlsItemType.Stop or SeVideoControlsItemType.FullScreen;
+
+            if (IsButton(left) && IsButton(right))
+            {
+                return 3;
+            }
+
+            if (left == SeVideoControlsItemType.Volume || right == SeVideoControlsItemType.Volume)
+            {
+                return 10;
+            }
+
+            return 5;
+        }
+
+        /// <summary>
+        /// Fills the captions with sample texts, for a preview of the layout without a video.
+        /// </summary>
+        internal void SetPreviewCaptions(string progressText, string videoFileName, string playerName)
+        {
+            ProgressText = progressText;
+            _textBlockVideoFileName.Text = videoFileName;
+            _textBlockPlayerName.Text = playerName;
+            UpdateVideoFileNameMaxWidth();
+        }
+
+        // Cap the file-name label to the width available beside the position/duration text, so
+        // it fills the free space and grows/shrinks with the window while its
+        // PrefixCharacterEllipsis trims the start when the name is too long to fit.
         private void UpdateVideoFileNameMaxWidth()
         {
             var gridWidth = _gridProgress.Bounds.Width;
-            if (gridWidth <= 0)
+            if (gridWidth <= 0 || _textBlockVideoFileName.Parent == null)
             {
                 return;
             }
 
-            // Right edge of the centered progress text (falls back to the grid center
-            // before that text has been laid out).
-            var progressRight = _textBlockProgress.Bounds.Width > 0
-                ? _textBlockProgress.Bounds.Right
-                : gridWidth / 2;
+            // Left edge of the captions: the position slider's column.
+            double captionLeft = 0;
+            for (var i = 0; i < _captionColumn && i < _gridProgress.ColumnDefinitions.Count; i++)
+            {
+                captionLeft += _gridProgress.ColumnDefinitions[i].ActualWidth;
+            }
 
+            var hasProgress = _textBlockProgress.Parent != null && _textBlockProgress.Bounds.Width > 0;
             const double gap = 8;
-            var available = gridWidth - progressRight - gap;
+            double available;
+            if (_isVideoFileNameLeftOfPositionText)
+            {
+                // File name to the left of the right-aligned position text.
+                var progressLeft = hasProgress ? _textBlockProgress.Bounds.Left : gridWidth;
+                available = progressLeft - captionLeft - gap;
+            }
+            else
+            {
+                // File name to the right of the centered position text (falls back to the
+                // center before that text has been laid out).
+                var progressRight = _textBlockProgress.Parent == null
+                    ? captionLeft
+                    : hasProgress ? _textBlockProgress.Bounds.Right : gridWidth / 2;
+                available = gridWidth - progressRight - gap;
+            }
+
             _textBlockVideoFileName.MaxWidth = available > 20 ? available : 20;
         }
 

@@ -3543,8 +3543,6 @@
       "FavoriteSubtitleFormats": "Favoriete ondertitelformaten",
       "FavoriteLanguages": "Favoriete talen",
       "WebVttUseXTimestampMap": "WebVTT: X-TIMESTAMP-MAP gebruiken (tijdcodes verschuiven bij laden)",
-      "ShowStopButton": "Stopknop tonen",
-      "ShowFullscreenButton": "Knop voor volledig scherm tonen",
       "FullscreenHideControls": "Videobesturing verbergen in volledig scherm",
       "ShowSecondarySubtitleDialog": "Stijlvenster tonen bij het openen van een tweede ondertitelbestand",
       "RememberSecondarySubtitleFile": "Tweede ondertitelbestand onthouden",

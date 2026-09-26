@@ -211,8 +211,10 @@ public static class InitVideoPlayer
         var control = new VideoPlayerControl(videoPlayer)
         {
             PlayerContent = view,
-            StopIsVisible = Se.Settings.Video.ShowStopButton,
-            FullScreenIsVisible = Se.Settings.Video.ShowFullscreenButton,
+            // Whether they are shown is up to the controls layout (Video.ControlsItems) - these
+            // only let a dialog hide a button it has no use for.
+            StopIsVisible = true,
+            FullScreenIsVisible = true,
             VerticalAlignment = VerticalAlignment.Stretch,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             Volume = Se.Settings.Video.Volume,

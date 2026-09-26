@@ -183,8 +183,11 @@ public class LanguageSettings
     public string AssaAutoSetResolution { get; set; }
     public string AssaAutoSetResolutionPrompt { get; set; }
 
-    public string ShowStopButton { get; set; }
-    public string ShowFullscreenButton { get; set; }
+    public string VideoControls { get; set; }
+    public string VideoControlsEdit { get; set; }
+    public string VideoControlsPositionText { get; set; }
+    public string VideoControlsVideoFileName { get; set; }
+    public string VideoControlsPlayerName { get; set; }
     public string FullscreenHideControls { get; set; }
     public string ShowSecondarySubtitleDialog { get; set; }
     public string RememberSecondarySubtitleFile { get; set; }
@@ -520,8 +523,11 @@ public class LanguageSettings
         CheckForUpdatesChannelStable = "Stable versions only";
         CheckForUpdatesChannelStableAndBeta = "Stable and beta versions";
 
-        ShowStopButton = "Show stop button";
-        ShowFullscreenButton = "Show full-screen button";
+        VideoControls = "Video controls";
+        VideoControlsEdit = "Edit video controls...";
+        VideoControlsPositionText = "Position / duration text";
+        VideoControlsVideoFileName = "Video file name";
+        VideoControlsPlayerName = "Video player name";
         FullscreenHideControls = "Hide video controls in full-screen";
         ShowSecondarySubtitleDialog = "Show style dialog when opening a second subtitle file";
         RememberSecondarySubtitleFile = "Remember second subtitle file";

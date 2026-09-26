@@ -59,6 +59,7 @@ using Nikse.SubtitleEdit.Features.Options.Settings.SettingsImportExport;
 using Nikse.SubtitleEdit.Features.Options.Settings.MinGapCalculate;
 using Nikse.SubtitleEdit.Features.Options.Settings.SyntaxColorTooWideSettings;
 using Nikse.SubtitleEdit.Features.Options.Settings.WaveformThemes;
+using Nikse.SubtitleEdit.Features.Options.Settings.VideoControlsItems;
 using Nikse.SubtitleEdit.Features.Options.Settings.WaveformToolbarItems;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts.CustomSearch;
@@ -625,6 +626,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<TranslationErrorViewModel>();
         collection.AddTransient<TransparentSettingsViewModel>();
         collection.AddTransient<TransparentSubtitlesViewModel>();
+        collection.AddTransient<VideoControlsItemsViewModel>();
         collection.AddTransient<VideoPlayerUndockedViewModel>();
         collection.AddTransient<VisualSyncViewModel>();
         collection.AddTransient<VoiceSettingsViewModel>();

@@ -13695,10 +13695,9 @@ public partial class MainViewModel :
 
         if (baselineSerialized != newSettingsSerialized)
         {
-            // Apply video-player visibility toggles directly on the existing
-            // VideoPlayerControl. StopIsVisible / FullScreenIsVisible are plain
-            // Avalonia styled properties, so writing to them updates the button
-            // bar in place — no new control, no new native HWND, no layout
+            // Apply the video controls layout (order + visibility) directly on
+            // the existing VideoPlayerControl. It only rearranges the existing
+            // controls - no new control, no new native HWND, no layout
             // rebuild. The full ApplySettings path below only runs when
             // *other* settings changed, which is what avoided #10815 in beta 26
             // via the Dispatcher.Post defer but apparently still races the
@@ -13709,8 +13708,7 @@ public partial class MainViewModel :
             var vp = GetVideoPlayerControl();
             if (vp != null)
             {
-                vp.StopIsVisible = Se.Settings.Video.ShowStopButton;
-                vp.FullScreenIsVisible = Se.Settings.Video.ShowFullscreenButton;
+                vp.ApplyControlsLayout(Se.Settings.Video.ControlsItems);
             }
 
             if (OnlyVideoPlayerVisibilityFlagsChanged(baselineSerialized, newSettingsSerialized))
@@ -13728,7 +13726,7 @@ public partial class MainViewModel :
 
     /// <summary>
     /// True iff the two serialized <see cref="Se.Settings"/> snapshots differ
-    /// only in <c>Video.ShowStopButton</c> and/or <c>Video.ShowFullscreenButton</c>.
+    /// only in <c>Video.ControlsItems</c>.
     /// Callers use this to skip the heavyweight <see cref="ApplySettings"/>
     /// path (which rebuilds the entire layout and recreates the video player's
     /// native HWND) when the only changes are visibility flags that can be
@@ -13769,8 +13767,7 @@ public partial class MainViewModel :
             && rootObj.TryGetPropertyValue("Video", out var videoNode)
             && videoNode is JsonObject videoObj)
         {
-            videoObj["ShowStopButton"] = false;
-            videoObj["ShowFullscreenButton"] = false;
+            videoObj["ControlsItems"] = null;
         }
     }
 
