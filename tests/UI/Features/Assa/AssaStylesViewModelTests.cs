@@ -486,6 +486,44 @@ public class AssaStylesViewModelTests
     }
 
     /// <summary>
+    /// Moving styles into a category (Move to category, or renaming a category into an existing
+    /// one) renames a style whose name is already taken in that category, instead of leaving two
+    /// same-named styles in one category.
+    /// </summary>
+    [AvaloniaFact]
+    public void MoveStylesToCategory_RenamesClashingNamesOnly()
+    {
+        var services = new ServiceCollection();
+        services.AddSubtitleEditServices();
+        using var provider = services.BuildServiceProvider();
+        var vm = provider.GetRequiredService<AssaStylesViewModel>();
+
+        vm.StorageStyles.Clear();
+        var existing = new StyleDisplay { Name = "Default", Category = "Anime" };
+        var other = new StyleDisplay { Name = "Signs", Category = "Anime" };
+        var a = new StyleDisplay { Name = "default", Category = string.Empty };
+        var b = new StyleDisplay { Name = "Top", Category = string.Empty };
+        var c = new StyleDisplay { Name = "Default", Category = "Movies" };
+        vm.StorageStyles.Add(existing);
+        vm.StorageStyles.Add(other);
+        vm.StorageStyles.Add(a);
+        vm.StorageStyles.Add(b);
+        vm.StorageStyles.Add(c);
+
+        vm.MoveStylesToCategory(new[] { a, b, c }, "anime");
+
+        Assert.Equal("Default", existing.Name);
+        Assert.Equal("default_2", a.Name);
+        Assert.Equal("Top", b.Name);
+        Assert.Equal("Default_3", c.Name);
+        Assert.All(new[] { a, b, c }, p => Assert.Equal("anime", p.Category));
+
+        // moving a style into the category it is already in keeps its name
+        vm.MoveStylesToCategory(new[] { existing }, "Anime");
+        Assert.Equal("Default", existing.Name);
+    }
+
+    /// <summary>
     /// Overwriting an existing style on copy between file and storage (#15312) takes the
     /// formatting but keeps the target's identity: name, category and default flag.
     /// </summary>
