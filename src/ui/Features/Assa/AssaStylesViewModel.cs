@@ -309,7 +309,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         return StyleFileImportHelper.LoadStyles(fileName, new AdvancedSubStationAlpha());
     }
 
-    private static string MakeUniqueName(string name, ObservableCollection<StyleDisplay> styles)
+    private static string MakeUniqueName(string name, IEnumerable<StyleDisplay> styles)
     {
         var newName = name;
         if (styles.Any(p => p.Name.Equals(newName, StringComparison.OrdinalIgnoreCase)))
@@ -1064,10 +1064,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         // (a case-only rename of this category keeps the new spelling)
         newName = StorageCategories.FirstOrDefault(c => IsSameCategoryLabel(c, newName) && !IsSameCategoryLabel(c, oldName)) ?? newName;
         var newStored = CategoryLabelToStored(newName);
-        foreach (var style in StorageStyles.Where(s => IsSameCategoryLabel(StoredToCategoryLabel(s.Category), oldName)))
-        {
-            style.Category = newStored;
-        }
+        MoveStylesToCategory(StorageStyles.Where(s => IsSameCategoryLabel(StoredToCategoryLabel(s.Category), oldName)).ToList(), newStored);
 
         _extraCategories.RemoveAll(c => c.Equals(oldName, StringComparison.OrdinalIgnoreCase));
         if (!_extraCategories.Contains(newName, StringComparer.OrdinalIgnoreCase))
@@ -1139,14 +1136,33 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
             _extraCategories.Add(label);
         }
 
-        foreach (var style in selectedItems)
-        {
-            style.Category = stored;
-        }
+        MoveStylesToCategory(selectedItems, stored);
 
         RebuildStorageCategories();
         SelectedStorageCategory = StorageCategories.FirstOrDefault(c => IsSameCategoryLabel(c, label)) ?? SelectedStorageCategory;
         RefreshStorageStylesView();
+    }
+
+    /// <summary>
+    /// Puts styles into a category (stored name, empty = Default). Style names are unique within
+    /// a category, so a style whose name is already taken there - by a style of that category or
+    /// by another of the moved styles - gets a "_2" name, like the other storage adds. Renaming
+    /// a category into an existing one, or moving styles, used to create same-named styles in
+    /// one category, of which the default template silently used only the first.
+    /// </summary>
+    internal void MoveStylesToCategory(IReadOnlyList<StyleDisplay> styles, string storedCategory)
+    {
+        var moving = new HashSet<StyleDisplay>(styles);
+        var taken = StorageStyles
+            .Where(s => !moving.Contains(s) && IsSameCategoryLabel(s.Category ?? string.Empty, storedCategory))
+            .ToList();
+
+        foreach (var style in styles)
+        {
+            style.Name = MakeUniqueName(style.Name, taken);
+            style.Category = storedCategory;
+            taken.Add(style);
+        }
     }
 
     private void Close()
