@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Headless.XUnit;
@@ -246,6 +247,34 @@ public class AssaStylesViewModelTests
         {
             window.Close();
         }
+    }
+
+    /// <summary>
+    /// Storage "Remove all" with a category selected must only remove that category's styles -
+    /// it used to clear the whole storage, all categories.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task StorageRemoveAll_InFilteredCategory_RemovesOnlyThatCategory()
+    {
+        var services = new ServiceCollection();
+        services.AddSubtitleEditServices();
+        using var provider = services.BuildServiceProvider();
+        var vm = provider.GetRequiredService<AssaStylesViewModel>();
+
+        vm.StorageStyles.Clear();
+        var a = new StyleDisplay { Name = "A", Category = "X" };
+        var b = new StyleDisplay { Name = "B", Category = "Y" };
+        var c = new StyleDisplay { Name = "C", Category = string.Empty };
+        vm.StorageStyles.Add(a);
+        vm.StorageStyles.Add(b);
+        vm.StorageStyles.Add(c);
+        vm.StorageCategories.Add("X");
+        vm.SelectedStorageCategory = "X";
+
+        await vm.StorageRemoveAllCommand.ExecuteAsync(null);
+
+        Assert.Equal(new[] { b, c }, vm.StorageStyles);
+        Assert.Empty(vm.StorageStylesView);
     }
 
     /// <summary>

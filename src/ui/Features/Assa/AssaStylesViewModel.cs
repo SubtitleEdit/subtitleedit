@@ -835,10 +835,43 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         });
     }
 
+    /// <summary>
+    /// Removes the storage styles shown in the grid - with a category selected, only that
+    /// category's styles. It used to clear the whole storage, all categories, without asking.
+    /// </summary>
     [RelayCommand]
-    private void StorageRemoveAll()
+    private async Task StorageRemoveAll()
     {
-        StorageStyles.Clear();
+        var styles = StorageStylesView.ToList();
+        if (styles.Count == 0)
+        {
+            return;
+        }
+
+        if (Window != null && Se.Settings.General.PromptBeforeDelete)
+        {
+            var answer = await MessageBox.Show(
+                Window,
+                Se.Language.Assa.DeleteStylesQuestion,
+                $"Do you want to delete {styles.Count} styles from storage?",
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question);
+            if (answer != MessageBoxResult.Yes)
+            {
+                return;
+            }
+        }
+
+        if (CurrentStyle != null && styles.Contains(CurrentStyle))
+        {
+            SelectedStorageStyle = null;
+            CurrentStyle = null;
+        }
+
+        foreach (var style in styles)
+        {
+            StorageStyles.Remove(style);
+        }
     }
 
     [RelayCommand]
@@ -1726,7 +1759,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
 
     internal void StoreContextMenuOpening(object? sender, EventArgs e)
     {
-        IsDeleteAllVisible = StorageStyles.Count > 0;
+        IsDeleteAllVisible = StorageStylesView.Count > 0;
         IsDeleteVisible = SelectedStorageStyle != null;
         IsMoveVisible = StorageStylesView.Count > 1 && StorageStyleGrid.SelectedItems?.Count > 0;
     }
