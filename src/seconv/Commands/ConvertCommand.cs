@@ -133,7 +133,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public bool NoVobSubIsolateColors { get; init; }
 
         [CommandOption("--no-pgs-isolate-colors|--nopgsisolatecolors")]
-        [Description("Disable PGS/DVB-sub OCR colour isolation (on by default, except for --ocr-engine:applevision)")]
+        [Description("Disable PGS/DVB-sub OCR colour isolation (on by default, except for --ocr-engine:applevision, nocr and binaryocr)")]
         public bool NoPgsIsolateColors { get; init; }
 
         [CommandOption("--ocr-auto-detect-assa-alignment|--ocrautodetectassaalignment")]
@@ -821,8 +821,11 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 // Apple Vision reads the original PGS/DVB-sub images better than binarised ones -
                 // binarising costs it umlauts and trailing punctuation - and the GUI never
                 // binarises for it either, so isolation stays off for that engine.
+                // nOCR and BinaryOCR split letters on the alpha channel of the original image
+                // (like the GUI's nOCR/BinaryOCR loops); the opaque black-on-white isolated
+                // bitmap leaves nothing to split, so every line came out as "*".
                 PgsIsolateColors = !settings.NoPgsIsolateColors &&
-                                   settings.OcrEngine?.Trim().ToLowerInvariant() is not ("applevision" or "apple-vision"),
+                                   settings.OcrEngine?.Trim().ToLowerInvariant() is not ("applevision" or "apple-vision" or "nocr" or "binaryocr" or "binary"),
                 OcrAutoDetectAssaAlignment = settings.OcrAutoDetectAssaAlignment,
                 OllamaUrl = settings.OllamaUrl,
                 OllamaModel = settings.OllamaModel,
