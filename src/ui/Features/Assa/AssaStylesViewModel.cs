@@ -160,10 +160,14 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         Close();
     }
 
+    /// <summary>
+    /// Hands the current styles to the main window without closing. OkPressed stays false: it
+    /// is only for OK, so a later Cancel keeps what was applied instead of also applying the
+    /// edits made after Apply.
+    /// </summary>
     [RelayCommand]
     private void Apply()
     {
-        OkPressed = true;
         SaveFileStylesToHeader();
         SaveSettings();
         _applyAssaStyles?.ApplyAssaStyles(this);
