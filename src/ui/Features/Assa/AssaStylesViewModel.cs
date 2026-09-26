@@ -812,21 +812,20 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
                 return;
             }
 
+            // The next selection comes from the shown (category-filtered) styles - an index into
+            // the full storage list could select a style of another category, one not in the grid,
+            // which the style editor would then silently edit.
             foreach (var selectedStyle in selectedItems)
             {
-                var idx = StorageStyles.IndexOf(selectedStyle);
+                var idx = StorageStylesView.IndexOf(selectedStyle);
                 StorageStyles.Remove(selectedStyle);
                 SelectedStorageStyle = null;
                 CurrentStyle = null;
 
-                if (StorageStyles.Count > 0)
+                if (StorageStylesView.Count > 0)
                 {
-                    if (idx >= StorageStyles.Count)
-                    {
-                        idx = StorageStyles.Count - 1;
-                    }
-
-                    SelectedStorageStyle = StorageStyles[idx];
+                    idx = Math.Clamp(idx, 0, StorageStylesView.Count - 1);
+                    SelectedStorageStyle = StorageStylesView[idx];
                     CurrentStyle = SelectedStorageStyle;
                 }
             }

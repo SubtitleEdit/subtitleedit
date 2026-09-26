@@ -249,6 +249,58 @@ public class AssaStylesViewModelTests
     }
 
     /// <summary>
+    /// Deleting a storage style selects the next one among the shown (category-filtered) styles.
+    /// The index used to come from the full storage list, so the new current style could belong
+    /// to another category - not in the grid, but edited by the style editor.
+    /// </summary>
+    [AvaloniaFact]
+    public void StorageRemove_InFilteredCategory_SelectsNextShownStyle()
+    {
+        var services = new ServiceCollection();
+        services.AddSubtitleEditServices();
+        using var provider = services.BuildServiceProvider();
+        var vm = provider.GetRequiredService<AssaStylesViewModel>();
+
+        vm.StorageStyles.Clear();
+        var a = new StyleDisplay { Name = "A", Category = "X" };
+        var b = new StyleDisplay { Name = "B", Category = "Y" };
+        var c = new StyleDisplay { Name = "C", Category = "Y" };
+        var d = new StyleDisplay { Name = "D", Category = "X" };
+        vm.StorageStyles.Add(a);
+        vm.StorageStyles.Add(b);
+        vm.StorageStyles.Add(c);
+        vm.StorageStyles.Add(d);
+        vm.StorageCategories.Add("X");
+        vm.StorageCategories.Add("Y");
+        vm.SelectedStorageCategory = "Y";
+
+        var grid = vm.StorageStyleGrid;
+        grid.Columns.Add(new Avalonia.Controls.TableViewColumn { Header = "Name", Binding = new Avalonia.Data.Binding(nameof(StyleDisplay.Name)) });
+        grid.ItemsSource = vm.StorageStylesView;
+        var window = new Avalonia.Controls.Window { Width = 400, Height = 300, Content = grid };
+        window.Show();
+        vm.Window = window;
+        var promptBeforeDelete = Se.Settings.General.PromptBeforeDelete;
+        Se.Settings.General.PromptBeforeDelete = false;
+        try
+        {
+            grid.SelectedItem = c;
+
+            vm.StorageRemoveCommand.Execute(null);
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal(new[] { a, b, d }, vm.StorageStyles);
+            Assert.Same(b, vm.SelectedStorageStyle);
+            Assert.Same(b, vm.CurrentStyle);
+        }
+        finally
+        {
+            Se.Settings.General.PromptBeforeDelete = promptBeforeDelete;
+            window.Close();
+        }
+    }
+
+    /// <summary>
     /// Overwriting an existing style on copy between file and storage (#15312) takes the
     /// formatting but keeps the target's identity: name, category and default flag.
     /// </summary>
