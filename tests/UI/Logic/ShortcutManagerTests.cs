@@ -137,6 +137,22 @@ public class ShortcutManagerTests
     }
 
     [Fact]
+    public void BareDecimalBindingFiresFromNumpadDecimal()
+    {
+        // #15317: "Alt+Decimal" (from the key dropdown / SE 4 import) never matched the
+        // "NumPadDecimal" token dispatched for the numpad '.' key.
+        var manager = new ShortcutManager();
+        var category = ShortcutCategory.SubtitleGridAndTextBox;
+        var command = new RelayCommand(() => { });
+        manager.RegisterShortcut(new ShortCut("Toggle dashes", ["Alt", "Decimal"], category, command));
+
+        var e = KeyEvent(Key.Decimal, PhysicalKey.NumPadDecimal, KeyModifiers.Alt);
+        manager.OnKeyPressed(null, e);
+
+        Assert.Same(command, manager.CheckShortcuts(e, category.ToString()));
+    }
+
+    [Fact]
     public void AltGrTypingDoesNotCompleteShortcuts()
     {
         var manager = new ShortcutManager();

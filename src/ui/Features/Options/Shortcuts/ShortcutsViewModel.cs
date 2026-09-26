@@ -215,7 +215,8 @@ public partial class ShortcutsViewModel : ObservableObject
                 continue;
             }
 
-            result.Add(key);
+            // Offer the token a numpad '.' press actually dispatches as (#15317).
+            result.Add(key == nameof(Key.Decimal) ? "NumPadDecimal" : key);
         }
 
         result.AddRange(PhysicalPunctuationKeys);

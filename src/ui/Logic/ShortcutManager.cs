@@ -195,6 +195,12 @@ public class ShortcutManager : IShortcutManager
         ["NumPadSubtract"] = "Subtract",
         ["NumPadMultiply"] = "Multiply",
         ["NumPadDivide"] = "Divide",
+
+        // Numpad '.' with NumLock on is dispatched as "NumPadDecimal", but the bare Avalonia
+        // name "Decimal" reached settings via the Options > Shortcuts key dropdown, SE 4 import
+        // and pre-prefix SE 5 builds - such a binding never fired (#15317). Key.Decimal only
+        // exists on the numpad, so the rename is lossless.
+        ["Decimal"] = "NumPadDecimal",
     };
 
     public static void MigrateLegacyOemKeys(List<string> keys)
