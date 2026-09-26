@@ -11,6 +11,9 @@ public class LanguageAudioToText
     public string IsolateSpeechHint { get; set; }
     public string IsolatingSpeech { get; set; }
     public string IsolateSpeechFailed { get; set; }
+    public string DetectSpeakers { get; set; }
+    public string DetectSpeakersHint { get; set; }
+    public string DetectSpeakersNeedsNewerCrispAsr { get; set; }
     public string InputLanguage { get; set; }
     public string AdvancedWhisperSettings { get; set; }
     public string DownloadingSpeechToTextEngine { get; set; }
@@ -81,6 +84,9 @@ public class LanguageAudioToText
         IsolateSpeechHint = "Removes music and sound effects before transcribing. Gives fewer missed lines and better timing on audio with loud music, but takes about as long as the audio itself with a GPU - and many times longer without one.";
         IsolatingSpeech = "Isolating speech...";
         IsolateSpeechFailed = "Could not isolate the speech - transcribing the original audio instead.";
+        DetectSpeakers = "Detect speakers";
+        DetectSpeakersHint = "Starts each line with the speaker, like \"(speaker 0)\", using NVIDIA's Sortformer diarization (up to 8 speakers). Works best with backends that split lines where the speaker changes, like Parakeet and Cohere.";
+        DetectSpeakersNeedsNewerCrispAsr = "\"Detect speakers\" needs Crisp ASR v{0} or newer, but v{1} is installed.\n\nUpdate Crisp ASR (the gear button next to the engine) or turn off \"Detect speakers\".";
         InputLanguage = "Input language";
         AdvancedWhisperSettings = "Advanced speech-to-text parameters";
         DownloadingSpeechToTextEngine = "Downloading speech-to-text engine";

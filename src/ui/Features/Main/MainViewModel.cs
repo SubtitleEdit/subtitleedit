@@ -11405,9 +11405,10 @@ public partial class MainViewModel :
         }
 
         // MOSS Diarize is the engine that tells speakers apart; it is only preselected, so a user
-        // who has another diarizing engine can switch to it in the window.
+        // can switch to another one. "Detect speakers" is turned on for that case: any other Crisp
+        // ASR backend then labels the speakers too, in languages MOSS (English/Chinese only) lacks.
         var sttResult = await ShowDialogAsync<SpeechToTextWindow, SpeechToTextViewModel>(vm =>
-            vm.Initialize(_videoFileName, _audioTrack?.FfIndex ?? -1, WhisperChoice.CrispAsrMossDiarize));
+            vm.Initialize(_videoFileName, _audioTrack?.FfIndex ?? -1, WhisperChoice.CrispAsrMossDiarize, detectSpeakers: true));
         if (!sttResult.OkPressed || sttResult.TranscribedSubtitle == null || sttResult.TranscribedSubtitle.Paragraphs.Count == 0)
         {
             return;

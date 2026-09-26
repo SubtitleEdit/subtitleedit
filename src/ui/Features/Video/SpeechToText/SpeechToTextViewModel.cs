@@ -83,6 +83,8 @@ public partial class SpeechToTextViewModel : ObservableObject
     [ObservableProperty] private CrispAsrEngineBase? _selectedCrispAsrBackend;
     [ObservableProperty] private bool _isForcedAlignerVisible;
     [ObservableProperty] private bool _doIsolateSpeech;
+    [ObservableProperty] private bool _doDetectSpeakers;
+    [ObservableProperty] private bool _isDetectSpeakersVisible;
     [ObservableProperty] private ObservableCollection<ForcedAlignerOption> _forcedAligners;
     [ObservableProperty] private ForcedAlignerOption? _selectedForcedAligner;
     [ObservableProperty] private double _progressOpacity;
@@ -236,6 +238,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private string? _batchOutputFolder;
     private bool _isUpdatingWhisperCppBackend;
     private bool _isUpdatingCrispAsrBackend;
+    private bool _keepDetectSpeakersSetting;
     private static bool _crispAsrUpdatePromptShown;
     private static bool _whisperCppUpdatePromptShown;
     private static bool _qwen3AsrCppUpdatePromptShown;
@@ -363,6 +366,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         DoAdjustTimings = Se.Settings.Tools.AudioToText.WhisperAutoAdjustTimings;
         DoPostProcessing = Se.Settings.Tools.AudioToText.PostProcessing;
         DoIsolateSpeech = Se.Settings.Tools.AudioToText.CrispAsrIsolateSpeech;
+        DoDetectSpeakers = Se.Settings.Tools.AudioToText.CrispAsrDetectSpeakers;
         AddLanguageCodeToFileName = Se.Settings.Tools.AudioToText.WhisperAddLanguageCodeToFileName;
 
         OpenAiCompatibleSttUrl = Se.Settings.Tools.OpenAiCompatibleSttUrl;
@@ -431,6 +435,11 @@ public partial class SpeechToTextViewModel : ObservableObject
         Se.Settings.Tools.AudioToText.WhisperAutoAdjustTimings = DoAdjustTimings;
         Se.Settings.Tools.AudioToText.PostProcessing = DoPostProcessing;
         Se.Settings.Tools.AudioToText.CrispAsrIsolateSpeech = DoIsolateSpeech;
+        if (!_keepDetectSpeakersSetting)
+        {
+            Se.Settings.Tools.AudioToText.CrispAsrDetectSpeakers = DoDetectSpeakers;
+        }
+
         Se.Settings.Tools.AudioToText.WhisperAddLanguageCodeToFileName = AddLanguageCodeToFileName;
         var engine = GetEffectiveSelectedEngine();
         engine.CommandLineParameter = Parameters;
@@ -575,6 +584,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         UpdateForcedAlignerUi();
         IsBackendSelectionVisible = IsWhisperCppSelected || IsCrispAsrSelected;
         IsForcedAlignerVisible = IsCrispAsrSelected;
+        IsDetectSpeakersVisible = IsCrispAsrSelected && GetEffectiveSelectedEngine() is not CrispAsrMossDiarize;
     }
 
     private void UpdateForcedAlignerUi()
@@ -2905,6 +2915,49 @@ public partial class SpeechToTextViewModel : ObservableObject
         return DoIsolateSpeech && GetEffectiveSelectedEngine() is ICrispAsrEngine;
     }
 
+    /// <summary>
+    /// "Detect speakers" is CrispASR's Sortformer pass, so like "Isolate speech" it must not leak
+    /// into other engines. MOSS Diarize writes its own speaker labels - a second pass would put
+    /// two labels on every line.
+    /// </summary>
+    private bool ShouldDetectSpeakers()
+    {
+        return ShouldDetectSpeakers(DoDetectSpeakers, GetEffectiveSelectedEngine());
+    }
+
+    internal static bool ShouldDetectSpeakers(bool doDetectSpeakers, ISpeechToTextEngine engine)
+    {
+        return doDetectSpeakers && engine is ICrispAsrEngine and not CrispAsrMossDiarize;
+    }
+
+    /// <summary>
+    /// Makes sure the diarization model is on disk and the installed CrispASR knows about it - an
+    /// older one aborts on "--diarize-model" before transcribing anything.
+    /// </summary>
+    private async Task<bool> EnsureSpeakerDetectionReadyAsync(ISpeechToTextEngine engine)
+    {
+        var installedVersion = CrispAsrVersion.TryGet(engine.GetExecutable());
+        if (!SpeakerDiarizationModel.IsSupportedBy(installedVersion))
+        {
+            await MessageBox.Show(
+                Window!,
+                Se.Language.Video.AudioToText.DetectSpeakers,
+                string.Format(Se.Language.Video.AudioToText.DetectSpeakersNeedsNewerCrispAsr, SpeakerDiarizationModel.MinimumCrispAsrVersion, installedVersion),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+            return false;
+        }
+
+        return await SpeechIsolationModelDownload.EnsureModelDownloadedAsync(
+            Window!,
+            _windowService,
+            engine,
+            SpeakerDiarizationModel.ToWhisperModel(),
+            SpeakerDiarizationModel.DisplayName,
+            Se.Language.Video.AudioToText.DetectSpeakers,
+            "a speaker diarization model");
+    }
+
     private Task<bool> EnsureSpeechIsolationModelDownloadedAsync(ISpeechToTextEngine engine)
     {
         return SpeechIsolationModelDownload.EnsureDownloadedAsync(Window!, _windowService, engine, Se.Language.Video.AudioToText.IsolateSpeech);
@@ -4015,6 +4068,11 @@ public partial class SpeechToTextViewModel : ObservableObject
                 return;
             }
 
+            if (ShouldDetectSpeakers() && !await EnsureSpeakerDetectionReadyAsync(engine))
+            {
+                return;
+            }
+
             if (language.Code != "en" && IsModelEnglishOnly(model.Model))
             {
                 var answer = await MessageBox.Show(
@@ -4545,6 +4603,16 @@ public partial class SpeechToTextViewModel : ObservableObject
                 }
             }
 
+            var diarizePart = string.Empty;
+            if (ShouldDetectSpeakers(DoDetectSpeakers, crispAsrEngine))
+            {
+                var diarizeModel = crispAsrEngine.GetModelForCmdLine(SpeakerDiarizationModel.FileName);
+                if (File.Exists(diarizeModel))
+                {
+                    diarizePart = " " + SpeakerDiarizationModel.BuildArguments(diarizeModel);
+                }
+            }
+
             // Remembered so an empty result can be told apart from an empty result *because of*
             // VAD - only the latter is worth re-running without it (#13911).
             _crispAsrVadWasUsed = vadPart.Length > 0;
@@ -4554,8 +4622,8 @@ public partial class SpeechToTextViewModel : ObservableObject
             // once the whole file is done - without this the progress bar sat idle for the
             // entire run and jumped straight to 100%.
             var crispParams = string.IsNullOrWhiteSpace(crispArgs)
-                ? $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart} -f \"{waveFileName}\" --output-srt --print-progress"
-                : $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart} -f \"{waveFileName}\" --output-srt --print-progress {crispArgs}";
+                ? $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart}{diarizePart} -f \"{waveFileName}\" --output-srt --print-progress"
+                : $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart}{diarizePart} -f \"{waveFileName}\" --output-srt --print-progress {crispArgs}";
 
             Se.WriteToolsLog($"{exe} {crispParams}");
 
@@ -5784,12 +5852,22 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// need a specific one - "find the voices in the video" needs an engine that tells speakers
     /// apart. The user can still switch it in the window; nothing is forced beyond the first view.
     /// </param>
-    internal void Initialize(string? videoFileName, int audioTrackNumber, string? preferredEngineChoice = null)
+    /// <param name="detectSpeakers">
+    /// Starts with "Detect speakers" on, so a Crisp ASR backend the user switches to still labels
+    /// the speakers. Only for this window: the user's own default is left as it was.
+    /// </param>
+    internal void Initialize(string? videoFileName, int audioTrackNumber, string? preferredEngineChoice = null, bool detectSpeakers = false)
     {
         _videoFileName = videoFileName;
         _audioTrackNumber = audioTrackNumber;
         _audioTrackVideoFileName = videoFileName;
         TrySelectEngineChoice(preferredEngineChoice);
+        if (detectSpeakers)
+        {
+            DoDetectSpeakers = true;
+            _keepDetectSpeakersSetting = true;
+        }
+
         if (string.IsNullOrEmpty(_videoFileName) || !File.Exists(_videoFileName))
         {
             IsBatchModeVisible = false;
