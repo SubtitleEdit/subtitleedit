@@ -2109,7 +2109,6 @@ public partial class MainViewModel :
             if (result.OkPressed)
             {
                 ApplyAssaStyles(result);
-                _subtitle.Footer = result.ResultSubtitle.Footer;
             }
         }
         finally
@@ -2118,9 +2117,11 @@ public partial class MainViewModel :
         }
     }
 
+    // Used by both OK and the dialog's Apply button, so Apply also takes the embedded fonts (footer)
     public void ApplyAssaStyles(AssaStylesViewModel result)
     {
         ApplyStylesFromDialog(result.Header, result.ResultSubtitle, _styleDialogRowByParagraphId);
+        _subtitle.Footer = result.ResultSubtitle.Footer;
     }
 
     /// <summary>
@@ -2213,7 +2214,6 @@ public partial class MainViewModel :
             if (result.OkPressed)
             {
                 ApplySsaStyles(result);
-                _subtitle.Footer = result.ResultSubtitle.Footer;
             }
         }
         finally
@@ -2438,9 +2438,11 @@ public partial class MainViewModel :
         }
     }
 
+    // Used by both OK and the dialog's Apply button, so Apply also takes the embedded fonts (footer)
     public void ApplySsaStyles(SsaStylesViewModel result)
     {
         ApplyStylesFromDialog(result.Header, result.ResultSubtitle, _styleDialogRowByParagraphId);
+        _subtitle.Footer = result.ResultSubtitle.Footer;
     }
 
     [RelayCommand]

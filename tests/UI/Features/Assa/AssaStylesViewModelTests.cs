@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Headless.XUnit;
@@ -246,6 +247,103 @@ public class AssaStylesViewModelTests
         {
             window.Close();
         }
+    }
+
+    /// <summary>
+    /// Storage categories are independent style sets (#15332): copying a file style into a
+    /// category must not clash with a same-named style in another category - it used to offer
+    /// only "Overwrite" (which changed the other category's style) or "Keep both" (a "_2" name).
+    /// </summary>
+    [AvaloniaFact]
+    public void FileCopyToStorage_SameNameInOtherCategory_AddsToSelectedCategory()
+    {
+        var vm = MakeInitializedVm(out _);
+        vm.StorageStyles.Clear();
+        var defaultCategoryStyle = new StyleDisplay { Name = "Default", Category = string.Empty, FontSize = 20 };
+        vm.StorageStyles.Add(defaultCategoryStyle);
+        vm.StorageCategories.Add("Anime");
+        vm.SelectedStorageCategory = "Anime";
+
+        var fileStyle = vm.FileStyles.Single(p => p.Name == "Default");
+        fileStyle.FontSize = 42;
+
+        var grid = vm.FileStyleGrid;
+        grid.Columns.Add(new Avalonia.Controls.TableViewColumn { Header = "Name", Binding = new Avalonia.Data.Binding(nameof(StyleDisplay.Name)) });
+        grid.ItemsSource = vm.FileStyles;
+        var window = new Avalonia.Controls.Window { Width = 400, Height = 300, Content = grid };
+        window.Show();
+        vm.Window = window;
+        try
+        {
+            grid.SelectedItem = fileStyle;
+
+            vm.FileCopyToStorageCommand.Execute(null);
+
+            Assert.Equal(2, vm.StorageStyles.Count);
+            Assert.Equal(20, defaultCategoryStyle.FontSize);
+            Assert.Equal(string.Empty, defaultCategoryStyle.Category);
+            var copy = vm.StorageStyles.Single(p => p.Category == "Anime");
+            Assert.Equal("Default", copy.Name);
+            Assert.Equal(42, copy.FontSize);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    /// <summary>
+    /// Importing an SE 4 category export (#15332) keeps each style's category - SE 4's "Default"
+    /// category is the built-in Default category - and only renames a style whose name is
+    /// already taken in its own category.
+    /// </summary>
+    [Fact]
+    public void MakeSe4TemplateImportStyles_KeepsCategoriesAndRenamesOnlyWithinCategory()
+    {
+        var categories = new List<Se4StyleCategory>
+        {
+            new("Default", true, new List<SsaStyle> { new() { Name = "Default" }, new() { Name = "Top" } }),
+            new("Anime", false, new List<SsaStyle> { new() { Name = "Default" }, new() { Name = "Top" } }),
+        };
+        var storage = new List<StyleDisplay>
+        {
+            new() { Name = "Default", Category = string.Empty },
+            new() { Name = "Signs", Category = "Anime" },
+        };
+
+        var styles = AssaStylesViewModel.MakeSe4TemplateImportStyles(categories, storage);
+
+        Assert.Equal(new[] { "Default_2", "Top", "Default", "Top" }, styles.Select(p => p.Name));
+        Assert.Equal(new[] { "", "", "Anime", "Anime" }, styles.Select(p => p.Category));
+        Assert.All(styles, p => Assert.True(p.IsSelected));
+    }
+
+    /// <summary>
+    /// Storage "Remove all" with a category selected must only remove that category's styles -
+    /// it used to clear the whole storage, all categories.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task StorageRemoveAll_InFilteredCategory_RemovesOnlyThatCategory()
+    {
+        var services = new ServiceCollection();
+        services.AddSubtitleEditServices();
+        using var provider = services.BuildServiceProvider();
+        var vm = provider.GetRequiredService<AssaStylesViewModel>();
+
+        vm.StorageStyles.Clear();
+        var a = new StyleDisplay { Name = "A", Category = "X" };
+        var b = new StyleDisplay { Name = "B", Category = "Y" };
+        var c = new StyleDisplay { Name = "C", Category = string.Empty };
+        vm.StorageStyles.Add(a);
+        vm.StorageStyles.Add(b);
+        vm.StorageStyles.Add(c);
+        vm.StorageCategories.Add("X");
+        vm.SelectedStorageCategory = "X";
+
+        await vm.StorageRemoveAllCommand.ExecuteAsync(null);
+
+        Assert.Equal(new[] { b, c }, vm.StorageStyles);
+        Assert.Empty(vm.StorageStylesView);
     }
 
     /// <summary>
