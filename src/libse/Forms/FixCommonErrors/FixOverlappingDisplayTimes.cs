@@ -104,42 +104,28 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     if (!Configuration.Settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart && Math.Abs(p.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds) < 0.001 &&
                         prev.DurationTotalMilliseconds > 100)
                     {
-                        if (callbacks.AllowFix(target, fixAction))
+                        if (!canBeEqual)
                         {
-                            if (!canBeEqual)
+                            // Report the paragraph that actually moved, and ask AllowFix about that
+                            // same paragraph: the apply pass only allows fixes whose row (keyed by
+                            // paragraph) is checked, so asking about prev while the row was listed
+                            // under p meant the fix was never applied.
+                            if (prev.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                             {
-                                bool okEqual = true;
-                                var changedCurrent = false;
-                                if (prev.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                                if (callbacks.AllowFix(target, fixAction))
                                 {
                                     prev.EndTime.TotalMilliseconds--;
+                                    noOfOverlappingDisplayTimesFixed++;
+                                    callbacks.AddFixToListView(target, fixAction, oldPrevious, prev.ToString());
                                 }
-                                else if (p.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                            }
+                            else if (p.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                            {
+                                if (callbacks.AllowFix(p, fixAction))
                                 {
                                     p.StartTime.TotalMilliseconds++;
-                                    changedCurrent = true;
-                                }
-                                else
-                                {
-                                    okEqual = false;
-                                }
-
-                                if (okEqual)
-                                {
                                     noOfOverlappingDisplayTimesFixed++;
-
-                                    // Report the paragraph that actually moved. This branch changes
-                                    // "p" while prev is untouched, so reporting prev produced a fix
-                                    // row whose before and after were identical and hid the real
-                                    // change - every other branch reports the one it modified.
-                                    if (changedCurrent)
-                                    {
-                                        callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
-                                    }
-                                    else
-                                    {
-                                        callbacks.AddFixToListView(target, fixAction, oldPrevious, prev.ToString());
-                                    }
+                                    callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                                 }
                             }
                         }
