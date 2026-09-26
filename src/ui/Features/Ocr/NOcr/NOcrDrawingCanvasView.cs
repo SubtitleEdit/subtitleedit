@@ -122,8 +122,8 @@ public class NOcrDrawingCanvasView : Control
         IsDrawing = true;
         var pos = e.GetPosition(this);
 
-        _mouseMoveStartX = (int)Math.Round(pos.X / ZoomFactor, MidpointRounding.AwayFromZero);
-        _mouseMoveStartY = (int)Math.Round(pos.Y / ZoomFactor, MidpointRounding.AwayFromZero);
+        _mouseMoveStartX = ToPixelX(pos.X);
+        _mouseMoveStartY = ToPixelY(pos.Y);
 
         e.Pointer.Capture(this);
         e.Handled = true;
@@ -134,8 +134,8 @@ public class NOcrDrawingCanvasView : Control
         base.OnPointerMoved(e);
 
         var pos = e.GetPosition(this);
-        var x = (int)Math.Round(pos.X / ZoomFactor, MidpointRounding.AwayFromZero);
-        var y = (int)Math.Round(pos.Y / ZoomFactor, MidpointRounding.AwayFromZero);
+        var x = ToPixelX(pos.X);
+        var y = ToPixelY(pos.Y);
 
         if (IsDrawing)
         {
@@ -180,8 +180,8 @@ public class NOcrDrawingCanvasView : Control
             IsDrawing = true;
             var pos = e.GetPosition(this);
 
-            _mouseMoveStartX = (int)Math.Round(pos.X / ZoomFactor, MidpointRounding.AwayFromZero);
-            _mouseMoveStartY = (int)Math.Round(pos.Y / ZoomFactor, MidpointRounding.AwayFromZero);
+            _mouseMoveStartX = ToPixelX(pos.X);
+            _mouseMoveStartY = ToPixelY(pos.Y);
         }
     }
 
@@ -235,10 +235,29 @@ public class NOcrDrawingCanvasView : Control
         }
     }
 
+    // Line points are pixel indices, so the pointer maps to the pixel under it (floor, not
+    // round - rounding sent a click in the right/bottom half of a pixel to its neighbor, and
+    // hand-drawn lines along thin strokes then tested background pixels) and lines are drawn
+    // through pixel centers so what is shown is what is matched.
+    private int ToPixelX(double x) => ToPixel(x, BackgroundImage?.PixelSize.Width);
+
+    private int ToPixelY(double y) => ToPixel(y, BackgroundImage?.PixelSize.Height);
+
+    private int ToPixel(double value, int? size)
+    {
+        var pixel = (int)Math.Floor(value / ZoomFactor);
+        if (size is > 0)
+        {
+            pixel = Math.Clamp(pixel, 0, size.Value - 1);
+        }
+
+        return pixel;
+    }
+
     private void DrawLine(DrawingContext context, NOcrLine line, IPen pen)
     {
-        var startPoint = new Point(line.Start.X * ZoomFactor, line.Start.Y * ZoomFactor);
-        var endPoint = new Point(line.End.X * ZoomFactor, line.End.Y * ZoomFactor);
+        var startPoint = new Point((line.Start.X + 0.5) * ZoomFactor, (line.Start.Y + 0.5) * ZoomFactor);
+        var endPoint = new Point((line.End.X + 0.5) * ZoomFactor, (line.End.Y + 0.5) * ZoomFactor);
 
         context.DrawLine(pen, startPoint, endPoint);
     }

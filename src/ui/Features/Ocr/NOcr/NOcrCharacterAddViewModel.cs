@@ -328,6 +328,24 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
         NOcrChar.Text = NewText;
         NOcrChar.Italic = IsNewTextItalic;
         SyncCanvasLinesToNOcrChar();
+
+        // A character whose lines don't match its own image is never recognized, so OCR would
+        // prompt for the same glyph again right after saving it.
+        if (NOcrChar.ExpandCount == 0 && PreviewBitmap != null && !NOcrDb.IsMatch(PreviewBitmap, NOcrChar, 0))
+        {
+            var answer = await MessageBox.Show(
+                Window!,
+                Se.Language.Ocr.DrawnLinesDoNotMatchTitle,
+                Se.Language.Ocr.DrawnLinesDoNotMatchPrompt,
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (answer != MessageBoxResult.Yes)
+            {
+                return;
+            }
+        }
+
         OkPressed = true;
         SaveSettings();
         Close();
