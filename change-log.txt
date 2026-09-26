@@ -3,6 +3,36 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-beta13 (26th of September 2026)
+
+* Add TikTok/YouTube Shorts (1-3 words) rule profile - thx hardpenguin
+* Add brightness (tone) bar to the color picker - thx bichitoxxx
+* Add "Toggle screen privacy" shortcut: hide file names, then also blur texts - thx kadrimarzouki
+* Add Crisp ASR Parakeet Ultra models
+* Add OpenAI-compatible text to speech output format (Auto/MP3/PCM) - thx laszlolaszlo
+* Add Remux option to turn off "Optimize for web streaming" (faststart)
+* Burn-in: show a "videos generated" dialog after batch mode
+* ASSA styles: ask to overwrite on copy to storage/file, and allow reordering storage styles - thx bichitoxxx
+* Open original/import/insert file pickers now start in the current subtitle's folder - thx bichitoxxx
+* Speech to text: merging short lines now respects the rule profile's number of lines - thx hardpenguin
+* Fix Alt+Decimal shortcuts (e.g. toggle dashes) never firing - thx kadrimarzouki
+* Fix second subtitle settings not re-styling from the loaded file - thx kadrimarzouki
+* Fix dragged text box height reset after Settings OK/Apply - thx kadrimarzouki
+* Fix text commands (delete, surround with) acting on display-only reference rows, and empty original lines shown as reference rows - thx kadrimarzouki
+* Fix duplicate recent colors in the color picker - thx bichitoxxx
+* Fix Burn-in batch mode only burning the logo into the first video
+* Fix Burn-in Logo/video position windows not maximizing
+* Fix batch video tools showing "_Done" as job status
+* Fix subtitle text boxes using the UI font instead of the subtitle text box font - thx Surlime
+* Update CrispASR to v0.8.37
+* Update audio.cpp runtime to v0.8.2-audio8-perf-hotfix
+* Update Czech translation - thx Matěj Fouma
+* Update Dutch translation - thx CmdSpock
+* Update Italian translation - thx bovirus
+* Update Korean translation - thx 12si27
+
+-----------------------------------------------------------------------------------------------------
+
 v5.3.0-beta12 (25th of September 2026)
 
 * Add OpenAI-compatible text to speech engine (OpenAI, OpenRouter, custom server) - thx laszlolaszlo
