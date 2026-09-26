@@ -42,6 +42,69 @@ public class AssaStylesDialogKeepsLineStylesTests
         await Run("[script info]", "ScriptType: v4.00+", string.Empty, useApply: true);
     }
 
+    /// <summary>
+    /// Apply used to set OkPressed, so a later Cancel applied the dialog again - with the header
+    /// saved at Apply time but the line styles as edited after it. A style renamed after Apply
+    /// then no longer matched the header, and its lines fell back to the first style.
+    /// Cancel after Apply must keep exactly what was applied.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task Apply_ThenRename_ThenCancel_KeepsAppliedState()
+    {
+        var (window, vm) = CreateMainViewModel();
+        var dir = Path.Combine(Path.GetTempPath(), $"se-apply-cancel-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(dir);
+        try
+        {
+            var assFile = Path.Combine(dir, "test.ass");
+            await File.WriteAllTextAsync(assFile, MakeAss("[Script Info]", "ScriptType: v4.00+", string.Empty));
+            await vm.SubtitleOpen(assFile, skipLoadVideo: true);
+            Dispatcher.UIThread.RunJobs();
+            var stylesBefore = vm.Subtitles.Select(p => p.Style).ToArray();
+
+            var dialogTask = vm.ShowAssaStylesCommand.ExecuteAsync(null);
+            Dispatcher.UIThread.RunJobs();
+            var dialogWindow = window.OwnedWindows.OfType<AssaStylesWindow>().Single();
+            var dialogVm = (AssaStylesViewModel)dialogWindow.DataContext!;
+
+            var gothic = dialogVm.FileStyles.Single(s => s.Name == "Gothic");
+            dialogVm.SelectedFileStyle = gothic;
+            Dispatcher.UIThread.RunJobs();
+            gothic.FontSize = 39;
+            Dispatcher.UIThread.RunJobs();
+
+            dialogVm.ApplyCommand.Execute(null);
+            Dispatcher.UIThread.RunJobs();
+            Assert.False(dialogVm.OkPressed);
+
+            gothic.Name = "Gothic renamed";
+            Dispatcher.UIThread.RunJobs();
+
+            dialogVm.CancelCommand.Execute(null);
+            Dispatcher.UIThread.RunJobs();
+            await dialogTask;
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.False(dialogVm.OkPressed);
+            Assert.Equal(stylesBefore, vm.Subtitles.Select(p => p.Style).ToArray());
+            var header = vm.GetUpdateSubtitle().Header;
+            Assert.Equal(new[] { "Default", "Gothic", "B Gothic" }, AdvancedSubStationAlpha.GetStylesFromHeader(header));
+            Assert.Contains("Style: Gothic,CinemaGothic,39,", header);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+            try
+            {
+                Directory.Delete(dir, true);
+            }
+            catch
+            {
+                // temp dir cleanup only
+            }
+        }
+    }
+
     private static async Task Run(string scriptInfoLine, string scriptTypeLine, string star, bool useApply)
     {
         var (window, vm) = CreateMainViewModel();
