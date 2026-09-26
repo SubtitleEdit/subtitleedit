@@ -95,6 +95,18 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
     /// the item list would make Avalonia clear the selection and null out the style's font.
     /// Make sure the font is listed before the style becomes current (#13101).
     /// </summary>
+    /// <summary>
+    /// The border type combo is not bound to CurrentStyle - it writes its selection into the
+    /// current style (BorderTypeChanged). Keep it in sync on every change of the current style,
+    /// or it would show (and on its next selection change write) another style's border type:
+    /// Initialize left it at the last file style's, and deleting a file style kept the deleted
+    /// one's. Both were only corrected by the grid's selection event.
+    /// </summary>
+    partial void OnCurrentStyleChanged(StyleDisplay? value)
+    {
+        SelectedBorderType = value?.BorderStyle ?? BorderTypes[0];
+    }
+
     partial void OnCurrentStyleChanging(StyleDisplay? value)
     {
         var fontName = value?.FontName;
@@ -651,7 +663,6 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
             if (style != null)
             {
                 var display = StripAlpha(new StyleDisplay(style));
-                SelectedBorderType = display.BorderStyle;
                 FileStyles.Add(display);
 
                 var fontName = display.FontName;
