@@ -869,7 +869,7 @@ public static partial class InitLayout
 
         Grid.SetRow(editSection, 1);
         rightGrid.Children.Add(editSection);
-        InitListViewAndEditBox.AttachDetachedEditBoxSplitter(rightGrid, editSection);
+        InitListViewAndEditBox.AttachDetachedEditBoxSplitter(vm, rightGrid, editSection);
 
         var nestedRight = new Border
         {
@@ -1040,7 +1040,7 @@ public static partial class InitLayout
 
         Grid.SetRow(editSection, 1);
         videoGrid.Children.Add(editSection);
-        InitListViewAndEditBox.AttachDetachedEditBoxSplitter(videoGrid, editSection);
+        InitListViewAndEditBox.AttachDetachedEditBoxSplitter(vm, videoGrid, editSection);
 
         var gridBorder = new Border
         {

@@ -86,7 +86,7 @@ public static partial class InitListViewAndEditBox
         {
             // GridSplitter constrains the row definition, so include editGrid's outer
             // margin to preserve the text box's 92 px minimum at the drag limit.
-            mainGrid.RowDefinitions.Add(MakeEditSectionRow());
+            mainGrid.RowDefinitions.Add(MakeEditSectionRow(vm));
         }
 
         // TableView (Avalonia 12.1) pilot #3, after Show history (#12704) and the OCR grid
@@ -2179,11 +2179,12 @@ public static partial class InitListViewAndEditBox
     /// minimum-height tracking as the docked layout, so the text box cannot be dragged small
     /// enough to overpaint its labels (#10271).
     /// </summary>
-    internal static void AttachDetachedEditBoxSplitter(Grid hostGrid, Grid editSection)
+    internal static void AttachDetachedEditBoxSplitter(MainViewModel vm, Grid hostGrid, Grid editSection)
     {
-        var row = MakeEditSectionRow();
-        hostGrid.RowDefinitions[1].Height = row.Height;
+        var row = MakeEditSectionRow(null);
+        hostGrid.RowDefinitions[1].Height = KeepUserEditSectionHeight(vm, row.Height, row.MinHeight);
         hostGrid.RowDefinitions[1].MinHeight = row.MinHeight;
+        vm.EditSectionRow = hostGrid.RowDefinitions[1];
 
         var editBoxSplitter = new GridSplitter
         {
@@ -2332,10 +2333,41 @@ public static partial class InitListViewAndEditBox
     /// layout pass replaces both with the measured value (TrackEditSectionMinimumHeight), which is
     /// exactly what the Auto row used to settle at, so the default look is unchanged.
     /// </summary>
-    private static RowDefinition MakeEditSectionRow()
+    private static RowDefinition MakeEditSectionRow(MainViewModel? vm)
     {
         var floor = EditGridMinimumHeight + EditGridMargin * 2;
-        return new RowDefinition(new GridLength(floor, GridUnitType.Pixel)) { MinHeight = floor };
+        var row = new RowDefinition(new GridLength(floor, GridUnitType.Pixel)) { MinHeight = floor };
+        if (vm != null)
+        {
+            row.Height = KeepUserEditSectionHeight(vm, row.Height, floor);
+            vm.EditSectionRow = row;
+        }
+
+        return row;
+    }
+
+    /// <summary>
+    /// The height for a freshly built edit section row: the previous row's height when the user
+    /// dragged it taller than its floor, otherwise <paramref name="defaultHeight"/>. Every layout
+    /// rebuild (Settings OK/Apply, layout switch, undock) creates a new row, so without this the
+    /// text box snapped back to its minimum size (#15318). A row still at its floor is the
+    /// untouched seed and is not carried over, so the new row keeps tracking the measured floor.
+    /// </summary>
+    private static GridLength KeepUserEditSectionHeight(MainViewModel vm, GridLength defaultHeight, double floor)
+    {
+        var oldRow = vm.EditSectionRow;
+        if (oldRow == null || !oldRow.Height.IsAbsolute)
+        {
+            return defaultHeight;
+        }
+
+        var oldHeight = oldRow.Height.Value;
+        if (oldHeight <= oldRow.MinHeight + 0.5 || oldHeight <= floor)
+        {
+            return defaultHeight;
+        }
+
+        return new GridLength(oldHeight, GridUnitType.Pixel);
     }
 
     /// <summary>

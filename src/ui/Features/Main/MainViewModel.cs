@@ -911,6 +911,11 @@ public partial class MainViewModel :
     public MenuItem MenuItemAudioVisualizerCopyText { get; set; }
     public ITextBoxWrapper EditTextBoxOriginal { get; set; }
     public ITextBoxWrapper EditTextBox { get; set; }
+
+    // The row holding the edit box (the text box section below the grid). Kept so a layout
+    // rebuild - Settings OK/Apply, layout switch, undock - can hand a height the user dragged
+    // the splitter to over to the new row instead of snapping back to the minimum (#15318).
+    internal RowDefinition? EditSectionRow { get; set; }
     public TimeCodeUpDown? EditBoxStartTimeUpDown { get; set; }
     public TimeCodeUpDown? EditBoxEndTimeUpDown { get; set; }
     public SecondsUpDown? EditBoxDurationUpDown { get; set; }
