@@ -137,6 +137,11 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
         Close();
     }
 
+    /// <summary>
+    /// Hands the current styles to the main window without closing. OkPressed stays false: it
+    /// is only for OK, so a later Cancel keeps what was applied instead of also applying the
+    /// edits made after Apply.
+    /// </summary>
     [RelayCommand]
     private async Task Apply()
     {
@@ -145,7 +150,6 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        OkPressed = true;
         SaveFileStylesToHeader();
         SaveSettings();
         _applySsaStyles?.ApplySsaStyles(this);

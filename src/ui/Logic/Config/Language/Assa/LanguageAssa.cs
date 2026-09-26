@@ -144,6 +144,7 @@ public class LanguageAssa
     public string DeleteStyleQuestion { get; set; }
     public string DeleteStylesQuestion { get; set; }
     public string OpenStyleImportFile { get; set; }
+    public string StyleImportFiles { get; set; }
     public string Primary { get; set; }
     public string Secondary { get; set; }
     public string ApplyOverrideTags { get; set; }
@@ -392,6 +393,7 @@ public class LanguageAssa
         DeleteStyleQuestion = "Delete style?";
         DeleteStylesQuestion = "Delete styles?";
         OpenStyleImportFile = "Open subtitle file to import styles from";
+        StyleImportFiles = "Style files (.ass, .sty, Subtitle Edit 4 categories .template)";
         Primary = "Primary";
         Secondary = "Secondary";
         ApplyOverrideTags = "Apply override tags";
