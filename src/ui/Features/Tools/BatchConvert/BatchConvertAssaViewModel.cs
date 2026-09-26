@@ -78,6 +78,7 @@ public partial class BatchConvertAssaViewModel : ObservableObject
         if (result.OkPressed)
         {
             _subtitle.Header = result.Header;
+            _subtitle.Footer = result.ResultSubtitle.Footer; // fonts embedded from the dialog's font pickers
             Text = _subtitle.ToText(new AdvancedSubStationAlpha());
         }
     }
