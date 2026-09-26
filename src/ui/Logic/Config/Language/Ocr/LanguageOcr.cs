@@ -86,6 +86,8 @@ public class LanguageOcr
     public string BinaryImageCompareInspectImageMatches { get; set; }
     public string SaveBlankTextTitle { get; set; }
     public string SaveBlankTextPrompt { get; set; }
+    public string DrawnLinesDoNotMatchTitle { get; set; }
+    public string DrawnLinesDoNotMatchPrompt { get; set; }
     public string YesAndNeverAskAgain { get; set; }
     public string ImportTextFromSubtitleDotDotDot { get; set; }
     public string ImportTextFromSubtitleOverwritePrompt { get; set; }
@@ -241,6 +243,10 @@ public class LanguageOcr
         BinaryImageCompareInspectImageMatches = "\"Binary image compare\" - Inspect image matches";
         SaveBlankTextTitle = "Save blank text?";
         SaveBlankTextPrompt = "Save blank text for image?";
+        DrawnLinesDoNotMatchTitle = "Lines do not match image";
+        DrawnLinesDoNotMatchPrompt = "Some of the drawn lines do not match the image (green lines must be on the character, red lines must be off it), so this character will not be recognized." + Environment.NewLine +
+                                     Environment.NewLine +
+                                     "Save anyway?";
         YesAndNeverAskAgain = "Yes and never ask again";
         ImportTextFromSubtitleDotDotDot = "Import text from subtitle...";
         ImportTextFromSubtitleOverwritePrompt = "Some lines already have OCR text. Overwrite existing text?";
