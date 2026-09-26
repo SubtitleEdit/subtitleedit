@@ -16,8 +16,8 @@ public class AiReviewPromptWindow : Window
         Title = Se.Language.Tools.AiReview.EditPromptTitle;
         Width = 640;
         MinWidth = 480;
-        Height = 520;
-        MinHeight = 360;
+        Height = 700;
+        MinHeight = 520;
         CanResize = true;
         vm.Window = this;
         DataContext = vm;
@@ -38,6 +38,63 @@ public class AiReviewPromptWindow : Window
             [!TextBox.TextProperty] = new Binding(nameof(vm.PromptText)) { Mode = BindingMode.TwoWay },
         };
         Avalonia.Automation.AutomationProperties.SetName(textBox, l.EditPromptTitle);
+
+        var labelTemplate = UiUtil.MakeTextBlock(l.Template);
+        labelTemplate.VerticalAlignment = VerticalAlignment.Center;
+        var comboTemplate = new ComboBox
+        {
+            ItemsSource = vm.Templates,
+            PlaceholderText = l.TemplatePlaceholder,
+            MinWidth = 280,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedTemplate)) { Mode = BindingMode.TwoWay },
+        };
+        Avalonia.Automation.AutomationProperties.SetName(comboTemplate, l.Template);
+        var panelTemplate = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            Children = { labelTemplate, comboTemplate },
+        };
+
+        var labelContext = UiUtil.MakeTextBlock(l.ReferenceContext);
+        labelContext.FontWeight = FontWeight.SemiBold;
+        labelContext.VerticalAlignment = VerticalAlignment.Center;
+        var buttonGenerate = UiUtil.MakeButton(l.GenerateContext, vm.GenerateContextCommand);
+        buttonGenerate.Bind(Button.ContentProperty, new Binding(nameof(vm.GenerateButtonText)));
+        buttonGenerate.Bind(IsVisibleProperty, new Binding(nameof(vm.CanGenerate)));
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(buttonGenerate, l.GenerateContextHint);
+        }
+
+        var labelGenerateStatus = UiUtil.MakeTextBlock(string.Empty);
+        labelGenerateStatus.Opacity = 0.75;
+        labelGenerateStatus.VerticalAlignment = VerticalAlignment.Center;
+        labelGenerateStatus.Bind(TextBlock.TextProperty, new Binding(nameof(vm.GenerateStatus)));
+        var panelContextHeader = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 10,
+            Children = { labelContext, buttonGenerate, labelGenerateStatus },
+        };
+
+        var labelContextInfo = UiUtil.MakeTextBlock(l.ReferenceContextInfo);
+        labelContextInfo.TextWrapping = TextWrapping.Wrap;
+        labelContextInfo.Opacity = 0.75;
+
+        var textBoxContext = new TextBox
+        {
+            AcceptsReturn = true,
+            TextWrapping = TextWrapping.Wrap,
+            MinHeight = 90,
+            PlaceholderText = l.ReferenceContextPlaceholder,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Stretch,
+            [!TextBox.TextProperty] = new Binding(nameof(vm.ContextText)) { Mode = BindingMode.TwoWay },
+            [!TextBox.IsReadOnlyProperty] = new Binding(nameof(vm.IsGenerating)),
+        };
+        Avalonia.Automation.AutomationProperties.SetName(textBoxContext, l.ReferenceContext);
 
         var labelProtocol = UiUtil.MakeTextBlock(l.ProtocolInfo);
         labelProtocol.TextWrapping = TextWrapping.Wrap;
@@ -68,13 +125,17 @@ public class AiReviewPromptWindow : Window
         var panel = new Grid
         {
             Margin = UiUtil.MakeWindowMargin(),
-            RowDefinitions = new RowDefinitions("Auto,*,Auto,Auto"),
+            RowDefinitions = new RowDefinitions("Auto,Auto,3*,Auto,Auto,2*,Auto,Auto"),
             RowSpacing = 10,
         };
         panel.Add(labelInfo, 0, 0);
-        panel.Add(textBox, 1, 0);
-        panel.Add(borderProtocol, 2, 0);
-        panel.Add(buttonBar, 3, 0);
+        panel.Add(panelTemplate, 1, 0);
+        panel.Add(textBox, 2, 0);
+        panel.Add(panelContextHeader, 3, 0);
+        panel.Add(labelContextInfo, 4, 0);
+        panel.Add(textBoxContext, 5, 0);
+        panel.Add(borderProtocol, 6, 0);
+        panel.Add(buttonBar, 7, 0);
 
         Content = panel;
 
@@ -83,7 +144,11 @@ public class AiReviewPromptWindow : Window
             textBox.Focus();
             UiUtil.RestoreWindowPosition(this);
         };
-        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Closing += delegate
+        {
+            vm.OnClosing();
+            UiUtil.SaveWindowPosition(this);
+        };
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

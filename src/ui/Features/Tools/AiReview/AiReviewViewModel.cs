@@ -350,6 +350,63 @@ public partial class AiReviewViewModel : ObservableObject
         Se.SaveSettings();
     }
 
+    private record EngineTarget(string Url, string Model, string? ApiKey);
+
+    /// <summary>
+    /// Resolves the selected engine to an endpoint - for llama.cpp this downloads the model/engine
+    /// when needed and starts the server (<paramref name="onServerStarting"/> runs just before).
+    /// Returns null when the engine is not usable; the user has then already been told why.
+    /// </summary>
+    private async Task<EngineTarget?> PrepareEngineAsync(Window owner, Action? onServerStarting = null)
+    {
+        if (SelectedEngine == SeAiReview.EngineLlamaCpp)
+        {
+            var display = SelectedLlamaCppModel;
+            if (display == null ||
+                !await LlamaCppDownloadHelper.EnsureReadyAsync(owner, _windowService, display.Model.FileName,
+                    LlamaCppServerManager.GetAllReviewModels(), persistAsTranslateModel: false))
+            {
+                RefreshLlamaCppModels();
+                RefreshEngines();
+                return null;
+            }
+
+            RefreshLlamaCppModels(); // pick up the fresh install state (green dot)
+            RefreshEngines();
+            display = SelectedLlamaCppModel;
+            if (display == null)
+            {
+                return null;
+            }
+
+            onServerStarting?.Invoke();
+            try
+            {
+                await LlamaCppServerManager.EnsureServerRunningAsync(display.Model, CancellationToken.None);
+            }
+            catch (Exception e)
+            {
+                UpdateLlamaCppServerButtonText();
+                await MessageBox.Show(owner, Se.Language.General.Error,
+                    string.Format(Se.Language.Tools.AiReview.EngineError, e.Message), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+
+            UpdateLlamaCppServerButtonText();
+            return new EngineTarget(LlamaCppServerManager.ApiUrl, string.Empty, null);
+        }
+
+        if (SelectedEngine == SeAiReview.EngineOpenAiCompatible)
+        {
+            return new EngineTarget(
+                OpenAiCompatibleUrl.Trim(),
+                OpenAiCompatibleModel.Trim(),
+                string.IsNullOrWhiteSpace(OpenAiCompatibleApiKey) ? null : OpenAiCompatibleApiKey.Trim());
+        }
+
+        return new EngineTarget(Se.Settings.Tools.AiReview.OllamaUrl, OllamaModel.Trim(), null);
+    }
+
     [RelayCommand]
     private async Task Review()
     {
@@ -361,61 +418,20 @@ public partial class AiReviewViewModel : ObservableObject
         SaveSettings();
         var l = Se.Language.Tools.AiReview;
 
-        string url;
-        var model = string.Empty;
-        string? apiKey = null;
-        if (SelectedEngine == SeAiReview.EngineLlamaCpp)
+        var target = await PrepareEngineAsync(Window, () =>
         {
-            var display = SelectedLlamaCppModel;
-            if (display == null ||
-                !await LlamaCppDownloadHelper.EnsureReadyAsync(Window, _windowService, display.Model.FileName,
-                    LlamaCppServerManager.GetAllReviewModels(), persistAsTranslateModel: false))
-            {
-                RefreshLlamaCppModels();
-                RefreshEngines();
-                return;
-            }
-
-            RefreshLlamaCppModels(); // pick up the fresh install state (green dot)
-            RefreshEngines();
-            display = SelectedLlamaCppModel;
-            if (display == null)
-            {
-                return;
-            }
-
             IsReviewing = true;
             StatusText = "llama.cpp...";
-            try
-            {
-                await LlamaCppServerManager.EnsureServerRunningAsync(display.Model, CancellationToken.None);
-            }
-            catch (Exception e)
-            {
-                IsReviewing = false;
-                StatusText = string.Empty;
-                UpdateLlamaCppServerButtonText();
-                await MessageBox.Show(Window, Se.Language.General.Error,
-                    string.Format(l.EngineError, e.Message), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+        });
+        if (target == null)
+        {
+            IsReviewing = false;
+            StatusText = string.Empty;
+            return;
+        }
 
-            UpdateLlamaCppServerButtonText();
-            url = LlamaCppServerManager.ApiUrl;
-        }
-        else if (SelectedEngine == SeAiReview.EngineOpenAiCompatible)
-        {
-            url = OpenAiCompatibleUrl.Trim();
-            model = OpenAiCompatibleModel.Trim();
-            apiKey = string.IsNullOrWhiteSpace(OpenAiCompatibleApiKey) ? null : OpenAiCompatibleApiKey.Trim();
-            IsReviewing = true;
-        }
-        else
-        {
-            url = Se.Settings.Tools.AiReview.OllamaUrl;
-            model = OllamaModel.Trim();
-            IsReviewing = true;
-        }
+        IsReviewing = true;
+        var (url, model, apiKey) = target;
 
         _cancellationTokenSource = new CancellationTokenSource();
         var ct = _cancellationTokenSource.Token;
@@ -447,7 +463,7 @@ public partial class AiReviewViewModel : ObservableObject
         }
 
         var chunks = AiReviewChunker.BuildChunks(lines, Se.Settings.Tools.AiReview.MaxLinesPerBatch);
-        var systemPrompt = AiReviewProtocol.BuildSystemPrompt(Se.Settings.Tools.AiReview.Prompt, GetLanguageDisplayName(_languageCode));
+        var systemPrompt = AiReviewProtocol.BuildSystemPrompt(Se.Settings.Tools.AiReview.Prompt, GetLanguageDisplayName(_languageCode), Se.Settings.Tools.AiReview.Context);
 
         using var client = new AiReviewClient();
         var processedLines = 0;
@@ -940,7 +956,76 @@ public partial class AiReviewViewModel : ObservableObject
             return;
         }
 
-        await _windowService.ShowDialogAsync<AiReviewPromptWindow, AiReviewPromptViewModel>(Window, vm => vm.Initialize());
+        await _windowService.ShowDialogAsync<AiReviewPromptWindow, AiReviewPromptViewModel>(Window,
+            vm => vm.Initialize(_subtitle.Paragraphs.Count > 0 ? GenerateContextAsync : null));
+    }
+
+    /// <summary>
+    /// "Generate with AI" in the prompt dialog: drafts names, terms and a synopsis from the whole
+    /// subtitle with the engine selected in this window (issue #15290).
+    /// </summary>
+    private async Task<string?> GenerateContextAsync(Window owner, Action<int, int> progress, CancellationToken cancellationToken)
+    {
+        SaveSettings();
+        var target = await PrepareEngineAsync(owner);
+        if (target == null)
+        {
+            return null;
+        }
+
+        var lines = new List<string>();
+        foreach (var p in _subtitle.Paragraphs)
+        {
+            var text = HtmlUtil.RemoveHtmlTags(p.Text ?? string.Empty, true)
+                .Replace(Environment.NewLine, " ")
+                .Replace('\n', ' ')
+                .Trim();
+            if (text.Length > 0)
+            {
+                lines.Add(string.IsNullOrWhiteSpace(p.Actor) ? text : $"[{p.Actor.Trim()}] {text}");
+            }
+        }
+
+        using var client = new AiReviewClient();
+        var delay = TimeSpan.FromSeconds(Math.Max(0, RequestDelaySeconds));
+        var lastRequestCompletedUtc = DateTime.MinValue;
+        async Task<string> ChatAsync(string systemPrompt, string userContent, bool jsonObject, CancellationToken ct)
+        {
+            var remaining = delay - (DateTime.UtcNow - lastRequestCompletedUtc);
+            if (remaining > TimeSpan.Zero)
+            {
+                await Task.Delay(remaining, ct);
+            }
+
+            try
+            {
+                return await client.ChatAsync(target.Url, target.Model, systemPrompt, userContent, ct, target.ApiKey, jsonObject);
+            }
+            finally
+            {
+                lastRequestCompletedUtc = DateTime.UtcNow;
+            }
+        }
+
+        try
+        {
+            return await AiReviewContextGenerator.GenerateAsync(lines, GetLanguageDisplayName(_languageCode), ChatAsync,
+                progress, cancellationToken, s => Se.WriteToolsLog(s));
+        }
+        catch (OperationCanceledException)
+        {
+            // same rule as a cancelled review (#13969): release the local model's RAM/VRAM right away
+            if (SelectedEngine == SeAiReview.EngineLlamaCpp && LlamaCppServerManager.IsServerRunning)
+            {
+                _ = Task.Run(() =>
+                {
+                    LlamaCppServerManager.StopServer();
+                    Dispatcher.UIThread.Post(UpdateLlamaCppServerButtonText);
+                });
+            }
+
+            throw;
+        }
     }
 
     /// <summary>
