@@ -319,4 +319,64 @@ public class SpeechToTextQualityReportTests
             Configuration.Settings.General.MergeLinesShorterThan = oldMergeShorter;
         }
     }
+
+    // Real CrispASR Parakeet + Sortformer output (--max-len 50 --split-on-punct) for a
+    // three-voice dialog: every sentence comes back as two labelled halves.
+    private static Subtitle MakeDiarizedDialog() => Make(
+        ("(speaker 0) Good morning, did you finish the report about the", 0, 2320),
+        ("(speaker 0)  new subtitle project yesterday?", 2320, 4880),
+        ("(speaker 1) Not yet, I still need the numbers from the", 4960, 7520),
+        ("(speaker 1)  translation team before I can send it.", 7520, 10240),
+        ("(speaker 0) Fine by me, I will bring the coffee and the", 24080, 26560),
+        ("(speaker 0)  printed copies.", 26560, 27840),
+        ("(speaker 0)  I", 27920, 28160),
+        ("(speaker 2) will tell the other.", 28160, 29760));
+
+    [Fact]
+    public void Fix_DiarizedTranscript_KeepsEachLabelAtTheStartOfItsSpeakersLines()
+    {
+        var pp = new SpeechToTextPostProcessor("en");
+        var result = pp.Fix(SpeechToTextPostProcessor.Engine.Whisper, MakeDiarizedDialog(), true, true, true, true, true, true, false, Avalonia.Media.Colors.Red);
+
+        Assert.All(result.Paragraphs, p => Assert.Matches(@"^\(speaker \d\) [^(]*$", p.Text.Replace(System.Environment.NewLine, " ")));
+        Assert.Equal("(speaker 0) Good morning, did you finish the report about the new subtitle project yesterday?", Flatten(result.Paragraphs[0].Text));
+        Assert.Equal("(speaker 1) Not yet, I still need the numbers from the translation team before I can send it.", Flatten(result.Paragraphs[1].Text));
+    }
+
+    [Fact]
+    public void Fix_DiarizedTranscript_NeverMergesTwoSpeakers()
+    {
+        var pp = new SpeechToTextPostProcessor("en");
+        var result = pp.Fix(SpeechToTextPostProcessor.Engine.Whisper, MakeDiarizedDialog(), true, true, true, true, true, true, false, Avalonia.Media.Colors.Red);
+
+        // "I" is speaker 0's according to the engine; merged with the next line it would hand
+        // speaker 2's words to speaker 0.
+        Assert.Equal("(speaker 2) will tell the other.", result.Paragraphs.Last().Text);
+        Assert.StartsWith("(speaker 0) I", result.Paragraphs[^2].Text);
+    }
+
+    [Fact]
+    public void Fix_DiarizedTranscript_DoesNotLengthenALineIntoTheNextSpeaker()
+    {
+        var pp = new SpeechToTextPostProcessor("en");
+        var result = pp.Fix(SpeechToTextPostProcessor.Engine.Whisper, MakeDiarizedDialog(), true, true, true, true, true, true, false, Avalonia.Media.Colors.Red);
+
+        for (var i = 0; i < result.Paragraphs.Count - 1; i++)
+        {
+            Assert.True(result.Paragraphs[i].EndTime.TotalMilliseconds <= result.Paragraphs[i + 1].StartTime.TotalMilliseconds, $"line {i + 1} overlaps line {i + 2}");
+        }
+    }
+
+    [Fact]
+    public void Fix_DiarizedTranscript_PostProcessingOff_LeavesTheTextAlone()
+    {
+        var input = MakeDiarizedDialog();
+        var expected = input.Paragraphs.Select(p => p.Text).ToArray();
+
+        var result = new SpeechToTextPostProcessor("en").Fix(SpeechToTextPostProcessor.Engine.Whisper, input, false, true, true, true, true, true, false, Avalonia.Media.Colors.Red);
+
+        Assert.Equal(expected, result.Paragraphs.Select(p => p.Text).ToArray());
+    }
+
+    private static string Flatten(string text) => text.Replace(System.Environment.NewLine, " ");
 }

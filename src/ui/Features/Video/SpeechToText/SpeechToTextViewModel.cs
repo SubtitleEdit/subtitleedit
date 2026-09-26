@@ -83,6 +83,8 @@ public partial class SpeechToTextViewModel : ObservableObject
     [ObservableProperty] private CrispAsrEngineBase? _selectedCrispAsrBackend;
     [ObservableProperty] private bool _isForcedAlignerVisible;
     [ObservableProperty] private bool _doIsolateSpeech;
+    [ObservableProperty] private bool _doDetectSpeakers;
+    [ObservableProperty] private bool _isDetectSpeakersVisible;
     [ObservableProperty] private ObservableCollection<ForcedAlignerOption> _forcedAligners;
     [ObservableProperty] private ForcedAlignerOption? _selectedForcedAligner;
     [ObservableProperty] private double _progressOpacity;
@@ -363,6 +365,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         DoAdjustTimings = Se.Settings.Tools.AudioToText.WhisperAutoAdjustTimings;
         DoPostProcessing = Se.Settings.Tools.AudioToText.PostProcessing;
         DoIsolateSpeech = Se.Settings.Tools.AudioToText.CrispAsrIsolateSpeech;
+        DoDetectSpeakers = Se.Settings.Tools.AudioToText.CrispAsrDetectSpeakers;
         AddLanguageCodeToFileName = Se.Settings.Tools.AudioToText.WhisperAddLanguageCodeToFileName;
 
         OpenAiCompatibleSttUrl = Se.Settings.Tools.OpenAiCompatibleSttUrl;
@@ -431,6 +434,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         Se.Settings.Tools.AudioToText.WhisperAutoAdjustTimings = DoAdjustTimings;
         Se.Settings.Tools.AudioToText.PostProcessing = DoPostProcessing;
         Se.Settings.Tools.AudioToText.CrispAsrIsolateSpeech = DoIsolateSpeech;
+        Se.Settings.Tools.AudioToText.CrispAsrDetectSpeakers = DoDetectSpeakers;
         Se.Settings.Tools.AudioToText.WhisperAddLanguageCodeToFileName = AddLanguageCodeToFileName;
         var engine = GetEffectiveSelectedEngine();
         engine.CommandLineParameter = Parameters;
@@ -575,6 +579,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         UpdateForcedAlignerUi();
         IsBackendSelectionVisible = IsWhisperCppSelected || IsCrispAsrSelected;
         IsForcedAlignerVisible = IsCrispAsrSelected;
+        IsDetectSpeakersVisible = IsCrispAsrSelected && GetEffectiveSelectedEngine() is not CrispAsrMossDiarize;
     }
 
     private void UpdateForcedAlignerUi()
@@ -2905,6 +2910,49 @@ public partial class SpeechToTextViewModel : ObservableObject
         return DoIsolateSpeech && GetEffectiveSelectedEngine() is ICrispAsrEngine;
     }
 
+    /// <summary>
+    /// "Detect speakers" is CrispASR's Sortformer pass, so like "Isolate speech" it must not leak
+    /// into other engines. MOSS Diarize writes its own speaker labels - a second pass would put
+    /// two labels on every line.
+    /// </summary>
+    private bool ShouldDetectSpeakers()
+    {
+        return ShouldDetectSpeakers(DoDetectSpeakers, GetEffectiveSelectedEngine());
+    }
+
+    internal static bool ShouldDetectSpeakers(bool doDetectSpeakers, ISpeechToTextEngine engine)
+    {
+        return doDetectSpeakers && engine is ICrispAsrEngine and not CrispAsrMossDiarize;
+    }
+
+    /// <summary>
+    /// Makes sure the diarization model is on disk and the installed CrispASR knows about it - an
+    /// older one aborts on "--diarize-model" before transcribing anything.
+    /// </summary>
+    private async Task<bool> EnsureSpeakerDetectionReadyAsync(ISpeechToTextEngine engine)
+    {
+        var installedVersion = CrispAsrVersion.TryGet(engine.GetExecutable());
+        if (!SpeakerDiarizationModel.IsSupportedBy(installedVersion))
+        {
+            await MessageBox.Show(
+                Window!,
+                Se.Language.Video.AudioToText.DetectSpeakers,
+                string.Format(Se.Language.Video.AudioToText.DetectSpeakersNeedsNewerCrispAsr, SpeakerDiarizationModel.MinimumCrispAsrVersion, installedVersion),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+            return false;
+        }
+
+        return await SpeechIsolationModelDownload.EnsureModelDownloadedAsync(
+            Window!,
+            _windowService,
+            engine,
+            SpeakerDiarizationModel.ToWhisperModel(),
+            SpeakerDiarizationModel.DisplayName,
+            Se.Language.Video.AudioToText.DetectSpeakers,
+            "a speaker diarization model");
+    }
+
     private Task<bool> EnsureSpeechIsolationModelDownloadedAsync(ISpeechToTextEngine engine)
     {
         return SpeechIsolationModelDownload.EnsureDownloadedAsync(Window!, _windowService, engine, Se.Language.Video.AudioToText.IsolateSpeech);
@@ -4015,6 +4063,11 @@ public partial class SpeechToTextViewModel : ObservableObject
                 return;
             }
 
+            if (ShouldDetectSpeakers() && !await EnsureSpeakerDetectionReadyAsync(engine))
+            {
+                return;
+            }
+
             if (language.Code != "en" && IsModelEnglishOnly(model.Model))
             {
                 var answer = await MessageBox.Show(
@@ -4545,6 +4598,16 @@ public partial class SpeechToTextViewModel : ObservableObject
                 }
             }
 
+            var diarizePart = string.Empty;
+            if (ShouldDetectSpeakers(DoDetectSpeakers, crispAsrEngine))
+            {
+                var diarizeModel = crispAsrEngine.GetModelForCmdLine(SpeakerDiarizationModel.FileName);
+                if (File.Exists(diarizeModel))
+                {
+                    diarizePart = " " + SpeakerDiarizationModel.BuildArguments(diarizeModel);
+                }
+            }
+
             // Remembered so an empty result can be told apart from an empty result *because of*
             // VAD - only the latter is worth re-running without it (#13911).
             _crispAsrVadWasUsed = vadPart.Length > 0;
@@ -4554,8 +4617,8 @@ public partial class SpeechToTextViewModel : ObservableObject
             // once the whole file is done - without this the progress bar sat idle for the
             // entire run and jumped straight to 100%.
             var crispParams = string.IsNullOrWhiteSpace(crispArgs)
-                ? $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart} -f \"{waveFileName}\" --output-srt --print-progress"
-                : $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart} -f \"{waveFileName}\" --output-srt --print-progress {crispArgs}";
+                ? $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart}{diarizePart} -f \"{waveFileName}\" --output-srt --print-progress"
+                : $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart}{diarizePart} -f \"{waveFileName}\" --output-srt --print-progress {crispArgs}";
 
             Se.WriteToolsLog($"{exe} {crispParams}");
 
