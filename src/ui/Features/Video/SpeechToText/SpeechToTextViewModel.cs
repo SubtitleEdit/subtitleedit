@@ -238,6 +238,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private string? _batchOutputFolder;
     private bool _isUpdatingWhisperCppBackend;
     private bool _isUpdatingCrispAsrBackend;
+    private bool _keepDetectSpeakersSetting;
     private static bool _crispAsrUpdatePromptShown;
     private static bool _whisperCppUpdatePromptShown;
     private static bool _qwen3AsrCppUpdatePromptShown;
@@ -434,7 +435,11 @@ public partial class SpeechToTextViewModel : ObservableObject
         Se.Settings.Tools.AudioToText.WhisperAutoAdjustTimings = DoAdjustTimings;
         Se.Settings.Tools.AudioToText.PostProcessing = DoPostProcessing;
         Se.Settings.Tools.AudioToText.CrispAsrIsolateSpeech = DoIsolateSpeech;
-        Se.Settings.Tools.AudioToText.CrispAsrDetectSpeakers = DoDetectSpeakers;
+        if (!_keepDetectSpeakersSetting)
+        {
+            Se.Settings.Tools.AudioToText.CrispAsrDetectSpeakers = DoDetectSpeakers;
+        }
+
         Se.Settings.Tools.AudioToText.WhisperAddLanguageCodeToFileName = AddLanguageCodeToFileName;
         var engine = GetEffectiveSelectedEngine();
         engine.CommandLineParameter = Parameters;
@@ -5847,12 +5852,22 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// need a specific one - "find the voices in the video" needs an engine that tells speakers
     /// apart. The user can still switch it in the window; nothing is forced beyond the first view.
     /// </param>
-    internal void Initialize(string? videoFileName, int audioTrackNumber, string? preferredEngineChoice = null)
+    /// <param name="detectSpeakers">
+    /// Starts with "Detect speakers" on, so a Crisp ASR backend the user switches to still labels
+    /// the speakers. Only for this window: the user's own default is left as it was.
+    /// </param>
+    internal void Initialize(string? videoFileName, int audioTrackNumber, string? preferredEngineChoice = null, bool detectSpeakers = false)
     {
         _videoFileName = videoFileName;
         _audioTrackNumber = audioTrackNumber;
         _audioTrackVideoFileName = videoFileName;
         TrySelectEngineChoice(preferredEngineChoice);
+        if (detectSpeakers)
+        {
+            DoDetectSpeakers = true;
+            _keepDetectSpeakersSetting = true;
+        }
+
         if (string.IsNullOrEmpty(_videoFileName) || !File.Exists(_videoFileName))
         {
             IsBatchModeVisible = false;
