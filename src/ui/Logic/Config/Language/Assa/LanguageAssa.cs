@@ -132,6 +132,8 @@ public class LanguageAssa
     public string CopyToFileStyles { get; set; }
     public string StyleXAlreadyExistsInStorage { get; set; }
     public string StyleXAlreadyExistsInFile { get; set; }
+    public string StyleNameCannotBeEmpty { get; set; }
+    public string StyleNameXIsUsedMoreThanOnce { get; set; }
     public string Overwrite { get; set; }
     public string KeepBoth { get; set; }
     public string DoThisForAllConflictingStyles { get; set; }
@@ -142,6 +144,7 @@ public class LanguageAssa
     public string DeleteStyleQuestion { get; set; }
     public string DeleteStylesQuestion { get; set; }
     public string OpenStyleImportFile { get; set; }
+    public string StyleImportFiles { get; set; }
     public string Primary { get; set; }
     public string Secondary { get; set; }
     public string ApplyOverrideTags { get; set; }
@@ -378,6 +381,8 @@ public class LanguageAssa
         CopyToFileStyles = "Copy to file styles";
         StyleXAlreadyExistsInStorage = "A style named \"{0}\" already exists in storage.\n\nOverwrite it, or keep both (the copy gets a new name)?";
         StyleXAlreadyExistsInFile = "A style named \"{0}\" already exists in the file.\n\nOverwrite it, or keep both (the copy gets a new name)?";
+        StyleNameCannotBeEmpty = "A style name cannot be empty.";
+        StyleNameXIsUsedMoreThanOnce = "The style name \"{0}\" is used by more than one style in the file.";
         Overwrite = "Overwrite";
         KeepBoth = "Keep both";
         DoThisForAllConflictingStyles = "Do this for all conflicting styles";
@@ -388,6 +393,7 @@ public class LanguageAssa
         DeleteStyleQuestion = "Delete style?";
         DeleteStylesQuestion = "Delete styles?";
         OpenStyleImportFile = "Open subtitle file to import styles from";
+        StyleImportFiles = "Style files (.ass, .sty, Subtitle Edit 4 categories .template)";
         Primary = "Primary";
         Secondary = "Secondary";
         ApplyOverrideTags = "Apply override tags";
