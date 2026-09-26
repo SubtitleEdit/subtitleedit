@@ -173,9 +173,12 @@ public class ItalicTextMerger
             if (slants[i] == WordSlant.Neutral)
             {
                 // Leading punctuation ("- Hello") belongs to the word after it, trailing
-                // punctuation ("Hello . . .") to the word before it.
-                italic[i] = FindItalic(words, slants, italic, i, 1, includeTies: true, stopAtLineBreak: true) ??
-                            FindItalic(words, slants, italic, i, -1, includeTies: true, stopAtLineBreak: true) ??
+                // punctuation ("Hello . . .") to the word before it. Closing punctuation always
+                // looks back first: a spaced colon after an upright speaker name ("MAN 1 : Hey")
+                // otherwise joined the italic speech after it as "MAN 1 <i>: Hey</i>".
+                var direction = IsClosingPunctuation(words[i].Chars) ? -1 : 1;
+                italic[i] = FindItalic(words, slants, italic, i, direction, includeTies: true, stopAtLineBreak: true) ??
+                            FindItalic(words, slants, italic, i, -direction, includeTies: true, stopAtLineBreak: true) ??
                             false;
             }
         }
@@ -282,6 +285,25 @@ public class ItalicTextMerger
         }
 
         return false;
+    }
+
+    private static bool IsClosingPunctuation(List<NOcrChar> chars)
+    {
+        var any = false;
+        for (var i = 0; i < chars.Count; i++)
+        {
+            foreach (var c in chars[i].Text)
+            {
+                if (".,:;!?…)]}".IndexOf(c) < 0)
+                {
+                    return false;
+                }
+
+                any = true;
+            }
+        }
+
+        return any;
     }
 
     private static bool ContainsLineBreak(List<NOcrChar> chars)
