@@ -54,6 +54,7 @@ public class VisualSyncWindow : Window
             DrawGridLines = Se.Settings.Waveform.DrawGridLines,
             WaveformColor = Se.Settings.Waveform.WaveformColor.FromHexToColor(),
             WaveformSelectedColor = Se.Settings.Waveform.WaveformSelectedColor.FromHexToColor(),
+            WaveformGridColor = Se.Settings.Waveform.WaveformGridColor.FromHexToColor(),
             InvertMouseWheel = Se.Settings.Waveform.InvertMouseWheel,
         };
         vm.AudioVisualizerLeft.OnVideoPositionChanged += vm.AudioVisualizerLeftPositionChanged;
@@ -70,6 +71,7 @@ public class VisualSyncWindow : Window
             DrawGridLines = Se.Settings.Waveform.DrawGridLines,
             WaveformColor = Se.Settings.Waveform.WaveformColor.FromHexToColor(),
             WaveformSelectedColor = Se.Settings.Waveform.WaveformSelectedColor.FromHexToColor(),
+            WaveformGridColor = Se.Settings.Waveform.WaveformGridColor.FromHexToColor(),
             InvertMouseWheel = Se.Settings.Waveform.InvertMouseWheel,
         };
         vm.AudioVisualizerRight.OnVideoPositionChanged += vm.AudioVisualizerRightPositionChanged;
