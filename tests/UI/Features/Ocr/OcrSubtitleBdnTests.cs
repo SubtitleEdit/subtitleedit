@@ -137,6 +137,43 @@ public class OcrSubtitleBdnTests : IDisposable
         Assert.Equal(-1, ocr.GetPosition(0).Y);
     }
 
+    /// <summary>
+    /// Timed Images xml (e.g. AVISubDetector) loads in the BDN shape, so the same OCR source
+    /// reads its images, timings, positions and target video size.
+    /// </summary>
+    [Fact]
+    public void ReadsTimedImagesXml()
+    {
+        WritePng("AYZ-1.png", 218, 58);
+        WritePng("AYZ-2.png", 176, 111);
+        var path = Path.Combine(_dir, "AYZ.xml");
+        File.WriteAllText(path, """
+            <TimedImages targetWidth="720" targetHeight="576" aspectRatio="16:9">
+            <I s="0.600" e="3.720" x="268" y="458" w="218" h="58" i="AYZ-1.png" />
+            <I s="3.840" e="6.960" x="290" y="400" w="176" h="111" i="AYZ-2.png" />
+            </TimedImages>
+            """);
+
+        var lines = FileUtil.ReadAllLinesShared(path, LanguageAutoDetect.GetEncodingFromFile(path));
+        var format = new TimedImagesXml();
+        Assert.True(format.IsMine(lines, path));
+        var subtitle = new Subtitle();
+        format.LoadSubtitle(subtitle, lines, path);
+        var ocr = new OcrSubtitleBdn(subtitle, path, isSon: false);
+
+        Assert.Equal(2, ocr.Count);
+        Assert.Equal(TimeSpan.FromMilliseconds(600), ocr.GetStartTime(0));
+        Assert.Equal(TimeSpan.FromMilliseconds(3720), ocr.GetEndTime(0));
+        Assert.Equal(268, ocr.GetPosition(0).X);
+        Assert.Equal(458, ocr.GetPosition(0).Y);
+        Assert.Equal(720, ocr.GetScreenSize(0).Width);
+        Assert.Equal(576, ocr.GetScreenSize(0).Height);
+
+        using var bitmap = ocr.GetBitmap(1);
+        Assert.Equal(176, bitmap.Width);
+        Assert.Equal(111, bitmap.Height);
+    }
+
     [Fact]
     public void ReturnsNoPositionForOutOfRangeIndex()
     {
