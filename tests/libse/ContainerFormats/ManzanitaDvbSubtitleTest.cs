@@ -91,6 +91,35 @@ public class ManzanitaDvbSubtitleTest
         Assert.Empty(parser.GetTeletext());
     }
 
+    /// <summary>
+    /// The DVB Teletext format claimed every Manzanita dump, so a bitmap dump detected as
+    /// "DVB Teletext" with no subtitles (seen with a dump named .stl).
+    /// </summary>
+    [Fact]
+    public void DvbTeletextFormatClaimsOnlyTeletextDumps()
+    {
+        var bitmapPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".stl");
+        var teletextPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".dvbttx");
+        try
+        {
+            File.WriteAllBytes(bitmapPath, MakeManzanitaFile(
+                (1000, MakeDvbPayload(withObject: true)),
+                (3000, MakeDvbPayload(withObject: false))));
+            var subtitle = new Nikse.SubtitleEdit.Core.Common.Subtitle();
+            subtitle.Paragraphs.Add(new Nikse.SubtitleEdit.Core.Common.Paragraph("Hello", 1000, 3000));
+            File.WriteAllBytes(teletextPath, new ManzanitaTeletextWriter { Date = new DateTime(2026, 1, 1) }.GetBytes(subtitle));
+
+            Assert.Equal(ManzanitaTransportStreamParser.DvbSubtitleStreamType, ManzanitaTransportStreamParser.GetStreamType(bitmapPath));
+            Assert.False(new Nikse.SubtitleEdit.Core.SubtitleFormats.DvbTeletext().IsMine(null, bitmapPath));
+            Assert.True(new Nikse.SubtitleEdit.Core.SubtitleFormats.DvbTeletext().IsMine(null, teletextPath));
+        }
+        finally
+        {
+            File.Delete(bitmapPath);
+            File.Delete(teletextPath);
+        }
+    }
+
     [Fact]
     public void TeletextFilesHoldNoBitmapSubtitles()
     {

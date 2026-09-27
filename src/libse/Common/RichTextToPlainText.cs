@@ -117,6 +117,24 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return NativeRtfTextConverter.RtfToText(inputRtf);
             }
 
+            // Opening a file asks every format whether it is theirs, and ~20 RTF based formats
+            // each convert the same document (often twice: IsMine + LoadSubtitle) - a 1.3 MB RTF
+            // took 13 s to open. The conversion is deterministic, so reuse the last result.
+            var cached = _lastConversion;
+            if (cached != null && string.Equals(cached.Item1, inputRtf, StringComparison.Ordinal))
+            {
+                return cached.Item2;
+            }
+
+            var result = ConvertToTextUncached(inputRtf);
+            _lastConversion = Tuple.Create(inputRtf, result);
+            return result;
+        }
+
+        private static volatile Tuple<string, string> _lastConversion;
+
+        private static string ConvertToTextUncached(string inputRtf)
+        {
             var stack = new Stack<StackEntry>();
             bool ignorable = false;              // Whether this group (and all inside it) are "ignorable".
             int ucskip = 1;                      // Number of ASCII characters to skip after a unicode character.

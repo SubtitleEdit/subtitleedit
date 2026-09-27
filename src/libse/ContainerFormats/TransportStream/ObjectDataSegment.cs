@@ -57,14 +57,17 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
                 int pixelCode = 0;
                 int runLength = 0;
-                int dataType = buffer[index + 7];
                 int length = TopFieldDataBlockLength;
 
-                if (length + index + 7 > buffer.Length) // check if buffer is large enough
+                // check if buffer is large enough - before reading the first data type, which an
+                // object segment ending the payload (no pixel data) does not have
+                if (length + index + 7 >= buffer.Length)
                 {
                     Image = new SKBitmap(1, 1);
                     return;
                 }
+
+                int dataType = buffer[index + 7];
 
                 index += 8;
                 int start = index;
