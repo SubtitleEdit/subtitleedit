@@ -21784,14 +21784,11 @@ public partial class MainViewModel :
         var lineCounts = Subtitles
             .GroupBy(p => string.IsNullOrEmpty(p.Style) ? "Default" : p.Style)
             .ToDictionary(g => g.Key, g => g.Count());
-        var pickerShortcut = ShortcutsMain.GetUsedShortcuts(this)
-            .FirstOrDefault(s => ReferenceEquals(s.Action, ShowStylePickerCommand));
-        var pickerShortcutText = pickerShortcut != null ? InitMenu.ToKeyGesture(pickerShortcut)?.ToString() ?? string.Empty : string.Empty;
 
         var vm = await ShowDialogAsync<StylePickerWindow, StylePickerViewModel>(viewModel =>
         {
             viewModel.Initialize(styles, lineCounts, selectedItems.Select(p => p.Style).ToList(),
-                selectedItems.Count, pickerShortcutText, IsFormatSsa,
+                selectedItems.Count, IsFormatSsa,
                 AdvancedSubStationAlpha.GetSsaStylesFromHeader(GetDefaultAssaHeader()).FirstOrDefault());
         });
 

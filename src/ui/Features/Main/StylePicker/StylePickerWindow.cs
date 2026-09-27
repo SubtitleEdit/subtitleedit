@@ -101,28 +101,6 @@ public class StylePickerWindow : Window
             Opacity = 0.7,
         };
 
-        var labelContextMenuTip = new TextBlock
-        {
-            Text = Se.Language.General.StylePickerContextMenuTip,
-            TextWrapping = TextWrapping.Wrap,
-            FontSize = UiUtil.ScaledFontSize(11),
-            Opacity = 0.7,
-        };
-
-        var labelShortcutInfo = new TextBlock
-        {
-            TextWrapping = TextWrapping.Wrap,
-            FontSize = UiUtil.ScaledFontSize(11),
-            Opacity = 0.7,
-        };
-        labelShortcutInfo.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ShortcutInfo)));
-
-        var panelHints = new StackPanel
-        {
-            Spacing = 2,
-            Children = { labelKeysHint, labelContextMenuTip, labelShortcutInfo },
-        };
-
         var buttonManageStyles = UiUtil.MakeButton(Se.Language.General.StylePickerManageStyles);
         buttonManageStyles.Click += (_, _) => vm.ShowStylesManager();
         if (Se.Settings.Appearance.ShowHints)
@@ -153,7 +131,7 @@ public class StylePickerWindow : Window
         grid.Add(panelInfo, 0);
         grid.Add(textBoxFilter, 1);
         grid.Add(gridContent, 2);
-        grid.Add(panelHints, 3);
+        grid.Add(labelKeysHint, 3);
         grid.Add(panelButtons, 4);
 
         Content = grid;

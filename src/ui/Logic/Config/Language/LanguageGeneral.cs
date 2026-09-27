@@ -17,9 +17,6 @@ public class LanguageGeneral
     public string StylePickerTitle { get; set; }
     public string StylePickerFilterHint { get; set; }
     public string StylePickerKeysHint { get; set; }
-    public string StylePickerContextMenuTip { get; set; }
-    public string StylePickerShortcutX { get; set; }
-    public string StylePickerNoShortcutHint { get; set; }
     public string StylePickerNewStyleX { get; set; }
     public string StylePickerNewStyleInfo { get; set; }
     public string StylePickerCurrentStyleX { get; set; }
@@ -858,10 +855,7 @@ public class LanguageGeneral
         SetStyleDotDotDot = "Set style...";
         StylePickerTitle = "Set style";
         StylePickerFilterHint = "Type to filter, or type a new style name";
-        StylePickerKeysHint = "Press a number (1-9, 0) or Enter to set the style on all selected lines. Up/Down highlights a style and shows its details, double-click also sets it. Esc closes without changes.";
-        StylePickerContextMenuTip = "Tip: Styles can also be set by right-clicking the selected lines in the subtitle list and choosing \"Style\".";
-        StylePickerShortcutX = "This window opens with {0} - from the subtitle list, the text box or the waveform.";
-        StylePickerNoShortcutHint = "Assign a shortcut to \"Set style...\" in Options > Shortcuts to open this window from the keyboard.";
+        StylePickerKeysHint = "Press a number (1-9, 0) to set the style on all selected lines.";
         StylePickerNewStyleX = "New style \"{0}\"";
         StylePickerNewStyleInfo = "Press Enter to add this style with default settings and set it on the selected lines. Use \"Manage styles...\" to change its font, colors and position later.";
         StylePickerCurrentStyleX = "Current style: {0}";

@@ -236,7 +236,7 @@ public class StylePickerTests
     {
         var styles = styleNames.Select(p => new SsaStyle { Name = p }).ToList();
         var vm = new StylePickerViewModel();
-        vm.Initialize(styles, styleNames.ToDictionary(p => p, _ => 1), selectedStyles ?? [], selectedStyles?.Count ?? 1, string.Empty, false);
+        vm.Initialize(styles, styleNames.ToDictionary(p => p, _ => 1), selectedStyles ?? [], selectedStyles?.Count ?? 1, false);
         return vm;
     }
 

@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,6 @@ public partial class StylePickerViewModel : ObservableObject
     [ObservableProperty] private StylePickerItem? _selectedItem;
     [ObservableProperty] private string _selectionInfo;
     [ObservableProperty] private string _currentStyleInfo;
-    [ObservableProperty] private string _shortcutInfo;
 
     public ObservableCollection<StylePickerItem> VisibleItems { get; }
 
@@ -43,7 +43,6 @@ public partial class StylePickerViewModel : ObservableObject
         _filterText = string.Empty;
         _selectionInfo = string.Empty;
         _currentStyleInfo = string.Empty;
-        _shortcutInfo = string.Empty;
         VisibleItems = new ObservableCollection<StylePickerItem>();
     }
 
@@ -51,11 +50,10 @@ public partial class StylePickerViewModel : ObservableObject
     /// <param name="lineCounts">Number of lines per style, over the whole file.</param>
     /// <param name="selectedStyles">Styles of the selected lines, in grid order.</param>
     /// <param name="selectedLineCount">Number of lines the style will be applied to.</param>
-    /// <param name="pickerShortcut">Display text of the "Set style..." shortcut, empty if none.</param>
     /// <param name="isSsa">SSA (legacy alignment values) rather than ASS.</param>
     /// <param name="newStyleTemplate">Settings a style typed as a new name is created with, shown in its details.</param>
     public void Initialize(IReadOnlyList<SsaStyle> styles, IReadOnlyDictionary<string, int> lineCounts,
-        IReadOnlyList<string> selectedStyles, int selectedLineCount, string pickerShortcut, bool isSsa,
+        IReadOnlyList<string> selectedStyles, int selectedLineCount, bool isSsa,
         SsaStyle? newStyleTemplate = null)
     {
         _isSsa = isSsa;
@@ -80,9 +78,6 @@ public partial class StylePickerViewModel : ObservableObject
             _ => string.Format(Se.Language.General.StylePickerCurrentStyleX,
                 string.Join(", ", distinctSelected.Take(3)) + ", ... (" + distinctSelected.Count + ")"),
         };
-        ShortcutInfo = string.IsNullOrEmpty(pickerShortcut)
-            ? Se.Language.General.StylePickerNoShortcutHint
-            : string.Format(Se.Language.General.StylePickerShortcutX, pickerShortcut);
 
         UpdateNumberTexts();
         UpdateVisibleItems();
@@ -166,6 +161,13 @@ public partial class StylePickerViewModel : ObservableObject
         {
             e.Handled = true;
             Cancel();
+            return;
+        }
+
+        if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/subtitle-grid", "setting-styles");
             return;
         }
 
