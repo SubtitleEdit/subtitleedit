@@ -149,6 +149,7 @@ using Nikse.SubtitleEdit.Features.Tools.RemoveTextForHearingImpaired;
 using Nikse.SubtitleEdit.Features.Tools.Renumber;
 using Nikse.SubtitleEdit.Features.Tools.SortBy;
 using Nikse.SubtitleEdit.Features.Main.ActorPicker;
+using Nikse.SubtitleEdit.Features.Main.StylePicker;
 using Nikse.SubtitleEdit.Features.Main.AssistedMove;
 using Nikse.SubtitleEdit.Features.Main.AssistedSplit;
 using Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
@@ -21672,47 +21673,56 @@ public partial class MainViewModel :
 
         if (result.OkPressed && !string.IsNullOrWhiteSpace(result.Text))
         {
-            _subtitle ??= new Subtitle();
-
-            var header = _subtitle?.Header ?? string.Empty;
-            if (header != null && header.Contains("http://www.w3.org/ns/ttml"))
-            {
-                var s = new Subtitle { Header = header };
-                AdvancedSubStationAlpha.LoadStylesFromTimedText10(s, string.Empty, header,
-                    AdvancedSubStationAlpha.HeaderNoStyles, new StringBuilder());
-                header = s.Header;
-            }
-            else if (header != null && header.StartsWith("WEBVTT", StringComparison.Ordinal))
-            {
-                _subtitle = WebVttToAssa.Convert(_subtitle, new SsaStyle(), 0, 0);
-                header = _subtitle.Header;
-            }
-
-            var defaultHeader = GetDefaultAssaHeader();
-            if (header == null || !header.Contains("style:", StringComparison.OrdinalIgnoreCase))
-            {
-                header = defaultHeader;
-            }
-
-            var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(header);
-            var newStyle = AdvancedSubStationAlpha.GetSsaStylesFromHeader(defaultHeader).First();
-
-            newStyle.Name = result.Text.Trim();
-
-            // ensure unique style name
-            var idx = 1;
-            while (styles.Any(s => s.Name.Equals(newStyle.Name, StringComparison.OrdinalIgnoreCase)))
-            {
-                idx++;
-                newStyle.Name = $"{result.Text.Trim()}_{idx}";
-            }
-
-            styles.Add(newStyle);
-            header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(header, styles);
-            _subtitle!.Header = header;
-
-            SetStyleForSelectedLines(newStyle.Name);
+            AddNewStyleAndSetForSelectedLines(result.Text);
         }
+    }
+
+    /// <summary>
+    /// Adds a style with default settings to the header (made unique by name) and sets it on the
+    /// selected lines. Used by "Style - New..." and by typing a new name in the style picker.
+    /// </summary>
+    private void AddNewStyleAndSetForSelectedLines(string name)
+    {
+        _subtitle ??= new Subtitle();
+
+        var header = _subtitle?.Header ?? string.Empty;
+        if (header != null && header.Contains("http://www.w3.org/ns/ttml"))
+        {
+            var s = new Subtitle { Header = header };
+            AdvancedSubStationAlpha.LoadStylesFromTimedText10(s, string.Empty, header,
+                AdvancedSubStationAlpha.HeaderNoStyles, new StringBuilder());
+            header = s.Header;
+        }
+        else if (header != null && header.StartsWith("WEBVTT", StringComparison.Ordinal))
+        {
+            _subtitle = WebVttToAssa.Convert(_subtitle, new SsaStyle(), 0, 0);
+            header = _subtitle.Header;
+        }
+
+        var defaultHeader = GetDefaultAssaHeader();
+        if (header == null || !header.Contains("style:", StringComparison.OrdinalIgnoreCase))
+        {
+            header = defaultHeader;
+        }
+
+        var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(header);
+        var newStyle = AdvancedSubStationAlpha.GetSsaStylesFromHeader(defaultHeader).First();
+
+        newStyle.Name = name.Trim();
+
+        // ensure unique style name
+        var idx = 1;
+        while (styles.Any(s => s.Name.Equals(newStyle.Name, StringComparison.OrdinalIgnoreCase)))
+        {
+            idx++;
+            newStyle.Name = $"{name.Trim()}_{idx}";
+        }
+
+        styles.Add(newStyle);
+        header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(header, styles);
+        _subtitle!.Header = header;
+
+        SetStyleForSelectedLines(newStyle.Name);
     }
 
     private static string GetDefaultAssaHeader()
@@ -21739,6 +21749,76 @@ public partial class MainViewModel :
 
             RefreshSubtitlePreview();
         });
+    }
+
+    /// <summary>
+    /// Shows the style picker: every style in the file with its number key, a preview, line
+    /// count and details, a filter box and "new style" by typing a name. Applies the style to all
+    /// selected lines. Works from the grid, text box and waveform.
+    /// </summary>
+    [RelayCommand]
+    private async Task ShowStylePicker()
+    {
+        if (Window == null || !(IsFormatAssa || IsFormatSsa))
+        {
+            return;
+        }
+
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (selectedItems.Count == 0)
+        {
+            return;
+        }
+
+        // Header order, like the context menu's Style submenu (#11921).
+        var header = _subtitle?.Header;
+        if (string.IsNullOrEmpty(header) || !header.Contains("style:", StringComparison.OrdinalIgnoreCase))
+        {
+            header = GetDefaultAssaHeader();
+        }
+
+        var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(header)
+            .Where(p => !string.IsNullOrEmpty(p.Name))
+            .DistinctBy(p => p.Name)
+            .ToList();
+        var lineCounts = Subtitles
+            .GroupBy(p => string.IsNullOrEmpty(p.Style) ? "Default" : p.Style)
+            .ToDictionary(g => g.Key, g => g.Count());
+
+        var vm = await ShowDialogAsync<StylePickerWindow, StylePickerViewModel>(viewModel =>
+        {
+            viewModel.Initialize(styles, lineCounts, selectedItems.Select(p => p.Style).ToList(),
+                selectedItems.Count, IsFormatSsa,
+                AdvancedSubStationAlpha.GetSsaStylesFromHeader(GetDefaultAssaHeader()).FirstOrDefault());
+        });
+
+        if (vm.OpenStylesManager)
+        {
+            if (IsFormatAssa)
+            {
+                await ShowAssaStyles();
+            }
+            else
+            {
+                await ShowSsaStyles();
+            }
+
+            return;
+        }
+
+        if (!vm.OkPressed || string.IsNullOrEmpty(vm.ResultStyle))
+        {
+            return;
+        }
+
+        if (vm.ResultIsNewStyle)
+        {
+            AddNewStyleAndSetForSelectedLines(vm.ResultStyle);
+        }
+        else
+        {
+            SetStyleForSelectedLines(vm.ResultStyle);
+        }
     }
 
     [RelayCommand]
@@ -29508,6 +29588,24 @@ public partial class MainViewModel :
                 AreAssaContentMenuItemsVisible = true;
 
                 MenuItemStyles.Items.Clear();
+
+                // The picker first: it shows each style's font, colors and position, has number
+                // keys and a filter, and its shortcut works from the text box and the waveform too.
+                var stylePickerMenuItem = new MenuItem
+                {
+                    Header = Se.Language.General.SetStyleDotDotDot,
+                    Command = ShowStylePickerCommand,
+                };
+                var stylePickerShortcut = ShortcutsMain.GetUsedShortcuts(this)
+                    .FirstOrDefault(s => ReferenceEquals(s.Action, ShowStylePickerCommand));
+                if (stylePickerShortcut != null)
+                {
+                    stylePickerMenuItem.InputGesture = InitMenu.ToKeyGesture(stylePickerShortcut);
+                }
+
+                MenuItemStyles.Items.Add(stylePickerMenuItem);
+                MenuItemStyles.Items.Add(new Separator());
+
                 var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(_subtitle.Header);
                 // Keep styles in the order they are defined in the header (user-defined order), do not sort alphabetically (#11921)
                 var stylesToAdd = styles.Select(p => p.Name).Where(p => !string.IsNullOrEmpty(p)).DistinctBy(p => p);

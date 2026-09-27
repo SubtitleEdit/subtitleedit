@@ -621,6 +621,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.SetActor9Command), string.Format(Se.Language.Options.Shortcuts.SetActorX, 9) },
         { nameof(MainViewModel.SetActor10Command), string.Format(Se.Language.Options.Shortcuts.SetActorX, 10) },
         { nameof(MainViewModel.ShowActorPickerCommand), Se.Language.General.SetActorDotDotDot },
+        { nameof(MainViewModel.ShowStylePickerCommand), Se.Language.General.SetStyleDotDotDot },
         { nameof(MainViewModel.SetNewActorCommand), Se.Language.Options.Shortcuts.SetNewActor },
         { nameof(MainViewModel.RemoveActorCommand), Se.Language.General.Actor + " - " + Se.Language.General.Remove },
         { nameof(MainViewModel.SurroundWith1Command), GetSurroundWithTitle(1) },
@@ -1096,6 +1097,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.SetActor9Command, nameof(vm.SetActor9Command), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SetActor10Command, nameof(vm.SetActor10Command), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowActorPickerCommand, nameof(vm.ShowActorPickerCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.ShowStylePickerCommand, nameof(vm.ShowStylePickerCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SetNewActorCommand, nameof(vm.SetNewActorCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.RemoveActorCommand, nameof(vm.RemoveActorCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SurroundWith1Command, nameof(vm.SurroundWith1Command), ShortcutCategory.SubtitleGridAndTextBox);

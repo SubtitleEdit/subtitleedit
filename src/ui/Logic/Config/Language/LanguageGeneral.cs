@@ -13,6 +13,18 @@ public class LanguageGeneral
     public string ActorPickerKeysHint { get; set; }
     public string ActorPickerNewActorX { get; set; }
     public string ActorPickerLinesSelectedX { get; set; }
+    public string SetStyleDotDotDot { get; set; }
+    public string StylePickerTitle { get; set; }
+    public string StylePickerFilterHint { get; set; }
+    public string StylePickerKeysHint { get; set; }
+    public string StylePickerNewStyleX { get; set; }
+    public string StylePickerNewStyleInfo { get; set; }
+    public string StylePickerCurrentStyleX { get; set; }
+    public string StylePickerLinesUsingStyleX { get; set; }
+    public string StylePickerMarginsXYZ { get; set; }
+    public string StylePickerSetStyle { get; set; }
+    public string StylePickerManageStyles { get; set; }
+    public string StylePickerManageStylesHint { get; set; }
     public string Add { get; set; }
     public string AddDotDotDot { get; set; }
     public string AddToNamesListCaseSensitive { get; set; }
@@ -840,6 +852,18 @@ public class LanguageGeneral
         ActorPickerKeysHint = "Press a number or Enter to set the actor. Alt+Up/Down changes the order, Delete removes the actor.";
         ActorPickerNewActorX = "New actor \"{0}\"";
         ActorPickerLinesSelectedX = "Lines selected: {0}";
+        SetStyleDotDotDot = "Set style...";
+        StylePickerTitle = "Set style";
+        StylePickerFilterHint = "Type to filter, or type a new style name";
+        StylePickerKeysHint = "Press a number (1-9, 0) to set the style on all selected lines.";
+        StylePickerNewStyleX = "New style \"{0}\"";
+        StylePickerNewStyleInfo = "Press Enter to add this style with default settings and set it on the selected lines. Use \"Manage styles...\" to change its font, colors and position later.";
+        StylePickerCurrentStyleX = "Current style: {0}";
+        StylePickerLinesUsingStyleX = "Lines using this style: {0}";
+        StylePickerMarginsXYZ = "Left {0}, right {1}, vertical {2}";
+        StylePickerSetStyle = "_Set style";
+        StylePickerManageStyles = "Manage styles...";
+        StylePickerManageStylesHint = "Close this window and open the styles manager to edit fonts, colors, position and more";
         Add = "Add";
         AddDotDotDot = "Add...";
         AddToNamesListCaseSensitive = "Add to names list (case sensitive)";
