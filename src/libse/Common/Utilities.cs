@@ -1480,10 +1480,24 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static readonly string LowercaseLettersWithNumbers = LowercaseLetters + "0123456789";
         public static readonly string AllLetters = UppercaseLetters + LowercaseLetters;
 
-        // QualifiesForMerge runs per adjacent paragraph pair in the merge fixes; concatenating
-        // this ~135-char set (plus a one-char Substring) on every call added two allocations
-        // per pair. Declared after AllLetters - static field initializers run in order.
-        private static readonly string LineContinuationEndChars = AllLetters + "…,-$%";
+        // Non-letter chars that continue a line; letters are checked with char.IsLetter, as the
+        // configured alphabet misses e.g. "ß", "Š", Hebrew, Arabic and Thai.
+        private static readonly string LineContinuationEndChars = "…,-$%";
+
+        /// <summary>
+        /// A letter, or a combining mark that belongs to one - Thai, Devanagari and Arabic words
+        /// often end in a vowel sign or diacritic, e.g. "ไม่รู้".
+        /// </summary>
+        private static bool IsLetterOrCombiningMark(char c)
+        {
+            if (char.IsLetter(c))
+            {
+                return true;
+            }
+
+            var category = char.GetUnicodeCategory(c);
+            return category == UnicodeCategory.NonSpacingMark || category == UnicodeCategory.SpacingCombiningMark;
+        }
         public static readonly string AllLettersAndNumbers = UppercaseLetters + LowercaseLettersWithNumbers;
 
         public static SKColor GetColorFromUserName(string userName)
@@ -3482,6 +3496,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                     var lastChar = s[s.Length - 1];
                     var isLineContinuation = s.EndsWith("...", StringComparison.Ordinal) ||
+                                              IsLetterOrCombiningMark(lastChar) ||
                                               LineContinuationEndChars.IndexOf(lastChar) >= 0 ||
                                               (CalcCjk.IsCjk(lastChar) && !IsCjkSentenceEnding(lastChar));
 
