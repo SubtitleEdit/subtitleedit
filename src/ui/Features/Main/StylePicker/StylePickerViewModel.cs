@@ -37,6 +37,7 @@ public partial class StylePickerViewModel : ObservableObject
     private readonly List<StylePickerItem> _allItems = new();
     private bool _isSsa;
     private SsaStyle _newStyleTemplate = new();
+    private IReadOnlyList<string> _shortcutTexts = Array.Empty<string>();
 
     public StylePickerViewModel()
     {
@@ -51,12 +52,14 @@ public partial class StylePickerViewModel : ObservableObject
     /// <param name="selectedStyles">Styles of the selected lines, in grid order.</param>
     /// <param name="selectedLineCount">Number of lines the style will be applied to.</param>
     /// <param name="isSsa">SSA (legacy alignment values) rather than ASS.</param>
+    /// <param name="shortcutTexts">Display text of the "Set style 1-10" shortcuts, by position.</param>
     /// <param name="newStyleTemplate">Settings a style typed as a new name is created with, shown in its details.</param>
     public void Initialize(IReadOnlyList<SsaStyle> styles, IReadOnlyDictionary<string, int> lineCounts,
         IReadOnlyList<string> selectedStyles, int selectedLineCount, bool isSsa,
-        SsaStyle? newStyleTemplate = null)
+        IReadOnlyList<string>? shortcutTexts = null, SsaStyle? newStyleTemplate = null)
     {
         _isSsa = isSsa;
+        _shortcutTexts = shortcutTexts ?? Array.Empty<string>();
         _newStyleTemplate = newStyleTemplate ?? new SsaStyle();
         var distinctSelected = selectedStyles
             .Select(p => string.IsNullOrEmpty(p) ? "Default" : p)
@@ -100,6 +103,7 @@ public partial class StylePickerViewModel : ObservableObject
         {
             // Keys run 1..9 then 0, like the number row.
             _allItems[i].NumberText = i < NumberKeyCount ? ((i + 1) % 10).ToString() : string.Empty;
+            _allItems[i].ShortcutText = i < _shortcutTexts.Count ? _shortcutTexts[i] : string.Empty;
         }
     }
 

@@ -1,3 +1,4 @@
+using System.Reflection;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
@@ -207,7 +208,120 @@ public class StylePickerTests
     }
 
     [AvaloniaFact]
-    public void ShowStylePicker_IsAnEverywhereShortcut()
+    public void Picker_ShowsTheSetStyleShortcutByPosition()
+    {
+        var styles = new List<SsaStyle> { new() { Name = "Default" }, new() { Name = "voice" }, new() { Name = "Phone" } };
+        var vm = new StylePickerViewModel();
+        vm.Initialize(styles, new Dictionary<string, int>(), [], 1, false, ["Ctrl+1", "", "Ctrl+3"]);
+
+        Assert.Equal(["Ctrl+1", "", "Ctrl+3"], vm.VisibleItems.Select(p => p.ShortcutText));
+    }
+
+    [AvaloniaFact]
+    public void StyleShortcuts_AreEverywhereShortcuts()
+    {
+        var (window, vm) = ShowMainWindowWithLines();
+        try
+        {
+            var all = ShortcutsMain.GetAllShortcuts(vm);
+            string[] names =
+            [
+                nameof(MainViewModel.ShowStylePickerCommand), nameof(MainViewModel.SetStyle1Command),
+                nameof(MainViewModel.SetStyle5Command), nameof(MainViewModel.SetStyle10Command),
+            ];
+            foreach (var name in names)
+            {
+                Assert.Equal(ShortcutCategory.General, all.Single(s => s.Name == name).Category);
+            }
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void SetStyleN_SetsTheNthHeaderStyleOnAllSelectedLines()
+    {
+        var (window, vm) = ShowMainWindowWithLines();
+        try
+        {
+            vm.SelectedSubtitleFormat = vm.SubtitleFormats.First(f => f.Name == "Advanced Sub Station Alpha");
+            SetHeader(vm, MakeHeader("Default", "voice", "Off-screen"));
+            Settle(window);
+
+            // Header order, not alphabetical: 3 is "Off-screen".
+            SelectFirstAndLast(vm);
+            vm.SetStyle3Command.Execute(null);
+            Settle(window);
+            Assert.Equal(["Off-screen", "Default", "Off-screen"], vm.Subtitles.Select(p => p.Style));
+
+            SelectFirstAndLast(vm);
+            vm.SetStyle2Command.Execute(null);
+            Settle(window);
+            Assert.Equal(["voice", "Default", "voice"], vm.Subtitles.Select(p => p.Style));
+
+            // No 10th style - nothing changes.
+            SelectFirstAndLast(vm);
+            vm.SetStyle10Command.Execute(null);
+            Settle(window);
+            Assert.Equal(["voice", "Default", "voice"], vm.Subtitles.Select(p => p.Style));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void SetStyleN_DoesNothingForFormatsWithoutStyles()
+    {
+        var (window, vm) = ShowMainWindowWithLines();
+        try
+        {
+            vm.SelectedSubtitleFormat = vm.SubtitleFormats.First(f => f.Name == "SubRip");
+            SetHeader(vm, MakeHeader("Default", "voice"));
+            Settle(window);
+
+            vm.SetStyle2Command.Execute(null);
+            Settle(window);
+
+            Assert.DoesNotContain(vm.Subtitles, p => p.Style == "voice");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    private static void SelectFirstAndLast(MainViewModel vm)
+    {
+        vm.SubtitleGrid.SelectedItems!.Clear();
+        vm.SubtitleGrid.SelectedItems.Add(vm.Subtitles[0]);
+        vm.SubtitleGrid.SelectedItems.Add(vm.Subtitles[2]);
+        Assert.Equal(2, vm.SubtitleGridSelectedItems.Count);
+    }
+
+    private static string MakeHeader(params string[] styleNames)
+    {
+        var styles = string.Join(Environment.NewLine, styleNames.Select(p =>
+            $"Style: {p},Arial,20,&H00FFFFFF,&H0000FFFF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,2,2,2,10,10,10,1"));
+        return "[Script Info]" + Environment.NewLine +
+               "ScriptType: v4.00+" + Environment.NewLine + Environment.NewLine +
+               "[V4+ Styles]" + Environment.NewLine +
+               SsaStyle.DefaultAssStyleFormat + Environment.NewLine +
+               styles + Environment.NewLine + Environment.NewLine +
+               "[Events]";
+    }
+
+    private static void SetHeader(MainViewModel vm, string header)
+    {
+        var field = typeof(MainViewModel).GetField("_subtitle", BindingFlags.Instance | BindingFlags.NonPublic)
+                    ?? throw new InvalidOperationException("_subtitle not found");
+        ((Subtitle)field.GetValue(vm)!).Header = header;
+    }
+
+    private static (Window Window, MainViewModel Vm) ShowMainWindowWithLines()
     {
         var services = new ServiceCollection();
         services.AddSubtitleEditServices();
@@ -219,16 +333,34 @@ public class StylePickerTests
         window.Content = view;
         window.Show();
         Dispatcher.UIThread.RunJobs();
+        window.UpdateLayout();
+
         var vm = (MainViewModel)view.DataContext!;
         window.SuppressSaveChangesPromptOnClose(vm);
-        try
+        for (var i = 0; i < 3; i++)
         {
-            var all = ShortcutsMain.GetAllShortcuts(vm);
-            Assert.Equal(ShortcutCategory.General, all.Single(s => s.Name == nameof(MainViewModel.ShowStylePickerCommand)).Category);
+            vm.Subtitles.Add(new SubtitleLineViewModel(new Paragraph($"Line {i + 1}", i * 5000 + 1000, i * 5000 + 3000), null!)
+            {
+                Number = i + 1,
+                Style = "Default",
+            });
         }
-        finally
+
+        Settle(window);
+
+        vm.SelectedSubtitleIndex = 0;
+        vm.SubtitleGrid.SelectedItem = vm.Subtitles[0];
+        Settle(window);
+
+        return (window, vm);
+    }
+
+    private static void Settle(Window window)
+    {
+        for (var pump = 0; pump < 5; pump++)
         {
-            window.Close();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
         }
     }
 

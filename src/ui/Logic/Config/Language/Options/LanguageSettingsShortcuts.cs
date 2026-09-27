@@ -274,6 +274,7 @@ public class LanguageSettingsShortcuts
     public string GoogleIt { get; set; }
     public string SetActorX { get; set; }
     public string SetNewActor { get; set; }
+    public string SetStyleX { get; set; }
     public string ToggleDialogDashes { get; set; }
     public string MergeWithLineBeforeAsDialog { get; set; }
     public string MergeWithLineAfterAsDialog { get; set; }
@@ -574,6 +575,7 @@ public class LanguageSettingsShortcuts
         GoogleIt = "Google it (selected text)";
         SetActorX = "Set actor: {0}";
         SetNewActor = "Set new actor...";
+        SetStyleX = "Set style: {0}";
         ToggleDialogDashes = "Toggle dialog dashes";
         MergeWithLineBeforeAsDialog = "Merge with line before as dialog";
         MergeWithLineAfterAsDialog = "Merge with line after as dialog";

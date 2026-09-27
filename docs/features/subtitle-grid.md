@@ -72,6 +72,7 @@ For ASS/SSA files there are two ways to set a style on the selected lines:
   - Type to filter a long style list. A name that does not exist yet can be added as a new style with default settings.
   - <kbd>Esc</kbd> closes the picker without changes. The help shortcut (<kbd>F1</kbd> by default) opens this page.
   - **Manage styles...** closes the picker and opens the styles manager to edit fonts, colors and positions.
+- **Set style: 1** … **Set style: 10** (assign in **Options → Shortcuts**) set one of the first ten styles directly, from the grid, the text box or the waveform. The numbers follow the order the styles are defined in the file - the same order as the **Style** submenu and the picker's number keys. The assigned shortcuts are shown next to the style names in the **Style** submenu and in the picker.
 
 The style is set on all selected lines.
 

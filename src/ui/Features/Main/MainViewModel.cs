@@ -21770,25 +21770,21 @@ public partial class MainViewModel :
             return;
         }
 
-        // Header order, like the context menu's Style submenu (#11921).
-        var header = _subtitle?.Header;
-        if (string.IsNullOrEmpty(header) || !header.Contains("style:", StringComparison.OrdinalIgnoreCase))
-        {
-            header = GetDefaultAssaHeader();
-        }
-
-        var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(header)
-            .Where(p => !string.IsNullOrEmpty(p.Name))
-            .DistinctBy(p => p.Name)
-            .ToList();
+        var styles = GetStylesInHeaderOrder();
         var lineCounts = Subtitles
             .GroupBy(p => string.IsNullOrEmpty(p.Style) ? "Default" : p.Style)
             .ToDictionary(g => g.Key, g => g.Count());
 
+        var usedShortcuts = ShortcutsMain.GetUsedShortcuts(this);
+        var shortcutTexts = GetSetStyleCommands()
+            .Select(command => usedShortcuts.FirstOrDefault(s => ReferenceEquals(s.Action, command)))
+            .Select(shortcut => shortcut != null ? InitMenu.ToKeyGesture(shortcut)?.ToString() ?? string.Empty : string.Empty)
+            .ToList();
+
         var vm = await ShowDialogAsync<StylePickerWindow, StylePickerViewModel>(viewModel =>
         {
             viewModel.Initialize(styles, lineCounts, selectedItems.Select(p => p.Style).ToList(),
-                selectedItems.Count, IsFormatSsa,
+                selectedItems.Count, IsFormatSsa, shortcutTexts,
                 AdvancedSubStationAlpha.GetSsaStylesFromHeader(GetDefaultAssaHeader()).FirstOrDefault());
         });
 
@@ -21820,6 +21816,78 @@ public partial class MainViewModel :
             SetStyleForSelectedLines(vm.ResultStyle);
         }
     }
+
+    /// <summary>
+    /// The styles of the current file in header order - the order of the context menu's Style
+    /// submenu (#11921), the style picker's number keys and the "Set style 1-10" shortcuts.
+    /// A file without styles gets the default style.
+    /// </summary>
+    private List<SsaStyle> GetStylesInHeaderOrder()
+    {
+        var header = _subtitle?.Header;
+        if (string.IsNullOrEmpty(header) || !header.Contains("style:", StringComparison.OrdinalIgnoreCase))
+        {
+            header = GetDefaultAssaHeader();
+        }
+
+        return AdvancedSubStationAlpha.GetSsaStylesFromHeader(header)
+            .Where(p => !string.IsNullOrEmpty(p.Name))
+            .DistinctBy(p => p.Name)
+            .ToList();
+    }
+
+    private IRelayCommand[] GetSetStyleCommands()
+    {
+        return
+        [
+            SetStyle1Command, SetStyle2Command, SetStyle3Command, SetStyle4Command, SetStyle5Command,
+            SetStyle6Command, SetStyle7Command, SetStyle8Command, SetStyle9Command, SetStyle10Command,
+        ];
+    }
+
+    private void SetStyleByIndex(int index)
+    {
+        if (!(IsFormatAssa || IsFormatSsa))
+        {
+            return;
+        }
+
+        var styles = GetStylesInHeaderOrder();
+        if (index >= 0 && index < styles.Count)
+        {
+            SetStyleForSelectedLines(styles[index].Name);
+        }
+    }
+
+    [RelayCommand]
+    private void SetStyle1() => SetStyleByIndex(0);
+
+    [RelayCommand]
+    private void SetStyle2() => SetStyleByIndex(1);
+
+    [RelayCommand]
+    private void SetStyle3() => SetStyleByIndex(2);
+
+    [RelayCommand]
+    private void SetStyle4() => SetStyleByIndex(3);
+
+    [RelayCommand]
+    private void SetStyle5() => SetStyleByIndex(4);
+
+    [RelayCommand]
+    private void SetStyle6() => SetStyleByIndex(5);
+
+    [RelayCommand]
+    private void SetStyle7() => SetStyleByIndex(6);
+
+    [RelayCommand]
+    private void SetStyle8() => SetStyleByIndex(7);
+
+    [RelayCommand]
+    private void SetStyle9() => SetStyleByIndex(8);
+
+    [RelayCommand]
+    private void SetStyle10() => SetStyleByIndex(9);
 
     [RelayCommand]
     private async Task SetNewActorForSelectedLines(string styleName)
@@ -29596,7 +29664,8 @@ public partial class MainViewModel :
                     Header = Se.Language.General.SetStyleDotDotDot,
                     Command = ShowStylePickerCommand,
                 };
-                var stylePickerShortcut = ShortcutsMain.GetUsedShortcuts(this)
+                var styleUsedShortcuts = ShortcutsMain.GetUsedShortcuts(this);
+                var stylePickerShortcut = styleUsedShortcuts
                     .FirstOrDefault(s => ReferenceEquals(s.Action, ShowStylePickerCommand));
                 if (stylePickerShortcut != null)
                 {
@@ -29608,15 +29677,28 @@ public partial class MainViewModel :
 
                 var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(_subtitle.Header);
                 // Keep styles in the order they are defined in the header (user-defined order), do not sort alphabetically (#11921)
-                var stylesToAdd = styles.Select(p => p.Name).Where(p => !string.IsNullOrEmpty(p)).DistinctBy(p => p);
-                foreach (var style in stylesToAdd)
+                var stylesToAdd = styles.Select(p => p.Name).Where(p => !string.IsNullOrEmpty(p)).DistinctBy(p => p).ToList();
+                var styleCommands = GetSetStyleCommands();
+                for (var i = 0; i < stylesToAdd.Count; i++)
                 {
-                    MenuItemStyles.Items.Add(new MenuItem
+                    var styleMenuItem = new MenuItem
                     {
-                        Header = style,
+                        Header = stylesToAdd[i],
                         Command = SetStyleForSelectedLinesCommand,
-                        CommandParameter = style,
-                    });
+                        CommandParameter = stylesToAdd[i],
+                    };
+
+                    // Surface the matching SetStyleX shortcut (1-based, first 10 styles) next to the name.
+                    if (i < styleCommands.Length)
+                    {
+                        var shortcut = styleUsedShortcuts.FirstOrDefault(s => ReferenceEquals(s.Action, styleCommands[i]));
+                        if (shortcut != null)
+                        {
+                            styleMenuItem.InputGesture = InitMenu.ToKeyGesture(shortcut);
+                        }
+                    }
+
+                    MenuItemStyles.Items.Add(styleMenuItem);
                 }
 
                 if (stylesToAdd.Any())

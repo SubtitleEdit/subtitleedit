@@ -251,6 +251,15 @@ public class StylePickerWindow : Window
             Children = { panelName, labelSummary },
         };
 
+        var labelShortcut = new TextBlock
+        {
+            Opacity = 0.6,
+            Margin = new Thickness(12, 0, 0, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Right,
+        };
+        labelShortcut.Bind(TextBlock.TextProperty, new Binding(nameof(StylePickerItem.ShortcutText)));
+
         var grid = new Grid
         {
             ColumnDefinitions =
@@ -258,11 +267,13 @@ public class StylePickerWindow : Window
                 new ColumnDefinition { Width = GridLength.Auto },
                 new ColumnDefinition { Width = GridLength.Auto },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = GridLength.Auto },
             },
         };
         grid.Add(labelNumber, 0, 0);
         grid.Add(chip, 0, 1);
         grid.Add(panelText, 0, 2);
+        grid.Add(labelShortcut, 0, 3);
 
         return grid;
     }
