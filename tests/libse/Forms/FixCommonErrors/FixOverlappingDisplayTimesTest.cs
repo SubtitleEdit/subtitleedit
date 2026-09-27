@@ -83,4 +83,42 @@ public class FixOverlappingDisplayTimesTest
             Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds = oldMin;
         }
     }
+
+    // Both lines at or below minimum display time (sample file lines 66/67: 793 ms and 333 ms)
+    // used to be skipped with no fix row and no error, leaving the overlap in place.
+    [Fact]
+    public void EqualEndStart_BothShort_ShortensPrevious()
+    {
+        var oldAllowEqual = Configuration.Settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart;
+        var oldMin = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
+        try
+        {
+            Configuration.Settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart = false;
+            Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds = 1000;
+
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph("Hi.", 168585, 169378) { Number = 1 });
+            subtitle.Paragraphs.Add(new Paragraph("Yes.", 169378, 169711) { Number = 2 });
+            var preview = new Subtitle();
+            foreach (var p in subtitle.Paragraphs)
+            {
+                preview.Paragraphs.Add(new Paragraph(p, generateNewId: false));
+            }
+
+            var cb = new PreviewApplyCallback();
+            new FixOverlappingDisplayTimes().Fix(preview, cb);
+            Assert.Single(cb.Listed);
+
+            cb.PreviewMode = false;
+            new FixOverlappingDisplayTimes().Fix(subtitle, cb);
+
+            Assert.Equal(169377, subtitle.Paragraphs[0].EndTime.TotalMilliseconds);
+            Assert.Equal(169378, subtitle.Paragraphs[1].StartTime.TotalMilliseconds);
+        }
+        finally
+        {
+            Configuration.Settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart = oldAllowEqual;
+            Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds = oldMin;
+        }
+    }
 }

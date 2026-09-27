@@ -128,6 +128,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                     callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                                 }
                             }
+                            else if (callbacks.AllowFix(target, fixAction))
+                            {
+                                // Both lines are already at or below minimum display time. Taking 1 ms
+                                // off prev (known to be over 100 ms here) is better than leaving the
+                                // overlap unfixed and unreported.
+                                prev.EndTime.TotalMilliseconds--;
+                                noOfOverlappingDisplayTimesFixed++;
+                                callbacks.AddFixToListView(target, fixAction, oldPrevious, prev.ToString());
+                            }
                         }
                     }
                     else if (prevOptimalDisplayTime <= (p.StartTime.TotalMilliseconds - prev.StartTime.TotalMilliseconds))
