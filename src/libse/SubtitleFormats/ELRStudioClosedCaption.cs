@@ -20,9 +20,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
+        // ELR Studio also saves the same binary layout as .ela and .elb.
+        private static readonly string[] FileExtensions = { ".elr", ".ela", ".elb" };
+
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".elr", StringComparison.OrdinalIgnoreCase) && File.Exists(fileName))
+            if (!string.IsNullOrEmpty(fileName) &&
+                Array.Exists(FileExtensions, ext => fileName.EndsWith(ext, StringComparison.OrdinalIgnoreCase)) &&
+                File.Exists(fileName))
             {
                 var fi = new FileInfo(fileName);
                 if (fi.Length >= 640 && fi.Length < 1024000) // not too small or too big

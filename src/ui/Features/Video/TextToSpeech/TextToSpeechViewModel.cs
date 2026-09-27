@@ -3221,6 +3221,18 @@ public partial class TextToSpeechViewModel : ObservableObject
         // The separation works in 44.1 kHz stereo - over a gigabyte of wav for a feature film -
         // so its files get a folder of their own that is gone as soon as the video is written.
         string? separationFolder = null;
+        var ffmpegOutput = new FfmpegOutputTail();
+        var ffmpegExitCode = 0;
+        // Skip the progress lines, or a long run leaves only those in the log and pushes out the
+        // warnings that explain a bad result (e.g. "Non-monotonic DTS" where the video stopped).
+        DataReceivedEventHandler ffmpegOutputHandler = (_, e) =>
+        {
+            var line = e.Data?.TrimStart();
+            if (!string.IsNullOrEmpty(line) && !line.StartsWith("frame=", StringComparison.Ordinal) && !line.StartsWith("size=", StringComparison.Ordinal))
+            {
+                ffmpegOutput.Add(e.Data!);
+            }
+        };
         try
         {
             string? backgroundFileName = null;
@@ -3241,12 +3253,13 @@ public partial class TextToSpeechViewModel : ObservableObject
 
             // With the speech gone there is nothing left for the new speech to compete with, so
             // the music and effects play at full volume unless ducking asks for less.
-            var addAudioProcess = backgroundFileName != null
-                ? FfmpegGenerator.AddAudioTrackWithBackground(_videoFileName, backgroundFileName, audioFileName, outputFileName, audioEncoding, stereo, ducking ? duckingVolume : 100)
+            using var addAudioProcess = backgroundFileName != null
+                ? FfmpegGenerator.AddAudioTrackWithBackground(_videoFileName, backgroundFileName, audioFileName, outputFileName, audioEncoding, stereo, ducking ? duckingVolume : 100, ffmpegOutputHandler)
                 : ducking
-                    ? FfmpegGenerator.AddAudioTrackWithDucking(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo, duckingVolume)
-                    : FfmpegGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo);
+                    ? FfmpegGenerator.AddAudioTrackWithDucking(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo, duckingVolume, ffmpegOutputHandler)
+                    : FfmpegGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo, ffmpegOutputHandler);
             await addAudioProcess.StartAndWaitAsync(cancellationToken);
+            ffmpegExitCode = addAudioProcess.ExitCode;
         }
         finally
         {
@@ -3270,7 +3283,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         // not exist. Verify the output and report instead.
         if (!File.Exists(outputFileName) || new FileInfo(outputFileName).Length == 0)
         {
-            SeLogger.Error($"TextToSpeech: adding audio to video failed - no output produced (encoding=\"{audioEncoding}\", ducking={Se.Settings.Video.TextToSpeech.AudioDuckingEnabled})");
+            SeLogger.Error($"TextToSpeech: adding audio to video failed - no output produced (encoding=\"{audioEncoding}\", ducking={Se.Settings.Video.TextToSpeech.AudioDuckingEnabled}, exit code {ffmpegExitCode}){Environment.NewLine}{ffmpegOutput}");
             Se.WriteToolsLog($"TTS add-to-video failed: ffmpeg produced no output for \"{outputFileName}\" (encoding=\"{audioEncoding}\", ducking={Se.Settings.Video.TextToSpeech.AudioDuckingEnabled})", true);
             if (Window != null)
             {
@@ -3286,7 +3299,49 @@ public partial class TextToSpeechViewModel : ObservableObject
             return null;
         }
 
+        if (ffmpegExitCode != 0)
+        {
+            SeLogger.Error($"TextToSpeech: ffmpeg exited with code {ffmpegExitCode} while adding audio to \"{outputFileName}\"{Environment.NewLine}{ffmpegOutput}");
+        }
+
+        await WarnIfVideoTruncated(outputFileName, ffmpegOutput, cancellationToken);
+
         return outputFileName;
+    }
+
+    /// <summary>
+    /// The video is stream-copied, and on some sources ffmpeg stops copying it early while the new
+    /// audio runs to the end - the picture then freezes after a minute (#15265). The container
+    /// still reports the full length, so compare the video streams themselves.
+    /// </summary>
+    private async Task WarnIfVideoTruncated(string outputFileName, FfmpegOutputTail ffmpegOutput, CancellationToken cancellationToken)
+    {
+        ProgressText = Se.Language.Video.TextToSpeech.AddingAudioToVideoFileDotDotDot;
+        var sourceSeconds = await VideoStreamDuration.GetSecondsAsync(_videoFileName, cancellationToken);
+        var outputSeconds = sourceSeconds == null ? null : await VideoStreamDuration.GetSecondsAsync(outputFileName, cancellationToken);
+        ProgressText = string.Empty;
+        if (sourceSeconds == null || outputSeconds == null || !VideoStreamDuration.IsTruncated(sourceSeconds.Value, outputSeconds.Value))
+        {
+            return;
+        }
+
+        var source = TimeSpan.FromSeconds(sourceSeconds.Value);
+        var output = TimeSpan.FromSeconds(outputSeconds.Value);
+        SeLogger.Error($"TextToSpeech: video stream in \"{outputFileName}\" is {output:hh\\:mm\\:ss\\.fff} long, source \"{_videoFileName}\" is {source:hh\\:mm\\:ss\\.fff}{Environment.NewLine}{ffmpegOutput}");
+        if (Window != null)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Warning,
+                string.Format(Se.Language.Video.TextToSpeech.VideoTruncatedWarning, FormatDuration(output), FormatDuration(source)),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning);
+        }
+    }
+
+    private static string FormatDuration(TimeSpan duration)
+    {
+        return duration.TotalHours >= 1 ? duration.ToString(@"h\:mm\:ss") : duration.ToString(@"m\:ss");
     }
 
     private async Task<string?> MergeAudioParagraphs(TtsStepResult[] previousStepResult, CancellationToken cancellationToken)

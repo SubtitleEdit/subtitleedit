@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
@@ -80,6 +81,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     break;
                 }
 
+                // skip empty records (padding) - the "remove padding" below would take their length
+                // negative and throw, and any other .dat file reaches this via IsMine
+                if (textLength == 0)
+                {
+                    index++;
+                    lastMultiline = lastP != null && multipleLineFlag == 1;
+                    continue;
+                }
+
                 if (buffer[index + textLength] == 0) // remove padding
                 {
                     textLength--;
@@ -130,12 +140,36 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (!fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
+            if (string.IsNullOrEmpty(fileName) || !fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
 
-            return base.IsMine(lines, fileName);
+            // ".dat" is a common extension and the reader accepts almost any bytes, so require
+            // what real VCD subtitles look like: forward timing and printable text
+            var subtitle = new Subtitle();
+            LoadSubtitle(subtitle, lines, fileName);
+            if (subtitle.Paragraphs.Count == 0)
+            {
+                return false;
+            }
+
+            var plausible = subtitle.Paragraphs.Count(p => p.EndTime.TotalMilliseconds >= p.StartTime.TotalMilliseconds && !HasControlCharacters(p.Text));
+            return plausible >= subtitle.Paragraphs.Count * 0.9;
+        }
+
+        private static bool HasControlCharacters(string text)
+        {
+            foreach (var c in text)
+            {
+                // NUL is padding, kept in real files' text
+                if (c < ' ' && c != '\0' && c != '\r' && c != '\n' || c >= '\u007F' && c <= '\u009F')
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

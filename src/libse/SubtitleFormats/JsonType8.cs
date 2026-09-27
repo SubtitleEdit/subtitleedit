@@ -76,8 +76,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             foreach (string line in allText.Split('{', '}', '[', ']'))
             {
-                string s = line.Trim();
-                if (s.Length > 10)
+                // Put back the closing brace the split removed: Json.ReadTag needs a ',' or '}' after
+                // a number, so a trailing "end_time" : 16.399 (ELR Studio json) was otherwise lost.
+                string s = line.Trim() + "}";
+                if (s.Length > 11)
                 {
                     string start = Json.ReadTag(s, "start_time");
                     string end = Json.ReadTag(s, "end_time");

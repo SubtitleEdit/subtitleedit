@@ -49,23 +49,39 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
             Paragraph p = null;
+            var afterTimeCode = false;
+            var skippedSpokenTimeCodes = new Dictionary<Paragraph, string>();
             subtitle.Paragraphs.Clear();
             foreach (string line in lines)
             {
-                var s = line.TrimEnd();
+                var s = RemoveMarkdownBold(line.Trim());
                 if (RegexTimeCodes.IsMatch(s))
                 {
                     p = new Paragraph(DecodeTimeCode(s), new TimeCode(), string.Empty);
                     subtitle.Paragraphs.Add(p);
+                    afterTimeCode = true;
+                    continue;
                 }
-                else if (RegexTimeCodesHours.IsMatch(s))
+
+                if (RegexTimeCodesHours.IsMatch(s))
                 {
                     p = new Paragraph(DecodeTimeCodeWithHours(s), new TimeCode(), string.Empty);
                     subtitle.Paragraphs.Add(p);
+                    afterTimeCode = true;
+                    continue;
                 }
-                else if (string.IsNullOrWhiteSpace(s))
+
+                if (string.IsNullOrWhiteSpace(s))
                 {
                     // skip these lines
+                    continue;
+                }
+
+                var isSpokenTimeCode = afterTimeCode && p != null && IsSpokenTimeCode(s, p.StartTime);
+                afterTimeCode = false;
+                if (isSpokenTimeCode)
+                {
+                    skippedSpokenTimeCodes[p] = s;
                 }
                 else if (p != null)
                 {
@@ -86,12 +102,101 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
+            // a "spoken time code" line that is the only text was real text after all
+            foreach (var kvp in skippedSpokenTimeCodes)
+            {
+                if (string.IsNullOrEmpty(kvp.Key.Text))
+                {
+                    kvp.Key.Text = kvp.Value;
+                }
+            }
+
             foreach (var p2 in subtitle.Paragraphs)
             {
                 p2.Text = Utilities.AutoBreakLine(p2.Text);
             }
             subtitle.RecalculateDisplayTimes(Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds, null, Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds);
             subtitle.Renumber();
+        }
+
+        /// <summary>
+        /// Transcripts copied from YouTube can have the time code wrapped in markdown bold, e.g. "**0:07**".
+        /// </summary>
+        private static string RemoveMarkdownBold(string s)
+        {
+            if (s.Length > 4 && s.StartsWith("**", StringComparison.Ordinal) && s.EndsWith("**", StringComparison.Ordinal))
+            {
+                return s.Substring(2, s.Length - 4).Trim();
+            }
+
+            return s;
+        }
+
+        /// <summary>
+        /// Transcripts copied from YouTube can have the time code spelled out in the UI language on the line
+        /// after the time code, e.g. "7 seconds" or "2 hours, 2 minutes, 14 seconds" (in any script).
+        /// Such a line contains exactly the non-zero parts of the time code as numbers.
+        /// </summary>
+        private static bool IsSpokenTimeCode(string s, TimeCode timeCode)
+        {
+            if (s.Length == 0 || s.Length > 80)
+            {
+                return false;
+            }
+
+            var expected = new List<int>();
+            foreach (var part in new[] { timeCode.Hours, timeCode.Minutes, timeCode.Seconds })
+            {
+                if (part != 0)
+                {
+                    expected.Add(part);
+                }
+            }
+
+            if (expected.Count == 0)
+            {
+                expected.Add(0);
+            }
+
+            var numbers = new List<int>();
+            var current = -1;
+            foreach (var ch in s)
+            {
+                if (char.IsDigit(ch))
+                {
+                    var digit = (int)char.GetNumericValue(ch);
+                    current = current < 0 ? digit : current * 10 + digit;
+                    if (current > 9999)
+                    {
+                        return false;
+                    }
+                }
+                else if (current >= 0)
+                {
+                    numbers.Add(current);
+                    current = -1;
+                }
+            }
+
+            if (current >= 0)
+            {
+                numbers.Add(current);
+            }
+
+            if (numbers.Count == 0 || numbers.Count != expected.Count)
+            {
+                return false;
+            }
+
+            for (var i = 0; i < numbers.Count; i++)
+            {
+                if (numbers[i] != expected[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private static TimeCode DecodeTimeCode(string s)

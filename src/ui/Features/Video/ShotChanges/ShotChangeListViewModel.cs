@@ -8,6 +8,8 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Video.ShotChanges;
@@ -83,6 +85,29 @@ public partial class ShotChangeListViewModel : ObservableObject
 
         ShotChanges.Remove(shotChange);
         OKProssed = true;
+    }
+
+    /// <summary>
+    /// Copies the given rows as "number TAB time" lines, the way the DataGrid this list used to
+    /// be copied them on Ctrl+C - the TableView it became has no copy of its own.
+    /// </summary>
+    internal async Task CopyToClipboard(IEnumerable<ShotChangeItem> items)
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var sb = new StringBuilder();
+        foreach (var item in items.OrderBy(p => p.Index))
+        {
+            sb.Append(item.Index).Append('\t').AppendLine(item.TimeText);
+        }
+
+        if (sb.Length > 0)
+        {
+            await ClipboardHelper.SetTextAsync(Window, sb.ToString());
+        }
     }
 
     [RelayCommand]

@@ -21,6 +21,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         // Carries the region of every paragraph.
         public override bool HasPositionSupport => true;
 
+        /// <summary>
+        /// LoadSubtitle throws on malformed CLQTT (to report why), but detection runs on every
+        /// file - an unrelated JSON or html page that merely contains "events" is not a CLQTT file.
+        /// </summary>
+        public override bool IsMine(List<string> lines, string fileName)
+        {
+            try
+            {
+                return base.IsMine(lines, fileName);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public override string ToText(Subtitle subtitle, string title)
         {
             return "Not implemented";

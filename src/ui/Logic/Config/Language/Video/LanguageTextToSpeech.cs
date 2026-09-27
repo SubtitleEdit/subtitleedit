@@ -147,6 +147,7 @@ public class LanguageTextToSpeech
     public string RemoveOriginalSpeechDescription { get; set; }
     public string RemovingOriginalSpeech { get; set; }
     public string RemoveOriginalSpeechFailed { get; set; }
+    public string VideoTruncatedWarning { get; set; }
     public string OriginalVolumePercent { get; set; }
     public string VadSilenceCompression { get; set; }
     public string VadSilenceCompressionDescription { get; set; }
@@ -362,6 +363,7 @@ public class LanguageTextToSpeech
         RemoveOriginalSpeechDescription = "Keeps the music and sound effects of the original video but removes its speech, and mixes the new speech over that. Takes about as long as the video itself with a GPU, and many times longer without one. With audio ducking on, its volume applies to the music and effects. Only applies when the speech is added to the video file.";
         RemovingOriginalSpeech = "Removing original speech...";
         RemoveOriginalSpeechFailed = "Could not remove the original speech - the speech was added to the video without it.";
+        VideoTruncatedWarning = "The picture in the new video file stops after {0}, but the original video is {1} long - the picture will freeze while the sound continues.\n\nThe file was kept. See error-log.txt in the Subtitle Edit data folder for the ffmpeg output.";
         OriginalVolumePercent = "Original volume %";
         VadSilenceCompression = "VAD silence compression";
         VadSilenceCompressionDescription = "Shortens the pauses between words instead of speeding up the speech, so a clip fits without any loss of quality.";

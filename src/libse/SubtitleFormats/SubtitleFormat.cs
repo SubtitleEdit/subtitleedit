@@ -156,6 +156,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new Captionate(),
                     new CaptionateMs(),
                     new CaraokeXml(),
+                    new CheetahCaptionAsc(),
                     new Csv(),
                     new Csv2(),
                     new Csv3(),
