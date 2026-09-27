@@ -1,8 +1,9 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -24,7 +25,29 @@ public partial class BurnInResolutionPickerViewModel : ObservableObject
 
     public void RemoveUseSourceResolution()
     {
-        Resolutions.Remove(Resolutions.First(p => p.ItemType == ResolutionItemType.UseSource));
+        var item = Resolutions.FirstOrDefault(p => p.ItemType == ResolutionItemType.UseSource);
+        if (item != null)
+        {
+            Resolutions.Remove(item);
+        }
+    }
+
+    public void RemovePickResolution()
+    {
+        var item = Resolutions.FirstOrDefault(p => p.ItemType == ResolutionItemType.PickResolution);
+        if (item != null)
+        {
+            Resolutions.Remove(item);
+        }
+    }
+
+    public void SetSourceResolution(int width, int height)
+    {
+        var item = Resolutions.FirstOrDefault(p => p.ItemType == ResolutionItemType.UseSource);
+        if (item != null && width > 0 && height > 0)
+        {
+            item.DisplayName = $"{Se.Language.General.UseSourceResolution} ({width}x{height})";
+        }
     }
 
     [RelayCommand]

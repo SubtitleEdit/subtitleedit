@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -9,7 +9,7 @@ public partial class ResolutionItem : ObservableObject
 {
     public ResolutionItemType ItemType { get; set; }
     public string Name { get; set; }
-    public string DisplayName { get; set; }
+    [ObservableProperty] private string _displayName = string.Empty;
     public int Width { get; set; }
     public int Height { get; set; }
     public bool IsSeparator => ItemType == ResolutionItemType.Separator;

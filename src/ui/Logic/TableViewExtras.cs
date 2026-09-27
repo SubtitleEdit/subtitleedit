@@ -38,10 +38,10 @@ public class SeTableViewColumn : TableViewColumn
         HorizontalContentAlignment = Avalonia.Layout.HorizontalAlignment.Stretch;
     }
 
-    public static readonly StyledProperty<bool> IsVisibleProperty =
+    public new static readonly StyledProperty<bool> IsVisibleProperty =
         AvaloniaProperty.Register<SeTableViewColumn, bool>(nameof(IsVisible), defaultValue: true);
 
-    public bool IsVisible
+    public new bool IsVisible
     {
         get => GetValue(IsVisibleProperty);
         set => SetValue(IsVisibleProperty, value);

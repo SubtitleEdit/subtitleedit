@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Shapes;
@@ -216,7 +216,7 @@ public class VoiceManagerWindow : Window
 
         var searchBox = new TextBox
         {
-            Watermark = Se.Language.Video.TextToSpeech.SearchVoices,
+            PlaceholderText = Se.Language.Video.TextToSpeech.SearchVoices,
             MinWidth = 180,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBox.TextProperty] = new Binding(nameof(vm.FilterText)) { Mode = BindingMode.TwoWay },

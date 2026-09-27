@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.UiLogic.Export;
+using Nikse.SubtitleEdit.UiLogic.Export;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -158,6 +158,7 @@ using Nikse.SubtitleEdit.Features.Video.BackgroundMusic;
 using Nikse.SubtitleEdit.Features.Video.BlankVideo;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
 using Nikse.SubtitleEdit.Features.Video.CutVideo;
+using Nikse.SubtitleEdit.Features.Video.VideoSpeed;
 using Nikse.SubtitleEdit.Features.Video.EmbeddedSubtitlesEdit;
 using Nikse.SubtitleEdit.Features.Video.GoToVideoPosition;
 using Nikse.SubtitleEdit.Features.Video.OpenFromUrl;
@@ -7551,6 +7552,48 @@ public partial class MainViewModel :
         {
             return;
         }
+    }
+
+    private Window? _videoSpeedWindow;
+    private VideoSpeedViewModel? _videoSpeedViewModel;
+
+    [RelayCommand]
+    private async Task VideoSpeed()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var ffmpegOk = await RequireFfmpegOk();
+        if (!ffmpegOk)
+        {
+            return;
+        }
+
+        if (string.IsNullOrEmpty(_videoFileName))
+        {
+            await CommandVideoOpen();
+        }
+
+        if (_videoSpeedWindow != null)
+        {
+            _videoSpeedWindow.Activate();
+            _videoSpeedWindow.Focus();
+            return;
+        }
+
+        _videoSpeedViewModel = _windowService.ShowWindow<VideoSpeedWindow, VideoSpeedViewModel>(Window, (window, vm) =>
+        {
+            _videoSpeedWindow = window;
+            vm.Initialize(_videoFileName ?? string.Empty, GetUpdateSubtitle(), SelectedSubtitleFormat);
+
+            window.Closed += (_, _) =>
+            {
+                _videoSpeedWindow = null;
+                _videoSpeedViewModel = null;
+            };
+        });
     }
 
     [RelayCommand]
@@ -31287,7 +31330,8 @@ public partial class MainViewModel :
 
     public void SubtitleGridDropHost_DoubleTapped(object? sender, TappedEventArgs e)
     {
-        var rowIndex = GetDataGridRowIndexFromPoint(e.GetPosition(SubtitleGrid));
+        var pos = e.GetPosition(SubtitleGrid);
+        var rowIndex = GetDataGridRowIndexFromPoint(pos);
         if (rowIndex < 0 || rowIndex >= Subtitles.Count)
         {
             return;
@@ -31295,9 +31339,52 @@ public partial class MainViewModel :
 
         SubtitleGridDragSelect?.Reset();
 
-        SubtitleGrid.SelectedItem = Subtitles[rowIndex];
+        var selectedSub = Subtitles[rowIndex];
+        SubtitleGrid.SelectedItem = selectedSub;
+
+        if (_videoSpeedViewModel != null)
+        {
+            var hit = SubtitleGrid.InputHitTest(pos) as Visual;
+            var tag = hit?.GetVisualAncestors().Prepend(hit).OfType<Control>().FirstOrDefault(c => c.Tag is string)?.Tag as string;
+            var colTag = tag ?? GetSubtitleGridColumnTagFromPosition(pos.X);
+
+            if (colTag == InitListViewAndEditBox.SubtitleGridColumnKeys.Start)
+            {
+                _videoSpeedViewModel.NewStartTime = selectedSub.StartTime;
+                e.Handled = true;
+                return;
+            }
+            if (colTag == InitListViewAndEditBox.SubtitleGridColumnKeys.End)
+            {
+                _videoSpeedViewModel.NewEndTime = selectedSub.EndTime;
+                e.Handled = true;
+                return;
+            }
+        }
+
         OnSubtitleGridDoubleTapped(SubtitleGrid, e);
         e.Handled = true;
+    }
+
+    private string? GetSubtitleGridColumnTagFromPosition(double x)
+    {
+        if (SubtitleGridColumnManager == null)
+        {
+            return null;
+        }
+
+        double currentX = 0;
+        foreach (var col in SubtitleGridColumnManager.Columns.OfType<SeTableViewColumn>())
+        {
+            if (!col.IsVisible) continue;
+            var colWidth = col.ActualWidth > 0 ? col.ActualWidth : col.Width.Value;
+            if (x >= currentX && x < currentX + colWidth)
+            {
+                return col.Tag as string;
+            }
+            currentX += colWidth;
+        }
+        return null;
     }
 
     private int GetDataGridRowIndexFromPoint(Avalonia.Point position)
@@ -33547,6 +33634,26 @@ public partial class MainViewModel :
     internal void OnSubtitleGridDoubleTapped(object? sender, TappedEventArgs e)
     {
         _singleTapCancellationTokenSource?.Cancel();
+
+        if (_videoSpeedViewModel != null && SubtitleGrid.SelectedItem is SubtitleLineViewModel selectedSub)
+        {
+            var pos = e.GetPosition(SubtitleGrid);
+            var hit = SubtitleGrid.InputHitTest(pos) as Visual;
+            var tag = hit?.GetVisualAncestors().Prepend(hit).OfType<Control>().FirstOrDefault(c => c.Tag is string)?.Tag as string;
+            var colTag = tag ?? GetSubtitleGridColumnTagFromPosition(pos.X);
+
+            if (colTag == InitListViewAndEditBox.SubtitleGridColumnKeys.Start)
+            {
+                _videoSpeedViewModel.NewStartTime = selectedSub.StartTime;
+                return;
+            }
+            if (colTag == InitListViewAndEditBox.SubtitleGridColumnKeys.End)
+            {
+                _videoSpeedViewModel.NewEndTime = selectedSub.EndTime;
+                return;
+            }
+        }
+
         OnSubtitleGridDoubleTapped(sender);
     }
 
