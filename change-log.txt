@@ -3,6 +3,39 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-beta14 (27th of September 2026)
+
+* Add "Detect speakers" (Sortformer diarization) for Crisp ASR
+* Add customizable order and visibility of the video player controls - thx maknol
+* Add AI review prompt templates, reference context and AI-generated context - thx Morv55555
+* Add PAC secondary code page for lines in another script (open, Export PAC and seconv)
+* Add Cheetah Caption ASC format, and load ELR Studio .ela/.elb, ELR json, timing-only SAMI and Timed Images xml (for OCR)
+* seconv: convert Manzanita DVB bitmap dumps
+* PAC: detect the code page when opening files (was always Latin)
+* OCR fix: split run-together words like SE4 does, and fill nOCR's unknown glyphs
+* Cut video: much faster opening and generating (seek to ranges instead of decoding the whole video)
+* Open large RTF subtitles ~8x faster
+* TTS add-to-video: warn when the video stream comes out truncated - thx laszlolaszlo
+* ASSA styles storage: category fixes (name clashes, "Remove all", Export, rename/move, case-insensitive names) and import of Subtitle Edit 4 category exports (.template)
+* ASSA/SSA styles: block OK/Apply on empty or duplicate style names, and border type combo now follows the current style
+* YouTube Transcript: read markdown-bold time codes and skip spoken time codes
+* Fix duplicate Ctrl+Shift+V default shortcut (voice manager vs. fill selected lines) - thx GrampaWildWilly
+* Fix ASSA/SSA styles: Cancel after Apply applied the dialog again
+* Fix Batch convert ASSA dropping fonts embedded from the styles dialog
+* Fix common errors: fix overlap for equal end/start never applied
+* Fix nOCR hand-drawn lines landing on the neighbor pixel
+* Fix OCR italics moving spaced closing punctuation into the next italic word
+* Fix PAC: one "secondary code page" line turning a whole file Latin
+* Fix seconv nOCR/BinaryOCR giving only "*" on PGS input
+* Fix Shot changes list not copying rows to the clipboard
+* Fix two formats throwing on detection (Video CD DAT, CLQTT JSON)
+* Fix English OCR fix splitting some valid words
+* Update Latin nOCR database
+* Update Italian translation - thx bovirus
+* Update Polish translation - thx potplayer-fanpack
+
+-----------------------------------------------------------------------------------------------------
+
 v5.3.0-beta13 (26th of September 2026)
 
 * Add TikTok/YouTube Shorts (1-3 words) rule profile - thx hardpenguin
