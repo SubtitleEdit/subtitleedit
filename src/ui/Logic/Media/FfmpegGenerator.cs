@@ -1521,7 +1521,10 @@ public class FfmpegGenerator
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-i \"{inputVideoFileName}\" -vf select='eq(pict_type\\,I)',showinfo -f null -",
+                // -skip_frame nokey: only key frames are decoded (and no audio at all) - decoding every
+                // frame of the whole file just to throw all but the I-frames away kept a core
+                // pegged for as long as the video plays, from the moment the dialog opened.
+                Arguments = $"-skip_frame nokey -i \"{inputVideoFileName}\" -an -sn -dn -vf select='eq(pict_type\\,I)',showinfo -f null -",
                 UseShellExecute = false,
                 RedirectStandardError = true,
                 RedirectStandardOutput = false,
@@ -1649,9 +1652,20 @@ public class FfmpegGenerator
     }
 
     /// <summary>
-    /// The trim + concat command line shared by "merge segments" and "remove segments": every
+    /// More ranges than this are cut from one input instead of one seeked input per range - every
+    /// input is its own demuxer and decoder, and a list of hundreds of lines should not open the
+    /// video hundreds of times.
+    /// </summary>
+    private const int MaxSeekedCutInputs = 32;
+
+    /// <summary>
+    /// The seek + concat command line shared by "merge segments" and "remove segments": every
     /// range is cut out of the input and the pieces are joined in the order given. A range
     /// without an end runs to the end of the file.
+    /// Each range is its own input, opened with -ss/-t, so ffmpeg jumps to the range instead of
+    /// decoding the video from the very beginning - a trim filter on one input decoded (and
+    /// threw away) everything before a range, so a ten second clip from late in a long film
+    /// took minutes at full CPU. Input seeking while transcoding is frame accurate.
     /// </summary>
     private static string GetConcatSegmentsParameters(
         string inputFileName,
@@ -1668,27 +1682,60 @@ public class FfmpegGenerator
             hasAudio = true;
         }
 
+        var inv = CultureInfo.InvariantCulture;
+        string F(double value) => value.ToString(inv);
+
+        var inputArgs = string.Empty;
         var filterParts = new List<string>();
         var concatInputs = new List<string>();
+        var seekPerRange = ranges.Count <= MaxSeekedCutInputs;
+
+        // One shared input: seek to the earliest range and stop after the latest, and trim
+        // relative to that window.
+        var windowStart = 0.0;
+        if (!seekPerRange)
+        {
+            windowStart = ranges.Min(r => r.Start.GetValueOrDefault());
+            var windowEnd = ranges.All(r => r.End.HasValue) ? ranges.Max(r => r.End!.Value) : (double?)null;
+            inputArgs = GetSeekInputArgs(inputFileName, windowStart, windowEnd, F);
+        }
 
         for (var i = 0; i < ranges.Count; i++)
         {
-            var trim = "start=" + ranges[i].Start.GetValueOrDefault().ToString(CultureInfo.InvariantCulture);
-            if (ranges[i].End.HasValue)
+            var start = ranges[i].Start.GetValueOrDefault();
+            var end = ranges[i].End;
+            var input = 0;
+            var filter = string.Empty;
+            if (seekPerRange)
             {
-                trim += ":end=" + ranges[i].End!.Value.ToString(CultureInfo.InvariantCulture);
+                input = i;
+                inputArgs += GetSeekInputArgs(inputFileName, start, end, F);
+            }
+            else
+            {
+                var trim = "start=" + F(start - windowStart);
+                if (end.HasValue)
+                {
+                    trim += ":end=" + F(end.Value - windowStart);
+                }
+
+                filter = trim;
             }
 
             var labels = string.Empty;
             if (hasVideo)
             {
-                filterParts.Add($"[0:v]trim={trim},setpts=PTS-STARTPTS[v{i}]");
+                filterParts.Add(filter.Length > 0
+                    ? $"[{input}:v]trim={filter},setpts=PTS-STARTPTS[v{i}]"
+                    : $"[{input}:v]setpts=PTS-STARTPTS[v{i}]");
                 labels += $"[v{i}]";
             }
 
             if (hasAudio)
             {
-                filterParts.Add($"[0:a]atrim={trim},asetpts=PTS-STARTPTS[a{i}]");
+                filterParts.Add(filter.Length > 0
+                    ? $"[{input}:a]atrim={filter},asetpts=PTS-STARTPTS[a{i}]"
+                    : $"[{input}:a]asetpts=PTS-STARTPTS[a{i}]");
                 labels += $"[a{i}]";
             }
 
@@ -1700,7 +1747,23 @@ public class FfmpegGenerator
                             string.Join("", concatInputs) +
                             $"concat=n={ranges.Count}:v={(hasVideo ? 1 : 0)}:a={(hasAudio ? 1 : 0)}{outputLabels}";
 
-        return GetCutEncodingParameters(inputFileName, outputFileName, filterComplex, hasVideo, hasAudio);
+        return GetCutEncodingParameters(inputArgs, outputFileName, filterComplex, hasVideo, hasAudio);
+    }
+
+    private static string GetSeekInputArgs(string inputFileName, double start, double? end, Func<double, string> format)
+    {
+        var args = string.Empty;
+        if (start > 0)
+        {
+            args += $"-ss {format(start)} ";
+        }
+
+        if (end.HasValue)
+        {
+            args += $"-t {format(Math.Max(0, end.Value - start))} ";
+        }
+
+        return args + $"-i \"{inputFileName}\" ";
     }
 
     /// <summary>
@@ -1830,13 +1893,13 @@ public class FfmpegGenerator
             filterParts.Add($"[{audioLabel}]{(audioFades.Count > 0 ? string.Join(",", audioFades) : "anull")}[outa]");
         }
 
-        return GetCutEncodingParameters(inputFileName, outputFileName, string.Join("; ", filterParts), hasVideo, hasAudio);
+        return GetCutEncodingParameters($"-i \"{inputFileName}\" ", outputFileName, string.Join("; ", filterParts), hasVideo, hasAudio);
     }
 
-    private static string GetCutEncodingParameters(string inputFileName, string outputFileName, string filterComplex, bool hasVideo, bool hasAudio)
+    private static string GetCutEncodingParameters(string inputArgs, string outputFileName, string filterComplex, bool hasVideo, bool hasAudio)
     {
         var arguments =
-            $"-y -i \"{inputFileName}\" " +
+            "-y " + inputArgs +
             $"-filter_complex \"{filterComplex}\" ";
 
         if (hasVideo)
