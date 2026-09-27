@@ -2585,6 +2585,9 @@ public partial class OcrViewModel : ObservableObject
             }
 
             _ocrFixEngine.Initialize(_fixEngineSubtitle, threeLetterCode, SelectedDictionary);
+
+            // nOCR and binary image compare write "*" for a glyph they could not match.
+            _ocrFixEngine.FillUnknownCharacters = ocrEngine.EngineType is OcrEngineType.nOcr or OcrEngineType.BinaryImageCompare;
         }
         else
         {

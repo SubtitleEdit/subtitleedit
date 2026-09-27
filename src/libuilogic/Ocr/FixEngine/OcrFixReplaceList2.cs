@@ -1030,14 +1030,75 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                 word = word.Replace('‘', '\'');
             }
 
+            // An exact whole-word entry is more specific than the always-applied word parts, so it
+            // wins: "IVl" -> "M" fixes "IVlust" but must not turn the medical "IVline" into "Mine".
+            var wholeWord = StripAffixes(word, out var wholePre, out var wholePost);
+            if (wholeWord.Length > 0 && GetReplaceWord(wholePre, wholeWord, wholePost, out var wholeWordResult))
+            {
+                return wholeWordResult;
+            }
+
             //always replace list
             foreach (var kv in _partialWordAlwaysReplaceList)
             {
                 word = word.Replace(kv.Key, kv.Value);
             }
 
-            var pre = string.Empty;
-            var post = string.Empty;
+            word = StripAffixes(word, out var pre, out var post);
+
+            var preWordPost = pre + word + post;
+            if (word.Length == 0)
+            {
+                return preWordPost;
+            }
+
+            if (word.Contains('?'))
+            {
+                var match = RegExQuestion.Match(word);
+                if (match.Success)
+                {
+                    word = word.Insert(match.Index + 2, " ");
+                }
+            }
+
+            if (GetReplaceWord(pre, word, post, out var res))
+            {
+                return res;
+            }
+
+            var oldWord = word;
+            if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
+            {
+                // uppercase I or 1 inside lowercase fromWord (will be replaced by lowercase L)
+                word = FixIor1InsideLowerCaseWord(word);
+
+                // uppercase 0 inside lowercase fromWord (will be replaced by lowercase L)
+                word = Fix0InsideLowerCaseWord(word);
+
+                // uppercase I or 1 inside lowercase fromWord (will be replaced by lowercase L)
+                word = FixIor1InsideLowerCaseWord(word);
+
+                word = FixLowerCaseLInsideUpperCaseWord(word); // eg. SCARLETTl => SCARLETTI
+            }
+
+
+            if (oldWord != word)
+            {
+                // Retry fromWord replace list
+                if (GetReplaceWord(pre, word, post, out var result))
+                {
+                    return result;
+                }
+            }
+
+            return preWordPost;
+        }
+
+        private static string StripAffixes(string input, out string pre, out string post)
+        {
+            var word = input;
+            pre = string.Empty;
+            post = string.Empty;
 
             if (word.StartsWith("<i>", StringComparison.Ordinal))
             {
@@ -1096,52 +1157,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                 word = word.Remove(word.Length - 4, 4);
             }
 
-            var preWordPost = pre + word + post;
-            if (word.Length == 0)
-            {
-                return preWordPost;
-            }
-
-            if (word.Contains('?'))
-            {
-                var match = RegExQuestion.Match(word);
-                if (match.Success)
-                {
-                    word = word.Insert(match.Index + 2, " ");
-                }
-            }
-
-            if (GetReplaceWord(pre, word, post, out var res))
-            {
-                return res;
-            }
-
-            var oldWord = word;
-            if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
-            {
-                // uppercase I or 1 inside lowercase fromWord (will be replaced by lowercase L)
-                word = FixIor1InsideLowerCaseWord(word);
-
-                // uppercase 0 inside lowercase fromWord (will be replaced by lowercase L)
-                word = Fix0InsideLowerCaseWord(word);
-
-                // uppercase I or 1 inside lowercase fromWord (will be replaced by lowercase L)
-                word = FixIor1InsideLowerCaseWord(word);
-
-                word = FixLowerCaseLInsideUpperCaseWord(word); // eg. SCARLETTl => SCARLETTI
-            }
-
-
-            if (oldWord != word)
-            {
-                // Retry fromWord replace list
-                if (GetReplaceWord(pre, word, post, out var result))
-                {
-                    return result;
-                }
-            }
-
-            return preWordPost;
+            return word;
         }
 
         private bool GetReplaceWord(string pre, string word, string post, out string result)

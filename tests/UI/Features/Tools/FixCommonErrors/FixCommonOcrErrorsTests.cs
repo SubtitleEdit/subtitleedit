@@ -62,6 +62,7 @@ public class FixCommonOcrErrorsTests : IDisposable
         public void SkipAll(string word) { }
         public void AddName(string name) { }
         public List<string> ReloadNames() => new();
+        public bool FillUnknownCharacters { get; set; }
     }
 
     private sealed class FakeCallbacks : IFixCallbacks
