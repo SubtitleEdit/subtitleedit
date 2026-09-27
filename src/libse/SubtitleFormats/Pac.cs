@@ -1639,7 +1639,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            secondaryCodePageIsMain = secondaryUse > (hasStory && firstIsSecondary ? (total - 1) : 0);
+            // A majority vote, not "any line": the record search above also matches an 0xFE time
+            // code byte now and then, and one such false hit flagged "secondary" decoded every
+            // line of a Greek or Cyrillic file with the Latin code page.
+            var storyLines = hasStory ? 1 : 0;
+            var secondaryLines = secondaryUse - (hasStory && firstIsSecondary ? 1 : 0);
+            secondaryCodePageIsMain = secondaryLines * 2 > total - storyLines;
         }
 
         private double _lastStartTotalSeconds;
