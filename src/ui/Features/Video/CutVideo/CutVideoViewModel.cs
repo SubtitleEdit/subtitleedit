@@ -43,6 +43,9 @@ public partial class CutVideoViewModel : ObservableObject
     [ObservableProperty] private double _selectedFrameRate;
     [ObservableProperty] private ObservableCollection<string> _videoExtensions;
     [ObservableProperty] private string _selectedVideoExtension;
+    [ObservableProperty] private ObservableCollection<VideoEncodingItem> _videoEncodings;
+    [ObservableProperty] private VideoEncodingItem _selectedVideoEncoding;
+    [ObservableProperty] private bool _isVideoEncodingVisible;
     [ObservableProperty] private string _progressText;
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private ObservableCollection<BurnInJobItem> _jobItems;
@@ -104,6 +107,7 @@ public partial class CutVideoViewModel : ObservableObject
     // The transition/fade settings of the run, completed with the input's frame rate and
     // duration once the job starts - the video and the cut subtitle are both built from them.
     private CutVideoTransitionOptions _generateTransitions = new();
+    private string _generateVideoEncoding = FfmpegGenerator.DefaultCutVideoEncoding;
 
     // ffmpeg's stdout and stderr readers both call OutputHandlerKeyFrames, on two thread pool
     // threads, while the waveform render thread walks AudioVisualizer.ShotChanges every frame.
@@ -150,6 +154,12 @@ public partial class CutVideoViewModel : ObservableObject
             ".wav",
         };
         SelectedVideoExtension = VideoExtensions[0];
+
+        // H.264/HEVC only - the output is .mkv/.mp4, and there is no quality/preset UI here for
+        // VP9 or ProRes. The GPU encoders are what make a cut from a large video fast.
+        VideoEncodings = new ObservableCollection<VideoEncodingItem>(
+            VideoEncodingItem.VideoEncodings.Where(p => IsCutVideoEncoding(p.Codec)));
+        SelectedVideoEncoding = VideoEncodings[0];
 
         CutTypes = new ObservableCollection<CutTypeDisplay>(CutTypeDisplay.GetCutTypes());
         SelectedCutType = CutTypes[0];
@@ -639,11 +649,11 @@ public partial class CutVideoViewModel : ObservableObject
 
         if (_generateCutType == CutType.MergeSegments)
         {
-            arguments = FfmpegGenerator.GetMergeSegmentsParameters(jobItem.InputVideoFileName, jobItem.OutputVideoFileName, _generateSegments, hasVideo, hasAudio, _generateTransitions);
+            arguments = FfmpegGenerator.GetMergeSegmentsParameters(jobItem.InputVideoFileName, jobItem.OutputVideoFileName, _generateSegments, hasVideo, hasAudio, _generateTransitions, _generateVideoEncoding);
         }
         else
         {
-            arguments = FfmpegGenerator.GetRemoveSegmentsParameters(jobItem.InputVideoFileName, jobItem.OutputVideoFileName, _generateSegments, hasVideo, hasAudio, _generateTransitions);
+            arguments = FfmpegGenerator.GetRemoveSegmentsParameters(jobItem.InputVideoFileName, jobItem.OutputVideoFileName, _generateSegments, hasVideo, hasAudio, _generateTransitions, _generateVideoEncoding);
         }
 
         _ffmpegProcess = FfmpegGenerator.GetProcess(arguments, OutputHandler);
@@ -1002,6 +1012,7 @@ public partial class CutVideoViewModel : ObservableObject
             .ToList();
         _generateCutType = SelectedCutType.CutType;
         _generateTransitions = MakeTransitionOptions();
+        _generateVideoEncoding = SelectedVideoEncoding.Codec;
 
         _doAbort = false;
         _log.Clear();
@@ -1021,6 +1032,7 @@ public partial class CutVideoViewModel : ObservableObject
             ? settings.CutDefaultVideoExtension
             : VideoExtensions[0];
         CutSubtitleToo = settings.CutAlsoCutSubtitle;
+        SelectedVideoEncoding = VideoEncodings.FirstOrDefault(p => p.Codec == settings.CutVideoEncoding) ?? VideoEncodings[0];
         TransitionEnabled = settings.CutTransitionEnabled;
         SelectedTransition = Transitions.FirstOrDefault(t => t.Code == settings.CutTransition) ?? Transitions[0];
         TransitionDuration = settings.CutTransitionDuration;
@@ -1036,6 +1048,7 @@ public partial class CutVideoViewModel : ObservableObject
         settings.CutType = SelectedCutType.CutType.ToString();
         settings.CutDefaultVideoExtension = SelectedVideoExtension;
         settings.CutAlsoCutSubtitle = CutSubtitleToo;
+        settings.CutVideoEncoding = SelectedVideoEncoding.Codec;
         settings.CutTransitionEnabled = TransitionEnabled;
         settings.CutTransition = SelectedTransition.Code;
         settings.CutTransitionDuration = TransitionDuration ?? settings.CutTransitionDuration;
@@ -1060,6 +1073,50 @@ public partial class CutVideoViewModel : ObservableObject
             FadeInSeconds = FadeInEnabled ? FadeInDuration ?? 0 : 0,
             FadeOutSeconds = FadeOutEnabled ? FadeOutDuration ?? 0 : 0,
         };
+    }
+
+    private static bool IsCutVideoEncoding(string codec)
+    {
+        return codec is "libx264" or "libx265" ||
+               codec.StartsWith("h264_", StringComparison.Ordinal) ||
+               codec.StartsWith("hevc_", StringComparison.Ordinal);
+    }
+
+    partial void OnSelectedVideoExtensionChanged(string value)
+    {
+        // .mp3/.wav take the audio-only branch - no video is encoded.
+        IsVideoEncodingVisible = value is not (".mp3" or ".wav");
+    }
+
+    /// <summary>
+    /// Hides the encoders the running ffmpeg was not built with (see
+    /// <see cref="VideoEncodingItem.GetUnsupported"/>), as burn-in does. The probe launches ffmpeg,
+    /// so it runs off the UI thread.
+    /// </summary>
+    private void RemoveUnsupportedVideoEncodings()
+    {
+        var available = FfmpegHelper.GetAvailableEncoders();
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            var unsupported = VideoEncodingItem.GetUnsupported(VideoEncodings, available);
+            if (unsupported.Count == 0)
+            {
+                return;
+            }
+
+            // Re-point the selection first: removing the selected item from the ComboBox's
+            // ItemsSource nulls its SelectedItem, and the TwoWay binding writes that back.
+            if (unsupported.Contains(SelectedVideoEncoding))
+            {
+                SelectedVideoEncoding = VideoEncodings.First(p => !unsupported.Contains(p));
+            }
+
+            foreach (var item in unsupported)
+            {
+                VideoEncodings.Remove(item);
+            }
+        });
     }
 
     partial void OnIsGeneratingChanged(bool value) => UpdatePreviewState();
@@ -1428,6 +1485,7 @@ public partial class CutVideoViewModel : ObservableObject
     internal void OnLoaded()
     {
         StartTitleTimer();
+        _ = Task.Run(RemoveUnsupportedVideoEncodings);
         _updateAudioVisualizer = true;
         UiUtil.RestoreWindowPosition(Window);
     }

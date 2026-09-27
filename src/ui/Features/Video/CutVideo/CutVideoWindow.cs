@@ -51,6 +51,15 @@ public class CutVideoWindow : Window
             nameof(vm.SelectedVideoExtension)
         ).WithMarginRight(10);
 
+        var labelVideoEncoding = UiUtil.MakeLabel(Se.Language.General.Encoding);
+        labelVideoEncoding[!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsVideoEncodingVisible));
+        var comboBoxVideoEncoding = UiUtil.MakeComboBox(
+            vm.VideoEncodings,
+            vm,
+            nameof(vm.SelectedVideoEncoding)
+        ).WithMarginRight(10);
+        comboBoxVideoEncoding[!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsVideoEncodingVisible));
+
         var checkBoxCutSubtitle = UiUtil.MakeCheckBox(Se.Language.Video.CutVideoAlsoCutSubtitle, vm, nameof(vm.CutSubtitleToo))
             .WithMarginRight(10);
         checkBoxCutSubtitle[!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsCutSubtitleVisible));
@@ -65,6 +74,8 @@ public class CutVideoWindow : Window
             comboBoxCutType,
             labelVideoExtension,
             comboBoxVideoExtension,
+            labelVideoEncoding,
+            comboBoxVideoEncoding,
             buttonGenerate,
             UiUtil.MakeButtonCancel(vm.CancelCommand)
         );

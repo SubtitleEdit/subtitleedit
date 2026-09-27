@@ -1544,9 +1544,10 @@ public class FfmpegGenerator
     List<SubtitleLineViewModel> segments,
     bool hasVideo,
     bool hasAudio = true,
-    CutVideoTransitionOptions? transitions = null)
+    CutVideoTransitionOptions? transitions = null,
+    string videoEncoding = DefaultCutVideoEncoding)
     {
-        return GetCutParameters(inputFileName, outputFileName, GetMergeRanges(segments), hasVideo, hasAudio, transitions);
+        return GetCutParameters(inputFileName, outputFileName, GetMergeRanges(segments), hasVideo, hasAudio, transitions, videoEncoding);
     }
 
     /// <summary>The ranges "merge segments" keeps: the segments themselves, in the order given.</summary>
@@ -1563,9 +1564,10 @@ public class FfmpegGenerator
     List<SubtitleLineViewModel> segments,
     bool hasVideo,
     bool hasAudio = true,
-    CutVideoTransitionOptions? transitions = null)
+    CutVideoTransitionOptions? transitions = null,
+    string videoEncoding = DefaultCutVideoEncoding)
     {
-        return GetCutParameters(inputFileName, outputFileName, GetRemoveRanges(segments), hasVideo, hasAudio, transitions);
+        return GetCutParameters(inputFileName, outputFileName, GetRemoveRanges(segments), hasVideo, hasAudio, transitions, videoEncoding);
     }
 
     /// <summary>
@@ -1628,7 +1630,7 @@ public class FfmpegGenerator
             InputDurationSeconds = transitions.InputDurationSeconds,
         };
 
-        return GetCutParameters(inputFileName, outputFileName, ranges, hasVideo, hasAudio, previewOptions);
+        return GetCutParameters(inputFileName, outputFileName, ranges, hasVideo, hasAudio, previewOptions, DefaultCutVideoEncoding);
     }
 
     private static string GetCutParameters(
@@ -1637,18 +1639,19 @@ public class FfmpegGenerator
         List<(double? Start, double? End)> ranges,
         bool hasVideo,
         bool hasAudio,
-        CutVideoTransitionOptions? transitions)
+        CutVideoTransitionOptions? transitions,
+        string videoEncoding)
     {
         if (transitions is { UsesPlan: true })
         {
             var plan = CutVideoTransitionPlan.Create(ranges, transitions);
             if (plan.Ranges.Count > 0)
             {
-                return GetTransitionSegmentsParameters(inputFileName, outputFileName, plan, hasVideo, hasAudio);
+                return GetTransitionSegmentsParameters(inputFileName, outputFileName, plan, hasVideo, hasAudio, videoEncoding);
             }
         }
 
-        return GetConcatSegmentsParameters(inputFileName, outputFileName, ranges, hasVideo, hasAudio);
+        return GetConcatSegmentsParameters(inputFileName, outputFileName, ranges, hasVideo, hasAudio, videoEncoding);
     }
 
     /// <summary>
@@ -1672,7 +1675,8 @@ public class FfmpegGenerator
         string outputFileName,
         List<(double? Start, double? End)> ranges,
         bool hasVideo,
-        bool hasAudio)
+        bool hasAudio,
+        string videoEncoding)
     {
         // The graph used to reference "[0:a]" no matter what, so a video without an audio track
         // (a screen recording, a blank video made here) failed with "Stream specifier ':a' ...
@@ -1747,7 +1751,7 @@ public class FfmpegGenerator
                             string.Join("", concatInputs) +
                             $"concat=n={ranges.Count}:v={(hasVideo ? 1 : 0)}:a={(hasAudio ? 1 : 0)}{outputLabels}";
 
-        return GetCutEncodingParameters(inputArgs, outputFileName, filterComplex, hasVideo, hasAudio);
+        return GetCutEncodingParameters(inputArgs, outputFileName, filterComplex, hasVideo, hasAudio, videoEncoding);
     }
 
     private static string GetSeekInputArgs(string inputFileName, double start, double? end, Func<double, string> format)
@@ -1778,7 +1782,8 @@ public class FfmpegGenerator
         string outputFileName,
         CutVideoTransitionPlan plan,
         bool hasVideo,
-        bool hasAudio)
+        bool hasAudio,
+        string videoEncoding)
     {
         if (!hasVideo && !hasAudio)
         {
@@ -1893,10 +1898,10 @@ public class FfmpegGenerator
             filterParts.Add($"[{audioLabel}]{(audioFades.Count > 0 ? string.Join(",", audioFades) : "anull")}[outa]");
         }
 
-        return GetCutEncodingParameters($"-i \"{inputFileName}\" ", outputFileName, string.Join("; ", filterParts), hasVideo, hasAudio);
+        return GetCutEncodingParameters($"-i \"{inputFileName}\" ", outputFileName, string.Join("; ", filterParts), hasVideo, hasAudio, videoEncoding);
     }
 
-    private static string GetCutEncodingParameters(string inputArgs, string outputFileName, string filterComplex, bool hasVideo, bool hasAudio)
+    private static string GetCutEncodingParameters(string inputArgs, string outputFileName, string filterComplex, bool hasVideo, bool hasAudio, string videoEncoding)
     {
         var arguments =
             "-y " + inputArgs +
@@ -1914,7 +1919,7 @@ public class FfmpegGenerator
 
         if (hasVideo)
         {
-            arguments += "-c:v libx264 -preset veryfast -crf 23 ";
+            arguments += GetCutVideoEncoding(videoEncoding) + " ";
             if (hasAudio)
             {
                 arguments += "-c:a aac -b:a 192k ";
@@ -1930,6 +1935,34 @@ public class FfmpegGenerator
         arguments += $"\"{outputFileName}\"";
 
         return arguments.Trim();
+    }
+
+    public const string DefaultCutVideoEncoding = "libx264";
+
+    /// <summary>
+    /// Video encoder settings for "Cut video". There is no quality UI in the dialog, so every
+    /// encoder gets a fixed, visually good setting in its own terms - CRF for x264/x265, CQ for
+    /// NVENC, ICQ for QSV, constant QP for AMF and a quality value for VideoToolbox. The HEVC
+    /// encoders get the hvc1 tag, without which the Apple stack refuses to play the mp4/mov.
+    /// </summary>
+    internal static string GetCutVideoEncoding(string videoEncoding)
+    {
+        var settings = videoEncoding switch
+        {
+            "libx265" => "-c:v libx265 -preset veryfast -crf 26",
+            "h264_nvenc" or "hevc_nvenc" => $"-c:v {videoEncoding} -preset p4 -rc vbr -cq 23 -b:v 0",
+            "h264_qsv" or "hevc_qsv" => $"-c:v {videoEncoding} -preset veryfast -global_quality 23",
+            "h264_amf" or "hevc_amf" => $"-c:v {videoEncoding} -quality balanced -rc cqp -qp_i 22 -qp_p 24",
+            "h264_videotoolbox" or "hevc_videotoolbox" => $"-c:v {videoEncoding} -q:v 65",
+            _ => "-c:v libx264 -preset veryfast -crf 23",
+        };
+
+        if (videoEncoding == "libx265" || videoEncoding.StartsWith("hevc_", StringComparison.Ordinal))
+        {
+            settings += " -tag:v hvc1";
+        }
+
+        return settings;
     }
 
     /// <summary>
