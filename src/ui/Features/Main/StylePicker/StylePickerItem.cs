@@ -52,6 +52,7 @@ public partial class StylePickerItem : ObservableObject
 
     // Number key follows the position; dimmed once the number keys type into the filter box.
     [ObservableProperty] private string _numberText;
+    [ObservableProperty] private string _shortcutText;
     [ObservableProperty] private bool _isNumberKeyActive;
 
     public StylePickerItem(SsaStyle style, int lineCount, bool isCurrent, bool isNew, bool isSsa)
@@ -108,6 +109,7 @@ public partial class StylePickerItem : ObservableObject
         PreviewBackground = IsBoxBorderStyle(style.BorderStyle) ? ShadowBrush : VideoBackgroundBrush;
 
         _numberText = string.Empty;
+        _shortcutText = string.Empty;
         _isNumberKeyActive = true;
     }
 
