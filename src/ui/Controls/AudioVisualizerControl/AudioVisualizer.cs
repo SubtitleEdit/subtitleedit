@@ -67,6 +67,9 @@ public class AudioVisualizer : Control
     public static readonly StyledProperty<Color> WaveformShotChangeColorProperty =
        AvaloniaProperty.Register<AudioVisualizer, Color>(nameof(WaveformShotChangeColor));
 
+    public static readonly StyledProperty<Color> WaveformGridColorProperty =
+       AvaloniaProperty.Register<AudioVisualizer, Color>(nameof(WaveformGridColor));
+
     public static readonly StyledProperty<Color> WaveformParagraphLeftColorProperty =
         AvaloniaProperty.Register<AudioVisualizer, Color>(nameof(WaveformParagraphLeftColor));
 
@@ -178,6 +181,17 @@ public class AudioVisualizer : Control
             _paintShotChangeThickPen = new Pen(new SolidColorBrush(value), 2);
             _paintShotChangeThinPen = new Pen(new SolidColorBrush(value), 1);
             SetValue(WaveformShotChangeColorProperty, value);
+        }
+    }
+
+    public Color WaveformGridColor
+    {
+        get => GetValue(WaveformGridColorProperty);
+        set
+        {
+            _paintGridLines = new Pen(new SolidColorBrush(value), 1);
+            SetValue(WaveformGridColorProperty, value);
+            InvalidateVisual();
         }
     }
 
@@ -453,7 +467,7 @@ public class AudioVisualizer : Control
     private Pen _paintShotChangeThickPen = new Pen(Brushes.AntiqueWhite, 2);
     private Pen _paintShotChangeThinPen = new Pen(Brushes.AntiqueWhite, 1);
 
-    private readonly Pen _paintGridLines = new Pen(Brushes.DarkGray, 0.2);
+    private Pen _paintGridLines = new Pen(new SolidColorBrush(Color.FromArgb(90, 169, 169, 169)), 1);
     private readonly IBrush _mouseOverBrush = new SolidColorBrush(Color.FromArgb(50, 255, 255, 0));
 
     // Cached drawing resources for fancy waveform

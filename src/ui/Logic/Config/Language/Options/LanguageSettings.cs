@@ -209,6 +209,7 @@ public class LanguageSettings
     public string ShowAssaLayer { get; set; }
     public string WaveformCursorColor { get; set; }
     public string WaveformShotChangeColor { get; set; }
+    public string WaveformGridColor { get; set; }
     public string WaveformParagraphLeftColor { get; set; }
     public string WaveformParagraphRightColor { get; set; }
     public string WaveformFancyHighColor { get; set; }
@@ -556,6 +557,7 @@ public class LanguageSettings
         ShowAssaLayer = "Show ASSA layer box";
         WaveformCursorColor = "Waveform cursor/head color";
         WaveformShotChangeColor = "Waveform shot change color";
+        WaveformGridColor = "Waveform grid color";
         WaveformParagraphLeftColor = "Waveform left border color";
         WaveformParagraphRightColor = "Waveform right border color";
         WaveformFancyHighColor = "Waveform fancy high color";

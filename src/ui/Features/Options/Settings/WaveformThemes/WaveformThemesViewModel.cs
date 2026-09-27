@@ -33,6 +33,7 @@ public partial class WaveformThemesViewModel : ObservableObject
     [ObservableProperty] private Color _paragraphLeftColor;
     [ObservableProperty] private Color _paragraphRightColor;
     [ObservableProperty] private Color _fancyHighColor;
+    [ObservableProperty] private Color _gridColor;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -48,7 +49,8 @@ public partial class WaveformThemesViewModel : ObservableObject
         Color textColor, Color waveformColor, Color backgroundColor,
         Color selectedColor, Color cursorColor, Color shotChangeColor,
         Color paragraphBackgroundColor, Color paragraphSelectedBackgroundColor,
-        Color paragraphLeftColor, Color paragraphRightColor, Color fancyHighColor)
+        Color paragraphLeftColor, Color paragraphRightColor, Color fancyHighColor,
+        Color gridColor)
     {
         Themes.Clear();
         Themes.Add(MakeDarkTheme());
@@ -75,6 +77,7 @@ public partial class WaveformThemesViewModel : ObservableObject
             ParagraphLeftColor = paragraphLeftColor,
             ParagraphRightColor = paragraphRightColor,
             FancyHighColor = fancyHighColor,
+            GridColor = gridColor,
         });
 
         TextColor = textColor;
@@ -88,6 +91,7 @@ public partial class WaveformThemesViewModel : ObservableObject
         ParagraphLeftColor = paragraphLeftColor;
         ParagraphRightColor = paragraphRightColor;
         FancyHighColor = fancyHighColor;
+        GridColor = gridColor;
 
         SelectedTheme = Themes.Last();
     }
@@ -110,6 +114,7 @@ public partial class WaveformThemesViewModel : ObservableObject
         ParagraphLeftColor = value.ParagraphLeftColor;
         ParagraphRightColor = value.ParagraphRightColor;
         FancyHighColor = value.FancyHighColor;
+        GridColor = value.GridColor;
     }
 
     [RelayCommand]
@@ -146,6 +151,7 @@ public partial class WaveformThemesViewModel : ObservableObject
             ParagraphLeftColor = ParagraphLeftColor,
             ParagraphRightColor = ParagraphRightColor,
             FancyHighColor = FancyHighColor,
+            GridColor = GridColor,
         };
 
         Themes.Add(theme);
@@ -287,7 +293,8 @@ public partial class WaveformThemesViewModel : ObservableObject
             paragraphSelectedBackgroundColor: ParagraphSelectedBackgroundColor,
             paragraphLeftColor: ParagraphLeftColor,
             paragraphRightColor: ParagraphRightColor,
-            fancyHighColor: FancyHighColor);
+            fancyHighColor: FancyHighColor,
+            gridColor: GridColor);
 
         try
         {
@@ -315,6 +322,7 @@ public partial class WaveformThemesViewModel : ObservableObject
         ParagraphLeftColor = Color.FromArgb(90, 0, 255, 0),
         ParagraphRightColor = Color.FromArgb(90, 255, 0, 0),
         FancyHighColor = Colors.Orange,
+        GridColor = Color.FromArgb(90, 169, 169, 169),
     };
 
     private static WaveformThemeDisplay MakeLightTheme() => new()
@@ -331,6 +339,7 @@ public partial class WaveformThemesViewModel : ObservableObject
         ParagraphLeftColor = Color.FromArgb(90, 0, 160, 0),
         ParagraphRightColor = Color.FromArgb(90, 200, 0, 0),
         FancyHighColor = Colors.DarkOrange,
+        GridColor = Color.FromArgb(90, 80, 80, 80),
     };
 
     private static WaveformThemeDisplay MakeHighContrastTheme() => new()
@@ -347,6 +356,7 @@ public partial class WaveformThemesViewModel : ObservableObject
         ParagraphLeftColor = Color.FromArgb(90, 0, 255, 255),
         ParagraphRightColor = Color.FromArgb(90, 255, 0, 255),
         FancyHighColor = Colors.Yellow,
+        GridColor = Color.FromArgb(140, 255, 255, 255),
     };
 
     private static WaveformThemeDisplay MakeOceanBlueTheme() => new()
@@ -363,6 +373,7 @@ public partial class WaveformThemesViewModel : ObservableObject
         ParagraphLeftColor = Color.FromArgb(90, 0, 200, 0),
         ParagraphRightColor = Color.FromArgb(90, 200, 100, 0),
         FancyHighColor = Colors.Cyan,
+        GridColor = Color.FromArgb(90, 120, 170, 220),
     };
 
     private static WaveformThemeDisplay MakeWarmSunsetTheme() => new()
@@ -379,6 +390,7 @@ public partial class WaveformThemesViewModel : ObservableObject
         ParagraphLeftColor = Color.FromArgb(90, 255, 200, 0),
         ParagraphRightColor = Color.FromArgb(90, 200, 50, 0),
         FancyHighColor = Colors.Orange,
+        GridColor = Color.FromArgb(90, 220, 160, 110),
     };
 
     private static WaveformThemeDisplay MakeForestTheme() => new()
@@ -395,6 +407,7 @@ public partial class WaveformThemesViewModel : ObservableObject
         ParagraphLeftColor = Color.FromArgb(100, 0, 200, 80),
         ParagraphRightColor = Color.FromArgb(100, 180, 120, 0),
         FancyHighColor = Color.FromArgb(255, 120, 255, 80),
+        GridColor = Color.FromArgb(90, 140, 200, 140),
     };
 
     private static WaveformThemeDisplay MakeMidnightPurpleTheme() => new()
@@ -411,6 +424,7 @@ public partial class WaveformThemesViewModel : ObservableObject
         ParagraphLeftColor = Color.FromArgb(100, 100, 60, 200),
         ParagraphRightColor = Color.FromArgb(100, 200, 60, 120),
         FancyHighColor = Color.FromArgb(255, 220, 120, 255),
+        GridColor = Color.FromArgb(90, 170, 140, 220),
     };
 
     private static WaveformThemeDisplay MakeRetroAmberTheme() => new()
@@ -427,6 +441,7 @@ public partial class WaveformThemesViewModel : ObservableObject
         ParagraphLeftColor = Color.FromArgb(100, 200, 160, 0),
         ParagraphRightColor = Color.FromArgb(100, 200, 80, 0),
         FancyHighColor = Color.FromArgb(255, 255, 220, 60),
+        GridColor = Color.FromArgb(90, 200, 150, 60),
     };
 
     private static WaveformThemeDisplay MakeIceTheme() => new()
@@ -443,6 +458,7 @@ public partial class WaveformThemesViewModel : ObservableObject
         ParagraphLeftColor = Color.FromArgb(100, 100, 200, 255),
         ParagraphRightColor = Color.FromArgb(100, 200, 100, 180),
         FancyHighColor = Color.FromArgb(255, 180, 240, 255),
+        GridColor = Color.FromArgb(90, 160, 200, 240),
     };
 
     private static WaveformThemeDisplay MakeSolarizedDarkTheme() => new()
@@ -459,6 +475,7 @@ public partial class WaveformThemesViewModel : ObservableObject
         ParagraphLeftColor = Color.FromArgb(100, 133, 153, 0),
         ParagraphRightColor = Color.FromArgb(100, 211, 54, 130),
         FancyHighColor = Color.FromArgb(255, 203, 75, 22),
+        GridColor = Color.FromArgb(110, 88, 110, 117),
     };
 }
 
@@ -481,12 +498,16 @@ internal class WaveformThemeDto
     public string ParagraphRightColor { get; set; } = "#5AFF0000";
     public string FancyHighColor { get; set; } = "#FFFFA500";
 
+    // Theme files exported before the grid color existed have no GridColor, so they get the default.
+    public string GridColor { get; set; } = "#5AA9A9A9";
+
     public static WaveformThemeDto FromColors(
         string name,
         Color textColor, Color waveformColor, Color backgroundColor,
         Color selectedColor, Color cursorColor, Color shotChangeColor,
         Color paragraphBackgroundColor, Color paragraphSelectedBackgroundColor,
-        Color paragraphLeftColor, Color paragraphRightColor, Color fancyHighColor) => new()
+        Color paragraphLeftColor, Color paragraphRightColor, Color fancyHighColor,
+        Color gridColor) => new()
         {
             Name = name,
             TextColor = textColor.FromColorToHex(),
@@ -500,6 +521,7 @@ internal class WaveformThemeDto
             ParagraphLeftColor = paragraphLeftColor.FromColorToHex(),
             ParagraphRightColor = paragraphRightColor.FromColorToHex(),
             FancyHighColor = fancyHighColor.FromColorToHex(),
+            GridColor = gridColor.FromColorToHex(),
         };
 
     public WaveformThemeDisplay ToThemeDisplay(string fallbackName) => new()
@@ -516,6 +538,7 @@ internal class WaveformThemeDto
         ParagraphLeftColor = ParseColor(ParagraphLeftColor),
         ParagraphRightColor = ParseColor(ParagraphRightColor),
         FancyHighColor = ParseColor(FancyHighColor),
+        GridColor = ParseColor(GridColor),
     };
 
     private static Color ParseColor(string hex)

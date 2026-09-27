@@ -238,6 +238,7 @@ public static class Se4SetupApplier
         w.WaveformTextColor = Colors.Gray.FromColorToHex();
         w.WaveformCursorColor = Colors.Cyan.FromColorToHex();
         w.WaveformShotChangeColor = Colors.AntiqueWhite.FromColorToHex();
+        w.WaveformGridColor = Color.FromArgb(90, 169, 169, 169).FromColorToHex();
 
         // SE 4 drew the paragraph start marker (left) green and the end marker
         // (right) red.

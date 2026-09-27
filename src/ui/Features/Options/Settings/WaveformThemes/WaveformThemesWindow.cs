@@ -69,6 +69,7 @@ public class WaveformThemesWindow : Window
             (Se.Language.Options.Settings.WaveformParagraphLeftColor, nameof(vm.ParagraphLeftColor)),
             (Se.Language.Options.Settings.WaveformParagraphRightColor, nameof(vm.ParagraphRightColor)),
             (Se.Language.Options.Settings.WaveformFancyHighColor, nameof(vm.FancyHighColor)),
+            (Se.Language.Options.Settings.WaveformGridColor, nameof(vm.GridColor)),
         };
 
         var maxRows = Math.Max(leftColors.Length, rightColors.Length);

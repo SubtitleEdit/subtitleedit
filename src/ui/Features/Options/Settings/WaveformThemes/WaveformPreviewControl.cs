@@ -28,6 +28,9 @@ public class WaveformPreviewControl : Control
     // Shot-change line positions (as fractions of width)
     private static readonly double[] ShotChangeFractions = [0.18, 0.54, 0.78];
 
+    // Distance between the grid lines, in pixels
+    private const double GridSpacing = 20;
+
     // Cursor position fraction
     private const double CursorFraction = 0.35;
 
@@ -78,6 +81,18 @@ public class WaveformPreviewControl : Control
         using (context.PushClip(new Rect(pLeft + 2, 0, pWidth - 4, height)))
         {
             context.DrawText(ft, new Point(pLeft + 4, height * 0.15));
+        }
+
+        // ── Grid lines ────────────────────────────────────────────────
+        var gridPen = new Pen(new SolidColorBrush(_vm.GridColor), 1);
+        for (var x = GridSpacing; x < width; x += GridSpacing)
+        {
+            context.DrawLine(gridPen, new Point(x, 0), new Point(x, height));
+        }
+
+        for (var y = GridSpacing; y < height; y += GridSpacing)
+        {
+            context.DrawLine(gridPen, new Point(0, y), new Point(width, y));
         }
 
         // ── Waveform lines ────────────────────────────────────────────

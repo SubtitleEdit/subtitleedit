@@ -82,6 +82,7 @@ public class InitWaveform
             vm.AudioVisualizer.WaveformSelectedColor = settings.WaveformSelectedColor.FromHexToColor();
             vm.AudioVisualizer.WaveformCursorColor = settings.WaveformCursorColor.FromHexToColor();
             vm.AudioVisualizer.WaveformShotChangeColor = settings.WaveformShotChangeColor.FromHexToColor();
+            vm.AudioVisualizer.WaveformGridColor = settings.WaveformGridColor.FromHexToColor();
             vm.AudioVisualizer.WaveformParagraphLeftColor = settings.WaveformParagraphLeftColor.FromHexToColor();
             vm.AudioVisualizer.WaveformParagraphRightColor = settings.WaveformParagraphRightColor.FromHexToColor();
             vm.AudioVisualizer.WaveformFancyHighColor = settings.WaveformFancyHighColor.FromHexToColor();

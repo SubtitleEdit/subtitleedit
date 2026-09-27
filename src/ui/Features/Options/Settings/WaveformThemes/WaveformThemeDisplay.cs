@@ -16,6 +16,7 @@ public class WaveformThemeDisplay
     public Color ParagraphLeftColor { get; set; }
     public Color ParagraphRightColor { get; set; }
     public Color FancyHighColor { get; set; }
+    public Color GridColor { get; set; }
 
     public override string ToString() => Name;
 }
