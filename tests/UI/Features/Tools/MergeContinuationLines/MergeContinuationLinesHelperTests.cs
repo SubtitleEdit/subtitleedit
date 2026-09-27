@@ -62,4 +62,47 @@ public class MergeContinuationLinesHelperTests
 
         Assert.Empty(candidates);
     }
+
+    [Theory]
+    [InlineData("Ich weiß", "nicht, was du meinst.")] // ß is not in the configured alphabet
+    [InlineData("Wir treffen uns um 10", "Uhr am Bahnhof.")]
+    [InlineData("Er sagte:", "Komm sofort nach Hause.")]
+    [InlineData("Er sagte \"komm\"", "und ging dann weg.")]
+    [InlineData("Er schrie „Hilfe“", "und rannte weg.")]
+    [InlineData("<i>Das ist die Straße</i>", "<i>nach Hause.</i>")]
+    [InlineData("זה לא", "מה שחשבתי.")]
+    [InlineData("I was going to say...", "never mind.")]
+    public void Detect_LineWithoutSentenceEnding_IsMerged(string text1, string text2)
+    {
+        var subtitles = new List<SubtitleLineViewModel>
+        {
+            MakeSubtitle(text1, 1.00, 2.00),
+            MakeSubtitle(text2, 2.10, 3.00),
+        };
+
+        var candidates = MergeContinuationLinesHelper.Detect(subtitles, "de", maxGapMs: 500, maxTotalLength: 200);
+
+        Assert.Single(candidates);
+    }
+
+    [Theory]
+    [InlineData("Das ist gut.", "Ja, sehr gut.")]
+    [InlineData("Wirklich?", "Ja.")]
+    [InlineData("Hör auf!", "Sofort.")]
+    [InlineData("Er sagte \"komm.\"", "Dann ging er.")]
+    [InlineData("(lacht)", "Das ist lustig.")]
+    [InlineData("Ich weiß", "- Nein.")]
+    [InlineData("♪ La la la ♪", "Was war das")]
+    public void Detect_SentenceEndingOrDialogOrMusic_NotMerged(string text1, string text2)
+    {
+        var subtitles = new List<SubtitleLineViewModel>
+        {
+            MakeSubtitle(text1, 1.00, 2.00),
+            MakeSubtitle(text2, 2.10, 3.00),
+        };
+
+        var candidates = MergeContinuationLinesHelper.Detect(subtitles, "de", maxGapMs: 500, maxTotalLength: 200);
+
+        Assert.Empty(candidates);
+    }
 }
