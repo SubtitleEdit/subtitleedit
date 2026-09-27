@@ -48,9 +48,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
             var fixAction = Language.FixText;
             var fixCount = 0;
-            // Unknown-word guessing (which splits words it reads as two words run together) is this
+            // Unknown-word guessing (heuristic word splitting and letter-substitution guesses) is this
             // tool's own setting and is off by default - on a normal subtitle it breaks far more words
             // than it fixes (#12441). It used to follow the OCR window's setting, which defaults on.
+            // Splitting run-together words via the word split list runs either way, as in SE4.
             var doTryToGuessUnknownWords = Se.Settings.Tools.FixCommonErrors.TryToGuessUnknownWords;
             for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
