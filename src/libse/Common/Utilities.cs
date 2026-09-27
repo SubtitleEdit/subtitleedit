@@ -1480,7 +1480,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static readonly string LowercaseLettersWithNumbers = LowercaseLetters + "0123456789";
         public static readonly string AllLetters = UppercaseLetters + LowercaseLetters;
 
-        // Non-letter chars that continue a line; letters are checked with char.IsLetter, as the
+        // Other chars that continue a line; letters and digits are checked with char.IsLetter/IsDigit, as the
         // configured alphabet misses e.g. "ß", "Š", Hebrew, Arabic and Thai.
         private static readonly string LineContinuationEndChars = "…,-$%";
 
@@ -3497,6 +3497,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     var lastChar = s[s.Length - 1];
                     var isLineContinuation = s.EndsWith("...", StringComparison.Ordinal) ||
                                               IsLetterOrCombiningMark(lastChar) ||
+                                              char.IsDigit(lastChar) ||
                                               LineContinuationEndChars.IndexOf(lastChar) >= 0 ||
                                               (CalcCjk.IsCjk(lastChar) && !IsCjkSentenceEnding(lastChar));
 

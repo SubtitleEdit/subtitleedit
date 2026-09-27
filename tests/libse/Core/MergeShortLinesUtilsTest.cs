@@ -47,6 +47,9 @@ public class MergeShortLinesUtilsTest
     [InlineData("Příliš")]
     [InlineData("זה לא")]
     [InlineData("ไม่รู้")]
+    [InlineData("Wir treffen uns um 10")]
+    [InlineData("See you in room 2B at 3")]
+    [InlineData("午後３")] // fullwidth digit
     [InlineData("Where are you,")]
     public void QualifiesForMergeOnlyContinuationLinesAnyLetter(string text)
     {
