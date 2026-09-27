@@ -37,6 +37,7 @@ public class SeVideo
     public bool VideoPlayerDisplayTimeLeft { get; set; }
     public string CutDefaultVideoExtension { get; set; }
     public bool CutAlsoCutSubtitle { get; set; }
+    public string CutVideoEncoding { get; set; } = Logic.Media.FfmpegGenerator.DefaultCutVideoEncoding;
     public bool CutTransitionEnabled { get; set; }
     public string CutTransition { get; set; } = "fade";
     public double CutTransitionDuration { get; set; } = 0.5;

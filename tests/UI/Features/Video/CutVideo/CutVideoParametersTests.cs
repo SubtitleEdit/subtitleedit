@@ -124,4 +124,29 @@ public class CutVideoParametersTests
         Assert.Contains("[0:a]atrim=start=390:end=395,asetpts=PTS-STARTPTS[a39]", args);
         Assert.DoesNotContain("[1:v]", args);
     }
+
+    [Theory]
+    [InlineData("libx264", "-c:v libx264 -preset veryfast -crf 23 ")]
+    [InlineData("libx265", "-c:v libx265 -preset veryfast -crf 26 -tag:v hvc1 ")]
+    [InlineData("h264_nvenc", "-c:v h264_nvenc -preset p4 -rc vbr -cq 23 -b:v 0 ")]
+    [InlineData("hevc_nvenc", "-c:v hevc_nvenc -preset p4 -rc vbr -cq 23 -b:v 0 -tag:v hvc1 ")]
+    [InlineData("h264_qsv", "-c:v h264_qsv -preset veryfast -global_quality 23 ")]
+    [InlineData("h264_amf", "-c:v h264_amf -quality balanced -rc cqp -qp_i 22 -qp_p 24 ")]
+    [InlineData("h264_videotoolbox", "-c:v h264_videotoolbox -q:v 65 ")]
+    public void VideoEncoderIsTheChosenOne(string videoEncoding, string expected)
+    {
+        var merge = FfmpegGenerator.GetMergeSegmentsParameters("in.mp4", "out.mp4", MakeSegments((1, 2)), hasVideo: true, videoEncoding: videoEncoding);
+        var remove = FfmpegGenerator.GetRemoveSegmentsParameters("in.mp4", "out.mp4", MakeSegments((1, 2)), hasVideo: true, videoEncoding: videoEncoding);
+
+        Assert.Contains(expected, merge);
+        Assert.Contains(expected, remove);
+    }
+
+    [Fact]
+    public void AudioOnly_IgnoresTheVideoEncoder()
+    {
+        var args = FfmpegGenerator.GetMergeSegmentsParameters("in.wav", "out.wav", MakeSegments((1, 2)), hasVideo: false, videoEncoding: "h264_nvenc");
+
+        Assert.DoesNotContain("-c:v", args);
+    }
 }
