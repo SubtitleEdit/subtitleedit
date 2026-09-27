@@ -423,7 +423,8 @@ public class OcrSubtitleBdn : IOcrSubtitle
     {
         if (_screenSize == null)
         {
-            _screenSize = BdnXml.TryGetVideoSize(_bdnXmlSubtitle.Header, out var width, out var height)
+            _screenSize = BdnXml.TryGetVideoSize(_bdnXmlSubtitle.Header, out var width, out var height) ||
+                          TimedImagesXml.TryGetVideoSize(_bdnXmlSubtitle.Header, out width, out height)
                 ? new SKSizeI(width, height)
                 : NoScreenSize;
         }

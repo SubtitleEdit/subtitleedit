@@ -24528,6 +24528,18 @@ public partial class MainViewModel :
                 }
             }
 
+            var timedImages = new TimedImagesXml();
+            if (timedImages.IsMine(lines, fileName))
+            {
+                var subtitle = new Subtitle();
+                timedImages.LoadSubtitle(subtitle, lines, fileName);
+                if (subtitle.Paragraphs.Count > 0)
+                {
+                    subtitle.OriginalFormat = timedImages;
+                    return subtitle;
+                }
+            }
+
             // Cheap content gate first - FinalCutProImage has no fast IsMine of its own.
             if (lines.Any(l => l.Contains("<xmeml", StringComparison.Ordinal)) &&
                 lines.Any(l => l.Contains("<pathurl>", StringComparison.Ordinal)))

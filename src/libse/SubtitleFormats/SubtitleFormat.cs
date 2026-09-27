@@ -837,6 +837,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 new Dost(),
                 new SeImageHtmlIndex(),
                 new BdnXml(),
+                new TimedImagesXml(),
                 new Wsb(),
                 new JsonTypeOnlyLoad1(),
                 new JsonTypeOnlyLoad2(),
