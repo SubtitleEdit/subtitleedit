@@ -169,6 +169,13 @@ public class SeGeneral
     public bool ShowColumnTeletext { get; set; }
     public bool TeletextAlignmentPreview { get; set; }
     public bool ShowColumnGap { get; set; }
+
+    /// <summary>
+    /// The "Shot in"/"Shot out" columns: signed distance from the cue to the nearest shot change,
+    /// colored by the beautify time codes profile's zones. Off by default.
+    /// </summary>
+    public bool ShowColumnShotIn { get; set; }
+    public bool ShowColumnShotOut { get; set; }
     public bool ShowColumnDuration { get; set; }
     public bool ShowColumnStyle { get; set; }
     public bool ShowColumnActor { get; set; }

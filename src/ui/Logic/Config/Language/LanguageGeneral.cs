@@ -568,6 +568,8 @@ public class LanguageGeneral
     public string ShadowColor { get; set; }
     public string ShadowWidth { get; set; }
     public string ShiftLineBy { get; set; } = string.Empty;
+    public string ShotIn { get; set; } = string.Empty;
+    public string ShotOut { get; set; } = string.Empty;
     public string Shortcut { get; set; }
     public string Shortcuts { get; set; }
     public string Show { get; set; }
@@ -582,6 +584,8 @@ public class LanguageGeneral
     public string ShowLayerColumn { get; set; }
     public string ShowPreview { get; set; }
     public string ShowShotChangesList { get; set; }
+    public string ShowShotInColumn { get; set; } = string.Empty;
+    public string ShowShotOutColumn { get; set; } = string.Empty;
     public string ShowStyleColumn { get; set; }
     public string ShowTeletext { get; set; } = string.Empty;
     public string ShowTimeCodes { get; set; }
@@ -1399,6 +1403,8 @@ public class LanguageGeneral
         ShadowColor = "Shadow color";
         ShadowWidth = "Shadow width";
         ShiftLineBy = "Shift line by";
+        ShotIn = "Shot in";
+        ShotOut = "Shot out";
         Shortcut = "Shortcut";
         Shortcuts = "Shortcuts";
         Show = "Show";
@@ -1413,6 +1419,8 @@ public class LanguageGeneral
         ShowLayerColumn = "Show \"Layer\" column";
         ShowPreview = "Show preview";
         ShowShotChangesList = "Show shot changes list";
+        ShowShotInColumn = "Show \"Shot in\" column";
+        ShowShotOutColumn = "Show \"Shot out\" column";
         ShowStyleColumn = "Show \"Style\" column";
         ShowTeletext = "Show teletext column in list view";
         ShowTimeCodes = "Show time codes";

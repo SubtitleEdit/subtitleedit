@@ -583,6 +583,13 @@ public static partial class InitListViewAndEditBox
         });
         columnManager.Add(columnGap);
 
+        // Signed distance from the in/out cue to the nearest shot change (frames in frame mode,
+        // otherwise milliseconds), tinted when Beautify time codes would move the cue.
+        columnManager.Add(MakeShotChangeOffsetColumn(vm, SubtitleGridColumnKeys.ShotIn, Se.Language.General.ShotIn,
+            nameof(SubtitleLineViewModel.ShotInDisplay), nameof(SubtitleLineViewModel.ShotInBackgroundBrush), nameof(vm.ShowColumnShotIn)));
+        columnManager.Add(MakeShotChangeOffsetColumn(vm, SubtitleGridColumnKeys.ShotOut, Se.Language.General.ShotOut,
+            nameof(SubtitleLineViewModel.ShotOutDisplay), nameof(SubtitleLineViewModel.ShotOutBackgroundBrush), nameof(vm.ShowColumnShotOut)));
+
         var actorColumn = new SeTableViewColumn
         {
             Header = Se.Language.General.Actor,
@@ -880,6 +887,36 @@ public static partial class InitListViewAndEditBox
         };
         showGapMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridFlyoutHeaderVisible)) { Mode = BindingMode.OneWay });
         flyout.Items.Add(showGapMenuItem);
+
+        var showShotInMenuItem = new MenuItem
+        {
+            Header = Se.Language.General.ShowShotInColumn,
+            Command = vm.ToggleShowColumnShotInCommand,
+            DataContext = vm,
+            Icon = new Icon
+            {
+                Value = IconNames.CheckBold,
+                VerticalAlignment = VerticalAlignment.Center,
+                [!Visual.IsVisibleProperty] = new Binding(nameof(vm.ShowColumnShotIn)),
+            }
+        };
+        showShotInMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridFlyoutHeaderVisible)) { Mode = BindingMode.OneWay });
+        flyout.Items.Add(showShotInMenuItem);
+
+        var showShotOutMenuItem = new MenuItem
+        {
+            Header = Se.Language.General.ShowShotOutColumn,
+            Command = vm.ToggleShowColumnShotOutCommand,
+            DataContext = vm,
+            Icon = new Icon
+            {
+                Value = IconNames.CheckBold,
+                VerticalAlignment = VerticalAlignment.Center,
+                [!Visual.IsVisibleProperty] = new Binding(nameof(vm.ShowColumnShotOut)),
+            }
+        };
+        showShotOutMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridFlyoutHeaderVisible)) { Mode = BindingMode.OneWay });
+        flyout.Items.Add(showShotOutMenuItem);
 
         var showStyleMenuItem = new MenuItem
         {
@@ -2202,6 +2239,47 @@ public static partial class InitListViewAndEditBox
 
     // One entry of the "search via" submenu. The header and the visibility are bound rather than
     // set, so renaming a slot in Options > Shortcuts shows up without rebuilding the menu.
+    private static SeTableViewColumn MakeShotChangeOffsetColumn(
+        MainViewModel vm,
+        string key,
+        string header,
+        string textProperty,
+        string brushProperty,
+        string visibleProperty)
+    {
+        var column = new SeTableViewColumn
+        {
+            Header = header,
+            Tag = key,
+            Width = new GridLength(70),
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((value, nameScope) =>
+            {
+                var border = new Border
+                {
+                    Padding = new Thickness(4, 2),
+                    [!Border.BackgroundProperty] = new Binding(brushProperty) { Mode = BindingMode.OneWay },
+                };
+
+                border.Child = new TextBlock
+                {
+                    VerticalAlignment = VerticalAlignment.Center,
+                    [!TextBlock.TextProperty] = new Binding(textProperty) { Mode = BindingMode.OneWay },
+                };
+
+                return border;
+            })
+        };
+        column.Bind(SeTableViewColumn.IsVisibleProperty, new Binding(visibleProperty)
+        {
+            Mode = BindingMode.OneWay,
+            Source = vm,
+        });
+
+        return column;
+    }
+
     private static void AddCustomSearchMenuItem(MenuItem parent, MainViewModel vm, string textProperty, string visibleProperty, ICommand command)
     {
         var item = new MenuItem
@@ -2229,6 +2307,8 @@ public static partial class InitListViewAndEditBox
         public const string Style = "Style";
         public const string WebVttStyle = "WebVttStyle";
         public const string Gap = "Gap";
+        public const string ShotIn = "ShotIn";
+        public const string ShotOut = "ShotOut";
         public const string Actor = "Actor";
         public const string WebVttVoice = "WebVttVoice";
         public const string Cps = "Cps";

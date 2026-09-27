@@ -833,6 +833,64 @@ public partial class SubtitleLineViewModel : ObservableObject
         OnPropertyChanged(nameof(AccessibleErrorText));
     }
 
+    // Signed distance from the start/end to the nearest shot change, for the "Shot in"/"Shot out"
+    // columns (NaN = no shot change nearby). Set by MainViewModel.UpdateShotChangeOffsets, only
+    // while one of the columns is visible.
+    private double _shotInMs = double.NaN;
+    private int _shotInFrames;
+    private bool _shotInWarning;
+    private double _shotOutMs = double.NaN;
+    private int _shotOutFrames;
+    private bool _shotOutWarning;
+
+    public string ShotInDisplay => FormatShotChangeOffset(_shotInMs, _shotInFrames);
+    public string ShotOutDisplay => FormatShotChangeOffset(_shotOutMs, _shotOutFrames);
+    public IBrush ShotInBackgroundBrush => _shotInWarning ? _errorBrush : _transparentBrush;
+    public IBrush ShotOutBackgroundBrush => _shotOutWarning ? _errorBrush : _transparentBrush;
+
+    private static string FormatShotChangeOffset(double ms, int frames)
+    {
+        if (double.IsNaN(ms))
+        {
+            return string.Empty;
+        }
+
+        return Se.Settings.General.UseFrameMode
+            ? frames.ToString("+0;-0;0", CultureInfo.InvariantCulture)
+            : Math.Round(ms, MidpointRounding.AwayFromZero).ToString("+0;-0;0", CultureInfo.InvariantCulture);
+    }
+
+    public void SetShotChangeOffsets(double inMs, int inFrames, bool inWarning, double outMs, int outFrames, bool outWarning)
+    {
+        if (!_shotInMs.Equals(inMs) || _shotInFrames != inFrames)
+        {
+            _shotInMs = inMs;
+            _shotInFrames = inFrames;
+            OnPropertyChanged(nameof(ShotInDisplay));
+        }
+
+        if (_shotInWarning != inWarning)
+        {
+            _shotInWarning = inWarning;
+            OnPropertyChanged(nameof(ShotInBackgroundBrush));
+            OnPropertyChanged(nameof(AccessibleErrorText));
+        }
+
+        if (!_shotOutMs.Equals(outMs) || _shotOutFrames != outFrames)
+        {
+            _shotOutMs = outMs;
+            _shotOutFrames = outFrames;
+            OnPropertyChanged(nameof(ShotOutDisplay));
+        }
+
+        if (_shotOutWarning != outWarning)
+        {
+            _shotOutWarning = outWarning;
+            OnPropertyChanged(nameof(ShotOutBackgroundBrush));
+            OnPropertyChanged(nameof(AccessibleErrorText));
+        }
+    }
+
     public IBrush GapBackgroundBrush
     {
         get
@@ -883,6 +941,16 @@ public partial class SubtitleLineViewModel : ObservableObject
             else if (general.ColorGapTooShort && Gap < general.MinimumBetweenLines.GetMilliseconds())
             {
                 Add("gap too short");
+            }
+
+            if (_shotInWarning)
+            {
+                Add("start too close to shot change");
+            }
+
+            if (_shotOutWarning)
+            {
+                Add("end too close to shot change");
             }
 
             var durMsRounded = Math.Round(Duration.TotalMilliseconds, 3, MidpointRounding.AwayFromZero);
@@ -1109,6 +1177,10 @@ public partial class SubtitleLineViewModel : ObservableObject
         OnPropertyChanged(nameof(CpsBackgroundBrush));
         OnPropertyChanged(nameof(WpmBackgroundBrush));
         OnPropertyChanged(nameof(GapBackgroundBrush));
+        OnPropertyChanged(nameof(ShotInDisplay));
+        OnPropertyChanged(nameof(ShotOutDisplay));
+        OnPropertyChanged(nameof(ShotInBackgroundBrush));
+        OnPropertyChanged(nameof(ShotOutBackgroundBrush));
         OnPropertyChanged(nameof(PixelWidth));
         OnPropertyChanged(nameof(AccessibleErrorText));
 
@@ -1418,5 +1490,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         OnPropertyChanged(nameof(EndTime));
         OnPropertyChanged(nameof(Duration));
         OnPropertyChanged(nameof(Gap));
+        OnPropertyChanged(nameof(ShotInDisplay));
+        OnPropertyChanged(nameof(ShotOutDisplay));
     }
 }

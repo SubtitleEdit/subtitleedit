@@ -502,6 +502,71 @@ public class ShotChangesHelper
         return Math.Abs(candidateMs - targetMs) < maxDistanceMs ? candidateMs : null;
     }
 
+    /// <summary>
+    /// Where a cue sits relative to its nearest shot change, for the grid's "Shot in"/"Shot out"
+    /// columns: the signed distance cue minus cut (negative = the cue is before the cut), in
+    /// milliseconds and in frames. False when there are no shot changes or the nearest one is more
+    /// than <paramref name="maxDistanceFrames"/> away - a cue far from any cut has nothing to show.
+    /// <para>
+    /// Frames are counted the way the beautifier counts them (cue and cut each rounded to a frame,
+    /// then subtracted), so the column and <see cref="IsCueInShotChangeZone"/> agree with what
+    /// Beautify time codes would do to the cue.
+    /// </para>
+    /// </summary>
+    public static bool TryGetShotChangeOffset(
+        List<double> shotChanges,
+        double cueMs,
+        double frameRate,
+        int maxDistanceFrames,
+        out double offsetMs,
+        out int offsetFrames)
+    {
+        offsetMs = 0;
+        offsetFrames = 0;
+        if (shotChanges == null || shotChanges.Count == 0)
+        {
+            return false;
+        }
+
+        var shotChangeMs = shotChanges.ClosestTo(cueMs / 1000.0) * 1000.0;
+        var frames = SubtitleFormat.MillisecondsToFrames(cueMs, frameRate) -
+                     SubtitleFormat.MillisecondsToFrames(shotChangeMs, frameRate);
+        if (Math.Abs(frames) > maxDistanceFrames)
+        {
+            return false;
+        }
+
+        offsetMs = cueMs - shotChangeMs;
+        offsetFrames = frames;
+        return true;
+    }
+
+    /// <summary>
+    /// True when Beautify time codes would move a cue that is <paramref name="offsetFrames"/> from
+    /// its nearest shot change: it sits in a red zone (which snaps to the cut plus the gap) or in a
+    /// green zone (which pushes it out to the zone's edge), and is not already on the target
+    /// <paramref name="gapFrames"/> - the in cues gap after the cut, or minus the out cues gap
+    /// before it. Zone bounds match <c>TimeCodesBeautifier.FindBestCueFrame</c>: red zones are
+    /// inclusive, green zones exclusive.
+    /// </summary>
+    public static bool IsCueInShotChangeZone(
+        int offsetFrames,
+        int gapFrames,
+        int leftGreenZone,
+        int leftRedZone,
+        int rightRedZone,
+        int rightGreenZone)
+    {
+        if (offsetFrames == gapFrames)
+        {
+            return false;
+        }
+
+        var inRedZone = offsetFrames >= -leftRedZone && offsetFrames <= rightRedZone;
+        var inGreenZone = offsetFrames > -leftGreenZone && offsetFrames < rightGreenZone;
+        return inRedZone || inGreenZone;
+    }
+
     public static double? GetClosestShotChange(List<double> shotChanges, TimeCode currentTime)
     {
         if (shotChanges == null || shotChanges.Count == 0)
