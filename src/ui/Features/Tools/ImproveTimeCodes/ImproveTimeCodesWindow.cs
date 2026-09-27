@@ -249,6 +249,7 @@ public class ImproveTimeCodesWindow : Window
         {
             IsReadOnly = true,
             DrawGridLines = true,
+            WaveformGridColor = Se.Settings.Waveform.WaveformGridColor.FromHexToColor(),
             ParagraphBackground = tint,
             ParagraphSelectedBackground = CurrentTint,
         };

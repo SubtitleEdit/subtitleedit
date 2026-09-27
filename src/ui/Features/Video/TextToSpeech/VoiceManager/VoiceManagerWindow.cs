@@ -429,6 +429,7 @@ public class VoiceManagerWindow : Window
             WaveformSelectedColor = settings.WaveformSelectedColor.FromHexToColor(),
             WaveformCursorColor = settings.WaveformCursorColor.FromHexToColor(),
             WaveformShotChangeColor = settings.WaveformShotChangeColor.FromHexToColor(),
+            WaveformGridColor = settings.WaveformGridColor.FromHexToColor(),
             WaveformParagraphLeftColor = settings.WaveformParagraphLeftColor.FromHexToColor(),
             WaveformParagraphRightColor = settings.WaveformParagraphRightColor.FromHexToColor(),
             WaveformFancyHighColor = settings.WaveformFancyHighColor.FromHexToColor(),

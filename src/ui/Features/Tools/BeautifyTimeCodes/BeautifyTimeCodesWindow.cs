@@ -173,6 +173,7 @@ public class BeautifyTimeCodesWindow : Window
         {
             IsReadOnly = true,
             DrawGridLines = true,
+            WaveformGridColor = Se.Settings.Waveform.WaveformGridColor.FromHexToColor(),
             // Stronger tints so paragraphs stand out on the dark waveform
             ParagraphBackground = Color.FromArgb(140, 70, 110, 180),       // regular: blue
             ParagraphSelectedBackground = Color.FromArgb(210, 230, 160, 40), // current change: amber

@@ -125,6 +125,7 @@ public class SkiaAudioVisualizer : AudioVisualizer
         f.FancyHighColor = ToSkColor(WaveformFancyHighColor, SKColors.Orange);
         f.CursorColor = ToSkColor(WaveformCursorColor, SKColors.Cyan);
         f.ShotChangeColor = ToSkColor(WaveformShotChangeColor, SKColors.AntiqueWhite);
+        f.GridColor = ToSkColor(WaveformGridColor, new SKColor(169, 169, 169, 90));
         f.ParagraphLeftColor = ToSkColor(WaveformParagraphLeftColor, new SKColor(0, 255, 0, 60));
         f.ParagraphRightColor = ToSkColor(WaveformParagraphRightColor, new SKColor(255, 0, 0, 100));
         f.ParagraphBackgroundColor = ToSkColor(ParagraphBackground, SKColors.Transparent);
@@ -482,6 +483,7 @@ internal sealed class SkiaWaveformFrame
     public SKColor FancyHighColor;
     public SKColor CursorColor;
     public SKColor ShotChangeColor;
+    public SKColor GridColor;
     public SKColor ParagraphLeftColor;
     public SKColor ParagraphRightColor;
     public SKColor ParagraphBackgroundColor;
@@ -539,6 +541,7 @@ internal sealed class SkiaWaveformFrame
         target.SelectedColor = SelectedColor;
         target.FancyHighColor = FancyHighColor;
         target.DrawGridLines = DrawGridLines;
+        target.GridColor = GridColor;
         target.FrameMode = FrameMode;
         target.FrameRate = FrameRate;
         target.SelectedRanges.Clear();

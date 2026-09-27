@@ -308,6 +308,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private Color _waveformParagraphSelectedBackgroundColor;
     [ObservableProperty] private Color _waveformCursorColor;
     [ObservableProperty] private Color _waveformShotChangeColor;
+    [ObservableProperty] private Color _waveformGridColor;
     [ObservableProperty] private Color _waveformParagraphLeftColor;
     [ObservableProperty] private Color _waveformParagraphRightColor;
     [ObservableProperty] private Color _waveformFancyHighColor;
@@ -1019,6 +1020,7 @@ public partial class SettingsViewModel : ObservableObject
         WaveformParagraphSelectedBackgroundColor = Se.Settings.Waveform.ParagraphSelectedBackground.FromHexToColor();
         WaveformCursorColor = Se.Settings.Waveform.WaveformCursorColor.FromHexToColor();
         WaveformShotChangeColor = Se.Settings.Waveform.WaveformShotChangeColor.FromHexToColor();
+        WaveformGridColor = Se.Settings.Waveform.WaveformGridColor.FromHexToColor();
         WaveformParagraphLeftColor = Se.Settings.Waveform.WaveformParagraphLeftColor.FromHexToColor();
         WaveformParagraphRightColor = Se.Settings.Waveform.WaveformParagraphRightColor.FromHexToColor();
         WaveformFancyHighColor = Se.Settings.Waveform.WaveformFancyHighColor.FromHexToColor();
@@ -1878,6 +1880,7 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Waveform.WaveformSelectedColor = WaveformSelectedColor.FromColorToHex();
         Se.Settings.Waveform.WaveformCursorColor = WaveformCursorColor.FromColorToHex();
         Se.Settings.Waveform.WaveformShotChangeColor = WaveformShotChangeColor.FromColorToHex();
+        Se.Settings.Waveform.WaveformGridColor = WaveformGridColor.FromColorToHex();
         Se.Settings.Waveform.WaveformParagraphLeftColor = WaveformParagraphLeftColor.FromColorToHex();
         Se.Settings.Waveform.WaveformParagraphRightColor = WaveformParagraphRightColor.FromColorToHex();
         Se.Settings.Waveform.WaveformFancyHighColor = WaveformFancyHighColor.FromColorToHex();
@@ -2408,7 +2411,8 @@ public partial class SettingsViewModel : ObservableObject
                 WaveformTextColor, WaveformColor, WaveformBackgroundColor,
                 WaveformSelectedColor, WaveformCursorColor, WaveformShotChangeColor,
                 WaveformParagraphBackgroundColor, WaveformParagraphSelectedBackgroundColor,
-                WaveformParagraphLeftColor, WaveformParagraphRightColor, WaveformFancyHighColor);
+                WaveformParagraphLeftColor, WaveformParagraphRightColor, WaveformFancyHighColor,
+                WaveformGridColor);
         });
 
         if (result.OkPressed)
@@ -2424,6 +2428,7 @@ public partial class SettingsViewModel : ObservableObject
             WaveformParagraphLeftColor = result.ParagraphLeftColor;
             WaveformParagraphRightColor = result.ParagraphRightColor;
             WaveformFancyHighColor = result.FancyHighColor;
+            WaveformGridColor = result.GridColor;
         }
     }
 
