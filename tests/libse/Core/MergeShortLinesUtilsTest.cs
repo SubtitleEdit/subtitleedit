@@ -40,4 +40,34 @@ public class MergeShortLinesUtilsTest
 
         Assert.Equal(3, mergedSubtitle.Paragraphs.Count);
     }
+
+    [Theory]
+    [InlineData("Ich weiß")] // not in the configured alphabet
+    [InlineData("Das ist groß")]
+    [InlineData("Příliš")]
+    [InlineData("זה לא")]
+    [InlineData("ไม่รู้")]
+    [InlineData("Wir treffen uns um 10")]
+    [InlineData("See you in room 2B at 3")]
+    [InlineData("午後３")] // fullwidth digit
+    [InlineData("Where are you,")]
+    public void QualifiesForMergeOnlyContinuationLinesAnyLetter(string text)
+    {
+        var p = new Paragraph(text, 0, 1000);
+        var next = new Paragraph("next line.", 1100, 2000);
+
+        Assert.True(Utilities.QualifiesForMerge(p, next, 500, 200, true));
+    }
+
+    [Theory]
+    [InlineData("Das ist groß.")]
+    [InlineData("Wirklich?")]
+    [InlineData("Er sagte:")]
+    public void QualifiesForMergeOnlyContinuationLinesNotContinuation(string text)
+    {
+        var p = new Paragraph(text, 0, 1000);
+        var next = new Paragraph("next line.", 1100, 2000);
+
+        Assert.False(Utilities.QualifiesForMerge(p, next, 500, 200, true));
+    }
 }

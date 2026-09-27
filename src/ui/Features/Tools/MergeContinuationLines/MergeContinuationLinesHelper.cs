@@ -25,10 +25,7 @@ public static class MergeContinuationLinesHelper
             var current = subtitles[i];
             var next = subtitles[i + 1];
 
-            var p = current.ToParagraph();
-            var nextP = next.ToParagraph();
-
-            if (!Utilities.QualifiesForMerge(p, nextP, maxGapMs, maxTotalLength, onlyContinuationLines: true))
+            if (!QualifiesForMerge(current, next, lang, maxGapMs, maxTotalLength))
             {
                 continue;
             }
@@ -90,6 +87,58 @@ public static class MergeContinuationLinesHelper
         }
 
         return result;
+    }
+
+    private static bool QualifiesForMerge(SubtitleLineViewModel current, SubtitleLineViewModel next, string language, int maxGapMs, int maxTotalLength)
+    {
+        var s = HtmlUtil.RemoveHtmlTags((current.Text ?? string.Empty).Trim(), true);
+        var nextText = HtmlUtil.RemoveHtmlTags((next.Text ?? string.Empty).Trim(), true);
+        if (s.Length + nextText.Length >= maxTotalLength ||
+            (next.StartTime - current.EndTime).TotalMilliseconds >= maxGapMs)
+        {
+            return false;
+        }
+
+        if (s.Length == 0)
+        {
+            return true;
+        }
+
+        if (s.EndsWith('♪') || s.EndsWith('♫') || nextText.StartsWith('♪') || nextText.StartsWith('♫'))
+        {
+            return false;
+        }
+
+        return IsContinuation(s, language);
+    }
+
+    /// <summary>
+    /// A line continues into the next one unless it ends a sentence - like SE4's "Merge sentences".
+    /// A list of "continuation" end characters (letters, comma...) misses too much: words ending in
+    /// letters outside the configured alphabet (ß, Š, Arabic, Hebrew, Thai...), numbers, colons,
+    /// quotes and so on.
+    /// </summary>
+    internal static bool IsContinuation(string text, string language)
+    {
+        var s = text.TrimEnd();
+        if (s.Length == 0)
+        {
+            return true;
+        }
+
+        // A trailing ellipsis is an unfinished sentence that carries on in the next line.
+        if (s.EndsWith("...", StringComparison.Ordinal) || s.EndsWith('…'))
+        {
+            return true;
+        }
+
+        var lastChar = s[s.Length - 1];
+        if (lastChar == '！' || lastChar == '．' || lastChar == '｡' || lastChar == '♪' || lastChar == '♫')
+        {
+            return false;
+        }
+
+        return !s.HasSentenceEnding(language);
     }
 
     private static bool StartsWithDashSpeaker(string? text)
