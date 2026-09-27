@@ -32,6 +32,19 @@ internal static class ContainerSubtitleLoader
     {
         var ext = Path.GetExtension(filePath).ToLowerInvariant();
 
+        // A Manzanita "private_stream_1" dump can have any extension (.dvbttx, .stl, even .idx,
+        // which the VobSub branch below would take). Teletext dumps are text (the DVB Teletext
+        // format reads them); bitmap dumps need OCR.
+        if (IsManzanitaDvbSubtitle(filePath))
+        {
+            return LoadManzanitaDvbSub(filePath, options);
+        }
+
+        if (IsManzanita(filePath))
+        {
+            return null;
+        }
+
         // .webm is Matroska too - a WebVTT track muxed into one was falling through to the
         // text loader, which then failed to detect a format at all.
         if (ext is ".mkv" or ".mks" or ".webm")
@@ -463,6 +476,38 @@ internal static class ContainerSubtitleLoader
         if (subtitle.Paragraphs.Count == 0)
         {
             throw new InvalidOperationException($"No subtitles recognised in Blu-Ray sup file: {filePath}");
+        }
+        return [new LoadedTrack(subtitle, new SubRip(), string.Empty, null)];
+    }
+
+    private static bool IsManzanita(string filePath)
+    {
+        try
+        {
+            return FileUtil.IsManzanita(filePath);
+        }
+        catch (IOException)
+        {
+            return false;
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return false;
+        }
+    }
+
+    private static bool IsManzanitaDvbSubtitle(string filePath)
+    {
+        return IsManzanita(filePath) &&
+               ManzanitaTransportStreamParser.GetStreamType(filePath) == ManzanitaTransportStreamParser.DvbSubtitleStreamType;
+    }
+
+    private static List<LoadedTrack> LoadManzanitaDvbSub(string filePath, ConversionOptions options)
+    {
+        var subtitle = ImageOcrLoader.LoadManzanitaDvbSub(filePath, options);
+        if (subtitle.Paragraphs.Count == 0)
+        {
+            throw new InvalidOperationException($"No subtitles recognised in Manzanita DVB subtitle file: {filePath}");
         }
         return [new LoadedTrack(subtitle, new SubRip(), string.Empty, null)];
     }

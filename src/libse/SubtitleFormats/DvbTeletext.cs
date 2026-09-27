@@ -68,7 +68,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            return !string.IsNullOrEmpty(fileName) && File.Exists(fileName) && FileUtil.IsManzanita(fileName);
+            // a "dvb_subtitle" dump carries bitmaps (OCR) - claiming it gave an empty subtitle
+            return !string.IsNullOrEmpty(fileName) && File.Exists(fileName) && FileUtil.IsManzanita(fileName) &&
+                   ManzanitaTransportStreamParser.GetStreamType(fileName) != ManzanitaTransportStreamParser.DvbSubtitleStreamType;
         }
 
         public override string ToText(Subtitle subtitle, string title)
