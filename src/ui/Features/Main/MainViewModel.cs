@@ -5358,7 +5358,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var pac = new Pac { CodePage = result.PacCodePage!.Value };
+        var pac = new Pac { CodePage = result.PacCodePage!.Value, SecondaryCodePage = result.SecondaryPacCodePage };
 
         var fileName = await _fileHelper.PickSaveSubtitleFile(Window!, pac, GetNewFileName(),
             string.Format(Se.Language.Main.SaveXFileAs, pac.Name));

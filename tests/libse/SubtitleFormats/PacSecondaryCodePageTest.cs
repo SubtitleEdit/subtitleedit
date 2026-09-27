@@ -98,4 +98,89 @@ public class PacSecondaryCodePageTest
 
         Assert.Equal(GreekLines, loaded.Paragraphs.Select(p => p.Text));
     }
+
+    /// <summary>Hebrew subtitles with a Russian translation line each - two scripts, two code pages.</summary>
+    private static readonly string[] HebrewRussian =
+    {
+        "אתה בסדר?" + Environment.NewLine + "Да, это меня.",
+        "הוא יודע טוב." + Environment.NewLine + "Нет, я не знаю.",
+        "אולי הוא יודע." + Environment.NewLine + "Он как всё за нас.",
+        "אתה בסדר, אולי." + Environment.NewLine + "Да, я знаю.",
+    };
+
+    private static byte[] SavePac(string[] texts, int codePage, int secondaryCodePage)
+    {
+        var subtitle = new Subtitle();
+        var start = 1000;
+        foreach (var text in texts)
+        {
+            subtitle.Paragraphs.Add(new Paragraph(text, start, start + 2000));
+            start += 3000;
+        }
+
+        var path = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".pac");
+        try
+        {
+            new Pac { BatchMode = true, CodePage = codePage, SecondaryCodePage = secondaryCodePage }.Save(path, subtitle);
+            return File.ReadAllBytes(path);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
+    public void SecondaryCodePageRoundTripsWithExplicitCodePages()
+    {
+        var bytes = SavePac(HebrewRussian, Pac.CodePageHebrew, Pac.CodePageCyrillic);
+
+        var loaded = new Subtitle();
+        new Pac { CodePage = Pac.CodePageHebrew, SecondaryCodePage = Pac.CodePageCyrillic }.LoadSubtitle(loaded, bytes);
+
+        Assert.Equal(HebrewRussian, loaded.Paragraphs.Select(p => p.Text));
+    }
+
+    /// <summary>Opening detects both: Hebrew for the plain lines, Cyrillic for the flagged ones.</summary>
+    [Fact]
+    public void SecondaryCodePageIsDetectedWhenOpening()
+    {
+        var bytes = SavePac(HebrewRussian, Pac.CodePageHebrew, Pac.CodePageCyrillic);
+
+        var pac = new Pac { BatchMode = true };
+        var loaded = new Subtitle();
+        pac.LoadSubtitle(loaded, bytes);
+
+        Assert.Equal(Pac.CodePageHebrew, pac.CodePage);
+        Assert.Equal(HebrewRussian, loaded.Paragraphs.Select(p => p.Text));
+    }
+
+    [Fact]
+    public void OnlyLinesThatFitTheSecondaryCodePageAreFlagged()
+    {
+        var bytes = SavePac(HebrewRussian, Pac.CodePageHebrew, Pac.CodePageCyrillic);
+
+        // every line marker (0xFE, alignment, 0x03): the Hebrew lines plain, the Russian ones flagged
+        var flags = new List<bool>();
+        for (var i = 0; i < bytes.Length - 2; i++)
+        {
+            if (bytes[i] == 0xFE && bytes[i + 2] == 0x03)
+            {
+                flags.Add((bytes[i + 1] & 0x08) != 0);
+            }
+        }
+
+        Assert.Equal(Enumerable.Range(0, HebrewRussian.Length * 2).Select(i => i % 2 == 1), flags);
+    }
+
+    /// <summary>No secondary code page - the bytes are exactly what they were before the option existed.</summary>
+    [Fact]
+    public void WithoutSecondaryCodePageNothingIsFlagged()
+    {
+        var withoutOption = SavePac(HebrewRussian, Pac.CodePageHebrew, -1);
+        var sameAsPrimary = SavePac(HebrewRussian, Pac.CodePageHebrew, Pac.CodePageHebrew);
+
+        Assert.Equal(withoutOption, sameAsPrimary);
+        Assert.DoesNotContain(Enumerable.Range(0, withoutOption.Length - 2), i => withoutOption[i] == 0xFE && withoutOption[i + 2] == 0x03 && (withoutOption[i + 1] & 0x08) != 0);
+    }
 }
