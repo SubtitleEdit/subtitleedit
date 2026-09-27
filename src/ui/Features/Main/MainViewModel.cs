@@ -333,6 +333,8 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _showColumnStartTime;
     [ObservableProperty] private bool _showColumnEndTime;
     [ObservableProperty] private bool _showColumnGap;
+    [ObservableProperty] private bool _showColumnShotIn;
+    [ObservableProperty] private bool _showColumnShotOut;
     [ObservableProperty] private bool _showColumnDuration;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsTeletextColumnVisible))]
@@ -1111,6 +1113,8 @@ public partial class MainViewModel :
         ShowColumnTeletext = Se.Settings.General.ShowColumnTeletext;
         TeletextAlignmentPreview = Se.Settings.General.TeletextAlignmentPreview;
         ShowColumnGap = Se.Settings.General.ShowColumnGap;
+        ShowColumnShotIn = Se.Settings.General.ShowColumnShotIn;
+        ShowColumnShotOut = Se.Settings.General.ShowColumnShotOut;
         ShowColumnActor = Se.Settings.General.ShowColumnActor;
         ShowColumnStyle = Se.Settings.General.ShowColumnStyle;
         ShowColumnCps = Se.Settings.General.ShowColumnCps;
@@ -14725,6 +14729,24 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void ToggleShowColumnShotIn()
+    {
+        Se.Settings.General.ShowColumnShotIn = !Se.Settings.General.ShowColumnShotIn;
+        ShowColumnShotIn = Se.Settings.General.ShowColumnShotIn;
+        UpdateShotChangeOffsets();
+        AutoFitColumns();
+    }
+
+    [RelayCommand]
+    private void ToggleShowColumnShotOut()
+    {
+        Se.Settings.General.ShowColumnShotOut = !Se.Settings.General.ShowColumnShotOut;
+        ShowColumnShotOut = Se.Settings.General.ShowColumnShotOut;
+        UpdateShotChangeOffsets();
+        AutoFitColumns();
+    }
+
+    [RelayCommand]
     private void ToggleShowColumnDuration()
     {
         Se.Settings.General.ShowColumnDuration = !Se.Settings.General.ShowColumnDuration;
@@ -14822,6 +14844,8 @@ public partial class MainViewModel :
             new(Se.Language.General.OriginalText, false, ShowColumnOriginalText, InitListViewAndEditBox.SubtitleGridColumnKeys.OriginalText),
             new(Se.Language.General.Style, true, ShowColumnStyle, InitListViewAndEditBox.SubtitleGridColumnKeys.Style, InitListViewAndEditBox.SubtitleGridColumnKeys.WebVttStyle),
             new(Se.Language.General.Gap, true, ShowColumnGap, InitListViewAndEditBox.SubtitleGridColumnKeys.Gap),
+            new(Se.Language.General.ShotIn, true, ShowColumnShotIn, InitListViewAndEditBox.SubtitleGridColumnKeys.ShotIn),
+            new(Se.Language.General.ShotOut, true, ShowColumnShotOut, InitListViewAndEditBox.SubtitleGridColumnKeys.ShotOut),
             new(Se.Language.General.Actor, true, ShowColumnActor, InitListViewAndEditBox.SubtitleGridColumnKeys.Actor, InitListViewAndEditBox.SubtitleGridColumnKeys.WebVttVoice),
             new(Se.Language.General.Cps, true, ShowColumnCps, InitListViewAndEditBox.SubtitleGridColumnKeys.Cps),
             new(Se.Language.General.Wpm, true, ShowColumnWpm, InitListViewAndEditBox.SubtitleGridColumnKeys.Wpm),
@@ -14895,6 +14919,16 @@ public partial class MainViewModel :
             case InitListViewAndEditBox.SubtitleGridColumnKeys.Gap:
                 Se.Settings.General.ShowColumnGap = isVisible;
                 ShowColumnGap = isVisible;
+                break;
+            case InitListViewAndEditBox.SubtitleGridColumnKeys.ShotIn:
+                Se.Settings.General.ShowColumnShotIn = isVisible;
+                ShowColumnShotIn = isVisible;
+                UpdateShotChangeOffsets();
+                break;
+            case InitListViewAndEditBox.SubtitleGridColumnKeys.ShotOut:
+                Se.Settings.General.ShowColumnShotOut = isVisible;
+                ShowColumnShotOut = isVisible;
+                UpdateShotChangeOffsets();
                 break;
             case InitListViewAndEditBox.SubtitleGridColumnKeys.Actor:
                 Se.Settings.General.ShowColumnActor = isVisible;
@@ -26726,6 +26760,8 @@ public partial class MainViewModel :
             Se.Settings.General.ShowColumnTeletext = ShowColumnTeletext;
             Se.Settings.General.TeletextAlignmentPreview = TeletextAlignmentPreview;
             Se.Settings.General.ShowColumnGap = ShowColumnGap;
+            Se.Settings.General.ShowColumnShotIn = ShowColumnShotIn;
+            Se.Settings.General.ShowColumnShotOut = ShowColumnShotOut;
             Se.Settings.General.ShowColumnActor = ShowColumnActor;
             Se.Settings.General.ShowColumnStyle = ShowColumnStyle;
             Se.Settings.General.ShowColumnCps = ShowColumnCps;
@@ -33163,6 +33199,7 @@ public partial class MainViewModel :
         try
         {
             SubtitleTextInfoHelper.UpdateGaps(Subtitles);
+            UpdateShotChangeOffsets();
 
             var hasLayers = _visibleLayers != null && Se.Settings.Assa.HideLayersFromSubtitleGrid;
             if (!hasLayers) return;
@@ -33172,6 +33209,70 @@ public partial class MainViewModel :
         catch
         {
             // ignore
+        }
+    }
+
+    // Fills the "Shot in"/"Shot out" columns: each cue's signed distance to its nearest shot change,
+    // flagged when Beautify time codes would move it (inside a zone of the current profile, but not
+    // on the profile's gap). Runs with UpdateGaps on the slow timer, so a retime, a new shot change
+    // list or a profile change shows up within a tick; skipped entirely while both columns are hidden.
+    private void UpdateShotChangeOffsets()
+    {
+        if (!ShowColumnShotIn && !ShowColumnShotOut)
+        {
+            return;
+        }
+
+        var shotChanges = AudioVisualizer?.ShotChanges;
+        if (shotChanges == null || shotChanges.Count == 0 || string.IsNullOrEmpty(_videoFileName))
+        {
+            foreach (var row in Subtitles)
+            {
+                row.SetShotChangeOffsets(double.NaN, 0, false, double.NaN, 0, false);
+            }
+
+            return;
+        }
+
+        var profile = Configuration.Settings.BeautifyTimeCodes.Profile;
+        var frameRate = Configuration.Settings.General.CurrentFrameRate;
+
+        // Show a cue's offset while it is within the profile's zones, and never less than a
+        // second away, so a cut just outside a small zone is still visible.
+        var oneSecondFrames = (int)Math.Ceiling(frameRate);
+        var inMaxFrames = Math.Max(oneSecondFrames, Math.Max(
+            Math.Max(profile.InCuesLeftGreenZone, profile.InCuesLeftRedZone),
+            Math.Max(profile.InCuesRightGreenZone, profile.InCuesRightRedZone)));
+        var outMaxFrames = Math.Max(oneSecondFrames, Math.Max(
+            Math.Max(profile.OutCuesLeftGreenZone, profile.OutCuesLeftRedZone),
+            Math.Max(profile.OutCuesRightGreenZone, profile.OutCuesRightRedZone)));
+
+        foreach (var row in Subtitles)
+        {
+            var inMs = double.NaN;
+            var outMs = double.NaN;
+            var inFrames = 0;
+            var outFrames = 0;
+            var inWarning = false;
+            var outWarning = false;
+
+            if (ShowColumnShotIn &&
+                ShotChangesHelper.TryGetShotChangeOffset(shotChanges, row.StartTime.TotalMilliseconds, frameRate, inMaxFrames, out var startOffsetMs, out inFrames))
+            {
+                inMs = startOffsetMs;
+                inWarning = ShotChangesHelper.IsCueInShotChangeZone(inFrames, profile.InCuesGap,
+                    profile.InCuesLeftGreenZone, profile.InCuesLeftRedZone, profile.InCuesRightRedZone, profile.InCuesRightGreenZone);
+            }
+
+            if (ShowColumnShotOut &&
+                ShotChangesHelper.TryGetShotChangeOffset(shotChanges, row.EndTime.TotalMilliseconds, frameRate, outMaxFrames, out var endOffsetMs, out outFrames))
+            {
+                outMs = endOffsetMs;
+                outWarning = ShotChangesHelper.IsCueInShotChangeZone(outFrames, -profile.OutCuesGap,
+                    profile.OutCuesLeftGreenZone, profile.OutCuesLeftRedZone, profile.OutCuesRightRedZone, profile.OutCuesRightGreenZone);
+            }
+
+            row.SetShotChangeOffsets(inMs, inFrames, inWarning, outMs, outFrames, outWarning);
         }
     }
 
