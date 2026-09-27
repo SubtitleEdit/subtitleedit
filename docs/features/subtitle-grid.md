@@ -61,6 +61,19 @@ Right-click a line to access:
 - Selected lines... (Speech to text, Auto translate, Change casing, Set layer, Fix common errors, Save as..., etc.)
 - Save forced lines as...
 
+## Setting Styles (ASS/SSA)
+
+For ASS/SSA files there are two ways to set a style on the selected lines:
+
+- Right-click the lines and use the **Style** submenu. It lists the styles in the order they are defined in the file, plus **New...**.
+- **Set style...** (top of the **Style** submenu, and a shortcut you can assign in **Options → Shortcuts**) opens the style picker. The shortcut works with focus in the grid, the text box or the waveform.
+  - Each style has a small preview in its own font and colors, the number of lines that use it, and a summary of its font and position. The highlighted style's details (font, alignment, border style, outline/shadow width, margins, colors) are shown on the right.
+  - Press <kbd>1</kbd>–<kbd>9</kbd> or <kbd>0</kbd> to set one of the first ten styles, or use <kbd>Up</kbd>/<kbd>Down</kbd> and <kbd>Enter</kbd>. Double-click also sets a style.
+  - Type to filter a long style list. A name that does not exist yet can be added as a new style with default settings.
+  - **Manage styles...** opens the styles manager to edit fonts, colors and positions.
+
+The style is set on all selected lines.
+
 ## Setting Actors (ASS/SSA)
 
 For ASS/SSA files the context menu has an **Actors** submenu, and these shortcuts can be assigned in **Options → Shortcuts**. They all work with focus in the grid, the text box or the waveform:
