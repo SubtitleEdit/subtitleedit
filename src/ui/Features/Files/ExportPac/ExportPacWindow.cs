@@ -20,6 +20,11 @@ public class ExportPacWindow : Window
         var comboBoxPacFormats = UiUtil.MakeComboBox(vm.PacCodePages, vm, nameof(vm.SelectedPacCodePage))
             .WithMinWidth(200);
 
+        // lines in another script (e.g. Russian lines in a Hebrew subtitle) go in this code page
+        var labelSecondary = UiUtil.MakeLabel("Secondary code page");
+        var comboBoxSecondary = UiUtil.MakeComboBox(vm.SecondaryPacCodePages, vm, nameof(vm.SelectedSecondaryPacCodePage))
+            .WithMinWidth(200);
+
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
@@ -28,6 +33,7 @@ public class ExportPacWindow : Window
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
@@ -45,7 +51,9 @@ public class ExportPacWindow : Window
 
         grid.Add(labelPac, 0);
         grid.Add(comboBoxPacFormats, 0, 1);
-        grid.Add(panelButtons, 1, 0, 1, 2);
+        grid.Add(labelSecondary, 1);
+        grid.Add(comboBoxSecondary, 1, 1);
+        grid.Add(panelButtons, 2, 0, 1, 2);
 
         Content = grid;
 

@@ -91,7 +91,7 @@ internal static class ListHelpers
                     aliases = r.aliases.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries),
                 }),
                 total = rows.Length,
-                note = "Pass the name or any alias to --pac-codepage.",
+                note = "Pass the name or any alias to --pac-codepage or --pac-secondary-codepage.",
             });
             return;
         }

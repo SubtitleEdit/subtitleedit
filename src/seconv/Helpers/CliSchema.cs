@@ -63,6 +63,7 @@ internal static class CliSchema
         ["--encoding"] = "seconv list-encodings --json",
         ["--input-encoding-fallback"] = "seconv list-encodings --json",
         ["--pac-codepage"] = "seconv list-pac-codepages --json",
+        ["--pac-secondary-codepage"] = "seconv list-pac-codepages --json",
         ["--ocr-engine"] = "seconv list-ocr-engines --json",
         ["--fix-common-errors-rules"] = "seconv list-fce-rules --json",
         ["--remove-formatting-rules"] = "seconv list-rf-rules --json",

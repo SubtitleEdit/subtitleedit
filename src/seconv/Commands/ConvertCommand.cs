@@ -204,6 +204,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("PAC code page")]
         public string? PacCodepage { get; init; }
 
+        [CommandOption("--pac-secondary-codepage")]
+        [Description("PAC secondary code page, for lines in another script (e.g. Cyrillic lines in a Hebrew file)")]
+        public string? PacSecondaryCodepage { get; init; }
+
         [CommandOption("--profile")]
         [Description("Profile name")]
         public string? Profile { get; init; }
@@ -767,6 +771,19 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 }
             }
 
+            int? pacSecondaryCodePage = null;
+            if (!string.IsNullOrWhiteSpace(settings.PacSecondaryCodepage))
+            {
+                try
+                {
+                    pacSecondaryCodePage = PacCodepageParser.Parse(settings.PacSecondaryCodepage);
+                }
+                catch (FormatException ex)
+                {
+                    return Fail(settings, ex.Message);
+                }
+            }
+
             // Create conversion options
             var options = new ConversionOptions
             {
@@ -800,6 +817,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 ImageStyle = imageStyle,
                 AssaStyleFile = settings.AssaStyleFile,
                 PacCodePage = pacCodePage,
+                PacSecondaryCodePage = pacSecondaryCodePage,
                 EbuHeaderFile = settings.EbuHeaderFile,
                 MultipleReplaceFile = settings.MultipleReplace,
                 CustomFormatFile = settings.CustomFormat,

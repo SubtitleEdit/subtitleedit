@@ -157,7 +157,7 @@ Export subtitles in EBU STL format (used in European broadcasting).
 
 ### Export to PAC
 
-Export subtitles in PAC format.
+Export subtitles in PAC format. Pick the **code page** for the text. A subtitle with lines in two scripts (e.g. Hebrew with a Russian line under it) can also get a **Secondary code page**: each line that fits it better is written with it and flagged as a secondary code page line. Opening a PAC file detects both code pages automatically.
 
 ### Export to Cavena 890
 

@@ -494,6 +494,7 @@ internal static class LibSEIntegration
             {
                 pac.CodePage = pacCodePage.Value;
             }
+            pac.SecondaryCodePage = options?.PacSecondaryCodePage ?? -1;
             pac.Save(filePath, subtitle);
             return;
         }

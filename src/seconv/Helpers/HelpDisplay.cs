@@ -56,6 +56,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--no-language-suffix", "Do not add the language code to the output name (movie.srt, not movie.en.srt); with --overwrite and --translate-to the file is translated in place");
         ShowParameter(console, "--keep-timestamp", "Give output files the source file's modified/created date instead of the conversion time");
         ShowParameter(console, "--pac-codepage:<code page>", "PAC code page");
+        ShowParameter(console, "--pac-secondary-codepage:<code page>", "PAC code page for lines in another script (e.g. Cyrillic lines in a Hebrew file)");
         ShowParameter(console, "--profile:<profile name>", "Profile name");
         ShowParameter(console, "--renumber:<starting number>", "Renumber subtitles from this number");
         ShowParameter(console, "--resolution:<width>x<height>", "Video resolution (e.g., 1920x1080)");

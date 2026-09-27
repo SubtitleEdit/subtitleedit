@@ -1247,6 +1247,9 @@ internal record class ConversionOptions
     public string? OutputFilenameAppend { get; init; }
     public string? AssaStyleFile { get; init; }
     public int? PacCodePage { get; init; }
+
+    /// <summary>PAC code page for lines in another script, written flagged as "secondary code page".</summary>
+    public int? PacSecondaryCodePage { get; init; }
     public string? EbuHeaderFile { get; init; }
     public string? MultipleReplaceFile { get; init; }
     public string? CustomFormatFile { get; init; }
