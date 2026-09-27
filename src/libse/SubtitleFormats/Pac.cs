@@ -1551,6 +1551,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         return true;
                     }
+
+                    if (fileName.EndsWith(RecoveryExtension, StringComparison.OrdinalIgnoreCase) && GetType() == typeof(Pac))
+                    {
+                        return IsRecoveryFile(fileName);
+                    }
                 }
             }
             catch
@@ -1559,6 +1564,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// A ".rac" file holds the same PAC subtitle records without the PAC file header, with
+        /// unrelated bytes between them (it looks like a recovery/autosave file).
+        /// </summary>
+        private const string RecoveryExtension = ".rac";
+
+        private static bool IsRecoveryFile(string fileName)
+        {
+            var subtitle = new Subtitle();
+            new Pac { CodePage = CodePageLatin }.LoadSubtitle(subtitle, null, fileName);
+            return subtitle.Paragraphs.Count(p => !string.IsNullOrWhiteSpace(p.Text) && p.EndTime.TotalMilliseconds > p.StartTime.TotalMilliseconds) >= 2;
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -1570,6 +1588,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _fileName = fileName;
             LoadSubtitle(subtitle, FileUtil.ReadAllBytesShared(fileName));
+            if (fileName != null && fileName.EndsWith(RecoveryExtension, StringComparison.OrdinalIgnoreCase))
+            {
+                // the bytes between the records can end in a record-like block with no text
+                subtitle.RemoveEmptyLines();
+                subtitle.Renumber();
+            }
         }
 
         public void LoadSubtitle(Subtitle subtitle, byte[] buffer)
@@ -2135,36 +2159,119 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
+        /// <summary>
+        /// Screen's language codes, as written in the "Lang:" line of the story header (the same
+        /// codes are used in CHK files) - e.g. SIM = Simplified Chinese, DKO = Korean DVB.
+        /// Latin languages are left to <see cref="CodePageDetectionOrder"/>.
+        /// </summary>
+        private static readonly Dictionary<string, int> LanguageHeaderCodePages = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+        {
+            { "DAR", CodePageArabic }, { "OAR", CodePageArabic }, { "ARA", CodePageArabic }, { "ARB", CodePageArabic },
+            { "ISR", CodePageHebrew }, { "HEB", CodePageHebrew },
+            { "GRC", CodePageGreek }, { "GRE", CodePageGreek }, { "ELL", CodePageGreek },
+            { "DRU", CodePageCyrillic }, { "RUS", CodePageCyrillic }, { "BGR", CodePageCyrillic }, { "MKD", CodePageCyrillic }, { "MNG", CodePageCyrillic }, { "UKR", CodePageCyrillic },
+            { "THA", CodePageThai },
+            { "TRD", CodePageChineseTraditional }, { "OCH", CodePageChineseTraditional }, { "CHT", CodePageChineseTraditional },
+            { "SIM", CodePageChineseSimplified }, { "CHS", CodePageChineseSimplified },
+            { "DJA", CodePageJapanese }, { "JPN", CodePageJapanese },
+            { "DKO", CodePageKorean }, { "KOR", CodePageKorean },
+            { "TUR", CodePageLatinTurkish },
+            { "POR", CodePageLatinPortuguese }, { "DPT", CodePageLatinPortuguese },
+            { "CSK", CodePageLatinCzech }, { "CZE", CodePageLatinCzech },
+        };
+
+        /// <summary>
+        /// Code pages to try, each with the languages that confirm it. The Latin family goes
+        /// first: the Greek, Cyrillic and Hebrew tables remap plain ASCII letters, so Latin text
+        /// read with them still "detects" as that language (Icelandic came out as Greek).
+        /// Non-Latin text read as Latin is rejected by <see cref="IsPlausibleDecoding"/> instead.
+        /// </summary>
+        private static readonly (int CodePage, string[] Languages)[] CodePageDetectionOrder =
+        {
+            (CodePageLatin, new[] { "en", "da", "no", "nb", "nn", "sv", "es", "it", "fr", "de", "nl", "pl", "sq", "hr", "sr", "bs", "sl", "ro", "id", "ms", "is", "fo", "fi", "et", "lv", "lt", "hu", "ca", "gl", "eu", "ga", "cy", "af", "tl", "sw", "mt", "vi" }),
+            (CodePageLatinCzech, new[] { "cs", "sk" }),
+            (CodePageLatinPortuguese, new[] { "pt" }),
+            (CodePageLatinTurkish, new[] { "tr" }),
+            (CodePageGreek, new[] { "el" }),
+            (CodePageCyrillic, new[] { "bg", "ru", "uk", "mk" }),
+            (CodePageHebrew, new[] { "he" }),
+            (CodePageArabic, new[] { "ar" }),
+            (CodePageThai, new[] { "th" }),
+            (CodePageKorean, new[] { "ko" }),
+            (CodePageJapanese, new[] { "ja" }),
+            (CodePageChineseTraditional, new[] { "zh" }),
+            (CodePageChineseSimplified, new[] { "zh" }),
+        };
+
         public static int AutoDetectEncoding(string fileName)
+        {
+            try
+            {
+                return AutoDetectEncoding(FileUtil.ReadAllBytesShared(fileName));
+            }
+            catch
+            {
+                return CodePageLatin;
+            }
+        }
+
+        public static int AutoDetectEncoding(byte[] buffer)
         {
             var pac = new Pac();
             try
             {
-                var dictionary = new Dictionary<int, string>
+                var language = GetHeaderLanguage(buffer);
+                if (language != null && LanguageHeaderCodePages.TryGetValue(language, out var headerCodePage))
                 {
-                    { CodePageLatin, "en-da-no-sv-es-it-fr-de-nl-pl-sq-hr-sr-ro-id" },
-                    { CodePageGreek, "el" },
-                    { CodePageLatinCzech, "cs-sk-cz" },
-                    { CodePageLatinPortuguese, "pt" },
-                    { CodePageLatinTurkish, "tr" },
-                    { CodePageCyrillic, "bg-ru-uk-mk" },
-                    { CodePageHebrew, "he" },
-                    { CodePageThai, "th" },
-                    { CodePageArabic, "ar" },
-                    { CodePageKorean, "ko" },
-                    { CodePageChineseTraditional, "zh" },
-                    { CodePageChineseSimplified, "zh" },
-                    { CodePageJapanese, "ja" }
-                };
-                foreach (var kvp in dictionary)
+                    return headerCodePage;
+                }
+
+                var decodings = new List<(int CodePage, string[] Languages, Subtitle Subtitle)>();
+                foreach (var (codePage, languages) in CodePageDetectionOrder)
                 {
                     var sub = new Subtitle();
-                    pac.CodePage = kvp.Key;
-                    pac.LoadSubtitle(sub, null, fileName);
-                    var languageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(sub);
-                    if (languageCode != null && kvp.Value.Contains(languageCode))
+                    pac.CodePage = codePage;
+                    pac.LoadSubtitle(sub, buffer);
+                    decodings.Add((codePage, languages, sub));
+                }
+
+                // Real words first, and the code page with the most of them: gibberish from a wrong
+                // code page can hit a few keywords too (Greek read as Latin "was" Estonian).
+                // Korean/Japanese word hits beat Chinese: Chinese is scored by common characters,
+                // and Korean read as GB2312 is full of valid (if meaningless) hanzi.
+                var bestCodePage = -1;
+                var bestScore = 0;
+                var bestIsKoreanOrJapanese = false;
+                foreach (var (codePage, languages, sub) in decodings)
+                {
+                    var languageCode = LanguageAutoDetect.AutoDetectGoogleLanguageFromWordsOrNull(sub, out var score);
+                    if (languageCode == null || Array.IndexOf(languages, languageCode) < 0 || !IsPlausibleDecoding(codePage, sub))
                     {
-                        return kvp.Key;
+                        continue;
+                    }
+
+                    var isKoreanOrJapanese = codePage == CodePageKorean || codePage == CodePageJapanese;
+                    if (isKoreanOrJapanese && !bestIsKoreanOrJapanese || isKoreanOrJapanese == bestIsKoreanOrJapanese && score > bestScore)
+                    {
+                        bestCodePage = codePage;
+                        bestScore = score;
+                        bestIsKoreanOrJapanese = isKoreanOrJapanese;
+                    }
+                }
+
+                if (bestCodePage >= 0)
+                {
+                    return bestCodePage;
+                }
+
+                // letter statistics also accept text decoded with the wrong code page, so they
+                // only decide when no code page gives dictionary words
+                foreach (var (codePage, languages, sub) in decodings)
+                {
+                    var languageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(sub);
+                    if (languageCode != null && Array.IndexOf(languages, languageCode) >= 0 && IsPlausibleDecoding(codePage, sub))
+                    {
+                        return codePage;
                     }
                 }
             }
@@ -2176,15 +2283,134 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return CodePageLatin;
         }
 
+        /// <summary>
+        /// The "Lang:" value from the story header at the start of the file (e.g. "LANG:DKO").
+        /// </summary>
+        private static string GetHeaderLanguage(byte[] buffer)
+        {
+            var max = Math.Min(buffer.Length, 1024) - 8;
+            for (var i = 0; i < max; i++)
+            {
+                if ((buffer[i] == 'L' || buffer[i] == 'l') &&
+                    (buffer[i + 1] == 'A' || buffer[i + 1] == 'a') &&
+                    (buffer[i + 2] == 'N' || buffer[i + 2] == 'n') &&
+                    (buffer[i + 3] == 'G' || buffer[i + 3] == 'g') &&
+                    buffer[i + 4] == ':')
+                {
+                    var start = i + 5;
+                    var end = start;
+                    while (end < buffer.Length && end - start < 8 && buffer[end] > 0x20 && buffer[end] < 0x7F)
+                    {
+                        end++;
+                    }
+
+                    return end > start ? Encoding.ASCII.GetString(buffer, start, end - start) : null;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// The language detector falls back to letter statistics, so a wrong code page can still
+        /// "detect" as a plausible language: Thai read as Latin is full of Ê/Ñ/Õ (Spanish), and
+        /// Simplified Chinese read as Korean is a hangul/hanja mix. Check the script as well.
+        /// </summary>
+        private static bool IsPlausibleDecoding(int codePage, Subtitle subtitle)
+        {
+            int letters = 0, ascii = 0, hangul = 0, han = 0, kana = 0, script = 0;
+            foreach (var p in subtitle.Paragraphs)
+            {
+                foreach (var c in p.Text)
+                {
+                    if (!char.IsLetter(c))
+                    {
+                        continue;
+                    }
+
+                    letters++;
+                    if (c < 0x80)
+                    {
+                        ascii++;
+                    }
+                    else if (c >= 0xAC00 && c <= 0xD7A3)
+                    {
+                        hangul++;
+                    }
+                    else if (c >= 0x4E00 && c <= 0x9FFF)
+                    {
+                        han++;
+                    }
+                    else if (c >= 0x3040 && c <= 0x30FF) // hiragana + full-width katakana, not the half-width katakana wrong code pages produce
+                    {
+                        kana++;
+                    }
+                    else if (IsInScript(codePage, c))
+                    {
+                        script++;
+                    }
+                }
+            }
+
+            switch (codePage)
+            {
+                case CodePageLatin:
+                case CodePageLatinCzech:
+                case CodePageLatinPortuguese:
+                case CodePageLatinTurkish:
+                    return letters > 0 && ascii >= letters * 0.7;
+                case CodePageKorean:
+                    return hangul > 0 && hangul >= (hangul + han) * 0.8;
+                case CodePageJapanese:
+                    return kana > 0 && kana >= (kana + han) * 0.2;
+                case CodePageGreek:
+                case CodePageCyrillic:
+                case CodePageHebrew:
+                case CodePageArabic:
+                case CodePageThai:
+                    // most letters in the code page's own script (some Latin credits are fine)
+                    return script > 0 && script >= letters * 0.6;
+                default:
+                    return true;
+            }
+        }
+
+        private static bool IsInScript(int codePage, char c)
+        {
+            switch (codePage)
+            {
+                case CodePageGreek:
+                    return c >= 0x0370 && c <= 0x03FF || c >= 0x1F00 && c <= 0x1FFF;
+                case CodePageCyrillic:
+                    return c >= 0x0400 && c <= 0x04FF;
+                case CodePageHebrew:
+                    return c >= 0x0590 && c <= 0x05FF || c >= 0xFB1D && c <= 0xFB4F;
+                case CodePageArabic:
+                    return c >= 0x0600 && c <= 0x06FF || c >= 0x0750 && c <= 0x077F || c >= 0xFB50 && c <= 0xFDFF || c >= 0xFE70 && c <= 0xFEFF;
+                case CodePageThai:
+                    return c >= 0x0E00 && c <= 0x0E7F;
+                default:
+                    return false;
+            }
+        }
+
         private void GetCodePage(byte[] buffer, int index, int endDelimiter)
         {
             if (BatchMode)
             {
                 if (CodePage == -1)
                 {
-                    CodePage = AutoDetectEncoding(_fileName);
+                    CodePage = buffer != null ? AutoDetectEncoding(buffer) : AutoDetectEncoding(_fileName);
                 }
 
+                return;
+            }
+
+            // no code page picker is registered (Subtitle Edit 5) - detect instead of silently
+            // decoding every PAC with the fallback Latin (Czech) code page below
+            if (GetPacEncodingImplementation == null && buffer != null)
+            {
+                CodePage = AutoDetectEncoding(buffer);
                 return;
             }
 
