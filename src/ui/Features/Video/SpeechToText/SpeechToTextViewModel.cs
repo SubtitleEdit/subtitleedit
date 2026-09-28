@@ -5258,9 +5258,12 @@ public partial class SpeechToTextViewModel : ObservableObject
         // peaking at -0.5 dBFS - and that distortion costs recognition accuracy (#13738). The gain
         // buys nothing in return: whisper's log-mel front end clamps to "max - 8 dB" and rescales,
         // so a uniform gain is normalized away before the model ever sees it.
+        // "aresample=async=1:first_pts=0" keeps gaps in the audio timestamps as silence. Without it
+        // ffmpeg writes the decoded samples back to back, and every time code after a gap came back
+        // early - 0.7 s for the screen recording in issue #15385.
         var channelArgs = useCenterChannelOnly
-            ? "-af \"pan=mono|c0=FC\""
-            : "-ac 1";
+            ? "-af \"pan=mono|c0=FC,aresample=async=1:first_pts=0\""
+            : "-af aresample=async=1:first_pts=0 -ac 1";
 
         return normalized switch
         {

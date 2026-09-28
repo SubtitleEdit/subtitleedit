@@ -26,10 +26,12 @@ public static class SpeechOnlyWaveform
     /// <summary>
     /// ffmpeg arguments for the audio the source separation is fed. 16 kHz mono separates as well
     /// as the full-quality track and keeps the temp file of a feature film around 200 MB.
+    /// "aresample=async=1:first_pts=0" keeps gaps in the audio timestamps as silence, like the
+    /// normal waveform extraction, so both waveforms line up with playback (#15385).
     /// </summary>
     public static string BuildExtractArguments(string videoFileName, int audioTrackNumber, string outputWaveFileName)
     {
         var map = audioTrackNumber >= 0 ? $"-map 0:{audioTrackNumber}? " : string.Empty;
-        return $"-nostdin -y -i \"{videoFileName}\" -vn {map}-ar 16000 -ac 1 \"{outputWaveFileName}\"";
+        return $"-nostdin -y -i \"{videoFileName}\" -vn {map}-af aresample=async=1:first_pts=0 -ar 16000 -ac 1 \"{outputWaveFileName}\"";
     }
 }
