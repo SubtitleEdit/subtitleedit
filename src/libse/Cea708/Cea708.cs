@@ -309,7 +309,61 @@ namespace Nikse.SubtitleEdit.Core.Cea708
 
         private static Dictionary<char, byte[]> _textLookupTable;
 
+        private const byte Backspace = 0x08;
+        private const byte FormFeed = 0x0C;
         private const byte CarriageReturn = 0x0D;
+        private const byte HorizontalCarriageReturn = 0x0E;
+
+        private static bool IsCurrentWindowVisible(CommandState state)
+        {
+            return state.CurrentWindow >= 0 && state.VisibleWindows[state.CurrentWindow];
+        }
+
+        /// <summary>
+        /// Removes the last not yet flushed character (BS).
+        /// </summary>
+        private static void RemoveLastPendingChar(CommandState state)
+        {
+            for (var index = state.Commands.Count - 1; index >= 0; index--)
+            {
+                var command = state.Commands[index];
+                if (command is SetPenLocation)
+                {
+                    return; // the pen moved - nothing to erase on this row
+                }
+
+                if (command is SetText text && !string.IsNullOrEmpty(text.Content))
+                {
+                    if (text.Content == "\r")
+                    {
+                        return;
+                    }
+
+                    text.Content = text.Content.Substring(0, text.Content.Length - 1);
+                    return;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Removes the not yet flushed text of the current row (HCR), or of all rows (FF).
+        /// </summary>
+        private static void RemovePendingText(CommandState state, bool currentRowOnly)
+        {
+            for (var index = state.Commands.Count - 1; index >= 0; index--)
+            {
+                var command = state.Commands[index];
+                if (currentRowOnly && (command is SetPenLocation || command is SetText { Content: "\r" }))
+                {
+                    return;
+                }
+
+                if (command is SetText)
+                {
+                    state.Commands.RemoveAt(index);
+                }
+            }
+        }
 
         private static void SetWindowsVisible(CommandState state, bool[] windows, bool visible)
         {
@@ -622,13 +676,51 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     i += 2;
                 }
 
+                else if (b == Backspace)
+                {
+                    // BS erases the character before the pen.
+                    RemoveLastPendingChar(state);
+                    if (DebugMode)
+                    {
+                        debugBuilder.Append("{BS}");
+                    }
+                }
+                else if (b == FormFeed)
+                {
+                    // FF erases the window and moves the pen to its top left corner. On screen
+                    // that ends the caption shown; a caption being built in a hidden window is
+                    // thrown away.
+                    if (IsCurrentWindowVisible(state))
+                    {
+                        FlushText(DebugMode ? debugBuilder : textBuilder, state);
+                    }
+                    else
+                    {
+                        RemovePendingText(state, currentRowOnly: false);
+                    }
+
+                    if (DebugMode)
+                    {
+                        debugBuilder.Append("{FF}");
+                    }
+                }
+                else if (b == HorizontalCarriageReturn)
+                {
+                    // HCR erases the current row and moves the pen to its start - the row is
+                    // rewritten, so its text so far is dropped.
+                    RemovePendingText(state, currentRowOnly: true);
+                    if (DebugMode)
+                    {
+                        debugBuilder.Append("{HCR}");
+                    }
+                }
                 else if (b == CarriageReturn)
                 {
                     // CR moves the pen to the next row. In a visible window - roll-up and paint-on
                     // captions - that finishes the line on screen, so it ends the current cue;
                     // otherwise (a pop-on caption being built in a hidden window) it is a line
                     // break inside the caption.
-                    if (state.CurrentWindow >= 0 && state.VisibleWindows[state.CurrentWindow])
+                    if (IsCurrentWindowVisible(state))
                     {
                         FlushText(DebugMode ? debugBuilder : textBuilder, state);
                     }
