@@ -47,9 +47,9 @@ public partial class CompareViewModel : ObservableObject
     [ObservableProperty] private string _statusText = string.Empty;
     [ObservableProperty] private CompareVisual _selectedCompareVisual;
 
-    // Display properties for shortened file names in UI
-    public string LeftFileNameDisplay => GetShortFileName(LeftFileName);
-    public string RightFileNameDisplay => GetShortFileName(RightFileName);
+    // The headers trim these to the space they have, keeping the start and the end (#15384).
+    public string LeftFileNameDisplay => GetFileName(LeftFileName);
+    public string RightFileNameDisplay => GetFileName(RightFileName);
 
     public bool HasPendingChanges => PendingChangeCount > 0;
 
@@ -1214,50 +1214,6 @@ public partial class CompareViewModel : ObservableObject
         }
     }
 
-    private static string GetShortFileName(string fileName)
-    {
-        if (string.IsNullOrEmpty(fileName))
-        {
-            return string.Empty;
-        }
-
-        try
-        {
-            var name = System.IO.Path.GetFileName(fileName);
-            const int maxLength = 40;
-            
-            if (name.Length <= maxLength)
-            {
-                return name;
-            }
-
-            // Show beginning and end of filename with ellipsis in the middle
-            var extension = System.IO.Path.GetExtension(name);
-            var nameWithoutExt = System.IO.Path.GetFileNameWithoutExtension(name);
-            
-            if (nameWithoutExt.Length + extension.Length <= maxLength)
-            {
-                return name;
-            }
-
-            var charsToShow = maxLength - extension.Length - 3; // 3 for "..."
-            if (charsToShow < 5)
-            {
-                // Filename is very long, just truncate
-                return name.Substring(0, maxLength - 3) + "...";
-            }
-
-            var frontChars = charsToShow * 2 / 3; // Show more of the beginning
-            var backChars = charsToShow - frontChars;
-            
-            return nameWithoutExt.Substring(0, frontChars) + "..." + nameWithoutExt.Substring(nameWithoutExt.Length - backChars) + extension;
-        }
-        catch
-        {
-            return fileName;
-        }
-    }
-
     partial void OnLeftFileNameChanged(string value)
     {
         OnPropertyChanged(nameof(LeftFileNameDisplay));
@@ -1514,6 +1470,7 @@ public partial class CompareViewModel : ObservableObject
                     }
 
                     RightFileName = path;
+                    IsReloadFromFileVisible = false;
 
                     _languageDirty = true;
                     Dispatcher.UIThread.Post(CompareAndSelectFirst);

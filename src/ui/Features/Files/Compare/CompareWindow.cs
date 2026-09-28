@@ -31,6 +31,9 @@ public class CompareWindow : Window
     private const double GutterWidth = 52;
     private const string EditButtonClass = "compareEdit";
 
+    // Trims in the middle: the start of the name and its end (episode, language, extension) stay visible.
+    private static readonly TextTrimming FileNameTrimming = new TextLeadingPrefixTrimming("\u2026", 24);
+
     private readonly CompareViewModel _vm;
     private readonly CompareOverviewRuler _ruler = new();
     private ScrollViewer? _scrollViewer;
@@ -209,7 +212,7 @@ public class CompareWindow : Window
         {
             FontWeight = FontWeight.SemiBold,
             VerticalAlignment = VerticalAlignment.Center,
-            TextTrimming = TextTrimming.CharacterEllipsis,
+            TextTrimming = FileNameTrimming,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.LeftFileNameDisplay)),
             [!ToolTip.TipProperty] = new Binding(nameof(vm.LeftFileName)),
         };
@@ -235,7 +238,7 @@ public class CompareWindow : Window
         {
             FontWeight = FontWeight.SemiBold,
             VerticalAlignment = VerticalAlignment.Center,
-            TextTrimming = TextTrimming.CharacterEllipsis,
+            TextTrimming = FileNameTrimming,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.RightFileNameDisplay)),
             [!ToolTip.TipProperty] = new Binding(nameof(vm.RightFileName)),
         };
@@ -271,13 +274,29 @@ public class CompareWindow : Window
 
     private static Border MakeHeaderCard(Control icon, TextBlock fileName, Control hasChanges, Control caption, params Control[] trailing)
     {
-        var namePanel = new StackPanel
+        // A grid rather than a horizontal stack panel: a stack panel measures the name with
+        // unlimited width, so it was never trimmed, just cut off by the card (#15384). Left
+        // aligned, the star column still shrinks to a short name, keeping the caption beside it.
+        var namePanel = new Grid
         {
-            Orientation = Orientation.Horizontal,
-            Spacing = 6,
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(GridLength.Star),
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(GridLength.Auto),
+            },
+            HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Center,
-            Children = { icon, fileName, hasChanges, caption },
         };
+        // Margins, not column spacing, so a hidden "*" leaves no gap.
+        icon.Margin = new Thickness(0, 0, 6, 0);
+        hasChanges.Margin = new Thickness(6, 0, 0, 0);
+        caption.Margin = new Thickness(6, 0, 0, 0);
+        namePanel.Add(icon, 0);
+        namePanel.Add(fileName, 0, 1);
+        namePanel.Add(hasChanges, 0, 2);
+        namePanel.Add(caption, 0, 3);
 
         var trailingPanel = new StackPanel
         {
