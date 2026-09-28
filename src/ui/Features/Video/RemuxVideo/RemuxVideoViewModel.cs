@@ -28,7 +28,7 @@ public partial class RemuxVideoViewModel : ObservableObject
 {
     private static readonly HashSet<string> AllowedVideoExtensions = new(StringComparer.OrdinalIgnoreCase)
     {
-        ".mp4", ".mkv", ".avi", ".webm", ".ts"
+        ".mp4", ".mkv", ".mov", ".avi", ".webm", ".ts"
     };
 
     private static readonly HashSet<string> AllowedAudioExtensions = new(StringComparer.OrdinalIgnoreCase)
@@ -38,7 +38,7 @@ public partial class RemuxVideoViewModel : ObservableObject
 
     private static readonly HashSet<string> AllowedSubtitleExtensions = new(StringComparer.OrdinalIgnoreCase)
     {
-        ".srt", ".ass", ".ssa", ".vtt", ".sub"
+        ".srt", ".ass", ".ssa", ".vtt", ".sub", ".scc"
     };
 
     [ObservableProperty] private string _videoFileName = string.Empty;
@@ -90,7 +90,7 @@ public partial class RemuxVideoViewModel : ObservableObject
         _fileHelper = fileHelper;
         _folderHelper = folderHelper;
         _windowService = windowService;
-        OutputFormats = new ObservableCollection<string> { ".mp4", ".mkv" };
+        OutputFormats = new ObservableCollection<string> { ".mp4", ".mkv", ".mov" };
         SelectedOutputFormat = OutputFormats[0];
         FastStart = Se.Settings.Video.RemuxFastStart;
 
@@ -105,7 +105,7 @@ public partial class RemuxVideoViewModel : ObservableObject
             var ext = Path.GetExtension(currentVideoFileName);
             if (AllowedVideoExtensions.Contains(ext))
             {
-                SelectedOutputFormat = string.Equals(ext, ".mkv", StringComparison.OrdinalIgnoreCase) ? ".mkv" : ".mp4";
+                SelectedOutputFormat = OutputFormats.Contains(ext.ToLowerInvariant()) ? ext.ToLowerInvariant() : ".mp4";
                 VideoFileName = currentVideoFileName;
                 OutputFileName = MakeOutputFileName(VideoFileName, SelectedOutputFormat);
             }
@@ -153,9 +153,31 @@ public partial class RemuxVideoViewModel : ObservableObject
     /// </summary>
     private bool IsMixing => MixAudio && AudioFiles.Count > 1;
 
+    private static bool IsScc(RemuxFileItem file) =>
+        string.Equals(Path.GetExtension(file.FileName), ".scc", StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// The container the current tracks need, or null when the selected one will do.
+    /// Scenarist (.scc) goes in as a QuickTime "c608" CEA-608 closed caption track, which
+    /// ffmpeg can only write to .mov (neither mp4 nor mkv has a tag for eia_608, #15382). A .mov
+    /// also holds several audio and subtitle tracks, so SCC wins over the .mkv requirements;
+    /// the other subtitles are converted to mov_text.
+    /// </summary>
+    private string? RequiredOutputFormat(out string reason)
+    {
+        if (SubtitleFiles.Any(IsScc))
+        {
+            reason = Se.Language.Video.RemuxVideoSccRequiresMov;
+            return ".mov";
+        }
+
+        return RequiresMkv(out reason) ? ".mkv" : null;
+    }
+
     private bool RequiresMkv(out string reason)
     {
-        if ((AudioFiles.Count > 1 && !IsMixing) || SubtitleFiles.Count > 1)
+        var isMov = string.Equals(SelectedOutputFormat, ".mov", StringComparison.OrdinalIgnoreCase);
+        if (!isMov && ((AudioFiles.Count > 1 && !IsMixing) || SubtitleFiles.Count > 1))
         {
             reason = Se.Language.Video.RemuxVideoMultipleTracksRequiresMkv;
             return true;
@@ -213,9 +235,10 @@ public partial class RemuxVideoViewModel : ObservableObject
 
     private void EnforceMkvIfRequired()
     {
-        if (RequiresMkv(out _) && !string.Equals(SelectedOutputFormat, ".mkv", StringComparison.OrdinalIgnoreCase))
+        var required = RequiredOutputFormat(out _);
+        if (required != null && !string.Equals(SelectedOutputFormat, required, StringComparison.OrdinalIgnoreCase))
         {
-            SelectedOutputFormat = ".mkv";
+            SelectedOutputFormat = required;
         }
     }
 
@@ -408,12 +431,13 @@ public partial class RemuxVideoViewModel : ObservableObject
 
     partial void OnSelectedOutputFormatChanged(string value)
     {
-        IsFastStartVisible = string.Equals(value, ".mp4", StringComparison.OrdinalIgnoreCase);
-        if (string.Equals(value, ".mp4", StringComparison.OrdinalIgnoreCase) && RequiresMkv(out var reason))
+        IsFastStartVisible = IsMovFamily(value);
+        var required = RequiredOutputFormat(out var reason);
+        if (required != null && !string.Equals(value, required, StringComparison.OrdinalIgnoreCase))
         {
             Dispatcher.UIThread.Post(async () =>
             {
-                SelectedOutputFormat = ".mkv";
+                SelectedOutputFormat = required;
                 if (Window != null)
                 {
                     await MessageBox.Show(Window, Se.Language.General.Warning, reason, MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -440,6 +464,10 @@ public partial class RemuxVideoViewModel : ObservableObject
         }
         IsCompleted = false;
     }
+
+    private static bool IsMovFamily(string extension) =>
+        string.Equals(extension, ".mp4", StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(extension, ".mov", StringComparison.OrdinalIgnoreCase);
 
     private static string MakeOutputFileName(string videoFileName, string extension)
     {
@@ -473,8 +501,8 @@ public partial class RemuxVideoViewModel : ObservableObject
         var selectedFile = await _fileHelper.PickOpenFile(
             Window,
             Se.Language.General.VideoFiles,
-            "Video files (*.mp4, *.mkv, *.avi, *.webm, *.ts)",
-            ".mp4;.mkv;.avi;.webm;.ts",
+            "Video files (*.mp4, *.mkv, *.mov, *.avi, *.webm, *.ts)",
+            ".mp4;.mkv;.mov;.avi;.webm;.ts",
             Se.Language.General.AllFiles,
             "*.*");
 
@@ -599,8 +627,8 @@ public partial class RemuxVideoViewModel : ObservableObject
         var selectedFiles = await _fileHelper.PickOpenFiles(
             Window,
             Se.Language.General.SubtitleFiles,
-            "Subtitle files (*.srt, *.ass, *.ssa, *.vtt, *.sub)",
-            new List<string> { "*.srt", "*.ass", "*.ssa", "*.vtt", "*.sub" },
+            "Subtitle files (*.srt, *.ass, *.ssa, *.vtt, *.sub, *.scc)",
+            new List<string> { "*.srt", "*.ass", "*.ssa", "*.vtt", "*.sub", "*.scc" },
             Se.Language.General.AllFiles,
             new List<string> { "*.*" });
 
@@ -855,7 +883,7 @@ public partial class RemuxVideoViewModel : ObservableObject
         var videoExt = Path.GetExtension(VideoFileName);
         if (!AllowedVideoExtensions.Contains(videoExt))
         {
-            await MessageBox.Show(Window, Se.Language.General.Error, $"Video format '{videoExt}' is not supported (allowed: mp4, mkv, avi, webm, ts).", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            await MessageBox.Show(Window, Se.Language.General.Error, $"Video format '{videoExt}' is not supported (allowed: mp4, mkv, mov, avi, webm, ts).", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return;
         }
 
@@ -894,14 +922,15 @@ public partial class RemuxVideoViewModel : ObservableObject
             var subExt = Path.GetExtension(subFile.FileName);
             if (!AllowedSubtitleExtensions.Contains(subExt))
             {
-                await MessageBox.Show(Window, Se.Language.General.Error, $"Subtitle format '{subExt}' is not supported (allowed: srt, ass, ssa, vtt, sub).", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                await MessageBox.Show(Window, Se.Language.General.Error, $"Subtitle format '{subExt}' is not supported (allowed: srt, ass, ssa, vtt, sub, scc).", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
         }
 
-        if (RequiresMkv(out _) && string.Equals(SelectedOutputFormat, ".mp4", StringComparison.OrdinalIgnoreCase))
+        var requiredFormat = RequiredOutputFormat(out _);
+        if (requiredFormat != null && !string.Equals(SelectedOutputFormat, requiredFormat, StringComparison.OrdinalIgnoreCase))
         {
-            SelectedOutputFormat = ".mkv";
+            SelectedOutputFormat = requiredFormat;
             OutputFileName = MakeOutputFileName(VideoFileName, SelectedOutputFormat);
         }
 
@@ -1234,6 +1263,18 @@ public partial class RemuxVideoViewModel : ObservableObject
         {
             subCodec = isMkv ? "-c:s copy" : "-c:s mov_text";
 
+            // CEA-608 from .scc is copied as it is into a QuickTime "c608" track.
+            if (!isMkv)
+            {
+                for (var j = 0; j < subFiles.Count; j++)
+                {
+                    if (IsScc(subFiles[j]))
+                    {
+                        subCodec += $" -c:s:{j.ToString(CultureInfo.InvariantCulture)} copy";
+                    }
+                }
+            }
+
             // Matroska has no codec id for MicroDVD, so a text .sub cannot be copied in
             // ("Subtitle codec microdvd is not supported") - it goes in as SubRip. A .sub
             // with an .idx next to it is VobSub, which can be copied.
@@ -1253,7 +1294,7 @@ public partial class RemuxVideoViewModel : ObservableObject
 
         // "+faststart" moves the mp4 index to the front for web streaming, but ffmpeg then has to
         // rewrite the whole file after the last packet - optional, as local players don't need it (#15253).
-        var fastStart = FastStart && string.Equals(SelectedOutputFormat, ".mp4", StringComparison.OrdinalIgnoreCase)
+        var fastStart = FastStart && IsMovFamily(SelectedOutputFormat)
             ? "-movflags +faststart "
             : string.Empty;
         return $"-y {inputArgs}{filterArgs}{mapArgs}{videoCodec} {audioCodec} {subCodec} {metadataArgs}{fastStart}\"{OutputFileName}\"".Trim();
