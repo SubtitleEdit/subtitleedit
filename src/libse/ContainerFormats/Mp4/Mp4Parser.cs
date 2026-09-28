@@ -555,7 +555,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                         {
                             var startMs = data.Start / (double)timeScale * 1000.0;
                             var endMs = data.End / (double)timeScale * 1000.0;
-                            TrunCea608Subtitle.Paragraphs.Add(new Paragraph(SerializedScreenText.GetText(data.Screen), startMs, endMs));
+                            Cea608CueBuilder.Add(TrunCea608Subtitle.Paragraphs, SerializedScreenText.GetText(data.Screen), startMs, endMs);
                         };
                         foreach (var cc in cea608Entries)
                         {
@@ -773,8 +773,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
             var startMs = data.Start / timeScale * 1000.0;
             var endMs = data.End / timeScale * 1000.0;
-            var p = new Paragraph(SerializedScreenText.GetText(data.Screen), startMs, endMs);
-            TrunCea608Subtitle.Paragraphs.Add(p);
+            Cea608CueBuilder.Add(TrunCea608Subtitle.Paragraphs, SerializedScreenText.GetText(data.Screen), startMs, endMs);
         }
 
         private sealed class FragmentedTextTrack
