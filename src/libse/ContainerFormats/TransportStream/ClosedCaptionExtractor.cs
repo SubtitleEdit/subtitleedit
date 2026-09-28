@@ -391,7 +391,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 return;
             }
 
-            text = text.Trim();
             var trackKey = field * 2 + data.Channel; // CC1/CC2 on field 1, CC3/CC4 on field 2
             if (!_cea608Paragraphs.TryGetValue(trackKey, out var paragraphs))
             {
@@ -399,23 +398,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 _cea608Paragraphs.Add(trackKey, paragraphs);
             }
 
-            // Roll-up and paint-on captions change the screen with every character pair - let a
-            // line that is still being written grow the cue before it instead of adding a cue per
-            // character. A new row (roll-up scroll) starts a new cue.
-            if (paragraphs.Count > 0)
-            {
-                var last = paragraphs[paragraphs.Count - 1];
-                if (Math.Abs(last.EndTime.TotalMilliseconds - data.Start) < 0.5 &&
-                    last.NumberOfLines == Utilities.GetNumberOfLines(text) &&
-                    HtmlUtil.RemoveHtmlTags(text, true).StartsWith(HtmlUtil.RemoveHtmlTags(last.Text, true), StringComparison.Ordinal))
-                {
-                    last.Text = text;
-                    last.EndTime.TotalMilliseconds = data.End;
-                    return;
-                }
-            }
-
-            paragraphs.Add(new Paragraph(text, data.Start, data.End));
+            Cea608CueBuilder.Add(paragraphs, text, data.Start, data.End);
         }
     }
 }
