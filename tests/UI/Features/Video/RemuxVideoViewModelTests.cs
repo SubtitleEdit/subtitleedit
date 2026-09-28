@@ -292,6 +292,36 @@ public class RemuxVideoViewModelTests
         Assert.False(vm.IsVolumeEnabled);
     }
 
+    [AvaloniaFact]
+    public void Scc_SwitchesToMovAndCopiesTheCaptionsAsCea608()
+    {
+        var (vm, _, _) = BuildMixViewModel(false);
+        var srt = new RemuxFileItem(Path.Combine(Path.GetTempPath(), "remux-srt-does-not-exist.srt"));
+        var scc = new RemuxFileItem(Path.Combine(Path.GetTempPath(), "remux-scc-does-not-exist.scc"));
+        vm.SubtitleFiles.Add(srt);
+        vm.SubtitleFiles.Add(scc);
+
+        Assert.Equal(".mov", vm.SelectedOutputFormat);
+
+        var args = vm.BuildFfmpegArguments([.. vm.AudioFiles], [.. vm.SubtitleFiles]);
+
+        Assert.Contains("-map 0:v:0 -map 0:a:0 -map 1:a:0 -map 2:s:0 -map 3:s:0 ", args);
+        Assert.Contains("-c:s mov_text -c:s:1 copy", args);
+        Assert.Contains("-c:a copy", args);
+    }
+
+    [AvaloniaFact]
+    public void Mov_KeepsMultipleTracks_ButAssStillSwitchesToMkv()
+    {
+        var (vm, _, _) = BuildMixViewModel(false);
+        vm.SelectedOutputFormat = ".mov";
+        Assert.Equal(".mov", vm.SelectedOutputFormat);
+
+        vm.SubtitleFiles.Add(new RemuxFileItem(Path.Combine(Path.GetTempPath(), "remux-ass-does-not-exist.ass")));
+
+        Assert.Equal(".mkv", vm.SelectedOutputFormat);
+    }
+
     [Theory]
     [InlineData(100, "1.00")]
     [InlineData(15, "0.15")]
