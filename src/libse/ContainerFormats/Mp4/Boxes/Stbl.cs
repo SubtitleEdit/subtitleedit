@@ -544,11 +544,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 {
                     var startMs = data.Start / (double)TimeScale * 1000.0;
                     var endMs = data.End / (double)TimeScale * 1000.0;
-                    var text = SerializedScreenText.GetText(data.Screen);
-                    if (!string.IsNullOrEmpty(text))
-                    {
-                        paragraphs.Add(new Paragraph(text, startMs, endMs));
-                    }
+                    Cea608CueBuilder.Add(paragraphs, SerializedScreenText.GetText(data.Screen), startMs, endMs);
                 };
                 foreach (var cc in _cea608CcData)
                 {
