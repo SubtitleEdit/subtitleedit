@@ -28,6 +28,33 @@ public class LanguageFile
     public string IgnoreFormatting { get; set; }
     public string IgnoreFormattingHint { get; set; }
     public string ShowOnlyDifferencesInText { get; set; }
+    public string IgnoreNumbering { get; set; }
+    public string IgnoreNumberingHint { get; set; }
+    public string CompareDifferences { get; set; }
+    public string CompareTextDifferences { get; set; }
+    public string CompareCurrent { get; set; }
+    public string CompareReference { get; set; }
+    public string CompareEditable { get; set; }
+    public string CompareEditableHint { get; set; }
+    public string CompareReadOnly { get; set; }
+    public string CompareTakeFromReference { get; set; }
+    public string CompareInsertFromReference { get; set; }
+    public string CompareDeleteFromCurrent { get; set; }
+    public string CompareTakeText { get; set; }
+    public string CompareTakeTiming { get; set; }
+    public string CompareEditLine { get; set; }
+    public string CompareEditHint { get; set; }
+    public string CompareEdited { get; set; }
+    public string CompareOnePendingChange { get; set; }
+    public string CompareXPendingChanges { get; set; }
+    public string CompareDiscardXChanges { get; set; }
+    public string CompareXChangesApplied { get; set; }
+    public string CompareChangeTextX { get; set; }
+    public string CompareChangeTimingX { get; set; }
+    public string CompareChangeTextAndTimingX { get; set; }
+    public string CompareChangeEditedX { get; set; }
+    public string CompareChangeInsertedX { get; set; }
+    public string CompareChangeDeletedX { get; set; }
     public string LoadXFromFile { get; set; }
     public string SaveCompareHtmlTitle { get; set; }
     public string PickMatroskaTrackX { get; set; }
@@ -62,6 +89,33 @@ public class LanguageFile
         CompareTextOrTimeDifference = "Text/time difference";
         CompareNumberDifference = "Number difference";
         ShowOnlyDifferencesInText = "Only differences in text";
+        IgnoreNumbering = "Ignore numbering";
+        IgnoreNumberingHint = "Lines that differ only in their number do not count as different";
+        CompareDifferences = "Differences";
+        CompareTextDifferences = "Text differences";
+        CompareCurrent = "Current";
+        CompareReference = "Reference";
+        CompareEditable = "Editable";
+        CompareEditableHint = "Changes made here go back to the subtitle when you click Apply";
+        CompareReadOnly = "Read-only";
+        CompareTakeFromReference = "Take text and timing from the reference";
+        CompareInsertFromReference = "Insert this line into the current subtitle";
+        CompareDeleteFromCurrent = "Delete this line from the current subtitle";
+        CompareTakeText = "Take text";
+        CompareTakeTiming = "Take timing";
+        CompareEditLine = "Edit line";
+        CompareEditHint = "Ctrl+Enter to save, Esc to cancel";
+        CompareEdited = "edited";
+        CompareOnePendingChange = "1 pending change";
+        CompareXPendingChanges = "{0} pending changes";
+        CompareDiscardXChanges = "Discard the {0} change(s) made in Compare?";
+        CompareXChangesApplied = "Compare: {0} change(s) applied";
+        CompareChangeTextX = "#{0} text from reference";
+        CompareChangeTimingX = "#{0} timing from reference";
+        CompareChangeTextAndTimingX = "#{0} text and timing from reference";
+        CompareChangeEditedX = "#{0} edited";
+        CompareChangeInsertedX = "#{0} inserted";
+        CompareChangeDeletedX = "#{0} deleted";
         IgnoreWhitespace = "Ignore whitespace";
         IgnoreWhitespaceHint = "Lines that differ only in spaces, tabs or line breaks do not count as different";
         IgnoreFormatting = "Ignore formatting";

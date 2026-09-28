@@ -4756,11 +4756,19 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task ShowCompare()
     {
+        var before = CaptureGridPosition();
         var result = await ShowDialogAsync<CompareWindow, CompareViewModel>(vm =>
         {
             var right = new ObservableCollection<SubtitleLineViewModel>();
             vm.Initialize(Subtitles, _subtitleFileName ?? string.Empty, right, string.Empty, HasChanges());
         });
+
+        // Lines edited in Compare keep their row ids, so they map back onto the rows they came from.
+        if (result.OkPressed && result.IsLeftEditable && result.HasPendingChanges)
+        {
+            ApplyDialogRows(result.GetEditedLines(), before);
+            ShowStatus(string.Format(Se.Language.File.CompareXChangesApplied, result.PendingChangeCount));
+        }
     }
 
     [RelayCommand]

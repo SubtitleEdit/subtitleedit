@@ -11,6 +11,7 @@ internal class IconNames
     public const string ArrowCollapseVertical = "mdi-arrow-collapse-vertical";
     public const string ArrowDownThin = "mdi-arrow-down-thin";
     public const string ArrowExpandRight = "mdi-arrow-expand-right";
+    public const string ArrowLeft = "mdi-arrow-left";
     public const string ArrowLeftRightBold = "mdi-arrow-left-right-bold";
     public const string ArrowLeftThick = "mdi-arrow-left-thick";
     public const string ArrowRightThick = "mdi-arrow-right-thick";
@@ -129,6 +130,7 @@ internal class IconNames
     public const string SubtitlesOutline = "mdi-subtitles-outline";
     public const string Tune = "mdi-tune";
     public const string Trash = "mdi-trash-can-outline";
+    public const string Undo = "mdi-undo";
     public const string ViewGrid = "mdi-view-grid";
     public const string ViewList = "mdi-view-list";
     public const string ViewSplitVertical = "mdi-view-split-vertical";
