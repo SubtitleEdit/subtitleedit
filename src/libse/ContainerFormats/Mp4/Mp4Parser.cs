@@ -365,7 +365,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             foreach (var trak in Moov.Tracks)
             {
                 var mdia = trak?.Mdia;
-                if (mdia == null || !(mdia.IsTextSubtitle || mdia.IsVobSubSubtitle))
+                if (mdia == null || !(mdia.IsTextSubtitle || mdia.IsVobSubSubtitle || mdia.IsClosedCaption))
                 {
                     continue;
                 }
@@ -378,7 +378,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
                 // A VobSub track's paragraphs are index-paired with its sub pictures, so
                 // dropping one there would misalign every bitmap after it.
-                ShiftParagraphs(paragraphs, GetEditListOffsetMs(trak), dropBeforeZero: mdia.IsTextSubtitle);
+                ShiftParagraphs(paragraphs, GetEditListOffsetMs(trak), dropBeforeZero: !mdia.IsVobSubSubtitle);
             }
         }
 
