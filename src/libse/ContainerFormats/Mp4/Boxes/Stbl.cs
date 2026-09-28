@@ -544,7 +544,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 {
                     var startMs = data.Start / (double)TimeScale * 1000.0;
                     var endMs = data.End / (double)TimeScale * 1000.0;
-                    var text = GetC608Text(data.Screen);
+                    var text = SerializedScreenText.GetText(data.Screen);
                     if (!string.IsNullOrEmpty(text))
                     {
                         paragraphs.Add(new Paragraph(text, startMs, endMs));
@@ -595,20 +595,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     }
                 }
             }
-        }
-
-        private static string GetC608Text(SerializedRow[] screen)
-        {
-            var sb = new StringBuilder();
-            foreach (var row in screen)
-            {
-                foreach (var column in row.Columns)
-                {
-                    sb.Append(column.Character);
-                }
-                sb.AppendLine();
-            }
-            return sb.ToString().Trim();
         }
 
         private static string MakeScenaristText(byte[] buffer)
