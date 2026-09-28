@@ -85,9 +85,12 @@ public class CompareWindow : Window
         _ruler.ScrollRequested += (_, fraction) => ScrollToFraction(fraction);
 
         Closing += vm.WindowClosing;
+
+        // Closing, not Closed: after Closed the window has no platform handle, so its screen
+        // and position can't be read and nothing got saved. (#15393)
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Closed += delegate
         {
-            UiUtil.SaveWindowPosition(this);
             vm.SaveSettings(); // the compare options are remembered between sessions (#14299)
         };
         Loaded += delegate
