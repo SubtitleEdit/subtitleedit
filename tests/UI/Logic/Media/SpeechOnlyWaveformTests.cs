@@ -28,7 +28,7 @@ public class SpeechOnlyWaveformTests
     {
         var args = SpeechOnlyWaveform.BuildExtractArguments("/v/film.mkv", 2, "/tmp/audio.wav");
 
-        Assert.Equal("-nostdin -y -i \"/v/film.mkv\" -vn -map 0:2? -ar 16000 -ac 1 \"/tmp/audio.wav\"", args);
+        Assert.Equal("-nostdin -y -i \"/v/film.mkv\" -vn -map 0:2? -af aresample=async=1:first_pts=0 -ar 16000 -ac 1 \"/tmp/audio.wav\"", args);
     }
 
     [Fact]

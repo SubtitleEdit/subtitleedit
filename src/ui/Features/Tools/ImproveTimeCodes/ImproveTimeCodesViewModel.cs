@@ -773,10 +773,11 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
 
     private async Task<bool> ExtractAudioAsync(string audioFileName, CancellationToken cancellationToken)
     {
-        // 16 kHz mono PCM - what every CTC aligner expects.
+        // 16 kHz mono PCM - what every CTC aligner expects. "aresample=async=1:first_pts=0" keeps
+        // gaps in the audio timestamps as silence, or the aligned times after a gap come out early (#15385).
         var map = SpeechToTextViewModel.BuildAudioMapParameter(_videoFileName, _audioTrackNumber, _videoFileName);
         var arguments =
-            $"-hide_banner -nostats -loglevel error -y -i \"{_videoFileName}\" -vn {map} -ar 16000 -ac 1 -acodec pcm_s16le \"{audioFileName}\"";
+            $"-hide_banner -nostats -loglevel error -y -i \"{_videoFileName}\" -vn {map} -af aresample=async=1:first_pts=0 -ar 16000 -ac 1 -acodec pcm_s16le \"{audioFileName}\"";
 
         var (exitCode, _) = await RunProcessAsync(GetFfmpegPath(), arguments, cancellationToken);
         return exitCode == 0 && File.Exists(audioFileName);
