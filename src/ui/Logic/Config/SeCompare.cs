@@ -12,4 +12,5 @@ public class SeCompare
 
     public bool IgnoreWhitespace { get; set; }
     public bool IgnoreFormatting { get; set; }
+    public bool IgnoreNumbering { get; set; }
 }

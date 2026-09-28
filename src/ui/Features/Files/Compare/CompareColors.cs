@@ -1,4 +1,4 @@
-using Avalonia.Media;
+﻿using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using Nikse.SubtitleEdit.Logic;
 
@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Features.Files.Compare;
 internal static class CompareColors
 {
     private const byte RowAlpha = 180;
+    private const byte SoftAlpha = 90;
 
     // The light palette doubles as the export palette: the generated HTML page has a white
     // background and black text, so it must keep the pastels whatever theme is active.
@@ -36,6 +37,17 @@ internal static class CompareColors
     private static readonly IBrush TextOrTimeDifferenceRowDark = MakeRowBrush(TextOrTimeDifferenceDark);
     private static readonly IBrush NumberDifferenceRowDark = MakeRowBrush(NumberDifferenceDark);
 
+    private static readonly IBrush OnlyInOneFileSoftLight = MakeBrush(OnlyInOneFileLight, SoftAlpha);
+    private static readonly IBrush TextOrTimeDifferenceSoftLight = MakeBrush(TextOrTimeDifferenceLight, SoftAlpha);
+    private static readonly IBrush NumberDifferenceSoftLight = MakeBrush(NumberDifferenceLight, SoftAlpha);
+
+    private static readonly IBrush OnlyInOneFileSoftDark = MakeBrush(OnlyInOneFileDark, SoftAlpha);
+    private static readonly IBrush TextOrTimeDifferenceSoftDark = MakeBrush(TextOrTimeDifferenceDark, SoftAlpha);
+    private static readonly IBrush NumberDifferenceSoftDark = MakeBrush(NumberDifferenceDark, SoftAlpha);
+
+    /// <summary>Marks a line changed inside Compare - the same violet in both themes.</summary>
+    internal static readonly IBrush Edited = new ImmutableSolidColorBrush(Color.FromRgb(160, 120, 245));
+
     /// <summary>Opaque color for the legend swatches.</summary>
     internal static Color OnlyInOneFile => UiTheme.IsDarkThemeEnabled() ? OnlyInOneFileDark : OnlyInOneFileLight;
 
@@ -49,6 +61,13 @@ internal static class CompareColors
     internal static IBrush TextOrTimeDifferenceRow => UiTheme.IsDarkThemeEnabled() ? TextOrTimeDifferenceRowDark : TextOrTimeDifferenceRowLight;
 
     internal static IBrush NumberDifferenceRow => UiTheme.IsDarkThemeEnabled() ? NumberDifferenceRowDark : NumberDifferenceRowLight;
+
+    /// <summary>Paler twin of the row brush, for a whole line card in the merge view; the full brush marks the differing cells on it.</summary>
+    internal static IBrush OnlyInOneFileSoft => UiTheme.IsDarkThemeEnabled() ? OnlyInOneFileSoftDark : OnlyInOneFileSoftLight;
+
+    internal static IBrush TextOrTimeDifferenceSoft => UiTheme.IsDarkThemeEnabled() ? TextOrTimeDifferenceSoftDark : TextOrTimeDifferenceSoftLight;
+
+    internal static IBrush NumberDifferenceSoft => UiTheme.IsDarkThemeEnabled() ? NumberDifferenceSoftDark : NumberDifferenceSoftLight;
 
     /// <summary>
     /// Light-palette color for a row brush, or null when the cell is not highlighted. The
@@ -83,6 +102,8 @@ internal static class CompareColors
     /// "the calling thread cannot access this object" out of the renderer - and an exception
     /// thrown inside a render job leaves the compositor broken for good.
     /// </summary>
-    private static IBrush MakeRowBrush(Color color)
-        => new ImmutableSolidColorBrush(Color.FromArgb(RowAlpha, color.R, color.G, color.B));
+    private static IBrush MakeRowBrush(Color color) => MakeBrush(color, RowAlpha);
+
+    private static IBrush MakeBrush(Color color, byte alpha)
+        => new ImmutableSolidColorBrush(Color.FromArgb(alpha, color.R, color.G, color.B));
 }

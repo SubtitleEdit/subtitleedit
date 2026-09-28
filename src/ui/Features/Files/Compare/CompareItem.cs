@@ -24,6 +24,10 @@ public partial class CompareItem : ObservableObject
     [ObservableProperty] private IBrush _endTimeBackgroundBrush;
     [ObservableProperty] private IBrush _textBackgroundBrush;
     public bool HasDifference { get; set; }
+
+    /// <summary>The line this item shows; null for the blank filler that aligns the two sides.</summary>
+    public SubtitleLineViewModel? Line { get; }
+
     public bool IsDefault => Text == string.Empty && Number == 0 && Duration == TimeSpan.Zero && StartTime == TimeSpan.Zero;
     public string NumberDisplay => IsDefault ? string.Empty : Number.ToString();
     public string StartTimeDisplay => IsDefault ? string.Empty : FormatTime(StartTime);
@@ -55,6 +59,7 @@ public partial class CompareItem : ObservableObject
         EndTime = line.EndTime;
         Duration = line.Duration;
         Number = line.Number;
+        Line = line;
         BackgroundBrush = new SolidColorBrush(Colors.Transparent);
         NumberBackgroundBrush = new SolidColorBrush(Colors.Transparent);
         StartTimeBackgroundBrush = new SolidColorBrush(Colors.Transparent);

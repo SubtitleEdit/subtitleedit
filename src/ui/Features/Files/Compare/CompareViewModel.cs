@@ -5,10 +5,12 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using System;
@@ -26,10 +28,17 @@ public partial class CompareViewModel : ObservableObject
     public ObservableCollection<CompareItem> RightSubtitles { get; } = new();
     public ObservableCollection<CompareVisual> CompareVisuals { get; } = new();
 
-    [ObservableProperty] private CompareItem? _selectedLeft;
-    [ObservableProperty] private CompareItem? _selectedRight;
+    [ObservableProperty] private ObservableCollection<CompareRow> _rows = new();
+    [ObservableProperty] private CompareRow? _selectedRow;
     [ObservableProperty] private bool _ignoreFormatting;
     [ObservableProperty] private bool _ignoreWhiteSpace;
+    [ObservableProperty] private bool _ignoreNumbering;
+    [ObservableProperty] private int _allCount;
+    [ObservableProperty] private int _differenceCount;
+    [ObservableProperty] private int _textDifferenceCount;
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(LeftSideLabel))] private bool _isLeftEditable;
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(HasPendingChanges), nameof(PendingChangesText), nameof(OkButtonText))] private int _pendingChangeCount;
+    [ObservableProperty] private string _lastChangeText = string.Empty;
     [ObservableProperty] private bool _isReloadFromFileVisible;
     [ObservableProperty] private bool _isExportVisible;
     [ObservableProperty] private string _leftFileName = string.Empty;
@@ -42,13 +51,24 @@ public partial class CompareViewModel : ObservableObject
     public string LeftFileNameDisplay => GetShortFileName(LeftFileName);
     public string RightFileNameDisplay => GetShortFileName(RightFileName);
 
+    public bool HasPendingChanges => PendingChangeCount > 0;
+
+    public string PendingChangesText => PendingChangeCount == 1
+        ? Se.Language.File.CompareOnePendingChange
+        : string.Format(Se.Language.File.CompareXPendingChanges, PendingChangeCount);
+
+    public string OkButtonText => HasPendingChanges ? Se.Language.General.Apply : Se.Language.General.Ok;
+
+    public string LeftSideLabel => IsLeftEditable ? Se.Language.File.CompareEditable : Se.Language.File.CompareReadOnly;
+
     public Window? Window { get; internal set; }
     public bool OkPressed { get; private set; }
-    public TableView? LeftGrid { get; set; } = new();
-    public TableView? RightGrid { get; set; } = new();
 
-    /// <summary>Keeps the two grids showing the same rows while either one scrolls (#13504).</summary>
-    public TableViewScrollSync? ScrollSync { get; set; }
+    /// <summary>The one list that shows both sides, a pair per row.</summary>
+    public ListBox? RowsView { get; set; }
+
+    /// <summary>Raised after the rows were rebuilt, so the overview ruler can redraw.</summary>
+    public event EventHandler? RowsRebuilt;
 
     private IFileHelper _fileHelper;
     private IFolderHelper _folderHelper;
@@ -56,7 +76,14 @@ public partial class CompareViewModel : ObservableObject
     private List<SubtitleLineViewModel> _rightLines = new();
     private string _language = string.Empty;
     private bool _languageDirty = true;
-    private bool _mirroringSelection;
+    private bool _closeConfirmed;
+
+    // Edits made in the merge view: every change pushes the state before it, so undo is a pop.
+    private readonly Stack<EditState> _undoStack = new();
+    private HashSet<Guid> _editedIds = new();
+    private List<string> _changes = new();
+
+    private sealed record EditState(List<SubtitleLineViewModel> Lines, HashSet<Guid> EditedIds, List<string> Changes);
 
     // Theme aware - the light pastels are unreadable under the dark theme's near-white text (#13435).
     private static IBrush ListViewRed => CompareColors.OnlyInOneFileRow;
@@ -94,6 +121,7 @@ public partial class CompareViewModel : ObservableObject
 
         IgnoreWhiteSpace = settings.IgnoreWhitespace;
         IgnoreFormatting = settings.IgnoreFormatting;
+        IgnoreNumbering = settings.IgnoreNumbering;
     }
 
     /// <summary>
@@ -106,6 +134,7 @@ public partial class CompareViewModel : ObservableObject
         settings.Show = SelectedCompareVisual.Type.ToString();
         settings.IgnoreWhitespace = IgnoreWhiteSpace;
         settings.IgnoreFormatting = IgnoreFormatting;
+        settings.IgnoreNumbering = IgnoreNumbering;
     }
 
     internal void Initialize(
@@ -118,6 +147,11 @@ public partial class CompareViewModel : ObservableObject
         _leftLines.Clear();
         _leftLines.AddRange(left.Select(p => new SubtitleLineViewModel(p)));
         LeftFileName = leftFileName;
+
+        // The left side is the editor's own subtitle, so it is the one that can be edited here -
+        // the reference is only ever read, which keeps "what gets saved" a single subtitle.
+        IsLeftEditable = true;
+        ResetEdits();
         if (!string.IsNullOrEmpty(leftFileName) && hasChanges)
         {
             LeftFileNameHasChanges = true;
@@ -130,7 +164,7 @@ public partial class CompareViewModel : ObservableObject
         IsReloadFromFileVisible = !string.IsNullOrEmpty(LeftFileName);
 
         _languageDirty = true;
-        Dispatcher.UIThread.Post(Compare);
+        Dispatcher.UIThread.Post(CompareAndSelectFirst);
     }
 
     private void Compare()
@@ -153,9 +187,55 @@ public partial class CompareViewModel : ObservableObject
         InsertMissingLines();
         AddColoringAndCountDifferences();
         SetTextStackPanels();
+        BuildRows();
         IsExportVisible = LeftSubtitles.Count > 0 && RightSubtitles.Count > 0;
-        SelectAndScrollToRow(LeftGrid, 0);
     }
+
+    private void CompareAndSelectFirst()
+    {
+        Compare();
+        SelectRow(0);
+    }
+
+    private void BuildRows()
+    {
+        var max = Math.Max(LeftSubtitles.Count, RightSubtitles.Count);
+        var rows = new List<CompareRow>(max);
+        for (var i = 0; i < max; i++)
+        {
+            var left = i < LeftSubtitles.Count ? LeftSubtitles[i] : new CompareItem();
+            var right = i < RightSubtitles.Count ? RightSubtitles[i] : new CompareItem();
+            var isEdited = left.Line != null && _editedIds.Contains(left.Line.Id);
+            rows.Add(new CompareRow(left, right, GetRowKind(left, right), isEdited, IsLeftEditable));
+        }
+
+        Rows = new ObservableCollection<CompareRow>(rows);
+        RowsRebuilt?.Invoke(this, EventArgs.Empty);
+    }
+
+    private static CompareRowKind GetRowKind(CompareItem left, CompareItem right)
+    {
+        if (!left.HasDifference)
+        {
+            return CompareRowKind.Same;
+        }
+
+        if (left.IsDefault)
+        {
+            return CompareRowKind.OnlyRight;
+        }
+
+        if (right.IsDefault)
+        {
+            return CompareRowKind.OnlyLeft;
+        }
+
+        return IsHighlighted(left.TextBackgroundBrush) || IsHighlighted(left.StartTimeBackgroundBrush) || IsHighlighted(left.EndTimeBackgroundBrush)
+            ? CompareRowKind.Changed
+            : CompareRowKind.NumberOnly;
+    }
+
+    private static bool IsHighlighted(IBrush brush) => !ReferenceEquals(brush, TransparentBrush);
 
     private void SetTextStackPanels()
     {
@@ -183,138 +263,103 @@ public partial class CompareViewModel : ObservableObject
     private void AddColoringAndCountDifferences()
     {
         var differences = new List<int>();
-        var index = 0;
-        var left = GetLeftItemOrNull(index);
-        var right = GetRightItemOrNull(index);
         var totalWords = 0;
         var wordsChanged = 0;
-        var max = Math.Max(LeftSubtitles.Count, RightSubtitles.Count);
         var min = Math.Min(LeftSubtitles.Count, RightSubtitles.Count);
         var onlyShowTextDiff = SelectedCompareVisual.Type == CompareVisualType.ShowOnlyDifferencesInText;
         var onlyShowDiff = SelectedCompareVisual.Type == CompareVisualType.ShowOnlyDifferences;
 
         ResetAllBackgroundColors();
+        AllCount = Math.Max(LeftSubtitles.Count, RightSubtitles.Count);
+        DifferenceCount = 0;
+        TextDifferenceCount = 0;
 
         if (LeftSubtitles.Count == 0 || RightSubtitles.Count == 0)
         {
             return;
         }
 
-        if (onlyShowTextDiff)
+        var differenceCount = 0;
+        var textDifferenceCount = 0;
+        for (var index = 0; index < min; index++)
         {
-            while (index < min)
-            {
-                var addIndexToDifferences = false;
-                Utilities.GetTotalAndChangedWords(left?.Text, right?.Text, ref totalWords, ref wordsChanged, IgnoreWhiteSpace, IgnoreFormatting, ShouldBreakToLetter());
+            var left = LeftSubtitles[index];
+            var right = RightSubtitles[index];
+            Utilities.GetTotalAndChangedWords(left.Text, right.Text, ref totalWords, ref wordsChanged, IgnoreWhiteSpace, IgnoreFormatting, ShouldBreakToLetter());
 
-                if (left == null || left.IsDefault)
+            bool isDifference;
+            bool isTextDifference;
+            if (left.IsDefault || right.IsDefault)
+            {
+                isDifference = true;
+                isTextDifference = true;
+                if (!right.IsDefault)
                 {
-                    addIndexToDifferences = true;
-                    if (right != null && !right.IsDefault)
-                    {
-                        SetItemBackgroundColor(index, false, ListViewRed, ItemColumn.All);
-                    }
+                    SetItemBackgroundColor(index, false, ListViewRed, ItemColumn.All);
                 }
-                else if (right == null || right.IsDefault)
+
+                if (!left.IsDefault)
                 {
-                    addIndexToDifferences = true;
-                    if (left != null && !left.IsDefault)
-                    {
-                        SetItemBackgroundColor(index, true, ListViewRed, ItemColumn.All);
-                    }
+                    SetItemBackgroundColor(index, true, ListViewRed, ItemColumn.All);
                 }
-                else if (!AreTextsEqual(left, right))
+            }
+            else
+            {
+                var startMatch = IsTimeEqual(left.StartTime, right.StartTime);
+                var endMatch = IsTimeEqual(left.EndTime, right.EndTime);
+                var textsMatch = AreTextsEqual(left, right);
+                var numbersMatch = IgnoreNumbering || left.Number == right.Number;
+                isTextDifference = !textsMatch;
+                isDifference = !startMatch || !endMatch || !textsMatch || !numbersMatch;
+
+                if (!textsMatch)
                 {
-                    addIndexToDifferences = true;
                     SetItemBackgroundColor(index, true, ListViewGreen, ItemColumn.Text);
                     SetItemBackgroundColor(index, false, ListViewGreen, ItemColumn.Text);
                 }
 
-                if (addIndexToDifferences)
+                // "Only differences in text" leaves the timing and numbering unmarked, as it always did.
+                if (!onlyShowTextDiff)
                 {
-                    differences.Add(index);
-                }
+                    if (!startMatch)
+                    {
+                        SetItemBackgroundColor(index, true, ListViewGreen, ItemColumn.StartTime);
+                        SetItemBackgroundColor(index, false, ListViewGreen, ItemColumn.StartTime);
+                    }
 
-                index++;
-                left = GetLeftItemOrNull(index);
-                right = GetRightItemOrNull(index);
+                    if (!endMatch)
+                    {
+                        SetItemBackgroundColor(index, true, ListViewGreen, ItemColumn.EndTime);
+                        SetItemBackgroundColor(index, false, ListViewGreen, ItemColumn.EndTime);
+                    }
+
+                    if (!numbersMatch)
+                    {
+                        SetItemBackgroundColor(index, true, ListViewOrange, ItemColumn.Number);
+                        SetItemBackgroundColor(index, false, ListViewOrange, ItemColumn.Number);
+                    }
+                }
             }
-        }
-        else
-        {
-            while (index < min)
+
+            // The tab counts are for the whole comparison, whichever view is showing.
+            if (isDifference)
             {
-                Utilities.GetTotalAndChangedWords(left?.Text, right?.Text, ref totalWords, ref wordsChanged, IgnoreWhiteSpace, IgnoreFormatting, ShouldBreakToLetter());
-                var addIndexToDifferences = false;
+                differenceCount++;
+            }
 
-                if (left == null || left.IsDefault)
-                {
-                    addIndexToDifferences = true;
-                    if (right != null && !right.IsDefault)
-                    {
-                        SetItemBackgroundColor(index, false, ListViewRed, ItemColumn.All);
-                    }
-                }
-                else if (right == null || right.IsDefault)
-                {
-                    addIndexToDifferences = true;
-                    if (left != null && !left.IsDefault)
-                    {
-                        SetItemBackgroundColor(index, true, ListViewRed, ItemColumn.All);
-                    }
-                }
-                else
-                {
-                    var timingsMatch = IsTimeEqual(left.StartTime, right.StartTime) && 
-                                      IsTimeEqual(left.EndTime, right.EndTime);
-                    var textsMatch = AreTextsEqual(left, right);
-                    var numbersMatch = left.Number == right.Number;
+            if (isTextDifference)
+            {
+                textDifferenceCount++;
+            }
 
-                    // Check if there are any differences at all
-                    if (!timingsMatch || !textsMatch || !numbersMatch)
-                    {
-                        addIndexToDifferences = true;
-
-                        // Start time difference
-                        if (!IsTimeEqual(left.StartTime, right.StartTime))
-                        {
-                            SetItemBackgroundColor(index, true, ListViewGreen, ItemColumn.StartTime);
-                            SetItemBackgroundColor(index, false, ListViewGreen, ItemColumn.StartTime);
-                        }
-
-                        // End time difference
-                        if (!IsTimeEqual(left.EndTime, right.EndTime))
-                        {
-                            SetItemBackgroundColor(index, true, ListViewGreen, ItemColumn.EndTime);
-                            SetItemBackgroundColor(index, false, ListViewGreen, ItemColumn.EndTime);
-                        }
-
-                        // Text difference
-                        if (!textsMatch)
-                        {
-                            SetItemBackgroundColor(index, true, ListViewGreen, ItemColumn.Text);
-                            SetItemBackgroundColor(index, false, ListViewGreen, ItemColumn.Text);
-                        }
-
-                        // Number difference
-                        if (!numbersMatch)
-                        {
-                            SetItemBackgroundColor(index, true, ListViewOrange, ItemColumn.Number);
-                            SetItemBackgroundColor(index, false, ListViewOrange, ItemColumn.Number);
-                        }
-                    }
-                }
-
-                if (addIndexToDifferences)
-                {
-                    differences.Add(index);
-                }
-
-                index++;
-                left = GetLeftItemOrNull(index);
-                right = GetRightItemOrNull(index);
+            if (onlyShowTextDiff ? isTextDifference : isDifference)
+            {
+                differences.Add(index);
             }
         }
+
+        DifferenceCount = differenceCount;
+        TextDifferenceCount = textDifferenceCount;
 
         foreach (var idx in differences)
         {
@@ -651,6 +696,11 @@ public partial class CompareViewModel : ObservableObject
     [RelayCommand]
     private async Task PickLeftSubtitleFile()
     {
+        if (!await ConfirmDiscardChangesAsync())
+        {
+            return;
+        }
+
         var fileName = await _fileHelper.PickOpenSubtitleFile(Window!, Se.Language.General.OpenSubtitleFileTitle);
         if (string.IsNullOrEmpty(fileName))
         {
@@ -672,8 +722,12 @@ public partial class CompareViewModel : ObservableObject
         LeftFileNameHasChanges = false;
         LeftFileName = fileName;
 
+        // Another file on the left is no longer the editor's subtitle - there is nothing to apply it to.
+        IsLeftEditable = false;
+        ResetEdits();
+
         _languageDirty = true;
-        Dispatcher.UIThread.Post(Compare);
+        Dispatcher.UIThread.Post(CompareAndSelectFirst);
     }
 
     [RelayCommand]
@@ -701,7 +755,7 @@ public partial class CompareViewModel : ObservableObject
         IsReloadFromFileVisible = false;
 
         _languageDirty = true;
-        Dispatcher.UIThread.Post(Compare);
+        Dispatcher.UIThread.Post(CompareAndSelectFirst);
     }
 
     [RelayCommand]
@@ -729,30 +783,19 @@ public partial class CompareViewModel : ObservableObject
         IsReloadFromFileVisible = false;
 
         _languageDirty = true;
-        Dispatcher.UIThread.Post(Compare);
+        Dispatcher.UIThread.Post(CompareAndSelectFirst);
     }
 
     [RelayCommand]
     private void PreviousDifference()
     {
-        var selected = SelectedLeft;
-        if (selected == null)
-        {
-            return;
-        }
-
-        var idx = LeftSubtitles.IndexOf(selected);
-        if (idx < 0)
-        {
-            return;
-        }
-
+        var idx = SelectedRow == null ? Rows.Count : Rows.IndexOf(SelectedRow);
         while (idx > 0)
         {
             idx--;
-            if (LeftSubtitles[idx].HasDifference)
+            if (Rows[idx].Kind != CompareRowKind.Same)
             {
-                SelectAndScrollToRow(LeftGrid, idx);
+                SelectRow(idx);
                 return;
             }
         }
@@ -761,27 +804,313 @@ public partial class CompareViewModel : ObservableObject
     [RelayCommand]
     private void NextDifference()
     {
-        var selected = SelectedLeft;
-        if (selected == null)
-        {
-            return;
-        }
-
-        var idx = LeftSubtitles.IndexOf(selected);
-        if (idx < 0)
-        {
-            return;
-        }
-
-        while (idx < LeftSubtitles.Count - 1)
+        var idx = SelectedRow == null ? -1 : Rows.IndexOf(SelectedRow);
+        while (idx < Rows.Count - 1)
         {
             idx++;
-            if (LeftSubtitles[idx].HasDifference)
+            if (Rows[idx].Kind != CompareRowKind.Same)
             {
-                SelectAndScrollToRow(LeftGrid, idx);
+                SelectRow(idx);
                 return;
             }
         }
+    }
+
+    [RelayCommand]
+    private void ShowAll() => SetCompareVisual(CompareVisualType.All);
+
+    [RelayCommand]
+    private void ShowDifferences() => SetCompareVisual(CompareVisualType.ShowOnlyDifferences);
+
+    [RelayCommand]
+    private void ShowTextDifferences() => SetCompareVisual(CompareVisualType.ShowOnlyDifferencesInText);
+
+    private void SetCompareVisual(CompareVisualType type)
+    {
+        var visual = CompareVisuals.FirstOrDefault(p => p.Type == type);
+        if (visual == null || visual == SelectedCompareVisual)
+        {
+            // Clicking the active tab toggled it off; give it its checked state back.
+            OnPropertyChanged(nameof(SelectedCompareVisual));
+            return;
+        }
+
+        SelectedCompareVisual = visual;
+        CompareKeepingPlace(SelectedRow?.Left.Line?.Id);
+    }
+
+    /// <summary>The gutter arrow: a differing pair takes the reference's text and timing, a reference-only line is inserted.</summary>
+    [RelayCommand]
+    private void TakeReference(CompareRow? row)
+    {
+        if (row == null || !row.CanTakeReference || row.Right.Line is not { } reference)
+        {
+            return;
+        }
+
+        if (row.Kind == CompareRowKind.OnlyRight)
+        {
+            var inserted = new SubtitleLineViewModel(reference, generateNewId: true);
+            var index = _leftLines.FindIndex(p => p.StartTime > inserted.StartTime);
+            ApplyEdit(inserted.Id, () =>
+            {
+                _leftLines.Insert(index < 0 ? _leftLines.Count : index, inserted);
+                return inserted;
+            }, Se.Language.File.CompareChangeInsertedX);
+            return;
+        }
+
+        ApplyToLeftLine(row, line =>
+        {
+            line.Text = reference.Text;
+            SetTimes(line, reference.StartTime, reference.EndTime);
+        }, Se.Language.File.CompareChangeTextAndTimingX);
+    }
+
+    [RelayCommand]
+    private void TakeReferenceText(CompareRow? row)
+    {
+        if (row?.Right.Line is { } reference && row.CanTakeFromPair)
+        {
+            ApplyToLeftLine(row, line => line.Text = reference.Text, Se.Language.File.CompareChangeTextX);
+        }
+    }
+
+    [RelayCommand]
+    private void TakeReferenceTiming(CompareRow? row)
+    {
+        if (row?.Right.Line is { } reference && row.CanTakeFromPair)
+        {
+            ApplyToLeftLine(row, line => SetTimes(line, reference.StartTime, reference.EndTime), Se.Language.File.CompareChangeTimingX);
+        }
+    }
+
+    [RelayCommand]
+    private void DeleteCurrentLine(CompareRow? row)
+    {
+        if (row == null || !row.CanEdit || row.Left.Line is not { } line)
+        {
+            return;
+        }
+
+        var number = line.Number;
+        var rowIndex = Rows.IndexOf(row);
+        PushUndo();
+        _leftLines.Remove(line);
+        _editedIds.Remove(line.Id);
+        Renumber();
+        AddChange(string.Format(Se.Language.File.CompareChangeDeletedX, number));
+        CompareKeepingPlace(null, rowIndex);
+    }
+
+    [RelayCommand]
+    private void BeginEdit(CompareRow? row)
+    {
+        if (row == null || !row.CanEdit)
+        {
+            return;
+        }
+
+        foreach (var other in Rows)
+        {
+            if (other.IsEditing && other != row)
+            {
+                other.IsEditing = false;
+            }
+        }
+
+        SelectedRow = row;
+        row.BeginEdit();
+    }
+
+    [RelayCommand]
+    private void CommitEdit(CompareRow? row)
+    {
+        if (row == null || !row.IsEditing)
+        {
+            return;
+        }
+
+        row.IsEditing = false;
+        var line = row.Left.Line;
+        if (line == null)
+        {
+            return;
+        }
+
+        var end = row.EditEnd < row.EditStart ? row.EditStart : row.EditEnd;
+        if (line.Text == row.EditText && IsTimeEqual(line.StartTime, row.EditStart) && IsTimeEqual(line.EndTime, end))
+        {
+            FocusRows();
+            return;
+        }
+
+        ApplyToLeftLine(row, l =>
+        {
+            l.Text = row.EditText;
+            SetTimes(l, row.EditStart, end);
+        }, Se.Language.File.CompareChangeEditedX);
+    }
+
+    [RelayCommand]
+    private void CancelEdit(CompareRow? row)
+    {
+        if (row != null)
+        {
+            row.IsEditing = false;
+        }
+
+        FocusRows();
+    }
+
+    [RelayCommand]
+    private void Undo()
+    {
+        if (_undoStack.Count == 0)
+        {
+            return;
+        }
+
+        var state = _undoStack.Pop();
+        _leftLines = state.Lines;
+        _editedIds = state.EditedIds;
+        _changes = state.Changes;
+        UpdatePendingChanges();
+        CompareKeepingPlace(SelectedRow?.Left.Line?.Id, SelectedRow == null ? 0 : Rows.IndexOf(SelectedRow));
+    }
+
+    /// <summary>The current lines, edits included, for the main window to take over on Apply.</summary>
+    public List<SubtitleLineViewModel> GetEditedLines() => _leftLines.Select(p => new SubtitleLineViewModel(p)).ToList();
+
+    private void ApplyToLeftLine(CompareRow row, Action<SubtitleLineViewModel> edit, string changeFormat)
+    {
+        if (row.Left.Line is not { } line)
+        {
+            return;
+        }
+
+        ApplyEdit(line.Id, () =>
+        {
+            edit(line);
+            return line;
+        }, changeFormat);
+    }
+
+    private void ApplyEdit(Guid lineId, Func<SubtitleLineViewModel> edit, string changeFormat)
+    {
+        PushUndo();
+
+        // The undo snapshot holds copies, so the live list can be changed in place from here.
+        var line = edit();
+        _editedIds.Add(lineId);
+        Renumber();
+        AddChange(string.Format(changeFormat, line.Number));
+        CompareKeepingPlace(lineId);
+    }
+
+    private void PushUndo()
+    {
+        _undoStack.Push(new EditState(
+            _leftLines.Select(p => new SubtitleLineViewModel(p)).ToList(),
+            new HashSet<Guid>(_editedIds),
+            new List<string>(_changes)));
+    }
+
+    private void AddChange(string description)
+    {
+        _changes.Add(description);
+        UpdatePendingChanges();
+    }
+
+    private void UpdatePendingChanges()
+    {
+        PendingChangeCount = _changes.Count;
+        LastChangeText = _changes.Count > 0 ? _changes[^1] : string.Empty;
+    }
+
+    private void ResetEdits()
+    {
+        _undoStack.Clear();
+        _editedIds.Clear();
+        _changes.Clear();
+        UpdatePendingChanges();
+    }
+
+    /// <summary>Numbers follow the line order, as the main window will number them - reference-only rows take none (#13449).</summary>
+    private void Renumber()
+    {
+        var number = 0;
+        foreach (var line in _leftLines)
+        {
+            if (!line.IsReferenceOnly)
+            {
+                line.Number = ++number;
+            }
+        }
+    }
+
+    private static void SetTimes(SubtitleLineViewModel line, TimeSpan start, TimeSpan end)
+    {
+        line.StartTime = start;
+        line.EndTime = end;
+    }
+
+    /// <summary>
+    /// Re-runs the comparison after an edit without losing the user's place: the list keeps its
+    /// scroll offset, and the row showing <paramref name="lineId"/> - or, for a line that is gone,
+    /// the row now at <paramref name="fallbackIndex"/> - becomes the selected one.
+    /// </summary>
+    private void CompareKeepingPlace(Guid? lineId, int fallbackIndex = 0)
+    {
+        var scrollViewer = RowsView?.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
+        var offset = scrollViewer?.Offset;
+
+        Compare();
+
+        var index = -1;
+        if (lineId is { } id)
+        {
+            for (var i = 0; i < Rows.Count; i++)
+            {
+                if (Rows[i].Left.Line?.Id == id)
+                {
+                    index = i;
+                    break;
+                }
+            }
+        }
+
+        if (index < 0)
+        {
+            index = Math.Clamp(fallbackIndex, 0, Math.Max(0, Rows.Count - 1));
+        }
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (scrollViewer != null && offset is { } o)
+            {
+                scrollViewer.Offset = o;
+            }
+
+            SelectRow(index);
+        }, DispatcherPriority.Loaded);
+    }
+
+    private async Task<bool> ConfirmDiscardChangesAsync()
+    {
+        if (!HasPendingChanges || Window == null)
+        {
+            return true;
+        }
+
+        var answer = await MessageBox.Show(
+            Window,
+            Se.Language.File.Compare,
+            string.Format(Se.Language.File.CompareDiscardXChanges, PendingChangeCount),
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+
+        return answer == MessageBoxResult.Yes;
     }
 
     [RelayCommand]
@@ -795,6 +1124,25 @@ public partial class CompareViewModel : ObservableObject
     private void Cancel()
     {
         Close();
+    }
+
+    /// <summary>Closing by Cancel, Escape or the title bar asks first when there are edits to lose.</summary>
+    internal void WindowClosing(object? sender, WindowClosingEventArgs e)
+    {
+        if (OkPressed || _closeConfirmed || !HasPendingChanges)
+        {
+            return;
+        }
+
+        e.Cancel = true;
+        Dispatcher.UIThread.Post(async () =>
+        {
+            if (await ConfirmDiscardChangesAsync())
+            {
+                _closeConfirmed = true;
+                Window?.Close();
+            }
+        });
     }
 
     [RelayCommand]
@@ -968,99 +1316,105 @@ public partial class CompareViewModel : ObservableObject
 
     internal void KeyDown(object? sender, KeyEventArgs e)
     {
+        var editing = Rows.FirstOrDefault(p => p.IsEditing);
+        var ctrl = e.KeyModifiers.HasFlag(KeyModifiers.Control) || e.KeyModifiers.HasFlag(KeyModifiers.Meta);
+
         if (e.Key == Key.Escape)
         {
-            Close();
+            e.Handled = true;
+            if (editing != null)
+            {
+                CancelEdit(editing);
+            }
+            else
+            {
+                Close();
+            }
         }
         else if (UiUtil.IsHelp(e))
         {
             e.Handled = true;
             UiUtil.ShowHelp("features/compare");
         }
+        else if (editing != null)
+        {
+            if (e.Key == Key.Enter && ctrl)
+            {
+                e.Handled = true;
+                CommitEdit(editing);
+            }
+        }
+        else if (e.Key == Key.F2)
+        {
+            e.Handled = true;
+            BeginEdit(SelectedRow);
+        }
+        else if (e.Key == Key.Z && ctrl)
+        {
+            e.Handled = true;
+            Undo();
+        }
+        else if (e.Key == Key.Left && e.KeyModifiers == KeyModifiers.Alt)
+        {
+            e.Handled = true;
+            TakeReference(SelectedRow);
+        }
+        else if (e.Key == Key.Delete && e.KeyModifiers == KeyModifiers.None && SelectedRow is { CanEdit: true })
+        {
+            e.Handled = true;
+            DeleteCurrentLine(SelectedRow);
+        }
+        else if (e.Key == Key.F8)
+        {
+            e.Handled = true;
+            if (e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            {
+                PreviousDifference();
+            }
+            else
+            {
+                NextDifference();
+            }
+        }
     }
 
-    internal void LeftGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    internal void SelectRow(int index)
     {
-        MirrorSelection(e, LeftSubtitles, LeftGrid, RightGrid);
-    }
-
-    internal void RightGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        MirrorSelection(e, RightSubtitles, RightGrid, LeftGrid);
-    }
-
-    /// <summary>
-    /// Selects the same row on the other side and lines the two views up again. SE4 assigned the
-    /// other list view's TopItem here (Compare.SelectLinesInBothListViews); ScrollIntoView only
-    /// promises the row is somewhere in view, so the two sides could keep the same row selected
-    /// while showing ranges a page apart (#13504).
-    /// </summary>
-    private void MirrorSelection(
-        SelectionChangedEventArgs e,
-        ObservableCollection<CompareItem> sourceItems,
-        TableView? source,
-        TableView? target)
-    {
-        if (_mirroringSelection || source == null || target == null || e.AddedItems.Count == 0)
+        if (index < 0 || index >= Rows.Count)
         {
             return;
         }
 
-        if (e.AddedItems[0] is not CompareItem selection)
-        {
-            return;
-        }
-
-        var idx = sourceItems.IndexOf(selection);
-        if (idx < 0)
-        {
-            return;
-        }
-
+        SelectedRow = Rows[index];
         Dispatcher.UIThread.Post(() =>
         {
-            // Mirroring the selection raises SelectionChanged on the other grid, which would
-            // mirror it straight back and re-align from the wrong side.
-            _mirroringSelection = true;
-            try
+            if (RowsView != null && SelectedRow != null)
             {
-                if (idx < target.ItemCount && target.SelectedIndex != idx)
-                {
-                    target.SelectedIndex = idx;
-                }
+                RowsView.ScrollIntoView(SelectedRow);
             }
-            finally
-            {
-                _mirroringSelection = false;
-            }
-
-            // Setting SelectedIndex makes the target grid *post* its own ScrollIntoView
-            // (SelectingItemsControl.AutoScrollToSelectedItemIfNecessary), and that scroll is
-            // computed from the panel's estimated row height, so a sync done here would be
-            // undone a frame later - the two sides ended one row apart on CI whenever the
-            // estimate put the selected row on the viewport's bottom edge. Queue the sync
-            // behind that scroll instead: same priority, so it runs after it.
-            Dispatcher.UIThread.Post(() => ScrollSync?.SyncFrom(source));
         });
     }
 
-    private void SelectAndScrollToRow(TableView? tableView, int index)
+    /// <summary>Scrolls so that row <paramref name="index"/> is in view, for the overview ruler.</summary>
+    internal void ScrollToRow(int index)
     {
-        if (index < 0 || tableView == null)
+        if (RowsView != null && index >= 0 && index < Rows.Count)
         {
-            return;
+            RowsView.ScrollIntoView(index);
         }
+    }
 
+    private void FocusRows()
+    {
         Dispatcher.UIThread.Post(() =>
         {
-            if (tableView.SelectedIndex != index)
+            if (RowsView?.ContainerFromItem(SelectedRow!) is { } container)
             {
-                tableView.SelectedIndex = index;
+                container.Focus();
             }
-
-            if (tableView.SelectedItem is { } item)
+            else
             {
-                tableView.ScrollIntoView(item);
+                RowsView?.Focus();
             }
         });
     }
@@ -1069,15 +1423,7 @@ public partial class CompareViewModel : ObservableObject
     {
         Task.Delay(100).ContinueWith(_ =>
         {
-            Dispatcher.UIThread.Post(Compare);
-        });
-    }
-
-    internal void ComboBoxCompareVisualSelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        Task.Delay(100).ContinueWith(_ =>
-        {
-            Dispatcher.UIThread.Post(Compare);
+            Dispatcher.UIThread.Post(CompareAndSelectFirst);
         });
     }
 
@@ -1105,8 +1451,13 @@ public partial class CompareViewModel : ObservableObject
         var files = e.DataTransfer.TryGetFiles();
         if (files != null)
         {
-            Dispatcher.UIThread.Post(() =>
+            Dispatcher.UIThread.Post(async () =>
             {
+                if (!await ConfirmDiscardChangesAsync())
+                {
+                    return;
+                }
+
                 foreach (var file in files)
                 {
                     var path = file.Path?.LocalPath;
@@ -1124,9 +1475,11 @@ public partial class CompareViewModel : ObservableObject
 
                     LeftFileNameHasChanges = false;
                     LeftFileName = path;
+                    IsLeftEditable = false;
+                    ResetEdits();
 
                     _languageDirty = true;
-                    Dispatcher.UIThread.Post(Compare);
+                    Dispatcher.UIThread.Post(CompareAndSelectFirst);
                     break;
                 }
             });
@@ -1163,7 +1516,7 @@ public partial class CompareViewModel : ObservableObject
                     RightFileName = path;
 
                     _languageDirty = true;
-                    Dispatcher.UIThread.Post(Compare);
+                    Dispatcher.UIThread.Post(CompareAndSelectFirst);
                     break;
                 }
             });
