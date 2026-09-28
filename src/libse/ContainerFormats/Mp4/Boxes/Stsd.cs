@@ -23,6 +23,38 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         /// </summary>
         public bool IsForcedSubtitle { get; private set; }
 
+        /// <summary>
+        /// H.265 video sample entry ("hvc1"/"hev1").
+        /// </summary>
+        public bool IsHevc => Name == "hvc1" || Name == "hev1";
+
+        /// <summary>
+        /// Size of the NAL unit length prefix in samples (1, 2 or 4) - lengthSizeMinusOne + 1 from the
+        /// "avcC"/"hvcC" decoder configuration. 4 when the configuration is not found.
+        /// </summary>
+        public int GetNalLengthSize()
+        {
+            var payload = SampleEntryPayload;
+            if (payload == null)
+            {
+                return 4;
+            }
+
+            // configuration record offset of the byte holding lengthSizeMinusOne (low 2 bits)
+            var type = IsHevc ? "hvcC" : "avcC";
+            var offset = IsHevc ? 21 : 4;
+            for (var i = 0; i + 4 + offset < payload.Length; i++)
+            {
+                if (payload[i] == type[0] && payload[i + 1] == type[1] && payload[i + 2] == type[2] && payload[i + 3] == type[3])
+                {
+                    var size = (payload[i + 4 + offset] & 0x03) + 1;
+                    return size == 3 ? 4 : size;
+                }
+            }
+
+            return 4;
+        }
+
         public Stsd(Stream fs, ulong maximumLength)
         {
             Position = (ulong)fs.Position;

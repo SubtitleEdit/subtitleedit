@@ -11,6 +11,25 @@ namespace Nikse.SubtitleEdit.Core.Cea608
     {
         public static List<CcData> GetCcData(Stream fs, ulong startPos, ulong size)
         {
+            return GetCcData(fs, startPos, size, isHevc: false, nalLengthSize: 4);
+        }
+
+        /// <summary>
+        /// Reads cc_data from the SEI NAL units of one MP4 video sample (length-prefixed NAL units).
+        /// </summary>
+        /// <param name="fs">Input stream</param>
+        /// <param name="startPos">Sample position</param>
+        /// <param name="size">Sample size</param>
+        /// <param name="isHevc">H.265 (2-byte NAL header, SEI types 39/40) instead of H.264</param>
+        /// <param name="nalLengthSize">Size of the NAL unit length prefix (1, 2 or 4) from avcC/hvcC</param>
+        public static List<CcData> GetCcData(Stream fs, ulong startPos, ulong size, bool isHevc, int nalLengthSize)
+        {
+            if (nalLengthSize != 1 && nalLengthSize != 2 && nalLengthSize != 4)
+            {
+                nalLengthSize = 4;
+            }
+
+            var nalHeaderSize = isHevc ? 2 : 1;
             var fieldData = new List<CcData>();
             if (size < 6 || size > int.MaxValue)
             {
@@ -30,15 +49,19 @@ namespace Nikse.SubtitleEdit.Core.Cea608
                 var read = fs.ReadFully(sample, 0, length);
 
                 var i = 0;
-                while (i + 5 < read)
+                while (i + nalLengthSize + nalHeaderSize < read)
                 {
-                    var nalSize = BinaryPrimitives.ReadUInt32BigEndian(sample.AsSpan(i, 4));
-                    var flag = sample[i + 4];
-                    if (IsRbspNalUnitType(flag & 0x1F) && nalSize < 10_000)
+                    var nalSize = ReadNalLength(sample, i, nalLengthSize);
+                    var flag = sample[i + nalLengthSize];
+                    var isSei = isHevc
+                        ? IsHevcSeiNalUnitType((flag >> 1) & 0x3F)
+                        : IsRbspNalUnitType(flag & 0x1F);
+                    if (isSei && nalSize < 10_000)
                     {
-                        // SEI payload spans [i + 5, i + nalSize + 3), clamped to what was read
-                        var seiStart = i + 5;
-                        var seiEnd = (int)Math.Min((long)i + nalSize + 3, read);
+                        // SEI payload spans from after the NAL header to the NAL end minus its
+                        // rbsp trailing byte, clamped to what was read
+                        var seiStart = i + nalLengthSize + nalHeaderSize;
+                        var seiEnd = (int)Math.Min((long)i + nalLengthSize + nalSize - 1, read);
                         if (seiEnd > seiStart)
                         {
                             var seiData = UnescapeSeiData(sample.AsSpan(seiStart, seiEnd - seiStart));
@@ -48,7 +71,7 @@ namespace Nikse.SubtitleEdit.Core.Cea608
 
                     // nalSize is unsigned and unvalidated here; widen so a bogus size
                     // cannot overflow the index into a negative value and loop forever
-                    var advance = (long)nalSize + 4;
+                    var advance = (long)nalSize + nalLengthSize;
                     if (i + advance > read)
                     {
                         break;
@@ -68,6 +91,24 @@ namespace Nikse.SubtitleEdit.Core.Cea608
         private static bool IsRbspNalUnitType(int unitType)
         {
             return unitType == 0x06;
+        }
+
+        private static bool IsHevcSeiNalUnitType(int unitType)
+        {
+            return unitType == 39 || unitType == 40; // prefix / suffix SEI
+        }
+
+        private static uint ReadNalLength(byte[] buffer, int index, int nalLengthSize)
+        {
+            switch (nalLengthSize)
+            {
+                case 1:
+                    return buffer[index];
+                case 2:
+                    return BinaryPrimitives.ReadUInt16BigEndian(buffer.AsSpan(index, 2));
+                default:
+                    return BinaryPrimitives.ReadUInt32BigEndian(buffer.AsSpan(index, 4));
+            }
         }
 
         public static byte[] GetSeiData(Stream fs, ulong startPos, ulong endPos)

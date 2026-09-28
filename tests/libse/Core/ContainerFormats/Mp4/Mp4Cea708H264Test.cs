@@ -25,6 +25,35 @@ public class Mp4Cea708H264Test
     [Fact]
     public void TrunCea708_AssemblesTextFromDtvccTripletsAcrossFrames()
     {
+        AssertHiFromSampleEntry("avc1", nalLengthSize: 4);
+    }
+
+    /// <summary>
+    /// H.265 SEI (prefix SEI NAL, type 39, 2-byte NAL header) in an "hvc1" track - it used to be
+    /// skipped, as only the H.264 SEI NAL type was recognized.
+    /// </summary>
+    [Theory]
+    [InlineData("hvc1")]
+    [InlineData("hev1")]
+    public void Cea708FromHevcSei(string sampleEntry)
+    {
+        AssertHiFromSampleEntry(sampleEntry, nalLengthSize: 4);
+    }
+
+    /// <summary>
+    /// The NAL unit length prefix size comes from avcC/hvcC (lengthSizeMinusOne) - it is not always 4.
+    /// </summary>
+    [Theory]
+    [InlineData("avc1", 2)]
+    [InlineData("hvc1", 2)]
+    [InlineData("avc1", 1)]
+    public void Cea708WithShortNalLengthPrefix(string sampleEntry, int nalLengthSize)
+    {
+        AssertHiFromSampleEntry(sampleEntry, nalLengthSize);
+    }
+
+    private static void AssertHiFromSampleEntry(string sampleEntry, int nalLengthSize)
+    {
         var ccDataPerSample = new[]
         {
             // sample 0 → packet seq=0, size_code=2 (4 bytes total), service 1, block_size=2
@@ -48,7 +77,7 @@ public class Mp4Cea708H264Test
         var tempFile = Path.GetTempFileName();
         try
         {
-            File.WriteAllBytes(tempFile, BuildH264Mp4WithCcData(ccDataPerSample, sampleTicks, timeScale));
+            File.WriteAllBytes(tempFile, BuildMp4WithCcData(ccDataPerSample, sampleTicks, timeScale, sampleEntry, nalLengthSize));
 
             var parser = new MP4Parser(tempFile);
             Assert.NotNull(parser.TrunCea708Subtitle);
@@ -66,19 +95,25 @@ public class Mp4Cea708H264Test
 
     private record CcTriplet(byte CcType, byte Data1, byte Data2);
 
-    // Build a minimal H.264-in-MP4 with one SEI per sample, each SEI carrying
-    // N cc_data triplets (arbitrary cc_type — 2/3 for CEA-708, 0/1 for CEA-608).
-    private static byte[] BuildH264Mp4WithCcData(CcTriplet[][] ccDataPerSample, uint sampleTicks, uint timeScale)
+    // Build a minimal H.264 ("avc1") or H.265 ("hvc1"/"hev1") MP4 with one SEI per sample, each
+    // SEI carrying N cc_data triplets (arbitrary cc_type — 2/3 for CEA-708, 0/1 for CEA-608), NAL
+    // units prefixed with a nalLengthSize-byte length as declared in the avcC/hvcC configuration.
+    private static byte[] BuildMp4WithCcData(CcTriplet[][] ccDataPerSample, uint sampleTicks, uint timeScale, string sampleEntry = "avc1", int nalLengthSize = 4)
     {
         var sampleCount = ccDataPerSample.Length;
+        var isHevc = sampleEntry != "avc1";
 
         var sampleBytes = new byte[sampleCount][];
         for (var i = 0; i < sampleCount; i++)
         {
-            var nal = BuildSeiNalWithCcData(ccDataPerSample[i]);
-            var withLengthPrefix = new byte[4 + nal.Length];
-            WriteUInt32Be(withLengthPrefix, 0, (uint)nal.Length);
-            System.Buffer.BlockCopy(nal, 0, withLengthPrefix, 4, nal.Length);
+            var nal = BuildSeiNalWithCcData(ccDataPerSample[i], isHevc);
+            var withLengthPrefix = new byte[nalLengthSize + nal.Length];
+            for (var b = 0; b < nalLengthSize; b++)
+            {
+                withLengthPrefix[b] = (byte)(nal.Length >> (8 * (nalLengthSize - 1 - b)));
+            }
+
+            System.Buffer.BlockCopy(nal, 0, withLengthPrefix, nalLengthSize, nal.Length);
             sampleBytes[i] = withLengthPrefix;
         }
         var sampleSizes = sampleBytes.Select(s => (uint)s.Length).ToArray();
@@ -92,11 +127,15 @@ public class Mp4Cea708H264Test
         var mdat = Box("mdat", mdatPayload);
         var sampleDataOffset = (uint)(ftyp.Length + 8);
 
-        var avc1Entry = Box("avc1");
+        // visual sample entry (78 bytes) + decoder configuration; only lengthSizeMinusOne is read:
+        // avcC byte 4, hvcC byte 21 (low 2 bits)
+        var configuration = new byte[isHevc ? 23 : 7];
+        configuration[isHevc ? 21 : 4] = (byte)(0xFC | (nalLengthSize - 1));
+        var videoEntry = Box(sampleEntry, new byte[78], Box(isHevc ? "hvcC" : "avcC", configuration));
         var stsd = Box("stsd",
             new byte[4],
             UInt32Be(1),
-            avc1Entry);
+            videoEntry);
 
         var stts = Box("stts",
             new byte[4],
@@ -148,10 +187,10 @@ public class Mp4Cea708H264Test
         return Concat(ftyp, mdat, moov);
     }
 
-    // Build an H.264 SEI NAL (nal_unit_type=6) containing an ATSC A/53
-    // user_data_registered_itu_t_t35 payload with N cc_data triplets.
+    // Build an H.264 SEI NAL (nal_unit_type=6) or H.265 prefix SEI NAL (nal_unit_type=39, 2-byte
+    // header) containing an ATSC A/53 user_data_registered_itu_t_t35 payload with N cc_data triplets.
     // Each triplet is: marker byte (cc_valid=1, cc_type=N) + cc_data_1 + cc_data_2.
-    private static byte[] BuildSeiNalWithCcData(CcTriplet[] triplets)
+    private static byte[] BuildSeiNalWithCcData(CcTriplet[] triplets, bool isHevc)
     {
         var ccCount = triplets.Length;
 
@@ -179,13 +218,10 @@ public class Mp4Cea708H264Test
         };
         sei.AddRange(payload);
 
-        var nal = new byte[1 + sei.Count];
-        nal[0] = 0x06;                              // nal_unit_type = SEI
-        for (var i = 0; i < sei.Count; i++)
-        {
-            nal[1 + i] = sei[i];
-        }
-        return nal;
+        var header = isHevc
+            ? new byte[] { 39 << 1, 0x01 }          // nal_unit_type = PREFIX_SEI, nuh_temporal_id_plus1 = 1
+            : new byte[] { 0x06 };                  // nal_unit_type = SEI
+        return Concat(header, sei.ToArray());
     }
 
     private static byte[] Box(string name, params byte[][] parts)
