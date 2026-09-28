@@ -311,6 +311,33 @@ public class RemuxVideoViewModelTests
     }
 
     [AvaloniaFact]
+    public void Subtitles_GetLanguageTagFromFileName()
+    {
+        var (vm, _, _) = BuildMixViewModel(false);
+        vm.SubtitleFiles.Add(new RemuxFileItem(Path.Combine(Path.GetTempPath(), "remux-does-not-exist.en.scc")));
+        vm.SubtitleFiles.Add(new RemuxFileItem(Path.Combine(Path.GetTempPath(), "remux-does-not-exist.srt")));
+        vm.SubtitleFiles.Add(new RemuxFileItem(Path.Combine(Path.GetTempPath(), "remux-does-not-exist.de.srt")));
+
+        var args = vm.BuildFfmpegArguments([.. vm.AudioFiles], [.. vm.SubtitleFiles]);
+
+        Assert.Contains("-metadata:s:s:0 language=eng ", args);
+        Assert.DoesNotContain("-metadata:s:s:1 language=", args);
+        Assert.Contains("-metadata:s:s:2 language=ger ", args);
+    }
+
+    [Theory]
+    [InlineData("movie.en.scc", "eng")]
+    [InlineData("movie.spa.srt", "spa")]
+    [InlineData("movie.fr.forced.srt", "fre")]
+    [InlineData("movie_track3_[dut].srt", "dut")]
+    [InlineData("movie.scc", null)]
+    [InlineData("Dr.No.srt", null)]
+    public void GetSubtitleLanguageFromFileName_ReturnsBibliographicCode(string fileName, string? expected)
+    {
+        Assert.Equal(expected, RemuxVideoViewModel.GetSubtitleLanguageFromFileName(fileName));
+    }
+
+    [AvaloniaFact]
     public void Mov_KeepsMultipleTracks_ButAssStillSwitchesToMkv()
     {
         var (vm, _, _) = BuildMixViewModel(false);

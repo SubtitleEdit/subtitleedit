@@ -4,6 +4,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
@@ -172,6 +173,17 @@ public partial class RemuxVideoViewModel : ObservableObject
         }
 
         return RequiresMkv(out reason) ? ".mkv" : null;
+    }
+
+    /// <summary>
+    /// The ISO 639-2/B code for a language tag in the subtitle file name ("movie.en.scc",
+    /// "movie.eng.srt", "movie_[eng].srt"), or null. ffmpeg writes it to the mov/mp4 track
+    /// header and the Matroska track, so players show "English CC" instead of "Unknown" (#15405).
+    /// </summary>
+    internal static string? GetSubtitleLanguageFromFileName(string fileName)
+    {
+        var language = OcrViewModel.ResolveIsoLanguage(OcrViewModel.DetectLanguageCodeFromFileName(fileName));
+        return language?.BibliographicCode;
     }
 
     private bool RequiresMkv(out string reason)
@@ -1236,6 +1248,12 @@ public partial class RemuxVideoViewModel : ObservableObject
             mapArgs.Append($"-map {currentInputIndex}:s:0 ");
             var subTitle = Path.GetFileNameWithoutExtension(subFile.FileName);
             metadataArgs.Append($"-metadata:s:s:{j} title=\"{EscapeFfmpegMetadata(subTitle)}\" ");
+            var subLanguage = GetSubtitleLanguageFromFileName(subFile.FileName);
+            if (subLanguage != null)
+            {
+                metadataArgs.Append($"-metadata:s:s:{j} language={subLanguage} ");
+            }
+
             currentInputIndex++;
         }
 
