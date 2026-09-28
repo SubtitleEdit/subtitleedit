@@ -273,6 +273,27 @@ internal static class ContainerSubtitleLoader
         var subtitleTracks = matroska.GetTracks(true);
         if (subtitleTracks.Count == 0)
         {
+            // CEA-608/708 closed captions inside the video track (e.g. a broadcast recording remuxed to .mkv)
+            var videoTrack = MatroskaClosedCaptionReader.GetVideoTrack(matroska);
+            if (videoTrack != null && (options.TrackNumbers.Count == 0 || options.TrackNumbers.Contains(videoTrack.TrackNumber)))
+            {
+                foreach (var captionTrack in MatroskaClosedCaptionReader.Read(matroska, MatroskaClosedCaptionReader.DefaultProbeMilliseconds, null))
+                {
+                    var subtitle = new Subtitle();
+                    subtitle.Paragraphs.AddRange(captionTrack.Value);
+                    subtitle.Renumber();
+                    var trackName = captionTrack.Key > ClosedCaptionExtractor.Cea708TrackKeyOffset
+                        ? $"cea708_{videoTrack.TrackNumber}_s{captionTrack.Key - ClosedCaptionExtractor.Cea708TrackKeyOffset}"
+                        : $"cea608_{videoTrack.TrackNumber}_cc{captionTrack.Key}";
+                    tracks.Add(new LoadedTrack(subtitle, new SubRip(), trackName, videoTrack.TrackNumber));
+                }
+            }
+
+            if (tracks.Count > 0)
+            {
+                return tracks;
+            }
+
             throw new InvalidOperationException($"No subtitle tracks in Matroska file: {filePath}");
         }
 

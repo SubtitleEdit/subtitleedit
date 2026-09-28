@@ -25223,14 +25223,54 @@ public partial class MainViewModel :
     /// same path .mp4 files take. It used to dead-end here on a "does not seem to contain any
     /// subtitles" error, so a subtitle-less .mkv could never be opened as a video (#12171).
     /// </summary>
+    private async Task<bool> ImportClosedCaptionsFromMatroskaFile(MatroskaFile matroska, string fileName, bool skipLoadVideo)
+    {
+        if (MatroskaClosedCaptionReader.GetVideoTrack(matroska) == null)
+        {
+            return false;
+        }
+
+        ShowStatus(string.Format(Se.Language.General.ParsingXDotDotDot, fileName));
+        var tracks = await Task.Run(() => MatroskaClosedCaptionReader.Read(matroska, MatroskaClosedCaptionReader.DefaultProbeMilliseconds,
+            (pos, total) => UpdateProgress(pos, total, string.Format(Se.Language.General.ParsingXDotDotDot, fileName))));
+        ShowStatus(string.Empty);
+        if (tracks.Count == 0)
+        {
+            return false;
+        }
+
+        // Prefer CEA-608 CC1 (the primary caption channel), like the .mp4 import does, otherwise
+        // the first track found (e.g. CEA-708 service 1).
+        var paragraphs = tracks.TryGetValue(1, out var cc1) ? cc1 : tracks.First().Value;
+        VideoCloseFile();
+        ResetSubtitle();
+        _subtitle = new Subtitle(paragraphs);
+        _subtitle.Renumber();
+        _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + SelectedSubtitleFormat.Extension;
+        ReplaceSubtitles(_subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
+        _converted = true;
+        ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
+        SelectAndScrollToRow(0);
+
+        if (Se.Settings.Video.AutoOpen && !skipLoadVideo)
+        {
+            await VideoOpenFile(fileName);
+        }
+
+        return true;
+    }
+
     private async Task<bool> ImportSubtitleFromMatroskaFile(string fileName, string? videoFileName, bool skipLoadVideo = false)
     {
         var matroska = new MatroskaFile(fileName);
         var subtitleList = matroska.GetTracks(true);
         if (subtitleList.Count == 0)
         {
+            // A broadcast recording remuxed to .mkv keeps its CEA-608/708 closed captions inside
+            // the video track.
+            var loaded = await ImportClosedCaptionsFromMatroskaFile(matroska, fileName, skipLoadVideo);
             matroska.Dispose();
-            return false;
+            return loaded;
         }
 
         if (subtitleList.Count > 1)

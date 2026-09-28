@@ -291,6 +291,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             string codecId = string.Empty;
             byte[] codecPrivateRaw = null;
             int contentCompressionAlgorithm = -1;
+            byte[] contentCompSettings = null;
             int contentEncodingType = -1;
             uint contentEncodingScope = 1;
 
@@ -346,7 +347,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                         var contentEncodingElement = ReadElement();
                         if (contentEncodingElement != null && contentEncodingElement.Id == ElementId.ContentEncoding)
                         {
-                            ReadContentEncodingElement(element, ref contentCompressionAlgorithm, ref contentEncodingType, ref contentEncodingScope);
+                            ReadContentEncodingElement(element, ref contentCompressionAlgorithm, ref contentCompSettings, ref contentEncodingType, ref contentEncodingScope);
                         }
                         break;
                     case ElementId.FlagDefault:
@@ -371,6 +372,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 Name = name,
                 ContentEncodingType = contentEncodingType,
                 ContentCompressionAlgorithm = contentCompressionAlgorithm,
+                ContentCompSettings = contentCompSettings,
                 ContentEncodingScope = contentEncodingScope,
                 IsDefault = isDefault,
                 IsForced = isForced,
@@ -386,7 +388,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             }
         }
 
-        private void ReadContentEncodingElement(Element contentEncodingElement, ref int contentCompressionAlgorithm, ref int contentEncodingType, ref uint contentEncodingScope)
+        private void ReadContentEncodingElement(Element contentEncodingElement, ref int contentCompressionAlgorithm, ref byte[] contentCompSettings, ref int contentEncodingType, ref uint contentEncodingScope)
         {
             Element element;
             while (_stream.Position < contentEncodingElement.EndPosition && (element = ReadElement()) != null)
@@ -414,8 +416,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                                     contentCompressionAlgorithm = ReadUIntAsInt(compElement.DataSize);
                                     break;
                                 case ElementId.ContentCompSettings:
-                                    var contentCompSettings = ReadUIntAsInt(compElement.DataSize);
-                                    System.Diagnostics.Debug.WriteLine("ContentCompSettings: " + contentCompSettings);
+                                    // for header stripping (algorithm 3): the bytes removed from the start of every frame
+                                    contentCompSettings = new byte[compElement.DataSize];
+                                    _stream.ReadFully(contentCompSettings, 0, contentCompSettings.Length);
                                     break;
                                 default:
                                     // compElement, not element: seeking by the parent
@@ -813,8 +816,45 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 _stream.ReadFully(data, 0, dataLength);
 
                 var subtitle = new MatroskaSubtitle(data, (long)Math.Round(GetTimeScaledToMilliseconds(clusterTimeCode + timeCode, _timeCodeScale)));
-                return new MatroskaSubtitleBlock(trackNumber, subtitle);
+                return new MatroskaSubtitleBlock(trackNumber, subtitle) { IsLaced = (flags & 6) != 0 };
             }
+        }
+
+        /// <summary>
+        /// Reads the frames (blocks) of one track - e.g. a video track - in file order, without
+        /// keeping them in memory. Laced blocks are skipped, and header stripping compression is
+        /// undone.
+        /// </summary>
+        /// <param name="track">Track to read</param>
+        /// <param name="onFrame">Gets the frame time in milliseconds and the frame data; returns false to stop reading</param>
+        /// <param name="progressCallback">Optional progress callback</param>
+        public void ReadTrackFrames(MatroskaTrackInfo track, Func<long, byte[], bool> onFrame, LoadMatroskaCallback progressCallback)
+        {
+            ReadSegmentInfoAndTracks();
+            var headerStripping = track.ContentEncodingType == 0 && track.ContentCompressionAlgorithm == 3 && track.ContentCompSettings?.Length > 0
+                ? track.ContentCompSettings
+                : null;
+            var stop = false;
+            var clusterReader = new ClusterReader(_stream, new HashSet<int> { track.TrackNumber }, _timeCodeScale, block =>
+            {
+                if (stop || block.IsLaced)
+                {
+                    return;
+                }
+
+                var data = block.Subtitle.Data;
+                if (headerStripping != null)
+                {
+                    var restored = new byte[headerStripping.Length + data.Length];
+                    System.Buffer.BlockCopy(headerStripping, 0, restored, 0, headerStripping.Length);
+                    System.Buffer.BlockCopy(data, 0, restored, headerStripping.Length, data.Length);
+                    data = restored;
+                }
+
+                stop = !onFrame(block.Subtitle.Start, data);
+            });
+
+            ReadSegmentCluster(progressCallback, clusterReader, () => stop);
         }
 
         /// <summary>
@@ -878,6 +918,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             public int TrackNumber { get; }
 
             public MatroskaSubtitle Subtitle { get; }
+
+            public bool IsLaced { get; set; }
         }
 
         public void Dispose() => Dispose(true);
@@ -915,7 +957,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 
         private void ReadSegmentCluster(LoadMatroskaCallback progressCallback)
         {
-            var clusterReader = new ClusterReader(_stream, _subtitleTrackNumbers, _timeCodeScale, AddSubtitleBlock);
+            ReadSegmentCluster(progressCallback, new ClusterReader(_stream, _subtitleTrackNumbers, _timeCodeScale, AddSubtitleBlock), null);
+        }
+
+        private void ReadSegmentCluster(LoadMatroskaCallback progressCallback, ClusterReader clusterReader, Func<bool> stopRequested)
+        {
 
             // go to segment
             _stream.Seek(_segmentElement.DataPosition, SeekOrigin.Begin);
@@ -963,6 +1009,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 if (element.Id == ElementId.Cluster)
                 {
                     clusterReader.ReadCluster(element);
+                    if (stopRequested?.Invoke() == true)
+                    {
+                        return;
+                    }
                 }
                 else
                 {
