@@ -83,6 +83,18 @@ public class BatchConvertTransportStreamSplitter : IBatchConvertItemSplitter
             }
         }
 
+        // CEA-608/708 closed captions from the video stream (ATSC/cable broadcasts)
+        foreach (var videoPid in tsParser.ClosedCaptionSubtitlesLookup)
+        {
+            foreach (var track in videoPid.Value)
+            {
+                if (track.Value.Count > 0)
+                {
+                    result.Add(MakeTrackItem(item, tsSettings, string.Empty, videoPid.Key, track.Key, new Subtitle(track.Value), imageSubtitle: null));
+                }
+            }
+        }
+
         return result;
     }
 

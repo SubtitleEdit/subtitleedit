@@ -128,6 +128,25 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         }
 
         /// <summary>
+        /// Get stream_type per elementary PID
+        /// </summary>
+        public Dictionary<int, int> GetStreamTypes()
+        {
+            var result = new Dictionary<int, int>();
+            foreach (var programMapTable in _programMapTables)
+            {
+                foreach (var stream in programMapTable.Streams)
+                {
+                    if (!result.ContainsKey(stream.ElementaryPid))
+                    {
+                        result.Add(stream.ElementaryPid, stream.StreamType);
+                    }
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Get data_component_id per elementary PID from ARIB data_component_descriptors (tag 0xFD) -
         /// identifies ISDB caption streams: 0x0008 = ARIB profile A captions, 0x0012 = profile C (one-seg)
         /// </summary>
