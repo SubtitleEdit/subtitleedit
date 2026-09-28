@@ -34,6 +34,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
         /// </summary>
         public List<Mp4FragmentedSubtitleTrack> FragmentedSubtitleTracks { get; } = new List<Mp4FragmentedSubtitleTrack>();
 
+        /// <summary>
+        /// CEA-608/708 closed captions from the video track: paragraphs per track key
+        /// (1-4 = CC1-CC4, 100 + n = CEA-708 service n, see <see cref="ClosedCaptionDecoder"/>).
+        /// </summary>
+        public SortedDictionary<int, List<Paragraph>> ClosedCaptionTracks { get; private set; } = new SortedDictionary<int, List<Paragraph>>();
+
         public Subtitle TrunCea608Subtitle { get; private set; }
         public Subtitle TrunCea708Subtitle { get; private set; }
         private List<Cea608.CcData> _trunCcData = new List<Cea608.CcData>();
@@ -548,7 +554,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
         }
 
         /// <summary>
-        /// Decodes cc_data (timestamped in video track ticks) into TrunCea608Subtitle and TrunCea708Subtitle.
+        /// Decodes cc_data (timestamped in video track ticks) into ClosedCaptionTracks,
+        /// TrunCea608Subtitle and TrunCea708Subtitle.
         /// </summary>
         private void DecodeCcData(List<CcData> ccDataList, double timeScale)
         {
@@ -557,57 +564,36 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                 return;
             }
 
-            var sortedCcData = ccDataList.OrderBy(p => p.Time).ToList();
-
-            // CEA-608 (NTSC fields 1 + 2). Isolated in its own try so a
-            // failure in the 608 decoder doesn't suppress the 708 path.
-            var cea608Entries = sortedCcData.Where(c => c.Type == 0 || c.Type == 1).ToList();
-            if (cea608Entries.Count > 0)
-            {
-                try
-                {
-                    TrunCea608Subtitle = new Subtitle();
-                    var cea608Parser = new CcDataC608Parser();
-                    cea608Parser.DisplayScreen += data =>
-                    {
-                        var startMs = data.Start / timeScale * 1000.0;
-                        var endMs = data.End / timeScale * 1000.0;
-                        Cea608CueBuilder.Add(TrunCea608Subtitle.Paragraphs, SerializedScreenText.GetText(data.Screen), startMs, endMs);
-                    };
-                    foreach (var cc in cea608Entries)
-                    {
-                        cea608Parser.AddData((int)cc.Time, new[] { cc.Data1, cc.Data2 });
-                    }
-                }
-                catch (Exception e)
-                {
-                    SeLogger.Error(e, "Error while parsing MP4 video track CEA-608");
-                }
-            }
-
-            // CEA-708 (DTVCC). Run regardless of 608's success/failure —
-            // many real broadcast MP4s carry only one or the other.
-            DecodeCea708(sortedCcData, timeScale);
-        }
-
-        private void DecodeCea708(List<Cea608.CcData> sortedCcData, double timeScale)
-        {
             try
             {
-                // Service 1 is the primary caption service - by far the most common;
-                // extended services 2..63 would carry alternate languages.
-                var decoder = new Cea708.DtvccServiceDecoder { OnlyService = 1 };
-                foreach (var cc in sortedCcData)
+                // one frame per timestamp; the decoder puts frames in presentation order itself
+                var decoder = new ClosedCaptionDecoder();
+                var frame = new List<CcData>();
+                var frameTime = ccDataList[0].Time;
+                foreach (var cc in ccDataList)
                 {
-                    decoder.Add(cc.Type, cc.Data1, cc.Data2, cc.Time / timeScale * 1000.0);
+                    if (cc.Time != frameTime)
+                    {
+                        decoder.AddFrame((long)Math.Round(frameTime / timeScale * 1000.0), frame.ToArray());
+                        frame.Clear();
+                        frameTime = cc.Time;
+                    }
+
+                    frame.Add(cc);
                 }
 
-                var services = decoder.Finish();
-                TrunCea708Subtitle = services.TryGetValue(1, out var paragraphs) ? new Subtitle(paragraphs) : null;
+                decoder.AddFrame((long)Math.Round(frameTime / timeScale * 1000.0), frame.ToArray());
+                ClosedCaptionTracks = decoder.Finish(0);
+
+                // CC1 (else the first CEA-608 channel) and CEA-708 service 1 (else the first service)
+                var cea608 = ClosedCaptionTracks.Where(p => p.Key < ClosedCaptionDecoder.Cea708TrackKeyOffset).Select(p => p.Value).FirstOrDefault();
+                var cea708 = ClosedCaptionTracks.Where(p => p.Key > ClosedCaptionDecoder.Cea708TrackKeyOffset).Select(p => p.Value).FirstOrDefault();
+                TrunCea608Subtitle = cea608 != null ? new Subtitle(cea608) : null;
+                TrunCea708Subtitle = cea708 != null ? new Subtitle(cea708) : null;
             }
             catch (Exception e)
             {
-                SeLogger.Error(e, "Error while parsing MP4 moov video track CEA-708");
+                SeLogger.Error(e, "Error while parsing MP4 video track closed captions");
             }
         }
 

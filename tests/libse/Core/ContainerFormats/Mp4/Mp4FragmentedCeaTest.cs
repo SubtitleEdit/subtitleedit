@@ -20,7 +20,7 @@ public class Mp4FragmentedCeaTest
 
         Assert.NotNull(parser.TrunCea608Subtitle);
         var cea608 = parser.TrunCea608Subtitle.Paragraphs;
-        Assert.Equal(3, cea608.Count);
+        Assert.Equal(4, cea608.Count); // the last one is the caption still on screen when the stream ends
         Assert.Equal("(<i>inaudible radio chatter</i>)", cea608[0].Text);
         Assert.InRange(cea608[0].StartTime.TotalMilliseconds, 1034 - 1, 1034 + 1);
 

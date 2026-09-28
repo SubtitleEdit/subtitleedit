@@ -25082,14 +25082,22 @@ public partial class MainViewModel :
                 return true;
             }
 
-            // Prefer CEA-608 if present, otherwise fall back to CEA-708 — most US
-            // broadcast MP4s carry both, but newer streams (and many international
-            // ones) carry only CEA-708.
-            var captionsFromH264 = mp4Parser.TrunCea608Subtitle?.Paragraphs.Count > 0
-                ? mp4Parser.TrunCea608Subtitle
-                : mp4Parser.TrunCea708Subtitle?.Paragraphs.Count > 0
-                    ? mp4Parser.TrunCea708Subtitle
-                    : null;
+            // CEA-608/708 closed captions in the video track - most US broadcast MP4s carry
+            // both, newer streams (and many international ones) only CEA-708. With more than
+            // one caption track (CC1-CC4, CEA-708 services) the user picks one.
+            Subtitle? captionsFromH264 = null;
+            if (mp4Parser.ClosedCaptionTracks.Count > 0)
+            {
+                var videoTrackNumber = (int)(mp4Parser.GetVideoTracks().FirstOrDefault()?.Tkhd?.TrackId ?? 0);
+                var picked = await PickClosedCaptionTrackAsync(mp4Parser.ClosedCaptionTracks, videoTrackNumber,
+                    string.Format(Se.Language.File.PickMp4TrackX, fileName));
+                if (picked == null)
+                {
+                    return true; // picker cancelled
+                }
+
+                captionsFromH264 = new Subtitle(picked);
+            }
 
             if (captionsFromH264 != null)
             {
@@ -25223,6 +25231,25 @@ public partial class MainViewModel :
     /// same path .mp4 files take. It used to dead-end here on a "does not seem to contain any
     /// subtitles" error, so a subtitle-less .mkv could never be opened as a video (#12171).
     /// </summary>
+    /// <summary>
+    /// A single CEA-608/708 caption track is returned as it is, from several the user picks one.
+    /// </summary>
+    /// <returns>Paragraphs of the track, null if the picker was cancelled</returns>
+    private async Task<List<Paragraph>?> PickClosedCaptionTrackAsync(SortedDictionary<int, List<Paragraph>> tracks, int videoTrackNumber, string windowTitle)
+    {
+        if (tracks.Count == 1)
+        {
+            return tracks.First().Value;
+        }
+
+        var result = await ShowDialogAsync<PickTsTrackWindow, PickTsTrackViewModel>(vm =>
+        {
+            vm.InitializeClosedCaptions(tracks, videoTrackNumber, windowTitle);
+        });
+
+        return result.OkPressed && result.SelectedTrack != null ? result.TeletextSubtitle.Paragraphs : null;
+    }
+
     private async Task<bool> ImportClosedCaptionsFromMatroskaFile(MatroskaFile matroska, string fileName, bool skipLoadVideo)
     {
         if (MatroskaClosedCaptionReader.GetVideoTrack(matroska) == null)
@@ -25239,9 +25266,14 @@ public partial class MainViewModel :
             return false;
         }
 
-        // Prefer CEA-608 CC1 (the primary caption channel), like the .mp4 import does, otherwise
-        // the first track found (e.g. CEA-708 service 1).
-        var paragraphs = tracks.TryGetValue(1, out var cc1) ? cc1 : tracks.First().Value;
+        // With more than one caption track (CC1-CC4, CEA-708 services) the user picks one
+        var paragraphs = await PickClosedCaptionTrackAsync(tracks, MatroskaClosedCaptionReader.GetVideoTrack(matroska)!.TrackNumber,
+            string.Format(Se.Language.File.PickMatroskaTrackX, fileName));
+        if (paragraphs == null)
+        {
+            return true; // picker cancelled
+        }
+
         VideoCloseFile();
         ResetSubtitle();
         _subtitle = new Subtitle(paragraphs);

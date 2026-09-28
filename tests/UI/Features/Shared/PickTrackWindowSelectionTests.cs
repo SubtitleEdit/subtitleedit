@@ -272,6 +272,40 @@ public class PickTrackWindowSelectionTests
         }
     }
 
+    /// <summary>
+    /// CEA-608/708 caption tracks from an .mp4/.mkv video track: one row per CC channel / CEA-708
+    /// service, and the preselected first row (CC1) is what OK returns.
+    /// </summary>
+    [AvaloniaFact]
+    public void PickTsTrackWindow_ClosedCaptionTracks()
+    {
+        var tracks = new SortedDictionary<int, List<Paragraph>>
+        {
+            { 1, new List<Paragraph> { new Paragraph("CC1 text", 1000, 2000) } },
+            { 3, new List<Paragraph> { new Paragraph("CC3 text", 1000, 2000) } },
+            { 101, new List<Paragraph> { new Paragraph("708 text", 1000, 2000) } },
+        };
+        var vm = new PickTsTrackViewModel();
+        vm.InitializeClosedCaptions(tracks, 1, "Pick MP4 track - movie.mp4");
+        var window = new PickTsTrackWindow(vm);
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal(new[] { "CEA-608 CC1", "CEA-608 CC3", "CEA-708 service 1" }, vm.Tracks.Select(p => p.Codec));
+            Assert.Contains("movie.mp4", window.Title);
+            Assert.Same(vm.Tracks[0], vm.SelectedTrack);
+            Assert.Equal("CC1 text", Assert.Single(vm.TeletextSubtitle.Paragraphs).Text);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     private static PickVobSubLanguageViewModel MakeVobSubViewModel(int languageCount)
     {
         var streamIdDictionary = new Dictionary<int, List<VobSubMergedPack>>();

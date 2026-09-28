@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Core.Cea608;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Features.Ocr;
@@ -146,6 +147,27 @@ public partial class PickTsTrackViewModel : ObservableObject
                 Teletext = page.Value,
                 Codec = "Teletext",
                 IsTeletext = true,
+            });
+        }
+    }
+
+    /// <summary>
+    /// CEA-608/708 closed caption tracks read from the video track of an .mp4 or .mkv file.
+    /// </summary>
+    /// <param name="captionTracks">Paragraphs per track key (see <see cref="ClosedCaptionDecoder"/>)</param>
+    /// <param name="trackNumber">Video track the captions came from</param>
+    /// <param name="windowTitle">Window title</param>
+    internal void InitializeClosedCaptions(SortedDictionary<int, List<Paragraph>> captionTracks, int trackNumber, string windowTitle)
+    {
+        WindowTitle = windowTitle;
+        foreach (var track in captionTracks)
+        {
+            Tracks.Add(new TsTrackInfoDisplay
+            {
+                TrackNumber = trackNumber,
+                Teletext = track.Value,
+                Codec = ClosedCaptionDecoder.GetTrackName(track.Key),
+                IsTeletext = true, // text track - same preview/open handling as teletext
             });
         }
     }
