@@ -672,7 +672,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     }
                     else if (!italicOn && IsItalicOn(text.ToString()))
                     {
-                        text.Append("</i>");
+                        AppendItalicEnd(text);
                     }
                     text.Append(textCommand.Content);
                 }
@@ -693,6 +693,12 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     {
                         italicOn = attributes.Italics;
                     }
+                    else if (command is Reset || (command is DefineWindow defineWindow && defineWindow.PenStyleId > 0))
+                    {
+                        // Both (re)apply a predefined pen style, none of which is italic - without
+                        // this, a retained italic SetPenAttributes leaked into every later caption.
+                        italicOn = false;
+                    }
 
                     commands.Add(command);
                 }
@@ -700,10 +706,24 @@ namespace Nikse.SubtitleEdit.Core.Cea708
 
             if (IsItalicOn(text.ToString()))
             {
-                text.Append("</i>");
+                AppendItalicEnd(text);
             }
 
             state.Commands = commands;
+        }
+
+        /// <summary>
+        /// Closes an italic run right after its last visible char, so "&lt;i&gt;yo " + "ok" becomes "&lt;i&gt;yo&lt;/i&gt; ok".
+        /// </summary>
+        private static void AppendItalicEnd(StringBuilder text)
+        {
+            var index = text.Length;
+            while (index > 0 && text[index - 1] == ' ')
+            {
+                index--;
+            }
+
+            text.Insert(index, "</i>");
         }
 
         private static bool IsItalicOn(string text)
