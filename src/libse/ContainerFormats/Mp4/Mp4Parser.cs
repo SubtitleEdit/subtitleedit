@@ -472,6 +472,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                 //debugInfo.AppendLine($"CheckForMoovVideoCea608: chunks={stbl.ChunkOffsets.Count}, sizes={stbl.SampleSizes.Count}, ssts={stbl.Ssts.Count}, stsc={stbl.Stsc.Count}");
 
                 var timeScale = stbl.TimeScale > 0 ? stbl.TimeScale : (Moov?.Mvhd?.TimeScale ?? 1000UL);
+                var isHevc = stbl.Stsd?.IsHevc == true;
+                var nalLengthSize = stbl.Stsd?.GetNalLengthSize() ?? 4;
                 var ccDataList = new List<CcData>();
                 var samplesScanned = 0;
 
@@ -514,7 +516,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                                 // old cap). Cap at the actual sample size — GetCcData stops
                                 // at NAL boundaries so the cost is just a few extra reads.
                                 var scanSize = (ulong)sampleSize;
-                                var ccData = GetCcDataHelper.GetCcData(fs, chunkOffset, scanSize);
+                                var ccData = GetCcDataHelper.GetCcData(fs, chunkOffset, scanSize, isHevc, nalLengthSize);
                                 // Use presentation timestamp (DTS + ctts offset) so cc_data from B-frames lands in display order.
                                 var cttsOffset = index < stbl.Ctts.Count ? stbl.Ctts[index] : 0;
                                 var pts = (ulong)((long)totalTicks + cttsOffset);
@@ -755,6 +757,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                     continue;
                 }
 
+                var stsd = trak?.Mdia?.Minf?.Stbl?.Stsd;
+                var isHevc = stsd?.IsHevc == true;
+                var nalLengthSize = stsd?.GetNalLengthSize() ?? 4;
                 var dts = traf.Tfdt.BaseMediaDecodeTime;
                 // trun data offsets are relative to tfhd's base-data-offset when present
                 // (PIFF/Smooth Streaming sets it), and to the moof start otherwise.
@@ -782,7 +787,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                             // A frame carries several cc_data triplets - the CEA-608 pairs of both
                             // fields and up to ~30 CEA-708 packet bytes - all at the frame's
                             // presentation time (decode time + composition offset).
-                            var ccData = GetCcDataHelper.GetCcData(fs, startPosition, sample.Size.Value);
+                            var ccData = GetCcDataHelper.GetCcData(fs, startPosition, sample.Size.Value, isHevc, nalLengthSize);
                             var pts = (long)dts + (sample.TimeOffset ?? 0);
                             foreach (var cc in ccData)
                             {
