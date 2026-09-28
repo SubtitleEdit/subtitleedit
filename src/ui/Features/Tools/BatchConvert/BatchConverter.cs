@@ -2483,10 +2483,25 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         if (c.RebalanceLongLines)
         {
+            // Same threshold rule as the split/break dialog: at or above the single line max
+            // length means "keep any text that fits on one line", and capping there prevents
+            // merging to a single line that would exceed the max length (#12910).
+            var unbreakLinesShorterThan = c.UnbreakLinesShorterThan > 0
+                ? c.UnbreakLinesShorterThan
+                : Se.Settings.General.UnbreakLinesShorterThan;
+            var mergeLinesShorterThan = unbreakLinesShorterThan >= c.SingleLineMaxLength
+                ? c.SingleLineMaxLength + 1
+                : unbreakLinesShorterThan;
+
             for (var index = 0; index < subtitlesFixed.Count; index++)
             {
                 var item = subtitlesFixed[index];
-                var rebalancedText = Utilities.AutoBreakLine(item.Text, c.SingleLineMaxLength, Se.Settings.General.UnbreakLinesShorterThan, language);
+                if (c.RebalanceOnlyLinesTooLong && !SplitBreakLongLinesViewModel.HasLineTooLong(item.Text, c.SingleLineMaxLength, c.MaxNumberOfLines))
+                {
+                    continue;
+                }
+
+                var rebalancedText = Utilities.AutoBreakLine(item.Text, c.SingleLineMaxLength, mergeLinesShorterThan, language);
                 if (rebalancedText != item.Text)
                 {
                     item.Text = rebalancedText;

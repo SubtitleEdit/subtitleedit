@@ -294,6 +294,8 @@ public class BatchConvertConfig
         public int SingleLineMaxLength { get; set; }
         public int MaxNumberOfLines { get; set; }
         public bool RebalanceLongLines { get; set; }
+        public bool RebalanceOnlyLinesTooLong { get; set; }
+        public int UnbreakLinesShorterThan { get; set; }
     }
 
     public class AssaChangeResolutionSettings

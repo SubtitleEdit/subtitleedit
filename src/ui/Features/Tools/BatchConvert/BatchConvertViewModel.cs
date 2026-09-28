@@ -242,6 +242,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private int _splitBreakSingleLineMaxLength;
     [ObservableProperty] private int _splitBreakMaxNumberOfLines;
     [ObservableProperty] private bool _splitBreakRebalanceLongLines;
+    [ObservableProperty] private bool _splitBreakRebalanceOnlyLinesTooLong;
+    [ObservableProperty] private int _splitBreakUnbreakLinesShorterThan;
 
     // ASSA change resolution
     [ObservableProperty] private int _assaChangeResolutionTargetWidth;
@@ -842,6 +844,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         Se.Settings.Tools.SplitRebalanceLongLinesRebalance = SplitBreakRebalanceLongLines;
         Se.Settings.Tools.SplitRebalanceLongLinesSingleLineMaxLength = SplitBreakSingleLineMaxLength;
         Se.Settings.Tools.SplitRebalanceLongLinesMaxNumberOfLines = SplitBreakMaxNumberOfLines;
+        Se.Settings.Tools.SplitRebalanceLongLinesRebalanceOnlyTooLong = SplitBreakRebalanceOnlyLinesTooLong;
+        Se.Settings.Tools.SplitRebalanceLongLinesUnbreakShorterThan = SplitBreakUnbreakLinesShorterThan;
 
         Se.SaveSettings();
     }
@@ -996,6 +1000,10 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             : Se.Settings.General.MaxNumberOfLines;
         SplitBreakSplitLongLines = Se.Settings.Tools.SplitRebalanceLongLinesSplit;
         SplitBreakRebalanceLongLines = Se.Settings.Tools.SplitRebalanceLongLinesRebalance;
+        SplitBreakRebalanceOnlyLinesTooLong = Se.Settings.Tools.SplitRebalanceLongLinesRebalanceOnlyTooLong;
+        SplitBreakUnbreakLinesShorterThan = Se.Settings.Tools.SplitRebalanceLongLinesUnbreakShorterThan > 0
+            ? Se.Settings.Tools.SplitRebalanceLongLinesUnbreakShorterThan
+            : Se.Settings.General.UnbreakLinesShorterThan;
 
         // Offset time codes
         OffsetTimeCodesTime = TimeSpan.FromMilliseconds(Se.Settings.Tools.BatchConvert.OffsetTimeCodesMilliseconds);
@@ -2854,6 +2862,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                 IsActive = activeFunctions.Contains(BatchConvertFunctionType.SplitBreakLongLines),
                 SplitLongLines = SplitBreakSplitLongLines,
                 RebalanceLongLines = SplitBreakRebalanceLongLines,
+                RebalanceOnlyLinesTooLong = SplitBreakRebalanceOnlyLinesTooLong,
+                UnbreakLinesShorterThan = SplitBreakUnbreakLinesShorterThan,
                 MaxNumberOfLines = SplitBreakMaxNumberOfLines,
                 SingleLineMaxLength = SplitBreakSingleLineMaxLength,
             },
