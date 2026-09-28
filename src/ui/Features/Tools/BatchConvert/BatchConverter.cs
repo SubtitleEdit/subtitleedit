@@ -447,10 +447,11 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             item.Subtitle = await RunConvertFunctions(item, imageToImage, cancellationToken);
         }
 
-        // Save text based formats
+        // Save text based formats - binary ones like EBU STL are in the list too (for loading),
+        // but their ToText is just "Not supported!", so they go through the binary save below
         foreach (var format in _subtitleFormats)
         {
-            if (format.Name == _config.TargetFormatName && item.Subtitle != null)
+            if (format.IsTextBased && format.Name == _config.TargetFormatName && item.Subtitle != null)
             {
                 await SaveSubtitleFormat(item, format, cancellationToken);
                 return;
@@ -472,11 +473,16 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             {
                 var format = kvp.Value;
 
-                if (format is Ebu && !string.IsNullOrEmpty(_config.EbuHeader))
+                if (format is Ebu)
                 {
-                    item.Subtitle.Header = _config.EbuHeader;
+                    // Ebu.Save writes nothing without a UI helper, so it is needed even when the
+                    // EBU settings dialog was never opened
                     Ebu.EbuUiHelper ??= new UiEbuSaveHelper();
-                    Ebu.EbuUiHelper.JustificationCode = _config.EbuJustificationCode;
+                    if (!string.IsNullOrEmpty(_config.EbuHeader))
+                    {
+                        item.Subtitle.Header = _config.EbuHeader;
+                        Ebu.EbuUiHelper.JustificationCode = _config.EbuJustificationCode;
+                    }
                 }
 
                 if (format is IBinaryPersistableSubtitle binaryPersistableSubtitle)
