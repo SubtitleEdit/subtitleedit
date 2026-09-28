@@ -35,14 +35,18 @@ public static class WaveFileExtractor
                 audioParameter = $"-map 0:{audioTrackNumber}?";
             }
 
-            var fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ac 2 -ab 128 -af volume=1.75 -f wav {2} \"{1}\"";
+            // "aresample=async=1:first_pts=0" lays the samples out on the stream's timestamps: a WAV
+            // has none, so without it any gap in the audio timestamps (screen recorders drop audio)
+            // was squeezed out and everything after it was drawn early - 0.7 s in issue #15385.
+            // "first_pts=0" is required; "async=1" alone did not fill that gap.
+            var fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ac 2 -ab 128 -af \"aresample=async=1:first_pts=0,volume=1.75\" -f wav {2} \"{1}\"";
             if (settings.General.FfmpegUseCenterChannelOnly &&
                 FfmpegMediaInfo.Parse(inputVideoFile).HasFrontCenterAudio(audioTrackNumber))
             {
                 // Both filters go in one "-af" chain: ffmpeg keeps only the last "-af" per output
                 // stream, so the older two-option form silently dropped the volume boost and drew
                 // center-channel waveforms quieter than every other waveform.
-                fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ab 128 -af \"pan=mono|c0=FC,volume=1.75\" -f wav {2} \"{1}\"";
+                fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ab 128 -af \"pan=mono|c0=FC,aresample=async=1:first_pts=0,volume=1.75\" -f wav {2} \"{1}\"";
                 encoderName += " FC";
             }
 
