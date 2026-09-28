@@ -94,7 +94,7 @@ public partial class CompareRow : ObservableObject
         };
     }
 
-    private static string FormatDuration(CompareItem item)
+    internal static string FormatDuration(CompareItem item)
     {
         if (item.IsDefault)
         {

@@ -1168,9 +1168,9 @@ public partial class CompareViewModel : ObservableObject
         sb.AppendLine("    <h1>Subtitle Edit compare</h1>");
         sb.AppendLine("    <table>");
         sb.AppendLine("    <tr>");
-        sb.AppendLine("      <th colspan='4' style='text-align:left'>" + GetFileName(LeftFileName) + "</th>");
+        sb.AppendLine("      <th colspan='5' style='text-align:left'>" + GetFileName(LeftFileName) + "</th>");
         sb.AppendLine("      <th>&nbsp;</th>");
-        sb.AppendLine("      <th colspan='4' style='text-align:left'>" + GetFileName(RightFileName) + "</th>");
+        sb.AppendLine("      <th colspan='5' style='text-align:left'>" + GetFileName(RightFileName) + "</th>");
         sb.AppendLine("    </tr>");
         // Belt and braces alongside the button guard: only the padded rows are pairs.
         var rowCount = Math.Min(LeftSubtitles.Count, RightSubtitles.Count);
@@ -1184,16 +1184,18 @@ public partial class CompareViewModel : ObservableObject
             sb.AppendLine("      <td" + GetHtmlBackgroundColor(itemLeft.NumberBackgroundBrush) + ">" + GetHtmlText(itemLeft, itemLeft.Number.ToString()) + "</td>");
             sb.AppendLine("      <td" + GetHtmlBackgroundColor(itemLeft.StartTimeBackgroundBrush) + ">" + GetHtmlText(itemLeft, new TimeCode(itemLeft.StartTime).ToDisplayString()) + "</td>");
             sb.AppendLine("      <td" + GetHtmlBackgroundColor(itemLeft.EndTimeBackgroundBrush) + ">" + GetHtmlText(itemLeft, new TimeCode(itemLeft.EndTime).ToDisplayString()) + "</td>");
+            sb.AppendLine("      <td>" + HtmlUtil.EncodeNamed(CompareRow.FormatDuration(itemLeft)) + "</td>");
             sb.AppendLine("      <td" + GetHtmlBackgroundColor(itemLeft.TextBackgroundBrush) + ">" + leftTextHtml + "</td>");
             sb.AppendLine("      <td>&nbsp;</td>");
             sb.AppendLine("      <td" + GetHtmlBackgroundColor(itemRight.NumberBackgroundBrush) + ">" + GetHtmlText(itemRight, itemRight.Number.ToString()) + "</td>");
             sb.AppendLine("      <td" + GetHtmlBackgroundColor(itemRight.StartTimeBackgroundBrush) + ">" + GetHtmlText(itemRight, new TimeCode(itemRight.StartTime).ToDisplayString()) + "</td>");
             sb.AppendLine("      <td" + GetHtmlBackgroundColor(itemRight.EndTimeBackgroundBrush) + ">" + GetHtmlText(itemRight, new TimeCode(itemRight.EndTime).ToDisplayString()) + "</td>");
+            sb.AppendLine("      <td>" + HtmlUtil.EncodeNamed(CompareRow.FormatDuration(itemRight)) + "</td>");
             sb.AppendLine("      <td" + GetHtmlBackgroundColor(itemRight.TextBackgroundBrush) + ">" + rightTextHtml + "</td>");
             sb.AppendLine("    </tr>");
         }
         sb.AppendLine("    <tr>");
-        sb.AppendLine("      <td colspan='9' style='text-align:left'><br />" + StatusText + "</td>");
+        sb.AppendLine("      <td colspan='11' style='text-align:left'><br />" + StatusText + "</td>");
         sb.AppendLine("    </tr>");
         sb.AppendLine("    </table>");
         sb.AppendLine("  </body>");
