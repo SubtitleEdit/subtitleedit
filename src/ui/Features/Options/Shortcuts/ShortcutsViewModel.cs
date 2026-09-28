@@ -1381,7 +1381,9 @@ public partial class ShortcutsViewModel : ObservableObject
     /// </summary>
     private static bool IsKeyCombinationMatch(string searchText, ShortCut p)
     {
-        if (!searchText.Contains('+') || p.Keys.Count == 0)
+        // Without '+', only a lone modifier like "ctrl" is treated as a key search,
+        // since the list shows "Control" (or mac symbols) rather than the alias
+        if (p.Keys.Count == 0 || !searchText.Contains('+') && !IsModifierAlias(searchText.Trim()))
         {
             return false;
         }
@@ -1409,16 +1411,23 @@ public partial class ShortcutsViewModel : ObservableObject
         return true;
     }
 
-    private static bool KeyMatchesSearchToken(string key, string token)
+    private static string? GetModifierFromAlias(string token)
     {
-        var normalizedToken = token.ToLowerInvariant() switch
+        return token.ToLowerInvariant() switch
         {
             "ctrl" or "control" => "Control",
             "alt" or "option" or "opt" => "Alt",
             "shift" => "Shift",
             "win" or "windows" or "cmd" or "command" or "meta" or "super" => "Win",
-            _ => token,
+            _ => null,
         };
+    }
+
+    private static bool IsModifierAlias(string token) => GetModifierFromAlias(token) != null;
+
+    private static bool KeyMatchesSearchToken(string key, string token)
+    {
+        var normalizedToken = GetModifierFromAlias(token) ?? token;
 
         if (key.Equals(normalizedToken, StringComparison.OrdinalIgnoreCase))
         {
