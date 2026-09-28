@@ -110,6 +110,23 @@ public partial class PickTsTrackViewModel : ObservableObject
                 Tracks.Add(display);
             }
         }
+
+        foreach (var videoPid in tsParser.ClosedCaptionSubtitlesLookup)
+        {
+            foreach (var track in videoPid.Value)
+            {
+                var display = new TsTrackInfoDisplay
+                {
+                    TrackNumber = videoPid.Key,
+                    Teletext = track.Value,
+                    IsDefault = false,
+                    IsForced = false,
+                    Codec = ClosedCaptionExtractor.GetTrackName(track.Key),
+                    IsTeletext = true, // text track - same preview/open handling as teletext
+                };
+                Tracks.Add(display);
+            }
+        }
     }
 
     /// <summary>

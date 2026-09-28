@@ -625,6 +625,31 @@ internal static class ContainerSubtitleLoader
                     tracks.Add(new LoadedTrack(subtitle, new SubRip(), trackName, pidEntry.Key));
                 }
             }
+
+            // CEA-608/708 closed captions from the video stream (ATSC/cable broadcasts) — also text
+            foreach (var pidEntry in parser.ClosedCaptionSubtitlesLookup)
+            {
+                if (options.TrackNumbers.Count > 0 && !options.TrackNumbers.Contains(pidEntry.Key))
+                {
+                    continue;
+                }
+
+                foreach (var trackEntry in pidEntry.Value)
+                {
+                    if (trackEntry.Value.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    var subtitle = new Subtitle();
+                    subtitle.Paragraphs.AddRange(trackEntry.Value);
+                    subtitle.Renumber();
+                    var trackName = trackEntry.Key > ClosedCaptionExtractor.Cea708TrackKeyOffset
+                        ? $"cea708_{pidEntry.Key}_s{trackEntry.Key - ClosedCaptionExtractor.Cea708TrackKeyOffset}"
+                        : $"cea608_{pidEntry.Key}_cc{trackEntry.Key}";
+                    tracks.Add(new LoadedTrack(subtitle, new SubRip(), trackName, pidEntry.Key));
+                }
+            }
         }
 
         // 2. DVB-sub (image) — runs through Tesseract

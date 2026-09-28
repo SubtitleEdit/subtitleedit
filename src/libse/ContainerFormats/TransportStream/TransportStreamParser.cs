@@ -27,6 +27,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         public SortedDictionary<int, SortedDictionary<int, List<Paragraph>>> AribSubtitlesLookup { get; set; } // ARIB STD-B24 captions: pid -> language index -> paragraphs
         public Dictionary<int, Dictionary<int, string>> AribLanguageLookup { get; set; } // pid -> language index -> ISO 639-2 code
         private Dictionary<int, List<DvbSubPes>> _aribPesLookup;
+        public SortedDictionary<int, SortedDictionary<int, List<Paragraph>>> ClosedCaptionSubtitlesLookup { get; set; } // CEA-608/708 from the video stream: video pid -> track key (see ClosedCaptionExtractor) -> paragraphs
+        private Dictionary<int, ClosedCaptionExtractor> _closedCaptionExtractors;
+        private HashSet<int> _nonVideoPacketIds;
+        private ProgramMapTableParser _programMapTableParser;
 
         private List<Packet> SubtitlePackets { get; set; }
         private SortedDictionary<int, List<DvbSubPes>> SubtitlesLookup { get; set; }
@@ -81,10 +85,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             AribSubtitlesLookup = new SortedDictionary<int, SortedDictionary<int, List<Paragraph>>>();
             AribLanguageLookup = new Dictionary<int, Dictionary<int, string>>();
             _aribPesLookup = new Dictionary<int, List<DvbSubPes>>();
+            ClosedCaptionSubtitlesLookup = new SortedDictionary<int, SortedDictionary<int, List<Paragraph>>>();
+            _closedCaptionExtractors = new Dictionary<int, ClosedCaptionExtractor>();
+            _nonVideoPacketIds = new HashSet<int>();
             var teletextPesList = new Dictionary<int, List<DvbSubPes>>();
             var teletextPages = new Dictionary<int, List<int>>();
             ulong? firstMs = null;
             ulong? firstVideoMs = null;
+
+            // stream types (video codec for closed captions) and ARIB data component ids
+            _programMapTableParser = new ProgramMapTableParser();
+            _programMapTableParser.Parse(ms);
+            var streamTypes = _programMapTableParser.GetStreamTypes(); // partial results are fine
 
             // check for Topfield .rec file
             ms.Seek(position, SeekOrigin.Begin);
@@ -121,6 +133,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     // firstVideoMs is known, every packet must still be fully materialized to
                     // read the PES timestamp bytes, exactly as before.
                     var packetId = Packet.PeekPacketId(packetBuffer);
+                    AddClosedCaptionPacket(packetId, packetBuffer, streamTypes);
                     if (packetId == Packet.NullPacketId)
                     {
                         NumberOfNullPackets++;
@@ -224,7 +237,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 SubtitlesLookup.Remove(id);
             }
 
-            ParseAribCaptions(ms, firstVideoMs ?? firstMs);
+            ParseAribCaptions(firstVideoMs ?? firstMs);
+            FinishClosedCaptions(firstVideoMs ?? firstMs);
 
             DvbSubtitlesLookup = new SortedDictionary<int, List<TransportStreamSubtitle>>();
             if (_isM2TransportStream) // m2ts blu-ray images from PES packets
@@ -376,7 +390,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         /// <summary>
         /// Decode collected ARIB STD-B24 caption PES packets (ISDB broadcasts) into text paragraphs
         /// </summary>
-        private void ParseAribCaptions(Stream ms, ulong? firstMs)
+        private void ParseAribCaptions(ulong? firstMs)
         {
             if (_aribPesLookup.Count == 0)
             {
@@ -385,10 +399,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
             // the ARIB data_component_descriptor in the PMT tells profile A (full-seg, 0x0008)
             // and profile C (one-seg, 0x0012) caption streams apart
-            var pmtParser = new ProgramMapTableParser();
-            pmtParser.Parse(ms);
-            var dataComponentIds = pmtParser.GetAribDataComponentIds(); // partial results are fine
-
+            var dataComponentIds = _programMapTableParser.GetAribDataComponentIds(); // partial results are fine
 
             var offset = (long)(firstMs ?? 0);
             foreach (var pid in _aribPesLookup.Keys)
@@ -435,6 +446,62 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             }
 
             _aribPesLookup.Clear();
+        }
+
+        /// <summary>
+        /// Feeds packets of video PIDs to a CEA-608/708 extractor. A PID counts as video when its
+        /// first PES packet has a video stream id; the codec comes from the PMT when it is known.
+        /// </summary>
+        private void AddClosedCaptionPacket(int packetId, byte[] packetBuffer, Dictionary<int, int> streamTypes)
+        {
+            if (_closedCaptionExtractors.TryGetValue(packetId, out var extractor))
+            {
+                extractor.AddPacket(packetBuffer);
+                return;
+            }
+
+            if ((packetBuffer[1] & 0x40) == 0 || packetId == Packet.NullPacketId || _nonVideoPacketIds.Contains(packetId))
+            {
+                return;
+            }
+
+            if (!ClosedCaptionExtractor.IsVideoPesStart(packetBuffer))
+            {
+                _nonVideoPacketIds.Add(packetId);
+                return;
+            }
+
+            var codec = ClosedCaptionExtractor.VideoCodec.Unknown;
+            if (streamTypes.TryGetValue(packetId, out var streamType) && !ClosedCaptionExtractor.IsVideoStreamType(streamType, out codec))
+            {
+                _nonVideoPacketIds.Add(packetId); // e.g. a video codec without closed captions support
+                return;
+            }
+
+            extractor = new ClosedCaptionExtractor(codec);
+            _closedCaptionExtractors.Add(packetId, extractor);
+            extractor.AddPacket(packetBuffer);
+        }
+
+        private void FinishClosedCaptions(ulong? firstMs)
+        {
+            foreach (var extractor in _closedCaptionExtractors)
+            {
+                try
+                {
+                    var tracks = extractor.Value.Finish((long)(firstMs ?? 0));
+                    if (tracks.Count > 0)
+                    {
+                        ClosedCaptionSubtitlesLookup.Add(extractor.Key, tracks);
+                    }
+                }
+                catch (Exception e)
+                {
+                    SeLogger.Error(e, "Error while parsing transport stream closed captions");
+                }
+            }
+
+            _closedCaptionExtractors.Clear();
         }
 
         /// <summary>

@@ -24957,7 +24957,7 @@ public partial class MainViewModel :
         ShowStatus(string.Empty);
 
         if (tsParser.SubtitlePacketIds.Count == 0 && tsParser.TeletextSubtitlesLookup.Count == 0 &&
-            tsParser.AribSubtitlesLookup.Count == 0)
+            tsParser.AribSubtitlesLookup.Count == 0 && tsParser.ClosedCaptionSubtitlesLookup.Count == 0)
         {
             await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.General.NoSubtitlesFound,
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -24966,13 +24966,16 @@ public partial class MainViewModel :
 
         var teletextTrackCount = tsParser.TeletextSubtitlesLookup.Sum(p => p.Value.Count);
         var aribTrackCount = tsParser.AribSubtitlesLookup.Sum(p => p.Value.Count);
-        if (tsParser.SubtitlePacketIds.Count == 0 && teletextTrackCount + aribTrackCount == 1)
+        var closedCaptionTrackCount = tsParser.ClosedCaptionSubtitlesLookup.Sum(p => p.Value.Count);
+        if (tsParser.SubtitlePacketIds.Count == 0 && teletextTrackCount + aribTrackCount + closedCaptionTrackCount == 1)
         {
             VideoCloseFile();
             ResetSubtitle();
             var textParagraphs = teletextTrackCount == 1
                 ? tsParser.TeletextSubtitlesLookup.First().Value.First().Value
-                : tsParser.AribSubtitlesLookup.First().Value.First().Value;
+                : aribTrackCount == 1
+                    ? tsParser.AribSubtitlesLookup.First().Value.First().Value
+                    : tsParser.ClosedCaptionSubtitlesLookup.First().Value.First().Value;
             _subtitle = new Subtitle(textParagraphs);
             _subtitle.Renumber();
             ReplaceSubtitles(_subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
@@ -24988,7 +24991,7 @@ public partial class MainViewModel :
         }
 
         int packetId = 0;
-        if (tsParser.SubtitlePacketIds.Count + teletextTrackCount + aribTrackCount > 1)
+        if (tsParser.SubtitlePacketIds.Count + teletextTrackCount + aribTrackCount + closedCaptionTrackCount > 1)
         {
             var result = await ShowDialogAsync<PickTsTrackWindow, PickTsTrackViewModel>(vm => { vm.Initialize(tsParser, fileName); });
 

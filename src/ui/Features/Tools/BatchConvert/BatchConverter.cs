@@ -578,6 +578,17 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             }
         }
 
+        foreach (var tracks in tsParser.ClosedCaptionSubtitlesLookup.Values)
+        {
+            foreach (var paragraphs in tracks.Values)
+            {
+                if (paragraphs.Count > 0)
+                {
+                    result.Add(new TransportStreamResult { IsImage = false, Subtitle = new Subtitle(paragraphs) });
+                }
+            }
+        }
+
         return result;
     }
 

@@ -584,161 +584,21 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
         {
             try
             {
-                // Step 1: assemble DTVCC packets from the cc_type 3 (PACKET_START)
-                // and cc_type 2 (PACKET_DATA) triplet stream. Each PACKET_START
-                // triplet carries: data1 = packet header (sequence<<6 | size_code),
-                // data2 = first byte of packet content. Subsequent PACKET_DATA
-                // triplets contribute 2 more content bytes each.
-                var packets = new List<DtvccPacket>();
-                DtvccPacket current = null;
+                // Service 1 is the primary caption service - by far the most common;
+                // extended services 2..63 would carry alternate languages.
+                var decoder = new Cea708.DtvccServiceDecoder { OnlyService = 1 };
                 foreach (var cc in sortedCcData)
                 {
-                    if (cc.Type == 3)
-                    {
-                        if (current != null)
-                        {
-                            packets.Add(current);
-                        }
-                        current = new DtvccPacket { Time = cc.Time, Header = (byte)cc.Data1 };
-                        current.Content.Add((byte)cc.Data2);
-                    }
-                    else if (cc.Type == 2 && current != null)
-                    {
-                        current.Content.Add((byte)cc.Data1);
-                        current.Content.Add((byte)cc.Data2);
-                    }
-                }
-                if (current != null)
-                {
-                    packets.Add(current);
+                    decoder.Add(cc.Type, cc.Data1, cc.Data2, cc.Time / (double)timeScale * 1000.0);
                 }
 
-                if (packets.Count == 0)
-                {
-                    return;
-                }
-
-                // Step 2: for each packet, parse out service blocks. Service 1 is
-                // the primary caption service; we collect its bytes per-packet
-                // (timestamped at the packet's PTS) and feed them to Cea708.Decode.
-                TrunCea708Subtitle = new Subtitle();
-                var state = new Cea708.CommandState();
-                var packetTimesMs = new List<double>();
-
-                foreach (var packet in packets)
-                {
-                    var service1Bytes = ExtractService1(packet);
-                    if (service1Bytes.Length == 0)
-                    {
-                        continue;
-                    }
-
-                    var packetMs = packet.Time / (double)timeScale * 1000.0;
-                    packetTimesMs.Add(packetMs);
-                    var lineIndex = packetTimesMs.Count - 1;
-
-                    var text = Cea708.Cea708.Decode(lineIndex, service1Bytes, state, flush: false);
-                    EmitCea708Paragraph(text, state, packetTimesMs, endMs: packetMs);
-                }
-
-                // Final flush so any text still buffered (no terminating display
-                // command in the stream) still gets surfaced.
-                if (packetTimesMs.Count > 0)
-                {
-                    var tailText = Cea708.Cea708.Decode(packetTimesMs.Count, Array.Empty<byte>(), state, flush: true);
-                    EmitCea708Paragraph(tailText, state, packetTimesMs, endMs: packetTimesMs[packetTimesMs.Count - 1]);
-                }
-
-                if (TrunCea708Subtitle.Paragraphs.Count == 0)
-                {
-                    TrunCea708Subtitle = null;
-                }
+                var services = decoder.Finish();
+                TrunCea708Subtitle = services.TryGetValue(1, out var paragraphs) ? new Subtitle(paragraphs) : null;
             }
             catch (Exception e)
             {
                 SeLogger.Error(e, "Error while parsing MP4 moov video track CEA-708");
             }
-        }
-
-        // Walk a DTVCC packet's service blocks and return the concatenated bytes
-        // belonging to service 1 (the primary caption service — by far the most
-        // common; extended services 2..63 would carry alternate languages).
-        // Service block header byte: bits 7-5 = service_number, bits 4-0 = block_size.
-        // If service_number == 7, an extended_service_number byte follows.
-        // service_number == 0 with block_size == 0 marks the end of the packet
-        // (NULL service block / padding).
-        private static byte[] ExtractService1(DtvccPacket packet)
-        {
-            var result = new List<byte>();
-            var content = packet.Content;
-            // packet_size_code in the low 6 bits of the header: 0 → 128 bytes,
-            // n → n*2 bytes (TOTAL packet length including the header). Clamp
-            // to what we actually have so a malformed truncated packet doesn't
-            // walk past the buffer.
-            var sizeCode = packet.Header & 0x3F;
-            var declaredPacketBytes = sizeCode == 0 ? 128 : sizeCode * 2;
-            var contentBytesFromHeader = declaredPacketBytes - 1; // minus 1-byte packet header
-            var limit = Math.Min(content.Count, contentBytesFromHeader);
-
-            var i = 0;
-            while (i < limit)
-            {
-                var header = content[i++];
-                var serviceNum = (header >> 5) & 0x07;
-                var blockSize = header & 0x1F;
-
-                if (serviceNum == 0 && blockSize == 0)
-                {
-                    break; // NULL service block — rest of packet is padding
-                }
-
-                if (serviceNum == 7)
-                {
-                    if (i >= limit) break;
-                    serviceNum = content[i++] & 0x3F;
-                }
-
-                if (i + blockSize > limit)
-                {
-                    break; // malformed: declared block runs past packet
-                }
-
-                if (serviceNum == 1 && blockSize > 0)
-                {
-                    for (var j = 0; j < blockSize; j++)
-                    {
-                        result.Add(content[i + j]);
-                    }
-                }
-                i += blockSize;
-            }
-
-            return result.ToArray();
-        }
-
-        private class DtvccPacket
-        {
-            public ulong Time;
-            public byte Header;
-            public List<byte> Content { get; } = new List<byte>();
-        }
-
-        private void EmitCea708Paragraph(string text, Cea708.CommandState state, List<double> frameTimesMs, double endMs)
-        {
-            if (string.IsNullOrEmpty(text))
-            {
-                return;
-            }
-
-            // state.StartLineIndex is set by Cea708.FlushText to the lineIndex of
-            // the first SetText command that contributed to the just-emitted
-            // caption — i.e., when the text "started". Clamp defensively in case
-            // the index isn't valid (e.g., flush with empty state).
-            var startIndex = state.StartLineIndex >= 0 && state.StartLineIndex < frameTimesMs.Count
-                ? state.StartLineIndex
-                : frameTimesMs.Count - 1;
-            var startMs = frameTimesMs[startIndex];
-            TrunCea708Subtitle.Paragraphs.Add(new Paragraph(text.Trim(), startMs, endMs));
         }
 
         private void CheckForTrunCea608()

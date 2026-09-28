@@ -151,35 +151,71 @@ namespace Nikse.SubtitleEdit.Core.Cea608
                 if (IsStartOfCcDataHeader(payloadType, buffer, x))
                 {
                     var pos = x + 10;
-                    var ccCount = pos + (buffer[pos - 2] & 0x1F) * 3;
-                    for (var i = pos; i < ccCount && i + 2 < buffer.Length; i += 3)
-                    {
-                        var b = buffer[i];
-                        if ((b & 0x4) > 0)
-                        {
-                            var ccType = b & 0x3;
-                            if (IsCcType(ccType))
-                            {
-                                var ccData1 = buffer[i + 1];
-                                var ccData2 = buffer[i + 2];
-                                // The "non-empty" filter is a CEA-608 convention
-                                // (high bit is parity; both bytes need non-zero
-                                // low-7-bits to be a meaningful char pair). For
-                                // CEA-708 packet data (types 2/3), 0x80 / 0x00
-                                // are legal payload bytes — e.g. a window-bitmap
-                                // argument — and dropping them corrupts the
-                                // DTVCC packet. Scope the filter to CEA-608.
-                                var isCea608 = ccType == 0 || ccType == 1;
-                                if (!isCea608 || IsNonEmptyCcData(ccData1, ccData2))
-                                {
-                                    fieldData.Add(new CcData(ccType, ccData1, ccData2));
-                                }
-                            }
-                        }
-                    }
+                    AddCcTriplets(buffer, pos, buffer[pos - 2] & 0x1F, fieldData);
                 }
 
                 x += payloadSize;
+            }
+        }
+
+        /// <summary>
+        /// Parses cc_data from an H.264/H.265 SEI NAL unit payload (the bytes after the NAL unit
+        /// header, still containing emulation prevention bytes).
+        /// </summary>
+        public static void ParseCcDataFromSeiNalPayload(ReadOnlySpan<byte> escapedSeiPayload, List<CcData> fieldData)
+        {
+            if (escapedSeiPayload.Length < 12)
+            {
+                return;
+            }
+
+            ParseCcDataFromSei(UnescapeSeiData(escapedSeiPayload), fieldData);
+        }
+
+        /// <summary>
+        /// Parses cc_data from MPEG-2 video user data (the bytes after the 00 00 01 B2 start code)
+        /// in ATSC A/53 form: "GA94", user_data_type_code 3, flags/cc_count, em_data, triplets.
+        /// </summary>
+        public static void ParseCcDataFromAtscUserData(ReadOnlySpan<byte> userData, List<CcData> fieldData)
+        {
+            if (userData.Length < 10 ||
+                BinaryPrimitives.ReadUInt32BigEndian(userData) != 0x47413934 || // "GA94"
+                userData[4] != 0x03 || // cc_data
+                (userData[5] & 0x40) == 0) // process_cc_data_flag
+            {
+                return;
+            }
+
+            AddCcTriplets(userData, 7, userData[5] & 0x1F, fieldData);
+        }
+
+        private static void AddCcTriplets(ReadOnlySpan<byte> buffer, int pos, int count, List<CcData> fieldData)
+        {
+            var end = pos + count * 3;
+            for (var i = pos; i < end && i + 2 < buffer.Length; i += 3)
+            {
+                var b = buffer[i];
+                if ((b & 0x4) > 0)
+                {
+                    var ccType = b & 0x3;
+                    if (IsCcType(ccType))
+                    {
+                        var ccData1 = buffer[i + 1];
+                        var ccData2 = buffer[i + 2];
+                        // The "non-empty" filter is a CEA-608 convention
+                        // (high bit is parity; both bytes need non-zero
+                        // low-7-bits to be a meaningful char pair). For
+                        // CEA-708 packet data (types 2/3), 0x80 / 0x00
+                        // are legal payload bytes — e.g. a window-bitmap
+                        // argument — and dropping them corrupts the
+                        // DTVCC packet. Scope the filter to CEA-608.
+                        var isCea608 = ccType == 0 || ccType == 1;
+                        if (!isCea608 || IsNonEmptyCcData(ccData1, ccData2))
+                        {
+                            fieldData.Add(new CcData(ccType, ccData1, ccData2));
+                        }
+                    }
+                }
             }
         }
 
