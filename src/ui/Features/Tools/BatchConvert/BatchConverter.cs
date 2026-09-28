@@ -1945,7 +1945,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
             if (s.OriginalFormat != null && s.OriginalFormat.Name != targetFormat.Name)
             {
-                s.OriginalFormat.RemoveNativeFormatting(item.Subtitle, targetFormat);
+                s.OriginalFormat.RemoveNativeFormatting(s, targetFormat);
             }
 
             if (targetFormat.Name == AdvancedSubStationAlpha.NameOfFormat)
