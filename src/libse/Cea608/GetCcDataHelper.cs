@@ -7,6 +7,18 @@ using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Cea608
 {
+    /// <summary>
+    /// Video codec whose elementary stream carries cc_data.
+    /// </summary>
+    public enum CcVideoCodec
+    {
+        /// <summary>Unknown - H.264, H.265 and MPEG-2 cc_data are all looked for.</summary>
+        Unknown,
+        Mpeg2,
+        H264,
+        H265,
+    }
+
     public static class GetCcDataHelper
     {
         public static List<CcData> GetCcData(Stream fs, ulong startPos, ulong size)
@@ -24,12 +36,6 @@ namespace Nikse.SubtitleEdit.Core.Cea608
         /// <param name="nalLengthSize">Size of the NAL unit length prefix (1, 2 or 4) from avcC/hvcC</param>
         public static List<CcData> GetCcData(Stream fs, ulong startPos, ulong size, bool isHevc, int nalLengthSize)
         {
-            if (nalLengthSize != 1 && nalLengthSize != 2 && nalLengthSize != 4)
-            {
-                nalLengthSize = 4;
-            }
-
-            var nalHeaderSize = isHevc ? 2 : 1;
             var fieldData = new List<CcData>();
             if (size < 6 || size > int.MaxValue)
             {
@@ -47,38 +53,7 @@ namespace Nikse.SubtitleEdit.Core.Cea608
             {
                 fs.Seek((long)startPos, SeekOrigin.Begin);
                 var read = fs.ReadFully(sample, 0, length);
-
-                var i = 0;
-                while (i + nalLengthSize + nalHeaderSize < read)
-                {
-                    var nalSize = ReadNalLength(sample, i, nalLengthSize);
-                    var flag = sample[i + nalLengthSize];
-                    var isSei = isHevc
-                        ? IsHevcSeiNalUnitType((flag >> 1) & 0x3F)
-                        : IsRbspNalUnitType(flag & 0x1F);
-                    if (isSei && nalSize < 10_000)
-                    {
-                        // SEI payload spans from after the NAL header to the NAL end minus its
-                        // rbsp trailing byte, clamped to what was read
-                        var seiStart = i + nalLengthSize + nalHeaderSize;
-                        var seiEnd = (int)Math.Min((long)i + nalLengthSize + nalSize - 1, read);
-                        if (seiEnd > seiStart)
-                        {
-                            var seiData = UnescapeSeiData(sample.AsSpan(seiStart, seiEnd - seiStart));
-                            ParseCcDataFromSei(seiData, fieldData);
-                        }
-                    }
-
-                    // nalSize is unsigned and unvalidated here; widen so a bogus size
-                    // cannot overflow the index into a negative value and loop forever
-                    var advance = (long)nalSize + nalLengthSize;
-                    if (i + advance > read)
-                    {
-                        break;
-                    }
-
-                    i += (int)advance;
-                }
+                ParseCcDataFromLengthPrefixedSample(sample.AsSpan(0, read), isHevc, nalLengthSize, fieldData);
             }
             finally
             {
@@ -86,6 +61,102 @@ namespace Nikse.SubtitleEdit.Core.Cea608
             }
 
             return fieldData;
+        }
+
+        /// <summary>
+        /// Parses cc_data from the SEI NAL units of one video sample/frame stored as length-prefixed
+        /// NAL units (MP4 "avc1"/"hvc1", Matroska V_MPEG4/ISO/AVC and V_MPEGH/ISO/HEVC).
+        /// </summary>
+        /// <param name="sample">The sample/frame</param>
+        /// <param name="isHevc">H.265 (2-byte NAL header, SEI types 39/40) instead of H.264</param>
+        /// <param name="nalLengthSize">Size of the NAL unit length prefix (1, 2 or 4) from avcC/hvcC</param>
+        /// <param name="fieldData">cc_data found is added here</param>
+        public static void ParseCcDataFromLengthPrefixedSample(ReadOnlySpan<byte> sample, bool isHevc, int nalLengthSize, List<CcData> fieldData)
+        {
+            if (nalLengthSize != 1 && nalLengthSize != 2 && nalLengthSize != 4)
+            {
+                nalLengthSize = 4;
+            }
+
+            var nalHeaderSize = isHevc ? 2 : 1;
+            var read = sample.Length;
+            var i = 0;
+            while (i + nalLengthSize + nalHeaderSize < read)
+            {
+                var nalSize = ReadNalLength(sample, i, nalLengthSize);
+                var flag = sample[i + nalLengthSize];
+                var isSei = isHevc
+                    ? IsHevcSeiNalUnitType((flag >> 1) & 0x3F)
+                    : IsRbspNalUnitType(flag & 0x1F);
+                if (isSei && nalSize < 10_000)
+                {
+                    // SEI payload spans from after the NAL header to the NAL end minus its
+                    // rbsp trailing byte, clamped to what was read
+                    var seiStart = i + nalLengthSize + nalHeaderSize;
+                    var seiEnd = (int)Math.Min((long)i + nalLengthSize + nalSize - 1, read);
+                    if (seiEnd > seiStart)
+                    {
+                        var seiData = UnescapeSeiData(sample.Slice(seiStart, seiEnd - seiStart));
+                        ParseCcDataFromSei(seiData, fieldData);
+                    }
+                }
+
+                // nalSize is unsigned and unvalidated here; widen so a bogus size
+                // cannot overflow the index into a negative value and loop forever
+                var advance = (long)nalSize + nalLengthSize;
+                if (i + advance > read)
+                {
+                    break;
+                }
+
+                i += (int)advance;
+            }
+        }
+
+        private static readonly byte[] StartCode = { 0, 0, 1 };
+
+        /// <summary>
+        /// Parses cc_data from start code delimited video data (a transport stream PES payload, a
+        /// Matroska V_MPEG2 frame): H.264/H.265 SEI NAL units and MPEG-2 user data (ATSC A/53).
+        /// </summary>
+        public static void ParseCcDataFromStartCodeStream(ReadOnlySpan<byte> data, CcVideoCodec codec, List<CcData> fieldData)
+        {
+            var position = data.IndexOf(StartCode);
+            while (position >= 0)
+            {
+                var unitStart = position + 3;
+                if (unitStart >= data.Length)
+                {
+                    return;
+                }
+
+                var next = data.Slice(unitStart).IndexOf(StartCode);
+                var unitEnd = next < 0 ? data.Length : unitStart + next;
+                ParseStartCodeUnit(data.Slice(unitStart, unitEnd - unitStart), codec, fieldData);
+                position = next < 0 ? -1 : unitEnd;
+            }
+        }
+
+        private static void ParseStartCodeUnit(ReadOnlySpan<byte> unit, CcVideoCodec codec, List<CcData> fieldData)
+        {
+            if (unit.Length < 2)
+            {
+                return;
+            }
+
+            var b = unit[0];
+            if ((codec == CcVideoCodec.Mpeg2 || codec == CcVideoCodec.Unknown) && b == 0xB2)
+            {
+                ParseCcDataFromAtscUserData(unit.Slice(1), fieldData);
+            }
+            else if ((codec == CcVideoCodec.H264 || codec == CcVideoCodec.Unknown) && (b & 0x9F) == 0x06)
+            {
+                ParseCcDataFromSeiNalPayload(unit.Slice(1), fieldData); // H.264 SEI
+            }
+            else if ((codec == CcVideoCodec.H265 || codec == CcVideoCodec.Unknown) && (b & 0x81) == 0 && ((b >> 1) == 39 || (b >> 1) == 40))
+            {
+                ParseCcDataFromSeiNalPayload(unit.Slice(2), fieldData); // H.265 prefix/suffix SEI
+            }
         }
 
         private static bool IsRbspNalUnitType(int unitType)
@@ -98,16 +169,16 @@ namespace Nikse.SubtitleEdit.Core.Cea608
             return unitType == 39 || unitType == 40; // prefix / suffix SEI
         }
 
-        private static uint ReadNalLength(byte[] buffer, int index, int nalLengthSize)
+        private static uint ReadNalLength(ReadOnlySpan<byte> buffer, int index, int nalLengthSize)
         {
             switch (nalLengthSize)
             {
                 case 1:
                     return buffer[index];
                 case 2:
-                    return BinaryPrimitives.ReadUInt16BigEndian(buffer.AsSpan(index, 2));
+                    return BinaryPrimitives.ReadUInt16BigEndian(buffer.Slice(index, 2));
                 default:
-                    return BinaryPrimitives.ReadUInt32BigEndian(buffer.AsSpan(index, 4));
+                    return BinaryPrimitives.ReadUInt32BigEndian(buffer.Slice(index, 4));
             }
         }
 

@@ -30,6 +30,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         ///  3 = Header Stripping
         /// </summary>
         public int ContentCompressionAlgorithm { get; set; }
+
+        /// <summary>
+        /// ContentCompSettings - for header stripping (algorithm 3) the bytes removed from the start of every frame.
+        /// </summary>
+        internal byte[] ContentCompSettings { get; set; }
         public int ContentEncodingType { get; set; }
         public uint ContentEncodingScope { get; set; }
 

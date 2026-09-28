@@ -471,7 +471,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 return;
             }
 
-            var codec = ClosedCaptionExtractor.VideoCodec.Unknown;
+            var codec = Cea608.CcVideoCodec.Unknown;
             if (streamTypes.TryGetValue(packetId, out var streamType) && !ClosedCaptionExtractor.IsVideoStreamType(streamType, out codec))
             {
                 _nonVideoPacketIds.Add(packetId); // e.g. a video codec without closed captions support
