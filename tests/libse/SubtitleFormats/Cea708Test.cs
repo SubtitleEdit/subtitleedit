@@ -274,4 +274,48 @@ public class Cea708Test
 
         Assert.Equal("One" + Environment.NewLine + "Two", text);
     }
+    // DefineWindow 0: hidden (pop-on being built) or visible (roll-up/paint-on)
+    private static readonly byte[] HiddenWindow = { 0x98, 0x1B, 0x80, 0x0F, 0x01, 0x1F, 0x11 };
+    private static readonly byte[] VisibleWindow = { 0x98, 0x3B, 0x80, 0x0F, 0x01, 0x1F, 0x11 };
+
+    private static string DecodeWithHideWindows(params byte[][] parts)
+    {
+        var bytes = parts.SelectMany(p => p).Concat(new byte[] { 0x8A, 0x01 }).ToArray();
+        return Nikse.SubtitleEdit.Core.Cea708.Cea708.Decode(0, bytes, new CommandState(), false);
+    }
+
+    private static byte[] Ascii(string text) => System.Text.Encoding.ASCII.GetBytes(text);
+
+    [Fact]
+    public void DecodeBackspaceErasesLastChar()
+    {
+        Assert.Equal("Cat", DecodeWithHideWindows(HiddenWindow, Ascii("Cax"), new byte[] { 0x08 }, Ascii("t")));
+    }
+
+    [Fact]
+    public void DecodeHorizontalCarriageReturnErasesCurrentRowOnly()
+    {
+        Assert.Equal("One" + Environment.NewLine + "Two",
+            DecodeWithHideWindows(HiddenWindow, Ascii("One"), new byte[] { 0x0D }, Ascii("Tw0"), new byte[] { 0x0E }, Ascii("Two")));
+    }
+
+    [Fact]
+    public void DecodeFormFeedInHiddenWindowDiscardsCaption()
+    {
+        Assert.Equal("New", DecodeWithHideWindows(HiddenWindow, Ascii("Old"), new byte[] { 0x0C }, Ascii("New")));
+    }
+
+    /// <summary>
+    /// FF erases a visible window - the caption on screen ends there.
+    /// </summary>
+    [Fact]
+    public void DecodeFormFeedInVisibleWindowEndsCaption()
+    {
+        var state = new CommandState();
+        var decode = new Func<int, byte[], string>((lineIndex, bytes) => Nikse.SubtitleEdit.Core.Cea708.Cea708.Decode(lineIndex, bytes, state, false));
+
+        Assert.Equal(string.Empty, decode(0, VisibleWindow.Concat(Ascii("First")).ToArray()));
+        Assert.Equal("First", decode(1, new byte[] { 0x0C }.Concat(Ascii("Second")).ToArray()));
+        Assert.Equal(0, state.StartLineIndex);
+    }
 }
