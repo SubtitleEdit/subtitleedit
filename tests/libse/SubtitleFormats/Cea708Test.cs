@@ -240,4 +240,38 @@ public class Cea708Test
 
         return bytes;
     }
+    /// <summary>
+    /// Roll-up captions (as upconverted from CEA-608): every line starts with CR, then re-defines a
+    /// visible window and writes its text. No Hide/Clear/Delete command ever comes, so the CR must
+    /// end the line on screen - it used to be decoded as a lone "\r" and every line of the stream
+    /// ran into one cue.
+    /// </summary>
+    [Fact]
+    public void DecodeRollUpCarriageReturnEndsTheLine()
+    {
+        byte[] Line(string text) => new byte[] { 0x0D, 0x98, 0x3B, 0x80, 0x0F, 0x01, 0x1F, 0x11, 0x92, 0x01, 0x00 }
+            .Concat(System.Text.Encoding.ASCII.GetBytes(text)).ToArray();
+
+        var state = new CommandState();
+        Assert.Equal(string.Empty, Nikse.SubtitleEdit.Core.Cea708.Cea708.Decode(0, Line("Line one"), state, false));
+
+        Assert.Equal("Line one", Nikse.SubtitleEdit.Core.Cea708.Cea708.Decode(1, Line("Line two"), state, false));
+        Assert.Equal(0, state.StartLineIndex);
+
+        Assert.Equal("Line two", Nikse.SubtitleEdit.Core.Cea708.Cea708.Decode(2, new byte[] { 0x0D }, state, false));
+        Assert.Equal(1, state.StartLineIndex);
+    }
+
+    /// <summary>
+    /// A pop-on caption is built in a hidden window - a CR there is a line break inside the caption.
+    /// </summary>
+    [Fact]
+    public void DecodePopOnCarriageReturnIsLineBreak()
+    {
+        var bytes = new byte[] { 0x98, 0x1B, 0x80, 0x0F, 0x01, 0x1F, 0x11, 0x4F, 0x6E, 0x65, 0x0D, 0x54, 0x77, 0x6F, 0x8A, 0x01 };
+
+        var text = Nikse.SubtitleEdit.Core.Cea708.Cea708.Decode(0, bytes, new CommandState(), false);
+
+        Assert.Equal("One" + Environment.NewLine + "Two", text);
+    }
 }
