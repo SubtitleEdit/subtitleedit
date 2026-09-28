@@ -91,6 +91,7 @@ using Nikse.SubtitleEdit.Features.Shared.ErrorList;
 using Nikse.SubtitleEdit.Features.Shared.GetAudioClips;
 using Nikse.SubtitleEdit.Features.Shared.FormatLimitWarning;
 using Nikse.SubtitleEdit.Features.Shared.GoToLineNumber;
+using Nikse.SubtitleEdit.Features.Main.GridTimeAdjust;
 using Nikse.SubtitleEdit.Features.Shared.MediaInfoView;
 using Nikse.SubtitleEdit.Features.Shared.PickAlignment;
 using Nikse.SubtitleEdit.Features.Shared.PickTeletextAlignment;
@@ -31577,6 +31578,18 @@ public partial class MainViewModel :
             var isShiftPressed = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
             var rowIndex = GetDataGridRowIndexFromPoint(e.GetPosition(SubtitleGrid));
 
+            if (props.IsMiddleButtonPressed && isMultiSelectModifier && rowIndex >= 0 && rowIndex < Subtitles.Count)
+            {
+                var tag = hitTest?.GetVisualAncestors().Prepend(hitTest).OfType<Control>().FirstOrDefault(c => c.Tag is string)?.Tag as string;
+                var colTag = tag ?? GetSubtitleGridColumnTagFromPosition(e.GetPosition(SubtitleGrid).X);
+                if (colTag == InitListViewAndEditBox.SubtitleGridColumnKeys.Start || colTag == InitListViewAndEditBox.SubtitleGridColumnKeys.End)
+                {
+                    e.Handled = true;
+                    Dispatcher.UIThread.Post(async () => await OpenGridTimeAdjustDialog(rowIndex, colTag));
+                    return;
+                }
+            }
+
             if (_subtitleGridIsLeftClick && isShiftPressed && rowIndex >= 0)
             {
                 var anchor = _shiftSelectAnchorIndex >= 0
@@ -31642,6 +31655,27 @@ public partial class MainViewModel :
         e.Handled = true;
     }
 
+    private string? GetSubtitleGridColumnTagFromPosition(double x)
+    {
+        if (SubtitleGridColumnManager == null)
+        {
+            return null;
+        }
+
+        double currentX = 0;
+        foreach (var col in SubtitleGridColumnManager.Columns.OfType<SeTableViewColumn>())
+        {
+            if (!col.IsVisible) continue;
+            var colWidth = col.ActualWidth > 0 ? col.ActualWidth : col.Width.Value;
+            if (x >= currentX && x < currentX + colWidth)
+            {
+                return col.Tag as string;
+            }
+            currentX += colWidth;
+        }
+        return null;
+    }
+
     private int GetDataGridRowIndexFromPoint(Avalonia.Point position)
     {
         return TableViewExtras.GetRowIndexFromPoint(SubtitleGrid, position);
@@ -31655,6 +31689,106 @@ public partial class MainViewModel :
         }
 
         SubtitleGridDragSelect?.OnPointerMoved(sender, e);
+    }
+
+    public void SubtitleGrid_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
+    {
+        var hasAltShift = e.KeyModifiers.HasFlag(KeyModifiers.Alt) && e.KeyModifiers.HasFlag(KeyModifiers.Shift);
+        if (!hasAltShift || Subtitles.Count == 0)
+        {
+            return;
+        }
+
+        var pos = e.GetPosition(SubtitleGrid);
+        var rowIndex = GetDataGridRowIndexFromPoint(pos);
+        if (rowIndex < 0 || rowIndex >= Subtitles.Count)
+        {
+            return;
+        }
+
+        var hit = SubtitleGrid.InputHitTest(pos) as Visual;
+        var tag = hit?.GetVisualAncestors().Prepend(hit).OfType<Control>().FirstOrDefault(c => c.Tag is string)?.Tag as string;
+        var colTag = tag ?? GetSubtitleGridColumnTagFromPosition(pos.X);
+
+        var isStart = colTag == InitListViewAndEditBox.SubtitleGridColumnKeys.Start;
+        var isEnd = colTag == InitListViewAndEditBox.SubtitleGridColumnKeys.End;
+
+        if (!isStart && !isEnd)
+        {
+            return;
+        }
+
+        var stepMs = Se.Settings.General.GridTimeAdjustStepMs > 0 ? Se.Settings.General.GridTimeAdjustStepMs : 500;
+        var deltaMs = e.Delta.Y > 0 ? stepMs : (e.Delta.Y < 0 ? -stepMs : 0);
+        if (deltaMs == 0)
+        {
+            return;
+        }
+
+        var targetLine = Subtitles[rowIndex];
+        if (isStart)
+        {
+            var newTime = targetLine.StartTime.Add(TimeSpan.FromMilliseconds(deltaMs));
+            if (newTime < TimeSpan.Zero)
+            {
+                newTime = TimeSpan.Zero;
+            }
+            targetLine.StartTime = newTime;
+        }
+        else
+        {
+            var newTime = targetLine.EndTime.Add(TimeSpan.FromMilliseconds(deltaMs));
+            if (newTime < TimeSpan.Zero)
+            {
+                newTime = TimeSpan.Zero;
+            }
+            targetLine.EndTime = newTime;
+        }
+
+        _updateAudioVisualizer = true;
+        if (targetLine == SelectedSubtitle)
+        {
+            MakeSubtitleTextInfo(targetLine.Text, targetLine);
+            MakeSubtitleTextInfoOriginal(targetLine.OriginalText, targetLine);
+        }
+
+        e.Handled = true;
+    }
+
+    private async Task OpenGridTimeAdjustDialog(int rowIndex, string colTag)
+    {
+        if (rowIndex < 0 || rowIndex >= Subtitles.Count)
+        {
+            return;
+        }
+
+        var targetLine = Subtitles[rowIndex];
+        var isEnd = colTag == InitListViewAndEditBox.SubtitleGridColumnKeys.End;
+        var title = Se.Language.General.Show + " / " + Se.Language.General.Hide;
+        var initialStep = Se.Settings.General.GridTimeAdjustStepMs > 0 ? Se.Settings.General.GridTimeAdjustStepMs : 500;
+
+        var result = await ShowDialogAsync<GridTimeAdjustWindow, GridTimeAdjustViewModel>(vm =>
+        {
+            vm.Initialize(title, targetLine.StartTime, targetLine.EndTime, initialStep, isEnd);
+        });
+
+        if (result.OkPressed)
+        {
+            targetLine.SetTimes(result.StartTime, result.EndTime);
+
+            if (result.StepMs > 0)
+            {
+                Se.Settings.General.GridTimeAdjustStepMs = (int)result.StepMs;
+                Se.SaveSettings();
+            }
+
+            _updateAudioVisualizer = true;
+            if (targetLine == SelectedSubtitle)
+            {
+                MakeSubtitleTextInfo(targetLine.Text, targetLine);
+                MakeSubtitleTextInfoOriginal(targetLine.OriginalText, targetLine);
+            }
+        }
     }
 
     /// <summary>
