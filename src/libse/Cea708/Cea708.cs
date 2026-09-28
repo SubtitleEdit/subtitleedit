@@ -693,7 +693,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     {
                         italicOn = attributes.Italics;
                     }
-                    else if (command is Reset || command is DefineWindow { PenStyleId: > 0 })
+                    else if (command is Reset || (command is DefineWindow defineWindow && defineWindow.PenStyleId > 0))
                     {
                         // Both (re)apply a predefined pen style, none of which is italic - without
                         // this, a retained italic SetPenAttributes leaked into every later caption.
