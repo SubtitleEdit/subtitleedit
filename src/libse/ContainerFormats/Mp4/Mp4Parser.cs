@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
         public Subtitle TrunCea608Subtitle { get; private set; }
         public Subtitle TrunCea708Subtitle { get; private set; }
-        private List<Cea608.CcData> _trunCea608CcData = new List<Cea608.CcData>();
+        private List<Cea608.CcData> _trunCcData = new List<Cea608.CcData>();
         public string DebugInfo { get; private set; }
 
         public List<Trak> GetSubtitleTracks()
@@ -448,7 +448,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
         {
             try
             {
-                if (TrunCea608Subtitle?.Paragraphs.Count > 0)
+                if (TrunCea608Subtitle?.Paragraphs.Count > 0 || TrunCea708Subtitle?.Paragraphs.Count > 0)
                 {
                     //debugInfo.AppendLine("CheckForMoovVideoCea608: skipped (fragmented path already found data)");
                     return;
@@ -535,42 +535,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
                 //debugInfo.AppendLine($"CheckForMoovVideoCea608: scanned={samplesScanned}, cea608entries={ccDataList.Count}");
 
-                if (ccDataList.Count == 0)
-                {
-                    return;
-                }
-
-                var sortedCcData = ccDataList.OrderBy(p => p.Time).ToList();
-
-                // CEA-608 (NTSC fields 1 + 2). Isolated in its own try so a
-                // failure in the 608 decoder doesn't suppress the 708 path.
-                var cea608Entries = sortedCcData.Where(c => c.Type == 0 || c.Type == 1).ToList();
-                if (cea608Entries.Count > 0)
-                {
-                    try
-                    {
-                        TrunCea608Subtitle = new Subtitle();
-                        var cea608Parser = new CcDataC608Parser();
-                        cea608Parser.DisplayScreen += data =>
-                        {
-                            var startMs = data.Start / (double)timeScale * 1000.0;
-                            var endMs = data.End / (double)timeScale * 1000.0;
-                            Cea608CueBuilder.Add(TrunCea608Subtitle.Paragraphs, SerializedScreenText.GetText(data.Screen), startMs, endMs);
-                        };
-                        foreach (var cc in cea608Entries)
-                        {
-                            cea608Parser.AddData((int)cc.Time, new[] { cc.Data1, cc.Data2 });
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        SeLogger.Error(e, "Error while parsing MP4 moov video track CEA-608");
-                    }
-                }
-
-                // CEA-708 (DTVCC). Run regardless of 608's success/failure —
-                // many real broadcast MP4s carry only one or the other.
-                DecodeMoovVideoCea708(sortedCcData, timeScale);
+                DecodeCcData(ccDataList, timeScale);
 
                 //debugInfo.AppendLine($"CheckForMoovVideoCea608: paragraphs={TrunCea608Subtitle?.Paragraphs.Count ?? 0}, cea708 paragraphs={TrunCea708Subtitle?.Paragraphs.Count ?? 0}");
             }
@@ -580,7 +545,50 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             }
         }
 
-        private void DecodeMoovVideoCea708(List<Cea608.CcData> sortedCcData, ulong timeScale)
+        /// <summary>
+        /// Decodes cc_data (timestamped in video track ticks) into TrunCea608Subtitle and TrunCea708Subtitle.
+        /// </summary>
+        private void DecodeCcData(List<CcData> ccDataList, double timeScale)
+        {
+            if (ccDataList.Count == 0)
+            {
+                return;
+            }
+
+            var sortedCcData = ccDataList.OrderBy(p => p.Time).ToList();
+
+            // CEA-608 (NTSC fields 1 + 2). Isolated in its own try so a
+            // failure in the 608 decoder doesn't suppress the 708 path.
+            var cea608Entries = sortedCcData.Where(c => c.Type == 0 || c.Type == 1).ToList();
+            if (cea608Entries.Count > 0)
+            {
+                try
+                {
+                    TrunCea608Subtitle = new Subtitle();
+                    var cea608Parser = new CcDataC608Parser();
+                    cea608Parser.DisplayScreen += data =>
+                    {
+                        var startMs = data.Start / timeScale * 1000.0;
+                        var endMs = data.End / timeScale * 1000.0;
+                        Cea608CueBuilder.Add(TrunCea608Subtitle.Paragraphs, SerializedScreenText.GetText(data.Screen), startMs, endMs);
+                    };
+                    foreach (var cc in cea608Entries)
+                    {
+                        cea608Parser.AddData((int)cc.Time, new[] { cc.Data1, cc.Data2 });
+                    }
+                }
+                catch (Exception e)
+                {
+                    SeLogger.Error(e, "Error while parsing MP4 video track CEA-608");
+                }
+            }
+
+            // CEA-708 (DTVCC). Run regardless of 608's success/failure —
+            // many real broadcast MP4s carry only one or the other.
+            DecodeCea708(sortedCcData, timeScale);
+        }
+
+        private void DecodeCea708(List<Cea608.CcData> sortedCcData, double timeScale)
         {
             try
             {
@@ -589,7 +597,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                 var decoder = new Cea708.DtvccServiceDecoder { OnlyService = 1 };
                 foreach (var cc in sortedCcData)
                 {
-                    decoder.Add(cc.Type, cc.Data1, cc.Data2, cc.Time / (double)timeScale * 1000.0);
+                    decoder.Add(cc.Type, cc.Data1, cc.Data2, cc.Time / timeScale * 1000.0);
                 }
 
                 var services = decoder.Finish();
@@ -605,35 +613,22 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
         {
             try
             {
-                TrunCea608Subtitle = new Subtitle();
-                var sortedData = _trunCea608CcData.OrderBy(p => p.Time).ToList();
-                var parser = new CcDataC608Parser();
-                parser.DisplayScreen += DisplayScreen;
-                foreach (var cc in sortedData)
+                // Fragment ticks are media-track times, so prefer the video track's mdhd
+                // timescale; the movie (mvhd) timescale is only a fallback.
+                double timeScale = Moov?.Mvhd?.TimeScale ?? 1000.0;
+                var videoTrack = GetVideoTracks().FirstOrDefault();
+                if (videoTrack?.Mdia?.Mdhd?.TimeScale > 0)
                 {
-                    parser.AddData((int)cc.Time, new[] { cc.Data1, cc.Data2 });
+                    timeScale = videoTrack.Mdia.Mdhd.TimeScale;
                 }
+
+                DecodeCcData(_trunCcData, timeScale);
+                _trunCcData.Clear();
             }
             catch (Exception e)
             {
                 SeLogger.Error(e, "Error while parsing MP4 TRUN CEA 608");
             }
-        }
-
-        private void DisplayScreen(DataOutput data)
-        {
-            // Fragment ticks are media-track times, so prefer the video track's mdhd
-            // timescale; the movie (mvhd) timescale is only a fallback.
-            var timeScale = Moov?.Mvhd?.TimeScale ?? 1000.0;
-            var videoTrack = GetVideoTracks().FirstOrDefault();
-            if (videoTrack?.Mdia?.Mdhd?.TimeScale > 0)
-            {
-                timeScale = videoTrack.Mdia.Mdhd.TimeScale;
-            }
-
-            var startMs = data.Start / timeScale * 1000.0;
-            var endMs = data.End / timeScale * 1000.0;
-            Cea608CueBuilder.Add(TrunCea608Subtitle.Paragraphs, SerializedScreenText.GetText(data.Screen), startMs, endMs);
         }
 
         private sealed class FragmentedTextTrack
@@ -784,15 +779,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                         var sample = trun.Samples[index];
                         if (sample.Size.HasValue)
                         {
+                            // A frame carries several cc_data triplets - the CEA-608 pairs of both
+                            // fields and up to ~30 CEA-708 packet bytes - all at the frame's
+                            // presentation time (decode time + composition offset).
                             var ccData = GetCcDataHelper.GetCcData(fs, startPosition, sample.Size.Value);
-                            if (ccData.Count > 0)
+                            var pts = (long)dts + (sample.TimeOffset ?? 0);
+                            foreach (var cc in ccData)
                             {
-                                if (sample.TimeOffset.HasValue)
-                                {
-                                    ccData[0].Time = (ulong)((long)dts + sample.TimeOffset.Value);
-                                }
-
-                                _trunCea608CcData.Add(ccData[0]); //TODO: can there be more than one?
+                                cc.Time = (ulong)Math.Max(0, pts);
+                                _trunCcData.Add(cc);
                             }
 
                             startPosition += sample.Size.Value;
