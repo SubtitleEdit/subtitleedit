@@ -176,6 +176,36 @@ public class SubtitleOpenImageListOcrTests : IDisposable
     }
 
     [AvaloniaFact]
+    public async Task ImscImageProfileFileOpensInOcrWithItsImages()
+    {
+        // IMSC image profile: smpte:backgroundImage names png files next to the document.
+        WritePng("1.png", 150, 30);
+        WritePng("2.png", 160, 30);
+        var fileName = Path.Combine(_tempDirectory, "imsc.ttml");
+        File.WriteAllText(fileName, """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <tt xmlns="http://www.w3.org/ns/ttml" xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
+                xmlns:tts="http://www.w3.org/ns/ttml#styling" xmlns:smpte="http://www.smpte-ra.org/schemas/2052-1/2010/smpte-tt"
+                ttp:profile="http://www.w3.org/ns/ttml/profile/imsc1/image" tts:extent="1920px 1080px" xml:lang="en">
+              <head><layout><region xml:id="r1" tts:origin="10% 80%" tts:extent="80% 10%"/></layout></head>
+              <body>
+                <div region="r1" begin="00:00:01.000" end="00:00:02.000" smpte:backgroundImage="1.png"/>
+                <div region="r1" begin="00:00:03.000" end="00:00:04.500" smpte:backgroundImage="2.png"/>
+              </body>
+            </tt>
+            """);
+
+        var (vm, ocr) = await Open(fileName);
+
+        Assert.NotNull(ocr);
+        Assert.Equal(2, ocr.OcrSubtitleItems.Count);
+        Assert.Equal(TimeSpan.FromMilliseconds(4500), ocr.OcrSubtitleItems[1].EndTime);
+        using var bitmap = ocr.OcrSubtitleItems[1].GetSkBitmapClean();
+        Assert.Equal(160, bitmap.Width);
+        Assert.Empty(vm.Subtitles);
+    }
+
+    [AvaloniaFact]
     public async Task OrdinarySubRipStillOpensAsText()
     {
         var fileName = Path.Combine(_tempDirectory, "text.srt");

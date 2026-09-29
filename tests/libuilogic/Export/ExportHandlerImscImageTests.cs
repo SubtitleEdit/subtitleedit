@@ -64,14 +64,15 @@ public class ExportHandlerImscImageTests : IDisposable
 
         Assert.Contains("ttp:profile=\"http://www.w3.org/ns/ttml/profile/imsc1/image\"", xml);
         Assert.Contains("ttp:timeBase=\"media\"", xml);
-        Assert.Contains("<smpte:image xml:id=\"img0\" imagetype=\"PNG\" encoding=\"Base64\">", xml);
-        Assert.Contains("<smpte:image xml:id=\"img1\" imagetype=\"PNG\" encoding=\"Base64\">", xml);
-        Assert.Contains("smpte:backgroundImage=\"#img0\"", xml);
+        // The image profile prohibits embedded images (IMSC 1.1 section 9.4.5): each cue
+        // references a png file next to the document.
+        Assert.DoesNotContain("smpte:image", xml);
+        Assert.Contains("smpte:backgroundImage=\"out_0001.png\"", xml);
+        Assert.Contains("smpte:backgroundImage=\"out_0002.png\"", xml);
         Assert.Contains("region=\"region0\"", xml);
         Assert.Contains("begin=\"00:00:01.240\"", xml);
         Assert.Contains("end=\"00:00:06.500\"", xml);
-        // Base64 PNG payload present (PNG magic "iVBOR..." is the base64 of \x89PNG)
-        Assert.Contains("iVBOR", xml);
+        Assert.DoesNotContain("forcedDisplay", xml);
         // valid XML
         var doc = new System.Xml.XmlDocument();
         doc.LoadXml(xml);
@@ -79,39 +80,54 @@ public class ExportHandlerImscImageTests : IDisposable
     }
 
     [Fact]
-    public void RoundTripsThroughBase64ImageReader()
+    public void WritesOnePngPerCueNextToTheDocument()
+    {
+        Export(Cue(0, "Decode me", 0, 2000, 200, 60), Cue(1, "Me too", 3000, 4000, 220, 70));
+
+        using var first = SKBitmap.Decode(Path.Combine(_dir, "out_0001.png"));
+        Assert.NotNull(first);
+        Assert.Equal(200, first.Width);
+        Assert.Equal(60, first.Height);
+        using var second = SKBitmap.Decode(Path.Combine(_dir, "out_0002.png"));
+        Assert.Equal(220, second.Width);
+    }
+
+    [Fact]
+    public void ForcedCue_IsMarkedForcedDisplay()
+    {
+        var forced = Cue(0, "Forced", 1000, 2000);
+        forced.IsForced = true;
+
+        var xml = Export(forced, Cue(1, "Normal", 3000, 4000));
+
+        Assert.Contains("xmlns:itts=\"http://www.w3.org/ns/ttml/profile/imsc1#styling\"", xml);
+        Assert.Contains("smpte:backgroundImage=\"out_0001.png\" region=\"region0\" begin=\"00:00:01.000\" end=\"00:00:02.000\" itts:forcedDisplay=\"true\"", xml);
+        Assert.Single(System.Text.RegularExpressions.Regex.Matches(xml, "forcedDisplay"));
+    }
+
+    [Fact]
+    public void RoundTripsThroughTimedTextImageReader()
     {
         var xml = Export(
             Cue(0, "First line", 1240, 3120),
             Cue(1, "Second line", 4000, 6500));
 
-        // SE's Timed Text Base64 Image reader must accept our output and recover the cue timings.
-        var format = new TimedTextBase64Image();
-        Assert.True(format.IsMine(xml.SplitToLines(), "out.ttml"));
+        // SE's Timed Text Image reader must accept our output and recover the images and timings.
+        var fileName = Path.Combine(_dir, "out.ttml");
+        var format = new TimedTextImage();
+        Assert.True(format.IsMine(xml.SplitToLines(), fileName));
 
         var sub = new Subtitle();
-        format.LoadSubtitle(sub, xml.SplitToLines(), "out.ttml");
+        format.LoadSubtitle(sub, xml.SplitToLines(), fileName);
 
         Assert.Equal(2, sub.Paragraphs.Count);
+        Assert.Equal("out_0001.png", sub.Paragraphs[0].Text);
         Assert.Equal(1240, sub.Paragraphs[0].StartTime.TotalMilliseconds);
         Assert.Equal(3120, sub.Paragraphs[0].EndTime.TotalMilliseconds);
         Assert.Equal(4000, sub.Paragraphs[1].StartTime.TotalMilliseconds);
         Assert.Equal(6500, sub.Paragraphs[1].EndTime.TotalMilliseconds);
-    }
 
-    [Fact]
-    public void EmbeddedImagesAreDecodablePng()
-    {
-        var xml = Export(Cue(0, "Decode me", 0, 2000, 200, 60));
-
-        var start = xml.IndexOf("Base64\">", StringComparison.Ordinal) + "Base64\">".Length;
-        var end = xml.IndexOf("</smpte:image>", start, StringComparison.Ordinal);
-        var base64 = xml.Substring(start, end - start);
-
-        var bytes = Convert.FromBase64String(base64);
-        using var decoded = SKBitmap.Decode(bytes);
-        Assert.NotNull(decoded);
-        Assert.Equal(200, decoded.Width);
-        Assert.Equal(60, decoded.Height);
+        // Not mistaken for the embedded-image variant.
+        Assert.False(new TimedTextBase64Image().IsMine(xml.SplitToLines(), fileName));
     }
 }

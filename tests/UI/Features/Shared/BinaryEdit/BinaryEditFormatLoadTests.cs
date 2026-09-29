@@ -112,7 +112,10 @@ public class BinaryEditFormatLoadTests
     [Fact]
     public void ImscImageExport_RoundTripsThroughXmlImageLoader()
     {
-        var fileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".ttml");
+        // The IMSC image export writes its pngs next to the document.
+        var folderName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        Directory.CreateDirectory(folderName);
+        var fileName = Path.Combine(folderName, "imsc.ttml");
         try
         {
             Export(new ExportHandlerImscImage(), fileName);
@@ -120,7 +123,7 @@ public class BinaryEditFormatLoadTests
             var ocrSubtitle = BinaryEditViewModel.LoadXmlImageSubtitle(fileName);
 
             Assert.NotNull(ocrSubtitle);
-            Assert.IsType<OcrSubtitleIBinaryParagraph>(ocrSubtitle);
+            Assert.IsType<OcrSubtitleBdn>(ocrSubtitle);
             Assert.Equal(2, ocrSubtitle.Count);
             Assert.Equal(1000, ocrSubtitle.GetStartTime(0).TotalMilliseconds, 0);
             Assert.Equal(7000, ocrSubtitle.GetEndTime(1).TotalMilliseconds, 0);
@@ -130,7 +133,7 @@ public class BinaryEditFormatLoadTests
         }
         finally
         {
-            File.Delete(fileName);
+            Directory.Delete(folderName, true);
         }
     }
 

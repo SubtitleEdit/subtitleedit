@@ -24126,6 +24126,20 @@ public partial class MainViewModel :
                         ImportAndInlineBase64(base64ImageSubtitle, fileName, skipLoadVideo);
                         return;
                     }
+
+                    // IMSC image profile: the PNGs are files next to the document, named by
+                    // smpte:backgroundImage (or <image src>) - the shape the BDN OCR import reads.
+                    var timedTextImage = new TimedTextImage();
+                    if (timedTextImage.IsMine(base64ImageLines, fileName))
+                    {
+                        var timedTextImageSubtitle = new Subtitle();
+                        timedTextImage.LoadSubtitle(timedTextImageSubtitle, base64ImageLines, fileName);
+                        if (timedTextImageSubtitle.Paragraphs.Count > 0)
+                        {
+                            ImportAndOcrDost(fileName, timedTextImageSubtitle, skipLoadVideo);
+                            return;
+                        }
+                    }
                 }
 
                 // Image-list xml projects reference png files next to the xml - BDN xml and

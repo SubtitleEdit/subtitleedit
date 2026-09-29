@@ -169,7 +169,7 @@ Export subtitles as images. The Export submenu lists: Blu-ray (sup), BDN/xml, BD
 
 **BDN/xml** writes 32-bit PNGs; **BDN/xml 8-bit** writes the same index.xml with 8-bit palette-indexed PNGs, which is what most Blu-ray authoring tools expect.
 
-The **IMSC 1.1 image profile** export writes a single self-contained TTML file with each subtitle embedded as a base64 PNG (`smpte:image` / `smpte:backgroundImage`), media timebase, and percentage-positioned regions — the standardized image-subtitle carriage for streaming and broadcast delivery.
+The **IMSC 1.1 image profile** export writes the TTML file plus one PNG per subtitle next to it, named after the TTML file (`movie.ttml`, `movie_0001.png`, `movie_0002.png`, ...). Each subtitle is a `div` whose `smpte:backgroundImage` names its PNG, with media timebase, percentage-positioned regions, and `itts:forcedDisplay` on forced subtitles. The PNGs are separate files because the image profile does not allow embedded images. Keep them together with the TTML file when you deliver it.
 
 #### Text effects
 

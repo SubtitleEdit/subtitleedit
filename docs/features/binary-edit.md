@@ -18,7 +18,7 @@ Edit image-based subtitles — Blu-ray SUP, VobSub, DVB, BDN XML — directly, w
 - MP4/MOV (`.mp4`, `.m4v`, `.mov`, `.3gp`) with VobSub image tracks
 - XSUB/DivX subtitles in `.avi`/`.divx`
 - WebVTT with embedded base64 images (`.vtt`, `.webvtt`)
-- BDN XML, Final Cut Pro image xml, and SMPTE-TT/IMSC with base64 images (`.xml`, `.ttml`, `.dfxp`)
+- BDN XML, Final Cut Pro image xml, IMSC image profile (PNG files next to the document), and SMPTE-TT with base64 images (`.xml`, `.ttml`, `.dfxp`)
 
 ## Window Layout
 
