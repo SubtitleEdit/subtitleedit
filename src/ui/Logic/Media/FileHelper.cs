@@ -264,6 +264,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
             AddExt(existingTypes, extensions, ".2hd");
             AddExt(existingTypes, extensions, ".1sd");
             AddExt(existingTypes, extensions, ".2sd");
+            AddExt(existingTypes, extensions, ".prproj");
 
             if (includeVideoFiles)
             {
