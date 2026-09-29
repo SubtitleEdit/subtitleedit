@@ -94,6 +94,26 @@ public class EZTitlesBinaryTest
         Assert.Equal(4000 + SubtitleFormat.FramesToMilliseconds(29, 29.97), subtitle.Paragraphs[1].EndTime.TotalMilliseconds);
     }
 
+    // Timing templates have subtitles without any text row; the reader locates the record
+    // list from the first text row, so leading empty records must be chained back to.
+    [Fact]
+    public void KeepsEmptySubtitlesBeforeFirstText()
+    {
+        var bytes = BuildFile(
+            (30, 60, new string[0]),
+            (90, 120, new string[0]),
+            (150, 180, new[] { "ON-SCREEN" }),
+            (210, 240, new string[0]));
+
+        var subtitle = Load(bytes);
+
+        Assert.Equal(4, subtitle.Paragraphs.Count);
+        Assert.Equal(1000, subtitle.Paragraphs[0].StartTime.TotalMilliseconds);
+        Assert.Equal(string.Empty, subtitle.Paragraphs[0].Text);
+        Assert.Equal("ON-SCREEN", subtitle.Paragraphs[2].Text);
+        Assert.Equal(string.Empty, subtitle.Paragraphs[3].Text);
+    }
+
     [Fact]
     public void IsMineRejectsOtherFiles()
     {
