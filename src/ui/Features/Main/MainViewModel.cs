@@ -3158,6 +3158,8 @@ public partial class MainViewModel :
                 }
             }
 
+            subtitle ??= LoadOnlyTextFormatLoader.TryLoad(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName));
+
             if (subtitle == null)
             {
                 var message = Se.Language.General.UnknownSubtitleFormat;
@@ -24124,6 +24126,8 @@ public partial class MainViewModel :
                         break; // format found, exit the loop
                     }
                 }
+
+                subtitle ??= LoadOnlyTextFormatLoader.TryLoad(fileName, fileEncoding);
 
                 if (subtitle == null)
                 {
