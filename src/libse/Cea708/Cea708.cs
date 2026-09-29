@@ -381,6 +381,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             var i = 0;
             var debugBuilder = new StringBuilder();
             var textBuilder = new StringBuilder();
+            state.FlushedTexts.Clear();
 
             while (i < bytes.Length)
             {
@@ -450,7 +451,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                         break;
                     }
 
-                    FlushText(DebugMode ? debugBuilder : textBuilder, state);
+                    Flush(debugBuilder, textBuilder, state);
 
                     // HideWindows hides all the windows specified in the 8 bit window bitmap.
                     var hideWindows = new HideWindows(lineIndex, bytes, i + 1);
@@ -470,7 +471,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                         break;
                     }
 
-                    FlushText(DebugMode ? debugBuilder : textBuilder, state);
+                    Flush(debugBuilder, textBuilder, state);
 
                     // ToggleWindows hides all displayed windows, and displays all hidden windows specified in the 8 bit window bitmap.
                     var toggleWindows = new ToggleWindows(lineIndex, bytes, i + 1);
@@ -496,7 +497,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                         break;
                     }
 
-                    FlushText(DebugMode ? debugBuilder : textBuilder, state);
+                    Flush(debugBuilder, textBuilder, state);
 
                     // DeleteWindows deletes all the windows specified in the 8 bit window bitmap.If the current window, as specified by the last SetCurrentWindow command, is deleted then the current window becomes undefined and the window attribute commands should have no effect until after the next SetCurrentWindow or DefineWindow command.
                     var deleteWindows = new DeleteWindows(lineIndex, bytes, i + 1);
@@ -692,7 +693,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     // thrown away.
                     if (IsCurrentWindowVisible(state))
                     {
-                        FlushText(DebugMode ? debugBuilder : textBuilder, state);
+                        Flush(debugBuilder, textBuilder, state);
                     }
                     else
                     {
@@ -722,7 +723,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     // break inside the caption.
                     if (IsCurrentWindowVisible(state))
                     {
-                        FlushText(DebugMode ? debugBuilder : textBuilder, state);
+                        Flush(debugBuilder, textBuilder, state);
                     }
                     else
                     {
@@ -783,10 +784,44 @@ namespace Nikse.SubtitleEdit.Core.Cea708
 
             if (flush)
             {
-                FlushText(DebugMode ? debugBuilder : textBuilder, state);
+                Flush(debugBuilder, textBuilder, state);
+            }
+
+            if (state.FlushedTexts.Count > 0)
+            {
+                state.StartLineIndex = state.FlushedTexts[0].Key; // start of the returned text
             }
 
             return DebugMode ? debugBuilder.ToString() : textBuilder.ToString();
+        }
+
+        /// <summary>
+        /// Flushes the buffered text as one caption - several flushes in one packet (e.g. roll-up
+        /// lines ended by CR) each become a caption of their own in <see cref="CommandState.FlushedTexts"/>,
+        /// and are separated by a line break in the returned text.
+        /// </summary>
+        private static void Flush(StringBuilder debugBuilder, StringBuilder textBuilder, CommandState state)
+        {
+            if (DebugMode)
+            {
+                FlushText(debugBuilder, state);
+                return;
+            }
+
+            var text = new StringBuilder();
+            FlushText(text, state);
+            if (text.Length == 0)
+            {
+                return;
+            }
+
+            state.FlushedTexts.Add(new KeyValuePair<int, string>(state.StartLineIndex, text.ToString()));
+            if (textBuilder.Length > 0)
+            {
+                textBuilder.AppendLine();
+            }
+
+            textBuilder.Append(text);
         }
 
         private static void FlushText(StringBuilder text, CommandState state)

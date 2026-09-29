@@ -56,6 +56,49 @@ public class Mp4Cea608H264Test
     }
 
     /// <summary>
+    /// The video track's edit list moves the video - and the captions embedded in it - on the
+    /// presentation timeline: a media start time of one frame (the ctts delay of B-frame video)
+    /// moves every cue one frame earlier, the same times as MKV/TS.
+    /// </summary>
+    [Fact]
+    public void CheckForMoovVideoCea608_EditListShiftsCues()
+    {
+        var pairs = new (byte a, byte b)[]
+        {
+            (0x14, 0x20), // RCL
+            (0x48, 0x69), // 'H' 'i'
+            (0x14, 0x2F), // EOC
+            (0x00, 0x00),
+            (0x14, 0x2C), // EDM
+            (0x00, 0x00),
+        };
+        var storageToPts = Enumerable.Range(0, pairs.Length).ToArray();
+
+        var withoutEditList = ReadCea608(BuildH264Mp4WithCea608(pairs, storageToPts, 100, 1000));
+        var withEditList = ReadCea608(BuildH264Mp4WithCea608(pairs, storageToPts, 100, 1000, editListMediaTime: 100));
+
+        Assert.Equal("Hi", withEditList.Text);
+        Assert.Equal(withoutEditList.StartTime.TotalMilliseconds - 100, withEditList.StartTime.TotalMilliseconds, 1);
+        Assert.Equal(withoutEditList.EndTime.TotalMilliseconds - 100, withEditList.EndTime.TotalMilliseconds, 1);
+    }
+
+    private static Nikse.SubtitleEdit.Core.Common.Paragraph ReadCea608(byte[] mp4)
+    {
+        var tempFile = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllBytes(tempFile, mp4);
+            var parser = new MP4Parser(tempFile);
+            Assert.NotNull(parser.TrunCea608Subtitle);
+            return Assert.Single(parser.TrunCea608Subtitle.Paragraphs);
+        }
+        finally
+        {
+            File.Delete(tempFile);
+        }
+    }
+
+    /// <summary>
     /// Build a minimal H.264-in-MP4 with one length-prefixed SEI NAL per sample,
     /// each NAL carrying a single CEA-608 cc_data byte pair (NTSC F1).
     /// The ctts box maps decode indices to presentation timestamps so storage
@@ -65,7 +108,8 @@ public class Mp4Cea608H264Test
         (byte a, byte b)[] pairsInPtsOrder,
         int[] storageToPts,
         uint sampleTicks,
-        uint timeScale)
+        uint timeScale,
+        uint? editListMediaTime = null)
     {
         var sampleCount = storageToPts.Length;
 
@@ -167,7 +211,9 @@ public class Mp4Cea608H264Test
             UInt16Be(0));
 
         var mdia = Box("mdia", hdlr, mdhd, minf);
-        var trak = Box("trak", mdia);
+        var trak = editListMediaTime.HasValue
+            ? Box("trak", Box("edts", Box("elst", new byte[4], UInt32Be(1), UInt32Be(sampleTicks * (uint)sampleCount), UInt32Be(editListMediaTime.Value), UInt32Be(0x00010000))), mdia)
+            : Box("trak", mdia);
         var moov = Box("moov", trak);
 
         return Concat(ftyp, mdat, moov);

@@ -53,6 +53,17 @@ namespace Nikse.SubtitleEdit.Core.Cea708
         /// <returns>Paragraphs per service number (only services that produced text)</returns>
         public SortedDictionary<int, List<Paragraph>> Finish()
         {
+            return Finish(null);
+        }
+
+        /// <summary>
+        /// Decodes the last packet and flushes text still buffered (no terminating display command).
+        /// </summary>
+        /// <param name="endMs">End time of text still on screen at the end of the stream (e.g. the
+        /// end of the last video frame) - null for the time of the last packet</param>
+        /// <returns>Paragraphs per service number (only services that produced text)</returns>
+        public SortedDictionary<int, List<Paragraph>> Finish(double? endMs)
+        {
             DecodeCurrentPacket();
             _hasPacket = false;
 
@@ -62,8 +73,9 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 var s = service.Value;
                 if (s.PacketTimesMs.Count > 0)
                 {
-                    var tailText = Cea708.Decode(s.PacketTimesMs.Count, Array.Empty<byte>(), s.State, flush: true);
-                    Emit(s, tailText, s.PacketTimesMs[s.PacketTimesMs.Count - 1]);
+                    Cea708.Decode(s.PacketTimesMs.Count, Array.Empty<byte>(), s.State, flush: true);
+                    var lastPacketMs = s.PacketTimesMs[s.PacketTimesMs.Count - 1];
+                    Emit(s, endMs.HasValue && endMs.Value > lastPacketMs ? endMs.Value : lastPacketMs);
                 }
 
                 if (s.Paragraphs.Count > 0)
@@ -96,28 +108,35 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 }
 
                 s.PacketTimesMs.Add(_packetTimeMs);
-                var text = Cea708.Decode(s.PacketTimesMs.Count - 1, block.Value.ToArray(), s.State, flush: false);
-                Emit(s, text, _packetTimeMs);
+                Cea708.Decode(s.PacketTimesMs.Count - 1, block.Value.ToArray(), s.State, flush: false);
+                Emit(s, _packetTimeMs);
             }
 
             _hasPacket = false;
         }
 
-        private static void Emit(ServiceState s, string text, double endMs)
+        /// <summary>
+        /// Adds a paragraph per caption flushed by the last decode - one packet can end several
+        /// captions, e.g. roll-up lines each ended by a CR.
+        /// </summary>
+        private static void Emit(ServiceState s, double endMs)
         {
-            if (string.IsNullOrEmpty(text))
+            foreach (var flushed in s.State.FlushedTexts)
             {
-                return;
-            }
+                var text = flushed.Value.Trim();
+                if (string.IsNullOrEmpty(text))
+                {
+                    continue;
+                }
 
-            // state.StartLineIndex is set by Cea708.FlushText to the lineIndex of the first
-            // SetText command that contributed to the just-emitted caption. Clamp defensively in
-            // case the index isn't valid (e.g., flush with empty state).
-            var times = s.PacketTimesMs;
-            var startIndex = s.State.StartLineIndex >= 0 && s.State.StartLineIndex < times.Count
-                ? s.State.StartLineIndex
-                : times.Count - 1;
-            s.Paragraphs.Add(new Paragraph(text.Trim(), times[startIndex], endMs));
+                // The key is the lineIndex (packet number) of the first SetText command that
+                // contributed to the caption. Clamp defensively in case it isn't valid.
+                var times = s.PacketTimesMs;
+                var startIndex = flushed.Key >= 0 && flushed.Key < times.Count
+                    ? flushed.Key
+                    : times.Count - 1;
+                s.Paragraphs.Add(new Paragraph(text, times[startIndex], endMs));
+            }
         }
 
         /// <summary>

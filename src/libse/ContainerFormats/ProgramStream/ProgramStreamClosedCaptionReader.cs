@@ -22,6 +22,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
         /// </summary>
         public const long DefaultProbeMilliseconds = 60_000;
 
+        private const long PtsWrap = 1L << 33;
+        private const long PtsDiscontinuity = 10 * 90_000; // 10 seconds backwards is a new PTS base, not frame reordering
+        private const long PtsFrame = 3003; // one NTSC frame at 90 kHz
+
         /// <summary>
         /// True if the stream starts with an MPEG pack header (00 00 01 BA).
         /// </summary>
@@ -54,6 +58,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
             try
             {
                 int? videoStreamId = null;
+                long lastPts = -1;
+                long ptsOffset = 0;
                 var length = stream.Length;
                 long packets = 0;
                 while (!scanner.Stop && FindNextStartCode(stream, header))
@@ -108,10 +114,36 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
 
                     videoStreamId = streamId;
                     var read = stream.ReadFully(payload, 0, packetLength);
-                    var dataStart = GetPesDataStart(payload, read, out var pts);
+                    var dataStart = GetPesDataStart(payload, read, out var rawPts);
+                    long? ptsMs = null;
+                    if (rawPts.HasValue)
+                    {
+                        var pts = rawPts.Value + ptsOffset;
+                        if (lastPts >= 0 && pts < lastPts - PtsWrap / 2)
+                        {
+                            // the 33-bit PTS wrapped (every ~26.5 hours)
+                            ptsOffset += PtsWrap;
+                            pts += PtsWrap;
+                        }
+                        else if (lastPts >= 0 && pts > lastPts + PtsWrap / 2)
+                        {
+                            pts -= PtsWrap; // a reordered frame from just before the wrap
+                        }
+                        else if (lastPts >= 0 && pts < lastPts - PtsDiscontinuity)
+                        {
+                            // PTS reset (e.g. a new VOB ID in a DVD .vob) - continue after the previous part
+                            var shift = lastPts + PtsFrame - pts;
+                            ptsOffset += shift;
+                            pts += shift;
+                        }
+
+                        lastPts = Math.Max(lastPts, pts);
+                        ptsMs = pts / 90;
+                    }
+
                     if (dataStart >= 0 && dataStart < read)
                     {
-                        scanner.Feed(payload.AsSpan(dataStart, read - dataStart), pts);
+                        scanner.Feed(payload.AsSpan(dataStart, read - dataStart), ptsMs);
                     }
 
                     if (++packets % 10000 == 0)
@@ -155,11 +187,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
 
         /// <summary>
         /// Where the elementary stream data starts in a PES packet body (after the 6-byte PES
-        /// start/length) - MPEG-2 or MPEG-1 PES header - and its PTS in milliseconds, if any.
+        /// start/length) - MPEG-2 or MPEG-1 PES header - and its raw 33-bit PTS (90 kHz), if any.
         /// </summary>
-        private static int GetPesDataStart(byte[] data, int length, out long? ptsMs)
+        private static int GetPesDataStart(byte[] data, int length, out long? pts)
         {
-            ptsMs = null;
+            pts = null;
             if (length < 3)
             {
                 return -1;
@@ -170,7 +202,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
                 var headerDataLength = data[2];
                 if ((data[1] & 0x80) != 0 && length >= 8)
                 {
-                    ptsMs = ReadPts(data, 3) / 90;
+                    pts = ReadPts(data, 3);
                 }
 
                 return 3 + headerDataLength;
@@ -195,13 +227,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
 
             if ((data[i] & 0xF0) == 0x20 && i + 5 <= length)
             {
-                ptsMs = ReadPts(data, i) / 90;
+                pts = ReadPts(data, i);
                 return i + 5;
             }
 
             if ((data[i] & 0xF0) == 0x30 && i + 10 <= length)
             {
-                ptsMs = ReadPts(data, i) / 90;
+                pts = ReadPts(data, i);
                 return i + 10;
             }
 
@@ -244,6 +276,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
             private bool _topFieldFirst = true;
             private List<CcData[]> _pendingDvdFrames;
             private readonly List<CcData> _ccData = new List<CcData>();
+            private readonly CcDataParseState _parseState = new CcDataParseState();
 
             public VideoScanner(long probeMilliseconds)
             {
@@ -314,6 +347,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
 
             public SortedDictionary<int, List<Paragraph>> Finish()
             {
+                AppendToUnit(_carry.AsSpan(0, _carryLength)); // the last bytes of the stream
+                _carryLength = 0;
                 FinishUnit();
                 EmitPendingDvdFrames();
                 return _decoder.HasData
@@ -395,7 +430,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
                     EmitPendingDvdFrames(); // the GOP's start is known exactly now
                 }
 
-                if (!_decoder.HasData && _pictureMs - _firstPictureMs > _probeMilliseconds)
+                // caption user data with only padding so far still means captions may come later
+                if (!_parseState.CaptionDataSeen && !_decoder.HasData && _pictureMs - _firstPictureMs > _probeMilliseconds)
                 {
                     Stop = true;
                 }
@@ -420,12 +456,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
                         if (dvdFrames.Count > 0)
                         {
                             _pendingDvdFrames = dvdFrames;
+                            _parseState.CaptionDataSeen = true;
                         }
                         else if (_pictureMs.HasValue)
                         {
                             _ccData.Clear();
-                            GetCcDataHelper.ParseCcDataFromAtscUserData(unit, _ccData);
-                            GetCcDataHelper.ParseCcDataFromScte20UserData(unit, _topFieldFirst, _ccData);
+                            GetCcDataHelper.ParseCcDataFromMpeg2UserData(unit, _topFieldFirst, _ccData, _parseState);
                             _decoder.AddFrame(_pictureMs.Value, _ccData.ToArray());
                         }
 

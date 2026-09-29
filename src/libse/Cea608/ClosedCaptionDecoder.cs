@@ -110,7 +110,7 @@ namespace Nikse.SubtitleEdit.Core.Cea608
                 result.Add(track.Key, track.Value);
             }
 
-            foreach (var service in _cea708Decoder.Finish())
+            foreach (var service in _cea708Decoder.Finish(flushTime))
             {
                 result.Add(Cea708TrackKeyOffset + service.Key, service.Value);
             }

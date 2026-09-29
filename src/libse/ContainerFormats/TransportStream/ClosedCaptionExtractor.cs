@@ -22,6 +22,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         private int _pesLength;
         private bool _pesStarted;
         private readonly List<CcData> _scratch = new List<CcData>();
+        private readonly CcDataParseState _parseState = new CcDataParseState();
         private long _lastPts = -1;
         private long _ptsWrapOffset;
         private readonly ClosedCaptionDecoder _decoder = new ClosedCaptionDecoder();
@@ -184,7 +185,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             }
 
             _scratch.Clear();
-            GetCcDataHelper.ParseCcDataFromStartCodeStream(pes.Slice(dataStart), _codec, _scratch);
+            GetCcDataHelper.ParseCcDataFromStartCodeStream(pes.Slice(dataStart), _codec, _scratch, _parseState);
             _decoder.AddFrame(pts / 90, _scratch.ToArray());
         }
     }
