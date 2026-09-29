@@ -1420,6 +1420,15 @@ public class AudioVisualizer : Control
             return;
         }
 
+        // Pointer-enter also fires while another application is in front (the mouse crossing the
+        // waveform on the way to it). Focusing then silently moved the window's focus off the
+        // subtitle grid, so after switching back Ctrl+V pasted at the waveform position instead
+        // of over the still-highlighted selected lines (#15436).
+        if (TopLevel.GetTopLevel(this) is WindowBase { IsActive: false })
+        {
+            return;
+        }
+
         if (!IsFocused)
         {
             if (SkipNextPointerEntered)
