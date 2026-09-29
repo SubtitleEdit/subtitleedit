@@ -354,6 +354,44 @@ namespace Nikse.SubtitleEdit.Core.Cea608
             }
         }
 
+        /// <summary>
+        /// Parses DVD style Line 21 captions from MPEG-2 video user data (the bytes after the
+        /// 00 00 01 B2 start code): "CC", user_data_type_code 1, caption_block_size 0xF8, a flags
+        /// byte (bit 7 = odd field first), then 6-byte caption blocks - two caption words, each a
+        /// marker byte (0xFF/0xFE) and two caption bytes. One user data packet at the start of a GOP
+        /// holds the captions of the whole GOP, one block per frame.
+        /// </summary>
+        /// <returns>The cc_data of each frame (CEA-608 field 1/2 pairs), in frame order - empty if this is not DVD caption data</returns>
+        public static List<CcData[]> ParseDvdCaptionUserData(ReadOnlySpan<byte> userData)
+        {
+            var frames = new List<CcData[]>();
+            if (userData.Length < 11 || userData[0] != 0x43 || userData[1] != 0x43 || userData[2] != 0x01 || userData[3] != 0xF8)
+            {
+                return frames;
+            }
+
+            // The caption_block_count in the flags byte is often wrong - count the blocks instead,
+            // like ffmpeg does, and map the fields the same way.
+            var oddFieldFirst = (userData[4] & 0x80) != 0;
+            for (var i = 5; i + 6 <= userData.Length && (userData[i] & 0xFE) == 0xFE; i += 6)
+            {
+                var frame = new List<CcData>(2);
+                AddDvdCaptionWord(frame, userData[i] == 0xFF && oddFieldFirst ? 0 : 1, userData[i + 1], userData[i + 2]);
+                AddDvdCaptionWord(frame, userData[i + 3] == 0xFF && !oddFieldFirst ? 0 : 1, userData[i + 4], userData[i + 5]);
+                frames.Add(frame.ToArray());
+            }
+
+            return frames;
+        }
+
+        private static void AddDvdCaptionWord(List<CcData> frame, int ccType, byte ccData1, byte ccData2)
+        {
+            if (IsNonEmptyCcData(ccData1, ccData2))
+            {
+                frame.Add(new CcData(ccType, ccData1, ccData2));
+            }
+        }
+
         private static int ReadBits(ReadOnlySpan<byte> data, ref int bitPosition, int count)
         {
             var value = 0;

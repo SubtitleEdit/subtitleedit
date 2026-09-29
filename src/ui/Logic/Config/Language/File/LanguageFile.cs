@@ -61,6 +61,7 @@ public class LanguageFile
     public string PickTransportStreamTrackX { get; set; }
     public string PickMp4TrackX { get; set; }
     public string PickMxfTrackX { get; set; }
+    public string PickMpegTrackX { get; set; }
     public string RosettaProperties { get; set; }
     public string RosettaFontSize { get; set; }
     public string PropertyTimeBase { get; set; }
@@ -127,6 +128,7 @@ public class LanguageFile
         PickTransportStreamTrackX = "Pick transport stream track - {0}";
         PickMp4TrackX = "Pick MP4 track - {0}";
         PickMxfTrackX = "Pick MXF track - {0}";
+        PickMpegTrackX = "Pick MPEG track - {0}";
         RosettaProperties = "Timed Text Rosetta IMSC properties";
         RosettaFontSize = "Font size (row height)";
         PropertyTimeBase = "Time base";
