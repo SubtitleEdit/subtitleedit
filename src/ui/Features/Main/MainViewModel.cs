@@ -24078,6 +24078,15 @@ public partial class MainViewModel :
                 }
             }
 
+            // Image-list files (DOST, SON, SpuImage, SubRip with image file names, ...) name an
+            // image per cue - loaded as text the grid would show file names, so OCR them, like SE 4.
+            var imageFileListSubtitle = isAudioFile ? null : ImageListSubtitleLoader.TryLoad(fileName, fileEncoding, subtitle);
+            if (imageFileListSubtitle != null)
+            {
+                ImportAndOcrDost(fileName, imageFileListSubtitle, skipLoadVideo);
+                return;
+            }
+
             if (subtitle == null)
             {
                 // SMPTE-TT with bitmap captions: base64 PNGs in <smpte:image> referenced via
@@ -24114,6 +24123,19 @@ public partial class MainViewModel :
                 {
                     ImportAndOcrSpDvdSup(fileName, skipLoadVideo);
                     return;
+                }
+
+                // PlayStation subs keep their png images inside the file.
+                if (ext == ".subs")
+                {
+                    var playStationSubs = new PlayStationSubs();
+                    if (playStationSubs.IsMine(null, fileName))
+                    {
+                        var playStationSubtitle = new Subtitle();
+                        playStationSubs.LoadSubtitle(playStationSubtitle, null, fileName);
+                        ImportAndOcrBinaryParagraphList(fileName, playStationSubs, playStationSubtitle, skipLoadVideo);
+                        return;
+                    }
                 }
 
                 subtitle = TryLoadAribB36(fileName);
@@ -24816,6 +24838,19 @@ public partial class MainViewModel :
         Dispatcher.UIThread.Post(async () =>
         {
             var result = await ShowDialogAsync<OcrWindow, OcrViewModel>(vm => { vm.InitializeBdn(subtitle, fileName, false); });
+
+            if (result.OkPressed)
+            {
+                await FinishOcrImportAsync(fileName, result.OcredSubtitle, skipLoadVideo: skipLoadVideo);
+            }
+        });
+    }
+
+    private void ImportAndOcrBinaryParagraphList(string fileName, IBinaryParagraphList binaryParagraphList, Subtitle subtitle, bool skipLoadVideo = false)
+    {
+        Dispatcher.UIThread.Post(async () =>
+        {
+            var result = await ShowDialogAsync<OcrWindow, OcrViewModel>(vm => { vm.InitializeBinaryParagraphList(binaryParagraphList, subtitle, fileName); });
 
             if (result.OkPressed)
             {
