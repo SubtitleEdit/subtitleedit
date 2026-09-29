@@ -281,4 +281,71 @@ public class MultipleReplaceMoveTests
             window.Close();
         }
     }
+
+    // #15374: a rule could only change category by recreating it there and deleting the original.
+    [AvaloniaFact]
+    public void MoveRuleToCategory_AppendsRuleToTargetCategory()
+    {
+        var vm = BuildViewModel();
+        var rule = vm.Nodes[0].SubNodes![1];
+        var target = vm.Nodes[2];
+
+        vm.MoveRuleToCategory(rule, target);
+
+        Assert.Equal("c1r1,c1r3", Rules(vm.Nodes[0]));
+        Assert.Equal("c3r1,c3r2,c3r3,c1r2", Rules(target));
+        Assert.Same(target, rule.Parent);
+        Assert.True(target.IsExpanded);
+
+        // The moved rule then reorders inside its new category, not the old one.
+        vm.NodeMoveToTopCommand.Execute(rule);
+        Assert.Equal("c1r2,c3r1,c3r2,c3r3", Rules(target));
+        Assert.Equal("c1r1,c1r3", Rules(vm.Nodes[0]));
+    }
+
+    [AvaloniaFact]
+    public void MoveRuleToCategory_IgnoresOwnCategoryAndCategoryNodes()
+    {
+        var vm = BuildViewModel();
+
+        vm.MoveRuleToCategory(vm.Nodes[0].SubNodes![0], vm.Nodes[0]);
+        vm.MoveRuleToCategory(vm.Nodes[0], vm.Nodes[1]);
+        vm.MoveRuleToCategory(vm.Nodes[0].SubNodes![0], vm.Nodes[1].SubNodes![0]);
+
+        Assert.Equal("c1,c2,c3", Categories(vm));
+        Assert.Equal("c1r1,c1r2,c1r3", Rules(vm.Nodes[0]));
+        Assert.Equal("c2r1,c2r2,c2r3", Rules(vm.Nodes[1]));
+    }
+
+    // The submenu lists the other categories only, and picking one moves the rule there.
+    [AvaloniaFact]
+    public void ContextMenu_MoveToCategory_ListsOtherCategoriesAndMoves()
+    {
+        var vm = BuildViewModel();
+        var window = new MultipleReplaceWindow(vm);
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            var rule = vm.Nodes[1].SubNodes![0];
+            vm.NodeOpenContextMenuCommand.Execute(rule);
+
+            var moveTo = vm.RulesTreeView.ContextMenu!.Items
+                .OfType<MenuItem>()
+                .Single(m => m.Header as string == Se.Language.Edit.MultipleReplace.MoveToCategory);
+            var targets = moveTo.Items.OfType<MenuItem>().ToList();
+
+            Assert.Equal("c1,c3", string.Join(",", targets.Select(m => m.Header as string)));
+
+            targets[1].Command!.Execute(null);
+
+            Assert.Equal("c2r2,c2r3", Rules(vm.Nodes[1]));
+            Assert.Equal("c3r1,c3r2,c3r3,c2r1", Rules(vm.Nodes[2]));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

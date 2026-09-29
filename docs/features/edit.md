@@ -137,6 +137,7 @@ Right-click a rule node to open its context menu:
 - **Insert before / Insert after** — add a new rule relative to this one
 - **Move up / Move down** — reorder within the category
 - **Move to top / Move to bottom** — move the rule to the first or last position in the category
+- **Move to category** — move the rule to the end of another category
 - **Delete** — remove the rule
 
 Double-clicking a rule also opens the **Edit rule** dialog.
