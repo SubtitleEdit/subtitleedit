@@ -85,7 +85,7 @@ public partial class WebVttStylesViewModel : ObservableObject, IClosingCleanup
 
     public void Initialize(Subtitle subtitle, string fileName, string? selectedStyleName, IApplyWebVttStyles? applyWebVttStyles)
     {
-        Title = string.Format(Se.Language.Assa.StylesTitleX, fileName);
+        Title = UiUtil.FormatTitleWithFileName(Se.Language.Assa.StylesTitleX, fileName);
         _subtitle = subtitle;
         _applyWebVttStyles = applyWebVttStyles;
         IsApplyVisible = applyWebVttStyles != null;

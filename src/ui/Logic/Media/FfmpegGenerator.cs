@@ -1662,6 +1662,23 @@ public class FfmpegGenerator
     private const int MaxSeekedCutInputs = 32;
 
     /// <summary>
+    /// Inputs without a seek index are opened this many seconds before a range and trimmed to it exactly. A .ts, .m2ts,
+    /// .mpg or .vob has no seek index, so "-ss" there lands on a frame that is not a keyframe and
+    /// the decoder drops pictures up to the next keyframe - the picture started up to a GOP late
+    /// and ahead of the sound. Starting a little earlier gives the decoder a keyframe before the
+    /// range.
+    /// </summary>
+    private const double CutSeekPreroll = 15.0;
+
+    private static double GetCutSeekPreroll(string inputFileName)
+    {
+        var ext = Path.GetExtension(inputFileName).ToLowerInvariant();
+        return ext is ".ts" or ".m2ts" or ".mts" or ".m2t" or ".tp" or ".trp" or ".mpg" or ".mpeg" or ".m2p" or ".vob" or ".m2v" or ".mpv"
+            ? CutSeekPreroll
+            : 0;
+    }
+
+    /// <summary>
     /// The seek + concat command line shared by "merge segments" and "remove segments": every
     /// range is cut out of the input and the pieces are joined in the order given. A range
     /// without an end runs to the end of the file.
@@ -1693,13 +1710,14 @@ public class FfmpegGenerator
         var filterParts = new List<string>();
         var concatInputs = new List<string>();
         var seekPerRange = ranges.Count <= MaxSeekedCutInputs;
+        var preroll = GetCutSeekPreroll(inputFileName);
 
         // One shared input: seek to the earliest range and stop after the latest, and trim
         // relative to that window.
         var windowStart = 0.0;
         if (!seekPerRange)
         {
-            windowStart = ranges.Min(r => r.Start.GetValueOrDefault());
+            windowStart = Math.Max(0, ranges.Min(r => r.Start.GetValueOrDefault()) - preroll);
             var windowEnd = ranges.All(r => r.End.HasValue) ? ranges.Max(r => r.End!.Value) : (double?)null;
             inputArgs = GetSeekInputArgs(inputFileName, windowStart, windowEnd, F);
         }
@@ -1709,21 +1727,24 @@ public class FfmpegGenerator
             var start = ranges[i].Start.GetValueOrDefault();
             var end = ranges[i].End;
             var input = 0;
-            var filter = string.Empty;
+            var seekStart = windowStart;
             if (seekPerRange)
             {
                 input = i;
-                inputArgs += GetSeekInputArgs(inputFileName, start, end, F);
+                seekStart = Math.Max(0, start - preroll);
+                inputArgs += GetSeekInputArgs(inputFileName, seekStart, end, F);
             }
-            else
-            {
-                var trim = "start=" + F(start - windowStart);
-                if (end.HasValue)
-                {
-                    trim += ":end=" + F(end.Value - windowStart);
-                }
 
-                filter = trim;
+            // A per-range input opened exactly at the range needs no trim (-t ends it).
+            var filter = string.Empty;
+            if (!seekPerRange || start > seekStart)
+            {
+                filter = "start=" + F(start - seekStart);
+            }
+
+            if (end.HasValue && (!seekPerRange || filter.Length > 0))
+            {
+                filter += (filter.Length > 0 ? ":" : string.Empty) + "end=" + F(end.Value - seekStart);
             }
 
             var labels = string.Empty;

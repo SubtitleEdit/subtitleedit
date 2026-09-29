@@ -222,7 +222,7 @@ public partial class AssaPropertiesViewModel : ObservableObject
 
     public void Initialize(Subtitle subtitle, SubtitleFormat format, string fileName, string videoFileName, int videoWidth = 0, int videoHeight = 0)
     {
-        Title = string.Format(Se.Language.Assa.PropertiesTitleX, fileName);
+        Title = UiUtil.FormatTitleWithFileName(Se.Language.Assa.PropertiesTitleX, fileName);
         Header = subtitle.Header;
         _videoFileName = videoFileName;
         _currentVideoWidth = videoWidth;

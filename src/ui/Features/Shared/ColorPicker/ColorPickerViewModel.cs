@@ -126,11 +126,25 @@ public partial class ColorPickerViewModel : ObservableObject
 
     partial void OnHueChanged(double value)
     {
-        UpdateColorFromHsv();
+        UpdateColorFromWheel();
     }
 
     partial void OnSaturationChanged(double value)
     {
+        UpdateColorFromWheel();
+    }
+
+    // Picking on the wheel while the brightness is at zero (the picker opened on black, common for
+    // ASSA outline/shadow) gave black for every hue - the wheel seemed to do nothing. A pick there
+    // brings the brightness up, as the wheel always gave a full-brightness color before.
+    private void UpdateColorFromWheel()
+    {
+        if (!_isUpdating && Brightness <= 0)
+        {
+            Brightness = 1; // updates the color
+            return;
+        }
+
         UpdateColorFromHsv();
     }
 

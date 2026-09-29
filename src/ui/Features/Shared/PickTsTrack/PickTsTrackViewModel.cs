@@ -46,7 +46,7 @@ public partial class PickTsTrackViewModel : ObservableObject
     {
         _tsParser = tsParser;
         _fileName = fileName;
-        WindowTitle = string.Format(Se.Language.File.PickTransportStreamTrackX, fileName);
+        WindowTitle = UiUtil.FormatTitleWithFileName(Se.Language.File.PickTransportStreamTrackX, fileName);
 
         var programMapTableParser = new ProgramMapTableParser();
         programMapTableParser.Parse(fileName); // get languages
@@ -137,7 +137,7 @@ public partial class PickTsTrackViewModel : ObservableObject
     internal void Initialize(Dictionary<int, List<Paragraph>> teletextPages, string fileName)
     {
         _fileName = fileName;
-        WindowTitle = string.Format(Se.Language.File.PickTransportStreamTrackX, fileName);
+        WindowTitle = UiUtil.FormatTitleWithFileName(Se.Language.File.PickTransportStreamTrackX, fileName);
 
         foreach (var page in teletextPages)
         {

@@ -496,6 +496,18 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             }
         }
 
+        // Other binary formats in the list (DVB Teletext, ...) - the text loop above skips them
+        // now, and the image-based writer below does not know them.
+        foreach (var format in _subtitleFormats)
+        {
+            if (!format.IsTextBased && format.Name == _config.TargetFormatName && item.Subtitle != null &&
+                format is IBinaryPersistableSubtitle binaryPersistableSubtitle)
+            {
+                SaveSubtitleFormat(item, binaryPersistableSubtitle, format, cancellationToken);
+                return;
+            }
+        }
+
         if (_config.TargetFormatName == FormatPlainText && item.Subtitle != null)
         {
             var path = MakeOutputFileName(item, ".txt");
@@ -2464,6 +2476,17 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         var subtitles = new List<SubtitleLineViewModel>(subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, subtitle.OriginalFormat)));
         var subtitlesFixed = new List<SubtitleLineViewModel>();
         var maxCharactersPerSubtitle = c.MaxNumberOfLines * c.SingleLineMaxLength;
+
+        // Same threshold rule as the split/break dialog: at or above the single line max
+        // length means "keep any text that fits on one line", and capping there prevents
+        // merging to a single line that would exceed the max length (#12910).
+        var unbreakLinesShorterThan = c.UnbreakLinesShorterThan > 0
+            ? c.UnbreakLinesShorterThan
+            : Se.Settings.General.UnbreakLinesShorterThan;
+        var mergeLinesShorterThan = unbreakLinesShorterThan >= c.SingleLineMaxLength
+            ? c.SingleLineMaxLength + 1
+            : unbreakLinesShorterThan;
+
         if (c.SplitLongLines)
         {
             var splitOptions = new SplitBreakLongLinesViewModel.SplitOptions
@@ -2476,6 +2499,14 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             for (var index = 0; index < subtitles.Count; index++)
             {
                 var item = new SubtitleLineViewModel(subtitles[index]);
+
+                // As the dialog: a subtitle is not cut into several events when re-wrapping its
+                // lines is enough to make it fit - the rebalance pass below does that.
+                if (c.RebalanceLongLines && SplitBreakLongLinesViewModel.CanBeFixedByRebalancing(item.Text, c.SingleLineMaxLength, c.MaxNumberOfLines, mergeLinesShorterThan, language))
+                {
+                    subtitlesFixed.Add(item);
+                    continue;
+                }
 
                 // Pass the split options the dialog passes. The 3-argument overload uses a
                 // default SplitOptions with MinimumGapMs = 0, so batch produced back-to-back
@@ -2500,16 +2531,6 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         if (c.RebalanceLongLines)
         {
-            // Same threshold rule as the split/break dialog: at or above the single line max
-            // length means "keep any text that fits on one line", and capping there prevents
-            // merging to a single line that would exceed the max length (#12910).
-            var unbreakLinesShorterThan = c.UnbreakLinesShorterThan > 0
-                ? c.UnbreakLinesShorterThan
-                : Se.Settings.General.UnbreakLinesShorterThan;
-            var mergeLinesShorterThan = unbreakLinesShorterThan >= c.SingleLineMaxLength
-                ? c.SingleLineMaxLength + 1
-                : unbreakLinesShorterThan;
-
             for (var index = 0; index < subtitlesFixed.Count; index++)
             {
                 var item = subtitlesFixed[index];

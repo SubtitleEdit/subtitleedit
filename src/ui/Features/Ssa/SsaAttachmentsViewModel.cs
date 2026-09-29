@@ -218,7 +218,7 @@ public partial class SsaAttachmentsViewModel : ObservableObject
 
     public void Initialize(Subtitle subtitle, SubtitleFormat format, string fileName)
     {
-        Title = string.Format(Se.Language.Assa.AttachmentsTitleX, fileName);
+        Title = UiUtil.FormatTitleWithFileName(Se.Language.Assa.AttachmentsTitleX, fileName);
         Header = subtitle.Header;
         Footer = subtitle.Footer ?? string.Empty;
         _subtitle = subtitle;

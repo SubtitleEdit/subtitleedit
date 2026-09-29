@@ -3216,6 +3216,20 @@ public static class UiUtil
     }
 
     /// <summary>
+    /// A dialog title made from a "Title - {0}" format and a file name. With screen privacy on,
+    /// the file name is left out, as <see cref="MakeWindowTitle"/> does (#15300).
+    /// </summary>
+    internal static string FormatTitleWithFileName(string format, string fileName)
+    {
+        if (!HideFileNames)
+        {
+            return string.Format(format, fileName);
+        }
+
+        return string.Format(format, string.Empty).Trim().TrimEnd('-', ':').Trim();
+    }
+
+    /// <summary>
     /// Window title with the current subtitle file name appended, e.g. "Auto-translate - my movie.srt".
     /// The plain title is returned unchanged when no subtitle file is open, and inside a
     /// <see cref="SuppressSubtitleFileNameInTitle"/> scope.

@@ -187,7 +187,7 @@ https://github.com/SubtitleEdit/subtitleedit
             }
             else
             {
-                Title = string.Format(_l.TitleWithFileName, _fileName);
+                Title = UiUtil.FormatTitleWithFileName(_l.TitleWithFileName, _fileName);
             }
         });
     }

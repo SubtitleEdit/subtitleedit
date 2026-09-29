@@ -4762,13 +4762,21 @@ public partial class MainViewModel :
         var result = await ShowDialogAsync<CompareWindow, CompareViewModel>(vm =>
         {
             var right = new ObservableCollection<SubtitleLineViewModel>();
-            vm.Initialize(Subtitles, _subtitleFileName ?? string.Empty, right, string.Empty, HasChanges());
+
+            // Display-only reference rows (#15299) are not lines of the subtitle: Compare showed
+            // them as empty differences and could fill in or delete them.
+            var left = new ObservableCollection<SubtitleLineViewModel>(Subtitles.Where(p => !p.IsReferenceOnly));
+            vm.Initialize(left, _subtitleFileName ?? string.Empty, right, string.Empty, HasChanges());
         });
 
         // Lines edited in Compare keep their row ids, so they map back onto the rows they came from.
+        // The reference rows go back in too (ApplyDialogRows drops rows it is not given), and are
+        // then put back at their times.
         if (result.OkPressed && result.IsLeftEditable && result.HasPendingChanges)
         {
-            ApplyDialogRows(result.GetEditedLines(), before);
+            var referenceRows = Subtitles.Where(p => p.IsReferenceOnly).ToList();
+            ApplyDialogRows(result.GetEditedLines().Concat(referenceRows).ToList(), before);
+            RepositionReferenceOnlyRows();
             ShowStatus(string.Format(Se.Language.File.CompareXChangesApplied, result.PendingChangeCount));
         }
     }

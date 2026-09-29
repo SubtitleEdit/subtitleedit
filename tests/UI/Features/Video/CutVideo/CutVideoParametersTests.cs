@@ -105,6 +105,21 @@ public class CutVideoParametersTests
     }
 
     /// <summary>
+    /// A .ts has no seek index: "-ss" lands on a non-keyframe and the picture of the range started
+    /// up to a GOP late. The input is opened earlier and the range trimmed exactly.
+    /// </summary>
+    [Fact]
+    public void Merge_TransportStream_SeeksEarlierAndTrimsToTheRange()
+    {
+        var args = FfmpegGenerator.GetMergeSegmentsParameters("in.ts", "out.mp4", MakeSegments((20.5, 25.5), (5, 8)), hasVideo: true);
+
+        Assert.StartsWith("-y -ss 5.5 -t 20 -i \"in.ts\" -t 8 -i \"in.ts\" -filter_complex ", args);
+        Assert.Contains("[0:v]trim=start=15:end=20,setpts=PTS-STARTPTS[v0]", args);
+        Assert.Contains("[0:a]atrim=start=15:end=20,asetpts=PTS-STARTPTS[a0]", args);
+        Assert.Contains("[1:v]trim=start=5:end=8,setpts=PTS-STARTPTS[v1]", args);
+    }
+
+    /// <summary>
     /// Many ranges share one input (seeked to the first range, stopped after the last) rather
     /// than opening the video once per range.
     /// </summary>

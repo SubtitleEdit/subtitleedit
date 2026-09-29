@@ -48,7 +48,7 @@ public partial class PickVobSubLanguageViewModel : ObservableObject
     {
         _streamIdDictionary = streamIdDictionary;
         _palette = palette;
-        WindowTitle = string.Format(Se.Language.General.PickVobSubLanguageTitle, Path.GetFileName(fileName));
+        WindowTitle = UiUtil.FormatTitleWithFileName(Se.Language.General.PickVobSubLanguageTitle, Path.GetFileName(fileName));
 
         foreach (var streamId in streamIdDictionary.Keys.OrderBy(k => k))
         {

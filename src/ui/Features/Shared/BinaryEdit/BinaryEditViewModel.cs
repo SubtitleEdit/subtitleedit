@@ -741,7 +741,7 @@ public partial class BinaryEditViewModel : ObservableObject
             ScreenWidth = Subtitles[0].ScreenSize.Width;
             ScreenHeight = Subtitles[0].ScreenSize.Height;
             RefreshStatusText();
-            Window.Title = string.Format(Se.Language.Tools.ImageBasedEdit.EditImagedBaseSubtitleX, fileName);
+            Window.Title = UiUtil.FormatTitleWithFileName(Se.Language.Tools.ImageBasedEdit.EditImagedBaseSubtitleX, fileName);
         }
 
         RefreshPositionMonitor();

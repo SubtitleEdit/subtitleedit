@@ -682,7 +682,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
         string selectedStyleName,
         IApplySsaStyles? applySsaStyles)
     {
-        Title = string.Format(Se.Language.Assa.StylesTitleX, fileName);
+        Title = UiUtil.FormatTitleWithFileName(Se.Language.Assa.StylesTitleX, fileName);
         Header = subtitle.Header;
         _subtitle = new Subtitle(subtitle, false);
         _subtitleFileName = fileName;
