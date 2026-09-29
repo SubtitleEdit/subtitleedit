@@ -72,6 +72,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
                         continue;
                     }
 
+                    // Picture and sound never hold subtitles - reading and text sniffing every video
+                    // frame made opening an hour of 50 Mbit/s broadcast MXF take minutes.
+                    if (IsPictureOrSoundElement(klv.Key))
+                    {
+                        continue;
+                    }
+
                     if ((klv.IdentifierType == KeyIdentifier.EssenceElement || klv.IdentifierType == KeyIdentifier.Unknown) && klv.DataSize < 500000)
                     {
                         stream.Seek(klv.DataPosition, SeekOrigin.Begin);
@@ -140,6 +147,17 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
         private static bool IsHeaderMetadataSet(byte[] key)
         {
             return key[4] == 0x02 && key[5] == 0x53 && key[8] == 0x0D && key[9] == 0x01 && key[10] == 0x01 && key[11] == 0x01;
+        }
+
+        /// <summary>
+        /// Essence element of a picture or sound item: content package (SMPTE 331M, 0x05/0x06) or
+        /// generic container (SMPTE 379M, 0x15/0x16). Subtitles (e.g. SMPTE 429-5 timed text) and
+        /// SMPTE 436M ANC/VBI data are data items (0x17).
+        /// </summary>
+        private static bool IsPictureOrSoundElement(byte[] key)
+        {
+            return key[4] == 0x01 && key[5] == 0x02 && key[8] == 0x0D && key[9] == 0x01 && key[10] == 0x03 && key[11] == 0x01 &&
+                   (key[12] == 0x05 || key[12] == 0x06 || key[12] == 0x15 || key[12] == 0x16);
         }
 
         /// <summary>
