@@ -19,6 +19,7 @@ public class LanguageMultipleReplace
     public string DescriptionOptional { get; set; }
     public string InvalidRegularExpressionX { get; set; }
     public string RegularExpressionTooSlowX { get; set; }
+    public string MoveToCategory { get; set; }
 
     public LanguageMultipleReplace()
     {
@@ -39,5 +40,6 @@ public class LanguageMultipleReplace
         DescriptionOptional = "Description (optional)";
         InvalidRegularExpressionX = "Invalid regular expression: {0}";
         RegularExpressionTooSlowX = "Regular expression gave up after {0} seconds - the rule is skipped, try a simpler pattern";
+        MoveToCategory = "Move to category";
     }
 }

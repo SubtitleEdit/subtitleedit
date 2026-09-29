@@ -860,6 +860,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
                     CommandParameter = node,
                     InputGesture = MoveToBottomGesture,
                 },
+                MakeMoveToCategoryMenuItem(node),
                 new Separator(),
                 new MenuItem
                 {
@@ -1029,6 +1030,45 @@ public partial class MultipleReplaceViewModel : ObservableObject
         }
 
         MoveNodeIn(node.Parent.SubNodes, node, direction);
+    }
+
+    /// <summary>
+    /// "Move to category" submenu with every category except the rule's own - before this a rule
+    /// could only change category by recreating it there and deleting the original (#15374).
+    /// </summary>
+    private MenuItem MakeMoveToCategoryMenuItem(RuleTreeNode node)
+    {
+        var menuItem = new MenuItem { Header = Se.Language.Edit.MultipleReplace.MoveToCategory };
+        foreach (var category in Nodes.Where(p => p.IsCategory && p != node.Parent))
+        {
+            menuItem.Items.Add(new MenuItem
+            {
+                Header = category.CategoryName,
+                Command = new RelayCommand(() => MoveRuleToCategory(node, category)),
+            });
+        }
+
+        menuItem.IsEnabled = menuItem.Items.Count > 0;
+        return menuItem;
+    }
+
+    /// <summary>
+    /// Moves a rule to the end of another category, then expands that category and keeps the
+    /// rule selected so it can be walked into place with Ctrl+Up/Down.
+    /// </summary>
+    internal void MoveRuleToCategory(RuleTreeNode? node, RuleTreeNode? category)
+    {
+        if (node == null || node.IsCategory || node.Parent?.SubNodes == null ||
+            category?.SubNodes == null || !category.IsCategory || category == node.Parent)
+        {
+            return;
+        }
+
+        node.Parent.SubNodes.Remove(node);
+        node.Parent = category;
+        category.SubNodes.Add(node);
+        _dirty = true;
+        NavigateToRule(node);
     }
 
     /// <summary>
