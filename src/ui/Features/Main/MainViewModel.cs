@@ -23992,6 +23992,29 @@ public partial class MainViewModel :
                 }
             }
 
+            // Adobe Premiere project (gzipped xml): its text clips, as SE 4 opened them.
+            if (ext == ".prproj")
+            {
+                var prProjSubtitle = TryLoadPremiereProject(fileName);
+                if (prProjSubtitle != null)
+                {
+                    if (!skipLoadVideo)
+                    {
+                        VideoCloseFile();
+                    }
+
+                    ResetSubtitle();
+                    _subtitle.Paragraphs.AddRange(prProjSubtitle.Paragraphs);
+                    SetSubtitles(_subtitle);
+                    _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) +
+                                        SelectedSubtitleFormat.Extension;
+                    ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
+                    SelectAndScrollToRow(0);
+                    _converted = true;
+                    return;
+                }
+            }
+
             if (ext == ".divx" || ext == ".avi")
             {
                 if (ImportSubtitleFromDivX(fileName, skipLoadVideo))
@@ -24830,6 +24853,26 @@ public partial class MainViewModel :
         catch
         {
             return null; // the parser indexes the page blocks without bounds checks
+        }
+    }
+
+    private static Subtitle? TryLoadPremiereProject(string fileName)
+    {
+        try
+        {
+            var xml = AdobePremierePrProj.LoadFromZipFile(fileName);
+            if (string.IsNullOrEmpty(xml))
+            {
+                return null;
+            }
+
+            var subtitle = new Subtitle();
+            new AdobePremierePrProj().LoadSubtitle(subtitle, xml.SplitToLines(), fileName);
+            return subtitle.Paragraphs.Count > 0 ? subtitle : null;
+        }
+        catch
+        {
+            return null;
         }
     }
 
