@@ -114,7 +114,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
 
                     videoStreamId = streamId;
                     var read = stream.ReadFully(payload, 0, packetLength);
-                    var dataStart = GetPesDataStart(payload, read, out var rawPts);
+                    var dataStart = GetPesDataStart(payload.AsSpan(0, read), out var rawPts);
                     long? ptsMs = null;
                     if (rawPts.HasValue)
                     {
@@ -189,9 +189,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
         /// Where the elementary stream data starts in a PES packet body (after the 6-byte PES
         /// start/length) - MPEG-2 or MPEG-1 PES header - and its raw 33-bit PTS (90 kHz), if any.
         /// </summary>
-        private static int GetPesDataStart(byte[] data, int length, out long? pts)
+        internal static int GetPesDataStart(ReadOnlySpan<byte> data, out long? pts)
         {
             pts = null;
+            var length = data.Length;
             if (length < 3)
             {
                 return -1;
@@ -240,7 +241,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
             return i + 1; // 0x0F = no timestamps
         }
 
-        private static long ReadPts(byte[] data, int index)
+        private static long ReadPts(ReadOnlySpan<byte> data, int index)
         {
             return ((long)(data[index] & 0x0E) << 29) | ((long)data[index + 1] << 22) | ((long)(data[index + 2] & 0xFE) << 14) |
                    ((long)data[index + 3] << 7) | ((long)data[index + 4] >> 1);

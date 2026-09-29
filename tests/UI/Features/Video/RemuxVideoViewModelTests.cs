@@ -310,6 +310,55 @@ public class RemuxVideoViewModelTests
         Assert.Contains("-c:a copy", args);
     }
 
+    /// <summary>
+    /// An .mpg gets every subtitle as A/53 closed captions in the video afterwards (#15405), so
+    /// neither .scc (MOV) nor .ass (MKV) switches the container, and ffmpeg gets no subtitle
+    /// streams - it writes an MPEG-2 program stream to the given (temporary) file.
+    /// </summary>
+    [AvaloniaFact]
+    public void Mpg_KeepsSubtitlesOutOfFfmpegAndStaysMpg()
+    {
+        var (vm, _, _) = BuildMixViewModel(false);
+        vm.SelectedOutputFormat = ".mpg";
+        vm.SubtitleFiles.Add(new RemuxFileItem(Path.Combine(Path.GetTempPath(), "remux-scc-does-not-exist.en.scc")));
+        vm.SubtitleFiles.Add(new RemuxFileItem(Path.Combine(Path.GetTempPath(), "remux-ass-does-not-exist.ass")));
+
+        Assert.Equal(".mpg", vm.SelectedOutputFormat);
+
+        var temp = Path.Combine(Path.GetTempPath(), "remux-mpg-temp.mpg");
+        var args = vm.BuildFfmpegArguments([.. vm.AudioFiles], [.. vm.SubtitleFiles], temp);
+
+        Assert.Contains("-map 0:v:0 -map 0:a:0 -map 1:a:0 -c:v copy -c:a ac3 -b:a 192k ", args);
+        Assert.DoesNotContain("-map 2:", args);
+        Assert.DoesNotContain("-c:s", args);
+        Assert.DoesNotContain("-metadata:s:s", args);
+        Assert.EndsWith($"-f vob \"{temp}\"", args);
+
+        vm.ReencodeVideoToMpeg2 = true;
+        Assert.Contains("-c:v mpeg2video -q:v 2 ", vm.BuildFfmpegArguments([.. vm.AudioFiles], [.. vm.SubtitleFiles], temp));
+    }
+
+    [Theory]
+    [InlineData("ac3, 48000 Hz, stereo, fltp, 192 kb/s", true)]
+    [InlineData("mp2, 48000 Hz, stereo, s16p, 224 kb/s", true)]
+    [InlineData("mp3 (mp3float), 44100 Hz, stereo", true)]
+    [InlineData("aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo", false)]
+    [InlineData("opus, 48000 Hz, stereo", false)]
+    [InlineData(null, false)]
+    public void IsMpegProgramStreamAudio_OnlyMpegAudioAndAc3(string? details, bool expected)
+    {
+        Assert.Equal(expected, RemuxVideoViewModel.IsMpegProgramStreamAudio(details));
+    }
+
+    [Theory]
+    [InlineData("mpeg2video (Main), yuv420p(tv, progressive), 720x480", "mpeg2video")]
+    [InlineData("h264 (High) (avc1 / 0x31637661), yuv420p", "h264")]
+    [InlineData("", "")]
+    public void GetCodecName_IsTheFirstWord(string details, string expected)
+    {
+        Assert.Equal(expected, RemuxVideoViewModel.GetCodecName(details));
+    }
+
     [AvaloniaFact]
     public void Subtitles_GetLanguageTagFromFileName()
     {
