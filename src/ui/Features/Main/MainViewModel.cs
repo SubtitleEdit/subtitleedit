@@ -24116,14 +24116,19 @@ public partial class MainViewModel :
                     return;
                 }
 
-                foreach (var f in SubtitleFormat.GetBinaryFormats(false))
+                subtitle = TryLoadAribB36(fileName);
+
+                if (subtitle == null)
                 {
-                    if (f.IsMine(null, fileName))
+                    foreach (var f in SubtitleFormat.GetBinaryFormats(false))
                     {
-                        subtitle = new Subtitle();
-                        f.LoadSubtitle(subtitle, null, fileName);
-                        subtitle.OriginalFormat = f;
-                        break; // format found, exit the loop
+                        if (f.IsMine(null, fileName))
+                        {
+                            subtitle = new Subtitle();
+                            f.LoadSubtitle(subtitle, null, fileName);
+                            subtitle.OriginalFormat = f;
+                            break; // format found, exit the loop
+                        }
                     }
                 }
 
@@ -24778,6 +24783,31 @@ public partial class MainViewModel :
         catch
         {
             return null;
+        }
+    }
+
+    /// <summary>
+    /// ARIB STD-B36 caption files (.1hd, .2hd, .1sd, .2sd), as SE 4 opened them. Not one of the
+    /// binary formats: IsMine only looks at the extension and size, so the load decides.
+    /// </summary>
+    private static Subtitle? TryLoadAribB36(string fileName)
+    {
+        try
+        {
+            var arib = new AribB36();
+            if (!arib.IsMine(null, fileName))
+            {
+                return null;
+            }
+
+            var subtitle = new Subtitle();
+            arib.LoadSubtitle(subtitle, null, fileName);
+            subtitle.OriginalFormat = arib;
+            return subtitle.Paragraphs.Count > 0 ? subtitle : null;
+        }
+        catch
+        {
+            return null; // the parser indexes the page blocks without bounds checks
         }
     }
 
