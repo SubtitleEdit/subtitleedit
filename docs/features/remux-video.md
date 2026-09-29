@@ -38,27 +38,29 @@ Accepted formats: `.mp3`, `.aac`, `.ac3`, `.wav`, `.mkv`, `.mka`, `.mp4`. At lea
 
 ## Subtitle Files
 
-Accepted formats: `.srt`, `.ass`, `.ssa`, `.vtt`, `.sub`, `.scc`. These become soft subtitle tracks (selectable in the player, not burned in), one per file, titled after the file name. In an MKV the file is stored unchanged; in an MP4 it is converted to the MP4 text subtitle format (mov_text), which loses styling.
+Accepted formats: `.srt`, `.ass`, `.ssa`, `.vtt`, `.sub`, `.scc`, `.mcc`. These become soft subtitle tracks (selectable in the player, not burned in), one per file, titled after the file name. In an MKV the file is stored unchanged; in an MP4 it is converted to the MP4 text subtitle format (mov_text), which loses styling.
 
 A Scenarist `.scc` file is embedded as a CEA-608 closed caption track (QuickTime `c608`) in a MOV. Save the subtitle as *Scenarist Closed Captions* first, then add the `.scc` file here.
 
 ### Closed captions in MPG (ATSC A/53)
 
-With **Output format** `.mpg`, the subtitles are embedded as CEA-608 closed captions inside the MPEG-2 video (ATSC A/53 "GA94" picture user data, as in US broadcast and NTSC MPEG-2 files). Players and tools show them as "EIA-608" or "CC1".
+With **Output format** `.mpg`, the subtitles are embedded as CEA-608 (and CEA-708) closed captions inside the MPEG-2 video (ATSC A/53 "GA94" picture user data, as in US broadcast and NTSC MPEG-2 files). Players and tools show them as "EIA-608" or "CC1".
 
 - A `.scc` file goes in byte for byte (pop-on, roll-up and paint-on all work); any other subtitle format is converted to pop-on captions first, like *Save as Scenarist Closed Captions* does
-- The first subtitle file becomes CC1 (field 1), a second one CC3 (field 2); at most two
+- A MacCaption `.mcc` file goes in with all its caption data - CEA-608 field 1 and 2 and CEA-708 (DTVCC) - repacked to the video's frame rate. An `.mcc` can only be embedded in MPG, so adding one switches the output to `.mpg`
+- The first subtitle file becomes CC1 (field 1), a second one CC3 (field 2) - replacing any field 2 data of an `.mcc` first file; at most two
 - The video must be MPEG-2. Any other video (H.264, HEVC, ...) is re-encoded to MPEG-2 after asking, which takes longer and lowers the quality a little
 - The audio is copied when it is MP2, MP3 or AC-3, and converted to AC-3 (192 kb/s) otherwise
 - Caption data the video already has is replaced
-- Caption times are taken from the video's first frame, so SCC timecodes should start at 00:00:00:00 (not at a 01:00:00:00 tape start)
+- Caption times are taken from the video's first frame, so SCC/MCC timecodes should start at 00:00:00:00 (not at a 01:00:00:00 tape start)
 
-ffmpeg first writes the MPEG program stream, then Subtitle Edit adds the captions to the video; the progress bar shows both steps. To check the result: MediaInfo lists a *Text* track "EIA-608" muxed in the video, and `ffmpeg -f lavfi -i "movie=out.mpg[out0+subcc]" -map 0:1 out.srt` extracts it.
+ffmpeg first writes the MPEG program stream, then Subtitle Edit adds the captions to the video; the progress bar shows both steps. To check the result: MediaInfo lists *Text* tracks "EIA-608" (and "EIA-708") muxed in the video, and `ffmpeg -f lavfi -i "movie=out.mpg[out0+subcc]" -map 0:1 out.srt` extracts it.
 
 ## Output Format and File
 
 - **Output format** is `.mp4`, `.mkv`, `.mov` or `.mpg`; the default follows the input video (MKV in, MKV out; MOV in, MOV out; MPG/MPEG/VOB in, MPG out; anything else MP4)
 - **MOV is required**, and switched to automatically with a message, when there is an `.scc` subtitle (unless the output is MPG). MOV also holds several audio and subtitle tracks
+- **MPG is required**, and switched to automatically with a message, when there is an `.mcc` subtitle
 - **MPG** puts every subtitle into the video as closed captions (see above), so it needs no other container
 - **MKV is required**, and switched to automatically with a message, when there is more than one audio file, more than one subtitle file (unless the output is MOV or MPG), or an `.ass`/`.ssa` subtitle (to keep its styles; not for MPG)
 - **Output file** defaults to the video name with `_remuxed` appended, next to the video; a number is added if that file exists. It cannot be one of the input files

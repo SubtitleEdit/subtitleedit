@@ -6,23 +6,30 @@ using System.IO;
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
 {
     /// <summary>
-    /// Embeds CEA-608 closed captions in the MPEG-2 video of an MPEG program stream (.mpg) as ATSC
-    /// A/53 "GA94" picture user data - what ffmpeg, VLC, MediaInfo and broadcast decoders read as
-    /// "EIA-608". Only the video packets change: the caption data goes in front of each picture's
-    /// first slice, and the packets keep their timestamps, so audio and video are copied as they are.
+    /// Embeds closed captions in the MPEG-2 video of an MPEG program stream (.mpg) as ATSC A/53
+    /// "GA94" picture user data - CEA-608 (what ffmpeg, VLC, MediaInfo and broadcast decoders read
+    /// as "EIA-608") and CEA-708. Only the video packets change: the caption data goes in front of
+    /// each picture's first slice, and the packets keep their timestamps, so audio and video are
+    /// copied as they are.
     /// </summary>
     public static class ProgramStreamClosedCaptionWriter
     {
         /// <summary>
+        /// A/53 allows 600 cc_data triplets per second (CEA-708's 9600 bit/s plus CEA-608):
+        /// cc_count 20 at 29.97 fps, 10 at 59.94, 25 at 23.976.
+        /// </summary>
+        private const double MaxTripletsPerMillisecond = 0.6;
+
+        /// <summary>
         /// Writes <paramref name="inputFileName"/> with captions to <paramref name="outputFileName"/>.
         /// Caption user data the video already has is replaced.
         /// </summary>
-        public static void Write(string inputFileName, string outputFileName, IReadOnlyList<SccBytePairs.TimedPair> field1, IReadOnlyList<SccBytePairs.TimedPair> field2, Action<double> progress)
+        public static void Write(string inputFileName, string outputFileName, ClosedCaptionBytes captions, Action<double> progress)
         {
             using (var input = new FileStream(inputFileName, FileMode.Open, FileAccess.Read, FileShare.Read, 1024 * 1024))
             using (var output = new FileStream(outputFileName, FileMode.Create, FileAccess.Write, FileShare.None, 1024 * 1024))
             {
-                Write(input, output, field1, field2, progress);
+                Write(input, output, captions, progress);
             }
         }
 
@@ -34,6 +41,21 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
         /// <exception cref="InvalidDataException">No MPEG-2 video in a program stream</exception>
         public static void Write(Stream input, Stream output, IReadOnlyList<SccBytePairs.TimedPair> field1, IReadOnlyList<SccBytePairs.TimedPair> field2, Action<double> progress)
         {
+            var captions = new ClosedCaptionBytes
+            {
+                Field1 = new List<SccBytePairs.TimedPair>(field1 ?? Array.Empty<SccBytePairs.TimedPair>()),
+                Field2 = new List<SccBytePairs.TimedPair>(field2 ?? Array.Empty<SccBytePairs.TimedPair>()),
+            };
+            Write(input, output, captions, progress);
+        }
+
+        /// <param name="input">MPEG program stream with MPEG-2 video</param>
+        /// <param name="output">The same program stream with the captions</param>
+        /// <param name="captions">CEA-608 fields 1 and 2 and CEA-708 caption data</param>
+        /// <param name="progress">Called with 0.0 - 1.0</param>
+        /// <exception cref="InvalidDataException">No MPEG-2 video in a program stream</exception>
+        public static void Write(Stream input, Stream output, ClosedCaptionBytes captions, Action<double> progress)
+        {
             var length = Math.Max(1, input.Length);
             var analyzer = new VideoAnalyzer();
             var videoStreamId = ReadVideo(input, analyzer, p => progress?.Invoke(0.5 * p / length));
@@ -43,7 +65,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
                 throw new InvalidDataException("No MPEG-2 video found in the program stream - A/53 closed captions need MPEG-2 video.");
             }
 
-            var edits = BuildEdits(analyzer, field1, field2);
+            var edits = BuildEdits(analyzer, captions);
             input.Seek(0, SeekOrigin.Begin);
             Rewrite(input, output, videoStreamId, edits, p => progress?.Invoke(0.5 + 0.5 * p / length));
             progress?.Invoke(1.0);
@@ -102,25 +124,23 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
 
         /// <summary>
         /// One caption user data block per frame, in front of its first slice. Every frame gets the
-        /// caption slots that start while it is shown: one per frame at 29.97 fps, sometimes two
-        /// at 23.976, none every other frame at 59.94 (then a block with only padding).
+        /// CEA-608 slots that start while it is shown (one per frame at 29.97 fps, sometimes two at
+        /// 23.976, none every other frame at 59.94), then the CEA-708 data that is due, as much as
+        /// fits. Frames are filled in display order - decoders put the cc_data in display order, so
+        /// that is the order the DTVCC bytes must have.
         /// </summary>
-        private static List<Edit> BuildEdits(VideoAnalyzer analyzer, IReadOnlyList<SccBytePairs.TimedPair> field1, IReadOnlyList<SccBytePairs.TimedPair> field2)
+        private static List<Edit> BuildEdits(VideoAnalyzer analyzer, ClosedCaptionBytes captions)
         {
-            var pairs1 = ToDictionary(field1);
-            var pairs2 = ToDictionary(field2);
+            var pairs1 = ToDictionary(captions.Field1);
+            var pairs2 = ToDictionary(captions.Field2);
+            var dtvcc = captions.Dtvcc ?? new List<ClosedCaptionBytes.DtvccTriplet>();
+            var dtvccIndex = 0;
             var frameMs = analyzer.FrameMilliseconds;
 
             // display times: frames sorted by display position, each shown for its own number of frame periods
             var frames = analyzer.Pictures.FindAll(p => !p.IsSecondField && p.InsertOffset >= 0);
             var displayOrder = new List<Picture>(frames);
             displayOrder.Sort((a, b) => a.DisplayIndex != b.DisplayIndex ? a.DisplayIndex.CompareTo(b.DisplayIndex) : a.CodedIndex.CompareTo(b.CodedIndex));
-            double periods = 0;
-            foreach (var picture in displayOrder)
-            {
-                picture.StartPeriods = periods;
-                periods += picture.Periods;
-            }
 
             var edits = new List<Edit>(frames.Count + analyzer.Deletions.Count);
             foreach (var deletion in analyzer.Deletions)
@@ -128,13 +148,26 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
                 edits.Add(new Edit { Offset = deletion.Start, DeleteLength = deletion.End - deletion.Start });
             }
 
-            foreach (var picture in frames)
+            double periods = 0;
+            foreach (var picture in displayOrder)
             {
-                var startMs = picture.StartPeriods * frameMs;
-                var endMs = (picture.StartPeriods + picture.Periods) * frameMs;
+                var startMs = periods * frameMs;
+                periods += picture.Periods;
+                var endMs = periods * frameMs;
                 var firstSlot = (long)Math.Ceiling(startMs / SccBytePairs.SlotMilliseconds - 0.001);
                 var endSlot = (long)Math.Ceiling(endMs / SccBytePairs.SlotMilliseconds - 0.001);
-                edits.Add(new Edit { Offset = picture.InsertOffset, Insert = MakeUserData(firstSlot, endSlot, pairs1, pairs2) });
+                var slotCount = (int)Math.Min(15, Math.Max(0, endSlot - firstSlot));
+
+                // CEA-708 data sent by now, up to the frame's share of the A/53 bandwidth
+                var maxCcCount = Math.Min(31, Math.Max(2 * slotCount + 1, (int)(MaxTripletsPerMillisecond * (endMs - startMs))));
+                var dtvccStart = dtvccIndex;
+                while (dtvccIndex < dtvcc.Count && dtvcc[dtvccIndex].Milliseconds < endMs && 2 * slotCount + dtvccIndex - dtvccStart < maxCcCount)
+                {
+                    dtvccIndex++;
+                }
+
+                var userData = MakeUserData(firstSlot, slotCount, pairs1, pairs2, dtvcc, dtvccStart, dtvccIndex - dtvccStart);
+                edits.Add(new Edit { Offset = picture.InsertOffset, Insert = userData });
             }
 
             // deletions before insertions at the same offset - both only touch the picture's user data
@@ -159,12 +192,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
         /// <summary>
         /// ATSC A/53 picture user data: user_data_start_code, "GA94", user_data_type_code 3,
         /// process_cc_data_flag + cc_count, em_data, cc_count x (marker/cc_valid/cc_type, two bytes),
-        /// marker_bits. A slot with no caption byte pair sends the null pair 0x80 0x80.
+        /// marker_bits. CEA-608 comes first, one field 1 and one field 2 pair per slot - a slot with
+        /// no byte pair sends the null pair 0x80 0x80. A frame without slot or CEA-708 data gets
+        /// padding with cc_valid = 0.
         /// </summary>
-        internal static byte[] MakeUserData(long firstSlot, long endSlot, Dictionary<long, SccBytePairs.TimedPair> field1, Dictionary<long, SccBytePairs.TimedPair> field2)
+        private static byte[] MakeUserData(long firstSlot, int slotCount, Dictionary<long, SccBytePairs.TimedPair> field1, Dictionary<long, SccBytePairs.TimedPair> field2,
+            List<ClosedCaptionBytes.DtvccTriplet> dtvcc, int dtvccStart, int dtvccCount)
         {
-            var slotCount = (int)Math.Min(15, Math.Max(0, endSlot - firstSlot));
-            var ccCount = Math.Max(1, slotCount) * 2;
+            var padding = slotCount == 0 && dtvccCount == 0;
+            var ccCount = padding ? 2 : 2 * slotCount + dtvccCount;
             var data = new byte[11 + ccCount * 3 + 1];
             data[2] = 1;
             data[3] = 0xB2;
@@ -176,28 +212,35 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
             data[9] = (byte)(0xC0 | ccCount); // reserved, process_cc_data_flag, additional_data_flag = 0
             data[10] = 0xFF; // em_data
             var index = 11;
-            if (slotCount == 0)
+            if (padding)
             {
-                // no slot starts in this frame: padding with cc_valid = 0
-                AddCcData(data, ref index, 0xF8, null);
-                AddCcData(data, ref index, 0xF9, null);
+                AddCcData(data, ref index, 0xF8, 0x80, 0x80);
+                AddCcData(data, ref index, 0xF9, 0x80, 0x80);
             }
 
             for (var slot = firstSlot; slot < firstSlot + slotCount; slot++)
             {
-                AddCcData(data, ref index, 0xFC, field1.TryGetValue(slot, out var pair1) ? pair1 : (SccBytePairs.TimedPair?)null);
-                AddCcData(data, ref index, 0xFD, field2.TryGetValue(slot, out var pair2) ? pair2 : (SccBytePairs.TimedPair?)null);
+                var hasPair1 = field1.TryGetValue(slot, out var pair1);
+                AddCcData(data, ref index, 0xFC, hasPair1 ? pair1.Data1 : (byte)0x80, hasPair1 ? pair1.Data2 : (byte)0x80);
+                var hasPair2 = field2.TryGetValue(slot, out var pair2);
+                AddCcData(data, ref index, 0xFD, hasPair2 ? pair2.Data1 : (byte)0x80, hasPair2 ? pair2.Data2 : (byte)0x80);
+            }
+
+            for (var i = dtvccStart; i < dtvccStart + dtvccCount; i++)
+            {
+                var triplet = dtvcc[i];
+                AddCcData(data, ref index, (byte)(0xFC | triplet.Type), triplet.Data1, triplet.Data2);
             }
 
             data[index] = 0xFF; // marker_bits
             return data;
         }
 
-        private static void AddCcData(byte[] data, ref int index, byte header, SccBytePairs.TimedPair? pair)
+        private static void AddCcData(byte[] data, ref int index, byte header, byte data1, byte data2)
         {
             data[index++] = header;
-            data[index++] = pair?.Data1 ?? 0x80;
-            data[index++] = pair?.Data2 ?? 0x80;
+            data[index++] = data1;
+            data[index++] = data2;
         }
 
         /// <summary>
@@ -425,7 +468,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
             public long InsertOffset = -1; // elementary stream offset of the first slice
             public double Periods = 1; // frame periods shown (repeat_first_field makes it 1.5, 2 or 3)
             public bool IsSecondField;
-            public double StartPeriods;
         }
 
         /// <summary>

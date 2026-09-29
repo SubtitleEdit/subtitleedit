@@ -1,6 +1,7 @@
 using Nikse.SubtitleEdit.Core.Cea608;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -91,6 +92,58 @@ public class ProgramStreamClosedCaptionWriterTest
         var tracks = ReadCaptions(output);
         Assert.Equal(new[] { 1, 3 }, tracks.Keys.ToArray());
         Assert.Equal("Field two", Assert.Single(tracks[3]).Text);
+    }
+
+    /// <summary>
+    /// An MCC file goes in with all its caption data - CEA-608 and CEA-708 - and reads back like
+    /// the MCC itself decodes. sample_mcc_cea608_708.mcc has the captions of the same broadcast
+    /// clip as the video (29.97 fps, one caption packet per frame).
+    /// </summary>
+    [Theory]
+    [InlineData("sample_mcc_cea608_708.mcc", true)]
+    [InlineData("sample_mcc_cea608_only.mcc", false)]
+    public void EmbedsMccCea608AndCea708(string mccFileName, bool hasCea708)
+    {
+        var mccPath = FilePath(mccFileName);
+        var captions = ClosedCaptionBytes.FromFile(mccPath);
+        Assert.Equal(hasCea708, captions.HasCea708);
+        Assert.NotEmpty(captions.Field1);
+
+        var input = File.ReadAllBytes(FilePath("sample_mpg_mpeg2_no_captions.mpg"));
+        using var output = new MemoryStream();
+        ProgramStreamClosedCaptionWriter.Write(new MemoryStream(input), output, captions, null);
+        var tracks = ReadCaptions(output.ToArray());
+
+        var expected = DecodeMcc(mccPath);
+        Assert.Equal(expected.Keys, tracks.Keys);
+        Assert.Equal(hasCea708, tracks.ContainsKey(ClosedCaptionDecoder.Cea708TrackKeyOffset + 1));
+        foreach (var track in expected)
+        {
+            Assert.Equal(track.Value.Select(p => p.Text), tracks[track.Key].Select(p => p.Text));
+            for (var i = 0; i < track.Value.Count; i++)
+            {
+                Assert.InRange(tracks[track.Key][i].StartTime.TotalMilliseconds, track.Value[i].StartTime.TotalMilliseconds - 35, track.Value[i].StartTime.TotalMilliseconds + 35);
+            }
+        }
+    }
+
+    /// <summary>
+    /// The reference: the MCC's cc_data decoded as it is, one packet per 29.97 frame.
+    /// </summary>
+    private static SortedDictionary<int, List<Paragraph>> DecodeMcc(string path)
+    {
+        var decoder = new ClosedCaptionDecoder();
+        var frame = 0;
+        foreach (var line in File.ReadAllLines(path).Where(l => l.Length > 12 && l[11] == '\t'))
+        {
+            var ccData = MacCaption10.GetAllCcData(line.Substring(12))
+                .Where(cc => cc.Valid && (cc.Type >= 2 || (cc.Data1 & 0x7F) != 0 || (cc.Data2 & 0x7F) != 0))
+                .Select(cc => new CcData(cc.Type, cc.Data1, cc.Data2))
+                .ToArray();
+            decoder.AddFrame((long)System.Math.Round(frame++ * 1001.0 / 30), ccData);
+        }
+
+        return decoder.Finish(0);
     }
 
     [Fact]

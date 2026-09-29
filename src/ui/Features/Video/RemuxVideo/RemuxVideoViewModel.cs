@@ -41,7 +41,7 @@ public partial class RemuxVideoViewModel : ObservableObject
 
     private static readonly HashSet<string> AllowedSubtitleExtensions = new(StringComparer.OrdinalIgnoreCase)
     {
-        ".srt", ".ass", ".ssa", ".vtt", ".sub", ".scc"
+        ".srt", ".ass", ".ssa", ".vtt", ".sub", ".scc", ".mcc"
     };
 
     [ObservableProperty] private string _videoFileName = string.Empty;
@@ -165,6 +165,9 @@ public partial class RemuxVideoViewModel : ObservableObject
     private static bool IsScc(RemuxFileItem file) =>
         string.Equals(Path.GetExtension(file.FileName), ".scc", StringComparison.OrdinalIgnoreCase);
 
+    private static bool IsMcc(RemuxFileItem file) =>
+        string.Equals(Path.GetExtension(file.FileName), ".mcc", StringComparison.OrdinalIgnoreCase);
+
     /// <summary>
     /// The container the current tracks need, or null when the selected one will do.
     /// Scenarist (.scc) goes in as a QuickTime "c608" CEA-608 closed caption track, which
@@ -180,6 +183,14 @@ public partial class RemuxVideoViewModel : ObservableObject
         {
             reason = string.Empty;
             return null;
+        }
+
+        // MacCaption (.mcc) carries CEA-608 and CEA-708 caption packets, which only the .mpg
+        // output embeds (ffmpeg has no MCC reader to mux it anywhere else).
+        if (SubtitleFiles.Any(IsMcc))
+        {
+            reason = Se.Language.Video.RemuxVideoMccRequiresMpg;
+            return ".mpg";
         }
 
         if (SubtitleFiles.Any(IsScc))
@@ -673,8 +684,8 @@ public partial class RemuxVideoViewModel : ObservableObject
         var selectedFiles = await _fileHelper.PickOpenFiles(
             Window,
             Se.Language.General.SubtitleFiles,
-            "Subtitle files (*.srt, *.ass, *.ssa, *.vtt, *.sub, *.scc)",
-            new List<string> { "*.srt", "*.ass", "*.ssa", "*.vtt", "*.sub", "*.scc" },
+            "Subtitle files (*.srt, *.ass, *.ssa, *.vtt, *.sub, *.scc, *.mcc)",
+            new List<string> { "*.srt", "*.ass", "*.ssa", "*.vtt", "*.sub", "*.scc", "*.mcc" },
             Se.Language.General.AllFiles,
             new List<string> { "*.*" });
 
@@ -969,7 +980,7 @@ public partial class RemuxVideoViewModel : ObservableObject
             var subExt = Path.GetExtension(subFile.FileName);
             if (!AllowedSubtitleExtensions.Contains(subExt))
             {
-                await MessageBox.Show(Window, Se.Language.General.Error, $"Subtitle format '{subExt}' is not supported (allowed: srt, ass, ssa, vtt, sub, scc).", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                await MessageBox.Show(Window, Se.Language.General.Error, $"Subtitle format '{subExt}' is not supported (allowed: srt, ass, ssa, vtt, sub, scc, mcc).", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
         }
@@ -1246,9 +1257,10 @@ public partial class RemuxVideoViewModel : ObservableObject
 
     /// <summary>
     /// Writes the output .mpg from ffmpeg's <paramref name="programStreamFileName"/> with the
-    /// subtitle files as ATSC A/53 closed captions in the MPEG-2 video: the first file in field 1
-    /// (CC1), the second in field 2 (CC3). A .scc file goes in as it is, other formats are
-    /// converted to CEA-608 pop-on captions first.
+    /// subtitle files as ATSC A/53 closed captions in the MPEG-2 video. The first file is field 1
+    /// (CC1) - an .mcc brings all its caption data, CEA-608 field 2 and CEA-708 too; a second file
+    /// replaces field 2 (CC3). A .scc/.mcc goes in as it is, other formats are converted to
+    /// CEA-608 pop-on captions first.
     /// </summary>
     private async Task AddClosedCaptions(string programStreamFileName, List<RemuxFileItem> captionFiles, Stopwatch stopwatch)
     {
@@ -1260,11 +1272,8 @@ public partial class RemuxVideoViewModel : ObservableObject
         {
             await Task.Run(() =>
             {
-                var field1 = SccBytePairs.FromFile(captionFiles[0].FileName);
-                var field2 = captionFiles.Count > 1
-                    ? SccBytePairs.FromFile(captionFiles[1].FileName)
-                    : new List<SccBytePairs.TimedPair>();
-                ProgramStreamClosedCaptionWriter.Write(programStreamFileName, outputFileName, field1, field2, fraction =>
+                var captions = GetClosedCaptionBytes(captionFiles);
+                ProgramStreamClosedCaptionWriter.Write(programStreamFileName, outputFileName, captions, fraction =>
                 {
                     if (_isCancelled)
                     {
@@ -1549,6 +1558,21 @@ public partial class RemuxVideoViewModel : ObservableObject
         }
 
         DeletePartialOutputFile();
+    }
+
+    /// <summary>
+    /// The caption data of the first file, with CEA-608 field 1 of the second file (if any) as
+    /// field 2 - CC1 and CC3.
+    /// </summary>
+    internal static ClosedCaptionBytes GetClosedCaptionBytes(List<RemuxFileItem> captionFiles)
+    {
+        var captions = ClosedCaptionBytes.FromFile(captionFiles[0].FileName);
+        if (captionFiles.Count > 1)
+        {
+            captions.Field2 = ClosedCaptionBytes.FromFile(captionFiles[1].FileName).Field1;
+        }
+
+        return captions;
     }
 
     private void DeletePartialOutputFile()
