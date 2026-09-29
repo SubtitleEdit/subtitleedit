@@ -5,8 +5,8 @@ using Nikse.SubtitleEdit.UiLogic.Export;
 namespace SeConv.Core;
 
 /// <summary>
-/// Renders text subtitles into image-based output formats (Blu-Ray sup, VobSub, BDN-XML,
-/// DOST, FCP, D-Cinema, images-with-time-code, WebVTT thumbnails). Each paragraph is
+/// Renders text subtitles into image-based output formats (Blu-Ray sup, DVD sup, VobSub,
+/// BDN-XML, IMSC image, DOST, FCP, D-Cinema, images-with-time-code, WebVTT thumbnails). Each paragraph is
 /// rendered to an SKBitmap via <see cref="ImageRenderer.GenerateBitmap"/> and fed through
 /// the format-specific <see cref="IExportHandler"/>.
 /// </summary>
@@ -21,6 +21,9 @@ internal static class ImageOutputWriter
         {
             var x when x.Equals("Blu-ray sup", StringComparison.OrdinalIgnoreCase) || x.Equals("BluRaySup", StringComparison.OrdinalIgnoreCase)
                 => new ExportHandlerBluRaySup(),
+            // SP-wrapped DVD subpictures, the .sup that DVD authoring and ripping tools use.
+            var x when x.Equals("DVD sup", StringComparison.OrdinalIgnoreCase) || x.Equals("DvdSup", StringComparison.OrdinalIgnoreCase)
+                => new ExportHandlerDvdSup(),
             var x when x.Equals("VobSub", StringComparison.OrdinalIgnoreCase)
                 => new ExportHandlerVobSub(),
             var x when x.Equals("BDN-XML", StringComparison.OrdinalIgnoreCase) || x.Equals("BdnXml", StringComparison.OrdinalIgnoreCase)
@@ -29,6 +32,9 @@ internal static class ImageOutputWriter
             // tools expect (issue #13452).
             var x when x.Equals("BDN-XML 8-bit", StringComparison.OrdinalIgnoreCase) || x.Equals("BdnXml8Bit", StringComparison.OrdinalIgnoreCase)
                 => new ExportHandlerBdnXml(true),
+            // IMSC 1.1 image profile: one .ttml with each cue's PNG embedded as base64.
+            var x when x.Equals("IMSC image", StringComparison.OrdinalIgnoreCase) || x.Equals("ImscImage", StringComparison.OrdinalIgnoreCase)
+                => new ExportHandlerImscImage(),
             var x when x.Equals("DOST/image", StringComparison.OrdinalIgnoreCase) || x.Equals("Dost", StringComparison.OrdinalIgnoreCase)
                 => new ExportHandlerDost(),
             var x when x.Equals("FCP/image", StringComparison.OrdinalIgnoreCase) || x.Equals("FcpImage", StringComparison.OrdinalIgnoreCase)

@@ -166,6 +166,40 @@ public class ImageOutputTest : IDisposable
     }
 
     [Fact]
+    public async Task ConvertAsync_DvdSupOutput_IsReadableAsSpDvdSup()
+    {
+        var result = await ConvertTo("dvdsup", "dvdsup");
+        Assert.True(result.Success, string.Join("; ", result.Errors));
+
+        var supFiles = Directory.GetFiles(Path.Combine(_tempRoot, "dvdsup"), "*.sup");
+        Assert.Single(supFiles);
+        // The same check File > Open uses to route a .sup to the DVD sup OCR import.
+        Assert.True(Nikse.SubtitleEdit.Core.Common.FileUtil.IsSpDvdSup(supFiles[0]));
+    }
+
+    [Fact]
+    public async Task ConvertAsync_ImscImageOutput_EmbedsOnePngPerCue()
+    {
+        var result = await ConvertTo("imscimage", "imsc");
+        Assert.True(result.Success, string.Join("; ", result.Errors));
+
+        var ttmlFiles = Directory.GetFiles(Path.Combine(_tempRoot, "imsc"), "*.ttml");
+        Assert.Single(ttmlFiles);
+        var ttml = await File.ReadAllTextAsync(ttmlFiles[0], TestContext.Current.CancellationToken);
+        Assert.Contains("http://www.w3.org/ns/ttml/profile/imsc1/image", ttml);
+
+        // SE reads it back as an image-based TTML with both cues.
+        var lines = ttml.Split('\n').Select(l => l.TrimEnd('\r')).ToList();
+        var format = new Nikse.SubtitleEdit.Core.SubtitleFormats.TimedTextBase64Image();
+        Assert.True(format.IsMine(lines, ttmlFiles[0]));
+        var subtitle = new Nikse.SubtitleEdit.Core.Common.Subtitle();
+        format.LoadSubtitle(subtitle, lines, ttmlFiles[0]);
+        Assert.Equal(2, subtitle.Paragraphs.Count);
+        Assert.Equal(1000, subtitle.Paragraphs[0].StartTime.TotalMilliseconds);
+        Assert.Equal(8000, subtitle.Paragraphs[1].EndTime.TotalMilliseconds);
+    }
+
+    [Fact]
     public async Task ConvertAsync_WebVttThumbnailOutput_ProducesPngsAndIndexVtt()
     {
         // WebVTT thumbnail bundle: the handler treats the output path as a folder

@@ -776,9 +776,11 @@ This mirrors the desktop app, where batch convert's *Remove formatting* function
 | `capmaker`, `capmakerplus` | CapMakerPlus — binary |
 | `ayato` | Ayato — binary |
 | `bluraysup`, `blurayup`, `sup` | Blu-Ray sup — image |
+| `dvdsup`, `spdvdsup` | DVD sup (SP-wrapped DVD subpictures) — image |
 | `vobsub` | VobSub — image |
 | `bdnxml`, `bdn-xml` | BDN-XML — image (folder of PNGs + index.xml) |
 | `bdnxml8bit`, `bdn-xml8-bit` | BDN-XML with 8-bit palette-indexed PNGs — image |
+| `imscimage`, `imsc-image` | IMSC 1.1 image profile — image (PNGs embedded as base64 in one `.ttml`) |
 | `dost`, `dostimage` | DOST/image |
 | `fcpimage`, `fcp` | FCP/image |
 | `dcinemainterop`, `dcinema-interop` | D-Cinema interop/png |
