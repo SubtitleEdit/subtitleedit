@@ -800,6 +800,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 new CheetahCaptionOld(),
                 new TSB4(),
                 new Chk(),
+                new EZTitlesBinary(),
                 new Ayato(),
                 new CapMakerPlus(),
                 new Ultech130(),
