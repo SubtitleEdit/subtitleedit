@@ -12012,7 +12012,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var result = await ShowDialogAsync<ShotChangeListWindow, ShotChangeListViewModel>(vm => { vm.Initialize(AudioVisualizer?.ShotChanges ?? new List<double>()); });
+        var result = await ShowDialogAsync<ShotChangeListWindow, ShotChangeListViewModel>(vm => { vm.Initialize(AudioVisualizer?.ShotChanges ?? new List<double>(), _videoFileName); });
 
         if (result.OKProssed && AudioVisualizer != null)
         {

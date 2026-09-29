@@ -32,8 +32,9 @@ public class ShotChangeListWindow : Window
 
         var buttonGoTo = UiUtil.MakeButton(Se.Language.General.GoTo, vm.GoToCommand).WithBindIsEnabled(nameof(vm.HasShotChanges));
         var buttonClear = UiUtil.MakeButton(Se.Language.General.Clear, vm.ClearCommand).WithBindIsEnabled(nameof(vm.HasShotChanges));
+        var buttonExport = UiUtil.MakeButton(Se.Language.General.ExportDotDotDot, vm.ExportCommand).WithBindIsEnabled(nameof(vm.HasShotChanges));
         var buttonCancel = UiUtil.MakeButtonDone(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonGoTo, buttonClear, buttonCancel);
+        var panelButtons = UiUtil.MakeButtonBar(buttonGoTo, buttonClear, buttonExport, buttonCancel);
 
         var grid = new Grid
         {

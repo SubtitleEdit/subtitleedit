@@ -113,13 +113,22 @@ public class ShotChangesHelper
     /// <param name="audioTrackNumber">Audio track number, -1 if no track number</param>
     public static void SaveShotChanges(string videoFileName, List<double> list, int audioTrackNumber)
     {
+        File.WriteAllText(GetShotChangesFileName(videoFileName, audioTrackNumber), ToText(list));
+    }
+
+    /// <summary>
+    /// Shot changes as text, the same as the .shotchanges files: one time in seconds per line,
+    /// invariant culture.
+    /// </summary>
+    public static string ToText(IEnumerable<double> list)
+    {
         var sb = new StringBuilder();
         foreach (var d in list)
         {
             sb.AppendLine(d.ToString(CultureInfo.InvariantCulture));
         }
-        
-        File.WriteAllText(GetShotChangesFileName(videoFileName, audioTrackNumber), sb.ToString().Trim());
+
+        return sb.ToString().Trim();
     }
 
     /// <summary>
