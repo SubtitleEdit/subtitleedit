@@ -12,6 +12,8 @@ public class LanguageShotChanges
     public string ShotChangesList { get; set; }
     public string ShotChangesClearQuestion { get; set; }
     public string DeleteSelectedShotChangeQuestion { get; set; }
+    public string ShotChanges { get; set; }
+    public string ExportShotChanges { get; set; }
 
     public LanguageShotChanges()
     {
@@ -25,5 +27,7 @@ public class LanguageShotChanges
         ShotChangesList = "Shot changes list";
         ShotChangesClearQuestion = "Are you sure you want to clear all shot changes?";
         DeleteSelectedShotChangeQuestion = "Are you sure you want to delete the selected shot change?";
+        ShotChanges = "Shot changes";
+        ExportShotChanges = "Export shot changes";
     }
 }

@@ -44,7 +44,7 @@ public class PrePopulatedGridSelectionTests
     [AvaloniaFact]
     public void ShotChangeListWindow_HasASelectionAndEnabledButtonsOnOpen()
     {
-        var vm = new ShotChangeListViewModel();
+        var vm = new ShotChangeListViewModel(new UITests.StubFileHelper());
         vm.Initialize(new List<double> { 1.0, 2.5 });
         var window = new ShotChangeListWindow(vm);
 
