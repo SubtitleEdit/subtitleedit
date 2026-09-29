@@ -26,6 +26,7 @@ using Nikse.SubtitleEdit.Core.ContainerFormats;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Chapters;
 using Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
@@ -23897,6 +23898,15 @@ public partial class MainViewModel :
                 }
             }
 
+            // DVD .vob / program stream .mpg: CEA-608 closed captions in the video (DVD Line 21
+            // captions, ATSC A/53, SCTE 20) - a .vob with subpictures was handled just above
+            if ((ext == ".vob" || ext == ".mpg" || ext == ".mpeg" || ext == ".m2p") && fileSize > 10000 &&
+                ProgramStreamClosedCaptionReader.IsProgramStream(fileName) &&
+                await ImportClosedCaptionsFromProgramStream(fileName, skipLoadVideo))
+            {
+                return;
+            }
+
             if (ext == ".idx")
             {
                 var subFile = Path.ChangeExtension(fileName, ".sub");
@@ -25314,6 +25324,53 @@ public partial class MainViewModel :
         VideoCloseFile();
         ResetSubtitle();
         _subtitle = subtitle;
+        _subtitle.Renumber();
+        _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + SelectedSubtitleFormat.Extension;
+        ReplaceSubtitles(_subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
+        _converted = true;
+        ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
+        SelectAndScrollToRow(0);
+
+        if (Se.Settings.Video.AutoOpen && !skipLoadVideo)
+        {
+            await VideoOpenFile(fileName);
+        }
+
+        return true;
+    }
+
+    /// <returns>True if captions were loaded (or the track picker was cancelled)</returns>
+    private async Task<bool> ImportClosedCaptionsFromProgramStream(string fileName, bool skipLoadVideo)
+    {
+        ShowStatus(string.Format(Se.Language.General.ParsingXDotDotDot, fileName));
+        SortedDictionary<int, List<Paragraph>> tracks;
+        try
+        {
+            tracks = await Task.Run(() => ProgramStreamClosedCaptionReader.Read(fileName, ProgramStreamClosedCaptionReader.DefaultProbeMilliseconds,
+                (pos, total) => UpdateProgress(pos, total, string.Format(Se.Language.General.ParsingXDotDotDot, fileName))));
+        }
+        catch (Exception e)
+        {
+            SeLogger.Error(e, "Error while reading closed captions from " + fileName);
+            ShowStatus(string.Empty);
+            return false;
+        }
+
+        ShowStatus(string.Empty);
+        if (tracks.Count == 0)
+        {
+            return false;
+        }
+
+        var paragraphs = await PickClosedCaptionTrackAsync(tracks, 0, string.Format(Se.Language.File.PickMpegTrackX, fileName));
+        if (paragraphs == null)
+        {
+            return true; // picker cancelled
+        }
+
+        VideoCloseFile();
+        ResetSubtitle();
+        _subtitle = new Subtitle(paragraphs);
         _subtitle.Renumber();
         _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + SelectedSubtitleFormat.Extension;
         ReplaceSubtitles(_subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));

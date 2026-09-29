@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
+using Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Spectre.Console;
@@ -155,7 +156,36 @@ internal static class ContainerSubtitleLoader
             return LoadMxf(filePath, options);
         }
 
+        if (ext is ".vob" or ".mpg" or ".mpeg" or ".m2p" && ProgramStreamClosedCaptionReader.IsProgramStream(filePath))
+        {
+            return LoadProgramStreamClosedCaptions(filePath, options);
+        }
+
         return null;
+    }
+
+    /// <summary>
+    /// MPEG program stream (DVD .vob, .mpg): CEA-608 closed captions from the video - DVD style
+    /// Line 21 captions, ATSC A/53 or SCTE 20 user data. The track number is the caption channel
+    /// (1-4 = CC1-CC4).
+    /// </summary>
+    private static List<LoadedTrack>? LoadProgramStreamClosedCaptions(string filePath, ConversionOptions options)
+    {
+        var tracks = new List<LoadedTrack>();
+        foreach (var captionTrack in ProgramStreamClosedCaptionReader.Read(filePath, ProgramStreamClosedCaptionReader.DefaultProbeMilliseconds, null))
+        {
+            if (options.TrackNumbers.Count > 0 && !options.TrackNumbers.Contains(captionTrack.Key))
+            {
+                continue;
+            }
+
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.AddRange(captionTrack.Value);
+            subtitle.Renumber();
+            tracks.Add(new LoadedTrack(subtitle, new SubRip(), $"cea608_cc{captionTrack.Key}", captionTrack.Key));
+        }
+
+        return tracks.Count > 0 ? tracks : null; // null: let the other loaders have a go
     }
 
     /// <summary>
