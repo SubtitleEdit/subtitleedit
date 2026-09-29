@@ -72,6 +72,9 @@
     <Content Include="Files\sample_TS_cea608_scte20.ts">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Files\sample_mpg_mpeg2_no_captions.mpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Files\sample_vob_dvd_captions.vob">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

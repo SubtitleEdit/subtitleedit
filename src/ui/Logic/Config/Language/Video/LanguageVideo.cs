@@ -44,6 +44,10 @@ public class LanguageVideo
     public string RemuxVideoAssRequiresMkv { get; set; }
     public string RemuxVideoSccRequiresMov { get; set; }
     public string RemuxVideoSccNotWithWebM { get; set; }
+    public string RemuxVideoMpgMaxTwoCaptionTracks { get; set; }
+    public string RemuxVideoMccRequiresMpg { get; set; }
+    public string RemuxVideoMpgReencodeVideoX { get; set; }
+    public string RemuxVideoAddingClosedCaptions { get; set; }
     public string RemuxVideoSelectAudioTrack { get; set; }
     public string RemuxVideoSelectAudioTrackFor { get; set; }
     public string RemuxVideoSelectAudioTrackPrompt { get; set; }
@@ -198,8 +202,12 @@ public class LanguageVideo
         RemuxVideoFailed = "Failed to remux video.";
         RemuxVideoPleaseSelectBoth = "Please select both video and audio files.";
         RemuxVideoAssRequiresMkv = "ASS/SSA subtitles require the MKV container to preserve all formatting and styles.";
-        RemuxVideoSccRequiresMov = "Scenarist (.scc) subtitles are embedded as CEA-608 closed captions, which require the MOV container. Output format has been automatically switched to .mov.";
+        RemuxVideoSccRequiresMov = "Scenarist (.scc) subtitles are embedded as CEA-608 closed captions, which require the MOV or MPG container. Output format has been automatically switched to .mov.";
         RemuxVideoSccNotWithWebM = "Scenarist (.scc) closed captions need the MOV container, which cannot hold the VP9/AV1 video of a .webm file. Remove the .scc file or convert it to another subtitle format.";
+        RemuxVideoMpgMaxTwoCaptionTracks = "An .mpg file holds at most two closed caption tracks (CC1 and CC3) - remove subtitle files so that one or two are left.";
+        RemuxVideoMccRequiresMpg = "MacCaption (.mcc) subtitles are embedded as CEA-608/708 closed captions in the MPEG-2 video, which requires the MPG container. Output format has been automatically switched to .mpg.";
+        RemuxVideoMpgReencodeVideoX = "Closed captions in an .mpg file need MPEG-2 video, and the video is {0}. Re-encode the video to MPEG-2? This takes longer and lowers the quality a little.";
+        RemuxVideoAddingClosedCaptions = "Adding closed captions...";
         RemuxVideoSelectAudioTrack = "Select audio track";
         RemuxVideoSelectAudioTrackFor = "Select audio track for {0}";
         RemuxVideoSelectAudioTrackPrompt = "The file '{0}' contains {1} audio tracks. Please select the audio track to remux:";

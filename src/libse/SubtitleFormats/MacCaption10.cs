@@ -310,6 +310,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
+        /// <summary>
+        /// All cc_data triplets (valid or not) of the caption distribution packet in one MCC
+        /// line's ANC data, empty if it has none.
+        /// </summary>
+        public static List<Nikse.SubtitleEdit.Core.Cea708.CcData> GetAllCcData(string ancData)
+        {
+            var bytes = HexStringToByteArray(GetHex(ancData));
+            if (bytes.Length < 10)
+            {
+                return new List<Nikse.SubtitleEdit.Core.Cea708.CcData>();
+            }
+
+            try
+            {
+                return new Smpte291M(bytes).CcDataSectionCcData.CcData.ToList();
+            }
+            catch
+            {
+                return new List<Nikse.SubtitleEdit.Core.Cea708.CcData>();
+            }
+        }
+
         public static string GetText(int lineIndex, string input, bool flush, CommandState state)
         {
             var hexString = GetHex(input);
