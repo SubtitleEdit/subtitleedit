@@ -3,6 +3,30 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-beta16 (29th of September 2026)
+
+* Add reading of CEA-608/708 closed captions from video in .ts, .mkv, H.265 .mp4, fragmented .mp4 and .mxf (SMPTE 436M) files
+* Add CEA-608 channel / CEA-708 service picker when opening captions from MP4/MKV
+* Add "Multilingual" language option for Purfview Faster Whisper XXL speech to text - thx fointypinger
+* Add "Only subtitles with a too-long line" and more options to Batch convert split/rebalance long lines - thx xyv1997
+* Compare: include duration in HTML export - thx andor1999
+* Compare: show file names using the space the header has - thx vertigo220
+* Remux: tag subtitle tracks with the language from the file name - thx MaxBunny1786
+* MCC: read CEA-608 captions when there is no CEA-708 text
+* OCR: "use word split list" is now off by default - thx WAusJackBauer
+* Fix CEA-708: handle CR, BS, FF and HCR control codes (roll-up lines no longer run together)
+* Fix MP4: merge CEA-608 roll-up/paint-on screens into one cue per line
+* Fix waveform, speech to text and alignment: keep gaps in audio timestamps - thx sherkhan30452
+* Fix Batch convert to EBU STL writing invalid files
+* Fix Batch convert ASSA to other formats not converting tags like Save as - thx Slava46
+* Fix Compare window not remembering size and position - thx vertigo220
+* Fix Shortcuts search for a lone modifier like "ctrl" - thx Surlime
+* Update CrispASR to v0.8.38
+* Update Czech translation - thx Matěj Fouma
+* Update Japanese translation - thx hisui3393
+
+-----------------------------------------------------------------------------------------------------
+
 v5.3.0-beta15 (28th of September 2026)
 
 * Add Compare merge view: edit the current subtitle while comparing - thx perkesfurmah-collab
