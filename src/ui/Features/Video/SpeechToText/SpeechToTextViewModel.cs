@@ -527,6 +527,18 @@ public partial class SpeechToTextViewModel : ObservableObject
             or WhisperChoice.OpenAi;
     }
 
+    // Pseudo language code for Purfview Faster Whisper XXL's "--multilingual" mode, which
+    // detects the language on every segment instead of once for the whole file - handy for
+    // mapping out where a film switches between spoken languages (#15381).
+    private const string MultilingualLanguageCode = "multilingual";
+
+    private static bool IsAutoOrMultilingual(string? languageCode)
+    {
+        return languageCode != null &&
+               (languageCode.Equals("auto", StringComparison.OrdinalIgnoreCase) ||
+                languageCode.Equals(MultilingualLanguageCode, StringComparison.OrdinalIgnoreCase));
+    }
+
     // Builds the language dropdown for an engine, prepending an "Auto detect" entry
     // (code "auto") for engines that support automatic language detection.
     private static IEnumerable<WhisperLanguage> GetEngineLanguages(ISpeechToTextEngine engine)
@@ -535,6 +547,11 @@ public partial class SpeechToTextViewModel : ObservableObject
         if (EngineSupportsAutoLanguageDetection(engine))
         {
             result.Add(new WhisperLanguage("auto", "Auto detect"));
+        }
+
+        if (engine.Choice == WhisperChoice.PurfviewFasterWhisperXxl)
+        {
+            result.Add(new WhisperLanguage(MultilingualLanguageCode, "Multilingual (detect per segment)"));
         }
 
         // Bubble the user's favorite languages to the top (the "Auto detect" entry stays first).
@@ -2159,7 +2176,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         var languageCode = SelectedLanguage?.Code;
-        if (string.IsNullOrWhiteSpace(languageCode) || languageCode.Equals("auto", StringComparison.OrdinalIgnoreCase))
+        if (string.IsNullOrWhiteSpace(languageCode) || IsAutoOrMultilingual(languageCode))
         {
             // Normalized here (not just at the end) so a hint that can't be mapped to a
             // code falls through to auto-detection instead of being dropped outright.
@@ -2171,7 +2188,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             languageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(transcript);
         }
 
-        if (string.IsNullOrWhiteSpace(languageCode) || languageCode.Equals("auto", StringComparison.OrdinalIgnoreCase))
+        if (string.IsNullOrWhiteSpace(languageCode) || IsAutoOrMultilingual(languageCode))
         {
             return null;
         }
@@ -4691,7 +4708,15 @@ public partial class SpeechToTextViewModel : ObservableObject
         // engines (Purfview, CTranslate2) and OpenAI reject "auto" but auto-detect when no
         // --language is given, so the flag is omitted there.
         var languageArg = $"--language {language} ";
-        if (language.Equals("auto", StringComparison.OrdinalIgnoreCase))
+        if (language.Equals(MultilingualLanguageCode, StringComparison.OrdinalIgnoreCase))
+        {
+            // Per-segment language detection (#15381) - no fixed --language. A user who already
+            // set --multilingual in the extra parameters keeps their own value.
+            languageArg = args.Contains("--multilingual", StringComparison.Ordinal)
+                ? string.Empty
+                : "--multilingual True ";
+        }
+        else if (language.Equals("auto", StringComparison.OrdinalIgnoreCase))
         {
             languageArg = settings.WhisperChoice is WhisperChoice.Cpp or WhisperChoice.CppCuBlas
                 or WhisperChoice.CppVulkan or WhisperChoice.CppCuBlasLib or WhisperChoice.ConstMe
