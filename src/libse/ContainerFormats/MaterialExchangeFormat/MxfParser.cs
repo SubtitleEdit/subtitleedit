@@ -1,6 +1,10 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Cea608;
+using Nikse.SubtitleEdit.Core.Cea708;
+using Nikse.SubtitleEdit.Core.Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
 {
@@ -16,7 +20,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
 
         public List<byte[]> GetImages() => _images;
 
+        /// <summary>
+        /// CEA-608/708 closed captions from a SMPTE 436M ANC data track (caption distribution
+        /// packets in VANC): paragraphs per track key (1-4 = CC1-CC4, 100 + n = CEA-708 service n,
+        /// see <see cref="ClosedCaptionDecoder"/>). Times are from the start of the essence.
+        /// </summary>
+        public SortedDictionary<int, List<Paragraph>> ClosedCaptionTracks { get; private set; } = new SortedDictionary<int, List<Paragraph>>();
+
         private long _startPosition;
+        private double _editRate; // frames per second from the header metadata, 0 = not found yet
+        private byte[] _ancElementKey; // the first ANC data element key seen - one track is decoded
+        private int _ancFrameIndex;
+        private ClosedCaptionDecoder _closedCaptionDecoder;
 
         public MxfParser(string fileName)
         {
@@ -46,6 +61,17 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
                     stream.Seek(next, SeekOrigin.Begin);
                     var klv = new KlvPacket(stream);
                     next += klv.TotalSize;
+                    if (IsHeaderMetadataSet(klv.Key) && _editRate == 0 && klv.DataSize < 65536)
+                    {
+                        ReadEditRate(stream, klv);
+                    }
+
+                    if (IsAncDataElement(klv.Key) && klv.DataSize < 65536)
+                    {
+                        ReadAncDataElement(stream, klv);
+                        continue;
+                    }
+
                     if ((klv.IdentifierType == KeyIdentifier.EssenceElement || klv.IdentifierType == KeyIdentifier.Unknown) && klv.DataSize < 500000)
                     {
                         stream.Seek(klv.DataPosition, SeekOrigin.Begin);
@@ -100,6 +126,134 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
                         }
                     }
                 }
+
+                if (_closedCaptionDecoder?.HasData == true)
+                {
+                    ClosedCaptionTracks = _closedCaptionDecoder.Finish(0);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Header metadata local set (06 0E 2B 34 02 53 01 01 0D 01 01 01 ...).
+        /// </summary>
+        private static bool IsHeaderMetadataSet(byte[] key)
+        {
+            return key[4] == 0x02 && key[5] == 0x53 && key[8] == 0x0D && key[9] == 0x01 && key[10] == 0x01 && key[11] == 0x01;
+        }
+
+        /// <summary>
+        /// Generic container data item (0x17) ANC data element (0x02) - SMPTE 436M VANC/HANC packets.
+        /// </summary>
+        private static bool IsAncDataElement(byte[] key)
+        {
+            return key[4] == 0x01 && key[5] == 0x02 && key[8] == 0x0D && key[9] == 0x01 && key[10] == 0x03 && key[11] == 0x01 &&
+                   key[12] == 0x17 && key[14] == 0x02;
+        }
+
+        /// <summary>
+        /// Takes the edit rate from a descriptor's sample rate (local tag 3001) or a track's edit
+        /// rate (local tag 4B01) - both are an 8-byte rational.
+        /// </summary>
+        private void ReadEditRate(Stream stream, KlvPacket klv)
+        {
+            stream.Seek(klv.DataPosition, SeekOrigin.Begin);
+            var buffer = new byte[klv.DataSize];
+            var read = stream.ReadFully(buffer, 0, buffer.Length);
+            var i = 0;
+            while (i + 4 <= read)
+            {
+                var tag = (buffer[i] << 8) | buffer[i + 1];
+                var length = (buffer[i + 2] << 8) | buffer[i + 3];
+                i += 4;
+                if ((tag == 0x3001 || tag == 0x4B01) && length == 8 && i + 8 <= read)
+                {
+                    var numerator = (buffer[i] << 24) | (buffer[i + 1] << 16) | (buffer[i + 2] << 8) | buffer[i + 3];
+                    var denominator = (buffer[i + 4] << 24) | (buffer[i + 5] << 16) | (buffer[i + 6] << 8) | buffer[i + 7];
+                    if (numerator > 0 && denominator > 0 && numerator / (double)denominator < 1000)
+                    {
+                        _editRate = numerator / (double)denominator;
+                        return;
+                    }
+                }
+
+                i += length;
+            }
+        }
+
+        /// <summary>
+        /// One frame-wrapped SMPTE 436M ANC element: a packet count, then per packet line number,
+        /// wrapping type, payload sample coding, sample count and the payload array. 8-bit coded
+        /// caption distribution packets (DID 0x61, SDID 0x01) are decoded.
+        /// </summary>
+        private void ReadAncDataElement(Stream stream, KlvPacket klv)
+        {
+            if (_ancElementKey == null)
+            {
+                _ancElementKey = klv.Key;
+                _closedCaptionDecoder = new ClosedCaptionDecoder();
+            }
+            else if (!klv.Key.SequenceEqual(_ancElementKey))
+            {
+                return;
+            }
+
+            var frameRate = _editRate > 0 ? _editRate : Configuration.Settings.General.CurrentFrameRate;
+            var timeMs = (long)Math.Round(_ancFrameIndex * 1000.0 / frameRate);
+            _ancFrameIndex++;
+
+            stream.Seek(klv.DataPosition, SeekOrigin.Begin);
+            var buffer = new byte[klv.DataSize];
+            var read = stream.ReadFully(buffer, 0, buffer.Length);
+            if (read < 2)
+            {
+                return;
+            }
+
+            var ccData = new List<Cea608.CcData>();
+            var packetCount = (buffer[0] << 8) | buffer[1];
+            var i = 2;
+            for (var packet = 0; packet < packetCount && i + 14 <= read; packet++)
+            {
+                var sampleCoding = buffer[i + 3];
+                var arrayCount = (buffer[i + 6] << 24) | (buffer[i + 7] << 16) | (buffer[i + 8] << 8) | buffer[i + 9];
+                var arrayElementSize = (buffer[i + 10] << 24) | (buffer[i + 11] << 16) | (buffer[i + 12] << 8) | buffer[i + 13];
+                var payloadStart = i + 14;
+                var payloadLength = (long)arrayCount * arrayElementSize;
+                if (arrayCount < 0 || arrayElementSize < 0 || payloadStart + payloadLength > read)
+                {
+                    break;
+                }
+
+                // 8-bit sample codings: 4 = luma, 5 = color difference, 6 = both, 10-12 = with parity error
+                var isEightBit = sampleCoding == 4 || sampleCoding == 5 || sampleCoding == 6 || (sampleCoding >= 10 && sampleCoding <= 12);
+                if (isEightBit && arrayElementSize == 1 && payloadLength >= 12 &&
+                    buffer[payloadStart] == 0x61 && buffer[payloadStart + 1] == 0x01) // DID/SDID = CEA-708 caption distribution packet
+                {
+                    ccData.AddRange(GetCcData(buffer, payloadStart, (int)payloadLength));
+                }
+
+                // the payload array is padded to a 4-byte boundary
+                i = payloadStart + (int)((payloadLength + 3) / 4 * 4);
+            }
+
+            _closedCaptionDecoder.AddFrame(timeMs, ccData.ToArray());
+        }
+
+        private static IEnumerable<Cea608.CcData> GetCcData(byte[] buffer, int index, int length)
+        {
+            try
+            {
+                var packet = new byte[length];
+                Array.Copy(buffer, index, packet, 0, length);
+                return new Smpte291M(packet).CcDataSectionCcData.CcData
+                    .Where(cc => cc.Valid)
+                    .Select(cc => new Cea608.CcData(cc.Type, cc.Data1, cc.Data2))
+                    .ToList();
+            }
+            catch
+            {
+                return Enumerable.Empty<Cea608.CcData>();
             }
         }
 
