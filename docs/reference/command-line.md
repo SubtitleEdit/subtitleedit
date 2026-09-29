@@ -780,7 +780,7 @@ This mirrors the desktop app, where batch convert's *Remove formatting* function
 | `vobsub` | VobSub — image |
 | `bdnxml`, `bdn-xml` | BDN-XML — image (folder of PNGs + index.xml) |
 | `bdnxml8bit`, `bdn-xml8-bit` | BDN-XML with 8-bit palette-indexed PNGs — image |
-| `imscimage`, `imsc-image` | IMSC 1.1 image profile — image (PNGs embedded as base64 in one `.ttml`) |
+| `imscimage`, `imsc-image` | IMSC 1.1 image profile — image (`.ttml` plus one PNG per subtitle next to it) |
 | `dost`, `dostimage` | DOST/image |
 | `fcpimage`, `fcp` | FCP/image |
 | `dcinemainterop`, `dcinema-interop` | D-Cinema interop/png |

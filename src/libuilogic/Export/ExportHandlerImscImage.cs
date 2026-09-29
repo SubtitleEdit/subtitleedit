@@ -6,11 +6,11 @@ namespace Nikse.SubtitleEdit.UiLogic.Export;
 
 /// <summary>
 /// IMSC 1.1 image profile (TTML Profiles for Internet Media Subtitles and Captions 1.1, image
-/// profile). Emits a single self-contained TTML file: each cue is a cropped PNG embedded as a
-/// base64 &lt;smpte:image&gt; in the head, referenced from a &lt;div smpte:backgroundImage&gt; in
-/// the body, positioned by a per-cue region with percentage origin/extent. Media timebase.
-/// This is the standardized image-subtitle carriage used for streaming/broadcast delivery, and
-/// round-trips through SE's Timed Text Base64 Image reader.
+/// profile). Writes the TTML document plus one cropped PNG per cue next to it, named after the
+/// document ("movie_0001.png", ...). Each cue is a &lt;div smpte:backgroundImage="movie_0001.png"&gt;
+/// in the body, positioned by a per-cue region with percentage origin/extent. Media timebase.
+/// The PNGs are separate files because the image profile prohibits embedded &lt;smpte:image&gt;
+/// (IMSC 1.1 section 9.4.5). Round-trips through SE's Timed Text Image reader.
 /// Spec: https://www.w3.org/TR/ttml-imsc1.1/
 /// </summary>
 public class ExportHandlerImscImage : IExportHandler
@@ -21,20 +21,22 @@ public class ExportHandlerImscImage : IExportHandler
     public string Title => string.Format("Export to {0}", "IMSC 1.1 image profile");
 
     private string _fileName = string.Empty;
+    private string _folder = string.Empty;
+    private string _imagePrefix = string.Empty;
     private int _width = 1920;
     private int _height = 1080;
     private int _count;
-    private readonly StringBuilder _images = new();
     private readonly StringBuilder _regions = new();
     private readonly StringBuilder _divs = new();
 
     public void WriteHeader(string fileOrFolderName, ImageParameter imageParameter)
     {
         _fileName = fileOrFolderName;
+        _folder = Path.GetDirectoryName(Path.GetFullPath(fileOrFolderName)) ?? string.Empty;
+        _imagePrefix = Path.GetFileNameWithoutExtension(fileOrFolderName);
         _width = imageParameter.ScreenWidth > 0 ? imageParameter.ScreenWidth : 1920;
         _height = imageParameter.ScreenHeight > 0 ? imageParameter.ScreenHeight : 1080;
         _count = 0;
-        _images.Clear();
         _regions.Clear();
         _divs.Clear();
     }
@@ -48,9 +50,8 @@ public class ExportHandlerImscImage : IExportHandler
         var id = _count;
         _count++;
 
-        var base64 = Convert.ToBase64String(param.Bitmap.ToPngArray());
-        _images.Append("      <smpte:image xml:id=\"img").Append(id).Append("\" imagetype=\"PNG\" encoding=\"Base64\">")
-            .Append(base64).Append("</smpte:image>").Append('\n');
+        var imageFileName = GetImageFileName(_imagePrefix, _count);
+        File.WriteAllBytes(Path.Combine(_folder, imageFileName), param.Bitmap.ToPngArray());
 
         GetPlacement(param, out var x, out var y);
         var originX = Pct(x, _width);
@@ -62,9 +63,14 @@ public class ExportHandlerImscImage : IExportHandler
             .Append(originX).Append(' ').Append(originY).Append("\" tts:extent=\"")
             .Append(extentX).Append(' ').Append(extentY).Append("\"/>").Append('\n');
 
-        _divs.Append("      <div smpte:backgroundImage=\"#img").Append(id).Append("\" region=\"region").Append(id)
-            .Append("\" begin=\"").Append(ToTimeCode(param.StartTime)).Append("\" end=\"").Append(ToTimeCode(param.EndTime))
-            .Append("\" ttm:role=\"caption\"/>").Append('\n');
+        _divs.Append("      <div smpte:backgroundImage=\"").Append(SecurityElementEscape(imageFileName)).Append("\" region=\"region").Append(id)
+            .Append("\" begin=\"").Append(ToTimeCode(param.StartTime)).Append("\" end=\"").Append(ToTimeCode(param.EndTime)).Append('"');
+        if (param.IsForced)
+        {
+            _divs.Append(" itts:forcedDisplay=\"true\"");
+        }
+
+        _divs.Append(" ttm:role=\"caption\"/>").Append('\n');
     }
 
     public void WriteFooter()
@@ -74,13 +80,11 @@ public class ExportHandlerImscImage : IExportHandler
         sb.Append("<tt xmlns=\"http://www.w3.org/ns/ttml\" xmlns:tts=\"http://www.w3.org/ns/ttml#styling\" ")
             .Append("xmlns:ttp=\"http://www.w3.org/ns/ttml#parameter\" xmlns:ttm=\"http://www.w3.org/ns/ttml#metadata\" ")
             .Append("xmlns:smpte=\"http://www.smpte-ra.org/schemas/2052-1/2010/smpte-tt\" ")
+            .Append("xmlns:itts=\"http://www.w3.org/ns/ttml/profile/imsc1#styling\" ")
             .Append("ttp:profile=\"http://www.w3.org/ns/ttml/profile/imsc1/image\" ttp:timeBase=\"media\" ")
             .Append("tts:extent=\"").Append(_width.ToString(CultureInfo.InvariantCulture)).Append("px ")
             .Append(_height.ToString(CultureInfo.InvariantCulture)).Append("px\" xml:lang=\"en\">\n");
         sb.Append("  <head>\n");
-        sb.Append("    <metadata>\n");
-        sb.Append(_images);
-        sb.Append("    </metadata>\n");
         sb.Append("    <layout>\n");
         sb.Append(_regions);
         sb.Append("    </layout>\n");
@@ -152,6 +156,17 @@ public class ExportHandlerImscImage : IExportHandler
         {
             y = 0;
         }
+    }
+
+    /// <summary>The cue's PNG, next to the TTML and named after it: "movie_0001.png".</summary>
+    public static string GetImageFileName(string ttmlFileNameWithoutExtension, int number)
+    {
+        return ttmlFileNameWithoutExtension + "_" + number.ToString("0000", CultureInfo.InvariantCulture) + ".png";
+    }
+
+    private static string SecurityElementEscape(string value)
+    {
+        return System.Security.SecurityElement.Escape(value) ?? string.Empty;
     }
 
     private static string Pct(int value, int total)

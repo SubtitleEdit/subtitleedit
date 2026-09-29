@@ -54,6 +54,82 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// The timed elements: body's children, or - when a child carries no timing, like the
+        /// wrapping &lt;div&gt; many IMSC files use - the timed elements inside it.
+        /// </summary>
+        private static List<XmlNode> GetCueNodes(XmlNode parent)
+        {
+            var result = new List<XmlNode>();
+            foreach (XmlNode node in parent.ChildNodes)
+            {
+                if (node.NodeType != XmlNodeType.Element)
+                {
+                    continue;
+                }
+
+                if (HasAttributeEndingWith(node, "begin") || !HasElementChildren(node))
+                {
+                    result.Add(node);
+                }
+                else
+                {
+                    result.AddRange(GetCueNodes(node));
+                }
+            }
+
+            return result;
+        }
+
+        private static bool HasAttributeEndingWith(XmlNode node, string name)
+        {
+            if (node.Attributes == null)
+            {
+                return false;
+            }
+
+            foreach (XmlAttribute attr in node.Attributes)
+            {
+                if (attr.Name.EndsWith(name, StringComparison.Ordinal))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static bool HasElementChildren(XmlNode node)
+        {
+            foreach (XmlNode child in node.ChildNodes)
+            {
+                if (child.NodeType == XmlNodeType.Element)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static string GetBackgroundImage(XmlNode node)
+        {
+            if (node.Attributes == null)
+            {
+                return null;
+            }
+
+            foreach (XmlAttribute attr in node.Attributes)
+            {
+                if (attr.LocalName == "backgroundImage")
+                {
+                    return attr.Value.Trim();
+                }
+            }
+
+            return null;
+        }
+
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
@@ -73,7 +149,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             bool couldBeFrames = true;
             bool couldBeMillisecondsWithMissingLastDigit = true;
             var pText = new StringBuilder();
-            foreach (XmlNode node in body.ChildNodes)
+            foreach (XmlNode node in GetCueNodes(body))
             {
                 try
                 {
@@ -89,6 +165,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
 
                             break;
+                        }
+                    }
+
+                    // IMSC image profile: <div smpte:backgroundImage="0001.png"/>. A "#id" value
+                    // points at an embedded <smpte:image> - that is Timed Text Base64 Image.
+                    if (pText.Length == 0)
+                    {
+                        var backgroundImage = GetBackgroundImage(node);
+                        if (!string.IsNullOrEmpty(backgroundImage) && !backgroundImage.StartsWith("#", StringComparison.Ordinal))
+                        {
+                            pText.Append(backgroundImage);
                         }
                     }
 

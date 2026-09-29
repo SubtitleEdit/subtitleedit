@@ -940,7 +940,19 @@ public partial class BinaryEditViewModel : ObservableObject
             }
         }
 
-        // SMPTE-TT / IMSC with base64 png images - round-trips this window's own IMSC image export
+        // IMSC image profile - png files next to the document, as this window's IMSC image export writes
+        var timedTextImage = new Nikse.SubtitleEdit.Core.SubtitleFormats.TimedTextImage();
+        if (timedTextImage.IsMine(lines, fileName))
+        {
+            var timedTextImageSubtitle = new Subtitle();
+            timedTextImage.LoadSubtitle(timedTextImageSubtitle, lines, fileName);
+            if (timedTextImageSubtitle.Paragraphs.Count > 0)
+            {
+                return new OcrSubtitleBdn(timedTextImageSubtitle, fileName, false);
+            }
+        }
+
+        // SMPTE-TT with base64 png images (<smpte:image>)
         var base64Format = new Nikse.SubtitleEdit.Core.SubtitleFormats.TimedTextBase64Image();
         if (base64Format.IsMine(lines, fileName))
         {

@@ -196,7 +196,7 @@ See [Batch Convert](batch-convert.md), [OCR](ocr.md), and [Command Line (seconv)
 
 - Added **EBU-TT-D** (read and write) — the TTML distribution profile used by European broadcasters (BBC iPlayer, ARD/ZDF, NPO) and HbbTV.
 - Added **IMSC-Rosetta Timed Text** subtitle format support.
-- New **IMSC 1.1 image profile** export — a single self-contained TTML file with base64 PNG subtitles (`smpte:image`) for streaming and broadcast image-subtitle delivery, from File → Export and from the image/binary subtitle editor.
+- New **IMSC 1.1 image profile** export — a TTML file plus one PNG per subtitle, for streaming and broadcast image-subtitle delivery, from File → Export and from the image/binary subtitle editor. IMSC image profile files (and SMPTE-TT with base64 images) also open for OCR.
 - New **DVD sup (MuxMan/Scenarist)** image-based export — the classic DVD-Video subpicture `.sup` that DVD authoring tools import.
 - New **Import CSV/XLSX with custom columns** window for spreadsheets that don't fit the standard layout — pick which columns map to start, end, text, etc.
 - **Teletext / EBU STL** — an alignment dialog, a *TT* grid column, a teletext color picker with a *No color* option, and the position the file carries is used when previewing on the video (also for TTML and PAC).
