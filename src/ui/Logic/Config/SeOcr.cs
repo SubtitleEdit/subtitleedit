@@ -150,7 +150,7 @@ public class SeOcr
         TextBoxFontSize = 14;
         TextBoxFontName = string.Empty;
 
-        UseWordSplitList = true;
+        UseWordSplitList = false;
 
         CaptureAssaPosition = false;
 
