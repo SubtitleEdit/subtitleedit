@@ -164,14 +164,84 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 foreach (XmlNode row in rowsNode.SelectNodes("Row"))
                 {
-                    textBuilder.AppendLine(row.InnerText);
+                    textBuilder.AppendLine(GetRowText(row));
                 }
                 var text = textBuilder.ToString().TrimEnd();
-                var startMs = DecodeTimeCodeFrames(inCue.InnerText, splitChars).TotalMilliseconds;
-                var endMs = DecodeTimeCodeFrames(outCue.InnerText, splitChars).TotalMilliseconds;
+                var alignment = GetAssAlignment(subNode.SelectSingleNode("VisualAttributes"));
+                if (alignment != null && text.Length > 0)
+                {
+                    text = alignment + text;
+                }
+                // Subtitles without timing have "--:--:--:--" cues.
+                var startMs = inCue.InnerText.StartsWith("-", StringComparison.Ordinal) ? 0 : DecodeTimeCodeFrames(inCue.InnerText, splitChars).TotalMilliseconds;
+                var endMs = outCue.InnerText.StartsWith("-", StringComparison.Ordinal) ? 0 : DecodeTimeCodeFrames(outCue.InnerText, splitChars).TotalMilliseconds;
                 subtitle.Paragraphs.Add(new Paragraph(text, startMs, endMs));
             }
             subtitle.Renumber();
+        }
+
+        /// <summary>
+        /// Row text with italic/foreground_color from the row and from its inline spans, e.g.
+        /// &lt;Row italic="true" foreground_color="red"&gt;&lt;Text&gt;Only &lt;span italic="true"&gt;THIS&lt;/span&gt;&lt;/Text&gt;&lt;/Row&gt;.
+        /// </summary>
+        private static string GetRowText(XmlNode row)
+        {
+            var textNode = row.SelectSingleNode("Text");
+            if (textNode == null)
+            {
+                return row.InnerText;
+            }
+
+            var sb = new StringBuilder();
+            foreach (XmlNode node in textNode.ChildNodes)
+            {
+                if (node.NodeType == XmlNodeType.Element)
+                {
+                    sb.Append(ApplyStyle(node, node.InnerText));
+                }
+                else
+                {
+                    sb.Append(node.InnerText);
+                }
+            }
+
+            return ApplyStyle(row, sb.ToString());
+        }
+
+        private static string ApplyStyle(XmlNode node, string text)
+        {
+            if (text.Length == 0)
+            {
+                return text;
+            }
+
+            if (node.Attributes?["italic"]?.Value == "true")
+            {
+                text = "<i>" + text + "</i>";
+            }
+
+            var color = node.Attributes?["foreground_color"]?.Value;
+            if (!string.IsNullOrEmpty(color) && color != "white")
+            {
+                text = "<font color=\"" + color + "\">" + text + "</font>";
+            }
+
+            return text;
+        }
+
+        private static string GetAssAlignment(XmlNode visualAttributes)
+        {
+            if (visualAttributes?.Attributes == null)
+            {
+                return null;
+            }
+
+            var verticalAlign = visualAttributes.Attributes["vertical_align"]?.Value;
+            var justification = visualAttributes.Attributes["row_justification"]?.Value;
+            var row = verticalAlign == "top" ? 7 : verticalAlign == "center" ? 4 : 1;
+            var column = justification == "left" ? 0 : justification == "right" ? 2 : 1;
+            var an = row + column;
+            return an == 2 ? null : "{\\an" + an + "}";
         }
 
         /// <summary>

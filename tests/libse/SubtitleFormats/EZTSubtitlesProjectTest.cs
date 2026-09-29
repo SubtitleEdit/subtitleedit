@@ -108,4 +108,41 @@ public class EZTSubtitlesProjectTest
             Configuration.Settings.General.CurrentFrameRate = old;
         }
     }
+
+    // Sample exported by EZTitles: italic/colour on the row or an inline span, alignment in
+    // VisualAttributes, and "--:--:--:--" cues on subtitles without timing.
+    [Fact]
+    public void LoadsFormattingAndAlignment()
+    {
+        var subtitle = Load(@"<?xml version=""1.0"" encoding=""UTF-8""?>
+<EZTSubtitlesProject version=""1.3"">
+  <ProjectConfiguration><TimeCodeStandard>24</TimeCodeStandard></ProjectConfiguration>
+  <Subtitles count=""4"">
+    <Subtitle id=""sub1"" number=""1"" incue=""--:--:--:--"" outcue=""--:--:--:--"">
+      <VisualAttributes row_position=""center"" row_justification=""center"" vertical_align=""bottom""/>
+      <Rows><Row foreground_color=""red"" italic=""true""><Text>Red italic text</Text></Row></Rows>
+    </Subtitle>
+    <Subtitle id=""sub2"" number=""1"" index=""a"" incue=""--:--:--:--"" outcue=""--:--:--:--"">
+      <VisualAttributes row_position=""left"" row_justification=""left"" vertical_align=""top""/>
+      <Rows><Row foreground_color=""white""><Text>Top left</Text></Row></Rows>
+    </Subtitle>
+    <Subtitle id=""sub3"" number=""1"" index=""b"" incue=""--:--:--:--"" outcue=""--:--:--:--"">
+      <VisualAttributes row_position=""right"" row_justification=""right"" vertical_align=""bottom""/>
+      <Rows><Row foreground_color=""yellow""><Text>Bottom right</Text><Style foreground_color=""yellow""/></Row></Rows>
+    </Subtitle>
+    <Subtitle id=""sub4"" number=""1"" index=""c"" incue=""--:--:--:--"" outcue=""--:--:--:--"">
+      <VisualAttributes row_position=""center"" row_justification=""center"" vertical_align=""bottom""/>
+      <Rows><Row foreground_color=""white""><Text>Only <span italic=""true"">THIS</span> in italic</Text></Row></Rows>
+    </Subtitle>
+  </Subtitles>
+</EZTSubtitlesProject>");
+
+        Assert.Equal(4, subtitle.Paragraphs.Count);
+        Assert.Equal("<font color=\"red\"><i>Red italic text</i></font>", subtitle.Paragraphs[0].Text);
+        Assert.Equal("{\\an7}Top left", subtitle.Paragraphs[1].Text);
+        Assert.Equal("{\\an3}<font color=\"yellow\">Bottom right</font>", subtitle.Paragraphs[2].Text);
+        Assert.Equal("Only <i>THIS</i> in italic", subtitle.Paragraphs[3].Text);
+        Assert.Equal(0, subtitle.Paragraphs[0].StartTime.TotalMilliseconds);
+        Assert.Equal(0, subtitle.Paragraphs[0].EndTime.TotalMilliseconds);
+    }
 }
