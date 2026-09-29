@@ -100,6 +100,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             titleNode.Attributes["name"].InnerText = text;
         }
 
+        public override bool IsMine(List<string> lines, string fileName)
+        {
+            // Paragraphs only come from <title> elements: skip parsing any other XML.
+            if (lines != null && (!AnyLineContains(lines, "<title")))
+            {
+                return false;
+            }
+
+            return base.IsMine(lines, fileName);
+        }
+
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;

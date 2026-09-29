@@ -84,6 +84,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             sb.AppendLine(Json.DecodeJsonText(textLine));
                         }
+
+                        // An object without "start" or "end" used to throw a
+                        // NullReferenceException on Split below, caught as one error - once
+                        // per object of any JSON file with a "start" key, ~10 µs each.
+                        if (start == null || end == null)
+                        {
+                            _errorCount++;
+                            continue;
+                        }
+
                         var startArr = start.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
                         var endArr = end.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
                         if (startArr.Length == 4 && endArr.Length == 4)

@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 try
                 {
-                    if (line.IndexOf(':') > 0 &&
+                    if (line.IndexOf(':') > 0 && HasTimeCodeField(line) &&
                         (CsvLine.IsMatch(line) ||
                          CsvLineNoQuotes.IsMatch(line) ||
                          CsvLineAllQuotes.IsMatch(line) ||
@@ -70,6 +70,58 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 .RemoveChar('"')
                 .RemoveChar(' ')
                 .Contains(Header.RemoveChar('"').RemoveChar(' '));
+        }
+
+        /// <summary>
+        /// Every one of the four line patterns needs a field of four colon separated numbers
+        /// right after a comma (",00:00:01:00," or ",\"00:00:01:00\""). Without one, none can
+        /// match - checking that first skips four backtracking regexes, which took about a
+        /// second over the single line of a 5 MB minified JSON file.
+        /// </summary>
+        private static bool HasTimeCodeField(string line)
+        {
+            var comma = line.IndexOf(',');
+            while (comma >= 0)
+            {
+                var i = comma + 1;
+                var quoted = i < line.Length && line[i] == '"';
+                if (quoted)
+                {
+                    i++;
+                }
+
+                var groups = 0;
+                while (true)
+                {
+                    var digitsStart = i;
+                    while (i < line.Length && char.IsDigit(line[i]))
+                    {
+                        i++;
+                    }
+
+                    if (i == digitsStart)
+                    {
+                        break;
+                    }
+
+                    groups++;
+                    if (groups == 4 || i >= line.Length || line[i] != ':')
+                    {
+                        break;
+                    }
+
+                    i++;
+                }
+
+                if (groups == 4 && i < line.Length && line[i] == (quoted ? '"' : ','))
+                {
+                    return true;
+                }
+
+                comma = line.IndexOf(',', comma + 1);
+            }
+
+            return false;
         }
 
         public override string ToText(Subtitle subtitle, string title)

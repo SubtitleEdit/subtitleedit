@@ -20,10 +20,39 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
+            if (!HasEvents(lines))
+            {
+                Errors = null;
+                return false;
+            }
+
             var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
             Errors = null;
             return subtitle.Paragraphs.Count > _errorCount;
+        }
+
+        /// <summary>
+        /// Events (the only source of paragraphs) are read after an "[Events]" line or once a
+        /// "Dialogue:" / "Dialog:" / "Comment:" line starts them, so a file with neither has no
+        /// paragraph - skip loading it. Shared with <see cref="AdvancedSubStationAlpha"/>.
+        /// </summary>
+        internal static bool HasEvents(List<string> lines)
+        {
+            foreach (var line in lines)
+            {
+                var trimmed = line.AsSpan().Trim();
+                if (trimmed.StartsWith("dialog".AsSpan(), StringComparison.OrdinalIgnoreCase) &&
+                    (trimmed.StartsWith("dialog:".AsSpan(), StringComparison.OrdinalIgnoreCase) ||
+                     trimmed.StartsWith("dialogue:".AsSpan(), StringComparison.OrdinalIgnoreCase)) ||
+                    trimmed.StartsWith("comment:".AsSpan(), StringComparison.OrdinalIgnoreCase) ||
+                    trimmed.Equals("[events]".AsSpan(), StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private const string HeaderNoStyles =

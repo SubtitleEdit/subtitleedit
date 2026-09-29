@@ -13,6 +13,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
+            // Without an AVDicPlayer tag the text is not rewritten, so it has to be SAMI as is.
+            if (!lines.Exists(line => line.Contains("<AVDicPlayer")) && !HasSyncTag(lines))
+            {
+                return false;
+            }
+
             if (new SamiModern().IsMine(lines, fileName))
             {
                 return false;

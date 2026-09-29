@@ -80,6 +80,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return xmlAsText;
         }
 
+        public override bool IsMine(List<string> lines, string fileName)
+        {
+            // Paragraphs only come from fcpxml/.../gap elements: skip parsing any other XML.
+            if (lines != null && (!AnyLineContains(lines, "<fcpxml") || !AnyLineContains(lines, "<gap")))
+            {
+                return false;
+            }
+
+            return base.IsMine(lines, fileName);
+        }
+
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;

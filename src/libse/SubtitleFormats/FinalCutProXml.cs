@@ -467,6 +467,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return timebase;
         }
 
+        public override bool IsMine(List<string> lines, string fileName)
+        {
+            // Paragraphs only come from <generatoritem> elements: skip parsing any other XML twice.
+            if (lines != null && (!AnyLineContains(lines, "<generatoritem")))
+            {
+                return false;
+            }
+
+            return base.IsMine(lines, fileName);
+        }
+
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;

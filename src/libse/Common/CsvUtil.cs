@@ -9,7 +9,15 @@ namespace Nikse.SubtitleEdit.Core.Common
     {
         public static List<List<string>> CsvSplitLines(List<string> lines, char separator)
         {
-            var result = new List<List<string>>();
+            return new List<List<string>>(CsvSplitLinesLazy(lines, separator));
+        }
+
+        /// <summary>
+        /// Same rows as <see cref="CsvSplitLines"/>, produced one at a time, so a reader that
+        /// gives up after a few bad rows does not split the rest of a large file first.
+        /// </summary>
+        public static IEnumerable<List<string>> CsvSplitLinesLazy(IEnumerable<string> lines, char separator)
+        {
             var continuation = false;
             var lineResult = new List<string>();
             foreach (var line in lines)
@@ -23,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                     if (!continuation)
                     {
-                        result.Add(lineResult);
+                        yield return lineResult;
                         lineResult = new List<string>();
                     }
                 }
@@ -49,7 +57,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                     if (!continuation)
                     {
-                        result.Add(lineResult);
+                        yield return lineResult;
                         lineResult = new List<string>();
                     }
                 }
@@ -57,10 +65,9 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (lineResult.Count > 0)
             {
-                result.Add(lineResult);
+                yield return lineResult;
             }
 
-            return result;
         }
 
         public static string[] CsvSplit(string line, bool quoteOn, out bool continuation, char separator = ',')

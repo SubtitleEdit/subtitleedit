@@ -82,6 +82,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
+            if (!SubStationAlpha.HasEvents(lines))
+            {
+                Errors = null;
+                return false; // no event line, no paragraph
+            }
+
             var subtitle = new Subtitle();
 
             var all = JoinLines(lines);
