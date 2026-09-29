@@ -59,6 +59,10 @@ namespace Nikse.SubtitleEdit
             // environment variables both from managed code and through native getenv).
             ApplyLinuxDeadKeyInputFix();
 
+            // Must run before Avalonia creates Skia's font manager, which spins forever on a
+            // font without a family name - no window, no error log (Ubuntu 26.04 user report).
+            FontconfigFamilyGuard.Apply();
+
             try
             {
                 // Global exception handling
