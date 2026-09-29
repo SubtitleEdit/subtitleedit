@@ -114,6 +114,73 @@ public class EZTitlesBinaryTest
         Assert.Equal(string.Empty, subtitle.Paragraphs[3].Text);
     }
 
+    // Per-character attributes as written by EZTitles: style flags (0x02 = italic), RGB colour
+    // and 0x1f for "default colour", background, then 4 more bytes.
+    private static byte[] Attributes(bool italic, byte r = 0xff, byte g = 0xff, byte b = 0xff, bool defaultColor = true) =>
+        new byte[] { (byte)(italic ? 0x02 : 0x00), r, g, b, (byte)(defaultColor ? 0x1f : 0x00), 0xff, 0xff, 0xff, 0x1f, 0x09, 0x08, 0x00, 0x00 };
+
+    private static byte[] BuildFormattedFile(params (byte verticalAlign, byte justification, string text, Func<int, byte[]> attributes)[] subtitles)
+    {
+        var body = new List<byte>();
+        body.AddRange(new byte[64]); // fake header
+        body.AddRange(BitConverter.GetBytes(subtitles.Length));
+
+        foreach (var (verticalAlign, justification, text, attributes) in subtitles)
+        {
+            var rec = new List<byte>();
+            rec.AddRange(BitConverter.GetBytes((short)1));
+            rec.Add(0x61);
+            rec.AddRange(new byte[] { 0x00, 0x00, 0xff, 0xff }); // unset time codes
+            rec.AddRange(new byte[] { 0x00, 0x00, 0xff, 0xff });
+            rec.AddRange(new byte[] { 0x0b, 0x00, 0x80, 0x01, 0x80, 0x80, verticalAlign });
+            rec.Add(1);
+            rec.AddRange(new byte[] { 0x5a, 0x01, 0, 0, 0, 0, 0, 0, justification, 0x03 });
+            rec.AddRange(BitConverter.GetBytes(text.Length));
+            rec.AddRange(Encoding.UTF32.GetBytes(text));
+            rec.AddRange(BitConverter.GetBytes(text.Length));
+            rec.AddRange(BitConverter.GetBytes(13));
+            for (var i = 0; i < text.Length; i++)
+            {
+                rec.AddRange(attributes(i));
+            }
+
+            rec.AddRange(new byte[40]); // trailing record data
+            body.AddRange(BitConverter.GetBytes(rec.Count));
+            body.AddRange(rec);
+        }
+
+        using var ms = new MemoryStream();
+        ms.Write(Encoding.ASCII.GetBytes("EZTZ"));
+        using (var zlib = new ZLibStream(ms, CompressionLevel.Optimal, leaveOpen: true))
+        {
+            zlib.Write(body.ToArray());
+        }
+
+        return ms.ToArray();
+    }
+
+    [Fact]
+    public void LoadsItalicColorAndAlignment()
+    {
+        var bytes = BuildFormattedFile(
+            (0, 2, "Red italic", _ => Attributes(true, 0xff, 0x00, 0x00, false)),
+            (2, 2, "Top", _ => Attributes(false, defaultColor: false)), // explicit white = no tag
+            (2, 0, "Top left", _ => Attributes(false)),
+            (0, 1, "Bottom right", _ => Attributes(false, 0xff, 0xff, 0x00, false)),
+            (0, 2, "Only THIS in italic", i => Attributes(i >= 5 && i < 9)));
+
+        var subtitle = Load(bytes);
+
+        Assert.Equal(5, subtitle.Paragraphs.Count);
+        Assert.Equal("<font color=\"#ff0000\"><i>Red italic</i></font>", subtitle.Paragraphs[0].Text);
+        Assert.Equal("{\\an8}Top", subtitle.Paragraphs[1].Text);
+        Assert.Equal("{\\an7}Top left", subtitle.Paragraphs[2].Text);
+        Assert.Equal("{\\an3}<font color=\"#ffff00\">Bottom right</font>", subtitle.Paragraphs[3].Text);
+        Assert.Equal("Only <i>THIS</i> in italic", subtitle.Paragraphs[4].Text);
+        Assert.Equal(0, subtitle.Paragraphs[0].StartTime.TotalMilliseconds);
+        Assert.Equal(0, subtitle.Paragraphs[0].EndTime.TotalMilliseconds);
+    }
+
     [Fact]
     public void IsMineRejectsOtherFiles()
     {

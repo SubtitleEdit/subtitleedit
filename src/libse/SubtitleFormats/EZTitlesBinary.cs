@@ -17,7 +17,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     ///     int32 subtitle count.
     ///     subtitle records: int32 size (excluding itself), int16 number, byte flags,
     ///     start time as 4 bytes (frames, seconds, minutes, hours), end time (same),
-    ///     7 bytes of layout, byte row count, then per row a small header ending in 02 03,
+    ///     7 bytes of layout (the last is vertical align: 0 bottom, 1 center, 2 top), byte row
+    ///     count, then per row a small header ending in justification (0 left, 1 right,
+    ///     2 center) + 03,
     ///     int32 char count, UTF-32LE text, the same char count again and per-character
     ///     attribute blobs of varying size.
     /// The header size is not fixed, so the reader locates the first record by its text row
@@ -121,6 +123,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (var r in records)
             {
                 var text = string.Join(Environment.NewLine, r.Rows).Trim();
+                var alignment = GetAssAlignment(r.VerticalAlign, r.Justification);
+                if (alignment != null && text.Length > 0)
+                {
+                    text = alignment + text;
+                }
+
                 var p = new Paragraph(text, r.StartMs + FramesToMilliseconds(r.StartFrames, frameRate), r.EndMs + FramesToMilliseconds(r.EndFrames, frameRate));
                 subtitle.Paragraphs.Add(p);
             }
@@ -146,7 +154,110 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             public int StartFrames;
             public int EndMs;
             public int EndFrames;
+            public int VerticalAlign;
+            public int Justification = 2;
             public List<string> Rows = new List<string>();
+        }
+
+        private static string GetAssAlignment(int verticalAlign, int justification)
+        {
+            var row = verticalAlign == 2 ? 7 : verticalAlign == 1 ? 4 : 1;
+            var column = justification == 0 ? 0 : justification == 1 ? 2 : 1;
+            var an = row + column;
+            return an == 2 ? null : "{\\an" + an + "}";
+        }
+
+        // A time code of unused subtitles has minutes and hours set to 0xff.
+        private static bool IsUnsetTimeCode(byte[] data, int pos)
+        {
+            return data[pos + 2] == 0xff && data[pos + 3] == 0xff;
+        }
+
+        private static int ReadFrames(byte[] data, int pos)
+        {
+            return IsUnsetTimeCode(data, pos) ? 0 : data[pos];
+        }
+
+        private static int ReadMilliseconds(byte[] data, int pos)
+        {
+            return IsUnsetTimeCode(data, pos) ? 0 : data[pos + 1] * 1000 + data[pos + 2] * 60000 + data[pos + 3] * 3600000;
+        }
+
+        /// <summary>
+        /// Applies the per-character attributes following a row: int32 attribute size, then one
+        /// attribute blob per character. Byte 0 is style flags (0x02 = italic), bytes 1-3 the RGB
+        /// text color and byte 4 is 0x1f when the color is the default one.
+        /// </summary>
+        private static string FormatRow(byte[] data, int rowLengthPos, int attributesPos, int end, string text, out int next)
+        {
+            next = attributesPos;
+            var length = BitConverter.ToInt32(data, rowLengthPos);
+            if (attributesPos + 4 > end)
+            {
+                return text;
+            }
+
+            var attributeSize = BitConverter.ToInt32(data, attributesPos);
+            if (attributeSize < 5 || attributeSize > 64 || attributesPos + 4 + (long)attributeSize * length > end)
+            {
+                return text;
+            }
+
+            var sb = new StringBuilder();
+            var runText = new StringBuilder();
+            var runItalic = false;
+            string runColor = null;
+            var textPos = rowLengthPos + 4;
+            var attributePos = attributesPos + 4;
+            for (var k = 0; k < length; k++)
+            {
+                var c = char.ConvertFromUtf32(BitConverter.ToInt32(data, textPos + k * 4));
+                var italic = (data[attributePos] & 0x02) != 0;
+                string color = null;
+                if (data[attributePos + 4] != 0x1f)
+                {
+                    color = $"#{data[attributePos + 1]:x2}{data[attributePos + 2]:x2}{data[attributePos + 3]:x2}";
+                    if (color == "#ffffff")
+                    {
+                        color = null;
+                    }
+                }
+
+                if (k > 0 && (italic != runItalic || color != runColor))
+                {
+                    AppendRun(sb, runText.ToString(), runItalic, runColor);
+                    runText.Clear();
+                }
+
+                runItalic = italic;
+                runColor = color;
+                runText.Append(c);
+                attributePos += attributeSize;
+            }
+
+            AppendRun(sb, runText.ToString(), runItalic, runColor);
+            next = attributePos;
+            return sb.ToString();
+        }
+
+        private static void AppendRun(StringBuilder sb, string text, bool italic, string color)
+        {
+            if (text.Length == 0)
+            {
+                return;
+            }
+
+            if (italic)
+            {
+                text = "<i>" + text + "</i>";
+            }
+
+            if (color != null)
+            {
+                text = "<font color=\"" + color + "\">" + text + "</font>";
+            }
+
+            sb.Append(text);
         }
 
         private static List<Record> ReadRecords(byte[] data)
@@ -183,10 +294,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var recordEnd = recordStart + size;
                 var record = new Record
                 {
-                    StartFrames = data[recordStart + 3],
-                    StartMs = data[recordStart + 4] * 1000 + data[recordStart + 5] * 60000 + data[recordStart + 6] * 3600000,
-                    EndFrames = data[recordStart + 7],
-                    EndMs = data[recordStart + 8] * 1000 + data[recordStart + 9] * 60000 + data[recordStart + 10] * 3600000,
+                    StartFrames = ReadFrames(data, recordStart + 3),
+                    StartMs = ReadMilliseconds(data, recordStart + 3),
+                    EndFrames = ReadFrames(data, recordStart + 7),
+                    EndMs = ReadMilliseconds(data, recordStart + 7),
+                    VerticalAlign = data[recordStart + 17],
                 };
 
                 var i = recordStart + 19;
@@ -198,8 +310,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         break;
                     }
 
-                    record.Rows.Add(text);
-                    i = next;
+                    if (record.Rows.Count == 0)
+                    {
+                        record.Justification = data[rowPos - 2];
+                    }
+
+                    record.Rows.Add(FormatRow(data, rowPos, next, recordEnd, text, out var afterAttributes));
+                    i = afterAttributes;
                 }
 
                 records.Add(record);
@@ -249,7 +366,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static int FindRecordStart(byte[] data, int firstRowLengthPos)
         {
-            // rowLengthPos points at the int32 char count. Before it: 02 03, then 8 bytes of row
+            // rowLengthPos points at the int32 char count. Before it: justification + 03, then 8 bytes of row
             // header, before that the record header (19 bytes) and the int32 size.
             var recordStart = firstRowLengthPos - 2 - 8 - 19;
             var sizePos = recordStart - 4;
@@ -268,7 +385,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         }
 
         /// <summary>
-        /// Finds the next text row at or after <paramref name="start"/>: marker 02 03, int32 char
+        /// Finds the next text row at or after <paramref name="start"/>: justification (0-2) + 03, int32 char
         /// count, UTF-32LE chars, the same char count again. Returns the position of the first
         /// char count, or -1.
         /// </summary>
@@ -278,7 +395,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             next = -1;
             for (var i = Math.Max(start, 4); i + 10 <= end; i++)
             {
-                if (data[i - 2] != 0x02 || data[i - 1] != 0x03 || data[i - 3] != 0 || data[i - 4] != 0)
+                if (data[i - 2] > 0x02 || data[i - 1] != 0x03 || data[i - 3] != 0 || data[i - 4] != 0)
                 {
                     continue;
                 }
