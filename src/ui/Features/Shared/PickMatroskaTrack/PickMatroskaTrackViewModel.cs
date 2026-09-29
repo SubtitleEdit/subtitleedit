@@ -83,7 +83,7 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
         _matroskaFile = matroskaFile;
         _matroskaTracks = matroskaTracks;
         _fileName = fileName;
-        WindowTitle = string.Format(Se.Language.File.PickMatroskaTrackX, fileName);
+        WindowTitle = UiUtil.FormatTitleWithFileName(Se.Language.File.PickMatroskaTrackX, fileName);
         foreach (var track in _matroskaTracks)
         {
             var display = new MatroskaTrackInfoDisplay

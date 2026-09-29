@@ -43,6 +43,7 @@ public class LanguageVideo
     public string RemuxVideoPleaseSelectBoth { get; set; }
     public string RemuxVideoAssRequiresMkv { get; set; }
     public string RemuxVideoSccRequiresMov { get; set; }
+    public string RemuxVideoSccNotWithWebM { get; set; }
     public string RemuxVideoSelectAudioTrack { get; set; }
     public string RemuxVideoSelectAudioTrackFor { get; set; }
     public string RemuxVideoSelectAudioTrackPrompt { get; set; }
@@ -198,6 +199,7 @@ public class LanguageVideo
         RemuxVideoPleaseSelectBoth = "Please select both video and audio files.";
         RemuxVideoAssRequiresMkv = "ASS/SSA subtitles require the MKV container to preserve all formatting and styles.";
         RemuxVideoSccRequiresMov = "Scenarist (.scc) subtitles are embedded as CEA-608 closed captions, which require the MOV container. Output format has been automatically switched to .mov.";
+        RemuxVideoSccNotWithWebM = "Scenarist (.scc) closed captions need the MOV container, which cannot hold the VP9/AV1 video of a .webm file. Remove the .scc file or convert it to another subtitle format.";
         RemuxVideoSelectAudioTrack = "Select audio track";
         RemuxVideoSelectAudioTrackFor = "Select audio track for {0}";
         RemuxVideoSelectAudioTrackPrompt = "The file '{0}' contains {1} audio tracks. Please select the audio track to remux:";

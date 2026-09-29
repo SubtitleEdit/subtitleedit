@@ -19,6 +19,30 @@ namespace Nikse.SubtitleEdit.Core.Cea608
         H265,
     }
 
+    /// <summary>
+    /// Per video stream state for cc_data parsing - kept by the caller across pictures.
+    /// </summary>
+    public sealed class CcDataParseState
+    {
+        /// <summary>
+        /// MPEG-2 user data format locked to (like ffmpeg's cc_format auto): a stream may carry
+        /// the same captions both as ATSC A/53 and as SCTE 20 - only the first one found is used.
+        /// </summary>
+        public CcUserDataFormat UserDataFormat { get; set; }
+
+        /// <summary>
+        /// True when a caption data unit was found - also if it only had padding/null bytes.
+        /// </summary>
+        public bool CaptionDataSeen { get; set; }
+    }
+
+    public enum CcUserDataFormat
+    {
+        Unknown,
+        Atsc,
+        Scte20,
+    }
+
     public static class GetCcDataHelper
     {
         public static List<CcData> GetCcData(Stream fs, ulong startPos, ulong size)
@@ -71,7 +95,8 @@ namespace Nikse.SubtitleEdit.Core.Cea608
         /// <param name="isHevc">H.265 (2-byte NAL header, SEI types 39/40) instead of H.264</param>
         /// <param name="nalLengthSize">Size of the NAL unit length prefix (1, 2 or 4) from avcC/hvcC</param>
         /// <param name="fieldData">cc_data found is added here</param>
-        public static void ParseCcDataFromLengthPrefixedSample(ReadOnlySpan<byte> sample, bool isHevc, int nalLengthSize, List<CcData> fieldData)
+        /// <param name="state">Optional per stream state</param>
+        public static void ParseCcDataFromLengthPrefixedSample(ReadOnlySpan<byte> sample, bool isHevc, int nalLengthSize, List<CcData> fieldData, CcDataParseState state = null)
         {
             if (nalLengthSize != 1 && nalLengthSize != 2 && nalLengthSize != 4)
             {
@@ -97,7 +122,10 @@ namespace Nikse.SubtitleEdit.Core.Cea608
                     if (seiEnd > seiStart)
                     {
                         var seiData = UnescapeSeiData(sample.Slice(seiStart, seiEnd - seiStart));
-                        ParseCcDataFromSei(seiData, fieldData);
+                        if (ParseCcDataFromSei(seiData, fieldData) && state != null)
+                        {
+                            state.CaptionDataSeen = true;
+                        }
                     }
                 }
 
@@ -119,7 +147,11 @@ namespace Nikse.SubtitleEdit.Core.Cea608
         /// Parses cc_data from start code delimited video data (a transport stream PES payload, a
         /// Matroska V_MPEG2 frame): H.264/H.265 SEI NAL units and MPEG-2 user data (ATSC A/53).
         /// </summary>
-        public static void ParseCcDataFromStartCodeStream(ReadOnlySpan<byte> data, CcVideoCodec codec, List<CcData> fieldData)
+        /// <param name="data">Video data</param>
+        /// <param name="codec">Video codec</param>
+        /// <param name="fieldData">cc_data found is added here</param>
+        /// <param name="state">Optional per stream state - locks the MPEG-2 user data format</param>
+        public static void ParseCcDataFromStartCodeStream(ReadOnlySpan<byte> data, CcVideoCodec codec, List<CcData> fieldData, CcDataParseState state = null)
         {
             var topFieldFirst = true; // from the MPEG-2 picture coding extension, which comes before the user data
             var position = data.IndexOf(StartCode);
@@ -133,12 +165,12 @@ namespace Nikse.SubtitleEdit.Core.Cea608
 
                 var next = data.Slice(unitStart).IndexOf(StartCode);
                 var unitEnd = next < 0 ? data.Length : unitStart + next;
-                ParseStartCodeUnit(data.Slice(unitStart, unitEnd - unitStart), codec, fieldData, ref topFieldFirst);
+                ParseStartCodeUnit(data.Slice(unitStart, unitEnd - unitStart), codec, fieldData, state, ref topFieldFirst);
                 position = next < 0 ? -1 : unitEnd;
             }
         }
 
-        private static void ParseStartCodeUnit(ReadOnlySpan<byte> unit, CcVideoCodec codec, List<CcData> fieldData, ref bool topFieldFirst)
+        private static void ParseStartCodeUnit(ReadOnlySpan<byte> unit, CcVideoCodec codec, List<CcData> fieldData, CcDataParseState state, ref bool topFieldFirst)
         {
             if (unit.Length < 2)
             {
@@ -155,16 +187,41 @@ namespace Nikse.SubtitleEdit.Core.Cea608
             }
             else if (isMpeg2 && b == 0xB2)
             {
-                ParseCcDataFromAtscUserData(unit.Slice(1), fieldData);
-                ParseCcDataFromScte20UserData(unit.Slice(1), topFieldFirst, fieldData);
+                ParseCcDataFromMpeg2UserData(unit.Slice(1), topFieldFirst, fieldData, state);
             }
             else if ((codec == CcVideoCodec.H264 || codec == CcVideoCodec.Unknown) && (b & 0x9F) == 0x06)
             {
-                ParseCcDataFromSeiNalPayload(unit.Slice(1), fieldData); // H.264 SEI
+                ParseCcDataFromSeiNalPayload(unit.Slice(1), fieldData, state); // H.264 SEI
             }
             else if ((codec == CcVideoCodec.H265 || codec == CcVideoCodec.Unknown) && (b & 0x81) == 0 && ((b >> 1) == 39 || (b >> 1) == 40))
             {
-                ParseCcDataFromSeiNalPayload(unit.Slice(2), fieldData); // H.265 prefix/suffix SEI
+                ParseCcDataFromSeiNalPayload(unit.Slice(2), fieldData, state); // H.265 prefix/suffix SEI
+            }
+        }
+
+        /// <summary>
+        /// Parses cc_data from MPEG-2 video user data (the bytes after the 00 00 01 B2 start code) in
+        /// ATSC A/53 or SCTE 20 form. With a state, the stream is locked to the first form found, so
+        /// captions sent in both forms are not decoded twice.
+        /// </summary>
+        public static void ParseCcDataFromMpeg2UserData(ReadOnlySpan<byte> userData, bool topFieldFirst, List<CcData> fieldData, CcDataParseState state)
+        {
+            if (state == null)
+            {
+                ParseCcDataFromAtscUserData(userData, fieldData);
+                ParseCcDataFromScte20UserData(userData, topFieldFirst, fieldData);
+                return;
+            }
+
+            if (state.UserDataFormat != CcUserDataFormat.Scte20 && ParseCcDataFromAtscUserData(userData, fieldData))
+            {
+                state.UserDataFormat = CcUserDataFormat.Atsc;
+                state.CaptionDataSeen = true;
+            }
+            else if (state.UserDataFormat != CcUserDataFormat.Atsc && ParseCcDataFromScte20UserData(userData, topFieldFirst, fieldData))
+            {
+                state.UserDataFormat = CcUserDataFormat.Scte20;
+                state.CaptionDataSeen = true;
             }
         }
 
@@ -243,8 +300,10 @@ namespace Nikse.SubtitleEdit.Core.Cea608
             return trimmed;
         }
 
-        public static void ParseCcDataFromSei(byte[] buffer, List<CcData> fieldData)
+        /// <returns>True if a cc_data SEI message was found (also if it only had padding)</returns>
+        public static bool ParseCcDataFromSei(byte[] buffer, List<CcData> fieldData)
         {
+            var found = false;
             var x = 0;
             while (x < buffer.Length -1)
             {
@@ -273,41 +332,52 @@ namespace Nikse.SubtitleEdit.Core.Cea608
                 {
                     var pos = x + 10;
                     AddCcTriplets(buffer, pos, buffer[pos - 2] & 0x1F, fieldData);
+                    found = true;
                 }
 
                 x += payloadSize;
             }
+
+            return found;
         }
 
         /// <summary>
         /// Parses cc_data from an H.264/H.265 SEI NAL unit payload (the bytes after the NAL unit
         /// header, still containing emulation prevention bytes).
         /// </summary>
-        public static void ParseCcDataFromSeiNalPayload(ReadOnlySpan<byte> escapedSeiPayload, List<CcData> fieldData)
+        public static void ParseCcDataFromSeiNalPayload(ReadOnlySpan<byte> escapedSeiPayload, List<CcData> fieldData, CcDataParseState state = null)
         {
             if (escapedSeiPayload.Length < 12)
             {
                 return;
             }
 
-            ParseCcDataFromSei(UnescapeSeiData(escapedSeiPayload), fieldData);
+            if (ParseCcDataFromSei(UnescapeSeiData(escapedSeiPayload), fieldData) && state != null)
+            {
+                state.CaptionDataSeen = true;
+            }
         }
 
         /// <summary>
         /// Parses cc_data from MPEG-2 video user data (the bytes after the 00 00 01 B2 start code)
         /// in ATSC A/53 form: "GA94", user_data_type_code 3, flags/cc_count, em_data, triplets.
         /// </summary>
-        public static void ParseCcDataFromAtscUserData(ReadOnlySpan<byte> userData, List<CcData> fieldData)
+        /// <returns>True if this is ATSC A/53 cc_data (also if it only had padding)</returns>
+        public static bool ParseCcDataFromAtscUserData(ReadOnlySpan<byte> userData, List<CcData> fieldData)
         {
             if (userData.Length < 10 ||
                 BinaryPrimitives.ReadUInt32BigEndian(userData) != 0x47413934 || // "GA94"
-                userData[4] != 0x03 || // cc_data
-                (userData[5] & 0x40) == 0) // process_cc_data_flag
+                userData[4] != 0x03) // cc_data
             {
-                return;
+                return false;
             }
 
-            AddCcTriplets(userData, 7, userData[5] & 0x1F, fieldData);
+            if ((userData[5] & 0x40) != 0) // process_cc_data_flag
+            {
+                AddCcTriplets(userData, 7, userData[5] & 0x1F, fieldData);
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -319,11 +389,12 @@ namespace Nikse.SubtitleEdit.Core.Cea608
         /// <param name="userData">User data after the start code</param>
         /// <param name="topFieldFirst">From the picture coding extension - field numbers are in transmission order</param>
         /// <param name="fieldData">cc_data found is added here (as CEA-608 field 1/2 pairs)</param>
-        public static void ParseCcDataFromScte20UserData(ReadOnlySpan<byte> userData, bool topFieldFirst, List<CcData> fieldData)
+        /// <returns>True if this is SCTE 20 cc_data (also if it only had padding)</returns>
+        public static bool ParseCcDataFromScte20UserData(ReadOnlySpan<byte> userData, bool topFieldFirst, List<CcData> fieldData)
         {
             if (userData.Length < 3 || userData[0] != 0x03 || (userData[1] & 0x7F) != 0x01)
             {
-                return;
+                return false;
             }
 
             var bitPosition = 16;
@@ -352,6 +423,8 @@ namespace Nikse.SubtitleEdit.Core.Cea608
 
                 fieldData.Add(new CcData(ccType, ccData1, ccData2));
             }
+
+            return true;
         }
 
         /// <summary>

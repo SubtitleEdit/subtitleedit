@@ -10,9 +10,15 @@ namespace Nikse.SubtitleEdit.Core.Cea608
     public static class Cea608CueBuilder
     {
         /// <summary>
+        /// One character pair - plus a space that was trimmed off the end of the previous screen.
+        /// </summary>
+        private const int MaxGrowthPerCharacterPair = 3;
+
+        /// <summary>
         /// Adds a displayed screen as a cue. Roll-up and paint-on captions change the screen with
         /// every character pair, so a line that is still being written grows the cue right before
-        /// it instead of adding a cue per character. A new row (roll-up scroll) starts a new cue.
+        /// it instead of adding a cue per character. A new row (roll-up scroll) starts a new cue, and
+        /// so does a screen that grew by more than one character pair (back-to-back pop-on captions).
         /// </summary>
         public static void Add(List<Paragraph> paragraphs, string text, double startMs, double endMs)
         {
@@ -25,9 +31,12 @@ namespace Nikse.SubtitleEdit.Core.Cea608
             if (paragraphs.Count > 0)
             {
                 var last = paragraphs[paragraphs.Count - 1];
+                var plainText = HtmlUtil.RemoveHtmlTags(text, true);
+                var lastPlainText = HtmlUtil.RemoveHtmlTags(last.Text, true);
                 if (Math.Abs(last.EndTime.TotalMilliseconds - startMs) < 0.5 &&
                     last.NumberOfLines == Utilities.GetNumberOfLines(text) &&
-                    HtmlUtil.RemoveHtmlTags(text, true).StartsWith(HtmlUtil.RemoveHtmlTags(last.Text, true), StringComparison.Ordinal))
+                    plainText.Length - lastPlainText.Length <= MaxGrowthPerCharacterPair &&
+                    plainText.StartsWith(lastPlainText, StringComparison.Ordinal))
                 {
                     last.Text = text;
                     last.EndTime.TotalMilliseconds = endMs;

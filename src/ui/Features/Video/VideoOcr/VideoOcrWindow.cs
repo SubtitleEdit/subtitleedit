@@ -29,7 +29,7 @@ public class VideoOcrWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         // The view model is initialized with the video before the window is built, so the
         // file being OCR'ed can go straight into the title.
-        Title = string.IsNullOrEmpty(vm.VideoFileName)
+        Title = string.IsNullOrEmpty(vm.VideoFileName) || UiUtil.HideFileNames
             ? Se.Language.Video.VideoOcr.Title
             : $"{Se.Language.Video.VideoOcr.Title} - {System.IO.Path.GetFileName(vm.VideoFileName)}";
         CanResize = true;

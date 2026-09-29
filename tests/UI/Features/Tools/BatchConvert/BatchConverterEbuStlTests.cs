@@ -68,4 +68,46 @@ Second line.
             dir.Delete(recursive: true);
         }
     }
+
+    /// <summary>
+    /// DVB Teletext is binary too but not in the batch converter's own binary list - after the
+    /// text loop learned to skip binary formats, it fell through to the image writer and failed.
+    /// </summary>
+    [Fact]
+    public async Task SrtToDvbTeletext_WritesBinaryFile()
+    {
+        var dir = Directory.CreateTempSubdirectory("se-batch-dvbttx-test");
+        try
+        {
+            var inputFile = Path.Combine(dir.FullName, "movie.srt");
+            await File.WriteAllTextAsync(inputFile, InputSrt, TestContext.Current.CancellationToken);
+
+            var converter = new BatchConverter(null!, null!, null!);
+            converter.Initialize(new BatchConvertConfig
+            {
+                SaveInSourceFolder = true,
+                Overwrite = true,
+                TargetFormatName = DvbTeletext.NameOfFormat,
+            });
+
+            var subtitle = new Subtitle();
+            new SubRip().LoadSubtitle(subtitle, InputSrt.SplitToLines(), inputFile);
+            var item = new BatchConvertItem(inputFile, 1, new SubRip().Name, subtitle);
+            await converter.Convert(item, TestContext.Current.CancellationToken);
+
+            var outputFile = Path.Combine(dir.FullName, "movie.dvbttx");
+            Assert.True(File.Exists(outputFile), "no .dvbttx written");
+
+            var reloaded = new Subtitle();
+            var format = new DvbTeletext();
+            Assert.True(format.IsMine(null!, outputFile), "output is not recognized as DVB Teletext");
+            format.LoadSubtitle(reloaded, null!, outputFile);
+            Assert.Equal(2, reloaded.Paragraphs.Count);
+            Assert.Equal("Hello world.", reloaded.Paragraphs[0].Text);
+        }
+        finally
+        {
+            dir.Delete(recursive: true);
+        }
+    }
 }

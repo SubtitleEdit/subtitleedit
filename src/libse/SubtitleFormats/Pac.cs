@@ -1672,9 +1672,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Analyze(buffer, out bool secondaryCodePageIsMain, out bool hasStory, out string language);
 
             // Lines flagged "secondary code page" in a file that is mostly not flagged - their
-            // own code page (Russian lines in a Hebrew file) is detected from their language.
+            // own code page (Russian lines in a Hebrew file) is detected from their language -
+            // unless the caller set the code page.
             _detectedSecondaryCodePage = -1;
-            if (SecondaryCodePage < 0 && !secondaryCodePageIsMain && _collectedLines == null && !IsFpc && HasSecondaryLineMarker(buffer))
+            if (CodePage < 0 && SecondaryCodePage < 0 && !secondaryCodePageIsMain && _collectedLines == null && !IsFpc && HasSecondaryLineMarker(buffer))
             {
                 _detectedSecondaryCodePage = DetectSecondaryCodePage(buffer);
             }
@@ -2372,7 +2373,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     return -1;
                 }
 
-                return PickCodePage(decodings.Select(d => (d.CodePage, d.Languages, ToSubtitle(d.Lines, l => l.IsSecondary)))) ?? -1;
+                // real words only - flagged lines can be in the main script too (e.g. a large font line)
+                return PickCodePage(decodings.Select(d => (d.CodePage, d.Languages, ToSubtitle(d.Lines, l => l.IsSecondary))), true) ?? -1;
             }
             catch
             {
@@ -2423,12 +2425,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle;
         }
 
-        private static int? PickCodePage(IEnumerable<(int CodePage, string[] Languages, Subtitle Subtitle)> candidates)
+        /// <summary>
+        /// Fewer Latin keyword hits than this are weak: gibberish from a wrong code page hits a
+        /// short word or two too (Greek read as Latin "was" Estonian).
+        /// </summary>
+        private const int MinStrongWordScore = 3;
+
+        private static int? PickCodePage(IEnumerable<(int CodePage, string[] Languages, Subtitle Subtitle)> candidates, bool requireStrongWordHits = false)
         {
             var decodings = candidates.ToList();
 
-            // Real words first, and the code page with the most of them: gibberish from a wrong
-            // code page can hit a few keywords too (Greek read as Latin "was" Estonian).
+            // Real words first, and the code page with the most of them.
             // Korean/Japanese word hits beat Chinese: Chinese is scored by common characters,
             // and Korean read as GB2312 is full of valid (if meaningless) hanzi.
             var bestCodePage = -1;
@@ -2451,23 +2458,102 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
+            if (requireStrongWordHits)
+            {
+                return bestCodePage >= 0 && bestScore >= MinStrongWordScore ? bestCodePage : (int?)null;
+            }
+
+            if (bestCodePage >= 0 && (bestScore >= MinStrongWordScore || !IsLatinCodePage(bestCodePage)))
+            {
+                return bestCodePage;
+            }
+
+            // Only ASCII bytes and no real words: Latin - the Greek and Cyrillic tables remap
+            // ASCII letters, so "OK." or "Hello" would otherwise "detect" as Greek or Russian.
+            var latin = decodings.FirstOrDefault(d => d.CodePage == CodePageLatin).Subtitle;
+            if (latin != null && latin.Paragraphs.All(p => p.Text.All(c => c < 0x80)))
+            {
+                return CodePageLatin;
+            }
+
+            // letter statistics also accept text decoded with the wrong code page, so they
+            // only decide when no code page gives (enough) dictionary words
+            var letterMatches = decodings.Where(d =>
+            {
+                var languageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(d.Subtitle);
+                return languageCode != null && Array.IndexOf(d.Languages, languageCode) >= 0 && IsPlausibleDecoding(d.CodePage, d.Subtitle);
+            }).ToList();
+
+            // a few Latin word hits lose to a decoding that is all in its own script - the one
+            // with the most letters (Thai read as Hebrew or Arabic loses letters to vowel points)
+            var dominantCodePage = -1;
+            var dominantLetters = 0;
+            foreach (var (codePage, _, sub) in letterMatches)
+            {
+                var letters = CountDominantScriptLetters(codePage, sub);
+                if (letters > dominantLetters)
+                {
+                    dominantCodePage = codePage;
+                    dominantLetters = letters;
+                }
+            }
+
+            if (dominantCodePage >= 0)
+            {
+                return dominantCodePage;
+            }
+
             if (bestCodePage >= 0)
             {
                 return bestCodePage;
             }
 
-            // letter statistics also accept text decoded with the wrong code page, so they
-            // only decide when no code page gives dictionary words
-            foreach (var (codePage, languages, sub) in decodings)
+            return letterMatches.Count > 0 ? letterMatches[0].CodePage : (int?)null;
+        }
+
+        /// <summary>
+        /// Nearly all letters in the code page's own script, for the scripts whose table keeps
+        /// ASCII letters as they are - and for Greek, real Greek: final sigma only at the end of
+        /// a word (Latin read with the Greek table has "ς" for "r" and "σ" for a final "s").
+        /// Returns the number of letters in the script, or 0.
+        /// </summary>
+        private static int CountDominantScriptLetters(int codePage, Subtitle subtitle)
+        {
+            if (codePage != CodePageGreek && codePage != CodePageHebrew && codePage != CodePageArabic && codePage != CodePageThai)
             {
-                var languageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(sub);
-                if (languageCode != null && Array.IndexOf(languages, languageCode) >= 0 && IsPlausibleDecoding(codePage, sub))
+                return 0;
+            }
+
+            int letters = 0, script = 0;
+            foreach (var p in subtitle.Paragraphs)
+            {
+                var text = p.Text;
+                for (var i = 0; i < text.Length; i++)
                 {
-                    return codePage;
+                    var c = text[i];
+                    if (!char.IsLetter(c))
+                    {
+                        continue;
+                    }
+
+                    letters++;
+                    if (IsInScript(codePage, c))
+                    {
+                        script++;
+                    }
+
+                    if (codePage == CodePageGreek)
+                    {
+                        var nextIsLetter = i + 1 < text.Length && char.IsLetter(text[i + 1]);
+                        if (c == 'ς' && nextIsLetter || c == 'σ' && !nextIsLetter)
+                        {
+                            return 0;
+                        }
+                    }
                 }
             }
 
-            return null;
+            return letters > 0 && script >= letters * 0.9 ? script : 0;
         }
 
         private static bool IsLatinCodePage(int codePage)

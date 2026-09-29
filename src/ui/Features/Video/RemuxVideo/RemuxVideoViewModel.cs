@@ -939,6 +939,14 @@ public partial class RemuxVideoViewModel : ObservableObject
             }
         }
 
+        // SCC forces .mov, and ffmpeg's mov muxer refuses the VP9/AV1 video of a .webm
+        // ("vp9 only supported in MP4"), so the remux could only fail.
+        if (subFiles.Any(IsScc) && string.Equals(videoExt, ".webm", StringComparison.OrdinalIgnoreCase))
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Video.RemuxVideoSccNotWithWebM, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
         var requiredFormat = RequiredOutputFormat(out _);
         if (requiredFormat != null && !string.Equals(SelectedOutputFormat, requiredFormat, StringComparison.OrdinalIgnoreCase))
         {

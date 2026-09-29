@@ -50,4 +50,47 @@ public class MatroskaClosedCaptionTest
         Assert.Empty(tracks);
         Assert.True(lastPosition < total / 2, $"read {lastPosition} of {total} bytes");
     }
+
+    /// <summary>
+    /// A corrupt video block (its size is smaller than its own header) must not throw - reading
+    /// returns what could be decoded.
+    /// </summary>
+    [Fact]
+    public void CorruptVideoBlockDoesNotThrow()
+    {
+        var data = File.ReadAllBytes(FilePath("sample_mkv_cea608_mpeg2.mkv"));
+        var cluster = FindBytes(data, new byte[] { 0x1F, 0x43, 0xB6, 0x75 }, 0);
+        var block = FindBytes(data, new byte[] { 0xA3, 0x41, 0x29 }, cluster); // first SimpleBlock, 297 bytes
+        Assert.True(cluster > 0 && block > cluster);
+        data[block + 1] = 0x40;
+        data[block + 2] = 0x02; // 2 bytes - less than track number + timecode + flags
+
+        var fileName = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllBytes(fileName, data);
+            using var matroska = new MatroskaFile(fileName);
+
+            var tracks = MatroskaClosedCaptionReader.Read(matroska, MatroskaClosedCaptionReader.DefaultProbeMilliseconds, null);
+
+            Assert.NotNull(tracks);
+        }
+        finally
+        {
+            File.Delete(fileName);
+        }
+    }
+
+    private static int FindBytes(byte[] data, byte[] pattern, int start)
+    {
+        for (var i = start; i <= data.Length - pattern.Length; i++)
+        {
+            if (data.AsSpan(i, pattern.Length).SequenceEqual(pattern))
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
 }

@@ -58,7 +58,7 @@ public partial class PickMp4TrackViewModel : ObservableObject
     {
         _mp4Tracks = mp4Tracks;
         _fileName = fileName;
-        WindowTitle = string.Format(Se.Language.File.PickMp4TrackX, fileName);
+        WindowTitle = UiUtil.FormatTitleWithFileName(Se.Language.File.PickMp4TrackX, fileName);
         foreach (var track in _mp4Tracks)
         {
             // A trak box without an mdia child carries no media information at all;
@@ -107,7 +107,7 @@ public partial class PickMp4TrackViewModel : ObservableObject
     public void Initialize(List<Mp4FragmentedSubtitleTrack> fragmentedTracks, string fileName)
     {
         _fileName = fileName;
-        WindowTitle = string.Format(Se.Language.File.PickMp4TrackX, fileName);
+        WindowTitle = UiUtil.FormatTitleWithFileName(Se.Language.File.PickMp4TrackX, fileName);
         foreach (var track in fragmentedTracks)
         {
             Tracks.Add(new Mp4TrackInfoDisplay

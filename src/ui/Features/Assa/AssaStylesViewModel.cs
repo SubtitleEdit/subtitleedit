@@ -200,12 +200,27 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     private async Task<bool> ValidateFileStyleNames()
     {
         var invalid = FileStyleNameValidator.FindInvalidName(FileStyles);
-        if (invalid == null)
+        if (invalid != null)
         {
-            return true;
+            SelectedFileStyle = invalid.Value.Style;
+        }
+        else
+        {
+            // Storage style names only have to be unique within a category (the default template
+            // keeps one style per name), and the style editor can rename one onto another.
+            invalid = StorageStyles
+                .GroupBy(st => StoredToCategoryLabel(st.Category), StringComparer.OrdinalIgnoreCase)
+                .Select(g => FileStyleNameValidator.FindInvalidName(g))
+                .FirstOrDefault(r => r != null);
+            if (invalid == null)
+            {
+                return true;
+            }
+
+            SelectedStorageCategory = AllCategoriesLabel;
+            SelectedStorageStyle = invalid.Value.Style;
         }
 
-        SelectedFileStyle = invalid.Value.Style;
         if (Window != null)
         {
             await MessageBox.Show(
@@ -1276,10 +1291,9 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
                 return;
             }
 
-            foreach (var style in StorageStyles.Where(s => IsSameCategoryLabel(StoredToCategoryLabel(s.Category), name)))
-            {
-                style.Category = string.Empty;
-            }
+            // Through MoveStylesToCategory, as rename and move do, so a style named like one
+            // already in Default gets a unique name instead of a duplicate.
+            MoveStylesToCategory(StorageStyles.Where(s => IsSameCategoryLabel(StoredToCategoryLabel(s.Category), name)).ToList(), string.Empty);
 
             _extraCategories.RemoveAll(c => c.Equals(name, StringComparison.OrdinalIgnoreCase));
             RebuildStorageCategories();
@@ -1360,7 +1374,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         string selectedStyleName,
         IApplyAssaStyles? applyAssaStyles)
     {
-        Title = string.Format(Se.Language.Assa.StylesTitleX, fileName);
+        Title = UiUtil.FormatTitleWithFileName(Se.Language.Assa.StylesTitleX, fileName);
         Header = subtitle.Header;
         _subtitle = new Subtitle(subtitle, false);
         _subtitleFileName = fileName;

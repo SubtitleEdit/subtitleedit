@@ -128,6 +128,58 @@ public class PacCodePageDetectionTest
     }
 
     /// <summary>
+    /// Ordinary Greek sentences have few Greek keyword hits, and read as Latin they got a couple
+    /// of random Estonian word hits - the Greek decoding (all Greek letters) must win.
+    /// </summary>
+    [Fact]
+    public void GreekSentencesAreNotDetectedAsLatin()
+    {
+        var lines = new[] { "Δεν ξέρω τι εννοείς.", "Πρέπει να πάμε σπίτι τώρα." };
+        AssertDetectsAndDecodes(Pac.CodePageGreek, lines);
+    }
+
+    [Fact]
+    public void ThaiIsNotDetectedAsHebrew()
+    {
+        var lines = new[] { "ฉันไม่รู้ว่าคุณต้องการอะไร" };
+        AssertDetectsAndDecodes(Pac.CodePageThai, lines);
+    }
+
+    /// <summary>
+    /// The Greek and Cyrillic tables remap ASCII letters, so short all-ASCII text could "detect"
+    /// as Greek or Cyrillic from letter statistics - plain ASCII without dictionary hits is Latin.
+    /// </summary>
+    [Theory]
+    [InlineData("OK.")]
+    [InlineData("Yes.")]
+    [InlineData("Hello")]
+    [InlineData("Subtitles by ACME Studios")]
+    [InlineData("Paris, 1944")]
+    public void ShortAsciiTextIsLatin(string line)
+    {
+        AssertDetectsAndDecodes(Pac.CodePageLatin, new[] { line });
+    }
+
+    private static void AssertDetectsAndDecodes(int codePage, string[] lines)
+    {
+        var path = SavePac(MakeSubtitle(lines), codePage);
+        try
+        {
+            Assert.Equal(codePage, Pac.AutoDetectEncoding(path));
+
+            var pac = new Pac();
+            var loaded = new Subtitle();
+            pac.LoadSubtitle(loaded, null, path);
+            Assert.Equal(codePage, pac.CodePage);
+            Assert.Equal(lines, loaded.Paragraphs.Select(p => p.Text));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    /// <summary>
     /// A ".rac" file has the PAC subtitle records without the PAC file header, with unrelated
     /// bytes in front of (and between) them.
     /// </summary>

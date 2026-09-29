@@ -46,27 +46,38 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             var nalLengthSize = GetNalLengthSize(track, codec);
             var decoder = new ClosedCaptionDecoder();
             var ccData = new List<CcData>();
+            var parseState = new CcDataParseState();
             long? firstFrameMs = null;
-            matroska.ReadTrackFrames(track, (timeMs, frame) =>
+            try
             {
-                if (firstFrameMs == null)
+                matroska.ReadTrackFrames(track, (timeMs, frame) =>
                 {
-                    firstFrameMs = timeMs;
-                }
+                    if (firstFrameMs == null)
+                    {
+                        firstFrameMs = timeMs;
+                    }
 
-                ccData.Clear();
-                if (codec == CcVideoCodec.Mpeg2)
-                {
-                    GetCcDataHelper.ParseCcDataFromStartCodeStream(frame, codec, ccData);
-                }
-                else
-                {
-                    GetCcDataHelper.ParseCcDataFromLengthPrefixedSample(frame, codec == CcVideoCodec.H265, nalLengthSize, ccData);
-                }
+                    ccData.Clear();
+                    if (codec == CcVideoCodec.Mpeg2)
+                    {
+                        GetCcDataHelper.ParseCcDataFromStartCodeStream(frame, codec, ccData, parseState);
+                    }
+                    else
+                    {
+                        GetCcDataHelper.ParseCcDataFromLengthPrefixedSample(frame, codec == CcVideoCodec.H265, nalLengthSize, ccData, parseState);
+                    }
 
-                decoder.AddFrame(timeMs, ccData.ToArray());
-                return decoder.HasData || timeMs - firstFrameMs.Value < probeMilliseconds;
-            }, progressCallback);
+                    decoder.AddFrame(timeMs, ccData.ToArray());
+
+                    // keep reading once caption data was seen - also if it was only padding so far
+                    return parseState.CaptionDataSeen || decoder.HasData || timeMs - firstFrameMs.Value < probeMilliseconds;
+                }, progressCallback);
+            }
+            catch (Exception exception)
+            {
+                // corrupt video data - keep what was decoded so far
+                SeLogger.Error(exception, "MatroskaClosedCaptionReader: reading video frames failed");
+            }
 
             return decoder.HasData
                 ? decoder.Finish(0) // block timestamps are on the same timeline as everything else in the file

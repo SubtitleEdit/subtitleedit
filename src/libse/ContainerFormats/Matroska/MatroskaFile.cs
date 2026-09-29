@@ -812,6 +812,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 
                 // save subtitle data
                 var dataLength = (int)(blockElement.EndPosition - _stream.Position);
+                if (dataLength < 0)
+                {
+                    // corrupt block - its header runs past the block's end
+                    _stream.Seek(blockElement.EndPosition, SeekOrigin.Begin);
+                    return null;
+                }
+
                 var data = new byte[dataLength];
                 _stream.ReadFully(data, 0, dataLength);
 

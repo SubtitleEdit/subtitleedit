@@ -543,7 +543,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
                 //debugInfo.AppendLine($"CheckForMoovVideoCea608: scanned={samplesScanned}, cea608entries={ccDataList.Count}");
 
-                DecodeCcData(ccDataList, timeScale);
+                DecodeCcData(ccDataList, timeScale, videoTracks[0]);
 
                 //debugInfo.AppendLine($"CheckForMoovVideoCea608: paragraphs={TrunCea608Subtitle?.Paragraphs.Count ?? 0}, cea708 paragraphs={TrunCea708Subtitle?.Paragraphs.Count ?? 0}");
             }
@@ -555,9 +555,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
         /// <summary>
         /// Decodes cc_data (timestamped in video track ticks) into ClosedCaptionTracks,
-        /// TrunCea608Subtitle and TrunCea708Subtitle.
+        /// TrunCea608Subtitle and TrunCea708Subtitle - shifted by the video track's edit list, like
+        /// the samples of the video they are embedded in.
         /// </summary>
-        private void DecodeCcData(List<CcData> ccDataList, double timeScale)
+        private void DecodeCcData(List<CcData> ccDataList, double timeScale, Trak videoTrak)
         {
             if (ccDataList.Count == 0)
             {
@@ -584,6 +585,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
                 decoder.AddFrame((long)Math.Round(frameTime / timeScale * 1000.0), frame.ToArray());
                 ClosedCaptionTracks = decoder.Finish(0);
+                var editListOffsetMs = GetEditListOffsetMs(videoTrak);
+                if (editListOffsetMs != 0)
+                {
+                    foreach (var key in ClosedCaptionTracks.Keys.ToList())
+                    {
+                        ShiftParagraphs(ClosedCaptionTracks[key], editListOffsetMs);
+                        if (ClosedCaptionTracks[key].Count == 0)
+                        {
+                            ClosedCaptionTracks.Remove(key);
+                        }
+                    }
+                }
 
                 // CC1 (else the first CEA-608 channel) and CEA-708 service 1 (else the first service)
                 var cea608 = ClosedCaptionTracks.Where(p => p.Key < ClosedCaptionDecoder.Cea708TrackKeyOffset).Select(p => p.Value).FirstOrDefault();
@@ -610,7 +623,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                     timeScale = videoTrack.Mdia.Mdhd.TimeScale;
                 }
 
-                DecodeCcData(_trunCcData, timeScale);
+                DecodeCcData(_trunCcData, timeScale, videoTrack);
                 _trunCcData.Clear();
             }
             catch (Exception e)

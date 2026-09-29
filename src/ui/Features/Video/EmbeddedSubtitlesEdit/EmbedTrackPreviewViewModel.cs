@@ -46,7 +46,7 @@ public partial class EmbedTrackPreviewViewModel : ObservableObject
         _matroskaTrack = matroskaTrack;
         _videoFileName = videoFileName;
         _subtitleFileName = subtitleFileName;
-        WindowTitle = string.Format(Se.Language.Video.ViewMatroskaTrackX, videoFileName);
+        WindowTitle = UiUtil.FormatTitleWithFileName(Se.Language.Video.ViewMatroskaTrackX, videoFileName);
     }
 
     private void Close()
