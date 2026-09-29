@@ -24,6 +24,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.ContainerFormats;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Chapters;
+using Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
@@ -23818,6 +23819,11 @@ public partial class MainViewModel :
                 return;
             }
 
+            if (ext == ".mxf" && fileSize > 100 && await ImportSubtitleFromMxf(fileName, skipLoadVideo))
+            {
+                return;
+            }
+
             // A subtitle-only movie (e.g. AVFoundation writes tx3g-only .mov/.mp4 files)
             // can easily be under 2 KB, so the old 2000-byte floor misrouted those to the
             // text loader; a failed MP4 parse just falls through to the handlers below.
@@ -25248,6 +25254,79 @@ public partial class MainViewModel :
         });
 
         return result.OkPressed && result.SelectedTrack != null ? result.TeletextSubtitle.Paragraphs : null;
+    }
+
+    /// <summary>
+    /// MXF (broadcast): CEA-608/708 closed captions from a SMPTE 436M ANC track, else a text
+    /// subtitle essence (e.g. TTML or SRT wrapped in the MXF).
+    /// </summary>
+    /// <returns>True if something was loaded (or the track picker was cancelled)</returns>
+    private async Task<bool> ImportSubtitleFromMxf(string fileName, bool skipLoadVideo)
+    {
+        ShowStatus(string.Format(Se.Language.General.ParsingXDotDotDot, fileName));
+        MxfParser parser;
+        try
+        {
+            parser = await Task.Run(() => new MxfParser(fileName));
+        }
+        catch (Exception e)
+        {
+            SeLogger.Error(e, "Error while parsing MXF file " + fileName);
+            ShowStatus(string.Empty);
+            return false;
+        }
+
+        ShowStatus(string.Empty);
+        if (!parser.IsValid)
+        {
+            return false;
+        }
+
+        Subtitle? subtitle = null;
+        if (parser.ClosedCaptionTracks.Count > 0)
+        {
+            var picked = await PickClosedCaptionTrackAsync(parser.ClosedCaptionTracks, 0, string.Format(Se.Language.File.PickMxfTrackX, fileName));
+            if (picked == null)
+            {
+                return true; // picker cancelled
+            }
+
+            subtitle = new Subtitle(picked);
+        }
+        else
+        {
+            foreach (var text in parser.GetSubtitles())
+            {
+                var candidate = new Subtitle();
+                if (candidate.ReloadLoadSubtitle(new List<string>(text.SplitToLines()), null, null) != null && candidate.Paragraphs.Count > 0)
+                {
+                    subtitle = candidate;
+                    break;
+                }
+            }
+        }
+
+        if (subtitle == null)
+        {
+            return false;
+        }
+
+        VideoCloseFile();
+        ResetSubtitle();
+        _subtitle = subtitle;
+        _subtitle.Renumber();
+        _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + SelectedSubtitleFormat.Extension;
+        ReplaceSubtitles(_subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
+        _converted = true;
+        ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
+        SelectAndScrollToRow(0);
+
+        if (Se.Settings.Video.AutoOpen && !skipLoadVideo)
+        {
+            await VideoOpenFile(fileName);
+        }
+
+        return true;
     }
 
     private async Task<bool> ImportClosedCaptionsFromMatroskaFile(MatroskaFile matroska, string fileName, bool skipLoadVideo)

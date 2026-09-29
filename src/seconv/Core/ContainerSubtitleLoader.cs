@@ -198,6 +198,33 @@ internal static class ContainerSubtitleLoader
         var subtitleTexts = parser.GetSubtitles();
         var images = parser.GetImages();
 
+        // CEA-608/708 closed captions from a SMPTE 436M ANC track (broadcast MXF). The track
+        // number is the caption track key: 1-4 = CC1-CC4, 100 + n = CEA-708 service n.
+        if (subtitleTexts.Count == 0 && parser.ClosedCaptionTracks.Count > 0)
+        {
+            var captionTracks = new List<LoadedTrack>();
+            foreach (var captionTrack in parser.ClosedCaptionTracks)
+            {
+                if (options.TrackNumbers.Count > 0 && !options.TrackNumbers.Contains(captionTrack.Key))
+                {
+                    continue;
+                }
+
+                var subtitle = new Subtitle();
+                subtitle.Paragraphs.AddRange(captionTrack.Value);
+                subtitle.Renumber();
+                var trackName = captionTrack.Key > ClosedCaptionExtractor.Cea708TrackKeyOffset
+                    ? $"cea708_s{captionTrack.Key - ClosedCaptionExtractor.Cea708TrackKeyOffset}"
+                    : $"cea608_cc{captionTrack.Key}";
+                captionTracks.Add(new LoadedTrack(subtitle, new SubRip(), trackName, captionTrack.Key));
+            }
+
+            if (captionTracks.Count > 0)
+            {
+                return captionTracks;
+            }
+        }
+
         if (subtitleTexts.Count == 0)
         {
             if (images.Count > 0)
