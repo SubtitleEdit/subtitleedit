@@ -155,6 +155,34 @@ public class PacSecondaryCodePageTest
         Assert.Equal(HebrewRussian, loaded.Paragraphs.Select(p => p.Text));
     }
 
+    /// <summary>
+    /// A flagged line in the same script as the rest (e.g. a large-font line) keeps the code page
+    /// the caller set - it was decoded with a "detected" secondary code page ("Γιάννη" as "Ciámmg").
+    /// </summary>
+    [Theory]
+    [InlineData(Pac.CodePageGreek, new[] { "Δεν ξέρω τι εννοείς.", "Πρέπει να πάμε σπίτι τώρα.", "Γιάννη" })]
+    [InlineData(Pac.CodePageLatin, new[] { "I don't know what you mean.", "We have to go home now.", "OK." })]
+    public void FlaggedLineUsesExplicitCodePage(int codePage, string[] lines)
+    {
+        var bytes = SavePac(lines, codePage, -1);
+        var offsets = new List<int>();
+        for (var i = 0; i < bytes.Length - 2; i++)
+        {
+            if (bytes[i] == 0xFE && bytes[i + 2] == 0x03)
+            {
+                offsets.Add(i + 1);
+            }
+        }
+
+        Assert.Equal(lines.Length, offsets.Count);
+        bytes[offsets[offsets.Count - 1]] |= 0x08; // flag the last line only
+
+        var loaded = new Subtitle();
+        new Pac { CodePage = codePage }.LoadSubtitle(loaded, bytes);
+
+        Assert.Equal(lines, loaded.Paragraphs.Select(p => p.Text));
+    }
+
     [Fact]
     public void OnlyLinesThatFitTheSecondaryCodePageAreFlagged()
     {
