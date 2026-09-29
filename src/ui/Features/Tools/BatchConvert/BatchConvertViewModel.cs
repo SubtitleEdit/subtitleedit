@@ -2424,9 +2424,11 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             }
         }
 
+        // The load-only text formats (WSB, FTE, the JSON "load only" types, ...) - like File > Open.
+        // This replaces a second, identical Subtitle.Parse that could only fail again.
         if (format == Se.Language.General.Unknown && fileInfo.Length < 20_000_000)
         {
-            subtitle = Subtitle.Parse(fileName);
+            subtitle = LoadOnlyTextFormatLoader.TryLoad(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName));
             if (subtitle != null)
             {
                 format = subtitle.OriginalFormat.Name;
