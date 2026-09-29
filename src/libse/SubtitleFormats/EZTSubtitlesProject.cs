@@ -51,15 +51,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
   <Subtitles count='[SUBTITLE_COUNT]'>
   </Subtitles>
 </EZTSubtitlesProject>".Replace("'", "\"").Replace("[SUBTITLE_COUNT]", subtitle.Paragraphs.Count.ToString(CultureInfo.InvariantCulture));
-            template = template.Replace("23.976", Configuration.Settings.General.CurrentFrameRate.ToString(CultureInfo.InvariantCulture));
-            if (Configuration.Settings.General.CurrentFrameRate % 1.0 < 0.001)
-            {
-                template = template.Replace("30drop", Configuration.Settings.General.CurrentFrameRate.ToString(CultureInfo.InvariantCulture));
-            }
-            else
-            {
-                template = template.Replace("30drop", ((int)Math.Round(Configuration.Settings.General.CurrentFrameRate)).ToString(CultureInfo.InvariantCulture) + "drop");
-            }
+            var frameRate = Configuration.Settings.General.CurrentFrameRate;
+            template = template.Replace("23.976", frameRate.ToString(CultureInfo.InvariantCulture));
+            template = template.Replace("30drop", ToTimeCodeStandard(frameRate));
             xml.LoadXml(template);
             var subtitlesNode = xml.DocumentElement.SelectSingleNode("Subtitles");
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
@@ -138,10 +132,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 return;
             }
-            var frameRateNode = doc.SelectSingleNode("//VideoFrameRate");
-            if (frameRateNode != null && double.TryParse(frameRateNode.InnerText, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var frameRate))
+            // Cues are hh:mm:ss:ff in the time code standard, which need not match the video
+            // frame rate (a 23.976 fps project can use "30drop" cues, so ff runs up to 29).
+            var timeCodeStandardNode = doc.SelectSingleNode("//TimeCodeStandard");
+            if (timeCodeStandardNode != null && TryParseTimeCodeStandard(timeCodeStandardNode.InnerText, out var timeCodeFrameRate))
             {
-                Configuration.Settings.General.CurrentFrameRate = frameRate;
+                Configuration.Settings.General.CurrentFrameRate = timeCodeFrameRate;
+            }
+            else
+            {
+                // The value carries a unit ("23.976 fps"), which double.TryParse never accepted.
+                var frameRateNode = doc.SelectSingleNode("//VideoFrameRate");
+                if (frameRateNode != null && TryParseTimeCodeStandard(frameRateNode.InnerText, out var frameRate))
+                {
+                    Configuration.Settings.General.CurrentFrameRate = frameRate;
+                }
             }
 
             var splitChars = new[] { ':' };
@@ -167,6 +172,62 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 subtitle.Paragraphs.Add(new Paragraph(text, startMs, endMs));
             }
             subtitle.Renumber();
+        }
+
+        /// <summary>
+        /// EZTitles time code standards: "24", "25", "30", "30drop", "50", "60", "60drop".
+        /// </summary>
+        public static bool TryParseTimeCodeStandard(string text, out double frameRate)
+        {
+            frameRate = 0;
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return false;
+            }
+
+            var s = text.Trim().ToLowerInvariant();
+            var drop = s.EndsWith("drop", StringComparison.Ordinal);
+            if (drop)
+            {
+                s = s.Substring(0, s.Length - 4);
+            }
+
+            s = s.Replace("fps", string.Empty).Trim();
+            if (!double.TryParse(s, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var rate) || rate <= 0)
+            {
+                return false;
+            }
+
+            frameRate = drop ? rate * 1000.0 / 1001.0 : rate;
+            if (Math.Abs(frameRate - 30000.0 / 1001.0) < 0.01)
+            {
+                frameRate = 29.97;
+            }
+            else if (Math.Abs(frameRate - 60000.0 / 1001.0) < 0.01)
+            {
+                frameRate = 59.94;
+            }
+            else if (Math.Abs(frameRate - 24000.0 / 1001.0) < 0.01)
+            {
+                frameRate = 23.976;
+            }
+
+            return true;
+        }
+
+        public static string ToTimeCodeStandard(double frameRate)
+        {
+            if (Math.Abs(frameRate - 29.97) < 0.01)
+            {
+                return "30drop";
+            }
+
+            if (Math.Abs(frameRate - 59.94) < 0.01)
+            {
+                return "60drop";
+            }
+
+            return ((int)Math.Round(frameRate)).ToString(CultureInfo.InvariantCulture);
         }
     }
 }
