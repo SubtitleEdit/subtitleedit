@@ -166,10 +166,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return records;
             }
 
+            // Subtitles without text (timing templates) have no row to find, so the first text
+            // record may not be the first record: chain backwards through any records that end
+            // exactly where the known one starts.
+            pos = FindPrecedingRecords(data, pos);
+
             while (pos + 4 <= data.Length)
             {
                 var size = BitConverter.ToInt32(data, pos);
-                if (size <= 19 || pos + 4 + size > data.Length)
+                if (size < 19 || pos + 4 + size > data.Length)
                 {
                     break;
                 }
@@ -197,15 +202,49 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     i = next;
                 }
 
-                if (record.Rows.Count > 0)
-                {
-                    records.Add(record);
-                }
-
+                records.Add(record);
                 pos = recordEnd;
             }
 
             return records;
+        }
+
+        private static int FindPrecedingRecords(byte[] data, int sizePos)
+        {
+            var nextNumber = BitConverter.ToInt16(data, sizePos + 4);
+            var found = true;
+            while (found && sizePos > 0)
+            {
+                found = false;
+                for (var p = sizePos - 4 - 19; p >= 0; p--)
+                {
+                    var size = BitConverter.ToInt32(data, p);
+                    if (p + 4 + size != sizePos || !IsPlausibleRecordHeader(data, p + 4))
+                    {
+                        continue;
+                    }
+
+                    var number = BitConverter.ToInt16(data, p + 4);
+                    if (number < 1 || number > nextNumber)
+                    {
+                        continue;
+                    }
+
+                    sizePos = p;
+                    nextNumber = number;
+                    found = true;
+                    break;
+                }
+            }
+
+            return sizePos;
+        }
+
+        private static bool IsPlausibleRecordHeader(byte[] data, int recordStart)
+        {
+            return data[recordStart + 3] < 60 && data[recordStart + 4] < 60 && data[recordStart + 5] < 60 &&
+                   data[recordStart + 7] < 60 && data[recordStart + 8] < 60 && data[recordStart + 9] < 60 &&
+                   data[recordStart + 18] <= 8; // row count
         }
 
         private static int FindRecordStart(byte[] data, int firstRowLengthPos)
@@ -220,7 +259,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             var size = BitConverter.ToInt32(data, sizePos);
-            if (size <= 19 || recordStart + size > data.Length)
+            if (size < 19 || recordStart + size > data.Length)
             {
                 return -1;
             }
