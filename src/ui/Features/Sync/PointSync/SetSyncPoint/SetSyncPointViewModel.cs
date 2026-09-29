@@ -70,6 +70,10 @@ public partial class SetSyncPointViewModel : ObservableObject
     private bool _closed; // set by OnClosing; stops the posted half of Initialize from starting a pump on a disposed player
     private UiTickPump _positionTimer = new(TimeSpan.FromMilliseconds(150)); // posted ticks, not a DispatcherTimer - see UiTickPump
     private List<SubtitleLineViewModel> _subtitleLines = new List<SubtitleLineViewModel>();
+
+    // The lines are never re-timed in this dialog, so the waveform's sorted copy is built once
+    // instead of on every 150 ms tick (as in VisualSync).
+    private List<SubtitleLineViewModel>? _sortedLines;
     private VideoPreviewSubtitleContext _previewContext = VideoPreviewSubtitleContext.Default;
     private bool _updateAudioVisualizer;
     private bool _updateTimeCodeFromVideo;
@@ -107,6 +111,7 @@ public partial class SetSyncPointViewModel : ObservableObject
         _audioTrackId = audioTrackId;
         Paragraphs = new ObservableCollection<SubtitleDisplayItem>(paragraphs.Select(p => new SubtitleDisplayItem(p)));
         _subtitleLines = paragraphs;
+        _sortedLines = null;
 
         // Carried in so the subtitle drawn on the video looks like the one on the main window's video.
         _previewContext = previewContext;
@@ -266,7 +271,7 @@ public partial class SetSyncPointViewModel : ObservableObject
             ? null
             : Paragraphs[selectedParagraphIndex];
 
-        var subtitle = _subtitleLines.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
+        var subtitle = _sortedLines ??= _subtitleLines.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
         var firstSelectedIndex = -1;
 
         var mediaPlayerSeconds = vp.Position;

@@ -8,6 +8,9 @@ public static partial class MergeAndSplitHelper
         public int ParagraphCount { get; set; }
         public List<MergeResultItem> MergeResultItems { get; set; } = [];
         public bool HasError { get; set; }
+
+        /// <summary>The merge ran through the last row it was given without stopping.</summary>
+        public bool ReachedEndOfRows { get; set; }
         public bool NoSentenceEndingSource { get; set; }
         public bool NoSentenceEndingTarget { get; set; }
 

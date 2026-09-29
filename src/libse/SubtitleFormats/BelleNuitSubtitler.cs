@@ -161,6 +161,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
+
+            // The root element must be <xmldict>: don't copy and XML-parse every other file
+            // that reaches this format during auto-detect.
+            if (!lines.Exists(line => line.Contains("<xmldict")))
+            {
+                _errorCount = 1;
+                return;
+            }
+
             var sb = new StringBuilder();
             foreach (var line in lines)
             {

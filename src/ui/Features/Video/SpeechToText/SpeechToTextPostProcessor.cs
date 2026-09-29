@@ -534,7 +534,7 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
 
             const int maxMillisecondsBetweenLines = 100;
             var shortLineCharsCount = Configuration.Settings.General.SubtitleLineMaximumLength;
-            var deleteItems = new List<Paragraph>();
+            var deleteItems = new HashSet<Paragraph>(ReferenceEqualityComparer.Instance);
 
             var s = new Subtitle(subtitle);
             for (var i = 0; i < s.Paragraphs.Count - 1; i++)
@@ -586,9 +586,9 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
                 }
             }
 
-            foreach (var deleteItem in deleteItems)
+            if (deleteItems.Count > 0)
             {
-                s.Paragraphs.Remove(deleteItem);
+                s.Paragraphs.RemoveAll(deleteItems.Contains);
             }
 
             s.Renumber();

@@ -69,6 +69,49 @@ public class MergeAndSplitHelperTests
         Assert.Equal(count, rowsWithText);
     }
 
+    private sealed class EchoTranslator : IAutoTranslator
+    {
+        public string Name => "Echo";
+        public string Url => "https://example.com";
+        public string Error { get; set; } = string.Empty;
+        public int MaxCharacters => 1500;
+        public void Initialize() { }
+        public List<TranslationPair> GetSupportedSourceLanguages() => new();
+        public List<TranslationPair> GetSupportedTargetLanguages() => new();
+        public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken) => Task.FromResult(text);
+    }
+
+    // Rows are merged into one request as long as they fit, however many that is - also past the
+    // first rows looked at, which are only a window that grows while the merge keeps going.
+    [Theory]
+    [InlineData(10)]
+    [InlineData(64)]
+    [InlineData(65)]
+    [InlineData(200)]
+    [InlineData(1000)]
+    public async Task MergeAndTranslateIfPossible_MergesAsManyRowsAsFit(int rowCount)
+    {
+        MergeAndSplitHelper.MergeSplitProblems = false;
+        var maxChars = Math.Min(1500, Configuration.Settings.Tools.AutoTranslateMaxBytes);
+        var rowsThatFit = 1 + (maxChars - 3) / (Utilities.UrlEncodeLength(Environment.NewLine) + 3);
+        var expected = Math.Min(rowCount, rowsThatFit);
+        Assert.True(rowsThatFit > 64);
+        var rows = MakeRows(Enumerable.Range(0, rowCount).Select(_ => "Hi.").ToArray());
+
+        var count = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+            rows,
+            new TranslationPair("English", "en"),
+            new TranslationPair("Danish", "da"),
+            0,
+            new EchoTranslator(),
+            forceSingleLineMode: false,
+            CancellationToken.None);
+
+        Assert.Equal(expected, count);
+        Assert.All(rows.Take(expected), r => Assert.Equal("Hi.", r.TranslatedText));
+        Assert.All(rows.Skip(expected), r => Assert.True(string.IsNullOrEmpty(r.TranslatedText)));
+    }
+
     // Issue #14230: two lines are merged and translated as one sentence, and the reply contains
     // a clock time written with a period ("04.00 uur") where the English source had a colon
     // ("4:00am"). The split back over the two rows must not mistake that period for the end of

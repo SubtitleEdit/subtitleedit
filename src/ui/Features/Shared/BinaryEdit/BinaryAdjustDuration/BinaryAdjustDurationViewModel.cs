@@ -67,9 +67,11 @@ public partial class BinaryAdjustDurationViewModel : ObservableObject
 
     public void AdjustDuration(List<BinarySubtitleItem> subtitles, List<int>? selectedIndices = null)
     {
-        var itemsToAdjust = selectedIndices != null && selectedIndices.Count > 0
-            ? selectedIndices.Select(i => subtitles[i]).ToList()
-            : subtitles;
+        // Indexes, not items: looking each item up with IndexOf to find its next cue made
+        // "adjust all" O(N^2).
+        IReadOnlyList<int> itemsToAdjust = selectedIndices != null && selectedIndices.Count > 0
+            ? selectedIndices
+            : Enumerable.Range(0, subtitles.Count).ToList();
 
         if (SelectedAdjustType.Type == BinaryAdjustDurationType.Seconds)
         {
@@ -89,11 +91,11 @@ public partial class BinaryAdjustDurationViewModel : ObservableObject
         }
     }
 
-    private void DoAdjustViaSeconds(List<BinarySubtitleItem> allSubtitles, List<BinarySubtitleItem> itemsToAdjust)
+    private void DoAdjustViaSeconds(List<BinarySubtitleItem> allSubtitles, IReadOnlyList<int> itemsToAdjust)
     {
-        foreach (var subtitle in itemsToAdjust)
+        foreach (var index in itemsToAdjust)
         {
-            var index = allSubtitles.IndexOf(subtitle);
+            var subtitle = allSubtitles[index];
             var nextSubtitle = index + 1 < allSubtitles.Count ? allSubtitles[index + 1] : null;
             
             var newEndTime = subtitle.EndTime + TimeSpan.FromSeconds(AdjustSeconds);
@@ -122,11 +124,11 @@ public partial class BinaryAdjustDurationViewModel : ObservableObject
         }
     }
 
-    private void DoAdjustViaFixed(List<BinarySubtitleItem> allSubtitles, List<BinarySubtitleItem> itemsToAdjust)
+    private void DoAdjustViaFixed(List<BinarySubtitleItem> allSubtitles, IReadOnlyList<int> itemsToAdjust)
     {
-        foreach (var subtitle in itemsToAdjust)
+        foreach (var index in itemsToAdjust)
         {
-            var index = allSubtitles.IndexOf(subtitle);
+            var subtitle = allSubtitles[index];
             var nextSubtitle = index + 1 < allSubtitles.Count ? allSubtitles[index + 1] : null;
             
             var newDuration = TimeSpan.FromSeconds(AdjustFixed);
@@ -148,11 +150,11 @@ public partial class BinaryAdjustDurationViewModel : ObservableObject
         }
     }
 
-    private void DoAdjustViaPercent(List<BinarySubtitleItem> allSubtitles, List<BinarySubtitleItem> itemsToAdjust)
+    private void DoAdjustViaPercent(List<BinarySubtitleItem> allSubtitles, IReadOnlyList<int> itemsToAdjust)
     {
-        foreach (var subtitle in itemsToAdjust)
+        foreach (var index in itemsToAdjust)
         {
-            var index = allSubtitles.IndexOf(subtitle);
+            var subtitle = allSubtitles[index];
             var nextSubtitle = index + 1 < allSubtitles.Count ? allSubtitles[index + 1] : null;
 
             // Set the duration TO the percentage of the original (110% = 10% longer), like the
@@ -175,11 +177,11 @@ public partial class BinaryAdjustDurationViewModel : ObservableObject
         }
     }
 
-    private void DoAdjustViaRecalculate(List<BinarySubtitleItem> allSubtitles, List<BinarySubtitleItem> itemsToAdjust)
+    private void DoAdjustViaRecalculate(List<BinarySubtitleItem> allSubtitles, IReadOnlyList<int> itemsToAdjust)
     {
-        foreach (var subtitle in itemsToAdjust)
+        foreach (var index in itemsToAdjust)
         {
-            var index = allSubtitles.IndexOf(subtitle);
+            var subtitle = allSubtitles[index];
             // Strip tags/line breaks so the recalculated durations land at the requested CPS
             var charCount = (double)(subtitle.Text ?? string.Empty).CountCharacters(true);
 
