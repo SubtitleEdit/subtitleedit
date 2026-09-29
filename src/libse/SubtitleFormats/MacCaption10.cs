@@ -1,7 +1,9 @@
-﻿using Nikse.SubtitleEdit.Core.Cea708;
+﻿using Nikse.SubtitleEdit.Core.Cea608;
+using Nikse.SubtitleEdit.Core.Cea708;
 using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -180,6 +182,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var timeCodeList = new List<TimeCode>();
             var header = new StringBuilder();
             var state = new CommandState();
+            var closedCaptionDecoder = new ClosedCaptionDecoder();
             char[] splitChars = { ':', ';', ',' };
             for (var index = 0; index < lines.Count; index++)
             {
@@ -200,7 +203,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
 
                     var startTime = DecodeTimeCodeFrames(s.Substring(0, match.Length - 1), splitChars);
-                    var text = GetText(timeCodeList.Count, s.Substring(match.Index + match.Length).Trim(), index == lines.Count - 1, state);
+                    var ancData = s.Substring(match.Index + match.Length).Trim();
+                    closedCaptionDecoder.AddFrame((long)Math.Round(startTime.TotalMilliseconds), GetCcData(ancData));
+                    var text = GetText(timeCodeList.Count, ancData, index == lines.Count - 1, state);
                     timeCodeList.Add(startTime);
                     if (string.IsNullOrEmpty(text))
                     {
@@ -212,8 +217,44 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
+            // Most MCC files (e.g. from MacCaption or a CEA-608 upconvert) carry CEA-608 in the
+            // caption data packets too, and many only CEA-608 with CEA-708 padding - use CEA-608
+            // CC1 (else the first caption track) when the CEA-708 data gave no text.
+            if (subtitle.Paragraphs.Count == 0)
+            {
+                var tracks = closedCaptionDecoder.Finish(0);
+                if (tracks.Count > 0)
+                {
+                    subtitle.Paragraphs.AddRange(tracks.TryGetValue(1, out var cc1) ? cc1 : tracks.First().Value);
+                }
+            }
+
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();
+        }
+
+        /// <summary>
+        /// The valid cc_data triplets (CEA-608 and CEA-708) of one caption distribution packet.
+        /// </summary>
+        private static Cea608.CcData[] GetCcData(string input)
+        {
+            var bytes = HexStringToByteArray(GetHex(input));
+            if (bytes.Length < 10)
+            {
+                return Array.Empty<Cea608.CcData>();
+            }
+
+            try
+            {
+                return new Smpte291M(bytes).CcDataSectionCcData.CcData
+                    .Where(cc => cc.Valid)
+                    .Select(cc => new Cea608.CcData(cc.Type, cc.Data1, cc.Data2))
+                    .ToArray();
+            }
+            catch
+            {
+                return Array.Empty<Cea608.CcData>();
+            }
         }
 
         public static string GetText(int lineIndex, string input, bool flush, CommandState state)
