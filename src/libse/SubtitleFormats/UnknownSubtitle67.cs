@@ -48,7 +48,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
 
             string allText = JoinLines(lines);
-            if (!allText.Contains("<Cue") && allText.Contains("value="))
+            // Only <Cue> elements are read, so without one there is nothing to parse (the old
+            // guard let every file without "value=" through to a full XML parse).
+            if (!allText.Contains("<Cue"))
             {
                 return;
             }

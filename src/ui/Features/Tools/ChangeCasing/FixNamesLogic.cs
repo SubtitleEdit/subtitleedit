@@ -45,11 +45,19 @@ internal static class FixNamesLogic
 
         var usedNames = new HashSet<string>();
         var result = new List<(string Name, bool IsChecked)>();
+        var words = GetLetterRuns(text);
 
         foreach (var name in allNames)
         {
             // filter out invalid names
             if (name.Length <= 1 || name == name.ToLowerInvariant())
+            {
+                continue;
+            }
+
+            // Every boundary char is a non-letter, so a letters-only name can only match a whole
+            // letter run - skip the full-text scan (~8000 names x the whole file) when none is equal.
+            if (IsLettersOnly(name) && !words.Contains(name))
             {
                 continue;
             }
@@ -116,6 +124,42 @@ internal static class FixNamesLogic
         }
 
         return text;
+    }
+
+    private static HashSet<string> GetLetterRuns(string text)
+    {
+        var words = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var start = -1;
+        for (var i = 0; i <= text.Length; i++)
+        {
+            if (i < text.Length && char.IsLetter(text[i]))
+            {
+                if (start < 0)
+                {
+                    start = i;
+                }
+            }
+            else if (start >= 0)
+            {
+                words.Add(text.Substring(start, i - start));
+                start = -1;
+            }
+        }
+
+        return words;
+    }
+
+    private static bool IsLettersOnly(string name)
+    {
+        foreach (var c in name)
+        {
+            if (!char.IsLetter(c))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private static bool IsWordBoundary(string text, int startIndex, string name)

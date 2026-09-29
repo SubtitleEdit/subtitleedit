@@ -131,6 +131,19 @@ Second line.
         Assert.DoesNotContain(names, n => n.Name == "Unused");
     }
 
+    // Names are only matched as whole words - "joe" inside "joey" is not a hit - while names
+    // with non-letters ("O'Brien", "Van Damme") still go through the full-text search.
+    [Fact]
+    public void FixNamesLogic_MatchesWholeWordsOnly()
+    {
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph("<i>joey</i> met o'brien and van damme.\r\n-ÅSA? paris-", 0, 2000));
+
+        var names = FixNamesLogic.FindNames(subtitle, ["Joe", "O'Brien", "Van Damme", "Åsa", "Paris", "Dam"], "joey", "en_US");
+
+        Assert.Equal(["O'Brien", "Van Damme", "Åsa", "Paris"], names.Select(n => n.Name).ToArray());
+    }
+
     [Fact]
     public void FixNamesLogic_LeavesCommonWordsUnchecked()
     {

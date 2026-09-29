@@ -67,16 +67,38 @@ public static partial class MergeAndSplitHelper
         var noSentenceEndingSource = IsNonMergeLanguage(source);
         var noSentenceEndingTarget = IsNonMergeLanguage(target);
 
-        var tempSubtitle = CreateTempSubtitle(rows);
-        // source.Code, not target.Code: HandleFormatting feeds this to PreTranslate (whose
-        // rules are guarded by source == "en") and to Formatting.SetTagsAndReturnTrimmed,
-        // which decides un-breaking from LanguagesAllowingLineMerging - both are properties
-        // of the text being sent, not of the language being requested.
-        var formattingList = HandleFormatting(tempSubtitle, index, source.Code);
         var maxChars = CalculateMaxChars(autoTranslator, forceSingleLineMode);
-
         var joinContinuousRowsWithLineBreak = autoTranslator is ILineBreakPreservingTranslator;
-        var mergeResult = TryMergeLines(tempSubtitle, index, maxChars, ref noSentenceEndingSource, noSentenceEndingTarget, source.TwoLetterIsoLanguageName ?? source.Code, joinContinuousRowsWithLineBreak);
+
+        // Only the rows from index up to where the merge stops are used, so copy and format a
+        // window of rows (indexes relative to it) instead of every remaining row per request -
+        // that was O(N^2) over a run, and per line in single-line mode. The merge is sequential,
+        // so when it runs to the end of a window that is not the end of the file, redo it with a
+        // bigger window: the result is the same as with all remaining rows.
+        var initialNoSentenceEndingSource = noSentenceEndingSource;
+        var windowSize = InitialWindowSize;
+        TranslateRow[] tempSubtitle;
+        List<Formatting> formattingList;
+        MergeResult mergeResult;
+        while (true)
+        {
+            var count = Math.Max(0, Math.Min(windowSize, rows.Count - index));
+            tempSubtitle = CreateTempSubtitle(rows, index, count);
+            // source.Code, not target.Code: HandleFormatting feeds this to PreTranslate (whose
+            // rules are guarded by source == "en") and to Formatting.SetTagsAndReturnTrimmed,
+            // which decides un-breaking from LanguagesAllowingLineMerging - both are properties
+            // of the text being sent, not of the language being requested.
+            formattingList = HandleFormatting(tempSubtitle, 0, source.Code);
+            noSentenceEndingSource = initialNoSentenceEndingSource;
+            mergeResult = TryMergeLines(tempSubtitle, 0, maxChars, ref noSentenceEndingSource, noSentenceEndingTarget, source.TwoLetterIsoLanguageName ?? source.Code, joinContinuousRowsWithLineBreak);
+            if (!mergeResult.ReachedEndOfRows || index + count >= rows.Count)
+            {
+                break;
+            }
+
+            windowSize *= 2;
+        }
+
         if (mergeResult.HasError)
         {
             return 0;
@@ -142,16 +164,25 @@ public static partial class MergeAndSplitHelper
         }
     }
 
-    private static TranslateRow[] CreateTempSubtitle(ObservableCollection<TranslateRow> rows)
+    private const int InitialWindowSize = 64;
+
+    private static TranslateRow[] CreateTempSubtitle(ObservableCollection<TranslateRow> rows, int start, int count)
     {
-        return rows.Select(p => new TranslateRow
+        var result = new TranslateRow[count];
+        for (var i = 0; i < count; i++)
         {
-            Number = p.Number,
-            Show = p.Show,
-            Hide = p.Hide,
-            Duration = p.Duration,
-            Text = p.Text
-        }).ToArray();
+            var p = rows[start + i];
+            result[i] = new TranslateRow
+            {
+                Number = p.Number,
+                Show = p.Show,
+                Hide = p.Hide,
+                Duration = p.Duration,
+                Text = p.Text
+            };
+        }
+
+        return result;
     }
 
     private static int CalculateMaxChars(IAutoTranslator autoTranslator, bool forceSingleLineMode)
@@ -233,6 +264,7 @@ public static partial class MergeAndSplitHelper
         string mergedTranslation,
         Action<Action> applyRowUpdate)
     {
+        // tempSubtitle is the window starting at rows[index]
         var sourceTexts = tempSubtitle.Select(p => p.Text).ToList();
         var mergeCount = mergeResult.ParagraphCount;
         var sourceAbbreviations = AbbreviationsForLanguage(mergeResult.SourceLanguage);
@@ -240,7 +272,7 @@ public static partial class MergeAndSplitHelper
 
         // Strategy 1: Split by line ending chars where period count matches
         var splitResult = SplitMultipleLines(mergeResult, mergedTranslation, target.Code);
-        if (IsSplitValid(splitResult, mergeCount, sourceTexts, index) &&
+        if (IsSplitValid(splitResult, mergeCount, sourceTexts, 0) &&
             HasMatchingPeriodCount(mergeResult.Text, mergedTranslation, sourceAbbreviations, targetAbbreviations))
         {
             return ApplySplitResult(rows, target, index, formattingList, splitResult, applyRowUpdate);
@@ -256,7 +288,7 @@ public static partial class MergeAndSplitHelper
         // Strategy 3: Split with periods in numbers normalized
         var noPeriodsInNumbersTranslation = FixPeriodInNumbers(mergedTranslation);
         splitResult = SplitMultipleLines(mergeResult, noPeriodsInNumbersTranslation, target.Code);
-        if (IsSplitValid(splitResult, mergeCount, sourceTexts, index) &&
+        if (IsSplitValid(splitResult, mergeCount, sourceTexts, 0) &&
             HasMatchingPeriodCount(mergeResult.Text, noPeriodsInNumbersTranslation, sourceAbbreviations, targetAbbreviations))
         {
             return ApplySplitResult(rows, target, index, formattingList, splitResult, applyRowUpdate, restorePeriodPlaceholder: true);
@@ -269,7 +301,7 @@ public static partial class MergeAndSplitHelper
         // (#14484). The proportion check catches that shape: a row cut off at "Mrs." is far
         // shorter than its source, and the final row is far longer.
         splitResult = SplitMultipleLines(mergeResult, mergedTranslation, target.Code);
-        if (IsSplitValid(splitResult, mergeCount, sourceTexts, index) &&
+        if (IsSplitValid(splitResult, mergeCount, sourceTexts, 0) &&
             HasPlausibleProportions(mergeResult, splitResult))
         {
             return ApplySplitResult(rows, target, index, formattingList, splitResult, applyRowUpdate);
@@ -626,6 +658,7 @@ public static partial class MergeAndSplitHelper
         InitializeFirstItem(result, context);
 
         // Process remaining lines
+        result.ReachedEndOfRows = true;
         for (var i = index + 1; i < sourceSubtitle.Length; i++)
         {
             var currentRow = sourceSubtitle[i];
@@ -633,17 +666,20 @@ public static partial class MergeAndSplitHelper
             // A music line kept in the source language ends the request; the next call copies it.
             if (IsKeptUntranslated(currentRow.Text))
             {
+                result.ReachedEndOfRows = false;
                 break;
             }
 
             if (ExceedsMaxSize(result, context, currentRow, maxTextSize))
             {
+                result.ReachedEndOfRows = false;
                 break;
             }
 
             var continueProcessing = ProcessRow(result, context, currentRow, i, noSentenceEndingSource);
             if (!continueProcessing)
             {
+                result.ReachedEndOfRows = false;
                 break;
             }
         }
