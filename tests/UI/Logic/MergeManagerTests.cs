@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
@@ -40,6 +41,77 @@ public class MergeManagerTests
         Assert.Single(subtitles);
         Assert.Equal("Translated one Translated two", subtitles[0].Text);
         Assert.Equal("Original one Original two", subtitles[0].OriginalText);
+    }
+
+    // Issue #15441: merging a two-line subtitle with an empty line must not unbreak it.
+    [Theory]
+    [InlineData(MergeManager.BreakMode.Normal)]
+    [InlineData(MergeManager.BreakMode.AutoBreak)]
+    public void MergeSelectedLines_WithEmptyLine_ShouldKeepLineBreaks(MergeManager.BreakMode breakMode)
+    {
+        var mergeManager = new MergeManager();
+        var twoLines = "САСОН ГАБАЙ" + Environment.NewLine + "ДОУДИ ШУА";
+        var subtitles = new ObservableCollection<SubtitleLineViewModel>
+        {
+            new() { Number = 1, Text = twoLines, OriginalText = "Sasson Gabai" + Environment.NewLine + "Doudi Shoua", StartTime = TimeSpan.FromSeconds(1), EndTime = TimeSpan.FromSeconds(2) },
+            new() { Number = 2, Text = string.Empty, OriginalText = string.Empty, StartTime = TimeSpan.FromSeconds(2), EndTime = TimeSpan.FromSeconds(3) },
+        };
+
+        mergeManager.MergeSelectedLines(subtitles, [subtitles[0], subtitles[1]], breakMode);
+
+        Assert.Single(subtitles);
+        Assert.Equal(twoLines, subtitles[0].Text);
+        Assert.Equal("Sasson Gabai" + Environment.NewLine + "Doudi Shoua", subtitles[0].OriginalText);
+        Assert.Equal(TimeSpan.FromSeconds(3), subtitles[0].EndTime);
+    }
+
+    [Fact]
+    public void MergeSelectedLines_EmptyLineFirst_ShouldKeepLineBreaks()
+    {
+        var mergeManager = new MergeManager();
+        var twoLines = "Hi" + Environment.NewLine + "there";
+        var subtitles = new ObservableCollection<SubtitleLineViewModel>
+        {
+            new() { Number = 1, Text = " ", StartTime = TimeSpan.FromSeconds(1), EndTime = TimeSpan.FromSeconds(2) },
+            new() { Number = 2, Text = twoLines, StartTime = TimeSpan.FromSeconds(2), EndTime = TimeSpan.FromSeconds(3) },
+        };
+
+        mergeManager.MergeSelectedLines(subtitles, [subtitles[0], subtitles[1]]);
+
+        Assert.Single(subtitles);
+        Assert.Equal(twoLines, subtitles[0].Text);
+    }
+
+    [Fact]
+    public void MergeSelectedLines_EmptyLineInMiddle_ShouldNotAddEmptyLine()
+    {
+        var mergeManager = new MergeManager();
+        var subtitles = new ObservableCollection<SubtitleLineViewModel>
+        {
+            new() { Number = 1, Text = "One", StartTime = TimeSpan.FromSeconds(1), EndTime = TimeSpan.FromSeconds(2) },
+            new() { Number = 2, Text = string.Empty, StartTime = TimeSpan.FromSeconds(2), EndTime = TimeSpan.FromSeconds(3) },
+            new() { Number = 3, Text = "Two", StartTime = TimeSpan.FromSeconds(3), EndTime = TimeSpan.FromSeconds(4) },
+        };
+
+        mergeManager.MergeSelectedLines(subtitles, [subtitles[0], subtitles[1], subtitles[2]], MergeManager.BreakMode.KeepBreaks);
+
+        Assert.Single(subtitles);
+        Assert.Equal("One" + Environment.NewLine + "Two", subtitles[0].Text);
+    }
+
+    [Fact]
+    public void MergeSelectedLines_Subtitle_WithEmptyLine_ShouldKeepLineBreaks()
+    {
+        var mergeManager = new MergeManager();
+        var twoLines = "САСОН ГАБАЙ" + Environment.NewLine + "ДОУДИ ШУА";
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph(twoLines, 1000, 2000));
+        subtitle.Paragraphs.Add(new Paragraph(string.Empty, 2000, 3000));
+
+        var result = mergeManager.MergeSelectedLines(subtitle, [0, 1]);
+
+        Assert.Single(result.Paragraphs);
+        Assert.Equal(twoLines, result.Paragraphs[0].Text);
     }
 
     [Fact]
