@@ -69,6 +69,9 @@
     <Content Include="Files\sample_TS_cea608_mpeg2.ts">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Files\sample_TS_cea608_scte20.ts">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Files\sample_fragmented_mp4_cea608_708.mp4">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

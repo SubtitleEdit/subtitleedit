@@ -121,6 +121,7 @@ namespace Nikse.SubtitleEdit.Core.Cea608
         /// </summary>
         public static void ParseCcDataFromStartCodeStream(ReadOnlySpan<byte> data, CcVideoCodec codec, List<CcData> fieldData)
         {
+            var topFieldFirst = true; // from the MPEG-2 picture coding extension, which comes before the user data
             var position = data.IndexOf(StartCode);
             while (position >= 0)
             {
@@ -132,12 +133,12 @@ namespace Nikse.SubtitleEdit.Core.Cea608
 
                 var next = data.Slice(unitStart).IndexOf(StartCode);
                 var unitEnd = next < 0 ? data.Length : unitStart + next;
-                ParseStartCodeUnit(data.Slice(unitStart, unitEnd - unitStart), codec, fieldData);
+                ParseStartCodeUnit(data.Slice(unitStart, unitEnd - unitStart), codec, fieldData, ref topFieldFirst);
                 position = next < 0 ? -1 : unitEnd;
             }
         }
 
-        private static void ParseStartCodeUnit(ReadOnlySpan<byte> unit, CcVideoCodec codec, List<CcData> fieldData)
+        private static void ParseStartCodeUnit(ReadOnlySpan<byte> unit, CcVideoCodec codec, List<CcData> fieldData, ref bool topFieldFirst)
         {
             if (unit.Length < 2)
             {
@@ -145,9 +146,17 @@ namespace Nikse.SubtitleEdit.Core.Cea608
             }
 
             var b = unit[0];
-            if ((codec == CcVideoCodec.Mpeg2 || codec == CcVideoCodec.Unknown) && b == 0xB2)
+            var isMpeg2 = codec == CcVideoCodec.Mpeg2 || codec == CcVideoCodec.Unknown;
+            if (isMpeg2 && b == 0xB5 && unit.Length >= 5 && (unit[1] >> 4) == 8)
+            {
+                // picture coding extension: 4-bit id, 4 x 4-bit f_code, intra_dc_precision (2),
+                // picture_structure (2), then top_field_first
+                topFieldFirst = (unit[4] & 0x80) != 0;
+            }
+            else if (isMpeg2 && b == 0xB2)
             {
                 ParseCcDataFromAtscUserData(unit.Slice(1), fieldData);
+                ParseCcDataFromScte20UserData(unit.Slice(1), topFieldFirst, fieldData);
             }
             else if ((codec == CcVideoCodec.H264 || codec == CcVideoCodec.Unknown) && (b & 0x9F) == 0x06)
             {
@@ -299,6 +308,74 @@ namespace Nikse.SubtitleEdit.Core.Cea608
             }
 
             AddCcTriplets(userData, 7, userData[5] & 0x1F, fieldData);
+        }
+
+        /// <summary>
+        /// Parses cc_data from MPEG-2 video user data (the bytes after the 00 00 01 B2 start code) in
+        /// SCTE 20 form - used by US cable before ATSC A/53: user_data_type_code 3, then a 5-bit
+        /// cc_count and per pair 2-bit priority, 2-bit field number, 5-bit line offset, the two
+        /// caption bytes (sent least significant bit first) and a marker bit.
+        /// </summary>
+        /// <param name="userData">User data after the start code</param>
+        /// <param name="topFieldFirst">From the picture coding extension - field numbers are in transmission order</param>
+        /// <param name="fieldData">cc_data found is added here (as CEA-608 field 1/2 pairs)</param>
+        public static void ParseCcDataFromScte20UserData(ReadOnlySpan<byte> userData, bool topFieldFirst, List<CcData> fieldData)
+        {
+            if (userData.Length < 3 || userData[0] != 0x03 || (userData[1] & 0x7F) != 0x01)
+            {
+                return;
+            }
+
+            var bitPosition = 16;
+            var totalBits = userData.Length * 8;
+            var ccCount = ReadBits(userData, ref bitPosition, 5);
+            for (var i = 0; i < ccCount && bitPosition + 26 <= totalBits; i++)
+            {
+                bitPosition += 2; // priority
+                var field = ReadBits(userData, ref bitPosition, 2);
+                bitPosition += 5; // line offset
+                var ccData1 = ReverseBits(ReadBits(userData, ref bitPosition, 8));
+                var ccData2 = ReverseBits(ReadBits(userData, ref bitPosition, 8));
+                bitPosition += 1; // marker
+
+                // field 1 = odd field, 2 = even field, 3 = repeated odd field, 0 = forbidden
+                if (field == 0 || !IsNonEmptyCcData(ccData1, ccData2))
+                {
+                    continue;
+                }
+
+                var ccType = field == 2 ? 1 : 0;
+                if (!topFieldFirst)
+                {
+                    ccType = 1 - ccType;
+                }
+
+                fieldData.Add(new CcData(ccType, ccData1, ccData2));
+            }
+        }
+
+        private static int ReadBits(ReadOnlySpan<byte> data, ref int bitPosition, int count)
+        {
+            var value = 0;
+            for (var i = 0; i < count; i++)
+            {
+                var bit = (data[bitPosition >> 3] >> (7 - (bitPosition & 7))) & 1;
+                value = (value << 1) | bit;
+                bitPosition++;
+            }
+
+            return value;
+        }
+
+        private static int ReverseBits(int b)
+        {
+            var result = 0;
+            for (var i = 0; i < 8; i++)
+            {
+                result = (result << 1) | ((b >> i) & 1);
+            }
+
+            return result;
         }
 
         private static void AddCcTriplets(ReadOnlySpan<byte> buffer, int pos, int count, List<CcData> fieldData)

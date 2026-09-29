@@ -70,6 +70,58 @@ public class TransportStreamClosedCaptionTest
         Assert.Equal("OK", cc3.Text);
     }
 
+    /// <summary>
+    /// SCTE 20 captions (US cable, before ATSC A/53) in MPEG-2 user data: ffmpeg fate-suite
+    /// sub/scte20.ts with the picture slices removed (headers, user data and timing kept). ffmpeg's
+    /// decoder reads the same lines from the original. The recording starts in the middle of a
+    /// roll-up caption, before any control code, so its first partial line is not read.
+    /// </summary>
+    [Fact]
+    public void ReadsScte20CaptionsFromMpeg2UserData()
+    {
+        var parser = new TransportStreamParser();
+        parser.Parse(FilePath("sample_TS_cea608_scte20.ts"), null);
+
+        var tracks = Assert.Single(parser.ClosedCaptionSubtitlesLookup).Value;
+        var cc1 = tracks[1];
+        Assert.Equal("SPENDING AND THIS, IS THAT CAR", cc1[0].Text);
+        Assert.Equal("SPENDING AND THIS, IS THAT CAR" + System.Environment.NewLine + "MANUFACTURERS ARE ABOUT AS", cc1[1].Text);
+        Assert.InRange(cc1[1].StartTime.TotalMilliseconds, 3900, 4100);
+    }
+
+    /// <summary>
+    /// SCTE 20 field numbers are in transmission order: 1 (and 3, a repeated first field) is CEA-608
+    /// field 1 when the picture is top field first, the fields swap when it is bottom field first.
+    /// The caption bytes are sent least significant bit first.
+    /// </summary>
+    [Theory]
+    [InlineData(true, 1, 0)]
+    [InlineData(true, 2, 1)]
+    [InlineData(true, 3, 0)]
+    [InlineData(false, 1, 1)]
+    [InlineData(false, 2, 0)]
+    public void Scte20FieldNumberAndBitOrder(bool topFieldFirst, int field, int expectedCcType)
+    {
+        // user_data_type_code 3, 0x81, then cc_count (5 bits) and one 26-bit pair:
+        // priority (2), field (2), line offset (5), cc_data_1 (8, reversed), cc_data_2 (8, reversed), marker (1)
+        static string Reverse(int b) => new string(System.Convert.ToString(b, 2).PadLeft(8, '0').Reverse().ToArray());
+        var bits = "00001" + "00" + System.Convert.ToString(field, 2).PadLeft(2, '0') + "10101" + Reverse(0x94) + Reverse(0x2C) + "1";
+        bits = bits.PadRight((bits.Length + 7) / 8 * 8, '0');
+        var userData = new List<byte> { 0x03, 0x81 };
+        for (var i = 0; i < bits.Length; i += 8)
+        {
+            userData.Add(System.Convert.ToByte(bits.Substring(i, 8), 2));
+        }
+
+        var ccData = new List<Nikse.SubtitleEdit.Core.Cea608.CcData>();
+        Nikse.SubtitleEdit.Core.Cea608.GetCcDataHelper.ParseCcDataFromScte20UserData(userData.ToArray(), topFieldFirst, ccData);
+
+        var cc = Assert.Single(ccData);
+        Assert.Equal(expectedCcType, cc.Type);
+        Assert.Equal(0x94, cc.Data1);
+        Assert.Equal(0x2C, cc.Data2);
+    }
+
     private static byte[] Cc(int ccType, int data1, int data2) => new[] { (byte)(0xF8 | 0x04 | ccType), (byte)data1, (byte)data2 };
 
     // One PES packet per frame on PID 0x100, one second apart, starting at PTS 0.
