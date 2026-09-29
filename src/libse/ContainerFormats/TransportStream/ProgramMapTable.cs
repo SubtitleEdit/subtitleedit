@@ -18,15 +18,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
         public ProgramMapTable(byte[] packetBuffer, int index)
         {
-            var pointer = packetBuffer[index];
-            if (pointer > 0)
-            {
-                index += pointer;
-            }
-            else
-            {
-                index++;
-            }
+            // pointer_field: number of bytes before the section starts, not counting itself
+            index += 1 + packetBuffer[index];
             TableId = packetBuffer[index];
             SectionLength = (packetBuffer[index + 1] & 0b00000011) * 256 + packetBuffer[index + 2];
             ProgramNumber = packetBuffer[index + 3] * 256 + packetBuffer[index + 4];

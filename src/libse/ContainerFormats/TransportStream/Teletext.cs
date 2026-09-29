@@ -915,8 +915,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         {
             if (_pageBuffer.Tainted)
             {
-                // this time we do not subtract any frames, there will be no more frames
-                _pageBuffer.HideTimestamp = teletextRunSettings.GetLastTimestamp(pageNumberDec);
+                // this time we do not subtract any frames, there will be no more frames - but the
+                // stored last time stamp is the raw one, so it needs the same wrap offset and start
+                // subtraction as every other (it used to end the last caption at the absolute PTS)
+                var lastTimestamp = teletextRunSettings.GetLastTimestamp(pageNumberDec) + teletextRunSettings.GetAddTimestamp(pageNumberDec);
+                _pageBuffer.HideTimestamp = teletextRunSettings.SubtractStartMs(lastTimestamp);
                 ProcessPage(_pageBuffer, teletextRunSettings, pageNumberDec);
                 return teletextRunSettings.PageNumberAndParagraph;
             }

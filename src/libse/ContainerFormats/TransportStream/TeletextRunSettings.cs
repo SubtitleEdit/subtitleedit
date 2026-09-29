@@ -20,6 +20,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             PageNumberAndParagraph = new Dictionary<int, Paragraph>();
         }
 
+        /// <param name="startMs">Time stamp of time code zero</param>
+        /// <param name="alwaysSubtractStartMs">Always make times relative to <paramref name="startMs"/>
+        /// (e.g. the program's first video frame) instead of deciding from the first time stamp</param>
+        public TeletextRunSettings(ulong? startMs, bool alwaysSubtractStartMs)
+            : this(startMs)
+        {
+            if (alwaysSubtractStartMs && startMs.HasValue)
+            {
+                _subtractStartMs = true;
+            }
+        }
+
         public ulong GetLastTimestamp(int pageNumber)
         {
             if (_lastTimestamp.ContainsKey(pageNumber))

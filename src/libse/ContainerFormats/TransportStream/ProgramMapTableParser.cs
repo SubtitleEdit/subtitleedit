@@ -169,6 +169,76 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             return result;
         }
 
+        /// <summary>
+        /// Video PID of the program that carries the elementary stream <paramref name="packetId"/> -
+        /// in a multi-program stream (e.g. a whole DVB-T mux) every program has its own clock, so a
+        /// subtitle's times must be taken relative to its own program's video.
+        /// </summary>
+        /// <returns>The video PID, or the program's PCR PID if no video stream is listed, or null
+        /// if no program map table lists the stream</returns>
+        public int? GetProgramVideoPacketId(int packetId)
+        {
+            var programMapTable = GetProgramMapTable(packetId);
+            if (programMapTable == null)
+            {
+                return null;
+            }
+
+            foreach (var stream in programMapTable.Streams)
+            {
+                if (IsVideoStreamType(stream.StreamType))
+                {
+                    return stream.ElementaryPid;
+                }
+            }
+
+            return programMapTable.PcrId;
+        }
+
+        /// <summary>
+        /// PCR PID of the program that carries the elementary stream <paramref name="packetId"/>.
+        /// </summary>
+        public int? GetProgramClockReferencePacketId(int packetId)
+        {
+            return GetProgramMapTable(packetId)?.PcrId;
+        }
+
+        private ProgramMapTable GetProgramMapTable(int packetId)
+        {
+            foreach (var programMapTable in _programMapTables)
+            {
+                foreach (var stream in programMapTable.Streams)
+                {
+                    if (stream.ElementaryPid == packetId)
+                    {
+                        return programMapTable;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private static bool IsVideoStreamType(int streamType)
+        {
+            switch (streamType)
+            {
+                case 0x01: // MPEG-1 video
+                case 0x02: // MPEG-2 video
+                case 0x10: // MPEG-4 part 2 video
+                case 0x1B: // H.264
+                case 0x20: // H.264 MVC sub-bitstream
+                case 0x24: // H.265
+                case 0x33: // H.266
+                case 0x42: // AVS
+                case 0xD1: // Dirac
+                case 0xEA: // VC-1
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
         public string GetSubtitleLanguage(int packetId)
         {
             foreach (var programMapTable in _programMapTables)

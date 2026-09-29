@@ -136,6 +136,90 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                    packetBuffer[payloadStart + 3] == 0xbd;
         }
 
+        /// <summary>
+        /// Reads the PTS (90 kHz) of a video PES (stream id 0xE0-0xEF) that starts in this packet,
+        /// straight from the raw packet buffer.
+        /// </summary>
+        public static bool TryPeekVideoPresentationTimestamp(byte[] packetBuffer, out ulong presentationTimestamp)
+        {
+            presentationTimestamp = 0;
+            if ((packetBuffer[1] & 0x40) == 0)
+            {
+                return false; // no PES starts here
+            }
+
+            var payloadStart = GetPayloadStart(packetBuffer);
+            if (payloadStart < 0 || payloadStart + 14 > packetBuffer.Length)
+            {
+                return false;
+            }
+
+            var p = payloadStart;
+            if (packetBuffer[p] != 0 || packetBuffer[p + 1] != 0 || packetBuffer[p + 2] != 1 ||
+                packetBuffer[p + 3] < 0xE0 || packetBuffer[p + 3] > 0xEF ||
+                (packetBuffer[p + 7] & 0x80) == 0)
+            {
+                return false;
+            }
+
+            presentationTimestamp = ReadTimestamp(packetBuffer, p + 9);
+            return true;
+        }
+
+        /// <summary>
+        /// Reads the program clock reference base (90 kHz) from the adaptation field, if present.
+        /// </summary>
+        public static bool TryPeekProgramClockReference(byte[] packetBuffer, out ulong programClockReference)
+        {
+            programClockReference = 0;
+            if ((packetBuffer[3] & 0x20) == 0 || packetBuffer[4] < 7 || (packetBuffer[5] & 0x10) == 0)
+            {
+                return false;
+            }
+
+            programClockReference = ((ulong)packetBuffer[6] << 25) |
+                                    ((ulong)packetBuffer[7] << 17) |
+                                    ((ulong)packetBuffer[8] << 9) |
+                                    ((ulong)packetBuffer[9] << 1) |
+                                    ((ulong)packetBuffer[10] >> 7);
+            return true;
+        }
+
+        /// <summary>
+        /// Decodes a 33-bit PES time stamp (PTS/DTS) stored in five bytes.
+        /// </summary>
+        public static ulong ReadTimestamp(byte[] buffer, int index)
+        {
+            return ((ulong)(buffer[index] & 0b00001110) << 29) |
+                   ((ulong)buffer[index + 1] << 22) |
+                   ((ulong)(buffer[index + 2] & 0b11111110) << 14) |
+                   ((ulong)buffer[index + 3] << 7) |
+                   ((ulong)buffer[index + 4] >> 1);
+        }
+
+        private static int GetPayloadStart(byte[] packetBuffer)
+        {
+            var adaptationFieldControl = (packetBuffer[3] & 48) >> 4;
+            if (adaptationFieldControl == 0b00000001)
+            {
+                return 4;
+            }
+
+            if (adaptationFieldControl == 0b00000011)
+            {
+                return 5 + packetBuffer[4];
+            }
+
+            return -1; // no payload
+        }
+
+        /// <summary>
+        /// Program clock reference (90 kHz) of the packet's program when the packet was read - the
+        /// time stamp of last resort for PES packets sent without a PTS (e.g. teletext from some
+        /// Topfield recorders).
+        /// </summary>
+        public ulong? ArrivalTimestamp { get; set; }
+
         public Packet(byte[] packetBuffer)
         {
             if (packetBuffer == null || packetBuffer.Length < 30)
