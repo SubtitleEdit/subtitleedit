@@ -3,6 +3,7 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Globalization;
@@ -352,8 +353,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var fi = new FileInfo(fileName);
                 if (fi.Length >= 3000 && fi.Length < 1024000) // not too small or too big
                 {
-                    string fileExt = Path.GetExtension(fileName).ToUpperInvariant();
-                    if (fileExt != Extension && !AlternateExtensions.Contains(fileExt))
+                    // Case-insensitive: AlternateExtensions are lower case, so comparing them with
+                    // the upper-cased extension turned down every .2hd, .1sd and .2sd file.
+                    var fileExt = Path.GetExtension(fileName);
+                    if (!fileExt.Equals(Extension, StringComparison.OrdinalIgnoreCase) &&
+                        !AlternateExtensions.Any(ext => ext.Equals(fileExt, StringComparison.OrdinalIgnoreCase)))
                     {
                         return false;
                     }
