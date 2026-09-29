@@ -22,6 +22,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
+            if (!HasSyncTag(lines))
+            {
+                return false; // LoadSubtitle finds nothing without one
+            }
+
             var sb = new StringBuilder();
             foreach (string l in lines)
             {
@@ -239,9 +244,33 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return new List<string> { languageTag };
         }
 
+        /// <summary>
+        /// Whether a line holds "&lt;sync " in any casing - LoadSubtitle returns without a
+        /// paragraph otherwise. Checking the lines first skips rebuilding, patching and
+        /// lower-casing the whole file, which every SAMI variant did for every file reaching
+        /// it during auto-detect.
+        /// </summary>
+        internal static bool HasSyncTag(List<string> lines)
+        {
+            foreach (var line in lines)
+            {
+                if (line.IndexOf("<sync ", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
+            if (!HasSyncTag(lines))
+            {
+                return;
+            }
+
             var sb = new StringBuilder();
             foreach (string l in lines)
             {

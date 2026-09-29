@@ -57,6 +57,51 @@ public class RichTextToPlainTextEquivalenceTest
         Assert.Equal(Reference(rtf), RichTextToPlainText.ConvertToText(rtf));
     }
 
+    // The regex was replaced by a hand-written tokenizer. Random documents built from the
+    // tokens where the two could disagree: control words with and without (Unicode) digits,
+    // negative and over-long parameters, 33-letter words, \' with and without hex digits,
+    // the non-ASCII letters case-insensitive [a-z] matches, a lone backslash at the end, line
+    // breaks, unbalanced braces. Exceptions must match too (int.Parse of a bad \u parameter).
+    [Fact]
+    public void MatchesTheOriginalImplementationOnRandomDocuments()
+    {
+        string[] tokens =
+        {
+            "\\", "\\", "\\", "u", "uc", "'", "e9", "4F", "g", "0", "12", "-", "-7", "12345678901", " ", "  ",
+            "{", "}", "\r", "\n", "\r\n", "a", "Z", "par", "tab", "*", "~", "fonttbl", "info", "\t",
+            "\u0130", "\u212A", "\u0131", "\u017F", "é", "\u0663", "\u0967", "x", "abcdefghijklmnopqrstuvwxyzabcdefg", "?",
+        };
+        var random = new Random(27);
+        for (var n = 0; n < 50000; n++)
+        {
+            var sb = new StringBuilder();
+            var count = random.Next(1, 30);
+            for (var t = 0; t < count; t++)
+            {
+                sb.Append(tokens[random.Next(tokens.Length)]);
+            }
+
+            var rtf = sb.ToString();
+            string expected;
+            try
+            {
+                expected = Reference(rtf);
+            }
+            catch (InvalidOperationException)
+            {
+                continue; // unbalanced '}' - the production code ignores it on purpose
+            }
+            catch (Exception referenceException)
+            {
+                var actualException = Record.Exception(() => RichTextToPlainText.ConvertToText(rtf));
+                Assert.True(actualException != null && actualException.GetType() == referenceException.GetType(), $"input: {rtf}");
+                continue;
+            }
+
+            Assert.True(expected == RichTextToPlainText.ConvertToText(rtf), $"input: {rtf}");
+        }
+    }
+
     private static string Repeat(string s, int count)
     {
         var sb = new StringBuilder();

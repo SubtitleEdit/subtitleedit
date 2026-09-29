@@ -42,6 +42,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
+            // Only <p> elements under a <body> are read, and FixBadXml below just escapes '&' and
+            // drops text before the first '<' - without both start tags neither parse can find
+            // one, so skip parsing (twice) any other XML reaching this format.
+            if (!xmlAsString.Contains("<body") || !xmlAsString.Contains("<p"))
+            {
+                return false;
+            }
+
             var xml = new XmlDocument { XmlResolver = null };
             try
             {

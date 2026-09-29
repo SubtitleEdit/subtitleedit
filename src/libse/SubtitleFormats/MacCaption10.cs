@@ -17,6 +17,59 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => "MacCaption 1.0";
 
+        public override bool IsMine(List<string> lines, string fileName)
+        {
+            // Captions only come from "hh:mm:ss:ff<tab>data" lines, so a file without one has
+            // none - skip the per-line load (Trim, nine StartsWith, a regex) of every other file
+            // reaching this format during auto-detect.
+            if (lines != null && !lines.Exists(IsTimeCodeLine))
+            {
+                return false;
+            }
+
+            return base.IsMine(lines, fileName);
+        }
+
+        /// <summary>True where RegexTimeCodes matches the trimmed line.</summary>
+        private static bool IsTimeCodeLine(string line)
+        {
+            var start = 0;
+            while (start < line.Length && char.IsWhiteSpace(line[start]))
+            {
+                start++;
+            }
+
+            if (line.Length - start < 12)
+            {
+                return false;
+            }
+
+            for (var k = 0; k < 11; k++)
+            {
+                var c = line[start + k];
+                if (k % 3 == 2 ? c != ':' : !char.IsDigit(c))
+                {
+                    return false;
+                }
+            }
+
+            if (line[start + 11] != '\t')
+            {
+                return false;
+            }
+
+            // the tab is only kept by Trim when something follows it
+            for (var k = start + 12; k < line.Length; k++)
+            {
+                if (!char.IsWhiteSpace(line[k]))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         // ANC data bytes may be represented by one ASCII character according to the following schema:
         private static readonly Dictionary<char, string> AncDictionary = new Dictionary<char, string>
         {

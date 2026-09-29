@@ -78,6 +78,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return _joinedLines;
         }
 
+        /// <summary>
+        /// Whether any line contains <paramref name="value"/> (ordinal). For a marker without a
+        /// line break this is the same as searching the joined text, without joining it - used
+        /// by readers that XML-parse the whole file but can only find paragraphs in elements
+        /// whose start tag must then appear in the text.
+        /// </summary>
+        protected static bool AnyLineContains(List<string> lines, string value)
+        {
+            foreach (var line in lines)
+            {
+                if (line.IndexOf(value, StringComparison.Ordinal) >= 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         /// <summary>Same as <see cref="JoinLines"/> followed by Trim().</summary>
         protected static string JoinLinesTrimmed(List<string> lines)
         {
