@@ -38,10 +38,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         /// </summary>
         public bool AdaptationFieldExtensionFlag { get; set; }
 
-        public int ProgramClockReferenceBase { get; set; }
+        public ulong ProgramClockReferenceBase { get; set; }
         public int ProgramClockReferenceExtension { get; set; }
 
-        public int OriginalProgramClockReferenceBase { get; set; }
+        public ulong OriginalProgramClockReferenceBase { get; set; }
         public int OriginalProgramClockReferenceExtension { get; set; }
 
         public int SpliceCountdown { get; set; }
@@ -54,55 +54,72 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         public AdaptationField(byte[] packetBuffer)
         {
             Length = packetBuffer[4];
-            DiscontinuityIndicator = 1 == packetBuffer[5] >> 7;
-            RandomAccessIndicator = (packetBuffer[5] & 64) > 0; // and with 01000000 to get second byte
-            ElementaryStreamPriorityIndicator = (packetBuffer[5] & 32) > 0; // and with 00100000 to get third byte
-            PcrFlag = (packetBuffer[5] & 16) > 0; // and with 00010000 to get fourth byte
-            OpcrFlag = (packetBuffer[5] & 8) > 0; // and with 00001000 to get fifth byte
-            SplicingPointFlag = (packetBuffer[5] & 4) > 0; // and with 00000100 to get sixth byte
-            TransportPrivateDataFlag = (packetBuffer[5] & 4) > 0; // and with 00000100 to get seventh byte
-            AdaptationFieldExtensionFlag = (packetBuffer[5] & 2) > 0; // and with 00000010 to get 8th byte
-
-            int index = 6;
-            if (PcrFlag)
+            if (Length == 0)
             {
-                ProgramClockReferenceBase = (packetBuffer[index] * 256 + packetBuffer[index + 1]) << 1;
-                ProgramClockReferenceBase += packetBuffer[index + 2] >> 7;
-                ProgramClockReferenceExtension = (packetBuffer[index + 2] & 0b0000_0001) * 256 + packetBuffer[index + 3];
-                index += 4;
+                return; // a single stuffing byte - no flags
             }
 
-            if (OpcrFlag)
+            DiscontinuityIndicator = (packetBuffer[5] & 0b1000_0000) > 0;
+            RandomAccessIndicator = (packetBuffer[5] & 0b0100_0000) > 0;
+            ElementaryStreamPriorityIndicator = (packetBuffer[5] & 0b0010_0000) > 0;
+            PcrFlag = (packetBuffer[5] & 0b0001_0000) > 0;
+            OpcrFlag = (packetBuffer[5] & 0b0000_1000) > 0;
+            SplicingPointFlag = (packetBuffer[5] & 0b0000_0100) > 0;
+            TransportPrivateDataFlag = (packetBuffer[5] & 0b0000_0010) > 0;
+            AdaptationFieldExtensionFlag = (packetBuffer[5] & 0b0000_0001) > 0;
+
+            // the adaptation field ends at packet byte 4 + Length
+            var end = Math.Min(packetBuffer.Length, 5 + Length);
+            var index = 6;
+            if (PcrFlag && index + 6 <= end)
             {
-                OriginalProgramClockReferenceBase = (packetBuffer[index] * 256 + packetBuffer[index + 1]) << 1;
-                OriginalProgramClockReferenceBase += packetBuffer[index + 2] >> 7;
-                OriginalProgramClockReferenceExtension = (packetBuffer[index + 2] & 0b00000001) * 256 + packetBuffer[index + 3];
-                index += 4;
+                ProgramClockReferenceBase = ReadClockReferenceBase(packetBuffer, index);
+                ProgramClockReferenceExtension = (packetBuffer[index + 4] & 0b0000_0001) * 256 + packetBuffer[index + 5];
+                index += 6;
             }
 
-            if (SplicingPointFlag)
+            if (OpcrFlag && index + 6 <= end)
+            {
+                OriginalProgramClockReferenceBase = ReadClockReferenceBase(packetBuffer, index);
+                OriginalProgramClockReferenceExtension = (packetBuffer[index + 4] & 0b0000_0001) * 256 + packetBuffer[index + 5];
+                index += 6;
+            }
+
+            if (SplicingPointFlag && index < end)
             {
                 SpliceCountdown = packetBuffer[index];
                 index++;
             }
 
-            if (TransportPrivateDataFlag)
+            if (TransportPrivateDataFlag && index < end)
             {
                 TransportPrivateDataLength = packetBuffer[index];
                 index++;
                 TransportPrivateData = new byte[TransportPrivateDataLength];
 
-                if (index + TransportPrivateDataLength <= packetBuffer.Length)
+                if (index + TransportPrivateDataLength <= end)
                 {
                     Buffer.BlockCopy(packetBuffer, index, TransportPrivateData, 0, TransportPrivateDataLength);
                     index += TransportPrivateDataLength;
                 }
             }
 
-            if (AdaptationFieldExtensionFlag && index < packetBuffer.Length)
+            if (AdaptationFieldExtensionFlag && index < end)
             {
                 AdaptationFieldExtensionLength = packetBuffer[index];
             }
+        }
+
+        /// <summary>
+        /// 33-bit clock reference base (90 kHz) - followed by 6 reserved bits and a 9-bit extension.
+        /// </summary>
+        private static ulong ReadClockReferenceBase(byte[] buffer, int index)
+        {
+            return ((ulong)buffer[index] << 25) |
+                   ((ulong)buffer[index + 1] << 17) |
+                   ((ulong)buffer[index + 2] << 9) |
+                   ((ulong)buffer[index + 3] << 1) |
+                   ((ulong)buffer[index + 4] >> 7);
         }
     }
 }

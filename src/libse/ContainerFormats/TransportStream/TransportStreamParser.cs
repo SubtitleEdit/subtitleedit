@@ -31,8 +31,20 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         private Dictionary<int, ClosedCaptionExtractor> _closedCaptionExtractors;
         private HashSet<int> _nonVideoPacketIds;
         private ProgramMapTableParser _programMapTableParser;
+        private Dictionary<int, int> _streamTypes;
+        private Dictionary<int, ulong> _firstVideoPtsByPid; // video pid -> first PTS (90 kHz)
+        private ulong? _firstVideoPts; // first video PTS in the file, any program
+        private Dictionary<int, ulong> _lastPcrByPid; // PCR pid -> last PCR base (90 kHz)
+        private ulong? _lastPcr;
+        private Dictionary<int, bool> _pgsPacketIds; // pid -> carries Blu-ray PGS (HDMV presentation graphics)
 
-        private List<Packet> SubtitlePackets { get; set; }
+        /// <summary>
+        /// Packets of the PES packet being received, per subtitle PID. Kept apart per PID - one
+        /// shared list had to be scanned for every PES start, and with a subtitle PID that sends
+        /// thousands of packets between starts alongside private stream 1 audio (AC-3), that was
+        /// quadratic: 25 s for a 3 GB film.
+        /// </summary>
+        private Dictionary<int, List<Packet>> _pendingPackets;
         private SortedDictionary<int, List<DvbSubPes>> SubtitlesLookup { get; set; }
         private SortedDictionary<int, List<TransportStreamSubtitle>> DvbSubtitlesLookup { get; set; } // images
         private bool _isM2TransportStream;
@@ -46,6 +58,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         /// previous subtitle and keeps it for every cue that follows.
         /// </summary>
         private const long MaxSubtitleLeadOverVideoMs = 1000;
+
+        /// <summary>
+        /// PES time stamps are 33-bit counters of a 90 kHz clock, they wrap every ~26.5 hours.
+        /// </summary>
+        private const ulong TimestampWrap = 1UL << 33;
+
+        /// <summary>HDMV presentation graphics (Blu-ray PGS) stream_type in the PMT.</summary>
+        private const int StreamTypePgs = 0x90;
 
         public void Parse(string fileName, LoadTransportStreamCallback callback)
         {
@@ -69,7 +89,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             TotalNumberOfPrivateStream1 = 0;
             SubtitlePacketIds = new List<int>();
             _subtitlePacketIdsLookup = new HashSet<int>();
-            SubtitlePackets = new List<Packet>();
+            _pendingPackets = new Dictionary<int, List<Packet>>();
             ms.Position = 0;
             const int packetLength = 188;
             _isM2TransportStream = IsM2TransportStream(ms);
@@ -88,6 +108,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             ClosedCaptionSubtitlesLookup = new SortedDictionary<int, SortedDictionary<int, List<Paragraph>>>();
             _closedCaptionExtractors = new Dictionary<int, ClosedCaptionExtractor>();
             _nonVideoPacketIds = new HashSet<int>();
+            _firstVideoPtsByPid = new Dictionary<int, ulong>();
+            _lastPcrByPid = new Dictionary<int, ulong>();
+            _lastPcr = null;
+            _firstVideoPts = null;
+            _pgsPacketIds = new Dictionary<int, bool>();
             var teletextPesList = new Dictionary<int, List<DvbSubPes>>();
             var teletextPages = new Dictionary<int, List<int>>();
             ulong? firstMs = null;
@@ -97,6 +122,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             _programMapTableParser = new ProgramMapTableParser();
             _programMapTableParser.Parse(ms);
             var streamTypes = _programMapTableParser.GetStreamTypes(); // partial results are fine
+            _streamTypes = streamTypes;
+            var pcrPidBySubtitlePid = new Dictionary<int, int?>();
 
             // check for Topfield .rec file
             ms.Seek(position, SeekOrigin.Begin);
@@ -125,50 +152,43 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
                 if (packetBuffer[0] == Packet.SynchronizationByte)
                 {
-                    // Constructing a Packet always copies the payload into a fresh byte[]. Once
-                    // firstVideoMs is known, video/audio content packets - the vast majority of a
-                    // real file - are only ever tested against IsPrivateStream1 and discarded, so
-                    // peek the raw buffer for that marker first and skip the allocation entirely
-                    // for everything that is neither a null packet nor a subtitle one. Before
-                    // firstVideoMs is known, every packet must still be fully materialized to
-                    // read the PES timestamp bytes, exactly as before.
+                    // Constructing a Packet always copies the payload into a fresh byte[], and
+                    // video/audio content packets - the vast majority of a real file - are of no
+                    // interest beyond their first PTS and the PCR, so those are peeked from the raw
+                    // buffer and only subtitle packets are materialized.
                     var packetId = Packet.PeekPacketId(packetBuffer);
                     AddClosedCaptionPacket(packetId, packetBuffer, streamTypes);
                     if (packetId == Packet.NullPacketId)
                     {
                         NumberOfNullPackets++;
                     }
-                    else if (!firstVideoMs.HasValue)
+                    else
                     {
-                        var packet = new Packet(packetBuffer);
-                        if (packet.IsVideoStream)
+                        if (Packet.TryPeekProgramClockReference(packetBuffer, out var programClockReference))
                         {
-                            if (packet.Payload != null && packet.Payload.Length > 10)
+                            _lastPcrByPid[packetId] = programClockReference;
+                            _lastPcr = programClockReference;
+                        }
+
+                        if (!_firstVideoPtsByPid.ContainsKey(packetId) &&
+                            Packet.TryPeekVideoPresentationTimestamp(packetBuffer, out var videoPts))
+                        {
+                            // every program of a multi-program stream has its own clock
+                            _firstVideoPtsByPid.Add(packetId, videoPts);
+                            if (!_firstVideoPts.HasValue)
                             {
-                                int presentationTimestampDecodeTimestampFlags = packet.Payload[7] >> 6;
-                                if (presentationTimestampDecodeTimestampFlags == 0b00000010 ||
-                                    presentationTimestampDecodeTimestampFlags == 0b00000011)
-                                {
-                                    firstVideoMs = (ulong)packet.Payload[9 + 4] >> 1;
-                                    firstVideoMs += (ulong)packet.Payload[9 + 3] << 7;
-                                    firstVideoMs += (ulong)(packet.Payload[9 + 2] & 0b11111110) << 14;
-                                    firstVideoMs += (ulong)packet.Payload[9 + 1] << 22;
-                                    firstVideoMs += (ulong)(packet.Payload[9 + 0] & 0b00001110) << 29;
-                                    firstVideoMs = firstVideoMs / 90;
-                                }
+                                _firstVideoPts = videoPts;
+                                firstVideoMs = videoPts / 90;
                             }
                         }
-                        else if (packet.IsPrivateStream1 || _subtitlePacketIdsLookup.Contains(packet.PacketId))
+                        else if (_subtitlePacketIdsLookup.Contains(packetId) || Packet.PeekIsPrivateStream1(packetBuffer))
                         {
-                            AddSubtitlePacket(packet, teletextPages, teletextPesList, ref firstMs);
-                        }
-                    }
-                    else if (_subtitlePacketIdsLookup.Contains(packetId) || Packet.PeekIsPrivateStream1(packetBuffer))
-                    {
-                        var packet = new Packet(packetBuffer);
-                        if (packet.IsPrivateStream1 || _subtitlePacketIdsLookup.Contains(packet.PacketId))
-                        {
-                            AddSubtitlePacket(packet, teletextPages, teletextPesList, ref firstMs);
+                            var packet = new Packet(packetBuffer);
+                            if (packet.IsPrivateStream1 || _subtitlePacketIdsLookup.Contains(packet.PacketId))
+                            {
+                                packet.ArrivalTimestamp = GetArrivalTimestamp(packetId, pcrPidBySubtitlePid);
+                                AddSubtitlePacket(packet, teletextPages, teletextPesList, ref firstMs);
+                            }
                         }
                     }
                     TotalNumberOfPackets++;
@@ -196,11 +216,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     ms.Seek(position, SeekOrigin.Begin);
                 }
             }
-            foreach (var pid in SubtitlePackets.GroupBy(p => p.PacketId))
+            foreach (var pending in _pendingPackets)
             {
-                firstMs = ProcessPackages(pid.Key, teletextPages, teletextPesList, firstMs);
+                if (pending.Value.Count > 0)
+                {
+                    firstMs = ProcessPackages(pending.Key, pending.Value, teletextPages, teletextPesList, firstMs);
+                }
             }
-            SubtitlePackets.Clear();
+            _pendingPackets.Clear();
             callback?.Invoke(transportStreamLength, transportStreamLength);
 
             foreach (var packetId in teletextPesList.Keys) // teletext from PES packets
@@ -210,11 +233,23 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     continue;
                 }
 
+                // Teletext sent without PTS is timed by the program clock - relative to the
+                // program's video like the DVB subtitles, as the clock differs from the PTS of the
+                // first subtitle packet that is used otherwise.
+                var videoPts = GetFirstVideoPts(packetId);
+                var hasEstimatedTimestamps = videoPts.HasValue && teletextPesList[packetId].Any(p => p.HasEstimatedTimestamp);
+                if (hasEstimatedTimestamps)
+                {
+                    UnwrapTimestamps(teletextPesList[packetId], videoPts);
+                }
+
                 foreach (var page in teletextPages[packetId].OrderBy(p => p))
                 {
                     var pageBcd = Teletext.DecToBec(page);
                     Teletext.InitializeStaticFields(packetId, pageBcd);
-                    var teletextRunSettings = new TeletextRunSettings(firstMs);
+                    var teletextRunSettings = hasEstimatedTimestamps
+                        ? new TeletextRunSettings(videoPts.Value / 90, alwaysSubtractStartMs: true)
+                        : new TeletextRunSettings(firstMs);
                     foreach (var pes in teletextPesList[packetId])
                     {
                         var textDictionary = pes.GetTeletext(teletextRunSettings, page, pageBcd);
@@ -241,54 +276,72 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             FinishClosedCaptions(firstVideoMs ?? firstMs);
 
             DvbSubtitlesLookup = new SortedDictionary<int, List<TransportStreamSubtitle>>();
-            if (_isM2TransportStream) // m2ts blu-ray images from PES packets
+            var sb = new StringBuilder();
+            foreach (int pid in SubtitlesLookup.Keys)
             {
-                var sb = new StringBuilder();
-                foreach (int pid in SubtitlesLookup.Keys)
+                // Blu-ray images from PES packets - in .m2ts, and PGS remuxed into a plain .ts
+                if (!_isM2TransportStream && !IsPgsPacketId(pid))
                 {
-                    var bdMs = new MemoryStream();
-                    var list = SubtitlesLookup[pid];
-                    var currentList = new List<DvbSubPes>();
-                    sb.Clear();
-                    var subList = new List<TransportStreamSubtitle>();
-                    var offset = (long)(firstVideoMs ?? 0); // when to use firstMs ?
-                    var lastPalettes = new Dictionary<int, List<PaletteInfo>>();
-                    var lastBitmapObjects = new Dictionary<int, List<BluRaySupParser.OdsData>>();
-                    for (var index = 0; index < list.Count; index++)
-                    {
-                        var item = list[index];
-                        item.WriteToStream(bdMs);
-                        currentList.Add(item);
-                        if (item.DataIdentifier == 0x80)
-                        {
-                            bdMs.Position = 0;
-                            var bdList = BluRaySupParser.ParseBluRaySup(bdMs, sb, true, lastPalettes, lastBitmapObjects);
-                            if (bdList.Count > 0)
-                            {
-                                var startMs = currentList.First().PresentationTimestampToMilliseconds();
-                                var endMs = index + 1 < list.Count ? list[index + 1].PresentationTimestampToMilliseconds() : startMs + (ulong)Configuration.Settings.General.NewEmptyDefaultMs;
-                                startMs = (ulong)((long)startMs - offset);
-                                endMs = (ulong)((long)endMs - offset);
-                                subList.Add(new TransportStreamSubtitle(bdList[0], startMs, endMs));
-                            }
-                            bdMs.Dispose();
-                            bdMs = new MemoryStream();
-                            currentList.Clear();
-                        }
-                        else if (bdMs.Length > 2_000_000_000) // Avoid crashing on very large files
-                        {
-                            bdMs.Dispose();
-                            bdMs = new MemoryStream();
-                            currentList.Clear();
-                        }
-                    }
+                    continue;
+                }
 
-                    if (subList.Count > 0)
+                var bdMs = new MemoryStream();
+                var list = SubtitlesLookup[pid];
+                var videoPts = GetFirstVideoPts(pid);
+                UnwrapTimestamps(list, videoPts);
+                var currentList = new List<DvbSubPes>();
+                sb.Clear();
+                var subList = new List<TransportStreamSubtitle>();
+                var offset = GetVideoOffsetMs(videoPts, firstVideoMs);
+                var lastPalettes = new Dictionary<int, List<PaletteInfo>>();
+                var lastBitmapObjects = new Dictionary<int, List<BluRaySupParser.OdsData>>();
+                for (var index = 0; index < list.Count; index++)
+                {
+                    var item = list[index];
+                    item.WriteToStream(bdMs);
+                    currentList.Add(item);
+                    if (item.DataIdentifier == 0x80)
                     {
-                        DvbSubtitlesLookup.Add(pid, subList);
-                        SubtitlePacketIds.Remove(pid);
-                        _subtitlePacketIdsLookup.Remove(pid);
+                        bdMs.Position = 0;
+                        var bdList = BluRaySupParser.ParseBluRaySup(bdMs, sb, true, lastPalettes, lastBitmapObjects);
+                        if (bdList.Count > 0)
+                        {
+                            var startMs = currentList.First().PresentationTimestampToMilliseconds();
+                            var endMs = index + 1 < list.Count ? list[index + 1].PresentationTimestampToMilliseconds() : startMs + (ulong)Configuration.Settings.General.NewEmptyDefaultMs;
+                            subList.Add(new TransportStreamSubtitle(bdList[0], ToVideoTime(startMs, offset), ToVideoTime(endMs, offset)));
+                        }
+                        bdMs.Dispose();
+                        bdMs = new MemoryStream();
+                        currentList.Clear();
                     }
+                    else if (bdMs.Length > 2_000_000_000) // Avoid crashing on very large files
+                    {
+                        bdMs.Dispose();
+                        bdMs = new MemoryStream();
+                        currentList.Clear();
+                    }
+                }
+
+                if (currentList.Count > 0)
+                {
+                    // the recording was cut before the last display set's END segment
+                    bdMs.Position = 0;
+                    var bdList = BluRaySupParser.ParseBluRaySup(bdMs, sb, true, lastPalettes, lastBitmapObjects);
+                    if (bdList.Count > 0)
+                    {
+                        var startMs = currentList.First().PresentationTimestampToMilliseconds();
+                        var endMs = startMs + (ulong)Configuration.Settings.General.NewEmptyDefaultMs;
+                        subList.Add(new TransportStreamSubtitle(bdList[0], ToVideoTime(startMs, offset), ToVideoTime(endMs, offset)));
+                    }
+                }
+
+                bdMs.Dispose();
+
+                if (subList.Count > 0)
+                {
+                    DvbSubtitlesLookup.Add(pid, subList);
+                    SubtitlePacketIds.Remove(pid);
+                    _subtitlePacketIdsLookup.Remove(pid);
                 }
             }
 
@@ -302,11 +355,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             SubtitlePacketIds.Sort();
 
             // Merge packets and set start/end time
-            foreach (int pid in SubtitlePacketIds.Where(p => !DvbSubtitlesLookup.ContainsKey(p)))
+            foreach (int pid in SubtitlePacketIds.Where(p => !DvbSubtitlesLookup.ContainsKey(p) && !IsPgsPacketId(p)))
             {
                 var subtitles = new List<TransportStreamSubtitle>();
                 var list = ParseAndRemoveEmpty(GetSubtitlePesPackets(pid));
-                var offset = (long)(firstVideoMs ?? 0); // when to use firstMs ?
+                var videoPts = GetFirstVideoPts(pid);
+                UnwrapTimestamps(list, videoPts);
+                var offset = GetVideoOffsetMs(videoPts, firstVideoMs);
+                ComposeNormalCasePageUpdates(list);
                 for (int i = 0; i < list.Count; i++)
                 {
                     var pes = list[i];
@@ -314,26 +370,36 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     if (pes.ObjectDataList.Count > 0)
                     {
                         var sub = new TransportStreamSubtitle { StartMilliseconds = pes.PresentationTimestampToMilliseconds(), Pes = pes };
-                        if (i + 1 < list.Count)
+                        var endFound = false;
+                        var ndx = i + 1;
+                        while (ndx < list.Count)
                         {
-                            var ndx = i + 1;
-                            while (ndx < list.Count)
+                            var entry = list[ndx]; ndx++;
+                            if (entry.SubtitleSegments.Count == 0)
                             {
-                                var entry = list[ndx]; ndx++;
-                                if (entry.SubtitleSegments.Count == 0)
-                                {
-                                    continue;
-                                }
-
-                                // We need EndOfDisplaySegment to stop the subtitle. In other case we can get Stuffing or something else
-                                if (!entry.SubtitleSegments.Any(p => p.SegmentType == SubtitleSegment.EndOfDisplaySetSegment))
-                                {
-                                    continue;
-                                }
-
-                                sub.EndMilliseconds = entry.PresentationTimestampToMilliseconds();
-                                break;
+                                continue;
                             }
+
+                            // The next display set ends this one. It is normally closed by an end of
+                            // display set segment, but older encoders send none - a page composition
+                            // (e.g. the empty one that clears the screen) starts a new display set
+                            // too. Anything else (stuffing, a lone CLUT) is skipped.
+                            if (!entry.SubtitleSegments.Any(p => p.SegmentType == SubtitleSegment.EndOfDisplaySetSegment) &&
+                                entry.PageCompositions.Count == 0)
+                            {
+                                continue;
+                            }
+
+                            sub.EndMilliseconds = entry.PresentationTimestampToMilliseconds();
+                            endFound = true;
+                            break;
+                        }
+
+                        // page_time_out: the page is erased when it is not updated within this time
+                        var pageTimeOutMs = pes.PageCompositions.Count > 0 ? (ulong)pes.PageCompositions[0].PageTimeOut * 1000UL : 0UL;
+                        if (pageTimeOutMs > 0 && (!endFound || sub.EndMilliseconds > sub.StartMilliseconds + pageTimeOutMs))
+                        {
+                            sub.EndMilliseconds = sub.StartMilliseconds + pageTimeOutMs;
                         }
 
                         if (sub.EndMilliseconds < sub.StartMilliseconds || sub.EndMilliseconds - sub.StartMilliseconds > (ulong)Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
@@ -356,15 +422,16 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                             sub.StartMilliseconds = 0;
                             sub.EndMilliseconds = end > 0 ? (ulong)end : 0;
                         }
-                        else
+                        else if (subtitles.Count > 0)
                         {
-                            if (subtitles.Count > 0)
-                            {
-                                offset = (long)sub.StartMilliseconds - (long)subtitles[subtitles.Count - 1].EndMilliseconds + 1000;
-                                sub.StartMilliseconds = (ulong)((long)sub.StartMilliseconds - offset);
-                                sub.EndMilliseconds = (ulong)((long)sub.EndMilliseconds - offset);
-                            }
+                            // A time stamp discontinuity: continue one second after the previous
+                            // subtitle, and keep that offset for the ones that follow.
+                            var duration = sub.EndMilliseconds - sub.StartMilliseconds;
+                            offset = (long)sub.StartMilliseconds - ((long)subtitles[subtitles.Count - 1].EndMilliseconds + 1000);
+                            sub.StartMilliseconds = (ulong)((long)sub.StartMilliseconds - offset);
+                            sub.EndMilliseconds = sub.StartMilliseconds + duration;
                         }
+
                         subtitles.Add(sub);
                     }
                 }
@@ -401,9 +468,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             // and profile C (one-seg, 0x0012) caption streams apart
             var dataComponentIds = _programMapTableParser.GetAribDataComponentIds(); // partial results are fine
 
-            var offset = (long)(firstMs ?? 0);
             foreach (var pid in _aribPesLookup.Keys)
             {
+                var videoPts = GetFirstVideoPts(pid);
+                var offset = videoPts.HasValue ? (long)(videoPts.Value / 90) : (long)(firstMs ?? 0);
                 var profile = AribB24Decoder.AribProfile.ProfileA;
                 if (dataComponentIds.TryGetValue(pid, out var dataComponentId) && dataComponentId == 0x12)
                 {
@@ -489,7 +557,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             {
                 try
                 {
-                    var tracks = extractor.Value.Finish((long)(firstMs ?? 0));
+                    // the captions travel inside this video stream - its own clock is the reference
+                    var offset = _firstVideoPtsByPid.TryGetValue(extractor.Key, out var videoPts) ? (long)(videoPts / 90) : (long)(firstMs ?? 0);
+                    var tracks = extractor.Value.Finish(offset);
                     if (tracks.Count > 0)
                     {
                         ClosedCaptionSubtitlesLookup.Add(extractor.Key, tracks);
@@ -599,18 +669,23 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 SubtitlePacketIds.Add(packet.PacketId);
             }
 
+            var pending = GetOrAddList(_pendingPackets, packet.PacketId);
             if (packet.PayloadUnitStartIndicator)
             {
-                firstMs = ProcessPackages(packet.PacketId, teletextPages, teletextPesList, firstMs);
-                SubtitlePackets.RemoveAll(p => p.PacketId == packet.PacketId);
+                if (pending.Count > 0)
+                {
+                    firstMs = ProcessPackages(packet.PacketId, pending, teletextPages, teletextPesList, firstMs);
+                }
+
+                pending.Clear();
             }
 
-            SubtitlePackets.Add(packet);
+            pending.Add(packet);
         }
 
-        private ulong? ProcessPackages(int packetId, Dictionary<int, List<int>> teletextPages, Dictionary<int, List<DvbSubPes>> teletextPesList, ulong? firstVideoMs)
+        private ulong? ProcessPackages(int packetId, List<Packet> packets, Dictionary<int, List<int>> teletextPages, Dictionary<int, List<DvbSubPes>> teletextPesList, ulong? firstVideoMs)
         {
-            var list = MakeSubtitlePesPackets(packetId, SubtitlePackets);
+            var list = MakeSubtitlePesPackets(packetId, packets);
             if (list.Count == 0)
             {
                 return firstVideoMs;
@@ -628,7 +703,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 }
             }
 
-            if (_isM2TransportStream || list.Any(p => p.IsDvbSubPicture))
+            if (_isM2TransportStream || list.Any(p => p.IsDvbSubPicture) || IsPgsPacketId(packetId, list))
             {
                 if (SubtitlesLookup.TryGetValue(packetId, out var existing))
                 {
@@ -680,6 +755,144 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 #endif
         }
 
+        /// <summary>
+        /// First PTS (90 kHz) of the video of the program that carries <paramref name="packetId"/>,
+        /// falling back to the first video in the file when the PMT does not tell.
+        /// </summary>
+        private ulong? GetFirstVideoPts(int packetId)
+        {
+            var videoPacketId = _programMapTableParser.GetProgramVideoPacketId(packetId);
+            if (videoPacketId.HasValue && _firstVideoPtsByPid.TryGetValue(videoPacketId.Value, out var pts))
+            {
+                return pts;
+            }
+
+            return _firstVideoPts;
+        }
+
+        private static long GetVideoOffsetMs(ulong? firstVideoPts, ulong? fallbackMs)
+        {
+            if (firstVideoPts.HasValue)
+            {
+                return (long)(firstVideoPts.Value / 90);
+            }
+
+            return (long)(fallbackMs ?? 0);
+        }
+
+        /// <summary>
+        /// Absolute time stamp to a time on the video's timeline; a hair before the first video
+        /// frame is shown at zero, anything far outside it (a different epoch) is left as is.
+        /// </summary>
+        private static ulong ToVideoTime(ulong milliseconds, long offset)
+        {
+            if ((long)milliseconds >= offset)
+            {
+                return (ulong)((long)milliseconds - offset);
+            }
+
+            return offset - (long)milliseconds <= MaxSubtitleLeadOverVideoMs ? 0 : milliseconds;
+        }
+
+        /// <summary>
+        /// PES time stamps are 33 bits and wrap after ~26.5 hours of stream clock (not stream
+        /// length - broadcasters start the clock anywhere). A time stamp that drops by more than half
+        /// the range is taken as a wrap, and it and everything after it is moved one range up.
+        /// </summary>
+        /// <param name="list">PES packets in stream order</param>
+        /// <param name="referencePts">First video PTS of the program - a stream whose first
+        /// subtitle comes after the wrap is unwrapped relative to it</param>
+        private static void UnwrapTimestamps(List<DvbSubPes> list, ulong? referencePts)
+        {
+            ulong add = 0;
+            var last = referencePts;
+            foreach (var pes in list)
+            {
+                if (!pes.PresentationTimestamp.HasValue)
+                {
+                    continue;
+                }
+
+                var pts = pes.PresentationTimestamp.Value + add;
+                if (last.HasValue && pts + TimestampWrap / 2 < last.Value)
+                {
+                    add += TimestampWrap;
+                    pts += TimestampWrap;
+                }
+
+                pes.PresentationTimestamp = pts;
+                last = pts;
+            }
+        }
+
+        /// <summary>
+        /// Program clock (PCR base, 90 kHz) of the program carrying <paramref name="packetId"/>,
+        /// or of the last PCR in the file if the PMT does not tell.
+        /// </summary>
+        private ulong? GetArrivalTimestamp(int packetId, Dictionary<int, int?> pcrPidBySubtitlePid)
+        {
+            if (!pcrPidBySubtitlePid.TryGetValue(packetId, out var pcrPid))
+            {
+                pcrPid = _programMapTableParser.GetProgramClockReferencePacketId(packetId);
+                pcrPidBySubtitlePid.Add(packetId, pcrPid);
+            }
+
+            if (pcrPid.HasValue && _lastPcrByPid.TryGetValue(pcrPid.Value, out var pcr))
+            {
+                return pcr;
+            }
+
+            return _lastPcr;
+        }
+
+        /// <summary>
+        /// True if <paramref name="packetId"/> has been found to carry Blu-ray PGS.
+        /// </summary>
+        private bool IsPgsPacketId(int packetId)
+        {
+            return _pgsPacketIds.TryGetValue(packetId, out var isPgs) && isPgs;
+        }
+
+        /// <summary>
+        /// Decides (once) whether <paramref name="packetId"/> carries Blu-ray PGS - by the PMT's
+        /// stream_type, or when the PMT is unknown or says "private data", by the PES data being a
+        /// chain of PGS segments. tsMuxeR and ffmpeg both write PGS into plain 188-byte streams.
+        /// </summary>
+        private bool IsPgsPacketId(int packetId, List<DvbSubPes> list)
+        {
+            if (_pgsPacketIds.TryGetValue(packetId, out var isPgs))
+            {
+                return isPgs;
+            }
+
+            if (_streamTypes.TryGetValue(packetId, out var streamType))
+            {
+                if (streamType == StreamTypePgs)
+                {
+                    _pgsPacketIds.Add(packetId, true);
+                    return true;
+                }
+
+                if (streamType != ProgramMapTableStream.StreamTypePrivateData)
+                {
+                    _pgsPacketIds.Add(packetId, false);
+                    return false;
+                }
+            }
+
+            foreach (var pes in list)
+            {
+                if (pes.DataIdentifier != 0)
+                {
+                    isPgs = pes.IsPgsSegmentData;
+                    _pgsPacketIds.Add(packetId, isPgs);
+                    return isPgs;
+                }
+            }
+
+            return false; // undecided - no data yet
+        }
+
         public List<TransportStreamSubtitle> GetDvbSubtitles(int packetId)
         {
             return DvbSubtitlesLookup.ContainsKey(packetId) ? DvbSubtitlesLookup[packetId] : null;
@@ -724,6 +937,95 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// DVB decoders keep a page's regions between display sets: an acquisition point or mode
+        /// change (page_state 1/2) starts the page afresh, a "normal case" update (page_state 0)
+        /// sends only what changed - objects are painted into regions that keep their earlier
+        /// pixels unless the region is filled. Live subtitling paints a line word by word like
+        /// this, so each such update is given the whole page to show.
+        /// </summary>
+        private static void ComposeNormalCasePageUpdates(List<DvbSubPes> list)
+        {
+            var regionContent = new Dictionary<int, List<DvbSubPes.PlacedObject>>(); // region id -> painted objects (region relative)
+            var objects = new Dictionary<int, KeyValuePair<ObjectDataSegment, DvbSubPes>>(); // latest data per object id
+            var cluts = new Dictionary<int, ClutDefinitionSegment>();
+            foreach (var pes in list)
+            {
+                pes.ParseSegments();
+                if (pes.SubtitleSegments.Count == 0)
+                {
+                    continue;
+                }
+
+                if (pes.ObjectDataList.Count > 0 && cluts.Count > 0)
+                {
+                    pes.SetInheritedClutDefinitions(cluts.Values.ToList());
+                }
+
+                foreach (var clut in pes.ClutDefinitions)
+                {
+                    cluts[clut.ClutId] = clut;
+                }
+
+                foreach (var ods in pes.ObjectDataList)
+                {
+                    objects[ods.ObjectId] = new KeyValuePair<ObjectDataSegment, DvbSubPes>(ods, pes);
+                }
+
+                var pageComposition = pes.PageCompositions.Count > 0 ? pes.PageCompositions[0] : null;
+                if (pageComposition != null && pageComposition.PageState != 0)
+                {
+                    regionContent.Clear();
+                }
+
+                foreach (var region in pes.RegionCompositions)
+                {
+                    if (region.RegionFillFlag || !regionContent.TryGetValue(region.RegionId, out var painted))
+                    {
+                        painted = new List<DvbSubPes.PlacedObject>();
+                        regionContent[region.RegionId] = painted;
+                    }
+
+                    foreach (var regionObject in region.Objects)
+                    {
+                        if (objects.TryGetValue(regionObject.ObjectId, out var data))
+                        {
+                            painted.Add(new DvbSubPes.PlacedObject
+                            {
+                                Object = data.Key,
+                                Owner = data.Value,
+                                X = regionObject.ObjectHorizontalPosition,
+                                Y = regionObject.ObjectVerticalPosition,
+                            });
+                        }
+                    }
+                }
+
+                if (pageComposition != null && pageComposition.PageState == 0 && pes.ObjectDataList.Count > 0)
+                {
+                    var composed = new List<DvbSubPes.PlacedObject>();
+                    foreach (var pageRegion in pageComposition.Regions)
+                    {
+                        if (regionContent.TryGetValue(pageRegion.RegionId, out var painted))
+                        {
+                            foreach (var placed in painted)
+                            {
+                                composed.Add(new DvbSubPes.PlacedObject
+                                {
+                                    Object = placed.Object,
+                                    Owner = placed.Owner,
+                                    X = pageRegion.RegionHorizontalAddress + placed.X,
+                                    Y = pageRegion.RegionVerticalAddress + placed.Y,
+                                });
+                            }
+                        }
+                    }
+
+                    pes.SetComposedObjects(composed);
+                }
+            }
         }
 
         private static List<DvbSubPes> ParseAndRemoveEmpty(List<DvbSubPes> list)
@@ -772,6 +1074,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 {
                     pes = new DvbSubPes(pesData, 0, bufferSize);
                 }
+
+                if (!pes.PresentationTimestamp.HasValue && packetList[0].ArrivalTimestamp.HasValue)
+                {
+                    // No PTS (e.g. teletext from some Topfield recorders) - the program clock at
+                    // the time the packet arrived is the best estimate, as ffmpeg does
+                    pes.PresentationTimestamp = packetList[0].ArrivalTimestamp;
+                    pes.HasEstimatedTimestamp = true;
+                }
+
                 list.Add(pes);
             }
             finally

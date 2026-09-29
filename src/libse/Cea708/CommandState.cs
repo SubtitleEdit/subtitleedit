@@ -15,6 +15,20 @@ namespace Nikse.SubtitleEdit.Core.Cea708
         public List<KeyValuePair<int, string>> FlushedTexts { get; } = new List<KeyValuePair<int, string>>();
 
         /// <summary>
+        /// Indexes into <see cref="FlushedTexts"/> of lines ended by a carriage return in a visible
+        /// window (roll-up/paint-on) - the line is complete, but stays on screen until a later line
+        /// or a command that erases it (see <see cref="ErasedAtFlushCounts"/>).
+        /// </summary>
+        public HashSet<int> StillVisibleFlushes { get; } = new HashSet<int>();
+
+        /// <summary>
+        /// Positions (number of <see cref="FlushedTexts"/> so far) at which the last
+        /// <see cref="Cea708.Decode"/> call cleared, hid, deleted or reset windows - text on screen
+        /// ends there.
+        /// </summary>
+        public List<int> ErasedAtFlushCounts { get; } = new List<int>();
+
+        /// <summary>
         /// Window the pen is in (0-7), -1 when undefined - set by SetCurrentWindow and DefineWindow.
         /// </summary>
         public int CurrentWindow { get; set; } = -1;

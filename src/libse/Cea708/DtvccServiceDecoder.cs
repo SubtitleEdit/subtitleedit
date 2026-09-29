@@ -16,6 +16,9 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             public CommandState State { get; } = new CommandState();
             public List<double> PacketTimesMs { get; } = new List<double>();
             public List<Paragraph> Paragraphs { get; } = new List<Paragraph>();
+
+            /// <summary>Roll-up/paint-on lines still on screen - their end is not known yet.</summary>
+            public List<Paragraph> OnScreen { get; } = new List<Paragraph>();
         }
 
         private readonly SortedDictionary<int, ServiceState> _services = new SortedDictionary<int, ServiceState>();
@@ -75,7 +78,9 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 {
                     Cea708.Decode(s.PacketTimesMs.Count, Array.Empty<byte>(), s.State, flush: true);
                     var lastPacketMs = s.PacketTimesMs[s.PacketTimesMs.Count - 1];
-                    Emit(s, endMs.HasValue && endMs.Value > lastPacketMs ? endMs.Value : lastPacketMs);
+                    var streamEndMs = endMs.HasValue && endMs.Value > lastPacketMs ? endMs.Value : lastPacketMs;
+                    Emit(s, streamEndMs);
+                    EndOnScreen(s, streamEndMs);
                 }
 
                 if (s.Paragraphs.Count > 0)
@@ -117,12 +122,25 @@ namespace Nikse.SubtitleEdit.Core.Cea708
 
         /// <summary>
         /// Adds a paragraph per caption flushed by the last decode - one packet can end several
-        /// captions, e.g. roll-up lines each ended by a CR.
+        /// captions, e.g. roll-up lines each ended by a CR. A roll-up line stays on screen after
+        /// its CR, so it ends when the next line starts or when the window is erased.
         /// </summary>
         private static void Emit(ServiceState s, double endMs)
         {
-            foreach (var flushed in s.State.FlushedTexts)
+            var flushedTexts = s.State.FlushedTexts;
+            for (var i = 0; i <= flushedTexts.Count; i++)
             {
+                if (s.State.ErasedAtFlushCounts.Contains(i))
+                {
+                    EndOnScreen(s, endMs);
+                }
+
+                if (i == flushedTexts.Count)
+                {
+                    break;
+                }
+
+                var flushed = flushedTexts[i];
                 var text = flushed.Value.Trim();
                 if (string.IsNullOrEmpty(text))
                 {
@@ -135,8 +153,29 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 var startIndex = flushed.Key >= 0 && flushed.Key < times.Count
                     ? flushed.Key
                     : times.Count - 1;
-                s.Paragraphs.Add(new Paragraph(text, times[startIndex], endMs));
+                var startMs = times[startIndex];
+                EndOnScreen(s, startMs);
+
+                var paragraph = new Paragraph(text, startMs, endMs);
+                s.Paragraphs.Add(paragraph);
+                if (s.State.StillVisibleFlushes.Contains(i))
+                {
+                    s.OnScreen.Add(paragraph);
+                }
             }
+        }
+
+        /// <summary>
+        /// Ends the lines still on screen at <paramref name="endMs"/> (never before they start).
+        /// </summary>
+        private static void EndOnScreen(ServiceState s, double endMs)
+        {
+            foreach (var paragraph in s.OnScreen)
+            {
+                paragraph.EndTime.TotalMilliseconds = Math.Max(paragraph.StartTime.TotalMilliseconds, endMs);
+            }
+
+            s.OnScreen.Clear();
         }
 
         /// <summary>

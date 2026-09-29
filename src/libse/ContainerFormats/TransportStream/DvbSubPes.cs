@@ -15,6 +15,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
         public int Length { get; }
         public ulong? PresentationTimestamp { get; set; }
+
+        /// <summary>
+        /// True if the PES had no PTS and <see cref="PresentationTimestamp"/> is the program clock
+        /// at the time it arrived.
+        /// </summary>
+        public bool HasEstimatedTimestamp { get; internal set; }
         public ulong? DecodeTimestamp { get; }
         public int? SubPictureStreamId { get; }
         public uint StartCode { get; }
@@ -333,6 +339,35 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         /// <summary>PES data starting at data_identifier - for <see cref="AribCaptionParser"/></summary>
         public byte[] GetAribCaptionData() => _dataBuffer;
 
+        /// <summary>
+        /// True if the PES data is a chain of Blu-ray PGS segments (segment type, 16-bit length)
+        /// that ends exactly with the data - PGS remuxed into a transport stream.
+        /// </summary>
+        public bool IsPgsSegmentData
+        {
+            get
+            {
+                if (_dataBuffer == null || _dataBuffer.Length < 3)
+                {
+                    return false;
+                }
+
+                var i = 0;
+                while (i + 3 <= _dataBuffer.Length)
+                {
+                    var segmentType = _dataBuffer[i];
+                    if ((segmentType < 0x14 || segmentType > 0x18) && segmentType != 0x80)
+                    {
+                        return false;
+                    }
+
+                    i += 3 + ((_dataBuffer[i + 1] << 8) | _dataBuffer[i + 2]);
+                }
+
+                return i == _dataBuffer.Length;
+            }
+        }
+
         public int DataIdentifier
         {
             get
@@ -412,6 +447,17 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             }
         }
 
+        /// <summary>
+        /// CLUTs sent by earlier display sets of the page - a "normal case" update need not
+        /// resend the CLUT its regions use.
+        /// </summary>
+        private List<ClutDefinitionSegment> _inheritedClutDefinitions;
+
+        internal void SetInheritedClutDefinitions(List<ClutDefinitionSegment> clutDefinitions)
+        {
+            _inheritedClutDefinitions = clutDefinitions;
+        }
+
         private ClutDefinitionSegment GetClutDefinitionSegment(ObjectDataSegment ods)
         {
             foreach (var rcs in RegionCompositions)
@@ -427,6 +473,17 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                                 return cds;
                             }
                         }
+
+                        if (_inheritedClutDefinitions != null)
+                        {
+                            foreach (var cds in _inheritedClutDefinitions)
+                            {
+                                if (cds.ClutId == rcs.RegionClutId)
+                                {
+                                    return cds;
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -434,6 +491,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             if (ClutDefinitions.Count > 0)
             {
                 return ClutDefinitions[0];
+            }
+
+            if (_inheritedClutDefinitions != null && _inheritedClutDefinitions.Count > 0)
+            {
+                return _inheritedClutDefinitions[0];
             }
 
             return null; // TODO: Return default clut
@@ -487,6 +549,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 return ods.Image;
             }
 
+            var owner = GetObjectOwner(ods);
+            if (owner != this)
+            {
+                return owner.GetImage(ods);
+            }
+
             var cds = GetClutDefinitionSegment(ods);
             ods.DecodeImage(_dataBuffer, ods.BufferIndex, cds);
             return ods.Image;
@@ -515,18 +583,78 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             using (var canvas = new SKCanvas(bmp))
             {
                 canvas.Clear(SKColors.Transparent);
-                foreach (var ods in ObjectDataList)
+                foreach (var placed in GetPlacedObjects())
                 {
-                    var odsImage = GetImage(ods); // Assuming GetImage returns SKBitmap now
+                    var odsImage = GetImage(placed.Object);
                     if (odsImage != null)
                     {
-                        var odsPoint = GetImagePosition(ods); // Assuming this returns an SKPoint or similar
-                        canvas.DrawBitmap(odsImage, odsPoint.X, odsPoint.Y);
+                        canvas.DrawBitmap(odsImage, placed.X, placed.Y);
                     }
                 }
             }
 
             return bmp;
+        }
+
+        /// <summary>
+        /// An object drawn on the page at an absolute position, with the PES whose data holds its
+        /// pixels.
+        /// </summary>
+        internal sealed class PlacedObject
+        {
+            public ObjectDataSegment Object { get; set; }
+            public DvbSubPes Owner { get; set; }
+            public float X { get; set; }
+            public float Y { get; set; }
+        }
+
+        /// <summary>
+        /// Everything on the page after this display set, for a "normal case" page update - set by
+        /// <see cref="TransportStreamParser"/>; null when the display set is complete by itself.
+        /// </summary>
+        private List<PlacedObject> _composedObjects;
+
+        /// <summary>
+        /// A "normal case" page update (page_state 0) only sends what changed; regions keep the
+        /// pixels painted into them earlier (live subtitling paints a line word by word). Sets the
+        /// objects on the page after this update, which the full image then shows.
+        /// </summary>
+        internal void SetComposedObjects(List<PlacedObject> composedObjects)
+        {
+            _composedObjects = composedObjects;
+        }
+
+        private List<PlacedObject> GetPlacedObjects()
+        {
+            if (_composedObjects != null)
+            {
+                return _composedObjects;
+            }
+
+            var list = new List<PlacedObject>();
+            foreach (var ods in ObjectDataList)
+            {
+                var point = GetImagePosition(ods);
+                list.Add(new PlacedObject { Object = ods, Owner = this, X = point.X, Y = point.Y });
+            }
+
+            return list;
+        }
+
+        private DvbSubPes GetObjectOwner(ObjectDataSegment ods)
+        {
+            if (_composedObjects != null)
+            {
+                foreach (var placed in _composedObjects)
+                {
+                    if (placed.Object == ods)
+                    {
+                        return placed.Owner;
+                    }
+                }
+            }
+
+            return this;
         }
 
         public Position GetPosition()
@@ -538,21 +666,21 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
             var minX = float.MaxValue;
             var minY = float.MaxValue;
-            foreach (var ods in ObjectDataList)
+            foreach (var placed in GetPlacedObjects())
             {
-                var cds = GetClutDefinitionSegment(ods);
-                var pos = ods.FindPosition(_dataBuffer, ods.BufferIndex, cds);
+                var ods = placed.Object;
+                var owner = placed.Owner;
+                var cds = owner.GetClutDefinitionSegment(ods);
+                var pos = ods.FindPosition(owner._dataBuffer, ods.BufferIndex, cds);
                 if (pos != null)
                 {
-                    var odsPoint = GetImagePosition(ods);
-
-                    var x = pos.Left + odsPoint.X;
+                    var x = pos.Left + placed.X;
                     if (x < minX)
                     {
                         minX = x;
                     }
 
-                    var y = pos.Top + odsPoint.Y;
+                    var y = pos.Top + placed.Y;
                     if (y < minY)
                     {
                         minY = y;

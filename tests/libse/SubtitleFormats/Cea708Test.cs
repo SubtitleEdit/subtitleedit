@@ -357,6 +357,59 @@ public class Cea708Test
         Assert.Equal(1033, paragraph.EndTime.TotalMilliseconds);
     }
 
+    /// <summary>
+    /// Korean broadcasters send P16 characters as EUC-KR (KS X 1001) - "금방" is B1DD B9E6. Read
+    /// as UTF-16 that was nonsense Hangul ("뇝맦").
+    /// </summary>
+    [Fact]
+    public void DecodeP16EucKr()
+    {
+        Assert.Equal("금방", DecodeWithHideWindows(HiddenWindow, new byte[] { 0x18, 0xB1, 0xDD, 0x18, 0xB9, 0xE6 }));
+    }
+
+    /// <summary>
+    /// P16 characters outside the EUC-KR range stay UTF-16.
+    /// </summary>
+    [Fact]
+    public void DecodeP16Unicode()
+    {
+        Assert.Equal("é가", DecodeWithHideWindows(HiddenWindow, new byte[] { 0x18, 0x00, 0xE9, 0x18, 0xAC, 0x00 }));
+    }
+
+    /// <summary>
+    /// A roll-up line stays on screen after its CR - it ends when the next line starts, or when
+    /// the window is cleared. It used to end at its own CR, so every cue lasted about one frame.
+    /// </summary>
+    [Fact]
+    public void DtvccRollUpLineStaysOnScreenUntilNextLineOrClear()
+    {
+        var decoder = new DtvccServiceDecoder();
+        AddDtvccPacket(decoder, VisibleWindow.Concat(Ascii("One")).Concat(new byte[] { 0x0D }).ToArray(), 1000);
+        AddDtvccPacket(decoder, Ascii("Two").Concat(new byte[] { 0x0D }).ToArray(), 3000);
+        AddDtvccPacket(decoder, new byte[] { 0x88, 0x01 }, 5000); // ClearWindows: window 0
+
+        var paragraphs = Assert.Single(decoder.Finish(9000)).Value;
+
+        Assert.Equal(new[] { "One", "Two" }, paragraphs.Select(p => p.Text));
+        Assert.Equal(new double[] { 1000, 3000 }, paragraphs.Select(p => p.StartTime.TotalMilliseconds));
+        Assert.Equal(new double[] { 3000, 5000 }, paragraphs.Select(p => p.EndTime.TotalMilliseconds));
+    }
+
+    /// <summary>
+    /// A roll-up line still on screen at the end of the stream ends at the end time.
+    /// </summary>
+    [Fact]
+    public void DtvccRollUpLineOnScreenAtEndOfStreamEndsAtEndTime()
+    {
+        var decoder = new DtvccServiceDecoder();
+        AddDtvccPacket(decoder, VisibleWindow.Concat(Ascii("Last")).Concat(new byte[] { 0x0D }).ToArray(), 1000);
+
+        var paragraph = Assert.Single(Assert.Single(decoder.Finish(4000)).Value);
+
+        Assert.Equal("Last", paragraph.Text);
+        Assert.Equal(4000, paragraph.EndTime.TotalMilliseconds);
+    }
+
     // One DTVCC packet with one service 1 block
     private static void AddDtvccPacket(DtvccServiceDecoder decoder, byte[] serviceData, double timeMs)
     {
