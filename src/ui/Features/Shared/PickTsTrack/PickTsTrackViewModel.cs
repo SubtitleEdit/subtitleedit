@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Cea608;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Logic;
@@ -31,6 +32,7 @@ public partial class PickTsTrackViewModel : ObservableObject
 
     private string _fileName = string.Empty;
     private TransportStreamParser? _tsParser;
+    private SortedDictionary<int, List<UmdVideoSubtitle>>? _umdTracks;
 
     public PickTsTrackViewModel()
     {
@@ -172,6 +174,25 @@ public partial class PickTsTrackViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// PSP UMD Video: one image subtitle stream per sub-stream id (0x80 = the first).
+    /// </summary>
+    internal void InitializeUmdVideo(SortedDictionary<int, List<UmdVideoSubtitle>> tracks, string fileName)
+    {
+        _umdTracks = tracks;
+        _fileName = fileName;
+        WindowTitle = UiUtil.FormatTitleWithFileName(Se.Language.File.PickMpegTrackX, fileName);
+        foreach (var track in tracks)
+        {
+            Tracks.Add(new TsTrackInfoDisplay
+            {
+                TrackNumber = track.Key,
+                Codec = "PNG",
+                Name = "#" + (track.Key - 0x80 + 1),
+            });
+        }
+    }
+
     private void Close()
     {
         Dispatcher.UIThread.Post(() =>
@@ -243,6 +264,26 @@ public partial class PickTsTrackViewModel : ObservableObject
                     Text = p.Text,
                 };
                 Rows.Add(cue);
+            }
+
+            return true;
+        }
+
+        if (_umdTracks != null && _umdTracks.TryGetValue(selectedTrack.TrackNumber, out var pictures))
+        {
+            SubtitleCountText = string.Format(Se.Language.File.Import.NumberOfSubtitlesX, pictures.Count.ToString("N0"));
+            for (var i = 0; i < 20 && i < pictures.Count; i++)
+            {
+                var picture = pictures[i];
+                using var bitmap = picture.GetBitmap();
+                Rows.Add(new TsSubtitleCueDisplay
+                {
+                    Number = i + 1,
+                    Show = picture.StartTime,
+                    Hide = picture.EndTime,
+                    Duration = picture.EndTime - picture.StartTime,
+                    Image = new Image { Source = bitmap.ToAvaloniaBitmap() },
+                });
             }
 
             return true;

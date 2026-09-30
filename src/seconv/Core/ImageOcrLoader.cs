@@ -331,6 +331,16 @@ internal static class ImageOcrLoader
     /// DVD .sup file ("SP" packets) → text via the configured OCR engine, or time codes only
     /// when <see cref="ConversionOptions.TimeCodesOnly"/> is set.
     /// </summary>
+    /// <summary>
+    /// One PSP UMD Video subtitle stream → text via the configured OCR engine, or time codes
+    /// only when <see cref="ConversionOptions.TimeCodesOnly"/> is set.
+    /// </summary>
+    public static Subtitle LoadUmdVideo(List<Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream.UmdVideoSubtitle> pictures, int subStreamId, ConversionOptions options)
+    {
+        var items = BitmapSubtitleLoader.LoadUmdVideo(pictures);
+        return OcrBitmapItems(items, options, $"{items.Count} UMD Video image(s) (stream #{subStreamId - 0x80 + 1})");
+    }
+
     public static Subtitle LoadSpDvdSup(string filePath, ConversionOptions options)
     {
         var items = BitmapSubtitleLoader.LoadSpDvdSup(filePath);
