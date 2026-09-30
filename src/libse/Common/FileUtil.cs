@@ -479,6 +479,33 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        private static readonly string[] TransportStreamExtensions = { ".ts", ".tsv", ".tts", ".rec", ".mpeg", ".mpg", ".m2ts", ".mts" };
+
+        /// <summary>
+        /// True for a video file whose content is an MPEG transport stream although its extension
+        /// is not a transport stream one - typically an HLS web rip saved as .mp4. Transport stream
+        /// extensions are left out, as callers already route those by extension (and a .m2ts can be
+        /// TextST instead).
+        /// </summary>
+        public static bool IsTransportStreamWithOtherVideoExtension(string fileName)
+        {
+            var ext = Path.GetExtension(fileName).ToLowerInvariant();
+            if (TransportStreamExtensions.Contains(ext) || !Utilities.VideoFileExtensions.Contains(ext))
+            {
+                return false;
+            }
+
+            try
+            {
+                return new FileInfo(fileName).Length > 10000 &&
+                       (IsTransportStream(fileName) || IsM2TransportStream(fileName));
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         /// <summary>
         /// Determines whether the specified file is an MPEG-2 Private Stream 2 file.
         /// </summary>

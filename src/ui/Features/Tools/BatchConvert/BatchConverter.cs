@@ -311,12 +311,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 }
             }
         }
-        else if ((item.FileName.EndsWith(".ts", StringComparison.OrdinalIgnoreCase) ||
-                  item.FileName.EndsWith(".m2ts", StringComparison.OrdinalIgnoreCase) ||
-                  item.FileName.EndsWith(".mts", StringComparison.OrdinalIgnoreCase) ||
-                  item.FileName.EndsWith(".mpg", StringComparison.OrdinalIgnoreCase) ||
-                  item.FileName.EndsWith(".mpeg", StringComparison.OrdinalIgnoreCase)) &&
-                 item.Format!.StartsWith("Transport Stream", StringComparison.Ordinal))
+        // no extension check - a transport stream can be named .mp4 (see AddFile)
+        else if (item.Format!.StartsWith("Transport Stream", StringComparison.Ordinal))
         {
             if (item.ImageSubtitle != null)
             {
