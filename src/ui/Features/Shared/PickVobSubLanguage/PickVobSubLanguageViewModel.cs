@@ -127,11 +127,13 @@ public partial class PickVobSubLanguageViewModel : ObservableObject
         for (var i = 0; i < PreviewCount && i < packs.Count; i++)
         {
             var pack = packs[i];
-            if (_palette != null)
+            var palette = _palette is { Count: > 0 } ? _palette : null;
+            if (palette != null)
             {
-                pack.Palette = _palette;
+                pack.Palette = palette;
             }
 
+            // without a palette (a .vob without its IFO) GetBitmap finds the text/outline colors itself
             var bitmap = pack.GetBitmap();
             Rows.Add(new VobSubLanguageCueDisplay
             {

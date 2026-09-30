@@ -65,6 +65,7 @@ using Nikse.SubtitleEdit.Features.Files.FormatProperties.TimedText10Properties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.TimedTextImsc11Properties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.TmpegEncXmlProperties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.WebVttProperties;
+using Nikse.SubtitleEdit.Features.Files.ImportDvd;
 using Nikse.SubtitleEdit.Features.Files.ImportImages;
 using Nikse.SubtitleEdit.Features.Files.ImportCsvXlsxCustomColumns;
 using Nikse.SubtitleEdit.Features.Files.ImportPlainText;
@@ -5683,7 +5684,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var fileName = await _fileHelper.PickOpenFile(Window!, Se.Language.General.OpenImageBasedSubtitle, Se.Language.General.ImageBasedSubtitles, "*.sup;*.sub;*.ts;*.m2ts;*.mts;*.rec;*.mkv;*.mks;*.mp4;*.m4v;*.mov;*.3gp;*.avi;*.divx;*.xml;*.ttml;*.dfxp;*.vtt;*.webvtt",
+        var fileName = await _fileHelper.PickOpenFile(Window!, Se.Language.General.OpenImageBasedSubtitle, Se.Language.General.ImageBasedSubtitles, "*.sup;*.sub;*.ifo;*.vob;*.ts;*.m2ts;*.mts;*.rec;*.mkv;*.mks;*.mp4;*.m4v;*.mov;*.3gp;*.avi;*.divx;*.xml;*.ttml;*.dfxp;*.vtt;*.webvtt",
             Se.Language.General.AllFiles, "*.*");
         if (string.IsNullOrEmpty(fileName))
         {
@@ -23907,6 +23908,16 @@ public partial class MainViewModel :
                 return;
             }
 
+            // DVD IFO: rip the subtitles of a title (program chain) from its VOB files
+            if ((ext == ".ifo" || ext == ".bup") && IfoParser.IsIfo(fileName))
+            {
+                if (await ImportSubtitleFromDvd(fileName, videoFileName, skipLoadVideo))
+                {
+                    SelectAndScrollToRow(0);
+                    return;
+                }
+            }
+
             if (FileUtil.IsVobSub(fileName) && ext == ".sub")
             {
                 var ok = await ImportSubtitleFromVobSubFile(fileName, videoFileName, skipLoadVideo);
@@ -23922,7 +23933,7 @@ public partial class MainViewModel :
             // (SPU) stream directly; a .vob without subtitles falls through to the video handling
             if (ext == ".vob" && FileUtil.IsVobSub(fileName))
             {
-                var ok = await ImportSubtitleFromVobSubFile(fileName, videoFileName, skipLoadVideo);
+                var ok = await ImportSubtitleFromVob(fileName, videoFileName, skipLoadVideo);
                 if (ok)
                 {
                     SelectAndScrollToRow(0);
@@ -26017,9 +26028,147 @@ public partial class MainViewModel :
         string idxFileName = Path.ChangeExtension(vobSubFileName, ".idx");
         vobSubParser.OpenSubIdx(vobSubFileName, idxFileName);
         var vobSubMergedPackList = vobSubParser.MergeVobSubPacks();
-        var palette = vobSubParser.IdxPalette;
         vobSubParser.VobSubPacks.Clear();
 
+        // Recover a stream's language code from the idx: Idx.cs formats language entries as
+        // "{LanguageName} ‎(0x{streamId:x})", parallel to IdxLanguageCodes.
+        string? GetLanguageCode(int streamId)
+        {
+            var languageMarker = $"(0x{streamId:x})";
+            var languageIndex = vobSubParser.IdxLanguages.FindIndex(l => l.Contains(languageMarker, StringComparison.OrdinalIgnoreCase));
+            return languageIndex >= 0 && languageIndex < vobSubParser.IdxLanguageCodes.Count
+                ? vobSubParser.IdxLanguageCodes[languageIndex]
+                : null;
+        }
+
+        return await ImportVobSubPacksWithOcr(vobSubMergedPackList, vobSubParser.IdxPalette, vobSubParser.IdxLanguages, GetLanguageCode, vobSubFileName, videoFileName, skipLoadVideo);
+    }
+
+    [RelayCommand]
+    private async Task ImportDvdSubtitles()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await ImportSubtitleFromDvd(null, null, false);
+        _shortcutManager.ClearKeys();
+    }
+
+    /// <summary>
+    /// The "Import subtitles from DVD" window (optionally started with an IFO or VOB file): pick a
+    /// title, rip it, then pick the language and OCR it.
+    /// </summary>
+    private async Task<bool> ImportSubtitleFromDvd(string? fileName, string? videoFileName, bool skipLoadVideo)
+    {
+        var result = await ShowDialogAsync<ImportDvdWindow, ImportDvdViewModel>(vm => vm.Initialize(fileName));
+        if (!result.OkPressed)
+        {
+            return true; // the file was ours, the user just cancelled
+        }
+
+        // the file was ours even when the user cancels the language pick or the OCR
+        await ImportVobSubPacksWithOcr(result.MergedPacks, result.Palette, result.Languages, result.GetLanguageCode, result.FileName, videoFileName, skipLoadVideo);
+        return true;
+    }
+    /// <summary>
+    /// Opens a single DVD .vob. The PTS restarts are stitched from its NAV packs; palette, languages
+    /// and PAL/NTSC come from the title set's IFO when it is next to the VOB.
+    /// </summary>
+    private async Task<bool> ImportSubtitleFromVob(string vobFileName, string? videoFileName, bool skipLoadVideo)
+    {
+        var ifoFileName = IfoParser.GetIfoFileName(vobFileName);
+        var ifo = ifoFileName == null ? null : new IfoParser(ifoFileName);
+        if (ifo != null && ifo.Type != IfoParser.IfoType.VideoTitleSet)
+        {
+            ifo = null;
+        }
+
+        var vobFileNames = new List<string> { vobFileName };
+        var packs = await RipDvdSubtitlesAsync(vobFileNames, ifo?.IsPal ?? true,
+            (progress, cancellationToken) => DvdSubtitleRipper.Rip(vobFileNames, progress, cancellationToken));
+        if (packs.Count == 0)
+        {
+            return false;
+        }
+
+        return await ImportVobSubPacksWithOcr(packs, ifo?.Palette ?? new List<SkiaSharp.SKColor>(), ifo?.GetLanguages() ?? new List<string>(),
+            streamId => ifo?.GetLanguageCode(streamId), vobFileName, videoFileName, skipLoadVideo);
+    }
+
+    // below this a rip is over before a progress window would even have been drawn
+    private const long DvdRipProgressWindowMinSize = 25 * 1024 * 1024; // 25 MB
+
+    /// <summary>
+    /// Runs a DVD subtitle rip + pack merge on a background thread, with a progress window for
+    /// big inputs.
+    /// </summary>
+    private async Task<List<VobSubMergedPack>> RipDvdSubtitlesAsync(List<string> vobFileNames, bool isPal, Func<Action<long, long>, CancellationToken, List<VobSubPack>> rip)
+    {
+        long size = 0;
+        foreach (var fileName in vobFileNames)
+        {
+            try
+            {
+                size += new FileInfo(fileName).Length;
+            }
+            catch
+            {
+                // ignore - just means no size-based gating
+            }
+        }
+
+        PleaseWaitViewModel? pleaseWaitVm = null;
+        if (size >= DvdRipProgressWindowMinSize)
+        {
+            pleaseWaitVm = _windowService.ShowWindow<PleaseWaitWindow, PleaseWaitViewModel>(Window!);
+            pleaseWaitVm.StatusText = Se.Language.Main.ReadingDvdSubtitles;
+        }
+
+        ShowStatus(Se.Language.Main.ReadingDvdSubtitles);
+        var packCount = 0;
+        var encryptedPackCount = 0;
+        List<VobSubMergedPack> merged;
+        try
+        {
+            var vm = pleaseWaitVm;
+            merged = await Task.Run(() =>
+            {
+                var packs = rip((position, total) => vm?.ReportProgress(position, total), CancellationToken.None);
+                packCount = packs.Count;
+                encryptedPackCount = DvdSubtitleRipper.CountEncrypted(packs);
+                var parser = new VobSubParser(isPal);
+                parser.VobSubPacks.AddRange(packs);
+                return parser.MergeVobSubPacks();
+            });
+        }
+        finally
+        {
+            pleaseWaitVm?.Close();
+        }
+
+        // SE does not decrypt CSS - a VOB copied without decrypting gives garbled images
+        if (merged.Count > 0 && encryptedPackCount > 0)
+        {
+            var answer = await MessageBox.Show(Window!, Se.Language.General.Warning,
+                string.Format(Se.Language.File.Import.DvdEncryptedXOfY, encryptedPackCount, packCount),
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (answer != MessageBoxResult.Yes)
+            {
+                return new List<VobSubMergedPack>();
+            }
+        }
+
+        return merged;
+    }
+
+    /// <summary>
+    /// Picks a subpicture stream (language) when there is more than one, then OCRs it.
+    /// </summary>
+    private async Task<bool> ImportVobSubPacksWithOcr(List<VobSubMergedPack> vobSubMergedPackList, List<SkiaSharp.SKColor> palette, List<string> languages,
+        Func<int, string?> getLanguageCode, string fileName, string? videoFileName, bool skipLoadVideo)
+    {
         var languageStreamIds = new List<int>();
         var streamIdDictionary = new Dictionary<int, List<VobSubMergedPack>>();
         foreach (var pack in vobSubMergedPackList)
@@ -26048,7 +26197,7 @@ public partial class MainViewModel :
         if (languageStreamIds.Count > 1)
         {
             var pickResult = await ShowDialogAsync<PickVobSubLanguageWindow, PickVobSubLanguageViewModel>(
-                vm => vm.Initialize(streamIdDictionary, palette, vobSubParser.IdxLanguages, vobSubFileName));
+                vm => vm.Initialize(streamIdDictionary, palette, languages, fileName));
             if (!pickResult.OkPressed)
             {
                 return false;
@@ -26061,24 +26210,14 @@ public partial class MainViewModel :
             streamId = languageStreamIds.First();
         }
 
-        // Recover the picked stream's language code from the idx: Idx.cs formats language
-        // entries as "{LanguageName} ‎(0x{streamId:x})", parallel to IdxLanguageCodes.
-        string? languageCode = null;
-        var languageMarker = $"(0x{streamId:x})";
-        var languageIndex = vobSubParser.IdxLanguages.FindIndex(l => l.Contains(languageMarker, StringComparison.OrdinalIgnoreCase));
-        if (languageIndex >= 0 && languageIndex < vobSubParser.IdxLanguageCodes.Count)
-        {
-            languageCode = vobSubParser.IdxLanguageCodes[languageIndex];
-        }
-
-        var result = await ShowDialogAsync<OcrWindow, OcrViewModel>(vm => { vm.Initialize(streamIdDictionary[streamId], palette, vobSubFileName, languageCode); });
+        var languageCode = getLanguageCode(streamId);
+        var result = await ShowDialogAsync<OcrWindow, OcrViewModel>(vm => { vm.Initialize(streamIdDictionary[streamId], palette, fileName, languageCode); });
 
         if (result.OkPressed)
         {
-            await FinishOcrImportAsync(vobSubFileName, result.OcredSubtitle, videoFileName: videoFileName, skipLoadVideo: skipLoadVideo);
+            await FinishOcrImportAsync(fileName, result.OcredSubtitle, videoFileName: videoFileName, skipLoadVideo: skipLoadVideo);
             return true;
         }
-
         return false;
     }
 

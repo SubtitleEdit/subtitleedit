@@ -20,6 +20,21 @@ public class LanguageImport
     public string FormattingDotDotDot { get; set; }
     public string ImageBasedSubtitleForEditDotDotDot { get;  set; }
     public string ImageBasedSubtitleForOcrDotDotDot { get;  set; }
+    public string DvdSubtitlesDotDotDot { get; set; }
+    public string TitleImportDvd { get; set; }
+    public string DvdIfoFile { get; set; }
+    public string DvdVobFiles { get; set; }
+    public string DvdVideoStandard { get; set; }
+    public string DvdStartRipping { get; set; }
+    public string DvdRippingAborted { get; set; }
+    public string DvdOpenIfoFile { get; set; }
+    public string DvdAddVobFiles { get; set; }
+    public string DvdIfoFiles { get; set; }
+    public string DvdVobFileType { get; set; }
+    public string DvdDropHint { get; set; }
+    public string DvdNotAnIfoFileX { get; set; }
+    public string DvdMenuIfoNoTitleSetsX { get; set; }
+    public string DvdEncryptedXOfY { get; set; }
     public string SplitTextAt { get; set; }
     public string BlankLines { get; set; }
     public string OneLineIsOneSubtitle { get; set; }
@@ -70,6 +85,21 @@ Rules:
 • Optional index after end time";
         ImageBasedSubtitleForEditDotDotDot = "Image-based subtitle for edit...";
         ImageBasedSubtitleForOcrDotDotDot = "Image-based subtitle for OCR...";
+        DvdSubtitlesDotDotDot = "Subtitles from DVD (IFO/VOB)...";
+        TitleImportDvd = "Import subtitles from DVD";
+        DvdIfoFile = "IFO file";
+        DvdVobFiles = "VOB files";
+        DvdVideoStandard = "Video standard";
+        DvdStartRipping = "Start ripping";
+        DvdRippingAborted = "Ripping aborted";
+        DvdOpenIfoFile = "Open DVD IFO file";
+        DvdAddVobFiles = "Add VOB files";
+        DvdIfoFiles = "DVD IFO files";
+        DvdVobFileType = "DVD VOB files";
+        DvdDropHint = "Open an IFO file (VIDEO_TS\\VTS_01_0.IFO) or add VOB files - or drop them here";
+        DvdNotAnIfoFileX = "{0} is not a DVD IFO file";
+        DvdMenuIfoNoTitleSetsX = "No title sets (VTS_xx_0.IFO) found next to {0}";
+        DvdEncryptedXOfY = "{0} of the {1} subtitle packets are still CSS encrypted - these VOB files were copied without decrypting, so some subtitle images will be garbled.\n\nDecrypt the DVD with a DVD ripping tool first for a clean result.\n\nContinue anyway?";
         SplitTextAt = "Split text at";
         BlankLines = "Blank lines";
         OneLineIsOneSubtitle = "One line is one subtitle";

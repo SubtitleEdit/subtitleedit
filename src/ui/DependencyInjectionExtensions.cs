@@ -29,6 +29,7 @@ using Nikse.SubtitleEdit.Features.Files.FormatProperties.TimedText10Properties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.TimedTextImsc11Properties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.WebVttProperties;
 using Nikse.SubtitleEdit.Features.WebVtt;
+using Nikse.SubtitleEdit.Features.Files.ImportDvd;
 using Nikse.SubtitleEdit.Features.Files.ImportImages;
 using Nikse.SubtitleEdit.Features.Files.ImportCsvXlsxCustomColumns;
 using Nikse.SubtitleEdit.Features.Files.ImportPlainText;
@@ -482,6 +483,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<ImageBasedPreviewViewModel>();
         collection.AddTransient<ImageBasedProfileViewModel>();
         collection.AddTransient<ImportCsvXlsxCustomColumnsViewModel>();
+        collection.AddTransient<ImportDvdViewModel>();
         collection.AddTransient<ImportImagesViewModel>();
         collection.AddTransient<ImportPlainTextViewModel>();
         collection.AddTransient<InterjectionsViewModel>();

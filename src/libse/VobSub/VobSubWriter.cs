@@ -2,7 +2,9 @@
 using Nikse.SubtitleEdit.Core.Common;
 using SkiaSharp;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.VobSub
@@ -56,6 +58,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         private SKColor _emphasis2;
         private readonly string _languageName;
         private readonly string _languageNameShort;
+        private readonly IReadOnlyList<SKColor> _palette;
 
         public VobSubWriter(string subFileName, int screenWidth, int screenHeight, int bottomMargin, int leftRightMargin, int languageStreamId, SKColor pattern, SKColor emphasis1, bool useInnerAntiAliasing, DvdSubtitleLanguage language)
         {
@@ -70,6 +73,23 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             _useInnerAntiAliasing = useInnerAntiAliasing;
             _languageName = language.NativeName;
             _languageNameShort = language.Code;
+            _idx = CreateIdxHeader();
+            _subFile = new FileStream(subFileName, FileMode.Create);
+        }
+
+        /// <summary>
+        /// For writing existing sub picture units with <see cref="WriteSubPictureUnit"/>: the idx
+        /// gets the DVD's own 16 color palette.
+        /// </summary>
+        public VobSubWriter(string subFileName, int screenWidth, int screenHeight, int languageStreamId, DvdSubtitleLanguage language, IReadOnlyList<SKColor> palette)
+        {
+            _subFileName = subFileName;
+            _screenWidth = screenWidth;
+            _screenHeight = screenHeight;
+            _languageStreamId = languageStreamId;
+            _languageName = language.NativeName;
+            _languageNameShort = language.Code;
+            _palette = palette;
             _idx = CreateIdxHeader();
             _subFile = new FileStream(subFileName, FileMode.Create);
         }
@@ -142,15 +162,25 @@ namespace Nikse.SubtitleEdit.Core.VobSub
 
         public void WriteParagraph(Paragraph p, SKBitmap bmp, BluRayContentAlignment alignment, SKPoint? overridePosition = null) // inspired by code from SubtitleCreator
         {
-            // timestamp: 00:00:33:900, filepos: 000000000
-            _idx.AppendLine($"timestamp: {p.StartTime.Hours:00}:{p.StartTime.Minutes:00}:{p.StartTime.Seconds:00}:{p.StartTime.Milliseconds:000}, filepos: {_subFile.Position.ToString("X").PadLeft(9, '0').ToLowerInvariant()}");
-
             var nbmp = new NikseBitmap(bmp);
             _emphasis2 = nbmp.ConvertToFourColors(_background, _pattern, _emphasis1, _useInnerAntiAliasing);
             var twoPartBuffer = nbmp.RunLengthEncodeForDvd(_background, _pattern, _emphasis1, _emphasis2);
             var imageBuffer = GetSubImageBuffer(twoPartBuffer, nbmp, p, alignment, overridePosition,
                 _screenWidth, _screenHeight, _bottomMargin, _leftRightMargin, _background, _pattern, _emphasis1, _emphasis2);
+            WriteSubPictureUnit(p.StartTime, imageBuffer);
+        }
 
+        /// <summary>
+        /// Writes an existing DVD sub picture unit (e.g. one ripped from a VOB) as is - no decoding
+        /// and re-encoding, so it keeps its colors, position, forced flag and display time. Use the
+        /// constructor that takes the DVD's 16 color palette, which the unit's colors index into.
+        /// </summary>
+        public void WriteSubPictureUnit(TimeCode startTime, byte[] subPictureUnit)
+        {
+            // timestamp: 00:00:33:900, filepos: 000000000
+            _idx.AppendLine($"timestamp: {startTime.Hours:00}:{startTime.Minutes:00}:{startTime.Seconds:00}:{startTime.Milliseconds:000}, filepos: {_subFile.Position.ToString("X").PadLeft(9, '0').ToLowerInvariant()}");
+
+            var imageBuffer = subPictureUnit;
             int bufferIndex = 0;
             byte vobSubId = (byte)_languageStreamId;
             var mwsub = new MemWriter(200000);
@@ -204,7 +234,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                     subHeader[27] = (byte)((ts[0] & 0x7f) << 1 | 0x01);
 
                     const string pre = "0010"; // 0011 or 0010 ? (KMPlayer will not understand 0011!!!)
-                    long newPts = (long)(p.StartTime.TotalSeconds * 90000.0);
+                    long newPts = (long)(startTime.TotalSeconds * 90000.0);
                     string bString = Convert.ToString(newPts, 2).PadLeft(33, '0');
                     string fiveBytesString = pre + bString.Substring(0, 3) + "1" + bString.Substring(3, 15) + "1" + bString.Substring(18, 15) + "1";
                     for (int i = 0; i < 5; i++)
@@ -431,7 +461,7 @@ time offset: 0
 forced subs: OFF
 
 # The original palette of the DVD
-palette: 000000, " + ToHexColor(_pattern) + ", " + ToHexColor(_emphasis1) + ", " + Emphasis2PalettePlaceholder + @", 828282, 828282, 828282, ffffff, 828282, bababa, 828282, 828282, 828282, 828282, 828282, 828282
+palette: " + GetPaletteLine() + @"
 
 # Custom colors (transp idxs and the four colors)
 custom colors: OFF, tridx: 0000, colors: 000000, 000000, 000000, 000000
@@ -445,6 +475,16 @@ id: " + _languageNameShort + @", index: 0
 # alt: " + _languageName + @"
 # Vob/Cell ID: 1, 1 (PTS: 0)");
             return sb;
+        }
+
+        private string GetPaletteLine()
+        {
+            if (_palette != null && _palette.Count > 0)
+            {
+                return string.Join(", ", Enumerable.Range(0, 16).Select(i => ToHexColor(i < _palette.Count ? _palette[i] : SKColors.Black)));
+            }
+
+            return "000000, " + ToHexColor(_pattern) + ", " + ToHexColor(_emphasis1) + ", " + Emphasis2PalettePlaceholder + ", 828282, 828282, 828282, ffffff, 828282, bababa, 828282, 828282, 828282, 828282, 828282, 828282";
         }
 
         private const string Emphasis2PalettePlaceholder = "[EMPHASIS2]";

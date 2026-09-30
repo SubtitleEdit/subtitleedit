@@ -9,6 +9,7 @@ Cross-platform (Windows, Linux, macOS); only needs the .NET 10 runtime.
 
 - 380+ subtitle formats (text, binary, image-based)
 - Container input: Matroska (.mkv/.mks), MP4, MCC, MXF, AVI (.avi/.divx), transport stream teletext
+- DVD rip to VobSub: a title set IFO (VTS_xx_0.IFO) or its VOB files → .sub/.idx, lossless with the disc's palette and languages
 - OCR for image-based sources (Blu-ray .sup, VobSub .sub/.idx, MKV PGS/VobSub, MP4 VobSub, TS DVB-sub, AVI XSUB)
   via seven engines: Tesseract, nOCR, BinaryOCR, Ollama, llama.cpp, PaddleOCR, Apple Vision (macOS) — or `--time-codes-only` to skip OCR
 - Image-based output and image-to-image conversion (preserve source bitmaps, no OCR)
@@ -38,6 +39,8 @@ seconv movie.sup subrip --time-codes-only                        # timing only, 
 seconv movie.sup subrip --ocr-auto-detect-assa-alignment         # OCR + {\an8} etc. from each image's position
 seconv movie.avi subrip --ocr-engine:tesseract --ocr-language:eng # OCR the XSUB subtitles of an .avi
 seconv subs.srt bluraysup --resolution:1920x1080                 # render text → Blu-ray sup
+seconv VIDEO_TS/VTS_01_0.IFO vobsub                              # rip DVD subtitles (longest title) to .sub/.idx
+seconv VIDEO_TS/VTS_01_0.IFO vobsub --track-number:2             # rip DVD title (program chain) 2
 seconv dump-settings > my.json                                   # starter --settings file (libse defaults)
 ```
 
