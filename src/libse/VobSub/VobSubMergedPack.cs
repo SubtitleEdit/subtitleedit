@@ -36,9 +36,10 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 return SubPicture.GetBitmap(Palette, SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black, false, true);
             }
 
-            // No palette (e.g. a .vob without its IFO): black text with a white outline. Which of
-            // the three colors is the text, the outline and the anti-aliasing differs between
-            // discs, so it is found from the image itself - see GetNoPaletteColors.
+            // No palette (e.g. a .vob without its IFO): white text with a black outline, the way a DVD
+            // usually looks (and how a sub/idx with its palette is shown). Which of the three colors is
+            // the text, the outline and the anti-aliasing differs between discs, so it is found from the
+            // image itself - see GetNoPaletteColors.
             var colors = GetNoPaletteColors();
             return SubPicture.GetBitmap(null, colors[0], colors[1], colors[2], colors[3], false, true);
         }
@@ -47,10 +48,10 @@ namespace Nikse.SubtitleEdit.Core.VobSub
 
         /// <summary>
         /// The outline is the color that borders the transparent background the most (relative to
-        /// its pixel count) and the text body the one that borders it the least; the text body is
-        /// drawn black, the outline white and the anti-aliasing between them black. Most discs use
-        /// pattern = text, emphasis 1 = outline, but e.g. some use pattern = outline and emphasis 2 =
-        /// text - with fixed colors, text and outline then both came out black.
+        /// its pixel count) and the text body the one that borders it the least; the text is drawn
+        /// white, the outline black and the anti-aliasing between them gray. Most discs use pattern =
+        /// text, emphasis 1 = outline, but e.g. some use pattern = outline and emphasis 2 = text - with
+        /// fixed colors, text and outline then came out the same color.
         /// </summary>
         private SKColor[] GetNoPaletteColors()
         {
@@ -106,12 +107,13 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 }
             }
 
-            var colors = new[] { SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black };
+            var colors = new[] { SKColors.Transparent, SKColors.White, SKColors.Black, SKColors.Gray };
             if (used.Count >= 2)
             {
                 used.Sort((a, b) => ((double)edges[a] / counts[a]).CompareTo((double)edges[b] / counts[b]));
-                colors = new[] { SKColors.Transparent, SKColors.Black, SKColors.Black, SKColors.Black };
-                colors[used[used.Count - 1]] = SKColors.White; // borders the background the most: outline
+                colors = new[] { SKColors.Transparent, SKColors.Gray, SKColors.Gray, SKColors.Gray };
+                colors[used[0]] = SKColors.White; // borders the background the least: text
+                colors[used[used.Count - 1]] = SKColors.Black; // borders the background the most: outline
             }
 
             _noPaletteColors = colors;

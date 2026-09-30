@@ -133,9 +133,8 @@ public partial class PickVobSubLanguageViewModel : ObservableObject
                 pack.Palette = palette;
             }
 
-            // Without a palette (a .vob without its IFO) draw like SE 4: wheat text, black outline
-            // - the plain default is black text, near invisible on a dark theme.
-            var bitmap = pack.SubPicture.GetBitmap(palette, SKColors.Transparent, SKColors.Wheat, SKColors.Black, SKColors.DarkGray, false, true);
+            // without a palette (a .vob without its IFO) GetBitmap finds the text/outline colors itself
+            var bitmap = pack.GetBitmap();
             Rows.Add(new VobSubLanguageCueDisplay
             {
                 Number = i + 1,
