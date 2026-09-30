@@ -1,10 +1,14 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Input.Platform;
 using Avalonia.Media.Imaging;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Logic;
@@ -102,9 +106,15 @@ public static partial class ClipboardHelper
     private const uint GMEM_MOVEABLE = 0x0002;
     private const int BI_RGB = 0;
 
-    public static async Task SetTextAsync(Window window, string text)
+    public static async Task SetTextAsync(Visual visual, string text)
     {
-        var clipboard = TopLevel.GetTopLevel(window)?.Clipboard;
+        if (OperatingSystem.IsLinux() && Se.Settings.General.LinuxClipboardUseExternalTool &&
+            await TrySetTextLinuxExternalToolAsync(text))
+        {
+            return;
+        }
+
+        var clipboard = TopLevel.GetTopLevel(visual)?.Clipboard;
         if (clipboard != null)
         {
             try
@@ -127,7 +137,99 @@ public static partial class ClipboardHelper
         }
     }
 
-    // GetTextAsync 
+    // Tools found missing (Process.Start threw) - not retried for the rest of the session.
+    private static bool _xclipMissing;
+    private static bool _wlCopyMissing;
+
+    /// <summary>
+    /// Copy text via xclip (X11/XWayland) or wl-copy (Wayland) instead of Avalonia's X11 clipboard.
+    /// Avalonia serves the X11 "STRING" target with Encoding.ASCII (ICCCM says Latin-1), so apps
+    /// that request that target get every non-ASCII character as '?' - "posição" pasted as
+    /// "posi??o" (issue #15488). Returns false when neither tool is available or both fail, so
+    /// the caller can fall back to Avalonia.
+    /// </summary>
+    private static async Task<bool> TrySetTextLinuxExternalToolAsync(string text)
+    {
+        var hasX11 = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DISPLAY"));
+        var hasWayland = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WAYLAND_DISPLAY"));
+
+        // SE is an X11 client (XWayland under a Wayland session), so prefer xclip: it owns the
+        // same selection SE reads back on paste, and wl-copy on GNOME needs a focus-stealing
+        // helper surface because mutter lacks the data-control protocol.
+        if (hasX11 && !_xclipMissing &&
+            await TryRunClipboardToolAsync("xclip", ["-selection", "clipboard", "-i"], text, () => _xclipMissing = true))
+        {
+            return true;
+        }
+
+        if (hasWayland && !_wlCopyMissing &&
+            await TryRunClipboardToolAsync("wl-copy", [], text, () => _wlCopyMissing = true))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private static async Task<bool> TryRunClipboardToolAsync(string fileName, string[] arguments, string text, Action markMissing)
+    {
+        // stdout/stderr are deliberately not redirected: xclip and wl-copy fork a background
+        // child that keeps serving the selection, and that child would inherit the pipes.
+        var psi = new ProcessStartInfo
+        {
+            FileName = fileName,
+            UseShellExecute = false,
+            CreateNoWindow = true,
+            RedirectStandardInput = true,
+        };
+        foreach (var argument in arguments)
+        {
+            psi.ArgumentList.Add(argument);
+        }
+
+        Process? process;
+        try
+        {
+            process = Process.Start(psi);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Clipboard tool {fileName} not available: {ex.Message}");
+            markMissing();
+            return false;
+        }
+
+        if (process == null)
+        {
+            return false;
+        }
+
+        using (process)
+        {
+            try
+            {
+                // Write UTF-8 bytes ourselves: StandardInput's encoding follows the process
+                // locale, which may not be UTF-8 (e.g. LANG=C).
+                using (var stdin = process.StandardInput.BaseStream)
+                {
+                    var bytes = Encoding.UTF8.GetBytes(text);
+                    await stdin.WriteAsync(bytes);
+                }
+
+                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+                await process.WaitForExitAsync(cts.Token);
+                return process.ExitCode == 0;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Clipboard tool {fileName} failed: {ex.Message}");
+                try { process.Kill(); } catch { }
+                return false;
+            }
+        }
+    }
+
+    // GetTextAsync
     public static async Task<string?> GetTextAsync(Window window)
     {
         var clipboard = TopLevel.GetTopLevel(window)?.Clipboard;
