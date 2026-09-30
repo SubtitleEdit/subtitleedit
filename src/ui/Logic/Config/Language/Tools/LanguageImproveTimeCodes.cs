@@ -25,6 +25,8 @@ public class LanguageImproveTimeCodes
     public string HeardHint { get; set; }
     public string StatusConfirmedBySpeech { get; set; }
     public string StatusDisputedBySpeech { get; set; }
+    public string StatusMovedWithSync { get; set; }
+    public string SyncedFirstXY { get; set; }
     public string ShowSpeechOnly { get; set; }
     public string ShowSpeechOnlyHint { get; set; }
     public string Align { get; set; }
@@ -74,7 +76,7 @@ public class LanguageImproveTimeCodes
         IsolatingSpeech = "Isolating speech... (this takes a while)";
         IsolateSpeechFailed = "Could not isolate the speech - aligned against the original audio instead.";
         CheckWithSpeechToText = "Check with speech-to-text";
-        CheckWithSpeechToTextHint = "Transcribes the audio as well, and checks every move against where the words were actually heard. Large moves the speech confirms are ticked for you, and moves away from where a line is heard are left unticked for you to check. Also shows how much of each line was heard - a low share means the text differs from what is said. Uses Crisp ASR Parakeet, which takes a few minutes for a feature film with a GPU.";
+        CheckWithSpeechToTextHint = "Transcribes the audio as well, and checks every move against where the words were actually heard. Large moves the speech confirms are ticked for you, and moves away from where a line is heard are left unticked for you to check. Also shows how much of each line was heard - a low share means the text differs from what is said. A subtitle that is further out of sync than the max shift - a constant offset, a drift from a frame rate mismatch, or jumps where scenes were cut - is synced by the heard words first. Uses Crisp ASR Parakeet, which takes a few minutes for a feature film with a GPU.";
         CheckWithSpeechToTextNotAvailableX = "Speech-to-text check is not available for {0}";
         TranscribingToCheck = "Transcribing to check the alignment...";
         SpeechToTextFailed = "Speech-to-text failed - the time codes were not checked against it.";
@@ -85,6 +87,8 @@ public class LanguageImproveTimeCodes
         HeardHint = "How much of the line speech-to-text heard. A low share means the text differs from what is said - where the aligner is most likely to be wrong.";
         StatusConfirmedBySpeech = "Confirmed by speech";
         StatusDisputedBySpeech = "Heard where it was";
+        StatusMovedWithSync = "Moved with the sync";
+        SyncedFirstXY = "Synced first: {0} s at the start, {1} s at the end";
         ShowSpeechOnly = "Show speech only";
         ShowSpeechOnlyHint = "Draw the aligned waveform from the audio with music and sound effects removed; the original waveform stays as it is, for comparison. Available once the speech has been isolated - here, or with \"Show speech only\" in the main window's waveform.";
         Align = "Align";

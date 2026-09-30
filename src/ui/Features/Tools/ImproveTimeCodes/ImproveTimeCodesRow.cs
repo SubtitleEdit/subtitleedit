@@ -83,6 +83,7 @@ public partial class ImproveTimeCodesRow : ObservableObject
             SubtitleRetimer.LineStatus.LargeMoveUnconfirmed => (l.StatusLargeMoveUnconfirmed, StatusDots.Amber),
             SubtitleRetimer.LineStatus.ConfirmedBySpeech => (l.StatusConfirmedBySpeech, StatusDots.Green),
             SubtitleRetimer.LineStatus.DisputedBySpeech => (l.StatusDisputedBySpeech, StatusDots.Amber),
+            SubtitleRetimer.LineStatus.MovedWithSync => (l.StatusMovedWithSync, Blue),
             SubtitleRetimer.LineStatus.Unchanged => (l.StatusUnchanged, StatusDots.Grey),
             SubtitleRetimer.LineStatus.NoSpeech => (l.StatusNoSpeech, StatusDots.Grey),
             SubtitleRetimer.LineStatus.ShiftTooLarge => (l.StatusShiftTooLarge, StatusDots.Amber),

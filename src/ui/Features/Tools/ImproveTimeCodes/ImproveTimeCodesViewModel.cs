@@ -525,6 +525,23 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
                 .Select(p => new SubtitleRetimer.Line(p.Text ?? string.Empty, p.StartTime.TotalSeconds, p.EndTime.TotalSeconds))
                 .ToList();
 
+            // Further out than the aligner may reach: the heard words bring it close enough first.
+            // Within the max shift the aligner does better on its own, so nothing is changed then.
+            var syncedLines = lines;
+            RoughSync.Result? sync = null;
+            if (heardWords != null)
+            {
+                sync = RoughSync.Measure(lines, heardWords);
+                if (sync != null && sync.MaxAbsOffset > options.MaxShiftSeconds)
+                {
+                    syncedLines = RoughSync.Apply(lines, sync);
+                }
+                else
+                {
+                    sync = null;
+                }
+            }
+
             var progress = new Progress<SubtitleRetimer.Progress>(p =>
             {
                 ProgressValue = p.Percent;
@@ -533,11 +550,20 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
 
             using var audio = new FfmpegWindowAudioSource(GetFfmpegPath(), audioFileName, totalSeconds, workFolder);
             var runner = new CrispAsrAlignOnlyRunner(_engine.GetExecutable(), modelPath, Se.WriteToolsLog);
-            var results = await Task.Run(
-                () => new SubtitleRetimer(runner, audio, options).RetimeAsync(lines, progress, cancellationToken, heardWords),
-                cancellationToken);
+            var results = (await Task.Run(
+                () => new SubtitleRetimer(runner, audio, options).RetimeAsync(syncedLines, progress, cancellationToken, heardWords),
+                cancellationToken)).ToArray();
+            if (sync != null)
+            {
+                RoughSync.Merge(lines, syncedLines, results);
+            }
 
             ShowResults(results);
+            if (sync != null)
+            {
+                SummaryLine = string.Format(l.SyncedFirstXY, FormatOffset(sync.Offsets[0]), FormatOffset(sync.Offsets[^1])) + "   ·   " + SummaryLine;
+            }
+
             if (isolationFailed)
             {
                 StatusText = l.IsolateSpeechFailed;
@@ -573,6 +599,9 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
             TryDeleteFolder(workFolder);
         }
     }
+
+    private static string FormatOffset(double seconds)
+        => (seconds >= 0 ? "+" : "−") + Math.Abs(seconds).ToString("0.0", CultureInfo.InvariantCulture);
 
     private void ShowResults(IReadOnlyList<SubtitleRetimer.LineResult> results)
     {

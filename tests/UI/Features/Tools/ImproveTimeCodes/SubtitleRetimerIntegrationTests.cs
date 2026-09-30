@@ -118,6 +118,63 @@ public class SubtitleRetimerIntegrationTests
         }
     }
 
+    [Fact]
+    public async Task RealSpeechToText_SyncsAnOffsetAndDriftBeyondTheMaxShift()
+    {
+        if (!File.Exists(Audio) || !File.Exists(Srt) || !File.Exists(Executable) || !File.Exists(Model) || !File.Exists(SttModel))
+        {
+            return;
+        }
+
+        var subtitle = new Subtitle();
+        new SubRip().LoadSubtitle(subtitle, File.ReadAllLines(Srt!).ToList(), Srt!);
+        var truth = subtitle.Paragraphs;
+
+        var folder = Directory.CreateTempSubdirectory().FullName;
+        try
+        {
+            var totalSeconds = new FileInfo(Audio!).Length / (16000.0 * 2);
+            using var audio = new FfmpegWindowAudioSource("ffmpeg", Audio!, totalSeconds, folder);
+            var runner = new CrispAsrAlignOnlyRunner(Executable!, Model!);
+            var copy = Path.Combine(folder, "audio.wav");
+            File.Copy(Audio!, copy);
+            var heard = await new CrispAsrWordTranscriber(Executable!, "parakeet", SttModel!, CrispAsrWordTranscriber.FindVadModel(Path.GetDirectoryName(Executable!)!))
+                .TranscribeAsync(copy, "en", null, TestContext.Current.CancellationToken);
+
+            // Three seconds late, drifting a further two seconds a hundred seconds, with a little
+            // jitter per line - far beyond the default max shift.
+            var random = new Random(3);
+            var lines = truth
+                .Select(p =>
+                {
+                    var t = p.StartTime.TotalSeconds;
+                    var shift = 3.0 + (t * 0.02) + ((random.NextDouble() - 0.5) * 0.4);
+                    return new SubtitleRetimer.Line(p.Text, t + shift, p.EndTime.TotalSeconds + shift);
+                })
+                .ToList();
+
+            var options = new SubtitleRetimer.Options();
+            var sync = RoughSync.Measure(lines, heard);
+            Assert.NotNull(sync);
+            var synced = RoughSync.Apply(lines, sync!);
+            var results = (await new SubtitleRetimer(runner, audio, options)
+                .RetimeAsync(synced, null, TestContext.Current.CancellationToken, heard)).ToArray();
+            RoughSync.Merge(lines, synced, results);
+
+            var report = string.Join("\n", truth.Select((p, i) =>
+                $"{i + 1,3} {results[i].Status,-20} ref {p.StartTime.TotalSeconds,7:0.00} in {lines[i].StartSeconds,7:0.00} " +
+                $"sync {synced[i].StartSeconds,7:0.00} out {results[i].StartSeconds,7:0.00}  {p.Text.Replace("\n", " ").Replace("\r", string.Empty)}"));
+
+            var spoken = Enumerable.Range(0, truth.Count).Where(i => results[i].Status != SubtitleRetimer.LineStatus.NoSpeech).ToList();
+            var close = spoken.Count(i => Math.Abs(results[i].StartSeconds - truth[i].StartTime.TotalSeconds) < 0.3);
+            Assert.True(close >= spoken.Count * 0.8, $"{close} of {spoken.Count} within 0.3 s, {sync!.AnchorLines} anchor lines\n{report}");
+        }
+        finally
+        {
+            Directory.Delete(folder, true);
+        }
+    }
+
     private static async Task<(List<SubtitleRetimer.Line> Input, IReadOnlyList<SubtitleRetimer.LineResult> Output)> RetimeJitteredAsync(
         List<Paragraph> truth, int seed, ForcedAligner.IRunner runner, ForcedAligner.IAudioSource audio)
     {

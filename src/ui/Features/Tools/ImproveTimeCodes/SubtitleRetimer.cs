@@ -122,6 +122,12 @@ public sealed partial class SubtitleRetimer
         /// moved it. The aligner's times are offered, unticked, for the user to check.
         /// </summary>
         DisputedBySpeech,
+
+        /// <summary>
+        /// The subtitle was out of sync by more than the max shift, so it was synced first
+        /// (see <see cref="RoughSync"/>), and the aligner left this line where the sync put it.
+        /// </summary>
+        MovedWithSync,
     }
 
     public readonly record struct Line(string Text, double StartSeconds, double EndSeconds);
@@ -552,7 +558,8 @@ public sealed partial class SubtitleRetimer
             or LineStatus.MovedWithNeighbours
             or LineStatus.LargeMoveUnconfirmed
             or LineStatus.ConfirmedBySpeech
-            or LineStatus.DisputedBySpeech;
+            or LineStatus.DisputedBySpeech
+            or LineStatus.MovedWithSync;
 
     /// <summary>The new times are offered unticked, for the user to check.</summary>
     public static bool IsUnconfirmed(LineStatus status)
