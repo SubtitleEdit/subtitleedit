@@ -360,17 +360,36 @@ public sealed class FfmpegPlayerLiveTests : IDisposable
     /// does (#9828) - subtitles extracted from it are timed on them. Rebasing it to zero put every
     /// subtitle late by the start time.
     /// </summary>
-    [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public void StartOffset_PositionsAreTheFilesOwnTimeStamps(bool transportStream)
+    [Fact]
+    public void StartOffset_PositionsAreTheFilesOwnTimeStamps()
     {
-        var index = Load(transportStream ? StartOffsetTransportStream : StartOffsetClip);
+        var index = Load(StartOffsetClip);
 
         var first = index.SecondsAt(0);
-        Assert.InRange(first, 5.0, 6.5);
+        Assert.InRange(first, 4.99, 5.01);
         AssertPosition(first, "first picture");
         Assert.Equal(first + 99 * 0.04, _player.Duration, 1); // the end, not the length
+
+        SeekAndWait(first + 2.0);
+        AssertPosition(first + 2.0, "seek into the clip");
+
+        SeekAndWait(0);
+        AssertPosition(first, "seek before the first picture");
+    }
+
+    /// <summary>
+    /// A transport stream counts from the file's start (its earliest audio or video time stamp) -
+    /// as mpv plays it and as the subtitles read from it are timed. Its clock starts anywhere.
+    /// </summary>
+    [Fact]
+    public void StartOffset_TransportStreamCountsFromTheFileStart()
+    {
+        var index = Load(StartOffsetTransportStream);
+
+        var first = index.SecondsAt(0);
+        Assert.InRange(first, 0.0, 0.1); // the audio starts a moment before the video
+        AssertPosition(first, "first picture");
+        Assert.Equal(first + 99 * 0.04, _player.Duration, 1);
 
         SeekAndWait(first + 2.0);
         AssertPosition(first + 2.0, "seek into the clip");

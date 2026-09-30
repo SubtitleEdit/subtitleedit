@@ -271,6 +271,18 @@ public class FfmpegPlayerTests
     }
 
     [Theory]
+    [InlineData("mpegts", true)]
+    [InlineData("mpeg", false)] // MPEG-PS (.mpg/.vob): subtitles read from it keep their time stamps
+    [InlineData("mov,mp4,m4a,3gp,3g2,mj2", false)]
+    [InlineData("matroska,webm", false)]
+    [InlineData("flv", false)]
+    [InlineData(null, false)]
+    public void UsesFileStartAsZero_OnlyForTransportStreams(string? format, bool expected)
+    {
+        Assert.Equal(expected, FfmpegPlayer.UsesFileStartAsZero(format));
+    }
+
+    [Theory]
     [InlineData(AVSampleFormat.AV_SAMPLE_FMT_U8, false)]
     [InlineData(AVSampleFormat.AV_SAMPLE_FMT_S16, false)]
     [InlineData(AVSampleFormat.AV_SAMPLE_FMT_S32, false)]

@@ -167,6 +167,82 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         }
 
         /// <summary>
+        /// Reads the PTS (90 kHz) of any PES that starts in this packet - for a PID whose kind the
+        /// program map table already tells (VC-1 video and Blu-ray audio use stream ids outside
+        /// the MPEG video/audio ranges).
+        /// </summary>
+        public static bool TryPeekPresentationTimestamp(byte[] packetBuffer, out ulong presentationTimestamp)
+        {
+            presentationTimestamp = 0;
+            if ((packetBuffer[1] & 0x40) == 0)
+            {
+                return false; // no PES starts here
+            }
+
+            var payloadStart = GetPayloadStart(packetBuffer);
+            if (payloadStart < 0 || payloadStart + 14 > packetBuffer.Length)
+            {
+                return false;
+            }
+
+            var p = payloadStart;
+            if (packetBuffer[p] != 0 || packetBuffer[p + 1] != 0 || packetBuffer[p + 2] != 1 || (packetBuffer[p + 7] & 0x80) == 0)
+            {
+                return false;
+            }
+
+            presentationTimestamp = ReadTimestamp(packetBuffer, p + 9);
+            return true;
+        }
+
+        /// <summary>
+        /// Reads the PTS (90 kHz) of an audio PES that starts in this packet: MPEG audio/AAC
+        /// (stream id 0xC0-0xDF), or AC-3/E-AC-3/DTS in private stream 1 (0xBD) or an extended
+        /// stream (0xFD, Blu-ray) - told apart from the subtitles and teletext that share private
+        /// stream 1 by the sync word that starts the payload.
+        /// </summary>
+        public static bool TryPeekAudioPresentationTimestamp(byte[] packetBuffer, out ulong presentationTimestamp)
+        {
+            presentationTimestamp = 0;
+            if ((packetBuffer[1] & 0x40) == 0)
+            {
+                return false; // no PES starts here
+            }
+
+            var payloadStart = GetPayloadStart(packetBuffer);
+            if (payloadStart < 0 || payloadStart + 14 > packetBuffer.Length)
+            {
+                return false;
+            }
+
+            var p = payloadStart;
+            if (packetBuffer[p] != 0 || packetBuffer[p + 1] != 0 || packetBuffer[p + 2] != 1 || (packetBuffer[p + 7] & 0x80) == 0)
+            {
+                return false;
+            }
+
+            var streamId = packetBuffer[p + 3];
+            if (streamId == 0xBD || streamId == 0xFD)
+            {
+                var data = p + 9 + packetBuffer[p + 8];
+                var isAc3 = data + 2 <= packetBuffer.Length && packetBuffer[data] == 0x0B && packetBuffer[data + 1] == 0x77;
+                var isDts = data + 4 <= packetBuffer.Length && packetBuffer[data] == 0x7F && packetBuffer[data + 1] == 0xFE &&
+                            packetBuffer[data + 2] == 0x80 && packetBuffer[data + 3] == 0x01;
+                if (!isAc3 && !isDts)
+                {
+                    return false;
+                }
+            }
+            else if (streamId < 0xC0 || streamId > 0xDF)
+            {
+                return false;
+            }
+
+            presentationTimestamp = ReadTimestamp(packetBuffer, p + 9);
+            return true;
+        }
+
+        /// <summary>
         /// Reads the program clock reference base (90 kHz) from the adaptation field, if present.
         /// </summary>
         public static bool TryPeekProgramClockReference(byte[] packetBuffer, out ulong programClockReference)
