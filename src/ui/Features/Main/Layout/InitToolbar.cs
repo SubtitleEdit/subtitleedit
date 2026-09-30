@@ -31,7 +31,7 @@ public static class InitToolbar
         };
     }
 
-    private static Grid CreateToolbar(MainViewModel vm)
+    private static ToolbarPanel CreateToolbar(MainViewModel vm)
     {
 
         var stackPanelLeft = new StackPanel
@@ -510,6 +510,15 @@ public static class InitToolbar
             VerticalAlignment = VerticalAlignment.Center,
         };
 
+        // When the window is too narrow for both the icons and the right panel, the right
+        // panel's items are hidden in this order so they never draw on top of the icons (#15462).
+        var toolbarPanel = new ToolbarPanel(stackPanelLeft, stackPanelRight);
+        const int rankLabels = 1;
+        const int rankFrameRate = 2;
+        const int rankEncoding = 3;
+        const int rankFormatProperties = 4;
+        const int rankFormat = 5;
+
         // One properties/options button for every format with format-specific settings (EBU STL
         // options, DCinema/timed-text/WebVTT properties, ...) - the same dialogs as the File menu's
         // "<format> properties..." item. Placed left of the format selector: the right-aligned
@@ -533,15 +542,20 @@ public static class InitToolbar
         {
             formatPropertiesButton[!ToolTip.TipProperty] = new Binding(nameof(vm.FilePropertiesText)) { Source = vm };
         }
-        stackPanelRight.Children.Add(formatPropertiesButton);
+        // Wrapped, as the button's own visibility is bound to the current format.
+        var formatPropertiesHost = new Panel { Children = { formatPropertiesButton } };
+        stackPanelRight.Children.Add(formatPropertiesHost);
+        toolbarPanel.AddCollapsible(formatPropertiesHost, rankFormatProperties);
 
         // subtitle formats
-        stackPanelRight.Children.Add(new TextBlock
+        var labelFormat = new TextBlock
         {
             Text = Se.Language.General.Format,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(5, 0, 3, 0),
-        });
+        };
+        stackPanelRight.Children.Add(labelFormat);
+        toolbarPanel.AddCollapsible(labelFormat, rankLabels);
         var comboBoxSubtitleFormat = new ComboBox
         {
             Width = 200,
@@ -565,16 +579,19 @@ public static class InitToolbar
             RoutingStrategies.Tunnel,
             handledEventsToo: true);
         stackPanelRight.Children.Add(comboBoxSubtitleFormat);
+        toolbarPanel.AddCollapsible(comboBoxSubtitleFormat, rankFormat);
         isLastSeparator = false;
 
         if (appearance.ToolbarShowEncoding)
         {
-            stackPanelRight.Children.Add(new TextBlock
+            var labelEncoding = new TextBlock
             {
                 Text = Se.Language.General.Encoding,
                 VerticalAlignment = VerticalAlignment.Center,
                 Margin = new Thickness(5, 0, 3, 0),
-            });
+            };
+            stackPanelRight.Children.Add(labelEncoding);
+            toolbarPanel.AddCollapsible(labelEncoding, rankLabels);
             var comboBoxEncoding = new ComboBox
             {
                 Width = 200,
@@ -584,16 +601,19 @@ public static class InitToolbar
                 DataContext = vm,
             };
             stackPanelRight.Children.Add(comboBoxEncoding);
+            toolbarPanel.AddCollapsible(comboBoxEncoding, rankEncoding);
         }
 
         if (appearance.ToolbarShowFrameRate)
         {
-            stackPanelRight.Children.Add(new TextBlock
+            var labelFrameRate = new TextBlock
             {
                 Text = Se.Language.General.FrameRate,
                 VerticalAlignment = VerticalAlignment.Center,
                 Margin = new Thickness(5, 0, 3, 0),
-            });
+            };
+            stackPanelRight.Children.Add(labelFrameRate);
+            toolbarPanel.AddCollapsible(labelFrameRate, rankLabels);
             var comboBoxFrameRate = new ComboBox
             {
                 Width = 110,
@@ -603,11 +623,12 @@ public static class InitToolbar
                 DataContext = vm,
             };
             stackPanelRight.Children.Add(comboBoxFrameRate);
+            toolbarPanel.AddCollapsible(comboBoxFrameRate, rankFrameRate);
             comboBoxFrameRate.SelectionChanged += vm.ComboBoxFrameRateSelectionChanged;
 
             // SE 4 had a "..." button right next to the combo box for reading the frame rate
             // out of a video file without opening it in the player.
-            stackPanelRight.Children.Add(new Button
+            var buttonFrameRateFromVideo = new Button
             {
                 Content = "...",
                 Command = vm.GetFrameRateFromVideoFileCommand,
@@ -615,36 +636,22 @@ public static class InitToolbar
                 VerticalAlignment = VerticalAlignment.Center,
                 [AutomationProperties.NameProperty] = languageHints.GetFrameRateFromVideoFileHint,
                 [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.GetFrameRateFromVideoFileHint, shortcuts),
-            });
+            };
+            stackPanelRight.Children.Add(buttonFrameRateFromVideo);
+            toolbarPanel.AddCollapsible(buttonFrameRateFromVideo, rankFrameRate);
         }
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-
-        grid.Add(stackPanelLeft, 0, 0);
-        grid.Add(stackPanelRight, 0, 1);
+        toolbarPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
+        toolbarPanel.VerticalAlignment = VerticalAlignment.Center;
 
         // SE 4 drew toolbar icons as flat, borderless buttons. The Classic theme's
         // global Button style (UiTheme.ApplyWindowsClassicGray) adds a 1px border to
-        // every button; this style is scoped to the toolbar grid so it strips the
+        // every button; this style is scoped to the toolbar panel so it strips the
         // border from the toolbar buttons only - buttons elsewhere keep their border.
         // Pastel's Button style colors the border too, which boxes in every icon.
         if (UiTheme.ThemeName == UiTheme.ThemeNameClassic || UiTheme.ThemeName == UiTheme.ThemeNamePastel)
         {
-            grid.Styles.Add(new Style(x => x.OfType<Button>())
+            toolbarPanel.Styles.Add(new Style(x => x.OfType<Button>())
             {
                 Setters =
                 {
@@ -654,7 +661,7 @@ public static class InitToolbar
             });
         }
 
-        return grid;
+        return toolbarPanel;
     }
 
     // Public so other windows (e.g. the spell-check completed dialog) can reuse the exact same
