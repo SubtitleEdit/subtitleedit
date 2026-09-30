@@ -74,7 +74,8 @@ public class TransportStreamClosedCaptionTest
     /// SCTE 20 captions (US cable, before ATSC A/53) in MPEG-2 user data: ffmpeg fate-suite
     /// sub/scte20.ts with the picture slices removed (headers, user data and timing kept). ffmpeg's
     /// decoder reads the same lines from the original. The recording starts in the middle of a
-    /// roll-up caption, before any control code, so its first partial line is not read.
+    /// roll-up caption, before any control code: its first partial line is kept once the first
+    /// command turns out to be a roll-up (it used to be dropped).
     /// </summary>
     [Fact]
     public void ReadsScte20CaptionsFromMpeg2UserData()
@@ -84,9 +85,10 @@ public class TransportStreamClosedCaptionTest
 
         var tracks = Assert.Single(parser.ClosedCaptionSubtitlesLookup).Value;
         var cc1 = tracks[1];
-        Assert.Equal("SPENDING AND THIS, IS THAT CAR", cc1[0].Text);
-        Assert.Equal("SPENDING AND THIS, IS THAT CAR" + System.Environment.NewLine + "MANUFACTURERS ARE ABOUT AS", cc1[1].Text);
-        Assert.InRange(cc1[1].StartTime.TotalMilliseconds, 3900, 4100);
+        Assert.Equal("BESIDES THE", cc1[0].Text);
+        Assert.Equal("BESIDES THE" + System.Environment.NewLine + "SPENDING AND THIS, IS THAT CAR", cc1[1].Text);
+        Assert.Equal("SPENDING AND THIS, IS THAT CAR" + System.Environment.NewLine + "MANUFACTURERS ARE ABOUT AS", cc1[2].Text);
+        Assert.InRange(cc1[2].StartTime.TotalMilliseconds, 3900, 4100);
     }
 
     /// <summary>

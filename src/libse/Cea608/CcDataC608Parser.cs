@@ -14,6 +14,14 @@ namespace Nikse.SubtitleEdit.Core.Cea608
         private int? _lastCmdA;
         private int? _lastCmdB;
 
+        /// <summary>
+        /// Characters received before any command named their channel - a recording cut in the
+        /// middle of a roll-up line starts like that. They are replayed if the first command
+        /// turns out to be roll-up or paint-on (text shown as it arrives), else dropped.
+        /// </summary>
+        private readonly List<(int Time, int[] Chars)> _charsBeforeFirstCommand = new List<(int Time, int[] Chars)>();
+        private int _charCountBeforeFirstCommand;
+
         public DisplayScreenDelegate DisplayScreen { get; set; }
 
         public CcDataC608Parser()
@@ -61,9 +69,10 @@ namespace Nikse.SubtitleEdit.Core.Cea608
                     var channel = Channels[CurrentChannelNumber.Value - 1];
                     channel.InsertChars(charsFound);
                 }
-                else
+                else if (_charCountBeforeFirstCommand + charsFound.Length <= Constants.ScreenColCount)
                 {
-                    System.Diagnostics.Debug.WriteLine("No channel found yet. TEXT-MODE?");
+                    _charsBeforeFirstCommand.Add((LastTime ?? 0, charsFound));
+                    _charCountBeforeFirstCommand += charsFound.Length;
                 }
             }
         }
@@ -146,10 +155,36 @@ namespace Nikse.SubtitleEdit.Core.Cea608
                 CurrentChannelNumber = chNr;
                 _lastCmdA = a;
                 _lastCmdB = b;
+                ReplayCharsBeforeFirstCommand(Channels[chNr - 1], a, b);
                 return true;
             }
 
             return false;
+        }
+
+        private void ReplayCharsBeforeFirstCommand(Cea608Channel channel, int a, int b)
+        {
+            if (_charsBeforeFirstCommand.Count == 0)
+            {
+                return;
+            }
+
+            // Roll-up (RU2-RU4) or paint-on (RDC) show text as it arrives, so the leading
+            // characters were on screen; with pop-on they were never displayed.
+            var isMiscCommand = a == 0x14 || a == 0x1C;
+            if (isMiscCommand && (b == 0x25 || b == 0x26 || b == 0x27 || b == 0x29))
+            {
+                var time = LastTime;
+                foreach (var (charTime, chars) in _charsBeforeFirstCommand)
+                {
+                    LastTime = charTime;
+                    channel.InsertChars(chars);
+                }
+
+                LastTime = time;
+            }
+
+            _charsBeforeFirstCommand.Clear();
         }
 
         public bool ParseMidRow(int a, int b)
@@ -199,6 +234,7 @@ namespace Nikse.SubtitleEdit.Core.Cea608
                 var channel = Channels[chNr - 1];
                 channel.SetPac(pacData);
                 CurrentChannelNumber = chNr;
+                _charsBeforeFirstCommand.Clear(); // a preamble first: the mode is unknown
                 return true;
             }
             return false;
