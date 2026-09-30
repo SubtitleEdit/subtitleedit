@@ -545,6 +545,89 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             return 0x10; // 23.976
         }
 
+        /// <summary>
+        /// The frame rate a PCS frame_rate code (<see cref="BluRaySupParser.PcsData.FramesPerSecondType"/>)
+        /// stands for, or 0 when the code is not one Blu-ray defines.
+        /// </summary>
+        public static double GetFrameRate(int fpsId)
+        {
+            switch (fpsId & 0xf0)
+            {
+                case 0x10: return Core.Fps24P;
+                case 0x20: return Core.Fps24Hz;
+                case 0x30: return Core.FpsPal;
+                case 0x40: return Core.FpsNtsc;
+                case 0x50: return 30.0;
+                case 0x60: return Core.FpsPalI;
+                case 0x70: return Core.FpsNtscI;
+                default: return 0;
+            }
+        }
+
+        /// <summary>
+        /// The frame rate as an exact fraction: 23.976, 29.97 and 59.94 are the NTSC rates
+        /// n * 1000/1001, and a rounded decimal of those would drift off the frame grid within
+        /// minutes. False when <paramref name="fps"/> is not a usable frame rate.
+        /// </summary>
+        private static bool TryGetExactFrameRate(double fps, out long numerator, out long denominator)
+        {
+            numerator = 0;
+            denominator = 1;
+            if (double.IsNaN(fps) || fps < 1 || fps > 1000)
+            {
+                return false;
+            }
+
+            var whole = Math.Round(fps);
+            if (Math.Abs(fps - whole) < 0.001)
+            {
+                numerator = (long)whole;
+                return true;
+            }
+
+            var ntsc = Math.Round(fps * 1.001);
+            if (Math.Abs(fps - ntsc * 1000.0 / 1001.0) < 0.01)
+            {
+                numerator = (long)ntsc * 1000;
+                denominator = 1001;
+                return true;
+            }
+
+            numerator = (long)Math.Round(fps * 1000);
+            denominator = 1000;
+            return true;
+        }
+
+        /// <summary>
+        /// Converts a time in milliseconds to a 90 kHz PTS on the frame grid of
+        /// <paramref name="fps"/> (issue #15478). The time is snapped to the nearest frame, and
+        /// the frame converted with the exact frame duration - a millisecond time of a 23.976
+        /// frame is up to half a millisecond (45 ticks) off the frame, and a PTS after the frame
+        /// makes a strict decoder show the caption a frame late. The frame's PTS is rounded down
+        /// for the same reason. Without a usable frame rate the time is converted as it is.
+        /// </summary>
+        public static long MillisecondsToPts(long ms, double fps)
+        {
+            if (ms < 0 || !TryGetExactFrameRate(fps, out var numerator, out var denominator))
+            {
+                return (long)Math.Round(ms * 90.0, MidpointRounding.AwayFromZero);
+            }
+
+            return FrameToPts(MillisecondsToFrame(ms, numerator, denominator), numerator, denominator);
+        }
+
+        private static long MillisecondsToFrame(long ms, long numerator, long denominator)
+        {
+            // round(ms / 1000 * numerator / denominator), in integers
+            return (ms * numerator * 2 + 1000 * denominator) / (2000 * denominator);
+        }
+
+        private static long FrameToPts(long frame, long numerator, long denominator)
+        {
+            // floor(frame * 90000 * denominator / numerator)
+            return frame * 90000 * denominator / numerator;
+        }
+
         private static long _lastEndTimeForWrite = -1000;
 
         // PG segment types
@@ -1058,14 +1141,30 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             var fpsId = GetFpsId(fps);
             var writer = new SegmentWriter();
 
-            var pts = pic.StartTimeForWrite;
-            if (Configuration.Settings.Tools.ExportBluRayRemoveSmallGaps && Math.Abs(_lastEndTimeForWrite - pts) < 100)
+            // Start and end go on the frame grid (issue #15478). That already closes every gap
+            // shorter than half a frame, so the small gap removal - which nudges the start one
+            // tick past the previous end, i.e. off the grid - is only needed without a frame rate.
+            var onFrameGrid = TryGetExactFrameRate(fps, out var fpsNumerator, out var fpsDenominator) && pic.StartTime >= 0;
+            long pts;
+            long endPts;
+            if (onFrameGrid)
             {
-                pts = _lastEndTimeForWrite + 1;
+                var startFrame = MillisecondsToFrame(pic.StartTime, fpsNumerator, fpsDenominator);
+                var endFrame = Math.Max(MillisecondsToFrame(pic.EndTime, fpsNumerator, fpsDenominator), startFrame + 1);
+                pts = FrameToPts(startFrame, fpsNumerator, fpsDenominator);
+                endPts = FrameToPts(endFrame, fpsNumerator, fpsDenominator);
+            }
+            else
+            {
+                pts = pic.StartTimeForWrite;
+                endPts = pic.EndTimeForWrite;
+                if (Configuration.Settings.Tools.ExportBluRayRemoveSmallGaps && Math.Abs(_lastEndTimeForWrite - pts) < 100)
+                {
+                    pts = _lastEndTimeForWrite + 1;
+                }
             }
 
-            _lastEndTimeForWrite = pic.EndTimeForWrite;
-            var endPts = pic.EndTimeForWrite;
+            _lastEndTimeForWrite = endPts;
             var compositionNumber = pic.CompositionNumber;
 
             // The caption: PCS (also called the Control Segment), WDS, PDS, the ODS of every
@@ -1090,18 +1189,33 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             // repeats the composition of the epoch start with palette_update_flag set, which
             // tells the decoder to keep the objects it already has and only take the new palette.
             var updates = MergeFadeSteps(encoded);
-            for (var step = 0; step < updates.Count; step++)
+            var scheduled = new List<(long Pts, int[] AlphaPercents)>(updates.Count);
+            foreach (var update in updates)
             {
                 // A step may only be scheduled after the caption is up and before it is taken
                 // down; the start PTS can have been nudged by the small gap removal above.
-                var stepPts = Math.Min(Math.Max(updates[step].TimeForWrite, pts + 1), endPts - 1);
+                var stepPts = onFrameGrid ? MillisecondsToPts(update.TimeMs, fps) : update.TimeForWrite;
+                stepPts = Math.Min(Math.Max(stepPts, pts + 1), endPts - 1);
 
+                // Steps closer than a frame land on the same frame - only the last one shows.
+                if (scheduled.Count > 0 && scheduled[scheduled.Count - 1].Pts >= stepPts)
+                {
+                    scheduled[scheduled.Count - 1] = (scheduled[scheduled.Count - 1].Pts, update.AlphaPercents);
+                    continue;
+                }
+
+                scheduled.Add((stepPts, update.AlphaPercents));
+            }
+
+            for (var step = 0; step < scheduled.Count; step++)
+            {
+                var stepPts = scheduled[step].Pts;
                 compositionNumber++;
                 writer.Write(PcsSegment, stepPts, BuildPcs(pic.Width, h, fpsId, compositionNumber, CompositionStateNormal, true, encoded));
 
                 // The palette version has to move for the decoder to take the update; it is a
                 // byte, so it wraps on captions with more than 255 steps.
-                writer.Write(PdsSegment, stepPts, BuildPds(pal, palSize, (step + 1) & 0xff, encoded, updates[step].AlphaPercents));
+                writer.Write(PdsSegment, stepPts, BuildPds(pal, palSize, (step + 1) & 0xff, encoded, scheduled[step].AlphaPercents));
                 writer.Write(EndSegment, stepPts, Array.Empty<byte>());
             }
 

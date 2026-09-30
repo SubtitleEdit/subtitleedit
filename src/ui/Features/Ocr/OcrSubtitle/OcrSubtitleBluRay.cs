@@ -18,6 +18,11 @@ public class OcrSubtitleBluRay : IOcrSubtitle
         Count = pcsDataList.Count;
     }
 
+    /// <summary>
+    /// The frame rate the first PCS declares, or 0 when it declares none Blu-ray defines.
+    /// </summary>
+    public double FrameRate => _pcsDataList.Count > 0 ? BluRaySupPicture.GetFrameRate(_pcsDataList[0].FramesPerSecondType) : 0;
+
     public SKBitmap GetBitmap(int index)
     {
         if (index < 0 || index >= _pcsDataList.Count)

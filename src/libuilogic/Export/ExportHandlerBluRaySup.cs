@@ -184,9 +184,18 @@ public class ExportHandlerBluRaySup : IExportHandler
     private void WriteOverlapping(List<PendingCue> cues)
     {
         var pictures = cues.Select(c => c.Picture).ToList();
-        var times = pictures.SelectMany(p => new[] { p.StartTime, p.EndTime }).Distinct().OrderBy(t => t).ToList();
         var compositionNumber = pictures[0].CompositionNumber;
         var fps = cues[0].FramesPerSecond;
+
+        // The display sets go on the frame grid, so cut points on the same frame are one cut:
+        // keep the last of them - a subtitle that starts earlier on that frame is still on
+        // screen then, and one that ends on it is already gone.
+        var times = pictures.SelectMany(p => new[] { p.StartTime, p.EndTime })
+            .Distinct()
+            .OrderBy(t => t)
+            .GroupBy(t => BluRaySupPicture.MillisecondsToPts(t, fps))
+            .Select(g => g.Max())
+            .ToList();
 
         var captions = new List<PlacedCaption>(cues.Count);
         try
