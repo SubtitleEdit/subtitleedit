@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
@@ -156,7 +156,8 @@ internal static class ContainerSubtitleLoader
             return LoadMxf(filePath, options);
         }
 
-        if (ext is ".vob" or ".mpg" or ".mpeg" or ".m2p" && ProgramStreamClosedCaptionReader.IsProgramStream(filePath))
+        if (ext is ".vob" or ".mpg" or ".mpeg" or ".m2p" && ProgramStreamClosedCaptionReader.IsProgramStream(filePath) ||
+            ext is ".m2v" or ".m1v" or ".mpv" && ProgramStreamClosedCaptionReader.IsVideoElementaryStream(filePath))
         {
             return LoadProgramStreamClosedCaptions(filePath, options);
         }

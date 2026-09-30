@@ -32,8 +32,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         /// (CC1/CC2), "cdt2" the field 2 ones (CC3/CC4). Reading the whole sample as byte pairs
         /// decoded the atom header too, so every caption ended in "cdat" (#15382). Only field 1 is
         /// decoded; a sample that is not atom-wrapped is read as bare byte pairs.
+        /// The pairs of a sample go out one per video frame from the sample time, see
+        /// <see cref="AddCcPairs"/>.
         /// </summary>
-        private void AddC608SampleCcData(byte[] sampleData, ulong time)
+        private void AddC608SampleCcData(byte[] sampleData, ulong time, ulong durationTicks)
         {
             var pos = 0;
             var foundAtom = false;
@@ -49,7 +51,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 foundAtom = true;
                 if (atomType == "cdat")
                 {
-                    AddCcPairs(sampleData, pos + 8, pos + atomSize, time);
+                    AddCcPairs(sampleData, pos + 8, pos + atomSize, time, durationTicks);
                 }
 
                 pos += atomSize;
@@ -57,19 +59,28 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
             if (!foundAtom)
             {
-                AddCcPairs(sampleData, 0, sampleData.Length, time);
+                AddCcPairs(sampleData, 0, sampleData.Length, time, durationTicks);
             }
         }
 
-        private void AddCcPairs(byte[] data, int start, int end, ulong time)
+        /// <summary>
+        /// A sample holds the byte pairs of many frames - one pair per NTSC frame, starting at the
+        /// sample time. Giving them all the sample time made a caption that is shown and replaced
+        /// within one sample a zero-length cue. The pairs are spaced a frame apart, closer when
+        /// they would not fit in the sample, so they never run into the next one.
+        /// </summary>
+        private void AddCcPairs(byte[] data, int start, int end, ulong time, ulong durationTicks)
         {
-            for (var j = start; j + 1 < end; j += 2)
+            var pairCount = (end - start) / 2;
+            var frameTicks = TimeScale * 1001.0 / 30000.0;
+            var step = pairCount > 0 ? Math.Min(frameTicks, durationTicks / (double)pairCount) : 0;
+            for (var k = 0; k < pairCount; k++)
             {
-                var d1 = data[j];
-                var d2 = data[j + 1];
+                var d1 = data[start + k * 2];
+                var d2 = data[start + k * 2 + 1];
                 if (d1 != 0 || d2 != 0)
                 {
-                    _cea608CcData.Add(new CcData(0, d1, d2) { Time = time });
+                    _cea608CcData.Add(new CcData(0, d1, d2) { Time = time + (ulong)(k * step) });
                 }
             }
         }
@@ -408,7 +419,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                             fs.Seek((long)sampleOffset, SeekOrigin.Begin);
                             if (fs.Read(sampleData, 0, sampleData.Length) == sampleData.Length)
                             {
-                                AddC608SampleCcData(sampleData, beforeTicks);
+                                AddC608SampleCcData(sampleData, beforeTicks, sampleTime);
                             }
                         }
                         else if (stsdCodec == "wvtt") // WebVTT in MP4 (ISO 14496-30)
