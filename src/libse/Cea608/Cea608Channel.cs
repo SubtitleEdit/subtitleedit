@@ -326,6 +326,10 @@ namespace Nikse.SubtitleEdit.Core.Cea608
             }
 
             WriteScreen.SetPen(styles);
+
+            // A mid-row code takes up a column and shows as a space - without it the styled
+            // word ran into its neighbours ("that you<i>were</i>smelling")
+            WriteScreen.InsertMidRowSpace();
         }
 
         public void OutputDataUpdate(bool rolling = false)

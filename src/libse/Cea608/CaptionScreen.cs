@@ -124,6 +124,11 @@ namespace Nikse.SubtitleEdit.Core.Cea608
             Rows[CurrentRow].InsertChar(character);
         }
 
+        public void InsertMidRowSpace()
+        {
+            Rows[CurrentRow].InsertMidRowSpace();
+        }
+
         public void SetPen(SerializedPenState styles)
         {
             Rows[CurrentRow].SetPenStyles(styles);
@@ -152,7 +157,10 @@ namespace Nikse.SubtitleEdit.Core.Cea608
                 pacData.Color = row.Chars[prevPos].PenState.Foreground;
             }
 
-            SetPen(new SerializedPenState
+            // The pen only - SetPen also restyles the char under the cursor, and a PAC that moves
+            // the pen onto a written char (right after an italic word) turned its last letter
+            // upright ("<i>wer</i>e").
+            row.CurrentPenState.SetStyles(new SerializedPenState
             {
                 Foreground = pacData.Color ?? Constants.ColorWhite,
                 Underline = pacData.Underline,

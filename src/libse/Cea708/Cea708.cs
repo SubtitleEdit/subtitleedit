@@ -1030,6 +1030,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
         {
             var commands = new List<ICea708Command>();
             var y = 0;
+            var x = 0; // pen column in the current row
             var italicOn = false;
             foreach (var command in state.Commands)
             {
@@ -1047,6 +1048,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                             text.AppendLine();
                         }
 
+                        x = 0;
                         continue;
                     }
 
@@ -1064,6 +1066,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                         AppendItalicEnd(text);
                     }
                     text.Append(textCommand.Content);
+                    x += textCommand.Content.Length;
                 }
                 else
                 {
@@ -1073,8 +1076,15 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                         {
                             text.AppendLine();
                         }
+                        else if (location.Row == y && location.Column > x && text.Length > 0 && !char.IsWhiteSpace(text[text.Length - 1]))
+                        {
+                            // the pen skips columns on the same row - blank cells on screen, e.g.
+                            // where a CEA-608 upconvert had a mid-row code ("were smelling")
+                            text.Append(' ');
+                        }
 
                         y = location.Row;
+                        x = location.Column;
                         continue; // consumed - retaining it would append line breaks again on the next flush
                     }
 

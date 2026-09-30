@@ -16,6 +16,12 @@ namespace Nikse.SubtitleEdit.Core.Cea608
 
         public const string EmptyChar = " ";
 
+        /// <summary>
+        /// The cell a mid-row code takes up - shown as a space. Kept apart from a plain space so the
+        /// text output can leave it out where a space would be doubled or sit inside brackets.
+        /// </summary>
+        public const string MidRowSpace = "\u00A0";
+
         public static string[] PacDataColors = new string[]
         {
             ColorWhite,

@@ -49,6 +49,28 @@ namespace Nikse.SubtitleEdit.Core.Cea608
                     continue;
                 }
 
+                // Control codes - commands, PACs, mid-row codes, special characters - are sent
+                // twice in a row; skip the copy. Only the pair right before counts: a tab offset
+                // repeated a line later (after text) is a new command, and skipping it put the
+                // pen one column short.
+                if (a >= 0x10 && a <= 0x1F)
+                {
+                    if (_lastCmdA == a && _lastCmdB == b)
+                    {
+                        _lastCmdA = null;
+                        _lastCmdB = null;
+                        continue;
+                    }
+
+                    _lastCmdA = a;
+                    _lastCmdB = b;
+                }
+                else
+                {
+                    _lastCmdA = null;
+                    _lastCmdB = null;
+                }
+
                 if (!(ParseCmd(a, b) ||
                     ParseMidRow(a, b) ||
                     ParsePac(a, b) ||
@@ -133,14 +155,6 @@ namespace Nikse.SubtitleEdit.Core.Cea608
         {
             if (HasCmd(a, b))
             {
-                // Duplicate CMD commands get skipped once
-                if (_lastCmdA == a && _lastCmdB == b)
-                {
-                    _lastCmdA = null;
-                    _lastCmdB = null;
-                    return true;
-                }
-
                 int chNr;
                 if (a == 0x14 || a == 0x17)
                 {
@@ -153,8 +167,6 @@ namespace Nikse.SubtitleEdit.Core.Cea608
 
                 Channels[chNr - 1].RunCmd(a, b);
                 CurrentChannelNumber = chNr;
-                _lastCmdA = a;
-                _lastCmdB = b;
                 ReplayCharsBeforeFirstCommand(Channels[chNr - 1], a, b);
                 return true;
             }

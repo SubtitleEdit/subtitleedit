@@ -49,6 +49,58 @@ public class SerializedScreenTextTest
         Assert.Equal("Hi <i>yo</i> ok", text);
     }
 
+    /// <summary>
+    /// A mid-row code takes up a column and shows as a space - encoders rely on it to separate the
+    /// styled word ("that you<i>were</i>smelling" before).
+    /// </summary>
+    [Fact]
+    public void MidRowCodeShowsAsSpace()
+    {
+        var text = Decode(PopOn((0x14, 0x70), (0x48, 0x69), (0x11, 0x2E), (0x79, 0x6F), (0x11, 0x20), (0x6F, 0x6B)));
+        Assert.Equal("Hi <i>yo</i> ok", text);
+    }
+
+    [Fact]
+    public void MidRowCodeInsideBracketsAddsNoSpace()
+    {
+        var text = Decode(PopOn((0x14, 0x70), (0x28, 0x00), (0x11, 0x2E), (0x79, 0x6F), (0x11, 0x20), (0x29, 0x00)));
+        Assert.Equal("(<i>yo</i>)", text);
+    }
+
+    /// <summary>
+    /// Control codes are sent twice - the copy right after is skipped, also for mid-row codes (one
+    /// space) and special characters (one note).
+    /// </summary>
+    [Fact]
+    public void DoubledMidRowCodeAndSpecialCharAreSkippedOnce()
+    {
+        var text = Decode(PopOn((0x14, 0x70), (0x48, 0x69), (0x11, 0x2E), (0x11, 0x2E), (0x79, 0x6F), (0x11, 0x37), (0x11, 0x37)));
+        Assert.Equal("Hi <i>yo\u266A</i>", text);
+    }
+
+    /// <summary>
+    /// The same tab offset again after some text is a new command, not the second copy of the first
+    /// one - skipping it put the pen a column short, onto the last letter of the word before.
+    /// </summary>
+    [Fact]
+    public void RepeatedTabOffsetAfterTextIsNotSkipped()
+    {
+        var text = Decode(PopOn((0x14, 0x70), (0x48, 0x69), (0x17, 0x21), (0x79, 0x6F), (0x17, 0x21), (0x6F, 0x6B)));
+        Assert.Equal("Hi yo ok", text);
+    }
+
+    /// <summary>
+    /// A PAC that puts the pen on a written char (the last letter of an italic word) must not
+    /// restyle that char - "<i>wer</i>e" before.
+    /// </summary>
+    [Fact]
+    public void PacOnWrittenCharKeepsItsStyle()
+    {
+        // mid-row italics at column 0, "abcd" at 1-4, PAC column 4 + TO1, mid-row white at 5, "ok"
+        var text = Decode(PopOn((0x14, 0x70), (0x11, 0x2E), (0x61, 0x62), (0x63, 0x64), (0x14, 0x72), (0x17, 0x21), (0x11, 0x20), (0x6F, 0x6B)));
+        Assert.Equal("<i>abcd</i> ok", text);
+    }
+
     [Fact]
     public void EachRowGetsItsOwnTagsAndNoPadding()
     {
