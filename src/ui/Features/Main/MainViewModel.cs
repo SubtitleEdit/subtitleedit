@@ -23889,6 +23889,15 @@ public partial class MainViewModel :
                 }
             }
 
+            // A transport stream saved under another video extension (e.g. an HLS web rip
+            // renamed to .mp4 - the MP4 parse above finds nothing in it) used to end at the
+            // "open as video?" prompt, so its DVB/teletext/closed captions were never read.
+            if (FileUtil.IsTransportStreamWithOtherVideoExtension(fileName))
+            {
+                await ImportSubtitleFromTransportStream(fileName, skipLoadVideo);
+                return;
+            }
+
             // DVD IFO: rip the subtitles of a title (program chain) from its VOB files
             if ((ext == ".ifo" || ext == ".bup") && IfoParser.IsIfo(fileName))
             {

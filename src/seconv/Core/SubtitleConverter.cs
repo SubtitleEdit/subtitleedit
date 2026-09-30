@@ -505,12 +505,14 @@ internal class SubtitleConverter
                 () => BitmapSubtitleLoader.LoadVobSub(subPath, inputFile, isPal: true));
         }
 
-        if (ext is ".mkv" or ".mks")
+        // e.g. an HLS web rip named .mp4 - before the Matroska branch, as it could be named .mkv too
+        var isTransportStreamWithOtherExtension = FileUtil.IsTransportStreamWithOtherVideoExtension(inputFile);
+        if (ext is ".mkv" or ".mks" && !isTransportStreamWithOtherExtension)
         {
             return await PassThroughMatroskaPgsAsync(inputFile, options, result, fileIndex, sourceTimestamps);
         }
 
-        if (ext is ".ts" or ".m2ts" or ".mts")
+        if (ext is ".ts" or ".m2ts" or ".mts" || isTransportStreamWithOtherExtension)
         {
             return await PassThroughTransportStreamDvbAsync(inputFile, options, result, fileIndex, sourceTimestamps);
         }

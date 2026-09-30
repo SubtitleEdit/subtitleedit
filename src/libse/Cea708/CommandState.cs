@@ -39,6 +39,30 @@ namespace Nikse.SubtitleEdit.Core.Cea708
         /// </summary>
         public bool[] VisibleWindows { get; } = new bool[8];
 
+        /// <summary>
+        /// Window the buffered (not yet flushed) text was written to, -1 when nothing is buffered
+        /// or the window is unknown.
+        /// </summary>
+        public int PendingWindow { get; set; } = -1;
+
+        /// <summary>
+        /// Pop-on captions on screen per window: built in a hidden window, then displayed. They are
+        /// flushed when their window is hidden, cleared or deleted, so the next caption can be built
+        /// in another window meanwhile.
+        /// </summary>
+        public SortedDictionary<int, ShownCaption> ShownCaptions { get; } = new SortedDictionary<int, ShownCaption>();
+
+        public sealed class ShownCaption
+        {
+            /// <summary>Line index (packet number) where the caption's text was written.</summary>
+            public int WrittenLineIndex { get; set; }
+
+            /// <summary>Line index (packet number) where its window was displayed.</summary>
+            public int ShownLineIndex { get; set; }
+
+            public string Text { get; set; }
+        }
+
         public CommandState()
         {
             Commands = new List<ICea708Command>();

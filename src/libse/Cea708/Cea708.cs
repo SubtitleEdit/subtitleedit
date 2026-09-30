@@ -362,6 +362,36 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             return state.CurrentWindow >= 0 && state.VisibleWindows[state.CurrentWindow];
         }
 
+        private static void AddText(CommandState state, SetText text)
+        {
+            if (state.PendingWindow < 0)
+            {
+                state.PendingWindow = state.CurrentWindow;
+            }
+
+            state.Commands.Add(text);
+        }
+
+        /// <summary>
+        /// Whether the buffered text is in one of these windows - also true when its window is
+        /// unknown, so streams without window commands still flush.
+        /// </summary>
+        private static bool IsPendingTextIn(CommandState state, bool[] windows)
+        {
+            var w = state.PendingWindow;
+            return w < 0 || w >= windows.Length || windows[w];
+        }
+
+        /// <summary>
+        /// Whether the buffered text is on screen (roll-up/paint-on) in one of these windows - text
+        /// buffered in a hidden window is a pop-on caption still being built.
+        /// </summary>
+        private static bool IsPendingTextVisibleIn(CommandState state, bool[] windows)
+        {
+            var w = state.PendingWindow;
+            return IsPendingTextIn(state, windows) && (w < 0 || w >= state.VisibleWindows.Length || state.VisibleWindows[w]);
+        }
+
         /// <summary>
         /// Removes the last not yet flushed character (BS).
         /// </summary>
@@ -393,6 +423,11 @@ namespace Nikse.SubtitleEdit.Core.Cea708
         /// </summary>
         private static void RemovePendingText(CommandState state, bool currentRowOnly)
         {
+            if (!currentRowOnly)
+            {
+                state.PendingWindow = -1;
+            }
+
             for (var index = state.Commands.Count - 1; index >= 0; index--)
             {
                 var command = state.Commands[index];
@@ -464,6 +499,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     // ClearWindows clears all the windows specified in the 8 bit window bitmap.
                     var clearWindows = new ClearWindows(lineIndex, bytes, i + 1);
                     state.Commands.Add(clearWindows);
+                    FlushShownCaptions(debugBuilder, textBuilder, state, clearWindows.Flags, lineIndex);
                     state.ErasedAtFlushCounts.Add(state.FlushedTexts.Count);
                     if (DebugMode)
                     {
@@ -482,6 +518,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     // DisplayWindows displays all the windows specified in the 8 bit window bitmap.
                     var displayWindows = new DisplayWindows(lineIndex, bytes, i + 1);
                     state.Commands.Add(displayWindows);
+                    ShowPendingText(debugBuilder, state, displayWindows.Flags, lineIndex);
                     SetWindowsVisible(state, displayWindows.Flags, true);
                     if (DebugMode)
                     {
@@ -497,10 +534,14 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                         break;
                     }
 
-                    Flush(debugBuilder, textBuilder, state);
-
                     // HideWindows hides all the windows specified in the 8 bit window bitmap.
                     var hideWindows = new HideWindows(lineIndex, bytes, i + 1);
+                    FlushShownCaptions(debugBuilder, textBuilder, state, hideWindows.Flags, lineIndex);
+                    if (IsPendingTextVisibleIn(state, hideWindows.Flags))
+                    {
+                        Flush(debugBuilder, textBuilder, state);
+                    }
+
                     state.Commands.Add(hideWindows);
                     state.ErasedAtFlushCounts.Add(state.FlushedTexts.Count);
                     SetWindowsVisible(state, hideWindows.Flags, false);
@@ -518,10 +559,21 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                         break;
                     }
 
-                    Flush(debugBuilder, textBuilder, state);
-
                     // ToggleWindows hides all displayed windows, and displays all hidden windows specified in the 8 bit window bitmap.
                     var toggleWindows = new ToggleWindows(lineIndex, bytes, i + 1);
+                    var hiddenByToggle = new bool[toggleWindows.Flags.Length];
+                    for (var w = 0; w < hiddenByToggle.Length && w < state.VisibleWindows.Length; w++)
+                    {
+                        hiddenByToggle[w] = toggleWindows.Flags[w] && state.VisibleWindows[w];
+                    }
+
+                    FlushShownCaptions(debugBuilder, textBuilder, state, hiddenByToggle, lineIndex);
+                    if (IsPendingTextVisibleIn(state, hiddenByToggle))
+                    {
+                        Flush(debugBuilder, textBuilder, state);
+                    }
+
+                    ShowPendingText(debugBuilder, state, toggleWindows.Flags, lineIndex);
                     state.Commands.Add(toggleWindows);
                     state.ErasedAtFlushCounts.Add(state.FlushedTexts.Count);
                     for (var w = 0; w < toggleWindows.Flags.Length && w < state.VisibleWindows.Length; w++)
@@ -545,10 +597,14 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                         break;
                     }
 
-                    Flush(debugBuilder, textBuilder, state);
-
                     // DeleteWindows deletes all the windows specified in the 8 bit window bitmap.If the current window, as specified by the last SetCurrentWindow command, is deleted then the current window becomes undefined and the window attribute commands should have no effect until after the next SetCurrentWindow or DefineWindow command.
                     var deleteWindows = new DeleteWindows(lineIndex, bytes, i + 1);
+                    FlushShownCaptions(debugBuilder, textBuilder, state, deleteWindows.Flags, lineIndex);
+                    if (IsPendingTextIn(state, deleteWindows.Flags))
+                    {
+                        Flush(debugBuilder, textBuilder, state);
+                    }
+
                     state.Commands.Add(deleteWindows);
                     state.ErasedAtFlushCounts.Add(state.FlushedTexts.Count);
                     SetWindowsVisible(state, deleteWindows.Flags, false);
@@ -594,6 +650,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 {
                     // Reset deletes all windows, cancels any active delay, and clears the buffer before the Reset command. Reset should be scanned for during a Delay. 
                     var reset = new Reset(lineIndex);
+                    FlushShownCaptions(debugBuilder, textBuilder, state, null, lineIndex);
                     state.ErasedAtFlushCounts.Add(state.FlushedTexts.Count);
                     state.Commands.Add(reset);
                     if (DebugMode)
@@ -680,6 +737,14 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     var defineWindow = new DefineWindow(lineIndex, bytes, i);
                     state.Commands.Add(defineWindow);
                     state.CurrentWindow = defineWindow.Id - DefineWindow.IdStart;
+                    if (defineWindow.Visible)
+                    {
+                        // redefining a hidden window as visible displays it, like DisplayWindows
+                        var displayed = new bool[state.VisibleWindows.Length];
+                        displayed[state.CurrentWindow] = true;
+                        ShowPendingText(debugBuilder, state, displayed, lineIndex);
+                    }
+
                     state.VisibleWindows[state.CurrentWindow] = defineWindow.Visible;
                     if (DebugMode)
                     {
@@ -702,7 +767,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                         if (G2CharLookupTable.TryGetValue(b2, out var g2Text))
                         {
                             var text = new SetText(lineIndex, g2Text);
-                            state.Commands.Add(text);
+                            AddText(state, text);
                             if (DebugMode)
                             {
                                 debugBuilder.Append($"{{SetText G2:Text={text.Content}}}");
@@ -718,7 +783,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 {
                     // P16: a 16-bit character - Unicode, or (Korean broadcasts, TTA) EUC-KR
                     var text = new SetText(lineIndex, DecodeP16(bytes[i + 1], bytes[i + 2]));
-                    state.Commands.Add(text);
+                    AddText(state, text);
                     if (DebugMode)
                     {
                         debugBuilder.Append($"{{SetText CL Group Unicode:Text={text.Content}}}");
@@ -742,6 +807,9 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     // thrown away.
                     if (IsCurrentWindowVisible(state))
                     {
+                        var erased = new bool[state.VisibleWindows.Length];
+                        erased[state.CurrentWindow] = true;
+                        FlushShownCaptions(debugBuilder, textBuilder, state, erased, lineIndex);
                         Flush(debugBuilder, textBuilder, state);
                         state.ErasedAtFlushCounts.Add(state.FlushedTexts.Count);
                     }
@@ -783,7 +851,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     }
                     else
                     {
-                        state.Commands.Add(new SetText(lineIndex, "\r"));
+                        AddText(state, new SetText(lineIndex, "\r"));
                     }
 
                     if (DebugMode)
@@ -795,7 +863,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 {
                     // CL Group: C0: Subset of ASCII Control Codes
                     var text = new SetText(lineIndex, SingleCharLookupTable[b]);
-                    state.Commands.Add(text);
+                    AddText(state, text);
                     if (DebugMode)
                     {
                         debugBuilder.Append($"{{SetText CL Group C0:Text={text.Content}}}");
@@ -805,7 +873,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 {
                     // Modified version of ANSI X3.4 Printable Character Set(ASCII)
                     var text = new SetText(lineIndex, SingleCharLookupTable[b]);
-                    state.Commands.Add(text);
+                    AddText(state, text);
 
                     if (DebugMode)
                     {
@@ -816,7 +884,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 {
                     // CR Group: C1: Caption Control Codes
                     var text = new SetText(lineIndex, SingleCharLookupTable[b]);
-                    state.Commands.Add(text);
+                    AddText(state, text);
 
                     if (DebugMode)
                     {
@@ -827,7 +895,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 {
                     // ISO 8859 - 1 Latin 1 Characters
                     var text = new SetText(lineIndex, SingleCharLookupTable[b]);
-                    state.Commands.Add(text);
+                    AddText(state, text);
 
                     if (DebugMode)
                     {
@@ -840,6 +908,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
 
             if (flush)
             {
+                FlushShownCaptions(debugBuilder, textBuilder, state, null, lineIndex);
                 Flush(debugBuilder, textBuilder, state);
             }
 
@@ -858,6 +927,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
         /// </summary>
         private static void Flush(StringBuilder debugBuilder, StringBuilder textBuilder, CommandState state)
         {
+            state.PendingWindow = -1;
             if (DebugMode)
             {
                 FlushText(debugBuilder, state);
@@ -871,13 +941,89 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 return;
             }
 
-            state.FlushedTexts.Add(new KeyValuePair<int, string>(state.StartLineIndex, text.ToString()));
+            AddFlushedText(textBuilder, state, state.StartLineIndex, text.ToString());
+        }
+
+        private static void AddFlushedText(StringBuilder textBuilder, CommandState state, int startLineIndex, string text)
+        {
+            state.FlushedTexts.Add(new KeyValuePair<int, string>(startLineIndex, text));
             if (textBuilder.Length > 0)
             {
                 textBuilder.AppendLine();
             }
 
             textBuilder.Append(text);
+        }
+
+        /// <summary>
+        /// A pop-on caption - text buffered in a hidden window - is displayed: it is taken out of the
+        /// buffer (the next caption is usually built in another window while this one shows) and
+        /// kept as on screen in that window until the window is hidden, cleared or deleted.
+        /// </summary>
+        private static void ShowPendingText(StringBuilder debugBuilder, CommandState state, bool[] windows, int lineIndex)
+        {
+            var w = state.PendingWindow;
+            if (w < 0 || w >= windows.Length || w >= state.VisibleWindows.Length || !windows[w] || state.VisibleWindows[w])
+            {
+                return;
+            }
+
+            state.PendingWindow = -1;
+            var text = new StringBuilder();
+            FlushText(text, state);
+            if (text.Length == 0)
+            {
+                return;
+            }
+
+            if (DebugMode)
+            {
+                debugBuilder.Append(text);
+                return;
+            }
+
+            state.ShownCaptions[w] = new CommandState.ShownCaption
+            {
+                WrittenLineIndex = state.StartLineIndex,
+                ShownLineIndex = lineIndex,
+                Text = text.ToString(),
+            };
+        }
+
+        /// <summary>
+        /// Flushes the pop-on captions on screen in these windows (null = all): they start when
+        /// displayed. One displayed and removed in the same packet was never really on screen - SE's
+        /// own MCC writer (VancDataWriter) sends the text at the start time into a hidden window and
+        /// toggles + hides it at the end time - so it keeps the time it was written.
+        /// </summary>
+        private static void FlushShownCaptions(StringBuilder debugBuilder, StringBuilder textBuilder, CommandState state, bool[] windows, int lineIndex)
+        {
+            if (state.ShownCaptions.Count == 0)
+            {
+                return;
+            }
+
+            var flushed = new List<int>();
+            foreach (var shown in state.ShownCaptions)
+            {
+                if (windows != null && (shown.Key >= windows.Length || !windows[shown.Key]))
+                {
+                    continue;
+                }
+
+                flushed.Add(shown.Key);
+                if (!DebugMode)
+                {
+                    var caption = shown.Value;
+                    var startLineIndex = caption.ShownLineIndex == lineIndex ? caption.WrittenLineIndex : caption.ShownLineIndex;
+                    AddFlushedText(textBuilder, state, startLineIndex, caption.Text);
+                }
+            }
+
+            foreach (var w in flushed)
+            {
+                state.ShownCaptions.Remove(w);
+            }
         }
 
         private static void FlushText(StringBuilder text, CommandState state)

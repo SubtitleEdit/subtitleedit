@@ -244,6 +244,32 @@ public class FfmpegPlayerTests
         Assert.Null(FfmpegPlayer.SeekTarget(value, 60));
     }
 
+    /// <summary>
+    /// The player keeps the file's own time stamps, so its end is where the last one is. The
+    /// values are ffprobe's start/duration for files whose last packet ends at the expected time.
+    /// </summary>
+    [Theory]
+    [InlineData("mpegts", 6.3891, 4.0109, 10.4)]                      // TS: duration is the length
+    [InlineData("mpegts", 4529.0, 5.9388, 4534.9388)]                  // TS cut from a recording
+    [InlineData("mpegts", 0.7098, 20.704, 21.4138)]                    // camcorder .MTS, length > start
+    [InlineData("mpeg", 191.2123, 93.2552, 284.4675)]                  // DVD .VOB
+    [InlineData("flv", 4.977, 4.08, 9.057)]
+    [InlineData("matroska,webm", 4.977, 9.023, 9.023)]                 // segment duration runs from zero
+    [InlineData("mov,mp4,m4a,3gp,3g2,mj2", 4.976, 4.024, 9.0)]         // leading empty edit: media length only
+    [InlineData("mov,mp4,m4a,3gp,3g2,mj2", 84723.332, 84777.319, 84777.319)] // fragmented, tfdt from zero
+    [InlineData("mov,mp4,m4a,3gp,3g2,mj2", 0.0, 60.0, 60.0)]
+    [InlineData("avi", 0.0, 9.012, 9.012)]
+    public void TimelineEnd_IsTheLastTimeStampOnTheFilesOwnTimeline(string format, double start, double duration, double expected)
+    {
+        Assert.Equal(expected, FfmpegPlayer.TimelineEnd(format, start, duration), 3);
+    }
+
+    [Fact]
+    public void TimelineEnd_UnknownDuration_StaysUnknown()
+    {
+        Assert.Equal(0, FfmpegPlayer.TimelineEnd("mpegts", 4529, 0));
+    }
+
     [Theory]
     [InlineData(AVSampleFormat.AV_SAMPLE_FMT_U8, false)]
     [InlineData(AVSampleFormat.AV_SAMPLE_FMT_S16, false)]
