@@ -160,7 +160,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
             }
         }
 
+        /// <param name="subStreamId">The subtitle stream (0x80 = the first)</param>
+        /// <param name="pts">Presentation time stamp of the record (90 kHz)</param>
         /// <param name="data">The record after sub-stream id and 00: length (32 bits), header, PNG</param>
+        /// <param name="result">Pictures per sub-stream id</param>
         private static void AddRecord(int subStreamId, long pts, List<byte> data, SortedDictionary<int, List<UmdVideoSubtitle>> result)
         {
             if (data.Count < 4)
@@ -366,7 +369,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
             if (buffer[0] == 'P' && buffer[1] == 'S' && buffer[2] == 'M' && buffer[3] == 'F')
             {
                 var offset = BinaryPrimitives.ReadUInt32BigEndian(buffer.AsSpan(8));
-                return offset < stream.Length ? offset : -1;
+                return offset < stream.Length ? (long)offset : -1;
             }
 
             return buffer[0] == 0 && buffer[1] == 0 && buffer[2] == 1 && buffer[3] == 0xBA ? 0 : -1;
