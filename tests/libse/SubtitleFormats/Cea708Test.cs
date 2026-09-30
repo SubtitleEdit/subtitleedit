@@ -268,7 +268,7 @@ public class Cea708Test
     [Fact]
     public void DecodePopOnCarriageReturnIsLineBreak()
     {
-        var bytes = new byte[] { 0x98, 0x1B, 0x80, 0x0F, 0x01, 0x1F, 0x11, 0x4F, 0x6E, 0x65, 0x0D, 0x54, 0x77, 0x6F, 0x8A, 0x01 };
+        var bytes = new byte[] { 0x98, 0x1B, 0x80, 0x0F, 0x01, 0x1F, 0x11, 0x4F, 0x6E, 0x65, 0x0D, 0x54, 0x77, 0x6F, 0x8B, 0x01, 0x8A, 0x01 };
 
         var text = Nikse.SubtitleEdit.Core.Cea708.Cea708.Decode(0, bytes, new CommandState(), false);
 
@@ -278,9 +278,11 @@ public class Cea708Test
     private static readonly byte[] HiddenWindow = { 0x98, 0x1B, 0x80, 0x0F, 0x01, 0x1F, 0x11 };
     private static readonly byte[] VisibleWindow = { 0x98, 0x3B, 0x80, 0x0F, 0x01, 0x1F, 0x11 };
 
+    // ToggleWindows + HideWindows: the caption is displayed and removed in one packet, the way
+    // SE's own MCC writer ends a caption - it keeps the time it was written
     private static string DecodeWithHideWindows(params byte[][] parts)
     {
-        var bytes = parts.SelectMany(p => p).Concat(new byte[] { 0x8A, 0x01 }).ToArray();
+        var bytes = parts.SelectMany(p => p).Concat(new byte[] { 0x8B, 0x01, 0x8A, 0x01 }).ToArray();
         return Nikse.SubtitleEdit.Core.Cea708.Cea708.Decode(0, bytes, new CommandState(), false);
     }
 
@@ -411,6 +413,49 @@ public class Cea708Test
     }
 
     // One DTVCC packet with one service 1 block
+    /// <summary>
+    /// A pop-on caption is built in a hidden window and shown by DisplayWindows - it starts there,
+    /// not when its text was written (a whole caption early, as the next one is built while the
+    /// current one shows). Hiding or deleting other windows must not end it.
+    /// </summary>
+    [Fact]
+    public void DtvccPopOnCaptionStartsWhenDisplayed()
+    {
+        byte[] HiddenWindowN(int n) => new byte[] { (byte)(0x98 + n), 0x1B, 0x80, 0x0F, 0x01, 0x1F, 0x11 };
+        var decoder = new DtvccServiceDecoder();
+        AddDtvccPacket(decoder, HiddenWindowN(1).Concat(Ascii("First")).ToArray(), 1000);
+        AddDtvccPacket(decoder, new byte[] { 0x8A, 0xFF, 0x89, 0x02 }, 3000); // hide all, display 1
+        AddDtvccPacket(decoder, new byte[] { 0x8C, 0xFD }.Concat(HiddenWindowN(2)).Concat(Ascii("Second")).ToArray(), 3100); // delete all but 1
+        AddDtvccPacket(decoder, new byte[] { 0x8A, 0xFF, 0x89, 0x04 }, 5000); // hide all, display 2
+
+        var paragraphs = Assert.Single(decoder.Finish(7000)).Value;
+
+        Assert.Equal(new[] { "First", "Second" }, paragraphs.Select(p => p.Text));
+        Assert.Equal(new double[] { 3000, 5000 }, paragraphs.Select(p => p.StartTime.TotalMilliseconds));
+        Assert.Equal(new double[] { 5000, 7000 }, paragraphs.Select(p => p.EndTime.TotalMilliseconds));
+    }
+
+    /// <summary>
+    /// ToggleWindows swaps the hidden caption in and the shown one out.
+    /// </summary>
+    [Fact]
+    public void DtvccPopOnCaptionShownByToggleWindows()
+    {
+        byte[] HiddenWindowN(int n) => new byte[] { (byte)(0x98 + n), 0x1B, 0x80, 0x0F, 0x01, 0x1F, 0x11 };
+        var decoder = new DtvccServiceDecoder();
+        AddDtvccPacket(decoder, HiddenWindowN(0).Concat(Ascii("First")).ToArray(), 1000);
+        AddDtvccPacket(decoder, new byte[] { 0x8B, 0x01 }, 2000); // toggle 0: shown
+        AddDtvccPacket(decoder, HiddenWindowN(1).Concat(Ascii("Second")).ToArray(), 2500);
+        AddDtvccPacket(decoder, new byte[] { 0x8B, 0x03 }, 4000); // toggle 0 + 1: 0 hidden, 1 shown
+        AddDtvccPacket(decoder, new byte[] { 0x8C, 0xFF }, 6000); // delete all
+
+        var paragraphs = Assert.Single(decoder.Finish(9000)).Value;
+
+        Assert.Equal(new[] { "First", "Second" }, paragraphs.Select(p => p.Text));
+        Assert.Equal(new double[] { 2000, 4000 }, paragraphs.Select(p => p.StartTime.TotalMilliseconds));
+        Assert.Equal(new double[] { 4000, 6000 }, paragraphs.Select(p => p.EndTime.TotalMilliseconds));
+    }
+
     private static void AddDtvccPacket(DtvccServiceDecoder decoder, byte[] serviceData, double timeMs)
     {
         var content = new List<byte> { (byte)((1 << 5) | serviceData.Length) };
