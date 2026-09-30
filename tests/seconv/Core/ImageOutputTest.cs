@@ -1,4 +1,4 @@
-using SeConv.Core;
+﻿using SeConv.Core;
 using Xunit;
 
 namespace SeConvTests.Core;
@@ -175,6 +175,43 @@ public class ImageOutputTest : IDisposable
         Assert.Single(supFiles);
         // The same check File > Open uses to route a .sup to the DVD sup OCR import.
         Assert.True(Nikse.SubtitleEdit.Core.Common.FileUtil.IsSpDvdSup(supFiles[0]));
+    }
+
+    [Fact]
+    public async Task ConvertAsync_DvdSupInput_ReadsTimeCodesAndPassesImagesThrough()
+    {
+        var result = await ConvertTo("dvdsup", "dvdsup");
+        Assert.True(result.Success, string.Join("; ", result.Errors));
+        var supFile = Directory.GetFiles(Path.Combine(_tempRoot, "dvdsup"), "*.sup").Single();
+
+        // Used to go to the Blu-ray loader and fail with "No Blu-Ray sup subtitles found".
+        var srtFolder = Path.Combine(_tempRoot, "fromdvdsup");
+        Directory.CreateDirectory(srtFolder);
+        result = await new SubtitleConverter().ConvertAsync(new ConversionOptions
+        {
+            Patterns = [supFile],
+            Format = "subrip",
+            OutputFolder = srtFolder,
+            Overwrite = true,
+            TimeCodesOnly = true,
+        });
+        Assert.True(result.Success, string.Join("; ", result.Errors));
+        var srt = await File.ReadAllTextAsync(Directory.GetFiles(srtFolder, "*.srt").Single(), TestContext.Current.CancellationToken);
+        // DVD stores the duration in 1024/90000 s steps, so 3 s comes back as 2.992 s.
+        Assert.Contains("00:00:01,000 --> 00:00:03,99", srt);
+        Assert.Contains("00:00:05,000 --> 00:00:07,99", srt);
+
+        var bdnFolder = Path.Combine(_tempRoot, "bdnfromdvdsup");
+        Directory.CreateDirectory(bdnFolder);
+        result = await new SubtitleConverter().ConvertAsync(new ConversionOptions
+        {
+            Patterns = [supFile],
+            Format = "bdn-xml",
+            OutputFolder = bdnFolder,
+            Overwrite = true,
+        });
+        Assert.True(result.Success, string.Join("; ", result.Errors));
+        Assert.Equal(2, Directory.GetFiles(bdnFolder, "*.png", SearchOption.AllDirectories).Length);
     }
 
     [Fact]

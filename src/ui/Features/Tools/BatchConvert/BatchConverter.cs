@@ -56,6 +56,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     public static readonly string FormatCavena890 = new Cavena890().Name;
     public const string FormatDCinemaInterop = "D-Cinema interop/png";
     public const string FormatDCinemaSmpte2014 = "D-Cinema SMPTE 2014/png";
+    public const string FormatDvdSup = "DVD sup";
     public const string FormatCustomTextFormat = "Custom text format";
     public static readonly string FormatDostImage = "DOST/image";
     public static readonly string FormatEbuStl = new Ebu().Name;
@@ -189,6 +190,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         else if (item.Format == FormatHdDvdSup)
         {
             imageSubtitle = new OcrSubtitleHdDvdSup(item.FileName);
+        }
+        else if (item.Format == FormatDvdSup)
+        {
+            imageSubtitle = new OcrSubtitleSpDvdSupImages(item.FileName);
         }
         else if (item.Format == FormatBdnXml && item.Subtitle != null)
         {

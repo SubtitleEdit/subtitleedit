@@ -87,6 +87,37 @@ internal static class BitmapSubtitleLoader
     }
 
     /// <summary>
+    /// DVD .sup file ("SP" packets) → bitmap events, rendered like the GUI's OCR (white
+    /// text, black outline). The stream carries no frame size, so pick the DVD standard
+    /// from the display areas (720x576 PAL / 720x480 NTSC).
+    /// </summary>
+    public static IReadOnlyList<BitmapSubtitleItem> LoadSpDvdSup(string filePath)
+    {
+        var headers = SpDvdSupParser.Parse(filePath);
+        if (headers.Count == 0)
+        {
+            throw new InvalidOperationException($"No DVD sup subtitles found in: {filePath}");
+        }
+
+        var screenHeight = headers.Any(h => h.Picture.ImageDisplayArea.Bottom > 480) ? 576 : 480;
+        var items = new List<BitmapSubtitleItem>(headers.Count);
+        foreach (var header in headers)
+        {
+            // ImagePosition is only filled in by GetBitmap - read it after decoding.
+            var bmp = header.Picture.GetBitmap(null, SKColors.Transparent, SKColors.White, SKColors.Black, SKColors.Black, false);
+            items.Add(new BitmapSubtitleItem(
+                new TimeCode(header.StartTime.TotalMilliseconds),
+                new TimeCode((header.StartTime + header.Picture.Delay).TotalMilliseconds),
+                bmp,
+                720,
+                screenHeight,
+                header.Picture.ImagePosition));
+        }
+
+        return items;
+    }
+
+    /// <summary>
     /// MKV PGS track (S_HDMV/PGS) → bitmap events. PGS-in-MKV is the same PCS payload
     /// as a .sup file, just wrapped in Matroska block timing.
     /// </summary>
