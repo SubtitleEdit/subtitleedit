@@ -1,6 +1,7 @@
 using Nikse.SubtitleEdit.Core.Common;
 using System.Text;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace UITests.Logic;
 
@@ -54,5 +55,52 @@ public class EncodingHelperTests
     public void Utf8WithoutBom_WritesNoBom()
     {
         Assert.Empty(EncodingHelper.ResolveEncoding(TextEncoding.Utf8WithoutBom, null).GetPreamble());
+    }
+
+    private static Encoding ResolveSourceEncoding(byte[] sourceBytes)
+    {
+        var sourceFile = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllBytes(sourceFile, sourceBytes);
+            return EncodingHelper.ResolveEncoding(EncodingHelper.TryToUseSourceEncoding, sourceFile);
+        }
+        finally
+        {
+            File.Delete(sourceFile);
+        }
+    }
+
+    [Fact]
+    public void TryToUseSourceEncoding_BinarySource_UsesBinarySourceEncoding()
+    {
+        // e.g. a .sup/.mkv - an EBML-like header with NUL bytes, followed by bytes the ANSI guesser would like
+        var bytes = new byte[] { 0x1a, 0x45, 0xdf, 0xa3, 0x00, 0x00, 0x00, 0x01 }
+            .Concat(Encoding.Latin1.GetBytes(Text)).ToArray();
+
+        var encoding = ResolveSourceEncoding(bytes);
+
+        var expected = new UTF8Encoding(true);
+        Assert.Equal(Encoding.UTF8.CodePage, encoding.CodePage);
+        Assert.Equal(expected.GetPreamble(), encoding.GetPreamble());
+    }
+
+    [Fact]
+    public void TryToUseSourceEncoding_Utf16Source_KeepsUtf16()
+    {
+        var bytes = Encoding.Unicode.GetPreamble().Concat(Encoding.Unicode.GetBytes(Text)).ToArray();
+        Assert.Equal(Encoding.Unicode.CodePage, ResolveSourceEncoding(bytes).CodePage);
+    }
+
+    [Theory]
+    [InlineData("UTF-8 with BOM", true)]
+    [InlineData("UTF-8 without BOM", false)]
+    [InlineData("windows-1252", true)]
+    [InlineData(null, true)]
+    public void BinarySourceEncoding_IsDefaultWhenUtf8_ElseUtf8WithBom(string? defaultEncoding, bool expectBom)
+    {
+        var encoding = EncodingHelper.GetBinarySourceEncoding(defaultEncoding);
+        Assert.Equal(Encoding.UTF8.CodePage, encoding.CodePage);
+        Assert.Equal(expectBom, encoding.GetPreamble().Length > 0);
     }
 }
