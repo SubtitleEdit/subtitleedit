@@ -102,6 +102,12 @@ public partial class BinaryEditViewModel : ObservableObject
 
     private string _loadFileName = string.Empty;
     private string _sourceFileName = string.Empty;
+
+    /// <summary>
+    /// The frame rate the loaded Blu-ray sup declares, 0 when none was loaded. The sup written
+    /// back goes on this frame grid (issue #15478).
+    /// </summary>
+    private double _sourceSupFrameRate;
     private int _lastPlaybackSubtitleIndex = -2;
     private bool _isDirty;
     private bool _dirtyTrackingActive;
@@ -149,6 +155,7 @@ public partial class BinaryEditViewModel : ObservableObject
     {
         _loadFileName = fileName;
         _sourceFileName = fileName;
+        _sourceSupFrameRate = (subtitle as OcrSubtitleBluRay)?.FrameRate ?? 0;
 
         if (subtitle != null && string.IsNullOrEmpty(fileName) && subtitle.Count > 0)
         {
@@ -726,6 +733,7 @@ public partial class BinaryEditViewModel : ObservableObject
 
         FileName = fileName;
         OcrSubtitle = imageSubtitle;
+        _sourceSupFrameRate = (imageSubtitle as OcrSubtitleBluRay)?.FrameRate ?? 0;
 
         Subtitles.Clear();
         List<Ocr.OcrSubtitleItem> list = imageSubtitle.MakeOcrSubtitleItems();
@@ -1302,7 +1310,10 @@ public partial class BinaryEditViewModel : ObservableObject
             // The D-Cinema SMPTE handler declares EditRate/TimeCodeRate from this, while the cue
             // timecodes are converted with Configuration...CurrentFrameRate - read the same value
             // so header and cues agree. The Dost and FCP handlers take their rate from it too.
-            FramesPerSecond = Configuration.Settings.General.CurrentFrameRate,
+            // A Blu-ray sup is written on the frame grid of the one it was loaded from.
+            FramesPerSecond = exportHandler is ExportHandlerBluRaySup && _sourceSupFrameRate > 0
+                ? _sourceSupFrameRate
+                : Configuration.Settings.General.CurrentFrameRate,
         };
 
         exportHandler.WriteHeader(fileOrFolderName, MakeImageParameter());
@@ -2146,6 +2157,10 @@ public partial class BinaryEditViewModel : ObservableObject
 
         var ratio = ChangeFrameRateViewModel.GetFrameRateRatio(result.SelectedFromFrameRate, result.SelectedToFrameRate);
         ScaleBinarySubtitleTimes(Subtitles, ratio);
+        if (_sourceSupFrameRate > 0)
+        {
+            _sourceSupFrameRate = result.SelectedToFrameRate;
+        }
     }
 
     [RelayCommand]

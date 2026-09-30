@@ -116,6 +116,21 @@ public class ExportHandlerBluRaySupOverlapTests : IDisposable
     private static int PaletteAlpha(Segment pds, int entry) => pds.Payload[2 + entry * 5 + 4];
 
     [Fact]
+    public void CutPointsOnOneFrame_MakeNoEmptySlice()
+    {
+        // At 25 fps 3.000 and 3.010 s are the same frame (issue #15478): the overlap of 10 ms
+        // is no slice of its own, and the second line takes over on that frame.
+        var segments = ReadSegments(Export(
+            Cue(0, 1, 3.01, ExportAlignment.BottomCenter, SKColors.White),
+            Cue(1, 3, 5, ExportAlignment.TopCenter, SKColors.White)));
+
+        var pcs = segments.Where(s => s.Type == Pcs).ToList();
+        Assert.Equal(new long[] { 1000 * 90, 3000 * 90, 5000 * 90 }, pcs.Select(p => p.Pts));
+        Assert.Equal(new[] { 1, 1, 0 }, pcs.Select(ObjectCount));
+        Assert.Equal(Margin, WindowY(segments.Where(s => s.Type == Wds).ElementAt(1), 0));
+    }
+
+    [Fact]
     public void TwoOverlappingLines_ShareTheScreenWhileBothAreOn()
     {
         var segments = ReadSegments(Export(
