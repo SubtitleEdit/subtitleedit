@@ -129,6 +129,13 @@ public class SeGeneral
     public bool ForceCrLfOnSave { get; set; }
 
     /// <summary>
+    /// Linux only: copy text via xclip/wl-copy instead of Avalonia's X11 clipboard, which turns
+    /// non-ASCII characters into '?' for apps requesting the X11 STRING target (issue #15488).
+    /// Falls back to Avalonia when neither tool is installed.
+    /// </summary>
+    public bool LinuxClipboardUseExternalTool { get; set; } = true;
+
+    /// <summary>
     /// Warn before saving in a format with hard line limits (e.g. SCC's 32 chars x 4 lines) when
     /// some subtitles exceed them and will be re-wrapped/truncated. Cleared via "Do not show again".
     /// </summary>

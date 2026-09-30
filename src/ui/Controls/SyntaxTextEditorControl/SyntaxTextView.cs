@@ -1897,13 +1897,12 @@ public class SyntaxTextView : Control
 
     private async Task CopyAsync()
     {
-        var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
-        if (clipboard == null || SelectionLength == 0)
+        if (SelectionLength == 0)
         {
             return;
         }
 
-        await clipboard.SetTextAsync(SelectedText);
+        await ClipboardHelper.SetTextAsync(this, SelectedText);
     }
 
     private async Task CutAsync()
