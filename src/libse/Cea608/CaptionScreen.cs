@@ -137,6 +137,11 @@ namespace Nikse.SubtitleEdit.Core.Cea608
         public void SetPac(PacData pacData)
         {
             var newRow = pacData.Row - 1;
+            if (NumberOfRollUpRows != null && newRow != CurrentRow)
+            {
+                MoveRollUpWindow(newRow, NumberOfRollUpRows.Value);
+            }
+
             CurrentRow = newRow;
             var row = Rows[CurrentRow];
             if (pacData.Indent != null)
@@ -155,6 +160,28 @@ namespace Nikse.SubtitleEdit.Core.Cea608
                 Background = Constants.ColorBlack,
                 Flash = false,
             });
+        }
+
+        /// <summary>
+        /// A preamble in roll-up mode that names another base row moves the whole roll-up window
+        /// there, rows and all (CEA-608) - moving only the cursor left the rows already on screen
+        /// behind, where no carriage return ever scrolled them away.
+        /// </summary>
+        private void MoveRollUpWindow(int newBaseRow, int rollUpRows)
+        {
+            var count = Math.Min(rollUpRows, Math.Min(CurrentRow, newBaseRow) + 1);
+            var window = new CcRow[count];
+            for (var i = 0; i < count; i++)
+            {
+                window[i] = new CcRow();
+                window[i].Copy(Rows[CurrentRow - count + 1 + i]);
+                Rows[CurrentRow - count + 1 + i].Clear();
+            }
+
+            for (var i = 0; i < count; i++)
+            {
+                Rows[newBaseRow - count + 1 + i].Copy(window[i]);
+            }
         }
 
         public void SetBkgData(SerializedPenState bkgData)

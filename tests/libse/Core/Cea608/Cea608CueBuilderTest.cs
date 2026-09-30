@@ -68,4 +68,46 @@ public class Cea608CueBuilderTest
         Assert.Equal("YES. I AGREE.", paragraphs[1].Text);
         Assert.Equal(2000, paragraphs[1].StartTime.TotalMilliseconds);
     }
+
+    /// <summary>
+    /// An extended character replaces the standard one sent right before it (' then ’) - the
+    /// line is still being written, so it is no new cue (it was a 67 ms flash cue).
+    /// </summary>
+    [Fact]
+    public void ExtendedCharacterReplacingPreviousGrowsCue()
+    {
+        var paragraphs = new List<Paragraph>();
+        Cea608CueBuilder.Add(paragraphs, "SO,\nIT", 5000, 5033);
+        Cea608CueBuilder.Add(paragraphs, "SO,\nIT'", 5033, 5066);
+        Cea608CueBuilder.Add(paragraphs, "SO,\nIT’", 5066, 5100);
+        Cea608CueBuilder.Add(paragraphs, "SO,\nIT’S", 5100, 6000);
+
+        var paragraph = Assert.Single(paragraphs);
+        Assert.Equal("SO,\nIT’S", paragraph.Text);
+        Assert.Equal(5000, paragraph.StartTime.TotalMilliseconds);
+        Assert.Equal(6000, paragraph.EndTime.TotalMilliseconds);
+    }
+
+    /// <summary>
+    /// After a roll-up carriage return only the scrolled rows are on screen for the few frames
+    /// until the next row's first characters arrive - that belongs to the next cue instead of
+    /// flashing by on its own. A longer pause stays a cue of its own.
+    /// </summary>
+    [Fact]
+    public void ShortRollUpGapFoldsIntoNextRowButPauseStays()
+    {
+        var paragraphs = new List<Paragraph>();
+        Cea608CueBuilder.Add(paragraphs, "JUSTICE\nIT’S AN HONOR", 5000, 8322);
+        Cea608CueBuilder.Add(paragraphs, "IT’S AN HONOR", 8322, 8455);
+        Cea608CueBuilder.Add(paragraphs, "IT’S AN HONOR\nWI", 8455, 8488);
+        Cea608CueBuilder.Add(paragraphs, "IT’S AN HONOR\nWITH", 8488, 8522);
+        Cea608CueBuilder.Add(paragraphs, "IT’S AN HONOR\nWITH U", 8522, 8555);
+        Cea608CueBuilder.Add(paragraphs, "IT’S AN HONOR\nWITH US.", 8555, 9000);
+        Cea608CueBuilder.Add(paragraphs, "WITH US.", 9000, 9800);
+        Cea608CueBuilder.Add(paragraphs, "WITH US.\nAS", 9800, 10000);
+
+        Assert.Equal(new[] { "JUSTICE\nIT’S AN HONOR", "IT’S AN HONOR\nWITH US.", "WITH US.", "WITH US.\nAS" }, paragraphs.ConvertAll(p => p.Text));
+        Assert.Equal(8322, paragraphs[1].StartTime.TotalMilliseconds);
+        Assert.Equal(9000, paragraphs[1].EndTime.TotalMilliseconds);
+    }
 }
