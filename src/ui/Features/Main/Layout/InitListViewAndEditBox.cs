@@ -267,7 +267,7 @@ public static partial class InitListViewAndEditBox
                 var border = new Border
                 {
                     Padding = new Thickness(4, 2),
-                    [!Border.BackgroundProperty] = new Binding(nameof(SubtitleLineViewModel.StartTimeBackgroundBrush)),
+                    [!Border.BackgroundProperty] = MakeErrorCellBackgroundBinding(nameof(SubtitleLineViewModel.StartTimeBackgroundBrush)),
                 };
                 var textBlock = new TextBlock
                 {
@@ -298,7 +298,7 @@ public static partial class InitListViewAndEditBox
                 var border = new Border
                 {
                     Padding = new Thickness(4, 2),
-                    [!Border.BackgroundProperty] = new Binding(nameof(SubtitleLineViewModel.EndTimeBackgroundBrush)),
+                    [!Border.BackgroundProperty] = MakeErrorCellBackgroundBinding(nameof(SubtitleLineViewModel.EndTimeBackgroundBrush)),
                 };
                 var textBlock = new TextBlock
                 {
@@ -331,7 +331,7 @@ public static partial class InitListViewAndEditBox
                 var border = new Border
                 {
                     Padding = new Thickness(4, 2),
-                    [!Border.BackgroundProperty] = new Binding(nameof(SubtitleLineViewModel.DurationBackgroundBrush))
+                    [!Border.BackgroundProperty] = MakeErrorCellBackgroundBinding(nameof(SubtitleLineViewModel.DurationBackgroundBrush))
                 };
 
                 var textBlock = new TextBlock
@@ -426,7 +426,7 @@ public static partial class InitListViewAndEditBox
                 var border = new Border
                 {
                     Padding = new Thickness(4, 2),
-                    [!Border.BackgroundProperty] = new Binding(nameof(SubtitleLineViewModel.TextBackgroundBrush))
+                    [!Border.BackgroundProperty] = MakeErrorCellBackgroundBinding(nameof(SubtitleLineViewModel.TextBackgroundBrush))
                 };
 
                 var textBlock = new TextBlock
@@ -562,7 +562,7 @@ public static partial class InitListViewAndEditBox
                 var border = new Border
                 {
                     Padding = new Thickness(4, 2),
-                    [!Border.BackgroundProperty] = new Binding(nameof(SubtitleLineViewModel.GapBackgroundBrush)) { Mode = BindingMode.OneWay },
+                    [!Border.BackgroundProperty] = MakeErrorCellBackgroundBinding(nameof(SubtitleLineViewModel.GapBackgroundBrush)),
                 };
 
                 var textBlock = new TextBlock
@@ -644,7 +644,7 @@ public static partial class InitListViewAndEditBox
                 var border = new Border
                 {
                     Padding = new Thickness(4, 2),
-                    [!Border.BackgroundProperty] = new Binding(nameof(SubtitleLineViewModel.CpsBackgroundBrush)) { Mode = BindingMode.OneWay }
+                    [!Border.BackgroundProperty] = MakeErrorCellBackgroundBinding(nameof(SubtitleLineViewModel.CpsBackgroundBrush))
                 };
 
                 var textBlock = new TextBlock
@@ -677,7 +677,7 @@ public static partial class InitListViewAndEditBox
                 var border = new Border
                 {
                     Padding = new Thickness(4, 2),
-                    [!Border.BackgroundProperty] = new Binding(nameof(SubtitleLineViewModel.WpmBackgroundBrush)) { Mode = BindingMode.OneWay }
+                    [!Border.BackgroundProperty] = MakeErrorCellBackgroundBinding(nameof(SubtitleLineViewModel.WpmBackgroundBrush))
                 };
 
                 var textBlock = new TextBlock
@@ -2237,6 +2237,26 @@ public static partial class InitListViewAndEditBox
         TrackEditSectionMinimumHeight(hostGrid, textEditGrid);
     }
 
+    // Background for a grid cell tinted with the error color. The row's IsSelected goes along
+    // so a selected row can show a stronger red - the faint default tint turns gray on top of
+    // the selection color, hiding the error on the very line being fixed.
+    private static MultiBinding MakeErrorCellBackgroundBinding(string brushProperty)
+    {
+        return new MultiBinding
+        {
+            Converter = SelectedRowErrorBrushConverter.Instance,
+            Bindings =
+            {
+                new Binding(brushProperty) { Mode = BindingMode.OneWay },
+                new Binding(nameof(TableViewRow.IsSelected))
+                {
+                    Mode = BindingMode.OneWay,
+                    RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor) { AncestorType = typeof(TableViewRow) },
+                },
+            },
+        };
+    }
+
     // One entry of the "search via" submenu. The header and the visibility are bound rather than
     // set, so renaming a slot in Options > Shortcuts shows up without rebuilding the menu.
     private static SeTableViewColumn MakeShotChangeOffsetColumn(
@@ -2259,7 +2279,7 @@ public static partial class InitListViewAndEditBox
                 var border = new Border
                 {
                     Padding = new Thickness(4, 2),
-                    [!Border.BackgroundProperty] = new Binding(brushProperty) { Mode = BindingMode.OneWay },
+                    [!Border.BackgroundProperty] = MakeErrorCellBackgroundBinding(brushProperty),
                 };
 
                 border.Child = new TextBlock
