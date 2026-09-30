@@ -64,6 +64,53 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         }
 
         /// <summary>
+        /// The cc_data of a QuickTime "c708" caption track (CEA-608 pairs and CEA-708 packets,
+        /// timed in this track's ticks), for <see cref="MP4Parser"/> to decode like the captions
+        /// of a video stream. Empty for other tracks.
+        /// </summary>
+        public List<CcData> C708CcData { get; } = new List<CcData>();
+
+        /// <summary>
+        /// A "c708" sample holds one frame's SMPTE 334 caption distribution packet in a "ccdp"
+        /// atom: 96 69, length, frame rate, flags, sequence counter, an optional time code
+        /// section (flags bit 7), then 0x72 and cc_count cc_data triplets. It used to be read as
+        /// tx3g text - a zero length, so the whole track came out empty.
+        /// </summary>
+        private void AddC708SampleCcData(byte[] sampleData, ulong time)
+        {
+            var pos = 0;
+            while (pos + 8 <= sampleData.Length)
+            {
+                var atomSize = (int)BinaryPrimitives.ReadUInt32BigEndian(sampleData.AsSpan(pos));
+                if (atomSize < 8 || pos + atomSize > sampleData.Length)
+                {
+                    return;
+                }
+
+                var p = pos + 8;
+                var end = pos + atomSize;
+                if (Encoding.ASCII.GetString(sampleData, pos + 4, 4) == "ccdp" && p + 7 <= end &&
+                    sampleData[p] == 0x96 && sampleData[p + 1] == 0x69)
+                {
+                    var q = p + 7 + ((sampleData[p + 4] & 0x80) != 0 ? 5 : 0);
+                    if (q + 2 <= end && sampleData[q] == 0x72)
+                    {
+                        var frame = new List<CcData>();
+                        GetCcDataHelper.AddCcTriplets(sampleData.AsSpan(0, end), q + 2, sampleData[q + 1] & 0x1F, frame);
+                        foreach (var cc in frame)
+                        {
+                            cc.Time = time;
+                        }
+
+                        C708CcData.AddRange(frame);
+                    }
+                }
+
+                pos = end;
+            }
+        }
+
+        /// <summary>
         /// A sample holds the byte pairs of many frames - one pair per NTSC frame, starting at the
         /// sample time. Giving them all the sample time made a caption that is shown and replaced
         /// within one sample a zero-length cue. The pairs are spaced a frame apart, closer when
@@ -420,6 +467,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                             if (fs.Read(sampleData, 0, sampleData.Length) == sampleData.Length)
                             {
                                 AddC608SampleCcData(sampleData, beforeTicks, sampleTime);
+                            }
+                        }
+                        else if (handlerType == "clcp" && stsdCodec == "c708")
+                        {
+                            var sampleData = new byte[sampleSize];
+                            fs.Seek((long)sampleOffset, SeekOrigin.Begin);
+                            if (fs.Read(sampleData, 0, sampleData.Length) == sampleData.Length)
+                            {
+                                AddC708SampleCcData(sampleData, beforeTicks);
                             }
                         }
                         else if (stsdCodec == "wvtt") // WebVTT in MP4 (ISO 14496-30)

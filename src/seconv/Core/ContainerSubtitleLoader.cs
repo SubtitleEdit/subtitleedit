@@ -55,6 +55,28 @@ internal static class ContainerSubtitleLoader
             return LoadTransportStream(filePath, options);
         }
 
+        // Content over extension, as the GUI opens them: a Matroska file named .mp4 or .sup, a
+        // Blu-ray .sup named .sub - the loader picked by the extension found nothing in them.
+        if (ext is not (".mkv" or ".mks" or ".webm") && FileUtil.IsMatroskaFileFast(filePath) && FileUtil.IsMatroskaFile(filePath))
+        {
+            return LoadMatroska(filePath, options);
+        }
+
+        if (ext != ".sup" && FileUtil.IsBluRaySupByContent(filePath))
+        {
+            return LoadBluRaySup(filePath, options);
+        }
+
+        // DVB recorder extensions, and transport streams saved as .mpg/.mpeg (the GUI opens these
+        // as TS too); a recorder header before the first packet is fine, IsTransportStream looks
+        // past it. The program stream reader below wants a pack header, so a .mpeg transport
+        // stream fell through to the text loader - minutes of reading a video as lines.
+        if (ext is ".tsv" or ".tts" or ".rec" or ".mpg" or ".mpeg" &&
+            (FileUtil.IsTransportStream(filePath) || FileUtil.IsM2TransportStream(filePath)))
+        {
+            return LoadTransportStream(filePath, options);
+        }
+
         // .webm is Matroska too - a WebVTT track muxed into one was falling through to the
         // text loader, which then failed to detect a format at all.
         if (ext is ".mkv" or ".mks" or ".webm")
@@ -179,6 +201,13 @@ internal static class ContainerSubtitleLoader
             ext is ".m2v" or ".m1v" or ".mpv" && ProgramStreamClosedCaptionReader.IsVideoElementaryStream(filePath))
         {
             return LoadProgramStreamClosedCaptions(filePath, options);
+        }
+
+        // A video no container reader took has no subtitles SE can read - the text loader would
+        // spend minutes trying every format on it as lines, then fail anyway.
+        if (Utilities.VideoFileExtensions.Contains(ext) && new FileInfo(filePath).Length > 20_000_000)
+        {
+            throw new InvalidOperationException($"No subtitles found in video file: {filePath}");
         }
 
         // Image-list files (BDN xml, SON, DOST, SubRip with png names, ...) name an image per

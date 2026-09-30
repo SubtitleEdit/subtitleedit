@@ -2292,7 +2292,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         Subtitle? subtitle = null;
         var format = Se.Language.General.Unknown;
-        if (ext == ".sup" && FileUtil.IsBluRaySup(fileName))
+        if ((ext == ".sup" && FileUtil.IsBluRaySup(fileName)) ||
+            (ext != ".sup" && fileInfo.Length > 13 && FileUtil.IsBluRaySupByContent(fileName))) // e.g. a .sup saved as .sub
         {
             format = BatchConverter.FormatBluRaySup;
         }
