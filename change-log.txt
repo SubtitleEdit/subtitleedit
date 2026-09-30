@@ -8,7 +8,7 @@ v5.3.0-beta17 (30th of September 2026)
 * Add reading of EZTitles binary project files (.ezt), with italic, color and alignment
 * Add reading of CEA-608 closed captions from DVD .vob / program stream .mpg video
 * Add export of the shot changes list to a file
-* Add "Check with speech-to-text" to Improve time codes: confirm or undo the aligner's large moves with Parakeet
+* Add "Check with speech-to-text" to Improve time codes: confirm or undo the aligner's large moves and first sync subtitles that are seconds off or drifting
 * Add "Move to category" on the Multiple replace rule context menu - thx Shae-Clark
 * Remux video: embed subtitles as A/53 CEA-608 closed captions in .mpg - thx MaxBunny1786
 * Open the load-only text formats again from File > Open and Batch convert (SE 4 parity)
