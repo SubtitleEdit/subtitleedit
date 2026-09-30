@@ -367,7 +367,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             uint samplesPerChunk = 1;
             var max = ChunkOffsets.Count;
             var index = 0;
-            double totalTime = 0;
             ulong totalTicks = 0;
             var stscLookup = GetStscLookup();
             for (var chunkIndex = 0; chunkIndex < max; chunkIndex++)
@@ -388,10 +387,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
                     var sampleSize = SampleSizes[index];
                     var sampleTime = Ssts[index];
-                    var before = totalTime;
                     var beforeTicks = totalTicks;
-                    totalTime += sampleTime / (double)TimeScale;
                     totalTicks += sampleTime;
+
+                    // From the integer tick count, multiplying before dividing: summing
+                    // per-sample seconds as doubles drifted just below whole milliseconds
+                    // (19.53 s became 19529.99 ms), which displays as 19,529.
+                    var startMs = beforeTicks * 1000.0 / TimeScale;
+                    var endMs = totalTicks * 1000.0 / TimeScale;
 
                     if (sampleSize > 2)
                     {
@@ -448,7 +451,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
                             if (wvttText.Length > 0)
                             {
-                                paragraphs.Add(new Paragraph(wvttText.ToString(), before * 1000.0, totalTime * 1000.0));
+                                paragraphs.Add(new Paragraph(wvttText.ToString(), startMs, endMs));
                             }
                         }
                         else if (stsdCodec == "stpp") // TTML/IMSC1 in MP4 (ISO 14496-30)
@@ -459,7 +462,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                                 fs.Seek((long)sampleOffset, SeekOrigin.Begin);
                                 if (fs.Read(sampleData, 0, sampleData.Length) == sampleData.Length)
                                 {
-                                    AddTtmlSample(sampleData, before * 1000.0, (totalTime - before) * 1000.0, paragraphs);
+                                    AddTtmlSample(sampleData, startMs, endMs - startMs, paragraphs);
                                 }
                             }
                         }
@@ -474,7 +477,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                                     var text = Mp4TextSampleHelper.ReadSimpleTextSample(sampleData);
                                     if (!string.IsNullOrEmpty(text))
                                     {
-                                        paragraphs.Add(new Paragraph(text, before * 1000.0, totalTime * 1000.0));
+                                        paragraphs.Add(new Paragraph(text, startMs, endMs));
                                     }
                                 }
                             }
@@ -489,8 +492,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                             if (textSize > 0)
                             {
                                 var p = new Paragraph();
-                                p.StartTime.TotalSeconds = before;
-                                p.EndTime.TotalSeconds = totalTime;
+                                p.StartTime.TotalMilliseconds = startMs;
+                                p.EndTime.TotalMilliseconds = endMs;
 
                                 if (handlerType == "subp") // VobSub created with Mp4Box
                                 {
@@ -542,8 +545,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 var cea608Parser = new CcDataC608Parser();
                 cea608Parser.DisplayScreen += data =>
                 {
-                    var startMs = data.Start / (double)TimeScale * 1000.0;
-                    var endMs = data.End / (double)TimeScale * 1000.0;
+                    var startMs = data.Start * 1000.0 / TimeScale;
+                    var endMs = data.End * 1000.0 / TimeScale;
                     Cea608CueBuilder.Add(paragraphs, SerializedScreenText.GetText(data.Screen), startMs, endMs);
                 };
                 foreach (var cc in _cea608CcData)
