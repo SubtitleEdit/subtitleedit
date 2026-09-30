@@ -127,12 +127,15 @@ public partial class PickVobSubLanguageViewModel : ObservableObject
         for (var i = 0; i < PreviewCount && i < packs.Count; i++)
         {
             var pack = packs[i];
-            if (_palette != null)
+            var palette = _palette is { Count: > 0 } ? _palette : null;
+            if (palette != null)
             {
-                pack.Palette = _palette;
+                pack.Palette = palette;
             }
 
-            var bitmap = pack.GetBitmap();
+            // Without a palette (a .vob without its IFO) draw like SE 4: wheat text, black outline
+            // - the plain default is black text, near invisible on a dark theme.
+            var bitmap = pack.SubPicture.GetBitmap(palette, SKColors.Transparent, SKColors.Wheat, SKColors.Black, SKColors.DarkGray, false, true);
             Rows.Add(new VobSubLanguageCueDisplay
             {
                 Number = i + 1,

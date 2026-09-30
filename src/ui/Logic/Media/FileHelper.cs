@@ -195,11 +195,21 @@ namespace Nikse.SubtitleEdit.Logic.Media
         /// </summary>
         private static List<FilePickerFileType> MakeOpenSubtitleFilter(bool includeVideoFiles, bool includeSpreadsheets = false)
         {
+            // The main window's open (the one with the spreadsheet importer) also rips DVD subtitles
+            // from an IFO/VOB - listed there only, not in GetOpenSubtitleExtensions, which batch
+            // convert's folder scan uses too.
+            var subtitlePatterns = MakeOpenSubtitlePatterns(includeVideoFiles);
+            if (includeSpreadsheets)
+            {
+                subtitlePatterns.Add("*.ifo");
+                subtitlePatterns.Add("*.vob");
+            }
+
             var fileTypes = new List<FilePickerFileType>
             {
                 new FilePickerFileType(Se.Language.General.SubtitleFiles)
                 {
-                    Patterns = MakeOpenSubtitlePatterns(includeVideoFiles),
+                    Patterns = subtitlePatterns,
                 },
                 new FilePickerFileType(Se.Language.General.VideoFiles)
                 {

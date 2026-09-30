@@ -31,9 +31,92 @@ namespace Nikse.SubtitleEdit.Core.VobSub
 
         public SKBitmap GetBitmap()
         {
-            return SubPicture.GetBitmap(Palette, SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black, false, true);
+            if (Palette != null && Palette.Count > 0)
+            {
+                return SubPicture.GetBitmap(Palette, SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black, false, true);
+            }
+
+            // No palette (e.g. a .vob without its IFO): black text with a white outline. Which of
+            // the three colors is the text, the outline and the anti-aliasing differs between
+            // discs, so it is found from the image itself - see GetNoPaletteColors.
+            var colors = GetNoPaletteColors();
+            return SubPicture.GetBitmap(null, colors[0], colors[1], colors[2], colors[3], false, true);
         }
 
+        private SKColor[] _noPaletteColors;
+
+        /// <summary>
+        /// The outline is the color that borders the transparent background the most (relative to
+        /// its pixel count) and the text body the one that borders it the least; the text body is
+        /// drawn black, the outline white and the anti-aliasing between them black. Most discs use
+        /// pattern = text, emphasis 1 = outline, but e.g. some use pattern = outline and emphasis 2 =
+        /// text - with fixed colors, text and outline then both came out black.
+        /// </summary>
+        private SKColor[] GetNoPaletteColors()
+        {
+            if (_noPaletteColors != null)
+            {
+                return _noPaletteColors;
+            }
+
+            var markers = new[] { SKColors.Transparent, new SKColor(255, 0, 0), new SKColor(0, 255, 0), new SKColor(0, 0, 255) };
+            var counts = new int[4];
+            var edges = new int[4];
+            using (var bitmap = SubPicture.GetBitmap(null, markers[0], markers[1], markers[2], markers[3], false, true))
+            {
+                if (bitmap != null)
+                {
+                    var width = bitmap.Width;
+                    var height = bitmap.Height;
+                    var pixels = bitmap.Pixels;
+                    var index = new int[pixels.Length];
+                    for (var i = 0; i < pixels.Length; i++)
+                    {
+                        index[i] = pixels[i] == markers[1] ? 1 : pixels[i] == markers[2] ? 2 : pixels[i] == markers[3] ? 3 : 0;
+                    }
+
+                    for (var y = 0; y < height; y++)
+                    {
+                        for (var x = 0; x < width; x++)
+                        {
+                            var i = index[y * width + x];
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+
+                            counts[i]++;
+                            if (x == 0 || y == 0 || x == width - 1 || y == height - 1 ||
+                                index[y * width + x - 1] == 0 || index[y * width + x + 1] == 0 ||
+                                index[(y - 1) * width + x] == 0 || index[(y + 1) * width + x] == 0)
+                            {
+                                edges[i]++;
+                            }
+                        }
+                    }
+                }
+            }
+
+            var used = new List<int>();
+            for (var i = 1; i < 4; i++)
+            {
+                if (counts[i] > 0)
+                {
+                    used.Add(i);
+                }
+            }
+
+            var colors = new[] { SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black };
+            if (used.Count >= 2)
+            {
+                used.Sort((a, b) => ((double)edges[a] / counts[a]).CompareTo((double)edges[b] / counts[b]));
+                colors = new[] { SKColors.Transparent, SKColors.Black, SKColors.Black, SKColors.Black };
+                colors[used[used.Count - 1]] = SKColors.White; // borders the background the most: outline
+            }
+
+            _noPaletteColors = colors;
+            return colors;
+        }
         public SKSize GetScreenSize()
         {
             return new SKSize(720, 480);

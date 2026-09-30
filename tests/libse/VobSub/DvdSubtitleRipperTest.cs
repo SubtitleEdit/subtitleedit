@@ -109,6 +109,22 @@ public class DvdSubtitleRipperTest : IDisposable
         Assert.Equal(0x3F, packs[0].PacketizedElementaryStream.SubPictureStreamId);
     }
 
+    [Fact]
+    public void CountEncrypted_CountsCssScrambledPacks()
+    {
+        var encrypted = MakeSubtitlePack(0x20, 9000);
+        encrypted[14 + 6] |= 0b0011_0000; // PES scrambling control
+        var vob = WriteVob("VTS_01_1.VOB",
+            MakeNavPack(1, 1, 0, 30000),
+            MakeSubtitlePack(0x20, 4500),
+            encrypted);
+
+        var packs = DvdSubtitleRipper.Rip(new[] { vob });
+
+        Assert.Equal(2, packs.Count);
+        Assert.Equal(1, DvdSubtitleRipper.CountEncrypted(packs));
+    }
+
     private string WriteVob(string name, params byte[][] sectors)
     {
         var fileName = Path.Combine(_folder, name);

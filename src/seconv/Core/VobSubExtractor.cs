@@ -24,7 +24,7 @@ internal static class VobSubExtractor
     public sealed record StreamOutput(string Path, int StreamId, int Written);
 
     /// <summary>The outputs plus a one line note on what was read (for the console).</summary>
-    public sealed record ExtractionResult(IReadOnlyList<StreamOutput> Outputs, string Source);
+    public sealed record ExtractionResult(IReadOnlyList<StreamOutput> Outputs, string Source, int EncryptedPacks = 0, int TotalPacks = 0);
 
     /// <summary>
     /// Parse <paramref name="vobFiles"/> (treated as one logical title) and write
@@ -123,7 +123,7 @@ internal static class VobSubExtractor
             outputs.Add(new StreamOutput(outputPath, streamId, written));
         }
 
-        return new ExtractionResult(outputs, source);
+        return new ExtractionResult(outputs, source, DvdSubtitleRipper.CountEncrypted(packs), packs.Count);
     }
 
     /// <summary>

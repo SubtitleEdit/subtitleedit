@@ -155,6 +155,25 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         }
 
         /// <summary>
+        /// Number of packs that are still CSS encrypted (PES scrambling control set) - a VOB copied
+        /// from the disc without decrypting. Past the first 128 bytes of such a sector the data is
+        /// scrambled, so the sub picture it belongs to decodes as noise. SE does not decrypt CSS.
+        /// </summary>
+        public static int CountEncrypted(IEnumerable<VobSubPack> packs)
+        {
+            var count = 0;
+            foreach (var pack in packs)
+            {
+                if (pack.PacketizedElementaryStream?.ScramblingControl > 0)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        /// <summary>
         /// SE 4's PTS stitching from the NAV packs' VOBU start/end PTS.
         /// </summary>
         private sealed class NavPtsState

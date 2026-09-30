@@ -179,6 +179,11 @@ public static class InitMenu
                         },
                         new MenuItem
                         {
+                            Header = Se.Language.File.Import.DvdSubtitlesDotDotDot,
+                            Command = vm.ImportDvdSubtitlesCommand,
+                        },
+                        new MenuItem
+                        {
                             Header = Se.Language.File.Import.ImageBasedSubtitleForEditDotDotDot,
                             Command = vm.ImportImageSubtitleForEditCommand,
                         },

@@ -59,7 +59,6 @@ public class LanguageFile
     public string SaveCompareHtmlTitle { get; set; }
     public string PickMatroskaTrackX { get; set; }
     public string PickTransportStreamTrackX { get; set; }
-    public string PickDvdTitleX { get; set; }
     public string Chapters { get; set; }
     public string DvdVobFilesMissingX { get; set; }
     public string PickMp4TrackX { get; set; }
@@ -129,7 +128,6 @@ public class LanguageFile
         SaveCompareHtmlTitle = "Save compare HTML file";
         PickMatroskaTrackX = "Pick Matroska track - {0}";
         PickTransportStreamTrackX = "Pick transport stream track - {0}";
-        PickDvdTitleX = "Pick DVD title - {0}";
         Chapters = "Chapters";
         DvdVobFilesMissingX = "VOB files missing ({0}% found)";
         PickMp4TrackX = "Pick MP4 track - {0}";

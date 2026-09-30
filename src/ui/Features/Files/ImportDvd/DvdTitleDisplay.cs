@@ -1,7 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core.VobSub;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 
-namespace Nikse.SubtitleEdit.Features.Shared.PickDvdTitle;
+namespace Nikse.SubtitleEdit.Features.Files.ImportDvd;
 
 public class DvdTitleDisplay
 {
@@ -24,6 +25,7 @@ public class DvdTitleDisplay
 
     public override string ToString()
     {
-        return Name;
+        var text = $"{Name}:  {Duration:hh\\:mm\\:ss}  ({Chapters} {Se.Language.File.Chapters.ToLowerInvariant()})";
+        return string.IsNullOrEmpty(Status) ? text : $"{text}  -  {Status}";
     }
 }

@@ -65,6 +65,7 @@ using Nikse.SubtitleEdit.Features.Files.FormatProperties.TimedText10Properties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.TimedTextImsc11Properties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.TmpegEncXmlProperties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.WebVttProperties;
+using Nikse.SubtitleEdit.Features.Files.ImportDvd;
 using Nikse.SubtitleEdit.Features.Files.ImportImages;
 using Nikse.SubtitleEdit.Features.Files.ImportCsvXlsxCustomColumns;
 using Nikse.SubtitleEdit.Features.Files.ImportPlainText;
@@ -107,7 +108,6 @@ using Nikse.SubtitleEdit.Features.Shared.PickSpellCheckDictionary;
 using Nikse.SubtitleEdit.Features.Shared.OpenOriginalMismatch;
 using Nikse.SubtitleEdit.Features.Shared.PickSubtitleFormat;
 using Nikse.SubtitleEdit.Features.Shared.PickTsTrack;
-using Nikse.SubtitleEdit.Features.Shared.PickDvdTitle;
 using Nikse.SubtitleEdit.Features.Shared.PickVobSubLanguage;
 using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
@@ -5684,7 +5684,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var fileName = await _fileHelper.PickOpenFile(Window!, Se.Language.General.OpenImageBasedSubtitle, Se.Language.General.ImageBasedSubtitles, "*.sup;*.sub;*.ts;*.m2ts;*.mts;*.rec;*.mkv;*.mks;*.mp4;*.m4v;*.mov;*.3gp;*.avi;*.divx;*.xml;*.ttml;*.dfxp;*.vtt;*.webvtt",
+        var fileName = await _fileHelper.PickOpenFile(Window!, Se.Language.General.OpenImageBasedSubtitle, Se.Language.General.ImageBasedSubtitles, "*.sup;*.sub;*.ifo;*.vob;*.ts;*.m2ts;*.mts;*.rec;*.mkv;*.mks;*.mp4;*.m4v;*.mov;*.3gp;*.avi;*.divx;*.xml;*.ttml;*.dfxp;*.vtt;*.webvtt",
             Se.Language.General.AllFiles, "*.*");
         if (string.IsNullOrEmpty(fileName))
         {
@@ -23724,7 +23724,8 @@ public partial class MainViewModel :
         _ocrImageSourceHolder.Source = null;
         _ocrImageSourceHolder.FileName = null;
 
-        var ext = Path.GetExtension(fileName);
+        // lower case: the checks below compare with ".vob", ".sup" etc., and DVD files are VTS_01_1.VOB
+        var ext = Path.GetExtension(fileName).ToLowerInvariant();
         var fileSize = (long)0;
         try
         {
@@ -23901,7 +23902,7 @@ public partial class MainViewModel :
             // DVD IFO: rip the subtitles of a title (program chain) from its VOB files
             if ((ext == ".ifo" || ext == ".bup") && IfoParser.IsIfo(fileName))
             {
-                if (await ImportSubtitleFromDvdIfo(fileName, videoFileName, skipLoadVideo))
+                if (await ImportSubtitleFromDvd(fileName, videoFileName, skipLoadVideo))
                 {
                     SelectAndScrollToRow(0);
                     return;
@@ -26001,46 +26002,34 @@ public partial class MainViewModel :
         return await ImportVobSubPacksWithOcr(vobSubMergedPackList, vobSubParser.IdxPalette, vobSubParser.IdxLanguages, GetLanguageCode, vobSubFileName, videoFileName, skipLoadVideo);
     }
 
-    /// <summary>
-    /// Opens a DVD IFO (VIDEO_TS.IFO or VTS_xx_0.IFO): pick a title (program chain) if there is
-    /// more than one, rip just that title's cells from the VOB files and OCR the picked language.
-    /// </summary>
-    private async Task<bool> ImportSubtitleFromDvdIfo(string ifoFileName, string? videoFileName, bool skipLoadVideo)
+    [RelayCommand]
+    private async Task ImportDvdSubtitles()
     {
-        var titles = await Task.Run(() => DvdTitle.Find(ifoFileName));
-        titles = titles.Where(p => p.AvailableShare > 0).ToList();
-        if (titles.Count == 0)
+        if (Window == null)
         {
-            return false;
+            return;
         }
 
-        var title = DvdTitle.GetDefault(titles);
-        if (titles.Count > 1)
-        {
-            var pickResult = await ShowDialogAsync<PickDvdTitleWindow, PickDvdTitleViewModel>(vm => vm.Initialize(titles, title, ifoFileName));
-            if (!pickResult.OkPressed || pickResult.SelectedDvdTitle == null)
-            {
-                return true; // the file was ours, the user just did not pick a title
-            }
-
-            title = pickResult.SelectedDvdTitle;
-        }
-
-        var packs = await RipDvdSubtitlesAsync(title.VobFileNames, title.Ifo.IsPal,
-            (progress, cancellationToken) => DvdSubtitleRipper.Rip(title.VobFileNames, title.ProgramChain, progress, cancellationToken));
-        var fileName = title.VobFileNames.FirstOrDefault() ?? ifoFileName;
-        if (packs.Count == 0)
-        {
-            ShowStatus(Se.Language.General.NoSubtitlesFound);
-            return true;
-        }
-
-        var palette = title.ProgramChain.Palette.Count > 0 ? title.ProgramChain.Palette : title.Ifo.Palette;
-        // the file was ours even when the user cancels the language pick or the OCR
-        await ImportVobSubPacksWithOcr(packs, palette, title.Ifo.GetLanguages(), title.Ifo.GetLanguageCode, fileName, videoFileName, skipLoadVideo);
-        return true;
+        await ImportSubtitleFromDvd(null, null, false);
+        _shortcutManager.ClearKeys();
     }
 
+    /// <summary>
+    /// The "Import subtitles from DVD" window (optionally started with an IFO or VOB file): pick a
+    /// title, rip it, then pick the language and OCR it.
+    /// </summary>
+    private async Task<bool> ImportSubtitleFromDvd(string? fileName, string? videoFileName, bool skipLoadVideo)
+    {
+        var result = await ShowDialogAsync<ImportDvdWindow, ImportDvdViewModel>(vm => vm.Initialize(fileName));
+        if (!result.OkPressed)
+        {
+            return true; // the file was ours, the user just cancelled
+        }
+
+        // the file was ours even when the user cancels the language pick or the OCR
+        await ImportVobSubPacksWithOcr(result.MergedPacks, result.Palette, result.Languages, result.GetLanguageCode, result.FileName, videoFileName, skipLoadVideo);
+        return true;
+    }
     /// <summary>
     /// Opens a single DVD .vob. The PTS restarts are stitched from its NAV packs; palette, languages
     /// and PAL/NTSC come from the title set's IFO when it is next to the VOB.
@@ -26096,12 +26085,17 @@ public partial class MainViewModel :
         }
 
         ShowStatus(Se.Language.Main.ReadingDvdSubtitles);
+        var packCount = 0;
+        var encryptedPackCount = 0;
+        List<VobSubMergedPack> merged;
         try
         {
             var vm = pleaseWaitVm;
-            return await Task.Run(() =>
+            merged = await Task.Run(() =>
             {
                 var packs = rip((position, total) => vm?.ReportProgress(position, total), CancellationToken.None);
+                packCount = packs.Count;
+                encryptedPackCount = DvdSubtitleRipper.CountEncrypted(packs);
                 var parser = new VobSubParser(isPal);
                 parser.VobSubPacks.AddRange(packs);
                 return parser.MergeVobSubPacks();
@@ -26111,6 +26105,20 @@ public partial class MainViewModel :
         {
             pleaseWaitVm?.Close();
         }
+
+        // SE does not decrypt CSS - a VOB copied without decrypting gives garbled images
+        if (merged.Count > 0 && encryptedPackCount > 0)
+        {
+            var answer = await MessageBox.Show(Window!, Se.Language.General.Warning,
+                string.Format(Se.Language.File.Import.DvdEncryptedXOfY, encryptedPackCount, packCount),
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (answer != MessageBoxResult.Yes)
+            {
+                return new List<VobSubMergedPack>();
+            }
+        }
+
+        return merged;
     }
 
     /// <summary>

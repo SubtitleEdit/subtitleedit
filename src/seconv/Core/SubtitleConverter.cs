@@ -380,6 +380,13 @@ internal class SubtitleConverter
                 AnsiConsole.MarkupInterpolated($" [dim]({extraction.Source})[/]");
             }
 
+            // SE does not decrypt CSS - a VOB copied without decrypting gives garbled images
+            if (extraction.EncryptedPacks > 0)
+            {
+                var warning = $"{extraction.EncryptedPacks} of {extraction.TotalPacks} subtitle packets are still CSS encrypted - the VOB files were copied without decrypting, so some subtitle images are garbled. Decrypt the DVD with a DVD ripping tool first.";
+                result.Warnings.Add(warning); // listed in the summary at the end
+            }
+
             result.SuccessfulFiles = vobFiles.Count;
             // Report the first stream's output path against each input VOB. With multiple
             // streams there's no clean 1:1 mapping back to inputs, but the OutputFile slot
