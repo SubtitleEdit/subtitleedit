@@ -23841,7 +23841,9 @@ public partial class MainViewModel :
             if ((ext == ".mp4" || ext == ".m4v" || ext == ".3gp" || ext == ".mov" || ext == ".cmaf" || ext == ".m4a" || ext == ".m4b") &&
                 fileSize > 100 || ext == ".m4s")
             {
-                if (!new IsmtDfxp().IsMine(null, fileName))
+                // IsMine parses the whole file (up to 50 MB) - keep it off the UI thread
+                var isIsmt = await Task.Run(() => new IsmtDfxp().IsMine(null, fileName));
+                if (!isIsmt)
                 {
                     var ok = await ImportSubtitleFromMp4(fileName, skipLoadVideo);
                     if (ok)
@@ -25204,7 +25206,18 @@ public partial class MainViewModel :
 
     private async Task<bool> ImportSubtitleFromMp4(string fileName, bool skipLoadVideo = false)
     {
-        var mp4Parser = new MP4Parser(fileName);
+        // Parsing a multi-GB movie takes seconds from a cold disk cache - keep it off the UI thread
+        ShowStatus(string.Format(Se.Language.General.ParsingXDotDotDot, fileName));
+        MP4Parser mp4Parser;
+        try
+        {
+            mp4Parser = await Task.Run(() => new MP4Parser(fileName));
+        }
+        finally
+        {
+            ShowStatus(string.Empty);
+        }
+
         var mp4SubtitleTracks = mp4Parser.GetSubtitleTracks();
         if (mp4SubtitleTracks.Count == 0)
         {

@@ -37,6 +37,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
         /// <summary>
         /// CEA-608/708 closed captions from the video track: paragraphs per track key
         /// (1-4 = CC1-CC4, 100 + n = CEA-708 service n, see <see cref="ClosedCaptionDecoder"/>).
+        /// Empty for a progressive file that has a subtitle track - its video is not scanned.
         /// </summary>
         public SortedDictionary<int, List<Paragraph>> ClosedCaptionTracks { get; private set; } = new SortedDictionary<int, List<Paragraph>>();
 
@@ -358,7 +359,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             }
 
             CheckForTrunCea608();
-            CheckForMoovVideoCea608();
+
+            // Finding CEA-608/708 in a progressive file reads every video sample - seconds on a
+            // multi-GB movie - and callers only offer the captions when there is no subtitle
+            // track, so skip the scan when there is one.
+            if (GetSubtitleTracks().Count == 0)
+            {
+                CheckForMoovVideoCea608();
+            }
         }
 
         private void ApplyEditListsToMoovSubtitleTracks()
