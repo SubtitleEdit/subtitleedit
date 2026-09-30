@@ -151,10 +151,17 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             try
             {
                 var lines = xml.SplitToLines(100_000);
-                var format = new TimedText10();
+
+                // TimedText10 leaves IMSC1 documents (ttp:profile .../imsc1/...) to the IMSC
+                // format, so an IMSC1 stpp track came out empty
+                SubtitleFormat format = new TimedText10();
                 if (!format.IsMine(lines, null))
                 {
-                    return new List<Paragraph>();
+                    format = new TimedTextImsc11();
+                    if (!format.IsMine(lines, null))
+                    {
+                        return new List<Paragraph>();
+                    }
                 }
 
                 var subtitle = new Subtitle();

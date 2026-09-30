@@ -169,6 +169,38 @@ public class ContainerLoaderTest : IDisposable
         Assert.Contains("inaudible radio chatter", cc1);
     }
 
+    /// <summary>
+    /// The loader goes by content before extension, as the GUI does: a Matroska file named .mp4,
+    /// a Blu-ray .sup named .sub and a transport stream named .mpeg were read with the loader of
+    /// their extension (or, for .mpeg, as text for minutes) and failed.
+    /// </summary>
+    [Theory]
+    [InlineData("container_text.mkv", "movie.mp4", false)]
+    [InlineData("sample.sup", "movie.sub", true)]
+    [InlineData("container_teletext.ts", "recording.mpeg", false)]
+    public async Task ConvertAsync_ContainerWithAnotherExtension_IsReadByItsContent(string fixture, string fileName, bool timeCodesOnly)
+    {
+        var input = Path.Combine(_tempRoot, fileName);
+        File.Copy(Fixtures.Path(fixture), input);
+        var outputFolder = Path.Combine(_tempRoot, "out");
+        Directory.CreateDirectory(outputFolder);
+
+        var converter = new SubtitleConverter();
+        var result = await converter.ConvertAsync(new ConversionOptions
+        {
+            Patterns = [input],
+            Format = "SubRip",
+            OutputFolder = outputFolder,
+            Overwrite = true,
+            TimeCodesOnly = timeCodesOnly,
+        });
+
+        Assert.True(result.Success, string.Join("; ", result.Errors));
+        var outputs = Directory.GetFiles(outputFolder, "*.srt");
+        Assert.NotEmpty(outputs);
+        Assert.Contains("-->", await File.ReadAllTextAsync(outputs[0], TestContext.Current.CancellationToken));
+    }
+
     [Fact]
     public async Task ConvertAsync_Mp4WithoutUsableTrack_ReportsNoSubtitleTracks()
     {

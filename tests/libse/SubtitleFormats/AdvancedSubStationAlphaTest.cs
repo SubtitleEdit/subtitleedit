@@ -61,4 +61,31 @@ Style: Default,Arial,20,&H00FFFFFF,&H0300FFFF,&H00000000,&H02000000,0,0,0,0,100,
         Assert.Single(reloaded.Paragraphs);
         Assert.Equal("Hello", reloaded.Paragraphs[0].Text);
     }
+
+    /// <summary>
+    /// An Aegisub script with styles but no lines yet (a style template, an episode not
+    /// subtitled yet) is an ASSA file - it was "unknown format", and the styles were lost.
+    /// </summary>
+    [Fact]
+    public void StylesOnlyScript_IsAssaWithNoLines()
+    {
+        var lines = HeaderWithEventsFormat(StandardEventsFormatLine).SplitToLines();
+        var format = new AdvancedSubStationAlpha();
+
+        Assert.True(format.IsMine(lines, "episode.ass"));
+        var subtitle = new Subtitle();
+        format.LoadSubtitle(subtitle, lines, "episode.ass");
+        Assert.Empty(subtitle.Paragraphs);
+        Assert.Contains("Style: Default,Arial,20", subtitle.Header);
+    }
+
+    [Theory]
+    [InlineData("[V4 Styles]")] // SSA v4, not ASSA
+    [InlineData("[Styles]")]
+    public void ScriptWithoutLinesOrV4PlusStyles_IsNotAssa(string stylesSection)
+    {
+        var lines = HeaderWithEventsFormat(StandardEventsFormatLine).Replace("[V4+ Styles]", stylesSection).SplitToLines();
+
+        Assert.False(new AdvancedSubStationAlpha().IsMine(lines, "episode.ssa"));
+    }
 }

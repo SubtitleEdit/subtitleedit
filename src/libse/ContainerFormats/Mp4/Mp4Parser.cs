@@ -359,6 +359,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             }
 
             CheckForTrunCea608();
+            CheckForClcpCea708();
 
             // Finding CEA-608/708 in a progressive file reads every video sample - seconds on a
             // multi-GB movie - and callers only offer the captions when there is no subtitle
@@ -455,6 +456,30 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
                 p.StartTime.TotalMilliseconds = start < 0 ? 0 : start;
                 p.EndTime.TotalMilliseconds = end < 0 ? 0 : end;
+            }
+        }
+
+        /// <summary>
+        /// A QuickTime "c708" closed caption track carries both CEA-608 channels and CEA-708
+        /// services; they are decoded into <see cref="ClosedCaptionTracks"/> like the captions
+        /// of a video stream (the video scan then has nothing to add).
+        /// </summary>
+        private void CheckForClcpCea708()
+        {
+            if (Moov?.Tracks == null || TrunCea608Subtitle?.Paragraphs.Count > 0 || TrunCea708Subtitle?.Paragraphs.Count > 0)
+            {
+                return;
+            }
+
+            foreach (var trak in Moov.Tracks)
+            {
+                var stbl = trak?.Mdia?.Minf?.Stbl;
+                if (trak?.Mdia?.IsClosedCaption == true && stbl?.C708CcData.Count > 0)
+                {
+                    var timeScale = stbl.TimeScale > 0 ? stbl.TimeScale : (Moov.Mvhd?.TimeScale ?? 1000UL);
+                    DecodeCcData(stbl.C708CcData, timeScale, trak);
+                    return;
+                }
             }
         }
 
