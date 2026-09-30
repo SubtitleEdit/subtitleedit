@@ -1633,6 +1633,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         if (item.Format == BatchConverter.FormatBluRaySup ||
             item.Format == BatchConverter.FormatHdDvdSup ||
+            item.Format == BatchConverter.FormatDvdSup ||
             item.Format == BatchConverter.FormatBdnXml ||
             item.Format == BatchConverter.FormatVobSub)
         {
@@ -2297,6 +2298,10 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         else if (ext == ".sup" && HdDvdSupParser.IsHdDvdSup(fileName))
         {
             format = BatchConverter.FormatHdDvdSup;
+        }
+        else if (ext == ".sup" && FileUtil.IsSpDvdSup(fileName))
+        {
+            format = BatchConverter.FormatDvdSup;
         }
 
         if (ext == ".sub" && FileUtil.IsVobSub(fileName))

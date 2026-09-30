@@ -255,6 +255,16 @@ internal static class ImageOcrLoader
     }
 
     /// <summary>
+    /// DVD .sup file ("SP" packets) → text via the configured OCR engine, or time codes only
+    /// when <see cref="ConversionOptions.TimeCodesOnly"/> is set.
+    /// </summary>
+    public static Subtitle LoadSpDvdSup(string filePath, ConversionOptions options)
+    {
+        var items = BitmapSubtitleLoader.LoadSpDvdSup(filePath);
+        return OcrBitmapItems(items, options, $"{items.Count} DVD sup image(s)");
+    }
+
+    /// <summary>
     /// VobSub MKV track (<c>S_VOBSUB</c>) → text via the configured OCR engine, or time
     /// codes only when <see cref="ConversionOptions.TimeCodesOnly"/> is set.
     /// </summary>

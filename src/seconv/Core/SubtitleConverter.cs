@@ -399,6 +399,12 @@ internal class SubtitleConverter
                     () => BitmapSubtitleLoader.LoadHdDvdSup(inputFile));
             }
 
+            if (FileUtil.IsSpDvdSup(inputFile))
+            {
+                return await PassThroughSingleStreamAsync(inputFile, options, result, fileIndex, sourceTimestamps,
+                    () => BitmapSubtitleLoader.LoadSpDvdSup(inputFile));
+            }
+
             return await PassThroughSingleStreamAsync(inputFile, options, result, fileIndex, sourceTimestamps,
                 () => BitmapSubtitleLoader.LoadBluRaySup(inputFile));
         }

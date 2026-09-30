@@ -103,6 +103,11 @@ internal static class ContainerSubtitleLoader
                 return LoadHdDvdSup(filePath, options);
             }
 
+            if (FileUtil.IsSpDvdSup(filePath))
+            {
+                return LoadSpDvdSup(filePath, options);
+            }
+
             return LoadBluRaySup(filePath, options);
         }
 
@@ -571,6 +576,16 @@ internal static class ContainerSubtitleLoader
         if (subtitle.Paragraphs.Count == 0)
         {
             throw new InvalidOperationException($"No subtitles recognised in HD-DVD sup file: {filePath}");
+        }
+        return [new LoadedTrack(subtitle, new SubRip(), string.Empty, null)];
+    }
+
+    private static List<LoadedTrack> LoadSpDvdSup(string filePath, ConversionOptions options)
+    {
+        var subtitle = ImageOcrLoader.LoadSpDvdSup(filePath, options);
+        if (subtitle.Paragraphs.Count == 0)
+        {
+            throw new InvalidOperationException($"No subtitles recognised in DVD sup file: {filePath}");
         }
         return [new LoadedTrack(subtitle, new SubRip(), string.Empty, null)];
     }
