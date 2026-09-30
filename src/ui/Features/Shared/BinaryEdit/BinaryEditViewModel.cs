@@ -776,6 +776,13 @@ public partial class BinaryEditViewModel : ObservableObject
             return spDvdSup.Count > 0 ? spDvdSup : null;
         }
 
+        // HD-DVD SUP ("SP" packets with 32-bit sizes, e.g. demuxed with EVODemux)
+        if (HdDvdSupParser.IsHdDvdSup(fileName))
+        {
+            var hdDvdSup = new OcrSubtitleHdDvdSup(fileName);
+            return hdDvdSup.Count > 0 ? hdDvdSup : null;
+        }
+
         // VobSub (.sub + .idx)
         if (FileUtil.IsVobSub(fileName))
         {

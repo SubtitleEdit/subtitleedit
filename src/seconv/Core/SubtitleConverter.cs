@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.UiLogic.Export;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 using Spectre.Console;
@@ -392,6 +393,12 @@ internal class SubtitleConverter
 
         if (ext == ".sup")
         {
+            if (HdDvdSupParser.IsHdDvdSup(inputFile))
+            {
+                return await PassThroughSingleStreamAsync(inputFile, options, result, fileIndex, sourceTimestamps,
+                    () => BitmapSubtitleLoader.LoadHdDvdSup(inputFile));
+            }
+
             return await PassThroughSingleStreamAsync(inputFile, options, result, fileIndex, sourceTimestamps,
                 () => BitmapSubtitleLoader.LoadBluRaySup(inputFile));
         }

@@ -5318,6 +5318,15 @@ public partial class OcrViewModel : ObservableObject
         AutoDetectSourceLanguage();
     }
 
+    public void InitializeHdDvdSup(string fileName)
+    {
+        _sourceFileName = fileName;
+        Title = UiUtil.FormatTitleWithFileName(Se.Language.Ocr.OcrX, fileName);
+        _ocrSubtitle = new OcrSubtitleHdDvdSup(fileName);
+        SetOcrSubtitleItems();
+        AutoDetectSourceLanguage();
+    }
+
     internal void Initialize(List<TransportStreamSubtitle> subtitles, string fileName)
     {
         _sourceFileName = fileName;
