@@ -40,6 +40,10 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
     [ObservableProperty] private bool _adjustStart;
     [ObservableProperty] private bool _adjustEnd;
     [ObservableProperty] private bool _isolateSpeech;
+    [ObservableProperty] private bool _checkWithSpeechToText;
+    [ObservableProperty] private bool _canCheckWithSpeechToText;
+    [ObservableProperty] private string _checkWithSpeechToTextHint;
+    [ObservableProperty] private bool _hasHeard;
     [ObservableProperty] private bool _isProgressIndeterminate;
     [ObservableProperty] private bool _showSpeechOnly;
     [ObservableProperty] private bool _isSpeechOnlyAvailable;
@@ -70,6 +74,8 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
     private readonly List<SubtitleLineViewModel> _alignedSubtitles = new();
     private string _videoFileName = string.Empty;
     private int _audioTrackNumber = -1;
+    private string? _languageCode;
+    private bool _isSpeechToTextLanguage;
     private CancellationTokenSource? _cancellation;
     private UiTickPump? _positionTimer;
 
@@ -93,6 +99,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         _statusText = Se.Language.Tools.ImproveTimeCodes.Intro;
         _summaryLine = string.Empty;
         _changePositionLabel = string.Empty;
+        _checkWithSpeechToTextHint = string.Empty;
         _isIdle = true;
 
         var settings = Se.Settings.Tools.ImproveTimeCodes;
@@ -100,6 +107,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         _adjustStart = settings.AdjustStart;
         _adjustEnd = settings.AdjustEnd;
         _isolateSpeech = settings.IsolateSpeech;
+        _checkWithSpeechToText = settings.CheckWithSpeechToText;
     }
 
     /// <param name="subtitles">The lines to re-time, sorted by start time.</param>
@@ -113,6 +121,14 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
     {
         _videoFileName = videoFileName;
         _audioTrackNumber = audioTrackNumber;
+        _languageCode = languageCode;
+
+        var l = Se.Language.Tools.ImproveTimeCodes;
+        _isSpeechToTextLanguage = ImproveTimeCodesAligners.CanCheckWithSpeechToText(languageCode);
+        CanCheckWithSpeechToText = _isSpeechToTextLanguage;
+        CheckWithSpeechToTextHint = _isSpeechToTextLanguage
+            ? l.CheckWithSpeechToTextHint
+            : string.Format(l.CheckWithSpeechToTextNotAvailableX, languageCode);
 
         _originalSubtitles.Clear();
         _originalSubtitles.AddRange(subtitles.Select(p => new SubtitleLineViewModel(p)));
@@ -216,6 +232,8 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         IsSpeechOnlyAvailable = _speechPeaks != null;
         ShowSpeechOnly = IsSpeechOnlyAvailable && mainShowsSpeechOnly;
     }
+
+    partial void OnIsIdleChanged(bool value) => CanCheckWithSpeechToText = value && _isSpeechToTextLanguage;
 
     partial void OnShowSpeechOnlyChanged(bool value)
     {
@@ -334,6 +352,61 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         return modelPath;
     }
 
+    /// <summary>The path of the speech-to-text model to check with, downloading it first if need be; null when that was cancelled.</summary>
+    private async Task<string?> EnsureSpeechToTextModelAsync()
+    {
+        var model = ImproveTimeCodesAligners.PickSpeechToTextModel(
+            _engine, _languageCode, m => File.Exists(_engine.GetModelForCmdLine(m.Name)));
+        var modelPath = _engine.GetModelForCmdLine(model.Name);
+        if (File.Exists(modelPath))
+        {
+            return modelPath;
+        }
+
+        var display = new SpeechToTextModelDisplay { Model = model, Engine = _engine };
+        var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
+            Window!, viewModel =>
+            {
+                viewModel.SetModels(new ObservableCollection<SpeechToTextModelDisplay> { display }, _engine, display);
+                viewModel.StartDownload();
+            });
+
+        return vm.OkPressed && File.Exists(modelPath) ? modelPath : null;
+    }
+
+    /// <summary>
+    /// Every word speech-to-text hears in the audio, or null when it failed - the alignment then
+    /// goes ahead unchecked rather than not at all.
+    /// </summary>
+    private async Task<List<SpeechToTextCheck.HeardWord>?> TranscribeAsync(string audioFileName, string modelPath, CancellationToken cancellationToken)
+    {
+        var l = Se.Language.Tools.ImproveTimeCodes;
+        StatusText = l.TranscribingToCheck;
+        ProgressValue = 0;
+        var progress = new Progress<double>(percent =>
+        {
+            ProgressValue = percent;
+            StatusText = $"{l.TranscribingToCheck} {percent:0}%";
+        });
+
+        var language = string.IsNullOrEmpty(_languageCode) ? "auto" : _languageCode;
+        var transcriber = new CrispAsrWordTranscriber(
+            _engine.GetExecutable(), _engine.BackendName, modelPath, CrispAsrWordTranscriber.FindVadModel(Se.CrispAsrFolder));
+        try
+        {
+            return await Task.Run(() => transcriber.TranscribeAsync(audioFileName, language, progress, cancellationToken), cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception exception)
+        {
+            Se.WriteToolsLog(exception is ForcedAlignerException e ? $"{e.Message}{Environment.NewLine}{e.Detail}" : exception.ToString());
+            return null;
+        }
+    }
+
     [RelayCommand]
     private async Task Align()
     {
@@ -366,9 +439,20 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
             return;
         }
 
+        string? speechToTextModelPath = null;
+        if (CheckWithSpeechToText && _isSpeechToTextLanguage)
+        {
+            speechToTextModelPath = await EnsureSpeechToTextModelAsync();
+            if (speechToTextModelPath == null)
+            {
+                return;
+            }
+        }
+
         SaveSettings();
 
         var isolationFailed = false;
+        var speechToTextFailed = false;
         IsAligning = true;
         IsIdle = false;
         HasResult = false;
@@ -414,6 +498,15 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
                 }
             }
 
+            // Transcribed from what the aligner hears too: with music and effects gone, fewer
+            // words are misheard.
+            List<SpeechToTextCheck.HeardWord>? heardWords = null;
+            if (speechToTextModelPath != null)
+            {
+                heardWords = await TranscribeAsync(audioFileName, speechToTextModelPath, cancellationToken);
+                speechToTextFailed = heardWords == null;
+            }
+
             // We wrote this file ourselves: 16 kHz, mono, 16-bit, behind a 44 byte header.
             var totalSeconds = Math.Max(0, new FileInfo(audioFileName).Length - 44) / (16000.0 * 2);
 
@@ -441,13 +534,17 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
             using var audio = new FfmpegWindowAudioSource(GetFfmpegPath(), audioFileName, totalSeconds, workFolder);
             var runner = new CrispAsrAlignOnlyRunner(_engine.GetExecutable(), modelPath, Se.WriteToolsLog);
             var results = await Task.Run(
-                () => new SubtitleRetimer(runner, audio, options).RetimeAsync(lines, progress, cancellationToken),
+                () => new SubtitleRetimer(runner, audio, options).RetimeAsync(lines, progress, cancellationToken, heardWords),
                 cancellationToken);
 
             ShowResults(results);
             if (isolationFailed)
             {
                 StatusText = l.IsolateSpeechFailed;
+            }
+            else if (speechToTextFailed)
+            {
+                StatusText = l.SpeechToTextFailed;
             }
         }
         catch (OperationCanceledException)
@@ -488,7 +585,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
 
         var l = Se.Language.Tools.ImproveTimeCodes;
         var retimed = Rows.Where(r => r.IsChanged && r.Apply).ToList();
-        var toCheck = Rows.Count(r => r.Status == SubtitleRetimer.LineStatus.LargeMoveUnconfirmed);
+        var toCheck = Rows.Count(r => r.Status is { } status && SubtitleRetimer.IsUnconfirmed(status));
         var noSpeech = Rows.Count(r => r.Status == SubtitleRetimer.LineStatus.NoSpeech);
         var meanShiftMs = retimed.Count == 0
             ? 0
@@ -497,7 +594,36 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         SummaryLine = string.Format(l.SummaryXRetimedYKeptZSkipped, retimed.Count, Rows.Count - retimed.Count - toCheck - noSpeech, noSpeech) +
                       (toCheck > 0 ? "   ·   " + string.Format(l.ToCheckX, toCheck) : string.Empty) +
                       "   ·   " + string.Format(l.MeanShiftX, meanShiftMs.ToString("0", CultureInfo.InvariantCulture));
-        StatusText = toCheck > 0 ? string.Format(l.LargeMovesToCheckX, toCheck) : string.Empty;
+        var disputedAny = Rows.Any(r => r.Status == SubtitleRetimer.LineStatus.DisputedBySpeech);
+        StatusText = toCheck > 0 ? string.Format(disputedAny ? l.LinesToCheckX : l.LargeMovesToCheckX, toCheck) : string.Empty;
+
+        HasHeard = results.Any(r => r.HeardRatio != null);
+        if (HasHeard)
+        {
+            var confirmed = Rows.Count(r => r.Status == SubtitleRetimer.LineStatus.ConfirmedBySpeech);
+            var disputed = Rows.Count(r => r.Status == SubtitleRetimer.LineStatus.DisputedBySpeech);
+            SummaryLine += "   ·   " + string.Format(l.SpeechToTextConfirmedXDisputedY, confirmed, disputed);
+
+            // Weighted by words, so a run of one-word lines ("Yes.", "No!") does not decide it.
+            var words = 0;
+            var heardWords = 0.0;
+            for (var i = 0; i < results.Count; i++)
+            {
+                if (results[i].HeardRatio is { } ratio)
+                {
+                    var count = SubtitleRetimer.GetSpokenText(_originalSubtitles[i].Text).Split(' ', StringSplitOptions.RemoveEmptyEntries).Length;
+                    words += count;
+                    heardWords += ratio * count;
+                }
+            }
+
+            var heardPercent = words == 0 ? 0 : heardWords / words * 100.0;
+            if (heardPercent < 30)
+            {
+                StatusText = string.Format(l.HardlyHeardX, heardPercent.ToString("0", CultureInfo.InvariantCulture));
+            }
+        }
+
         ProgressValue = 100;
         HasResult = retimed.Count > 0;
 
@@ -966,6 +1092,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         settings.AdjustStart = AdjustStart;
         settings.AdjustEnd = AdjustEnd;
         settings.IsolateSpeech = IsolateSpeech;
+        settings.CheckWithSpeechToText = CheckWithSpeechToText;
     }
 
     /// <summary>The input lines, in input order, carrying the accepted new times.</summary>

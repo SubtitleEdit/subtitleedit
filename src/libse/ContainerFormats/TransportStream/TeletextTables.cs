@@ -206,9 +206,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             0xff, 0xff, 0xff, 0x09, 0xff, 0xff, 0xff, 0xff
         };
 
-        // Remapping a national subset patches the Latin row of G0 in place, so a new decode
-        // must start from an untouched copy or the previous file's national characters leak
-        // into the next one.
+        // The Latin row of G0 as defined, before any national subset is patched in. G0 itself
+        // is never written to: a decoder remaps a national subset in its own copy of the row
+        // (see CreateLatinG0Row), so decodes cannot leak characters into each other.
         private static readonly int[] G0LatinPristine = GetLatinRowCopy();
 
         private static int[] GetLatinRowCopy()
@@ -222,12 +222,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             return copy;
         }
 
-        public static void ResetLatinG0()
+        /// <summary>
+        /// Returns a fresh, writable copy of the default Latin G0 row for a decoder to patch a
+        /// national option sub-set into.
+        /// </summary>
+        public static int[] CreateLatinG0Row()
         {
-            for (var i = 0; i < G0LatinPristine.Length; i++)
-            {
-                G0[(int)G0CharsetsT.Latin, i] = G0LatinPristine[i];
-            }
+            return (int[])G0LatinPristine.Clone();
         }
 
         // --- G2 ----------------------------------------------------------------------

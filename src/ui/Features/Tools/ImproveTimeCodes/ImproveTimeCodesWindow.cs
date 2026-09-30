@@ -97,12 +97,16 @@ public class ImproveTimeCodesWindow : Window
         var checkEnd = UiUtil.MakeCheckBox(l.AdjustEndTimes, vm, nameof(vm.AdjustEnd));
         var checkIsolate = UiUtil.MakeCheckBox(l.IsolateSpeech, vm, nameof(vm.IsolateSpeech));
         checkIsolate.Bind(IsEnabledProperty, new Binding(nameof(vm.IsIdle)) { Source = vm });
+        var checkSpeechToText = UiUtil.MakeCheckBox(l.CheckWithSpeechToText, vm, nameof(vm.CheckWithSpeechToText));
+        checkSpeechToText.Bind(IsEnabledProperty, new Binding(nameof(vm.CanCheckWithSpeechToText)) { Source = vm });
 
         if (Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(comboAligner, l.AlignerHint);
             ToolTip.SetTip(numericMaxShift, l.MaxShiftHint);
             ToolTip.SetTip(checkIsolate, l.IsolateSpeechHint);
+            checkSpeechToText.Bind(ToolTip.TipProperty, new Binding(nameof(vm.CheckWithSpeechToTextHint)) { Source = vm });
+            ToolTip.SetShowOnDisabled(checkSpeechToText, true); // says why, for a language it cannot hear
         }
 
         var left = new WrapPanel
@@ -114,7 +118,7 @@ public class ImproveTimeCodesWindow : Window
                 Group(engineDot, engineStatus, buttonEngineSettings),
                 Group(Label(l.Aligner), comboAligner),
                 Group(Label(l.MaxShift), numericMaxShift),
-                Group(checkStart, checkEnd, checkIsolate),
+                Group(checkStart, checkEnd, checkIsolate, checkSpeechToText),
             },
         };
 
@@ -313,6 +317,9 @@ public class ImproveTimeCodesWindow : Window
             HorizontalAlignment = HorizontalAlignment.Right,
             Opacity = 0.8,
             FontSize = UiUtil.ScaledFontSize(12),
+            // With the speech-to-text counts it can be longer than the room beside the buttons.
+            TextWrapping = TextWrapping.Wrap,
+            TextAlignment = TextAlignment.Right,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.SummaryLine)) { Source = vm },
         };
 
@@ -407,20 +414,30 @@ public class ImproveTimeCodesWindow : Window
             Width = new GridLength(190),
         };
 
-        tableView.Columns.AddRange(new[]
+        // Only there once speech-to-text has been run.
+        var heardColumn = MakeTextColumn(l.Heard, new Binding(nameof(ImproveTimeCodesRow.Heard)), new GridLength(60), TextAlignment.Right);
+        heardColumn.Bind(SeTableViewColumn.IsVisibleProperty, new Binding(nameof(vm.HasHeard)) { Source = vm, Mode = BindingMode.OneWay });
+
+        // A column with a bound visibility needs every column to go through a manager.
+        var columnManager = new TableViewColumnManager(tableView);
+        foreach (var column in new[]
+                 {
+                     applyColumn,
+                     MakeTextColumn(Se.Language.General.NumberSymbol, new Binding(nameof(ImproveTimeCodesRow.Number)), new GridLength(50)),
+                     MakeTextColumn(Se.Language.General.Show, new Binding(nameof(ImproveTimeCodesRow.StartTime)) { Converter = new TimeSpanToDisplayFullConverter() }, new GridLength(115)),
+                     MakeTextColumn(l.StartShift, new Binding(nameof(ImproveTimeCodesRow.StartShift)), new GridLength(95), TextAlignment.Right),
+                     MakeTextColumn(l.EndShift, new Binding(nameof(ImproveTimeCodesRow.EndShift)), new GridLength(95), TextAlignment.Right),
+                     MakeTextColumn(Se.Language.General.Text, new Binding(nameof(ImproveTimeCodesRow.Text)), new GridLength(1, GridUnitType.Star)),
+                     heardColumn,
+                     statusColumn,
+                 })
         {
-            applyColumn,
-            MakeTextColumn(Se.Language.General.NumberSymbol, new Binding(nameof(ImproveTimeCodesRow.Number)), new GridLength(60)),
-            MakeTextColumn(Se.Language.General.Show, new Binding(nameof(ImproveTimeCodesRow.StartTime)) { Converter = new TimeSpanToDisplayFullConverter() }, new GridLength(115)),
-            MakeTextColumn(l.StartShift, new Binding(nameof(ImproveTimeCodesRow.StartShift)), new GridLength(95), TextAlignment.Right),
-            MakeTextColumn(l.EndShift, new Binding(nameof(ImproveTimeCodesRow.EndShift)), new GridLength(95), TextAlignment.Right),
-            MakeTextColumn(Se.Language.General.Text, new Binding(nameof(ImproveTimeCodesRow.Text)), new GridLength(1, GridUnitType.Star)),
-            statusColumn,
-        });
+            columnManager.Add(column);
+        }
 
         if (Se.Settings.Appearance.ShowHints)
         {
-            ToolTip.SetTip(tableView, l.ApplyHint);
+            ToolTip.SetTip(tableView, $"{l.ApplyHint}{System.Environment.NewLine}{System.Environment.NewLine}{l.Heard}: {l.HeardHint}");
         }
 
         return UiUtil.MakeBorderForControlNoPadding(tableView);

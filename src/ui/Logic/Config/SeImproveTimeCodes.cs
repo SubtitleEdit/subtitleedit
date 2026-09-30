@@ -8,6 +8,7 @@ public class SeImproveTimeCodes
     public bool AdjustStart { get; set; }
     public bool AdjustEnd { get; set; }
     public bool IsolateSpeech { get; set; }
+    public bool CheckWithSpeechToText { get; set; }
 
     public SeImproveTimeCodes()
     {
