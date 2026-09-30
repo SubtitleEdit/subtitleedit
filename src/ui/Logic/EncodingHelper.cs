@@ -57,7 +57,15 @@ public static class EncodingHelper
         {
             if (!string.IsNullOrEmpty(sourceFile) && File.Exists(sourceFile))
             {
-                return LanguageAutoDetect.GetEncodingFromFile(sourceFile);
+                // Detection returns the shared Encoding.UTF8 (which always writes a BOM) for
+                // UTF-8 with or without BOM and for plain ASCII - keep the source's BOM choice (#15489).
+                var detected = LanguageAutoDetect.GetEncodingFromFile(sourceFile);
+                if (detected.CodePage == Encoding.UTF8.CodePage)
+                {
+                    return new UTF8Encoding(FileUtil.HasUtf8Bom(sourceFile));
+                }
+
+                return detected;
             }
             return new UTF8Encoding(true);
         }
