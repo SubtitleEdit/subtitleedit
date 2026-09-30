@@ -11,7 +11,8 @@ namespace UITests.Features.Tools.ImproveTimeCodes;
 /// has everything (see <c>ForcedAlignerIntegrationTests</c> for why).
 ///
 /// Set SE_ALIGN_TEST_CRISPASR, SE_ALIGN_TEST_ALIGNER, SE_RETIME_TEST_AUDIO (16 kHz mono WAV)
-/// and SE_RETIME_TEST_SRT (accurately timed subtitle for that audio).
+/// and SE_RETIME_TEST_SRT (accurately timed subtitle for that audio). The speech-to-text check
+/// also needs SE_RETIME_TEST_STT_MODEL (a Parakeet v3 model).
 /// </summary>
 public class SubtitleRetimerIntegrationTests
 {
@@ -19,6 +20,7 @@ public class SubtitleRetimerIntegrationTests
     private static string? Srt => Environment.GetEnvironmentVariable("SE_RETIME_TEST_SRT");
     private static string? Executable => Environment.GetEnvironmentVariable("SE_ALIGN_TEST_CRISPASR");
     private static string? Model => Environment.GetEnvironmentVariable("SE_ALIGN_TEST_ALIGNER");
+    private static string? SttModel => Environment.GetEnvironmentVariable("SE_RETIME_TEST_STT_MODEL");
 
     [Fact]
     public async Task RealAligner_PullsJitteredTimesBackTowardsTheTruth()
@@ -54,6 +56,61 @@ public class SubtitleRetimerIntegrationTests
 
             Assert.True(spread < 0.1, $"mean start spread {spreadIn:0.000} s -> {spread:0.000} s\n{report}");
             Assert.True(first.Output.Count(r => r.Status == SubtitleRetimer.LineStatus.Retimed) > truth.Count * 0.8, report);
+        }
+        finally
+        {
+            Directory.Delete(folder, true);
+        }
+    }
+
+    [Fact]
+    public async Task RealSpeechToText_ConfirmsLoneLargeMovesThatAreRight()
+    {
+        if (!File.Exists(Audio) || !File.Exists(Srt) || !File.Exists(Executable) || !File.Exists(Model) || !File.Exists(SttModel))
+        {
+            return;
+        }
+
+        var subtitle = new Subtitle();
+        new SubRip().LoadSubtitle(subtitle, File.ReadAllLines(Srt!).ToList(), Srt!);
+        var truth = subtitle.Paragraphs;
+
+        var folder = Directory.CreateTempSubdirectory().FullName;
+        try
+        {
+            var totalSeconds = new FileInfo(Audio!).Length / (16000.0 * 2);
+            using var audio = new FfmpegWindowAudioSource("ffmpeg", Audio!, totalSeconds, folder);
+            var runner = new CrispAsrAlignOnlyRunner(Executable!, Model!);
+            var copy = Path.Combine(folder, "audio.wav");
+            File.Copy(Audio!, copy);
+            var heard = await new CrispAsrWordTranscriber(Executable!, "parakeet", SttModel!, CrispAsrWordTranscriber.FindVadModel(Path.GetDirectoryName(Executable!)!))
+                .TranscribeAsync(copy, "en", null, TestContext.Current.CancellationToken);
+
+            // Every fifth line is a second late on its own: the neighbours stay put, so without
+            // speech-to-text each of those moves could only be offered unticked.
+            var lines = truth
+                .Select((p, i) =>
+                {
+                    var shift = i % 5 == 2 ? 1.0 : 0.0;
+                    return new SubtitleRetimer.Line(p.Text, p.StartTime.TotalSeconds + shift, p.EndTime.TotalSeconds + shift);
+                })
+                .ToList();
+
+            var options = new SubtitleRetimer.Options { MaxShiftSeconds = 2.0 };
+            var results = await new SubtitleRetimer(runner, audio, options)
+                .RetimeAsync(lines, null, TestContext.Current.CancellationToken, heard);
+
+            var report = string.Join("\n", truth.Select((p, i) =>
+                $"{i + 1,3} {results[i].Status,-20} heard {results[i].HeardRatio ?? -1,5:0.00} ref {p.StartTime.TotalSeconds,7:0.00} " +
+                $"in {lines[i].StartSeconds,7:0.00} out {results[i].StartSeconds,7:0.00}  {p.Text.Replace("\n", " ").Replace("\r", string.Empty)}"));
+
+            var displaced = Enumerable.Range(0, truth.Count).Where(i => i % 5 == 2).ToList();
+            var confirmed = displaced.Count(i => results[i].Status == SubtitleRetimer.LineStatus.ConfirmedBySpeech);
+            var disputedInPlace = Enumerable.Range(0, truth.Count)
+                .Count(i => i % 5 != 2 && results[i].Status == SubtitleRetimer.LineStatus.DisputedBySpeech);
+
+            Assert.True(confirmed >= displaced.Count / 2 && disputedInPlace == 0,
+                $"confirmed {confirmed} of {displaced.Count}, disputed in place {disputedInPlace}\n{report}");
         }
         finally
         {

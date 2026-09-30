@@ -110,11 +110,33 @@ public sealed partial class SubtitleRetimer
 
         /// <summary>The aligner failed on this line's batch.</summary>
         Failed,
+
+        /// <summary>
+        /// A large move the neighbourhood could not vouch for, confirmed by speech-to-text
+        /// hearing the line start where the aligner put it.
+        /// </summary>
+        ConfirmedBySpeech,
+
+        /// <summary>
+        /// Speech-to-text heard the line start where it already was, not where the aligner
+        /// moved it. The aligner's times are offered, unticked, for the user to check.
+        /// </summary>
+        DisputedBySpeech,
     }
 
     public readonly record struct Line(string Text, double StartSeconds, double EndSeconds);
 
-    public sealed record LineResult(double StartSeconds, double EndSeconds, LineStatus Status);
+    public sealed record LineResult(double StartSeconds, double EndSeconds, LineStatus Status)
+    {
+        /// <summary>Share of the line's words speech-to-text heard; null when it was not run.</summary>
+        public double? HeardRatio { get; init; }
+
+        /// <summary>
+        /// For a line moved with its neighbours: where the aligner itself put it, which
+        /// speech-to-text may yet show to be right.
+        /// </summary>
+        public (double StartSeconds, double EndSeconds)? AlignerOwn { get; init; }
+    }
 
     public sealed record Progress(int BatchIndex, int BatchCount, double Percent);
 
@@ -137,10 +159,15 @@ public sealed partial class SubtitleRetimer
     /// Throws <see cref="ForcedAlignerException"/> only when every batch failed - a single bad
     /// batch just leaves its lines as they were.
     /// </summary>
+    /// <param name="heardWords">
+    /// A word-level transcription of the same audio, when there is one: the aligner's moves are
+    /// then checked against it (see <see cref="SpeechToTextCheck"/>).
+    /// </param>
     public async Task<IReadOnlyList<LineResult>> RetimeAsync(
         IReadOnlyList<Line> lines,
         IProgress<Progress>? progress = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        IReadOnlyList<SpeechToTextCheck.HeardWord>? heardWords = null)
     {
         ArgumentNullException.ThrowIfNull(lines);
 
@@ -201,6 +228,14 @@ public sealed partial class SubtitleRetimer
         }
 
         FollowNeighbours(lines, results, _options);
+        if (heardWords != null)
+        {
+            // Words are looked for as far away as a line may move, plus room for a word's place
+            // in a long line being guessed from its length.
+            var evidence = SpeechToTextCheck.Match(lines, heardWords, _options.MaxShiftSeconds + 3.0);
+            SpeechToTextCheck.Apply(lines, results, evidence);
+        }
+
         Tidy(lines, results, _options, _audio.TotalSeconds);
         return results;
     }
@@ -425,7 +460,10 @@ public sealed partial class SubtitleRetimer
                 results[i] = new LineResult(
                     Math.Max(0, lines[i].StartSeconds + offset),
                     options.AdjustEnd ? lines[i].EndSeconds + offset : lines[i].EndSeconds,
-                    LineStatus.MovedWithNeighbours);
+                    LineStatus.MovedWithNeighbours)
+                {
+                    AlignerOwn = status == LineStatus.Retimed ? (results[i].StartSeconds, results[i].EndSeconds) : null,
+                };
             }
             else if (status == LineStatus.Retimed)
             {
@@ -459,7 +497,7 @@ public sealed partial class SubtitleRetimer
         for (var i = 0; i < results.Length; i++)
         {
             var result = results[i];
-            if (result.Status is not (LineStatus.Retimed or LineStatus.MovedWithNeighbours or LineStatus.LargeMoveUnconfirmed))
+            if (!IsMove(result.Status))
             {
                 continue;
             }
@@ -499,24 +537,36 @@ public sealed partial class SubtitleRetimer
 
             if (end <= start)
             {
-                results[i] = new LineResult(lines[i].StartSeconds, lines[i].EndSeconds, LineStatus.ShiftTooLarge);
+                results[i] = result with { StartSeconds = lines[i].StartSeconds, EndSeconds = lines[i].EndSeconds, Status = LineStatus.ShiftTooLarge };
                 continue;
             }
 
             var moved = Math.Abs(start - lines[i].StartSeconds) >= 0.001 || Math.Abs(end - lines[i].EndSeconds) >= 0.001;
-            results[i] = new LineResult(start, end, moved ? result.Status : LineStatus.Unchanged);
+            results[i] = result with { StartSeconds = start, EndSeconds = end, Status = moved ? result.Status : LineStatus.Unchanged };
         }
     }
+
+    /// <summary>The line has new times to offer, ticked or not.</summary>
+    public static bool IsMove(LineStatus status)
+        => status is LineStatus.Retimed
+            or LineStatus.MovedWithNeighbours
+            or LineStatus.LargeMoveUnconfirmed
+            or LineStatus.ConfirmedBySpeech
+            or LineStatus.DisputedBySpeech;
+
+    /// <summary>The new times are offered unticked, for the user to check.</summary>
+    public static bool IsUnconfirmed(LineStatus status)
+        => status is LineStatus.LargeMoveUnconfirmed or LineStatus.DisputedBySpeech;
 
     // An unconfirmed line may end up at either of its two positions, so its neighbours keep
     // clear of both.
     private static double SettledStart(IReadOnlyList<Line> lines, LineResult[] results, int index)
-        => results[index].Status == LineStatus.LargeMoveUnconfirmed
+        => IsUnconfirmed(results[index].Status)
             ? Math.Min(results[index].StartSeconds, lines[index].StartSeconds)
             : results[index].StartSeconds;
 
     private static double SettledEnd(IReadOnlyList<Line> lines, LineResult[] results, int index)
-        => results[index].Status == LineStatus.LargeMoveUnconfirmed
+        => IsUnconfirmed(results[index].Status)
             ? Math.Max(results[index].EndSeconds, lines[index].EndSeconds)
             : results[index].EndSeconds;
 

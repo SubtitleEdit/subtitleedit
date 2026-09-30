@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
+using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +30,41 @@ public static class ImproveTimeCodesAligners
     {
         "zh", "en", "fr", "de", "it", "ja", "ko", "pt", "ru", "es",
     };
+
+    /// <summary>
+    /// Whether the speech-to-text check can hear this language: Parakeet v3 knows the same 25
+    /// European languages as Canary. An unknown language is left to Parakeet to detect.
+    /// </summary>
+    public static bool CanCheckWithSpeechToText(string? twoLetterLanguageCode)
+    {
+        var language = (twoLetterLanguageCode ?? string.Empty).Trim();
+        return language.Length == 0 || CanaryLanguages.Contains(language);
+    }
+
+    /// <summary>
+    /// The Parakeet model to check with: an installed one that knows the language, best first,
+    /// or - when none is - the smallest multilingual one, to be downloaded.
+    /// </summary>
+    public static WhisperModel PickSpeechToTextModel(CrispAsrParakeet engine, string? twoLetterLanguageCode, Func<WhisperModel, bool> isInstalled)
+    {
+        var isEnglish = string.Equals(twoLetterLanguageCode, "en", StringComparison.OrdinalIgnoreCase);
+        var multilingual = engine.Models
+            .Where(m => m.Name.StartsWith("parakeet-ultra-", StringComparison.Ordinal) ||
+                        m.Name.StartsWith("parakeet-tdt-0.6b-v3", StringComparison.Ordinal))
+            .ToList();
+
+        // Ultra is v3 post-trained, with a lower error rate everywhere; the English-only models
+        // are only any use for English.
+        var candidates = multilingual.Where(m => m.Name.StartsWith("parakeet-ultra-", StringComparison.Ordinal))
+            .Concat(multilingual.Where(m => m.Name.StartsWith("parakeet-tdt-0.6b-v3", StringComparison.Ordinal)))
+            .Concat(isEnglish
+                ? engine.Models.Where(m => m.Name.StartsWith("parakeet-tdt-1.1b", StringComparison.Ordinal) ||
+                                           m.Name.StartsWith("parakeet-rnnt-", StringComparison.Ordinal))
+                : Enumerable.Empty<WhisperModel>());
+
+        return candidates.FirstOrDefault(isInstalled)
+               ?? multilingual.First(m => m.Name == "parakeet-tdt-0.6b-v3-q4_k.gguf");
+    }
 
     public static List<ForcedAlignerOption> Rank(string? twoLetterLanguageCode)
     {

@@ -20,6 +20,7 @@ public partial class ImproveTimeCodesRow : ObservableObject
     [ObservableProperty] private string _endShift;
     [ObservableProperty] private string _statusText;
     [ObservableProperty] private IBrush? _statusBrush;
+    [ObservableProperty] private string _heard;
 
     public int Index { get; }
     public int Number { get; }
@@ -50,6 +51,7 @@ public partial class ImproveTimeCodesRow : ObservableObject
         _startShift = string.Empty;
         _endShift = string.Empty;
         _statusText = string.Empty;
+        _heard = string.Empty;
     }
 
     public void SetResult(SubtitleRetimer.LineResult result)
@@ -62,22 +64,25 @@ public partial class ImproveTimeCodesRow : ObservableObject
         EndShiftMs = (result.EndSeconds - _endSeconds) * 1000.0;
 
         _settingResult = true;
-        IsChanged = result.Status is SubtitleRetimer.LineStatus.Retimed
-            or SubtitleRetimer.LineStatus.MovedWithNeighbours
-            or SubtitleRetimer.LineStatus.LargeMoveUnconfirmed;
+        IsChanged = SubtitleRetimer.IsMove(result.Status);
 
         // An unconfirmed move is offered, not made: the user listens and ticks it.
-        Apply = IsChanged && result.Status != SubtitleRetimer.LineStatus.LargeMoveUnconfirmed;
+        Apply = IsChanged && !SubtitleRetimer.IsUnconfirmed(result.Status);
         _settingResult = false;
 
         StartShift = IsChanged ? FormatShift(StartShiftMs) : string.Empty;
         EndShift = IsChanged ? FormatShift(EndShiftMs) : string.Empty;
+        Heard = result.HeardRatio is { } heard
+            ? Math.Round(heard * 100).ToString("0", CultureInfo.InvariantCulture) + "%"
+            : string.Empty;
 
         (StatusText, StatusBrush) = result.Status switch
         {
             SubtitleRetimer.LineStatus.Retimed => (l.StatusRetimed, StatusDots.Green),
             SubtitleRetimer.LineStatus.MovedWithNeighbours => (l.StatusMovedWithNeighbours, Blue),
             SubtitleRetimer.LineStatus.LargeMoveUnconfirmed => (l.StatusLargeMoveUnconfirmed, StatusDots.Amber),
+            SubtitleRetimer.LineStatus.ConfirmedBySpeech => (l.StatusConfirmedBySpeech, StatusDots.Green),
+            SubtitleRetimer.LineStatus.DisputedBySpeech => (l.StatusDisputedBySpeech, StatusDots.Amber),
             SubtitleRetimer.LineStatus.Unchanged => (l.StatusUnchanged, StatusDots.Grey),
             SubtitleRetimer.LineStatus.NoSpeech => (l.StatusNoSpeech, StatusDots.Grey),
             SubtitleRetimer.LineStatus.ShiftTooLarge => (l.StatusShiftTooLarge, StatusDots.Amber),

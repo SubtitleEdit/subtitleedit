@@ -13,6 +13,18 @@ public class LanguageImproveTimeCodes
     public string IsolateSpeechHint { get; set; }
     public string IsolatingSpeech { get; set; }
     public string IsolateSpeechFailed { get; set; }
+    public string CheckWithSpeechToText { get; set; }
+    public string CheckWithSpeechToTextHint { get; set; }
+    public string CheckWithSpeechToTextNotAvailableX { get; set; }
+    public string TranscribingToCheck { get; set; }
+    public string SpeechToTextFailed { get; set; }
+    public string SpeechToTextX { get; set; }
+    public string SpeechToTextConfirmedXDisputedY { get; set; }
+    public string HardlyHeardX { get; set; }
+    public string Heard { get; set; }
+    public string HeardHint { get; set; }
+    public string StatusConfirmedBySpeech { get; set; }
+    public string StatusDisputedBySpeech { get; set; }
     public string ShowSpeechOnly { get; set; }
     public string ShowSpeechOnlyHint { get; set; }
     public string Align { get; set; }
@@ -27,6 +39,7 @@ public class LanguageImproveTimeCodes
     public string MeanShiftX { get; set; }
     public string ToCheckX { get; set; }
     public string LargeMovesToCheckX { get; set; }
+    public string LinesToCheckX { get; set; }
     public string ChangeXOfY { get; set; }
     public string PreviousChange { get; set; }
     public string NextChange { get; set; }
@@ -60,6 +73,18 @@ public class LanguageImproveTimeCodes
         IsolateSpeechHint = "Removes music and sound effects before aligning, so the aligner only hears the dialogue. Helps on lines spoken over loud music or action, but takes about as long as the audio itself with a GPU - and many times longer without one.";
         IsolatingSpeech = "Isolating speech... (this takes a while)";
         IsolateSpeechFailed = "Could not isolate the speech - aligned against the original audio instead.";
+        CheckWithSpeechToText = "Check with speech-to-text";
+        CheckWithSpeechToTextHint = "Transcribes the audio as well, and checks every move against where the words were actually heard. Large moves the speech confirms are ticked for you, and moves away from where a line is heard are left unticked for you to check. Also shows how much of each line was heard - a low share means the text differs from what is said. Uses Crisp ASR Parakeet, which takes a few minutes for a feature film with a GPU.";
+        CheckWithSpeechToTextNotAvailableX = "Speech-to-text check is not available for {0}";
+        TranscribingToCheck = "Transcribing to check the alignment...";
+        SpeechToTextFailed = "Speech-to-text failed - the time codes were not checked against it.";
+        SpeechToTextX = "Speech-to-text: {0}";
+        SpeechToTextConfirmedXDisputedY = "Speech: {0} confirmed, {1} disputed";
+        HardlyHeardX = "Speech-to-text heard only {0}% of the subtitle's words. Is the subtitle in the language that is spoken? The aligner cannot place a translation.";
+        Heard = "Heard";
+        HeardHint = "How much of the line speech-to-text heard. A low share means the text differs from what is said - where the aligner is most likely to be wrong.";
+        StatusConfirmedBySpeech = "Confirmed by speech";
+        StatusDisputedBySpeech = "Heard where it was";
         ShowSpeechOnly = "Show speech only";
         ShowSpeechOnlyHint = "Draw the aligned waveform from the audio with music and sound effects removed; the original waveform stays as it is, for comparison. Available once the speech has been isolated - here, or with \"Show speech only\" in the main window's waveform.";
         Align = "Align";
@@ -74,6 +99,7 @@ public class LanguageImproveTimeCodes
         MeanShiftX = "Mean shift: {0} ms";
         ToCheckX = "To check: {0}";
         LargeMovesToCheckX = "{0} line(s) would move a long way on their own and are left unticked - play Original / Aligned and tick the ones that are right.";
+        LinesToCheckX = "{0} line(s) are left unticked to check - play Original / Aligned and tick the ones that are right.";
         ChangeXOfY = "Change {0} of {1}";
         PreviousChange = "Previous change";
         NextChange = "Next change";
