@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using System.Text;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace SeConv.Core;
@@ -20,5 +21,10 @@ internal static class Bootstrap
 
         // EBU STL save requires a UI helper even in batch mode (libse design).
         Ebu.EbuUiHelper ??= new HeadlessEbuUiHelper();
+
+        // Splitting run-together words via the word split list also splits valid words missing
+        // from the dictionary ("backlit" -> "back lit"), so it is off by default like in the GUI
+        // (discussion #15423). tools.ocrUseWordSplitList in a --settings file turns it back on.
+        Configuration.Settings.Tools.OcrUseWordSplitList = false;
     }
 }
