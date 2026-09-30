@@ -155,6 +155,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 : TeletextTables.ColorToHtml(TeletextTables.DefaultColorMap[7]);
         }
 
+        // ETS 300 706, chapter 15.2: the Latin G0 row with the national option sub-set in force
+        // patched in. A copy per decode, so the shared TeletextTables.G0 is never written to.
+        private static int[] _latinG0 = TeletextTables.CreateLatinG0Row();
+
         // subtitle type pages bitmap, 2048 bits = 2048 possible pages in teletext (excl. subpages)
         private static readonly byte[] CcMap = new byte[256];
 
@@ -182,7 +186,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             _states = new States();
             _pageBuffer = new TeletextPage();
             _colorMap = (int[])TeletextTables.DefaultColorMap.Clone();
-            TeletextTables.ResetLatinG0();
+            _latinG0 = TeletextTables.CreateLatinG0Row();
         }
 
         /// <summary>
@@ -265,7 +269,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 {
                     for (int j = 0; j < 13; j++)
                     {
-                        TeletextTables.G0[(int)TeletextTables.G0CharsetsT.Latin, TeletextTables.G0LatinNationalSubsetsPositions[j]] = TeletextTables.G0LatinNationalSubsets[m].Characters[j];
+                        _latinG0[TeletextTables.G0LatinNationalSubsetsPositions[j]] = TeletextTables.G0LatinNationalSubsets[m].Characters[j];
                     }
 
                     _config.LogInfo($"- Using G0 Latin National Subset ID {c >> 3:X2}.{c & 0x7:X2} ({TeletextTables.G0LatinNationalSubsets[m].Language})");
@@ -310,7 +314,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             var r = c & 0x7f;
             if (r >= 0x20)
             {
-                r = TeletextTables.G0[(int)TeletextTables.G0CharsetsT.Latin, r - 0x20];
+                r = _latinG0[r - 0x20];
             }
 
             return r;

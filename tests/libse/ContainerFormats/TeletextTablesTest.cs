@@ -4,20 +4,23 @@ namespace LibSETests.ContainerFormats;
 
 public class TeletextTablesTest
 {
-    // RemapG0Charset patches the Latin G0 row in place when a stream selects a national
-    // subset, so a later decode of a different file must be able to start from the
-    // original table or the previous file's national characters leak into it.
+    // RemapG0Charset patches a national subset into the decoder's own copy of the Latin G0
+    // row, so a later decode of a different file must get an untouched copy, and the shared
+    // G0 table must not change - or the previous file's national characters leak into it.
     [Fact]
-    public void ResetLatinG0_RestoresMutatedNationalSubsetPositions()
+    public void CreateLatinG0Row_ReturnsIndependentCopyOfTheLatinRow()
     {
         var latin = (int)TeletextTables.G0CharsetsT.Latin;
         var position = TeletextTables.G0LatinNationalSubsetsPositions[0];
         var original = TeletextTables.G0[latin, position];
 
-        TeletextTables.G0[latin, position] = 0x0141; // Ł - pretend a Polish stream was decoded
-        TeletextTables.ResetLatinG0();
+        var row = TeletextTables.CreateLatinG0Row();
+        Assert.Equal(original, row[position]);
+
+        row[position] = 0x0141; // Ł - pretend a Polish stream was decoded
 
         Assert.Equal(original, TeletextTables.G0[latin, position]);
+        Assert.Equal(original, TeletextTables.CreateLatinG0Row()[position]);
     }
 
     // The X/28 and M/29 charset designation field is 7 bits wide (0..127), but the subset
