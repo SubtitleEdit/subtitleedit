@@ -10,6 +10,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
+using Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
@@ -5314,6 +5315,15 @@ public partial class OcrViewModel : ObservableObject
         _sourceFileName = fileName;
         Title = UiUtil.FormatTitleWithFileName(Se.Language.Ocr.OcrX, fileName);
         _ocrSubtitle = new OcrSubtitleSpDvdSupImages(fileName);
+        SetOcrSubtitleItems();
+        AutoDetectSourceLanguage();
+    }
+
+    public void InitializeUmdVideo(List<UmdVideoSubtitle> pictures, string fileName)
+    {
+        _sourceFileName = fileName;
+        Title = UiUtil.FormatTitleWithFileName(Se.Language.Ocr.OcrX, fileName);
+        _ocrSubtitle = new OcrSubtitleUmdVideo(pictures);
         SetOcrSubtitleItems();
         AutoDetectSourceLanguage();
     }

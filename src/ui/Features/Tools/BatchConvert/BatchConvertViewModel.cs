@@ -10,6 +10,7 @@ using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
+using Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.UiLogic.Translate;
@@ -1634,6 +1635,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         if (item.Format == BatchConverter.FormatBluRaySup ||
             item.Format == BatchConverter.FormatHdDvdSup ||
+            item.Format == BatchConverter.FormatUmdVideo ||
             item.Format == BatchConverter.FormatDvdSup ||
             item.Format == BatchConverter.FormatBdnXml ||
             item.Format == BatchConverter.FormatVobSub)
@@ -2412,6 +2414,21 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             }
 
             return added;
+        }
+        else if (ext == ".mps" || ext == ".pmf" || ext == ".subs")
+        {
+            // PSP UMD Video: one item per subtitle stream (sub-stream 0x80 = #1)
+            foreach (var track in UmdVideoSubtitleReader.Read(fileName))
+            {
+                var umdBatchItem = new BatchConvertItem(fileName, fileInfo.Length, BatchConverter.FormatUmdVideo, subtitle);
+                umdBatchItem.TrackNumber = track.Key.ToString(CultureInfo.InvariantCulture);
+                added.Add(umdBatchItem);
+            }
+
+            if (added.Count > 0)
+            {
+                return added;
+            }
         }
         else if ((ext == ".ts" || ext == ".m2ts" || ext == ".mts" || ext == ".mpg" || ext == ".mpeg") &&
                  (FileUtil.IsTransportStream(fileName) || FileUtil.IsM2TransportStream(fileName)))

@@ -23840,6 +23840,12 @@ public partial class MainViewModel :
                 return;
             }
 
+            // PSP UMD Video (.MPS) and PSP movies (.PMF), and ".subs" dumps of their subtitles
+            if ((ext == ".mps" || ext == ".pmf" || ext == ".subs") && fileSize > 100 && await ImportUmdVideoSubtitles(fileName, skipLoadVideo))
+            {
+                return;
+            }
+
             // A subtitle-only movie (e.g. AVFoundation writes tx3g-only .mov/.mp4 files)
             // can easily be under 2 KB, so the old 2000-byte floor misrouted those to the
             // text loader; a failed MP4 parse just falls through to the handlers below.
@@ -24184,19 +24190,6 @@ public partial class MainViewModel :
                 {
                     ImportAndOcrHdDvdSup(fileName, skipLoadVideo);
                     return;
-                }
-
-                // PlayStation subs keep their png images inside the file.
-                if (ext == ".subs")
-                {
-                    var playStationSubs = new PlayStationSubs();
-                    if (playStationSubs.IsMine(null, fileName))
-                    {
-                        var playStationSubtitle = new Subtitle();
-                        playStationSubs.LoadSubtitle(playStationSubtitle, null, fileName);
-                        ImportAndOcrBinaryParagraphList(fileName, playStationSubs, playStationSubtitle, skipLoadVideo);
-                        return;
-                    }
                 }
 
                 subtitle = NonRegisteredFormatLoader.TryLoadAribB36(fileName);
@@ -24862,6 +24855,52 @@ public partial class MainViewModel :
                 await FinishOcrImportAsync(fileName, result.OcredSubtitle, skipLoadVideo: skipLoadVideo);
             }
         });
+    }
+
+    /// <summary>
+    /// PSP UMD Video subtitles: png images per sub-stream, picked when there are several, then OCR.
+    /// </summary>
+    /// <returns>True if subtitles were found (also when the track picker was cancelled)</returns>
+    private async Task<bool> ImportUmdVideoSubtitles(string fileName, bool skipLoadVideo)
+    {
+        ShowStatus(string.Format(Se.Language.General.ParsingXDotDotDot, fileName));
+        SortedDictionary<int, List<UmdVideoSubtitle>> tracks;
+        try
+        {
+            tracks = await Task.Run(() => UmdVideoSubtitleReader.Read(fileName));
+        }
+        catch (Exception e)
+        {
+            SeLogger.Error(e, "Error while reading PSP UMD Video subtitles from " + fileName);
+            return false;
+        }
+        finally
+        {
+            ShowStatus(string.Empty);
+        }
+
+        if (tracks.Count == 0)
+        {
+            return false;
+        }
+
+        var pictures = tracks.First().Value;
+        if (tracks.Count > 1)
+        {
+            var result = await ShowDialogAsync<PickTsTrackWindow, PickTsTrackViewModel>(vm => vm.InitializeUmdVideo(tracks, fileName));
+            if (!result.OkPressed || result.SelectedTrack == null || !tracks.TryGetValue(result.SelectedTrack.TrackNumber, out pictures))
+            {
+                return true; // picker cancelled
+            }
+        }
+
+        var ocrResult = await ShowDialogAsync<OcrWindow, OcrViewModel>(vm => { vm.InitializeUmdVideo(pictures, fileName); });
+        if (ocrResult.OkPressed)
+        {
+            await FinishOcrImportAsync(fileName, ocrResult.OcredSubtitle, skipLoadVideo: skipLoadVideo);
+        }
+
+        return true;
     }
 
     private void ImportAndOcrHdDvdSup(string fileName, bool skipLoadVideo = false)

@@ -121,6 +121,17 @@ internal static class ContainerSubtitleLoader
             }
         }
 
+        // PSP UMD Video (.MPS), PSP movies (.PMF) and ".subs" dumps of their subtitles: png images,
+        // one track per subtitle stream. A video without subtitles goes on to the video check.
+        if (ext is ".mps" or ".pmf" or ".subs")
+        {
+            var umdTracks = LoadUmdVideo(filePath, options);
+            if (umdTracks != null)
+            {
+                return umdTracks;
+            }
+        }
+
         if (ext == ".mcc")
         {
             return LoadMcc(filePath);
@@ -225,6 +236,38 @@ internal static class ContainerSubtitleLoader
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// The subtitle streams of a PSP UMD Video file, null if it has none. The track number is the
+    /// sub-stream id (0x80 = 128 for the first stream), the name "umd1", "umd2", ...
+    /// </summary>
+    private static List<LoadedTrack>? LoadUmdVideo(string filePath, ConversionOptions options)
+    {
+        var umdTracks = UmdVideoSubtitleReader.Read(filePath);
+        if (umdTracks.Count == 0)
+        {
+            return null;
+        }
+
+        var tracks = new List<LoadedTrack>();
+        foreach (var track in umdTracks)
+        {
+            if (options.TrackNumbers.Count > 0 && !options.TrackNumbers.Contains(track.Key))
+            {
+                continue;
+            }
+
+            var subtitle = ImageOcrLoader.LoadUmdVideo(track.Value, track.Key, options);
+            tracks.Add(new LoadedTrack(subtitle, new SubRip(), "umd" + (track.Key - 0x80 + 1), track.Key));
+        }
+
+        if (tracks.Count == 0)
+        {
+            throw new InvalidOperationException($"No PSP UMD Video subtitle stream matches the track number(s) in: {filePath}");
+        }
+
+        return tracks;
     }
 
     private static readonly string[] ImageFileExtensions = [".png", ".bmp", ".jpg", ".tif"];
