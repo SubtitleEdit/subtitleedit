@@ -79,6 +79,71 @@ public class TransportStreamReadingTest
     }
 
     /// <summary>
+    /// Time code zero is where the program starts - its earliest video or audio time stamp, as
+    /// ffmpeg, mpv and the waveform count - not its first video frame: audio that starts 0.3 s
+    /// before the video put every subtitle 0.3 s early.
+    /// </summary>
+    [Theory]
+    [InlineData(0x03, 0xC0, false)] // MPEG audio
+    [InlineData(0x81, 0xBD, true)] // AC-3 in private stream 1, listed in the PMT
+    public void AudioThatStartsFirstIsTimeCodeZero(int audioStreamType, int audioStreamId, bool ac3Payload)
+    {
+        var expected = Times(Parse(BuildGraphicsStream(0)).GetDvbSubtitles(0x101));
+        var pesList = TransportStreamTestWriter.ReadPesPackets(FilePath("sample_TS_with_graphics.ts"), GraphicsPid);
+        var videoPts = TransportStreamTestWriter.GetPts(pesList[0]) - 90000;
+
+        var writer = new TransportStreamTestWriter();
+        writer.WriteProgramAssociationTable((1, 0x1000));
+        writer.WriteProgramMapTable(0x1000, 1, 0x100, (0x02, 0x100), (0x06, 0x101), (audioStreamType, 0x102));
+        var payload = ac3Payload ? new byte[] { 0x0B, 0x77, 0, 0, 0, 0 } : new byte[] { 0xFF, 0xFD, 0, 0, 0, 0 };
+        writer.WritePes(0x102, TransportStreamTestWriter.MakePes(audioStreamId, videoPts - 27000, payload));
+        WriteGraphicsProgram(writer, 0x100, 0x101, 0);
+
+        var times = Times(Parse(writer.ToArray()).GetDvbSubtitles(0x101));
+
+        Assert.Equal(expected.Select(p => (p.Start + 300, p.End + 300)), times);
+    }
+
+    /// <summary>
+    /// Without a PMT, AC-3 in private stream 1 is told from the subtitles and teletext that share
+    /// that stream id by its sync word - and the DVB subtitles themselves never count as audio.
+    /// </summary>
+    [Fact]
+    public void Ac3WithoutProgramMapTableIsAudio()
+    {
+        var expected = Times(Parse(BuildGraphicsStream(0)).GetDvbSubtitles(0x101));
+        var pesList = TransportStreamTestWriter.ReadPesPackets(FilePath("sample_TS_with_graphics.ts"), GraphicsPid);
+        var videoPts = TransportStreamTestWriter.GetPts(pesList[0]) - 90000;
+
+        var writer = new TransportStreamTestWriter();
+        writer.WritePes(0x102, TransportStreamTestWriter.MakePes(0xBD, videoPts - 45000, new byte[] { 0x0B, 0x77, 0, 0, 0, 0 }));
+        WriteGraphicsProgram(writer, 0x100, 0x101, 0);
+
+        Assert.Equal(expected.Select(p => (p.Start + 500, p.End + 500)), Times(Parse(writer.ToArray()).GetDvbSubtitles(0x101)));
+    }
+
+    /// <summary>
+    /// VC-1 video (Blu-ray) is sent with stream id 0xFD, outside the MPEG video range: its start
+    /// was never found, and the subtitles kept their raw time stamps - 01:15:29 for a recording
+    /// whose clock started there.
+    /// </summary>
+    [Fact]
+    public void Vc1VideoOnAnExtendedStreamIdIsTimeCodeZero()
+    {
+        var expected = Times(Parse(BuildGraphicsStream(0)).GetDvbSubtitles(0x101));
+        var pesList = TransportStreamTestWriter.ReadPesPackets(FilePath("sample_TS_with_graphics.ts"), GraphicsPid);
+        var shift = 90000L * 4529;
+
+        var writer = new TransportStreamTestWriter();
+        writer.WriteProgramAssociationTable((1, 0x1000));
+        writer.WriteProgramMapTable(0x1000, 1, 0x100, (0xEA, 0x100), (0x06, 0x101));
+        writer.WritePes(0x100, TransportStreamTestWriter.MakePes(0xFD, TransportStreamTestWriter.GetPts(pesList[0]) - 90000 + shift, new byte[] { 0, 0, 1, 0x0F, 0, 0 }));
+        WriteGraphicsProgram(writer, 0x100, 0x101, shift, writeVideo: false);
+
+        Assert.Equal(expected, Times(Parse(writer.ToArray()).GetDvbSubtitles(0x101)));
+    }
+
+    /// <summary>
     /// PTS are 33-bit and wrap every ~26.5 hours of stream clock. Subtitles after the wrap used to
     /// be moved to a second after the previous one, losing the real gap.
     /// </summary>

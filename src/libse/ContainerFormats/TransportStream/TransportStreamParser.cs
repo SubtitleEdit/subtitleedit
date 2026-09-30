@@ -34,6 +34,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         private Dictionary<int, int> _streamTypes;
         private Dictionary<int, ulong> _firstVideoPtsByPid; // video pid -> first PTS (90 kHz)
         private ulong? _firstVideoPts; // first video PTS in the file, any program
+        private Dictionary<int, ulong> _firstAudioPtsByPid; // audio pid -> first PTS (90 kHz)
         private Dictionary<int, ulong> _lastPcrByPid; // PCR pid -> last PCR base (90 kHz)
         private ulong? _lastPcr;
         private Dictionary<int, bool> _pgsPacketIds; // pid -> carries Blu-ray PGS (HDMV presentation graphics)
@@ -109,6 +110,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             _closedCaptionExtractors = new Dictionary<int, ClosedCaptionExtractor>();
             _nonVideoPacketIds = new HashSet<int>();
             _firstVideoPtsByPid = new Dictionary<int, ulong>();
+            _firstAudioPtsByPid = new Dictionary<int, ulong>();
             _lastPcrByPid = new Dictionary<int, ulong>();
             _lastPcr = null;
             _firstVideoPts = null;
@@ -116,7 +118,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             var teletextPesList = new Dictionary<int, List<DvbSubPes>>();
             var teletextPages = new Dictionary<int, List<int>>();
             ulong? firstMs = null;
-            ulong? firstVideoMs = null;
 
             // stream types (video codec for closed captions) and ARIB data component ids
             _programMapTableParser = new ProgramMapTableParser();
@@ -170,15 +171,27 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                             _lastPcr = programClockReference;
                         }
 
-                        if (!_firstVideoPtsByPid.ContainsKey(packetId) &&
-                            Packet.TryPeekVideoPresentationTimestamp(packetBuffer, out var videoPts))
+                        // the PMT's stream type first - VC-1 video and Blu-ray audio use stream ids
+                        // outside the MPEG ranges - else the stream id (and sync word for AC-3/DTS)
+                        var streamKind = GetStreamKind(packetId);
+                        if (streamKind != StreamKind.Video && !_firstAudioPtsByPid.ContainsKey(packetId) &&
+                            (streamKind == StreamKind.Audio
+                                ? Packet.TryPeekPresentationTimestamp(packetBuffer, out var audioPts)
+                                : Packet.TryPeekAudioPresentationTimestamp(packetBuffer, out audioPts)))
+                        {
+                            _firstAudioPtsByPid.Add(packetId, audioPts);
+                        }
+
+                        if (streamKind != StreamKind.Audio && !_firstVideoPtsByPid.ContainsKey(packetId) &&
+                            (streamKind == StreamKind.Video
+                                ? Packet.TryPeekPresentationTimestamp(packetBuffer, out var videoPts)
+                                : Packet.TryPeekVideoPresentationTimestamp(packetBuffer, out videoPts)))
                         {
                             // every program of a multi-program stream has its own clock
                             _firstVideoPtsByPid.Add(packetId, videoPts);
                             if (!_firstVideoPts.HasValue)
                             {
                                 _firstVideoPts = videoPts;
-                                firstVideoMs = videoPts / 90;
                             }
                         }
                         else if (_subtitlePacketIdsLookup.Contains(packetId) || Packet.PeekIsPrivateStream1(packetBuffer))
@@ -226,6 +239,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             _pendingPackets.Clear();
             callback?.Invoke(transportStreamLength, transportStreamLength);
 
+            // time code zero: where the file starts, as players and ffmpeg see it
+            var fileStartMs = GetFileStartPts() / 90;
+
             foreach (var packetId in teletextPesList.Keys) // teletext from PES packets
             {
                 if (!teletextPages.ContainsKey(packetId))
@@ -236,7 +252,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 // Teletext sent without PTS is timed by the program clock - relative to the
                 // program's video like the DVB subtitles, as the clock differs from the PTS of the
                 // first subtitle packet that is used otherwise.
-                var videoPts = GetFirstVideoPts(packetId);
+                var videoPts = GetProgramStartPts(packetId);
                 var hasEstimatedTimestamps = videoPts.HasValue && teletextPesList[packetId].Any(p => p.HasEstimatedTimestamp);
                 if (hasEstimatedTimestamps)
                 {
@@ -249,7 +265,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     Teletext.InitializeStaticFields(packetId, pageBcd);
                     var teletextRunSettings = hasEstimatedTimestamps
                         ? new TeletextRunSettings(videoPts.Value / 90, alwaysSubtractStartMs: true)
-                        : new TeletextRunSettings(firstMs);
+                        : new TeletextRunSettings(EarliestMs(videoPts / 90, firstMs));
                     foreach (var pes in teletextPesList[packetId])
                     {
                         var textDictionary = pes.GetTeletext(teletextRunSettings, page, pageBcd);
@@ -272,8 +288,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 SubtitlesLookup.Remove(id);
             }
 
-            ParseAribCaptions(firstVideoMs ?? firstMs);
-            FinishClosedCaptions(firstVideoMs ?? firstMs);
+            ParseAribCaptions(fileStartMs ?? firstMs);
+            FinishClosedCaptions(fileStartMs ?? firstMs);
 
             DvbSubtitlesLookup = new SortedDictionary<int, List<TransportStreamSubtitle>>();
             var sb = new StringBuilder();
@@ -287,12 +303,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
                 var bdMs = new MemoryStream();
                 var list = SubtitlesLookup[pid];
-                var videoPts = GetFirstVideoPts(pid);
+                var videoPts = GetProgramStartPts(pid);
                 UnwrapTimestamps(list, videoPts);
                 var currentList = new List<DvbSubPes>();
                 sb.Clear();
                 var subList = new List<TransportStreamSubtitle>();
-                var offset = GetVideoOffsetMs(videoPts, firstVideoMs);
+                var offset = GetVideoOffsetMs(videoPts, fileStartMs);
                 var lastPalettes = new Dictionary<int, List<PaletteInfo>>();
                 var lastBitmapObjects = new Dictionary<int, List<BluRaySupParser.OdsData>>();
                 for (var index = 0; index < list.Count; index++)
@@ -359,9 +375,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             {
                 var subtitles = new List<TransportStreamSubtitle>();
                 var list = ParseAndRemoveEmpty(GetSubtitlePesPackets(pid));
-                var videoPts = GetFirstVideoPts(pid);
+                var videoPts = GetProgramStartPts(pid);
                 UnwrapTimestamps(list, videoPts);
-                var offset = GetVideoOffsetMs(videoPts, firstVideoMs);
+                var offset = GetVideoOffsetMs(videoPts, fileStartMs);
                 ComposeNormalCasePageUpdates(list);
                 for (int i = 0; i < list.Count; i++)
                 {
@@ -470,7 +486,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
             foreach (var pid in _aribPesLookup.Keys)
             {
-                var videoPts = GetFirstVideoPts(pid);
+                var videoPts = GetProgramStartPts(pid);
                 var offset = videoPts.HasValue ? (long)(videoPts.Value / 90) : (long)(firstMs ?? 0);
                 var profile = AribB24Decoder.AribProfile.ProfileA;
                 if (dataComponentIds.TryGetValue(pid, out var dataComponentId) && dataComponentId == 0x12)
@@ -558,7 +574,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 try
                 {
                     // the captions travel inside this video stream - its own clock is the reference
-                    var offset = _firstVideoPtsByPid.TryGetValue(extractor.Key, out var videoPts) ? (long)(videoPts / 90) : (long)(firstMs ?? 0);
+                    var startPts = GetProgramStartPts(extractor.Key);
+                    var offset = startPts.HasValue ? (long)(startPts.Value / 90) : (long)(firstMs ?? 0);
                     var tracks = extractor.Value.Finish(offset);
                     if (tracks.Count > 0)
                     {
@@ -756,18 +773,93 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         }
 
         /// <summary>
-        /// First PTS (90 kHz) of the video of the program that carries <paramref name="packetId"/>,
-        /// falling back to the first video in the file when the PMT does not tell.
+        /// Start (90 kHz) of the program that carries <paramref name="packetId"/>: the earliest first
+        /// PTS of its video and audio - libavformat's start time, which players (mpv, ffmpeg) and the
+        /// waveform count from. Taking the video alone put every subtitle late by the audio's lead.
+        /// Falls back to the start of the whole file when the PMT does not tell.
         /// </summary>
-        private ulong? GetFirstVideoPts(int packetId)
+        private ulong? GetProgramStartPts(int packetId)
         {
             var videoPacketId = _programMapTableParser.GetProgramVideoPacketId(packetId);
-            if (videoPacketId.HasValue && _firstVideoPtsByPid.TryGetValue(videoPacketId.Value, out var pts))
+            if (videoPacketId.HasValue)
             {
-                return pts;
+                ulong? start = _firstVideoPtsByPid.TryGetValue(videoPacketId.Value, out var videoPts) ? videoPts : (ulong?)null;
+                foreach (var audio in _firstAudioPtsByPid)
+                {
+                    if (_programMapTableParser.GetProgramVideoPacketId(audio.Key) == videoPacketId)
+                    {
+                        start = Earliest(start, audio.Value);
+                    }
+                }
+
+                if (start.HasValue)
+                {
+                    return start;
+                }
             }
 
-            return _firstVideoPts;
+            return GetFileStartPts();
+        }
+
+        private enum StreamKind
+        {
+            Unknown,
+            Video,
+            Audio,
+        }
+
+        private StreamKind GetStreamKind(int packetId)
+        {
+            if (!_streamTypes.TryGetValue(packetId, out var streamType))
+            {
+                return StreamKind.Unknown;
+            }
+
+            if (ProgramMapTableParser.IsVideoStreamType(streamType))
+            {
+                return StreamKind.Video;
+            }
+
+            return ProgramMapTableParser.IsAudioStreamType(streamType) && !_subtitlePacketIdsLookup.Contains(packetId)
+                ? StreamKind.Audio
+                : StreamKind.Unknown;
+        }
+
+        /// <summary>Earliest first video or audio PTS (90 kHz) in the file, any program.</summary>
+        private ulong? GetFileStartPts()
+        {
+            var start = _firstVideoPts;
+            foreach (var audioPts in _firstAudioPtsByPid.Values)
+            {
+                start = Earliest(start, audioPts);
+            }
+
+            return start;
+        }
+
+        /// <summary>
+        /// The earlier of two PTS values, across a 33-bit wrap: a value just after the wrap is later
+        /// than one just before it.
+        /// </summary>
+        private static ulong? Earliest(ulong? a, ulong b)
+        {
+            if (!a.HasValue)
+            {
+                return b;
+            }
+
+            var bIsEarlier = ((a.Value - b) & (TimestampWrap - 1)) < TimestampWrap / 2 && a.Value != b;
+            return bIsEarlier ? b : a;
+        }
+
+        private static ulong? EarliestMs(ulong? a, ulong? b)
+        {
+            if (!a.HasValue)
+            {
+                return b;
+            }
+
+            return b.HasValue && b.Value < a.Value ? b : a;
         }
 
         private static long GetVideoOffsetMs(ulong? firstVideoPts, ulong? fallbackMs)
