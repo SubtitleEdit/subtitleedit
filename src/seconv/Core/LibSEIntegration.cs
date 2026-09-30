@@ -1,7 +1,8 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.UiLogic.SubtitleLoading;
 using Spectre.Console;
 using System.Text;
 
@@ -150,6 +151,23 @@ internal static class LibSEIntegration
             }
         }
 
+        // 1b. Formats SE 4 opened that are in none of libse's lists: ARIB STD-B36 (.1hd, ...)
+        // and Adobe Premiere projects (gzipped xml, so the lines above are gzip bytes).
+        var aribSubtitle = NonRegisteredFormatLoader.TryLoadAribB36(filePath);
+        if (aribSubtitle?.OriginalFormat != null)
+        {
+            return (aribSubtitle, aribSubtitle.OriginalFormat);
+        }
+
+        if (filePath.EndsWith(".prproj", StringComparison.OrdinalIgnoreCase))
+        {
+            var prProjSubtitle = NonRegisteredFormatLoader.TryLoadPremiereProject(filePath);
+            if (prProjSubtitle != null)
+            {
+                return (prProjSubtitle, new AdobePremierePrProj());
+            }
+        }
+
         // 2. Try binary formats (Pac, Ebu, Cavena890, ...) — they read raw bytes themselves
         foreach (var format in SubtitleFormat.GetBinaryFormats(true))
         {
@@ -171,18 +189,14 @@ internal static class LibSEIntegration
             }
         }
 
-        // 3. Try the "other text" formats (NkhCuePoints, BdnXml, JSON variants, ...)
-        foreach (var format in SubtitleFormat.GetTextOtherFormats())
+        // 3. Try the load-only text formats (NkhCuePoints, WSB, JSON variants, ...) - the same
+        // fallback as the GUI's File > Open: image-list formats are skipped (they are OCR'd by
+        // ContainerSubtitleLoader; as text they would convert to png file names), and a parser
+        // that throws on a file it doesn't understand counts as "not this format".
+        var loadOnly = LoadOnlyTextFormatLoader.TryLoad(lines, filePath);
+        if (loadOnly?.OriginalFormat != null)
         {
-            if (format.IsMine(lines, filePath))
-            {
-                var freshSubtitle = new Subtitle();
-                format.LoadSubtitle(freshSubtitle, lines, filePath);
-                if (freshSubtitle.Paragraphs.Count > 0)
-                {
-                    return (freshSubtitle, format);
-                }
-            }
+            return (loadOnly, loadOnly.OriginalFormat);
         }
 
         // 4. Last resort: generic auto-guesser (handles freeform CSV, xlsx, ods, JSON variants, ...)

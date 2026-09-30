@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
 using Nikse.SubtitleEdit.UiLogic.Ocr.Paddle;
+using Nikse.SubtitleEdit.UiLogic.SubtitleLoading;
 using SkiaSharp;
 using Spectre.Console;
 using System.Text;
@@ -85,6 +86,78 @@ internal static class ImageOcrLoader
 
         return HdDvdPicturesToSubtitle(pictures, ocr, options.PgsIsolateColors, options.Quiet, options.OcrAutoDetectAssaAlignment);
     }
+
+    /// <summary>
+    /// Image-list subtitle (cue text = image file names, see <see cref="ImageListSubtitleLoader"/>)
+    /// → text via the configured OCR engine, or time codes only when
+    /// <see cref="ConversionOptions.TimeCodesOnly"/> is set. Images are read one at a time.
+    /// </summary>
+    public static Subtitle LoadImageList(Subtitle imageList, string filePath, ConversionOptions options)
+    {
+        var paragraphs = imageList.Paragraphs;
+        if (options.TimeCodesOnly)
+        {
+            if (!options.Quiet)
+            {
+                AnsiConsole.MarkupLine($"[dim]Extracting time codes from {paragraphs.Count} image-list cue(s) (no OCR)...[/]");
+            }
+
+            var timing = new Subtitle();
+            timing.Paragraphs.AddRange(paragraphs.Select(p => new LibSeParagraph(string.Empty, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds)));
+            timing.Renumber();
+            return timing;
+        }
+
+        using var ocr = OcrEngineFactory.Create(options);
+        var isolationNote = options.PgsIsolateColors ? string.Empty : " (colour isolation off)";
+        if (!options.Quiet)
+        {
+            AnsiConsole.MarkupLine($"[dim]Running {ocr.Name} OCR on {paragraphs.Count} image-list image(s){isolationNote}...[/]");
+        }
+
+        // Only images on a transparent background are binarised (like PGS: light fill, dark
+        // outline). An opaque image - dark text on a light box - would come out inverted.
+        Func<SKBitmap, SKBitmap>? isolate = options.PgsIsolateColors
+            ? (b => HasTransparentCorner(b) ? VobSubColorIsolation.BinarizeForOcr(b) : b.Copy())
+            : null;
+        var showProgress = !options.Quiet;
+        var texts = RecognizeAll(
+            ocr, paragraphs.Count, i => ImageListBitmapLoader.Load(paragraphs[i], filePath),
+            callerOwnsBitmap: false, isolate, quiet: !showProgress);
+
+        var subtitle = new Subtitle();
+        var missing = 0;
+        for (var i = 0; i < paragraphs.Count; i++)
+        {
+            if (texts[i] is null)
+            {
+                missing++;
+                continue;
+            }
+
+            if (!string.IsNullOrWhiteSpace(texts[i]))
+            {
+                subtitle.Paragraphs.Add(new LibSeParagraph(texts[i], paragraphs[i].StartTime.TotalMilliseconds, paragraphs[i].EndTime.TotalMilliseconds));
+            }
+        }
+
+        if (showProgress)
+        {
+            ProgressLine.Report("OCR", paragraphs.Count, paragraphs.Count);
+            ProgressLine.Finish();
+        }
+
+        if (missing > 0 && !options.Quiet)
+        {
+            AnsiConsole.MarkupLine($"[yellow]Note: {missing} image file(s) named in {Path.GetFileName(filePath).EscapeMarkup()} could not be read and were dropped.[/]");
+        }
+
+        subtitle.Renumber();
+        return subtitle;
+    }
+
+    private static bool HasTransparentCorner(SKBitmap bitmap) =>
+        bitmap.Width > 0 && bitmap.Height > 0 && bitmap.GetPixel(0, 0).Alpha == 0;
 
     /// <summary>
     /// MKV PGS track (S_HDMV/PGS) → text via the configured OCR engine, or time codes only

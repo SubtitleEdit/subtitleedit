@@ -182,6 +182,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceManager;
 using Nikse.SubtitleEdit.Features.Video.TransparentSubtitles;
 using Nikse.SubtitleEdit.Features.WebVtt;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.UiLogic.SubtitleLoading;
 using Nikse.SubtitleEdit.Logic.Config;
 using static Nikse.SubtitleEdit.Logic.FindService;
 using Nikse.SubtitleEdit.Logic.Config.Language;
@@ -23999,7 +24000,7 @@ public partial class MainViewModel :
             // Adobe Premiere project (gzipped xml): its text clips, as SE 4 opened them.
             if (ext == ".prproj")
             {
-                var prProjSubtitle = TryLoadPremiereProject(fileName);
+                var prProjSubtitle = NonRegisteredFormatLoader.TryLoadPremiereProject(fileName);
                 if (prProjSubtitle != null)
                 {
                     if (!skipLoadVideo)
@@ -24152,7 +24153,7 @@ public partial class MainViewModel :
                 // route through the BDN OCR import like batch convert already does for BDN.
                 if (ext == ".xml")
                 {
-                    var imageListSubtitle = TryLoadImageListXml(fileName);
+                    var imageListSubtitle = ImageListSubtitleLoader.TryLoadImageListXml(fileName);
                     if (imageListSubtitle != null)
                     {
                         ImportAndOcrDost(fileName, imageListSubtitle, skipLoadVideo);
@@ -24185,7 +24186,7 @@ public partial class MainViewModel :
                     }
                 }
 
-                subtitle = TryLoadAribB36(fileName);
+                subtitle = NonRegisteredFormatLoader.TryLoadAribB36(fileName);
 
                 if (subtitle == null)
                 {
@@ -24796,108 +24797,6 @@ public partial class MainViewModel :
         // Applying what was just read is not an edit - without this, opening a file with forced
         // marks rewrote its sidecar on the next tick.
         _subtitleMarksDirty = false;
-    }
-
-    /// <summary>
-    /// Loads an image-list xml project (BDN xml, or a Final Cut Pro image xmeml where each
-    /// clipitem references a png) whose cues carry image file names for the OCR importer.
-    /// Returns null when the file is neither.
-    /// </summary>
-    private static Subtitle? TryLoadImageListXml(string fileName)
-    {
-        try
-        {
-            var lines = FileUtil.ReadAllLinesShared(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName));
-
-            var bdnXml = new BdnXml();
-            if (bdnXml.IsMine(lines, fileName))
-            {
-                var subtitle = new Subtitle();
-                bdnXml.LoadSubtitle(subtitle, lines, fileName);
-                if (subtitle.Paragraphs.Count > 0)
-                {
-                    subtitle.OriginalFormat = bdnXml;
-                    return subtitle;
-                }
-            }
-
-            var timedImages = new TimedImagesXml();
-            if (timedImages.IsMine(lines, fileName))
-            {
-                var subtitle = new Subtitle();
-                timedImages.LoadSubtitle(subtitle, lines, fileName);
-                if (subtitle.Paragraphs.Count > 0)
-                {
-                    subtitle.OriginalFormat = timedImages;
-                    return subtitle;
-                }
-            }
-
-            // Cheap content gate first - FinalCutProImage has no fast IsMine of its own.
-            if (lines.Any(l => l.Contains("<xmeml", StringComparison.Ordinal)) &&
-                lines.Any(l => l.Contains("<pathurl>", StringComparison.Ordinal)))
-            {
-                var fcpImage = new FinalCutProImage();
-                var subtitle = new Subtitle();
-                fcpImage.LoadSubtitle(subtitle, lines, fileName);
-                if (subtitle.Paragraphs.Count > 0)
-                {
-                    subtitle.OriginalFormat = fcpImage;
-                    return subtitle;
-                }
-            }
-
-            return null;
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
-    /// <summary>
-    /// ARIB STD-B36 caption files (.1hd, .2hd, .1sd, .2sd), as SE 4 opened them. Not one of the
-    /// binary formats: IsMine only looks at the extension and size, so the load decides.
-    /// </summary>
-    private static Subtitle? TryLoadAribB36(string fileName)
-    {
-        try
-        {
-            var arib = new AribB36();
-            if (!arib.IsMine(null, fileName))
-            {
-                return null;
-            }
-
-            var subtitle = new Subtitle();
-            arib.LoadSubtitle(subtitle, null, fileName);
-            subtitle.OriginalFormat = arib;
-            return subtitle.Paragraphs.Count > 0 ? subtitle : null;
-        }
-        catch
-        {
-            return null; // the parser indexes the page blocks without bounds checks
-        }
-    }
-
-    private static Subtitle? TryLoadPremiereProject(string fileName)
-    {
-        try
-        {
-            var xml = AdobePremierePrProj.LoadFromZipFile(fileName);
-            if (string.IsNullOrEmpty(xml))
-            {
-                return null;
-            }
-
-            var subtitle = new Subtitle();
-            new AdobePremierePrProj().LoadSubtitle(subtitle, xml.SplitToLines(), fileName);
-            return subtitle.Paragraphs.Count > 0 ? subtitle : null;
-        }
-        catch
-        {
-            return null;
-        }
     }
 
     private void ImportAndOcrDost(string fileName, Subtitle subtitle, bool skipLoadVideo = false)
