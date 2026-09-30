@@ -23888,6 +23888,15 @@ public partial class MainViewModel :
                 }
             }
 
+            // A transport stream saved under another video extension (e.g. an HLS web rip
+            // renamed to .mp4 - the MP4 parse above finds nothing in it) used to end at the
+            // "open as video?" prompt, so its DVB/teletext/closed captions were never read.
+            if (fileSize > 10000 && IsTransportStreamUnderOtherVideoExtension(fileName, ext))
+            {
+                await ImportSubtitleFromTransportStream(fileName, skipLoadVideo);
+                return;
+            }
+
             if (FileUtil.IsVobSub(fileName) && ext == ".sub")
             {
                 var ok = await ImportSubtitleFromVobSubFile(fileName, videoFileName, skipLoadVideo);
@@ -25013,6 +25022,30 @@ public partial class MainViewModel :
         ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
 
         return true;
+    }
+
+    /// <summary>
+    /// True for a video file whose content is an MPEG transport stream although its extension is
+    /// not one of the transport stream extensions the open handlers already check (.ts, .m2ts, ...).
+    /// Those are left out so a .m2ts TextST file still falls through to the text formats.
+    /// </summary>
+    internal static bool IsTransportStreamUnderOtherVideoExtension(string fileName, string ext)
+    {
+        var lowerExt = ext.ToLowerInvariant();
+        if (lowerExt is ".ts" or ".tsv" or ".tts" or ".rec" or ".mpeg" or ".mpg" or ".m2ts" or ".mts" ||
+            !Utilities.VideoFileExtensions.Contains(lowerExt))
+        {
+            return false;
+        }
+
+        try
+        {
+            return FileUtil.IsTransportStream(fileName) || FileUtil.IsM2TransportStream(fileName);
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private async Task ImportSubtitleFromTransportStream(string fileName, bool skipLoadVideo = false)
