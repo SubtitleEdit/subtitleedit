@@ -298,7 +298,7 @@ public static class SpeechToTextCheck
     /// both strictly increase - a weighted longest increasing subsequence, via a Fenwick tree
     /// of prefix maxima over the heard index.
     /// </summary>
-    private static List<(int Token, int Heard)> HeaviestIncreasingChain(List<(int Token, int Heard, double Weight)> candidates, int heardCount)
+    internal static List<(int Token, int Heard)> HeaviestIncreasingChain(List<(int Token, int Heard, double Weight)> candidates, int heardCount)
     {
         var result = new List<(int Token, int Heard)>();
         if (candidates.Count == 0)
