@@ -22,6 +22,7 @@ The subtitle has to be close to begin with: each line is looked for round its cu
 - **Max shift (seconds)** — how far the subtitle may be out of sync (default 0.5). A line whose *start* would move further is left alone and flagged. An *end* that would move further is not pulled in to the speech - subtitles are often held long after the last word so they can be read - it travels with the start, so the line keeps its duration. Raise the value for a file that is off by a second or so; it is safe to do so, because single lines are checked against their neighbours (see [Large moves](#large-moves)).
 - **Adjust start times / Adjust end times** — untick one to leave that side of every line alone.
 - **Isolate speech first (slow)** — removes music and sound effects before aligning, so the aligner only hears the dialogue. Worth it for lines spoken over loud music or action; on clean dialogue it changes little. It takes about as long as the audio itself with a GPU, and many times longer without one. The first use downloads the *Mel-Band RoFormer (vocals)* model (457 MB) - the same one as *Isolate speech* in [Speech to text](speech-to-text.md). If the isolation fails, the original audio is aligned instead and the status line says so. A successful run also produces the speech-only waveform for the preview (see below).
+- **Check with speech-to-text** — also transcribes the audio with *Crisp ASR Parakeet* and checks every move against where the words were actually heard (see [Checking with speech-to-text](#checking-with-speech-to-text)). It adds a **Heard** column to the line list. Available for the 25 European languages Parakeet knows; the first use downloads the Parakeet v3 model (489 MB) unless one is already installed for [Speech to text](speech-to-text.md). A feature film takes a few minutes with a GPU. If the transcription fails, the alignment is still done, unchecked, and the status line says so.
 - **Align** (bottom button bar, highlighted until there is a result) — extracts the audio and runs the aligner. Length is not a limit: the audio is processed in short windows of a few lines each, so long films use no more memory than short clips. **Cancel** stops a running alignment.
 
 ## Preview
@@ -40,7 +41,7 @@ Under the waveforms:
 - **Play / pause** (or **Space**, wherever the focus is) plays from the playhead. Click in either waveform to move the playhead.
 - **▶ Original** (**Shift+F5**) and **▶ Aligned** (**F5**) play just the selected line, with its old or its new time codes - the quickest way to hear whether a cue now starts and stops with the speech. Double-clicking a cue in a waveform plays it with that waveform's time codes; double-clicking a row plays the aligned version.
 - **▲ / ▼** (or **F7** / **F8**) step to the previous / next re-timed line, and *Change X of Y* shows where you are.
-- The summary on the right counts re-timed lines, lines that were kept, lines with no speech, and the mean shift.
+- The summary on the right counts re-timed lines, lines that were kept, lines with no speech, and the mean shift - and, after a speech-to-text check, how many moves it confirmed and disputed.
 
 ## Line list
 
@@ -51,10 +52,14 @@ One row per subtitle line, with the shift of its start and end in milliseconds a
 | Re-timed | The aligner moved the line. |
 | Moved with its neighbours | The lines round it all moved by about the same amount, but the aligner wanted this one somewhere else - or further than *Max shift*. It was given the neighbours' offset instead. |
 | Large move - listen, tick to apply | The line wants to move more than half a second while its neighbours stay put. The new time codes are the aligner's, but the row is **not ticked**: play ▶ Original and ▶ Aligned and tick it if the move is right. |
+| Confirmed by speech | A large move that speech-to-text heard starting where the aligner put it - ticked. Also used when the neighbours overruled the aligner but the speech sided with the aligner. |
+| Heard where it was | Speech-to-text heard the line where it already was, not where the aligner moved it. The aligner's time codes are offered **unticked**. |
 | Already in place | The aligner agrees with the current time codes. |
 | No speech | Nothing to listen for - blank lines, `[sound descriptions]`, `(sighs)`, `♪`. These lines are never moved. |
 | Kept - shift too large | The start would have moved more than *Max shift*, so the line was left alone. |
 | Kept - aligner failed | The aligner could not process this group of lines. |
+
+With *Check with speech-to-text* on, the **Heard** column shows how much of each line speech-to-text heard. A low share means the text differs from what is said - a condensed or reworded line, a name it misheard - which is exactly where the aligner is most likely to be wrong, so those are the lines worth a listen.
 
 Untick **Apply** on a row to keep that line's original time codes; the green waveform updates at once.
 
@@ -70,7 +75,19 @@ With a small *Max shift* such a line is simply refused. With a larger one it wou
 - **The neighbours stayed where they were** - the line is either genuinely mistimed or has unsubtitled speech beside it, and the audio cannot say which. It is listed as *Large move* and left unticked for you to judge by ear. The status line says how many there are.
 - **The neighbours moved all over the place** - there is nothing to measure against, and the aligner is believed.
 
-Isolating the speech first does not help with this: the extra words are speech too.
+Isolating the speech first does not help with this: the extra words are speech too. Speech-to-text can, though - see below.
+
+## Checking with speech-to-text
+
+The aligner is told the text and finds it; it cannot say when the text is not what is said. Speech-to-text is not told anything: it reports the words it hears, and when. With *Check with speech-to-text* on, the subtitle's words are matched to the heard words (in order, and only near where the line is), which gives every line a *Heard* share and - when one of its first words was heard - the time the line really starts. That settles moves the neighbourhood check could not:
+
+- A **large move** is *confirmed* (and ticked) when the speech starts where the aligner put the line, and marked *Heard where it was* when the speech starts where the line was.
+- A line **moved with its neighbours** goes back to the aligner's own answer when that is where the speech was heard.
+- Any other move of 0.4 s or more away from where the line was heard is marked *Heard where it was* and unticked.
+
+Speech-to-text word times are coarser than the aligner's, so they only ever choose between two positions - the new time codes are always the aligner's. A steady difference between the two (Parakeet marks words about 0.2 s earlier than the aligners do) is measured on the file and allowed for, and a line with less than half its words heard is not judged at all.
+
+If speech-to-text hears less than 30% of the subtitle's words, the status line asks whether the subtitle is in the spoken language: a translation cannot be aligned - neither the aligner nor speech-to-text can find its words in the audio.
 
 ## How the new time codes are chosen
 
