@@ -151,6 +151,43 @@ public class ProgramStreamClosedCaptionTest
         Assert.Equal(9000, cue.EndTime.TotalMilliseconds, 0);
     }
 
+    /// <summary>
+    /// A bare .m2v (video elementary stream, no PES timestamps) of film with 3:2 pulldown: four
+    /// pictures per GOP that all repeat a field last six frames, and the DVD caption user data
+    /// holds a block per frame. Spacing the GOPs by their four pictures overlapped them and
+    /// interleaved the caption bytes of neighbouring GOPs.
+    /// </summary>
+    [Fact]
+    public void ElementaryStreamWithPulldownKeepsCaptionBytesInOrder()
+    {
+        var pairs = HelloWorldPopOn();
+        pairs.InsertRange(9, Enumerable.Repeat(new byte[] { 0x80, 0x80 }, 10)); // EDM 10 frames later
+        var es = new List<byte> { 0, 0, 1, 0xB3, 0x2D, 0x01, 0xE0, 0x34, 0x12, 0x4F, 0xA3, 0x80 }; // 720x480, 29.97 fps
+        for (var gop = 0; gop * 6 < pairs.Count; gop++)
+        {
+            var dvdUserData = new List<byte> { 0x43, 0x43, 0x01, 0xF8, 0x86 };
+            for (var frame = gop * 6; frame < gop * 6 + 6; frame++)
+            {
+                var pair = frame < pairs.Count ? pairs[frame] : new byte[] { 0x80, 0x80 };
+                dvdUserData.AddRange(new byte[] { 0xFF, pair[0], pair[1], 0xFE, 0x80, 0x80 });
+            }
+
+            es.AddRange(Concat(GopHeader, UserData(dvdUserData.ToArray())));
+            foreach (var temporalReference in new[] { 0, 1, 2, 3 })
+            {
+                es.AddRange(new byte[] { 0, 0, 1, 0x00, 0x00, (byte)((temporalReference << 6) | 0x08), 0xFF, 0xF8 });
+                es.AddRange(new byte[] { 0, 0, 1, 0xB5, 0x8F, 0xFF, 0x03, 0x82, 0x80 }); // frame picture, repeat_first_field
+            }
+        }
+
+        var tracks = ProgramStreamClosedCaptionReader.ReadElementaryStream(new MemoryStream(es.ToArray()), ProgramStreamClosedCaptionReader.DefaultProbeMilliseconds, null);
+
+        var cue = Assert.Single(Assert.Single(tracks).Value);
+        Assert.Equal("HELLO WORLD", cue.Text);
+        Assert.Equal(7 * 1001 / 30.0, cue.StartTime.TotalMilliseconds, tolerance: 2); // EOC is frame 7
+        Assert.Equal(19 * 1001 / 30.0, cue.EndTime.TotalMilliseconds, tolerance: 2); // EDM is frame 19
+    }
+
     // One pair per picture (one picture per second): RCL, "HELLO WORLD", EOC at 7 s, padding, EDM at 9 s
     private static List<byte[]> HelloWorldPopOn()
     {

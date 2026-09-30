@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Cea608;
+﻿using Nikse.SubtitleEdit.Core.Cea608;
 using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Buffers;
@@ -38,11 +38,59 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
             }
         }
 
+        /// <summary>
+        /// True if the file is a bare MPEG-1/2 video elementary stream (.m2v/.m1v), i.e. starts with a
+        /// sequence header (00 00 01 B3) instead of a pack header.
+        /// </summary>
+        public static bool IsVideoElementaryStream(string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var buffer = new byte[4];
+                return fs.ReadFully(buffer, 0, 4) == 4 && buffer[0] == 0 && buffer[1] == 0 && buffer[2] == 1 && buffer[3] == 0xB3;
+            }
+        }
+
+        /// <summary>
+        /// Reads the closed captions of a bare MPEG video elementary stream. There are no PES
+        /// timestamps, so picture times come from the frame rate and the GOP structure alone,
+        /// counted from the first picture.
+        /// </summary>
+        /// <returns>Paragraphs per track key (1-4 = CC1-CC4, see <see cref="ClosedCaptionDecoder"/>), empty if none</returns>
+        public static SortedDictionary<int, List<Paragraph>> ReadElementaryStream(Stream stream, long probeMilliseconds, ProgressCallback progressCallback)
+        {
+            var scanner = new VideoScanner(probeMilliseconds);
+            var buffer = ArrayPool<byte>.Shared.Rent(65536);
+            try
+            {
+                var length = stream.Length;
+                long chunks = 0;
+                int read;
+                while (!scanner.Stop && (read = stream.Read(buffer, 0, 65536)) > 0)
+                {
+                    scanner.Feed(buffer.AsSpan(0, read), null);
+                    if (++chunks % 100 == 0)
+                    {
+                        progressCallback?.Invoke(stream.Position, length);
+                    }
+                }
+
+                progressCallback?.Invoke(length, length);
+                return scanner.Finish();
+            }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(buffer);
+            }
+        }
+
         public static SortedDictionary<int, List<Paragraph>> Read(string fileName, long probeMilliseconds, ProgressCallback progressCallback)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 1024 * 1024))
             {
-                return Read(fs, probeMilliseconds, progressCallback);
+                return IsVideoElementaryStream(fileName)
+                    ? ReadElementaryStream(fs, probeMilliseconds, progressCallback)
+                    : Read(fs, probeMilliseconds, progressCallback);
             }
         }
 
@@ -273,6 +321,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
             private double? _previousGopBaseMs;
             private int _gopFrameCount;
             private int _previousGopFrameCount;
+            private int _gopFieldCount; // displayed fields, so 3:2 pulldown (repeat_first_field) counts
+            private int _previousGopFieldCount;
             private double _frameMs = 1001.0 / 30;
             private bool _topFieldFirst = true;
             private List<CcData[]> _pendingDvdFrames;
@@ -377,10 +427,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
                 {
                     _previousGopBaseMs = _gopBaseMs;
                     _previousGopFrameCount = _gopFrameCount;
+                    _previousGopFieldCount = _gopFieldCount;
                 }
 
                 _gopBaseMs = null;
                 _gopFrameCount = 0;
+                _gopFieldCount = 0;
             }
 
             /// <summary>
@@ -410,14 +462,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
             private void Picture(int temporalReference)
             {
                 _gopFrameCount = Math.Max(_gopFrameCount, temporalReference + 1);
+                _gopFieldCount += 2; // a frame picture; the picture coding extension corrects it
                 if (_picturePts.HasValue)
                 {
                     _gopBaseMs = _picturePts.Value - temporalReference * _frameMs;
                 }
                 else if (_gopBaseMs == null)
                 {
-                    // no PTS yet in this GOP - estimate from the previous one
-                    _gopBaseMs = _previousGopBaseMs.HasValue ? _previousGopBaseMs + _previousGopFrameCount * _frameMs : 0;
+                    // No PTS yet in this GOP - estimate from the previous one. Its length is its displayed
+                    // fields: with 3:2 pulldown 9 film pictures last 11 frames, and counting 9 made the
+                    // GOPs overlap, interleaving their DVD caption bytes (a bare .m2v has no PTS at all).
+                    var previousGopFrames = _previousGopFieldCount > 0 ? _previousGopFieldCount / 2.0 : _previousGopFrameCount;
+                    _gopBaseMs = _previousGopBaseMs.HasValue ? _previousGopBaseMs + previousGopFrames * _frameMs : 0;
                 }
 
                 _pictureMs = (long)Math.Round(_gopBaseMs.Value + temporalReference * _frameMs);
@@ -451,6 +507,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
                         break;
                     case 0xB5 when unit.Length >= 4 && (unit[0] >> 4) == 8: // picture coding extension
                         _topFieldFirst = (unit[3] & 0x80) != 0;
+                        if ((unit[2] & 0x03) != 0x03)
+                        {
+                            _gopFieldCount--; // field picture: one field
+                        }
+                        else if ((unit[3] & 0x02) != 0)
+                        {
+                            _gopFieldCount++; // repeat_first_field
+                        }
+
                         break;
                     case 0xB2:
                         var dvdFrames = GetCcDataHelper.ParseDvdCaptionUserData(unit);

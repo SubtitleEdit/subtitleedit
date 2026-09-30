@@ -23908,10 +23908,12 @@ public partial class MainViewModel :
                 }
             }
 
-            // DVD .vob / program stream .mpg: CEA-608 closed captions in the video (DVD Line 21
-            // captions, ATSC A/53, SCTE 20) - a .vob with subpictures was handled just above
-            if ((ext == ".vob" || ext == ".mpg" || ext == ".mpeg" || ext == ".m2p") && fileSize > 10000 &&
-                ProgramStreamClosedCaptionReader.IsProgramStream(fileName) &&
+            // DVD .vob / program stream .mpg / bare MPEG video .m2v: CEA-608 closed captions in the
+            // video (DVD Line 21 captions, ATSC A/53, SCTE 20) - a .vob with subpictures was handled
+            // just above
+            if (fileSize > 10000 &&
+                ((ext == ".vob" || ext == ".mpg" || ext == ".mpeg" || ext == ".m2p") && ProgramStreamClosedCaptionReader.IsProgramStream(fileName) ||
+                 (ext == ".m2v" || ext == ".m1v" || ext == ".mpv") && ProgramStreamClosedCaptionReader.IsVideoElementaryStream(fileName)) &&
                 await ImportClosedCaptionsFromProgramStream(fileName, skipLoadVideo))
             {
                 return;
