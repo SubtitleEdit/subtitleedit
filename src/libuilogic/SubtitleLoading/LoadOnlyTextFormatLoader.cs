@@ -1,9 +1,9 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Nikse.SubtitleEdit.Logic;
+namespace Nikse.SubtitleEdit.UiLogic.SubtitleLoading;
 
 /// <summary>
 /// Opens the load-only text formats (Captionate, WSB, FTE, the JSON "load only" variants, ...).
@@ -24,6 +24,11 @@ public static class LoadOnlyTextFormatLoader
             return null;
         }
 
+        return TryLoad(lines, fileName);
+    }
+
+    public static Subtitle? TryLoad(List<string> lines, string fileName)
+    {
         foreach (var format in SubtitleFormat.GetTextOtherFormats())
         {
             // Image-list formats need OCR; loaded as text they fill the grid with png file names.
@@ -56,7 +61,10 @@ public static class LoadOnlyTextFormatLoader
         return null;
     }
 
-    private static bool IsImageListFormat(SubtitleFormat format)
+    /// <summary>
+    /// Formats whose cues name image files: they need OCR, never a text load.
+    /// </summary>
+    public static bool IsImageListFormat(SubtitleFormat format)
     {
         return format is BdnXml or Dost or FinalCutProImage or SeImageHtmlIndex or SpuImage or TimedImagesXml or TimedTextImage;
     }

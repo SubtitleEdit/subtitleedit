@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Nikse.SubtitleEdit.Logic;
+namespace Nikse.SubtitleEdit.UiLogic.SubtitleLoading;
 
 /// <summary>
 /// Recognizes the image-list subtitle files SE 4 opened for OCR: each cue names an image file
@@ -98,6 +98,63 @@ public static class ImageListSubtitleLoader
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Loads an image-list xml project (BDN xml, or a Final Cut Pro image xmeml where each
+    /// clipitem references a png) whose cues carry image file names for the OCR importer.
+    /// Returns null when the file is neither.
+    /// </summary>
+    public static Subtitle? TryLoadImageListXml(string fileName)
+    {
+        try
+        {
+            var lines = FileUtil.ReadAllLinesShared(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName));
+
+            var bdnXml = new BdnXml();
+            if (bdnXml.IsMine(lines, fileName))
+            {
+                var subtitle = new Subtitle();
+                bdnXml.LoadSubtitle(subtitle, lines, fileName);
+                if (subtitle.Paragraphs.Count > 0)
+                {
+                    subtitle.OriginalFormat = bdnXml;
+                    return subtitle;
+                }
+            }
+
+            var timedImages = new TimedImagesXml();
+            if (timedImages.IsMine(lines, fileName))
+            {
+                var subtitle = new Subtitle();
+                timedImages.LoadSubtitle(subtitle, lines, fileName);
+                if (subtitle.Paragraphs.Count > 0)
+                {
+                    subtitle.OriginalFormat = timedImages;
+                    return subtitle;
+                }
+            }
+
+            // Cheap content gate first - FinalCutProImage has no fast IsMine of its own.
+            if (lines.Any(l => l.Contains("<xmeml", StringComparison.Ordinal)) &&
+                lines.Any(l => l.Contains("<pathurl>", StringComparison.Ordinal)))
+            {
+                var fcpImage = new FinalCutProImage();
+                var subtitle = new Subtitle();
+                fcpImage.LoadSubtitle(subtitle, lines, fileName);
+                if (subtitle.Paragraphs.Count > 0)
+                {
+                    subtitle.OriginalFormat = fcpImage;
+                    return subtitle;
+                }
+            }
+
+            return null;
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     private static IEnumerable<SubtitleFormat> GetCandidateFormats(string fileName)

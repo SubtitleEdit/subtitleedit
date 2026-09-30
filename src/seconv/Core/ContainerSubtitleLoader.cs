@@ -7,6 +7,7 @@ using Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
+using Nikse.SubtitleEdit.UiLogic.SubtitleLoading;
 using Spectre.Console;
 
 namespace SeConv.Core;
@@ -173,7 +174,80 @@ internal static class ContainerSubtitleLoader
             return LoadProgramStreamClosedCaptions(filePath, options);
         }
 
+        // Image-list files (BDN xml, SON, DOST, SubRip with png names, ...) name an image per
+        // cue. As text they would convert to the file names, so OCR them like the GUI does.
+        var imageList = TryLoadImageList(filePath, ext);
+        if (imageList != null)
+        {
+            var subtitle = ImageOcrLoader.LoadImageList(imageList, filePath, options);
+            if (subtitle.Paragraphs.Count == 0)
+            {
+                throw new InvalidOperationException($"No subtitles recognised in image-list file: {filePath}");
+            }
+
+            return [new LoadedTrack(subtitle, new SubRip(), string.Empty, null)];
+        }
+
         return null;
+    }
+
+    private static readonly string[] ImageFileExtensions = [".png", ".bmp", ".jpg", ".tif"];
+
+    /// <summary>
+    /// The image-list subtitle in <paramref name="filePath"/> (cue text = image file names), or
+    /// null for anything else. Same detection as the GUI's File > Open.
+    /// </summary>
+    private static Subtitle? TryLoadImageList(string filePath, string ext)
+    {
+        if (ext == ".xml")
+        {
+            var imageListXml = ImageListSubtitleLoader.TryLoadImageListXml(filePath);
+            if (imageListXml != null)
+            {
+                return imageListXml;
+            }
+        }
+
+        // Only a file that mentions an image file at all is parsed a second time - an
+        // ordinary subtitle never pays for it. Image lists are small; skip big files.
+        string text;
+        try
+        {
+            if (new FileInfo(filePath).Length > 20_000_000)
+            {
+                return null;
+            }
+
+            text = System.Text.Encoding.Latin1.GetString(File.ReadAllBytes(filePath));
+        }
+        catch (IOException)
+        {
+            return null;
+        }
+
+        if (!ImageFileExtensions.Any(e => text.Contains(e, StringComparison.OrdinalIgnoreCase)))
+        {
+            return null;
+        }
+
+        var encoding = LanguageAutoDetect.GetEncodingFromFile(filePath);
+        if (ext is ".ttml" or ".xml" or ".dfxp")
+        {
+            // IMSC image profile: smpte:backgroundImage names png files next to the document.
+            var lines = FileUtil.ReadAllLinesShared(filePath, encoding);
+            var timedTextImage = new TimedTextImage();
+            if (timedTextImage.IsMine(lines, filePath))
+            {
+                var subtitle = new Subtitle();
+                timedTextImage.LoadSubtitle(subtitle, lines, filePath);
+                if (subtitle.Paragraphs.Count > 0)
+                {
+                    return subtitle;
+                }
+            }
+        }
+
+        return ImageListSubtitleLoader.TryLoad(filePath, encoding, Subtitle.Parse(filePath, encoding));
     }
 
     /// <summary>
