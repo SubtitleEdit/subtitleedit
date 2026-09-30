@@ -1006,7 +1006,7 @@ internal class SubtitleConverter
             // fall back to the dictionaries bundled into seconv (English out of the box) (#11744).
             SpellCheckConfig.DictionariesFolder = () =>
                 !string.IsNullOrEmpty(options.DictionaryFolder) ? options.DictionaryFolder : BundledDictionaries.GetFolder();
-            SpellCheckConfig.UseWordSplitList = () => true;
+            SpellCheckConfig.UseWordSplitList = () => Configuration.Settings.Tools.OcrUseWordSplitList;
             SpellCheckConfig.TreatInApostropheAsIng = () => false;
 
             LibSEIntegration.ApplyOperations(

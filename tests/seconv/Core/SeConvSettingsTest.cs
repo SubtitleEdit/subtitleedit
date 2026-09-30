@@ -137,6 +137,30 @@ public class SeConvSettingsTest : IDisposable
     }
 
     [Fact]
+    public void OcrUseWordSplitList_IsOffByDefault_AndSettingsCanTurnItOn()
+    {
+        // Word splitting also breaks valid words missing from the dictionary ("backlit"),
+        // so seconv starts with it off like the GUI does (discussion #15423).
+        var tools = Configuration.Settings.Tools;
+        Assert.False(tools.OcrUseWordSplitList);
+
+        try
+        {
+            var path = WriteSettings("""{ "tools": { "ocrUseWordSplitList": true } }""");
+
+            var settings = SeConvSettings.Load(path);
+            settings.ApplyToLibSe();
+
+            Assert.Empty(settings.GetUnknownKeys());
+            Assert.True(tools.OcrUseWordSplitList);
+        }
+        finally
+        {
+            tools.OcrUseWordSplitList = false;
+        }
+    }
+
+    [Fact]
     public void ApplyToLibSe_AppliesProfileGeneralValues()
     {
         // Regression for #11874: the FixCommonErrors profile values must be mappable.

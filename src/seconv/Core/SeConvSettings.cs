@@ -94,6 +94,7 @@ internal sealed class SeConvSettings
                 LlamaCppPrompt = s.Tools.LlamaCppPrompt,
                 OllamaPrompt = s.Tools.OllamaPrompt,
                 LmStudioPrompt = s.Tools.LmStudioPrompt,
+                OcrUseWordSplitList = s.Tools.OcrUseWordSplitList,
             },
             RemoveTextForHearingImpaired = new RemoveHiSection
             {
@@ -315,6 +316,9 @@ internal sealed class SeConvSettings
                 s.Tools.OllamaPrompt = t.OllamaPrompt;
             if (!string.IsNullOrWhiteSpace(t.LmStudioPrompt))
                 s.Tools.LmStudioPrompt = t.LmStudioPrompt;
+
+            if (t.OcrUseWordSplitList.HasValue)
+                s.Tools.OcrUseWordSplitList = t.OcrUseWordSplitList.Value;
         }
 
         if (RemoveTextForHearingImpaired is { } r)
@@ -380,6 +384,9 @@ internal sealed class SeConvSettings
 
         /// <summary>Auto-translate prompt for the LM Studio engine ({0}=source, {1}=target, {2}=text).</summary>
         public string? LmStudioPrompt { get; set; }
+
+        /// <summary>"Fix common OCR errors": split run-together words via the word split list (default off).</summary>
+        public bool? OcrUseWordSplitList { get; set; }
 
         [JsonExtensionData]
         public Dictionary<string, JsonElement>? UnknownMembers { get; set; }
