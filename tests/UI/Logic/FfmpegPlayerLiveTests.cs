@@ -33,6 +33,12 @@ public sealed class FfmpegPlayerLiveTests : IDisposable
     /// <summary>Two audio tracks: an English "Main" default track at stream 1 and a Danish "Commentary" track at stream 2.</summary>
     private static string TwoAudioTracksClip => Path.Combine(Clips(), "two-audio.mkv");
 
+    /// <summary>25 fps, 4 s, first time stamp at 5 s (like a clip cut from a stream), with audio.</summary>
+    private static string StartOffsetClip => Path.Combine(Clips(), "offset.mp4");
+
+    /// <summary>The same as a transport stream: the demuxer adds its own 1.4 s mux delay.</summary>
+    private static string StartOffsetTransportStream => Path.Combine(Clips(), "offset.ts");
+
     private static string Clips()
     {
         lock (ClipLock)
@@ -78,7 +84,13 @@ public sealed class FfmpegPlayerLiveTests : IDisposable
                      "-v error -y -f lavfi -i testsrc2=size=320x180:rate=25:duration=10 -f lavfi -i sine=frequency=440:duration=10 -f lavfi -i sine=frequency=880:duration=10 " +
                      "-map 0:v -map 1:a -map 2:a -c:v libx264 -preset ultrafast -pix_fmt yuv420p -c:a aac " +
                      "-metadata:s:a:0 language=eng -metadata:s:a:0 title=Main -disposition:a:0 default " +
-                     "-metadata:s:a:1 language=dan -metadata:s:a:1 title=Commentary -disposition:a:1 0 two-audio.mkv");
+                     "-metadata:s:a:1 language=dan -metadata:s:a:1 title=Commentary -disposition:a:1 0 two-audio.mkv") &&
+                 Run(ffmpeg, folder,
+                     "-v error -y -f lavfi -i testsrc2=size=320x180:rate=25:duration=4 -f lavfi -i sine=frequency=440:duration=4 " +
+                     "-c:v libx264 -preset ultrafast -bf 0 -pix_fmt yuv420p -c:a aac -output_ts_offset 5 offset.mp4") &&
+                 Run(ffmpeg, folder,
+                     "-v error -y -f lavfi -i testsrc2=size=320x180:rate=25:duration=4 -f lavfi -i sine=frequency=440:duration=4 " +
+                     "-c:v libx264 -preset ultrafast -bf 0 -pix_fmt yuv420p -c:a aac -output_ts_offset 5 offset.ts");
         if (!ok)
         {
             _clipError = $"'{ffmpeg}' could not generate the test clips (no libx264?).";
@@ -341,6 +353,44 @@ public sealed class FfmpegPlayerLiveTests : IDisposable
 
         // 16 pictures of history per seek at this size: 40 steps are a few refills, not 40 seeks.
         Assert.InRange(_player.SeeksPerformed - seeks, 1, 3);
+    }
+
+    /// <summary>
+    /// A file whose first time stamp is not zero plays on its own time stamps, as the mpv player
+    /// does (#9828) - subtitles extracted from it are timed on them. Rebasing it to zero put every
+    /// subtitle late by the start time.
+    /// </summary>
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void StartOffset_PositionsAreTheFilesOwnTimeStamps(bool transportStream)
+    {
+        var index = Load(transportStream ? StartOffsetTransportStream : StartOffsetClip);
+
+        var first = index.SecondsAt(0);
+        Assert.InRange(first, 5.0, 6.5);
+        AssertPosition(first, "first picture");
+        Assert.Equal(first + 99 * 0.04, _player.Duration, 1); // the end, not the length
+
+        SeekAndWait(first + 2.0);
+        AssertPosition(first + 2.0, "seek into the clip");
+
+        SeekAndWait(0);
+        AssertPosition(first, "seek before the first picture");
+    }
+
+    [Fact]
+    public void StartOffset_WithoutFrameIndex_StepBackAtTheFirstFrameStaysThere()
+    {
+        _player.UseFrameIndex = false;
+        LoadWithoutIndex(StartOffsetClip);
+        var first = _player.Position;
+        Assert.InRange(first, 4.99, 5.01);
+
+        _player.StepOneFrameBack();
+        Thread.Sleep(200);
+
+        AssertPosition(first, "step back at the start");
     }
 
     [Fact]
