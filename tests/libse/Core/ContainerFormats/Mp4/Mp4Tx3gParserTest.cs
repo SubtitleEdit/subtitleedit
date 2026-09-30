@@ -108,6 +108,33 @@ public class Mp4Tx3gParserTest
         }
     }
 
+    [Fact]
+    public void GetParagraphs_ManyShortSamples_TimesLandOnExactMilliseconds()
+    {
+        // Sample times used to be summed as seconds in a double, so ten 10 ms samples
+        // came to 99.99999 ms - shown (truncated) as 00:00:00,099. Against ffmpeg that
+        // put about 60 % of all cue times in real files 1 ms early.
+        var samples = Enumerable.Range(1, 50).Select(i => "Line " + i).ToArray();
+
+        var tempFile = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllBytes(tempFile, BuildSingleChunkTx3gMp4(samples, sampleDurationTicks: 10, timeScale: 1000));
+            var paragraphs = new MP4Parser(tempFile).GetSubtitleTracks()[0].Mdia.Minf.Stbl.GetParagraphs();
+
+            Assert.Equal(samples.Length, paragraphs.Count);
+            for (var i = 0; i < samples.Length; i++)
+            {
+                Assert.Equal(i * 10, (int)paragraphs[i].StartTime.TimeSpan.TotalMilliseconds);
+                Assert.Equal((i + 1) * 10, (int)paragraphs[i].EndTime.TimeSpan.TotalMilliseconds);
+            }
+        }
+        finally
+        {
+            File.Delete(tempFile);
+        }
+    }
+
     /// <summary>
     /// Build a minimal MP4 with a single sbtl/tx3g track whose samples are
     /// packed into one chunk — the layout that triggered the regression.

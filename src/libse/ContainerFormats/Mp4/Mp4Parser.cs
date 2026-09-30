@@ -915,8 +915,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                         ticks += sample.Duration.Value;
                     }
 
-                    var startMs = startTicks / timeScale * 1000.0;
-                    var durationMs = durationTicks / timeScale * 1000.0;
+                    var startMs = startTicks * 1000.0 / timeScale;
+                    var durationMs = durationTicks * 1000.0 / timeScale;
 
                     if (size > 2 && size <= maxSampleSize && samplePosition + size <= (ulong)fs.Length)
                     {
