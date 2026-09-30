@@ -63,7 +63,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--target-fps:<frame rate>", "Target frame rate");
         ShowParameter(console, "--teletext-only", "Process teletext only");
         ShowParameter(console, "--teletext-only-page:<page number>", "Teletext page number");
-        ShowParameter(console, "--track-number:<track list>", "Comma separated track number list");
+        ShowParameter(console, "--track-number:<track list>", "Comma separated track number list (DVD IFO/VOB input: the title number)");
         ShowParameter(console, "--ocr-engine:<engine>", "OCR engine: tesseract | nocr | binaryocr | ollama | llamacpp | paddle | applevision (macOS)");
         ShowParameter(console, "--ocr-language:<lang>", "Language for OCR (e.g. eng, deu, spa)");
         ShowParameter(console, "--ocr-db:<path>", ".nocr (--ocr-engine=nocr) or .db (--ocr-engine=binaryocr)");
@@ -185,6 +185,9 @@ internal static class HelpDisplay
         ShowExample(console,
             "seconv movie.mkv subrip --track-number:3",
             "Extract MKV subtitle track #3 to SRT");
+        ShowExample(console,
+            "seconv VTS_01_0.IFO vobsub --track-number:2",
+            "Rip the subtitles of DVD title 2 to .sub/.idx (one pair per language)");
         ShowExample(console,
             "seconv movie.sup subrip --ocr-engine:nocr --ocr-db:Latin.nocr",
             "OCR a Blu-Ray .sup using nOCR");

@@ -116,6 +116,19 @@ internal class SubtitleConverter
             // GetFiles enumeration order isn't guaranteed and chunk order affects packet
             // ordering and idx timestamps, so sort up front. DVD spec caps a VTS at 9
             // chunks, so a plain ordinal sort puts VTS_xx_1..VTS_xx_9 in playback order.
+            // A DVD title set IFO (VTS_xx_0.IFO) stands for its VOB files (VTS_xx_1.VOB, ...).
+            if (inputFiles.Count == 1 && IsDvdIfo(inputFiles[0], out var titleSetVobs, out var ifoError))
+            {
+                if (ifoError != null)
+                {
+                    result.Errors.Add(ifoError);
+                    result.FailedFiles = 1;
+                    return result;
+                }
+
+                return await ConvertVobBatchAsync(titleSetVobs, options, result);
+            }
+
             if (inputFiles.All(f => f.EndsWith(".vob", StringComparison.OrdinalIgnoreCase)))
             {
                 inputFiles.Sort(StringComparer.OrdinalIgnoreCase);
@@ -244,6 +257,36 @@ internal class SubtitleConverter
     /// containers, so the regular text-loading path used to error with
     /// "input file too large". This bypasses it.
     /// </summary>
+    /// <summary>
+    /// True for a DVD IFO file; <paramref name="vobFiles"/> gets its title set's VOB files, or
+    /// <paramref name="error"/> says why there are none.
+    /// </summary>
+    private static bool IsDvdIfo(string fileName, out List<string> vobFiles, out string? error)
+    {
+        vobFiles = [];
+        error = null;
+        var ext = Path.GetExtension(fileName).ToLowerInvariant();
+        if (ext is not (".ifo" or ".bup") || !IfoParser.IsIfo(fileName))
+        {
+            return false;
+        }
+
+        var ifo = new IfoParser(fileName);
+        if (ifo.Type != IfoParser.IfoType.VideoTitleSet)
+        {
+            error = $"{Path.GetFileName(fileName)} is the disc menu IFO - use a title set IFO (VTS_xx_0.IFO) instead.";
+            return true;
+        }
+
+        vobFiles = IfoParser.GetTitleVobFiles(Path.ChangeExtension(fileName, ".IFO"));
+        if (vobFiles.Count == 0)
+        {
+            error = $"No VOB files (VTS_xx_1.VOB, ...) found next to {Path.GetFileName(fileName)}.";
+        }
+
+        return true;
+    }
+
     private async Task<ConversionResult> ConvertVobBatchAsync(List<string> vobFiles, ConversionOptions options, ConversionResult result)
     {
         if (!"vobsub".Equals(options.Format, StringComparison.OrdinalIgnoreCase))
@@ -322,10 +365,21 @@ internal class SubtitleConverter
 
         try
         {
-            // IsPal — there's no single reliable auto-detect from VOB alone (would need
-            // IFO parsing). Default to PAL to match the GUI's batch converter. Future
-            // work: add --vob-pal/--vob-ntsc and/or read VIDEO_TS.IFO.
-            var outputs = VobSubExtractor.Extract(vobFiles, outputBase, isPal: true);
+            // PAL/NTSC, palette and languages come from the title set's IFO when it is next to
+            // the VOBs (else PAL); --track-number picks the DVD title (program chain).
+            if (options.TrackNumbers.Count > 1)
+            {
+                throw new InvalidOperationException("--track-number takes one DVD title number for VOB/IFO input.");
+            }
+
+            int? dvdTitleNumber = options.TrackNumbers.Count == 1 ? options.TrackNumbers[0] : null;
+            var extraction = VobSubExtractor.Extract(vobFiles, outputBase, dvdTitleNumber);
+            var outputs = extraction.Outputs;
+            if (!options.Quiet)
+            {
+                AnsiConsole.MarkupInterpolated($" [dim]({extraction.Source})[/]");
+            }
+
             result.SuccessfulFiles = vobFiles.Count;
             // Report the first stream's output path against each input VOB. With multiple
             // streams there's no clean 1:1 mapping back to inputs, but the OutputFile slot

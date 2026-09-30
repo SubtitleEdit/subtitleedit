@@ -103,6 +103,7 @@ using Nikse.SubtitleEdit.Features.Shared.PickRuleProfile;
 using Nikse.SubtitleEdit.Features.Shared.PickSpellCheckDictionary;
 using Nikse.SubtitleEdit.Features.Shared.PickSubtitleFormat;
 using Nikse.SubtitleEdit.Features.Shared.PickTsTrack;
+using Nikse.SubtitleEdit.Features.Shared.PickDvdTitle;
 using Nikse.SubtitleEdit.Features.Shared.PickVobSubLanguage;
 using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Features.Shared.PromptFilesSaved;
@@ -563,6 +564,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<PickSubtitleFormatViewModel>();
         collection.AddTransient<PickTsTrackViewModel>();
         collection.AddTransient<PickVobSubLanguageViewModel>();
+        collection.AddTransient<PickDvdTitleViewModel>();
         collection.AddTransient<PluginManagerViewModel>();
         collection.AddTransient<GetPluginsViewModel>();
         collection.AddTransient<PointSyncViaOtherViewModel>();

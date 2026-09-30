@@ -57,6 +57,7 @@ public class LanguageMain
     public string OverwriteExistingCells { get; set; }
     public string OverwriteOrShiftCellsDown { get; set; }
     public string ParsingMatroskaFile { get; set; }
+    public string ReadingDvdSubtitles { get; set; }
     public string PasteFromClipboardDotDotDot { get; set; }
     public string RedoPerformed { get; set; }
     public string RedoPerformedXActionLeft { get; set; }
@@ -217,6 +218,7 @@ public class LanguageMain
         OverwriteExistingCells = "Overwrite existing cells";
         OverwriteOrShiftCellsDown = "Overwrite/shift cells down";
         ParsingMatroskaFile = "Parsing Matroska file...";
+        ReadingDvdSubtitles = "Reading DVD subtitles...";
         PasteFromClipboardDotDotDot = "Paste from clipboard...";
         RedoPerformed = "Redo performed";
         RedoPerformedXActionLeft = "Redo performed (actions left: {0})";

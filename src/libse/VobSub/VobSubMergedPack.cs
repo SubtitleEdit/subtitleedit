@@ -15,9 +15,12 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         public IdxParagraph IdxLine { get; private set; }
         public List<SKColor> Palette { get; set; }
 
+        /// <summary>The raw DVD sub picture unit (the merged PES payloads).</summary>
+        public byte[] SubPictureData { get; }
 
         public VobSubMergedPack(byte[] subPictureData, TimeSpan presentationTimestamp, int streamId, IdxParagraph idxLine)
         {
+            SubPictureData = subPictureData;
             SubPicture = new SubPicture(subPictureData);
             StartTime = presentationTimestamp;
             StreamId = streamId;
