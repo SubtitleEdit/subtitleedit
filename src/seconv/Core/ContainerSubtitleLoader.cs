@@ -48,6 +48,13 @@ internal static class ContainerSubtitleLoader
             return null;
         }
 
+        // A transport stream saved under another video extension (e.g. an HLS web rip named
+        // .mp4) - the MP4/Matroska parsers below would find nothing in it.
+        if (FileUtil.IsTransportStreamWithOtherVideoExtension(filePath))
+        {
+            return LoadTransportStream(filePath, options);
+        }
+
         // .webm is Matroska too - a WebVTT track muxed into one was falling through to the
         // text loader, which then failed to detect a format at all.
         if (ext is ".mkv" or ".mks" or ".webm")

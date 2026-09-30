@@ -2323,6 +2323,15 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             }
         }
 
+        // A transport stream saved under another video extension (e.g. an HLS web rip named .mp4)
+        // - checked first, as the MP4/Matroska parsers below find nothing in it
+        if (FileUtil.IsTransportStreamWithOtherVideoExtension(fileName))
+        {
+            format = "Transport Stream";
+            added.Add(new BatchConvertItem(fileName, fileInfo.Length, format, subtitle));
+            return added;
+        }
+
         if (ext == ".mkv" || ext == ".mks")
         {
             using (var matroska = new MatroskaFile(fileName))
