@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -48,18 +49,33 @@ public static class EncodingHelper
     /// <summary>
     /// Resolves a target-encoding <see cref="TextEncoding.DisplayName"/> (as stored in
     /// settings) to a concrete <see cref="Encoding"/>. Honors the <see cref="TryToUseSourceEncoding"/>
-    /// sentinel by detecting the source file's encoding. Falls back to UTF-8 with BOM
-    /// when the name is empty, unknown, or detection fails.
+    /// sentinel by detecting the source file's encoding - a binary source (container, image
+    /// or binary subtitle format) has no text encoding, so it gets <see cref="GetBinarySourceEncoding"/>.
+    /// Falls back to UTF-8 with BOM when the name is empty or unknown.
     /// </summary>
     public static Encoding ResolveEncoding(string? displayName, string? sourceFile)
     {
         if (string.Equals(displayName, TryToUseSourceEncoding, System.StringComparison.Ordinal))
         {
-            if (!string.IsNullOrEmpty(sourceFile) && File.Exists(sourceFile))
+            if (string.IsNullOrEmpty(sourceFile) || !File.Exists(sourceFile))
             {
-                return LanguageAutoDetect.GetEncodingFromFile(sourceFile);
+                return GetBinarySourceEncoding(Se.Settings.General.DefaultEncoding);
             }
-            return new UTF8Encoding(true);
+
+            var detected = LanguageAutoDetect.GetEncodingFromFile(sourceFile);
+            if (IsBinaryFile(sourceFile, detected))
+            {
+                return GetBinarySourceEncoding(Se.Settings.General.DefaultEncoding);
+            }
+
+            // Detection returns the shared Encoding.UTF8 (which always writes a BOM) for
+            // UTF-8 with or without BOM and for plain ASCII - keep the source's BOM choice (#15489).
+            if (detected.CodePage == Encoding.UTF8.CodePage)
+            {
+                return new UTF8Encoding(FileUtil.HasUtf8Bom(sourceFile));
+            }
+
+            return detected;
         }
 
         if (string.IsNullOrEmpty(displayName) ||
@@ -75,5 +91,40 @@ public static class EncodingHelper
 
         var match = GetEncodings().FirstOrDefault(e => e.DisplayName == displayName);
         return match?.Encoding ?? new UTF8Encoding(true);
+    }
+
+    /// <summary>
+    /// The encoding for text written from a source that has none (e.g. OCR of a .sup, or a
+    /// track from a .mkv): the default encoding when it is UTF-8 with or without BOM, otherwise
+    /// UTF-8 with BOM - a single-byte default code page could not hold arbitrary OCR'd or
+    /// extracted text.
+    /// </summary>
+    public static Encoding GetBinarySourceEncoding(string? defaultEncodingName)
+    {
+        return new UTF8Encoding(!string.Equals(defaultEncodingName, TextEncoding.Utf8WithoutBom, System.StringComparison.Ordinal));
+    }
+
+    /// <summary>
+    /// A text subtitle never contains a NUL byte unless it is UTF-16/32, which detection
+    /// already recognized - so a NUL in the first 8 KB means a binary file.
+    /// </summary>
+    private static bool IsBinaryFile(string fileName, Encoding detected)
+    {
+        if (detected.CodePage is 1200 or 1201 or 12000 or 12001)
+        {
+            return false;
+        }
+
+        try
+        {
+            using var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var buffer = new byte[8192];
+            var count = stream.Read(buffer, 0, buffer.Length);
+            return System.Array.IndexOf(buffer, (byte)0, 0, count) >= 0;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }
