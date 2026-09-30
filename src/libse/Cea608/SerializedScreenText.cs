@@ -28,9 +28,15 @@ namespace Nikse.SubtitleEdit.Core.Cea608
             var sb = new StringBuilder();
             var italic = false;
             var endOfText = 0; // length of sb up to and including the last non-space char
-            foreach (var column in columns)
+            for (var index = 0; index < columns.Length; index++)
             {
+                var column = columns[index];
                 var character = column.Character;
+                if (character == Constants.MidRowSpace)
+                {
+                    character = IsMidRowSpaceShown(sb, columns, index) ? " " : string.Empty;
+                }
+
                 if (string.IsNullOrWhiteSpace(character))
                 {
                     if (sb.Length > 0)
@@ -69,6 +75,31 @@ namespace Nikse.SubtitleEdit.Core.Cea608
             }
 
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// A mid-row code shows as a space ("that you <i>were</i> smelling"), but not next to a
+        /// space already there, nor inside brackets - "(<i>music</i>)", not "( <i>music</i> )".
+        /// </summary>
+        private static bool IsMidRowSpaceShown(StringBuilder sb, SerializedStyledUnicodeChar[] columns, int index)
+        {
+            if (sb.Length == 0 || char.IsWhiteSpace(sb[sb.Length - 1]) || "([{".IndexOf(sb[sb.Length - 1]) >= 0)
+            {
+                return false;
+            }
+
+            for (var i = index + 1; i < columns.Length; i++)
+            {
+                var next = columns[i].Character;
+                if (next == Constants.MidRowSpace)
+                {
+                    continue;
+                }
+
+                return !string.IsNullOrWhiteSpace(next) && ")]}".IndexOf(next[0]) < 0;
+            }
+
+            return false;
         }
     }
 }

@@ -156,6 +156,12 @@
             MoveCursor(1);
         }
 
+        public void InsertMidRowSpace()
+        {
+            Chars[Position].SetChar(Constants.MidRowSpace, CurrentPenState);
+            MoveCursor(1);
+        }
+
         /// <summary>
         /// Get Unicode Character from CEA-608 byte code.
         /// </summary>
