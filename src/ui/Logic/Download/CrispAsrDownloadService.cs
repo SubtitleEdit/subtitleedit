@@ -25,37 +25,42 @@ public class CrispAsrDownloadService : ICrispAsrDownloadService
 {
     private readonly HttpClient _httpClient;
 
-    private const string WindowsCudaUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.38/crispasr-windows-x86_64-cuda.zip";
+    private const string WindowsCudaUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.39/crispasr-windows-x86_64-cuda.zip";
     /// <summary>
     /// The CUDA 13 build, added upstream in v0.8.31 next to the CUDA 12 one rather than
     /// replacing it. Offered as its own option because CUDA 13 needs a newer NVIDIA driver than
     /// CUDA 12 - repointing <see cref="WindowsCudaUrl"/> at it would have broken everyone still
     /// on an older driver. Mirrors the Linux pair, which has had both since v0.8.30.
     /// </summary>
-    private const string WindowsCuda13Url = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.38/crispasr-windows-x86_64-cuda13.zip";
-    private const string WindowsVulkanUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.38/crispasr-windows-x86_64-vulkan.zip";
-    private const string WindowsCpuUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.38/crispasr-windows-x86_64-cpu.zip";
-    private const string WindowsCpuLegacyUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.38/crispasr-windows-x86_64-cpu-legacy.zip";
-    private const string MacUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.38/crispasr-macos.tar.gz";
+    private const string WindowsCuda13Url = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.39/crispasr-windows-x86_64-cuda13.zip";
+    private const string WindowsVulkanUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.39/crispasr-windows-x86_64-vulkan.zip";
+    private const string WindowsCpuUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.39/crispasr-windows-x86_64-cpu.zip";
+    private const string WindowsCpuLegacyUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.39/crispasr-windows-x86_64-cpu-legacy.zip";
+    private const string MacUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.39/crispasr-macos.tar.gz";
 
     /// <summary>
-    /// Intel Macs. Upstream's crispasr-macos.tar.gz is arm64-only - its build job runs on
-    /// macos-latest, which is Apple Silicon since macos-13 was retired, so an Intel Mac gets
-    /// "Bad CPU type in executable" after a 15 MB download, and Rosetta cannot bridge it
-    /// (x86_64 -> arm64 only, never the reverse). Issue #13559. Until upstream ships an
-    /// x86_64 or universal build, Subtitle Edit builds the x86_64 slice itself from the same
-    /// pinned tag: SubtitleEdit/support-files, workflow build-crispasr-macos-x64-release.yml.
-    /// It is a CPU + Accelerate build (ggml's Metal kernels crash on the AMD GPUs in Intel
-    /// Macs) and targets macOS 12, and the archive's inner folder matches upstream's so the
-    /// unpack path is shared.
+    /// Intel Macs. Upstream's crispasr-macos.tar.gz is arm64-only (issue #13559: "Bad CPU type
+    /// in executable"), so up to v0.8.38 Subtitle Edit built the x86_64 slice itself in
+    /// SubtitleEdit/support-files. From v0.8.39 upstream ships an official CPU + Accelerate
+    /// Intel build (Metal disabled, portable CPU baseline - so it also passes crispasr's
+    /// CPU-ISA gate under Rosetta, where the old AVX2 slice exited 1). Its inner folder is
+    /// crispasr-macos-x86_64, not crispasr-macos - see <see cref="MacUnpackFolder"/>.
     /// </summary>
-    private const string MacIntelUrl = "https://github.com/SubtitleEdit/support-files/releases/download/crispasr-0838-macos-x64/crispasr-macos-x86_64.tar.gz";
-    private const string LinuxUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.38/crispasr-linux-x86_64.tar.gz";
-    private const string LinuxCudaUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.38/crispasr-linux-x86_64-cuda.tar.gz";
-    private const string LinuxCuda13Url = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.38/crispasr-linux-x86_64-cuda13.tar.gz";
-    private const string LinuxVulkanUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.38/crispasr-linux-x86_64-vulkan.tar.gz";
-    private const string LinuxHipUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.38/crispasr-linux-x86_64-hip.tar.gz";
-    private const string LinuxArmUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.38/crispasr-linux-arm64.tar.gz";
+    private const string MacIntelUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.39/crispasr-macos-x86_64.tar.gz";
+
+    /// <summary>
+    /// The folder inside the macOS archive that <see cref="DownloadEngine"/> fetches for this
+    /// process architecture. crispasr-macos.tar.gz (arm64) keeps its original crispasr-macos
+    /// folder as a compatibility alias; the Intel archive uses crispasr-macos-x86_64.
+    /// </summary>
+    public static string MacUnpackFolder =>
+        RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? "crispasr-macos" : "crispasr-macos-x86_64";
+    private const string LinuxUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.39/crispasr-linux-x86_64.tar.gz";
+    private const string LinuxCudaUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.39/crispasr-linux-x86_64-cuda.tar.gz";
+    private const string LinuxCuda13Url = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.39/crispasr-linux-x86_64-cuda13.tar.gz";
+    private const string LinuxVulkanUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.39/crispasr-linux-x86_64-vulkan.tar.gz";
+    private const string LinuxHipUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.39/crispasr-linux-x86_64-hip.tar.gz";
+    private const string LinuxArmUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.39/crispasr-linux-arm64.tar.gz";
 
     public CrispAsrDownloadService(HttpClient httpClient)
     {

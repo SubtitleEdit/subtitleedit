@@ -291,7 +291,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
                                 _        => "crispasr-linux-x86_64",
                             })
                         : OperatingSystem.IsMacOS()
-                            ? "crispasr-macos"
+                            ? CrispAsrDownloadService.MacUnpackFolder
                             : CrispAsrWindowsVariant switch
                             {
                                 "cuda"       => "crispasr-windows-x86_64-cuda",
