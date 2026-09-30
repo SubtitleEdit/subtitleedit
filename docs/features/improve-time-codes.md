@@ -8,7 +8,7 @@ Tighten the time codes of a subtitle that is already roughly in sync, by letting
 <!-- Screenshot: Improve time codes window with Original/Aligned waveforms and the line list after an alignment -->
 ![Improve time codes](../screenshots/improve-time-codes.png)
 
-The subtitle has to be close to begin with: each line is looked for round its current position only. If the whole file is off by seconds, use [Adjust all times](adjust-all-times.md), [Point sync](point-sync.md) or [Visual sync](visual-sync.md) first.
+The aligner looks for each line round its current position only, so on its own it needs a subtitle that is close to begin with. With **Check with speech-to-text** on, a subtitle that is further out - seconds or minutes, drifting, or with jumps where scenes were cut - is synced first (see [Syncing first](#syncing-first)). Without it, use [Adjust all times](adjust-all-times.md), [Point sync](point-sync.md) or [Visual sync](visual-sync.md) first.
 
 ## Setup bar
 
@@ -22,7 +22,7 @@ The subtitle has to be close to begin with: each line is looked for round its cu
 - **Max shift (seconds)** — how far the subtitle may be out of sync (default 0.5). A line whose *start* would move further is left alone and flagged. An *end* that would move further is not pulled in to the speech - subtitles are often held long after the last word so they can be read - it travels with the start, so the line keeps its duration. Raise the value for a file that is off by a second or so; it is safe to do so, because single lines are checked against their neighbours (see [Large moves](#large-moves)).
 - **Adjust start times / Adjust end times** — untick one to leave that side of every line alone.
 - **Isolate speech first (slow)** — removes music and sound effects before aligning, so the aligner only hears the dialogue. Worth it for lines spoken over loud music or action; on clean dialogue it changes little. It takes about as long as the audio itself with a GPU, and many times longer without one. The first use downloads the *Mel-Band RoFormer (vocals)* model (457 MB) - the same one as *Isolate speech* in [Speech to text](speech-to-text.md). If the isolation fails, the original audio is aligned instead and the status line says so. A successful run also produces the speech-only waveform for the preview (see below).
-- **Check with speech-to-text** — also transcribes the audio with *Crisp ASR Parakeet* and checks every move against where the words were actually heard (see [Checking with speech-to-text](#checking-with-speech-to-text)). It adds a **Heard** column to the line list. Available for the 25 European languages Parakeet knows; the first use downloads the Parakeet v3 model (489 MB) unless one is already installed for [Speech to text](speech-to-text.md). A feature film takes a few minutes with a GPU. If the transcription fails, the alignment is still done, unchecked, and the status line says so.
+- **Check with speech-to-text** — also transcribes the audio with *Crisp ASR Parakeet*, syncs a subtitle that is further out than *Max shift* by the heard words first (see [Syncing first](#syncing-first)), and checks every move against where the words were actually heard (see [Checking with speech-to-text](#checking-with-speech-to-text)). It adds a **Heard** column to the line list. Available for the 25 European languages Parakeet knows; the first use downloads the Parakeet v3 model (489 MB) unless one is already installed for [Speech to text](speech-to-text.md). A feature film takes a few minutes with a GPU. If the transcription fails, the alignment is still done, unchecked, and the status line says so.
 - **Align** (bottom button bar, highlighted until there is a result) — extracts the audio and runs the aligner. Length is not a limit: the audio is processed in short windows of a few lines each, so long films use no more memory than short clips. **Cancel** stops a running alignment.
 
 ## Preview
@@ -54,6 +54,7 @@ One row per subtitle line, with the shift of its start and end in milliseconds a
 | Large move - listen, tick to apply | The line wants to move more than half a second while its neighbours stay put. The new time codes are the aligner's, but the row is **not ticked**: play ▶ Original and ▶ Aligned and tick it if the move is right. |
 | Confirmed by speech | A large move that speech-to-text heard starting where the aligner put it - ticked. Also used when the neighbours overruled the aligner but the speech sided with the aligner. |
 | Heard where it was | Speech-to-text heard the line where it already was, not where the aligner moved it. The aligner's time codes are offered **unticked**. |
+| Moved with the sync | The subtitle was synced first, and the aligner left this line where the sync put it - a line with no speech, one already in place after the sync, or one the aligner could not place. |
 | Already in place | The aligner agrees with the current time codes. |
 | No speech | Nothing to listen for - blank lines, `[sound descriptions]`, `(sighs)`, `♪`. These lines are never moved. |
 | Kept - shift too large | The start would have moved more than *Max shift*, so the line was left alone. |
@@ -86,6 +87,18 @@ The aligner is told the text and finds it; it cannot say when the text is not wh
 - Any other move of 0.4 s or more away from where the line was heard is marked *Heard where it was* and unticked.
 
 Speech-to-text word times are coarser than the aligner's, so they only ever choose between two positions - the new time codes are always the aligner's. A steady difference between the two (Parakeet marks words about 0.2 s earlier than the aligners do) is measured on the file and allowed for, and a line with less than half its words heard is not judged at all.
+
+## Syncing first
+
+A subtitle can be out of sync in three ways, and often in all of them at once:
+
+- a **constant offset** - everything seconds (or minutes) early or late;
+- a **drift** - the offset grows along the film, as when the subtitle was made for a different frame rate (25 vs 23.976 fps);
+- **jumps** - the offset changes at a point where a scene, a recap or an ad break is in one version and not the other.
+
+The aligner cannot fix these on its own, as it only looks near each line. So when *Check with speech-to-text* is on, the transcription is used first: distinctive words and word pairs that occur in both the subtitle and the transcription are paired up and kept only where they agree on the order. Every line with such pairs gives an offset, offsets that disagree with the lines round them are dropped as mismatches, and the rest are smoothed - following a drift, keeping a jump sharp. Lines in between get an offset from the lines round them. When that shows the subtitle is further out than *Max shift* somewhere, every line is moved by its offset and the aligner then fine-tunes from there; the summary starts with how far the subtitle was out at the start and at the end. A subtitle already within *Max shift* is not touched by this.
+
+Because it matches words rather than speech and silence, a large offset cannot pile the lines up at the start of the film, as purely acoustic sync tools sometimes do. It needs the subtitle to be in the spoken language; if too few of its words are found, nothing is synced.
 
 If speech-to-text hears less than 30% of the subtitle's words, the status line asks whether the subtitle is in the spoken language: a translation cannot be aligned - neither the aligner nor speech-to-text can find its words in the audio.
 
