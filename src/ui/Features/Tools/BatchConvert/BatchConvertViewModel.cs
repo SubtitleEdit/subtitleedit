@@ -11,6 +11,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.UiLogic.Translate;
 using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Features.Edit.MultipleReplace;
@@ -1631,6 +1632,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         }
 
         if (item.Format == BatchConverter.FormatBluRaySup ||
+            item.Format == BatchConverter.FormatHdDvdSup ||
             item.Format == BatchConverter.FormatBdnXml ||
             item.Format == BatchConverter.FormatVobSub)
         {
@@ -2291,6 +2293,10 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         if (ext == ".sup" && FileUtil.IsBluRaySup(fileName))
         {
             format = BatchConverter.FormatBluRaySup;
+        }
+        else if (ext == ".sup" && HdDvdSupParser.IsHdDvdSup(fileName))
+        {
+            format = BatchConverter.FormatHdDvdSup;
         }
 
         if (ext == ".sub" && FileUtil.IsVobSub(fileName))

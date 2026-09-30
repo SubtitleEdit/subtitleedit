@@ -58,6 +58,35 @@ internal static class BitmapSubtitleLoader
     }
 
     /// <summary>
+    /// HD-DVD .sup file → bitmap events. The stream carries no frame size; HD-DVD video is
+    /// always 1920x1080.
+    /// </summary>
+    public static IReadOnlyList<BitmapSubtitleItem> LoadHdDvdSup(string filePath)
+    {
+        var pictures = HdDvdSupParser.Parse(filePath);
+        if (pictures.Count == 0)
+        {
+            throw new InvalidOperationException($"No HD-DVD sup subtitles found in: {filePath}");
+        }
+
+        var items = new List<BitmapSubtitleItem>(pictures.Count);
+        foreach (var picture in pictures)
+        {
+            // ImagePosition is only filled in by GetBitmap - read it after decoding.
+            var bmp = picture.GetBitmap();
+            items.Add(new BitmapSubtitleItem(
+                new TimeCode(picture.StartTime.TotalMilliseconds),
+                new TimeCode(picture.EndTime.TotalMilliseconds),
+                bmp,
+                1920,
+                1080,
+                picture.ImagePosition));
+        }
+
+        return items;
+    }
+
+    /// <summary>
     /// MKV PGS track (S_HDMV/PGS) → bitmap events. PGS-in-MKV is the same PCS payload
     /// as a .sup file, just wrapped in Matroska block timing.
     /// </summary>

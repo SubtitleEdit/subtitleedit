@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Core.VobSub;
 using Spectre.Console;
 
 namespace SeConv.Core;
@@ -97,6 +98,11 @@ internal static class ContainerSubtitleLoader
 
         if (ext == ".sup")
         {
+            if (HdDvdSupParser.IsHdDvdSup(filePath))
+            {
+                return LoadHdDvdSup(filePath, options);
+            }
+
             return LoadBluRaySup(filePath, options);
         }
 
@@ -555,6 +561,16 @@ internal static class ContainerSubtitleLoader
         if (subtitle.Paragraphs.Count == 0)
         {
             throw new InvalidOperationException($"No subtitles recognised in Blu-Ray sup file: {filePath}");
+        }
+        return [new LoadedTrack(subtitle, new SubRip(), string.Empty, null)];
+    }
+
+    private static List<LoadedTrack> LoadHdDvdSup(string filePath, ConversionOptions options)
+    {
+        var subtitle = ImageOcrLoader.LoadHdDvdSup(filePath, options);
+        if (subtitle.Paragraphs.Count == 0)
+        {
+            throw new InvalidOperationException($"No subtitles recognised in HD-DVD sup file: {filePath}");
         }
         return [new LoadedTrack(subtitle, new SubRip(), string.Empty, null)];
     }

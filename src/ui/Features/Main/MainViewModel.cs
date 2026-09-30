@@ -24166,6 +24166,12 @@ public partial class MainViewModel :
                     return;
                 }
 
+                if (HdDvdSupParser.IsHdDvdSup(fileName))
+                {
+                    ImportAndOcrHdDvdSup(fileName, skipLoadVideo);
+                    return;
+                }
+
                 // PlayStation subs keep their png images inside the file.
                 if (ext == ".subs")
                 {
@@ -24938,6 +24944,19 @@ public partial class MainViewModel :
         Dispatcher.UIThread.Post(async () =>
         {
             var result = await ShowDialogAsync<OcrWindow, OcrViewModel>(vm => { vm.InitializeSpDvdSup(fileName); });
+
+            if (result.OkPressed)
+            {
+                await FinishOcrImportAsync(fileName, result.OcredSubtitle, skipLoadVideo: skipLoadVideo);
+            }
+        });
+    }
+
+    private void ImportAndOcrHdDvdSup(string fileName, bool skipLoadVideo = false)
+    {
+        Dispatcher.UIThread.Post(async () =>
+        {
+            var result = await ShowDialogAsync<OcrWindow, OcrViewModel>(vm => { vm.InitializeHdDvdSup(fileName); });
 
             if (result.OkPressed)
             {

@@ -60,6 +60,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     public static readonly string FormatDostImage = "DOST/image";
     public static readonly string FormatEbuStl = new Ebu().Name;
     public const string FormatFcpImage = "FCP/image";
+    public const string FormatHdDvdSup = "HD-DVD sup";
     public const string FormatImagesWithTimeCodesInFileName = "Images with time codes in file name";
     public static readonly string FormatPac = new Pac().Name;
     public static readonly string FormatPacUnicode = new PacUnicode().Name;
@@ -184,6 +185,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             var log = new StringBuilder();
             var pcsData = BluRaySupParser.ParseBluRaySup(item.FileName, log);
             imageSubtitle = new OcrSubtitleBluRay(pcsData);
+        }
+        else if (item.Format == FormatHdDvdSup)
+        {
+            imageSubtitle = new OcrSubtitleHdDvdSup(item.FileName);
         }
         else if (item.Format == FormatBdnXml && item.Subtitle != null)
         {
