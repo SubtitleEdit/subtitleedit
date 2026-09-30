@@ -23724,7 +23724,8 @@ public partial class MainViewModel :
         _ocrImageSourceHolder.Source = null;
         _ocrImageSourceHolder.FileName = null;
 
-        // lower case: the checks below compare with ".vob", ".sup" etc., and DVD files are VTS_01_1.VOB
+        // Lower case: every check below compares with lower-case extensions, and DVD/Blu-ray rips
+        // are often upper case (MOVIE.SUP, 00001.M2TS) - those fell through to the text formats.
         var ext = Path.GetExtension(fileName).ToLowerInvariant();
         var fileSize = (long)0;
         try
@@ -23772,7 +23773,9 @@ public partial class MainViewModel :
                 // prompt below (a subtitle-less .mkv is still a video), matching the .mp4 path (#12171).
             }
 
-            if (ext == ".sup" && FileUtil.IsBluRaySup(fileName))
+            // by content too: a Blu-ray .sup saved as .sub fell through to the text formats
+            if ((ext == ".sup" && FileUtil.IsBluRaySup(fileName)) ||
+                (ext != ".sup" && fileSize > 13 && FileUtil.IsBluRaySupByContent(fileName)))
             {
                 var log = new StringBuilder();
                 var subtitles = BluRaySupParser.ParseBluRaySup(fileName, log);
@@ -23834,6 +23837,12 @@ public partial class MainViewModel :
             }
 
             if (ext == ".mxf" && fileSize > 100 && await ImportSubtitleFromMxf(fileName, skipLoadVideo))
+            {
+                return;
+            }
+
+            // PSP UMD Video (.MPS) and PSP movies (.PMF), and ".subs" dumps of their subtitles
+            if ((ext == ".mps" || ext == ".pmf" || ext == ".subs") && fileSize > 100 && await ImportUmdVideoSubtitles(fileName, skipLoadVideo))
             {
                 return;
             }
@@ -24192,19 +24201,6 @@ public partial class MainViewModel :
                 {
                     ImportAndOcrHdDvdSup(fileName, skipLoadVideo);
                     return;
-                }
-
-                // PlayStation subs keep their png images inside the file.
-                if (ext == ".subs")
-                {
-                    var playStationSubs = new PlayStationSubs();
-                    if (playStationSubs.IsMine(null, fileName))
-                    {
-                        var playStationSubtitle = new Subtitle();
-                        playStationSubs.LoadSubtitle(playStationSubtitle, null, fileName);
-                        ImportAndOcrBinaryParagraphList(fileName, playStationSubs, playStationSubtitle, skipLoadVideo);
-                        return;
-                    }
                 }
 
                 subtitle = NonRegisteredFormatLoader.TryLoadAribB36(fileName);
@@ -24870,6 +24866,52 @@ public partial class MainViewModel :
                 await FinishOcrImportAsync(fileName, result.OcredSubtitle, skipLoadVideo: skipLoadVideo);
             }
         });
+    }
+
+    /// <summary>
+    /// PSP UMD Video subtitles: png images per sub-stream, picked when there are several, then OCR.
+    /// </summary>
+    /// <returns>True if subtitles were found (also when the track picker was cancelled)</returns>
+    private async Task<bool> ImportUmdVideoSubtitles(string fileName, bool skipLoadVideo)
+    {
+        ShowStatus(string.Format(Se.Language.General.ParsingXDotDotDot, fileName));
+        SortedDictionary<int, List<UmdVideoSubtitle>> tracks;
+        try
+        {
+            tracks = await Task.Run(() => UmdVideoSubtitleReader.Read(fileName));
+        }
+        catch (Exception e)
+        {
+            SeLogger.Error(e, "Error while reading PSP UMD Video subtitles from " + fileName);
+            return false;
+        }
+        finally
+        {
+            ShowStatus(string.Empty);
+        }
+
+        if (tracks.Count == 0)
+        {
+            return false;
+        }
+
+        var pictures = tracks.First().Value;
+        if (tracks.Count > 1)
+        {
+            var result = await ShowDialogAsync<PickTsTrackWindow, PickTsTrackViewModel>(vm => vm.InitializeUmdVideo(tracks, fileName));
+            if (!result.OkPressed || result.SelectedTrack == null || !tracks.TryGetValue(result.SelectedTrack.TrackNumber, out pictures))
+            {
+                return true; // picker cancelled
+            }
+        }
+
+        var ocrResult = await ShowDialogAsync<OcrWindow, OcrViewModel>(vm => { vm.InitializeUmdVideo(pictures, fileName); });
+        if (ocrResult.OkPressed)
+        {
+            await FinishOcrImportAsync(fileName, ocrResult.OcredSubtitle, skipLoadVideo: skipLoadVideo);
+        }
+
+        return true;
     }
 
     private void ImportAndOcrHdDvdSup(string fileName, bool skipLoadVideo = false)

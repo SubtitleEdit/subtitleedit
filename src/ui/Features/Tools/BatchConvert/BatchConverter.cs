@@ -5,6 +5,7 @@ using Nikse.SubtitleEdit.Features.Assa.ResolutionResampler;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
+using Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Enums;
@@ -62,6 +63,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     public static readonly string FormatEbuStl = new Ebu().Name;
     public const string FormatFcpImage = "FCP/image";
     public const string FormatHdDvdSup = "HD-DVD sup";
+    public const string FormatUmdVideo = "PSP UMD Video";
     public const string FormatImagesWithTimeCodesInFileName = "Images with time codes in file name";
     public static readonly string FormatPac = new Pac().Name;
     public static readonly string FormatPacUnicode = new PacUnicode().Name;
@@ -186,6 +188,16 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             var log = new StringBuilder();
             var pcsData = BluRaySupParser.ParseBluRaySup(item.FileName, log);
             imageSubtitle = new OcrSubtitleBluRay(pcsData);
+        }
+        else if (item.Format == FormatUmdVideo)
+        {
+            // one item per subtitle stream - TrackNumber is its sub-stream id
+            var tracks = UmdVideoSubtitleReader.Read(item.FileName);
+            if (int.TryParse(item.TrackNumber, NumberStyles.Integer, CultureInfo.InvariantCulture, out var subStreamId) &&
+                tracks.TryGetValue(subStreamId, out var pictures))
+            {
+                imageSubtitle = new OcrSubtitleUmdVideo(pictures);
+            }
         }
         else if (item.Format == FormatHdDvdSup)
         {

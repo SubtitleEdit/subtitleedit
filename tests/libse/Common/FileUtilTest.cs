@@ -142,4 +142,18 @@ public class FileUtilTest
             File.Delete(path);
         }
     }
+
+    /// <summary>
+    /// A Blu-ray .sup saved under another extension (.sub) is recognised by its content - the
+    /// segment chain, not just the two "PG" bytes, which also start plenty of text files.
+    /// </summary>
+    [Fact]
+    public void IsBluRaySupByContentNeedsASegmentChain()
+    {
+        var sup = File.ReadAllBytes(Path.Combine(Directory.GetCurrentDirectory(), "Files", "sample_BDSUP_multi_image.sup"));
+        WithTempFile(sup, path => Assert.True(FileUtil.IsBluRaySupByContent(path)));
+        WithTempFile(Encoding.ASCII.GetBytes("PG-13 rated, 1" + Environment.NewLine + "00:00:01,000 --> 00:00:02,000" + Environment.NewLine + "Hi"),
+            path => Assert.False(FileUtil.IsBluRaySupByContent(path)));
+        WithTempFile(sup.Take(14).ToArray(), path => Assert.False(FileUtil.IsBluRaySupByContent(path)));
+    }
 }

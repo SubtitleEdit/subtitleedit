@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
+using Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
@@ -91,6 +92,26 @@ internal static class BitmapSubtitleLoader
     /// text, black outline). The stream carries no frame size, so pick the DVD standard
     /// from the display areas (720x576 PAL / 720x480 NTSC).
     /// </summary>
+    /// <summary>
+    /// One PSP UMD Video subtitle stream → bitmap events on the 720x480 UMD video frame.
+    /// </summary>
+    public static IReadOnlyList<BitmapSubtitleItem> LoadUmdVideo(List<UmdVideoSubtitle> pictures)
+    {
+        var items = new List<BitmapSubtitleItem>(pictures.Count);
+        foreach (var picture in pictures)
+        {
+            items.Add(new BitmapSubtitleItem(
+                new TimeCode(picture.StartTime.TotalMilliseconds),
+                new TimeCode(picture.EndTime.TotalMilliseconds),
+                picture.GetBitmap() ?? new SKBitmap(1, 1),
+                UmdVideoSubtitle.ScreenWidth,
+                UmdVideoSubtitle.ScreenHeight,
+                new SKPointI(picture.X, picture.Y)));
+        }
+
+        return items;
+    }
+
     public static IReadOnlyList<BitmapSubtitleItem> LoadSpDvdSup(string filePath)
     {
         var headers = SpDvdSupParser.Parse(filePath);

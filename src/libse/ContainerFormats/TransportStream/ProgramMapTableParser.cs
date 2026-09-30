@@ -219,7 +219,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             return null;
         }
 
-        private static bool IsVideoStreamType(int streamType)
+        public static bool IsVideoStreamType(int streamType)
         {
             switch (streamType)
             {
@@ -233,6 +233,36 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 case 0x42: // AVS
                 case 0xD1: // Dirac
                 case 0xEA: // VC-1
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// Audio stream types of MPEG-TS/ATSC and Blu-ray. 0x06 (private data, DVB AC-3 and the
+        /// like) needs its descriptors or payload to tell, and 0x82 is DTS on Blu-ray but SCTE 27
+        /// subtitles in ATSC, so a caller must rule out subtitle PIDs.
+        /// </summary>
+        public static bool IsAudioStreamType(int streamType)
+        {
+            switch (streamType)
+            {
+                case 0x03: // MPEG-1 audio
+                case 0x04: // MPEG-2 audio
+                case 0x0F: // AAC (ADTS)
+                case 0x11: // AAC (LATM)
+                case 0x1C: // MPEG-4 audio
+                case 0x80: // Blu-ray LPCM
+                case 0x81: // AC-3
+                case 0x82: // DTS (Blu-ray)
+                case 0x83: // Dolby TrueHD
+                case 0x84: // E-AC-3 (Blu-ray)
+                case 0x85: // DTS-HD
+                case 0x86: // DTS-HD MA
+                case 0x87: // E-AC-3 (ATSC)
+                case 0xA1: // E-AC-3 secondary audio
+                case 0xA2: // DTS-HD secondary audio
                     return true;
                 default:
                     return false;

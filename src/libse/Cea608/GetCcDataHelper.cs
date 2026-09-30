@@ -489,7 +489,7 @@ namespace Nikse.SubtitleEdit.Core.Cea608
             return result;
         }
 
-        private static void AddCcTriplets(ReadOnlySpan<byte> buffer, int pos, int count, List<CcData> fieldData)
+        internal static void AddCcTriplets(ReadOnlySpan<byte> buffer, int pos, int count, List<CcData> fieldData)
         {
             var end = pos + count * 3;
             for (var i = pos; i < end && i + 2 < buffer.Length; i += 3)

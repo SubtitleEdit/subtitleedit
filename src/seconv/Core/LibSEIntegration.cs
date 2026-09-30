@@ -321,6 +321,12 @@ internal static class LibSEIntegration
                 totalRead += n;
             }
 
+            var utf16 = LanguageAutoDetect.GetUtf16WithoutByteOrderMark(totalRead == buffer.Length ? buffer : buffer.AsSpan(0, totalRead).ToArray());
+            if (utf16 != null)
+            {
+                return utf16;
+            }
+
             if (LooksLikeUtf8(buffer, totalRead))
             {
                 return Encoding.UTF8;

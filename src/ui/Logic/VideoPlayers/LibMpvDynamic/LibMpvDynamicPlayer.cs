@@ -1872,6 +1872,29 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         }
     }
 
+    /// <summary>
+    /// Whether the timeline starts at the file's first time stamp ("rebase-start-time=yes") rather
+    /// than at its raw time stamps (#9828). Only transport streams: their clock starts anywhere -
+    /// hours in for a broadcast recording - and subtitles read from them count from the file's
+    /// start, as ffmpeg, mkvmerge and other players do. Everything else keeps its own time stamps.
+    /// </summary>
+    internal static bool UseFileStartAsZero(string path)
+    {
+        if (string.IsNullOrEmpty(path) || path.Contains("://", StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        try
+        {
+            return File.Exists(path) && (FileUtil.IsTransportStream(path) || FileUtil.IsM2TransportStream(path));
+        }
+        catch
+        {
+            return false; // unreadable - mpv reports the error when it opens it
+        }
+    }
+
     public async Task LoadFile(string path, double startPositionSeconds = 0)
     {
         EnsureNotDisposed();
@@ -1954,6 +1977,9 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         // without ever undoing a sub-add that got in first.
         SetOptionString("sid", "no");
 
+        // Also before loadfile - the demuxer reads it when it opens the file. See UseFileStartAsZero.
+        SetOptionString("rebase-start-time", UseFileStartAsZero(path) ? "yes" : "no");
+
         // Long local paths get the "\\?\" prefix on Windows: mpv opens the file with the path
         // as given, and a plain path past MAX_PATH fails silently - no error, duration 0:00,
         // Play does nothing (#14407). _fileName keeps the path the caller knows.
@@ -1976,7 +2002,6 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         SetOptionString("keep-open", "always");
 
         SetOptionString("hr-seek", "yes");
-        SetOptionString("rebase-start-time", "no");
 
         ApplySubtitleMarginArea();
         ApplySubtitleJustify();

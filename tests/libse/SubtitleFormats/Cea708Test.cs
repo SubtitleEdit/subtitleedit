@@ -288,6 +288,22 @@ public class Cea708Test
 
     private static byte[] Ascii(string text) => System.Text.Encoding.ASCII.GetBytes(text);
 
+    /// <summary>
+    /// SetPenLocation skipping columns on the same row leaves blank cells - a space in the text
+    /// (a CEA-608 upconvert places words after mid-row codes this way).
+    /// </summary>
+    [Fact]
+    public void DecodePenLocationSkippingColumnsIsSpace()
+    {
+        Assert.Equal("you were", DecodeWithHideWindows(HiddenWindow, Ascii("you"), new byte[] { 0x92, 0x00, 0x04 }, Ascii("were")));
+    }
+
+    [Fact]
+    public void DecodePenLocationRightAfterTextAddsNoSpace()
+    {
+        Assert.Equal("youwere", DecodeWithHideWindows(HiddenWindow, Ascii("you"), new byte[] { 0x92, 0x00, 0x03 }, Ascii("were")));
+    }
+
     [Fact]
     public void DecodeBackspaceErasesLastChar()
     {

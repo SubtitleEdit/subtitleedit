@@ -275,6 +275,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
             AddExt(existingTypes, extensions, ".1sd");
             AddExt(existingTypes, extensions, ".2sd");
             AddExt(existingTypes, extensions, ".prproj");
+            AddExt(existingTypes, extensions, ".subs"); // PSP UMD Video subtitle dump
 
             if (includeVideoFiles)
             {
@@ -283,6 +284,8 @@ namespace Nikse.SubtitleEdit.Logic.Media
                 AddExt(existingTypes, extensions, ".ts");
                 AddExt(existingTypes, extensions, ".mxf");
                 AddExt(existingTypes, extensions, ".sup");
+                AddExt(existingTypes, extensions, ".mps"); // PSP UMD Video
+                AddExt(existingTypes, extensions, ".pmf"); // PSP movie
             }
 
             return extensions;
