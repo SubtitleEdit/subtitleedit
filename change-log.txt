@@ -3,6 +3,31 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-beta17 (30th of September 2026)
+
+* Add reading of EZTitles binary project files (.ezt), with italic, color and alignment
+* Add reading of CEA-608 closed captions from DVD .vob / program stream .mpg video
+* Add export of the shot changes list to a file
+* Add "Check with speech-to-text" to Improve time codes: confirm or undo the aligner's large moves and first sync subtitles that are seconds off or drifting
+* Add "Move to category" on the Multiple replace rule context menu - thx Shae-Clark
+* Remux video: embed subtitles as A/53 CEA-608 closed captions in .mpg - thx MaxBunny1786
+* Open the load-only text formats again from File > Open and Batch convert (SE 4 parity)
+* Open Adobe Premiere projects (.prproj), ARIB STD-B36 files and image-list subtitle files for OCR again (SE 4 parity)
+* seconv: add DVD sup and IMSC image outputs, and refuse formats that can only be read
+* Subtitle grid: keep the error color visible on the selected row - thx Ingo
+* Improve performance of opening large non-subtitle files, VobSub reading, auto-translate, fix names and more
+* Fix transport stream subtitle reading (PGS in .ts, multi-program timing, PTS wrap, partial DVB pages, teletext without PTS, CEA-708 Korean)
+* Fix EZTitles XML: decode cues with the time code standard, not the video frame rate
+* Fix IMSC image export: write the PNGs as files
+* Fix Merge: keep line breaks when merging with an empty line - thx maknol
+* Fix waveform taking focus on mouse over while the window is inactive - thx mariajuferreira1958-creator
+* Fix Linux: startup could hang on fonts without a family name
+* Fix PAC code-page detection (Greek, Thai, short English lines), Cut video of .ts/.mpg/.vob ranges and more from a bug hunt
+* Update French translation - thx Need74
+* Update Korean translation - thx 12si27
+
+-----------------------------------------------------------------------------------------------------
+
 v5.3.0-beta16 (29th of September 2026)
 
 * Add reading of CEA-608/708 closed captions from video in .ts, .mkv, H.265 .mp4, fragmented .mp4 and .mxf (SMPTE 436M) files
