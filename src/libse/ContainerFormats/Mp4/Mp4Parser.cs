@@ -618,13 +618,17 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             }
         }
 
+        private const double MissingMoovVideoTimeScale = 90000.0;
+
         private void CheckForTrunCea608()
         {
             try
             {
                 // Fragment ticks are media-track times, so prefer the video track's mdhd
-                // timescale; the movie (mvhd) timescale is only a fallback.
-                double timeScale = Moov?.Mvhd?.TimeScale ?? 1000.0;
+                // timescale; the movie (mvhd) timescale is only a fallback. A bare media
+                // segment without its init segment (no moov) has neither, so assume the
+                // 90 kHz MPEG clock that DASH/HLS video uses - 1000 made every time ~90x too large.
+                double timeScale = Moov == null ? MissingMoovVideoTimeScale : Moov.Mvhd?.TimeScale ?? 1000.0;
                 var videoTrack = GetVideoTracks().FirstOrDefault();
                 if (videoTrack?.Mdia?.Mdhd?.TimeScale > 0)
                 {

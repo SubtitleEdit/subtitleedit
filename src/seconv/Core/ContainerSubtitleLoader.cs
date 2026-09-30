@@ -318,23 +318,7 @@ internal static class ContainerSubtitleLoader
         // number is the caption track key: 1-4 = CC1-CC4, 100 + n = CEA-708 service n.
         if (subtitleTexts.Count == 0 && parser.ClosedCaptionTracks.Count > 0)
         {
-            var captionTracks = new List<LoadedTrack>();
-            foreach (var captionTrack in parser.ClosedCaptionTracks)
-            {
-                if (options.TrackNumbers.Count > 0 && !options.TrackNumbers.Contains(captionTrack.Key))
-                {
-                    continue;
-                }
-
-                var subtitle = new Subtitle();
-                subtitle.Paragraphs.AddRange(captionTrack.Value);
-                subtitle.Renumber();
-                var trackName = captionTrack.Key > ClosedCaptionExtractor.Cea708TrackKeyOffset
-                    ? $"cea708_s{captionTrack.Key - ClosedCaptionExtractor.Cea708TrackKeyOffset}"
-                    : $"cea608_cc{captionTrack.Key}";
-                captionTracks.Add(new LoadedTrack(subtitle, new SubRip(), trackName, captionTrack.Key));
-            }
-
+            var captionTracks = GetClosedCaptionTracks(parser.ClosedCaptionTracks, options);
             if (captionTracks.Count > 0)
             {
                 return captionTracks;
@@ -599,12 +583,45 @@ internal static class ContainerSubtitleLoader
             tracks.Add(new LoadedTrack(subtitle, new SubRip(), GetMp4TrackLanguage(track, subtitle), trackId, isForced));
         }
 
+        // CEA-608/708 closed captions in the video track's SEI (or a QuickTime c608 track) -
+        // the parser only decodes them when the file has no subtitle track, as the GUI does.
+        if (tracks.Count == 0 && parser.ClosedCaptionTracks.Count > 0 && !options.ForcedOnly)
+        {
+            tracks.AddRange(GetClosedCaptionTracks(parser.ClosedCaptionTracks, options));
+        }
+
         if (tracks.Count == 0)
         {
             throw new InvalidOperationException(
                 $"No subtitle tracks in MP4 file: {filePath}. Subtitles burned into the picture are not a track and cannot be extracted.");
         }
         return tracks;
+    }
+
+    /// <summary>
+    /// One track per decoded closed caption channel. The key is the track number: 1-4 =
+    /// CC1-CC4, 100 + n = CEA-708 service n (see <see cref="ClosedCaptionExtractor"/>).
+    /// </summary>
+    private static List<LoadedTrack> GetClosedCaptionTracks(SortedDictionary<int, List<Nikse.SubtitleEdit.Core.Common.Paragraph>> closedCaptionTracks, ConversionOptions options)
+    {
+        var captionTracks = new List<LoadedTrack>();
+        foreach (var captionTrack in closedCaptionTracks)
+        {
+            if (options.TrackNumbers.Count > 0 && !options.TrackNumbers.Contains(captionTrack.Key))
+            {
+                continue;
+            }
+
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.AddRange(captionTrack.Value);
+            subtitle.Renumber();
+            var trackName = captionTrack.Key > ClosedCaptionExtractor.Cea708TrackKeyOffset
+                ? $"cea708_s{captionTrack.Key - ClosedCaptionExtractor.Cea708TrackKeyOffset}"
+                : $"cea608_cc{captionTrack.Key}";
+            captionTracks.Add(new LoadedTrack(subtitle, new SubRip(), trackName, captionTrack.Key));
+        }
+
+        return captionTracks;
     }
 
     /// <summary>

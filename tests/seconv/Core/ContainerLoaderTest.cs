@@ -143,6 +143,33 @@ public class ContainerLoaderTest : IDisposable
     }
 
     [Fact]
+    public async Task ConvertAsync_Mp4WithCea608And708InVideo_ProducesSrtPerCaptionTrack()
+    {
+        // H.264 SEI captions are not a subtitle track; the MP4 loader used to report
+        // "No subtitle tracks" although the parser had decoded them (the GUI offered them).
+        var input = Fixtures.Path("container_cea608_708.mp4");
+        Assert.True(File.Exists(input), $"Fixture missing: {input}");
+        var outputFolder = Path.Combine(_tempRoot, "out");
+        Directory.CreateDirectory(outputFolder);
+
+        var converter = new SubtitleConverter();
+        var result = await converter.ConvertAsync(new ConversionOptions
+        {
+            Patterns = [input],
+            Format = "SubRip",
+            OutputFolder = outputFolder,
+            Overwrite = true,
+        });
+
+        Assert.True(result.Success, string.Join("; ", result.Errors));
+        var outputs = Directory.GetFiles(outputFolder, "*.srt");
+        Assert.Contains(outputs, p => Path.GetFileName(p).Contains("cea608_cc1"));
+        Assert.Contains(outputs, p => Path.GetFileName(p).Contains("cea708_s1"));
+        var cc1 = await File.ReadAllTextAsync(outputs.First(p => Path.GetFileName(p).Contains("cea608_cc1")), TestContext.Current.CancellationToken);
+        Assert.Contains("inaudible radio chatter", cc1);
+    }
+
+    [Fact]
     public async Task ConvertAsync_Mp4WithoutUsableTrack_ReportsNoSubtitleTracks()
     {
         var input = Fixtures.Path("container_text.mp4");
