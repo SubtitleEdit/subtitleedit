@@ -176,4 +176,48 @@ public class DoAutoTranslateTests
             Assert.Equal(5, rows.Count);
         }
     }
+
+    [Fact]
+    public async Task LineRejectedEveryTime_FailsWithTheEnginesReason()
+    {
+        // llama.cpp reports a reply that echoed the source as no translation, with the reason in
+        // Error - seconv only shows the exception message, so the reason has to be in it.
+        var translator = new FakeTranslator();
+        translator.Translation = _ =>
+        {
+            translator.Error = "The model returned the English source text untranslated";
+            return string.Empty;
+        };
+        var doAutoTranslate = new DoAutoTranslate();
+
+        var exception = await Assert.ThrowsAsync<Exception>(() => doAutoTranslate.DoTranslate(
+            MakeSubtitle(3),
+            new TranslationPair("English", "en"),
+            new TranslationPair("Danish", "da"),
+            translator,
+            CancellationToken.None));
+
+        Assert.Contains("returned no translation for line 1", exception.Message);
+        Assert.Contains("untranslated", exception.Message);
+    }
+
+    [Fact]
+    public async Task MergedRequestRejected_FallsBackToSingleLines()
+    {
+        // TranslateGemma 12B echoes merged blocks but translates the same lines one at a time:
+        // a rejected merged request must end with every line translated, not with an error.
+        var translator = new FakeTranslator { Translation = text => text.Contains('\n') ? string.Empty : "X" + text };
+        var doAutoTranslate = new DoAutoTranslate();
+        const int lineCount = 6;
+
+        var rows = await doAutoTranslate.DoTranslate(
+            MakeSubtitle(lineCount),
+            new TranslationPair("English", "en"),
+            new TranslationPair("Danish", "da"),
+            translator,
+            CancellationToken.None);
+
+        Assert.Equal(lineCount, rows.Count);
+        Assert.All(rows, row => Assert.StartsWith("X", row.TranslatedText));
+    }
 }

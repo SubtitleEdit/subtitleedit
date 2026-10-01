@@ -56,7 +56,8 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
         var stripped = StrippedLine.Strip(text.Trim());
         var lines = new List<LlamaCppAdvancedProtocol.BatchLine> { new(1, stripped.Text) };
         var map = await TranslateLinesAsync(lines, new List<LlamaCppAdvancedProtocol.HistoryPair>(), sourceLanguageCode, targetLanguageCode, cancellationToken);
-        return map.TryGetValue(1, out var translation) && translation.Length > 0
+        return map.TryGetValue(1, out var translation) && translation.Length > 0 &&
+               FindUntranslatedEcho(map, lines, sourceLanguageCode, targetLanguageCode) < 0
             ? stripped.Restore(translation)
             : string.Empty;
     }
@@ -109,7 +110,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
         // translation, so the single-line case - including bisection retries - goes context-free.
         var history = count > 1 ? CollectHistory(rows, index) : new List<LlamaCppAdvancedProtocol.HistoryPair>();
         var map = await TranslateLinesAsync(lines, history, sourceLanguageCode, targetLanguageCode, cancellationToken);
-        if (IsComplete(map, lines))
+        if (IsComplete(map, lines) && FindUntranslatedEcho(map, lines, sourceLanguageCode, targetLanguageCode) < 0)
         {
             // Runs on the background translation loop; the rows are DataGrid-bound, so the
             // writes must happen on the UI thread.
@@ -162,15 +163,29 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
         }
 
         var map = new Dictionary<int, string>();
+        var echoed = false;
         for (var attempt = 0; attempt < 2 && !cancellationToken.IsCancellationRequested; attempt++)
         {
             try
             {
-                var reply = await client.ChatAsync(url, systemPrompt, userContent, responseFormat, cancellationToken, GetModel(), defaultMaxTokens);
+                // After an untranslated echo the retry runs a little warmer: at the same low
+                // temperature the same request tends to echo again.
+                var temperatureBump = echoed ? EchoRetryTemperatureBump : 0;
+                var reply = await client.ChatAsync(url, systemPrompt, userContent, responseFormat, cancellationToken, GetModel(), defaultMaxTokens, temperatureBump);
                 map = LlamaCppAdvancedProtocol.ParseTranslations(reply);
                 if (IsComplete(map, lines))
                 {
-                    return map;
+                    var echoedLine = FindUntranslatedEcho(map, lines, sourceLanguageCode, targetLanguageCode);
+                    if (echoedLine < 0)
+                    {
+                        return map;
+                    }
+
+                    // The model handed a line back in the source language (TranslateGemma 12B does
+                    // this). Not usable - retried here, then the caller bisects/fails the batch.
+                    echoed = true;
+                    Error = "line " + echoedLine + " came back untranslated (" + sourceLanguageCode + " source instead of " + targetLanguageCode + "): " + map[echoedLine];
+                    continue;
                 }
 
                 Error = DescribeUnusableReply(reply, client.ReplyFromReasoning);
@@ -235,6 +250,26 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
 
         history.Reverse();
         return history;
+    }
+
+    private const double EchoRetryTemperatureBump = 0.3;
+
+    /// <summary>
+    /// The number of the first line whose translation is just its source text again (see
+    /// <see cref="TranslationEchoGuard"/>), or -1 when there is none.
+    /// </summary>
+    internal static int FindUntranslatedEcho(Dictionary<int, string> map, List<LlamaCppAdvancedProtocol.BatchLine> lines, string sourceLanguageCode, string targetLanguageCode)
+    {
+        foreach (var line in lines)
+        {
+            if (map.TryGetValue(line.Number, out var translation) &&
+                TranslationEchoGuard.IsUntranslatedEcho(line.Text, translation, sourceLanguageCode, targetLanguageCode))
+            {
+                return line.Number;
+            }
+        }
+
+        return -1;
     }
 
     /// <summary>Every requested line number must be present, and non-empty for non-empty sources.</summary>
