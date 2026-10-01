@@ -39,6 +39,9 @@ public class EditRuleWindow : Window
         var radioButtonRegularExpression = UiUtil.MakeRadioButton(Se.Language.General.RegularExpression, vm, nameof(vm.IsRegularExpression));
         var radioButtonCaseSensitive = UiUtil.MakeRadioButton(Se.Language.General.CaseSensitive, vm, nameof(vm.IsCaseSensitive));
         var radioButtonCaseInsensitive = UiUtil.MakeRadioButton(Se.Language.General.CaseInsensitive, vm, nameof(vm.IsCaseInsensitive));
+        var checkBoxWholeWord = UiUtil.MakeCheckBox(Se.Language.Edit.Find.WholeWord, vm, nameof(vm.IsWholeWord))
+            .WithBindIsEnabled(nameof(vm.IsWholeWordEnabled));
+        checkBoxWholeWord.Margin = new Thickness(0, 5, 0, 0);
         var panelType = new StackPanel
         {
             Orientation = Orientation.Vertical,
@@ -47,7 +50,8 @@ public class EditRuleWindow : Window
             {
                 radioButtonRegularExpression,
                 radioButtonCaseSensitive,
-                radioButtonCaseInsensitive
+                radioButtonCaseInsensitive,
+                checkBoxWholeWord,
             }
         };
 

@@ -7,6 +7,12 @@ public class MultipleReplaceRule
     public string Description { get; set; } 
     public bool Active { get; set; } = false;
     public MultipleReplaceType Type { get; set; }
+
+    /// <summary>
+    /// Only match the find text as a whole word (not inside a longer word) - ignored for
+    /// regular expressions, which can use \b themselves (#15510).
+    /// </summary>
+    public bool WholeWord { get; set; }
     
     public MultipleReplaceRule() 
     { 

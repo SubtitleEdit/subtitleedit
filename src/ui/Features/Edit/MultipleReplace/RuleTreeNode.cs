@@ -16,6 +16,7 @@ public partial class RuleTreeNode : ObservableObject
     [ObservableProperty] private string _iconName;
     [ObservableProperty] private bool _isSelected;
     [ObservableProperty] private bool _isExpanded;
+    [ObservableProperty] private bool _wholeWord;
 
     /// <summary>
     /// Why this rule cannot run - currently only a regular expression that will not compile.
@@ -39,11 +40,22 @@ public partial class RuleTreeNode : ObservableObject
                 UpdateIconName();
                 OnPropertyChanged(nameof(Type));
                 OnPropertyChanged(nameof(SearchType));
+                OnPropertyChanged(nameof(CanUseWholeWord));
             }
         }
     }
 
     public RuleTreeNode? Parent { get; set; }
+
+    /// <summary>
+    /// "Whole word" applies to the plain text types only - a regular expression uses \b itself.
+    /// </summary>
+    public bool CanUseWholeWord => Type != MultipleReplaceType.RegularExpression;
+
+    /// <summary>
+    /// True when the rule should only match whole words when it runs.
+    /// </summary>
+    public bool IsWholeWordActive => WholeWord && CanUseWholeWord;
     
     public string SearchType 
     {
@@ -83,6 +95,7 @@ public partial class RuleTreeNode : ObservableObject
         IsActive = rule.Active;
         IsCategory = false;
         _type = rule.Type;
+        _wholeWord = rule.WholeWord;
         IconName = string.Empty;
         Parent = parent;
         UpdateIconName();

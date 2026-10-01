@@ -5,12 +5,12 @@ namespace Nikse.SubtitleEdit.Features.Edit.MultipleReplace;
 
 /// <summary>
 /// Exports multiple-replace rules to a portable CSV file.
-/// Columns: Category,Find,ReplaceWith,Description,Active,Type
+/// Columns: Category,Find,ReplaceWith,Description,Active,Type,WholeWord
 /// Values are RFC 4180 quoted so patterns containing commas, quotes or newlines round-trip.
 /// </summary>
 public static class CsvExporter
 {
-    public const string Header = "Category,Find,ReplaceWith,Description,Active,Type";
+    public const string Header = "Category,Find,ReplaceWith,Description,Active,Type,WholeWord";
 
     public static string Export(CategoryImportExportItem item)
     {
@@ -33,7 +33,8 @@ public static class CsvExporter
                     sb.Append(Escape(rule.ReplaceWith)).Append(',');
                     sb.Append(Escape(rule.Description)).Append(',');
                     sb.Append(rule.IsActive ? "true" : "false").Append(',');
-                    sb.Append(Escape(rule.Type)).Append("\r\n");
+                    sb.Append(Escape(rule.Type)).Append(',');
+                    sb.Append(rule.WholeWord ? "true" : "false").Append("\r\n");
                 }
             }
         }

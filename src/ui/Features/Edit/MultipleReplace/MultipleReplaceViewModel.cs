@@ -58,6 +58,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
     // checked so a broken one is marked even in an unticked category, so this must not be the
     // compiled cache: see GetRegexError.
     private readonly ConcurrentDictionary<string, string?> _regExErrors;
+    private readonly ConcurrentDictionary<(string FindWhat, bool IgnoreCase), Regex> _wholeWordRegexes = new();
     private readonly Timer _timerReplace;
 
     /// <summary>
@@ -247,6 +248,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
                     Find = rule.Find,
                     ReplaceWith = rule.ReplaceWith,
                     Type = rule.Type,
+                    WholeWord = rule.WholeWord,
                 });
             }
         }
@@ -571,6 +573,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 Type = result.IsRegularExpression ? MultipleReplaceType.RegularExpression :
                     result.IsCaseSensitive ? MultipleReplaceType.CaseSensitive :
                     MultipleReplaceType.CaseInsensitive,
+                WholeWord = result.IsWholeWord,
             });
             node.SubNodes?.Add(rule);
             node.IsExpanded = true;
@@ -908,6 +911,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 node.Type = MultipleReplaceType.CaseInsensitive;
             }
 
+            node.WholeWord = result.IsWholeWord;
             _dirty = true;
         }
     }
@@ -931,6 +935,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 Find = node.Find,
                 ReplaceWith = node.ReplaceWith,
                 Type = node.Type,
+                WholeWord = node.WholeWord,
             }));
             _dirty = true;
         }
@@ -1337,6 +1342,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
             Type = result.IsRegularExpression ? MultipleReplaceType.RegularExpression :
                 result.IsCaseSensitive ? MultipleReplaceType.CaseSensitive :
                 MultipleReplaceType.CaseInsensitive,
+            WholeWord = result.IsWholeWord,
         });
     }
 
@@ -1372,7 +1378,19 @@ public partial class MultipleReplaceViewModel : ObservableObject
             var ruleHits = new List<ReplaceExpression>();
             foreach (var item in replaceExpressions)
             {
-                if (item.SearchType == ReplaceExpression.SearchCaseSensitive)
+                if (item.WholeWordRegex != null)
+                {
+                    if (item.WholeWordRegex.IsMatch(newText))
+                    {
+                        hit = true;
+                        ruleInfo = string.IsNullOrEmpty(ruleInfo) ? item.RuleInfo : $"{ruleInfo} + {item.RuleInfo}";
+                        ruleHits.Add(item);
+
+                        // An evaluator so the replacement is literal text - a "$" in it is not a group reference.
+                        newText = item.WholeWordRegex.Replace(newText, _ => item.ReplaceWith);
+                    }
+                }
+                else if (item.SearchType == ReplaceExpression.SearchCaseSensitive)
                 {
                     if (newText.Contains(item.FindWhat))
                     {
@@ -1497,6 +1515,11 @@ public partial class MultipleReplaceViewModel : ObservableObject
                     : $"Group name: {group.CategoryName} - Rule number: {ruleNumber}. {rule.Description}";
                 var mpi = new ReplaceExpression(findWhat, replaceWith, rule.SearchType, ruleInfo);
                 mpi.RuleTreeNode = rule;
+                if (rule.IsWholeWordActive)
+                {
+                    mpi.WholeWordRegex = GetWholeWordRegex(findWhat, mpi.SearchType != ReplaceExpression.SearchCaseSensitive);
+                }
+
                 replaceExpressions.Add(mpi);
             }
         }
@@ -1553,6 +1576,19 @@ public partial class MultipleReplaceViewModel : ObservableObject
             regex = null!;
             return false;
         }
+    }
+
+    /// <summary>
+    /// The regex a "Whole word" rule runs with: the escaped find text between word boundaries, so
+    /// "Zeyn" no longer matches inside "Zeynep" (#15510). Cached per find text and case setting.
+    /// </summary>
+    private Regex GetWholeWordRegex(string findWhat, bool ignoreCase)
+    {
+        return _wholeWordRegexes.GetOrAdd((findWhat, ignoreCase), static key =>
+            new Regex(RegexUtils.BuildWholeWordPattern(key.FindWhat),
+                // CultureInvariant: case-insensitive matching must not depend on the machine (tr-TR "I").
+                key.IgnoreCase ? RegexOptions.IgnoreCase | RegexOptions.CultureInvariant : RegexOptions.CultureInvariant,
+                RegexUtils.UserPatternMatchTimeout));
     }
 
     /// <summary>

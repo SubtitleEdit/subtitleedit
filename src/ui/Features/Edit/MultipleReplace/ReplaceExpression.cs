@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Features.Edit.MultipleReplace;
+﻿using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Features.Edit.MultipleReplace;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -17,6 +18,12 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int SearchType { get; set; }
         public string RuleInfo { get; set; }
         public RuleTreeNode? RuleTreeNode { get; set; }
+
+        /// <summary>
+        /// Set for a "Normal" or "CaseSensitive" rule with "Whole word" ticked: the find text,
+        /// escaped and wrapped in word boundaries, honouring the rule's case setting (#15510).
+        /// </summary>
+        public Regex? WholeWordRegex { get; set; }
 
         public ReplaceExpression(string findWhat, string replaceWith, string searchType, string ruleInfo)
         {

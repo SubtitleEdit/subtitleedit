@@ -15,7 +15,7 @@ public class FindWindow : Window
     public FindWindow(FindViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.General.Find;
+        Title = UiUtil.RemoveAccessKey(Se.Language.General.Find);
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         vm.Window = this;

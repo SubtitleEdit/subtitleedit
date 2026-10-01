@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Features.Edit.MultipleReplace;
 
 /// <summary>
 /// Imports multiple-replace rules from a CSV file written by <see cref="CsvExporter"/>.
-/// Expects the columns Category,Find,ReplaceWith,Description,Active,Type (a header row is
+/// Expects the columns Category,Find,ReplaceWith,Description,Active,Type[,WholeWord] (a header row is
 /// optional - columns are matched by name when present, otherwise by position). RFC 4180 quoting
 /// is honored so patterns with commas, quotes or newlines round-trip.
 /// </summary>
@@ -49,6 +49,7 @@ public static class CsvImporter
         var descIdx = hasHeader ? Col("Description", 3) : 3;
         var activeIdx = hasHeader ? Col("Active", 4) : 4;
         var typeIdx = hasHeader ? Col("Type", 5) : 5;
+        var wholeWordIdx = hasHeader ? Col("WholeWord", -1) : 6; // optional - older exports have no such column
 
         var byCategory = new Dictionary<string, CategoryImportExportItem.RuleImportExportCategory>(StringComparer.Ordinal);
         var order = new List<string>();
@@ -93,6 +94,7 @@ public static class CsvImporter
                 Description = Get(descIdx),
                 IsActive = ParseBool(Get(activeIdx)),
                 Type = ParseType(Get(typeIdx)),
+                WholeWord = ParseBool(Get(wholeWordIdx)),
             });
         }
 

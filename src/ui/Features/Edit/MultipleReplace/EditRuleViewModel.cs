@@ -11,9 +11,14 @@ public partial class EditRuleViewModel : ObservableObject
     [ObservableProperty] private string _findWhat;
     [ObservableProperty] private string _replaceWith;
     [ObservableProperty] private string _description;
-    [ObservableProperty] private bool _isRegularExpression;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsWholeWordEnabled))]
+    private bool _isRegularExpression;
     [ObservableProperty] private bool _isCaseSensitive;
     [ObservableProperty] private bool _isCaseInsensitive;
+    [ObservableProperty] private bool _isWholeWord;
+
+    public bool IsWholeWordEnabled => !IsRegularExpression;
 
     public Window? Window { get; set; }
 
@@ -36,6 +41,7 @@ public partial class EditRuleViewModel : ObservableObject
         FindWhat = node.Find;
         ReplaceWith = node.ReplaceWith;
         Description = node.Description;
+        IsWholeWord = node.WholeWord;
         if (node.Type == MultipleReplaceType.RegularExpression)
         {
             IsRegularExpression = true;
