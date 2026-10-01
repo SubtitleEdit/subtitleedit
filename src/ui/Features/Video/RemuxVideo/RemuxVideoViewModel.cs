@@ -34,9 +34,11 @@ public partial class RemuxVideoViewModel : ObservableObject
         ".mp4", ".mkv", ".mov", ".avi", ".webm", ".ts", ".mpg", ".mpeg", ".vob"
     };
 
+    // The input video is added as the default audio source, so every video container is an audio source too
     private static readonly HashSet<string> AllowedAudioExtensions = new(StringComparer.OrdinalIgnoreCase)
     {
-        ".mp3", ".aac", ".m4a", ".ac3", ".wav", ".mkv", ".mka", ".mp4"
+        ".mp3", ".aac", ".m4a", ".ac3", ".wav", ".mka",
+        ".mp4", ".mkv", ".mov", ".avi", ".webm", ".ts", ".mpg", ".mpeg", ".vob"
     };
 
     private static readonly HashSet<string> AllowedSubtitleExtensions = new(StringComparer.OrdinalIgnoreCase)
@@ -582,8 +584,8 @@ public partial class RemuxVideoViewModel : ObservableObject
         var selectedFiles = await _fileHelper.PickOpenFiles(
             Window,
             Se.Language.General.AudioFiles,
-            "Audio files (*.mp3, *.aac, *.m4a, *.ac3, *.wav, *.mkv, *.mka, *.mp4)",
-            new List<string> { "*.mp3", "*.aac", "*.m4a", "*.ac3", "*.wav", "*.mkv", "*.mka", "*.mp4" },
+            "Audio files (*.mp3, *.aac, *.m4a, *.ac3, *.wav, *.mka, *.mp4, *.mkv, *.mov, *.avi, *.webm, *.ts, *.mpg, *.mpeg, *.vob)",
+            new List<string> { "*.mp3", "*.aac", "*.m4a", "*.ac3", "*.wav", "*.mka", "*.mp4", "*.mkv", "*.mov", "*.avi", "*.webm", "*.ts", "*.mpg", "*.mpeg", "*.vob" },
             Se.Language.General.AllFiles,
             new List<string> { "*.*" });
 
@@ -963,7 +965,7 @@ public partial class RemuxVideoViewModel : ObservableObject
             var audioExt = Path.GetExtension(audioFile.FileName);
             if (!AllowedAudioExtensions.Contains(audioExt))
             {
-                await MessageBox.Show(Window, Se.Language.General.Error, $"Audio format '{audioExt}' is not supported (allowed: mp3, aac, m4a, ac3, wav, mkv, mka, mp4).", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                await MessageBox.Show(Window, Se.Language.General.Error, $"Audio format '{audioExt}' is not supported (allowed: mp3, aac, m4a, ac3, wav, mka, mp4, mkv, mov, avi, webm, ts, mpg, mpeg, vob).", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
         }
