@@ -49,23 +49,23 @@ public class LlamaCppAdvancedClient : IDisposable
         _httpClient.Timeout = TimeSpan.FromMinutes(15);
     }
 
-    public async Task<string> ChatAsync(string url, string systemPrompt, string userContent, string? responseFormatJson, CancellationToken cancellationToken, string? model = null, int defaultMaxTokens = -1)
+    public async Task<string> ChatAsync(string url, string systemPrompt, string userContent, string? responseFormatJson, CancellationToken cancellationToken, string? model = null, int defaultMaxTokens = -1, double temperatureBump = 0)
     {
         Error = string.Empty;
         ReplyFromReasoning = false;
 
-        var response = await PostAsync(url, BuildRequestJson(systemPrompt, userContent, responseFormatJson, model, defaultMaxTokens), cancellationToken);
+        var response = await PostAsync(url, BuildRequestJson(systemPrompt, userContent, responseFormatJson, model, defaultMaxTokens, temperatureBump), cancellationToken);
 
         // A stall is not a format rejection - retrying the same prompt with a looser format
         // would just burn another watchdog period, so only the format fallbacks run here.
         if (!response.ok && !response.stalled && responseFormatJson != null && !cancellationToken.IsCancellationRequested)
         {
-            response = await PostAsync(url, BuildRequestJson(systemPrompt, userContent, "{\"type\":\"json_object\"}", model, defaultMaxTokens), cancellationToken);
+            response = await PostAsync(url, BuildRequestJson(systemPrompt, userContent, "{\"type\":\"json_object\"}", model, defaultMaxTokens, temperatureBump), cancellationToken);
         }
 
         if (!response.ok && !response.stalled && responseFormatJson != null && !cancellationToken.IsCancellationRequested)
         {
-            response = await PostAsync(url, BuildRequestJson(systemPrompt, userContent, null, model, defaultMaxTokens), cancellationToken);
+            response = await PostAsync(url, BuildRequestJson(systemPrompt, userContent, null, model, defaultMaxTokens, temperatureBump), cancellationToken);
         }
 
         if (!response.ok)
@@ -89,7 +89,7 @@ public class LlamaCppAdvancedClient : IDisposable
     /// llama-server serves the single model it was started with, and sending one would only
     /// risk a mismatch). cache_prompt is llama.cpp-specific; other servers ignore it.
     /// </summary>
-    private static string BuildRequestJson(string systemPrompt, string userContent, string? responseFormatJson, string? model, int defaultMaxTokens)
+    private static string BuildRequestJson(string systemPrompt, string userContent, string? responseFormatJson, string? model, int defaultMaxTokens, double temperatureBump = 0)
     {
         using var stream = new System.IO.MemoryStream();
         using (var writer = new Utf8JsonWriter(stream))
@@ -103,7 +103,7 @@ public class LlamaCppAdvancedClient : IDisposable
             writer.WriteBoolean("stream", true);
             writer.WriteBoolean("cache_prompt", true);
 
-            WriteSampling(writer, defaultMaxTokens);
+            WriteSampling(writer, defaultMaxTokens, temperatureBump);
 
             if (responseFormatJson != null)
             {
@@ -135,9 +135,11 @@ public class LlamaCppAdvancedClient : IDisposable
     /// across batches ("the Chief" became three different Danish words in testing), while 0.0-0.2
     /// stayed consistent with no downside. max_tokens falls back to the caller's batch-derived
     /// cap so a looping model runs out of tokens (a retryable failed batch) instead of
-    /// generating until the context fills (#13830).
+    /// generating until the context fills (#13830). <paramref name="temperatureBump"/> raises the
+    /// temperature for a retry after the model echoed the source untranslated - the same request
+    /// at the same low temperature tends to echo again.
     /// </summary>
-    private static void WriteSampling(Utf8JsonWriter writer, int defaultMaxTokens)
+    private static void WriteSampling(Utf8JsonWriter writer, int defaultMaxTokens, double temperatureBump = 0)
     {
         var advanced = Se.Settings.AutoTranslate.LlamaCppAdvanced;
         var tools = Configuration.Settings.Tools;
@@ -145,6 +147,11 @@ public class LlamaCppAdvancedClient : IDisposable
         var temperature = advanced.Temperature >= 0 ? advanced.Temperature
             : tools.LlamaCppModelTemperature >= 0 ? tools.LlamaCppModelTemperature
             : 0.2;
+        if (temperatureBump > 0)
+        {
+            temperature = Math.Min(1.0, temperature + temperatureBump);
+        }
+
         WriteNumberIfSet(writer, "temperature", temperature);
         WriteNumberIfSet(writer, "top_p", advanced.TopP >= 0 ? advanced.TopP : tools.LlamaCppModelTopP);
         WriteNumberIfSet(writer, "top_k", advanced.TopK >= 0 ? advanced.TopK : tools.LlamaCppModelTopK);

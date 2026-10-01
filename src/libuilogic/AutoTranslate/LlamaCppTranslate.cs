@@ -51,6 +51,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
+            Error = string.Empty; // describes this line's failure only - never an earlier line's
             var template = Configuration.Settings.Tools.LlamaCppModelPrompt;
             if (string.IsNullOrWhiteSpace(template))
             {
@@ -64,6 +65,35 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
             // The "codes" this engine receives are already English language names - ListLanguages()
             // puts the name in TranslationPair.Code - which is what the templates expect.
+            var outputText = await RequestTranslation(template, text, sourceLanguageCode, targetLanguageCode, null, cancellationToken);
+            if (!TranslationEchoGuard.IsUntranslatedEcho(text, outputText, sourceLanguageCode, targetLanguageCode))
+            {
+                return outputText;
+            }
+
+            // The model handed the source back untranslated (TranslateGemma 12B does this for merged
+            // multi-line requests). Ask once more - at greedy sampling the same request echoes every
+            // time, so a model-defined temperature is nudged up; with none set the server samples
+            // anyway and a second draw is already different.
+            var temperature = Configuration.Settings.Tools.LlamaCppModelTemperature;
+            double? retryTemperature = temperature >= 0 ? Math.Min(1.0, temperature + EchoRetryTemperatureBump) : (double?)null;
+            outputText = await RequestTranslation(template, text, sourceLanguageCode, targetLanguageCode, retryTemperature, cancellationToken);
+            if (!TranslationEchoGuard.IsUntranslatedEcho(text, outputText, sourceLanguageCode, targetLanguageCode))
+            {
+                return outputText;
+            }
+
+            // Still the source: report no translation, so the caller treats the line as failed
+            // (retries it on its own, then gives up with an error) instead of writing it out as translated.
+            Error = "The model returned the " + sourceLanguageCode + " source text untranslated instead of translating it to " + targetLanguageCode + ": " + outputText;
+            SeLogger.Error(StaticName + ": " + Error);
+            return string.Empty;
+        }
+
+        private const double EchoRetryTemperatureBump = 0.3;
+
+        private async Task<string> RequestTranslation(string template, string text, string sourceLanguageCode, string targetLanguageCode, double? temperatureOverride, CancellationToken cancellationToken)
+        {
             var encodedUserMessage = LlmTranslatePrompt.BuildEncodedUserMessage(
                 template, sourceLanguageCode, targetLanguageCode, text);
 
@@ -73,7 +103,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             // Generous output budget (a translation is roughly source-sized) so a model stuck in a
             // generation loop runs out of tokens instead of generating until the context fills (#13830).
             var maxTokens = 200 + 2 * text.Length;
-            var input = "{ \"messages\": [{ \"role\": \"user\", \"content\": \"" + encodedUserMessage + "\" }], \"max_tokens\": " + maxTokens + MakeSamplingJson() + "}";
+            var input = "{ \"messages\": [{ \"role\": \"user\", \"content\": \"" + encodedUserMessage + "\" }], \"max_tokens\": " + maxTokens + MakeSamplingJson(temperatureOverride) + "}";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);
@@ -112,13 +142,14 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         /// model defines none, keeping the server defaults - the behavior before per-model
         /// sampling existed).
         /// </summary>
-        private static string MakeSamplingJson()
+        private static string MakeSamplingJson(double? temperatureOverride = null)
         {
             var sb = new StringBuilder();
             var tools = Configuration.Settings.Tools;
-            if (tools.LlamaCppModelTemperature >= 0)
+            var temperature = temperatureOverride ?? tools.LlamaCppModelTemperature;
+            if (temperature >= 0)
             {
-                sb.Append(", \"temperature\": ").Append(tools.LlamaCppModelTemperature.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                sb.Append(", \"temperature\": ").Append(temperature.ToString(System.Globalization.CultureInfo.InvariantCulture));
             }
             if (tools.LlamaCppModelTopP >= 0)
             {

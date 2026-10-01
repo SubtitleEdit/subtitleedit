@@ -127,7 +127,10 @@ public class DoAutoTranslate
                     noProgressCount++;
                     if (noProgressCount > 3)
                     {
-                        throw new Exception($"Translation engine {translator.Name} returned no translation for line {index + 1} after {noProgressCount} attempts");
+                        // The engine's own reason, when it has one (e.g. llama.cpp's "returned the
+                        // source text untranslated"), is what the user needs to see.
+                        var reason = string.IsNullOrWhiteSpace(translator.Error) ? string.Empty : ": " + translator.Error;
+                        throw new Exception($"Translation engine {translator.Name} returned no translation for line {index + 1} after {noProgressCount} attempts{reason}");
                     }
                 }
             }
