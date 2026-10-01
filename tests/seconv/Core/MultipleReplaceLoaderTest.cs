@@ -277,4 +277,56 @@ public class MultipleReplaceLoaderTest : IDisposable
             RegexUtils.UserPatternMatchTimeout = previousTimeout;
         }
     }
+
+    // "Whole word" (#15510): "Zeyn" -> "Zeynep" must not turn an existing "Zeynep" into
+    // "Zeynepep". The flag comes from the SE5 GUI's CSV/JSON export (and an optional XML element).
+    private const string WholeWordCsv =
+        "Category,Find,ReplaceWith,Description,Active,Type,WholeWord\r\n" +
+        "Names,zeyn,Zeynep,,true,CaseInsensitive,true\r\n" +
+        "Names,Ali,Alim,,true,CaseSensitive,true\r\n" +
+        "Names,price,$1,,true,CaseInsensitive,true\r\n";
+
+    private const string WholeWordJson = """
+        {
+          "categories": [
+            { "name": "Names", "rules": [
+              { "find": "zeyn", "replaceWith": "Zeynep", "isActive": true, "type": "CaseInsensitive", "wholeWord": true },
+              { "find": "Ali", "replaceWith": "Alim", "isActive": true, "type": "CaseSensitive", "wholeWord": true },
+              { "find": "price", "replaceWith": "$1", "isActive": true, "type": "CaseInsensitive", "wholeWord": true }
+            ]}
+          ]
+        }
+        """;
+
+    private const string WholeWordXml = """
+        <?xml version="1.0" encoding="utf-8"?>
+        <MultipleSearchAndReplaceGroups>
+          <Group>
+            <Name>Names</Name>
+            <IsActive>true</IsActive>
+            <Rules>
+              <Rule><Active>true</Active><FindWhat>zeyn</FindWhat><ReplaceWith>Zeynep</ReplaceWith><SearchType>Normal</SearchType><WholeWord>true</WholeWord></Rule>
+              <Rule><Active>true</Active><FindWhat>Ali</FindWhat><ReplaceWith>Alim</ReplaceWith><SearchType>CaseSensitive</SearchType><WholeWord>true</WholeWord></Rule>
+              <Rule><Active>true</Active><FindWhat>price</FindWhat><ReplaceWith>$1</ReplaceWith><SearchType>Normal</SearchType><WholeWord>true</WholeWord></Rule>
+            </Rules>
+          </Group>
+        </MultipleSearchAndReplaceGroups>
+        """;
+
+    [Theory]
+    [InlineData(WholeWordCsv, ".csv")]
+    [InlineData(WholeWordJson, ".template")]
+    [InlineData(WholeWordXml, ".xml")]
+    public void WholeWordRulesOnlyMatchWholeWords(string content, string ext)
+    {
+        _sub = new Subtitle();
+        _sub.Paragraphs.Add(new Paragraph("Zeyn and Zeynep, ZEYN!", 0, 3000));
+        _sub.Paragraphs.Add(new Paragraph("Ali, ali and Alice", 4000, 6000));
+        _sub.Paragraphs.Add(new Paragraph("the price, the prices", 7000, 9000));
+
+        Assert.Equal(3, Apply(content, ext));
+        Assert.Equal("Zeynep and Zeynep, Zeynep!", _sub.Paragraphs[0].Text);
+        Assert.Equal("Alim, ali and Alice", _sub.Paragraphs[1].Text);
+        Assert.Equal("the $1, the prices", _sub.Paragraphs[2].Text);
+    }
 }

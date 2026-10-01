@@ -378,6 +378,7 @@ public class MultipleReplaceWindow : Window
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
             },
             Margin = new Thickness(0, 0, 0, 10),
             HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -417,6 +418,15 @@ public class MultipleReplaceWindow : Window
         };
         // no event handler needed; binding to SelectedRuleType updates RuleTreeNode.Type
 
+        var checkBoxWholeWord = new CheckBox
+        {
+            Content = Se.Language.Edit.Find.WholeWord,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.SelectedNode) + "." + nameof(RuleTreeNode.WholeWord)) { Source = vm, Mode = BindingMode.TwoWay },
+            [!InputElement.IsEnabledProperty] = new Binding(nameof(vm.SelectedNode) + "." + nameof(RuleTreeNode.CanUseWholeWord)) { Source = vm },
+        };
+        checkBoxWholeWord.IsCheckedChanged += vm.OnActiveChanged;
+
         editGrid.Add(labelFind, 0, 0);
         editGrid.Add(textBoxFind, 1, 0);
 
@@ -425,6 +435,8 @@ public class MultipleReplaceWindow : Window
 
         editGrid.Add(labelType, 0, 2);
         editGrid.Add(comboBoxType, 1, 2);
+
+        editGrid.Add(checkBoxWholeWord, 1, 3);
 
         // No header sorting (the DataGrid's CanUserSortColumns is not carried over):
         // this is a fix preview in subtitle order, and the replace rules themselves run

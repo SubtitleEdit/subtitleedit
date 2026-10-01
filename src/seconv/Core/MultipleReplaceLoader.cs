@@ -46,6 +46,8 @@ public static class MultipleReplaceLoader
         public string SearchType { get; set; } = SearchTypeNormal;
         [XmlElement("Description")]
         public string? Description { get; set; }
+        [XmlElement("WholeWord")]
+        public bool WholeWord { get; set; }
     }
 
     /// <summary>
@@ -163,6 +165,7 @@ public static class MultipleReplaceLoader
                     ReplaceWith = rule.ReplaceWith ?? string.Empty,
                     Description = rule.Description,
                     SearchType = MapSearchType(rule.Type),
+                    WholeWord = rule.WholeWord,
                 });
             }
         }
@@ -188,7 +191,7 @@ public static class MultipleReplaceLoader
     }
 
     // CSV reader for the SE5 "Multiple replace > export" CSV
-    // (columns: Category,Find,ReplaceWith,Description,Active,Type). Ported from the UI's
+    // (columns: Category,Find,ReplaceWith,Description,Active,Type[,WholeWord]). Ported from the UI's
     // CsvImporter so a CSV exported from the GUI produces the same rules here.
     private static class CsvRules
     {
@@ -223,6 +226,7 @@ public static class MultipleReplaceLoader
             var descIdx = hasHeader ? Col("Description", 3) : 3;
             var activeIdx = hasHeader ? Col("Active", 4) : 4;
             var typeIdx = hasHeader ? Col("Type", 5) : 5;
+            var wholeWordIdx = hasHeader ? Col("WholeWord", -1) : 6; // optional - older exports have no such column
 
             var byCategory = new Dictionary<string, CategoryImportExport.Category>(StringComparer.Ordinal);
             var order = new List<string>();
@@ -263,6 +267,7 @@ public static class MultipleReplaceLoader
                     Description = Get(descIdx),
                     IsActive = ParseBool(Get(activeIdx)),
                     Type = Get(typeIdx).Trim(),
+                    WholeWord = ParseBool(Get(wholeWordIdx)),
                 });
             }
 
@@ -375,6 +380,7 @@ public static class MultipleReplaceLoader
             public string? Description { get; set; }
             public bool IsActive { get; set; }
             public string Type { get; set; } = string.Empty;
+            public bool WholeWord { get; set; }
         }
     }
 
@@ -418,6 +424,19 @@ public static class MultipleReplaceLoader
                     compiled.Add(new CompiledRule(
                         RuleKind.Regex,
                         new Regex(rule.FindWhat, RegexOptions.Compiled | RegexOptions.Multiline, RegexUtils.UserPatternMatchTimeout),
+                        rule.FindWhat,
+                        rule.ReplaceWith));
+                }
+                else if (rule.WholeWord && !string.IsNullOrEmpty(rule.FindWhat))
+                {
+                    // "Whole word" (#15510): the escaped literal between word boundaries, so "Zeyn"
+                    // no longer matches inside "Zeynep" - the same pattern the GUI uses.
+                    var caseSensitive = string.Equals(rule.SearchType, SearchTypeCaseSensitive, StringComparison.OrdinalIgnoreCase);
+                    compiled.Add(new CompiledRule(
+                        RuleKind.WholeWord,
+                        new Regex(RegexUtils.BuildWholeWordPattern(rule.FindWhat),
+                            caseSensitive ? RegexOptions.CultureInvariant : RegexOptions.IgnoreCase | RegexOptions.CultureInvariant,
+                            RegexUtils.UserPatternMatchTimeout),
                         rule.FindWhat,
                         rule.ReplaceWith));
                 }
@@ -465,6 +484,7 @@ public static class MultipleReplaceLoader
                     {
                         RuleKind.CaseSensitive => newText.Replace(rule.Find, rule.Replace, StringComparison.Ordinal),
                         RuleKind.Regex => RegexUtils.ReplaceNewLineSafe(rule.Regex!, newText, rule.Replace),
+                        RuleKind.WholeWord => ReplaceLiteral(rule.Regex!, newText, rule.Replace),
                         _ => newText.Replace(rule.Find, rule.Replace, StringComparison.OrdinalIgnoreCase),
                     };
                 }
@@ -497,6 +517,15 @@ public static class MultipleReplaceLoader
         Literal,
         CaseSensitive,
         Regex,
+
+        /// <summary>A literal (either case setting) that only matches whole words.</summary>
+        WholeWord,
+    }
+
+    // An evaluator so the replacement is inserted as typed - a "$" in it is not a group reference.
+    private static string ReplaceLiteral(Regex regex, string text, string replacement)
+    {
+        return regex.Replace(text, _ => replacement);
     }
 
     /// <summary>A rule with its search kind resolved and its pattern compiled, ready to apply.</summary>

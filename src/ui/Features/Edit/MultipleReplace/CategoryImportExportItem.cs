@@ -45,6 +45,7 @@ public class CategoryImportExportItem
             Description = node.Description;
             IsActive = node.IsActive;
             Type = node.Type.ToString();
+            WholeWord = node.WholeWord;
         }
 
         public string Find { get; set; } = string.Empty;
@@ -52,6 +53,7 @@ public class CategoryImportExportItem
         public string Description { get; set; } = string.Empty;
         public bool IsActive { get; set; } = false;
         public string Type { get; set; } = string.Empty;
+        public bool WholeWord { get; set; }
     }
 
     public List<RuleImportExportCategory>? Categories { get; set; }
@@ -105,6 +107,7 @@ public class CategoryImportExportItem
                     Description = rule.Description,
                     IsActive = rule.IsActive,
                     Type = Enum.Parse<MultipleReplaceType>(rule.Type),
+                    WholeWord = rule.WholeWord,
                     // Without the parent link, duplicate / insert / delete / move all silently do
                     // nothing on a freshly imported rule until the window is reopened.
                     Parent = categoryNode,
