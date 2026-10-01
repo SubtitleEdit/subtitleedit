@@ -55,6 +55,21 @@ public class LanguageFile
     public string CompareChangeEditedX { get; set; }
     public string CompareChangeInsertedX { get; set; }
     public string CompareChangeDeletedX { get; set; }
+    public string CompareSyncPoint { get; set; }
+    public string CompareSyncPointHint { get; set; }
+    public string CompareSyncPickCurrent { get; set; }
+    public string CompareSyncPickReference { get; set; }
+    public string CompareSyncRemove { get; set; }
+    public string CompareClearXSyncPoints { get; set; }
+    public string CompareSyncCurrentPickedX { get; set; }
+    public string CompareSyncReferencePickedX { get; set; }
+    public string CompareSyncWithCurrentX { get; set; }
+    public string CompareSyncWithReferenceX { get; set; }
+    public string CompareSyncApply { get; set; }
+    public string CompareSyncPointSetXY { get; set; }
+    public string CompareSyncAlreadyPairedXY { get; set; }
+    public string CompareSyncPointShiftedXYZW { get; set; }
+    public string CompareChangeSyncShiftXYZ { get; set; }
     public string LoadXFromFile { get; set; }
     public string SaveCompareHtmlTitle { get; set; }
     public string PickMatroskaTrackX { get; set; }
@@ -120,6 +135,21 @@ public class LanguageFile
         CompareChangeEditedX = "#{0} edited";
         CompareChangeInsertedX = "#{0} inserted";
         CompareChangeDeletedX = "#{0} deleted";
+        CompareSyncPoint = "Sync point";
+        CompareSyncPointHint = "Sync point - these two lines are always shown as a pair, and the lines above and below are lined up on their own";
+        CompareSyncPickCurrent = "Sync point: use this current line";
+        CompareSyncPickReference = "Sync point: use this reference line";
+        CompareSyncRemove = "Remove sync point";
+        CompareClearXSyncPoints = "Clear sync points ({0})";
+        CompareSyncCurrentPickedX = "Current #{0} picked as sync point - select the matching reference line and click Sync";
+        CompareSyncReferencePickedX = "Reference #{0} picked as sync point - select the matching current line and click Sync";
+        CompareSyncWithCurrentX = "Sync with current #{0}";
+        CompareSyncWithReferenceX = "Sync with reference #{0}";
+        CompareSyncApply = "Sync";
+        CompareSyncPointSetXY = "Sync point set: current #{0} and reference #{1} are now shown as a pair";
+        CompareSyncAlreadyPairedXY = "Current #{0} and reference #{1} are already shown as a pair with the same start - nothing to sync";
+        CompareSyncPointShiftedXYZW = "Sync point set: current #{0}-#{1} shifted {2} to start with reference #{3}";
+        CompareChangeSyncShiftXYZ = "#{0}-#{1} shifted {2} (sync point)";
         IgnoreWhitespace = "Ignore whitespace";
         IgnoreWhitespaceHint = "Lines that differ only in spaces, tabs or line breaks do not count as different";
         IgnoreFormatting = "Ignore formatting";

@@ -46,6 +46,9 @@ public partial class CompareViewModel : ObservableObject
     [ObservableProperty] private string _rightFileName = string.Empty;
     [ObservableProperty] private string _statusText = string.Empty;
     [ObservableProperty] private CompareVisual _selectedCompareVisual;
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(HasSyncPoints), nameof(ClearSyncPointsText), nameof(HasSyncBar))] private int _syncPointCount;
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(HasSyncPointHint), nameof(HasSyncPointMessage), nameof(HasSyncBar))] private string _syncPointHint = string.Empty;
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(HasSyncPointMessage), nameof(HasSyncBar))] private string _syncPointMessage = string.Empty;
 
     // The headers trim these to the space they have, keeping the start and the end (#15384).
     public string LeftFileNameDisplay => GetFileName(LeftFileName);
@@ -58,6 +61,26 @@ public partial class CompareViewModel : ObservableObject
         : string.Format(Se.Language.File.CompareXPendingChanges, PendingChangeCount);
 
     public string OkButtonText => HasPendingChanges ? Se.Language.General.Apply : Se.Language.General.Ok;
+
+    public bool HasSyncPoints => SyncPointCount > 0;
+    public bool HasSyncPointHint => !string.IsNullOrEmpty(SyncPointHint);
+    public string ClearSyncPointsText => string.Format(Se.Language.File.CompareClearXSyncPoints, SyncPointCount);
+    public bool HasSyncPointMessage => !string.IsNullOrEmpty(SyncPointMessage) && !HasSyncPointHint;
+    public bool HasSyncBar => HasSyncPoints || HasSyncPointHint || HasSyncPointMessage;
+
+    // With one half picked, the menu item that completes the pair says so.
+    public string PickSyncCurrentHeader => _pendingSyncRightId != null
+        ? string.Format(Se.Language.File.CompareSyncWithReferenceX, _pendingSyncNumber)
+        : Se.Language.File.CompareSyncPickCurrent;
+
+    public string PickSyncReferenceHeader => _pendingSyncLeftId != null
+        ? string.Format(Se.Language.File.CompareSyncWithCurrentX, _pendingSyncNumber)
+        : Se.Language.File.CompareSyncPickReference;
+
+    /// <summary>The selected row has the line the waiting half needs.</summary>
+    public bool CanApplySync =>
+        (_pendingSyncLeftId != null && SelectedRow?.Right.Line != null) ||
+        (_pendingSyncRightId != null && SelectedRow?.Left.Line != null);
 
     public string LeftSideLabel => IsLeftEditable ? Se.Language.File.CompareEditable : Se.Language.File.CompareReadOnly;
 
@@ -83,7 +106,18 @@ public partial class CompareViewModel : ObservableObject
     private HashSet<Guid> _editedIds = new();
     private List<string> _changes = new();
 
-    private sealed record EditState(List<SubtitleLineViewModel> Lines, HashSet<Guid> EditedIds, List<string> Changes);
+    // Sync points: a current line and a reference line the user says belong together (#15394).
+    // Kept by line id, so they survive edits and re-alignment; one half picked waits for the other.
+    private readonly List<SyncPoint> _syncPoints = new();
+    private Guid? _pendingSyncLeftId;
+    private Guid? _pendingSyncRightId;
+    private int _pendingSyncNumber;
+    private HashSet<(Guid Left, Guid Right)> _alignedPairs = new();
+    private DispatcherTimer? _syncMessageTimer;
+
+    private sealed record SyncPoint(Guid LeftId, Guid RightId);
+
+    private sealed record EditState(List<SubtitleLineViewModel> Lines, HashSet<Guid> EditedIds, List<string> Changes, List<SyncPoint> SyncPoints);
 
     // Theme aware - the light pastels are unreadable under the dark theme's near-white text (#13435).
     private static IBrush ListViewRed => CompareColors.OnlyInOneFileRow;
@@ -152,6 +186,7 @@ public partial class CompareViewModel : ObservableObject
         // the reference is only ever read, which keeps "what gets saved" a single subtitle.
         IsLeftEditable = true;
         ResetEdits();
+        ResetSyncPoints();
         if (!string.IsNullOrEmpty(leftFileName) && hasChanges)
         {
             LeftFileNameHasChanges = true;
@@ -206,10 +241,14 @@ public partial class CompareViewModel : ObservableObject
             var left = i < LeftSubtitles.Count ? LeftSubtitles[i] : new CompareItem();
             var right = i < RightSubtitles.Count ? RightSubtitles[i] : new CompareItem();
             var isEdited = left.Line != null && _editedIds.Contains(left.Line.Id);
-            rows.Add(new CompareRow(left, right, GetRowKind(left, right), isEdited, IsLeftEditable));
+            rows.Add(new CompareRow(left, right, GetRowKind(left, right), isEdited, IsLeftEditable)
+            {
+                IsSyncPoint = IsSyncPoint(left, right),
+            });
         }
 
         Rows = new ObservableCollection<CompareRow>(rows);
+        UpdateSyncFlags();
         RowsRebuilt?.Invoke(this, EventArgs.Empty);
     }
 
@@ -516,6 +555,10 @@ public partial class CompareViewModel : ObservableObject
             : string.Empty;
     }
 
+    /// <summary>
+    /// Lines the two sides up, with a blank row where a line exists on one side only - see
+    /// <see cref="CompareAligner"/>. The user's sync points are honoured as forced pairs (#15394).
+    /// </summary>
     private void InsertMissingLines()
     {
         if (LeftSubtitles.Count == 0 || RightSubtitles.Count == 0)
@@ -523,97 +566,64 @@ public partial class CompareViewModel : ObservableObject
             return;
         }
 
-        var index = 0;
-        var left = GetLeftItemOrNull(index);
-        var right = GetRightItemOrNull(index);
-        var max = Math.Max(_leftLines.Count, _rightLines.Count);
-        while (index < max)
-        {
-            if (left != null && right != null && GetColumnsEqualExceptNumberAndDuration(left, right) == 0)
-            {
-                for (var i = index + 1; i < max; i++)
-                {
-                    // Try to find at least two matching properties
-                    if (GetColumnsEqualExceptNumber(GetLeftItemOrNull(i), right) > 1)
-                    {
-                        for (var j = index; j < i; j++)
-                        {
-                            RightSubtitles.Insert(index++, new CompareItem());
-                        }
-                        break;
-                    }
+        var leftItems = LeftSubtitles.ToList();
+        var rightItems = RightSubtitles.ToList();
+        var pairs = CompareAligner.Align(
+            leftItems.Select(ToAlignerLine).ToList(),
+            rightItems.Select(ToAlignerLine).ToList(),
+            IsTimeEqual,
+            GetSyncPointIndexes(leftItems, rightItems));
 
-                    if (GetColumnsEqualExceptNumber(left, GetRightItemOrNull(i)) > 1)
-                    {
-                        for (var j = index; j < i; j++)
-                        {
-                            LeftSubtitles.Insert(index++, new CompareItem());
-                        }
-                        break;
-                    }
-                }
+        _alignedPairs = new HashSet<(Guid Left, Guid Right)>();
+        LeftSubtitles.Clear();
+        RightSubtitles.Clear();
+        foreach (var pair in pairs)
+        {
+            if (pair.Left >= 0 && pair.Right >= 0 && leftItems[pair.Left].Line is { } l && rightItems[pair.Right].Line is { } r)
+            {
+                _alignedPairs.Add((l.Id, r.Id));
             }
 
-            index++;
-            left = GetLeftItemOrNull(index);
-            right = GetRightItemOrNull(index);
-        }
-
-        // insert rest - pad to the max of the *current* collection counts: the alignment
-        // above inserts blanks, so one side may already have grown past the raw-line max,
-        // and every consumer of the two lists assumes equal lengths
-        var maxNow = Math.Max(LeftSubtitles.Count, RightSubtitles.Count);
-        var minSub = LeftSubtitles.Count < RightSubtitles.Count ? LeftSubtitles : RightSubtitles;
-        for (var idx = minSub.Count; idx < maxNow; idx++)
-        {
-            minSub.Insert(idx, new CompareItem());
+            LeftSubtitles.Add(pair.Left >= 0 ? leftItems[pair.Left] : new CompareItem());
+            RightSubtitles.Add(pair.Right >= 0 ? rightItems[pair.Right] : new CompareItem());
         }
     }
 
-    private CompareItem? GetLeftItemOrNull(int index)
+    private CompareAligner.Line ToAlignerLine(CompareItem item) => new(NormalizeForCompare(item.Text), item.StartTime, item.EndTime);
+
+    private List<(int Left, int Right)> GetSyncPointIndexes(List<CompareItem> leftItems, List<CompareItem> rightItems)
     {
-        if (index >= 0 && index < LeftSubtitles.Count)
+        var result = new List<(int Left, int Right)>();
+        if (_syncPoints.Count == 0)
         {
-            return LeftSubtitles[index];
+            return result;
         }
 
-        return null;
+        var leftIndexes = IndexById(leftItems);
+        var rightIndexes = IndexById(rightItems);
+        foreach (var sp in _syncPoints)
+        {
+            if (leftIndexes.TryGetValue(sp.LeftId, out var l) && rightIndexes.TryGetValue(sp.RightId, out var r))
+            {
+                result.Add((l, r));
+            }
+        }
+
+        return result;
     }
 
-    private CompareItem? GetRightItemOrNull(int index)
+    private static Dictionary<Guid, int> IndexById(List<CompareItem> items)
     {
-        if (index >= 0 && index < RightSubtitles.Count)
+        var result = new Dictionary<Guid, int>(items.Count);
+        for (var i = 0; i < items.Count; i++)
         {
-            return RightSubtitles[index];
+            if (items[i].Line is { } line)
+            {
+                result.TryAdd(line.Id, i);
+            }
         }
 
-        return null;
-    }
-
-    private int GetColumnsEqualExceptNumberAndDuration(CompareItem p1, CompareItem p2)
-    {
-        if (p1 == null || p2 == null)
-        {
-            return 0;
-        }
-
-        var columnsEqual = 0;
-        if (IsTimeEqual(p1.StartTime, p2.StartTime))
-        {
-            columnsEqual++;
-        }
-
-        if (IsTimeEqual(p1.EndTime, p2.EndTime))
-        {
-            columnsEqual++;
-        }
-
-        if (AreTextsEqual(p1, p2))
-        {
-            columnsEqual++;
-        }
-
-        return columnsEqual;
+        return result;
     }
 
     private bool AreTextsEqual(CompareItem p1, CompareItem p2)
@@ -649,37 +659,6 @@ public partial class CompareViewModel : ObservableObject
         }
 
         return sb.ToString();
-    }
-
-    private int GetColumnsEqualExceptNumber(CompareItem? left, CompareItem? right)
-    {
-        if (left == null || right == null)
-        {
-            return 0;
-        }
-
-        var columnsEqual = 0;
-        if (IsTimeEqual(left.StartTime, right.StartTime))
-        {
-            columnsEqual++;
-        }
-
-        if (IsTimeEqual(left.EndTime, right.EndTime))
-        {
-            columnsEqual++;
-        }
-
-        if (IsTimeEqual(left.Duration, right.Duration))
-        {
-            columnsEqual++;
-        }
-
-        if (AreTextsEqual(left, right))
-        {
-            columnsEqual++;
-        }
-
-        return columnsEqual;
     }
 
     private static bool IsTimeEqual(TimeSpan t1, TimeSpan t2)
@@ -725,6 +704,7 @@ public partial class CompareViewModel : ObservableObject
         // Another file on the left is no longer the editor's subtitle - there is nothing to apply it to.
         IsLeftEditable = false;
         ResetEdits();
+        ResetSyncPoints();
 
         _languageDirty = true;
         Dispatcher.UIThread.Post(CompareAndSelectFirst);
@@ -744,6 +724,8 @@ public partial class CompareViewModel : ObservableObject
         {
             return;
         }
+
+        ResetSyncPoints();
 
         _rightLines.Clear();
         foreach (var line in subtitle.Paragraphs)
@@ -773,6 +755,8 @@ public partial class CompareViewModel : ObservableObject
             return;
         }
 
+        ResetSyncPoints();
+
         _rightLines.Clear();
         foreach (var line in subtitle.Paragraphs)
         {
@@ -784,6 +768,263 @@ public partial class CompareViewModel : ObservableObject
 
         _languageDirty = true;
         Dispatcher.UIThread.Post(CompareAndSelectFirst);
+    }
+
+    /// <summary>Picks the row's current line as one half of a sync point; completes it when a reference line is waiting.</summary>
+    [RelayCommand]
+    private void PickSyncCurrent(CompareRow? row)
+    {
+        if (row?.Left.Line is not { } line)
+        {
+            return;
+        }
+
+        if (_pendingSyncRightId is { } rightId)
+        {
+            AddSyncPoint(line.Id, rightId);
+            return;
+        }
+
+        ClearSyncPointMessage();
+        _pendingSyncLeftId = line.Id;
+        _pendingSyncNumber = line.Number;
+        SyncPointHint = string.Format(Se.Language.File.CompareSyncCurrentPickedX, line.Number);
+        UpdateSyncFlags();
+    }
+
+    /// <summary>Picks the row's reference line as one half of a sync point; completes it when a current line is waiting.</summary>
+    [RelayCommand]
+    private void PickSyncReference(CompareRow? row)
+    {
+        if (row?.Right.Line is not { } line)
+        {
+            return;
+        }
+
+        if (_pendingSyncLeftId is { } leftId)
+        {
+            AddSyncPoint(leftId, line.Id);
+            return;
+        }
+
+        ClearSyncPointMessage();
+        _pendingSyncRightId = line.Id;
+        _pendingSyncNumber = line.Number;
+        SyncPointHint = string.Format(Se.Language.File.CompareSyncReferencePickedX, line.Number);
+        UpdateSyncFlags();
+    }
+
+    /// <summary>Completes the waiting sync point with the selected row's line on the other side.</summary>
+    [RelayCommand]
+    private void ApplySync()
+    {
+        if (_pendingSyncLeftId != null)
+        {
+            PickSyncReference(SelectedRow);
+        }
+        else if (_pendingSyncRightId != null)
+        {
+            PickSyncCurrent(SelectedRow);
+        }
+    }
+
+    [RelayCommand]
+    private void RemoveSyncPoint(CompareRow? row)
+    {
+        if (row == null || !row.IsSyncPoint)
+        {
+            return;
+        }
+
+        _syncPoints.RemoveAll(p => p.LeftId == row.Left.Line?.Id && p.RightId == row.Right.Line?.Id);
+        SyncPointCount = _syncPoints.Count;
+        CompareKeepingPlace(row.Left.Line?.Id, Rows.IndexOf(row));
+    }
+
+    [RelayCommand]
+    private void ClearSyncPoints()
+    {
+        if (_syncPoints.Count == 0)
+        {
+            CancelSyncPick();
+            return;
+        }
+
+        var lineId = SelectedRow?.Left.Line?.Id;
+        ResetSyncPoints();
+        CompareKeepingPlace(lineId);
+    }
+
+    [RelayCommand]
+    private void CancelSyncPick()
+    {
+        _pendingSyncLeftId = null;
+        _pendingSyncRightId = null;
+        SyncPointHint = string.Empty;
+        UpdateSyncFlags();
+    }
+
+    private bool IsSyncPickPending => _pendingSyncLeftId != null || _pendingSyncRightId != null;
+
+    /// <summary>
+    /// Adds the pair, dropping any sync point it contradicts - one that shares a line with it or
+    /// would cross it - so the newest choice wins, then re-aligns. When the current side can be
+    /// edited and the two start times differ, it also syncs the timing: the current line takes
+    /// the reference line's start, and the lines after it move by the same amount, up to the
+    /// next sync point - so each sync point sets the offset of its own stretch.
+    /// </summary>
+    private void AddSyncPoint(Guid leftId, Guid rightId)
+    {
+        _pendingSyncLeftId = null;
+        _pendingSyncRightId = null;
+        SyncPointHint = string.Empty;
+
+        var leftIndex = _leftLines.FindIndex(p => p.Id == leftId);
+        var rightIndex = _rightLines.FindIndex(p => p.Id == rightId);
+        if (leftIndex < 0 || rightIndex < 0)
+        {
+            UpdateSyncFlags();
+            return;
+        }
+
+        var leftLine = _leftLines[leftIndex];
+        var rightLine = _rightLines[rightIndex];
+        var offset = rightLine.StartTime - leftLine.StartTime;
+        var shiftTiming = IsLeftEditable && !IsTimeEqual(leftLine.StartTime, rightLine.StartTime);
+
+        // Already side by side with the same start: there is nothing to sync, so say so instead
+        // of leaving a marker that looks like it did not work.
+        if (!shiftTiming && _alignedPairs.Contains((leftId, rightId)))
+        {
+            ShowSyncPointMessage(string.Format(Se.Language.File.CompareSyncAlreadyPairedXY, leftLine.Number, rightLine.Number));
+            UpdateSyncFlags();
+            return;
+        }
+
+        if (shiftTiming)
+        {
+            PushUndo();
+        }
+
+        _syncPoints.RemoveAll(p =>
+        {
+            var l = _leftLines.FindIndex(x => x.Id == p.LeftId);
+            var r = _rightLines.FindIndex(x => x.Id == p.RightId);
+            return l < 0 || r < 0 || (long)(l - leftIndex) * (r - rightIndex) <= 0;
+        });
+        _syncPoints.Add(new SyncPoint(leftId, rightId));
+        SyncPointCount = _syncPoints.Count;
+
+        if (shiftTiming)
+        {
+            var endIndex = GetNextSyncPointLeftIndex(leftIndex);
+            for (var i = leftIndex; i < endIndex; i++)
+            {
+                var line = _leftLines[i];
+                SetTimes(line, line.StartTime + offset, line.EndTime + offset);
+                _editedIds.Add(line.Id);
+            }
+
+            var lastNumber = _leftLines[endIndex - 1].Number;
+            var offsetText = FormatOffset(offset);
+            AddChange(string.Format(Se.Language.File.CompareChangeSyncShiftXYZ, leftLine.Number, lastNumber, offsetText));
+            ShowSyncPointMessage(string.Format(Se.Language.File.CompareSyncPointShiftedXYZW, leftLine.Number, lastNumber, offsetText, rightLine.Number));
+        }
+        else
+        {
+            ShowSyncPointMessage(string.Format(Se.Language.File.CompareSyncPointSetXY, leftLine.Number, rightLine.Number));
+        }
+
+        CompareKeepingPlace(leftId);
+    }
+
+    /// <summary>Where the stretch that starts at <paramref name="leftIndex"/> ends: the next sync point's current line, or the end.</summary>
+    private int GetNextSyncPointLeftIndex(int leftIndex)
+    {
+        var end = _leftLines.Count;
+        foreach (var sp in _syncPoints)
+        {
+            var l = _leftLines.FindIndex(x => x.Id == sp.LeftId);
+            if (l > leftIndex && l < end)
+            {
+                end = l;
+            }
+        }
+
+        return end;
+    }
+
+    private static string FormatOffset(TimeSpan offset)
+    {
+        var sign = offset < TimeSpan.Zero ? "-" : "+";
+        return sign + new TimeCode(offset.Duration()).ToDisplayString();
+    }
+
+    /// <summary>A short confirmation in the sync bar, gone after a few seconds or at the next pick.</summary>
+    private void ShowSyncPointMessage(string message)
+    {
+        _syncMessageTimer?.Stop();
+        SyncPointMessage = message;
+        _syncMessageTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(6) };
+        _syncMessageTimer.Tick += (_, _) =>
+        {
+            _syncMessageTimer?.Stop();
+            SyncPointMessage = string.Empty;
+        };
+        _syncMessageTimer.Start();
+    }
+
+    private void ClearSyncPointMessage()
+    {
+        _syncMessageTimer?.Stop();
+        SyncPointMessage = string.Empty;
+    }
+
+    private void ResetSyncPoints()
+    {
+        ClearSyncPointMessage();
+        _syncPoints.Clear();
+        _pendingSyncLeftId = null;
+        _pendingSyncRightId = null;
+        SyncPointCount = 0;
+        SyncPointHint = string.Empty;
+    }
+
+    private bool IsSyncPoint(CompareItem left, CompareItem right)
+    {
+        if (left.Line is not { } l || right.Line is not { } r)
+        {
+            return false;
+        }
+
+        foreach (var sp in _syncPoints)
+        {
+            if (sp.LeftId == l.Id && sp.RightId == r.Id)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>Marks the half of a sync point that is waiting for its other half.</summary>
+    private void UpdateSyncFlags()
+    {
+        foreach (var row in Rows)
+        {
+            row.IsLeftSyncPending = _pendingSyncLeftId != null && row.Left.Line?.Id == _pendingSyncLeftId;
+            row.IsRightSyncPending = _pendingSyncRightId != null && row.Right.Line?.Id == _pendingSyncRightId;
+        }
+
+        OnPropertyChanged(nameof(PickSyncCurrentHeader));
+        OnPropertyChanged(nameof(PickSyncReferenceHeader));
+        OnPropertyChanged(nameof(CanApplySync));
+    }
+
+    partial void OnSelectedRowChanged(CompareRow? value)
+    {
+        OnPropertyChanged(nameof(CanApplySync));
     }
 
     [RelayCommand]
@@ -975,6 +1216,9 @@ public partial class CompareViewModel : ObservableObject
         _leftLines = state.Lines;
         _editedIds = state.EditedIds;
         _changes = state.Changes;
+        _syncPoints.Clear();
+        _syncPoints.AddRange(state.SyncPoints);
+        SyncPointCount = _syncPoints.Count;
         UpdatePendingChanges();
         CompareKeepingPlace(SelectedRow?.Left.Line?.Id, SelectedRow == null ? 0 : Rows.IndexOf(SelectedRow));
     }
@@ -1013,7 +1257,8 @@ public partial class CompareViewModel : ObservableObject
         _undoStack.Push(new EditState(
             _leftLines.Select(p => new SubtitleLineViewModel(p)).ToList(),
             new HashSet<Guid>(_editedIds),
-            new List<string>(_changes)));
+            new List<string>(_changes),
+            new List<SyncPoint>(_syncPoints)));
     }
 
     private void AddChange(string description)
@@ -1284,6 +1529,10 @@ public partial class CompareViewModel : ObservableObject
             {
                 CancelEdit(editing);
             }
+            else if (IsSyncPickPending)
+            {
+                CancelSyncPick();
+            }
             else
             {
                 Close();
@@ -1435,6 +1684,7 @@ public partial class CompareViewModel : ObservableObject
                     LeftFileName = path;
                     IsLeftEditable = false;
                     ResetEdits();
+                    ResetSyncPoints();
 
                     _languageDirty = true;
                     Dispatcher.UIThread.Post(CompareAndSelectFirst);
@@ -1464,6 +1714,8 @@ public partial class CompareViewModel : ObservableObject
                     {
                         return;
                     }
+
+                    ResetSyncPoints();
 
                     _rightLines.Clear();
                     foreach (var line in subtitle.Paragraphs)

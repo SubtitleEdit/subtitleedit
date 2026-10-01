@@ -36,6 +36,13 @@ public partial class CompareRow : ObservableObject
     /// <summary>The current side is the editor's own subtitle, so it can be changed here.</summary>
     public bool IsLeftEditable { get; }
 
+    /// <summary>The pair was forced together by the user's sync point (#15394).</summary>
+    public bool IsSyncPoint { get; init; }
+
+    /// <summary>The line on that side was picked as half of a sync point, waiting for the other half.</summary>
+    [ObservableProperty] private bool _isLeftSyncPending;
+    [ObservableProperty] private bool _isRightSyncPending;
+
     [ObservableProperty] private bool _isEditing;
     [ObservableProperty] private string _editText = string.Empty;
     [ObservableProperty] private TimeSpan _editStart;
