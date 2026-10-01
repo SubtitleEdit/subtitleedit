@@ -2322,6 +2322,11 @@ public partial class OcrViewModel : ObservableObject
     [RelayCommand]
     private void Ok()
     {
+        if (IsOcrRunning)
+        {
+            return; // Enter/Alt+O mid-run closed the window with a partial result while OCR kept running (#15500)
+        }
+
         // A just-finished OCR run may still have line texts in the coalesced UI queue.
         OcrUiUpdates.Flush();
 
