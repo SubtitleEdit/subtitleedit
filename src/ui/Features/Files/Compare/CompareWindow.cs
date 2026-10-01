@@ -428,6 +428,7 @@ public class CompareWindow : Window
             }
         };
 
+        listBox.ContextMenu = MakeRowContextMenu(vm);
         vm.RowsView = listBox;
 
         var listBorder = new Border
@@ -451,6 +452,51 @@ public class CompareWindow : Window
         area.Add(MakeDropHost(listBorder, null), 0);
         area.Add(_ruler, 0, 1);
         return area;
+    }
+
+    /// <summary>
+    /// Sync points (#15394): right-click a current line and a reference line - in either order -
+    /// to make them a pair; the comparison is then lined up above and below it separately.
+    /// Acts on the selected row, which a right-click selects, so the menu key works too.
+    /// </summary>
+    private static ContextMenu MakeRowContextMenu(CompareViewModel vm)
+    {
+        Avalonia.Controls.MenuItem MakeItem(string header, System.Windows.Input.ICommand command, string? isVisiblePath, string? iconName = null)
+        {
+            var item = new Avalonia.Controls.MenuItem
+            {
+                Header = header,
+                DataContext = vm,
+                Command = command,
+                [!Avalonia.Controls.MenuItem.CommandParameterProperty] = new Binding(nameof(vm.SelectedRow)),
+            };
+
+            if (isVisiblePath != null)
+            {
+                item.Bind(IsVisibleProperty, new Binding(isVisiblePath));
+            }
+
+            if (iconName != null)
+            {
+                item.Icon = new Icon { Value = iconName };
+            }
+
+            return item;
+        }
+
+        var clear = MakeItem(string.Empty, vm.ClearSyncPointsCommand, nameof(vm.HasSyncPoints));
+        clear.Bind(HeaderedSelectingItemsControl.HeaderProperty, new Binding(nameof(vm.ClearSyncPointsText)));
+
+        return new ContextMenu
+        {
+            Items =
+            {
+                MakeItem(Se.Language.File.CompareSyncPickCurrent, vm.PickSyncCurrentCommand, $"{nameof(vm.SelectedRow)}.{nameof(CompareRow.HasLeft)}", IconNames.LinkVariant),
+                MakeItem(Se.Language.File.CompareSyncPickReference, vm.PickSyncReferenceCommand, $"{nameof(vm.SelectedRow)}.{nameof(CompareRow.HasRight)}", IconNames.LinkVariant),
+                MakeItem(Se.Language.File.CompareSyncRemove, vm.RemoveSyncPointCommand, $"{nameof(vm.SelectedRow)}.{nameof(CompareRow.IsSyncPoint)}"),
+                clear,
+            },
+        };
     }
 
     /// <summary>One row: the current card, the gutter with the action between them, the reference card.</summary>
@@ -591,6 +637,17 @@ public class CompareWindow : Window
                 },
             },
         };
+
+        // The half of a sync point that waits for its other half.
+        panel.Children.Add(new Icon
+        {
+            Value = IconNames.LinkVariant,
+            FontSize = UiUtil.ScaledFontSize(13),
+            Foreground = CompareColors.Edited,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(6, 0, 0, 0),
+            [!IsVisibleProperty] = new Binding(side == nameof(CompareRow.Left) ? nameof(CompareRow.IsLeftSyncPending) : nameof(CompareRow.IsRightSyncPending)),
+        });
 
         if (showEdited)
         {
@@ -756,10 +813,22 @@ public class CompareWindow : Window
         AutomationProperties.SetName(delete, Se.Language.File.CompareDeleteFromCurrent);
         AddHint(delete, Se.Language.File.CompareDeleteFromCurrent);
 
+        var syncPoint = new Icon
+        {
+            Value = IconNames.LinkVariant,
+            FontSize = UiUtil.ScaledFontSize(14),
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Top,
+            Margin = new Thickness(0, 4, 0, 0),
+            [!IsVisibleProperty] = new Binding(nameof(CompareRow.IsSyncPoint)),
+        };
+        AutomationProperties.SetName(syncPoint, Se.Language.File.CompareSyncPoint);
+        AddHint(syncPoint, Se.Language.File.CompareSyncPointHint);
+
         return new Border
         {
             [!Border.BackgroundProperty] = new Binding(nameof(CompareRow.GutterBrush)),
-            Child = new Panel { Children = { take, delete } },
+            Child = new Panel { Children = { syncPoint, take, delete } },
         };
     }
 
@@ -802,7 +871,28 @@ public class CompareWindow : Window
             },
         };
 
-        return MakeTwoColumnBar(statusText, legend);
+        var syncHint = new TextBlock
+        {
+            FontWeight = FontWeight.SemiBold,
+            Foreground = CompareColors.Edited,
+            VerticalAlignment = VerticalAlignment.Center,
+            TextWrapping = TextWrapping.Wrap,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.SyncPointHint)),
+            [!IsVisibleProperty] = new Binding(nameof(vm.HasSyncPointHint)),
+        };
+        var buttonClearSync = UiUtil.MakeButton(string.Empty, vm.ClearSyncPointsCommand)
+            .WithIconLeftBindText(IconNames.LinkVariant, nameof(vm.ClearSyncPointsText))
+            .WithBindIsVisible(nameof(vm.HasSyncPoints));
+
+        var left = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 12,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { statusText, buttonClearSync, syncHint },
+        };
+
+        return MakeTwoColumnBar(left, legend);
     }
 
     private Control MakeBottomBar(CompareViewModel vm)

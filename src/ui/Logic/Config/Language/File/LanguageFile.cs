@@ -55,6 +55,14 @@ public class LanguageFile
     public string CompareChangeEditedX { get; set; }
     public string CompareChangeInsertedX { get; set; }
     public string CompareChangeDeletedX { get; set; }
+    public string CompareSyncPoint { get; set; }
+    public string CompareSyncPointHint { get; set; }
+    public string CompareSyncPickCurrent { get; set; }
+    public string CompareSyncPickReference { get; set; }
+    public string CompareSyncRemove { get; set; }
+    public string CompareClearXSyncPoints { get; set; }
+    public string CompareSyncCurrentPickedX { get; set; }
+    public string CompareSyncReferencePickedX { get; set; }
     public string LoadXFromFile { get; set; }
     public string SaveCompareHtmlTitle { get; set; }
     public string PickMatroskaTrackX { get; set; }
@@ -120,6 +128,14 @@ public class LanguageFile
         CompareChangeEditedX = "#{0} edited";
         CompareChangeInsertedX = "#{0} inserted";
         CompareChangeDeletedX = "#{0} deleted";
+        CompareSyncPoint = "Sync point";
+        CompareSyncPointHint = "Sync point - these two lines are always shown as a pair, and the lines above and below are lined up on their own";
+        CompareSyncPickCurrent = "Sync point: use this current line";
+        CompareSyncPickReference = "Sync point: use this reference line";
+        CompareSyncRemove = "Remove sync point";
+        CompareClearXSyncPoints = "Clear sync points ({0})";
+        CompareSyncCurrentPickedX = "Current line #{0} picked - now right-click the matching reference line and use it as the sync point (Esc cancels)";
+        CompareSyncReferencePickedX = "Reference line #{0} picked - now right-click the matching current line and use it as the sync point (Esc cancels)";
         IgnoreWhitespace = "Ignore whitespace";
         IgnoreWhitespaceHint = "Lines that differ only in spaces, tabs or line breaks do not count as different";
         IgnoreFormatting = "Ignore formatting";

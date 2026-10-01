@@ -18,6 +18,17 @@ Compare two subtitle files side by side to identify differences in text, timing,
 5. Use **Previous difference** / **Next difference** (F8 / Shift+F8) to jump between differing rows, or click the overview strip on the right to jump to any part of the file.
 6. Use the tabs (**All**, **Differences**, **Text differences**) and the options to refine the comparison. Each tab shows how many rows it holds.
 
+## Alignment and sync points
+
+Lines are paired by content, not by position. A line that exists on one side only gets a blank row on the other, and the lines after it pair up again, even when the two files are timed differently. Lines with the same or nearly the same text, or with the same timing, are matched.
+
+If the automatic pairing gets a stretch wrong, set a **sync point**:
+
+1. Right-click a line on one side and choose **Sync point: use this current line** (or **...reference line**).
+2. Right-click the matching line on the other side and choose the other option.
+
+The two lines are now always shown as a pair, marked with a link icon between them, and the lines above and below are aligned separately. You can add as many sync points as you need. A new sync point that contradicts an earlier one replaces it. Right-click a sync point to remove it, or use **Clear sync points** below the list. Press Escape to cancel a half-picked sync point.
+
 ## Editing
 
 The current subtitle can be edited right in the compare window. The reference is read-only.
@@ -58,4 +69,4 @@ Editing is only available while the left side is the loaded subtitle. If you loa
 | Alt+Left | Take the selected line from the reference |
 | Delete | Delete the selected current line |
 | Ctrl+Z | Undo the last change |
-| Escape | Cancel editing, or close the dialog |
+| Escape | Cancel editing or a half-picked sync point, or close the dialog |
