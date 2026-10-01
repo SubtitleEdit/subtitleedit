@@ -58,6 +58,7 @@ public class CompareWindow : Window
                 new RowDefinition(GridLength.Auto), // filter tabs + options + navigation
                 new RowDefinition(GridLength.Auto), // the two file headers
                 new RowDefinition(GridLength.Star), // the aligned rows
+                new RowDefinition(GridLength.Auto), // sync points: picking hint + actions
                 new RowDefinition(GridLength.Auto), // status text + legend
                 new RowDefinition(GridLength.Auto), // pending changes + buttons
             },
@@ -68,8 +69,9 @@ public class CompareWindow : Window
         grid.Add(MakeToolbar(vm), 0);
         grid.Add(MakeHeaders(vm), 1);
         grid.Add(MakeRowsArea(vm), 2);
-        grid.Add(MakeStatusBar(vm), 3);
-        grid.Add(MakeBottomBar(vm), 4);
+        grid.Add(MakeSyncBar(vm), 3);
+        grid.Add(MakeStatusBar(vm), 4);
+        grid.Add(MakeBottomBar(vm), 5);
 
         Content = grid;
 
@@ -508,6 +510,10 @@ public class CompareWindow : Window
             return item;
         }
 
+        var pickCurrent = MakeItem(string.Empty, vm.PickSyncCurrentCommand, $"{nameof(vm.SelectedRow)}.{nameof(CompareRow.HasLeft)}", IconNames.LinkVariant);
+        pickCurrent.Bind(HeaderedSelectingItemsControl.HeaderProperty, new Binding(nameof(vm.PickSyncCurrentHeader)));
+        var pickReference = MakeItem(string.Empty, vm.PickSyncReferenceCommand, $"{nameof(vm.SelectedRow)}.{nameof(CompareRow.HasRight)}", IconNames.LinkVariant);
+        pickReference.Bind(HeaderedSelectingItemsControl.HeaderProperty, new Binding(nameof(vm.PickSyncReferenceHeader)));
         var clear = MakeItem(string.Empty, vm.ClearSyncPointsCommand, nameof(vm.HasSyncPoints));
         clear.Bind(HeaderedSelectingItemsControl.HeaderProperty, new Binding(nameof(vm.ClearSyncPointsText)));
 
@@ -515,8 +521,8 @@ public class CompareWindow : Window
         {
             Items =
             {
-                MakeItem(Se.Language.File.CompareSyncPickCurrent, vm.PickSyncCurrentCommand, $"{nameof(vm.SelectedRow)}.{nameof(CompareRow.HasLeft)}", IconNames.LinkVariant),
-                MakeItem(Se.Language.File.CompareSyncPickReference, vm.PickSyncReferenceCommand, $"{nameof(vm.SelectedRow)}.{nameof(CompareRow.HasRight)}", IconNames.LinkVariant),
+                pickCurrent,
+                pickReference,
                 MakeItem(Se.Language.File.CompareSyncRemove, vm.RemoveSyncPointCommand, $"{nameof(vm.SelectedRow)}.{nameof(CompareRow.IsSyncPoint)}"),
                 clear,
             },
@@ -895,7 +901,16 @@ public class CompareWindow : Window
             },
         };
 
-        var syncHint = new TextBlock
+        return MakeTwoColumnBar(statusText, legend);
+    }
+
+    /// <summary>
+    /// Sync points (#15394), shown while one is being picked or any exist: what to do next, Sync
+    /// for the selected row, Cancel, and Clear. A row of its own, so the hint has the full width.
+    /// </summary>
+    private static Control MakeSyncBar(CompareViewModel vm)
+    {
+        var hint = new TextBlock
         {
             FontWeight = FontWeight.SemiBold,
             Foreground = CompareColors.Edited,
@@ -904,19 +919,39 @@ public class CompareWindow : Window
             [!TextBlock.TextProperty] = new Binding(nameof(vm.SyncPointHint)),
             [!IsVisibleProperty] = new Binding(nameof(vm.HasSyncPointHint)),
         };
-        var buttonClearSync = UiUtil.MakeButton(string.Empty, vm.ClearSyncPointsCommand)
-            .WithIconLeftBindText(IconNames.LinkVariant, nameof(vm.ClearSyncPointsText))
+
+        var buttonApply = UiUtil.MakeButton(Se.Language.File.CompareSyncApply, vm.ApplySyncCommand)
+            .WithIconLeft(IconNames.LinkVariant)
+            .WithBindIsVisible(nameof(vm.HasSyncPointHint));
+        buttonApply.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.CanApplySync)));
+        var buttonCancel = UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelSyncPickCommand)
+            .WithBindIsVisible(nameof(vm.HasSyncPointHint));
+        AddHint(buttonCancel, Se.Language.General.Cancel + " (Esc)");
+        var buttonClear = UiUtil.MakeButton(string.Empty, vm.ClearSyncPointsCommand)
+            .WithIconLeftBindText(IconNames.Close, nameof(vm.ClearSyncPointsText))
             .WithBindIsVisible(nameof(vm.HasSyncPoints));
 
-        var left = new StackPanel
+        var buttons = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 12,
+            Spacing = 6,
             VerticalAlignment = VerticalAlignment.Center,
-            Children = { statusText, buttonClearSync, syncHint },
+            Children = { buttonApply, buttonCancel, buttonClear },
         };
 
-        return MakeTwoColumnBar(left, legend);
+        var bar = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(GridLength.Star),
+                new ColumnDefinition(GridLength.Auto),
+            },
+            ColumnSpacing = 12,
+            [!IsVisibleProperty] = new Binding(nameof(vm.HasSyncBar)),
+        };
+        bar.Add(hint, 0);
+        bar.Add(buttons, 0, 1);
+        return bar;
     }
 
     private Control MakeBottomBar(CompareViewModel vm)

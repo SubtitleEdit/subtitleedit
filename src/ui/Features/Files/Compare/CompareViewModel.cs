@@ -46,8 +46,8 @@ public partial class CompareViewModel : ObservableObject
     [ObservableProperty] private string _rightFileName = string.Empty;
     [ObservableProperty] private string _statusText = string.Empty;
     [ObservableProperty] private CompareVisual _selectedCompareVisual;
-    [ObservableProperty] [NotifyPropertyChangedFor(nameof(HasSyncPoints), nameof(ClearSyncPointsText))] private int _syncPointCount;
-    [ObservableProperty] [NotifyPropertyChangedFor(nameof(HasSyncPointHint))] private string _syncPointHint = string.Empty;
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(HasSyncPoints), nameof(ClearSyncPointsText), nameof(HasSyncBar))] private int _syncPointCount;
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(HasSyncPointHint), nameof(HasSyncBar))] private string _syncPointHint = string.Empty;
 
     // The headers trim these to the space they have, keeping the start and the end (#15384).
     public string LeftFileNameDisplay => GetFileName(LeftFileName);
@@ -64,6 +64,21 @@ public partial class CompareViewModel : ObservableObject
     public bool HasSyncPoints => SyncPointCount > 0;
     public bool HasSyncPointHint => !string.IsNullOrEmpty(SyncPointHint);
     public string ClearSyncPointsText => string.Format(Se.Language.File.CompareClearXSyncPoints, SyncPointCount);
+    public bool HasSyncBar => HasSyncPoints || HasSyncPointHint;
+
+    // With one half picked, the menu item that completes the pair says so.
+    public string PickSyncCurrentHeader => _pendingSyncRightId != null
+        ? string.Format(Se.Language.File.CompareSyncWithReferenceX, _pendingSyncNumber)
+        : Se.Language.File.CompareSyncPickCurrent;
+
+    public string PickSyncReferenceHeader => _pendingSyncLeftId != null
+        ? string.Format(Se.Language.File.CompareSyncWithCurrentX, _pendingSyncNumber)
+        : Se.Language.File.CompareSyncPickReference;
+
+    /// <summary>The selected row has the line the waiting half needs.</summary>
+    public bool CanApplySync =>
+        (_pendingSyncLeftId != null && SelectedRow?.Right.Line != null) ||
+        (_pendingSyncRightId != null && SelectedRow?.Left.Line != null);
 
     public string LeftSideLabel => IsLeftEditable ? Se.Language.File.CompareEditable : Se.Language.File.CompareReadOnly;
 
@@ -94,6 +109,7 @@ public partial class CompareViewModel : ObservableObject
     private readonly List<SyncPoint> _syncPoints = new();
     private Guid? _pendingSyncLeftId;
     private Guid? _pendingSyncRightId;
+    private int _pendingSyncNumber;
 
     private sealed record SyncPoint(Guid LeftId, Guid RightId);
 
@@ -760,6 +776,7 @@ public partial class CompareViewModel : ObservableObject
         }
 
         _pendingSyncLeftId = line.Id;
+        _pendingSyncNumber = line.Number;
         SyncPointHint = string.Format(Se.Language.File.CompareSyncCurrentPickedX, line.Number);
         UpdateSyncFlags();
     }
@@ -780,8 +797,23 @@ public partial class CompareViewModel : ObservableObject
         }
 
         _pendingSyncRightId = line.Id;
+        _pendingSyncNumber = line.Number;
         SyncPointHint = string.Format(Se.Language.File.CompareSyncReferencePickedX, line.Number);
         UpdateSyncFlags();
+    }
+
+    /// <summary>Completes the waiting sync point with the selected row's line on the other side.</summary>
+    [RelayCommand]
+    private void ApplySync()
+    {
+        if (_pendingSyncLeftId != null)
+        {
+            PickSyncReference(SelectedRow);
+        }
+        else if (_pendingSyncRightId != null)
+        {
+            PickSyncCurrent(SelectedRow);
+        }
     }
 
     [RelayCommand]
@@ -887,6 +919,15 @@ public partial class CompareViewModel : ObservableObject
             row.IsLeftSyncPending = _pendingSyncLeftId != null && row.Left.Line?.Id == _pendingSyncLeftId;
             row.IsRightSyncPending = _pendingSyncRightId != null && row.Right.Line?.Id == _pendingSyncRightId;
         }
+
+        OnPropertyChanged(nameof(PickSyncCurrentHeader));
+        OnPropertyChanged(nameof(PickSyncReferenceHeader));
+        OnPropertyChanged(nameof(CanApplySync));
+    }
+
+    partial void OnSelectedRowChanged(CompareRow? value)
+    {
+        OnPropertyChanged(nameof(CanApplySync));
     }
 
     [RelayCommand]

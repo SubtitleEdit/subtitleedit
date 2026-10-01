@@ -4,6 +4,7 @@ using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Files.Compare;
 using Nikse.SubtitleEdit.Features.Main;
@@ -167,6 +168,50 @@ public class CompareAlignmentTests : IDisposable
             var visible = flyout.Items.OfType<MenuItem>().Where(p => p.IsVisible).Select(p => p.Header).ToList();
             Assert.Equal(new object[] { Se.Language.File.CompareSyncPickCurrent, Se.Language.File.CompareSyncPickReference }, visible);
             flyout.Hide();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void ApplySync_CompletesThePickWithTheSelectedRow_AndTheMenuNamesTheWaitingLine()
+    {
+        var vm = Open(MakeLines(("A", 0), ("B", 2000), ("C", 4000)), MakeLines(("X", 50000), ("Y", 52000), ("Z", 54000)));
+        Assert.Equal(Se.Language.File.CompareSyncPickReference, vm.PickSyncReferenceHeader);
+
+        vm.PickSyncCurrentCommand.Execute(vm.Rows[1]); // current "B", #2
+        Assert.Equal(string.Format(Se.Language.File.CompareSyncWithCurrentX, 2), vm.PickSyncReferenceHeader);
+        Assert.True(vm.HasSyncBar);
+
+        vm.SelectedRow = vm.Rows.First(p => p.Right.Text == "Z");
+        Assert.True(vm.CanApplySync);
+        vm.ApplySyncCommand.Execute(null);
+        Settle();
+
+        var syncRow = vm.Rows.Single(p => p.IsSyncPoint);
+        Assert.Equal("B", syncRow.Left.Text);
+        Assert.Equal("Z", syncRow.Right.Text);
+        Assert.False(vm.CanApplySync);
+        Assert.Equal(Se.Language.File.CompareSyncPickReference, vm.PickSyncReferenceHeader);
+    }
+
+    [AvaloniaFact]
+    public void SyncBar_AtTheMinimumWidth_KeepsTheHintOnAFewLines()
+    {
+        var vm = Open(MakeLines(("A", 0), ("B", 2000)), MakeLines(("A", 0), ("X", 2000)));
+        var window = new CompareWindow(vm) { Width = 900, Height = 500 };
+        window.Show();
+        try
+        {
+            Settle(window);
+            vm.PickSyncCurrentCommand.Execute(vm.Rows[1]);
+            Settle(window);
+
+            var hint = window.GetVisualDescendants().OfType<TextBlock>().First(p => p.Text == vm.SyncPointHint);
+            Assert.True(hint.IsEffectivelyVisible);
+            Assert.True(hint.Bounds.Height < 60, $"hint is {hint.Bounds.Height}px tall");
         }
         finally
         {
