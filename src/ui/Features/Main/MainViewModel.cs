@@ -15651,6 +15651,14 @@ public partial class MainViewModel :
         return first < 0 ? selected : Subtitles.Skip(first);
     }
 
+    /// <summary>
+    /// Slack for the "keep gap if close" test: frame-snapped gaps land a fraction of a millisecond
+    /// above MinimumBetweenLines (2 frames at 23.976 fps = 83.4 ms vs. a setting of 83 ms). Half a
+    /// frame covers that rounding; a whole frame (issue #15511) also caught a gap one frame wider than
+    /// the minimum, so nudging towards the neighbour locked the gap at minimum + 1 frame.
+    /// </summary>
+    private static double KeepGapCloseToleranceMs() => FramesToMilliseconds(1) / 2.0;
+
     private void MoveStartByFrames(int frames, bool keepGapPrevIfClose)
     {
         var s = SelectedSubtitle;
@@ -15680,10 +15688,9 @@ public partial class MainViewModel :
         var prev = GetPreviousWorkingRow(idx);
         var prevGapMs = 0.0;
         var prevIsClose = false;
-        var oneFrameMsStart = FramesToMilliseconds(1);
         if (keepGapPrevIfClose && prev != null
             && prev.EndTime.TotalMilliseconds <= s.StartTime.TotalMilliseconds
-            && prev.EndTime.TotalMilliseconds + gapMs + oneFrameMsStart >= s.StartTime.TotalMilliseconds)
+            && prev.EndTime.TotalMilliseconds + gapMs + KeepGapCloseToleranceMs() >= s.StartTime.TotalMilliseconds)
         {
             prevIsClose = true;
             prevGapMs = s.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds;
@@ -15754,10 +15761,9 @@ public partial class MainViewModel :
         var next = GetNextWorkingRow(idx);
         var nextGapMs = 0.0;
         var nextIsClose = false;
-        var oneFrameMsEnd = FramesToMilliseconds(1);
         if (keepGapNextIfClose && next != null
             && s.EndTime.TotalMilliseconds <= next.StartTime.TotalMilliseconds
-            && s.EndTime.TotalMilliseconds + gapMs + oneFrameMsEnd >= next.StartTime.TotalMilliseconds)
+            && s.EndTime.TotalMilliseconds + gapMs + KeepGapCloseToleranceMs() >= next.StartTime.TotalMilliseconds)
         {
             nextIsClose = true;
             nextGapMs = next.StartTime.TotalMilliseconds - s.EndTime.TotalMilliseconds;
