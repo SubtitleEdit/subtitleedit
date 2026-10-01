@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.Forms
 {
@@ -9,6 +10,13 @@ namespace Nikse.SubtitleEdit.Core.Forms
     {
         public string S1 { get; private set; }
         public string S2 { get; private set; }
+
+        /// <summary>
+        /// Re-break the receiving text when a line gets longer than the max line length. Right for
+        /// moving words between two subtitles, wrong for moving them between the two lines of one
+        /// subtitle: there the user places the line break by hand, and re-breaking undoes the move.
+        /// </summary>
+        public bool AutoBreak { get; set; } = true;
 
         public MoveWordUpDown(string s1, string s2)
         {
@@ -399,6 +407,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
             S2 = AutoBreakIfNeeded(S2);
         }
 
+        private static readonly Regex EmptyFontTagRegex = new Regex(@"<font\b[^>]*>\s*</font>", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex DoubleSpaceRegex = new Regex(@"  +", RegexOptions.Compiled);
+
         private static string RemoveEmptyTags(string s)
         {
             var noTags = HtmlUtil.RemoveHtmlTags(s, true);
@@ -407,14 +418,28 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return string.Empty;
             }
 
-            return s
+            s = s
                 .Replace("<i></i>", string.Empty)
                 .Replace("<u></u>", string.Empty)
                 .Replace("<b></b>", string.Empty);
+
+            if (s.IndexOf("</font>", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                // A <font color=...> whose last word moved to the other line is left empty, and
+                // repeated moves piled them up ("<font c></font> <font c></font> ...").
+                s = DoubleSpaceRegex.Replace(EmptyFontTagRegex.Replace(s, string.Empty), " ").Trim();
+            }
+
+            return s;
         }
 
-        private static string AutoBreakIfNeeded(string s)
+        private string AutoBreakIfNeeded(string s)
         {
+            if (!AutoBreak)
+            {
+                return s;
+            }
+
             var doBreak = false;
             foreach (var line in s.SplitToLines())
             {

@@ -465,4 +465,34 @@ public class MoveWordUpDownTest
         Assert.Equal("He knows much <i>of</i>", mover.S1);
         Assert.Equal("<i>anything</i> anymore.", mover.S2);
     }
+
+    [Fact]
+    public void MoveWordDown_AutoBreakOff_KeepsLongSecondLine()
+    {
+        var mover = new MoveWordUpDown("This is a rather", "long subtitle line that will need two lines") { AutoBreak = false };
+        mover.MoveWordDown();
+
+        Assert.Equal("This is a", mover.S1);
+        Assert.Equal("rather long subtitle line that will need two lines", mover.S2);
+    }
+
+    [Fact]
+    public void MoveWordUp_AutoBreakOff_KeepsLongFirstLine()
+    {
+        var mover = new MoveWordUpDown("This is a rather long subtitle line that will", "need") { AutoBreak = false };
+        mover.MoveWordUp();
+
+        Assert.Equal("This is a rather long subtitle line that will need", mover.S1);
+        Assert.Equal(string.Empty, mover.S2);
+    }
+
+    [Fact]
+    public void MoveWordDown_RemovesEmptyFontTag()
+    {
+        var mover = new MoveWordUpDown("<font color=\"#ff0000\">This is</font> <font color=\"#ff0000\">rather</font>", "<font color=\"#ff0000\">long</font>");
+        mover.MoveWordDown();
+
+        Assert.Equal("<font color=\"#ff0000\">This is</font>", mover.S1);
+        Assert.Equal("<font color=\"#ff0000\">rather long</font>", mover.S2);
+    }
 }
