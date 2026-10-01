@@ -739,22 +739,26 @@ public static class ImageRenderer
             {
                 var segment = segmentsToRender[i];
                 var font = fonts.Get(segment);
-                using var shaper = new SKShaper(font.Typeface);
-                var result = shaper.Shape(segment.Text, font);
-
-                for (var g = 0; g < result.Codepoints.Length; g++)
+                ForEachFontRun(segment.Text, font, (runText, runFont) =>
                 {
-                    var glyphPath = font.GetGlyphPath((ushort)result.Codepoints[g]);
-                    var gx = x + result.Points[g].X + g * spacing;
-                    var next = g + 1 < result.Points.Length ? result.Points[g + 1].X : result.Width;
-                    glyphs.Add(new GeometryGlyph(
-                        glyphPath is { IsEmpty: false } ? glyphPath : null,
-                        gx,
-                        next - result.Points[g].X,
-                        segment.Color));
-                }
+                    using var shaper = new SKShaper(runFont.Typeface);
+                    var result = shaper.Shape(runText, runFont);
 
-                x += result.Width + result.Codepoints.Length * spacing;
+                    for (var g = 0; g < result.Codepoints.Length; g++)
+                    {
+                        var glyphPath = runFont.GetGlyphPath((ushort)result.Codepoints[g]);
+                        var gx = x + result.Points[g].X + g * spacing;
+                        var next = g + 1 < result.Points.Length ? result.Points[g + 1].X : result.Width;
+                        glyphs.Add(new GeometryGlyph(
+                            glyphPath is { IsEmpty: false } ? glyphPath : null,
+                            gx,
+                            next - result.Points[g].X,
+                            segment.Color));
+                    }
+
+                    x += result.Width + result.Codepoints.Length * spacing;
+                });
+
                 if ((segment.IsItalic || segment.IsBold) && i < segmentsToRender.Count - 1)
                 {
                     x += font.Size * 0.17f;
@@ -1069,41 +1073,286 @@ public static class ImageRenderer
         };
     }
 
-    // Helper method to measure text with HarfBuzz shaping via SKShaper
-    private static float MeasureTextWithShaping(string text, SKFont font)
-    {
-        using var shaper = new SKShaper(font.Typeface);
-        var result = shaper.Shape(text, font);
+    // Glyph fallback typefaces by (family, weight, width, slant, code point). Shared across
+    // renders and threads; the typefaces live for the process, like Skia's own font cache.
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<(string Family, int Weight, int Width, SKFontStyleSlant Slant, int CodePoint), SKTypeface?> FallbackTypefaces = new();
 
-        // The visual right edge (glyph overhang, e.g. italics) comes from the SHAPED glyphs.
-        // SKFont.MeasureText on the string measures the unshaped, isolated forms - for
-        // Arabic that is up to 40% wider than what is drawn, so right/center aligned lines
-        // ended at different edges (issue #14696).
-        var visualRight = 0f;
-        if (result.Codepoints.Length > 0)
+    /// <summary>
+    /// Splits text into runs that each have glyphs in one typeface and calls back for every
+    /// run in logical order. Characters the font has no glyph for - like "♪" in many text
+    /// fonts (issue #15499) - get a fallback typeface from the system font manager, the way
+    /// a text box would show them, instead of rendering as nothing. Marks, joiners and
+    /// variation selectors stay in the run of the character they belong to. The fallback
+    /// fonts only exist during the callback. Text that HarfBuzz shapes right-to-left (its
+    /// first letter is RTL) gets its runs in reverse, so they line up left to right the way
+    /// the unsplit string would have been drawn.
+    /// </summary>
+    private static void ForEachFontRun(string text, SKFont font, Action<string, SKFont> action)
+    {
+        var primary = font.Typeface;
+        if (string.IsNullOrEmpty(text) || primary.ContainsGlyphs(text))
         {
-            var glyphs = new ushort[result.Codepoints.Length];
-            for (var i = 0; i < glyphs.Length; i++)
+            action(text, font);
+            return;
+        }
+
+        // 1) Letters and characters the font lacks decide their typeface. Neutral characters -
+        //    spaces, punctuation, digits - are left open, and marks follow their base.
+        var style = primary.FontStyle;
+        var runes = text.EnumerateRunes().ToArray();
+        var typefaces = new SKTypeface?[runes.Length];
+        for (var i = 0; i < runes.Length; i++)
+        {
+            var rune = runes[i];
+            if (StaysInRun(rune) && !System.Text.Rune.IsWhiteSpace(rune))
             {
-                glyphs[i] = (ushort)result.Codepoints[i];
+                continue; // takes the typeface of the character before it, below
             }
 
-            font.GetGlyphWidths(glyphs, out var glyphBounds);
-            for (var i = 0; i < glyphs.Length; i++)
+            if (!primary.ContainsGlyph(rune.Value))
             {
-                visualRight = Math.Max(visualRight, result.Points[i].X + glyphBounds[i].Right);
+                typefaces[i] = GetFallbackTypeface(primary.FamilyName, style, rune.Value) ?? primary;
+            }
+            else if (System.Text.Rune.IsLetter(rune))
+            {
+                typefaces[i] = primary;
             }
         }
 
+        // 2) A neutral character joins the run before it, or else the run after it, when that
+        //    typeface has a glyph for it. Splitting "- (" off an Arabic line would shape it as a
+        //    separate left-to-right run and break the line's order and mirroring.
+        for (var i = 0; i < runes.Length; i++)
+        {
+            if (typefaces[i] != null)
+            {
+                continue;
+            }
+
+            var rune = runes[i];
+            if (StaysInRun(rune) && !System.Text.Rune.IsWhiteSpace(rune))
+            {
+                typefaces[i] = i > 0 ? typefaces[i - 1] : null;
+                if (typefaces[i] != null)
+                {
+                    continue;
+                }
+            }
+
+            var previous = i > 0 ? typefaces[i - 1] : null;
+            SKTypeface? next = null;
+            for (var j = i + 1; j < runes.Length && next == null; j++)
+            {
+                if (System.Text.Rune.IsLetter(runes[j]) || !primary.ContainsGlyph(runes[j].Value))
+                {
+                    next = typefaces[j];
+                }
+            }
+
+            typefaces[i] = previous != null && previous.ContainsGlyph(rune.Value) ? previous
+                : next != null && next.ContainsGlyph(rune.Value) ? next
+                : primary;
+        }
+
+        var runStart = 0;
+        SKTypeface? runTypeface = null;
+        var runs = new List<(string Text, SKTypeface Typeface)>();
+        var fallbackFonts = new Dictionary<SKTypeface, SKFont>();
+        try
+        {
+            var index = 0;
+            for (var i = 0; i < runes.Length; i++)
+            {
+                var typeface = typefaces[i] ?? primary;
+                if (runTypeface != null && !ReferenceEquals(typeface, runTypeface))
+                {
+                    runs.Add((text.Substring(runStart, index - runStart), runTypeface));
+                    runStart = index;
+                }
+
+                runTypeface = typeface;
+                index += runes[i].Utf16SequenceLength;
+            }
+
+            runs.Add((text.Substring(runStart), runTypeface ?? primary));
+            if (StartsRightToLeft(text))
+            {
+                runs.Reverse();
+
+                // A run with no letter or digit - "- (" next to Arabic in a font without those
+                // glyphs - is shaped left-to-right on its own, so lay it out the way the
+                // right-to-left line would have: characters reversed, brackets mirrored.
+                for (var i = 0; i < runs.Count; i++)
+                {
+                    if (IsNeutralRun(runs[i].Text))
+                    {
+                        runs[i] = (ReverseAndMirror(runs[i].Text), runs[i].Typeface);
+                    }
+                }
+            }
+
+            foreach (var run in runs)
+            {
+                action(run.Text, GetRunFont(run.Typeface));
+            }
+        }
+        finally
+        {
+            foreach (var fallbackFont in fallbackFonts.Values)
+            {
+                fallbackFont.Dispose();
+            }
+        }
+
+        SKFont GetRunFont(SKTypeface typeface)
+        {
+            if (ReferenceEquals(typeface, primary))
+            {
+                return font;
+            }
+
+            if (!fallbackFonts.TryGetValue(typeface, out var fallbackFont))
+            {
+                fallbackFont = new SKFont(typeface, font.Size, font.ScaleX, font.SkewX)
+                {
+                    Hinting = font.Hinting,
+                    Subpixel = font.Subpixel,
+                    Edging = font.Edging,
+                    Embolden = font.Embolden,
+                };
+                fallbackFonts[typeface] = fallbackFont;
+            }
+
+            return fallbackFont;
+        }
+    }
+
+    // HarfBuzz picks the direction of a buffer from the script of its first letter.
+    private static bool StartsRightToLeft(string text)
+    {
+        foreach (var rune in text.EnumerateRunes())
+        {
+            if (System.Text.Rune.IsLetter(rune))
+            {
+                return LanguageAutoDetect.ContainsRightToLeftLetter(rune.ToString());
+            }
+        }
+
+        return false;
+    }
+
+    private static bool IsNeutralRun(string text)
+    {
+        foreach (var rune in text.EnumerateRunes())
+        {
+            if (System.Text.Rune.IsLetterOrDigit(rune))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static string ReverseAndMirror(string text)
+    {
+        var runes = text.EnumerateRunes().ToArray();
+        var sb = new System.Text.StringBuilder(text.Length);
+        for (var i = runes.Length - 1; i >= 0; i--)
+        {
+            var rune = runes[i];
+            var mirrored = rune.Value switch
+            {
+                '(' => ")", ')' => "(",
+                '[' => "]", ']' => "[",
+                '{' => "}", '}' => "{",
+                '<' => ">", '>' => "<",
+                '«' => "»", '»' => "«",
+                _ => null,
+            };
+
+            if (mirrored != null)
+            {
+                sb.Append(mirrored);
+            }
+            else
+            {
+                sb.Append(rune.ToString());
+            }
+        }
+
+        return sb.ToString();
+    }
+
+    private static bool StaysInRun(System.Text.Rune rune)
+    {
+        if (System.Text.Rune.IsWhiteSpace(rune) || System.Text.Rune.IsControl(rune))
+        {
+            return true;
+        }
+
+        var category = System.Text.Rune.GetUnicodeCategory(rune);
+        return category is UnicodeCategory.NonSpacingMark
+            or UnicodeCategory.SpacingCombiningMark
+            or UnicodeCategory.EnclosingMark
+            or UnicodeCategory.Format;
+    }
+
+    private static SKTypeface? GetFallbackTypeface(string family, SKFontStyle style, int codePoint)
+    {
+        return FallbackTypefaces.GetOrAdd((family ?? string.Empty, style.Weight, style.Width, style.Slant, codePoint), key =>
+        {
+            var match = SKFontManager.Default.MatchCharacter(key.Family, key.Weight, key.Width, key.Slant, null, key.CodePoint);
+            return match != null && match.ContainsGlyph(key.CodePoint) ? match : null;
+        });
+    }
+
+    // Helper method to measure text with HarfBuzz shaping via SKShaper
+    private static float MeasureTextWithShaping(string text, SKFont font)
+    {
+        var advance = 0f;
+        var visualRight = 0f;
+        ForEachFontRun(text, font, (runText, runFont) =>
+        {
+            using var shaper = new SKShaper(runFont.Typeface);
+            var result = shaper.Shape(runText, runFont);
+
+            // The visual right edge (glyph overhang, e.g. italics) comes from the SHAPED glyphs.
+            // SKFont.MeasureText on the string measures the unshaped, isolated forms - for
+            // Arabic that is up to 40% wider than what is drawn, so right/center aligned lines
+            // ended at different edges (issue #14696).
+            if (result.Codepoints.Length > 0)
+            {
+                var glyphs = new ushort[result.Codepoints.Length];
+                for (var i = 0; i < glyphs.Length; i++)
+                {
+                    glyphs[i] = (ushort)result.Codepoints[i];
+                }
+
+                runFont.GetGlyphWidths(glyphs, out var glyphBounds);
+                for (var i = 0; i < glyphs.Length; i++)
+                {
+                    visualRight = Math.Max(visualRight, advance + result.Points[i].X + glyphBounds[i].Right);
+                }
+            }
+
+            advance += result.Width;
+        });
+
         // Use the maximum of advance width and visual right edge
-        return Math.Max(result.Width, visualRight);
+        return Math.Max(advance, visualRight);
     }
 
     // Helper method to draw shaped text using SKShaper
     private static void DrawShapedText(SKCanvas canvas, string text, float x, float y, SKFont font, SKPaint paint)
     {
-        using var shaper = new SKShaper(font.Typeface);
-        canvas.DrawShapedText(shaper, text, x, y, SKTextAlign.Left, font, paint);
+        ForEachFontRun(text, font, (runText, runFont) =>
+        {
+            using var shaper = new SKShaper(runFont.Typeface);
+            var result = shaper.Shape(runText, runFont);
+            canvas.DrawShapedText(shaper, runText, x, y, SKTextAlign.Left, runFont, paint);
+            x += result.Width;
+        });
     }
 
     // Builds the combined glyph outline path for shaped text, positioned like
@@ -1111,20 +1360,24 @@ public static class ImageRenderer
     // are skipped - they get no stroke, but the fill still renders them.
     private static SKPath GetShapedTextPath(string text, float x, float y, SKFont font)
     {
-        using var shaper = new SKShaper(font.Typeface);
-        var result = shaper.Shape(text, x, y, font);
-
         var path = new SKPath();
-        for (var i = 0; i < result.Codepoints.Length; i++)
+        ForEachFontRun(text, font, (runText, runFont) =>
         {
-            using var glyphPath = font.GetGlyphPath((ushort)result.Codepoints[i]);
-            if (glyphPath == null || glyphPath.IsEmpty)
+            using var shaper = new SKShaper(runFont.Typeface);
+            var result = shaper.Shape(runText, x, y, runFont);
+            for (var i = 0; i < result.Codepoints.Length; i++)
             {
-                continue;
+                using var glyphPath = runFont.GetGlyphPath((ushort)result.Codepoints[i]);
+                if (glyphPath == null || glyphPath.IsEmpty)
+                {
+                    continue;
+                }
+
+                path.AddPath(glyphPath, result.Points[i].X, result.Points[i].Y);
             }
 
-            path.AddPath(glyphPath, result.Points[i].X, result.Points[i].Y);
-        }
+            x += result.Width;
+        });
 
         return path;
     }
