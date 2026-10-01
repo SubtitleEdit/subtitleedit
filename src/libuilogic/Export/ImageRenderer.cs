@@ -1096,7 +1096,64 @@ public static class ImageRenderer
             return;
         }
 
+        // 1) Letters and characters the font lacks decide their typeface. Neutral characters -
+        //    spaces, punctuation, digits - are left open, and marks follow their base.
         var style = primary.FontStyle;
+        var runes = text.EnumerateRunes().ToArray();
+        var typefaces = new SKTypeface?[runes.Length];
+        for (var i = 0; i < runes.Length; i++)
+        {
+            var rune = runes[i];
+            if (StaysInRun(rune) && !System.Text.Rune.IsWhiteSpace(rune))
+            {
+                continue; // takes the typeface of the character before it, below
+            }
+
+            if (!primary.ContainsGlyph(rune.Value))
+            {
+                typefaces[i] = GetFallbackTypeface(primary.FamilyName, style, rune.Value) ?? primary;
+            }
+            else if (System.Text.Rune.IsLetter(rune))
+            {
+                typefaces[i] = primary;
+            }
+        }
+
+        // 2) A neutral character joins the run before it, or else the run after it, when that
+        //    typeface has a glyph for it. Splitting "- (" off an Arabic line would shape it as a
+        //    separate left-to-right run and break the line's order and mirroring.
+        for (var i = 0; i < runes.Length; i++)
+        {
+            if (typefaces[i] != null)
+            {
+                continue;
+            }
+
+            var rune = runes[i];
+            if (StaysInRun(rune) && !System.Text.Rune.IsWhiteSpace(rune))
+            {
+                typefaces[i] = i > 0 ? typefaces[i - 1] : null;
+                if (typefaces[i] != null)
+                {
+                    continue;
+                }
+            }
+
+            var previous = i > 0 ? typefaces[i - 1] : null;
+            SKTypeface? next = null;
+            for (var j = i + 1; j < runes.Length && next == null; j++)
+            {
+                if (System.Text.Rune.IsLetter(runes[j]) || !primary.ContainsGlyph(runes[j].Value))
+                {
+                    next = typefaces[j];
+                }
+            }
+
+            typefaces[i] = previous != null && previous.ContainsGlyph(rune.Value) ? previous
+                : next != null && next.ContainsGlyph(rune.Value) ? next
+                : primary;
+        }
+
         var runStart = 0;
         SKTypeface? runTypeface = null;
         var runs = new List<(string Text, SKTypeface Typeface)>();
@@ -1104,16 +1161,9 @@ public static class ImageRenderer
         try
         {
             var index = 0;
-            foreach (var rune in text.EnumerateRunes())
+            for (var i = 0; i < runes.Length; i++)
             {
-                var typeface = runTypeface ?? primary;
-                if (!StaysInRun(rune))
-                {
-                    typeface = primary.ContainsGlyph(rune.Value)
-                        ? primary
-                        : GetFallbackTypeface(primary.FamilyName, style, rune.Value) ?? primary;
-                }
-
+                var typeface = typefaces[i] ?? primary;
                 if (runTypeface != null && !ReferenceEquals(typeface, runTypeface))
                 {
                     runs.Add((text.Substring(runStart, index - runStart), runTypeface));
@@ -1121,13 +1171,24 @@ public static class ImageRenderer
                 }
 
                 runTypeface = typeface;
-                index += rune.Utf16SequenceLength;
+                index += runes[i].Utf16SequenceLength;
             }
 
             runs.Add((text.Substring(runStart), runTypeface ?? primary));
             if (StartsRightToLeft(text))
             {
                 runs.Reverse();
+
+                // A run with no letter or digit - "- (" next to Arabic in a font without those
+                // glyphs - is shaped left-to-right on its own, so lay it out the way the
+                // right-to-left line would have: characters reversed, brackets mirrored.
+                for (var i = 0; i < runs.Count; i++)
+                {
+                    if (IsNeutralRun(runs[i].Text))
+                    {
+                        runs[i] = (ReverseAndMirror(runs[i].Text), runs[i].Typeface);
+                    }
+                }
             }
 
             foreach (var run in runs)
@@ -1178,6 +1239,49 @@ public static class ImageRenderer
         }
 
         return false;
+    }
+
+    private static bool IsNeutralRun(string text)
+    {
+        foreach (var rune in text.EnumerateRunes())
+        {
+            if (System.Text.Rune.IsLetterOrDigit(rune))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static string ReverseAndMirror(string text)
+    {
+        var runes = text.EnumerateRunes().ToArray();
+        var sb = new System.Text.StringBuilder(text.Length);
+        for (var i = runes.Length - 1; i >= 0; i--)
+        {
+            var rune = runes[i];
+            var mirrored = rune.Value switch
+            {
+                '(' => ")", ')' => "(",
+                '[' => "]", ']' => "[",
+                '{' => "}", '}' => "{",
+                '<' => ">", '>' => "<",
+                '«' => "»", '»' => "«",
+                _ => null,
+            };
+
+            if (mirrored != null)
+            {
+                sb.Append(mirrored);
+            }
+            else
+            {
+                sb.Append(rune.ToString());
+            }
+        }
+
+        return sb.ToString();
     }
 
     private static bool StaysInRun(System.Text.Rune rune)
