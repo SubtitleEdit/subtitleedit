@@ -12587,6 +12587,7 @@ public partial class MainViewModel :
         }
 
         AudioVisualizer.ShotChanges = newShotChanges;
+        SaveShotChangesToDisk(newShotChanges);
 
         _updateAudioVisualizer = true;
     }
@@ -12622,6 +12623,7 @@ public partial class MainViewModel :
         }
 
         AudioVisualizer.ShotChanges = newShotChanges;
+        SaveShotChangesToDisk(newShotChanges);
 
         _updateAudioVisualizer = true;
     }
@@ -24964,6 +24966,27 @@ public partial class MainViewModel :
                 await FinishOcrImportAsync(fileName, result.OcredSubtitle, skipLoadVideo: skipLoadVideo);
             }
         });
+    }
+
+    /// <summary>
+    /// Shot changes are kept per video on disk and reloaded with it, so every edit must be written
+    /// back - otherwise it is silently lost the next time the video is opened.
+    /// </summary>
+    private void SaveShotChangesToDisk(List<double> shotChanges)
+    {
+        if (string.IsNullOrEmpty(_videoFileName))
+        {
+            return;
+        }
+
+        if (shotChanges.Count == 0)
+        {
+            ShotChangesHelper.DeleteShotChanges(_videoFileName, _audioTrack?.FfIndex ?? -1);
+        }
+        else
+        {
+            ShotChangesHelper.SaveShotChanges(_videoFileName, shotChanges, _audioTrack?.FfIndex ?? -1);
+        }
     }
 
     private void RemoveShotChange(int idx)
