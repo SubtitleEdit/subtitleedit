@@ -222,6 +222,9 @@ public class AutoTranslateRunnerTest : IDisposable
     // file name - the curated 4B and the smaller sizes we do not list.
     [InlineData("TranslatePsy-AfriSLM-4B-Q4_K_M-imat.gguf", null, false, true)] // curated
     [InlineData("TranslatePsy-AfriSLM-2B-Q8_0-imat.gguf", null, false, true)]   // uncurated size
+    // Index-Translate is a Qwen 3.5 fine-tune too, again without "qwen" in the file name.
+    [InlineData("Index-Translate-2B.Q8_0.gguf", null, false, true)]             // curated
+    [InlineData("Index-Translate-2B.Q4_K_M.gguf", null, false, true)]           // uncurated quant
     public void InferChatTemplate_PicksFlagsByFamily(string fileName, string? expectedTemplate, bool expectedNoJinja, bool expectedNoThinking)
     {
         var (chatTemplate, noJinja, noThinking) = LlamaCppServerManager.InferChatTemplate(fileName);
