@@ -18,6 +18,19 @@ Compare two subtitle files side by side to identify differences in text, timing,
 5. Use **Previous difference** / **Next difference** (F8 / Shift+F8) to jump between differing rows, or click the overview strip on the right to jump to any part of the file.
 6. Use the tabs (**All**, **Differences**, **Text differences**) and the options to refine the comparison. Each tab shows how many rows it holds.
 
+## Alignment and sync points
+
+Lines are paired by content, not by position. A line that exists on one side only gets a blank row on the other, and the lines after it pair up again, even when the two files are timed differently. Lines with the same or nearly the same text, or with the same timing, are matched.
+
+If the automatic pairing gets a stretch wrong, set a **sync point**:
+
+1. Right-click (Ctrl+Click on macOS) a line on one side and choose **Sync point: use this current line** (or **...reference line**). A bar above the status line says which line is waiting.
+2. Select the matching line on the other side and click **Sync** in that bar, or right-click it and choose **Sync with current #N** (or **Sync with reference #N**).
+
+When the current subtitle is editable and the two start times differ, the sync point also fixes the timing. The current line gets the reference line's start time, and the lines after it move by the same amount, up to the next sync point. One sync point on the first line where the timing goes wrong is enough to shift the rest of the file. The shift is a pending change like any other edit, so **Undo** takes it back.
+
+The two lines are now always shown as a pair, marked with a link icon between them, and the lines above and below are aligned separately. You can add as many sync points as you need. A new sync point that contradicts an earlier one replaces it. Right-click a sync point to remove it, or use **Clear sync points**. Press Escape or **Cancel** to drop a half-picked sync point.
+
 ## Editing
 
 The current subtitle can be edited right in the compare window. The reference is read-only.
@@ -58,4 +71,4 @@ Editing is only available while the left side is the loaded subtitle. If you loa
 | Alt+Left | Take the selected line from the reference |
 | Delete | Delete the selected current line |
 | Ctrl+Z | Undo the last change |
-| Escape | Cancel editing, or close the dialog |
+| Escape | Cancel editing or a half-picked sync point, or close the dialog |

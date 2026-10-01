@@ -76,6 +76,7 @@ internal class IconNames
     public const string Import = "mdi-import";
     public const string Information = "mdi-information";
     public const string Italic = "mdi-format-italic";
+    public const string LinkVariant = "mdi-link-variant";
     public const string Lock = "mdi-lock";
     public const string LockClock = "mdi-lock-clock";
     public const string MagnifyMinus = "mdi-magnify-minus";
