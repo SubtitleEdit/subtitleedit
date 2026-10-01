@@ -3,6 +3,35 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-beta18 (1st of October 2026)
+
+* Add import of subtitles from DVD (IFO/VOB) with title picker, fast rip and exact cell timing (SE 4 parity)
+* Add reading of PSP UMD Video subtitles (.MPS/.PMF and .subs dumps)
+* Add reading of HD-DVD sup subtitles
+* Add reading of DVD "SP" sup in Batch convert and seconv
+* Add reading of CEA-608 captions from .m2v
+* Open transport streams saved with a video extension like .mp4 (GUI, Batch convert, seconv)
+* Open more files found in a scan of real issue files (UTF-16 without BOM, styles-only ASS, IMSC1 and more)
+* seconv: read the SE 4 formats the GUI opens again, and follow the "use word split list" OCR setting
+* OCR: access keys for Start/Pause/Edit-export, and OK is blocked while OCR runs - thx skylinekiller
+* Remux video: accept every video container as an audio source - thx MaxBunny1786
+* Blu-ray sup: write PTS on the video frame grid - thx Lukewarm1141
+* Toolbar: hide right-side items instead of overlapping icons when the window is narrow - thx hisui3393
+* Fix image export dropping glyphs like ♪ missing from the font (falls back to a system font) - thx JoaoGri
+* Fix Linux: copy text via xclip/wl-copy to keep accented characters - thx Pemicope
+* Fix Batch convert not keeping the source's UTF-8 BOM choice - thx Pemicope
+* Fix transport stream subtitles being off by the file's start time in the players
+* Fix FFmpeg player: play on the file's own timestamps, like mpv
+* Fix MP4 closed captions: 1 ms early cues, UI freeze on large files, CEA-608 roll-up
+* Fix CEA-708 pop-on caption timing, and keep the space around mid-row styled words in CEA-608/708
+* Fix Spanish "Fix common OCR errors" splitting forms of "sobrevalorar"
+* Update audio.cpp to v0.9.0 (lower GPU memory use for Higgs, Fish and ACE-Step)
+* Update CrispASR to v0.8.39 (fixes macOS 14 and older "exit code 134" crash) - thx YujKodato
+* Update Chinese Traditional translation - thx love80312
+* Update Korean translation - thx 12si27
+
+-----------------------------------------------------------------------------------------------------
+
 v5.3.0-beta17 (30th of September 2026)
 
 * Add reading of EZTitles binary project files (.ezt), with italic, color and alignment
