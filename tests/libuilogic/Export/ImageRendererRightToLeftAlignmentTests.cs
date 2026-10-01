@@ -111,6 +111,9 @@ public class ImageRendererRightToLeftAlignmentTests
         var topCenter = (edges.TopLeft + edges.TopRight) / 2.0;
         var bottomCenter = (edges.BottomLeft + edges.BottomRight) / 2.0;
 
-        Assert.True(Math.Abs(topCenter - bottomCenter) <= 2, $"centers {topCenter} vs {bottomCenter}");
+        // A center is the mean of two ink edges, so side-bearing differences between the
+        // first/last glyphs of the two lines add up - 2.5 px with the font picked on Linux CI.
+        // The bug this guards against was tens of pixels.
+        Assert.True(Math.Abs(topCenter - bottomCenter) <= 3, $"centers {topCenter} vs {bottomCenter}");
     }
 }
