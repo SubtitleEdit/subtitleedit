@@ -33286,7 +33286,11 @@ public partial class MainViewModel :
                         // wheels through the waveform, keep selecting the line under the centered cursor.
                         // Only react to position *changes* — otherwise this would immediately steal back
                         // the selection when the user picks a different line in the grid while paused.
+                        // Opt-in (default off, like SE 4 which never selected while paused): scrubbing
+                        // backwards would otherwise steal the selection to the previous line, so the
+                        // current line's start can't be pulled back to the cursor (#15513).
                         if (WaveformCenter && Se.Settings.Waveform.CenterVideoPositionAlsoWhenPaused &&
+                            Se.Settings.Waveform.SelectCurrentSubtitleWhilePaused &&
                             SelectCurrentSubtitleWhilePlaying &&
                             Math.Abs(mediaPlayerSeconds - _pausedSelectLastSeconds) > 0.001)
                         {

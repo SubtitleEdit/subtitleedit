@@ -128,6 +128,7 @@ public class LanguageSettings
     public string WaveformDrawGridLines { get; set; }
     public string WaveformUseSkiaRenderer { get; set; }
     public string WaveformCenterVideoPositionAlsoWhenPaused { get; set; }
+    public string WaveformSelectCurrentSubtitleWhilePaused { get; set; }
     public string WaveformShowToolbar { get; set; }
     public string WaveformShowToolbarEdit { get; set; }
     public string WaveformShowToolbarEditLabel { get; set; }
@@ -478,6 +479,7 @@ public class LanguageSettings
         WaveformUseSkiaRenderer = "Use experimental fast renderer";
         WaveformFocusOnMouseOver = "Focus on mouse over";
         WaveformCenterVideoPositionAlsoWhenPaused = "Center video position also while paused";
+        WaveformSelectCurrentSubtitleWhilePaused = "Select current subtitle also while paused";
         WaveformShowToolbar = "Show toolbar";
         WaveformShowToolbarEdit = "Edit toolbar...";
         WaveformShowToolbarEditLabel = "Toolbar items";
