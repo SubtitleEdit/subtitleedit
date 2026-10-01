@@ -159,6 +159,99 @@ public class MainWordMoveFocusTests
         }
     }
 
+    /// <summary>
+    /// #15496: pressing "Move last word from first line down" repeatedly cycles like SE 4 - once
+    /// the last word has moved down, the text collapses to one line and the next press starts over.
+    /// </summary>
+    [AvaloniaFact]
+    public void MoveLastWordFromFirstLineDown_Repeated_CyclesBackToOneLine()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            var line = AddLine(vm, "Hello there friend", "Hej");
+            vm.SelectedSubtitle = line;
+
+            var nl = Environment.NewLine;
+            var expected = new[]
+            {
+                "Hello there" + nl + "friend",
+                "Hello" + nl + "there friend",
+                "Hello there friend",
+                "Hello there" + nl + "friend",
+            };
+            foreach (var text in expected)
+            {
+                vm.MoveLastWordFromFirstLineDownCurrentSubtitleCommand.Execute(null);
+                Assert.Equal(text, line.Text);
+            }
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>
+    /// #15496: a second line longer than the max line length used to be auto-broken and the whole
+    /// text rebalanced, so the word jumped back up instead of staying where the user put it.
+    /// </summary>
+    [AvaloniaFact]
+    public void MoveLastWordFromFirstLineDown_LongLine_KeepsTheUsersBreak()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            var nl = Environment.NewLine;
+            var line = AddLine(vm, "This is a rather long subtitle" + nl + "line that will need two lines", "Hej");
+            vm.SelectedSubtitle = line;
+
+            vm.MoveLastWordFromFirstLineDownCurrentSubtitleCommand.Execute(null);
+            vm.MoveLastWordFromFirstLineDownCurrentSubtitleCommand.Execute(null);
+            vm.MoveLastWordFromFirstLineDownCurrentSubtitleCommand.Execute(null);
+
+            Assert.Equal("This is a" + nl + "rather long subtitle line that will need two lines", line.Text);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>
+    /// #15496: with a font color the line break used to land inside a re-flowed color span and
+    /// empty "&lt;font ...&gt;&lt;/font&gt;" pairs piled up.
+    /// </summary>
+    [AvaloniaFact]
+    public void MoveLastWordFromFirstLineDown_FontColor_KeepsBreakAndTags()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            var nl = Environment.NewLine;
+            const string open = "<font color=\"#ff0000\">";
+            var line = AddLine(vm, open + "This is a rather long subtitle line that will need two lines</font>", "Hej");
+            vm.SelectedSubtitle = line;
+
+            for (var i = 0; i < 9; i++)
+            {
+                vm.MoveLastWordFromFirstLineDownCurrentSubtitleCommand.Execute(null);
+            }
+
+            Assert.Equal(open + "This is a</font>" + nl + open + "rather long subtitle line that will need two lines</font>", line.Text);
+
+            vm.MoveLastWordFromFirstLineDownCurrentSubtitleCommand.Execute(null);
+            vm.MoveLastWordFromFirstLineDownCurrentSubtitleCommand.Execute(null);
+            vm.MoveLastWordFromFirstLineDownCurrentSubtitleCommand.Execute(null);
+
+            Assert.Equal(open + "This is a rather long subtitle line that will need two lines</font>", line.Text);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
     [AvaloniaFact]
     public void MoveFirstWordToPrevious_TranslationFocused_MovesTranslationWordUp()
     {

@@ -20506,7 +20506,9 @@ public partial class MainViewModel :
             return;
         }
 
-        var upDown = new MoveWordUpDown(lines[0].Trim(), lines[1].Trim());
+        // The user places the line break by hand here, so no auto-break: re-breaking an
+        // over-long line rebalanced the text and undid the move (issue #15496).
+        var upDown = new MoveWordUpDown(lines[0].Trim(), lines[1].Trim()) { AutoBreak = false };
         if (up)
         {
             upDown.MoveWordUp();
@@ -20516,7 +20518,9 @@ public partial class MainViewModel :
             upDown.MoveWordDown();
         }
 
-        SetWordMoveText(s, original, JoinAndCapAtTwoLines(upDown.S1, upDown.S2));
+        // Trim like SE 4: once the last word has moved down, line 1 is empty and the text
+        // collapses to one line, so the next press starts the cycle over.
+        SetWordMoveText(s, original, (upDown.S1 + Environment.NewLine + upDown.S2).Trim());
 
         _updateAudioVisualizer = true;
     }
@@ -20752,17 +20756,6 @@ public partial class MainViewModel :
         }
 
         return lines;
-    }
-
-    private string JoinAndCapAtTwoLines(string s1, string s2)
-    {
-        var result = s1 + Environment.NewLine + s2;
-        if (result.SplitToLines().Count > 2)
-        {
-            result = Utilities.AutoBreakLine(Utilities.UnbreakLine(result), GetDetectedLanguageCode());
-        }
-
-        return result;
     }
 
     [RelayCommand]
