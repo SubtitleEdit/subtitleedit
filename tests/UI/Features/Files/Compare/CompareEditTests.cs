@@ -265,7 +265,9 @@ public class CompareEditTests : IDisposable
         Settle(window);
 
         var containers = vm.RowsView.GetRealizedContainers().ToList();
-        var row = (CompareRow)containers[containers.Count / 2].DataContext!;
+        // Near the top, so the opened editor fits in the view - focusing it must not need a scroll
+        // (rows are taller with the Linux fonts on CI, and a lower row's editor would overflow).
+        var row = (CompareRow)containers[2].DataContext!;
         double RowTop() => vm.RowsView.ContainerFromItem(row)!.TranslatePoint(new Point(0, 0), window)!.Value.Y;
         var top = RowTop();
 
