@@ -171,6 +171,8 @@ Export subtitles as images. The Export submenu lists: Blu-ray (sup), BDN/xml, BD
 
 The **IMSC 1.1 image profile** export writes the TTML file plus one PNG per subtitle next to it, named after the TTML file (`movie.ttml`, `movie_0001.png`, `movie_0002.png`, ...). Each subtitle is a `div` whose `smpte:backgroundImage` names its PNG, with media timebase, percentage-positioned regions, and `itts:forcedDisplay` on forced subtitles. The PNGs are separate files because the image profile does not allow embedded images. Keep them together with the TTML file when you deliver it.
 
+**Characters missing from the font.** If the chosen font has no glyph for a character, such as the music note ♪ in Times New Roman or Open Sans, that character is drawn with another installed font that has it, as text boxes on screen do. The rest of the line keeps the chosen font. This also works inside right-to-left lines, for example Arabic or Hebrew with a font that only covers Latin text.
+
 #### Text effects
 
 Tick **Text effect** (next to the bold and right-to-left check boxes) and press the settings button beside it to pick a **Preset** and tune it with **Strength**, **Letter spacing**, **Curve** and **Wave**. Every size in a preset scales with the font size, and presets use the window's font, outline and shadow colours where that is natural (the "signature" looks such as gold, chrome and fire bring their own palette). The presets, as listed in the settings window:
