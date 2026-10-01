@@ -428,7 +428,31 @@ public class CompareWindow : Window
             }
         };
 
-        listBox.ContextMenu = MakeRowContextMenu(vm);
+        listBox.ContextFlyout = MakeRowContextFlyout(vm);
+        UiUtil.AttachMacContextFlyoutHandler(listBox); // Ctrl+Click on macOS
+
+        // The menu acts on the selected row, so the row under the pointer becomes the selected
+        // one first - and a macOS Ctrl+Click must not reach the list, where it would deselect it.
+        listBox.AddHandler(PointerPressedEvent, (_, e) =>
+        {
+            var properties = e.GetCurrentPoint(listBox).Properties;
+            var isMacCtrlClick = OperatingSystem.IsMacOS() && properties.IsLeftButtonPressed && e.KeyModifiers.HasFlag(KeyModifiers.Control);
+            if (!properties.IsRightButtonPressed && !isMacCtrlClick)
+            {
+                return;
+            }
+
+            if ((e.Source as Visual)?.FindAncestorOfType<ListBoxItem>(includeSelf: true)?.DataContext is CompareRow row)
+            {
+                vm.SelectedRow = row;
+            }
+
+            if (isMacCtrlClick)
+            {
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
+
         vm.RowsView = listBox;
 
         var listBorder = new Border
@@ -459,7 +483,7 @@ public class CompareWindow : Window
     /// to make them a pair; the comparison is then lined up above and below it separately.
     /// Acts on the selected row, which a right-click selects, so the menu key works too.
     /// </summary>
-    private static ContextMenu MakeRowContextMenu(CompareViewModel vm)
+    private static MenuFlyout MakeRowContextFlyout(CompareViewModel vm)
     {
         Avalonia.Controls.MenuItem MakeItem(string header, System.Windows.Input.ICommand command, string? isVisiblePath, string? iconName = null)
         {
@@ -478,7 +502,7 @@ public class CompareWindow : Window
 
             if (iconName != null)
             {
-                item.Icon = new Icon { Value = iconName };
+                item.Icon = new Icon { Value = iconName, VerticalAlignment = VerticalAlignment.Center };
             }
 
             return item;
@@ -487,7 +511,7 @@ public class CompareWindow : Window
         var clear = MakeItem(string.Empty, vm.ClearSyncPointsCommand, nameof(vm.HasSyncPoints));
         clear.Bind(HeaderedSelectingItemsControl.HeaderProperty, new Binding(nameof(vm.ClearSyncPointsText)));
 
-        return new ContextMenu
+        return new MenuFlyout
         {
             Items =
             {

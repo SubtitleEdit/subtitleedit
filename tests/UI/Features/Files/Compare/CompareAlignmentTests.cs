@@ -1,5 +1,8 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
+using Avalonia.Input;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Files.Compare;
@@ -140,6 +143,37 @@ public class CompareAlignmentTests : IDisposable
         Assert.Equal("X", syncRow.Right.Text);
     }
 
+    [AvaloniaFact]
+    public void RightClick_SelectsTheRowUnderThePointer_AndOpensTheSyncMenu()
+    {
+        var vm = Open(MakeLines(("A", 0), ("B", 2000), ("C", 4000)), MakeLines(("A", 0), ("X", 2000), ("C", 4000)));
+        var window = new CompareWindow(vm) { Width = 1300, Height = 800 };
+        window.Show();
+        try
+        {
+            Settle(window);
+            vm.SelectRow(0);
+            Settle(window);
+
+            var container = vm.RowsView!.GetRealizedContainers().ElementAt(2);
+            var point = container.TranslatePoint(new Point(200, 20), window)!.Value;
+            window.MouseDown(point, MouseButton.Right);
+            window.MouseUp(point, MouseButton.Right);
+            Settle(window);
+
+            var flyout = Assert.IsType<MenuFlyout>(vm.RowsView!.ContextFlyout);
+            Assert.True(flyout.IsOpen);
+            Assert.Same(vm.Rows[2], vm.SelectedRow);
+            var visible = flyout.Items.OfType<MenuItem>().Where(p => p.IsVisible).Select(p => p.Header).ToList();
+            Assert.Equal(new object[] { Se.Language.File.CompareSyncPickCurrent, Se.Language.File.CompareSyncPickReference }, visible);
+            flyout.Hide();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     private static void AddSyncPoint(CompareViewModel vm, string leftText, string rightText)
     {
         vm.PickSyncReferenceCommand.Execute(vm.Rows.First(p => p.Right.Text == rightText));
@@ -174,11 +208,12 @@ public class CompareAlignmentTests : IDisposable
         return result;
     }
 
-    private static void Settle()
+    private static void Settle(Window? window = null)
     {
         for (var pump = 0; pump < 12; pump++)
         {
             Dispatcher.UIThread.RunJobs();
+            window?.UpdateLayout();
         }
     }
 }
