@@ -33286,9 +33286,12 @@ public partial class MainViewModel :
                         // wheels through the waveform, keep selecting the line under the centered cursor.
                         // Only react to position *changes* — otherwise this would immediately steal back
                         // the selection when the user picks a different line in the grid while paused.
+                        // Forward moves only: scrubbing backwards keeps the selected line even when the
+                        // cursor crosses the previous one, so its start can be pulled back to the cursor
+                        // - SE 4 only changed the selection while playing, i.e. moving forward (#15513).
                         if (WaveformCenter && Se.Settings.Waveform.CenterVideoPositionAlsoWhenPaused &&
                             SelectCurrentSubtitleWhilePlaying &&
-                            Math.Abs(mediaPlayerSeconds - _pausedSelectLastSeconds) > 0.001)
+                            mediaPlayerSeconds - _pausedSelectLastSeconds > 0.001)
                         {
                             SelectCurrentSubtitleAtPlayhead(mediaPlayerSeconds, subtitle);
                         }
