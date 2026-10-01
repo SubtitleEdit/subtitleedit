@@ -1333,6 +1333,8 @@ public partial class BurnInViewModel : ObservableObject
 
         subtitle = GetSubtitleBasedOnCut(subtitle);
 
+        AssaCentisecondTiming.FloorToCentiseconds(subtitle); // first frame kept, issue #15520
+
         if (subtitle.OriginalFormat is NetflixImsc11Japanese || NetflixImsc11JapaneseToAss.HasJapaneseMarkup(subtitle))
         {
             // Furigana, bouten and vertical writing become extra positioned render lines - burning

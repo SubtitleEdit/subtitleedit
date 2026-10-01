@@ -198,6 +198,7 @@ public class MpvReloader : IMpvReloader
             // text on the video (issue #13861). Lambda Cap decodes to the same markup (issue #14165).
             subtitle = NetflixImsc11JapaneseToAss.ConvertToSubtitle(subtitle, VideoWidth, VideoHeight);
             SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary, SmpteMode);
+            AssaCentisecondTiming.FloorToCentiseconds(subtitle);
             return (subtitle, subtitle.ToText(_assFormat), 0, false);
         }
 
@@ -208,6 +209,7 @@ public class MpvReloader : IMpvReloader
             // Convert deep-copies its input again internally without mutating it.
             subtitle = WebVttToAssa.Convert(subtitle, defaultStyle, VideoWidth, VideoHeight);
             SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary, SmpteMode);
+            AssaCentisecondTiming.FloorToCentiseconds(subtitle);
             // The WebVTT path never used the hash memo, so keep it untouched (HashValid false).
             return (subtitle, subtitle.ToText(_assFormat), 0, false);
         }
@@ -266,6 +268,8 @@ public class MpvReloader : IMpvReloader
         }
 
         SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary, SmpteMode);
+        // ASSA centiseconds rounded up past the frame lost the first frame (issue #15520).
+        AssaCentisecondTiming.FloorToCentiseconds(subtitle);
         var hash = subtitle.GetFastHashCode(null);
         if (hash != oldHash || string.IsNullOrEmpty(oldText))
         {
