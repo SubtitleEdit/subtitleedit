@@ -160,4 +160,24 @@ public class LlamaCppServerArgumentsTests
         Assert.All(afriSlm, m => Assert.Null(m.ChatTemplate));
         Assert.All(afriSlm, m => Assert.False(m.NoJinja));
     }
+
+    /// <summary>
+    /// Index-Translate is a Qwen 3.5 fine-tune that inherits the thinking template (without
+    /// "--reasoning off" it answers ~4x slower) and has no "qwen" in its file names. It uses
+    /// bilibili's greedy decoding and SE's generic prompt, which matches its trained prompt.
+    /// </summary>
+    [Fact]
+    public void CuratedIndexTranslateModels_DisableThinkingAndDecodeGreedily()
+    {
+        var indexTranslate = LlamaCppServerManager.TranslateModels
+            .Where(m => m.FileName.Contains("index-translate", System.StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        Assert.NotEmpty(indexTranslate);
+        Assert.All(indexTranslate, m => Assert.True(m.NoThinking, m.DisplayName + " must set NoThinking"));
+        Assert.All(indexTranslate, m => Assert.Equal(0, m.Temperature));
+        Assert.All(indexTranslate, m => Assert.Null(m.PromptTemplate));
+        Assert.All(indexTranslate, m => Assert.Null(m.ChatTemplate));
+        Assert.All(indexTranslate, m => Assert.False(m.NoJinja));
+    }
 }
