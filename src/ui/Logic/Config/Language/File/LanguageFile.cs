@@ -68,6 +68,8 @@ public class LanguageFile
     public string CompareSyncApply { get; set; }
     public string CompareSyncPointSetXY { get; set; }
     public string CompareSyncAlreadyPairedXY { get; set; }
+    public string CompareSyncPointShiftedXYZW { get; set; }
+    public string CompareChangeSyncShiftXYZ { get; set; }
     public string LoadXFromFile { get; set; }
     public string SaveCompareHtmlTitle { get; set; }
     public string PickMatroskaTrackX { get; set; }
@@ -145,7 +147,9 @@ public class LanguageFile
         CompareSyncWithReferenceX = "Sync with reference #{0}";
         CompareSyncApply = "Sync";
         CompareSyncPointSetXY = "Sync point set: current #{0} and reference #{1} are now shown as a pair";
-        CompareSyncAlreadyPairedXY = "Current #{0} and reference #{1} are already shown as a pair - no sync point needed";
+        CompareSyncAlreadyPairedXY = "Current #{0} and reference #{1} are already shown as a pair with the same start - nothing to sync";
+        CompareSyncPointShiftedXYZW = "Sync point set: current #{0}-#{1} shifted {2} to start with reference #{3}";
+        CompareChangeSyncShiftXYZ = "#{0}-#{1} shifted {2} (sync point)";
         IgnoreWhitespace = "Ignore whitespace";
         IgnoreWhitespaceHint = "Lines that differ only in spaces, tabs or line breaks do not count as different";
         IgnoreFormatting = "Ignore formatting";

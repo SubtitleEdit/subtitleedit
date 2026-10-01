@@ -27,6 +27,8 @@ If the automatic pairing gets a stretch wrong, set a **sync point**:
 1. Right-click (Ctrl+Click on macOS) a line on one side and choose **Sync point: use this current line** (or **...reference line**). A bar above the status line says which line is waiting.
 2. Select the matching line on the other side and click **Sync** in that bar, or right-click it and choose **Sync with current #N** (or **Sync with reference #N**).
 
+When the current subtitle is editable and the two start times differ, the sync point also fixes the timing. The current line gets the reference line's start time, and the lines after it move by the same amount, up to the next sync point. One sync point on the first line where the timing goes wrong is enough to shift the rest of the file. The shift is a pending change like any other edit, so **Undo** takes it back.
+
 The two lines are now always shown as a pair, marked with a link icon between them, and the lines above and below are aligned separately. You can add as many sync points as you need. A new sync point that contradicts an earlier one replaces it. Right-click a sync point to remove it, or use **Clear sync points**. Press Escape or **Cancel** to drop a half-picked sync point.
 
 ## Editing

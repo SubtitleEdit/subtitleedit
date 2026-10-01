@@ -117,7 +117,7 @@ public partial class CompareViewModel : ObservableObject
 
     private sealed record SyncPoint(Guid LeftId, Guid RightId);
 
-    private sealed record EditState(List<SubtitleLineViewModel> Lines, HashSet<Guid> EditedIds, List<string> Changes);
+    private sealed record EditState(List<SubtitleLineViewModel> Lines, HashSet<Guid> EditedIds, List<string> Changes, List<SyncPoint> SyncPoints);
 
     // Theme aware - the light pastels are unreadable under the dark theme's near-white text (#13435).
     private static IBrush ListViewRed => CompareColors.OnlyInOneFileRow;
@@ -868,7 +868,10 @@ public partial class CompareViewModel : ObservableObject
 
     /// <summary>
     /// Adds the pair, dropping any sync point it contradicts - one that shares a line with it or
-    /// would cross it - so the newest choice wins, then re-aligns.
+    /// would cross it - so the newest choice wins, then re-aligns. When the current side can be
+    /// edited and the two start times differ, it also syncs the timing: the current line takes
+    /// the reference line's start, and the lines after it move by the same amount, up to the
+    /// next sync point - so each sync point sets the offset of its own stretch.
     /// </summary>
     private void AddSyncPoint(Guid leftId, Guid rightId)
     {
@@ -884,16 +887,23 @@ public partial class CompareViewModel : ObservableObject
             return;
         }
 
-        var leftNumber = _leftLines[leftIndex].Number;
-        var rightNumber = _rightLines[rightIndex].Number;
+        var leftLine = _leftLines[leftIndex];
+        var rightLine = _rightLines[rightIndex];
+        var offset = rightLine.StartTime - leftLine.StartTime;
+        var shiftTiming = IsLeftEditable && !IsTimeEqual(leftLine.StartTime, rightLine.StartTime);
 
-        // Already side by side: a sync point would change nothing, so say so instead of
-        // leaving a marker that looks like it did not work.
-        if (_alignedPairs.Contains((leftId, rightId)))
+        // Already side by side with the same start: there is nothing to sync, so say so instead
+        // of leaving a marker that looks like it did not work.
+        if (!shiftTiming && _alignedPairs.Contains((leftId, rightId)))
         {
-            ShowSyncPointMessage(string.Format(Se.Language.File.CompareSyncAlreadyPairedXY, leftNumber, rightNumber));
+            ShowSyncPointMessage(string.Format(Se.Language.File.CompareSyncAlreadyPairedXY, leftLine.Number, rightLine.Number));
             UpdateSyncFlags();
             return;
+        }
+
+        if (shiftTiming)
+        {
+            PushUndo();
         }
 
         _syncPoints.RemoveAll(p =>
@@ -904,9 +914,50 @@ public partial class CompareViewModel : ObservableObject
         });
         _syncPoints.Add(new SyncPoint(leftId, rightId));
         SyncPointCount = _syncPoints.Count;
-        ShowSyncPointMessage(string.Format(Se.Language.File.CompareSyncPointSetXY, leftNumber, rightNumber));
+
+        if (shiftTiming)
+        {
+            var endIndex = GetNextSyncPointLeftIndex(leftIndex);
+            for (var i = leftIndex; i < endIndex; i++)
+            {
+                var line = _leftLines[i];
+                SetTimes(line, line.StartTime + offset, line.EndTime + offset);
+                _editedIds.Add(line.Id);
+            }
+
+            var lastNumber = _leftLines[endIndex - 1].Number;
+            var offsetText = FormatOffset(offset);
+            AddChange(string.Format(Se.Language.File.CompareChangeSyncShiftXYZ, leftLine.Number, lastNumber, offsetText));
+            ShowSyncPointMessage(string.Format(Se.Language.File.CompareSyncPointShiftedXYZW, leftLine.Number, lastNumber, offsetText, rightLine.Number));
+        }
+        else
+        {
+            ShowSyncPointMessage(string.Format(Se.Language.File.CompareSyncPointSetXY, leftLine.Number, rightLine.Number));
+        }
 
         CompareKeepingPlace(leftId);
+    }
+
+    /// <summary>Where the stretch that starts at <paramref name="leftIndex"/> ends: the next sync point's current line, or the end.</summary>
+    private int GetNextSyncPointLeftIndex(int leftIndex)
+    {
+        var end = _leftLines.Count;
+        foreach (var sp in _syncPoints)
+        {
+            var l = _leftLines.FindIndex(x => x.Id == sp.LeftId);
+            if (l > leftIndex && l < end)
+            {
+                end = l;
+            }
+        }
+
+        return end;
+    }
+
+    private static string FormatOffset(TimeSpan offset)
+    {
+        var sign = offset < TimeSpan.Zero ? "-" : "+";
+        return sign + new TimeCode(offset.Duration()).ToDisplayString();
     }
 
     /// <summary>A short confirmation in the sync bar, gone after a few seconds or at the next pick.</summary>
@@ -1165,6 +1216,9 @@ public partial class CompareViewModel : ObservableObject
         _leftLines = state.Lines;
         _editedIds = state.EditedIds;
         _changes = state.Changes;
+        _syncPoints.Clear();
+        _syncPoints.AddRange(state.SyncPoints);
+        SyncPointCount = _syncPoints.Count;
         UpdatePendingChanges();
         CompareKeepingPlace(SelectedRow?.Left.Line?.Id, SelectedRow == null ? 0 : Rows.IndexOf(SelectedRow));
     }
@@ -1203,7 +1257,8 @@ public partial class CompareViewModel : ObservableObject
         _undoStack.Push(new EditState(
             _leftLines.Select(p => new SubtitleLineViewModel(p)).ToList(),
             new HashSet<Guid>(_editedIds),
-            new List<string>(_changes)));
+            new List<string>(_changes),
+            new List<SyncPoint>(_syncPoints)));
     }
 
     private void AddChange(string description)

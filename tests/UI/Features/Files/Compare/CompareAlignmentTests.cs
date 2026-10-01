@@ -216,14 +216,46 @@ public class CompareAlignmentTests : IDisposable
     }
 
     [AvaloniaFact]
-    public void SyncPoint_WhenSet_ConfirmsWhichLinesWerePaired()
+    public void SyncPoint_ShiftsTheCurrentLineToTheReferenceStart_AndTheRestWithIt()
     {
-        var vm = Open(MakeLines(("A", 0), ("B", 2000), ("C", 4000)), MakeLines(("X", 50000), ("Y", 52000), ("Z", 54000)));
+        // From "C" on, the reference runs 11 s later - the current file lost the sync there.
+        var vm = Open(
+            MakeLines(("A", 0), ("B", 2000), ("C", 4000), ("D", 6000)),
+            MakeLines(("A", 0), ("B", 2000), ("C", 15000), ("D", 17000)));
+        Assert.Equal(2, vm.DifferenceCount);
 
-        AddSyncPoint(vm, "A", "Z");
+        // C is already beside C - a single sync point there is still a valid timing sync.
+        AddSyncPoint(vm, "C", "C");
 
-        Assert.Equal(string.Format(Se.Language.File.CompareSyncPointSetXY, 1, 3), vm.SyncPointMessage);
-        Assert.True(vm.HasSyncPointMessage);
+        var edited = vm.GetEditedLines();
+        Assert.Equal(new[] { 0d, 2000, 15000, 17000 }, edited.Select(p => p.StartTime.TotalMilliseconds));
+        Assert.Equal(new[] { 1500d, 3500, 16500, 18500 }, edited.Select(p => p.EndTime.TotalMilliseconds));
+        Assert.Equal(0, vm.DifferenceCount);
+        Assert.Equal(1, vm.PendingChangeCount);
+        Assert.Equal(1, vm.SyncPointCount);
+        Assert.Equal(string.Format(Se.Language.File.CompareSyncPointShiftedXYZW, 3, 4, "+" + new TimeCode(11000).ToDisplayString(), 3), vm.SyncPointMessage);
+
+        // Undo takes back the timing and the sync point together.
+        vm.UndoCommand.Execute(null);
+        Settle();
+        Assert.Equal(new[] { 0d, 2000, 4000, 6000 }, vm.GetEditedLines().Select(p => p.StartTime.TotalMilliseconds));
+        Assert.Equal(0, vm.SyncPointCount);
+        Assert.Equal(0, vm.PendingChangeCount);
+    }
+
+    [AvaloniaFact]
+    public void SyncPoint_ShiftStopsAtTheNextSyncPoint()
+    {
+        var vm = Open(
+            MakeLines(("A", 0), ("B", 2000), ("C", 4000), ("D", 6000)),
+            MakeLines(("A", 1000), ("B", 3000), ("C", 9000), ("D", 11000)));
+
+        AddSyncPoint(vm, "C", "C"); // C, D: +5 s
+        AddSyncPoint(vm, "A", "A"); // A, B: +1 s - not past C
+
+        Assert.Equal(new[] { 1000d, 3000, 9000, 11000 }, vm.GetEditedLines().Select(p => p.StartTime.TotalMilliseconds));
+        Assert.Equal(2, vm.SyncPointCount);
+        Assert.Equal(2, vm.PendingChangeCount);
     }
 
     [AvaloniaFact]
