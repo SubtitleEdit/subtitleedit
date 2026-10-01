@@ -1147,7 +1147,8 @@ public class OcrWindow : Window
             .WithBottomAlignment();
         var buttonExport = UiUtil.MakeButton(Se.Language.Ocr.EditExportDotDotDot, vm.EditExportCommand)
             .WithBindIsEnabled(nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance).WithBottomAlignment();
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBottomAlignment();
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand)
+            .WithBindIsEnabled(nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance).WithBottomAlignment();
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand).WithBottomAlignment();
 
         var grid = new Grid

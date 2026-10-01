@@ -164,8 +164,8 @@ public class LanguageOcr
         LinesToDraw = "Lines to draw";
         CurrentImage = "Current image";
         AutoDrawAgain = "Auto draw again";
-        StartOcr = "Start OCR";
-        PauseOcr = "Pause OCR";
+        StartOcr = "_Start OCR";
+        PauseOcr = "_Pause OCR";
         InspectLine = "Inspect line...";
         OcrEngine = "OCR Engine";
         TesseractEngineMode = "Engine mode";
@@ -233,7 +233,7 @@ public class LanguageOcr
         OcrImage = "OCR image";
         OneColor = "One color (white)";
         DarknessThreshold = "Darkness threshold";
-        EditExportDotDotDot = "Edit/export...";
+        EditExportDotDotDot = "_Edit/export...";
         EditBinaryOcrDatabase = "Edit \"Binary image compare\" database";
         BinaryImageCompareDatabase = "\"Binary image compare\" database";
         RemoveXFromUnknownWordsList = "Remove \"{0}\" from unknown words list";
