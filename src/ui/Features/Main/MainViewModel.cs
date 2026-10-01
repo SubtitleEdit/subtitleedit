@@ -31629,8 +31629,10 @@ public partial class MainViewModel :
                                          (keyEventArgs.KeyModifiers == KeyModifiers.Shift && !NonTypingEditKeys.Contains(key));
                     // Space always types in a text input, even with "allow single-letter shortcuts
                     // in text box" on: bare Space is the default play/pause shortcut, so the option
-                    // made it impossible to type a space (#15028).
-                    if (key == Key.Space && isBareKeyChord)
+                    // made it impossible to type a space (#15028). Only bare Space - Shift+Space has
+                    // no default binding, so it follows the option like Shift+<letter> does and
+                    // stays usable as a user-assigned shortcut (#14990, #15519).
+                    if (key == Key.Space && keyEventArgs.KeyModifiers == KeyModifiers.None)
                     {
                         return;
                     }
