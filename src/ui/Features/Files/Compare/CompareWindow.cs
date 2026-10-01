@@ -949,7 +949,15 @@ public class CompareWindow : Window
             ColumnSpacing = 12,
             [!IsVisibleProperty] = new Binding(nameof(vm.HasSyncBar)),
         };
-        bar.Add(hint, 0);
+        var message = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            TextWrapping = TextWrapping.Wrap,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.SyncPointMessage)),
+            [!IsVisibleProperty] = new Binding(nameof(vm.HasSyncPointMessage)),
+        };
+
+        bar.Add(new Panel { Children = { hint, message } }, 0);
         bar.Add(buttons, 0, 1);
         return bar;
     }

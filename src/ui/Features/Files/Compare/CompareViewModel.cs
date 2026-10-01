@@ -47,7 +47,8 @@ public partial class CompareViewModel : ObservableObject
     [ObservableProperty] private string _statusText = string.Empty;
     [ObservableProperty] private CompareVisual _selectedCompareVisual;
     [ObservableProperty] [NotifyPropertyChangedFor(nameof(HasSyncPoints), nameof(ClearSyncPointsText), nameof(HasSyncBar))] private int _syncPointCount;
-    [ObservableProperty] [NotifyPropertyChangedFor(nameof(HasSyncPointHint), nameof(HasSyncBar))] private string _syncPointHint = string.Empty;
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(HasSyncPointHint), nameof(HasSyncPointMessage), nameof(HasSyncBar))] private string _syncPointHint = string.Empty;
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(HasSyncPointMessage), nameof(HasSyncBar))] private string _syncPointMessage = string.Empty;
 
     // The headers trim these to the space they have, keeping the start and the end (#15384).
     public string LeftFileNameDisplay => GetFileName(LeftFileName);
@@ -64,7 +65,8 @@ public partial class CompareViewModel : ObservableObject
     public bool HasSyncPoints => SyncPointCount > 0;
     public bool HasSyncPointHint => !string.IsNullOrEmpty(SyncPointHint);
     public string ClearSyncPointsText => string.Format(Se.Language.File.CompareClearXSyncPoints, SyncPointCount);
-    public bool HasSyncBar => HasSyncPoints || HasSyncPointHint;
+    public bool HasSyncPointMessage => !string.IsNullOrEmpty(SyncPointMessage) && !HasSyncPointHint;
+    public bool HasSyncBar => HasSyncPoints || HasSyncPointHint || HasSyncPointMessage;
 
     // With one half picked, the menu item that completes the pair says so.
     public string PickSyncCurrentHeader => _pendingSyncRightId != null
@@ -110,6 +112,8 @@ public partial class CompareViewModel : ObservableObject
     private Guid? _pendingSyncLeftId;
     private Guid? _pendingSyncRightId;
     private int _pendingSyncNumber;
+    private HashSet<(Guid Left, Guid Right)> _alignedPairs = new();
+    private DispatcherTimer? _syncMessageTimer;
 
     private sealed record SyncPoint(Guid LeftId, Guid RightId);
 
@@ -570,10 +574,16 @@ public partial class CompareViewModel : ObservableObject
             IsTimeEqual,
             GetSyncPointIndexes(leftItems, rightItems));
 
+        _alignedPairs = new HashSet<(Guid Left, Guid Right)>();
         LeftSubtitles.Clear();
         RightSubtitles.Clear();
         foreach (var pair in pairs)
         {
+            if (pair.Left >= 0 && pair.Right >= 0 && leftItems[pair.Left].Line is { } l && rightItems[pair.Right].Line is { } r)
+            {
+                _alignedPairs.Add((l.Id, r.Id));
+            }
+
             LeftSubtitles.Add(pair.Left >= 0 ? leftItems[pair.Left] : new CompareItem());
             RightSubtitles.Add(pair.Right >= 0 ? rightItems[pair.Right] : new CompareItem());
         }
@@ -775,6 +785,7 @@ public partial class CompareViewModel : ObservableObject
             return;
         }
 
+        ClearSyncPointMessage();
         _pendingSyncLeftId = line.Id;
         _pendingSyncNumber = line.Number;
         SyncPointHint = string.Format(Se.Language.File.CompareSyncCurrentPickedX, line.Number);
@@ -796,6 +807,7 @@ public partial class CompareViewModel : ObservableObject
             return;
         }
 
+        ClearSyncPointMessage();
         _pendingSyncRightId = line.Id;
         _pendingSyncNumber = line.Number;
         SyncPointHint = string.Format(Se.Language.File.CompareSyncReferencePickedX, line.Number);
@@ -872,6 +884,18 @@ public partial class CompareViewModel : ObservableObject
             return;
         }
 
+        var leftNumber = _leftLines[leftIndex].Number;
+        var rightNumber = _rightLines[rightIndex].Number;
+
+        // Already side by side: a sync point would change nothing, so say so instead of
+        // leaving a marker that looks like it did not work.
+        if (_alignedPairs.Contains((leftId, rightId)))
+        {
+            ShowSyncPointMessage(string.Format(Se.Language.File.CompareSyncAlreadyPairedXY, leftNumber, rightNumber));
+            UpdateSyncFlags();
+            return;
+        }
+
         _syncPoints.RemoveAll(p =>
         {
             var l = _leftLines.FindIndex(x => x.Id == p.LeftId);
@@ -880,12 +904,34 @@ public partial class CompareViewModel : ObservableObject
         });
         _syncPoints.Add(new SyncPoint(leftId, rightId));
         SyncPointCount = _syncPoints.Count;
+        ShowSyncPointMessage(string.Format(Se.Language.File.CompareSyncPointSetXY, leftNumber, rightNumber));
 
         CompareKeepingPlace(leftId);
     }
 
+    /// <summary>A short confirmation in the sync bar, gone after a few seconds or at the next pick.</summary>
+    private void ShowSyncPointMessage(string message)
+    {
+        _syncMessageTimer?.Stop();
+        SyncPointMessage = message;
+        _syncMessageTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(6) };
+        _syncMessageTimer.Tick += (_, _) =>
+        {
+            _syncMessageTimer?.Stop();
+            SyncPointMessage = string.Empty;
+        };
+        _syncMessageTimer.Start();
+    }
+
+    private void ClearSyncPointMessage()
+    {
+        _syncMessageTimer?.Stop();
+        SyncPointMessage = string.Empty;
+    }
+
     private void ResetSyncPoints()
     {
+        ClearSyncPointMessage();
         _syncPoints.Clear();
         _pendingSyncLeftId = null;
         _pendingSyncRightId = null;

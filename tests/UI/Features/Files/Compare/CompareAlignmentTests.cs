@@ -198,6 +198,35 @@ public class CompareAlignmentTests : IDisposable
     }
 
     [AvaloniaFact]
+    public void SyncPoint_OnAPairAlreadyShownTogether_IsNotAdded_AndSaysSo()
+    {
+        var vm = Open(MakeLines(("A", 0), ("B", 2000)), MakeLines(("A", 0), ("X", 2000)));
+
+        // Pick the current line, then Sync with the same row still selected.
+        vm.PickSyncCurrentCommand.Execute(vm.Rows[1]);
+        vm.SelectedRow = vm.Rows[1];
+        vm.ApplySyncCommand.Execute(null);
+        Settle();
+
+        Assert.Equal(0, vm.SyncPointCount);
+        Assert.False(vm.HasSyncPointHint);
+        Assert.Equal(string.Format(Se.Language.File.CompareSyncAlreadyPairedXY, 2, 2), vm.SyncPointMessage);
+        Assert.True(vm.HasSyncBar);
+        Assert.DoesNotContain(vm.Rows, p => p.IsSyncPoint || p.IsLeftSyncPending);
+    }
+
+    [AvaloniaFact]
+    public void SyncPoint_WhenSet_ConfirmsWhichLinesWerePaired()
+    {
+        var vm = Open(MakeLines(("A", 0), ("B", 2000), ("C", 4000)), MakeLines(("X", 50000), ("Y", 52000), ("Z", 54000)));
+
+        AddSyncPoint(vm, "A", "Z");
+
+        Assert.Equal(string.Format(Se.Language.File.CompareSyncPointSetXY, 1, 3), vm.SyncPointMessage);
+        Assert.True(vm.HasSyncPointMessage);
+    }
+
+    [AvaloniaFact]
     public void SyncBar_AtTheMinimumWidth_KeepsTheHintOnAFewLines()
     {
         var vm = Open(MakeLines(("A", 0), ("B", 2000)), MakeLines(("A", 0), ("X", 2000)));
