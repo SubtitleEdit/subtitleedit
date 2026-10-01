@@ -793,6 +793,7 @@ public partial class MainViewModel :
     private double _playheadTickPrevEstimate = -1;
     private long _playheadTickPrevTimestamp;
     private double _playheadPlaybackSpeed = 1.0;
+    private double _pausedSelectLastSeconds = -1;
 
     // Scrub-seek throttle for waveform-driven position changes (wheel scrubbing in center mode,
     // wheel video-position stepping, edge drags with "set video position on move start/end").
@@ -33226,6 +33227,10 @@ public partial class MainViewModel :
                             SeekVideoPlayer(vp, stopSeconds);
                             PinPlayheadTo(stopSeconds);
 
+                            // Stopping here is not a user scrub: without this the "center also while paused"
+                            // branch below sees the play-head jump (its baseline is still where playback
+                            // started) and re-selects the line under the play-head (#13331).
+                            _pausedSelectLastSeconds = stopSeconds;
                             ResetPlaySelection();
                         }
                         else
@@ -33275,10 +33280,24 @@ public partial class MainViewModel :
                     // which resets the play selection a second way through SelectionChanged.
                     if (!_playStartGate.IsPending(Stopwatch.GetTimestamp(), Stopwatch.Frequency))
                     {
-                        // No auto-select while paused (matches SE 4): scrubbing backwards over the
-                        // previous line must keep the selected line, so its start can be pulled back
-                        // to the cursor (#15513).
                         ResetPlaySelection();
+
+                        // "Center also while paused" scrub-editing (SE 4's locked mode): while the user
+                        // wheels through the waveform, keep selecting the line under the centered cursor.
+                        // Only react to position *changes* — otherwise this would immediately steal back
+                        // the selection when the user picks a different line in the grid while paused.
+                        // Opt-in (default off, like SE 4 which never selected while paused): scrubbing
+                        // backwards would otherwise steal the selection to the previous line, so the
+                        // current line's start can't be pulled back to the cursor (#15513).
+                        if (WaveformCenter && Se.Settings.Waveform.CenterVideoPositionAlsoWhenPaused &&
+                            Se.Settings.Waveform.SelectCurrentSubtitleWhilePaused &&
+                            SelectCurrentSubtitleWhilePlaying &&
+                            Math.Abs(mediaPlayerSeconds - _pausedSelectLastSeconds) > 0.001)
+                        {
+                            SelectCurrentSubtitleAtPlayhead(mediaPlayerSeconds, subtitle);
+                        }
+
+                        _pausedSelectLastSeconds = mediaPlayerSeconds;
                     }
                 }
 
