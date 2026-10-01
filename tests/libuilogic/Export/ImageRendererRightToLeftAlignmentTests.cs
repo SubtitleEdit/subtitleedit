@@ -15,7 +15,7 @@ public class ImageRendererRightToLeftAlignmentTests
         return new ImageParameter
         {
             Text = text,
-            FontName = "Arial",
+            FontName = ArabicFontName.Value,
             FontSize = 40,
             FontColor = SKColors.White,
             OutlineColor = SKColors.Black,
@@ -29,6 +29,26 @@ public class ImageRendererRightToLeftAlignmentTests
             IsRightToLeft = isRightToLeft,
         };
     }
+
+    // Arial when it covers the test text (Windows, macOS), else the first installed font that
+    // does - on Linux CI "Arial" has no Arabic, and mixing in fallback-font glyphs makes the ink
+    // edges depend on two fonts' side bearings instead of on the shaped line widths these
+    // tests are about.
+    private static readonly Lazy<string> ArabicFontName = new(() =>
+    {
+        const string preferred = "Arial";
+        var text = ArabicTwoLines.Replace("\n", string.Empty);
+        foreach (var face in FontFaces.GetFontFaces().Prepend(preferred))
+        {
+            using var typeface = FontFaces.CreateTypeface(face, false, false);
+            if (typeface != null && typeface.ContainsGlyphs(text))
+            {
+                return face;
+            }
+        }
+
+        return preferred;
+    });
 
     /// <summary>Rightmost/leftmost column with an opaque pixel in each half of the bitmap.</summary>
     private static (int TopLeft, int TopRight, int BottomLeft, int BottomRight) GetInkEdges(SKBitmap bitmap)
