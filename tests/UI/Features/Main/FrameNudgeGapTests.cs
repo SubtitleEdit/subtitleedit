@@ -182,4 +182,64 @@ public class FrameNudgeGapTests : IDisposable
         Assert.Equal(before, vm.Subtitles[1].StartTime.TotalMilliseconds, 3);
         window.Close();
     }
+
+    // Issue #15511: with "Min gap" = 2 frames, walking the end towards the next line with the
+    // KeepGapNext shortcut stopped at a 3-frame gap - the "close" test allowed a whole frame of
+    // slack, so a gap of minimum + 1 frame already counted as close and was then preserved.
+    [AvaloniaFact]
+    public void MoveEndForwardKeepGapNext_ApproachingTheNeighbour_SettlesOnTheMinimumGap()
+    {
+        var (window, vm) = TwoLinesInFrameMode(gapMs: 400, minGapFrames: 2);
+        vm.SelectedSubtitle = vm.Subtitles[0];
+        Dispatcher.UIThread.RunJobs();
+
+        for (var i = 0; i < 20; i++)
+        {
+            vm.MoveEndOneFrameForwardKeepGapNextCommand.Execute(null);
+        }
+
+        var gap = vm.Subtitles[1].StartTime.TotalMilliseconds - vm.Subtitles[0].EndTime.TotalMilliseconds;
+        Assert.Equal(2 * OneFrameMs, gap, 3);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void MoveStartBackKeepGapPrev_ApproachingTheNeighbour_SettlesOnTheMinimumGap()
+    {
+        var (window, vm) = TwoLinesInFrameMode(gapMs: 400, minGapFrames: 2);
+        vm.SelectedSubtitle = vm.Subtitles[1];
+        Dispatcher.UIThread.RunJobs();
+
+        for (var i = 0; i < 20; i++)
+        {
+            vm.MoveStartOneFrameBackKeepGapPrevCommand.Execute(null);
+        }
+
+        var gap = vm.Subtitles[1].StartTime.TotalMilliseconds - vm.Subtitles[0].EndTime.TotalMilliseconds;
+        Assert.Equal(2 * OneFrameMs, gap, 3);
+        window.Close();
+    }
+
+    // Once at the minimum gap the shortcut carries the neighbour along instead of closing the gap.
+    [AvaloniaFact]
+    public void MoveEndForwardKeepGapNext_AtTheMinimumGap_KeepsIt()
+    {
+        var (window, vm) = TwoLinesInFrameMode(gapMs: 80, minGapFrames: 2);
+        vm.SelectedSubtitle = vm.Subtitles[0];
+        Dispatcher.UIThread.RunJobs();
+
+        vm.MoveEndOneFrameForwardKeepGapNextCommand.Execute(null);
+
+        Assert.Equal(3000 + OneFrameMs, vm.Subtitles[0].EndTime.TotalMilliseconds, 3);
+        Assert.Equal(80, vm.Subtitles[1].StartTime.TotalMilliseconds - vm.Subtitles[0].EndTime.TotalMilliseconds, 3);
+        window.Close();
+    }
+
+    private (Window Window, MainViewModel Vm) TwoLinesInFrameMode(int gapMs, int minGapFrames)
+    {
+        Se.Settings.General.MinimumBetweenLines.Frames = minGapFrames;
+        var result = TwoLines(gapMs);
+        Se.Settings.General.UseFrameMode = true;
+        return result;
+    }
 }
