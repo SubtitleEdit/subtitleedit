@@ -1,3 +1,4 @@
+using Avalonia;
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Nikse.SubtitleEdit.Logic;
@@ -1161,7 +1162,7 @@ public partial class CompareViewModel : ObservableObject
         }
 
         SelectedRow = row;
-        row.BeginEdit();
+        KeepRowInPlace(row, row.BeginEdit);
     }
 
     [RelayCommand]
@@ -1198,10 +1199,42 @@ public partial class CompareViewModel : ObservableObject
     {
         if (row != null)
         {
-            row.IsEditing = false;
+            KeepRowInPlace(row, () => row.IsEditing = false);
         }
 
         FocusRows();
+    }
+
+    /// <summary>
+    /// Opening or closing the inline editor changes the row's height, and the virtualizing list
+    /// then re-estimates where every row sits - with the scroll offset unchanged, the whole list
+    /// jumped by about the height difference. Puts the row back where it was on screen.
+    /// </summary>
+    private void KeepRowInPlace(CompareRow row, Action change)
+    {
+        var scrollViewer = RowsView?.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
+        var before = GetRowTop(row, scrollViewer);
+        change();
+        if (scrollViewer == null || before == null)
+        {
+            return;
+        }
+
+        RowsView!.UpdateLayout();
+        if (GetRowTop(row, scrollViewer) is { } after && Math.Abs(after - before.Value) > 0.5)
+        {
+            scrollViewer.Offset = new Vector(scrollViewer.Offset.X, scrollViewer.Offset.Y + after - before.Value);
+        }
+    }
+
+    private double? GetRowTop(CompareRow row, ScrollViewer? scrollViewer)
+    {
+        if (scrollViewer == null || RowsView?.ContainerFromItem(row) is not Control container)
+        {
+            return null;
+        }
+
+        return container.TranslatePoint(new Point(0, 0), scrollViewer)?.Y;
     }
 
     [RelayCommand]

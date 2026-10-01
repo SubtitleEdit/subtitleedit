@@ -249,6 +249,39 @@ public class CompareEditTests : IDisposable
         Assert.All(vm.Rows.Take(3), row => Assert.NotNull(row.Left.TextPanel.Parent));
     }
 
+    [AvaloniaFact]
+    public void OpeningAndClosingTheEditor_DoesNotMoveTheList()
+    {
+        var left = new ObservableCollection<SubtitleLineViewModel>(Enumerable.Range(0, 60).Select(i => MakeLine("Line " + i, i * 2000, i + 1)));
+        var right = new ObservableCollection<SubtitleLineViewModel>(Enumerable.Range(0, 60).Select(i => MakeLine("Line " + i, i * 2000 + 300, i + 1)));
+        var vm = Open(left, right);
+        var window = new CompareWindow(vm) { Width = 1300, Height = 800 };
+        _windows.Add(window);
+        window.Show();
+        Settle(window);
+
+        var scrollViewer = vm.RowsView!.GetVisualDescendants().OfType<ScrollViewer>().First();
+        scrollViewer.Offset = new Vector(0, 600);
+        Settle(window);
+
+        var containers = vm.RowsView.GetRealizedContainers().ToList();
+        // Near the top, so the opened editor fits in the view - focusing it must not need a scroll
+        // (rows are taller with the Linux fonts on CI, and a lower row's editor would overflow).
+        var row = (CompareRow)containers[2].DataContext!;
+        double RowTop() => vm.RowsView.ContainerFromItem(row)!.TranslatePoint(new Point(0, 0), window)!.Value.Y;
+        var top = RowTop();
+
+        vm.BeginEditCommand.Execute(row);
+        Settle(window);
+        Assert.True(row.IsEditing);
+        Assert.Equal(top, RowTop(), 1);
+
+        vm.CancelEditCommand.Execute(row);
+        Settle(window);
+        Assert.False(row.IsEditing);
+        Assert.Equal(top, RowTop(), 1);
+    }
+
     private CompareViewModel Open(ObservableCollection<SubtitleLineViewModel> left, ObservableCollection<SubtitleLineViewModel> right)
     {
         var vm = new CompareViewModel(new FileHelper(), new FolderHelper());
