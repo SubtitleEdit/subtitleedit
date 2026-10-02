@@ -15653,12 +15653,17 @@ public partial class MainViewModel :
     }
 
     /// <summary>
-    /// Slack for the "keep gap if close" test: frame-snapped gaps land a fraction of a millisecond
-    /// above MinimumBetweenLines (2 frames at 23.976 fps = 83.4 ms vs. a setting of 83 ms). Half a
-    /// frame covers that rounding; a whole frame (issue #15511) also caught a gap one frame wider than
-    /// the minimum, so nudging towards the neighbour locked the gap at minimum + 1 frame.
+    /// The "keep gap if close" test: a gap counts as close when it is strictly below "minimum gap plus
+    /// one frame" (with half a millisecond of slack for whole-millisecond rounding). That is the
+    /// smallest on-frame gap at or above MinimumBetweenLines, which can be most of a frame above it
+    /// when the minimum is in milliseconds (24 ms at 59.94 fps: 33.4 ms; at 50 fps: 40 ms; 100 ms at
+    /// 23.976 fps: 125.1 ms) - a half-frame tolerance missed those, so the nudge clamped to
+    /// "neighbour + minimum" (off the frame grid) instead of carrying the neighbour along. A gap of
+    /// minimum + 1 frame (issue #15511: 3 frames with a 2-frame minimum) is not close, so walking
+    /// towards the neighbour still settles on the minimum.
     /// </summary>
-    private static double KeepGapCloseToleranceMs() => FramesToMilliseconds(1) / 2.0;
+    private static bool IsKeepGapClose(double gapToNeighbourMs, double minGapMs) =>
+        gapToNeighbourMs < minGapMs + FramesToMilliseconds(1) - 0.5;
 
     private void MoveStartByFrames(int frames, bool keepGapPrevIfClose)
     {
@@ -15691,7 +15696,7 @@ public partial class MainViewModel :
         var prevIsClose = false;
         if (keepGapPrevIfClose && prev != null
             && prev.EndTime.TotalMilliseconds <= s.StartTime.TotalMilliseconds
-            && prev.EndTime.TotalMilliseconds + gapMs + KeepGapCloseToleranceMs() >= s.StartTime.TotalMilliseconds)
+            && IsKeepGapClose(s.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds, gapMs))
         {
             prevIsClose = true;
             prevGapMs = s.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds;
@@ -15764,7 +15769,7 @@ public partial class MainViewModel :
         var nextIsClose = false;
         if (keepGapNextIfClose && next != null
             && s.EndTime.TotalMilliseconds <= next.StartTime.TotalMilliseconds
-            && s.EndTime.TotalMilliseconds + gapMs + KeepGapCloseToleranceMs() >= next.StartTime.TotalMilliseconds)
+            && IsKeepGapClose(next.StartTime.TotalMilliseconds - s.EndTime.TotalMilliseconds, gapMs))
         {
             nextIsClose = true;
             nextGapMs = next.StartTime.TotalMilliseconds - s.EndTime.TotalMilliseconds;
