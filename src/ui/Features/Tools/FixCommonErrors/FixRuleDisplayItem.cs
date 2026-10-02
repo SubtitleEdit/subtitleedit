@@ -77,6 +77,7 @@ public partial class FixRuleDisplayItem : ObservableObject
             new FixMissingOpenBracket(),
             new FixMissingPeriodsAtEndOfLine(),
             new FixMissingSpaces(),
+            new FixMisreadQuotes(),
             new FixMusicNotation(),
             new FixOverlappingDisplayTimes(),
             new FixShortDisplayTimes(),

@@ -152,7 +152,7 @@ public class FixCommonErrorsRunnerTest
     [Fact]
     public void ResolveRuleIds_NullOrWhitespace_ReturnsAll()
     {
-        var all = FixCommonErrorsRunner.AvailableRuleIds;
+        var all = DefaultRuleIds();
 
         Assert.Equal(all, FixCommonErrorsRunner.ResolveRuleIds(null));
         Assert.Equal(all, FixCommonErrorsRunner.ResolveRuleIds(""));
@@ -175,7 +175,7 @@ public class FixCommonErrorsRunnerTest
     {
         var resolved = FixCommonErrorsRunner.ResolveRuleIds("all,-FixDanishLetterI");
 
-        Assert.Equal(FixCommonErrorsRunner.AvailableRuleIds.Count - 1, resolved.Count);
+        Assert.Equal(DefaultRuleIds().Count - 1, resolved.Count);
         Assert.DoesNotContain("FixDanishLetterI", resolved);
     }
 
@@ -184,9 +184,55 @@ public class FixCommonErrorsRunnerTest
     {
         var resolved = FixCommonErrorsRunner.ResolveRuleIds("-FixDanishLetterI,-FixCommas");
 
-        Assert.Equal(FixCommonErrorsRunner.AvailableRuleIds.Count - 2, resolved.Count);
+        Assert.Equal(DefaultRuleIds().Count - 2, resolved.Count);
         Assert.DoesNotContain("FixDanishLetterI", resolved);
         Assert.DoesNotContain("FixCommas", resolved);
+    }
+
+    private static List<string> DefaultRuleIds() =>
+        FixCommonErrorsRunner.AvailableRuleIds.Where(id => !FixCommonErrorsRunner.OptInRules.Contains(id)).ToList();
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("all")]
+    [InlineData("-FixCommas")]
+    [InlineData("all,-FixCommas")]
+    public void ResolveRuleIds_OptInRule_NotIncludedUnlessNamed(string? spec)
+    {
+        Assert.DoesNotContain("FixMisreadQuotes", FixCommonErrorsRunner.ResolveRuleIds(spec));
+    }
+
+    [Theory]
+    [InlineData("FixMisreadQuotes")]
+    [InlineData("all,fixmisreadquotes")]
+    public void ResolveRuleIds_OptInRule_IncludedWhenNamed(string spec)
+    {
+        Assert.Contains("FixMisreadQuotes", FixCommonErrorsRunner.ResolveRuleIds(spec));
+    }
+
+    [Fact]
+    public void RunAll_DoesNotRunOptInRule()
+    {
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph("'Hello there.'", 0, 2000));
+
+        FixCommonErrorsRunner.Run(subtitle, null, "en");
+
+        Assert.Equal("'Hello there.'", subtitle.Paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void Run_NamedOptInRule_IsLanguageGated()
+    {
+        var english = new Subtitle();
+        english.Paragraphs.Add(new Paragraph("\"Hello there.'", 0, 2000));
+        FixCommonErrorsRunner.Run(english, new[] { "FixMisreadQuotes" }, "en");
+        Assert.Equal("\"Hello there.\"", english.Paragraphs[0].Text);
+
+        var italian = new Subtitle();
+        italian.Paragraphs.Add(new Paragraph("\"Aspetta un po',", 0, 2000));
+        FixCommonErrorsRunner.Run(italian, new[] { "FixMisreadQuotes" }, "it");
+        Assert.Equal("\"Aspetta un po',", italian.Paragraphs[0].Text);
     }
 
     [Fact]
@@ -388,6 +434,7 @@ public class FixCommonErrorsRunnerTest
     {
         var gates = FixCommonErrorsRunner.LanguageGates;
         Assert.Equal("en", gates["FixAloneLowercaseIToUppercaseI"]);
+        Assert.Equal("en", gates["FixMisreadQuotes"]);
         Assert.Equal("da", gates["FixDanishLetterI"]);
         Assert.Equal("es", gates["FixSpanishInvertedQuestionAndExclamationMarks"]);
         Assert.Equal("tr", gates["FixTurkishAnsiToUnicode"]);

@@ -678,6 +678,8 @@ The language is auto-detected from the content. To force it:
 
 **Rule selection is CLI-only.** The set of rules is chosen with `--fix-common-errors-rules`, not through the `--settings` JSON. The settings file shapes *how* the rules behave (line length, min gap, dialog/continuation style, CPS — see [Settings JSON](#settings-json)); it does not select which rules run.
 
+**Opt-in rules.** `FixMisreadQuotes` can change correct text (British-style `'quotes'` become `"quotes"`), so it is not part of `all` — neither the `--fix-common-errors` default, `all`, nor a negation-only spec runs it. Name it explicitly to use it, e.g. `--fix-common-errors-rules:all,FixMisreadQuotes`.
+
 `FixCommonOcrErrors` runs only when a dictionary folder is available — bundled for English, or supplied via `--dictionary-folder` for other languages (see [OCR options](#ocr)). Without one, that rule is skipped and every other rule still runs.
 
 #### Rule ID ↔ GUI equivalent
@@ -686,6 +688,7 @@ The CLI rule IDs match the check-box rules in the desktop app's *Fix Common Erro
 
 | Rule ID | GUI equivalent | Language gate |
 |---|---|---|
+| `FixMisreadQuotes` | Fix apostrophes misread as double quotes (OCR, English) | en only, opt-in |
 | `AddMissingQuotes` | Add missing quotes (") | — |
 | `Fix3PlusLines` | Fix subtitles with more than two lines | — |
 | `FixAloneLowercaseIToUppercaseI` | Fix alone lowercase 'i' to 'I' (English) | en only |
