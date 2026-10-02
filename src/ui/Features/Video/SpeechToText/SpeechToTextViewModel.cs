@@ -232,6 +232,9 @@ public partial class SpeechToTextViewModel : ObservableObject
     private string _error;
     private List<AudioClip>? _audioClips;
     private bool _audioClipsAutoStart;
+    // "Retry failed" for audio clips (#15497): the next batch run only takes the clips that
+    // did not get a transcription, so the ones that did are neither redone nor lost.
+    private bool _retryFailedClipsOnly;
     private string _qwen3AsrOutputJsonPath = string.Empty;
     private int? _engineExitCode;
 
@@ -2117,10 +2120,9 @@ public partial class SpeechToTextViewModel : ObservableObject
             EstimatedText = string.Empty;
             ElapsedText = string.Empty;
 
-            if (_audioClips != null && failed == 0)
+            if (_audioClips != null)
             {
-                OkPressed = true;
-                Window?.Close();
+                await FinishAudioClips();
                 return;
             }
 
@@ -2139,6 +2141,94 @@ public partial class SpeechToTextViewModel : ObservableObject
                 Window?.Close();
             }
         });
+    }
+
+    private int CountTranscribedAudioClips() => ResultAudioClips.Count(p => p.Transcription.Paragraphs.Count > 0);
+
+    /// <summary>
+    /// End of an audio clip run ("speech to text selected lines"). The clips that were
+    /// transcribed are delivered even when others failed - a clip of only music or silence
+    /// comes back empty and counts as failed, and that used to throw away every other line of
+    /// the run (#15497). With failures the user picks: apply what was transcribed, retry only
+    /// the failed clips, or go back to the dialog.
+    /// </summary>
+    private async Task FinishAudioClips()
+    {
+        var total = ResultAudioClips.Count;
+        var transcribed = CountTranscribedAudioClips();
+        if (transcribed == total)
+        {
+            OkPressed = true;
+            Window?.Close();
+            return;
+        }
+
+        if (transcribed == 0)
+        {
+            await MessageBox.Show(
+                Window!,
+                Se.Language.Video.AudioToText.Title,
+                string.Format(Se.Language.Video.AudioToText.NoLinesTranscribed, total),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+            IsTranscribeEnabled = true;
+            return;
+        }
+
+        var answer = await MessageBox.Show(
+            Window!,
+            Se.Language.Video.AudioToText.Title,
+            string.Format(Se.Language.Video.AudioToText.LinesTranscribedXOfYFailedZ, transcribed, total, total - transcribed),
+            MessageBoxButtons.Cancel,
+            MessageBoxIcon.Question,
+            Se.Language.Video.AudioToText.ApplyTranscribedLines,
+            Se.Language.Video.AudioToText.RetryFailedLines);
+
+        IsTranscribeEnabled = true;
+        if (answer == MessageBoxResult.Custom1)
+        {
+            OkPressed = true;
+            Window?.Close();
+        }
+        else if (answer == MessageBoxResult.Custom2)
+        {
+            _retryFailedClipsOnly = true;
+            Dispatcher.UIThread.Post(() => TranscribeCommand.Execute(null));
+        }
+    }
+
+    /// <summary>
+    /// A cancelled audio clip run: the clips finished before the cancel are offered instead of
+    /// being dropped with the rest (#15497). Returns true when the dialog was closed with them.
+    /// </summary>
+    private async Task<bool> OfferTranscribedAudioClipsAfterCancel()
+    {
+        if (_audioClips == null)
+        {
+            return false;
+        }
+
+        var transcribed = CountTranscribedAudioClips();
+        if (transcribed == 0)
+        {
+            return false;
+        }
+
+        var answer = await MessageBox.Show(
+            Window!,
+            Se.Language.Video.AudioToText.Title,
+            string.Format(Se.Language.Video.AudioToText.LinesTranscribedXOfYCancelled, transcribed, ResultAudioClips.Count),
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+
+        if (answer != MessageBoxResult.Yes)
+        {
+            return false;
+        }
+
+        OkPressed = true;
+        Window?.Close();
+        return true;
     }
 
     public static string GetSubtitleFileName(string videoFileName, string? languageCode, string? outputFolder = null)
@@ -2748,6 +2838,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             // batch must stop the whole batch, not skip to the next item.
             IsTranscribeEnabled = true;
             HideProgressBar();
+            await OfferTranscribedAudioClipsAfterCancel();
         }
         else if (IsBatchMode)
         {
@@ -4160,10 +4251,30 @@ public partial class SpeechToTextViewModel : ObservableObject
             // do not touch BatchItems here - it holds the user's queued batch list
             _jobItems = new List<SpeechToTextJobItem> { new SpeechToTextJobItem(_videoFileName, string.Empty, mediaInfo) };
         }
+        else if (_retryFailedClipsOnly && _audioClips != null)
+        {
+            _retryFailedClipsOnly = false;
+            _jobItems = BatchItems.Where(p => p.Status != Se.Language.General.Converted).ToList();
+            ResetBatchStatuses(_jobItems);
+        }
         else
         {
             _jobItems = BatchItems;
             ResetBatchStatuses(_jobItems);
+        }
+
+        // A clip that is run again must not keep the text of an earlier run - it would be
+        // applied to its line even when this run fails on it.
+        if (_audioClips != null)
+        {
+            foreach (var jobItem in _jobItems)
+            {
+                var clip = ResultAudioClips.FirstOrDefault(p => p.AudioFileName == jobItem.InputVideoFileName);
+                if (clip != null)
+                {
+                    clip.Transcription = new Subtitle();
+                }
+            }
         }
 
         _batchIndex = 0;
@@ -4228,6 +4339,10 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         IsTranscribeEnabled = true;
+        if (_abort)
+        {
+            Dispatcher.UIThread.Post(async () => await OfferTranscribedAudioClipsAfterCancel());
+        }
     }
 
     [RelayCommand]

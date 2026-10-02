@@ -10326,7 +10326,9 @@ public partial class MainViewModel :
         foreach (var transcribedLine in resultSpeechToText.ResultAudioClips)
         {
             var selectedLine = transcribedLine?.Line;
-            if (transcribedLine != null && selectedLine != null)
+            // A clip that failed (or had no speech) has no transcription - its line keeps its
+            // text instead of being blanked, now that a partly failed run is applied (#15497).
+            if (transcribedLine != null && selectedLine != null && transcribedLine.Transcription.Paragraphs.Count > 0)
             {
                 if (selectedLine.Duration.TotalSeconds > 10 && transcribedLine.Transcription.Paragraphs.Count > 1)
                 {

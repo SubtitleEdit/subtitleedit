@@ -7,6 +7,11 @@ public class LanguageAudioToText
     public string TranslateToEnglish { get; set; }
     public string Transcribing { get; set; }
     public string TranscribingXOfY { get; set; }
+    public string LinesTranscribedXOfYFailedZ { get; set; }
+    public string LinesTranscribedXOfYCancelled { get; set; }
+    public string NoLinesTranscribed { get; set; }
+    public string ApplyTranscribedLines { get; set; }
+    public string RetryFailedLines { get; set; }
     public string IsolateSpeech { get; set; }
     public string IsolateSpeechHint { get; set; }
     public string IsolatingSpeech { get; set; }
@@ -80,6 +85,11 @@ public class LanguageAudioToText
         TranslateToEnglish = "Translate to English";
         Transcribing = "Transcribing...";
         TranscribingXOfY = "Transcribing {0} of {1}...";
+        LinesTranscribedXOfYFailedZ = "{0} of {1} lines were transcribed - {2} failed or had no speech.\n\nFailed lines keep their current text. Apply the transcribed lines, or retry the failed ones (you can change engine or settings first)?";
+        LinesTranscribedXOfYCancelled = "Transcription was cancelled after {0} of {1} lines.\n\nApply the transcribed lines? The other lines keep their current text.";
+        NoLinesTranscribed = "None of the {0} lines could be transcribed.\nPlease check the tools log for details.";
+        ApplyTranscribedLines = "Apply transcribed";
+        RetryFailedLines = "Retry failed";
         IsolateSpeech = "Isolate speech (slow)";
         IsolateSpeechHint = "Removes music and sound effects before transcribing. Gives fewer missed lines and better timing on audio with loud music, but takes about as long as the audio itself with a GPU - and many times longer without one.";
         IsolatingSpeech = "Isolating speech...";
