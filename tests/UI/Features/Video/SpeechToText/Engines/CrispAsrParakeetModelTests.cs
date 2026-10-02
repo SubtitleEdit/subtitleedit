@@ -58,4 +58,18 @@ public class CrispAsrParakeetModelTests
             "parakeet-tdt_ctc-1.1b-q4_k.gguf", "parakeet-tdt_ctc-1.1b-q8_0.gguf", "parakeet-tdt_ctc-1.1b.gguf",
         }, englishOnly);
     }
+
+    [Theory]
+    [InlineData("phonon2-q8_0.gguf", "de", true)]
+    [InlineData("parakeet-rnnt-0.6b-q4_k.gguf", "fr", true)]
+    [InlineData("phonon2-q8_0.gguf", "en", false)]
+    [InlineData("phonon2-q8_0.gguf", "auto", false)]
+    [InlineData("parakeet-rnnt-0.6b-q4_k.gguf", "auto", false)]
+    [InlineData("parakeet-tdt-0.6b-v3-q4_k.gguf", "de", false)]
+    public void ShouldWarnEnglishOnlyModel_SkipsEnglishAndAutoDetect(string name, string language, bool expected)
+    {
+        var model = Assert.Single(new CrispAsrParakeet().Models, m => m.Name == name);
+
+        Assert.Equal(expected, SpeechToTextViewModel.ShouldWarnEnglishOnlyModel(model, language));
+    }
 }
