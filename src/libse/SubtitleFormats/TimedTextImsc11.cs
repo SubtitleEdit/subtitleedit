@@ -56,7 +56,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (fileName != null && !(fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase)))
+            // Accept every extension offered in the format properties, not only the one picked for
+            // saving - otherwise a .ttml IMSC file fell through to the Timed Text 1.0 reader (#15289)
+            if (fileName != null &&
+                !(fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase) ||
+                  fileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase) ||
+                  fileName.EndsWith(".ttml", StringComparison.OrdinalIgnoreCase) ||
+                  fileName.EndsWith(".dfxp", StringComparison.OrdinalIgnoreCase)))
             {
                 return false;
             }
