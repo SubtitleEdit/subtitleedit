@@ -99,8 +99,8 @@ The same settings page also has:
 - **Video controls** — see [Video Controls](#video-controls)
 - **Hide video controls in full-screen**
 - **Auto-open video file when opening subtitle**
-- **Download mpv** / **Download VLC** — fetch the player library when it is not installed
 - **Subtitle preview properties** — how the subtitle is drawn on the video
+- **Download mpv** / **Download VLC** / **Download FFmpeg libraries** — fetch the player library when it is not installed
 
 ## Video Info
 

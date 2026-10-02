@@ -68,9 +68,10 @@ The subtitle rules that drive error checking, the grid's warning colors, and too
 
 ## Video Player
 
-- **Video player** — Which player to use, plus **Download mpv** / **Download VLC** when the library is missing
+- **Video player** — Which player to use
 - **Video controls** (order and visibility of the controls under the video, see [Video Player](video-player.md#video-controls)), **Hide video controls in full-screen**, **Auto-open video file when opening subtitle**
 - **Subtitle preview properties** — Font name, size and bold, primary/outline/shadow colors, border style and outline/shadow width for the subtitle drawn on the video
+- **Download mpv** / **Download VLC** / **Download FFmpeg libraries** — Grouped at the bottom; fetch the library a player needs when it is not installed
 
 ## Waveform / Spectrogram
 
