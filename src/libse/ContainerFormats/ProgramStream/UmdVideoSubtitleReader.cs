@@ -172,7 +172,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
             }
 
             var length = (data[0] << 24) | (data[1] << 16) | (data[2] << 8) | data[3];
-            if (length <= RecordHeaderLength || data.Count < 4 + length)
+            if (length <= RecordHeaderLength || length > data.Count - 4)
             {
                 return;
             }
@@ -211,7 +211,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
                 var pts = ReadPts(bytes, pos);
                 var length = BinaryPrimitives.ReadInt32BigEndian(bytes.AsSpan(pos + SubsPesHeaderLength + 2));
                 var recordStart = pos + SubsPesHeaderLength + 6;
-                if (length <= RecordHeaderLength || recordStart + length > bytes.Length)
+                if (length <= RecordHeaderLength || length > bytes.Length - recordStart)
                 {
                     break;
                 }

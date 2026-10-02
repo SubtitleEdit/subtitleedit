@@ -153,6 +153,22 @@ public class UmdVideoSubtitleReaderTest
     }
 
     [Fact]
+    public void ARecordLengthNearIntMaxValueIsIgnored()
+    {
+        // record start + length overflowed int: a .subs dump threw, a program stream allocated ~2 GB
+        var dump = new byte[64];
+        TransportStreamTestWriter.EncodePts(Pts).CopyTo(dump, 0);
+        dump[8] = 0x81;
+        BigEndian(0x7FFFFFF8).CopyTo(dump, 10);
+        Assert.Empty(ReadFile(dump, ".subs"));
+
+        var record = new byte[64];
+        record[0] = 0x81;
+        BigEndian(0x7FFFFFFE).CopyTo(record, 2);
+        Assert.Empty(ReadFile(BuildProgramStream(record), ".mps"));
+    }
+
+    [Fact]
     public void AnOrdinaryFileHasNoUmdSubtitles()
     {
         Assert.Empty(ReadFile(Encoding.ASCII.GetBytes("1\r\n00:00:01,000 --> 00:00:02,000\r\nHi\r\n"), ".subs"));
