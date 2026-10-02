@@ -21,16 +21,49 @@ public class CustomShortcutStepWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        const double inputWidth = 420;
+        const double inputWidth = InputWidth;
 
         var labelType = UiUtil.MakeLabel(Se.Language.General.Type);
         var comboBoxType = UiUtil.MakeComboBox(vm.StepTypes, vm, nameof(vm.SelectedStepType));
-        comboBoxType.Width = 250;
+        comboBoxType.Width = inputWidth; // same right edge as the inputs below
+        var panelType = MakeFormGrid((labelType, comboBoxType));
 
         // Run command: a searchable list of every shortcut command.
-        var textBoxSearch = UiUtil.MakeTextBox(inputWidth, vm, nameof(vm.CommandSearchText))
-            .WithAccessibleName(Se.Language.General.Search);
-        textBoxSearch.Watermark = Se.Language.General.Search;
+        // Search box with icon and a match-count badge, like the Shortcuts window.
+        var textBoxSearch = new TextBox
+        {
+            PlaceholderText = Se.Language.General.Search,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            [!TextBox.TextProperty] = new Binding(nameof(vm.CommandSearchText)) { Mode = BindingMode.TwoWay },
+        }.WithSearchAndClearIcons().WithAccessibleName(Se.Language.General.Search);
+        var accentColor = UiUtil.GetAccentBrush() is ISolidColorBrush accentSolid ? accentSolid.Color : Colors.DodgerBlue;
+        var badgeCount = new Border
+        {
+            Background = new SolidColorBrush(accentColor, 0.18),
+            CornerRadius = new CornerRadius(10),
+            Padding = new Thickness(8, 3, 8, 2),
+            Margin = new Thickness(8, 0, 0, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+            Child = new TextBlock
+            {
+                [!TextBlock.TextProperty] = new Binding(nameof(vm.FilteredCommands) + ".Count") { Mode = BindingMode.OneWay },
+                FontSize = UiUtil.ScaledFontSize(10),
+                FontWeight = FontWeight.SemiBold,
+                VerticalAlignment = VerticalAlignment.Center,
+                Foreground = new SolidColorBrush(accentColor),
+            },
+        };
+        var panelSearch = new Grid
+        {
+            Width = inputWidth,
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = GridLength.Auto },
+            },
+        };
+        panelSearch.Add(textBoxSearch, 0, 0);
+        panelSearch.Add(badgeCount, 0, 1);
         var listBoxCommands = new ListBox
         {
             [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(vm.FilteredCommands)) { Mode = BindingMode.OneWay },
@@ -45,11 +78,10 @@ public class CustomShortcutStepWindow : Window
             }),
         };
         listBoxCommands.DoubleTapped += (_, _) => vm.CommandListDoubleTapped();
-        var panelRunCommand = new StackPanel
-        {
-            Spacing = 6,
-            Children = { textBoxSearch, UiUtil.MakeBorderForControlNoPadding(listBoxCommands) },
-        };
+        var labelSearch = UiUtil.MakeLabel(Se.Language.General.Search);
+        var panelRunCommand = MakeFormGrid(
+            (labelSearch, panelSearch),
+            (null, UiUtil.MakeBorderForControlNoPadding(listBoxCommands)));
         panelRunCommand.Bind(IsVisibleProperty, new Binding(nameof(vm.IsRunCommand)));
 
         // Insert text
@@ -95,22 +127,16 @@ public class CustomShortcutStepWindow : Window
                 new RowDefinition { Height = GridLength.Auto },
                 new RowDefinition { Height = GridLength.Auto },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = GridLength.Auto },
-                new ColumnDefinition { Width = GridLength.Auto },
-            },
             Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
             RowSpacing = 12,
         };
 
         var panels = new Panel { Children = { panelRunCommand, panelInsertText, panelReplace } };
 
-        grid.Add(labelType, 0);
-        grid.Add(comboBoxType, 0, 1);
-        grid.Add(panels, 1, 0, 1, 2);
-        grid.Add(buttonPanel, 2, 0, 1, 2);
+        // Every row uses the same label column and input width, so left and right edges line up.
+        grid.Add(panelType, 0);
+        grid.Add(panels, 1);
+        grid.Add(buttonPanel, 2);
 
         Content = grid;
 
@@ -118,17 +144,25 @@ public class CustomShortcutStepWindow : Window
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
+    private const double LabelWidth = 110;
+    private const double InputWidth = 420;
+
+    /// <summary>
+    /// Label + input rows with fixed column widths, so every section of the dialog (type, run
+    /// command, insert text, find and replace) lines up left and right.
+    /// </summary>
     private static Grid MakeFormGrid(params (Control? Label, Control Input)[] rows)
     {
         var grid = new Grid
         {
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(110) },
-                new ColumnDefinition { Width = GridLength.Auto },
+                new ColumnDefinition { Width = new GridLength(LabelWidth) },
+                new ColumnDefinition { Width = new GridLength(InputWidth) },
             },
             ColumnSpacing = 10,
             RowSpacing = 10,
+            HorizontalAlignment = HorizontalAlignment.Left,
         };
 
         for (var i = 0; i < rows.Length; i++)
@@ -141,6 +175,7 @@ public class CustomShortcutStepWindow : Window
                 grid.Add(label, i);
             }
 
+            rows[i].Input.HorizontalAlignment = HorizontalAlignment.Left;
             grid.Add(rows[i].Input, i, 1);
         }
 
