@@ -837,8 +837,9 @@ public partial class CompareViewModel : ObservableObject
             return;
         }
 
+        PushUndo();
         _syncPoints.RemoveAll(p => p.LeftId == row.Left.Line?.Id && p.RightId == row.Right.Line?.Id);
-        SyncPointCount = _syncPoints.Count;
+        UpdateSyncPointCount();
         CompareKeepingPlace(row.Left.Line?.Id, Rows.IndexOf(row));
     }
 
@@ -852,6 +853,7 @@ public partial class CompareViewModel : ObservableObject
         }
 
         var lineId = SelectedRow?.Left.Line?.Id;
+        PushUndo();
         ResetSyncPoints();
         CompareKeepingPlace(lineId);
     }
@@ -902,11 +904,8 @@ public partial class CompareViewModel : ObservableObject
             return;
         }
 
-        if (shiftTiming)
-        {
-            PushUndo();
-        }
-
+        // Every sync point change is undoable, as Undo restores the sync points with the lines.
+        PushUndo();
         _syncPoints.RemoveAll(p =>
         {
             var l = _leftLines.FindIndex(x => x.Id == p.LeftId);
@@ -914,7 +913,7 @@ public partial class CompareViewModel : ObservableObject
             return l < 0 || r < 0 || (long)(l - leftIndex) * (r - rightIndex) <= 0;
         });
         _syncPoints.Add(new SyncPoint(leftId, rightId));
-        SyncPointCount = _syncPoints.Count;
+        UpdateSyncPointCount();
 
         if (shiftTiming)
         {
@@ -989,6 +988,21 @@ public partial class CompareViewModel : ObservableObject
         _pendingSyncRightId = null;
         SyncPointCount = 0;
         SyncPointHint = string.Empty;
+    }
+
+    /// <summary>Counts only the sync points whose two lines still exist.</summary>
+    private void UpdateSyncPointCount()
+    {
+        var count = 0;
+        foreach (var sp in _syncPoints)
+        {
+            if (_leftLines.Exists(p => p.Id == sp.LeftId) && _rightLines.Exists(p => p.Id == sp.RightId))
+            {
+                count++;
+            }
+        }
+
+        SyncPointCount = count;
     }
 
     private bool IsSyncPoint(CompareItem left, CompareItem right)
@@ -1140,6 +1154,11 @@ public partial class CompareViewModel : ObservableObject
         PushUndo();
         _leftLines.Remove(line);
         _editedIds.Remove(line.Id);
+        if (_syncPoints.RemoveAll(p => p.LeftId == line.Id) > 0)
+        {
+            UpdateSyncPointCount();
+        }
+
         Renumber();
         AddChange(string.Format(Se.Language.File.CompareChangeDeletedX, number));
         CompareKeepingPlace(null, rowIndex);
@@ -1251,7 +1270,7 @@ public partial class CompareViewModel : ObservableObject
         _changes = state.Changes;
         _syncPoints.Clear();
         _syncPoints.AddRange(state.SyncPoints);
-        SyncPointCount = _syncPoints.Count;
+        UpdateSyncPointCount();
         UpdatePendingChanges();
         CompareKeepingPlace(SelectedRow?.Left.Line?.Id, SelectedRow == null ? 0 : Rows.IndexOf(SelectedRow));
     }
