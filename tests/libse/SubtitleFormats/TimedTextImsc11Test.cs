@@ -98,4 +98,34 @@ public class TimedTextImsc11Test
             Configuration.Settings.SubtitleSettings.TimedTextImsc11TimeCodeFormat = oldTimeCodeFormat;
         }
     }
+
+    [Theory]
+    [InlineData("test.xml")]
+    [InlineData("test.ttml")]
+    [InlineData("test.dfxp")]
+    public void IsMine_Accepts_All_Imsc_Extensions_And_Keeps_Consecutive_Line_Breaks(string fileName)
+    {
+        var oldExtension = Configuration.Settings.SubtitleSettings.TimedTextImsc11FileExtension;
+        try
+        {
+            Configuration.Settings.SubtitleSettings.TimedTextImsc11FileExtension = ".xml";
+            var xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                      "<tt xmlns=\"http://www.w3.org/ns/ttml\" xmlns:ttp=\"http://www.w3.org/ns/ttml#parameter\" xml:lang=\"en\" ttp:profile=\"http://www.w3.org/ns/ttml/profile/imsc1/text\" ttp:timeBase=\"media\">" +
+                      "<body><div>" +
+                      "<p begin=\"00:00:01.000\" end=\"00:00:03.000\">A<br/><br/><br/>B</p>" +
+                      "</div></body></tt>";
+            var lines = xml.SplitToLines();
+
+            Assert.True(new TimedTextImsc11().IsMine(lines, fileName));
+
+            var subtitle = new Subtitle();
+            var format = subtitle.ReloadLoadSubtitle(lines, fileName, null);
+            Assert.IsType<TimedTextImsc11>(format);
+            Assert.Equal("A" + Environment.NewLine + Environment.NewLine + Environment.NewLine + "B", subtitle.Paragraphs[0].Text);
+        }
+        finally
+        {
+            Configuration.Settings.SubtitleSettings.TimedTextImsc11FileExtension = oldExtension;
+        }
+    }
 }
