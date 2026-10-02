@@ -10,6 +10,7 @@ using Nikse.SubtitleEdit.Logic.Se4Setup;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -105,6 +106,7 @@ public partial class SettingsImportExportViewModel : ObservableObject
     private bool _importHasShortcutSlots;
     private bool _importHasCustomSearchSlots;
     private bool _importHasSurroundOptions;
+    private bool _importHasCustomShortcuts;
 
     // Set instead of _importData when the picked file is an SE 4 Settings.xml (#14309): SE 4 has
     // no Settings.json, so the only file a user migrating from 4.x can point at is the classic
@@ -195,6 +197,7 @@ public partial class SettingsImportExportViewModel : ObservableObject
             _importHasShortcutSlots = TryReadExportIncludesShortcutSlots(json);
             _importHasCustomSearchSlots = TryReadHasTopLevelProperty(json, nameof(Se.CustomSearch1Name));
             _importHasSurroundOptions = TryReadHasTopLevelProperty(json, nameof(Se.Surround1Behavior));
+            _importHasCustomShortcuts = TryReadHasTopLevelProperty(json, nameof(Se.CustomShortcuts));
 
             IsRulesEnabled = _importData.General != null;
             IsAppearanceEnabled = _importData.Appearance != null;
@@ -253,6 +256,7 @@ public partial class SettingsImportExportViewModel : ObservableObject
         _importHasShortcutSlots = false;
         _importHasCustomSearchSlots = false;
         _importHasSurroundOptions = false;
+        _importHasCustomShortcuts = false;
 
         IsRulesEnabled = se4.HasRules;
         IsAppearanceEnabled = se4.HasAppearance;
@@ -495,7 +499,7 @@ public partial class SettingsImportExportViewModel : ObservableObject
 
             if (_importHasShortcutSlots)
             {
-                CopyShortcutSlots(importData, Se.Settings, _importHasCustomSearchSlots, _importHasSurroundOptions);
+                CopyShortcutSlots(importData, Se.Settings, _importHasCustomSearchSlots, _importHasSurroundOptions, _importHasCustomShortcuts);
             }
         }
 
@@ -654,7 +658,7 @@ public partial class SettingsImportExportViewModel : ObservableObject
     /// of its sections. A null <paramref name="from"/> clears them, so an export that leaves
     /// shortcuts out says so instead of shipping a block of defaults.
     /// </summary>
-    private static void CopyShortcutSlots(Se? from, Se to, bool includeCustomSearch = true, bool includeSurroundOptions = true)
+    private static void CopyShortcutSlots(Se? from, Se to, bool includeCustomSearch = true, bool includeSurroundOptions = true, bool includeCustomShortcuts = true)
     {
         to.Color1 = from?.Color1!;
         to.Color2 = from?.Color2!;
@@ -689,6 +693,12 @@ public partial class SettingsImportExportViewModel : ObservableObject
             {
                 to.SetCustomSearch(slot, from?.GetCustomSearchName(slot)!, from?.GetCustomSearchUrl(slot)!);
             }
+        }
+
+        // User-built shortcuts (name + steps); their key bindings travel with the shortcuts list.
+        if (includeCustomShortcuts)
+        {
+            to.CustomShortcuts = from?.CustomShortcuts?.Select(p => p.Clone()).ToList() ?? new List<SeCustomShortcut>();
         }
     }
 

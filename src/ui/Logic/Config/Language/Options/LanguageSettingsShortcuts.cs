@@ -14,6 +14,27 @@ public class LanguageSettingsShortcuts
     public string CategoryVideo { get; set; }
     public string CategorySync { get; set; }
     public string CategoryAi { get; set; }
+    public string CategoryCustom { get; set; }
+    public string EditCustomShortcut { get; set; }
+    public string CustomShortcutNumberX { get; set; }
+    public string CustomShortcutNumberXY { get; set; }
+    public string CustomShortcutStep { get; set; }
+    public string CustomShortcutSteps { get; set; }
+    public string CustomShortcutStepRunCommand { get; set; }
+    public string CustomShortcutStepInsertText { get; set; }
+    public string CustomShortcutStepReplace { get; set; }
+    public string CustomShortcutInsertAtCursor { get; set; }
+    public string CustomShortcutInsertAtStart { get; set; }
+    public string CustomShortcutInsertAtEnd { get; set; }
+    public string CustomShortcutSummaryRunCommandX { get; set; }
+    public string CustomShortcutSummaryInsertXY { get; set; }
+    public string CustomShortcutSummaryReplaceXY { get; set; }
+    public string CustomShortcutSummaryReplaceRegexXY { get; set; }
+    public string CustomShortcutPickCommand { get; set; }
+    public string CustomShortcutEnterText { get; set; }
+    public string CustomShortcutEnterFind { get; set; }
+    public string CustomShortcutInvalidRegexX { get; set; }
+    public string CustomShortcutStepsHint { get; set; }
     public string ActiveIn { get; set; }
     public string ActiveInEverywhere { get; set; }
 
@@ -317,6 +338,27 @@ public class LanguageSettingsShortcuts
         CategoryVideo = "Video";
         CategorySync = "Synchronization";
         CategoryAi = "AI";
+        CategoryCustom = "Custom";
+        EditCustomShortcut = "Edit custom shortcut";
+        CustomShortcutNumberX = "Custom shortcut #{0}";
+        CustomShortcutNumberXY = "Custom shortcut #{0}: {1}";
+        CustomShortcutStep = "Step";
+        CustomShortcutSteps = "Steps";
+        CustomShortcutStepRunCommand = "Run command";
+        CustomShortcutStepInsertText = "Insert text";
+        CustomShortcutStepReplace = "Find and replace";
+        CustomShortcutInsertAtCursor = "At cursor";
+        CustomShortcutInsertAtStart = "At start of text";
+        CustomShortcutInsertAtEnd = "At end of text";
+        CustomShortcutSummaryRunCommandX = "Run: {0}";
+        CustomShortcutSummaryInsertXY = "Insert \"{0}\" ({1})";
+        CustomShortcutSummaryReplaceXY = "Replace \"{0}\" with \"{1}\"";
+        CustomShortcutSummaryReplaceRegexXY = "Replace regex \"{0}\" with \"{1}\"";
+        CustomShortcutPickCommand = "Please select a command to run.";
+        CustomShortcutEnterText = "Please enter the text to insert.";
+        CustomShortcutEnterFind = "Please enter the text to find.";
+        CustomShortcutInvalidRegexX = "Invalid regular expression: {0}";
+        CustomShortcutStepsHint = "Steps run from top to bottom. Text steps work on the selected lines; commands that open a window continue after it closes.";
         ActiveIn = "Active in";
         ActiveInEverywhere = "Everywhere";
 

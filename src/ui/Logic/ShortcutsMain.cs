@@ -642,6 +642,14 @@ public static class ShortcutsMain
         { nameof(MainViewModel.SurroundWith6Command), GetSurroundWithTitle(6) },
         { nameof(MainViewModel.SurroundWith7Command), GetSurroundWithTitle(7) },
         { nameof(MainViewModel.SurroundWith8Command), GetSurroundWithTitle(8) },
+        { nameof(MainViewModel.CustomShortcut1Command), GetCustomShortcutTitle(1) },
+        { nameof(MainViewModel.CustomShortcut2Command), GetCustomShortcutTitle(2) },
+        { nameof(MainViewModel.CustomShortcut3Command), GetCustomShortcutTitle(3) },
+        { nameof(MainViewModel.CustomShortcut4Command), GetCustomShortcutTitle(4) },
+        { nameof(MainViewModel.CustomShortcut5Command), GetCustomShortcutTitle(5) },
+        { nameof(MainViewModel.CustomShortcut6Command), GetCustomShortcutTitle(6) },
+        { nameof(MainViewModel.CustomShortcut7Command), GetCustomShortcutTitle(7) },
+        { nameof(MainViewModel.CustomShortcut8Command), GetCustomShortcutTitle(8) },
         { nameof(MainViewModel.InsertLineBeforeCommand), Se.Language.General.InsertBefore },
         { nameof(MainViewModel.InsertLineAfterCommand), Se.Language.General.InsertAfter },
         { nameof(MainViewModel.WaveformInsertNewSelectionCommand), Se.Language.Options.Shortcuts.WaveformInsertNewSelection },
@@ -721,6 +729,40 @@ public static class ShortcutsMain
         { nameof(MainViewModel.ToggleSubtitlesOnVideoPlayerCommand), Se.Language.Video.ToggleSubtitlesOnVideoPlayer },
         { nameof(MainViewModel.ToggleSmpteTimingCommand), Se.Language.Main.Menu.SmpteTiming },
     };
+    }
+
+    /// <summary>
+    /// The commands a custom shortcut step can run: every shortcut command except the custom
+    /// shortcuts themselves, so one custom shortcut can never start another (or itself).
+    /// </summary>
+    public static List<AvailableShortcut> GetCommandsForCustomShortcuts(MainViewModel vm)
+    {
+        return GetAllAvailableShortcuts(vm)
+            .Where(p => p.Group != ShortcutGroup.Custom)
+            .ToList();
+    }
+
+    /// <summary>
+    /// Display name for a custom shortcut slot: the slot number, plus the user's name for it.
+    /// </summary>
+    public static string GetCustomShortcutTitle(int slotNumber)
+    {
+        return GetCustomShortcutTitle(slotNumber, Se.Settings.GetCustomShortcut(slotNumber).Name);
+    }
+
+    public static string GetCustomShortcutTitle(int slotNumber, string? name)
+    {
+        var language = Se.Language.Options.Shortcuts;
+        return string.IsNullOrWhiteSpace(name)
+            ? string.Format(language.CustomShortcutNumberX, slotNumber)
+            : string.Format(language.CustomShortcutNumberXY, slotNumber, name.Trim());
+    }
+
+    public static string GetCommandDisplayName(string actionName)
+    {
+        return CommandTranslationLookup.TryGetValue(actionName, out var displayName)
+            ? displayName
+            : actionName;
     }
 
     private static List<AvailableShortcut> GetAllAvailableShortcuts(MainViewModel vm)
@@ -1218,6 +1260,16 @@ public static class ShortcutsMain
             CommandTranslationLookup[entry.ActionName] = entry.Plugin.Manifest.Name;
             AddShortcut(shortcuts, entry.Command, entry.ActionName, ShortcutCategory.General, ShortcutGroup.Plugins);
         }
+
+        // User-built shortcut slots: steps run by MainViewModel.RunCustomShortcut.
+        AddShortcut(shortcuts, vm.CustomShortcut1Command, nameof(vm.CustomShortcut1Command), ShortcutCategory.General, ShortcutGroup.Custom);
+        AddShortcut(shortcuts, vm.CustomShortcut2Command, nameof(vm.CustomShortcut2Command), ShortcutCategory.General, ShortcutGroup.Custom);
+        AddShortcut(shortcuts, vm.CustomShortcut3Command, nameof(vm.CustomShortcut3Command), ShortcutCategory.General, ShortcutGroup.Custom);
+        AddShortcut(shortcuts, vm.CustomShortcut4Command, nameof(vm.CustomShortcut4Command), ShortcutCategory.General, ShortcutGroup.Custom);
+        AddShortcut(shortcuts, vm.CustomShortcut5Command, nameof(vm.CustomShortcut5Command), ShortcutCategory.General, ShortcutGroup.Custom);
+        AddShortcut(shortcuts, vm.CustomShortcut6Command, nameof(vm.CustomShortcut6Command), ShortcutCategory.General, ShortcutGroup.Custom);
+        AddShortcut(shortcuts, vm.CustomShortcut7Command, nameof(vm.CustomShortcut7Command), ShortcutCategory.General, ShortcutGroup.Custom);
+        AddShortcut(shortcuts, vm.CustomShortcut8Command, nameof(vm.CustomShortcut8Command), ShortcutCategory.General, ShortcutGroup.Custom);
 
         return shortcuts;
     }

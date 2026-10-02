@@ -51,9 +51,22 @@ Some commands have additional configuration beyond the shortcut key:
 - **Video move custom 1–4 back/forward** — Set the number of milliseconds to skip
 - **Set actor 1–10** — Define the actor name assigned by each actor shortcut
 - **Custom search 1–5** — Set the name and URL for each search slot
+- **Custom shortcut 1–8** — Build your own shortcut from steps (see below)
 - **Go to first line** / **Go to last line** — Whether the video position follows
 
 Select a configurable command and click the **gear icon** to adjust its settings. The gear sits in the shortcut assignment row below the list, between the key detection button and **Reset** — it is only shown while a configurable command is selected, so if you cannot see it, the selected command has no extra settings.
+
+## Custom Shortcuts
+
+**Custom shortcut 1–8** (group **Custom**) are slots you build yourself. Select one, click the **gear icon**, give it an optional name and add steps that run from top to bottom:
+
+- **Run command** — Runs any command from the shortcuts list (search by name). A command that opens a window waits for it to close before the next step runs.
+- **Insert text** — Inserts text *at cursor* in the text box, or *at start of text* / *at end of text* of every selected line. Line breaks typed in the text box are inserted as line breaks.
+- **Find and replace** — Replaces text in the selected lines, optionally as a **regular expression** (`$1` etc. in the replacement) and **case sensitive**.
+
+Examples: *Insert text* `\N` at end of text to lift a subtitle one line per key press; *Find and replace* regex `(?m)^- ` with `– ` followed by *Run command* **Go to next line**.
+
+Assign a key like for any other command. The text changes of one run are undone in a single step. A custom shortcut cannot run another custom shortcut; a slot without steps does nothing.
 
 ## Resetting Shortcuts
 
