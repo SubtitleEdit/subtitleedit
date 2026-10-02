@@ -180,11 +180,25 @@ public class ShortcutsWindow : Window
         // TableView has no content-based column sizing (Auto behaves as star), so the
         // former Auto columns get pixel widths measured from the widest strings they
         // can show (the VM is initialized before the window ctor, so the rows exist).
+        // Measure with the UI font the user picked - the FontManager default (Helvetica Neue on
+        // macOS) may not load at all, and a measuring failure must never stop the window from
+        // opening: fall back to a rough per-character estimate (#15562).
         const double sortArrowSlack = 18; // room for TableViewHeaderSorter's ▲/▼ header suffix
-        static double MeasureWidth(string text, double fontSize, FontWeight fontWeight) =>
-            new FormattedText(text, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight,
-                new Typeface(Typeface.Default.FontFamily, FontStyle.Normal, fontWeight), fontSize, null).Width;
-        static double HeaderWidth(string header) =>
+        var measureFontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.FontName);
+        double MeasureWidth(string text, double fontSize, FontWeight fontWeight)
+        {
+            try
+            {
+                return new FormattedText(text ?? string.Empty, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight,
+                    new Typeface(measureFontFamily, FontStyle.Normal, fontWeight), fontSize, null).Width;
+            }
+            catch (Exception exception)
+            {
+                Se.LogError(exception, "ShortcutsWindow: could not measure text width");
+                return (text?.Length ?? 0) * fontSize * 0.6;
+            }
+        }
+        double HeaderWidth(string header) =>
             MeasureWidth(header, 14, FontWeight.SemiBold) + 8 + sortArrowSlack;
 
         var activeInTexts = new[]
@@ -206,7 +220,7 @@ public class ShortcutsWindow : Window
                 .DefaultIfEmpty(90).Max());
 
         // Keycap chips: 6+6 padding, 1+1 border, min 24 wide, 3 spacing; panel margin 4+20.
-        static double ChipRowWidth(ShortcutTreeNode node) => node.KeyParts.Count == 0
+        double ChipRowWidth(ShortcutTreeNode node) => node.KeyParts.Count == 0
             ? MeasureWidth(Se.Language.Options.Shortcuts.Unassigned, 11, FontWeight.Normal)
             : node.KeyParts.Sum(k => Math.Max(24, MeasureWidth(k, 11, FontWeight.SemiBold) + 14)) +
               (node.KeyParts.Count - 1) * 3;
