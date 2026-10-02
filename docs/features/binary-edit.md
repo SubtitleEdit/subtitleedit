@@ -64,4 +64,6 @@ There is no in-place save — use File → Export:
 
 When a Blu-ray SUP is exported, the times are written on a frame grid. The frame rate for that grid is worked out from the loaded file's own time codes rather than taken from the frame-rate value stored in the file, which is often wrong (many tools, and older versions of Subtitle Edit, store 25 fps for 23.976 fps material). With fewer than ten subtitles the stored frame rate is kept, and if the time codes fit no standard frame rate, the current frame rate is used.
 
+The **Frame rate** box next to OK shows that frame rate, and its tooltip says where it came from (stored in the file, detected from the time codes, the video, the current frame rate, or set by you). Blu-ray SUP, BDN/xml, DOST/png and Final Cut Pro exports are written at it; D-Cinema SMPTE uses the current frame rate. Changing it does not move any times. Use **Change frame rate** for that, which starts from this frame rate and sets it to the new one. When you open a video with a different frame rate, Binary Edit asks whether to use the video's. It only skips the question when the box just holds the current frame rate, and then takes the video's frame rate without asking.
+
 Closing with unexported changes asks for confirmation.

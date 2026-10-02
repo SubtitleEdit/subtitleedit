@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Shapes;
@@ -121,6 +122,7 @@ public class BinaryEditWindow : Window
             {
                 new ColumnDefinition(GridLength.Star),
                 new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(GridLength.Auto),
             },
             Margin = new Thickness(5),
         };
@@ -133,10 +135,37 @@ public class BinaryEditWindow : Window
         };
         bottomPanel.Add(statusTextBlock, 0);
 
+        // The frame rate exports are written at, and where it came from (issue #15549).
+        var frameRatePanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Center,
+            Spacing = 5,
+            Margin = new Thickness(10, 0, 10, 0),
+            [!ToolTip.TipProperty] = new Binding(nameof(vm.FrameRateHint)),
+            Children =
+            {
+                new TextBlock
+                {
+                    Text = Se.Language.General.FrameRate,
+                    VerticalAlignment = VerticalAlignment.Center,
+                },
+                new ComboBox
+                {
+                    Width = 110,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    [AutomationProperties.NameProperty] = Se.Language.General.FrameRate,
+                    [!ComboBox.ItemsSourceProperty] = new Binding(nameof(vm.FrameRates)),
+                    [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedFrameRate)),
+                },
+            },
+        };
+        bottomPanel.Add(frameRatePanel, 0, 1);
+
         var buttonPanel = UiUtil.MakeButtonBar(
             UiUtil.MakeButtonOk(vm.OkCommand),
             UiUtil.MakeButtonCancel(vm.CancelCommand));
-        bottomPanel.Add(buttonPanel, 1);
+        bottomPanel.Add(buttonPanel, 0, 2);
 
         mainGrid.Add(bottomPanel, 2);
 

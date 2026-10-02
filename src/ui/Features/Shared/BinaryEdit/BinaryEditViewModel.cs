@@ -38,6 +38,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -54,6 +55,8 @@ public partial class BinaryEditViewModel : ObservableObject
     [ObservableProperty] private int _screenWidth;
     [ObservableProperty] private int _screenHeight;
     [ObservableProperty] private string _statusText;
+    [ObservableProperty] private string _selectedFrameRate;
+    [ObservableProperty] private string _frameRateHint;
     [ObservableProperty] private string _currentPosition;
     [ObservableProperty] private string _currentSize;
     [ObservableProperty] private bool _hasSelection;
@@ -104,10 +107,16 @@ public partial class BinaryEditViewModel : ObservableObject
     private string _sourceFileName = string.Empty;
 
     /// <summary>
-    /// The frame rate the loaded Blu-ray sup declares, 0 when none was loaded. The sup written
-    /// back goes on this frame grid (issue #15478).
+    /// Frame rate choices for the bottom bar combo box (invariant strings, like the main toolbar's).
     /// </summary>
-    private double _sourceSupFrameRate;
+    public ObservableCollection<string> FrameRates { get; }
+
+    /// <summary>
+    /// Where <see cref="SelectedFrameRate"/> came from - shown as its tooltip, and a rate the user
+    /// or the file chose is only replaced by a video's after asking (issue #15549).
+    /// </summary>
+    private BinaryEditFrameRateSource _frameRateSource;
+    private bool _isSettingFrameRate;
     private int _lastPlaybackSubtitleIndex = -2;
     private bool _isDirty;
     private bool _dirtyTrackingActive;
@@ -123,6 +132,20 @@ public partial class BinaryEditViewModel : ObservableObject
         _selectCurrentSubtitleWhilePlaying = Se.Settings.Tools.BinEditSelectCurrentSubtitleWhilePlaying;
         Subtitles = new ObservableCollection<BinarySubtitleItem>();
         StatusText = string.Empty;
+        FrameRates = new ObservableCollection<string>
+        {
+            "23.976",
+            "24",
+            "25",
+            "29.97",
+            "30",
+            "50",
+            "59.94",
+            "60",
+        };
+        _selectedFrameRate = string.Empty;
+        _frameRateHint = string.Empty;
+        SetFrameRate(Se.Settings.General.CurrentFrameRate, BinaryEditFrameRateSource.Current);
         CurrentPosition = string.Empty;
         CurrentSize = string.Empty;
 
@@ -155,7 +178,7 @@ public partial class BinaryEditViewModel : ObservableObject
     {
         _loadFileName = fileName;
         _sourceFileName = fileName;
-        _sourceSupFrameRate = (subtitle as OcrSubtitleBluRay)?.FrameRate ?? 0;
+        SetFrameRateFromLoadedSubtitle(subtitle);
 
         if (subtitle != null && string.IsNullOrEmpty(fileName) && subtitle.Count > 0)
         {
@@ -733,7 +756,7 @@ public partial class BinaryEditViewModel : ObservableObject
 
         FileName = fileName;
         OcrSubtitle = imageSubtitle;
-        _sourceSupFrameRate = (imageSubtitle as OcrSubtitleBluRay)?.FrameRate ?? 0;
+        SetFrameRateFromLoadedSubtitle(imageSubtitle);
 
         Subtitles.Clear();
         List<Ocr.OcrSubtitleItem> list = imageSubtitle.MakeOcrSubtitleItems();
@@ -758,6 +781,7 @@ public partial class BinaryEditViewModel : ObservableObject
         if (ShouldAutoOpenMatchingVideo(Se.Settings.Video.AutoOpen, videoFileName) && VideoPlayerControl != null)
         {
             await VideoPlayerControl.Open(videoFileName!);
+            await OfferVideoFrameRate(videoFileName!);
         }
     }
 
@@ -1310,10 +1334,9 @@ public partial class BinaryEditViewModel : ObservableObject
             // The D-Cinema SMPTE handler declares EditRate/TimeCodeRate from this, while the cue
             // timecodes are converted with Configuration...CurrentFrameRate - read the same value
             // so header and cues agree. The Dost and FCP handlers take their rate from it too.
-            // A Blu-ray sup is written on the frame grid of the one it was loaded from.
-            FramesPerSecond = exportHandler is ExportHandlerBluRaySup && _sourceSupFrameRate > 0
-                ? _sourceSupFrameRate
-                : Configuration.Settings.General.CurrentFrameRate,
+            // The others (a Blu-ray sup goes on its frame grid) use the bottom bar frame rate:
+            // the loaded sup's own, the video's or the user's pick (issues #15478, #15549).
+            FramesPerSecond = GetExportFrameRate(exportHandler, GetFrameRate(), Configuration.Settings.General.CurrentFrameRate),
         };
 
         exportHandler.WriteHeader(fileOrFolderName, MakeImageParameter());
@@ -2146,7 +2169,9 @@ public partial class BinaryEditViewModel : ObservableObject
             videoFrameRate = await Task.Run(() => (double)FfmpegMediaInfo2.Parse(videoFileName).FramesRate);
         }
 
-        var currentFrameRate = Se.Settings.General.CurrentFrameRate;
+        // The "from" rate is the one the subtitle is timed at - the bottom bar frame rate, which
+        // for a loaded Blu-ray sup is its own, not the main window's (issue #15549).
+        var currentFrameRate = GetFrameRate();
         var result = await _windowService.ShowDialogAsync<ChangeFrameRateWindow, ChangeFrameRateViewModel>(Window,
             vm => { vm.Initialize(videoFileName, videoFrameRate, currentFrameRate); });
 
@@ -2157,10 +2182,178 @@ public partial class BinaryEditViewModel : ObservableObject
 
         var ratio = ChangeFrameRateViewModel.GetFrameRateRatio(result.SelectedFromFrameRate, result.SelectedToFrameRate);
         ScaleBinarySubtitleTimes(Subtitles, ratio);
-        if (_sourceSupFrameRate > 0)
+        SetFrameRate(result.SelectedToFrameRate, BinaryEditFrameRateSource.Manual);
+    }
+
+    /// <summary>
+    /// The frame rate in the bottom bar combo box, falling back to the current frame rate.
+    /// </summary>
+    internal double GetFrameRate()
+    {
+        return double.TryParse(SelectedFrameRate, NumberStyles.Float, CultureInfo.InvariantCulture, out var frameRate) && frameRate > 0
+            ? frameRate
+            : Se.Settings.General.CurrentFrameRate;
+    }
+
+    private void SetFrameRate(double frameRate, BinaryEditFrameRateSource source, double declaredFrameRate = 0)
+    {
+        _isSettingFrameRate = true;
+        try
         {
-            _sourceSupFrameRate = result.SelectedToFrameRate;
+            SelectedFrameRate = FrameRateHelper.SelectInList(FrameRates, NormalizeFrameRate(frameRate));
         }
+        finally
+        {
+            _isSettingFrameRate = false;
+        }
+
+        _frameRateSource = source;
+        FrameRateHint = GetFrameRateHint(source, declaredFrameRate);
+    }
+
+    partial void OnSelectedFrameRateChanged(string value)
+    {
+        if (_isSettingFrameRate || string.IsNullOrEmpty(value))
+        {
+            return;
+        }
+
+        _frameRateSource = BinaryEditFrameRateSource.Manual;
+        FrameRateHint = GetFrameRateHint(BinaryEditFrameRateSource.Manual, 0);
+        if (_dirtyTrackingActive)
+        {
+            _isDirty = true;
+        }
+    }
+
+    /// <summary>
+    /// A Blu-ray sup sets the frame rate its time codes are on (the declared one when they fit
+    /// it); anything else keeps the frame rate there is.
+    /// </summary>
+    private void SetFrameRateFromLoadedSubtitle(IOcrSubtitle? subtitle)
+    {
+        if (subtitle is not OcrSubtitleBluRay bluRay || bluRay.Count == 0)
+        {
+            return;
+        }
+
+        var (frameRate, source) = GetLoadedSupFrameRate(bluRay.FrameRate, bluRay.DeclaredFrameRate, Se.Settings.General.CurrentFrameRate);
+        SetFrameRate(frameRate, source, bluRay.DeclaredFrameRate);
+    }
+
+    /// <summary>
+    /// After a video is opened: use its frame rate, asking first when the current one came from
+    /// the subtitle file or the user and differs (issue #15549).
+    /// </summary>
+    private async Task OfferVideoFrameRate(string videoFileName)
+    {
+        if (Window == null || string.IsNullOrEmpty(videoFileName))
+        {
+            return;
+        }
+
+        double videoFrameRate;
+        try
+        {
+            videoFrameRate = await Task.Run(() => (double)FfmpegMediaInfo2.Parse(videoFileName).FramesRate);
+        }
+        catch
+        {
+            return;
+        }
+
+        var currentFrameRate = GetFrameRate();
+        var action = GetVideoFrameRateAction(_frameRateSource, currentFrameRate, videoFrameRate);
+        if (action == VideoFrameRateAction.Ask)
+        {
+            var message = string.Format(Se.Language.Tools.ImageBasedEdit.UseVideoFrameRateXInsteadOfY,
+                FormatFrameRate(videoFrameRate), FormatFrameRate(currentFrameRate));
+            var answer = await MessageBox.Show(Window, Se.Language.General.FrameRate, message, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            action = answer == MessageBoxResult.Yes ? VideoFrameRateAction.Use : VideoFrameRateAction.Keep;
+        }
+
+        if (action == VideoFrameRateAction.Use)
+        {
+            SetFrameRate(videoFrameRate, BinaryEditFrameRateSource.Video);
+        }
+    }
+
+    public enum VideoFrameRateAction
+    {
+        Keep,
+        Use,
+        Ask,
+    }
+
+    /// <summary>
+    /// What to do with an opened video's frame rate: nothing when unknown or the same, take it
+    /// when the current one is just the default, ask when the file or the user chose it.
+    /// </summary>
+    internal static VideoFrameRateAction GetVideoFrameRateAction(BinaryEditFrameRateSource source, double currentFrameRate, double videoFrameRate)
+    {
+        if (videoFrameRate <= 0 || Math.Abs(NormalizeFrameRate(videoFrameRate) - NormalizeFrameRate(currentFrameRate)) < 0.01)
+        {
+            return VideoFrameRateAction.Keep;
+        }
+
+        return source == BinaryEditFrameRateSource.Current ? VideoFrameRateAction.Use : VideoFrameRateAction.Ask;
+    }
+
+    /// <summary>
+    /// The frame rate of a loaded Blu-ray sup: the detected one (the declared one when its times
+    /// fit it), else the current frame rate when no rate fits.
+    /// </summary>
+    internal static (double FrameRate, BinaryEditFrameRateSource Source) GetLoadedSupFrameRate(double detectedFrameRate, double declaredFrameRate, double currentFrameRate)
+    {
+        if (detectedFrameRate <= 0)
+        {
+            return (currentFrameRate, BinaryEditFrameRateSource.Current);
+        }
+
+        return Math.Abs(detectedFrameRate - declaredFrameRate) < 0.001
+            ? (detectedFrameRate, BinaryEditFrameRateSource.Declared)
+            : (detectedFrameRate, BinaryEditFrameRateSource.Detected);
+    }
+
+    /// <summary>
+    /// The frame rate an export is written at. D-Cinema SMPTE converts its cue times with the
+    /// global current frame rate, so its header must declare that one too.
+    /// </summary>
+    internal static double GetExportFrameRate(IExportHandler exportHandler, double binaryEditFrameRate, double currentFrameRate)
+    {
+        return exportHandler is ExportHandlerDCinemaSmpte2014Png || binaryEditFrameRate <= 0
+            ? currentFrameRate
+            : binaryEditFrameRate;
+    }
+
+    /// <summary>
+    /// 24000/1001 etc. as the "23.976" the combo box lists - the sup writer maps those back to
+    /// the exact NTSC fractions.
+    /// </summary>
+    internal static double NormalizeFrameRate(double frameRate)
+    {
+        return Math.Round(frameRate, 3);
+    }
+
+    private static string FormatFrameRate(double frameRate)
+    {
+        return NormalizeFrameRate(frameRate).ToString(CultureInfo.InvariantCulture);
+    }
+
+    private static string GetFrameRateHint(BinaryEditFrameRateSource source, double declaredFrameRate)
+    {
+        var l = Se.Language.Tools.ImageBasedEdit;
+        var sourceText = source switch
+        {
+            BinaryEditFrameRateSource.Declared => l.FrameRateDeclaredInFile,
+            BinaryEditFrameRateSource.Detected => string.Format(l.FrameRateDetectedFromTimeCodesX,
+                declaredFrameRate > 0 ? FormatFrameRate(declaredFrameRate) : "?"),
+            BinaryEditFrameRateSource.Video => l.FrameRateFromVideo,
+            BinaryEditFrameRateSource.Manual => l.FrameRateSetManually,
+            _ => l.FrameRateCurrent,
+        };
+
+        return sourceText + Environment.NewLine + Environment.NewLine + l.FrameRateUsageInfo;
     }
 
     [RelayCommand]
@@ -2271,6 +2464,7 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         await VideoPlayerControl.Open(videoFileName);
+        await OfferVideoFrameRate(videoFileName);
     }
 
     internal void VideoPlayerAreaPointerPressed()
