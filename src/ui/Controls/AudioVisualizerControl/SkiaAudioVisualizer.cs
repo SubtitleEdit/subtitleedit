@@ -285,7 +285,9 @@ public class SkiaAudioVisualizer : AudioVisualizer
         var startIndex = FindFirstIndexAfterTime(OriginalSubtitleCueMaxEnds, f.StartSeconds, static maxEnd => maxEnd);
         var lastStart = -1d;
         var count = 0;
-        for (var i = startIndex; i < cues.Count && count < 250; i++)
+        var minSpacing = GetThinnedSpacingSeconds(f.PixelsPerSecond);
+        var i = startIndex;
+        while (i < cues.Count)
         {
             var cue = cues[i];
             if (cue.StartSeconds > f.EndSeconds)
@@ -293,12 +295,29 @@ public class SkiaAudioVisualizer : AudioVisualizer
                 break;
             }
 
-            if (cue.EndSeconds < f.StartSeconds ||
-                (count > 200 && (cue.EndSeconds - cue.StartSeconds < 0.00001 || cue.StartSeconds - lastStart < 0.09)))
+            if (cue.EndSeconds < f.StartSeconds)
             {
+                i++;
                 continue;
             }
 
+            // No cap on the count, see LoadParagraphsInLock (issue #15587).
+            if (count > ParagraphsBeforeThinning)
+            {
+                if (cue.StartSeconds - lastStart < minSpacing)
+                {
+                    i = FindFirstIndexAtOrAfterStart(cues, i + 1, lastStart + minSpacing, static c => c.StartSeconds);
+                    continue;
+                }
+
+                if (cue.EndSeconds - cue.StartSeconds < 0.00001)
+                {
+                    i++;
+                    continue;
+                }
+            }
+
+            i++;
             lastStart = cue.StartSeconds;
             count++;
             var prepared = GetPreparedParagraphText(cue.Text);
