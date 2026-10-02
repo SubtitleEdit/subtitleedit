@@ -19,15 +19,16 @@ public class VoiceSettingsWindow : Window
     private Border? _dropBorder;
     private Rectangle? _dropDashRect;
     private Icon? _dropIcon;
+    private RowDefinition? _dropRow;
 
     public VoiceSettingsWindow(VoiceSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Video.TextToSpeech.VoiceSettings;
         Width = 520;
-        Height = 360;
+        Height = 420;
         MinWidth = 400;
-        MinHeight = 280;
+        MinHeight = 320;
         CanResize = true;
 
         _vm = vm;
@@ -44,6 +45,14 @@ public class VoiceSettingsWindow : Window
         textBox.Width = double.NaN;
         textBox.HorizontalAlignment = HorizontalAlignment.Stretch;
 
+        // Multi-line and growing with the window, so a longer sample text is readable (#14726).
+        // Line breaks are fine - the sample is unbroken before it is spoken.
+        textBox.AcceptsReturn = true;
+        textBox.TextWrapping = TextWrapping.Wrap;
+        textBox.VerticalAlignment = VerticalAlignment.Stretch;
+        textBox.VerticalContentAlignment = VerticalAlignment.Top;
+        textBox.MinHeight = 60;
+
         var dropArea = BuildDropArea(vm);
 
         var buttonImport = UiUtil.MakeButton(Se.Language.Video.TextToSpeech.ImportVoiceDotDotDot, vm.ImportVoiceCommand).WithBindIsVisible(nameof(vm.IsImportVoiceVisible));
@@ -57,7 +66,7 @@ public class VoiceSettingsWindow : Window
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
@@ -72,6 +81,8 @@ public class VoiceSettingsWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
+        _dropRow = grid.RowDefinitions[2];
+
         grid.Add(label, 0, 0);
         grid.Add(textBox, 1, 0);
         grid.Add(dropArea, 2, 0);
@@ -84,6 +95,7 @@ public class VoiceSettingsWindow : Window
         Closing += (_, _) => UiUtil.SaveWindowPosition(this);
         Loaded += (_, _) => UiUtil.RestoreWindowPosition(this);
         ApplyDropVisualState(vm.IsDragOver);
+        ApplyDropRowHeight(vm.IsImportVoiceVisible);
 
         UiUtil.FocusOnFirstActivation(this, textBox); // hack to make OnKeyDown work
     }
@@ -170,6 +182,20 @@ public class VoiceSettingsWindow : Window
         if (e.PropertyName == nameof(VoiceSettingsViewModel.IsDragOver))
         {
             ApplyDropVisualState(_vm.IsDragOver);
+        }
+        else if (e.PropertyName == nameof(VoiceSettingsViewModel.IsImportVoiceVisible))
+        {
+            ApplyDropRowHeight(_vm.IsImportVoiceVisible);
+        }
+    }
+
+    // A star row keeps its share of the height even when its content is hidden, so without a
+    // drop area the row collapses and the sample text box gets all the extra height.
+    private void ApplyDropRowHeight(bool isDropAreaVisible)
+    {
+        if (_dropRow != null)
+        {
+            _dropRow.Height = isDropAreaVisible ? new GridLength(1, GridUnitType.Star) : GridLength.Auto;
         }
     }
 
