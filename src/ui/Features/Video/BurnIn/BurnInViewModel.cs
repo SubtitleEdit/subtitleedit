@@ -290,6 +290,24 @@ public partial class BurnInViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Burns only the given lines, with "Cut" set to the span from the first start to the last
+    /// end so a short clip comes out without typing the times (SE 4 "Generate video with
+    /// burned-in subtitles for selected lines", issue #15012).
+    /// </summary>
+    public void InitializeSelectedLines(string videoFileName, Subtitle subtitle, SubtitleFormat subtitleFormat)
+    {
+        Initialize(videoFileName, subtitle, subtitleFormat);
+        if (subtitle.Paragraphs.Count == 0)
+        {
+            return;
+        }
+
+        CutFrom = TimeSpan.FromMilliseconds(Math.Max(0, subtitle.Paragraphs.Min(p => p.StartTime.TotalMilliseconds)));
+        CutTo = TimeSpan.FromMilliseconds(subtitle.Paragraphs.Max(p => p.EndTime.TotalMilliseconds));
+        IsCutActive = CutTo > CutFrom;
+    }
+
+    /// <summary>
     /// Burns a Blu-ray sup into the video instead of text - the bitmaps as they are, overlapping
     /// lines included (issue #14456). Batch mode takes sup files the same way, per job.
     /// </summary>
