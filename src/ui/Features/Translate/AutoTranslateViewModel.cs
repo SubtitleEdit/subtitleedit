@@ -169,6 +169,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             new GroqTranslate(),
             new OpenRouterTranslate(),
             new ApiRouteTranslate(),
+            new CheaperInferenceTranslate(),
             new LaraTranslate(),
             new PerplexityTranslate(),
             new GeminiTranslate(),
@@ -234,6 +235,11 @@ public partial class AutoTranslateViewModel : ObservableObject
         Configuration.Settings.Tools.ApiRouteUrl = Se.Settings.AutoTranslate.ApiRouteUrl;
         Configuration.Settings.Tools.ApiRouteModel = Se.Settings.AutoTranslate.ApiRouteModel;
         Configuration.Settings.Tools.ApiRoutePrompt = Se.Settings.AutoTranslate.ApiRoutePrompt;
+
+        Configuration.Settings.Tools.CheaperInferenceApiKey = Se.Settings.AutoTranslate.CheaperInferenceApiKey;
+        Configuration.Settings.Tools.CheaperInferenceUrl = Se.Settings.AutoTranslate.CheaperInferenceUrl;
+        Configuration.Settings.Tools.CheaperInferenceModel = Se.Settings.AutoTranslate.CheaperInferenceModel;
+        Configuration.Settings.Tools.CheaperInferencePrompt = Se.Settings.AutoTranslate.CheaperInferencePrompt;
 
         Configuration.Settings.Tools.ChatGptApiKey = Se.Settings.AutoTranslate.ChatGptApiKey;
         Configuration.Settings.Tools.ChatGptUrl = Se.Settings.AutoTranslate.ChatGptUrl;
@@ -497,6 +503,14 @@ public partial class AutoTranslateViewModel : ObservableObject
             Se.Settings.AutoTranslate.ApiRouteUrl = apiUrl.Trim();
         }
 
+        if (engineType == typeof(CheaperInferenceTranslate))
+        {
+            Configuration.Settings.Tools.CheaperInferenceApiKey = apiKey.Trim();
+            Configuration.Settings.Tools.CheaperInferenceModel = apiModel.Trim();
+            Configuration.Settings.Tools.CheaperInferenceUrl = apiUrl.Trim();
+            Se.Settings.AutoTranslate.CheaperInferenceUrl = apiUrl.Trim();
+        }
+
         if (engineType == typeof(GeminiTranslate))
         {
             Configuration.Settings.Tools.GeminiProApiKey = apiKey.Trim();
@@ -557,6 +571,11 @@ public partial class AutoTranslateViewModel : ObservableObject
         Se.Settings.AutoTranslate.ApiRouteUrl = Configuration.Settings.Tools.ApiRouteUrl;
         Se.Settings.AutoTranslate.ApiRouteModel = Configuration.Settings.Tools.ApiRouteModel;
         Se.Settings.AutoTranslate.ApiRoutePrompt = Configuration.Settings.Tools.ApiRoutePrompt;
+
+        Se.Settings.AutoTranslate.CheaperInferenceApiKey = Configuration.Settings.Tools.CheaperInferenceApiKey;
+        Se.Settings.AutoTranslate.CheaperInferenceUrl = Configuration.Settings.Tools.CheaperInferenceUrl;
+        Se.Settings.AutoTranslate.CheaperInferenceModel = Configuration.Settings.Tools.CheaperInferenceModel;
+        Se.Settings.AutoTranslate.CheaperInferencePrompt = Configuration.Settings.Tools.CheaperInferencePrompt;
 
         Se.Settings.AutoTranslate.ChatGptApiKey = Configuration.Settings.Tools.ChatGptApiKey;
         Se.Settings.AutoTranslate.ChatGptUrl = Configuration.Settings.Tools.ChatGptUrl;
@@ -1749,6 +1768,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             GroqTranslate => settings.GroqUrl,
             OpenRouterTranslate => settings.OpenRouterUrl,
             ApiRouteTranslate => settings.ApiRouteUrl,
+            CheaperInferenceTranslate => settings.CheaperInferenceUrl,
             LaraTranslate => settings.LaraUrl,
             PerplexityTranslate => settings.PerplexityUrl,
             NvidiaTranslate => settings.NvidiaUrl,
@@ -2323,6 +2343,24 @@ public partial class AutoTranslateViewModel : ObservableObject
             ModelIsVisible = true;
             ButtonModelIsVisible = true;
             ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.ApiRouteModel) ? _apiModels[0] : Configuration.Settings.Tools.ApiRouteModel;
+
+            return;
+        }
+
+        if (engineType == typeof(CheaperInferenceTranslate))
+        {
+            FillUrls(new List<string>
+            {
+                Configuration.Settings.Tools.CheaperInferenceUrl,
+            });
+
+            ApiKeyText = Configuration.Settings.Tools.CheaperInferenceApiKey;
+            ApiKeyIsVisible = true;
+
+            _apiModels = CheaperInferenceTranslate.Models.ToList();
+            ModelIsVisible = true;
+            ButtonModelIsVisible = true;
+            ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.CheaperInferenceModel) ? _apiModels[0] : Configuration.Settings.Tools.CheaperInferenceModel;
 
             return;
         }

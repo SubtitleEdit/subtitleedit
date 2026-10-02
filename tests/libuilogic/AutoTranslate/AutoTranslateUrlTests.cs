@@ -75,4 +75,13 @@ public class AutoTranslateUrlTests
         Assert.Equal("http://localhost:5001/api/generate", AutoTranslateUrl.Complete("http://localhost:5001", KoboldCppTranslate.DefaultUrl));
         Assert.Equal("https://api.anthropic.com/v1/messages", AutoTranslateUrl.Complete("https://api.anthropic.com", AnthropicTranslate.DefaultUrl));
     }
+
+    [Theory]
+    [InlineData("https://api.cheaperinference.com")]
+    [InlineData("https://api.cheaperinference.com/v1")]
+    [InlineData("https://api.cheaperinference.com/v1/chat/completions")]
+    public void Complete_CheaperInferenceBaseUrl_GivesChatCompletionsEndpoint(string url)
+    {
+        Assert.Equal(CheaperInferenceTranslate.DefaultUrl, AutoTranslateUrl.Complete(url, CheaperInferenceTranslate.DefaultUrl));
+    }
 }

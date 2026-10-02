@@ -101,6 +101,10 @@ public class SeAutoTranslate
     public string ApiRoutePrompt { get; set; }
     public string ApiRouteApiKey { get; set; }
     public string ApiRouteModel { get; set; }
+    public string CheaperInferenceUrl { get; set; }
+    public string CheaperInferencePrompt { get; set; }
+    public string CheaperInferenceApiKey { get; set; }
+    public string CheaperInferenceModel { get; set; }
 
     public string PerplexityUrl { get; set; }
     public string PerplexityPrompt { get; set; }
@@ -142,6 +146,10 @@ public class SeAutoTranslate
         ApiRouteModel = ApiRouteTranslate.Models[0];
         ApiRoutePrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
         ApiRouteUrl = ApiRouteTranslate.DefaultUrl;
+        CheaperInferenceApiKey = string.Empty;
+        CheaperInferenceModel = CheaperInferenceTranslate.Models[0];
+        CheaperInferencePrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
+        CheaperInferenceUrl = CheaperInferenceTranslate.DefaultUrl;
         PerplexityApiKey = string.Empty;
         PerplexityModel = PerplexityTranslate.Models[0];
         PerplexityPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
