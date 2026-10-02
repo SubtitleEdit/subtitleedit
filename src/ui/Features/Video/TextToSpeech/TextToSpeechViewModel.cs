@@ -174,6 +174,9 @@ public partial class TextToSpeechViewModel : ObservableObject
     private string _waveFolder;
     private CancellationTokenSource _cancellationTokenSource;
     private CancellationToken _cancellationToken;
+    // Held while generating, so a long run is not cut short by the machine idling into sleep
+    // (#15552). Driven by IsGenerating, which every end-of-run path resets.
+    private readonly SleepInhibitorScope _sleepInhibitor = new(Se.Language.Video.TextToSpeech.Title);
     private WavePeakData2? _wavePeakData;
     private FfmpegMediaInfo? _mediaInfo;
     private string _videoFileName = string.Empty;
@@ -1703,6 +1706,8 @@ public partial class TextToSpeechViewModel : ObservableObject
             }
         }
     }
+
+    partial void OnIsGeneratingChanged(bool value) => _sleepInhibitor.SetActive(value);
 
     /// <summary>
     /// Returns the window from "generating" (buttons disabled, progress showing) to its idle state.
@@ -5236,6 +5241,9 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             SeLogger.Error(ex, "TTS window close: stopping the playback timer failed");
         }
+
+        // A close mid-run cancels the pipeline but does not always reach ResetGeneratingUiState.
+        _sleepInhibitor.Dispose();
 
         // Only present when Test voice played a clip, and normally already gone: OK disposes it
         // before the close starts. This covers the paths that close without OK (Cancel, Escape,
