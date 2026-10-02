@@ -687,6 +687,11 @@ public static class ShortcutsMain
         { nameof(MainViewModel.ShowSubtitleFormatPickerCommand), Se.Language.Options.Shortcuts.ChooseSubtitleFormat },
         { nameof(MainViewModel.TrimWhitespaceSelectedLinesCommand), Se.Language.Options.Shortcuts.TrimWhitespaceSelectedLines },
         { nameof(MainViewModel.FocusTextBoxCommand), Se.Language.Options.Shortcuts.FocusTextBox },
+        { nameof(MainViewModel.FocusSubtitleListViewCommand), Se.Language.Options.Shortcuts.FocusSubtitleListView },
+        { nameof(MainViewModel.FocusWaveformCommand), Se.Language.Options.Shortcuts.FocusWaveform },
+        { nameof(MainViewModel.FocusOriginalTextBoxCommand), Se.Language.Options.Shortcuts.FocusOriginalTextBox },
+        { nameof(MainViewModel.TextBoxGoToStartCommand), Se.Language.Options.Shortcuts.TextBoxGoToStart },
+        { nameof(MainViewModel.TextBoxGoToEndCommand), Se.Language.Options.Shortcuts.TextBoxGoToEnd },
         { nameof(MainViewModel.SortByNumberCommand), Se.Language.Options.Shortcuts.SortByNumber },
         { nameof(MainViewModel.SortByStartTimeCommand), Se.Language.Options.Shortcuts.SortByStartTime },
         { nameof(MainViewModel.SortByEndTimeCommand), Se.Language.Options.Shortcuts.SortByEndTime },
@@ -1209,6 +1214,11 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.ShowSubtitleFormatPickerCommand, nameof(vm.ShowSubtitleFormatPickerCommand), ShortcutCategory.General, ShortcutGroup.File);
         AddShortcut(shortcuts, vm.TrimWhitespaceSelectedLinesCommand, nameof(vm.TrimWhitespaceSelectedLinesCommand), ShortcutCategory.SubtitleGrid);
         AddShortcut(shortcuts, vm.FocusTextBoxCommand, nameof(vm.FocusTextBoxCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.FocusSubtitleListViewCommand, nameof(vm.FocusSubtitleListViewCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.FocusWaveformCommand, nameof(vm.FocusWaveformCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.FocusOriginalTextBoxCommand, nameof(vm.FocusOriginalTextBoxCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.TextBoxGoToStartCommand, nameof(vm.TextBoxGoToStartCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.TextBoxGoToEndCommand, nameof(vm.TextBoxGoToEndCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SortByNumberCommand, nameof(vm.SortByNumberCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SortByStartTimeCommand, nameof(vm.SortByStartTimeCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SortByEndTimeCommand, nameof(vm.SortByEndTimeCommand), ShortcutCategory.General);

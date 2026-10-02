@@ -66,7 +66,7 @@ Select a configurable command and click the **gear icon** to adjust its settings
 
 Examples: *Insert text* `\N` at end of text to lift a subtitle one line per key press; *Find and replace* regex `(?m)^- ` with `– ` followed by *Run command* **Go to next line**.
 
-**Active in** sets where the key works: *Everywhere*, *Subtitle list view*, *Text box*, *Subtitle list view & text box* or *Waveform* — so the same key can do something else elsewhere. For text box areas use a key with Ctrl/Alt, as a plain key would no longer type. Assign a key like for any other command. The text changes of one run are undone in a single step. A custom shortcut cannot run another custom shortcut; a slot without steps does nothing.
+**Active in** sets where the key works: *Everywhere*, *Subtitle list view*, *Text box*, *Subtitle list view & text box* or *Waveform* — so the same key can do something else elsewhere. For text box areas use a key with Ctrl/Alt, as a plain key would no longer type. Handy commands for steps: **Focus subtitle list view**, **Focus text box**, **Focus original text box**, **Focus waveform**, **Text box, go to start** and **Text box, go to end** — each step waits for focus to move before the next one runs. Assign a key like for any other command. The text changes of one run are undone in a single step. A custom shortcut cannot run another custom shortcut; a slot without steps does nothing.
 
 ## Resetting Shortcuts
 

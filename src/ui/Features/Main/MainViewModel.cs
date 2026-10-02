@@ -16764,6 +16764,10 @@ public partial class MainViewModel :
                         if (commands.TryGetValue(step.ActionName, out var command))
                         {
                             await ExecuteCommandAndWait(command);
+
+                            // Focus (and some other UI) changes are posted to the dispatcher - let
+                            // them land so the next step sees e.g. the newly focused control.
+                            await Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.Background);
                         }
 
                         break;
@@ -19959,6 +19963,69 @@ public partial class MainViewModel :
     private void FocusTextBox()
     {
         FocusEditTextBox();
+    }
+
+    // Fixed-target focus commands (unlike the "toggle focus" ones), so a custom shortcut step
+    // always lands in the same place.
+    [RelayCommand]
+    private void FocusSubtitleListView()
+    {
+        FocusSubtitleGrid();
+    }
+
+    [RelayCommand]
+    private void FocusWaveform()
+    {
+        FocusAudioVisualizer();
+    }
+
+    [RelayCommand]
+    private void TextBoxGoToStart()
+    {
+        TextBoxMoveCaret(toEnd: false);
+    }
+
+    [RelayCommand]
+    private void TextBoxGoToEnd()
+    {
+        TextBoxMoveCaret(toEnd: true);
+    }
+
+    /// <summary>
+    /// Puts the caret at the start/end of the focused text box (original or main), focusing the
+    /// main text box first when neither has focus - so it also works from the list view.
+    /// </summary>
+    private void TextBoxMoveCaret(bool toEnd)
+    {
+        var tb = GetFocusedTextBoxWrapper() ?? EditTextBox;
+        void MoveCaret()
+        {
+            tb.ClearSelection();
+            tb.CaretIndex = toEnd ? tb.Text?.Length ?? 0 : 0;
+        }
+
+        if (tb.IsFocused)
+        {
+            MoveCaret();
+            return;
+        }
+
+        // Gaining focus can select or reposition text, so place the caret again once it settled.
+        ActivateWindow(Window);
+        tb.Focus();
+        MoveCaret();
+        Dispatcher.UIThread.Post(MoveCaret, DispatcherPriority.Background);
+    }
+
+    [RelayCommand]
+    private void FocusOriginalTextBox()
+    {
+        if (!ShowColumnOriginalText)
+        {
+            return;
+        }
+
+        FocusEditTextBox(true);
     }
 
     [RelayCommand]
