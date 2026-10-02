@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts.CustomSearch;
+using Nikse.SubtitleEdit.Features.Options.Shortcuts.CustomShortcuts;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts.PickMilliseconds;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts.SurroundWith;
 using Nikse.SubtitleEdit.Features.Shared;
@@ -66,6 +67,8 @@ public partial class ShortcutsViewModel : ObservableObject
     private readonly string[] _surroundRightSlots = new string[Se.SurroundWithSlotCount];
     private readonly SurroundWithBehavior[] _surroundBehaviorSlots = new SurroundWithBehavior[Se.SurroundWithSlotCount];
     private readonly SurroundWithScope[] _surroundScopeSlots = new SurroundWithScope[Se.SurroundWithSlotCount];
+    // Same for the custom shortcut slots (name + steps).
+    private readonly SeCustomShortcut[] _customShortcutSlots = new SeCustomShortcut[Se.CustomShortcutSlotCount];
     // Same for the "search via" slots (name + URL).
     private readonly string[] _customSearchNameSlots = new string[Se.CustomSearchSlotCount];
     private readonly string[] _customSearchUrlSlots = new string[Se.CustomSearchSlotCount];
@@ -80,6 +83,7 @@ public partial class ShortcutsViewModel : ObservableObject
 
     // Add this flag to prevent updates during selection changes
     private bool _isLoadingSelection = false;
+
 
     public ShortcutsViewModel(IWindowService windowService, IFileHelper fileHelper)
     {
@@ -111,6 +115,10 @@ public partial class ShortcutsViewModel : ObservableObject
             _surroundRightSlots[i] = Se.Settings.GetSurroundRight(i + 1);
             _surroundBehaviorSlots[i] = Se.Settings.GetSurroundBehavior(i + 1);
             _surroundScopeSlots[i] = Se.Settings.GetSurroundScope(i + 1);
+        }
+        for (var i = 0; i < Se.CustomShortcutSlotCount; i++)
+        {
+            _customShortcutSlots[i] = Se.Settings.GetCustomShortcut(i + 1).Clone();
         }
         for (var i = 0; i < Se.CustomSearchSlotCount; i++)
         {
@@ -253,6 +261,14 @@ public partial class ShortcutsViewModel : ObservableObject
         _configurableCommands.Add(vm.SurroundWith6Command);
         _configurableCommands.Add(vm.SurroundWith7Command);
         _configurableCommands.Add(vm.SurroundWith8Command);
+        _configurableCommands.Add(vm.CustomShortcut1Command);
+        _configurableCommands.Add(vm.CustomShortcut2Command);
+        _configurableCommands.Add(vm.CustomShortcut3Command);
+        _configurableCommands.Add(vm.CustomShortcut4Command);
+        _configurableCommands.Add(vm.CustomShortcut5Command);
+        _configurableCommands.Add(vm.CustomShortcut6Command);
+        _configurableCommands.Add(vm.CustomShortcut7Command);
+        _configurableCommands.Add(vm.CustomShortcut8Command);
         _configurableCommands.Add(vm.CustomSearch1Command);
         _configurableCommands.Add(vm.CustomSearch2Command);
         _configurableCommands.Add(vm.CustomSearch3Command);
@@ -585,6 +601,11 @@ public partial class ShortcutsViewModel : ObservableObject
         }
 
         Se.Settings.Shortcuts = shortcuts;
+        for (var i = 0; i < Se.CustomShortcutSlotCount; i++)
+        {
+            Se.Settings.SetCustomShortcut(i + 1, _customShortcutSlots[i]);
+            ShortcutsMain.CommandTranslationLookup[$"CustomShortcut{i + 1}Command"] = ShortcutsMain.GetCustomShortcutTitle(i + 1);
+        }
 
         Se.Settings.Color1 = _color1.FromColorToHex();
         Se.Settings.Color2 = _color2.FromColorToHex();
@@ -645,6 +666,13 @@ public partial class ShortcutsViewModel : ObservableObject
         var node = SelectedNode;
         if (Window == null || MainViewModel == null || node?.ShortCut == null)
         {
+            return;
+        }
+
+        var customShortcutSlotIndex = GetCustomShortcutSlotIndex(node.ShortCut.Action);
+        if (customShortcutSlotIndex >= 0)
+        {
+            await ConfigureCustomShortcutSlot(customShortcutSlotIndex);
             return;
         }
 
@@ -991,6 +1019,62 @@ public partial class ShortcutsViewModel : ObservableObject
         if (action == MainViewModel.SurroundWith7Command) { return 6; }
         if (action == MainViewModel.SurroundWith8Command) { return 7; }
         return -1;
+    }
+
+    private List<CustomShortcutCommandItem> GetCustomShortcutCommandItems()
+    {
+        if (MainViewModel == null)
+        {
+            return new List<CustomShortcutCommandItem>();
+        }
+
+        return ShortcutsMain.GetCommandsForCustomShortcuts(MainViewModel)
+            .Select(p => new CustomShortcutCommandItem(p.Name, ShortcutsMain.GetCommandDisplayName(p.Name), ShortcutGroupUi.GetName(p.Group)))
+            .OrderBy(p => p.DisplayName, StringComparer.CurrentCultureIgnoreCase)
+            .ToList();
+    }
+
+    private int GetCustomShortcutSlotIndex(IRelayCommand action)
+    {
+        if (MainViewModel == null)
+        {
+            return -1;
+        }
+
+        if (action == MainViewModel.CustomShortcut1Command) { return 0; }
+        if (action == MainViewModel.CustomShortcut2Command) { return 1; }
+        if (action == MainViewModel.CustomShortcut3Command) { return 2; }
+        if (action == MainViewModel.CustomShortcut4Command) { return 3; }
+        if (action == MainViewModel.CustomShortcut5Command) { return 4; }
+        if (action == MainViewModel.CustomShortcut6Command) { return 5; }
+        if (action == MainViewModel.CustomShortcut7Command) { return 6; }
+        if (action == MainViewModel.CustomShortcut8Command) { return 7; }
+        return -1;
+    }
+
+    private async Task ConfigureCustomShortcutSlot(int slotIndex)
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var slotNumber = slotIndex + 1;
+        var result = await _windowService.ShowDialogAsync<CustomShortcutEditWindow, CustomShortcutEditViewModel>(Window,
+            vm => vm.Initialize(_customShortcutSlots[slotIndex], GetCustomShortcutCommandItems(),
+                ShortcutsMain.GetCustomShortcutTitle(slotNumber, null)));
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        _customShortcutSlots[slotIndex] = result.CustomShortcut;
+
+        var node = FlatNodes.FirstOrDefault(n => n?.ShortCut != null && GetCustomShortcutSlotIndex(n.ShortCut.Action) == slotIndex);
+        if (node != null)
+        {
+            node.Title = ShortcutsMain.GetCustomShortcutTitle(slotNumber, result.CustomShortcut.Name);
+        }
     }
 
     private async Task ConfigureSurroundSlot(int slotIndex)

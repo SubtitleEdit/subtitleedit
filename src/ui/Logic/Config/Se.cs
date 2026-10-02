@@ -25,6 +25,7 @@ public class Se
 
     public SeGeneral General { get; set; } = new();
     public List<SeShortCut> Shortcuts { get; set; } = new();
+    public List<SeCustomShortcut> CustomShortcuts { get; set; } = new();
     public int? ShortcutsMigrationVersion { get; set; }
     public string Color1 { get; set; } = "#ffff00ff";
     public string Color2 { get; set; } = "#ff0000ff";
@@ -475,6 +476,35 @@ public class Se
             case 7: Surround7Scope = value; break;
             case 8: Surround8Scope = value; break;
         }
+    }
+
+    /// <summary>
+    /// Number of custom shortcut slots ("Custom shortcut 1-8"), each a list of steps.
+    /// </summary>
+    public const int CustomShortcutSlotCount = 8;
+
+    public SeCustomShortcut GetCustomShortcut(int slotNumber)
+    {
+        var index = slotNumber - 1;
+        return CustomShortcuts != null && index >= 0 && index < CustomShortcuts.Count && CustomShortcuts[index] != null
+            ? CustomShortcuts[index]
+            : new SeCustomShortcut();
+    }
+
+    public void SetCustomShortcut(int slotNumber, SeCustomShortcut customShortcut)
+    {
+        if (slotNumber < 1 || slotNumber > CustomShortcutSlotCount)
+        {
+            return;
+        }
+
+        CustomShortcuts ??= new List<SeCustomShortcut>();
+        while (CustomShortcuts.Count < CustomShortcutSlotCount)
+        {
+            CustomShortcuts.Add(new SeCustomShortcut());
+        }
+
+        CustomShortcuts[slotNumber - 1] = customShortcut;
     }
 
     /// <summary>

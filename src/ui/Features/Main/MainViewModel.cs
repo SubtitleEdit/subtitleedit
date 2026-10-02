@@ -78,6 +78,7 @@ using Nikse.SubtitleEdit.Features.Main.GridColumns;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Features.Main.MainHelpers;
 using Nikse.SubtitleEdit.Features.Ocr;
+using Nikse.SubtitleEdit.Features.Options.Shortcuts.CustomShortcuts;
 using Nikse.SubtitleEdit.Features.Options.Language;
 using Nikse.SubtitleEdit.Features.Options.Plugins;
 using Nikse.SubtitleEdit.Features.Options.Settings;
@@ -16666,6 +16667,163 @@ public partial class MainViewModel :
         }
 
         _colorService.RemoveColorTags(selectedItems, GetUpdateSubtitle(), SelectedSubtitleFormat);
+    }
+
+    private bool _isRunningCustomShortcut;
+
+    [RelayCommand]
+    private Task CustomShortcut1()
+    {
+        return RunCustomShortcut(1);
+    }
+
+    [RelayCommand]
+    private Task CustomShortcut2()
+    {
+        return RunCustomShortcut(2);
+    }
+
+    [RelayCommand]
+    private Task CustomShortcut3()
+    {
+        return RunCustomShortcut(3);
+    }
+
+    [RelayCommand]
+    private Task CustomShortcut4()
+    {
+        return RunCustomShortcut(4);
+    }
+
+    [RelayCommand]
+    private Task CustomShortcut5()
+    {
+        return RunCustomShortcut(5);
+    }
+
+    [RelayCommand]
+    private Task CustomShortcut6()
+    {
+        return RunCustomShortcut(6);
+    }
+
+    [RelayCommand]
+    private Task CustomShortcut7()
+    {
+        return RunCustomShortcut(7);
+    }
+
+    [RelayCommand]
+    private Task CustomShortcut8()
+    {
+        return RunCustomShortcut(8);
+    }
+
+    /// <summary>
+    /// Runs the steps of a custom shortcut in order. Commands that open a dialog are awaited, so
+    /// the next step runs after the dialog closes. The text changes of the whole run become a
+    /// single undo step.
+    /// </summary>
+    private async Task RunCustomShortcut(int slotNumber)
+    {
+        var custom = Se.Settings.GetCustomShortcut(slotNumber);
+        if (custom.Steps.Count == 0 || _isRunningCustomShortcut)
+        {
+            return;
+        }
+
+        _isRunningCustomShortcut = true;
+        _undoRedoManager.CheckForChanges(null);
+        _undoRedoManager.StopChangeDetection();
+        try
+        {
+            Dictionary<string, IRelayCommand>? commands = null;
+            foreach (var step in custom.Steps.ToList())
+            {
+                switch (step.GetStepType())
+                {
+                    case CustomShortcutStepType.InsertText:
+                        CustomShortcutInsertText(step);
+                        break;
+                    case CustomShortcutStepType.Replace:
+                        CustomShortcutReplace(step);
+                        break;
+                    default:
+                        commands ??= ShortcutsMain.GetCommandsForCustomShortcuts(this)
+                            .GroupBy(p => p.Name)
+                            .ToDictionary(g => g.Key, g => g.First().RelayCommand);
+                        if (commands.TryGetValue(step.ActionName, out var command))
+                        {
+                            await ExecuteCommandAndWait(command);
+                        }
+
+                        break;
+                }
+            }
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Custom shortcut " + slotNumber + " failed: " + custom.Name);
+        }
+        finally
+        {
+            _undoRedoManager.StartChangeDetection();
+            _isRunningCustomShortcut = false;
+        }
+
+        _updateAudioVisualizer = true;
+    }
+
+    private static async Task ExecuteCommandAndWait(IRelayCommand command)
+    {
+        if (!command.CanExecute(null))
+        {
+            return;
+        }
+
+        if (command is IAsyncRelayCommand asyncCommand)
+        {
+            await asyncCommand.ExecuteAsync(null);
+        }
+        else
+        {
+            command.Execute(null);
+        }
+    }
+
+    private void CustomShortcutInsertText(SeCustomShortcutStep step)
+    {
+        var selectedItems = GetSelectedEditableSubtitles();
+        if (selectedItems.Count == 0 || string.IsNullOrEmpty(step.Text))
+        {
+            return;
+        }
+
+        var position = step.GetPosition();
+        if (position == CustomShortcutInsertPosition.Cursor)
+        {
+            var tb = GetFocusedTextBoxWrapper() ?? EditTextBox;
+            if (!tb.IsReadOnly)
+            {
+                tb.SelectedText = CustomShortcutText.NormalizeNewLines(step.Text);
+                tb.SelectionLength = 0;
+            }
+
+            return;
+        }
+
+        foreach (var item in selectedItems)
+        {
+            item.Text = CustomShortcutText.Insert(item.Text, step.Text, position);
+        }
+    }
+
+    private void CustomShortcutReplace(SeCustomShortcutStep step)
+    {
+        foreach (var item in GetSelectedEditableSubtitles())
+        {
+            item.Text = CustomShortcutText.Replace(item.Text, step);
+        }
     }
 
     private void SurroundWith(string surroundLeft, string surroundRight, SurroundWithBehavior behavior, SurroundWithScope scope)

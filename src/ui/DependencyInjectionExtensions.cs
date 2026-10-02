@@ -67,6 +67,7 @@ using Nikse.SubtitleEdit.Features.Options.Shortcuts;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts.CustomSearch;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts.PickMilliseconds;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts.SurroundWith;
+using Nikse.SubtitleEdit.Features.Options.Shortcuts.CustomShortcuts;
 using Nikse.SubtitleEdit.Features.Options.WordLists;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.AddToNamesList;
@@ -613,6 +614,8 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<SplitSubtitleViewModel>();
         collection.AddTransient<StatisticsViewModel>();
         collection.AddTransient<SurroundWithViewModel>();
+        collection.AddTransient<CustomShortcutEditViewModel>();
+        collection.AddTransient<CustomShortcutStepViewModel>();
         collection.AddTransient<CustomSearchViewModel>();
         collection.AddTransient<SyntaxColorTooWideSettingsViewModel>();
         collection.AddTransient<MinGapCalculateViewModel>();
