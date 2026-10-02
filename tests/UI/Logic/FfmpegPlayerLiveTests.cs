@@ -503,7 +503,9 @@ public sealed class FfmpegPlayerLiveTests : IDisposable
         _player.Volume = 0;
         var random = new Random(12345);
         var start = Stopwatch.GetTimestamp();
-        while (Stopwatch.GetElapsedTime(start).TotalSeconds < 4)
+        // ~250 random operations at the average 6 ms pause: enough to interleave seeks, steps and
+        // play/pause in every order, and the slowest test in the suite when it ran for 4 s.
+        while (Stopwatch.GetElapsedTime(start).TotalSeconds < 1.5)
         {
             switch (random.Next(7))
             {
