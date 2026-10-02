@@ -56,8 +56,9 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
         var stripped = StrippedLine.Strip(text.Trim());
         var lines = new List<LlamaCppAdvancedProtocol.BatchLine> { new(1, stripped.Text) };
         var map = await TranslateLinesAsync(lines, new List<LlamaCppAdvancedProtocol.HistoryPair>(), sourceLanguageCode, targetLanguageCode, cancellationToken);
-        return map.TryGetValue(1, out var translation) && translation.Length > 0 &&
-               FindUntranslatedEcho(map, lines, sourceLanguageCode, targetLanguageCode) < 0
+        // An echo that survived the warmer retry in TranslateLinesAsync is accepted: the line may
+        // legitimately read the same in both languages, and failing it would abort the translation.
+        return map.TryGetValue(1, out var translation) && translation.Length > 0
             ? stripped.Restore(translation)
             : string.Empty;
     }
@@ -110,7 +111,11 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
         // translation, so the single-line case - including bisection retries - goes context-free.
         var history = count > 1 ? CollectHistory(rows, index) : new List<LlamaCppAdvancedProtocol.HistoryPair>();
         var map = await TranslateLinesAsync(lines, history, sourceLanguageCode, targetLanguageCode, cancellationToken);
-        if (IsComplete(map, lines) && FindUntranslatedEcho(map, lines, sourceLanguageCode, targetLanguageCode) < 0)
+
+        // An echoed line in a batch is bisected down to that line; a single line that still comes
+        // back unchanged after the warmer retry is accepted - it may legitimately read the same in
+        // both languages, and throwing would abort the whole translation.
+        if (IsComplete(map, lines) && (count == 1 || FindUntranslatedEcho(map, lines, sourceLanguageCode, targetLanguageCode) < 0))
         {
             // Runs on the background translation loop; the rows are DataGrid-bound, so the
             // writes must happen on the UI thread.
@@ -163,6 +168,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
         }
 
         var map = new Dictionary<int, string>();
+        Dictionary<int, string>? echoedMap = null;
         var echoed = false;
         for (var attempt = 0; attempt < 2 && !cancellationToken.IsCancellationRequested; attempt++)
         {
@@ -182,8 +188,9 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
                     }
 
                     // The model handed a line back in the source language (TranslateGemma 12B does
-                    // this). Not usable - retried here, then the caller bisects/fails the batch.
+                    // this). Retried here, then the caller bisects the batch (a lone line is accepted).
                     echoed = true;
+                    echoedMap = map;
                     Error = "line " + echoedLine + " came back untranslated (" + sourceLanguageCode + " source instead of " + targetLanguageCode + "): " + map[echoedLine];
                     continue;
                 }
@@ -201,7 +208,9 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
         }
 
         cancellationToken.ThrowIfCancellationRequested();
-        return map;
+
+        // A complete (if echoed) reply beats an unusable retry - the caller decides about echoes.
+        return echoedMap != null && !IsComplete(map, lines) ? echoedMap : map;
     }
 
     /// <summary>

@@ -1,5 +1,7 @@
 using Nikse.SubtitleEdit.Core.Common;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
@@ -22,14 +24,49 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         /// <summary>
         /// True when <paramref name="reply"/> is <paramref name="source"/> again (ignoring case,
         /// whitespace, line breaks and formatting tags) although the languages differ.
+        /// <para>
+        /// A multi-line block (several subtitles merged into one request) is compared line by
+        /// line when the reply has the same number of lines, and counts as an echo when most of
+        /// the lines that need translating came back unchanged - a single line that is the same in
+        /// both languages must not hide that the rest was echoed, nor make the block an echo.
+        /// </para>
         /// </summary>
         public static bool IsUntranslatedEcho(string source, string reply, string sourceLanguage, string targetLanguage)
         {
             if (string.IsNullOrWhiteSpace(source) || string.IsNullOrWhiteSpace(reply) ||
                 string.IsNullOrWhiteSpace(sourceLanguage) || string.IsNullOrWhiteSpace(targetLanguage) ||
-                string.Equals(sourceLanguage.Trim(), targetLanguage.Trim(), StringComparison.OrdinalIgnoreCase))
+                IsSameLanguage(sourceLanguage, targetLanguage))
             {
                 return false;
+            }
+
+            var sourceLines = SplitLines(source);
+            var replyLines = SplitLines(reply);
+            if (sourceLines.Count > 1 && sourceLines.Count == replyLines.Count)
+            {
+                var qualifying = 0;
+                var echoes = 0;
+                for (var i = 0; i < sourceLines.Count; i++)
+                {
+                    var normalizedLine = Normalize(sourceLines[i]);
+                    if (!NeedsTranslation(normalizedLine))
+                    {
+                        continue;
+                    }
+
+                    qualifying++;
+                    if (normalizedLine == Normalize(replyLines[i]))
+                    {
+                        echoes++;
+                    }
+                }
+
+                if (qualifying > 0)
+                {
+                    return echoes * 2 > qualifying;
+                }
+
+                // No single line is long enough to judge on its own - judge the block as a whole.
             }
 
             var normalizedSource = Normalize(source);
@@ -39,6 +76,30 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             }
 
             return normalizedSource == Normalize(reply);
+        }
+
+        /// <summary>
+        /// These engines use English language names as codes; "Spanish" and "Spanish (Latin America)",
+        /// or "Chinese (Simplified)" and "Chinese (Traditional)", share most text, so a line coming
+        /// back unchanged between them is expected - treat them as the same language.
+        /// </summary>
+        internal static bool IsSameLanguage(string sourceLanguage, string targetLanguage)
+        {
+            return string.Equals(BaseLanguageName(sourceLanguage), BaseLanguageName(targetLanguage), StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string BaseLanguageName(string language)
+        {
+            var s = language.Trim();
+            var idx = s.IndexOf('(');
+            return idx > 0 ? s.Substring(0, idx).Trim() : s;
+        }
+
+        private static List<string> SplitLines(string text)
+        {
+            var s = text.Replace("<br />", "\n").Replace("<br/>", "\n").Replace("<br>", "\n")
+                        .Replace("\\N", "\n").Replace("\\n", "\n");
+            return s.SplitToLines().Where(line => !string.IsNullOrWhiteSpace(line)).ToList();
         }
 
         internal static string Normalize(string text)

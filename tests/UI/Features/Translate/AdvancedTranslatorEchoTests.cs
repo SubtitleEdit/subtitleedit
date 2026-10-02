@@ -5,7 +5,8 @@ namespace UITests.Features.Translate;
 
 /// <summary>
 /// A batch reply where the model handed a line back in the source language (TranslateGemma 12B,
-/// en -> de) must not count as usable - it is retried, then bisected down to a failing line.
+/// en -> de) must not count as usable - it is retried, then bisected down to that line, which is
+/// then kept (it may legitimately read the same in both languages).
 /// </summary>
 public class AdvancedTranslatorEchoTests
 {
@@ -53,5 +54,18 @@ public class AdvancedTranslatorEchoTests
         };
 
         Assert.Equal(-1, AdvancedTranslatorBase.FindUntranslatedEcho(map, Lines, "English", "English"));
+    }
+
+    [Fact]
+    public void VariantOfSameLanguage_IsNeverEcho()
+    {
+        var map = new Dictionary<int, string>
+        {
+            [1] = "Where were you last night?",
+            [2] = "Erik.",
+            [3] = "I was at the office until late.",
+        };
+
+        Assert.Equal(-1, AdvancedTranslatorBase.FindUntranslatedEcho(map, Lines, "Spanish", "Spanish (Latin America)"));
     }
 }

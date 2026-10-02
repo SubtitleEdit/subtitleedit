@@ -9,7 +9,8 @@ namespace LibUiLogicTests.AutoTranslate;
 /// <summary>
 /// TranslateGemma 12B answered merged en -> de requests with the English source, and
 /// LlamaCppTranslate returned that as the German translation. An echo is now retried once
-/// (warmer when the model pins a temperature), and a second echo is reported as no translation.
+/// (warmer when the model pins a temperature); a second echo is kept, as a line can legitimately
+/// read the same in both languages and failing it aborted the whole translation.
 /// </summary>
 public class LlamaCppTranslateEchoTests : IDisposable
 {
@@ -65,15 +66,39 @@ public class LlamaCppTranslateEchoTests : IDisposable
     }
 
     [Fact]
-    public async Task EchoTwice_ReturnsNoTranslationWithReason()
+    public async Task EchoTwice_KeepsTheEchoInsteadOfFailing()
     {
         Configuration.Settings.Tools.LlamaCppModelTemperature = -1;
 
         var (result, requests, error) = await TranslateAgainstFakeServerAsync(Source, Source);
 
-        Assert.Equal(string.Empty, result);
+        Assert.Equal(Source.Replace("\n", Environment.NewLine), result);
         Assert.Equal(2, requests.Count);
-        Assert.Contains("untranslated", error);
+        Assert.Equal(string.Empty, error);
+    }
+
+    [Fact]
+    public async Task MergedBlockMostlyEchoed_IsRetried()
+    {
+        Configuration.Settings.Tools.LlamaCppModelTemperature = -1;
+        const string block = "Where were you last night?\nI was at the office until late.\nDon't lie to me, I called them.";
+        const string mostlyEchoed = "Wo warst du letzte Nacht?\nI was at the office until late.\nDon't lie to me, I called them.";
+        const string german = "Wo warst du letzte Nacht?\nIch war bis spät im Büro.\nLüg mich nicht an, ich habe sie angerufen.";
+
+        var (result, requests, _) = await TranslateAgainstFakeServerAsync(block, german, firstReply: mostlyEchoed);
+
+        Assert.Equal(german.Replace("\n", Environment.NewLine), result);
+        Assert.Equal(2, requests.Count);
+    }
+
+    [Fact]
+    public async Task VariantOfSameLanguage_IsNotRetried()
+    {
+        var (result, requests, _) = await TranslateAgainstFakeServerAsync(Source, "unused", firstReply: Source,
+            sourceLanguage: "Spanish", targetLanguage: "Spanish (Latin America)");
+
+        Assert.Equal(Source.Replace("\n", Environment.NewLine), result);
+        Assert.Single(requests);
     }
 
     [Fact]
@@ -101,7 +126,7 @@ public class LlamaCppTranslateEchoTests : IDisposable
     /// and any later one with <paramref name="laterReply"/>, collecting the request bodies.
     /// </summary>
     private static async Task<(string result, List<string> requests, string error)> TranslateAgainstFakeServerAsync(
-        string text, string laterReply, string? firstReply = null)
+        string text, string laterReply, string? firstReply = null, string sourceLanguage = "English", string targetLanguage = "German")
     {
         var requests = new List<string>();
         var (listener, url) = StartListener();
@@ -142,7 +167,7 @@ public class LlamaCppTranslateEchoTests : IDisposable
             using var translator = new LlamaCppTranslate();
             translator.Initialize();
             using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
-            var result = await translator.Translate(text, "English", "German", timeout.Token);
+            var result = await translator.Translate(text, sourceLanguage, targetLanguage, timeout.Token);
             stop.Cancel();
             listener.Stop();
             await serverTask;
