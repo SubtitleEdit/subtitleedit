@@ -54,6 +54,59 @@ public class SurroundWithBehaviorTests
         Assert.Equal("Hello", result);
     }
 
+    [Fact]
+    public void Apply_RemoveOnce_RemovesOnePairPerPress()
+    {
+        var once = TextBoxSurroundToggler.Apply(SurroundWithBehavior.RemoveOnce, "", "Hello\\N\\N", "\\N", out var added);
+        var twice = TextBoxSurroundToggler.Apply(SurroundWithBehavior.RemoveOnce, "", once, "\\N", out _);
+        var thrice = TextBoxSurroundToggler.Apply(SurroundWithBehavior.RemoveOnce, "", twice, "\\N", out _);
+
+        Assert.False(added);
+        Assert.Equal("Hello\\N", once);
+        Assert.Equal("Hello", twice);
+        Assert.Equal("Hello", thrice);
+    }
+
+    [Fact]
+    public void Apply_RemoveOnce_RemovesOuterPairKeepingItalicTagsOutside()
+    {
+        var result = TextBoxSurroundToggler.Apply(SurroundWithBehavior.RemoveOnce, "[", "<i>[[Hello]]</i>", "]", out _);
+
+        Assert.Equal("<i>[Hello]</i>", result);
+    }
+
+    [Fact]
+    public void Apply_RemoveOnce_SameBeforeAndAfter()
+    {
+        var once = TextBoxSurroundToggler.Apply(SurroundWithBehavior.RemoveOnce, "*", "**Hello**", "*", out _);
+        var single = TextBoxSurroundToggler.Apply(SurroundWithBehavior.RemoveOnce, "*", "*Hello", "*", out _);
+
+        Assert.Equal("*Hello*", once);
+        Assert.Equal("Hello", single);
+    }
+
+    [Fact]
+    public void Apply_RemoveOnce_UndoesAddedMusicSymbols()
+    {
+        var symbol = Nikse.SubtitleEdit.Core.Common.Configuration.Settings.Tools.MusicSymbol;
+        var added = TextBoxSurroundToggler.Apply(SurroundWithBehavior.Add, symbol, "Hello" + Nl + "Bye", symbol, out _);
+        var addedTwice = TextBoxSurroundToggler.Apply(SurroundWithBehavior.Add, symbol, added, symbol, out _);
+
+        var removed = TextBoxSurroundToggler.Apply(SurroundWithBehavior.RemoveOnce, symbol, addedTwice, symbol, out _);
+
+        Assert.Equal(added, removed);
+        Assert.Equal("Hello" + Nl + "Bye", TextBoxSurroundToggler.Apply(SurroundWithBehavior.RemoveOnce, symbol, removed, symbol, out _));
+    }
+
+    [Fact]
+    public void ApplyToTexts_EachLineRemoveOnce_RemovesOnePairPerLine()
+    {
+        var result = TextBoxSurroundToggler.ApplyToTexts(SurroundWithBehavior.RemoveOnce, SurroundWithScope.EachLine,
+            "[", ["[[Hello]]" + Nl + "[Bye]", "Again"], "]");
+
+        Assert.Equal(["[Hello]" + Nl + "Bye", "Again"], result);
+    }
+
     [AvaloniaFact]
     public void ToggleSelection_Add_AddsPairAgainToSelection()
     {
