@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
@@ -656,6 +656,11 @@ public static class InitMenu
             {
                 Header = Se.Language.Video.CutVideoDotDotDot,
                 Command = vm.VideoCutCommand,
+            },
+            new MenuItem
+            {
+                Header = Se.Language.Video.VideoSpeedDotDotDot,
+                Command = vm.VideoSpeedCommand,
             },
             new MenuItem
             {

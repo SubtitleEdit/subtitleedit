@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Nikse.SubtitleEdit.Logic.Config.Language.Tools;
 
@@ -30,6 +30,9 @@ public class LanguageVideo
     public string ClearRecentVideos { get; set; }
     public string CutVideoTitle { get; set; }
     public string CutVideoDotDotDot { get; set; }
+    public string VideoSpeedTitle { get; set; }
+    public string VideoSpeedDotDotDot { get; set; }
+    public string VideoSpeedBurnInCurrentSubtitle { get; set; }
     public string RemuxVideoTitle { get; set; }
     public string RemuxVideoDotDotDot { get; set; }
     public string RemuxVideoInputVideo { get; set; }
@@ -191,6 +194,9 @@ public class LanguageVideo
         ClearRecentVideos = "Clear recent videos";
         CutVideoTitle = "Cut video";
         CutVideoDotDotDot = "Cut video...";
+        VideoSpeedTitle = "Speed up / slow down video";
+        VideoSpeedDotDotDot = "Speed up / slow down video...";
+        VideoSpeedBurnInCurrentSubtitle = "Burn-in current subtitle onto output video";
         RemuxVideoTitle = "Remux video";
         RemuxVideoDotDotDot = "Remux video...";
         RemuxVideoInputVideo = "Input video:";

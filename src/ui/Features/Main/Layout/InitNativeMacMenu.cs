@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.Input;
@@ -392,6 +392,7 @@ public static class InitNativeMacMenu
         {
             Item(Clean(lVideo.ReEncodeVideoForBetterSubtitlingDotDotDot), v => v.VideoReEncodeCommand),
             Item(Clean(lVideo.CutVideoDotDotDot), v => v.VideoCutCommand),
+            Item(Clean(lVideo.VideoSpeedDotDotDot), v => v.VideoSpeedCommand),
             Item(Clean(lVideo.BackgroundMusic.GenerateBackgroundMusicDotDotDot), v => v.ShowVideoBackgroundMusicCommand),
             Item(Clean(lVideo.RemuxVideoDotDotDot), v => v.ShowVideoRemuxVideoCommand),
 

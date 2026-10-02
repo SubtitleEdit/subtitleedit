@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Windows.Input;
 using Avalonia;
@@ -266,11 +266,13 @@ public static partial class InitListViewAndEditBox
             {
                 var border = new Border
                 {
+                    Tag = SubtitleGridColumnKeys.Start,
                     Padding = new Thickness(4, 2),
                     [!Border.BackgroundProperty] = MakeErrorCellBackgroundBinding(nameof(SubtitleLineViewModel.StartTimeBackgroundBrush)),
                 };
                 var textBlock = new TextBlock
                 {
+                    Tag = SubtitleGridColumnKeys.Start,
                     VerticalAlignment = VerticalAlignment.Center,
                     [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter, Mode = BindingMode.OneWay },
                 };
@@ -297,11 +299,13 @@ public static partial class InitListViewAndEditBox
             {
                 var border = new Border
                 {
+                    Tag = SubtitleGridColumnKeys.End,
                     Padding = new Thickness(4, 2),
                     [!Border.BackgroundProperty] = MakeErrorCellBackgroundBinding(nameof(SubtitleLineViewModel.EndTimeBackgroundBrush)),
                 };
                 var textBlock = new TextBlock
                 {
+                    Tag = SubtitleGridColumnKeys.End,
                     VerticalAlignment = VerticalAlignment.Center,
                     [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.EndTime)) { Converter = fullTimeConverter, Mode = BindingMode.OneWay },
                 };
