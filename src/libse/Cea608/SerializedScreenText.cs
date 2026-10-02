@@ -79,24 +79,94 @@ namespace Nikse.SubtitleEdit.Core.Cea608
 
         /// <summary>
         /// A mid-row code shows as a space ("that you <i>were</i> smelling"), but not next to a
-        /// space already there, nor inside brackets - "(<i>music</i>)", not "( <i>music</i> )".
+        /// space already there, nor inside brackets or quotes - "(<i>music</i>)", not
+        /// "( <i>music</i> )" - nor before closing punctuation: "see <i>Jaws</i>?", not
+        /// "see <i>Jaws</i> ?". Subtitle Edit's own SCC writer puts the reset code right before
+        /// the next char, with no space of its own.
         /// </summary>
         private static bool IsMidRowSpaceShown(StringBuilder sb, SerializedStyledUnicodeChar[] columns, int index)
         {
-            if (sb.Length == 0 || char.IsWhiteSpace(sb[sb.Length - 1]) || "([{".IndexOf(sb[sb.Length - 1]) >= 0)
+            var previous = GetPreviousCharIndex(sb, sb.Length);
+            if (previous < 0 || char.IsWhiteSpace(sb[previous]) || IsOpeningMark(sb, previous))
             {
                 return false;
             }
 
-            for (var i = index + 1; i < columns.Length; i++)
-            {
-                var next = columns[i].Character;
-                if (next == Constants.MidRowSpace)
-                {
-                    continue;
-                }
+            var next = GetNextCharIndex(columns, index + 1);
+            return next >= 0 && !string.IsNullOrWhiteSpace(columns[next].Character) && !IsClosingMark(columns, next);
+        }
 
-                return !string.IsNullOrWhiteSpace(next) && ")]}".IndexOf(next[0]) < 0;
+        private static int GetNextCharIndex(SerializedStyledUnicodeChar[] columns, int start)
+        {
+            for (var i = start; i < columns.Length; i++)
+            {
+                if (columns[i].Character != Constants.MidRowSpace)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        /// <summary>
+        /// Index of the last char in sb before "end", skipping italic tags; -1 if there is none.
+        /// </summary>
+        private static int GetPreviousCharIndex(StringBuilder sb, int end)
+        {
+            var i = end - 1;
+            while (i >= 0 && sb[i] == '>')
+            {
+                if (i >= 2 && sb[i - 1] == 'i' && sb[i - 2] == '<')
+                {
+                    i -= 3;
+                }
+                else if (i >= 3 && sb[i - 1] == 'i' && sb[i - 2] == '/' && sb[i - 3] == '<')
+                {
+                    i -= 4;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return i;
+        }
+
+        private static bool IsOpeningMark(StringBuilder sb, int index)
+        {
+            var ch = sb[index];
+            if ("([{“‘¿¡".IndexOf(ch) >= 0)
+            {
+                return true;
+            }
+
+            if (ch == '"' || ch == '\'')
+            {
+                // A straight quote opens at the start or after a space or bracket: "<i>Jaws</i>"
+                // - after a word it closes (or is an apostrophe).
+                var before = GetPreviousCharIndex(sb, index);
+                return before < 0 || char.IsWhiteSpace(sb[before]) || "([{".IndexOf(sb[before]) >= 0;
+            }
+
+            return false;
+        }
+
+        private static bool IsClosingMark(SerializedStyledUnicodeChar[] columns, int index)
+        {
+            var ch = columns[index].Character[0];
+            if (".,!?;:)]}'…’”".IndexOf(ch) >= 0)
+            {
+                return true; // a straight apostrophe right after a word: "<i>Jaws</i>'s"
+            }
+
+            if (ch == '"')
+            {
+                // A straight double quote closes unless a word follows it: "<i>Jaws</i>", but
+                // "Hi <i>yo</i> "ok"" keeps its space.
+                var after = GetNextCharIndex(columns, index + 1);
+                return after < 0 || string.IsNullOrEmpty(columns[after].Character) || !char.IsLetterOrDigit(columns[after].Character[0]);
             }
 
             return false;

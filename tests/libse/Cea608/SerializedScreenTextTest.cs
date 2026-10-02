@@ -1,4 +1,6 @@
 using Nikse.SubtitleEdit.Core.Cea608;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace LibSETests.Cea608;
 
@@ -107,5 +109,64 @@ public class SerializedScreenTextTest
         // row 14 italics "Hi", row 15 plain "yo"
         var text = Decode(PopOn((0x14, 0x4E), (0x48, 0x69), (0x14, 0x70), (0x79, 0x6F)));
         Assert.Equal("<i>Hi</i>" + Environment.NewLine + "yo", text);
+    }
+
+    /// <summary>
+    /// No mid-row space before closing punctuation - "Hi <i>yo</i> ." before.
+    /// </summary>
+    [Fact]
+    public void MidRowCodeBeforeClosingPunctuationAddsNoSpace()
+    {
+        Assert.Equal("Hi <i>yo</i>.", Decode(PopOn((0x14, 0x70), (0x48, 0x69), (0x11, 0x2E), (0x79, 0x6F), (0x11, 0x20), (0x2E, 0x00))));
+        Assert.Equal("Hi <i>yo</i>, o", Decode(PopOn((0x14, 0x70), (0x48, 0x69), (0x11, 0x2E), (0x79, 0x6F), (0x11, 0x20), (0x2C, 0x20), (0x6F, 0x00))));
+    }
+
+    [Fact]
+    public void MidRowCodeInsideStraightQuotesAddsNoSpace()
+    {
+        // "yo" in italics, inside straight quotes
+        Assert.Equal("\"<i>yo</i>\"", Decode(PopOn((0x14, 0x70), (0x22, 0x00), (0x11, 0x2E), (0x79, 0x6F), (0x11, 0x20), (0x22, 0x00))));
+    }
+
+    [Fact]
+    public void MidRowCodeBeforeOpeningQuoteKeepsSpace()
+    {
+        // Hi + mid-row italics + yo + mid-row white + "ok" - the quote opens a new word
+        Assert.Equal("Hi <i>yo</i> \"ok\"", Decode(PopOn((0x14, 0x70), (0x48, 0x69), (0x11, 0x2E), (0x79, 0x6F), (0x11, 0x20), (0x22, 0x6F), (0x6B, 0x22))));
+    }
+
+    /// <summary>
+    /// Subtitle Edit's own SCC writer puts the mid-row reset right before the next char, so the
+    /// decoder must not add a space there.
+    /// </summary>
+    [Theory]
+    [InlineData("see <i>Jaws</i>?")]
+    [InlineData("\"<i>Jaws</i>\"")]
+    [InlineData("see \"<i>Jaws</i>\" now")]
+    [InlineData("<i>Jaws</i>'s shark")]
+    [InlineData("(<i>music</i>)")]
+    [InlineData("Hi <i>yo</i> ok")]
+    [InlineData("Hi <i>yo</i>, ok.")]
+    public void SccWriterRoundTrip(string text)
+    {
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph(text, 1000, 3000));
+        var scc = new ScenaristClosedCaptions().ToText(subtitle, "test");
+        var pairs = new List<(int, int)>();
+        foreach (var line in scc.SplitToLines())
+        {
+            var tab = line.IndexOf('\t');
+            if (tab < 0)
+            {
+                continue;
+            }
+
+            foreach (var word in line.Substring(tab + 1).Split(' ', StringSplitOptions.RemoveEmptyEntries))
+            {
+                pairs.Add((Convert.ToInt32(word.Substring(0, 2), 16), Convert.ToInt32(word.Substring(2, 2), 16)));
+            }
+        }
+
+        Assert.Equal(text, Decode(pairs.ToArray()));
     }
 }
