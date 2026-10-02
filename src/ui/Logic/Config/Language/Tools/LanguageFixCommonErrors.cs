@@ -158,7 +158,7 @@ public class LanguageFixCommonErrors
         RemoveLineBreaksPixelWidth = "Unbreak subtitles that can fit on one line (pixel width)";
         FixUppercaseIInsideLowercaseWords = "Fix uppercase 'i' inside lowercase words (OCR error)";
         FixDoubleApostrophes = "Fix double apostrophe characters ('') to a single quote (\")";
-        FixMisreadQuotes = "Fix apostrophes misread as double quotes (OCR)";
+        FixMisreadQuotes = "Fix apostrophes misread as double quotes (OCR, English)";
         AddPeriods = "Add period after lines where next line starts with uppercase letter";
         StartWithUppercaseLetterAfterParagraph = "Start with uppercase letter after paragraph";
         StartWithUppercaseLetterAfterPeriodInsideParagraph = "Start with uppercase letter after period inside paragraph";

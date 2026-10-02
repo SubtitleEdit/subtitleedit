@@ -125,6 +125,7 @@ internal static class ListHelpers
                     id,
                     guiLabel = guiLabels.TryGetValue(id, out var label) ? label : null,
                     languageGate = gates.TryGetValue(id, out var lang) ? lang : null,
+                    optIn = FixCommonErrorsRunner.OptInRules.Contains(id),
                 }),
                 total = FixCommonErrorsRunner.AvailableRuleIds.Count,
                 syntax = new
@@ -134,7 +135,7 @@ internal static class ListHelpers
                     allExcept = "--fix-common-errors-rules:all,-FixDanishLetterI",
                     forceLanguage = "--fce-language:es",
                 },
-                note = "A language-gated rule runs only when the subtitle's language matches (auto-detected, or forced with --fce-language). Naming a gated rule selects it but does not bypass the gate.",
+                note = "A language-gated rule runs only when the subtitle's language matches (auto-detected, or forced with --fce-language). Naming a gated rule selects it but does not bypass the gate. An opt-in rule is not part of 'all' and only runs when named.",
             });
             return;
         }
@@ -156,6 +157,11 @@ internal static class ListHelpers
             // forced via --fce-language) matches. Mark them so the gate is discoverable from
             // the CLI without reading the source.
             var gate = gates.TryGetValue(id, out var lang) ? $"[magenta]{lang} only[/]" : "[dim]—[/]";
+            if (FixCommonErrorsRunner.OptInRules.Contains(id))
+            {
+                gate += " [yellow](opt-in)[/]";
+            }
+
             table.AddRow($"[green]{id}[/]", gui, gate);
         }
 
@@ -163,7 +169,8 @@ internal static class ListHelpers
         AnsiConsole.MarkupLine(
             "\n[dim]The GUI equivalent is the checkbox label in the desktop Fix Common Errors window.[/]\n" +
             "[dim]Language-gated rules run only when the language matches — auto-detected, or forced with[/] " +
-            "[green]--fce-language:<code>[/][dim]. Naming a gated rule selects it but does not bypass the gate.[/]");
+            "[green]--fce-language:<code>[/][dim]. Naming a gated rule selects it but does not bypass the gate.[/]\n" +
+            "[dim]Opt-in rules are not part of 'all' and only run when named in[/] [green]--fix-common-errors-rules[/][dim].[/]");
         AnsiConsole.MarkupLine(
             "\n[dim]Examples:[/]\n" +
             "  [dim]--fix-common-errors[/]                                          [dim]# all rules (gates active)[/]\n" +

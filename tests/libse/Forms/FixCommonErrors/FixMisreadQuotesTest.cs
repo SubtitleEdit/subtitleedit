@@ -77,6 +77,19 @@ public class FixMisreadQuotesTest
         Assert.Equal(input, Fix(input));
     }
 
+    [Theory]
+    [InlineData("nl", "Ik kom 's avonds terug,\" zei hij.")]
+    [InlineData("it", "\"Aspetta un po',")]
+    [InlineData("en", "Ik kom 's avonds terug,\" zei hij.", "Ik kom \"s avonds terug,\" zei hij.")]
+    public void EnglishOnly(string language, string input, string? expected = null)
+    {
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph(input, 0, 2000));
+        new FixMisreadQuotes().Fix(subtitle, new EmptyFixCallback { Language = language });
+
+        Assert.Equal(expected ?? input, subtitle.Paragraphs[0].Text);
+    }
+
     [Fact]
     public void RunsBeforeAddMissingQuotes()
     {

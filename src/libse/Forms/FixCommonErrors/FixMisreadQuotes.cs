@@ -13,12 +13,13 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
     ///   'Hello' -> "Hello" (whole line wrapped in apostrophes, no double quotes in the text)
     ///   ''Hello' -> "Hello" (two apostrophes are always treated as a double quote)
     /// Contractions (don't), elisions ('cause, goin') and possessives (the boys' toys) are left alone.
+    /// English only - other languages use apostrophes differently (Dutch 's avonds, Italian un po').
     /// </summary>
     public class FixMisreadQuotes : IFixCommonError
     {
         public static class Language
         {
-            public static string FixMisreadQuotes { get; set; } = "Fix apostrophes misread as double quotes (OCR)";
+            public static string FixMisreadQuotes { get; set; } = "Fix apostrophes misread as double quotes (OCR, English)";
         }
 
         private static readonly HashSet<string> ElisionStarts = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
@@ -30,6 +31,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             var fixAction = Language.FixMisreadQuotes;
             var noOfFixes = 0;
+            if (!string.Equals(callbacks.Language, "en", StringComparison.OrdinalIgnoreCase))
+            {
+                callbacks.UpdateFixStatus(noOfFixes, fixAction);
+                return;
+            }
+
             for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];

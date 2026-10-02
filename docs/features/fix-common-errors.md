@@ -50,7 +50,7 @@ Common fixes include:
 - Break long lines
 - Remove line breaks in short lines (text length / pixel width)
 - Fix double apostrophes (`''` → `"`)
-- Fix apostrophes misread as double quotes by OCR (`"Hello'` → `"Hello"`, `'Hello'` → `"Hello"`)
+- Fix apostrophes misread as double quotes by OCR (`"Hello'` → `"Hello"`, `'Hello'` → `"Hello"`) - English only
 - Fix music notation
 - Add missing periods at end of lines
 - Start with uppercase letter after paragraph / period / colon
