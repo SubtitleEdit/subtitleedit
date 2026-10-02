@@ -54,11 +54,12 @@ public static class ImproveTimeCodesAligners
             .ToList();
 
         // Ultra is v3 post-trained, with a lower error rate everywhere; the English-only models
-        // are only any use for English.
+        // are only any use for English. Phonon-2 is v3 retrained for English, so it leads those.
         var candidates = multilingual.Where(m => m.Name.StartsWith("parakeet-ultra-", StringComparison.Ordinal))
             .Concat(multilingual.Where(m => m.Name.StartsWith("parakeet-tdt-0.6b-v3", StringComparison.Ordinal)))
             .Concat(isEnglish
-                ? engine.Models.Where(m => m.Name.StartsWith("parakeet-tdt-1.1b", StringComparison.Ordinal) ||
+                ? engine.Models.Where(m => m.Name.StartsWith("phonon2-", StringComparison.Ordinal) ||
+                                           m.Name.StartsWith("parakeet-tdt-1.1b", StringComparison.Ordinal) ||
                                            m.Name.StartsWith("parakeet-rnnt-", StringComparison.Ordinal))
                 : Enumerable.Empty<WhisperModel>());
 

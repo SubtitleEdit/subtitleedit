@@ -3262,11 +3262,16 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
     }
 
-    private static bool IsModelEnglishOnly(WhisperModel model)
+    /// <summary>
+    /// Models that only transcribe English. Phonon-2 (Crisp ASR Parakeet) ignores any other
+    /// language: crispasr only logs a warning and still outputs English.
+    /// </summary>
+    internal static bool IsModelEnglishOnly(WhisperModel model)
     {
         return model.Name.EndsWith(".en", StringComparison.InvariantCulture) ||
                model.Name == "distil-large-v2" ||
-               model.Name == "distil-large-v3";
+               model.Name == "distil-large-v3" ||
+               model.Name.StartsWith("phonon2-", StringComparison.Ordinal);
     }
 
     [RelayCommand]
