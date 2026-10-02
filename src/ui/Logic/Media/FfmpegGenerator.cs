@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.Media;
 
@@ -662,6 +663,21 @@ public class FfmpegGenerator
         return timeCode;
     }
 
+    private static readonly Regex FadeTagRegex = new(@"\\fade?\s*\([^)]*\)", RegexOptions.Compiled);
+
+    /// <summary>
+    /// Removes ASSA \fad(...) and \fade(...) tags (and tag blocks left empty by that).
+    /// </summary>
+    internal static string RemoveFadeTags(string text)
+    {
+        if (string.IsNullOrEmpty(text) || !text.Contains("\\fad", StringComparison.Ordinal))
+        {
+            return text;
+        }
+
+        return FadeTagRegex.Replace(text, string.Empty).Replace("{}", string.Empty);
+    }
+
     internal static string? GetScreenShotWithSubtitle(Subtitle previewSubtitle, int width, int height)
     {
         previewSubtitle = new Subtitle(previewSubtitle);
@@ -672,6 +688,14 @@ public class FfmpegGenerator
         }
 
         first.StartTime.TotalMilliseconds = 0;
+
+        // Only the first frame (t=0) is rendered, where a fade-in is still fully transparent, so a
+        // line with \fad/\fade measured as nothing: Set position had no text to drag and Set
+        // background skipped the line (#15580). Callers only measure the text, so drop the fade.
+        foreach (var p in previewSubtitle.Paragraphs)
+        {
+            p.Text = RemoveFadeTags(p.Text);
+        }
 
         var advancedSubStationAlphaContent = previewSubtitle.ToText(new AdvancedSubStationAlpha());
 
