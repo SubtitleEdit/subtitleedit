@@ -96,7 +96,14 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
 
     private void UpdatePreview()
     {
-        Dispatcher.UIThread.Post(BuildPreview);
+        Dispatcher.UIThread.Post(() =>
+        {
+            // OK may have built the result and closed the window before this queued tick ran.
+            if (!_isClosing)
+            {
+                BuildPreview();
+            }
+        });
     }
 
     /// <summary>
@@ -294,12 +301,11 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
         }
 
         // The preview timer fills AllSubtitlesFixed, so before its first tick - or right after a
-        // value changed - OK either did nothing or applied the previous limits. Build it now.
-        if (_isDirty || AllSubtitlesFixed.Count == 0)
-        {
-            _isDirty = false;
-            BuildPreview();
-        }
+        // value changed - OK either did nothing or applied the previous limits. Always build it
+        // now: the timer clears _isDirty on its own thread and only posts the rebuild, so a tick
+        // landing between a change and OK left the flag clear and the list still stale.
+        _isDirty = false;
+        BuildPreview();
 
         if (FixMinDurationMs || FixMaxDurationMs)
         {
