@@ -128,6 +128,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _promptBeforeDelete;
     [ObservableProperty] private bool _lockTimeCodes;
     [ObservableProperty] private bool _rememberPositionAndSize;
+    [ObservableProperty] private bool _titleBarFullFileName;
     [ObservableProperty] private bool _openLastFileOnStart;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsMsMode))]
@@ -804,6 +805,7 @@ public partial class SettingsViewModel : ObservableObject
         PromptBeforeDelete = general.PromptBeforeDelete;
         LockTimeCodes = general.LockTimeCodes;
         RememberPositionAndSize = general.RememberPositionAndSize;
+        TitleBarFullFileName = general.TitleBarFullFileName;
         OpenLastFileOnStart = Se.Settings.File.OpenLastFileOnStart;
         AutoSave = general.AutoSave;
         AutoBackupOn = general.AutoBackupOn;
@@ -1702,6 +1704,7 @@ public partial class SettingsViewModel : ObservableObject
         general.PromptBeforeDelete = PromptBeforeDelete;
         general.LockTimeCodes = LockTimeCodes;
         general.RememberPositionAndSize = RememberPositionAndSize;
+        general.TitleBarFullFileName = TitleBarFullFileName;
         Se.Settings.File.OpenLastFileOnStart = OpenLastFileOnStart;
         general.AutoSave = AutoSave;
         general.AutoBackupOn = AutoBackupOn;

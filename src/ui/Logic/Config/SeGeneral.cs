@@ -117,6 +117,11 @@ public class SeGeneral
     /// </summary>
     public bool ShowOriginalNonMatchingLines { get; set; }
     public bool RememberPositionAndSize { get; set; }
+
+    /// <summary>
+    /// Show the subtitle file's full path in the main window title instead of only its name (#14982).
+    /// </summary>
+    public bool TitleBarFullFileName { get; set; }
     public bool UndockVideoControls { get; set; }
     public List<SeWindowPosition> WindowPositions { get; set; } = new List<SeWindowPosition>();
     public bool AutoSave { get; set; }
