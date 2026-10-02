@@ -31,6 +31,7 @@ public partial class SurroundWithViewModel : ObservableObject
             new(SurroundWithBehavior.Toggle, Se.Language.Options.Shortcuts.SurroundWithBehaviorToggle),
             new(SurroundWithBehavior.Add, Se.Language.Options.Shortcuts.SurroundWithBehaviorAdd),
             new(SurroundWithBehavior.Remove, Se.Language.Options.Shortcuts.SurroundWithBehaviorRemove),
+            new(SurroundWithBehavior.RemoveOnce, Se.Language.Options.Shortcuts.SurroundWithBehaviorRemoveOnce),
         };
         SelectedBehavior = Behaviors[0];
         Scopes = new ObservableCollection<SurroundWithScopeItem>

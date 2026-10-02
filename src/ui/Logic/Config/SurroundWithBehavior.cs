@@ -13,4 +13,7 @@ public enum SurroundWithBehavior
 
     /// <summary>Only remove the pair; text without it is left alone.</summary>
     Remove,
+
+    /// <summary>Remove one pair per press - the counterpart of <see cref="Add"/> (#15531).</summary>
+    RemoveOnce,
 }

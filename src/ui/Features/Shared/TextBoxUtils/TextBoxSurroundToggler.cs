@@ -76,6 +76,9 @@ public static class TextBoxSurroundToggler
             case SurroundWithBehavior.Remove:
                 added = false;
                 return Utilities.RemoveSymbols(surroundLeft, text, surroundRight);
+            case SurroundWithBehavior.RemoveOnce:
+                added = false;
+                return RemoveOnce(surroundLeft, text, surroundRight);
             default:
                 return Utilities.ToggleSymbols(surroundLeft, text, surroundRight, out added);
         }
@@ -94,6 +97,7 @@ public static class TextBoxSurroundToggler
         {
             SurroundWithBehavior.Add => true,
             SurroundWithBehavior.Remove => false,
+            SurroundWithBehavior.RemoveOnce => false,
             _ => null,
         };
 
@@ -109,6 +113,11 @@ public static class TextBoxSurroundToggler
             if (behavior == SurroundWithBehavior.Add)
             {
                 return AddKeepExisting(surroundLeft, text, surroundRight);
+            }
+
+            if (behavior == SurroundWithBehavior.RemoveOnce)
+            {
+                return RemoveOnce(surroundLeft, text, surroundRight);
             }
 
             return add.Value
@@ -162,5 +171,61 @@ public static class TextBoxSurroundToggler
         }
 
         return pre + tag + text + endTag + post;
+    }
+
+    /// <summary>
+    /// Removes one pair only - the outermost one, which is the one <see cref="AddKeepExisting"/>
+    /// added last - so an "add" slot fired three times needs three "remove once" presses (#15531).
+    /// </summary>
+    private static string RemoveOnce(string tag, string text, string endTag)
+    {
+        var pre = string.Empty;
+        var post = string.Empty;
+        text = Utilities.SplitStartTags(text, ref pre);
+        text = Utilities.SplitEndTags(text, ref post);
+
+        if (!string.IsNullOrEmpty(tag) && tag == Configuration.Settings.Tools.MusicSymbol)
+        {
+            // Music symbols are added per line with a space ("♪ Hello ♪"), so remove one from each line.
+            var lines = text.SplitToLines();
+            for (var i = 0; i < lines.Count; i++)
+            {
+                var line = lines[i];
+                if (line.StartsWith(tag, StringComparison.Ordinal))
+                {
+                    line = line.Substring(tag.Length).TrimStart(' ');
+                }
+
+                if (line.EndsWith(tag, StringComparison.Ordinal))
+                {
+                    line = line.Substring(0, line.Length - tag.Length).TrimEnd(' ');
+                }
+
+                lines[i] = line;
+            }
+
+            return pre + string.Join(Environment.NewLine, lines) + post;
+        }
+
+        var start = string.IsNullOrEmpty(tag) ? -1 : text.IndexOf(tag, StringComparison.Ordinal);
+        var end = string.IsNullOrEmpty(endTag) ? -1 : text.LastIndexOf(endTag, StringComparison.Ordinal);
+
+        // Same text before and after (like "*"): a single occurrence is only removed once.
+        if (start >= 0 && end >= 0 && end < start + tag.Length)
+        {
+            end = -1;
+        }
+
+        if (end >= 0)
+        {
+            text = text.Remove(end, endTag.Length);
+        }
+
+        if (start >= 0)
+        {
+            text = text.Remove(start, tag.Length);
+        }
+
+        return pre + text + post;
     }
 }

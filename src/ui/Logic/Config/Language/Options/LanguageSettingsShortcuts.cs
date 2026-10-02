@@ -234,6 +234,7 @@ public class LanguageSettingsShortcuts
     public string SurroundWithBehaviorToggle { get; set; }
     public string SurroundWithBehaviorAdd { get; set; }
     public string SurroundWithBehaviorRemove { get; set; }
+    public string SurroundWithBehaviorRemoveOnce { get; set; }
     public string SurroundWithWorksOn { get; set; }
     public string SurroundWithScopeSelectionOrText { get; set; }
     public string SurroundWithScopeEachLine { get; set; }
@@ -568,7 +569,8 @@ public class LanguageSettingsShortcuts
         SurroundWithBehavior = "Behavior";
         SurroundWithBehaviorToggle = "Toggle (add, or remove if present)";
         SurroundWithBehaviorAdd = "Add (every time)";
-        SurroundWithBehaviorRemove = "Remove";
+        SurroundWithBehaviorRemove = "Remove (all)";
+        SurroundWithBehaviorRemoveOnce = "Remove (one each time)";
         SurroundWithWorksOn = "Works on";
         SurroundWithScopeSelectionOrText = "Selection, else whole text";
         SurroundWithScopeEachLine = "Each line";
