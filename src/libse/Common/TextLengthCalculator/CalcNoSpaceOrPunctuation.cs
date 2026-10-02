@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
         /// </summary>
         public decimal CountCharacters(string text, bool forCps)
         {
-            var s = HtmlUtil.RemoveHtmlTags(text, true);
+            var s = CalcFactory.RemoveTags(text);
 
             // Fast path: the same test as the single-char branch below, plus one per "\r\n" -
             // the only multi-char element that can pass the probe, and any multi-char element

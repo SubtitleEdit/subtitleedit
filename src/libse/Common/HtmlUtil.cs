@@ -437,8 +437,9 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         /// <param name="input">The input string that may contain HTML tags.</param>
         /// <param name="alsoSsaTags">A boolean value indicating whether SSA tags should also be removed.</param>
+        /// <param name="alsoSsaCommentBlocks">With <paramref name="alsoSsaTags"/>, also remove ASSA comment blocks like {comment}.</param>
         /// <returns>A new string with all HTML tags removed, and optionally SSA tags removed.</returns>
-        public static string RemoveHtmlTags(string input, bool alsoSsaTags = false)
+        public static string RemoveHtmlTags(string input, bool alsoSsaTags = false, bool alsoSsaCommentBlocks = false)
         {
             if (input == null || input.Length < 3)
             {
@@ -448,7 +449,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var s = input;
             if (alsoSsaTags)
             {
-                s = Utilities.RemoveSsaTags(s);
+                s = Utilities.RemoveSsaTags(s, removeCommentBlocks: alsoSsaCommentBlocks);
             }
 
             if (s.IndexOf('<') < 0)

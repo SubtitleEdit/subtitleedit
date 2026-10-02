@@ -12,7 +12,7 @@
                 return 0;
             }
 
-            var s = HtmlUtil.RemoveHtmlTags(text, true);
+            var s = CalcFactory.RemoveTags(text);
             return CalcCjk.Count(s, skipSpace: true, includeJapaneseFullWidth: false);
         }
     }

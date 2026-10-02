@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
         /// </summary>
         public decimal CountCharacters(string text, bool forCps)
         {
-            var s = HtmlUtil.RemoveHtmlTags(text, true);
+            var s = CalcFactory.RemoveTags(text);
 
             // Fast path: both chars of the "\r\n" the probe lets through are controls and so
             // are not counted here either way, matching the element != "\r\n" test below.

@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
         /// </summary>
         public decimal CountCharacters(string text, bool forCps)
         {
-            var s = HtmlUtil.RemoveHtmlTags(text, true);
+            var s = CalcFactory.RemoveTags(text);
 
             // Fast path: the Arabic composition characters excluded below are all >= U+0300
             // and so cannot pass the probe; "\r\n" can, and this calculator scores a
