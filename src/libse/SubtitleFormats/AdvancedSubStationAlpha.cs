@@ -2232,6 +2232,46 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             }
         }
 
+        /// <summary>
+        /// Removes the comments from ASSA text, keeping the override tags: renderers never draw a
+        /// {...} block, so fansubbers use {comment} for notes, which must not end up in an export
+        /// to a format where a brace is real text (#15584). "{note}" is removed, "{note\i1}"
+        /// becomes "{\i1}" (the tags of a block are applied whatever precedes them) and an
+        /// unclosed '{' is drawn as text, so it is kept.
+        /// </summary>
+        public static string RemoveCommentBlocks(string text)
+        {
+            if (string.IsNullOrEmpty(text) || text.IndexOf('{') < 0)
+            {
+                return text;
+            }
+
+            var sb = new StringBuilder(text.Length);
+            var i = 0;
+            while (i < text.Length)
+            {
+                var start = text.IndexOf('{', i);
+                var end = start < 0 ? -1 : text.IndexOf('}', start + 1);
+                if (end < 0)
+                {
+                    sb.Append(text, i, text.Length - i);
+                    break;
+                }
+
+                sb.Append(text, i, start - i);
+                var backslash = text.IndexOf('\\', start + 1, end - start - 1);
+                if (backslash >= 0)
+                {
+                    sb.Append('{');
+                    sb.Append(text, backslash, end - backslash + 1);
+                }
+
+                i = end + 1;
+            }
+
+            return sb.ToString();
+        }
+
         public static string RemoveDrawingTag(string input)
         {
             var s = input;

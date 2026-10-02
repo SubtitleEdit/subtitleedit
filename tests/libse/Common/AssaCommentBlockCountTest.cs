@@ -1,5 +1,6 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Tests.Common;
 
@@ -48,5 +49,20 @@ public class AssaCommentBlockCountTest
         {
             CalcFactory.IgnoreAssaCommentBlocks = old;
         }
+    }
+
+    [Theory]
+    [InlineData("Hello {a note} there", "Hello  there")]
+    [InlineData("{note}Hello", "Hello")]
+    [InlineData("Hello{}", "Hello")]
+    [InlineData("{note\\i1}Hello", "{\\i1}Hello")]          // tags of a block are kept
+    [InlineData("{\\an8}{\\i1}Hello{\\i0}", "{\\an8}{\\i1}Hello{\\i0}")]
+    [InlineData("Hello { there", "Hello { there")]            // unclosed brace is drawn as text
+    [InlineData("a {x} b { c", "a  b { c")]
+    [InlineData("Line 1\\N{tl note}Line 2", "Line 1\\NLine 2")]
+    [InlineData("", "")]
+    public void RemoveCommentBlocks(string input, string expected)
+    {
+        Assert.Equal(expected, AdvancedSubStationAlpha.RemoveCommentBlocks(input));
     }
 }
