@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Logic.Config.Language;
+﻿using System;
+
+namespace Nikse.SubtitleEdit.Logic.Config.Language;
 
 public class LanguageImageBasedEdit
 {
@@ -55,6 +57,13 @@ public class LanguageImageBasedEdit
     public string XInBottomBar { get; set; }
     public string NoImageSubtitlesLoaded { get; set; }
     public string ImageBasedFormatNotSupported { get; set; }
+    public string FrameRateDeclaredInFile { get; set; }
+    public string FrameRateDetectedFromTimeCodesX { get; set; }
+    public string FrameRateFromVideo { get; set; }
+    public string FrameRateCurrent { get; set; }
+    public string FrameRateSetManually { get; set; }
+    public string FrameRateUsageInfo { get; set; }
+    public string UseVideoFrameRateXInsteadOfY { get; set; }
 
     public LanguageImageBasedEdit()
     {
@@ -111,5 +120,12 @@ public class LanguageImageBasedEdit
         XInBottomBar = "{0} in bottom bar";
         NoImageSubtitlesLoaded = "No image subtitles loaded";
         ImageBasedFormatNotSupported = "Image based subtitle format not found/supported.";
+        FrameRateDeclaredInFile = "Frame rate declared in the Blu-ray sup file";
+        FrameRateDetectedFromTimeCodesX = "Frame rate detected from the Blu-ray sup time codes (the file declares {0})";
+        FrameRateFromVideo = "Frame rate of the video";
+        FrameRateCurrent = "Current frame rate";
+        FrameRateSetManually = "Frame rate set manually";
+        FrameRateUsageInfo = "Blu-ray sup, BDN XML, DOST and FCP exports are written at this frame rate. It does not change any times - use \"Change frame rate\" for that.";
+        UseVideoFrameRateXInsteadOfY = "The video's frame rate is {0}, but the subtitle is set to {1}." + Environment.NewLine + Environment.NewLine + "Use the video's frame rate ({0})?";
     }
 }
