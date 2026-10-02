@@ -407,6 +407,12 @@ public partial class SubtitleLineViewModel : ObservableObject
         return _strippedLinesCacheValue!;
     }
 
+    /// <summary>
+    /// Line count for the "too many lines" rule - empty ASSA \N lines are not counted (#15531).
+    /// </summary>
+    internal int GetLineCountForMaxLines()
+        => SubtitleTextInfoHelper.GetLineCountForMaxLines(Text, GetStrippedLines().Count);
+
     // Read-time memos for the two WebVTT grid columns below, keyed on the text instance like
     // the memos around them - both parse the text, and a cell binding re-reads its value on
     // every repaint.
@@ -695,7 +701,7 @@ public partial class SubtitleLineViewModel : ObservableObject
 
         if (settings.ColorTextTooManyLines)
         {
-            if (GetStrippedLines().Count > settings.MaxNumberOfLines)
+            if (GetLineCountForMaxLines() > settings.MaxNumberOfLines)
             {
                 return true;
             }
@@ -1383,7 +1389,7 @@ public partial class SubtitleLineViewModel : ObservableObject
 
         if (general.ColorTextTooManyLines)
         {
-            var lineCount = GetStrippedLines().Count;
+            var lineCount = GetLineCountForMaxLines();
             if (lineCount > general.MaxNumberOfLines)
             {
                 errors.Add(new LineError(LineErrorType.TooManyLines, string.Format(l.DetailXGreaterThanY, lineCount, general.MaxNumberOfLines)));

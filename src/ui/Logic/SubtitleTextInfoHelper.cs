@@ -212,6 +212,58 @@ internal static class SubtitleTextInfoHelper
     internal static string StripHtml(string text)
         => HtmlUtil.RemoveHtmlTags(text, true);
 
+    /// <summary>
+    /// Number of lines for the "too many lines" rule. Like <paramref name="strippedLineCount"/>
+    /// (the stripped text split to lines), except a line produced by an ASSA hard break
+    /// (\N or \n) that is empty or whitespace once tags are removed is not counted - repeated
+    /// "\N" is used to lift a subtitle up the screen, which adds no text lines (#15531).
+    /// A real empty line (no \N) still counts.
+    /// </summary>
+    internal static int GetLineCountForMaxLines(string text, int strippedLineCount)
+    {
+        if (string.IsNullOrEmpty(text) || text.IndexOf('\\') < 0)
+        {
+            return strippedLineCount;
+        }
+
+        var count = 0;
+        foreach (var line in text.SplitToLines())
+        {
+            var start = 0;
+            var hasHardBreak = false;
+            var lineCount = 0;
+            for (var i = 0; i < line.Length - 1; i++)
+            {
+                if (line[i] == '\\' && (line[i + 1] == 'N' || line[i + 1] == 'n'))
+                {
+                    hasHardBreak = true;
+                    if (!string.IsNullOrWhiteSpace(StripHtml(line.Substring(start, i - start))))
+                    {
+                        lineCount++;
+                    }
+
+                    start = i + 2;
+                    i++;
+                }
+            }
+
+            if (!hasHardBreak)
+            {
+                count++;
+                continue;
+            }
+
+            if (!string.IsNullOrWhiteSpace(StripHtml(line.Substring(start))))
+            {
+                lineCount++;
+            }
+
+            count += lineCount;
+        }
+
+        return count;
+    }
+
     internal static double GetTotalLength(string text)
         => (double)text.CountCharacters(false);
 

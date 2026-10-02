@@ -1,4 +1,4 @@
-using Avalonia.Headless.XUnit;
+﻿using Avalonia.Headless.XUnit;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -236,6 +236,43 @@ public class SubtitleLineViewModelHasErrorsTests
             var wide = line.PixelWidth;
 
             Assert.True(wide > narrow, $"expected the wider text to measure wider, got {wide} <= {narrow}");
+        }
+        finally
+        {
+            Se.Settings = originalSettings;
+        }
+    }
+
+    /// <summary>Repeated \N lifts a subtitle up the screen - empty \N lines are not text lines (#15531).</summary>
+    [AvaloniaTheory]
+    [InlineData("Hello\\N\\N\\N\\N", 1)]
+    [InlineData("\\N\\N\\N{\\i1}\\N\\hHello", 1)]
+    [InlineData("Line one\\NLine two\\N\\N", 2)]
+    [InlineData("Line one\\NLine two\\NLine three", 3)]
+    [InlineData("Line one\r\n\r\nLine two", 3)] // a real empty line still counts
+    [InlineData("Line one\r\nLine two\\N\\N", 2)]
+    public void TooManyLines_IgnoresEmptyAssaHardBreakLines(string text, int expectedLineCount)
+    {
+        var originalSettings = Se.Settings;
+        try
+        {
+            Se.Settings = new Se();
+            var general = Se.Settings.General;
+            general.ColorDurationTooShort = false;
+            general.ColorDurationTooLong = false;
+            general.ColorTextTooLong = false;
+            general.ColorTextTooWide = false;
+            general.ColorTextTooManyLines = true;
+            general.ColorCharactersPerSecond = false;
+            general.ColorWordsPerMinute = false;
+            general.ColorTimeCodeOverlap = false;
+            general.ColorGapTooShort = false;
+            general.MaxNumberOfLines = 2;
+
+            var line = Line(text, 1000, 5000);
+            Assert.Equal(expectedLineCount, line.GetLineCountForMaxLines());
+            Assert.Equal(expectedLineCount > 2, line.HasErrors(null, null));
+            Assert.Equal(expectedLineCount > 2, !string.IsNullOrEmpty(line.GetErrors(null, null)));
         }
         finally
         {
