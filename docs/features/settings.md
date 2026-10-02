@@ -34,6 +34,7 @@ The subtitle rules that drive error checking, the grid's warning colors, and too
 - **Default new subtitle duration (ms)** - The duration a newly inserted subtitle gets, e.g. when inserting at the video position
 - **Time up/down increment (ms)** - The step of the start/end/duration up-down boxes in millisecond mode
 - **Prompt before delete**, **Lock time codes**, **Remember window position and size**
+- **Show full file path in title bar** — Show the subtitle file's full path in the main window title instead of only its name. Off by default
 - **Use frame mode (hh.mm.ss.ff)** — Show times as frames instead of milliseconds
 - **Limit number of lines in subtitle text box**
 - **Open last recent file on start**
