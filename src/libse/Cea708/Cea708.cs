@@ -518,7 +518,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     // DisplayWindows displays all the windows specified in the 8 bit window bitmap.
                     var displayWindows = new DisplayWindows(lineIndex, bytes, i + 1);
                     state.Commands.Add(displayWindows);
-                    ShowPendingText(debugBuilder, state, displayWindows.Flags, lineIndex);
+                    ShowPendingText(debugBuilder, textBuilder, state, displayWindows.Flags, lineIndex);
                     SetWindowsVisible(state, displayWindows.Flags, true);
                     if (DebugMode)
                     {
@@ -573,7 +573,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                         Flush(debugBuilder, textBuilder, state);
                     }
 
-                    ShowPendingText(debugBuilder, state, toggleWindows.Flags, lineIndex);
+                    ShowPendingText(debugBuilder, textBuilder, state, toggleWindows.Flags, lineIndex);
                     state.Commands.Add(toggleWindows);
                     state.ErasedAtFlushCounts.Add(state.FlushedTexts.Count);
                     for (var w = 0; w < toggleWindows.Flags.Length && w < state.VisibleWindows.Length; w++)
@@ -737,12 +737,24 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     var defineWindow = new DefineWindow(lineIndex, bytes, i);
                     state.Commands.Add(defineWindow);
                     state.CurrentWindow = defineWindow.Id - DefineWindow.IdStart;
+                    var defined = new bool[state.VisibleWindows.Length];
+                    defined[state.CurrentWindow] = true;
                     if (defineWindow.Visible)
                     {
                         // redefining a hidden window as visible displays it, like DisplayWindows
-                        var displayed = new bool[state.VisibleWindows.Length];
-                        displayed[state.CurrentWindow] = true;
-                        ShowPendingText(debugBuilder, state, displayed, lineIndex);
+                        ShowPendingText(debugBuilder, textBuilder, state, defined, lineIndex);
+                    }
+                    else if (state.VisibleWindows[state.CurrentWindow])
+                    {
+                        // redefining a displayed window as hidden hides it, like HideWindows - the
+                        // caption on screen there ends now (the next one is often built in it)
+                        FlushShownCaptions(debugBuilder, textBuilder, state, defined, lineIndex);
+                        if (IsPendingTextVisibleIn(state, defined))
+                        {
+                            Flush(debugBuilder, textBuilder, state);
+                        }
+
+                        state.ErasedAtFlushCounts.Add(state.FlushedTexts.Count);
                     }
 
                     state.VisibleWindows[state.CurrentWindow] = defineWindow.Visible;
@@ -960,7 +972,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
         /// buffer (the next caption is usually built in another window while this one shows) and
         /// kept as on screen in that window until the window is hidden, cleared or deleted.
         /// </summary>
-        private static void ShowPendingText(StringBuilder debugBuilder, CommandState state, bool[] windows, int lineIndex)
+        private static void ShowPendingText(StringBuilder debugBuilder, StringBuilder textBuilder, CommandState state, bool[] windows, int lineIndex)
         {
             var w = state.PendingWindow;
             if (w < 0 || w >= windows.Length || w >= state.VisibleWindows.Length || !windows[w] || state.VisibleWindows[w])
@@ -982,7 +994,16 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 return;
             }
 
-            state.ShownCaptions[w] = new CommandState.ShownCaption
+            if (state.ShownCaptions.ContainsKey(w))
+            {
+                // a caption still marked as shown there (its window was hidden some way not
+                // tracked) ends now rather than being lost
+                var replaced = new bool[windows.Length];
+                replaced[w] = true;
+                FlushShownCaptions(debugBuilder, textBuilder, state, replaced, lineIndex);
+            }
+
+            state.ShownCaptions[w] =new CommandState.ShownCaption
             {
                 WrittenLineIndex = state.StartLineIndex,
                 ShownLineIndex = lineIndex,

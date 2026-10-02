@@ -86,6 +86,60 @@ public class IfoParserTest
     }
 
     [Fact]
+    public void AngleBlock_KeepsFirstAngleAndCountsTimeOnce()
+    {
+        // cell 1 normal, cells 2-3 an angle block (angle 1 + angle 2), cell 4 normal - 10 seconds each
+        var ifo = new IfoParser(BuildVtsIfo(
+            wideScreen: true,
+            cellCategories: new byte[] { 0, 0b01_01_0000, 0b11_01_0000, 0 },
+            programEntryCells: new byte[] { 1, 2, 4 }));
+
+        var programChain = Assert.Single(ifo.ProgramChains);
+        Assert.Equal(3, programChain.Cells.Count);
+        Assert.Equal(new[] { 1, 2, 4 }, programChain.Cells.Select(p => p.CellId));
+        Assert.Equal(new[] { 0.0, 10, 20 }, programChain.Cells.Select(p => p.Start.TotalSeconds));
+        Assert.Equal(1000, programChain.Cells[1].FirstSector);
+        Assert.Equal(3000, programChain.Cells[2].FirstSector);
+        Assert.Equal(new[] { 0.0, 10, 20 }, programChain.ProgramStarts.Select(p => p.TotalSeconds));
+    }
+
+    [Fact]
+    public void LowercaseDvdFolder_FindsIfoAndVobFiles()
+    {
+        // a DVD copied to a case sensitive file system: video_ts/vts_01_0.ifo, vts_01_1.vob, ...
+        var folder = Path.Combine(Path.GetTempPath(), "se-ifo-" + Guid.NewGuid().ToString("N"), "video_ts");
+        Directory.CreateDirectory(folder);
+        try
+        {
+            var vmg = new byte[SectorSize];
+            Encoding.ASCII.GetBytes("DVDVIDEO-VMG").CopyTo(vmg, 0);
+            File.WriteAllBytes(Path.Combine(folder, "video_ts.ifo"), vmg);
+            File.WriteAllBytes(Path.Combine(folder, "vts_01_0.ifo"), BuildVtsIfo(wideScreen: true));
+            File.WriteAllBytes(Path.Combine(folder, "vts_01_0.vob"), new byte[SectorSize]);
+            File.WriteAllBytes(Path.Combine(folder, "vts_01_1.vob"), new byte[SectorSize * 2000]);
+            File.WriteAllBytes(Path.Combine(folder, "vts_01_2.vob"), new byte[SectorSize]);
+
+            var vobFiles = IfoParser.GetTitleVobFiles(Path.Combine(folder, "VTS_01_0.IFO"));
+            Assert.Equal(2, vobFiles.Count);
+            Assert.All(vobFiles, p => Assert.True(File.Exists(p)));
+            Assert.EndsWith("1.vob", vobFiles[0], StringComparison.OrdinalIgnoreCase);
+
+            var ifoFileName = IfoParser.GetIfoFileName(Path.Combine(folder, "vts_01_2.vob"));
+            Assert.NotNull(ifoFileName);
+            Assert.True(File.Exists(ifoFileName));
+
+            var title = Assert.Single(DvdTitle.Find(Path.Combine(folder, "video_ts.ifo")));
+            Assert.Equal(1, title.TitleSetNumber);
+            Assert.Equal(2, title.VobFileNames.Count);
+            Assert.True(title.IsComplete);
+        }
+        finally
+        {
+            Directory.Delete(Path.GetDirectoryName(folder)!, true);
+        }
+    }
+
+    [Fact]
     public void RecognizesVideoManager()
     {
         var buffer = new byte[SectorSize];
@@ -108,8 +162,11 @@ public class IfoParserTest
         Assert.NotNull(ifo.ErrorMessage);
     }
 
-    private static byte[] BuildVtsIfo(bool wideScreen)
+    private static byte[] BuildVtsIfo(bool wideScreen, byte[]? cellCategories = null, byte[]? programEntryCells = null)
     {
+        cellCategories ??= new byte[2];
+        programEntryCells ??= new byte[] { 1, 2 };
+        var cellCount = cellCategories.Length;
         var buffer = new byte[SectorSize * 3];
         Encoding.ASCII.GetBytes("DVDVIDEO-VTS").CopyTo(buffer, 0);
         WriteUInt32(buffer, 0xCC, PgciSector);
@@ -139,8 +196,8 @@ public class IfoParserTest
         const int pgcOffset = 16;
         WriteUInt32(buffer, table + 12, pgcOffset);
         var pgc = table + pgcOffset;
-        buffer[pgc + 2] = 2; // programs
-        buffer[pgc + 3] = 2; // cells
+        buffer[pgc + 2] = (byte)programEntryCells.Length; // programs
+        buffer[pgc + 3] = (byte)cellCount; // cells
         buffer[pgc + 4] = 0x01;
         buffer[pgc + 5] = 0x02;
         buffer[pgc + 6] = 0x03;
@@ -167,15 +224,15 @@ public class IfoParserTest
 
         const int programMap = 0xEC;
         const int playbackInfo = 0xF0;
-        const int positionInfo = playbackInfo + 2 * 24;
+        var positionInfo = playbackInfo + cellCount * 24;
         WriteUInt16(buffer, pgc + 0xE6, programMap);
         WriteUInt16(buffer, pgc + 0xE8, playbackInfo);
         WriteUInt16(buffer, pgc + 0xEA, positionInfo);
-        buffer[pgc + programMap] = 1;
-        buffer[pgc + programMap + 1] = 2;
-        for (var i = 0; i < 2; i++)
+        programEntryCells.CopyTo(buffer, pgc + programMap);
+        for (var i = 0; i < cellCount; i++)
         {
             var play = pgc + playbackInfo + i * 24;
+            buffer[play] = cellCategories[i];
             buffer[play + 6] = 0x10; // 10 seconds
             buffer[play + 7] = 0b01_000000;
             WriteUInt32(buffer, play + 8, (uint)(i * 1000));

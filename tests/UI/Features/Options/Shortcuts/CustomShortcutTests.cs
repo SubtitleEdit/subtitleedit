@@ -49,6 +49,20 @@ public class CustomShortcutTests
         Assert.Equal("world hello", CustomShortcutText.Replace("hello world", step));
     }
 
+    // A typed \n in the pattern must match a line break whether the text uses \r\n (Windows) or \n,
+    // like the Multiple replace window; the result keeps platform line breaks.
+    [Theory]
+    [InlineData("a\r\nb")]
+    [InlineData("a\nb")]
+    public void Replace_Regex_TypedNewLineMatchesAnyLineBreak(string text)
+    {
+        var step = new SeCustomShortcutStep { Find = @"a\nb", ReplaceWith = "x", UseRegex = true };
+        Assert.Equal("x", CustomShortcutText.Replace(text, step));
+
+        step = new SeCustomShortcutStep { Find = @"a\r\nb", ReplaceWith = @"b\na", UseRegex = true };
+        Assert.Equal("b" + Nl + "a", CustomShortcutText.Replace(text, step));
+    }
+
     [Fact]
     public void GetRegexError_InvalidPattern_ReturnsMessage()
     {

@@ -83,11 +83,11 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 return outputText;
             }
 
-            // Still the source: report no translation, so the caller treats the line as failed
-            // (retries it on its own, then gives up with an error) instead of writing it out as translated.
-            Error = "The model returned the " + sourceLanguageCode + " source text untranslated instead of translating it to " + targetLanguageCode + ": " + outputText;
-            SeLogger.Error(StaticName + ": " + Error);
-            return string.Empty;
+            // Still the source after the warmer retry: accept it. A line can legitimately read the
+            // same in both languages (a source line already in the target language, or two variants
+            // of one language), and failing it would abort the whole translation.
+            SeLogger.Error(StaticName + ": the model returned the " + sourceLanguageCode + " source text untranslated twice (target " + targetLanguageCode + "), keeping it: " + outputText);
+            return outputText;
         }
 
         private const double EchoRetryTemperatureBump = 0.3;

@@ -86,6 +86,61 @@ public class CompareAlignmentTests : IDisposable
     }
 
     [Fact]
+    public void Align_LargeTranslationWithExtraLineAtTop_PairsByTiming()
+    {
+        // Original vs translation: no text in common, identical timings, one extra line on top.
+        // Far too big for the dynamic program - it used to fall back to pairing by position.
+        var left = Enumerable.Range(0, 3000).Select(i => Line("Original " + i, 2000 + i * 2000)).ToList();
+        var right = new[] { Line("Extra", 0) }.Concat(Enumerable.Range(0, 3000).Select(i => Line("Translation " + i, 2000 + i * 2000))).ToList();
+
+        var watch = System.Diagnostics.Stopwatch.StartNew();
+        var pairs = CompareAligner.Align(left, right, TimeEqual);
+        watch.Stop();
+
+        Assert.Equal(new[] { (-1, 0) }.Concat(Enumerable.Range(0, 3000).Select(i => (i, i + 1))), pairs.Select(p => (p.Left, p.Right)));
+        Assert.True(watch.ElapsedMilliseconds < 2000, $"took {watch.ElapsedMilliseconds} ms");
+    }
+
+    [Fact]
+    public void Align_LargeStretchWithoutTimingAnchors_MergesByTime()
+    {
+        // Timings 50 ms apart - overlapping, but no exact match to anchor on.
+        var left = Enumerable.Range(0, 600).Select(i => Line("Original " + i, 2000 + i * 2000)).ToList();
+        var right = new[] { Line("Extra", 0) }.Concat(Enumerable.Range(0, 600).Select(i => Line("Translation " + i, 2050 + i * 2000))).ToList();
+
+        var pairs = CompareAligner.Align(left, right, TimeEqual);
+
+        Assert.Equal(new[] { (-1, 0) }.Concat(Enumerable.Range(0, 600).Select(i => (i, i + 1))), pairs.Select(p => (p.Left, p.Right)));
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(100)]
+    public void Align_UniqueTextFarAwayInTime_IsNotAnAnchor(int rightShiftMs)
+    {
+        // "Okay." is the only text in common, but at left #10 and right #150 - 280 s apart.
+        var left = Enumerable.Range(0, 160).Select(i => Line(i == 10 ? "Okay." : "Original " + i, i * 2000)).ToList();
+        var right = Enumerable.Range(0, 160).Select(i => Line(i == 150 ? "Okay." : "Translation " + i, i * 2000 + rightShiftMs)).ToList();
+
+        var pairs = CompareAligner.Align(left, right, TimeEqual);
+
+        Assert.Equal(Enumerable.Range(0, 160).Select(i => (i, i)), pairs.Select(p => (p.Left, p.Right)));
+    }
+
+    [Fact]
+    public void Align_ConstantOffset_StillAnchorsByText()
+    {
+        // The reference runs a minute later throughout and lacks line #20.
+        var texts = Enumerable.Range(0, 50).Select(i => $"Line {i}: {new string((char)('a' + i % 26), 1 + i % 7)}").ToList();
+        var left = Enumerable.Range(0, 50).Select(i => Line(texts[i], i * 2000)).ToList();
+        var right = Enumerable.Range(0, 50).Where(i => i != 20).Select(i => Line(texts[i], 60000 + i * 2000)).ToList();
+
+        var pairs = CompareAligner.Align(left, right, TimeEqual);
+
+        Assert.Equal(Enumerable.Range(0, 50).Select(i => (i, i < 20 ? i : i == 20 ? -1 : i - 1)), pairs.Select(p => (p.Left, p.Right)));
+    }
+
+    [Fact]
     public void GetOrderedSyncPoints_DropsCrossingAndOutOfRangePoints()
     {
         var result = CompareAligner.GetOrderedSyncPoints(new[] { (5, 1), (2, 3), (4, 9), (1, 1), (3, 2) }, 6, 5);
@@ -259,6 +314,62 @@ public class CompareAlignmentTests : IDisposable
     }
 
     [AvaloniaFact]
+    public void SyncPoint_AddRemoveAndClear_AreEachUndoable()
+    {
+        var vm = Open(
+            MakeLines(("A", 0), ("B", 2000), ("C", 4000)),
+            MakeLines(("X", 0), ("Y", 2000), ("Z", 4000)));
+
+        AddSyncPoint(vm, "B", "Z");
+        Assert.Equal(1, vm.SyncPointCount);
+
+        vm.RemoveSyncPointCommand.Execute(vm.Rows.Single(p => p.IsSyncPoint));
+        Settle();
+        Assert.Equal(0, vm.SyncPointCount);
+
+        vm.UndoCommand.Execute(null); // the removal
+        Settle();
+        Assert.Equal(1, vm.SyncPointCount);
+
+        vm.ClearSyncPointsCommand.Execute(null);
+        Settle();
+        Assert.Equal(0, vm.SyncPointCount);
+
+        vm.UndoCommand.Execute(null); // the clear
+        Settle();
+        Assert.Equal(1, vm.SyncPointCount);
+        Assert.Single(vm.Rows, p => p.IsSyncPoint);
+
+        vm.UndoCommand.Execute(null); // the add, timing shift included
+        Settle();
+        Assert.Equal(0, vm.SyncPointCount);
+        Assert.Equal(new[] { 0d, 2000, 4000 }, vm.GetEditedLines().Select(p => p.StartTime.TotalMilliseconds));
+    }
+
+    [AvaloniaFact]
+    public void DeleteCurrentLine_RemovesItsSyncPoint_AndUndoBringsItBack()
+    {
+        var vm = Open(
+            MakeLines(("A", 0), ("B", 2000), ("C", 4000)),
+            MakeLines(("X", 0), ("Y", 2000), ("Z", 4000)));
+        AddSyncPoint(vm, "B", "Z");
+        Assert.Equal(1, vm.SyncPointCount);
+
+        vm.DeleteCurrentLineCommand.Execute(vm.Rows.Single(p => p.IsSyncPoint));
+        Settle();
+        Assert.Equal(0, vm.SyncPointCount);
+        Assert.False(vm.HasSyncPoints);
+        Assert.DoesNotContain(vm.Rows, p => p.IsSyncPoint || p.Left.Text == "B");
+
+        vm.UndoCommand.Execute(null);
+        Settle();
+        Assert.Equal(1, vm.SyncPointCount);
+        var syncRow = vm.Rows.Single(p => p.IsSyncPoint);
+        Assert.Equal("B", syncRow.Left.Text);
+        Assert.Equal("Z", syncRow.Right.Text);
+    }
+
+    [AvaloniaFact]
     public void SyncBar_AtTheMinimumWidth_KeepsTheHintOnAFewLines()
     {
         var vm = Open(MakeLines(("A", 0), ("B", 2000)), MakeLines(("A", 0), ("X", 2000)));
@@ -288,6 +399,9 @@ public class CompareAlignmentTests : IDisposable
     }
 
     private static bool TimeEqual(TimeSpan a, TimeSpan b) => Math.Abs((a - b).TotalMilliseconds) < 0.1;
+
+    private static CompareAligner.Line Line(string text, int startMs) =>
+        new(text, TimeSpan.FromMilliseconds(startMs), TimeSpan.FromMilliseconds(startMs + 1500));
 
     private static List<CompareAligner.Line> Lines(params (string Text, int StartMs)[] lines) =>
         lines.Select(p => new CompareAligner.Line(p.Text, TimeSpan.FromMilliseconds(p.StartMs), TimeSpan.FromMilliseconds(p.StartMs + 1500))).ToList();

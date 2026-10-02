@@ -46,11 +46,16 @@ namespace Nikse.SubtitleEdit.Core.Cea608
                 var lastPlainText = HtmlUtil.RemoveHtmlTags(last.Text, true);
                 var isContiguous = Math.Abs(last.EndTime.TotalMilliseconds - startMs) < 0.5;
                 var growth = plainText.Length - lastPlainText.Length;
+
+                // an extended character takes the place of the standard one before it: same
+                // length, only the last char differs ("IT'" then "IT’") - not "♪" then "Hey!"
+                var isLastCharReplaced = growth == 0 &&
+                                         lastPlainText.Length > 1 &&
+                                         plainText.StartsWith(lastPlainText.Substring(0, lastPlainText.Length - 1), StringComparison.Ordinal);
                 if (isContiguous &&
                     last.NumberOfLines == Utilities.GetNumberOfLines(text) &&
                     growth >= 0 && growth <= MaxGrowthPerCharacterPair &&
-                    (plainText.StartsWith(lastPlainText, StringComparison.Ordinal) ||
-                     lastPlainText.Length > 0 && plainText.StartsWith(lastPlainText.Substring(0, lastPlainText.Length - 1), StringComparison.Ordinal)))
+                    (plainText.StartsWith(lastPlainText, StringComparison.Ordinal) || isLastCharReplaced))
                 {
                     last.Text = text;
                     last.EndTime.TotalMilliseconds = endMs;

@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Text.RegularExpressions;
@@ -42,8 +43,12 @@ public static class CustomShortcutText
 
         if (step.UseRegex)
         {
+            // Like the Multiple replace window: a typed \n (or \r\n) in the pattern is a line-feed,
+            // and the match runs against line-feed-normalized text, so "a\nb" matches "a\r\nb" too.
             var options = step.CaseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase;
-            return Regex.Replace(text, step.Find, NormalizeNewLines(step.ReplaceWith), options, RegexTimeout);
+            var regex = new Regex(RegexUtils.FixNewLine(step.Find), options, RegexTimeout);
+            var replaceWith = RegexUtils.FixNewLine(step.ReplaceWith ?? string.Empty).Replace("\r\n", "\n").Replace("\r", "\n");
+            return RegexUtils.ReplaceNewLineSafe(regex, text, replaceWith);
         }
 
         var comparison = step.CaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;

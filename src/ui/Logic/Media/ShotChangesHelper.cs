@@ -36,36 +36,31 @@ public class ShotChangesHelper
     }
 
     /// <summary>
-    /// Find shot changes file name
+    /// Find shot changes file name. The file written for <paramref name="audioTrackNumber"/> wins
+    /// (that is the name <see cref="SaveShotChanges"/> uses), then the track-less name, then any
+    /// file for the video.
     /// </summary>
     /// <param name="videoFileName">Video file name</param>
-    /// <returns>Return file name of existing shot changes, or null</returns>
-    private static string FindShotChangesFileName(string videoFileName)
+    /// <param name="audioTrackNumber">Audio track number, -1 if no track number</param>
+    /// <returns>Return file name of existing shot changes, or empty string</returns>
+    private static string FindShotChangesFileName(string videoFileName, int audioTrackNumber)
     {
-        var dir = Se.ShotChangesFolder;
-        if (!Directory.Exists(dir))
+        if (audioTrackNumber >= 0)
         {
-            Directory.CreateDirectory(dir);
+            var trackFileName = GetShotChangesFileName(videoFileName, audioTrackNumber);
+            if (File.Exists(trackFileName))
+            {
+                return trackFileName;
+            }
         }
 
-        var videoFileNameWithoutExtension = Path.GetFileNameWithoutExtension(videoFileName)
-            .Replace(".", string.Empty)
-            .Replace("_", string.Empty);
-        if (videoFileNameWithoutExtension.Length > 25)
-        {
-            videoFileNameWithoutExtension = videoFileNameWithoutExtension.Substring(0, 25);
-        }
-
-        var hash = MovieHasher.GenerateHash(videoFileName);
-
-        var newFileName = Path.Combine(dir, $"{hash}_{videoFileNameWithoutExtension}.shotchanges");
+        var newFileName = GetShotChangesFileName(videoFileName, -1);
         if (File.Exists(newFileName))
         {
             return newFileName;
         }
 
-        var searchFileName = $"{hash}*.shotchanges";
-        var files = Directory.GetFiles(dir, searchFileName);
+        var files = GetAllShotChangesFileNames(videoFileName);
         if (files.Length > 0)
         {
             return files[0];
@@ -74,12 +69,26 @@ public class ShotChangesHelper
         return string.Empty;
     }
 
+    // Every shot changes file for the video, whatever audio track it was written for - the set
+    // FindShotChangesFileName picks from.
+    private static string[] GetAllShotChangesFileNames(string videoFileName)
+    {
+        var dir = Se.ShotChangesFolder;
+        if (!Directory.Exists(dir))
+        {
+            Directory.CreateDirectory(dir);
+        }
+
+        return Directory.GetFiles(dir, $"{MovieHasher.GenerateHash(videoFileName)}*.shotchanges");
+    }
+
     /// <summary>
     /// Load shot changes from file
     /// </summary>
     /// <param name="videoFileName">Video file name</param>
+    /// <param name="audioTrackNumber">Audio track number, -1 if no track number</param>
     /// <returns>List of shot changes in seconds</returns>
-    public static List<double> FromDisk(string videoFileName)
+    public static List<double> FromDisk(string videoFileName, int audioTrackNumber = -1)
     {
         var list = new List<double>();
 
@@ -88,7 +97,7 @@ public class ShotChangesHelper
             return list;
         }
 
-        var shotChangesFileName = FindShotChangesFileName(videoFileName);
+        var shotChangesFileName = FindShotChangesFileName(videoFileName, audioTrackNumber);
         if (string.IsNullOrEmpty(shotChangesFileName))
         {
             return list;
@@ -106,14 +115,25 @@ public class ShotChangesHelper
     }
 
     /// <summary>
-    /// Saves shot changes
+    /// Saves shot changes. Other shot changes files for the same video (another audio track, or
+    /// the track-less name) are removed, so every reader - whatever track it asks for - gets
+    /// this list rather than a stale one.
     /// </summary>
     /// <param name="videoFileName">Video file name</param>
     /// <param name="list">List of shot changes in seconds</param>
     /// <param name="audioTrackNumber">Audio track number, -1 if no track number</param>
     public static void SaveShotChanges(string videoFileName, List<double> list, int audioTrackNumber)
     {
-        File.WriteAllText(GetShotChangesFileName(videoFileName, audioTrackNumber), ToText(list));
+        var fileName = GetShotChangesFileName(videoFileName, audioTrackNumber);
+        foreach (var other in GetAllShotChangesFileNames(videoFileName))
+        {
+            if (!string.Equals(other, fileName, StringComparison.OrdinalIgnoreCase))
+            {
+                TryDelete(other);
+            }
+        }
+
+        File.WriteAllText(fileName, ToText(list));
     }
 
     /// <summary>
@@ -132,15 +152,29 @@ public class ShotChangesHelper
     }
 
     /// <summary>
-    /// Delete shot changes file associated with video file
+    /// Delete the shot changes associated with video file - every file <see cref="FromDisk"/>
+    /// could read for it, not just the one for <paramref name="audioTrackNumber"/>, or an older
+    /// file would bring the deleted shot changes back on reopen.
     /// </summary>
     /// <param name="videoFileName">Video file name</param>
+    /// <param name="audioTrackNumber">Audio track number, -1 if no track number</param>
     public static void DeleteShotChanges(string videoFileName, int audioTrackNumber)
     {
-        var shotChangesFileName = GetShotChangesFileName(videoFileName, audioTrackNumber);
-        if (File.Exists(shotChangesFileName))
+        foreach (var fileName in GetAllShotChangesFileNames(videoFileName))
         {
-            File.Delete(shotChangesFileName);
+            TryDelete(fileName);
+        }
+    }
+
+    private static void TryDelete(string fileName)
+    {
+        try
+        {
+            File.Delete(fileName);
+        }
+        catch
+        {
+            // ignore - a locked/read-only cache file is not worth failing the edit over
         }
     }
 

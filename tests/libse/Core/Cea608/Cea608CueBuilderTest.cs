@@ -89,6 +89,23 @@ public class Cea608CueBuilderTest
     }
 
     /// <summary>
+    /// Only an extended character replacing the last char continues the cue - a short caption
+    /// followed by another one that happens to share all but its last char is a new cue.
+    /// </summary>
+    [Theory]
+    [InlineData("♪", "Hey!")]
+    [InlineData("OK", "Oh!")]
+    public void ShortCaptionFollowedByDifferentCaptionIsNewCue(string first, string second)
+    {
+        var paragraphs = new List<Paragraph>();
+        Cea608CueBuilder.Add(paragraphs, first, 1000, 2000);
+        Cea608CueBuilder.Add(paragraphs, second, 2000, 4000);
+
+        Assert.Equal(new[] { first, second }, paragraphs.Select(p => p.Text));
+        Assert.Equal(new double[] { 1000, 2000 }, paragraphs.Select(p => p.StartTime.TotalMilliseconds));
+    }
+
+    /// <summary>
     /// After a roll-up carriage return only the scrolled rows are on screen for the few frames
     /// until the next row's first characters arrive - that belongs to the next cue instead of
     /// flashing by on its own. A longer pause stays a cue of its own.

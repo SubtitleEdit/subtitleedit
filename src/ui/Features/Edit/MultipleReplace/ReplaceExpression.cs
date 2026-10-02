@@ -25,6 +25,19 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         public Regex? WholeWordRegex { get; set; }
 
+        /// <summary>
+        /// The regex a "Whole word" rule runs with: the escaped find text between word boundaries, so
+        /// "Zeyn" no longer matches inside "Zeynep" (#15510). Replace with an evaluator returning
+        /// <see cref="ReplaceWith"/> so a "$" in the replacement is literal text.
+        /// </summary>
+        public static Regex CreateWholeWordRegex(string findWhat, bool ignoreCase)
+        {
+            return new Regex(RegexUtils.BuildWholeWordPattern(findWhat),
+                // CultureInvariant: case-insensitive matching must not depend on the machine (tr-TR "I").
+                ignoreCase ? RegexOptions.IgnoreCase | RegexOptions.CultureInvariant : RegexOptions.CultureInvariant,
+                RegexUtils.UserPatternMatchTimeout);
+        }
+
         public ReplaceExpression(string findWhat, string replaceWith, string searchType, string ruleInfo)
         {
             FindWhat = findWhat;

@@ -198,13 +198,29 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// A pattern that finds <paramref name="searchText"/> as a whole word. A word character at an
+        /// edge gets a word boundary (<c>\b</c>); punctuation at an edge (e.g. "|t" or "'Tis") must not
+        /// touch a word character either. White space at an edge already separates the text from its
+        /// neighbour, so that side gets no check at all - otherwise "Zeyn " could never match
+        /// "Zeyn is here", as the white space would have to be followed by a non-word character.
+        /// </summary>
         public static string BuildWholeWordPattern(string searchText)
         {
             var escaped = Regex.Escape(searchText);
-            var prefix = searchText.Length > 0 && (char.IsLetterOrDigit(searchText[0]) || searchText[0] == '_') ? @"\b" : @"(?<!\w)";
-            var suffix = searchText.Length > 0 && (char.IsLetterOrDigit(searchText[searchText.Length - 1]) || searchText[searchText.Length - 1] == '_') ? @"\b" : @"(?!\w)";
-            return $"{prefix}{escaped}{suffix}";
+            if (searchText.Length == 0)
+            {
+                return @"(?<!\w)(?!\w)";
+            }
+
+            var first = searchText[0];
+            var last = searchText[searchText.Length - 1];
+            var prefix = IsWordChar(first) ? @"\b" : char.IsWhiteSpace(first) ? string.Empty : @"(?<!\w)";
+            var suffix = IsWordChar(last) ? @"\b" : char.IsWhiteSpace(last) ? string.Empty : @"(?!\w)";
+            return prefix + escaped + suffix;
         }
+
+        private static bool IsWordChar(char c) => char.IsLetterOrDigit(c) || c == '_';
 
         public static string GetRegExGroup(string pattern)
         {

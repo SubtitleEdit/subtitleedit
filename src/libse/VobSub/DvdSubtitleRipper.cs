@@ -249,8 +249,22 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 {
                     var file = Array.BinarySearch(_firstSectors, sector);
                     file = file >= 0 ? file : ~file - 1;
+
+                    // an empty VOB has the same first sector as the next one - move past it
+                    while (file < _fileNames.Length - 1 && _firstSectors[file + 1] <= sector)
+                    {
+                        file++;
+                    }
+
+                    var sectorsInFile = file < _fileNames.Length ? (int)Math.Min(count, _firstSectors[file + 1] - sector) : 0;
+                    if (sectorsInFile <= 0)
+                    {
+                        // past the last VOB
+                        Array.Clear(buffer, bufferOffset, count * SectorSize);
+                        break;
+                    }
+
                     var stream = _streams[file] ?? (_streams[file] = OpenSequential(_fileNames[file]));
-                    var sectorsInFile = (int)Math.Min(count, _firstSectors[file + 1] - sector);
                     var position = (sector - _firstSectors[file]) * SectorSize;
                     if (stream.Position != position)
                     {

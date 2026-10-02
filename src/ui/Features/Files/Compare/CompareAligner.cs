@@ -9,7 +9,8 @@ namespace Nikse.SubtitleEdit.Features.Files.Compare;
 /// <para>
 /// The user's sync points split the two files into segments that are aligned independently, so
 /// a forced pair is always a row of its own. Inside a segment, lines whose text is unique on both
-/// sides and appears in the same order anchor the alignment (patience diff); the stretches between
+/// sides, and lines whose start and end times both match one line only on the other side, anchor
+/// the alignment where they appear in the same order (patience diff); the stretches between
 /// anchors are aligned by a scored dynamic program that prefers pairing similar lines - by text,
 /// by fuzzy text, or by timing - over leaving a line unpaired. Two unrelated lines still pair up
 /// rather than becoming two blank rows, so files that differ throughout read like before.
@@ -42,8 +43,24 @@ internal static class CompareAligner
     private const double PairWeight = 3.0;
     private const double PairOffset = 1.5;
 
-    // The dynamic program is O(n*m) in time and memory; beyond this a stretch is paired by position.
-    private const long MaxCells = 1_000_000;
+    // The dynamic program is O(n*m) in time and memory, and every edit re-runs it; beyond this a
+    // stretch is merged by time instead (see AlignByTime).
+    private const long MaxCells = 250_000;
+
+    // A line pair whose start and end differ by no more than this (or that isTimeEqual calls equal)
+    // has the same timing - covers the rounding of formats with centisecond or frame precision.
+    private static readonly long SameTimeToleranceTicks = TimeSpan.FromMilliseconds(10).Ticks;
+    private static readonly long SameTimeSearchTicks = TimeSpan.FromMilliseconds(100).Ticks;
+
+    // A unique text whose two lines are further apart in time than this is only trusted when a
+    // neighbouring text anchor has about the same offset - a file shifted as a whole still anchors,
+    // a lone "Okay." far away from its namesake does not.
+    private static readonly long FarApartTicks = TimeSpan.FromSeconds(10).Ticks;
+    private static readonly long SameOffsetTicks = TimeSpan.FromSeconds(3).Ticks;
+
+    // Where text anchors and timing anchors disagree, the same text is the stronger evidence.
+    private const int TextAnchorWeight = 2;
+    private const int TimingAnchorWeight = 1;
 
     public static List<Pair> Align(
         IReadOnlyList<Line> left,
@@ -117,7 +134,7 @@ internal static class CompareAligner
         {
             var l = l0;
             var r = r0;
-            foreach (var (al, ar) in FindUniqueTextAnchors(l0, l1, r0, r1))
+            foreach (var (al, ar) in FindAnchors(l0, l1, r0, r1))
             {
                 AlignStretch(l, al, r, ar, result);
                 result.Add(new Pair(al, ar));
@@ -129,10 +146,44 @@ internal static class CompareAligner
         }
 
         /// <summary>
-        /// Lines whose text occurs exactly once on each side of the segment, kept only where they
-        /// appear in the same order on both (the longest increasing run) - the patience diff anchors.
+        /// The patience diff anchors: lines whose text occurs exactly once on each side of the
+        /// segment, and lines whose timing matches exactly one line on the other side and vice
+        /// versa, kept only where they appear in the same order on both. Where the two kinds
+        /// disagree, the heaviest run wins, a text match weighing twice a timing match.
         /// </summary>
-        private List<(int Left, int Right)> FindUniqueTextAnchors(int l0, int l1, int r0, int r1)
+        private List<(int Left, int Right)> FindAnchors(int l0, int l1, int r0, int r1)
+        {
+            var candidates = new List<(int Left, int Right, int Weight)>();
+            foreach (var (l, r) in FindTextCandidates(l0, l1, r0, r1))
+            {
+                candidates.Add((l, r, TextAnchorWeight));
+            }
+
+            foreach (var (l, r) in FindTimingCandidates(l0, l1, r0, r1))
+            {
+                candidates.Add((l, r, TimingAnchorWeight));
+            }
+
+            // By left, and by right descending for the same left, so the strictly increasing run
+            // can never take two pairs of one left line; the same pair found twice adds up.
+            candidates.Sort((a, b) => a.Left != b.Left ? a.Left.CompareTo(b.Left) : b.Right.CompareTo(a.Right));
+            var merged = new List<(int Left, int Right, int Weight)>(candidates.Count);
+            foreach (var c in candidates)
+            {
+                if (merged.Count > 0 && merged[^1].Left == c.Left && merged[^1].Right == c.Right)
+                {
+                    merged[^1] = (c.Left, c.Right, merged[^1].Weight + c.Weight);
+                }
+                else
+                {
+                    merged.Add(c);
+                }
+            }
+
+            return HeaviestIncreasingByRight(merged, r0, r1);
+        }
+
+        private List<(int Left, int Right)> FindTextCandidates(int l0, int l1, int r0, int r1)
         {
             var leftCounts = CountTexts(_left, l0, l1);
             var rightCounts = CountTexts(_right, r0, r1);
@@ -149,8 +200,111 @@ internal static class CompareAligner
                 }
             }
 
-            return LongestIncreasingByRight(candidates);
+            // A pair far apart in time needs a neighbour with about the same offset to vouch for it.
+            var result = new List<(int Left, int Right)>(candidates.Count);
+            for (var k = 0; k < candidates.Count; k++)
+            {
+                var (cl, cr) = candidates[k];
+                if (!IsFarApart(_left[cl], _right[cr]) ||
+                    (k > 0 && IsSameOffset(candidates[k - 1], candidates[k])) ||
+                    (k + 1 < candidates.Count && IsSameOffset(candidates[k + 1], candidates[k])))
+                {
+                    result.Add(candidates[k]);
+                }
+            }
+
+            return result;
         }
+
+        private static bool IsFarApart(Line a, Line b) =>
+            !Overlaps(a, b) && Math.Abs(a.Start.Ticks - b.Start.Ticks) > FarApartTicks;
+
+        private bool IsSameOffset((int Left, int Right) a, (int Left, int Right) b)
+        {
+            var offsetA = _right[a.Right].Start.Ticks - _left[a.Left].Start.Ticks;
+            var offsetB = _right[b.Right].Start.Ticks - _left[b.Left].Start.Ticks;
+            return Math.Abs(offsetA - offsetB) <= SameOffsetTicks;
+        }
+
+        private static bool Overlaps(Line a, Line b) =>
+            Math.Min(a.End.Ticks, b.End.Ticks) > Math.Max(a.Start.Ticks, b.Start.Ticks);
+
+        /// <summary>Pairs whose start and end both match, where neither line matches any other line that way.</summary>
+        private List<(int Left, int Right)> FindTimingCandidates(int l0, int l1, int r0, int r1)
+        {
+            var result = new List<(int Left, int Right)>();
+            if (l0 >= l1 || r0 >= r1)
+            {
+                return result;
+            }
+
+            var rightByStart = new int[r1 - r0];
+            for (var j = 0; j < rightByStart.Length; j++)
+            {
+                rightByStart[j] = r0 + j;
+            }
+
+            Array.Sort(rightByStart, (a, b) => _right[a].Start.CompareTo(_right[b].Start));
+
+            var rightMatchCount = new int[r1 - r0];
+            var leftMatch = new int[l1 - l0];
+            for (var i = l0; i < l1; i++)
+            {
+                var line = _left[i];
+                var match = -1;
+                var count = 0;
+                for (var k = LowerBoundByStart(rightByStart, line.Start.Ticks - SameTimeSearchTicks); k < rightByStart.Length; k++)
+                {
+                    var other = _right[rightByStart[k]];
+                    if (other.Start.Ticks > line.Start.Ticks + SameTimeSearchTicks)
+                    {
+                        break;
+                    }
+
+                    if (IsSameTime(line.Start, other.Start) && IsSameTime(line.End, other.End))
+                    {
+                        match = rightByStart[k];
+                        count++;
+                        rightMatchCount[match - r0]++;
+                    }
+                }
+
+                leftMatch[i - l0] = count == 1 ? match : -1;
+            }
+
+            for (var i = l0; i < l1; i++)
+            {
+                var match = leftMatch[i - l0];
+                if (match >= 0 && rightMatchCount[match - r0] == 1)
+                {
+                    result.Add((i, match));
+                }
+            }
+
+            return result;
+        }
+
+        private int LowerBoundByStart(int[] rightByStart, long ticks)
+        {
+            int lo = 0, hi = rightByStart.Length;
+            while (lo < hi)
+            {
+                var mid = (lo + hi) / 2;
+                if (_right[rightByStart[mid]].Start.Ticks < ticks)
+                {
+                    lo = mid + 1;
+                }
+                else
+                {
+                    hi = mid;
+                }
+            }
+
+            return lo;
+        }
+
+        private bool IsSameTime(TimeSpan a, TimeSpan b) =>
+            Math.Abs(a.Ticks - b.Ticks) <= SameTimeToleranceTicks || _isTimeEqual(a, b);
 
         private static Dictionary<string, (int Count, int Index)> CountTexts(IReadOnlyList<Line> lines, int from, int to)
         {
@@ -164,8 +318,12 @@ internal static class CompareAligner
             return counts;
         }
 
-        /// <summary>Candidates come sorted by left index; keeps the longest subsequence increasing in right index too.</summary>
-        private static List<(int Left, int Right)> LongestIncreasingByRight(List<(int Left, int Right)> candidates)
+        /// <summary>
+        /// Candidates come sorted by left index (right descending within one); keeps the heaviest
+        /// subsequence strictly increasing in right index too - a Fenwick tree of the best chain
+        /// ending at or before each right index makes it O(n log n).
+        /// </summary>
+        private static List<(int Left, int Right)> HeaviestIncreasingByRight(List<(int Left, int Right, int Weight)> candidates, int r0, int r1)
         {
             var result = new List<(int Left, int Right)>();
             if (candidates.Count == 0)
@@ -173,39 +331,47 @@ internal static class CompareAligner
                 return result;
             }
 
-            var tailIndexes = new List<int>(); // index into candidates of the smallest tail for each length
+            var size = r1 - r0;
+            var treeWeight = new long[size + 1];
+            var treeIndex = new int[size + 1];
             var previous = new int[candidates.Count];
+            long bestWeight = 0;
+            var bestIndex = -1;
             for (var i = 0; i < candidates.Count; i++)
             {
-                var value = candidates[i].Right;
-                int lo = 0, hi = tailIndexes.Count;
-                while (lo < hi)
+                var position = candidates[i].Right - r0; // chains ending at a right index < Right
+                long before = 0;
+                var beforeIndex = -1;
+                for (var k = position; k > 0; k -= k & -k)
                 {
-                    var mid = (lo + hi) / 2;
-                    if (candidates[tailIndexes[mid]].Right < value)
+                    if (treeWeight[k] > before)
                     {
-                        lo = mid + 1;
-                    }
-                    else
-                    {
-                        hi = mid;
+                        before = treeWeight[k];
+                        beforeIndex = treeIndex[k];
                     }
                 }
 
-                previous[i] = lo > 0 ? tailIndexes[lo - 1] : -1;
-                if (lo == tailIndexes.Count)
+                previous[i] = beforeIndex;
+                var weight = before + candidates[i].Weight;
+                if (weight > bestWeight)
                 {
-                    tailIndexes.Add(i);
+                    bestWeight = weight;
+                    bestIndex = i;
                 }
-                else
+
+                for (var k = position + 1; k <= size; k += k & -k)
                 {
-                    tailIndexes[lo] = i;
+                    if (weight > treeWeight[k])
+                    {
+                        treeWeight[k] = weight;
+                        treeIndex[k] = i;
+                    }
                 }
             }
 
-            for (var i = tailIndexes[^1]; i >= 0; i = previous[i])
+            for (var i = bestIndex; i >= 0; i = previous[i])
             {
-                result.Add(candidates[i]);
+                result.Add((candidates[i].Left, candidates[i].Right));
             }
 
             result.Reverse();
@@ -219,7 +385,7 @@ internal static class CompareAligner
             var m = r1 - r0;
             if (n == 0 || m == 0 || (long)(n + 1) * (m + 1) > MaxCells)
             {
-                AlignByPosition(l0, l1, r0, r1, result);
+                AlignByTime(l0, l1, r0, r1, result);
                 return;
             }
 
@@ -294,13 +460,45 @@ internal static class CompareAligner
             result.AddRange(rows);
         }
 
-        private static void AlignByPosition(int l0, int l1, int r0, int r1, List<Pair> result)
+        /// <summary>
+        /// The cheap alignment of a stretch too big for the dynamic program: walks both sides in
+        /// step, pairing lines that overlap in time; a line is left alone only when it comes first
+        /// and the next line on its own side overlaps the other side's line instead - otherwise the
+        /// two pair by position, as unrelated timings did before.
+        /// </summary>
+        private void AlignByTime(int l0, int l1, int r0, int r1, List<Pair> result)
         {
-            var n = l1 - l0;
-            var m = r1 - r0;
-            for (var k = 0; k < Math.Max(n, m); k++)
+            int i = l0, j = r0;
+            while (i < l1 && j < r1)
             {
-                result.Add(new Pair(k < n ? l0 + k : -1, k < m ? r0 + k : -1));
+                var a = _left[i];
+                var b = _right[j];
+                if (!Overlaps(a, b))
+                {
+                    if (a.Start < b.Start && i + 1 < l1 && Overlaps(_left[i + 1], b))
+                    {
+                        result.Add(new Pair(i++, -1));
+                        continue;
+                    }
+
+                    if (b.Start < a.Start && j + 1 < r1 && Overlaps(a, _right[j + 1]))
+                    {
+                        result.Add(new Pair(-1, j++));
+                        continue;
+                    }
+                }
+
+                result.Add(new Pair(i++, j++));
+            }
+
+            while (i < l1)
+            {
+                result.Add(new Pair(i++, -1));
+            }
+
+            while (j < r1)
+            {
+                result.Add(new Pair(-1, j++));
             }
         }
 

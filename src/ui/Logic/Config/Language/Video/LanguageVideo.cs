@@ -47,6 +47,7 @@ public class LanguageVideo
     public string RemuxVideoMpgMaxTwoCaptionTracks { get; set; }
     public string RemuxVideoMccRequiresMpg { get; set; }
     public string RemuxVideoMpgReencodeVideoX { get; set; }
+    public string RemuxVideoFileHasNoAudioX { get; set; }
     public string RemuxVideoAddingClosedCaptions { get; set; }
     public string RemuxVideoSelectAudioTrack { get; set; }
     public string RemuxVideoSelectAudioTrackFor { get; set; }
@@ -206,6 +207,7 @@ public class LanguageVideo
         RemuxVideoSccNotWithWebM = "Scenarist (.scc) closed captions need the MOV container, which cannot hold the VP9/AV1 video of a .webm file. Remove the .scc file or convert it to another subtitle format.";
         RemuxVideoMpgMaxTwoCaptionTracks = "An .mpg file holds at most two closed caption tracks (CC1 and CC3) - remove subtitle files so that one or two are left.";
         RemuxVideoMccRequiresMpg = "MacCaption (.mcc) subtitles are embedded as CEA-608/708 closed captions in the MPEG-2 video, which requires the MPG container. Output format has been automatically switched to .mpg.";
+        RemuxVideoFileHasNoAudioX = "\"{0}\" has no audio track, so it cannot be used as an audio source.";
         RemuxVideoMpgReencodeVideoX = "Closed captions in an .mpg file need MPEG-2 video, and the video is {0}. Re-encode the video to MPEG-2? This takes longer and lowers the quality a little.";
         RemuxVideoAddingClosedCaptions = "Adding closed captions...";
         RemuxVideoSelectAudioTrack = "Select audio track";

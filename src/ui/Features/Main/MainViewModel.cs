@@ -11188,7 +11188,7 @@ public partial class MainViewModel :
 
             InitializeWaveformDisplayMode();
 
-            AudioVisualizer.ShotChanges = ShotChangesHelper.FromDisk(_videoFileName);
+            AudioVisualizer.ShotChanges = ShotChangesHelper.FromDisk(_videoFileName, _audioTrack?.FfIndex ?? -1);
             UpdateShotChangesListMenuItem();
             if (AudioVisualizer.ShotChanges.Count == 0)
             {
@@ -15653,12 +15653,17 @@ public partial class MainViewModel :
     }
 
     /// <summary>
-    /// Slack for the "keep gap if close" test: frame-snapped gaps land a fraction of a millisecond
-    /// above MinimumBetweenLines (2 frames at 23.976 fps = 83.4 ms vs. a setting of 83 ms). Half a
-    /// frame covers that rounding; a whole frame (issue #15511) also caught a gap one frame wider than
-    /// the minimum, so nudging towards the neighbour locked the gap at minimum + 1 frame.
+    /// The "keep gap if close" test: a gap counts as close when it is strictly below "minimum gap plus
+    /// one frame" (with half a millisecond of slack for whole-millisecond rounding). That is the
+    /// smallest on-frame gap at or above MinimumBetweenLines, which can be most of a frame above it
+    /// when the minimum is in milliseconds (24 ms at 59.94 fps: 33.4 ms; at 50 fps: 40 ms; 100 ms at
+    /// 23.976 fps: 125.1 ms) - a half-frame tolerance missed those, so the nudge clamped to
+    /// "neighbour + minimum" (off the frame grid) instead of carrying the neighbour along. A gap of
+    /// minimum + 1 frame (issue #15511: 3 frames with a 2-frame minimum) is not close, so walking
+    /// towards the neighbour still settles on the minimum.
     /// </summary>
-    private static double KeepGapCloseToleranceMs() => FramesToMilliseconds(1) / 2.0;
+    private static bool IsKeepGapClose(double gapToNeighbourMs, double minGapMs) =>
+        gapToNeighbourMs < minGapMs + FramesToMilliseconds(1) - 0.5;
 
     private void MoveStartByFrames(int frames, bool keepGapPrevIfClose)
     {
@@ -15691,7 +15696,7 @@ public partial class MainViewModel :
         var prevIsClose = false;
         if (keepGapPrevIfClose && prev != null
             && prev.EndTime.TotalMilliseconds <= s.StartTime.TotalMilliseconds
-            && prev.EndTime.TotalMilliseconds + gapMs + KeepGapCloseToleranceMs() >= s.StartTime.TotalMilliseconds)
+            && IsKeepGapClose(s.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds, gapMs))
         {
             prevIsClose = true;
             prevGapMs = s.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds;
@@ -15764,7 +15769,7 @@ public partial class MainViewModel :
         var nextIsClose = false;
         if (keepGapNextIfClose && next != null
             && s.EndTime.TotalMilliseconds <= next.StartTime.TotalMilliseconds
-            && s.EndTime.TotalMilliseconds + gapMs + KeepGapCloseToleranceMs() >= next.StartTime.TotalMilliseconds)
+            && IsKeepGapClose(next.StartTime.TotalMilliseconds - s.EndTime.TotalMilliseconds, gapMs))
         {
             nextIsClose = true;
             nextGapMs = next.StartTime.TotalMilliseconds - s.EndTime.TotalMilliseconds;
@@ -16735,6 +16740,10 @@ public partial class MainViewModel :
         _isRunningCustomShortcut = true;
         _undoRedoManager.CheckForChanges(null);
         _undoRedoManager.StopChangeDetection();
+
+        // Suspend as well as stop: commands run as steps (e.g. via RunWithoutChangeDetection)
+        // restart detection in their own finally, which would split the run into several undo steps.
+        _undoRedoManager.SuspendChangeDetection();
         try
         {
             Dictionary<string, IRelayCommand>? commands = null;
@@ -16767,6 +16776,7 @@ public partial class MainViewModel :
         }
         finally
         {
+            _undoRedoManager.ResumeChangeDetection();
             _undoRedoManager.StartChangeDetection();
             _isRunningCustomShortcut = false;
         }
@@ -16835,8 +16845,10 @@ public partial class MainViewModel :
         }
 
         // Only surround the selected text when editing a single line with part of the text
-        // selected - like SE 4 does (#12873).
-        if (selectedItems.Count == 1 && SurroundTextBoxSelection(surroundLeft, surroundRight, behavior))
+        // selected - like SE 4 does (#12873). "Each line" always works on the whole text, line by line.
+        if (scope == SurroundWithScope.SelectionOrText &&
+            selectedItems.Count == 1 &&
+            SurroundTextBoxSelection(surroundLeft, surroundRight, behavior))
         {
             _updateAudioVisualizer = true;
             return;
@@ -27261,7 +27273,7 @@ public partial class MainViewModel :
         // converting it to SubRip suggested "movie.srt" instead of "movie.da.srt" (#15530).
         if (string.IsNullOrEmpty(_saveAsFileNameSuggestion) && !string.IsNullOrEmpty(_subtitleFileName))
         {
-            newFileName = KeepSubtitleLanguageSuffix(newFileName, GetFileNameWithoutExtension(_subtitleFileName));
+            newFileName = KeepSubtitleLanguageSuffix(newFileName, GetFileNameWithoutExtension(_subtitleFileName), Se.Settings.General.SaveAsAppendLanguageCode);
         }
 
         newFileName = AppendLanguageCodeToFileName(newFileName, GetUpdateSubtitle());
@@ -27394,10 +27406,14 @@ public partial class MainViewModel :
     /// language tag ("movie" vs "movie.da" or "movie.da.forced"), appends that tag so the
     /// tag survives a format change. The suggestion's folder is kept. Otherwise returns the
     /// suggestion unchanged. Both names are without extension.
+    /// When "Save as" appends a language code anyway (<paramref name="saveAsAppendLanguageCode"/> is
+    /// not None), the old tag is not kept: the appended code would follow it ("movie.da.forced.da",
+    /// or "movie.en.da" for a translation).
     /// </summary>
-    internal static string KeepSubtitleLanguageSuffix(string suggestion, string subtitleFileNameWithoutExtension)
+    internal static string KeepSubtitleLanguageSuffix(string suggestion, string subtitleFileNameWithoutExtension, string? saveAsAppendLanguageCode = nameof(SaveAsLanguageAppendType.None))
     {
-        if (string.IsNullOrEmpty(suggestion) || string.IsNullOrEmpty(subtitleFileNameWithoutExtension))
+        if (string.IsNullOrEmpty(suggestion) || string.IsNullOrEmpty(subtitleFileNameWithoutExtension) ||
+            (!string.IsNullOrEmpty(saveAsAppendLanguageCode) && saveAsAppendLanguageCode != nameof(SaveAsLanguageAppendType.None)))
         {
             return suggestion;
         }
@@ -28376,7 +28392,7 @@ public partial class MainViewModel :
             spectrogramFileName,
             wavePeaks,
             TryLoadCachedSpectrogram(spectrogramFileName),
-            ShotChangesHelper.FromDisk(videoFileName));
+            ShotChangesHelper.FromDisk(videoFileName, trackNumber));
     }
 
     private void ShowClickToGenerateWaveformHint()

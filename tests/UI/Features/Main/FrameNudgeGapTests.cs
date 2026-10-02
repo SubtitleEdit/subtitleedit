@@ -71,7 +71,7 @@ public class FrameNudgeGapTests : IDisposable
     }
 
     /// <summary>Two lines, the second starting <paramref name="gapMs"/> after the first ends.</summary>
-    private (Window Window, MainViewModel Vm) TwoLines(int gapMs, bool allowOverlap = false)
+    private (Window Window, MainViewModel Vm) TwoLines(int gapMs, bool allowOverlap = false, double fps = Fps, int minGapMs = GapMs)
     {
         // Everything the clamp reads is pinned here. The minimum gap comes from
         // MinimumBetweenLines *and* UseFrameMode, and the frame rate has two independent homes
@@ -79,10 +79,10 @@ public class FrameNudgeGapTests : IDisposable
         // in the run happened to set makes this test order-dependent, which is how it passed
         // locally and failed on CI.
         Se.Settings.Waveform.AllowOverlap = allowOverlap;
-        Se.Settings.General.CurrentFrameRate = Fps; // one frame = 40 ms
-        Configuration.Settings.General.CurrentFrameRate = Fps;
+        Se.Settings.General.CurrentFrameRate = fps; // default: one frame = 40 ms
+        Configuration.Settings.General.CurrentFrameRate = fps;
         Se.Settings.General.UseFrameMode = false;
-        Se.Settings.General.MinimumBetweenLines.Milliseconds = GapMs;
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = minGapMs;
 
         var (window, vm) = CreateMainViewModel();
         vm.Subtitles.Add(new SubtitleLineViewModel(new Paragraph("one", 1000, 3000), null!) { Number = 1 });
@@ -232,6 +232,44 @@ public class FrameNudgeGapTests : IDisposable
 
         Assert.Equal(3000 + OneFrameMs, vm.Subtitles[0].EndTime.TotalMilliseconds, 3);
         Assert.Equal(80, vm.Subtitles[1].StartTime.TotalMilliseconds - vm.Subtitles[0].EndTime.TotalMilliseconds, 3);
+        window.Close();
+    }
+
+    // The smallest on-frame gap at or above a millisecond minimum can be most of a frame above it
+    // (24 ms at 50 fps: 40 ms; 24 ms at 59.94 fps: 33 ms; 100 ms at 23.976 fps: 125 ms). Such a gap
+    // is "close": the KeepGap variants must carry the neighbour along rather than clamp to
+    // "neighbour + minimum", which is off the frame grid.
+    [AvaloniaTheory]
+    [InlineData(50.0, 24, 40)]
+    [InlineData(59.94, 24, 33)]
+    [InlineData(23.976, 100, 125)]
+    public void MoveEndForwardKeepGapNext_SmallestOnFrameGapAboveMsMinimum_CarriesTheNeighbour(double fps, int minGapMs, int gapMs)
+    {
+        var (window, vm) = TwoLines(gapMs, fps: fps, minGapMs: minGapMs);
+        vm.SelectedSubtitle = vm.Subtitles[0];
+        Dispatcher.UIThread.RunJobs();
+
+        vm.MoveEndOneFrameForwardKeepGapNextCommand.Execute(null);
+
+        Assert.True(vm.Subtitles[0].EndTime.TotalMilliseconds > 3000);
+        Assert.Equal(gapMs, vm.Subtitles[1].StartTime.TotalMilliseconds - vm.Subtitles[0].EndTime.TotalMilliseconds, 3);
+        window.Close();
+    }
+
+    [AvaloniaTheory]
+    [InlineData(50.0, 24, 40)]
+    [InlineData(59.94, 24, 33)]
+    [InlineData(23.976, 100, 125)]
+    public void MoveStartBackKeepGapPrev_SmallestOnFrameGapAboveMsMinimum_CarriesTheNeighbour(double fps, int minGapMs, int gapMs)
+    {
+        var (window, vm) = TwoLines(gapMs, fps: fps, minGapMs: minGapMs);
+        vm.SelectedSubtitle = vm.Subtitles[1];
+        Dispatcher.UIThread.RunJobs();
+
+        vm.MoveStartOneFrameBackKeepGapPrevCommand.Execute(null);
+
+        Assert.True(vm.Subtitles[0].EndTime.TotalMilliseconds < 3000);
+        Assert.Equal(gapMs, vm.Subtitles[1].StartTime.TotalMilliseconds - vm.Subtitles[0].EndTime.TotalMilliseconds, 3);
         window.Close();
     }
 

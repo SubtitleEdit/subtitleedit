@@ -38,17 +38,14 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             if (ifo.Type == IfoParser.IfoType.VideoManager)
             {
                 var folder = Path.GetDirectoryName(ifoFileName) ?? string.Empty;
+                string[] folderFiles = null;
                 for (var i = 1; i < 100; i++)
                 {
-                    var vts = Path.Combine(folder, $"VTS_{i:00}_0.IFO");
-                    var bup = Path.ChangeExtension(vts, ".BUP");
-                    if (File.Exists(vts))
+                    var vts = IfoParser.FindFile(folder, $"VTS_{i:00}_0.IFO", ref folderFiles) ??
+                              IfoParser.FindFile(folder, $"VTS_{i:00}_0.BUP", ref folderFiles);
+                    if (vts != null)
                     {
                         ifoFileNames.Add(vts);
-                    }
-                    else if (File.Exists(bup))
-                    {
-                        ifoFileNames.Add(bup);
                     }
                 }
             }

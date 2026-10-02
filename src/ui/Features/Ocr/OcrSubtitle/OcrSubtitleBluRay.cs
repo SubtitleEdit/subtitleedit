@@ -18,10 +18,33 @@ public class OcrSubtitleBluRay : IOcrSubtitle
         Count = pcsDataList.Count;
     }
 
+    private double? _frameRate;
+
     /// <summary>
-    /// The frame rate the first PCS declares, or 0 when it declares none Blu-ray defines.
+    /// The frame rate the cues are timed at: the one the first PCS declares when the start times
+    /// are on its frame grid, else the standard rate they fit (the declared byte is often wrong,
+    /// e.g. 25 over 23.976 timing). 0 when no rate fits.
     /// </summary>
-    public double FrameRate => _pcsDataList.Count > 0 ? BluRaySupPicture.GetFrameRate(_pcsDataList[0].FramesPerSecondType) : 0;
+    public double FrameRate
+    {
+        get
+        {
+            if (_frameRate == null)
+            {
+                var startTimes = new List<long>(_pcsDataList.Count);
+                foreach (var pcsData in _pcsDataList)
+                {
+                    startTimes.Add(pcsData.StartTime);
+                }
+
+                _frameRate = _pcsDataList.Count > 0
+                    ? BluRaySupFrameRateDetector.Detect(startTimes, _pcsDataList[0].FramesPerSecondType)
+                    : 0;
+            }
+
+            return _frameRate.Value;
+        }
+    }
 
     public SKBitmap GetBitmap(int index)
     {

@@ -49,4 +49,22 @@ public class SaveAsKeepLanguageSuffixTests
     {
         Assert.Equal(P("v", "movie.da"), MainViewModel.KeepSubtitleLanguageSuffix(P("v", "movie.da"), P("v", "movie.da")));
     }
+
+    // With "Append language code" on, the code is appended after the kept tag: "movie.da.forced.da",
+    // or "movie.en.da" for an English subtitle translated to Danish. Leave the tag to that setting.
+    [Theory]
+    [InlineData("TwoLetterLanguageCode")]
+    [InlineData("ThreeLEtterLanguageCode")]
+    [InlineData("ThreeLetterLanguageCodeBibliographic")]
+    public void AppendLanguageCodeOn_TagIsNotKept(string appendSetting)
+    {
+        Assert.Equal(P("v", "movie"), MainViewModel.KeepSubtitleLanguageSuffix(P("v", "movie"), P("v", "movie.da.forced"), appendSetting));
+        Assert.Equal(P("v", "movie"), MainViewModel.KeepSubtitleLanguageSuffix(P("v", "movie"), P("v", "movie.en"), appendSetting));
+    }
+
+    [Fact]
+    public void AppendLanguageCodeNone_TagIsKept()
+    {
+        Assert.Equal(P("v", "movie.da.forced"), MainViewModel.KeepSubtitleLanguageSuffix(P("v", "movie"), P("v", "movie.da.forced"), "None"));
+    }
 }

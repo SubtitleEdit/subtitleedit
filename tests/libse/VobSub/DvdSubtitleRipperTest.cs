@@ -76,6 +76,32 @@ public class DvdSubtitleRipperTest : IDisposable
     }
 
     [Fact]
+    public void Rip_ProgramChain_SkipsEmptyVobFile()
+    {
+        // an empty VOB in the middle shares its first sector with the next VOB - reading must not loop forever
+        var vob1 = WriteVob("VTS_01_1.VOB",
+            MakeNavPack(1, 1, 0, 30000),
+            MakeSubtitlePack(0x20, 9000));
+        var vob2 = WriteVob("VTS_01_2.VOB");
+        var vob3 = WriteVob("VTS_01_3.VOB",
+            MakeNavPack(1, 2, 0, 30000),
+            MakeSubtitlePack(0x21, 4500));
+
+        var programChain = new IfoParser.ProgramChain();
+        programChain.Cells.Add(new IfoParser.Cell { VobId = 1, CellId = 1, FirstSector = 0, LastSector = 1 });
+        programChain.Cells.Add(new IfoParser.Cell { VobId = 1, CellId = 2, Start = TimeSpan.FromSeconds(1), FirstSector = 2, LastSector = 3 });
+
+        var task = Task.Run(() => DvdSubtitleRipper.Rip(new[] { vob1, vob2, vob3 }, programChain));
+        Assert.True(task.Wait(TimeSpan.FromSeconds(30)), "Rip did not finish");
+
+        var packs = task.Result;
+        Assert.Equal(2, packs.Count);
+        Assert.Equal(9000UL, packs[0].PacketizedElementaryStream.PresentationTimestamp);
+        Assert.Equal(0x21, packs[1].PacketizedElementaryStream.SubPictureStreamId);
+        Assert.Equal(90000UL + 4500UL, packs[1].PacketizedElementaryStream.PresentationTimestamp);
+    }
+
+    [Fact]
     public void Rip_WithoutIfo_StitchesPtsRestartsFromNavPacks()
     {
         var vob = WriteVob("VTS_01_1.VOB",
