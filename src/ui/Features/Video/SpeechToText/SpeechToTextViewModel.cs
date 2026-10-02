@@ -221,6 +221,9 @@ public partial class SpeechToTextViewModel : ObservableObject
     private Process? _audioExtractProcess;
     private readonly System.Timers.Timer _timerAudioExtract = new();
     private volatile bool _windowClosing;
+    // Held while a transcription runs, so a long (batch) run is not cut short by the machine
+    // idling into sleep (#15552). Driven by IsTranscribeEnabled, which every end-of-run path resets.
+    private readonly SleepInhibitorScope _sleepInhibitor = new(Se.Language.Video.AudioToText.Title);
     private Stopwatch _sw = new();
     private StringBuilder _ffmpegLog = new();
     private readonly Lock _lockObj = new();
@@ -3864,6 +3867,8 @@ public partial class SpeechToTextViewModel : ObservableObject
         return vm.OkPressed;
     }
 
+    partial void OnIsTranscribeEnabledChanged(bool value) => _sleepInhibitor.SetActive(!value);
+
     [RelayCommand]
     private async Task Transcribe()
     {
@@ -4165,6 +4170,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         if (_jobItems.Count == 0)
         {
+            IsTranscribeEnabled = true;
             return;
         }
 
@@ -5997,6 +6003,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         // an orphan burning CPU in the background.
         KillRunningProcesses();
         _openAiCts?.Cancel();
+        _sleepInhibitor.Dispose();
 
         UiUtil.SaveWindowPosition(Window);
         Task.Run(() => { DeleteTempFiles(); });
