@@ -129,4 +129,30 @@ public class BatchConverterMultipleReplaceRegexTests : IDisposable
         Assert.Equal(EvilLine + " color", text);
         Assert.True(stopwatch.Elapsed.TotalSeconds < MaxSeconds, $"the conversion took {stopwatch.Elapsed.TotalSeconds:0.0}s");
     }
+
+    // #15510: batch convert ignored the rule's "Whole word" flag, so "Zeyn" -> "Zeynep" turned
+    // every existing "Zeynep" into "Zeynepep".
+    [Theory]
+    [InlineData(MultipleReplaceType.CaseInsensitive)]
+    [InlineData(MultipleReplaceType.CaseSensitive)]
+    public async Task WholeWordRule_DoesNotMatchInsideALongerWord(MultipleReplaceType type)
+    {
+        var rule = Rule("Zeyn", "Zeynep", type);
+        rule.WholeWord = true;
+
+        var text = await ConvertAsync("Zeyn and Zeynep.", Category(rule));
+
+        Assert.Equal("Zeynep and Zeynep.", text);
+    }
+
+    [Fact]
+    public async Task WholeWordRule_ReplacementDollarIsLiteral()
+    {
+        var rule = Rule("cost", "$1 price", MultipleReplaceType.CaseInsensitive);
+        rule.WholeWord = true;
+
+        var text = await ConvertAsync("The cost is high.", Category(rule));
+
+        Assert.Equal("The $1 price is high.", text);
+    }
 }

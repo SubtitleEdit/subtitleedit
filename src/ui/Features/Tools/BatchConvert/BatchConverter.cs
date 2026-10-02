@@ -2240,7 +2240,31 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             var ruleInfo = string.Empty;
             foreach (var item in replaceExpressions)
             {
-                if (item.SearchType == ReplaceExpression.SearchCaseSensitive)
+                if (item.WholeWordRegex != null)
+                {
+                    if (timedOut.Contains(item.FindWhat))
+                    {
+                        continue;
+                    }
+
+                    try
+                    {
+                        if (item.WholeWordRegex.IsMatch(newText))
+                        {
+                            hit = true;
+                            ruleInfo = string.IsNullOrEmpty(ruleInfo) ? item.RuleInfo : $"{ruleInfo} + {item.RuleInfo}";
+
+                            // An evaluator so the replacement is literal text - a "$" in it is not a group reference.
+                            newText = item.WholeWordRegex.Replace(newText, _ => item.ReplaceWith);
+                        }
+                    }
+                    catch (RegexMatchTimeoutException)
+                    {
+                        SeLogger.Error($"Batch convert, multiple replace: {DescribeRule(item)} timed out on line {i + 1} - skipping it for the rest of this file");
+                        timedOut.Add(item.FindWhat);
+                    }
+                }
+                else if (item.SearchType == ReplaceExpression.SearchCaseSensitive)
                 {
                     if (newText.Contains(item.FindWhat))
                     {
@@ -2313,6 +2337,13 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 var replaceWith = isRegex ? RegexUtils.FixNewLine(rule.ReplaceWith) : rule.ReplaceWith;
 
                 var mpi = new ReplaceExpression(findWhat, replaceWith, rule.Type.ToString(), category.Name + ": " + rule.Description);
+                if (rule.WholeWord && !isRegex)
+                {
+                    // "Whole word" (#15510): "Zeyn" must not match inside "Zeynep" - the same regex
+                    // the Multiple replace window runs.
+                    mpi.WholeWordRegex = ReplaceExpression.CreateWholeWordRegex(findWhat, mpi.SearchType != ReplaceExpression.SearchCaseSensitive);
+                }
+
                 if (mpi.SearchType == ReplaceExpression.SearchRegEx && !_compiledRegExList.ContainsKey(findWhat))
                 {
                     try
