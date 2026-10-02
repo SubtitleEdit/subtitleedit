@@ -107,6 +107,38 @@ public class CrispAsrParakeet : CrispAsrEngineBase
                 ],
             },
 
+            // Phonon-2 - Fermion Research's English-only retrain of parakeet-tdt-0.6b-v3
+            // (CC-BY-4.0), wired into CrispASR v0.8.40. Same runtime, punctuated mixed-case
+            // output. q8_0 is upstream's registry default; q4_k drifts more from the reference
+            // (15/21 exact transcripts against 19/21 for q8_0 in upstream's check).
+            new WhisperModel
+            {
+                Name = "phonon2-q4_k.gguf",
+                Size = "402 MB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/phonon2-GGUF/resolve/main/phonon2-q4_k.gguf",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "phonon2-q8_0.gguf",
+                Size = "674 MB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/phonon2-GGUF/resolve/main/phonon2-q8_0.gguf",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "phonon2-f16.gguf",
+                Size = "1.26 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/phonon2-GGUF/resolve/main/phonon2-f16.gguf",
+                ],
+            },
+
             new WhisperModel
             {
                 Name = "parakeet-tdt-0.6b-ja-q4_k.gguf",
