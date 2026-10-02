@@ -14552,11 +14552,14 @@ public partial class MainViewModel :
 
         if (result.OkPressed)
         {
-            var selectedSubtitle = SelectedSubtitle;
+            var selectedId = SelectedSubtitle?.Id;
             ReplaceSubtitles(result.Subtitles);
 
             Renumber();
 
+            // The dialog hands back copies of the rows, so find the current line again by Id -
+            // the old instance is no longer in Subtitles.
+            var selectedSubtitle = selectedId == null ? null : Subtitles.FirstOrDefault(p => p.Id == selectedId);
             if (selectedSubtitle != null)
             {
                 SelectAndScrollToSubtitle(selectedSubtitle);
@@ -26628,7 +26631,7 @@ public partial class MainViewModel :
         var detach = grid != null && ReferenceEquals(grid.ItemsSource, Subtitles);
         if (detach)
         {
-            grid!.ItemsSource = null;
+            DetachSubtitleGridItemsSource(grid!);
         }
 
         Subtitles.Clear();
@@ -26642,9 +26645,40 @@ public partial class MainViewModel :
         ReDetectSpellCheckLanguageIfPending();
     }
 
+    /// <summary>
+    /// Takes the ItemsSource off the grid for a bulk rebuild. SelectionChanged is held off until the
+    /// detach is done: letting its handler run in the middle of it left the TableView's selection
+    /// out of step - on reattach the grid kept the old SelectedIndex (now a different row) with
+    /// SelectedItems empty, and from then on assigning SelectedItem moved the highlight and
+    /// SelectedSubtitle but not the grid's own SelectedItem. A grid double-click reads that, so it
+    /// seeked the video to the same line every time until the next rebuild reset it (#15579: sort
+    /// once breaks seeking, sort again fixes it). The view model is then cleared the same way the
+    /// handler would have, once the grid is settled.
+    /// </summary>
+    private void DetachSubtitleGridItemsSource(TableView grid)
+    {
+        var wasSkipping = _subtitleGridSelectionChangedSkip;
+        _subtitleGridSelectionChangedSkip = true;
+        try
+        {
+            grid.ItemsSource = null;
+        }
+        finally
+        {
+            _subtitleGridSelectionChangedSkip = wasSkipping;
+        }
+
+        if (!wasSkipping)
+        {
+            _shiftSelectAnchorIndex = -1;
+            _shiftSelectCurrentIndex = -1;
+            SubtitleGridSelectionChanged();
+        }
+    }
+
     private void SetSubtitles(Subtitle subtitle, Subtitle? subtitleOriginal = null)
     {
-        SubtitleGrid.ItemsSource = null;
+        DetachSubtitleGridItemsSource(SubtitleGrid);
 
         Subtitles.Clear();
         foreach (var p in subtitle.Paragraphs)
@@ -26710,7 +26744,7 @@ public partial class MainViewModel :
 
     private void SetSubtitles(List<SubtitleLineViewModel> subtitles)
     {
-        SubtitleGrid.ItemsSource = null;
+        DetachSubtitleGridItemsSource(SubtitleGrid);
 
         Subtitles.Clear();
         foreach (var p in subtitles)
@@ -29801,7 +29835,7 @@ public partial class MainViewModel :
 
             if (isLargeDelete)
             {
-                SubtitleGrid.ItemsSource = null;
+                DetachSubtitleGridItemsSource(SubtitleGrid);
             }
 
             for (var i = Subtitles.Count - 1; i >= 0 && removeSet.Count > 0; i--)
