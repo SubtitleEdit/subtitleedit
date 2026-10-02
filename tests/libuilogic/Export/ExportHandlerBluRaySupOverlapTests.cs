@@ -130,6 +130,28 @@ public class ExportHandlerBluRaySupOverlapTests : IDisposable
         Assert.Equal(Margin, WindowY(segments.Where(s => s.Type == Wds).ElementAt(1), 0));
     }
 
+    /// <summary>
+    /// A cue shorter than half a frame stays up one frame; the next cue starting on that frame
+    /// overlaps it on the grid. Written apart, the first one's clear came after the second one's
+    /// start - the PTS went backwards.
+    /// </summary>
+    [Fact]
+    public void CueShorterThanHalfAFrame_NextCueOnSameFrame_PtsNeverGoBackwards()
+    {
+        var a = Cue(0, 1.000, 1.005, ExportAlignment.BottomCenter, SKColors.White);
+        var b = Cue(1, 1.010, 2.000, ExportAlignment.BottomCenter, SKColors.White);
+        a.FramesPerSecond = 23.976;
+        b.FramesPerSecond = 23.976;
+
+        var segments = ReadSegments(Export(a, b));
+
+        var pts = segments.Select(s => s.Pts).ToList();
+        Assert.Equal(pts.OrderBy(p => p), pts);
+        var pcs = segments.Where(s => s.Type == Pcs).ToList();
+        Assert.Equal(new long[] { BluRaySupPicture.MillisecondsToPts(1010, 23.976), BluRaySupPicture.MillisecondsToPts(2000, 23.976) }, pcs.Select(p => p.Pts));
+        Assert.Equal(new[] { 1, 0 }, pcs.Select(ObjectCount));
+    }
+
     [Fact]
     public void TwoOverlappingLines_ShareTheScreenWhileBothAreOn()
     {

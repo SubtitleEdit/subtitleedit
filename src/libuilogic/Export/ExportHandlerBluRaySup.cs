@@ -41,6 +41,8 @@ public class ExportHandlerBluRaySup : IExportHandler
     private readonly List<PendingCue> _pending = [];
     private long _pendingStartMs;
     private long _pendingEndMs;
+    private long _pendingStartPts;
+    private long _pendingEndPts;
 
     public void WriteHeader(string fileOrFolderName, ImageParameter imageParameter)
     {
@@ -67,7 +69,13 @@ public class ExportHandlerBluRaySup : IExportHandler
             return;
         }
 
-        var overlapsPending = picture.StartTime < _pendingEndMs && picture.EndTime > _pendingStartMs;
+        // Also on the frame grid the display sets are written on: a cue shorter than half a frame
+        // stays up one frame, so the next one starting on that same frame overlaps it - written
+        // apart, its clear would come after the next start (backwards in the file).
+        var startPts = BluRaySupPicture.MillisecondsToPts(picture.StartTime, param.FramesPerSecond);
+        var endPts = Math.Max(BluRaySupPicture.MillisecondsToPts(picture.EndTime, param.FramesPerSecond), startPts + 1);
+        var overlapsPending = picture.StartTime < _pendingEndMs && picture.EndTime > _pendingStartMs ||
+                              startPts < _pendingEndPts && endPts > _pendingStartPts;
         if (_pending.Count > 0 && !overlapsPending)
         {
             FlushPending();
@@ -77,11 +85,15 @@ public class ExportHandlerBluRaySup : IExportHandler
         {
             _pendingStartMs = picture.StartTime;
             _pendingEndMs = picture.EndTime;
+            _pendingStartPts = startPts;
+            _pendingEndPts = endPts;
         }
         else
         {
             _pendingStartMs = Math.Min(_pendingStartMs, picture.StartTime);
             _pendingEndMs = Math.Max(_pendingEndMs, picture.EndTime);
+            _pendingStartPts = Math.Min(_pendingStartPts, startPts);
+            _pendingEndPts = Math.Max(_pendingEndPts, endPts);
         }
 
         _pending.Add(new PendingCue(param.Buffer, picture, param.FontColor, param.IsForced, param.FramesPerSecond));
