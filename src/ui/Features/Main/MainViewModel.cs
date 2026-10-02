@@ -34168,10 +34168,11 @@ public partial class MainViewModel :
 
     private void UpdateTitleStatus(int mainHash, int originalHash)
     {
+        var fullPath = Se.Settings.General.TitleBarFullFileName;
         var text = Se.Language.General.Untitled;
         if (!string.IsNullOrEmpty(_subtitleFileName))
         {
-            text = Path.GetFileName(_subtitleFileName);
+            text = fullPath ? _subtitleFileName : Path.GetFileName(_subtitleFileName);
         }
 
         if (ShowColumnOriginalText)
@@ -34189,7 +34190,7 @@ public partial class MainViewModel :
             }
             else
             {
-                text += Path.GetFileName(_subtitleFileNameOriginal);
+                text += fullPath ? _subtitleFileNameOriginal : Path.GetFileName(_subtitleFileNameOriginal);
             }
         }
 

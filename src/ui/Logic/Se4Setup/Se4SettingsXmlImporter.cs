@@ -128,6 +128,7 @@ public static class Se4SettingsXmlImporter
         // throws on an unknown name), so only accept values that still exist.
         SetEnumName<DialogType>(general, "DialogStyle", v => g.DialogStyle = v);
         SetEnumName<ContinuationStyle>(general, "ContinuationStyle", v => g.ContinuationStyle = v);
+        SetBool(general, "TitleBarFullFileName", v => g.TitleBarFullFileName = v);
 
         var cpsStrategy = Value(general, "CpsLineLengthStrategy");
         if (!string.IsNullOrWhiteSpace(cpsStrategy))
