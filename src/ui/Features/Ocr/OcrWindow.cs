@@ -620,6 +620,11 @@ public class OcrWindow : Window
 
         var scrollBarHost = new TableViewIndexScrollBar(dataGridSubtitle);
 
+        // Keep the view on the row being edited when a row changes height (#13619, #15275):
+        // adding or removing a line in the edit box grows or shrinks the row, the virtualizing
+        // panel re-estimates its pixel extent, and the grid scrolled away from the line.
+        TableViewScrollAnchor.Attach(dataGridSubtitle);
+
         // The image thumbnails scale with Ctrl+plus/minus (Image.MaxWidth/MaxHeight are
         // bound to the VM) - keep the pixel-sized image column in step with the zoom.
         var imageColumn = dataGridSubtitle.Columns[dataGridSubtitle.Columns.Count - 2];
@@ -822,8 +827,22 @@ public class OcrWindow : Window
         textBoxText.Bind(TextBox.FontWeightProperty, new Binding(nameof(vm.TextBoxFontWeight)) { Mode = BindingMode.TwoWay });
         UiUtil.FixMacDiacriticClipping(textBoxText);
 
-        // Create a Flyout for the TextBox
+        // Setting ContextFlyout replaces the TextBox's built-in Cut/Copy/Paste menu, so add
+        // those back above the font item (#15275)
         var flyout = new MenuFlyout();
+        var menuItemCut = new MenuItem { Header = Se.Language.General.Cut };
+        menuItemCut.Click += (_, _) => textBoxText.Cut();
+        flyout.Items.Add(menuItemCut);
+        var menuItemCopy = new MenuItem { Header = Se.Language.General.Copy };
+        menuItemCopy.Click += (_, _) => textBoxText.Copy();
+        flyout.Items.Add(menuItemCopy);
+        var menuItemPaste = new MenuItem { Header = Se.Language.General.Paste };
+        menuItemPaste.Click += (_, _) => textBoxText.Paste();
+        flyout.Items.Add(menuItemPaste);
+        var menuItemSelectAll = new MenuItem { Header = Se.Language.General.SelectAll };
+        menuItemSelectAll.Click += (_, _) => textBoxText.SelectAll();
+        flyout.Items.Add(menuItemSelectAll);
+        flyout.Items.Add(new Separator());
         var menuItemSetFont = new MenuItem
         {
             Header = Se.Language.General.SetFontDotDotDot,
