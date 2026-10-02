@@ -156,6 +156,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             new GoogleTranslateV2(),
             new MicrosoftTranslator(),
             new DeepLTranslate(),
+            new DeepLXTranslate(),
             new LibreTranslate(),
             new MyMemoryApi(),
             new ChatGptTranslate(),
@@ -358,6 +359,11 @@ public partial class AutoTranslateViewModel : ObservableObject
         {
             Configuration.Settings.Tools.AutoTranslateDeepLUrl = apiUrl.Trim();
             Configuration.Settings.Tools.AutoTranslateDeepLApiKey = apiKey.Trim();
+        }
+
+        if (engineType == typeof(DeepLXTranslate))
+        {
+            Configuration.Settings.Tools.AutoTranslateDeepLXUrl = apiUrl.Trim();
         }
 
         if (engineType == typeof(LibreTranslate))
@@ -1735,6 +1741,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         return translator switch
         {
             DeepLTranslate => settings.AutoTranslateDeepLUrl,
+            DeepLXTranslate => settings.AutoTranslateDeepLXUrl,
             LibreTranslate => settings.AutoTranslateLibreUrl,
             NoLanguageLeftBehindApi => settings.AutoTranslateNllbApiUrl,
             NoLanguageLeftBehindServe => settings.AutoTranslateNllbServeUrl,
@@ -1977,6 +1984,17 @@ public partial class AutoTranslateViewModel : ObservableObject
 
             LoadSelectedFormality();
             UpdateFormalityVisibility();
+
+            return;
+        }
+
+        if (engineType == typeof(DeepLXTranslate))
+        {
+            FillUrls(new List<string>
+            {
+                Configuration.Settings.Tools.AutoTranslateDeepLXUrl,
+                "http://localhost:1188",
+            });
 
             return;
         }
