@@ -451,10 +451,25 @@ public class OcrWindow : Window
         // treated as 1* by its layout helper - so the narrow columns get pixel widths
         // measured from their widest content (the VM is initialized before the window
         // ctor, so the items are available here).
+        //
+        // Measure with the UI font the user picked - the FontManager default (Helvetica Neue
+        // on macOS) may not load at all, and a measuring failure must never stop the window
+        // from opening: fall back to a rough per-character estimate (#15562).
         const double cellChrome = 16; // cell padding/margins + slack
-        double MeasureWidth(string text) =>
-            new FormattedText(text, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight,
-                Typeface.Default, 14, null).Width;
+        var measureTypeface = new Typeface(FontFamilyHelper.Make(Se.Settings.Appearance.FontName));
+        double MeasureWidth(string text)
+        {
+            try
+            {
+                return new FormattedText(text ?? string.Empty, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight,
+                    measureTypeface, 14, null).Width;
+            }
+            catch (Exception exception)
+            {
+                Se.LogError(exception, "OcrWindow: could not measure text width");
+                return (text?.Length ?? 0) * 14 * 0.6;
+            }
+        }
         double ColumnWidth(string header, string widestCellText) =>
             Math.Max(MeasureWidth(header), MeasureWidth(widestCellText)) + cellChrome;
 
