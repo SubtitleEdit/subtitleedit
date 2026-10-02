@@ -25,6 +25,13 @@ public class CrispAsrVadGateTests
         Assert.True(SpeechToTextViewModel.ShouldForceCrispAsrVad(new CrispAsrMega(), null, vadSuppressed: false));
     }
 
+    /// <summary>Without Silero, Index-Echo falls back to fixed 60 s windows that cut sentences.</summary>
+    [Fact]
+    public void IndexEchoGetsVadByDefault()
+    {
+        Assert.True(SpeechToTextViewModel.ShouldForceCrispAsrVad(new CrispAsrIndexEcho(), string.Empty, vadSuppressed: false));
+    }
+
     [Fact]
     public void OtherBackendsAreLeftAlone()
     {

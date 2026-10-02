@@ -1,0 +1,7 @@
+
+🗣️ Index-Echo S2TT 2B
+
+Type: Qwen3-Omni audio encoder + Qwen3.5 2B decoder (speech translation)
+Focus: 🇨🇳 Chinese speech → English, Japanese or Spanish subtitles
+Note: the language list is the target language; output is the translation
+Models: tower + decoder pair (q8_0 ~2.7 GB, f16 ~5.1 GB); sentence timestamps are native
