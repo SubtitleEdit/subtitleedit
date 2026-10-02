@@ -472,6 +472,27 @@ public class Cea708Test
         Assert.Equal(new double[] { 4000, 6000 }, paragraphs.Select(p => p.EndTime.TotalMilliseconds));
     }
 
+    /// <summary>
+    /// Redefining the displayed window as hidden hides it - the caption shown there ends, and is
+    /// not lost when the next caption built in the same window is displayed.
+    /// </summary>
+    [Fact]
+    public void DtvccRedefiningShownWindowAsHiddenEndsCaption()
+    {
+        var decoder = new DtvccServiceDecoder();
+        AddDtvccPacket(decoder, HiddenWindow.Concat(Ascii("First")).ToArray(), 1000);
+        AddDtvccPacket(decoder, new byte[] { 0x89, 0x01 }, 2000); // display 0
+        AddDtvccPacket(decoder, HiddenWindow.Concat(Ascii("Second")).ToArray(), 4000); // redefine 0 hidden
+        AddDtvccPacket(decoder, new byte[] { 0x89, 0x01 }, 5000); // display 0
+        AddDtvccPacket(decoder, new byte[] { 0x8C, 0xFF }, 7000); // delete all
+
+        var paragraphs = Assert.Single(decoder.Finish(9000)).Value;
+
+        Assert.Equal(new[] { "First", "Second" }, paragraphs.Select(p => p.Text));
+        Assert.Equal(new double[] { 2000, 5000 }, paragraphs.Select(p => p.StartTime.TotalMilliseconds));
+        Assert.Equal(new double[] { 4000, 7000 }, paragraphs.Select(p => p.EndTime.TotalMilliseconds));
+    }
+
     private static void AddDtvccPacket(DtvccServiceDecoder decoder, byte[] serviceData, double timeMs)
     {
         var content = new List<byte> { (byte)((1 << 5) | serviceData.Length) };
