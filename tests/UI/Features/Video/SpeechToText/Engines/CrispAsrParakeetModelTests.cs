@@ -39,16 +39,23 @@ public class CrispAsrParakeetModelTests
         Assert.Equal(names.Count, names.Distinct().Count());
     }
 
-    [Theory]
-    [InlineData("phonon2-q4_k.gguf", true)]
-    [InlineData("phonon2-q8_0.gguf", true)]
-    [InlineData("phonon2-f16.gguf", true)]
-    [InlineData("parakeet-ultra-q8_0.gguf", false)]
-    [InlineData("parakeet-tdt-0.6b-v3-q4_k.gguf", false)]
-    public void IsModelEnglishOnly_WarnsForPhonon2(string name, bool expected)
+    [Fact]
+    public void IsModelEnglishOnly_FlagsExactlyTheEnglishOnlyParakeetModels()
     {
-        var model = Assert.Single(new CrispAsrParakeet().Models, m => m.Name == name);
+        var englishOnly = new CrispAsrParakeet().Models
+            .Where(SpeechToTextViewModel.IsModelEnglishOnly)
+            .Select(m => m.Name)
+            .ToList();
 
-        Assert.Equal(expected, SpeechToTextViewModel.IsModelEnglishOnly(model));
+        Assert.Equal(new[]
+        {
+            "phonon2-q4_k.gguf", "phonon2-q8_0.gguf", "phonon2-f16.gguf",
+            "parakeet-rnnt-0.6b-q4_k.gguf", "parakeet-rnnt-0.6b-f16.gguf",
+            "parakeet-rnnt-1.1b-q4_k.gguf", "parakeet-rnnt-1.1b-f16.gguf",
+            "parakeet-tdt-1.1b-q4_k.gguf", "parakeet-tdt-1.1b-q8_0.gguf", "parakeet-tdt-1.1b.gguf",
+            "parakeet-tdt-0.6b-v2-q4_k.gguf", "parakeet-tdt-0.6b-v2-q8_0.gguf", "parakeet-tdt-0.6b-v2.gguf",
+            "parakeet-tdt_ctc-110m-q4_k.gguf", "parakeet-tdt_ctc-110m-q8_0.gguf", "parakeet-tdt_ctc-110m.gguf",
+            "parakeet-tdt_ctc-1.1b-q4_k.gguf", "parakeet-tdt_ctc-1.1b-q8_0.gguf", "parakeet-tdt_ctc-1.1b.gguf",
+        }, englishOnly);
     }
 }
