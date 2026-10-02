@@ -89,6 +89,7 @@ internal static class FixCommonErrorsRunner
             [nameof(FixMissingOpenBracket)] = "Fix missing [ or ( in line",
             [nameof(FixMissingPeriodsAtEndOfLine)] = "Add period after lines where next line starts with uppercase letter",
             [nameof(FixMissingSpaces)] = "Fix missing spaces",
+            [nameof(FixMisreadQuotes)] = "Fix apostrophes misread as double quotes (OCR)",
             [nameof(FixMusicNotation)] = "Replace music symbols with preferred symbol",
             [nameof(FixOverlappingDisplayTimes)] = "Fix overlapping display times",
             [nameof(FixShortDisplayTimes)] = "Fix short display times",
@@ -337,10 +338,11 @@ internal static class FixCommonErrorsRunner
     /// <summary>
     /// Canonical rule list. Order here defines execution order. <c>FixCommonOcrErrors</c>
     /// is intentionally omitted — it requires an UI-side IOcrFixEngine and SpellCheck
-    /// setup that seconv doesn't carry. The other 38 rules cover most cleanup.
+    /// setup that seconv doesn't carry. The other 40 rules cover most cleanup.
     /// </summary>
     private static IReadOnlyList<(string Id, Func<IFixCommonError> Factory)> BuildRules() =>
     [
+        (nameof(FixMisreadQuotes), () => new FixMisreadQuotes()), // before AddMissingQuotes, which would otherwise add a second quote to "Hello'
         (nameof(AddMissingQuotes), () => new AddMissingQuotes()),
         (nameof(Fix3PlusLines), () => new Fix3PlusLines()),
         (nameof(FixAloneLowercaseIToUppercaseI), () => new FixAloneLowercaseIToUppercaseI()),

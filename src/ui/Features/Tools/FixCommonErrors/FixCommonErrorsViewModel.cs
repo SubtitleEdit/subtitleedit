@@ -848,6 +848,8 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 
         FixDoubleApostrophes.Language.FixDoubleApostrophes = language.FixDoubleApostrophes;
 
+        FixMisreadQuotes.Language.FixMisreadQuotes = language.FixMisreadQuotes;
+
         FixMusicNotation.Language.FixMusicNotation = language.FixMusicNotation;
 
         FixMissingPeriodsAtEndOfLine.Language.AddPeriods = language.AddPeriods;
@@ -907,6 +909,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             new(language.RemoveLineBreaksAll, string.Empty, 1, true, nameof(FixShortLinesAll)),
             new(language.RemoveLineBreaksPixelWidth, string.Empty, 1, true, nameof(FixShortLinesPixelWidth)),
             new(language.FixDoubleApostrophes, language.FixDoubleApostrophesExample, 1, true, nameof(FixDoubleApostrophes)),
+            new(language.FixMisreadQuotes, language.FixMisreadQuotesExample, 1, true, nameof(FixMisreadQuotes)),
             new(language.FixMusicNotation, language.FixMusicNotationExample, 1, true, nameof(FixMusicNotation)),
             new(language.AddPeriods, language.AddPeriodsExample, 1, true, nameof(FixMissingPeriodsAtEndOfLine)),
             new(language.StartWithUppercaseLetterAfterParagraph, language.StartWithUppercaseLetterAfterParagraphExample, 1, true,

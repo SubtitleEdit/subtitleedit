@@ -30,6 +30,7 @@ public class LanguageFixCommonErrors
     public string RemoveLineBreaksPixelWidth { get; set; }
     public string FixUppercaseIInsideLowercaseWords { get; set; }
     public string FixDoubleApostrophes { get; set; }
+    public string FixMisreadQuotes { get; set; }
     public string AddPeriods { get; set; }
     public string StartWithUppercaseLetterAfterParagraph { get; set; }
     public string StartWithUppercaseLetterAfterPeriodInsideParagraph { get; set; }
@@ -52,6 +53,7 @@ public class LanguageFixCommonErrors
     public string FixCommasExample { get; set; }
     public string RemoveLineBreaksExample { get; set; }
     public string FixDoubleApostrophesExample { get; set; }
+    public string FixMisreadQuotesExample { get; set; }
     public string AddPeriodsExample { get; set; }
     public string StartWithUppercaseLetterAfterParagraphExample { get; set; }
     public string StartWithUppercaseLetterAfterPeriodInsideParagraphExample { get; set; }
@@ -156,6 +158,7 @@ public class LanguageFixCommonErrors
         RemoveLineBreaksPixelWidth = "Unbreak subtitles that can fit on one line (pixel width)";
         FixUppercaseIInsideLowercaseWords = "Fix uppercase 'i' inside lowercase words (OCR error)";
         FixDoubleApostrophes = "Fix double apostrophe characters ('') to a single quote (\")";
+        FixMisreadQuotes = "Fix apostrophes misread as double quotes (OCR)";
         AddPeriods = "Add period after lines where next line starts with uppercase letter";
         StartWithUppercaseLetterAfterParagraph = "Start with uppercase letter after paragraph";
         StartWithUppercaseLetterAfterPeriodInsideParagraph = "Start with uppercase letter after period inside paragraph";
@@ -179,6 +182,7 @@ public class LanguageFixCommonErrors
         FixCommasExample = ",, -> ,";
         RemoveLineBreaksExample = "Foo</br>bar! -> Foo bar!";
         FixDoubleApostrophesExample = "''Has double single quotes'' -> \"Has single double quote\"";
+        FixMisreadQuotesExample = "\"Hello' -> \"Hello\"";
         AddPeriodsExample = "Hello world -> Hello world.";
         StartWithUppercaseLetterAfterParagraphExample = "p1: Foobar! || p2: foobar! -> p1: Foobar! || p2: Foobar!";
         StartWithUppercaseLetterAfterPeriodInsideParagraphExample = "Hello there! how are you?  -> Hello there! How are you?";
