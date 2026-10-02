@@ -50,6 +50,22 @@ public class Se
     public string Surround7Right { get; set; } = string.Empty;
     public string Surround8Left { get; set; } = string.Empty;
     public string Surround8Right { get; set; } = string.Empty;
+    public string Surround1Behavior { get; set; } = nameof(SurroundWithBehavior.Toggle);
+    public string Surround2Behavior { get; set; } = nameof(SurroundWithBehavior.Toggle);
+    public string Surround3Behavior { get; set; } = nameof(SurroundWithBehavior.Toggle);
+    public string Surround4Behavior { get; set; } = nameof(SurroundWithBehavior.Toggle);
+    public string Surround5Behavior { get; set; } = nameof(SurroundWithBehavior.Toggle);
+    public string Surround6Behavior { get; set; } = nameof(SurroundWithBehavior.Toggle);
+    public string Surround7Behavior { get; set; } = nameof(SurroundWithBehavior.Toggle);
+    public string Surround8Behavior { get; set; } = nameof(SurroundWithBehavior.Toggle);
+    public string Surround1Scope { get; set; } = nameof(SurroundWithScope.SelectionOrText);
+    public string Surround2Scope { get; set; } = nameof(SurroundWithScope.SelectionOrText);
+    public string Surround3Scope { get; set; } = nameof(SurroundWithScope.SelectionOrText);
+    public string Surround4Scope { get; set; } = nameof(SurroundWithScope.SelectionOrText);
+    public string Surround5Scope { get; set; } = nameof(SurroundWithScope.SelectionOrText);
+    public string Surround6Scope { get; set; } = nameof(SurroundWithScope.SelectionOrText);
+    public string Surround7Scope { get; set; } = nameof(SurroundWithScope.SelectionOrText);
+    public string Surround8Scope { get; set; } = nameof(SurroundWithScope.SelectionOrText);
     public string CustomSearch1Name { get; set; } = "The Free Dictionary";
     public string CustomSearch1Url { get; set; } = "https://www.thefreedictionary.com/{0}";
     public string CustomSearch2Name { get; set; } = "Wikipedia";
@@ -378,6 +394,86 @@ public class Se
             case 6: Surround6Left = left; Surround6Right = right; break;
             case 7: Surround7Left = left; Surround7Right = right; break;
             case 8: Surround8Left = left; Surround8Right = right; break;
+        }
+    }
+
+    /// <summary>
+    /// What a "surround with" slot does when fired: toggle (default), always add, or only remove.
+    /// Unknown or missing values fall back to toggle.
+    /// </summary>
+    public SurroundWithBehavior GetSurroundBehavior(int slotNumber)
+    {
+        var value = slotNumber switch
+        {
+            1 => Surround1Behavior,
+            2 => Surround2Behavior,
+            3 => Surround3Behavior,
+            4 => Surround4Behavior,
+            5 => Surround5Behavior,
+            6 => Surround6Behavior,
+            7 => Surround7Behavior,
+            8 => Surround8Behavior,
+            _ => null,
+        };
+
+        return Enum.TryParse<SurroundWithBehavior>(value, true, out var behavior) && Enum.IsDefined(behavior)
+            ? behavior
+            : SurroundWithBehavior.Toggle;
+    }
+
+    public void SetSurroundBehavior(int slotNumber, SurroundWithBehavior behavior)
+    {
+        var value = behavior.ToString();
+        switch (slotNumber)
+        {
+            case 1: Surround1Behavior = value; break;
+            case 2: Surround2Behavior = value; break;
+            case 3: Surround3Behavior = value; break;
+            case 4: Surround4Behavior = value; break;
+            case 5: Surround5Behavior = value; break;
+            case 6: Surround6Behavior = value; break;
+            case 7: Surround7Behavior = value; break;
+            case 8: Surround8Behavior = value; break;
+        }
+    }
+
+    /// <summary>
+    /// What text a "surround with" slot works on. Unknown or missing values fall back to
+    /// "selection, else whole text".
+    /// </summary>
+    public SurroundWithScope GetSurroundScope(int slotNumber)
+    {
+        var value = slotNumber switch
+        {
+            1 => Surround1Scope,
+            2 => Surround2Scope,
+            3 => Surround3Scope,
+            4 => Surround4Scope,
+            5 => Surround5Scope,
+            6 => Surround6Scope,
+            7 => Surround7Scope,
+            8 => Surround8Scope,
+            _ => null,
+        };
+
+        return Enum.TryParse<SurroundWithScope>(value, true, out var scope) && Enum.IsDefined(scope)
+            ? scope
+            : SurroundWithScope.SelectionOrText;
+    }
+
+    public void SetSurroundScope(int slotNumber, SurroundWithScope scope)
+    {
+        var value = scope.ToString();
+        switch (slotNumber)
+        {
+            case 1: Surround1Scope = value; break;
+            case 2: Surround2Scope = value; break;
+            case 3: Surround3Scope = value; break;
+            case 4: Surround4Scope = value; break;
+            case 5: Surround5Scope = value; break;
+            case 6: Surround6Scope = value; break;
+            case 7: Surround7Scope = value; break;
+            case 8: Surround8Scope = value; break;
         }
     }
 

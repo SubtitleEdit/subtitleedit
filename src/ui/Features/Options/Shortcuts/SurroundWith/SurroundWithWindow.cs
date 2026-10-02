@@ -23,6 +23,14 @@ public class SurroundWithWindow : Window
         var labelAfter = UiUtil.MakeLabel(Se.Language.General.After);   
         var textBoxAfter = UiUtil.MakeTextBox(200, vm, nameof(vm.After));
 
+        var labelBehavior = UiUtil.MakeLabel(Se.Language.Options.Shortcuts.SurroundWithBehavior);
+        var comboBoxBehavior = UiUtil.MakeComboBox(vm.Behaviors, vm, nameof(vm.SelectedBehavior));
+        comboBoxBehavior.Width = 300;
+
+        var labelScope = UiUtil.MakeLabel(Se.Language.Options.Shortcuts.SurroundWithWorksOn);
+        var comboBoxScope = UiUtil.MakeComboBox(vm.Scopes, vm, nameof(vm.SelectedScope));
+        comboBoxScope.Width = 300;
+
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
@@ -31,6 +39,8 @@ public class SurroundWithWindow : Window
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
@@ -51,7 +61,11 @@ public class SurroundWithWindow : Window
         grid.Add(textBoxBefore, 0, 1);
         grid.Add(labelAfter, 1);
         grid.Add(textBoxAfter, 1, 1);
-        grid.Add(buttonPanel, 2, 0, 1, 2);
+        grid.Add(labelBehavior, 2);
+        grid.Add(comboBoxBehavior, 2, 1);
+        grid.Add(labelScope, 3);
+        grid.Add(comboBoxScope, 3, 1);
+        grid.Add(buttonPanel, 4, 0, 1, 2);
 
         Content = grid;
         

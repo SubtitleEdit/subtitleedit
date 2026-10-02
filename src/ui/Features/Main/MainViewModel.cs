@@ -16668,7 +16668,7 @@ public partial class MainViewModel :
         _colorService.RemoveColorTags(selectedItems, GetUpdateSubtitle(), SelectedSubtitleFormat);
     }
 
-    private void SurroundWith(string surroundLeft, string surroundRight)
+    private void SurroundWith(string surroundLeft, string surroundRight, SurroundWithBehavior behavior, SurroundWithScope scope)
     {
         var selectedItems = GetSelectedEditableSubtitles();
         if (selectedItems.Count == 0)
@@ -16678,29 +16678,26 @@ public partial class MainViewModel :
 
         // Only surround the selected text when editing a single line with part of the text
         // selected - like SE 4 does (#12873).
-        if (selectedItems.Count == 1 && SurroundTextBoxSelection(surroundLeft, surroundRight))
+        if (selectedItems.Count == 1 && SurroundTextBoxSelection(surroundLeft, surroundRight, behavior))
         {
             _updateAudioVisualizer = true;
             return;
         }
 
-        var first = selectedItems.First();
-        first.Text = Utilities.ToggleSymbols(surroundLeft, first.Text, surroundRight, out var added);
-
-        foreach (var item in selectedItems.Skip(1))
+        var newTexts = TextBoxSurroundToggler.ApplyToTexts(
+            behavior, scope, surroundLeft, selectedItems.Select(p => p.Text), surroundRight);
+        for (var i = 0; i < selectedItems.Count; i++)
         {
-            item.Text = added
-                ? Utilities.AddSymbols(surroundLeft, item.Text, surroundRight)
-                : Utilities.RemoveSymbols(surroundLeft, item.Text, surroundRight);
+            selectedItems[i].Text = newTexts[i];
         }
 
         _updateAudioVisualizer = true;
     }
 
-    private bool SurroundTextBoxSelection(string surroundLeft, string surroundRight)
+    private bool SurroundTextBoxSelection(string surroundLeft, string surroundRight, SurroundWithBehavior behavior)
     {
         var tb = GetFocusedTextBoxWrapper();
-        return tb != null && TextBoxSurroundToggler.ToggleSelection(tb, surroundLeft, surroundRight);
+        return tb != null && TextBoxSurroundToggler.ToggleSelection(tb, surroundLeft, surroundRight, behavior);
     }
 
     [RelayCommand]
@@ -16753,7 +16750,11 @@ public partial class MainViewModel :
 
     private void SurroundWithSlot(int slotNumber)
     {
-        SurroundWith(Se.Settings.GetSurroundLeft(slotNumber), Se.Settings.GetSurroundRight(slotNumber));
+        SurroundWith(
+            Se.Settings.GetSurroundLeft(slotNumber),
+            Se.Settings.GetSurroundRight(slotNumber),
+            Se.Settings.GetSurroundBehavior(slotNumber),
+            Se.Settings.GetSurroundScope(slotNumber));
     }
 
     /// <summary>

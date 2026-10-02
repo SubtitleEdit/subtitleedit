@@ -208,6 +208,13 @@ public class LanguageSettingsShortcuts
     public string SurroundWith { get; set; }
     public string SurroundWithXY { get; set; }
     public string SurroundWithNumberX { get; set; }
+    public string SurroundWithBehavior { get; set; }
+    public string SurroundWithBehaviorToggle { get; set; }
+    public string SurroundWithBehaviorAdd { get; set; }
+    public string SurroundWithBehaviorRemove { get; set; }
+    public string SurroundWithWorksOn { get; set; }
+    public string SurroundWithScopeSelectionOrText { get; set; }
+    public string SurroundWithScopeEachLine { get; set; }
     public string SearchVia { get; set; }
     public string SearchViaX { get; set; }
     public string SearchViaNumberX { get; set; }
@@ -509,6 +516,13 @@ public class LanguageSettingsShortcuts
         SurroundWith = "Surround with...";
         SurroundWithXY = "Surround with {0}/{1}";
         SurroundWithNumberX = "Surround with #{0}";
+        SurroundWithBehavior = "Behavior";
+        SurroundWithBehaviorToggle = "Toggle (add, or remove if present)";
+        SurroundWithBehaviorAdd = "Add (every time)";
+        SurroundWithBehaviorRemove = "Remove";
+        SurroundWithWorksOn = "Works on";
+        SurroundWithScopeSelectionOrText = "Selection, else whole text";
+        SurroundWithScopeEachLine = "Each line";
         SearchVia = "Search via";
         SearchViaX = "Search via {0}";
         SearchViaNumberX = "Search via #{0}";

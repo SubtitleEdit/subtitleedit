@@ -64,6 +64,8 @@ public partial class ShortcutsViewModel : ObservableObject
     // leaves the settings untouched.
     private readonly string[] _surroundLeftSlots = new string[Se.SurroundWithSlotCount];
     private readonly string[] _surroundRightSlots = new string[Se.SurroundWithSlotCount];
+    private readonly SurroundWithBehavior[] _surroundBehaviorSlots = new SurroundWithBehavior[Se.SurroundWithSlotCount];
+    private readonly SurroundWithScope[] _surroundScopeSlots = new SurroundWithScope[Se.SurroundWithSlotCount];
     // Same for the "search via" slots (name + URL).
     private readonly string[] _customSearchNameSlots = new string[Se.CustomSearchSlotCount];
     private readonly string[] _customSearchUrlSlots = new string[Se.CustomSearchSlotCount];
@@ -107,6 +109,8 @@ public partial class ShortcutsViewModel : ObservableObject
         {
             _surroundLeftSlots[i] = Se.Settings.GetSurroundLeft(i + 1);
             _surroundRightSlots[i] = Se.Settings.GetSurroundRight(i + 1);
+            _surroundBehaviorSlots[i] = Se.Settings.GetSurroundBehavior(i + 1);
+            _surroundScopeSlots[i] = Se.Settings.GetSurroundScope(i + 1);
         }
         for (var i = 0; i < Se.CustomSearchSlotCount; i++)
         {
@@ -593,6 +597,8 @@ public partial class ShortcutsViewModel : ObservableObject
         for (var i = 0; i < Se.SurroundWithSlotCount; i++)
         {
             Se.Settings.SetSurround(i + 1, _surroundLeftSlots[i], _surroundRightSlots[i]);
+            Se.Settings.SetSurroundBehavior(i + 1, _surroundBehaviorSlots[i]);
+            Se.Settings.SetSurroundScope(i + 1, _surroundScopeSlots[i]);
         }
         for (var i = 0; i < Se.CustomSearchSlotCount; i++)
         {
@@ -996,7 +1002,7 @@ public partial class ShortcutsViewModel : ObservableObject
 
         var result = await _windowService.ShowDialogAsync<SurroundWithWindow, SurroundWithViewModel>(Window, vm =>
         {
-            vm.Initialize(_surroundLeftSlots[slotIndex], _surroundRightSlots[slotIndex]);
+            vm.Initialize(_surroundLeftSlots[slotIndex], _surroundRightSlots[slotIndex], _surroundBehaviorSlots[slotIndex], _surroundScopeSlots[slotIndex]);
         });
         if (!result.OkPressed)
         {
@@ -1005,6 +1011,8 @@ public partial class ShortcutsViewModel : ObservableObject
 
         _surroundLeftSlots[slotIndex] = result.Before;
         _surroundRightSlots[slotIndex] = result.After;
+        _surroundBehaviorSlots[slotIndex] = result.Behavior;
+        _surroundScopeSlots[slotIndex] = result.Scope;
 
         var flatNodeBack = FlatNodes.FirstOrDefault(n => n?.ShortCut != null && GetSurroundSlotIndex(n.ShortCut.Action) == slotIndex);
         if (flatNodeBack != null)
