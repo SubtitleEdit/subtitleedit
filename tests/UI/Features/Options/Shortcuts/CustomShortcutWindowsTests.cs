@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Features.Options.Shortcuts;
 using Avalonia.Headless.XUnit;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts.CustomShortcuts;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -34,5 +35,21 @@ public class CustomShortcutWindowsTests
 
         vm.CommandSearchText = "next";
         Assert.Equal("GoToNextLineCommand", Assert.Single(vm.FilteredCommands).ActionName);
+    }
+
+    [AvaloniaFact]
+    public void EditViewModel_KeepsActiveInAndShowsTextBoxHint()
+    {
+        var vm = new CustomShortcutEditViewModel(null!);
+        vm.Initialize(new SeCustomShortcut { ActiveIn = nameof(ShortcutCategory.TextBox) }, new List<CustomShortcutCommandItem>(), "Custom shortcut #1");
+
+        Assert.Equal(ShortcutCategory.TextBox, vm.SelectedActiveIn.Value);
+        Assert.True(vm.IsTextBoxKeyHintVisible);
+
+        vm.SelectedActiveIn = vm.ActiveInChoices.First(p => p.Value == ShortcutCategory.SubtitleGrid);
+        Assert.False(vm.IsTextBoxKeyHintVisible);
+        vm.OkCommand.Execute(null);
+
+        Assert.Equal(ShortcutCategory.SubtitleGrid, vm.CustomShortcut.GetActiveIn());
     }
 }

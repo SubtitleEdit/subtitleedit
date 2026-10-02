@@ -16,6 +16,7 @@ public class LanguageSettingsShortcuts
     public string CategoryAi { get; set; }
     public string CategoryCustom { get; set; }
     public string EditCustomShortcut { get; set; }
+    public string CustomShortcutTextBoxKeyHint { get; set; }
     public string CustomShortcutNumberX { get; set; }
     public string CustomShortcutNumberXY { get; set; }
     public string CustomShortcutStep { get; set; }
@@ -340,6 +341,7 @@ public class LanguageSettingsShortcuts
         CategoryAi = "AI";
         CategoryCustom = "Custom";
         EditCustomShortcut = "Edit custom shortcut";
+        CustomShortcutTextBoxKeyHint = "Use a key with Ctrl/Alt here - a plain key would no longer type in the text box.";
         CustomShortcutNumberX = "Custom shortcut #{0}";
         CustomShortcutNumberXY = "Custom shortcut #{0}: {1}";
         CustomShortcutStep = "Step";

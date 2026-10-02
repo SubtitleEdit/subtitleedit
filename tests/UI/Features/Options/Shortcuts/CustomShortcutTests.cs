@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Features.Options.Shortcuts;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts.CustomShortcuts;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Text.Json;
@@ -126,5 +127,32 @@ public class CustomShortcutTests
         Assert.True(result.Steps[0].UseRegex);
         Assert.Equal(CustomShortcutStepType.Replace, result.Steps[0].GetStepType());
         Assert.Equal("GoToNextLineCommand", result.Steps[1].ActionName);
+    }
+
+    [Fact]
+    public void ActiveIn_DefaultsToEverywhereAndSurvivesCloneAndUnknownValues()
+    {
+        var custom = new SeCustomShortcut();
+        Assert.Equal(ShortcutCategory.General, custom.GetActiveIn());
+
+        custom.ActiveIn = nameof(ShortcutCategory.TextBox);
+        Assert.Equal(ShortcutCategory.TextBox, custom.Clone().GetActiveIn());
+
+        custom.ActiveIn = "nonsense";
+        Assert.Equal(ShortcutCategory.General, custom.GetActiveIn());
+        custom.ActiveIn = null!;
+        Assert.Equal(ShortcutCategory.General, custom.GetActiveIn());
+    }
+
+    [Fact]
+    public void ActiveIn_RoundTripsThroughSettings()
+    {
+        var se = new Se();
+        se.SetCustomShortcut(5, new SeCustomShortcut { ActiveIn = nameof(ShortcutCategory.Waveform) });
+
+        var json = JsonSerializer.Serialize(se, SeJsonContext.Default.Se);
+        var loaded = JsonSerializer.Deserialize(json, SeJsonContext.Default.Se)!;
+
+        Assert.Equal(ShortcutCategory.Waveform, loaded.GetCustomShortcut(5).GetActiveIn());
     }
 }

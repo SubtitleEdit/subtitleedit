@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Features.Options.Shortcuts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,23 @@ public class SeCustomShortcut
     public string Name { get; set; }
     public List<SeCustomShortcutStep> Steps { get; set; }
 
+    /// <summary>
+    /// Where the key works (a <see cref="ShortcutCategory"/> name) - "General" is everywhere.
+    /// </summary>
+    public string ActiveIn { get; set; }
+
     public SeCustomShortcut()
     {
         Name = string.Empty;
         Steps = new List<SeCustomShortcutStep>();
+        ActiveIn = nameof(ShortcutCategory.General);
+    }
+
+    public ShortcutCategory GetActiveIn()
+    {
+        return Enum.TryParse<ShortcutCategory>(ActiveIn, true, out var category) && Enum.IsDefined(category)
+            ? category
+            : ShortcutCategory.General;
     }
 
     public SeCustomShortcut Clone()
@@ -25,6 +39,7 @@ public class SeCustomShortcut
         {
             Name = Name,
             Steps = Steps.Select(p => p.Clone()).ToList(),
+            ActiveIn = ActiveIn,
         };
     }
 }

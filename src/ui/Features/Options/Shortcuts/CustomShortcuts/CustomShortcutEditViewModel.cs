@@ -31,6 +31,9 @@ public partial class CustomShortcutEditViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<CustomShortcutStepItem> _steps;
     [ObservableProperty] private CustomShortcutStepItem? _selectedStep;
     [ObservableProperty] private bool _isStepSelected;
+    [ObservableProperty] private ObservableCollection<CustomShortcutChoice<ShortcutCategory>> _activeInChoices;
+    [ObservableProperty] private CustomShortcutChoice<ShortcutCategory> _selectedActiveIn;
+    [ObservableProperty] private bool _isTextBoxKeyHintVisible;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -45,6 +48,8 @@ public partial class CustomShortcutEditViewModel : ObservableObject
         _windowService = windowService;
         Name = string.Empty;
         Steps = new ObservableCollection<CustomShortcutStepItem>();
+        ActiveInChoices = new ObservableCollection<CustomShortcutChoice<ShortcutCategory>>(CustomShortcutDisplay.GetActiveInChoices());
+        SelectedActiveIn = ActiveInChoices[0];
         CustomShortcut = new SeCustomShortcut();
         _commands = new List<CustomShortcutCommandItem>();
         _commandLookup = new Dictionary<string, CustomShortcutCommandItem>();
@@ -59,6 +64,7 @@ public partial class CustomShortcutEditViewModel : ObservableObject
         _commands = commands;
         _commandLookup = commands.GroupBy(p => p.ActionName).ToDictionary(g => g.Key, g => g.First());
         Name = CustomShortcut.Name;
+        SelectedActiveIn = ActiveInChoices.FirstOrDefault(p => p.Value == CustomShortcut.GetActiveIn()) ?? ActiveInChoices[0];
         Steps.Clear();
         foreach (var step in CustomShortcut.Steps)
         {
@@ -66,6 +72,11 @@ public partial class CustomShortcutEditViewModel : ObservableObject
         }
 
         SelectedStep = Steps.FirstOrDefault();
+    }
+
+    partial void OnSelectedActiveInChanged(CustomShortcutChoice<ShortcutCategory> value)
+    {
+        IsTextBoxKeyHintVisible = value?.Value is ShortcutCategory.TextBox or ShortcutCategory.SubtitleGridAndTextBox;
     }
 
     partial void OnSelectedStepChanged(CustomShortcutStepItem? value)
@@ -176,6 +187,7 @@ public partial class CustomShortcutEditViewModel : ObservableObject
     private void Ok()
     {
         CustomShortcut.Name = Name?.Trim() ?? string.Empty;
+        CustomShortcut.ActiveIn = (SelectedActiveIn?.Value ?? ShortcutCategory.General).ToString();
         CustomShortcut.Steps = Steps.Select(p => p.Step).ToList();
         OkPressed = true;
         Window?.Close();
