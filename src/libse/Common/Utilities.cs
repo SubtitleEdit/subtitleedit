@@ -965,7 +965,15 @@ namespace Nikse.SubtitleEdit.Core.Common
             return singleLine;
         }
 
-        public static string RemoveSsaTags(string input, bool removeDrawingTags = false)
+        /// <summary>
+        /// Removes ASSA override blocks ({\...}), the {Kara Effector...} block and \N, \n, \h.
+        /// </summary>
+        /// <param name="removeCommentBlocks">
+        /// Also remove any other closed {...} block. ASSA renderers never draw a brace block, so
+        /// fansubbers use {...} for comments (#15584); an unclosed '{' is drawn as text. Off by
+        /// default, as a brace in other formats is real text.
+        /// </param>
+        public static string RemoveSsaTags(string input, bool removeDrawingTags = false, bool removeCommentBlocks = false)
         {
             if (string.IsNullOrEmpty(input))
             {
@@ -1002,8 +1010,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                         var closingBrace = input.IndexOf('}', i + 1);
                         if (closingBrace != -1)
                         {
-                            // {\...} (the common case) or {Kara Effector...}
-                            if (input[i + 1] == '\\' ||
+                            // {\...} (the common case), {Kara Effector...} or an ASSA comment
+                            if (removeCommentBlocks ||
+                                input[i + 1] == '\\' ||
                                 input.AsSpan(i, closingBrace - i + 1).StartsWith("{Kara Effector".AsSpan()))
                             {
                                 i = closingBrace + 1;

@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -210,7 +211,7 @@ internal static class SubtitleTextInfoHelper
     }
 
     internal static string StripHtml(string text)
-        => HtmlUtil.RemoveHtmlTags(text, true);
+        => CalcFactory.RemoveTags(text);
 
     /// <summary>
     /// Number of lines for the "too many lines" rule. Like <paramref name="strippedLineCount"/>

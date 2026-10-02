@@ -1,6 +1,7 @@
 ﻿using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Shared.ErrorList;
 using Nikse.SubtitleEdit.Logic;
@@ -1174,6 +1175,21 @@ public partial class SubtitleLineViewModel : ObservableObject
     /// on the row itself changes. Call this once per row after
     /// <see cref="Se.Settings"/> is updated.
     /// </summary>
+    /// <summary>
+    /// Drops the memos keyed on the text instance whose value also depends on how the text is
+    /// stripped before counting (<see cref="CalcFactory.IgnoreAssaCommentBlocks"/>), so the next
+    /// read measures the unchanged text again.
+    /// </summary>
+    internal void ClearStrippedTextCaches()
+    {
+        _strippedLinesCacheText = null;
+        _strippedLinesCacheValue = null;
+        _pixelWidthCacheText = null;
+        _cpsCacheText = null;
+        _cpsOriginalCacheText = null;
+        _textErrorCacheText = null;
+    }
+
     public void RefreshAfterSettingsChanged()
     {
         OnPropertyChanged(nameof(CharactersPerSecond));

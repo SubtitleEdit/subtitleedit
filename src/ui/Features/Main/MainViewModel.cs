@@ -21,6 +21,7 @@ using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.ContainerFormats;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Chapters;
@@ -35567,6 +35568,27 @@ public partial class MainViewModel :
         }
     }
 
+    /// <summary>
+    /// ASSA/SSA renderers never draw a {...} block, so fansubbers use {comment} for notes - the
+    /// character counters (CPS, line length) skip those blocks for these formats only, as a brace
+    /// is real text in the others (#15584).
+    /// </summary>
+    private void UpdateIgnoreAssaCommentBlocks()
+    {
+        var ignore = SelectedSubtitleFormat is AdvancedSubStationAlpha or SubStationAlpha;
+        if (CalcFactory.IgnoreAssaCommentBlocks == ignore)
+        {
+            return;
+        }
+
+        CalcFactory.IgnoreAssaCommentBlocks = ignore;
+        foreach (var row in Subtitles)
+        {
+            row.ClearStrippedTextCaches();
+            row.RefreshAfterSettingsChanged();
+        }
+    }
+
     internal void ComboBoxSubtitleFormatChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (!_changingFormatProgrammatically)
@@ -35582,6 +35604,7 @@ public partial class MainViewModel :
         IsFormatEbu = SelectedSubtitleFormat is Ebu;
         IsFormatTeletext = SelectedSubtitleFormat is Ebu or DvbTeletext;
         UpdateTeletextLineLength();
+        UpdateIgnoreAssaCommentBlocks();
 
         UpdateTemporaryFrameMode();
 

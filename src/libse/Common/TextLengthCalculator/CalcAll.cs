@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
         /// </summary>
         public decimal CountCharacters(string text, bool forCps)
         {
-            var s = HtmlUtil.RemoveHtmlTags(text, true);
+            var s = CalcFactory.RemoveTags(text);
 
             // Fast path: runs per grid-row repaint, per keystroke and per waveform frame, so
             // avoid StringInfo.GetTextElementEnumerator's heap allocation and culture-aware

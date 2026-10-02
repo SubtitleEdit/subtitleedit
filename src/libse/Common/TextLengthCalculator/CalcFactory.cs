@@ -37,6 +37,22 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
 
         private static volatile ResolvedCalculator _lastResolved;
 
+        /// <summary>
+        /// Do not count the text of ASSA comment blocks like {comment} - set while the subtitle
+        /// is ASSA/SSA, where renderers never draw a brace block (#15584). In other formats a
+        /// brace is real text, so this is off by default.
+        /// </summary>
+        public static bool IgnoreAssaCommentBlocks { get; set; }
+
+        /// <summary>
+        /// The text the character counters measure: HTML and ASSA tags removed, and ASSA comment
+        /// blocks too when <see cref="IgnoreAssaCommentBlocks"/> is set.
+        /// </summary>
+        public static string RemoveTags(string text)
+        {
+            return HtmlUtil.RemoveHtmlTags(text, true, IgnoreAssaCommentBlocks);
+        }
+
         public static ICalcLength MakeCalculator(string strategy)
         {
             // Called for every CountCharacters (grid CPS/length columns on repaint, waveform
