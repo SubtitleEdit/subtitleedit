@@ -12,6 +12,7 @@ Configure application preferences, rules and profiles, appearance, video player,
 
 1. Open **Options → Settings...**
 2. Pick a section from the icons on the left, or type in the **Search for settings...** box at the top to jump to a setting by name
+   - **Alt+Left** / **Alt+Right** (**Cmd+[** / **Cmd+]** on macOS) go back and forward through the sections you have visited, like in a web browser. The history is forgotten when Settings closes
 3. Adjust settings as needed
 4. Click **OK** to save
 
