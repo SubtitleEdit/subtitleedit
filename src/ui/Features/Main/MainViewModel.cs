@@ -27273,7 +27273,7 @@ public partial class MainViewModel :
         // converting it to SubRip suggested "movie.srt" instead of "movie.da.srt" (#15530).
         if (string.IsNullOrEmpty(_saveAsFileNameSuggestion) && !string.IsNullOrEmpty(_subtitleFileName))
         {
-            newFileName = KeepSubtitleLanguageSuffix(newFileName, GetFileNameWithoutExtension(_subtitleFileName));
+            newFileName = KeepSubtitleLanguageSuffix(newFileName, GetFileNameWithoutExtension(_subtitleFileName), Se.Settings.General.SaveAsAppendLanguageCode);
         }
 
         newFileName = AppendLanguageCodeToFileName(newFileName, GetUpdateSubtitle());
@@ -27406,10 +27406,14 @@ public partial class MainViewModel :
     /// language tag ("movie" vs "movie.da" or "movie.da.forced"), appends that tag so the
     /// tag survives a format change. The suggestion's folder is kept. Otherwise returns the
     /// suggestion unchanged. Both names are without extension.
+    /// When "Save as" appends a language code anyway (<paramref name="saveAsAppendLanguageCode"/> is
+    /// not None), the old tag is not kept: the appended code would follow it ("movie.da.forced.da",
+    /// or "movie.en.da" for a translation).
     /// </summary>
-    internal static string KeepSubtitleLanguageSuffix(string suggestion, string subtitleFileNameWithoutExtension)
+    internal static string KeepSubtitleLanguageSuffix(string suggestion, string subtitleFileNameWithoutExtension, string? saveAsAppendLanguageCode = nameof(SaveAsLanguageAppendType.None))
     {
-        if (string.IsNullOrEmpty(suggestion) || string.IsNullOrEmpty(subtitleFileNameWithoutExtension))
+        if (string.IsNullOrEmpty(suggestion) || string.IsNullOrEmpty(subtitleFileNameWithoutExtension) ||
+            (!string.IsNullOrEmpty(saveAsAppendLanguageCode) && saveAsAppendLanguageCode != nameof(SaveAsLanguageAppendType.None)))
         {
             return suggestion;
         }
