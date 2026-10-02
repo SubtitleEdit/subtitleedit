@@ -28,6 +28,12 @@ public class FixMisreadQuotesTest
     [InlineData("<i>\"Hello'</i>", "<i>\"Hello\"</i>")]
     [InlineData("<i>'Hello'</i>", "<i>\"Hello\"</i>")]
     [InlineData("{\\an8}'Hello'", "{\\an8}\"Hello\"")]
+    [InlineData("''Hello''", "\"Hello\"")]
+    [InlineData("''Hello'", "\"Hello\"")]
+    [InlineData("'Hello''", "\"Hello\"")]
+    [InlineData("\"Hello''", "\"Hello\"")]
+    [InlineData("''Hello\"", "\"Hello\"")]
+    [InlineData("''I don't know.''", "\"I don't know.\"")]
     public void Fixes(string input, string expected)
     {
         Assert.Equal(expected, Fix(input));

@@ -11,6 +11,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
     ///   "Hello' -> "Hello"
     ///   'Hello" -> "Hello"
     ///   'Hello' -> "Hello" (whole line wrapped in apostrophes, no double quotes in the text)
+    ///   ''Hello' -> "Hello" (two apostrophes are always treated as a double quote)
     /// Contractions (don't), elisions ('cause, goin') and possessives (the boys' toys) are left alone.
     /// </summary>
     public class FixMisreadQuotes : IFixCommonError
@@ -52,6 +53,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             {
                 return text;
             }
+
+            // Two apostrophes are a misread double quote
+            text = text.Replace("''", "\"");
 
             // Visible characters (tags removed) mapped back to their index in the original text
             var visible = new StringBuilder(text.Length);
