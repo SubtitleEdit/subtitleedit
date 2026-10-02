@@ -152,6 +152,7 @@ public static class UiTheme
         }
 
         ApplyMenuScaleStyle(Se.Settings.Appearance.LayoutScale);
+        ApplyTextSelectionStyle();
         ApplyLayoutScaleToAllWindows();
         ApplyScaleToExistingMenus(Se.Settings.Appearance.LayoutScale);
     }
@@ -177,6 +178,7 @@ public static class UiTheme
             ApplyLighterDark();
         }
 
+        ApplyTextSelectionStyle();
         SystemThemeChangedCallback?.Invoke();
     }
 
@@ -411,6 +413,54 @@ public static class UiTheme
     }
 
     private static Styles? _scrollBarStyle;
+    private static Styles? _textSelectionStyle;
+
+    public const int MinTextSelectionOpacity = 10;
+
+    /// <summary>
+    /// Text box selection highlight opacity (#14744). Fluent paints the selection as a solid
+    /// accent block with white text, which some find tiring to read. Below 100% the accent is
+    /// made translucent and the selected text keeps its normal (or syntax) color instead of
+    /// turning white, which would vanish on a light highlight. At 100% nothing is overridden.
+    /// </summary>
+    public static void ApplyTextSelectionStyle()
+    {
+        if (Application.Current == null)
+        {
+            return;
+        }
+
+        if (_textSelectionStyle != null)
+        {
+            Application.Current.Styles.Remove(_textSelectionStyle);
+            _textSelectionStyle = null;
+        }
+
+        var opacity = Math.Clamp(Se.Settings.Appearance.TextSelectionOpacity, MinTextSelectionOpacity, 100);
+        if (opacity >= 100)
+        {
+            return;
+        }
+
+        var accent = Application.Current.TryGetResource("SystemAccentColor", Application.Current.ActualThemeVariant, out var value) && value is Color c
+            ? c
+            : Colors.SteelBlue;
+        var brush = new SolidColorBrush(accent, opacity / 100.0);
+
+        _textSelectionStyle = new Styles
+        {
+            new Style(x => x.Is<TextBox>())
+            {
+                Setters =
+                {
+                    new Setter(TextBox.SelectionBrushProperty, brush),
+                    new Setter(TextBox.SelectionForegroundBrushProperty, null),
+                }
+            },
+        };
+
+        Application.Current.Styles.Add(_textSelectionStyle);
+    }
     private static bool _scrollBarAllowAutoHide;
     /// <summary>
     /// Applies scrollbar visibility styles based on the OS preference.
