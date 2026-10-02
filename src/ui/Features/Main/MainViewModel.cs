@@ -27098,6 +27098,13 @@ public partial class MainViewModel :
             }
         }
 
+        // A name taken from the video drops the language tag of the loaded "movie.da.ass", so
+        // converting it to SubRip suggested "movie.srt" instead of "movie.da.srt" (#15530).
+        if (string.IsNullOrEmpty(_saveAsFileNameSuggestion) && !string.IsNullOrEmpty(_subtitleFileName))
+        {
+            newFileName = KeepSubtitleLanguageSuffix(newFileName, GetFileNameWithoutExtension(_subtitleFileName));
+        }
+
         newFileName = AppendLanguageCodeToFileName(newFileName, GetUpdateSubtitle());
 
         newFileName = ApplyDefaultSaveLocation(newFileName);
@@ -27221,6 +27228,46 @@ public partial class MainViewModel :
         }
 
         return string.IsNullOrEmpty(folder) ? fileName : Path.Combine(folder, Path.GetFileName(fileName));
+    }
+
+    /// <summary>
+    /// When the "Save as" suggestion is the video name and the loaded subtitle is that name plus a
+    /// language tag ("movie" vs "movie.da" or "movie.da.forced"), appends that tag so the
+    /// tag survives a format change. The suggestion's folder is kept. Otherwise returns the
+    /// suggestion unchanged. Both names are without extension.
+    /// </summary>
+    internal static string KeepSubtitleLanguageSuffix(string suggestion, string subtitleFileNameWithoutExtension)
+    {
+        if (string.IsNullOrEmpty(suggestion) || string.IsNullOrEmpty(subtitleFileNameWithoutExtension))
+        {
+            return suggestion;
+        }
+
+        // Compared by file name: the subtitle may sit in another folder than the video.
+        var prefix = Path.GetFileName(suggestion) + ".";
+        var subtitleName = Path.GetFileName(subtitleFileNameWithoutExtension);
+        if (prefix.Length == 1 ||
+            !subtitleName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) ||
+            subtitleName.Length == prefix.Length)
+        {
+            return suggestion;
+        }
+
+        var suffix = subtitleName.Substring(prefix.Length);
+        var token = suffix.Split('.')[0];
+        var dash = token.IndexOfAny(new[] { '-', '_' });
+        if (dash > 0)
+        {
+            token = token.Substring(0, dash); // "pt-BR", "zh_Hans"
+        }
+
+        var isLanguage = Iso639Dash2LanguageCode.List.Any(l =>
+            string.Equals(l.TwoLetterCode, token, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(l.ThreeLetterCode, token, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(l.BibliographicCode, token, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(l.EnglishName, token, StringComparison.OrdinalIgnoreCase));
+
+        return isLanguage ? suggestion + "." + suffix : suggestion;
     }
 
     private string GetFileNameWithoutExtension(string fileName)
