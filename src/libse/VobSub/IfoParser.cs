@@ -298,10 +298,11 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             }
 
             var prefix = name.Substring(0, name.Length - 1);
+            string[] folderFiles = null;
             for (var i = 1; i < 30; i++)
             {
-                var vobFileName = Path.Combine(folder, prefix + i.ToString(CultureInfo.InvariantCulture) + ".VOB");
-                if (!File.Exists(vobFileName))
+                var vobFileName = FindFile(folder, prefix + i.ToString(CultureInfo.InvariantCulture) + ".VOB", ref folderFiles);
+                if (vobFileName == null)
                 {
                     break;
                 }
@@ -325,15 +326,46 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 return null;
             }
 
-            var ifoFileName = Path.Combine(folder, name.Substring(0, lastUnderscore + 1) + "0.IFO");
-            if (File.Exists(ifoFileName))
+            // a backup copy works just as well
+            string[] folderFiles = null;
+            var baseName = name.Substring(0, lastUnderscore + 1) + "0";
+            return FindFile(folder, baseName + ".IFO", ref folderFiles) ?? FindFile(folder, baseName + ".BUP", ref folderFiles);
+        }
+
+        /// <summary>
+        /// A file in <paramref name="folder"/> named <paramref name="fileName"/> ignoring case (a DVD
+        /// copied to a case sensitive file system may be all lowercase: video_ts/vts_01_1.vob), or null.
+        /// </summary>
+        /// <param name="folderFiles">The folder's files, listed on the first miss and reused.</param>
+        internal static string FindFile(string folder, string fileName, ref string[] folderFiles)
+        {
+            var path = Path.Combine(folder, fileName);
+            if (File.Exists(path))
             {
-                return ifoFileName;
+                return path;
             }
 
-            // a backup copy works just as well
-            var bupFileName = Path.ChangeExtension(ifoFileName, ".BUP");
-            return File.Exists(bupFileName) ? bupFileName : null;
+            if (folderFiles == null)
+            {
+                try
+                {
+                    folderFiles = Directory.GetFiles(string.IsNullOrEmpty(folder) ? "." : folder);
+                }
+                catch (Exception exception) when (exception is IOException || exception is UnauthorizedAccessException)
+                {
+                    folderFiles = Array.Empty<string>();
+                }
+            }
+
+            foreach (var file in folderFiles)
+            {
+                if (string.Equals(Path.GetFileName(file), fileName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return file;
+                }
+            }
+
+            return null;
         }
 
         private void Parse(byte[] buffer)
@@ -525,7 +557,12 @@ namespace Nikse.SubtitleEdit.Core.VobSub
 
             // cell playback info (24 bytes each): category (4), playback time (4), first VOBU start sector (4), ...,
             // last VOBU end sector (4) - cell position info (4 bytes each): VOB id (2), reserved (1), cell id (1)
+            // The first category byte holds the block mode (bits 7-6: 01 first cell of a block, 10 in a block,
+            // 11 last cell) and block type (bits 5-4: 01 angle block). An angle block lists one cell per angle,
+            // all covering the same time, so only the first angle's cell is kept and the time advances once.
             var elapsed = TimeSpan.Zero;
+            var cellStarts = new List<TimeSpan>();
+            var inAngleBlock = false;
             for (var i = 0; i < cellCount; i++)
             {
                 var play = playbackInfo + i * 24;
@@ -535,6 +572,21 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                     break;
                 }
 
+                var blockMode = (buffer[play] >> 6) & 0b11;
+                var isAngleCell = ((buffer[play] >> 4) & 0b11) == 1 && blockMode != 0;
+                if (isAngleCell && blockMode != 1 && inAngleBlock)
+                {
+                    // another angle of the current block
+                    cellStarts.Add(programChain.Cells[programChain.Cells.Count - 1].Start);
+                    if (blockMode == 3)
+                    {
+                        inAngleBlock = false;
+                    }
+
+                    continue;
+                }
+
+                inAngleBlock = isAngleCell && blockMode != 3;
                 var cell = new Cell
                 {
                     VobId = GetWord(buffer, position),
@@ -551,6 +603,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 }
 
                 programChain.Cells.Add(cell);
+                cellStarts.Add(cell.Start);
                 elapsed += cell.Duration;
             }
 
@@ -558,9 +611,9 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             for (var i = 0; i < programChain.ProgramCount && programMap != pgc && programMap + i < buffer.Length; i++)
             {
                 var cellIndex = buffer[programMap + i] - 1;
-                if (cellIndex >= 0 && cellIndex < programChain.Cells.Count)
+                if (cellIndex >= 0 && cellIndex < cellStarts.Count)
                 {
-                    programChain.ProgramStarts.Add(programChain.Cells[cellIndex].Start);
+                    programChain.ProgramStarts.Add(cellStarts[cellIndex]);
                 }
             }
 
