@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 
 namespace UITests.Features.Video.SpeechToText.Engines;
@@ -36,5 +37,18 @@ public class CrispAsrParakeetModelTests
         var names = new CrispAsrParakeet().Models.Select(m => m.Name).ToList();
 
         Assert.Equal(names.Count, names.Distinct().Count());
+    }
+
+    [Theory]
+    [InlineData("phonon2-q4_k.gguf", true)]
+    [InlineData("phonon2-q8_0.gguf", true)]
+    [InlineData("phonon2-f16.gguf", true)]
+    [InlineData("parakeet-ultra-q8_0.gguf", false)]
+    [InlineData("parakeet-tdt-0.6b-v3-q4_k.gguf", false)]
+    public void IsModelEnglishOnly_WarnsForPhonon2(string name, bool expected)
+    {
+        var model = Assert.Single(new CrispAsrParakeet().Models, m => m.Name == name);
+
+        Assert.Equal(expected, SpeechToTextViewModel.IsModelEnglishOnly(model));
     }
 }
