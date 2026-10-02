@@ -96,4 +96,26 @@ public class RegexUtilsTest
 
         Assert.Contains("First line...\\NSecond line", assa);
     }
+
+    // White space at an edge of a whole-word search is its own separator: "Zeyn " must match in
+    // "Zeyn is here" (the space is followed by a word character) and " Zeyn" in "Hi Zeyn".
+    [Theory]
+    [InlineData("Zeyn", "Zeyn is here", true)]
+    [InlineData("Zeyn", "Zeynep is here", false)]
+    [InlineData("Zeyn ", "Zeyn is here", true)]
+    [InlineData("Zeyn ", "Zeynep is here", false)]
+    [InlineData(" Zeyn", "Hi Zeyn", true)]
+    [InlineData(" Zeyn", "Hi Zeynep", false)]
+    [InlineData(" Zeyn", "Hi AZeyn", false)]
+    [InlineData(" Zeyn ", "Hi Zeyn there", true)]
+    [InlineData("|t", "|t is", true)]
+    [InlineData("|t", "a|t is", false)]
+    [InlineData("'Tis", "'Tis true", true)]
+    [InlineData("'Tis", "'Tisk", false)]
+    [InlineData("Mr.", "Mr. Smith", true)]
+    [InlineData("Mr.", "Mr.Smith", false)]
+    public void BuildWholeWordPattern_Matches(string searchText, string text, bool expected)
+    {
+        Assert.Equal(expected, Regex.IsMatch(text, RegexUtils.BuildWholeWordPattern(searchText)));
+    }
 }
