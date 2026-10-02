@@ -28007,16 +28007,27 @@ public partial class MainViewModel :
                     // windows so a dialog (or any window the user focused on purpose) keeps the
                     // foreground, and skipped while a modal dialog is open (#13405) or the main
                     // window is minimized, where Activate() would misfire.
+                    //
+                    // Never pull focus away from where the user already put it during that second:
+                    // typing in the text box, or navigating the menu bar, must not be yanked over
+                    // to the grid mid-keystroke.
+                    var userHoldsFocus = IsTextInputFocused() || IsMainMenuFocused() || Menu is { IsOpen: true };
                     if (Window.IsActive)
                     {
-                        TableViewExtras.FocusRow(SubtitleGrid);
+                        if (!userHoldsFocus)
+                        {
+                            TableViewExtras.FocusRow(SubtitleGrid);
+                        }
                     }
                     else if (IsUndockedWindowActive() &&
                              !WindowService.IsModalDialogOpen &&
                              Window.WindowState != WindowState.Minimized)
                     {
                         Window.Activate();
-                        TableViewExtras.FocusRow(SubtitleGrid);
+                        if (!userHoldsFocus)
+                        {
+                            TableViewExtras.FocusRow(SubtitleGrid);
+                        }
                     }
 
                     UpdateSurroundWithMenuItems();
