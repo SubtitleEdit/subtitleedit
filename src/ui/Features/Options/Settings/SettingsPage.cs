@@ -609,6 +609,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoOpenVideoFile, nameof(_vm.AutoOpenVideoFile)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowSecondarySubtitleDialog, nameof(_vm.ShowSecondarySubtitleDialog)),
             MakeCheckboxSetting(Se.Language.Options.Settings.RememberSecondarySubtitleFile, nameof(_vm.RememberSecondarySubtitleFile)),
+            new SettingsItem(Se.Language.Options.Settings.SubtitlePreviewProperties, () => MakeMpvPreviewSettings(_vm)),
             new SettingsItem(!_vm.IsLibMpvDownloadVisible, Se.Language.Options.Settings.DownloadMpv, () => new StackPanel
             {
                 Children =
@@ -641,7 +642,6 @@ public class SettingsPage : UserControl
                     }
                 },
             }),
-            new SettingsItem(Se.Language.Options.Settings.SubtitlePreviewProperties, () => MakeMpvPreviewSettings(_vm)),
             new SettingsItem(!_vm.IsLibVlcDownloadVisible, Se.Language.Options.Settings.DownloadVlc, () => new StackPanel
             {
                 Children =
