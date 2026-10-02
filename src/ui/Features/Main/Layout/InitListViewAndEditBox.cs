@@ -1495,6 +1495,12 @@ public static partial class InitListViewAndEditBox
                 },
                 new MenuItem
                 {
+                    Header = Se.Language.Main.Menu.GenerateBurnIn,
+                    Command = vm.ShowVideoBurnInSelectedLinesCommand,
+                    DataContext = vm,
+                },
+                new MenuItem
+                {
                     Header = Se.Language.Main.Menu.Statistics,
                     Command = vm.StatisticsSelectedLinesCommand,
                     DataContext = vm,

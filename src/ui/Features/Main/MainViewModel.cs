@@ -10526,6 +10526,51 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private async Task ShowVideoBurnInSelectedLines()
+    {
+        var selectedItems = new HashSet<SubtitleLineViewModel>(SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>());
+        if (Window == null || selectedItems.Count == 0)
+        {
+            return;
+        }
+
+        var ffmpegOk = await RequireFfmpegOk();
+        if (!ffmpegOk)
+        {
+            return;
+        }
+
+        if (string.IsNullOrEmpty(_videoFileName))
+        {
+            await CommandVideoOpen();
+        }
+
+        if (string.IsNullOrEmpty(_videoFileName))
+        {
+            return;
+        }
+
+        // A copy of the working subtitle keeps the header (ASSA styles) - only the selected lines go in.
+        var subtitle = new Subtitle(GetUpdateSubtitle(), false);
+        subtitle.Paragraphs.Clear();
+        foreach (var line in Subtitles)
+        {
+            if (!line.IsReferenceOnly && selectedItems.Contains(line))
+            {
+                subtitle.Paragraphs.Add(line.ToParagraph(SelectedSubtitleFormat));
+            }
+        }
+
+        if (subtitle.Paragraphs.Count == 0)
+        {
+            return;
+        }
+
+        subtitle.Renumber();
+        await ShowDialogAsync<BurnInWindow, BurnInViewModel>(vm => { vm.InitializeSelectedLines(_videoFileName, subtitle, SelectedSubtitleFormat); });
+    }
+
+    [RelayCommand]
     private async Task ShowVideoOpenFromUrl()
     {
         if (Window == null)
