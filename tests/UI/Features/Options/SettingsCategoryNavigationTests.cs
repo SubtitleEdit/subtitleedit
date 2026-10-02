@@ -152,6 +152,51 @@ public class SettingsCategoryNavigationTests : IDisposable
     }
 
     /// <summary>
+    /// Browser-style back/forward through the categories visited in this session (#14999):
+    /// Alt+Left/Right, or Cmd+[ / Cmd+] on macOS where Option+Left/Right move by word.
+    /// </summary>
+    [AvaloniaFact]
+    public void BackAndForward_StepThroughVisitedCategories()
+    {
+        var (window, vm) = OpenSettings();
+        try
+        {
+            var a = vm.Sections[0];
+            var b = vm.Sections[3];
+            var c = vm.Sections[5];
+            vm.ScrollToSectionCommand.Execute(b.Title);
+            vm.ScrollToSectionCommand.Execute(c.Title);
+
+            var backKey = OperatingSystem.IsMacOS() ? Key.OemOpenBrackets : Key.Left;
+            var forwardKey = OperatingSystem.IsMacOS() ? Key.OemCloseBrackets : Key.Right;
+            var modifiers = OperatingSystem.IsMacOS() ? KeyModifiers.Meta : KeyModifiers.Alt;
+            void Press(Key key) => vm.OnPreviewKeyDown(new KeyEventArgs { Key = key, KeyModifiers = modifiers, RoutedEvent = InputElement.KeyDownEvent });
+
+            Press(backKey);
+            Assert.Same(b, vm.SelectedSection);
+            Press(backKey);
+            Assert.Same(a, vm.SelectedSection);
+            Press(backKey); // nothing further back
+            Assert.Same(a, vm.SelectedSection);
+
+            Press(forwardKey);
+            Assert.Same(b, vm.SelectedSection);
+
+            // A new pick drops the forward history, like a browser.
+            vm.ScrollToSectionCommand.Execute(a.Title);
+            Press(forwardKey);
+            Assert.Same(a, vm.SelectedSection);
+            Press(backKey);
+            Assert.Same(b, vm.SelectedSection);
+        }
+        finally
+        {
+            window.Close();
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    /// <summary>
     /// The shortcut must work with focus on a setting inside the section, not only on the category
     /// buttons (#12087): the content's ScrollViewer, text boxes and combo boxes handle PageUp/PageDown
     /// themselves, so a bubbling window handler never saw the key.

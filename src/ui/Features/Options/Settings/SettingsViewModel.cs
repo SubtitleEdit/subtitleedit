@@ -2744,6 +2744,59 @@ public partial class SettingsViewModel : ObservableObject
         ShowSection(candidates[index], NavigationMethod.Tab);
     }
 
+    // Categories visited in this Settings session, browser style (#14999). Forgotten on close.
+    private readonly List<SettingsSection> _sectionBackHistory = new();
+    private readonly List<SettingsSection> _sectionForwardHistory = new();
+    private bool _isNavigatingSectionHistory;
+
+    partial void OnSelectedSectionChanged(SettingsSection? oldValue, SettingsSection? newValue)
+    {
+        if (_isNavigatingSectionHistory || oldValue == null || newValue == null || oldValue == newValue)
+        {
+            return;
+        }
+
+        _sectionBackHistory.Add(oldValue);
+        _sectionForwardHistory.Clear();
+    }
+
+    /// <summary>
+    /// Alt+Left / Alt+Right (Cmd+[ / Cmd+] on macOS) step back and forward through the
+    /// categories visited in this Settings session, like a web browser (#14999). Categories
+    /// hidden by the search filter are skipped.
+    /// </summary>
+    internal void NavigateSectionHistory(bool back)
+    {
+        var from = back ? _sectionBackHistory : _sectionForwardHistory;
+        var to = back ? _sectionForwardHistory : _sectionBackHistory;
+        while (from.Count > 0)
+        {
+            var section = from[^1];
+            from.RemoveAt(from.Count - 1);
+            if (!section.IsVisible || section == SelectedSection)
+            {
+                continue;
+            }
+
+            if (SelectedSection != null)
+            {
+                to.Add(SelectedSection);
+            }
+
+            _isNavigatingSectionHistory = true;
+            try
+            {
+                ShowSection(section, NavigationMethod.Tab);
+            }
+            finally
+            {
+                _isNavigatingSectionHistory = false;
+            }
+
+            return;
+        }
+    }
+
     private void ShowSection(SettingsSection section, NavigationMethod navigationMethod)
     {
         SelectedSection = section; // the page rebuilds the content to this section
@@ -3165,6 +3218,23 @@ public partial class SettingsViewModel : ObservableObject
             e.Handled = true;
             SelectAdjacentSection(e.Key == Key.PageDown ? 1 : -1);
         }
+        else if (IsSectionHistoryKey(e, out var back))
+        {
+            e.Handled = true;
+            NavigateSectionHistory(back);
+        }
+    }
+
+    // Option+Left/Right moves by word in macOS text fields, so use the Safari/Firefox Cmd+[ / Cmd+] there.
+    private static bool IsSectionHistoryKey(KeyEventArgs e, out bool back)
+    {
+        back = e.Key is Key.Left or Key.OemOpenBrackets;
+        if (OperatingSystem.IsMacOS())
+        {
+            return e.KeyModifiers == KeyModifiers.Meta && e.Key is Key.OemOpenBrackets or Key.OemCloseBrackets;
+        }
+
+        return e.KeyModifiers == KeyModifiers.Alt && e.Key is Key.Left or Key.Right;
     }
 
     internal void Initialize(MainViewModel mainViewModel)
