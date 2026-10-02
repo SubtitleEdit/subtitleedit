@@ -1261,15 +1261,16 @@ public static class ShortcutsMain
             AddShortcut(shortcuts, entry.Command, entry.ActionName, ShortcutCategory.General, ShortcutGroup.Plugins);
         }
 
-        // User-built shortcut slots: steps run by MainViewModel.RunCustomShortcut.
-        AddShortcut(shortcuts, vm.CustomShortcut1Command, nameof(vm.CustomShortcut1Command), ShortcutCategory.General, ShortcutGroup.Custom);
-        AddShortcut(shortcuts, vm.CustomShortcut2Command, nameof(vm.CustomShortcut2Command), ShortcutCategory.General, ShortcutGroup.Custom);
-        AddShortcut(shortcuts, vm.CustomShortcut3Command, nameof(vm.CustomShortcut3Command), ShortcutCategory.General, ShortcutGroup.Custom);
-        AddShortcut(shortcuts, vm.CustomShortcut4Command, nameof(vm.CustomShortcut4Command), ShortcutCategory.General, ShortcutGroup.Custom);
-        AddShortcut(shortcuts, vm.CustomShortcut5Command, nameof(vm.CustomShortcut5Command), ShortcutCategory.General, ShortcutGroup.Custom);
-        AddShortcut(shortcuts, vm.CustomShortcut6Command, nameof(vm.CustomShortcut6Command), ShortcutCategory.General, ShortcutGroup.Custom);
-        AddShortcut(shortcuts, vm.CustomShortcut7Command, nameof(vm.CustomShortcut7Command), ShortcutCategory.General, ShortcutGroup.Custom);
-        AddShortcut(shortcuts, vm.CustomShortcut8Command, nameof(vm.CustomShortcut8Command), ShortcutCategory.General, ShortcutGroup.Custom);
+        // User-built shortcut slots: steps run by MainViewModel.RunCustomShortcut. The user picks
+        // where each one is active, unlike the built-in commands whose area is fixed.
+        AddShortcut(shortcuts, vm.CustomShortcut1Command, nameof(vm.CustomShortcut1Command), Se.Settings.GetCustomShortcut(1).GetActiveIn(), ShortcutGroup.Custom);
+        AddShortcut(shortcuts, vm.CustomShortcut2Command, nameof(vm.CustomShortcut2Command), Se.Settings.GetCustomShortcut(2).GetActiveIn(), ShortcutGroup.Custom);
+        AddShortcut(shortcuts, vm.CustomShortcut3Command, nameof(vm.CustomShortcut3Command), Se.Settings.GetCustomShortcut(3).GetActiveIn(), ShortcutGroup.Custom);
+        AddShortcut(shortcuts, vm.CustomShortcut4Command, nameof(vm.CustomShortcut4Command), Se.Settings.GetCustomShortcut(4).GetActiveIn(), ShortcutGroup.Custom);
+        AddShortcut(shortcuts, vm.CustomShortcut5Command, nameof(vm.CustomShortcut5Command), Se.Settings.GetCustomShortcut(5).GetActiveIn(), ShortcutGroup.Custom);
+        AddShortcut(shortcuts, vm.CustomShortcut6Command, nameof(vm.CustomShortcut6Command), Se.Settings.GetCustomShortcut(6).GetActiveIn(), ShortcutGroup.Custom);
+        AddShortcut(shortcuts, vm.CustomShortcut7Command, nameof(vm.CustomShortcut7Command), Se.Settings.GetCustomShortcut(7).GetActiveIn(), ShortcutGroup.Custom);
+        AddShortcut(shortcuts, vm.CustomShortcut8Command, nameof(vm.CustomShortcut8Command), Se.Settings.GetCustomShortcut(8).GetActiveIn(), ShortcutGroup.Custom);
 
         return shortcuts;
     }

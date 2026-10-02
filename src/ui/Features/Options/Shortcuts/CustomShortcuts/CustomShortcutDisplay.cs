@@ -56,6 +56,22 @@ public static class CustomShortcutDisplay
         ];
     }
 
+    /// <summary>
+    /// The areas a custom shortcut can be active in - same names as the "Active in" column.
+    /// </summary>
+    public static List<CustomShortcutChoice<ShortcutCategory>> GetActiveInChoices()
+    {
+        var language = Se.Language.Options.Shortcuts;
+        return
+        [
+            new(ShortcutCategory.General, language.ActiveInEverywhere),
+            new(ShortcutCategory.SubtitleGrid, language.CategorySubtitleGrid),
+            new(ShortcutCategory.TextBox, language.CategoryTextBox),
+            new(ShortcutCategory.SubtitleGridAndTextBox, language.CategorySubtitleGridAndTextBox),
+            new(ShortcutCategory.Waveform, Se.Language.General.Waveform),
+        ];
+    }
+
     public static List<CustomShortcutChoice<CustomShortcutInsertPosition>> GetInsertPositions()
     {
         var language = Se.Language.Options.Shortcuts;

@@ -1071,9 +1071,16 @@ public partial class ShortcutsViewModel : ObservableObject
         _customShortcutSlots[slotIndex] = result.CustomShortcut;
 
         var node = FlatNodes.FirstOrDefault(n => n?.ShortCut != null && GetCustomShortcutSlotIndex(n.ShortCut.Action) == slotIndex);
-        if (node != null)
+        if (node?.ShortCut != null)
         {
             node.Title = ShortcutsMain.GetCustomShortcutTitle(slotNumber, result.CustomShortcut.Name);
+
+            // The area is part of the binding: saving on OK stores it from the category.
+            var category = result.CustomShortcut.GetActiveIn();
+            node.ShortCut.Category = category;
+            node.ShortCut.Control = category.ToString();
+            node.ActiveIn = GetActiveInName(category);
+            node.ActiveInOpacity = category == ShortcutCategory.General ? 0.55 : 1.0;
         }
     }
 

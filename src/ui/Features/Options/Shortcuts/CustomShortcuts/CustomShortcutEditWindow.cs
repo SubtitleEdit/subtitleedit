@@ -25,7 +25,37 @@ public class CustomShortcutEditWindow : Window
 
         var labelName = UiUtil.MakeLabel(Se.Language.General.Name);
         var textBoxName = UiUtil.MakeTextBox(300, vm, nameof(vm.Name));
-        var panelName = UiUtil.MakeHorizontalPanel(labelName, textBoxName);
+        var labelActiveIn = UiUtil.MakeLabel(language.ActiveIn);
+        var comboBoxActiveIn = UiUtil.MakeComboBox(vm.ActiveInChoices, vm, nameof(vm.SelectedActiveIn));
+        comboBoxActiveIn.MinWidth = 200;
+        var labelTextBoxKeyHint = new TextBlock
+        {
+            Text = language.CustomShortcutTextBoxKeyHint,
+            TextWrapping = TextWrapping.Wrap,
+            Opacity = 0.7,
+            [!IsVisibleProperty] = new Binding(nameof(vm.IsTextBoxKeyHintVisible)),
+        };
+        var panelName = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = GridLength.Auto },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+            },
+            RowDefinitions =
+            {
+                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = GridLength.Auto },
+            },
+            ColumnSpacing = 10,
+            RowSpacing = 6,
+        };
+        panelName.Add(labelName, 0, 0);
+        panelName.Add(textBoxName, 0, 1);
+        panelName.Add(labelActiveIn, 1, 0);
+        panelName.Add(comboBoxActiveIn, 1, 1);
+        panelName.Add(labelTextBoxKeyHint, 2, 1);
 
         var labelSteps = UiUtil.MakeLabel(language.CustomShortcutSteps);
         var listBoxSteps = new ListBox
