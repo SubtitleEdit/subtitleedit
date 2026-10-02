@@ -750,4 +750,39 @@ public class UndoRedoManagerTests
         Assert.Equal(original.Hash, clone.Hash);
         Assert.Equal(original.Description, clone.Description);
     }
+
+    // A custom shortcut suspends detection for its whole run; a command run as a step that stops
+    // and restarts detection itself (RunWithoutChangeDetection) must not record an entry mid-run.
+    [Fact]
+    public void CheckForChanges_DoesNothingWhileSuspended_EvenAfterStartChangeDetection()
+    {
+        var lines1 = new[] { MakeLine("hello") };
+        var client = new FakeClient { Hash = 1, Subtitles = lines1 };
+        var manager = new UndoRedoManager();
+        manager.SetupChangeDetection(client, TimeSpan.FromHours(1));
+        manager.StartChangeDetection();
+        manager.Do(MakeItem("initial", 1, lines1));
+
+        manager.StopChangeDetection();
+        manager.SuspendChangeDetection();
+
+        // a step restarts detection, changes text, the timer ticks
+        manager.StopChangeDetection();
+        client.Hash = 2;
+        client.Subtitles = [MakeLine("hello there")];
+        manager.StartChangeDetection();
+        manager.CheckForChanges(null);
+        Assert.Equal(1, manager.UndoCount);
+
+        // second step
+        client.Hash = 3;
+        client.Subtitles = [MakeLine("hello there again")];
+        manager.CheckForChanges(null);
+        Assert.Equal(1, manager.UndoCount);
+
+        manager.ResumeChangeDetection();
+        manager.StartChangeDetection();
+        manager.CheckForChanges(null);
+        Assert.Equal(2, manager.UndoCount);
+    }
 }

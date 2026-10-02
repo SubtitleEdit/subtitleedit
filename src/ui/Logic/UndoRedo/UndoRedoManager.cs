@@ -20,6 +20,9 @@ public sealed class UndoRedoManager : IUndoRedoManager
     // under _lock for ordering vs other field mutations.
     private volatile IUndoRedoClient? _undoRedoClient;
     private volatile bool _isChangeDetectionActive;
+    // Set by SuspendChangeDetection: ticks do nothing while it is set, whatever
+    // Start/StopChangeDetection calls happen in between.
+    private volatile bool _isChangeDetectionSuspended;
     // Int (instead of `volatile bool`) so Dispose() can use Interlocked.Exchange
     // to atomically check-and-set — concurrent Dispose() calls can't both pass
     // the gate and double-dispose the timer. Reads outside the lock use
@@ -149,6 +152,16 @@ public sealed class UndoRedoManager : IUndoRedoManager
         }
     }
 
+    public void SuspendChangeDetection()
+    {
+        _isChangeDetectionSuspended = true;
+    }
+
+    public void ResumeChangeDetection()
+    {
+        _isChangeDetectionSuspended = false;
+    }
+
     // -------------------------------------------------------------------------
     // Core Do / Undo / Redo
     // -------------------------------------------------------------------------
@@ -257,7 +270,7 @@ public sealed class UndoRedoManager : IUndoRedoManager
         // even if SetupChangeDetection races with us. `_undoRedoClient` is
         // volatile so this read isn't torn.
         var client = _undoRedoClient;
-        if (client is null || !_isChangeDetectionActive || Volatile.Read(ref _disposed) != 0)
+        if (client is null || !_isChangeDetectionActive || _isChangeDetectionSuspended || Volatile.Read(ref _disposed) != 0)
         {
             return;
         }

@@ -16735,6 +16735,10 @@ public partial class MainViewModel :
         _isRunningCustomShortcut = true;
         _undoRedoManager.CheckForChanges(null);
         _undoRedoManager.StopChangeDetection();
+
+        // Suspend as well as stop: commands run as steps (e.g. via RunWithoutChangeDetection)
+        // restart detection in their own finally, which would split the run into several undo steps.
+        _undoRedoManager.SuspendChangeDetection();
         try
         {
             Dictionary<string, IRelayCommand>? commands = null;
@@ -16767,6 +16771,7 @@ public partial class MainViewModel :
         }
         finally
         {
+            _undoRedoManager.ResumeChangeDetection();
             _undoRedoManager.StartChangeDetection();
             _isRunningCustomShortcut = false;
         }
@@ -16835,8 +16840,10 @@ public partial class MainViewModel :
         }
 
         // Only surround the selected text when editing a single line with part of the text
-        // selected - like SE 4 does (#12873).
-        if (selectedItems.Count == 1 && SurroundTextBoxSelection(surroundLeft, surroundRight, behavior))
+        // selected - like SE 4 does (#12873). "Each line" always works on the whole text, line by line.
+        if (scope == SurroundWithScope.SelectionOrText &&
+            selectedItems.Count == 1 &&
+            SurroundTextBoxSelection(surroundLeft, surroundRight, behavior))
         {
             _updateAudioVisualizer = true;
             return;
