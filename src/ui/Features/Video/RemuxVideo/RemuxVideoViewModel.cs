@@ -418,6 +418,8 @@ public partial class RemuxVideoViewModel : ObservableObject
                 UpdateVideoInfo(mediaInfo.Duration.TimeSpan);
             }
 
+            UseOutputFormatForVideoCodec(mediaInfo.Tracks.FirstOrDefault(t => t.TrackType == FfmpegTrackType.Video)?.TrackInfo);
+
             if (!onlyVideoAudio)
             {
                 return;
@@ -519,6 +521,46 @@ public partial class RemuxVideoViewModel : ObservableObject
         }
 
         return OutputFormats.Contains(ext) ? ext : ".mp4";
+    }
+
+    /// <summary>
+    /// Switches the output to .mkv when the selected .mp4/.mov cannot hold the video as it is -
+    /// a .webm's VP8 defaulted to .mp4 and "-c:v copy" failed with "Could not find tag for codec
+    /// vp8". Not when the subtitles need a particular container.
+    /// </summary>
+    internal void UseOutputFormatForVideoCodec(string? videoTrackDetails)
+    {
+        if (!CanCopyVideoTo(videoTrackDetails, SelectedOutputFormat) && RequiredOutputFormat(out _) == null)
+        {
+            SelectedOutputFormat = ".mkv";
+        }
+    }
+
+    /// <summary>
+    /// False when ffmpeg cannot stream-copy the video in <paramref name="trackDetails"/> into
+    /// <paramref name="outputExtension"/>: .mp4 only takes the MPEG-4 registered codecs, and
+    /// .mov takes most anything but VP8. Unknown details (media info not read) count as copyable.
+    /// </summary>
+    internal static bool CanCopyVideoTo(string? trackDetails, string outputExtension)
+    {
+        var codec = GetCodecName(trackDetails);
+        if (codec.Length == 0)
+        {
+            return true;
+        }
+
+        if (string.Equals(outputExtension, ".mp4", StringComparison.OrdinalIgnoreCase))
+        {
+            return codec is "h264" or "hevc" or "vvc" or "av1" or "vp9" or "mpeg4" or "mpeg2video" or "mpeg1video"
+                or "mjpeg" or "vc1" or "png" or "jpeg2000" or "dirac";
+        }
+
+        if (string.Equals(outputExtension, ".mov", StringComparison.OrdinalIgnoreCase))
+        {
+            return codec != "vp8";
+        }
+
+        return true;
     }
 
     private static bool IsMpg(string extension) =>

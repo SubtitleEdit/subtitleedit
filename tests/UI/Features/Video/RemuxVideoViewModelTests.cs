@@ -277,6 +277,36 @@ public class RemuxVideoViewModelTests
         Assert.Equal(expected, RemuxVideoViewModel.CanCopyAudioToMovFamily(details, outputExtension));
     }
 
+    [Theory]
+    [InlineData("vp8, yuv420p(progressive), 640x360, 30 fps", ".mp4", false)]
+    [InlineData("vp8, yuv420p(progressive), 640x360, 30 fps", ".mov", false)]
+    [InlineData("vp8, yuv420p(progressive), 640x360, 30 fps", ".mkv", true)]
+    [InlineData("theora, yuv420p, 352x288, 25 fps", ".mp4", false)]
+    [InlineData("theora, yuv420p, 352x288, 25 fps", ".mov", true)]
+    [InlineData("vp9 (Profile 0), yuv420p(tv), 640x360, 30 fps", ".mp4", true)]
+    [InlineData("h264 (High), yuv420p(progressive), 1920x1080, 23.98 fps", ".mp4", true)]
+    [InlineData(null, ".mp4", true)]
+    public void CanCopyVideoTo_FollowsTheContainer(string? details, string outputExtension, bool expected)
+    {
+        Assert.Equal(expected, RemuxVideoViewModel.CanCopyVideoTo(details, outputExtension));
+    }
+
+    // A .webm input defaulted to .mp4 output, and "-c:v copy" of its VP8 failed with
+    // "Could not find tag for codec vp8" - the output switches to .mkv.
+    [AvaloniaTheory]
+    [InlineData("vp8, yuv420p(progressive), 640x360, 30 fps", ".mkv")]
+    [InlineData("vp9 (Profile 0), yuv420p(tv), 640x360, 30 fps", ".mp4")]
+    [InlineData(null, ".mp4")]
+    public void UseOutputFormatForVideoCodec_SwitchesToMkvForVideoMp4CannotHold(string? details, string expected)
+    {
+        var vm = BuildViewModel();
+        vm.SelectedOutputFormat = ".mp4";
+
+        vm.UseOutputFormatForVideoCodec(details);
+
+        Assert.Equal(expected, vm.SelectedOutputFormat);
+    }
+
     [AvaloniaTheory]
     [InlineData(true)]
     [InlineData(false)]
