@@ -17,6 +17,7 @@ public class NetflixQualityControllerTests
     [InlineData("th", 35)]
     [InlineData("ko", 16)]
     [InlineData("zh", 16)]
+    [InlineData("ja", 13)]
     public void SingleLineMaxLengthMatchesStyleGuide(string language, int expected)
     {
         Assert.Equal(expected, new NetflixQualityController { Language = language }.SingleLineMaxLength);

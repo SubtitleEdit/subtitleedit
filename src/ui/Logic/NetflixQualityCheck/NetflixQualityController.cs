@@ -111,7 +111,7 @@ public class NetflixQualityController
             switch (Language)
             {
                 case "ja": // Japanese
-                    return 23;
+                    return 13;
                 case "th": // Thai
                     return 35;
                 case "ko": // Korean
