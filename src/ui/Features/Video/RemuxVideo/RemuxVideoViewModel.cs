@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -612,6 +612,19 @@ public partial class RemuxVideoViewModel : ObservableObject
                 item.SetDuration(mediaInfo.Duration.TimeSpan);
             }
             var audioTracks = ReadAudioTracks(mediaInfo);
+
+            // A video without sound would fail in ffmpeg on "-map N:a:0". No tracks at all means
+            // ffmpeg could not read the file (or is missing) - leave that to the remux itself.
+            if (audioTracks.Count == 0 && mediaInfo.Tracks.Count > 0)
+            {
+                if (Window != null)
+                {
+                    await MessageBox.Show(Window, Se.Language.General.Warning, string.Format(Se.Language.Video.RemuxVideoFileHasNoAudioX, Path.GetFileName(fileName)), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
+                return;
+            }
+
             AudioTrackOption? selected = null;
             if (audioTracks.Count > 1)
             {
@@ -1442,8 +1455,11 @@ public partial class RemuxVideoViewModel : ObservableObject
         }
         else
         {
+            // .mp4/.mov: audio the container cannot hold (PCM or TrueHD in .mp4, Opus/FLAC in .mov,
+            // ...) would make ffmpeg fail on "-c:a copy", so it is re-encoded to AAC.
             var hasWav = audioFiles.Any(f => string.Equals(Path.GetExtension(f.FileName), ".wav", StringComparison.OrdinalIgnoreCase));
-            audioCodec = hasWav ? "-c:a aac -b:a 192k" : "-c:a copy";
+            var needsReencode = hasWav || audioFiles.Any(f => !CanCopyAudioToMovFamily(f.SelectedTrack?.Details, SelectedOutputFormat));
+            audioCodec = needsReencode ? "-c:a aac -b:a 192k" : "-c:a copy";
         }
 
         var subCodec = string.Empty;
@@ -1499,6 +1515,29 @@ public partial class RemuxVideoViewModel : ObservableObject
     {
         var codec = GetCodecName(trackDetails);
         return codec is "mp2" or "mp3" or "ac3";
+    }
+
+    /// <summary>
+    /// False when ffmpeg cannot stream-copy the audio in <paramref name="trackDetails"/> into an
+    /// .mp4 or .mov (<paramref name="outputExtension"/>). Unknown details (media info not read)
+    /// count as copyable, as before.
+    /// </summary>
+    internal static bool CanCopyAudioToMovFamily(string? trackDetails, string outputExtension)
+    {
+        var codec = GetCodecName(trackDetails);
+        if (codec.Length == 0)
+        {
+            return true;
+        }
+
+        if (codec is "aac" or "mp3" or "mp2" or "ac3" or "eac3" or "alac" or "dts")
+        {
+            return true;
+        }
+
+        return string.Equals(outputExtension, ".mov", StringComparison.OrdinalIgnoreCase)
+            ? codec.StartsWith("pcm_", StringComparison.Ordinal)
+            : codec is "opus" or "flac";
     }
 
     /// <summary>

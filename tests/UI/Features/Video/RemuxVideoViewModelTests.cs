@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using Avalonia.Headless.XUnit;
 using Nikse.SubtitleEdit.Features.Video.RemuxVideo;
@@ -239,6 +239,42 @@ public class RemuxVideoViewModelTests
         Assert.DoesNotContain("-filter_complex", args);
         Assert.Contains("-map 0:v:0 -map 0:a:0 -map 1:a:0 ", args);
         Assert.Contains("-c:a copy", args);
+    }
+
+    // An .avi/.ts/.webm input defaults to .mp4 output, and "-c:a copy" failed for audio .mp4 cannot
+    // hold (PCM, Vorbis, ...) - such audio is re-encoded to AAC.
+    [AvaloniaTheory]
+    [InlineData(".mp4", "pcm_s16le, 48000 Hz, stereo, s16, 1536 kb/s", true)]
+    [InlineData(".mp4", "vorbis, 44100 Hz, stereo, fltp", true)]
+    [InlineData(".mp4", "opus, 48000 Hz, stereo, fltp", false)]
+    [InlineData(".mp4", "aac (LC), 48000 Hz, stereo, fltp", false)]
+    [InlineData(".mov", "pcm_s16le, 48000 Hz, stereo, s16, 1536 kb/s", false)]
+    [InlineData(".mov", "opus, 48000 Hz, stereo, fltp", true)]
+    public void BuildFfmpegArguments_AudioTheContainerCannotHold_IsReencodedToAac(string outputFormat, string details, bool reencode)
+    {
+        var (vm, videoAudio, narration) = BuildMixViewModel(false);
+        vm.SelectedOutputFormat = outputFormat;
+        videoAudio.SetTracks([new AudioTrackOption { Index = 0, Details = details }], null);
+        narration.SetTracks([new AudioTrackOption { Index = 0, Details = "mp3 (mp3float), 44100 Hz, stereo, fltp, 128 kb/s" }], null);
+
+        var args = vm.BuildFfmpegArguments([.. vm.AudioFiles], []);
+
+        Assert.Equal(reencode, args.Contains("-c:a aac -b:a 192k"));
+        Assert.Equal(!reencode, args.Contains("-c:a copy"));
+    }
+
+    [Theory]
+    [InlineData("ac3, 48000 Hz, 5.1(side), fltp, 448 kb/s", ".mp4", true)]
+    [InlineData("eac3, 48000 Hz, 5.1(side), fltp, 640 kb/s", ".mov", true)]
+    [InlineData("flac, 48000 Hz, stereo, s16", ".mp4", true)]
+    [InlineData("flac, 48000 Hz, stereo, s16", ".mov", false)]
+    [InlineData("pcm_s24le, 48000 Hz, stereo, s32", ".mp4", false)]
+    [InlineData("dts (DTS), 48000 Hz, 5.1(side), fltp, 1536 kb/s", ".mp4", true)]
+    [InlineData("truehd, 48000 Hz, 7.1, s32 (24 bit)", ".mp4", false)]
+    [InlineData(null, ".mp4", true)]
+    public void CanCopyAudioToMovFamily_FollowsTheContainer(string? details, string outputExtension, bool expected)
+    {
+        Assert.Equal(expected, RemuxVideoViewModel.CanCopyAudioToMovFamily(details, outputExtension));
     }
 
     [AvaloniaTheory]
