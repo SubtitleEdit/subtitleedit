@@ -111,6 +111,7 @@ The subtitle rules that drive error checking, the grid's warning colors, and too
 ## Appearance
 
 - **Theme**, **icon theme**, **match icon color to dark theme foreground color**, **UI scale (%)**
+- **Text selection opacity (%)** — How strong the selection highlight in text boxes is. 100 (default) is the theme's solid highlight with white text; lower values make it see-through and keep the text in its own color
 - **Dark theme foreground / background color**, **focused button background color**
 - **UI font**, and a separate font for the subtitle text box and grid
 - **Grid** — Show subtitle text as single line (with the separator to use), text fit, [show formatted text](subtitle-grid.md#formatting-display), live spell check, **Center text in subtitle grid** (centers the text column, as Subtitle Edit 4 could), compact mode, alternating row colors (light and dark), grid lines, bookmark color

@@ -953,6 +953,13 @@ public class SettingsPage : UserControl
                 120,
                 _vm,
                 nameof(_vm.FontScale))),
+            new SettingsItem(Se.Language.Options.Settings.TextSelectionOpacity, () => UiUtil.MakeNumericUpDownInt(
+                UiTheme.MinTextSelectionOpacity,
+                100,
+                100,
+                120,
+                _vm,
+                nameof(_vm.TextSelectionOpacity))),
             new SettingsItem(Se.Language.Options.Settings.DarkThemeForegroundColor, () => new StackPanel
             {
                 Orientation = Orientation.Horizontal,

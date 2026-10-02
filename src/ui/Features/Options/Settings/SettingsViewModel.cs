@@ -381,6 +381,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _matchIconColorToDarkTheme;
     [ObservableProperty] private int _layoutScale;
     [ObservableProperty] private int _fontScale;
+    [ObservableProperty] private int _textSelectionOpacity;
     [ObservableProperty] private ObservableCollection<string> _fontNames;
     [ObservableProperty] private string _selectedFontName;
     [ObservableProperty] private double _subtitleGridFontSize;
@@ -904,6 +905,7 @@ public partial class SettingsViewModel : ObservableObject
         MatchIconColorToDarkTheme = appearance.MatchIconColorToDarkTheme;
         LayoutScale = (int)Math.Round(appearance.LayoutScale * 100.0, MidpointRounding.AwayFromZero);
         FontScale = (int)Math.Round(appearance.FontScale * 100.0, MidpointRounding.AwayFromZero);
+        TextSelectionOpacity = appearance.TextSelectionOpacity;
         if (OperatingSystem.IsMacOS())
         {
             SelectedFontName = MapMacOsFontNameForDisplay(appearance.FontName, FontNames);
@@ -1776,6 +1778,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.MatchIconColorToDarkTheme = MatchIconColorToDarkTheme;
         appearance.LayoutScale = LayoutScale / 100.0;
         appearance.FontScale = FontScale / 100.0;
+        appearance.TextSelectionOpacity = Math.Clamp(TextSelectionOpacity, UiTheme.MinTextSelectionOpacity, 100);
         if (OperatingSystem.IsMacOS())
         {
             appearance.FontName = SelectedFontName == "System Font"

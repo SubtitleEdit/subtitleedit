@@ -330,6 +330,7 @@ public class LanguageSettings
     public string AllSettings { get; set; }
     public string UiScale { get; set; }
     public string FontScale { get; set; }
+    public string TextSelectionOpacity { get; set; }
     public string WaveformToolbarItems { get; set; }
     public string MatchIconColorToDarkTheme { get; set; }
     public string SubtitlePreviewProperties { get; set; }
@@ -680,6 +681,7 @@ public class LanguageSettings
         AllSettings = "All settings";
         UiScale = "UI scale (%)";
         FontScale = "Font scale (%)";
+        TextSelectionOpacity = "Text selection opacity (%)";
         WaveformToolbarItems = "Waveform toolbar items";
         MatchIconColorToDarkTheme = "Match icon color to dark theme foreground color";
         SubtitlePreviewProperties = "Subtitle preview properties";

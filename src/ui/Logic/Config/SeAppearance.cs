@@ -16,6 +16,12 @@ public class SeAppearance
     public bool MatchIconColorToDarkTheme { get; set; }
     public double LayoutScale { get; set; }
     public double FontScale { get; set; }
+
+    /// <summary>
+    /// Opacity (%) of the text box selection highlight (#14744). 100 keeps the theme's solid
+    /// accent highlight; lower values let the text keep its own color through the highlight.
+    /// </summary>
+    public int TextSelectionOpacity { get; set; }
     public string FontName { get; set; }
     public double SubtitleGridFontSize { get; set; }
     public bool SubtitleGridTextSingleLine { get; set; }
@@ -115,6 +121,7 @@ public class SeAppearance
         MatchIconColorToDarkTheme = false;
         LayoutScale = 1.0;
         FontScale = 1.0;
+        TextSelectionOpacity = 100;
         // On macOS default to Helvetica Neue rather than the hidden system font (.AppleSystemUIFont /
         // San Francisco): SetFontName applies this family explicitly to every control, and Helvetica
         // Neue avoids Avalonia's caret-misplacement with San Francisco's overhanging glyphs (#12009).
