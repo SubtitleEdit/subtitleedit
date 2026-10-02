@@ -264,6 +264,11 @@ public class LanguageSettingsShortcuts
     public string CopySubtitlePathToClipboard { get; set; }
     public string CopySubtitleOriginalPathToClipboard { get; set; }
     public string FocusTextBox { get; set; }
+    public string FocusSubtitleListView { get; set; }
+    public string FocusWaveform { get; set; }
+    public string FocusOriginalTextBox { get; set; }
+    public string TextBoxGoToStart { get; set; }
+    public string TextBoxGoToEnd { get; set; }
     public string SortByNumber { get; set; }
     public string SortByStartTime { get; set; }
     public string SortByEndTime { get; set; }
@@ -594,6 +599,11 @@ public class LanguageSettingsShortcuts
         CopySubtitlePathToClipboard = "Copy subtitle path to clipboard";
         CopySubtitleOriginalPathToClipboard = "Copy subtitle path of original to clipboard";
         FocusTextBox = "Focus text box";
+        FocusSubtitleListView = "Focus subtitle list view";
+        FocusWaveform = "Focus waveform";
+        FocusOriginalTextBox = "Focus original text box";
+        TextBoxGoToStart = "Text box, go to start";
+        TextBoxGoToEnd = "Text box, go to end";
         SortByNumber = "Sort by number";
         SortByStartTime = "Sort by \"Show\" time";
         SortByEndTime = "Sort by \"Hide\" time";
