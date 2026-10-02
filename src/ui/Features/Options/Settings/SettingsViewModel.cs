@@ -503,7 +503,11 @@ public partial class SettingsViewModel : ObservableObject
         Themes = [Se.Language.General.System, Se.Language.General.Light, Se.Language.General.Dark, Se.Language.General.Classic, "Pastel"];
         SelectedTheme = Themes[0];
 
-        var iconFolders = Directory.GetDirectories(Se.ThemesFolder).Select(p => Path.GetFileName(p)).ToList();
+        // Themes.zip is unpacked into the data folder at start-up; if that failed (or has not run)
+        // the folder is missing, which must not take the whole Settings window down with it.
+        var iconFolders = Directory.Exists(Se.ThemesFolder)
+            ? Directory.GetDirectories(Se.ThemesFolder).Select(p => Path.GetFileName(p)).ToList()
+            : new List<string>();
         iconFolders.Insert(0, Se.Language.General.Auto);
         IconThemes = new ObservableCollection<string>(iconFolders);
         SelectedIconTheme = IconThemes[0];
