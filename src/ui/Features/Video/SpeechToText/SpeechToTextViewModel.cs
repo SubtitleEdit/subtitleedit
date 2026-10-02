@@ -3276,6 +3276,16 @@ public partial class SpeechToTextViewModel : ObservableObject
     };
 
     /// <summary>
+    /// Whether to ask before running an English-only model with <paramref name="languageCode"/>.
+    /// Auto detect is left alone: the engines simply transcribe English then (crispasr skips
+    /// language detection for an English-only model), so nothing is lost.
+    /// </summary>
+    internal static bool ShouldWarnEnglishOnlyModel(WhisperModel model, string languageCode)
+    {
+        return languageCode != "en" && languageCode != "auto" && IsModelEnglishOnly(model);
+    }
+
+    /// <summary>
     /// Models that only transcribe English.
     /// </summary>
     internal static bool IsModelEnglishOnly(WhisperModel model)
@@ -4107,7 +4117,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 return;
             }
 
-            if (language.Code != "en" && IsModelEnglishOnly(model.Model))
+            if (ShouldWarnEnglishOnlyModel(model.Model, language.Code))
             {
                 var answer = await MessageBox.Show(
                     Window!,
