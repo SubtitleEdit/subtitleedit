@@ -29,6 +29,7 @@ public class CrispAsrEngine : CrispAsrEngineBase
             new CrispAsrGigaAm(),
             new CrispAsrGlm(),
             new CrispAsrGranite(),
+            new CrispAsrIndexEcho(),
             new CrispAsrQwen3(),
             new CrispAsrMega(),
             new CrispAsrMossDiarize(),

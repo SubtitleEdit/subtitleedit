@@ -1005,7 +1005,9 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// the transcription log says it succeeded but no segments are emitted. Cohere gets the same
     /// treatment because crispasr auto-enables VAD for that backend on long audio anyway; passing
     /// the bundled Silero model keeps it from downloading its own copy into ~/.cache/crispasr
-    /// mid-transcription.
+    /// mid-transcription. Index-Echo windows its audio on Silero speech boundaries when it has the
+    /// model and falls back to fixed 60 s windows otherwise, which cut sentences in half and repeated
+    /// a cue at the seam.
     ///
     /// --chunk-seconds/-ck in the user's parameters means "no VAD, use fixed chunks" - that is
     /// crispasr's own documented way to switch its auto-VAD back off, and it is the only way to
@@ -1017,7 +1019,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// </param>
     internal static bool ShouldForceCrispAsrVad(ISpeechToTextEngine engine, string? crispArgs, bool vadSuppressed)
     {
-        if (engine is not (CrispAsrCohere or CrispAsrMega) || vadSuppressed)
+        if (engine is not (CrispAsrCohere or CrispAsrMega or CrispAsrIndexEcho) || vadSuppressed)
         {
             return false;
         }
@@ -2631,7 +2633,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             Start = (decimal)p.StartTime.TotalSeconds,
             End = (decimal)p.EndTime.TotalSeconds,
-            Text = p.Text
+            Text = engine is CrispAsrIndexEcho ? CrispAsrIndexEcho.GetTranslation(p.Text) : p.Text
         }).ToList();
 
         if (!string.IsNullOrEmpty(srtFileName))
@@ -4726,6 +4728,12 @@ public partial class SpeechToTextViewModel : ObservableObject
             var langPart = crispAsrEngine.IncludeLanguage || langCode == "auto"
                 ? $"-l {langCode} "
                 : string.Empty;
+            if (crispAsrEngine is CrispAsrIndexEcho)
+            {
+                // A speech translation model: the language list is the target, the source is Chinese.
+                langPart = $"--target-lang {langCode} ";
+            }
+
             var alignerPart = string.Empty;
             var selectedAligner = SelectedForcedAligner ?? ForcedAlignerOption.BuiltIn();
             if (!selectedAligner.IsBuiltIn)

@@ -46,6 +46,10 @@ public class SeAudioToText
     public string CommandLineParameterCrispAsrGigaAm { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrGlm { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrGranite { get; set; } = "--max-len 50 --split-on-punct";
+    // No --max-len/--split-on-punct: Index-Echo cues are bilingual (Chinese line + translation)
+    // at its own sentence boundaries, and re-splitting them by length turns the two lines into
+    // separate cues with interpolated times, so SE can no longer pick out the translation.
+    public string CommandLineParameterCrispAsrIndexEcho { get; set; } = string.Empty;
     public string CommandLineParameterCrispAsrParakeet { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrQwen3 { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrOmni { get; set; } = "--max-len 50 --split-on-punct";

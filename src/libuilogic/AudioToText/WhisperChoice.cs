@@ -24,6 +24,7 @@
         public const string CrispAsrFunAsrNano = "Crisp ASR Fun-ASR Nano";
         public const string CrispAsrFunAsrMltNano = "Crisp ASR Fun-ASR MLT Nano";
         public const string CrispAsrGranite = "Crisp ASR Granite";
+        public const string CrispAsrIndexEcho = "Crisp ASR Index-Echo";
         public const string CrispAsrOmni = "Crisp ASR Omni";
         public const string CrispAsrKyutai = "Crisp ASR Kyutai";
         public const string CrispAsrMadlad = "Crisp ASR MADLAD";
