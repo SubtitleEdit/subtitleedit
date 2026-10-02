@@ -271,6 +271,16 @@ public class FfmpegPlayerTests
     }
 
     [Theory]
+    [InlineData("mpegts", 3600.0, 0.0, 3600.0, 0.0)] // unknown duration stays unknown, not -3600
+    [InlineData("mpegts", 3600.0, double.NaN, 3600.0, 0.0)]
+    [InlineData("mpegts", 3600.0, 60.0, 3600.0, 60.0)]
+    [InlineData("matroska,webm", 0.0, 60.0, 0.0, 60.0)]
+    public void RebasedDuration_IsOnThePlayersTimeline(string format, double start, double duration, double origin, double expected)
+    {
+        Assert.Equal(expected, FfmpegPlayer.RebasedDuration(format, start, duration, origin), 3);
+    }
+
+    [Theory]
     [InlineData("mpegts", true)]
     [InlineData("mpeg", false)] // MPEG-PS (.mpg/.vob): subtitles read from it keep their time stamps
     [InlineData("mov,mp4,m4a,3gp,3g2,mj2", false)]

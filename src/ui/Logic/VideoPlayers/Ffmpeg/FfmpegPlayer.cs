@@ -506,6 +506,21 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
     }
 
     /// <summary>
+    /// The duration on the player's timeline, which starts at <paramref name="originSeconds"/>.
+    /// An unknown duration (0) stays unknown - a transport stream starting an hour in would get
+    /// a negative one.
+    /// </summary>
+    internal static double RebasedDuration(string? formatName, double startSeconds, double durationSeconds, double originSeconds)
+    {
+        if (durationSeconds <= 0 || double.IsNaN(durationSeconds))
+        {
+            return 0;
+        }
+
+        return Math.Max(0, TimelineEnd(formatName, startSeconds, durationSeconds) - originSeconds);
+    }
+
+    /// <summary>
     /// Transport streams count from the file's first time stamp: their clock starts anywhere
     /// (hours in for a broadcast recording) and subtitles read from them are timed from the
     /// file's start - as mpv plays them (LibMpvDynamicPlayer.UseFileStartAsZero), and as ffmpeg,
@@ -756,7 +771,7 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
 
             var formatName = Marshal.PtrToStringUTF8((IntPtr)format->iformat->name);
             _originSeconds = UsesFileStartAsZero(formatName) ? _startTimeSeconds : 0;
-            Duration = TimelineEnd(formatName, _startTimeSeconds, duration) - _originSeconds;
+            Duration = RebasedDuration(formatName, _startTimeSeconds, duration, _originSeconds);
 
             _audioSink = CreateAudioSink();
             if (_hasAudio)
@@ -925,7 +940,7 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
 
                 if (_endReached)
                 {
-                    return Duration;
+                    return _pausedPosition; // the duration, or where it ended when that is unknown
                 }
 
                 return _playing ? Clock() : _pausedPosition;
@@ -2284,7 +2299,8 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
 
         private void ReachEnd()
         {
-            _pausedPosition = Duration;
+            // With no known duration the end is where the clock stopped - not 0.
+            _pausedPosition = Duration > 0 ? Duration : Math.Max(0, Clock());
             _playing = false;
             _endReached = true;
             _wallClock.Stop();
