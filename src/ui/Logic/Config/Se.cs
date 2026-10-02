@@ -21,7 +21,7 @@ public class Se
     internal const int CurrentShortcutsMigrationVersion = 5;
     internal const int CurrentLayoutMigrationVersion = 2;
 
-    public static string Version { get; set; } = "v5.3.0-beta18";
+    public static string Version { get; set; } = "v5.3.0-beta19";
 
     public SeGeneral General { get; set; } = new();
     public List<SeShortCut> Shortcuts { get; set; } = new();

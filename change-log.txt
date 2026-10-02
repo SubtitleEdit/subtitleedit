@@ -3,6 +3,41 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-beta19 (2nd of October 2026)
+
+* Add custom shortcut slots built from steps (run commands, insert text, find and replace) - thx kadrimarzouki
+* Add behavior (toggle/add/remove) and "works on" options to surround-with slots, like SE 4 - thx kadrimarzouki
+* Add "Whole word" option to Multiple replace rules (also in Batch convert and seconv) - thx rosilucia-hub
+* Add Index-Translate 2B/9B to the curated llama.cpp translate models - thx Oplay66
+* Add Phonon-2 models to Crisp ASR Parakeet, and warn when an English-only model is used with another language
+* Add opt-in setting "Select current subtitle also while paused" (default off, like SE 4) - thx accessallareas
+* Compare: alignment by timing on large files, distant lines with the same text no longer misalign the list, sync points are undoable
+* llama.cpp translate: retry lines that come back untranslated
+* Remux video: refuse audio sources without audio, re-encode audio MP4/MOV cannot hold, use MKV for video MP4 cannot hold (VP8)
+* Binary Edit: take a Blu-ray sup's frame rate from its time codes, not the often wrong stored value
+* Export Blu-ray sup: use the open video's frame rate for the frame grid
+* Fix moving a word between the lines of the current subtitle: keep the user's line break, cycle like SE 4 - thx accessallareas
+* Fix Shift+Space not following "allow single-letter shortcuts in text box" - thx zbik1
+* Fix subtitles not shown on their first frame in the mpv preview and burn-in - thx accessallareas
+* Fix "keep gap if close" nudges settling on minimum gap + 1 frame - thx accessallareas
+* Fix moving all shot changes one frame not being saved
+* Fix Save as dropping the subtitle's language tag (e.g. ".en") after a format change - thx ukdtom
+* Fix "_" shown in Find/Replace window titles
+* Fix startup grid focus stealing focus from the text box or menu
+* Fix Settings crash when the Themes folder is missing
+* Fix Apply duration limits: OK did not always apply the current limits
+* Fix DVD import hanging on an empty VOB file, ripping every angle of multi-angle titles, and missing lower case file names on Linux
+* Fix CEA-608 space before punctuation after a styled word, a lost CEA-708 caption, and a one-character CEA-608 caption merged into the next
+* Fix Blu-ray sup export writing time stamps backwards for cues shorter than half a frame
+* Fix FFmpeg player showing a negative duration for transport streams without a known duration
+* Update CrispASR to v0.8.40 (Intel Mac legacy build for older CPUs) - thx tolikdgan
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+* Update Korean translation
+* Update Polish translation - thx potplayer-fanpack
+
+-----------------------------------------------------------------------------------------------------
+
 v5.3.0-beta18 (1st of October 2026)
 
 * Add import of subtitles from DVD (IFO/VOB) with title picker, fast rip and exact cell timing (SE 4 parity)
