@@ -104,6 +104,7 @@ public partial class SettingsImportExportViewModel : ObservableObject
     private string? _importSourceOs;
     private bool _importHasShortcutSlots;
     private bool _importHasCustomSearchSlots;
+    private bool _importHasSurroundOptions;
 
     // Set instead of _importData when the picked file is an SE 4 Settings.xml (#14309): SE 4 has
     // no Settings.json, so the only file a user migrating from 4.x can point at is the classic
@@ -192,7 +193,8 @@ public partial class SettingsImportExportViewModel : ObservableObject
 
             _importSourceOs = TryReadExportSourceOs(json);
             _importHasShortcutSlots = TryReadExportIncludesShortcutSlots(json);
-            _importHasCustomSearchSlots = TryReadHasCustomSearchSlots(json);
+            _importHasCustomSearchSlots = TryReadHasTopLevelProperty(json, nameof(Se.CustomSearch1Name));
+            _importHasSurroundOptions = TryReadHasTopLevelProperty(json, nameof(Se.Surround1Behavior));
 
             IsRulesEnabled = _importData.General != null;
             IsAppearanceEnabled = _importData.Appearance != null;
@@ -250,6 +252,7 @@ public partial class SettingsImportExportViewModel : ObservableObject
         _importSourceOs = null;
         _importHasShortcutSlots = false;
         _importHasCustomSearchSlots = false;
+        _importHasSurroundOptions = false;
 
         IsRulesEnabled = se4.HasRules;
         IsAppearanceEnabled = se4.HasAppearance;
@@ -492,7 +495,7 @@ public partial class SettingsImportExportViewModel : ObservableObject
 
             if (_importHasShortcutSlots)
             {
-                CopyShortcutSlots(importData, Se.Settings, _importHasCustomSearchSlots);
+                CopyShortcutSlots(importData, Se.Settings, _importHasCustomSearchSlots, _importHasSurroundOptions);
             }
         }
 
@@ -651,7 +654,7 @@ public partial class SettingsImportExportViewModel : ObservableObject
     /// of its sections. A null <paramref name="from"/> clears them, so an export that leaves
     /// shortcuts out says so instead of shipping a block of defaults.
     /// </summary>
-    private static void CopyShortcutSlots(Se? from, Se to, bool includeCustomSearch = true)
+    private static void CopyShortcutSlots(Se? from, Se to, bool includeCustomSearch = true, bool includeSurroundOptions = true)
     {
         to.Color1 = from?.Color1!;
         to.Color2 = from?.Color2!;
@@ -665,6 +668,16 @@ public partial class SettingsImportExportViewModel : ObservableObject
         for (var slot = 1; slot <= Se.SurroundWithSlotCount; slot++)
         {
             to.SetSurround(slot, from?.GetSurroundLeft(slot)!, from?.GetSurroundRight(slot)!);
+        }
+
+        // The surround behaviors and scopes (#15531) came later still - same reasoning as the "search via" slots below.
+        if (includeSurroundOptions)
+        {
+            for (var slot = 1; slot <= Se.SurroundWithSlotCount; slot++)
+            {
+                to.SetSurroundBehavior(slot, from?.GetSurroundBehavior(slot) ?? SurroundWithBehavior.Toggle);
+                to.SetSurroundScope(slot, from?.GetSurroundScope(slot) ?? SurroundWithScope.SelectionOrText);
+            }
         }
 
         // The "search via" slots were added after the slot marker, so a file carrying the marker
@@ -753,11 +766,11 @@ public partial class SettingsImportExportViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Whether the export file carries the "search via" slot values at all. They joined the
-    /// existing shortcut-slot marker later, so this is detected off the serialized property
-    /// itself: a file from a build without them lacks the key entirely.
+    /// Whether the export file carries a top-level value at all - used for slot values (like the
+    /// "search via" slots) that joined the existing shortcut-slot marker later, so they are detected
+    /// off the serialized property itself: a file from a build without them lacks the key entirely.
     /// </summary>
-    private static bool TryReadHasCustomSearchSlots(string json)
+    private static bool TryReadHasTopLevelProperty(string json, string propertyName)
     {
         try
         {
@@ -769,7 +782,7 @@ public partial class SettingsImportExportViewModel : ObservableObject
 
             foreach (var prop in doc.RootElement.EnumerateObject())
             {
-                if (string.Equals(prop.Name, nameof(Se.CustomSearch1Name), StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(prop.Name, propertyName, StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }

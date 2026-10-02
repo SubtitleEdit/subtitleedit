@@ -1,6 +1,8 @@
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Features.Shared.TextBoxUtils;
 
@@ -15,7 +17,8 @@ public static class TextBoxSurroundToggler
     /// Returns false when there is nothing selected, or when the whole text is selected -
     /// the caller should then surround the whole subtitle line(s) instead.
     /// </summary>
-    public static bool ToggleSelection(ITextBoxWrapper? tb, string surroundLeft, string surroundRight)
+    public static bool ToggleSelection(ITextBoxWrapper? tb, string surroundLeft, string surroundRight,
+        SurroundWithBehavior behavior = SurroundWithBehavior.Toggle)
     {
         if (tb?.Text == null ||
             string.IsNullOrEmpty(surroundLeft) && string.IsNullOrEmpty(surroundRight))
@@ -41,9 +44,9 @@ public static class TextBoxSurroundToggler
             return false;
         }
 
-        // "ToggleSymbols" keeps italic/bold/font tags of the selection outside the symbols,
+        // Italic/bold/font tags of the selection stay outside the symbols,
         // so "<i>Hello</i>" becomes "<i>♪ Hello ♪</i>".
-        var newText = pre + Utilities.ToggleSymbols(surroundLeft, selectedText, surroundRight, out _) + post;
+        var newText = pre + Apply(behavior, surroundLeft, selectedText, surroundRight, out _) + post;
 
         tb.Text = tb.Text
             .Remove(selectionStart, selectionLength)
@@ -57,5 +60,107 @@ public static class TextBoxSurroundToggler
         });
 
         return true;
+    }
+
+    /// <summary>
+    /// Applies a "surround with" pair to <paramref name="text"/> according to <paramref name="behavior"/>.
+    /// <paramref name="added"/> tells whether the pair was added (true) or removed (false).
+    /// </summary>
+    public static string Apply(SurroundWithBehavior behavior, string surroundLeft, string text, string surroundRight, out bool added)
+    {
+        switch (behavior)
+        {
+            case SurroundWithBehavior.Add:
+                added = true;
+                return AddKeepExisting(surroundLeft, text, surroundRight);
+            case SurroundWithBehavior.Remove:
+                added = false;
+                return Utilities.RemoveSymbols(surroundLeft, text, surroundRight);
+            default:
+                return Utilities.ToggleSymbols(surroundLeft, text, surroundRight, out added);
+        }
+    }
+
+    /// <summary>
+    /// Applies a "surround with" pair to the texts of several subtitles. With "toggle", the first
+    /// (non-empty) line decides whether the pair is added or removed everywhere, so a mixed
+    /// selection ends up consistent instead of flipping. With <see cref="SurroundWithScope.EachLine"/>
+    /// every line of a text gets its own pair; blank lines are left alone.
+    /// </summary>
+    public static List<string> ApplyToTexts(SurroundWithBehavior behavior, SurroundWithScope scope,
+        string surroundLeft, IEnumerable<string> texts, string surroundRight)
+    {
+        bool? add = behavior switch
+        {
+            SurroundWithBehavior.Add => true,
+            SurroundWithBehavior.Remove => false,
+            _ => null,
+        };
+
+        string ApplyOne(string text)
+        {
+            if (add == null)
+            {
+                var result = Utilities.ToggleSymbols(surroundLeft, text, surroundRight, out var added);
+                add = added;
+                return result;
+            }
+
+            if (behavior == SurroundWithBehavior.Add)
+            {
+                return AddKeepExisting(surroundLeft, text, surroundRight);
+            }
+
+            return add.Value
+                ? Utilities.AddSymbols(surroundLeft, text, surroundRight)
+                : Utilities.RemoveSymbols(surroundLeft, text, surroundRight);
+        }
+
+        var results = new List<string>();
+        foreach (var text in texts)
+        {
+            if (scope != SurroundWithScope.EachLine)
+            {
+                results.Add(ApplyOne(text));
+                continue;
+            }
+
+            var lines = text.SplitToLines();
+            for (var i = 0; i < lines.Count; i++)
+            {
+                if (!string.IsNullOrWhiteSpace(lines[i]))
+                {
+                    lines[i] = ApplyOne(lines[i]);
+                }
+            }
+
+            results.Add(string.Join(Environment.NewLine, lines));
+        }
+
+        return results;
+    }
+
+    /// <summary>
+    /// Like <see cref="Utilities.AddSymbols"/>, but without removing the pair first - so firing an
+    /// "add" slot twice adds the pair twice, like SE 4's custom tags toggle did (#15531).
+    /// </summary>
+    private static string AddKeepExisting(string tag, string text, string endTag)
+    {
+        var pre = string.Empty;
+        var post = string.Empty;
+        text = Utilities.SplitStartTags(text, ref pre);
+        text = Utilities.SplitEndTags(text, ref post);
+
+        if (!string.IsNullOrEmpty(tag) && tag == Configuration.Settings.Tools.MusicSymbol)
+        {
+            if (Configuration.Settings.Tools.MusicSymbolStyle.Equals("single", StringComparison.OrdinalIgnoreCase))
+            {
+                return pre + tag + " " + text.Replace(Environment.NewLine, Environment.NewLine + tag + " ") + post;
+            }
+
+            return pre + tag + " " + text.Replace(Environment.NewLine, " " + tag + Environment.NewLine + tag + " ") + " " + tag + post;
+        }
+
+        return pre + tag + text + endTag + post;
     }
 }
