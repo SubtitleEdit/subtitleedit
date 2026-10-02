@@ -11188,7 +11188,7 @@ public partial class MainViewModel :
 
             InitializeWaveformDisplayMode();
 
-            AudioVisualizer.ShotChanges = ShotChangesHelper.FromDisk(_videoFileName);
+            AudioVisualizer.ShotChanges = ShotChangesHelper.FromDisk(_videoFileName, _audioTrack?.FfIndex ?? -1);
             UpdateShotChangesListMenuItem();
             if (AudioVisualizer.ShotChanges.Count == 0)
             {
@@ -28392,7 +28392,7 @@ public partial class MainViewModel :
             spectrogramFileName,
             wavePeaks,
             TryLoadCachedSpectrogram(spectrogramFileName),
-            ShotChangesHelper.FromDisk(videoFileName));
+            ShotChangesHelper.FromDisk(videoFileName, trackNumber));
     }
 
     private void ShowClickToGenerateWaveformHint()
