@@ -132,6 +132,12 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     public TableView SubtitleGrid { get; set; }
 
     private List<SubtitleLineViewModel>? _selectedSubtitles;
+
+    // The profile whose frame rate UseVideoFrameRate replaced for this export, its own frame
+    // rate, and the video's - so closing the dialog doesn't write the video's rate into it.
+    private SeExportImagesProfile? _videoFrameRateProfile;
+    private double _videoFrameRateProfileValue;
+    private double _videoFrameRate;
     // PlayResX/PlayResY from the subtitle's own header - "\pos" coordinates and
     // "\bord"/"\shad" widths are relative to those, not to the export canvas. (0,0) when
     // there is no header, which keeps everything at scale 1.0.
@@ -720,6 +726,14 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
 
         SelectedSubtitle = Subtitles.FirstOrDefault();
 
+        // A Blu-ray sup's cue times are snapped to the frame grid of the frame rate, so the
+        // profile's rate (25 by default) would move 23.976 cues up to half a frame. With a video
+        // open, the main window's frame rate is the video's - use it for this export.
+        if (exportHandler.ExportImageType == ExportImageType.BluRaySup && !string.IsNullOrEmpty(videoFileName))
+        {
+            UseVideoFrameRate(Se.Settings.General.CurrentFrameRate);
+        }
+
         if (!string.IsNullOrEmpty(videoFileName))
         {
             _ = Task.Run(() =>
@@ -741,6 +755,25 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
                 }
             });
         }
+    }
+
+    /// <summary>
+    /// Selects the video's frame rate when it is one of <see cref="FrameRates"/>, for this export
+    /// only: the active profile keeps its own frame rate unless the user changes the combo box,
+    /// and picking another profile selects that profile's frame rate.
+    /// </summary>
+    internal void UseVideoFrameRate(double videoFrameRate)
+    {
+        var match = FrameRates.Where(fr => Math.Abs(fr - videoFrameRate) < 0.01).ToList();
+        if (match.Count == 0)
+        {
+            return;
+        }
+
+        _videoFrameRateProfile = SelectedProfile;
+        _videoFrameRateProfileValue = SelectedFrameRate;
+        _videoFrameRate = match[0];
+        SelectedFrameRate = match[0];
     }
 
     private void SubtitleLineChanged()
@@ -1048,6 +1081,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     {
         if (v is SeExportImagesProfile profile)
         {
+            _videoFrameRateProfile = null;
             SelectedFontSize = (int)profile.FontSize;
             SelectedResolution = EnsureResolutionItem(profile.ScreenWidth, profile.ScreenHeight)
                                  ?? Resolutions.FirstOrDefault(r => r.Width == 1920);
@@ -1133,7 +1167,9 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             profile.PaddingLeftRight = SelectedPaddingLeftRight;
             profile.PaddingTopBottom = SelectedPaddingTopBottom;
             profile.LineSpacingPercent = SelectedLineSpacing;
-            profile.FramesPerSecond = SelectedFrameRate;
+            profile.FramesPerSecond = ReferenceEquals(profile, _videoFrameRateProfile) && SelectedFrameRate == _videoFrameRate
+                ? _videoFrameRateProfileValue
+                : SelectedFrameRate;
             profile.IsFullFrame = IsFullFrame;
             profile.FullFrameBackgroundColor = FullFrameBackgroundColor.FromColorToHex(true);
             profile.Mode3D = SelectedMode3D?.Mode ?? Export3DMode.None;
