@@ -76,8 +76,28 @@ public class OpenAiSttService : ISttTranscriber
         IProgress<OpenAiCompatibleSegment>? segmentProgress = null,
         CancellationToken cancellationToken = default)
     {
-        using var fileStream = File.OpenRead(audioFilePath);
-        return await TranscribeAsync(fileStream, Path.GetFileName(audioFilePath), language, progress, segmentProgress, cancellationToken);
+        try
+        {
+            using var fileStream = File.OpenRead(audioFilePath);
+            return await TranscribeAsync(fileStream, Path.GetFileName(audioFilePath), language, progress, segmentProgress, cancellationToken);
+        }
+        catch (HttpRequestException exception) when (!_settings.Stream && IsVerboseJsonRejected(exception))
+        {
+            // vLLM only does verbose_json for models with Whisper-style timestamp tokens and
+            // answers 400 for any other model. Ask again for plain json - the text comes back
+            // without segments and the caller spreads it over sentences. The file is opened
+            // again, as the first request disposed its stream.
+            _settings.Logger?.Invoke("OpenAI-compatible STT: server rejected verbose_json, retrying with json");
+            using var fileStream = File.OpenRead(audioFilePath);
+            return await TranscribeAsync(fileStream, Path.GetFileName(audioFilePath), language, progress, segmentProgress, cancellationToken, forceJson: true);
+        }
+    }
+
+    private static bool IsVerboseJsonRejected(HttpRequestException exception)
+    {
+        var status = (int?)exception.StatusCode;
+        return status is >= 400 and < 500 &&
+               exception.Message.Contains("verbose_json", StringComparison.OrdinalIgnoreCase);
     }
 
     public async Task<OpenAiCompatibleSttResponse> TranscribeAsync(
@@ -87,6 +107,18 @@ public class OpenAiSttService : ISttTranscriber
         IProgress<string>? progress = null,
         IProgress<OpenAiCompatibleSegment>? segmentProgress = null,
         CancellationToken cancellationToken = default)
+    {
+        return await TranscribeAsync(audioStream, fileName, language, progress, segmentProgress, cancellationToken, forceJson: false);
+    }
+
+    private async Task<OpenAiCompatibleSttResponse> TranscribeAsync(
+        Stream audioStream,
+        string fileName,
+        string? language,
+        IProgress<string>? progress,
+        IProgress<OpenAiCompatibleSegment>? segmentProgress,
+        CancellationToken cancellationToken,
+        bool forceJson)
     {
         // Apply the per-call deadline via a linked CTS rather than the shared
         // HttpClient.Timeout, so the shared client stays unmodified.
@@ -98,7 +130,7 @@ public class OpenAiSttService : ISttTranscriber
 
         try
         {
-            return await TranscribeCoreAsync(audioStream, fileName, language, progress, segmentProgress, timeoutCts.Token);
+            return await TranscribeCoreAsync(audioStream, fileName, language, progress, segmentProgress, forceJson, timeoutCts.Token);
         }
         catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
         {
@@ -114,6 +146,7 @@ public class OpenAiSttService : ISttTranscriber
         string? language,
         IProgress<string>? progress,
         IProgress<OpenAiCompatibleSegment>? segmentProgress,
+        bool forceJson,
         CancellationToken cancellationToken)
     {
         using var content = new MultipartFormDataContent();
@@ -147,10 +180,11 @@ public class OpenAiSttService : ISttTranscriber
         // unless `response_format=verbose_json` (issue #11146). Send the
         // granularity hints only with verbose_json — segments come through
         // the SSE `transcript.text.done` event anyway during streaming.
-        var responseFormat = _settings.Stream ? "json" : "verbose_json";
+        var useJson = _settings.Stream || forceJson;
+        var responseFormat = useJson ? "json" : "verbose_json";
         content.Add(new StringContent(responseFormat), "response_format");
 
-        if (!_settings.Stream)
+        if (!useJson)
         {
             content.Add(new StringContent("segment"), "timestamp_granularities[]");
             content.Add(new StringContent("word"), "timestamp_granularities[]");
@@ -210,7 +244,7 @@ public class OpenAiSttService : ISttTranscriber
             var temperatureSummary = _settings.Temperature > 0
                 ? _settings.Temperature.ToString("F2", CultureInfo.InvariantCulture)
                 : "(not sent)";
-            var granularitiesSummary = _settings.Stream ? "(not sent)" : "[segment,word]";
+            var granularitiesSummary = useJson ? "(not sent)" : "[segment,word]";
             var paramSummary =
                 $"model={_settings.Model}, language={languageToUse}, " +
                 $"response_format={responseFormat}, timestamp_granularities={granularitiesSummary}, " +
@@ -412,10 +446,59 @@ public class OpenAiSttService : ISttTranscriber
                     segmentProgress?.Report(segObj.Segment);
                 }
             }
+            else if (eventType.Length == 0)
+            {
+                ProcessUntypedSseChunk(data, fullText, progress);
+            }
         }
         catch (JsonException)
         {
             // Ignore malformed JSON
+        }
+    }
+
+    /// <summary>
+    /// Chunks without an event type: vLLM streams its transcription chat-completion style, as
+    /// <c>{"object":"transcription.chunk","choices":[{"delta":{"content":"..."}}]}</c>, and reports
+    /// a failure mid-stream as <c>{"error":{"message":"..."}}</c>.
+    /// </summary>
+    private static void ProcessUntypedSseChunk(string data, StringBuilder fullText, IProgress<string>? progress)
+    {
+        using var doc = JsonDocument.Parse(data);
+        var root = doc.RootElement;
+        if (root.ValueKind != JsonValueKind.Object)
+        {
+            return;
+        }
+
+        if (root.TryGetProperty("error", out var error) && error.ValueKind != JsonValueKind.Null)
+        {
+            var message = error.ValueKind == JsonValueKind.Object && error.TryGetProperty("message", out var messageElement)
+                ? messageElement.ToString()
+                : error.ToString();
+            throw new HttpRequestException("STT stream failed: " + message);
+        }
+
+        if (!root.TryGetProperty("choices", out var choices) || choices.ValueKind != JsonValueKind.Array)
+        {
+            return;
+        }
+
+        foreach (var choice in choices.EnumerateArray())
+        {
+            if (choice.ValueKind == JsonValueKind.Object &&
+                choice.TryGetProperty("delta", out var delta) &&
+                delta.ValueKind == JsonValueKind.Object &&
+                delta.TryGetProperty("content", out var content) &&
+                content.ValueKind == JsonValueKind.String)
+            {
+                var text = content.GetString();
+                if (!string.IsNullOrEmpty(text))
+                {
+                    fullText.Append(text);
+                    progress?.Report(text);
+                }
+            }
         }
     }
 

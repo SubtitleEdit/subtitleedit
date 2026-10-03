@@ -250,6 +250,131 @@ public class OpenAiSttServiceTests
     }
 
     [Fact]
+    public async Task TranscribeAsync_VllmSseStream_AccumulatesChoiceDeltas()
+    {
+        // vLLM's /v1/audio/transcriptions streams chat-completion style chunks: bare "data:"
+        // lines, no "event:" and no "type", the text in choices[].delta.content, then a
+        // usage-only chunk and "[DONE]" (vllm/entrypoints/speech_to_text/base/serving.py).
+        // Before these were understood every chunk was skipped and the result was empty.
+        const string sse =
+            "data: {\"id\":\"trsc-1\",\"object\":\"transcription.chunk\",\"created\":1,\"model\":\"hviske\",\"choices\":[{\"delta\":{\"content\":\"Hej med\"}}]}\n" +
+            "\n" +
+            "data: {\"id\":\"trsc-1\",\"object\":\"transcription.chunk\",\"created\":1,\"model\":\"hviske\",\"choices\":[{\"delta\":{\"content\":\" dig\"},\"finish_reason\":\"stop\",\"stop_reason\":null}]}\n" +
+            "\n" +
+            "data: {\"id\":\"trsc-1\",\"object\":\"transcription.chunk\",\"created\":1,\"model\":\"hviske\",\"choices\":[],\"usage\":{\"prompt_tokens\":10,\"completion_tokens\":4,\"total_tokens\":14}}\n" +
+            "\n" +
+            "data: [DONE]\n" +
+            "\n";
+
+        using var handler = new StubHandler((req, ct) =>
+            Task.FromResult(JsonResponse(sse, contentType: "text/event-stream")));
+        using var client = new HttpClient(handler);
+        var settings = MakeSettings("hviske");
+        settings.Stream = true;
+        var service = new OpenAiSttService(client, settings);
+
+        var deltas = new List<string>();
+        var ct = TestContext.Current.CancellationToken;
+        var wav = MakeTinyWav();
+        try
+        {
+            var response = await service.TranscribeAsync(wav, language: null, new SyncProgress<string>(deltas.Add), null, ct);
+
+            Assert.Equal("Hej med dig", response.Text);
+            Assert.Equal(new[] { "Hej med", " dig" }, deltas);
+            Assert.Empty(response.Segments ?? new List<OpenAiCompatibleSegment>());
+        }
+        finally
+        {
+            File.Delete(wav);
+        }
+    }
+
+    [Fact]
+    public async Task TranscribeAsync_VllmSseStreamError_Throws()
+    {
+        // vLLM reports a failure mid-stream as a "data: {error}" chunk followed by [DONE] - it
+        // must not come back as an empty, apparently successful transcription.
+        const string sse =
+            "data: {\"error\":{\"message\":\"CUDA out of memory\",\"type\":\"InternalServerError\",\"code\":500}}\n" +
+            "\n" +
+            "data: [DONE]\n" +
+            "\n";
+
+        using var handler = new StubHandler((req, ct) =>
+            Task.FromResult(JsonResponse(sse, contentType: "text/event-stream")));
+        using var client = new HttpClient(handler);
+        var settings = MakeSettings();
+        settings.Stream = true;
+        var service = new OpenAiSttService(client, settings);
+
+        var ct = TestContext.Current.CancellationToken;
+        var wav = MakeTinyWav();
+        try
+        {
+            var ex = await Assert.ThrowsAsync<HttpRequestException>(() => service.TranscribeAsync(wav, cancellationToken: ct));
+            Assert.Contains("CUDA out of memory", ex.Message);
+        }
+        finally
+        {
+            File.Delete(wav);
+        }
+    }
+
+    [Fact]
+    public async Task TranscribeAsync_VerboseJsonRejected_RetriesWithJson()
+    {
+        // vLLM only does verbose_json for models with Whisper-style timestamp tokens; for any
+        // other model (e.g. the Cohere-based Danish "hviske") it answers 400. Retry with plain
+        // json so the text still comes back - the caller spreads it over sentences.
+        var formats = new List<string>();
+        using var handler = new StubHandler(async (req, ct) =>
+        {
+            var format = string.Empty;
+            if (req.Content is MultipartFormDataContent multipart)
+            {
+                foreach (var part in multipart)
+                {
+                    if (part.Headers.ContentDisposition?.Name?.Trim('"') == "response_format")
+                    {
+                        format = await part.ReadAsStringAsync(ct);
+                    }
+                }
+            }
+
+            formats.Add(format);
+            if (format == "verbose_json")
+            {
+                return new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new StringContent(
+                        "{\"error\":{\"message\":\"Currently do not support verbose_json for hviske\",\"type\":\"BadRequestError\",\"param\":null,\"code\":400}}",
+                        Encoding.UTF8,
+                        "application/json"),
+                };
+            }
+
+            return JsonResponse("{\"text\":\"Hej med dig\",\"usage\":{\"type\":\"duration\",\"seconds\":2}}");
+        });
+        using var client = new HttpClient(handler);
+        var service = new OpenAiSttService(client, MakeSettings("hviske"));
+
+        var ct = TestContext.Current.CancellationToken;
+        var wav = MakeTinyWav();
+        try
+        {
+            var response = await service.TranscribeAsync(wav, cancellationToken: ct);
+
+            Assert.Equal(new[] { "verbose_json", "json" }, formats);
+            Assert.Equal("Hej med dig", response.Text);
+        }
+        finally
+        {
+            File.Delete(wav);
+        }
+    }
+
+    [Fact]
     public async Task TranscribeAsync_AttachesExtraHeaders_AndIgnoresMalformedLines()
     {
         // ExtraHeaders is a free-form multi-line string of "Name: value" pairs;
