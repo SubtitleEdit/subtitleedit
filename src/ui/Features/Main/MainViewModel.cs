@@ -13307,8 +13307,10 @@ public partial class MainViewModel :
             return;
         }
 
+        // One selected line is a valid target too: it is the keyboard way to replace the current
+        // line's text, as Ctrl+V with one line selected inserts below it instead (#15597).
         var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
-        if (selectedItems.Count < 2)
+        if (selectedItems.Count == 0)
         {
             return;
         }
@@ -21845,6 +21847,10 @@ public partial class MainViewModel :
             {
                 SelectAndScrollToRange(firstIndex, firstIndex + pastedLines.Count - 1);
             }
+
+            // Say it was an insert: with one row selected Ctrl+V adds lines below it, while with
+            // several selected it pastes over them - the status line makes the mode visible (#15597).
+            ShowStatus(string.Format(Se.Language.Main.InsertedXLinesFromClipboard, pastedLines.Count));
         }
 
         _updateAudioVisualizer = true;

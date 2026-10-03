@@ -97,6 +97,7 @@ public class LanguageMain
     public string TrimmedXLines { get; set; }
     public string PastedXLinesOverSelectedLines { get; set; }
     public string PastedXOfYLinesOverSelectedLines { get; set; }
+    public string InsertedXLinesFromClipboard { get; set; }
     public string OpenOriginalDifferentNumberOfSubtitlesXY { get; set; }
     public string OriginalTextReadOnly { get; set; }
     public string OriginalTextEditMode { get; set; }
@@ -258,6 +259,7 @@ public class LanguageMain
         TrimmedXLines = "Trimmed {0} subtitle lines";
         PastedXLinesOverSelectedLines = "Pasted {0} line(s) over the selected lines";
         PastedXOfYLinesOverSelectedLines = "Pasted {0} of {1} line(s) over the selected lines - the rest did not fit the selection";
+        InsertedXLinesFromClipboard = "Inserted {0} line(s) from the clipboard";
         OpenOriginalDifferentNumberOfSubtitlesXY = "The original subtitle file does not have the same number of subtitles as the current subtitle file.\n\n• Original subtitles: {0}\n• Current subtitles: {1}";
         OriginalTextReadOnly = "Original text (read-only)";
         OriginalTextEditMode = "Original text (edit mode)";
