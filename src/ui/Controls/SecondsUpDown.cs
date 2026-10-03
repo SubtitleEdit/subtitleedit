@@ -229,7 +229,9 @@ public class SecondsUpDown : TemplatedControl
         }
         else
         {
-            val = val.Add(TimeSpan.FromMilliseconds(10 * delta));
+            // Same step as the time code up/down's milliseconds part, so Show and Duration move alike
+            var step = Math.Max(1, Se.Settings.General.TimeCodeUpDownStepMs);
+            val = val.Add(TimeSpan.FromMilliseconds(delta * step));
         }
 
         Value = val;
