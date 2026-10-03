@@ -137,6 +137,47 @@ public class BatchConvertAssaViewModelTests
             => throw new NotSupportedException();
     }
 
+    /// <summary>
+    /// SE 4 applied the pasted header by default; SE 5 defaults to "Use source styles", which
+    /// silently ignored the header for .ass input (Reddit report). Editing the header means it
+    /// should be used, so the edit unticks the checkbox - and ticking it back sticks.
+    /// </summary>
+    [AvaloniaFact]
+    public void EditingHeader_UnticksUseSourceStyles_UntilNextEdit()
+    {
+        var header = Se.Settings.Tools.BatchConvert.AssaHeader;
+        var footer = Se.Settings.Tools.BatchConvert.AssaFooter;
+        var useSource = Se.Settings.Tools.BatchConvert.AssaUseSourceStylesIfPossible;
+        try
+        {
+            Se.Settings.Tools.BatchConvert.AssaHeader = string.Empty;
+            Se.Settings.Tools.BatchConvert.AssaFooter = string.Empty;
+            Se.Settings.Tools.BatchConvert.AssaUseSourceStylesIfPossible = true;
+
+            var viewModel = MakeViewModel();
+            Assert.True(viewModel.UseSourceStylesIfPossible);
+            Assert.False(viewModel.KeepSourceEmbeddedFontsIsEnabled);
+
+            // Re-setting the same text (as the source editor does when it is created) is no edit
+            viewModel.Text = viewModel.Text.Replace("\r\n", "\n");
+            Assert.True(viewModel.UseSourceStylesIfPossible);
+
+            viewModel.Text = viewModel.Text.Replace("Style: Default,Arial", "Style: Default,Trebuchet MS");
+            Assert.False(viewModel.UseSourceStylesIfPossible);
+            Assert.True(viewModel.KeepSourceEmbeddedFontsIsEnabled);
+
+            viewModel.UseSourceStylesIfPossible = true;
+            viewModel.Text = viewModel.Text + "\n";
+            Assert.True(viewModel.UseSourceStylesIfPossible);
+        }
+        finally
+        {
+            Se.Settings.Tools.BatchConvert.AssaHeader = header;
+            Se.Settings.Tools.BatchConvert.AssaFooter = footer;
+            Se.Settings.Tools.BatchConvert.AssaUseSourceStylesIfPossible = useSource;
+        }
+    }
+
     private static BatchConvertAssaViewModel MakeViewModel()
     {
         var services = new ServiceCollection();

@@ -28,6 +28,21 @@ public class BatchConvertAssaWindow : Window
             [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.UseSourceStylesIfPossible)),
         };
 
+        var checkBoxKeepSourceFonts = new CheckBox
+        {
+            Content = Se.Language.Tools.BatchConvert.KeepSourceEmbeddedFonts,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.KeepSourceEmbeddedFonts)),
+            [!CheckBox.IsEnabledProperty] = new Binding(nameof(vm.KeepSourceEmbeddedFontsIsEnabled)),
+        };
+
+        var panelCheckBoxes = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Spacing = 5,
+            Children = { checkBoxOverwrite, checkBoxKeepSourceFonts },
+        };
+
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
@@ -51,7 +66,7 @@ public class BatchConvertAssaWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(checkBoxOverwrite, 0);
+        grid.Add(panelCheckBoxes, 0);
         grid.Add(MakeEditView(vm), 1);
         grid.Add(panelButtons, 2);
 

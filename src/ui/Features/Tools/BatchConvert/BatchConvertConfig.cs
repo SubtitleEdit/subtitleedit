@@ -21,6 +21,7 @@ public class BatchConvertConfig
     public bool AssaUseSourceStylesIfPossible { get; set; }
     public string AssaHeader { get; set; }
     public string AssaFooter { get; set; }
+    public bool AssaKeepSourceEmbeddedFonts { get; set; }
     public string EbuHeader { get; set; } = string.Empty;
     public byte EbuJustificationCode { get; set; } = 2;
     public AddFormattingSettings AddFormatting { get; set; }
@@ -64,6 +65,7 @@ public class BatchConvertConfig
         AssaUseSourceStylesIfPossible = false;
         AssaHeader = string.Empty;
         AssaFooter = string.Empty;
+        AssaKeepSourceEmbeddedFonts = false;
         TargetFormatName = SubRip.NameOfFormat;
         TargetEncoding = TextEncoding.Utf8WithBom;
         AddFormatting = new AddFormattingSettings();

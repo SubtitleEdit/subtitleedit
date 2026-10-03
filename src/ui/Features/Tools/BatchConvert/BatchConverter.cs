@@ -2007,6 +2007,33 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         item.Status = Se.Language.General.Converted;
     }
 
+    /// <summary>
+    /// The footer (embedded fonts etc.) to write when the header template replaces the source's
+    /// header. Replacing it outright used to strip a source .ass file's embedded fonts; with
+    /// "keep source embedded fonts" the source footer is kept, and the template's fonts are added
+    /// first so the template wins when both have a font file with the same name.
+    /// </summary>
+    internal static string MakeAssaFooter(string? templateFooter, string? sourceFooter, bool keepSourceEmbeddedFonts)
+    {
+        if (!keepSourceEmbeddedFonts || string.IsNullOrWhiteSpace(sourceFooter))
+        {
+            return templateFooter ?? string.Empty;
+        }
+
+        if (string.IsNullOrWhiteSpace(templateFooter))
+        {
+            return sourceFooter;
+        }
+
+        var footer = templateFooter;
+        foreach (var (fileName, bytes) in AssaFontEmbedder.GetEmbeddedFonts(sourceFooter))
+        {
+            footer = AssaFontEmbedder.AddFontToFooter(footer, fileName, bytes);
+        }
+
+        return footer;
+    }
+
     private async Task SaveSubtitleFormat(BatchConvertItem item, SubtitleFormat targetFormat, CancellationToken cancellationToken)
     {
         try
@@ -2025,7 +2052,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                     if (!string.IsNullOrEmpty(_config.AssaHeader))
                     {
                         s.Header = _config.AssaHeader;
-                        s.Footer = _config.AssaFooter;
+                        s.Footer = MakeAssaFooter(_config.AssaFooter, s.Footer, _config.AssaKeepSourceEmbeddedFonts);
                     }
                 }
 

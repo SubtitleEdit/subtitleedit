@@ -116,6 +116,8 @@ public class SeBatchConvert
     public bool AssaUseSourceStylesIfPossible { get; set; }
     public string AssaHeader { get; set; }
     public string AssaFooter { get; set; }
+    /// <summary>When the ASSA header template replaces a source file's header, keep the source's embedded fonts (footer).</summary>
+    public bool AssaKeepSourceEmbeddedFonts { get; set; }
 
     public bool AssaEmbedFontsTrim { get; set; }
 
@@ -244,6 +246,7 @@ public class SeBatchConvert
         AssaUseSourceStylesIfPossible = true;
         AssaHeader = string.Empty;
         AssaFooter = string.Empty;
+        AssaKeepSourceEmbeddedFonts = false;
 
         MergeShortLinesMaxCharacters = 55;
         MergeShortLinesMaxMillisecondsBetweenLines = 250;

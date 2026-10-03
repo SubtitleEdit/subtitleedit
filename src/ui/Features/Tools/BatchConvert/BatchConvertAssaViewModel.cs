@@ -15,13 +15,17 @@ using Nikse.SubtitleEdit.Features.Shared.TextBoxUtils;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert;
 
 public partial class BatchConvertAssaViewModel : ObservableObject
 {
-    [ObservableProperty] private bool _useSourceStylesIfPossible;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(KeepSourceEmbeddedFontsIsEnabled))]
+    private bool _useSourceStylesIfPossible;
+    [ObservableProperty] private bool _keepSourceEmbeddedFonts;
     [ObservableProperty] private string _text;
     [ObservableProperty] private StyleDisplay? _currentStyle;
     [ObservableProperty] private ObservableCollection<string> _fonts;
@@ -38,6 +42,13 @@ public partial class BatchConvertAssaViewModel : ObservableObject
 
     private Subtitle _subtitle;
 
+    // The header as last seen in the source view - an edit to it unticks "Use source styles",
+    // as editing the header only makes sense if it is going to be used (SE 4 applied it by default).
+    private string? _lastHeader;
+
+    /// <summary>Source fonts only matter when the header below replaces the source's header.</summary>
+    public bool KeepSourceEmbeddedFontsIsEnabled => !UseSourceStylesIfPossible;
+
     public BatchConvertAssaViewModel(IWindowService windowService)
     {
         _windowService = windowService;
@@ -52,12 +63,46 @@ public partial class BatchConvertAssaViewModel : ObservableObject
         _subtitle.Paragraphs.Add(new Paragraph("Sample subtitle", 0, 2000));
 
         UseSourceStylesIfPossible = Se.Settings.Tools.BatchConvert.AssaUseSourceStylesIfPossible;
+        KeepSourceEmbeddedFonts = Se.Settings.Tools.BatchConvert.AssaKeepSourceEmbeddedFonts;
         _subtitle.Header = Se.Settings.Tools.BatchConvert.AssaHeader;
         _subtitle.Footer = Se.Settings.Tools.BatchConvert.AssaFooter;
 
         // Generate the source view after the saved header/footer have been applied - otherwise
         // the window always shows the default styles instead of the saved ones (#12839).
         Text = _subtitle.ToText(new AdvancedSubStationAlpha());
+        _lastHeader = NormalizeHeader(ParseHeader(Text));
+    }
+
+    partial void OnTextChanged(string value)
+    {
+        if (_lastHeader == null)
+        {
+            return; // still in the constructor
+        }
+
+        var header = NormalizeHeader(ParseHeader(value));
+        if (header.Length > 0 && header != _lastHeader)
+        {
+            _lastHeader = header;
+            UseSourceStylesIfPossible = false;
+        }
+    }
+
+    private static string ParseHeader(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return string.Empty;
+        }
+
+        var sub = new Subtitle();
+        new AdvancedSubStationAlpha().LoadSubtitle(sub, text.SplitToLines(), string.Empty);
+        return sub.Header ?? string.Empty;
+    }
+
+    private static string NormalizeHeader(string header)
+    {
+        return string.Join("\n", header.SplitToLines().Select(p => p.Trim()).Where(p => p.Length > 0));
     }
 
     [RelayCommand]
@@ -135,6 +180,7 @@ public partial class BatchConvertAssaViewModel : ObservableObject
 
         OkPressed = true;
         Se.Settings.Tools.BatchConvert.AssaUseSourceStylesIfPossible = UseSourceStylesIfPossible;
+        Se.Settings.Tools.BatchConvert.AssaKeepSourceEmbeddedFonts = KeepSourceEmbeddedFonts;
         Se.Settings.Tools.BatchConvert.AssaHeader = _subtitle.Header ?? string.Empty;
         Se.Settings.Tools.BatchConvert.AssaFooter = _subtitle.Footer ?? string.Empty;
         Se.SaveSettings();
