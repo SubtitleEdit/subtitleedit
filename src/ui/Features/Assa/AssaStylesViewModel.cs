@@ -269,7 +269,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
 
         var result = await _windowService.ShowDialogAsync<AssaStylePickerWindow, AssaStylePickerViewModel>(Window, vm =>
         {
-            vm.Initialize(Se.Language.General.Import, ssaStyles.Select(p => new StyleDisplay(p) { IsSelected = true, Name = MakeUniqueName(p.Name, FileStyles) }).ToList(), Se.Language.General.Import, false);
+            vm.Initialize(Se.Language.General.Import, ssaStyles.Select(p => new StyleDisplay(p) { IsSelected = true }).ToList(), Se.Language.General.Import, false);
         });
 
         var selectedStyles = result.Styles.Where(p => p.IsSelected).ToList();
@@ -278,7 +278,14 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        FileStyles.AddRange(selectedStyles);
+        // Same overwrite / keep both prompt as copying from storage - importing a style to
+        // replace the file's style of the same name always added a "_2" copy instead
+        await CopyStyles(
+            selectedStyles,
+            FileStyles,
+            _ => true,
+            Se.Language.Assa.StyleXAlreadyExistsInFile,
+            style => new StyleDisplay(style));
 
         UpdateUsages();
     }
@@ -809,7 +816,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         var category = CategoryForNewStyle();
         var result = await _windowService.ShowDialogAsync<AssaStylePickerWindow, AssaStylePickerViewModel>(Window, vm =>
         {
-            vm.Initialize(Se.Language.General.Import, ssaStyles.Select(p => new StyleDisplay(p) { IsSelected = true, Name = MakeUniqueName(p.Name, StorageStylesInCategory(category)) }).ToList(), Se.Language.General.Import, false);
+            vm.Initialize(Se.Language.General.Import, ssaStyles.Select(p => new StyleDisplay(p) { IsSelected = true }).ToList(), Se.Language.General.Import, false);
         });
 
         var selectedStyles = result.Styles.Where(p => p.IsSelected).ToList();
@@ -818,12 +825,12 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        foreach (var style in selectedStyles)
-        {
-            style.Category = category;
-        }
-
-        StorageStyles.AddRange(selectedStyles);
+        await CopyStyles(
+            selectedStyles,
+            StorageStyles,
+            s => IsInStorageCategory(s, category),
+            Se.Language.Assa.StyleXAlreadyExistsInStorage,
+            style => new StyleDisplay(style) { Category = category });
 
         UpdateUsages();
     }
