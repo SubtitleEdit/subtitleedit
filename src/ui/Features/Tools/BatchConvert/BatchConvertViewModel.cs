@@ -164,6 +164,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private TranslationPair? _selectedSourceLanguage;
     [ObservableProperty] private ObservableCollection<TranslationPair> _targetLanguages = new();
     [ObservableProperty] private TranslationPair? _selectedTargetLanguage;
+    // More "To" languages - each gives its own output file ("movie.da.srt", "movie.sv.srt")
+    [ObservableProperty] private ObservableCollection<ExtraTargetLanguageItem> _extraTargetLanguages = new();
     [ObservableProperty] private string _autoTranslateModel;
     [ObservableProperty] private string _autoTranslateUrl;
     [ObservableProperty] private string _autoTranslateApiKey;
@@ -691,6 +693,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         Se.Settings.Tools.BatchConvert.AutoTranslateEngine = SelectedAutoTranslator.Name;
         Se.Settings.Tools.BatchConvert.AutoTranslateSourceLanguage = SelectedSourceLanguage?.TwoLetterIsoLanguageName ?? "auto";
         Se.Settings.Tools.BatchConvert.AutoTranslateTargetLanguage = SelectedTargetLanguage?.TwoLetterIsoLanguageName ?? "en";
+        Se.Settings.Tools.BatchConvert.AutoTranslateExtraTargetLanguages = string.Join(",", GetExtraTargetLanguages().Select(p => p.Code));
         Se.Settings.Tools.BatchConvert.LlamaCppUseRemoteServer = LlamaCppUseRemoteServer;
 
         // Change casing
@@ -907,6 +910,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         {
             SelectedTargetLanguage = targetLanguage;
         }
+
+        SetExtraTargetLanguages((Se.Settings.Tools.BatchConvert.AutoTranslateExtraTargetLanguages ?? string.Empty)
+            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
 
         // Change casing
         if (Se.Settings.Tools.BatchConvert.ChangeCasingType == "Normal")
@@ -1155,6 +1161,58 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         _ = await _windowService
             .ShowDialogAsync<RemoveTextForHearingImpairedWindow, RemoveTextForHearingImpairedViewModel>(
                 Window!, vm => { vm.Initialize(new Subtitle()); });
+    }
+
+    /// <summary>
+    /// Rebuilds the extra "To" combo boxes from language codes - codes the current engine does
+    /// not have are dropped (each engine has its own language list).
+    /// </summary>
+    private void SetExtraTargetLanguages(IEnumerable<string?> codes)
+    {
+        ExtraTargetLanguages.Clear();
+        foreach (var code in codes)
+        {
+            var language = TargetLanguages.FirstOrDefault(p => p.Code.Equals(code, StringComparison.OrdinalIgnoreCase));
+            if (language != null)
+            {
+                ExtraTargetLanguages.Add(new ExtraTargetLanguageItem { SelectedLanguage = language });
+            }
+        }
+    }
+
+    internal List<TranslationPair> GetExtraTargetLanguages()
+    {
+        return ExtraTargetLanguages
+            .Select(p => p.SelectedLanguage)
+            .OfType<TranslationPair>()
+            .Distinct()
+            .ToList();
+    }
+
+    [RelayCommand]
+    private void AddExtraTargetLanguage()
+    {
+        // Start on a language not picked yet, so a new combo box is not just a duplicate
+        var used = GetExtraTargetLanguages();
+        if (SelectedTargetLanguage != null)
+        {
+            used.Add(SelectedTargetLanguage);
+        }
+
+        var language = TargetLanguages.FirstOrDefault(p => !used.Contains(p)) ?? TargetLanguages.FirstOrDefault();
+        if (language != null)
+        {
+            ExtraTargetLanguages.Add(new ExtraTargetLanguageItem { SelectedLanguage = language });
+        }
+    }
+
+    [RelayCommand]
+    private void RemoveExtraTargetLanguage(ExtraTargetLanguageItem? item)
+    {
+        if (item != null)
+        {
+            ExtraTargetLanguages.Remove(item);
+        }
     }
 
     [RelayCommand]
@@ -2786,6 +2844,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                 Translator = SelectedAutoTranslator,
                 SourceLanguage = SelectedSourceLanguage ?? SourceLanguages.First(),
                 TargetLanguage = SelectedTargetLanguage ?? TargetLanguages.First(),
+                ExtraTargetLanguages = GetExtraTargetLanguages(),
             },
 
             ChangeCasing = new BatchConvertConfig.ChangeCasingSettings
@@ -3568,6 +3627,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
     private void UpdateTargetLanguages(IAutoTranslator autoTranslator)
     {
+        // Read before clearing: emptying the list the combo boxes show resets their selection
+        var extraCodes = ExtraTargetLanguages.Select(p => p.SelectedLanguage?.Code).ToList();
         TargetLanguages.Clear();
         if (autoTranslator == null)
         {
@@ -3578,6 +3639,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         {
             TargetLanguages.Add(language);
         }
+
+        // Each engine has its own language list - keep only the extra languages this one has
+        SetExtraTargetLanguages(extraCodes);
 
         SelectedTargetLanguage = AutoTranslateViewModel.FindDefaultTargetLanguage(
             TargetLanguages,

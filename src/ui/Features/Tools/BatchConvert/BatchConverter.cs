@@ -85,6 +85,12 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     /// <summary>Output paths handed out while converting the current item - stamped with the source timestamp afterwards.</summary>
     private readonly List<string> _currentItemOutputFileNames = new();
 
+    // The target language being produced right now - one file can be translated into several
+    // languages in one run, each saved as its own output.
+    private TranslationPair? _currentTargetLanguage;
+    private int _currentTargetNumber;
+    private int _targetLanguageCount = 1;
+
     public SubtitleFormat Format { get; set; } = new SubRip();
 
     public Encoding Encoding { get; set; } = Encoding.UTF8;
@@ -460,11 +466,99 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         // Run convert functions (remove formatting, etc.)
         var imageToImage = _config.IsTargetFormatImageBased && imageSubtitle != null;
-        if (item.Subtitle != null)
+        var targetLanguages = imageToImage || item.Subtitle == null
+            ? new List<TranslationPair>()
+            : GetTargetLanguages();
+        if (targetLanguages.Count <= 1)
         {
-            item.Subtitle = await RunConvertFunctions(item, imageToImage, cancellationToken);
+            _currentTargetLanguage = targetLanguages.FirstOrDefault();
+            _currentTargetNumber = 1;
+            _targetLanguageCount = 1;
+            if (item.Subtitle != null)
+            {
+                item.Subtitle = await RunConvertFunctions(item, imageToImage, cancellationToken);
+            }
+
+            await SaveConverted(item, imageSubtitle, cancellationToken);
+            return;
         }
 
+        // Several target languages: loading/OCR above ran once, now each language starts from
+        // the untranslated text and is saved as its own file ("movie.da.srt", "movie.sv.srt").
+        // A language that fails does not stop the others.
+        var source = new Subtitle(item.Subtitle, false);
+        var errors = new List<string>();
+        _targetLanguageCount = targetLanguages.Count;
+        try
+        {
+            for (var i = 0; i < targetLanguages.Count; i++)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                _currentTargetLanguage = targetLanguages[i];
+                _currentTargetNumber = i + 1;
+                item.Subtitle = new Subtitle(source, false);
+                try
+                {
+                    item.Subtitle = await RunConvertFunctions(item, imageToImage, cancellationToken);
+                    await SaveConverted(item, imageSubtitle, cancellationToken);
+                }
+                catch (Exception exception) when (exception is not OperationCanceledException)
+                {
+                    SeLogger.Error(exception, $"Batch convert to {targetLanguages[i].Code} failed for: {item.FileName}");
+                    errors.Add(targetLanguages[i].Code + ": " + exception.Message);
+                }
+            }
+        }
+        finally
+        {
+            _currentTargetLanguage = null;
+            _targetLanguageCount = 1;
+        }
+
+        if (errors.Count == targetLanguages.Count)
+        {
+            throw new InvalidOperationException(string.Join("; ", errors));
+        }
+
+        if (errors.Count > 0)
+        {
+            item.Status = string.Format(Se.Language.General.ErrorX, string.Join("; ", errors));
+        }
+    }
+
+    /// <summary>
+    /// The languages to translate into: the "To" language plus any extra ones, without
+    /// duplicates. When the source language is set explicitly, an extra target equal to it is
+    /// skipped - it would only produce a copy of the source.
+    /// </summary>
+    internal List<TranslationPair> GetTargetLanguages()
+    {
+        var result = new List<TranslationPair>();
+        if (!_config.AutoTranslate.IsActive)
+        {
+            return result;
+        }
+
+        result.Add(_config.AutoTranslate.TargetLanguage);
+        var sourceCode = _config.AutoTranslate.SourceLanguage?.Code ?? string.Empty;
+        foreach (var language in _config.AutoTranslate.ExtraTargetLanguages)
+        {
+            if (result.Any(p => p.Code.Equals(language.Code, StringComparison.OrdinalIgnoreCase)) ||
+                language.Code.Equals(sourceCode, StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            result.Add(language);
+        }
+
+        return result;
+    }
+
+    private TranslationPair CurrentTargetLanguage => _currentTargetLanguage ?? _config.AutoTranslate.TargetLanguage;
+
+    private async Task SaveConverted(BatchConvertItem item, IOcrSubtitle? imageSubtitle, CancellationToken cancellationToken)
+    {
         // Save text based formats - binary ones like EBU STL are in the list too (for loading),
         // but their ToText is just "Not supported!", so they go through the binary save below
         foreach (var format in _subtitleFormats)
@@ -2111,6 +2205,28 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         return new OcrSubtitleImageParameter(imageParameters);
     }
 
+    /// <summary>
+    /// "en" for a translator code like "en", "pt-BR", "zho_Hans" or "eng", or null when it
+    /// cannot be mapped.
+    /// </summary>
+    internal static string? GetTwoLetterLanguageCode(string? languageCode)
+    {
+        if (string.IsNullOrEmpty(languageCode))
+        {
+            return null;
+        }
+
+        var primary = languageCode.Split('-', '_')[0].ToLowerInvariant();
+        var code = primary.Length switch
+        {
+            2 => primary,
+            3 => Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(primary),
+            _ => Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(languageCode),
+        };
+
+        return code?.Length == 2 ? code.ToLowerInvariant() : null;
+    }
+
     private async Task<Subtitle> RunConvertFunctions(BatchConvertItem item, bool imageToImage, CancellationToken cancellationToken)
     {
         var s = new Subtitle(item.Subtitle, false);
@@ -2136,6 +2252,14 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             s = SplitBreakLongLines(s, Language);
             s = AdjustDisplayDuration(s);
             s = await AutoTranslate(s, item, cancellationToken);
+            if (_config.AutoTranslate.IsActive)
+            {
+                // The steps below (casing, auto balance, remove text for HI, fix common errors,
+                // right-to-left, ...) work on the translated text, so they need the target
+                // language's rules, not the source's.
+                Language = GetTwoLetterLanguageCode(CurrentTargetLanguage.Code) ?? Language;
+            }
+
             s = ChangeCasing(s, Language);
             s = OffsetTimeCodes(s);
             s = ChangeFrameRate(s);
@@ -3351,11 +3475,14 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 if (percent != lastPercent)
                 {
                     lastPercent = percent;
-                    item.Status = string.Format(Se.Language.General.TranslatePercentX, percent);
+                    var status = string.Format(Se.Language.General.TranslatePercentX, percent);
+                    item.Status = _targetLanguageCount > 1
+                        ? $"{CurrentTargetLanguage.Code} ({_currentTargetNumber}/{_targetLanguageCount}) {status}"
+                        : status;
                 }
             },
         };
-        var translatedSubtitle = await doAutoTranslate.DoTranslate(subtitle, _config.AutoTranslate.SourceLanguage, _config.AutoTranslate.TargetLanguage,
+        var translatedSubtitle = await doAutoTranslate.DoTranslate(subtitle, _config.AutoTranslate.SourceLanguage, CurrentTargetLanguage,
             _config.AutoTranslate.Translator, cancellationToken);
 
         // Translating is only one step of the run - the item still goes through the remaining
@@ -3715,7 +3842,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     private string GetLanguagePostFix(BatchConvertItem item)
     {
         var languageCode = _config.AutoTranslate.IsActive
-            ? _config.AutoTranslate.TargetLanguage.Code
+            ? CurrentTargetLanguage.Code
             : item.LanguageCode;
 
         if (string.IsNullOrEmpty(languageCode))
@@ -3727,8 +3854,19 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         // the primary subtag carries the language for the two/three-letter mappings.
         var primary = languageCode.Split('-', '_')[0];
 
+        // With several target languages the outputs only differ by their language token, so
+        // "No language code" falls back to two-letter codes instead of "movie.srt", "movie_2.srt".
+        var postFixSetting = Se.Settings.Tools.BatchConvert.LanguagePostFix;
+        if (_targetLanguageCount > 1 &&
+            postFixSetting != Se.Language.General.TwoLetterLanguageCode &&
+            postFixSetting != Se.Language.General.ThreeLetterLanguageCode &&
+            postFixSetting != Se.Language.General.ThreeLetterLanguageCodeBibliographic)
+        {
+            postFixSetting = Se.Language.General.TwoLetterLanguageCode;
+        }
+
         var code = string.Empty;
-        if (Se.Settings.Tools.BatchConvert.LanguagePostFix == Se.Language.General.TwoLetterLanguageCode)
+        if (postFixSetting == Se.Language.General.TwoLetterLanguageCode)
         {
             if (primary.Length == 2)
             {
@@ -3748,7 +3886,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 code = string.Empty;
             }
         }
-        else if (Se.Settings.Tools.BatchConvert.LanguagePostFix == Se.Language.General.ThreeLetterLanguageCode)
+        else if (postFixSetting == Se.Language.General.ThreeLetterLanguageCode)
         {
             if (primary.Length == 2)
             {
@@ -3769,7 +3907,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 code = string.Empty;
             }
         }
-        else if (Se.Settings.Tools.BatchConvert.LanguagePostFix == Se.Language.General.ThreeLetterLanguageCodeBibliographic)
+        else if (postFixSetting == Se.Language.General.ThreeLetterLanguageCodeBibliographic)
         {
             var twoLetter = primary;
             if (primary.Length == 3)

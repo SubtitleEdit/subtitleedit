@@ -149,7 +149,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public string? OllamaModel { get; init; }
 
         [CommandOption("--translate-to|--translateto")]
-        [Description("Auto-translate to this language (code or English name, e.g. de or German); enables translation")]
+        [Description("Auto-translate to this language (code or English name, e.g. de or German); enables translation. Several comma separated (de,fr,da) give one output per language")]
         public string? TranslateTo { get; init; }
 
         [CommandOption("--translate-from|--translatefrom")]

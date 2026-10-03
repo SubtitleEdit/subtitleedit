@@ -1,4 +1,6 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Features.Translate;
@@ -122,6 +124,41 @@ public static class ViewAutoTranslate
         var labelTargetLanguage = UiUtil.MakeLabel(Se.Language.General.To);
         var targetLangCombo = UiUtil.MakeComboBox(vm.TargetLanguages, vm, nameof(vm.SelectedTargetLanguage));
 
+        // More "To" languages, one combo box each - every language gives its own output file
+        // ("movie.da.srt", "movie.sv.srt")
+        var extraTargetLanguages = new ItemsControl
+        {
+            DataContext = vm,
+            ItemsPanel = new FuncTemplate<Panel?>(() => new WrapPanel { Orientation = Orientation.Horizontal }),
+            ItemTemplate = new FuncDataTemplate<ExtraTargetLanguageItem>((_, _) =>
+            {
+                var combo = new ComboBox
+                {
+                    ItemsSource = vm.TargetLanguages,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(5, 0, 0, 0),
+                }.WithAccessibleName(Se.Language.General.To);
+                combo.Bind(Avalonia.Controls.Primitives.SelectingItemsControl.SelectedItemProperty,
+                    new Binding(nameof(ExtraTargetLanguageItem.SelectedLanguage)) { Mode = BindingMode.TwoWay });
+
+                var buttonRemove = UiUtil.MakeButton(vm.RemoveExtraTargetLanguageCommand, IconNames.Close, Se.Language.General.Remove);
+                buttonRemove.Bind(Button.CommandParameterProperty, new Binding("."));
+                buttonRemove.Margin = new Thickness(2, 0, 0, 0);
+
+                return UiUtil.MakeHorizontalPanel(combo, buttonRemove);
+            }, true),
+        };
+        extraTargetLanguages.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(vm.ExtraTargetLanguages)));
+
+        var buttonAddTargetLanguage = UiUtil.MakeButton(vm.AddExtraTargetLanguageCommand, IconNames.Plus, Se.Language.General.Add)
+            .WithMarginLeft(5);
+
+        var panelTargetLanguages = new WrapPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Children = { targetLangCombo, extraTargetLanguages, buttonAddTargetLanguage },
+        };
+
         var labelUrl = UiUtil.MakeLabel(Se.Language.General.Url).WithBindVisible(vm, nameof(vm.AutoTranslateUrlIsVisible));
         var textBoxUrl = UiUtil.MakeTextBox(300, vm, nameof(vm.AutoTranslateUrl), nameof(vm.AutoTranslateUrlIsVisible));
 
@@ -164,7 +201,7 @@ public static class ViewAutoTranslate
         grid.Add(sourceLangCombo, 3, 1);
 
         grid.Add(labelTargetLanguage, 4, 0);
-        grid.Add(targetLangCombo, 4, 1);
+        grid.Add(panelTargetLanguages, 4, 1);
 
         grid.Add(labelUrl, 5, 0);
         grid.Add(textBoxUrl, 5, 1);
