@@ -3701,8 +3701,10 @@ public class AudioVisualizer : Control
         var startIndex = FindFirstIndexAfterTime(_originalSubtitleCueMaxEnds, start, static maxEnd => maxEnd);
         var lastStart = -1d;
         var count = 0;
+        var minSpacing = GetThinnedSpacingSeconds(end > start ? renderCtx.Width / (end - start) : 0);
 
-        for (var i = startIndex; i < _originalSubtitleCues.Count; i++)
+        var i = startIndex;
+        while (i < _originalSubtitleCues.Count)
         {
             var cue = _originalSubtitleCues[i];
             if (cue.StartSeconds > end)
@@ -3712,16 +3714,27 @@ public class AudioVisualizer : Control
 
             if (cue.EndSeconds < start)
             {
+                i++;
                 continue;
             }
 
-            var isTooShortOrDense = count > 200 &&
-                                    (cue.EndSeconds - cue.StartSeconds < 0.00001 || cue.StartSeconds - lastStart < 0.09);
-            if (isTooShortOrDense)
+            // No cap on the count, see LoadParagraphsInLock (issue #15587).
+            if (count > ParagraphsBeforeThinning)
             {
-                continue;
+                if (cue.StartSeconds - lastStart < minSpacing)
+                {
+                    i = FindFirstIndexAtOrAfterStart(_originalSubtitleCues, i + 1, lastStart + minSpacing, static c => c.StartSeconds);
+                    continue;
+                }
+
+                if (cue.EndSeconds - cue.StartSeconds < 0.00001)
+                {
+                    i++;
+                    continue;
+                }
             }
 
+            i++;
             lastStart = cue.StartSeconds;
             count++;
 
@@ -3742,11 +3755,6 @@ public class AudioVisualizer : Control
                 {
                     DrawParagraphText(context, cue.Text, left + 3, top + 14);
                 }
-            }
-
-            if (count >= 250)
-            {
-                break;
             }
         }
     }
@@ -4361,9 +4369,12 @@ public class AudioVisualizer : Control
 
         var lastStartTime = -1d;
         var count = 0;
+        var viewSeconds = EndPositionSeconds - StartPositionSeconds;
+        var minSpacing = GetThinnedSpacingSeconds(viewSeconds > 0 ? Bounds.Width / viewSeconds : 0) * TimeCode.BaseUnit;
 
-        // 2. Linear scan only the relevant window
-        for (var i = startIndex; i < subtitle.Count; i++)
+        // 2. Scan only the relevant window
+        var i = startIndex;
+        while (i < subtitle.Count)
         {
             var p = subtitle[i];
             var pStart = p.StartTime.TotalMilliseconds;
@@ -4377,23 +4388,34 @@ public class AudioVisualizer : Control
             // Skip subtitles that end before our window starts
             if (p.EndTime.TotalMilliseconds < startThreshold)
             {
+                i++;
                 continue;
             }
 
-            // 3. Apply filtering logic immediately to avoid second loop
-            var isTooShortOrDense = count > 200 && (p.Duration.TotalMilliseconds < 0.01 || pStart - lastStartTime < 90);
-
-            if (!isTooShortOrDense)
+            // 3. Thin out dense sections. There is no cap on the count: a capped scan filled up on
+            // a burst of tens of thousands of frame-by-frame typesetting lines in the left margin
+            // and never reached the lines actually on screen (issue #15587). Jumping past the rest
+            // of a burst keeps the work at roughly one binary search per drawn line.
+            if (count > ParagraphsBeforeThinning)
             {
-                _displayableParagraphs.Add(p);
-                lastStartTime = pStart;
-                count++;
+                if (pStart - lastStartTime < minSpacing)
+                {
+                    i = FindFirstIndexAtOrAfterStart(subtitle, i + 1, lastStartTime + minSpacing,
+                        static paragraph => paragraph.StartTime.TotalMilliseconds);
+                    continue;
+                }
+
+                if (p.Duration.TotalMilliseconds < 0.01)
+                {
+                    i++;
+                    continue;
+                }
             }
 
-            if (count >= 250)
-            {
-                break;
-            }
+            _displayableParagraphs.Add(p);
+            lastStartTime = pStart;
+            count++;
+            i++;
         }
 
         // 4. Optimized Selection Handling
@@ -4414,6 +4436,43 @@ public class AudioVisualizer : Control
                 AllSelectedParagraphs.Add(p);
             }
         }
+    }
+
+    /// <summary>Paragraphs drawn as-is before dense sections start getting thinned out.</summary>
+    private protected const int ParagraphsBeforeThinning = 200;
+
+    /// <summary>
+    /// Minimum start-to-start spacing between thinned paragraphs: 90 ms, or 5 px when zoomed out
+    /// far enough that 90 ms is narrower than that (closer starts would just overdraw each other).
+    /// </summary>
+    private protected static double GetThinnedSpacingSeconds(double pixelsPerSecond)
+    {
+        const double minSpacingSeconds = 0.09;
+        const double minSpacingPixels = 5;
+        return pixelsPerSecond > 0 ? Math.Max(minSpacingSeconds, minSpacingPixels / pixelsPerSecond) : minSpacingSeconds;
+    }
+
+    /// <summary>First index at or after <paramref name="low"/> whose start is at or after <paramref name="time"/> (items sorted by start), or <c>items.Count</c>.</summary>
+    private protected static int FindFirstIndexAtOrAfterStart<T>(IReadOnlyList<T> items, int low, double time, Func<T, double> getStartTime)
+    {
+        var high = items.Count - 1;
+        var result = items.Count;
+
+        while (low <= high)
+        {
+            var mid = low + (high - low) / 2;
+            if (getStartTime(items[mid]) >= time)
+            {
+                result = mid;
+                high = mid - 1;
+            }
+            else
+            {
+                low = mid + 1;
+            }
+        }
+
+        return result;
     }
 
     // Helper for Binary Search
