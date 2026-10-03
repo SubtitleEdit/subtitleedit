@@ -714,88 +714,81 @@ public partial class VisualSyncViewModel : ObservableObject
 
         if (IsLeftFocused())
         {
-            if (e.Key == Key.Space || (e.Key == Key.P && e.KeyModifiers.HasFlag(KeyModifiers.Control)))
-            {
-                e.Handled = true;
-                VideoPlayerControlLeft.TogglePlayPause();
-            }
-            else if (e.Key == Key.Left && e.KeyModifiers.HasFlag(KeyModifiers.Control))
-            {
-                e.Handled = true;
-                VideoPlayerControlLeft.Position = Math.Max(0, VideoPlayerControlLeft.Position - 1);
-                _updateAudioVisualizer = true;
-            }
-            else if (e.Key == Key.Right && e.KeyModifiers.HasFlag(KeyModifiers.Control))
-            {
-                e.Handled = true;
-                VideoPlayerControlLeft.Position += 1;
-                _updateAudioVisualizer = true;
-            }
-            else if (e.Key == Key.Left && e.KeyModifiers.HasFlag(KeyModifiers.Alt))
-            {
-                e.Handled = true;
-                VideoPlayerControlLeft.Position = Math.Max(0, VideoPlayerControlLeft.Position - 0.5);
-                _updateAudioVisualizer = true;
-            }
-            else if (e.Key == Key.Right && e.KeyModifiers.HasFlag(KeyModifiers.Alt))
-            {
-                e.Handled = true;
-                VideoPlayerControlLeft.Position += 0.5;
-                _updateAudioVisualizer = true;
-            }
-            else if ((e.Key == Key.Add || e.Key == Key.OemPlus) && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
-            {
-                e.Handled = true;
-                WaveformVerticalZoomIn(AudioVisualizerLeft);
-            }
-            else if ((e.Key == Key.Subtract || e.Key == Key.OemMinus) && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
-            {
-                e.Handled = true;
-                WaveformVerticalZoomOut(AudioVisualizerLeft);
-            }
+            HandlePaneKeys(e, VideoPlayerControlLeft, AudioVisualizerLeft);
         }
         else if (IsRightFocused())
         {
-            if (e.Key == Key.Space || (e.Key == Key.P && e.KeyModifiers.HasFlag(KeyModifiers.Control)))
-            {
-                e.Handled = true;
-                VideoPlayerControlRight.TogglePlayPause();
-            }
-            else if (e.Key == Key.Left && e.KeyModifiers.HasFlag(KeyModifiers.Control))
-            {
-                e.Handled = true;
-                VideoPlayerControlRight.Position = Math.Max(0, VideoPlayerControlRight.Position - 1);
-                _updateAudioVisualizer = true;
-            }
-            else if (e.Key == Key.Right && e.KeyModifiers.HasFlag(KeyModifiers.Control))
-            {
-                e.Handled = true;
-                VideoPlayerControlRight.Position += 1;
-                _updateAudioVisualizer = true;
-            }
-            else if (e.Key == Key.Left && e.KeyModifiers.HasFlag(KeyModifiers.Alt))
-            {
-                e.Handled = true;
-                VideoPlayerControlRight.Position = Math.Max(0, VideoPlayerControlRight.Position - 0.5);
-                _updateAudioVisualizer = true;
-            }
-            else if (e.Key == Key.Right && e.KeyModifiers.HasFlag(KeyModifiers.Alt))
-            {
-                e.Handled = true;
-                VideoPlayerControlRight.Position += 0.5;
-                _updateAudioVisualizer = true;
-            }
-            else if ((e.Key == Key.Add || e.Key == Key.OemPlus) && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
-            {
-                e.Handled = true;
-                WaveformVerticalZoomIn(AudioVisualizerRight);
-            }
-            else if ((e.Key == Key.Subtract || e.Key == Key.OemMinus) && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
-            {
-                e.Handled = true;
-                WaveformVerticalZoomOut(AudioVisualizerRight);
-            }
+            HandlePaneKeys(e, VideoPlayerControlRight, AudioVisualizerRight);
         }
+    }
+
+    private void HandlePaneKeys(KeyEventArgs e, VideoPlayerControl videoPlayer, AudioVisualizer audioVisualizer)
+    {
+        if (e.Key == Key.Space || (e.Key == Key.P && e.KeyModifiers.HasFlag(KeyModifiers.Control)))
+        {
+            e.Handled = true;
+            videoPlayer.TogglePlayPause();
+            return;
+        }
+
+        var seekSeconds = GetSeekSeconds(e);
+        if (seekSeconds.HasValue)
+        {
+            e.Handled = true;
+            videoPlayer.Position = Math.Max(0, videoPlayer.Position + seekSeconds.Value);
+            _updateAudioVisualizer = true;
+        }
+        else if ((e.Key == Key.Add || e.Key == Key.OemPlus) && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+        {
+            e.Handled = true;
+            WaveformVerticalZoomIn(audioVisualizer);
+        }
+        else if ((e.Key == Key.Subtract || e.Key == Key.OemMinus) && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+        {
+            e.Handled = true;
+            WaveformVerticalZoomOut(audioVisualizer);
+        }
+    }
+
+    /// <summary>
+    /// How far a key moves the focused video, in seconds, or null for other keys.
+    /// The main window's "Move start/end X ms back/forward" shortcuts step by the X ms setting
+    /// (finer than a frame, to hit waveform edges); the built-in arrow steps are SE 4's:
+    /// Ctrl = 100 ms, Alt = 500 ms, Ctrl+Shift = 1 s. A user binding wins over a built-in step.
+    /// </summary>
+    internal static double? GetSeekSeconds(KeyEventArgs e)
+    {
+        var stepSeconds = Math.Max(1, Se.Settings.General.MoveStartEndStepMs) / 1000.0;
+        if (MainShortcutKeys.Matches(e, nameof(MainViewModel.MoveStartXMsBackCommand), []) ||
+            MainShortcutKeys.Matches(e, nameof(MainViewModel.MoveEndXMsBackCommand), []))
+        {
+            return -stepSeconds;
+        }
+
+        if (MainShortcutKeys.Matches(e, nameof(MainViewModel.MoveStartXMsForwardCommand), []) ||
+            MainShortcutKeys.Matches(e, nameof(MainViewModel.MoveEndXMsForwardCommand), []))
+        {
+            return stepSeconds;
+        }
+
+        var direction = e.Key switch
+        {
+            Key.Left => -1,
+            Key.Right => 1,
+            _ => 0,
+        };
+        if (direction == 0)
+        {
+            return null;
+        }
+
+        return e.KeyModifiers switch
+        {
+            KeyModifiers.Control | KeyModifiers.Shift => direction * 1.0,
+            KeyModifiers.Control => direction * 0.1,
+            KeyModifiers.Alt => direction * 0.5,
+            _ => null,
+        };
     }
 
     /// <summary>

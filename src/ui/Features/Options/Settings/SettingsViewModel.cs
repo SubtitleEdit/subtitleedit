@@ -124,6 +124,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private int? _newEmptyDefaultMs;
     [ObservableProperty] private int? _timeCodeUpDownStepMs;
     [ObservableProperty] private int? _moveSelectedLinesStepMs;
+    [ObservableProperty] private int? _moveStartEndStepMs;
     [ObservableProperty] private bool _moveLinesShortenNeighbor;
     [ObservableProperty] private bool _promptBeforeDelete;
     [ObservableProperty] private bool _lockTimeCodes;
@@ -802,6 +803,7 @@ public partial class SettingsViewModel : ObservableObject
         NewEmptyDefaultMs = general.NewEmptyDefaultMs;
         TimeCodeUpDownStepMs = general.TimeCodeUpDownStepMs;
         MoveSelectedLinesStepMs = general.MoveSelectedLinesStepMs;
+        MoveStartEndStepMs = general.MoveStartEndStepMs;
         MoveLinesShortenNeighbor = general.MoveLinesShortenNeighbor;
         PromptBeforeDelete = general.PromptBeforeDelete;
         LockTimeCodes = general.LockTimeCodes;
@@ -1702,6 +1704,7 @@ public partial class SettingsViewModel : ObservableObject
         general.NewEmptyDefaultMs = NewEmptyDefaultMs ?? general.NewEmptyDefaultMs;
         general.TimeCodeUpDownStepMs = TimeCodeUpDownStepMs ?? general.TimeCodeUpDownStepMs;
         general.MoveSelectedLinesStepMs = MoveSelectedLinesStepMs ?? general.MoveSelectedLinesStepMs;
+        general.MoveStartEndStepMs = MoveStartEndStepMs ?? general.MoveStartEndStepMs;
         general.MoveLinesShortenNeighbor = MoveLinesShortenNeighbor;
         general.PromptBeforeDelete = PromptBeforeDelete;
         general.LockTimeCodes = LockTimeCodes;
