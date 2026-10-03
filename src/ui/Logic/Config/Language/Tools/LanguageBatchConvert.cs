@@ -74,7 +74,6 @@ public class LanguageBatchConvert
     public string TransportStreamGetSizeFromVideo { get; set; }
     public string TwoLetterLanguageCodeUppercase { get; set; }
     public string ThreeLetterLanguageCodeUppercase { get; set; }
-    public string AlsoTranslateTo { get; set; }
 
     public LanguageBatchConvert()
     {
@@ -147,6 +146,5 @@ public class LanguageBatchConvert
         TransportStreamGetSizeFromVideo = "Get size from video...";
         TwoLetterLanguageCodeUppercase = "Two-letter language code (uppercase)";
         ThreeLetterLanguageCodeUppercase = "Three-letter language code (uppercase)";
-        AlsoTranslateTo = "Also translate to";
     }
 }
