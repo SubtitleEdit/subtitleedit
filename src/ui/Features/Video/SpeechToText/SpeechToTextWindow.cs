@@ -138,6 +138,20 @@ public class SpeechToTextWindow : Window
             },
         }.BindIsVisible(vm, nameof(vm.IsForcedAlignerVisible));
 
+        var labelVad = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.Vad).WithMarginTop(10)
+            .BindIsVisible(vm, nameof(vm.IsVadVisible));
+        var comboVad = UiUtil.MakeComboBox(vm.VadOptions, vm, nameof(vm.SelectedVadOption))
+            .WithMinWidth(220)
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
+            .WithMarginTop(10)
+            .BindIsVisible(vm, nameof(vm.IsVadVisible))
+            .WithLabeledBy(labelVad);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(labelVad, Se.Language.Video.AudioToText.VadHint);
+            ToolTip.SetTip(comboVad, Se.Language.Video.AudioToText.VadHint);
+        }
+
         var labelLanguage = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.InputLanguage).WithMarginTop(10)
             .BindIsVisible(vm, nameof(vm.IsLanguageSelectionVisible));
         var comboLanguage = UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage))
@@ -381,13 +395,13 @@ public class SpeechToTextWindow : Window
         );
         buttonPanel.Margin = new Thickness(10, 0, 10, 10);
 
-        // Rows: 0 console log label, 1 console log (Star), 2-8 engine/backend/language/model/forced aligner/
+        // Rows: 0 console log label, 1 console log (Star), 2-9 engine/backend/language/model/forced aligner/VAD/
         // isolate speech/detect speakers, then one row per online-STT setting (OpenAI-compatible, OpenRouter, DashScope, Google Cloud; only the
         // selected engine's rows are visible, the rest collapse to zero height), then translate-to-English,
         // post processing, advanced settings label + button, advanced parameters text box, and finally the
         // progress panel + buttons. The count is derived from the engine row arrays so adding an online engine
         // cannot leave trailing rows clamped onto the last row (which made the labels overlap the progress text).
-        const int fixedRowsBeforeOnlineStt = 9;
+        const int fixedRowsBeforeOnlineStt = 10;
         const int fixedRowsAfterOnlineStt = 5;
         var onlineSttRowCount = openAiRows.Length + openRouterRows.Length + dashScopeRows.Length + googleCloudRows.Length;
         var totalRowCount = fixedRowsBeforeOnlineStt + onlineSttRowCount + fixedRowsAfterOnlineStt;
@@ -469,6 +483,10 @@ public class SpeechToTextWindow : Window
 
         grid.Add(labelForcedAligner, row, 0);
         grid.Add(panelForcedAlignerControls, row, 1);
+        row++;
+
+        grid.Add(labelVad, row, 0);
+        grid.Add(comboVad, row, 1);
         row++;
 
         grid.Add(labelIsolateSpeech, row, 0);

@@ -33,6 +33,9 @@ public partial class SpeechToTextAdvancedViewModel : ObservableObject
     public List<ISpeechToTextEngine> Engines { get; set; }
     public ISpeechToTextEngine? SelectedEngine { get; set; }
 
+    /// <summary>The main window's "VAD" choice, which the Crisp ASR "Enable VAD" button puts in.</summary>
+    public string VadChoice { get; set; } = CrispAsrVadModel.Automatic;
+
     public bool OkPressed { get; private set; }
 
     public SpeechToTextAdvancedViewModel()
@@ -250,12 +253,30 @@ public partial class SpeechToTextAdvancedViewModel : ObservableObject
             return;
         }
 
-        var fileName = GetVadCrispAsrFile();
-        var vadArgs = string.IsNullOrEmpty(fileName)
-            ? "--vad"
-            : $"--vad --vad-model \"{fileName}\"";
+        Parameters = AddParameters(VadRegex, GetVadCrispAsrArguments());
+    }
 
-        Parameters = AddParameters(VadRegex, vadArgs);
+    private string GetVadCrispAsrArguments()
+    {
+        var option = CrispAsrVadModel.Get(VadChoice);
+        if (option.Choice == CrispAsrVadModel.Automatic)
+        {
+            option = CrispAsrVadModel.Get(CrispAsrVadModel.Silero);
+        }
+
+        if (option.Choice == CrispAsrVadModel.Silero || SelectedEngine is not ICrispAsrEngine)
+        {
+            var fileName = GetVadCrispAsrFile();
+            return string.IsNullOrEmpty(fileName)
+                ? "--vad"
+                : CrispAsrVadModel.BuildArguments(fileName);
+        }
+
+        // A model that is not downloaded yet goes in by name - crispasr fetches it itself.
+        var modelPath = CrispAsrVadModel.GetModelPath(option, SelectedEngine) ?? option.Choice;
+        return modelPath == option.Choice
+            ? $"--vad --vad-model {option.Choice}"
+            : CrispAsrVadModel.BuildArguments(modelPath);
     }
 
     [RelayCommand]
@@ -278,22 +299,9 @@ public partial class SpeechToTextAdvancedViewModel : ObservableObject
         Parameters = "--max-len 50 --split-on-punct";
     }
 
-    private string? GetVadCrispAsrFile()
+    private static string? GetVadCrispAsrFile()
     {
-        var folder = Se.CrispAsrFolder;
-        if (!Directory.Exists(folder))
-        {
-            return null;
-        }
-
-        var files = Directory.GetFiles(folder, "ggml-silero-v*.bin", SearchOption.TopDirectoryOnly);
-        if (files.Length > 0)
-        {
-            return files.OrderByDescending(p => p).First();
-        }
-
-        var fallback = Path.Combine(folder, "ggml-silero-vad.bin");
-        return File.Exists(fallback) ? fallback : null;
+        return CrispAsrVadModel.FindSilero(Se.CrispAsrFolder);
     }
 
     private string? GetVadCppFile()

@@ -85,6 +85,9 @@ public partial class SpeechToTextViewModel : ObservableObject
     [ObservableProperty] private bool _doIsolateSpeech;
     [ObservableProperty] private bool _doDetectSpeakers;
     [ObservableProperty] private bool _isDetectSpeakersVisible;
+    [ObservableProperty] private bool _isVadVisible;
+    [ObservableProperty] private ObservableCollection<CrispAsrVadOption> _vadOptions;
+    [ObservableProperty] private CrispAsrVadOption _selectedVadOption;
     [ObservableProperty] private ObservableCollection<ForcedAlignerOption> _forcedAligners;
     [ObservableProperty] private ForcedAlignerOption? _selectedForcedAligner;
     [ObservableProperty] private double _progressOpacity;
@@ -333,6 +336,8 @@ public partial class SpeechToTextViewModel : ObservableObject
         WhisperCppBackends = new ObservableCollection<ISpeechToTextEngine>();
         CrispAsrBackends = new ObservableCollection<CrispAsrEngineBase>();
         ForcedAligners = new ObservableCollection<ForcedAlignerOption>();
+        VadOptions = new ObservableCollection<CrispAsrVadOption>(CrispAsrVadModel.Options);
+        SelectedVadOption = CrispAsrVadModel.Get(Se.Settings.Tools.AudioToText.CrispAsrVad);
 
         ResultAudioClips = new List<AudioClip>();
 
@@ -441,6 +446,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         Se.Settings.Tools.AudioToText.WhisperAutoAdjustTimings = DoAdjustTimings;
         Se.Settings.Tools.AudioToText.PostProcessing = DoPostProcessing;
         Se.Settings.Tools.AudioToText.CrispAsrIsolateSpeech = DoIsolateSpeech;
+        Se.Settings.Tools.AudioToText.CrispAsrVad = SelectedVadOption.Choice;
         if (!_keepDetectSpeakersSetting)
         {
             Se.Settings.Tools.AudioToText.CrispAsrDetectSpeakers = DoDetectSpeakers;
@@ -608,6 +614,9 @@ public partial class SpeechToTextViewModel : ObservableObject
         IsBackendSelectionVisible = IsWhisperCppSelected || IsCrispAsrSelected;
         IsForcedAlignerVisible = IsCrispAsrSelected;
         IsDetectSpeakersVisible = IsCrispAsrSelected && GetEffectiveSelectedEngine() is not CrispAsrMossDiarize;
+
+        // Index-Echo reads the VAD model itself and only understands Silero.
+        IsVadVisible = IsCrispAsrSelected && GetEffectiveSelectedEngine() is not CrispAsrIndexEcho;
     }
 
     private void UpdateForcedAlignerUi()
@@ -1017,9 +1026,18 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// <param name="vadSuppressed">
     /// Set on the re-run of a job that came back empty with VAD on (#13911).
     /// </param>
-    internal static bool ShouldForceCrispAsrVad(ISpeechToTextEngine engine, string? crispArgs, bool vadSuppressed)
+    /// <param name="vadChoice">
+    /// The "VAD" combo box. Anything but "Auto" turns VAD on for every Crisp ASR backend (#15563).
+    /// </param>
+    internal static bool ShouldForceCrispAsrVad(ISpeechToTextEngine engine, string? crispArgs, bool vadSuppressed, string? vadChoice = CrispAsrVadModel.Automatic)
     {
-        if (engine is not (CrispAsrCohere or CrispAsrMega or CrispAsrIndexEcho) || vadSuppressed)
+        if (vadSuppressed || engine is not ICrispAsrEngine)
+        {
+            return false;
+        }
+
+        var needsVad = engine is CrispAsrCohere or CrispAsrMega or CrispAsrIndexEcho;
+        if (!needsVad && CrispAsrVadModel.Get(vadChoice).Choice == CrispAsrVadModel.Automatic)
         {
             return false;
         }
@@ -3071,6 +3089,34 @@ public partial class SpeechToTextViewModel : ObservableObject
             "a speaker diarization model");
     }
 
+    /// <summary>
+    /// Makes sure the model for the selected VAD is on disk when this run is going to use it.
+    /// Without it crispasr downloads its own copy into ~/.cache mid-transcription.
+    /// </summary>
+    private async Task<bool> EnsureVadModelDownloadedAsync(ISpeechToTextEngine engine)
+    {
+        if (engine is not ICrispAsrEngine ||
+            !ShouldForceCrispAsrVad(engine, engine.CommandLineParameter, vadSuppressed: false, SelectedVadOption.Choice))
+        {
+            return true;
+        }
+
+        var vadOption = CrispAsrVadModel.GetEffective(SelectedVadOption.Choice, engine);
+        if (!vadOption.NeedsDownload)
+        {
+            return true;
+        }
+
+        return await SpeechIsolationModelDownload.EnsureModelDownloadedAsync(
+            Window!,
+            _windowService,
+            engine,
+            vadOption.ToWhisperModel(),
+            vadOption.DisplayName,
+            Se.Language.Video.AudioToText.Vad,
+            "a voice activity detection model");
+    }
+
     private Task<bool> EnsureSpeechIsolationModelDownloadedAsync(ISpeechToTextEngine engine)
     {
         return SpeechIsolationModelDownload.EnsureDownloadedAsync(Window!, _windowService, engine, Se.Language.Video.AudioToText.IsolateSpeech);
@@ -3783,6 +3829,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             viewModal =>
             {
                 viewModal.Engines = Engines.ToList();
+                viewModal.VadChoice = CrispAsrVadModel.GetEffective(SelectedVadOption.Choice, GetEffectiveSelectedEngine()).Choice;
                 viewModal.EngineClickedCommand.Execute(SelectedEngine);
             });
 
@@ -4211,6 +4258,11 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
 
             if (ShouldDetectSpeakers() && !await EnsureSpeakerDetectionReadyAsync(engine))
+            {
+                return;
+            }
+
+            if (!await EnsureVadModelDownloadedAsync(engine))
             {
                 return;
             }
@@ -4762,17 +4814,15 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
 
             var vadPart = string.Empty;
-            if (ShouldForceCrispAsrVad(crispAsrEngine, crispArgs, _crispAsrVadSuppressed))
+            if (ShouldForceCrispAsrVad(crispAsrEngine, crispArgs, _crispAsrVadSuppressed, SelectedVadOption.Choice))
             {
-                var crispFolder = crispAsrEngine.GetAndCreateWhisperFolder();
-                var vadFiles = Directory.Exists(crispFolder)
-                    ? Directory.GetFiles(crispFolder, "ggml-silero-v*.bin", SearchOption.TopDirectoryOnly)
-                    : Array.Empty<string>();
-                var vadPath = vadFiles.OrderByDescending(p => p).FirstOrDefault()
-                              ?? Path.Combine(crispFolder, "ggml-silero-vad.bin");
-                if (File.Exists(vadPath))
+                var vadOption = CrispAsrVadModel.GetEffective(SelectedVadOption.Choice, crispAsrEngine);
+                // A model that is not on disk falls back to Silero - Cohere and Mega must not lose VAD.
+                var vadPath = CrispAsrVadModel.GetModelPath(vadOption, crispAsrEngine)
+                              ?? CrispAsrVadModel.GetModelPath(CrispAsrVadModel.Get(CrispAsrVadModel.Silero), crispAsrEngine);
+                if (vadPath != null)
                 {
-                    vadPart = $" --vad --vad-model \"{vadPath}\"";
+                    vadPart = " " + CrispAsrVadModel.BuildArguments(vadPath);
                 }
             }
 
