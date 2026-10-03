@@ -14,8 +14,8 @@ The aligner looks for each line round its current position only, so on its own i
 
 - **Engine status + gear icon** — shows the installed Crisp ASR version. The gear opens the engine settings (backend, update / re-download), the same dialog as in Speech to text.
 - **Aligner** — the model that does the listening. The list is ordered best first for the language of the subtitle:
-  1. the *wav2vec2 aligner* for that language, when there is one (English, German, French, Spanish, Italian, Japanese, Chinese, Dutch, Portuguese, Arabic, Ukrainian, Czech) — the most precise, and its line ends stop where the speech stops;
-  2. the *Canary CTC aligner* — one model for 25 European languages, accurate to about 80 ms;
+  1. the *wav2vec2 aligner* for that language, when there is one (German, French, Spanish, Italian, Japanese, Chinese, Dutch, Portuguese, Arabic, Ukrainian, Czech) — the most precise;
+  2. the *Canary CTC aligner* — one model for 25 European languages, accurate to about 80 ms. For English it comes first, ahead of the English wav2vec2 aligner: it keeps its place better when the subtitle leaves out words that are said;
   3. the *Qwen3 forced aligner* — for the languages only it covers (e.g. Korean).
 
   A model that is not installed yet says how much will be downloaded; the download starts when you press **Align**.
