@@ -8,8 +8,8 @@ namespace UITests.Features.Translate;
 /// <summary>
 /// The auto-translate target combo always opened on Abkhaz for ChatGPT (#14903): the LLM engines
 /// keep the English name in Code, the default only matched on Code, and so it fell back to the
-/// alphabetically first entry. The default is now the last target, then the UI language, then
-/// English - matched however the engine spells the language.
+/// alphabetically first entry. The default is now the last target, then the reverse of the
+/// last run, then the UI language, then the OS language, then English - matched however the engine spells the language.
 /// </summary>
 public class AutoTranslateDefaultTargetLanguageTests
 {
@@ -84,6 +84,52 @@ public class AutoTranslateDefaultTargetLanguageTests
         var target = AutoTranslateViewModel.FindDefaultTargetLanguage(GoogleLike(), source, string.Empty, "en-US");
 
         Assert.Equal("de", target?.Code);
+    }
+
+    [Fact]
+    public void EnglishSourceWithEnglishUiPicksTheOsLanguage()
+    {
+        var languages = GoogleLike();
+        languages.Add(new TranslationPair("Danish", "da"));
+        var source = new TranslationPair("English", "en");
+
+        var target = AutoTranslateViewModel.FindDefaultTargetLanguage(languages, source, string.Empty, "en-US", null, "da-DK");
+
+        Assert.Equal("da", target?.Code);
+    }
+
+    [Fact]
+    public void UiLanguageWinsOverTheOsLanguage()
+    {
+        var languages = GoogleLike();
+        languages.Add(new TranslationPair("Danish", "da"));
+
+        var target = AutoTranslateViewModel.FindDefaultTargetLanguage(languages, null, string.Empty, "en-US", null, "da-DK");
+
+        Assert.Equal("en", target?.Code);
+    }
+
+    /// <summary>Last run was Danish to English, now the subtitle is English: suggest the reverse.</summary>
+    [Fact]
+    public void LastTargetEqualToTheSourcePicksTheLastSource()
+    {
+        var languages = GoogleLike();
+        languages.Add(new TranslationPair("Danish", "da"));
+        var source = new TranslationPair("English", "en");
+
+        var target = AutoTranslateViewModel.FindDefaultTargetLanguage(languages, source, "en", "en-US", "da", "en-US");
+
+        Assert.Equal("da", target?.Code);
+    }
+
+    [Fact]
+    public void LastSourceIsNotUsedWhenTheLastTargetIsStillValid()
+    {
+        var source = new TranslationPair("English", "en");
+
+        var target = AutoTranslateViewModel.FindDefaultTargetLanguage(GoogleLike(), source, "ja", "en-US", "de", "en-US");
+
+        Assert.Equal("ja", target?.Code);
     }
 
     [Fact]

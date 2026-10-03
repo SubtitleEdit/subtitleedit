@@ -741,7 +741,9 @@ public partial class AutoTranslateViewModel : ObservableObject
             TargetLanguages,
             SelectedSourceLanguage,
             Se.Settings.AutoTranslate.AutoTranslateLastTarget,
-            Se.Language.CultureName);
+            Se.Language.CultureName,
+            Se.Settings.AutoTranslate.AutoTranslateLastSource,
+            System.Globalization.CultureInfo.CurrentUICulture.Name);
     }
 
     [RelayCommand]
@@ -2513,7 +2515,10 @@ public partial class AutoTranslateViewModel : ObservableObject
 
     /// <summary>
     /// The target language a freshly built target combo starts on: the last target used, then the
-    /// UI language, then English - skipping any that is the source language (#14903).
+    /// last source if the last target is now the source (the reverse direction), then the UI
+    /// language, then the OS language, then English - skipping any that is the source language (#14903).
+    /// The OS language makes a Danish macOS with an English UI suggest Danish for an English
+    /// subtitle instead of the German fallback.
     ///
     /// The old default only matched on <see cref="TranslationPair.Code"/> and guessed the user's
     /// language from the region part of the OS culture ("US" in "en-US"). The LLM engines keep the
@@ -2524,19 +2529,24 @@ public partial class AutoTranslateViewModel : ObservableObject
         IList<TranslationPair> targetLanguages,
         TranslationPair? sourceLanguage,
         string? lastTarget,
-        string? uiCultureName)
+        string? uiCultureName,
+        string? lastSource = null,
+        string? osCultureName = null)
     {
         if (targetLanguages.Count == 0)
         {
             return null;
         }
 
-        var candidates = new List<string?> { lastTarget, uiCultureName };
-        if (!string.IsNullOrEmpty(uiCultureName) && uiCultureName.Contains('-'))
+        var candidates = new List<string?> { lastTarget };
+        var lastTargetLanguage = FindLanguage(targetLanguages, lastTarget);
+        if (lastTargetLanguage != null && IsSameLanguage(lastTargetLanguage, sourceLanguage))
         {
-            candidates.Add(uiCultureName.Substring(0, uiCultureName.IndexOf('-')));
+            candidates.Add(lastSource);
         }
 
+        AddCultureCandidates(candidates, uiCultureName);
+        AddCultureCandidates(candidates, osCultureName);
         candidates.Add("en");
         candidates.Add("de");
 
@@ -2550,6 +2560,20 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
 
         return targetLanguages.FirstOrDefault(p => !IsSameLanguage(p, sourceLanguage)) ?? targetLanguages[0];
+    }
+
+    private static void AddCultureCandidates(List<string?> candidates, string? cultureName)
+    {
+        if (string.IsNullOrEmpty(cultureName))
+        {
+            return;
+        }
+
+        candidates.Add(cultureName);
+        if (cultureName.Contains('-'))
+        {
+            candidates.Add(cultureName.Substring(0, cultureName.IndexOf('-')));
+        }
     }
 
     /// <summary>
