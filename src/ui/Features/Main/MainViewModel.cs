@@ -17026,7 +17026,7 @@ public partial class MainViewModel :
 
         foreach (var item in selectedItems)
         {
-            item.Text = HtmlUtil.RemoveHtmlTags(item.Text, true);
+            item.Text = FormattingRemover.RemoveAll(item.Text);
         }
 
         _shortcutManager.ClearKeys();
@@ -19533,7 +19533,7 @@ public partial class MainViewModel :
 
         if (selectionLength == 0)
         {
-            tb.Text = HtmlUtil.RemoveHtmlTags(tb.Text, true);
+            tb.Text = FormattingRemover.RemoveAll(tb.Text);
         }
         else
         {
