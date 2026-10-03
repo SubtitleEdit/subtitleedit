@@ -24,6 +24,7 @@ public class LanguageBatchConvert
     public string AddColor { get; set; }
     public string DeleteLinesWithSpecificActorsOrStyles { get; set; }
     public string UseSourceStylesIfPossible { get; set; }
+    public string KeepSourceEmbeddedFonts { get; set; }
     public string EditStyles { get; set; }
     public string EditProperties { get; set; }
     public string EditAttachments { get; set; }
@@ -94,7 +95,8 @@ public class LanguageBatchConvert
         AddAlignment = "Add alignment";
         AddColor = "Add color";
         DeleteLinesWithSpecificActorsOrStyles = "Delete lines with actors or styles (separate multiple by comma)";
-        UseSourceStylesIfPossible = "Use source styles if possible";
+        UseSourceStylesIfPossible = "Use source styles if possible (the header below is then only used for non-ASSA input)";
+        KeepSourceEmbeddedFonts = "Keep source embedded fonts (footer)";
         EditStyles = "Edit styles";
         EditProperties = "Edit properties";
         EditAttachments = "Edit attachments";

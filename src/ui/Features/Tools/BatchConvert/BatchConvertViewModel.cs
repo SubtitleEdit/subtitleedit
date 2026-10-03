@@ -2824,6 +2824,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             AssaUseSourceStylesIfPossible = Se.Settings.Tools.BatchConvert.AssaUseSourceStylesIfPossible,
             AssaHeader = Se.Settings.Tools.BatchConvert.AssaHeader,
             AssaFooter = Se.Settings.Tools.BatchConvert.AssaFooter,
+            AssaKeepSourceEmbeddedFonts = Se.Settings.Tools.BatchConvert.AssaKeepSourceEmbeddedFonts,
             EbuHeader = EbuHeader,
             EbuJustificationCode = EbuJustificationCode,
 
