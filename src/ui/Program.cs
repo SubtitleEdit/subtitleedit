@@ -63,6 +63,13 @@ namespace Nikse.SubtitleEdit
             // font without a family name - no window, no error log (Ubuntu 26.04 user report).
             FontconfigFamilyGuard.Apply();
 
+            // Child processes inherit the error mode, so a crashing Whisper engine/ffmpeg exits
+            // instead of hanging on a Windows "has stopped working" dialog (stalling batch jobs).
+            if (OperatingSystem.IsWindows())
+            {
+                SetErrorMode(0x0001 | 0x0002); // SEM_FAILCRITICALERRORS | SEM_NOGPFAULTERRORBOX
+            }
+
             try
             {
                 // Global exception handling
@@ -296,6 +303,9 @@ namespace Nikse.SubtitleEdit
 
         [LibraryImport("libc", StringMarshalling = StringMarshalling.Utf8, SetLastError = true)]
         private static partial int setenv(string name, string value, int overwrite);
+
+        [LibraryImport("kernel32.dll")]
+        private static partial uint SetErrorMode(uint mode);
 
         /// <summary>
         /// Makes dead-key accents (á, ê, õ, ...) work on Linux. Avalonia's ibus D-Bus client
