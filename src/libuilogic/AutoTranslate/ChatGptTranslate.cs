@@ -14,7 +14,7 @@ using Nikse.SubtitleEdit.UiLogic.Http;
 
 namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 {
-    public class ChatGptTranslate : IAutoTranslator, IDisposable
+    public class ChatGptTranslate : IAutoTranslator, ILineBreakPreservingTranslator, IDisposable
     {
         private static readonly Regex UnicodeRegex = new Regex(@"\\u([0-9a-fA-F]{4})", RegexOptions.Compiled);
         private static readonly Regex PreambleRegex = new Regex(@"^(Here is|Here's) [a-zA-Z ,]+:", RegexOptions.Compiled);

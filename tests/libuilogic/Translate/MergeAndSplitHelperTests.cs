@@ -625,6 +625,49 @@ public class MergeAndSplitHelperTests
         Assert.Equal(3, count);
     }
 
+    // Issue #15602: ChatGPT gets the rows of a sentence as lines too, so its words stay in the
+    // row whose timing they belong to.
+    [Fact]
+    public void ChatGpt_IsLineBreakPreserving()
+    {
+        Assert.True(typeof(ILineBreakPreservingTranslator).IsAssignableFrom(typeof(ChatGptTranslate)));
+    }
+
+    // Issue #15602: the reply kept the row boundaries but changed the sentence punctuation, so
+    // the punctuation split fails and the line-count split takes over - it must deal the lines
+    // back out to the rows, not re-cut the sentence by length ("namens" moved into row 1).
+    [Fact]
+    public async Task MergeAndTranslateIfPossible_LineBreakPreservingEngineChangedPunctuationKeepsRowBoundaries()
+    {
+        var rows = new ObservableCollection<TranslateRow>
+        {
+            new() { Number = 1, Show = TimeSpan.FromMilliseconds(0), Hide = TimeSpan.FromMilliseconds(1500), Text = "And I have this boy" },
+            new() { Number = 2, Show = TimeSpan.FromMilliseconds(1600), Hide = TimeSpan.FromMilliseconds(2400), Text = "named Time" },
+            new() { Number = 3, Show = TimeSpan.FromMilliseconds(2500), Hide = TimeSpan.FromMilliseconds(5500), Text = "who also auditioned and did an amazing job." },
+        };
+        var translator = new LineBreakPreservingTranslator
+        {
+            Result = "Und ich habe da diesen Jungen" + Environment.NewLine +
+                     "namens Time." + Environment.NewLine +
+                     "Er hat ebenfalls vorgesprochen und einen tollen Job gemacht.",
+        };
+
+        var count = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+            rows,
+            new TranslationPair("English", "en"),
+            new TranslationPair("German", "de"),
+            0,
+            translator,
+            forceSingleLineMode: false,
+            CancellationToken.None);
+
+        Assert.Equal("And I have this boy" + Environment.NewLine + "named Time" + Environment.NewLine + "who also auditioned and did an amazing job.", translator.SentText);
+        Assert.Equal(3, count);
+        Assert.Equal("Und ich habe da diesen Jungen", rows[0].TranslatedText);
+        Assert.Equal("namens Time.", rows[1].TranslatedText);
+        Assert.Equal("Er hat ebenfalls vorgesprochen und einen tollen Job gemacht.", rows[2].TranslatedText.Replace(Environment.NewLine, " "));
+    }
+
     private sealed class CapturingTranslator : IAutoTranslator
     {
         private readonly Action<string> _onTranslate;
