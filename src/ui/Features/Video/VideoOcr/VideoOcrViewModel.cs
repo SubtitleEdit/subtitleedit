@@ -106,6 +106,7 @@ public partial class VideoOcrViewModel : ObservableObject
     /// <summary>The video being OCR'ed - the window shows its file name in the title.</summary>
     public string VideoFileName => _videoFileName;
     private CancellationTokenSource _cancellationTokenSource = new();
+    private string _ocrStoppedEarlyError = string.Empty;
     private readonly ISpellCheckManager _spellCheckManager;
     private readonly IOcrFixEngine _ocrFixEngine;
     private Process? _ffmpegProcess;
@@ -893,7 +894,16 @@ public partial class VideoOcrViewModel : ObservableObject
             ProgressValue = 0;
             ProgressText = string.Format(Se.Language.Video.VideoOcr.LinesFoundX, Lines.Count);
 
-            if (Lines.Count == 0)
+            if (!string.IsNullOrEmpty(_ocrStoppedEarlyError))
+            {
+                await MessageBox.Show(
+                    Window!,
+                    Se.Language.General.Error,
+                    string.Format(Se.Language.Video.VideoOcr.OcrStoppedEarlyMessage, Environment.NewLine, _ocrStoppedEarlyError),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+            }
+            else if (Lines.Count == 0)
             {
                 await MessageBox.Show(
                     Window!,
@@ -1082,6 +1092,7 @@ public partial class VideoOcrViewModel : ObservableObject
             ProgressText = string.Format(Se.Language.Video.VideoOcr.RunningOcrXY, 0, ocrGroups.Count);
         });
 
+        _ocrStoppedEarlyError = string.Empty;
         await OcrGroups(ocrGroups, ReportOcrProgress, AddPreviewLine, cancellationToken);
     }
 
@@ -1150,9 +1161,15 @@ public partial class VideoOcrViewModel : ObservableObject
                 MinConfidencePercent = 75,
             };
             await paddleOcr.OcrBatch(engineType, batch, language, mode, progress, cancellationToken);
-            if (!string.IsNullOrEmpty(paddleOcr.Error) && ocrGroups.All(p => string.IsNullOrEmpty(p.Text)))
+            if (!string.IsNullOrEmpty(paddleOcr.Error))
             {
-                throw new Exception("Paddle OCR failed: " + paddleOcr.Error);
+                if (ocrGroups.All(p => string.IsNullOrEmpty(p.Text)))
+                {
+                    throw new Exception("Paddle OCR failed: " + paddleOcr.Error);
+                }
+
+                // Stopped part-way: keep the lines read so far, warn once the scan is done
+                _ocrStoppedEarlyError = paddleOcr.Error;
             }
         }
         else if (engineType == OcrEngineType.Ollama)

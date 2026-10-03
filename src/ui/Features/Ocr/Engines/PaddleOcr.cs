@@ -372,6 +372,15 @@ public partial class PaddleOcr
         var poller = CreatePoller(saveFolder);
         await poller.PollUntilDoneAsync(() => process.HasExited, ReportResult, LogParseError, cancellationToken);
 
+        // The poller gave up while the launcher is still alive: nothing new for minutes, so the
+        // worker died or hung. Waiting for the launcher here would block forever with progress
+        // frozen part-way, so stop it and report what came back.
+        if (!poller.IsComplete && !process.HasExited && !cancellationToken.IsCancellationRequested)
+        {
+            Se.WriteToolsLog($"Paddle OCR ({engineType}) stopped producing results after {poller.ReportedCount} of {_batchFileNames.Count} images - stopping it");
+            KillProcessTree(process);
+        }
+
         try
         {
             await process.WaitForExitAsync(cancellationToken);
@@ -432,6 +441,26 @@ public partial class PaddleOcr
             Se.LogError($"PaddleOCR failed with exit code {process.ExitCode} and error: {Error}");
             Se.WriteToolsLog($"Paddle OCR ({engineType}) failed with exit code {process.ExitCode}: {Error}");
         }
+        else if (!poller.IsComplete && !cancellationToken.IsCancellationRequested)
+        {
+            // Some results, but not all: the worker crashed or ran out of memory part-way. The
+            // lines read so far have already been reported; without an error the rest would
+            // just stay empty and the run would look complete.
+            lock (_errorLock)
+            {
+                Error = $"PaddleOCR stopped after {poller.ReportedCount} of {_batchFileNames.Count} images (exit code {process.ExitCode})." +
+                        Environment.NewLine + Environment.NewLine + GetLastLines(_errorOutput.ToString(), 20);
+            }
+
+            Se.LogError($"PaddleOCR stopped early: {Error}");
+            Se.WriteToolsLog($"Paddle OCR ({engineType}) stopped early: {Error}");
+        }
+    }
+
+    private static string GetLastLines(string text, int count)
+    {
+        var lines = text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+        return string.Join(Environment.NewLine, lines.Skip(Math.Max(0, lines.Length - count)).Select(p => p.TrimEnd('\r')));
     }
 
     // Test seam: wires up the batch inputs and progress sink used by
