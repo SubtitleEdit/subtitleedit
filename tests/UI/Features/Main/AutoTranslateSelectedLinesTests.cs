@@ -16,7 +16,7 @@ namespace UITests.Features.Main;
 /// <summary>
 /// "Selected lines > Auto translate" with a single subtitle open (#14926): the selected lines are
 /// translated from their own text, the grid shows the translation, and the subtitle becomes the
-/// original - every row, not just the selected ones.
+/// original - every row, not just the selected ones. Unselected rows start with a blank translation.
 /// </summary>
 public class AutoTranslateSelectedLinesTests
 {
@@ -41,7 +41,7 @@ public class AutoTranslateSelectedLinesTests
             await SettleAsync(window);
 
             Assert.True(FakeTranslateWindowService.LastInPlaceOffered);
-            Assert.Equal(new[] { "T:One", "T:Two", "Three" }, vm.Subtitles.Select(p => p.Text));
+            Assert.Equal(new[] { "T:One", "T:Two", "" }, vm.Subtitles.Select(p => p.Text)); // unselected lines are not translated yet
             Assert.Equal(new[] { "One", "Two", "Three" }, vm.Subtitles.Select(p => p.OriginalText));
             Assert.True(vm.ShowColumnOriginalText);
 

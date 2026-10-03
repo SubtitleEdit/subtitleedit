@@ -13071,6 +13071,24 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task AutoTranslateSelectedLines()
     {
+        await AutoTranslateSelectedLines(autoStart: false);
+    }
+
+    /// <summary>
+    /// Translates the selected lines with the last used engine and languages without waiting for
+    /// the user - the dialog only shows progress and closes itself when done (#15603). Until a
+    /// translation has been run once there is nothing remembered to use, so it prompts as usual.
+    /// </summary>
+    [RelayCommand]
+    private async Task AutoTranslateSelectedLinesNoPrompt()
+    {
+        var hasLastUsed = !string.IsNullOrEmpty(Se.Settings.AutoTranslate.AutoTranslateLastName) &&
+                          !string.IsNullOrEmpty(Se.Settings.AutoTranslate.AutoTranslateLastTarget);
+        await AutoTranslateSelectedLines(autoStart: hasLastUsed);
+    }
+
+    private async Task AutoTranslateSelectedLines(bool autoStart)
+    {
         var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (selectedItems.Count == 0)
         {
@@ -13111,6 +13129,11 @@ public partial class MainViewModel :
             {
                 vm.OfferTranslateInPlace();
             }
+
+            if (autoStart)
+            {
+                vm.SetAutoStart();
+            }
         });
 
         if (!result.OkPressed)
@@ -13129,10 +13152,17 @@ public partial class MainViewModel :
 
         if (captureOriginal)
         {
+            // Only the selected lines get a translation - the others start out untranslated
+            // (blank) instead of showing a copy of the original text as if translated (#15603).
+            var selectedIds = selectedItems.Select(p => p.Id).ToHashSet();
             foreach (var line in Subtitles)
             {
                 line.OriginalText = line.Text;
                 line.ReferenceParagraphId = null;
+                if (!selectedIds.Contains(line.Id))
+                {
+                    line.Text = string.Empty;
+                }
             }
         }
 
