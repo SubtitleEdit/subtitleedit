@@ -1,4 +1,4 @@
-﻿using Avalonia.Media;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 using Nikse.SubtitleEdit.Core.Enums;
@@ -85,6 +85,8 @@ public class SeGeneral
     /// <summary>How much the time up/down controls change per step when the caret is on the
     /// milliseconds part. Frame mode always steps one frame (#12506).</summary>
     public int TimeCodeUpDownStepMs { get; set; }
+    /// <summary>Time adjustment step size in milliseconds for grid time mouse-wheel adjustments and time edit popup.</summary>
+    public int GridTimeAdjustStepMs { get; set; }
     /// <summary>How far the "move selected lines X ms back/forward" shortcuts shift, in
     /// milliseconds (SE 4 had fixed 100 ms variants; #14789 asks for repeatable drift fixes).</summary>
     public int MoveSelectedLinesStepMs { get; set; }
@@ -294,6 +296,7 @@ public class SeGeneral
         AutoGuessAnsiEncoding = true;
         NewEmptyDefaultMs = 2000;
         TimeCodeUpDownStepMs = 100;
+        GridTimeAdjustStepMs = 500;
         MoveSelectedLinesStepMs = 100;
         MoveSelectedLinesCustom1Ms = 10;
         MoveSelectedLinesCustom2Ms = 1000;

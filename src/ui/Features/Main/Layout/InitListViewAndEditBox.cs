@@ -70,6 +70,7 @@ public static partial class InitListViewAndEditBox
                 vm.SubtitleGridDropHost.RemoveHandler(InputElement.PointerPressedEvent, vm.SubtitleGrid_PointerPressed);
                 vm.SubtitleGridDropHost.RemoveHandler(InputElement.PointerReleasedEvent, vm.SubtitleGrid_PointerReleased);
                 vm.SubtitleGridDropHost.RemoveHandler(InputElement.PointerMovedEvent, vm.SubtitleGrid_PointerMoved);
+                vm.SubtitleGridDropHost.RemoveHandler(InputElement.PointerWheelChangedEvent, vm.SubtitleGrid_PointerWheelChanged);
                 vm.SubtitleGridDropHost.ContextFlyout = null;
                 vm.SubtitleGridDropHost = null;
             }
@@ -1535,6 +1536,7 @@ public static partial class InitListViewAndEditBox
         dropHost.AddHandler(InputElement.PointerPressedEvent, vm.SubtitleGrid_PointerPressed, RoutingStrategies.Tunnel, handledEventsToo: true);
         dropHost.AddHandler(InputElement.PointerReleasedEvent, vm.SubtitleGrid_PointerReleased, RoutingStrategies.Tunnel, handledEventsToo: true);
         dropHost.AddHandler(InputElement.PointerMovedEvent, vm.SubtitleGrid_PointerMoved, RoutingStrategies.Tunnel, handledEventsToo: true);
+        dropHost.AddHandler(InputElement.PointerWheelChangedEvent, vm.SubtitleGrid_PointerWheelChanged, RoutingStrategies.Tunnel, handledEventsToo: true);
 
         // Edit area - restructured with time controls on left, multiline text on right
         var editGrid = new Grid

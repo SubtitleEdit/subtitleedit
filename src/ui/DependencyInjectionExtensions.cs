@@ -45,6 +45,7 @@ using Nikse.SubtitleEdit.Features.Main.ActorPicker;
 using Nikse.SubtitleEdit.Features.Main.StylePicker;
 using Nikse.SubtitleEdit.Features.Main.AssistedSplit;
 using Nikse.SubtitleEdit.Features.Main.GridColumns;
+using Nikse.SubtitleEdit.Features.Main.GridTimeAdjust;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Features.Main.MainHelpers;
 using Nikse.SubtitleEdit.Features.Ocr;
@@ -478,6 +479,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<GetKeyViewModel>();
         collection.AddTransient<GoToLineNumberViewModel>();
         collection.AddTransient<GridColumnsViewModel>();
+        collection.AddTransient<GridTimeAdjustViewModel>();
         collection.AddTransient<FormatLimitWarningViewModel>();
         collection.AddTransient<GoToVideoPositionViewModel>();
         collection.AddTransient<HearingImpairedRuleSettingsViewModel>();
