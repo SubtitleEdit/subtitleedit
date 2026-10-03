@@ -150,6 +150,7 @@ public class LanguageSettingsShortcuts
     public string ListViewColumnTextUp { get; set; }
     public string ListViewColumnTextDown { get; set; }
     public string AutoTranslateSelectedLines { get; set; }
+    public string AutoTranslateSelectedLinesNoPrompt { get; set; }
     public string SetAssaResolution { get; set; }
     public string SetShortcutForX { get; set; }
     public string CommandFileNewKeepVideo { get; set; }
@@ -486,6 +487,7 @@ public class LanguageSettingsShortcuts
         ListViewColumnTextUp = "Column, text up";
         ListViewColumnTextDown = "Column, text down";
         AutoTranslateSelectedLines = "Auto-translate selected lines...";
+        AutoTranslateSelectedLinesNoPrompt = "Auto-translate selected lines (no prompt, use last engine/languages)";
         SetAssaResolution = "Set ASSA resolution (PlayResX/PlayResY)";
         SetShortcutForX = "Set shortcut for \"{0}\"";
         CommandFileNewKeepVideo = "New (keep video)";

@@ -586,6 +586,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.ShowToolsRenumberCommand), Se.Language.Main.Menu.Renumber },
         { nameof(MainViewModel.EvenlyDistributeSelectedLinesCommand), Se.Language.Main.Menu.EvenlyDistributeLines },
         { nameof(MainViewModel.AutoTranslateSelectedLinesCommand), Se.Language.Options.Shortcuts.AutoTranslateSelectedLines },
+        { nameof(MainViewModel.AutoTranslateSelectedLinesNoPromptCommand), Se.Language.Options.Shortcuts.AutoTranslateSelectedLinesNoPrompt },
         { nameof(MainViewModel.ShowAssaChangeResolutionCommand), Se.Language.Options.Shortcuts.SetAssaResolution },
         { nameof(MainViewModel.ShowChooseProfileCommand), Se.Language.Options.Shortcuts.ChooseRuleProfile },
         { nameof(MainViewModel.TogglePlaybackSpeedCommand), Se.Language.Options.Shortcuts.TogglePlaybackSpeed },
@@ -1119,6 +1120,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.ShowToolsRenumberCommand, nameof(vm.ShowToolsRenumberCommand), ShortcutCategory.General, ShortcutGroup.Tools);
         AddShortcut(shortcuts, vm.EvenlyDistributeSelectedLinesCommand, nameof(vm.EvenlyDistributeSelectedLinesCommand), ShortcutCategory.SubtitleGrid);
         AddShortcut(shortcuts, vm.AutoTranslateSelectedLinesCommand, nameof(vm.AutoTranslateSelectedLinesCommand), ShortcutCategory.General, ShortcutGroup.Translate);
+        AddShortcut(shortcuts, vm.AutoTranslateSelectedLinesNoPromptCommand, nameof(vm.AutoTranslateSelectedLinesNoPromptCommand), ShortcutCategory.General, ShortcutGroup.Translate);
         AddShortcut(shortcuts, vm.ShowAssaChangeResolutionCommand, nameof(vm.ShowAssaChangeResolutionCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowChooseProfileCommand, nameof(vm.ShowChooseProfileCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.TogglePlaybackSpeedCommand, nameof(vm.TogglePlaybackSpeedCommand), ShortcutCategory.General, ShortcutGroup.Video);

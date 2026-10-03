@@ -123,6 +123,8 @@ public partial class AutoTranslateViewModel : ObservableObject
     private List<string> _apiUrls = new();
     private List<string> _apiModels = new();
     private bool _onlyCurrentLine;
+    private bool _autoStart;
+    private bool _translationFailed;
     private Subtitle _subtitle = new Subtitle();
     private int _translationProgressIndex;
     private bool _llamaCppUpdatePromptShown;
@@ -215,6 +217,16 @@ public partial class AutoTranslateViewModel : ObservableObject
     {
         TranslateInPlaceIsVisible = true;
         TranslateInPlace = Se.Settings.AutoTranslate.TranslateSelectedLinesInPlace;
+    }
+
+    /// <summary>
+    /// For the "Auto-translate selected lines (no prompt)" shortcut (#15603): translate right away
+    /// with the last used engine and languages, and close with OK when done. On an error or cancel
+    /// the window stays open, so the user can fix the settings or retry.
+    /// </summary>
+    public void SetAutoStart()
+    {
+        _autoStart = true;
     }
 
     private void LoadSettings()
@@ -1375,6 +1387,7 @@ public partial class AutoTranslateViewModel : ObservableObject
     private async Task<bool> StartTranslation(IAutoTranslator translator)
     {
         _abort = false;
+        _translationFailed = false;
         IsProgressEnabled = true;
         var engineType = translator.GetType();
 
@@ -1653,6 +1666,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
         catch (Exception ex)
         {
+            _translationFailed = true;
             _ = Dispatcher.UIThread.Invoke(async () =>
             {
                 var details = new System.Text.StringBuilder();
@@ -1726,6 +1740,11 @@ public partial class AutoTranslateViewModel : ObservableObject
                 if (lastTranslatedRow != null)
                 {
                     SelectAndScrollToRow(Rows.IndexOf(lastTranslatedRow));
+                }
+
+                if (_autoStart && !_abort && !_translationFailed && HasTranslatedSomething)
+                {
+                    Ok();
                 }
             });
         }
@@ -2690,5 +2709,10 @@ public partial class AutoTranslateViewModel : ObservableObject
                 SelectedTranslateRow = Rows[0];
             }
         });
+
+        if (_autoStart)
+        {
+            Dispatcher.UIThread.Post(async () => await DoTranslate(onlyCurrentLine: false));
+        }
     }
 }
