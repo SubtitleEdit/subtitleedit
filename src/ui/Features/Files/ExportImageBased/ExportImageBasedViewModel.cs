@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.UiLogic.Export;
+﻿using Nikse.SubtitleEdit.UiLogic.Export;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
@@ -144,6 +145,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     private int _scriptWidth;
     private int _scriptHeight;
     private bool _dirty;
+    private bool _removeAssaCommentBlocks;
     private Stereo3DPlane? _plane3D;
     private readonly Lock _generateLock;
     private bool _isCtrlDown;
@@ -566,7 +568,10 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             PaddingLeftRight = SelectedPaddingLeftRight,
             PaddingTopBottom = SelectedPaddingTopBottom,
             Index = i,
-            Text = ExportTextTags.ToRenderableText(subtitle.Text),
+            // ASSA renderers never draw a {comment} block, so neither does the image (#15584).
+            Text = ExportTextTags.ToRenderableText(_removeAssaCommentBlocks
+                ? AdvancedSubStationAlpha.RemoveCommentBlocks(subtitle.Text)
+                : subtitle.Text),
             StartTime = subtitle.StartTime,
             EndTime = subtitle.EndTime,
             // Carry the forced flag through: BDN XML writes it as Forced="..." and the
@@ -703,10 +708,12 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         string? subtitleFileName,
         string? videoFileName,
         string? subtitleHeader = null,
-        bool hideExportButton = false)
+        bool hideExportButton = false,
+        bool removeAssaCommentBlocks = false)
     {
         Subtitles.Clear();
         Subtitles.AddRange(subtitles);
+        _removeAssaCommentBlocks = removeAssaCommentBlocks;
         IsExportButtonVisible = !hideExportButton;
         _exportImageHandler = exportHandler;
         _subtitleFileName = subtitleFileName;

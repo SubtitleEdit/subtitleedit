@@ -4824,7 +4824,7 @@ public partial class MainViewModel :
         IExportHandler exportHandler = new ExportHandlerBluRaySup();
         var result = await ShowDialogAsync<ExportImageBasedWindow, ExportImageBasedViewModel>(vm =>
         {
-            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName, _subtitle.Header);
+            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName, _subtitle.Header, removeAssaCommentBlocks: IsFormatAssaOrSsa);
         });
 
         if (!result.OkPressed)
@@ -4850,7 +4850,7 @@ public partial class MainViewModel :
         IExportHandler exportHandler = new ExportHandlerBdnXml();
         var result = await ShowDialogAsync<ExportImageBasedWindow, ExportImageBasedViewModel>(vm =>
         {
-            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName, _subtitle.Header);
+            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName, _subtitle.Header, removeAssaCommentBlocks: IsFormatAssaOrSsa);
         });
 
         if (!result.OkPressed)
@@ -4880,7 +4880,7 @@ public partial class MainViewModel :
         IExportHandler exportHandler = new ExportHandlerBdnXml(true);
         var result = await ShowDialogAsync<ExportImageBasedWindow, ExportImageBasedViewModel>(vm =>
         {
-            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName, _subtitle.Header);
+            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName, _subtitle.Header, removeAssaCommentBlocks: IsFormatAssaOrSsa);
         });
 
         if (!result.OkPressed)
@@ -4906,7 +4906,7 @@ public partial class MainViewModel :
         IExportHandler exportHandler = new ExportHandlerImscImage();
         var result = await ShowDialogAsync<ExportImageBasedWindow, ExportImageBasedViewModel>(vm =>
         {
-            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName, _subtitle.Header);
+            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName, _subtitle.Header, removeAssaCommentBlocks: IsFormatAssaOrSsa);
         });
 
         if (!result.OkPressed)
@@ -4932,7 +4932,7 @@ public partial class MainViewModel :
         IExportHandler exportHandler = new ExportHandlerWebVttThumbnail();
         var result = await ShowDialogAsync<ExportImageBasedWindow, ExportImageBasedViewModel>(vm =>
         {
-            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName, _subtitle.Header);
+            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName, _subtitle.Header, removeAssaCommentBlocks: IsFormatAssaOrSsa);
         });
 
         if (!result.OkPressed)
@@ -4958,7 +4958,7 @@ public partial class MainViewModel :
         IExportHandler exportHandler = new ExportHandlerDCinemaInteropPng();
         var result = await ShowDialogAsync<ExportImageBasedWindow, ExportImageBasedViewModel>(vm =>
         {
-            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName, _subtitle.Header);
+            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName, _subtitle.Header, removeAssaCommentBlocks: IsFormatAssaOrSsa);
         });
 
         if (!result.OkPressed)
@@ -4984,7 +4984,7 @@ public partial class MainViewModel :
         IExportHandler exportHandler = new ExportHandlerDCinemaSmpte2014Png();
         var result = await ShowDialogAsync<ExportImageBasedWindow, ExportImageBasedViewModel>(vm =>
         {
-            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName, _subtitle.Header);
+            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName, _subtitle.Header, removeAssaCommentBlocks: IsFormatAssaOrSsa);
         });
 
         if (!result.OkPressed)
@@ -5010,7 +5010,7 @@ public partial class MainViewModel :
         IExportHandler exportHandler = new ExportHandlerDost();
         var result = await ShowDialogAsync<ExportImageBasedWindow, ExportImageBasedViewModel>(vm =>
         {
-            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName, _subtitle.Header);
+            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName, _subtitle.Header, removeAssaCommentBlocks: IsFormatAssaOrSsa);
         });
 
         if (!result.OkPressed)
@@ -5036,7 +5036,7 @@ public partial class MainViewModel :
         IExportHandler exportHandler = new ExportHandlerFcp();
         var result = await ShowDialogAsync<ExportImageBasedWindow, ExportImageBasedViewModel>(vm =>
         {
-            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName, _subtitle.Header);
+            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName, _subtitle.Header, removeAssaCommentBlocks: IsFormatAssaOrSsa);
         });
 
         if (!result.OkPressed)
@@ -5062,7 +5062,7 @@ public partial class MainViewModel :
         IExportHandler exportHandler = new ExportHandlerImagesWithTimeCode();
         var result = await ShowDialogAsync<ExportImageBasedWindow, ExportImageBasedViewModel>(vm =>
         {
-            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName, _subtitle.Header);
+            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName, _subtitle.Header, removeAssaCommentBlocks: IsFormatAssaOrSsa);
         });
 
         if (!result.OkPressed)
@@ -5088,7 +5088,7 @@ public partial class MainViewModel :
         IExportHandler exportHandler = new ExportHandlerDvdSup();
         var result = await ShowDialogAsync<ExportImageBasedWindow, ExportImageBasedViewModel>(vm =>
         {
-            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName, _subtitle.Header);
+            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName, _subtitle.Header, removeAssaCommentBlocks: IsFormatAssaOrSsa);
         });
 
         if (!result.OkPressed)
@@ -5114,7 +5114,7 @@ public partial class MainViewModel :
         IExportHandler exportHandler = new ExportHandlerVobSub();
         var result = await ShowDialogAsync<ExportImageBasedWindow, ExportImageBasedViewModel>(vm =>
         {
-            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName, _subtitle.Header);
+            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName, _subtitle.Header, removeAssaCommentBlocks: IsFormatAssaOrSsa);
         });
 
         if (!result.OkPressed)
@@ -5143,7 +5143,7 @@ public partial class MainViewModel :
         // other save does.
         var result = await ShowDialogAsync<ExportCustomTextFormatWindow, ExportCustomTextFormatViewModel>(vm =>
         {
-            vm.Initialize(GetSaveSubtitle().Paragraphs.ToList(), _subtitleFileName, _videoFileName);
+            vm.Initialize(GetExportSubtitle().Paragraphs.ToList(), _subtitleFileName, _videoFileName);
         });
     }
 
@@ -5163,7 +5163,7 @@ public partial class MainViewModel :
 
         // Rows rebuilt from GetSaveSubtitle: the time codes it writes must be the ones a save
         // writes (video offset included), and the read-only reference rows must stay out.
-        var lines = GetSaveSubtitle().Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)).ToList();
+        var lines = GetExportSubtitle().Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)).ToList();
         var result = await ShowDialogAsync<ExportPlainTextWindow, ExportPlainTextViewModel>(vm => { vm.Initialize(lines, _subtitleFileName, _videoFileName); });
     }
 
@@ -5183,7 +5183,7 @@ public partial class MainViewModel :
 
         var format = new CapMakerPlus();
         using var ms = new MemoryStream();
-        format.Save(_subtitleFileName, ms, GetSaveSubtitle(), false);
+        format.Save(_subtitleFileName, ms, GetExportSubtitle(), false);
 
         var fileName = await _fileHelper.PickSaveSubtitleFile(
             Window!,
@@ -5214,7 +5214,7 @@ public partial class MainViewModel :
 
         var format = new CheetahCaption();
         using var ms = new MemoryStream();
-        format.Save(_subtitleFileName, ms, GetSaveSubtitle(), false);
+        format.Save(_subtitleFileName, ms, GetExportSubtitle(), false);
 
         var fileName = await _fileHelper.PickSaveSubtitleFile(
             Window!,
@@ -5245,7 +5245,7 @@ public partial class MainViewModel :
 
         var format = new CheetahCaptionOld();
         using var ms = new MemoryStream();
-        format.Save(_subtitleFileName, ms, GetSaveSubtitle(), false);
+        format.Save(_subtitleFileName, ms, GetExportSubtitle(), false);
 
         var fileName = await _fileHelper.PickSaveSubtitleFile(
             Window!,
@@ -5303,7 +5303,7 @@ public partial class MainViewModel :
 
         using (var ms = new MemoryStream())
         {
-            cavena.Save(fileName, ms, GetSaveSubtitle(), false);
+            cavena.Save(fileName, ms, GetExportSubtitle(), false);
             ms.Position = 0;
             await File.WriteAllBytesAsync(fileName, ms.ToArray());
         }
@@ -5364,7 +5364,7 @@ public partial class MainViewModel :
     /// </summary>
     internal byte[] GetDvbTeletextExportBytes(ManzanitaTeletextWriter writer)
     {
-        return writer.GetBytes(GetSaveSubtitle());
+        return writer.GetBytes(GetExportSubtitle());
     }
 
     [RelayCommand]
@@ -5397,7 +5397,7 @@ public partial class MainViewModel :
         }
 
         using var ms = new MemoryStream();
-        pac.Save(fileName, ms, GetSaveSubtitle(), false);
+        pac.Save(fileName, ms, GetExportSubtitle(), false);
         ms.Position = 0;
         await File.WriteAllBytesAsync(fileName, ms.ToArray());
 
@@ -5420,7 +5420,7 @@ public partial class MainViewModel :
 
         var format = new PacUnicode();
         using var ms = new MemoryStream();
-        format.Save(_subtitleFileName, ms, GetSaveSubtitle());
+        format.Save(_subtitleFileName, ms, GetExportSubtitle());
 
         var fileName = await _fileHelper.PickSaveSubtitleFile(
             Window!,
@@ -5553,7 +5553,7 @@ public partial class MainViewModel :
             // A failed write must surface as an error dialog: an exception out of an async command
             // dies silently, which read as "Save does nothing" in the field (unquoted font colors
             // used to throw here).
-            if (!format.Save(fileName, GetSaveSubtitle()))
+            if (!format.Save(fileName, GetExportSubtitle()))
             {
                 await MessageBox.Show(Window!, Se.Language.General.Error,
                     string.Format(Se.Language.General.CouldNotSaveFileXErrorY, fileName, string.Empty),
@@ -27171,6 +27171,29 @@ public partial class MainViewModel :
     public Subtitle GetSaveSubtitle()
     {
         return AddVideoOffset(GetUpdateSubtitle());
+    }
+
+    /// <summary>
+    /// The subtitle a File > Export writes: <see cref="GetSaveSubtitle"/>, and for ASSA/SSA
+    /// without the {comment} blocks - renderers never draw those, but the export formats would
+    /// write them as text (#15584). The override tags stay for the exporter to convert.
+    /// </summary>
+    internal Subtitle GetExportSubtitle()
+    {
+        var subtitle = GetSaveSubtitle();
+        if (!IsFormatAssaOrSsa)
+        {
+            return subtitle;
+        }
+
+        // generateNewId false: bookmarks and marks are matched on the paragraph ids.
+        var copy = new Subtitle(subtitle, false);
+        foreach (var p in copy.Paragraphs)
+        {
+            p.Text = AdvancedSubStationAlpha.RemoveCommentBlocks(p.Text);
+        }
+
+        return copy;
     }
 
     /// <summary>Same as <see cref="GetSaveSubtitle"/> for the original subtitle.</summary>

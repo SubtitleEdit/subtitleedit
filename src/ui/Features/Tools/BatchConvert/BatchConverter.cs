@@ -746,7 +746,13 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return;
         }
 
-        var text = Nikse.SubtitleEdit.UiLogic.Export.CustomTextFormatter.GenerateCustomText(selectedCustomFormat.ToTemplate(), item.Subtitle.Paragraphs, item.FileName, string.Empty);
+        var paragraphs = item.Subtitle.Paragraphs;
+        if (IsAssaOrSsa(item.Subtitle))
+        {
+            paragraphs = paragraphs.Select(p => new Paragraph(p, false) { Text = AdvancedSubStationAlpha.RemoveCommentBlocks(p.Text) }).ToList();
+        }
+
+        var text = Nikse.SubtitleEdit.UiLogic.Export.CustomTextFormatter.GenerateCustomText(selectedCustomFormat.ToTemplate(), paragraphs, item.FileName, string.Empty);
         var path = MakeOutputFileName(item, selectedCustomFormat.Extension);
         await File.WriteAllTextAsync(path, text, cancellationToken);
     }
@@ -2005,6 +2011,13 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                ?? new SeExportImagesProfile();
     }
 
+    /// <summary>
+    /// ASSA/SSA renderers never draw a {comment} block, so the exports that write the text
+    /// as-is (custom text format, images) must drop them for these sources (#15584).
+    /// </summary>
+    private static bool IsAssaOrSsa(Subtitle subtitle)
+        => subtitle.OriginalFormat is AdvancedSubStationAlpha or SubStationAlpha;
+
     private IOcrSubtitle? CreateImageSubtitles(BatchConvertItem item)
     {
         var profile = GetExportImagesProfile();
@@ -2022,6 +2035,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             ? parsedPreset
             : TextEffectPreset.SoftShadow;
 
+        var removeAssaCommentBlocks = IsAssaOrSsa(item.Subtitle);
         var imageParameters = new List<ImageParameter>();
         for (var i = 0; i < item.Subtitle.Paragraphs.Count; i++)
         {
@@ -2037,7 +2051,9 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 PaddingLeftRight = profile.PaddingLeftRight,
                 PaddingTopBottom = profile.PaddingTopBottom,
                 Index = i,
-                Text = ExportTextTags.ToRenderableText(subtitle.Text),
+                Text = ExportTextTags.ToRenderableText(removeAssaCommentBlocks
+                    ? AdvancedSubStationAlpha.RemoveCommentBlocks(subtitle.Text)
+                    : subtitle.Text),
                 StartTime = subtitle.StartTime.TimeSpan,
                 EndTime = subtitle.EndTime.TimeSpan,
                 FontColor = profile.FontColor.FromHexToColor().ToSKColor(),
