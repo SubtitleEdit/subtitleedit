@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Xunit;
 
 namespace UITests.Features.Video.SpeechToText;
@@ -123,6 +124,20 @@ public class SpeechToTextAdvancedToggleTests
 
         Assert.Equal("-t 8", vm.Parameters);
         Assert.False(vm.IsVadCrispAsrActive);
+    }
+
+    /// <summary>The Crisp ASR VAD button puts in the VAD chosen in the main window (#15563).</summary>
+    [Fact]
+    public void CrispAsrVadUsesTheChosenVad()
+    {
+        var vm = MakeViewModel("-t 8");
+        vm.SelectedEngine = new CrispAsrParakeet();
+        vm.VadChoice = CrispAsrVadModel.WebRtc;
+
+        vm.EnableVadCrispAsrCommand.Execute(null);
+
+        Assert.Equal("-t 8 --vad --vad-model webrtc", vm.Parameters);
+        Assert.True(vm.IsVadCrispAsrActive);
     }
 
     /// <summary>The highlight press turns a switched-off VAD filter into a switched-on one, once.</summary>

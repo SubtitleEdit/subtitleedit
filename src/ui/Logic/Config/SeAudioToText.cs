@@ -62,6 +62,7 @@ public class SeAudioToText
     public string CrispAsrForcedAligner { get; set; } = "built-in";
     public bool CrispAsrIsolateSpeech { get; set; }
     public bool CrispAsrDetectSpeakers { get; set; }
+    public string CrispAsrVad { get; set; } = "auto";
     public bool ForcedAlignerEndsFromIsolatedSpeech { get; set; }
 
     public bool WhisperAutoAdjustTimings { get; set; } = true;

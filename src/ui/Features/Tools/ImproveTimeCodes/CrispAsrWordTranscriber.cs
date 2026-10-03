@@ -1,6 +1,7 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Files.ImportPlainText;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
@@ -46,7 +47,9 @@ public sealed class CrispAsrWordTranscriber
             Path.GetFileNameWithoutExtension(audioFileName) + "-words");
         var outputFileName = outputBase + ".srt";
 
-        var vadPart = _vadModel != null && File.Exists(_vadModel) ? $" --vad --vad-model \"{_vadModel}\"" : string.Empty;
+        var vadPart = _vadModel != null && (_vadModel == CrispAsrVadModel.WebRtc || File.Exists(_vadModel))
+            ? " " + CrispAsrVadModel.BuildArguments(_vadModel)
+            : string.Empty;
         var arguments =
             $"--backend {_backend} -l {languageCode} -m \"{_model}\"{vadPart} -f \"{audioFileName}\" " +
             $"--output-srt -of \"{outputBase}\" -ml 1 -sow --print-progress";
@@ -135,14 +138,17 @@ public sealed class CrispAsrWordTranscriber
     /// </summary>
     public static string? FindVadModel(string crispAsrFolder)
     {
-        if (!Directory.Exists(crispAsrFolder))
-        {
-            return null;
-        }
+        return CrispAsrVadModel.FindSilero(crispAsrFolder);
+    }
 
-        return Directory.GetFiles(crispAsrFolder, "ggml-silero-v*.bin", SearchOption.TopDirectoryOnly)
-            .OrderByDescending(p => p, StringComparer.Ordinal)
-            .FirstOrDefault();
+    /// <summary>
+    /// The VAD chosen in speech-to-text (#15563) when its model is on disk, else Silero - no
+    /// download prompt in the middle of improving time codes.
+    /// </summary>
+    public static string? FindVadModel(ISpeechToTextEngine engine, string? vadChoice)
+    {
+        var option = CrispAsrVadModel.GetEffective(vadChoice, engine);
+        return CrispAsrVadModel.GetModelPath(option, engine) ?? FindVadModel(engine.GetAndCreateWhisperFolder());
     }
 
     /// <summary>

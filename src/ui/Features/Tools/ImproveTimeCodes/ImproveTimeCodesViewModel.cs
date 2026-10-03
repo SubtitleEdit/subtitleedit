@@ -393,7 +393,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
 
         var language = string.IsNullOrEmpty(_languageCode) ? "auto" : _languageCode;
         var transcriber = new CrispAsrWordTranscriber(
-            _engine.GetExecutable(), _engine.BackendName, modelPath, CrispAsrWordTranscriber.FindVadModel(Se.CrispAsrFolder));
+            _engine.GetExecutable(), _engine.BackendName, modelPath, CrispAsrWordTranscriber.FindVadModel(_engine, Se.Settings.Tools.AudioToText.CrispAsrVad));
         try
         {
             return await Task.Run(() => transcriber.TranscribeAsync(audioFileName, language, progress, cancellationToken), cancellationToken);
