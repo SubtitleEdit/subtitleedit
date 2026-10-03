@@ -122,6 +122,18 @@ public static class ViewAutoTranslate
         var labelTargetLanguage = UiUtil.MakeLabel(Se.Language.General.To);
         var targetLangCombo = UiUtil.MakeComboBox(vm.TargetLanguages, vm, nameof(vm.SelectedTargetLanguage));
 
+        // More languages, each giving its own output file ("movie.da.srt", "movie.sv.srt")
+        var labelExtraTargetLanguages = UiUtil.MakeLabel(Se.Language.Tools.BatchConvert.AlsoTranslateTo);
+        var buttonExtraTargetLanguages = new Button
+        {
+            Command = vm.PickExtraTargetLanguagesCommand,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            HorizontalContentAlignment = HorizontalAlignment.Left,
+            MinWidth = 120,
+            DataContext = vm,
+        }.WithAccessibleName(Se.Language.Tools.BatchConvert.AlsoTranslateTo);
+        buttonExtraTargetLanguages.Bind(ContentControl.ContentProperty, new Binding(nameof(vm.ExtraTargetLanguagesText)));
+
         var labelUrl = UiUtil.MakeLabel(Se.Language.General.Url).WithBindVisible(vm, nameof(vm.AutoTranslateUrlIsVisible));
         var textBoxUrl = UiUtil.MakeTextBox(300, vm, nameof(vm.AutoTranslateUrl), nameof(vm.AutoTranslateUrlIsVisible));
 
@@ -133,6 +145,7 @@ public static class ViewAutoTranslate
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
@@ -166,11 +179,14 @@ public static class ViewAutoTranslate
         grid.Add(labelTargetLanguage, 4, 0);
         grid.Add(targetLangCombo, 4, 1);
 
-        grid.Add(labelUrl, 5, 0);
-        grid.Add(textBoxUrl, 5, 1);
+        grid.Add(labelExtraTargetLanguages, 5, 0);
+        grid.Add(buttonExtraTargetLanguages, 5, 1);
 
-        grid.Add(labelApiKey, 6, 0);
-        grid.Add(textBoxApiKey, 6, 1);
+        grid.Add(labelUrl, 6, 0);
+        grid.Add(textBoxUrl, 6, 1);
+
+        grid.Add(labelApiKey, 7, 0);
+        grid.Add(textBoxApiKey, 7, 1);
 
         return grid;
     }

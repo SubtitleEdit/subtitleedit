@@ -86,8 +86,54 @@ internal class SubtitleConverter
 
     public async Task<ConversionResult> ConvertAsync(ConversionOptions options)
     {
+        var targets = SplitTranslateTargets(options.TranslateTo);
+        if (targets.Count <= 1)
+        {
+            return await ConvertSingleTargetAsync(options);
+        }
+
+        // "--translate-to da,sv,de": one full run per language, each output named after its
+        // language ("movie.da.srt", "movie.sv.srt", ...).
+        var merged = new ConversionResult();
+        if (!string.IsNullOrEmpty(options.OutputFilename) || options.NoLanguageSuffix)
+        {
+            merged.Errors.Add("--output-filename and --no-language-suffix cannot be used with several --translate-to languages - the outputs would get the same name.");
+            return merged;
+        }
+
+        foreach (var target in targets)
+        {
+            var result = await ConvertSingleTargetAsync(options with { TranslateTo = target });
+            merged.TotalFiles += result.TotalFiles;
+            merged.SuccessfulFiles += result.SuccessfulFiles;
+            merged.FailedFiles += result.FailedFiles;
+            merged.Errors.AddRange(result.Errors.Select(p => $"[{target}] {p}"));
+            merged.Warnings.AddRange(result.Warnings.Select(p => $"[{target}] {p}"));
+            merged.Files.AddRange(result.Files);
+        }
+
+        return merged;
+    }
+
+    /// <summary>"da, sv,de" -> ["da", "sv", "de"], without duplicates.</summary>
+    internal static List<string> SplitTranslateTargets(string? translateTo)
+    {
+        if (string.IsNullOrWhiteSpace(translateTo))
+        {
+            return new List<string>();
+        }
+
+        return translateTo
+            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    private async Task<ConversionResult> ConvertSingleTargetAsync(ConversionOptions options)
+    {
         var result = new ConversionResult();
         _usedOutputFileNames.Clear();
+        _translateRunner = null;
 
         try
         {

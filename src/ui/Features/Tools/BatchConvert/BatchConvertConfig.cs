@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.UiLogic.Translate;
 using Nikse.SubtitleEdit.UiLogic.AdjustDuration;
 using Nikse.SubtitleEdit.Logic.Config;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert;
 
@@ -212,12 +213,18 @@ public class BatchConvertConfig
         public bool IsActive { get; set; }
         public TranslationPair SourceLanguage { get; internal set; }
         public TranslationPair TargetLanguage { get; internal set; }
+
+        /// <summary>More languages to translate into besides <see cref="TargetLanguage"/> - each
+        /// gives its own output file.</summary>
+        public List<TranslationPair> ExtraTargetLanguages { get; internal set; }
+
         public IAutoTranslator Translator { get; internal set; }
 
         public AutoTranslateSettings()
         {
             SourceLanguage = new TranslationPair("English", "en");
             TargetLanguage = new TranslationPair("Spanish", "es");
+            ExtraTargetLanguages = new List<TranslationPair>();
             Translator = new OllamaTranslate();
         }
     }

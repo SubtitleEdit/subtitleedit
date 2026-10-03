@@ -96,6 +96,8 @@ public class SeBatchConvert
     public string AutoTranslateEngine { get; set; }
     public string AutoTranslateSourceLanguage { get; set; }
     public string AutoTranslateTargetLanguage { get; set; }
+    /// <summary>Codes of the extra languages to translate into besides the "To" language, comma separated.</summary>
+    public string AutoTranslateExtraTargetLanguages { get; set; }
 
     /// <summary>
     /// Batch convert's own "use external server" switch for the llama.cpp engines - independent of
@@ -233,6 +235,7 @@ public class SeBatchConvert
         AutoTranslateEngine = new OllamaTranslate().Name;
         AutoTranslateSourceLanguage = "auto";
         AutoTranslateTargetLanguage = "en";
+        AutoTranslateExtraTargetLanguages = string.Empty;
         ChangeCasingType = "Normal";
         NormalCasingFixNames = true;
         FixRtlMode = "ReverseStartEnd";

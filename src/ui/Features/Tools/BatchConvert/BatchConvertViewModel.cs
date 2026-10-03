@@ -46,6 +46,7 @@ using Nikse.SubtitleEdit.UiLogic.BatchConvert;
 using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
+using Nikse.SubtitleEdit.Features.Tools.BatchConvert.PickTargetLanguages;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
@@ -164,6 +165,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private TranslationPair? _selectedSourceLanguage;
     [ObservableProperty] private ObservableCollection<TranslationPair> _targetLanguages = new();
     [ObservableProperty] private TranslationPair? _selectedTargetLanguage;
+    [ObservableProperty] private string _extraTargetLanguagesText = string.Empty;
+    private List<TranslationPair> _extraTargetLanguages = new();
     [ObservableProperty] private string _autoTranslateModel;
     [ObservableProperty] private string _autoTranslateUrl;
     [ObservableProperty] private string _autoTranslateApiKey;
@@ -691,6 +694,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         Se.Settings.Tools.BatchConvert.AutoTranslateEngine = SelectedAutoTranslator.Name;
         Se.Settings.Tools.BatchConvert.AutoTranslateSourceLanguage = SelectedSourceLanguage?.TwoLetterIsoLanguageName ?? "auto";
         Se.Settings.Tools.BatchConvert.AutoTranslateTargetLanguage = SelectedTargetLanguage?.TwoLetterIsoLanguageName ?? "en";
+        Se.Settings.Tools.BatchConvert.AutoTranslateExtraTargetLanguages = string.Join(",", _extraTargetLanguages.Select(p => p.Code));
         Se.Settings.Tools.BatchConvert.LlamaCppUseRemoteServer = LlamaCppUseRemoteServer;
 
         // Change casing
@@ -907,6 +911,12 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         {
             SelectedTargetLanguage = targetLanguage;
         }
+
+        var extraCodes = (Se.Settings.Tools.BatchConvert.AutoTranslateExtraTargetLanguages ?? string.Empty)
+            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        SetExtraTargetLanguages(extraCodes
+            .Select(code => TargetLanguages.FirstOrDefault(p => p.Code.Equals(code, StringComparison.OrdinalIgnoreCase)))
+            .OfType<TranslationPair>());
 
         // Change casing
         if (Se.Settings.Tools.BatchConvert.ChangeCasingType == "Normal")
@@ -1155,6 +1165,31 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         _ = await _windowService
             .ShowDialogAsync<RemoveTextForHearingImpairedWindow, RemoveTextForHearingImpairedViewModel>(
                 Window!, vm => { vm.Initialize(new Subtitle()); });
+    }
+
+    private void SetExtraTargetLanguages(IEnumerable<TranslationPair> languages)
+    {
+        _extraTargetLanguages = languages.Distinct().ToList();
+        ExtraTargetLanguagesText = _extraTargetLanguages.Count == 0
+            ? Se.Language.General.None
+            : string.Join(", ", _extraTargetLanguages.Select(p => p.Code));
+    }
+
+    [RelayCommand]
+    private async Task PickExtraTargetLanguages()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        using var titleScope = UiUtil.SuppressSubtitleFileNameInTitle();
+        var result = await _windowService.ShowDialogAsync<PickTargetLanguagesWindow, PickTargetLanguagesViewModel>(
+            Window, vm => vm.Initialize(TargetLanguages.Where(p => !Equals(p, SelectedTargetLanguage)), _extraTargetLanguages));
+        if (result.OkPressed)
+        {
+            SetExtraTargetLanguages(result.GetSelectedLanguages());
+        }
     }
 
     [RelayCommand]
@@ -2786,6 +2821,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                 Translator = SelectedAutoTranslator,
                 SourceLanguage = SelectedSourceLanguage ?? SourceLanguages.First(),
                 TargetLanguage = SelectedTargetLanguage ?? TargetLanguages.First(),
+                ExtraTargetLanguages = _extraTargetLanguages.ToList(),
             },
 
             ChangeCasing = new BatchConvertConfig.ChangeCasingSettings
@@ -3578,6 +3614,12 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         {
             TargetLanguages.Add(language);
         }
+
+        // Each engine has its own language list - keep only the extra languages this one has
+        SetExtraTargetLanguages(_extraTargetLanguages
+            .Select(extra => TargetLanguages.FirstOrDefault(p => p.Code.Equals(extra.Code, StringComparison.OrdinalIgnoreCase)))
+            .OfType<TranslationPair>()
+            .ToList());
 
         SelectedTargetLanguage = AutoTranslateViewModel.FindDefaultTargetLanguage(
             TargetLanguages,
