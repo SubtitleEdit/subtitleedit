@@ -73,6 +73,12 @@ sudo zypper install libmpv1 ffmpeg
 
 ---
 
+## 🔌 Third-party integrations
+
+- **[Logi Options+ plugin](https://github.com/muaz978/subtitleedit-logi-plugin)** - control Subtitle Edit from a Logitech MX Master, MX Keys, or MX Creative Console. Listed on the [Logi Marketplace](https://marketplace.logi.com/plugin/SubtitleEdit/en).
+
+---
+
 ## 🔒 Privacy
 
 **Subtitle Edit** is an offline, open-source application.  
