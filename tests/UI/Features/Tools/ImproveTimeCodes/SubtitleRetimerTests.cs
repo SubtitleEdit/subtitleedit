@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Files.ImportPlainText;
 using Nikse.SubtitleEdit.Features.Tools.ImproveTimeCodes;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
@@ -106,7 +107,7 @@ public class SubtitleRetimerTests : IDisposable
         => Assert.Equal(expected, SubtitleRetimer.GetSpokenText(text));
 
     [Fact]
-    public async Task Retime_MovesLinesOntoTheAlignedTimes_AndDiscardsSentinels()
+    public async Task Retime_MovesLinesOntoTheAlignedStarts_AndDiscardsSentinels()
     {
         var lines = MakeLines(12);
         var audio = new FakeAudio(_folder);
@@ -126,8 +127,49 @@ public class SubtitleRetimerTests : IDisposable
         {
             Assert.Equal(SubtitleRetimer.LineStatus.Retimed, results[i].Status);
             Assert.Equal(lines[i].StartSeconds + 0.3, results[i].StartSeconds, 2);
-            Assert.Equal(lines[i].EndSeconds - 0.2, results[i].EndSeconds, 2);
+            Assert.Equal(lines[i].EndSeconds + 0.3, results[i].EndSeconds, 2); // the end travels with the start
         }
+    }
+
+    [Fact]
+    public async Task Retime_AnEndIsNeverPulledInBeforeTheSpeechIsOver()
+    {
+        // A CTC aligner puts a word's end where its last letter was recognised, before the word
+        // has died away. Pulling ends in to that made lines stop too soon.
+        var lines = MakeLines(3);
+        var audio = new FakeAudio(_folder);
+        var runner = new OracleRunner(audio);
+        foreach (var l in lines)
+        {
+            runner.Truth[l.Text] = (l.StartSeconds, l.EndSeconds - 0.3);
+        }
+
+        var results = await new SubtitleRetimer(runner, audio).RetimeAsync(lines, null, TestContext.Current.CancellationToken);
+
+        for (var i = 0; i < lines.Count; i++)
+        {
+            Assert.Equal(lines[i].EndSeconds, results[i].EndSeconds, 2);
+        }
+    }
+
+    [Fact]
+    public async Task Retime_SpeechThatGoesOnPastTheEnd_HoldsTheLineUntilItIsOver()
+    {
+        var lines = MakeLines(3);
+        var audio = new FakeAudio(_folder);
+        var runner = new OracleRunner(audio);
+        foreach (var l in lines)
+        {
+            runner.Truth[l.Text] = (l.StartSeconds, l.EndSeconds);
+        }
+
+        // Line 1 is taken down 0.7 s before its speech is over.
+        runner.Truth[lines[1].Text] = (lines[1].StartSeconds, lines[1].EndSeconds + 0.7);
+
+        var results = await new SubtitleRetimer(runner, audio).RetimeAsync(lines, null, TestContext.Current.CancellationToken);
+
+        Assert.Equal(lines[1].EndSeconds + 0.7 + SubtitleRetimer.EndTailSeconds, results[1].EndSeconds, 2);
+        Assert.True(results[1].EndSeconds < results[2].StartSeconds);
     }
 
     [Fact]
@@ -221,9 +263,9 @@ public class SubtitleRetimerTests : IDisposable
         var options = new SubtitleRetimer.Options { MaxShiftSeconds = 3, ReadingCharsPerSecond = 20, MinDurationSeconds = 1.0, MinGapSeconds = 0.1 };
         var results = await new SubtitleRetimer(runner, audio, options).RetimeAsync(lines, null, TestContext.Current.CancellationToken);
 
-        // 45 chars at 20 cps wants 2.25 s, but the next line now starts at 12.5.
+        // The end travels with the start to 13.1, but the next line now starts at 12.5.
         Assert.Equal(10.1, results[0].StartSeconds, 2);
-        Assert.Equal(12.35, results[0].EndSeconds, 2);
+        Assert.Equal(12.4, results[0].EndSeconds, 2);
         Assert.Equal(12.5, results[1].StartSeconds, 2);
     }
 
@@ -275,8 +317,9 @@ public class SubtitleRetimerTests : IDisposable
     }
 
     [Fact]
-    public void Tidy_KeepsClearOfBothPositionsOfAnUnconfirmedLine()
+    public void Tidy_MakesRoomForWhereAnUnconfirmedLineStays_NotForItsProposal()
     {
+        // The proposal (12.9) is offered unticked; were it ticked, Settle would make room then.
         var lines = new List<SubtitleRetimer.Line> { new("First line", 10, 12), new("Second line", 12.1, 14) };
         var results = new[]
         {
@@ -286,7 +329,132 @@ public class SubtitleRetimerTests : IDisposable
 
         SubtitleRetimer.Tidy(lines, results, new SubtitleRetimer.Options { MinGapSeconds = 0.1 }, 0);
 
-        Assert.Equal(12.0, results[0].EndSeconds, 3); // the second line may yet stay at 12.1
+        Assert.Equal(12.0, results[0].EndSeconds, 3); // the second line stays at 12.1 unless ticked
+    }
+
+    [Fact]
+    public void Tidy_AnUnconfirmedProposal_DoesNotCutTheLineBeforeItShort()
+    {
+        var lines = new List<SubtitleRetimer.Line> { new("First line", 10, 12), new("Second line", 12.5, 14) };
+        var results = new[]
+        {
+            new SubtitleRetimer.LineResult(10.0, 12.2, SubtitleRetimer.LineStatus.Retimed),
+            new SubtitleRetimer.LineResult(11.6, 13.1, SubtitleRetimer.LineStatus.DisputedBySpeech),
+        };
+
+        SubtitleRetimer.Tidy(lines, results, new SubtitleRetimer.Options { MinGapSeconds = 0.1 }, 0);
+
+        Assert.Equal(12.2, results[0].EndSeconds, 3);
+    }
+
+    [Fact]
+    public void Tidy_MaxCharactersPerSecond_HoldsALineLongerThanItUsedToBe_RoomPermitting()
+    {
+        // 50 characters in 1.5 s is 33 per second; at most 20 per second needs 2.5 s.
+        var lines = new List<SubtitleRetimer.Line>
+        {
+            new("This line is far too fast to read in the time it has", 10, 11.5),
+            new("Next", 20, 21),
+        };
+        var results = new[]
+        {
+            new SubtitleRetimer.LineResult(10.2, 11.7, SubtitleRetimer.LineStatus.Retimed),
+            new SubtitleRetimer.LineResult(20, 21, SubtitleRetimer.LineStatus.Unchanged),
+        };
+
+        SubtitleRetimer.Tidy(lines, results, new SubtitleRetimer.Options { MaxCharsPerSecond = 20 }, 0);
+
+        var characters = (double)lines[0].Text.CountCharacters(true);
+        Assert.Equal(10.2 + (characters / 20), results[0].EndSeconds, 3);
+    }
+
+    [Fact]
+    public void Tidy_MaxCharactersPerSecond_NeverRunsIntoTheNextLine()
+    {
+        var lines = new List<SubtitleRetimer.Line>
+        {
+            new("This line is far too fast to read in the time it has", 10, 11.5),
+            new("Next", 12, 13),
+        };
+        var results = new[]
+        {
+            new SubtitleRetimer.LineResult(10.2, 11.7, SubtitleRetimer.LineStatus.Retimed),
+            new SubtitleRetimer.LineResult(12, 13, SubtitleRetimer.LineStatus.Unchanged),
+        };
+
+        SubtitleRetimer.Tidy(lines, results, new SubtitleRetimer.Options { MaxCharsPerSecond = 20, MinGapSeconds = 0.1 }, 0);
+
+        Assert.Equal(11.9, results[0].EndSeconds, 3);
+    }
+
+    [Fact]
+    public void Tidy_HeardLastWord_HoldsTheLineUntilItWasSaid()
+    {
+        var lines = new List<SubtitleRetimer.Line> { new("Short", 10, 11), new("Next", 14, 15) };
+        var results = new[]
+        {
+            new SubtitleRetimer.LineResult(10.1, 11.1, SubtitleRetimer.LineStatus.Retimed) { HeardEndSeconds = 12.3 },
+            new SubtitleRetimer.LineResult(14, 15, SubtitleRetimer.LineStatus.Unchanged),
+        };
+
+        SubtitleRetimer.Tidy(lines, results, new SubtitleRetimer.Options(), 0);
+
+        Assert.Equal(12.3, results[0].EndSeconds, 3);
+    }
+
+    [Fact]
+    public void Tidy_ReadingRules_NeverHoldALinePastTheMaximumDuration()
+    {
+        var lines = new List<SubtitleRetimer.Line> { new(new string('x', 120), 10, 13) };
+        var results = new[] { new SubtitleRetimer.LineResult(10.2, 13.2, SubtitleRetimer.LineStatus.Retimed) };
+
+        SubtitleRetimer.Tidy(lines, results, new SubtitleRetimer.Options { MaxCharsPerSecond = 10, MaxDurationSeconds = 5 }, 0);
+
+        Assert.Equal(15.2, results[0].EndSeconds, 3);
+    }
+
+    [Fact]
+    public void Settle_AnAppliedLine_GivesWayToALineThatStaysPut()
+    {
+        var original = new List<SubtitleRetimer.Line> { new("a", 10, 12), new("b", 12.5, 14), new("c", 14.5, 16) };
+        var placements = new[]
+        {
+            new SubtitleRetimer.Placement(10.2, 12.8, true), // moved, runs into b's old place
+            new SubtitleRetimer.Placement(12.5, 14, false), // unticked - stays
+            new SubtitleRetimer.Placement(13.9, 15.8, true), // moved earlier, into b
+        };
+
+        SubtitleRetimer.Settle(original, placements, 0.1);
+
+        Assert.Equal(12.4, placements[0].EndSeconds, 3);
+        Assert.Equal(12.5, placements[1].StartSeconds, 3);
+        Assert.Equal(14.0, placements[1].EndSeconds, 3);
+        Assert.Equal(14.1, placements[2].StartSeconds, 3);
+        Assert.Equal(15.8, placements[2].EndSeconds, 3);
+    }
+
+    [Fact]
+    public void Settle_LeavesOverlapsTheSubtitleCameInWith()
+    {
+        var original = new List<SubtitleRetimer.Line> { new("a", 10, 13), new("b", 12, 14) };
+        var placements = new[] { new SubtitleRetimer.Placement(10.1, 13.1, true), new SubtitleRetimer.Placement(12.1, 14.1, true) };
+
+        SubtitleRetimer.Settle(original, placements, 0.1);
+
+        Assert.Equal(13.1, placements[0].EndSeconds, 3);
+        Assert.Equal(12.1, placements[1].StartSeconds, 3);
+    }
+
+    [Fact]
+    public void Settle_TwoLinesThatMayNotMove_AreLeftAlone()
+    {
+        var original = new List<SubtitleRetimer.Line> { new("a", 10, 12), new("b", 12.5, 14) };
+        var placements = new[] { new SubtitleRetimer.Placement(10, 12.6, false), new SubtitleRetimer.Placement(12.5, 14, false) };
+
+        SubtitleRetimer.Settle(original, placements, 0.1);
+
+        Assert.Equal(12.6, placements[0].EndSeconds, 3);
+        Assert.Equal(12.5, placements[1].StartSeconds, 3);
     }
 
     [Fact]

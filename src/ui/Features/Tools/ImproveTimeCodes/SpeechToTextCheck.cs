@@ -34,6 +34,12 @@ public static class SpeechToTextCheck
     /// </param>
     public sealed record LineEvidence(int Words, int Heard, double? AnchorSeconds, double AnchorFraction = 0)
     {
+        /// <summary>
+        /// Where the line's last word was heard to end, when it was - and heard right after the
+        /// word before it, so it is this line's and not a copy from elsewhere.
+        /// </summary>
+        public double? LastWordEndSeconds { get; init; }
+
         public double HeardRatio => Words == 0 ? 0 : Heard / (double)Words;
     }
 
@@ -126,6 +132,7 @@ public static class SpeechToTextCheck
         }
 
         var heardCounts = new int[lines.Count];
+        var lastWordEnds = new double?[lines.Count];
         var anchorToken = new int[lines.Count];
         Array.Fill(anchorToken, -1);
         for (var t = 0; t < tokens.Count; t++)
@@ -137,6 +144,11 @@ public static class SpeechToTextCheck
             }
 
             heardCounts[line]++;
+            if (tokens[t].Position == wordCounts[line] - 1 && IsEnd(t, wordCounts[line], tokens, matchedHeard))
+            {
+                lastWordEnds[line] = heard[matchedHeard[t]].EndSeconds;
+            }
+
             if (anchorToken[line] < 0 && tokens[t].Position <= MaxAnchorPosition && IsAnchor(t, wordCounts[line], tokens, matchedHeard))
             {
                 anchorToken[line] = t;
@@ -151,9 +163,10 @@ public static class SpeechToTextCheck
             }
 
             var t = anchorToken[i];
-            evidence[i] = t < 0
+            evidence[i] = (t < 0
                 ? new LineEvidence(wordCounts[i], heardCounts[i], null)
-                : new LineEvidence(wordCounts[i], heardCounts[i], heard[matchedHeard[t]].StartSeconds, tokenFractions[t]);
+                : new LineEvidence(wordCounts[i], heardCounts[i], heard[matchedHeard[t]].StartSeconds, tokenFractions[t]))
+                with { LastWordEndSeconds = lastWordEnds[i] };
         }
 
         return evidence;
@@ -181,6 +194,18 @@ public static class SpeechToTextCheck
         return next > matchedHeard[t] && next - matchedHeard[t] <= 2;
     }
 
+    /// <summary>The mirror of <see cref="IsAnchor"/> for a line's last word: the word before it must have been heard just before it.</summary>
+    private static bool IsEnd(int t, int wordCount, List<(string Word, int Line, int Position)> tokens, int[] matchedHeard)
+    {
+        if (wordCount == 1)
+        {
+            return tokens[t].Word.Length >= 3;
+        }
+
+        var previous = matchedHeard[t - 1];
+        return previous >= 0 && previous < matchedHeard[t] && matchedHeard[t] - previous <= 2;
+    }
+
     /// <summary>
     /// Settles the lines the aligner moved, using what was heard. Runs on the aligner's raw
     /// answers, before they are tidied, so the start compared is the aligner's own.
@@ -203,7 +228,7 @@ public static class SpeechToTextCheck
                 continue;
             }
 
-            results[i] = results[i] with { HeardRatio = e.HeardRatio };
+            results[i] = results[i] with { HeardRatio = e.HeardRatio, HeardEndSeconds = e.LastWordEndSeconds };
             if (e.AnchorSeconds is not { } anchor || e.HeardRatio < MinHeardRatio)
             {
                 continue;
