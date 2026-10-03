@@ -16,6 +16,11 @@ namespace Nikse.SubtitleEdit.Features.Tools.ImproveTimeCodes;
 /// - the Canary CTC aligner is steady to a frame or two (80 ms) across 25 languages;
 /// - the Qwen3 aligner drifts by several hundred ms on line ends, so it is the fallback
 ///   for the languages only it covers.
+///
+/// English is the exception: there Canary leads. The English wav2vec2 model is quantised and
+/// lost its place for the next lines after a line with words the subtitle leaves out ("Honestly,
+/// I know"), and on real film dialogue Canary put every line on its speech where wav2vec2 left
+/// lines for the user to check. Canary's 80 ms grid costs little next to that.
 /// </summary>
 public static class ImproveTimeCodesAligners
 {
@@ -72,7 +77,7 @@ public static class ImproveTimeCodesAligners
         var language = (twoLetterLanguageCode ?? string.Empty).Trim().ToLowerInvariant();
         var all = ForcedAlignerOption.All().Where(o => !o.IsBuiltIn).ToList();
 
-        int Score(ForcedAlignerOption option)
+        double Score(ForcedAlignerOption option)
         {
             if (option.Choice == ForcedAlignerOption.CanaryCtcChoice)
             {
@@ -84,8 +89,13 @@ public static class ImproveTimeCodesAligners
                 return Qwen3Languages.Contains(language) ? 2 : 4;
             }
 
-            // wav2vec2-aligner-<code>: only any use for its own language.
-            return language.Length > 0 && option.Choice.EndsWith("-" + language, StringComparison.OrdinalIgnoreCase) ? 0 : 5;
+            // wav2vec2-aligner-<code>: only any use for its own language - and for English, second to Canary.
+            if (language.Length > 0 && option.Choice.EndsWith("-" + language, StringComparison.OrdinalIgnoreCase))
+            {
+                return language == "en" ? 1.5 : 0;
+            }
+
+            return 5;
         }
 
         // OrderBy is stable, so aligners that tie keep the order of ForcedAlignerOption.All().

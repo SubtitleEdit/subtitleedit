@@ -6,7 +6,8 @@ namespace UITests.Features.Tools.ImproveTimeCodes;
 public class ImproveTimeCodesAlignersTests
 {
     [Theory]
-    [InlineData("en", ForcedAlignerOption.Wav2Vec2EnChoice, ForcedAlignerOption.CanaryCtcChoice, ForcedAlignerOption.Qwen3Choice)]
+    [InlineData("en", ForcedAlignerOption.CanaryCtcChoice, ForcedAlignerOption.Wav2Vec2EnChoice, ForcedAlignerOption.Qwen3Choice)]
+    [InlineData("de", ForcedAlignerOption.Wav2Vec2DeChoice, ForcedAlignerOption.CanaryCtcChoice, ForcedAlignerOption.Qwen3Choice)]
     [InlineData("da", ForcedAlignerOption.CanaryCtcChoice, ForcedAlignerOption.Qwen3Choice, null)]
     [InlineData("ja", ForcedAlignerOption.Wav2Vec2JaChoice, ForcedAlignerOption.Qwen3Choice, ForcedAlignerOption.CanaryCtcChoice)]
     [InlineData("ko", ForcedAlignerOption.Qwen3Choice, ForcedAlignerOption.CanaryCtcChoice, null)]
