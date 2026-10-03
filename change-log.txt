@@ -3,6 +3,38 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-beta20 (3rd of October 2026)
+
+* Add burn-in for selected lines (grid context menu) - thx rookes
+* Add Crisp ASR Index-Echo (Chinese speech to English/Japanese/Spanish text) - thx Oplay66
+* Add Fix common errors rule for apostrophes misread as double quotes (OCR, English) - thx WAusJackBauer
+* Add text selection opacity setting - thx kadrimarzouki
+* Add option to show the full file path in the title bar - thx GrampaWildWilly
+* Add "Remove (one each time)" behavior to surround-with slots - thx kadrimarzouki
+* Custom shortcut slots: choose where they are active, new focus and text box start/end commands - thx GrampaWildWilly
+* Settings: Alt+Left/Right goes back/forward through visited categories, video player download buttons kept together - thx GrampaWildWilly
+* Auto-translate: add DeepLX back to the engine list - thx gambar3
+* Improve time codes: no overlaps or lines ending too early, honours timing rules (max CPS, max duration), lines can be adjusted in the waveform
+* Speech to text on selected lines: keep the transcribed lines when some clips fail, and offer to retry the failed ones - thx Marooo1122
+* Prevent sleep while speech to text, text to speech or burn-in runs - thx wixfigur
+* Text to speech: voice sample text box is multi-line and stretchable - thx subof
+* OCR: keep the edited row in view, add Cut/Copy/Paste to the text box menu - thx gojetablade
+* Open Matroska PGS tracks with the same timing as the extracted .sup - thx gmariani
+* IMSC 1.1: detect .ttml and .dfxp files regardless of the extension they were saved with
+* ASSA: comment blocks ({...}) are not counted in CPS and line length, and are dropped from exports to other formats - thx Tom2681
+* Fix waveform not drawing the lines after a dense burst of ASSA lines - thx Tom2681
+* Fix ASSA Set position/Set background measuring wrong on lines with a fade - thx Tom2681
+* Fix grid double-click seeking to the same line after Sort - thx Tom2681
+* Fix empty ASSA \N lines counted in "too many lines" - thx kadrimarzouki
+* Fix Shortcuts and OCR windows not opening when text measuring fails (macOS 27) - thx leesuhyung-sudo
+* Fix Netflix check: Japanese single line max length is 13, not 23 - thx JuergenFleiss
+* Binary Edit: show and set the frame rate a sup is written at - thx Lukewarm1141
+* Update CrispASR to v0.8.41
+* Update Portuguese (Brazil) translation - thx igorruckert
+* Update Turkish translation - thx bilimiyorum
+
+-----------------------------------------------------------------------------------------------------
+
 v5.3.0-beta19 (2nd of October 2026)
 
 * Add custom shortcut slots built from steps (run commands, insert text, find and replace) - thx kadrimarzouki
