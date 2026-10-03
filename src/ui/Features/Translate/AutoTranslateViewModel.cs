@@ -1378,7 +1378,10 @@ public partial class AutoTranslateViewModel : ObservableObject
         IsProgressEnabled = true;
         var engineType = translator.GetType();
 
-        if (ApiKeyIsVisible && string.IsNullOrWhiteSpace(ApiKeyText) && engineType != typeof(LibreTranslate))
+        // LibreTranslate and MyMemory keys are optional: MyMemory works without one (anonymous
+        // daily quota), the key only raises the limit, and MakeUrl leaves it out when empty.
+        if (ApiKeyIsVisible && string.IsNullOrWhiteSpace(ApiKeyText) &&
+            engineType != typeof(LibreTranslate) && engineType != typeof(MyMemoryApi))
         {
             IsProgressEnabled = false;
             await MessageBox.Show(
