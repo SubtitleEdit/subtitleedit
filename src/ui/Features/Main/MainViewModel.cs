@@ -13152,10 +13152,17 @@ public partial class MainViewModel :
 
         if (captureOriginal)
         {
+            // Only the selected lines get a translation - the others start out untranslated
+            // (blank) instead of showing a copy of the original text as if translated (#15603).
+            var selectedIds = selectedItems.Select(p => p.Id).ToHashSet();
             foreach (var line in Subtitles)
             {
                 line.OriginalText = line.Text;
                 line.ReferenceParagraphId = null;
+                if (!selectedIds.Contains(line.Id))
+                {
+                    line.Text = string.Empty;
+                }
             }
         }
 
