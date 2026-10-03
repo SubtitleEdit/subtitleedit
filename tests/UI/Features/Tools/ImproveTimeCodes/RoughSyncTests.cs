@@ -166,4 +166,29 @@ public class RoughSyncTests
         Assert.True(IsMove(LineStatus.MovedWithSync));
         Assert.False(IsUnconfirmed(LineStatus.MovedWithSync));
     }
+
+    [Fact]
+    public void Apply_LinesGivenDifferentOffsets_DoNotRunIntoEachOther()
+    {
+        var lines = new List<SubtitleRetimer.Line> { new("a", 10, 12), new("b", 12.1, 14), new("c", 20, 22) };
+        var sync = new RoughSync.Result(new[] { 1.5, 1.2, 1.2 }, 3, 3);
+
+        var synced = RoughSync.Apply(lines, sync);
+
+        Assert.Equal(11.5, synced[0].StartSeconds, 3);
+        Assert.Equal(13.2, synced[0].EndSeconds, 3); // the 0.1 s gap there was is kept
+        Assert.Equal(13.3, synced[1].StartSeconds, 3);
+    }
+
+    [Fact]
+    public void Merge_AMovedLine_FallsBackToItsSyncedPlace()
+    {
+        var original = new List<SubtitleRetimer.Line> { new("a", 10, 12) };
+        var synced = new List<SubtitleRetimer.Line> { new("a", 12, 14) };
+        var results = new[] { new SubtitleRetimer.LineResult(11.6, 13.6, SubtitleRetimer.LineStatus.DisputedBySpeech) };
+
+        RoughSync.Merge(original, synced, results);
+
+        Assert.Equal((12.0, 14.0), results[0].Fallback);
+    }
 }

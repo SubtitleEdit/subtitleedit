@@ -55,6 +55,18 @@ public sealed partial class SubtitleRetimer
         public double MinDurationSeconds { get; init; } = 1.0;
 
         /// <summary>
+        /// A re-timed line is never held up longer than this by the reading-speed rules - it
+        /// may still be longer when the speech itself is. 0 means no limit.
+        /// </summary>
+        public double MaxDurationSeconds { get; init; }
+
+        /// <summary>
+        /// Fastest reading speed allowed. Unlike <see cref="ReadingCharsPerSecond"/> this may
+        /// hold a line for longer than it used to be shown, room permitting. 0 turns it off.
+        /// </summary>
+        public double MaxCharsPerSecond { get; init; }
+
+        /// <summary>
         /// Comfortable reading speed. Speech is often over before a line has been read, so a
         /// line is held for this long - though never past where it used to end. 0 turns it off.
         /// </summary>
@@ -128,6 +140,9 @@ public sealed partial class SubtitleRetimer
         /// (see <see cref="RoughSync"/>), and the aligner left this line where the sync put it.
         /// </summary>
         MovedWithSync,
+
+        /// <summary>Moved or resized by the user in the waveform.</summary>
+        AdjustedByHand,
     }
 
     public readonly record struct Line(string Text, double StartSeconds, double EndSeconds);
@@ -137,17 +152,36 @@ public sealed partial class SubtitleRetimer
         /// <summary>Share of the line's words speech-to-text heard; null when it was not run.</summary>
         public double? HeardRatio { get; init; }
 
+        /// <summary>Where speech-to-text heard the line's last word end; null when it did not.</summary>
+        public double? HeardEndSeconds { get; init; }
+
         /// <summary>
         /// For a line moved with its neighbours: where the aligner itself put it, which
         /// speech-to-text may yet show to be right.
         /// </summary>
         public (double StartSeconds, double EndSeconds)? AlignerOwn { get; init; }
+
+        /// <summary>
+        /// Where the line stays when this move is not taken; null for where it came in. Set once
+        /// the whole subtitle was synced first - a line that is not re-timed still keeps the sync.
+        /// </summary>
+        public (double StartSeconds, double EndSeconds)? Fallback { get; init; }
     }
 
     public sealed record Progress(int BatchIndex, int BatchCount, double Percent);
 
     /// <summary>One aligner run: <c>First..Last</c> index the alignable lines, sentinels excluded.</summary>
     internal sealed record Batch(int First, int Last, bool LeadingSentinel, bool TrailingSentinel);
+
+    /// <summary>How long a word goes on sounding after a CTC aligner has placed its end.</summary>
+    internal const double EndTailSeconds = 0.2;
+
+    /// <summary>
+    /// The furthest an end is held on for speech that goes on. A CTC aligner stretches a line's
+    /// last word over the silence after it, so this is more about the next line than the speech;
+    /// further than this, it is more likely speech the line does not have.
+    /// </summary>
+    internal const double MaxEndExtensionSeconds = 2.0;
 
     private readonly ForcedAligner.IRunner _runner;
     private readonly ForcedAligner.IAudioSource _audio;
@@ -333,15 +367,22 @@ public sealed partial class SubtitleRetimer
                 start = newStart;
             }
 
-            // An end is different: subtitles are routinely held long after the last word so they
-            // can be read, so an end far from the speech end is normal. Such an end is not pulled
-            // in to the speech - it travels with the start, and the line keeps its duration.
+            // An end is different. Subtitles are held after the last word so they can be read, so
+            // an end after the speech is normal and is not pulled in: it travels with the start,
+            // and the line keeps its duration. And a CTC aligner's end is not where the sound
+            // stops but where the last letter was recognised - a tenth to half a second before
+            // the word has died away - so pulling ends in to it made lines stop too soon. What
+            // the aligner's end is good for is the other way round: speech that goes on past
+            // where the line would end. The line is then held until it is over.
             var end = line.EndSeconds;
             if (_options.AdjustEnd)
             {
-                end = endMeasured && Math.Abs(newEnd - line.EndSeconds) <= _options.MaxShiftSeconds
-                    ? newEnd
-                    : line.EndSeconds + (start - line.StartSeconds);
+                end = line.EndSeconds + (start - line.StartSeconds);
+                var speechEnd = newEnd + EndTailSeconds;
+                if (endMeasured && speechEnd > end && speechEnd - end <= MaxEndExtensionSeconds)
+                {
+                    end = speechEnd;
+                }
             }
 
             if (end <= start)
@@ -528,18 +569,30 @@ public sealed partial class SubtitleRetimer
                 room = Math.Min(room, audioSeconds);
             }
 
-            var wanted = options.MinDurationSeconds;
-            if (options.ReadingCharsPerSecond > 0)
+            // With "Adjust end times" off the end is not held at all - it only gives way to the
+            // next line - or every line whose start moved later had its end moved along after all.
+            var readingEnd = start + GetHoldSeconds(lines[i], options);
+            if (options.AdjustEnd)
             {
-                wanted = Math.Max(wanted, GetSpokenText(lines[i].Text).Length / options.ReadingCharsPerSecond);
+                end = Math.Max(end, readingEnd);
+
+                // Speech-to-text heard the last word end later: the line is still being spoken.
+                if (result.HeardEndSeconds is { } heardEnd && heardEnd > end && heardEnd > start &&
+                    heardEnd - end <= MaxEndExtensionSeconds)
+                {
+                    end = heardEnd;
+                }
+
+                // Never held up longer than the maximum duration by the rules here - only when it
+                // came in longer.
+                var longest = Math.Max(options.MaxDurationSeconds, lines[i].EndSeconds - lines[i].StartSeconds);
+                if (options.MaxDurationSeconds > 0 && end - start > longest)
+                {
+                    end = start + longest;
+                }
             }
 
-            // Reading time may hold a line for as long as it used to be shown, never longer. With
-            // "Adjust end times" off the end is not held at all - it only gives way to the next
-            // line - or every line whose start moved later had its end moved along after all.
-            var originalDuration = lines[i].EndSeconds - lines[i].StartSeconds;
-            var readingEnd = start + Math.Min(wanted, Math.Max(originalDuration, options.MinDurationSeconds));
-            end = Math.Min(options.AdjustEnd ? Math.Max(end, readingEnd) : end, room);
+            end = Math.Min(end, room);
 
             if (end <= start)
             {
@@ -552,6 +605,34 @@ public sealed partial class SubtitleRetimer
         }
     }
 
+    /// <summary>
+    /// How long a line has to stay up to be read. The minimum duration and the maximum reading
+    /// speed are rules, and hold a line for as long as they need. The comfortable reading speed
+    /// is only a wish: it holds a line for as long as it used to be shown, never longer.
+    /// </summary>
+    internal static double GetHoldSeconds(Line line, Options options)
+    {
+        var characters = CountCharacters(line.Text);
+        var floor = options.MinDurationSeconds;
+        if (options.MaxCharsPerSecond > 0)
+        {
+            floor = Math.Max(floor, characters / options.MaxCharsPerSecond);
+        }
+
+        if (options.MaxDurationSeconds > 0)
+        {
+            floor = Math.Min(floor, options.MaxDurationSeconds);
+        }
+
+        var wish = options.ReadingCharsPerSecond > 0 ? characters / options.ReadingCharsPerSecond : 0;
+        var originalDuration = line.EndSeconds - line.StartSeconds;
+        return Math.Max(floor, Math.Min(wish, originalDuration));
+    }
+
+    /// <summary>Characters as the rest of Subtitle Edit counts them for characters per second.</summary>
+    private static double CountCharacters(string? text)
+        => string.IsNullOrEmpty(text) ? 0 : (double)HtmlUtil.RemoveHtmlTags(text, true).CountCharacters(true);
+
     /// <summary>The line has new times to offer, ticked or not.</summary>
     public static bool IsMove(LineStatus status)
         => status is LineStatus.Retimed
@@ -559,23 +640,78 @@ public sealed partial class SubtitleRetimer
             or LineStatus.LargeMoveUnconfirmed
             or LineStatus.ConfirmedBySpeech
             or LineStatus.DisputedBySpeech
-            or LineStatus.MovedWithSync;
+            or LineStatus.MovedWithSync
+            or LineStatus.AdjustedByHand;
 
     /// <summary>The new times are offered unticked, for the user to check.</summary>
     public static bool IsUnconfirmed(LineStatus status)
         => status is LineStatus.LargeMoveUnconfirmed or LineStatus.DisputedBySpeech;
 
-    // An unconfirmed line may end up at either of its two positions, so its neighbours keep
-    // clear of both.
+    // An unconfirmed line is offered unticked, so it stays where it was unless the user takes
+    // the move - and its neighbours make room for where it stays. Keeping clear of both of its
+    // positions cut a neighbour short for a move that is, as often as not, wrong; when the user
+    // does take it, Settle makes room then.
     private static double SettledStart(IReadOnlyList<Line> lines, LineResult[] results, int index)
-        => IsUnconfirmed(results[index].Status)
-            ? Math.Min(results[index].StartSeconds, lines[index].StartSeconds)
-            : results[index].StartSeconds;
+        => IsMove(results[index].Status) && !IsUnconfirmed(results[index].Status)
+            ? results[index].StartSeconds
+            : lines[index].StartSeconds;
 
     private static double SettledEnd(IReadOnlyList<Line> lines, LineResult[] results, int index)
-        => IsUnconfirmed(results[index].Status)
-            ? Math.Max(results[index].EndSeconds, lines[index].EndSeconds)
-            : results[index].EndSeconds;
+        => IsMove(results[index].Status) && !IsUnconfirmed(results[index].Status)
+            ? results[index].EndSeconds
+            : lines[index].EndSeconds;
+
+    /// <summary>One line's times on the final timeline, and whether they may still be changed.</summary>
+    public record struct Placement(double StartSeconds, double EndSeconds, bool CanMove);
+
+    /// <summary>
+    /// Makes the lines as they will actually be saved - each one moved or not, as the user
+    /// ticked it - keep clear of one another by at least <paramref name="minGapSeconds"/>.
+    /// Lines that overlapped on the way in (two speakers at once) are left overlapping.
+    ///
+    /// Only lines that may move are changed. An end gives way first: it marks when the line
+    /// comes down, which can be any time after the speech, while the start is where the speech
+    /// begins. Only when the earlier line cannot give way, or would be left with almost nothing,
+    /// does the later line start later.
+    /// </summary>
+    public static void Settle(IReadOnlyList<Line> original, Placement[] placements, double minGapSeconds)
+    {
+        const double shortestSeconds = 0.1;
+        for (var i = 1; i < placements.Length; i++)
+        {
+            if (original[i].StartSeconds < original[i - 1].EndSeconds)
+            {
+                continue;
+            }
+
+            var previous = placements[i - 1];
+            var current = placements[i];
+            var latestEnd = current.StartSeconds - minGapSeconds;
+            if (previous.EndSeconds <= latestEnd + 0.0005)
+            {
+                continue;
+            }
+
+            if (previous.CanMove && latestEnd >= previous.StartSeconds + shortestSeconds)
+            {
+                placements[i - 1] = previous with { EndSeconds = latestEnd };
+            }
+            else if (current.CanMove)
+            {
+                var start = previous.EndSeconds + minGapSeconds;
+                var duration = current.EndSeconds - current.StartSeconds;
+                placements[i] = current with
+                {
+                    StartSeconds = start,
+                    EndSeconds = Math.Max(current.EndSeconds, start + Math.Max(shortestSeconds, Math.Min(duration, 1.0))),
+                };
+            }
+            else if (previous.CanMove)
+            {
+                placements[i - 1] = previous with { EndSeconds = Math.Max(previous.StartSeconds + 0.001, latestEnd) };
+            }
+        }
+    }
 
     /// <summary>
     /// What is actually said in a line: no tags, no sound descriptions, no music symbols, no

@@ -54,10 +54,12 @@ public class LanguageImproveTimeCodes
     public string StatusNoSpeech { get; set; }
     public string StatusShiftTooLarge { get; set; }
     public string StatusFailed { get; set; }
+    public string StatusAdjustedByHand { get; set; }
+    public string AlignedWaveformHint { get; set; }
+    public string PlayLine { get; set; }
+    public string UndoAdjustment { get; set; }
     public string PlayPause { get; set; }
-    public string PlayOriginal { get; set; }
     public string PlayAligned { get; set; }
-    public string PlayOriginalHint { get; set; }
     public string PlayAlignedHint { get; set; }
     public string Apply { get; set; }
     public string ApplyHint { get; set; }
@@ -102,8 +104,8 @@ public class LanguageImproveTimeCodes
         SummaryXRetimedYKeptZSkipped = "Re-timed: {0}   ·   Kept: {1}   ·   No speech: {2}";
         MeanShiftX = "Mean shift: {0} ms";
         ToCheckX = "To check: {0}";
-        LargeMovesToCheckX = "{0} line(s) would move a long way on their own and are left unticked - play Original / Aligned and tick the ones that are right.";
-        LinesToCheckX = "{0} line(s) are left unticked to check - play Original / Aligned and tick the ones that are right.";
+        LargeMovesToCheckX = "{0} line(s) would move a long way on their own and are left unticked - listen to them (F5 plays the aligned line, Shift+F5 the original) and tick the ones that are right.";
+        LinesToCheckX = "{0} line(s) are left unticked to check - listen to them (F5 plays the aligned line, Shift+F5 the original) and tick the ones that are right.";
         ChangeXOfY = "Change {0} of {1}";
         PreviousChange = "Previous change";
         NextChange = "Next change";
@@ -116,12 +118,14 @@ public class LanguageImproveTimeCodes
         StatusNoSpeech = "No speech";
         StatusShiftTooLarge = "Kept - shift too large";
         StatusFailed = "Kept - aligner failed";
+        StatusAdjustedByHand = "Adjusted by hand";
+        AlignedWaveformHint = "Drag a line to move it, or drag its edges to change its start or end.";
+        PlayLine = "Play line";
+        UndoAdjustment = "Undo adjustment";
         PlayPause = "Play / pause";
-        PlayOriginal = "Original";
         PlayAligned = "Aligned";
-        PlayOriginalHint = "Play the selected line with its original time codes";
         PlayAlignedHint = "Play the selected line with its aligned time codes";
         Apply = "Apply";
-        ApplyHint = "Untick a line to keep its original time codes. Double-click a line to play it.";
+        ApplyHint = "Untick a line to keep its original time codes. Double-click a line to play it. Lines can also be moved or resized in the aligned waveform.";
     }
 }

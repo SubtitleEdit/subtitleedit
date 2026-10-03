@@ -2078,9 +2078,7 @@
       "StatusShiftTooLarge": "Behouden - verschuiving te groot",
       "StatusFailed": "Behouden - aligner mislukt",
       "PlayPause": "Afspelen / pauzeren",
-      "PlayOriginal": "Origineel",
       "PlayAligned": "Uitgelijnd",
-      "PlayOriginalHint": "De geselecteerde rij afspelen met de originele tijdcodes",
       "PlayAlignedHint": "De geselecteerde rij afspelen met de uitgelijnde tijdcodes",
       "Apply": "Toepassen",
       "ApplyHint": "Vink een rij uit om de originele tijdcodes te behouden. Dubbelklik op een rij om die af te spelen."

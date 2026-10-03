@@ -140,6 +140,8 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
             Rows.Add(new ImproveTimeCodesRow(i, _originalSubtitles[i], OnRowApplyChanged));
         }
 
+        RebuildAligned();
+
         foreach (var option in ImproveTimeCodesAligners.Rank(languageCode))
         {
             option.IsInstalled = File.Exists(_engine.GetModelForCmdLine(option.FileName));
@@ -517,8 +519,10 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
                 AdjustStart = AdjustStart,
                 AdjustEnd = AdjustEnd,
                 MinDurationSeconds = general.SubtitleMinimumDisplayMilliseconds / 1000.0,
+                MaxDurationSeconds = general.SubtitleMaximumDisplayMilliseconds / 1000.0,
                 ReadingCharsPerSecond = general.SubtitleOptimalCharactersPerSeconds,
-                MinGapSeconds = general.MinimumBetweenLines.GetMilliseconds() / 1000.0,
+                MaxCharsPerSecond = general.SubtitleMaximumCharactersPerSeconds,
+                MinGapSeconds = MinGapSeconds,
             };
 
             var lines = _originalSubtitles
@@ -663,29 +667,134 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         }
     }
 
-    /// <summary>The aligned list is the original with every ticked, re-timed row's new times laid over it.</summary>
+    /// <summary>Where each line was last put in the aligned waveform, so a drag can be told from it.</summary>
+    private SubtitleRetimer.Placement[] _placed = Array.Empty<SubtitleRetimer.Placement>();
+
+    private static double MinGapSeconds => Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / 1000.0;
+
+    /// <summary>
+    /// The aligned list is the original with every ticked row's new times laid over it, and
+    /// every other row where it stays (its old place, or its synced one). Ticking and unticking
+    /// can bring a moved line next to one that was not, so the result is then made to keep clear
+    /// of overlaps and the minimum gap - by changing only the ticked lines the aligner moved,
+    /// never one that stays put or one the user placed by hand.
+    /// </summary>
     private void RebuildAligned()
     {
-        for (var i = 0; i < Rows.Count; i++)
+        var count = Math.Min(Rows.Count, _alignedSubtitles.Count);
+        var original = new List<SubtitleRetimer.Line>(count);
+        var placements = new SubtitleRetimer.Placement[count];
+        for (var i = 0; i < count; i++)
         {
             var row = Rows[i];
-            var target = _alignedSubtitles[i];
             var source = _originalSubtitles[i];
+            original.Add(new SubtitleRetimer.Line(source.Text ?? string.Empty, source.StartTime.TotalSeconds, source.EndTime.TotalSeconds));
+            placements[i] = row.IsChanged && row.Apply
+                ? new SubtitleRetimer.Placement(row.NewStartSeconds, row.NewEndSeconds, !row.IsAdjustedByHand)
+                : new SubtitleRetimer.Placement(row.FallbackStartSeconds, row.FallbackEndSeconds, false);
+        }
+
+        SubtitleRetimer.Settle(original, placements, MinGapSeconds);
+        _placed = placements;
+
+        for (var i = 0; i < count; i++)
+        {
+            var target = _alignedSubtitles[i];
+            target.SetTimes(
+                TimeSpan.FromMilliseconds(Math.Round(placements[i].StartSeconds * 1000.0)),
+                TimeSpan.FromMilliseconds(Math.Round(placements[i].EndSeconds * 1000.0)));
+            target.UpdateDuration();
+
+            var row = Rows[i];
             if (row.IsChanged && row.Apply)
             {
-                target.StartTime = TimeSpan.FromSeconds(row.NewStartSeconds);
-                target.EndTime = TimeSpan.FromSeconds(row.NewEndSeconds);
+                row.ShowApplied(placements[i].StartSeconds, placements[i].EndSeconds);
             }
-            else
+            else if (row.IsChanged)
             {
-                target.StartTime = source.StartTime;
-                target.EndTime = source.EndTime;
+                row.ShowApplied(row.NewStartSeconds, row.NewEndSeconds);
             }
-
-            target.UpdateDuration();
         }
 
         PushParagraphsToVisualizers();
+    }
+
+    /// <summary>Selects the row of a line grabbed in the aligned waveform, without scrolling the waveform away from under the pointer.</summary>
+    internal void OnAlignedDragStarted(SubtitleLineViewModel? paragraph)
+    {
+        var index = paragraph == null ? -1 : _alignedSubtitles.FindIndex(p => ReferenceEquals(p, paragraph));
+        if (index < 0 || index >= Rows.Count || ReferenceEquals(SelectedRow, Rows[index]))
+        {
+            return;
+        }
+
+        _centerOnSelection = false;
+        try
+        {
+            SelectAndScroll(Rows[index]);
+        }
+        finally
+        {
+            _centerOnSelection = true;
+        }
+    }
+
+    /// <summary>
+    /// A drag in the aligned waveform moves the line's own view model; whatever line now differs
+    /// from what the rows say it should be was moved or resized by hand.
+    /// </summary>
+    internal void OnAlignedDragEnded()
+    {
+        if (IsAligning)
+        {
+            RebuildAligned();
+            return;
+        }
+
+        var changed = false;
+        for (var i = 0; i < Rows.Count && i < _alignedSubtitles.Count && i < _placed.Length; i++)
+        {
+            var line = _alignedSubtitles[i];
+            var start = line.StartTime.TotalSeconds;
+            var end = line.EndTime.TotalSeconds;
+            if (Math.Abs(start - _placed[i].StartSeconds) >= 0.0015 || Math.Abs(end - _placed[i].EndSeconds) >= 0.0015)
+            {
+                Rows[i].SetAdjustedByHand(start, end);
+                changed = true;
+            }
+        }
+
+        RebuildAligned();
+        if (changed)
+        {
+            HasResult = Rows.Any(r => r.IsChanged && r.Apply);
+            UpdateChangeNavigation();
+        }
+    }
+
+    /// <summary>The row under a waveform position, selected - for the aligned waveform's context menu.</summary>
+    internal ImproveTimeCodesRow? SelectRowAtAligned(double seconds)
+    {
+        SelectRowAt(seconds, _alignedSubtitles, centerOnRow: false);
+        var index = _alignedSubtitles.FindIndex(p => p.StartTime.TotalSeconds <= seconds && seconds <= p.EndTime.TotalSeconds);
+        return index >= 0 && index < Rows.Count ? Rows[index] : null;
+    }
+
+    [RelayCommand]
+    private void PlayRow(ImproveTimeCodesRow? row) => PlayLine(row, _alignedSubtitles);
+
+    [RelayCommand]
+    private void UndoAdjustment(ImproveTimeCodesRow? row)
+    {
+        if (row == null || !row.IsAdjustedByHand)
+        {
+            return;
+        }
+
+        row.UndoAdjustment();
+        RebuildAligned();
+        HasResult = Rows.Any(r => r.IsChanged && r.Apply);
+        UpdateChangeNavigation();
     }
 
     private void OnRowApplyChanged(ImproveTimeCodesRow row)

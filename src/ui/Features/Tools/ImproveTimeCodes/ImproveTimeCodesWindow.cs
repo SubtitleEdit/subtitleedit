@@ -169,6 +169,11 @@ public class ImproveTimeCodesWindow : Window
         Mirror(avAligned, avOriginal);
         ReloadParagraphsWhenViewMoves(avOriginal, vm);
         ReloadParagraphsWhenViewMoves(avAligned, vm);
+        MakeEditable(avAligned, vm);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(labelAligned, l.AlignedWaveformHint);
+        }
 
         var grid = new Grid
         {
@@ -223,6 +228,36 @@ public class ImproveTimeCodesWindow : Window
             {
                 vm.ReloadWaveformParagraphs(av);
             }
+        };
+    }
+
+    /// <summary>
+    /// The aligned waveform takes the user's word over the aligner's: a line dragged or resized
+    /// there gets those times. The original waveform stays read-only - it is the reference.
+    /// </summary>
+    private static void MakeEditable(AudioVisualizer av, ImproveTimeCodesViewModel vm)
+    {
+        av.IsReadOnly = false;
+        av.MinGapSeconds = Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / 1000.0;
+        av.OnDragStarted += (_, e) => vm.OnAlignedDragStarted(e.Paragraph);
+        av.OnDragEnded += (_, _) => vm.OnAlignedDragEnded();
+
+        var l = Se.Language.Tools.ImproveTimeCodes;
+        var menuPlay = new Avalonia.Controls.MenuItem { Header = l.PlayLine, Command = vm.PlayRowCommand };
+        var menuUndo = new Avalonia.Controls.MenuItem { Header = l.UndoAdjustment, Command = vm.UndoAdjustmentCommand };
+        var flyout = new MenuFlyout();
+        flyout.Items.Add(menuPlay);
+        flyout.Items.Add(menuUndo);
+        av.MenuFlyout = flyout;
+        av.FlyoutMenuOpening += (_, e) =>
+        {
+            // A right-drag over empty waveform marks a selection; there is nothing here to do with one.
+            av.NewSelectionParagraph = null;
+            var row = vm.SelectRowAtAligned(e.PositionInSeconds);
+            menuPlay.CommandParameter = row;
+            menuUndo.CommandParameter = row;
+            menuPlay.IsEnabled = row != null;
+            menuUndo.IsEnabled = row is { IsAdjustedByHand: true };
         };
     }
 
@@ -299,16 +334,13 @@ public class ImproveTimeCodesWindow : Window
 
         var buttonPlayPause = UiUtil.MakeButton(vm.TogglePlayPauseCommand, "mdi-play-pause", $"{l.PlayPause} (Space)");
         var buttonPlayAligned = UiUtil.MakeButton(l.PlayAligned, vm.PlaySelectedAlignedCommand).WithIconLeft(IconNames.Play);
-        var buttonPlayOriginal = UiUtil.MakeButton(l.PlayOriginal, vm.PlaySelectedOriginalCommand).WithIconLeft(IconNames.Play);
         if (Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(buttonPlayAligned, $"{l.PlayAlignedHint} (F5)");
-            ToolTip.SetTip(buttonPlayOriginal, $"{l.PlayOriginalHint} (Shift+F5)");
         }
 
         nav.Children.Add(UiUtil.MakeVerticalSeparator(margin: new Thickness(8, 2)));
         nav.Children.Add(buttonPlayPause);
-        nav.Children.Add(buttonPlayOriginal);
         nav.Children.Add(buttonPlayAligned);
 
         var summary = new TextBlock

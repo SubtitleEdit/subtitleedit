@@ -218,15 +218,40 @@ public static class RoughSync
         return offsets;
     }
 
-    /// <summary>The lines moved by the measured offsets.</summary>
+    /// <summary>
+    /// The lines moved by the measured offsets. Neighbouring lines can get slightly different
+    /// offsets (a drift, the smoothing), and a line moved further than the next would run into
+    /// it - so where two lines did not overlap before, the earlier one ends in time to keep the
+    /// gap there was between them. Overlaps made here would otherwise pass for overlaps the
+    /// user made on purpose, and be kept.
+    /// </summary>
     public static List<SubtitleRetimer.Line> Apply(IReadOnlyList<SubtitleRetimer.Line> lines, Result sync)
-        => lines.Select((l, i) => l with { StartSeconds = l.StartSeconds + sync.Offsets[i], EndSeconds = l.EndSeconds + sync.Offsets[i] }).ToList();
+    {
+        var synced = lines.Select((l, i) => l with { StartSeconds = l.StartSeconds + sync.Offsets[i], EndSeconds = l.EndSeconds + sync.Offsets[i] }).ToList();
+        for (var i = 0; i + 1 < synced.Count; i++)
+        {
+            var gap = lines[i + 1].StartSeconds - lines[i].EndSeconds;
+            if (gap < 0)
+            {
+                continue;
+            }
+
+            var latestEnd = synced[i + 1].StartSeconds - gap;
+            if (synced[i].EndSeconds > latestEnd)
+            {
+                synced[i] = synced[i] with { EndSeconds = Math.Max(latestEnd, synced[i].StartSeconds + 0.1) };
+            }
+        }
+
+        return synced;
+    }
 
     /// <summary>
     /// Folds the sync into the aligner's results. The aligner worked on the synced lines, so a
     /// line it left alone - already in place, no speech, refused, failed - still has to take
     /// the sync's move, or it would fall back to where it was before. Such lines are marked
-    /// <see cref="SubtitleRetimer.LineStatus.MovedWithSync"/>.
+    /// <see cref="SubtitleRetimer.LineStatus.MovedWithSync"/>. A line the aligner did move
+    /// falls back to its synced place, not its old one, when the user does not take the move.
     /// </summary>
     public static void Merge(IReadOnlyList<SubtitleRetimer.Line> original, IReadOnlyList<SubtitleRetimer.Line> synced, SubtitleRetimer.LineResult[] results)
     {
@@ -234,6 +259,7 @@ public static class RoughSync
         {
             if (SubtitleRetimer.IsMove(results[i].Status))
             {
+                results[i] = results[i] with { Fallback = (synced[i].StartSeconds, synced[i].EndSeconds) };
                 continue;
             }
 
