@@ -322,6 +322,10 @@ public class LanguageSettingsShortcuts
     public string MoveStartOneFrameForwardKeepGapPrev { get; set; }
     public string MoveEndOneFrameBackKeepGapNext { get; set; }
     public string MoveEndOneFrameForwardKeepGapNext { get; set; }
+    public string MoveStartXMsBack { get; set; }
+    public string MoveStartXMsForward { get; set; }
+    public string MoveEndXMsBack { get; set; }
+    public string MoveEndXMsForward { get; set; }
     public string MoveSelectedLinesXMsBack { get; set; }
     public string MoveSelectedLinesXMsForward { get; set; }
     public string MoveSelectedLinesAndForwardXMsBack { get; set; }
@@ -659,6 +663,10 @@ public class LanguageSettingsShortcuts
         MoveStartOneFrameForwardKeepGapPrev = "Move start one frame forward (keep gap to previous if close)";
         MoveEndOneFrameBackKeepGapNext = "Move end one frame back (keep gap to next if close)";
         MoveEndOneFrameForwardKeepGapNext = "Move end one frame forward (keep gap to next if close)";
+        MoveStartXMsBack = "Move start X ms back (X set in Settings, also in Visual Sync)";
+        MoveStartXMsForward = "Move start X ms forward (X set in Settings, also in Visual Sync)";
+        MoveEndXMsBack = "Move end X ms back (X set in Settings, also in Visual Sync)";
+        MoveEndXMsForward = "Move end X ms forward (X set in Settings, also in Visual Sync)";
         MoveSelectedLinesXMsBack = "Move selected lines X ms back (X set in Settings)";
         MoveSelectedLinesXMsForward = "Move selected lines X ms forward (X set in Settings)";
         MoveSelectedLinesAndForwardXMsBack = "Move selected lines and all following X ms back (X set in Settings)";

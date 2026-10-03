@@ -15504,6 +15504,22 @@ public partial class MainViewModel :
     [RelayCommand]
     private void MoveEndOneFrameForwardKeepGapNext() => MoveEndByFrames(1, keepGapNextIfClose: true);
 
+    // Finer than a frame, for hitting waveform edges exactly - the step is
+    // Settings > General > "Move start/end shortcut step (ms)" (default 10 ms).
+    [RelayCommand]
+    private void MoveStartXMsBack() => MoveStartByMs(-GetMoveStartEndStepMs(), keepGapPrevIfClose: false);
+
+    [RelayCommand]
+    private void MoveStartXMsForward() => MoveStartByMs(GetMoveStartEndStepMs(), keepGapPrevIfClose: false);
+
+    [RelayCommand]
+    private void MoveEndXMsBack() => MoveEndByMs(-GetMoveStartEndStepMs(), keepGapNextIfClose: false);
+
+    [RelayCommand]
+    private void MoveEndXMsForward() => MoveEndByMs(GetMoveStartEndStepMs(), keepGapNextIfClose: false);
+
+    private static int GetMoveStartEndStepMs() => Math.Max(1, Se.Settings.General.MoveStartEndStepMs);
+
     // #14789: repeatable fixed-ms nudges for fixing progressive drift section by section.
     // Durations are kept, and a backward move is clamped so no start goes below zero.
     [RelayCommand]
@@ -15748,7 +15764,10 @@ public partial class MainViewModel :
     private static bool IsKeepGapClose(double gapToNeighbourMs, double minGapMs) =>
         gapToNeighbourMs < minGapMs + FramesToMilliseconds(1) - 0.5;
 
-    private void MoveStartByFrames(int frames, bool keepGapPrevIfClose)
+    private void MoveStartByFrames(int frames, bool keepGapPrevIfClose) =>
+        MoveStartByMs(FramesToMilliseconds(frames), keepGapPrevIfClose);
+
+    private void MoveStartByMs(int deltaMs, bool keepGapPrevIfClose)
     {
         var s = SelectedSubtitle;
         if (s == null || AreTimeCodesLocked)
@@ -15756,7 +15775,6 @@ public partial class MainViewModel :
             return;
         }
 
-        var deltaMs = FramesToMilliseconds(frames);
         var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
         var newStartMs = s.StartTime.TotalMilliseconds + deltaMs;
 
@@ -15825,7 +15843,10 @@ public partial class MainViewModel :
         _updateAudioVisualizer = true;
     }
 
-    private void MoveEndByFrames(int frames, bool keepGapNextIfClose)
+    private void MoveEndByFrames(int frames, bool keepGapNextIfClose) =>
+        MoveEndByMs(FramesToMilliseconds(frames), keepGapNextIfClose);
+
+    private void MoveEndByMs(int deltaMs, bool keepGapNextIfClose)
     {
         var s = SelectedSubtitle;
         if (s == null || AreTimeCodesLocked)
@@ -15833,7 +15854,6 @@ public partial class MainViewModel :
             return;
         }
 
-        var deltaMs = FramesToMilliseconds(frames);
         var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
         var newEndMs = s.EndTime.TotalMilliseconds + deltaMs;
 

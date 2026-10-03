@@ -35,6 +35,7 @@ public class FrameNudgeGapTests : IDisposable
     private readonly bool _useFrameMode = Se.Settings.General.UseFrameMode;
     private readonly int _minBetweenMs = Se.Settings.General.MinimumBetweenLines.Milliseconds;
     private readonly int _minBetweenFrames = Se.Settings.General.MinimumBetweenLines.Frames;
+    private readonly int _moveStartEndStepMs = Se.Settings.General.MoveStartEndStepMs;
 
     public void Dispose()
     {
@@ -44,6 +45,7 @@ public class FrameNudgeGapTests : IDisposable
         Se.Settings.General.UseFrameMode = _useFrameMode;
         Se.Settings.General.MinimumBetweenLines.Milliseconds = _minBetweenMs;
         Se.Settings.General.MinimumBetweenLines.Frames = _minBetweenFrames;
+        Se.Settings.General.MoveStartEndStepMs = _moveStartEndStepMs;
         foreach (var w in _windows)
         {
             w.Close();
@@ -93,6 +95,51 @@ public class FrameNudgeGapTests : IDisposable
 
     private static double MinGapMs => Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
 
+
+    // "Move start/end X ms" (Reddit: steps finer than 100 ms to hit waveform edges) - same clamps
+    // as the frame variants, but the step is the "Move start/end shortcut step (ms)" setting.
+    [AvaloniaFact]
+    public void MoveStartEndXMs_MovesBySettingStep()
+    {
+        var (window, vm) = TwoLines(gapMs: 1000);
+        Se.Settings.General.MoveStartEndStepMs = 10;
+        vm.SelectedSubtitle = vm.Subtitles[1];
+        Dispatcher.UIThread.RunJobs();
+        var start = vm.Subtitles[1].StartTime.TotalMilliseconds;
+        var end = vm.Subtitles[1].EndTime.TotalMilliseconds;
+
+        vm.MoveStartXMsBackCommand.Execute(null);
+        Assert.Equal(start - 10, vm.Subtitles[1].StartTime.TotalMilliseconds, 3);
+        vm.MoveStartXMsForwardCommand.Execute(null);
+        vm.MoveStartXMsForwardCommand.Execute(null);
+        Assert.Equal(start + 10, vm.Subtitles[1].StartTime.TotalMilliseconds, 3);
+
+        vm.MoveEndXMsForwardCommand.Execute(null);
+        Assert.Equal(end + 10, vm.Subtitles[1].EndTime.TotalMilliseconds, 3);
+        vm.MoveEndXMsBackCommand.Execute(null);
+        vm.MoveEndXMsBackCommand.Execute(null);
+        Assert.Equal(end - 10, vm.Subtitles[1].EndTime.TotalMilliseconds, 3);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void MoveStartXMsBack_StopsAtTheMinimumGap()
+    {
+        var (window, vm) = TwoLines(gapMs: 100);
+        Se.Settings.General.MoveStartEndStepMs = 7;
+        vm.SelectedSubtitle = vm.Subtitles[1];
+        Dispatcher.UIThread.RunJobs();
+
+        var floor = vm.Subtitles[0].EndTime.TotalMilliseconds + MinGapMs;
+        for (var i = 0; i < 50; i++)
+        {
+            vm.MoveStartXMsBackCommand.Execute(null);
+        }
+
+        Assert.True(vm.Subtitles[1].StartTime.TotalMilliseconds >= floor - 0.001,
+            $"start {vm.Subtitles[1].StartTime.TotalMilliseconds} went past the floor {floor}");
+        window.Close();
+    }
 
     [AvaloniaFact]
     public void MoveStartBack_StopsAtTheMinimumGap()
