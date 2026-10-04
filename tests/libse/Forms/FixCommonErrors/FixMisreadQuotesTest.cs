@@ -71,6 +71,9 @@ public class FixMisreadQuotesTest
     [InlineData("„Hallo'")]
     [InlineData("'Cause I'm leavin'")]
     [InlineData("'em all'")]
+    [InlineData("\"I love rock 'n' roll.")]
+    [InlineData("\"We stayed at the Parkers'.")]
+    [InlineData("\"We ate at my parents'")]
     [InlineData("")]
     public void Unchanged(string input)
     {

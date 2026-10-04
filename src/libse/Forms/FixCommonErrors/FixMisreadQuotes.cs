@@ -350,13 +350,64 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 return false;
             }
 
-            // possessive like "the boys' toys"
-            if ((prev == 's' || prev == 'S') && i + 2 < end && v[i + 1] == ' ' && char.IsLower(v[i + 2]))
+            // the closing apostrophe of rock 'n' roll
+            if ((prev == 'n' || prev == 'N') && i - 2 >= start && v[i - 2] == '\'')
             {
                 return false;
             }
 
+            if (prev == 's' || prev == 'S')
+            {
+                // possessive like "the boys' toys"
+                if (i + 2 < end && v[i + 1] == ' ' && char.IsLower(v[i + 2]))
+                {
+                    return false;
+                }
+
+                // plural possessive ending a sentence: "at the Parkers'." / "at my parents'"
+                if (IsAfterDeterminer(v, i - 1, start))
+                {
+                    return false;
+                }
+            }
+
             return true;
+        }
+
+        private static readonly HashSet<string> Determiners = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "the", "my", "your", "his", "her", "our", "their", "its",
+        };
+
+        /// <summary>
+        /// True when the word ending at wordLastIndex follows a determiner ("the Parkers"), i.e. it is
+        /// a noun that can take a plural possessive apostrophe rather than a quoted word.
+        /// </summary>
+        private static bool IsAfterDeterminer(string v, int wordLastIndex, int start)
+        {
+            var i = wordLastIndex;
+            while (i >= start && char.IsLetter(v[i]))
+            {
+                i--;
+            }
+
+            if (i < start || v[i] != ' ')
+            {
+                return false;
+            }
+
+            while (i >= start && v[i] == ' ')
+            {
+                i--;
+            }
+
+            var previousEnd = i + 1;
+            while (i >= start && char.IsLetter(v[i]))
+            {
+                i--;
+            }
+
+            return previousEnd - i - 1 > 0 && Determiners.Contains(v.Substring(i + 1, previousEnd - i - 1));
         }
     }
 }
