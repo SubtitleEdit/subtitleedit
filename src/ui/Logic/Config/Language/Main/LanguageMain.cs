@@ -138,6 +138,7 @@ public class LanguageMain
     public string FileExportedInFormatXToY { get; set; }
     public string FileExportedInFormatXToFileY { get; set; }
     public string FixedXLines { get; set; }
+    public string ToolXChangedYLines { get; set; }
     public string TranscriptionCompletedWithXLines { get; set; }
     public string OpenSubtitleFileX { get; set; }
     public string ReplacedXOccurrences { get; set; }
@@ -300,6 +301,7 @@ public class LanguageMain
         FileExportedInFormatXToY = "File exported in format {0} to {1}";
         FileExportedInFormatXToFileY = "File exported in format \"{0}\" to file \"{1}\"";
         FixedXLines = "Fixed {0} lines";
+        ToolXChangedYLines = "{0}: {1} lines changed";
         TranscriptionCompletedWithXLines = "Transcription completed with {0} lines";
         OpenSubtitleFileX = "Open subtitle file \"{0}\"?";
         ReplacedXOccurrences = "Replaced {0} occurrences";
