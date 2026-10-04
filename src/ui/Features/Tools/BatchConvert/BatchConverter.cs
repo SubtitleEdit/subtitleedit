@@ -3922,6 +3922,13 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return string.Empty;
         }
 
+        // Two regional variants of one language as targets ("zh-CN" + "zh-TW") would both map
+        // to ".zh" and only differ by a counter ("movie_2.zh.srt") - use the full code for them.
+        if (_targetLanguageCount > 1 && _config.AutoTranslate.IsActive && SharesLanguageWithOtherTarget(languageCode))
+        {
+            return "." + languageCode;
+        }
+
         // Translator codes can be regional ("zh-CN", "pt-BR") or NLLB-style ("zho_Hans");
         // the primary subtag carries the language for the two/three-letter mappings.
         var primary = languageCode.Split('-', '_')[0];
@@ -4011,6 +4018,15 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
 
         return code.Length == 0 ? string.Empty : "." + code;
+    }
+
+    /// <summary>True when another selected target language is the same language ("pt-BR" and "pt-PT").</summary>
+    private bool SharesLanguageWithOtherTarget(string languageCode)
+    {
+        var language = GetTwoLetterLanguageCode(languageCode) ?? languageCode.Split('-', '_')[0];
+        return GetTargetLanguages().Any(p =>
+            !p.Code.Equals(languageCode, StringComparison.OrdinalIgnoreCase) &&
+            (GetTwoLetterLanguageCode(p.Code) ?? p.Code.Split('-', '_')[0]).Equals(language, StringComparison.OrdinalIgnoreCase));
     }
 
     public bool AllowFix(Paragraph p, string action)

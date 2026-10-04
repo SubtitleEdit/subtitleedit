@@ -155,6 +155,36 @@ Hello world.
     }
 
     [Fact]
+    public async Task RegionalVariantsOfOneLanguage_GetFullCodes()
+    {
+        await Run(Se.Language.General.TwoLetterLanguageCode, async (dir, converter) =>
+        {
+            // Both used to map to ".zh" - "movie.zh.srt" and "movie_2.zh.srt".
+            converter.Initialize(MakeConfig(new TaggingTranslator(), "zh-CN", "zh-TW", "de"));
+
+            await ConvertFile(converter, dir);
+
+            Assert.Equal("[zh-CN] Hello world.", ReadText(dir, "movie.zh-CN.srt"));
+            Assert.Equal("[zh-TW] Hello world.", ReadText(dir, "movie.zh-TW.srt"));
+            Assert.Equal("[de] Hello world.", ReadText(dir, "movie.de.srt"));
+            Assert.False(File.Exists(Path.Combine(dir.FullName, "movie_2.zh.srt")));
+        });
+    }
+
+    [Fact]
+    public async Task SingleRegionalTarget_KeepsShortCode()
+    {
+        await Run(Se.Language.General.TwoLetterLanguageCode, async (dir, converter) =>
+        {
+            converter.Initialize(MakeConfig(new TaggingTranslator(), "pt-BR"));
+
+            await ConvertFile(converter, dir);
+
+            Assert.Equal("[pt-BR] Hello world.", ReadText(dir, "movie.pt.srt"));
+        });
+    }
+
+    [Fact]
     public async Task AllTargetsFail_Throws()
     {
         await Run(Se.Language.General.TwoLetterLanguageCode, async (dir, converter) =>
