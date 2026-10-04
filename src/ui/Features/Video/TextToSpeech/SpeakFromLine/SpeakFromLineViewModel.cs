@@ -79,7 +79,9 @@ public partial class SpeakFromLineViewModel : ObservableObject
         }
     }
 
-    private async Task LoadEngine(ITtsEngine engine)
+    /// <param name="preferredVoiceName">The voice to keep selected (by name) when the list is
+    /// reloaded after an engine download; null picks the saved voice.</param>
+    private async Task LoadEngine(ITtsEngine engine, string? preferredVoiceName = null)
     {
         var version = ++_engineLoadVersion;
         HasLanguageParameter = engine.HasLanguageParameter;
@@ -110,14 +112,21 @@ public partial class SpeakFromLineViewModel : ObservableObject
         Languages.Clear();
         SelectedLanguage = null;
 
-        var settings = Se.Settings.Video.TextToSpeech;
-        SelectedVoice = Voices.FirstOrDefault(v => v.Name == settings.SpeakFromLineVoice)
-                        ?? Voices.FirstOrDefault(v => v.Name.StartsWith("en", StringComparison.OrdinalIgnoreCase) ||
-                                                      v.Name.Contains("English", StringComparison.OrdinalIgnoreCase))
-                        ?? Voices.FirstOrDefault();
+        SelectedVoice = PickVoice(Voices, preferredVoiceName ?? Se.Settings.Video.TextToSpeech.SpeakFromLineVoice);
     }
 
-    private async Task LoadLanguages(ITtsEngine engine, Voice voice)
+    /// <summary>The voice named <paramref name="name"/>, else an English voice, else the first.</summary>
+    internal static Voice? PickVoice(Collection<Voice> voices, string? name)
+    {
+        return voices.FirstOrDefault(v => v.Name == name)
+               ?? voices.FirstOrDefault(v => v.Name.StartsWith("en", StringComparison.OrdinalIgnoreCase) ||
+                                             v.Name.Contains("English", StringComparison.OrdinalIgnoreCase))
+               ?? voices.FirstOrDefault();
+    }
+
+    /// <param name="preferredLanguageName">The language to keep selected (by name); null keeps
+    /// the current pick, or the saved one.</param>
+    private async Task LoadLanguages(ITtsEngine engine, Voice voice, string? preferredLanguageName = null)
     {
         var version = _engineLoadVersion;
         var languages = await engine.GetLanguages(voice, null);
@@ -126,7 +135,7 @@ public partial class SpeakFromLineViewModel : ObservableObject
             return;
         }
 
-        var previous = SelectedLanguage?.Name ?? Se.Settings.Video.TextToSpeech.SpeakFromLineLanguage;
+        var previous = preferredLanguageName ?? SelectedLanguage?.Name ?? Se.Settings.Video.TextToSpeech.SpeakFromLineLanguage;
         Languages.Clear();
         foreach (var language in languages)
         {
@@ -134,6 +143,34 @@ public partial class SpeakFromLineViewModel : ObservableObject
         }
 
         SelectedLanguage = Languages.FirstOrDefault(l => l.Name == previous) ?? Languages.FirstOrDefault();
+    }
+
+    /// <summary>
+    /// Reloads the voices after an engine download, keeping the voice and language the user
+    /// picked before clicking OK - a plain reload would fall back to the saved voice.
+    /// </summary>
+    private async Task ReloadEngineKeepingSelection(ITtsEngine engine, string? voiceName, string? languageName)
+    {
+        await LoadEngine(engine, voiceName);
+        await EnsureLanguageLoaded(engine, languageName);
+    }
+
+    /// <summary>
+    /// Loads the language list now when the engine needs one and it is not there yet - the list
+    /// otherwise loads in a posted callback that may run after the dialog has closed.
+    /// </summary>
+    private async Task EnsureLanguageLoaded(ITtsEngine engine, string? languageName)
+    {
+        var voice = SelectedVoice;
+        if (!engine.HasLanguageParameter || voice == null)
+        {
+            return;
+        }
+
+        if (SelectedLanguage == null || (languageName != null && SelectedLanguage.Name != languageName))
+        {
+            await LoadLanguages(engine, voice, languageName);
+        }
     }
 
     [RelayCommand]
@@ -150,8 +187,12 @@ public partial class SpeakFromLineViewModel : ObservableObject
         try
         {
             // Downloads happen here, with this window as owner, so the reader never has to stop
-            // half-way for an install prompt.
-            if (!await TtsEngineInstaller.EnsureEngineInstalled(engine, Window, _windowService, null, null, null, null, () => LoadEngine(engine)))
+            // half-way for an install prompt. The voice list is reloaded after a download, so
+            // remember the user's pick by name.
+            var voiceName = voice.Name;
+            var languageName = SelectedLanguage?.Name;
+            if (!await TtsEngineInstaller.EnsureEngineInstalled(engine, Window, _windowService, null, null, null, null,
+                    () => ReloadEngineKeepingSelection(engine, voiceName, languageName)))
             {
                 return;
             }
@@ -161,6 +202,8 @@ public partial class SpeakFromLineViewModel : ObservableObject
             {
                 return;
             }
+
+            await EnsureLanguageLoaded(engine, languageName);
 
             var settings = Se.Settings.Video.TextToSpeech;
             settings.SpeakFromLineEngine = engine.Name;
