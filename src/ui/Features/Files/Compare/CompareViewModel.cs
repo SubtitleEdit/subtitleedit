@@ -668,17 +668,15 @@ public partial class CompareViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Equal for the comparison: within the user's time tolerance (#15620), else <see cref="IsTimeEqual"/>.
+    /// Equal for the comparison: <see cref="IsTimeEqual"/>, or within the user's time tolerance (#15620).
+    /// The tolerance only ever widens the check - in HH:MM:SS:FF mode two times on the same frame
+    /// stay equal even when they are further apart than a small tolerance.
     /// Edits and sync points keep the exact check - a 3 ms change is still a change.
     /// </summary>
     private bool IsTimeSame(TimeSpan t1, TimeSpan t2)
     {
-        if (IgnoreTimeDifferenceMs > 0)
-        {
-            return Math.Abs(t1.TotalMilliseconds - t2.TotalMilliseconds) <= IgnoreTimeDifferenceMs + 0.1;
-        }
-
-        return IsTimeEqual(t1, t2);
+        return IsTimeEqual(t1, t2) ||
+               (IgnoreTimeDifferenceMs > 0 && Math.Abs(t1.TotalMilliseconds - t2.TotalMilliseconds) <= IgnoreTimeDifferenceMs + 0.1);
     }
 
     /// <summary>
@@ -688,7 +686,7 @@ public partial class CompareViewModel : ObservableObject
     /// </summary>
     private Func<TimeSpan, TimeSpan, bool> CreateAlignerTimeEquality()
     {
-        if (IgnoreTimeDifferenceMs > 0 || !Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+        if (!Configuration.Settings.General.UseTimeFormatHHMMSSFF)
         {
             return IsTimeSame;
         }
@@ -705,7 +703,9 @@ public partial class CompareViewModel : ObservableObject
             return s;
         }
 
-        return (t1, t2) => GetDisplayString(t1) == GetDisplayString(t2);
+        var toleranceMs = IgnoreTimeDifferenceMs;
+        return (t1, t2) => GetDisplayString(t1) == GetDisplayString(t2) ||
+                           (toleranceMs > 0 && Math.Abs(t1.TotalMilliseconds - t2.TotalMilliseconds) <= toleranceMs + 0.1);
     }
 
     private static bool IsTimeEqual(TimeSpan t1, TimeSpan t2)

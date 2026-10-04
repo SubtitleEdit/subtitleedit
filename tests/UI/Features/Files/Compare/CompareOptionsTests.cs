@@ -151,6 +151,37 @@ public class CompareOptionsTests : IDisposable
         Assert.Equal(expectedDifferences, vm.DifferenceCount);
     }
 
+    [AvaloniaTheory]
+    [InlineData(0)]
+    [InlineData(10)]
+    public void IgnoreTimeDifferenceMs_InFrameMode_DoesNotSplitTimesOnTheSameFrame(int toleranceMs)
+    {
+        // At 25 fps 0 ms and 15 ms are both frame 0 - equal without a tolerance, so a 10 ms
+        // tolerance must not turn them into a difference.
+        var savedFrameMode = Configuration.Settings.General.UseTimeFormatHHMMSSFF;
+        var savedFrameRate = Configuration.Settings.General.CurrentFrameRate;
+        try
+        {
+            Configuration.Settings.General.UseTimeFormatHHMMSSFF = true;
+            Configuration.Settings.General.CurrentFrameRate = 25;
+            var left = MakeLines("Same text.", "Same text again.");
+            var right = MakeLines("Same text.", "Same text again.");
+            right[0].StartTime += TimeSpan.FromMilliseconds(15);
+
+            var vm = MakeViewModel();
+            vm.IgnoreTimeDifferenceMs = toleranceMs;
+            vm.Initialize(left, "left.srt", right, "right.srt", false);
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal(0, vm.DifferenceCount);
+        }
+        finally
+        {
+            Configuration.Settings.General.UseTimeFormatHHMMSSFF = savedFrameMode;
+            Configuration.Settings.General.CurrentFrameRate = savedFrameRate;
+        }
+    }
+
     [AvaloniaFact]
     public void SaveSettings_RemembersTheTimeTolerance()
     {
