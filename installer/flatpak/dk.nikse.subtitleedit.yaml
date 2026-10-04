@@ -468,8 +468,14 @@ modules:
       # AppStream metainfo
       - install -Dm644 installer/flatpak/dk.nikse.subtitleedit.metainfo.xml /app/share/metainfo/dk.nikse.subtitleedit.metainfo.xml
 
-      # Icon (256x256 PNG from the source tree)
+      # Icon (256x256 PNG from the source tree, plus pre-scaled smaller sizes so
+      # desktop menus/panels don't show a blank icon when they look up e.g. 48x48)
       - install -Dm644 src/ui/Assets/SE.png /app/share/icons/hicolor/256x256/apps/dk.nikse.subtitleedit.png
+      - |
+        for size in 16 24 32 48 64 128; do
+          install -Dm644 "installer/flatpak/icons/dk.nikse.subtitleedit-${size}.png" \
+            "/app/share/icons/hicolor/${size}x${size}/apps/dk.nikse.subtitleedit.png"
+        done
 
       # MIT license — distribute the project's terms alongside the app (issue #11278).
       - install -Dm644 LICENSE /app/share/licenses/dk.nikse.subtitleedit/LICENSE
