@@ -410,9 +410,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             const string newLine = "_____@___";
             int number = 1;
+
+            // The track structure only differs per font style (and the id number), so parse it
+            // once per style and clone it - parsing ~8 KB of XML per line dominated the save.
+            var templates = new Dictionary<string, XmlNode>();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                XmlNode generatorItem = xml.CreateElement("generatoritem");
                 string fontStyle = "1"; //1==plain
                 var s = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagFont).Trim();
                 if ((s.StartsWith("<i><b>") && s.EndsWith("</b></i>")) || (s.StartsWith("<b><i>") && s.EndsWith("</i></b>")))
@@ -424,23 +427,31 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     fontStyle = "3"; //3==italic
                 }
 
-                generatorItem.InnerXml = xmlTrackStructure.Replace("[NUMBER]", number.ToString()).Replace("[FONTSTYLE]", fontStyle).
-                    Replace("[FONTSIZE]", Configuration.Settings.SubtitleSettings.FcpFontSize.ToString(CultureInfo.InvariantCulture)).
-                    Replace("[FONTNAME]", Configuration.Settings.SubtitleSettings.FcpFontName).
-                    Replace("[NUMBER]", number.ToString(CultureInfo.InvariantCulture));
+                if (!templates.TryGetValue(fontStyle, out var template))
+                {
+                    XmlNode templateHolder = xml.CreateElement("generatoritem");
+                    templateHolder.InnerXml = xmlTrackStructure.Replace("[FONTSTYLE]", fontStyle).
+                        Replace("[FONTSIZE]", Configuration.Settings.SubtitleSettings.FcpFontSize.ToString(CultureInfo.InvariantCulture)).
+                        Replace("[FONTNAME]", Configuration.Settings.SubtitleSettings.FcpFontName);
+                    template = templateHolder.SelectSingleNode("generatoritem");
+                    templates.Add(fontStyle, template);
+                }
+
+                var generatorItem = template.CloneNode(true);
+                generatorItem.Attributes["id"].Value = "Outline Text" + number.ToString(CultureInfo.InvariantCulture);
 
                 double frameRate = Configuration.Settings.General.CurrentFrameRate;
-                XmlNode start = generatorItem.SelectSingleNode("generatoritem/start");
+                XmlNode start = generatorItem.SelectSingleNode("start");
                 start.InnerText = ((int)Math.Round(p.StartTime.TotalSeconds * frameRate)).ToString();
 
-                XmlNode end = generatorItem.SelectSingleNode("generatoritem/end");
+                XmlNode end = generatorItem.SelectSingleNode("end");
                 end.InnerText = ((int)Math.Round(p.EndTime.TotalSeconds * frameRate)).ToString();
 
-                XmlNode text = generatorItem.SelectSingleNode("generatoritem/effect/parameter[parameterid='str']/value");
+                XmlNode text = generatorItem.SelectSingleNode("effect/parameter[parameterid='str']/value");
                 text.InnerText = HtmlUtil.RemoveHtmlTags(p.Text);
                 text.InnerXml = text.InnerXml.Replace(Environment.NewLine, newLine);
 
-                trackNode.AppendChild(generatorItem.SelectSingleNode("generatoritem"));
+                trackNode.AppendChild(generatorItem);
                 number++;
             }
 

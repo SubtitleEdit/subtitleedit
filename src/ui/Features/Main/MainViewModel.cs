@@ -34367,8 +34367,15 @@ public partial class MainViewModel :
     /// </summary>
     private string AppendLanguageCodeToFileName(string newFileName, Subtitle subtitle)
     {
+        // The setting is off by default - check it before detecting the language (a copy and a
+        // word count of the whole subtitle) on every Save as.
+        if (Se.Settings.General.SaveAsAppendLanguageCode == nameof(SaveAsLanguageAppendType.None))
+        {
+            return newFileName;
+        }
+
         var language = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull2(subtitle);
-        if (!string.IsNullOrEmpty(language) && Se.Settings.General.SaveAsAppendLanguageCode != nameof(SaveAsLanguageAppendType.None))
+        if (!string.IsNullOrEmpty(language))
         {
             var l = Iso639Dash2LanguageCode.List.FirstOrDefault(p => p.TwoLetterCode == language);
             if (l != null)

@@ -68,6 +68,7 @@ public class TimelineTracks : Control, IDisposable
 
     private readonly TimelineThumbnailCache _thumbnails = new();
     private readonly List<SubtitleLineViewModel> _paragraphs = new();
+    private readonly HashSet<SubtitleLineViewModel> _selectedRenderSet = new();
     private readonly Dictionary<SubtitleLineViewModel, (string Source, FormattedText Text)> _textCache = new();
     private readonly Dictionary<SubtitleLineViewModel, (string Source, FormattedText Text)> _originalTextCache = new();
     private readonly Dictionary<string, FormattedText> _labelCache = new();
@@ -601,7 +602,24 @@ public class TimelineTracks : Control, IDisposable
     {
         source.CopyDisplayableParagraphs(_paragraphs);
 
+        // List.Contains per visible block was O(selection) - millions of compares per frame after
+        // "select all" on a large subtitle. Probe a set of the selected blocks that are drawn
+        // (same visibility test as below), as AudioVisualizer.DrawParagraphs does.
+        _selectedRenderSet.Clear();
         var selected = source.AllSelectedParagraphs;
+        if (selected != null)
+        {
+            foreach (var paragraph in selected)
+            {
+                var x1 = (paragraph.StartTime.TotalSeconds - startSeconds) * pixelsPerSecond;
+                var x2 = (paragraph.EndTime.TotalSeconds - startSeconds) * pixelsPerSecond;
+                if (!(x2 < 0 || x1 > width))
+                {
+                    _selectedRenderSet.Add(paragraph);
+                }
+            }
+        }
+
         var originalTrack = _tracks.FindIndex(static t => t.IsOriginal);
         foreach (var paragraph in _paragraphs)
         {
@@ -612,7 +630,7 @@ public class TimelineTracks : Control, IDisposable
                 continue;
             }
 
-            var isSelected = selected.Contains(paragraph);
+            var isSelected = _selectedRenderSet.Contains(paragraph);
             DrawBlock(context, paragraph, GetTrackRect(GetGroupTrackIndex(paragraph), width), x1, x2, isSelected, false);
             if (originalTrack >= 0)
             {

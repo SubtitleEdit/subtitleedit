@@ -121,19 +121,22 @@ public class NOcrDb
         {
             var tempFileName = FileName + ".tmp";
 
+            // Characters are written a byte at a time - buffered, so the deflater gets 64 KB
+            // writes instead of ~2.5 million single-byte ones.
             using (var gz = new GZipStream(File.Create(tempFileName), CompressionMode.Compress))
+            using (var buffered = new BufferedStream(gz, 1 << 16))
             {
                 var versionBuffer = Encoding.ASCII.GetBytes(Version);
-                gz.Write(versionBuffer, 0, versionBuffer.Length);
+                buffered.Write(versionBuffer, 0, versionBuffer.Length);
 
                 foreach (var ocrChar in OcrCharacters)
                 {
-                    ocrChar.Save(gz);
+                    ocrChar.Save(buffered);
                 }
 
                 foreach (var ocrChar in OcrCharactersExpanded)
                 {
-                    ocrChar.Save(gz);
+                    ocrChar.Save(buffered);
                 }
             }
 
