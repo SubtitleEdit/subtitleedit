@@ -180,6 +180,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AutoCast;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.SpeakFromLine;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceCloneConsent;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceManager;
 using Nikse.SubtitleEdit.Features.Video.TransparentSubtitles;
@@ -233,6 +234,7 @@ public partial class MainViewModel :
 {
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _subtitles;
     [ObservableProperty] private SubtitleLineViewModel? _selectedSubtitle;
+    [ObservableProperty] private bool _isSpeakingFromLine;
     // The grid's selection as the selection machinery sees it - display-only reference rows included,
     // so the edit boxes can follow the user onto one. Commands that change lines must read
     // GetSelectedEditableSubtitles() instead.
@@ -840,6 +842,7 @@ public partial class MainViewModel :
     private const double FrameStepPlaySeekWaitMs = 250; // players that can't report seek completion: assume the seek landed after this
     private const double FrameStepPlayMaxMs = 700; // safety cap: end the blip even if mpv's clock never reaches the stop point
     private CancellationTokenSource _videoOpenTokenSource;
+    private CancellationTokenSource? _speakFromLineCts;
     private readonly HashSet<string> _waveformsBeingGenerated = new(StringComparer.OrdinalIgnoreCase);
     private readonly Lock _waveformsBeingGeneratedLock = new();
     private VideoPlayerControl? _fullScreenVideoPlayerControl;
@@ -1544,12 +1547,18 @@ public partial class MainViewModel :
     /// </summary>
     private void ReapplyPlaybackSpeed()
     {
-        if (SelectedSpeed != null && SelectedSpeed.EndsWith('x') &&
-            double.TryParse(SelectedSpeed.Trim('x'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var speed))
+        if (TryGetSelectedPlaybackSpeed(out var speed))
         {
             GetVideoPlayerControl()?.SetSpeed(speed);
             _playheadPlaybackSpeed = speed;
         }
+    }
+
+    private bool TryGetSelectedPlaybackSpeed(out double speed)
+    {
+        speed = 1.0;
+        return SelectedSpeed != null && SelectedSpeed.EndsWith('x') &&
+               double.TryParse(SelectedSpeed.Trim('x'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out speed);
     }
 
     /// <summary>
@@ -11751,6 +11760,118 @@ public partial class MainViewModel :
 
         await TextToSpeech(sub, original, selectedItems);
         _shortcutManager.ClearKeys();
+    }
+
+    /// <summary>
+    /// Reads the lines aloud from the current line on, one after another (time codes ignored),
+    /// with the grid following along. Running it again, Escape or clicking another line stops it.
+    /// </summary>
+    /// <remarks>Concurrent executions allowed: the second run is the stop, and a plain async
+    /// command stays disabled for as long as the first run is reading.</remarks>
+    [RelayCommand(AllowConcurrentExecutions = true)]
+    private async Task SpeakFromCurrentLine()
+    {
+        if (_speakFromLineCts != null)
+        {
+            StopSpeakFromLine();
+            return;
+        }
+
+        var startRow = SubtitleGrid.SelectedItem as SubtitleLineViewModel ?? SelectedSubtitle;
+        var startIndex = startRow == null ? -1 : Subtitles.IndexOf(startRow);
+        if (Window == null || startIndex < 0)
+        {
+            return;
+        }
+
+        var vm = await ShowDialogAsync<SpeakFromLineWindow, SpeakFromLineViewModel>();
+        _shortcutManager.ClearKeys();
+        if (!vm.OkPressed || vm.SelectedEngine == null || vm.SelectedVoice == null || _speakFromLineCts != null)
+        {
+            return;
+        }
+
+        var rows = Subtitles.Skip(startIndex).Where(p => !p.IsReferenceOnly).ToList();
+        if (rows.Count == 0)
+        {
+            return;
+        }
+
+        var texts = rows.Select(p => SpeakFromLineReader.GetSpeakableText(p.Text)).ToList();
+        GetVideoPlayerControl()?.VideoPlayer.Pause();
+
+        var cts = new CancellationTokenSource();
+        _speakFromLineCts = cts;
+        IsSpeakingFromLine = true;
+
+        // The row the reader selected last: when the grid's selection is anything else, the user
+        // clicked or moved away, which stops the reading.
+        SubtitleLineViewModel? speakingRow = null;
+        var reader = new SpeakFromLineReader(vm.SelectedEngine, vm.SelectedVoice, vm.HasLanguageParameter ? vm.SelectedLanguage : null);
+
+        // Shown before the first clip too: a local engine's first line includes its server start.
+        ShowStatus(string.Format(Se.Language.Video.TextToSpeech.SpeakingLineX, startIndex + 1), 10_000);
+        try
+        {
+            await reader.RunAsync(
+                texts,
+                i =>
+                {
+                    var row = rows[i];
+
+                    // Selected synchronously (not via SelectAndScrollToRow, which posts it) so the
+                    // moved-away check below never sees a selection that is merely still pending.
+                    speakingRow = row;
+                    SubtitleGrid.SelectedItem = row;
+                    SubtitleGrid.ScrollIntoView(row);
+                    SeekVideoToSubtitleStart(row);
+                    AudioVisualizerCenterOnPositionIfNeeded(row, row.StartTime.TotalSeconds);
+
+                    ShowStatus(string.Format(Se.Language.Video.TextToSpeech.SpeakingLineX, Subtitles.IndexOf(row) + 1), 10_000);
+                },
+                () => speakingRow == null || ReferenceEquals(SubtitleGrid.SelectedItem, speakingRow),
+                // The waveform toolbar's playback speed applies to the reading too.
+                () => TryGetSelectedPlaybackSpeed(out var speed) ? speed : 1.0,
+                cts.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            // stopped by the user
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, "Speak from current line failed");
+            if (!cts.IsCancellationRequested)
+            {
+                await MessageBox.Show(Window, Se.Language.General.Error, ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        finally
+        {
+            if (ReferenceEquals(_speakFromLineCts, cts))
+            {
+                _speakFromLineCts = null;
+                IsSpeakingFromLine = false;
+            }
+
+            cts.Dispose();
+            ShowStatus(string.Empty);
+        }
+    }
+
+    private void StopSpeakFromLine()
+    {
+        var cts = _speakFromLineCts;
+        _speakFromLineCts = null;
+        IsSpeakingFromLine = false;
+        try
+        {
+            cts?.Cancel();
+        }
+        catch (ObjectDisposedException)
+        {
+            // already finished
+        }
     }
 
     /// <param name="onlyRows">The rows <paramref name="subtitle"/> was built from, or null for the whole grid.</param>
@@ -27840,6 +27961,7 @@ public partial class MainViewModel :
     internal async void OnClosing(object? sender, WindowClosingEventArgs e)
     {
         _videoOpenTokenSource?.Cancel();
+        StopSpeakFromLine();
         AddToRecentFiles(false);
 
         if (Window != null)
@@ -32025,6 +32147,13 @@ public partial class MainViewModel :
             // instead of consuming those keys as shortcuts.
             if (IsMainMenuFocused())
             {
+                return;
+            }
+
+            if (k == Key.Escape && keyEventArgs.KeyModifiers == KeyModifiers.None && _speakFromLineCts != null)
+            {
+                StopSpeakFromLine();
+                keyEventArgs.Handled = true;
                 return;
             }
 

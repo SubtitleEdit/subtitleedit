@@ -1517,6 +1517,33 @@ public static partial class InitListViewAndEditBox
         menuItemSelectedLines.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridDataMenuVisible)));
         flyout.Items.Add(menuItemSelectedLines);
 
+        // One command for both: while reading, it stops.
+        var speakFromCurrentLineMenuItem = new MenuItem
+        {
+            Header = Se.Language.Video.TextToSpeech.SpeakFromCurrentLineDotDotDot,
+            Command = vm.SpeakFromCurrentLineCommand,
+            DataContext = vm,
+        };
+        speakFromCurrentLineMenuItem.Bind(Visual.IsVisibleProperty, new MultiBinding
+        {
+            Converter = BoolConverters.And,
+            Bindings =
+            {
+                new Binding(nameof(vm.IsSubtitleGridDataMenuVisible)),
+                new Binding(nameof(vm.IsSpeakingFromLine)) { Converter = BoolConverters.Not },
+            },
+        });
+        flyout.Items.Add(speakFromCurrentLineMenuItem);
+
+        var stopSpeakingMenuItem = new MenuItem
+        {
+            Header = Se.Language.Video.TextToSpeech.StopSpeaking,
+            Command = vm.SpeakFromCurrentLineCommand,
+            DataContext = vm,
+        };
+        stopSpeakingMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSpeakingFromLine)));
+        flyout.Items.Add(stopSpeakingMenuItem);
+
         var saveForcedLinesAsMenuItem = new MenuItem
         {
             Header = Se.Language.General.SaveForcedLinesAs,

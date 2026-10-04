@@ -58,6 +58,24 @@ Sentences split across several subtitles are offered for merging, so the engine 
 
 Lines that contain only sounds or music — `♪`, `[door slams]`, `(sighs)`, or nothing once formatting tags are stripped — get read aloud or hallucinated into made-up words by TTS engines. Subtitle Edit offers to leave the checked lines silent: no audio is generated for them, and they are not counted as failures. A sound annotation followed by real speech (`[gunshot] Get down!`) is kept.
 
+## Speak From Current Line
+
+Listen to the subtitle instead of generating an audio file: **Speak from current line...** reads the lines aloud one after another, starting at the selected line. It is meant for proofreading by ear - typos, awkward phrasing and bad line breaks are often easier to hear than to see.
+
+- **Menu:** right-click the subtitle grid, or **Video → Speak from current line...**
+- **Shortcut:** Configurable (no default)
+
+1. Select the line to start from
+2. Choose **Speak from current line...**
+3. Pick an engine, a voice and (for Supertonic) a language, then click **OK** - a missing engine or voice is downloaded at this point
+
+Only the engines fast enough to keep up with speech are offered: **Supertonic** (the default), **Kokoro TTS**, **Edge TTS** and **Piper** (not on macOS). The choice is remembered for next time. The first line can take a few seconds while a local engine starts; after that the next line is generated while the current one plays, so the lines follow each other without gaps.
+
+While reading, the selected line, the video position and the waveform follow the line being spoken. Time codes are ignored - each line is simply read after the previous one. The video is paused when reading starts.
+
+- **Speed:** the **Speed** dropdown in the waveform toolbar sets how fast the lines are read, and a change is heard right away
+- **Stop:** press **Escape**, click another line, choose **Stop speaking** in the grid's right-click menu, or run the command (or shortcut) again
+
 ## Supported Engines
 
 - **Piper** — Local, open-source TTS (Windows and Linux). Custom voice models are supported: any Piper voice is an `.onnx` model with an `.onnx.json` config beside it, and **Import voice...** in the voice settings dialog (the settings button next to **Test voice**) copies such a pair into the Piper folder (`TextToSpeech/Piper` in the data folder). It then appears in the voice list as *Custom - name*; a pair copied into the folder by hand is picked up the same way

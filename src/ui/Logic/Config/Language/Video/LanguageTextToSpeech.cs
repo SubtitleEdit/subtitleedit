@@ -69,6 +69,11 @@ public class LanguageTextToSpeech
     public string VoiceManagerTitle { get; set; }
     public string VoiceManagerDotDotDot { get; set; }
     public string VoiceManagerMenuItem { get; set; }
+    public string SpeakFromCurrentLineTitle { get; set; }
+    public string SpeakFromCurrentLineDotDotDot { get; set; }
+    public string SpeakFromCurrentLineHint { get; set; }
+    public string StopSpeaking { get; set; }
+    public string SpeakingLineX { get; set; }
     public string VoiceKindClone { get; set; }
     public string VoiceKindPreset { get; set; }
     public string VoiceKindModel { get; set; }
@@ -291,6 +296,11 @@ public class LanguageTextToSpeech
         VoiceManagerTitle = "TTS - Voice manager";
         VoiceManagerDotDotDot = "Voice manager...";
         VoiceManagerMenuItem = "TTS voice manager...";
+        SpeakFromCurrentLineTitle = "Speak from current line";
+        SpeakFromCurrentLineDotDotDot = "Speak from current line...";
+        SpeakFromCurrentLineHint = "Reads the lines aloud one after another, starting at the current line. Press Escape or click another line to stop.";
+        StopSpeaking = "Stop speaking";
+        SpeakingLineX = "Speaking line {0}... (Escape to stop)";
         VoiceKindClone = "Cloned voice";
         VoiceKindPreset = "Built-in";
         VoiceKindModel = "Voice model";

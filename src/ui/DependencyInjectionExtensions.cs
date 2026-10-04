@@ -169,6 +169,7 @@ using Nikse.SubtitleEdit.Features.Video.ShotChanges;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AutoCast;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.SpeakFromLine;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DetectSpeakers;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.SkipNoiseLines;
 using Nikse.SubtitleEdit.Features.Video.VideoOcr;
@@ -620,6 +621,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<SyntaxColorTooWideSettingsViewModel>();
         collection.AddTransient<MinGapCalculateViewModel>();
         collection.AddTransient<TextToSpeechViewModel>();
+        collection.AddTransient<SpeakFromLineViewModel>();
         collection.AddTransient<ActorVoiceMappingViewModel>();
         collection.AddTransient<ActorVoiceRowSettingsViewModel>();
         collection.AddTransient<AutoCastSpeakersViewModel>();

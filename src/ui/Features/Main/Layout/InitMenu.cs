@@ -789,6 +789,11 @@ public static class InitMenu
                 },
                 new MenuItem
                 {
+                    Header = Se.Language.Video.TextToSpeech.SpeakFromCurrentLineDotDotDot,
+                    Command = vm.SpeakFromCurrentLineCommand,
+                },
+                new MenuItem
+                {
                     Header = Se.Language.Video.TextToSpeech.VoiceManagerMenuItem,
                     Command = vm.ShowVideoVoiceManagerCommand,
                 },

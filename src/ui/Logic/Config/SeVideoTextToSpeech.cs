@@ -13,6 +13,9 @@ public class SeVideoTextToSpeech
     public string CustomAudioEncoding { get; set; }
     public bool GenerateVideoFile { get; set; }
     public string VoiceTestText { get; set; }
+    public string SpeakFromLineEngine { get; set; }
+    public string SpeakFromLineVoice { get; set; }
+    public string SpeakFromLineLanguage { get; set; }
     public string AllTalkUrl { get; set; }
     public string AzureApiKey { get; set; }
     public string AzureRegion { get; set; }
@@ -200,6 +203,9 @@ public class SeVideoTextToSpeech
         CustomAudioEncoding = string.Empty;
         GenerateVideoFile = true;
         VoiceTestText = "Hello, how are you doing?";
+        SpeakFromLineEngine = string.Empty;
+        SpeakFromLineVoice = string.Empty;
+        SpeakFromLineLanguage = string.Empty;
         AllTalkUrl = "http://127.0.0.1:7851";
         MurfApiKey = string.Empty;
         MurfStyle = "Conversational";
