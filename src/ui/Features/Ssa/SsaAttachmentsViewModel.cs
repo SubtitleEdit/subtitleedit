@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -31,8 +32,10 @@ public partial class SsaAttachmentsViewModel : ObservableObject
     [ObservableProperty] private bool _isCopyFontnameToClipboardVisible;
     [ObservableProperty] private bool _isDeleteVisible;
     [ObservableProperty] private bool _isDeleteAllVisible;
+    [ObservableProperty] private bool _isMoveVisible;
 
     public Window? Window { get; internal set; }
+    public TableView AttachmentGrid { get; set; }
     public bool OkPressed { get; private set; }
     public string Header { get; set; }
     public string Footer { get; set; }
@@ -60,6 +63,28 @@ public partial class SsaAttachmentsViewModel : ObservableObject
         Header = string.Empty;
         Footer = string.Empty;
         _subtitle = new Subtitle();
+        AttachmentGrid = new TableView();
+    }
+
+    [RelayCommand]
+    private void MoveUp() => MoveAttachments(ListMoveDirection.Up);
+
+    [RelayCommand]
+    private void MoveDown() => MoveAttachments(ListMoveDirection.Down);
+
+    [RelayCommand]
+    private void MoveToTop() => MoveAttachments(ListMoveDirection.Top);
+
+    [RelayCommand]
+    private void MoveToBottom() => MoveAttachments(ListMoveDirection.Bottom);
+
+    /// <summary>
+    /// Reorders the selected attachments, as in SE 4. The list order is not presentation-only -
+    /// it is the order the attachments are written back to the [Fonts]/[Graphics] sections on OK.
+    /// </summary>
+    private void MoveAttachments(ListMoveDirection direction)
+    {
+        TableViewExtras.MoveSelectedRows(AttachmentGrid, Attachments, direction);
     }
 
     [RelayCommand]
@@ -83,6 +108,22 @@ public partial class SsaAttachmentsViewModel : ObservableObject
         {
             await ClipboardHelper.SetTextAsync(Window, SelectedAttachment.FontName);
         }
+    }
+
+    /// <summary>
+    /// Copies the selected font attachment into SE's own Fonts folder - the collection
+    /// the font collector and the font picker's "Collected fonts" tab offer.
+    /// </summary>
+    [RelayCommand]
+    private async Task CopyToSeFontsFolder()
+    {
+        var selected = SelectedAttachment;
+        if (Window == null || selected == null || selected.Category != Se.Language.General.Fonts || selected.Bytes.Length == 0)
+        {
+            return;
+        }
+
+        await AttachmentFontActions.CopyToSeFontsFolder(Window, selected.FileName, selected.Bytes);
     }
 
     [RelayCommand]
@@ -159,6 +200,48 @@ public partial class SsaAttachmentsViewModel : ObservableObject
         {
             await MessageBox.Show(Window, exception.Message, Se.Language.General.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+    }
+
+    /// <summary>
+    /// Trims all embedded font attachments to the glyphs the current subtitle text uses
+    /// (see <see cref="AttachmentFontActions.TrimFontsToUsedCharacters"/>), after a confirmation.
+    /// </summary>
+    [RelayCommand]
+    private async Task TrimFontsToUsedCharacters()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var fonts = Attachments.Where(a => a.Category == Se.Language.General.Fonts && a.Bytes.Length > 0).ToList();
+        var trims = await AttachmentFontActions.TrimFontsToUsedCharacters(Window, _subtitle, fonts, f => f.FileName, f => f.Bytes);
+        if (trims.Count == 0)
+        {
+            return;
+        }
+
+        var selectedFileName = SelectedAttachment?.FileName;
+        foreach (var (font, bytes) in trims)
+        {
+            // replace the row so the grid picks up the new size (the item is not observable)
+            var trimmed = new SsaAttachmentItem
+            {
+                FileName = font.FileName,
+                Category = font.Category,
+                Bytes = bytes,
+                Content = UUEncoding.UUEncode(bytes).Trim(),
+                Size = Utilities.FormatBytesToDisplayFileSize(bytes.Length),
+                FontName = font.FontName,
+            };
+            Attachments[Attachments.IndexOf(font)] = trimmed;
+            if (font.FileName == selectedFileName)
+            {
+                SelectedAttachment = trimmed;
+            }
+        }
+
+        UpdatePreview();
     }
 
     [RelayCommand]
@@ -500,6 +583,7 @@ public partial class SsaAttachmentsViewModel : ObservableObject
     {
         IsDeleteAllVisible = Attachments.Count > 0;
         IsDeleteVisible = SelectedAttachment != null;
+        IsMoveVisible = Attachments.Count > 1 && AttachmentGrid.SelectedItems?.Count > 0;
     }
 
     internal void AttachmentsDataGridKeyDown(object? sender, KeyEventArgs e)
@@ -510,4 +594,11 @@ public partial class SsaAttachmentsViewModel : ObservableObject
             e.Handled = true;
         }
     }
+
+    /// <summary>
+    /// Ctrl+Up/Ctrl+Down reorder the selected attachments, as in SE 4 (tunneled, see
+    /// <see cref="StylesDialogHelper.HandleMoveKeyDown"/>).
+    /// </summary>
+    internal void AttachmentsMoveKeyDown(object? sender, KeyEventArgs e)
+        => StylesDialogHelper.HandleMoveKeyDown(e, MoveAttachments);
 }

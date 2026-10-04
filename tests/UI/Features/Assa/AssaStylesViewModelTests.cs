@@ -21,7 +21,7 @@ public class AssaStylesViewModelTests
         subtitle.Paragraphs.Add(new Paragraph("c", 2000, 3000) { Extra = "Keep" });
 
         var oldNames = new HashSet<string>(System.StringComparer.OrdinalIgnoreCase) { "Old1", "Old2" };
-        AssaStylesViewModel.RepointParagraphsToStyle(subtitle, oldNames, "Target");
+        StylesDialogHelper.RepointParagraphsToStyle(subtitle, oldNames, "Target");
 
         Assert.Equal("Target", subtitle.Paragraphs[0].Extra);
         Assert.Equal("Target", subtitle.Paragraphs[1].Extra);

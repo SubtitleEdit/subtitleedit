@@ -382,22 +382,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     }
 
     private static string MakeUniqueName(string name, IEnumerable<StyleDisplay> styles)
-    {
-        var newName = name;
-        if (styles.Any(p => p.Name.Equals(newName, StringComparison.OrdinalIgnoreCase)))
-        {
-            var count = 2;
-            var doRepeat = true;
-            while (doRepeat)
-            {
-                newName = name + "_" + count;
-                doRepeat = styles.Any(p => p.Name.Equals(newName, StringComparison.OrdinalIgnoreCase));
-                count++;
-            }
-        }
-
-        return newName;
-    }
+        => StylesDialogHelper.MakeUniqueName(name, styles);
 
     [RelayCommand]
     private void FileNew()
@@ -439,8 +424,25 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     }
 
     [RelayCommand]
-    private void FileRemoveAll()
+    private async Task FileRemoveAll()
     {
+        if (FileStyles.Count == 0)
+        {
+            return;
+        }
+
+        // Asks first, as deleting selected styles does - "Clear" used to wipe the list silently
+        if (!await StylesDialogHelper.ConfirmDeleteStyles(Window, $"Do you want to delete {FileStyles.Count} styles?"))
+        {
+            return;
+        }
+
+        if (CurrentStyle != null && FileStyles.Contains(CurrentStyle))
+        {
+            SelectedFileStyle = null;
+            CurrentStyle = null;
+        }
+
         FileStyles.Clear();
     }
 
@@ -598,85 +600,22 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     }
 
     /// <summary>
-    /// Copies styles between the file and storage lists. A name clash asks whether to
-    /// overwrite the existing style or keep both - always adding a "_2" copy made it
-    /// impossible to update a saved style from an edited file style (#15312). An overwrite
-    /// keeps the target's position, name, category and default flag.
-    /// Only the target styles matching <paramref name="isInConflictScope"/> can clash - in storage
-    /// that is the category the copies land in, as names only need to be unique per category (#15332).
+    /// See <see cref="StylesDialogHelper.CopyStyles(Window, List{StyleDisplay}, ObservableCollection{StyleDisplay}, Func{StyleDisplay, bool}, string, Func{SsaStyle, StyleDisplay}, Action{StyleDisplay}?)"/>.
     /// </summary>
-    private async Task CopyStyles(
+    private Task CopyStyles(
         List<StyleDisplay> sourceStyles,
         ObservableCollection<StyleDisplay> target,
         Func<StyleDisplay, bool> isInConflictScope,
         string alreadyExistsFormat,
         Func<SsaStyle, StyleDisplay> makeNew)
     {
-        var conflictCount = sourceStyles.Count(s => target.Any(t => isInConflictScope(t) && t.Name.Equals(s.Name, StringComparison.OrdinalIgnoreCase)));
-        MessageBoxResult? answerForAll = null;
-
-        foreach (var item in sourceStyles)
+        return StylesDialogHelper.CopyStyles(Window!, sourceStyles, target, isInConflictScope, alreadyExistsFormat, makeNew, existing =>
         {
-            var existing = target.FirstOrDefault(p => isInConflictScope(p) && p.Name.Equals(item.Name, StringComparison.OrdinalIgnoreCase));
-            if (existing == null)
+            if (ReferenceEquals(existing, CurrentStyle))
             {
-                target.Add(makeNew(item.ToSsaStyle()));
-                continue;
+                SelectedBorderType = existing.BorderStyle;
             }
-
-            var answer = answerForAll;
-            if (answer == null)
-            {
-                var message = string.Format(alreadyExistsFormat, item.Name);
-                if (conflictCount > 1)
-                {
-                    var (result, doForAll) = await MessageBox.ShowWithDoNotAskAgain(
-                        Window!,
-                        Se.Language.General.OverwriteQuestion,
-                        message,
-                        Se.Language.Assa.DoThisForAllConflictingStyles,
-                        MessageBoxButtons.Cancel,
-                        MessageBoxIcon.Question,
-                        Se.Language.Assa.Overwrite,
-                        Se.Language.Assa.KeepBoth);
-                    answer = result;
-                    if (doForAll)
-                    {
-                        answerForAll = result;
-                    }
-                }
-                else
-                {
-                    answer = await MessageBox.Show(
-                        Window!,
-                        Se.Language.General.OverwriteQuestion,
-                        message,
-                        MessageBoxButtons.Cancel,
-                        MessageBoxIcon.Question,
-                        Se.Language.Assa.Overwrite,
-                        Se.Language.Assa.KeepBoth);
-                }
-            }
-
-            if (answer == MessageBoxResult.Custom1)
-            {
-                existing.CopyFormattingFrom(item);
-                if (ReferenceEquals(existing, CurrentStyle))
-                {
-                    SelectedBorderType = existing.BorderStyle;
-                }
-            }
-            else if (answer == MessageBoxResult.Custom2)
-            {
-                var style = item.ToSsaStyle();
-                style.Name = MakeUniqueName(style.Name, target.Where(isInConflictScope));
-                target.Add(makeNew(style));
-            }
-            else
-            {
-                return;
-            }
-        }
+        });
     }
 
     [RelayCommand]
@@ -724,10 +663,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         }
 
         var oldNames = selectedItems.Select(p => p.Name).ToHashSet(StringComparer.OrdinalIgnoreCase);
-
-        // Candidate targets: the other file styles, plus storage styles not already in the file.
-        var candidates = FileStyles.Where(p => !oldNames.Contains(p.Name)).ToList();
-        candidates.AddRange(StorageStyles.Where(s => FileStyles.All(f => !f.Name.Equals(s.Name, StringComparison.OrdinalIgnoreCase))));
+        var candidates = StylesDialogHelper.GetReplaceWithCandidates(FileStyles, StorageStyles, oldNames);
         if (candidates.Count == 0)
         {
             return;
@@ -745,39 +681,10 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        // If the target came from storage and isn't in the file yet, add it.
-        var targetInFile = FileStyles.FirstOrDefault(f => f.Name.Equals(target.Name, StringComparison.OrdinalIgnoreCase));
-        if (targetInFile == null)
-        {
-            targetInFile = new StyleDisplay(target.ToSsaStyle());
-            FileStyles.Add(targetInFile);
-        }
-
-        // Re-point every line that used one of the replaced styles to the target.
-        RepointParagraphsToStyle(_subtitle, oldNames, targetInFile.Name);
-
-        // Remove the replaced styles (but never the target itself).
-        foreach (var old in selectedItems.Where(s => !s.Name.Equals(targetInFile.Name, StringComparison.OrdinalIgnoreCase)))
-        {
-            FileStyles.Remove(old);
-        }
-
+        var targetInFile = StylesDialogHelper.ReplaceStylesWith(_subtitle, FileStyles, selectedItems, target, style => new StyleDisplay(style));
         SelectedFileStyle = targetInFile;
         CurrentStyle = targetInFile;
         UpdateUsages();
-    }
-
-    // Re-points every paragraph that uses one of <paramref name="oldNames"/> (its style, via Extra,
-    // optionally prefixed with '*') to <paramref name="targetName"/>. Used by "Replace style with...".
-    internal static void RepointParagraphsToStyle(Subtitle subtitle, ISet<string> oldNames, string targetName)
-    {
-        foreach (var paragraph in subtitle.Paragraphs)
-        {
-            if (paragraph.Extra != null && oldNames.Contains(paragraph.Extra.TrimStart('*')))
-            {
-                paragraph.Extra = targetName;
-            }
-        }
     }
 
     [RelayCommand]
@@ -1000,18 +907,9 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        if (Window != null && Se.Settings.General.PromptBeforeDelete)
+        if (!await StylesDialogHelper.ConfirmDeleteStyles(Window, $"Do you want to delete {styles.Count} styles from storage?"))
         {
-            var answer = await MessageBox.Show(
-                Window,
-                Se.Language.Assa.DeleteStylesQuestion,
-                $"Do you want to delete {styles.Count} styles from storage?",
-                MessageBoxButtons.YesNoCancel,
-                MessageBoxIcon.Question);
-            if (answer != MessageBoxResult.Yes)
-            {
-                return;
-            }
+            return;
         }
 
         if (CurrentStyle != null && styles.Contains(CurrentStyle))
@@ -1449,10 +1347,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
 
     private void LoadFonts()
     {
-        // Fonts collected in SE's own Fonts folder come first - they may not be installed
-        // on the system, but a mux/render with the collected files will resolve them.
-        var fonts = FontHelper.GetFontsFolderFontNames();
-        fonts.AddRange(FontHelper.GetLibAssaFonts());
+        var fonts = StylesDialogHelper.GetStyleEditorFontNames();
 
         Dispatcher.UIThread.Post(() =>
         {
@@ -1777,58 +1672,33 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         selectedStyle.BorderStyle = SelectedBorderType;
     }
 
+    // Delete removes all selected rows, as the Delete button does - not just the focused one
     internal void FileStylesKeyDown(object? sender, KeyEventArgs e)
     {
         if (e.Key == Key.Delete)
         {
-            var selectedStyle = SelectedFileStyle;
-            DeleteFileStyle(selectedStyle);
+            FileRemove();
+            e.Handled = true;
+        }
+    }
+
+    internal void StorageStylesKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Delete)
+        {
+            StorageRemove();
             e.Handled = true;
         }
     }
 
     /// <summary>
-    /// Ctrl+Up/Ctrl+Down reorder the selected styles, as in SE 4. Tunneled, because the
-    /// ListBox underneath TableView handles Ctrl+Arrow itself (move focus without changing
-    /// the selection) and a bubbling handler would never see the key.
+    /// Ctrl+Up/Ctrl+Down reorder the selected styles (tunneled, see <see cref="StylesDialogHelper.HandleMoveKeyDown"/>).
     /// </summary>
     internal void FileStylesMoveKeyDown(object? sender, KeyEventArgs e)
-    {
-        if (e.KeyModifiers != KeyModifiers.Control || e.Source is TextBox)
-        {
-            return;
-        }
-
-        if (e.Key == Key.Up)
-        {
-            MoveFileStyles(ListMoveDirection.Up);
-            e.Handled = true;
-        }
-        else if (e.Key == Key.Down)
-        {
-            MoveFileStyles(ListMoveDirection.Down);
-            e.Handled = true;
-        }
-    }
+        => StylesDialogHelper.HandleMoveKeyDown(e, MoveFileStyles);
 
     internal void StorageStylesMoveKeyDown(object? sender, KeyEventArgs e)
-    {
-        if (e.KeyModifiers != KeyModifiers.Control || e.Source is TextBox)
-        {
-            return;
-        }
-
-        if (e.Key == Key.Up)
-        {
-            MoveStorageStyles(ListMoveDirection.Up);
-            e.Handled = true;
-        }
-        else if (e.Key == Key.Down)
-        {
-            MoveStorageStyles(ListMoveDirection.Down);
-            e.Handled = true;
-        }
-    }
+        => StylesDialogHelper.HandleMoveKeyDown(e, MoveStorageStyles);
 
     private void DeleteFileStyle(StyleDisplay? selectedStyle)
     {

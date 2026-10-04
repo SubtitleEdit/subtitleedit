@@ -4288,6 +4288,7 @@
     "deleteStylesQuestion": "Delete styles?",
     "openStyleImportFile": "Open subtitle file to import styles from",
     "styleImportFiles": "Style files (.ass, .sty, Subtitle Edit 4 categories .template)",
+    "ssaStyleImportFiles": "Style files (.ssa, .ass, .sty)",
     "primary": "Primary",
     "secondary": "Secondary",
     "applyOverrideTags": "Apply override tags",
