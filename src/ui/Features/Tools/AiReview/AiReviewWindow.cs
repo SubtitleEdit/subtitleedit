@@ -58,8 +58,8 @@ public class AiReviewWindow : Window
         var textBoxOpenAiModel = UiUtil.MakeTextBox(150, vm, nameof(vm.OpenAiCompatibleModel))
             .WithAccessibleName(Se.Language.General.Model);
         textBoxOpenAiModel.PlaceholderText = Se.Language.General.Model;
-        var panelOpenAiApiKey = UiUtil.MakeApiKeyTextBox(130, vm, nameof(vm.OpenAiCompatibleApiKey));
-        ((TextBox)panelOpenAiApiKey.Children[0]).PlaceholderText = Se.Language.General.ApiKey;
+        var panelOpenAiApiKey = UiUtil.MakeApiKeyTextBox(130, vm, nameof(vm.OpenAiCompatibleApiKey),
+            placeholderText: Se.Language.General.ApiKey);
 
         // Free cloud tiers rate limit hard, so the delay between requests lives next to the API key
         // rather than in a settings dialog. The label would not fit the toolbar - a timer icon plus

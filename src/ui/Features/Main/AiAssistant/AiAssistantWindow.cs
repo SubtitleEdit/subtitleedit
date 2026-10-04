@@ -72,8 +72,8 @@ public class AiAssistantWindow : Window
         var textBoxOpenAiModel = UiUtil.MakeTextBox(130, vm, nameof(vm.OpenAiCompatibleModel))
             .WithAccessibleName(Se.Language.General.Model);
         textBoxOpenAiModel.PlaceholderText = Se.Language.General.Model;
-        var panelOpenAiApiKey = UiUtil.MakeApiKeyTextBox(120, vm, nameof(vm.OpenAiCompatibleApiKey));
-        ((TextBox)panelOpenAiApiKey.Children[0]).PlaceholderText = Se.Language.General.ApiKey;
+        var panelOpenAiApiKey = UiUtil.MakeApiKeyTextBox(120, vm, nameof(vm.OpenAiCompatibleApiKey),
+            placeholderText: Se.Language.General.ApiKey);
         var panelOpenAiCompatible = new StackPanel
         {
             Orientation = Orientation.Horizontal,
