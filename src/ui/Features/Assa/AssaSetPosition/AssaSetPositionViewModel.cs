@@ -336,6 +336,23 @@ public partial class AssaSetPositionViewModel : ObservableObject
         return new RelativePoint(x, y, RelativeUnit.Relative);
     }
 
+    /// <summary>
+    /// Writes the OK tags into the line, replacing any previous \pos/\frz. When the line already
+    /// starts with an override block the tags join it, so "{\an8\i1}Hi" becomes
+    /// "{\pos(..)\an8\i1}Hi" instead of "{\pos(..)}{\an8\i1}Hi".
+    /// </summary>
+    internal static string ApplyPositionTags(string text, string tags)
+    {
+        var rest = Regex.Replace(text ?? string.Empty, @"\\pos\(\d+,\d+\)", string.Empty);
+        rest = FrzRegex.Replace(rest, string.Empty).Replace("{}", string.Empty);
+        if (rest.StartsWith("{\\", StringComparison.Ordinal) && rest.IndexOf('}') > 0)
+        {
+            return "{" + tags + rest.Substring(1);
+        }
+
+        return "{" + tags + "}" + rest;
+    }
+
     internal static string BuildPositionTags(int x, int y, decimal rotation, decimal styleAngle)
     {
         var tags = $"\\pos({x},{y})";
