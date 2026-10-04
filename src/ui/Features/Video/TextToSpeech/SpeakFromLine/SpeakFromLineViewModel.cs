@@ -48,8 +48,9 @@ public partial class SpeakFromLineViewModel : ObservableObject
         _engineDescription = string.Empty;
 
         var settings = Se.Settings.Video.TextToSpeech;
+        // Supertonic by default: the fastest local engine, and one download covers 31 languages.
         SelectedEngine = Engines.FirstOrDefault(e => e.Name == settings.SpeakFromLineEngine)
-                         ?? Engines.FirstOrDefault(e => e.Name == settings.Engine)
+                         ?? Engines.FirstOrDefault(e => e is SupertonicCrispAsr)
                          ?? Engines.FirstOrDefault();
     }
 
@@ -111,7 +112,6 @@ public partial class SpeakFromLineViewModel : ObservableObject
 
         var settings = Se.Settings.Video.TextToSpeech;
         SelectedVoice = Voices.FirstOrDefault(v => v.Name == settings.SpeakFromLineVoice)
-                        ?? Voices.FirstOrDefault(v => v.Name == settings.Voice)
                         ?? Voices.FirstOrDefault(v => v.Name.StartsWith("en", StringComparison.OrdinalIgnoreCase) ||
                                                       v.Name.Contains("English", StringComparison.OrdinalIgnoreCase))
                         ?? Voices.FirstOrDefault();

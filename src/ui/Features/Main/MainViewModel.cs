@@ -11818,6 +11818,9 @@ public partial class MainViewModel :
                     speakingRow = row;
                     SubtitleGrid.SelectedItem = row;
                     SubtitleGrid.ScrollIntoView(row);
+                    SeekVideoToSubtitleStart(row);
+                    AudioVisualizerCenterOnPositionIfNeeded(row, row.StartTime.TotalSeconds);
+
                     ShowStatus(string.Format(Se.Language.Video.TextToSpeech.SpeakingLineX, Subtitles.IndexOf(row) + 1), 10_000);
                 },
                 () => speakingRow == null || ReferenceEquals(SubtitleGrid.SelectedItem, speakingRow),
