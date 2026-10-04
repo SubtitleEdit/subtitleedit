@@ -41,6 +41,7 @@ public partial class CompareViewModel : ObservableObject
     [ObservableProperty] [NotifyPropertyChangedFor(nameof(HasPendingChanges), nameof(PendingChangesText), nameof(OkButtonText))] private int _pendingChangeCount;
     [ObservableProperty] private string _lastChangeText = string.Empty;
     [ObservableProperty] private bool _isReloadFromFileVisible;
+    [ObservableProperty] private int _ignoreTimeDifferenceMs;
     [ObservableProperty] private bool _isExportVisible;
     [ObservableProperty] private string _leftFileName = string.Empty;
     [ObservableProperty] private bool _leftFileNameHasChanges;
@@ -157,6 +158,7 @@ public partial class CompareViewModel : ObservableObject
         IgnoreWhiteSpace = settings.IgnoreWhitespace;
         IgnoreFormatting = settings.IgnoreFormatting;
         IgnoreNumbering = settings.IgnoreNumbering;
+        IgnoreTimeDifferenceMs = Math.Max(0, settings.IgnoreTimeDifferenceMs);
     }
 
     /// <summary>
@@ -170,6 +172,7 @@ public partial class CompareViewModel : ObservableObject
         settings.IgnoreWhitespace = IgnoreWhiteSpace;
         settings.IgnoreFormatting = IgnoreFormatting;
         settings.IgnoreNumbering = IgnoreNumbering;
+        settings.IgnoreTimeDifferenceMs = IgnoreTimeDifferenceMs;
     }
 
     internal void Initialize(
@@ -345,8 +348,8 @@ public partial class CompareViewModel : ObservableObject
             }
             else
             {
-                var startMatch = IsTimeEqual(left.StartTime, right.StartTime);
-                var endMatch = IsTimeEqual(left.EndTime, right.EndTime);
+                var startMatch = IsTimeSame(left.StartTime, right.StartTime);
+                var endMatch = IsTimeSame(left.EndTime, right.EndTime);
                 var textsMatch = AreTextsEqual(left, right);
                 var numbersMatch = IgnoreNumbering || left.Number == right.Number;
                 isTextDifference = !textsMatch;
@@ -572,7 +575,7 @@ public partial class CompareViewModel : ObservableObject
         var pairs = CompareAligner.Align(
             leftItems.Select(ToAlignerLine).ToList(),
             rightItems.Select(ToAlignerLine).ToList(),
-            IsTimeEqual,
+            IsTimeSame,
             GetSyncPointIndexes(leftItems, rightItems));
 
         _alignedPairs = new HashSet<(Guid Left, Guid Right)>();
@@ -660,6 +663,20 @@ public partial class CompareViewModel : ObservableObject
         }
 
         return sb.ToString();
+    }
+
+    /// <summary>
+    /// Equal for the comparison: within the user's time tolerance (#15620), else <see cref="IsTimeEqual"/>.
+    /// Edits and sync points keep the exact check - a 3 ms change is still a change.
+    /// </summary>
+    private bool IsTimeSame(TimeSpan t1, TimeSpan t2)
+    {
+        if (IgnoreTimeDifferenceMs > 0)
+        {
+            return Math.Abs(t1.TotalMilliseconds - t2.TotalMilliseconds) <= IgnoreTimeDifferenceMs + 0.1;
+        }
+
+        return IsTimeEqual(t1, t2);
     }
 
     private static bool IsTimeEqual(TimeSpan t1, TimeSpan t2)

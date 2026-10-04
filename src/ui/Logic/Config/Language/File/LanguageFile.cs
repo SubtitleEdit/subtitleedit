@@ -30,6 +30,8 @@ public class LanguageFile
     public string ShowOnlyDifferencesInText { get; set; }
     public string IgnoreNumbering { get; set; }
     public string IgnoreNumberingHint { get; set; }
+    public string IgnoreTimeDifferenceMs { get; set; }
+    public string IgnoreTimeDifferenceMsHint { get; set; }
     public string CompareDifferences { get; set; }
     public string CompareTextDifferences { get; set; }
     public string CompareCurrent { get; set; }
@@ -111,6 +113,8 @@ public class LanguageFile
         ShowOnlyDifferencesInText = "Only differences in text";
         IgnoreNumbering = "Ignore numbering";
         IgnoreNumberingHint = "Lines that differ only in their number do not count as different";
+        IgnoreTimeDifferenceMs = "Time tolerance (ms)";
+        IgnoreTimeDifferenceMsHint = "Start and end times that differ by this many milliseconds or less do not count as different";
         CompareDifferences = "Differences";
         CompareTextDifferences = "Text differences";
         CompareCurrent = "Current";

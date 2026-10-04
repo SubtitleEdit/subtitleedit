@@ -125,10 +125,12 @@ public class CompareWindow : Window
             Child = tabs,
         };
 
-        var options = new StackPanel
+        // Wraps rather than clips when the window is too narrow for all the options.
+        var options = new WrapPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 16,
+            ItemSpacing = 16,
+            LineSpacing = 4,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(16, 0, 0, 0),
             Children =
@@ -136,6 +138,7 @@ public class CompareWindow : Window
                 MakeOption(vm, Se.Language.File.IgnoreWhitespace, Se.Language.File.IgnoreWhitespaceHint, nameof(vm.IgnoreWhiteSpace)),
                 MakeOption(vm, Se.Language.File.IgnoreFormatting, Se.Language.File.IgnoreFormattingHint, nameof(vm.IgnoreFormatting)),
                 MakeOption(vm, Se.Language.File.IgnoreNumbering, Se.Language.File.IgnoreNumberingHint, nameof(vm.IgnoreNumbering)),
+                MakeTimeToleranceOption(vm),
             },
         };
 
@@ -208,6 +211,25 @@ public class CompareWindow : Window
         checkBox.IsCheckedChanged += vm.CheckBoxChanged;
         AddHint(checkBox, hint);
         return checkBox;
+    }
+
+    private static Control MakeTimeToleranceOption(CompareViewModel vm)
+    {
+        var label = UiUtil.MakeLabel(Se.Language.File.IgnoreTimeDifferenceMs);
+        var numericUpDown = UiUtil.MakeNumericUpDownInt(0, 10_000, 0, 120, vm, nameof(vm.IgnoreTimeDifferenceMs));
+        numericUpDown.Increment = 10;
+        numericUpDown.ValueChanged += vm.CheckBoxChanged;
+        AutomationProperties.SetName(numericUpDown, Se.Language.File.IgnoreTimeDifferenceMs);
+
+        var panel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 6,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { label, numericUpDown },
+        };
+        AddHint(panel, Se.Language.File.IgnoreTimeDifferenceMsHint);
+        return panel;
     }
 
     private Control MakeHeaders(CompareViewModel vm)
