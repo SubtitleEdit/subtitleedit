@@ -1952,6 +1952,8 @@
       "fixMinDurationMs": "Fix minimum duration (ms)",
       "doNotGoPastShotChange": "Do not go past shot change",
       "fixMaxDurationMs": "Fix maximum duration (ms)",
+      "fixMinDurationFrames": "Fix minimum duration (frames)",
+      "fixMaxDurationFrames": "Fix maximum duration (frames)",
       "minimumDurationMilliseconds": "Minimum duration (milliseconds):",
       "maximumDurationMilliseconds": "Maximum duration (milliseconds):",
       "maxDurationShouldBeHigherThanMinDuration": "Maximum duration should be higher than minimum duration",
@@ -2277,11 +2279,13 @@
     },
     "mergeLinesWithSameText": {
       "maxMsBetweenLines": "Max milliseconds between lines",
+      "maxFramesBetweenLines": "Max frames between lines",
       "includeIncrementingLines": "Include lines with incrementing text",
       "includeRollUpCaptions": "Include roll-up (scrolling) captions"
     },
     "mergeLinesWithSameTimeCodes": {
       "maxMsDifference": "Max difference (milliseconds)",
+      "maxFramesDifference": "Max difference (frames)",
       "makeDialog": "Make dialogs"
     },
     "netflixCheckAndFix": {

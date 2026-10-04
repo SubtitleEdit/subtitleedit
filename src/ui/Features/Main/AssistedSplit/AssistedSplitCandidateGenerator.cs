@@ -141,8 +141,8 @@ public static class AssistedSplitCandidateGenerator
 
     private static string MakeInfo(SubtitleLineViewModel s)
     {
-        var start = new TimeCode(s.StartTime).ToShortDisplayString();
-        var end = new TimeCode(s.EndTime).ToShortDisplayString();
+        var start = TimeCodeShortDisplay.Format(s.StartTime.TotalMilliseconds, localize: true);
+        var end = TimeCodeShortDisplay.Format(s.EndTime.TotalMilliseconds, localize: true);
         var chars = CountVisibleCharacters(s.Text);
         var seconds = s.Duration.TotalSeconds;
         var cps = seconds > 0.001 ? chars / seconds : 0;

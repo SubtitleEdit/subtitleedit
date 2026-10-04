@@ -11340,17 +11340,7 @@ public partial class MainViewModel :
 
     private void UpdateVideoOffsetStatus()
     {
-        IsVideoOffsetVisible = Se.Settings.General.CurrentVideoOffsetInMs != 0;
-        if (IsVideoOffsetVisible)
-        {
-            VideoOffsetText = new TimeCode(Se.Settings.General.CurrentVideoOffsetInMs).ToShortString();
-            SetVideoOffsetText = string.Format(Se.Language.Main.Menu.UpdateVideoOffsetX, VideoOffsetText);
-        }
-        else
-        {
-            VideoOffsetText = string.Empty;
-            SetVideoOffsetText = Se.Language.Main.Menu.SetVideoOffset;
-        }
+        UpdateVideoOffsetText();
 
         // refresh all Subtitle rows
         foreach (var s in Subtitles)
@@ -36111,7 +36101,27 @@ public partial class MainViewModel :
         RefreshVideoSeekAmounts();
         AutoFitColumns();
         UpdateTimeCodeModeText();
+        UpdateVideoOffsetText();
         _updateAudioVisualizer = true;
+    }
+
+    /// <summary>
+    /// The status bar offset and the "Update video offset from X" menu item, in the current time
+    /// code mode - so also re-run when the mode changes.
+    /// </summary>
+    private void UpdateVideoOffsetText()
+    {
+        IsVideoOffsetVisible = Se.Settings.General.CurrentVideoOffsetInMs != 0;
+        if (IsVideoOffsetVisible)
+        {
+            VideoOffsetText = TimeCodeShortDisplay.Format(Se.Settings.General.CurrentVideoOffsetInMs);
+            SetVideoOffsetText = string.Format(Se.Language.Main.Menu.UpdateVideoOffsetX, VideoOffsetText);
+        }
+        else
+        {
+            VideoOffsetText = string.Empty;
+            SetVideoOffsetText = Se.Language.Main.Menu.SetVideoOffset;
+        }
     }
 
     private void UpdateTimeCodeModeText()
