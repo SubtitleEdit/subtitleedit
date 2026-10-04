@@ -243,16 +243,21 @@ public partial class SortByViewModel : ObservableObject, IClosingCleanup
         };
     }
 
-    // Text length metrics matching SE4's "Text - total length" / "Text - single line max length"
-    // sorts. Shared with the main window's sort shortcuts (#12407).
+    // Text length metrics for the "Text - total length" / "Text - single line max length" sorts.
+    // Shared with the main window's sort shortcuts (#12407). Counted like the "Total chars" /
+    // "Single line length" labels, so ASSA override blocks and HTML tags are not text (#15669).
     internal static int GetTextTotalLength(string? text)
     {
-        return (text ?? string.Empty).SplitToLines().Sum(line => line.Length);
+        return (int)SubtitleTextInfoHelper.GetTotalLength(SubtitleTextInfoHelper.StripHtml(text ?? string.Empty));
     }
 
     internal static int GetTextSingleLineMaxLength(string? text)
     {
-        return (text ?? string.Empty).SplitToLines().DefaultIfEmpty(string.Empty).Max(line => line.Length);
+        return SubtitleTextInfoHelper.StripHtml(text ?? string.Empty)
+            .SplitToLines()
+            .Select(SubtitleTextInfoHelper.GetLineLength)
+            .DefaultIfEmpty(0)
+            .Max();
     }
 
     public void Initialize(List<SubtitleLineViewModel> subtitles)
