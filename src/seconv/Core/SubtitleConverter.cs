@@ -101,9 +101,13 @@ internal class SubtitleConverter
             return merged;
         }
 
+        // Enumerate the inputs once: with a wildcard ("*.srt") and the output next to the input,
+        // a later language would otherwise also pick up the earlier ones' outputs
+        // ("movie.de.srt" -> "movie.de.fr.srt").
+        var inputFiles = GetInputFiles(options);
         foreach (var target in targets)
         {
-            var result = await ConvertSingleTargetAsync(options with { TranslateTo = target });
+            var result = await ConvertSingleTargetAsync(options with { TranslateTo = target }, new List<string>(inputFiles));
             merged.TotalFiles += result.TotalFiles;
             merged.SuccessfulFiles += result.SuccessfulFiles;
             merged.FailedFiles += result.FailedFiles;
@@ -129,7 +133,7 @@ internal class SubtitleConverter
             .ToList();
     }
 
-    private async Task<ConversionResult> ConvertSingleTargetAsync(ConversionOptions options)
+    private async Task<ConversionResult> ConvertSingleTargetAsync(ConversionOptions options, List<string>? inputFiles = null)
     {
         var result = new ConversionResult();
         _usedOutputFileNames.Clear();
@@ -146,7 +150,7 @@ internal class SubtitleConverter
             WarnIf3DIgnored(options, result);
 
             // Get input files
-            var inputFiles = GetInputFiles(options);
+            inputFiles ??= GetInputFiles(options);
             result.TotalFiles = inputFiles.Count;
 
             if (inputFiles.Count == 0)
