@@ -10,6 +10,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Shared.PickFontName;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
@@ -18,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -205,14 +207,13 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        var format = new SubStationAlpha();
-        var fileName = await _fileHelper.PickOpenFile(Window, "Open subtitle file to import styles from", format.Name, "*" + format.Extension);
+        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.Assa.OpenStyleImportFile, Se.Language.Assa.SsaStyleImportFiles, SsaStyleImportExtensions);
         if (string.IsNullOrEmpty(fileName))
         {
             return;
         }
 
-        var ssaStyles = StyleFileImportHelper.LoadStyles(fileName, format);
+        var ssaStyles = StyleFileImportHelper.LoadStylesForSsa(fileName);
         if (ssaStyles.Count == 0)
         {
             await MessageBox.Show(
@@ -226,7 +227,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
 
         var result = await _windowService.ShowDialogAsync<AssaStylePickerWindow, AssaStylePickerViewModel>(Window, vm =>
         {
-            vm.Initialize(Se.Language.General.Import, ssaStyles.Select(p => StripAlpha(new StyleDisplay(p) { IsSelected = true, Name = MakeUniqueName(p.Name, FileStyles) })).ToList(), Se.Language.General.Import, false);
+            vm.Initialize(Se.Language.General.Import, ssaStyles.Select(p => StripAlpha(new StyleDisplay(p) { IsSelected = true })).ToList(), Se.Language.General.Import, false);
         });
 
         var selectedStyles = result.Styles.Where(p => p.IsSelected).ToList();
@@ -235,27 +236,122 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        FileStyles.AddRange(selectedStyles);
+        // Same overwrite / keep both prompt as the ASSA window - importing a style to replace
+        // the file's style of the same name always added a "_2" copy instead
+        await CopyStyles(selectedStyles, FileStyles, Se.Language.Assa.StyleXAlreadyExistsInFile);
 
         UpdateUsages();
     }
 
-    private static string MakeUniqueName(string name, ObservableCollection<StyleDisplay> styles)
+    // .ass and Aegisub .sty styles are accepted too - the [V4 Styles] header is written on OK
+    private const string SsaStyleImportExtensions = "*.ssa;*.ass;*.sty";
+
+    /// <summary>
+    /// Opens the font picker (installed fonts + fonts collected in SE's Fonts folder)
+    /// and assigns the picked font to the current style.
+    /// </summary>
+    [RelayCommand]
+    private async Task PickFontName()
     {
-        var newName = name;
-        if (styles.Any(p => p.Name.Equals(newName, StringComparison.OrdinalIgnoreCase)))
+        if (Window == null || CurrentStyle == null)
         {
-            var count = 2;
-            var doRepeat = true;
-            while (doRepeat)
-            {
-                newName = name + "_" + count;
-                doRepeat = styles.Any(p => p.Name.Equals(newName, StringComparison.OrdinalIgnoreCase));
-                count++;
-            }
+            return;
         }
 
-        return newName;
+        var currentFontName = CurrentStyle.FontName;
+        var result = await _windowService.ShowDialogAsync<PickFontNameWindow, PickFontNameViewModel>(Window, vm =>
+        {
+            vm.Initialize();
+            if (!string.IsNullOrEmpty(currentFontName))
+            {
+                vm.SelectedFontName = currentFontName;
+            }
+        });
+
+        if (result.OkPressed && !string.IsNullOrEmpty(result.SelectedFontName) && CurrentStyle != null)
+        {
+            if (!Fonts.Contains(result.SelectedFontName))
+            {
+                Fonts.Insert(0, result.SelectedFontName);
+            }
+
+            CurrentStyle.FontName = result.SelectedFontName;
+
+            if (result.SelectedCollectedFont != null)
+            {
+                EmbedCollectedFont(result.SelectedCollectedFont);
+            }
+        }
+    }
+
+    /// <summary>
+    /// A font picked from the "Collected fonts" tab need not be installed on the machine
+    /// that plays the subtitle, so its file is embedded in the [Fonts] attachment section.
+    /// Reaches the main subtitle only on OK/Apply, like the rest of this dialog's changes.
+    /// </summary>
+    private void EmbedCollectedFont(CollectedFont font)
+    {
+        try
+        {
+            var bytes = File.ReadAllBytes(font.FilePath);
+            _subtitle.Footer = AssaFontEmbedder.AddFontToFooter(_subtitle.Footer, font.FilePath, bytes);
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Could not embed collected font " + font.FilePath);
+        }
+    }
+
+    [RelayCommand]
+    private async Task BrowseFontName()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<SsaAttachmentsWindow, SsaAttachmentsViewModel>(Window, vm =>
+        {
+            vm.Initialize(_subtitle, new SubStationAlpha(), _subtitleFileName);
+        });
+
+        if (result.OkPressed)
+        {
+            _subtitle.Footer = result.Footer;
+
+            if (CurrentStyle != null && result.SelectedAttachment != null && !string.IsNullOrEmpty(result.SelectedAttachment.FontName))
+            {
+                if (!Fonts.Contains(result.SelectedAttachment.FontName))
+                {
+                    Fonts.Insert(0, result.SelectedAttachment.FontName);
+                }
+
+                CurrentStyle.FontName = result.SelectedAttachment.FontName;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Copies styles with <see cref="StylesDialogHelper.CopyStyles(Avalonia.Controls.Window, List{StyleDisplay}, ObservableCollection{StyleDisplay}, Func{StyleDisplay, bool}, string, Func{SsaStyle, StyleDisplay}, Action{StyleDisplay}?)"/> -
+    /// a name clash asks whether to overwrite or keep both (#15312).
+    /// </summary>
+    private Task CopyStyles(List<StyleDisplay> sourceStyles, ObservableCollection<StyleDisplay> target, string alreadyExistsFormat)
+    {
+        return StylesDialogHelper.CopyStyles(
+            Window!,
+            sourceStyles,
+            target,
+            _ => true,
+            alreadyExistsFormat,
+            style => StripAlpha(new StyleDisplay(style)),
+            existing =>
+            {
+                StripAlpha(existing);
+                if (ReferenceEquals(existing, CurrentStyle))
+                {
+                    SelectedBorderType = existing.BorderStyle;
+                }
+            });
     }
 
     [RelayCommand]
@@ -298,8 +394,25 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
     }
 
     [RelayCommand]
-    private void FileRemoveAll()
+    private async Task FileRemoveAll()
     {
+        if (FileStyles.Count == 0)
+        {
+            return;
+        }
+
+        // Asks first, as deleting selected styles does - "Clear" used to wipe the list silently
+        if (!await StylesDialogHelper.ConfirmDeleteStyles(Window, $"Do you want to delete {FileStyles.Count} styles?"))
+        {
+            return;
+        }
+
+        if (CurrentStyle != null && FileStyles.Contains(CurrentStyle))
+        {
+            SelectedFileStyle = null;
+            CurrentStyle = null;
+        }
+
         FileStyles.Clear();
     }
 
@@ -322,6 +435,26 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
     private void MoveFileStyles(ListMoveDirection direction)
     {
         TableViewExtras.MoveSelectedRows(FileStyleGrid, FileStyles, direction);
+    }
+
+    [RelayCommand]
+    private void StorageMoveUp() => MoveStorageStyles(ListMoveDirection.Up);
+
+    [RelayCommand]
+    private void StorageMoveDown() => MoveStorageStyles(ListMoveDirection.Down);
+
+    [RelayCommand]
+    private void StorageMoveToTop() => MoveStorageStyles(ListMoveDirection.Top);
+
+    [RelayCommand]
+    private void StorageMoveToBottom() => MoveStorageStyles(ListMoveDirection.Bottom);
+
+    /// <summary>
+    /// Reorders the selected storage styles (#15312) - saved to settings in list order on OK.
+    /// </summary>
+    private void MoveStorageStyles(ListMoveDirection direction)
+    {
+        TableViewExtras.MoveSelectedRows(StorageStyleGrid, StorageStyles, direction);
     }
 
     [RelayCommand]
@@ -387,7 +520,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
     }
 
     [RelayCommand]
-    private void FileCopyToStorage()
+    private async Task FileCopyToStorage()
     {
         var selectedItems = FileStyleGrid.SelectedItems?.Cast<StyleDisplay>().ToList() ?? new List<StyleDisplay>();
         if (Window == null || selectedItems.Count == 0)
@@ -395,12 +528,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        foreach (var item in selectedItems)
-        {
-            var style = item.ToSsaStyle();
-            style.Name = MakeUniqueName(style.Name, StorageStyles);
-            StorageStyles.Add(StripAlpha(new StyleDisplay(style)));
-        }
+        await CopyStyles(selectedItems, StorageStyles, Se.Language.Assa.StyleXAlreadyExistsInStorage);
     }
 
     [RelayCommand]
@@ -439,6 +567,40 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
     }
 
     [RelayCommand]
+    private async Task FileReplaceWith()
+    {
+        var selectedItems = FileStyleGrid.SelectedItems?.Cast<StyleDisplay>().ToList() ?? new List<StyleDisplay>();
+        if (Window == null || selectedItems.Count == 0)
+        {
+            return;
+        }
+
+        var oldNames = selectedItems.Select(p => p.Name).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var candidates = StylesDialogHelper.GetReplaceWithCandidates(FileStyles, StorageStyles, oldNames);
+        if (candidates.Count == 0)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<AssaStylePickerWindow, AssaStylePickerViewModel>(Window, vm =>
+        {
+            var styles = candidates.Select(p => StripAlpha(new StyleDisplay(p.ToSsaStyle()))).ToList();
+            vm.Initialize(Se.Language.Assa.ReplaceStyleWithDotDotDot, styles, Se.Language.General.Ok, false);
+        });
+
+        var target = result.Styles.FirstOrDefault(p => p.IsSelected) ?? result.SelectedStyle;
+        if (!result.OkPressed || target == null)
+        {
+            return;
+        }
+
+        var targetInFile = StylesDialogHelper.ReplaceStylesWith(_subtitle, FileStyles, selectedItems, target, style => StripAlpha(new StyleDisplay(style)));
+        SelectedFileStyle = targetInFile;
+        CurrentStyle = targetInFile;
+        UpdateUsages();
+    }
+
+    [RelayCommand]
     private async Task StorageImport()
     {
         if (Window == null)
@@ -446,14 +608,13 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        var format = new SubStationAlpha();
-        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.Assa.OpenStyleImportFile, format.Name, "*" + format.Extension);
+        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.Assa.OpenStyleImportFile, Se.Language.Assa.SsaStyleImportFiles, SsaStyleImportExtensions);
         if (string.IsNullOrEmpty(fileName))
         {
             return;
         }
 
-        var ssaStyles = StyleFileImportHelper.LoadStyles(fileName, format);
+        var ssaStyles = StyleFileImportHelper.LoadStylesForSsa(fileName);
         if (ssaStyles.Count == 0)
         {
             await MessageBox.Show(
@@ -467,7 +628,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
 
         var result = await _windowService.ShowDialogAsync<AssaStylePickerWindow, AssaStylePickerViewModel>(Window, vm =>
         {
-            vm.Initialize(Se.Language.General.Import, ssaStyles.Select(p => StripAlpha(new StyleDisplay(p) { IsSelected = true, Name = MakeUniqueName(p.Name, StorageStyles) })).ToList(), Se.Language.General.Import, false);
+            vm.Initialize(Se.Language.General.Import, ssaStyles.Select(p => StripAlpha(new StyleDisplay(p) { IsSelected = true })).ToList(), Se.Language.General.Import, false);
         });
 
         var selectedStyles = result.Styles.Where(p => p.IsSelected).ToList();
@@ -476,9 +637,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        StorageStyles.AddRange(selectedStyles);
-
-        UpdateUsages();
+        await CopyStyles(selectedStyles, StorageStyles, Se.Language.Assa.StyleXAlreadyExistsInStorage);
     }
 
     [RelayCommand]
@@ -565,8 +724,25 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
     }
 
     [RelayCommand]
-    private void StorageRemoveAll()
+    private async Task StorageRemoveAll()
     {
+        if (StorageStyles.Count == 0)
+        {
+            return;
+        }
+
+        // Asks first, as the ASSA window does - it used to clear the storage without asking
+        if (!await StylesDialogHelper.ConfirmDeleteStyles(Window, $"Do you want to delete {StorageStyles.Count} styles from storage?"))
+        {
+            return;
+        }
+
+        if (CurrentStyle != null && StorageStyles.Contains(CurrentStyle))
+        {
+            SelectedStorageStyle = null;
+            CurrentStyle = null;
+        }
+
         StorageStyles.Clear();
     }
 
@@ -631,7 +807,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
     }
 
     [RelayCommand]
-    private void StorageCopyToFiles()
+    private async Task StorageCopyToFiles()
     {
         var selectedItems = StorageStyleGrid.SelectedItems?.Cast<StyleDisplay>().ToList() ?? new List<StyleDisplay>();
         if (Window == null || selectedItems.Count == 0)
@@ -639,12 +815,8 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        foreach (var item in selectedItems)
-        {
-            var style = item.ToSsaStyle();
-            style.Name = MakeUniqueName(style.Name, FileStyles);
-            FileStyles.Add(StripAlpha(new StyleDisplay(style)));
-        }
+        await CopyStyles(selectedItems, FileStyles, Se.Language.Assa.StyleXAlreadyExistsInFile);
+        UpdateUsages();
     }
 
     [RelayCommand]
@@ -736,7 +908,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
 
     private void LoadFonts()
     {
-        var fonts = FontHelper.GetLibAssaFonts();
+        var fonts = StylesDialogHelper.GetStyleEditorFontNames();
 
         Dispatcher.UIThread.Post(() =>
         {
@@ -1013,39 +1185,33 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
         selectedStyle.BorderStyle = SelectedBorderType;
     }
 
+    // Delete removes all selected rows, as the Delete button does - not just the focused one
     internal void FileStylesKeyDown(object? sender, KeyEventArgs e)
     {
         if (e.Key == Key.Delete)
         {
-            var selectedStyle = SelectedFileStyle;
-            DeleteFileStyle(selectedStyle);
+            FileRemove();
+            e.Handled = true;
+        }
+    }
+
+    internal void StorageStylesKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Delete)
+        {
+            StorageRemove();
             e.Handled = true;
         }
     }
 
     /// <summary>
-    /// Ctrl+Up/Ctrl+Down reorder the selected styles, as in SE 4. Tunneled, because the
-    /// ListBox underneath TableView handles Ctrl+Arrow itself (move focus without changing
-    /// the selection) and a bubbling handler would never see the key.
+    /// Ctrl+Up/Ctrl+Down reorder the selected styles (tunneled, see <see cref="StylesDialogHelper.HandleMoveKeyDown"/>).
     /// </summary>
     internal void FileStylesMoveKeyDown(object? sender, KeyEventArgs e)
-    {
-        if (e.KeyModifiers != KeyModifiers.Control || e.Source is TextBox)
-        {
-            return;
-        }
+        => StylesDialogHelper.HandleMoveKeyDown(e, MoveFileStyles);
 
-        if (e.Key == Key.Up)
-        {
-            MoveFileStyles(ListMoveDirection.Up);
-            e.Handled = true;
-        }
-        else if (e.Key == Key.Down)
-        {
-            MoveFileStyles(ListMoveDirection.Down);
-            e.Handled = true;
-        }
-    }
+    internal void StorageStylesMoveKeyDown(object? sender, KeyEventArgs e)
+        => StylesDialogHelper.HandleMoveKeyDown(e, MoveStorageStyles);
 
     private void DeleteFileStyle(StyleDisplay? selectedStyle)
     {
@@ -1174,5 +1340,6 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
         // and offered "Clear" on an empty storage list.
         IsDeleteAllVisible = StorageStyles.Count > 0;
         IsDeleteVisible = SelectedStorageStyle != null;
+        IsMoveVisible = StorageStyles.Count > 1 && StorageStyleGrid.SelectedItems?.Count > 0;
     }
 }

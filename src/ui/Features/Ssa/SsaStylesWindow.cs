@@ -6,7 +6,6 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using System.Collections;
-using System.Windows.Input;
 using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Logic;
@@ -203,7 +202,16 @@ public class SsaStylesWindow : Window
         menuItemTakeUsagesFrom.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsTakeUsagesFromVisible)) { Source = vm });
         flyout.Items.Add(menuItemTakeUsagesFrom);
 
-        AddMoveMenuItems(flyout, vm);
+        var menuItemReplaceWith = new MenuItem
+        {
+            Header = Se.Language.Assa.ReplaceStyleWithDotDotDot,
+            DataContext = vm,
+            Command = vm.FileReplaceWithCommand,
+        };
+        menuItemReplaceWith.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsFileStyleSelected)) { Source = vm });
+        flyout.Items.Add(menuItemReplaceWith);
+
+        StylesDialogHelper.AddMoveMenuItems(flyout, vm, nameof(vm.IsMoveVisible), vm.FileMoveUpCommand, vm.FileMoveDownCommand, vm.FileMoveToTopCommand, vm.FileMoveToBottomCommand);
 
         var buttonNew = UiUtil.MakeButton(vm.FileNewCommand, IconNames.Plus, Se.Language.General.New);
         var buttonRemove = UiUtil.MakeButton(vm.FileRemoveCommand, IconNames.Trash, Se.Language.General.Delete);
@@ -289,6 +297,8 @@ public class SsaStylesWindow : Window
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedStorageStyle)) { Source = vm });
         dataGrid.SelectionChanged += vm.StorageStylesChanged;
         dataGrid.GotFocus += vm.StorageStylesGotFocus;
+        dataGrid.KeyDown += vm.StorageStylesKeyDown;
+        dataGrid.AddHandler(InputElement.KeyDownEvent, vm.StorageStylesMoveKeyDown, RoutingStrategies.Tunnel);
         vm.StorageStyleGrid = dataGrid;
 
         var flyout = new MenuFlyout();
@@ -331,6 +341,8 @@ public class SsaStylesWindow : Window
         };
         menuItemClearSetAsDefault.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsSetStyleAsDefaultVisible)) { Source = vm });
         flyout.Items.Add(menuItemClearSetAsDefault);
+
+        StylesDialogHelper.AddMoveMenuItems(flyout, vm, nameof(vm.IsMoveVisible), vm.StorageMoveUpCommand, vm.StorageMoveDownCommand, vm.StorageMoveToTopCommand, vm.StorageMoveToBottomCommand);
 
         var buttonNew = UiUtil.MakeButton(vm.StorageNewCommand, IconNames.Plus, Se.Language.General.New);
         var buttonDuplicate = UiUtil.MakeButton(vm.StorageDuplicateCommand, IconNames.Duplicate, Se.Language.General.Duplicate);
@@ -415,10 +427,12 @@ public class SsaStylesWindow : Window
 
         var labelFontName = UiUtil.MakeLabel(Se.Language.General.FontName);
         var comboBoxFontName = UiUtil.MakeComboBox(vm.Fonts, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.FontName)).WithMinWidth(150);
+        var buttonFontBrowse = UiUtil.MakeButtonBrowse(vm.PickFontNameCommand, null, Se.Language.Tools.PickFontNameTitle);
+        var buttonFontAttachments = UiUtil.MakeButton(vm.BrowseFontNameCommand, IconNames.Paperclip, Se.Language.Assa.Attachments);
         var labelFontSize = UiUtil.MakeLabel(Se.Language.General.FontSize);
         var numericUpDownFontSize = UiUtil.MakeNumericUpDownOneDecimal(1, 1000, 130, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.FontSize));
         numericUpDownFontSize.Increment = 1;
-        var panelFont = UiUtil.MakeHorizontalPanel(labelFontName, comboBoxFontName, labelFontSize, numericUpDownFontSize);
+        var panelFont = UiUtil.MakeHorizontalPanel(labelFontName, comboBoxFontName, buttonFontBrowse, buttonFontAttachments, labelFontSize, numericUpDownFontSize);
 
         var checkBoxBold = UiUtil.MakeCheckBox(Se.Language.General.Bold, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.Bold));
         var checkBoxItalic = UiUtil.MakeCheckBox(Se.Language.General.Italic, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.Italic));
@@ -666,38 +680,5 @@ public class SsaStylesWindow : Window
         };
 
         return button;
-    }
-
-    /// <summary>
-    /// The "move up/down/to top/to bottom" block of the file styles context menu (#13056).
-    /// The styles are written to the file header in list order, so this is real reordering,
-    /// not a view sort.
-    /// </summary>
-    private static void AddMoveMenuItems(MenuFlyout flyout, SsaStylesViewModel vm)
-    {
-        var separator = new Separator();
-        separator.Bind(Separator.IsVisibleProperty, new Binding(nameof(vm.IsMoveVisible)) { Source = vm });
-        flyout.Items.Add(separator);
-
-        var items = new (string Header, ICommand Command, KeyGesture? Gesture)[]
-        {
-            (Se.Language.General.MoveUp, vm.FileMoveUpCommand, new KeyGesture(Key.Up, KeyModifiers.Control)),
-            (Se.Language.General.MoveDown, vm.FileMoveDownCommand, new KeyGesture(Key.Down, KeyModifiers.Control)),
-            (Se.Language.General.MoveToTop, vm.FileMoveToTopCommand, null),
-            (Se.Language.General.MoveToBottom, vm.FileMoveToBottomCommand, null),
-        };
-
-        foreach (var (header, command, gesture) in items)
-        {
-            var menuItem = new MenuItem
-            {
-                Header = header,
-                DataContext = vm,
-                Command = command,
-                InputGesture = gesture,
-            };
-            menuItem.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsMoveVisible)) { Source = vm });
-            flyout.Items.Add(menuItem);
-        }
     }
 }
