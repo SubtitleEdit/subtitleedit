@@ -65,4 +65,37 @@ public class AssaCommentBlockCountTest
     {
         Assert.Equal(expected, AdvancedSubStationAlpha.RemoveCommentBlocks(input));
     }
+
+    [Theory]
+    [InlineData("{TL note}", true)]
+    [InlineData("{TL note}{\\i1}", true)]
+    [InlineData("{TL note} ", true)]
+    [InlineData("{a}\\N{b}", true)]
+    [InlineData("{TL note}Hello", false)]
+    [InlineData("Hello", false)]
+    [InlineData("", false)]                // already empty: not made empty by the comment strip
+    [InlineData("{\\i1}", false)]
+    [InlineData("Hello { there", false)]
+    public void IsCommentOnly(string input, bool expected)
+    {
+        Assert.Equal(expected, AdvancedSubStationAlpha.IsCommentOnly(input));
+    }
+
+    [Fact]
+    public void RemoveCommentBlocks_Paragraphs_DropsLinesThatOnlyHeldAComment()
+    {
+        var paragraphs = new List<Paragraph>
+        {
+            new Paragraph("{note}Hello", 0, 1000),
+            new Paragraph("{TL note: a pun}", 1000, 2000),
+            new Paragraph("", 2000, 3000),
+            new Paragraph("{\\i1}Bye", 3000, 4000),
+        };
+
+        var result = AdvancedSubStationAlpha.RemoveCommentBlocks(paragraphs);
+
+        Assert.Equal(new[] { "Hello", "", "{\\i1}Bye" }, result.Select(p => p.Text));
+        Assert.Equal(paragraphs[0].Id, result[0].Id);
+        Assert.Equal("{note}Hello", paragraphs[0].Text); // input untouched
+    }
 }

@@ -712,7 +712,10 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         bool removeAssaCommentBlocks = false)
     {
         Subtitles.Clear();
-        Subtitles.AddRange(subtitles);
+        // A comment-only ASSA line ("{TL note}") renders as nothing - no empty image for it.
+        Subtitles.AddRange(removeAssaCommentBlocks
+            ? subtitles.Where(s => !AdvancedSubStationAlpha.IsCommentOnly(s.Text))
+            : subtitles);
         _removeAssaCommentBlocks = removeAssaCommentBlocks;
         IsExportButtonVisible = !hideExportButton;
         _exportImageHandler = exportHandler;

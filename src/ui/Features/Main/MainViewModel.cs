@@ -27388,11 +27388,16 @@ public partial class MainViewModel :
             return subtitle;
         }
 
-        // generateNewId false: bookmarks and marks are matched on the paragraph ids.
+        // The paragraph copies keep their ids: bookmarks and marks are matched on them. A line
+        // holding only a comment is dropped - the renderer shows nothing for it, so an export
+        // must not write an empty cue.
         var copy = new Subtitle(subtitle, false);
-        foreach (var p in copy.Paragraphs)
+        var paragraphs = AdvancedSubStationAlpha.RemoveCommentBlocks(subtitle.Paragraphs);
+        copy.Paragraphs.Clear();
+        copy.Paragraphs.AddRange(paragraphs);
+        if (paragraphs.Count != subtitle.Paragraphs.Count)
         {
-            p.Text = AdvancedSubStationAlpha.RemoveCommentBlocks(p.Text);
+            copy.Renumber();
         }
 
         return copy;

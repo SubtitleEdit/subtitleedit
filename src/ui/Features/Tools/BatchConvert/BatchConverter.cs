@@ -843,7 +843,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         var paragraphs = item.Subtitle.Paragraphs;
         if (IsAssaOrSsa(item.Subtitle))
         {
-            paragraphs = paragraphs.Select(p => new Paragraph(p, false) { Text = AdvancedSubStationAlpha.RemoveCommentBlocks(p.Text) }).ToList();
+            paragraphs = AdvancedSubStationAlpha.RemoveCommentBlocks(paragraphs);
         }
 
         var text = Nikse.SubtitleEdit.UiLogic.Export.CustomTextFormatter.GenerateCustomText(selectedCustomFormat.ToTemplate(), paragraphs, item.FileName, string.Empty);
@@ -2156,11 +2156,15 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             ? parsedPreset
             : TextEffectPreset.SoftShadow;
 
-        var removeAssaCommentBlocks = IsAssaOrSsa(item.Subtitle);
+        // ASSA renderers never draw a {comment} block: strip them, and skip the lines that held
+        // nothing else instead of rendering an empty image for them.
+        var paragraphs = IsAssaOrSsa(item.Subtitle)
+            ? AdvancedSubStationAlpha.RemoveCommentBlocks(item.Subtitle.Paragraphs)
+            : item.Subtitle.Paragraphs;
         var imageParameters = new List<ImageParameter>();
-        for (var i = 0; i < item.Subtitle.Paragraphs.Count; i++)
+        for (var i = 0; i < paragraphs.Count; i++)
         {
-            Paragraph? subtitle = item.Subtitle.Paragraphs[i];
+            Paragraph? subtitle = paragraphs[i];
             var imageParameter = new ImageParameter
             {
                 // "{\an8}" & co. were stripped from the text but not honored, so top-positioned
@@ -2172,9 +2176,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 PaddingLeftRight = profile.PaddingLeftRight,
                 PaddingTopBottom = profile.PaddingTopBottom,
                 Index = i,
-                Text = ExportTextTags.ToRenderableText(removeAssaCommentBlocks
-                    ? AdvancedSubStationAlpha.RemoveCommentBlocks(subtitle.Text)
-                    : subtitle.Text),
+                Text = ExportTextTags.ToRenderableText(subtitle.Text),
                 StartTime = subtitle.StartTime.TimeSpan,
                 EndTime = subtitle.EndTime.TimeSpan,
                 FontColor = profile.FontColor.FromHexToColor().ToSKColor(),
