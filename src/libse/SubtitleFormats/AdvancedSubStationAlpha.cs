@@ -2239,6 +2239,42 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
         /// becomes "{\i1}" (the tags of a block are applied whatever precedes them) and an
         /// unclosed '{' is drawn as text, so it is kept.
         /// </summary>
+        /// <summary>
+        /// True when the text shows something only because of its {comment} blocks, like a
+        /// "{TL note}" line: an ASSA renderer draws nothing for it, so an export must drop the line
+        /// instead of writing an empty one. A line that was already empty is not comment-only.
+        /// </summary>
+        public static bool IsCommentOnly(string text)
+        {
+            if (string.IsNullOrEmpty(text) || text.IndexOf('{') < 0)
+            {
+                return false;
+            }
+
+            return !string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(text, true)) &&
+                   string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(text, true, true));
+        }
+
+        /// <summary>
+        /// Copies of the paragraphs (same ids) with the {comment} blocks removed, leaving out the
+        /// comment-only lines (<see cref="IsCommentOnly"/>) an ASSA renderer never shows.
+        /// </summary>
+        public static List<Paragraph> RemoveCommentBlocks(IEnumerable<Paragraph> paragraphs)
+        {
+            var result = new List<Paragraph>();
+            foreach (var p in paragraphs)
+            {
+                if (IsCommentOnly(p.Text))
+                {
+                    continue;
+                }
+
+                result.Add(new Paragraph(p, false) { Text = RemoveCommentBlocks(p.Text) });
+            }
+
+            return result;
+        }
+
         public static string RemoveCommentBlocks(string text)
         {
             if (string.IsNullOrEmpty(text) || text.IndexOf('{') < 0)

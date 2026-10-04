@@ -144,4 +144,28 @@ public class PaddleOcrResultPollerTests : IDisposable
 
         Assert.Equal(0, poller.ReportedCount);
     }
+
+    [Fact]
+    public void ShouldStopWaiting_BeforeFirstResult_WaitsWhileLauncherRuns()
+    {
+        // Slow model load: no results yet, launcher alive - never give up on idle time alone.
+        var wayPastGrace = (int)(PaddleOcrResultPoller.IdleGraceWhileRunning / PaddleOcrResultPoller.PollInterval) * 10;
+        Assert.False(PaddleOcrResultPoller.ShouldStopWaiting(wayPastGrace, 0, processExited: false));
+    }
+
+    [Fact]
+    public void ShouldStopWaiting_AfterFirstResult_UsesRunningGrace()
+    {
+        var graceRounds = (int)(PaddleOcrResultPoller.IdleGraceWhileRunning / PaddleOcrResultPoller.PollInterval);
+        Assert.False(PaddleOcrResultPoller.ShouldStopWaiting(graceRounds - 1, 1, processExited: false));
+        Assert.True(PaddleOcrResultPoller.ShouldStopWaiting(graceRounds, 1, processExited: false));
+    }
+
+    [Fact]
+    public void ShouldStopWaiting_LauncherExited_UsesShortGraceEvenWithoutResults()
+    {
+        var graceRounds = (int)(PaddleOcrResultPoller.IdleGraceAfterExit / PaddleOcrResultPoller.PollInterval);
+        Assert.False(PaddleOcrResultPoller.ShouldStopWaiting(graceRounds - 1, 0, processExited: true));
+        Assert.True(PaddleOcrResultPoller.ShouldStopWaiting(graceRounds, 0, processExited: true));
+    }
 }

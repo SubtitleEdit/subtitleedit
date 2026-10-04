@@ -210,6 +210,8 @@ internal static class SubtitleTextInfoHelper
         items[items.Count - 1].Gap = double.MaxValue;
     }
 
+    private static readonly string[] AssaHardBreaks = ["\\N", "\\n"];
+
     internal static string StripHtml(string text)
         => CalcFactory.RemoveTags(text);
 
@@ -218,11 +220,35 @@ internal static class SubtitleTextInfoHelper
     /// (the stripped text split to lines), except a line produced by an ASSA hard break
     /// (\N or \n) that is empty or whitespace once tags are removed is not counted - repeated
     /// "\N" is used to lift a subtitle up the screen, which adds no text lines (#15531).
-    /// A real empty line (no \N) still counts.
+    /// A real empty line (no \N) still counts, unless <paramref name="skipAllEmptyLines"/> is set:
+    /// the ASSA/SSA loader turns every \N into a real line break, so for those formats a reopened
+    /// file has real empty lines where the user typed \N, and they are skipped the same way.
     /// </summary>
-    internal static int GetLineCountForMaxLines(string text, int strippedLineCount)
+    internal static int GetLineCountForMaxLines(string text, int strippedLineCount, bool skipAllEmptyLines = false)
     {
-        if (string.IsNullOrEmpty(text) || text.IndexOf('\\') < 0)
+        if (string.IsNullOrEmpty(text))
+        {
+            return strippedLineCount;
+        }
+
+        if (skipAllEmptyLines)
+        {
+            var nonEmpty = 0;
+            foreach (var line in text.SplitToLines())
+            {
+                foreach (var part in line.Split(AssaHardBreaks, StringSplitOptions.None))
+                {
+                    if (!string.IsNullOrWhiteSpace(StripHtml(part)))
+                    {
+                        nonEmpty++;
+                    }
+                }
+            }
+
+            return nonEmpty;
+        }
+
+        if (text.IndexOf('\\') < 0)
         {
             return strippedLineCount;
         }

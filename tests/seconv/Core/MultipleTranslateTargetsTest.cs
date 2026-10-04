@@ -102,6 +102,22 @@ public class MultipleTranslateTargetsTest : IDisposable
     }
 
     [Fact]
+    public async Task SeveralTargets_WildcardPattern_DoesNotPickUpEarlierLanguageOutputs()
+    {
+        // Output next to the input: the "fr" run re-evaluated "*.srt" and also translated the
+        // freshly written "movie.de.srt" into "movie.de.fr.srt".
+        await File.WriteAllTextAsync(Path.Combine(_tempRoot, "movie.srt"), SrtContent, TestContext.Current.CancellationToken);
+
+        var result = await new SubtitleConverter().ConvertAsync(MakeOptions(Path.Combine(_tempRoot, "*.srt"), _tempRoot, "de,fr"));
+
+        Assert.True(result.Success, string.Join("; ", result.Errors));
+        Assert.Equal(2, result.SuccessfulFiles);
+        Assert.True(File.Exists(Path.Combine(_tempRoot, "movie.de.srt")));
+        Assert.True(File.Exists(Path.Combine(_tempRoot, "movie.fr.srt")));
+        Assert.Equal(3, Directory.GetFiles(_tempRoot, "*.srt").Length);
+    }
+
+    [Fact]
     public async Task SeveralTargets_WithNoLanguageSuffix_IsRejected()
     {
         var input = Path.Combine(_tempRoot, "in.srt");

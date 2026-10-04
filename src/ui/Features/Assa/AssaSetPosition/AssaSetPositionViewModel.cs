@@ -15,9 +15,11 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Media;
 using SkiaSharp;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -43,6 +45,7 @@ public partial class AssaSetPositionViewModel : ObservableObject
     [ObservableProperty] private decimal _rotation;
 
     private static readonly Regex FrzRegex = new(@"\\frz\(?(-?\d+(\.\d+)?)\)?", RegexOptions.Compiled);
+    private static readonly Regex PosRegex = new(@"\\pos\(\s*-?\d+(\.\d+)?\s*,\s*-?\d+(\.\d+)?\s*\)", RegexOptions.Compiled);
     private static readonly Regex InlineAlignmentRegex = new(@"\\an([1-9])", RegexOptions.Compiled);
 
     public decimal ResultRotation => Rotation;
@@ -182,10 +185,7 @@ public partial class AssaSetPositionViewModel : ObservableObject
         _styleAngle = style?.Angle ?? 0;
         ApplyAlignment(ResolveAlignment(style?.Alignment, line.Text));
 
-        var frzMatch = FrzRegex.Match(line.Text ?? string.Empty);
-        Rotation = frzMatch.Success && decimal.TryParse(frzMatch.Groups[1].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var frz)
-            ? frz
-            : _styleAngle;
+        Rotation = ReadRotation(line.Text, _styleAngle);
 
         // Without a video, render at the script's own resolution so PlayRes aspect is honored and
         // render space equals script space. GetScreenShotWithSubtitle bumps odd sizes to even for
@@ -343,14 +343,89 @@ public partial class AssaSetPositionViewModel : ObservableObject
     /// </summary>
     internal static string ApplyPositionTags(string text, string tags)
     {
-        var rest = Regex.Replace(text ?? string.Empty, @"\\pos\(\d+,\d+\)", string.Empty);
-        rest = FrzRegex.Replace(rest, string.Empty).Replace("{}", string.Empty);
+        var rest = PosRegex.Replace(text ?? string.Empty, string.Empty);
+        rest = RemoveOutsideTransforms(rest, FrzRegex).Replace("{}", string.Empty);
         if (rest.StartsWith("{\\", StringComparison.Ordinal) && rest.IndexOf('}') > 0)
         {
             return "{" + tags + rest.Substring(1);
         }
 
         return "{" + tags + "}" + rest;
+    }
+
+    /// <summary>
+    /// The line's static rotation: its first \frz outside a \t(...) animation, else the style angle.
+    /// A \frz inside \t is where the animation ends, not the rotation the line starts at.
+    /// </summary>
+    internal static decimal ReadRotation(string? text, decimal styleAngle)
+    {
+        text ??= string.Empty;
+        foreach (var (start, length) in GetSegmentsOutsideTransforms(text))
+        {
+            var match = FrzRegex.Match(text, start, length);
+            if (match.Success)
+            {
+                return decimal.TryParse(match.Groups[1].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var frz)
+                    ? frz
+                    : styleAngle;
+            }
+        }
+
+        return styleAngle;
+    }
+
+    /// <summary>
+    /// Removes the regex matches from the text but leaves the contents of \t(...) animations alone,
+    /// so "{\t(0,1000,\frz360)}" keeps its animated rotation.
+    /// </summary>
+    private static string RemoveOutsideTransforms(string text, Regex regex)
+    {
+        var sb = new StringBuilder(text.Length);
+        var last = 0;
+        foreach (var (start, length) in GetSegmentsOutsideTransforms(text))
+        {
+            sb.Append(text, last, start - last); // the \t(...) in between, untouched
+            sb.Append(regex.Replace(text.Substring(start, length), string.Empty));
+            last = start + length;
+        }
+
+        return sb.ToString();
+    }
+
+    private static List<(int Start, int Length)> GetSegmentsOutsideTransforms(string text)
+    {
+        var segments = new List<(int Start, int Length)>();
+        var segmentStart = 0;
+        var t = text.IndexOf("\\t(", StringComparison.Ordinal);
+        while (t >= 0)
+        {
+            var depth = 0;
+            var end = t + 2;
+            for (; end < text.Length; end++)
+            {
+                if (text[end] == '(')
+                {
+                    depth++;
+                }
+                else if (text[end] == ')' && --depth == 0)
+                {
+                    break;
+                }
+                else if (text[end] == '}')
+                {
+                    end--; // unclosed \t(: it ends with its override block
+                    break;
+                }
+            }
+
+            end = Math.Min(end, text.Length - 1);
+            segments.Add((segmentStart, t - segmentStart));
+            segmentStart = end + 1;
+            t = text.IndexOf("\\t(", segmentStart, StringComparison.Ordinal);
+        }
+
+        segments.Add((segmentStart, text.Length - segmentStart));
+        return segments;
     }
 
     internal static string BuildPositionTags(int x, int y, decimal rotation, decimal styleAngle)

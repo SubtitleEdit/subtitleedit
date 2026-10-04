@@ -18,7 +18,10 @@ public sealed class PaddleOcrResultPoller
     /// <summary>Give up this long after the launcher exits with nothing new arriving.</summary>
     public static readonly TimeSpan IdleGraceAfterExit = TimeSpan.FromSeconds(60);
 
-    /// <summary>Safety net while the launcher is still alive but has stopped producing.</summary>
+    /// <summary>
+    /// Safety net while the launcher is still alive but has stopped producing. Only counts once
+    /// the first result is in - model loading before that is not "stopped producing".
+    /// </summary>
     public static readonly TimeSpan IdleGraceWhileRunning = TimeSpan.FromMinutes(5);
 
     private readonly string _saveFolder;
@@ -151,11 +154,27 @@ public sealed class PaddleOcrResultPoller
             }
 
             idleRounds++;
-            var grace = hasProcessExited() ? IdleGraceAfterExit : IdleGraceWhileRunning;
-            if (idleRounds >= grace.TotalMilliseconds / PollInterval.TotalMilliseconds)
+            if (ShouldStopWaiting(idleRounds, ReportedCount, hasProcessExited()))
             {
                 return;
             }
         }
+    }
+
+    /// <summary>
+    /// Whether <paramref name="idleRounds"/> polls in a row without a new result mean the run is
+    /// over. Before the first result the idle safety net does not apply while the launcher is
+    /// alive: loading (or first-time downloading) the models can take far longer than the gap
+    /// between results, and the caller stops the process when the poller gives up.
+    /// </summary>
+    internal static bool ShouldStopWaiting(int idleRounds, int reportedCount, bool processExited)
+    {
+        if (!processExited && reportedCount == 0)
+        {
+            return false;
+        }
+
+        var grace = processExited ? IdleGraceAfterExit : IdleGraceWhileRunning;
+        return idleRounds >= grace.TotalMilliseconds / PollInterval.TotalMilliseconds;
     }
 }

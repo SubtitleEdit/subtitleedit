@@ -153,8 +153,11 @@ public sealed class SpeakFromLineReader
         player.Play();
 
         // mpv pauses itself when the clip ends ("keep-open"). The grace period skips the moment
-        // right after loadfile, before the new clip has reported that it is playing.
+        // right after loadfile, before the new clip has reported that it is playing. A clip mpv
+        // could not load never pauses - mpv just goes idle - so a position that stops moving
+        // also ends the wait instead of hanging the reading forever.
         var stopwatch = Stopwatch.StartNew();
+        var stallDetector = new PlaybackStallDetector(StallTimeoutMilliseconds);
         while (true)
         {
             await Task.Delay(50, cancellationToken);
@@ -174,6 +177,43 @@ public sealed class SpeakFromLineReader
             {
                 return true;
             }
+
+            if (stallDetector.IsStalled(player.Position, stopwatch.ElapsedMilliseconds))
+            {
+                Se.LogError(new InvalidOperationException($"Playback did not progress for {StallTimeoutMilliseconds} ms"),
+                    $"Speak from current line: skipping {Path.GetFileName(fileName)}");
+                return true;
+            }
+        }
+    }
+
+    private const int StallTimeoutMilliseconds = 5000;
+
+    /// <summary>
+    /// Reports when the playback position has not moved for a while - mpv goes idle without
+    /// pausing when it cannot load a clip, so the end-of-clip pause never comes.
+    /// </summary>
+    internal sealed class PlaybackStallDetector
+    {
+        private readonly long _timeoutMilliseconds;
+        private double _lastPosition = double.NaN;
+        private long _lastChangeMilliseconds;
+
+        public PlaybackStallDetector(long timeoutMilliseconds)
+        {
+            _timeoutMilliseconds = timeoutMilliseconds;
+        }
+
+        public bool IsStalled(double position, long elapsedMilliseconds)
+        {
+            if (double.IsNaN(_lastPosition) || Math.Abs(position - _lastPosition) > 0.0001)
+            {
+                _lastPosition = position;
+                _lastChangeMilliseconds = elapsedMilliseconds;
+                return false;
+            }
+
+            return elapsedMilliseconds - _lastChangeMilliseconds >= _timeoutMilliseconds;
         }
     }
 

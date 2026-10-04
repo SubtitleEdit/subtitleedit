@@ -3701,6 +3701,7 @@ public class AudioVisualizer : Control
         var startIndex = FindFirstIndexAfterTime(_originalSubtitleCueMaxEnds, start, static maxEnd => maxEnd);
         var lastStart = -1d;
         var count = 0;
+        var sortedRunEnd = -1;
         var minSpacing = GetThinnedSpacingSeconds(end > start ? renderCtx.Width / (end - start) : 0);
 
         var i = startIndex;
@@ -3723,7 +3724,12 @@ public class AudioVisualizer : Control
             {
                 if (cue.StartSeconds - lastStart < minSpacing)
                 {
-                    i = FindFirstIndexAtOrAfterStart(_originalSubtitleCues, i + 1, lastStart + minSpacing, static c => c.StartSeconds);
+                    if (i >= sortedRunEnd)
+                    {
+                        sortedRunEnd = FindSortedRunEnd(_originalSubtitleCues, i, end, static c => c.StartSeconds);
+                    }
+
+                    i = FindFirstIndexAtOrAfterStart(_originalSubtitleCues, i + 1, sortedRunEnd, lastStart + minSpacing, static c => c.StartSeconds);
                     continue;
                 }
 
@@ -4369,6 +4375,7 @@ public class AudioVisualizer : Control
 
         var lastStartTime = -1d;
         var count = 0;
+        var sortedRunEnd = -1;
         var viewSeconds = EndPositionSeconds - StartPositionSeconds;
         var minSpacing = GetThinnedSpacingSeconds(viewSeconds > 0 ? Bounds.Width / viewSeconds : 0) * TimeCode.BaseUnit;
 
@@ -4400,7 +4407,12 @@ public class AudioVisualizer : Control
             {
                 if (pStart - lastStartTime < minSpacing)
                 {
-                    i = FindFirstIndexAtOrAfterStart(subtitle, i + 1, lastStartTime + minSpacing,
+                    if (i >= sortedRunEnd)
+                    {
+                        sortedRunEnd = FindSortedRunEnd(subtitle, i, endThreshold, static paragraph => paragraph.StartTime.TotalMilliseconds);
+                    }
+
+                    i = FindFirstIndexAtOrAfterStart(subtitle, i + 1, sortedRunEnd, lastStartTime + minSpacing,
                         static paragraph => paragraph.StartTime.TotalMilliseconds);
                     continue;
                 }
@@ -4452,11 +4464,39 @@ public class AudioVisualizer : Control
         return pixelsPerSecond > 0 ? Math.Max(minSpacingSeconds, minSpacingPixels / pixelsPerSecond) : minSpacingSeconds;
     }
 
-    /// <summary>First index at or after <paramref name="low"/> whose start is at or after <paramref name="time"/> (items sorted by start), or <c>items.Count</c>.</summary>
-    private protected static int FindFirstIndexAtOrAfterStart<T>(IReadOnlyList<T> items, int low, double time, Func<T, double> getStartTime)
+    /// <summary>
+    /// End (exclusive) of the run of items from <paramref name="from"/> that is sorted by start. The
+    /// list is not always sorted - ASSA files often have typesetting lines appended after the
+    /// dialogue - and a binary search across an unsorted stretch can jump past lines on screen.
+    /// The scan stops at the first start after <paramref name="stopAfter"/>, where the caller's
+    /// scan of the view stops too.
+    /// </summary>
+    private protected static int FindSortedRunEnd<T>(IReadOnlyList<T> items, int from, double stopAfter, Func<T, double> getStartTime)
     {
-        var high = items.Count - 1;
-        var result = items.Count;
+        var previous = getStartTime(items[from]);
+        for (var k = from + 1; k < items.Count; k++)
+        {
+            var start = getStartTime(items[k]);
+            if (start < previous || start > stopAfter)
+            {
+                return k;
+            }
+
+            previous = start;
+        }
+
+        return items.Count;
+    }
+
+    /// <summary>
+    /// First index in [<paramref name="low"/>, <paramref name="end"/>) whose start is at or after
+    /// <paramref name="time"/>, or <paramref name="end"/>. The range must be sorted by start - see
+    /// <see cref="FindSortedRunEnd{T}"/>.
+    /// </summary>
+    private protected static int FindFirstIndexAtOrAfterStart<T>(IReadOnlyList<T> items, int low, int end, double time, Func<T, double> getStartTime)
+    {
+        var high = end - 1;
+        var result = end;
 
         while (low <= high)
         {

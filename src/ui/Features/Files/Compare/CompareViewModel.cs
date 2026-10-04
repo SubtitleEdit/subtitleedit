@@ -56,6 +56,9 @@ public partial class CompareViewModel : ObservableObject
     public string LeftFileNameDisplay => GetFileName(LeftFileName);
     public string RightFileNameDisplay => GetFileName(RightFileName);
 
+    // Follows the current file: Browse or a drop on the left changes what "Load saved file" loads.
+    public string ReloadFromFileHint => string.Format(Se.Language.File.LoadXFromFile, System.IO.Path.GetFileName(LeftFileName));
+
     public bool HasPendingChanges => PendingChangeCount > 0;
 
     public string PendingChangesText => PendingChangeCount == 1
@@ -668,17 +671,15 @@ public partial class CompareViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Equal for the comparison: within the user's time tolerance (#15620), else <see cref="IsTimeEqual"/>.
+    /// Equal for the comparison: <see cref="IsTimeEqual"/>, or within the user's time tolerance (#15620).
+    /// The tolerance only ever widens the check - in HH:MM:SS:FF mode two times on the same frame
+    /// stay equal even when they are further apart than a small tolerance.
     /// Edits and sync points keep the exact check - a 3 ms change is still a change.
     /// </summary>
     private bool IsTimeSame(TimeSpan t1, TimeSpan t2)
     {
-        if (IgnoreTimeDifferenceMs > 0)
-        {
-            return Math.Abs(t1.TotalMilliseconds - t2.TotalMilliseconds) <= IgnoreTimeDifferenceMs + 0.1;
-        }
-
-        return IsTimeEqual(t1, t2);
+        return IsTimeEqual(t1, t2) ||
+               (IgnoreTimeDifferenceMs > 0 && Math.Abs(t1.TotalMilliseconds - t2.TotalMilliseconds) <= IgnoreTimeDifferenceMs + 0.1);
     }
 
     /// <summary>
@@ -688,7 +689,7 @@ public partial class CompareViewModel : ObservableObject
     /// </summary>
     private Func<TimeSpan, TimeSpan, bool> CreateAlignerTimeEquality()
     {
-        if (IgnoreTimeDifferenceMs > 0 || !Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+        if (!Configuration.Settings.General.UseTimeFormatHHMMSSFF)
         {
             return IsTimeSame;
         }
@@ -705,7 +706,9 @@ public partial class CompareViewModel : ObservableObject
             return s;
         }
 
-        return (t1, t2) => GetDisplayString(t1) == GetDisplayString(t2);
+        var toleranceMs = IgnoreTimeDifferenceMs;
+        return (t1, t2) => GetDisplayString(t1) == GetDisplayString(t2) ||
+                           (toleranceMs > 0 && Math.Abs(t1.TotalMilliseconds - t2.TotalMilliseconds) <= toleranceMs + 0.1);
     }
 
     private static bool IsTimeEqual(TimeSpan t1, TimeSpan t2)
@@ -825,8 +828,9 @@ public partial class CompareViewModel : ObservableObject
         return subtitle;
     }
 
+    /// <summary>"Load saved file": the current subtitle as saved on disk becomes the reference - or says why it can't.</summary>
     [RelayCommand]
-    private void ReloadRightFromFile()
+    private async Task ReloadRightFromFile()
     {
         var fileName = LeftFileName;
         if (string.IsNullOrEmpty(fileName))
@@ -834,25 +838,7 @@ public partial class CompareViewModel : ObservableObject
             return;
         }
 
-        var subtitle = Subtitle.Parse(fileName);
-        if (subtitle == null)
-        {
-            return;
-        }
-
-        ResetSyncPoints();
-
-        _rightLines.Clear();
-        foreach (var line in subtitle.Paragraphs)
-        {
-            _rightLines.Add(new SubtitleLineViewModel(line, subtitle.OriginalFormat));
-        }
-
-        RightFileName = fileName;
-        IsReloadFromFileVisible = false;
-
-        _languageDirty = true;
-        Dispatcher.UIThread.Post(CompareAndSelectFirst);
+        await LoadRightFileAsync(fileName);
     }
 
     /// <summary>Picks the row's current line as one half of a sync point; completes it when a reference line is waiting.</summary>
@@ -1600,6 +1586,7 @@ public partial class CompareViewModel : ObservableObject
     partial void OnLeftFileNameChanged(string value)
     {
         OnPropertyChanged(nameof(LeftFileNameDisplay));
+        OnPropertyChanged(nameof(ReloadFromFileHint));
     }
 
     partial void OnRightFileNameChanged(string value)

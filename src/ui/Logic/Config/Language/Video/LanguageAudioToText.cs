@@ -19,6 +19,7 @@ public class LanguageAudioToText
     public string DetectSpeakers { get; set; }
     public string DetectSpeakersHint { get; set; }
     public string DetectSpeakersNeedsNewerCrispAsr { get; set; }
+    public string XNeedsNewerCrispAsr { get; set; }
     public string Vad { get; set; }
     public string VadHint { get; set; }
     public string InputLanguage { get; set; }
@@ -99,6 +100,7 @@ public class LanguageAudioToText
         DetectSpeakers = "Detect speakers";
         DetectSpeakersHint = "Starts each line with the speaker, like \"(speaker 0)\", using NVIDIA's Sortformer diarization (up to 8 speakers). Works best with backends that split lines where the speaker changes, like Parakeet and Cohere.";
         DetectSpeakersNeedsNewerCrispAsr = "\"Detect speakers\" needs Crisp ASR v{0} or newer, but v{1} is installed.\n\nUpdate Crisp ASR (the gear button next to the engine) or turn off \"Detect speakers\".";
+        XNeedsNewerCrispAsr = "{0} needs Crisp ASR v{1} or newer, but v{2} is installed.\n\nDownload and install the update now?";
         Vad = "VAD";
         VadHint = "Voice activity detection: only the speech is transcribed, cut where the speaker pauses.\nAuto: Silero, and only for the engines that need it (Cohere, Mega, Index-Echo).\nSilero, FireRedVAD, WebRTC: always on, for every Crisp ASR engine. FireRedVAD is the most accurate.\nIndex-Echo always uses Silero. --vad, --vad-model or --chunk-seconds in the advanced settings take precedence.";
         InputLanguage = "Input language";

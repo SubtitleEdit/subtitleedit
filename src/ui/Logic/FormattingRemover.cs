@@ -10,9 +10,9 @@ namespace Nikse.SubtitleEdit.Logic;
 public static class FormattingRemover
 {
     /// <summary>
-    /// Removes HTML and ASSA tags. A \N between text stays a line break, but \N used as padding
-    /// (at the start/end or several in a row, e.g. to lift a subtitle) would only leave empty lines
-    /// behind, so empty lines are dropped (#15531).
+    /// Removes HTML and ASSA tags. \N used as padding at the start/end (e.g. from Surround with \N
+    /// to lift a subtitle) would only leave empty lines behind, so leading and trailing empty lines
+    /// are dropped (#15531). Empty lines between text are kept - they may be an intended gap.
     /// </summary>
     public static string RemoveAll(string text)
     {
@@ -23,11 +23,23 @@ public static class FormattingRemover
 
         var s = HtmlUtil.RemoveHtmlTags(text, true);
         var lines = s.SplitToLines();
-        if (!lines.Any(string.IsNullOrWhiteSpace))
+        var first = 0;
+        while (first < lines.Count && string.IsNullOrWhiteSpace(lines[first]))
+        {
+            first++;
+        }
+
+        var last = lines.Count - 1;
+        while (last >= first && string.IsNullOrWhiteSpace(lines[last]))
+        {
+            last--;
+        }
+
+        if (first == 0 && last == lines.Count - 1)
         {
             return s;
         }
 
-        return string.Join(Environment.NewLine, lines.Where(p => !string.IsNullOrWhiteSpace(p)));
+        return string.Join(Environment.NewLine, lines.Skip(first).Take(last - first + 1));
     }
 }

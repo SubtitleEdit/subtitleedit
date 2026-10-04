@@ -36,6 +36,13 @@ public class ExportImageBasedAssaCommentTests
                 StartTime = TimeSpan.FromSeconds(1),
                 EndTime = TimeSpan.FromSeconds(3),
             },
+            new SubtitleLineViewModel
+            {
+                Number = 2,
+                Text = "{TL note: a pun}",
+                StartTime = TimeSpan.FromSeconds(4),
+                EndTime = TimeSpan.FromSeconds(5),
+            },
         };
 
         vm.Initialize(new ExportHandlerBluRaySup(), subtitles, null, null, removeAssaCommentBlocks: removeAssaCommentBlocks);
@@ -46,6 +53,15 @@ public class ExportImageBasedAssaCommentTests
     public void Assa_CommentBlocksAreNotDrawn()
     {
         Assert.Equal("<i>Hello</i>", BuildViewModel(true).GetImageParameter(0).Text.Trim());
+    }
+
+    [AvaloniaFact]
+    public void Assa_CommentOnlyLinesAreNotExported()
+    {
+        var vm = BuildViewModel(true);
+
+        Assert.Single(vm.Subtitles);
+        Assert.Equal(2, BuildViewModel(false).Subtitles.Count);
     }
 
     [AvaloniaFact]

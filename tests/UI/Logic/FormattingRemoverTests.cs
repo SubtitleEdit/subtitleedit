@@ -19,11 +19,27 @@ public class FormattingRemoverTests
 
     [Theory]
     [InlineData("A\\NB")]
-    [InlineData("A\\N\\N\\NB")]
     [InlineData("<i>A</i>\nB")]
-    [InlineData("A\n\nB")]
     public void KeepsOneLineBreakBetweenText(string text)
     {
         Assert.Equal("A" + Environment.NewLine + "B", FormattingRemover.RemoveAll(text));
+    }
+
+    // An empty line between text may be an intended gap (e.g. between two dialogue lines), and
+    // text without any formatting must come back unchanged.
+    [Theory]
+    [InlineData("- Hi\\N\\N- Bye", "- Hi\n\n- Bye")]
+    [InlineData("A\\N\\N\\NB", "A\n\n\nB")]
+    [InlineData("\\N\\NA\\N\\NB\\N", "A\n\nB")]
+    public void KeepsEmptyLinesBetweenText(string text, string expected)
+    {
+        Assert.Equal(expected.Replace("\n", Environment.NewLine), FormattingRemover.RemoveAll(text));
+    }
+
+    [Fact]
+    public void UnformattedTextWithGapIsUnchanged()
+    {
+        var text = "A" + Environment.NewLine + Environment.NewLine + "B";
+        Assert.Same(text, FormattingRemover.RemoveAll(text));
     }
 }

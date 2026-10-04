@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Logic;
 
@@ -10,8 +11,22 @@ namespace Nikse.SubtitleEdit.Logic;
 /// Matches a key event against the user's main-window shortcut bindings, so a dialog can offer the
 /// same keys as the main window without going through the full ShortcutManager.
 /// </summary>
-public static class MainShortcutKeys
+public static partial class MainShortcutKeys
 {
+    private const KeyModifiers ControlAlt = KeyModifiers.Control | KeyModifiers.Alt;
+    private const int VkRightMenu = 0xA5; // physical right Alt
+
+    [LibraryImport("user32.dll")]
+    private static partial short GetKeyState(int keyCode);
+
+    /// <summary>
+    /// True while the physical right Alt (AltGr) is down. Windows reports AltGr as Ctrl+Alt, so
+    /// like ShortcutManager this tells the two apart by the physical key; AltGr is Windows-only.
+    /// Replaceable for tests.
+    /// </summary>
+    internal static Func<bool> IsAltGrHeld { get; set; } =
+        () => OperatingSystem.IsWindows() && GetKeyState(VkRightMenu) < 0;
+
     /// <summary>The Ctrl/Cmd token as it is stored in the settings shortcut key lists.</summary>
     public static string CtrlOrCmd => OperatingSystem.IsMacOS() ? "Win" : "Ctrl";
 
@@ -34,6 +49,7 @@ public static class MainShortcutKeys
     public static bool MatchesKeys(KeyEventArgs e, IReadOnlyList<string> keys)
     {
         var modifiers = KeyModifiers.None;
+        var wantsAltGr = false;
         Key? mainKey = null;
         foreach (var token in keys)
         {
@@ -44,6 +60,10 @@ public static class MainShortcutKeys
             else if (token is "Alt" or "LeftAlt" or "RightAlt")
             {
                 modifiers |= KeyModifiers.Alt;
+            }
+            else if (token == ShortcutManager.AltGrToken)
+            {
+                wantsAltGr = true;
             }
             else if (token is "Shift" or "LeftShift" or "RightShift")
             {
@@ -63,6 +83,24 @@ public static class MainShortcutKeys
             }
         }
 
-        return mainKey != null && mainKey == e.Key && e.KeyModifiers == modifiers;
+        if (mainKey == null || mainKey != e.Key)
+        {
+            return false;
+        }
+
+        // Windows AltGr arrives as Ctrl+Alt: it matches only an AltGr binding, never a Ctrl+Alt
+        // one, so the character AltGr types wins unless AltGr+key is bound (same as ShortcutManager).
+        var isAltGr = (e.KeyModifiers & ControlAlt) == ControlAlt && IsAltGrHeld();
+        if (wantsAltGr != isAltGr)
+        {
+            return false;
+        }
+
+        if (wantsAltGr)
+        {
+            modifiers |= ControlAlt;
+        }
+
+        return e.KeyModifiers == modifiers;
     }
 }

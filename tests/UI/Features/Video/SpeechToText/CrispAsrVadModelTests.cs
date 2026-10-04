@@ -57,4 +57,35 @@ public class CrispAsrVadModelTests
     {
         Assert.Equal("--vad --vad-model \"/a b/firered-vad.gguf\"", CrispAsrVadModel.BuildArguments("/a b/firered-vad.gguf"));
     }
+
+    [Fact]
+    public void FindMissingModel_FireRedAtItsDownloadPath()
+    {
+        var engine = new CrispAsrParakeet();
+        var fireRed = CrispAsrVadModel.Get(CrispAsrVadModel.FireRed);
+        var path = engine.GetModelForCmdLine(fireRed.FileName!);
+        var args = "-t 8 " + CrispAsrVadModel.BuildArguments(path);
+
+        var missing = CrispAsrVadModel.FindMissingModelInArguments(args, engine);
+
+        if (File.Exists(path))
+        {
+            Assert.Null(missing);
+        }
+        else
+        {
+            Assert.Same(fireRed, missing);
+        }
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("--vad")]
+    [InlineData("--vad --vad-model webrtc")]
+    [InlineData("--vad --vad-model \"/somewhere/else/firered-vad.gguf\"")]
+    [InlineData("--vad -vm /x/ggml-silero-v5.1.2.bin")]
+    public void FindMissingModel_IgnoresOtherVadArguments(string args)
+    {
+        Assert.Null(CrispAsrVadModel.FindMissingModelInArguments(args, new CrispAsrParakeet()));
+    }
 }

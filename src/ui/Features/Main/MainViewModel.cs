@@ -11869,7 +11869,13 @@ public partial class MainViewModel :
             }
 
             cts.Dispose();
-            ShowStatus(string.Empty);
+
+            // StopSpeakFromLine clears _speakFromLineCts at once, so a quick restart can already
+            // be reading while this run unwinds - leave its status alone.
+            if (_speakFromLineCts == null)
+            {
+                ShowStatus(string.Empty);
+            }
         }
     }
 
@@ -15959,6 +15965,18 @@ public partial class MainViewModel :
 
                 newStartMs = floorMs;
             }
+        }
+
+        // Nothing comes before 00:00:00 - not for the first line, which has no previous line to
+        // stop at, nor for any line with "Allow overlap" on.
+        if (newStartMs < 0)
+        {
+            if (s.StartTime.TotalMilliseconds <= 0)
+            {
+                return;
+            }
+
+            newStartMs = 0;
         }
 
         s.SetStartTimeOnly(TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newStartMs));
@@ -27385,11 +27403,16 @@ public partial class MainViewModel :
             return subtitle;
         }
 
-        // generateNewId false: bookmarks and marks are matched on the paragraph ids.
+        // The paragraph copies keep their ids: bookmarks and marks are matched on them. A line
+        // holding only a comment is dropped - the renderer shows nothing for it, so an export
+        // must not write an empty cue.
         var copy = new Subtitle(subtitle, false);
-        foreach (var p in copy.Paragraphs)
+        var paragraphs = AdvancedSubStationAlpha.RemoveCommentBlocks(subtitle.Paragraphs);
+        copy.Paragraphs.Clear();
+        copy.Paragraphs.AddRange(paragraphs);
+        if (paragraphs.Count != subtitle.Paragraphs.Count)
         {
-            p.Text = AdvancedSubStationAlpha.RemoveCommentBlocks(p.Text);
+            copy.Renumber();
         }
 
         return copy;
@@ -35826,6 +35849,25 @@ public partial class MainViewModel :
         }
     }
 
+    /// <summary>
+    /// The ASSA/SSA loaders turn \N into real line breaks, so for those formats every empty line is
+    /// a lift-up-the-screen \N and is not counted by the "too many lines" rule (#15531).
+    /// </summary>
+    private void UpdateSkipEmptyLinesInLineCount()
+    {
+        var skip = SelectedSubtitleFormat is AdvancedSubStationAlpha or SubStationAlpha;
+        if (SubtitleLineViewModel.SkipEmptyLinesInLineCount == skip)
+        {
+            return;
+        }
+
+        SubtitleLineViewModel.SkipEmptyLinesInLineCount = skip;
+        foreach (var row in Subtitles)
+        {
+            row.RefreshAfterSettingsChanged();
+        }
+    }
+
     internal void ComboBoxSubtitleFormatChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (!_changingFormatProgrammatically)
@@ -35842,6 +35884,7 @@ public partial class MainViewModel :
         IsFormatTeletext = SelectedSubtitleFormat is Ebu or DvbTeletext;
         UpdateTeletextLineLength();
         UpdateIgnoreAssaCommentBlocks();
+        UpdateSkipEmptyLinesInLineCount();
 
         UpdateTemporaryFrameMode();
 

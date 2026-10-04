@@ -1,4 +1,5 @@
 ﻿using Avalonia.Headless.XUnit;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -277,6 +278,77 @@ public class SubtitleLineViewModelHasErrorsTests
         finally
         {
             Se.Settings = originalSettings;
+        }
+    }
+
+    /// <summary>
+    /// The ASSA loader turns \N into real line breaks, so after save + reopen the lift-up lines are
+    /// real empty lines - with an ASSA/SSA file open they must not count either (#15531).
+    /// </summary>
+    [AvaloniaTheory]
+    [InlineData("\\N\\N\\NHello", 1)]                 // as typed
+    [InlineData("\n\n\nHello", 1)]                     // as loaded from the file
+    [InlineData("Line one\n\nLine two", 2)]
+    [InlineData("Line one\r\n{\\i1}\r\nLine two\\N\\N", 2)]
+    [InlineData("Line one\nLine two\nLine three", 3)]
+    public void TooManyLines_AssaFileOpen_IgnoresAllEmptyLines(string text, int expectedLineCount)
+    {
+        var originalSettings = Se.Settings;
+        var originalSkip = SubtitleLineViewModel.SkipEmptyLinesInLineCount;
+        try
+        {
+            Se.Settings = new Se();
+            var general = Se.Settings.General;
+            general.ColorDurationTooShort = false;
+            general.ColorDurationTooLong = false;
+            general.ColorTextTooLong = false;
+            general.ColorTextTooWide = false;
+            general.ColorTextTooManyLines = true;
+            general.ColorCharactersPerSecond = false;
+            general.ColorWordsPerMinute = false;
+            general.ColorTimeCodeOverlap = false;
+            general.ColorGapTooShort = false;
+            general.MaxNumberOfLines = 2;
+
+            SubtitleLineViewModel.SkipEmptyLinesInLineCount = true;
+            var line = Line(text, 1000, 5000);
+            Assert.Equal(expectedLineCount, line.GetLineCountForMaxLines());
+            Assert.Equal(expectedLineCount > 2, line.HasErrors(null, null));
+            Assert.Equal(expectedLineCount > 2, !string.IsNullOrEmpty(line.GetErrors(null, null)));
+        }
+        finally
+        {
+            SubtitleLineViewModel.SkipEmptyLinesInLineCount = originalSkip;
+            Se.Settings = originalSettings;
+        }
+    }
+
+    /// <summary>Round trip through the real ASSA writer/loader: the reopened line is still one line.</summary>
+    [AvaloniaFact]
+    public void TooManyLines_AssaSavedAndReopened_StillOneLine()
+    {
+        var originalSkip = SubtitleLineViewModel.SkipEmptyLinesInLineCount;
+        try
+        {
+            var format = new Nikse.SubtitleEdit.Core.SubtitleFormats.AdvancedSubStationAlpha();
+            var subtitle = new Nikse.SubtitleEdit.Core.Common.Subtitle();
+            subtitle.Paragraphs.Add(new Nikse.SubtitleEdit.Core.Common.Paragraph("\\N\\N\\NHello", 1000, 3000));
+            var raw = format.ToText(subtitle, "test");
+
+            var reopened = new Nikse.SubtitleEdit.Core.Common.Subtitle();
+            format.LoadSubtitle(reopened, new List<string>(raw.SplitToLines()), "test.ass");
+            var loadedText = reopened.Paragraphs[0].Text;
+            Assert.DoesNotContain("\\N", loadedText); // the loader really did convert them
+
+            var line = new SubtitleLineViewModel(reopened.Paragraphs[0], format);
+            SubtitleLineViewModel.SkipEmptyLinesInLineCount = false;
+            Assert.Equal(4, line.GetLineCountForMaxLines()); // non-ASSA rule: real empty lines count
+            SubtitleLineViewModel.SkipEmptyLinesInLineCount = true;
+            Assert.Equal(1, line.GetLineCountForMaxLines());
+        }
+        finally
+        {
+            SubtitleLineViewModel.SkipEmptyLinesInLineCount = originalSkip;
         }
     }
 }

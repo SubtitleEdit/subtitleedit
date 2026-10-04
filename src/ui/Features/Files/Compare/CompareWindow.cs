@@ -275,7 +275,11 @@ public class CompareWindow : Window
         var buttonRightReload = UiUtil.MakeButton(Se.Language.File.CompareLoadSavedFile, vm.ReloadRightFromFileCommand)
             .WithIconLeft(IconNames.Refresh)
             .WithBindIsVisible(nameof(vm.IsReloadFromFileVisible));
-        AddHint(buttonRightReload, string.Format(Se.Language.File.LoadXFromFile, System.IO.Path.GetFileName(vm.LeftFileName)));
+        AddHint(buttonRightReload, vm.ReloadFromFileHint);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            buttonRightReload[!ToolTip.TipProperty] = new Binding(nameof(vm.ReloadFromFileHint));
+        }
         var buttonRightBrowse = UiUtil.MakeButtonBrowse(vm.PickRightSubtitleFileCommand, accessibleName: Se.Language.General.OpenSubtitleFileTitle);
 
         var right = MakeHeaderCard(

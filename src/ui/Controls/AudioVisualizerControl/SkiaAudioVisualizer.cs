@@ -285,6 +285,7 @@ public class SkiaAudioVisualizer : AudioVisualizer
         var startIndex = FindFirstIndexAfterTime(OriginalSubtitleCueMaxEnds, f.StartSeconds, static maxEnd => maxEnd);
         var lastStart = -1d;
         var count = 0;
+        var sortedRunEnd = -1;
         var minSpacing = GetThinnedSpacingSeconds(f.PixelsPerSecond);
         var i = startIndex;
         while (i < cues.Count)
@@ -306,7 +307,12 @@ public class SkiaAudioVisualizer : AudioVisualizer
             {
                 if (cue.StartSeconds - lastStart < minSpacing)
                 {
-                    i = FindFirstIndexAtOrAfterStart(cues, i + 1, lastStart + minSpacing, static c => c.StartSeconds);
+                    if (i >= sortedRunEnd)
+                    {
+                        sortedRunEnd = FindSortedRunEnd(cues, i, f.EndSeconds, static c => c.StartSeconds);
+                    }
+
+                    i = FindFirstIndexAtOrAfterStart(cues, i + 1, sortedRunEnd, lastStart + minSpacing, static c => c.StartSeconds);
                     continue;
                 }
 

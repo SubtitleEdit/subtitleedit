@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 
@@ -122,6 +123,42 @@ public static class CrispAsrVadModel
 
         var fallback = Path.Combine(crispAsrFolder, "ggml-silero-vad.bin");
         return File.Exists(fallback) ? fallback : null;
+    }
+
+    private static readonly Regex VadModelArgumentRegex = new(
+        @"(?:^|\s)(?:--vad-model|-vm)\s+(?:""(?<path>[^""]+)""|(?<path>\S+))",
+        RegexOptions.Compiled);
+
+    /// <summary>
+    /// The downloadable VAD whose model file the advanced parameters name at its download
+    /// location while it is not there yet - the advanced "VAD" button writes that path before
+    /// the model is downloaded. Null when the parameters name no such missing file.
+    /// </summary>
+    public static CrispAsrVadOption? FindMissingModelInArguments(string? crispArgs, ISpeechToTextEngine engine)
+    {
+        var match = VadModelArgumentRegex.Match(crispArgs ?? string.Empty);
+        if (!match.Success)
+        {
+            return null;
+        }
+
+        var path = match.Groups["path"].Value;
+        foreach (var option in Options)
+        {
+            if (option.FileName == null ||
+                !string.Equals(Path.GetFileName(path), option.FileName, StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            var expectedPath = engine.GetModelForCmdLine(option.FileName);
+            return string.Equals(Path.GetFullPath(path), Path.GetFullPath(expectedPath), StringComparison.OrdinalIgnoreCase) &&
+                   !File.Exists(expectedPath)
+                ? option
+                : null;
+        }
+
+        return null;
     }
 
     public static string BuildArguments(string modelPath)

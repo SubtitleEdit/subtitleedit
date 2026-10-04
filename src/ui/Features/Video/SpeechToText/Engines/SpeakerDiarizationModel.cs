@@ -34,24 +34,7 @@ public static class SpeakerDiarizationModel
     /// </summary>
     public static bool IsSupportedBy(string? crispAsrVersion)
     {
-        if (string.IsNullOrWhiteSpace(crispAsrVersion))
-        {
-            return true;
-        }
-
-        var numeric = crispAsrVersion.Trim().TrimStart('v', 'V');
-        var end = 0;
-        while (end < numeric.Length && (char.IsDigit(numeric[end]) || numeric[end] == '.'))
-        {
-            end++;
-        }
-
-        if (!Version.TryParse(numeric[..end].TrimEnd('.'), out var version))
-        {
-            return true;
-        }
-
-        return version >= MinimumCrispAsrVersion;
+        return CrispAsrVersion.IsAtLeast(crispAsrVersion, MinimumCrispAsrVersion);
     }
 
     public static WhisperModel ToWhisperModel() => new()

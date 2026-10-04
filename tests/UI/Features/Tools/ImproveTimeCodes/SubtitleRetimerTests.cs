@@ -414,6 +414,32 @@ public class SubtitleRetimerTests : IDisposable
     }
 
     [Fact]
+    public void Tidy_MaximumDuration_DoesNotCutOffTheHeardLastWord()
+    {
+        var lines = new List<SubtitleRetimer.Line> { new("Short", 10, 13), new("Next", 16, 17) };
+        var results = new[]
+        {
+            new SubtitleRetimer.LineResult(10.1, 12.5, SubtitleRetimer.LineStatus.Retimed) { HeardEndSeconds = 13.6 },
+            new SubtitleRetimer.LineResult(16, 17, SubtitleRetimer.LineStatus.Unchanged),
+        };
+
+        SubtitleRetimer.Tidy(lines, results, new SubtitleRetimer.Options { MaxDurationSeconds = 3 }, 0);
+
+        Assert.Equal(13.6, results[0].EndSeconds, 3);
+    }
+
+    [Fact]
+    public void Tidy_MaximumDuration_DoesNotCutOffTheAlignedSpeech()
+    {
+        var lines = new List<SubtitleRetimer.Line> { new("Short", 10, 12) };
+        var results = new[] { new SubtitleRetimer.LineResult(10.1, 13.6, SubtitleRetimer.LineStatus.Retimed) };
+
+        SubtitleRetimer.Tidy(lines, results, new SubtitleRetimer.Options { MaxDurationSeconds = 3 }, 0);
+
+        Assert.Equal(13.6, results[0].EndSeconds, 3);
+    }
+
+    [Fact]
     public void Settle_AnAppliedLine_GivesWayToALineThatStaysPut()
     {
         var original = new List<SubtitleRetimer.Line> { new("a", 10, 12), new("b", 12.5, 14), new("c", 14.5, 16) };
@@ -455,6 +481,39 @@ public class SubtitleRetimerTests : IDisposable
 
         Assert.Equal(12.6, placements[0].EndSeconds, 3);
         Assert.Equal(12.5, placements[1].StartSeconds, 3);
+    }
+
+    [Fact]
+    public void Settle_ALinePlacedByHandRightAfterTheStartOfTheLineBefore_DoesNotSquashIt()
+    {
+        var original = new List<SubtitleRetimer.Line> { new("a", 10, 12), new("b", 12.5, 14) };
+        var placements = new[]
+        {
+            new SubtitleRetimer.Placement(10, 12, true),
+            new SubtitleRetimer.Placement(10.05, 11.5, false), // dragged by hand into a
+        };
+
+        SubtitleRetimer.Settle(original, placements, 0.024);
+
+        Assert.Equal(10.0, placements[0].StartSeconds, 3);
+        Assert.Equal(12.0, placements[0].EndSeconds, 3);
+        Assert.Equal(10.05, placements[1].StartSeconds, 3);
+    }
+
+    [Fact]
+    public void Settle_ALinePlacedByHand_StillCutsTheLineBeforeWhenThereIsRoom()
+    {
+        var original = new List<SubtitleRetimer.Line> { new("a", 10, 12), new("b", 12.5, 14) };
+        var placements = new[]
+        {
+            new SubtitleRetimer.Placement(10, 12, true),
+            new SubtitleRetimer.Placement(11, 13, false),
+        };
+
+        SubtitleRetimer.Settle(original, placements, 0.1);
+
+        Assert.Equal(10.9, placements[0].EndSeconds, 3);
+        Assert.Equal(11.0, placements[1].StartSeconds, 3);
     }
 
     [Fact]

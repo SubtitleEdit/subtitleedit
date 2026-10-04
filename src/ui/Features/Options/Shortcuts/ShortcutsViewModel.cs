@@ -149,10 +149,22 @@ public partial class ShortcutsViewModel : ObservableObject
         UpdateVisibleShortcuts(SearchText);
     }
 
+    /// <summary>
+    /// AltGr is only offered on Windows (the checkbox is hidden elsewhere), so a stored AltGr
+    /// token is dropped when the shortcut is edited on another OS. Settable for tests.
+    /// </summary>
+    internal bool IsAltGrSupported { get; set; } = OperatingSystem.IsWindows();
+
     partial void OnCtrlIsSelectedChanged(bool value)
     {
         if (!_isLoadingSelection)
         {
+            // Windows reports AltGr as Ctrl+Alt, so Ctrl+AltGr can never fire - keep them exclusive.
+            if (value)
+            {
+                AltGrIsSelected = false;
+            }
+
             UpdateShortcutDo();
         }
     }
@@ -161,6 +173,11 @@ public partial class ShortcutsViewModel : ObservableObject
     {
         if (!_isLoadingSelection)
         {
+            if (value)
+            {
+                AltGrIsSelected = false;
+            }
+
             UpdateShortcutDo();
         }
     }
@@ -177,6 +194,12 @@ public partial class ShortcutsViewModel : ObservableObject
     {
         if (!_isLoadingSelection)
         {
+            if (value)
+            {
+                CtrlIsSelected = false;
+                AltIsSelected = false;
+            }
+
             UpdateShortcutDo();
         }
     }
@@ -1386,18 +1409,20 @@ public partial class ShortcutsViewModel : ObservableObject
         }
 
         var keys = new List<string>();
+        var altGr = AltGrIsSelected && IsAltGrSupported;
 
-        if (CtrlIsSelected)
+        // AltGr arrives as Ctrl+Alt, so a stored Ctrl/Alt next to AltGr could never match.
+        if (CtrlIsSelected && !altGr)
         {
             keys.Add("Ctrl");
         }
 
-        if (AltIsSelected)
+        if (AltIsSelected && !altGr)
         {
             keys.Add("Alt");
         }
 
-        if (AltGrIsSelected)
+        if (altGr)
         {
             keys.Add(ShortcutManager.AltGrToken);
         }

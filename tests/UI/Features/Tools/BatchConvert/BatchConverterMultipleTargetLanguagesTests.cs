@@ -127,6 +127,93 @@ Hello world.
     }
 
     [Fact]
+    public async Task OneTargetSaveFails_StatusNamesTheFailure_NotConverted()
+    {
+        await Run(Se.Language.General.TwoLetterLanguageCode, async (dir, converter) =>
+        {
+            // A folder where the Danish file should go makes that save fail - the save methods
+            // catch it themselves, and the Swedish pass after it used to set "Converted".
+            Directory.CreateDirectory(Path.Combine(dir.FullName, "movie.da.srt"));
+            converter.Initialize(MakeConfig(new TaggingTranslator(), "da", "sv"));
+
+            var item = await ConvertFile(converter, dir);
+
+            Assert.Equal("[sv] Hello world.", ReadText(dir, "movie.sv.srt"));
+            Assert.NotEqual(Se.Language.General.Converted, item.Status);
+            Assert.True(BatchConverter.TryGetErrorStatusMessage(item.Status, out var message));
+            Assert.StartsWith("da: ", message);
+        });
+    }
+
+    [Fact]
+    public void TryGetErrorStatusMessage_OnlyMatchesErrorStatus()
+    {
+        Assert.True(BatchConverter.TryGetErrorStatusMessage(string.Format(Se.Language.General.ErrorX, "disk full"), out var message));
+        Assert.Equal("disk full", message);
+        Assert.False(BatchConverter.TryGetErrorStatusMessage(Se.Language.General.Converted, out _));
+        Assert.False(BatchConverter.TryGetErrorStatusMessage(null, out _));
+    }
+
+    [Fact]
+    public async Task RegionalVariantsOfOneLanguage_GetFullCodes()
+    {
+        await Run(Se.Language.General.TwoLetterLanguageCode, async (dir, converter) =>
+        {
+            // Both used to map to ".zh" - "movie.zh.srt" and "movie_2.zh.srt".
+            converter.Initialize(MakeConfig(new TaggingTranslator(), "zh-CN", "zh-TW", "de"));
+
+            await ConvertFile(converter, dir);
+
+            Assert.Equal("[zh-CN] Hello world.", ReadText(dir, "movie.zh-CN.srt"));
+            Assert.Equal("[zh-TW] Hello world.", ReadText(dir, "movie.zh-TW.srt"));
+            Assert.Equal("[de] Hello world.", ReadText(dir, "movie.de.srt"));
+            Assert.False(File.Exists(Path.Combine(dir.FullName, "movie_2.zh.srt")));
+        });
+    }
+
+    [Fact]
+    public async Task SingleRegionalTarget_KeepsShortCode()
+    {
+        await Run(Se.Language.General.TwoLetterLanguageCode, async (dir, converter) =>
+        {
+            converter.Initialize(MakeConfig(new TaggingTranslator(), "pt-BR"));
+
+            await ConvertFile(converter, dir);
+
+            Assert.Equal("[pt-BR] Hello world.", ReadText(dir, "movie.pt.srt"));
+        });
+    }
+
+    [Theory]
+    [InlineData(".{three-letter-country-code}", "movie.deu.srt", "movie.fra.srt")]
+    [InlineData(".forced", "movie.forced.de.srt", "movie.forced.fr.srt")]
+    public async Task TransportStreamTrackTemplate_UsesTargetLanguage(string template, string expectedDe, string expectedFr)
+    {
+        await Run(Se.Language.General.TwoLetterLanguageCode, async (dir, converter) =>
+        {
+            // A track named by the file name ending template ("movie.eng") used to keep the
+            // source token and skip the post fix: "movie.eng.srt", "movie.eng_2.srt".
+            converter.Initialize(MakeConfig(new TaggingTranslator(), "de", "fr"));
+            var inputFile = Path.Combine(dir.FullName, "movie.srt");
+            await File.WriteAllTextAsync(inputFile, InputSrt, TestContext.Current.CancellationToken);
+            var item = new BatchConvertItem(inputFile, new FileInfo(inputFile).Length, new SubRip().Name, Subtitle.Parse(inputFile))
+            {
+                LanguageCode = "eng",
+                OutputFileName = "movie" + TransportStreamFileNameEnding.Format(template, "eng", 0) + ".ts",
+                OutputFileNameIncludesLanguage = true,
+                OutputFileNameEndingTemplate = template,
+                OutputFileNameTrackId = 0,
+            };
+
+            await converter.Convert(item, TestContext.Current.CancellationToken);
+
+            Assert.Equal("[de] Hello world.", ReadText(dir, expectedDe));
+            Assert.Equal("[fr] Hello world.", ReadText(dir, expectedFr));
+            Assert.Empty(Directory.GetFiles(dir.FullName, "*_2*"));
+        });
+    }
+
+    [Fact]
     public async Task AllTargetsFail_Throws()
     {
         await Run(Se.Language.General.TwoLetterLanguageCode, async (dir, converter) =>
