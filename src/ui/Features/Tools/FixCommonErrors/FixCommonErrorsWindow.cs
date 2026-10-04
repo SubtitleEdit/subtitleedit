@@ -530,7 +530,7 @@ public class FixCommonErrorsWindow : Window
         // Extended selection is native ListBox behavior on TableView; Space toggling every
         // selected row's checkbox is the piece the old DataGridCheckboxMultiSelect provided.
         TableViewExtras.AddSpaceToggle<FixDisplayItem>(dataGridFixes,
-            item => item.IsSelected, (item, v) => item.IsSelected = v);
+            item => item.IsSelected, _vm.SetFixesSelected);
         // Keep the subtitle preview following the focused fix (the old helper's
         // onFocusedItemChanged callback).
         dataGridFixes.SelectionChanged += (_, _) =>

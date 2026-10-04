@@ -246,9 +246,22 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             }
         }
 
-        public MP4Parser(string fileName)
+        private readonly bool _readClosedCaptions;
+
+        public MP4Parser(string fileName) : this(fileName, true)
+        {
+        }
+
+        /// <param name="fileName">MP4/MOV file</param>
+        /// <param name="readClosedCaptions">
+        /// False skips finding CEA-608/708 in the video samples (<see cref="ClosedCaptionTracks"/>,
+        /// <see cref="TrunCea608Subtitle"/>, <see cref="TrunCea708Subtitle"/> stay empty) - that reads
+        /// every video sample, seconds on a multi-GB movie, which chapters or video info never need.
+        /// </param>
+        public MP4Parser(string fileName, bool readClosedCaptions)
         {
             FileName = fileName;
+            _readClosedCaptions = readClosedCaptions;
             using (var fs = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 ParseMp4(fs);
@@ -294,7 +307,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                 {
                     Moof = new Moof(fs, Position);
                     ApplyTrexDefaults();
-                    ReadFragmentedCcSamples(fs);
+                    if (_readClosedCaptions)
+                    {
+                        ReadFragmentedCcSamples(fs);
+                    }
                 }
                 else if (Name == "mdat" && Moof != null)
                 {
@@ -364,7 +380,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             // Finding CEA-608/708 in a progressive file reads every video sample - seconds on a
             // multi-GB movie - and callers only offer the captions when there is no subtitle
             // track, so skip the scan when there is one.
-            if (GetSubtitleTracks().Count == 0)
+            if (_readClosedCaptions && GetSubtitleTracks().Count == 0)
             {
                 CheckForMoovVideoCea608();
             }

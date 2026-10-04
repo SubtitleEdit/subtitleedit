@@ -547,7 +547,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 var header = new byte[HeaderSize];
                 header[0] = 0x50; // P
                 header[1] = 0x47; // G
-                var pending = new List<byte>();
+                // bytes of segments not yet emitted - copied in bulk (a List<byte> indexed per byte
+                // made the rewrap ~10x slower than parsing the resulting .sup)
+                var pending = new byte[4096];
+                var pendingCount = 0;
                 long pendingPts = 0;
                 long lastBlockEndPts = 0;
                 foreach (var block in blocks)
@@ -558,21 +561,27 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                         continue;
                     }
 
-                    if (pending.Count == 0)
+                    if (pendingCount == 0)
                     {
                         pendingPts = block.Start * 90;
                     }
 
                     lastBlockEndPts = Math.Max(lastBlockEndPts, block.End * 90);
-                    pending.AddRange(data);
+                    if (pendingCount + data.Length > pending.Length)
+                    {
+                        Array.Resize(ref pending, Math.Max(pending.Length * 2, pendingCount + data.Length));
+                    }
+
+                    Buffer.BlockCopy(data, 0, pending, pendingCount, data.Length);
+                    pendingCount += data.Length;
 
                     // Emit every complete segment; a segment split across blocks keeps the
                     // time code of the block it started in.
                     var position = 0;
-                    while (position + 3 <= pending.Count)
+                    while (position + 3 <= pendingCount)
                     {
                         var size = (pending[position + 1] << 8) | pending[position + 2];
-                        if (position + 3 + size > pending.Count)
+                        if (position + 3 + size > pendingCount)
                         {
                             break;
                         }
@@ -586,16 +595,13 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                         header[11] = pending[position + 1];
                         header[12] = pending[position + 2];
                         supStream.Write(header, 0, header.Length);
-                        for (var i = position + 3; i < position + 3 + size; i++)
-                        {
-                            supStream.WriteByte(pending[i]);
-                        }
-
+                        supStream.Write(pending, position + 3, size);
                         position += 3 + size;
                     }
 
-                    pending.RemoveRange(0, position);
-                    if (pending.Count > 0)
+                    pendingCount -= position;
+                    Buffer.BlockCopy(pending, position, pending, 0, pendingCount);
+                    if (pendingCount > 0)
                     {
                         pendingPts = block.Start * 90;
                     }

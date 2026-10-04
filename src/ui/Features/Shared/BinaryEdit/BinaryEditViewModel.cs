@@ -924,7 +924,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return null;
         }
 
-        var mp4Parser = new MP4Parser(fileName);
+        var mp4Parser = new MP4Parser(fileName, readClosedCaptions: false);
         var vobSubTracks = mp4Parser.GetSubtitleTracks().Where(t => t.Mdia.IsVobSubSubtitle).ToList();
         if (vobSubTracks.Count == 0)
         {

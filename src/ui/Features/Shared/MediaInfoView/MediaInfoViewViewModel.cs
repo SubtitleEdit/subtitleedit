@@ -140,7 +140,7 @@ public partial class MediaInfoViewViewModel : ObservableObject
         }
         else
         {
-            var mp4Parser = new MP4Parser(videoFileName);
+            var mp4Parser = new MP4Parser(videoFileName, readClosedCaptions: false);
             if (mp4Parser.Duration.TotalMilliseconds > 0)
             {
                 sb.AppendLine($"Container: MP4");
