@@ -70,6 +70,7 @@ public class LanguageFile
     public string CompareSyncAlreadyPairedXY { get; set; }
     public string CompareSyncPointShiftedXYZW { get; set; }
     public string CompareChangeSyncShiftXYZ { get; set; }
+    public string CompareTimingDeltaHint { get; set; }
     public string LoadXFromFile { get; set; }
     public string SaveCompareHtmlTitle { get; set; }
     public string PickMatroskaTrackX { get; set; }
@@ -150,6 +151,7 @@ public class LanguageFile
         CompareSyncAlreadyPairedXY = "Current #{0} and reference #{1} are already shown as a pair with the same start - nothing to sync";
         CompareSyncPointShiftedXYZW = "Sync point set: current #{0}-#{1} shifted {2} to start with reference #{3}";
         CompareChangeSyncShiftXYZ = "#{0}-#{1} shifted {2} (sync point)";
+        CompareTimingDeltaHint = "How much later (+) or earlier (−) the reference starts and ends than the current line";
         IgnoreWhitespace = "Ignore whitespace";
         IgnoreWhitespaceHint = "Lines that differ only in spaces, tabs or line breaks do not count as different";
         IgnoreFormatting = "Ignore formatting";
