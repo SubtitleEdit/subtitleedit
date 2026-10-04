@@ -66,6 +66,7 @@ public static class Se4ShortcutsImporter
         ["MainFileSave"] = nameof(MainViewModel.CommandFileSaveCommand),
         ["MainFileSaveAll"] = nameof(MainViewModel.CommandFileSaveCommand),
         ["MainFileSaveAs"] = nameof(MainViewModel.CommandFileSaveAsCommand),
+        ["MainFileSaveOriginal"] = nameof(MainViewModel.CommandFileSaveOriginalCommand),
         ["MainFileOpenOriginal"] = nameof(MainViewModel.FileOpenOriginalCommand),
         ["MainFileCloseOriginal"] = nameof(MainViewModel.FileCloseOriginalCommand),
         ["MainFileCloseTranslation"] = nameof(MainViewModel.FileCloseTranslationCommand),

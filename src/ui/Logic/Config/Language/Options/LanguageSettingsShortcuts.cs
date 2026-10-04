@@ -64,6 +64,7 @@ public class LanguageSettingsShortcuts
     public string FileOpenKeepVideo { get; set; }
     public string FileSave { get; set; }
     public string FileSaveAs { get; set; }
+    public string FileSaveOriginal { get; set; }
     public string FileCompare { get; set; }
     public string FileStatistics { get; set; }
     public string FileImportPlainText { get; set; }
@@ -401,6 +402,7 @@ public class LanguageSettingsShortcuts
         FileOpenKeepVideo = "Open (keep video)";
         FileSave = "Save";
         FileSaveAs = "Save as";
+        FileSaveOriginal = "Save original";
         FileStatistics = "Statistics";
         FileCompare = "Compare";
         FileImportPlainText = "Import plain text";
