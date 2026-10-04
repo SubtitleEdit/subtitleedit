@@ -64,6 +64,20 @@ public class CompareUnreadableFileTests : IDisposable
         Assert.True(vm.IsLeftEditable);
     }
 
+    [AvaloniaFact]
+    public void LoadSavedFile_ThatCantBeRead_ShowsAnError_AndKeepsTheReference()
+    {
+        var (vm, window) = Show(leftFileName: _unreadableFile);
+        Assert.True(vm.IsReloadFromFileVisible);
+
+        _ = vm.ReloadRightFromFileCommand.ExecuteAsync(null);
+        Settle();
+
+        AssertErrorShown(window);
+        Assert.Equal("right.srt", vm.RightFileName);
+        Assert.Equal("Two", vm.Rows.Single().Right.Line!.Text);
+    }
+
     private void AssertErrorShown(Window window)
     {
         var messageBox = Assert.Single(window.OwnedWindows.OfType<MessageBox>());
@@ -72,12 +86,12 @@ public class CompareUnreadableFileTests : IDisposable
         messageBox.Close();
     }
 
-    private (CompareViewModel vm, Window window) Show()
+    private (CompareViewModel vm, Window window) Show(string leftFileName = "left.srt")
     {
         var vm = new CompareViewModel(new FileHelper(), new FolderHelper());
         var left = new ObservableCollection<SubtitleLineViewModel> { new(new Paragraph("One", 0, 1500), null!) { Number = 1 } };
         var right = new ObservableCollection<SubtitleLineViewModel> { new(new Paragraph("Two", 0, 1500), null!) { Number = 1 } };
-        vm.Initialize(left, "left.srt", right, "right.srt", false);
+        vm.Initialize(left, leftFileName, right, "right.srt", false);
 
         var window = new CompareWindow(vm);
         _window = window;

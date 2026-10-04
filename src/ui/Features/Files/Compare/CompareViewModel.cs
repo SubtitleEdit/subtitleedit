@@ -825,8 +825,9 @@ public partial class CompareViewModel : ObservableObject
         return subtitle;
     }
 
+    /// <summary>"Load saved file": the current subtitle as saved on disk becomes the reference - or says why it can't.</summary>
     [RelayCommand]
-    private void ReloadRightFromFile()
+    private async Task ReloadRightFromFile()
     {
         var fileName = LeftFileName;
         if (string.IsNullOrEmpty(fileName))
@@ -834,25 +835,7 @@ public partial class CompareViewModel : ObservableObject
             return;
         }
 
-        var subtitle = Subtitle.Parse(fileName);
-        if (subtitle == null)
-        {
-            return;
-        }
-
-        ResetSyncPoints();
-
-        _rightLines.Clear();
-        foreach (var line in subtitle.Paragraphs)
-        {
-            _rightLines.Add(new SubtitleLineViewModel(line, subtitle.OriginalFormat));
-        }
-
-        RightFileName = fileName;
-        IsReloadFromFileVisible = false;
-
-        _languageDirty = true;
-        Dispatcher.UIThread.Post(CompareAndSelectFirst);
+        await LoadRightFileAsync(fileName);
     }
 
     /// <summary>Picks the row's current line as one half of a sync point; completes it when a reference line is waiting.</summary>
