@@ -66,6 +66,9 @@ public class PluginRequest
 
     public string SeVersion { get; set; } = string.Empty;
 
+    /// <summary>Read-only snapshot of the user's subtitle rules (durations, gaps, line length, EBU options).</summary>
+    public PluginRules? Rules { get; set; }
+
     /// <summary>The plugin's own settings as last persisted by Subtitle Edit (null on first run).</summary>
     public JsonElement? Settings { get; set; }
 

@@ -15,6 +15,8 @@ namespace Nikse.SubtitleEdit.Logic.Plugins;
 [JsonSerializable(typeof(PluginManifest))]
 [JsonSerializable(typeof(PluginRequest))]
 [JsonSerializable(typeof(PluginResponse))]
+[JsonSerializable(typeof(PluginParagraph))]
+[JsonSerializable(typeof(PluginRules))]
 [JsonSerializable(typeof(PluginIndex))]
 [JsonSerializable(typeof(Dictionary<string, string>))]
 internal partial class PluginJsonContext : JsonSerializerContext
