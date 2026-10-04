@@ -8783,7 +8783,7 @@ public partial class MainViewModel :
 
         SavePluginSettings(plugin, response);
 
-        if (response.Subtitle == null || string.IsNullOrWhiteSpace(response.Subtitle.Native))
+        if (!HasPluginSubtitle(response.Subtitle))
         {
             if (!string.IsNullOrWhiteSpace(response.Message))
             {
@@ -8870,8 +8870,12 @@ public partial class MainViewModel :
             {
                 Format = format.Name,
                 FileName = _subtitleFileName ?? string.Empty,
-                Native = subtitle.ToText(format),
+                // A binary format (EBU STL, PAC, ...) has no text form - Ebu.ToText returns
+                // "Not supported!" - so plugins get its header and paragraphs only.
+                Native = format.IsTextBased ? subtitle.ToText(format) : string.Empty,
                 SubRip = subtitle.ToText(new Nikse.SubtitleEdit.Core.SubtitleFormats.SubRip()),
+                Header = subtitle.Header,
+                Paragraphs = subtitle.Paragraphs.Select(ToPluginParagraph).ToList(),
             },
             SubtitleEncoding = SelectedEncoding?.DisplayName ?? string.Empty,
             SelectedIndices = selectedIndices,
@@ -8885,6 +8889,7 @@ public partial class MainViewModel :
             Theme = UiTheme.ThemeName,
             ThemeColors = PluginThemeColorsFactory.Build(),
             SeVersion = Se.Version,
+            Rules = BuildPluginRules(),
             Settings = settings,
             SettingsVersion = settingsVersion,
         };
@@ -8914,17 +8919,101 @@ public partial class MainViewModel :
         return path;
     }
 
+    private static PluginRules BuildPluginRules()
+    {
+        var general = Se.Settings.General;
+        return new PluginRules
+        {
+            SubtitleMinimumDisplayMilliseconds = general.SubtitleMinimumDisplayMilliseconds,
+            SubtitleMaximumDisplayMilliseconds = general.SubtitleMaximumDisplayMilliseconds,
+            SubtitleMaximumCharactersPerSeconds = general.SubtitleMaximumCharactersPerSeconds,
+            SubtitleOptimalCharactersPerSeconds = general.SubtitleOptimalCharactersPerSeconds,
+            SubtitleLineMaximumLength = general.SubtitleLineMaximumLength,
+            MaxNumberOfLines = general.MaxNumberOfLines,
+            MinimumMillisecondsBetweenLines = general.MinimumBetweenLines.GetMilliseconds(),
+            MinimumFramesBetweenLines = general.MinimumBetweenLines.Frames,
+            UseFrameMode = general.UseFrameMode,
+            EbuStlTeletextUseBox = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox,
+            EbuStlTeletextUseDoubleHeight = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight,
+            VideoOffsetMs = general.CurrentVideoOffsetInMs,
+        };
+    }
+
+    private static PluginParagraph ToPluginParagraph(Paragraph p)
+    {
+        return new PluginParagraph
+        {
+            StartMs = p.StartTime.TotalMilliseconds,
+            EndMs = p.EndTime.TotalMilliseconds,
+            Text = p.Text ?? string.Empty,
+            Style = p.Style,
+            Actor = p.Actor,
+            Language = p.Language,
+            Region = p.Region,
+            Effect = p.Effect,
+            Extra = p.Extra,
+            MarginL = p.MarginL,
+            MarginR = p.MarginR,
+            MarginV = p.MarginV,
+            Layer = p.Layer,
+            IsComment = p.IsComment,
+            Forced = p.Forced,
+            NewSection = p.NewSection,
+            Bookmark = p.Bookmark,
+        };
+    }
+
+    private static Paragraph FromPluginParagraph(PluginParagraph p)
+    {
+        return new Paragraph(new TimeCode(p.StartMs), new TimeCode(p.EndMs), p.Text ?? string.Empty)
+        {
+            Style = p.Style,
+            Actor = p.Actor,
+            Language = p.Language,
+            Region = p.Region,
+            Effect = p.Effect,
+            Extra = p.Extra,
+            MarginL = p.MarginL,
+            MarginR = p.MarginR,
+            MarginV = p.MarginV,
+            Layer = p.Layer,
+            IsComment = p.IsComment,
+            Forced = p.Forced,
+            NewSection = p.NewSection,
+            Bookmark = p.Bookmark,
+        };
+    }
+
+    private static bool HasPluginSubtitle(PluginSubtitle? subtitle)
+    {
+        return subtitle != null && (subtitle.Paragraphs is { Count: > 0 } || !string.IsNullOrWhiteSpace(subtitle.Native));
+    }
+
     private async Task<bool> ApplyPluginSubtitle(InstalledPlugin plugin, PluginResponse response)
     {
         var pluginSubtitle = response.Subtitle!;
-        var lines = pluginSubtitle.Native.SplitToLines().ToList();
-
-        var format = SubtitleFormat.AllSubtitleFormats
-            .FirstOrDefault(f => f.Name.Equals(pluginSubtitle.Format, StringComparison.OrdinalIgnoreCase));
-
         var subtitle = new Subtitle();
-        var loadedFormat = subtitle.ReloadLoadSubtitle(lines, string.Empty, format);
-        if (loadedFormat == null || subtitle.Paragraphs.Count == 0)
+        if (pluginSubtitle.Paragraphs is { Count: > 0 })
+        {
+            // Lossless path: the lines come back exactly as SE holds them, so the current format
+            // (and for EBU STL the teletext rows and GSI header) survive - no re-parse involved.
+            subtitle.Paragraphs.AddRange(pluginSubtitle.Paragraphs.Select(FromPluginParagraph));
+            subtitle.Renumber();
+        }
+        else
+        {
+            var lines = pluginSubtitle.Native.SplitToLines().ToList();
+            var format = SubtitleFormat.AllSubtitleFormats
+                .FirstOrDefault(f => f.Name.Equals(pluginSubtitle.Format, StringComparison.OrdinalIgnoreCase));
+
+            var loadedFormat = subtitle.ReloadLoadSubtitle(lines, string.Empty, format);
+            if (loadedFormat == null)
+            {
+                subtitle.Paragraphs.Clear();
+            }
+        }
+
+        if (subtitle.Paragraphs.Count == 0)
         {
             await MessageBox.Show(Window!, Se.Language.General.Error,
                 string.Format(Se.Language.Plugins.PluginXReturnedUnparsableSubtitle, plugin.Manifest.Name),
@@ -8933,6 +9022,11 @@ public partial class MainViewModel :
         }
 
         var idx = SelectedSubtitleIndex ?? 0;
+
+        if (pluginSubtitle.Paragraphs is { Count: > 0 } && pluginSubtitle.Header != null)
+        {
+            _subtitle.Header = pluginSubtitle.Header;
+        }
 
         // Not the plain rebuild: that blanks the original column, and with an original captured
         // from a translation the user then saw the source text vanish for every line (#14445).

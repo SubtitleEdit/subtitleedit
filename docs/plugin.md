@@ -159,7 +159,12 @@ launched as `dotnet <entry> <requestFilePath>`.
     "format": "Advanced Sub Station Alpha",
     "fileName": "C:\\videos\\episode01.ass",
     "native": "[Script Info]\n...full subtitle in its original format...",
-    "subRip": "1\n00:00:01,000 --> 00:00:03,000\nHello world\n\n..."
+    "subRip": "1\n00:00:01,000 --> 00:00:03,000\nHello world\n\n...",
+    "header": "[Script Info]\n...",
+    "paragraphs": [
+      { "startMs": 1000, "endMs": 3000, "text": "Hello world", "style": "Default",
+        "actor": "", "marginV": "0", "layer": 0, "isComment": false }
+    ]
   },
   "subtitleEncoding": "UTF-8 with BOM",
   "selectedIndices": [3, 4, 5],
@@ -181,6 +186,20 @@ launched as `dotnet <entry> <requestFilePath>`.
     "bookmarkColor": "#FFFFD700"
   },
   "seVersion": "5.0.0",
+  "rules": {
+    "subtitleMinimumDisplayMilliseconds": 1000,
+    "subtitleMaximumDisplayMilliseconds": 8000,
+    "subtitleMaximumCharactersPerSeconds": 25,
+    "subtitleOptimalCharactersPerSeconds": 15,
+    "subtitleLineMaximumLength": 43,
+    "maxNumberOfLines": 2,
+    "minimumMillisecondsBetweenLines": 24,
+    "minimumFramesBetweenLines": 2,
+    "useFrameMode": false,
+    "ebuStlTeletextUseBox": true,
+    "ebuStlTeletextUseDoubleHeight": true,
+    "videoOffsetMs": 0
+  },
   "settings": { "lastUsedOption": true },
   "settingsVersion": 2
 }
@@ -189,6 +208,22 @@ launched as `dotnet <entry> <requestFilePath>`.
 - `subtitle.native` is the subtitle serialized in its **original format**;
   `subtitle.subRip` is the **same content as SubRip (.srt)** — use whichever is
   easier for your plugin.
+- `subtitle.header` is the subtitle's in-memory header: the EBU STL GSI block (1024
+  characters, single-byte code page), the ASSA `[Script Info]`/styles sections, etc.
+- `subtitle.paragraphs` are the lines exactly as Subtitle Edit holds them, including
+  fields SubRip cannot carry (`style`, `actor`, `layer`, `marginL/R/V`, `region`,
+  `effect`, `extra`, `isComment`, `forced`, `newSection`, `bookmark`). Times are in
+  milliseconds. For EBU STL / DVB Teletext, `marginV` is the teletext row (vertical
+  position) the line starts on, and colors/box/alignment are in the text as
+  `<font color="...">`, `<box>` and `{\anN}` tags.
+- For a **binary format** (EBU STL, PAC, Cavena, ...) `subtitle.native` is empty —
+  use `header` + `paragraphs`.
+- `rules` is a read-only snapshot of the user's subtitle rules (durations, CPS, line
+  length, minimum gap, frame mode, EBU teletext box/double height, video offset).
+  Paragraph times are video-relative; the grid and saved file show time +
+  `videoOffsetMs`. Changes to `rules` are not read back — keep your own options in
+  `settings`. Subtitle Edit does not hand out the path to its `Settings.json`: the file
+  is rewritten by Subtitle Edit on exit and its layout is internal.
 - `subtitleEncoding` is the display name of the encoding the file was loaded with
   (e.g. `UTF-8 with BOM`). Empty when unknown / on older SE versions.
 - `pluginDataDirectory` is a **persistent, writable folder private to your plugin**
@@ -237,8 +272,13 @@ Write this file to `responseFilePath` before exiting with code `0`.
 | `cancelled`  | Nothing changes. Use this when the user closed your plugin's window. |
 | `error`      | `message` is shown to the user; the subtitle is left unchanged. |
 
-- For `status: "ok"` you only need to set `subtitle.format` and `subtitle.native`.
-  Return the format you find most convenient — `SubRip` is always safe.
+- For `status: "ok"` set either `subtitle.format` + `subtitle.native`, or
+  `subtitle.paragraphs`. Return the format you find most convenient — `SubRip` is
+  always safe for text-based subtitles.
+- When `subtitle.paragraphs` is non-empty it wins over `native`: the lines replace the
+  current ones as-is (no re-parse) and the current format is kept — the way to change a
+  binary format such as EBU STL without losing its rows and header. Set
+  `subtitle.header` to replace the header too; omit it (or `null`) to keep it.
 - If `subtitle.native` cannot be parsed, Subtitle Edit aborts with an error and
   makes no changes.
 - `settings` is stored by Subtitle Edit and handed back in the next request.
