@@ -68,6 +68,58 @@ public class AudioVisualizerDenseParagraphsTests
         }
     }
 
+    [AvaloniaFact]
+    public void LinesAfterADenseBurst_AreLoaded_WhenTypesettingIsAppendedOutOfOrder()
+    {
+        var av = new AudioVisualizer { WavePeaks = MakePeaks(500) };
+        var window = new Window
+        {
+            Width = WidthPx,
+            Height = HeightPx,
+            Content = av,
+        };
+
+        window.Show();
+        window.UpdateLayout();
+
+        try
+        {
+            // ASSA files often have typesetting lines appended after the dialogue, so the list is
+            // not sorted by start. Skipping a dense burst must not jump past dialogue that comes
+            // before the out-of-order block in the list.
+            var lines = new List<SubtitleLineViewModel>();
+            for (var i = 0; i < 300; i++)
+            {
+                var start = 390.0 + i * 0.003;
+                lines.Add(MakeLine(start, start + 0.04, string.Empty));
+            }
+
+            var dialogue = MakeLine(393.12, 396.46, "is two tickets fer that luxury cruise");
+            lines.Add(dialogue);
+
+            for (var i = 0; i < 1000; i++)
+            {
+                var start = 389.0 + i * 0.0003;
+                lines.Add(MakeLine(start, start + 0.04, "{\\pos(10,10)}sign"));
+            }
+
+            var nextDialogue = MakeLine(396.6, 398.0, "everyone's buzzin' about lately!");
+            lines.Add(nextDialogue);
+
+            av.SetPosition(393, lines, 393, -1, new List<SubtitleLineViewModel>());
+
+            var loaded = new List<SubtitleLineViewModel>();
+            av.CopyDisplayableParagraphs(loaded);
+
+            Assert.Contains(dialogue, loaded);
+            Assert.Contains(nextDialogue, loaded);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     private static SubtitleLineViewModel MakeLine(double startSeconds, double endSeconds, string text)
     {
         return new SubtitleLineViewModel
