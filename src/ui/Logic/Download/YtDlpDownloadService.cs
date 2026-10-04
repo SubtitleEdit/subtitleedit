@@ -190,7 +190,7 @@ public class YtDlpDownloadService : IYtDlpDownloadService
         }
         catch
         {
-            TryDeleteFile(partFileName);
+            DeletePartialDownload(fileName);
             throw;
         }
     }
