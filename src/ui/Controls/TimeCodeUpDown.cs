@@ -10,6 +10,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Globalization;
@@ -33,7 +34,8 @@ namespace Nikse.SubtitleEdit.Controls
         // jump a whole hour (#12506). The millisecond step size is configurable in Settings.
         // Computed rather than a constant because a negative time code carries a leading minus
         // (#13695), which shifts every part one to the right, and frame mode has a shorter last part.
-        private int LastPartCaretIndex => LastPartStartIndex(_textBuffer);
+        // A frame number has no parts - the caret goes after its last digit.
+        private int LastPartCaretIndex => Se.Settings.General.UseFrameNumbers ? _textBuffer.Length : LastPartStartIndex(_textBuffer);
 
         // A negative time code is shown as "-00:00:01,500". Like the separators, the sign is a mask
         // literal: it is never typed over and the caret skips past it.
@@ -89,6 +91,7 @@ namespace Nikse.SubtitleEdit.Controls
                 _textBox.RemoveHandler(TextInputEvent, OnTextInput);
                 _textBox.RemoveHandler(KeyDownEvent, OnTextBoxKeyDown);
                 _textBox.GotFocus -= OnTextBoxGotFocus;
+                _textBox.LostFocus -= OnTextBoxLostFocus;
                 _textBox.PastingFromClipboard -= OnPastingFromClipboard;
             }
 
@@ -120,6 +123,7 @@ namespace Nikse.SubtitleEdit.Controls
                 _textBox.AddHandler(TextInputEvent, OnTextInput, RoutingStrategies.Tunnel);
                 _textBox.AddHandler(KeyDownEvent, OnTextBoxKeyDown, RoutingStrategies.Tunnel);
                 _textBox.GotFocus += OnTextBoxGotFocus;
+                _textBox.LostFocus += OnTextBoxLostFocus;
                 _textBox.PastingFromClipboard += OnPastingFromClipboard;
             }
 
@@ -267,10 +271,26 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        // A frame number being typed can be briefly empty or just "-"; show the value again.
+        private void OnTextBoxLostFocus(object? sender, RoutedEventArgs e)
+        {
+            if (Se.Settings.General.UseFrameNumbers && _textBuffer != FormatTime(Value))
+            {
+                UpdateText();
+            }
+        }
+
         private void OnTextInput(object? sender, TextInputEventArgs e)
         {
             if (_textBox == null || string.IsNullOrEmpty(e.Text))
             {
+                return;
+            }
+
+            if (Se.Settings.General.UseFrameNumbers)
+            {
+                OnFrameNumberTextInput(e.Text);
+                e.Handled = true;
                 return;
             }
 
@@ -329,6 +349,81 @@ namespace Nikse.SubtitleEdit.Controls
             _isUpdatingFromValue = true;
             SetValue(ValueProperty, newValue);
             _isUpdatingFromValue = false;
+        }
+
+        // A frame number has no fixed width, so it is edited like a plain number box (insert, Backspace,
+        // Delete) instead of through the overwrite mask; the value follows every keystroke.
+        private void OnFrameNumberTextInput(string text)
+        {
+            if (_textBox == null)
+            {
+                return;
+            }
+
+            var selectionStart = Math.Min(_textBox.SelectionStart, _textBox.SelectionEnd);
+            var selectionEnd = Math.Max(_textBox.SelectionStart, _textBox.SelectionEnd);
+            var buffer = _textBuffer.Remove(selectionStart, selectionEnd - selectionStart);
+            var caret = selectionStart;
+            foreach (var c in text)
+            {
+                var isSign = c == '-' && caret == 0 && !buffer.StartsWith('-');
+                if (c is >= '0' and <= '9' || isSign)
+                {
+                    buffer = buffer.Insert(caret, c.ToString());
+                    caret++;
+                }
+            }
+
+            SetFrameNumberText(buffer, caret);
+        }
+
+        private void DeleteFrameNumberText(bool backspace)
+        {
+            if (_textBox == null)
+            {
+                return;
+            }
+
+            var selectionStart = Math.Min(_textBox.SelectionStart, _textBox.SelectionEnd);
+            var selectionEnd = Math.Max(_textBox.SelectionStart, _textBox.SelectionEnd);
+            if (selectionStart == selectionEnd)
+            {
+                if (backspace && selectionStart > 0)
+                {
+                    selectionStart--;
+                }
+                else if (!backspace && selectionEnd < _textBuffer.Length)
+                {
+                    selectionEnd++;
+                }
+            }
+
+            SetFrameNumberText(_textBuffer.Remove(selectionStart, selectionEnd - selectionStart), selectionStart);
+        }
+
+        private void SetFrameNumberText(string text, int caret)
+        {
+            if (_textBox == null)
+            {
+                return;
+            }
+
+            // The typed-over selection must go too - setting the caret alone leaves it in place,
+            // and the next Backspace would delete the whole number.
+            caret = Math.Clamp(caret, 0, text.Length);
+            _textBuffer = text;
+            _textBox.Text = _textBuffer;
+            _textBox.SelectionStart = caret;
+            _textBox.SelectionEnd = caret;
+            _textBox.CaretIndex = caret;
+
+            // Empty or a lone minus is half-typed: keep the value until there is a number.
+            if (FrameNumbers.TryParse(_textBuffer, out var frameTime))
+            {
+                _isUpdatingFromValue = true;
+                SetValue(ValueProperty, RemoveVideoOffset(frameTime));
+                _isUpdatingFromValue = false;
+            }
         }
 
         // The text box is masked and edits character-by-character via OnTextInput, but paste bypasses
@@ -413,6 +508,13 @@ namespace Nikse.SubtitleEdit.Controls
             if (text.Length == 0)
             {
                 return false;
+            }
+
+            // In frame numbers mode a bare number is a frame number, as shown.
+            if (Se.Settings.General.UseFrameNumbers && FrameNumbers.TryParse(text, out var frameTime))
+            {
+                value = RemoveVideoOffset(isNegative ? frameTime.Negate() : frameTime);
+                return true;
             }
 
             if (long.TryParse(text, NumberStyles.None, CultureInfo.InvariantCulture, out var milliseconds))
@@ -555,6 +657,15 @@ namespace Nikse.SubtitleEdit.Controls
                 ChangeValue(-1);
                 e.Handled = true;
             }
+            else if (Se.Settings.General.UseFrameNumbers && e.Key is Key.Left or Key.Right or Key.Home or Key.End)
+            {
+                // No mask to skip - let the text box move the caret.
+            }
+            else if (Se.Settings.General.UseFrameNumbers && e.Key is Key.Back or Key.Delete)
+            {
+                DeleteFrameNumberText(e.Key == Key.Back);
+                e.Handled = true;
+            }
             else if (e.Key == Key.Left)
             {
                 var newPos = _textBox.CaretIndex - 1;
@@ -604,7 +715,13 @@ namespace Nikse.SubtitleEdit.Controls
             var caret = _textBox.CaretIndex - SignOffset;
             TimeSpan newVal = Value;
 
-            if (caret <= 2)
+            if (Se.Settings.General.UseFrameNumbers)
+            {
+                // One frame per step, wherever the caret is.
+                var frame = FrameNumbers.FromMilliseconds(newVal.TotalMilliseconds);
+                newVal = TimeSpan.FromMilliseconds(FrameNumbers.ToMilliseconds(frame + delta));
+            }
+            else if (caret <= 2)
             {
                 newVal = newVal.Add(TimeSpan.FromHours(delta));
             }
@@ -672,6 +789,11 @@ namespace Nikse.SubtitleEdit.Controls
             if (UseVideoOffset && Se.Settings.General.CurrentVideoOffsetInMs != 0)
             {
                 time = TimeSpan.FromMilliseconds(time.TotalMilliseconds + Se.Settings.General.CurrentVideoOffsetInMs);
+            }
+
+            if (Se.Settings.General.UseFrameNumbers)
+            {
+                return FrameNumbers.Format(time);
             }
 
             // A negative time span has negative parts throughout, which TimeCode renders as a single

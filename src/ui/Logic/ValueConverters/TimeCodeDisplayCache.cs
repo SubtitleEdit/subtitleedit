@@ -28,6 +28,7 @@ internal sealed class TimeCodeDisplayCache
     // rather than folded into the key so a hit stays a single lookup; a change drops the cache,
     // which is what happens when the user flips the time format or sets a video offset.
     private bool _frameMode;
+    private bool _frameNumbers;
     private double _frameRate;
     private double _videoOffsetMs;
 
@@ -35,12 +36,14 @@ internal sealed class TimeCodeDisplayCache
     {
         var general = Se.Settings.General;
         var frameMode = general.UseFrameMode;
+        var frameNumbers = general.UseFrameNumbers;
         var frameRate = Configuration.Settings.General.CurrentFrameRate;
         var videoOffsetMs = general.CurrentVideoOffsetInMs;
 
-        if (_frameMode != frameMode || _frameRate != frameRate || _videoOffsetMs != videoOffsetMs)
+        if (_frameMode != frameMode || _frameNumbers != frameNumbers || _frameRate != frameRate || _videoOffsetMs != videoOffsetMs)
         {
             _frameMode = frameMode;
+            _frameNumbers = frameNumbers;
             _frameRate = frameRate;
             _videoOffsetMs = videoOffsetMs;
             _byTicks.Clear();

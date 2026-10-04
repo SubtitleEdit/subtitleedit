@@ -264,6 +264,12 @@ public class SecondsUpDown : TemplatedControl
             return TimeSpan.Zero;
         }
 
+        if (Se.Settings.General.UseFrameNumbers)
+        {
+            // A frame count; a negative duration is clamped to zero like any other.
+            return FrameNumbers.TryParse(text, out var frameCount) ? frameCount : TimeSpan.Zero;
+        }
+
         if (Se.Settings.General.UseFrameMode)
         {
             // Expect "seconds:frames"
@@ -341,6 +347,11 @@ public class SecondsUpDown : TemplatedControl
 
     private static string FormatTime(TimeSpan ts)
     {
+        if (Se.Settings.General.UseFrameNumbers)
+        {
+            return FrameNumbers.Format(ts);
+        }
+
         if (Se.Settings.General.UseFrameMode)
         {
             var seconds = Math.Floor(ts.TotalSeconds);

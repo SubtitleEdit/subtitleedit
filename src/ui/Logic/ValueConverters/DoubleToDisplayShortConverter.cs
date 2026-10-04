@@ -27,10 +27,20 @@ public class DoubleToDisplayShortConverter : IValueConverter
                 return string.Empty;
             }
 
+            if (Se.Settings.General.UseFrameNumbers)
+            {
+                return FrameNumbers.Format(ms);
+            }
+
             _formattingTimeCode.TotalMilliseconds = ms;
             return useFrameMode
                 ? _formattingTimeCode.ToShortStringHHMMSSFF()
                 : _formattingTimeCode.ToShortString();
+        }
+
+        if (Se.Settings.General.UseFrameNumbers)
+        {
+            return "0";
         }
 
         return useFrameMode ? ZeroFrameMode : ZeroTime;

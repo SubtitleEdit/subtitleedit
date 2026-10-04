@@ -59,6 +59,17 @@ public class SeGeneral
         set => UseFrameModePersisted = value;
     }
 
+    /// <summary>
+    /// In frame mode, show time codes as absolute frame numbers ("15230") instead of
+    /// hh:mm:ss:ff, so a sync offset is a plain subtraction (#15603). Read
+    /// <see cref="UseFrameNumbers"/> instead, which is only on while frame mode is.
+    /// </summary>
+    [JsonPropertyName("UseFrameNumbers")]
+    public bool UseFrameNumbersPersisted { get; set; }
+
+    [JsonIgnore]
+    public bool UseFrameNumbers => UseFrameMode && UseFrameNumbersPersisted;
+
     public double DefaultFrameRate { get; set; }
     public double CurrentFrameRate { get; set; }
     public string DefaultSubtitleFormat { get; set; }

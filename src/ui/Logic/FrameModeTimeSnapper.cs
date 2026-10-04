@@ -26,6 +26,13 @@ public static class FrameModeTimeSnapper
             return time;
         }
 
+        // Frame numbers count frames from zero, which at 23.976/29.97 is not the same grid as
+        // HH:MM:SS:FF - snap to the one the user sees, or a typed frame number would move.
+        if (Config.Se.Settings.General.UseFrameNumbers)
+        {
+            return FrameNumbers.Snap(time);
+        }
+
         var timeCode = new TimeCode(time.TotalMilliseconds);
         return TimeSpan.FromMilliseconds(TimeCode.ParseHHMMSSFFToMilliseconds(timeCode.ToHHMMSSFF()));
     }

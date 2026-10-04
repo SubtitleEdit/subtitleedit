@@ -30,6 +30,14 @@ public class TimeSpanToDisplayShortConverter : IValueConverter
                 return cached;
             }
 
+            if (Se.Settings.General.UseFrameNumbers)
+            {
+                // A duration in frame numbers mode is a frame count.
+                var frameCount = FrameNumbers.Format(ts);
+                _cache.Set(ts.Ticks, frameCount);
+                return frameCount;
+            }
+
             _formattingTimeCode.TimeSpan = ts;
             var formatted = useFrameMode
                 ? _formattingTimeCode.ToShortStringHHMMSSFF()
@@ -39,6 +47,11 @@ public class TimeSpanToDisplayShortConverter : IValueConverter
             return formatted;
         }
 
+        if (Se.Settings.General.UseFrameNumbers)
+        {
+            return "0";
+        }
+
         return useFrameMode ? ZeroFrameMode : ZeroTime;
     }
 
@@ -46,6 +59,11 @@ public class TimeSpanToDisplayShortConverter : IValueConverter
     {
         if (value is string s)
         {
+            if (Se.Settings.General.UseFrameNumbers)
+            {
+                return FrameNumbers.TryParse(s, out var frameCount) ? frameCount : TimeSpan.Zero;
+            }
+
             var arr = s.Split(',', ':', '.', ';');
 
             if (Se.Settings.General.UseFrameMode)

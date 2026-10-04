@@ -55,6 +55,7 @@ public class SkiaAudioVisualizer : AudioVisualizer
     private readonly HashSet<SubtitleLineViewModel> _selectedInView = new();
     private readonly Dictionary<long, string> _timeLabels = new(256);
     private double _timeLabelsVideoOffsetMs = double.NaN;
+    private double _timeLabelsFrameNumbersFrameRate;
 
     private string? _textColorSource;
     private SKColor _textColor = SKColors.White;
@@ -170,7 +171,7 @@ public class SkiaAudioVisualizer : AudioVisualizer
             f.NewSelectionStartSeconds = newSelection.StartTime.TotalSeconds;
             f.NewSelectionEndSeconds = newSelection.EndTime.TotalSeconds;
             var durationMs = (newSelection.EndTime - newSelection.StartTime).TotalMilliseconds;
-            f.NewSelectionLabel = durationMs >= 10 ? new TimeCode(durationMs).ToShortDisplayString() : null;
+            f.NewSelectionLabel = durationMs >= 10 ? FormatDurationLabel(durationMs) : null;
         }
     }
 
@@ -178,10 +179,14 @@ public class SkiaAudioVisualizer : AudioVisualizer
     {
         // Labels are formatted here (GetDisplayTime reads settings) and cached per whole second,
         // so a playing waveform does not allocate a string per label per frame.
-        if (!videoOffsetMs.Equals(_timeLabelsVideoOffsetMs) || _timeLabels.Count > 8000)
+        var frameNumbersFrameRate = TimeLabelFrameNumbersFrameRate;
+        if (!videoOffsetMs.Equals(_timeLabelsVideoOffsetMs) ||
+            !frameNumbersFrameRate.Equals(_timeLabelsFrameNumbersFrameRate) ||
+            _timeLabels.Count > 8000)
         {
             _timeLabels.Clear();
             _timeLabelsVideoOffsetMs = videoOffsetMs;
+            _timeLabelsFrameNumbersFrameRate = frameNumbersFrameRate;
         }
 
         var labelEverySecond = f.PixelsPerSecond > 38;
