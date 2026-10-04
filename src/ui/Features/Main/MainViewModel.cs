@@ -1547,12 +1547,18 @@ public partial class MainViewModel :
     /// </summary>
     private void ReapplyPlaybackSpeed()
     {
-        if (SelectedSpeed != null && SelectedSpeed.EndsWith('x') &&
-            double.TryParse(SelectedSpeed.Trim('x'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var speed))
+        if (TryGetSelectedPlaybackSpeed(out var speed))
         {
             GetVideoPlayerControl()?.SetSpeed(speed);
             _playheadPlaybackSpeed = speed;
         }
+    }
+
+    private bool TryGetSelectedPlaybackSpeed(out double speed)
+    {
+        speed = 1.0;
+        return SelectedSpeed != null && SelectedSpeed.EndsWith('x') &&
+               double.TryParse(SelectedSpeed.Trim('x'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out speed);
     }
 
     /// <summary>
@@ -11824,6 +11830,8 @@ public partial class MainViewModel :
                     ShowStatus(string.Format(Se.Language.Video.TextToSpeech.SpeakingLineX, Subtitles.IndexOf(row) + 1), 10_000);
                 },
                 () => speakingRow == null || ReferenceEquals(SubtitleGrid.SelectedItem, speakingRow),
+                // The waveform toolbar's playback speed applies to the reading too.
+                () => TryGetSelectedPlaybackSpeed(out var speed) ? speed : 1.0,
                 cts.Token);
         }
         catch (OperationCanceledException)

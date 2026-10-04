@@ -35,7 +35,8 @@ public sealed class SpeakFromLineReader
     /// </summary>
     /// <param name="onLineStarting">Called just before line i is heard - the caller selects the row.</param>
     /// <param name="keepGoing">Polled while speaking; false stops the reading (the user moved on).</param>
-    public async Task RunAsync(IReadOnlyList<string> texts, Action<int> onLineStarting, Func<bool> keepGoing, CancellationToken cancellationToken)
+    /// <param name="getSpeed">Polled while speaking: the playback speed, so a change is heard at once.</param>
+    public async Task RunAsync(IReadOnlyList<string> texts, Action<int> onLineStarting, Func<bool> keepGoing, Func<double> getSpeed, CancellationToken cancellationToken)
     {
         var folder = Path.Combine(Path.GetTempPath(), "se-speak-" + Guid.NewGuid());
         Directory.CreateDirectory(folder);
@@ -61,7 +62,7 @@ public sealed class SpeakFromLineReader
                 }
 
                 onLineStarting(i);
-                var finished = await PlayAndWaitAsync(player, fileName, keepGoing, cancellationToken);
+                var finished = await PlayAndWaitAsync(player, fileName, keepGoing, getSpeed, cancellationToken);
                 TryDelete(fileName);
                 if (!finished)
                 {
@@ -141,9 +142,11 @@ public sealed class SpeakFromLineReader
     }
 
     /// <returns>True when the clip played to its end, false when <paramref name="keepGoing"/> said stop.</returns>
-    private static async Task<bool> PlayAndWaitAsync(LibMpvDynamicPlayer player, string fileName, Func<bool> keepGoing, CancellationToken cancellationToken)
+    private static async Task<bool> PlayAndWaitAsync(LibMpvDynamicPlayer player, string fileName, Func<bool> keepGoing, Func<double> getSpeed, CancellationToken cancellationToken)
     {
         await player.LoadAudio(fileName);
+        var speed = getSpeed();
+        player.Speed = speed;
 
         // LoadAudio keeps the file open at its end, which pauses mpv - and the pause carries over
         // to the next file, so un-pause explicitly.
@@ -158,6 +161,13 @@ public sealed class SpeakFromLineReader
             if (!keepGoing())
             {
                 return false;
+            }
+
+            var newSpeed = getSpeed();
+            if (Math.Abs(newSpeed - speed) > 0.001)
+            {
+                speed = newSpeed;
+                player.Speed = speed;
             }
 
             if (stopwatch.ElapsedMilliseconds > 300 && player.IsPaused)
