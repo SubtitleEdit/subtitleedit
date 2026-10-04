@@ -127,6 +127,34 @@ Hello world.
     }
 
     [Fact]
+    public async Task OneTargetSaveFails_StatusNamesTheFailure_NotConverted()
+    {
+        await Run(Se.Language.General.TwoLetterLanguageCode, async (dir, converter) =>
+        {
+            // A folder where the Danish file should go makes that save fail - the save methods
+            // catch it themselves, and the Swedish pass after it used to set "Converted".
+            Directory.CreateDirectory(Path.Combine(dir.FullName, "movie.da.srt"));
+            converter.Initialize(MakeConfig(new TaggingTranslator(), "da", "sv"));
+
+            var item = await ConvertFile(converter, dir);
+
+            Assert.Equal("[sv] Hello world.", ReadText(dir, "movie.sv.srt"));
+            Assert.NotEqual(Se.Language.General.Converted, item.Status);
+            Assert.True(BatchConverter.TryGetErrorStatusMessage(item.Status, out var message));
+            Assert.StartsWith("da: ", message);
+        });
+    }
+
+    [Fact]
+    public void TryGetErrorStatusMessage_OnlyMatchesErrorStatus()
+    {
+        Assert.True(BatchConverter.TryGetErrorStatusMessage(string.Format(Se.Language.General.ErrorX, "disk full"), out var message));
+        Assert.Equal("disk full", message);
+        Assert.False(BatchConverter.TryGetErrorStatusMessage(Se.Language.General.Converted, out _));
+        Assert.False(BatchConverter.TryGetErrorStatusMessage(null, out _));
+    }
+
+    [Fact]
     public async Task AllTargetsFail_Throws()
     {
         await Run(Se.Language.General.TwoLetterLanguageCode, async (dir, converter) =>

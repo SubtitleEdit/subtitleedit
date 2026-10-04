@@ -500,7 +500,18 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 try
                 {
                     item.Subtitle = await RunConvertFunctions(item, imageToImage, cancellationToken);
+                    var statusBeforeSave = item.Status;
                     await SaveConverted(item, imageSubtitle, cancellationToken);
+
+                    // The save methods catch their own exceptions and only leave an error status
+                    // behind - the next language's save would overwrite it with "Converted" and
+                    // hide that this language's file was never written.
+                    if (TryGetErrorStatusMessage(item.Status, out var saveError))
+                    {
+                        SeLogger.Error($"Batch convert save to {targetLanguages[i].Code} failed for: {item.FileName}: {saveError}");
+                        errors.Add(targetLanguages[i].Code + ": " + saveError);
+                        item.Status = statusBeforeSave;
+                    }
                 }
                 catch (Exception exception) when (exception is not OperationCanceledException)
                 {
@@ -849,6 +860,38 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         var text = Nikse.SubtitleEdit.UiLogic.Export.CustomTextFormatter.GenerateCustomText(selectedCustomFormat.ToTemplate(), paragraphs, item.FileName, string.Empty);
         var path = MakeOutputFileName(item, selectedCustomFormat.Extension);
         await File.WriteAllTextAsync(path, text, cancellationToken);
+    }
+
+    /// <summary>
+    /// True when the status is an "Error; {0}" value the save methods leave behind when they
+    /// fail (they catch their own exceptions), with the message in <paramref name="message"/>.
+    /// </summary>
+    internal static bool TryGetErrorStatusMessage(string? status, out string message)
+    {
+        message = string.Empty;
+        if (string.IsNullOrEmpty(status))
+        {
+            return false;
+        }
+
+        var format = Se.Language.General.ErrorX;
+        var placeholder = format.IndexOf("{0}", StringComparison.Ordinal);
+        if (placeholder < 0)
+        {
+            return false;
+        }
+
+        var prefix = format.Substring(0, placeholder);
+        var suffix = format.Substring(placeholder + "{0}".Length);
+        if (status.Length < prefix.Length + suffix.Length ||
+            !status.StartsWith(prefix, StringComparison.Ordinal) ||
+            !status.EndsWith(suffix, StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        message = status.Substring(prefix.Length, status.Length - prefix.Length - suffix.Length);
+        return true;
     }
 
     /// <summary>
