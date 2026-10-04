@@ -134,6 +134,22 @@ public class YtDlpDownloadService : IYtDlpDownloadService
 
         throw new PlatformNotSupportedException("Unsupported OS platform");
     }
+
+    /// <summary>
+    /// The temporary file a download is written to before it is verified and moved over
+    /// <paramref name="fullFileName"/>.
+    /// </summary>
+    internal static string GetPartFileName(string fullFileName) => fullFileName + ".part";
+
+    /// <summary>
+    /// Removes a leftover partial download. Never touches the installed binary - a failed or
+    /// cancelled update must leave the previous working yt-dlp in place.
+    /// </summary>
+    internal static void DeletePartialDownload(string fullFileName)
+    {
+        TryDeleteFile(GetPartFileName(fullFileName));
+    }
+
     private static string GetUrl()
     {
         if (OperatingSystem.IsWindows())
@@ -162,27 +178,19 @@ public class YtDlpDownloadService : IYtDlpDownloadService
         // Writing straight to the final path left a truncated binary behind when the user
         // cancelled - which the "is yt-dlp installed?" check then accepted and ran - and on an
         // update it truncated the working binary before the first byte even arrived.
-        var partFileName = fileName + ".part";
+        var partFileName = GetPartFileName(fileName);
         try
         {
             await DownloadHelper.DownloadFileAsync(_httpClient, GetUrl(), partFileName, progress, cancellationToken);
-            await VerifyChecksumAsync(partFileName, CurrentVersion, cancellationToken);
+
+            // Verify against the real asset name - the ".part" name has no checksum on record,
+            // which silently turned verification into a no-op.
+            await VerifyChecksumAsync(partFileName, CurrentVersion, cancellationToken, Path.GetFileName(fileName));
             File.Move(partFileName, fileName, true);
         }
         catch
         {
-            try
-            {
-                if (File.Exists(partFileName))
-                {
-                    File.Delete(partFileName);
-                }
-            }
-            catch
-            {
-                // ignore - nothing useful to do if the partial file cannot be removed
-            }
-
+            TryDeleteFile(partFileName);
             throw;
         }
     }
@@ -192,11 +200,12 @@ public class YtDlpDownloadService : IYtDlpDownloadService
     /// checksum for <paramref name="version"/>. A tampered, truncated, or
     /// otherwise corrupt download is deleted and surfaced as an error instead
     /// of being executed. If no checksum is on record for the asset, this is a
-    /// no-op — we don't block on data we don't have.
+    /// no-op — we don't block on data we don't have. <paramref name="assetName"/> defaults to
+    /// the file name of <paramref name="filePath"/>; pass it when verifying a temporary file.
     /// </summary>
-    internal static async Task VerifyChecksumAsync(string filePath, string version, CancellationToken cancellationToken)
+    internal static async Task VerifyChecksumAsync(string filePath, string version, CancellationToken cancellationToken, string? assetName = null)
     {
-        var assetName = Path.GetFileName(filePath);
+        assetName ??= Path.GetFileName(filePath);
         if (!KnownSha256.TryGetValue(version, out var byAsset) ||
             !byAsset.TryGetValue(assetName, out var expected))
         {
