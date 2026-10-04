@@ -28,7 +28,7 @@ You can find the latest cross-platform builds here:
 
 #### Installing Subtitle Edit on macOS
 
-As of **v5.1.0-rc13**, the `.dmg` is signed with an Apple Developer ID and notarized by Apple, so it opens normally — no Terminal quarantine-removal step is needed:
+As of **v5.2.0**, the `.dmg` is signed with an Apple Developer ID and notarized by Apple, so it opens normally — no Terminal quarantine-removal step is needed:
 
 1. **Download** and **double-click** the `.dmg` file to mount it.
 2. In the window that appears, **drag `Subtitle Edit.app` into your `Applications` folder**.
