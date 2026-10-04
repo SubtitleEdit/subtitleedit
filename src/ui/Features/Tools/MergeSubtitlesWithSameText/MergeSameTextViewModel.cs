@@ -113,7 +113,9 @@ public partial class MergeSameTextViewModel : ObservableObject, IClosingCleanup
 
         var mergedIndexes = new List<int>();
         var removed = new HashSet<int>();
-        var maxMsBetween = MsOrFrames.ToMilliseconds(MaxMsOrFramesBetweenLines, IsFrameMode);
+        // In frame mode: the largest millisecond gap that is still at most N frames, so a gap of
+        // exactly N frames is not missed when its rounded milliseconds are one above N frames' ms.
+        var maxMsBetween = MsOrFrames.ToMaxGapMilliseconds(MaxMsOrFramesBetweenLines, IsFrameMode);
         var fixIncrementing = IncludeIncrementingLines;
         var numberOfMerges = 0;
         Paragraph? p = null;

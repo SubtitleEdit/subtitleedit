@@ -166,7 +166,9 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
 
             var next = _allSubtitles.GetOrNull(index + 1);
 
-            if (item.Duration.TotalMilliseconds > maxMs && FixMaxDurationMs)
+            // Compared in frames in frame mode, so a line exactly N frames long is not flagged
+            // because its rounded milliseconds are one off the rounded limit.
+            if (FixMaxDurationMs && MsOrFrames.IsAbove(item.Duration.TotalMilliseconds, MaxDurationMsOrFrames.Value, IsFrameMode))
             {
                 // Shortening never runs into the next line or a shot change.
                 var newEndTime = TimeSpan.FromMilliseconds(item.StartTime.TotalMilliseconds + maxMs);
@@ -174,7 +176,7 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
                 fixCount++;
             }
 
-            if (item.Duration.TotalMilliseconds < minMs && FixMinDurationMs)
+            if (FixMinDurationMs && MsOrFrames.IsBelow(item.Duration.TotalMilliseconds, MinDurationMsOrFrames.Value, IsFrameMode))
             {
                 var wantedEndTime = TimeSpan.FromMilliseconds(item.StartTime.TotalMilliseconds + minMs);
                 var allowedEndTime = wantedEndTime;
