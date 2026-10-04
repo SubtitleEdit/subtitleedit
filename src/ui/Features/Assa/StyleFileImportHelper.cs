@@ -184,6 +184,23 @@ public static class StyleFileImportHelper
     }
 
     /// <summary>
+    /// Reads styles for the SSA styles window, which imports from .ssa, .ass and Aegisub .sty
+    /// files alike (the [V4 Styles] header is written from them on OK). The file is parsed as
+    /// the format its extension suggests, and as the other one if that finds no styles.
+    /// </summary>
+    public static List<SsaStyle> LoadStylesForSsa(string fileName)
+    {
+        var isAss = fileName.EndsWith(".ass", StringComparison.OrdinalIgnoreCase);
+        var styles = LoadStyles(fileName, isAss ? new AdvancedSubStationAlpha() : new SubStationAlpha());
+        if (styles.Count == 0 && !fileName.EndsWith(".sty", StringComparison.OrdinalIgnoreCase))
+        {
+            styles = LoadStyles(fileName, isAss ? new SubStationAlpha() : new AdvancedSubStationAlpha());
+        }
+
+        return styles;
+    }
+
+    /// <summary>
     /// Reads styles from a file with a "[V4+ Styles]"/"[V4 Styles]" section but no dialogue lines.
     /// Everything from "[Events]" and down is cut away, as the events "Format:" line would
     /// otherwise be read as a style format line.

@@ -384,11 +384,11 @@ public partial class BurnInViewModel : ObservableObject
 
             if (JobItems.Count == 1)
             {
-                ProgressText = $"Analyzing video... {percentage}%     {estimatedLeft}";
+                ProgressText = string.Format(Se.Language.Video.AnalyzingVideoX, percentage, estimatedLeft);
             }
             else
             {
-                ProgressText = $"Analyzing video {_jobItemIndex + 1}/{JobItems.Count}... {percentage}%     {estimatedLeft}";
+                ProgressText = string.Format(Se.Language.Video.AnalyzingVideoXofY, _jobItemIndex + 1, JobItems.Count, percentage, estimatedLeft);
             }
 
             return;
@@ -597,12 +597,11 @@ public partial class BurnInViewModel : ObservableObject
 
             if (JobItems.Count == 1)
             {
-                ProgressText = $"Generating video... {percentage}%     {estimatedLeft}";
+                ProgressText = string.Format(Se.Language.Video.ReEncodeGeneratingVideoX, percentage, estimatedLeft);
             }
             else
             {
-                ProgressText =
-                    $"Generating video {_jobItemIndex + 1}/{JobItems.Count}... {percentage}%     {estimatedLeft}";
+                ProgressText = string.Format(Se.Language.Video.ReEncodeGeneratingVideoXofY, _jobItemIndex + 1, JobItems.Count, percentage, estimatedLeft);
             }
 
             return;

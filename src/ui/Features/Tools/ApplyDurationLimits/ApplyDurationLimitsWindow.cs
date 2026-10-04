@@ -89,10 +89,10 @@ public class ApplyDurationLimitsWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        var checkBoxFixMinDuration = UiUtil.MakeCheckBox(Se.Language.Tools.ApplyDurationLimits.FixMinDurationMs, vm, nameof(vm.FixMinDurationMs));
+        var checkBoxFixMinDuration = UiUtil.MakeCheckBox(vm.FixMinDurationLabel, vm, nameof(vm.FixMinDurationMs));
         _checkBoxFixMinDuration = checkBoxFixMinDuration;
         checkBoxFixMinDuration.IsCheckedChanged += (s, e) => vm.SetChanged();
-        var numericUpDownMinDuration = UiUtil.MakeNumericUpDownInt(1, 10000, 1000, 150, vm, nameof(vm.MinDurationMs))
+        var numericUpDownMinDuration = UiUtil.MakeNumericUpDownInt(1, 10000, 1000, 150, vm, nameof(vm.MinDurationMsOrFrames))
                 .WithBindEnabled(nameof(vm.FixMinDurationMs));
         numericUpDownMinDuration.ValueChanged += (s, e) => vm.SetChanged();
         var checkBoxDoNotGoPastShotChange = UiUtil.MakeCheckBox(Se.Language.Tools.ApplyDurationLimits.DoNotGoPastShotChange, vm, nameof(vm.DoNotGoPastShotChange))
@@ -102,9 +102,9 @@ public class ApplyDurationLimitsWindow : Window
         checkBoxDoNotGoPastShotChange.IsCheckedChanged += (s, e) => vm.SetChanged();
         var panelMin = UiUtil.MakeHorizontalPanel(numericUpDownMinDuration, checkBoxDoNotGoPastShotChange);
 
-        var checkBoxFixMaxDuration = UiUtil.MakeCheckBox(Se.Language.Tools.ApplyDurationLimits.FixMaxDurationMs, vm, nameof(vm.FixMaxDurationMs));
+        var checkBoxFixMaxDuration = UiUtil.MakeCheckBox(vm.FixMaxDurationLabel, vm, nameof(vm.FixMaxDurationMs));
         checkBoxFixMaxDuration.IsCheckedChanged += (s, e) => vm.SetChanged();
-        var numericUpDownMaxDuration = UiUtil.MakeNumericUpDownInt(1, 10000, 1000, 150, vm, nameof(vm.MaxDurationMs))
+        var numericUpDownMaxDuration = UiUtil.MakeNumericUpDownInt(1, 10000, 1000, 150, vm, nameof(vm.MaxDurationMsOrFrames))
             .WithBindEnabled(nameof(vm.FixMaxDurationMs));
         numericUpDownMaxDuration.ValueChanged += (s, e) => vm.SetChanged();
 

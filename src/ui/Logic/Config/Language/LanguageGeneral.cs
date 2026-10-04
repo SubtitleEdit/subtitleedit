@@ -519,6 +519,7 @@ public class LanguageGeneral
     public string Reset { get; set; }
     public string ResizePanels { get; set; }
     public string Resolution { get; set; }
+    public string Retry { get; set; }
     public string ReverseRightToLeftStartEnd { get; set; }
     public string Right { get; set; }
     public string RightToLeft { get; set; }
@@ -1366,6 +1367,7 @@ public class LanguageGeneral
         Reset = "Reset";
         ResizePanels = "Resize panels";
         Resolution = "Resolution";
+        Retry = "Retry";
         ReverseRightToLeftStartEnd = "Reverse RTL start/end";
         Right = "Right";
         RightToLeft = "Right to left";

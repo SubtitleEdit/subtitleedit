@@ -19,6 +19,11 @@ public class SeAiReview
     public const string EngineOllama = "Ollama";
     public const string EngineLlamaCpp = "llama.cpp";
     public const string EngineOpenAiCompatible = "OpenAI-compatible";
+    public const string DefaultOllamaUrl = "http://localhost:11434/v1/chat/completions";
+
+    /// <summary>The Ollama URL to call - the saved one, or the default when it was cleared.</summary>
+    public static string ResolveOllamaUrl(string? url)
+        => string.IsNullOrWhiteSpace(url) ? DefaultOllamaUrl : url.Trim();
 
     public static string DefaultPrompt =>
         "You are a subtitle proofreader. Fix typos, spelling, grammar and punctuation in {language}." +
@@ -28,7 +33,7 @@ public class SeAiReview
     public SeAiReview()
     {
         Engine = EngineLlamaCpp;
-        OllamaUrl = "http://localhost:11434/v1/chat/completions";
+        OllamaUrl = DefaultOllamaUrl;
         OllamaModel = string.Empty;
         LlamaCppModelFileName = string.Empty;
         OpenAiCompatibleUrl = "http://localhost:1234/v1/chat/completions";

@@ -51,13 +51,31 @@ public class FfmpegDownloadService : IFfmpegDownloadService
         throw new PlatformNotSupportedException();
     }
 
+    /// <summary>The <see cref="DownloadHashManager.Ffmpeg"/> key matching <see cref="GetFfmpegUrl"/>.</summary>
+    internal static string? GetHashKey(string url)
+    {
+        return url switch
+        {
+            WindowsUrl => DownloadHashManager.Ffmpeg.Windows,
+            MacUrl => DownloadHashManager.Ffmpeg.MacOsX64,
+            MacUrlArm => DownloadHashManager.Ffmpeg.MacOsArm64,
+            _ => null,
+        };
+    }
+
+    internal static string[] AllUrls => [WindowsUrl, MacUrl, MacUrlArm];
+
     public async Task DownloadFfmpeg(string destinationFileName, IProgress<float>? progress, CancellationToken cancellationToken)
     {
-        await DownloadHelper.DownloadFileAsync(_httpClient, GetFfmpegUrl(), destinationFileName, progress, cancellationToken);
+        var url = GetFfmpegUrl();
+        await DownloadHelper.DownloadFileAsync(_httpClient, url, destinationFileName, progress, cancellationToken);
+        await DownloadHashManager.VerifyDownloadAsync(destinationFileName, GetHashKey(url), "ffmpeg", cancellationToken);
     }
 
     public async Task DownloadFfmpeg(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
     {
-        await DownloadHelper.DownloadFileAsync(_httpClient, GetFfmpegUrl(), stream, progress, cancellationToken);
+        var url = GetFfmpegUrl();
+        await DownloadHelper.DownloadFileAsync(_httpClient, url, stream, progress, cancellationToken);
+        await DownloadHashManager.VerifyDownloadAsync(stream, GetHashKey(url), "ffmpeg", cancellationToken);
     }
 }

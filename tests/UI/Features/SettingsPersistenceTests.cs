@@ -157,17 +157,17 @@ public class SettingsPersistenceTests
 
         var vm = new ApplyDurationLimitsViewModel();
         Invoke(vm, "LoadSettings");
-        Assert.Equal(1000, Get(vm, "MinDurationMs"));
-        Assert.Equal(8000, Get(vm, "MaxDurationMs"));
+        Assert.Equal(1000, Get(vm, "MinDurationMsOrFrames"));
+        Assert.Equal(8000, Get(vm, "MaxDurationMsOrFrames"));
 
-        Set(vm, "MinDurationMs", 1200);
-        Set(vm, "MaxDurationMs", 6000);
+        Set(vm, "MinDurationMsOrFrames", 1200);
+        Set(vm, "MaxDurationMsOrFrames", 6000);
         Invoke(vm, "SaveSettings");
 
         var reopened = new ApplyDurationLimitsViewModel();
         Invoke(reopened, "LoadSettings");
-        Assert.Equal(1200, Get(reopened, "MinDurationMs"));
-        Assert.Equal(6000, Get(reopened, "MaxDurationMs"));
+        Assert.Equal(1200, Get(reopened, "MinDurationMsOrFrames"));
+        Assert.Equal(6000, Get(reopened, "MaxDurationMsOrFrames"));
 
         Assert.Equal(1000, Se.Settings.General.SubtitleMinimumDisplayMilliseconds);
         Assert.Equal(8000, Se.Settings.General.SubtitleMaximumDisplayMilliseconds);

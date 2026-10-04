@@ -5,7 +5,6 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using System.Collections;
-using System.Windows.Input;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -163,44 +162,11 @@ public class AssaAttachmentsWindow : Window
         menuItemClear.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteAllVisible)) { Source = vm });
         flyout.Items.Add(menuItemClear);
 
-        AddMoveMenuItems(flyout, vm);
+        StylesDialogHelper.AddMoveMenuItems(flyout, vm, nameof(vm.IsMoveVisible), vm.MoveUpCommand, vm.MoveDownCommand, vm.MoveToTopCommand, vm.MoveToBottomCommand);
 
         grid.Add(dataGrid, 0);
 
         return UiUtil.MakeBorderForControlNoPadding(grid);
-    }
-
-    /// <summary>
-    /// The "move up/down/to top/to bottom" block of the attachments context menu, as in SE 4.
-    /// The attachments are written back to the subtitle footer in list order on OK, so this is
-    /// real reordering, not a view sort.
-    /// </summary>
-    private static void AddMoveMenuItems(MenuFlyout flyout, AssaAttachmentsViewModel vm)
-    {
-        var separator = new Separator();
-        separator.Bind(Separator.IsVisibleProperty, new Binding(nameof(vm.IsMoveVisible)) { Source = vm });
-        flyout.Items.Add(separator);
-
-        var items = new (string Header, ICommand Command, KeyGesture? Gesture)[]
-        {
-            (Se.Language.General.MoveUp, vm.MoveUpCommand, new KeyGesture(Key.Up, KeyModifiers.Control)),
-            (Se.Language.General.MoveDown, vm.MoveDownCommand, new KeyGesture(Key.Down, KeyModifiers.Control)),
-            (Se.Language.General.MoveToTop, vm.MoveToTopCommand, null),
-            (Se.Language.General.MoveToBottom, vm.MoveToBottomCommand, null),
-        };
-
-        foreach (var (header, command, gesture) in items)
-        {
-            var menuItem = new MenuItem
-            {
-                Header = header,
-                DataContext = vm,
-                Command = command,
-                InputGesture = gesture,
-            };
-            menuItem.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsMoveVisible)) { Source = vm });
-            flyout.Items.Add(menuItem);
-        }
     }
 
     private static Border MakeRightView(AssaAttachmentsViewModel vm)

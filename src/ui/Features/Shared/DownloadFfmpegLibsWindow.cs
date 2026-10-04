@@ -34,11 +34,11 @@ public class DownloadFfmpegLibsWindow : Window
         var statusText = new TextBlock();
         statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
 
-        var errorText = new TextBlock { TextWrapping = TextWrapping.Wrap, MaxWidth = 450 };
-        errorText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.Error)));
+        var errorText = DownloadWindowUi.MakeErrorText(450);
 
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CommandCancelCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonCancel);
+        var buttonRetry = DownloadWindowUi.MakeButtonRetry(vm.RetryCommand);
+        var buttonBar = UiUtil.MakeButtonBar(buttonRetry, buttonCancel);
 
         Content = new StackPanel
         {

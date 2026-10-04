@@ -93,7 +93,7 @@ public class OpenAiCompatibleSpeech : ITtsEngine
         var s = Se.Settings.Video.TextToSpeech;
         return ResolveProvider(provider) switch
         {
-            ProviderOpenRouter => s.OpenRouterTtsApiKey,
+            ProviderOpenRouter => Se.Settings.Providers.OpenRouterApiKey,
             ProviderCustom => s.OpenAiCompatibleCustomApiKey,
             _ => s.OpenAiApiKey,
         } ?? string.Empty;
@@ -105,7 +105,7 @@ public class OpenAiCompatibleSpeech : ITtsEngine
         switch (ResolveProvider(provider))
         {
             case ProviderOpenRouter:
-                s.OpenRouterTtsApiKey = apiKey ?? string.Empty;
+                Se.Settings.Providers.OpenRouterApiKey = apiKey ?? string.Empty;
                 break;
             case ProviderCustom:
                 s.OpenAiCompatibleCustomApiKey = apiKey ?? string.Empty;

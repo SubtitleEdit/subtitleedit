@@ -146,6 +146,10 @@ public class LanguageTextToSpeech
     public string AdvancedTtsOutput { get; set; }
     public string ProAudioPostProcessing { get; set; }
     public string ProAudioPostProcessingDescription { get; set; }
+    public string GeneratingSpeechSegmentXOfY { get; set; }
+    public string AdjustingSpeedSegmentXOfY { get; set; }
+    public string MergingAudioSegmentXOfY { get; set; }
+    public string PostProcessingSegmentXOfY { get; set; }
     public string AudioDucking { get; set; }
     public string AudioDuckingDescription { get; set; }
     public string RemoveOriginalSpeech { get; set; }
@@ -367,6 +371,10 @@ public class LanguageTextToSpeech
         AdvancedTtsOutput = "Output";
         ProAudioPostProcessing = "Pro audio post-processing";
         ProAudioPostProcessingDescription = "Adds EQ, noise gate, compression, loudness normalization (-16 LUFS) and a short fade in/out to every clip.";
+        GeneratingSpeechSegmentXOfY = "Generating speech: segment {0} of {1}";
+        AdjustingSpeedSegmentXOfY = "Adjusting speed: segment {0} of {1}";
+        MergingAudioSegmentXOfY = "Merging audio: segment {0} of {1}";
+        PostProcessingSegmentXOfY = "Post-processing: segment {0} of {1}";
         AudioDucking = "Audio ducking";
         AudioDuckingDescription = "Turns the original video sound down and mixes the speech over it, so the original track stays faintly audible. Only applies when the speech is added to the video file.";
         RemoveOriginalSpeech = "Remove original speech (slow)";

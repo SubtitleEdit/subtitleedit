@@ -323,7 +323,7 @@ public partial class OcrViewModel : ObservableObject
             SelectedCrispEmbedBackend = CrispEmbedBackends.FirstOrDefault(p => p.Name == ocr.CrispEmbedBackend) ?? CrispEmbedBackends.FirstOrDefault();
             SelectedOllamaLanguage = ocr.OllamaLanguage;
             GoogleVisionApiKey = ocr.GoogleVisionApiKey;
-            MistralApiKey = ocr.MistralApiKey;
+            MistralApiKey = Se.Settings.Providers.MistralApiKey;
             SelectedGoogleVisionLanguage = GoogleVisionLanguages.FirstOrDefault(p => p.Code == ocr.GoogleVisionLanguage);
             SelectedAppleVisionLanguage = AppleVisionLanguages.FirstOrDefault(p => p.Code == ocr.AppleVisionLanguage);
             var paddleOcrLastLanguage = PaddleOcr.NormalizeLanguageCode(Se.Settings.Ocr.PaddleOcrLastLanguage);
@@ -373,7 +373,7 @@ public partial class OcrViewModel : ObservableObject
         ocr.CrispEmbedBackend = SelectedCrispEmbedBackend?.Name ?? ocr.CrispEmbedBackend;
         ocr.CrispEmbedModel = SelectedCrispEmbedModel?.Model.Name ?? ocr.CrispEmbedModel;
         ocr.GoogleVisionApiKey = GoogleVisionApiKey;
-        ocr.MistralApiKey = MistralApiKey;
+        Se.Settings.Providers.MistralApiKey = MistralApiKey;
         ocr.GoogleVisionLanguage = SelectedGoogleVisionLanguage?.Code ?? "en";
         ocr.AppleVisionLanguage = SelectedAppleVisionLanguage?.Code ?? ocr.AppleVisionLanguage;
         ocr.TesseractLastLanguage = SelectedTesseractDictionaryItem?.Code ?? "eng";

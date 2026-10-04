@@ -174,6 +174,29 @@ public class StyleFileImportHelperTests : IDisposable
         Assert.True(styles[1].Italic);
     }
 
+    /// <summary>
+    /// The SSA styles window imports from .ass and .sty files too, not just .ssa.
+    /// </summary>
+    [Fact]
+    public void LoadStylesForSsa_ImportsAssSsaAndStyFiles()
+    {
+        var subtitle = new Subtitle
+        {
+            Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(AdvancedSubStationAlpha.DefaultHeader, MakeStyles())
+        };
+        subtitle.Paragraphs.Add(new Paragraph("Hello", 1000, 2000) { Extra = "Narrator" });
+        var assFile = WriteTempFile(".ass", subtitle.ToText(new AdvancedSubStationAlpha()));
+        var assStyleOnlyFile = WriteTempFile(".ass", ExportAssStyles(MakeStyles()));
+        var ssaFile = WriteTempFile(".ssa", ExportSsaStyles(MakeStyles()));
+        var styFile = WriteTempFile(".sty",
+            "Style: FromSty,Tahoma,30,&H00FFFFFF,&H0000FFFF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,1,1,2,10,10,10,1" + Environment.NewLine);
+
+        Assert.Equal(new[] { "Default", "Narrator" }, StyleFileImportHelper.LoadStylesForSsa(assFile).Select(p => p.Name).ToArray());
+        Assert.Equal(new[] { "Default", "Narrator" }, StyleFileImportHelper.LoadStylesForSsa(assStyleOnlyFile).Select(p => p.Name).ToArray());
+        Assert.Equal(new[] { "Default", "Narrator" }, StyleFileImportHelper.LoadStylesForSsa(ssaFile).Select(p => p.Name).ToArray());
+        Assert.Equal("FromSty", Assert.Single(StyleFileImportHelper.LoadStylesForSsa(styFile)).Name);
+    }
+
     [Fact]
     public void LoadStyles_ImportsFromNormalSubtitleFile()
     {

@@ -235,7 +235,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         Configuration.Settings.Tools.OllamaModel = Se.Settings.AutoTranslate.OllamaModel;
         Configuration.Settings.Tools.OllamaPrompt = Se.Settings.AutoTranslate.OllamaPrompt;
 
-        Configuration.Settings.Tools.OpenRouterApiKey = Se.Settings.AutoTranslate.OpenRouterApiKey;
+        Configuration.Settings.Tools.OpenRouterApiKey = Se.Settings.Providers.OpenRouterApiKey;
         Configuration.Settings.Tools.OpenRouterModel = Se.Settings.AutoTranslate.OpenRouterModel;
         Configuration.Settings.Tools.OpenRouterPrompt = Se.Settings.AutoTranslate.OpenRouterPrompt;
 
@@ -302,7 +302,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         Configuration.Settings.Tools.NvidiaModel = Se.Settings.AutoTranslate.NvidiaModel;
         Configuration.Settings.Tools.NvidiaPrompt = Se.Settings.AutoTranslate.NvidiaPrompt;
 
-        Configuration.Settings.Tools.AutoTranslateMistralApiKey = Se.Settings.AutoTranslate.MistralApiKey;
+        Configuration.Settings.Tools.AutoTranslateMistralApiKey = Se.Settings.Providers.MistralApiKey;
         Configuration.Settings.Tools.AutoTranslateMistralUrl = Se.Settings.AutoTranslate.MistralUrl;
         Configuration.Settings.Tools.AutoTranslateMistralModel = Se.Settings.AutoTranslate.MistralModel;
         Configuration.Settings.Tools.AutoTranslateMistralPrompt = Se.Settings.AutoTranslate.MistralPrompt;
@@ -567,7 +567,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         Se.Settings.AutoTranslate.OllamaModel = Configuration.Settings.Tools.OllamaModel;
         Se.Settings.AutoTranslate.OllamaPrompt = Configuration.Settings.Tools.OllamaPrompt;
 
-        Se.Settings.AutoTranslate.OpenRouterApiKey = Configuration.Settings.Tools.OpenRouterApiKey;
+        Se.Settings.Providers.OpenRouterApiKey = Configuration.Settings.Tools.OpenRouterApiKey;
         Se.Settings.AutoTranslate.OpenRouterModel = Configuration.Settings.Tools.OpenRouterModel;
         Se.Settings.AutoTranslate.OpenRouterPrompt = Configuration.Settings.Tools.OpenRouterPrompt;
 
@@ -625,7 +625,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         Se.Settings.AutoTranslate.NvidiaModel = Configuration.Settings.Tools.NvidiaModel;
         Se.Settings.AutoTranslate.NvidiaPrompt = Configuration.Settings.Tools.NvidiaPrompt;
 
-        Se.Settings.AutoTranslate.MistralApiKey = Configuration.Settings.Tools.AutoTranslateMistralApiKey;
+        Se.Settings.Providers.MistralApiKey = Configuration.Settings.Tools.AutoTranslateMistralApiKey;
         Se.Settings.AutoTranslate.MistralUrl = Configuration.Settings.Tools.AutoTranslateMistralUrl;
         Se.Settings.AutoTranslate.MistralModel = Configuration.Settings.Tools.AutoTranslateMistralModel;
         Se.Settings.AutoTranslate.MistralPrompt = Configuration.Settings.Tools.AutoTranslateMistralPrompt;

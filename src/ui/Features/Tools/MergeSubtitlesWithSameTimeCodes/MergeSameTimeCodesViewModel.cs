@@ -18,7 +18,7 @@ public partial class MergeSameTimeCodesViewModel : ObservableObject, IClosingCle
 {
     [ObservableProperty] private ObservableCollection<MergeDisplayItem> _mergeItems;
     [ObservableProperty] private MergeDisplayItem? _selectedMergeItem;
-    [ObservableProperty] private int _maxMillisecondsDifference;
+    [ObservableProperty] private int _maxMsOrFramesDifference;
     [ObservableProperty] private bool _mergeDialog;
     [ObservableProperty] private bool _autoBreak;
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _mergeSubtitles;
@@ -26,6 +26,15 @@ public partial class MergeSameTimeCodesViewModel : ObservableObject, IClosingCle
     [ObservableProperty] private bool _isOkEnabled;
 
     public Window? Window { get; set; }
+
+    /// <summary>Frame mode: the box holds frames, like Bridge gaps and Apply min gap.</summary>
+    public bool IsFrameMode { get; }
+
+    public string MaxDifferenceLabel { get; }
+
+    // The saved milliseconds the box was filled from - kept on save when the frame count is
+    // unchanged, so a run in frame mode does not round the setting to whole frames.
+    private int _loadedMaxDifferenceMs;
 
     public bool OkPressed { get; private set; }
     public List<SubtitleLineViewModel> ResultSubtitles { get; set; }
@@ -39,6 +48,10 @@ public partial class MergeSameTimeCodesViewModel : ObservableObject, IClosingCle
 
     public MergeSameTimeCodesViewModel()
     {
+        IsFrameMode = Se.Settings.General.UseFrameMode;
+        MaxDifferenceLabel = IsFrameMode
+            ? Se.Language.Tools.MergeLinesWithSameTimeCodes.MaxFramesDifference
+            : Se.Language.Tools.MergeLinesWithSameTimeCodes.MaxMsDifference;
         MergeItems = new ObservableCollection<MergeDisplayItem>();
         MergeSubtitles = new ObservableCollection<SubtitleLineViewModel>();
         ResultSubtitles = new List<SubtitleLineViewModel>();
@@ -113,7 +126,7 @@ public partial class MergeSameTimeCodesViewModel : ObservableObject, IClosingCle
             }
 
             var next = _subtitles[i];
-            if (p != null && QualifiesForMerge(p, next, MaxMillisecondsDifference))
+            if (p != null && QualifiesForMerge(p, next, MsOrFrames.ToMilliseconds(MaxMsOrFramesDifference, IsFrameMode)))
             {
                 if (!singleMergeSubtitles.Contains(p))
                 {
@@ -231,14 +244,15 @@ public partial class MergeSameTimeCodesViewModel : ObservableObject, IClosingCle
 
     private void LoadSettings()
     {
-        MaxMillisecondsDifference = Se.Settings.Tools.MergeSameTimeCode.MaxMillisecondsDifference;
+        _loadedMaxDifferenceMs = Se.Settings.Tools.MergeSameTimeCode.MaxMillisecondsDifference;
+        MaxMsOrFramesDifference = MsOrFrames.FromMilliseconds(_loadedMaxDifferenceMs, IsFrameMode);
         MergeDialog = Se.Settings.Tools.MergeSameTimeCode.MergeDialog;
         AutoBreak = Se.Settings.Tools.MergeSameTimeCode.AutoBreak;
     }
 
     private void SaveSettings()
     {
-        Se.Settings.Tools.MergeSameTimeCode.MaxMillisecondsDifference = MaxMillisecondsDifference;
+        Se.Settings.Tools.MergeSameTimeCode.MaxMillisecondsDifference = MsOrFrames.ToMillisecondsForSave(MaxMsOrFramesDifference, IsFrameMode, _loadedMaxDifferenceMs);
         Se.Settings.Tools.MergeSameTimeCode.MergeDialog = MergeDialog;
         Se.Settings.Tools.MergeSameTimeCode.AutoBreak = AutoBreak;
 

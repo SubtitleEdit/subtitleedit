@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using System.Collections.Generic;
+using System;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 
@@ -67,7 +68,8 @@ public class SeAutoTranslate
     public string CopyPasteLineSeparator { get; set; }
     public string OpenRouterUrl { get; set; }
     public string OpenRouterPrompt { get; set; }
-    public string OpenRouterApiKey { get; set; }
+    [Obsolete("Use Se.Settings.Providers.OpenRouterApiKey - kept only so old settings files can be migrated.")]
+    public string OpenRouterApiKey { get; set; } = string.Empty;
     public string OpenRouterModel { get; set; }
     public string LibreTranslateApiKey { get; set; }
     public string LibreTranslateUrl { get; set; }
@@ -89,7 +91,8 @@ public class SeAutoTranslate
     public string NvidiaModel { get; set; }
     public string PapagoApiKeyId { get; set; }
     public string PapagoApiKey { get; set; }
-    public string MistralApiKey { get; set; }
+    [Obsolete("Use Se.Settings.Providers.MistralApiKey - kept only so old settings files can be migrated.")]
+    public string MistralApiKey { get; set; } = string.Empty;
     public string MistralUrl { get; set; }
     public string MistralModel { get; set; }
     public string MistralPrompt { get; set; }
@@ -195,7 +198,6 @@ public class SeAutoTranslate
         MicrosoftTranslatorApiKey = string.Empty;
         MicrosoftTranslatorCategory = string.Empty;
         MicrosoftTranslatorTokenEndpoint = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
-        MistralApiKey = string.Empty;
         MistralModel = MistralTranslate.Models[0];
         MistralPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
         MistralUrl = MistralTranslate.DefaultUrl;
@@ -207,7 +209,6 @@ public class SeAutoTranslate
         OllamaModels = "llama3.2,llama3.2:1b,phi3,gemma2,qwen2,mistral";
         OllamaPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments or notes:";
         OllamaUrl = OllamaTranslate.DefaultUrl;
-        OpenRouterApiKey = string.Empty;
         OpenRouterModel = OpenRouterTranslate.Models[0];
         OpenRouterPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
         OpenRouterUrl = OpenRouterTranslate.DefaultUrl;

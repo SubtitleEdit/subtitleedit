@@ -7,7 +7,6 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using System.Collections;
-using System.Windows.Input;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -212,7 +211,7 @@ public class AssaStylesWindow : Window
         menuItemReplaceWith.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsFileStyleSelected)) { Source = vm });
         flyout.Items.Add(menuItemReplaceWith);
 
-        AddMoveMenuItems(flyout, vm, vm.FileMoveUpCommand, vm.FileMoveDownCommand, vm.FileMoveToTopCommand, vm.FileMoveToBottomCommand);
+        StylesDialogHelper.AddMoveMenuItems(flyout, vm, nameof(vm.IsMoveVisible), vm.FileMoveUpCommand, vm.FileMoveDownCommand, vm.FileMoveToTopCommand, vm.FileMoveToBottomCommand);
 
         var buttonNew = UiUtil.MakeButton(vm.FileNewCommand, IconNames.Plus, Se.Language.General.New);
         var buttonRemove = UiUtil.MakeButton(vm.FileRemoveCommand, IconNames.Trash, Se.Language.General.Delete);
@@ -317,6 +316,7 @@ public class AssaStylesWindow : Window
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedStorageStyle)) { Source = vm });
         dataGrid.SelectionChanged += vm.StorageStylesChanged;
         dataGrid.GotFocus += vm.StorageStylesGotFocus;
+        dataGrid.KeyDown += vm.StorageStylesKeyDown;
         dataGrid.AddHandler(InputElement.KeyDownEvent, vm.StorageStylesMoveKeyDown, RoutingStrategies.Tunnel);
         vm.StorageStyleGrid = dataGrid;
 
@@ -370,7 +370,7 @@ public class AssaStylesWindow : Window
         menuItemMoveToCategory.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsStorageStyleSelected)) { Source = vm });
         flyout.Items.Add(menuItemMoveToCategory);
 
-        AddMoveMenuItems(flyout, vm, vm.StorageMoveUpCommand, vm.StorageMoveDownCommand, vm.StorageMoveToTopCommand, vm.StorageMoveToBottomCommand);
+        StylesDialogHelper.AddMoveMenuItems(flyout, vm, nameof(vm.IsMoveVisible), vm.StorageMoveUpCommand, vm.StorageMoveDownCommand, vm.StorageMoveToTopCommand, vm.StorageMoveToBottomCommand);
 
         var buttonNew = UiUtil.MakeButton(vm.StorageNewCommand, IconNames.Plus, Se.Language.General.New);
         var buttonDuplicate = UiUtil.MakeButton(vm.StorageDuplicateCommand, IconNames.Duplicate, Se.Language.General.Duplicate);
@@ -708,38 +708,5 @@ public class AssaStylesWindow : Window
         };
 
         return button;
-    }
-
-    /// <summary>
-    /// The "move up/down/to top/to bottom" block of the file styles (#13056) and storage
-    /// styles (#15312) context menus. Both lists are saved in list order, so this is real
-    /// reordering, not a view sort.
-    /// </summary>
-    private static void AddMoveMenuItems(MenuFlyout flyout, AssaStylesViewModel vm, ICommand moveUp, ICommand moveDown, ICommand moveToTop, ICommand moveToBottom)
-    {
-        var separator = new Separator();
-        separator.Bind(Separator.IsVisibleProperty, new Binding(nameof(vm.IsMoveVisible)) { Source = vm });
-        flyout.Items.Add(separator);
-
-        var items = new (string Header, ICommand Command, KeyGesture? Gesture)[]
-        {
-            (Se.Language.General.MoveUp, moveUp, new KeyGesture(Key.Up, KeyModifiers.Control)),
-            (Se.Language.General.MoveDown, moveDown, new KeyGesture(Key.Down, KeyModifiers.Control)),
-            (Se.Language.General.MoveToTop, moveToTop, null),
-            (Se.Language.General.MoveToBottom, moveToBottom, null),
-        };
-
-        foreach (var (header, command, gesture) in items)
-        {
-            var menuItem = new MenuItem
-            {
-                Header = header,
-                DataContext = vm,
-                Command = command,
-                InputGesture = gesture,
-            };
-            menuItem.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsMoveVisible)) { Source = vm });
-            flyout.Items.Add(menuItem);
-        }
     }
 }

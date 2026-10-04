@@ -304,7 +304,7 @@ public class OpenRouterSttService : ISttTranscriber
         return new OpenRouterSttSettings
         {
             EndpointUrl = DefaultEndpointUrl,
-            ApiKey = tools.OpenRouterSttApiKey,
+            ApiKey = Se.Settings.Providers.OpenRouterApiKey,
             Model = tools.OpenRouterSttModel,
             Language = tools.OpenRouterSttLanguage,
             Temperature = (double)tools.OpenRouterSttTemperature,

@@ -1,9 +1,11 @@
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using System.Collections;
+using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -52,14 +54,19 @@ public class SsaAttachmentsWindow : Window
         var labelPreview = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.PreviewTitle));
         var buttonCopyToClipboard = UiUtil.MakeButton(Se.Language.General.CopyToClipboard, vm.CopyFontNameToClipboardCommand)
             .WithBindIsVisible(nameof(vm.IsCopyFontnameToClipboardVisible));
-        var previewLine = UiUtil.MakeHorizontalPanel(labelPreview, buttonCopyToClipboard);
+        var buttonCopyToSeFontsFolder = UiUtil.MakeButton(Se.Language.Assa.FontCollectorCopyFontsToSeFontsFolder, vm.CopyToSeFontsFolderCommand)
+            .WithIconLeft(IconNames.FormatFont)
+            .WithBindIsVisible(nameof(vm.IsCopyFontnameToClipboardVisible));
+        var previewLine = UiUtil.MakeHorizontalPanel(labelPreview, buttonCopyToClipboard, buttonCopyToSeFontsFolder);
 
         var buttonAttach = UiUtil.MakeButton(Se.Language.General.AttachDotDotDot, vm.FileAttachCommand);
         var buttonImport = UiUtil.MakeButton(Se.Language.General.ImportDotDotDot, vm.FileImportCommand);
         var buttonExport = UiUtil.MakeButton(Se.Language.General.ExportDotDotDot, vm.FileExportCommand);
+        var buttonTrimFonts = UiUtil.MakeButton(Se.Language.Assa.TrimFontsDotDotDot, vm.TrimFontsToUsedCharactersCommand)
+            .WithIconLeft(IconNames.ContentCut);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonAttach, buttonImport, buttonExport, buttonOk, buttonCancel);
+        var panelButtons = UiUtil.MakeButtonBar(buttonAttach, buttonImport, buttonExport, buttonTrimFonts, buttonOk, buttonCancel);
 
         grid.Add(labelFontsAndImages, 0);
         grid.Add(previewLine, 0, 1);
@@ -129,7 +136,9 @@ public class SsaAttachmentsWindow : Window
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedAttachment)) { Source = vm });
         dataGrid.SelectionChanged += vm.DataGridSelectionChanged;
         dataGrid.KeyDown += vm.AttachmentsDataGridKeyDown;
+        dataGrid.AddHandler(InputElement.KeyDownEvent, vm.AttachmentsMoveKeyDown, RoutingStrategies.Tunnel);
         TableViewExtras.AttachListNavigation(dataGrid);
+        vm.AttachmentGrid = dataGrid;
 
         var flyout = new MenuFlyout();
         flyout.Opening += vm.AttachmentsContextMenuOpening;
@@ -153,6 +162,8 @@ public class SsaAttachmentsWindow : Window
         };
         menuItemClear.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteAllVisible)) { Source = vm });
         flyout.Items.Add(menuItemClear);
+
+        StylesDialogHelper.AddMoveMenuItems(flyout, vm, nameof(vm.IsMoveVisible), vm.MoveUpCommand, vm.MoveDownCommand, vm.MoveToTopCommand, vm.MoveToBottomCommand);
 
         grid.Add(dataGrid, 0);
 

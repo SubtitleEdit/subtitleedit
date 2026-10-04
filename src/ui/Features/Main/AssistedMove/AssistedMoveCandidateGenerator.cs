@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Forms;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
@@ -578,8 +579,8 @@ public static class AssistedMoveCandidateGenerator
 
     private static string MakeInfo(string newText, TimeSpan start, TimeSpan end)
     {
-        var startText = new TimeCode(start).ToShortDisplayString();
-        var endText = new TimeCode(end).ToShortDisplayString();
+        var startText = TimeCodeShortDisplay.Format(start.TotalMilliseconds, localize: true);
+        var endText = TimeCodeShortDisplay.Format(end.TotalMilliseconds, localize: true);
         var chars = CountVisibleCharacters(newText);
         var seconds = (end - start).TotalSeconds;
         var cps = seconds > 0.001 ? chars / seconds : 0;

@@ -275,7 +275,7 @@ public static class Se4SettingsXmlImporter
 
         var t = Se.Settings.AutoTranslate;
 
-        foreach (var (se4Name, apply) in AutoTranslateMap(t))
+        foreach (var (se4Name, apply) in AutoTranslateMap(t, Se.Settings.Providers))
         {
             var value = Value(tools, se4Name);
             if (!string.IsNullOrWhiteSpace(value))
@@ -289,7 +289,7 @@ public static class Se4SettingsXmlImporter
         SetInt(tools, "TranslateViaCopyPasteMaxSize", 1, int.MaxValue, v => t.CopyPasteMaxBlockSize = v);
     }
 
-    private static IEnumerable<(string Name, Action<string> Apply)> AutoTranslateMap(SeAutoTranslate t)
+    private static IEnumerable<(string Name, Action<string> Apply)> AutoTranslateMap(SeAutoTranslate t, SeProviders p)
     {
         yield return ("GoogleApiV2Key", v => t.GoogleApiV2Key = v);
         yield return ("MicrosoftBingApiId", v => t.MicrosoftBingApiId = v);
@@ -310,7 +310,7 @@ public static class Se4SettingsXmlImporter
         yield return ("AutoTranslateSeamlessM4TUrl", v => t.SeamlessM4TUrl = v);
         yield return ("AutoTranslatePapagoApiKeyId", v => t.PapagoApiKeyId = v);
         yield return ("AutoTranslatePapagoApiKey", v => t.PapagoApiKey = v);
-        yield return ("AutoTranslateMistralApiKey", v => t.MistralApiKey = v);
+        yield return ("AutoTranslateMistralApiKey", v => p.MistralApiKey = v);
         yield return ("AutoTranslateMistralUrl", v => t.MistralUrl = v);
         yield return ("AutoTranslateMistralModel", v => t.MistralModel = v);
         yield return ("AutoTranslateMistralPrompt", v => t.MistralPrompt = v);
@@ -337,7 +337,7 @@ public static class Se4SettingsXmlImporter
         yield return ("ApiRouteModel", v => t.ApiRouteModel = v);
         yield return ("OpenRouterUrl", v => t.OpenRouterUrl = v);
         yield return ("OpenRouterPrompt", v => t.OpenRouterPrompt = v);
-        yield return ("OpenRouterApiKey", v => t.OpenRouterApiKey = v);
+        yield return ("OpenRouterApiKey", v => p.OpenRouterApiKey = v);
         yield return ("OpenRouterModel", v => t.OpenRouterModel = v);
         yield return ("LmStudioApiUrl", v => t.LmStudioApiUrl = v);
         yield return ("LmStudioModel", v => t.LmStudioModel = v);

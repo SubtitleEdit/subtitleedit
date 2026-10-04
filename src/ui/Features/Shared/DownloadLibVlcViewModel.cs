@@ -109,6 +109,11 @@ public partial class DownloadLibVlcViewModel : ObservableObject, IClosingCleanup
                     Error = exception.Message;
                     return;
                 }
+                finally
+                {
+                    // The ~40 MB .7z was left in the data folder after every install.
+                    TryDeleteTempFile();
+                }
 
                 StopIndeterminateProgress();
 
@@ -119,6 +124,7 @@ public partial class DownloadLibVlcViewModel : ObservableObject, IClosingCleanup
             {
                 _timer.Stop();
                 _done = true;
+                TryDeleteTempFile();
                 var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
                 if (ex is OperationCanceledException)
                 {
@@ -155,6 +161,43 @@ public partial class DownloadLibVlcViewModel : ObservableObject, IClosingCleanup
         {
             Window?.Close();
         });
+    }
+
+    [RelayCommand]
+    private void Retry()
+    {
+        lock (_lockObj)
+        {
+            if (!_done || _cancellationTokenSource.IsCancellationRequested)
+            {
+                return;
+            }
+
+            StopIndeterminateProgress();
+            TryDeleteTempFile();
+            Error = string.Empty;
+            ProgressValue = 0;
+            ProgressOpacity = 1.0;
+            ProgressText = string.Empty;
+            _done = false;
+            StartDownloadCore();
+            _timer.Start();
+        }
+    }
+
+    private void TryDeleteTempFile()
+    {
+        try
+        {
+            if (!string.IsNullOrEmpty(_tempFileName) && File.Exists(_tempFileName))
+            {
+                File.Delete(_tempFileName);
+            }
+        }
+        catch
+        {
+            // temp file, best effort
+        }
     }
 
     [RelayCommand]

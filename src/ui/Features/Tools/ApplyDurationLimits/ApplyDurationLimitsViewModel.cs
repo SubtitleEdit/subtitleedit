@@ -24,10 +24,10 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _subtitles;
     [ObservableProperty] private SubtitleLineViewModel? _selectedSubtitle;
 
-    [ObservableProperty] private int? _minDurationMs;
+    [ObservableProperty] private int? _minDurationMsOrFrames;
     [ObservableProperty] private bool _fixMinDurationMs;
 
-    [ObservableProperty] private int? _maxDurationMs;
+    [ObservableProperty] private int? _maxDurationMsOrFrames;
     [ObservableProperty] private bool _fixMaxDurationMs;
 
     [ObservableProperty] private bool _doNotGoPastShotChange;
@@ -35,6 +35,12 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
 
     [ObservableProperty] private string _fixesInfo;
     [ObservableProperty] private string _fixesSkippedInfo;
+
+    /// <summary>Frame mode: both boxes hold frames, like Bridge gaps and Apply min gap.</summary>
+    public bool IsFrameMode { get; }
+
+    public string FixMinDurationLabel { get; }
+    public string FixMaxDurationLabel { get; }
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -48,8 +54,20 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
     private bool _isDirty;
     private List<double> _shotChanges;
 
+    // The saved milliseconds the boxes were filled from - kept on save when the frame count is
+    // unchanged, so a run in frame mode does not round the setting to whole frames.
+    private int _loadedMinDurationMs;
+    private int _loadedMaxDurationMs;
+
     public ApplyDurationLimitsViewModel()
     {
+        IsFrameMode = Se.Settings.General.UseFrameMode;
+        FixMinDurationLabel = IsFrameMode
+            ? Se.Language.Tools.ApplyDurationLimits.FixMinDurationFrames
+            : Se.Language.Tools.ApplyDurationLimits.FixMinDurationMs;
+        FixMaxDurationLabel = IsFrameMode
+            ? Se.Language.Tools.ApplyDurationLimits.FixMaxDurationFrames
+            : Se.Language.Tools.ApplyDurationLimits.FixMaxDurationMs;
         Fixes = new ObservableCollection<ApplyDurationLimitItem>();
         Subtitles = new ObservableCollection<SubtitleLineViewModel>();
         _allSubtitles = new List<SubtitleLineViewModel>();
@@ -114,7 +132,7 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
     /// </summary>
     private void BuildPreview()
     {
-        if (MinDurationMs == null || MaxDurationMs == null || _allSubtitles.Count == 0)
+        if (MinDurationMsOrFrames == null || MaxDurationMsOrFrames == null || _allSubtitles.Count == 0)
         {
             return;
         }
@@ -126,13 +144,13 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
         // Only a conflict when both limits are actually applied - bailing out whenever the
         // numbers cross meant "shorten to 500 ms" with a stale 1000 ms minimum in the other
         // box silently did nothing at all.
-        if (FixMinDurationMs && FixMaxDurationMs && MinDurationMs >= MaxDurationMs)
+        if (FixMinDurationMs && FixMaxDurationMs && MinDurationMsOrFrames >= MaxDurationMsOrFrames)
         {
             return;
         }
 
-        var minMs = MinDurationMs.Value;
-        var maxMs = MaxDurationMs.Value;
+        var minMs = MsOrFrames.ToMilliseconds(MinDurationMsOrFrames.Value, IsFrameMode);
+        var maxMs = MsOrFrames.ToMilliseconds(MaxDurationMsOrFrames.Value, IsFrameMode);
         var fixCount = 0;
         var improveCount = 0;
         var skipCount = 0;
@@ -262,15 +280,18 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
     {
         // 0 means "not saved yet" - fall back to the general defaults (#13514 pattern). Saving the
         // dialog's own copy keeps a one-off run from rewriting the app-wide duration settings.
+        // Stored in milliseconds; in frame mode the boxes show frames at the current frame rate.
         FixMinDurationMs = true;
-        MinDurationMs = Se.Settings.Tools.ApplyDurationLimitsMinDurationMs > 0
+        _loadedMinDurationMs = Se.Settings.Tools.ApplyDurationLimitsMinDurationMs > 0
             ? Se.Settings.Tools.ApplyDurationLimitsMinDurationMs
             : Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
+        MinDurationMsOrFrames = MsOrFrames.FromMilliseconds(_loadedMinDurationMs, IsFrameMode);
 
         FixMaxDurationMs = true;
-        MaxDurationMs = Se.Settings.Tools.ApplyDurationLimitsMaxDurationMs > 0
+        _loadedMaxDurationMs = Se.Settings.Tools.ApplyDurationLimitsMaxDurationMs > 0
             ? Se.Settings.Tools.ApplyDurationLimitsMaxDurationMs
             : Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
+        MaxDurationMsOrFrames = MsOrFrames.FromMilliseconds(_loadedMaxDurationMs, IsFrameMode);
 
         DoNotGoPastShotChange = Se.Settings.Tools.ApplyDurationLimits.DoNotExtendPastShotChange;
     }
@@ -278,8 +299,12 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
     private void SaveSettings()
     {
         Se.Settings.Tools.ApplyDurationLimits.DoNotExtendPastShotChange = DoNotGoPastShotChange;
-        Se.Settings.Tools.ApplyDurationLimitsMinDurationMs = MinDurationMs ?? 0;
-        Se.Settings.Tools.ApplyDurationLimitsMaxDurationMs = MaxDurationMs ?? 0;
+        Se.Settings.Tools.ApplyDurationLimitsMinDurationMs = MinDurationMsOrFrames is { } min
+            ? MsOrFrames.ToMillisecondsForSave(min, IsFrameMode, _loadedMinDurationMs)
+            : 0;
+        Se.Settings.Tools.ApplyDurationLimitsMaxDurationMs = MaxDurationMsOrFrames is { } max
+            ? MsOrFrames.ToMillisecondsForSave(max, IsFrameMode, _loadedMaxDurationMs)
+            : 0;
         Se.SaveSettings();
     }
 
@@ -293,7 +318,7 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
 
         SaveSettings();
 
-        if (FixMinDurationMs && FixMaxDurationMs && MinDurationMs >= MaxDurationMs)
+        if (FixMinDurationMs && FixMaxDurationMs && MinDurationMsOrFrames >= MaxDurationMsOrFrames)
         {
             var msg = Se.Language.Tools.ApplyDurationLimits.MaxDurationShouldBeHigherThanMinDuration;
             await MessageBox.Show(Window, Se.Language.General.Error, msg, MessageBoxButtons.OK, MessageBoxIcon.Warning);
