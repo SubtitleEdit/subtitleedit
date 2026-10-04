@@ -17,8 +17,14 @@ namespace UITests.Features.Main;
 /// The request now carries the header and the paragraphs, and a response with paragraphs is
 /// applied without a re-parse.
 /// </summary>
-public class PluginParagraphsTests
+public class PluginParagraphsTests : IDisposable
 {
+    // Selecting EBU STL turns on the session-only frame-mode override (and libse's HH:MM:SS:FF
+    // mirror); left on, every later test that sets UseFrameMode = false still runs in frame mode.
+    private readonly SettingsScope _frameMode = new("General.UseFrameMode");
+
+    public void Dispose() => _frameMode.Dispose();
+
     private static readonly string GsiHeader = new Ebu.EbuGeneralSubtitleInformation().ToString();
 
     [AvaloniaFact]

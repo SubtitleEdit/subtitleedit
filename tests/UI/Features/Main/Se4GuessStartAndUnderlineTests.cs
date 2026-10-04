@@ -29,8 +29,13 @@ public class Se4GuessStartAndUnderlineTests : IDisposable
     private readonly double _maxCps = Se.Settings.General.SubtitleMaximumCharactersPerSeconds;
     private readonly int _minDisplayMs = Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
 
+    // The box test switches the format to EBU STL, which turns on the session-only frame-mode
+    // override; restore it so later tests are not left in frame mode.
+    private readonly SettingsScope _frameMode = new("General.UseFrameMode");
+
     public void Dispose()
     {
+        _frameMode.Dispose();
         Se.Settings.General.LockTimeCodes = _timeCodesLocked;
         Se.Settings.Waveform.GuessStartOffsetMs = _guessStartOffsetMs;
         Se.Settings.Waveform.GuessEndOffsetMs = _guessEndOffsetMs;

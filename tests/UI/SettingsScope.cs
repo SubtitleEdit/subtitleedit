@@ -38,13 +38,32 @@ internal sealed class SettingsScope : IDisposable
 
     internal SettingsScope(params string[] paths)
     {
-        foreach (var path in paths)
+        // UseFrameMode is computed: it reads the session-only UseFrameModeOverride (forced on while
+        // EBU STL is the main window's format) before the persisted value, and its setter only
+        // writes the persisted value. So a test that sets UseFrameMode = false while an earlier
+        // test left the override on still runs in frame mode - and restoring through the computed
+        // getter would write the override into the persisted value. Snapshot both backing
+        // properties instead, and clear the override for the scope so the test's own choice holds.
+        var frameMode = paths.Contains("General.UseFrameMode");
+        var expanded = frameMode
+            ? paths.Where(p => p != "General.UseFrameMode")
+                .Append("General.UseFrameModePersisted")
+                .Append("General.UseFrameModeOverride")
+                .Distinct()
+            : paths;
+
+        foreach (var path in expanded)
         {
             var (owner, property) = Resolve(path);
             _saved.Add((property, owner, property.GetValue(owner)));
         }
 
-        _restoreLibSeTimeFormat = paths.Contains("General.UseFrameMode");
+        if (frameMode)
+        {
+            Se.Settings.General.UseFrameModeOverride = null;
+        }
+
+        _restoreLibSeTimeFormat = paths.Any(p => p.StartsWith("General.UseFrameMode", StringComparison.Ordinal));
         if (_restoreLibSeTimeFormat)
         {
             _libSeUseTimeFormatHhMmSsFf = Configuration.Settings.General.UseTimeFormatHHMMSSFF;
