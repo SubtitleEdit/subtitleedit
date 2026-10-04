@@ -5,7 +5,7 @@ The subtitle editor :)
 ---
 
 ## 🌐 Documentation & FAQ
-http://subtitleedit.github.io/subtitleedit/
+https://subtitleedit.github.io/subtitleedit/
 
 ---
 
@@ -45,28 +45,29 @@ flatpak install SubtitleEdit-linux-x64.flatpak
 flatpak run dk.nikse.subtitleedit
 ```
 
-#### Native packages
+#### Native builds (`.tar.gz`)
 
 Requires mpv and ffmpeg (ffmpeg is normally already installed) to enable video functionality.
 
-#### Debian/Ubuntu
+##### Debian/Ubuntu
 ```bash
 sudo apt update && sudo apt install -y mpv libmpv-dev ffmpeg
 ```
 
-#### Arch
+##### Arch
 ```bash
 sudo pacman -S mpv ffmpeg
 ```
 
-#### Fedora
+##### Fedora
 ```bash
-sudo dnf install mpv-libs ffmpeg
+sudo dnf install mpv-libs ffmpeg-free
 ```
+(or `ffmpeg` from [RPM Fusion](https://rpmfusion.org/))
 
-#### openSUSE
+##### openSUSE
 ```bash
-sudo zypper install libmpv1 ffmpeg
+sudo zypper install mpv ffmpeg
 ```
 
 > ⚙️ Note: The provided builds are self-contained and do not require a separate .NET installation.
