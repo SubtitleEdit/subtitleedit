@@ -672,7 +672,8 @@ public sealed partial class SubtitleRetimer
     /// Only lines that may move are changed. An end gives way first: it marks when the line
     /// comes down, which can be any time after the speech, while the start is where the speech
     /// begins. Only when the earlier line cannot give way, or would be left with almost nothing,
-    /// does the later line start later.
+    /// does the later line start later. When that line may not move either, the two are left
+    /// overlapping rather than the earlier one being cut down to nothing.
     /// </summary>
     public static void Settle(IReadOnlyList<Line> original, Placement[] placements, double minGapSeconds)
     {
@@ -706,10 +707,9 @@ public sealed partial class SubtitleRetimer
                     EndSeconds = Math.Max(current.EndSeconds, start + Math.Max(shortestSeconds, Math.Min(duration, 1.0))),
                 };
             }
-            else if (previous.CanMove)
-            {
-                placements[i - 1] = previous with { EndSeconds = Math.Max(previous.StartSeconds + 0.001, latestEnd) };
-            }
+
+            // Neither can give way: the later line stays put (placed by hand, or not taken), and
+            // cutting the earlier one down to a few milliseconds is worse than the overlap.
         }
     }
 

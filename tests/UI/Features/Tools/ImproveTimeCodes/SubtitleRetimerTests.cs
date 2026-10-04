@@ -458,6 +458,39 @@ public class SubtitleRetimerTests : IDisposable
     }
 
     [Fact]
+    public void Settle_ALinePlacedByHandRightAfterTheStartOfTheLineBefore_DoesNotSquashIt()
+    {
+        var original = new List<SubtitleRetimer.Line> { new("a", 10, 12), new("b", 12.5, 14) };
+        var placements = new[]
+        {
+            new SubtitleRetimer.Placement(10, 12, true),
+            new SubtitleRetimer.Placement(10.05, 11.5, false), // dragged by hand into a
+        };
+
+        SubtitleRetimer.Settle(original, placements, 0.024);
+
+        Assert.Equal(10.0, placements[0].StartSeconds, 3);
+        Assert.Equal(12.0, placements[0].EndSeconds, 3);
+        Assert.Equal(10.05, placements[1].StartSeconds, 3);
+    }
+
+    [Fact]
+    public void Settle_ALinePlacedByHand_StillCutsTheLineBeforeWhenThereIsRoom()
+    {
+        var original = new List<SubtitleRetimer.Line> { new("a", 10, 12), new("b", 12.5, 14) };
+        var placements = new[]
+        {
+            new SubtitleRetimer.Placement(10, 12, true),
+            new SubtitleRetimer.Placement(11, 13, false),
+        };
+
+        SubtitleRetimer.Settle(original, placements, 0.1);
+
+        Assert.Equal(10.9, placements[0].EndSeconds, 3);
+        Assert.Equal(11.0, placements[1].StartSeconds, 3);
+    }
+
+    [Fact]
     public void Tidy_AdjustEndOff_LeavesTheEndWhereItWas()
     {
         // 40 characters at 15 per second want 2.67 s - more than the line ever had
