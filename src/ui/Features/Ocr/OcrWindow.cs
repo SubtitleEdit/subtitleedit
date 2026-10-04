@@ -398,9 +398,7 @@ public class OcrWindow : Window
                     .WithMarginRight(10)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.ApiKey, vm => vm.IsGoogleVisionVisible),
-                UiUtil.MakeTextBox(200, vm, nameof(vm.GoogleVisionApiKey))
-                    .BindIsVisible(vm, nameof(vm.IsGoogleVisionVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
+                MakeApiKeyBox(vm, nameof(vm.GoogleVisionApiKey), nameof(vm.IsGoogleVisionVisible)),
 
                 // Google Lens settings
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Language, vm => vm.IsGoogleLensVisible),
@@ -420,9 +418,7 @@ public class OcrWindow : Window
 
                 // Mistral OCR settings
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.ApiKey, vm => vm.IsMistralOcrVisible),
-                UiUtil.MakeTextBox(200, vm, nameof(vm.MistralApiKey))
-                    .BindIsVisible(vm, nameof(vm.IsMistralOcrVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
+                MakeApiKeyBox(vm, nameof(vm.MistralApiKey), nameof(vm.IsMistralOcrVisible)),
             }
         };
 
@@ -430,6 +426,22 @@ public class OcrWindow : Window
         grid.Add(panelRight, 0);
 
         return grid;
+    }
+
+    /// <summary>
+    /// Masked API key box (eye button to reveal) like Translate/TTS/Video OCR, disabled while OCR runs.
+    /// </summary>
+    private static StackPanel MakeApiKeyBox(OcrViewModel vm, string apiKeyPath, string isVisiblePath)
+    {
+        var panel = UiUtil.MakeApiKeyTextBox(200, vm, apiKeyPath, isVisiblePath);
+        panel.Bind(StackPanel.IsEnabledProperty, new Binding
+        {
+            Path = nameof(OcrViewModel.IsOcrRunning),
+            Mode = BindingMode.OneWay,
+            Source = vm,
+            Converter = InverseBooleanConverter.Instance,
+        });
+        return panel;
     }
 
     private static Border MakeSubtitleView(OcrViewModel vm)

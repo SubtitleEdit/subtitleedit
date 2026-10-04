@@ -2268,6 +2268,19 @@ public partial class MainViewModel :
     public void ApplyWebVttStyles(WebVttStylesViewModel result)
     {
         _subtitle.Header = result.Header;
+
+        // Renamed styles: move <c.old> tags in the lines to the new class name.
+        if (result.RenamedClasses.Count > 0)
+        {
+            foreach (var row in Subtitles)
+            {
+                if (!row.IsReferenceOnly)
+                {
+                    row.Text = WebVttClassRenamer.RenameClasses(row.Text, result.RenamedClasses);
+                }
+            }
+        }
+
         RefreshSubtitlePreview();
     }
 
@@ -5599,6 +5612,11 @@ public partial class MainViewModel :
             return;
         }
 
+        if (!await HasChangesContinue())
+        {
+            return;
+        }
+
         var result = await ShowDialogAsync<ImportPlainTextWindow, ImportPlainTextViewModel>(vm => vm.Initialize(_subtitle, _videoFileName));
         if (result.OkPressed && result.Subtitles.Count > 0)
         {
@@ -5657,6 +5675,11 @@ public partial class MainViewModel :
             return;
         }
 
+        if (!await HasChangesContinue())
+        {
+            return;
+        }
+
         var result = await ShowDialogAsync<ImportCsvXlsxCustomColumnsWindow, ImportCsvXlsxCustomColumnsViewModel>();
         if (result.OkPressed && result.ResultSubtitles.Count > 0)
         {
@@ -5676,6 +5699,11 @@ public partial class MainViewModel :
     private async Task ImportImages()
     {
         if (Window == null)
+        {
+            return;
+        }
+
+        if (!await HasChangesContinue())
         {
             return;
         }
@@ -6951,7 +6979,7 @@ public partial class MainViewModel :
     private async Task RecalculateDurationSelectedLines()
     {
         var selectedLines = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
-        if (selectedLines.Count == 0)
+        if (selectedLines.Count == 0 || AreTimeCodesLocked)
         {
             return;
         }
@@ -7008,7 +7036,7 @@ public partial class MainViewModel :
     private void SetDurationMaxCpsSelectedLines()
     {
         var selectedLines = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
-        if (selectedLines.Count == 0)
+        if (selectedLines.Count == 0 || AreTimeCodesLocked)
         {
             return;
         }
@@ -8326,28 +8354,43 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task WaveformCopyToClipboard()
     {
-        var selectedSubtitle = SelectedSubtitle;
-        if (Window == null || selectedSubtitle == null)
+        var lines = GetWaveformCopyLines();
+        if (Window == null || lines.Count == 0)
         {
             return;
         }
 
         // Same serialized form as copy in the subtitle grid, so timing survives a paste.
-        await SubtitleGridCopyPasteHelper.Copy(Window, new List<SubtitleLineViewModel> { selectedSubtitle }, SelectedSubtitleFormat, _subtitle);
+        await SubtitleGridCopyPasteHelper.Copy(Window, lines, SelectedSubtitleFormat, _subtitle);
         _shortcutManager.ClearKeys();
     }
 
     [RelayCommand]
     private async Task WaveformCopyTextToClipboard()
     {
-        var selectedSubtitle = SelectedSubtitle;
-        if (Window == null || selectedSubtitle == null)
+        var lines = GetWaveformCopyLines();
+        if (Window == null || lines.Count == 0)
         {
             return;
         }
 
-        await ClipboardHelper.SetTextAsync(Window, selectedSubtitle.Text);
+        await ClipboardHelper.SetTextAsync(Window, string.Join(Environment.NewLine, lines.Select(p => p.Text)));
         _shortcutManager.ClearKeys();
+    }
+
+    /// <summary>
+    /// The lines the waveform's copy items act on: all selected lines, like Delete in the same
+    /// menu and copy in the grid - only the current line when nothing else is selected.
+    /// </summary>
+    private List<SubtitleLineViewModel> GetWaveformCopyLines()
+    {
+        var lines = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (lines.Count == 0 && SelectedSubtitle is { } current)
+        {
+            lines.Add(current);
+        }
+
+        return lines;
     }
 
     [RelayCommand]
@@ -9223,12 +9266,13 @@ public partial class MainViewModel :
 
         var idx = SelectedSubtitleIndex ?? 0;
         var subtitle = GetUpdateSubtitleWithRowMap(out var rowByParagraphId);
+        var linesBefore = SnapshotLines(subtitle);
         var viewModel = await ShowDialogAsync<FixCommonErrorsWindow, FixCommonErrorsViewModel>(vm => { vm.Initialize(subtitle, SelectedSubtitleFormat); });
 
         if (viewModel.OkPressed)
         {
             ApplyFixedSubtitle(viewModel.FixedSubtitle, rowByParagraphId, idx, SelectedSubtitleFormat);
-            ShowStatus(string.Format(Se.Language.Main.FixedXLines, viewModel.FixedSubtitle.Paragraphs.Count));
+            ShowStatus(string.Format(Se.Language.Main.FixedXLines, CountChangedLines(linesBefore, viewModel.FixedSubtitle)));
         }
     }
 
@@ -9248,12 +9292,13 @@ public partial class MainViewModel :
 
         var idx = SelectedSubtitleIndex ?? 0;
         var subtitle = GetUpdateSubtitleWithRowMap(out var rowByParagraphId);
+        var linesBefore = SnapshotLines(subtitle);
         var viewModel = await ShowDialogAsync<FixNetflixErrorsWindow, FixNetflixErrorsViewModel>(vm => { vm.Initialize(subtitle, _videoFileName ?? string.Empty); });
 
         if (viewModel.OkPressed)
         {
             ApplyFixedSubtitle(viewModel.FixedSubtitle, rowByParagraphId, idx, SelectedSubtitleFormat);
-            ShowStatus(string.Format(Se.Language.Main.FixedXLines, viewModel.FixedSubtitle.Paragraphs.Count));
+            ShowStatus(string.Format(Se.Language.Main.FixedXLines, CountChangedLines(linesBefore, viewModel.FixedSubtitle)));
         }
     }
 
@@ -9275,6 +9320,19 @@ public partial class MainViewModel :
                 SetSubtitleFormat(selectedFormat);
             }
         }
+    }
+
+    private void ShowVideoNotLoadedMessage()
+    {
+        Dispatcher.UIThread.Post(async void () =>
+        {
+            await MessageBox.Show(
+                Window!,
+                Se.Language.General.Error,
+                Se.Language.General.NoVideoLoaded,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+        });
     }
 
     private void ShowSubtitleNotLoadedMessage()
@@ -12422,7 +12480,8 @@ public partial class MainViewModel :
     {
         var selectedLines = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().OrderBy(p => p.StartTime).ToList();
         var vp = GetVideoPlayerControl();
-        if (string.IsNullOrEmpty(_videoFileName) ||
+        if (AreTimeCodesLocked ||
+            string.IsNullOrEmpty(_videoFileName) ||
             vp == null ||
             AudioVisualizer == null ||
             AudioVisualizer.ShotChanges.Count == 0 ||
@@ -12464,7 +12523,8 @@ public partial class MainViewModel :
     {
         var selectedLines = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().OrderBy(p => p.StartTime).ToList();
         var vp = GetVideoPlayerControl();
-        if (string.IsNullOrEmpty(_videoFileName) ||
+        if (AreTimeCodesLocked ||
+            string.IsNullOrEmpty(_videoFileName) ||
             vp == null ||
             AudioVisualizer == null ||
             AudioVisualizer.ShotChanges.Count == 0 ||
@@ -12510,7 +12570,8 @@ public partial class MainViewModel :
     {
         var selectedLines = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().OrderBy(p => p.StartTime).ToList();
         var vp = GetVideoPlayerControl();
-        if (string.IsNullOrEmpty(_videoFileName) ||
+        if (AreTimeCodesLocked ||
+            string.IsNullOrEmpty(_videoFileName) ||
             vp == null ||
             AudioVisualizer == null ||
             AudioVisualizer.ShotChanges.Count == 0 ||
@@ -12553,7 +12614,8 @@ public partial class MainViewModel :
     private void SnapSelectedLinesStartToNextShotChange()
     {
         var selectedLines = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
-        if (string.IsNullOrEmpty(_videoFileName) ||
+        if (AreTimeCodesLocked ||
+            string.IsNullOrEmpty(_videoFileName) ||
             AudioVisualizer == null ||
             AudioVisualizer.ShotChanges.Count == 0 ||
             selectedLines.Count == 0)
@@ -12589,7 +12651,8 @@ public partial class MainViewModel :
     private void SnapSelectedLinesEndToPreviousShotChange()
     {
         var selectedLines = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
-        if (string.IsNullOrEmpty(_videoFileName) ||
+        if (AreTimeCodesLocked ||
+            string.IsNullOrEmpty(_videoFileName) ||
             AudioVisualizer == null ||
             AudioVisualizer.ShotChanges.Count == 0 ||
             selectedLines.Count == 0)
@@ -12652,7 +12715,8 @@ public partial class MainViewModel :
         var selectedLines = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>()
             .OrderBy(p => p.StartTime).ToList();
         var vp = GetVideoPlayerControl();
-        if (string.IsNullOrEmpty(_videoFileName) ||
+        if (AreTimeCodesLocked ||
+            string.IsNullOrEmpty(_videoFileName) ||
             vp == null ||
             AudioVisualizer == null ||
             AudioVisualizer.ShotChanges.Count == 0 ||
@@ -13652,8 +13716,14 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task ShowBeautifyTimeCodes()
     {
-        if (Window == null || AudioVisualizer == null || string.IsNullOrEmpty(_videoFileName))
+        if (Window == null)
         {
+            return;
+        }
+
+        if (AudioVisualizer == null || string.IsNullOrEmpty(_videoFileName))
+        {
+            ShowVideoNotLoadedMessage();
             return;
         }
 
@@ -13689,8 +13759,20 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task ShowImproveTimeCodes()
     {
-        if (Window == null || AudioVisualizer == null || string.IsNullOrEmpty(_videoFileName) || Subtitles.Count == 0)
+        if (Window == null)
         {
+            return;
+        }
+
+        if (Subtitles.Count == 0)
+        {
+            ShowSubtitleNotLoadedMessage();
+            return;
+        }
+
+        if (AudioVisualizer == null || string.IsNullOrEmpty(_videoFileName))
+        {
+            ShowVideoNotLoadedMessage();
             return;
         }
 
@@ -13724,8 +13806,14 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task ShowBeautifyTimeCodesSelectedLines()
     {
-        if (Window == null || AudioVisualizer == null || string.IsNullOrEmpty(_videoFileName))
+        if (Window == null)
         {
+            return;
+        }
+
+        if (AudioVisualizer == null || string.IsNullOrEmpty(_videoFileName))
+        {
+            ShowVideoNotLoadedMessage();
             return;
         }
 
@@ -16449,7 +16537,7 @@ public partial class MainViewModel :
             return;
         }
 
-        if (selectedItems.Count == 1 && EditTextBox.SelectedText.Length > 0)
+        if (selectedItems.Count == 1 && GetFormattingTextBox().SelectedText.Length > 0)
         {
             TextBoxItalic();
             return;
@@ -16474,7 +16562,7 @@ public partial class MainViewModel :
             return;
         }
 
-        if (selectedItems.Count == 1 && EditTextBox.SelectedText.Length > 0)
+        if (selectedItems.Count == 1 && GetFormattingTextBox().SelectedText.Length > 0)
         {
             TextBoxBold();
             return;
@@ -16498,7 +16586,7 @@ public partial class MainViewModel :
             return;
         }
 
-        if (selectedItems.Count == 1 && EditTextBox.SelectedText.Length > 0)
+        if (selectedItems.Count == 1 && GetFormattingTextBox().SelectedText.Length > 0)
         {
             TextBoxUnderline();
             return;
@@ -16527,7 +16615,7 @@ public partial class MainViewModel :
             return;
         }
 
-        if (selectedItems.Count == 1 && EditTextBox.SelectedText.Length > 0)
+        if (selectedItems.Count == 1 && GetFormattingTextBox().SelectedText.Length > 0)
         {
             TextBoxBox();
             return;
@@ -16906,6 +16994,12 @@ public partial class MainViewModel :
         _colorService.SetColor(selectedItems, result.SelectedColor, GetUpdateSubtitle(), SelectedSubtitleFormat);
         _updateAudioVisualizer = true;
     }
+
+    /// <summary>
+    /// The text box the formatting commands (italic, bold, color, ...) work on: the original box
+    /// when the cursor is in it (editable original), else the translation/main box.
+    /// </summary>
+    private ITextBoxWrapper GetFormattingTextBox() => GetFocusedTextBoxWrapper() ?? EditTextBox;
 
     private ITextBoxWrapper? GetFocusedTextBoxWrapper()
     {
@@ -19505,7 +19599,7 @@ public partial class MainViewModel :
         // back-to-back with the configured minimum gap between them.
         var selectedItems = SubtitleGridSelectedItems;
 
-        if (selectedItems.Count < 2)
+        if (selectedItems.Count < 2 || AreTimeCodesLocked)
         {
             return;
         }
@@ -19814,7 +19908,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void TextBoxRemoveAllFormatting()
     {
-        var tb = EditTextBox;
+        var tb = GetFormattingTextBox();
         if (tb == null || tb.Text == null)
         {
             return;
@@ -19845,7 +19939,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void TextBoxBold()
     {
-        var tb = EditTextBox;
+        var tb = GetFormattingTextBox();
         ToggleTextBoxTag(tb, "b");
         _updateAudioVisualizer = true;
     }
@@ -19853,7 +19947,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void TextBoxItalic()
     {
-        var tb = EditTextBox;
+        var tb = GetFormattingTextBox();
         ToggleTextBoxTag(tb, "i");
         _updateAudioVisualizer = true;
     }
@@ -19861,7 +19955,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void TextBoxUnderline()
     {
-        var tb = EditTextBox;
+        var tb = GetFormattingTextBox();
         ToggleTextBoxTag(tb, "u");
         _updateAudioVisualizer = true;
     }
@@ -19875,7 +19969,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var tb = EditTextBox;
+        var tb = GetFormattingTextBox();
         TextBoxTagToggler.ToggleTag(tb, "box", isAssa: false);
         _updateAudioVisualizer = true;
     }
@@ -19883,7 +19977,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task TextBoxColor()
     {
-        var tb = EditTextBox;
+        var tb = GetFormattingTextBox();
         if (tb == null || tb.Text == null)
         {
             return;
@@ -19946,7 +20040,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task TextBoxFontName()
     {
-        var tb = EditTextBox;
+        var tb = GetFormattingTextBox();
         if (tb == null || tb.Text == null)
         {
             return;
@@ -20411,7 +20505,7 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
-    private void WaveformDeleteAtPosition()
+    private async Task WaveformDeleteAtPosition()
     {
         var vp = GetVideoPlayerControl();
         if (vp == null || AudioVisualizer == null)
@@ -20428,6 +20522,25 @@ public partial class MainViewModel :
         if (subtitlesAtPosition.Count == 0)
         {
             return;
+        }
+
+        // Same confirmation as Delete and ripple delete.
+        if (Se.Settings.General.PromptBeforeDelete && Window != null)
+        {
+            var message = subtitlesAtPosition.Count == 1
+                ? string.Format(Se.Language.General.DeleteLineXPrompt, subtitlesAtPosition[0].Number)
+                : string.Format(Se.Language.General.DeleteXLinesPrompt, subtitlesAtPosition.Count);
+            var answer = await MessageBox.Show(
+                Window,
+                Se.Language.General.Delete,
+                message,
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question);
+            _shortcutManager.ClearKeys();
+            if (answer != MessageBoxResult.Yes)
+            {
+                return;
+            }
         }
 
         // Through the same path as the Delete key: a removed current row hands the selection to
@@ -22331,6 +22444,12 @@ public partial class MainViewModel :
 
         styles.Add(newStyle);
         header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(header, styles);
+        if (SelectedSubtitleFormat is SubStationAlpha)
+        {
+            // Keep an SSA file's header in SSA form ([V4 Styles]), like the SSA styles window does.
+            header = SubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(header, string.Empty);
+        }
+
         _subtitle!.Header = header;
 
         SetStyleForSelectedLines(newStyle.Name);
@@ -23819,6 +23938,49 @@ public partial class MainViewModel :
     /// <see cref="ApplyFixedSubtitle(Subtitle, IReadOnlyDictionary{Guid, SubtitleLineViewModel}, int, SubtitleFormat?)"/>
     /// needs to put the dialog's result back on the rows it came from.
     /// </summary>
+    /// <summary>
+    /// Text and times of each line by paragraph id, taken before a dialog runs, so
+    /// <see cref="CountChangedLines"/> can report the lines the dialog changed - not the subtitle's
+    /// whole line count, which read as "fixed 1713 lines" for a two-line fix.
+    /// </summary>
+    private static Dictionary<Guid, (string Text, double Start, double End)> SnapshotLines(Subtitle subtitle)
+    {
+        var lines = new Dictionary<Guid, (string Text, double Start, double End)>(subtitle.Paragraphs.Count);
+        foreach (var p in subtitle.Paragraphs)
+        {
+            if (p.Id is { } id)
+            {
+                lines.TryAdd(id, (p.Text, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
+            }
+        }
+
+        return lines;
+    }
+
+    private static int CountChangedLines(Dictionary<Guid, (string Text, double Start, double End)> linesBefore, Subtitle fixedSubtitle)
+    {
+        var changed = 0;
+        var seen = new HashSet<Guid>();
+        foreach (var p in fixedSubtitle.Paragraphs)
+        {
+            if (p.Id is { } id && linesBefore.TryGetValue(id, out var before) && seen.Add(id))
+            {
+                if (before.Text != p.Text ||
+                    Math.Abs(before.Start - p.StartTime.TotalMilliseconds) > 0.001 ||
+                    Math.Abs(before.End - p.EndTime.TotalMilliseconds) > 0.001)
+                {
+                    changed++;
+                }
+            }
+            else
+            {
+                changed++; // added line
+            }
+        }
+
+        return changed + linesBefore.Count - seen.Count; // plus removed lines
+    }
+
     private Subtitle GetUpdateSubtitleWithRowMap(out Dictionary<Guid, SubtitleLineViewModel> rowByParagraphId)
     {
         var subtitle = GetUpdateSubtitle();
@@ -26676,6 +26838,11 @@ public partial class MainViewModel :
     private async Task ImportDvdSubtitles()
     {
         if (Window == null)
+        {
+            return;
+        }
+
+        if (!await HasChangesContinue())
         {
             return;
         }
@@ -30292,7 +30459,8 @@ public partial class MainViewModel :
             var survivor = PickRowToSelectAfterRemoval(selectedItems);
             RemoveRowsAndSelectSurvivor(selectedItems, survivor, gridHadFocus);
 
-            if (areLinesConsecutive && firstLine != null && nextLine != null)
+            // With time codes locked this is a plain delete - the following lines keep their times.
+            if (!AreTimeCodesLocked && areLinesConsecutive && firstLine != null && nextLine != null)
             {
                 var indexOfNext = Subtitles.IndexOf(nextLine);
                 var timeToShift = nextLine.StartTime - firstLine.StartTime;

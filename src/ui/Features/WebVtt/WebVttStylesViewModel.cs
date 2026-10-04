@@ -52,6 +52,16 @@ public partial class WebVttStylesViewModel : ObservableObject, IClosingCleanup
     /// <summary>The rewritten WebVTT header, valid after OK or Apply.</summary>
     public string Header { get; private set; }
 
+    /// <summary>
+    /// Cue classes renamed since the dialog opened or since the last Apply (old name to new
+    /// name), valid after OK or Apply. The caller rewrites its lines with
+    /// <see cref="WebVttClassRenamer.RenameClasses"/>, so <c>&lt;c.old&gt;</c> follows the style.
+    /// </summary>
+    public IReadOnlyDictionary<string, string> RenamedClasses { get; private set; }
+
+    /// <summary>The dialog's copy of the subtitle, with renamed classes rewritten after OK or Apply.</summary>
+    public Subtitle ResultSubtitle => _subtitle;
+
     public TableView StyleGrid { get; set; }
 
     private readonly IFileHelper _fileHelper;
@@ -61,6 +71,10 @@ public partial class WebVttStylesViewModel : ObservableObject, IClosingCleanup
     private Subtitle _subtitle;
     private IApplyWebVttStyles? _applyWebVttStyles;
     private volatile bool _isClosing;
+
+    // The class name each loaded style's lines use - the name from the header, moved on to the
+    // current name at each Apply. A style missing here (new, duplicated, imported) has no lines.
+    private readonly Dictionary<WebVttStyleDisplay, string> _lineNames = new();
 
     public WebVttStylesViewModel(IFileHelper fileHelper, IWindowService windowService)
     {
@@ -77,6 +91,7 @@ public partial class WebVttStylesViewModel : ObservableObject, IClosingCleanup
         _subtitle = new Subtitle();
 
         Header = string.Empty;
+        RenamedClasses = new Dictionary<string, string>();
         StyleGrid = new TableView();
 
         _timerUpdatePreview = new System.Timers.Timer(300);
@@ -93,11 +108,16 @@ public partial class WebVttStylesViewModel : ObservableObject, IClosingCleanup
         _originalStyles = WebVttHelper.GetStyles(Header);
 
         Styles.Clear();
+        _lineNames.Clear();
         foreach (var style in WebVttHelper.GetStyles(Header))
         {
             var display = new WebVttStyleDisplay(style);
             display.PropertyChanged += StyleChanged;
             Styles.Add(display);
+            if (display.IsClassSelector && !string.IsNullOrEmpty(display.Name))
+            {
+                _lineNames[display] = display.Name;
+            }
 
             if (!string.IsNullOrEmpty(display.FontName) && !Fonts.Contains(display.FontName))
             {
@@ -219,7 +239,8 @@ public partial class WebVttStylesViewModel : ObservableObject, IClosingCleanup
     {
         foreach (var style in Styles)
         {
-            style.UsageCount = CountUsages(_subtitle, style.Name);
+            // A renamed style's lines still carry the old class until OK/Apply rewrites them.
+            style.UsageCount = CountUsages(_subtitle, _lineNames.TryGetValue(style, out var lineName) ? lineName : style.Name);
         }
     }
 
@@ -571,19 +592,124 @@ public partial class WebVttStylesViewModel : ObservableObject, IClosingCleanup
     }
 
     [RelayCommand]
-    private void Ok()
+    private async Task Ok()
     {
+        if (!await ValidateStyleNames())
+        {
+            return;
+        }
+
         OkPressed = true;
         SetHeader();
+        SetRenamedClasses();
         Close();
     }
 
+    /// <summary>
+    /// Hands the current styles to the main window without closing. OkPressed stays false: it
+    /// is only for OK, so a later Cancel keeps what was applied instead of also applying the
+    /// edits made after Apply.
+    /// </summary>
     [RelayCommand]
-    private void Apply()
+    private async Task Apply()
     {
-        OkPressed = true;
+        if (!await ValidateStyleNames())
+        {
+            return;
+        }
+
         SetHeader();
+        SetRenamedClasses();
         _applyWebVttStyles?.ApplyWebVttStyles(this);
+    }
+
+    /// <summary>
+    /// An empty or duplicate name would be written to the header as is - a nameless
+    /// <c>::cue(.)</c>, or a second selector shadowing the first - so OK/Apply are refused and
+    /// the offending style is selected so it can be fixed.
+    /// </summary>
+    private async Task<bool> ValidateStyleNames()
+    {
+        WebVttStyleDisplay? invalidStyle = null;
+        var message = string.Empty;
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var style in Styles)
+        {
+            var name = style.Name?.Trim() ?? string.Empty;
+            if (name.Length == 0)
+            {
+                invalidStyle = style;
+                message = Se.Language.Assa.StyleNameCannotBeEmpty;
+                break;
+            }
+
+            if (!seen.Add(name))
+            {
+                invalidStyle = style;
+                message = string.Format(Se.Language.Assa.StyleNameXIsUsedMoreThanOnce, name);
+                break;
+            }
+        }
+
+        if (invalidStyle == null)
+        {
+            return true;
+        }
+
+        SelectedStyle = invalidStyle;
+        TableViewExtras.EnsureRowFullyVisible(StyleGrid, invalidStyle);
+        if (Window != null)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                message,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Collects the class renames since the dialog opened (or the last Apply) into
+    /// <see cref="RenamedClasses"/> and rewrites them in the dialog's own lines, so the usage
+    /// counts and a later Apply start from the names the main window now has.
+    /// </summary>
+    private void SetRenamedClasses()
+    {
+        var renames = new Dictionary<string, string>(StringComparer.Ordinal);
+        foreach (var style in Styles)
+        {
+            if (style.IsClassSelector &&
+                _lineNames.TryGetValue(style, out var oldName) &&
+                !string.IsNullOrEmpty(oldName) &&
+                !string.Equals(oldName, style.Name, StringComparison.Ordinal))
+            {
+                renames.TryAdd(oldName, style.Name);
+            }
+        }
+
+        RenamedClasses = renames;
+        if (renames.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var p in _subtitle.Paragraphs)
+        {
+            p.Text = WebVttClassRenamer.RenameClasses(p.Text, renames);
+        }
+
+        foreach (var style in Styles)
+        {
+            if (_lineNames.ContainsKey(style))
+            {
+                _lineNames[style] = style.Name;
+            }
+        }
+
+        UpdateUsages();
     }
 
     [RelayCommand]
@@ -620,7 +746,8 @@ public partial class WebVttStylesViewModel : ObservableObject, IClosingCleanup
         var style = SelectedStyle;
         if (style == null)
         {
-            ImagePreview = new SKBitmap(1, 1, true).ToAvaloniaBitmap();
+            using var empty = new SKBitmap(1, 1, true);
+            ImagePreview = empty.ToAvaloniaBitmap();
             return;
         }
 
@@ -645,8 +772,11 @@ public partial class WebVttStylesViewModel : ObservableObject, IClosingCleanup
             isUnderline: style.Underline,
             isStrikeout: style.Strikeout);
 
-        var frame = TextToImageGenerator.ComposeOnPreviewFrame(bitmap, 2, 0, 0, 20);
+        // A 300 ms timer re-renders this for as long as the dialog is open, and ToAvaloniaBitmap
+        // copies the pixels out, so both native bitmaps must go or the preview leaks every tick.
+        using var frame = TextToImageGenerator.ComposeOnPreviewFrame(bitmap, 2, 0, 0, 20);
         ImagePreview = frame.ToAvaloniaBitmap();
+        bitmap.Dispose();
     }
 
     public void OnClosingCleanup()

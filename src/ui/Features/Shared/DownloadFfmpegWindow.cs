@@ -35,6 +35,19 @@ public class DownloadFfmpegWindow : Window
         var statusText = new TextBlock();
         statusText.Bind(TextBlock.TextProperty, new Binding(nameof(DownloadFfmpegViewModel.StatusText)));
 
+        // Download/unpack failures (no data, ffmpeg in use, ...) - otherwise the window just sits there.
+        var errorText = new TextBlock
+        {
+            TextWrapping = TextWrapping.Wrap,
+            MaxWidth = 500,
+            Foreground = Brushes.IndianRed,
+        };
+        errorText.Bind(TextBlock.TextProperty, new Binding(nameof(DownloadFfmpegViewModel.Error)));
+        errorText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(DownloadFfmpegViewModel.Error))
+        {
+            Converter = Avalonia.Data.Converters.StringConverters.IsNotNullOrEmpty,
+        });
+
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CommandCancelCommand);
         var buttonBar = UiUtil.MakeButtonBar(buttonCancel);
 
@@ -47,6 +60,7 @@ public class DownloadFfmpegWindow : Window
                 titleText,
                 progressBar,
                 statusText,
+                errorText,
                 buttonBar,
             }
         };
