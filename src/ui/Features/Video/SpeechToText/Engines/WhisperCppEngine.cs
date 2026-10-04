@@ -58,7 +58,8 @@ public class WhisperCppEngine : ISpeechToTextEngine
     {
         return backend switch
         {
-            WhisperEngineCpp => "CPU",
+            // The default download is the Metal build on macOS and the Vulkan build on Linux (see WhisperDownloadService).
+            WhisperEngineCpp => OperatingSystem.IsMacOS() ? "Metal" : OperatingSystem.IsLinux() ? "Vulkan" : "CPU",
             WhisperEngineCppCuBlas => "cuBLAS",
             WhisperEngineCppVulkan => "Vulkan",
             _ => backend.Name,
