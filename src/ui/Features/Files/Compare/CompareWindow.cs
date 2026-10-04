@@ -507,8 +507,10 @@ public class CompareWindow : Window
     }
 
     /// <summary>
-    /// Sync points (#15394): right-click a current line and a reference line - in either order -
-    /// to make them a pair; the comparison is then lined up above and below it separately.
+    /// The row menu. First what the gutter arrow does, plus taking only the text or only the
+    /// timing (#15621) - a right-click (Ctrl+Click on macOS) on the arrow opens this menu too.
+    /// Then sync points (#15394): right-click a current line and a reference line - in either
+    /// order - to make them a pair; the comparison is then lined up above and below it separately.
     /// Acts on the selected row, which a right-click selects, so the menu key works too.
     /// </summary>
     private static MenuFlyout MakeRowContextFlyout(CompareViewModel vm)
@@ -536,6 +538,15 @@ public class CompareWindow : Window
             return item;
         }
 
+        string RowPath(string property) => $"{nameof(vm.SelectedRow)}.{property}";
+
+        var take = MakeItem(string.Empty, vm.TakeReferenceCommand, RowPath(nameof(CompareRow.CanTakeReference)), IconNames.ArrowLeft);
+        take.Bind(HeaderedSelectingItemsControl.HeaderProperty, new Binding(RowPath(nameof(CompareRow.TakeReferenceHint))));
+        var takeText = MakeItem(Se.Language.File.CompareTakeText, vm.TakeReferenceTextCommand, RowPath(nameof(CompareRow.CanTakeText)));
+        var takeTiming = MakeItem(Se.Language.File.CompareTakeTiming, vm.TakeReferenceTimingCommand, RowPath(nameof(CompareRow.CanTakeTiming)));
+        var takeSeparator = new Separator { [!IsVisibleProperty] = new Binding(RowPath(nameof(CompareRow.HasTakeActions))) { FallbackValue = false } };
+        takeSeparator.DataContext = vm;
+
         var pickCurrent = MakeItem(string.Empty, vm.PickSyncCurrentCommand, $"{nameof(vm.SelectedRow)}.{nameof(CompareRow.HasLeft)}", IconNames.LinkVariant);
         pickCurrent.Bind(HeaderedSelectingItemsControl.HeaderProperty, new Binding(nameof(vm.PickSyncCurrentHeader)));
         var pickReference = MakeItem(string.Empty, vm.PickSyncReferenceCommand, $"{nameof(vm.SelectedRow)}.{nameof(CompareRow.HasRight)}", IconNames.LinkVariant);
@@ -547,6 +558,10 @@ public class CompareWindow : Window
         {
             Items =
             {
+                take,
+                takeText,
+                takeTiming,
+                takeSeparator,
                 pickCurrent,
                 pickReference,
                 MakeItem(Se.Language.File.CompareSyncRemove, vm.RemoveSyncPointCommand, $"{nameof(vm.SelectedRow)}.{nameof(CompareRow.IsSyncPoint)}"),
