@@ -7872,16 +7872,13 @@ public partial class MainViewModel :
             return;
         }
 
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.AdjustDurations);
         var result =
             await ShowDialogAsync<AdjustDurationWindow, AdjustDurationViewModel>();
 
         if (result.OkPressed)
         {
-            RunWithoutChangeDetection(() =>
-            {
-                result.AdjustDuration(Subtitles);
-            });
-            _updateAudioVisualizer = true;
+            EndToolApply(toolApply, () => result.AdjustDuration(Subtitles));
         }
     }
 
@@ -7894,15 +7891,96 @@ public partial class MainViewModel :
             return;
         }
 
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.AdjustDurations);
         var result = await ShowDialogAsync<AdjustDurationWindow, AdjustDurationViewModel>();
         if (result.OkPressed)
         {
             // The whole grid goes in so a selected line is capped against its real neighbour.
-            RunWithoutChangeDetection(() => result.AdjustDuration(Subtitles, selectedItems));
-            _updateAudioVisualizer = true;
+            EndToolApply(toolApply, () => result.AdjustDuration(Subtitles, selectedItems));
         }
 
         _shortcutManager.ClearKeys();
+    }
+
+    /// <summary>
+    /// A tool run in progress: the tool's name (for the undo step and the status bar) and the
+    /// rows' text and times before the tool's dialog opened, by row id.
+    /// </summary>
+    private sealed record ToolApply(string Name, Dictionary<Guid, (string Text, string OriginalText, TimeSpan Start, TimeSpan End)> Before);
+
+    /// <summary>
+    /// Call before a tool's dialog opens. Records any edit not yet on the undo stack as its own
+    /// step, so undoing the tool does not undo that edit too, and snapshots the rows - some
+    /// dialogs get the live rows, so the snapshot cannot wait until the dialog has closed.
+    /// </summary>
+    /// <param name="menuText">The tool's menu text; the access key marker and "..." are dropped.</param>
+    private ToolApply BeginToolApply(string menuText)
+    {
+        _undoRedoManager.CheckForChanges(null);
+
+        var before = new Dictionary<Guid, (string Text, string OriginalText, TimeSpan Start, TimeSpan End)>(Subtitles.Count);
+        foreach (var row in Subtitles)
+        {
+            if (!row.IsReferenceOnly)
+            {
+                before.TryAdd(row.Id, (row.Text ?? string.Empty, row.OriginalText ?? string.Empty, row.StartTime, row.EndTime));
+            }
+        }
+
+        var name = menuText.Replace("_", string.Empty).Trim().TrimEnd('.', '…').Trim();
+        return new ToolApply(name, before);
+    }
+
+    /// <summary>
+    /// Puts a tool's result in the grid the same way for every tool: <paramref name="apply"/> runs
+    /// with change detection off, so the result is one undo step - named after the tool rather
+    /// than "Changes detected" - and the status bar says how many lines the tool changed.
+    /// </summary>
+    private void EndToolApply(ToolApply toolApply, Action apply)
+    {
+        RunWithoutChangeDetection(apply);
+
+        var changed = CountChangedRows(toolApply.Before);
+        if (changed > 0)
+        {
+            _undoRedoManager.Do(MakeUndoRedoObject(toolApply.Name));
+        }
+
+        _updateAudioVisualizer = true;
+        ShowStatus(string.Format(Se.Language.Main.ToolXChangedYLines, toolApply.Name, changed));
+    }
+
+    /// <summary>
+    /// Lines changed since <paramref name="before"/>: rows whose text, original text or times
+    /// differ, plus rows added and rows removed (a merge of two lines counts as two).
+    /// </summary>
+    private int CountChangedRows(Dictionary<Guid, (string Text, string OriginalText, TimeSpan Start, TimeSpan End)> before)
+    {
+        var changed = 0;
+        var seen = new HashSet<Guid>();
+        foreach (var row in Subtitles)
+        {
+            if (row.IsReferenceOnly)
+            {
+                continue;
+            }
+
+            if (!before.TryGetValue(row.Id, out var old) || !seen.Add(row.Id))
+            {
+                changed++; // added
+                continue;
+            }
+
+            if (old.Text != (row.Text ?? string.Empty) ||
+                old.OriginalText != (row.OriginalText ?? string.Empty) ||
+                old.Start != row.StartTime ||
+                old.End != row.EndTime)
+            {
+                changed++;
+            }
+        }
+
+        return changed + before.Count - seen.Count; // plus removed
     }
 
     public void RunWithoutChangeDetection(Action action)
@@ -7951,6 +8029,8 @@ public partial class MainViewModel :
     /// <param name="onlyIds">Limit fixes to these rows; null fixes the whole subtitle.</param>
     private async Task ApplyDurationLimits(ISet<Guid>? onlyIds)
     {
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.ApplyDurationLimits);
+        var before = CaptureGridPosition();
         var result = await ShowDialogAsync<ApplyDurationLimitsWindow, ApplyDurationLimitsViewModel>(vm =>
         {
             var shotChanges = AudioVisualizer?.ShotChanges ?? new List<double>();
@@ -7959,13 +8039,7 @@ public partial class MainViewModel :
 
         if (result.OkPressed && result.AllSubtitlesFixed.Count > 0)
         {
-            RunWithoutChangeDetection(() =>
-            {
-                var idx = SelectedSubtitleIndex;
-                ReplaceSubtitles(result.AllSubtitlesFixed);
-                SelectAndScrollToRow(idx ?? 0);
-                _updateAudioVisualizer = true;
-            });
+            EndToolApply(toolApply, () => ApplyDialogRows(result.AllSubtitlesFixed, before));
         }
     }
 
@@ -8070,6 +8144,7 @@ public partial class MainViewModel :
             return;
         }
 
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.MergeLinesWithSameText);
         var before = CaptureGridPosition();
         var result = await ShowDialogAsync<MergeSameTextWindow, MergeSameTextViewModel>(vm => { vm.Initialize(Subtitles.Select(p => new SubtitleLineViewModel(p)).ToList()); });
 
@@ -8078,7 +8153,7 @@ public partial class MainViewModel :
             return;
         }
 
-        ApplyDialogRows(result.ResultSubtitles, before);
+        EndToolApply(toolApply, () => ApplyDialogRows(result.ResultSubtitles, before));
     }
 
     [RelayCommand]
@@ -8095,6 +8170,7 @@ public partial class MainViewModel :
             return;
         }
 
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.MergeLinesWithSameTimeCodes);
         var before = CaptureGridPosition();
         var result = await ShowDialogAsync<MergeSameTimeCodesWindow, MergeSameTimeCodesViewModel>(vm =>
         {
@@ -8106,7 +8182,7 @@ public partial class MainViewModel :
             return;
         }
 
-        ApplyDialogRows(result.ResultSubtitles, before);
+        EndToolApply(toolApply, () => ApplyDialogRows(result.ResultSubtitles, before));
     }
 
     [RelayCommand]
@@ -8443,13 +8519,13 @@ public partial class MainViewModel :
             return;
         }
 
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.BridgeGaps);
         var before = CaptureGridPosition();
         var result = await ShowDialogAsync<BridgeGapsWindow, BridgeGapsViewModel>(vm => { vm.Initialize(Subtitles.Select(p => new SubtitleLineViewModel(p)).ToList()); });
 
         if (result.OkPressed)
         {
-            ApplyDialogRows(result.Subtitles.Select(p => p.SubtitleLineViewModel), before);
-            _updateAudioVisualizer = true;
+            EndToolApply(toolApply, () => ApplyDialogRows(result.Subtitles.Select(p => p.SubtitleLineViewModel), before));
         }
     }
 
@@ -8468,13 +8544,13 @@ public partial class MainViewModel :
             return;
         }
 
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.ApplyMinGap);
         var before = CaptureGridPosition();
         var result = await ShowDialogAsync<ApplyMinGapWindow, ApplyMinGapViewModel>(vm => { vm.Initialize(Subtitles.Select(p => new SubtitleLineViewModel(p)).ToList()); });
 
         if (result.OkPressed)
         {
-            ApplyDialogRows(result.FixedSubtitles, before);
-            _updateAudioVisualizer = true;
+            EndToolApply(toolApply, () => ApplyDialogRows(result.FixedSubtitles, before));
         }
     }
 
@@ -8492,22 +8568,24 @@ public partial class MainViewModel :
             return;
         }
 
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.ChangeCasing);
         var result =
             await ShowDialogAsync<ChangeCasingWindow, ChangeCasingViewModel>(vm => { vm.Initialize(GetUpdateSubtitle()); });
 
         if (result.OkPressed)
         {
-            for (var i = 0; i < Subtitles.Count; i++)
+            EndToolApply(toolApply, () =>
             {
-                if (result.Subtitle.Paragraphs.Count <= i)
+                for (var i = 0; i < Subtitles.Count; i++)
                 {
-                    break;
+                    if (result.Subtitle.Paragraphs.Count <= i)
+                    {
+                        break;
+                    }
+
+                    Subtitles[i].Text = result.Subtitle.Paragraphs[i].Text;
                 }
-
-                Subtitles[i].Text = result.Subtitle.Paragraphs[i].Text;
-            }
-
-            ShowStatus(result.Info);
+            });
         }
     }
 
@@ -8526,12 +8604,13 @@ public partial class MainViewModel :
         }
 
         var idx = SelectedSubtitleIndex ?? 0;
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.ChangeFormatting);
         var result =
             await ShowDialogAsync<ChangeFormattingWindow, ChangeFormattingViewModel>(vm => { vm.Initialize(Subtitles.ToList(), SelectedSubtitleFormat); });
 
         if (result.OkPressed)
         {
-            ApplyFixedSubtitle(result.FixedSubtitle, idx);
+            EndToolApply(toolApply, () => ApplyFixedSubtitle(result.FixedSubtitle, idx));
         }
     }
 
@@ -8545,6 +8624,7 @@ public partial class MainViewModel :
             return;
         }
 
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.ChangeFormatting);
         var result = await ShowDialogAsync<ChangeFormattingWindow, ChangeFormattingViewModel>(vm =>
         {
             vm.Initialize(ordered, SelectedSubtitleFormat);
@@ -8553,16 +8633,17 @@ public partial class MainViewModel :
         if (result.OkPressed)
         {
             // The dialog works on copies that keep the row ids, so each result maps back to its row.
-            var rowById = ordered.ToDictionary(p => p.Id);
-            foreach (var fixedLine in result.FixedSubtitle)
+            EndToolApply(toolApply, () =>
             {
-                if (rowById.TryGetValue(fixedLine.Id, out var row))
+                var rowById = ordered.ToDictionary(p => p.Id);
+                foreach (var fixedLine in result.FixedSubtitle)
                 {
-                    row.UpdateFrom(fixedLine);
+                    if (rowById.TryGetValue(fixedLine.Id, out var row))
+                    {
+                        row.UpdateFrom(fixedLine);
+                    }
                 }
-            }
-
-            _updateAudioVisualizer = true;
+            });
         }
 
         _shortcutManager.ClearKeys();
@@ -8600,12 +8681,13 @@ public partial class MainViewModel :
         }
 
         var idx = SelectedSubtitleIndex ?? 0;
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.ConvertActors);
         var result =
             await ShowDialogAsync<ConvertActorsWindow, ConvertActorsViewModel>(vm => { vm.Initialize(Subtitles.ToList(), SelectedSubtitleFormat); });
 
         if (result.OkPressed)
         {
-            ApplyFixedSubtitle(result.FixedSubtitle, idx);
+            EndToolApply(toolApply, () => ApplyFixedSubtitle(result.FixedSubtitle, idx));
         }
     }
 
@@ -8624,11 +8706,12 @@ public partial class MainViewModel :
         }
 
         var idx = SelectedSubtitleIndex ?? 0;
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.RemoveUnicodeCharacters);
         var result = await ShowDialogAsync<RemoveUnicodeCharactersWindow, RemoveUnicodeCharactersViewModel>(vm => { vm.Initialize(Subtitles.ToList()); });
 
         if (result.OkPressed)
         {
-            ApplyFixedSubtitle(result.FixedSubtitle, idx);
+            EndToolApply(toolApply, () => ApplyFixedSubtitle(result.FixedSubtitle, idx));
         }
     }
 
@@ -9266,13 +9349,12 @@ public partial class MainViewModel :
 
         var idx = SelectedSubtitleIndex ?? 0;
         var subtitle = GetUpdateSubtitleWithRowMap(out var rowByParagraphId);
-        var linesBefore = SnapshotLines(subtitle);
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.FixCommonErrors);
         var viewModel = await ShowDialogAsync<FixCommonErrorsWindow, FixCommonErrorsViewModel>(vm => { vm.Initialize(subtitle, SelectedSubtitleFormat); });
 
         if (viewModel.OkPressed)
         {
-            ApplyFixedSubtitle(viewModel.FixedSubtitle, rowByParagraphId, idx, SelectedSubtitleFormat);
-            ShowStatus(string.Format(Se.Language.Main.FixedXLines, CountChangedLines(linesBefore, viewModel.FixedSubtitle)));
+            EndToolApply(toolApply, () => ApplyFixedSubtitle(viewModel.FixedSubtitle, rowByParagraphId, idx, SelectedSubtitleFormat));
         }
     }
 
@@ -9292,13 +9374,12 @@ public partial class MainViewModel :
 
         var idx = SelectedSubtitleIndex ?? 0;
         var subtitle = GetUpdateSubtitleWithRowMap(out var rowByParagraphId);
-        var linesBefore = SnapshotLines(subtitle);
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.CheckAndFixNetflixErrors);
         var viewModel = await ShowDialogAsync<FixNetflixErrorsWindow, FixNetflixErrorsViewModel>(vm => { vm.Initialize(subtitle, _videoFileName ?? string.Empty); });
 
         if (viewModel.OkPressed)
         {
-            ApplyFixedSubtitle(viewModel.FixedSubtitle, rowByParagraphId, idx, SelectedSubtitleFormat);
-            ShowStatus(string.Format(Se.Language.Main.FixedXLines, CountChangedLines(linesBefore, viewModel.FixedSubtitle)));
+            EndToolApply(toolApply, () => ApplyFixedSubtitle(viewModel.FixedSubtitle, rowByParagraphId, idx, SelectedSubtitleFormat));
         }
     }
 
@@ -9363,14 +9444,14 @@ public partial class MainViewModel :
             return;
         }
 
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.SplitBreakLongLines);
         var before = CaptureGridPosition();
         var result = await ShowDialogAsync<SplitBreakLongLinesWindow, SplitBreakLongLinesViewModel>(
             vm => { vm.Initialize(Subtitles.ToList(), IsFormatTeletext); });
 
         if (result.OkPressed && result.AllSubtitlesFixed.Count > 0)
         {
-            ApplyDialogRows(result.AllSubtitlesFixed, before);
-            _updateAudioVisualizer = true;
+            EndToolApply(toolApply, () => ApplyDialogRows(result.AllSubtitlesFixed, before));
             RefreshSubtitlePreview();
         }
     }
@@ -9389,14 +9470,14 @@ public partial class MainViewModel :
             return;
         }
 
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.MergeShortLines);
         var before = CaptureGridPosition();
         var result = await ShowDialogAsync<MergeShortLinesWindow, MergeShortLinesViewModel>(
             vm => { vm.Initialize(Subtitles.ToList(), AudioVisualizer?.ShotChanges ?? new List<double>()); });
 
         if (result.OkPressed && result.AllSubtitlesFixed.Count > 0)
         {
-            ApplyDialogRows(result.AllSubtitlesFixed, before);
-            _updateAudioVisualizer = true;
+            EndToolApply(toolApply, () => ApplyDialogRows(result.AllSubtitlesFixed, before));
             RefreshSubtitlePreview();
         }
     }
@@ -9470,14 +9551,14 @@ public partial class MainViewModel :
         }
 
         var language = Subtitles.AutoDetectGoogleLanguage();
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.MergeContinuationLines);
         var before = CaptureGridPosition();
         var result = await ShowDialogAsync<MergeContinuationLinesWindow, MergeContinuationLinesViewModel>(
             vm => { vm.Initialize(Subtitles.ToList(), language); });
 
         if (result.OkPressed)
         {
-            ApplyDialogRows(result.AllSubtitlesFixed, before);
-            _updateAudioVisualizer = true;
+            EndToolApply(toolApply, () => ApplyDialogRows(result.AllSubtitlesFixed, before));
             RefreshSubtitlePreview();
         }
     }
@@ -9503,13 +9584,9 @@ public partial class MainViewModel :
         var subtitle = GetUpdateSubtitleWithRowMap(out var rowByParagraphId);
         void ApplyToGrid(Subtitle applied)
         {
-            // Stop change detection during the rewrite so the background undo snapshotter can't
-            // race the Subtitles Clear/AddRange (matches every other bulk grid operation).
-            RunWithoutChangeDetection(() =>
-            {
-                ApplyFixedSubtitle(applied, rowByParagraphId, idx, SelectedSubtitleFormat);
-                _updateAudioVisualizer = true;
-            });
+            // Each Apply is one undo step; change detection is off during the rewrite.
+            var toolApply = BeginToolApply(Se.Language.Main.Menu.RemoveTextForHearingImpaired);
+            EndToolApply(toolApply, () => ApplyFixedSubtitle(applied, rowByParagraphId, idx, SelectedSubtitleFormat));
         }
 
         // Menu mode uses Apply + Done: the change is applied live via the ApplyToGrid callback,
@@ -13040,6 +13117,7 @@ public partial class MainViewModel :
             return;
         }
 
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.VisualSync);
         var before = CaptureGridPosition();
         var result = await ShowDialogAsync<VisualSyncWindow, VisualSyncViewModel>(vm =>
         {
@@ -13049,7 +13127,7 @@ public partial class MainViewModel :
 
         if (result.OkPressed)
         {
-            ApplyDialogRows(result.Paragraphs.Select(p => p.Subtitle), before);
+            EndToolApply(toolApply, () => ApplyDialogRows(result.Paragraphs.Select(p => p.Subtitle), before));
         }
     }
 
@@ -13075,6 +13153,7 @@ public partial class MainViewModel :
             return;
         }
 
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.VisualSync);
         var result = await ShowDialogAsync<VisualSyncWindow, VisualSyncViewModel>(vm =>
         {
             var paragraphs = selectedLines.Select(p => new SubtitleLineViewModel(p)).ToList();
@@ -13087,20 +13166,21 @@ public partial class MainViewModel :
         }
 
         // Only the selected lines were synced - copy the new time codes back onto those rows and leave the rest of the subtitle alone.
-        var rowsById = GetRowsById();
-        foreach (var synced in result.Paragraphs.Select(p => p.Subtitle))
+        EndToolApply(toolApply, () =>
         {
-            if (!rowsById.TryGetValue(synced.Id, out var line))
+            var rowsById = GetRowsById();
+            foreach (var synced in result.Paragraphs.Select(p => p.Subtitle))
             {
-                continue;
+                if (!rowsById.TryGetValue(synced.Id, out var line))
+                {
+                    continue;
+                }
+
+                line.StartTime = synced.StartTime;
+                line.EndTime = synced.EndTime;
+                line.UpdateDuration();
             }
-
-            line.StartTime = synced.StartTime;
-            line.EndTime = synced.EndTime;
-            line.UpdateDuration();
-        }
-
-        _updateAudioVisualizer = true;
+        });
     }
 
     [RelayCommand]
@@ -13117,11 +13197,11 @@ public partial class MainViewModel :
             return;
         }
 
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.ChangeFrameRate);
         var result = await ShowDialogAsync<ChangeFrameRateWindow, ChangeFrameRateViewModel>(vm => { vm.Initialize(_videoFileName, (double)(_mediaInfo?.FramesRate ?? 0), Se.Settings.General.CurrentFrameRate); });
         if (result.OkPressed)
         {
-            ChangeFrameRateViewModel.ChangeFrameRate(Subtitles, result.SelectedFromFrameRate, result.SelectedToFrameRate);
-            _updateAudioVisualizer = true;
+            EndToolApply(toolApply, () => ChangeFrameRateViewModel.ChangeFrameRate(Subtitles, result.SelectedFromFrameRate, result.SelectedToFrameRate));
         }
     }
 
@@ -13171,6 +13251,7 @@ public partial class MainViewModel :
             return;
         }
 
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.PointSync);
         var before = CaptureGridPosition();
         var result = await ShowDialogAsync<PointSyncWindow, PointSyncViewModel>(vm =>
         {
@@ -13180,7 +13261,7 @@ public partial class MainViewModel :
 
         if (result.OkPressed)
         {
-            ApplyDialogRows(result.SyncedSubtitles, before);
+            EndToolApply(toolApply, () => ApplyDialogRows(result.SyncedSubtitles, before));
         }
 
         // Point sync can open a video of its own - take it over here too (issue #13341).
@@ -13204,6 +13285,7 @@ public partial class MainViewModel :
             return;
         }
 
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.PointSyncViaOther);
         var before = CaptureGridPosition();
         var result = await ShowDialogAsync<PointSyncViaOtherWindow, PointSyncViaOtherViewModel>(vm =>
         {
@@ -13213,7 +13295,7 @@ public partial class MainViewModel :
 
         if (result.OkPressed)
         {
-            ApplyDialogRows(result.SyncedSubtitles, before);
+            EndToolApply(toolApply, () => ApplyDialogRows(result.SyncedSubtitles, before));
         }
 
         // "Set sync point via video" can open a video of its own - take it over here too (issue #13341).
@@ -13545,6 +13627,7 @@ public partial class MainViewModel :
             return;
         }
 
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.ChangeCasing);
         var result = await ShowDialogAsync<ChangeCasingWindow, ChangeCasingViewModel>(vm =>
         {
             var sub = new Subtitle();
@@ -13575,18 +13658,19 @@ public partial class MainViewModel :
             return;
         }
 
-        var rowsById = GetRowsById();
-        for (var i = 0; i < result.Subtitle.Paragraphs.Count; i++)
+        EndToolApply(toolApply, () =>
         {
-            var text = result.Subtitle.Paragraphs[i].Text;
-            var id = selectedItems[i].Id;
-            if (rowsById.TryGetValue(id, out var p))
+            var rowsById = GetRowsById();
+            for (var i = 0; i < result.Subtitle.Paragraphs.Count; i++)
             {
-                p.Text = text;
+                var text = result.Subtitle.Paragraphs[i].Text;
+                var id = selectedItems[i].Id;
+                if (rowsById.TryGetValue(id, out var p))
+                {
+                    p.Text = text;
+                }
             }
-        }
-
-        _updateAudioVisualizer = true;
+        });
     }
 
     [RelayCommand]
@@ -13728,6 +13812,7 @@ public partial class MainViewModel :
         }
 
         var lines = Subtitles.OrderBy(p => p.StartTime).ToList();
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.BeautifyTimeCodes);
         var viewModel = await ShowDialogAsync<BeautifyTimeCodesWindow, BeautifyTimeCodesViewModel>(
             vm => { vm.Initialize(lines, AudioVisualizer, _videoFileName); });
 
@@ -13746,14 +13831,15 @@ public partial class MainViewModel :
             return;
         }
 
-        for (var i = 0; i < beautified.Count; i++)
+        EndToolApply(toolApply, () =>
         {
-            lines[i].StartTime = beautified[i].StartTime;
-            lines[i].EndTime = beautified[i].EndTime;
-            lines[i].UpdateDuration();
-        }
-
-        _updateAudioVisualizer = true;
+            for (var i = 0; i < beautified.Count; i++)
+            {
+                lines[i].StartTime = beautified[i].StartTime;
+                lines[i].EndTime = beautified[i].EndTime;
+                lines[i].UpdateDuration();
+            }
+        });
     }
 
     [RelayCommand]
@@ -13778,6 +13864,7 @@ public partial class MainViewModel :
 
         var lines = Subtitles.OrderBy(p => p.StartTime).ToList();
         var language = LanguageAutoDetect.AutoDetectGoogleLanguage(GetUpdateSubtitle());
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.ImproveTimeCodes);
         var viewModel = await ShowDialogAsync<ImproveTimeCodesWindow, ImproveTimeCodesViewModel>(
             vm => { vm.Initialize(lines, AudioVisualizer, _videoFileName, _audioTrack?.FfIndex ?? -1, language); });
 
@@ -13793,14 +13880,15 @@ public partial class MainViewModel :
             return;
         }
 
-        for (var i = 0; i < aligned.Count; i++)
+        EndToolApply(toolApply, () =>
         {
-            lines[i].StartTime = aligned[i].StartTime;
-            lines[i].EndTime = aligned[i].EndTime;
-            lines[i].UpdateDuration();
-        }
-
-        _updateAudioVisualizer = true;
+            for (var i = 0; i < aligned.Count; i++)
+            {
+                lines[i].StartTime = aligned[i].StartTime;
+                lines[i].EndTime = aligned[i].EndTime;
+                lines[i].UpdateDuration();
+            }
+        });
     }
 
     [RelayCommand]
@@ -13825,6 +13913,7 @@ public partial class MainViewModel :
             return;
         }
 
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.BeautifyTimeCodes);
         var viewModel = await ShowDialogAsync<BeautifyTimeCodesWindow, BeautifyTimeCodesViewModel>(
             vm => { vm.Initialize(selectedItems, AudioVisualizer, _videoFileName); });
 
@@ -13843,14 +13932,15 @@ public partial class MainViewModel :
             return;
         }
 
-        for (var i = 0; i < beautified.Count; i++)
+        EndToolApply(toolApply, () =>
         {
-            selectedItems[i].StartTime = beautified[i].StartTime;
-            selectedItems[i].EndTime = beautified[i].EndTime;
-            selectedItems[i].UpdateDuration();
-        }
-
-        _updateAudioVisualizer = true;
+            for (var i = 0; i < beautified.Count; i++)
+            {
+                selectedItems[i].StartTime = beautified[i].StartTime;
+                selectedItems[i].EndTime = beautified[i].EndTime;
+                selectedItems[i].UpdateDuration();
+            }
+        });
     }
 
     [RelayCommand]
@@ -13868,6 +13958,7 @@ public partial class MainViewModel :
         // by default) shift every later result onto its neighbour's row.
         var rowByParagraphId = new Dictionary<Guid, SubtitleLineViewModel>(selectedItems.Count);
 
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.FixCommonErrors);
         var result = await ShowDialogAsync<FixCommonErrorsWindow, FixCommonErrorsViewModel>(vm =>
         {
             var sub = new Subtitle();
@@ -13902,15 +13993,16 @@ public partial class MainViewModel :
             return;
         }
 
-        foreach (var paragraph in result.FixedSubtitle.Paragraphs)
+        EndToolApply(toolApply, () =>
         {
-            if (paragraph.Id.HasValue && rowByParagraphId.TryGetValue(paragraph.Id.Value, out var row))
+            foreach (var paragraph in result.FixedSubtitle.Paragraphs)
             {
-                row.Text = paragraph.Text;
+                if (paragraph.Id.HasValue && rowByParagraphId.TryGetValue(paragraph.Id.Value, out var row))
+                {
+                    row.Text = paragraph.Text;
+                }
             }
-        }
-
-        _updateAudioVisualizer = true;
+        });
     }
 
     [RelayCommand]
@@ -13980,9 +14072,11 @@ public partial class MainViewModel :
 
         void ApplyToGrid(Subtitle applied)
         {
-            // Stop change detection during the rewrite so the background undo snapshotter can't race
-            // the Subtitles Clear/AddRange (matches every other bulk grid operation).
-            RunWithoutChangeDetection(() =>
+            // Each Apply is one undo step. The lines keep their paragraph ids, so ApplyDialogRows
+            // updates the rows in place (keeping the original text) and the user's place in the grid.
+            var toolApply = BeginToolApply(Se.Language.Main.Menu.RemoveTextForHearingImpaired);
+            var before = CaptureGridPosition();
+            EndToolApply(toolApply, () =>
             {
                 var anchor = Subtitles.FirstOrDefault(s => blockIds.Contains(s.Id));
                 var firstIndex = anchor != null ? Subtitles.IndexOf(anchor) : Subtitles.Count;
@@ -13991,11 +14085,8 @@ public partial class MainViewModel :
                 var newLines = applied.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)).ToList();
                 kept.InsertRange(insertPos, newLines);
 
-                ReplaceSubtitles(kept);
-                Renumber();
-                SelectAndScrollToRow(insertPos);
+                ApplyDialogRows(kept, before);
                 blockIds = newLines.Select(s => s.Id).ToHashSet();
-                _updateAudioVisualizer = true;
             });
         }
 
@@ -14900,26 +14991,15 @@ public partial class MainViewModel :
             return;
         }
 
+        var before = CaptureGridPosition();
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.SortSubtitles);
         var result = await ShowDialogAsync<SortByWindow, SortByViewModel>(vm => { vm.Initialize(Subtitles.ToList()); });
 
         if (result.OkPressed)
         {
-            var selectedId = SelectedSubtitle?.Id;
-            ReplaceSubtitles(result.Subtitles);
-
-            Renumber();
-
-            // The dialog hands back copies of the rows, so find the current line again by Id -
-            // the old instance is no longer in Subtitles.
-            var selectedSubtitle = selectedId == null ? null : Subtitles.FirstOrDefault(p => p.Id == selectedId);
-            if (selectedSubtitle != null)
-            {
-                SelectAndScrollToSubtitle(selectedSubtitle);
-            }
-            else
-            {
-                SelectAndScrollToRow(0);
-            }
+            // The dialog hands back copies that keep the row ids, so the rows are reused in their
+            // new order and the current line stays current.
+            EndToolApply(toolApply, () => ApplyDialogRows(result.Subtitles, before));
         }
     }
 
@@ -19687,6 +19767,8 @@ public partial class MainViewModel :
             return;
         }
 
+        var before = CaptureGridPosition();
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.SplitBreakLongLines);
         var result = await ShowDialogAsync<SplitBreakLongLinesWindow, SplitBreakLongLinesViewModel>(
             vm => { vm.Initialize(selectedInOrder, IsFormatTeletext); });
 
@@ -19717,10 +19799,7 @@ public partial class MainViewModel :
             }
         }
 
-        ReplaceSubtitles(newSubtitles);
-        Renumber();
-        SelectAndScrollToRow(insertAt);
-        _updateAudioVisualizer = true;
+        EndToolApply(toolApply, () => ApplyDialogRows(newSubtitles, before));
         RefreshSubtitlePreview();
     }
 
@@ -23938,49 +24017,6 @@ public partial class MainViewModel :
     /// <see cref="ApplyFixedSubtitle(Subtitle, IReadOnlyDictionary{Guid, SubtitleLineViewModel}, int, SubtitleFormat?)"/>
     /// needs to put the dialog's result back on the rows it came from.
     /// </summary>
-    /// <summary>
-    /// Text and times of each line by paragraph id, taken before a dialog runs, so
-    /// <see cref="CountChangedLines"/> can report the lines the dialog changed - not the subtitle's
-    /// whole line count, which read as "fixed 1713 lines" for a two-line fix.
-    /// </summary>
-    private static Dictionary<Guid, (string Text, double Start, double End)> SnapshotLines(Subtitle subtitle)
-    {
-        var lines = new Dictionary<Guid, (string Text, double Start, double End)>(subtitle.Paragraphs.Count);
-        foreach (var p in subtitle.Paragraphs)
-        {
-            if (p.Id is { } id)
-            {
-                lines.TryAdd(id, (p.Text, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
-            }
-        }
-
-        return lines;
-    }
-
-    private static int CountChangedLines(Dictionary<Guid, (string Text, double Start, double End)> linesBefore, Subtitle fixedSubtitle)
-    {
-        var changed = 0;
-        var seen = new HashSet<Guid>();
-        foreach (var p in fixedSubtitle.Paragraphs)
-        {
-            if (p.Id is { } id && linesBefore.TryGetValue(id, out var before) && seen.Add(id))
-            {
-                if (before.Text != p.Text ||
-                    Math.Abs(before.Start - p.StartTime.TotalMilliseconds) > 0.001 ||
-                    Math.Abs(before.End - p.EndTime.TotalMilliseconds) > 0.001)
-                {
-                    changed++;
-                }
-            }
-            else
-            {
-                changed++; // added line
-            }
-        }
-
-        return changed + linesBefore.Count - seen.Count; // plus removed lines
-    }
-
     private Subtitle GetUpdateSubtitleWithRowMap(out Dictionary<Guid, SubtitleLineViewModel> rowByParagraphId)
     {
         var subtitle = GetUpdateSubtitle();

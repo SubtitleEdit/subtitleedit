@@ -1196,6 +1196,7 @@
     "fileExportedInFormatXToY": "File exported in format {0} to {1}",
     "fileExportedInFormatXToFileY": "File exported in format \"{0}\" to file \"{1}\"",
     "fixedXLines": "Fixed {0} lines",
+    "toolXChangedYLines": "{0}: {1} lines changed",
     "transcriptionCompletedWithXLines": "Transcription completed with {0} lines",
     "openSubtitleFileX": "Open subtitle file \"{0}\"?",
     "replacedXOccurrences": "Replaced {0} occurrences",
