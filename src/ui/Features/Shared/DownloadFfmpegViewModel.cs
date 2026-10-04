@@ -32,7 +32,7 @@ public partial class DownloadFfmpegViewModel : ObservableObject, IClosingCleanup
     private readonly Timer _timer;
     private bool _done;
     private readonly CancellationTokenSource _cancellationTokenSource;
-    private readonly MemoryStream _downloadStream;
+    private MemoryStream _downloadStream;
 
     private readonly IZipUnpacker _zipUnpacker;
 
@@ -226,6 +226,27 @@ public partial class DownloadFfmpegViewModel : ObservableObject, IClosingCleanup
         {
             Window?.Close();
         });
+    }
+
+    [RelayCommand]
+    private void Retry()
+    {
+        lock (_lockObj)
+        {
+            if (!_done || _cancellationTokenSource.IsCancellationRequested)
+            {
+                return;
+            }
+
+            _downloadStream.Dispose();
+            _downloadStream = new MemoryStream();
+            Error = string.Empty;
+            Progress = 0;
+            StatusText = Se.Language.General.StartingDotDotDot;
+            _done = false;
+            StartDownload();
+            _timer.Start();
+        }
     }
 
     [RelayCommand]

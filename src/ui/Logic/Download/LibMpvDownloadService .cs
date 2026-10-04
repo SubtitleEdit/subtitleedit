@@ -59,13 +59,30 @@ public class LibMpvDownloadService : ILibMpvDownloadService
         //throw new PlatformNotSupportedException();
     }
 
+    /// <summary>The <see cref="DownloadHashManager.LibMpv"/> key matching <see cref="GetUrl"/>.</summary>
+    internal static string? GetHashKey(string url)
+    {
+        return url switch
+        {
+            WindowsUrl => DownloadHashManager.LibMpv.WindowsX64,
+            WindowsUrlArm => DownloadHashManager.LibMpv.WindowsArm64,
+            _ => null,
+        };
+    }
+
+    internal static string[] AllUrls => [WindowsUrl, WindowsUrlArm];
+
     public async Task DownloadLibMpv(string destinationFileName, IProgress<float>? progress, CancellationToken cancellationToken)
     {
-        await DownloadHelper.DownloadFileAsync(_httpClient, GetUrl(), destinationFileName, progress, cancellationToken);
+        var url = GetUrl();
+        await DownloadHelper.DownloadFileAsync(_httpClient, url, destinationFileName, progress, cancellationToken);
+        await DownloadHashManager.VerifyDownloadAsync(destinationFileName, GetHashKey(url), "libmpv", cancellationToken);
     }
 
     public async Task DownloadLibMpv(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
     {
-        await DownloadHelper.DownloadFileAsync(_httpClient, GetUrl(), stream, progress, cancellationToken);
+        var url = GetUrl();
+        await DownloadHelper.DownloadFileAsync(_httpClient, url, stream, progress, cancellationToken);
+        await DownloadHashManager.VerifyDownloadAsync(stream, GetHashKey(url), "libmpv", cancellationToken);
     }
 }

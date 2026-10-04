@@ -47,6 +47,13 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
     private readonly IZipUnpacker _zipUnpacker;
     private readonly CancellationTokenSource _cancellationTokenSource = new();
 
+    // Steps that already finished, so Retry after a later step failed (e.g. the model after the
+    // engine was installed) does not download them again even when a forced re-download was asked for.
+    private bool _engineDone;
+    private bool _modelDone;
+    private bool _mmprojDone;
+    private bool _isRunning;
+
     public DownloadLlamaCppViewModel(ILlamaCppDownloadService downloadService, IZipUnpacker zipUnpacker)
     {
         _downloadService = downloadService;
@@ -63,14 +70,34 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
         Close();
     }
 
+    [RelayCommand]
+    private void Retry()
+    {
+        if (_isRunning || _cancellationTokenSource.IsCancellationRequested)
+        {
+            return;
+        }
+
+        Error = string.Empty;
+        ProgressValue = 0;
+        ProgressText = Se.Language.General.StartingDotDotDot;
+        StartDownload();
+    }
+
     public async void StartDownload()
     {
+        if (_isRunning)
+        {
+            return;
+        }
+
+        _isRunning = true;
         try
         {
             var folder = LlamaCppServerManager.GetAndCreateFolder();
             var token = _cancellationTokenSource.Token;
 
-            if (ForceEngineDownload || !LlamaCppServerManager.IsEngineInstalled())
+            if (!_engineDone && (ForceEngineDownload || !LlamaCppServerManager.IsEngineInstalled()))
             {
                 TitleText = string.Format(Se.Language.General.DownloadingX, "llama.cpp");
                 using (var engineStream = new MemoryStream())
@@ -108,9 +135,11 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
                 MakeExecutable(LlamaCppServerManager.GetExecutable());
             }
 
+            _engineDone = true;
+
             // Custom entries (a *.gguf the user dropped into the models folder) carry no Url - they
             // are already on disk, so there is nothing to fetch even when a re-download was asked for.
-            if (Model != null && !string.IsNullOrEmpty(Model.Url) &&
+            if (!_modelDone && Model != null && !string.IsNullOrEmpty(Model.Url) &&
                 (ForceModelDownload || !LlamaCppServerManager.IsModelInstalled(Model.FileName)))
             {
                 TitleText = string.Format(Se.Language.General.DownloadingX, Model.DisplayName);
@@ -132,7 +161,9 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
                 File.Move(tempPath, finalPath);
             }
 
-            if (Model?.MmprojFileName != null && Model.MmprojUrl != null &&
+            _modelDone = true;
+
+            if (!_mmprojDone && Model?.MmprojFileName != null && Model.MmprojUrl != null &&
                 (ForceModelDownload || !LlamaCppServerManager.IsModelInstalled(Model.MmprojFileName)))
             {
                 TitleText = string.Format(Se.Language.General.DownloadingX, Model.MmprojFileName);
@@ -154,6 +185,7 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
                 File.Move(tempPath, finalPath);
             }
 
+            _mmprojDone = true;
             OkPressed = true;
             Close();
         }
@@ -166,6 +198,10 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
             ProgressText = Se.Language.General.DownloadFailed;
             Error = ex.Message;
             Se.LogError(ex, "Error downloading llama.cpp");
+        }
+        finally
+        {
+            _isRunning = false;
         }
     }
 
