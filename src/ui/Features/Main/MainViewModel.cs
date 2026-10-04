@@ -8715,6 +8715,99 @@ public partial class MainViewModel :
         }
     }
 
+    [RelayCommand]
+    private async Task ShowToolsConvertActorsSelectedLines()
+    {
+        var selectedItems = new HashSet<SubtitleLineViewModel>(SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>());
+        var ordered = Subtitles.Where(p => !p.IsReferenceOnly && selectedItems.Contains(p)).ToList();
+        if (Window == null || ordered.Count == 0)
+        {
+            return;
+        }
+
+        var before = CaptureGridPosition();
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.ConvertActors);
+        var result = await ShowDialogAsync<ConvertActorsWindow, ConvertActorsViewModel>(vm => { vm.Initialize(ordered, SelectedSubtitleFormat); });
+        if (result.OkPressed)
+        {
+            EndToolApply(toolApply, () => ApplyDialogRows(SpliceSelectedLinesResult(Subtitles, ordered, result.FixedSubtitle), before));
+        }
+
+        _shortcutManager.ClearKeys();
+    }
+
+    [RelayCommand]
+    private async Task ShowToolsRemoveUnicodeCharactersSelectedLines()
+    {
+        var selectedItems = new HashSet<SubtitleLineViewModel>(SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>());
+        var ordered = Subtitles.Where(p => !p.IsReferenceOnly && selectedItems.Contains(p)).ToList();
+        if (Window == null || ordered.Count == 0)
+        {
+            return;
+        }
+
+        var before = CaptureGridPosition();
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.RemoveUnicodeCharacters);
+        var result = await ShowDialogAsync<RemoveUnicodeCharactersWindow, RemoveUnicodeCharactersViewModel>(vm => { vm.Initialize(ordered); });
+        if (result.OkPressed)
+        {
+            EndToolApply(toolApply, () => ApplyDialogRows(SpliceSelectedLinesResult(Subtitles, ordered, result.FixedSubtitle), before));
+        }
+
+        _shortcutManager.ClearKeys();
+    }
+
+    /// <summary>
+    /// The whole grid with a selected-lines tool's result put back where each line came from.
+    /// The dialogs work on copies that keep the row ids; a line the tool added (e.g. Convert
+    /// actors splitting a line per actor) has a new id and follows the line before it in the
+    /// result. A selected line missing from the result is dropped. Unlike splicing the result
+    /// in as one block, a scattered selection stays where it was.
+    /// </summary>
+    internal static List<SubtitleLineViewModel> SpliceSelectedLinesResult(IReadOnlyList<SubtitleLineViewModel> allRows, List<SubtitleLineViewModel> selected, IEnumerable<SubtitleLineViewModel> result)
+    {
+        var selectedIds = selected.Select(p => p.Id).ToHashSet();
+        var groups = new Dictionary<Guid, List<SubtitleLineViewModel>>();
+        var leading = new List<SubtitleLineViewModel>();
+        List<SubtitleLineViewModel>? current = null;
+        foreach (var line in result)
+        {
+            if (selectedIds.Contains(line.Id) && !groups.ContainsKey(line.Id))
+            {
+                current = new List<SubtitleLineViewModel> { line };
+                groups[line.Id] = current;
+            }
+            else
+            {
+                (current ?? leading).Add(line);
+            }
+        }
+
+        var rows = new List<SubtitleLineViewModel>(allRows.Count + leading.Count);
+        var first = true;
+        foreach (var row in allRows)
+        {
+            if (!selectedIds.Contains(row.Id))
+            {
+                rows.Add(row);
+                continue;
+            }
+
+            if (first)
+            {
+                rows.AddRange(leading);
+                first = false;
+            }
+
+            if (groups.TryGetValue(row.Id, out var lines))
+            {
+                rows.AddRange(lines);
+            }
+        }
+
+        return rows;
+    }
+
     public IReadOnlyList<InstalledPlugin> GetInstalledPlugins()
     {
         try
