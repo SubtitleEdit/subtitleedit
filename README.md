@@ -5,7 +5,7 @@ The subtitle editor :)
 ---
 
 ## 🌐 Documentation & FAQ
-http://subtitleedit.github.io/subtitleedit/
+https://subtitleedit.github.io/subtitleedit/
 
 ---
 
@@ -28,7 +28,7 @@ You can find the latest cross-platform builds here:
 
 #### Installing Subtitle Edit on macOS
 
-As of **v5.1.0-rc13**, the `.dmg` is signed with an Apple Developer ID and notarized by Apple, so it opens normally — no Terminal quarantine-removal step is needed:
+As of **v5.2.0**, the `.dmg` is signed with an Apple Developer ID and notarized by Apple, so it opens normally — no Terminal quarantine-removal step is needed:
 
 1. **Download** and **double-click** the `.dmg` file to mount it.
 2. In the window that appears, **drag `Subtitle Edit.app` into your `Applications` folder**.
@@ -45,28 +45,29 @@ flatpak install SubtitleEdit-linux-x64.flatpak
 flatpak run dk.nikse.subtitleedit
 ```
 
-#### Native packages
+#### Native builds (`.tar.gz`)
 
 Requires mpv and ffmpeg (ffmpeg is normally already installed) to enable video functionality.
 
-#### Debian/Ubuntu
+##### Debian/Ubuntu
 ```bash
 sudo apt update && sudo apt install -y mpv libmpv-dev ffmpeg
 ```
 
-#### Arch
+##### Arch
 ```bash
 sudo pacman -S mpv ffmpeg
 ```
 
-#### Fedora
+##### Fedora
 ```bash
-sudo dnf install mpv-libs ffmpeg
+sudo dnf install mpv-libs ffmpeg-free
 ```
+(or `ffmpeg` from [RPM Fusion](https://rpmfusion.org/))
 
-#### openSUSE
+##### openSUSE
 ```bash
-sudo zypper install libmpv1 ffmpeg
+sudo zypper install mpv ffmpeg
 ```
 
 > ⚙️ Note: The provided builds are self-contained and do not require a separate .NET installation.
