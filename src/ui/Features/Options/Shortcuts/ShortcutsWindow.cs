@@ -548,6 +548,18 @@ public class ShortcutsWindow : Window
         AutomationProperties.SetName(checkBoxAlt, altLabel);
         editPanel.Children.Add(checkBoxAlt);
 
+        // AltGr checkbox and label - Windows only: elsewhere right Alt is a plain Alt/Option
+        // key (macOS) or a layout level shift Avalonia does not report as Ctrl+Alt (Linux).
+        if (OperatingSystem.IsWindows())
+        {
+            var altGrLabel = Se.Language.Options.Shortcuts.AltGr;
+            editPanel.Children.Add(UiUtil.MakeTextBlock(altGrLabel).WithMarginRight(3));
+            var checkBoxAltGr = UiUtil.MakeCheckBox(vm, nameof(vm.AltGrIsSelected));
+            checkBoxAltGr.Bind(IsEnabledProperty, new Binding(nameof(vm.IsControlsEnabled)) { Source = vm });
+            AutomationProperties.SetName(checkBoxAltGr, altGrLabel);
+            editPanel.Children.Add(checkBoxAltGr);
+        }
+
         // Win key checkbox and label
         editPanel.Children.Add(UiUtil.MakeTextBlock(winLabel).WithMarginRight(3));
         var checkBoxWin = UiUtil.MakeCheckBox(vm, nameof(vm.WinIsSelected));

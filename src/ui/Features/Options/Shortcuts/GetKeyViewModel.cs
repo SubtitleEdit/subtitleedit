@@ -22,8 +22,10 @@ public partial class GetKeyViewModel : ObservableObject
     public bool IsAltPressed { get; private set; }
     public bool IsShiftPressed { get; private set; }
     public bool IsWinPressed { get; private set; }
+    public bool IsAltGrPressed { get; private set; }
 
     private bool _isWinDown;
+    private bool _isAltGrDown;
 
     public GetKeyViewModel()
     {
@@ -77,6 +79,14 @@ public partial class GetKeyViewModel : ObservableObject
             return;
         }
 
+        // Windows reports AltGr as a synthetic LeftCtrl followed by (physical) right Alt.
+        if (OperatingSystem.IsWindows() && (e.Key == Key.RightAlt || e.PhysicalKey == PhysicalKey.AltRight))
+        {
+            e.Handled = true;
+            _isAltGrDown = true;
+            return;
+        }
+
         if (e.Key is Key.LeftShift or Key.RightShift or
                      Key.LeftAlt or Key.RightAlt or
                      Key.LeftCtrl or Key.RightCtrl or
@@ -102,12 +112,15 @@ public partial class GetKeyViewModel : ObservableObject
         var keyName = ShortcutManager.GetShortcutKeyName(e);
 
         PressedKeyOnly = keyName;
-        IsControlPressed = e.KeyModifiers.HasFlag(KeyModifiers.Control);
-        IsAltPressed = e.KeyModifiers.HasFlag(KeyModifiers.Alt);
+        IsAltGrPressed = _isAltGrDown &&
+                         e.KeyModifiers.HasFlag(KeyModifiers.Control) &&
+                         e.KeyModifiers.HasFlag(KeyModifiers.Alt);
+        IsControlPressed = !IsAltGrPressed && e.KeyModifiers.HasFlag(KeyModifiers.Control);
+        IsAltPressed = !IsAltGrPressed && e.KeyModifiers.HasFlag(KeyModifiers.Alt);
         IsShiftPressed = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
         IsWinPressed = _isWinDown;
 
-        // Build the chord in canonical modifier order: Control, Alt, Shift, Win
+        // Build the chord in canonical modifier order: Control, Alt, AltGr, Shift, Win
         PressedKey = string.Empty;
 
         if (IsControlPressed)
@@ -120,6 +133,12 @@ public partial class GetKeyViewModel : ObservableObject
         {
             PressedKey += "Alt+";
             infoText += altLabel + " + ";
+        }
+
+        if (IsAltGrPressed)
+        {
+            PressedKey += ShortcutManager.AltGrToken + "+";
+            infoText += Se.Language.Options.Shortcuts.AltGr + " + ";
         }
 
         if (IsShiftPressed)
@@ -149,6 +168,11 @@ public partial class GetKeyViewModel : ObservableObject
         {
             e.Handled = true;
             _isWinDown = false;
+        }
+        else if (e.Key == Key.RightAlt || e.PhysicalKey == PhysicalKey.AltRight)
+        {
+            e.Handled = true;
+            _isAltGrDown = false;
         }
         else if (e.Key == Key.Space)
         {

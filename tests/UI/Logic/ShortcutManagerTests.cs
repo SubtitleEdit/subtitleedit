@@ -232,6 +232,39 @@ public class ShortcutManagerTests
     }
 
     [Fact]
+    public void AltGrShortcutFiresOnlyFromAltGr()
+    {
+        var manager = new ShortcutManager();
+        var category = ShortcutCategory.General;
+        var altGrCommand = new RelayCommand(() => { });
+        var controlAltCommand = new RelayCommand(() => { });
+        manager.RegisterShortcut(new ShortCut("AltGr+E", [ShortcutManager.AltGrToken, "E"], category, altGrCommand));
+        manager.RegisterShortcut(new ShortCut("Ctrl+Alt+E", ["Ctrl", "Alt", "E"], category, controlAltCommand));
+
+        // Windows AltGr: synthetic LeftCtrl, then physical right Alt.
+        manager.OnKeyPressed(null, KeyEvent(Key.LeftCtrl, PhysicalKey.ControlLeft, KeyModifiers.Control));
+        manager.OnKeyPressed(null, KeyEvent(Key.RightAlt, PhysicalKey.AltRight, KeyModifiers.Control | KeyModifiers.Alt));
+        var e = KeyEvent(Key.E, PhysicalKey.E, KeyModifiers.Control | KeyModifiers.Alt);
+        manager.OnKeyPressed(null, e);
+        Assert.Same(OperatingSystem.IsWindows() ? altGrCommand : controlAltCommand, manager.CheckShortcuts(e, category.ToString()));
+
+        // Left Ctrl + left Alt stays a plain Ctrl+Alt chord.
+        manager.ClearKeys();
+        manager.OnKeyPressed(null, KeyEvent(Key.LeftCtrl, PhysicalKey.ControlLeft, KeyModifiers.Control));
+        manager.OnKeyPressed(null, KeyEvent(Key.LeftAlt, PhysicalKey.AltLeft, KeyModifiers.Control | KeyModifiers.Alt));
+        manager.OnKeyPressed(null, e);
+        Assert.Same(controlAltCommand, manager.CheckShortcuts(e, category.ToString()));
+    }
+
+    [Fact]
+    public void OrderKeysPlacesAltGrAfterAlt()
+    {
+        Assert.Equal(
+            ["Ctrl", "Alt", ShortcutManager.AltGrToken, "Shift", "E"],
+            ShortcutManager.OrderKeys(["E", "Shift", ShortcutManager.AltGrToken, "Alt", "Ctrl"]));
+    }
+
+    [Fact]
     public void MissingAltGrKeyUpDoesNotBlockLaterLeftControlAltShortcut()
     {
         var manager = new ShortcutManager();
