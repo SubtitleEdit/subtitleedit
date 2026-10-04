@@ -3,6 +3,30 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-beta21 (4th of October 2026)
+
+* Batch convert: translate one file into several languages in one run
+* Add AltGr as a shortcut modifier (Windows) - thx kadrimarzouki
+* Add shortcut to auto-translate selected lines without the prompt - thx liquidkingtraduttore-stack
+* Add "Move start/end X ms" shortcuts, also in Visual sync, SE 4 arrow key steps are back
+* Speech to text: choose the VAD for Crisp ASR (Silero, FireRedVAD, WebRTC) - thx Davanix, Oplay66
+* Speech to text: OpenAI-compatible API works with vLLM
+* Compare: time tolerance option, show how far the times are off, right-click the gutter arrow to take only text or timing, error when a file can't be read - thx vertigo220
+* Auto-translate: keep ChatGPT's lines in their own row - thx Hardstylest
+* Auto-translate: MyMemory works without an API key
+* Auto-translate: default target language is the reverse of the last run or the OS language
+* Batch convert ASSA: pasted header is used again, option to keep source fonts
+* ASSA styles: importing a style with an existing name asks to overwrite or keep both - thx bichitoxxx
+* ASSA Set position: add \pos to the line's existing override block - thx Tom2681
+* Grid paste: Ctrl+Shift+V works on one line, Ctrl+V insert shows a status message - thx GrampaWildWilly
+* Duration up/down steps by the "Time up/down increment" setting
+* Remove all formatting: drop empty lines left by \N padding - thx kadrimarzouki
+* Remember dialog sizes and positions again - thx vertigo220
+* Fix Paddle OCR hanging when the worker stops part-way
+* Fix crashing child processes hanging on a Windows error dialog
+
+-----------------------------------------------------------------------------------------------------
+
 v5.3.0-beta20 (3rd of October 2026)
 
 * Add burn-in for selected lines (grid context menu) - thx rookes
