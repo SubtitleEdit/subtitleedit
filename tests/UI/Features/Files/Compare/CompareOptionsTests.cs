@@ -130,6 +130,39 @@ public class CompareOptionsTests : IDisposable
         Assert.All(vm.RightSubtitles, item => Assert.False(item.HasDifference));
     }
 
+    [AvaloniaTheory]
+    [InlineData(0, 2)]
+    [InlineData(3, 1)]
+    [InlineData(5, 0)]
+    public void IgnoreTimeDifferenceMs_TimesWithinTheToleranceAreNotADifference(int toleranceMs, int expectedDifferences)
+    {
+        // The example from #15620: same text, start 3 ms and end 5 ms apart on one line.
+        var left = MakeLines("Same text.", "Same text again.");
+        var right = MakeLines("Same text.", "Same text again.");
+        right[1].StartTime += TimeSpan.FromMilliseconds(3);
+        right[1].EndTime += TimeSpan.FromMilliseconds(5);
+        right[0].StartTime += TimeSpan.FromMilliseconds(1);
+
+        var vm = MakeViewModel();
+        vm.IgnoreTimeDifferenceMs = toleranceMs;
+        vm.Initialize(left, "left.srt", right, "right.srt", false);
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(expectedDifferences, vm.DifferenceCount);
+    }
+
+    [AvaloniaFact]
+    public void SaveSettings_RemembersTheTimeTolerance()
+    {
+        var vm = MakeViewModel();
+        vm.IgnoreTimeDifferenceMs = 40;
+
+        vm.SaveSettings();
+
+        Assert.Equal(40, Se.Settings.File.Compare.IgnoreTimeDifferenceMs);
+        Assert.Equal(40, MakeViewModel().IgnoreTimeDifferenceMs);
+    }
+
     private static ObservableCollection<SubtitleLineViewModel> MakeLines(params string[] texts)
     {
         var lines = new ObservableCollection<SubtitleLineViewModel>();

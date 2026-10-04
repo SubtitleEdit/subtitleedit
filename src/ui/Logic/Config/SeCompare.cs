@@ -13,4 +13,7 @@ public class SeCompare
     public bool IgnoreWhitespace { get; set; }
     public bool IgnoreFormatting { get; set; }
     public bool IgnoreNumbering { get; set; }
+
+    /// <summary>Start and end times this many milliseconds apart or closer count as equal (#15620).</summary>
+    public int IgnoreTimeDifferenceMs { get; set; }
 }
