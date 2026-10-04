@@ -299,6 +299,14 @@ public static class DownloadHashManager
         public const string ModelOrig = "FireRedTts3AudioCpp.ModelOrig";
     }
 
+    public static class KugelAudioAudioCpp
+    {
+        // SHA-256 of the KugelAudio-0-Open GGUFs on audio-cpp/audio.cpp-gguf (HF LFS oid).
+        // The engine binaries are the shared audio.cpp archives keyed under IndexTts25AudioCpp.
+        public const string ModelQ4_K = "KugelAudioAudioCpp.ModelQ4_K";
+        public const string ModelQ8_0 = "KugelAudioAudioCpp.ModelQ8_0";
+    }
+
     public static class ZonosTtsCrispAsr
     {
         // SHA-256 of the Zonos-v0.1 transformer (Q8_0) and the shared DAC 44 kHz codec.
@@ -2327,6 +2335,16 @@ public static class DownloadHashManager
             [FireRedTts3AudioCpp.ModelOrig] = new[]
             {
                 "1af06f341044121ddebb389c1e6e5181a43f65e2591f77c7eda2ca5810e484c8", // fireredtts3-base-orig.gguf
+            },
+
+            // KugelAudio-0-Open weights, from audio-cpp/audio.cpp-gguf (HF LFS oid).
+            [KugelAudioAudioCpp.ModelQ4_K] = new[]
+            {
+                "38a79cf4ffdcdeed69dc05d6350fc88042f951f952924799f59a0b93bc3895e9", // kugelaudio-0-open-q4_k.gguf
+            },
+            [KugelAudioAudioCpp.ModelQ8_0] = new[]
+            {
+                "9cff404eeafed33ac419f855002fa5fc6f6ef719f160b6fe333095b9cfb5be52", // kugelaudio-0-open-q8_0.gguf
             },
 
             // audio.cpp engine archives we build in SubtitleEdit/support-files

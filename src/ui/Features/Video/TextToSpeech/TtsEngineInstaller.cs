@@ -517,6 +517,20 @@ public static class TtsEngineInstaller
                 startDownloadModels: (vm, key) => vm.StartDownloadFireRedTts3AudioCppModels(key));
         }
 
+        if (engine is KugelAudioAudioCpp)
+        {
+            // MIT weights: no licence gate, otherwise the same runtime + model flow.
+            return await EnsureAudioCppEngineWithLicense(
+                window, windowService, refreshVoices,
+                engineDisplayName: "KugelAudio",
+                requiredFamily: KugelAudioAudioCpp.FamilyName,
+                licenseDefinition: null,
+                isLicenseAccepted: () => true,
+                modelKey: KugelAudioAudioCpp.ResolveModelKey(model),
+                areModelsInstalled: KugelAudioAudioCpp.AreModelsInstalled,
+                startDownloadModels: (vm, key) => vm.StartDownloadKugelAudioAudioCppModels(key));
+        }
+
         if (engine is ZonosTtsCrispAsr)
         {
             if (!await TtsVoiceInstaller.EnsureCrispAsrForZonos(window, windowService, forceRedownload: false))

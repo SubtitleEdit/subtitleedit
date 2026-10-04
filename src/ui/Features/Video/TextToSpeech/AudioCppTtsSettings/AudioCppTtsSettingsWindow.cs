@@ -187,6 +187,7 @@ public class AudioCppTtsSettingsWindow : Window
     {
         var openModelsFolder = UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.OpenModelsFolderCommand).WithIconLeft(IconNames.FolderOpen);
         var openVoicesFolder = UiUtil.MakeButton(Se.Language.Video.Voices, vm.OpenVoicesFolderCommand).WithIconLeft(IconNames.FolderOpen);
+        openVoicesFolder.IsVisible = vm.HasVoicesFolder;
         var close = UiUtil.MakeButtonOk(vm.OkCommand);
 
         var leftPanel = new StackPanel

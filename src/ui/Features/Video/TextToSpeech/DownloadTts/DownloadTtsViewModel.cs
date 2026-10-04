@@ -111,6 +111,8 @@ public partial class DownloadTtsViewModel : ObservableObject
     private Task? _downloadTaskFireRedTts3AudioCppModels;
     private readonly MemoryStream _downloadStreamFireRedTts3AudioCppVoices;
     private Task? _downloadTaskFireRedTts3AudioCppVoices;
+    private readonly IKugelAudioAudioCppDownloadService _kugelAudioAudioCppDownloadService;
+    private Task? _downloadTaskKugelAudioAudioCppModels;
     private readonly ICosyVoice3CrispAsrDownloadService _cosyVoice3CrispAsrDownloadService;
     private readonly IF5TtsCrispAsrDownloadService _f5TtsCrispAsrDownloadService;
     private readonly IVoxCPM2CrispAsrDownloadService _voxCPM2CrispAsrDownloadService;
@@ -155,6 +157,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         IHiggsTtsAudioCppDownloadService higgsTtsAudioCppDownloadService,
         IFishTtsAudioCppDownloadService fishTtsAudioCppDownloadService,
         IFireRedTts3AudioCppDownloadService fireRedTts3AudioCppDownloadService,
+        IKugelAudioAudioCppDownloadService kugelAudioAudioCppDownloadService,
         ICosyVoice3CrispAsrDownloadService cosyVoice3CrispAsrDownloadService,
         IF5TtsCrispAsrDownloadService f5TtsCrispAsrDownloadService,
         IVoxCPM2CrispAsrDownloadService voxCPM2CrispAsrDownloadService,
@@ -183,6 +186,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         _downloadStreamFishTtsAudioCppVoices = new MemoryStream();
         _fireRedTts3AudioCppDownloadService = fireRedTts3AudioCppDownloadService;
         _downloadStreamFireRedTts3AudioCppVoices = new MemoryStream();
+        _kugelAudioAudioCppDownloadService = kugelAudioAudioCppDownloadService;
         _cosyVoice3CrispAsrDownloadService = cosyVoice3CrispAsrDownloadService;
         _f5TtsCrispAsrDownloadService = f5TtsCrispAsrDownloadService;
         _voxCPM2CrispAsrDownloadService = voxCPM2CrispAsrDownloadService;
@@ -1592,6 +1596,36 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
             }
 
+            if (_downloadTaskKugelAudioAudioCppModels is { IsCompletedSuccessfully: true })
+            {
+                _timer.Stop();
+                _downloadTaskKugelAudioAudioCppModels = null;
+
+                // Model-only: the four preset voices are inside the GGUF and the engine does not
+                // clone, so there is no reference-voice pack to fetch afterwards.
+                OkPressed = true;
+                Close();
+                return;
+            }
+
+            if (_downloadTaskKugelAudioAudioCppModels is { IsFaulted: true })
+            {
+                _timer.Stop();
+                var ex = _downloadTaskKugelAudioAudioCppModels.Exception?.InnerException ?? _downloadTaskKugelAudioAudioCppModels.Exception;
+                if (ex is OperationCanceledException)
+                {
+                    ProgressText = Se.Language.General.DownloadCanceled;
+                    Close();
+                }
+                else
+                {
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
+                }
+
+                return;
+            }
+
             if (_downloadTaskSupertonicCrispAsrModels is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
@@ -2789,6 +2823,29 @@ public partial class DownloadTtsViewModel : ObservableObject
 
         _downloadTaskFireRedTts3AudioCppModels =
             _fireRedTts3AudioCppDownloadService.DownloadModels(resolved, downloadProgress, titleProgress, _cancellationTokenSource.Token);
+    }
+
+    public void StartDownloadKugelAudioAudioCppModels(string? modelKey = null)
+    {
+        var resolved = KugelAudioAudioCpp.ResolveModelKey(modelKey);
+        var fileName = KugelAudioAudioCpp.GetModelFileName(resolved);
+        TitleText = string.Format(Se.Language.General.DownloadingX, $"KugelAudio model ({resolved}): {fileName}");
+
+        var downloadProgress = new Progress<float>(number =>
+        {
+            var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
+            var pctString = percentage.ToString(CultureInfo.InvariantCulture);
+            ProgressValue = percentage;
+            ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
+        });
+
+        var titleProgress = new Action<string>(title =>
+        {
+            Dispatcher.UIThread.Post(() => TitleText = title);
+        });
+
+        _downloadTaskKugelAudioAudioCppModels =
+            _kugelAudioAudioCppDownloadService.DownloadModels(resolved, downloadProgress, titleProgress, _cancellationTokenSource.Token);
     }
 
     public void StartDownloadZonosTtsCrispAsrModels()

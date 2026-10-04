@@ -27,6 +27,13 @@ public class AudioCppRuntimeBuildInfoTests
         "models      : index_tts2,higgs_audio_tts,fish_audio,fireredtts3,ace_step\n" +
         "backend     : metal (arm64)\n";
 
+    private const string BuildInfo2026_10_04 =
+        "audio.cpp build for SubtitleEdit's IndexTTS-2.5 engine\n" +
+        "source      : https://github.com/0xShug0/audio.cpp\n" +
+        "ref         : d3ab9df288131aeb83a3c361f0eb1e464b41dea0\n" +
+        "models      : index_tts2,higgs_audio_tts,fish_audio,fireredtts3,ace_step,kugelaudio\n" +
+        "backend     : metal (arm64)\n";
+
     [Fact]
     public void ParseBuiltModelFamilies_ReadsTheModelsLine()
     {
@@ -58,14 +65,21 @@ public class AudioCppRuntimeBuildInfoTests
     [Fact]
     public void EveryAudioCppEngineFamily_IsInThePinnedBuild()
     {
-        var families = AudioCppRuntime.ParseBuiltModelFamilies(BuildInfo2026_09_17b)!;
+        var families = AudioCppRuntime.ParseBuiltModelFamilies(BuildInfo2026_10_04)!;
 
         Assert.Contains(IndexTts25AudioCpp.FamilyName, families);
         Assert.Contains(HiggsTtsAudioCpp.FamilyName, families);
         Assert.Contains(FishTtsAudioCpp.FamilyName, families);
         Assert.Contains(FireRedTts3AudioCpp.FamilyName, families);
+        Assert.Contains(KugelAudioAudioCpp.FamilyName, families);
         // Video > Generate background music and the TTS window's background music.
         Assert.Contains(AceStepAudioCpp.FamilyName, families);
+    }
+
+    [Fact]
+    public void PreviousBuild_LacksKugelAudio_SoItAsksForTheUpdate()
+    {
+        Assert.DoesNotContain(KugelAudioAudioCpp.FamilyName, AudioCppRuntime.ParseBuiltModelFamilies(BuildInfo2026_09_17b)!);
     }
 
     [Fact]
