@@ -4556,6 +4556,20 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private async Task CommandFileSaveOriginal()
+    {
+        if (Window == null || !ShowColumnOriginalText)
+        {
+            return;
+        }
+
+        if (await SaveCurrentSubtitleOriginal())
+        {
+            ShowStatus(string.Format(Se.Language.General.SavedChangesToX, _subtitleFileNameOriginal));
+        }
+    }
+
+    [RelayCommand]
     private async Task FilePropertiesShow()
     {
         if (Window == null)
