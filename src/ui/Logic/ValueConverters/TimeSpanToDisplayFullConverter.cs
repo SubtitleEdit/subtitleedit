@@ -36,14 +36,26 @@ public class TimeSpanToDisplayFullConverter : IValueConverter
                 ts = ts.Add(TimeSpan.FromMilliseconds(Se.Settings.General.CurrentVideoOffsetInMs));
             }
 
-            _formattingTimeCode.TimeSpan = ts;
-
-            var formatted = Se.Settings.General.UseFrameMode
-                ? _formattingTimeCode.ToHHMMSSFF()
-                : _formattingTimeCode.ToString();
+            string formatted;
+            if (Se.Settings.General.UseFrameNumbers)
+            {
+                formatted = FrameNumbers.Format(ts);
+            }
+            else
+            {
+                _formattingTimeCode.TimeSpan = ts;
+                formatted = Se.Settings.General.UseFrameMode
+                    ? _formattingTimeCode.ToHHMMSSFF()
+                    : _formattingTimeCode.ToString();
+            }
 
             _cache.Set(key, formatted);
             return formatted;
+        }
+
+        if (Se.Settings.General.UseFrameNumbers)
+        {
+            return "0";
         }
 
         return Se.Settings.General.UseFrameMode ? ZeroFrameMode : ZeroTime;
@@ -53,6 +65,18 @@ public class TimeSpanToDisplayFullConverter : IValueConverter
     {
         if (value is string s)
         {
+            if (Se.Settings.General.UseFrameNumbers)
+            {
+                if (!FrameNumbers.TryParse(s, out var frameTime))
+                {
+                    return TimeSpan.Zero;
+                }
+
+                return Se.Settings.General.CurrentVideoOffsetInMs != 0
+                    ? frameTime.Add(TimeSpan.FromMilliseconds(-Se.Settings.General.CurrentVideoOffsetInMs))
+                    : frameTime;
+            }
+
             var span = s.AsSpan();
             var enumerator = span.SplitAny(SplitChars);
             if (enumerator.MoveNext() && int.TryParse(span[enumerator.Current], out var hours) &&

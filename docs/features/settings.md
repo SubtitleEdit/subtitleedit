@@ -36,7 +36,7 @@ The subtitle rules that drive error checking, the grid's warning colors, and too
 - **Time up/down increment (ms)** - The step of the start/end/duration up-down boxes in millisecond mode
 - **Prompt before delete**, **Lock time codes**, **Remember window position and size**
 - **Show full file path in title bar** — Show the subtitle file's full path in the main window title instead of only its name. Off by default
-- **Use frame mode (hh.mm.ss.ff)** — Show times as frames instead of milliseconds
+- **Time code mode** — How times are shown and typed: *Time (hh:mm:ss,zzz)* with milliseconds, *Frames (hh:mm:ss:ff)*, or *Frame numbers* - the absolute frame number at the current frame rate (e.g. 15230), also for durations and the video position, so a sync offset is just "video frame - start frame". Both frame modes snap edited times to frames. The mode is also shown in the status bar - click it (or use the "Toggle time code mode" shortcut) to cycle through the three.
 - **Limit number of lines in subtitle text box**
 - **Open last recent file on start**
 - **Auto-convert encoding to UTF-8 on open**, **Force CR+LF on save**, **Auto-trim white-space**

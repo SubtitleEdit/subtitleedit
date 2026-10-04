@@ -465,6 +465,7 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _showWaveformOnlySpectrogram;
     [ObservableProperty] private bool _showWaveformWaveformAndSpectrogram;
     [ObservableProperty] private bool _isSmpteTimingEnabled;
+    [ObservableProperty] private string _timeCodeModeText = string.Empty;
     [ObservableProperty] private string _videoOffsetText;
     [ObservableProperty] private string _setVideoOffsetText;
     [ObservableProperty] private bool _isVideoOffsetVisible;
@@ -1230,6 +1231,7 @@ public partial class MainViewModel :
         // without callers overriding it back to a longer value (#11280).
         _undoRedoManager.SetupChangeDetection(this);
         LockTimeCodes = Se.Settings.General.LockTimeCodes;
+        UpdateTimeCodeModeText();
         SetLibSeSettings();
         _dropDownFormatsSearchTimer.Elapsed += (s, e) =>
         {
@@ -14089,6 +14091,7 @@ public partial class MainViewModel :
         }
 
         LockTimeCodes = Se.Settings.General.LockTimeCodes;
+        UpdateTimeCodeModeText();
         IsWaveformToolbarVisible = Se.Settings.Waveform.ShowToolbar;
 
         // Frame mode may have just been toggled - refresh the waveform seek combo (frames vs
@@ -23266,7 +23269,10 @@ public partial class MainViewModel :
     private double MeasureShowHideColumnWidth()
     {
         // Use "8" digits — typically the widest digit glyph in proportional fonts.
-        var sample = Se.Settings.General.UseFrameMode ? "88:88:88.88" : "88:88:88,888";
+        // Frame numbers: seven digits is past 40 hours at 50 fps.
+        var sample = Se.Settings.General.UseFrameNumbers
+            ? "8888888"
+            : Se.Settings.General.UseFrameMode ? "88:88:88.88" : "88:88:88,888";
         if (Se.Settings.General.CurrentVideoOffsetInMs < 0)
         {
             sample = "-" + sample;
@@ -35784,6 +35790,16 @@ public partial class MainViewModel :
             return;
         }
 
+        RefreshTimeCodeDisplay();
+    }
+
+    /// <summary>
+    /// Re-renders every time code after the time code mode changed (time, frames or frame
+    /// numbers) - the grid rows, the edit boxes and the waveform only re-format on a value change.
+    /// </summary>
+    private void RefreshTimeCodeDisplay()
+    {
+        var general = Se.Settings.General;
         Configuration.Settings.General.UseTimeFormatHHMMSSFF = general.UseFrameMode;
 
         foreach (var s in Subtitles)
@@ -35795,7 +35811,43 @@ public partial class MainViewModel :
         EditBoxEndTimeUpDown?.RefreshDisplayFormat();
         EditBoxDurationUpDown?.RefreshDisplayFormat();
         RefreshVideoSeekAmounts();
+        AutoFitColumns();
+        UpdateTimeCodeModeText();
         _updateAudioVisualizer = true;
+    }
+
+    private void UpdateTimeCodeModeText()
+    {
+        var general = Se.Settings.General;
+        TimeCodeModeText = !general.UseFrameMode
+            ? "hh:mm:ss,zzz"
+            : general.UseFrameNumbers ? Se.Language.Options.Settings.TimeCodeModeFrameNumbers : "hh:mm:ss:ff";
+    }
+
+    // Cycles time -> frames (hh:mm:ss:ff) -> frame numbers. Saved like the Settings choice; while
+    // EBU STL forces frame mode, time is skipped since it could not be shown anyway.
+    [RelayCommand]
+    private void ToggleTimeCodeMode()
+    {
+        var general = Se.Settings.General;
+        if (!general.UseFrameMode)
+        {
+            general.UseFrameModePersisted = true;
+            general.UseFrameNumbersPersisted = false;
+        }
+        else if (!general.UseFrameNumbers)
+        {
+            general.UseFrameModePersisted = true;
+            general.UseFrameNumbersPersisted = true;
+        }
+        else
+        {
+            general.UseFrameModePersisted = general.UseFrameModeOverride == true;
+            general.UseFrameNumbersPersisted = false;
+        }
+
+        RefreshTimeCodeDisplay();
+        ShowStatus($"{Se.Language.Options.Settings.TimeCodeMode}: {TimeCodeModeText}");
     }
 
     /// <summary>

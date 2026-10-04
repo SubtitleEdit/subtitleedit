@@ -241,7 +241,10 @@ public class LanguageSettings
     public string ResetSyntaxColoring { get; set; }
     public string ResetWaveform { get; set; }
     public string ResetRules { get; set; }
-    public string UseFrameMode { get; set; }
+    public string TimeCodeMode { get; set; }
+    public string TimeCodeModeTime { get; set; }
+    public string TimeCodeModeFrames { get; set; }
+    public string TimeCodeModeFrameNumbers { get; set; }
     public string TextBoxLimitNewLines { get; set; }
     public string MpvOpenGl { get; set; }
     public string MpvSoftwareRendering { get; set; }
@@ -593,7 +596,10 @@ public class LanguageSettings
         ResetSyntaxColoring = "Reset syntax coloring";
         ResetWaveform = "Reset waveform";
         ResetRules = "Reset rules";
-        UseFrameMode = "Use frame mode (hh.mm.ss.ff)";
+        TimeCodeMode = "Time code mode";
+        TimeCodeModeTime = "Time (hh:mm:ss,zzz)";
+        TimeCodeModeFrames = "Frames (hh:mm:ss:ff)";
+        TimeCodeModeFrameNumbers = "Frame numbers";
         TextBoxLimitNewLines = "Limit number of lines in subtitle text box";
         MpvOpenGl = "libmpv - OpenGL";
         MpvWidRendering = "libmpv - Native Window ID rendering";

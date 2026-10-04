@@ -210,6 +210,8 @@ public static class InitFooter
                     .WithBindText(vm, vm => vm.VideoOffsetText)
                     .WithBindVisible(vm, vm => vm.IsVideoOffsetVisible).WithMarginRight(15),
 
+                MakeTimeCodeModeButton(vm),
+
                 right,
             },
         };
@@ -217,5 +219,31 @@ public static class InitFooter
         grid.Add(panelRight, 0, 3);
 
         return grid;
+    }
+
+    // Shows the time code mode and cycles it on click: time, frames (hh:mm:ss:ff), frame numbers.
+    private static Button MakeTimeCodeModeButton(MainViewModel vm)
+    {
+        var button = new Button
+        {
+            Content = UiUtil.MakeLabel().WithBindText(vm, vm => vm.TimeCodeModeText),
+            [AutomationProperties.NameProperty] = Se.Language.Options.Settings.TimeCodeMode,
+            [!Button.CommandProperty] = new Binding(nameof(vm.ToggleTimeCodeModeCommand)),
+            DataContext = vm,
+
+            // Transparent, not null, so the whole label is hit-testable.
+            Background = Brushes.Transparent,
+            BorderBrush = null,
+            Padding = new Thickness(4, 2, 4, 2),
+            Margin = new Thickness(0, 0, 15, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(button, Se.Language.Options.Shortcuts.ToggleTimeCodeMode);
+        }
+
+        return button;
     }
 }
