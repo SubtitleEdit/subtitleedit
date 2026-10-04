@@ -3095,13 +3095,23 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// </summary>
     private async Task<bool> EnsureVadModelDownloadedAsync(ISpeechToTextEngine engine)
     {
-        if (engine is not ICrispAsrEngine ||
-            !ShouldForceCrispAsrVad(engine, engine.CommandLineParameter, vadSuppressed: false, SelectedVadOption.Choice))
+        if (engine is not ICrispAsrEngine)
         {
             return true;
         }
 
-        var vadOption = CrispAsrVadModel.GetEffective(SelectedVadOption.Choice, engine);
+        // The advanced "VAD" button names the model at its download path before it is there.
+        var vadOption = CrispAsrVadModel.FindMissingModelInArguments(engine.CommandLineParameter, engine);
+        if (vadOption == null)
+        {
+            if (!ShouldForceCrispAsrVad(engine, engine.CommandLineParameter, vadSuppressed: false, SelectedVadOption.Choice))
+            {
+                return true;
+            }
+
+            vadOption = CrispAsrVadModel.GetEffective(SelectedVadOption.Choice, engine);
+        }
+
         if (!vadOption.NeedsDownload)
         {
             return true;

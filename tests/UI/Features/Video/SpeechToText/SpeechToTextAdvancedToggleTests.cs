@@ -140,6 +140,24 @@ public class SpeechToTextAdvancedToggleTests
         Assert.True(vm.IsVadCrispAsrActive);
     }
 
+    /// <summary>
+    /// FireRedVAD goes in by its download path even before it is downloaded - a bare name made
+    /// the run skip the download prompt.
+    /// </summary>
+    [Fact]
+    public void CrispAsrVadFireRedUsesTheDownloadPath()
+    {
+        var engine = new CrispAsrParakeet();
+        var vm = MakeViewModel(string.Empty);
+        vm.SelectedEngine = engine;
+        vm.VadChoice = CrispAsrVadModel.FireRed;
+
+        vm.EnableVadCrispAsrCommand.Execute(null);
+
+        var path = engine.GetModelForCmdLine(CrispAsrVadModel.Get(CrispAsrVadModel.FireRed).FileName!);
+        Assert.Equal(CrispAsrVadModel.BuildArguments(path), vm.Parameters);
+    }
+
     /// <summary>The highlight press turns a switched-off VAD filter into a switched-on one, once.</summary>
     [Fact]
     public void CTranslate2HighlightWordReplacesAnOffVadFilter()

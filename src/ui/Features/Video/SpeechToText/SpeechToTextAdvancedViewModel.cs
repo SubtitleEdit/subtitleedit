@@ -272,9 +272,11 @@ public partial class SpeechToTextAdvancedViewModel : ObservableObject
                 : CrispAsrVadModel.BuildArguments(fileName);
         }
 
-        // A model that is not downloaded yet goes in by name - crispasr fetches it itself.
-        var modelPath = CrispAsrVadModel.GetModelPath(option, SelectedEngine) ?? option.Choice;
-        return modelPath == option.Choice
+        // A model that is not downloaded yet goes in by the path SE downloads it to, so the run
+        // still offers the download (a bare name skipped it and crispasr fetched its own copy).
+        var modelPath = CrispAsrVadModel.GetModelPath(option, SelectedEngine)
+                        ?? (option.FileName != null ? SelectedEngine.GetModelForCmdLine(option.FileName) : null);
+        return modelPath == null
             ? $"--vad --vad-model {option.Choice}"
             : CrispAsrVadModel.BuildArguments(modelPath);
     }
