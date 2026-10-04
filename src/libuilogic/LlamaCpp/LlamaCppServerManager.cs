@@ -215,18 +215,19 @@ public static class LlamaCppServerManager
         // Qwen 3.5's thinking template: without "--reasoning off" every line still came back, but at
         // ~4x the time (34 s vs 8 s for 24 lines EN->DA on the 2B). No PromptTemplate - its trained
         // prompt ("Translate the following text into {1}. Output the translation directly...") is
-        // already what SE's generic prompt asks for. There are no official GGUFs; the 2B quant is
-        // mradermacher's, the 9B a community Q4_K_M. Compared 2026-10-01 (seconv, 24 dialog lines
+        // already what SE's generic prompt asks for. Downloads come from IndexTeam's official GGUF
+        // repos (published 2026-10-02); the local file names are kept from the earlier community
+        // quants so existing downloads and saved selections still match. Compared 2026-10-01 (seconv, 24 dialog lines
         // EN->DA/DE/JA, b10840): the 9B was on par with TranslateGemma 12B (best in Japanese, never
         // left a line untranslated) and ahead of Gemma 4 E4B; the 2B is roughly TranslateGemma 4B
         // level at twice its speed. The 2B Q4_K_M is not offered - it made clearly worse slips than
         // the Q8_0 (e.g. "sweetie" -> the Danish insult "kærling"). Index-Homura (same family) is
         // left out: it needs a target syllable count per line, which the engines cannot supply.
         new LlamaCppModel("Index-Translate 2B (Q8_0) - 150 languages", "Index-Translate-2B.Q8_0.gguf", "2.1 GB",
-            "https://huggingface.co/mradermacher/Index-Translate-2B-GGUF/resolve/main/Index-Translate-2B.Q8_0.gguf",
+            "https://huggingface.co/IndexTeam/Index-Translate-2B-GGUF/resolve/main/Index-Translate-2B.Q8_0.gguf",
             Temperature: 0, NoThinking: true),
         new LlamaCppModel("Index-Translate 9B (Q4_K_M) - 150 languages", "index-translate-9b-q4_k_m.gguf", "5.8 GB",
-            "https://huggingface.co/datouge/Index-Translate-9B-Q4_K_M-GGUF/resolve/main/index-translate-9b-q4_k_m.gguf",
+            "https://huggingface.co/IndexTeam/Index-Translate-9B-GGUF/resolve/main/Index-Translate-9B.Q4_K_M.gguf",
             Temperature: 0, NoThinking: true),
 
         // Aya Expanse 8B (Cohere) - a dedicated multilingual model (23 languages), a good translation
