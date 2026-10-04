@@ -121,6 +121,20 @@ public class SeBatchConvert
 
     public bool AssaEmbedFontsTrim { get; set; }
 
+    /// <summary>The EBU STL header (GSI block) chosen in the EBU STL settings, empty = defaults.</summary>
+    public string EbuHeader { get; set; } = string.Empty;
+    public int EbuJustificationCode { get; set; } = 2;
+
+    // Cavena 890 header fields - batch convert's own, so a run never picks up the title of
+    // whatever file was last exported from the main window. An empty title = file name.
+    public string Cavena890TranslatedTitle { get; set; } = string.Empty;
+    public string Cavena890OriginalTitle { get; set; } = string.Empty;
+    public string Cavena890Translator { get; set; } = string.Empty;
+    public string Cavena890Comment { get; set; } = string.Empty;
+
+    /// <summary>Start of programme in milliseconds, 0 = the format's default (10:00:00:00).</summary>
+    public double Cavena890StartOfProgrammeMs { get; set; }
+
     public int MergeShortLinesMaxCharacters { get; set; }
     public int MergeShortLinesMaxMillisecondsBetweenLines { get; set; }
     public bool MergeShortLinesOnlyContinuationLines { get; set; }

@@ -20,6 +20,15 @@ public class SeFile
     public string ExportDvbTeletextLanguageCode { get; set; } = "eng";
     public bool ExportDvbTeletextHearingImpaired { get; set; }
 
+    /// <summary>
+    /// Last PAC code page chosen in Export PAC - shared with Batch convert's PAC settings so both
+    /// write the same code page. 0 = Latin (see the Pac.CodePage* constants).
+    /// </summary>
+    public int ExportPacCodePage { get; set; }
+
+    /// <summary>Last PAC secondary code page (lines in another script), -1 = none.</summary>
+    public int ExportPacSecondaryCodePage { get; set; } = -1;
+
     public SeFile()
     {
         ExportCustomFormats.Add(new SeExportCustomFormatItem

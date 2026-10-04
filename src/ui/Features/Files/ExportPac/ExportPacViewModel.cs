@@ -6,6 +6,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Files.ExportPac;
 
@@ -45,11 +46,17 @@ public partial class ExportPacViewModel : ObservableObject
             "Portuguese",
         };
 
-        SelectedPacCodePage = PacCodePages[0];
-
         // "(none)" first, then the same code pages - index - 1 is the code page number
         SecondaryPacCodePages = new ObservableCollection<string>(new[] { "(none)" }.Concat(PacCodePages));
-        SelectedSecondaryPacCodePage = SecondaryPacCodePages[0];
+
+        // Start from the last choice (shared with Batch convert's PAC settings) instead of
+        // resetting to Latin every time.
+        var codePage = Se.Settings.File.ExportPacCodePage;
+        SelectedPacCodePage = codePage >= 0 && codePage < PacCodePages.Count ? PacCodePages[codePage] : PacCodePages[0];
+        var secondaryIndex = Se.Settings.File.ExportPacSecondaryCodePage + 1;
+        SelectedSecondaryPacCodePage = secondaryIndex >= 0 && secondaryIndex < SecondaryPacCodePages.Count
+            ? SecondaryPacCodePages[secondaryIndex]
+            : SecondaryPacCodePages[0];
     }
 
     [RelayCommand]
@@ -68,6 +75,8 @@ public partial class ExportPacViewModel : ObservableObject
         SecondaryPacCodePage = string.IsNullOrEmpty(SelectedSecondaryPacCodePage)
             ? -1
             : SecondaryPacCodePages.IndexOf(SelectedSecondaryPacCodePage) - 1;
+        Se.Settings.File.ExportPacCodePage = PacCodePage.Value;
+        Se.Settings.File.ExportPacSecondaryCodePage = SecondaryPacCodePage;
         Close();
     }
 

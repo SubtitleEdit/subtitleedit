@@ -584,13 +584,24 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         // Save binary formats
         var binaryFormats = new Dictionary<string, SubtitleFormat>
         {
-            // Without a code page Pac.Save falls back to Latin (Czech) - use Latin like the main
-            // window's Export PAC default.
-            { FormatPac, new Pac { CodePage = Pac.CodePageLatin } },
+            // The code page from the PAC settings (shared with the main window's Export PAC) -
+            // without one Pac.Save falls back to Latin (Czech).
+            { FormatPac, new Pac { CodePage = _config.PacCodePage, SecondaryCodePage = _config.PacSecondaryCodePage } },
             { FormatPacUnicode, new PacUnicode() },
             { FormatCavena890, new Cavena890() },
             { FormatEbuStl, new Ebu() },
             { FormatAyato, new Ayato() },
+            { CheetahCaption.NameOfFormat, new CheetahCaption() },
+            { CheetahCaptionOld.NameOfFormat, new CheetahCaptionOld() },
+            { CapMakerPlus.NameOfFormat, new CapMakerPlus() },
+            {
+                DvbTeletext.NameOfFormat, new DvbTeletext
+                {
+                    PageNumber = _config.DvbTeletextPageNumber,
+                    LanguageCode = _config.DvbTeletextLanguageCode,
+                    HearingImpaired = _config.DvbTeletextHearingImpaired,
+                }
+            },
         };
         foreach (var kvp in binaryFormats)
         {
@@ -608,6 +619,12 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                         item.Subtitle.Header = _config.EbuHeader;
                         Ebu.EbuUiHelper.JustificationCode = _config.EbuJustificationCode;
                     }
+                }
+
+                if (format is Cavena890 cavena)
+                {
+                    SaveCavena890(item, cavena, format, cancellationToken);
+                    return;
                 }
 
                 if (format is IBinaryPersistableSubtitle binaryPersistableSubtitle)
@@ -2129,6 +2146,11 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             }
 
             var converted = ToTextWithFreshDCinemaIdentity(targetFormat, s, Path.GetFileNameWithoutExtension(item.FileName));
+            if (_config.ForceCrLf)
+            {
+                converted = EncodingHelper.ForceCrLf(converted);
+            }
+
             var path = MakeOutputFileName(item, targetFormat.Extension);
             var encoding = EncodingHelper.ResolveEncoding(_config.TargetEncoding, item.FileName);
             await File.WriteAllTextAsync(path, converted, encoding, cancellationToken);
@@ -2174,6 +2196,41 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         {
             ss.CurrentDCinemaSubtitleId = oldId;
             ss.CurrentDCinemaMovieTitle = oldTitle;
+        }
+    }
+
+    /// <summary>
+    /// Cavena890.Save reads its header fields from the global libse settings, which the main
+    /// window's Export Cavena 890 fills for the file it exports - so batch convert used to write
+    /// that file's title, translator and start time into every file. Apply batch convert's own
+    /// Cavena settings for the save and restore the main window's afterwards.
+    /// </summary>
+    private void SaveCavena890(BatchConvertItem item, IBinaryPersistableSubtitle format, SubtitleFormat f, CancellationToken cancellationToken)
+    {
+        var ss = Configuration.Settings.SubtitleSettings;
+        var oldTitle = ss.CurrentCavena89Title;
+        var oldOriginalTitle = ss.CurrentCavena890riginalTitle;
+        var oldTranslator = ss.CurrentCavena890Translator;
+        var oldComment = ss.CurrentCavena89Comment;
+        var oldStartOfMessage = ss.Cavena890StartOfMessage;
+        try
+        {
+            ss.CurrentCavena89Title = _config.Cavena890TranslatedTitle ?? string.Empty; // empty = file name
+            ss.CurrentCavena890riginalTitle = _config.Cavena890OriginalTitle ?? string.Empty;
+            ss.CurrentCavena890Translator = _config.Cavena890Translator ?? string.Empty;
+            ss.CurrentCavena89Comment = _config.Cavena890Comment ?? string.Empty;
+            ss.Cavena890StartOfMessage = string.IsNullOrEmpty(_config.Cavena890StartOfMessage)
+                ? "10:00:00:00"
+                : _config.Cavena890StartOfMessage;
+            SaveSubtitleFormat(item, format, f, cancellationToken);
+        }
+        finally
+        {
+            ss.CurrentCavena89Title = oldTitle;
+            ss.CurrentCavena890riginalTitle = oldOriginalTitle;
+            ss.CurrentCavena890Translator = oldTranslator;
+            ss.CurrentCavena89Comment = oldComment;
+            ss.Cavena890StartOfMessage = oldStartOfMessage;
         }
     }
 

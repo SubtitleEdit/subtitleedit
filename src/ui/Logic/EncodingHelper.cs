@@ -127,4 +127,19 @@ public static class EncodingHelper
             return false;
         }
     }
+
+    /// <summary>
+    /// "Force CR+LF on save" (Settings): every line ends with CR+LF. Shared by the main window's
+    /// save, the original's save and Batch convert so they write the same line breaks.
+    /// </summary>
+    public static string ForceCrLf(string text)
+    {
+        var sb = new StringBuilder(text.Length + 64);
+        foreach (var line in text.SplitToLines())
+        {
+            sb.Append(line).Append("\r\n");
+        }
+
+        return sb.ToString();
+    }
 }
