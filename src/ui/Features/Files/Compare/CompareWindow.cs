@@ -669,7 +669,10 @@ public class CompareWindow : Window
         };
     }
 
-    /// <summary>"12   00:00:01,250 → 00:00:03,480   2.23s", with the cells that differ marked.</summary>
+    /// <summary>
+    /// "12   00:00:01,250 → 00:00:03,480   2.23s", with a differing number marked. Differing times
+    /// are not filled - the reference shows how far off they are instead (#15622).
+    /// </summary>
     private static Control MakeMeta(string side, string durationPath, bool showEdited)
     {
         var panel = new StackPanel
@@ -680,9 +683,9 @@ public class CompareWindow : Window
             Children =
             {
                 MakeMetaCell($"{side}.{nameof(CompareItem.NumberDisplay)}", $"{side}.{nameof(CompareItem.NumberBackgroundBrush)}", FontWeight.SemiBold, 22),
-                MakeMetaCell($"{side}.{nameof(CompareItem.StartTimeDisplay)}", $"{side}.{nameof(CompareItem.StartTimeBackgroundBrush)}"),
+                MakeMetaCell($"{side}.{nameof(CompareItem.StartTimeDisplay)}", null),
                 new TextBlock { Text = "→", Opacity = 0.45, FontSize = UiUtil.ScaledFontSize(11), VerticalAlignment = VerticalAlignment.Center },
-                MakeMetaCell($"{side}.{nameof(CompareItem.EndTimeDisplay)}", $"{side}.{nameof(CompareItem.EndTimeBackgroundBrush)}"),
+                MakeMetaCell($"{side}.{nameof(CompareItem.EndTimeDisplay)}", null),
                 new TextBlock
                 {
                     Opacity = 0.45,
@@ -693,6 +696,22 @@ public class CompareWindow : Window
                 },
             },
         };
+
+        if (!showEdited)
+        {
+            var delta = new TextBlock
+            {
+                Opacity = 0.8,
+                FontSize = UiUtil.ScaledFontSize(11),
+                FontWeight = FontWeight.SemiBold,
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(6, 0, 0, 0),
+                [!TextBlock.TextProperty] = new Binding(nameof(CompareRow.TimingDeltaDisplay)),
+                [!IsVisibleProperty] = new Binding(nameof(CompareRow.HasTimingDelta)),
+            };
+            AddHint(delta, Se.Language.File.CompareTimingDeltaHint);
+            panel.Children.Add(delta);
+        }
 
         // The half of a sync point that waits for its other half.
         panel.Children.Add(new Icon
@@ -722,15 +741,14 @@ public class CompareWindow : Window
         return panel;
     }
 
-    private static Border MakeMetaCell(string textPath, string backgroundPath, FontWeight? weight = null, double minWidth = 0)
+    private static Border MakeMetaCell(string textPath, string? backgroundPath, FontWeight? weight = null, double minWidth = 0)
     {
-        return new Border
+        var cell = new Border
         {
             CornerRadius = new CornerRadius(3),
             Padding = new Thickness(3, 0),
             MinWidth = minWidth,
             VerticalAlignment = VerticalAlignment.Center,
-            [!Border.BackgroundProperty] = new Binding(backgroundPath),
             Child = new TextBlock
             {
                 Opacity = 0.7,
@@ -739,6 +757,13 @@ public class CompareWindow : Window
                 [!TextBlock.TextProperty] = new Binding(textPath),
             },
         };
+
+        if (backgroundPath != null)
+        {
+            cell.Bind(Border.BackgroundProperty, new Binding(backgroundPath));
+        }
+
+        return cell;
     }
 
     /// <summary>

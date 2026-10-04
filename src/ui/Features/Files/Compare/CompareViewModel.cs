@@ -248,6 +248,8 @@ public partial class CompareViewModel : ObservableObject
             rows.Add(new CompareRow(left, right, GetRowKind(left, right), isEdited, IsLeftEditable)
             {
                 IsSyncPoint = IsSyncPoint(left, right),
+                StartDiffers = IsHighlighted(left.StartTimeBackgroundBrush),
+                EndDiffers = IsHighlighted(left.EndTimeBackgroundBrush),
             });
         }
 
