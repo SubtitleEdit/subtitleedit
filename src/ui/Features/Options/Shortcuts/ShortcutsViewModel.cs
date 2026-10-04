@@ -36,6 +36,7 @@ public partial class ShortcutsViewModel : ObservableObject
     [ObservableProperty] private bool _isControlsEnabled;
     [ObservableProperty] private bool _ctrlIsSelected;
     [ObservableProperty] private bool _altIsSelected;
+    [ObservableProperty] private bool _altGrIsSelected;
     [ObservableProperty] private bool _shiftIsSelected;
     [ObservableProperty] private bool _winIsSelected;
     [ObservableProperty] private bool _isConfigureVisible;
@@ -165,6 +166,14 @@ public partial class ShortcutsViewModel : ObservableObject
     }
 
     partial void OnShiftIsSelectedChanged(bool value)
+    {
+        if (!_isLoadingSelection)
+        {
+            UpdateShortcutDo();
+        }
+    }
+
+    partial void OnAltGrIsSelectedChanged(bool value)
     {
         if (!_isLoadingSelection)
         {
@@ -1297,6 +1306,7 @@ public partial class ShortcutsViewModel : ObservableObject
             "Control",
             "Ctrl",
             "Alt",
+            ShortcutManager.AltGrToken,
             "Shift",
             "Win",
             Key.LeftCtrl.ToString(),
@@ -1345,6 +1355,7 @@ public partial class ShortcutsViewModel : ObservableObject
             SelectedShortcut = result.PressedKeyOnly;
             CtrlIsSelected = result.IsControlPressed;
             AltIsSelected = result.IsAltPressed;
+            AltGrIsSelected = result.IsAltGrPressed;
             ShiftIsSelected = result.IsShiftPressed;
             WinIsSelected = result.IsWinPressed;
             UpdateShortcutDo();
@@ -1386,6 +1397,11 @@ public partial class ShortcutsViewModel : ObservableObject
             keys.Add("Alt");
         }
 
+        if (AltGrIsSelected)
+        {
+            keys.Add(ShortcutManager.AltGrToken);
+        }
+
         if (ShiftIsSelected)
         {
             keys.Add("Shift");
@@ -1420,6 +1436,7 @@ public partial class ShortcutsViewModel : ObservableObject
         node.Title = MakeDisplayName(node.ShortCut!);
         CtrlIsSelected = false;
         AltIsSelected = false;
+        AltGrIsSelected = false;
         ShiftIsSelected = false;
         WinIsSelected = false;
         SelectedShortcut = null;
@@ -1516,6 +1533,7 @@ public partial class ShortcutsViewModel : ObservableObject
         {
             "ctrl" or "control" => "Control",
             "alt" or "option" or "opt" => "Alt",
+            "altgr" => ShortcutManager.AltGrToken,
             "shift" => "Shift",
             "win" or "windows" or "cmd" or "command" or "meta" or "super" => "Win",
             _ => null,
@@ -1575,6 +1593,7 @@ public partial class ShortcutsViewModel : ObservableObject
             AltIsSelected = node.ShortCut.Keys.Contains("Alt") ||
                             node.ShortCut.Keys.Contains(Key.LeftAlt.ToString()) ||
                             node.ShortCut.Keys.Contains(Key.RightAlt.ToString());
+            AltGrIsSelected = node.ShortCut.Keys.Contains(ShortcutManager.AltGrToken);
             ShiftIsSelected = node.ShortCut.Keys.Contains("Shift") ||
                               node.ShortCut.Keys.Contains(Key.LeftShift.ToString()) ||
                               node.ShortCut.Keys.Contains(Key.RightShift.ToString());
@@ -1587,6 +1606,7 @@ public partial class ShortcutsViewModel : ObservableObject
                 "Control",
                 "Ctrl",
                 "Alt",
+                ShortcutManager.AltGrToken,
                 "Shift",
                 "Win",
                 Key.LeftCtrl.ToString(),

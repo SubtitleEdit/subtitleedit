@@ -11,6 +11,14 @@ namespace Nikse.SubtitleEdit.Logic;
 public class ShortcutManager : IShortcutManager
 {
     private const KeyModifiers ControlAltModifiers = KeyModifiers.Control | KeyModifiers.Alt;
+
+    /// <summary>
+    /// Modifier token for the Windows AltGr key (physical right Alt). Windows reports AltGr
+    /// as Ctrl+Alt, so a chord typed with AltGr matches "AltGr" bindings instead of
+    /// "Ctrl+Alt" ones - letting AltGr characters (€, @, ...) keep typing unless the user
+    /// bound that exact AltGr chord (#15618).
+    /// </summary>
+    public const string AltGrToken = "AltGr";
     private readonly HashSet<Key> _activeKeys = [];
     // Parallel to _activeKeys but uses the physical-key-aware string token (see
     // GetShortcutKeyName). Numpad keys collapse to NumLock-on names in Avalonia's
@@ -37,6 +45,8 @@ public class ShortcutManager : IShortcutManager
                 return isMac ? shortcuts.ControlMac : shortcuts.Control;
             case "Alt":
                 return isMac ? shortcuts.AltMac : shortcuts.Alt;
+            case AltGrToken:
+                return shortcuts.AltGr;
             case "Shift":
                 return isMac ? shortcuts.ShiftMac : shortcuts.Shift;
             case "Win":
@@ -56,7 +66,7 @@ public class ShortcutManager : IShortcutManager
     }
 
     /// <summary>
-    /// Orders shortcut key tokens canonically — Control, Alt, Shift, Win, then regular
+    /// Orders shortcut key tokens canonically — Control, Alt, AltGr, Shift, Win, then regular
     /// keys — so a shortcut always reads the same way regardless of stored order.
     /// </summary>
     public static List<string> OrderKeys(IEnumerable<string> keys)
@@ -73,9 +83,10 @@ public class ShortcutManager : IShortcutManager
         {
             "Control" => 0,
             "Alt" => 1,
-            "Shift" => 2,
-            "Win" => 3,
-            _ => 4,
+            AltGrToken => 2,
+            "Shift" => 3,
+            "Win" => 4,
+            _ => 5,
         };
     }
 
@@ -421,12 +432,10 @@ public class ShortcutManager : IShortcutManager
             return null;
         }
 
-        // Prefer the character produced by AltGr over an equivalent Ctrl+Alt shortcut.
-        if (_isWindowsAltGrPressed &&
-            (keyEventArgs.KeyModifiers & ControlAltModifiers) == ControlAltModifiers)
-        {
-            return null;
-        }
+        // Windows AltGr arrives as Ctrl+Alt: match it only as the AltGr token, never as a
+        // Ctrl+Alt shortcut, so the character AltGr produces wins unless AltGr+key is bound.
+        var modifiers = keyEventArgs.KeyModifiers;
+        var isAltGr = _isWindowsAltGrPressed && (modifiers & ControlAltModifiers) == ControlAltModifiers;
 
         if (_isDirty || _lookupTable is null)
         {
@@ -444,15 +453,21 @@ public class ShortcutManager : IShortcutManager
         }
 
         // Add normalized modifiers based on the event state
-        var modifiers = keyEventArgs.KeyModifiers;
-        if ((modifiers & KeyModifiers.Control) != 0)
+        if (isAltGr)
         {
-            currentInputKeys.Add("Control");
+            currentInputKeys.Add(AltGrToken);
         }
-
-        if ((modifiers & KeyModifiers.Alt) != 0)
+        else
         {
-            currentInputKeys.Add("Alt");
+            if ((modifiers & KeyModifiers.Control) != 0)
+            {
+                currentInputKeys.Add("Control");
+            }
+
+            if ((modifiers & KeyModifiers.Alt) != 0)
+            {
+                currentInputKeys.Add("Alt");
+            }
         }
 
         if ((modifiers & KeyModifiers.Shift) != 0)

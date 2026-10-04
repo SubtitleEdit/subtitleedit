@@ -87,6 +87,7 @@ public class LanguageSettingsShortcuts
     public string DetectKey { get; set; }
     public string Control { get; set; }
     public string Alt { get; set; }
+    public string AltGr { get; set; }
     public string Win { get; set; }
     public string Shift { get; set; }
     public string ControlMac { get; set; }
@@ -428,6 +429,7 @@ public class LanguageSettingsShortcuts
         
         Control = "Control";
         Alt = "Alt";
+        AltGr = "AltGr";
         Win = "Win";
         Shift = "Shift";
 
