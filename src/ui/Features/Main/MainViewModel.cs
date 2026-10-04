@@ -27413,14 +27413,7 @@ public partial class MainViewModel :
 
         if (Se.Settings.General.ForceCrLfOnSave)
         {
-            var lines = text.SplitToLines();
-            var sb = new StringBuilder();
-            foreach (var line in lines)
-            {
-                sb.Append(line + "\r\n");
-            }
-
-            text = sb.ToString();
+            text = EncodingHelper.ForceCrLf(text);
         }
 
         try
@@ -27588,6 +27581,10 @@ public partial class MainViewModel :
         }
 
         var text = originalSubtitle.ToText(originalFormat);
+        if (Se.Settings.General.ForceCrLfOnSave)
+        {
+            text = EncodingHelper.ForceCrLf(text);
+        }
 
         try
         {

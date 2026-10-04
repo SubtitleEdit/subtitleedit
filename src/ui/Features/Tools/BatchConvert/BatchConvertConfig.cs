@@ -24,6 +24,21 @@ public class BatchConvertConfig
     public bool AssaKeepSourceEmbeddedFonts { get; set; }
     public string EbuHeader { get; set; } = string.Empty;
     public byte EbuJustificationCode { get; set; } = 2;
+    public int PacCodePage { get; set; } = Pac.CodePageLatin;
+    public int PacSecondaryCodePage { get; set; } = -1;
+    public string Cavena890TranslatedTitle { get; set; } = string.Empty;
+    public string Cavena890OriginalTitle { get; set; } = string.Empty;
+    public string Cavena890Translator { get; set; } = string.Empty;
+    public string Cavena890Comment { get; set; } = string.Empty;
+
+    /// <summary>"HH:MM:SS:FF", empty = the format's default (10:00:00:00).</summary>
+    public string Cavena890StartOfMessage { get; set; } = string.Empty;
+    public int DvbTeletextPageNumber { get; set; } = 888;
+    public string DvbTeletextLanguageCode { get; set; } = "eng";
+    public bool DvbTeletextHearingImpaired { get; set; }
+
+    /// <summary>"Force CR+LF on save" (Settings) - text subtitle formats get CR+LF line breaks.</summary>
+    public bool ForceCrLf { get; set; }
     public AddFormattingSettings AddFormatting { get; set; }
     public RemoveFormattingSettings RemoveFormatting { get; set; }
     public OffsetTimeCodesSettings OffsetTimeCodes { get; set; }
