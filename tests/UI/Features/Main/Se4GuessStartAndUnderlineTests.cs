@@ -29,6 +29,9 @@ public class Se4GuessStartAndUnderlineTests : IDisposable
     private readonly double _maxCps = Se.Settings.General.SubtitleMaximumCharactersPerSeconds;
     private readonly int _minDisplayMs = Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
 
+    // The box test selects EBU STL, which forces frame mode through the session-only override.
+    private readonly SettingsScope _settings = new("General.UseFrameMode");
+
     public void Dispose()
     {
         Se.Settings.General.LockTimeCodes = _timeCodesLocked;
@@ -42,6 +45,7 @@ public class Se4GuessStartAndUnderlineTests : IDisposable
         }
 
         _windows.Clear();
+        _settings.Dispose();
     }
 
     private (Window Window, MainViewModel Vm) CreateMainViewModel()

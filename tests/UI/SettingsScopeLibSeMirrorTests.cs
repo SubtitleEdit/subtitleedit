@@ -69,4 +69,76 @@ public class SettingsScopeLibSeMirrorTests
             Configuration.Settings.General.UseTimeFormatHHMMSSFF = original;
         }
     }
+
+    /// <summary>
+    /// Selecting EBU STL in the main view forces frame mode through the session-only
+    /// UseFrameModeOverride. A test that did that used to leave it on for the rest of the run, so
+    /// SecondsUpDown parsed "300" as 3 s 0 frames and Compare rounded to frames in tests that never
+    /// touch EBU - only in the orders where nothing reset the format in between.
+    /// </summary>
+    [Fact]
+    public void Dispose_ClearsAnEbuFrameModeOverride_AndKeepsItOutOfThePersistedValue()
+    {
+        var general = Se.Settings.General;
+        var originalPersisted = general.UseFrameModePersisted;
+        var originalOverride = general.UseFrameModeOverride;
+        var originalLibSe = Configuration.Settings.General.UseTimeFormatHHMMSSFF;
+        try
+        {
+            general.UseFrameModePersisted = false;
+            general.UseFrameModeOverride = null;
+            Configuration.Settings.General.UseTimeFormatHHMMSSFF = false;
+
+            using (var _ = new SettingsScope("General.UseFrameMode"))
+            {
+                // What MainViewModel.UpdateTemporaryFrameMode does when EBU STL is selected.
+                general.UseFrameModeOverride = true;
+                Configuration.Settings.General.UseTimeFormatHHMMSSFF = true;
+            }
+
+            Assert.Null(general.UseFrameModeOverride);
+            Assert.False(general.UseFrameMode);
+            Assert.False(Configuration.Settings.General.UseTimeFormatHHMMSSFF);
+
+            // Opened while an override is active: restoring must not write it into the persisted value.
+            general.UseFrameModeOverride = true;
+            using (var _ = new SettingsScope("General.UseFrameMode"))
+            {
+            }
+
+            Assert.False(general.UseFrameModePersisted);
+        }
+        finally
+        {
+            general.UseFrameModePersisted = originalPersisted;
+            general.UseFrameModeOverride = originalOverride;
+            Configuration.Settings.General.UseTimeFormatHHMMSSFF = originalLibSe;
+        }
+    }
+
+    [Fact]
+    public void Dispose_RestoresTheLibSeFrameRate_WhenTheFrameRateWasScoped()
+    {
+        var originalSe5 = Se.Settings.General.CurrentFrameRate;
+        var originalLibSe = Configuration.Settings.General.CurrentFrameRate;
+        try
+        {
+            Se.Settings.General.CurrentFrameRate = 23.976;
+            Configuration.Settings.General.CurrentFrameRate = 23.976;
+
+            using (var _ = new SettingsScope("General.CurrentFrameRate"))
+            {
+                Se.Settings.General.CurrentFrameRate = 25;
+                Configuration.Settings.General.CurrentFrameRate = 25;
+            }
+
+            Assert.Equal(23.976, Se.Settings.General.CurrentFrameRate);
+            Assert.Equal(23.976, Configuration.Settings.General.CurrentFrameRate);
+        }
+        finally
+        {
+            Se.Settings.General.CurrentFrameRate = originalSe5;
+            Configuration.Settings.General.CurrentFrameRate = originalLibSe;
+        }
+    }
 }

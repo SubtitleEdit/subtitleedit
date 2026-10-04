@@ -11,8 +11,15 @@ namespace UITests.Features.Options;
 /// Edit 4 had a small calculator behind a "..." button next to the field. It did not survive the
 /// move to SE5 (issue #13906); these cover the arithmetic it does.
 /// </summary>
-public class MinGapCalculateTests
+public class MinGapCalculateTests : IDisposable
 {
+    private readonly double _currentFrameRate = Configuration.Settings.General.CurrentFrameRate;
+
+    public void Dispose()
+    {
+        Configuration.Settings.General.CurrentFrameRate = _currentFrameRate;
+    }
+
     private static MinGapCalculateViewModel MakeViewModel(double currentFrameRate, int frames)
     {
         Configuration.Settings.General.CurrentFrameRate = currentFrameRate;
