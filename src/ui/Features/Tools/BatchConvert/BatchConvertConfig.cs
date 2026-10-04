@@ -108,7 +108,9 @@ public class BatchConvertConfig
         TargetFormatName == BatchConverter.FormatBdnXml ||
         TargetFormatName == BatchConverter.FormatBdnXml8Bit ||
         TargetFormatName == BatchConverter.FormatFcpImage ||
-        TargetFormatName == BatchConverter.FormatImagesWithTimeCodesInFileName;
+        TargetFormatName == BatchConverter.FormatImagesWithTimeCodesInFileName ||
+        TargetFormatName == BatchConverter.FormatDCinemaInterop ||
+        TargetFormatName == BatchConverter.FormatDCinemaSmpte2014;
 
     public class AddFormattingSettings
     {

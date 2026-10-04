@@ -584,7 +584,9 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         // Save binary formats
         var binaryFormats = new Dictionary<string, SubtitleFormat>
         {
-            { FormatPac, new Pac() },
+            // Without a code page Pac.Save falls back to Latin (Czech) - use Latin like the main
+            // window's Export PAC default.
+            { FormatPac, new Pac { CodePage = Pac.CodePageLatin } },
             { FormatPacUnicode, new PacUnicode() },
             { FormatCavena890, new Cavena890() },
             { FormatEbuStl, new Ebu() },
@@ -640,7 +642,17 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 sb.AppendLine(HtmlUtil.RemoveHtmlTags(p.Text, true));
             }
 
-            await File.WriteAllTextAsync(path, sb.ToString(), cancellationToken);
+            try
+            {
+                var encoding = EncodingHelper.ResolveEncoding(_config.TargetEncoding, item.FileName);
+                await File.WriteAllTextAsync(path, sb.ToString(), encoding, cancellationToken);
+                item.Status = Se.Language.General.Converted;
+            }
+            catch (Exception exception) when (exception is not OperationCanceledException)
+            {
+                item.Status = string.Format(Se.Language.General.ErrorX, exception.Message);
+            }
+
             return;
         }
 
@@ -858,8 +870,17 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
 
         var text = Nikse.SubtitleEdit.UiLogic.Export.CustomTextFormatter.GenerateCustomText(selectedCustomFormat.ToTemplate(), paragraphs, item.FileName, string.Empty);
-        var path = MakeOutputFileName(item, selectedCustomFormat.Extension);
-        await File.WriteAllTextAsync(path, text, cancellationToken);
+        try
+        {
+            var path = MakeOutputFileName(item, selectedCustomFormat.Extension);
+            var encoding = EncodingHelper.ResolveEncoding(_config.TargetEncoding, item.FileName);
+            await File.WriteAllTextAsync(path, text, encoding, cancellationToken);
+            item.Status = Se.Language.General.Converted;
+        }
+        catch (Exception exception) when (exception is not OperationCanceledException)
+        {
+            item.Status = string.Format(Se.Language.General.ErrorX, exception.Message);
+        }
     }
 
     /// <summary>
@@ -2107,7 +2128,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 }
             }
 
-            var converted = targetFormat.ToText(s, Path.GetFileNameWithoutExtension(item.FileName));
+            var converted = ToTextWithFreshDCinemaIdentity(targetFormat, s, Path.GetFileNameWithoutExtension(item.FileName));
             var path = MakeOutputFileName(item, targetFormat.Extension);
             var encoding = EncodingHelper.ResolveEncoding(_config.TargetEncoding, item.FileName);
             await File.WriteAllTextAsync(path, converted, encoding, cancellationToken);
@@ -2116,6 +2137,43 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         catch (Exception exception)
         {
             item.Status = string.Format(Se.Language.General.ErrorX, exception.Message);
+        }
+    }
+
+    internal static bool IsDCinemaTextFormat(SubtitleFormat? format) =>
+        format is DCinemaInterop or DCinemaSmpte2007 or DCinemaSmpte2010 or DCinemaSmpte2014;
+
+    /// <summary>
+    /// D-Cinema formats write the global current movie title/subtitle id and only fill them when
+    /// empty, so every file in a batch got the first file's title and the same UUID. Each output
+    /// gets a new id, and the title comes from the file name unless the source was D-Cinema (its
+    /// loaded title is kept). The previous values are restored afterwards so the main window's
+    /// D-Cinema properties are not changed by a batch run.
+    /// </summary>
+    internal static string ToTextWithFreshDCinemaIdentity(SubtitleFormat targetFormat, Subtitle subtitle, string title)
+    {
+        if (!IsDCinemaTextFormat(targetFormat))
+        {
+            return targetFormat.ToText(subtitle, title);
+        }
+
+        var ss = Configuration.Settings.SubtitleSettings;
+        var oldId = ss.CurrentDCinemaSubtitleId;
+        var oldTitle = ss.CurrentDCinemaMovieTitle;
+        try
+        {
+            ss.CurrentDCinemaSubtitleId = "urn:uuid:" + Guid.NewGuid();
+            if (!IsDCinemaTextFormat(subtitle.OriginalFormat))
+            {
+                ss.CurrentDCinemaMovieTitle = string.Empty;
+            }
+
+            return targetFormat.ToText(subtitle, title);
+        }
+        finally
+        {
+            ss.CurrentDCinemaSubtitleId = oldId;
+            ss.CurrentDCinemaMovieTitle = oldTitle;
         }
     }
 

@@ -496,6 +496,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             BatchConverter.FormatBdnXml8Bit,
             BatchConverter.FormatBluRaySup,
             BatchConverter.FormatCustomTextFormat,
+            BatchConverter.FormatDCinemaInterop,
+            BatchConverter.FormatDCinemaSmpte2014,
             BatchConverter.FormatDostImage,
             BatchConverter.FormatEbuStl,
             BatchConverter.FormatFcpImage,
@@ -1963,6 +1965,14 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         else if (targetFormat == BatchConverter.FormatBluRaySup)
         {
             exportHandler = new ExportHandlerBluRaySup();
+        }
+        else if (targetFormat == BatchConverter.FormatDCinemaInterop)
+        {
+            exportHandler = new ExportHandlerDCinemaInteropPng();
+        }
+        else if (targetFormat == BatchConverter.FormatDCinemaSmpte2014)
+        {
+            exportHandler = new ExportHandlerDCinemaSmpte2014Png();
         }
         else if (targetFormat == BatchConverter.FormatDostImage)
         {

@@ -151,7 +151,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     private bool _isCtrlDown;
     private IExportHandler? _exportImageHandler;
     private string? _subtitleFileName;
-    private readonly CancellationTokenSource _cancellationTokenSource;
+    private CancellationTokenSource _cancellationTokenSource;
     private readonly System.Timers.Timer _timerUpdatePreview;
     private readonly IFileHelper _fileHelper;
     private readonly IFolderHelper _folderHelper;
@@ -443,7 +443,37 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             return;
         }
 
+        // A fresh token per run: Cancel() trips the previous one for good, so reusing it
+        // would make every later export return at once with the window stuck "generating".
+        var oldCancellationTokenSource = _cancellationTokenSource;
+        oldCancellationTokenSource.Cancel();
+        var cancellationTokenSource = new CancellationTokenSource();
+        _cancellationTokenSource = cancellationTokenSource;
+        oldCancellationTokenSource.Dispose();
+        var cancellationToken = cancellationTokenSource.Token;
+
         IsGenerating = true;
+        try
+        {
+            await ExportRun(fileOrFolderName, cancellationToken);
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception);
+        }
+        finally
+        {
+            // A cancelled run that finishes after a new export started must not clear the new run's state.
+            if (ReferenceEquals(_cancellationTokenSource, cancellationTokenSource))
+            {
+                IsGenerating = false;
+            }
+        }
+    }
+
+    private async Task ExportRun(string fileOrFolderName, CancellationToken cancellationToken)
+    {
+        var exportImageHandler = _exportImageHandler!;
         var imageParameters = new List<ImageParameter>();
         for (var i = 0; i < Subtitles.Count; i++)
         {
@@ -457,7 +487,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         {
             Parallel.For(0, total, i =>
             {
-                if (_cancellationTokenSource.IsCancellationRequested)
+                if (cancellationToken.IsCancellationRequested)
                 {
                     return;
                 }
@@ -469,7 +499,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
                 ExportTextTags.ApplyPositionTag(ip, Subtitles[i].Text, _scriptWidth, _scriptHeight);
                 // 3D goes last: each eye's copy is placed where the flat subtitle ended up.
                 Stereo3DImage.Apply(ip);
-                _exportImageHandler.CreateParagraph(ip);
+                exportImageHandler.CreateParagraph(ip);
 
                 lock (_generateLock)
                 {
@@ -484,25 +514,27 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
                 }
             });
 
-            if (_cancellationTokenSource.IsCancellationRequested)
+            if (cancellationToken.IsCancellationRequested)
             {
                 return;
             }
 
-            ProgressValue = 100;
-            ProgressText = Se.Language.General.SavingDotDotDot;
+            Dispatcher.UIThread.Post(() =>
+            {
+                ProgressValue = 100;
+                ProgressText = Se.Language.General.SavingDotDotDot;
+            });
 
-            _exportImageHandler.WriteHeader(fileOrFolderName, GetImageParameter(0));
-            for (var i = 0; i < Subtitles.Count; i++)
+            exportImageHandler.WriteHeader(fileOrFolderName, GetImageParameter(0));
+            for (var i = 0; i < imageParameters.Count; i++)
             {
                 var ip = imageParameters[i];
-                _exportImageHandler.WriteParagraph(ip);
+                exportImageHandler.WriteParagraph(ip);
             }
 
-            _exportImageHandler.WriteFooter();
-            IsGenerating = false;
+            exportImageHandler.WriteFooter();
 
-            if (!_cancellationTokenSource.IsCancellationRequested && Window != null)
+            if (!cancellationToken.IsCancellationRequested && Window != null)
             {
                 Dispatcher.UIThread.Post(async void () =>
                 {
@@ -513,7 +545,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
                             {
                                 vm.Initialize(Se.Language.File.Export.ImageBasedSubtitleSaved,
                                     string.Format(Se.Language.General.SubtitleFileSavedToX, fileOrFolderName), fileOrFolderName, true,
-                                    _exportImageHandler.UseFileName);
+                                    exportImageHandler.UseFileName);
                             });
                     }
                     catch (Exception e)
@@ -699,6 +731,8 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
 
     public void OnClosingCleanup()
     {
+        // Closing the window mid-export stops the run instead of letting it write in the background.
+        _cancellationTokenSource.Cancel();
         _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
     }
 
