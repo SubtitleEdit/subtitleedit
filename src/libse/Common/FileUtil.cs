@@ -994,7 +994,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             try
             {
-                var mp4Parser = new MP4Parser(fileName);
+                var mp4Parser = new MP4Parser(fileName, readClosedCaptions: false);
                 if (mp4Parser.Moov != null && mp4Parser.VideoResolution.X > 0)
                 {
                     info.Width = mp4Parser.VideoResolution.X;

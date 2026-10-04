@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Chapters
 
         private static List<Chapter> GetMp4Chapters(string videoFileName)
         {
-            var parser = new MP4Parser(videoFileName);
+            var parser = new MP4Parser(videoFileName, readClosedCaptions: false);
             return parser.GetChapters();
         }
     }

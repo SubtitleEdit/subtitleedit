@@ -12921,10 +12921,10 @@ public partial class MainViewModel :
         }
 
         // Only the selected lines were synced - copy the new time codes back onto those rows and leave the rest of the subtitle alone.
+        var rowsById = GetRowsById();
         foreach (var synced in result.Paragraphs.Select(p => p.Subtitle))
         {
-            var line = Subtitles.FirstOrDefault(p => p.Id == synced.Id);
-            if (line == null)
+            if (!rowsById.TryGetValue(synced.Id, out var line))
             {
                 continue;
             }
@@ -13294,12 +13294,12 @@ public partial class MainViewModel :
             }
         }
 
+        var rowsById = GetRowsById();
         for (int i = 0; i < result.Rows.Count && i < selectedItems.Count; i++)
         {
             var translatedText = result.Rows[i].TranslatedText;
             var id = selectedItems[i].Id;
-            var p = Subtitles.FirstOrDefault(x => x.Id == id);
-            if (p != null && !string.IsNullOrEmpty(translatedText))
+            if (rowsById.TryGetValue(id, out var p) && !string.IsNullOrEmpty(translatedText))
             {
                 p.Text = translatedText;
             }
@@ -13409,12 +13409,12 @@ public partial class MainViewModel :
             return;
         }
 
+        var rowsById = GetRowsById();
         for (var i = 0; i < result.Subtitle.Paragraphs.Count; i++)
         {
             var text = result.Subtitle.Paragraphs[i].Text;
             var id = selectedItems[i].Id;
-            var p = Subtitles.FirstOrDefault(x => x.Id == id);
-            if (p != null)
+            if (rowsById.TryGetValue(id, out var p))
             {
                 p.Text = text;
             }
@@ -13481,10 +13481,10 @@ public partial class MainViewModel :
             return;
         }
 
+        var rowsById = GetRowsById();
         foreach (var line in selectedItems)
         {
-            var p = Subtitles.FirstOrDefault(x => x.Id == line.Id);
-            if (p != null)
+            if (rowsById.TryGetValue(line.Id, out var p))
             {
                 p.Text = text;
             }
@@ -13532,12 +13532,12 @@ public partial class MainViewModel :
             return;
         }
 
+        var rowsById = GetRowsById();
         for (var i = 0; i < result.FixedSubtitle.Paragraphs.Count; i++)
         {
             var text = result.FixedSubtitle.Paragraphs[i].Text;
             var id = selectedItems[i].Id;
-            var p = Subtitles.FirstOrDefault(x => x.Id == id);
-            if (p != null)
+            if (rowsById.TryGetValue(id, out var p))
             {
                 p.Text = text;
             }
@@ -23714,6 +23714,21 @@ public partial class MainViewModel :
     /// <c>new Subtitle(subtitle, generateNewId: false)</c>, so these ids survive the round trip and
     /// still name a row in the result, whatever the dialog did to the line count.
     /// </summary>
+    /// <summary>
+    /// The rows by id - the first row wins, like <c>Subtitles.FirstOrDefault(p => p.Id == id)</c>,
+    /// which was a full scan per line when a dialog's result was copied back to many rows.
+    /// </summary>
+    private Dictionary<Guid, SubtitleLineViewModel> GetRowsById()
+    {
+        var rowsById = new Dictionary<Guid, SubtitleLineViewModel>(Subtitles.Count);
+        foreach (var row in Subtitles)
+        {
+            rowsById.TryAdd(row.Id, row);
+        }
+
+        return rowsById;
+    }
+
     private Dictionary<Guid, SubtitleLineViewModel> MapParagraphIdsToRows(Subtitle subtitle)
     {
         var map = new Dictionary<Guid, SubtitleLineViewModel>(subtitle.Paragraphs.Count);

@@ -336,18 +336,19 @@ public partial class MergeTwoSubtitlesViewModel : ObservableObject
         ResultSubtitle.Renumber();
     }
 
-    private static Subtitle BuildSubRipMerge(Subtitle sub1, Subtitle sub2)
+    internal static Subtitle BuildSubRipMerge(Subtitle sub1, Subtitle sub2)
     {
         var result = new Subtitle();
-        var used2 = new HashSet<int>();
+        var used2 = new bool[sub2.Paragraphs.Count];
+        var firstUnused2 = 0;
 
         for (var i1 = 0; i1 < sub1.Paragraphs.Count; i1++)
         {
             var p1 = sub1.Paragraphs[i1];
-            var matchIndex = FindOverlapping(p1, sub2, used2);
+            var matchIndex = FindOverlapping(p1, sub2, used2, ref firstUnused2);
             if (matchIndex >= 0)
             {
-                used2.Add(matchIndex);
+                used2[matchIndex] = true;
                 var p2 = sub2.Paragraphs[matchIndex];
                 var combined = new Paragraph(
                     p1.Text + Environment.NewLine + p2.Text,
@@ -363,7 +364,7 @@ public partial class MergeTwoSubtitlesViewModel : ObservableObject
 
         for (var i2 = 0; i2 < sub2.Paragraphs.Count; i2++)
         {
-            if (used2.Contains(i2))
+            if (used2[i2])
             {
                 continue;
             }
@@ -375,11 +376,20 @@ public partial class MergeTwoSubtitlesViewModel : ObservableObject
         return result;
     }
 
-    private static int FindOverlapping(Paragraph p, Subtitle other, HashSet<int> used)
+    /// <param name="firstUnused">
+    /// Every index below it is used - so the search, which returns the first unused overlapping
+    /// line, starts there instead of re-walking the used prefix for each line (quadratic).
+    /// </param>
+    private static int FindOverlapping(Paragraph p, Subtitle other, bool[] used, ref int firstUnused)
     {
-        for (var i = 0; i < other.Paragraphs.Count; i++)
+        while (firstUnused < used.Length && used[firstUnused])
         {
-            if (used.Contains(i))
+            firstUnused++;
+        }
+
+        for (var i = firstUnused; i < other.Paragraphs.Count; i++)
+        {
+            if (used[i])
             {
                 continue;
             }

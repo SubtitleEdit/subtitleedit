@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
-            var mp4Parser = new MP4Parser(fileName);
+            var mp4Parser = new MP4Parser(fileName, readClosedCaptions: false);
 
             // Box-aware fragmented parsing (trun sample offsets/sizes) beats the mdat
             // text-sniffing below - it also works when TTML samples share an mdat with

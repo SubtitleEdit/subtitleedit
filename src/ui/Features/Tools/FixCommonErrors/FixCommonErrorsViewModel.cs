@@ -349,16 +349,22 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     public void FixesSelectAll()
     {
         var selectAll = VisibleFixes.Any(f => !f.IsSelected);
+        SetFixesSelected(VisibleFixes, selectAll);
+    }
 
-        // Each IsSelected set raises PropertyChanged, whose handler re-runs the full
-        // summary/chip recount - O(visible x fixes) for one click. Suppress the per-item
-        // recounts during the loop and do a single one at the end.
+    /// <summary>
+    /// Ticks or unticks several fixes (Select all, Space on a multi-selection). Each IsSelected
+    /// set raises PropertyChanged, whose handler re-runs the full summary/chip recount -
+    /// O(items x fixes) - so the per-item recounts are suppressed and done once at the end.
+    /// </summary>
+    public void SetFixesSelected(IEnumerable<FixDisplayItem> fixes, bool isSelected)
+    {
         _suppressFixesSummaryUpdate = true;
         try
         {
-            foreach (var fix in VisibleFixes)
+            foreach (var fix in fixes)
             {
-                fix.IsSelected = selectAll;
+                fix.IsSelected = isSelected;
             }
         }
         finally
