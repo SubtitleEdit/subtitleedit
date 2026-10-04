@@ -1397,6 +1397,18 @@ public static partial class InitListViewAndEditBox
                     Command = vm.RemoveTextForHearingImpairedSelectedLinesCommand,
                     DataContext = vm,
                 },
+                new MenuItem
+                {
+                    Header = Se.Language.Main.Menu.RemoveUnicodeCharacters,
+                    Command = vm.ShowToolsRemoveUnicodeCharactersSelectedLinesCommand,
+                    DataContext = vm,
+                },
+                new MenuItem
+                {
+                    Header = Se.Language.Main.Menu.ConvertActors,
+                    Command = vm.ShowToolsConvertActorsSelectedLinesCommand,
+                    DataContext = vm,
+                },
                 new Separator { DataContext = vm },
                 new MenuItem
                 {
