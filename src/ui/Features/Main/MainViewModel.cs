@@ -11869,7 +11869,13 @@ public partial class MainViewModel :
             }
 
             cts.Dispose();
-            ShowStatus(string.Empty);
+
+            // StopSpeakFromLine clears _speakFromLineCts at once, so a quick restart can already
+            // be reading while this run unwinds - leave its status alone.
+            if (_speakFromLineCts == null)
+            {
+                ShowStatus(string.Empty);
+            }
         }
     }
 
