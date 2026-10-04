@@ -38,6 +38,23 @@ public class CrispAsrIndexEchoTests
         Assert.Equal("Hello there", CrispAsrIndexEcho.GetTranslation("Hello there"));
     }
 
+    /// <summary>Detect speakers labels the cue, which puts the label on the transcript line.</summary>
+    [Fact]
+    public void GetTranslation_KeepsSpeakerLabel()
+    {
+        var text = "(speaker 1) 今天天气很好。" + Environment.NewLine + "The weather is great today.";
+
+        Assert.Equal("(speaker 1) The weather is great today.", CrispAsrIndexEcho.GetTranslation(text));
+    }
+
+    [Fact]
+    public void GetTranslation_KeepsSpeakerLabel_AfterStrippingCornerBrackets()
+    {
+        var text = "(speaker 0) 下午三点见。" + Environment.NewLine + "「午後3時に会いましょう。」";
+
+        Assert.Equal("(speaker 0) 午後3時に会いましょう。", CrispAsrIndexEcho.GetTranslation(text));
+    }
+
     [Theory]
     [InlineData("index-echo-2b-q8_0.gguf", "index-echo-2b-decoder-q8_0.gguf")]
     [InlineData("index-echo-2b-f16.gguf", "index-echo-2b-decoder-f16.gguf")]

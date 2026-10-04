@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AutoCast;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
@@ -76,7 +77,8 @@ public class CrispAsrIndexEcho : CrispAsrEngineBase
     /// Index-Echo writes each cue as the Chinese transcript line followed by the translation line;
     /// SE keeps the translation. A cue with a single line (an unparsed window) is kept as is.
     /// Japanese translations come wrapped in 「」 corner brackets, which are stripped when they
-    /// enclose the whole line.
+    /// enclose the whole line. A speaker label ("(speaker 0)") in front of the transcript line
+    /// is kept in front of the translation.
     /// </summary>
     internal static string GetTranslation(string text)
     {
@@ -93,6 +95,15 @@ public class CrispAsrIndexEcho : CrispAsrEngineBase
             translation.IndexOf('「', 1) < 0)
         {
             translation = translation[1..^1].Trim();
+        }
+
+        // "Detect speakers" puts "(speaker N)" in front of the cue, i.e. on the Chinese line -
+        // carry it over, or every label is dropped along with the transcript.
+        if (SpeakerLabelParser.TrySplit(lines[0], out _, out var spokenText) &&
+            !SpeakerLabelParser.TrySplit(translation, out _, out _))
+        {
+            var label = lines[0][..(lines[0].Length - spokenText.Length)].Trim();
+            translation = label + " " + translation;
         }
 
         return translation;
