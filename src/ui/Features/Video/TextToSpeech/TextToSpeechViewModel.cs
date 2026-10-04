@@ -3392,7 +3392,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             ProgressValue = 0;
             for (var index = 0; index < previousStepResult.Length; index++)
             {
-                ProgressText = $"Merging audio: segment {index + 1} of {previousStepResult.Length}";
+                ProgressText = string.Format(Se.Language.Video.TextToSpeech.MergingAudioSegmentXOfY, index + 1, previousStepResult.Length);
 
                 var item = previousStepResult[index];
 
@@ -3572,7 +3572,7 @@ public partial class TextToSpeechViewModel : ObservableObject
 
             for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
             {
-                ProgressText = $"Generating speech: segment {index + 1} of {_subtitle.Paragraphs.Count}";
+                ProgressText = string.Format(Se.Language.Video.TextToSpeech.GeneratingSpeechSegmentXOfY, index + 1, _subtitle.Paragraphs.Count);
                 var paragraph = _subtitle.Paragraphs[index];
 
                 // A line the user chose to leave silent gets no step result at all - exactly like
@@ -4307,7 +4307,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             ProgressValue = 0;
             for (var index = 0; index < previousStepResult.Length; index++)
             {
-                ProgressText = $"Adjusting speed: segment {index + 1} of {_subtitle.Paragraphs.Count}";
+                ProgressText = string.Format(Se.Language.Video.TextToSpeech.AdjustingSpeedSegmentXOfY, index + 1, _subtitle.Paragraphs.Count);
                 ProgressValue = (double)index / _subtitle.Paragraphs.Count * 100;
 
                 var item = previousStepResult[index];
@@ -4567,7 +4567,7 @@ public partial class TextToSpeechViewModel : ObservableObject
 
             for (var index = 0; index < previousStepResult.Length; index++)
             {
-                ProgressText = $"Post-processing: segment {index + 1} of {previousStepResult.Length}";
+                ProgressText = string.Format(Se.Language.Video.TextToSpeech.PostProcessingSegmentXOfY, index + 1, previousStepResult.Length);
                 var item = previousStepResult[index];
 
                 if (string.IsNullOrEmpty(item.CurrentFileName) || !File.Exists(item.CurrentFileName))

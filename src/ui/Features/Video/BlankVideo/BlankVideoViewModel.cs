@@ -142,11 +142,11 @@ public partial class BlankVideoViewModel : ObservableObject
 
             if (JobItems.Count == 1)
             {
-                ProgressText = $"Generating video... {percentage}%     {estimatedLeft}";
+                ProgressText = string.Format(Se.Language.Video.ReEncodeGeneratingVideoX, percentage, estimatedLeft);
             }
             else
             {
-                ProgressText = $"Generating video {_jobItemIndex + 1}/{JobItems.Count}... {percentage}%     {estimatedLeft}";
+                ProgressText = string.Format(Se.Language.Video.ReEncodeGeneratingVideoXofY, _jobItemIndex + 1, JobItems.Count, percentage, estimatedLeft);
             }
 
             return;
@@ -239,7 +239,7 @@ public partial class BlankVideoViewModel : ObservableObject
                 }
 
                 await MessageBox.Show(Window!,
-                    "Generating done",
+                    Se.Language.Video.ReEncodeGeneratingDone,
                     sb.ToString(),
                     MessageBoxButtons.OK);
             }
@@ -473,13 +473,13 @@ public partial class BlankVideoViewModel : ObservableObject
 
         if (UseBackgroundImage && string.IsNullOrEmpty(_fullBackgroundImageFileName))
         {
-            await MessageBox.Show(Window!, "Background image file not selected", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            await MessageBox.Show(Window!, Se.Language.Video.BackgroundImageFileNotSelected, Se.Language.General.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
         if (UseBackgroundImage && !File.Exists(_fullBackgroundImageFileName))
         {
-            await MessageBox.Show(Window!, "Background image file does not exist: " + _fullBackgroundImageFileName, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            await MessageBox.Show(Window!, string.Format(Se.Language.Video.BackgroundImageFileDoesNotExistX, _fullBackgroundImageFileName), Se.Language.General.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
