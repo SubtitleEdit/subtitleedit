@@ -599,27 +599,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         /// </summary>
         internal static string FixDcsTextSameLine(string xml)
         {
-            var regex = RegexTextOpenTagWhiteSpace;
-            var match = regex.Match(xml);
-            while (match.Success)
-            {
-                xml = xml
-                    .Remove(match.Index, match.Value.Length)
-                    .Insert(match.Index, match.Value.Trim());
-                match = regex.Match(xml, match.Index);
-            }
-
-            regex = RegexWhiteSpaceTextCloseTag;
-            match = regex.Match(xml);
-            while (match.Success)
-            {
-                xml = xml
-                    .Remove(match.Index, match.Value.Length)
-                    .Insert(match.Index, match.Value.Trim());
-                match = regex.Match(xml, match.Index);
-            }
-
-            return xml;
+            // One pass each - removing and re-inserting every match copied the whole document
+            // twice per indented Text element (seconds to a minute for a 10k line feature).
+            xml = RegexTextOpenTagWhiteSpace.Replace(xml, m => m.Value.Trim());
+            return RegexWhiteSpaceTextCloseTag.Replace(xml, m => m.Value.Trim());
         }
 
         private void ValidationCallBack(object sender, ValidationEventArgs e)
