@@ -2836,15 +2836,8 @@ public partial class MainViewModel :
         // interprets the \pos below in the same space the dialog measured in.
         _subtitle.Header = result.ResultSubtitle.Header;
 
-        selectedItem.Text = "{" + result.ResultTags + "}" + RemovePositionTags(selectedItem.Text);
+        selectedItem.Text = AssaSetPositionViewModel.ApplyPositionTags(selectedItem.Text, result.ResultTags);
         RefreshSubtitlePreview();
-    }
-
-    private static string RemovePositionTags(string text)
-    {
-        string result = Regex.Replace(text, @"\\pos\(\d+,\d+\)", string.Empty);
-        result = Regex.Replace(result, @"\\frz\(?-?\d+(\.\d+)?\)?", string.Empty);
-        return result.Replace("{}", string.Empty);
     }
 
     [RelayCommand]

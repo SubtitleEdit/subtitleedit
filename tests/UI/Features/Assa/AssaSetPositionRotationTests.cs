@@ -98,6 +98,18 @@ public class AssaSetPositionRotationTests
         Assert.Equal(@"\pos(1,2)\frz25", AssaSetPositionViewModel.BuildPositionTags(1, 2, 25.00m, 0));
     }
 
+    [Theory]
+    [InlineData("Hi", @"{\pos(1,2)}Hi")]
+    [InlineData(@"{\an8\i1}Hi", @"{\pos(1,2)\an8\i1}Hi")] // #15617: join the existing block
+    [InlineData(@"{\pos(5,6)\frz25\i1}Hi", @"{\pos(1,2)\i1}Hi")]
+    [InlineData(@"{\pos(5,6)}Hi", @"{\pos(1,2)}Hi")]
+    [InlineData(@"{comment}Hi", @"{\pos(1,2)}{comment}Hi")]
+    [InlineData(@"Hi {\i1}there", @"{\pos(1,2)}Hi {\i1}there")]
+    public void ApplyPositionTags_MergesIntoALeadingOverrideBlock(string text, string expected)
+    {
+        Assert.Equal(expected, AssaSetPositionViewModel.ApplyPositionTags(text, @"\pos(1,2)"));
+    }
+
     [AvaloniaFact]
     public void ResultTags_CombineTheScriptSpaceAnchorAndTheRotation()
     {
