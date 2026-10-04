@@ -72,6 +72,11 @@ public partial class CompareRow : ObservableObject
     public bool CanEdit => IsLeftEditable && HasLeft && Left.Line != null;
     public bool CanTakeFromPair => CanEdit && HasRight && Right.Line != null;
 
+    // The right-click menu offers only the takes that would change something (#15621).
+    public bool CanTakeText => CanTakeFromPair && Left.Text != Right.Text;
+    public bool CanTakeTiming => CanTakeFromPair && (Left.StartTime != Right.StartTime || Left.EndTime != Right.EndTime);
+    public bool HasTakeActions => CanTakeReference || CanTakeText || CanTakeTiming;
+
     public string TakeReferenceHint => Kind == CompareRowKind.OnlyRight
         ? Se.Language.File.CompareInsertFromReference
         : Se.Language.File.CompareTakeFromReference;
