@@ -687,28 +687,11 @@ public partial class CompareViewModel : ObservableObject
             return;
         }
 
-        var subtitle = Subtitle.Parse(fileName);
-        if (subtitle == null)
+        var subtitle = await ParseOrShowErrorAsync(fileName);
+        if (subtitle != null)
         {
-            return;
+            SetLeftSubtitle(subtitle, fileName);
         }
-
-        _leftLines.Clear();
-        foreach (var line in subtitle.Paragraphs)
-        {
-            _leftLines.Add(new SubtitleLineViewModel(line, subtitle.OriginalFormat));
-        }
-
-        LeftFileNameHasChanges = false;
-        LeftFileName = fileName;
-
-        // Another file on the left is no longer the editor's subtitle - there is nothing to apply it to.
-        IsLeftEditable = false;
-        ResetEdits();
-        ResetSyncPoints();
-
-        _languageDirty = true;
-        Dispatcher.UIThread.Post(CompareAndSelectFirst);
     }
 
     [RelayCommand]
@@ -720,7 +703,26 @@ public partial class CompareViewModel : ObservableObject
             return;
         }
 
-        var subtitle = Subtitle.Parse(fileName);
+        await LoadRightFileAsync(fileName);
+    }
+
+    /// <summary>Loads a file as the current subtitle - after the discard prompt, and only when it can be read.</summary>
+    internal async Task LoadLeftFileAsync(string fileName)
+    {
+        // Read first: a file Compare can't read should not first ask to throw the edits away.
+        var subtitle = await ParseOrShowErrorAsync(fileName);
+        if (subtitle == null || !await ConfirmDiscardChangesAsync())
+        {
+            return;
+        }
+
+        SetLeftSubtitle(subtitle, fileName);
+    }
+
+    /// <summary>Loads a file as the reference, or says why it can't.</summary>
+    internal async Task LoadRightFileAsync(string fileName)
+    {
+        var subtitle = await ParseOrShowErrorAsync(fileName);
         if (subtitle == null)
         {
             return;
@@ -739,6 +741,42 @@ public partial class CompareViewModel : ObservableObject
 
         _languageDirty = true;
         Dispatcher.UIThread.Post(CompareAndSelectFirst);
+    }
+
+    private void SetLeftSubtitle(Subtitle subtitle, string fileName)
+    {
+        _leftLines.Clear();
+        foreach (var line in subtitle.Paragraphs)
+        {
+            _leftLines.Add(new SubtitleLineViewModel(line, subtitle.OriginalFormat));
+        }
+
+        LeftFileNameHasChanges = false;
+        LeftFileName = fileName;
+
+        // Another file on the left is no longer the editor's subtitle - there is nothing to apply it to.
+        IsLeftEditable = false;
+        ResetEdits();
+        ResetSyncPoints();
+
+        _languageDirty = true;
+        Dispatcher.UIThread.Post(CompareAndSelectFirst);
+    }
+
+    /// <summary>
+    /// Parses a subtitle file, telling the user when it is not a format Compare can read - a
+    /// dropped .sup or .sub used to do nothing at all, which looked like a hang (#15623).
+    /// </summary>
+    private async Task<Subtitle?> ParseOrShowErrorAsync(string fileName)
+    {
+        var subtitle = Subtitle.Parse(fileName);
+        if (subtitle == null && Window != null)
+        {
+            var message = Se.Language.General.UnknownSubtitleFormat + Environment.NewLine + Environment.NewLine + System.IO.Path.GetFileName(fileName);
+            await MessageBox.Show(Window, Se.Language.General.Error, message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        return subtitle;
     }
 
     [RelayCommand]
@@ -1702,87 +1740,30 @@ public partial class CompareViewModel : ObservableObject
 
     internal void FileGridOnDropLeft(object? sender, DragEventArgs e)
     {
-        if (!e.DataTransfer.Contains(DataFormat.File))
+        var path = GetDroppedFile(e);
+        if (path != null)
         {
-            return;
-        }
-
-        var files = e.DataTransfer.TryGetFiles();
-        if (files != null)
-        {
-            Dispatcher.UIThread.Post(async () =>
-            {
-                if (!await ConfirmDiscardChangesAsync())
-                {
-                    return;
-                }
-
-                foreach (var file in files)
-                {
-                    var path = file.Path?.LocalPath;
-                    var subtitle = Subtitle.Parse(path);
-                    if (subtitle == null || path == null)
-                    {
-                        return;
-                    }
-
-                    _leftLines.Clear();
-                    foreach (var line in subtitle.Paragraphs)
-                    {
-                        _leftLines.Add(new SubtitleLineViewModel(line, subtitle.OriginalFormat));
-                    }
-
-                    LeftFileNameHasChanges = false;
-                    LeftFileName = path;
-                    IsLeftEditable = false;
-                    ResetEdits();
-                    ResetSyncPoints();
-
-                    _languageDirty = true;
-                    Dispatcher.UIThread.Post(CompareAndSelectFirst);
-                    break;
-                }
-            });
+            Dispatcher.UIThread.Post(async () => await LoadLeftFileAsync(path));
         }
     }
 
     internal void FileGridOnDropRight(object? sender, DragEventArgs e)
     {
+        var path = GetDroppedFile(e);
+        if (path != null)
+        {
+            Dispatcher.UIThread.Post(async () => await LoadRightFileAsync(path));
+        }
+    }
+
+    /// <summary>The first dropped file - a side shows one subtitle.</summary>
+    private static string? GetDroppedFile(DragEventArgs e)
+    {
         if (!e.DataTransfer.Contains(DataFormat.File))
         {
-            return;
+            return null;
         }
 
-        var files = e.DataTransfer.TryGetFiles();
-        if (files != null)
-        {
-            Dispatcher.UIThread.Post(() =>
-            {
-                foreach (var file in files)
-                {
-                    var path = file.Path?.LocalPath;
-                    var subtitle = Subtitle.Parse(path);
-                    if (subtitle == null || path == null)
-                    {
-                        return;
-                    }
-
-                    ResetSyncPoints();
-
-                    _rightLines.Clear();
-                    foreach (var line in subtitle.Paragraphs)
-                    {
-                        _rightLines.Add(new SubtitleLineViewModel(line, subtitle.OriginalFormat));
-                    }
-
-                    RightFileName = path;
-                    IsReloadFromFileVisible = false;
-
-                    _languageDirty = true;
-                    Dispatcher.UIThread.Post(CompareAndSelectFirst);
-                    break;
-                }
-            });
-        }
+        return e.DataTransfer.TryGetFiles()?.FirstOrDefault()?.Path?.LocalPath;
     }
 }
