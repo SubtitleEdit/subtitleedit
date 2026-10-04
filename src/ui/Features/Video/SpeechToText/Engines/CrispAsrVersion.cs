@@ -84,6 +84,33 @@ public static class CrispAsrVersion
         return version;
     }
 
+    /// <summary>
+    /// False only for a CrispASR known to be older than <paramref name="minimum"/>. A version
+    /// that cannot be read (a manual or odd build) gets the benefit of the doubt - refusing it
+    /// would block a binary that works.
+    /// </summary>
+    public static bool IsAtLeast(string? crispAsrVersion, Version minimum)
+    {
+        if (string.IsNullOrWhiteSpace(crispAsrVersion))
+        {
+            return true;
+        }
+
+        var numeric = crispAsrVersion.Trim().TrimStart('v', 'V');
+        var end = 0;
+        while (end < numeric.Length && (char.IsDigit(numeric[end]) || numeric[end] == '.'))
+        {
+            end++;
+        }
+
+        if (!Version.TryParse(numeric[..end].TrimEnd('.'), out var version))
+        {
+            return true;
+        }
+
+        return version >= minimum;
+    }
+
     private static string? Probe(string exePath)
     {
         try

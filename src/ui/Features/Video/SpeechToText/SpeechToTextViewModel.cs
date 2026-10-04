@@ -4166,6 +4166,11 @@ public partial class SpeechToTextViewModel : ObservableObject
                 RefreshEngineCombo?.Invoke();
             }
 
+            if (!await EnsureIndexEchoCrispAsrVersionAsync(engine))
+            {
+                return;
+            }
+
             // Engines that download their own models (WhisperX) are never routed through SE's
             // downloader: it would fill a folder the engine does not read and re-prompt on
             // every run. Their IsModelInstalled only drives the model dot.
@@ -5781,10 +5786,16 @@ public partial class SpeechToTextViewModel : ObservableObject
             return;
         }
 
-        var crispVariant = DownloadHashManager.GetCrispAsrVariant(key)
+        await DownloadCrispAsrUpdateAsync(engine, key);
+    }
+
+    /// <summary>Re-downloads CrispASR, keeping the installed variant (CUDA, Vulkan, ...) when known.</summary>
+    private async Task<bool> DownloadCrispAsrUpdateAsync(ISpeechToTextEngine engine, string? hashKey)
+    {
+        var crispVariant = (hashKey == null ? null : DownloadHashManager.GetCrispAsrVariant(hashKey))
                            ?? (OperatingSystem.IsWindows() ? "vulkan" : string.Empty);
 
-        await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
+        var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
             Window!, viewModel =>
             {
                 viewModel.Engine = engine;
@@ -5793,6 +5804,46 @@ public partial class SpeechToTextViewModel : ObservableObject
             });
 
         RefreshEngineCombo?.Invoke();
+        return vm.OkPressed;
+    }
+
+    /// <summary>
+    /// Index-Echo only exists in CrispASR v0.8.41+; an older binary rejects the backend after the
+    /// user has sat through a 2.7 GB model download. Offers the update before that.
+    /// </summary>
+    private async Task<bool> EnsureIndexEchoCrispAsrVersionAsync(ISpeechToTextEngine engine)
+    {
+        if (engine is not CrispAsrIndexEcho)
+        {
+            return true;
+        }
+
+        var installedVersion = CrispAsrVersion.TryGet(engine.GetExecutable());
+        if (CrispAsrVersion.IsAtLeast(installedVersion, CrispAsrIndexEcho.MinimumCrispAsrVersion))
+        {
+            return true;
+        }
+
+        var answer = await MessageBox.Show(
+            Window!,
+            string.Format(Se.Language.Video.AudioToText.UpdateXTitle, engine.Name),
+            string.Format(Se.Language.Video.AudioToText.XNeedsNewerCrispAsr, engine.Name, CrispAsrIndexEcho.MinimumCrispAsrVersion, installedVersion),
+            MessageBoxButtons.YesNoCancel,
+            MessageBoxIcon.Question);
+
+        if (answer != MessageBoxResult.Yes)
+        {
+            return false;
+        }
+
+        var folder = engine.GetAndCreateWhisperFolder();
+        var lookup = TryReadSidecarHash(folder) ?? TryHashInstalledExecutable(engine, folder);
+        if (!await DownloadCrispAsrUpdateAsync(engine, lookup?.key))
+        {
+            return false;
+        }
+
+        return CrispAsrVersion.IsAtLeast(CrispAsrVersion.TryGet(engine.GetExecutable()), CrispAsrIndexEcho.MinimumCrispAsrVersion);
     }
 
     private async Task CheckQwen3AsrCppForUpdateAsync()

@@ -21,6 +21,9 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 /// </summary>
 public class CrispAsrIndexEcho : CrispAsrEngineBase
 {
+    /// <summary>The first CrispASR with the index-echo backend.</summary>
+    public static readonly Version MinimumCrispAsrVersion = new(0, 8, 41);
+
     public static string StaticName => "Crisp ASR Index-Echo";
     public override string Name => StaticName;
     public override string Choice => WhisperChoice.CrispAsrIndexEcho;
