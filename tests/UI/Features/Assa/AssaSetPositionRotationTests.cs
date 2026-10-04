@@ -110,6 +110,25 @@ public class AssaSetPositionRotationTests
         Assert.Equal(expected, AssaSetPositionViewModel.ApplyPositionTags(text, @"\pos(1,2)"));
     }
 
+    [Theory]
+    [InlineData(@"{\t(0,1000,\frz360)}Spin", @"{\pos(1,2)\t(0,1000,\frz360)}Spin")]
+    [InlineData(@"{\frz10\t(0,1000,\frz360)}Spin", @"{\pos(1,2)\t(0,1000,\frz360)}Spin")]
+    [InlineData(@"{\t(0,500,\fscx120)\frz5}Spin", @"{\pos(1,2)\t(0,500,\fscx120)}Spin")]
+    public void ApplyPositionTags_KeepsFrzInsideTransforms(string text, string expected)
+    {
+        Assert.Equal(expected, AssaSetPositionViewModel.ApplyPositionTags(text, @"\pos(1,2)"));
+    }
+
+    [Theory]
+    [InlineData(@"{\t(0,1000,\frz360)}Spin", 7, 7)]
+    [InlineData(@"{\frz10\t(0,1000,\frz360)}Spin", 7, 10)]
+    [InlineData(@"{\t(0,1000,\frz360)\frz-3.5}Spin", 0, -3.5)]
+    [InlineData("Spin", 4, 4)]
+    public void ReadRotation_IgnoresFrzInsideTransforms(string text, decimal styleAngle, decimal expected)
+    {
+        Assert.Equal(expected, AssaSetPositionViewModel.ReadRotation(text, styleAngle));
+    }
+
     [AvaloniaFact]
     public void ResultTags_CombineTheScriptSpaceAnchorAndTheRotation()
     {
