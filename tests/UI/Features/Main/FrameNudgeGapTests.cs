@@ -122,6 +122,30 @@ public class FrameNudgeGapTests : IDisposable
         window.Close();
     }
 
+    // A line near 00:00:00 must not be nudged to a negative start - not the first line (no
+    // previous line to stop at), and not any line with "Allow overlap" on.
+    [AvaloniaTheory]
+    [InlineData(0, false)]
+    [InlineData(1, true)]
+    public void MoveStartXMsBack_StopsAtZero(int index, bool allowOverlap)
+    {
+        var (window, vm) = TwoLines(gapMs: 1000, allowOverlap: allowOverlap);
+        vm.Subtitles[index].SetStartTimeOnly(TimeSpan.FromMilliseconds(5));
+        Se.Settings.General.MoveStartEndStepMs = 10;
+        vm.SelectedSubtitle = vm.Subtitles[index];
+        Dispatcher.UIThread.RunJobs();
+
+        vm.MoveStartXMsBackCommand.Execute(null);
+        Assert.Equal(0, vm.Subtitles[index].StartTime.TotalMilliseconds, 3);
+
+        vm.MoveStartXMsBackCommand.Execute(null);
+        Assert.Equal(0, vm.Subtitles[index].StartTime.TotalMilliseconds, 3);
+
+        vm.MoveStartOneFrameBackCommand.Execute(null);
+        Assert.Equal(0, vm.Subtitles[index].StartTime.TotalMilliseconds, 3);
+        window.Close();
+    }
+
     [AvaloniaFact]
     public void MoveStartXMsBack_StopsAtTheMinimumGap()
     {

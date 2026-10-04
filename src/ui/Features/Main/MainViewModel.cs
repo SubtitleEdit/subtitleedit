@@ -15967,6 +15967,18 @@ public partial class MainViewModel :
             }
         }
 
+        // Nothing comes before 00:00:00 - not for the first line, which has no previous line to
+        // stop at, nor for any line with "Allow overlap" on.
+        if (newStartMs < 0)
+        {
+            if (s.StartTime.TotalMilliseconds <= 0)
+            {
+                return;
+            }
+
+            newStartMs = 0;
+        }
+
         s.SetStartTimeOnly(TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newStartMs));
 
         if (prevIsClose && prev != null)
