@@ -71,6 +71,7 @@ public class LanguageFile
     public string CompareSyncPointShiftedXYZW { get; set; }
     public string CompareChangeSyncShiftXYZ { get; set; }
     public string LoadXFromFile { get; set; }
+    public string CompareLoadSavedFile { get; set; }
     public string SaveCompareHtmlTitle { get; set; }
     public string PickMatroskaTrackX { get; set; }
     public string PickTransportStreamTrackX { get; set; }
@@ -155,6 +156,7 @@ public class LanguageFile
         IgnoreFormatting = "Ignore formatting";
         IgnoreFormattingHint = "Lines that differ only in formatting tags, like <i> or {\\an8}, do not count as different";
         LoadXFromFile = "Load \"{0}\" from file";
+        CompareLoadSavedFile = "Load saved file";
         SaveCompareHtmlTitle = "Save compare HTML file";
         PickMatroskaTrackX = "Pick Matroska track - {0}";
         PickTransportStreamTrackX = "Pick transport stream track - {0}";

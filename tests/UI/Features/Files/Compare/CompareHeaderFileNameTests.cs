@@ -74,6 +74,21 @@ public class CompareHeaderFileNameTests : IDisposable
         Assert.InRange(captionLeft - labelRight, 0, 20);
     }
 
+    [AvaloniaFact]
+    public void ReferenceHeader_WithLongCurrentName_DoesNotDrawTheCaptionUnderTheReadOnlyPill()
+    {
+        // Before a reference is loaded, the right card shows the button that loads the current
+        // file - it used to carry the whole file name and push the caption under the pill (#15619).
+        var name = string.Concat(Enumerable.Repeat("Very.Long.File.Name.", 6)) + "en.srt";
+        var (_, window) = Show(name, width: 900);
+
+        var caption = FindText(window, Se.Language.File.CompareReference);
+        var pill = FindText(window, Se.Language.File.CompareReadOnly).FindAncestorOfType<Border>()!;
+        var captionRight = caption.TranslatePoint(new Point(caption.Bounds.Width, 0), window)!.Value.X;
+        var pillLeft = pill.TranslatePoint(new Point(0, 0), window)!.Value.X;
+        Assert.True(captionRight <= pillLeft, $"caption ends at {captionRight}, pill starts at {pillLeft}");
+    }
+
     private (CompareViewModel vm, Window window) Show(string leftName, double width)
     {
         var vm = new CompareViewModel(new FileHelper(), new FolderHelper());

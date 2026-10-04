@@ -248,9 +248,12 @@ public class CompareWindow : Window
             [!ToolTip.TipProperty] = new Binding(nameof(vm.RightFileName)),
         };
         var pillRight = MakePill(IconNames.Lock, string.Empty, highlighted: false, fixedText: Se.Language.File.CompareReadOnly);
-        var buttonRightReload = UiUtil.MakeButton(string.Format(Se.Language.File.LoadXFromFile, System.IO.Path.GetFileName(vm.LeftFileName)), vm.ReloadRightFromFileCommand)
+        // A short label, the file name in the hint: the whole name made the button so wide that the
+        // "Reference" caption was pushed under the read-only pill (#15619).
+        var buttonRightReload = UiUtil.MakeButton(Se.Language.File.CompareLoadSavedFile, vm.ReloadRightFromFileCommand)
             .WithIconLeft(IconNames.Refresh)
             .WithBindIsVisible(nameof(vm.IsReloadFromFileVisible));
+        AddHint(buttonRightReload, string.Format(Se.Language.File.LoadXFromFile, System.IO.Path.GetFileName(vm.LeftFileName)));
         var buttonRightBrowse = UiUtil.MakeButtonBrowse(vm.PickRightSubtitleFileCommand, accessibleName: Se.Language.General.OpenSubtitleFileTitle);
 
         var right = MakeHeaderCard(
@@ -293,6 +296,7 @@ public class CompareWindow : Window
             },
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Center,
+            ClipToBounds = true, // a card too narrow for icon + caption clips them instead of drawing under the pills
         };
         // Margins, not column spacing, so a hidden "*" leaves no gap.
         icon.Margin = new Thickness(0, 0, 6, 0);
