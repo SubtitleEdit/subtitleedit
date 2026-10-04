@@ -150,12 +150,12 @@ Subtitle Edit 5 can download local TTS servers and models from the **Text to spe
 *   **Piper:** Stored in `[Data Folder]/TextToSpeech/Piper`. A custom voice is an `.onnx` model with its `.onnx.json` beside it in that folder (imported from the voice settings dialog or copied in by hand).
 
 ### audio.cpp (Text-to-Speech runtime)
-The runtime behind **IndexTTS 2.5**, **Higgs Audio v3**, **Fish Audio S2 Pro** and **FireRedTTS3**. One install serves all four engines, and each of them prompts for it on first use.
+The runtime behind **IndexTTS 2.5**, **Higgs Audio v3**, **Fish Audio S2 Pro**, **FireRedTTS3** and **KugelAudio**. One install serves all five engines, and each of them prompts for it on first use.
 
 *   **Download:** Built by Subtitle Edit's own workflow from upstream audio.cpp and published in [SubtitleEdit/support-files releases](https://github.com/SubtitleEdit/support-files/releases) (upstream only ships Windows builds). CPU, CUDA and Vulkan builds for Windows and Linux x64, and a Metal build for macOS Apple Silicon.
 *   **Destination:** `[Data Folder]/audio.cpp` - `audiocpp_server.exe` (`audiocpp_server` on Linux/macOS) plus a `BUILD-INFO.txt` listing the model families the build was compiled with. Subtitle Edit reads that file and offers an update when an engine needs a family the installed build lacks, so keep it next to the binary if you install by hand.
-*   **Models:** GGUF weights come straight from Hugging Face (`audio-cpp/audio.cpp-gguf`) and go into `[Data Folder]/audio.cpp/models/<family>-GGUF`: `IndexTTS2.5-GGUF`, `Higgs-Audio-v3-TTS-4B-GGUF`, `Fish-Audio-S2-Pro-GGUF` and `FireRedTTS3-Base-GGUF`. IndexTTS 2.5, Higgs Audio v3 and Fish Audio S2 Pro show a licence window before the first download.
-*   **Voices:** Reference recordings are kept per engine under `[Data Folder]/TextToSpeech/IndexTts25AudioCpp`, `HiggsTtsAudioCpp`, `FishTtsAudioCpp` and `FireRedTts3AudioCpp`.
+*   **Models:** GGUF weights come straight from Hugging Face (`audio-cpp/audio.cpp-gguf`) and go into `[Data Folder]/audio.cpp/models/<family>-GGUF`: `IndexTTS2.5-GGUF`, `Higgs-Audio-v3-TTS-4B-GGUF`, `Fish-Audio-S2-Pro-GGUF`, `FireRedTTS3-Base-GGUF` and `KugelAudio-0-Open-GGUF`. IndexTTS 2.5, Higgs Audio v3 and Fish Audio S2 Pro show a licence window before the first download.
+*   **Voices:** Reference recordings are kept per engine under `[Data Folder]/TextToSpeech/IndexTts25AudioCpp`, `HiggsTtsAudioCpp`, `FishTtsAudioCpp` and `FireRedTts3AudioCpp`. KugelAudio has no reference recordings: its four preset voices are inside the model file.
 
 These are examples, not the full set — many more local engines are downloadable from the Text to speech window (IndexTTS, CosyVoice3, dots.tts, VoxCPM2, MOSS-TTS, Zonos, VibeVoice, Confucius4-TTS, Pocket TTS, Supertonic, and more), following the same layout: CrispASR-based engines share the `[Data Folder]/CrispASR` cache, the audio.cpp engines share `[Data Folder]/audio.cpp`, and the rest live under `[Data Folder]/TextToSpeech/<engine>`.
 

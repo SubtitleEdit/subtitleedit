@@ -88,6 +88,7 @@ While reading, the selected line, the video position and the waveform follow the
 - **GoogleSpeech** — Google cloud TTS (requires key file)
 - **Kokoro TTS** — Local downloadable Kokoro TTS server and models
 - **Supertonic (CrispASR)** — Supertone Supertonic-3 via the CrispASR runtime: 31 languages and ten preset voices (five female, five male) from one 200 MB model, at 44.1 kHz. It does not clone, and it is by far the fastest local engine - a line takes a second or less
+- **KugelAudio (audio.cpp)** — KugelAudio-0-Open on the audio.cpp runtime: 23 European languages (including Danish, Swedish, Norwegian, Finnish and Polish) at 24 kHz, read from the text with no language pick. Four preset voices: two German female and two British (female and male). It does not clone. The voices keep their accent in other languages; for Danish the two German voices and the British male are clear, but the British female is not. It is a 7B model, so it is slow (several times slower than real time even on a fast GPU) and needs about 9 GB of memory with the default Q4_K model
 - **OmniVoice TTS** — Local CPU TTS with voice cloning and many languages
 - **Qwen3 TTS (CrispASR)** — Local Qwen3 TTS running through the CrispASR runtime (VoiceDesign, CustomVoice, and Voice clone 1.7B models)
 - **Chatterbox TTS (CrispASR)** — Chatterbox TTS via the CrispASR runtime, with voice cloning (multilingual Base or English-only Turbo model)

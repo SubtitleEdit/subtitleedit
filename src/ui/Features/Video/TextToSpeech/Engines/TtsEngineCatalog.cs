@@ -43,6 +43,11 @@ public static class TtsEngineCatalog
         // one 200 MB GGUF, and by far the fastest local engine here (RTF ~0.09 on an M4).
         engines.Add(new SupertonicCrispAsr());
 
+        // KugelAudio-0-Open (audio.cpp) — four preset voices and no cloning, 23 European
+        // languages (Danish, Swedish, Norwegian, Finnish, Polish...) from a 7B model. Slow
+        // (3-4x real time on an M4) and ~9 GB resident, but MIT-licensed.
+        engines.Add(new KugelAudioAudioCpp());
+
         // Zonos (CrispASR) — not a cloning engine: the zonos backend has no speaker encoder, so
         // it speaks with one fixed default voice (CrispASR v0.8.34 dropped its voice-cloning
         // cap). Move it back into CreateVoiceCloningEngines when upstream ports the encoder.

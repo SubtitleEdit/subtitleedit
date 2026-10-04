@@ -27,6 +27,8 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.AudioCppTtsSettings;
 ///
 /// <see cref="LicenseDefinition"/> is null for weights that need no acceptance (FireRedTTS3
 /// is Apache-2.0); <see cref="IsLicenseAccepted"/> then always returns true.
+/// <see cref="GetVoicesFolder"/> is null for an engine with built-in preset voices only
+/// (KugelAudio), which hides the voices folder shortcut.
 /// </summary>
 public sealed record AudioCppTtsSettingsAdapter(
     string EngineName,
@@ -37,7 +39,7 @@ public sealed record AudioCppTtsSettingsAdapter(
     Func<string?, string> ResolveModelKey,
     Func<string?, bool> AreModelsInstalled,
     Func<string> GetModelsFolder,
-    Func<string> GetVoicesFolder,
+    Func<string>? GetVoicesFolder,
     Func<bool> IsLicenseAccepted,
     ModelLicenseDefinition? LicenseDefinition,
     Action<DownloadTtsViewModel, string> StartDownloadModels);
@@ -85,6 +87,20 @@ public static class AudioCppTtsSettingsAdapters
         IsLicenseAccepted: () => true,
         LicenseDefinition: null,
         StartDownloadModels: (vm, modelKey) => vm.StartDownloadFireRedTts3AudioCppModels(modelKey));
+
+    public static AudioCppTtsSettingsAdapter KugelAudio { get; } = new(
+        EngineName: "KugelAudio (audio.cpp)",
+        FamilyName: KugelAudioAudioCpp.FamilyName,
+        Description: new KugelAudioAudioCpp().Description,
+        ModelKeyDefault: KugelAudioAudioCpp.ModelKeyQ4_K,
+        ModelKeyAlt: KugelAudioAudioCpp.ModelKeyQ8_0,
+        ResolveModelKey: KugelAudioAudioCpp.ResolveModelKey,
+        AreModelsInstalled: KugelAudioAudioCpp.AreModelsInstalled,
+        GetModelsFolder: KugelAudioAudioCpp.GetSetModelsFolder,
+        GetVoicesFolder: null,
+        IsLicenseAccepted: () => true,
+        LicenseDefinition: null,
+        StartDownloadModels: (vm, modelKey) => vm.StartDownloadKugelAudioAudioCppModels(modelKey));
 }
 
 public partial class AudioCppTtsSettingsViewModel : ObservableObject
@@ -112,6 +128,7 @@ public partial class AudioCppTtsSettingsViewModel : ObservableObject
     [ObservableProperty] private string _voicesLabel = string.Empty;
     [ObservableProperty] private string _modelsFolder = string.Empty;
     [ObservableProperty] private string _voicesFolder = string.Empty;
+    [ObservableProperty] private bool _hasVoicesFolder;
 
     public AudioCppTtsSettingsAdapter Adapter { get; private set; } = AudioCppTtsSettingsAdapters.Higgs;
 
@@ -128,7 +145,8 @@ public partial class AudioCppTtsSettingsViewModel : ObservableObject
     {
         Adapter = adapter;
         ModelsFolder = adapter.GetModelsFolder();
-        VoicesFolder = adapter.GetVoicesFolder();
+        VoicesFolder = adapter.GetVoicesFolder?.Invoke() ?? string.Empty;
+        HasVoicesFolder = adapter.GetVoicesFolder != null;
         Refresh();
     }
 
@@ -170,6 +188,12 @@ public partial class AudioCppTtsSettingsViewModel : ObservableObject
             Adapter.AreModelsInstalled(Adapter.ModelKeyAlt),
             label => ModelAltLabel = label,
             brush => ModelAltBrush = brush);
+
+        if (!HasVoicesFolder)
+        {
+            VoicesLabel = "Built-in preset voices";
+            return;
+        }
 
         try
         {
