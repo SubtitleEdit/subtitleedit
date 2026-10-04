@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var hasStart = false;
             var hasEnd = false;
             var text = new StringBuilder();
-            var missingEnds = new List<Paragraph>();
+            var missingEnds = new List<int>(); // indexes into subtitle.Paragraphs
 
             void AddCaption()
             {
@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 subtitle.Paragraphs.Add(p);
                 if (!hasEnd)
                 {
-                    missingEnds.Add(p);
+                    missingEnds.Add(subtitle.Paragraphs.Count - 1);
                 }
 
                 p = null;
@@ -167,9 +167,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             AddCaption();
 
             // a pop-on caption stays up until the next one replaces it
-            foreach (var paragraph in missingEnds)
+            foreach (var index in missingEnds)
             {
-                var next = subtitle.GetParagraphOrDefault(subtitle.Paragraphs.IndexOf(paragraph) + 1);
+                var paragraph = subtitle.Paragraphs[index];
+                var next = subtitle.GetParagraphOrDefault(index + 1);
                 var gap = Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                 paragraph.EndTime.TotalMilliseconds = next != null && next.StartTime.TotalMilliseconds - gap > paragraph.StartTime.TotalMilliseconds
                     ? next.StartTime.TotalMilliseconds - gap

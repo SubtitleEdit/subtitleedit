@@ -1049,7 +1049,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
 
         private static void FlushText(StringBuilder text, CommandState state)
         {
-            var commands = new List<ICea708Command>();
+            SetPenAttributes italicCommand = null;
             var y = 0;
             var x = 0; // pen column in the current row
             var italicOn = false;
@@ -1112,6 +1112,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                     if (command is SetPenAttributes attributes)
                     {
                         italicOn = attributes.Italics;
+                        italicCommand = attributes;
                     }
                     else if (command is Reset || (command is DefineWindow defineWindow && defineWindow.PenStyleId > 0))
                     {
@@ -1119,14 +1120,22 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                         // this, a retained italic SetPenAttributes leaked into every later caption.
                         italicOn = false;
                     }
-
-                    commands.Add(command);
                 }
             }
 
             if (IsItalicOn(text.ToString()))
             {
                 AppendItalicEnd(text);
+            }
+
+            // Of the non-text commands, only the pen italic state carries over to the next flush
+            // (pen locations are consumed above, and the backward scans for BS/HCR/FF stop at
+            // text or a pen location) - so retain just the command that set it. Retaining every
+            // window/pen command made each flush walk and copy all of them since the stream start.
+            var commands = new List<ICea708Command>();
+            if (italicOn)
+            {
+                commands.Add(italicCommand);
             }
 
             state.Commands = commands;

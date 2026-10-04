@@ -91,6 +91,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 'Z', "00" },
         };
 
+        private static readonly string[] AncByChar = CreateAncByChar();
+
+        private static string[] CreateAncByChar()
+        {
+            var table = new string['Z' + 1];
+            foreach (var kvp in AncDictionary)
+            {
+                table[kvp.Key] = kvp.Value;
+            }
+
+            return table;
+        }
+
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
@@ -235,14 +248,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var timeCodeList = new List<TimeCode>();
             var header = new StringBuilder();
             var state = new CommandState();
-            var closedCaptionDecoder = new ClosedCaptionDecoder();
+            var frames = new List<KeyValuePair<long, Cea608.CcData[]>>();
             char[] splitChars = { ':', ';', ',' };
             for (var index = 0; index < lines.Count; index++)
             {
                 var line = lines[index];
                 var s = line.Trim();
                 if (string.IsNullOrEmpty(s) || s.StartsWith("//", StringComparison.Ordinal) || s.StartsWith("File Format=MacCaption_MCC", StringComparison.Ordinal) || s.StartsWith("UUID=", StringComparison.Ordinal) ||
-                    s.StartsWith("Creation Program=") || s.StartsWith("Creation Date=") || s.StartsWith("Creation Time=") ||
+                    s.StartsWith("Creation Program=", StringComparison.Ordinal) || s.StartsWith("Creation Date=", StringComparison.Ordinal) || s.StartsWith("Creation Time=", StringComparison.Ordinal) ||
                     s.StartsWith("Code Rate=", StringComparison.Ordinal) || s.StartsWith("Time Code Rate=", StringComparison.Ordinal))
                 {
                     header.AppendLine(line);
@@ -257,8 +270,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     var startTime = DecodeTimeCodeFrames(s.Substring(0, match.Length - 1), splitChars);
                     var ancData = s.Substring(match.Index + match.Length).Trim();
-                    closedCaptionDecoder.AddFrame((long)Math.Round(startTime.TotalMilliseconds), GetCcData(ancData));
-                    var text = GetText(timeCodeList.Count, ancData, index == lines.Count - 1, state);
+                    var text = GetTextAndCcData(timeCodeList.Count, ancData, index == lines.Count - 1, state, out var ccData);
+                    frames.Add(new KeyValuePair<long, Cea608.CcData[]>((long)Math.Round(startTime.TotalMilliseconds), ccData));
                     timeCodeList.Add(startTime);
                     if (string.IsNullOrEmpty(text))
                     {
@@ -275,6 +288,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             // CC1 (else the first caption track) when the CEA-708 data gave no text.
             if (subtitle.Paragraphs.Count == 0)
             {
+                // decoded only when needed - it runs CEA-608 and a second CEA-708 decode per frame
+                var closedCaptionDecoder = new ClosedCaptionDecoder();
+                foreach (var frame in frames)
+                {
+                    closedCaptionDecoder.AddFrame(frame.Key, frame.Value);
+                }
+
                 var tracks = closedCaptionDecoder.Finish(0);
                 if (tracks.Count > 0)
                 {
@@ -287,26 +307,39 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         }
 
         /// <summary>
-        /// The valid cc_data triplets (CEA-608 and CEA-708) of one caption distribution packet.
+        /// The CEA-708 text of one MCC line (see <see cref="GetText"/>) plus the valid cc_data
+        /// triplets (CEA-608 and CEA-708) of its caption distribution packet - parsed once for both.
         /// </summary>
-        private static Cea608.CcData[] GetCcData(string input)
+        private static string GetTextAndCcData(int lineIndex, string input, bool flush, CommandState state, out Cea608.CcData[] ccData)
         {
+            ccData = Array.Empty<Cea608.CcData>();
             var bytes = HexStringToByteArray(GetHex(input));
             if (bytes.Length < 10)
             {
-                return Array.Empty<Cea608.CcData>();
+                return string.Empty;
             }
 
+            Smpte291M cea708;
             try
             {
-                return new Smpte291M(bytes).CcDataSectionCcData.CcData
+                cea708 = new Smpte291M(bytes);
+                ccData = cea708.CcDataSectionCcData.CcData
                     .Where(cc => cc.Valid)
                     .Select(cc => new Cea608.CcData(cc.Type, cc.Data1, cc.Data2))
                     .ToArray();
             }
             catch
             {
-                return Array.Empty<Cea608.CcData>();
+                return string.Empty;
+            }
+
+            try
+            {
+                return cea708.GetText(lineIndex, flush, state);
+            }
+            catch
+            {
+                return string.Empty;
             }
         }
 
@@ -354,10 +387,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string GetHex(string input)
         {
-            var sb = new StringBuilder();
+            var sb = new StringBuilder(input.Length * 2);
             foreach (var ch in input)
             {
-                if (AncDictionary.TryGetValue(ch, out var hexValue))
+                var hexValue = ch < AncByChar.Length ? AncByChar[ch] : null;
+                if (hexValue != null)
                 {
                     sb.Append(hexValue);
                 }

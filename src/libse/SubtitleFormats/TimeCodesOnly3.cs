@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                         subtitle.Paragraphs.Add(p);
 
-                        var prev = subtitle.GetParagraphOrDefault(subtitle.GetIndex(p) - 1);
+                        var prev = subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 2); // p was just added last
                         if (prev != null)
                         {
                             if (prev.EndTime.TotalMilliseconds > p.StartTime.TotalMilliseconds)
