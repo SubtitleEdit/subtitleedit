@@ -218,4 +218,48 @@ public class YtDlpDownloadServiceTests
             Directory.Delete(dir, recursive: true);
         }
     }
+
+    [Fact]
+    public async Task VerifyChecksumAsync_PartFileWithAssetName_ThrowsAndDeletesPartFile()
+    {
+        // Downloads land in "<asset>.part" first; verification must use the real asset name,
+        // otherwise no checksum is found and a corrupt download is moved into place unchecked.
+        var dir = Path.Combine(Path.GetTempPath(), "VerifyPart_" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(dir);
+        var partPath = Path.Combine(dir, "yt-dlp.exe.part");
+        await File.WriteAllTextAsync(partPath, "this is not really yt-dlp", TestContext.Current.CancellationToken);
+        try
+        {
+            await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                YtDlpDownloadService.VerifyChecksumAsync(partPath, YtDlpDownloadService.CurrentVersion, TestContext.Current.CancellationToken, "yt-dlp.exe"));
+
+            Assert.False(File.Exists(partPath));
+        }
+        finally
+        {
+            Directory.Delete(dir, recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task DeletePartialDownload_KeepsInstalledBinary()
+    {
+        var dir = Path.Combine(Path.GetTempPath(), "DeletePartial_" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(dir);
+        var binaryPath = Path.Combine(dir, "yt-dlp.exe");
+        var partPath = YtDlpDownloadService.GetPartFileName(binaryPath);
+        await File.WriteAllTextAsync(binaryPath, "working yt-dlp", TestContext.Current.CancellationToken);
+        await File.WriteAllTextAsync(partPath, "half a download", TestContext.Current.CancellationToken);
+        try
+        {
+            YtDlpDownloadService.DeletePartialDownload(binaryPath);
+
+            Assert.False(File.Exists(partPath));
+            Assert.True(File.Exists(binaryPath), "A failed update must leave the installed yt-dlp in place.");
+        }
+        finally
+        {
+            Directory.Delete(dir, recursive: true);
+        }
+    }
 }
