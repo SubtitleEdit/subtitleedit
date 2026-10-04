@@ -117,7 +117,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
 
                             paragraph.Text = (paragraph.Text + Environment.NewLine + text).Trim();
-                            if (!subtitle.Paragraphs.Contains(paragraph))
+                            // only ever added right after its time code line, so if added it is the last one
+                            if (subtitle.Paragraphs.Count == 0 || !ReferenceEquals(subtitle.Paragraphs[subtitle.Paragraphs.Count - 1], paragraph))
                             {
                                 subtitle.Paragraphs.Add(paragraph);
                             }

@@ -577,7 +577,7 @@ public partial class CompareViewModel : ObservableObject
         var pairs = CompareAligner.Align(
             leftItems.Select(ToAlignerLine).ToList(),
             rightItems.Select(ToAlignerLine).ToList(),
-            IsTimeSame,
+            CreateAlignerTimeEquality(),
             GetSyncPointIndexes(leftItems, rightItems));
 
         _alignedPairs = new HashSet<(Guid Left, Guid Right)>();
@@ -679,6 +679,33 @@ public partial class CompareViewModel : ObservableObject
         }
 
         return IsTimeEqual(t1, t2);
+    }
+
+    /// <summary>
+    /// <see cref="IsTimeSame"/> for one alignment - the aligner asks for every pair of lines it
+    /// weighs (up to a quarter million), so with HH:MM:SS:FF the display string of each time is
+    /// built once instead of four <see cref="TimeCode"/> strings per pair.
+    /// </summary>
+    private Func<TimeSpan, TimeSpan, bool> CreateAlignerTimeEquality()
+    {
+        if (IgnoreTimeDifferenceMs > 0 || !Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+        {
+            return IsTimeSame;
+        }
+
+        var displayStrings = new Dictionary<long, string>();
+        string GetDisplayString(TimeSpan t)
+        {
+            if (!displayStrings.TryGetValue(t.Ticks, out var s))
+            {
+                s = new TimeCode(t).ToDisplayString();
+                displayStrings.Add(t.Ticks, s);
+            }
+
+            return s;
+        }
+
+        return (t1, t2) => GetDisplayString(t1) == GetDisplayString(t2);
     }
 
     private static bool IsTimeEqual(TimeSpan t1, TimeSpan t2)
