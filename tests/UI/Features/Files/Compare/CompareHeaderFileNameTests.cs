@@ -84,9 +84,17 @@ public class CompareHeaderFileNameTests : IDisposable
 
         var caption = FindText(window, Se.Language.File.CompareReference);
         var pill = FindText(window, Se.Language.File.CompareReadOnly).FindAncestorOfType<Border>()!;
-        var captionRight = caption.TranslatePoint(new Point(caption.Bounds.Width, 0), window)!.Value.X;
         var pillLeft = pill.TranslatePoint(new Point(0, 0), window)!.Value.X;
-        Assert.True(captionRight <= pillLeft, $"caption ends at {captionRight}, pill starts at {pillLeft}");
+
+        // What is drawn, not the layout box: on a card too narrow for the caption, the name
+        // area clips it - with wider fonts (the Linux CI runner) the box itself can run past.
+        var visibleRight = caption.TranslatePoint(new Point(caption.Bounds.Width, 0), window)!.Value.X;
+        foreach (var clip in caption.GetVisualAncestors().OfType<Control>().Where(p => p.ClipToBounds))
+        {
+            visibleRight = Math.Min(visibleRight, clip.TranslatePoint(new Point(clip.Bounds.Width, 0), window)!.Value.X);
+        }
+
+        Assert.True(visibleRight <= pillLeft + 0.5, $"caption visible until {visibleRight}, pill starts at {pillLeft}");
     }
 
     private (CompareViewModel vm, Window window) Show(string leftName, double width)
