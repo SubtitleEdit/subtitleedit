@@ -8,6 +8,8 @@ public class LanguageApplyDurationLimits
     public string FixMinDurationMs { get; set; }
     public string DoNotGoPastShotChange { get; set; }
     public string FixMaxDurationMs { get; set; }
+    public string FixMinDurationFrames { get; set; }
+    public string FixMaxDurationFrames { get; set; }
     public string MinimumDurationMilliseconds { get; set; }
     public string MaximumDurationMilliseconds { get; set; }
     public string MaxDurationShouldBeHigherThanMinDuration { get; set; }
@@ -24,6 +26,8 @@ public class LanguageApplyDurationLimits
         FixMinDurationMs = "Fix minimum duration (ms)";
         DoNotGoPastShotChange = "Do not go past shot change";
         FixMaxDurationMs = "Fix maximum duration (ms)";
+        FixMinDurationFrames = "Fix minimum duration (frames)";
+        FixMaxDurationFrames = "Fix maximum duration (frames)";
         MinimumDurationMilliseconds = "Minimum duration (milliseconds):";
         MaximumDurationMilliseconds = "Maximum duration (milliseconds):";
         MaxDurationShouldBeHigherThanMinDuration = "Maximum duration should be higher than minimum duration";
