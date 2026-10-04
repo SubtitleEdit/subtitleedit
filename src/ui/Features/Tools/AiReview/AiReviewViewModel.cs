@@ -33,6 +33,7 @@ public partial class AiReviewViewModel : ObservableObject
     [ObservableProperty] private bool _isOllamaVisible;
     [ObservableProperty] private bool _isLlamaCppVisible;
     [ObservableProperty] private bool _isOpenAiCompatibleVisible;
+    [ObservableProperty] private string _ollamaUrl;
     [ObservableProperty] private string _ollamaModel;
     [ObservableProperty] private string _openAiCompatibleUrl;
     [ObservableProperty] private string _openAiCompatibleModel;
@@ -105,6 +106,7 @@ public partial class AiReviewViewModel : ObservableObject
 
         Engines = new ObservableCollection<string>();
         SelectedEngine = AiEngineCombo.Populate(Engines, Se.Settings.Tools.AiReview.Engine);
+        OllamaUrl = Se.Settings.Tools.AiReview.OllamaUrl;
         OllamaModel = Se.Settings.Tools.AiReview.OllamaModel;
         OpenAiCompatibleUrl = Se.Settings.Tools.AiReview.OpenAiCompatibleUrl;
         OpenAiCompatibleModel = Se.Settings.Tools.AiReview.OpenAiCompatibleModel;
@@ -341,6 +343,7 @@ public partial class AiReviewViewModel : ObservableObject
     {
         var settings = Se.Settings.Tools.AiReview;
         settings.Engine = SelectedEngine;
+        settings.OllamaUrl = OllamaUrl.Trim();
         settings.OllamaModel = OllamaModel;
         settings.LlamaCppModelFileName = SelectedLlamaCppModel?.Model.FileName ?? string.Empty;
         settings.OpenAiCompatibleUrl = OpenAiCompatibleUrl.Trim();
@@ -404,7 +407,7 @@ public partial class AiReviewViewModel : ObservableObject
                 string.IsNullOrWhiteSpace(OpenAiCompatibleApiKey) ? null : OpenAiCompatibleApiKey.Trim());
         }
 
-        return new EngineTarget(Se.Settings.Tools.AiReview.OllamaUrl, OllamaModel.Trim(), null);
+        return new EngineTarget(SeAiReview.ResolveOllamaUrl(OllamaUrl), OllamaModel.Trim(), null);
     }
 
     [RelayCommand]
@@ -939,7 +942,7 @@ public partial class AiReviewViewModel : ObservableObject
 
         var result = await _windowService.ShowDialogAsync<Ocr.PickOllamaModelWindow, Ocr.PickOllamaModelViewModel>(Window, vm =>
         {
-            vm.Initialize(Se.Language.General.PickOllamaModel, OllamaModel, Se.Settings.Tools.AiReview.OllamaUrl);
+            vm.Initialize(Se.Language.General.PickOllamaModel, OllamaModel, SeAiReview.ResolveOllamaUrl(OllamaUrl));
         });
 
         if (result is { OkPressed: true, SelectedModel: not null })

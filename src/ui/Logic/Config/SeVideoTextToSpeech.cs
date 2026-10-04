@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
+using System;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 
@@ -29,13 +30,15 @@ public class SeVideoTextToSpeech
     public double ElevenLabsStyleeExaggeration { get; set; }
     public string MurfApiKey { get; set; }
     public string MurfStyle { get; set; }
-    public string MistralApiKey { get; set; }
+    [Obsolete("Use Se.Settings.Providers.MistralApiKey - kept only so old settings files can be migrated.")]
+    public string MistralApiKey { get; set; } = string.Empty;
     public string MistralModel { get; set; }
     // OpenAI-compatible /v1/audio/speech engine: "OpenAI", "OpenRouter" or "Custom".
     public string OpenAiCompatibleProvider { get; set; }
     public string OpenAiApiKey { get; set; }
     public string OpenAiModel { get; set; }
-    public string OpenRouterTtsApiKey { get; set; }
+    [Obsolete("Use Se.Settings.Providers.OpenRouterApiKey - kept only so old settings files can be migrated.")]
+    public string OpenRouterTtsApiKey { get; set; } = string.Empty;
     public string OpenRouterTtsModel { get; set; }
     public string OpenAiCompatibleCustomUrl { get; set; }
     public string OpenAiCompatibleCustomApiKey { get; set; }
@@ -211,12 +214,10 @@ public class SeVideoTextToSpeech
         AllTalkUrl = "http://127.0.0.1:7851";
         MurfApiKey = string.Empty;
         MurfStyle = "Conversational";
-        MistralApiKey = string.Empty;
         MistralModel = "voxtral-mini-tts-2603";
         OpenAiCompatibleProvider = "OpenAI";
         OpenAiApiKey = string.Empty;
         OpenAiModel = "gpt-4o-mini-tts";
-        OpenRouterTtsApiKey = string.Empty;
         OpenRouterTtsModel = string.Empty;
         OpenAiCompatibleCustomUrl = "http://localhost:8880/v1/audio/speech";
         OpenAiCompatibleCustomApiKey = string.Empty;

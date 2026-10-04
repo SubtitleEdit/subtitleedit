@@ -700,7 +700,7 @@ public class SpeechToTextWindow : Window
         Control MakeLabel(string text) => UiUtil.MakeTextBlock(text).WithMarginTop(10)
             .BindIsVisible(vm, nameof(vm.IsOpenAiCompatibleSttVisible));
 
-        TextBox MakeText(string property, double width, bool isPassword = false)
+        TextBox MakeText(string property, double width)
         {
             var tb = new TextBox
             {
@@ -711,10 +711,6 @@ public class SpeechToTextWindow : Window
                 Margin = new Thickness(0, 10, 0, 0),
                 [!TextBox.TextProperty] = new Binding(property) { Mode = BindingMode.TwoWay }
             };
-            if (isPassword)
-            {
-                tb.PasswordChar = '*';
-            }
             return tb.BindIsVisible(vm, nameof(vm.IsOpenAiCompatibleSttVisible));
         }
 
@@ -771,7 +767,7 @@ public class SpeechToTextWindow : Window
         return new (Control, Control)[]
         {
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttEndpoint), MakeText(nameof(vm.OpenAiCompatibleSttUrl), 400)),
-            (MakeLabel(Se.Language.General.OpenAiCompatibleSttApiKey), MakeText(nameof(vm.OpenAiCompatibleSttApiKey), 400, isPassword: true)),
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttApiKey), UiUtil.MakeApiKeyTextBox(400, vm, nameof(vm.OpenAiCompatibleSttApiKey), nameof(vm.IsOpenAiCompatibleSttVisible)).WithMarginTop(10)),
             (MakeLabel(Se.Language.General.Model), MakeText(nameof(vm.OpenAiCompatibleSttModel), 250)),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttLanguage), MakeText(nameof(vm.OpenAiCompatibleSttLanguage), 150)),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttTimeout), numericTimeout),
@@ -788,7 +784,7 @@ public class SpeechToTextWindow : Window
         Control MakeLabel(string text) => UiUtil.MakeTextBlock(text).WithMarginTop(10)
             .BindIsVisible(vm, nameof(vm.IsOpenRouterSttVisible));
 
-        TextBox MakeText(string property, double width, bool isPassword = false)
+        TextBox MakeText(string property, double width)
         {
             var tb = new TextBox
             {
@@ -799,10 +795,6 @@ public class SpeechToTextWindow : Window
                 Margin = new Thickness(0, 10, 0, 0),
                 [!TextBox.TextProperty] = new Binding(property) { Mode = BindingMode.TwoWay }
             };
-            if (isPassword)
-            {
-                tb.PasswordChar = '*';
-            }
             return tb.BindIsVisible(vm, nameof(vm.IsOpenRouterSttVisible));
         }
 
@@ -835,7 +827,7 @@ public class SpeechToTextWindow : Window
 
         return new (Control, Control)[]
         {
-            (MakeLabel(Se.Language.General.OpenAiCompatibleSttApiKey), MakeText(nameof(vm.OpenRouterSttApiKey), 400, isPassword: true)),
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttApiKey), UiUtil.MakeApiKeyTextBox(400, vm, nameof(vm.OpenRouterSttApiKey), nameof(vm.IsOpenRouterSttVisible)).WithMarginTop(10)),
             (MakeLabel(Se.Language.General.Model), MakeText(nameof(vm.OpenRouterSttModel), 250)),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttLanguage), MakeText(nameof(vm.OpenRouterSttLanguage), 150)),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttTimeout), numericTimeout),
@@ -849,7 +841,7 @@ public class SpeechToTextWindow : Window
         Control MakeLabel(string text) => UiUtil.MakeTextBlock(text).WithMarginTop(10)
             .BindIsVisible(vm, nameof(vm.IsDashScopeSttVisible));
 
-        TextBox MakeText(string property, double width, bool isPassword = false)
+        TextBox MakeText(string property, double width)
         {
             var tb = new TextBox
             {
@@ -860,10 +852,6 @@ public class SpeechToTextWindow : Window
                 Margin = new Thickness(0, 10, 0, 0),
                 [!TextBox.TextProperty] = new Binding(property) { Mode = BindingMode.TwoWay }
             };
-            if (isPassword)
-            {
-                tb.PasswordChar = '*';
-            }
             return tb.BindIsVisible(vm, nameof(vm.IsDashScopeSttVisible));
         }
 
@@ -890,7 +878,7 @@ public class SpeechToTextWindow : Window
 
         return new (Control, Control)[]
         {
-            (MakeLabel(Se.Language.General.OpenAiCompatibleSttApiKey), MakeText(nameof(vm.DashScopeSttApiKey), 400, isPassword: true)),
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttApiKey), UiUtil.MakeApiKeyTextBox(400, vm, nameof(vm.DashScopeSttApiKey), nameof(vm.IsDashScopeSttVisible)).WithMarginTop(10)),
             (MakeLabel(Se.Language.General.Model), MakeText(nameof(vm.DashScopeSttModel), 250)),
             (MakeLabel(Se.Language.General.DashScopeSttRegion), comboRegion),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttLanguage), MakeText(nameof(vm.DashScopeSttLanguage), 150)),

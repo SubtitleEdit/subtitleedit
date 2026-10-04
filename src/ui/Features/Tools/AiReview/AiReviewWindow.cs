@@ -34,6 +34,11 @@ public class AiReviewWindow : Window
             .WithAccessibleName(Se.Language.General.Engine);
         comboEngine.ItemTemplate = AiEngineCombo.ItemTemplate();
 
+        // Ollama may run on another machine or port, so the URL is editable here like in
+        // auto-translate - it was only reachable by hand-editing Settings.json before.
+        var textBoxOllamaUrl = UiUtil.MakeTextBox(250, vm, nameof(vm.OllamaUrl))
+            .WithAccessibleName(Se.Language.General.Url);
+        textBoxOllamaUrl.PlaceholderText = Se.Language.General.Url;
         var textBoxOllamaModel = UiUtil.MakeTextBox(220, vm, nameof(vm.OllamaModel))
             .WithAccessibleName(Se.Language.General.Model);
         var buttonPickOllamaModel = UiUtil.MakeButton("...", vm.PickOllamaModelCommand)
@@ -44,7 +49,7 @@ public class AiReviewWindow : Window
             Orientation = Orientation.Horizontal,
             Spacing = 5,
             VerticalAlignment = VerticalAlignment.Center,
-            Children = { textBoxOllamaModel, buttonPickOllamaModel },
+            Children = { textBoxOllamaUrl, textBoxOllamaModel, buttonPickOllamaModel },
         };
         panelOllama.Bind(IsVisibleProperty, new Binding(nameof(vm.IsOllamaVisible)));
 
@@ -53,10 +58,8 @@ public class AiReviewWindow : Window
         var textBoxOpenAiModel = UiUtil.MakeTextBox(150, vm, nameof(vm.OpenAiCompatibleModel))
             .WithAccessibleName(Se.Language.General.Model);
         textBoxOpenAiModel.PlaceholderText = Se.Language.General.Model;
-        var textBoxOpenAiApiKey = UiUtil.MakeTextBox(130, vm, nameof(vm.OpenAiCompatibleApiKey))
-            .WithAccessibleName(Se.Language.General.ApiKey);
-        textBoxOpenAiApiKey.PlaceholderText = Se.Language.General.ApiKey;
-        textBoxOpenAiApiKey.PasswordChar = '\u25cf';
+        var panelOpenAiApiKey = UiUtil.MakeApiKeyTextBox(130, vm, nameof(vm.OpenAiCompatibleApiKey));
+        ((TextBox)panelOpenAiApiKey.Children[0]).PlaceholderText = Se.Language.General.ApiKey;
 
         // Free cloud tiers rate limit hard, so the delay between requests lives next to the API key
         // rather than in a settings dialog. The label would not fit the toolbar - a timer icon plus
@@ -77,7 +80,7 @@ public class AiReviewWindow : Window
             Orientation = Orientation.Horizontal,
             Spacing = 5,
             VerticalAlignment = VerticalAlignment.Center,
-            Children = { textBoxOpenAiUrl, textBoxOpenAiModel, textBoxOpenAiApiKey, iconDelay, numericDelay },
+            Children = { textBoxOpenAiUrl, textBoxOpenAiModel, panelOpenAiApiKey, iconDelay, numericDelay },
         };
         panelOpenAiCompatible.Bind(IsVisibleProperty, new Binding(nameof(vm.IsOpenAiCompatibleVisible)));
 

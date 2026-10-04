@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.UiLogic.Ocr;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 
@@ -41,7 +42,8 @@ public class SeOcr
     /// ("en-US", "pt-BR"). macOS only.
     /// </summary>
     public string AppleVisionLanguage { get; set; }
-    public string MistralApiKey { get; set; }
+    [Obsolete("Use Se.Settings.Providers.MistralApiKey - kept only so old settings files can be migrated.")]
+    public string MistralApiKey { get; set; } = string.Empty;
     public bool IsNewLetterItalic { get; set; }
     public bool SubmitOnFirstLetter { get; set; }
     public bool PromptForBlankOcrText { get; set; }
@@ -143,7 +145,6 @@ public class SeOcr
         GoogleVisionOcrLastLanguage = "en";
         GoogleLensOcrLastLanguage = "en";
 
-        MistralApiKey = string.Empty;
         
         LastLanguageDictionaryFile = string.Empty;
 

@@ -44,6 +44,7 @@ public partial class AiAssistantViewModel : ObservableObject
     [ObservableProperty] private bool _isOllamaVisible;
     [ObservableProperty] private bool _isLlamaCppVisible;
     [ObservableProperty] private bool _isOpenAiCompatibleVisible;
+    [ObservableProperty] private string _ollamaUrl;
     [ObservableProperty] private string _ollamaModel;
     [ObservableProperty] private string _openAiCompatibleUrl;
     [ObservableProperty] private string _openAiCompatibleModel;
@@ -78,6 +79,7 @@ public partial class AiAssistantViewModel : ObservableObject
         var review = Se.Settings.Tools.AiReview;
         Engines = new ObservableCollection<string>();
         SelectedEngine = AiEngineCombo.Populate(Engines, review.Engine);
+        OllamaUrl = review.OllamaUrl;
         OllamaModel = review.OllamaModel;
         OpenAiCompatibleUrl = review.OpenAiCompatibleUrl;
         OpenAiCompatibleModel = review.OpenAiCompatibleModel;
@@ -144,6 +146,7 @@ public partial class AiAssistantViewModel : ObservableObject
     {
         var settings = Se.Settings.Tools.AiReview;
         settings.Engine = SelectedEngine;
+        settings.OllamaUrl = OllamaUrl.Trim();
         settings.OllamaModel = OllamaModel.Trim();
         settings.LlamaCppModelFileName = SelectedLlamaCppModel?.Model.FileName ?? string.Empty;
         settings.OpenAiCompatibleUrl = OpenAiCompatibleUrl.Trim();
@@ -229,7 +232,7 @@ public partial class AiAssistantViewModel : ObservableObject
 
         var result = await _windowService.ShowDialogAsync<Ocr.PickOllamaModelWindow, Ocr.PickOllamaModelViewModel>(Window, vm =>
         {
-            vm.Initialize(Se.Language.General.PickOllamaModel, OllamaModel, Se.Settings.Tools.AiReview.OllamaUrl);
+            vm.Initialize(Se.Language.General.PickOllamaModel, OllamaModel, SeAiReview.ResolveOllamaUrl(OllamaUrl));
         });
 
         if (result is { OkPressed: true, SelectedModel: not null })
@@ -317,7 +320,7 @@ public partial class AiAssistantViewModel : ObservableObject
             }
             else if (SelectedEngine == SeAiReview.EngineOllama)
             {
-                url = Se.Settings.Tools.AiReview.OllamaUrl;
+                url = SeAiReview.ResolveOllamaUrl(OllamaUrl);
                 model = OllamaModel.Trim();
             }
             else

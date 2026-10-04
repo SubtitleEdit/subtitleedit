@@ -93,6 +93,7 @@ public class Se
     public SeFormats Formats { get; set; } = new();
     public SeOcr Ocr { get; set; } = new();
     public SePlugins Plugins { get; set; } = new();
+    public SeProviders Providers { get; set; } = new();
     public static SeLanguage Language { get; set; } = new();
     public static Se Settings { get; set; } = new();
 
@@ -920,6 +921,47 @@ public class Se
     }
 
     /// <summary>
+    /// Version 1: Mistral and OpenRouter API keys used to be stored per feature (Translate, OCR,
+    /// speech-to-text, text-to-speech), so a user with one account had to paste the same key
+    /// several times. They now live in <see cref="SeProviders"/>; this copies the first
+    /// non-empty old key in, unless a shared key is already set. The old properties are left
+    /// as they are so a downgrade still finds its keys.
+    /// </summary>
+#pragma warning disable CS0618 // reading the legacy per-feature keys is the point here
+    internal static void MigrateProviderApiKeys(Se settings)
+    {
+        settings.Providers ??= new SeProviders();
+        var providers = settings.Providers;
+        if (providers.MigrationVersion.GetValueOrDefault() >= SeProviders.CurrentMigrationVersion)
+        {
+            return;
+        }
+
+        var tts = settings.Video?.TextToSpeech;
+        if (string.IsNullOrWhiteSpace(providers.MistralApiKey))
+        {
+            providers.MistralApiKey = FirstNonEmpty(
+                settings.AutoTranslate?.MistralApiKey,
+                settings.Ocr?.MistralApiKey,
+                tts?.MistralApiKey);
+        }
+
+        if (string.IsNullOrWhiteSpace(providers.OpenRouterApiKey))
+        {
+            providers.OpenRouterApiKey = FirstNonEmpty(
+                settings.AutoTranslate?.OpenRouterApiKey,
+                tts?.OpenRouterTtsApiKey,
+                settings.Tools?.OpenRouterSttApiKey);
+        }
+
+        providers.MigrationVersion = SeProviders.CurrentMigrationVersion;
+
+        static string FirstNonEmpty(params string?[] values)
+            => values.FirstOrDefault(v => !string.IsNullOrWhiteSpace(v))?.Trim() ?? string.Empty;
+    }
+#pragma warning restore CS0618
+
+    /// <summary>
     /// Moves a settings file still holding the pre-#14221 llama.cpp OCR prompt onto the current
     /// default. That prompt asked the models to "preserve line breaks", which measurably merged
     /// two-line subtitles into one (see <see cref="SeOcrDefaults.LlamaCppOcrPrompt"/>), and the
@@ -1196,6 +1238,13 @@ public class Se
         {
             Settings.Plugins = new SePlugins();
         }
+
+        if (Settings.Providers == null)
+        {
+            Settings.Providers = new SeProviders();
+        }
+
+        MigrateProviderApiKeys(Settings);
 
         if (Settings.Tools.FixCommonErrors.Profiles.Count == 0)
         {

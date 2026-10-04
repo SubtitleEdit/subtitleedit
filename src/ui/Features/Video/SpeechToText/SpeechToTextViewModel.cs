@@ -392,7 +392,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         var savedFormat = Se.Settings.Tools.OpenAiCompatibleSttAudioFormat;
         OpenAiCompatibleSttAudioFormat = OpenAiCompatibleSttAudioFormats.Contains(savedFormat) ? savedFormat : "mp3";
 
-        OpenRouterSttApiKey = Se.Settings.Tools.OpenRouterSttApiKey;
+        OpenRouterSttApiKey = Se.Settings.Providers.OpenRouterApiKey;
         OpenRouterSttModel = Se.Settings.Tools.OpenRouterSttModel;
         OpenRouterSttLanguage = Se.Settings.Tools.OpenRouterSttLanguage;
         OpenRouterSttTemperature = Se.Settings.Tools.OpenRouterSttTemperature;
@@ -488,7 +488,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         Se.Settings.Tools.OpenAiCompatibleSttStream = OpenAiCompatibleSttStream;
         Se.Settings.Tools.OpenAiCompatibleSttAudioFormat = OpenAiCompatibleSttAudioFormat ?? "mp3";
 
-        Se.Settings.Tools.OpenRouterSttApiKey = OpenRouterSttApiKey ?? string.Empty;
+        Se.Settings.Providers.OpenRouterApiKey = OpenRouterSttApiKey ?? string.Empty;
         Se.Settings.Tools.OpenRouterSttModel = OpenRouterSttModel ?? string.Empty;
         Se.Settings.Tools.OpenRouterSttLanguage = OpenRouterSttLanguage ?? string.Empty;
         Se.Settings.Tools.OpenRouterSttTemperature = OpenRouterSttTemperature;
