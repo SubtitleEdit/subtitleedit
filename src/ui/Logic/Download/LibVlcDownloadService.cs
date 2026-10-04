@@ -20,17 +20,35 @@ public class LibVlcDownloadService(HttpClient httpClient) : ILibVlcDownloadServi
     private const string WindowsX86Url = "https://get.videolan.org/vlc/3.0.23/win32/vlc-3.0.23-win32.7z";
     private const string MacX64Url = "https://github.com/SubtitleEdit/support-files/releases/download/vlc3/libvlc-osx64.7z";
 
+    /// <summary>The <see cref="DownloadHashManager.LibVlc"/> key matching <see cref="GetUrl"/>.</summary>
+    internal static string? GetHashKey(string url)
+    {
+        return url switch
+        {
+            WindowsX64Url => DownloadHashManager.LibVlc.WindowsX64,
+            WindowsX86Url => DownloadHashManager.LibVlc.WindowsX86,
+            MacX64Url => DownloadHashManager.LibVlc.MacOsX64,
+            _ => null,
+        };
+    }
+
+    internal static string[] AllUrls => [WindowsX64Url, WindowsX86Url, MacX64Url];
+
     public async Task DownloadLibVlc(string destinationFileName, IProgress<float>? progress, CancellationToken cancellationToken)
     {
-        await DownloadHelper.DownloadFileAsync(httpClient, GetUrl(), destinationFileName, progress, cancellationToken);
+        var url = GetUrl();
+        await DownloadHelper.DownloadFileAsync(httpClient, url, destinationFileName, progress, cancellationToken);
+        await DownloadHashManager.VerifyDownloadAsync(destinationFileName, GetHashKey(url), "libVLC", cancellationToken);
     }
 
     public async Task DownloadLibVlc(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
     {
-        await DownloadHelper.DownloadFileAsync(httpClient, GetUrl(), stream, progress, cancellationToken);
+        var url = GetUrl();
+        await DownloadHelper.DownloadFileAsync(httpClient, url, stream, progress, cancellationToken);
+        await DownloadHashManager.VerifyDownloadAsync(stream, GetHashKey(url), "libVLC", cancellationToken);
     }
 
-    private string GetUrl()
+    private static string GetUrl()
     {
         if (OperatingSystem.IsWindows())
         {

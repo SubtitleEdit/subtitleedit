@@ -112,6 +112,25 @@ public partial class DownloadYtDlpViewModel : ObservableObject, IClosingCleanup
     }
 
     [RelayCommand]
+    private void Retry()
+    {
+        lock (_lockObj)
+        {
+            if (!_done || _cancellationTokenSource.IsCancellationRequested)
+            {
+                return;
+            }
+
+            Error = string.Empty;
+            Progress = 0;
+            StatusText = Se.Language.General.StartingDotDotDot;
+            _done = false;
+            StartDownload();
+            _timer.Start();
+        }
+    }
+
+    [RelayCommand]
     private void CommandCancel()
     {
         _cancellationTokenSource?.Cancel();
@@ -149,6 +168,11 @@ public partial class DownloadYtDlpViewModel : ObservableObject, IClosingCleanup
 
     internal void OnKeyDown(KeyEventArgs e)
     {
-        CommandCancel();
+        // Escape only, like the other download dialogs - any key cancelled the download,
+        // including Enter/Space on the Retry button.
+        if (e.Key == Key.Escape)
+        {
+            CommandCancel();
+        }
     }
 }

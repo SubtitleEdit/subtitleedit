@@ -4,6 +4,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Media;
 using Avalonia.Styling;
+using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -35,15 +36,11 @@ public class DownloadLlamaCppWindow : Window
         var statusText = new TextBlock();
         statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
 
-        var errorText = new TextBlock
-        {
-            Foreground = Brushes.IndianRed,
-            TextWrapping = TextWrapping.Wrap,
-        };
-        errorText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.Error)));
+        var errorText = DownloadWindowUi.MakeErrorText(460);
 
-        var buttonCancel = UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonCancel);
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+        var buttonRetry = DownloadWindowUi.MakeButtonRetry(vm.RetryCommand);
+        var buttonBar = UiUtil.MakeButtonBar(buttonRetry, buttonCancel);
 
         Content = new StackPanel
         {

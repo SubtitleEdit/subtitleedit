@@ -31,7 +31,7 @@ public partial class DownloadLibMpvViewModel : ObservableObject, IClosingCleanup
     private readonly Timer _timer;
     private bool _done;
     private readonly CancellationTokenSource _cancellationTokenSource;
-    private readonly MemoryStream _downloadStream;
+    private MemoryStream _downloadStream;
 
     private readonly IZipUnpacker _zipUnpacker;
 
@@ -105,13 +105,19 @@ public partial class DownloadLibMpvViewModel : ObservableObject, IClosingCleanup
                             return;
                         }, DispatcherPriority.Background);
 
-                        UnpackLibMpv(GetFallbackLibMpvFileName(true));
-                        Close();
+                        if (TryUnpackLibMpv(GetFallbackLibMpvFileName(true)))
+                        {
+                            Close();
+                        }
+
                         return;
                     }
                 }
 
-                UnpackLibMpv(fileName);
+                if (!TryUnpackLibMpv(fileName))
+                {
+                    return;
+                }
 
                 LibMpvFileName = fileName;
                 Close();
@@ -132,6 +138,27 @@ public partial class DownloadLibMpvViewModel : ObservableObject, IClosingCleanup
                     Error = ex?.Message ?? Se.Language.General.UnknownError;
                 }
             }
+        }
+    }
+
+    // Runs on the timer thread with _done already set, so an unpack exception would otherwise be
+    // swallowed and leave the window sitting at 100% forever (same as DownloadFfmpegViewModel).
+    private bool TryUnpackLibMpv(string newFileName)
+    {
+        try
+        {
+            UnpackLibMpv(newFileName);
+            return true;
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "libmpv unpack failed");
+            Dispatcher.UIThread.Post(() =>
+            {
+                StatusText = Se.Language.General.DownloadFailed;
+                Error = exception.Message;
+            });
+            return false;
         }
     }
 
@@ -186,6 +213,27 @@ public partial class DownloadLibMpvViewModel : ObservableObject, IClosingCleanup
         {
             Window?.Close();
         });
+    }
+
+    [RelayCommand]
+    private void Retry()
+    {
+        lock (_lockObj)
+        {
+            if (!_done || _cancellationTokenSource.IsCancellationRequested)
+            {
+                return;
+            }
+
+            _downloadStream.Dispose();
+            _downloadStream = new MemoryStream();
+            Error = string.Empty;
+            Progress = 0;
+            StatusText = Se.Language.General.StartingDotDotDot;
+            _done = false;
+            StartDownload();
+            _timer.Start();
+        }
     }
 
     [RelayCommand]

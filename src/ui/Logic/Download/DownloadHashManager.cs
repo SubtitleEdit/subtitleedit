@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
 using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using Nikse.SubtitleEdit.UiLogic;
 
@@ -143,6 +145,28 @@ public static class DownloadHashManager
         public const string LinuxArm64Executable = "LlamaCpp.Linux.Arm64.Executable";
         public const string MacOsArm64Executable = "LlamaCpp.MacOs.Arm64.Executable";
         public const string MacOsX64Executable = "LlamaCpp.MacOs.X64.Executable";
+    }
+
+    // Pinned archives with no update detection (no sidecar) - the hash only guards the download
+    // against a corrupt, truncated or tampered file. Index 0 must match the URL in the service.
+    public static class Ffmpeg
+    {
+        public const string Windows = "Ffmpeg.Windows";
+        public const string MacOsX64 = "Ffmpeg.MacOs.X64";
+        public const string MacOsArm64 = "Ffmpeg.MacOs.Arm64";
+    }
+
+    public static class LibMpv
+    {
+        public const string WindowsX64 = "LibMpv.Windows.X64";
+        public const string WindowsArm64 = "LibMpv.Windows.Arm64";
+    }
+
+    public static class LibVlc
+    {
+        public const string WindowsX64 = "LibVlc.Windows.X64";
+        public const string WindowsX86 = "LibVlc.Windows.X86";
+        public const string MacOsX64 = "LibVlc.MacOs.X64";
     }
 
     public static class OmniVoice
@@ -453,6 +477,44 @@ public static class DownloadHashManager
     private static readonly IReadOnlyDictionary<string, IReadOnlyList<string>> KnownHashes =
         new Dictionary<string, IReadOnlyList<string>>(StringComparer.OrdinalIgnoreCase)
         {
+            // ffmpeg - FfmpegDownloadService (SubtitleEdit/support-files releases)
+            [Ffmpeg.Windows] = new[]
+            {
+                "19ccdb1d6cfd4b07a14b6a4d51fb7a24c1de4672aec1485a0d0703bb7ec5ba8b", // ffmpeg-v9-2/ffmpeg902.zip (current download URL)
+            },
+            [Ffmpeg.MacOsX64] = new[]
+            {
+                "439c92ccbc6cf3116c4713d1724c3765f4fc68ad2351be6fa5709d7b52e1f063", // ffmpeg-v8/ffmpeg80intel.zip (current download URL)
+            },
+            [Ffmpeg.MacOsArm64] = new[]
+            {
+                "21721909d4a24544359aff1ac5ce0dded8a947a2abc4c939c8d525a7c6cc881b", // ffmpeg-v9-1/ffmpeg90arm.zip (current download URL)
+            },
+
+            // libmpv - LibMpvDownloadService (SubtitleEdit/support-files releases)
+            [LibMpv.WindowsX64] = new[]
+            {
+                "ce99ee7a9cab0ada2f696b04132def67b0978157d5f4a1a7966d04c92aebbfec", // libmpv-2026-08-14b/libmpv2-win64.zip (current download URL)
+            },
+            [LibMpv.WindowsArm64] = new[]
+            {
+                "d8be93f69eb102026ba81d5d237887b858701510c9e5e26996a2d30f9829df00", // libmpv-2026-08-14b/libmpv2-win-arm64.zip (current download URL)
+            },
+
+            // libVLC - LibVlcDownloadService. The Windows hashes match VideoLAN's published .sha256 files.
+            [LibVlc.WindowsX64] = new[]
+            {
+                "eb4fd8a28291da73608c733786a09610fea865fbe94113bcb60b91c1ebb8404a", // vlc-3.0.23-win64.7z (current download URL)
+            },
+            [LibVlc.WindowsX86] = new[]
+            {
+                "f148ff49cdac6c0b6b7018ad7c4e6cd24c99bc6c2dea8258d82684261a639017", // vlc-3.0.23-win32.7z (current download URL)
+            },
+            [LibVlc.MacOsX64] = new[]
+            {
+                "301c3c4a78ae2339d075f557af7ab0006c427dbd3e903c4778c59de9684c353a", // vlc3/libvlc-osx64.7z (current download URL)
+            },
+
             // CrispASR — https://github.com/CrispStrobe/CrispASR/releases
             // Index 0 must match whatever version CrispAsrDownloadService.cs is pinned to,
             // otherwise users will be prompted to "update" to the same version they just got.
@@ -2938,6 +3000,51 @@ public static class DownloadHashManager
         return KnownHashes.TryGetValue(key, out var hashes) && hashes.Count > 0
             ? hashes[0]
             : null;
+    }
+
+    /// <summary>
+    /// Compares a downloaded archive (in memory) against the latest known SHA-256 for
+    /// <paramref name="key"/> and throws on mismatch, so the download dialog shows
+    /// "Download failed" instead of unpacking a truncated or tampered file. No-op when the key
+    /// has no known hash. Leaves the stream at position 0.
+    /// </summary>
+    public static async Task VerifyDownloadAsync(Stream stream, string? key, string label, CancellationToken cancellationToken)
+    {
+        var expected = string.IsNullOrEmpty(key) ? null : GetLatestKnownHash(key);
+        if (string.IsNullOrEmpty(expected) || stream.Length == 0)
+        {
+            return;
+        }
+
+        stream.Position = 0;
+        var actual = await Sha256Util.ComputeSha256Async(stream, cancellationToken);
+        stream.Position = 0;
+        ThrowIfMismatch(expected, actual, label);
+    }
+
+    /// <summary>
+    /// File overload of <see cref="VerifyDownloadAsync(Stream, string?, string, CancellationToken)"/>
+    /// for archives downloaded to disk. The caller owns (and should delete) the file on failure.
+    /// </summary>
+    public static async Task VerifyDownloadAsync(string filePath, string? key, string label, CancellationToken cancellationToken)
+    {
+        var expected = string.IsNullOrEmpty(key) ? null : GetLatestKnownHash(key);
+        if (string.IsNullOrEmpty(expected) || !File.Exists(filePath))
+        {
+            return;
+        }
+
+        var actual = await Sha256Util.ComputeSha256Async(filePath, cancellationToken);
+        ThrowIfMismatch(expected, actual, label);
+    }
+
+    private static void ThrowIfMismatch(string expected, string? actual, string label)
+    {
+        if (!string.Equals(expected, actual, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new IOException(
+                $"{label} download failed integrity check (expected SHA-256 {expected}, got {actual}).");
+        }
     }
 
     /// <summary>
