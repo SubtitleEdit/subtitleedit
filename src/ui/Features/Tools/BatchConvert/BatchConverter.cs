@@ -3844,7 +3844,24 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         // A Transport Stream track named by the file name ending template already carries its
         // language/track token - the regular post fix would double it ("video.eng.en.srt").
-        var languagePart = item.OutputFileNameIncludesLanguage ? string.Empty : GetLanguagePostFix(item);
+        var includesLanguage = item.OutputFileNameIncludesLanguage;
+        if (includesLanguage && _config.AutoTranslate.IsActive && !string.IsNullOrEmpty(item.OutputFileNameEndingTemplate))
+        {
+            // Translated: the template's language token is the target language, not the track's
+            // ("video.eng.srt" for German, and "video.eng_2.srt" for the next target language).
+            var template = item.OutputFileNameEndingTemplate;
+            if (HasTransportStreamLanguagePlaceholder(template))
+            {
+                fileName = Path.GetFileNameWithoutExtension(item.FileName) +
+                           TransportStreamFileNameEnding.Format(template, GetTargetLanguageTokenForTemplate(), item.OutputFileNameTrackId);
+            }
+            else
+            {
+                includesLanguage = false;
+            }
+        }
+
+        var languagePart = includesLanguage ? string.Empty : GetLanguagePostFix(item);
         if (languagePart.Length > 0 && fileName.EndsWith(languagePart, StringComparison.InvariantCultureIgnoreCase))
         {
             languagePart = string.Empty; // base name already carries the language token
@@ -4018,6 +4035,30 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
 
         return code.Length == 0 ? string.Empty : "." + code;
+    }
+
+    private static bool HasTransportStreamLanguagePlaceholder(string template)
+    {
+        return template.Contains(TransportStreamExportSettings.PlaceholderTwoLetter, StringComparison.Ordinal) ||
+               template.Contains(TransportStreamExportSettings.PlaceholderTwoLetterUppercase, StringComparison.Ordinal) ||
+               template.Contains(TransportStreamExportSettings.PlaceholderThreeLetter, StringComparison.Ordinal) ||
+               template.Contains(TransportStreamExportSettings.PlaceholderThreeLetterUppercase, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// The target language for the Transport Stream file name template: two-letter so the
+    /// template's two/three-letter tokens map, or the full code for regional variants of one
+    /// language ("zh-CN" + "zh-TW") so they do not collide.
+    /// </summary>
+    private string GetTargetLanguageTokenForTemplate()
+    {
+        var code = CurrentTargetLanguage.Code;
+        if (_targetLanguageCount > 1 && SharesLanguageWithOtherTarget(code))
+        {
+            return code;
+        }
+
+        return GetTwoLetterLanguageCode(code) ?? code;
     }
 
     /// <summary>True when another selected target language is the same language ("pt-BR" and "pt-PT").</summary>

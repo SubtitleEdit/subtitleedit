@@ -184,6 +184,35 @@ Hello world.
         });
     }
 
+    [Theory]
+    [InlineData(".{three-letter-country-code}", "movie.deu.srt", "movie.fra.srt")]
+    [InlineData(".forced", "movie.forced.de.srt", "movie.forced.fr.srt")]
+    public async Task TransportStreamTrackTemplate_UsesTargetLanguage(string template, string expectedDe, string expectedFr)
+    {
+        await Run(Se.Language.General.TwoLetterLanguageCode, async (dir, converter) =>
+        {
+            // A track named by the file name ending template ("movie.eng") used to keep the
+            // source token and skip the post fix: "movie.eng.srt", "movie.eng_2.srt".
+            converter.Initialize(MakeConfig(new TaggingTranslator(), "de", "fr"));
+            var inputFile = Path.Combine(dir.FullName, "movie.srt");
+            await File.WriteAllTextAsync(inputFile, InputSrt, TestContext.Current.CancellationToken);
+            var item = new BatchConvertItem(inputFile, new FileInfo(inputFile).Length, new SubRip().Name, Subtitle.Parse(inputFile))
+            {
+                LanguageCode = "eng",
+                OutputFileName = "movie" + TransportStreamFileNameEnding.Format(template, "eng", 0) + ".ts",
+                OutputFileNameIncludesLanguage = true,
+                OutputFileNameEndingTemplate = template,
+                OutputFileNameTrackId = 0,
+            };
+
+            await converter.Convert(item, TestContext.Current.CancellationToken);
+
+            Assert.Equal("[de] Hello world.", ReadText(dir, expectedDe));
+            Assert.Equal("[fr] Hello world.", ReadText(dir, expectedFr));
+            Assert.Empty(Directory.GetFiles(dir.FullName, "*_2*"));
+        });
+    }
+
     [Fact]
     public async Task AllTargetsFail_Throws()
     {

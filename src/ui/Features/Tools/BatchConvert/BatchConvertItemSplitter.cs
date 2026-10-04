@@ -122,6 +122,8 @@ public class BatchConvertTransportStreamSplitter : IBatchConvertItemSplitter
             var baseName = Path.GetFileNameWithoutExtension(source.FileName);
             trackItem.OutputFileName = baseName + ending + Path.GetExtension(source.FileName);
             trackItem.OutputFileNameIncludesLanguage = true;
+            trackItem.OutputFileNameEndingTemplate = tsSettings.FileNameAppend;
+            trackItem.OutputFileNameTrackId = trackId;
         }
 
         return trackItem;
