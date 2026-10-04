@@ -124,7 +124,7 @@ public class LanguageFile
         CompareTakeTiming = "Take timing";
         CompareEditLine = "Edit line";
         CompareEditHint = "Ctrl+Enter to save, Esc to cancel";
-        CompareEdited = "edited";
+        CompareEdited = "Edited";
         CompareOnePendingChange = "1 pending change";
         CompareXPendingChanges = "{0} pending changes";
         CompareDiscardXChanges = "Discard the {0} change(s) made in Compare?";
