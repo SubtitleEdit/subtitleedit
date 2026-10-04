@@ -773,7 +773,7 @@ public class TtsDownloadService : ITtsDownloadService
         using var requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
         requestMessage.Headers.TryAddWithoutValidation("Content-Type", "application/json");
         requestMessage.Headers.TryAddWithoutValidation("Accept", "application/json");
-        requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Se.Settings.Video.TextToSpeech.MistralApiKey);
+        requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Se.Settings.Providers.MistralApiKey);
 
         var result = await _httpClient.SendAsync(requestMessage, cancellationToken);
 

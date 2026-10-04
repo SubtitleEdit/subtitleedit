@@ -25,7 +25,7 @@ public class MistralSpeech : ITtsEngine
 
     public Task<bool> IsInstalled(string? region)
     {
-        return Task.FromResult(!string.IsNullOrEmpty(Se.Settings.Video.TextToSpeech.MistralApiKey));
+        return Task.FromResult(!string.IsNullOrEmpty(Se.Settings.Providers.MistralApiKey));
     }
 
     private const string JsonFileName = "MistralVoices.json";
@@ -146,7 +146,7 @@ public class MistralSpeech : ITtsEngine
             text,
             mistralVoice,
             mistralModel,
-            Se.Settings.Video.TextToSpeech.MistralApiKey,
+            Se.Settings.Providers.MistralApiKey,
             ms,
             null,
             cancellationToken);

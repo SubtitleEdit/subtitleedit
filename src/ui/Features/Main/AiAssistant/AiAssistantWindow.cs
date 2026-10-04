@@ -49,6 +49,10 @@ public class AiAssistantWindow : Window
             Children = { comboEngine, buttonLlamaCppEngineSettings },
         };
 
+        // Shared with Tools -> AI review (Se.Settings.Tools.AiReview.OllamaUrl).
+        var textBoxOllamaUrl = UiUtil.MakeTextBox(220, vm, nameof(vm.OllamaUrl))
+            .WithAccessibleName(Se.Language.General.Url);
+        textBoxOllamaUrl.PlaceholderText = Se.Language.General.Url;
         var textBoxOllamaModel = UiUtil.MakeTextBox(190, vm, nameof(vm.OllamaModel))
             .WithAccessibleName(Se.Language.General.Model);
         var buttonPickOllamaModel = UiUtil.MakeButton("...", vm.PickOllamaModelCommand)
@@ -59,7 +63,7 @@ public class AiAssistantWindow : Window
             Orientation = Orientation.Horizontal,
             Spacing = 5,
             VerticalAlignment = VerticalAlignment.Center,
-            Children = { textBoxOllamaModel, buttonPickOllamaModel },
+            Children = { textBoxOllamaUrl, textBoxOllamaModel, buttonPickOllamaModel },
         };
         panelOllama.Bind(IsVisibleProperty, new Binding(nameof(vm.IsOllamaVisible)));
 
@@ -68,16 +72,14 @@ public class AiAssistantWindow : Window
         var textBoxOpenAiModel = UiUtil.MakeTextBox(130, vm, nameof(vm.OpenAiCompatibleModel))
             .WithAccessibleName(Se.Language.General.Model);
         textBoxOpenAiModel.PlaceholderText = Se.Language.General.Model;
-        var textBoxOpenAiApiKey = UiUtil.MakeTextBox(120, vm, nameof(vm.OpenAiCompatibleApiKey))
-            .WithAccessibleName(Se.Language.General.ApiKey);
-        textBoxOpenAiApiKey.PlaceholderText = Se.Language.General.ApiKey;
-        textBoxOpenAiApiKey.PasswordChar = '●';
+        var panelOpenAiApiKey = UiUtil.MakeApiKeyTextBox(120, vm, nameof(vm.OpenAiCompatibleApiKey));
+        ((TextBox)panelOpenAiApiKey.Children[0]).PlaceholderText = Se.Language.General.ApiKey;
         var panelOpenAiCompatible = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 5,
             VerticalAlignment = VerticalAlignment.Center,
-            Children = { textBoxOpenAiUrl, textBoxOpenAiModel, textBoxOpenAiApiKey },
+            Children = { textBoxOpenAiUrl, textBoxOpenAiModel, panelOpenAiApiKey },
         };
         panelOpenAiCompatible.Bind(IsVisibleProperty, new Binding(nameof(vm.IsOpenAiCompatibleVisible)));
 

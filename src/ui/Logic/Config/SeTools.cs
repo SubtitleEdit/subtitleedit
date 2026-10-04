@@ -1,6 +1,7 @@
 ﻿using Avalonia.Media;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System.Collections.Generic;
+using System;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 
@@ -23,14 +24,6 @@ public class SeTools
     public SeMergeSameTimeCode MergeSameTimeCode { get; set; } = new();
     public SeMergeSameText MergeSameText { get; set; } = new();
 
-    public string OllamaPrompt { get; set; }
-    public string LlamaCppPrompt { get; set; }
-    public string LmStudioPrompt { get; set; }
-    public string AnthropicPrompt { get; set; }
-    public string PerplexityPrompt { get; set; }
-    public string GroqPrompt { get; set; }
-    public string OpenRouterPrompt { get; set; }
-    public string NvidiaPrompt { get; set; }
     public bool MergeKeepEndTime { get; set; }
     public bool MergeKeepEndTimeOnlyAssa { get; set; } = true;
     public bool JoinKeepTimeCodes { get; set; }
@@ -151,6 +144,7 @@ public class SeTools
     public bool OpenAiCompatibleSttStream { get; set; }
     public string OpenAiCompatibleSttAudioFormat { get; set; } = "mp3";
 
+    [Obsolete("Use Se.Settings.Providers.OpenRouterApiKey - kept only so old settings files can be migrated.")]
     public string OpenRouterSttApiKey { get; set; } = string.Empty;
     public string OpenRouterSttModel { get; set; } = "openai/whisper-1";
     public string OpenRouterSttLanguage { get; set; } = string.Empty;
@@ -210,14 +204,6 @@ public class SeTools
 
     public SeTools()
     {
-        OllamaPrompt = string.Empty;
-        LmStudioPrompt = string.Empty;
-        LlamaCppPrompt = string.Empty;
-        AnthropicPrompt = string.Empty;
-        PerplexityPrompt = string.Empty;
-        GroqPrompt = string.Empty;
-        OpenRouterPrompt = string.Empty;
-        NvidiaPrompt = string.Empty;
         JoinKeepTimeCodes = true;
 
         MergeTwoSubtitlesOutputFormat = AdvancedSubStationAlpha.NameOfFormat;

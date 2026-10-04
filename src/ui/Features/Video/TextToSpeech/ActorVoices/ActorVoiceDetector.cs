@@ -129,7 +129,7 @@ public static class ActorVoiceDetector
                 case Murf when string.IsNullOrWhiteSpace(s.MurfApiKey):
                 case AzureSpeech when string.IsNullOrWhiteSpace(s.AzureApiKey):
                 case GoogleSpeech when string.IsNullOrWhiteSpace(s.GoogleKeyFile):
-                case MistralSpeech when string.IsNullOrWhiteSpace(s.MistralApiKey):
+                case MistralSpeech when string.IsNullOrWhiteSpace(Se.Settings.Providers.MistralApiKey):
                 case OpenAiCompatibleSpeech when !OpenAiCompatibleSpeech.IsConfigured():
                     continue;
 

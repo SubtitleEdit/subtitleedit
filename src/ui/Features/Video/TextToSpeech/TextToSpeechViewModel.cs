@@ -307,7 +307,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
         else if (SelectedEngine is MistralSpeech)
         {
-            ApiKey = Se.Settings.Video.TextToSpeech.MistralApiKey;
+            ApiKey = Se.Settings.Providers.MistralApiKey;
         }
         else if (SelectedEngine is OpenAiCompatibleSpeech)
         {
@@ -347,7 +347,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
         else if (SelectedEngine is MistralSpeech)
         {
-            Se.Settings.Video.TextToSpeech.MistralApiKey = ApiKey;
+            Se.Settings.Providers.MistralApiKey = ApiKey;
             Se.Settings.Video.TextToSpeech.MistralModel = SelectedModel ?? "voxtral-mini-tts-2603";
         }
         else if (SelectedEngine is OpenAiCompatibleSpeech)
@@ -4976,7 +4976,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             }
             else if (SelectedEngine is MistralSpeech)
             {
-                ApiKey = Se.Settings.Video.TextToSpeech.MistralApiKey;
+                ApiKey = Se.Settings.Providers.MistralApiKey;
                 SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.MistralModel);
                 if (string.IsNullOrEmpty(SelectedModel))
                 {
