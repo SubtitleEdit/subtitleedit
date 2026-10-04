@@ -45,6 +45,7 @@ public partial class AssaSetPositionViewModel : ObservableObject
     [ObservableProperty] private decimal _rotation;
 
     private static readonly Regex FrzRegex = new(@"\\frz\(?(-?\d+(\.\d+)?)\)?", RegexOptions.Compiled);
+    private static readonly Regex PosRegex = new(@"\\pos\(\s*-?\d+(\.\d+)?\s*,\s*-?\d+(\.\d+)?\s*\)", RegexOptions.Compiled);
     private static readonly Regex InlineAlignmentRegex = new(@"\\an([1-9])", RegexOptions.Compiled);
 
     public decimal ResultRotation => Rotation;
@@ -342,7 +343,7 @@ public partial class AssaSetPositionViewModel : ObservableObject
     /// </summary>
     internal static string ApplyPositionTags(string text, string tags)
     {
-        var rest = Regex.Replace(text ?? string.Empty, @"\\pos\(\d+,\d+\)", string.Empty);
+        var rest = PosRegex.Replace(text ?? string.Empty, string.Empty);
         rest = RemoveOutsideTransforms(rest, FrzRegex).Replace("{}", string.Empty);
         if (rest.StartsWith("{\\", StringComparison.Ordinal) && rest.IndexOf('}') > 0)
         {

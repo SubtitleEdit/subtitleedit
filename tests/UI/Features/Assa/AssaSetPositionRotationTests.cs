@@ -129,6 +129,15 @@ public class AssaSetPositionRotationTests
         Assert.Equal(expected, AssaSetPositionViewModel.ReadRotation(text, styleAngle));
     }
 
+    [Theory]
+    [InlineData(@"{\pos(960.5,540)\i1}Hi", @"{\pos(1,2)\i1}Hi")]
+    [InlineData(@"{\pos(-10,-20.25)}Hi", @"{\pos(1,2)}Hi")]
+    [InlineData(@"{\pos( 960 , 540 )\i1}Hi", @"{\pos(1,2)\i1}Hi")]
+    public void ApplyPositionTags_ReplacesDecimalNegativeAndSpacedPos(string text, string expected)
+    {
+        Assert.Equal(expected, AssaSetPositionViewModel.ApplyPositionTags(text, @"\pos(1,2)"));
+    }
+
     [AvaloniaFact]
     public void ResultTags_CombineTheScriptSpaceAnchorAndTheRotation()
     {
