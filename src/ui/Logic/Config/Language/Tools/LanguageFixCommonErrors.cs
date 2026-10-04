@@ -46,6 +46,8 @@ public class LanguageFixCommonErrors
     public string FixSpanishInvertedQuestionAndExclamationMarks { get; set; }
     public string AddMissingQuote { get; set; }
     public string AddMissingQuotes { get; set; }
+    public string FixDifferentQuotes { get; set; }
+    public string FixDifferentQuotesExample { get; set; }
     public string RemoveHyphensSingleLine { get; set; }
     public string FixHyphensInDialogs { get; set; }
     public string AddMissingQuotesExample { get; set; }
@@ -175,6 +177,8 @@ public class LanguageFixCommonErrors
         FixSpanishInvertedQuestionAndExclamationMarks = "Fix Spanish inverted question and exclamation marks";
         AddMissingQuote = "Add missing quote (\")";
         AddMissingQuotes = "Add missing quotes (\")";
+        FixDifferentQuotes = "Fix mismatched curly quote (“Hello\" -> \"Hello\")";
+        FixDifferentQuotesExample = "“Hello\" -> \"Hello\"";
         RemoveHyphensSingleLine = "Remove dialog dashes in single lines";
         FixHyphensInDialogs = "Fix dash in dialogs via style: {0}";
         AddMissingQuotesExample = "\"How are you? -> \"How are you?\"";

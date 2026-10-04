@@ -25,7 +25,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                 var p = subtitle.Paragraphs[i];
                 string oldText = p.Text;
-                p.Text = FixDifferentQuotes(p.Text); //TODO: extract to own rule
 
                 if (Utilities.CountTagInText(p.Text, '"') == 1)
                 {
@@ -234,30 +233,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 }
             }
             callbacks.UpdateFixStatus(noOfFixes, fixAction);
-        }
-
-        private string FixDifferentQuotes(string text)
-        {
-            if (text.Contains("„"))
-            {
-                return text;
-            }
-
-            const string doubleQuote = "\"";
-            if (Utilities.CountTagInText(text, doubleQuote) == 1)
-            {
-                if (Utilities.CountTagInText(text, "”") == 1)
-                {
-                    return text.Replace("”", doubleQuote);
-                }
-
-                if (Utilities.CountTagInText(text, "“") == 1)
-                {
-                    return text.Replace("“", doubleQuote);
-                }
-            }
-
-            return text;
         }
     }
 }

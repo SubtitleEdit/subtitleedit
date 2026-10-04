@@ -64,6 +64,7 @@ public partial class FixRuleDisplayItem : ObservableObject
             },
             new FixDanishLetterI(),
             new FixDialogsOnOneLine(),
+            new FixDifferentQuotes(),
             new FixDoubleApostrophes(),
             new FixDoubleDash(),
             new FixDoubleGreaterThan(),

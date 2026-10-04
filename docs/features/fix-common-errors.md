@@ -54,6 +54,7 @@ Common fixes include:
 - Fix music notation
 - Add missing periods at end of lines
 - Start with uppercase letter after paragraph / period / colon
+- Fix mismatched curly quotes (`“Hello"` → `"Hello"`)
 - Add missing quotes
 - Break dialogs on one line
 - Fix hyphens / dashes in dialog

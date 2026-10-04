@@ -689,6 +689,7 @@ The CLI rule IDs match the check-box rules in the desktop app's *Fix Common Erro
 | Rule ID | GUI equivalent | Language gate |
 |---|---|---|
 | `FixMisreadQuotes` | Fix apostrophes misread as double quotes (OCR, English) | en only, opt-in |
+| `FixDifferentQuotes` | Fix mismatched curly quote (“Hello" -> "Hello") | — |
 | `AddMissingQuotes` | Add missing quotes (") | — |
 | `Fix3PlusLines` | Fix subtitles with more than two lines | — |
 | `FixAloneLowercaseIToUppercaseI` | Fix alone lowercase 'i' to 'I' (English) | en only |

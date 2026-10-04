@@ -85,6 +85,7 @@ internal static class FixCommonErrorsRunner
             [nameof(FixContinuationStyle)] = "Fix continuation style",
             [nameof(FixDanishLetterI)] = "Fix Danish letter 'i'",
             [nameof(FixDialogsOnOneLine)] = "Split dialogs on one line",
+            [nameof(FixDifferentQuotes)] = "Fix mismatched curly quote (“Hello\" -> \"Hello\")",
             [nameof(FixDoubleApostrophes)] = "Fix double apostrophe characters ('') to a single quote (\")",
             [nameof(FixDoubleDash)] = "Fix '--' -> '...'",
             [nameof(FixDoubleGreaterThan)] = "Remove '>>'",
@@ -355,11 +356,12 @@ internal static class FixCommonErrorsRunner
     /// <summary>
     /// Canonical rule list. Order here defines execution order. <c>FixCommonOcrErrors</c>
     /// is intentionally omitted — it requires an UI-side IOcrFixEngine and SpellCheck
-    /// setup that seconv doesn't carry. The other 40 rules cover most cleanup.
+    /// setup that seconv doesn't carry. The other 41 rules cover most cleanup.
     /// </summary>
     private static IReadOnlyList<(string Id, Func<IFixCommonError> Factory)> BuildRules() =>
     [
         (nameof(FixMisreadQuotes), () => new FixMisreadQuotes()), // before AddMissingQuotes, which would otherwise add a second quote to "Hello'
+        (nameof(FixDifferentQuotes), () => new FixDifferentQuotes()), // before AddMissingQuotes, which would otherwise add a second quote to "Hello”
         (nameof(AddMissingQuotes), () => new AddMissingQuotes()),
         (nameof(Fix3PlusLines), () => new Fix3PlusLines()),
         (nameof(FixAloneLowercaseIToUppercaseI), () => new FixAloneLowercaseIToUppercaseI()),

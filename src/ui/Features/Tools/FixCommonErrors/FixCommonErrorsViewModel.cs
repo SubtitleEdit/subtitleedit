@@ -862,6 +862,8 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 
         FixStartWithUppercaseLetterAfterColon.Language.StartWithUppercaseLetterAfterColon = language.StartWithUppercaseLetterAfterColon;
 
+        FixDifferentQuotes.Language.FixDifferentQuotes = language.FixDifferentQuotes;
+
         AddMissingQuotes.Language.AddMissingQuote = language.AddMissingQuotes;
 
         FixDialogsOnOneLine.Language.FixDialogsOnOneLine = language.FixDialogsOnOneLine;
@@ -917,6 +919,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             new(language.StartWithUppercaseLetterAfterPeriodInsideParagraph, language.StartWithUppercaseLetterAfterPeriodInsideParagraphExample, 1, true,
                 nameof(FixStartWithUppercaseLetterAfterPeriodInsideParagraph)),
             new(language.StartWithUppercaseLetterAfterColon, language.StartWithUppercaseLetterAfterColonExample, 1, true, nameof(FixStartWithUppercaseLetterAfterColon)),
+            new(language.FixDifferentQuotes, language.FixDifferentQuotesExample, 1, true, nameof(FixDifferentQuotes)),
             new(language.AddMissingQuotes, language.AddMissingQuotesExample, 1, true, nameof(AddMissingQuotes)),
             new(language.BreakDialogsOnOneLine, language.FixDialogsOneLineExample, 1, true, nameof(FixDialogsOnOneLine)),
             new(string.Format(language.FixHyphensInDialogs, GetDialogStyle(Configuration.Settings.General.DialogStyle)), string.Empty, 1, true, nameof(FixHyphensInDialog)),
