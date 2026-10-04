@@ -97,6 +97,37 @@ public class CompareHeaderFileNameTests : IDisposable
         Assert.True(visibleRight <= pillLeft + 0.5, $"caption visible until {visibleRight}, pill starts at {pillLeft}");
     }
 
+    [AvaloniaFact]
+    public void LoadSavedFileHint_FollowsTheCurrentFile()
+    {
+        // The hint was built once with the first file's name, while the button loads whatever
+        // file is current - after Browse or a drop on the left it named the wrong file.
+        using var scope = new SettingsScope("Appearance.ShowHints");
+        Se.Settings.Appearance.ShowHints = true;
+        var newFile = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"compare-new-{Guid.NewGuid():N}.srt");
+        System.IO.File.WriteAllText(newFile, "1\n00:00:01,000 --> 00:00:02,000\nNew\n");
+        try
+        {
+            var (vm, window) = Show("old.srt", width: 1200);
+            var button = window.GetVisualDescendants().OfType<Button>()
+                .First(p => p.GetVisualDescendants().OfType<TextBlock>().Any(t => t.Text == Se.Language.File.CompareLoadSavedFile));
+            Assert.Contains("old.srt", ToolTip.GetTip(button) as string);
+
+            _ = vm.LoadLeftFileAsync(newFile);
+            for (var pump = 0; pump < 12; pump++)
+            {
+                Dispatcher.UIThread.RunJobs();
+            }
+
+            Assert.Equal(newFile, vm.LeftFileName);
+            Assert.Contains(System.IO.Path.GetFileName(newFile), ToolTip.GetTip(button) as string);
+        }
+        finally
+        {
+            System.IO.File.Delete(newFile);
+        }
+    }
+
     private (CompareViewModel vm, Window window) Show(string leftName, double width)
     {
         var vm = new CompareViewModel(new FileHelper(), new FolderHelper());

@@ -56,6 +56,9 @@ public partial class CompareViewModel : ObservableObject
     public string LeftFileNameDisplay => GetFileName(LeftFileName);
     public string RightFileNameDisplay => GetFileName(RightFileName);
 
+    // Follows the current file: Browse or a drop on the left changes what "Load saved file" loads.
+    public string ReloadFromFileHint => string.Format(Se.Language.File.LoadXFromFile, System.IO.Path.GetFileName(LeftFileName));
+
     public bool HasPendingChanges => PendingChangeCount > 0;
 
     public string PendingChangesText => PendingChangeCount == 1
@@ -1583,6 +1586,7 @@ public partial class CompareViewModel : ObservableObject
     partial void OnLeftFileNameChanged(string value)
     {
         OnPropertyChanged(nameof(LeftFileNameDisplay));
+        OnPropertyChanged(nameof(ReloadFromFileHint));
     }
 
     partial void OnRightFileNameChanged(string value)
