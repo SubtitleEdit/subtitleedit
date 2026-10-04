@@ -407,11 +407,11 @@ public partial class CutVideoViewModel : ObservableObject
 
             if (JobItems.Count == 1)
             {
-                ProgressText = $"Generating video... {percentage}%     {estimatedLeft}";
+                ProgressText = string.Format(Se.Language.Video.ReEncodeGeneratingVideoX, percentage, estimatedLeft);
             }
             else
             {
-                ProgressText = $"Generating video {_jobItemIndex + 1}/{JobItems.Count}... {percentage}%     {estimatedLeft}";
+                ProgressText = string.Format(Se.Language.Video.ReEncodeGeneratingVideoXofY, _jobItemIndex + 1, JobItems.Count, percentage, estimatedLeft);
             }
 
             return;
@@ -504,7 +504,7 @@ public partial class CutVideoViewModel : ObservableObject
                 }
 
                 await MessageBox.Show(Window!,
-                    "Generating done",
+                    Se.Language.Video.ReEncodeGeneratingDone,
                     sb.ToString(),
                     MessageBoxButtons.OK);
             }

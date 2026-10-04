@@ -161,6 +161,10 @@ public class LanguageVideo
     public string ReEncodeGeneratingDone { get; set; }
     public string ReEncodeGeneratedFilesX { get; set; }
     public string ReEncodeFfmpegParameters { get; set; }
+    public string AnalyzingVideoX { get; set; }
+    public string AnalyzingVideoXofY { get; set; }
+    public string BackgroundImageFileNotSelected { get; set; }
+    public string BackgroundImageFileDoesNotExistX { get; set; }
     public string Voices { get; set; }
     public string Presets { get; set; }
     public string TalkerX { get; set; }
@@ -310,6 +314,10 @@ public class LanguageVideo
         ReEncodeGeneratingDone = "Generating done";
         ReEncodeGeneratedFilesX = "Generated files ({0}):";
         ReEncodeFfmpegParameters = "ffmpeg parameters";
+        AnalyzingVideoX = "Analyzing video... {0}%     {1}";
+        AnalyzingVideoXofY = "Analyzing video {0}/{1}... {2}%     {3}";
+        BackgroundImageFileNotSelected = "Background image file not selected";
+        BackgroundImageFileDoesNotExistX = "Background image file does not exist: {0}";
         AssaStyleWillBeUsed = "Current ASSA style will be used" + Environment.NewLine + Environment.NewLine +
                               "Change subtitle format if" + Environment.NewLine +
                               "you want to set styles here";
