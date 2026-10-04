@@ -414,6 +414,32 @@ public class SubtitleRetimerTests : IDisposable
     }
 
     [Fact]
+    public void Tidy_MaximumDuration_DoesNotCutOffTheHeardLastWord()
+    {
+        var lines = new List<SubtitleRetimer.Line> { new("Short", 10, 13), new("Next", 16, 17) };
+        var results = new[]
+        {
+            new SubtitleRetimer.LineResult(10.1, 12.5, SubtitleRetimer.LineStatus.Retimed) { HeardEndSeconds = 13.6 },
+            new SubtitleRetimer.LineResult(16, 17, SubtitleRetimer.LineStatus.Unchanged),
+        };
+
+        SubtitleRetimer.Tidy(lines, results, new SubtitleRetimer.Options { MaxDurationSeconds = 3 }, 0);
+
+        Assert.Equal(13.6, results[0].EndSeconds, 3);
+    }
+
+    [Fact]
+    public void Tidy_MaximumDuration_DoesNotCutOffTheAlignedSpeech()
+    {
+        var lines = new List<SubtitleRetimer.Line> { new("Short", 10, 12) };
+        var results = new[] { new SubtitleRetimer.LineResult(10.1, 13.6, SubtitleRetimer.LineStatus.Retimed) };
+
+        SubtitleRetimer.Tidy(lines, results, new SubtitleRetimer.Options { MaxDurationSeconds = 3 }, 0);
+
+        Assert.Equal(13.6, results[0].EndSeconds, 3);
+    }
+
+    [Fact]
     public void Settle_AnAppliedLine_GivesWayToALineThatStaysPut()
     {
         var original = new List<SubtitleRetimer.Line> { new("a", 10, 12), new("b", 12.5, 14), new("c", 14.5, 16) };

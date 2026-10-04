@@ -574,6 +574,7 @@ public sealed partial class SubtitleRetimer
             var readingEnd = start + GetHoldSeconds(lines[i], options);
             if (options.AdjustEnd)
             {
+                var speechEnd = end;
                 end = Math.Max(end, readingEnd);
 
                 // Speech-to-text heard the last word end later: the line is still being spoken.
@@ -581,11 +582,14 @@ public sealed partial class SubtitleRetimer
                     heardEnd - end <= MaxEndExtensionSeconds)
                 {
                     end = heardEnd;
+                    speechEnd = heardEnd;
                 }
 
                 // Never held up longer than the maximum duration by the rules here - only when it
-                // came in longer.
-                var longest = Math.Max(options.MaxDurationSeconds, lines[i].EndSeconds - lines[i].StartSeconds);
+                // came in longer, or the speech itself runs longer.
+                var longest = Math.Max(
+                    Math.Max(options.MaxDurationSeconds, lines[i].EndSeconds - lines[i].StartSeconds),
+                    speechEnd - start);
                 if (options.MaxDurationSeconds > 0 && end - start > longest)
                 {
                     end = start + longest;
