@@ -35827,6 +35827,25 @@ public partial class MainViewModel :
         }
     }
 
+    /// <summary>
+    /// The ASSA/SSA loaders turn \N into real line breaks, so for those formats every empty line is
+    /// a lift-up-the-screen \N and is not counted by the "too many lines" rule (#15531).
+    /// </summary>
+    private void UpdateSkipEmptyLinesInLineCount()
+    {
+        var skip = SelectedSubtitleFormat is AdvancedSubStationAlpha or SubStationAlpha;
+        if (SubtitleLineViewModel.SkipEmptyLinesInLineCount == skip)
+        {
+            return;
+        }
+
+        SubtitleLineViewModel.SkipEmptyLinesInLineCount = skip;
+        foreach (var row in Subtitles)
+        {
+            row.RefreshAfterSettingsChanged();
+        }
+    }
+
     internal void ComboBoxSubtitleFormatChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (!_changingFormatProgrammatically)
@@ -35843,6 +35862,7 @@ public partial class MainViewModel :
         IsFormatTeletext = SelectedSubtitleFormat is Ebu or DvbTeletext;
         UpdateTeletextLineLength();
         UpdateIgnoreAssaCommentBlocks();
+        UpdateSkipEmptyLinesInLineCount();
 
         UpdateTemporaryFrameMode();
 

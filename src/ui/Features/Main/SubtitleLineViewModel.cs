@@ -175,6 +175,13 @@ public partial class SubtitleLineViewModel : ObservableObject
     /// </summary>
     public static bool UseTeletextLineLength { get; set; }
 
+    /// <summary>
+    /// True while an ASSA/SSA subtitle is open. Those loaders turn every \N into a real line break,
+    /// so any empty line is a lift-up-the-screen \N and is left out of the "too many lines" count
+    /// (#15531). Set from MainViewModel when the format changes.
+    /// </summary>
+    public static bool SkipEmptyLinesInLineCount { get; set; }
+
     // A teletext row holds 40 characters, of which the box and double-height control codes take
     // the first few; a colour change costs one more. These are the safe widths rather than the
     // header's MaximumNumberOfDisplayableCharactersInAnyTextRow, which is not reachable from a
@@ -412,7 +419,7 @@ public partial class SubtitleLineViewModel : ObservableObject
     /// Line count for the "too many lines" rule - empty ASSA \N lines are not counted (#15531).
     /// </summary>
     internal int GetLineCountForMaxLines()
-        => SubtitleTextInfoHelper.GetLineCountForMaxLines(Text, GetStrippedLines().Count);
+        => SubtitleTextInfoHelper.GetLineCountForMaxLines(Text, GetStrippedLines().Count, SkipEmptyLinesInLineCount);
 
     // Read-time memos for the two WebVTT grid columns below, keyed on the text instance like
     // the memos around them - both parse the text, and a cell binding re-reads its value on
@@ -629,7 +636,8 @@ public partial class SubtitleLineViewModel : ObservableObject
         bool ColorTextTooManyLines,
         int MaxNumberOfLines,
         string? LengthStrategy,
-        bool UseTeletextLineLength)
+        bool UseTeletextLineLength,
+        bool SkipEmptyLinesInLineCount)
     {
         public static TextErrorSettings Current()
         {
@@ -645,7 +653,8 @@ public partial class SubtitleLineViewModel : ObservableObject
                 general.MaxNumberOfLines,
                 // GetLineLength counts through this strategy, so it belongs in the key too.
                 Configuration.Settings.General.CpsLineLengthStrategy,
-                SubtitleLineViewModel.UseTeletextLineLength);
+                SubtitleLineViewModel.UseTeletextLineLength,
+                SubtitleLineViewModel.SkipEmptyLinesInLineCount);
         }
     }
 
