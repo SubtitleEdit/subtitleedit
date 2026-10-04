@@ -3534,6 +3534,19 @@ public static class UiUtil
             }
         }
 
+        // A dialog is shown centered on its owner, and resizing it re-centers it, so the size
+        // goes first and the window stops being centered before it is moved. (#15393)
+        window.WindowStartupLocation = WindowStartupLocation.Manual;
+
+        // A non-resizable window gets its size from its content (SizeToContent), so a saved
+        // size can only be stale - applying one from an older layout clips the window.
+        if (!existing.IsFullScreen && !existing.IsMaximized &&
+            existing.Width > 0 && existing.Height > 0 && window.CanResize)
+        {
+            window.Width = existing.Width;
+            window.Height = existing.Height;
+        }
+
         window.Position = desired;
 
         if (existing.IsFullScreen)
@@ -3546,14 +3559,6 @@ public static class UiUtil
         }
         else
         {
-            // A non-resizable window gets its size from its content (SizeToContent), so a saved
-            // size can only be stale - applying one from an older layout clips the window.
-            if (existing.Width > 0 && existing.Height > 0 && window.CanResize)
-            {
-                window.Width = existing.Width;
-                window.Height = existing.Height;
-            }
-
             window.WindowState = WindowState.Normal;
         }
     }
