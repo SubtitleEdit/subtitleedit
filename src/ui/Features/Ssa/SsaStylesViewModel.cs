@@ -402,7 +402,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
         }
 
         // Asks first, as deleting selected styles does - "Clear" used to wipe the list silently
-        if (!await StylesDialogHelper.ConfirmDeleteStyles(Window, $"Do you want to delete {FileStyles.Count} styles?"))
+        if (!await StylesDialogHelper.ConfirmDeleteStyles(Window, string.Format(Se.Language.Assa.DeleteXStylesQuestion, FileStyles.Count)))
         {
             return;
         }
@@ -680,7 +680,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
                     answer = await MessageBox.Show(
                         Window!,
                         Se.Language.Assa.DeleteStyleQuestion,
-                        $"Do you want to delete style \"{selectedItems[0].Name}\" from storage?",
+                        string.Format(Se.Language.Assa.DeleteStyleXFromStorageQuestion, selectedItems[0].Name),
                         MessageBoxButtons.YesNoCancel,
                         MessageBoxIcon.Question);
                 }
@@ -689,7 +689,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
                     answer = await MessageBox.Show(
                         Window!,
                         Se.Language.Assa.DeleteStylesQuestion,
-                        $"Do you want to delete {selectedItems.Count} styles from storage?",
+                        string.Format(Se.Language.Assa.DeleteXStylesFromStorageQuestion, selectedItems.Count),
                         MessageBoxButtons.YesNoCancel,
                         MessageBoxIcon.Question);
                 }
@@ -732,7 +732,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
         }
 
         // Asks first, as the ASSA window does - it used to clear the storage without asking
-        if (!await StylesDialogHelper.ConfirmDeleteStyles(Window, $"Do you want to delete {StorageStyles.Count} styles from storage?"))
+        if (!await StylesDialogHelper.ConfirmDeleteStyles(Window, string.Format(Se.Language.Assa.DeleteXStylesFromStorageQuestion, StorageStyles.Count)))
         {
             return;
         }
@@ -1229,7 +1229,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
                 answer = await MessageBox.Show(
                     Window!,
                     Se.Language.Assa.DeleteStyleQuestion,
-                    $"Do you want to delete style \"{selectedStyle.Name}\" from current file?",
+                    string.Format(Se.Language.Assa.DeleteStyleXFromFileQuestion, selectedStyle.Name),
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
             }
@@ -1279,7 +1279,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
                 answer = await MessageBox.Show(
                     Window!,
                     Se.Language.Assa.DeleteStylesQuestion,
-                    $"Do you want to delete {selectedStyles.Count} styles?",
+                    string.Format(Se.Language.Assa.DeleteXStylesQuestion, selectedStyles.Count),
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
             }

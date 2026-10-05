@@ -143,6 +143,10 @@ public class LanguageAssa
     public string NoAttachmentsFound { get; set; }
     public string DeleteStyleQuestion { get; set; }
     public string DeleteStylesQuestion { get; set; }
+    public string DeleteXStylesQuestion { get; set; }
+    public string DeleteXStylesFromStorageQuestion { get; set; }
+    public string DeleteStyleXFromStorageQuestion { get; set; }
+    public string DeleteStyleXFromFileQuestion { get; set; }
     public string OpenStyleImportFile { get; set; }
     public string StyleImportFiles { get; set; }
     public string SsaStyleImportFiles { get; set; }
@@ -393,6 +397,10 @@ public class LanguageAssa
         NoAttachmentsFound = "No attachments found in selected ASSA file.";
         DeleteStyleQuestion = "Delete style?";
         DeleteStylesQuestion = "Delete styles?";
+        DeleteXStylesQuestion = "Do you want to delete {0} styles?";
+        DeleteXStylesFromStorageQuestion = "Do you want to delete {0} styles from storage?";
+        DeleteStyleXFromStorageQuestion = "Do you want to delete style \"{0}\" from storage?";
+        DeleteStyleXFromFileQuestion = "Do you want to delete style \"{0}\" from current file?";
         OpenStyleImportFile = "Open subtitle file to import styles from";
         StyleImportFiles = "Style files (.ass, .sty, Subtitle Edit 4 categories .template)";
         SsaStyleImportFiles = "Style files (.ssa, .ass, .sty)";
