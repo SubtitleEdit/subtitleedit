@@ -127,4 +127,69 @@ public class MergeSameFrameModeTests : IDisposable
         Invoke(vm, "SaveSettings");
         Assert.Equal(40, Se.Settings.Tools.MergeSameTimeCode.MaxMillisecondsDifference);
     }
+
+    private static void Use2997()
+    {
+        Configuration.Settings.General.CurrentFrameRate = 29.97;
+        Se.Settings.General.CurrentFrameRate = 29.97;
+    }
+
+    [AvaloniaFact]
+    public void MergeSameText_OneFrameGapAt2997IsFoundWhenItRoundsTo34Ms()
+    {
+        // Frame 1 is 33 ms and frame 2 is 67 ms: one frame apart, but 34 ms - more than the
+        // 33 ms one frame converts to.
+        Use2997();
+        Se.Settings.General.UseFrameMode = true;
+
+        var vm = new MergeSameTextViewModel();
+        vm.Initialize(new List<SubtitleLineViewModel>
+        {
+            new() { Text = "Hello", StartTime = TimeSpan.Zero, EndTime = TimeSpan.FromMilliseconds(33) },
+            new() { Text = "Hello", StartTime = TimeSpan.FromMilliseconds(67), EndTime = TimeSpan.FromMilliseconds(1000) },
+        });
+        vm.OnClosingCleanup();
+
+        vm.MaxMsOrFramesBetweenLines = 1;
+        Invoke(vm, "UpdatePreview");
+        Assert.NotEmpty(vm.MergeItems);
+
+        vm.MaxMsOrFramesBetweenLines = 0;
+        Invoke(vm, "UpdatePreview");
+        Assert.Empty(vm.MergeItems);
+    }
+
+    [AvaloniaFact]
+    public void MergeSameTimeCodes_OneFrameDifferenceAt2997IsFoundWhenItRoundsTo34Ms()
+    {
+        Use2997();
+        Se.Settings.General.UseFrameMode = true;
+
+        var vm = new MergeSameTimeCodesViewModel();
+        vm.Initialize(new List<SubtitleLineViewModel>
+        {
+            // Starts at frames 1 and 2 (33 / 67 ms), ends at frames 30 and 31 (1001 / 1034 ms).
+            new() { Text = "One", StartTime = TimeSpan.FromMilliseconds(33), EndTime = TimeSpan.FromMilliseconds(1001) },
+            new() { Text = "Two", StartTime = TimeSpan.FromMilliseconds(67), EndTime = TimeSpan.FromMilliseconds(1034) },
+        }, new Subtitle());
+        vm.OnClosingCleanup();
+
+        vm.MaxMsOrFramesDifference = 1;
+        Invoke(vm, "UpdatePreview");
+        Assert.NotEmpty(vm.MergeItems);
+
+        vm.MaxMsOrFramesDifference = 0;
+        Invoke(vm, "UpdatePreview");
+        Assert.Empty(vm.MergeItems);
+    }
+
+    [Fact]
+    public void MergeSameTimeCodes_MillisecondModeIsUnchanged()
+    {
+        var p = new SubtitleLineViewModel { StartTime = TimeSpan.FromMilliseconds(33), EndTime = TimeSpan.FromMilliseconds(1000) };
+        var next = new SubtitleLineViewModel { StartTime = TimeSpan.FromMilliseconds(67), EndTime = TimeSpan.FromMilliseconds(1000) };
+
+        Assert.False(MergeSameTimeCodesViewModel.QualifiesForMerge(p, next, 33));
+        Assert.True(MergeSameTimeCodesViewModel.QualifiesForMerge(p, next, 34));
+    }
 }

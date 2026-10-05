@@ -141,4 +141,59 @@ public class ApplyDurationLimitsViewModelTests : IDisposable
             Configuration.Settings.General.CurrentFrameRate = frameRate;
         }
     }
+
+    [AvaloniaFact]
+    public void FrameModeAt2997DoesNotFlagLinesExactlyAtTheLimit()
+    {
+        // At 29.97 fps two frames convert to 67 ms, but a line from frame 2 (67 ms) to frame 4
+        // (133 ms) is 66 ms. Compared in frames it is exactly two frames - not too short.
+        using var settings = new SettingsScope(
+            "General.UseFrameMode",
+            "General.CurrentFrameRate",
+            "Tools.ApplyDurationLimitsMinDurationMs",
+            "Tools.ApplyDurationLimitsMaxDurationMs");
+        var frameRate = Configuration.Settings.General.CurrentFrameRate;
+        try
+        {
+            Configuration.Settings.General.CurrentFrameRate = 29.97;
+            Se.Settings.General.CurrentFrameRate = 29.97;
+            Se.Settings.General.UseFrameMode = true;
+
+            var vm = new ApplyDurationLimitsViewModel();
+            vm.Initialize(new List<SubtitleLineViewModel>
+            {
+                // Exactly 2 frames (66 ms).
+                new() { Text = "Two frames", StartTime = TimeSpan.FromMilliseconds(67), EndTime = TimeSpan.FromMilliseconds(133) },
+                // Exactly 1 frame (34 ms) - 1 ms over the 33 ms one frame converts to.
+                new() { Text = "One frame", StartTime = TimeSpan.FromMilliseconds(1001), EndTime = TimeSpan.FromMilliseconds(1035) },
+                // 1 frame (33 ms) - really too short for a 2 frame minimum.
+                new() { Text = "Short", StartTime = TimeSpan.FromMilliseconds(2002), EndTime = TimeSpan.FromMilliseconds(2035) },
+            }, new List<double>());
+            vm.FixMinDurationMs = true;
+            vm.MinDurationMsOrFrames = 2;
+            vm.FixMaxDurationMs = false;
+            vm.MaxDurationMsOrFrames = 300;
+            typeof(ApplyDurationLimitsViewModel)
+                .GetMethod("BuildPreview", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!
+                .Invoke(vm, null);
+
+            Assert.Equal(new[] { "One frame", "Short" }, vm.Fixes.Select(f => f.SubtitleLine.Text));
+
+            // A one frame maximum does not flag the line that is exactly one frame long.
+            vm.FixMinDurationMs = false;
+            vm.FixMaxDurationMs = true;
+            vm.MinDurationMsOrFrames = 1;
+            vm.MaxDurationMsOrFrames = 1;
+            typeof(ApplyDurationLimitsViewModel)
+                .GetMethod("BuildPreview", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!
+                .Invoke(vm, null);
+
+            Assert.Equal(new[] { "Two frames" }, vm.Fixes.Select(f => f.SubtitleLine.Text));
+            vm.OnClosingCleanup();
+        }
+        finally
+        {
+            Configuration.Settings.General.CurrentFrameRate = frameRate;
+        }
+    }
 }

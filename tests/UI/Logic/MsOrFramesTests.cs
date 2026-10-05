@@ -55,4 +55,33 @@ public class MsOrFramesTests : IDisposable
         // Millisecond mode saves what was typed.
         Assert.Equal(1234, MsOrFrames.ToMillisecondsForSave(1234, frameMode: false, storedMilliseconds: 1200));
     }
+
+    [Fact]
+    public void FrameModeComparesInFramesAt2997()
+    {
+        Configuration.Settings.General.CurrentFrameRate = 29.97;
+
+        // One frame is 33 ms, but 34 ms is also one frame.
+        Assert.False(MsOrFrames.IsAbove(34, 1, frameMode: true));
+        Assert.True(MsOrFrames.IsAbove(67, 1, frameMode: true));
+        Assert.False(MsOrFrames.IsBelow(66, 2, frameMode: true));
+        Assert.True(MsOrFrames.IsBelow(33, 2, frameMode: true));
+
+        // Millisecond mode is a plain comparison.
+        Assert.True(MsOrFrames.IsAbove(34, 33, frameMode: false));
+        Assert.True(MsOrFrames.IsBelow(66, 67, frameMode: false));
+    }
+
+    [Theory]
+    [InlineData(29.97, 0, 16)]
+    [InlineData(29.97, 1, 50)]
+    [InlineData(25, 1, 59)]
+    [InlineData(25, 6, 259)]
+    public void MaxGapMillisecondsIsTheLargestGapStillWithinTheFrames(double frameRate, int frames, int expectedMs)
+    {
+        Configuration.Settings.General.CurrentFrameRate = frameRate;
+
+        Assert.Equal(expectedMs, MsOrFrames.ToMaxGapMilliseconds(frames, frameMode: true));
+        Assert.Equal(frames, MsOrFrames.ToMaxGapMilliseconds(frames, frameMode: false));
+    }
 }
