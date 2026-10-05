@@ -186,6 +186,19 @@ public class YtDlpDownloadService : IYtDlpDownloadService
             // Verify against the real asset name - the ".part" name has no checksum on record,
             // which silently turned verification into a no-op.
             await VerifyChecksumAsync(partFileName, CurrentVersion, cancellationToken, Path.GetFileName(fileName));
+
+            // Make executable before the move, so the installed binary is never left without
+            // the execute bit - doing it afterwards in the dialog's timer tick was skipped
+            // whenever the user cancelled in the gap between the move and the next tick.
+            if (OperatingSystem.IsMacOS())
+            {
+                MacHelper.MakeExecutable(partFileName);
+            }
+            else if (OperatingSystem.IsLinux())
+            {
+                LinuxHelper.MakeExecutable(partFileName);
+            }
+
             File.Move(partFileName, fileName, true);
         }
         catch

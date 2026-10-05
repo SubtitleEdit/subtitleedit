@@ -62,17 +62,6 @@ public partial class DownloadYtDlpViewModel : ObservableObject, IClosingCleanup
             {
                 _timer.Stop();
                 _done = true;
-
-                var fileName = YtDlpDownloadService.GetFullFileName();
-                if (File.Exists(fileName) && OperatingSystem.IsMacOS())
-                {
-                    MacHelper.MakeExecutable(fileName);
-                }
-                else if (File.Exists(fileName) && OperatingSystem.IsLinux())
-                {
-                    LinuxHelper.MakeExecutable(fileName);
-                }
-
                 Close();
             }
             else if (_downloadTask is { IsFaulted: true })
