@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -160,10 +160,17 @@ public partial class ExportCustomTextFormatViewModel : ObservableObject
             return;
         }
 
-        var fileName = await _fileHelper.PickSaveFile(Window, SelectedCustomFormat.Extension, _title, Se.Language.General.SaveFileAsTitle);
+        var extension = SelectedCustomFormat.GetDottedExtension();
+        var fileName = await _fileHelper.PickSaveFile(Window, extension, _title, Se.Language.General.SaveFileAsTitle);
         if (string.IsNullOrWhiteSpace(fileName))
         {
             return;
+        }
+
+        // The macOS save panel does not apply the default extension itself (#15699).
+        if (extension.Length > 0 && !System.IO.Path.HasExtension(fileName))
+        {
+            fileName += extension;
         }
 
         // Resolve via the display name, not TextEncoding.Encoding: that property is plain

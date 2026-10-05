@@ -889,7 +889,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         var text = Nikse.SubtitleEdit.UiLogic.Export.CustomTextFormatter.GenerateCustomText(selectedCustomFormat.ToTemplate(), paragraphs, item.FileName, string.Empty);
         try
         {
-            var path = MakeOutputFileName(item, selectedCustomFormat.Extension);
+            var path = MakeOutputFileName(item, selectedCustomFormat.GetDottedExtension());
             var encoding = EncodingHelper.ResolveEncoding(_config.TargetEncoding, item.FileName);
             await File.WriteAllTextAsync(path, text, encoding, cancellationToken);
             item.Status = Se.Language.General.Converted;

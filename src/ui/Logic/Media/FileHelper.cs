@@ -596,6 +596,16 @@ namespace Nikse.SubtitleEdit.Logic.Media
             }
         }
 
+        /// <summary>
+        /// "*.srt" for both "srt" and ".srt" - macOS can't map a dotless "*srt" to a file type,
+        /// so the save panel then appended no extension at all (#15699).
+        /// </summary>
+        internal static string MakeExtensionPattern(string extension)
+        {
+            var trimmed = (extension ?? string.Empty).Trim().TrimStart('.');
+            return trimmed.Length == 0 ? "*" : "*." + trimmed;
+        }
+
         private static List<FilePickerFileType> MakeSaveFilePickerFileTypes(IReadOnlyList<(string Name, string Extension)> fileTypes)
         {
             var result = new List<FilePickerFileType>();
@@ -603,7 +613,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
             {
                 result.Add(new FilePickerFileType(name)
                 {
-                    Patterns = new List<string> { "*" + extension },
+                    Patterns = new List<string> { MakeExtensionPattern(extension) },
                 });
             }
 
@@ -654,7 +664,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
         {
             var fileType = new FilePickerFileType(name)
             {
-                Patterns = new List<string> { "*" + extension }
+                Patterns = new List<string> { MakeExtensionPattern(extension) }
             };
 
             var fileTypes = new List<FilePickerFileType> { fileType };
