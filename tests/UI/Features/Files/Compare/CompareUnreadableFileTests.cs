@@ -22,12 +22,16 @@ namespace UITests.Features.Files.Compare;
 public class CompareUnreadableFileTests : IDisposable
 {
     private readonly SeCompare _savedSettings = Se.Settings.File.Compare;
+
+    // A closed CompareWindow saves its size for the next one - see CompareEditTests.
+    private readonly SettingsScope _windowPositions = new("General.WindowPositions");
     private readonly string _unreadableFile = Path.Combine(Path.GetTempPath(), $"compare-unreadable-{Guid.NewGuid():N}.sup");
     private Window? _window;
 
     public CompareUnreadableFileTests()
     {
         Se.Settings.File.Compare = new SeCompare();
+        Se.Settings.General.WindowPositions = new List<SeWindowPosition>();
         File.WriteAllBytes(_unreadableFile, [0x50, 0x47, 0x00, 0x01, 0x02, 0x03, 0xFF, 0xFE]);
     }
 
@@ -35,6 +39,7 @@ public class CompareUnreadableFileTests : IDisposable
     {
         _window?.Close();
         Se.Settings.File.Compare = _savedSettings;
+        _windowPositions.Dispose();
         File.Delete(_unreadableFile);
     }
 
