@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.3.0-beta18",
+  "version": "v5.3.0-beta21",
   "translatedBy": "",
   "cultureName": "jp-JP",
   "general": {
@@ -3702,8 +3702,8 @@
       "selectionToSentenceCase": "テキストボックス: 選択範囲を文頭大文字に変換",
       "selectionToggleCasing": "テキストボックス: 選択範囲の大文字/小文字を切り替え（大文字 → 小文字 → タイトルケース）",
       "googleIt": "Google 検索 (選択テキスト)",
-      "setActorXY": "演者 {0} を設定: {1}",
-      "setNewActor": "新しい演者を設定...",
+      "setActorX": "声色を設定: {0}",
+      "setNewActor": "新しい声色を設定...",
       "toggleDialogDashes": "会話ダッシュ切替",
       "mergeWithLineBeforeAsDialog": "前行と会話として結合",
       "mergeWithLineAfterAsDialog": "次行と会話として結合",
