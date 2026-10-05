@@ -21,6 +21,9 @@ public class FormatPropertiesToolbarButtonTests
     [AvaloniaFact]
     public void FormatPropertiesButton_FollowsSelectedFormat()
     {
+        // Selecting EBU STL forces frame mode through the session-only override - an assert
+        // failing before the format moves on must not leave it on for later tests.
+        using var settings = new SettingsScope("General.UseFrameMode");
         var services = new ServiceCollection();
         services.AddSubtitleEditServices();
         Locator.Services = services.BuildServiceProvider();

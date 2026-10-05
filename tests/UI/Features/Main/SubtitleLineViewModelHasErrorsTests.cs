@@ -255,8 +255,11 @@ public class SubtitleLineViewModelHasErrorsTests
     public void TooManyLines_IgnoresEmptyAssaHardBreakLines(string text, int expectedLineCount)
     {
         var originalSettings = Se.Settings;
+        var originalSkip = SubtitleLineViewModel.SkipEmptyLinesInLineCount;
         try
         {
+            // No ASSA/SSA file open - otherwise every empty line is skipped, including the real one.
+            SubtitleLineViewModel.SkipEmptyLinesInLineCount = false;
             Se.Settings = new Se();
             var general = Se.Settings.General;
             general.ColorDurationTooShort = false;
@@ -277,6 +280,7 @@ public class SubtitleLineViewModelHasErrorsTests
         }
         finally
         {
+            SubtitleLineViewModel.SkipEmptyLinesInLineCount = originalSkip;
             Se.Settings = originalSettings;
         }
     }
