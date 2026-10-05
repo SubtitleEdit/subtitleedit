@@ -1079,10 +1079,15 @@ public static class UiUtil
     /// in screenshots or screen shares, with an eye button to reveal it while editing.
     /// </summary>
     public static StackPanel MakeApiKeyTextBox(double width, object viewModel, string propertyTextPath,
-        string? propertyIsVisiblePath = null)
+        string? propertyIsVisiblePath = null, string? placeholderText = null)
     {
         var textBox = MakeTextBox(width, viewModel, propertyTextPath);
         textBox.PasswordChar = '●';
+        if (placeholderText != null)
+        {
+            textBox.PlaceholderText = placeholderText;
+        }
+
         AutomationProperties.SetName(textBox, Se.Language.General.ApiKey);
 
         var buttonReveal = MakeButton(null, IconNames.Eye);
