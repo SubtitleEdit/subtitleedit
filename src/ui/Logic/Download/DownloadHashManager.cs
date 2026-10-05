@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using Nikse.SubtitleEdit.UiLogic;
 
@@ -3006,14 +3007,20 @@ public static class DownloadHashManager
     /// Compares a downloaded archive (in memory) against the latest known SHA-256 for
     /// <paramref name="key"/> and throws on mismatch, so the download dialog shows
     /// "Download failed" instead of unpacking a truncated or tampered file. No-op when the key
-    /// has no known hash. Leaves the stream at position 0.
+    /// has no known hash. Leaves the stream at position 0. An empty stream throws too: skipping
+    /// it left every caller to remember its own "no data" check before unpacking.
     /// </summary>
     public static async Task VerifyDownloadAsync(Stream stream, string? key, string label, CancellationToken cancellationToken)
     {
         var expected = string.IsNullOrEmpty(key) ? null : GetLatestKnownHash(key);
-        if (string.IsNullOrEmpty(expected) || stream.Length == 0)
+        if (string.IsNullOrEmpty(expected))
         {
             return;
+        }
+
+        if (stream.Length == 0)
+        {
+            throw new IOException(Se.Language.General.NoDataReceived);
         }
 
         stream.Position = 0;
@@ -3029,9 +3036,14 @@ public static class DownloadHashManager
     public static async Task VerifyDownloadAsync(string filePath, string? key, string label, CancellationToken cancellationToken)
     {
         var expected = string.IsNullOrEmpty(key) ? null : GetLatestKnownHash(key);
-        if (string.IsNullOrEmpty(expected) || !File.Exists(filePath))
+        if (string.IsNullOrEmpty(expected))
         {
             return;
+        }
+
+        if (!File.Exists(filePath) || new FileInfo(filePath).Length == 0)
+        {
+            throw new IOException(Se.Language.General.NoDataReceived);
         }
 
         var actual = await Sha256Util.ComputeSha256Async(filePath, cancellationToken);

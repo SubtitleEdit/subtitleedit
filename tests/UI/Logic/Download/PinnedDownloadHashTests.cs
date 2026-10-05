@@ -64,6 +64,34 @@ public class PinnedDownloadHashTests
     }
 
     [Fact]
+    public async Task VerifyDownloadAsync_EmptyStream_Throws()
+    {
+        using var stream = new MemoryStream();
+
+        await Assert.ThrowsAsync<IOException>(() =>
+            DownloadHashManager.VerifyDownloadAsync(stream, DownloadHashManager.Ffmpeg.Windows, "ffmpeg", CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task VerifyDownloadAsync_MissingOrEmptyFile_Throws()
+    {
+        var fileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".7z");
+        await Assert.ThrowsAsync<IOException>(() =>
+            DownloadHashManager.VerifyDownloadAsync(fileName, DownloadHashManager.LibVlc.WindowsX64, "libVLC", CancellationToken.None));
+
+        await File.WriteAllBytesAsync(fileName, []);
+        try
+        {
+            await Assert.ThrowsAsync<IOException>(() =>
+                DownloadHashManager.VerifyDownloadAsync(fileName, DownloadHashManager.LibVlc.WindowsX64, "libVLC", CancellationToken.None));
+        }
+        finally
+        {
+            File.Delete(fileName);
+        }
+    }
+
+    [Fact]
     public async Task VerifyDownloadAsync_UnknownKey_IsNoOp()
     {
         using var stream = new MemoryStream(Encoding.UTF8.GetBytes("anything"));
