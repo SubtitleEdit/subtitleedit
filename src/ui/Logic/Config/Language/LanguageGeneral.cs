@@ -443,6 +443,7 @@ public class LanguageGeneral
     public string Percent { get; set; }
     public string PickLayer { get; set; }
     public string PickOllamaModel { get; set; }
+    public string PickModel { get; set; }
     public string LlamaCppUseRemoteServer { get; set; }
     public string LlamaCppEngineSettings { get; set; }
     public string LlamaCppEngineSettingsSubtitle { get; set; }
@@ -1291,6 +1292,7 @@ public class LanguageGeneral
         Percent = "Percent";
         PickLayer = "Set layer";
         PickOllamaModel = "Pick Ollama model";
+        PickModel = "Pick model";
         LlamaCppUseRemoteServer = "Use external server (URL)";
         LlamaCppEngineSettings = "llama.cpp engine settings";
         LlamaCppEngineSettingsSubtitle = "Local llama.cpp server build";

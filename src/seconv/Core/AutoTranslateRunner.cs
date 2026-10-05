@@ -18,14 +18,17 @@ namespace SeConv.Core;
 /// </summary>
 internal sealed class AutoTranslateRunner
 {
-    public static readonly string[] SupportedEngines = { "llamacpp", "ollama", "lmstudio", "libretranslate", "nllb-serve", "nllb-api" };
+    public static readonly string[] SupportedEngines = { "llamacpp", "ollama", "lmstudio", "openai-compatible", "libretranslate", "nllb-serve", "nllb-api", "deepl" };
 
     /// <summary>
     /// Engines that build their request from an editable prompt, i.e. the ones
     /// <c>--translate-prompt</c> can steer. The rest (LibreTranslate, NLLB) are translation
     /// services with no prompt at all.
     /// </summary>
-    public static readonly string[] PromptEngines = { "llamacpp", "ollama", "lmstudio" };
+    public static readonly string[] PromptEngines = { "llamacpp", "ollama", "lmstudio", "openai-compatible" };
+
+    /// <summary>Engines that send <c>--translate-api-key</c>; the local/self-hosted rest have no key.</summary>
+    public static readonly string[] ApiKeyEngines = { "openai-compatible", "deepl" };
 
     /// <summary>File extensions that make <c>--translate-prompt</c> a file path rather than inline text.</summary>
     private static readonly string[] PromptFileExtensions = { ".txt", ".prompt", ".md" };
@@ -97,6 +100,13 @@ internal sealed class AutoTranslateRunner
                 $"--translate-prompt is not supported by translate engine '{engine}'. Use one of: {string.Join(", ", PromptEngines)}.");
         }
 
+        var apiKey = options.TranslateApiKey?.Trim();
+        if (!string.IsNullOrEmpty(apiKey) && !ApiKeyEngines.Contains(engine))
+        {
+            throw new InvalidOperationException(
+                $"--translate-api-key is not supported by translate engine '{engine}'. Use one of: {string.Join(", ", ApiKeyEngines)}.");
+        }
+
         if (options.Verbose)
         {
             LlamaCppServerManager.LogAction = m => Console.WriteLine("  " + m);
@@ -146,6 +156,25 @@ internal sealed class AutoTranslateRunner
                     tools.LmStudioPrompt = prompt;
                 }
                 break;
+            case "openai-compatible":
+                translator = new OpenAiCompatibleTranslate();
+                if (!string.IsNullOrEmpty(url))
+                {
+                    tools.OpenAiCompatibleTranslateUrl = url; // the engine completes a bare host:port or ".../v1" base
+                }
+                if (!string.IsNullOrEmpty(apiKey))
+                {
+                    tools.OpenAiCompatibleTranslateApiKey = apiKey;
+                }
+                if (!string.IsNullOrWhiteSpace(options.TranslateModel))
+                {
+                    tools.OpenAiCompatibleTranslateModel = options.TranslateModel.Trim();
+                }
+                if (prompt != null)
+                {
+                    tools.OpenAiCompatibleTranslatePrompt = prompt;
+                }
+                break;
             case "libretranslate":
                 translator = new LibreTranslate();
                 if (!string.IsNullOrEmpty(url))
@@ -165,6 +194,22 @@ internal sealed class AutoTranslateRunner
                 if (!string.IsNullOrEmpty(url))
                 {
                     tools.AutoTranslateNllbApiUrl = url;
+                }
+                break;
+            case "deepl":
+                translator = new DeepLTranslate();
+                if (!string.IsNullOrEmpty(url))
+                {
+                    tools.AutoTranslateDeepLUrl = url;
+                }
+                if (!string.IsNullOrEmpty(apiKey))
+                {
+                    tools.AutoTranslateDeepLApiKey = apiKey;
+                }
+                if (string.IsNullOrWhiteSpace(tools.AutoTranslateDeepLApiKey))
+                {
+                    // DeepLTranslate.Initialize silently skips setup without a key - fail up front instead.
+                    throw new InvalidOperationException("Translate engine 'deepl' needs an API key: pass --translate-api-key:<key>.");
                 }
                 break;
             default:
@@ -337,7 +382,7 @@ internal sealed class AutoTranslateRunner
     {
         if (_prompt == null || _engine != "llamacpp")
         {
-            return; // ollama/lmstudio are set once in Create; nothing overwrites them later
+            return; // ollama/lmstudio/openai-compatible are set once in Create; nothing overwrites them later
         }
 
         Configuration.Settings.Tools.LlamaCppPrompt = _prompt;

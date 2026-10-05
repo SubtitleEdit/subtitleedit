@@ -157,7 +157,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public string? TranslateFrom { get; init; }
 
         [CommandOption("--translate-engine|--translateengine")]
-        [Description("Translate engine: llamacpp (default) | ollama | lmstudio | libretranslate | nllb-serve | nllb-api")]
+        [Description("Translate engine: llamacpp (default) | ollama | lmstudio | openai-compatible | libretranslate | nllb-serve | nllb-api | deepl")]
         public string? TranslateEngine { get; init; }
 
         [CommandOption("--translate-url|--translateurl")]
@@ -165,11 +165,15 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public string? TranslateUrl { get; init; }
 
         [CommandOption("--translate-model|--translatemodel")]
-        [Description("Translate model: ollama/lmstudio model name, or llamacpp .gguf file name/path (default: first downloaded translate model)")]
+        [Description("Translate model: ollama/lmstudio/openai-compatible model name, or llamacpp .gguf file name/path (default: first downloaded translate model)")]
         public string? TranslateModel { get; init; }
 
+        [CommandOption("--translate-api-key|--translateapikey")]
+        [Description("API key for the openai-compatible and deepl translate engines (required for deepl)")]
+        public string? TranslateApiKey { get; init; }
+
         [CommandOption("--translate-prompt|--translateprompt")]
-        [Description("Prompt for llamacpp/ollama/lmstudio: inline text (\\n = line break) or a path to a text file; {0}=source language, {1}=target language, {2}=the text (completion-format models)")]
+        [Description("Prompt for llamacpp/ollama/lmstudio/openai-compatible: inline text (\\n = line break) or a path to a text file; {0}=source language, {1}=target language, {2}=the text (completion-format models)")]
         public string? TranslatePrompt { get; init; }
 
         [CommandOption("--offset")]
@@ -530,9 +534,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                  !string.IsNullOrWhiteSpace(settings.TranslateEngine) ||
                  !string.IsNullOrWhiteSpace(settings.TranslateUrl) ||
                  !string.IsNullOrWhiteSpace(settings.TranslateModel) ||
+                 !string.IsNullOrWhiteSpace(settings.TranslateApiKey) ||
                  !string.IsNullOrWhiteSpace(settings.TranslatePrompt)))
             {
-                return Fail(settings, "--translate-from/--translate-engine/--translate-url/--translate-model/--translate-prompt require --translate-to:<language>.");
+                return Fail(settings, "--translate-from/--translate-engine/--translate-url/--translate-model/--translate-api-key/--translate-prompt require --translate-to:<language>.");
             }
 
             if (!string.IsNullOrWhiteSpace(settings.TranslateEngine) &&
@@ -855,6 +860,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 TranslateEngine = settings.TranslateEngine,
                 TranslateUrl = settings.TranslateUrl,
                 TranslateModel = settings.TranslateModel,
+                TranslateApiKey = settings.TranslateApiKey,
                 TranslatePrompt = settings.TranslatePrompt,
                 TeletextOnly = settings.TeletextOnly,
                 TeletextOnlyPage = settings.TeletextOnlyPage,

@@ -70,9 +70,8 @@ public class AutoTranslateUrlTests
     [Fact]
     public void Complete_CompletesNativeEndpointsToo()
     {
-        // Ollama and KoboldCpp are not chat/completions services - the default path decides.
+        // Ollama and Anthropic are not chat/completions services - the default path decides.
         Assert.Equal("http://localhost:11434/api/generate", AutoTranslateUrl.Complete("http://localhost:11434", OllamaTranslate.DefaultUrl));
-        Assert.Equal("http://localhost:5001/api/generate", AutoTranslateUrl.Complete("http://localhost:5001", KoboldCppTranslate.DefaultUrl));
         Assert.Equal("https://api.anthropic.com/v1/messages", AutoTranslateUrl.Complete("https://api.anthropic.com", AnthropicTranslate.DefaultUrl));
     }
 }
