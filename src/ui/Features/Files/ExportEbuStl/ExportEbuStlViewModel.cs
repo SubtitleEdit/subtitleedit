@@ -284,7 +284,9 @@ new("2F", "French - hearing impaired (VF-MAL)"),
         // Preview only - an STL file carries a character table, not a typeface, so nothing here is
         // written to it. It is for someone with a teletext face installed who wants the preview to
         // look like a decoder; the first entry means "leave the video preview font alone".
-        PreviewFonts = new ObservableCollection<string>(FontHelper.GetSystemFonts());
+        // The preview is drawn by libass, which matches Win32 face names, so list every face
+        // ("Arial Light", not just "Arial") like the ASSA style editor does.
+        PreviewFonts = new ObservableCollection<string>(FontHelper.GetLibAssaFonts());
         PreviewFonts.Insert(0, Se.Language.File.EbuSaveOptions.PreviewFontDefault);
         PreviewFontSample = Se.Language.File.EbuSaveOptions.PreviewFontSample;
         PreviewFontFamily = FontFamily.Default;
@@ -382,12 +384,14 @@ new("2F", "French - hearing impaired (VF-MAL)"),
     /// <summary>
     /// Keeps the sample label in the font that is picked. The default entry is not a font family,
     /// so it previews the video preview font - that is what the preview will actually draw with.
+    /// Both are libass face names, so map them to the family Avalonia knows ("Arial Light" -> "Arial").
     /// </summary>
     partial void OnSelectedPreviewFontChanged(string? value)
     {
-        PreviewFontFamily = FontFamilyHelper.Make(IsDefaultPreviewFont(value)
-            ? FontHelper.GetSkiaFontNameFromLibAssaFontName(Se.Settings.Video.MpvPreviewFontName)
-            : value);
+        var fontName = IsDefaultPreviewFont(value) ? Se.Settings.Video.MpvPreviewFontName : value;
+        PreviewFontFamily = FontFamilyHelper.Make(string.IsNullOrEmpty(fontName)
+            ? fontName
+            : FontHelper.GetSkiaFontNameFromLibAssaFontName(fontName));
     }
 
     private bool IsDefaultPreviewFont(string? fontName)
