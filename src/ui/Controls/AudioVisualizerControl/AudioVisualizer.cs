@@ -357,6 +357,39 @@ public class AudioVisualizer : Control
     /// </summary>
     internal Func<SubtitleLineViewModel, bool>? HitTestFilter { get; set; }
 
+    /// <summary>
+    /// Says whether two paragraphs are in the same track; null when there is only one. The
+    /// editor-style layout's <see cref="TimelineTracks"/> splits the subtitles over rows (by
+    /// layer, actor or style), and there a subtitle's neighbours - the ones a move or resize
+    /// stops at, and the ones an edge drag can hand over to - are the subtitles in its own row,
+    /// not the ones next to it in time.
+    /// </summary>
+    internal Func<SubtitleLineViewModel, SubtitleLineViewModel, bool>? IsSameTrack { get; set; }
+
+    /// <summary>
+    /// Index of the nearest paragraph before (step -1) or after (step 1) the one at index that
+    /// is in the same track, or -1 for none.
+    /// </summary>
+    private int FindNeighborIndex(List<SubtitleLineViewModel> paragraphs, int index, int step)
+    {
+        if (index < 0 || index >= paragraphs.Count)
+        {
+            return -1;
+        }
+
+        var isSameTrack = IsSameTrack;
+        var paragraph = paragraphs[index];
+        for (var i = index + step; i >= 0 && i < paragraphs.Count; i += step)
+        {
+            if (isSameTrack == null || isSameTrack(paragraph, paragraphs[i]))
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     /// <summary>Samples per second of the loaded peaks, 0 without any - the x axis scale.</summary>
     internal int SampleRate => WavePeaks?.SampleRate ?? 0;
 
@@ -1301,9 +1334,10 @@ public class AudioVisualizer : Control
             _interactionMode = InteractionMode.ResizingLeft;
 
             var idx = displayableParagraphs.IndexOf(p);
-            if (idx > 0)
+            var prevIdx = FindNeighborIndex(displayableParagraphs, idx, -1);
+            if (prevIdx >= 0)
             {
-                var prevParagraph = displayableParagraphs[idx - 1];
+                var prevParagraph = displayableParagraphs[prevIdx];
                 double prevRightPos = SecondsToXPosition(prevParagraph.EndTime.TotalSeconds - StartPositionSeconds);
 
                 // Only consider "Or" mode if the previous paragraph's right edge is very close
@@ -1314,9 +1348,9 @@ public class AudioVisualizer : Control
                 }
             }
 
-            if (_isAltDown && idx > 0)
+            if (_isAltDown && prevIdx >= 0)
             {
-                var p2 = HitTestParagraph(point, displayableParagraphs, idx - 1, 100);
+                var p2 = HitTestParagraph(point, displayableParagraphs, prevIdx, 100);
                 if (p2 != null)
                 {
                     _activeParagraphPrevious = p2;
@@ -1330,9 +1364,10 @@ public class AudioVisualizer : Control
             _interactionMode = InteractionMode.ResizingRight;
 
             var idx = displayableParagraphs.IndexOf(p);
-            if (idx < displayableParagraphs.Count - 1)
+            var nextIdx = FindNeighborIndex(displayableParagraphs, idx, 1);
+            if (nextIdx >= 0)
             {
-                var nextParagraph = displayableParagraphs[idx + 1];
+                var nextParagraph = displayableParagraphs[nextIdx];
                 double nextLeftPos = SecondsToXPosition(nextParagraph.StartTime.TotalSeconds - StartPositionSeconds);
 
                 // Only consider "Or" mode if the next paragraph's left edge is very close
@@ -1343,9 +1378,9 @@ public class AudioVisualizer : Control
                 }
             }
 
-            if (_isAltDown && idx < displayableParagraphs.Count - 1)
+            if (_isAltDown && nextIdx >= 0)
             {
-                var p2 = HitTestParagraphRight(point, displayableParagraphs, idx + 1, 100);
+                var p2 = HitTestParagraphRight(point, displayableParagraphs, nextIdx, 100);
                 if (p2 != null)
                 {
                     _activeParagraphNext = p2;
@@ -1594,8 +1629,10 @@ public class AudioVisualizer : Control
         var newEnd = _originalEndSeconds;
 
         var currentIndex = _displayableParagraphs.IndexOf(_activeParagraph);
-        var previous = currentIndex > 0 ? _displayableParagraphs[currentIndex - 1] : null;
-        var next = currentIndex < _displayableParagraphs.Count - 1 ? _displayableParagraphs[currentIndex + 1] : null;
+        var previousIndex = FindNeighborIndex(_displayableParagraphs, currentIndex, -1);
+        var nextIndex = FindNeighborIndex(_displayableParagraphs, currentIndex, 1);
+        var previous = previousIndex >= 0 ? _displayableParagraphs[previousIndex] : null;
+        var next = nextIndex >= 0 ? _displayableParagraphs[nextIndex] : null;
 
         if (_isShiftDown || Se.Settings.Waveform.AllowOverlap)
         {
@@ -1634,8 +1671,8 @@ public class AudioVisualizer : Control
                 bool alreadyOverlapping = false;
                 if (_activeParagraph != null && currentIndex >= 0)
                 {
-                    var prevParagraph = currentIndex > 0 ? _displayableParagraphs[currentIndex - 1] : null;
-                    var nextParagraph = currentIndex < _displayableParagraphs.Count - 1 ? _displayableParagraphs[currentIndex + 1] : null;
+                    var prevParagraph = previousIndex >= 0 ? _displayableParagraphs[previousIndex] : null;
+                    var nextParagraph = nextIndex >= 0 ? _displayableParagraphs[nextIndex] : null;
 
                     bool alreadyOverlapsPrevious = prevParagraph != null && _originalStartSeconds < prevParagraph.EndTime.TotalSeconds;
                     bool alreadyOverlapsNext = nextParagraph != null && _originalEndSeconds > nextParagraph.StartTime.TotalSeconds;
@@ -2171,10 +2208,11 @@ public class AudioVisualizer : Control
         // If we found an edge, check for adjacent paragraphs that might be closer
         if (closestEdgeParagraph != null)
         {
-            if (isClosestEdgeLeft && closestEdgeIndex > 0)
+            var neighborIndex = FindNeighborIndex(_displayableParagraphs, closestEdgeIndex, isClosestEdgeLeft ? -1 : 1);
+            if (isClosestEdgeLeft && neighborIndex >= 0)
             {
                 // Check if previous paragraph's right edge is closer
-                var prev = _displayableParagraphs[closestEdgeIndex - 1];
+                var prev = _displayableParagraphs[neighborIndex];
                 var prevRight = ToX(prev.EndTime.TotalSeconds - startPosSeconds);
                 var distToPrevRight = Math.Abs(pointX - prevRight);
 
@@ -2183,10 +2221,10 @@ public class AudioVisualizer : Control
                     return prev;
                 }
             }
-            else if (!isClosestEdgeLeft && closestEdgeIndex < _displayableParagraphs.Count - 1)
+            else if (!isClosestEdgeLeft && neighborIndex >= 0)
             {
                 // Check if next paragraph's left edge is closer
-                var next = _displayableParagraphs[closestEdgeIndex + 1];
+                var next = _displayableParagraphs[neighborIndex];
                 var nextLeft = ToX(next.StartTime.TotalSeconds - startPosSeconds);
                 var distToNextLeft = Math.Abs(pointX - nextLeft);
 
