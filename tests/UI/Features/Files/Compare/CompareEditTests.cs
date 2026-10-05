@@ -25,9 +25,15 @@ public class CompareEditTests : IDisposable
     private readonly List<Window> _windows = new();
     private readonly SeCompare _savedSettings = Se.Settings.File.Compare;
 
+    // Closing a CompareWindow saves its size and the next one opens at it (#15393), so a test's
+    // own Width/Height lost to whatever window an earlier test closed - a 500 px tall one left
+    // no room for the inline editor. Each test starts with no saved positions and leaves none.
+    private readonly SettingsScope _windowPositions = new("General.WindowPositions");
+
     public CompareEditTests()
     {
         Se.Settings.File.Compare = new SeCompare();
+        Se.Settings.General.WindowPositions = new List<SeWindowPosition>();
     }
 
     public void Dispose()
@@ -39,6 +45,7 @@ public class CompareEditTests : IDisposable
 
         _windows.Clear();
         Se.Settings.File.Compare = _savedSettings;
+        _windowPositions.Dispose();
     }
 
     [AvaloniaFact]

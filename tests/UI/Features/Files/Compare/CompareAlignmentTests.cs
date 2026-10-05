@@ -26,14 +26,19 @@ public class CompareAlignmentTests : IDisposable
 {
     private readonly SeCompare _savedSettings = Se.Settings.File.Compare;
 
+    // A closed CompareWindow saves its size for the next one - see CompareEditTests.
+    private readonly SettingsScope _windowPositions = new("General.WindowPositions");
+
     public CompareAlignmentTests()
     {
         Se.Settings.File.Compare = new SeCompare();
+        Se.Settings.General.WindowPositions = new List<SeWindowPosition>();
     }
 
     public void Dispose()
     {
         Se.Settings.File.Compare = _savedSettings;
+        _windowPositions.Dispose();
     }
 
     [Fact]
