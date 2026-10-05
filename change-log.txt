@@ -3,6 +3,44 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-beta22 (5th of October 2026)
+
+* Add "Speak from current line" - read lines aloud with a fast TTS engine
+* Add KugelAudio text to speech engine (audio.cpp)
+* Add time code mode "Frame numbers" (Settings and status bar button) - thx liquidkingtraduttore-stack
+* Add "Toggle break/unbreak" shortcut - thx kadrimarzouki
+* Add "Save original" shortcut - thx edcol
+* Add built-in interjection lists for 11 languages (only your own changes are stored in settings)
+* Add Remove/replace Unicode characters and Convert actors for selected lines
+* Tools show "<tool>: N lines changed" and get their own named undo step
+* Frame mode: duration limits and merge tools use frames
+* Batch convert: PAC code page, Cavena 890 and DVB Teletext settings, PAC Unicode/Cheetah Caption/CapMaker Plus targets, Force CR+LF
+* Batch convert: report a failed save per target language, regional variants get the full language code
+* AI providers: one Mistral/OpenRouter API key shared by translate, OCR, speech to text and text to speech; all API key boxes are masked
+* SSA styles/attachments: overwrite or keep both on import, Replace style with, move up/down, font collector
+* Download windows: Retry button, show errors, SHA-256 check for ffmpeg/libmpv/libVLC
+* Keep the installed yt-dlp when an update fails
+* Index-Translate models download from IndexTeam's official repos
+* Video preview font: list every font face (e.g. Arial Light) - thx kadrimarzouki
+* Sort by text length ignores ASSA override blocks and tags - thx Tom2681
+* whisper.cpp: show Metal as the default backend on macOS, Vulkan on Linux - thx GitGianluc
+* Spell check: British English word list is now used
+* Flatpak: install small icon sizes (blank menu icon on some desktops) - thx liquidkingtraduttore-stack
+* Faster D-Cinema SMPTE/FCP XML/nOCR saving and MCC/CEA-708 loading
+* Lock time codes is respected by ripple delete, recalculate duration, evenly distribute and shot-change commands
+* Fix freeze/crash selecting colored tags in right-to-left lines - thx kadrimarzouki
+* Fix image-based export stuck after Cancel
+* Fix batch convert D-Cinema png output for text sources and reused D-Cinema UUID/title
+* Fix WebVTT styles: Cancel after Apply, preview memory leak, renaming a style updates the lines
+* Fix Compare time tolerance making HH:MM:SS:FF comparison stricter
+* Fix ASSA Set position with decimal/negative \pos and \frz inside \t
+* Update English.json with all new strings - thx GitGianluc
+* Update Catalan translation - thx jmontane
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+
+-----------------------------------------------------------------------------------------------------
+
 v5.3.0-beta21 (4th of October 2026)
 
 * Batch convert: translate one file into several languages in one run
