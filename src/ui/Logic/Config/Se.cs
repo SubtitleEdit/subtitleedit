@@ -1244,6 +1244,9 @@ public class Se
             Settings.Providers = new SeProviders();
         }
 
+        Settings.Tools.RemoveTextForHi ??= new();
+        Settings.Tools.RemoveTextForHi.AddMissingDefaultInterjections();
+
         MigrateProviderApiKeys(Settings);
 
         if (Settings.Tools.FixCommonErrors.Profiles.Count == 0)
