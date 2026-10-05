@@ -489,4 +489,16 @@ public class WebVttTest
 
         Assert.Equal(new List<string> { "Joe", "Ann" }, voices);
     }
+
+    [Fact]
+    public void WebVttFileWithLineNumberWritesHoursLikeWebVtt()
+    {
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph("Hello", 5005, 8400));
+
+        var output = new WebVTTFileWithLineNumber().ToText(subtitle, null);
+        var cueLine = output.SplitToLines().First(l => l.Contains("-->"));
+
+        Assert.Equal("00:00:05.005 --> 00:00:08.400", cueLine);
+    }
 }
