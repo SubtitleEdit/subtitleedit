@@ -192,7 +192,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             KoboldCppPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments or notes:";
             KoboldCppTemperature = 0.4m;
             AnthropicApiUrl = "https://api.anthropic.com/v1/messages";
-            AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without comments:";
+            AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
             AnthropicApiModel = "claude-opus-5"; // AnthropicTranslate.Models[0] in LibUiLogic
             BaiduUrl = "https://fanyi-api.baidu.com";
             GeminiModel = "gemini-flash-latest"; // GeminiTranslate.Models[0] in LibUiLogic

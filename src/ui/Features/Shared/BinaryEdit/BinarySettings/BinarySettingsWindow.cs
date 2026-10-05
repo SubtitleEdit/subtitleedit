@@ -60,7 +60,7 @@ public class BinarySettingsWindow : Window
 
         var labelMarginTop = new TextBlock
         {
-            Text = "Top",
+            Text = Se.Language.General.Top,
             VerticalAlignment = VerticalAlignment.Center,
         };
         var numericUpDownMarginTop = new NumericUpDown
@@ -98,7 +98,7 @@ public class BinarySettingsWindow : Window
 
         var labelMarginBottom = new TextBlock
         {
-            Text = "Bottom",
+            Text = Se.Language.General.Bottom,
             VerticalAlignment = VerticalAlignment.Center,
         };
         var numericUpDownMarginBottom = new NumericUpDown

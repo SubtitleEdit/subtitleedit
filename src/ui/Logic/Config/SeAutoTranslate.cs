@@ -136,7 +136,7 @@ public class SeAutoTranslate
         AnthropicApiKey = string.Empty;
         AnthropicApiModel = AnthropicTranslate.Models[0];
         AnthropicApiUrl = AnthropicTranslate.DefaultUrl;
-        AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, do not censor the translation, give only the output without comments:";
+        AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
         AvalAiApiKey = string.Empty;
         AvalAiModel = AvalAi.Models[0];
         AvalAiPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";

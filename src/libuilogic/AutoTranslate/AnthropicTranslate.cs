@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 Configuration.Settings.Tools.AnthropicPrompt = new ToolsSettings().AnthropicPrompt;
             }
             var prompt = string.Format(Json.EncodeJsonText(Configuration.Settings.Tools.AnthropicPrompt), sourceLanguageCode, targetLanguageCode);
-            var input = "{ \"model\": \"" + model + "\", \"max_tokens\": 1024, \"messages\": [{ \"role\": \"user\", \"content\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
+            var input = "{ \"model\": \"" + model + "\", \"max_tokens\": 8192, \"messages\": [{ \"role\": \"user\", \"content\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
 
             int[] retryDelays = { 2555, 5007, 9013 };
             HttpResponseMessage result = null!;
@@ -114,6 +114,12 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             result.EnsureSuccessStatusCode();
 
             var parser = new SeJsonParser();
+            if (parser.GetFirstObject(json, "stop_reason") == "max_tokens")
+            {
+                Error = "Anthropic response was truncated (stop_reason=max_tokens)";
+                SeLogger.Error("Anthropic Translate: response truncated (stop_reason=max_tokens), model=" + model + Environment.NewLine + json);
+            }
+
             var resultText = parser.GetFirstObject(json, "text");
             if (resultText == null)
             {

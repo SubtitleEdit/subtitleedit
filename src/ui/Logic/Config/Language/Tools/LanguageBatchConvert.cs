@@ -75,6 +75,19 @@ public class LanguageBatchConvert
     public string TransportStreamGetSizeFromVideo { get; set; }
     public string TwoLetterLanguageCodeUppercase { get; set; }
     public string ThreeLetterLanguageCodeUppercase { get; set; }
+    public string FormatContainsDotDotDot { get; set; }
+    public string ExtensionIsDotDotDot { get; set; }
+    public string StatusIsError { get; set; }
+    public string ForcedTracksOnly { get; set; }
+    public string XConvertedYFailedInZ { get; set; }
+    public string XNotProcessed { get; set; }
+    public string RemoveUnicodeControlCharactersTitle { get; set; }
+    public string RemoveUnicodeControlCharactersInfo { get; set; }
+    public string Preset { get; set; }
+    public string SavePresetDotDotDot { get; set; }
+    public string DeletePreset { get; set; }
+    public string PresetName { get; set; }
+    public string DeletePresetX { get; set; }
 
     public LanguageBatchConvert()
     {
@@ -148,5 +161,18 @@ public class LanguageBatchConvert
         TransportStreamGetSizeFromVideo = "Get size from video...";
         TwoLetterLanguageCodeUppercase = "Two-letter language code (uppercase)";
         ThreeLetterLanguageCodeUppercase = "Three-letter language code (uppercase)";
+        FormatContainsDotDotDot = "Format contains...";
+        ExtensionIsDotDotDot = "Extension is...";
+        StatusIsError = "Status is error";
+        ForcedTracksOnly = "Forced tracks only";
+        XConvertedYFailedInZ = "{0:#,###,##0} converted, {1:#,###,##0} failed in {2}";
+        XNotProcessed = "{0:#,###,##0} not processed";
+        RemoveUnicodeControlCharactersTitle = "Remove Unicode control characters";
+        RemoveUnicodeControlCharactersInfo = "Removes the invisible Unicode direction control characters (LRM, RLM, LRE, RLE, PDF, LRO and RLO) from the text, and replaces no-break spaces with normal spaces.";
+        Preset = "Preset";
+        SavePresetDotDotDot = "Save preset...";
+        DeletePreset = "Delete preset";
+        PresetName = "Preset name";
+        DeletePresetX = "Delete preset \"{0}\"?";
     }
 }

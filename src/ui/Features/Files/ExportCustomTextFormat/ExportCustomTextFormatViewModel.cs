@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
@@ -178,6 +179,16 @@ public partial class ExportCustomTextFormatViewModel : ObservableObject
         // so writing it directly would always add a BOM.
         var encoding = EncodingHelper.ResolveEncoding(SelectedEncoding?.DisplayName, null);
         await System.IO.File.WriteAllTextAsync(fileName, PreviewText, encoding);
+
+        await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window, vm =>
+        {
+            vm.Initialize(
+                Se.Language.General.FileSaved,
+                string.Format(Se.Language.General.FileSavedToX, fileName),
+                fileName,
+                true,
+                true);
+        });
     }
 
     [RelayCommand]

@@ -56,6 +56,8 @@ public partial class BatchConvertFunction : ObservableObject
             MakeFunction(BatchConvertFunctionType.MergeLinesWithSameText, Se.Language.General.MergeLinesWithSameText, ViewMergeLinesWithSameText.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.MergeLinesWithSameTimeCodes, Se.Language.General.MergeLinesWithSameTimeCodes, ViewMergeLinesWithSameTimeCodes.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.FixRightToLeft, Se.Language.General.FixRightToLeft, ViewFixRightToLeft.Make(vm), activeFunctions),
+            MakeFunction(BatchConvertFunctionType.RemoveUnicodeControlCharacters, Se.Language.Tools.BatchConvert.RemoveUnicodeControlCharactersTitle, ViewRemoveUnicodeControlCharacters.Make(vm), activeFunctions),
+            MakeFunction(BatchConvertFunctionType.ConvertActors, Se.Language.Tools.ConvertActors.Title, ViewConvertActors.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.ConvertColorsToDialog, Se.Language.Tools.BatchConvert.ConvertColorsToDialogTitle, ViewConvertColorsToDialog.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.AutoTranslate, Se.Language.General.AutoTranslate, ViewAutoTranslate.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.AssaChangeResolution, Se.Language.Assa.ResolutionResamplerTitle, ViewAssaChangeResolution.Make(vm), activeFunctions),
@@ -63,9 +65,11 @@ public partial class BatchConvertFunction : ObservableObject
             MakeFunction(BatchConvertFunctionType.AssaChangeStyleProperties, Se.Language.Tools.BatchConvert.AssaChangeStylePropertiesTitle, ViewAssaChangeStyleProperties.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.AssaEmbedFonts, Se.Language.Tools.BatchConvert.AssaEmbedFontsTitle, ViewAssaEmbedFonts.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.MergeShortLines, Se.Language.Tools.MergeShortLines.Title, ViewMergeShortLines.Make(vm), activeFunctions),
+            MakeFunction(BatchConvertFunctionType.MergeContinuationLines, Se.Language.Tools.MergeContinuationLines.Title, ViewMergeContinuationLines.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.ApplyDurationLimits, Se.Language.Tools.ApplyDurationLimits.Title, ViewApplyDurationLimits.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.AutoBalanceLines, Se.Language.General.AutoBalanceLines, ViewAutoBalanceLines.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.SortBy, Se.Language.Tools.SortBy.Title, ViewSortBy.Make(vm), activeFunctions),
+            MakeFunction(BatchConvertFunctionType.Renumber, Se.Language.Tools.Renumber.Title, ViewRenumber.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.AdjustImageColors, Se.Language.Tools.BatchConvert.AdjustImageColorsTitle, ViewAdjustImageColors.Make(vm), activeFunctions),
         }.ToArray();
     }

@@ -33,4 +33,8 @@ public enum BatchConvertFunctionType
     BeautifyTimeCodes,
     SnapTimeCodesToFrames,
     ConvertColorsToDialog,
+    RemoveUnicodeControlCharacters,
+    Renumber,
+    MergeContinuationLines,
+    ConvertActors,
 }

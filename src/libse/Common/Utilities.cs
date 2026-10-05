@@ -4075,11 +4075,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s;
         }
 
-        public static SubtitleFormat GetSubtitleFormatByFriendlyName(object value)
-        {
-            throw new NotImplementedException();
-        }
-
         public static string PngToBase64String(SKBitmap bitmap)
         {
             using (SKData data = bitmap.Encode(SKEncodedImageFormat.Png, 100))

@@ -5,6 +5,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Files.ExportCavena890;
 
@@ -24,14 +25,20 @@ public partial class ExportCavena890ViewModel : ObservableObject
     {
         TranslatedTitle = string.Empty;
         OriginalTitle = string.Empty;
-        Translator = string.Empty;
+        Translator = Se.Settings.File.ExportCavena890Translator ?? string.Empty;
         Comment = string.Empty;
-        Language = string.Empty;
+        Language = Se.Settings.File.ExportCavena890Language ?? string.Empty;
+        StartOfProgramme = TimeSpan.FromMilliseconds(Math.Max(0, Se.Settings.File.ExportCavena890StartOfProgrammeMs));
     }
 
     [RelayCommand]
     private void Ok()
     {
+        Se.Settings.File.ExportCavena890Translator = Translator ?? string.Empty;
+        Se.Settings.File.ExportCavena890Language = Language ?? string.Empty;
+        Se.Settings.File.ExportCavena890StartOfProgrammeMs = StartOfProgramme.TotalMilliseconds;
+        Se.SaveSettings();
+
         OkPressed = true;
         Close();
     }

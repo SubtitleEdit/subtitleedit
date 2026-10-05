@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -34,7 +35,8 @@ public partial class ChangeSpeedViewModel : ObservableObject
 
     public ChangeSpeedViewModel()
     {
-        SpeedPercent = 100.0;
+        var savedSpeed = Se.Settings.Synchronization.ChangeSpeedPercent;
+        SpeedPercent = savedSpeed > 0 ? savedSpeed : 100.0;
         AdjustAll = true;
     }
 
@@ -69,6 +71,8 @@ public partial class ChangeSpeedViewModel : ObservableObject
             return;
         }
 
+        SaveSettings();
+
         if (_subtitles != null)
         {
             ApplyToSubtitles();
@@ -76,6 +80,19 @@ public partial class ChangeSpeedViewModel : ObservableObject
         }
 
         _binaryApplyCallback?.Invoke(SpeedPercent, AdjustAll, AdjustSelectedLines, AdjustSelectedLinesAndForward);
+    }
+
+    private void SaveSettings()
+    {
+        Se.Settings.Synchronization.ChangeSpeedPercent = SpeedPercent;
+        if (IsSelectionAvailable)
+        {
+            Se.Settings.Synchronization.ChangeSpeedLineSelectionChoice =
+                AdjustSelectedLinesAndForward ? "SelectedAndForward" :
+                AdjustSelectedLines ? "Selected" : "All";
+        }
+
+        Se.SaveSettings();
     }
 
     private void ApplyToSubtitles()
@@ -127,9 +144,21 @@ public partial class ChangeSpeedViewModel : ObservableObject
     }
 
     // Default to "selected lines" when a selection is available (mirrors the Adjust all times
-    // dialog), otherwise "all lines".
+    // dialog), otherwise "all lines". With a selection, the last used scope is restored.
     private void SetDefaultScope(bool isSelectionAvailable)
     {
+        var choice = Se.Settings.Synchronization.ChangeSpeedLineSelectionChoice;
+        if (isSelectionAvailable && !string.IsNullOrEmpty(choice))
+        {
+            AdjustAll = choice == "All";
+            AdjustSelectedLines = choice == "Selected";
+            AdjustSelectedLinesAndForward = choice == "SelectedAndForward";
+            if (AdjustAll || AdjustSelectedLines || AdjustSelectedLinesAndForward)
+            {
+                return;
+            }
+        }
+
         if (isSelectionAvailable)
         {
             AdjustSelectedLines = true;

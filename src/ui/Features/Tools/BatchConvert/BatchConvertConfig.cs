@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.UiLogic.Translate;
 using Nikse.SubtitleEdit.UiLogic.AdjustDuration;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Features.Tools.ConvertActors;
 using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert;
@@ -70,6 +71,10 @@ public class BatchConvertConfig
     public BeautifyTimeCodesSettings2 BeautifyTimeCodes { get; set; }
     public SnapTimeCodesToFramesSettings SnapTimeCodesToFrames { get; set; }
     public ConvertColorsToDialogSettings ConvertColorsToDialog { get; set; }
+    public RemoveUnicodeControlCharactersSettings RemoveUnicodeControlCharacters { get; set; }
+    public RenumberSettings Renumber { get; set; }
+    public MergeContinuationLinesSettings MergeContinuationLines { get; set; }
+    public ConvertActorsSettings ConvertActors { get; set; }
 
     public BatchConvertConfig()
     {
@@ -114,6 +119,10 @@ public class BatchConvertConfig
         BeautifyTimeCodes = new BeautifyTimeCodesSettings2();
         SnapTimeCodesToFrames = new SnapTimeCodesToFramesSettings();
         ConvertColorsToDialog = new ConvertColorsToDialogSettings();
+        RemoveUnicodeControlCharacters = new RemoveUnicodeControlCharactersSettings();
+        Renumber = new RenumberSettings();
+        MergeContinuationLines = new MergeContinuationLinesSettings();
+        ConvertActors = new ConvertActorsSettings();
     }
 
     public bool IsTargetFormatImageBased =>
@@ -476,6 +485,54 @@ public class BatchConvertConfig
         public ConvertColorsToDialogSettings()
         {
             RemoveColorTags = true;
+        }
+    }
+
+    public class RemoveUnicodeControlCharactersSettings
+    {
+        public bool IsActive { get; set; }
+    }
+
+    public class RenumberSettings
+    {
+        public bool IsActive { get; set; }
+        public int StartNumber { get; set; }
+
+        public RenumberSettings()
+        {
+            StartNumber = 1;
+        }
+    }
+
+    public class MergeContinuationLinesSettings
+    {
+        public bool IsActive { get; set; }
+        public int MaxMillisecondsBetweenLines { get; set; }
+        public int MaxCharacters { get; set; }
+
+        public MergeContinuationLinesSettings()
+        {
+            MaxMillisecondsBetweenLines = 250;
+            MaxCharacters = 86;
+        }
+    }
+
+    public class ConvertActorsSettings
+    {
+        public bool IsActive { get; set; }
+        public ConvertActorType FromType { get; set; }
+        public ConvertActorType ToType { get; set; }
+        public bool SetColor { get; set; }
+        public Color Color { get; set; }
+        public bool ChangeCasing { get; set; }
+        public int CasingIndex { get; set; }
+        public bool OnlyNames { get; set; }
+
+        public ConvertActorsSettings()
+        {
+            FromType = ConvertActorType.InlineSquareBrackets;
+            ToType = ConvertActorType.Actor;
+            Color = Colors.Yellow;
         }
     }
 

@@ -86,6 +86,11 @@ public class MergeTwoSubtitlesWindow : Window
             }
         });
         KeyDown += vm.KeyDown;
+
+        // Files dropped elsewhere on the window: two files fill both slots, one fills the first empty slot.
+        DragDrop.SetAllowDrop(this, true);
+        AddHandler(DragDrop.DragOverEvent, vm.FileOnDragOver, RoutingStrategies.Bubble);
+        AddHandler(DragDrop.DropEvent, (object? _, DragEventArgs e) => vm.FileOnDrop(0, e), RoutingStrategies.Bubble);
     }
 
     private Border MakeListsView(MergeTwoSubtitlesViewModel vm)
@@ -107,14 +112,16 @@ public class MergeTwoSubtitlesWindow : Window
             nameof(vm.Items1),
             nameof(vm.SelectedItem1),
             nameof(vm.File1Display),
-            vm.LoadFile1Command), 0, 0);
+            vm.LoadFile1Command,
+            1), 0, 0);
 
         grid.Add(MakeOneListView(vm,
             Se.Language.Tools.MergeTwoSubtitles.Subtitle2,
             nameof(vm.Items2),
             nameof(vm.SelectedItem2),
             nameof(vm.File2Display),
-            vm.LoadFile2Command), 0, 1);
+            vm.LoadFile2Command,
+            2), 0, 1);
 
         return UiUtil.MakeBorderForControlNoPadding(grid);
     }
@@ -124,7 +131,8 @@ public class MergeTwoSubtitlesWindow : Window
         string itemsPath,
         string selectedItemPath,
         string fileNamePath,
-        CommunityToolkit.Mvvm.Input.IRelayCommand loadCommand)
+        CommunityToolkit.Mvvm.Input.IRelayCommand loadCommand,
+        int slot)
     {
         var labelTitle = UiUtil.MakeLabel(title);
         var labelFile = UiUtil.MakeLabel(string.Empty).WithBindText(vm, fileNamePath);
@@ -216,7 +224,13 @@ public class MergeTwoSubtitlesWindow : Window
         grid.Add(dataGrid, 1, 0);
         grid.Add(buttonLoad, 2, 0);
 
-        return UiUtil.MakeBorderForControl(grid);
+        // Drop a file onto this side to load it into this slot.
+        var border = UiUtil.MakeBorderForControl(grid);
+        border.Background = Brushes.Transparent; // hit-test the empty parts of the area too
+        DragDrop.SetAllowDrop(border, true);
+        border.AddHandler(DragDrop.DragOverEvent, vm.FileOnDragOver, RoutingStrategies.Bubble);
+        border.AddHandler(DragDrop.DropEvent, (object? _, DragEventArgs e) => vm.FileOnDrop(slot, e), RoutingStrategies.Bubble);
+        return border;
     }
 
     private static StackPanel MakeFormatRow(MergeTwoSubtitlesViewModel vm)
