@@ -276,7 +276,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                 return list;
             }
 
-            // See LoadReplaceList: duplicate sections must all be read. fin/fra/hrb/hun/por/spa
+            // See LoadReplaceList: duplicate sections must all be read. fin/fra/hun/por/spa
             // ship an empty <PartialWords /> placeholder ahead of the real section.
             var nodes = doc.DocumentElement?.SelectNodes(name);
             if (nodes == null)
