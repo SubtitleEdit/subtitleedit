@@ -3738,8 +3738,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         var removeTextForHiLib = new RemoveTextForHI(settings);
         removeTextForHiLib.Warnings = [];
 
-        var interjections = Se.Settings.Tools.RemoveTextForHi.Interjections
-            .FirstOrDefault(p => p.LanguageCode == (language ?? "en"));
+        var interjections = Se.Settings.Tools.RemoveTextForHi.GetInterjections(language ?? "en");
         var list = interjections?.Interjections ?? new List<string>();
         var skipList = interjections?.SkipStartList ?? new List<string>();
 

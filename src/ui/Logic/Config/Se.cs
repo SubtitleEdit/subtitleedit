@@ -1245,7 +1245,7 @@ public class Se
         }
 
         Settings.Tools.RemoveTextForHi ??= new();
-        Settings.Tools.RemoveTextForHi.AddMissingDefaultInterjections();
+        Settings.Tools.RemoveTextForHi.MigrateFullInterjectionLists();
 
         MigrateProviderApiKeys(Settings);
 
