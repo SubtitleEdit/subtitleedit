@@ -19754,6 +19754,31 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void ToggleBreak()
+    {
+        // Unbreaks when any selected line has a line break, otherwise breaks
+        // them - so repeated presses flip the selection back and forth (#15681).
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (selectedItems.Count == 0)
+        {
+            return;
+        }
+
+        var hasBreak = selectedItems.Any(s => s.Text.Contains('\n') || s.Text.Contains('\r'));
+        var language = GetDetectedLanguageCode();
+        foreach (var s in selectedItems)
+        {
+            // Merge threshold 0 so short lines get broken too - plain auto break
+            // leaves lines shorter than "Unbreak subtitles shorter than" as is.
+            s.Text = hasBreak
+                ? Utilities.UnbreakLine(s.Text)
+                : Utilities.AutoBreakLine(s.Text, Se.Settings.General.SubtitleLineMaximumLength, 0, language);
+        }
+
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
     private void EvenlyDistributeSelectedLines()
     {
         // Port of SE4's "Evenly distribute lines" (ToolStripMenuItemEvenlyDistributeLinesClick).
