@@ -97,7 +97,7 @@ public partial class DownloadLibVlcViewModel : ObservableObject, IClosingCleanup
 
                 try
                 {
-                    Unpacker.Extract7Zip(_tempFileName, Se.VlcFolder, "vlc-3.0.23", _cancellationTokenSource, text => ProgressText = text);
+                    Unpacker.Extract7Zip(_tempFileName, Se.VlcFolder, "vlc-3.0.24", _cancellationTokenSource, text => ProgressText = text);
                 }
                 catch (Exception exception)
                 {

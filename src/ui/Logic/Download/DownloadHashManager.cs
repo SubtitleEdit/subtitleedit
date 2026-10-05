@@ -486,8 +486,8 @@ public static class DownloadHashManager
             [Ffmpeg.MacOsArm64] = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v9-1/ffmpeg90arm.zip",
             [LibMpv.WindowsX64] = "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-08-14b/libmpv2-win64.zip",
             [LibMpv.WindowsArm64] = "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-08-14b/libmpv2-win-arm64.zip",
-            [LibVlc.WindowsX64] = "https://get.videolan.org/vlc/3.0.23/win64/vlc-3.0.23-win64.7z",
-            [LibVlc.WindowsX86] = "https://get.videolan.org/vlc/3.0.23/win32/vlc-3.0.23-win32.7z",
+            [LibVlc.WindowsX64] = "https://get.videolan.org/vlc/3.0.24/win64/vlc-3.0.24-win64.7z",
+            [LibVlc.WindowsX86] = "https://get.videolan.org/vlc/3.0.24/win32/vlc-3.0.24-win32.7z",
             [LibVlc.MacOsX64] = "https://github.com/SubtitleEdit/support-files/releases/download/vlc3/libvlc-osx64.7z",
         };
 
@@ -523,11 +523,11 @@ public static class DownloadHashManager
             // libVLC - LibVlcDownloadService. The Windows hashes match VideoLAN's published .sha256 files.
             [LibVlc.WindowsX64] = new[]
             {
-                "eb4fd8a28291da73608c733786a09610fea865fbe94113bcb60b91c1ebb8404a", // vlc-3.0.23-win64.7z (current download URL)
+                "1ed59c09152e78aff84663fa76efab26057716576db74332858810e5ef54ae1f", // vlc-3.0.24-win64.7z (current download URL)
             },
             [LibVlc.WindowsX86] = new[]
             {
-                "f148ff49cdac6c0b6b7018ad7c4e6cd24c99bc6c2dea8258d82684261a639017", // vlc-3.0.23-win32.7z (current download URL)
+                "80b61c03a5c7c4d4b44a79a2db34eda244ad6b09f1e0f44fcf6183f4c10e9966", // vlc-3.0.24-win32.7z (current download URL)
             },
             [LibVlc.MacOsX64] = new[]
             {

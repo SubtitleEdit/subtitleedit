@@ -16,8 +16,8 @@ public interface ILibVlcDownloadService
 
 public class LibVlcDownloadService(HttpClient httpClient) : ILibVlcDownloadService
 {
-    private const string WindowsX64Url = "https://get.videolan.org/vlc/3.0.23/win64/vlc-3.0.23-win64.7z";
-    private const string WindowsX86Url = "https://get.videolan.org/vlc/3.0.23/win32/vlc-3.0.23-win32.7z";
+    private const string WindowsX64Url = "https://get.videolan.org/vlc/3.0.24/win64/vlc-3.0.24-win64.7z";
+    private const string WindowsX86Url = "https://get.videolan.org/vlc/3.0.24/win32/vlc-3.0.24-win32.7z";
     private const string MacX64Url = "https://github.com/SubtitleEdit/support-files/releases/download/vlc3/libvlc-osx64.7z";
 
     /// <summary>The <see cref="DownloadHashManager.LibVlc"/> key matching <see cref="GetUrl"/>.</summary>
