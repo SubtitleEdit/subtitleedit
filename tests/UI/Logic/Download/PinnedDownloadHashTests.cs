@@ -6,7 +6,8 @@ namespace UITests.Logic.Download;
 /// <summary>
 /// ffmpeg, libmpv and libVLC are pinned URLs: every one of them must have a SHA-256 on record,
 /// otherwise <see cref="DownloadHashManager.VerifyDownloadAsync(Stream, string?, string, CancellationToken)"/>
-/// silently skips the check after a URL bump.
+/// silently skips the check after a URL bump - and that hash must have been recorded for the
+/// current URL, otherwise a stale hash fails every download.
 /// </summary>
 public class PinnedDownloadHashTests
 {
@@ -36,6 +37,16 @@ public class PinnedDownloadHashTests
         var hash = DownloadHashManager.GetLatestKnownHash(key!);
         Assert.NotNull(hash);
         Assert.Matches("^[0-9a-f]{64}$", hash);
+    }
+
+    [Theory]
+    [MemberData(nameof(PinnedUrls))]
+    public void EveryPinnedUrl_MatchesTheUrlItsHashWasRecordedFor(string url, string? key)
+    {
+        // A URL bumped in the service without bumping the hash still has *a* hash on record -
+        // the stale one - so every download would then fail verification.
+        Assert.True(DownloadHashManager.PinnedHashUrls.TryGetValue(key!, out var hashedUrl), $"No recorded URL for {key}");
+        Assert.Equal(hashedUrl, url);
     }
 
     [Fact]
