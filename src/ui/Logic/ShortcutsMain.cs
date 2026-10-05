@@ -417,6 +417,7 @@ public static class ShortcutsMain
 
         { nameof(MainViewModel.UnbreakCommand), Se.Language.General.Unbreak },
         { nameof(MainViewModel.AutoBreakCommand), Se.Language.General.AutoBreak },
+        { nameof(MainViewModel.ToggleBreakCommand), Se.Language.Options.Shortcuts.GeneralToggleBreak },
         { nameof(MainViewModel.SplitCommand), Se.Language.General.SplitLine },
         { nameof(MainViewModel.AssistedSplitCommand), Se.Language.General.AssistedSplit },
         { nameof(MainViewModel.AssistedMoveCommand), Se.Language.General.AssistedMove },
@@ -902,6 +903,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.UnbreakCommand, nameof(vm.UnbreakCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.UnbreakNoSpaceCommand, nameof(vm.UnbreakNoSpaceCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.AutoBreakCommand, nameof(vm.AutoBreakCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.ToggleBreakCommand, nameof(vm.ToggleBreakCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SplitCommand, nameof(vm.SplitCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.AssistedSplitCommand, nameof(vm.AssistedSplitCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.AssistedMoveCommand, nameof(vm.AssistedMoveCommand), ShortcutCategory.General);
