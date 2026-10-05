@@ -17461,11 +17461,19 @@ public partial class MainViewModel :
             return;
         }
 
+        var focusedTextBox = selectedItems.Count == 1 ? GetFocusedTextBoxWrapper() : null;
+        var reselectAll = TextBoxSurroundToggler.IsWholeTextSelected(focusedTextBox);
+
         var newTexts = TextBoxSurroundToggler.ApplyToTexts(
             behavior, scope, surroundLeft, selectedItems.Select(p => p.Text), surroundRight);
         for (var i = 0; i < selectedItems.Count; i++)
         {
             selectedItems[i].Text = newTexts[i];
+        }
+
+        if (reselectAll)
+        {
+            TextBoxSurroundToggler.SelectAllAfterTextChange(focusedTextBox!);
         }
 
         _updateAudioVisualizer = true;

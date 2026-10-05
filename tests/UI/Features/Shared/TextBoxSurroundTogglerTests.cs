@@ -109,6 +109,39 @@ public class TextBoxSurroundTogglerTests
     }
 
     [AvaloniaFact]
+    public void IsWholeTextSelected_DetectsFullSelectionOnly()
+    {
+        Assert.True(TextBoxSurroundToggler.IsWholeTextSelected(new TextBoxWrapper(MakeTextBox("Hello?", 0, 6))));
+        Assert.True(TextBoxSurroundToggler.IsWholeTextSelected(new TextBoxWrapper(MakeTextBox("Hello?", 6, 0))));
+        Assert.False(TextBoxSurroundToggler.IsWholeTextSelected(new TextBoxWrapper(MakeTextBox("Hello?", 0, 5))));
+        Assert.False(TextBoxSurroundToggler.IsWholeTextSelected(new TextBoxWrapper(MakeTextBox("Hello?", 3, 3))));
+        Assert.False(TextBoxSurroundToggler.IsWholeTextSelected(new TextBoxWrapper(MakeTextBox(string.Empty, 0, 0))));
+        Assert.False(TextBoxSurroundToggler.IsWholeTextSelected(null));
+    }
+
+    // #15693: surrounding a fully selected line updates the subtitle text, and the text box kept the
+    // old selection range - so the closing symbol and the last character were no longer selected.
+    [AvaloniaFact]
+    public void SelectAllAfterTextChange_WholeTextSelected_SelectionCoversLongerText()
+    {
+        var textBox = MakeTextBox("Hello?", 0, 6);
+        var wrapper = new TextBoxWrapper(textBox);
+        Assert.False(TextBoxSurroundToggler.ToggleSelection(wrapper, "\"", "\""));
+
+        textBox.Text = "\"Hello?\"";
+        Assert.Equal(6, textBox.SelectionEnd); // stale range: misses "?\""
+
+        TextBoxSurroundToggler.SelectAllAfterTextChange(wrapper);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(0, textBox.SelectionStart);
+        Assert.Equal(textBox.Text.Length, textBox.SelectionEnd);
+
+        // The next surround (like a lift with "\N") now works on the whole text again.
+        Assert.True(TextBoxSurroundToggler.IsWholeTextSelected(wrapper));
+    }
+
+    [AvaloniaFact]
     public void ToggleSelection_OnlyWhiteSpaceSelected_ReturnsFalseAndKeepsText()
     {
         var textBox = MakeTextBox("Hello world", 5, 6);
