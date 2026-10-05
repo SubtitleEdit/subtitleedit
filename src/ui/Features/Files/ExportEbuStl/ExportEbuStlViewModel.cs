@@ -386,7 +386,7 @@ new("2F", "French - hearing impaired (VF-MAL)"),
     partial void OnSelectedPreviewFontChanged(string? value)
     {
         PreviewFontFamily = FontFamilyHelper.Make(IsDefaultPreviewFont(value)
-            ? Se.Settings.Video.MpvPreviewFontName
+            ? FontHelper.GetSkiaFontNameFromLibAssaFontName(Se.Settings.Video.MpvPreviewFontName)
             : value);
     }
 
