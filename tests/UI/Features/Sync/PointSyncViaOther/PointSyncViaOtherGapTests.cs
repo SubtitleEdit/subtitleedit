@@ -13,8 +13,8 @@ using System.Linq;
 namespace UITests.Features.Sync.PointSyncViaOther;
 
 /// <summary>
-/// The "Gap" column in point sync via other shows the silence *before* each line - the tell
-/// for a reliable sync point (issue #10175) - unlike the main grid's gap-to-next.
+/// The "Gap after" column in point sync via other shows the silence after each line, like the
+/// main grid's "Gap" - a long one is the tell for a reliable sync point (issues #10175, #15695).
 /// </summary>
 public class PointSyncViaOtherGapTests
 {
@@ -34,7 +34,7 @@ public class PointSyncViaOtherGapTests
     };
 
     [Fact]
-    public void Initialize_ComputesTheGapBeforeEachLine()
+    public void Initialize_ComputesTheGapAfterEachLine()
     {
         var vm = MakeViewModel();
         var lines = new List<SubtitleLineViewModel>
@@ -46,10 +46,11 @@ public class PointSyncViaOtherGapTests
 
         vm.Initialize(lines, 0, string.Empty, string.Empty, VideoPreviewSubtitleContext.Default);
 
-        // The first line's gap is measured from 00:00 - it too starts after "silence".
-        Assert.Equal(4000, vm.Subtitles[0].PreviousGap, 3);
-        Assert.Equal(500, vm.Subtitles[1].PreviousGap, 3);
-        Assert.Equal(4000, vm.Subtitles[2].PreviousGap, 3);
+        Assert.Equal(500, vm.Subtitles[0].Gap, 3);
+        Assert.Equal(4000, vm.Subtitles[1].Gap, 3);
+
+        // The last line has no next line - its gap is the "no value" sentinel (shown blank).
+        Assert.Equal(double.MaxValue, vm.Subtitles[2].Gap);
     }
 
     [Fact]
@@ -67,16 +68,17 @@ public class PointSyncViaOtherGapTests
         vm.SelectedSubtitle = vm.Subtitles[0];
         var syncPoint = new SyncPoint(Line(1000, 3000), 0, Line(2000, 3000), 0);
         vm.SyncPoints.Add(syncPoint);
+        vm.Subtitles[0].Gap = 0; // stale - Apply must recompute it
 
         vm.ApplyCommand.Execute(null);
 
+        // One sync point shifts both lines +1000 ms (2000-4000, 6000-7000), keeping the gap.
         Assert.Equal(2000, vm.Subtitles[0].StartTime.TotalMilliseconds, 3);
-        Assert.Equal(2000, vm.Subtitles[0].PreviousGap, 3);
-        Assert.Equal(2000, vm.Subtitles[1].PreviousGap, 3);
+        Assert.Equal(2000, vm.Subtitles[0].Gap, 3);
     }
 
     [AvaloniaFact]
-    public void Window_HasAGapColumnInBothGridsAndALegend()
+    public void Window_HasAGapAfterColumnInBothGridsAndALegend()
     {
         var vm = MakeViewModel();
         vm.Initialize(new List<SubtitleLineViewModel> { Line(1000, 3000) },
@@ -88,10 +90,10 @@ public class PointSyncViaOtherGapTests
             var gapHeaders = window.GetLogicalDescendants()
                 .OfType<TableView>()
                 .SelectMany(t => t.Columns)
-                .Count(c => Equals(c.Header, Se.Language.General.Gap));
+                .Count(c => Equals(c.Header, Se.Language.Sync.GapAfter));
             Assert.Equal(2, gapHeaders);
 
-            var legendText = string.Format(Se.Language.Sync.SyncPointCandidateInfo, 3);
+            var legendText = string.Format(Se.Language.Sync.SyncPointCandidateAfterInfo, 3);
             Assert.Contains(window.GetLogicalDescendants().OfType<TextBlock>(),
                 t => t.Text == legendText);
         }
@@ -99,5 +101,23 @@ public class PointSyncViaOtherGapTests
         {
             window.Close();
         }
+    }
+
+    [Theory]
+    [InlineData(0, 0)]
+    [InlineData(2999, 0)]
+    [InlineData(3000, 1)]
+    [InlineData(5999, 1)]
+    [InlineData(6000, 2)]
+    [InlineData(12000, 3)]
+    [InlineData(24999, 3)]
+    [InlineData(25000, 4)]
+    [InlineData(41185, 4)]
+    [InlineData(-200, 0)]
+    [InlineData(double.MaxValue, 0)]
+    [InlineData(double.NaN, 0)]
+    public void SyncCandidateLevel_GrowsWithTheSilence(double gapMs, int expectedLevel)
+    {
+        Assert.Equal(expectedLevel, PointSyncViaOtherWindow.GetSyncCandidateLevel(gapMs));
     }
 }
