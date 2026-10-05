@@ -403,8 +403,7 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject, I
         _removeTextForHiLib.Settings = GetSettings(_subtitle);
         _removeTextForHiLib.Warnings = [];
         
-        var interjections = Se.Settings.Tools.RemoveTextForHi.Interjections
-            .FirstOrDefault(p => p.LanguageCode == (SelectedLanguage?.Code ?? "en"));
+        var interjections = Se.Settings.Tools.RemoveTextForHi.GetInterjections(SelectedLanguage?.Code ?? "en");
         var list = interjections?.Interjections ?? new List<string>();
         var skipList = interjections?.SkipStartList ?? new List<string>();
         _removeTextForHiLib.ReloadInterjection(list, skipList);

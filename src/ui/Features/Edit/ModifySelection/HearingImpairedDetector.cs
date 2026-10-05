@@ -96,8 +96,8 @@ public class HearingImpairedDetector
         };
 
         var removeTextForHi = new RemoveTextForHI(settings);
-        var interjections = saved.Interjections.FirstOrDefault(p => p.LanguageCode == _twoLetterLanguageCode) ??
-                            saved.Interjections.FirstOrDefault(p => p.LanguageCode == "en");
+        var interjections = saved.GetInterjections(_twoLetterLanguageCode) ??
+                            saved.GetInterjections("en");
         removeTextForHi.ReloadInterjection(
             interjections?.Interjections ?? new List<string>(),
             interjections?.SkipStartList ?? new List<string>());

@@ -36,28 +36,10 @@ public partial class InterjectionsViewModel : ObservableObject
             return;
         }
 
-        var interjectionLanguage =
-            Se.Settings.Tools.RemoveTextForHi.Interjections
-            .FirstOrDefault(p => p.LanguageCode == _languageCode);
-
-        if (interjectionLanguage == null)
-        {
-            interjectionLanguage = new SeRemoveTextForHi.InterjectionLanguage
-            {
-                LanguageCode = _languageCode,
-            };
-            Se.Settings.Tools.RemoveTextForHi.Interjections.Add(interjectionLanguage);
-        }
-
-        interjectionLanguage.Interjections = InterjectionsText.SplitToLines()
-            .Where(p => !string.IsNullOrWhiteSpace(p))
-            .Select(p => p.Trim())
-            .ToList();
-        
-        interjectionLanguage.SkipStartList = InterjectionsSkipStartText.SplitToLines()
-            .Where(p => !string.IsNullOrWhiteSpace(p))
-            .Select(p => p.Trim())
-            .ToList();
+        Se.Settings.Tools.RemoveTextForHi.SetInterjections(
+            _languageCode,
+            InterjectionsText.SplitToLines(),
+            InterjectionsSkipStartText.SplitToLines());
 
         OkPressed = true;
         Window?.Close();
@@ -91,15 +73,13 @@ public partial class InterjectionsViewModel : ObservableObject
         }
 
         _languageCode = selectedLanguage.Code;
-        var interjectionLanguage = Se.Settings.Tools.RemoveTextForHi.Interjections.FirstOrDefault(p =>
-                                    p.LanguageCode == _languageCode);
-        
-        if (interjectionLanguage == null)
+        var interjections = Se.Settings.Tools.RemoveTextForHi.GetInterjections(_languageCode);
+        if (interjections == null)
         {
             return;
         }
-        
-        InterjectionsText = string.Join(Environment.NewLine, interjectionLanguage.Interjections);
-        InterjectionsSkipStartText = string.Join(Environment.NewLine, interjectionLanguage.SkipStartList);
+
+        InterjectionsText = string.Join(Environment.NewLine, interjections.Interjections);
+        InterjectionsSkipStartText = string.Join(Environment.NewLine, interjections.SkipStartList);
     }
 }
