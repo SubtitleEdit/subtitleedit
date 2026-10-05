@@ -19,13 +19,16 @@ namespace UITests.Features.Main;
 /// </summary>
 public class PluginParagraphsTests : IDisposable
 {
-    // Selecting EBU STL turns on the session-only frame-mode override (and libse's HH:MM:SS:FF
-    // mirror); left on, every later test that sets UseFrameMode = false still runs in frame mode.
-    private readonly SettingsScope _frameMode = new("General.UseFrameMode");
-
-    public void Dispose() => _frameMode.Dispose();
-
     private static readonly string GsiHeader = new Ebu.EbuGeneralSubtitleInformation().ToString();
+
+    // Selecting EBU STL forces frame mode through the session-only override (and flips libse's
+    // time format); left behind, every later test that parses or compares times runs in frames.
+    private readonly SettingsScope _settings = new("General.UseFrameMode");
+
+    public void Dispose()
+    {
+        _settings.Dispose();
+    }
 
     [AvaloniaFact]
     public void BuildPluginRequest_BinaryFormat_SendsHeaderAndParagraphs()

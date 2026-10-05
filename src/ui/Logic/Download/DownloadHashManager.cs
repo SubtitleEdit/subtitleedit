@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using Nikse.SubtitleEdit.UiLogic;
 
@@ -148,7 +149,8 @@ public static class DownloadHashManager
     }
 
     // Pinned archives with no update detection (no sidecar) - the hash only guards the download
-    // against a corrupt, truncated or tampered file. Index 0 must match the URL in the service.
+    // against a corrupt, truncated or tampered file. Index 0 must match the URL in the service,
+    // and PinnedHashUrls must record that URL.
     public static class Ffmpeg
     {
         public const string Windows = "Ffmpeg.Windows";
@@ -471,6 +473,23 @@ public static class DownloadHashManager
         public const string MacArm64 = "WhisperX.MacArm64";                 // whisperx-standalone-macos-arm64.7z
         public const string LinuxX64 = "WhisperX.Linux.X64";                // whisperx-standalone-linux-x64.7z
     }
+
+    // The URL that index 0 of KnownHashes was computed from, for each pinned download
+    // (Ffmpeg/LibMpv/LibVlc). When a service's URL is bumped, update the URL here together with
+    // its hash - PinnedDownloadHashTests fails when the service URL and this URL differ, which
+    // catches a URL bump whose stale hash would fail every user's download.
+    internal static readonly IReadOnlyDictionary<string, string> PinnedHashUrls =
+        new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            [Ffmpeg.Windows] = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v9-2/ffmpeg902.zip",
+            [Ffmpeg.MacOsX64] = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v8/ffmpeg80intel.zip",
+            [Ffmpeg.MacOsArm64] = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v9-1/ffmpeg90arm.zip",
+            [LibMpv.WindowsX64] = "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-08-14b/libmpv2-win64.zip",
+            [LibMpv.WindowsArm64] = "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-08-14b/libmpv2-win-arm64.zip",
+            [LibVlc.WindowsX64] = "https://get.videolan.org/vlc/3.0.23/win64/vlc-3.0.23-win64.7z",
+            [LibVlc.WindowsX86] = "https://get.videolan.org/vlc/3.0.23/win32/vlc-3.0.23-win32.7z",
+            [LibVlc.MacOsX64] = "https://github.com/SubtitleEdit/support-files/releases/download/vlc3/libvlc-osx64.7z",
+        };
 
     // For each key, hashes are ordered newest-first. Index 0 is the latest known release.
     // All hashes are lower-case hex SHA-256.
@@ -3006,14 +3025,20 @@ public static class DownloadHashManager
     /// Compares a downloaded archive (in memory) against the latest known SHA-256 for
     /// <paramref name="key"/> and throws on mismatch, so the download dialog shows
     /// "Download failed" instead of unpacking a truncated or tampered file. No-op when the key
-    /// has no known hash. Leaves the stream at position 0.
+    /// has no known hash. Leaves the stream at position 0. An empty stream throws too: skipping
+    /// it left every caller to remember its own "no data" check before unpacking.
     /// </summary>
     public static async Task VerifyDownloadAsync(Stream stream, string? key, string label, CancellationToken cancellationToken)
     {
         var expected = string.IsNullOrEmpty(key) ? null : GetLatestKnownHash(key);
-        if (string.IsNullOrEmpty(expected) || stream.Length == 0)
+        if (string.IsNullOrEmpty(expected))
         {
             return;
+        }
+
+        if (stream.Length == 0)
+        {
+            throw new IOException(Se.Language.General.NoDataReceived);
         }
 
         stream.Position = 0;
@@ -3029,9 +3054,14 @@ public static class DownloadHashManager
     public static async Task VerifyDownloadAsync(string filePath, string? key, string label, CancellationToken cancellationToken)
     {
         var expected = string.IsNullOrEmpty(key) ? null : GetLatestKnownHash(key);
-        if (string.IsNullOrEmpty(expected) || !File.Exists(filePath))
+        if (string.IsNullOrEmpty(expected))
         {
             return;
+        }
+
+        if (!File.Exists(filePath) || new FileInfo(filePath).Length == 0)
+        {
+            throw new IOException(Se.Language.General.NoDataReceived);
         }
 
         var actual = await Sha256Util.ComputeSha256Async(filePath, cancellationToken);

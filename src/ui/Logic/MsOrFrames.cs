@@ -36,4 +36,46 @@ public static class MsOrFrames
 
         return ToMilliseconds(value, frameMode);
     }
+
+    /// <summary>
+    /// True when a measured duration or gap is above the box's limit. In frame mode both sides are
+    /// compared in frames: the limit converted to rounded milliseconds can be one millisecond short
+    /// of a span exactly that many frames long (one frame at 29.97 fps is 33 ms, but two time codes
+    /// one frame apart can be 34 ms apart after their own rounding).
+    /// </summary>
+    public static bool IsAbove(double milliseconds, int limit, bool frameMode)
+    {
+        return frameMode ? SubtitleFormat.MillisecondsToFrames(milliseconds) > limit : milliseconds > limit;
+    }
+
+    /// <summary>
+    /// True when a measured duration or gap is below the box's limit, compared in frames in frame
+    /// mode (see <see cref="IsAbove"/>).
+    /// </summary>
+    public static bool IsBelow(double milliseconds, int limit, bool frameMode)
+    {
+        return frameMode ? SubtitleFormat.MillisecondsToFrames(milliseconds) < limit : milliseconds < limit;
+    }
+
+    /// <summary>
+    /// The "max between" milliseconds to hand to code that compares millisecond gaps with
+    /// <c>gap &gt; max</c>. In frame mode this is the largest whole millisecond gap that still
+    /// rounds to at most <paramref name="value"/> frames, so the comparison matches comparing in
+    /// frames for whole-millisecond time codes.
+    /// </summary>
+    public static int ToMaxGapMilliseconds(int value, bool frameMode)
+    {
+        if (!frameMode || value < 0)
+        {
+            return value;
+        }
+
+        var ms = SubtitleFormat.FramesToMilliseconds(value);
+        while (SubtitleFormat.MillisecondsToFrames(ms + 1) <= value)
+        {
+            ms++;
+        }
+
+        return ms;
+    }
 }

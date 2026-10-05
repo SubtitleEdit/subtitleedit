@@ -126,7 +126,7 @@ public partial class MergeSameTimeCodesViewModel : ObservableObject, IClosingCle
             }
 
             var next = _subtitles[i];
-            if (p != null && QualifiesForMerge(p, next, MsOrFrames.ToMilliseconds(MaxMsOrFramesDifference, IsFrameMode)))
+            if (p != null && QualifiesForMerge(p, next, MaxMsOrFramesDifference, IsFrameMode))
             {
                 if (!singleMergeSubtitles.Contains(p))
                 {
@@ -233,13 +233,22 @@ public partial class MergeSameTimeCodesViewModel : ObservableObject, IClosingCle
 
     public static bool QualifiesForMerge(SubtitleLineViewModel p, SubtitleLineViewModel next, int maxMsBetween)
     {
+        return QualifiesForMerge(p, next, maxMsBetween, frameMode: false);
+    }
+
+    /// <summary>
+    /// In frame mode <paramref name="maxDifference"/> is frames and the differences are compared in
+    /// frames, so time codes exactly one frame apart (33 or 34 ms at 29.97 fps) both count as one.
+    /// </summary>
+    public static bool QualifiesForMerge(SubtitleLineViewModel? p, SubtitleLineViewModel? next, int maxDifference, bool frameMode)
+    {
         if (p == null || next == null)
         {
             return false;
         }
 
-        return Math.Abs(next.StartTime.TotalMilliseconds - p.StartTime.TotalMilliseconds) <= maxMsBetween &&
-               Math.Abs(next.EndTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) <= maxMsBetween;
+        return !MsOrFrames.IsAbove(Math.Abs(next.StartTime.TotalMilliseconds - p.StartTime.TotalMilliseconds), maxDifference, frameMode) &&
+               !MsOrFrames.IsAbove(Math.Abs(next.EndTime.TotalMilliseconds - p.EndTime.TotalMilliseconds), maxDifference, frameMode);
     }
 
     private void LoadSettings()

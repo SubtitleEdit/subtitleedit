@@ -26,8 +26,8 @@ internal sealed class SettingsScope : IDisposable
     /// singleton by <c>Se.UpdateLibSeSettings</c>, and the copy is one-way. Restoring the SE 5
     /// property therefore is not enough: if anything ran that sync while the scope held a changed
     /// value, the mirror keeps the changed one for the rest of the run. Test collections do not
-    /// run in parallel here, so this is not a race - it is plain ordering, which is why it shows
-    /// up as a suite that passes alone and fails in a different order.
+    /// run in parallel here (tests/xunit.runner.json), so this is not a race - it is plain ordering,
+    /// which is why it shows up as a suite that passes alone and fails in a different order.
     ///
     /// UseFrameMode is the mirror that bites, because TimeCode.ToDisplayString reads the libse
     /// side: a leak turns every later "00:11:23.520" assertion into "00:11:23:12" in a test that
@@ -36,38 +36,48 @@ internal sealed class SettingsScope : IDisposable
     private readonly bool _libSeUseTimeFormatHhMmSsFf;
     private readonly bool _restoreLibSeTimeFormat;
 
+    /// <summary>
+    /// The frame rate is mirrored the same way (and libse's copy is what frame conversions read),
+    /// so "General.CurrentFrameRate" puts both back too.
+    /// </summary>
+    private readonly double _libSeCurrentFrameRate;
+    private readonly bool _restoreLibSeFrameRate;
+
     internal SettingsScope(params string[] paths)
     {
-        // UseFrameMode is computed: it reads the session-only UseFrameModeOverride (forced on while
-        // EBU STL is the main window's format) before the persisted value, and its setter only
-        // writes the persisted value. So a test that sets UseFrameMode = false while an earlier
-        // test left the override on still runs in frame mode - and restoring through the computed
-        // getter would write the override into the persisted value. Snapshot both backing
-        // properties instead, and clear the override for the scope so the test's own choice holds.
-        var frameMode = paths.Contains("General.UseFrameMode");
-        var expanded = frameMode
-            ? paths.Where(p => p != "General.UseFrameMode")
-                .Append("General.UseFrameModePersisted")
-                .Append("General.UseFrameModeOverride")
-                .Distinct()
-            : paths;
-
-        foreach (var path in expanded)
+        foreach (var path in paths)
         {
-            var (owner, property) = Resolve(path);
-            _saved.Add((property, owner, property.GetValue(owner)));
+            // UseFrameMode reads through the session-only EBU STL override (UseFrameModeOverride),
+            // and its setter writes the persisted value. Snapshotting the effective value would
+            // neither undo an override a test left behind (selecting EBU STL in the main view sets
+            // it) nor keep it out of the persisted value on restore. Scope both halves instead.
+            if (path == "General.UseFrameMode")
+            {
+                Add("General.UseFrameModePersisted");
+                Add("General.UseFrameModeOverride");
+                continue;
+            }
+
+            Add(path);
         }
 
-        if (frameMode)
-        {
-            Se.Settings.General.UseFrameModeOverride = null;
-        }
-
-        _restoreLibSeTimeFormat = paths.Any(p => p.StartsWith("General.UseFrameMode", StringComparison.Ordinal));
+        _restoreLibSeTimeFormat = paths.Contains("General.UseFrameMode");
         if (_restoreLibSeTimeFormat)
         {
             _libSeUseTimeFormatHhMmSsFf = Configuration.Settings.General.UseTimeFormatHHMMSSFF;
         }
+
+        _restoreLibSeFrameRate = paths.Contains("General.CurrentFrameRate");
+        if (_restoreLibSeFrameRate)
+        {
+            _libSeCurrentFrameRate = Configuration.Settings.General.CurrentFrameRate;
+        }
+    }
+
+    private void Add(string path)
+    {
+        var (owner, property) = Resolve(path);
+        _saved.Add((property, owner, property.GetValue(owner)));
     }
 
     public void Dispose()
@@ -82,6 +92,11 @@ internal sealed class SettingsScope : IDisposable
         if (_restoreLibSeTimeFormat)
         {
             Configuration.Settings.General.UseTimeFormatHHMMSSFF = _libSeUseTimeFormatHhMmSsFf;
+        }
+
+        if (_restoreLibSeFrameRate)
+        {
+            Configuration.Settings.General.CurrentFrameRate = _libSeCurrentFrameRate;
         }
     }
 

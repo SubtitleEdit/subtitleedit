@@ -62,25 +62,12 @@ public partial class DownloadYtDlpViewModel : ObservableObject, IClosingCleanup
             {
                 _timer.Stop();
                 _done = true;
-
-                var fileName = YtDlpDownloadService.GetFullFileName();
-                if (File.Exists(fileName) && OperatingSystem.IsMacOS())
-                {
-                    MacHelper.MakeExecutable(fileName);
-                }
-                else if (File.Exists(fileName) && OperatingSystem.IsLinux())
-                {
-                    LinuxHelper.MakeExecutable(fileName);
-                }
-
                 Close();
             }
             else if (_downloadTask is { IsFaulted: true })
             {
-                // Only the partial download - deleting the installed binary here threw away a
-                // working yt-dlp whenever an update failed (network error, checksum mismatch).
-                YtDlpDownloadService.DeletePartialDownload(YtDlpDownloadService.GetFullFileName());
-
+                // The service already removed the partial download and left the installed
+                // yt-dlp in place - nothing to clean up here.
                 _timer.Stop();
                 _done = true;
                 var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;

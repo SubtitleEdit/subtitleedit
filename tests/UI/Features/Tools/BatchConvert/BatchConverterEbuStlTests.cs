@@ -13,11 +13,19 @@ namespace UITests.Features.Tools.BatchConvert;
 /// binary save also needs <see cref="Ebu.EbuUiHelper"/>, which used to be set only when the
 /// EBU settings dialog had been opened; without it the file was left empty.
 /// </summary>
-public class BatchConverterEbuStlTests
+public class BatchConverterEbuStlTests : IDisposable
 {
+    // Loading an EBU STL file sets libse's current frame rate from its GSI header.
+    private readonly double _currentFrameRate = Configuration.Settings.General.CurrentFrameRate;
+
     public BatchConverterEbuStlTests()
     {
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+    }
+
+    public void Dispose()
+    {
+        Configuration.Settings.General.CurrentFrameRate = _currentFrameRate;
     }
 
     private const string InputSrt = @"1
