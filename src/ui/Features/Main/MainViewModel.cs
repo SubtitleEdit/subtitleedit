@@ -5220,12 +5220,13 @@ public partial class MainViewModel :
             Window!,
             format,
             GetNewFileName(),
-            $"Save {format.Name} file as");
+            string.Format(Se.Language.Main.SaveXFileAs, format.Name));
 
         if (!string.IsNullOrEmpty(fileName))
         {
             await File.WriteAllBytesAsync(fileName, ms.ToArray());
             ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToY, format.Name, fileName));
+            await ShowExportFileSavedPrompt(fileName);
         }
     }
 
@@ -5251,12 +5252,13 @@ public partial class MainViewModel :
             Window!,
             format,
             GetNewFileName(),
-            $"Save {format.Name} file as");
+            string.Format(Se.Language.Main.SaveXFileAs, format.Name));
 
         if (!string.IsNullOrEmpty(fileName))
         {
             await File.WriteAllBytesAsync(fileName, ms.ToArray());
             ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToY, format.Name, fileName));
+            await ShowExportFileSavedPrompt(fileName);
         }
     }
 
@@ -5282,12 +5284,13 @@ public partial class MainViewModel :
             Window!,
             format,
             GetNewFileName(),
-            $"Save {format.Name} file as");
+            string.Format(Se.Language.Main.SaveXFileAs, format.Name));
 
         if (!string.IsNullOrEmpty(fileName))
         {
             await File.WriteAllBytesAsync(fileName, ms.ToArray());
             ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToY, format.Name, fileName));
+            await ShowExportFileSavedPrompt(fileName);
         }
     }
 
@@ -5340,6 +5343,7 @@ public partial class MainViewModel :
         }
 
         ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToY, cavena.Name, fileName));
+        await ShowExportFileSavedPrompt(fileName);
     }
 
     [RelayCommand]
@@ -5387,6 +5391,7 @@ public partial class MainViewModel :
         await File.WriteAllBytesAsync(fileName, GetDvbTeletextExportBytes(writer));
 
         ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToY, Se.Language.File.Export.TitleExportDvbTeletext, fileName));
+        await ShowExportFileSavedPrompt(fileName);
     }
 
     /// <summary>
@@ -5433,6 +5438,7 @@ public partial class MainViewModel :
         await File.WriteAllBytesAsync(fileName, ms.ToArray());
 
         ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToY, pac.Name, fileName));
+        await ShowExportFileSavedPrompt(fileName);
     }
 
     [RelayCommand]
@@ -5457,12 +5463,13 @@ public partial class MainViewModel :
             Window!,
             format,
             GetNewFileName(),
-            $"Save {format.Name} file as");
+            string.Format(Se.Language.Main.SaveXFileAs, format.Name));
 
         if (!string.IsNullOrEmpty(fileName))
         {
             await File.WriteAllBytesAsync(fileName, ms.ToArray());
             ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToY, format.Name, fileName));
+            await ShowExportFileSavedPrompt(fileName);
         }
 
         _shortcutManager.ClearKeys();
@@ -5572,7 +5579,7 @@ public partial class MainViewModel :
             Window!,
             format,
             GetNewFileName(),
-            $"Save {format.Name} file as");
+            string.Format(Se.Language.Main.SaveXFileAs, format.Name));
 
         if (string.IsNullOrEmpty(fileName))
         {
@@ -5602,6 +5609,24 @@ public partial class MainViewModel :
         }
 
         ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToFileY, format.Name, fileName));
+        await ShowExportFileSavedPrompt(fileName);
+    }
+
+    /// <summary>
+    /// Confirms a finished binary export with the shared "File saved" dialog (open folder), like
+    /// the other exports do - a status-bar line alone was easy to miss.
+    /// </summary>
+    private async Task ShowExportFileSavedPrompt(string fileName)
+    {
+        await ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(vm =>
+        {
+            vm.Initialize(
+                Se.Language.General.FileSaved,
+                string.Format(Se.Language.General.FileSavedToX, fileName),
+                fileName,
+                true,
+                false);
+        });
     }
 
     [RelayCommand]

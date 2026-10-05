@@ -13,6 +13,7 @@ namespace Nikse.SubtitleEdit.Logic.Config;
     UnmappedMemberHandling = JsonUnmappedMemberHandling.Skip,
     WriteIndented = true)]
 [JsonSerializable(typeof(Se))]
+[JsonSerializable(typeof(SeBatchConvert))] // batch convert presets store a copy of these settings
 internal partial class SeJsonContext : JsonSerializerContext
 {
 }

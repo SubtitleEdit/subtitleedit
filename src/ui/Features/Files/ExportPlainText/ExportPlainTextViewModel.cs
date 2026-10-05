@@ -11,6 +11,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using System.Globalization;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -298,6 +299,16 @@ public partial class ExportPlainTextViewModel : ObservableObject, IClosingCleanu
         var encoding = EncodingHelper.ResolveEncoding(SelectedEncoding?.DisplayName, null) ?? Encoding.UTF8;
         await System.IO.File.WriteAllTextAsync(fileName, text, encoding);
         SaveSettings();
+
+        await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window, vm =>
+        {
+            vm.Initialize(
+                Se.Language.General.FileSaved,
+                string.Format(Se.Language.General.FileSavedToX, fileName),
+                fileName,
+                true,
+                true);
+        });
     }
 
     [RelayCommand]

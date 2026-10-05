@@ -9,6 +9,10 @@ public class SeSync
     public double ChangeFrameRateFrom { get; set; } = 23.976;
     public double ChangeFrameRateTo { get; set; } = 25.0;
 
+    // Last used Change speed values ("All", "Selected", "SelectedAndForward"; empty = default by selection).
+    public double ChangeSpeedPercent { get; set; } = 100.0;
+    public string ChangeSpeedLineSelectionChoice { get; set; } = string.Empty;
+
     // Height of the drag-resizable waveform under the video in the sync dialogs (issue #14414).
     public double SetSyncPointWaveformHeight { get; set; } = 80;
     public double VisualSyncWaveformHeight { get; set; } = 80;

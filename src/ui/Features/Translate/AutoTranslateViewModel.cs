@@ -2178,6 +2178,10 @@ public partial class AutoTranslateViewModel : ObservableObject
                 Configuration.Settings.Tools.LmStudioApiUrl.TrimEnd('/'),
             });
 
+            // LM Studio serves whatever model is loaded - free-text field, may be left empty.
+            ModelIsVisible = true;
+            ModelText = Configuration.Settings.Tools.LmStudioModel;
+
             return;
         }
 

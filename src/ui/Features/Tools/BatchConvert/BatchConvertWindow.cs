@@ -480,7 +480,39 @@ public class BatchConvertWindow : Window
         return grid;
     }
 
-    private static Border MakeFunctionsListView(BatchConvertViewModel vm)
+    private static Control MakeFunctionsListView(BatchConvertViewModel vm)
+    {
+        var comboBoxPreset = UiUtil.MakeComboBox(vm.PresetNames, vm, nameof(vm.SelectedPresetName));
+        comboBoxPreset.Width = 150;
+        comboBoxPreset.PlaceholderText = Se.Language.Tools.BatchConvert.Preset;
+        comboBoxPreset.WithAccessibleName(Se.Language.Tools.BatchConvert.Preset);
+        var buttonSavePreset = UiUtil.MakeButton(Se.Language.Tools.BatchConvert.SavePresetDotDotDot, vm.SavePresetCommand);
+        var buttonDeletePreset = UiUtil.MakeButton(Se.Language.General.Delete, vm.DeletePresetCommand);
+        var panelPresets = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 5,
+            Margin = new Thickness(0, 0, 0, 5),
+            Children =
+            {
+                comboBoxPreset,
+                buttonSavePreset,
+                buttonDeletePreset,
+            }
+        };
+
+        return new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Children =
+            {
+                panelPresets,
+                MakeFunctionsList(vm),
+            }
+        };
+    }
+
+    private static Border MakeFunctionsList(BatchConvertViewModel vm)
     {
         // The DataGrid this replaces hid its header row (HeadersVisibility.None);
         // TableView has no such switch, so the two columns now show headers. No

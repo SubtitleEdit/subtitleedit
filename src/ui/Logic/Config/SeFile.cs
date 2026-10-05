@@ -20,6 +20,11 @@ public class SeFile
     public string ExportDvbTeletextLanguageCode { get; set; } = "eng";
     public bool ExportDvbTeletextHearingImpaired { get; set; }
 
+    // Last used Export Cavena 890 values (the titles and comment are per file and not kept).
+    public string ExportCavena890Translator { get; set; } = string.Empty;
+    public string ExportCavena890Language { get; set; } = string.Empty;
+    public double ExportCavena890StartOfProgrammeMs { get; set; }
+
     /// <summary>
     /// Last PAC code page chosen in Export PAC - shared with Batch convert's PAC settings so both
     /// write the same code page. 0 = Latin (see the Pac.CodePage* constants).

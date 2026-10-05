@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
@@ -223,15 +224,7 @@ public partial class MergeTwoSubtitlesViewModel : ObservableObject
             return;
         }
 
-        var subtitle = LoadSubtitleFile(fileName);
-        if (subtitle == null)
-        {
-            await MessageBox.Show(Window, Se.Language.General.Error, "Unable to read subtitle: " + fileName);
-            return;
-        }
-
-        SetSubtitle1(subtitle, Path.GetFileName(fileName));
-        UpdateMergeEnabled();
+        await LoadFileIntoSlot(1, fileName);
     }
 
     [RelayCommand]
@@ -248,6 +241,16 @@ public partial class MergeTwoSubtitlesViewModel : ObservableObject
             return;
         }
 
+        await LoadFileIntoSlot(2, fileName);
+    }
+
+    private async Task LoadFileIntoSlot(int slot, string fileName)
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
         var subtitle = LoadSubtitleFile(fileName);
         if (subtitle == null)
         {
@@ -255,8 +258,68 @@ public partial class MergeTwoSubtitlesViewModel : ObservableObject
             return;
         }
 
-        SetSubtitle2(subtitle, Path.GetFileName(fileName));
+        if (slot == 1)
+        {
+            SetSubtitle1(subtitle, Path.GetFileName(fileName));
+        }
+        else
+        {
+            SetSubtitle2(subtitle, Path.GetFileName(fileName));
+        }
+
         UpdateMergeEnabled();
+    }
+
+    internal void FileOnDragOver(object? sender, DragEventArgs e)
+    {
+        e.DragEffects = e.DataTransfer.Contains(DataFormat.File) ? DragDropEffects.Copy : DragDropEffects.None;
+        e.Handled = true;
+    }
+
+    /// <summary>
+    /// Drop onto a file area (slot 1 or 2) loads into that slot; slot 0 is the window itself,
+    /// which fills the first empty slot. Two or more files fill both slots in drop order.
+    /// </summary>
+    internal void FileOnDrop(int slot, DragEventArgs e)
+    {
+        if (!e.DataTransfer.Contains(DataFormat.File))
+        {
+            return;
+        }
+
+        var files = e.DataTransfer.TryGetFiles();
+        if (files == null)
+        {
+            return;
+        }
+
+        var fileNames = files
+            .Select(p => p.Path?.LocalPath)
+            .Where(p => p != null && System.IO.File.Exists(p))
+            .Select(p => p!)
+            .ToList();
+        if (fileNames.Count == 0)
+        {
+            return;
+        }
+
+        e.Handled = true;
+        Dispatcher.UIThread.Post(async void () =>
+        {
+            if (fileNames.Count >= 2)
+            {
+                await LoadFileIntoSlot(1, fileNames[0]);
+                await LoadFileIntoSlot(2, fileNames[1]);
+                return;
+            }
+
+            if (slot == 0)
+            {
+                slot = _subtitle1.Paragraphs.Count == 0 || _subtitle2.Paragraphs.Count > 0 ? 1 : 2;
+            }
+
+            await LoadFileIntoSlot(slot, fileNames[0]);
+        });
     }
 
     private static Subtitle? LoadSubtitleFile(string fileName)

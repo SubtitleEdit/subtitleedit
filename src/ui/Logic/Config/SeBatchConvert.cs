@@ -1,7 +1,15 @@
 ﻿using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.UiLogic.BatchConvert;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
+
+/// <summary>A named batch convert setup: the function selection and settings, as SeBatchConvert JSON.</summary>
+public class SeBatchConvertPreset
+{
+    public string Name { get; set; } = string.Empty;
+    public string Settings { get; set; } = string.Empty;
+}
 
 public class SeBatchConvert
 {
@@ -158,6 +166,22 @@ public class SeBatchConvert
     public bool ConvertColorsToDialogAddNewLines { get; set; }
     public bool ConvertColorsToDialogReBreakLines { get; set; }
 
+    public int RenumberStartNumber { get; set; }
+
+    public int MergeContinuationLinesMaxGapMs { get; set; }
+    public int MergeContinuationLinesMaxCharacters { get; set; }
+
+    public string ConvertActorsFromType { get; set; }
+    public string ConvertActorsToType { get; set; }
+    public bool ConvertActorsSetColor { get; set; }
+    public string ConvertActorsColor { get; set; }
+    public bool ConvertActorsChangeCasing { get; set; }
+    public int ConvertActorsCasingType { get; set; }
+    public bool ConvertActorsOnlyNames { get; set; }
+
+    /// <summary>Named function selections + settings. A preset's own stored copy has this list empty.</summary>
+    public List<SeBatchConvertPreset> Presets { get; set; } = new();
+
     /// <summary>
     /// "Add folder" (and dropping a folder on the file list) also picks up files in subfolders.
     /// Off by default - a recursive scan of a big tree or a network share can take a while.
@@ -280,5 +304,14 @@ public class SeBatchConvert
         SnapTimeCodesToFramesFixedFrameRate = 23.976;
 
         ConvertColorsToDialogRemoveColorTags = true;
+
+        RenumberStartNumber = 1;
+
+        MergeContinuationLinesMaxGapMs = 250;
+        MergeContinuationLinesMaxCharacters = 0; // 0 = max line length x max number of lines
+
+        ConvertActorsFromType = "InlineSquareBrackets";
+        ConvertActorsToType = "Actor";
+        ConvertActorsColor = Avalonia.Media.Colors.Yellow.FromColorToHex();
     }
 }

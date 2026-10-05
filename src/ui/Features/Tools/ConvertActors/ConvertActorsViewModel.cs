@@ -115,17 +115,8 @@ public partial class ConvertActorsViewModel : ObservableObject, IClosingCleanup
         subtitle.Paragraphs.AddRange(paragraphs);
 
         var languageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
-        var converter = new ActorConverter(_format, languageCode);
-
-        converter.ToSquare = SelectedToType.Type == ConvertActorType.InlineSquareBrackets;
-        converter.ToParentheses = SelectedToType.Type == ConvertActorType.InlineParentheses;
-        converter.ToColon = SelectedToType.Type == ConvertActorType.InlineColon;
-        converter.ToActor = SelectedToType.Type == ConvertActorType.Actor;
-
-        var fromSquare = SelectedFromType.Type == ConvertActorType.InlineSquareBrackets;
-        var fromParentheses = SelectedFromType.Type == ConvertActorType.InlineParentheses;
-        var fromColon = SelectedFromType.Type == ConvertActorType.InlineColon;
-        var fromActor = SelectedFromType.Type == ConvertActorType.Actor;
+        var converter = ConvertActorsHelper.MakeConverter(_format, languageCode, SelectedToType.Type);
+        var fromType = SelectedFromType.Type;
 
         int? changeCasing = ChangeCasing ? SelectedCasingIndex : null;
         SkiaSharp.SKColor? color = SetColor ? SelectedColor.ToSkColor() : null;
@@ -139,24 +130,9 @@ public partial class ConvertActorsViewModel : ObservableObject, IClosingCleanup
             var p = paragraphs[i];
             var oldText = p.Text;
 
-            if (fromSquare && Contains(p.Text, '[', ']'))
+            var result = ConvertActorsHelper.ConvertParagraph(converter, p, fromType, changeCasing, color);
+            if (result != null)
             {
-                var result = converter.FixActors(p, '[', ']', changeCasing, color);
-                AddConversion(vm, oldText, result, converter, items, ref count);
-            }
-            else if (fromParentheses && Contains(p.Text, '(', ')'))
-            {
-                var result = converter.FixActors(p, '(', ')', changeCasing, color);
-                AddConversion(vm, oldText, result, converter, items, ref count);
-            }
-            else if (fromColon && p.Text.Contains(':'))
-            {
-                var result = converter.FixActorsFromBeforeColon(p, ':', changeCasing, color);
-                AddConversion(vm, oldText, result, converter, items, ref count);
-            }
-            else if (fromActor && !string.IsNullOrEmpty(p.Actor))
-            {
-                var result = converter.FixActorsFromActor(p, changeCasing, color);
                 AddConversion(vm, oldText, result, converter, items, ref count);
             }
         }
@@ -241,22 +217,6 @@ public partial class ConvertActorsViewModel : ObservableObject, IClosingCleanup
                 UpdatedViewModel = nextVm,
             });
         }
-    }
-
-    private static bool Contains(string text, char start, char end)
-    {
-        if (string.IsNullOrEmpty(text))
-        {
-            return false;
-        }
-
-        var startIdx = text.IndexOf(start);
-        if (startIdx < 0)
-        {
-            return false;
-        }
-
-        return text.IndexOf(end) > startIdx;
     }
 
     public void Initialize(List<SubtitleLineViewModel> subtitles, SubtitleFormat format)
