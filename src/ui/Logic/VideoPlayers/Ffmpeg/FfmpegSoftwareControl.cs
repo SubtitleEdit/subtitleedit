@@ -6,6 +6,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.UiLogic.Export;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -177,7 +178,10 @@ public class FfmpegSoftwareControl : Control
         var fill = new SolidColorBrush(settings.MpvPreviewColorPrimary.FromHexToColor());
         var outline = new Pen(new SolidColorBrush(settings.MpvPreviewColorOutline.FromHexToColor()), outlineWidth * 2, lineJoin: PenLineJoin.Round);
         var shadow = new SolidColorBrush(settings.MpvPreviewColorShadow.FromHexToColor());
-        var weight = settings.MpvPreviewFontBold ? FontWeight.Bold : FontWeight.Normal;
+        // The font name is a libass face name ("Arial Light"); Avalonia matches families, so
+        // draw the face's family at the face's own weight (issue #15682).
+        FontFaces.TryGetFamilyAndWeight(settings.MpvPreviewFontName, out var fontFamily, out var faceWeight);
+        var weight = (FontWeight)(settings.MpvPreviewFontBold ? Math.Max(faceWeight, (int)FontWeight.Bold) : faceWeight);
         var alignment = int.TryParse(settings.MpvPreviewAlignment, NumberStyles.Integer, CultureInfo.InvariantCulture, out var a) && a is >= 1 and <= 9 ? a : 2;
 
         var primary = string.Join(Environment.NewLine, active.Where(l => !l.Secondary).Select(l => l.Text));
@@ -204,7 +208,7 @@ public class FfmpegSoftwareControl : Control
 
         void DrawBlock(DrawingContext ctx, string text, bool italic, int numpadAlignment)
         {
-            var typeface = new Typeface(settings.MpvPreviewFontName, italic ? FontStyle.Italic : FontStyle.Normal, weight);
+            var typeface = new Typeface(fontFamily, italic ? FontStyle.Italic : FontStyle.Normal, weight);
             var formatted = new FormattedText(text, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, typeface, fontSize, fill)
             {
                 TextAlignment = numpadAlignment is 1 or 4 or 7 ? TextAlignment.Left : numpadAlignment is 3 or 6 or 9 ? TextAlignment.Right : TextAlignment.Center,
