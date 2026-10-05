@@ -63,6 +63,35 @@ public static class TextBoxSurroundToggler
     }
 
     /// <summary>
+    /// True when the whole (non-empty) text of the text box is selected - then the caller surrounds
+    /// the whole subtitle and should call <see cref="SelectAllAfterTextChange"/> afterwards.
+    /// </summary>
+    public static bool IsWholeTextSelected(ITextBoxWrapper? tb)
+    {
+        if (string.IsNullOrEmpty(tb?.Text))
+        {
+            return false;
+        }
+
+        return Math.Min(tb.SelectionStart, tb.SelectionEnd) == 0 &&
+               Math.Max(tb.SelectionStart, tb.SelectionEnd) >= tb.Text.Length;
+    }
+
+    /// <summary>
+    /// Selects the whole text again once the new subtitle text has reached the text box. Without
+    /// this the text box keeps the old selection range, which no longer covers the end of the
+    /// (now longer) text - so the next surround lands before the last characters (#15693).
+    /// </summary>
+    public static void SelectAllAfterTextChange(ITextBoxWrapper tb)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            tb.SelectionStart = 0;
+            tb.SelectionEnd = tb.Text?.Length ?? 0;
+        });
+    }
+
+    /// <summary>
     /// Applies a "surround with" pair to <paramref name="text"/> according to <paramref name="behavior"/>.
     /// <paramref name="added"/> tells whether the pair was added (true) or removed (false).
     /// </summary>
