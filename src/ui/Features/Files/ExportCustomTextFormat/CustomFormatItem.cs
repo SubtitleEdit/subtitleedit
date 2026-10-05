@@ -46,6 +46,18 @@ public partial class CustomFormatItem : ObservableObject
         FormatNewLine = customFormat.FormatNewLine;
     }
 
+    /// <summary>
+    /// The extension with exactly one leading dot ("srt" and ".srt" both give ".srt"), or empty.
+    /// The defaults and the edit dialog store it without the dot, so appending it directly
+    /// produced "moviesrt", and the save picker got the filter "*srt" - which macOS can't map to
+    /// a file type, so it saved without any extension (#15699).
+    /// </summary>
+    public string GetDottedExtension()
+    {
+        var extension = (Extension ?? string.Empty).Trim().TrimStart('.');
+        return extension.Length == 0 ? string.Empty : "." + extension;
+    }
+
     public override string ToString()
     {
         return Name;
