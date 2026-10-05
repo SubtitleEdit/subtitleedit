@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="Spectre.Console" Version="0.57.2" />
-    <PackageReference Include="Spectre.Console.Cli" Version="0.55.0" />
+    <PackageReference Include="Spectre.Console.Cli" Version="0.57.2" />
 
     <!--
       seconv uses SkiaSharp (FixCommonErrors pixel-width measurement, image output) and
