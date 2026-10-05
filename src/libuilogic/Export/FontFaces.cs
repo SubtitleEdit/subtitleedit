@@ -52,6 +52,25 @@ public static class FontFaces
         return GetFaceMap().TryGetValue(faceName, out var face) ? face.SkiaFamily : faceName;
     }
 
+    /// <summary>
+    /// The Skia typographic family and weight of a face name, e.g. "Arial Light" -> "Arial", 300,
+    /// so a renderer that matches families (Avalonia) can draw a face that only libass knows by name.
+    /// Returns false when the face is unknown.
+    /// </summary>
+    public static bool TryGetFamilyAndWeight(string faceName, out string family, out int weight)
+    {
+        if (!string.IsNullOrEmpty(faceName) && GetFaceMap().TryGetValue(faceName, out var face))
+        {
+            family = face.SkiaFamily;
+            weight = face.Weight;
+            return true;
+        }
+
+        family = faceName;
+        weight = (int)SKFontStyleWeight.Normal;
+        return false;
+    }
+
     /// <summary>The Win32/GDI (name ID 1) face name of a typeface; falls back to the Skia family name.</summary>
     public static string GetFaceName(SKTypeface typeface) =>
         ReadWin32FamilyName(typeface) ?? typeface.FamilyName;

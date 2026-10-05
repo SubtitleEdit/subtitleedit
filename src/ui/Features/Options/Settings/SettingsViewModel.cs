@@ -499,7 +499,9 @@ public partial class SettingsViewModel : ObservableObject
         DialogStyle = DialogStyles.First();
         ContinuationStyle = ContinuationStyles.First();
         CpsLineLengthStrategy = CpsLineLengthStrategies.First();
-        Fonts = new ObservableCollection<string>(FontHelper.GetSystemFonts());
+        // The video preview font is drawn by libass (mpv/VLC), which matches Win32 face names -
+        // list every face like SE4 did, so e.g. "Arial Light" is not folded into "Arial" (issue #15682).
+        Fonts = new ObservableCollection<string>(FontHelper.GetLibAssaFonts());
         MpvPreviewBorderTypes = new ObservableCollection<BorderStyleItem>(BorderStyleItem.List());
         MpvPreviewFontAlignments = new ObservableCollection<AlignmentItem>(AlignmentItem.Alignments);
         MpvPreviewSelectedFontAlignment = MpvPreviewFontAlignments[7];
