@@ -270,6 +270,7 @@ public class TimelineTracks : Control, IDisposable
 
         _source.PropertyChanged += OnSourcePropertyChanged;
         _source.Rendered += OnSourceRendered;
+        _source.IsSameTrack = (a, b) => _grouping == TimelineTrackGrouping.None || GetGroupTrackIndex(a) == GetGroupTrackIndex(b);
         _hooked = true;
     }
 
@@ -283,6 +284,7 @@ public class TimelineTracks : Control, IDisposable
         _source.PropertyChanged -= OnSourcePropertyChanged;
         _source.Rendered -= OnSourceRendered;
         _source.HitTestFilter = null;
+        _source.IsSameTrack = null;
         _hooked = false;
     }
 
