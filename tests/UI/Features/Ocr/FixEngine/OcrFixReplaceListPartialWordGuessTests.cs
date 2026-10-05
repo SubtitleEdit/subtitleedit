@@ -63,7 +63,7 @@ public class OcrFixReplaceListPartialWordGuessTests
     [Fact]
     public void EmptyPlaceholderSection_DoesNotShadowTheRealSection()
     {
-        // fin/fra/hrb/hun/por/spa ship an empty <PartialWords /> placeholder BEFORE the real
+        // fin/fra/hun/por/spa ship an empty <PartialWords /> placeholder BEFORE the real
         // section; reading only the first section silently dropped every entry (same bug class
         // as #13658, which fixed it for the regex list only).
         var path = Path.Combine(Path.GetTempPath(), $"guesstest_{Guid.NewGuid():N}_OCRFixReplaceList.xml");
