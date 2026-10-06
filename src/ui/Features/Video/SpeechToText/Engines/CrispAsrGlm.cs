@@ -16,6 +16,8 @@ public class CrispAsrGlm : CrispAsrEngineBase
     public override string DefaultLanguage => "zh";
     public override bool IncludeLanguage => true;
 
+    // GLM-ASR-Nano only transcribes Chinese, English and Cantonese - CrispASR warns that
+    // any other language makes the model hallucinate.
     public override List<WhisperLanguage> Languages =>
         new()
         {
@@ -23,20 +25,6 @@ public class CrispAsrGlm : CrispAsrEngineBase
             new WhisperLanguage("zh", "chinese"),
             new WhisperLanguage("en", "english"),
             new WhisperLanguage("yue", "cantonese"),
-            new WhisperLanguage("ja", "japanese"),
-            new WhisperLanguage("ko", "korean"),
-            new WhisperLanguage("fr", "french"),
-            new WhisperLanguage("de", "german"),
-            new WhisperLanguage("es", "spanish"),
-            new WhisperLanguage("ru", "russian"),
-            new WhisperLanguage("it", "italian"),
-            new WhisperLanguage("pt", "portuguese"),
-            new WhisperLanguage("vi", "vietnamese"),
-            new WhisperLanguage("th", "thai"),
-            new WhisperLanguage("id", "indonesian"),
-            new WhisperLanguage("ar", "arabic"),
-            new WhisperLanguage("hi", "hindi"),
-            new WhisperLanguage("tr", "turkish"),
         };
 
 

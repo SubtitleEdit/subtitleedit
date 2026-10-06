@@ -17,23 +17,36 @@ public class CrispAsrParakeet : CrispAsrEngineBase
     public override bool IncludeLanguage => true;
     public override bool HasNativeTimestamps => true;
 
+    // The 25 European languages of parakeet-tdt-0.6b-v3 (also Parakeet Ultra).
     public override List<WhisperLanguage> Languages =>
        new()
        {
             new WhisperLanguage("auto", "Auto detect"),
             new WhisperLanguage("en", "english"),
-            new WhisperLanguage("es", "spanish"),
+            new WhisperLanguage("bg", "bulgarian"),
+            new WhisperLanguage("hr", "croatian"),
+            new WhisperLanguage("cs", "czech"),
+            new WhisperLanguage("da", "danish"),
+            new WhisperLanguage("nl", "dutch"),
+            new WhisperLanguage("et", "estonian"),
+            new WhisperLanguage("fi", "finnish"),
             new WhisperLanguage("fr", "french"),
             new WhisperLanguage("de", "german"),
+            new WhisperLanguage("el", "greek"),
+            new WhisperLanguage("hu", "hungarian"),
             new WhisperLanguage("it", "italian"),
-            new WhisperLanguage("pt", "portuguese"),
-            new WhisperLanguage("zh", "chinese"),
-            new WhisperLanguage("ja", "japanese"),
-            new WhisperLanguage("ko", "korean"),
-            new WhisperLanguage("ru", "russian"),
+            new WhisperLanguage("lv", "latvian"),
+            new WhisperLanguage("lt", "lithuanian"),
+            new WhisperLanguage("mt", "maltese"),
             new WhisperLanguage("pl", "polish"),
-            new WhisperLanguage("tr", "turkish"),
-            new WhisperLanguage("nl", "dutch"),
+            new WhisperLanguage("pt", "portuguese"),
+            new WhisperLanguage("ro", "romanian"),
+            new WhisperLanguage("ru", "russian"),
+            new WhisperLanguage("sk", "slovak"),
+            new WhisperLanguage("sl", "slovenian"),
+            new WhisperLanguage("es", "spanish"),
+            new WhisperLanguage("sv", "swedish"),
+            new WhisperLanguage("uk", "ukrainian"),
        };
 
     public override List<WhisperModel> Models =>
