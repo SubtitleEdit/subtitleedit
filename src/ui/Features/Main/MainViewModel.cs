@@ -23326,7 +23326,7 @@ public partial class MainViewModel :
 
         // mpv reports the pause asynchronously, so tell the seek it is paused: it then scrolls
         // the waveform to the target as for any other paused move.
-        SetVideoPositionSeconds(target, paused: pause);
+        SeekVideoPositionSeconds(target, paused: pause);
 
         // SetVideoPositionSeconds cleared the tracker (it is the shared choke point for
         // every position change); re-arm it here so the next relative step continues
@@ -23334,7 +23334,13 @@ public partial class MainViewModel :
         _relativeSeekTargetSeconds = target;
     }
 
-    private void SetVideoPositionSeconds(double newPosition, bool paused = false)
+    private void SetVideoPositionSeconds(double newPosition) => SeekVideoPositionSeconds(newPosition, paused: false);
+
+    /// <summary>
+    /// <see cref="SetVideoPositionSeconds"/>, but <paramref name="paused"/> says playback was just
+    /// paused: mpv reports that asynchronously, so the waveform is scrolled as for a paused seek.
+    /// </summary>
+    private void SeekVideoPositionSeconds(double newPosition, bool paused)
     {
         // Any position change other than a chained relative step invalidates the
         // relative-seek tracker so the next small step resyncs to the real position.
