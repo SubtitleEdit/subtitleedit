@@ -278,11 +278,14 @@ public class BatchConvertWindow : Window
         };
 
         var labelFilter = UiUtil.MakeLabel(Se.Language.General.Filter);
+        // Not while converting: rows mid-OCR ("OCR...", "OCR x%") would be filtered as errors.
         var comboBoxFilter = UiUtil.MakeComboBox(vm.FilterItems, vm, nameof(vm.SelectedFilterItem))
-            .WithMarginRight(3);
+            .WithMarginRight(3)
+            .WithBindEnabled(nameof(vm.AreControlsEnabled));
         comboBoxFilter.SelectionChanged += (_, _) => vm.FilterComboBoxChanged();
         var textBoxFilter = UiUtil.MakeTextBox(200, vm, nameof(vm.FilterText))
             .WithBindIsVisible(nameof(vm.IsFilterTextVisible))
+            .WithBindEnabled(nameof(vm.AreControlsEnabled))
             .WithSearchAndClearIcons();
         textBoxFilter.TextChanged += (_, _) => vm.FilterTextChanged();
         var panelFilter = new StackPanel

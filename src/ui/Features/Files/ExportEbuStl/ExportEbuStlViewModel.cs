@@ -345,6 +345,14 @@ new("2F", "French - hearing impaired (VF-MAL)"),
             UseBox = subtitleSettings.EbuStlTeletextUseBox;
             UseDoubleHeight = subtitleSettings.EbuStlTeletextUseDoubleHeight;
             var previewFont = Se.Settings.File.EbuSaveOptions.PreviewFontName;
+            if (!string.IsNullOrEmpty(previewFont) && !PreviewFonts.Contains(previewFont) &&
+                FontHelper.GetSystemFonts().Contains(previewFont))
+            {
+                // An installed family saved before the list held face names (e.g. "Hiragino Sans"
+                // on macOS has no face of that name) - keep it instead of resetting to the default.
+                PreviewFonts.Insert(1, previewFont);
+            }
+
             SelectedPreviewFont = string.IsNullOrEmpty(previewFont)
                 ? PreviewFonts[0]
                 : PreviewFonts.FirstOrDefault(p => p == previewFont) ?? PreviewFonts[0];
