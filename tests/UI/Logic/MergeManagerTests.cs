@@ -332,8 +332,22 @@ public class MergeManagerTests
             Se.Settings.Tools.MergeKeepEndTimeOnlyAssa = originalOnlyAssa;
         }
     }
+
+    [Theory]
+    [InlineData(true, MergeManager.BreakMode.Normal)]
+    [InlineData(false, MergeManager.BreakMode.KeepBreaks)]
+    public void DefaultBreakMode_FollowsMergeAutoBreakSetting(bool mergeAutoBreak, MergeManager.BreakMode expected)
+    {
+        var original = Se.Settings.Tools.MergeAutoBreak;
+        try
+        {
+            Se.Settings.Tools.MergeAutoBreak = mergeAutoBreak;
+
+            Assert.Equal(expected, MergeManager.DefaultBreakMode());
+        }
+        finally
+        {
+            Se.Settings.Tools.MergeAutoBreak = original;
+        }
+    }
 }
-
-
-
-

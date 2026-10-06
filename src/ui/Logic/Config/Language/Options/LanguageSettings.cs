@@ -204,6 +204,7 @@ public class LanguageSettings
     public string AdjustAllTimesRememberLineSelectionChoice { get; set; }
     public string MergeKeepEndTime { get; set; }
     public string MergeKeepEndTimeOnlyAssa { get; set; }
+    public string MergeAutoBreak { get; set; }
     public string FilesAndLogs { get; set; }
     public string ShowErrorLogFile { get; set; }
     public string ShowToolsLogFile { get; set; }
@@ -553,6 +554,7 @@ public class LanguageSettings
         AdjustAllTimesRememberLineSelectionChoice = "Adjust all times, remember line selection choice";
         MergeKeepEndTime = "Merge lines: keep end time (allow overlap with next subtitle)";
         MergeKeepEndTimeOnlyAssa = "Merge lines: keep end time only for \"Advanced Sub Station Alpha\"";
+        MergeAutoBreak = "Merge lines: auto-break merged text (off keeps the lines' own line breaks)";
         DefaultFormat = "Default format";
         DefaultSaveAsFormat = "Default \"Save as\" format";
         FavoriteSubtitleFormats = "Favorite subtitle formats";

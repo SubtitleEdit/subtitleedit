@@ -26,6 +26,7 @@ public class SeTools
 
     public bool MergeKeepEndTime { get; set; }
     public bool MergeKeepEndTimeOnlyAssa { get; set; } = true;
+    public bool MergeAutoBreak { get; set; } = true;
     public bool JoinKeepTimeCodes { get; set; }
     public int JoinAppendMilliseconds { get; set; }
     public bool BinEditAppendKeepTimeCodes { get; set; }
