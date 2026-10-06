@@ -26,6 +26,20 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 return (defaultUrl ?? string.Empty).Trim().TrimEnd('/');
             }
 
+            // A bare "host:port" is not an http URL ("192.168.1.10:8000" does not parse, and
+            // "localhost:8000" parses with "localhost" as the scheme) - borrow the default's scheme.
+            if (trimmed.IndexOf("://", StringComparison.Ordinal) < 0)
+            {
+                var scheme = Uri.TryCreate((defaultUrl ?? string.Empty).Trim(), UriKind.Absolute, out var schemeUri)
+                    ? schemeUri.Scheme
+                    : "http";
+                var withScheme = scheme + "://" + trimmed;
+                if (Uri.TryCreate(withScheme, UriKind.Absolute, out _))
+                {
+                    trimmed = withScheme;
+                }
+            }
+
             if (!Uri.TryCreate(trimmed, UriKind.Absolute, out var uri) ||
                 !Uri.TryCreate((defaultUrl ?? string.Empty).Trim(), UriKind.Absolute, out var defaultUri))
             {

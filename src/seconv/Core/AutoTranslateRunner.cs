@@ -160,7 +160,7 @@ internal sealed class AutoTranslateRunner
                 translator = new OpenAiCompatibleTranslate();
                 if (!string.IsNullOrEmpty(url))
                 {
-                    tools.OpenAiCompatibleTranslateUrl = url; // the engine completes a bare host:port or ".../v1" base
+                    tools.OpenAiCompatibleTranslateUrl = url; // the engine completes a bare host:port or ".../v1" base (AutoTranslateUrl.Complete)
                 }
                 if (!string.IsNullOrEmpty(apiKey))
                 {

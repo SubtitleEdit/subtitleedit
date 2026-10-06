@@ -67,6 +67,17 @@ public class AutoTranslateUrlTests
         Assert.Equal("not a url", AutoTranslateUrl.Complete("not a url", ChatGptTranslate.DefaultUrl));
     }
 
+    [Theory]
+    // A bare host:port gets the default's scheme - "localhost:8080" used to parse with
+    // "localhost" as the scheme, and an IP address did not parse at all.
+    [InlineData("localhost:8080", "http://localhost:8080/v1/chat/completions")]
+    [InlineData("192.168.1.10:8000", "http://192.168.1.10:8000/v1/chat/completions")]
+    [InlineData("192.168.1.10:8000/v1/", "http://192.168.1.10:8000/v1/chat/completions")]
+    public void Complete_AddsSchemeToBareHostPort(string url, string expected)
+    {
+        Assert.Equal(expected, AutoTranslateUrl.Complete(url, LlamaCppTranslate.DefaultUrl));
+    }
+
     [Fact]
     public void Complete_CompletesNativeEndpointsToo()
     {

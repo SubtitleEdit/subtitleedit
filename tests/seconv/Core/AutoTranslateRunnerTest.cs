@@ -503,6 +503,8 @@ public class AutoTranslateRunnerTest : IDisposable
     // and come out as ".../v1/v1/chat/completions".
     [Theory]
     [InlineData("http://localhost:8080", "http://localhost:8080/v1/chat/completions")]
+    [InlineData("localhost:8080", "http://localhost:8080/v1/chat/completions")]
+    [InlineData("192.168.1.10:8000/v1", "http://192.168.1.10:8000/v1/chat/completions")]
     [InlineData("http://localhost:8080/", "http://localhost:8080/v1/chat/completions")]
     [InlineData("http://localhost:8080/v1", "http://localhost:8080/v1/chat/completions")]
     [InlineData("http://localhost:8080/v1/", "http://localhost:8080/v1/chat/completions")]

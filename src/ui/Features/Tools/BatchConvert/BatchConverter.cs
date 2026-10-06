@@ -2543,10 +2543,37 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
 
         var c = _config.ConvertActors;
+        if (c.ToType == ConvertActorType.Actor && !TargetFormatKeepsActors())
+        {
+            // Moving the name out of the text into an actor field the target format never writes
+            // (e.g. SRT) would silently delete it - leave the text alone instead.
+            SeLogger.Error("Batch convert: convert actors to actor field skipped - format " + _config.TargetFormatName + " has no actor field");
+            return subtitle;
+        }
+
         int? changeCasing = c.ChangeCasing ? c.CasingIndex : null;
         SKColor? color = c.SetColor ? c.Color.ToSkColor() : null;
         ConvertActorsHelper.ConvertSubtitle(subtitle, subtitle.OriginalFormat ?? new SubRip(), c.FromType, c.ToType, changeCasing, color, c.OnlyNames);
         return subtitle;
+    }
+
+    private static readonly HashSet<string> ActorFormatNames = new(StringComparer.Ordinal)
+    {
+        new AdvancedSubStationAlpha().Name,
+        new SubStationAlpha().Name,
+        new CsvExcel().Name,
+        new CsvNuendo().Name,
+        new CsvDaVinci().Name,
+        new MsOfficeWorkbook().Name,
+        new NVivoTranscript().Name,
+        new OtterAi().Name,
+        new PodcastIndexer().Name,
+        new VocapiaSplit().Name,
+    };
+
+    private bool TargetFormatKeepsActors()
+    {
+        return ActorFormatNames.Contains(_config.TargetFormatName ?? string.Empty);
     }
 
     private Subtitle MultipleReplace(Subtitle subtitle)
