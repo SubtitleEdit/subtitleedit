@@ -52,6 +52,7 @@
 		-->
 		<PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="8.3.1.5" />
 		<PackageReference Include="TagLibSharp" Version="2.3.0" />
+		<PackageReference Include="Tmds.DBus.Protocol" Version="0.94.1" />
 	</ItemGroup>
 
 	<ItemGroup>
