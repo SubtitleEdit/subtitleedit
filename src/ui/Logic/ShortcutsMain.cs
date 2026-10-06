@@ -460,6 +460,14 @@ public static class ShortcutsMain
         { nameof(MainViewModel.VideoMoveCustom3ForwardCommand),  string.Format(Se.Language.General.VideoCustom3ForwardX, Se.Settings.Video.MoveVideoPositionCustom3Forward) },
         { nameof(MainViewModel.VideoMoveCustom4BackCommand),  string.Format(Se.Language.General.VideoCustom4BackX, Se.Settings.Video.MoveVideoPositionCustom4Back) },
         { nameof(MainViewModel.VideoMoveCustom4ForwardCommand),  string.Format(Se.Language.General.VideoCustom4ForwardX, Se.Settings.Video.MoveVideoPositionCustom4Forward) },
+        { nameof(MainViewModel.VideoMoveCustom1BackAndPauseCommand),  string.Format(Se.Language.General.VideoCustom1BackAndPauseX, Se.Settings.Video.MoveVideoPositionCustom1Back) },
+        { nameof(MainViewModel.VideoMoveCustom1ForwardAndPauseCommand),  string.Format(Se.Language.General.VideoCustom1ForwardAndPauseX, Se.Settings.Video.MoveVideoPositionCustom1Forward) },
+        { nameof(MainViewModel.VideoMoveCustom2BackAndPauseCommand),  string.Format(Se.Language.General.VideoCustom2BackAndPauseX, Se.Settings.Video.MoveVideoPositionCustom2Back) },
+        { nameof(MainViewModel.VideoMoveCustom2ForwardAndPauseCommand),  string.Format(Se.Language.General.VideoCustom2ForwardAndPauseX, Se.Settings.Video.MoveVideoPositionCustom2Forward) },
+        { nameof(MainViewModel.VideoMoveCustom3BackAndPauseCommand),  string.Format(Se.Language.General.VideoCustom3BackAndPauseX, Se.Settings.Video.MoveVideoPositionCustom3Back) },
+        { nameof(MainViewModel.VideoMoveCustom3ForwardAndPauseCommand),  string.Format(Se.Language.General.VideoCustom3ForwardAndPauseX, Se.Settings.Video.MoveVideoPositionCustom3Forward) },
+        { nameof(MainViewModel.VideoMoveCustom4BackAndPauseCommand),  string.Format(Se.Language.General.VideoCustom4BackAndPauseX, Se.Settings.Video.MoveVideoPositionCustom4Back) },
+        { nameof(MainViewModel.VideoMoveCustom4ForwardAndPauseCommand),  string.Format(Se.Language.General.VideoCustom4ForwardAndPauseX, Se.Settings.Video.MoveVideoPositionCustom4Forward) },
 
         { nameof(MainViewModel.WaveformSetStartAndOffsetTheRestCommand),  Se.Language.General.SetStartAndOffsetTheRest },
         { nameof(MainViewModel.WaveformSetEndAndOffsetTheRestCommand),  Se.Language.General.SetEndAndOffsetTheRest },
@@ -1007,6 +1015,14 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.VideoMoveCustom3ForwardCommand, nameof(vm.VideoMoveCustom3ForwardCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.VideoMoveCustom4BackCommand, nameof(vm.VideoMoveCustom4BackCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.VideoMoveCustom4ForwardCommand, nameof(vm.VideoMoveCustom4ForwardCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.VideoMoveCustom1BackAndPauseCommand, nameof(vm.VideoMoveCustom1BackAndPauseCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.VideoMoveCustom1ForwardAndPauseCommand, nameof(vm.VideoMoveCustom1ForwardAndPauseCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.VideoMoveCustom2BackAndPauseCommand, nameof(vm.VideoMoveCustom2BackAndPauseCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.VideoMoveCustom2ForwardAndPauseCommand, nameof(vm.VideoMoveCustom2ForwardAndPauseCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.VideoMoveCustom3BackAndPauseCommand, nameof(vm.VideoMoveCustom3BackAndPauseCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.VideoMoveCustom3ForwardAndPauseCommand, nameof(vm.VideoMoveCustom3ForwardAndPauseCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.VideoMoveCustom4BackAndPauseCommand, nameof(vm.VideoMoveCustom4BackAndPauseCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.VideoMoveCustom4ForwardAndPauseCommand, nameof(vm.VideoMoveCustom4ForwardAndPauseCommand), ShortcutCategory.General, ShortcutGroup.Video);
 
         AddShortcut(shortcuts, vm.WaveformSetStartAndOffsetTheRestCommand, nameof(vm.WaveformSetStartAndOffsetTheRestCommand), ShortcutCategory.Waveform);
         AddShortcut(shortcuts, vm.WaveformSetEndAndOffsetTheRestCommand, nameof(vm.WaveformSetEndAndOffsetTheRestCommand), ShortcutCategory.Waveform);

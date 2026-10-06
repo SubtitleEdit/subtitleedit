@@ -19690,6 +19690,14 @@ public partial class MainViewModel :
             (nameof(VideoMoveCustom3ForwardCommand),VideoMoveCustom3ForwardCommand),
             (nameof(VideoMoveCustom4BackCommand),   VideoMoveCustom4BackCommand),
             (nameof(VideoMoveCustom4ForwardCommand),VideoMoveCustom4ForwardCommand),
+            (nameof(VideoMoveCustom1BackAndPauseCommand), VideoMoveCustom1BackAndPauseCommand),
+            (nameof(VideoMoveCustom1ForwardAndPauseCommand), VideoMoveCustom1ForwardAndPauseCommand),
+            (nameof(VideoMoveCustom2BackAndPauseCommand), VideoMoveCustom2BackAndPauseCommand),
+            (nameof(VideoMoveCustom2ForwardAndPauseCommand), VideoMoveCustom2ForwardAndPauseCommand),
+            (nameof(VideoMoveCustom3BackAndPauseCommand), VideoMoveCustom3BackAndPauseCommand),
+            (nameof(VideoMoveCustom3ForwardAndPauseCommand), VideoMoveCustom3ForwardAndPauseCommand),
+            (nameof(VideoMoveCustom4BackAndPauseCommand), VideoMoveCustom4BackAndPauseCommand),
+            (nameof(VideoMoveCustom4ForwardAndPauseCommand), VideoMoveCustom4ForwardAndPauseCommand),
             (nameof(PlayCommand),                   PlayCommand),
             (nameof(PauseCommand),                  PauseCommand),
             (nameof(TogglePlayPauseCommand),        TogglePlayPauseCommand),
@@ -22180,6 +22188,54 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void VideoMoveCustom1BackAndPause()
+    {
+        MoveVideoPositionMs(-Se.Settings.Video.MoveVideoPositionCustom1Back, pause: true);
+    }
+
+    [RelayCommand]
+    private void VideoMoveCustom1ForwardAndPause()
+    {
+        MoveVideoPositionMs(Se.Settings.Video.MoveVideoPositionCustom1Forward, pause: true);
+    }
+
+    [RelayCommand]
+    private void VideoMoveCustom2BackAndPause()
+    {
+        MoveVideoPositionMs(-Se.Settings.Video.MoveVideoPositionCustom2Back, pause: true);
+    }
+
+    [RelayCommand]
+    private void VideoMoveCustom2ForwardAndPause()
+    {
+        MoveVideoPositionMs(Se.Settings.Video.MoveVideoPositionCustom2Forward, pause: true);
+    }
+
+    [RelayCommand]
+    private void VideoMoveCustom3BackAndPause()
+    {
+        MoveVideoPositionMs(-Se.Settings.Video.MoveVideoPositionCustom3Back, pause: true);
+    }
+
+    [RelayCommand]
+    private void VideoMoveCustom3ForwardAndPause()
+    {
+        MoveVideoPositionMs(Se.Settings.Video.MoveVideoPositionCustom3Forward, pause: true);
+    }
+
+    [RelayCommand]
+    private void VideoMoveCustom4BackAndPause()
+    {
+        MoveVideoPositionMs(-Se.Settings.Video.MoveVideoPositionCustom4Back, pause: true);
+    }
+
+    [RelayCommand]
+    private void VideoMoveCustom4ForwardAndPause()
+    {
+        MoveVideoPositionMs(Se.Settings.Video.MoveVideoPositionCustom4Forward, pause: true);
+    }
+
+    [RelayCommand]
     private void ExtendSelectedToPrevious()
     {
         var selectedItems = GetSelectedEditableSubtitles();
@@ -23228,12 +23284,22 @@ public partial class MainViewModel :
     // (#12027). null means "resync to the player on the next move".
     private double? _relativeSeekTargetSeconds;
 
-    private void MoveVideoPositionMs(int ms)
+    private void MoveVideoPositionMs(int ms, bool pause = false)
     {
         var vp = GetVideoPlayerControl();
         if (vp == null || string.IsNullOrEmpty(_videoFileName) || AudioVisualizer == null)
         {
             return;
+        }
+
+        var wasPlaying = vp.IsPlaying;
+
+        // The "...and pause" variants (#15741): stop playback first, like the Pause shortcut, so
+        // a jog/shuttle step leaves the video paused on the new position.
+        if (pause && wasPlaying)
+        {
+            ResetPlaySelection();
+            PauseVideoAndFreezePlayhead(vp);
         }
 
         var actual = vp.Position;
@@ -23242,7 +23308,7 @@ public partial class MainViewModel :
         // the player actually is (within half a second) and playback is paused. If the
         // user played, clicked the waveform, or jumped to a cue, the player diverges and
         // we resync to its real position.
-        var baseSeconds = !vp.IsPlaying
+        var baseSeconds = !wasPlaying
             && _relativeSeekTargetSeconds is double tracked
             && Math.Abs(tracked - actual) < 0.5
                 ? tracked
@@ -23258,7 +23324,9 @@ public partial class MainViewModel :
             target = vp.Duration;
         }
 
-        SetVideoPositionSeconds(target);
+        // mpv reports the pause asynchronously, so tell the seek it is paused: it then scrolls
+        // the waveform to the target as for any other paused move.
+        SeekVideoPositionSeconds(target, paused: pause);
 
         // SetVideoPositionSeconds cleared the tracker (it is the shared choke point for
         // every position change); re-arm it here so the next relative step continues
@@ -23266,7 +23334,13 @@ public partial class MainViewModel :
         _relativeSeekTargetSeconds = target;
     }
 
-    private void SetVideoPositionSeconds(double newPosition)
+    private void SetVideoPositionSeconds(double newPosition) => SeekVideoPositionSeconds(newPosition, paused: false);
+
+    /// <summary>
+    /// <see cref="SetVideoPositionSeconds"/>, but <paramref name="paused"/> says playback was just
+    /// paused: mpv reports that asynchronously, so the waveform is scrolled as for a paused seek.
+    /// </summary>
+    private void SeekVideoPositionSeconds(double newPosition, bool paused)
     {
         // Any position change other than a chained relative step invalidates the
         // relative-seek tracker so the next small step resyncs to the real position.
@@ -23299,7 +23373,7 @@ public partial class MainViewModel :
         vp.SeekTo(newPosition);
         PinPlayheadTo(newPosition);
 
-        if (vp.IsPlaying)
+        if (vp.IsPlaying && !paused)
         {
             return;
         }

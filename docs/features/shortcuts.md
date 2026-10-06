@@ -48,7 +48,7 @@ Some commands have additional configuration beyond the shortcut key:
 
 - **Set color 1–8** — Choose a color for each color shortcut
 - **Surround with 1–8** — Define the left/right text to surround selected text with (this replaces the *Shortcut toggle custom start/end* setting from Subtitle Edit 4), and its **Behavior**: *Toggle* adds the text, or removes it when it is already there; *Add* adds it every time, so pressing the shortcut twice adds it twice; *Remove (all)* only removes it, all at once; *Remove (one each time)* removes one pair per press, so it undoes *Add* step by step. **Works on** picks *Selection, else whole text* (the selected part of the text box, otherwise the whole text of each selected subtitle) or *Each line* (every line of a subtitle gets its own pair, e.g. `[Hello]` / `[Bye]`)
-- **Video move custom 1–4 back/forward** — Set the number of milliseconds to skip
+- **Video move custom 1–4 back/forward** — Set the number of milliseconds to skip. Each one also has a **…and pause** variant that uses the same milliseconds but pauses playback first, so a jog/shuttle step leaves the video paused on the new position
 - **Set actor 1–10** — Define the actor name assigned by each actor shortcut
 - **Custom search 1–5** — Set the name and URL for each search slot
 - **Custom shortcut 1–8** — Build your own shortcut from steps (see below)

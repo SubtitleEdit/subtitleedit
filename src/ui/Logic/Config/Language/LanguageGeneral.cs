@@ -745,6 +745,14 @@ public class LanguageGeneral
     public string VideoCustom3ForwardX { get; set; }
     public string VideoCustom4BackX { get; set; }
     public string VideoCustom4ForwardX { get; set; }
+    public string VideoCustom1BackAndPauseX { get; set; }
+    public string VideoCustom1ForwardAndPauseX { get; set; }
+    public string VideoCustom2BackAndPauseX { get; set; }
+    public string VideoCustom2ForwardAndPauseX { get; set; }
+    public string VideoCustom3BackAndPauseX { get; set; }
+    public string VideoCustom3ForwardAndPauseX { get; set; }
+    public string VideoCustom4BackAndPauseX { get; set; }
+    public string VideoCustom4ForwardAndPauseX { get; set; }
     public string VideoExtension { get; set; }
     public string VideoFile { get; set; }
     public string VideoFileGenerated { get; set; }
@@ -1586,6 +1594,14 @@ public class LanguageGeneral
         VideoCustom3ForwardX = "Video, custom milliseconds ({0:#,###,##0}) forward, 3";
         VideoCustom4BackX = "Video, custom milliseconds ({0:#,###,##0}) back, 4";
         VideoCustom4ForwardX = "Video, custom milliseconds ({0:#,###,##0}) forward, 4";
+        VideoCustom1BackAndPauseX = "Video, custom milliseconds ({0:#,###,##0}) back and pause, 1";
+        VideoCustom1ForwardAndPauseX = "Video, custom milliseconds ({0:#,###,##0}) forward and pause, 1";
+        VideoCustom2BackAndPauseX = "Video, custom milliseconds ({0:#,###,##0}) back and pause, 2";
+        VideoCustom2ForwardAndPauseX = "Video, custom milliseconds ({0:#,###,##0}) forward and pause, 2";
+        VideoCustom3BackAndPauseX = "Video, custom milliseconds ({0:#,###,##0}) back and pause, 3";
+        VideoCustom3ForwardAndPauseX = "Video, custom milliseconds ({0:#,###,##0}) forward and pause, 3";
+        VideoCustom4BackAndPauseX = "Video, custom milliseconds ({0:#,###,##0}) back and pause, 4";
+        VideoCustom4ForwardAndPauseX = "Video, custom milliseconds ({0:#,###,##0}) forward and pause, 4";
         VideoExtension = "Video file extension";
         VideoFile = "Video file";
         VideoFileGenerated = "Video file generated";
