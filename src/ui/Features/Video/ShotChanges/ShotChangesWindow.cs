@@ -6,6 +6,7 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Platform.Progress;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 
@@ -85,7 +86,7 @@ public class ShotChangesWindow : Window
         });
     }
 
-    private static Grid MakeGenerateView(ShotChangesViewModel vm)
+    private Grid MakeGenerateView(ShotChangesViewModel vm)
     {
         var grid = new Grid
         {
@@ -170,6 +171,7 @@ public class ShotChangesWindow : Window
         };
 
         var progressBar = UiUtil.MakeProgressBar();
+        progressBar.WithPlatformProgress(this, nameof(vm.IsGenerating));
         progressBar.MinWidth = 400;
         progressBar[!ProgressBar.ValueProperty] = new Binding(nameof(vm.ProgressValue)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged };
         var progressText = UiUtil.MakeLabel().WithBindText(vm, nameof(ShotChangesViewModel.ProgressText)).WithAlignmentCenter();
