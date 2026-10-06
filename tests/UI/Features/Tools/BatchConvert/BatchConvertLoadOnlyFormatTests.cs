@@ -1,11 +1,9 @@
 using Avalonia.Headless.XUnit;
-using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Tools.BatchConvert;
 using Nikse.SubtitleEdit.UiLogic.BatchConvert;
-using System.Reflection;
 using System.Text;
 
 namespace UITests.Features.Tools.BatchConvert;
@@ -27,16 +25,7 @@ public class BatchConvertLoadOnlyFormatTests
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
     }
 
-    private static List<BatchConvertItem> AddFile(string fileName)
-    {
-        var services = new ServiceCollection();
-        services.AddSubtitleEditServices();
-        using var provider = services.BuildServiceProvider();
-        var vm = provider.GetRequiredService<BatchConvertViewModel>();
-        return (List<BatchConvertItem>)typeof(BatchConvertViewModel)
-            .GetMethod("AddFile", BindingFlags.NonPublic | BindingFlags.Instance)!
-            .Invoke(vm, [fileName])!;
-    }
+    private static List<BatchConvertItem> AddFile(string fileName) => BatchConvertViewModel.AddFile(fileName);
 
     [AvaloniaFact]
     public async Task LoadOnlyJsonFile_IsAddedWithItsFormat_AndConverts()
