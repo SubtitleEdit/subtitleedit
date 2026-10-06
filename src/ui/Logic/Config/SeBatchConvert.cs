@@ -195,6 +195,19 @@ public class SeBatchConvert
     /// </summary>
     public bool ScanFolderRecursive { get; set; }
 
+    /// <summary>
+    /// What "Add folder" (and dropping a folder on the file list) does with video files
+    /// (.mkv/.mp4/.ts/...) it finds: <see cref="ScanFolderVideoFilesAsk"/> prompts each time,
+    /// <see cref="ScanFolderVideoFilesInclude"/> adds their embedded subtitle tracks,
+    /// <see cref="ScanFolderVideoFilesSkip"/> leaves them out like SE 4 did (#15742). Video files
+    /// added or dropped one by one are always added.
+    /// </summary>
+    public string ScanFolderVideoFiles { get; set; } = ScanFolderVideoFilesAsk;
+
+    public const string ScanFolderVideoFilesAsk = "Ask";
+    public const string ScanFolderVideoFilesInclude = "Include";
+    public const string ScanFolderVideoFilesSkip = "Skip";
+
     public bool ImageAdjustBrightnessOn { get; set; }
     public double ImageAdjustBrightness { get; set; }
     public double ImageAdjustContrast { get; set; }

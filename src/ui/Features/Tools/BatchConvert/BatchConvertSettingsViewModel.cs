@@ -32,6 +32,8 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
     [ObservableProperty] private bool _keepSourceTimestamp;
     [ObservableProperty] private bool _preventSleep;
     [ObservableProperty] private bool _scanFolderRecursive;
+    [ObservableProperty] private ObservableCollection<string> _scanFolderVideoFilesOptions;
+    [ObservableProperty] private string? _selectedScanFolderVideoFilesOption;
     [ObservableProperty] private ObservableCollection<string> _targetEncodings;
     [ObservableProperty] private string? _selectedTargetEncoding;
 
@@ -93,11 +95,26 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
     private readonly IFolderHelper _folderHelper;
     private readonly IWindowService _windowService;
 
+    private static readonly string[] ScanFolderVideoFilesValues =
+    {
+        SeBatchConvert.ScanFolderVideoFilesAsk,
+        SeBatchConvert.ScanFolderVideoFilesInclude,
+        SeBatchConvert.ScanFolderVideoFilesSkip,
+    };
+
     public BatchConvertSettingsViewModel(IFolderHelper folderHelper, IWindowService windowService)
     {
         var encodings = EncodingHelper.GetEncodings().Select(p => p.DisplayName).ToList();
         encodings.Insert(0, EncodingHelper.TryToUseSourceEncoding);
         TargetEncodings = new ObservableCollection<string>(encodings);
+
+        // same order as ScanFolderVideoFilesValues
+        ScanFolderVideoFilesOptions = new ObservableCollection<string>
+        {
+            Se.Language.Tools.BatchConvert.VideoFilesAsk,
+            Se.Language.Tools.BatchConvert.VideoFilesInclude,
+            Se.Language.Tools.BatchConvert.VideoFilesSkip,
+        };
 
         OcrEngines = new ObservableCollection<string> { "nOcr", "BinaryOcr", "Tesseract", "Ollama", "llama.cpp" };
         if (AppleVisionOcr.IsAvailable())
@@ -216,6 +233,8 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         SelectedOcrEngine = OcrEngines.FirstOrDefault(p => p == Se.Settings.Tools.BatchConvert.OcrEngine) ?? OcrEngines.First();
         VobSubIsolateColors = Se.Settings.Tools.BatchConvert.VobSubIsolateColors;
         ScanFolderRecursive = Se.Settings.Tools.BatchConvert.ScanFolderRecursive;
+        var videoFilesIndex = Array.IndexOf(ScanFolderVideoFilesValues, Se.Settings.Tools.BatchConvert.ScanFolderVideoFiles);
+        SelectedScanFolderVideoFilesOption = ScanFolderVideoFilesOptions[Math.Max(0, videoFilesIndex)];
     }
 
     private void SaveSettings()
@@ -230,6 +249,8 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         Se.Settings.Tools.BatchConvert.OcrEngine = SelectedOcrEngine ?? "nOcr";
         Se.Settings.Tools.BatchConvert.VobSubIsolateColors = VobSubIsolateColors;
         Se.Settings.Tools.BatchConvert.ScanFolderRecursive = ScanFolderRecursive;
+        var selectedVideoFilesIndex = SelectedScanFolderVideoFilesOption == null ? 0 : ScanFolderVideoFilesOptions.IndexOf(SelectedScanFolderVideoFilesOption);
+        Se.Settings.Tools.BatchConvert.ScanFolderVideoFiles = ScanFolderVideoFilesValues[Math.Max(0, selectedVideoFilesIndex)];
 
         var ocrEngine = SelectedOcrEngine;
         if (ocrEngine == "Tesseract")
