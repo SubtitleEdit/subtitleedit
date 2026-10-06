@@ -304,6 +304,27 @@ public class EbuSaveOptionsPersistenceTests
         Assert.Equal(viewModel.PreviewFonts[0], viewModel.SelectedPreviewFont);
     }
 
+    // An installed family that has no face of the same name (e.g. "Hiragino Sans" on macOS) was
+    // saved before the list held face names - it is kept, not reset to the default.
+    [AvaloniaFact]
+    public void PreviewFont_KeepsAnInstalledFamilyThatIsNotAFaceName()
+    {
+        var faces = FontHelper.GetLibAssaFonts();
+        var family = FontHelper.GetSystemFonts().FirstOrDefault(f => !faces.Contains(f));
+        if (family == null)
+        {
+            return; // every family is also a face name on this machine
+        }
+
+        using var scope = new SettingsScope(ScopePaths);
+        using var libSeScope = new LibSeEbuScope();
+        Se.Settings.File.EbuSaveOptions.PreviewFontName = family;
+
+        var viewModel = OpenDialog(MakeSubtitle());
+
+        Assert.Equal(family, viewModel.SelectedPreviewFont);
+    }
+
     // The sample label next to the drop-down: the first entry is not a font family, so it has to
     // show the font the preview will really use rather than a family named "(use the ...)".
     [AvaloniaFact]
@@ -330,6 +351,8 @@ public class EbuSaveOptionsPersistenceTests
         var font = viewModel.PreviewFonts.Last();
         viewModel.SelectedPreviewFont = font;
 
-        Assert.Equal(FontFamilyHelper.Make(font), viewModel.PreviewFontFamily);
+        // The list holds libass face names; the label draws with the family Avalonia knows
+        // (on macOS the last face can be a localized name, e.g. "गुरुमुखी एमटी" -> "Gurmukhi MT").
+        Assert.Equal(FontFamilyHelper.Make(FontHelper.GetSkiaFontNameFromLibAssaFontName(font)), viewModel.PreviewFontFamily);
     }
 }

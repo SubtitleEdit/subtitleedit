@@ -1118,6 +1118,14 @@ public partial class SettingsViewModel : ObservableObject
         ShowSecondarySubtitleDialog = video.SecondarySubtitleShowDialog;
         RememberSecondarySubtitleFile = video.SecondarySubtitleRememberFile;
 
+        if (!string.IsNullOrEmpty(video.MpvPreviewFontName) && !Fonts.Contains(video.MpvPreviewFontName) &&
+            FontHelper.GetSystemFonts().Contains(video.MpvPreviewFontName))
+        {
+            // An installed family saved before the list held face names (e.g. "Hiragino Sans" on
+            // macOS has no face of that name) - list it, so the combo box does not show blank.
+            Fonts.Insert(0, video.MpvPreviewFontName);
+        }
+
         MpvPreviewFontName = video.MpvPreviewFontName;
         MpvPreviewFontSize = video.MpvPreviewFontSize;
         MpvPreviewFontBold = video.MpvPreviewFontBold;

@@ -1383,11 +1383,6 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         _cancellationTokenSource = new CancellationTokenSource();
         _cancellationToken = _cancellationTokenSource.Token;
 
-        foreach (var batchItem in BatchItems)
-        {
-            batchItem.Status = "-";
-        }
-
         SaveSettings();
 
         var config = MakeBatchConvertConfig();
@@ -1419,6 +1414,13 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         if (!await EnsureLlamaCppAvailable(config))
         {
             return;
+        }
+
+        // Reset only once the run really starts - a declined API key/download prompt above must
+        // not wipe the error statuses of the previous run ("Status is error" re-runs).
+        foreach (var batchItem in BatchItems)
+        {
+            batchItem.Status = "-";
         }
 
         _batchConverter.Initialize(config);
