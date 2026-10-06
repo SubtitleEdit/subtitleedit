@@ -314,6 +314,14 @@ public partial class ShortcutsViewModel : ObservableObject
         _configurableCommands.Add(vm.VideoMoveCustom3ForwardCommand);
         _configurableCommands.Add(vm.VideoMoveCustom4BackCommand);
         _configurableCommands.Add(vm.VideoMoveCustom4ForwardCommand);
+        _configurableCommands.Add(vm.VideoMoveCustom1BackAndPauseCommand);
+        _configurableCommands.Add(vm.VideoMoveCustom1ForwardAndPauseCommand);
+        _configurableCommands.Add(vm.VideoMoveCustom2BackAndPauseCommand);
+        _configurableCommands.Add(vm.VideoMoveCustom2ForwardAndPauseCommand);
+        _configurableCommands.Add(vm.VideoMoveCustom3BackAndPauseCommand);
+        _configurableCommands.Add(vm.VideoMoveCustom3ForwardAndPauseCommand);
+        _configurableCommands.Add(vm.VideoMoveCustom4BackAndPauseCommand);
+        _configurableCommands.Add(vm.VideoMoveCustom4ForwardAndPauseCommand);
         _configurableCommands.Add(vm.MoveSelectedLinesCustom1BackCommand);
         _configurableCommands.Add(vm.MoveSelectedLinesCustom1ForwardCommand);
         _configurableCommands.Add(vm.MoveSelectedLinesCustom2BackCommand);
@@ -835,142 +843,55 @@ public partial class ShortcutsViewModel : ObservableObject
                 _color8 = result.SelectedColor;
             }
         }
-        else if (node.ShortCut.Action == MainViewModel.VideoMoveCustom1BackCommand)
+        else if (GetVideoSeekNodes(MainViewModel).FirstOrDefault(n => n.Command == node.ShortCut.Action) is { Command: not null } seekNode)
         {
             var result = await _windowService.ShowDialogAsync<PickMillisecondsWindow, PickMillisecondsViewModel>(Window, vm =>
             {
-                vm.Initialize(_videoSeekSlots[0]);
+                vm.Initialize(_videoSeekSlots[seekNode.Slot]);
             });
             if (result.OkPressed)
             {
-                _videoSeekSlots[0] = result.Milliseconds;
+                _videoSeekSlots[seekNode.Slot] = result.Milliseconds;
 
-                var flatNodeBack = FlatNodes.FirstOrDefault(n => n?.ShortCut?.Action == MainViewModel.VideoMoveCustom1BackCommand);
-                if (flatNodeBack != null)
+                // The plain move and its "...and pause" twin share the slot, so retitle both.
+                foreach (var sameSlot in GetVideoSeekNodes(MainViewModel).Where(n => n.Slot == seekNode.Slot))
                 {
-                    flatNodeBack.Title = string.Format(Se.Language.General.VideoCustom1BackX, _videoSeekSlots[0]);
+                    var flatNode = FlatNodes.FirstOrDefault(n => n?.ShortCut?.Action == sameSlot.Command);
+                    if (flatNode != null)
+                    {
+                        flatNode.Title = string.Format(sameSlot.TitleFormat, _videoSeekSlots[seekNode.Slot]);
+                    }
                 }
             }
         }
-        else if (node.ShortCut.Action == MainViewModel.VideoMoveCustom1ForwardCommand)
-        {
-            var result = await _windowService.ShowDialogAsync<PickMillisecondsWindow, PickMillisecondsViewModel>(Window, vm =>
-            {
-                vm.Initialize(_videoSeekSlots[1]);
-            });
-            if (result.OkPressed)
-            {
-                _videoSeekSlots[1] = result.Milliseconds;
+    }
 
-                var flatNodeForward = FlatNodes.FirstOrDefault(n => n?.ShortCut?.Action == MainViewModel.VideoMoveCustom1ForwardCommand);
-                if (flatNodeForward != null)
-                {
-                    flatNodeForward.Title = string.Format(Se.Language.General.VideoCustom1ForwardX, _videoSeekSlots[1]);
-                }
-            }
-        }
-        else if (node.ShortCut.Action == MainViewModel.VideoMoveCustom2BackCommand)
-        {
-            var result = await _windowService.ShowDialogAsync<PickMillisecondsWindow, PickMillisecondsViewModel>(Window, vm =>
-            {
-                vm.Initialize(_videoSeekSlots[2]);
-            });
-            if (result.OkPressed)
-            {
-                _videoSeekSlots[2] = result.Milliseconds;
-
-                var flatNodeBack = FlatNodes.FirstOrDefault(n => n?.ShortCut?.Action == MainViewModel.VideoMoveCustom2BackCommand);
-                if (flatNodeBack != null)
-                {
-                    flatNodeBack.Title = string.Format(Se.Language.General.VideoCustom2BackX, _videoSeekSlots[2]);
-                }
-            }
-        }
-        else if (node.ShortCut.Action == MainViewModel.VideoMoveCustom2ForwardCommand)
-        {
-            var result = await _windowService.ShowDialogAsync<PickMillisecondsWindow, PickMillisecondsViewModel>(Window, vm =>
-            {
-                vm.Initialize(_videoSeekSlots[3]);
-            });
-            if (result.OkPressed)
-            {
-                _videoSeekSlots[3] = result.Milliseconds;
-
-                var flatNodeForward = FlatNodes.FirstOrDefault(n => n?.ShortCut?.Action == MainViewModel.VideoMoveCustom2ForwardCommand);
-                if (flatNodeForward != null)
-                {
-                    flatNodeForward.Title = string.Format(Se.Language.General.VideoCustom2ForwardX, _videoSeekSlots[3]);
-                }
-            }
-        }
-        else if (node.ShortCut.Action == MainViewModel.VideoMoveCustom3BackCommand)
-        {
-            var result = await _windowService.ShowDialogAsync<PickMillisecondsWindow, PickMillisecondsViewModel>(Window, vm =>
-            {
-                vm.Initialize(_videoSeekSlots[4]);
-            });
-            if (result.OkPressed)
-            {
-                _videoSeekSlots[4] = result.Milliseconds;
-
-                var flatNodeBack = FlatNodes.FirstOrDefault(n => n?.ShortCut?.Action == MainViewModel.VideoMoveCustom3BackCommand);
-                if (flatNodeBack != null)
-                {
-                    flatNodeBack.Title = string.Format(Se.Language.General.VideoCustom3BackX, _videoSeekSlots[4]);
-                }
-            }
-        }
-        else if (node.ShortCut.Action == MainViewModel.VideoMoveCustom3ForwardCommand)
-        {
-            var result = await _windowService.ShowDialogAsync<PickMillisecondsWindow, PickMillisecondsViewModel>(Window, vm =>
-            {
-                vm.Initialize(_videoSeekSlots[5]);
-            });
-            if (result.OkPressed)
-            {
-                _videoSeekSlots[5] = result.Milliseconds;
-
-                var flatNodeForward = FlatNodes.FirstOrDefault(n => n?.ShortCut?.Action == MainViewModel.VideoMoveCustom3ForwardCommand);
-                if (flatNodeForward != null)
-                {
-                    flatNodeForward.Title = string.Format(Se.Language.General.VideoCustom3ForwardX, _videoSeekSlots[5]);
-                }
-            }
-        }
-        else if (node.ShortCut.Action == MainViewModel.VideoMoveCustom4BackCommand)
-        {
-            var result = await _windowService.ShowDialogAsync<PickMillisecondsWindow, PickMillisecondsViewModel>(Window, vm =>
-            {
-                vm.Initialize(_videoSeekSlots[6]);
-            });
-            if (result.OkPressed)
-            {
-                _videoSeekSlots[6] = result.Milliseconds;
-
-                var flatNodeBack = FlatNodes.FirstOrDefault(n => n?.ShortCut?.Action == MainViewModel.VideoMoveCustom4BackCommand);
-                if (flatNodeBack != null)
-                {
-                    flatNodeBack.Title = string.Format(Se.Language.General.VideoCustom4BackX, _videoSeekSlots[6]);
-                }
-            }
-        }
-        else if (node.ShortCut.Action == MainViewModel.VideoMoveCustom4ForwardCommand)
-        {
-            var result = await _windowService.ShowDialogAsync<PickMillisecondsWindow, PickMillisecondsViewModel>(Window, vm =>
-            {
-                vm.Initialize(_videoSeekSlots[7]);
-            });
-            if (result.OkPressed)
-            {
-                _videoSeekSlots[7] = result.Milliseconds;
-
-                var flatNodeForward = FlatNodes.FirstOrDefault(n => n?.ShortCut?.Action == MainViewModel.VideoMoveCustom4ForwardCommand);
-                if (flatNodeForward != null)
-                {
-                    flatNodeForward.Title = string.Format(Se.Language.General.VideoCustom4ForwardX, _videoSeekSlots[7]);
-                }
-            }
-        }
+    /// <summary>
+    /// The video "move custom" shortcuts and the <see cref="_videoSeekSlots"/> index holding their
+    /// milliseconds. Each "...and pause" variant uses the same slot as its plain move.
+    /// </summary>
+    private static (IRelayCommand Command, int Slot, string TitleFormat)[] GetVideoSeekNodes(MainViewModel vm)
+    {
+        var l = Se.Language.General;
+        return
+        [
+            (vm.VideoMoveCustom1BackCommand, 0, l.VideoCustom1BackX),
+            (vm.VideoMoveCustom1BackAndPauseCommand, 0, l.VideoCustom1BackAndPauseX),
+            (vm.VideoMoveCustom1ForwardCommand, 1, l.VideoCustom1ForwardX),
+            (vm.VideoMoveCustom1ForwardAndPauseCommand, 1, l.VideoCustom1ForwardAndPauseX),
+            (vm.VideoMoveCustom2BackCommand, 2, l.VideoCustom2BackX),
+            (vm.VideoMoveCustom2BackAndPauseCommand, 2, l.VideoCustom2BackAndPauseX),
+            (vm.VideoMoveCustom2ForwardCommand, 3, l.VideoCustom2ForwardX),
+            (vm.VideoMoveCustom2ForwardAndPauseCommand, 3, l.VideoCustom2ForwardAndPauseX),
+            (vm.VideoMoveCustom3BackCommand, 4, l.VideoCustom3BackX),
+            (vm.VideoMoveCustom3BackAndPauseCommand, 4, l.VideoCustom3BackAndPauseX),
+            (vm.VideoMoveCustom3ForwardCommand, 5, l.VideoCustom3ForwardX),
+            (vm.VideoMoveCustom3ForwardAndPauseCommand, 5, l.VideoCustom3ForwardAndPauseX),
+            (vm.VideoMoveCustom4BackCommand, 6, l.VideoCustom4BackX),
+            (vm.VideoMoveCustom4BackAndPauseCommand, 6, l.VideoCustom4BackAndPauseX),
+            (vm.VideoMoveCustom4ForwardCommand, 7, l.VideoCustom4ForwardX),
+            (vm.VideoMoveCustom4ForwardAndPauseCommand, 7, l.VideoCustom4ForwardAndPauseX),
+        ];
     }
 
     /// <summary>
