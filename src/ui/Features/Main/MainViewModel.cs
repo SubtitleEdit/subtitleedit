@@ -2110,6 +2110,13 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task ShowAssaStyles()
     {
+        // One "Styles" shortcut for both formats: SSA has its own dialog.
+        if (IsFormatSsa)
+        {
+            await ShowSsaStyles();
+            return;
+        }
+
         if (Window == null || !IsFormatAssa)
         {
             return;

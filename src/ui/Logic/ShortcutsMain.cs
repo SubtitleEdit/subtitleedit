@@ -734,6 +734,14 @@ public static class ShortcutsMain
         { nameof(MainViewModel.WaveformToggleWaveformSpectrogramHeightCommand), Se.Language.Options.Shortcuts.ToggleWaveformAndSpectrogramHeight },
         { nameof(MainViewModel.SpectrogramToggleStyleCommand), Se.Language.Options.Shortcuts.ToggleSpectrogramStyle },
         { nameof(MainViewModel.ShowBeautifyTimeCodesCommand), Se.Language.Tools.BeautifyTimeCodes.Title },
+        { nameof(MainViewModel.RemoveFormattingAllCommand), Se.Language.General.RemoveAllFormatting },
+        { nameof(MainViewModel.RemoveFormattingItalicCommand), Se.Language.General.RemoveItalic },
+        { nameof(MainViewModel.ToggleEditOriginalModeCommand), Se.Language.Main.Menu.EditOriginalSubtitle },
+        { nameof(MainViewModel.WaveformShowOnlyWaveformCommand), Se.Language.Waveform.ShowOnlyWaveform },
+        { nameof(MainViewModel.WaveformShowOnlySpectrogramCommand), Se.Language.Waveform.ShowOnlySpectrogram },
+        { nameof(MainViewModel.WaveformShowWaveformAndSpectrogramCommand), Se.Language.Waveform.ShowWaveformAndSpectrogram },
+        { nameof(MainViewModel.ShowWaveformGuessTimeCodesCommand), Se.Language.Waveform.GuessTimeCodes },
+        { nameof(MainViewModel.ShowToolsFixNetflixErrorsCommand), Se.Language.Tools.NetflixCheckAndFix.Title },
         { nameof(MainViewModel.ShowImproveTimeCodesCommand), Se.Language.Tools.ImproveTimeCodes.Title },
         { nameof(MainViewModel.ZoomLayoutInCommand), Se.Language.Options.Shortcuts.LayoutZoomIn },
         { nameof(MainViewModel.ZoomLayoutOutCommand), Se.Language.Options.Shortcuts.LayoutZoomOut },
@@ -1271,6 +1279,14 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.WaveformToggleWaveformSpectrogramHeightCommand, nameof(vm.WaveformToggleWaveformSpectrogramHeightCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SpectrogramToggleStyleCommand, nameof(vm.SpectrogramToggleStyleCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowBeautifyTimeCodesCommand, nameof(vm.ShowBeautifyTimeCodesCommand), ShortcutCategory.General, ShortcutGroup.Tools);
+        AddShortcut(shortcuts, vm.RemoveFormattingAllCommand, nameof(vm.RemoveFormattingAllCommand), ShortcutCategory.SubtitleGrid);
+        AddShortcut(shortcuts, vm.RemoveFormattingItalicCommand, nameof(vm.RemoveFormattingItalicCommand), ShortcutCategory.SubtitleGrid);
+        AddShortcut(shortcuts, vm.ToggleEditOriginalModeCommand, nameof(vm.ToggleEditOriginalModeCommand), ShortcutCategory.General, ShortcutGroup.Translate);
+        AddShortcut(shortcuts, vm.WaveformShowOnlyWaveformCommand, nameof(vm.WaveformShowOnlyWaveformCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
+        AddShortcut(shortcuts, vm.WaveformShowOnlySpectrogramCommand, nameof(vm.WaveformShowOnlySpectrogramCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
+        AddShortcut(shortcuts, vm.WaveformShowWaveformAndSpectrogramCommand, nameof(vm.WaveformShowWaveformAndSpectrogramCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
+        AddShortcut(shortcuts, vm.ShowWaveformGuessTimeCodesCommand, nameof(vm.ShowWaveformGuessTimeCodesCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
+        AddShortcut(shortcuts, vm.ShowToolsFixNetflixErrorsCommand, nameof(vm.ShowToolsFixNetflixErrorsCommand), ShortcutCategory.General, ShortcutGroup.Tools);
         AddShortcut(shortcuts, vm.ShowImproveTimeCodesCommand, nameof(vm.ShowImproveTimeCodesCommand), ShortcutCategory.General, ShortcutGroup.Tools);
         AddShortcut(shortcuts, vm.ZoomLayoutInCommand, nameof(vm.ZoomLayoutInCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ZoomLayoutOutCommand, nameof(vm.ZoomLayoutOutCommand), ShortcutCategory.General);
