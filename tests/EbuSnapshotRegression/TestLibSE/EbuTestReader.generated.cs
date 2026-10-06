@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+// Test-only copy; never compiled into the production LibSE project.
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using SkiaSharp;
 using System;
@@ -16,6 +17,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// </summary>
     public class Ebu : SubtitleFormat, IBinaryPersistableSubtitle
     {
+        internal Action<int> BeforeReadTti { get; set; }
         public static double OverrideReadFrameRate { get; set; }
 
         private static readonly Regex FontTagsNoSpace1 = new Regex("[a-zA-z.!?]</font><font[a-zA-Z =\"']+>[a-zA-Z-]", RegexOptions.Compiled);
@@ -523,7 +525,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     var temp = new List<byte>
                     {
-                        0x0a, // 0a==end box, 
+                        0x0a, // 0a==end box,
                         0x0a
                     };
                     for (var i = 0; i < Configuration.Settings.SubtitleSettings.EbuStlNewLineRows; i++)
@@ -1891,6 +1893,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             byte previousExtensionBlockNumber = 0xff;
             while (index + ttiSize <= buffer.Length)
             {
+                BeforeReadTti?.Invoke((index - startOfTextAndTimingBlock) / ttiSize);
                 var tti = new EbuTextTimingInformation
                 {
                     SubtitleGroupNumber = buffer[index],
