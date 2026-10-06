@@ -7,7 +7,7 @@ The subtitle editor :)
 ---
 
 ## 🌐 Documentation & FAQ
-[https://subtitleedit.github.io/subtitleedit/](https://subtitleedit.github.io/subtitleedit/)
+https://subtitleedit.github.io/subtitleedit/
 
 ---
 
