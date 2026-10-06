@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.UiLogic.AudioToText;
+﻿using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
@@ -16,6 +16,7 @@ public class CrispAsrFunAsrMltNano : CrispAsrEngineBase
     public override bool IncludeLanguage => true;
     public override string Url => "https://github.com/CrispStrobe/CrispASR";
 
+    // The 31 languages on the Fun-ASR-MLT-Nano-2512 model card.
     public override List<WhisperLanguage> Languages =>
         new()
         {
@@ -25,31 +26,31 @@ public class CrispAsrFunAsrMltNano : CrispAsrEngineBase
             new WhisperLanguage("ja", "japanese"),
             new WhisperLanguage("ko", "korean"),
             new WhisperLanguage("vi", "vietnamese"),
-            new WhisperLanguage("th", "thai"),
             new WhisperLanguage("id", "indonesian"),
+            new WhisperLanguage("th", "thai"),
             new WhisperLanguage("ms", "malay"),
             new WhisperLanguage("tl", "tagalog"),
             new WhisperLanguage("ar", "arabic"),
             new WhisperLanguage("hi", "hindi"),
             new WhisperLanguage("bg", "bulgarian"),
-            new WhisperLanguage("ru", "russian"),
-            new WhisperLanguage("de", "german"),
-            new WhisperLanguage("fr", "french"),
-            new WhisperLanguage("es", "spanish"),
-            new WhisperLanguage("it", "italian"),
-            new WhisperLanguage("pt", "portuguese"),
-            new WhisperLanguage("nl", "dutch"),
-            new WhisperLanguage("pl", "polish"),
+            new WhisperLanguage("hr", "croatian"),
             new WhisperLanguage("cs", "czech"),
-            new WhisperLanguage("ro", "romanian"),
-            new WhisperLanguage("el", "greek"),
-            new WhisperLanguage("fi", "finnish"),
-            new WhisperLanguage("sv", "swedish"),
-            new WhisperLanguage("tr", "turkish"),
-            new WhisperLanguage("fa", "persian"),
             new WhisperLanguage("da", "danish"),
+            new WhisperLanguage("nl", "dutch"),
+            new WhisperLanguage("et", "estonian"),
+            new WhisperLanguage("fi", "finnish"),
+            new WhisperLanguage("el", "greek"),
             new WhisperLanguage("hu", "hungarian"),
-            new WhisperLanguage("mk", "macedonian"),
+            new WhisperLanguage("ga", "irish"),
+            new WhisperLanguage("lv", "latvian"),
+            new WhisperLanguage("lt", "lithuanian"),
+            new WhisperLanguage("mt", "maltese"),
+            new WhisperLanguage("pl", "polish"),
+            new WhisperLanguage("pt", "portuguese"),
+            new WhisperLanguage("ro", "romanian"),
+            new WhisperLanguage("sk", "slovak"),
+            new WhisperLanguage("sl", "slovenian"),
+            new WhisperLanguage("sv", "swedish"),
         };
 
     public override List<WhisperModel> Models =>

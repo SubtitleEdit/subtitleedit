@@ -21,7 +21,8 @@ public class CrispAsrFireRed : CrispAsrEngineBase
     {
         new WhisperLanguage("auto", "Auto detect"),
 
-        // --- Core & Dialects ---
+        // FireRedASR2-AED only transcribes Chinese (+ dialects), English and Cantonese.
+        // The "100+ languages" in its docs is the separate FireRedLID module.
         new WhisperLanguage("zh", "chinese"),
         new WhisperLanguage("en", "english"),
         new WhisperLanguage("yue", "cantonese"),
@@ -30,49 +31,6 @@ public class CrispAsrFireRed : CrispAsrEngineBase
         new WhisperLanguage("gan", "gan"),
         new WhisperLanguage("hak", "hakka"),
         new WhisperLanguage("hsn", "xiang"),
-        
-        // --- Major Multilingual (Commonly used in 100+ set) ---
-        new WhisperLanguage("ja", "japanese"),
-        new WhisperLanguage("ko", "korean"),
-        new WhisperLanguage("fr", "french"),
-        new WhisperLanguage("de", "german"),
-        new WhisperLanguage("es", "spanish"),
-        new WhisperLanguage("ru", "russian"),
-        new WhisperLanguage("it", "italian"),
-        new WhisperLanguage("pt", "portuguese"),
-        new WhisperLanguage("vi", "vietnamese"),
-        new WhisperLanguage("th", "thai"),
-        new WhisperLanguage("id", "indonesian"),
-        new WhisperLanguage("ar", "arabic"),
-        new WhisperLanguage("hi", "hindi"),
-        new WhisperLanguage("tr", "turkish"),
-        new WhisperLanguage("nl", "dutch"),
-        new WhisperLanguage("sv", "swedish"),
-        new WhisperLanguage("pl", "polish"),
-        new WhisperLanguage("ms", "malay"),
-        new WhisperLanguage("fa", "persian"),
-        new WhisperLanguage("el", "greek"),
-        new WhisperLanguage("cs", "czech"),
-        new WhisperLanguage("hu", "hungarian"),
-        new WhisperLanguage("ro", "romanian"),
-        new WhisperLanguage("da", "danish"),
-        new WhisperLanguage("fi", "finnish"),
-        new WhisperLanguage("he", "hebrew"),
-        new WhisperLanguage("uk", "ukrainian"),
-        new WhisperLanguage("sk", "slovak"),
-        new WhisperLanguage("hr", "croatian"),
-        new WhisperLanguage("bg", "bulgarian"),
-        new WhisperLanguage("bn", "bengali"),
-        new WhisperLanguage("ta", "tamil"),
-        new WhisperLanguage("te", "telugu"),
-        new WhisperLanguage("kn", "kannada"),
-        new WhisperLanguage("ml", "malayalam"),
-        new WhisperLanguage("mr", "marathi"),
-        new WhisperLanguage("gu", "gujarati"),
-        new WhisperLanguage("pa", "punjabi"),
-        new WhisperLanguage("sw", "swahili"),
-        new WhisperLanguage("yo", "yoruba"),
-        new WhisperLanguage("ha", "hausa"),
     };
 
     public override List<WhisperModel> Models =>
