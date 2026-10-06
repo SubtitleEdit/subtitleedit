@@ -10,6 +10,7 @@ using Avalonia.Media;
 using System.Linq;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Platform.Progress;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -281,6 +282,7 @@ public class SpeechToTextWindow : Window
         });
 
         var progressBar = UiUtil.MakeProgressBar();
+        progressBar.WithPlatformProgress(this, nameof(vm.IsTranscribeEnabled), InverseBooleanConverter.Instance);
         AutomationProperties.SetName(progressBar, Se.Language.Video.AudioToText.Transcribe);
         progressBar.Margin = new Thickness(10, 0, 10, 8);
         progressBar.Width = double.NaN;
