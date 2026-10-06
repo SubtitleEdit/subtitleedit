@@ -59,6 +59,18 @@ public class LanguageBatchConvert
     public string AddFolderRecursiveDotDotDot { get; set; }
     public string SelectFolderToConvert { get; set; }
     public string IncludeSubfolders { get; set; }
+    public string VideoFilesWhenAddingFolder { get; set; }
+    public string VideoFilesAsk { get; set; }
+    public string VideoFilesInclude { get; set; }
+    public string VideoFilesSkip { get; set; }
+    public string FolderContainsXVideoFiles { get; set; }
+    public string AddVideoFiles { get; set; }
+    public string SkipVideoFiles { get; set; }
+    public string DoNotAskAgainVideoFiles { get; set; }
+    public string SettingsSectionOutput { get; set; }
+    public string SettingsSectionAddingFiles { get; set; }
+    public string SettingsSectionImageBasedSubtitles { get; set; }
+    public string SettingsSectionOther { get; set; }
     public string KeepSourceFileTimestamp { get; set; }
     public string PreventSleepWhileConverting { get; set; }
     public string ScanningFolderX { get; set; }
@@ -145,6 +157,18 @@ public class LanguageBatchConvert
         AddFolderRecursiveDotDotDot = "Add folder recursive...";
         SelectFolderToConvert = "Select folder with files to convert";
         IncludeSubfolders = "Include subfolders when adding a folder";
+        VideoFilesWhenAddingFolder = "Video files (mkv, mp4, ts...) when adding a folder";
+        VideoFilesAsk = "Ask";
+        VideoFilesInclude = "Add their subtitle tracks";
+        VideoFilesSkip = "Skip";
+        FolderContainsXVideoFiles = "The folder contains {0} video file(s) (mkv, mp4, ts...).\n\nAdd their embedded subtitle tracks too, or only the subtitle files?";
+        AddVideoFiles = "Add video files";
+        SkipVideoFiles = "Subtitle files only";
+        DoNotAskAgainVideoFiles = "Do not ask again (change in Batch convert settings)";
+        SettingsSectionOutput = "Output";
+        SettingsSectionAddingFiles = "Adding files";
+        SettingsSectionImageBasedSubtitles = "Image-based subtitles (OCR)";
+        SettingsSectionOther = "Other";
         KeepSourceFileTimestamp = "Keep source file date/time on output files";
         PreventSleepWhileConverting = "Prevent computer from sleeping while converting";
         ScanningFolderX = "Scanning {0}...";
