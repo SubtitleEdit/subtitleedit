@@ -85,7 +85,7 @@ public class BatchConvertAutoTranslateEngineTests
     /// from its own settings.
     /// </summary>
     [AvaloniaFact]
-    public void OpenAiCompatible_ShowsUrlApiKeyAndFreeTextModel()
+    public void OpenAiCompatible_ShowsUrlApiKeyModelAndBrowse()
     {
         var viewModel = MakeViewModel();
         Se.Settings.AutoTranslate.OpenAiCompatibleUrl = "http://example.local:8000/v1/chat/completions";
@@ -98,7 +98,7 @@ public class BatchConvertAutoTranslateEngineTests
         Assert.True(viewModel.AutoTranslateUrlIsVisible);
         Assert.True(viewModel.AutoTranslateApiKeyIsVisible);
         Assert.True(viewModel.AutoTranslateModelIsVisible);
-        Assert.False(viewModel.AutoTranslateModelBrowseIsVisible);
+        Assert.True(viewModel.AutoTranslateModelBrowseIsVisible);
         Assert.Equal("http://example.local:8000/v1/chat/completions", viewModel.AutoTranslateUrl);
         Assert.Equal("sk-test", viewModel.AutoTranslateApiKey);
         Assert.Equal("gemma-3-12b", viewModel.AutoTranslateModel);

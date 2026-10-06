@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             var modelJson = string.Empty;
             if (!string.IsNullOrEmpty(model))
             {
-                modelJson = "\"model\": \"" + model + "\",";
+                modelJson = "\"model\": \"" + Json.EncodeJsonText(model) + "\",";
                 Configuration.Settings.Tools.LmStudioModel = model;
             }
 

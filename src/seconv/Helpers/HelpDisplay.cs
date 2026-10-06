@@ -78,10 +78,11 @@ internal static class HelpDisplay
         ShowParameter(console, "--ollama-model:<model>", "Ollama vision model (default: llama3.2-vision)");
         ShowParameter(console, "--translate-to:<lang>", "Auto-translate to this language (code or English name, e.g. de or German)");
         ShowParameter(console, "--translate-from:<lang>", "Auto-translate source language (default: auto-detect per file)");
-        ShowParameter(console, "--translate-engine:<engine>", "llamacpp (default; auto-starts a local llama-server) | ollama | lmstudio | libretranslate | nllb-serve | nllb-api");
+        ShowParameter(console, "--translate-engine:<engine>", "llamacpp (default; auto-starts a local llama-server) | ollama | lmstudio | openai-compatible | libretranslate | nllb-serve | nllb-api | deepl");
         ShowParameter(console, "--translate-url:<url>", "Endpoint of an already-running translate server (llamacpp: skips the auto-start)");
-        ShowParameter(console, "--translate-model:<model>", "Ollama/LM Studio model name, or llamacpp .gguf file name/path");
-        ShowParameter(console, "--translate-prompt:<text|file>", "Prompt for llamacpp/ollama/lmstudio: inline text (\\n = line break) or a text file; {0}=source, {1}=target, {2}=text (completion-format models)");
+        ShowParameter(console, "--translate-model:<model>", "Ollama/LM Studio/OpenAI-compatible model name, or llamacpp .gguf file name/path");
+        ShowParameter(console, "--translate-api-key:<key>", "API key for openai-compatible and deepl (required for deepl)");
+        ShowParameter(console, "--translate-prompt:<text|file>", "Prompt for llamacpp/ollama/lmstudio/openai-compatible: inline text (\\n = line break) or a text file; {0}=source, {1}=target, {2}=text (completion-format models)");
         ShowParameter(console, "--multiple-replace:<path.xml>", "SE MultipleSearchAndReplaceGroups XML applied per paragraph");
         ShowParameter(console, "--custom-format:<path.xml>", "SE CustomFormatItem XML (use with --format customtext)");
         ShowParameter(console, "--settings:<path.json>", "JSON settings file overriding libse defaults");

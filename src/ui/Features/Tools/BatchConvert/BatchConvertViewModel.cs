@@ -494,6 +494,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             new LibreTranslate(),
             new OpenAiCompatibleTranslate(),
             new LmStudioTranslate(),
+            new LmStudioAdvancedTranslate(),
             new LlamaCppTranslate(),
             new LlamaCppAdvancedTranslate(),
             new NoLanguageLeftBehindServe(),
@@ -2790,6 +2791,35 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private async Task AutoTranslateBrowseModel()
     {
+        // OpenAI-compatible servers list their models at GET {base}/v1/models instead of /api/tags.
+        if (SelectedAutoTranslator is OpenAiCompatibleTranslate or LmStudioAdvancedTranslate)
+        {
+            var isOpenAiCompatible = SelectedAutoTranslator is OpenAiCompatibleTranslate;
+            var openAiUrl = !string.IsNullOrWhiteSpace(AutoTranslateUrl)
+                ? AutoTranslateUrl.Trim()
+                : isOpenAiCompatible ? OpenAiCompatibleTranslate.DefaultUrl : LmStudioAdvancedTranslate.DefaultUrl;
+            var apiKey = isOpenAiCompatible ? AutoTranslateApiKey : null;
+            var openAiResult = await _windowService.ShowDialogAsync<PickOllamaModelWindow, PickOllamaModelViewModel>(Window!,
+                vm => { vm.InitializeOpenAiCompatible(Se.Language.General.PickModel, AutoTranslateModel, openAiUrl, apiKey); });
+
+            if (openAiResult is { OkPressed: true, SelectedModel: not null })
+            {
+                AutoTranslateModel = openAiResult.SelectedModel;
+                if (isOpenAiCompatible)
+                {
+                    Se.Settings.AutoTranslate.OpenAiCompatibleModel = openAiResult.SelectedModel;
+                }
+                else
+                {
+                    Se.Settings.AutoTranslate.LmStudioAdvancedModel = openAiResult.SelectedModel;
+                }
+
+                SaveSettings();
+            }
+
+            return;
+        }
+
         // Both Ollama engines list the same installed models; the picker only needs the host,
         // so the advanced engine's /v1/chat/completions URL works as-is (it strips the path).
         var isAdvanced = SelectedAutoTranslator is OllamaAdvancedTranslate;
@@ -3620,6 +3650,17 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             }
         }
 
+        if (engineType == typeof(LmStudioAdvancedTranslate))
+        {
+            // Like Ollama advanced: SE's own settings only. An empty model means "the loaded model".
+            if (!string.IsNullOrWhiteSpace(AutoTranslateUrl))
+            {
+                Se.Settings.AutoTranslate.LmStudioAdvancedUrl = AutoTranslateUrl.Trim();
+            }
+
+            Se.Settings.AutoTranslate.LmStudioAdvancedModel = AutoTranslateModel.Trim();
+        }
+
         if (engineType == typeof(NoLanguageLeftBehindServe))
         {
             if (!string.IsNullOrEmpty(Se.Settings.AutoTranslate.NllbServeUrl))
@@ -3850,7 +3891,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     {
         var engine = SelectedAutoTranslator;
 
-        AutoTranslateModelIsVisible = engine is OllamaTranslate or OllamaAdvancedTranslate;
+        AutoTranslateModelIsVisible = engine is OllamaTranslate or OllamaAdvancedTranslate or LmStudioAdvancedTranslate;
         CrispAsrModelComboIsVisible = engine is CrispAsrMadladTranslate;
         // Both turned back on by PopulateLlamaCppModels for a local llama.cpp.
         LlamaCppModelComboIsVisible = false;
@@ -3863,7 +3904,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         // Batch size, context history and the synopsis/glossary/style prompt only exist on the
         // advanced engines; they are shared settings, so the same window serves both llama.cpp
         // (local or remote llama-server) and Ollama.
-        LlamaCppAdvancedButtonIsVisible = engine is LlamaCppAdvancedTranslate or OllamaAdvancedTranslate;
+        LlamaCppAdvancedButtonIsVisible = engine is LlamaCppAdvancedTranslate or OllamaAdvancedTranslate or LmStudioAdvancedTranslate;
 
         // The regular llama.cpp engine has no advanced window - its prompt (and the shared
         // delay/max-bytes/merge settings) live in the translate settings dialog instead.
@@ -3904,6 +3945,17 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             AutoTranslateApiKey = string.Empty;
             AutoTranslateApiKeyIsVisible = false;
         }
+        else if (engine is LmStudioAdvancedTranslate)
+        {
+            // Empty model = whatever model LM Studio has loaded; "Browse" asks /v1/models.
+            AutoTranslateModel = Se.Settings.AutoTranslate.LmStudioAdvancedModel;
+            AutoTranslateModelBrowseIsVisible = true;
+            AutoTranslateModelIsVisible = true;
+            AutoTranslateUrl = Se.Settings.AutoTranslate.LmStudioAdvancedUrl;
+            AutoTranslateUrlIsVisible = true;
+            AutoTranslateApiKey = string.Empty;
+            AutoTranslateApiKeyIsVisible = false;
+        }
         else if (engine is LibreTranslate)
         {
             AutoTranslateModel = string.Empty;
@@ -3917,10 +3969,10 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         else if (engine is OpenAiCompatibleTranslate)
         {
             // Any vLLM/llama-server/hosted "chat/completions" endpoint: URL, key and model are all
-            // user-typed. No model list to browse - the server decides which models exist, and a
-            // one-model server (llama.cpp, vLLM) may leave the model empty.
+            // user-typed; "Browse" asks the server's /v1/models. A one-model server (llama.cpp,
+            // vLLM) may leave the model empty.
             AutoTranslateModel = Se.Settings.AutoTranslate.OpenAiCompatibleModel;
-            AutoTranslateModelBrowseIsVisible = false;
+            AutoTranslateModelBrowseIsVisible = true;
             AutoTranslateModelIsVisible = true;
             AutoTranslateUrl = Se.Settings.AutoTranslate.OpenAiCompatibleUrl;
             AutoTranslateUrlIsVisible = true;

@@ -78,7 +78,7 @@ internal static class CliSchema
     private static readonly Dictionary<string, string[]> Choices = new(StringComparer.OrdinalIgnoreCase)
     {
         ["--ocr-engine"] = ["tesseract", "nocr", "binaryocr", "ollama", "llamacpp", "paddle", "applevision"],
-        ["--translate-engine"] = ["llamacpp", "ollama", "lmstudio", "libretranslate", "nllb-serve", "nllb-api"],
+        ["--translate-engine"] = ["llamacpp", "ollama", "lmstudio", "openai-compatible", "libretranslate", "nllb-serve", "nllb-api", "deepl"],
         ["--box-type"] = ["none", "one-box", "box-per-line"],
         ["--content-alignment"] = ["left", "center", "right", "from-alignment"],
         ["--alignment"] =

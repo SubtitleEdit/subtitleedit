@@ -300,14 +300,12 @@ public static class Se4SettingsXmlImporter
         yield return ("AutoTranslateDeepLApiKey", v => t.DeepLApiKey = v);
         yield return ("AutoTranslateDeepLUrl", v => t.DeepLUrl = v);
         yield return ("AutoTranslateDeepLFormality", v => t.DeepLFormality = v);
-        yield return ("AutoTranslateDeepLXUrl", v => t.DeepLXUrl = v);
         yield return ("AutoTranslateLibreUrl", v => t.LibreTranslateUrl = v);
         yield return ("AutoTranslateLibreApiKey", v => t.LibreTranslateApiKey = v);
         yield return ("AutoTranslateMyMemoryApiKey", v => t.MyMemoryApiKey = v);
         yield return ("AutoTranslateNllbApiUrl", v => t.NllbApiUrl = v);
         yield return ("AutoTranslateNllbServeUrl", v => t.NllbServeUrl = v);
         yield return ("AutoTranslateNllbServeModel", v => t.NllbServeModel = v);
-        yield return ("AutoTranslateSeamlessM4TUrl", v => t.SeamlessM4TUrl = v);
         yield return ("AutoTranslatePapagoApiKeyId", v => t.PapagoApiKeyId = v);
         yield return ("AutoTranslatePapagoApiKey", v => t.PapagoApiKey = v);
         yield return ("AutoTranslateMistralApiKey", v => p.MistralApiKey = v);
@@ -327,10 +325,6 @@ public static class Se4SettingsXmlImporter
         yield return ("DeepSeekPrompt", v => t.DeepSeekPrompt = v);
         yield return ("DeepSeekApiKey", v => t.DeepSeekApiKey = v);
         yield return ("DeepSeekModel", v => t.DeepSeekModel = v);
-        yield return ("AvalAiUrl", v => t.AvalAiUrl = v);
-        yield return ("AvalAiPrompt", v => t.AvalAiPrompt = v);
-        yield return ("AvalAiApiKey", v => t.AvalAiApiKey = v);
-        yield return ("AvalAiModel", v => t.AvalAiModel = v);
         yield return ("ApiRouteUrl", v => t.ApiRouteUrl = v);
         yield return ("ApiRoutePrompt", v => t.ApiRoutePrompt = v);
         yield return ("ApiRouteApiKey", v => t.ApiRouteApiKey = v);
@@ -346,8 +340,6 @@ public static class Se4SettingsXmlImporter
         yield return ("OllamaModels", v => t.OllamaModels = v);
         yield return ("OllamaModel", v => t.OllamaModel = v);
         yield return ("OllamaPrompt", v => t.OllamaPrompt = v);
-        yield return ("KoboldCppUrl", v => t.KoboldCppUrl = v);
-        yield return ("KoboldCppPrompt", v => t.KoboldCppPrompt = v);
         yield return ("AnthropicApiUrl", v => t.AnthropicApiUrl = v);
         yield return ("AnthropicPrompt", v => t.AnthropicPrompt = v);
         yield return ("AnthropicApiKey", v => t.AnthropicApiKey = v);

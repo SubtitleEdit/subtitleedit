@@ -30,9 +30,9 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         /// </summary>
         public static string[] Models => new[]
         {
+            "claude-sonnet-5",
             "claude-opus-5",
             "claude-opus-4-8",
-            "claude-sonnet-5",
             "claude-haiku-4-5",
             "claude-fable-5-1",
             "claude-fable-5",
@@ -83,8 +83,8 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             {
                 Configuration.Settings.Tools.AnthropicPrompt = new ToolsSettings().AnthropicPrompt;
             }
-            var prompt = string.Format(Json.EncodeJsonText(Configuration.Settings.Tools.AnthropicPrompt), sourceLanguageCode, targetLanguageCode);
-            var input = "{ \"model\": \"" + model + "\", \"max_tokens\": 8192, \"messages\": [{ \"role\": \"user\", \"content\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
+            var prompt = string.Format(Configuration.Settings.Tools.AnthropicPrompt, sourceLanguageCode, targetLanguageCode);
+            var input = "{ \"model\": \"" + Json.EncodeJsonText(model) + "\", \"max_tokens\": 8192, \"messages\": [{ \"role\": \"user\", \"content\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
 
             int[] retryDelays = { 2555, 5007, 9013 };
             HttpResponseMessage result = null!;

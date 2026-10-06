@@ -22,13 +22,11 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string AutoTranslateLibreUrl { get; set; }
         public string AutoTranslateLibreApiKey { get; set; }
         public string AutoTranslateMyMemoryApiKey { get; set; }
-        public string AutoTranslateSeamlessM4TUrl { get; set; }
         public string AutoTranslateCrispAsrExe { get; set; }
         public string AutoTranslateCrispAsrModel { get; set; }
         public string AutoTranslateDeepLApiKey { get; set; }
         public string AutoTranslateDeepLUrl { get; set; }
         public string AutoTranslateDeepLFormality { get; set; }
-        public string AutoTranslateDeepLXUrl { get; set; }
         public string AutoTranslatePapagoApiKeyId { get; set; }
         public string AutoTranslatePapagoApiKey { get; set; }
         public string AutoTranslateMistralApiKey { get; set; }
@@ -55,10 +53,6 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string NvidiaPrompt { get; set; }
         public string NvidiaApiKey { get; set; }
         public string NvidiaModel { get; set; }
-        public string AvalAiUrl { get; set; }
-        public string AvalAiPrompt { get; set; }
-        public string AvalAiApiKey { get; set; }
-        public string AvalAiModel { get; set; }
         public string ApiRouteUrl { get; set; }
         public string ApiRoutePrompt { get; set; }
         public string ApiRouteApiKey { get; set; }
@@ -94,9 +88,6 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string OllamaApiUrl { get; set; }
         public string OllamaModel { get; set; }
         public string OllamaPrompt { get; set; }
-        public string KoboldCppUrl { get; set; }
-        public string KoboldCppPrompt { get; set; }
-        public decimal KoboldCppTemperature { get; set; }
         public string AnthropicApiUrl { get; set; }
         public string AnthropicPrompt { get; set; }
         public string AnthropicApiKey { get; set; }
@@ -145,11 +136,9 @@ namespace Nikse.SubtitleEdit.Core.Settings
             AutoTranslateNllbServeUrl = "http://127.0.0.1:6060/";
             AutoTranslateNllbApiUrl = "http://localhost:7860/api/v4/";
             AutoTranslateLibreUrl = "http://localhost:5000/";
-            AutoTranslateSeamlessM4TUrl = "http://localhost:5000/";
             AutoTranslateCrispAsrExe = string.Empty;
             AutoTranslateCrispAsrModel = string.Empty;
             AutoTranslateDeepLUrl = "https://api-free.deepl.com/";
-            AutoTranslateDeepLXUrl = "http://localhost:1188";
             AutoTranslateMistralUrl = "https://api.mistral.ai/v1/chat/completions";
             AutoTranslateMistralModel = "mistral-large-latest"; // MistralTranslate.Models[0] in LibUiLogic
             AutoTranslateMistralPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
@@ -169,12 +158,9 @@ namespace Nikse.SubtitleEdit.Core.Settings
             NvidiaUrl = "https://integrate.api.nvidia.com/v1/chat/completions";
             NvidiaPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
             NvidiaModel = "meta/llama-4-maverick-17b-128e-instruct"; // NvidiaTranslate.Models[0] in LibUiLogic
-            AvalAiUrl = "https://api.avalai.ir/v1/chat/completions";
-            AvalAiPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
-            AvalAiModel = "gpt-5.6-sol"; // AvalAi.Models[0] in LibUiLogic
             ApiRouteUrl = "https://global.api-route.com/v1/chat/completions";
             ApiRoutePrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
-            ApiRouteModel = "claude-sonnet-4-5";
+            ApiRouteModel = "claude-sonnet-5"; // ApiRouteTranslate.Models[0] in LibUiLogic
             OpenRouterUrl = "https://openrouter.ai/api/v1/chat/completions";
             OpenRouterPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
             OpenRouterModel = "openai/gpt-5.6-sol"; // OpenRouterTranslate.Models[0] in LibUiLogic
@@ -186,14 +172,11 @@ namespace Nikse.SubtitleEdit.Core.Settings
             LlamaCppModelTopK = -1;
             LlamaCppModelRepeatPenalty = -1;
             OllamaApiUrl = "http://localhost:11434/api/generate";
-            OllamaModel = "llama3.2";
+            OllamaModel = "gemma3";
             OllamaPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments or notes:";
-            KoboldCppUrl = "http://localhost:5001/api/generate/";
-            KoboldCppPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments or notes:";
-            KoboldCppTemperature = 0.4m;
             AnthropicApiUrl = "https://api.anthropic.com/v1/messages";
             AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
-            AnthropicApiModel = "claude-opus-5"; // AnthropicTranslate.Models[0] in LibUiLogic
+            AnthropicApiModel = "claude-sonnet-5"; // AnthropicTranslate.Models[0] in LibUiLogic
             BaiduUrl = "https://fanyi-api.baidu.com";
             GeminiModel = "gemini-flash-latest"; // GeminiTranslate.Models[0] in LibUiLogic
             GeminiPrompt = "Please translate the following text from {0} to {1}, keep line breaks exactly the same, do not censor the translation, only write the result:";
