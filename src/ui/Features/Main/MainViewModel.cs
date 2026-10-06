@@ -12671,17 +12671,14 @@ public partial class MainViewModel :
     private void ExtendSelectedLinesToNextShotChangeOrNextSubtitle()
     {
         var selectedLines = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().OrderBy(p => p.StartTime).ToList();
-        var vp = GetVideoPlayerControl();
-        if (AreTimeCodesLocked ||
-            string.IsNullOrEmpty(_videoFileName) ||
-            vp == null ||
-            AudioVisualizer == null ||
-            AudioVisualizer.ShotChanges.Count == 0 ||
-            selectedLines.Count == 0)
+        if (AreTimeCodesLocked || selectedLines.Count == 0)
         {
             return;
         }
 
+        // No video or no shot changes is not a dead shortcut: the neighbouring subtitle is the
+        // bound then - the "(or next/previous subtitle)" half of the command (issue #15719).
+        var shotChanges = (IReadOnlyList<double>?)AudioVisualizer?.ShotChanges ?? Array.Empty<double>();
         var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
         var maxDurationMs = Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
         var indexMap = BuildSubtitleIndexMap();
@@ -12691,7 +12688,7 @@ public partial class MainViewModel :
             var next = GetNextWorkingRow(idx);
 
             var newEndMs = ShotChangesHelper.GetExtendedEndMs(
-                AudioVisualizer.ShotChanges,
+                shotChanges,
                 line.StartTime.TotalMilliseconds,
                 line.EndTime.TotalMilliseconds,
                 next?.StartTime.TotalMilliseconds,
@@ -12761,17 +12758,14 @@ public partial class MainViewModel :
     private void ExtendSelectedLinesToPreviousShotChange()
     {
         var selectedLines = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().OrderBy(p => p.StartTime).ToList();
-        var vp = GetVideoPlayerControl();
-        if (AreTimeCodesLocked ||
-            string.IsNullOrEmpty(_videoFileName) ||
-            vp == null ||
-            AudioVisualizer == null ||
-            AudioVisualizer.ShotChanges.Count == 0 ||
-            selectedLines.Count == 0)
+        if (AreTimeCodesLocked || selectedLines.Count == 0)
         {
             return;
         }
 
+        // No video or no shot changes is not a dead shortcut: the neighbouring subtitle is the
+        // bound then - the "(or next/previous subtitle)" half of the command (issue #15719).
+        var shotChanges = (IReadOnlyList<double>?)AudioVisualizer?.ShotChanges ?? Array.Empty<double>();
         var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
         var maxDurationMs = Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
         var indexMap = BuildSubtitleIndexMap();
@@ -12781,7 +12775,7 @@ public partial class MainViewModel :
             var prev = GetPreviousWorkingRow(idx);
 
             var newStartMs = ShotChangesHelper.GetExtendedStartMs(
-                AudioVisualizer.ShotChanges,
+                shotChanges,
                 line.StartTime.TotalMilliseconds,
                 line.EndTime.TotalMilliseconds,
                 prev?.EndTime.TotalMilliseconds,
