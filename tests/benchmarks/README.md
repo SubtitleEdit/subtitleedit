@@ -40,6 +40,9 @@ Reports land in `tests/benchmarks/BenchmarkDotNet.Artifacts/results/` (gitignore
 | `TimeCodeCellRepaintBenchmarks` | The grid's time-code cells as the app drives them: three cell bindings plus the accessible-name MultiBinding over the same three values. |
 | `WaveformPerFrameTextBenchmarks` | A playback frame zoomed far out, and one with a video loaded whose waveform has not been generated yet. |
 | `ColoredSyntaxHighlightingBenchmarks` | The syntax highlighting converter over rows carrying colours (font tags, ASSA colour overrides), in both formatting modes. |
+| `BatchConvertAddFilesBenchmarks` | Batch convert "Add files"/"Add folder": the real per-file parse over text files, container fixtures (MKV/MP4/TS/SUP) and a mix - sequential vs the `BatchConvertFileLoader` queue with 1-8 workers. |
+| `BatchConvertAddFilesSlowStorageBenchmarks` | The same over container files with a simulated per-file I/O wait (network share, USB/HDD). |
+| `BatchConvertAddFilesUiUpdateBenchmarks` | The UI-thread work per add: one update per file vs one per ~100 ms batch (list appends + the "N files" info scan). |
 
 Benchmarks that model a collection the app gets from Avalonia (e.g. `DataGrid.SelectedItems`)
 reproduce its interface surface rather than substituting a `List<T>` - `SelectedItems` only

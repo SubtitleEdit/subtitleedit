@@ -2518,26 +2518,26 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         {
             lock (_addFileLock)
             {
-                var number = 0;
-                foreach (var fileName in fileNames)
-                {
-                    if (token.IsCancellationRequested)
+                // A few workers hide per-file latency (network share, USB/HDD), and results come
+                // back in file order, batched - one UI update per ~100 ms instead of two per file.
+                BatchConvertFileLoader.Load(
+                    fileNames,
+                    AddFile,
+                    BatchConvertFileLoader.DefaultMaxDegreeOfParallelism,
+                    BatchConvertFileLoader.DefaultFlushInterval,
+                    progress => Dispatcher.UIThread.Post(() =>
                     {
-                        break;
-                    }
+                        if (progress.NewItems.Count > 0)
+                        {
+                            _allBatchItems.AddRange(progress.NewItems);
+                            AddFilteredItems(progress.NewItems);
+                            MakeBatchItemsInfo();
+                        }
 
-                    number++;
-                    var current = number;
-                    Dispatcher.UIThread.Post(() => AddingFilesStatus = string.Format("{0}/{1}: {2}", current, fileNames.Count, Path.GetFileName(fileName)));
-                    var added = AddFile(fileName);
-                    Dispatcher.UIThread.Post(() =>
-                    {
-                        _allBatchItems.AddRange(added);
-                        AddFilteredItems(added);
-                        AddingFilesProgressValue = current;
-                        MakeBatchItemsInfo();
-                    });
-                }
+                        AddingFilesProgressValue = progress.CompletedCount;
+                        AddingFilesStatus = string.Format("{0}/{1}: {2}", progress.CompletedCount, fileNames.Count, Path.GetFileName(progress.CurrentFileName));
+                    }),
+                    token);
             }
         });
 
@@ -2640,11 +2640,18 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         }
     }
 
+    // Text/binary format detection runs IsMine/LoadSubtitle on the shared SubtitleFormat
+    // instances, which keep per-instance state (error counts, ...) - so only one file at a time
+    // may go through it. The container probes (Matroska, MP4, TS, ...) use their own instances
+    // and run in parallel.
+    private static readonly Lock FormatDetectionLock = new();
+
     // Parses a file and returns the resulting item(s) without touching any shared collection,
-    // so it is safe to call from a background thread. Callers append the returned items to
-    // _allBatchItems and the visible BatchItems on the UI thread - _allBatchItems is read there
-    // (filtering, the info label), so mutating it from the parse thread would race those reads.
-    private List<BatchConvertItem> AddFile(string fileName)
+    // so it is safe to call from several background threads at once (see BatchConvertFileLoader).
+    // Callers append the returned items to _allBatchItems and the visible BatchItems on the UI
+    // thread - _allBatchItems is read there (filtering, the info label), so mutating it from the
+    // parse threads would race those reads.
+    internal static List<BatchConvertItem> AddFile(string fileName)
     {
         var added = new List<BatchConvertItem>();
         var ext = Path.GetExtension(fileName).ToLowerInvariant();
@@ -2797,7 +2804,24 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             return added;
         }
 
-        if (format == Se.Language.General.Unknown && fileInfo.Length < 20_000_000)
+        if (format == Se.Language.General.Unknown)
+        {
+            lock (FormatDetectionLock)
+            {
+                (subtitle, format) = DetectTextOrBinaryFormat(fileName, fileInfo.Length);
+            }
+        }
+
+        var batchItem = new BatchConvertItem(fileName, fileInfo.Length, format, subtitle);
+        added.Add(batchItem);
+        return added;
+    }
+
+    private static (Subtitle? Subtitle, string Format) DetectTextOrBinaryFormat(string fileName, long fileLength)
+    {
+        Subtitle? subtitle = null;
+        var format = Se.Language.General.Unknown;
+        if (fileLength < 20_000_000)
         {
             subtitle = Subtitle.Parse(fileName);
             if (subtitle != null)
@@ -2823,7 +2847,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         // The load-only text formats (WSB, FTE, the JSON "load only" types, ...) - like File > Open.
         // This replaces a second, identical Subtitle.Parse that could only fail again.
-        if (format == Se.Language.General.Unknown && fileInfo.Length < 20_000_000)
+        if (format == Se.Language.General.Unknown && fileLength < 20_000_000)
         {
             subtitle = LoadOnlyTextFormatLoader.TryLoad(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName));
             if (subtitle != null)
@@ -2832,9 +2856,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             }
         }
 
-        var batchItem = new BatchConvertItem(fileName, fileInfo.Length, format, subtitle);
-        added.Add(batchItem);
-        return added;
+        return (subtitle, format);
     }
 
     private static string MakeMkvTrackInfoString(MatroskaTrackInfo track)
