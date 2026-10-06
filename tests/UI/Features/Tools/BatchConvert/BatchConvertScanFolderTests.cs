@@ -30,6 +30,20 @@ public class BatchConvertScanFolderTests
         return fileNames;
     }
 
+    [Theory]
+    [InlineData("movie.mkv", true)]
+    [InlineData("movie.MP4", true)]
+    [InlineData("stream.ts", true)]
+    [InlineData("movie.srt", false)]
+    [InlineData("subs.mks", false)] // subtitle-only Matroska
+    [InlineData("bluray.sup", false)] // image subtitles, not a video
+    [InlineData("vobsub.sub", false)]
+    public void IsScanFolderVideoFile_OnlyVideoContainers(string fileName, bool expected)
+    {
+        // "Add folder" asks/skips these (#15742) - subtitle files must never be filtered out
+        Assert.Equal(expected, BatchConvertViewModel.IsScanFolderVideoFile(fileName));
+    }
+
     [Fact]
     public void ScanFolder_NotRecursive_TakesSubtitleFilesInTheFolderOnly()
     {

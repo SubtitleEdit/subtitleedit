@@ -2277,6 +2277,21 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                 return; // cancelled during the scan - add nothing
             }
 
+            var videoFiles = scanned.Where(IsScanFolderVideoFile).ToList();
+            if (videoFiles.Count > 0)
+            {
+                var includeVideoFiles = await AskIncludeScannedVideoFilesAsync(videoFiles.Count);
+                if (includeVideoFiles == null)
+                {
+                    return; // cancelled - add nothing
+                }
+
+                if (includeVideoFiles == false)
+                {
+                    scanned.RemoveAll(IsScanFolderVideoFile);
+                }
+            }
+
             allFileNames.AddRange(scanned);
         }
 
@@ -2286,6 +2301,68 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         }
 
         await AddFilesAsync(allFileNames);
+    }
+
+    /// <summary>
+    /// Whether video files found by a folder scan should be added (their embedded subtitle tracks),
+    /// following the "Video files when adding a folder" setting - asks when it is "Ask" (#15742).
+    /// Returns null when the prompt was cancelled.
+    /// </summary>
+    private async Task<bool?> AskIncludeScannedVideoFilesAsync(int videoFileCount)
+    {
+        var mode = Se.Settings.Tools.BatchConvert.ScanFolderVideoFiles;
+        if (mode == SeBatchConvert.ScanFolderVideoFilesInclude)
+        {
+            return true;
+        }
+
+        if (mode == SeBatchConvert.ScanFolderVideoFilesSkip || Window == null)
+        {
+            return false;
+        }
+
+        var (choice, doNotAskAgain) = await MessageBox.ShowWithDoNotAskAgain(
+            Window,
+            Se.Language.Tools.BatchConvert.Title,
+            string.Format(Se.Language.Tools.BatchConvert.FolderContainsXVideoFiles, videoFileCount),
+            Se.Language.Tools.BatchConvert.DoNotAskAgainVideoFiles,
+            MessageBoxButtons.Cancel,
+            MessageBoxIcon.Question,
+            custom1: Se.Language.Tools.BatchConvert.SkipVideoFiles,
+            custom2: Se.Language.Tools.BatchConvert.AddVideoFiles);
+
+        if (choice != MessageBoxResult.Custom1 && choice != MessageBoxResult.Custom2)
+        {
+            return null;
+        }
+
+        var include = choice == MessageBoxResult.Custom2;
+        if (doNotAskAgain)
+        {
+            Se.Settings.Tools.BatchConvert.ScanFolderVideoFiles = include
+                ? SeBatchConvert.ScanFolderVideoFilesInclude
+                : SeBatchConvert.ScanFolderVideoFilesSkip;
+            Se.SaveSettings();
+        }
+
+        return include;
+    }
+
+    private static readonly HashSet<string> ScanFolderVideoExtensions = MakeScanFolderVideoExtensions();
+
+    // The extensions the folder scan only takes because of includeVideoFiles - minus .sup, which
+    // is a subtitle file (Blu-ray/HD DVD/DVD images) and not a video.
+    private static HashSet<string> MakeScanFolderVideoExtensions()
+    {
+        var extensions = new HashSet<string>(FileHelper.GetOpenSubtitleExtensions(true), StringComparer.OrdinalIgnoreCase);
+        extensions.ExceptWith(FileHelper.GetOpenSubtitleExtensions(false));
+        extensions.Remove(".sup");
+        return extensions;
+    }
+
+    internal static bool IsScanFolderVideoFile(string fileName)
+    {
+        return ScanFolderVideoExtensions.Contains(Path.GetExtension(fileName));
     }
 
     /// <summary>

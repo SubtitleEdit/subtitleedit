@@ -21,11 +21,12 @@ public class BatchConvertSettingsWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var labelTargetEncoding = UiUtil.MakeLabel(Se.Language.General.TargetEncoding).WithMarginLeft(5);
+        var labelTargetEncoding = UiUtil.MakeLabel(Se.Language.General.TargetEncoding);
         var comboBoxTargetEncoding = UiUtil.MakeComboBox(vm.TargetEncodings, vm, nameof(vm.SelectedTargetEncoding));
         var panelTargetEncoding = new StackPanel
         {
             Orientation = Orientation.Horizontal,
+            Spacing = 5,
             Children = { labelTargetEncoding, comboBoxTargetEncoding }
         };
 
@@ -61,6 +62,15 @@ public class BatchConvertSettingsWindow : Window
             [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ScanFolderRecursive)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
         };
 
+        var labelScanFolderVideoFiles = UiUtil.MakeLabel(Se.Language.Tools.BatchConvert.VideoFilesWhenAddingFolder);
+        var comboBoxScanFolderVideoFiles = UiUtil.MakeComboBox(vm.ScanFolderVideoFilesOptions, vm, nameof(vm.SelectedScanFolderVideoFilesOption));
+        var panelScanFolderVideoFiles = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 5,
+            Children = { labelScanFolderVideoFiles, comboBoxScanFolderVideoFiles }
+        };
+
         var checkBoxUseSourceFolder = new RadioButton
         {
             Content = Se.Language.General.UseSourceFolder,
@@ -91,6 +101,7 @@ public class BatchConvertSettingsWindow : Window
         var panelOutputFolder = new StackPanel
         {
             Orientation = Orientation.Horizontal,
+            Margin = new Avalonia.Thickness(28, 0, 0, 0), // under the "Use output folder" radio button
             VerticalAlignment = VerticalAlignment.Center,
             Spacing = 5,
             Children =
@@ -148,7 +159,6 @@ public class BatchConvertSettingsWindow : Window
         var panelOcrEngine = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Margin = new Avalonia.Thickness(0, 30, 0, 0),
             Children = { labelOcrEngine, comboBoxOcrEngine, labelOcLanguage, comboBoxTesseractLanguages, labelTesseractEngineMode, comboBoxTesseractEngineMode, comboBoxPaddleLanguages, labelBinaryOcrDatabase, comboBoxBinaryOcrDatabases, labelBinaryOcrFallback, comboBoxBinaryOcrFallback, labelNOcrDatabase, comboBoxNOcrDatabases, labelNOcrFallback, comboBoxNOcrFallback, labelOllamaModel, comboBoxOllamaModels, buttonOllamaModelBrowse, labelLlamaCppModel, comboBoxLlamaCppModels, labelCrispEmbedBackend, comboBoxCrispEmbedBackends, labelCrispEmbedModel, comboBoxCrispEmbedModels, labelAppleVisionLanguage, comboBoxAppleVisionLanguages }
         };
         comboBoxOcrEngine.SelectionChanged += (s, e) => vm.OnOcrEngineChanged();
@@ -167,7 +177,7 @@ public class BatchConvertSettingsWindow : Window
         var panelLanguagePostFix = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Margin = new Avalonia.Thickness(0, 30, 0, 0),
+            Spacing = 5,
             Children = { labelLanguagePostFix, comboBoxLanguagePostFix }
         };
 
@@ -175,52 +185,63 @@ public class BatchConvertSettingsWindow : Window
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
+        var panelSections = new StackPanel
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
+            Orientation = Orientation.Vertical,
+            Spacing = 12,
             Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Children =
+            {
+                MakeSection(Se.Language.Tools.BatchConvert.SettingsSectionOutput,
+                    panelTargetEncoding,
+                    checkBoxUseSourceFolder,
+                    checkBoxUseOutputFolder,
+                    panelOutputFolder,
+                    checkBoxOverwrite,
+                    checkBoxKeepSourceTimestamp,
+                    panelLanguagePostFix),
+                MakeSection(Se.Language.Tools.BatchConvert.SettingsSectionAddingFiles,
+                    checkBoxScanFolderRecursive,
+                    panelScanFolderVideoFiles),
+                MakeSection(Se.Language.Tools.BatchConvert.SettingsSectionImageBasedSubtitles,
+                    panelOcrEngine,
+                    checkBoxVobSubIsolateColors),
+                MakeSection(Se.Language.Tools.BatchConvert.SettingsSectionOther,
+                    checkBoxPreventSleep),
+                panelButtons,
+            }
         };
 
-        grid.Add(panelTargetEncoding, 0, 0);
-        grid.Add(checkBoxOverwrite, 1, 0);
-        grid.Add(checkBoxKeepSourceTimestamp, 2, 0);
-        grid.Add(checkBoxUseSourceFolder, 3, 0);
-        grid.Add(checkBoxUseOutputFolder, 4, 0);
-        grid.Add(panelOutputFolder, 5, 0);
-        grid.Add(panelOcrEngine, 6, 0);
-        grid.Add(checkBoxVobSubIsolateColors, 7, 0);
-        grid.Add(panelLanguagePostFix, 8, 0);
-        grid.Add(checkBoxScanFolderRecursive, 9, 0);
-        grid.Add(checkBoxPreventSleep, 10, 0);
-        grid.Add(panelButtons, 11, 0);
-
-
-        Content = grid;
+        Content = panelSections;
 
         UiUtil.FocusOnFirstActivation(this, comboBoxTargetEncoding); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (s, e) => vm.OnKeyDown(e);
+    }
+
+    // A bold title over a bordered group - keeps the long list of options scannable.
+    private static Control MakeSection(string title, params Control[] controls)
+    {
+        var panel = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Spacing = 8,
+            Margin = new Avalonia.Thickness(5),
+        };
+        foreach (var control in controls)
+        {
+            panel.Children.Add(control);
+        }
+
+        return new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Spacing = 4,
+            Children =
+            {
+                UiUtil.MakeLabel(title).WithBold(),
+                UiUtil.MakeBorderForControl(panel),
+            }
+        };
     }
 
     // Model combo item template: a dot (green = downloaded, grey = not downloaded yet) plus the
