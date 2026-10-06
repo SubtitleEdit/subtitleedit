@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Logic.Config;
 public class Se
 {
     internal const int CurrentMacOsFontMigrationVersion = 1;
-    internal const int CurrentShortcutsMigrationVersion = 5;
+    internal const int CurrentShortcutsMigrationVersion = 6;
     internal const int CurrentLayoutMigrationVersion = 2;
 
     public static string Version { get; set; } = "v5.3.0-beta22";
@@ -590,6 +590,11 @@ public class Se
     /// Version 5: v5.3.0 betas shipped Ctrl+Shift+V (Cmd+Shift+V on macOS) as the default for the
     /// voice manager, which "fill selected lines with clipboard text" already had (#15326). The
     /// voice manager has no default now, and bindings still on the stale default are cleared.
+    ///
+    /// Version 6 (Windows/Linux only): v5.0.0-beta20 - v5.2.0-beta16 shipped Shift+Backspace as the
+    /// default for "delete selection", later renamed to forward delete (version 2). The default is
+    /// macOS-only now, but the persisted copy stayed, so holding Shift while typing capitals made
+    /// Backspace delete the character after the caret - nothing at the end of the text (#15717).
     /// </summary>
     internal void MigrateShortcuts()
     {
@@ -657,6 +662,19 @@ public class Se
                 if (shortcut.ActionName == nameof(MainViewModel.ShowVideoVoiceManagerCommand) &&
                     shortcut.Keys != null &&
                     IsSameKeys([.. shortcut.Keys.Select(ShortcutManager.NormalizeKeyToken)], oldVoiceManagerKeys))
+                {
+                    shortcut.Keys.Clear();
+                }
+            }
+        }
+
+        if (fromVersion < 6 && !isMacOS)
+        {
+            foreach (var shortcut in Shortcuts)
+            {
+                if (shortcut.ActionName == nameof(MainViewModel.TextBoxDeleteForwardCommand) &&
+                    shortcut.Keys != null &&
+                    IsSameKeys([.. shortcut.Keys.Select(ShortcutManager.NormalizeKeyToken)], ["Shift", nameof(Avalonia.Input.Key.Back)]))
                 {
                     shortcut.Keys.Clear();
                 }

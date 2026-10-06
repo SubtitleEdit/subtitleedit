@@ -76,4 +76,42 @@ public class ShortcutsForwardDeleteMigrationTests
         Assert.Equal(new[] { "F10" }, settings.Shortcuts[0].Keys);
         Assert.Equal(NewName, settings.Shortcuts[1].ActionName);
     }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(5)]
+    public void MigrationClearsStaleShiftBackspaceOffMacOs(int fromVersion)
+    {
+        // Shift+Backspace was the default everywhere until v5.2.0-beta17; on PC keyboards it must
+        // stay a backspace while Shift is held for capitals (#15717).
+        var settings = new Se { ShortcutsMigrationVersion = fromVersion };
+        settings.Shortcuts.Add(new SeShortCut(fromVersion < 2 ? OldName : NewName, ["Shift", "Back"]));
+
+        settings.MigrateShortcuts(isMacOS: false);
+
+        Assert.Empty(settings.Shortcuts.Single(s => s.ActionName == NewName).Keys);
+        Assert.Equal(Se.CurrentShortcutsMigrationVersion, settings.ShortcutsMigrationVersion);
+    }
+
+    [Fact]
+    public void MigrationKeepsShiftBackspaceOnMacOs()
+    {
+        var settings = new Se { ShortcutsMigrationVersion = 5 };
+        settings.Shortcuts.Add(new SeShortCut(NewName, ["Shift", "Back"]));
+
+        settings.MigrateShortcuts(isMacOS: true);
+
+        Assert.Equal(new[] { "Shift", "Back" }, settings.Shortcuts.Single().Keys);
+    }
+
+    [Fact]
+    public void MigrationKeepsCustomForwardDeleteBindingOffMacOs()
+    {
+        var settings = new Se { ShortcutsMigrationVersion = 5 };
+        settings.Shortcuts.Add(new SeShortCut(NewName, ["Control", "Shift", "Back"]));
+
+        settings.MigrateShortcuts(isMacOS: false);
+
+        Assert.Equal(new[] { "Control", "Shift", "Back" }, settings.Shortcuts.Single().Keys);
+    }
 }
