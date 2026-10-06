@@ -3,6 +3,40 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-beta23 (6th of October 2026)
+
+* Add batch convert functions: Remove Unicode control characters, Renumber, Merge continuation lines, Convert actors
+* Add batch convert filters: Format contains, Extension is, Status is error, Forced tracks only
+* Add batch convert named presets
+* Add LM Studio advanced translate engine
+* Add "Browse models" for OpenAI-compatible and LM Studio translate
+* Add seconv translate engines openai-compatible and deepl + --translate-api-key
+* Add shortcuts: Remove all formatting, Remove italic, Edit original, waveform/spectrogram view, Guess time codes, Netflix check
+* Add setting to merge lines without auto-break - thx geroyannis
+* Point sync via other subtitle: gap badges by silence length + "Gap after" column - thx fraternl
+* Extend to next/previous shot change: resolve overlaps and work without shot changes - thx kadrimarzouki
+* Merge two subtitles: drag & drop files
+* Change speed and Cavena 890 export remember their last values
+* "File saved" prompt after binary and plain/custom text exports
+* Batch convert end summary shows converted/failed/not processed counts
+* AI translate: refresh model lists (Anthropic default claude-sonnet-5, Ollama suggests gemma4), remove DeepLX
+* Anthropic translate: allow longer replies and keep line breaks/punctuation
+* Fix speech to text language lists of Parakeet, Fun-ASR MLT, GLM-ASR and FireRed (no Turkish) - thx mariajuferreira1958-creator
+* Fix LM Studio translate model always saved empty
+* Fix Shift+Backspace doing forward-delete on Windows/Linux - thx geroyannis
+* Fix custom text export not adding the file extension on macOS - thx GitGianluc
+* Fix WebVTT File with# missing hours in time codes - thx GitGianluc
+* Fix saved video preview/EBU preview font being reset when it is not a font face name
+* Fix ASSA styles shortcut for SSA files
+* Fix translate server URL without scheme (e.g. localhost:8000)
+* Update llama.cpp to b11425
+* Update CrispEmbed to v0.17.12
+* Update libVLC (Windows) to 3.0.24
+* Update Chinese (Simplified) translation - thx emsb8888-prog
+* Update Italian translation - thx bovirus
+* Update Polish translation - thx potplayer-fanpack
+
+
 v5.3.0-beta22 (5th of October 2026)
 
 * Add "Speak from current line" - read lines aloud with a fast TTS engine
