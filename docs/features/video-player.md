@@ -49,6 +49,7 @@ The layout applies to every video player, including the ones in dialogs like **S
 | 1 second back | Jump 1 second backward |
 | 1 second forward | Jump 1 second forward |
 | Custom back/forward | Configurable jump amounts |
+| Custom back/forward and pause | Same jump amounts, but pause playback first |
 
 > **Note:** Actual key bindings depend on your shortcut configuration. See **Options → Shortcuts**.
 
