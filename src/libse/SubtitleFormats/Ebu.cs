@@ -1386,13 +1386,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Paragraph last = null;
             byte lastExtensionBlockNumber = 0xff;
             JustificationCodes = new List<int>();
-            Configuration.Settings.General.CurrentFrameRate = header.FrameRate;
-            if (OverrideReadFrameRate > 20)
-            {
-                Configuration.Settings.General.CurrentFrameRate = OverrideReadFrameRate;
-            }
+            // Resolve this import once, independently of concurrent video-frame-rate updates.
+            var overrideReadFrameRate = OverrideReadFrameRate;
+            var readFrameRate = overrideReadFrameRate > 20 ? overrideReadFrameRate : header.FrameRate;
+            Configuration.Settings.General.CurrentFrameRate = readFrameRate;
 
-            foreach (var tti in ReadTextAndTiming(buffer, header))
+            foreach (var tti in ReadTextAndTiming(buffer, header, readFrameRate))
             {
                 if (tti.ExtensionBlockNumber != 0xfe) // FEh : Reserved for User Data
                 {
@@ -1872,7 +1871,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         /// Read Text and Timing Information (TTI) block.
         /// Each Text and Timing Information (TTI) block consists of 128 bytes.
         /// </summary>
-        private IEnumerable<EbuTextTimingInformation> ReadTextAndTiming(byte[] buffer, EbuGeneralSubtitleInformation header)
+        private IEnumerable<EbuTextTimingInformation> ReadTextAndTiming(byte[] buffer, EbuGeneralSubtitleInformation header, double readFrameRate)
         {
             const int startOfTextAndTimingBlock = 1024;
             const int ttiSize = 128;
@@ -1901,11 +1900,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     TimeCodeInHours = buffer[index + 5 + 0],
                     TimeCodeInMinutes = buffer[index + 5 + 1],
                     TimeCodeInSeconds = buffer[index + 5 + 2],
-                    TimeCodeInMilliseconds = FramesToMillisecondsMax999(buffer[index + 5 + 3]),
+                    TimeCodeInMilliseconds = Math.Min(FramesToMilliseconds(buffer[index + 5 + 3], readFrameRate), 999),
                     TimeCodeOutHours = buffer[index + 9 + 0],
                     TimeCodeOutMinutes = buffer[index + 9 + 1],
                     TimeCodeOutSeconds = buffer[index + 9 + 2],
-                    TimeCodeOutMilliseconds = FramesToMillisecondsMax999(buffer[index + 9 + 3]),
+                    TimeCodeOutMilliseconds = Math.Min(FramesToMilliseconds(buffer[index + 9 + 3], readFrameRate), 999),
                     VerticalPosition = buffer[index + 13],
                     JustificationCode = buffer[index + 14],
                     CommentFlag = buffer[index + 15]
