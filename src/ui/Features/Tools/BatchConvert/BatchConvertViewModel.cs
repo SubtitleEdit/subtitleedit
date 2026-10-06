@@ -55,6 +55,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
@@ -3096,7 +3097,16 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         }
 
         presets.RemoveAll(p => p.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
-        presets.Add(new SeBatchConvertPreset { Name = name, Settings = json });
+        var tools = Se.Settings.Tools;
+        presets.Add(new SeBatchConvertPreset
+        {
+            Name = name,
+            Settings = json,
+            MergeSameText = CloneJson(tools.MergeSameText, SeJsonContext.Default.SeMergeSameText),
+            MergeSameTimeCode = CloneJson(tools.MergeSameTimeCode, SeJsonContext.Default.SeMergeSameTimeCode),
+            BridgeGaps = CloneJson(tools.BridgeGaps, SeJsonContext.Default.SeBridgeGaps),
+            ApplyMinGapMilliseconds = tools.ApplyMinGapMilliseconds,
+        });
         Se.SaveSettings();
         RefreshPresetNames(name);
     }
@@ -3166,6 +3176,27 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         loaded.LastFilterItem = current.LastFilterItem;
         Se.Settings.Tools.BatchConvert = loaded;
 
+        var tools = Se.Settings.Tools;
+        if (preset.MergeSameText != null)
+        {
+            tools.MergeSameText = CloneJson(preset.MergeSameText, SeJsonContext.Default.SeMergeSameText);
+        }
+
+        if (preset.MergeSameTimeCode != null)
+        {
+            tools.MergeSameTimeCode = CloneJson(preset.MergeSameTimeCode, SeJsonContext.Default.SeMergeSameTimeCode);
+        }
+
+        if (preset.BridgeGaps != null)
+        {
+            tools.BridgeGaps = CloneJson(preset.BridgeGaps, SeJsonContext.Default.SeBridgeGaps);
+        }
+
+        if (preset.ApplyMinGapMilliseconds.HasValue)
+        {
+            tools.ApplyMinGapMilliseconds = preset.ApplyMinGapMilliseconds.Value;
+        }
+
         _isApplyingPreset = true;
         try
         {
@@ -3193,6 +3224,11 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         ComboBoxSubtitleFormatChanged();
         SelectedFunctionChanged();
+    }
+
+    private static T CloneJson<T>(T value, JsonTypeInfo<T> typeInfo) where T : new()
+    {
+        return JsonSerializer.Deserialize(JsonSerializer.Serialize(value, typeInfo), typeInfo) ?? new T();
     }
 
     internal void OnKeyDown(KeyEventArgs e)

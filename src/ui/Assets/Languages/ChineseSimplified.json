@@ -2727,7 +2727,7 @@
       "cloneVoicePerLinePreparing": "正在从视频中提取每一行的声音...",
       "cloneVoicePerLineNeedsVideo": "逐行克隆声音需要打开该字幕对应的视频。请打开视频后重试。",
       "cloneVoicePerLineNoClips": "无法从视频中提取音频，因此没有可供克隆的素材。请检查视频是否包含音轨。",
-      "cloneVoicePerLineTranscribeClipsXYZ": "{0} 只有在知道视频中该行说了什么时才能克隆该行的语音，而这需要原始语言的字幕。当前未加载原始字幕，因此每一行都会使用第一个导入的语音来朗读，而不是视频中的语音。\n\n请在译文字幕旁打开原始字幕（文件 > 打开原始文件...），然后重新生成。",
+      "cloneVoicePerLineTranscribeClipsXYZ": "{0} 只有在知道视频中该行说了什么时才能克隆该行的语音。{1} 行（共 {2} 行）的内容未知 - 这通常来自原始语言字幕（文件 > 打开原始文件...）。\n\n现在使用语音转文字从视频中转录这些行吗？\n\n是：选择引擎和视频中所说的语言，在生成语音之前先转录参考片段。\n否：仍然生成 - 这些行将使用普通语音朗读，而不是视频中的语音。",
       "voiceCloneConsentTitle": "语音克隆 - 开始前须知",
       "voiceCloneConsentHeader": "您即将克隆一段声音",
       "voiceCloneConsentIntro": "克隆会复制真实人物的声音。在大多数地区，这受到相关规则的约束；特别是在欧盟，相关的法律责任由您（而非 Subtitle Edit）承担。请务必仔细阅读以下内容。",

@@ -2717,6 +2717,12 @@ public partial class AutoTranslateViewModel : ObservableObject
                 {
                     SetAutoTranslatorEngine(autoTranslator);
                 }
+                else
+                {
+                    // The saved engine is gone (e.g. DeepLX was removed) - never auto-start with
+                    // the first engine in the list; open the dialog so the user picks one.
+                    _autoStart = false;
+                }
             }
 
             UpdateSourceLanguages(SelectedAutoTranslator);

@@ -9,6 +9,13 @@ public class SeBatchConvertPreset
 {
     public string Name { get; set; } = string.Empty;
     public string Settings { get; set; } = string.Empty;
+
+    // Batch convert edits these shared tool settings directly (not via SeBatchConvert), so a
+    // preset stores its own copies. Null for presets saved before they were included.
+    public SeMergeSameText? MergeSameText { get; set; }
+    public SeMergeSameTimeCode? MergeSameTimeCode { get; set; }
+    public SeBridgeGaps? BridgeGaps { get; set; }
+    public int? ApplyMinGapMilliseconds { get; set; }
 }
 
 public class SeBatchConvert
