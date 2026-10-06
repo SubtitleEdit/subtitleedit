@@ -29,9 +29,9 @@ public class LanguageWaveform
     public string IsolatingSpeechForWaveformX { get; set; }
     public string IsolatingSpeechForWaveformFailed { get; set; }
     public string SpeechOnlyWaveformReady { get; set; }
-    public object ShowOnlyWaveform { get; set; }
-    public object ShowOnlySpectrogram { get; set; }
-    public object ShowWaveformAndSpectrogram { get; set; }
+    public string ShowOnlyWaveform { get; set; }
+    public string ShowOnlySpectrogram { get; set; }
+    public string ShowWaveformAndSpectrogram { get; set; }
     public string SpectrogramClassicViridis { get; set; }
     public string SpectrogramClassicPlasma { get; set; }
     public string SpectrogramClassicInferno { get; set; }
