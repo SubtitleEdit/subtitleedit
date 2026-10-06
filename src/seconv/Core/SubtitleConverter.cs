@@ -1465,11 +1465,14 @@ internal record class ConversionOptions
     /// <summary>Endpoint of an already-running translate server; for llamacpp this skips the local llama-server auto-start.</summary>
     public string? TranslateUrl { get; init; }
 
-    /// <summary>Model: ollama/lmstudio model name, or llamacpp .gguf file name/path.</summary>
+    /// <summary>Model: ollama/lmstudio/openai-compatible model name, or llamacpp .gguf file name/path.</summary>
     public string? TranslateModel { get; init; }
 
+    /// <summary>API key for the engines in <see cref="AutoTranslateRunner.ApiKeyEngines"/> (openai-compatible, deepl).</summary>
+    public string? TranslateApiKey { get; init; }
+
     /// <summary>
-    /// Prompt override for the LLM translate engines (llamacpp/ollama/lmstudio): inline text
+    /// Prompt override for the LLM translate engines (llamacpp/ollama/lmstudio/openai-compatible): inline text
     /// (<c>\n</c> for a line break) or the path to a text file. See
     /// <see cref="AutoTranslateRunner.ReadPromptOption"/>.
     /// </summary>

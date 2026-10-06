@@ -23,7 +23,6 @@ Automatically translate subtitles using various translation engines and AI servi
 - **Google Translate V2 API** — Google Cloud Translation (requires API key)
 - **Bing Microsoft Translator** — Azure Cognitive Services (requires API key)
 - **DeepL V2 translate** — DeepL translation (requires API key). Every language the DeepL API offers is listed, as source and as target (including the target-only regional variants such as fr-CA and de-CH). A **Formality** dropdown — Default, More formal, Less formal, More formal (fall back to default), Less formal (fall back to default) — appears for target languages that support it
-- **DeepLX translate** — A self-hosted [DeepLX](https://github.com/OwO-Network/DeepLX) server (no API key). Enter its URL; the default is `http://localhost:1188`
 - **LibreTranslate** — Open-source, self-hosted translation
 - **MyMemory Translate** — Free translation memory
 - **ChatGPT** — OpenAI AI translation (requires API key)

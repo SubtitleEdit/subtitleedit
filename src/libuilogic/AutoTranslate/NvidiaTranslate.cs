@@ -32,8 +32,6 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             // Meta Llama
             "meta/llama-4-maverick-17b-128e-instruct",
             "meta/llama-3.3-70b-instruct",
-            "meta/llama-3.1-70b-instruct",
-            "meta/llama-3.1-8b-instruct",
 
             // NVIDIA Nemotron
             "nvidia/nemotron-3-ultra-550b-a55b",
@@ -126,7 +124,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 Configuration.Settings.Tools.NvidiaPrompt = new ToolsSettings().NvidiaPrompt;
             }
             var prompt = string.Format(Configuration.Settings.Tools.NvidiaPrompt, sourceLanguageCode, targetLanguageCode);
-            var input = "{\"model\": \"" + model + "\",\"messages\": [{ \"role\": \"user\", \"content\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
+            var input = "{\"model\": \"" + Json.EncodeJsonText(model) + "\",\"messages\": [{ \"role\": \"user\", \"content\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
 
             int[] retryDelays = { 2555, 5007, 9013 };
             HttpResponseMessage result = null!;

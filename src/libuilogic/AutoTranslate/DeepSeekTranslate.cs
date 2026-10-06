@@ -89,7 +89,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             }
             var prompt = string.Format(Configuration.Settings.Tools.DeepSeekPrompt, sourceLanguageCode, targetLanguageCode);
             // v4 models default to thinking mode - disable it to keep translations fast and cheap
-            var input = "{\"model\": \"" + model + "\",\"thinking\": {\"type\": \"disabled\"},\"messages\": [{ \"role\": \"user\", \"content\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
+            var input = "{\"model\": \"" + Json.EncodeJsonText(model) + "\",\"thinking\": {\"type\": \"disabled\"},\"messages\": [{ \"role\": \"user\", \"content\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
 
             int[] retryDelays = { 2555, 5007, 9013 };
             HttpResponseMessage result = null!;

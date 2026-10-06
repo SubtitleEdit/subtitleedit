@@ -3,6 +3,7 @@ using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -75,6 +76,38 @@ public partial class PickOllamaModelViewModel : ObservableObject
         _ = Task.Run(async () =>
         {
             var fetched = await GetModelsWithCapabilitiesAsync(url);
+            Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+            {
+                _allModels = fetched;
+                RepopulateVisibleModels();
+            });
+        });
+    }
+
+    /// <summary>
+    /// Populates the picker from an OpenAI-compatible server (GET {base}/v1/models) - OpenAI-compatible,
+    /// LM Studio and LM Studio advanced engines. Errors are logged and leave the list empty, like Ollama.
+    /// </summary>
+    public void InitializeOpenAiCompatible(string title, string? selectedModel, string url, string? apiKey)
+    {
+        Title = title;
+        Models.Clear();
+        _oldModel = selectedModel;
+        ShowAllModelsVisible = false;
+        ShowAllModels = true;
+        _ = Task.Run(async () =>
+        {
+            var fetched = new List<(string Name, bool IsVision)>();
+            try
+            {
+                var names = await OpenAiModelList.GetModelsAsync(url, apiKey);
+                fetched.AddRange(names.Select(name => (name, false)));
+            }
+            catch (Exception ex)
+            {
+                Se.LogError(ex, "getting OpenAI-compatible models from: " + url);
+            }
+
             Avalonia.Threading.Dispatcher.UIThread.Post(() =>
             {
                 _allModels = fetched;

@@ -158,12 +158,12 @@ public partial class AutoTranslateViewModel : ObservableObject
             new GoogleTranslateV2(),
             new MicrosoftTranslator(),
             new DeepLTranslate(),
-            new DeepLXTranslate(),
             new LibreTranslate(),
             new MyMemoryApi(),
             new ChatGptTranslate(),
             new OpenAiCompatibleTranslate(),
             new LmStudioTranslate(),
+            new LmStudioAdvancedTranslate(),
             new OllamaTranslate(),
             new OllamaAdvancedTranslate(),
             new LlamaCppTranslate(),
@@ -280,7 +280,6 @@ public partial class AutoTranslateViewModel : ObservableObject
         Configuration.Settings.Tools.AutoTranslateDeepLApiKey = Se.Settings.AutoTranslate.DeepLApiKey;
         Configuration.Settings.Tools.AutoTranslateDeepLUrl = Se.Settings.AutoTranslate.DeepLUrl;
         Configuration.Settings.Tools.AutoTranslateDeepLFormality = Se.Settings.AutoTranslate.DeepLFormality;
-        Configuration.Settings.Tools.AutoTranslateDeepLXUrl = Se.Settings.AutoTranslate.DeepLXUrl;
 
         Configuration.Settings.Tools.AutoTranslateLibreUrl = Se.Settings.AutoTranslate.LibreTranslateUrl;
 
@@ -307,19 +306,10 @@ public partial class AutoTranslateViewModel : ObservableObject
         Configuration.Settings.Tools.AutoTranslateMistralModel = Se.Settings.AutoTranslate.MistralModel;
         Configuration.Settings.Tools.AutoTranslateMistralPrompt = Se.Settings.AutoTranslate.MistralPrompt;
 
-        Configuration.Settings.Tools.AvalAiApiKey = Se.Settings.AutoTranslate.AvalAiApiKey;
-        Configuration.Settings.Tools.AvalAiUrl = Se.Settings.AutoTranslate.AvalAiUrl;
-        Configuration.Settings.Tools.AvalAiModel = Se.Settings.AutoTranslate.AvalAiModel;
-        Configuration.Settings.Tools.AvalAiPrompt = Se.Settings.AutoTranslate.AvalAiPrompt;
-
         Configuration.Settings.Tools.PerplexityApiKey = Se.Settings.AutoTranslate.PerplexityApiKey;
         Configuration.Settings.Tools.PerplexityUrl = Se.Settings.AutoTranslate.PerplexityUrl;
         Configuration.Settings.Tools.PerplexityModel = Se.Settings.AutoTranslate.PerplexityModel;
         Configuration.Settings.Tools.PerplexityPrompt = Se.Settings.AutoTranslate.PerplexityPrompt;
-
-        Configuration.Settings.Tools.KoboldCppPrompt = Se.Settings.AutoTranslate.KoboldCppPrompt;
-        Configuration.Settings.Tools.KoboldCppUrl = Se.Settings.AutoTranslate.KoboldCppUrl;
-        Configuration.Settings.Tools.KoboldCppTemperature = Se.Settings.AutoTranslate.KoboldCppTemperature;
 
         Configuration.Settings.Tools.AnthropicApiKey = Se.Settings.AutoTranslate.AnthropicApiKey;
         Configuration.Settings.Tools.AnthropicApiModel = Se.Settings.AutoTranslate.AnthropicApiModel;
@@ -332,8 +322,6 @@ public partial class AutoTranslateViewModel : ObservableObject
         Configuration.Settings.Tools.GeminiModel = Se.Settings.AutoTranslate.GeminiModel;
         Configuration.Settings.Tools.GeminiProApiKey = Se.Settings.AutoTranslate.GeminiProApiKey;
         Configuration.Settings.Tools.GeminiPrompt = Se.Settings.AutoTranslate.GeminiPrompt;
-
-        Configuration.Settings.Tools.AutoTranslateSeamlessM4TUrl = Se.Settings.AutoTranslate.SeamlessM4TUrl;
 
         Configuration.Settings.Tools.AutoTranslateCrispAsrExe = Se.Settings.AutoTranslate.CrispAsrExe;
         Configuration.Settings.Tools.AutoTranslateCrispAsrModel = Se.Settings.AutoTranslate.CrispAsrModel;
@@ -371,11 +359,6 @@ public partial class AutoTranslateViewModel : ObservableObject
         {
             Configuration.Settings.Tools.AutoTranslateDeepLUrl = apiUrl.Trim();
             Configuration.Settings.Tools.AutoTranslateDeepLApiKey = apiKey.Trim();
-        }
-
-        if (engineType == typeof(DeepLXTranslate))
-        {
-            Configuration.Settings.Tools.AutoTranslateDeepLXUrl = apiUrl.Trim();
         }
 
         if (engineType == typeof(LibreTranslate))
@@ -456,6 +439,12 @@ public partial class AutoTranslateViewModel : ObservableObject
         {
             Se.Settings.AutoTranslate.OllamaAdvancedUrl = apiUrl.Trim();
             Se.Settings.AutoTranslate.OllamaAdvancedModel = apiModel.Trim();
+        }
+
+        if (engineType == typeof(LmStudioAdvancedTranslate))
+        {
+            Se.Settings.AutoTranslate.LmStudioAdvancedUrl = apiUrl.Trim();
+            Se.Settings.AutoTranslate.LmStudioAdvancedModel = apiModel.Trim();
         }
 
         if (engineType == typeof(AnthropicTranslate))
@@ -603,7 +592,6 @@ public partial class AutoTranslateViewModel : ObservableObject
         Se.Settings.AutoTranslate.DeepLApiKey = Configuration.Settings.Tools.AutoTranslateDeepLApiKey;
         Se.Settings.AutoTranslate.DeepLUrl = Configuration.Settings.Tools.AutoTranslateDeepLUrl;
         Se.Settings.AutoTranslate.DeepLFormality = Configuration.Settings.Tools.AutoTranslateDeepLFormality;
-        Se.Settings.AutoTranslate.DeepLXUrl = Configuration.Settings.Tools.AutoTranslateDeepLXUrl;
 
         Se.Settings.AutoTranslate.LibreTranslateUrl = Configuration.Settings.Tools.AutoTranslateLibreUrl;
 
@@ -630,15 +618,6 @@ public partial class AutoTranslateViewModel : ObservableObject
         Se.Settings.AutoTranslate.MistralModel = Configuration.Settings.Tools.AutoTranslateMistralModel;
         Se.Settings.AutoTranslate.MistralPrompt = Configuration.Settings.Tools.AutoTranslateMistralPrompt;
 
-        Se.Settings.AutoTranslate.AvalAiApiKey = Configuration.Settings.Tools.AvalAiApiKey;
-        Se.Settings.AutoTranslate.AvalAiUrl = Configuration.Settings.Tools.AvalAiUrl;
-        Se.Settings.AutoTranslate.AvalAiModel = Configuration.Settings.Tools.AvalAiModel;
-        Se.Settings.AutoTranslate.AvalAiPrompt = Configuration.Settings.Tools.AvalAiPrompt;
-
-        Se.Settings.AutoTranslate.KoboldCppPrompt = Configuration.Settings.Tools.KoboldCppPrompt;
-        Se.Settings.AutoTranslate.KoboldCppUrl = Configuration.Settings.Tools.KoboldCppUrl;
-        Se.Settings.AutoTranslate.KoboldCppTemperature = Configuration.Settings.Tools.KoboldCppTemperature;
-
         Se.Settings.AutoTranslate.AnthropicApiKey = Configuration.Settings.Tools.AnthropicApiKey;
         Se.Settings.AutoTranslate.AnthropicApiModel = Configuration.Settings.Tools.AnthropicApiModel;
         Se.Settings.AutoTranslate.AnthropicApiUrl = Configuration.Settings.Tools.AnthropicApiUrl;
@@ -650,8 +629,6 @@ public partial class AutoTranslateViewModel : ObservableObject
         Se.Settings.AutoTranslate.GeminiModel = Configuration.Settings.Tools.GeminiModel;
         Se.Settings.AutoTranslate.GeminiProApiKey = Configuration.Settings.Tools.GeminiProApiKey;
         Se.Settings.AutoTranslate.GeminiPrompt = Configuration.Settings.Tools.GeminiPrompt;
-
-        Se.Settings.AutoTranslate.SeamlessM4TUrl = Configuration.Settings.Tools.AutoTranslateSeamlessM4TUrl;
 
         Se.Settings.AutoTranslate.CrispAsrExe = Configuration.Settings.Tools.AutoTranslateCrispAsrExe;
         Se.Settings.AutoTranslate.CrispAsrModel = Configuration.Settings.Tools.AutoTranslateCrispAsrModel;
@@ -865,9 +842,19 @@ public partial class AutoTranslateViewModel : ObservableObject
     [RelayCommand]
     private async Task BrowseModel()
     {
+        // OpenAI-compatible servers list their models at GET {base}/v1/models; Ollama uses /api/tags.
+        var isOpenAiStyle = SelectedAutoTranslator is OpenAiCompatibleTranslate or LmStudioTranslate or LmStudioAdvancedTranslate;
+        var apiKey = SelectedAutoTranslator is OpenAiCompatibleTranslate ? ApiKeyText : null;
         var result = await _windowService.ShowDialogAsync<PickOllamaModelWindow, PickOllamaModelViewModel>(Window!, vm =>
         {
-            vm.Initialize(Se.Language.General.PickOllamaModel, ModelText, ApiUrlText);
+            if (isOpenAiStyle)
+            {
+                vm.InitializeOpenAiCompatible(Se.Language.General.PickModel, ModelText, ApiUrlText, apiKey);
+            }
+            else
+            {
+                vm.Initialize(Se.Language.General.PickOllamaModel, ModelText, ApiUrlText);
+            }
         });
 
         if (result is { OkPressed: true, SelectedModel: not null })
@@ -1765,7 +1752,6 @@ public partial class AutoTranslateViewModel : ObservableObject
         return translator switch
         {
             DeepLTranslate => settings.AutoTranslateDeepLUrl,
-            DeepLXTranslate => settings.AutoTranslateDeepLXUrl,
             LibreTranslate => settings.AutoTranslateLibreUrl,
             NoLanguageLeftBehindApi => settings.AutoTranslateNllbApiUrl,
             NoLanguageLeftBehindServe => settings.AutoTranslateNllbServeUrl,
@@ -1776,6 +1762,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             LlamaCppTranslate => settings.LlamaCppApiUrl,
             LlamaCppAdvancedTranslate => settings.LlamaCppApiUrl,
             OllamaAdvancedTranslate => Se.Settings.AutoTranslate.OllamaAdvancedUrl,
+            LmStudioAdvancedTranslate => Se.Settings.AutoTranslate.LmStudioAdvancedUrl,
             AnthropicTranslate => settings.AnthropicApiUrl,
             GroqTranslate => settings.GroqUrl,
             OpenRouterTranslate => settings.OpenRouterUrl,
@@ -2012,17 +1999,6 @@ public partial class AutoTranslateViewModel : ObservableObject
             return;
         }
 
-        if (engineType == typeof(DeepLXTranslate))
-        {
-            FillUrls(new List<string>
-            {
-                Configuration.Settings.Tools.AutoTranslateDeepLXUrl,
-                "http://localhost:1188",
-            });
-
-            return;
-        }
-
         if (engineType == typeof(NoLanguageLeftBehindServe))
         {
             FillUrls(new List<string>
@@ -2158,9 +2134,10 @@ public partial class AutoTranslateViewModel : ObservableObject
             ApiKeyText = Configuration.Settings.Tools.OpenAiCompatibleTranslateApiKey;
             ApiKeyIsVisible = true;
 
-            // No model list to offer - the server decides which models exist, so the
-            // model stays a free-text field (and may be left empty for one-model servers).
+            // No fixed model list - the server decides which models exist, so the model stays a
+            // free-text field (may be left empty for one-model servers); "Browse" asks /v1/models.
             ModelIsVisible = true;
+            ModelBrowseIsVisible = true;
             ModelText = Configuration.Settings.Tools.OpenAiCompatibleTranslateModel;
 
             return;
@@ -2180,7 +2157,30 @@ public partial class AutoTranslateViewModel : ObservableObject
 
             // LM Studio serves whatever model is loaded - free-text field, may be left empty.
             ModelIsVisible = true;
+            ModelBrowseIsVisible = true;
             ModelText = Configuration.Settings.Tools.LmStudioModel;
+
+            return;
+        }
+
+        if (engineType == typeof(LmStudioAdvancedTranslate))
+        {
+            ModelBrowseIsVisible = true;
+            LlamaCppAdvancedButtonIsVisible = true;
+
+            if (string.IsNullOrEmpty(Se.Settings.AutoTranslate.LmStudioAdvancedUrl))
+            {
+                Se.Settings.AutoTranslate.LmStudioAdvancedUrl = LmStudioAdvancedTranslate.DefaultUrl;
+            }
+
+            FillUrls(new List<string>
+            {
+                Se.Settings.AutoTranslate.LmStudioAdvancedUrl.TrimEnd('/'),
+            });
+
+            // Empty model = whatever model LM Studio has loaded.
+            ModelIsVisible = true;
+            ModelText = Se.Settings.AutoTranslate.LmStudioAdvancedModel;
 
             return;
         }

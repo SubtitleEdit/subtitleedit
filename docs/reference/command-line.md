@@ -9,7 +9,7 @@
 - **380+ subtitle formats** — text, binary, and image-based.
 - **Container input** — Matroska (`.mkv` / `.mks`), MP4, MCC, MXF, AVI (`.avi` / `.divx`), transport stream teletext, Blu-Ray `.sup`.
 - **OCR for image-based sources** via seven engines (Tesseract subprocess, nOCR built-in, BinaryOCR built-in, Ollama HTTP, llama.cpp HTTP with automatic server start, PaddleOCR subprocess, Apple Vision built into macOS).
-- **Auto-translate** via local LLMs (llama.cpp with automatic server start, Ollama, LM Studio) or self-hosted services (LibreTranslate, NLLB).
+- **Auto-translate** via local LLMs (llama.cpp with automatic server start, Ollama, LM Studio), any OpenAI-compatible API, DeepL, or self-hosted services (LibreTranslate, NLLB).
 - **Image-based output** — Blu-Ray sup, BDN-XML, DOST, FCP (Final Cut Pro + image), D-Cinema interop / SMPTE 2014, images-with-time-code.
 - **Operations pipeline** — offset, fps change, change-speed, renumber, adjust-duration, fix-common-errors, merge/split, balance, redo casing, RTL fixes, multiple-replace, custom-text format, plain text.
 - **Cross-platform** — Windows, Linux, macOS. Only requires the .NET runtime; no display or GUI needed.
@@ -348,10 +348,11 @@ Translated output is named with the target language code — `way.srt --translat
 |---|---|
 | `--translate-to:<lang>` | Target language — enables translation |
 | `--translate-from:<lang>` | Source language (default: auto-detect per file) |
-| `--translate-engine:<engine>` | `llamacpp` (default) \| `ollama` \| `lmstudio` \| `libretranslate` \| `nllb-serve` \| `nllb-api` |
+| `--translate-engine:<engine>` | `llamacpp` (default) \| `ollama` \| `lmstudio` \| `openai-compatible` \| `libretranslate` \| `nllb-serve` \| `nllb-api` \| `deepl` |
 | `--translate-url:<url>` | Endpoint of an already-running translate server. For `llamacpp` this skips the local server auto-start; a bare `host:port` is completed to `/v1/chat/completions`. |
-| `--translate-model:<model>` | `ollama`/`lmstudio`: model name. `llamacpp`: a `.gguf` file name from the models folder or a full path (default: the first installed translate model). |
-| `--translate-prompt:<text\|file>` | Prompt for `llamacpp` / `ollama` / `lmstudio` — inline text or a path to a text file. See [Custom prompt](#custom-prompt) below. |
+| `--translate-model:<model>` | `ollama`/`lmstudio`/`openai-compatible`: model name. `llamacpp`: a `.gguf` file name from the models folder or a full path (default: the first installed translate model). |
+| `--translate-api-key:<key>` | API key for `openai-compatible` (sent as a Bearer token, optional) and `deepl` (required; a free-tier `:fx` key is routed to `api-free.deepl.com`, a Pro key to `api.deepl.com`). `--translate-url` overrides the DeepL endpoint (default `https://api-free.deepl.com/`) or the OpenAI-compatible endpoint (default `http://localhost:8000/v1/chat/completions`). |
+| `--translate-prompt:<text\|file>` | Prompt for `llamacpp` / `ollama` / `lmstudio` / `openai-compatible` — inline text or a path to a text file. See [Custom prompt](#custom-prompt) below. |
 
 **llama.cpp (default engine).** With no `--translate-url`, seconv runs a local `llama-server` for you: it looks for the binary in Subtitle Edit's data folder (`llama.cpp` next to `seconv`, then `%AppData%\Subtitle Edit\llama.cpp` / `~/Library/Application Support/Subtitle Edit/llama.cpp` / `~/.config/Subtitle Edit/llama.cpp`) and falls back to `llama-server` on `PATH`. The server is started on a free localhost port with the model's correct chat-template flags and stopped again when seconv exits. Models resolve against the data folder's `models` subfolder.
 
@@ -373,6 +374,12 @@ seconv movie.srt subrip --translate-to:de --translate-url:http://192.168.1.10:80
 
 # Ollama
 seconv movie.srt subrip --translate-to:da --translate-engine:ollama --translate-model:gemma2
+
+# Any OpenAI-compatible API (vLLM, Together, ...)
+seconv movie.srt subrip --translate-to:de --translate-engine:openai-compatible --translate-url:https://api.example.com/v1 --translate-api-key:<key> --translate-model:<model>
+
+# DeepL
+seconv movie.srt subrip --translate-to:de --translate-engine:deepl --translate-api-key:<key>
 
 # OCR a Blu-Ray sup and translate the result in one pass
 seconv movie.sup subrip --ocr-engine:tesseract --ocr-language:eng --translate-to:de

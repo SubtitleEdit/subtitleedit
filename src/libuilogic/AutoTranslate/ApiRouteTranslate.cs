@@ -30,27 +30,29 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         public static string[] Models => new[]
         {
             // Anthropic Claude
-            "claude-sonnet-4-5",
+            "claude-sonnet-5",
+            "claude-opus-5",
             "claude-haiku-4-5",
-            "claude-opus-4-1",
+            "claude-sonnet-4-6",
 
             // OpenAI GPT Series
-            "gpt-4o",
-            "gpt-4o-mini",
+            "gpt-5.6-sol",
+            "gpt-5.5",
+            "gpt-5.4",
+            "gpt-5.4-mini",
             "gpt-4.1",
             "gpt-4.1-mini",
-            "o3-mini",
 
             // DeepSeek
             "deepseek-chat",
             "deepseek-reasoner",
 
             // Google Gemini
+            "gemini-flash-latest",
+            "gemini-3.1-pro-preview",
+            "gemini-3.5-flash",
             "gemini-2.5-pro",
             "gemini-2.5-flash",
-
-            // Qwen
-            "qwen-2.5-72b-instruct",
         };
 
         /// <summary>
@@ -97,7 +99,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 Configuration.Settings.Tools.ApiRoutePrompt = new ToolsSettings().ApiRoutePrompt;
             }
             var prompt = string.Format(Configuration.Settings.Tools.ApiRoutePrompt, sourceLanguageCode, targetLanguageCode);
-            var input = "{\"model\": \"" + model + "\",\"messages\": [{ \"role\": \"user\", \"content\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
+            var input = "{\"model\": \"" + Json.EncodeJsonText(model) + "\",\"messages\": [{ \"role\": \"user\", \"content\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
 
             int[] retryDelays = { 2555, 5007, 9013 };
             HttpResponseMessage result = null!;
