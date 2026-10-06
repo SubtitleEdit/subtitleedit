@@ -211,6 +211,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _adjustAllTimesRememberLineSelectionChoice;
     [ObservableProperty] private bool _mergeKeepEndTime;
     [ObservableProperty] private bool _mergeKeepEndTimeOnlyAssa;
+    [ObservableProperty] private bool _mergeAutoBreak;
     [ObservableProperty] private ObservableCollection<string> _splitOddNumberOfLinesActions;
     [ObservableProperty] private string _selectedSplitOddNumberOfLinesAction;
     [ObservableProperty] private bool _ocrUseWordSplitList;
@@ -901,6 +902,7 @@ public partial class SettingsViewModel : ObservableObject
         AdjustAllTimesRememberLineSelectionChoice = Se.Settings.Synchronization.AdjustAllTimesRememberLineSelectionChoice;
         MergeKeepEndTime = Se.Settings.Tools.MergeKeepEndTime;
         MergeKeepEndTimeOnlyAssa = Se.Settings.Tools.MergeKeepEndTimeOnlyAssa;
+        MergeAutoBreak = Se.Settings.Tools.MergeAutoBreak;
         SelectedSplitOddNumberOfLinesAction = MapFromSplitOddActionToLanguageCode(Se.Settings.Tools.SplitOddLinesAction);
         SelectedSpellCheckEngine = MapFromSpellCheckEngine(Se.Settings.SpellCheck.SpellCheckProvider);
         OcrUseWordSplitList = Se.Settings.Ocr.UseWordSplitList;
@@ -1775,6 +1777,7 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Synchronization.AdjustAllTimesRememberLineSelectionChoice = AdjustAllTimesRememberLineSelectionChoice;
         Se.Settings.Tools.MergeKeepEndTime = MergeKeepEndTime;
         Se.Settings.Tools.MergeKeepEndTimeOnlyAssa = MergeKeepEndTimeOnlyAssa;
+        Se.Settings.Tools.MergeAutoBreak = MergeAutoBreak;
         Se.Settings.Tools.SplitOddLinesAction = MapFromSplitOddActionTranslationToCode(SelectedSplitOddNumberOfLinesAction);
         Se.Settings.SpellCheck.SpellCheckProvider = MapFromUISpellCheckEngineToCode(SelectedSpellCheckEngine);
         Se.Settings.Ocr.UseWordSplitList = OcrUseWordSplitList;

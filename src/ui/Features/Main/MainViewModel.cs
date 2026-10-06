@@ -16474,7 +16474,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void MergeSelectedLines()
     {
-        RunWithoutChangeDetection(() => WithoutReferenceOnlyRows(() => MergeLinesSelected()));
+        RunWithoutChangeDetection(() => WithoutReferenceOnlyRows(() => MergeLinesSelected(MergeManager.DefaultBreakMode())));
     }
 
     [RelayCommand]
@@ -30745,7 +30745,7 @@ public partial class MainViewModel :
                 previous,
                 selectedItem,
             };
-            _mergeManager.MergeSelectedLines(Subtitles, list, breakMode: MergeManager.BreakMode.Normal, keepEndTime: MergeManager.ShouldKeepEndTime(SelectedSubtitleFormat));
+            _mergeManager.MergeSelectedLines(Subtitles, list, breakMode: MergeManager.DefaultBreakMode(), keepEndTime: MergeManager.ShouldKeepEndTime(SelectedSubtitleFormat));
             Renumber();
             SelectAndScrollToRow(previous);
             _updateAudioVisualizer = true;
@@ -30805,7 +30805,7 @@ public partial class MainViewModel :
                 selectedItem,
                 next
             };
-            _mergeManager.MergeSelectedLines(Subtitles, list, breakMode: MergeManager.BreakMode.Normal, keepEndTime: MergeManager.ShouldKeepEndTime(SelectedSubtitleFormat));
+            _mergeManager.MergeSelectedLines(Subtitles, list, breakMode: MergeManager.DefaultBreakMode(), keepEndTime: MergeManager.ShouldKeepEndTime(SelectedSubtitleFormat));
             Renumber();
             SelectAndScrollToRow(selectedItem);
             _updateAudioVisualizer = true;
@@ -30847,7 +30847,7 @@ public partial class MainViewModel :
         }
     }
 
-    private void MergeLinesSelected(MergeManager.BreakMode breakMode = MergeManager.BreakMode.Normal)
+    private void MergeLinesSelected(MergeManager.BreakMode breakMode)
     {
         var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (selectedItems.Count == 0 || SelectedSubtitle == null)
