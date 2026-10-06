@@ -6,8 +6,8 @@ namespace UITests.Logic.Media;
 /// <summary>
 /// The rules behind "extend selected lines to next/previous shot change" (issue #13811). The
 /// command buys reading time without letting a line cross a cut, so: take the first cut at or after
-/// the end (never a later one), stop the configured gap short of it, and never move the cue the
-/// wrong way.
+/// the end (never a later one), stop the configured gap short of it, and never let a cut move the
+/// cue the wrong way - only the minimum gap to a neighbouring subtitle may trim a line (#15719).
 /// </summary>
 public class ShotChangeExtendTests
 {
@@ -47,15 +47,56 @@ public class ShotChangeExtendTests
         Assert.Null(result);
     }
 
-    // Rule 3: extend means extend. An overlapping next line used to pull the end backwards.
+    // The minimum gap always wins, like SE4: an overlapping line is trimmed to the gap before the
+    // next subtitle instead of being left alone (issue #15719).
     [Fact]
-    public void ExtendEnd_NextSubtitleStartsBeforeTheCurrentEnd_DoesNotShorten()
+    public void ExtendEnd_NextSubtitleStartsBeforeTheCurrentEnd_TrimsToTheGap()
     {
         var result = ShotChangesHelper.GetExtendedEndMs(
             ShotChanges, startMs: 100, endMs: 900, nextStartMs: 800,
             outCuesGapMs: 0, minGapMs: 24, maxDurationMs: NoMaxDuration);
 
+        Assert.Equal(776, result); // 800 - 24 ms minimum gap
+    }
+
+    [Fact]
+    public void ExtendEnd_EndInsideTheMinimumGap_TrimsToTheGap()
+    {
+        var result = ShotChangesHelper.GetExtendedEndMs(
+            ShotChanges, startMs: 100, endMs: 790, nextStartMs: 800,
+            outCuesGapMs: 0, minGapMs: 24, maxDurationMs: NoMaxDuration);
+
+        Assert.Equal(776, result);
+    }
+
+    [Fact]
+    public void ExtendEnd_AlreadyExactlyTheGapBeforeTheNextSubtitle_LeavesTheLineAlone()
+    {
+        var result = ShotChangesHelper.GetExtendedEndMs(
+            ShotChanges, startMs: 100, endMs: 776, nextStartMs: 800,
+            outCuesGapMs: 0, minGapMs: 24, maxDurationMs: NoMaxDuration);
+
         Assert.Null(result);
+    }
+
+    [Fact]
+    public void ExtendEnd_TrimWouldLeaveNoDuration_LeavesTheLineAlone()
+    {
+        var result = ShotChangesHelper.GetExtendedEndMs(
+            ShotChanges, startMs: 790, endMs: 900, nextStartMs: 800,
+            outCuesGapMs: 0, minGapMs: 24, maxDurationMs: NoMaxDuration);
+
+        Assert.Null(result); // 776 is before the start
+    }
+
+    [Fact]
+    public void ExtendEnd_NoShotChangesLoaded_UsesTheNextSubtitle()
+    {
+        var result = ShotChangesHelper.GetExtendedEndMs(
+            new List<double>(), startMs: 100, endMs: 500, nextStartMs: 3000,
+            outCuesGapMs: 80, minGapMs: 24, maxDurationMs: NoMaxDuration);
+
+        Assert.Equal(2976, result);
     }
 
     [Fact]
@@ -119,12 +160,42 @@ public class ShotChangeExtendTests
     }
 
     [Fact]
-    public void ExtendStart_PreviousSubtitleEndsAfterTheCurrentStart_DoesNotShorten()
+    public void ExtendStart_PreviousSubtitleEndsAfterTheCurrentStart_TrimsToTheGap()
     {
         var result = ShotChangesHelper.GetExtendedStartMs(
             ShotChanges, startMs: 2500, endMs: 3000, previousEndMs: 2600,
             inCuesGapMs: 0, minGapMs: 24, maxDurationMs: NoMaxDuration);
 
-        Assert.Null(result);
+        Assert.Equal(2624, result); // 2600 + 24 ms minimum gap
+    }
+
+    [Fact]
+    public void ExtendStart_StartInsideTheMinimumGap_TrimsToTheGap()
+    {
+        var result = ShotChangesHelper.GetExtendedStartMs(
+            ShotChanges, startMs: 2610, endMs: 3000, previousEndMs: 2600,
+            inCuesGapMs: 0, minGapMs: 24, maxDurationMs: NoMaxDuration);
+
+        Assert.Equal(2624, result);
+    }
+
+    [Fact]
+    public void ExtendStart_TrimWouldLeaveNoDuration_LeavesTheLineAlone()
+    {
+        var result = ShotChangesHelper.GetExtendedStartMs(
+            ShotChanges, startMs: 2500, endMs: 2610, previousEndMs: 2600,
+            inCuesGapMs: 0, minGapMs: 24, maxDurationMs: NoMaxDuration);
+
+        Assert.Null(result); // 2624 is after the end
+    }
+
+    [Fact]
+    public void ExtendStart_NoShotChangesLoaded_UsesThePreviousSubtitle()
+    {
+        var result = ShotChangesHelper.GetExtendedStartMs(
+            new List<double>(), startMs: 2500, endMs: 3000, previousEndMs: 1000,
+            inCuesGapMs: 40, minGapMs: 24, maxDurationMs: NoMaxDuration);
+
+        Assert.Equal(1024, result);
     }
 }

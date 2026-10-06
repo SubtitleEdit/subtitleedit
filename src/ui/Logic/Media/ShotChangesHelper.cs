@@ -271,14 +271,19 @@ public class ShotChangesHelper
     /// one, or the line would span the cut it was supposed to stop at;</item>
     /// <item>it lands <paramref name="outCuesGapMs"/> before that cut (the beautify profile's out
     /// cues gap, so this command, the beautifier and the snap commands share one rule);</item>
-    /// <item>it only ever extends - a target at or before the current end means "already where it
-    /// should be", so nothing moves. Shortening a line is not what the user asked for.</item>
+    /// <item>a shot change never shortens the line - a cut at or before the current end means
+    /// "already where it should be", so nothing moves.</item>
     /// </list>
     /// <para>
     /// The next subtitle's start minus <paramref name="minGapMs"/> caps the result (and is the only
-    /// bound when no cut lies ahead - the "or next subtitle" half of the command), and a result
-    /// longer than <paramref name="maxDurationMs"/> is dropped rather than clamped: a clamped end
-    /// would sit in the middle of a shot, which is the opposite of the point.
+    /// bound when no cut lies ahead, or no shot changes are loaded - the "or next subtitle" half of
+    /// the command), and a result longer than <paramref name="maxDurationMs"/> is dropped rather than
+    /// clamped: a clamped end would sit in the middle of a shot, which is the opposite of the point.
+    /// </para>
+    /// <para>
+    /// The minimum gap is the one bound that may pull the end backwards: a line that overlaps the
+    /// next subtitle, or ends inside the minimum gap, is trimmed to the next start minus the gap
+    /// like SE4 does (issue #15719) - as long as a positive duration is left.
     /// </para>
     /// </summary>
     public static double? GetExtendedEndMs(
@@ -290,6 +295,15 @@ public class ShotChangesHelper
         double minGapMs,
         double maxDurationMs)
     {
+        if (nextStartMs.HasValue)
+        {
+            var limitMs = nextStartMs.Value - minGapMs;
+            if (limitMs < endMs)
+            {
+                return limitMs > startMs ? limitMs : null;
+            }
+        }
+
         double? newEndMs = null;
         foreach (var shotChange in shotChanges)
         {
@@ -326,7 +340,8 @@ public class ShotChangesHelper
     /// left alone - <see cref="GetExtendedEndMs"/> mirrored: the <b>last</b> shot change at or before
     /// the current start, plus the in cues gap so the line starts after the cut rather than on it,
     /// and only when that moves the start earlier. The previous subtitle's end plus
-    /// <paramref name="minGapMs"/> is the floor.
+    /// <paramref name="minGapMs"/> is the floor - and the one bound that may move the start later,
+    /// when the line overlaps the previous subtitle or starts inside the minimum gap (issue #15719).
     /// </summary>
     public static double? GetExtendedStartMs(
         IReadOnlyList<double> shotChanges,
@@ -337,6 +352,15 @@ public class ShotChangesHelper
         double minGapMs,
         double maxDurationMs)
     {
+        if (previousEndMs.HasValue)
+        {
+            var limitMs = previousEndMs.Value + minGapMs;
+            if (limitMs > startMs)
+            {
+                return limitMs < endMs ? limitMs : null;
+            }
+        }
+
         double? newStartMs = null;
         for (var i = shotChanges.Count - 1; i >= 0; i--)
         {
