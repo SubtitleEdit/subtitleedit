@@ -206,7 +206,7 @@ public class SeAutoTranslate
         NllbServeModel = string.Empty;
         NllbServeUrl = "http://127.0.0.1:6060/";
         OllamaModel = string.Empty;
-        OllamaModels = "llama3.2,llama3.2:1b,phi3,gemma2,qwen2,mistral";
+        OllamaModels = "llama3.2,llama3.2:1b,phi3,gemma4,qwen2,mistral";
         OllamaPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments or notes:";
         OllamaUrl = OllamaTranslate.DefaultUrl;
         OpenRouterModel = OpenRouterTranslate.Models[0];
