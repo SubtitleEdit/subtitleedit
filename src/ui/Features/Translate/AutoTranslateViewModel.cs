@@ -87,7 +87,6 @@ public partial class AutoTranslateViewModel : ObservableObject
     [ObservableProperty] private bool _modelIsVisible;
     [ObservableProperty] private bool _modelBrowseIsVisible;
     [ObservableProperty] private string _modelText;
-    [ObservableProperty] private bool _buttonModelIsVisible;
     [ObservableProperty] private ObservableCollection<string> _modelPresets = new();
     [ObservableProperty] private bool _modelComboIsVisible;
     [ObservableProperty] private bool _modelTextBoxIsVisible;
@@ -1940,7 +1939,6 @@ public partial class AutoTranslateViewModel : ObservableObject
         FormalityIsVisible = false;
         ModelIsVisible = false;
         ModelBrowseIsVisible = false;
-        ButtonModelIsVisible = false;
         ButtonDownloadIsVisible = false;
         CrispAsrModelComboIsVisible = false;
         EngineUpdateButtonIsVisible = false;
@@ -2246,7 +2244,6 @@ public partial class AutoTranslateViewModel : ObservableObject
 
             _apiModels = Se.Settings.AutoTranslate.OllamaModels.Split(',').ToList();
             ModelIsVisible = true;
-            ButtonModelIsVisible = true;
             ModelText = Se.Settings.AutoTranslate.OllamaModel;
 
             return;
@@ -2270,7 +2267,6 @@ public partial class AutoTranslateViewModel : ObservableObject
             // Same installed-model list as the classic Ollama engine - only the endpoint differs.
             _apiModels = Se.Settings.AutoTranslate.OllamaModels.Split(',').ToList();
             ModelIsVisible = true;
-            ButtonModelIsVisible = true;
             ModelText = Se.Settings.AutoTranslate.OllamaAdvancedModel;
 
             return;
@@ -2288,7 +2284,6 @@ public partial class AutoTranslateViewModel : ObservableObject
 
             _apiModels = AnthropicTranslate.Models.ToList();
             ModelIsVisible = true;
-            ButtonModelIsVisible = true;
             ModelText = Configuration.Settings.Tools.AnthropicApiModel;
 
             return;
@@ -2312,7 +2307,6 @@ public partial class AutoTranslateViewModel : ObservableObject
 
             _apiModels = PerplexityTranslate.Models.ToList();
             ModelIsVisible = true;
-            ButtonModelIsVisible = true;
             ModelText = Configuration.Settings.Tools.PerplexityModel;
 
             return;
@@ -2330,7 +2324,6 @@ public partial class AutoTranslateViewModel : ObservableObject
 
             _apiModels = GroqTranslate.Models.ToList();
             ModelIsVisible = true;
-            ButtonModelIsVisible = true;
             ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.GroqModel) ? _apiModels[0] : Configuration.Settings.Tools.GroqModel;
 
             return;
@@ -2349,7 +2342,6 @@ public partial class AutoTranslateViewModel : ObservableObject
 
             _apiModels = OpenRouterTranslate.Models.ToList();
             ModelIsVisible = true;
-            ButtonModelIsVisible = true;
             ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.OpenRouterModel) ? _apiModels[0] : Configuration.Settings.Tools.OpenRouterModel;
 
             return;
@@ -2367,7 +2359,6 @@ public partial class AutoTranslateViewModel : ObservableObject
 
             _apiModels = ApiRouteTranslate.Models.ToList();
             ModelIsVisible = true;
-            ButtonModelIsVisible = true;
             ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.ApiRouteModel) ? _apiModels[0] : Configuration.Settings.Tools.ApiRouteModel;
 
             return;
@@ -2380,7 +2371,6 @@ public partial class AutoTranslateViewModel : ObservableObject
 
             _apiModels = GeminiTranslate.Models.ToList();
             ModelIsVisible = true;
-            ButtonModelIsVisible = true;
             ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.GeminiModel) ? _apiModels[0] : Configuration.Settings.Tools.GeminiModel;
 
             return;
@@ -2398,7 +2388,6 @@ public partial class AutoTranslateViewModel : ObservableObject
 
             _apiModels = NvidiaTranslate.Models.ToList();
             ModelIsVisible = true;
-            ButtonModelIsVisible = true;
             ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.NvidiaModel) ? _apiModels[0] : Configuration.Settings.Tools.NvidiaModel;
 
             return;
@@ -2416,7 +2405,6 @@ public partial class AutoTranslateViewModel : ObservableObject
 
             _apiModels = MistralTranslate.Models.ToList();
             ModelIsVisible = true;
-            ButtonModelIsVisible = true;
             ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.AutoTranslateMistralModel) ? _apiModels[0] : Configuration.Settings.Tools.AutoTranslateMistralModel;
 
             return;
@@ -2434,7 +2422,6 @@ public partial class AutoTranslateViewModel : ObservableObject
 
             _apiModels = DeepSeekTranslate.Models.ToList();
             ModelIsVisible = true;
-            ButtonModelIsVisible = true;
             ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.DeepSeekModel) ? _apiModels[0] : Configuration.Settings.Tools.DeepSeekModel;
 
             return;
