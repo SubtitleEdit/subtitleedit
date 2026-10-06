@@ -15071,7 +15071,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private void SortByNumberOfLines()
     {
-        SortSubtitlesBy(p => (p.Text ?? string.Empty).SplitToLines().Count, Se.Language.Main.SortedByNumberOfLines);
+        SortSubtitlesBy(p => (p.Text ?? string.Empty).CountLines(), Se.Language.Main.SortedByNumberOfLines);
     }
 
     [RelayCommand]
@@ -32793,7 +32793,7 @@ public partial class MainViewModel :
                         keyEventArgs.KeyModifiers == KeyModifiers.None &&
                         Se.Settings.General.SubtitleTextBoxLimitNewLines)
                     {
-                        var newLineCount = EditTextBox.Text.SplitToLines().Count;
+                        var newLineCount = EditTextBox.Text.CountLines();
                         if (newLineCount >= Se.Settings.General.MaxNumberOfLines)
                         {
                             keyEventArgs.Handled = true;
@@ -35153,7 +35153,7 @@ public partial class MainViewModel :
         if (value != null)
         {
             _teletextLineCountSubtitleId = value.Id;
-            _teletextLineCountLastSeen = (value.Text ?? string.Empty).SplitToLines().Count;
+            _teletextLineCountLastSeen = (value.Text ?? string.Empty).CountLines();
         }
     }
 
@@ -35165,7 +35165,7 @@ public partial class MainViewModel :
     /// </summary>
     private void AdjustTeletextRowForLineCountChange(SubtitleLineViewModel subtitle)
     {
-        var newLineCount = (subtitle.Text ?? string.Empty).SplitToLines().Count;
+        var newLineCount = (subtitle.Text ?? string.Empty).CountLines();
 
         // The edit box also raises TextChanged when the selection swaps its content to another
         // row - only line-count changes within the same row are edits.
