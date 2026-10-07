@@ -750,7 +750,7 @@ public static class InitNativeMacMenu
     public static void UpdateRecentFiles(MainViewModel vm)
     {
         var files = Se.Settings.File.RecentFiles
-            .Where(p => !string.IsNullOrEmpty(p.SubtitleFileName) && System.IO.File.Exists(p.SubtitleFileName))
+            .Where(p => Se.Settings.File.ShowRecentFiles && !string.IsNullOrEmpty(p.SubtitleFileName) && System.IO.File.Exists(p.SubtitleFileName))
             .ToList();
 
         PopulateRecentNativeMenu(
@@ -776,7 +776,7 @@ public static class InitNativeMacMenu
     public static void UpdateRecentVideos(MainViewModel vm)
     {
         var files = Se.Settings.Video.RecentFiles
-            .Where(f => !string.IsNullOrWhiteSpace(f))
+            .Where(f => Se.Settings.File.ShowRecentFiles && !string.IsNullOrWhiteSpace(f))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
 

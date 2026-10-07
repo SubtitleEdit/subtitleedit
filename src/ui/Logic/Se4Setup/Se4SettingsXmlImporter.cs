@@ -129,6 +129,7 @@ public static class Se4SettingsXmlImporter
         SetEnumName<DialogType>(general, "DialogStyle", v => g.DialogStyle = v);
         SetEnumName<ContinuationStyle>(general, "ContinuationStyle", v => g.ContinuationStyle = v);
         SetBool(general, "TitleBarFullFileName", v => g.TitleBarFullFileName = v);
+        SetBool(general, "ShowRecentFiles", v => Se.Settings.File.ShowRecentFiles = v);
 
         var cpsStrategy = Value(general, "CpsLineLengthStrategy");
         if (!string.IsNullOrWhiteSpace(cpsStrategy))
