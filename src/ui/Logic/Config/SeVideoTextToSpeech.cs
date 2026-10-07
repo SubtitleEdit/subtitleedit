@@ -17,6 +17,8 @@ public class SeVideoTextToSpeech
     public string SpeakFromLineEngine { get; set; }
     public string SpeakFromLineVoice { get; set; }
     public string SpeakFromLineLanguage { get; set; }
+    public bool PlayWithSpeechLowerVideoVolume { get; set; }
+    public bool PlayWithSpeechPauseVideoWhenLate { get; set; }
     public string AllTalkUrl { get; set; }
     public string AzureApiKey { get; set; }
     public string AzureRegion { get; set; }
@@ -211,6 +213,8 @@ public class SeVideoTextToSpeech
         SpeakFromLineEngine = string.Empty;
         SpeakFromLineVoice = string.Empty;
         SpeakFromLineLanguage = string.Empty;
+        PlayWithSpeechLowerVideoVolume = true;
+        PlayWithSpeechPauseVideoWhenLate = true;
         AllTalkUrl = "http://127.0.0.1:7851";
         MurfApiKey = string.Empty;
         MurfStyle = "Conversational";

@@ -74,6 +74,12 @@ public class LanguageTextToSpeech
     public string SpeakFromCurrentLineHint { get; set; }
     public string StopSpeaking { get; set; }
     public string SpeakingLineX { get; set; }
+    public string PlayWithSpeechTitle { get; set; }
+    public string PlayWithSpeechDotDotDot { get; set; }
+    public string PlayWithSpeechHint { get; set; }
+    public string LowerVideoVolumeWhileSpeaking { get; set; }
+    public string PauseVideoWhenSpeechRunsLate { get; set; }
+    public string WaitingForSpeechLineX { get; set; }
     public string VoiceKindClone { get; set; }
     public string VoiceKindPreset { get; set; }
     public string VoiceKindModel { get; set; }
@@ -305,6 +311,12 @@ public class LanguageTextToSpeech
         SpeakFromCurrentLineHint = "Reads the lines aloud one after another, starting at the current line. Press Escape or click another line to stop.";
         StopSpeaking = "Stop speaking";
         SpeakingLineX = "Speaking line {0}... (Escape to stop)";
+        PlayWithSpeechTitle = "Play with speech";
+        PlayWithSpeechDotDotDot = "Play with speech...";
+        PlayWithSpeechHint = "Plays the video and speaks each line when the video reaches it. Pause and seek as usual; press Escape to stop.";
+        LowerVideoVolumeWhileSpeaking = "Lower video volume while speaking";
+        PauseVideoWhenSpeechRunsLate = "Pause video when speech runs into the next line";
+        WaitingForSpeechLineX = "Generating speech for line {0}... (Escape to stop)";
         VoiceKindClone = "Cloned voice";
         VoiceKindPreset = "Built-in";
         VoiceKindModel = "Voice model";
