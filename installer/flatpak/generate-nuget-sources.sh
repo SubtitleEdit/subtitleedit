@@ -10,8 +10,8 @@
 # Run this script whenever NuGet dependencies change, then commit both
 # nuget-sources.json and src/ui/packages.lock.json alongside the manifest.
 #
-# Requires (preferred): flatpak, org.freedesktop.Sdk//24.08,
-#                       org.freedesktop.Sdk.Extension.dotnet10//24.08, python3
+# Requires (preferred): flatpak, org.freedesktop.Sdk//26.08,
+#                       org.freedesktop.Sdk.Extension.dotnet10//26.08, python3
 # Requires (fallback):  dotnet >= 10, python3
 #
 # Usage (from repo root):
@@ -34,7 +34,7 @@ GENERATOR="$SCRIPT_DIR/flatpak-dotnet-generator.py"
 GENERATOR_COMMIT="3fc0620788a1dda1a3a539b8f972edadce8260ab"
 GENERATOR_URL="https://raw.githubusercontent.com/flatpak/flatpak-builder-tools/${GENERATOR_COMMIT}/dotnet/flatpak-dotnet-generator.py"
 
-FREEDESKTOP_VERSION="24.08"
+FREEDESKTOP_VERSION="26.08"
 DOTNET_VERSION="10"
 
 cd "$REPO_ROOT"
