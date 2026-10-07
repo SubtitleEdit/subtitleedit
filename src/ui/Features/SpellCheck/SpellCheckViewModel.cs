@@ -169,6 +169,10 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
+        // Undo of Skip all / Change all / Add to names / Add to dictionary reverses the word-list
+        // change in the currently loaded language, which after a switch is the wrong one. (#15767)
+        ClearUndo();
+
         if (_spellCheckManager.WordSpellChecker != null)
         {
             if (Dictionaries.Count > 0)
@@ -993,6 +997,14 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
     }
 
     private bool CanUndo() => _undoList.Count > 0;
+
+    private void ClearUndo()
+    {
+        _undoList.Clear();
+        IsUndoVisible = false;
+        UndoText = string.Empty;
+        UndoCommand.NotifyCanExecuteChanged();
+    }
 
     private void PushUndo(string description, SpellCheckUndoAction action, string actionWord)
     {

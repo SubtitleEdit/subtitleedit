@@ -124,6 +124,10 @@ public class SpellChecker : ISpellChecker, IDoSpell
     public bool Initialize(string dictionaryFile, string twoLetterLanguageCode)
     {
         SkipAllList.Clear();
+
+        // Change-all pairs are per language (<lang>_UseAlways.xml, re-applied below) - switching
+        // dictionary mid-session used to keep the previous language's pairs active. (#15767)
+        ChangeAllDictionary.Clear();
         _twoLetterLanguageCode = twoLetterLanguageCode ?? string.Empty;
 
         // The Voikko marker path need not exist (bundled / system dictionary); TryCreate validates.
