@@ -347,7 +347,9 @@ public class RestoreAutoBackupWindow : Window
                 return new Border();
             }
 
-            var color = GetExtensionColor(item.Extension);
+            var index = GetExtensionPaletteIndex(item.Extension);
+            var color = ExtensionPalette[index];
+            var textColor = UiTheme.IsDarkThemeEnabled() ? color : ExtensionPaletteLight[index];
             return new Border
             {
                 Background = Brushes.Transparent,
@@ -363,7 +365,7 @@ public class RestoreAutoBackupWindow : Window
                     {
                         Text = item.Extension,
                         FontSize = UiUtil.ScaledFontSize(12),
-                        Foreground = new SolidColorBrush(color),
+                        Foreground = new SolidColorBrush(textColor),
                         VerticalAlignment = VerticalAlignment.Center,
                     },
                 },
@@ -381,7 +383,19 @@ public class RestoreAutoBackupWindow : Window
         Color.FromRgb(0x4c, 0x9c, 0xe8), // blue
     };
 
-    private static Color GetExtensionColor(string extension)
+    // Darker shades of ExtensionPalette for the pill text on the light theme - the pastels are
+    // tuned for a dark background and are hard to read on white (#15768).
+    private static readonly Color[] ExtensionPaletteLight =
+    {
+        Color.FromRgb(0x00, 0x6b, 0x7d), // cyan
+        Color.FromRgb(0x6a, 0x3d, 0xb8), // violet
+        Color.FromRgb(0x8a, 0x5a, 0x00), // amber
+        Color.FromRgb(0x1e, 0x7a, 0x34), // green
+        Color.FromRgb(0xa8, 0x2e, 0x66), // pink
+        Color.FromRgb(0x1a, 0x5f, 0xb4), // blue
+    };
+
+    private static int GetExtensionPaletteIndex(string extension)
     {
         var hash = 0;
         foreach (var ch in extension.ToLowerInvariant())
@@ -389,6 +403,6 @@ public class RestoreAutoBackupWindow : Window
             hash = hash * 31 + ch;
         }
 
-        return ExtensionPalette[System.Math.Abs(hash) % ExtensionPalette.Length];
+        return System.Math.Abs(hash) % ExtensionPalette.Length;
     }
 }
