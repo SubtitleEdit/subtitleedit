@@ -902,7 +902,7 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private void SuggestionUseOnce()
     {
-        if (SelectedSuggestion == null || SelectedParagraph == null)
+        if (string.IsNullOrWhiteSpace(SelectedSuggestion) || SelectedParagraph == null)
         {
             return;
         }
@@ -917,7 +917,7 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private void SuggestionUseAlways()
     {
-        if (SelectedSuggestion == null || SelectedParagraph == null)
+        if (string.IsNullOrWhiteSpace(SelectedSuggestion) || SelectedParagraph == null)
         {
             return;
         }
@@ -1119,10 +1119,11 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
             }
 
             AreSuggestionsAvailable = true;
-            if (suggestions.Count > 0)
-            {
-                SelectedSuggestion = suggestions[0];
-            }
+
+            // Clear when there are no suggestions - otherwise the previous word's suggestion stayed
+            // selected and "Use"/"Use always" applied it to this unrelated word (and "Use always"
+            // persisted that pair to <lang>_UseAlways.xml). (#15767)
+            SelectedSuggestion = suggestions.Count > 0 ? suggestions[0] : string.Empty;
 
             var lineIndex = Paragraphs.IndexOf(results[0].Paragraph) + 1;
             LineText = string.Format(Se.Language.SpellCheck.LineXofY, lineIndex, Paragraphs.Count);
