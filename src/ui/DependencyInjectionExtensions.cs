@@ -121,6 +121,7 @@ using Nikse.SubtitleEdit.Features.SpellCheck.EditWholeText;
 using Nikse.SubtitleEdit.Features.SpellCheck.FindDoubleLines;
 using Nikse.SubtitleEdit.Features.SpellCheck.FindDoubleWords;
 using Nikse.SubtitleEdit.Features.SpellCheck.GetDictionaries;
+using Nikse.SubtitleEdit.Features.SpellCheck.UseAlwaysList;
 using Nikse.SubtitleEdit.Features.Sync.AdjustAllTimes;
 using Nikse.SubtitleEdit.Features.Sync.ChangeFrameRate;
 using Nikse.SubtitleEdit.Features.Sync.ChangeSpeed;
@@ -447,6 +448,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<EditEmbeddedTrackViewModel>();
         collection.AddTransient<EditRuleViewModel>();
         collection.AddTransient<EditWholeTextViewModel>();
+        collection.AddTransient<UseAlwaysListViewModel>();
         collection.AddTransient<ElevenLabsSettingsViewModel>();
         collection.AddTransient<OpenAiCompatibleSettingsViewModel>();
         collection.AddTransient<EmbedTrackPreviewViewModel>();

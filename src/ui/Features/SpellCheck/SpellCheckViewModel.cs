@@ -17,6 +17,7 @@ using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.SpellCheck.EditWholeText;
 using Nikse.SubtitleEdit.Features.SpellCheck.GetDictionaries;
+using Nikse.SubtitleEdit.Features.SpellCheck.UseAlwaysList;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
@@ -886,6 +887,21 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
         }
 
         await Window!.Launcher.LaunchUriAsync(new Uri("https://www.google.com/search?q=" + HttpUtility.UrlEncode(CurrentWord)));
+    }
+
+    [RelayCommand]
+    private async Task EditUseAlwaysList()
+    {
+        var result = await _windowService.ShowDialogAsync<UseAlwaysListWindow, UseAlwaysListViewModel>(Window!, vm =>
+        {
+            vm.Initialize(SelectedDictionary?.DictionaryFileName);
+        });
+
+        if (result.OkPressed)
+        {
+            // Pick up the edited pairs for the rest of this run.
+            _spellCheckManager.ReloadUseAlwaysList();
+        }
     }
 
     [RelayCommand]

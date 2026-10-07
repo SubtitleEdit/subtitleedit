@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
@@ -323,6 +323,7 @@ public class SpellCheckWindow : Window
             {
                 comboBoxDictionary,
                 buttonDictionaryBrowse,
+                UiUtil.MakeButton(vm.EditUseAlwaysListCommand, IconNames.FormatListChecks, Se.Language.SpellCheck.EditUseAlwaysList),
             }
         };
 

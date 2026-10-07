@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -35,6 +35,8 @@ public class WordListsWindow : Window
         var panelLanguage = UiUtil.MakeHorizontalPanel(labelLanguage, comboLanguages);
 
         var linkLabelOpenDictionariesFolder = UiUtil.MakeLink(Se.Language.General.OpenDictionaryFolder, vm.OpenDictionariesFolderCommand);
+        var linkLabelEditUseAlwaysList = UiUtil.MakeLink(Se.Language.SpellCheck.EditUseAlwaysList, vm.EditUseAlwaysListCommand);
+        var panelLinks = UiUtil.MakeHorizontalPanel(linkLabelOpenDictionariesFolder, linkLabelEditUseAlwaysList).WithSpacing(20);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonOk);
@@ -65,7 +67,7 @@ public class WordListsWindow : Window
         grid.Add(MakeViewNames(vm), 1, 0);
         grid.Add(MakeViewWords(vm), 1, 1);
         grid.Add(MakeViewOcrFixes(vm), 1, 2);
-        grid.Add(linkLabelOpenDictionariesFolder, 2, 0, 1, 3);
+        grid.Add(panelLinks, 2, 0, 1, 3);
         grid.Add(panelButtons, 3, 0, 1, 3);
 
         Content = grid;
