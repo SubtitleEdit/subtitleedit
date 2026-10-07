@@ -3,6 +3,24 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-beta24 (7th of October 2026)
+
+* Add "Play with speech": speak lines in sync while the video plays - thx Jose4D
+* Add "custom milliseconds back/forward and pause" video shortcuts - thx accessallareas
+* Add option to remember waveform zoom across restarts - thx bichitoxxx
+* Batch convert: ask before adding video files from a folder - thx jsinfate
+* Batch convert: faster adding of many files
+* Close translation: ask before closing, keep the original's timing on a mismatched original - thx bichitoxxx
+* SMPTE timing: frame numbers follow the NDF time code clock (FCP 7 XML + Final Cut Pro X) - thx smt-joen
+* Fix ASSA override tags piling up when moving words - thx rRobis
+* Fix EBU STL import frame-rate race - thx Triathlon-rally
+* Update Flatpak runtime to freedesktop 26.08 (24.08 is end-of-life) - thx Gensplejs
+* Update German translation - thx FunkyKnilch
+* Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
+* Update Polish translation - thx potplayer-fanpack
+
+
 v5.3.0-beta23 (6th of October 2026)
 
 * Add batch convert functions: Remove Unicode control characters, Renumber, Merge continuation lines, Convert actors
