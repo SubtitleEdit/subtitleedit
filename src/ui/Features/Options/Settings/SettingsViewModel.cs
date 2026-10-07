@@ -277,6 +277,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _waveformCenterVideoPosition;
     [ObservableProperty] private bool _waveformCenterVideoPositionAlsoWhenPaused;
     [ObservableProperty] private bool _waveformSelectCurrentSubtitleWhilePaused;
+    [ObservableProperty] private bool _waveformRememberZoom;
 
     [ObservableProperty] private ObservableCollection<string> _waveformDrawStyles;
     [ObservableProperty] private string _selectedWaveformDrawStyle;
@@ -986,6 +987,7 @@ public partial class SettingsViewModel : ObservableObject
         WaveformCenterVideoPosition = Se.Settings.Waveform.CenterVideoPosition;
         WaveformCenterVideoPositionAlsoWhenPaused = Se.Settings.Waveform.CenterVideoPositionAlsoWhenPaused;
         WaveformSelectCurrentSubtitleWhilePaused = Se.Settings.Waveform.SelectCurrentSubtitleWhilePaused;
+        WaveformRememberZoom = Se.Settings.Waveform.RememberZoom;
         WaveformShowToolbar = Se.Settings.Waveform.ShowToolbar;
         WaveformShowOriginalSubtitle = Se.Settings.Waveform.ShowOriginalSubtitle;
 
@@ -1874,6 +1876,7 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Waveform.CenterVideoPosition = WaveformCenterVideoPosition;
         Se.Settings.Waveform.CenterVideoPositionAlsoWhenPaused = WaveformCenterVideoPositionAlsoWhenPaused;
         Se.Settings.Waveform.SelectCurrentSubtitleWhilePaused = WaveformSelectCurrentSubtitleWhilePaused;
+        Se.Settings.Waveform.RememberZoom = WaveformRememberZoom;
         Se.Settings.Waveform.FocusTextBoxAfterInsertNew = WaveformFocusTextboxAfterInsertNew;
 
         if (SelectedWaveformDrawStyle == Se.Language.General.Classic)
