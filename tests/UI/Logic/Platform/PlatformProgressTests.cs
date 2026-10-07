@@ -39,11 +39,13 @@ public class PlatformProgressTests
         public void Dispose() => IsDisposed = true;
     }
 
-    [Fact]
-    public void CompletingCurrentSourceRestoresOtherActiveSource()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void CompletingCurrentSourceRestoresOtherActiveSource(bool keepBackendWhenIdle)
     {
         var progress = new FakeProgress();
-        var group = new PlatformProgressGroup(() => progress);
+        var group = new PlatformProgressGroup(() => progress, keepBackendWhenIdle);
         var first = new object();
         var second = new object();
 
@@ -58,7 +60,7 @@ public class PlatformProgressTests
 
         group.Update(first, null, false);
         Assert.Equal(((double?)null, false), progress.Updates[^1]);
-        Assert.True(progress.IsDisposed);
+        Assert.Equal(!keepBackendWhenIdle, progress.IsDisposed);
     }
 
     [Fact]
@@ -110,51 +112,6 @@ public class PlatformProgressTests
         group.Update(source, 35, false);
         Assert.Equal(((double?)35, false), progress.Updates[^1]);
         group.Update(source, null, false);
-    }
-
-    [Fact]
-    public void NewOperationCreatesNewBackendAfterCleanup()
-    {
-        var instances = new List<FakeProgress>();
-        var group = new PlatformProgressGroup(() =>
-        {
-            var progress = new FakeProgress();
-            instances.Add(progress);
-            return progress;
-        });
-        var source = new object();
-
-        group.Update(source, null, false);
-        Assert.Empty(instances);
-        group.Update(source, 10, false);
-        group.Update(source, null, false);
-        group.Update(source, 20, false);
-
-        Assert.Equal(2, instances.Count);
-        Assert.True(instances[0].IsDisposed);
-        Assert.Equal(((double?)20, false), instances[1].Updates[^1]);
-        group.Update(source, null, false);
-    }
-
-    [Fact]
-    public void RetainedBackendRestoresOtherActiveSource()
-    {
-        var progress = new FakeProgress();
-        var group = new PlatformProgressGroup(() => progress, keepBackendWhenIdle: true);
-        var first = new object();
-        var second = new object();
-
-        group.Update(first, 70, false);
-        group.Update(second, 20, false);
-        group.Update(first, 80, false);
-        group.Update(second, null, false);
-
-        Assert.Equal(((double?)80, false), progress.Updates[^1]);
-        Assert.False(progress.IsDisposed);
-
-        group.Update(first, null, false);
-        Assert.Equal(((double?)null, false), progress.Updates[^1]);
-        Assert.False(progress.IsDisposed);
     }
 
     [Theory]
@@ -270,6 +227,9 @@ public class PlatformProgressTests
             return progress;
         }, keepBackendWhenIdle);
         var source = new object();
+
+        group.Update(source, null, false);
+        Assert.Empty(instances);
 
         group.Update(source, 20.2, false);
         group.Update(source, 20.9, false);
