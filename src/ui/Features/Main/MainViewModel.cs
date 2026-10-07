@@ -21442,7 +21442,7 @@ public partial class MainViewModel :
 
         // The user places the line break by hand here, so no auto-break: re-breaking an
         // over-long line rebalanced the text and undid the move (issue #15496).
-        var upDown = new MoveWordUpDown(lines[0].Trim(), lines[1].Trim()) { AutoBreak = false };
+        var upDown = new MoveWordUpDown(lines[0].Trim(), lines[1].Trim()) { AutoBreak = false, SameSubtitle = true };
         if (up)
         {
             upDown.MoveWordUp();
