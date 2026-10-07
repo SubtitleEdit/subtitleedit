@@ -130,6 +130,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _lockTimeCodes;
     [ObservableProperty] private bool _rememberPositionAndSize;
     [ObservableProperty] private bool _titleBarFullFileName;
+    [ObservableProperty] private bool _showRecentFiles;
     [ObservableProperty] private bool _openLastFileOnStart;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsMsMode))]
@@ -828,6 +829,7 @@ public partial class SettingsViewModel : ObservableObject
         LockTimeCodes = general.LockTimeCodes;
         RememberPositionAndSize = general.RememberPositionAndSize;
         TitleBarFullFileName = general.TitleBarFullFileName;
+        ShowRecentFiles = Se.Settings.File.ShowRecentFiles;
         OpenLastFileOnStart = Se.Settings.File.OpenLastFileOnStart;
         AutoSave = general.AutoSave;
         AutoBackupOn = general.AutoBackupOn;
@@ -1740,6 +1742,15 @@ public partial class SettingsViewModel : ObservableObject
         general.LockTimeCodes = LockTimeCodes;
         general.RememberPositionAndSize = RememberPositionAndSize;
         general.TitleBarFullFileName = TitleBarFullFileName;
+        Se.Settings.File.ShowRecentFiles = ShowRecentFiles;
+        if (!ShowRecentFiles)
+        {
+            // Turning recent files off means "do not remember what I opened" - drop what is
+            // already stored too, not just stop adding to it.
+            Se.Settings.File.RecentFiles = new List<RecentFile>();
+            Se.Settings.Video.RecentFiles = new List<string>();
+        }
+
         Se.Settings.File.OpenLastFileOnStart = OpenLastFileOnStart;
         general.AutoSave = AutoSave;
         general.AutoBackupOn = AutoBackupOn;

@@ -14682,6 +14682,15 @@ public partial class MainViewModel :
             Layout.InitNativeMacMenu.UpdatePluginsMenuVisibility(this);
         }
 
+        // "Show recent files" may have been turned off (lists cleared) or back on.
+        InitMenu.UpdateRecentFiles(this);
+        if (OperatingSystem.IsMacOS())
+        {
+            Layout.InitNativeMacMenu.UpdateRecentFiles(this);
+        }
+
+        UpdateRecentVideoMenus();
+
         LockTimeCodes = Se.Settings.General.LockTimeCodes;
         UpdateTimeCodeModeText();
         IsWaveformToolbarVisible = Se.Settings.Waveform.ShowToolbar;
@@ -28676,7 +28685,7 @@ public partial class MainViewModel :
 
     private void AddToRecentFiles(bool updateMenu, int? selectedLine = null)
     {
-        if (_loading)
+        if (_loading || !Se.Settings.File.ShowRecentFiles)
         {
             return;
         }
@@ -29010,7 +29019,7 @@ public partial class MainViewModel :
                 await OpenPendingStartupFilesAsync(delayForLayout: true);
             });
         }
-        else if (Se.Settings.File.OpenLastFileOnStart)
+        else if (Se.Settings.File.OpenLastFileOnStart && Se.Settings.File.ShowRecentFiles)
         {
             var first = Se.Settings.File.RecentFiles.FirstOrDefault();
             if (first != null && File.Exists(first.SubtitleFileName))
@@ -29368,7 +29377,7 @@ public partial class MainViewModel :
 
     private void AddToRecentVideoFiles(string videoFileName)
     {
-        if (string.IsNullOrEmpty(videoFileName) || IsValidUrl(videoFileName))
+        if (string.IsNullOrEmpty(videoFileName) || IsValidUrl(videoFileName) || !Se.Settings.File.ShowRecentFiles)
         {
             return;
         }
