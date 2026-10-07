@@ -201,7 +201,7 @@ public class AiReviewWindow : Window
             }),
         };
 
-        var warningBrush = new SolidColorBrush(Color.FromRgb(0xf0, 0xa6, 0x3c));
+        var warningBrush = ReviewSuggestionItem.GetWarningBrush();
         var warningText = MakeBoundTextBlock(nameof(vm.WarningNoteText));
         warningText.Foreground = warningBrush;
         var warningNote = new StackPanel
