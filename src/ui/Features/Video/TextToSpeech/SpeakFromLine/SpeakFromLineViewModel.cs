@@ -28,6 +28,11 @@ public partial class SpeakFromLineViewModel : ObservableObject
     [ObservableProperty] private bool _hasLanguageParameter;
     [ObservableProperty] private string _engineDescription;
     [ObservableProperty] private bool _isBusy;
+    [ObservableProperty] private bool _isPlayWithSpeech;
+    [ObservableProperty] private string _title;
+    [ObservableProperty] private string _hint;
+    [ObservableProperty] private bool _lowerVideoVolume;
+    [ObservableProperty] private bool _pauseVideoWhenLate;
 
     public ObservableCollection<ITtsEngine> Engines { get; }
     public ObservableCollection<Voice> Voices { get; }
@@ -46,8 +51,12 @@ public partial class SpeakFromLineViewModel : ObservableObject
         Voices = new ObservableCollection<Voice>();
         Languages = new ObservableCollection<TtsLanguage>();
         _engineDescription = string.Empty;
+        _title = Se.Language.Video.TextToSpeech.SpeakFromCurrentLineTitle;
+        _hint = Se.Language.Video.TextToSpeech.SpeakFromCurrentLineHint;
 
         var settings = Se.Settings.Video.TextToSpeech;
+        _lowerVideoVolume = settings.PlayWithSpeechLowerVideoVolume;
+        _pauseVideoWhenLate = settings.PlayWithSpeechPauseVideoWhenLate;
         // Supertonic by default: the fastest local engine, and one download covers 31 languages.
         SelectedEngine = Engines.FirstOrDefault(e => e.Name == settings.SpeakFromLineEngine)
                          ?? Engines.FirstOrDefault(e => e is SupertonicCrispAsr)
@@ -61,6 +70,14 @@ public partial class SpeakFromLineViewModel : ObservableObject
     /// </summary>
     public static bool IsFastEngine(ITtsEngine engine) =>
         engine is Piper or EdgeTts or KokoroTtsCpp or SupertonicCrispAsr;
+
+    /// <summary>Turns the dialog into the "Play with speech" prompt, which adds its playback options.</summary>
+    public void InitializePlayWithSpeech()
+    {
+        IsPlayWithSpeech = true;
+        Title = Se.Language.Video.TextToSpeech.PlayWithSpeechTitle;
+        Hint = Se.Language.Video.TextToSpeech.PlayWithSpeechHint;
+    }
 
     partial void OnSelectedEngineChanged(ITtsEngine? value)
     {
@@ -211,6 +228,12 @@ public partial class SpeakFromLineViewModel : ObservableObject
             if (SelectedLanguage != null)
             {
                 settings.SpeakFromLineLanguage = SelectedLanguage.Name;
+            }
+
+            if (IsPlayWithSpeech)
+            {
+                settings.PlayWithSpeechLowerVideoVolume = LowerVideoVolume;
+                settings.PlayWithSpeechPauseVideoWhenLate = PauseVideoWhenLate;
             }
 
             OkPressed = true;

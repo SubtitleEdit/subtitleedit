@@ -76,6 +76,24 @@ While reading, the selected line, the video position and the waveform follow the
 - **Speed:** the **Speed** dropdown in the waveform toolbar sets how fast the lines are read, and a change is heard right away
 - **Stop:** press **Escape**, click another line, choose **Stop speaking** in the grid's right-click menu, or run the command (or shortcut) again
 
+## Play With Speech
+
+Watch a video with its subtitles spoken, like a live dub - handy for a course or a film in a language you do not speak, so you can watch the picture instead of reading. **Play with speech...** plays the video and speaks each line when the video reaches it. Nothing is saved; for an audio track to keep, use **Text to speech** above.
+
+- **Menu:** **Video → Play with speech...**
+- **Shortcut:** Configurable (no default)
+
+1. Open the video and the (translated) subtitle, and move the video to where you want to start
+2. Choose **Play with speech...**
+3. Pick an engine, a voice and (for Supertonic) a language - the same fast engines as **Speak from current line** - and the options below, then click **OK**
+
+- **Lower video volume while speaking:** the video's own sound is turned down while a line is spoken, and back up between lines
+- **Pause video when speech runs into the next line:** a spoken line that is longer than its subtitle is first sped up (up to 1.5x). If it still runs into the next line, the video waits for it to finish, so no line is cut off or skipped. With this off, the video keeps playing and a line the video has already passed is skipped
+
+The next few lines are generated ahead while the video plays. If the engine falls behind - for example while a local engine starts - the video waits for it. Pausing the video pauses the speech, seeking (clicking the waveform, a line or the position slider) continues from the new position, and the waveform toolbar's **Speed** applies to both the video and the speech. The subtitle is read as it was when you started - edits made while playing are spoken after a restart.
+
+- **Stop:** press **Escape**, choose **Stop speaking** in the grid's right-click menu, or run the command (or shortcut) again
+
 ## Supported Engines
 
 - **Piper** — Local, open-source TTS (Windows and Linux). Custom voice models are supported: any Piper voice is an `.onnx` model with an `.onnx.json` config beside it, and **Import voice...** in the voice settings dialog (the settings button next to **Test voice**) copies such a pair into the Piper folder (`TextToSpeech/Piper` in the data folder). It then appears in the voice list as *Custom - name*; a pair copied into the folder by hand is picked up the same way

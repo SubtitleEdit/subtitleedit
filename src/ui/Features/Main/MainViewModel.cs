@@ -12225,6 +12225,99 @@ public partial class MainViewModel :
         }
     }
 
+    /// <summary>
+    /// Plays the video and speaks each line when the video reaches it, like a live dub (#15755).
+    /// Running it again or Escape stops it; pausing and seeking work as usual.
+    /// </summary>
+    /// <remarks>Concurrent executions allowed: the second run is the stop.</remarks>
+    [RelayCommand(AllowConcurrentExecutions = true)]
+    private async Task PlayWithSpeech()
+    {
+        if (_speakFromLineCts != null)
+        {
+            StopSpeakFromLine();
+            return;
+        }
+
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (GetVideoPlayerControl() == null || string.IsNullOrEmpty(_videoFileName))
+        {
+            await MessageBox.Show(Window, Se.Language.Video.TextToSpeech.PlayWithSpeechTitle, Se.Language.General.NoVideoLoaded, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        var vm = await ShowDialogAsync<SpeakFromLineWindow, SpeakFromLineViewModel>(v => v.InitializePlayWithSpeech());
+        _shortcutManager.ClearKeys();
+        if (!vm.OkPressed || vm.SelectedEngine == null || vm.SelectedVoice == null || _speakFromLineCts != null)
+        {
+            return;
+        }
+
+        var rows = Subtitles
+            .Where(p => !p.IsReferenceOnly)
+            .OrderBy(p => p.StartTime.TotalSeconds)
+            .ToList();
+        var lines = rows
+            .Select(p => new SpeechLine(p.StartTime.TotalSeconds, p.EndTime.TotalSeconds, SpeakFromLineReader.GetSpeakableText(p.Text)))
+            .ToList();
+        if (lines.Count == 0)
+        {
+            return;
+        }
+
+        var cts = new CancellationTokenSource();
+        _speakFromLineCts = cts;
+        IsSpeakingFromLine = true;
+
+        var reader = new PlayWithSpeechReader(vm.SelectedEngine, vm.SelectedVoice, vm.HasLanguageParameter ? vm.SelectedLanguage : null,
+            vm.LowerVideoVolume, vm.PauseVideoWhenLate);
+        var video = new PlayWithSpeechVideo(
+            GetVideoPlayerControl,
+            PlayVideo,
+            PauseVideoAndFreezePlayhead,
+            () => TryGetSelectedPlaybackSpeed(out var speed) ? speed : 1.0,
+            () => !string.IsNullOrEmpty(_videoFileName));
+        try
+        {
+            await reader.RunAsync(
+                lines,
+                video,
+                i => ShowStatus(string.Format(Se.Language.Video.TextToSpeech.SpeakingLineX, Subtitles.IndexOf(rows[i]) + 1), 10_000),
+                i => ShowStatus(string.Format(Se.Language.Video.TextToSpeech.WaitingForSpeechLineX, Subtitles.IndexOf(rows[i]) + 1), 10_000),
+                cts.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            // stopped by the user
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, "Play with speech failed");
+            if (!cts.IsCancellationRequested)
+            {
+                await MessageBox.Show(Window, Se.Language.General.Error, ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        finally
+        {
+            if (ReferenceEquals(_speakFromLineCts, cts))
+            {
+                _speakFromLineCts = null;
+                IsSpeakingFromLine = false;
+            }
+
+            cts.Dispose();
+            if (_speakFromLineCts == null)
+            {
+                ShowStatus(string.Empty);
+            }
+        }
+    }
+
     private void StopSpeakFromLine()
     {
         var cts = _speakFromLineCts;
