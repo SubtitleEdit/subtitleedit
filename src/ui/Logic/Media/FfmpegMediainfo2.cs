@@ -54,6 +54,47 @@ public class FfmpegMediaInfo2
         return ParseLog(log);
     }
 
+    /// <summary>
+    /// Returns the duration ffmpeg reports for the file, or null when ffmpeg is unavailable,
+    /// prints no duration, or only guessed it from the bitrate. Runs ffmpeg once (no retry).
+    /// </summary>
+    public static double? TryGetDurationSeconds(string videoFileName)
+    {
+        if (Configuration.IsRunningOnWindows &&
+            (string.IsNullOrEmpty(Se.Settings.General.FfmpegPath) || !File.Exists(Se.Settings.General.FfmpegPath)))
+        {
+            return null;
+        }
+
+        try
+        {
+            return ParseDurationSeconds(RunFfmpegOnce(videoFileName, out _));
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    internal static double? ParseDurationSeconds(string log)
+    {
+        // A bitrate-based estimate is the same kind of guess the player makes, so it is
+        // no better than what we already have.
+        if (log.Contains("Estimating duration from bitrate", StringComparison.Ordinal))
+        {
+            return null;
+        }
+
+        var match = DurationRegex.Match(log);
+        if (!match.Success)
+        {
+            return null;
+        }
+
+        var ms = TimeCode.ParseToMilliseconds(match.Value.Split(' ')[1]);
+        return ms > 0 ? ms / TimeCode.BaseUnit : null;
+    }
+
     public long GetTotalFrames()
     {
         if (Duration == null)
