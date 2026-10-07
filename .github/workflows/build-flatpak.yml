@@ -17,13 +17,13 @@ jobs:
   regenerate-nuget-sources:
     runs-on: ubuntu-latest
     env:
-      # The runtime version the flatpak org.freedesktop.Sdk.Extension.dotnet10//24.08
+      # The runtime version the flatpak org.freedesktop.Sdk.Extension.dotnet10//26.08
       # extension ships. generate-nuget-sources.sh pins the pre-fetched shared-framework
       # packs to this exact version; otherwise a self-contained restore rolls them forward
       # to the newest patch on nuget.org, which mismatches the older runtime the flatpak SDK
       # pins and breaks the offline restore inside the sandbox (NU1102). Bump this to match
       # whenever the flathub dotnet10 extension updates its runtime.
-      DOTNET_RUNTIME_VERSION: '10.0.8'
+      DOTNET_RUNTIME_VERSION: '10.0.12'
     steps:
       - uses: actions/checkout@v5
 
@@ -58,7 +58,7 @@ jobs:
     needs: regenerate-nuget-sources
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-24.08
+      image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-26.08
       options: --privileged
 
     steps:
