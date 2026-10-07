@@ -367,6 +367,7 @@ public static class InitNativeMacMenu
         videoItems.Items.Add(Item(Clean(l.SpeechToText), v => v.ShowSpeechToTextWhisperCommand));
         videoItems.Items.Add(Item(Clean(l.TextToSpeech), v => v.ShowVideoTextToSpeechCommand));
         videoItems.Items.Add(Item(Clean(Se.Language.Video.TextToSpeech.SpeakFromCurrentLineDotDotDot), v => v.SpeakFromCurrentLineCommand));
+        videoItems.Items.Add(Item(Clean(Se.Language.Video.TextToSpeech.PlayWithSpeechDotDotDot), v => v.PlayWithSpeechCommand));
         videoItems.Items.Add(Item(Clean(Se.Language.Video.TextToSpeech.VoiceManagerMenuItem), v => v.ShowVideoVoiceManagerCommand));
         videoItems.Items.Add(Item(Clean(l.VideoOcr), v => v.ShowVideoOcrCommand));
         videoItems.Items.Add(new NativeMenuItemSeparator());

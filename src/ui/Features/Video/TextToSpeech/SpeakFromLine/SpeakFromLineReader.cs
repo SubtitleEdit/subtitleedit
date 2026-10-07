@@ -103,7 +103,11 @@ public sealed class SpeakFromLineReader
         return Utilities.UnbreakLine(HtmlUtil.RemoveHtmlTags(text, alsoSsaTags: true)).Trim();
     }
 
-    private Task<string?> GenerateAsync(string text, string folder, CancellationToken cancellationToken)
+    private Task<string?> GenerateAsync(string text, string folder, CancellationToken cancellationToken) =>
+        GenerateClipAsync(_engine, _voice, _language, text, folder, cancellationToken);
+
+    /// <summary>Generates one line's clip; null when there is nothing to say.</summary>
+    internal static Task<string?> GenerateClipAsync(ITtsEngine engine, Voice voice, TtsLanguage? language, string text, string folder, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(text))
         {
@@ -113,12 +117,12 @@ public sealed class SpeakFromLineReader
         // Off the UI thread: the local engines start their server synchronously on first use.
         return Task.Run(async () =>
         {
-            var result = await _engine.Speak(text, folder, _voice, _language, null, null, cancellationToken);
+            var result = await engine.Speak(text, folder, voice, language, null, null, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             if (result.Error || string.IsNullOrEmpty(result.FileName) || !File.Exists(result.FileName))
             {
                 throw new InvalidOperationException(string.IsNullOrEmpty(result.ErrorMessage)
-                    ? $"{_engine.Name} did not produce any audio."
+                    ? $"{engine.Name} did not produce any audio."
                     : result.ErrorMessage);
             }
 
@@ -126,7 +130,7 @@ public sealed class SpeakFromLineReader
         }, cancellationToken);
     }
 
-    private static LibMpvDynamicPlayer CreatePlayer()
+    internal static LibMpvDynamicPlayer CreatePlayer()
     {
         var player = new LibMpvDynamicPlayer();
         player.LoadLib();
@@ -187,7 +191,7 @@ public sealed class SpeakFromLineReader
         }
     }
 
-    private const int StallTimeoutMilliseconds = 5000;
+    internal const int StallTimeoutMilliseconds = 5000;
 
     /// <summary>
     /// Reports when the playback position has not moved for a while - mpv goes idle without
@@ -217,7 +221,7 @@ public sealed class SpeakFromLineReader
         }
     }
 
-    private static void DisposePlayer(LibMpvDynamicPlayer? player)
+    internal static void DisposePlayer(LibMpvDynamicPlayer? player)
     {
         if (player == null)
         {
@@ -248,7 +252,7 @@ public sealed class SpeakFromLineReader
         });
     }
 
-    private static void TryDelete(string fileName)
+    internal static void TryDelete(string fileName)
     {
         try
         {
