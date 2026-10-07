@@ -7,6 +7,7 @@ using Nikse.SubtitleEdit;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Main.MainHelpers;
+using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -754,6 +755,54 @@ public class MainReadOnlyOriginalTests
     }
 
     /// <summary>
+    /// "Close translation" with nothing unsaved used to drop the translation without a word - and it
+    /// sits next to "Close original" in the File menu (#15749). It now asks, and No keeps everything.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task CloseTranslation_WithoutUnsavedChanges_AsksAndNoKeepsTheTranslation()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            AddLine(vm, "Translated one", string.Empty, 0, 2000);
+            AddLine(vm, "Translated two", string.Empty, 4000, 6000);
+
+            var reference = BuildSampleReference();
+            var match = ImportOriginalHelper.MatchOriginalLines(vm.Subtitles, reference);
+            InvokeImportOriginalSubtitle(vm, "reference.srt", reference, match, isReadOnly: false);
+            SetPrivateField(vm, "_changeSubtitleHash", vm.GetFastHash());
+
+            var asked = false;
+            var method = typeof(MainViewModel).GetMethod(
+                             "FileCloseTranslation", BindingFlags.Instance | BindingFlags.NonPublic)
+                         ?? throw new InvalidOperationException("FileCloseTranslation not found");
+            var task = (Task)method.Invoke(vm, null)!;
+            Dispatcher.UIThread.RunJobs();
+
+            var messageBox = window.OwnedWindows.OfType<MessageBox>()
+                .FirstOrDefault(p => p.Title == Se.Language.Options.Shortcuts.FileCloseTranslation);
+            if (messageBox != null)
+            {
+                asked = true;
+                messageBox.Close(MessageBoxResult.No);
+                Dispatcher.UIThread.RunJobs();
+            }
+
+            await task;
+
+            Assert.True(asked);
+            Assert.True(vm.ShowColumnOriginalText);
+            Assert.True(vm.IsShowingOriginalNonMatchingLines);
+            var saved = vm.GetUpdateSubtitle();
+            Assert.Equal(new[] { "Translated one", "Translated two" }, saved.Paragraphs.Select(p => p.Text));
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>
     /// A line split in two in the original is matched to the translation's single line by time code
     /// only - the row keeps the translation's time span. "Remove translation" must hand back the
     /// original's own time codes, not the row's, or the second half overlaps the first and both show
@@ -1090,13 +1139,28 @@ public class MainReadOnlyOriginalTests
         ((Task)method.Invoke(vm, null)!).GetAwaiter().GetResult();
     }
 
-    private static async Task InvokeFileCloseTranslation(MainViewModel vm)
+    /// <summary>
+    /// Runs "Close translation" and answers its "close the translation?" question (#15749) when it
+    /// is asked - only for a translation with no unsaved changes.
+    /// </summary>
+    private static async Task InvokeFileCloseTranslation(MainViewModel vm, MessageBoxResult answer = MessageBoxResult.Yes)
     {
         var method = typeof(MainViewModel).GetMethod(
                          "FileCloseTranslation", BindingFlags.Instance | BindingFlags.NonPublic)
                      ?? throw new InvalidOperationException("FileCloseTranslation not found");
 
-        await (Task)method.Invoke(vm, null)!;
+        var task = (Task)method.Invoke(vm, null)!;
+        Dispatcher.UIThread.RunJobs();
+
+        var messageBox = vm.Window?.OwnedWindows.OfType<MessageBox>()
+            .FirstOrDefault(p => p.Title == Se.Language.Options.Shortcuts.FileCloseTranslation);
+        if (messageBox != null)
+        {
+            messageBox.Close(answer);
+            Dispatcher.UIThread.RunJobs();
+        }
+
+        await task;
     }
 
     private static async Task InvokeDeleteSelectedItems(MainViewModel vm)
