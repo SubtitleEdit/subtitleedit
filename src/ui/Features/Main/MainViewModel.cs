@@ -3816,13 +3816,14 @@ public partial class MainViewModel :
         // Every original line lives in exactly one row here: matched ones in their working row, the
         // rest in the display-only rows - so this round-trips the whole original.
         var format = _subtitleOriginal.OriginalFormat ?? SelectedSubtitleFormat;
+        var linkedLines = GetOriginalLinesById();
         var captured = new Subtitle(_subtitleOriginal);
         captured.Paragraphs.Clear();
         foreach (var line in Subtitles)
         {
             if (line.IsReferenceOnly || !string.IsNullOrEmpty(line.OriginalText))
             {
-                var p = line.ToParagraphOriginal(format);
+                var p = ToOriginalParagraph(line, format, linkedLines);
                 captured.Paragraphs.Add(p);
 
                 // The capture creates fresh paragraphs (fresh ids), so re-point the row's sticky
@@ -3832,6 +3833,49 @@ public partial class MainViewModel :
         }
 
         _subtitleOriginal = captured;
+    }
+
+    /// <summary>
+    /// The original's lines by id, for <see cref="ToOriginalParagraph"/> - empty unless the
+    /// original's non-matching lines are on screen (the only mode where a row and its original line
+    /// can have different time codes).
+    /// </summary>
+    private Dictionary<Guid, Paragraph> GetOriginalLinesById()
+    {
+        var linesById = new Dictionary<Guid, Paragraph>();
+        if (!IsShowingOriginalNonMatchingLines || _subtitleOriginal == null)
+        {
+            return linesById;
+        }
+
+        foreach (var p in _subtitleOriginal.Paragraphs)
+        {
+            if (p.Id is { } id)
+            {
+                linesById[id] = p;
+            }
+        }
+
+        return linesById;
+    }
+
+    /// <summary>
+    /// The original line a row holds. A working row that displays an original line matched by time
+    /// code only borrows that line's text - its time codes and style are the translation's - so the
+    /// line keeps its own time codes and style from the original. Taking them from the row gave a
+    /// line split in two in the original the translation's single time span, overlapping its second
+    /// half (#15749). Display-only rows are the original's lines themselves, nudged timings included.
+    /// </summary>
+    private static Paragraph ToOriginalParagraph(SubtitleLineViewModel line, SubtitleFormat format, Dictionary<Guid, Paragraph> linesById)
+    {
+        if (!line.IsReferenceOnly &&
+            line.ReferenceParagraphId is { } id &&
+            linesById.TryGetValue(id, out var originalLine))
+        {
+            return new Paragraph(originalLine) { Text = line.OriginalText.TrimEnd() };
+        }
+
+        return line.ToParagraphOriginal(format);
     }
 
     /// <summary>
@@ -4167,25 +4211,40 @@ public partial class MainViewModel :
             }
         }
 
-        foreach (var subtitle in Subtitles)
-        {
-            subtitle.Text = subtitle.OriginalText;
-            subtitle.OriginalText = string.Empty;
-
-            // A display-only reference row carries a line of the original, so the promotion turns
-            // it into an ordinary line - left flagged, it would be dropped from every save by
-            // GetUpdateSubtitle and keep its dimmed, read-only appearance.
-            subtitle.IsReferenceOnly = false;
-            subtitle.ReferenceParagraphId = null; // the original it pointed into is gone
-        }
-
         if (IsShowingOriginalNonMatchingLines)
         {
-            // The mode is over: the original is now the working subtitle. Rebuild the rows so the
-            // promoted reference rows take a number and settle into their final rendering.
+            // The original does not line up with the rows: a matched row only borrows its original
+            // line's text, under the translation's time codes. Promoting the rows in place gave the
+            // original's text the translation's timing, with the display-only rows overlapping it -
+            // a line split in two in the original showed both halves stacked (#15749). The original
+            // itself, edits folded in, becomes the working subtitle instead.
+            CaptureOriginalFromRows();
+            var promoted = new Subtitle(_subtitleOriginal);
+            promoted.Sort(SubtitleSortCriteria.StartTime);
+            if (_subtitleOriginal.OriginalFormat?.GetType() != SelectedSubtitleFormat.GetType() ||
+                string.IsNullOrEmpty(promoted.Header))
+            {
+                // The rows stay in the current format, so its header (ASSA styles) stays too.
+                promoted.Header = _subtitle.Header;
+                promoted.Footer = _subtitle.Footer;
+            }
+
+            promoted.OriginalFormat = _subtitle.OriginalFormat;
+            promoted.FileName = _subtitle.FileName;
+
             IsShowingOriginalNonMatchingLines = false;
-            _subtitle = GetUpdateSubtitle();
+            _subtitle = promoted;
             SetSubtitles(_subtitle, null);
+        }
+        else
+        {
+            foreach (var subtitle in Subtitles)
+            {
+                subtitle.Text = subtitle.OriginalText;
+                subtitle.OriginalText = string.Empty;
+                subtitle.IsReferenceOnly = false;
+                subtitle.ReferenceParagraphId = null; // the original it pointed into is gone
+            }
         }
 
         IsEditOriginalMode = false; // there is no original left to edit
@@ -28162,6 +28221,7 @@ public partial class MainViewModel :
         _subtitleOriginal.OriginalFormat ??= SelectedSubtitleFormat;
         var originalFormat = _subtitleOriginal.OriginalFormat ?? SelectedSubtitleFormat;
 
+        var linkedLines = GetOriginalLinesById();
         _subtitleOriginal.Paragraphs.Clear();
         foreach (var line in Subtitles)
         {
@@ -28179,7 +28239,7 @@ public partial class MainViewModel :
                 continue;
             }
 
-            var p = line.ToParagraphOriginal(originalFormat);
+            var p = ToOriginalParagraph(line, originalFormat, linkedLines);
             _subtitleOriginal.Paragraphs.Add(p);
 
             // Fresh paragraphs mean fresh ids - keep the row's sticky link pointing at the line it
