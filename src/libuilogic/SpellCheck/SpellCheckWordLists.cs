@@ -178,33 +178,27 @@ public class SpellCheckWordLists
             return;
         }
 
-        var fileName = GetUseAlwaysListFileName();
-        var xmlDoc = new XmlDocument();
-        if (File.Exists(fileName))
+        foreach (var pair in UseAlwaysListFile.Load(GetUseAlwaysListFileName()))
         {
-            xmlDoc.Load(fileName);
-            var xmlNodeList = xmlDoc.DocumentElement?.SelectNodes("Pair");
-            if (xmlNodeList != null)
+            if (!_useAlwaysList.ContainsKey(pair.Key))
             {
-                foreach (XmlNode item in xmlNodeList)
-                {
-                    if (item.Attributes?["from"] != null && item.Attributes["to"] != null)
-                    {
-                        var to = item.Attributes["to"]?.Value;
-                        var from = item.Attributes["from"]?.Value;
-                        if (to != null && from != null && !_useAlwaysList.ContainsKey(from))
-                        {
-                            _useAlwaysList.Add(from, to);
-                        }
-                    }
-                }
+                _useAlwaysList.Add(pair.Key, pair.Value);
             }
         }
     }
 
+    /// <summary>
+    /// Re-reads &lt;lang&gt;_UseAlways.xml, e.g. after it was edited in the "use always" list editor.
+    /// </summary>
+    public void ReloadUseAlwaysList()
+    {
+        _useAlwaysList.Clear();
+        LoadUseAlwaysList();
+    }
+
     private string GetUseAlwaysListFileName()
     {
-        return Path.Combine(_dictionaryFolder, _languageName + "_UseAlways.xml");
+        return UseAlwaysListFile.GetFileName(_dictionaryFolder, _languageName);
     }
 
     public void UseAlwaysListRemove(string key)
@@ -228,9 +222,6 @@ public class SpellCheckWordLists
             return;
         }
 
-        var xmlDoc = new XmlDocument();
-        xmlDoc.LoadXml("<UseAlways></UseAlways>");
-
         if (newKey != null && newValue != null && !_useAlwaysList.ContainsKey(newKey.Trim()))
         {
             _useAlwaysList.Add(newKey.Trim(), newValue.Trim());
@@ -240,21 +231,7 @@ public class SpellCheckWordLists
             _useAlwaysList.Remove(oldKey.Trim());
         }
 
-        foreach (KeyValuePair<string, string> kvp in _useAlwaysList)
-        {
-            XmlNode node = xmlDoc.CreateElement("Pair");
-            var f = xmlDoc.CreateAttribute("from");
-            f.Value = kvp.Key;
-            var t = xmlDoc.CreateAttribute("to");
-            t.Value = kvp.Value;
-            if (node.Attributes != null)
-            {
-                node.Attributes.Append(f);
-                node.Attributes.Append(t);
-            }
-            xmlDoc.DocumentElement?.AppendChild(node);
-        }
-        xmlDoc.Save(GetUseAlwaysListFileName());
+        UseAlwaysListFile.Save(GetUseAlwaysListFileName(), _useAlwaysList);
     }
 
     public void RemoveUserWord(string word)

@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
@@ -301,7 +301,8 @@ public class SpellCheckWindow : Window
             [!ComboBox.ItemsSourceProperty] = new Binding(nameof(SpellCheckViewModel.Dictionaries)) { Mode = BindingMode.OneWay },
             [!ComboBox.SelectedItemProperty] = new Binding(nameof(SpellCheckViewModel.SelectedDictionary)) { Mode = BindingMode.TwoWay },
             VerticalAlignment = VerticalAlignment.Center,
-            Width = 200,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            MinWidth = 120,
         };
         comboBoxDictionary.SelectionChanged += (_, _) => vm.OnDictionaryChanged();
 
@@ -314,17 +315,22 @@ public class SpellCheckWindow : Window
             HorizontalContentAlignment = HorizontalAlignment.Center,
         };
 
-        var panelDictionary = new StackPanel
+        // The combo box takes whatever width the column leaves after the two buttons - a fixed
+        // width pushed the row (and the suggestions below it) past the window's right edge.
+        var panelDictionary = new Grid
         {
-            Orientation = Orientation.Horizontal,
-            VerticalAlignment = VerticalAlignment.Center,
-            Spacing = 5,
-            Children =
+            ColumnDefinitions =
             {
-                comboBoxDictionary,
-                buttonDictionaryBrowse,
-            }
+                new ColumnDefinition { Width = GridLength.Star },
+                new ColumnDefinition { Width = GridLength.Auto },
+                new ColumnDefinition { Width = GridLength.Auto },
+            },
+            ColumnSpacing = 5,
+            VerticalAlignment = VerticalAlignment.Center,
         };
+        panelDictionary.Add(comboBoxDictionary, 0, 0);
+        panelDictionary.Add(buttonDictionaryBrowse, 0, 1);
+        panelDictionary.Add(UiUtil.MakeButton(vm.EditUseAlwaysListCommand, IconNames.FormatListChecks, Se.Language.SpellCheck.EditUseAlwaysList), 0, 2);
 
         var labelSuggestions = new Label
         {
@@ -388,7 +394,7 @@ public class SpellCheckWindow : Window
         {
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
             RowDefinitions =
             {

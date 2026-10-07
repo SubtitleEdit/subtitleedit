@@ -22,6 +22,7 @@ public interface ISpellCheckManager : ISpellChecker
     void AdToUserDictionary(string currentWord);
     void RemoveIgnoreWord(string word);
     void RemoveChangeAllWord(string fromWord);
+    void ReloadUseAlwaysList();
     void RemoveFromNames(string word);
     void RemoveFromUserDictionary(string word);
     List<SpellCheckDictionaryDisplay> GetDictionaryLanguages(string dictionaryFolder);

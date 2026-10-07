@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.SpellCheck.UseAlwaysList;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
@@ -43,10 +44,12 @@ public partial class WordListsViewModel : ObservableObject
     public Window? Window { get; set; }
 
     private IFolderHelper _folderHelper;
+    private readonly IWindowService _windowService;
 
-    public WordListsViewModel(IFolderHelper folderHelper)
+    public WordListsViewModel(IFolderHelper folderHelper, IWindowService windowService)
     {
         _folderHelper = folderHelper;
+        _windowService = windowService;
 
         Languages = new ObservableCollection<LanguageItem>();
         Names = new ObservableCollection<string>();
@@ -331,6 +334,22 @@ public partial class WordListsViewModel : ObservableObject
         }
 
         _folderHelper.OpenFolder(Window!, dictionariesPath);
+    }
+
+    [RelayCommand]
+    private async Task EditUseAlwaysList()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var lang = SelectedLanguage;
+        var dictionaryFileName = lang == null ? null : Path.Combine(Se.DictionariesFolder, lang.CultureSpecificCode + ".dic");
+        await _windowService.ShowDialogAsync<UseAlwaysListWindow, UseAlwaysListViewModel>(Window, vm =>
+        {
+            vm.Initialize(dictionaryFileName);
+        });
     }
 
     [RelayCommand]

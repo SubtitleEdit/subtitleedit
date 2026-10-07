@@ -36,6 +36,26 @@ When a misspelled word is found, the spell checker provides a list of suggested 
 - **Use once** — Replace with the selected suggestion for this occurrence
 - **Use always** — Replace all occurrences with the selected suggestion
 
+## "Use always" list
+
+**Change all** and **Use always** save the correction per language in the "Use always" list
+(`<language>_UseAlways.xml` in the dictionary folder). A saved correction is only applied to words
+the dictionary flags as misspelled, so a correctly spelled word is never replaced.
+
+To view or edit the list, click the list button next to the dictionary dropdown in the spell
+check window, or use **Edit "Use always" list...** in **Options → Word lists**:
+
+- Pick the language, and search to filter the pairs
+- Select a pair to edit it, or type a misspelled word and its replacement and click **Add**
+- Remove a pair with its trash button (or **Delete**)
+- Pairs whose word is spelled correctly (or is a name or user word) are marked with a warning
+  icon - spell check never flags those words, so the pair is never used. **Remove unused** deletes
+  them all
+- Changes are saved when you click **OK**
+
+The list is only used and saved when **Spell check: remember "Use always" list** is turned on in
+**Settings → Tools**.
+
 ## Dictionaries
 
 Spell check requires a dictionary to be installed. If no dictionary is found, you will be prompted to download one.

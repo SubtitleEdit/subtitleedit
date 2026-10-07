@@ -45,6 +45,20 @@ public class LanguageSpellCheck
     public string NamesX { get; set; }
     public string AddedToDictionaryX { get; set; }
     public string DoNotShowThisAgain { get; set; }
+    public string EditUseAlwaysList { get; set; }
+    public string UseAlwaysListTitle { get; set; }
+    public string UseAlwaysListHeader { get; set; }
+    public string UseAlwaysListDescription { get; set; }
+    public string UseAlwaysWord { get; set; }
+    public string XPairs { get; set; }
+    public string XUnusedPairs { get; set; }
+    public string UseAlwaysUnusedHint { get; set; }
+    public string RemoveUnused { get; set; }
+    public string UseAlwaysEmpty { get; set; }
+    public string UseAlwaysEmptyHint { get; set; }
+    public string UseAlwaysNoMatch { get; set; }
+    public string UseAlwaysSameWord { get; set; }
+    public string UseAlwaysRememberOff { get; set; }
 
     public LanguageSpellCheck()
     {
@@ -89,5 +103,19 @@ public class LanguageSpellCheck
         NamesX = "Names: {0}";
         AddedToDictionaryX = "Added to dictionary: {0}";
         DoNotShowThisAgain = "Do not show this message again";
+        EditUseAlwaysList = "Edit \"Use always\" list...";
+        UseAlwaysListTitle = "Spell check - \"Use always\" list";
+        UseAlwaysListHeader = "\"Use always\" list";
+        UseAlwaysListDescription = "Words spell check replaces automatically, saved by \"Change all\" and \"Use always\". A pair is only used when the word is misspelled.";
+        UseAlwaysWord = "Misspelled word";
+        XPairs = "{0:#,##0} pairs";
+        XUnusedPairs = "{0:#,##0} never used";
+        UseAlwaysUnusedHint = "Never used - this word is spelled correctly (or is a name or user word), so spell check never flags it";
+        RemoveUnused = "Remove unused";
+        UseAlwaysEmpty = "No \"Use always\" pairs for this language yet";
+        UseAlwaysEmptyHint = "Pairs are added when you click \"Change all\" or \"Use always\" in spell check.";
+        UseAlwaysNoMatch = "No pairs match the search";
+        UseAlwaysSameWord = "The replacement must be different from the word.";
+        UseAlwaysRememberOff = "\"Remember 'Use always' list\" is turned off in Settings, so spell check does not use or save this list.";
     }
 }
