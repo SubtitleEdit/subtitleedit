@@ -392,7 +392,7 @@ public static class AssistedMoveCandidateGenerator
             return null;
         }
 
-        var upDown = new MoveWordUpDown(lines[0].Trim(), lines[1].Trim());
+        var upDown = new MoveWordUpDown(lines[0].Trim(), lines[1].Trim()) { SameSubtitle = true };
         if (moveDown)
         {
             upDown.MoveWordDown();
