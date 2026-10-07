@@ -19,6 +19,12 @@ public class SeWaveform
     // With the above on, also select the line under the cursor while scrubbing paused.
     // Off by default: SE 4 never changed the selection while paused (#15513).
     public bool SelectCurrentSubtitleWhilePaused { get; set; }
+
+    // Keep the main waveform's horizontal/vertical zoom across restarts (#15748).
+    // Off by default: SE always opened at 100% zoom.
+    public bool RememberZoom { get; set; }
+    public double ZoomFactor { get; set; }
+    public double VerticalZoomFactor { get; set; }
     public bool DrawGridLines { get; set; }
 
     /// <summary>
@@ -137,6 +143,9 @@ public class SeWaveform
         TimelineTrackGrouping = "None";
         TimelineShowThumbnails = true;
         DrawGridLines = false;
+        RememberZoom = false;
+        ZoomFactor = 1.0;
+        VerticalZoomFactor = 1.0;
         UseSkiaRenderer = false;
         FocusTextBoxAfterInsertNew = true;
         SpectrogramCombinedWaveformHeight = 50;

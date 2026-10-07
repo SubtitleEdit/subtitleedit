@@ -1,4 +1,4 @@
-﻿{
+﻿﻿{
   "title": "Subtitle Edit",
   "version": "v5.3.0-beta23",
   "translatedBy": "",
@@ -3412,6 +3412,7 @@
       "waveformUseSkiaRenderer": "Use experimental fast renderer",
       "waveformCenterVideoPositionAlsoWhenPaused": "Center video position also while paused",
       "waveformSelectCurrentSubtitleWhilePaused": "Select current subtitle also while paused",
+      "waveformRememberZoom": "Remember zoom (horizontal and vertical)",
       "waveformShowToolbar": "Show toolbar",
       "waveformShowToolbarEdit": "Edit toolbar...",
       "waveformShowToolbarEditLabel": "Toolbar items",

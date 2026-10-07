@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.UiLogic.Export;
+﻿﻿﻿using Nikse.SubtitleEdit.UiLogic.Export;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -28551,6 +28551,11 @@ public partial class MainViewModel :
             Se.Settings.General.SelectCurrentSubtitleWhilePlaying = SelectCurrentSubtitleWhilePlaying;
             Se.Settings.Waveform.ShowToolbar = IsWaveformToolbarVisible;
             Se.Settings.Waveform.CenterVideoPosition = WaveformCenter;
+            if (Se.Settings.Waveform.RememberZoom && AudioVisualizer != null)
+            {
+                Se.Settings.Waveform.ZoomFactor = AudioVisualizer.ZoomFactor;
+                Se.Settings.Waveform.VerticalZoomFactor = AudioVisualizer.VerticalZoomFactor;
+            }
 
             UiUtil.SaveWindowPosition(Window);
             Se.Settings.General.UndockVideoControls = Se.Settings.General.RememberPositionAndSize && AreVideoControlsUndocked;
@@ -29762,8 +29767,12 @@ public partial class MainViewModel :
         if (vp.VideoPlayer.Duration > 0)
         {
             var peakWaveFileName = WavePeakGenerator2.GetPeakWaveFileName(_videoFileName ?? string.Empty, _audioTrack?.FfIndex ?? -1);
-            AudioVisualizer.ZoomFactor = 1.0;
-            AudioVisualizer.VerticalZoomFactor = 1.0;
+            if (!Se.Settings.Waveform.RememberZoom)
+            {
+                AudioVisualizer.ZoomFactor = 1.0;
+                AudioVisualizer.VerticalZoomFactor = 1.0;
+            }
+
             AudioVisualizer.WavePeaks = WavePeakGenerator2.GenerateEmptyPeaks(peakWaveFileName, (int)vp.VideoPlayer.Duration);
         }
     }

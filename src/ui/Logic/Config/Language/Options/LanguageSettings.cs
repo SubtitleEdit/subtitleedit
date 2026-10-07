@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.Enums;
+﻿﻿﻿using Nikse.SubtitleEdit.Core.Enums;
 using System;
 
 namespace Nikse.SubtitleEdit.Logic.Config.Language.Options;
@@ -131,6 +131,7 @@ public class LanguageSettings
     public string WaveformUseSkiaRenderer { get; set; }
     public string WaveformCenterVideoPositionAlsoWhenPaused { get; set; }
     public string WaveformSelectCurrentSubtitleWhilePaused { get; set; }
+    public string WaveformRememberZoom { get; set; }
     public string WaveformShowToolbar { get; set; }
     public string WaveformShowToolbarEdit { get; set; }
     public string WaveformShowToolbarEditLabel { get; set; }
@@ -489,6 +490,7 @@ public class LanguageSettings
         WaveformFocusOnMouseOver = "Focus on mouse over";
         WaveformCenterVideoPositionAlsoWhenPaused = "Center video position also while paused";
         WaveformSelectCurrentSubtitleWhilePaused = "Select current subtitle also while paused";
+        WaveformRememberZoom = "Remember zoom (horizontal and vertical)";
         WaveformShowToolbar = "Show toolbar";
         WaveformShowToolbarEdit = "Edit toolbar...";
         WaveformShowToolbarEditLabel = "Toolbar items";
