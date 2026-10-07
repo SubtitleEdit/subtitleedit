@@ -96,4 +96,33 @@ public class SubtitleFormatFunctionsTest
             Configuration.Settings.General.CurrentFrameRate = oldRate;
         }
     }
+
+    [Fact]
+    public void SmpteTimingFinalCutPro7XmlCountsTimeCodeFrames()
+    {
+        var oldSmpte = Configuration.Settings.General.CurrentVideoIsSmpte;
+        var oldRate = Configuration.Settings.General.CurrentFrameRate;
+        try
+        {
+            Configuration.Settings.General.CurrentVideoIsSmpte = true;
+            Configuration.Settings.General.CurrentFrameRate = 23.976;
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph("Hi", 3600000, 3602000));
+            var format = new FinalCutProXml();
+            var xml = format.ToText(subtitle, "test");
+            Assert.Contains("<start>86400</start>", xml);
+            Assert.Contains("<end>86448</end>", xml);
+
+            var loaded = new Subtitle();
+            format.LoadSubtitle(loaded, xml.SplitToLines(), null);
+            Assert.Single(loaded.Paragraphs);
+            Assert.Equal(3600000, loaded.Paragraphs[0].StartTime.TotalMilliseconds, 0.5);
+            Assert.Equal(3602000, loaded.Paragraphs[0].EndTime.TotalMilliseconds, 0.5);
+        }
+        finally
+        {
+            Configuration.Settings.General.CurrentVideoIsSmpte = oldSmpte;
+            Configuration.Settings.General.CurrentFrameRate = oldRate;
+        }
+    }
 }

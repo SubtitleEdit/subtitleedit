@@ -11528,7 +11528,7 @@ public partial class MainViewModel :
     }
 
     /// <summary>
-    /// In a format that stores frame numbers (MicroDVD and friends) the frame number is the
+    /// In a format that stores frame numbers (MicroDVD, FCP 7 XML...) the frame number is the
     /// truth, but SMPTE timing changes how many milliseconds a 23.976/29.97/59.94 frame is
     /// (#15753). Read the frame numbers before the toggle so <see cref="RestoreFrameNumbers"/>
     /// can put every line back on the same frame - otherwise toggling, or reopening a recent
@@ -11537,7 +11537,7 @@ public partial class MainViewModel :
     private List<(SubtitleLineViewModel Line, int StartFrame, int EndFrame)>? GetFrameNumbersOfFrameBasedFormat()
     {
         var frameRate = Configuration.Settings.General.CurrentFrameRate;
-        if (SelectedSubtitleFormat is not { IsFrameBased: true } ||
+        if (SelectedSubtitleFormat is not { StoresFrameNumbers: true } ||
             SubtitleFormat.GetFrameForCalculation(frameRate).Equals(frameRate))
         {
             // Not an NTSC rate: SMPTE timing doesn't change the frame length.

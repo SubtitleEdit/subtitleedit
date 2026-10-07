@@ -535,6 +535,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public bool IsFrameBased => !IsTimeBased;
 
+        /// <summary>
+        /// True when the file stores absolute frame numbers - every frame-based format, plus time based
+        /// ones like FCP 7 XML that write frame counts. Toggling SMPTE timing keeps these lines on the
+        /// same frame (#15753).
+        /// </summary>
+        public virtual bool StoresFrameNumbers => IsFrameBased;
+
         private string _friendlyName;
         private string _friendlyNameExtension;
 
@@ -622,6 +629,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public static double GetTimeCodeFrameRate(double frameRate)
         {
             return IsSmpteTimeCodeClock(frameRate) ? Math.Round(frameRate) : GetFrameForCalculation(frameRate);
+        }
+
+        /// <summary>
+        /// For formats that count frames with their own math (FCP 7 XML): the whole-number rate in
+        /// SMPTE timing (see <see cref="IsSmpteTimeCodeClock"/>), otherwise <paramref name="frameRate"/>
+        /// unchanged.
+        /// </summary>
+        public static double ToTimeCodeFrameRate(double frameRate)
+        {
+            return IsSmpteTimeCodeClock(frameRate) ? Math.Round(frameRate) : frameRate;
         }
 
         public static double GetFrameForCalculation(double frameRate)
