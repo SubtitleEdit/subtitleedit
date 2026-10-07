@@ -23,6 +23,33 @@ public class StatisticsWindow : Window
     private static readonly Color SeriousColor = Color.Parse("#e0784a");
     private static readonly Color CriticalColor = Color.Parse("#d05252");
 
+    // Text/icon variants: on the light theme the tones above are too faint on white (#15768),
+    // so darker shades of the same hues are used there. Backgrounds and chart lines keep the base tones.
+    private static Color ForText(Color color)
+    {
+        if (UiTheme.IsDarkThemeEnabled())
+        {
+            return color;
+        }
+
+        if (color == GoodColor)
+        {
+            return Color.Parse("#1e7a4a");
+        }
+
+        if (color == WarningColor)
+        {
+            return Color.Parse("#8a5a00");
+        }
+
+        if (color == SeriousColor)
+        {
+            return Color.Parse("#a8460f");
+        }
+
+        return color == CriticalColor ? Color.Parse("#b42828") : color;
+    }
+
     private const double HistogramHeight = 150;
 
     public StatisticsWindow(StatisticsViewModel vm)
@@ -133,7 +160,7 @@ public class StatisticsWindow : Window
 
     private static Control MakeCopyButton(IRelayCommand command)
     {
-        var goodBrush = new SolidColorBrush(GoodColor);
+        var goodBrush = new SolidColorBrush(ForText(GoodColor));
 
         var feedback = new TextBlock
         {
@@ -364,7 +391,7 @@ public class StatisticsWindow : Window
             var icon = new ContentControl
             {
                 FontSize = UiUtil.ScaledFontSize(12),
-                Foreground = new SolidColorBrush(color),
+                Foreground = new SolidColorBrush(ForText(color)),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
             };
@@ -390,7 +417,7 @@ public class StatisticsWindow : Window
                 Text = check.Count.ToString("#,##0", CultureInfo.CurrentCulture),
                 FontSize = UiUtil.ScaledFontSize(12),
                 FontWeight = FontWeight.SemiBold,
-                Foreground = new SolidColorBrush(color),
+                Foreground = new SolidColorBrush(ForText(color)),
                 VerticalAlignment = VerticalAlignment.Center,
             }, 0, 2);
 
@@ -550,7 +577,7 @@ public class StatisticsWindow : Window
                     Text = cps.ToString("0.##", CultureInfo.CurrentCulture),
                     FontSize = UiUtil.ScaledFontSize(10),
                     FontWeight = FontWeight.SemiBold,
-                    Foreground = new SolidColorBrush(color),
+                    Foreground = new SolidColorBrush(ForText(color)),
                     // Fixed width so the label measures inside the zero-width pin panel.
                     Width = 50,
                     VerticalAlignment = VerticalAlignment.Top,
