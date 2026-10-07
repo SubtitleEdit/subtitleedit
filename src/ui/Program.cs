@@ -17,6 +17,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Optris.Icons.Avalonia;
 using Optris.Icons.Avalonia.FontAwesome;
 using Optris.Icons.Avalonia.MaterialDesign;
+using SkiaSharp;
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -153,6 +154,7 @@ namespace Nikse.SubtitleEdit
                         .WithInterFont()
                         .With(new FontManagerOptions
                         {
+                            DefaultFamilyName = GetLinuxDefaultFontFamilyOverride(),
                             FontFallbacks = new[]
                             {
                                 new FontFallback { FontFamily = new FontFamily("Noto Sans CJK SC") },
@@ -306,6 +308,34 @@ namespace Nikse.SubtitleEdit
 
         [LibraryImport("kernel32.dll")]
         private static partial uint SetErrorMode(uint mode);
+
+        /// <summary>
+        /// Returns a default font family for Avalonia when Skia has none, or null when Skia's own
+        /// default is usable. Skia's fontconfig matcher (still in SkiaSharp 3.119) only accepts
+        /// fontconfig's default font if its family is among the first 16 names of the substituted
+        /// pattern. On e.g. zh_CN the default is a CJK font that wins on language but sits far
+        /// down the sans-serif list, so Skia drops it and reports an empty default family.
+        /// Avalonia then falls back to the alphabetically first system font - often an X11 bitmap
+        /// font it cannot load - and startup dies with "Could not create glyphTypeface. Font
+        /// family: $Default". Character matching has no such limit, so it recovers the font
+        /// fontconfig really picked; the embedded Inter font covers systems where even that
+        /// yields nothing usable.
+        /// </summary>
+        private static string? GetLinuxDefaultFontFamilyOverride()
+        {
+            if (!string.IsNullOrEmpty(SKTypeface.Default.FamilyName))
+            {
+                return null;
+            }
+
+            using var typeface = SKFontManager.Default.MatchCharacter('a');
+            if (typeface == null || typeface.TableCount == 0 || string.IsNullOrEmpty(typeface.FamilyName))
+            {
+                return "fonts:Inter#Inter"; // no tables = bitmap font (PCF/BDF), which Avalonia cannot load
+            }
+
+            return typeface.FamilyName;
+        }
 
         /// <summary>
         /// Makes dead-key accents (á, ê, õ, ...) work on Linux. Avalonia's ibus D-Bus client
