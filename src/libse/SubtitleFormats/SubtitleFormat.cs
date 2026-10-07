@@ -536,9 +536,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public bool IsFrameBased => !IsTimeBased;
 
         /// <summary>
-        /// True when the file stores absolute frame numbers - every frame-based format, plus time based
-        /// ones like FCP 7 XML that write frame counts. Toggling SMPTE timing keeps these lines on the
-        /// same frame (#15753).
+        /// True when the file pins lines to video frames - every frame-based format, plus time based ones
+        /// that write frame counts (FCP 7 XML) or frame-aligned media time (FCP X). Toggling SMPTE timing
+        /// keeps these lines on the same frame (#15753).
         /// </summary>
         public virtual bool StoresFrameNumbers => IsFrameBased;
 
@@ -639,6 +639,46 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public static double ToTimeCodeFrameRate(double frameRate)
         {
             return IsSmpteTimeCodeClock(frameRate) ? Math.Round(frameRate) : frameRate;
+        }
+
+        /// <summary>
+        /// Final Cut Pro X stores real media time (a 23.976 frame is 1001/24000 s), but in SMPTE
+        /// timing the subtitle's times are on the time code clock, 1.001 faster (see
+        /// <see cref="IsSmpteTimeCodeClock"/>). Returns a copy on media time to write, or
+        /// <paramref name="subtitle"/> itself when SMPTE timing is off.
+        /// </summary>
+        protected static Subtitle ToMediaTime(Subtitle subtitle)
+        {
+            if (!IsSmpteTimeCodeClock(Configuration.Settings.General.CurrentFrameRate))
+            {
+                return subtitle;
+            }
+
+            var copy = new Subtitle(subtitle, false);
+            foreach (var p in copy.Paragraphs)
+            {
+                p.StartTime.TotalMilliseconds *= 1.001;
+                p.EndTime.TotalMilliseconds *= 1.001;
+            }
+
+            return copy;
+        }
+
+        /// <summary>
+        /// The reverse of <see cref="ToMediaTime"/> for a subtitle just read from media time.
+        /// </summary>
+        protected static void FromMediaTime(Subtitle subtitle)
+        {
+            if (!IsSmpteTimeCodeClock(Configuration.Settings.General.CurrentFrameRate))
+            {
+                return;
+            }
+
+            foreach (var p in subtitle.Paragraphs)
+            {
+                p.StartTime.TotalMilliseconds /= 1.001;
+                p.EndTime.TotalMilliseconds /= 1.001;
+            }
         }
 
         public static double GetFrameForCalculation(double frameRate)
