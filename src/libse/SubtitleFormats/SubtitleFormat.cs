@@ -535,6 +535,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public bool IsFrameBased => !IsTimeBased;
 
+        /// <summary>
+        /// True when the file stores absolute frame numbers - every frame-based format, plus time based
+        /// ones like FCP 7 XML that write frame counts. Toggling SMPTE timing keeps these lines on the
+        /// same frame (#15753).
+        /// </summary>
+        public virtual bool StoresFrameNumbers => IsFrameBased;
+
         private string _friendlyName;
         private string _friendlyNameExtension;
 
@@ -597,7 +604,41 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static int MillisecondsToFrames(double milliseconds, double frameRate)
         {
-            return (int)Math.Round(milliseconds / (TimeCode.BaseUnit / GetFrameForCalculation(frameRate)), MidpointRounding.AwayFromZero);
+            return (int)Math.Round(milliseconds / (TimeCode.BaseUnit / GetTimeCodeFrameRate(frameRate)), MidpointRounding.AwayFromZero);
+        }
+
+        /// <summary>
+        /// True when SMPTE timing is on and <paramref name="frameRate"/> is 23.976, 29.97 or 59.94.
+        /// The subtitle's times are then on the non-drop-frame time code clock - 24/30/60 frames per
+        /// time code second, with the video stretched by 1.001 to match - so frame 86400 at 23.976 is
+        /// 01:00:00:00, i.e. 3600000 ms, not 3603600 ms (#15753).
+        /// </summary>
+        public static bool IsSmpteTimeCodeClock(double frameRate)
+        {
+            return Configuration.Settings.General.CurrentVideoIsSmpte &&
+                   (Math.Abs(frameRate - 23.976) < 0.001 ||
+                    Math.Abs(frameRate - 29.97) < 0.001 ||
+                    Math.Abs(frameRate - 59.94) < 0.001);
+        }
+
+        /// <summary>
+        /// The frame rate subtitle times and frame numbers convert with: the whole-number time code
+        /// rate in SMPTE timing (see <see cref="IsSmpteTimeCodeClock"/>), otherwise the exact
+        /// NTSC rate from <see cref="GetFrameForCalculation"/>.
+        /// </summary>
+        public static double GetTimeCodeFrameRate(double frameRate)
+        {
+            return IsSmpteTimeCodeClock(frameRate) ? Math.Round(frameRate) : GetFrameForCalculation(frameRate);
+        }
+
+        /// <summary>
+        /// For formats that count frames with their own math (FCP 7 XML): the whole-number rate in
+        /// SMPTE timing (see <see cref="IsSmpteTimeCodeClock"/>), otherwise <paramref name="frameRate"/>
+        /// unchanged.
+        /// </summary>
+        public static double ToTimeCodeFrameRate(double frameRate)
+        {
+            return IsSmpteTimeCodeClock(frameRate) ? Math.Round(frameRate) : frameRate;
         }
 
         public static double GetFrameForCalculation(double frameRate)
@@ -620,7 +661,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static int MillisecondsToFramesMaxFrameRate(double milliseconds)
         {
-            var frames = (int)Math.Round(milliseconds / (TimeCode.BaseUnit / GetFrameForCalculation(Configuration.Settings.General.CurrentFrameRate)), MidpointRounding.AwayFromZero);
+            var frames = (int)Math.Round(milliseconds / (TimeCode.BaseUnit / GetTimeCodeFrameRate(Configuration.Settings.General.CurrentFrameRate)), MidpointRounding.AwayFromZero);
             if (frames >= Configuration.Settings.General.CurrentFrameRate)
             {
                 frames = (int)(Configuration.Settings.General.CurrentFrameRate - 0.01);
@@ -636,12 +677,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static int FramesToMilliseconds(double frames, double frameRate)
         {
-            return (int)Math.Round(frames * (TimeCode.BaseUnit / GetFrameForCalculation(frameRate)), MidpointRounding.AwayFromZero);
+            return (int)Math.Round(frames * (TimeCode.BaseUnit / GetTimeCodeFrameRate(frameRate)), MidpointRounding.AwayFromZero);
         }
 
         public static int FramesToMillisecondsMax999(double frames)
         {
-            var ms = (int)Math.Round(frames * (TimeCode.BaseUnit / GetFrameForCalculation(Configuration.Settings.General.CurrentFrameRate)), MidpointRounding.AwayFromZero);
+            var ms = (int)Math.Round(frames * (TimeCode.BaseUnit / GetTimeCodeFrameRate(Configuration.Settings.General.CurrentFrameRate)), MidpointRounding.AwayFromZero);
             return Math.Min(ms, 999);
         }
 
