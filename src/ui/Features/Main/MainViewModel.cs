@@ -4166,6 +4166,22 @@ public partial class MainViewModel :
                 return;
             }
         }
+        else if (!IsEmpty && Window != null)
+        {
+            // Nothing unsaved, but the whole translation still leaves the grid - and it sits right
+            // next to "Close original" in the File menu, so a slip used to swap the subtitle being
+            // edited for the original without a word (#15749). The save prompt above already asks.
+            var name = string.IsNullOrEmpty(_subtitleFileName) ? Se.Language.General.Untitled : Path.GetFileName(_subtitleFileName);
+            var originalName = string.IsNullOrEmpty(_subtitleFileNameOriginal) ? Se.Language.General.Untitled : Path.GetFileName(_subtitleFileNameOriginal);
+            var answer = await MessageBox.Show(Window, Se.Language.Options.Shortcuts.FileCloseTranslation,
+                string.Format(Se.Language.Main.CloseTranslationQuestionXY, name, originalName),
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (answer != MessageBoxResult.Yes)
+            {
+                _shortcutManager.ClearKeys();
+                return;
+            }
+        }
 
         foreach (var subtitle in Subtitles)
         {
