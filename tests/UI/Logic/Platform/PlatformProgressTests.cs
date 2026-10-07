@@ -73,6 +73,7 @@ public class PlatformProgressTests
         group.Update(second, 20, false);
         group.Update(first, null, false);
 
+        Assert.Equal(2, progress.Updates.Count);
         Assert.Equal(((double?)20, false), progress.Updates[^1]);
         Assert.False(progress.IsDisposed);
         group.Update(second, null, false);
@@ -192,6 +193,98 @@ public class PlatformProgressTests
         Assert.Equal(4, backend.Updates.Count);
         Assert.Equal(((double?)null, false), backend.Updates[^1]);
         Assert.False(backend.IsDisposed);
+    }
+
+    [Fact]
+    public void UpdatesWithinSameWholePercentageAreSkipped()
+    {
+        var progress = new FakeProgress();
+        var group = new PlatformProgressGroup(() => progress);
+        var source = new object();
+
+        group.Update(source, 10.1, false);
+        group.Update(source, 10.99, false);
+        group.Update(source, 11, false);
+        group.Update(source, 11.9, false);
+        group.Update(source, 10.9, false);
+
+        Assert.Equal(new[] { ((double?)10, false), ((double?)11, false), ((double?)10, false) }, progress.Updates);
+        group.Update(source, null, false);
+        Assert.Equal(((double?)null, false), progress.Updates[^1]);
+    }
+
+    [Fact]
+    public void IndeterminateTransitionsAreSentButNumericChangesAreSkipped()
+    {
+        var progress = new FakeProgress();
+        var group = new PlatformProgressGroup(() => progress);
+        var source = new object();
+
+        group.Update(source, 35.2, false);
+        group.Update(source, 35.2, true);
+        group.Update(source, 80.9, true);
+        group.Update(source, null, true);
+        group.Update(source, 35.9, false);
+
+        Assert.Equal(new[] { ((double?)35, false), ((double?)null, true), ((double?)35, false) }, progress.Updates);
+        group.Update(source, null, false);
+        Assert.Equal(((double?)null, false), progress.Updates[^1]);
+    }
+
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    public void NewSourceAndRestorationAreSentEvenWithSameEffectiveState(bool keepBackendWhenIdle, bool indeterminate)
+    {
+        var progress = new FakeProgress();
+        var group = new PlatformProgressGroup(() => progress, keepBackendWhenIdle);
+        var first = new object();
+        var second = new object();
+
+        group.Update(first, 20.2, indeterminate);
+        group.Update(second, 20.9, indeterminate);
+        group.Update(first, 20.7, indeterminate);
+        Assert.Equal(2, progress.Updates.Count);
+
+        group.Update(second, null, false);
+
+        double? effectivePercentage = indeterminate ? null : 20;
+        Assert.Equal(new[] { (effectivePercentage, indeterminate), (effectivePercentage, indeterminate),
+            (effectivePercentage, indeterminate) }, progress.Updates);
+        group.Update(first, null, false);
+        Assert.Equal(((double?)null, false), progress.Updates[^1]);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void ClearAndRestartOfSameSourceAreSentEvenWithSameWholePercentage(bool keepBackendWhenIdle)
+    {
+        var instances = new List<FakeProgress>();
+        var group = new PlatformProgressGroup(() =>
+        {
+            var progress = new FakeProgress();
+            instances.Add(progress);
+            return progress;
+        }, keepBackendWhenIdle);
+        var source = new object();
+
+        group.Update(source, 20.2, false);
+        group.Update(source, 20.9, false);
+        group.Update(source, null, false);
+
+        Assert.Equal(new[] { ((double?)20, false), ((double?)null, false) }, instances[0].Updates);
+        Assert.Equal(!keepBackendWhenIdle, instances[0].IsDisposed);
+
+        group.Update(source, 20.7, false);
+
+        Assert.Equal(keepBackendWhenIdle ? 1 : 2, instances.Count);
+        Assert.Equal(keepBackendWhenIdle ? 3 : 1, instances[^1].Updates.Count);
+        Assert.Equal(((double?)20, false), instances[^1].Updates[^1]);
+        group.Update(source, null, false);
+        Assert.Equal(((double?)null, false), instances[^1].Updates[^1]);
     }
 
     [Fact]

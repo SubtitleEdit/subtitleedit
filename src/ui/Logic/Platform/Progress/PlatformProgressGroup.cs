@@ -8,6 +8,7 @@ internal sealed class PlatformProgressGroup(Func<IPlatformProgress> createProgre
 {
     private readonly List<(object Source, double? Percentage, bool Indeterminate)> _sources = [];
     private IPlatformProgress? _progress;
+    private (object Source, int? Percentage, bool Indeterminate)? _lastUpdate;
 
     public void Update(object source, double? percentage, bool indeterminate)
     {
@@ -30,6 +31,7 @@ internal sealed class PlatformProgressGroup(Func<IPlatformProgress> createProgre
             if (_sources.Count == 0)
             {
                 _progress?.Update(null, false);
+                _lastUpdate = null;
                 // Keep the Linux connection alive so asynchronous clear requests can be sent.
                 if (!keepBackendWhenIdle)
                 {
@@ -41,7 +43,15 @@ internal sealed class PlatformProgressGroup(Func<IPlatformProgress> createProgre
 
             _progress ??= createProgress();
             var current = _sources[^1];
-            _progress.Update(current.Percentage, current.Indeterminate);
+            var effectivePercentage = !current.Indeterminate && current.Percentage is { } value
+                ? (int?)value : null;
+            // Source changes must be published even when their visible state is the same.
+            if (_lastUpdate is { } last && ReferenceEquals(last.Source, current.Source) &&
+                last.Percentage == effectivePercentage && last.Indeterminate == current.Indeterminate)
+                return;
+
+            _progress.Update(effectivePercentage, current.Indeterminate);
+            _lastUpdate = (current.Source, effectivePercentage, current.Indeterminate);
         }
         catch (Exception exception)
         {
