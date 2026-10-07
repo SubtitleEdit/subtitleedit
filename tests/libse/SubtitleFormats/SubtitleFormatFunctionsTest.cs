@@ -125,4 +125,57 @@ public class SubtitleFormatFunctionsTest
             Configuration.Settings.General.CurrentFrameRate = oldRate;
         }
     }
+
+    public static TheoryData<SubtitleFormat> FinalCutProXFormats => new TheoryData<SubtitleFormat>
+    {
+        new FinalCutProXml15(),
+        new FinalCutProXml114(),
+        new FinalCutProXml14(),
+        new FinalCutProXml13(),
+        new FinalCutProXXml(),
+        new FinalCutProXmlGap(),
+        new FinalCutProXmlName(),
+        new FinalCutProXml14Text(),
+        new FinalCutProXmlCaptions(),
+    };
+
+    [Theory]
+    [MemberData(nameof(FinalCutProXFormats))]
+    public void SmpteTimingFinalCutProXWritesMediaTime(SubtitleFormat format)
+    {
+        // #15753: FCP X stores real media time, so in SMPTE timing time code 01:00:00:00 is written
+        // as 3603.6 s (frame 86400 at 1001/24000 s) and read back as 01:00:00:00.
+        var oldSmpte = Configuration.Settings.General.CurrentVideoIsSmpte;
+        var oldRate = Configuration.Settings.General.CurrentFrameRate;
+        try
+        {
+            Configuration.Settings.General.CurrentFrameRate = 23.976;
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph("Hi", 3600000, 3602000));
+
+            Configuration.Settings.General.CurrentVideoIsSmpte = false;
+            var plain = format.ToText(subtitle, "test");
+            Configuration.Settings.General.CurrentVideoIsSmpte = true;
+            var smpte = format.ToText(subtitle, "test");
+            Assert.NotEqual(plain, smpte);
+
+            var stretched = new Subtitle();
+            stretched.Paragraphs.Add(new Paragraph("Hi", 3603600, 3605602));
+            Configuration.Settings.General.CurrentVideoIsSmpte = false;
+            Assert.Equal(format.ToText(stretched, "test"), smpte);
+
+            Configuration.Settings.General.CurrentFrameRate = 23.976;
+            Configuration.Settings.General.CurrentVideoIsSmpte = true;
+            var loaded = new Subtitle();
+            format.LoadSubtitle(loaded, smpte.SplitToLines(), null);
+            Assert.Single(loaded.Paragraphs);
+            Assert.Equal(3600000, loaded.Paragraphs[0].StartTime.TotalMilliseconds, 1);
+            Assert.Equal(3602000, loaded.Paragraphs[0].EndTime.TotalMilliseconds, 1);
+        }
+        finally
+        {
+            Configuration.Settings.General.CurrentVideoIsSmpte = oldSmpte;
+            Configuration.Settings.General.CurrentFrameRate = oldRate;
+        }
+    }
 }
