@@ -11497,6 +11497,7 @@ public partial class MainViewModel :
             return;
         }
 
+        var frameNumbers = GetFrameNumbersOfFrameBasedFormat();
         if (IsSmpteTimingEnabled)
         {
             IsSmpteTimingEnabled = false;
@@ -11514,6 +11515,8 @@ public partial class MainViewModel :
             }
         }
 
+        RestoreFrameNumbers(frameNumbers);
+
         var vp = GetVideoPlayerControl();
         if (vp != null)
         {
@@ -11522,6 +11525,45 @@ public partial class MainViewModel :
 
         _mpvReloader.SmpteMode = IsSmpteTimingEnabled;
         _vlcReloader.SmpteMode = IsSmpteTimingEnabled;
+    }
+
+    /// <summary>
+    /// In a format that stores frame numbers (MicroDVD and friends) the frame number is the
+    /// truth, but SMPTE timing changes how many milliseconds a 23.976/29.97/59.94 frame is
+    /// (#15753). Read the frame numbers before the toggle so <see cref="RestoreFrameNumbers"/>
+    /// can put every line back on the same frame - otherwise toggling, or reopening a recent
+    /// file in SMPTE timing, would move every line by 0.1 %.
+    /// </summary>
+    private List<(SubtitleLineViewModel Line, int StartFrame, int EndFrame)>? GetFrameNumbersOfFrameBasedFormat()
+    {
+        var frameRate = Configuration.Settings.General.CurrentFrameRate;
+        if (SelectedSubtitleFormat is not { IsFrameBased: true } ||
+            SubtitleFormat.GetFrameForCalculation(frameRate).Equals(frameRate))
+        {
+            // Not an NTSC rate: SMPTE timing doesn't change the frame length.
+            return null;
+        }
+
+        return Subtitles
+            .Select(p => (p, SubtitleFormat.MillisecondsToFrames(p.StartTime.TotalMilliseconds), SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds)))
+            .ToList();
+    }
+
+    private void RestoreFrameNumbers(List<(SubtitleLineViewModel Line, int StartFrame, int EndFrame)>? frameNumbers)
+    {
+        if (frameNumbers == null)
+        {
+            return;
+        }
+
+        foreach (var (line, startFrame, endFrame) in frameNumbers)
+        {
+            line.SetTimes(
+                TimeSpan.FromMilliseconds(SubtitleFormat.FramesToMilliseconds(startFrame)),
+                TimeSpan.FromMilliseconds(SubtitleFormat.FramesToMilliseconds(endFrame)));
+        }
+
+        _updateAudioVisualizer = true;
     }
 
     /// <summary>
