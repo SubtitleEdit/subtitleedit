@@ -10,6 +10,7 @@ using Nikse.SubtitleEdit.Features.Files.Compare;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Platform.Progress;
 
 namespace Nikse.SubtitleEdit.Features.Tools.AiReview;
 
@@ -366,6 +367,7 @@ public class AiReviewWindow : Window
             // finished review just looks stuck.
             [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsReviewing)),
         };
+        progressBar.WithPlatformProgress(this, nameof(vm.IsReviewing));
         var statusText = MakeBoundTextBlock(nameof(vm.StatusText));
         statusText.VerticalAlignment = VerticalAlignment.Center;
         statusText.Opacity = 0.8;

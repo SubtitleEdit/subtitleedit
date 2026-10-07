@@ -10,6 +10,7 @@ using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Platform.Progress;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Nikse.SubtitleEdit.UiLogic.Export;
 using System;
@@ -1167,9 +1168,10 @@ public class BurnInWindow : Window
             .WithMarginRight(5);
     }
 
-    private static Grid MakeProgressView(BurnInViewModel vm)
+    private Grid MakeProgressView(BurnInViewModel vm)
     {
         var progressBar = UiUtil.MakeProgressBar();
+        progressBar.WithPlatformProgress(this, nameof(vm.IsGenerating));
         progressBar.Margin = new Thickness(0, 4, 5, 0);
         progressBar.VerticalAlignment = VerticalAlignment.Top;
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
