@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace Nikse.SubtitleEdit.Logic.Platform.Progress;
 
-internal sealed class PlatformProgressGroup(Func<IPlatformProgress> createProgress)
+internal sealed class PlatformProgressGroup(Func<IPlatformProgress> createProgress, bool keepBackendWhenIdle = false)
 {
     private readonly List<(object Source, double? Percentage, bool Indeterminate)> _sources = [];
     private IPlatformProgress? _progress;
@@ -30,8 +30,12 @@ internal sealed class PlatformProgressGroup(Func<IPlatformProgress> createProgre
             if (_sources.Count == 0)
             {
                 _progress?.Update(null, false);
-                _progress?.Dispose();
-                _progress = null;
+                // Keep the Linux connection alive so asynchronous clear requests can be sent.
+                if (!keepBackendWhenIdle)
+                {
+                    _progress?.Dispose();
+                    _progress = null;
+                }
                 return;
             }
 

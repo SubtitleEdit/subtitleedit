@@ -136,6 +136,65 @@ public class PlatformProgressTests
     }
 
     [Fact]
+    public void RetainedBackendRestoresOtherActiveSource()
+    {
+        var progress = new FakeProgress();
+        var group = new PlatformProgressGroup(() => progress, keepBackendWhenIdle: true);
+        var first = new object();
+        var second = new object();
+
+        group.Update(first, 70, false);
+        group.Update(second, 20, false);
+        group.Update(first, 80, false);
+        group.Update(second, null, false);
+
+        Assert.Equal(((double?)80, false), progress.Updates[^1]);
+        Assert.False(progress.IsDisposed);
+
+        group.Update(first, null, false);
+        Assert.Equal(((double?)null, false), progress.Updates[^1]);
+        Assert.False(progress.IsDisposed);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void RetainedBackendClearsAndIsReusedForNextOperation(bool indeterminate)
+    {
+        var instances = new List<FakeProgress>();
+        var group = new PlatformProgressGroup(() =>
+        {
+            var progress = new FakeProgress();
+            instances.Add(progress);
+            return progress;
+        }, keepBackendWhenIdle: true);
+        var first = new object();
+        var second = new object();
+        double? percentage = indeterminate ? null : 10;
+
+        group.Update(first, null, false);
+        Assert.Empty(instances);
+
+        group.Update(first, percentage, indeterminate);
+        var backend = Assert.Single(instances);
+        group.Update(first, null, false);
+
+        Assert.Equal(2, backend.Updates.Count);
+        Assert.Equal((percentage, indeterminate), backend.Updates[0]);
+        Assert.Equal(((double?)null, false), backend.Updates[1]);
+        Assert.False(backend.IsDisposed);
+
+        group.Update(second, 20, false);
+
+        Assert.Same(backend, Assert.Single(instances));
+        Assert.Equal(((double?)20, false), backend.Updates[^1]);
+        group.Update(second, null, false);
+        Assert.Equal(4, backend.Updates.Count);
+        Assert.Equal(((double?)null, false), backend.Updates[^1]);
+        Assert.False(backend.IsDisposed);
+    }
+
+    [Fact]
     public void UnavailableBackendDoesNotInterruptOperation()
     {
         var group = new PlatformProgressGroup(() => throw new InvalidOperationException());

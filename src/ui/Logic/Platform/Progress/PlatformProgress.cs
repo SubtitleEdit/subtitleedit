@@ -13,8 +13,9 @@ public static class PlatformProgress
         AvaloniaProperty.RegisterAttached<ProgressBar, bool>("IsActive", typeof(PlatformProgress));
 
     private static readonly ConditionalWeakTable<Window, PlatformProgressGroup> WindowGroups = new();
-    private static readonly PlatformProgressGroup ApplicationGroup = new(() =>
-        OperatingSystem.IsMacOS() ? new MacDockProgress() : new LinuxLauncherProgress());
+    private static readonly PlatformProgressGroup ApplicationGroup = new(
+        () => OperatingSystem.IsMacOS() ? new MacDockProgress() : new LinuxLauncherProgress(),
+        keepBackendWhenIdle: OperatingSystem.IsLinux());
 
     public static ProgressBar WithPlatformProgress(this ProgressBar progressBar, Window window,
         string activeProperty, IValueConverter? converter = null)
