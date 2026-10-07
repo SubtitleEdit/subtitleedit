@@ -86,6 +86,11 @@ public class SpellCheckManager : SpellChecker, ISpellCheckManager
             return;
         }
 
+        ReplaceWord(fromWord, toWord, spellCheckWord, p);
+    }
+
+    private void ReplaceWord(string fromWord, string toWord, SpellCheckWord spellCheckWord, SubtitleLineViewModel p)
+    {
         var text = p.Text.Remove(spellCheckWord.Index, spellCheckWord.Length);
         text = text.Insert(spellCheckWord.Index, toWord);
         p.Text = text;
@@ -188,23 +193,28 @@ public class SpellCheckManager : SpellChecker, ISpellCheckManager
 
         isCorrect = isCorrect || IsLowercaseOnlyWordAtSentenceStart(spellCheckWord, text);
 
+        if (isCorrect)
+        {
+            NoOfCorrectWords++;
+            return true;
+        }
+
+        // Change-all pairs only replace misspelled words. The pairs persist in <lang>_UseAlways.xml
+        // (shared with SE4), so a stray pair like "and" -> "&" used to silently rewrite every
+        // correctly spelled "and". ReplaceWord, not ChangeWord: ChangeWord's no-current-result guard
+        // made a fresh run skip these (yet count them as correct) until the first flagged word.
         if (ChangeAllDictionary.ContainsKey(word) && NotSameSpecialEnding(words[wordIndex], ChangeAllDictionary[word], text))
         {
-            ChangeWord(word, ChangeAllDictionary[word], words[wordIndex], p);
+            ReplaceWord(word, ChangeAllDictionary[word], words[wordIndex], p);
             return true;
         }
 
         if (word.EndsWith('\'') && ChangeAllDictionary.ContainsKey(word.TrimEnd('\'')))
         {
-            ChangeWord(word, ChangeAllDictionary[word.TrimEnd('\'')] + word.Remove(0, word.TrimEnd('\'').Length), words[wordIndex], p);
+            ReplaceWord(word, ChangeAllDictionary[word.TrimEnd('\'')] + word.Remove(0, word.TrimEnd('\'').Length), words[wordIndex], p);
             return true;
         }
 
-        if (isCorrect)
-        {
-            NoOfCorrectWords++;
-        }
-
-        return isCorrect;
+        return false;
     }
 }
