@@ -1,4 +1,4 @@
-﻿﻿﻿using Nikse.SubtitleEdit.Core.Enums;
+﻿using Nikse.SubtitleEdit.Core.Enums;
 using System;
 
 namespace Nikse.SubtitleEdit.Logic.Config.Language.Options;
