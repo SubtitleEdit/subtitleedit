@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Assa.AssaSetPosition;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustAlpha;
 using Nikse.SubtitleEdit.Logic;
@@ -69,7 +70,7 @@ public partial class AssaImageColorPickerViewModel : ObservableObject
         }
     }
 
-    public void Initialize(Subtitle subtitle, SubtitleLineViewModel line, string? videoFileName, int? videoWidth, int? videoHeight)
+    public void Initialize(Subtitle subtitle, SubtitleLineViewModel line, string? videoFileName, int? videoWidth, int? videoHeight, double? videoPositionSeconds = null)
     {
         _subtitle = new Subtitle(subtitle, false);
 
@@ -124,7 +125,7 @@ public partial class AssaImageColorPickerViewModel : ObservableObject
 
         // Pass exact seconds (not ToDisplayString, which honors the HH:MM:SS:FF time-code format
         // setting and would feed ffmpeg an unparseable "-ss 00:01:23:15", blanking the preview - #12182).
-        var fileName = FfmpegGenerator.GetScreenShot(videoFileName, (line.StartTime.TotalMilliseconds / 1000.0).ToString("0.###", CultureInfo.InvariantCulture));
+        var fileName = FfmpegGenerator.GetScreenShot(videoFileName, AssaSetPositionViewModel.GetScreenshotSeconds(line, videoPositionSeconds).ToString("0.###", CultureInfo.InvariantCulture));
         if (System.IO.File.Exists(fileName))
         {
             try
