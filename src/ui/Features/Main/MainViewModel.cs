@@ -9349,9 +9349,31 @@ public partial class MainViewModel :
 
         var idx = SelectedSubtitleIndex ?? 0;
 
-        if (pluginSubtitle.Paragraphs is { Count: > 0 } && pluginSubtitle.Header != null)
+        if (pluginSubtitle.Paragraphs is { Count: > 0 })
         {
-            _subtitle.Header = pluginSubtitle.Header;
+            var current = GetUpdateSubtitle();
+            var currentParagraphs = JsonSerializer.Serialize(current.Paragraphs.Select(ToPluginParagraph).ToList(), PluginJsonContext.Default.Options);
+            var resultParagraphs = JsonSerializer.Serialize(subtitle.Paragraphs.Select(ToPluginParagraph).ToList(), PluginJsonContext.Default.Options);
+            if ((pluginSubtitle.Header ?? current.Header) == current.Header && currentParagraphs == resultParagraphs)
+            {
+                return true;
+            }
+
+            // Structured results are completed tool changes, not pending manual edits.
+            // Record their exact times before ordinary change detection can snap them again.
+            var toolApply = BeginToolApply(string.IsNullOrWhiteSpace(response.UndoDescription)
+                ? plugin.Manifest.Name : response.UndoDescription);
+            EndToolApply(toolApply, () =>
+            {
+                if (pluginSubtitle.Header != null)
+                {
+                    _subtitle.Header = pluginSubtitle.Header;
+                }
+
+                SetSubtitlesKeepingOriginal(subtitle);
+                SelectAndScrollToRow(Math.Min(idx, Math.Max(0, Subtitles.Count - 1)));
+            });
+            return true;
         }
 
         // Not the plain rebuild: that blanks the original column, and with an original captured
