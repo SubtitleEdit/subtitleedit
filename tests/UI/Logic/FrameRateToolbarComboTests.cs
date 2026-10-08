@@ -98,4 +98,48 @@ public class FrameRateToolbarComboTests
             CultureInfo.CurrentCulture = original;
         }
     }
+
+    // #15806: the toolbar combo box is editable again, like SE 4 - any rate can be typed.
+    [Theory]
+    [InlineData("1", 1.0)]
+    [InlineData("2", 2.0)]
+    [InlineData("5", 5.0)]
+    [InlineData("10", 10.0)]
+    [InlineData("15", 15.0)]
+    [InlineData(" 23.976 ", 23.976)]
+    [InlineData("23,976", 23.976)]
+    [InlineData("12.34567", 12.346)]
+    [InlineData("1000", 1000.0)]
+    public void TryParseTypedFrameRate_AcceptsAnyPositiveRate(string text, double expected)
+    {
+        Assert.True(FrameRateHelper.TryParseTypedFrameRate(text, out var frameRate));
+        Assert.Equal(expected, frameRate, 3);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    [InlineData("abc")]
+    [InlineData("0")]
+    [InlineData("0.0001")]
+    [InlineData("-5")]
+    [InlineData("1000.5")]
+    [InlineData("1.2.3")]
+    public void TryParseTypedFrameRate_RejectsInvalidText(string? text)
+    {
+        Assert.False(FrameRateHelper.TryParseTypedFrameRate(text, out _));
+    }
+
+    [Fact]
+    public void TryParseTypedFrameRate_TypedRateSelectsAddedListItem()
+    {
+        var frameRates = Presets();
+
+        Assert.True(FrameRateHelper.TryParseTypedFrameRate("10", out var frameRate));
+        var selected = FrameRateHelper.SelectInList(frameRates, frameRate);
+
+        Assert.Equal("10", selected);
+        Assert.Contains("10", frameRates);
+    }
 }

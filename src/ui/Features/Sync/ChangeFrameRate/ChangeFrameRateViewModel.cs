@@ -156,6 +156,32 @@ public partial class ChangeFrameRateViewModel : ObservableObject
         SelectedToFrameRate = GetClosestFrameRate(ToFrameRates, detectedRate);
     }
 
+    /// <summary>
+    /// Applies a frame rate typed into the editable <b>from</b> combo box (#15806), adding it to
+    /// the list when it is not there yet. Invalid text keeps the current selection.
+    /// </summary>
+    internal void CommitTypedFromFrameRate(string? text)
+    {
+        if (FrameRateHelper.TryParseTypedFrameRate(text, out var frameRate))
+        {
+            FromFrameRates = WithRate(FromFrameRates, frameRate);
+            SelectedFromFrameRate = GetClosestFrameRate(FromFrameRates, frameRate);
+        }
+    }
+
+    /// <summary>
+    /// Applies a frame rate typed into the editable <b>to</b> combo box (#15806), adding it to
+    /// the list when it is not there yet. Invalid text keeps the current selection.
+    /// </summary>
+    internal void CommitTypedToFrameRate(string? text)
+    {
+        if (FrameRateHelper.TryParseTypedFrameRate(text, out var frameRate))
+        {
+            ToFrameRates = WithRate(ToFrameRates, frameRate);
+            SelectedToFrameRate = GetClosestFrameRate(ToFrameRates, frameRate);
+        }
+    }
+
     [RelayCommand]
     private void Ok()
     {
