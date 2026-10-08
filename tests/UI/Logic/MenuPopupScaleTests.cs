@@ -126,4 +126,36 @@ public class MenuPopupScaleTests : IDisposable
         UiTheme.SetLayoutScale(1.2);
         AssertSizes(1.2);
     }
+
+    /// <summary>
+    /// Scale changes reach existing popup items through the re-created application style alone;
+    /// nothing walks the windows to set per-item sizes any more.
+    /// </summary>
+    [AvaloniaFact]
+    public void ExistingFlyoutItems_FollowLayoutScaleChange()
+    {
+        UiTheme.SetLayoutScale(1.0);
+
+        var flyoutItem = new MenuItem { Header = "Delete" };
+        var flyout = new MenuFlyout();
+        flyout.Items.Add(flyoutItem);
+        var host = new Border { Width = 200, Height = 100, Background = Brushes.Gray, ContextFlyout = flyout };
+        var window = new Window { Width = 400, Height = 300, Content = new LayoutTransformControl { Child = host } };
+        _windows.Add(window);
+        UiTheme.ApplyScaleToWindow(window);
+        window.Show();
+
+        flyout.ShowAt(host);
+        Dispatcher.UIThread.RunJobs();
+        Assert.Equal(14.0, flyoutItem.FontSize, precision: 3);
+        flyout.Hide();
+
+        UiTheme.SetLayoutScale(1.3);
+        flyout.ShowAt(host);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(14.0 * 1.3, flyoutItem.FontSize, precision: 3);
+        Assert.Equal(32.0 * 1.3, flyoutItem.MinHeight, precision: 3);
+        flyout.Hide();
+    }
 }

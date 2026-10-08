@@ -155,7 +155,7 @@ public static class UiTheme
         ApplyMenuScaleStyle(Se.Settings.Appearance.LayoutScale);
         ApplyTextSelectionStyle();
         ApplyLayoutScaleToAllWindows();
-        ApplyScaleToExistingMenus(Se.Settings.Appearance.LayoutScale);
+        ApplyScaleToDenseMenus();
     }
 
     public static Action? SystemThemeChangedCallback { get; set; }
@@ -320,7 +320,7 @@ public static class UiTheme
         Se.Settings.Appearance.LayoutScale = factor;
         ApplyMenuScaleStyle(factor);
         ApplyLayoutScaleToAllWindows();
-        ApplyScaleToExistingMenus(factor);
+        ApplyScaleToDenseMenus();
     }
 
     private static void ApplyMenuScaleStyle(double factor)
@@ -517,57 +517,14 @@ public static class UiTheme
 
 
     /// <summary>
-    /// Walk all open windows, find Menu, ContextMenu, and MenuFlyout instances,
-    /// and directly set FontSize/MinHeight on their items. Also register Opened
-    /// handlers so dynamic items get scaled when the menu opens.
+    /// Menus with their own dense style (the main menu) override the application-wide menu
+    /// item style, so they need the new scale baked in again.
     /// </summary>
-    private static void ApplyScaleToExistingMenus(double factor)
+    private static void ApplyScaleToDenseMenus()
     {
-        foreach (var (denseMenu, denseFontSize) in DenseMenuFontSizes.ToList())
+        foreach (var (menu, baseFontSize) in DenseMenuFontSizes.ToList())
         {
-            ApplyDenseMenuStyle(denseMenu, denseFontSize.Value);
-        }
-
-        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            return;
-        }
-
-        foreach (var window in desktop.Windows)
-        {
-            foreach (var visual in window.GetVisualDescendants())
-            {
-                if (visual is Menu menu && !DenseMenuFontSizes.TryGetValue(menu, out _))
-                {
-                    // Scale submenu items only (top-level items are inside LTC and already scaled)
-                    foreach (var obj in menu.Items)
-                    {
-                        if (obj is MenuItem topItem)
-                        {
-                            ScaleChildMenuItems(topItem, factor);
-                        }
-                    }
-                }
-
-                if (visual is not Control control)
-                {
-                    continue;
-                }
-
-                if (control.ContextMenu is { } contextMenu)
-                {
-                    ScaleMenuItems(contextMenu, factor);
-                    contextMenu.Opened -= OnContextMenuOpened;
-                    contextMenu.Opened += OnContextMenuOpened;
-                }
-
-                if (control.ContextFlyout is MenuFlyout menuFlyout)
-                {
-                    ScaleMenuFlyoutItems(menuFlyout, factor);
-                    menuFlyout.Opened -= OnMenuFlyoutOpened;
-                    menuFlyout.Opened += OnMenuFlyoutOpened;
-                }
-            }
+            ApplyDenseMenuStyle(menu, baseFontSize.Value);
         }
     }
 
@@ -607,63 +564,6 @@ public static class UiTheme
         DenseMenuStyles.AddOrUpdate(menu, styles);
         DenseMenuFontSizes.AddOrUpdate(menu, new StrongBox<double>(baseFontSize));
         menu.Styles.Add(styles);
-    }
-
-    private static void ScaleChildMenuItems(MenuItem parent, double factor)
-    {
-        foreach (var obj in parent.Items)
-        {
-            if (obj is MenuItem item)
-            {
-                item.FontSize = PopupFontSize(factor);
-                item.MinHeight = 32.0 * factor;
-                ScaleChildMenuItems(item, factor);
-            }
-        }
-    }
-
-    private static void ScaleMenuItems(ItemsControl parent, double factor)
-    {
-        foreach (var obj in parent.Items)
-        {
-            if (obj is MenuItem item)
-            {
-                item.FontSize = PopupFontSize(factor);
-                item.MinHeight = 32.0 * factor;
-                ScaleMenuItems(item, factor);
-            }
-        }
-    }
-
-    private static void ScaleMenuFlyoutItems(MenuFlyout flyout, double factor)
-    {
-        foreach (var obj in flyout.Items)
-        {
-            if (obj is MenuItem item)
-            {
-                item.FontSize = PopupFontSize(factor);
-                item.MinHeight = 32.0 * factor;
-                ScaleMenuItems(item, factor);
-            }
-        }
-    }
-
-    private static void OnContextMenuOpened(object? sender, EventArgs e)
-    {
-        if (sender is ContextMenu cm)
-        {
-            var factor = Se.Settings.Appearance.LayoutScale;
-            ScaleMenuItems(cm, factor);
-        }
-    }
-
-    private static void OnMenuFlyoutOpened(object? sender, EventArgs e)
-    {
-        if (sender is MenuFlyout flyout)
-        {
-            var factor = Se.Settings.Appearance.LayoutScale;
-            ScaleMenuFlyoutItems(flyout, factor);
-        }
     }
 
     public static void UpdateRegionColor()
