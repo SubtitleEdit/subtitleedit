@@ -308,7 +308,7 @@ public class TtsDownloadService : ITtsDownloadService
         // rows pass none, and forcing "en" made ElevenLabs apply English normalization and
         // pronunciation hints to non-English lines.
         var language = string.Empty;
-        if (model is "eleven_turbo_v2_5" && !string.IsNullOrEmpty(languageCode))
+        if (model is "eleven_turbo_v2_5" or "eleven_v4" or "eleven_v4_turbo" && !string.IsNullOrEmpty(languageCode))
         {
             language = $", \"language_code\": \"{languageCode}\"";
         }
