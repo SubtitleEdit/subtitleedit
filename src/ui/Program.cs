@@ -132,10 +132,11 @@ namespace Nikse.SubtitleEdit
                 var appBuilder = AppBuilder.Configure<Application>()
                     .UsePlatformDetect();
 
-                // Register the embedded Inter font as the default ONLY on Linux. Avalonia v12's font
-                // manager throws "Could not create glyphTypeface. Font family: $Default" at startup on
-                // minimal Linux installs that ship without fontconfig-discoverable fonts
-                // (e.g. Debian 13 trixie base — issue #11355). Forcing Inter as the default on macOS and
+                // Register the embedded Inter font ONLY on Linux, as the last-resort default. Avalonia v12's
+                // font manager throws "Could not create glyphTypeface. Font family: $Default" at startup
+                // when Skia reports no usable default family - minimal installs without
+                // fontconfig-discoverable fonts (e.g. Debian 13 trixie base — issue #11355), or a locale
+                // default font Skia drops (#15786). Forcing Inter as the default on macOS and
                 // Windows, however, overrides the system font and its CJK fallback, so Korean/Japanese/
                 // Chinese UI text renders as boxes (Inter has no CJK glyphs). Windows always has system
                 // fonts with proper fallback, so it uses the system default; macOS is handled below - a
@@ -143,9 +144,10 @@ namespace Nikse.SubtitleEdit
                 // system font, while keeping CJK fallback.
                 if (OperatingSystem.IsLinux())
                 {
-                    // Inter is the default here, but it has no CJK glyphs and Avalonia does not fall
-                    // back to system fonts from a forced embedded default - so name the common Linux
-                    // CJK families explicitly. fontconfig resolves whichever of these is installed
+                    // The system default font is kept when Skia reports one; otherwise
+                    // GetLinuxDefaultFontFamilyOverride picks fontconfig's font or Inter. Inter has no
+                    // CJK glyphs and Avalonia does not fall back to system fonts from a forced embedded
+                    // default - so name the common Linux CJK families explicitly. fontconfig resolves whichever of these is installed
                     // (normal desktops ship Noto Sans CJK); minimal installs have no CJK font at all,
                     // so CJK can't render there regardless. The non-CJK-suffixed Noto families and the
                     // Nanum/WenQuanYi entries cover distros that ship a region-specific Korean/Chinese
