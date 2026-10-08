@@ -35913,6 +35913,13 @@ public partial class MainViewModel :
         }
 
         CancelFrameStepPlayBlip();
+
+        // A direct jump (start/end of current line, next line, bookmark...) must also drop the
+        // relative-seek tracker: its 0.5 s "still matches the player" guard let a stale target
+        // survive short jumps, so alternating "set position to start of line" with a 10 ms step
+        // went 10, 20, 30... ms until the drift reached 0.5 s (#15818). MoveVideoPositionMs
+        // seeks via SeekTo, which does not raise this, so chained steps still accumulate.
+        _relativeSeekTargetSeconds = null;
     }
 
     internal void OnVideoPlayerUserSeeked(double newPositionSeconds)
