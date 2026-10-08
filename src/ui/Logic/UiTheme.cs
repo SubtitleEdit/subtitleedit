@@ -17,6 +17,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Nikse.SubtitleEdit.Logic;
 
@@ -522,6 +523,11 @@ public static class UiTheme
     /// </summary>
     private static void ApplyScaleToExistingMenus(double factor)
     {
+        foreach (var (denseMenu, denseFontSize) in DenseMenuFontSizes.ToList())
+        {
+            ApplyDenseMenuStyle(denseMenu, denseFontSize.Value);
+        }
+
         if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
         {
             return;
@@ -531,7 +537,7 @@ public static class UiTheme
         {
             foreach (var visual in window.GetVisualDescendants())
             {
-                if (visual is Menu menu)
+                if (visual is Menu menu && !DenseMenuFontSizes.TryGetValue(menu, out _))
                 {
                     // Scale submenu items only (top-level items are inside LTC and already scaled)
                     foreach (var obj in menu.Items)
@@ -563,6 +569,44 @@ public static class UiTheme
                 }
             }
         }
+    }
+
+    private static readonly ConditionalWeakTable<Menu, StrongBox<double>> DenseMenuFontSizes = new();
+    private static readonly ConditionalWeakTable<Menu, Styles> DenseMenuStyles = new();
+
+    /// <summary>
+    /// Smaller font and tighter padding for a menu with many entries (the main menu). The style
+    /// lives on the menu, so it beats the application-wide menu item style for every item below
+    /// it - including submenu items, which are logical descendants but render in popups outside
+    /// the window's LayoutTransformControl. Those therefore get the UI scale baked in here, or
+    /// they ignored it at startup (PR #14818 comment). Re-applied on every UI scale change.
+    /// </summary>
+    public static void ApplyDenseMenuStyle(Menu menu, double baseFontSize)
+    {
+        if (DenseMenuStyles.TryGetValue(menu, out var previous))
+        {
+            menu.Styles.Remove(previous);
+        }
+
+        var factor = Se.Settings.Appearance.LayoutScale;
+        var fontSize = baseFontSize * FontScale;
+        menu.FontSize = fontSize;
+
+        // Popup items first, so the top-level rule below wins for the menu bar items.
+        var popupItemStyle = new Style(x => x.OfType<MenuItem>());
+        popupItemStyle.Setters.Add(new Setter(TemplatedControl.FontSizeProperty, fontSize * factor));
+        popupItemStyle.Setters.Add(new Setter(TemplatedControl.PaddingProperty, new Thickness(10, 1)));
+        popupItemStyle.Setters.Add(new Setter(Layoutable.MinHeightProperty, 23.0 * factor));
+
+        // Top-level items sit inside the LayoutTransformControl, already scaled by the transform.
+        var topLevelItemStyle = new Style(x => x.OfType<Menu>().Child().OfType<MenuItem>());
+        topLevelItemStyle.Setters.Add(new Setter(TemplatedControl.FontSizeProperty, fontSize));
+        topLevelItemStyle.Setters.Add(new Setter(Layoutable.MinHeightProperty, 23.0));
+
+        var styles = new Styles { popupItemStyle, topLevelItemStyle };
+        DenseMenuStyles.AddOrUpdate(menu, styles);
+        DenseMenuFontSizes.AddOrUpdate(menu, new StrongBox<double>(baseFontSize));
+        menu.Styles.Add(styles);
     }
 
     private static void ScaleChildMenuItems(MenuItem parent, double factor)
