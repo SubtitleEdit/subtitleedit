@@ -5,6 +5,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
+using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -18,13 +19,23 @@ public class SetSyncPointWindow : Window
     private const double VideolessHeight = 340;
     private const double VideolessMinHeight = 340;
 
-    public SetSyncPointWindow(SetSyncPointViewModel vm)
+    public SetSyncPointWindow(SetSyncPointViewModel vm) : this(vm, null)
+    {
+    }
+
+    /// <param name="videoPlayerControl">Tests pass a player here; null builds the configured one.</param>
+    internal SetSyncPointWindow(SetSyncPointViewModel vm, VideoPlayerControl? videoPlayerControl)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Sync.SetSyncPoint;
         CanResize = true;
         vm.Window = this;
         DataContext = vm;
+
+        // Built first: with no player library the dialog falls back to its no-video mode (#15787),
+        // and the sizes below depend on that.
+        vm.SetVideoPlayerControl(videoPlayerControl ?? InitVideoPlayer.MakeVideoPlayer());
+        vm.VideoPlayerControl.FullScreenIsVisible = false;
 
         // The view model is initialized before this constructor runs, so the dialog knows here
         // whether it has a video - and without one there is no player or waveform to make room
@@ -58,9 +69,6 @@ public class SetSyncPointWindow : Window
                 labelVideoInfo,
             }
         };
-
-        vm.VideoPlayerControl = InitVideoPlayer.MakeVideoPlayer();
-        vm.VideoPlayerControl.FullScreenIsVisible = false;
 
         vm.AudioVisualizer = new AudioVisualizer
         {

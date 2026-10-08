@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.Plugins;
 using Nikse.SubtitleEdit.Logic.UndoRedo;
 
@@ -85,6 +86,34 @@ public sealed class PluginToolLifecycleTests : IDisposable
         Assert.Equal(
             response.Subtitle.Paragraphs.Select(p => (p.StartMs, p.EndMs)),
             request.Subtitle.Paragraphs!.Select(p => (p.StartMs, p.EndMs)));
+    }
+
+    [AvaloniaTheory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task StructuredResponse_Stl25Header_FollowsFrameRateUnlessVideo(bool videoLoaded)
+    {
+        // ArteCheck converts an STL30 file to 25 fps and sets the disk format code to STL25.01.
+        var vm = Create();
+        var stl30 = Header[..3] + "STL30.01" + Header[11..];
+        var subtitle = (Subtitle)typeof(MainViewModel).GetField("_subtitle", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(vm)!;
+        subtitle.Header = stl30;
+        vm.SetSelectedFrameRate(30);
+        Se.Settings.General.CurrentFrameRate = 30;
+        Configuration.Settings.General.CurrentFrameRate = 30;
+        if (videoLoaded)
+        {
+            typeof(MainViewModel).GetField("_mediaInfo", BindingFlags.Instance | BindingFlags.NonPublic)!.SetValue(vm, System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(typeof(FfmpegMediaInfo2)));
+        }
+
+        Assert.True(await Apply(vm, Response(newHeader: Header)));
+
+        var expected = videoLoaded ? 30 : 25;
+        Assert.Equal(expected, Se.Settings.General.CurrentFrameRate);
+        Assert.Equal(expected, Configuration.Settings.General.CurrentFrameRate);
+        Assert.Equal(expected, double.Parse(vm.SelectedFrameRate!, System.Globalization.CultureInfo.InvariantCulture));
+        Assert.Equal(Header, vm.GetUpdateSubtitle().Header);
+        typeof(MainViewModel).GetField("_mediaInfo", BindingFlags.Instance | BindingFlags.NonPublic)!.SetValue(vm, null);
     }
 
     [AvaloniaFact]

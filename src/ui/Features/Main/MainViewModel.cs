@@ -9367,7 +9367,9 @@ public partial class MainViewModel :
             {
                 if (pluginSubtitle.Header != null)
                 {
+                    var oldHeader = _subtitle.Header;
                     _subtitle.Header = pluginSubtitle.Header;
+                    FollowEbuHeaderFrameRate(oldHeader, pluginSubtitle.Header);
                 }
 
                 SetSubtitlesKeepingOriginal(subtitle);
@@ -9381,6 +9383,35 @@ public partial class MainViewModel :
         SetSubtitlesKeepingOriginal(subtitle);
         SelectAndScrollToRow(Math.Min(idx, Math.Max(0, Subtitles.Count - 1)));
         return true;
+    }
+
+    /// <summary>
+    /// A plugin that changes the EBU STL disk format code (ArteCheck sets STL30.01 → STL25.01 when it
+    /// converts to 25 fps) changes the frame rate the file is saved in, so the toolbar frame rate
+    /// follows - like opening an STL file does. Otherwise the grid kept showing, and frame mode kept
+    /// snapping edits to, the old frame rate. A loaded video still wins.
+    /// </summary>
+    private void FollowEbuHeaderFrameRate(string? oldHeader, string newHeader)
+    {
+        if (SelectedSubtitleFormat is not Ebu || _mediaInfo != null || !Ebu.IsStlHeader(newHeader))
+        {
+            return;
+        }
+
+        var diskFormatCode = newHeader.Substring(3, 8);
+        if (oldHeader != null && Ebu.IsStlHeader(oldHeader) && oldHeader.Substring(3, 8) == diskFormatCode)
+        {
+            return;
+        }
+
+        var frameRate = new Ebu.EbuGeneralSubtitleInformation { DiskFormatCode = diskFormatCode }.FrameRate;
+        if (Math.Abs(frameRate - Se.Settings.General.CurrentFrameRate) < 0.001)
+        {
+            return;
+        }
+
+        SetSelectedFrameRate(frameRate);
+        ApplyCurrentFrameRate(frameRate);
     }
 
     private static void SavePluginSettings(InstalledPlugin plugin, PluginResponse response)
@@ -29803,16 +29834,21 @@ public partial class MainViewModel :
     {
         if (double.TryParse(SelectedFrameRate, NumberStyles.Any, CultureInfo.InvariantCulture, out var frameRate))
         {
-            Se.Settings.General.CurrentFrameRate = frameRate;
-            Configuration.Settings.General.CurrentFrameRate = frameRate;
-            _updateAudioVisualizer = true;
+            ApplyCurrentFrameRate(frameRate);
+        }
+    }
 
-            if (Se.Settings.General.UseFrameMode)
+    private void ApplyCurrentFrameRate(double frameRate)
+    {
+        Se.Settings.General.CurrentFrameRate = frameRate;
+        Configuration.Settings.General.CurrentFrameRate = frameRate;
+        _updateAudioVisualizer = true;
+
+        if (Se.Settings.General.UseFrameMode)
+        {
+            foreach (var s in Subtitles)
             {
-                foreach (var s in Subtitles)
-                {
-                    s.RefreshTimeCodes();
-                }
+                s.RefreshTimeCodes();
             }
         }
     }
