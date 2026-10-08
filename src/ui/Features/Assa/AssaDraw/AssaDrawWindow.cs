@@ -132,11 +132,13 @@ public class AssaDrawWindow : Window
         var zoomOutButton = CreateToolButton("fa-solid fa-magnifying-glass-minus", Se.Language.Assa.DrawZoomOut, vm.ZoomOutCommand);
         var resetViewButton = CreateToolButton("fa-solid fa-expand", Se.Language.Assa.DrawResetView, vm.ResetViewCommand);
         var toggleGridButton = CreateToolButton("fa-solid fa-border-all", Se.Language.Assa.DrawToggleGrid, vm.ToggleGridCommand);
+        var togglePreviewButton = CreateToolButton("fa-solid fa-eye", Se.Language.Assa.DrawTogglePreview, vm.TogglePreviewCommand);
 
         toolbarPanel.Children.Add(zoomInButton);
         toolbarPanel.Children.Add(zoomOutButton);
         toolbarPanel.Children.Add(resetViewButton);
         toolbarPanel.Children.Add(toggleGridButton);
+        toolbarPanel.Children.Add(togglePreviewButton);
 
         toolbarPanel.Children.Add(new Separator { Width = 2, Margin = new Thickness(5, 2) });
 
@@ -483,6 +485,14 @@ public class AssaDrawWindow : Window
                 tool => string.Format(Se.Language.Assa.DrawToolX, tool))
         });
         statusPanel.Children.Add(toolLabel);
+
+        var previewStatusLabel = new TextBlock
+        {
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.PreviewStatusText)),
+            Foreground = Brushes.OrangeRed,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        statusPanel.Children.Add(previewStatusLabel);
 
         // Help text
         var helpLabel = new TextBlock

@@ -22,7 +22,7 @@ public class AssaDrawResolutionTests
     public void Initialize_HeaderPlayRes_WinsOverVideoSize()
     {
         var header = AdvancedSubStationAlpha.SetResolution(AdvancedSubStationAlpha.DefaultHeader, 1280, 720);
-        var vm = new AssaDrawViewModel(new FileHelper());
+        var vm = new AssaDrawViewModel(new FileHelper(), new StubWindowService());
 
         vm.Initialize(MakeSubtitle(header), [], null, null);
 
@@ -33,7 +33,7 @@ public class AssaDrawResolutionTests
     [Fact]
     public void Initialize_ZeroVideoSize_KeepsDefaultCanvas()
     {
-        var vm = new AssaDrawViewModel(new FileHelper());
+        var vm = new AssaDrawViewModel(new FileHelper(), new StubWindowService());
 
         vm.Initialize(MakeSubtitle(AdvancedSubStationAlpha.DefaultHeader), [], 0, 0);
 
@@ -44,7 +44,7 @@ public class AssaDrawResolutionTests
     [Fact]
     public void Ok_HeaderWithoutPlayRes_GetsCanvasSize()
     {
-        var vm = new AssaDrawViewModel(new FileHelper());
+        var vm = new AssaDrawViewModel(new FileHelper(), new StubWindowService());
         vm.Initialize(MakeSubtitle(AdvancedSubStationAlpha.DefaultHeader), [MakeLine("{\\p1}m 0 0 l 100 0 100 100{\\p0}")], 1280, 720);
 
         vm.OkCommand.Execute(null);
@@ -57,7 +57,7 @@ public class AssaDrawResolutionTests
     [Fact]
     public void Initialize_DrawingWithPosInSameTagBlock_IsImported()
     {
-        var vm = new AssaDrawViewModel(new FileHelper());
+        var vm = new AssaDrawViewModel(new FileHelper(), new StubWindowService());
 
         vm.Initialize(MakeSubtitle(AdvancedSubStationAlpha.DefaultHeader),
             [MakeLine("{\\an7\\pos(0,0)\\iclip(m 10 10 l 20 10 20 20)\\p1}m 0 0 l 100 0 100 100{\\p0}")], 1920, 1080);

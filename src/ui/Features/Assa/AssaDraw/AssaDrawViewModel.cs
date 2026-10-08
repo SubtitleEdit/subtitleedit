@@ -1,11 +1,13 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Assa.AssaSetPosition;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.PickLayer;
@@ -53,6 +55,8 @@ public partial class AssaDrawViewModel : ObservableObject
     [ObservableProperty] private bool _shapeIsEraser;
     [ObservableProperty] private Color _layerColor = Colors.White;
     [ObservableProperty] private bool _showGrid = DrawSettings.ShowGrid;
+    [ObservableProperty] private bool _showPreview;
+    [ObservableProperty] private string _previewStatusText = string.Empty;
     [ObservableProperty] private ObservableCollection<ShapeTreeItem> _shapeTreeItems = [];
     [ObservableProperty] private ShapeTreeItem? _selectedTreeItem;
     [ObservableProperty] private List<DrawShape> _selectedShapes = [];
@@ -65,12 +69,20 @@ public partial class AssaDrawViewModel : ObservableObject
     private readonly Regex _regexEnd = new(@"\{[^{]*\\p0[^}]*\}");
     private readonly Regex _regexIclip = new(@"\\iclip\(([^)]+)\)");
     private readonly IFileHelper _fileHelper;
+    private readonly IWindowService _windowService;
     private string _fileName = string.Empty;
     private Subtitle? _subtitle;
+    private string? _videoFileName;
+    private double _videoSeconds;
+    private bool _backgroundRequested;
+    private DispatcherTimer? _previewTimer;
+    private string _previewSource = string.Empty;
+    private bool _previewBusy;
 
-    public AssaDrawViewModel(IFileHelper fileHelper)
+    public AssaDrawViewModel(IFileHelper fileHelper, IWindowService windowService)
     {
         _fileHelper = fileHelper;
+        _windowService = windowService;
     }
 
     public void Initialize()
@@ -79,6 +91,11 @@ public partial class AssaDrawViewModel : ObservableObject
         ZoomToFitCurrentVideoResolution();
         RefreshTreeView();
         Canvas?.InvalidateVisual();
+
+        if (DrawSettings.ShowPreview)
+        {
+            _ = TogglePreview();
+        }
     }
 
     private void ZoomToFitCurrentVideoResolution()
@@ -96,9 +113,16 @@ public partial class AssaDrawViewModel : ObservableObject
         }, DispatcherPriority.Background);
     }
 
-    public void Initialize(Subtitle subtitle, List<SubtitleLineViewModel> selectedLines, int? width, int? height)
+    public void Initialize(Subtitle subtitle, List<SubtitleLineViewModel> selectedLines, int? width, int? height,
+        string? videoFileName = null, double? videoPositionSeconds = null)
     {
         _subtitle = subtitle;
+        _videoFileName = videoFileName;
+
+        // Same frame Set position uses: the paused player position when it is inside the line
+        _videoSeconds = selectedLines.Count > 0
+            ? AssaSetPositionViewModel.GetScreenshotSeconds(selectedLines[0], videoPositionSeconds)
+            : videoPositionSeconds ?? 0;
 
         // Drawing coordinates live in script (PlayRes) space, so the script resolution wins. The main
         // window writes the video size into the header before opening, so without a video this is the
@@ -591,6 +615,157 @@ public partial class AssaDrawViewModel : ObservableObject
         ShowGrid = !ShowGrid;
         DrawSettings.ShowGrid = ShowGrid;
         Canvas?.InvalidateVisual();
+    }
+
+    [RelayCommand]
+    private async Task TogglePreview()
+    {
+        if (!ShowPreview && Window != null)
+        {
+            var ffmpegOk = await FfmpegRequirement.EnsureAsync(
+                Window,
+                async () => (await _windowService.ShowDialogAsync<DownloadFfmpegWindow, DownloadFfmpegViewModel>(Window)).FfmpegFileName);
+            if (!ffmpegOk)
+            {
+                return;
+            }
+        }
+
+        ShowPreview = !ShowPreview;
+        DrawSettings.ShowPreview = ShowPreview;
+    }
+
+    partial void OnShowPreviewChanged(bool value)
+    {
+        if (Canvas != null)
+        {
+            Canvas.ShowPreview = value;
+        }
+
+        if (!value)
+        {
+            _previewTimer?.Stop();
+            PreviewStatusText = string.Empty;
+            return;
+        }
+
+        LoadPreviewBackground();
+        _previewSource = string.Empty;
+        if (_previewTimer == null)
+        {
+            // Shapes change from many places (clicks, drags, tree edits, nudges, colors), so poll the
+            // generated script instead of hooking each one - ffmpeg only runs when it differs.
+            _previewTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(250) };
+            _previewTimer.Tick += (_, _) => UpdatePreview();
+        }
+
+        _previewTimer.Start();
+        UpdatePreview();
+    }
+
+    private void LoadPreviewBackground()
+    {
+        if (_backgroundRequested || string.IsNullOrEmpty(_videoFileName) || !File.Exists(_videoFileName))
+        {
+            return;
+        }
+
+        _backgroundRequested = true;
+        var videoFileName = _videoFileName;
+        var seconds = _videoSeconds.ToString("0.###", CultureInfo.InvariantCulture);
+        _ = Task.Run(() =>
+        {
+            var bitmap = LoadBitmapAndDelete(FfmpegGenerator.GetScreenShot(videoFileName, seconds));
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (Canvas == null)
+                {
+                    bitmap?.Dispose();
+                    return;
+                }
+
+                Canvas.BackgroundImage = bitmap;
+            });
+        });
+    }
+
+    internal void UpdatePreview()
+    {
+        if (_previewBusy || Canvas == null || !ShowPreview)
+        {
+            return;
+        }
+
+        var subtitle = GenerateSubtitle();
+        var source = new AdvancedSubStationAlpha().ToText(subtitle, string.Empty) + CanvasWidth + "x" + CanvasHeight;
+        if (source == _previewSource)
+        {
+            return;
+        }
+
+        _previewSource = source;
+        _previewBusy = true;
+        var width = CanvasWidth;
+        var height = CanvasHeight;
+        _ = Task.Run(() =>
+        {
+            Bitmap? bitmap = null;
+            try
+            {
+                bitmap = subtitle.Paragraphs.Count == 0
+                    ? null
+                    : LoadBitmapAndDelete(FfmpegGenerator.GetScreenShotWithSubtitle(subtitle, width, height));
+            }
+            catch (Exception exception)
+            {
+                Se.LogError(exception, "ASSA draw preview failed");
+            }
+
+            var failed = bitmap == null && subtitle.Paragraphs.Count > 0;
+            Dispatcher.UIThread.Post(() =>
+            {
+                _previewBusy = false;
+                PreviewStatusText = failed && ShowPreview ? Se.Language.Assa.DrawPreviewFailed : string.Empty;
+                if (Canvas == null)
+                {
+                    bitmap?.Dispose();
+                    return;
+                }
+
+                var old = Canvas.PreviewImage as IDisposable;
+                Canvas.PreviewImage = bitmap;
+                old?.Dispose();
+            });
+        });
+    }
+
+    private static Bitmap? LoadBitmapAndDelete(string? fileName)
+    {
+        if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
+        {
+            return null;
+        }
+
+        try
+        {
+            using var stream = File.OpenRead(fileName);
+            return new Bitmap(stream);
+        }
+        catch
+        {
+            return null;
+        }
+        finally
+        {
+            try
+            {
+                File.Delete(fileName);
+            }
+            catch
+            {
+                // ignore cleanup errors
+            }
+        }
     }
 
     [RelayCommand]
@@ -1225,6 +1400,11 @@ public partial class AssaDrawViewModel : ObservableObject
             CloseShape();
             e.Handled = true;
         }
+        else if (e.Key == Key.F9)
+        {
+            e.Handled = true;
+            await TogglePreview();
+        }
         else if (UiUtil.IsHelp(e))
         {
             e.Handled = true;
@@ -1424,6 +1604,16 @@ public partial class AssaDrawViewModel : ObservableObject
     public void OnClosing()
     {
         UiUtil.SaveWindowPosition(Window);
+
+        _previewTimer?.Stop();
+        if (Canvas != null)
+        {
+            (Canvas.PreviewImage as IDisposable)?.Dispose();
+            (Canvas.BackgroundImage as IDisposable)?.Dispose();
+            Canvas.PreviewImage = null;
+            Canvas.BackgroundImage = null;
+            Canvas = null;
+        }
     }
 }
 

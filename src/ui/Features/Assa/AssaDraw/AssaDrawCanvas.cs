@@ -78,6 +78,21 @@ public class AssaDrawCanvas : Control
     public static readonly StyledProperty<float> CurrentYProperty =
         AvaloniaProperty.Register<AssaDrawCanvas, float>(nameof(CurrentY), float.MinValue);
 
+    public static readonly StyledProperty<bool> ShowPreviewProperty =
+        AvaloniaProperty.Register<AssaDrawCanvas, bool>(nameof(ShowPreview));
+
+    /// <summary>
+    /// The drawing as libass renders it, at canvas (PlayRes) size with a transparent background.
+    /// </summary>
+    public static readonly StyledProperty<IImage?> PreviewImageProperty =
+        AvaloniaProperty.Register<AssaDrawCanvas, IImage?>(nameof(PreviewImage));
+
+    /// <summary>
+    /// Video frame shown behind the preview.
+    /// </summary>
+    public static readonly StyledProperty<IImage?> BackgroundImageProperty =
+        AvaloniaProperty.Register<AssaDrawCanvas, IImage?>(nameof(BackgroundImage));
+
     public static readonly StyledProperty<DrawingTool> CurrentToolProperty =
         AvaloniaProperty.Register<AssaDrawCanvas, DrawingTool>(nameof(CurrentTool), DrawingTool.Line);
 
@@ -135,6 +150,24 @@ public class AssaDrawCanvas : Control
         set => SetValue(CurrentYProperty, value);
     }
 
+    public bool ShowPreview
+    {
+        get => GetValue(ShowPreviewProperty);
+        set => SetValue(ShowPreviewProperty, value);
+    }
+
+    public IImage? PreviewImage
+    {
+        get => GetValue(PreviewImageProperty);
+        set => SetValue(PreviewImageProperty, value);
+    }
+
+    public IImage? BackgroundImage
+    {
+        get => GetValue(BackgroundImageProperty);
+        set => SetValue(BackgroundImageProperty, value);
+    }
+
     public DrawingTool CurrentTool
     {
         get => GetValue(CurrentToolProperty);
@@ -167,7 +200,10 @@ public class AssaDrawCanvas : Control
             SelectedShapesProperty,
             ActivePointProperty,
             CanvasWidthProperty,
-            CanvasHeightProperty);
+            CanvasHeightProperty,
+            ShowPreviewProperty,
+            PreviewImageProperty,
+            BackgroundImageProperty);
     }
 
     public AssaDrawCanvas()
@@ -219,10 +255,22 @@ public class AssaDrawCanvas : Control
         // Draw the actual canvas area
         DrawCanvasArea(context);
 
+        var canvasRect = new Rect(_panX, _panY, CanvasWidth * _zoomFactor, CanvasHeight * _zoomFactor);
+        if (ShowPreview && BackgroundImage != null)
+        {
+            context.DrawImage(BackgroundImage, canvasRect);
+        }
+
         // Draw grid if enabled
         if (DrawSettings.ShowGrid)
         {
             DrawGrid(context);
+        }
+
+        // Rendered result under the outlines, so points stay editable while previewing
+        if (ShowPreview && PreviewImage != null)
+        {
+            context.DrawImage(PreviewImage, canvasRect);
         }
 
         // Draw resolution border
