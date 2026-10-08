@@ -2833,7 +2833,7 @@ public partial class MainViewModel :
 
         var result = await ShowDialogAsync<AssaImageColorPickerWindow, AssaImageColorPickerViewModel>(vm =>
         {
-            vm.Initialize(_subtitle, selectedItem, _videoFileName, _mediaInfo?.Dimension.Width, _mediaInfo?.Dimension.Height);
+            vm.Initialize(_subtitle, selectedItem, _videoFileName, _mediaInfo?.Dimension.Width, _mediaInfo?.Dimension.Height, GetVideoPlayerControl()?.Position);
         });
 
         RefreshSubtitlePreview();
@@ -2856,7 +2856,7 @@ public partial class MainViewModel :
 
         var result = await ShowDialogAsync<AssaSetPositionWindow, AssaSetPositionViewModel>(vm =>
         {
-            vm.Initialize(_subtitle, selectedItem, _videoFileName, _mediaInfo?.Dimension.Width, _mediaInfo?.Dimension.Height);
+            vm.Initialize(_subtitle, selectedItem, _videoFileName, _mediaInfo?.Dimension.Width, _mediaInfo?.Dimension.Height, GetVideoPlayerControl()?.Position);
         });
 
         if (!result.OkPressed)
