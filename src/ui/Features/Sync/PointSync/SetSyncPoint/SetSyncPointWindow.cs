@@ -26,6 +26,11 @@ public class SetSyncPointWindow : Window
         vm.Window = this;
         DataContext = vm;
 
+        // Built first: with no player library the dialog falls back to its no-video mode (#15787),
+        // and the sizes below depend on that.
+        vm.SetVideoPlayerControl(InitVideoPlayer.MakeVideoPlayer());
+        vm.VideoPlayerControl.FullScreenIsVisible = false;
+
         // The view model is initialized before this constructor runs, so the dialog knows here
         // whether it has a video - and without one there is no player or waveform to make room
         // for, just the line picker and the sync point time code (issue #13341).
@@ -58,9 +63,6 @@ public class SetSyncPointWindow : Window
                 labelVideoInfo,
             }
         };
-
-        vm.VideoPlayerControl = InitVideoPlayer.MakeVideoPlayer();
-        vm.VideoPlayerControl.FullScreenIsVisible = false;
 
         vm.AudioVisualizer = new AudioVisualizer
         {
