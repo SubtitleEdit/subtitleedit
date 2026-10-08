@@ -154,8 +154,21 @@ public class AssaDrawCanvas : Control
 
     public event EventHandler<CanvasClickEventArgs>? CanvasClicked;
     public event EventHandler<CanvasMouseEventArgs>? CanvasMouseMoved;
+    public event EventHandler<DrawCoordinate>? PointSelected;
     public event EventHandler<DrawCoordinate>? PointDragged;
     public event EventHandler<float>? ZoomChanged;
+
+    static AssaDrawCanvas()
+    {
+        AffectsRender<AssaDrawCanvas>(
+            ShapesProperty,
+            ActiveShapeProperty,
+            SelectedShapeProperty,
+            SelectedShapesProperty,
+            ActivePointProperty,
+            CanvasWidthProperty,
+            CanvasHeightProperty);
+    }
 
     public AssaDrawCanvas()
     {
@@ -163,16 +176,28 @@ public class AssaDrawCanvas : Control
         Focusable = true;
     }
 
-    public void ResetView()
+    /// <summary>
+    /// Zooms so the whole frame fits the visible area and centers it.
+    /// </summary>
+    public void FitToView(double padding = 20)
     {
         _isPanning = false;
-        _panX = 0;
-        _panY = 0;
-        ZoomFactor = 1.0f;
+        var availableWidth = Bounds.Width - padding * 2;
+        var availableHeight = Bounds.Height - padding * 2;
+        if (availableWidth < 1 || availableHeight < 1 || CanvasWidth < 1 || CanvasHeight < 1)
+        {
+            return;
+        }
+
+        var zoom = Math.Clamp((float)Math.Min(availableWidth / CanvasWidth, availableHeight / CanvasHeight), 0.1f, 10f);
+        _panX = (float)(Bounds.Width - CanvasWidth * zoom) / 2f;
+        _panY = (float)(Bounds.Height - CanvasHeight * zoom) / 2f;
+        ZoomFactor = zoom;
     }
 
-    public void ZoomIn() => ZoomFactor += 0.02f;
-    public void ZoomOut() => ZoomFactor -= 0.02f;
+    // Same step as Ctrl+mouse wheel - the buttons used 2%, so a click barely changed anything.
+    public void ZoomIn() => ZoomFactor += 0.1f;
+    public void ZoomOut() => ZoomFactor -= 0.1f;
 
     private float ToZoomFactorX(float v) => v * _zoomFactor + _panX;
     private float ToZoomFactorY(float v) => v * _zoomFactor + _panY;
@@ -457,6 +482,7 @@ public class AssaDrawCanvas : Control
         {
             ActivePoint = closePoint;
             _lastMousePosition = point;
+            PointSelected?.Invoke(this, closePoint);
             InvalidateVisual();
             e.Handled = true;
             return;

@@ -52,7 +52,7 @@ public partial class AssaDrawViewModel : ObservableObject
     [ObservableProperty] private bool _isShapeSelected;
     [ObservableProperty] private bool _shapeIsEraser;
     [ObservableProperty] private Color _layerColor = Colors.White;
-    [ObservableProperty] private bool _showGrid = true;
+    [ObservableProperty] private bool _showGrid = DrawSettings.ShowGrid;
     [ObservableProperty] private ObservableCollection<ShapeTreeItem> _shapeTreeItems = [];
     [ObservableProperty] private ShapeTreeItem? _selectedTreeItem;
     [ObservableProperty] private List<DrawShape> _selectedShapes = [];
@@ -63,7 +63,7 @@ public partial class AssaDrawViewModel : ObservableObject
     private float _currentY = float.MinValue;
     private readonly Regex _regexStart = new(@"\{[^{]*\\p1[^}]*\}");
     private readonly Regex _regexEnd = new(@"\{[^{]*\\p0[^}]*\}");
-    private readonly Regex _regexIclip = new(@"\{\\iclip\(([^)]+)\)\}");
+    private readonly Regex _regexIclip = new(@"\\iclip\(([^)]+)\)");
     private readonly IFileHelper _fileHelper;
     private string _fileName = string.Empty;
     private Subtitle? _subtitle;
@@ -91,32 +91,7 @@ public partial class AssaDrawViewModel : ObservableObject
         // Wait a bit to ensure the canvas bounds are updated
         Dispatcher.UIThread.Post(() =>
         {
-            if (Canvas == null || Canvas.Bounds.Width < 1 || Canvas.Bounds.Height < 1)
-            {
-                return;
-            }
-
-            // Calculate zoom factor to fit the entire canvas (video resolution) in the visible area
-            var availableWidth = Canvas.Bounds.Width;
-            var availableHeight = Canvas.Bounds.Height;
-
-            // Add some padding (e.g., 20 pixels on each side)
-            var padding = 40.0;
-            availableWidth -= padding;
-            availableHeight -= padding;
-
-            // Calculate zoom factors for width and height
-            var zoomX = (float)(availableWidth / CanvasWidth);
-            var zoomY = (float)(availableHeight / CanvasHeight);
-
-            // Use the smaller zoom factor to ensure the entire canvas fits
-            var newZoomFactor = Math.Min(zoomX, zoomY);
-
-            // Clamp the zoom factor to reasonable bounds
-            newZoomFactor = Math.Clamp(newZoomFactor, 0.1f, 10f);
-
-            // Set the zoom factor
-            Canvas.ZoomFactor = newZoomFactor;
+            Canvas?.FitToView();
             UpdateZoomText();
         }, DispatcherPriority.Background);
     }
@@ -124,7 +99,16 @@ public partial class AssaDrawViewModel : ObservableObject
     public void Initialize(Subtitle subtitle, List<SubtitleLineViewModel> selectedLines, int? width, int? height)
     {
         _subtitle = subtitle;
-        if (width.HasValue && height.HasValue && width.Value >= 0 && height.Value >= 0)
+
+        // Drawing coordinates live in script (PlayRes) space, so the script resolution wins. The main
+        // window writes the video size into the header before opening, so without a video this is the
+        // only place the real resolution comes from - the 1920x1080 default put shapes in the wrong spot.
+        if (TryGetPlayRes(subtitle.Header, out var playResX, out var playResY))
+        {
+            CanvasWidth = playResX;
+            CanvasHeight = playResY;
+        }
+        else if (width is > 0 && height is > 0)
         {
             CanvasWidth = width.Value;
             CanvasHeight = height.Value;
@@ -146,8 +130,8 @@ public partial class AssaDrawViewModel : ObservableObject
                 ImportAssaDrawingFromText(clipCommands, line.Layer, color, true);
             }
 
-            // 2. Process \p1 Drawing
-            if (line.Text.Contains("{\\p1}"))
+            // 2. Process \p1 Drawing (the \p1 can share its tag block with \pos, \an etc.)
+            if (_regexStart.IsMatch(line.Text))
             {
                 // Remove all tags (anything inside curly braces) to get raw vector data
                 string drawingOnly = Regex.Replace(line.Text, @"\{[^}]+\}", string.Empty).Trim();
@@ -173,6 +157,7 @@ public partial class AssaDrawViewModel : ObservableObject
 
         Canvas.CanvasClicked += OnCanvasClicked;
         Canvas.CanvasMouseMoved += OnCanvasMouseMoved;
+        Canvas.PointSelected += OnPointSelected;
         Canvas.PointDragged += OnPointDragged;
         Canvas.ZoomChanged += OnZoomChanged;
     }
@@ -200,6 +185,7 @@ public partial class AssaDrawViewModel : ObservableObject
 
         ActivePoint = null;
         IsPointSelected = false;
+        SelectedShapes = [];
 
         // Continue drawing on existing shape
         if (ActiveShape != null && ActiveShape.Points.Count > 0 && !Shapes.Contains(ActiveShape))
@@ -328,11 +314,22 @@ public partial class AssaDrawViewModel : ObservableObject
         }
     }
 
+    private void OnPointSelected(object? sender, DrawCoordinate point)
+    {
+        ActivePoint = point;
+        PointX = point.X;
+        PointY = point.Y;
+        IsPointSelected = true;
+    }
+
     private void OnPointDragged(object? sender, DrawCoordinate point)
     {
         PointX = point.X;
         PointY = point.Y;
-        RefreshTreeView();
+
+        // Only the dragged point's label changes - rebuilding the whole tree on every mouse move
+        // was slow on big drawings and dropped the tree selection.
+        UpdateSelectedPointName();
     }
 
     [RelayCommand]
@@ -362,7 +359,9 @@ public partial class AssaDrawViewModel : ObservableObject
     [RelayCommand]
     private void CloseShape()
     {
-        if (ActiveShape == null)
+        // A shape picked in the tree is already finished - closing it again appended a closing
+        // bezier to it (Bezier tool) or added a stray circle/rectangle copy (Circle/Rectangle tool).
+        if (ActiveShape == null || Shapes.Contains(ActiveShape))
         {
             return;
         }
@@ -447,8 +446,24 @@ public partial class AssaDrawViewModel : ObservableObject
     {
         if (ActiveShape != null)
         {
+            if (ActivePoint != null && ActiveShape.Points.Contains(ActivePoint))
+            {
+                ActivePoint = null;
+                IsPointSelected = false;
+            }
+
             Shapes.Remove(ActiveShape);
+            SelectedShapes = SelectedShapes.Where(s => s != ActiveShape).ToList();
             ActiveShape = null;
+            _currentX = float.MinValue;
+            _currentY = float.MinValue;
+            if (Canvas != null)
+            {
+                Canvas.SelectedShape = null;
+                Canvas.CurrentX = float.MinValue;
+                Canvas.CurrentY = float.MinValue;
+            }
+
             RefreshTreeView();
             Canvas?.InvalidateVisual();
         }
@@ -524,6 +539,8 @@ public partial class AssaDrawViewModel : ObservableObject
         Shapes.Clear();
         ActiveShape = null;
         ActivePoint = null;
+        IsPointSelected = false;
+        SelectedShapes = [];
         _currentX = float.MinValue;
         _currentY = float.MinValue;
         RefreshTreeView();
@@ -554,7 +571,9 @@ public partial class AssaDrawViewModel : ObservableObject
     [RelayCommand]
     private void ResetView()
     {
-        Canvas?.ResetView();
+        // Back to the opening view: whole frame fitted and centered (was 100% at the top-left
+        // corner, which for a 1080p frame is mostly off screen).
+        Canvas?.FitToView();
         UpdateZoomText();
     }
 
@@ -678,9 +697,14 @@ public partial class AssaDrawViewModel : ObservableObject
             subtitle.Footer = _subtitle.Footer;
         }
 
-        // Update resolution in header
-        subtitle.Header = subtitle.Header.Replace("PlayResX: 384", $"PlayResX: {CanvasWidth}");
-        subtitle.Header = subtitle.Header.Replace("PlayResY: 288", $"PlayResY: {CanvasHeight}");
+        // Shapes are drawn in canvas coordinates, so a header without a resolution needs the canvas
+        // size - libass falls back to 384x288 and scaled the drawing far off screen. The default header
+        // has no PlayRes lines at all, so the old "PlayResX: 384" replace never matched. An existing
+        // resolution is kept: it positions every other line of the script too.
+        if (!TryGetPlayRes(subtitle.Header, out _, out _))
+        {
+            subtitle.Header = AdvancedSubStationAlpha.SetResolution(subtitle.Header, CanvasWidth, CanvasHeight);
+        }
 
         // Collect unique colors from all layers
         var colorToStyleName = new Dictionary<Color, string>();
@@ -998,6 +1022,21 @@ public partial class AssaDrawViewModel : ObservableObject
         }
     }
 
+    private static bool TryGetPlayRes(string? header, out int width, out int height)
+    {
+        width = 0;
+        height = 0;
+        if (string.IsNullOrEmpty(header))
+        {
+            return false;
+        }
+
+        var playResX = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResX", "[Script Info]", header);
+        var playResY = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResY", "[Script Info]", header);
+        return int.TryParse(playResX, NumberStyles.Integer, CultureInfo.InvariantCulture, out width) && width >= 125 && width <= 4096 &&
+               int.TryParse(playResY, NumberStyles.Integer, CultureInfo.InvariantCulture, out height) && height >= 125 && height <= 4096;
+    }
+
     private void LoadFromText(string text)
     {
         ClearAll();
@@ -1007,15 +1046,9 @@ public partial class AssaDrawViewModel : ObservableObject
         format.LoadSubtitle(subtitle, text.SplitToLines(), _fileName);
 
         // Read resolution from header
-        var playResX = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResX", "[Script Info]", subtitle.Header);
-        if (int.TryParse(playResX, out var width) && width >= 125 && width <= 4096)
+        if (TryGetPlayRes(subtitle.Header, out var width, out var height))
         {
             CanvasWidth = width;
-        }
-
-        var playResY = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResY", "[Script Info]", subtitle.Header);
-        if (int.TryParse(playResY, out var height) && height >= 125 && height <= 4096)
-        {
             CanvasHeight = height;
         }
 
@@ -1040,8 +1073,8 @@ public partial class AssaDrawViewModel : ObservableObject
                 ImportAssaDrawingFromText(iclipMatch.Groups[1].Value, paragraph.Layer, color, true);
             }
 
-            // Handle \p1 Drawing
-            if (paragraph.Text.Contains("{\\p1}"))
+            // Handle \p1 Drawing (the \p1 can share its tag block with \pos, \an etc.)
+            if (_regexStart.IsMatch(paragraph.Text))
             {
                 // Strip tags to avoid parsing non-coordinate text
                 string drawingOnly = Regex.Replace(paragraph.Text, @"\{[^}]+\}", string.Empty).Trim();
@@ -1243,6 +1276,48 @@ public partial class AssaDrawViewModel : ObservableObject
         }
     }
 
+    partial void OnCanvasWidthChanged(int value)
+    {
+        if (Canvas != null)
+        {
+            Canvas.CanvasWidth = value;
+            ZoomToFitCurrentVideoResolution();
+        }
+    }
+
+    partial void OnCanvasHeightChanged(int value)
+    {
+        if (Canvas != null)
+        {
+            Canvas.CanvasHeight = value;
+            ZoomToFitCurrentVideoResolution();
+        }
+    }
+
+    partial void OnActiveShapeChanged(DrawShape? value)
+    {
+        if (Canvas != null)
+        {
+            Canvas.ActiveShape = value;
+        }
+    }
+
+    partial void OnActivePointChanged(DrawCoordinate? value)
+    {
+        if (Canvas != null)
+        {
+            Canvas.ActivePoint = value;
+        }
+    }
+
+    partial void OnSelectedShapesChanged(List<DrawShape> value)
+    {
+        if (Canvas != null)
+        {
+            Canvas.SelectedShapes = value;
+        }
+    }
+
     partial void OnPointXChanged(float value)
     {
         if (ActivePoint != null && Math.Abs(ActivePoint.X - value) > 0.001f)
@@ -1302,6 +1377,12 @@ public partial class AssaDrawViewModel : ObservableObject
         // Update layer selection state
         IsLayerSelected = value?.IsLayer == true;
         IsShapeSelected = value?.Shape != null;
+
+        // A tree pick ends a Ctrl+A selection - otherwise the arrow keys kept nudging every shape.
+        if (value != null)
+        {
+            SelectedShapes = [];
+        }
         
         if (value?.IsLayer == true)
         {
@@ -1337,10 +1418,6 @@ public partial class AssaDrawViewModel : ObservableObject
     private void SelectAllShapes()
     {
         SelectedShapes = Shapes.ToList();
-        if (Canvas != null)
-        {
-            Canvas.SelectedShapes = SelectedShapes;
-        }
         Canvas?.InvalidateVisual();
     }
 
