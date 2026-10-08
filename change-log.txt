@@ -3,6 +3,25 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-beta25 (8th of October 2026)
+
+* Add taskbar/Dock progress for Speech to text, Text to speech, AI review, Auto-translate, Burn-in and Generate shot changes - thx pdjdev
+* Add spell check editor for the "Use always" list
+* Add "Show recent files" option to disable recent files - thx amymor
+* OCR: automation ids + "Running OCR..." in window title while running - thx skylinekiller
+* Fix seek shortcuts not working in Visual sync - thx amymor
+* Fix plugin time codes changing after apply in frame mode (ArteCheck corrections reappearing) - thx Triathlon-rally
+* Plugins: follow the EBU STL frame rate a plugin sets in the header - thx Triathlon-rally
+* Fix Set sync point stuck at 0:00 when no video player library can be loaded - thx ovencovsky
+* Fix spell check "Change all" pairs changing correctly spelled words (e.g. "and" to "&") - thx fraternl
+* Fix spell check stale suggestion and change-all pairs/undo kept when switching dictionary
+* Fix hard-to-read colored text in light theme (Fix common errors, AI review, Restore auto-backup, Split, Batch convert, Statistics, Translation error) - thx subcor
+* Fix unstable duration/scrubbing for .ts/.mpg video files - thx dsouzabs
+* Fix submenu/context menu item size with UI scale at startup
+* Fix Linux startup crash when Skia reports no default font family - thx MaryJaneInChain
+* Update Italian translation - thx bovirus
+
+
 v5.3.0-beta24 (7th of October 2026)
 
 * Add "Play with speech": speak lines in sync while the video plays - thx Jose4D

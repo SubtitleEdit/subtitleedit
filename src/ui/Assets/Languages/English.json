@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.3.0-beta24",
+  "version": "v5.3.0-beta25",
   "translatedBy": "",
   "cultureName": "en-US",
   "general": {
@@ -2523,7 +2523,21 @@
     "correctWordsX": "Correct words: {0}",
     "namesX": "Names: {0}",
     "addedToDictionaryX": "Added to dictionary: {0}",
-    "doNotShowThisAgain": "Do not show this message again"
+    "doNotShowThisAgain": "Do not show this message again",
+    "editUseAlwaysList": "Edit \"Use always\" list...",
+    "useAlwaysListTitle": "Spell check - \"Use always\" list",
+    "useAlwaysListHeader": "\"Use always\" list",
+    "useAlwaysListDescription": "Words spell check replaces automatically, saved by \"Change all\" and \"Use always\". A pair is only used when the word is misspelled.",
+    "useAlwaysWord": "Misspelled word",
+    "xPairs": "{0:#,##0} pairs",
+    "xUnusedPairs": "{0:#,##0} never used",
+    "useAlwaysUnusedHint": "Never used - this word is spelled correctly (or is a name or user word), so spell check never flags it",
+    "removeUnused": "Remove unused",
+    "useAlwaysEmpty": "No \"Use always\" pairs for this language yet",
+    "useAlwaysEmptyHint": "Pairs are added when you click \"Change all\" or \"Use always\" in spell check.",
+    "useAlwaysNoMatch": "No pairs match the search",
+    "useAlwaysSameWord": "The replacement must be different from the word.",
+    "useAlwaysRememberOff": "\"Remember 'Use always' list\" is turned off in Settings, so spell check does not use or save this list."
   },
   "video": {
     "burnIn": {
@@ -3404,6 +3418,7 @@
       "promptBeforeDelete": "Prompt before delete",
       "rememberPositionAndSize": "Remember window position and size",
       "titleBarFullFileName": "Show full file path in title bar",
+      "showRecentFiles": "Show recent files (for reopen)",
       "openLastFileOnStart": "Open last recent file on start",
       "autoSave": "Auto-save (save the open file while editing)",
       "autoBackupOn": "Auto-backup",
