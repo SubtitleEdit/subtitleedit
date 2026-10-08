@@ -1036,6 +1036,39 @@ public static class UiUtil
         return comboBox;
     }
 
+    /// <summary>
+    /// Runs <paramref name="commit"/> when the user is done typing in an editable combo box: on
+    /// Enter, or when keyboard focus leaves the combo box. Not on every keystroke - typing "15"
+    /// would otherwise apply "1" first. Nothing is committed while the drop-down is open; picking
+    /// an item there goes through the normal selection. <paramref name="handleEnter"/> marks Enter
+    /// as handled, so it does not also reach window shortcuts; leave it off in a dialog where Enter
+    /// should still click the default button after the commit.
+    /// </summary>
+    public static void OnEditableComboBoxCommit(ComboBox comboBox, Action commit, bool handleEnter)
+    {
+        comboBox.AddHandler(InputElement.KeyDownEvent, (_, e) =>
+        {
+            if (e.Key == Key.Enter && e.KeyModifiers == KeyModifiers.None && !comboBox.IsDropDownOpen)
+            {
+                commit();
+                if (handleEnter)
+                {
+                    e.Handled = true;
+                }
+            }
+        }, RoutingStrategies.Bubble, handledEventsToo: true);
+
+        comboBox.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == InputElement.IsKeyboardFocusWithinProperty &&
+                e.NewValue is false &&
+                !comboBox.IsDropDownOpen)
+            {
+                commit();
+            }
+        };
+    }
+
     public static TextBox MakeTextBox(double width, object viewModel, string propertyTextPath)
     {
         return MakeTextBox(width, viewModel, propertyTextPath, null);

@@ -29832,6 +29832,14 @@ public partial class MainViewModel :
 
     internal void ComboBoxFrameRateSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
+        // While the user types in the editable combo box, each keystroke that matches or
+        // un-matches a preset changes the selection - typing "240" would apply 24 on the way.
+        // A typed rate is applied once, by CommitTypedFrameRate, on Enter or focus loss.
+        if (sender is ComboBox { IsEditable: true, IsDropDownOpen: false, IsKeyboardFocusWithin: true })
+        {
+            return;
+        }
+
         if (double.TryParse(SelectedFrameRate, NumberStyles.Any, CultureInfo.InvariantCulture, out var frameRate))
         {
             ApplyCurrentFrameRate(frameRate);
@@ -29850,6 +29858,25 @@ public partial class MainViewModel :
             {
                 s.RefreshTimeCodes();
             }
+        }
+    }
+
+    /// <summary>
+    /// Applies a frame rate typed into the editable toolbar frame rate combo box (#15806). A rate
+    /// that is not a preset is added to the list. Invalid text selects the current rate again.
+    /// </summary>
+    internal void CommitTypedFrameRate(string? text)
+    {
+        if (!FrameRateHelper.TryParseTypedFrameRate(text, out var frameRate))
+        {
+            SetSelectedFrameRate(Se.Settings.General.CurrentFrameRate);
+            return;
+        }
+
+        SetSelectedFrameRate(frameRate);
+        if (Math.Abs(Se.Settings.General.CurrentFrameRate - frameRate) > 0.0001)
+        {
+            ApplyCurrentFrameRate(frameRate);
         }
     }
 
