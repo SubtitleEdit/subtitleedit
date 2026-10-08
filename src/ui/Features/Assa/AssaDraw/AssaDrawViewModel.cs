@@ -91,32 +91,7 @@ public partial class AssaDrawViewModel : ObservableObject
         // Wait a bit to ensure the canvas bounds are updated
         Dispatcher.UIThread.Post(() =>
         {
-            if (Canvas == null || Canvas.Bounds.Width < 1 || Canvas.Bounds.Height < 1)
-            {
-                return;
-            }
-
-            // Calculate zoom factor to fit the entire canvas (video resolution) in the visible area
-            var availableWidth = Canvas.Bounds.Width;
-            var availableHeight = Canvas.Bounds.Height;
-
-            // Add some padding (e.g., 20 pixels on each side)
-            var padding = 40.0;
-            availableWidth -= padding;
-            availableHeight -= padding;
-
-            // Calculate zoom factors for width and height
-            var zoomX = (float)(availableWidth / CanvasWidth);
-            var zoomY = (float)(availableHeight / CanvasHeight);
-
-            // Use the smaller zoom factor to ensure the entire canvas fits
-            var newZoomFactor = Math.Min(zoomX, zoomY);
-
-            // Clamp the zoom factor to reasonable bounds
-            newZoomFactor = Math.Clamp(newZoomFactor, 0.1f, 10f);
-
-            // Set the zoom factor
-            Canvas.ZoomFactor = newZoomFactor;
+            Canvas?.FitToView();
             UpdateZoomText();
         }, DispatcherPriority.Background);
     }
@@ -596,7 +571,9 @@ public partial class AssaDrawViewModel : ObservableObject
     [RelayCommand]
     private void ResetView()
     {
-        Canvas?.ResetView();
+        // Back to the opening view: whole frame fitted and centered (was 100% at the top-left
+        // corner, which for a 1080p frame is mostly off screen).
+        Canvas?.FitToView();
         UpdateZoomText();
     }
 
