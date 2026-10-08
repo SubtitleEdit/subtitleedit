@@ -2595,6 +2595,29 @@ public partial class MainViewModel :
         }
     }
 
+    private static readonly Regex AssaDrawingTagRegex = new(@"\{[^{}]*\\p1[^}]*\}", RegexOptions.Compiled);
+    private static readonly Regex AssaTagBlockRegex = new(@"\{[^}]*\}", RegexOptions.Compiled);
+
+    /// <summary>
+    /// A row the ASSA draw dialog imports as drawing: a \p1 drawing, or a mask-only line
+    /// (just an \iclip, no text) as the dialog writes for a layer of erase shapes.
+    /// </summary>
+    internal static bool IsAssaDrawingText(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return false;
+        }
+
+        if (AssaDrawingTagRegex.IsMatch(text))
+        {
+            return true;
+        }
+
+        return text.Contains("\\iclip(", StringComparison.Ordinal) &&
+               AssaTagBlockRegex.Replace(text, string.Empty).Trim().Length == 0;
+    }
+
     [RelayCommand]
     private async Task ShowAssaDraw()
     {
@@ -2617,44 +2640,45 @@ public partial class MainViewModel :
             return;
         }
 
-        _subtitle = result.ResultSubtitle;
+        // Only the header (styles, PlayRes) comes back - ResultSubtitle holds just the drawing
+        // lines, the rest of the file lives in the grid rows.
+        _subtitle.Header = result.ResultSubtitle.Header;
+        _subtitle.Footer = result.ResultSubtitle.Footer;
         var assa = new SubStationAlpha();
-        var firstParagraph = selectedItems.FirstOrDefault();
-        var lastParagraph = selectedItems.LastOrDefault();
-        if (lastParagraph == null)
-        {
-            lastParagraph = new SubtitleLineViewModel()
-            {
-                StartTime = TimeSpan.FromSeconds(firstParagraph != null ? firstParagraph.StartTime.TotalSeconds : 0),
-                EndTime = TimeSpan.FromSeconds(firstParagraph != null ? firstParagraph.EndTime.TotalSeconds : 2),
-                Text = string.Empty
-            };
-        }
 
-        for (var index = 0; index < result.ResultSubtitle.Paragraphs.Count; index++)
+        // The dialog edits the drawings it imported, so only those rows are replaced. Writing the
+        // drawings over the selection in order overwrote ordinary dialogue lines that happened to be
+        // selected, and a drawing deleted in the dialog stayed behind in its old row.
+        var drawingRows = selectedItems.Where(p => IsAssaDrawingText(p.Text)).ToList();
+        var anchor = selectedItems.LastOrDefault();
+        var paragraphs = result.ResultSubtitle.Paragraphs;
+        for (var index = 0; index < paragraphs.Count; index++)
         {
-            var p = result.ResultSubtitle.Paragraphs[index];
-            if (index < selectedItems.Count)
+            var p = paragraphs[index];
+            if (index < drawingRows.Count)
             {
-                selectedItems[index].Text = p.Text;
-                selectedItems[index].Style = p.Extra;
-                selectedItems[index].Layer = p.Layer;
-                lastParagraph = selectedItems[index];
+                drawingRows[index].Text = p.Text;
+                drawingRows[index].Style = p.Extra;
+                drawingRows[index].Layer = p.Layer;
+                anchor = drawingRows[index];
             }
             else
             {
-                var newP = new SubtitleLineViewModel(p, assa);
-                newP.StartTime = lastParagraph.StartTime;
-                newP.EndTime = lastParagraph.EndTime;
-                var insertIndex = Subtitles.IndexOf(lastParagraph) + 1;
-                if (insertIndex <= 0)
+                var newP = new SubtitleLineViewModel(p, assa)
                 {
-                    insertIndex = Subtitles.Count;
-                }
-
+                    StartTime = anchor?.StartTime ?? TimeSpan.Zero,
+                    EndTime = anchor?.EndTime ?? TimeSpan.FromSeconds(2),
+                };
+                var insertIndex = anchor == null ? -1 : Subtitles.IndexOf(anchor);
+                insertIndex = insertIndex < 0 ? Subtitles.Count : insertIndex + 1;
                 Subtitles.Insert(insertIndex, newP);
-                lastParagraph = newP;
+                anchor = newP;
             }
+        }
+
+        for (var index = paragraphs.Count; index < drawingRows.Count; index++)
+        {
+            Subtitles.Remove(drawingRows[index]);
         }
 
         Renumber();
