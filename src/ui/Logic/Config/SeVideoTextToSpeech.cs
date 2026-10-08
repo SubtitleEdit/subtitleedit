@@ -154,6 +154,10 @@ public class SeVideoTextToSpeech
     public int AudioDuckingOriginalVolume { get; set; }
     public bool RemoveOriginalSpeech { get; set; }
 
+    // Run voice-clone references through Sidon (audio.cpp) first, to strip music and noise from
+    // under the speech. See Features.Video.TextToSpeech.CloneReferenceCleaning.CloneReferenceCleaner.
+    public bool CleanCloneReferences { get; set; }
+
     // Edge-TTS prosody parameters
     public string EdgeTtsRate { get; set; }
     public string EdgeTtsPitch { get; set; }

@@ -150,6 +150,12 @@ public class LanguageTextToSpeech
     public string AdvancedTtsSettings { get; set; }
     public string AdvancedTtsAudioProcessing { get; set; }
     public string AdvancedTtsOutput { get; set; }
+    public string AdvancedTtsVoiceCloning { get; set; }
+    public string CleanCloneReferences { get; set; }
+    public string CleanCloneReferencesDescription { get; set; }
+    public string CleaningCloneReferencesDotDotDot { get; set; }
+    public string DownloadSidonTitle { get; set; }
+    public string DownloadSidonQuestionX { get; set; }
     public string ProAudioPostProcessing { get; set; }
     public string ProAudioPostProcessingDescription { get; set; }
     public string GeneratingSpeechSegmentXOfY { get; set; }
@@ -381,6 +387,12 @@ public class LanguageTextToSpeech
         AdvancedTtsSettings = "Advanced TTS settings";
         AdvancedTtsAudioProcessing = "Audio processing";
         AdvancedTtsOutput = "Output";
+        AdvancedTtsVoiceCloning = "Voice cloning";
+        CleanCloneReferences = "Clean voice-clone references (Sidon)";
+        CleanCloneReferencesDescription = "Removes music, noise and reverb from the audio a voice is cloned from: clips taken from the video and recordings imported in the voice manager. Uses the Sidon speech restoration model on audio.cpp (940 MB download). The cloned voice no longer copies the background, but very quiet or overlapping speech can come out muffled.";
+        CleaningCloneReferencesDotDotDot = "Cleaning voice-clone references...";
+        DownloadSidonTitle = "Download Sidon?";
+        DownloadSidonQuestionX = "Cleaning voice-clone references needs the Sidon speech restoration model ({0})." + Environment.NewLine + Environment.NewLine + "Download it now? Without it the references are used as they are.";
         ProAudioPostProcessing = "Pro audio post-processing";
         ProAudioPostProcessingDescription = "Adds EQ, noise gate, compression, loudness normalization (-16 LUFS) and a short fade in/out to every clip.";
         GeneratingSpeechSegmentXOfY = "Generating speech: segment {0} of {1}";

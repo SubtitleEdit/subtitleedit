@@ -178,6 +178,7 @@ using Nikse.SubtitleEdit.Features.Video.VideoOcr;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AutoCast;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.CloneReferenceCleaning;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.SpeakFromLine;
@@ -6881,6 +6882,11 @@ public partial class MainViewModel :
                 }
             }
 
+            if (CloneReferenceCleaner.IsEnabled && await CloneReferenceCleaner.EnsureInstalledAsync(Window, _windowService))
+            {
+                await CloneReferenceCleaner.CleanFileAsync(clipFileName, null, CancellationToken.None);
+            }
+
             var transcript = HtmlUtil.RemoveHtmlTags(line.Text ?? string.Empty, true)
                 .Replace('\n', ' ')
                 .Replace('\r', ' ')
@@ -12103,6 +12109,8 @@ public partial class MainViewModel :
     {
         var clonedVoiceNames = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         var referenceFolder = Path.Combine(Path.GetTempPath(), "SeAutoCast_" + Guid.NewGuid().ToString("N"));
+        var cleanReferences = CloneReferenceCleaner.IsEnabled && Window != null &&
+                              await CloneReferenceCleaner.EnsureInstalledAsync(Window, _windowService);
 
         try
         {
@@ -12120,6 +12128,11 @@ public partial class MainViewModel :
                 if (referenceFileName == null)
                 {
                     continue;
+                }
+
+                if (cleanReferences)
+                {
+                    await CloneReferenceCleaner.CleanFileAsync(referenceFileName, null, CancellationToken.None);
                 }
 
                 var transcript = await ReadReferenceTranscriptAsync(referenceFileName);
