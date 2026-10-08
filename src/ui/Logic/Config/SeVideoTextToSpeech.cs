@@ -197,7 +197,7 @@ public class SeVideoTextToSpeech
         ElevenLabsApiKey = string.Empty;
         AzureApiKey = string.Empty;
         AzureRegion = string.Empty;
-        ElevenLabsModel = "eleven_turbo_v2_5";
+        ElevenLabsModel = "eleven_v4_turbo";
         ElevenLabsLanguage = string.Empty;
         ElevenLabsStability = 0.5;
         ElevenLabsSimilarity = 0.5;
