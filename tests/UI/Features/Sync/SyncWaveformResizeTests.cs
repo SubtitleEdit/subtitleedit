@@ -4,6 +4,7 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.LogicalTree;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
+using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Features.Sync.PointSync.SetSyncPoint;
@@ -97,6 +98,7 @@ public class SyncWaveformResizeTests : IDisposable
         // A path is enough for the layout decision; nothing opens it here (the open is posted to
         // the dispatcher and this test never pumps it).
         vm.Initialize(lines, lines[0], videoFileName: "/does/not/exist.mp4", subtitleFileName: null, previewContext: VideoPreviewSubtitleContext.Default, audioVisualizer: LentWaveform());
+        vm.MakeVideoPlayer = () => new VideoPlayerControl(new WorkingVideoPlayer());
         var window = Track(new SetSyncPointWindow(vm));
 
         // The peaks are handed over on the same posted job - flip the flag the way it does.

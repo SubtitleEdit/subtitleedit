@@ -9,6 +9,7 @@ using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Features.Shared.FindText;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -53,6 +54,12 @@ public partial class SetSyncPointViewModel : ObservableObject
     public string VideoFileName { get; private set; }
 
     public VideoPlayerControl VideoPlayerControl { get; set; }
+
+    /// <summary>
+    /// Builds the window's player. A seam for tests: the real factory gives the EmptyVideoPlayer
+    /// fallback where no libmpv is installed (CI), which puts the dialog in its no-video mode.
+    /// </summary>
+    internal Func<VideoPlayerControl> MakeVideoPlayer { get; set; } = InitVideoPlayer.MakeVideoPlayer;
     public AudioVisualizer AudioVisualizer { get; set; }
     public ComboBox ComboBoxSubtitle { get; set; }
     public TimeCodeUpDown TimeCodeUpDownSyncPoint { get; set; }

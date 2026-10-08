@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.LogicalTree;
+using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Sync.PointSync;
 using Nikse.SubtitleEdit.Features.Sync.PointSync.SetSyncPoint;
@@ -118,6 +119,7 @@ public class PointSyncWindowTests : IDisposable
         // A path is enough for the layout decision; nothing opens it here (the open is posted to
         // the dispatcher and this test never pumps it).
         vm.Initialize(lines, lines[0], videoFileName: "/does/not/exist.mp4", subtitleFileName: null, previewContext: VideoPreviewSubtitleContext.Default, audioVisualizer: null);
+        vm.MakeVideoPlayer = () => new VideoPlayerControl(new WorkingVideoPlayer());
 
         var window = Track(new SetSyncPointWindow(vm));
 

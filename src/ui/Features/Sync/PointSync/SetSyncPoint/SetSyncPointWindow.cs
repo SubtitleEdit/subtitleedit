@@ -5,7 +5,6 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
-using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -28,7 +27,7 @@ public class SetSyncPointWindow : Window
 
         // Built first: with no player library the dialog falls back to its no-video mode (#15787),
         // and the sizes below depend on that.
-        vm.SetVideoPlayerControl(InitVideoPlayer.MakeVideoPlayer());
+        vm.SetVideoPlayerControl(vm.MakeVideoPlayer());
         vm.VideoPlayerControl.FullScreenIsVisible = false;
 
         // The view model is initialized before this constructor runs, so the dialog knows here
