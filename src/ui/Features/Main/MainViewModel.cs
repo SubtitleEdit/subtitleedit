@@ -2803,7 +2803,7 @@ public partial class MainViewModel :
 
         var result = await ShowDialogAsync<AssSetBackgroundWindow, AssSetBackgroundViewModel>(vm =>
         {
-            vm.Initialize(GetUpdateSubtitle(), selectedItems, _mediaInfo?.Dimension.Width ?? 1920, _mediaInfo?.Dimension.Height ?? 1080, _videoFileName);
+            vm.Initialize(GetUpdateSubtitle(), selectedItems, _mediaInfo?.Dimension.Width ?? 1920, _mediaInfo?.Dimension.Height ?? 1080, _videoFileName, GetVideoPlayerControl()?.Position);
         });
 
         if (!result.OkPressed)
