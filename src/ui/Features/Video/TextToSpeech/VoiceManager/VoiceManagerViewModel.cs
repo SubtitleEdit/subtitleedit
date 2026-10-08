@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.CloneReferenceCleaning;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceCloneConsent;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceManager.VoicePacks;
@@ -889,7 +890,7 @@ public partial class VoiceManagerViewModel : ObservableObject
                 return;
             }
 
-            ok = await Task.Run(() => VoiceCloneImporter.Import(engine, fileName, transcript));
+            ok = await ImportCleanedOrAsIsAsync(engine, fileName, transcript);
         }
 
         if (!ok)
@@ -903,6 +904,42 @@ public partial class VoiceManagerViewModel : ObservableObject
         var baseName = Path.GetFileNameWithoutExtension(fileName).Replace('_', ' ');
         await LoadVoicesAsync(SelectedEngine, baseName);
         StatusText = string.Format(Se.Language.Video.TextToSpeech.VoiceXImported, Path.GetFileName(fileName));
+    }
+
+    /// <summary>
+    /// Imports a cleaned copy when "Clean voice-clone references" is on (the user's own file is
+    /// never changed), and the file as picked when it is off or cleaning did not work out.
+    /// </summary>
+    private async Task<bool> ImportCleanedOrAsIsAsync(ITtsEngine engine, string fileName, string transcript)
+    {
+        if (!CloneReferenceCleaner.IsEnabled || !await CloneReferenceCleaner.EnsureInstalledAsync(Window!, _windowService))
+        {
+            return await Task.Run(() => VoiceCloneImporter.Import(engine, fileName, transcript));
+        }
+
+        var tempFolder = Path.Combine(Path.GetTempPath(), "SeVoiceClean_" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            StatusText = Se.Language.Video.TextToSpeech.CleaningCloneReferencesDotDotDot;
+            var cleanedFileName = await CloneReferenceCleaner.CleanCopyAsync(fileName, tempFolder, CancellationToken.None);
+            StatusText = string.Empty;
+            var importFileName = cleanedFileName ?? fileName;
+            return await Task.Run(() => VoiceCloneImporter.Import(engine, importFileName, transcript));
+        }
+        finally
+        {
+            try
+            {
+                if (Directory.Exists(tempFolder))
+                {
+                    Directory.Delete(tempFolder, true);
+                }
+            }
+            catch
+            {
+                // a leftover copy in the temp folder is not worth telling the user about
+            }
+        }
     }
 
     private Task<bool> EnsureConsentAsync(ITtsEngine engine) =>

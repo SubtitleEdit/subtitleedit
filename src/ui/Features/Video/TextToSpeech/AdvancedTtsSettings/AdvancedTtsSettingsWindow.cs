@@ -45,6 +45,7 @@ public class AdvancedTtsSettingsWindow : Window
         var checkBoxVad = MakeCheckBox(l.VadSilenceCompression, nameof(vm.DoVadSilenceCompression));
         var checkBoxTimeStretch = MakeCheckBox(l.HighQualityTimeStretch, nameof(vm.DoHighQualityTimeStretch));
         var checkBoxDeleteTempFiles = MakeCheckBox(l.DeleteTempFiles, nameof(vm.DoDeleteTempFiles));
+        var checkBoxCleanCloneReferences = MakeCheckBox(l.CleanCloneReferences, nameof(vm.DoCleanCloneReferences));
 
         var groupAudio = MakeGroupBox(l.AdvancedTtsAudioProcessing, new StackPanel
         {
@@ -83,6 +84,15 @@ public class AdvancedTtsSettingsWindow : Window
             }
         });
 
+        var groupVoiceCloning = MakeGroupBox(l.AdvancedTtsVoiceCloning, new StackPanel
+        {
+            Spacing = 6,
+            Children =
+            {
+                MakeRow(checkBoxCleanCloneReferences, l.CleanCloneReferencesDescription),
+            }
+        });
+
         var groupFolder = MakeGroupBox(l.GenerationFolder, MakeGenerationFolderContent(vm, checkBoxDeleteTempFiles));
 
         var groupEdgeTts = MakeGroupBox("Edge-TTS", new StackPanel
@@ -105,7 +115,7 @@ public class AdvancedTtsSettingsWindow : Window
         var content = new StackPanel
         {
             Spacing = 10,
-            Children = { groupAudio, groupOutput, groupFolder, groupEdgeTts },
+            Children = { groupAudio, groupVoiceCloning, groupOutput, groupFolder, groupEdgeTts },
         };
 
         // Keeps OK/Cancel reachable when the window is clamped to a small working area (#14331).
