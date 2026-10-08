@@ -190,6 +190,34 @@ public class MergeManagerTests
         }
     }
 
+    // Issue #15600: the dash goes inside leading formatting, so it gets the line's color/italic.
+    [Theory]
+    [InlineData("DashBothLinesWithSpace", "<font color='#ffe200'>Subtitle one.</font>", "<font color='#ffe200'>Subtitle two.</font>", "<font color='#ffe200'>- Subtitle one.</font>", "<font color='#ffe200'>- Subtitle two.</font>")]
+    [InlineData("DashSecondLineWithSpace", "<font color='#ffe200'>Subtitle one.</font>", "<font color='#ffe200'>Subtitle two.</font>", "<font color='#ffe200'>Subtitle one.</font>", "<font color='#ffe200'>- Subtitle two.</font>")]
+    [InlineData("DashBothLinesWithSpace", "<i>- Subtitle one.</i>", "{\\an8}<i>-Subtitle two.</i>", "<i>- Subtitle one.</i>", "{\\an8}<i>- Subtitle two.</i>")]
+    public void MergeSelectedLinesAsDialog_ShouldPutDashInsideStartTags(string dialogStyle, string text1, string text2, string expectedLine1, string expectedLine2)
+    {
+        var originalDialogStyle = Se.Settings.General.DialogStyle;
+        try
+        {
+            Se.Settings.General.DialogStyle = dialogStyle;
+            var mergeManager = new MergeManager();
+            var subtitles = new ObservableCollection<SubtitleLineViewModel>
+            {
+                new() { Number = 1, Text = text1, StartTime = TimeSpan.FromSeconds(1), EndTime = TimeSpan.FromSeconds(2) },
+                new() { Number = 2, Text = text2, StartTime = TimeSpan.FromSeconds(2), EndTime = TimeSpan.FromSeconds(3) },
+            };
+
+            mergeManager.MergeSelectedLinesAsDialog(subtitles, [subtitles[0], subtitles[1]]);
+
+            Assert.Equal(expectedLine1 + Environment.NewLine + expectedLine2, subtitles[0].Text);
+        }
+        finally
+        {
+            Se.Settings.General.DialogStyle = originalDialogStyle;
+        }
+    }
+
     [Fact]
     public void MergeSelectedLines_ShouldKeepOriginalTextEmpty_WhenBothOriginalTextsAreEmpty()
     {
