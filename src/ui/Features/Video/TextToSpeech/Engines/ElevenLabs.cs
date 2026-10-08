@@ -393,7 +393,7 @@ public class ElevenLabs : ITtsEngine
 
         if (string.IsNullOrEmpty(model))
         {
-            model = "eleven_multilingual_v2";
+            model = "eleven_v4_turbo";
         }
 
         Se.WriteToolsLog($"ElevenLabs: voice={elevenLabVoice.Voice}, voiceId={elevenLabVoice.VoiceId}, model={model}, textLen={text.Length}");
@@ -422,9 +422,9 @@ public class ElevenLabs : ITtsEngine
     {
         return Task.FromResult(new[]
         {
-            "eleven_turbo_v2_5",
-            "eleven_v4",
             "eleven_v4_turbo",
+            "eleven_v4",
+            "eleven_turbo_v2_5",
             "eleven_v3",
             "eleven_multilingual_v2"
         });
