@@ -1,7 +1,7 @@
 {
   "title": "SubtitleEdit",
-  "version": "v. 5.3.0-beta24",
-  "translatedBy": "v. 07.10.2026 di bovirus e GitGianluc",
+  "version": "v. 5.3.0-beta25",
+  "translatedBy": "v. 08.10.2026 di bovirus e GitGianluc",
   "cultureName": "it-IT",
   "general": {
     "abort": "Annulla",
@@ -2523,7 +2523,21 @@
     "correctWordsX": "Parole corrette: {0}",
     "namesX": "Nomi: {0}",
     "addedToDictionaryX": "Aggiunto al dizionario: {0}",
-    "doNotShowThisAgain": "Non visualizzare più questo messaggio"
+    "doNotShowThisAgain": "Non visualizzare più questo messaggio",
+    "editUseAlwaysList": "Modifica elenco 'Usa sempre'...",
+    "useAlwaysListTitle": "Controllo ortografico: elenco 'Usa sempre'.",
+    "useAlwaysListHeader": "Elenco 'Usa sempre'.",
+    "useAlwaysListDescription": "Il controllo ortografico delle parole viene sostituito automaticamente, salvato da 'Modifica tutto' e 'Usa sempre'.\r\nUna coppia viene usata solo quando la parola è scritta in modo errato.",
+    "useAlwaysWord": "Parola errata",
+    "xPairs": "{0:#,##0} coppie",
+    "xUnusedPairs": "{0:#,##0} mai usata",
+    "useAlwaysUnusedHint": "Mai usata: questa parola è scritta correttamente (o è un nome o una parola utente), quindi il controllo ortografico non la contrassegna mai",
+    "removeUnused": "Rimuovi non usate",
+    "useAlwaysEmpty": "Per questa lingua ancora nessuna coppia 'Usa sempre'",
+    "useAlwaysEmptyHint": "Le coppie vengono aggiunte quando nel controllo ortografico fai clic su 'Modifica tutto' o 'Usa sempre'.",
+    "useAlwaysNoMatch": "Nessuna coppia corrisponde alla ricerca",
+    "useAlwaysSameWord": "La sostituzione deve essere diversa dalla parola.",
+    "useAlwaysRememberOff": "In Impostazioni è disattivato \"Ricorda elenco 'Usa sempre'\", quindi il controllo ortografico non usa né salva questo elenco."
   },
   "video": {
     "burnIn": {
@@ -3404,6 +3418,7 @@
       "promptBeforeDelete": "Chiedi conferma prima dell'eliminazione",
       "rememberPositionAndSize": "Ricorda posizione/dimensioni finestra",
       "titleBarFullFileName": "Visualizza percorso completo file nella barra del titolo",
+      "showRecentFiles": "Visualizza file recenti (per la riapertura)",
       "openLastFileOnStart": "All'avvio apri il file più recente",
       "autoSave": "Salvataggio automatico (salva il file aperto durante la modifica)",
       "autoBackupOn": "Backup automatico",
