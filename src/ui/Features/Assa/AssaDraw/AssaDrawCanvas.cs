@@ -154,8 +154,21 @@ public class AssaDrawCanvas : Control
 
     public event EventHandler<CanvasClickEventArgs>? CanvasClicked;
     public event EventHandler<CanvasMouseEventArgs>? CanvasMouseMoved;
+    public event EventHandler<DrawCoordinate>? PointSelected;
     public event EventHandler<DrawCoordinate>? PointDragged;
     public event EventHandler<float>? ZoomChanged;
+
+    static AssaDrawCanvas()
+    {
+        AffectsRender<AssaDrawCanvas>(
+            ShapesProperty,
+            ActiveShapeProperty,
+            SelectedShapeProperty,
+            SelectedShapesProperty,
+            ActivePointProperty,
+            CanvasWidthProperty,
+            CanvasHeightProperty);
+    }
 
     public AssaDrawCanvas()
     {
@@ -457,6 +470,7 @@ public class AssaDrawCanvas : Control
         {
             ActivePoint = closePoint;
             _lastMousePosition = point;
+            PointSelected?.Invoke(this, closePoint);
             InvalidateVisual();
             e.Handled = true;
             return;
