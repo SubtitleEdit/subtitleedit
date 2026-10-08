@@ -346,8 +346,10 @@ public static class UiTheme
         menuItemStyle.Setters.Add(new Setter(Layoutable.MinHeightProperty, 32.0 * factor));
         styles.Add(menuItemStyle);
 
-        // Reset MenuItems inside LayoutTransformControl (already scaled by transform)
-        var ltcMenuItemStyle = new Style(x => x.OfType<LayoutTransformControl>().Descendant().OfType<MenuItem>());
+        // Reset top-level menu bar items (inside the LayoutTransformControl, already scaled
+        // by the transform). Only direct Menu children: submenu and context menu items are
+        // logical descendants of the LTC too, but render in popups outside the transform.
+        var ltcMenuItemStyle = new Style(x => x.OfType<Menu>().Child().OfType<MenuItem>());
         ltcMenuItemStyle.Setters.Add(new Setter(TemplatedControl.FontSizeProperty, DefaultFontSize * FontScale));
         ltcMenuItemStyle.Setters.Add(new Setter(Layoutable.MinHeightProperty, 32.0));
         styles.Add(ltcMenuItemStyle);
