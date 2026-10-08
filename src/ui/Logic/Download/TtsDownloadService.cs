@@ -304,6 +304,13 @@ public class TtsDownloadService : ITtsDownloadService
         var url = "https://api.elevenlabs.io/v1/text-to-speech/" + voice.VoiceId;
         var text = Utilities.UnbreakLine(inputText);
 
+        // Eleven v4 / v4 Turbo silently drop SSML <break> tags (even with enable_ssml_parsing)
+        // but honor v3-style audio tags like [long pause], so translate breaks the same way.
+        if (model is "eleven_v4" or "eleven_v4_turbo")
+        {
+            text = ConvertBreakTagsToV3AudioTags(text);
+        }
+
         // Only send language_code when the user actually picked a language: cross-engine cast
         // rows pass none, and forcing "en" made ElevenLabs apply English normalization and
         // pronunciation hints to non-English lines.
