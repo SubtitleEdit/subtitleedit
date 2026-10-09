@@ -78,6 +78,15 @@
 		<Content Include="SE.ico" />
 	</ItemGroup>
 
+	<!--
+	  The docs pages back the search field in the macOS Help menu (HelpTopicIndex), so they
+	  are only embedded in macOS builds (and in RID-less dev builds).
+	-->
+	<ItemGroup Condition="'$(RuntimeIdentifier)' == '' or $(RuntimeIdentifier.StartsWith('osx'))">
+		<EmbeddedResource Include="..\..\docs\features\*.md" LogicalName="HelpDocs/features/%(Filename)%(Extension)" />
+		<EmbeddedResource Include="..\..\docs\faq.md" LogicalName="HelpDocs/%(Filename)%(Extension)" />
+	</ItemGroup>
+
 	<ItemGroup>
 	  <ProjectReference Include="..\libse\LibSE.csproj" />
 	  <ProjectReference Include="..\libuilogic\LibUiLogic.csproj" />
