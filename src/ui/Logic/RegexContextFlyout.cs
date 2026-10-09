@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.ComponentModel;
@@ -37,7 +38,7 @@ public static class RegexContextFlyout
     private static MenuFlyout MakeFindFlyout(TextBox textBox)
     {
         var l = Se.Language.Edit.RegularExpressionContextMenu;
-        var flyout = new MenuFlyout();
+        var flyout = MakeClipboardFlyout(textBox);
         AddItem(flyout, textBox, l.WordBoundary, "\\b");
         AddItem(flyout, textBox, l.NonWordBoundary, "\\B");
         AddItem(flyout, textBox, l.NewLine, "\\r\\n");
@@ -56,8 +57,42 @@ public static class RegexContextFlyout
     private static MenuFlyout MakeReplaceFlyout(TextBox textBox)
     {
         var l = Se.Language.Edit.RegularExpressionContextMenu;
-        var flyout = new MenuFlyout();
+        var flyout = MakeClipboardFlyout(textBox);
         AddItem(flyout, textBox, l.NewLineShort, "\\n");
+        return flyout;
+    }
+
+    /// <summary>
+    /// Cut/copy/paste on top, as the regex snippets replace the theme's default text box menu.
+    /// </summary>
+    private static MenuFlyout MakeClipboardFlyout(TextBox textBox)
+    {
+        var g = Se.Language.General;
+        var flyout = new MenuFlyout();
+        var commandModifier = OperatingSystem.IsMacOS() ? KeyModifiers.Meta : KeyModifiers.Control;
+        var cut = new MenuItem { Header = g.Cut, InputGesture = new KeyGesture(Key.X, commandModifier) };
+        cut.Click += (_, _) => textBox.Cut();
+        var copy = new MenuItem { Header = g.Copy, InputGesture = new KeyGesture(Key.C, commandModifier) };
+        copy.Click += (_, _) => textBox.Copy();
+        var paste = new MenuItem { Header = g.Paste, InputGesture = new KeyGesture(Key.V, commandModifier) };
+        paste.Click += (_, _) =>
+        {
+            textBox.Focus();
+            textBox.Paste();
+        };
+
+        flyout.Items.Add(cut);
+        flyout.Items.Add(copy);
+        flyout.Items.Add(paste);
+        flyout.Items.Add(new Separator());
+
+        flyout.Opening += (_, _) =>
+        {
+            cut.IsEnabled = textBox.CanCut;
+            copy.IsEnabled = textBox.CanCopy;
+            paste.IsEnabled = textBox.CanPaste;
+        };
+
         return flyout;
     }
 
