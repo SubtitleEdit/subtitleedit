@@ -36,11 +36,18 @@ public class AssaDrawPreviewTests
             }
 
             FfmpegHelper.SetFfmpegPath(candidate);
-            var fileName = FfmpegGenerator.GetScreenShotWithSubtitle(probe, 64, 64);
-            if (fileName != null)
+            try
             {
-                File.Delete(fileName);
-                return true;
+                var fileName = FfmpegGenerator.GetScreenShotWithSubtitle(probe, 64, 64);
+                if (fileName != null)
+                {
+                    File.Delete(fileName);
+                    return true;
+                }
+            }
+            catch (System.ComponentModel.Win32Exception)
+            {
+                // not installed (CI has no ffmpeg at all)
             }
         }
 
