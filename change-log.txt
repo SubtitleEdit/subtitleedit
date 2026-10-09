@@ -3,6 +3,33 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-beta26 (9th of October 2026)
+
+* Add ElevenLabs Eleven v4 and v4 Turbo TTS models (v4 Turbo is the new default, <break> converted to audio pause tags)
+* Add optional Sidon cleaning of voice-clone reference audio
+* Add Find and Replace to the OCR window
+* Add video player deinterlace setting (default auto) - thx MaxBunny1786
+* Add reload of the subtitle file when changed outside SE - thx jojorne
+* Add typing a custom frame rate - thx jojorne
+* Add Cut/Copy/Paste to the Find/Replace regex context menu - thx hisui3393
+* ASSA draw: live resolution change, zoom/reset view and F9 preview of the rendered drawing
+* Set position / Set background / Image color picker: use the paused video frame inside the line - thx 114562175
+* Set start/end and offset the rest: work without waveform focus, F9 default - thx DrDanAharoni
+* Fix no progress shown for whisper.cpp in Speech to text - thx abc16361
+* Fix custom ms seek accumulating after jump to start/end of line - thx 114562175
+* Fix Merge as dialog dash placed inside leading formatting tags - thx accessallareas
+* Fix OCR "All fixes"/"All guesses" line numbers after deleting lines - thx Peter Vella
+* Fix ASSA draw OK overwriting selected text lines + canvas sync bugs
+* Fix main menu dropdown size with UI scale at startup
+* Fix seconv --overwrite emptying the input file if interrupted - thx yottayoshida
+* Update CrispASR to v0.8.42
+* Update audio.cpp runtime to v0.9.1
+* Update Chinese Traditional translation - thx love80312
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+* Update Polish translation - thx potplayer-fanpack
+
+
 v5.3.0-beta25 (8th of October 2026)
 
 * Add taskbar/Dock progress for Speech to text, Text to speech, AI review, Auto-translate, Burn-in and Generate shot changes - thx pdjdev
