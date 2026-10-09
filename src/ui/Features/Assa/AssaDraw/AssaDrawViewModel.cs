@@ -887,7 +887,7 @@ public partial class AssaDrawViewModel : ObservableObject
         
         foreach (var layer in layers)
         {
-            var firstShape = layer.FirstOrDefault(p => !p.IsEraser || includeAll);
+            var firstShape = GetLayerStyleShape(layer);
             if (firstShape != null && !colorToStyleName.ContainsKey(firstShape.ForeColor))
             {
                 var color = firstShape.ForeColor;
@@ -919,7 +919,7 @@ public partial class AssaDrawViewModel : ObservableObject
         {
             sbDraw.Clear();
             sbErase.Clear();
-            var firstShape = layer.FirstOrDefault(p => !p.IsEraser);
+            var firstShape = GetLayerStyleShape(layer);
 
             // Collect draw shapes (normal shapes)
             foreach (var shape in layer.Where(p => !p.IsEraser))
@@ -974,6 +974,27 @@ public partial class AssaDrawViewModel : ObservableObject
         }
 
         return subtitle;
+    }
+
+    /// <summary>
+    /// The shape whose color names the layer's style: the first draw shape, or for a layer of only
+    /// erase shapes (written as an \iclip-only line) the first erase shape. The style loop and the
+    /// line loop picked differently, so an erase-only layer got a line with an empty style name.
+    /// </summary>
+    private static DrawShape? GetLayerStyleShape(IEnumerable<DrawShape> layer)
+    {
+        DrawShape? firstEraser = null;
+        foreach (var shape in layer)
+        {
+            if (!shape.IsEraser)
+            {
+                return shape;
+            }
+
+            firstEraser ??= shape;
+        }
+
+        return firstEraser;
     }
 
     private static string GetColorName(Color color)

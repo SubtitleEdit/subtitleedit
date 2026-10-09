@@ -66,4 +66,22 @@ public class AssaDrawResolutionTests
         Assert.Single(vm.Shapes, s => s.IsEraser);
         Assert.Equal("m 0 0 l 100 0 100 100", vm.Shapes.Single(s => !s.IsEraser).ToAssa());
     }
+
+    [Fact]
+    public void Ok_EraserOnlyLayer_GetsExistingStyle()
+    {
+        var vm = new AssaDrawViewModel(new FileHelper(), new StubWindowService());
+        var drawLine = MakeLine("{\\p1}m 0 0 l 100 0 100 100{\\p0}");
+        var maskLine = MakeLine("{\\iclip(m 10 10 l 20 10 20 20)}");
+        maskLine.Layer = 1;
+        vm.Initialize(MakeSubtitle(AdvancedSubStationAlpha.DefaultHeader), [drawLine, maskLine], 1920, 1080);
+
+        vm.OkCommand.Execute(null);
+
+        var styleNames = AdvancedSubStationAlpha.GetSsaStylesFromHeader(vm.ResultSubtitle.Header).Select(s => s.Name).ToList();
+        var mask = Assert.Single(vm.ResultSubtitle.Paragraphs, p => p.Layer == 1);
+        Assert.StartsWith("{\\iclip(", mask.Text);
+        Assert.False(string.IsNullOrEmpty(mask.Extra));
+        Assert.Contains(mask.Extra, styleNames);
+    }
 }
