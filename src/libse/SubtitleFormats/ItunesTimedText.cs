@@ -354,6 +354,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             newTag.InnerText = "bold";
                             skipCount = 2;
                         }
+                        else if (line.StartsWithAt(i, "<u>", StringComparison.OrdinalIgnoreCase))
+                        {
+                            newTag = xml.CreateAttribute("tts:textDecoration", "http://www.w3.org/ns/ttml#styling");
+                            newTag.InnerText = "underline";
+                            skipCount = 2;
+                        }
                         else if (line.StartsWithAt(i, "<font ", StringComparison.OrdinalIgnoreCase))
                         {
                             var endIndex = line.IndexOf('>', i + 1);
@@ -388,6 +394,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         else if (line.StartsWithAt(i, "</b>", StringComparison.OrdinalIgnoreCase))
                         {
                             closeTagName = "b";
+                            skipCount = 3;
+                        }
+                        else if (line.StartsWithAt(i, "</u>", StringComparison.OrdinalIgnoreCase))
+                        {
+                            closeTagName = "u";
                             skipCount = 3;
                         }
                         else if (line.StartsWithAt(i, "</font>", StringComparison.OrdinalIgnoreCase))
@@ -474,6 +485,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (tag.Name == "tts:fontWeight")
             {
                 return "b";
+            }
+
+            if (tag.Name == "tts:textDecoration")
+            {
+                return "u";
             }
 
             if (tag.Name == "tts:color" || tag.Name == FontWithoutColor)
