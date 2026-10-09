@@ -3,7 +3,6 @@ using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Edit.Find;
-using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -244,12 +243,12 @@ public partial class ReplaceViewModel : ObservableObject
         IsScopeVisible = canEditOriginal;
     }
 
-    internal void InitializeFindData(IFindService findService, List<string> subs, string selectedText, MainViewModel mainViewModel, List<string>? originalSubs = null, bool canEditOriginal = false)
+    internal void InitializeFindData(IFindService findService, List<string> subs, string selectedText, IFindResult findResult, List<string>? originalSubs = null, bool canEditOriginal = false)
     {
         _findService = findService;
         _subs = subs;
         _originalSubs = originalSubs;
-        _findResult = mainViewModel;
+        _findResult = findResult;
         IsScopeVisible = canEditOriginal;
         if (!string.IsNullOrEmpty(selectedText))
         {

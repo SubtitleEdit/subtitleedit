@@ -732,6 +732,24 @@ public class OcrWindow : Window
         menuItemDelete.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.OneWay });
         flyout.Items.Add(menuItemDelete);
 
+        var menuItemFind = new MenuItem
+        {
+            Header = Se.Language.Main.Menu.Find,
+            DataContext = vm,
+            Command = vm.ShowFindCommand,
+        };
+        menuItemFind.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.OneWay });
+        flyout.Items.Add(menuItemFind);
+
+        var menuItemReplace = new MenuItem
+        {
+            Header = Se.Language.Main.Menu.Replace,
+            DataContext = vm,
+            Command = vm.ShowReplaceCommand,
+        };
+        menuItemReplace.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.OneWay });
+        flyout.Items.Add(menuItemReplace);
+
         var menuItemFillSelectedLinesWithClipboard = new MenuItem
         {
             Header = Se.Language.Ocr.FillSelectedLinesWithClipboard,
@@ -863,6 +881,9 @@ public class OcrWindow : Window
         menuItemSelectAll.Click += (_, _) => textBoxText.SelectAll();
         flyout.Items.Add(menuItemSelectAll);
         flyout.Items.Add(new Separator());
+        flyout.Items.Add(new MenuItem { Header = Se.Language.Main.Menu.Find, DataContext = vm, Command = vm.ShowFindCommand });
+        flyout.Items.Add(new MenuItem { Header = Se.Language.Main.Menu.Replace, DataContext = vm, Command = vm.ShowReplaceCommand });
+        flyout.Items.Add(new Separator());
         var menuItemSetFont = new MenuItem
         {
             Header = Se.Language.General.SetFontDotDotDot,
@@ -871,6 +892,7 @@ public class OcrWindow : Window
         };
         flyout.Items.Add(menuItemSetFont);
         textBoxText.ContextFlyout = flyout;
+        vm.EditTextBox = textBoxText;
         textBoxText.PointerReleased += vm.TextBoxPointerReleased;
         textBoxText.KeyDown += vm.TextBoxKeyDown;
 
