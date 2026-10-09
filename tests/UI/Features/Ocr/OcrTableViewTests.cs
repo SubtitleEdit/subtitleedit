@@ -10,6 +10,7 @@ using Nikse.SubtitleEdit;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 using SkiaSharp;
 
 namespace UITests.Features.Ocr;
@@ -440,6 +441,41 @@ public class OcrTableViewTests
         Assert.Equal(250, tableView.SelectedIndex);
         var topAfter = FirstVisibleIndex(tableView, scrollViewer);
         Assert.True(Math.Abs(topAfter - topBefore) <= 2, $"Viewport moved from row {topBefore} to row {topAfter}");
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void OcrWindow_DeleteLines_KeepsAllFixesAndGuessesOnTheirRows()
+    {
+        var vm = MakeViewModel(10);
+        var window = ShowWindow(vm);
+        var tableView = GetTableView(window);
+
+        vm.AllFixes.Add(new ReplacementUsedItem("l", "I", 1));
+        vm.AllFixes.Add(new ReplacementUsedItem("rn", "m", 3));
+        vm.AllFixes.Add(new ReplacementUsedItem("0", "O", 8));
+        vm.AllGuesses.Add(new GuessUsedItem("tbe", "the", 5));
+        vm.AllGuesses.Add(new GuessUsedItem("wbat", "what", 9));
+
+        tableView.SelectedItems!.Clear();
+        tableView.SelectedItems.Add(vm.OcrSubtitleItems[3]);
+        tableView.SelectedItems.Add(vm.OcrSubtitleItems[0]);
+        tableView.SelectedItems.Add(vm.OcrSubtitleItems[6]);
+        Dispatcher.UIThread.RunJobs();
+
+        vm.DeleteSelectedLinesCommand.Execute(null);
+        Dispatcher.UIThread.RunJobs();
+
+        // Row 3's fix went with it; the others moved up by the deleted rows above them.
+        Assert.Equal(new[] { (0, "#1: l → I"), (5, "#6: 0 → O") },
+            vm.AllFixes.Select(f => (f.LineIndex, f.ToString())).ToArray());
+        Assert.Equal(new[] { 3, 6 }, vm.AllGuesses.Select(g => g.LineIndex).ToArray());
+
+        vm.SelectedAllFix = vm.AllFixes[1];
+        vm.AllFixesTapped();
+        Dispatcher.UIThread.RunJobs();
+        Assert.Equal("Line 9", vm.SelectedOcrSubtitleItem?.Text);
 
         window.Close();
     }
