@@ -25739,6 +25739,7 @@ public partial class MainViewModel :
 
             SetSubtitles(_subtitle);
             _changeSubtitleHash = GetFastHash();
+            RememberSubtitleFileStamp();
             ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
             LoadBookmarks();
 
@@ -28009,6 +28010,7 @@ public partial class MainViewModel :
 
         _changeSubtitleHash = GetFastHash();
         _lastOpenSaveFormat = SelectedSubtitleFormat;
+        RememberSubtitleFileStamp();
 
         new SubtitleMarksPersistence(GetSaveSubtitle(), _subtitleFileName).Save();
 
@@ -28081,6 +28083,7 @@ public partial class MainViewModel :
 
         _changeSubtitleHash = GetFastHash();
         _lastOpenSaveFormat = SelectedSubtitleFormat;
+        RememberSubtitleFileStamp();
 
         new SubtitleMarksPersistence(GetSaveSubtitle(), _subtitleFileName).Save();
 
@@ -32446,6 +32449,9 @@ public partial class MainViewModel :
         // Captured before the cleanup below, which can move focus itself.
         _focusBeforeWindowDeactivated = GetRestorableFocusedControl();
 
+        // The user may be off to edit the subtitle file in another program (#15828).
+        EnsureSubtitleFileStamp();
+
         // The claim on the SE foreground moves to a dialog when one is what took over; it
         // deliberately STAYS with the main window otherwise - through the application going to
         // the background, and through an undocked tool window reading as active here (topmost
@@ -32538,6 +32544,19 @@ public partial class MainViewModel :
             }
 
             SubtitleGrid?.Focus();
+        });
+
+        // Back from another program - pick up edits it made to the open subtitle file (#15828).
+        Dispatcher.UIThread.Post(async void () =>
+        {
+            try
+            {
+                await CheckSubtitleFileChangedOutside();
+            }
+            catch (Exception exception)
+            {
+                SeLogger.Error(exception, "Checking for subtitle file changes made outside Subtitle Edit failed");
+            }
         });
     }
 
