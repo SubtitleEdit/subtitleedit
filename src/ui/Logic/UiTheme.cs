@@ -154,6 +154,7 @@ public static class UiTheme
 
         ApplyMenuScaleStyle(Se.Settings.Appearance.LayoutScale);
         ApplyTextSelectionStyle();
+        ApplyProgressBarContrastStyle();
         ApplyLayoutScaleToAllWindows();
         ApplyScaleToDenseMenus();
     }
@@ -180,6 +181,7 @@ public static class UiTheme
         }
 
         ApplyTextSelectionStyle();
+        ApplyProgressBarContrastStyle();
         SystemThemeChangedCallback?.Invoke();
     }
 
@@ -417,6 +419,113 @@ public static class UiTheme
 
     private static Styles? _scrollBarStyle;
     private static Styles? _textSelectionStyle;
+    private static Styles? _progressBarContrastStyle;
+
+    /// <summary>
+    /// Fluent paints the progress bar fill with the plain accent color on a translucent
+    /// track. With a gray Windows accent such as "Storm" (#4C4A48) the fill matches the dark
+    /// track almost exactly and the bar looks like it never moves (#15836). When the accent is
+    /// too close to the track, the fill is blended toward white (dark) or black (light) until
+    /// it stands out; accents that already contrast are left alone.
+    /// </summary>
+    public static void ApplyProgressBarContrastStyle()
+    {
+        if (Application.Current == null)
+        {
+            return;
+        }
+
+        if (_progressBarContrastStyle != null)
+        {
+            Application.Current.Styles.Remove(_progressBarContrastStyle);
+            _progressBarContrastStyle = null;
+        }
+
+        var variant = Application.Current.ActualThemeVariant;
+        if (!Application.Current.TryGetResource("SystemAccentColor", variant, out var value) || value is not Color accent)
+        {
+            return;
+        }
+
+        var isDark = variant == ThemeVariant.Dark;
+        var fill = GetProgressBarFillColor(accent, isDark);
+        if (fill == accent)
+        {
+            return;
+        }
+
+        _progressBarContrastStyle = new Styles
+        {
+            new Style(x => x.Is<ProgressBar>())
+            {
+                Setters =
+                {
+                    new Setter(ProgressBar.ForegroundProperty, new SolidColorBrush(fill)),
+                }
+            },
+        };
+
+        Application.Current.Styles.Add(_progressBarContrastStyle);
+    }
+
+    // The default Windows blue (#0078D4) is about 1.8:1 against the dark track, so only accents
+    // below this are treated as invisible; those are then lifted to a clearly visible fill.
+    public const double MinProgressBarContrast = 1.5;
+    public const double AdjustedProgressBarContrast = 2.5;
+
+    /// <summary>
+    /// Returns <paramref name="accent"/> when it contrasts enough with the Fluent progress bar
+    /// track, otherwise the accent blended toward white (dark theme) or black (light theme)
+    /// just far enough to reach <see cref="AdjustedProgressBarContrast"/>.
+    /// </summary>
+    internal static Color GetProgressBarFillColor(Color accent, bool isDark)
+    {
+        // The Fluent track is SystemBaseLowColor (20% white/black) over the window background.
+        var track = isDark ? Color.FromRgb(77, 77, 77) : Color.FromRgb(204, 204, 204);
+        if (GetContrastRatio(accent, track) >= MinProgressBarContrast)
+        {
+            return accent;
+        }
+
+        var target = isDark ? Colors.White : Colors.Black;
+        for (var step = 1; step <= 10; step++)
+        {
+            var color = Blend(accent, target, step / 10.0);
+            if (GetContrastRatio(color, track) >= AdjustedProgressBarContrast)
+            {
+                return color;
+            }
+        }
+
+        return target;
+    }
+
+    private static Color Blend(Color from, Color to, double amount)
+    {
+        return Color.FromRgb(
+            (byte)Math.Round(from.R + (to.R - from.R) * amount),
+            (byte)Math.Round(from.G + (to.G - from.G) * amount),
+            (byte)Math.Round(from.B + (to.B - from.B) * amount));
+    }
+
+    internal static double GetContrastRatio(Color a, Color b)
+    {
+        var la = GetRelativeLuminance(a);
+        var lb = GetRelativeLuminance(b);
+        return (Math.Max(la, lb) + 0.05) / (Math.Min(la, lb) + 0.05);
+    }
+
+    private static double GetRelativeLuminance(Color c)
+    {
+        static double Channel(byte v)
+        {
+            var s = v / 255.0;
+            return s <= 0.03928 ? s / 12.92 : Math.Pow((s + 0.055) / 1.055, 2.4);
+        }
+
+        return 0.2126 * Channel(c.R) + 0.7152 * Channel(c.G) + 0.0722 * Channel(c.B);
+    }
+
 
     public const int MinTextSelectionOpacity = 10;
 

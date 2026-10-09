@@ -209,6 +209,10 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private readonly Regex _pctWhisper = new(@"^\d+%\|", RegexOptions.Compiled);
 
+    // whisper.cpp --print-progress; the function-name prefix differs between versions (#15836).
+    private static readonly Regex WhisperCppProgressRegex =
+        new(@"^\s*whisper_\w+:\s*progress\s*=\s*(\d+(?:\.\d+)?)\s*%", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
     // WhisperX (verbose, its default) prints one "Transcript: [1101.31 --> 1130.774]  text" line
     // per VAD chunk as it is decoded, with plain seconds rather than a time code.
     private static readonly Regex WhisperXTranscriptRegex =
@@ -2023,6 +2027,11 @@ public partial class SpeechToTextViewModel : ObservableObject
         if (IsBatchMode)
         {
             return string.Format(Se.Language.Video.AudioToText.TranscribingXOfY, _batchIndex + 1, _jobItems.Count);
+        }
+        else if (ProgressValue >= 1)
+        {
+            // The number keeps the progress readable even where the bar fill is hard to see (#15836).
+            return $"{Se.Language.Video.AudioToText.Transcribing} {(int)ProgressValue}%";
         }
         else
         {
@@ -5288,19 +5297,10 @@ public partial class SpeechToTextViewModel : ObservableObject
                     _endSeconds = whisperXEndSeconds;
                 }
             }
-            else if (line.StartsWith("whisper_full: progress =", StringComparison.OrdinalIgnoreCase))
+            else if (TryParseWhisperCppProgress(line, out var whisperCppPct))
             {
-                var arr = line.Split('=');
-                if (arr.Length == 2)
-                {
-                    var pctString = arr[1].Trim().TrimEnd('%').TrimEnd();
-                    if (double.TryParse(pctString, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture,
-                            out var pct))
-                    {
-                        _endSeconds = _videoInfo.TotalSeconds * pct / 100.0;
-                        _showProgressPct = pct;
-                    }
-                }
+                _endSeconds = _videoInfo.TotalSeconds * whisperCppPct / 100.0;
+                _showProgressPct = whisperCppPct;
             }
             else if (line.StartsWith("crispasr: progress =", StringComparison.OrdinalIgnoreCase))
             {
@@ -5363,6 +5363,19 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         _resultList.Add(rt);
+    }
+
+    /// <summary>
+    /// Reads the percentage from a whisper.cpp "--print-progress" line. Older builds print
+    /// "whisper_full: progress = 25%", current whisper-cli prints
+    /// "whisper_print_progress_callback: progress =  25%" (#15836).
+    /// </summary>
+    internal static bool TryParseWhisperCppProgress(string line, out double pct)
+    {
+        pct = 0;
+        var match = WhisperCppProgressRegex.Match(line);
+        return match.Success &&
+               double.TryParse(match.Groups[1].Value, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out pct);
     }
 
     /// <summary>
