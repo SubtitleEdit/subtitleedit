@@ -18,6 +18,8 @@ public class LanguageAssa
     public string DrawZoomOut { get; set; }
     public string DrawResetView { get; set; }
     public string DrawToggleGrid { get; set; }
+    public string DrawTogglePreview { get; set; }
+    public string DrawPreviewFailed { get; set; }
     public string DrawCopyToClipboard { get; set; }
     public string DrawShapes { get; set; }
     public string DrawSelectedPoint { get; set; }
@@ -275,6 +277,8 @@ public class LanguageAssa
         DrawZoomOut = "Zoom Out (Ctrl+-)";
         DrawResetView = "Reset View (Ctrl+0)";
         DrawToggleGrid = "Toggle Grid (Ctrl+G)";
+        DrawTogglePreview = "Toggle preview (F9)";
+        DrawPreviewFailed = "Preview failed - ffmpeg with libass (subtitles filter) is required";
         DrawCopyToClipboard = "Copy to Clipboard (Ctrl+C)";
         DrawShapes = "Shapes";
         DrawSelectedPoint = "Selected point";

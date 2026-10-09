@@ -2632,7 +2632,7 @@ public partial class MainViewModel :
 
         var result = await ShowDialogAsync<AssaDrawWindow, AssaDrawViewModel>(vm =>
         {
-            vm.Initialize(GetUpdateSubtitle(), selectedItems, _mediaInfo?.Dimension.Width, _mediaInfo?.Dimension.Height);
+            vm.Initialize(GetUpdateSubtitle(), selectedItems, _mediaInfo?.Dimension.Width, _mediaInfo?.Dimension.Height, _videoFileName, GetVideoPlayerControl()?.Position);
         });
 
         if (!result.OkPressed)
