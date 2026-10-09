@@ -289,6 +289,89 @@ public class CompareEditTests : IDisposable
         Assert.Equal(top, RowTop(), 1);
     }
 
+    // Wheel scrolling leaves keyboard focus on the selected row, out of view; the virtualizing list
+    // keeps it at an estimated position, and focus going back to it scrolled the list there -
+    // hundreds of rows off with these mixed row heights (#15843).
+    [AvaloniaFact]
+    public void ReactivatingTheWindow_KeepsTheView_WhenTheFocusedRowIsScrolledAway()
+    {
+        var (vm, window, scrollViewer) = OpenScrolledAwayFromFocusedRow();
+        var first = FirstVisibleRow(vm, scrollViewer);
+
+        var other = new Window { Width = 200, Height = 200 };
+        _windows.Add(other);
+        other.Show();
+        other.Activate();
+        Settle(other);
+        window.Activate();
+        Settle(window);
+
+        Assert.Equal(first, FirstVisibleRow(vm, scrollViewer));
+    }
+
+    [AvaloniaFact]
+    public void ClosingTheEditor_KeepsTheView_WhenTheFocusedRowIsScrolledAway()
+    {
+        var (vm, window, scrollViewer) = OpenScrolledAwayFromFocusedRow();
+        var row = vm.Rows[FirstVisibleRow(vm, scrollViewer) + 2];
+
+        vm.BeginEditCommand.Execute(row);
+        Settle(window);
+        var first = FirstVisibleRow(vm, scrollViewer); // the editor's text box may nudge the list to show it
+        vm.CancelEditCommand.Execute(row);
+        Settle(window);
+        Assert.Equal(first, FirstVisibleRow(vm, scrollViewer));
+
+        vm.BeginEditCommand.Execute(row);
+        Settle(window);
+        first = FirstVisibleRow(vm, scrollViewer);
+        vm.CommitEditCommand.Execute(row);
+        Settle(window);
+        Assert.Equal(first, FirstVisibleRow(vm, scrollViewer));
+    }
+
+    private (CompareViewModel Vm, CompareWindow Window, ScrollViewer ScrollViewer) OpenScrolledAwayFromFocusedRow()
+    {
+        var left = new ObservableCollection<SubtitleLineViewModel>();
+        var right = new ObservableCollection<SubtitleLineViewModel>();
+        for (var i = 0; i < 1000; i++)
+        {
+            var text = i < 450 ? "Line " + i : "Line " + i + Environment.NewLine + "second" + Environment.NewLine + "third";
+            left.Add(MakeLine(text, i * 2000, i + 1));
+            right.Add(MakeLine(i % 3 == 0 ? text + " x" : text, i * 2000, i + 1));
+        }
+
+        var vm = Open(left, right);
+        var window = new CompareWindow(vm) { Width = 1300, Height = 800 };
+        _windows.Add(window);
+        window.Show();
+        window.Activate();
+        Settle(window);
+
+        var scrollViewer = vm.RowsView!.GetVisualDescendants().OfType<ScrollViewer>().First();
+        vm.SelectRow(420);
+        Settle(window);
+        ((Control)vm.RowsView.ContainerFromIndex(420)!).Focus();
+        Settle(window);
+        while (FirstVisibleRow(vm, scrollViewer) < 500)
+        {
+            scrollViewer.Offset = new Vector(0, scrollViewer.Offset.Y + 300);
+            Settle(window);
+        }
+
+        return (vm, window, scrollViewer);
+    }
+
+    private static int FirstVisibleRow(CompareViewModel vm, ScrollViewer scrollViewer)
+    {
+        return vm.RowsView!.GetRealizedContainers()
+            .Select(c => (Container: c, Top: c.TranslatePoint(new Point(0, 0), scrollViewer)!.Value.Y))
+            .Where(p => p.Top + p.Container.Bounds.Height > 0 && p.Top < scrollViewer.Viewport.Height)
+            .OrderBy(p => p.Top)
+            .Select(p => vm.RowsView.IndexFromContainer(p.Container))
+            .First();
+    }
+
     private CompareViewModel Open(ObservableCollection<SubtitleLineViewModel> left, ObservableCollection<SubtitleLineViewModel> right)
     {
         var vm = new CompareViewModel(new FileHelper(), new FolderHelper());
