@@ -5079,6 +5079,11 @@ public partial class OcrViewModel : ObservableObject
     {
         _isCtrlDown = e.KeyModifiers.HasFlag(KeyModifiers.Control);
 
+        if (HandleFindReplaceKeys(e))
+        {
+            return;
+        }
+
         if (e.Key == Key.Escape)
         {
             e.Handled = true;

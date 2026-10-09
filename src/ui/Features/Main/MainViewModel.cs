@@ -18565,7 +18565,7 @@ public partial class MainViewModel :
         _shortcutManager.ClearKeys();
     }
 
-    private static int? TryBuildReplacement(string line, int matchIndex, string matchText, ReplaceViewModel result, out string newLine)
+    internal static int? TryBuildReplacement(string line, int matchIndex, string matchText, ReplaceViewModel result, out string newLine)
     {
         if (result.FindMode == FindMode.RegularExpression)
         {

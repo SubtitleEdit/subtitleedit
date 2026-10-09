@@ -127,9 +127,17 @@ Right-click the subtitle list for:
 - **Inspect line...** — nOCR and Binary image compare only
 - **Show image**, **Save image as...**, **Copy image to clipboard**
 - **Delete**, and **Fill selected lines with clipboard text** when several lines are selected
+- **Find...**, **Replace...** — See [Find and Replace](#find-and-replace)
 - **Italic**, **Bold**
 - **Edit/export...**, **Import text from subtitle...**, **Export text as subtitle...**
 - **Save all images with HTML index...** — See [Saving the Images](#saving-the-images)
+
+## Find and Replace
+
+**Find...** and **Replace...** (subtitle list or text box right-click menu, Ctrl+F / Ctrl+H) open
+the same Find and Replace windows as the main window, so text can be searched and fixed while the
+image is still next to it. A match selects its line and highlights the text in the text box.
+Replace all also updates the lines' highlighted OCR text in the list.
 
 ## Saving the Images
 
@@ -152,6 +160,9 @@ number, time codes, duration and image size.
 |----------|--------|
 | Escape | Cancel OCR / Close window |
 | Ctrl+G | Go to line number |
+| Ctrl+F | Find |
+| Ctrl+H | Replace (Cmd+Alt+F on macOS) |
+| F3 / Shift+F3 | Find next / Find previous |
 | Ctrl++ | Zoom in (images in grid) |
 | Ctrl+- | Zoom out (images in grid) |
 | F1 | Show help |
