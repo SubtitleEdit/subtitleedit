@@ -2430,9 +2430,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             // seek are about to be superseded. Those are served fast, at keyframes, and the exact
             // landing is deferred to when the burst settles (ScrubSeekPolicy). An isolated seek,
             // the common case, is exact right away as before - and so is the second seek of a
-            // pair, which is what a waveform click issues (ScrubSeekPolicy.JoinsBurst).
+            // pair, which is what a waveform click issues, and a short step such as a held
+            // 10 ms nudge shortcut (ScrubSeekPolicy.JoinsBurst).
             var seekInFlight = !forceExact && IsSeekInFlight();
-            var inBurst = ScrubSeekPolicy.JoinsBurst(seekInFlight, _lastSeekIssuedInFlight);
+            var previousTarget = BitConverter.Int64BitsToDouble(Interlocked.Read(ref _scrubFollowUpTargetBits));
+            var inBurst = ScrubSeekPolicy.JoinsBurst(seekInFlight, _lastSeekIssuedInFlight, value - previousTarget);
             _lastSeekIssuedInFlight = seekInFlight;
             var seekFlags = ScrubSeekPolicy.FlagsFor(inBurst);
 
