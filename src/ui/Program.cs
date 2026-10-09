@@ -478,6 +478,7 @@ namespace Nikse.SubtitleEdit
             if (OperatingSystem.IsMacOS())
             {
                 Nikse.SubtitleEdit.Features.Main.Layout.InitNativeMacMenu.SetupAppMenu(app);
+                Nikse.SubtitleEdit.Features.Main.Layout.MacHelpSearchInterop.TryRegister();
             }
 
             // mac finder "Send to"
