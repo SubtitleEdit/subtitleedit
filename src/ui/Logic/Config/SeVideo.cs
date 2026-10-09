@@ -92,6 +92,13 @@ public class SeVideo
     public string MpvPreviewJustify { get; set; }
 
     /// <summary>
+    /// mpv's "deinterlace" option for the video player: "no", "auto" or "yes" (#15827). "auto"
+    /// (the default) only deinterlaces frames the file flags as interlaced, so progressive video
+    /// is left untouched; "yes" filters every frame, for interlaced files that are not flagged.
+    /// </summary>
+    public string MpvDeinterlace { get; set; }
+
+    /// <summary>
     /// mpv's "audio-buffer" option in seconds, applied when a player core is created. Zero (the
     /// default) leaves mpv's own 0.2 s buffer alone. SE shipped 0.05 for a while: with a buffer
     /// that small any hiccup on mpv's audio thread empties the device, mpv stops the output,
@@ -192,6 +199,7 @@ public class SeVideo
         MpvPreviewBorderType = (int)BorderStyleType.Outline;
         MpvPreviewUsePositionFromFile = true;
         MpvPreviewJustify = "auto";
+        MpvDeinterlace = "auto";
         MpvAudioBufferSeconds = 0;
         MpvAudioStreamSilence = false;
         SecondarySubtitleOverrideStyle = false;

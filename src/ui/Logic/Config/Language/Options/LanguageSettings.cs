@@ -344,6 +344,10 @@ public class LanguageSettings
     public string UsePositionFromSubtitleFile { get; set; }
     public string MarginIsPartOfSubtitleArea { get; set; }
     public string TextJustify { get; set; }
+    public string Deinterlace { get; set; }
+    public string DeinterlaceOff { get; set; }
+    public string DeinterlaceAuto { get; set; }
+    public string DeinterlaceAlways { get; set; }
     public string PixelWidthInfo { get; set; }
     public string SpellCheckEngineHunSpelll { get; set; }
     public string SpellCheckEngineMsWord { get; set; }
@@ -702,6 +706,10 @@ public class LanguageSettings
         UsePositionFromSubtitleFile = "Use position from subtitle file (TTML/PAC/EBU STL)";
         MarginIsPartOfSubtitleArea = "Margin is part of the subtitle area";
         TextJustify = "Justify lines";
+        Deinterlace = "Deinterlace video";
+        DeinterlaceOff = "Off";
+        DeinterlaceAuto = "Auto (interlaced frames only)";
+        DeinterlaceAlways = "Always";
         PixelWidthInfo = "Green lines = max-width limit   |   Red area = text exceeds limit";
         SpellCheckEngineHunSpelll = "Hunspell";
         SpellCheckEngineMsWord = "MS Word";

@@ -1087,6 +1087,26 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         SetOptionString("sub-ass-justify", justify == "auto" ? "no" : "yes");
     }
 
+    /// <summary>
+    /// Deinterlaces the video picture, so interlaced (480i/576i/1080i) video does not show
+    /// comb-like scan lines (#15827). "auto" only filters frames flagged as interlaced; mpv
+    /// builds older than 0.38 do not know "auto" and reject it, so that falls back to "no"
+    /// rather than to "yes", which would filter progressive video too.
+    /// </summary>
+    public void ApplyDeinterlace()
+    {
+        var deinterlace = Se.Settings.Video.MpvDeinterlace;
+        if (deinterlace != "no" && deinterlace != "yes")
+        {
+            deinterlace = "auto";
+        }
+
+        if (SetOptionString("deinterlace", deinterlace) < 0 && deinterlace == "auto")
+        {
+            SetOptionString("deinterlace", "no");
+        }
+    }
+
     public int SetOptionString(string name, string value)
     {
         if (_mpvSetOptionString == null || _mpv == IntPtr.Zero)
@@ -2003,6 +2023,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
         SetOptionString("hr-seek", "yes");
 
+        ApplyDeinterlace();
         ApplySubtitleMarginArea();
         ApplySubtitleJustify();
 
