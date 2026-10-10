@@ -124,7 +124,7 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
         }
 
         var vm = await _windowService.ShowDialogAsync<ColorPickerWindow, ColorPickerViewModel>(
-            Window, viewModel => { viewModel.SelectedColor = SubtitleColor; });
+            Window, viewModel => viewModel.Initialize(SubtitleColor));
 
         if (vm.OkPressed)
         {

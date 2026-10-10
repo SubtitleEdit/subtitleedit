@@ -93,4 +93,25 @@ Input #0, matroska,webm, from 'audiobook.mka':
         Assert.Equal(0, audio[0].StreamIndex);
         Assert.Equal(1, audio[1].StreamIndex);
     }
+
+    // Newer ffmpeg prints "Display Matrix: rotation of", 4.x prints "displaymatrix: rotation of";
+    // both mean a portrait phone recording stored landscape.
+    [Theory]
+    [InlineData("Display Matrix")]
+    [InlineData("displaymatrix")]
+    public void ParseLog_RotationSwapsDimension(string sideDataName)
+    {
+        var log = @"
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'phone.mp4':
+  Duration: 00:00:05.00, start: 0.000000, bitrate: 1234 kb/s
+    Stream #0:0(und): Video: h264 (High), yuv420p, 1920x1080, 30 fps, 30 tbr
+    Side data:
+      " + sideDataName + @": rotation of -90.00 degrees
+";
+
+        var info = FfmpegMediaInfo.ParseLog(log);
+
+        Assert.Equal(1080, info.Dimension.Width);
+        Assert.Equal(1920, info.Dimension.Height);
+    }
 }

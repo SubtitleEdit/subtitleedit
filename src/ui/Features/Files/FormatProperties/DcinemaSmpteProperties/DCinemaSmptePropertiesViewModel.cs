@@ -284,7 +284,7 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
         }
 
         var vm = await _windowService.ShowDialogAsync<ColorPickerWindow, ColorPickerViewModel>(
-            Window, viewModel => { viewModel.SelectedColor = FontColor; });
+            Window, viewModel => viewModel.Initialize(FontColor));
 
         if (vm.OkPressed)
         {
@@ -301,7 +301,7 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
         }
 
         var vm = await _windowService.ShowDialogAsync<ColorPickerWindow, ColorPickerViewModel>(
-            Window, viewModel => { viewModel.SelectedColor = FontEffectColor; });
+            Window, viewModel => viewModel.Initialize(FontEffectColor));
 
         if (vm.OkPressed)
         {
@@ -339,7 +339,7 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
                 EditRate = importer.EditRate ?? "24 1";
                 SelectedTimeCodeRate = importer.TimeCodeRate ?? "24";
 
-                if (double.TryParse(importer.StartTime, out var startTimeMs))
+                if (double.TryParse(importer.StartTime, NumberStyles.Float, CultureInfo.InvariantCulture, out var startTimeMs))
                 {
                     var timeCode = new TimeCode(startTimeMs);
                     StartTime = timeCode.ToHHMMSSFF();
@@ -394,7 +394,8 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
 
         try
         {
-            var tc = TimeCode.ParseToMilliseconds(StartTime);
+            // HH:MM:SS:FF - the last field is frames (import reads it back with ToHHMMSSFF).
+            var tc = TimeCode.ParseHHMMSSFFToMilliseconds(StartTime);
 
             var exporter = new DcPropertiesSmpte
             {

@@ -124,13 +124,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
+            // Merge records sharing a start time (one record per line of a cue). Backwards, so a
+            // run of three or more folds into its first record - forward, the third line was
+            // merged into the already-deleted second one and lost, and the cue got zero duration.
             var deletes = new List<int>();
-            for (i = 0; i < subtitle.Paragraphs.Count - 1; i++)
+            for (i = subtitle.Paragraphs.Count - 2; i >= 0; i--)
             {
                 if (subtitle.Paragraphs[i].StartTime.TotalMilliseconds == subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds)
                 {
                     subtitle.Paragraphs[i].Text += Environment.NewLine + subtitle.Paragraphs[i + 1].Text;
-                    subtitle.Paragraphs[i].EndTime = subtitle.Paragraphs[i + 1].EndTime;
+                    subtitle.Paragraphs[i].EndTime = new TimeCode(subtitle.Paragraphs[i + 1].EndTime.TotalMilliseconds);
                     deletes.Add(i + 1);
                 }
             }
