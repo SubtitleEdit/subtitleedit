@@ -62,6 +62,14 @@ public partial class AssaDrawViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<ShapeTreeItem> _shapeTreeItems = [];
     [ObservableProperty] private ShapeTreeItem? _selectedTreeItem;
     [ObservableProperty] private List<DrawShape> _selectedShapes = [];
+    [ObservableProperty] private float _shapeX;
+    [ObservableProperty] private float _shapeY;
+    [ObservableProperty] private float _shapeWidth;
+    [ObservableProperty] private float _shapeHeight;
+    [ObservableProperty] private int _shapeLayer;
+    [ObservableProperty] private string _selectionText = string.Empty;
+    [ObservableProperty] private string _codePreview = string.Empty;
+    [ObservableProperty] private double _zoomPercent = 100;
     [ObservableProperty] private double _backgroundOpacity = Math.Clamp(Se.Settings.Assa.DrawBackgroundOpacity, 0.1, 1);
     [ObservableProperty] private bool _backgroundStretch = Se.Settings.Assa.DrawBackgroundStretch;
     [ObservableProperty] private bool _hasBackground;
@@ -91,6 +99,7 @@ public partial class AssaDrawViewModel : ObservableObject
     private string _previewSource = string.Empty;
     private bool _previewBusy;
     private bool _refreshingTree;
+    private bool _updatingShapeFields;
 
     private const int MaxUndoSteps = 100;
     private readonly List<UndoState> _undoStack = [];
@@ -318,6 +327,118 @@ public partial class AssaDrawViewModel : ObservableObject
     private void OnZoomChanged(object? sender, float zoomFactor)
     {
         ZoomText = $"Zoom: {zoomFactor * 100:0}%";
+        if (Math.Abs(ZoomPercent - zoomFactor * 100) > 0.5)
+        {
+            ZoomPercent = Math.Round(zoomFactor * 100);
+        }
+    }
+
+    partial void OnZoomPercentChanged(double value)
+    {
+        // Zoom slider: zoom around the middle of the view
+        if (Canvas != null && Math.Abs(Canvas.ZoomFactor * 100 - value) > 0.5)
+        {
+            Canvas.ZoomAt((float)(value / 100), Canvas.Bounds.Center);
+        }
+    }
+
+    /// <summary>
+    /// Fills the shape fields (position, size, layer), the status text and the code preview from the selection.
+    /// </summary>
+    private void UpdateSelectionInfo()
+    {
+        var shape = TargetShape;
+        _updatingShapeFields = true;
+        try
+        {
+            if (shape != null && shape.Points.Count > 0)
+            {
+                var (left, top, right, bottom) = shape.GetBounds();
+                ShapeX = MathF.Round(left, 1);
+                ShapeY = MathF.Round(top, 1);
+                ShapeWidth = MathF.Round(right - left, 1);
+                ShapeHeight = MathF.Round(bottom - top, 1);
+                ShapeLayer = shape.Layer;
+            }
+        }
+        finally
+        {
+            _updatingShapeFields = false;
+        }
+
+        var item = SelectedTreeItem;
+        SelectionText = SelectedShapes.Count > 1
+            ? $"{SelectedShapes.Count} shapes"
+            : item?.Point != null
+                ? item.Name.Trim()
+                : shape != null
+                    ? $"{string.Format(Se.Language.Assa.DrawLayerX, shape.Layer)} · {shape.Points.Count} points"
+                    : item?.IsLayer == true
+                        ? item.Name
+                        : string.Empty;
+
+        var code = GenerateAssaCode();
+        CodePreview = code.Length > 400 ? code[..400] + "..." : code;
+    }
+
+    partial void OnShapeXChanged(float value) => MoveTargetShape(value - (TargetShape?.GetBounds().Left ?? value), 0, "shape-x");
+
+    partial void OnShapeYChanged(float value) => MoveTargetShape(0, value - (TargetShape?.GetBounds().Top ?? value), "shape-y");
+
+    private void MoveTargetShape(float dx, float dy, string undoKey)
+    {
+        var shape = TargetShape;
+        if (_updatingShapeFields || shape == null || (Math.Abs(dx) < 0.001f && Math.Abs(dy) < 0.001f))
+        {
+            return;
+        }
+
+        SaveUndo($"{undoKey}-{RuntimeHelpers.GetHashCode(shape)}");
+        shape.Offset(dx, dy);
+        RefreshTreeView();
+        Canvas?.InvalidateVisual();
+    }
+
+    partial void OnShapeWidthChanged(float value) => ResizeTargetShape(value, null);
+
+    partial void OnShapeHeightChanged(float value) => ResizeTargetShape(null, value);
+
+    /// <summary>
+    /// Size fields: scale the shape from its top-left corner.
+    /// </summary>
+    private void ResizeTargetShape(float? width, float? height)
+    {
+        var shape = TargetShape;
+        if (_updatingShapeFields || shape == null)
+        {
+            return;
+        }
+
+        var (left, top, right, bottom) = shape.GetBounds();
+        var scaleX = width.HasValue && right - left > 0.01f && width.Value > 0.01f ? width.Value / (right - left) : 1f;
+        var scaleY = height.HasValue && bottom - top > 0.01f && height.Value > 0.01f ? height.Value / (bottom - top) : 1f;
+        if (Math.Abs(scaleX - 1) < 0.0001f && Math.Abs(scaleY - 1) < 0.0001f)
+        {
+            return;
+        }
+
+        SaveUndo($"shape-size-{RuntimeHelpers.GetHashCode(shape)}");
+        foreach (var point in shape.Points)
+        {
+            point.X = left + (point.X - left) * scaleX;
+            point.Y = top + (point.Y - top) * scaleY;
+        }
+
+        RefreshTreeView();
+        Canvas?.InvalidateVisual();
+    }
+
+    partial void OnShapeLayerChanged(int value)
+    {
+        if (!_updatingShapeFields && TargetShape != null && TargetShape.Layer != value && value >= 0)
+        {
+            MoveShapeToLayer(value);
+        }
     }
 
     private void OnCanvasClicked(object? sender, CanvasClickEventArgs e)
@@ -1795,6 +1916,7 @@ public partial class AssaDrawViewModel : ObservableObject
                     IconName = "fa-solid fa-layer-group",
                     Swatch = new SolidColorBrush(layerShapes[0].ForeColor),
                     IsHidden = layerShapes.All(s => s.Hidden),
+                    Meta = layerShapes.Count.ToString(CultureInfo.InvariantCulture),
                 };
 
                 var shapeNumber = 0;
@@ -1808,6 +1930,7 @@ public partial class AssaDrawViewModel : ObservableObject
                         IsExpanded = shape.Expanded,
                         IconName = shape.IsEraser ? "fa-solid fa-eraser" : "fa-solid fa-draw-polygon",
                         IsHidden = shape.Hidden,
+                        Meta = shape.Points.Count.ToString(CultureInfo.InvariantCulture),
                     };
 
                     foreach (var point in shape.Points)
@@ -2167,6 +2290,19 @@ public partial class AssaDrawViewModel : ObservableObject
                     break;
             }
         }
+        else if (e.KeyModifiers == KeyModifiers.None && !IsTextInput(e) && e.Key is Key.V or Key.L or Key.B or Key.R or Key.C)
+        {
+            // Single-key tools like other drawing programs (not while typing in a number box)
+            SetTool(e.Key switch
+            {
+                Key.V => DrawingTool.Select,
+                Key.L => DrawingTool.Line,
+                Key.B => DrawingTool.Bezier,
+                Key.R => DrawingTool.Rectangle,
+                _ => DrawingTool.Circle,
+            });
+            e.Handled = true;
+        }
         else if (e.Key == Key.F4)
         {
             LineTool();
@@ -2202,6 +2338,12 @@ public partial class AssaDrawViewModel : ObservableObject
             e.Handled = true;
             UiUtil.ShowHelp("features/assa-draw");
         }
+    }
+
+    private static bool IsTextInput(KeyEventArgs e)
+    {
+        return e.Source is Avalonia.Visual visual &&
+               (visual is TextBox || Avalonia.VisualTree.VisualExtensions.FindAncestorOfType<TextBox>(visual) != null);
     }
 
     private void AdjustPosition(float xAdjust, float yAdjust)
@@ -2393,6 +2535,7 @@ public partial class AssaDrawViewModel : ObservableObject
             {
                 ActiveShape = value.Shape;
                 ShapeIsEraser = value.Shape.IsEraser;
+                LayerColor = value.Shape.ForeColor;
             }
         }
 
@@ -2421,26 +2564,59 @@ public partial class AssaDrawViewModel : ObservableObject
             Canvas.SelectedShape = value?.Shape ?? value?.Point?.DrawShape;
             Canvas.InvalidateVisual();
         }
+
+        UpdateSelectionInfo();
     }
 
     partial void OnLayerColorChanged(Color value)
     {
-        if (SelectedTreeItem?.IsLayer == true)
+        // The color belongs to the layer: picked on a layer, or on a shape of it
+        int? layer = SelectedTreeItem?.IsLayer == true ? SelectedTreeItem.Layer : TargetShape?.Layer;
+        if (layer == null || !Shapes.Any(s => s.Layer == layer && s.ForeColor != value))
         {
-            if (Shapes.Any(s => s.Layer == SelectedTreeItem.Layer && s.ForeColor != value))
-            {
-                SaveUndo("layer-color");
-            }
-
-            // Update all shapes in the selected layer
-            foreach (var shape in Shapes.Where(s => s.Layer == SelectedTreeItem.Layer))
-            {
-                shape.ForeColor = value;
-            }
-
-            SelectedTreeItem.Swatch = new SolidColorBrush(value);
-            Canvas?.InvalidateVisual();
+            return;
         }
+
+        SaveUndo("layer-color");
+        foreach (var shape in Shapes.Where(s => s.Layer == layer))
+        {
+            shape.ForeColor = value;
+        }
+
+        var layerItem = FindTreeItem(null, null, layer);
+        if (layerItem != null)
+        {
+            layerItem.Swatch = new SolidColorBrush(value);
+        }
+
+        Canvas?.InvalidateVisual();
+    }
+
+    [RelayCommand]
+    private void ToggleItemVisibility(ShapeTreeItem? item)
+    {
+        if (item == null)
+        {
+            return;
+        }
+
+        var shapes = item.IsLayer
+            ? Shapes.Where(s => s.Layer == item.Layer).ToList()
+            : item.Shape != null ? [item.Shape] : [];
+        if (shapes.Count == 0)
+        {
+            return;
+        }
+
+        SaveUndo();
+        var hide = shapes.Any(s => !s.Hidden);
+        foreach (var shape in shapes)
+        {
+            shape.Hidden = hide;
+        }
+
+        RefreshTreeView();
+        Canvas?.InvalidateVisual();
     }
 
     /// <summary>
@@ -2639,6 +2815,7 @@ public partial class ShapeTreeItem : ObservableObject
     [ObservableProperty] private string _iconName = string.Empty;
     [ObservableProperty] private IBrush? _swatch;
     [ObservableProperty] private bool _isHidden;
+    [ObservableProperty] private string _meta = string.Empty;
 
     public bool IsLayer { get; set; }
     public int Layer { get; set; }
@@ -2646,6 +2823,7 @@ public partial class ShapeTreeItem : ObservableObject
     public DrawCoordinate? Point { get; set; }
 
     public bool HasSwatch => IsLayer;
+    public bool CanToggleVisibility => IsLayer || Shape != null;
 
     partial void OnIsExpandedChanged(bool value)
     {

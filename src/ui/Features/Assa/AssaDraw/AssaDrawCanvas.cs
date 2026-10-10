@@ -44,7 +44,7 @@ public class AssaDrawCanvas : Control
     ];
     private static readonly Cursor MoveCursor = new(StandardCursorType.SizeAll);
 
-    private static readonly ImmutableSolidColorBrush WorkspaceBrush = new(Color.FromRgb(27, 28, 32));
+    private static readonly ImmutableSolidColorBrush WorkspaceBrush = new(Color.FromRgb(22, 23, 27));
     private static readonly ImmutableSolidColorBrush CheckerBrush = new(Color.FromArgb(10, 255, 255, 255));
     private static readonly Color AccentColor = Color.FromRgb(76, 110, 245);
     private static readonly Color HandleFillColor = Colors.White;
@@ -302,8 +302,21 @@ public class AssaDrawCanvas : Control
     }
 
     // Same step as Ctrl+mouse wheel - the buttons used 2%, so a click barely changed anything.
-    public void ZoomIn() => ZoomFactor += 0.1f;
-    public void ZoomOut() => ZoomFactor -= 0.1f;
+    public void ZoomIn() => ZoomAt(_zoomFactor * 1.2f, Bounds.Center);
+    public void ZoomOut() => ZoomAt(_zoomFactor / 1.2f, Bounds.Center);
+
+    /// <summary>
+    /// Zooms keeping the canvas point under <paramref name="anchor"/> (control coordinates) in place.
+    /// </summary>
+    public void ZoomAt(float zoom, Point anchor)
+    {
+        var x = FromZoomFactorX((float)anchor.X);
+        var y = FromZoomFactorY((float)anchor.Y);
+        var newZoom = Math.Clamp(zoom, 0.1f, 10f);
+        _panX = (float)anchor.X - x * newZoom;
+        _panY = (float)anchor.Y - y * newZoom;
+        ZoomFactor = newZoom;
+    }
 
     private float ToZoomFactorX(float v) => v * _zoomFactor + _panX;
     private float ToZoomFactorY(float v) => v * _zoomFactor + _panY;
@@ -1145,8 +1158,8 @@ public class AssaDrawCanvas : Control
         if (e.KeyModifiers.HasFlag(KeyModifiers.Control))
         {
             // Zoom with Ctrl+Scroll
-            var delta = e.Delta.Y > 0 ? 0.1f : -0.1f;
-            ZoomFactor += delta;
+            // Zoom around the mouse pointer
+            ZoomAt(e.Delta.Y > 0 ? _zoomFactor * 1.1f : _zoomFactor / 1.1f, e.GetPosition(this));
             e.Handled = true;
         }
     }

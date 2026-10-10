@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Primitives.PopupPositioning;
 using Avalonia.Controls.Templates;
@@ -15,14 +16,39 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 
+/// <summary>
+/// ASSA draw - laid out like a vector editor: options bar on top, tool strip on the left, canvas,
+/// shapes/properties panel on the right. Always dark, like most drawing programs, so the artwork
+/// stands out; the colors below are the editor palette.
+/// </summary>
 public class AssaDrawWindow : Window
 {
+    private static readonly IBrush WindowBrush = new ImmutableSolidColorBrush(Color.FromRgb(30, 31, 36));
+    private static readonly IBrush PanelBrush = new ImmutableSolidColorBrush(Color.FromRgb(36, 38, 44));
+    private static readonly IBrush StatusBrush = new ImmutableSolidColorBrush(Color.FromRgb(27, 28, 33));
+    private static readonly IBrush ButtonBarBrush = new ImmutableSolidColorBrush(Color.FromRgb(32, 34, 39));
+    private static readonly IBrush LineBrush = new ImmutableSolidColorBrush(Color.FromRgb(47, 50, 58));
+    private static readonly IBrush SeparatorBrush = new ImmutableSolidColorBrush(Color.FromRgb(55, 58, 67));
+    private static readonly IBrush DimTextBrush = new ImmutableSolidColorBrush(Color.FromRgb(140, 146, 160));
+    private static readonly IBrush FaintTextBrush = new ImmutableSolidColorBrush(Color.FromRgb(111, 117, 131));
+    private static readonly IBrush IconBrush = new ImmutableSolidColorBrush(Color.FromRgb(174, 180, 194));
+    private static readonly IBrush HoverBrush = new ImmutableSolidColorBrush(Color.FromRgb(51, 54, 63));
+    private static readonly IBrush PressedBrush = new ImmutableSolidColorBrush(Color.FromRgb(59, 62, 71));
+    private static readonly IBrush AccentBrush = new ImmutableSolidColorBrush(Color.FromRgb(76, 110, 245));
+    private static readonly IBrush AccentHoverBrush = new ImmutableSolidColorBrush(Color.FromRgb(92, 124, 250));
+    private static readonly IBrush AccentSoftBrush = new ImmutableSolidColorBrush(Color.FromArgb(70, 76, 110, 245));
+    private static readonly IBrush FieldBrush = new ImmutableSolidColorBrush(Color.FromRgb(27, 28, 33));
+    private static readonly IBrush FieldBorderBrush = new ImmutableSolidColorBrush(Color.FromRgb(54, 57, 68));
+    private static readonly IBrush MenuBrush = new ImmutableSolidColorBrush(Color.FromRgb(42, 44, 51));
+    private static readonly IBrush MenuBorderBrush = new ImmutableSolidColorBrush(Color.FromRgb(66, 69, 79));
+
     private readonly AssaDrawViewModel _vm;
     private readonly AssaDrawCanvas _canvas;
     private readonly ContextMenu _canvasMenu;
@@ -32,13 +58,16 @@ public class AssaDrawWindow : Window
         _vm = vm;
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Assa.AssaDraw;
-        Width = 1200;
-        Height = 800;
+        Width = 1280;
+        Height = 820;
         MinWidth = 900;
         MinHeight = 600;
         CanResize = true;
+        RequestedThemeVariant = ThemeVariant.Dark;
+        Background = WindowBrush;
         vm.Window = this;
         DataContext = vm;
+        AddEditorStyles(Styles);
 
         var mainGrid = new Grid
         {
@@ -49,11 +78,6 @@ public class AssaDrawWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = new Thickness(10),
         };
 
         // Options bar
@@ -71,12 +95,10 @@ public class AssaDrawWindow : Window
         Grid.SetRow(statusBar, 2);
         mainGrid.Children.Add(statusBar);
 
-        // Button bar
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-        Grid.SetRow(panelButtons, 3);
-        mainGrid.Children.Add(panelButtons);
+        // Code preview + OK/Cancel
+        var buttonBar = CreateButtonBar(vm);
+        Grid.SetRow(buttonBar, 3);
+        mainGrid.Children.Add(buttonBar);
 
         Content = mainGrid;
 
@@ -89,7 +111,7 @@ public class AssaDrawWindow : Window
         };
         _canvas.ContextMenuRequested += OnCanvasContextMenuRequested;
 
-        // Drop an .svg file anywhere on the window to import it
+        // Drop an .svg (import) or an image (background) anywhere on the window
         DragDrop.SetAllowDrop(this, true);
         AddHandler(DragDrop.DragOverEvent, vm.OnDragOver, RoutingStrategies.Bubble);
         AddHandler(DragDrop.DropEvent, vm.OnDrop, RoutingStrategies.Bubble);
@@ -104,6 +126,123 @@ public class AssaDrawWindow : Window
         // Setup the canvas after the window is loaded
         _vm.SetCanvas(_canvas);
         _vm.Initialize();
+    }
+
+    /// <summary>
+    /// Flat icon buttons with an accent "active" state, compact number fields and accent menus.
+    /// </summary>
+    private static void AddEditorStyles(Styles styles)
+    {
+        static Style ToolPresenter(Func<Selector?, Selector> button, params (AvaloniaProperty Property, object Value)[] setters)
+        {
+            var style = new Style(x => button(x).Template().OfType<ContentPresenter>().Name("PART_ContentPresenter"));
+            foreach (var (property, value) in setters)
+            {
+                style.Setters.Add(new Setter(property, value));
+            }
+
+            return style;
+        }
+
+        styles.Add(new Style(x => x.OfType<Button>().Class("tool"))
+        {
+            Setters =
+            {
+                new Setter(Button.BackgroundProperty, Brushes.Transparent),
+                new Setter(Button.BorderThicknessProperty, new Thickness(0)),
+                new Setter(Button.CornerRadiusProperty, new CornerRadius(7)),
+                new Setter(Button.ForegroundProperty, IconBrush),
+                new Setter(Button.PaddingProperty, new Thickness(0)),
+            },
+        });
+        styles.Add(ToolPresenter(x => x.OfType<Button>().Class("tool").Class(":pointerover"),
+            (ContentPresenter.BackgroundProperty, HoverBrush), (ContentPresenter.ForegroundProperty, Brushes.White)));
+        styles.Add(ToolPresenter(x => x.OfType<Button>().Class("tool").Class(":pressed"),
+            (ContentPresenter.BackgroundProperty, PressedBrush)));
+        styles.Add(ToolPresenter(x => x.OfType<Button>().Class("tool").Class(":disabled"),
+            (ContentPresenter.BackgroundProperty, Brushes.Transparent), (ContentPresenter.ForegroundProperty, SeparatorBrush)));
+        styles.Add(ToolPresenter(x => x.OfType<Button>().Class("tool").Class("active"),
+            (ContentPresenter.BackgroundProperty, AccentBrush), (ContentPresenter.ForegroundProperty, Brushes.White)));
+        styles.Add(ToolPresenter(x => x.OfType<Button>().Class("tool").Class("active").Class(":pointerover"),
+            (ContentPresenter.BackgroundProperty, AccentHoverBrush), (ContentPresenter.ForegroundProperty, Brushes.White)));
+
+        // Primary button (OK) in the editor accent
+        styles.Add(ToolPresenter(x => x.OfType<Button>().Class("primary"),
+            (ContentPresenter.BackgroundProperty, AccentBrush), (ContentPresenter.ForegroundProperty, Brushes.White)));
+        styles.Add(ToolPresenter(x => x.OfType<Button>().Class("primary").Class(":pointerover"),
+            (ContentPresenter.BackgroundProperty, AccentHoverBrush), (ContentPresenter.ForegroundProperty, Brushes.White)));
+
+        // Compact number fields
+        styles.Add(new Style(x => x.OfType<NumericUpDown>().Class("field"))
+        {
+            Setters =
+            {
+                new Setter(NumericUpDown.ShowButtonSpinnerProperty, false),
+                new Setter(NumericUpDown.MinHeightProperty, 28.0),
+                new Setter(NumericUpDown.HeightProperty, 28.0),
+                new Setter(NumericUpDown.FontSizeProperty, 12.5),
+                new Setter(NumericUpDown.BackgroundProperty, FieldBrush),
+                new Setter(NumericUpDown.BorderBrushProperty, FieldBorderBrush),
+                new Setter(NumericUpDown.CornerRadiusProperty, new CornerRadius(6)),
+            },
+        });
+        styles.Add(new Style(x => x.OfType<NumericUpDown>().Class("field").Template().OfType<TextBox>())
+        {
+            Setters =
+            {
+                new Setter(TextBox.MinHeightProperty, 0.0),
+                new Setter(TextBox.HeightProperty, 28.0),
+                new Setter(TextBox.PaddingProperty, new Thickness(6, 0)),
+                new Setter(TextBox.VerticalContentAlignmentProperty, VerticalAlignment.Center),
+                new Setter(TextBox.BackgroundProperty, FieldBrush),
+            },
+        });
+
+        // Menus: rounded, darker, accent highlight
+        foreach (var menuType in new[] { typeof(ContextMenu), typeof(MenuFlyoutPresenter) })
+        {
+            styles.Add(new Style(x => x.OfType(menuType))
+            {
+                Setters =
+                {
+                    new Setter(TemplatedControl.BackgroundProperty, MenuBrush),
+                    new Setter(TemplatedControl.BorderBrushProperty, MenuBorderBrush),
+                    new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(9)),
+                    new Setter(TemplatedControl.PaddingProperty, new Thickness(4)),
+                },
+            });
+        }
+
+        styles.Add(new Style(x => x.OfType<MenuItem>())
+        {
+            Setters = { new Setter(MenuItem.CornerRadiusProperty, new CornerRadius(5)) },
+        });
+        styles.Add(new Style(x => x.OfType<MenuItem>().Class(":pointerover").Template().OfType<Border>().Name("PART_LayoutRoot"))
+        {
+            Setters = { new Setter(Border.BackgroundProperty, AccentBrush) },
+        });
+        styles.Add(new Style(x => x.OfType<MenuItem>().Class(":open").Template().OfType<Border>().Name("PART_LayoutRoot"))
+        {
+            Setters = { new Setter(Border.BackgroundProperty, AccentBrush) },
+        });
+
+        // Tree: rounded rows, soft accent selection
+        styles.Add(new Style(x => x.OfType<TreeViewItem>().Template().OfType<Border>().Name("PART_LayoutRoot"))
+        {
+            Setters =
+            {
+                new Setter(Border.CornerRadiusProperty, new CornerRadius(6)),
+                new Setter(Border.MinHeightProperty, 28.0),
+            },
+        });
+        styles.Add(new Style(x => x.OfType<TreeViewItem>().Class(":selected").Template().OfType<Border>().Name("PART_LayoutRoot"))
+        {
+            Setters = { new Setter(Border.BackgroundProperty, AccentSoftBrush) },
+        });
+        styles.Add(new Style(x => x.OfType<TreeViewItem>().Class(":selected").Class(":pointerover").Template().OfType<Border>().Name("PART_LayoutRoot"))
+        {
+            Setters = { new Setter(Border.BackgroundProperty, AccentSoftBrush) },
+        });
     }
 
     private void OnCanvasContextMenuRequested(object? sender, CanvasContextEventArgs e)
@@ -324,12 +463,33 @@ public class AssaDrawWindow : Window
         return Regex.Replace(text, @"\s*\([^()]*\)\s*$", string.Empty);
     }
 
+    private static List<Control> MakeBackgroundItems(AssaDrawViewModel vm)
+    {
+        var stretch = MakeMenuItem(Se.Language.Assa.DrawBackgroundStretch, null, vm.ToggleBackgroundStretchCommand);
+        stretch.ToggleType = MenuItemToggleType.CheckBox;
+        stretch.IsChecked = vm.BackgroundStretch;
+
+        var none = MakeMenuItem(Se.Language.Assa.DrawBackgroundNone, "fa-solid fa-xmark", vm.RemoveBackgroundCommand);
+        none.IsEnabled = vm.HasBackground;
+
+        return
+        [
+            MakeMenuItem(Se.Language.Assa.DrawBackgroundVideoFrame, "fa-solid fa-film", vm.BackgroundFromVideoCommand),
+            MakeMenuItem(Se.Language.Assa.DrawBackgroundVideoFrameAt, "fa-solid fa-clock", vm.BackgroundFromVideoAtCommand),
+            MakeMenuItem(Se.Language.Assa.DrawBackgroundImage, "fa-regular fa-image", vm.BackgroundFromImageCommand),
+            new Separator(),
+            stretch,
+            none,
+        ];
+    }
+
     private static Border CreateToolbar(AssaDrawViewModel vm)
     {
         var leftPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 4,
+            Spacing = 2,
+            VerticalAlignment = VerticalAlignment.Center,
         };
 
         // Undo/redo
@@ -339,6 +499,7 @@ public class AssaDrawWindow : Window
 
         // Shape actions
         leftPanel.Children.Add(CreateToolButton("fa-solid fa-check", Se.Language.Assa.DrawCloseShape, vm.CloseShapeCommand));
+        leftPanel.Children.Add(CreateToolButton("fa-regular fa-clone", Se.Language.General.Duplicate + " (Ctrl+D)", vm.DuplicateShapeCommand));
         leftPanel.Children.Add(CreateToolButton("fa-solid fa-trash", Se.Language.Assa.DrawDeleteShape, vm.DeleteShapeCommand));
         leftPanel.Children.Add(CreateToolButton("fa-solid fa-eraser", Se.Language.Assa.DrawClearAll, vm.ClearAllCommand));
         leftPanel.Children.Add(MakeToolbarSeparator());
@@ -363,7 +524,8 @@ public class AssaDrawWindow : Window
         {
             Minimum = 0.1,
             Maximum = 1,
-            Width = 90,
+            Width = 80,
+            Margin = new Thickness(6, 0, 4, 0),
             VerticalAlignment = VerticalAlignment.Center,
             [!Slider.ValueProperty] = new Binding(nameof(vm.BackgroundOpacity)) { Mode = BindingMode.TwoWay },
             [!Slider.IsEnabledProperty] = new Binding(nameof(vm.HasBackground)),
@@ -378,44 +540,17 @@ public class AssaDrawWindow : Window
         leftPanel.Children.Add(MakeToolbarSeparator());
 
         // Canvas size
-        leftPanel.Children.Add(new TextBlock
-        {
-            Text = Se.Language.General.Width,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(5, 0),
-            Opacity = 0.75,
-        });
-        leftPanel.Children.Add(new NumericUpDown
-        {
-            Minimum = 125,
-            Maximum = 4096,
-            Width = 125,
-            Increment = 10,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.CanvasWidth)) { Mode = BindingMode.TwoWay },
-        });
-        leftPanel.Children.Add(new TextBlock
-        {
-            Text = Se.Language.General.Height,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(5, 0),
-            Opacity = 0.75,
-        });
-        leftPanel.Children.Add(new NumericUpDown
-        {
-            Minimum = 125,
-            Maximum = 4096,
-            Width = 125,
-            Increment = 10,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.CanvasHeight)) { Mode = BindingMode.TwoWay },
-        });
+        leftPanel.Children.Add(MakeDimLabel(Se.Language.General.Width, new Thickness(4, 0, 6, 0)));
+        leftPanel.Children.Add(MakeField(nameof(vm.CanvasWidth), 125, 4096, 64));
+        leftPanel.Children.Add(MakeDimLabel("×", new Thickness(6, 0)));
+        leftPanel.Children.Add(MakeField(nameof(vm.CanvasHeight), 125, 4096, 64));
 
         // File actions on the right
         var rightPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 4,
+            Spacing = 2,
+            VerticalAlignment = VerticalAlignment.Center,
         };
         var copyButton = CreateToolButton("fa-solid fa-copy", Se.Language.Assa.DrawCopyToClipboard, vm.CopyToClipboardCommand);
         vm.CopyToClipboardButton = copyButton;
@@ -439,32 +574,54 @@ public class AssaDrawWindow : Window
         return new Border
         {
             Child = grid,
-            BorderBrush = UiUtil.GetBorderBrush(),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(6),
-            Padding = new Thickness(6, 4),
-            Margin = new Thickness(0, 0, 0, 8),
+            Background = PanelBrush,
+            BorderBrush = LineBrush,
+            BorderThickness = new Thickness(0, 0, 0, 1),
+            Padding = new Thickness(10, 6),
         };
     }
 
-    private static List<Control> MakeBackgroundItems(AssaDrawViewModel vm)
+    private static TextBlock MakeDimLabel(string text, Thickness margin)
     {
-        var stretch = MakeMenuItem(Se.Language.Assa.DrawBackgroundStretch, null, vm.ToggleBackgroundStretchCommand);
-        stretch.ToggleType = MenuItemToggleType.CheckBox;
-        stretch.IsChecked = vm.BackgroundStretch;
+        return new TextBlock
+        {
+            Text = text,
+            Foreground = DimTextBrush,
+            FontSize = 12,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = margin,
+        };
+    }
 
-        var none = MakeMenuItem(Se.Language.Assa.DrawBackgroundNone, "fa-solid fa-xmark", vm.RemoveBackgroundCommand);
-        none.IsEnabled = vm.HasBackground;
+    /// <summary>
+    /// Compact number field without spinner buttons, optionally with a dim prefix like "X".
+    /// </summary>
+    private static NumericUpDown MakeField(string property, double minimum, double maximum, double width = double.NaN, string? prefix = null, string format = "0")
+    {
+        var field = new NumericUpDown
+        {
+            Minimum = (decimal)minimum,
+            Maximum = (decimal)maximum,
+            Increment = 1,
+            Width = width,
+            FormatString = format,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!NumericUpDown.ValueProperty] = new Binding(property) { Mode = BindingMode.TwoWay },
+        };
+        field.Classes.Add("field");
+        if (prefix != null)
+        {
+            field.InnerLeftContent = new TextBlock
+            {
+                Text = prefix,
+                Foreground = FaintTextBrush,
+                FontSize = 11,
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(8, 0, 0, 0),
+            };
+        }
 
-        return
-        [
-            MakeMenuItem(Se.Language.Assa.DrawBackgroundVideoFrame, "fa-solid fa-film", vm.BackgroundFromVideoCommand),
-            MakeMenuItem(Se.Language.Assa.DrawBackgroundVideoFrameAt, "fa-solid fa-clock", vm.BackgroundFromVideoAtCommand),
-            MakeMenuItem(Se.Language.Assa.DrawBackgroundImage, "fa-regular fa-image", vm.BackgroundFromImageCommand),
-            new Separator(),
-            stretch,
-            none,
-        ];
+        return field;
     }
 
     private static Border MakeToolbarSeparator()
@@ -473,24 +630,44 @@ public class AssaDrawWindow : Window
         {
             Width = 1,
             Height = 22,
-            Background = UiUtil.GetBorderBrush(),
-            Margin = new Thickness(6, 0),
+            Background = SeparatorBrush,
+            Margin = new Thickness(8, 0),
             VerticalAlignment = VerticalAlignment.Center,
         };
     }
 
-    private static Button CreateToolButton(string icon, string tooltip, System.Windows.Input.ICommand? command, double size = 32)
+    private static Button CreateToolButton(string icon, string tooltip, System.Windows.Input.ICommand? command, double size = 30, string? shortcut = null)
     {
+        Control content = new Optris.Icons.Avalonia.Icon { Value = icon, FontSize = size > 34 ? 15 : 13 };
+        if (shortcut != null)
+        {
+            // Shortcut letter in the corner, like the tool palettes of drawing programs
+            var grid = new Grid { Width = size, Height = size };
+            content.HorizontalAlignment = HorizontalAlignment.Center;
+            content.VerticalAlignment = VerticalAlignment.Center;
+            grid.Children.Add(content);
+            grid.Children.Add(new TextBlock
+            {
+                Text = shortcut,
+                FontSize = 8,
+                Opacity = 0.6,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Margin = new Thickness(0, 0, 4, 2),
+            });
+            content = grid;
+        }
+
         var button = new Button
         {
-            Content = new Optris.Icons.Avalonia.Icon { Value = icon },
+            Content = content,
             Width = size,
             Height = size,
             Command = command,
-            Padding = new Thickness(4),
             HorizontalContentAlignment = HorizontalAlignment.Center,
             VerticalContentAlignment = VerticalAlignment.Center,
         };
+        button.Classes.Add("tool");
         if (Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(button, tooltip);
@@ -506,12 +683,12 @@ public class AssaDrawWindow : Window
     /// </summary>
     private static void BindHighlight(Button button, AssaDrawViewModel vm, Func<bool> isOn, string propertyName)
     {
-        button.Classes.Set("accent", isOn());
+        button.Classes.Set("active", isOn());
         vm.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName == propertyName)
             {
-                button.Classes.Set("accent", isOn());
+                button.Classes.Set("active", isOn());
             }
         };
     }
@@ -522,42 +699,66 @@ public class AssaDrawWindow : Window
         {
             Orientation = Orientation.Vertical,
             Spacing = 4,
+            HorizontalAlignment = HorizontalAlignment.Center,
         };
 
-        void AddTool(string icon, string tooltip, System.Windows.Input.ICommand command, DrawingTool tool)
+        void AddTool(string icon, string tooltip, System.Windows.Input.ICommand command, DrawingTool tool, string shortcut)
         {
-            var button = CreateToolButton(icon, tooltip, command, 38);
+            var button = CreateToolButton(icon, tooltip + " (" + shortcut + ")", command, 38, shortcut);
             BindHighlight(button, vm, () => vm.CurrentTool == tool, nameof(vm.CurrentTool));
             panel.Children.Add(button);
         }
 
-        AddTool("fa-solid fa-arrow-pointer", Se.Language.Assa.DrawSelectTool, vm.SelectToolCommand, DrawingTool.Select);
-        AddTool("fa-solid fa-pen", Se.Language.Assa.DrawLineTool, vm.LineToolCommand, DrawingTool.Line);
-        AddTool("fa-solid fa-bezier-curve", Se.Language.Assa.DrawBezierTool, vm.BezierToolCommand, DrawingTool.Bezier);
-        AddTool("fa-regular fa-square", Se.Language.Assa.DrawRectangleTool, vm.RectangleToolCommand, DrawingTool.Rectangle);
-        AddTool("fa-regular fa-circle", Se.Language.Assa.DrawCircleTool, vm.CircleToolCommand, DrawingTool.Circle);
-
-        panel.Children.Add(new Border
-        {
-            Height = 1,
-            Width = 26,
-            Background = UiUtil.GetBorderBrush(),
-            Margin = new Thickness(0, 6),
-            HorizontalAlignment = HorizontalAlignment.Center,
-        });
-
+        AddTool("fa-solid fa-arrow-pointer", Se.Language.Assa.DrawSelectTool, vm.SelectToolCommand, DrawingTool.Select, "V");
+        panel.Children.Add(MakeStripSeparator());
+        AddTool("fa-solid fa-pen-nib", Se.Language.Assa.DrawLineTool, vm.LineToolCommand, DrawingTool.Line, "L");
+        AddTool("fa-solid fa-bezier-curve", Se.Language.Assa.DrawBezierTool, vm.BezierToolCommand, DrawingTool.Bezier, "B");
+        AddTool("fa-regular fa-square", Se.Language.Assa.DrawRectangleTool, vm.RectangleToolCommand, DrawingTool.Rectangle, "R");
+        AddTool("fa-regular fa-circle", Se.Language.Assa.DrawCircleTool, vm.CircleToolCommand, DrawingTool.Circle, "C");
+        panel.Children.Add(MakeStripSeparator());
         panel.Children.Add(CreateToolButton("fa-solid fa-magnifying-glass-plus", Se.Language.Assa.DrawZoomIn, vm.ZoomInCommand, 38));
         panel.Children.Add(CreateToolButton("fa-solid fa-magnifying-glass-minus", Se.Language.Assa.DrawZoomOut, vm.ZoomOutCommand, 38));
         panel.Children.Add(CreateToolButton("fa-solid fa-expand", Se.Language.Assa.DrawResetView, vm.ResetViewCommand, 38));
 
+        // Current layer color, like the fill swatch of a tool palette
+        var swatch = new Border
+        {
+            Width = 24,
+            Height = 24,
+            CornerRadius = new CornerRadius(5),
+            BorderBrush = Brushes.White,
+            BorderThickness = new Thickness(2),
+            HorizontalAlignment = HorizontalAlignment.Center,
+            [!Border.BackgroundProperty] = new Binding(nameof(vm.LayerColor)) { Converter = new FuncValueConverter<Color, IBrush>(c => new SolidColorBrush(c)) },
+        };
+
+        var dock = new DockPanel { LastChildFill = false };
+        DockPanel.SetDock(panel, Dock.Top);
+        dock.Children.Add(panel);
+        swatch.Margin = new Thickness(0, 0, 0, 10);
+        DockPanel.SetDock(swatch, Dock.Bottom);
+        dock.Children.Add(swatch);
+
         return new Border
         {
-            Child = panel,
-            BorderBrush = UiUtil.GetBorderBrush(),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(6),
-            Padding = new Thickness(5),
-            Margin = new Thickness(0, 0, 8, 0),
+            Child = dock,
+            Width = 54,
+            Background = PanelBrush,
+            BorderBrush = LineBrush,
+            BorderThickness = new Thickness(0, 0, 1, 0),
+            Padding = new Thickness(0, 10, 0, 0),
+        };
+    }
+
+    private static Border MakeStripSeparator()
+    {
+        return new Border
+        {
+            Height = 1,
+            Width = 26,
+            Background = SeparatorBrush,
+            Margin = new Thickness(0, 4),
+            HorizontalAlignment = HorizontalAlignment.Center,
         };
     }
 
@@ -569,35 +770,16 @@ public class AssaDrawWindow : Window
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(270, GridUnitType.Pixel) },
+                new ColumnDefinition { Width = new GridLength(296, GridUnitType.Pixel) },
             },
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = new Thickness(0, 0, 0, 8),
         };
 
-        var toolStrip = CreateToolStrip(vm);
-        contentGrid.Children.Add(toolStrip);
-
-        // Drawing canvas
-        var canvasBorder = new Border
-        {
-            BorderBrush = UiUtil.GetBorderBrush(),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(6),
-            ClipToBounds = true,
-            Margin = new Thickness(0, 0, 8, 0),
-        };
+        contentGrid.Children.Add(CreateToolStrip(vm));
 
         canvas = new AssaDrawCanvas();
-        canvasBorder.Child = canvas;
+        Grid.SetColumn(canvas, 1);
+        contentGrid.Children.Add(canvas);
 
-        Grid.SetColumn(canvasBorder, 1);
-        contentGrid.Children.Add(canvasBorder);
-
-        // Side panel
         var sidePanel = CreateSidePanel(vm);
         Grid.SetColumn(sidePanel, 2);
         contentGrid.Children.Add(sidePanel);
@@ -612,8 +794,9 @@ public class AssaDrawWindow : Window
             Text = text.ToUpperInvariant(),
             FontSize = 11,
             FontWeight = FontWeight.SemiBold,
-            Opacity = 0.65,
-            Margin = new Thickness(0, 0, 0, 6),
+            LetterSpacing = 0.6,
+            Foreground = DimTextBrush,
+            VerticalAlignment = VerticalAlignment.Center,
         };
     }
 
@@ -631,18 +814,23 @@ public class AssaDrawWindow : Window
             },
         };
 
-        // Header
-        var headerLabel = MakeSectionHeader(Se.Language.Assa.DrawShapes);
-        headerLabel.Margin = new Thickness(10, 10, 10, 2);
-        Grid.SetRow(headerLabel, 0);
-        panelGrid.Children.Add(headerLabel);
+        // Header with quick actions
+        var header = new DockPanel { Margin = new Thickness(12, 10, 8, 4) };
+        var headerButtons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2 };
+        headerButtons.Children.Add(CreateToolButton("fa-regular fa-clone", Se.Language.General.Duplicate, vm.DuplicateShapeCommand, 24));
+        headerButtons.Children.Add(CreateToolButton("fa-solid fa-trash", WithoutShortcut(Se.Language.Assa.DrawDeleteShape), vm.DeleteShapeCommand, 24));
+        DockPanel.SetDock(headerButtons, Dock.Right);
+        header.Children.Add(headerButtons);
+        header.Children.Add(MakeSectionHeader(Se.Language.Assa.DrawShapes));
+        Grid.SetRow(header, 0);
+        panelGrid.Children.Add(header);
 
         // Layers > shapes > points; selection is two-way so canvas picks show up here
         var treeView = new TreeView
         {
             [!TreeView.ItemsSourceProperty] = new Binding(nameof(vm.ShapeTreeItems)),
             [!TreeView.SelectedItemProperty] = new Binding(nameof(vm.SelectedTreeItem)) { Mode = BindingMode.TwoWay },
-            Margin = new Thickness(4),
+            Margin = new Thickness(6, 0, 6, 6),
         };
         treeView.Styles.Add(new Style(x => x.OfType<TreeViewItem>())
         {
@@ -653,39 +841,82 @@ public class AssaDrawWindow : Window
         });
 
         var hiddenToOpacity = new FuncValueConverter<bool, double>(hidden => hidden ? 0.45 : 1.0);
+        var hiddenToIcon = new FuncValueConverter<bool, string>(hidden => hidden ? "fa-solid fa-eye-slash" : "fa-solid fa-eye");
         treeView.ItemTemplate = new FuncTreeDataTemplate<ShapeTreeItem>(
             (_, _) =>
             {
-                var row = new StackPanel
+                var row = new Grid
+                {
+                    ColumnDefinitions =
+                    {
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                    },
+                    ColumnSpacing = 6,
+                };
+
+                var eye = CreateToolButton("fa-solid fa-eye", Se.Language.Assa.DrawHideShape, vm.ToggleItemVisibilityCommand, 22);
+                eye.Bind(Button.CommandParameterProperty, new Binding("."));
+                eye.Bind(Button.IsVisibleProperty, new Binding(nameof(ShapeTreeItem.CanToggleVisibility)));
+                if (eye.Content is Optris.Icons.Avalonia.Icon eyeIcon)
+                {
+                    eyeIcon.FontSize = 10;
+                    eyeIcon.Bind(Optris.Icons.Avalonia.Icon.ValueProperty, new Binding(nameof(ShapeTreeItem.IsHidden)) { Converter = hiddenToIcon });
+                }
+
+                row.Children.Add(eye);
+
+                var content = new StackPanel
                 {
                     Orientation = Orientation.Horizontal,
-                    Spacing = 6,
+                    Spacing = 7,
                     [!StackPanel.OpacityProperty] = new Binding(nameof(ShapeTreeItem.IsHidden)) { Converter = hiddenToOpacity },
                 };
-                row.Children.Add(new Optris.Icons.Avalonia.Icon
+                var icon = new Optris.Icons.Avalonia.Icon
                 {
                     FontSize = 11,
                     Width = 14,
-                    Opacity = 0.7,
+                    Foreground = DimTextBrush,
                     VerticalAlignment = VerticalAlignment.Center,
                     [!Optris.Icons.Avalonia.Icon.ValueProperty] = new Binding(nameof(ShapeTreeItem.IconName)),
-                });
-                row.Children.Add(new Border
+                };
+                Grid.SetColumn(icon, 1);
+                row.Children.Add(icon);
+
+                var swatch = new Border
                 {
-                    Width = 12,
-                    Height = 12,
-                    CornerRadius = new CornerRadius(3),
-                    BorderBrush = UiUtil.GetBorderBrush(),
-                    BorderThickness = new Thickness(1),
+                    Width = 13,
+                    Height = 13,
+                    CornerRadius = new CornerRadius(4),
                     VerticalAlignment = VerticalAlignment.Center,
                     [!Border.BackgroundProperty] = new Binding(nameof(ShapeTreeItem.Swatch)),
                     [!Border.IsVisibleProperty] = new Binding(nameof(ShapeTreeItem.HasSwatch)),
-                });
-                row.Children.Add(new TextBlock
+                };
+                Grid.SetColumn(swatch, 2);
+                row.Children.Add(swatch);
+
+                content.Children.Add(new TextBlock
                 {
                     VerticalAlignment = VerticalAlignment.Center,
+                    TextTrimming = TextTrimming.CharacterEllipsis,
                     [!TextBlock.TextProperty] = new Binding(nameof(ShapeTreeItem.Name)),
                 });
+                Grid.SetColumn(content, 3);
+                row.Children.Add(content);
+
+                var meta = new TextBlock
+                {
+                    FontSize = 11,
+                    Foreground = FaintTextBrush,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(0, 0, 6, 0),
+                    [!TextBlock.TextProperty] = new Binding(nameof(ShapeTreeItem.Meta)),
+                };
+                Grid.SetColumn(meta, 4);
+                row.Children.Add(meta);
                 return row;
             },
             item => item.Children);
@@ -697,198 +928,269 @@ public class AssaDrawWindow : Window
         Grid.SetRow(treeView, 1);
         panelGrid.Children.Add(treeView);
 
-        // Point editor panel
-        var pointEditorPanel = CreatePointEditorPanel(vm);
-        Grid.SetRow(pointEditorPanel, 2);
-        panelGrid.Children.Add(pointEditorPanel);
+        var shapePanel = CreateShapePropertiesPanel(vm);
+        Grid.SetRow(shapePanel, 2);
+        panelGrid.Children.Add(shapePanel);
 
-        // Shape editor panel (for shape-specific actions)
-        var shapeActionsPanel = CreateShapeActionsPanel(vm);
-        Grid.SetRow(shapeActionsPanel, 3);
-        panelGrid.Children.Add(shapeActionsPanel);
+        var layerPanel = CreateLayerPropertiesPanel(vm);
+        Grid.SetRow(layerPanel, 3);
+        panelGrid.Children.Add(layerPanel);
 
-        // Layer color editor panel
-        var layerEditorPanel = CreateLayerEditorPanel(vm);
-        Grid.SetRow(layerEditorPanel, 4);
-        panelGrid.Children.Add(layerEditorPanel);
+        var pointPanel = CreatePointPropertiesPanel(vm);
+        Grid.SetRow(pointPanel, 4);
+        panelGrid.Children.Add(pointPanel);
 
         return new Border
         {
             Child = panelGrid,
-            BorderBrush = UiUtil.GetBorderBrush(),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(6),
+            Background = PanelBrush,
+            BorderBrush = LineBrush,
+            BorderThickness = new Thickness(1, 0, 0, 0),
         };
     }
 
-    private static Border MakePropertySection(Control content, string isVisibleProperty)
+    private static Border MakePropertySection(string title, Control content, string isVisibleProperty)
     {
+        var panel = new StackPanel { Spacing = 8 };
+        panel.Children.Add(MakeSectionHeader(title));
+        panel.Children.Add(content);
         return new Border
         {
-            Child = content,
-            BorderBrush = UiUtil.GetBorderBrush(),
+            Child = panel,
+            BorderBrush = LineBrush,
             BorderThickness = new Thickness(0, 1, 0, 0),
-            Padding = new Thickness(10, 8, 10, 10),
+            Padding = new Thickness(12, 10, 12, 12),
             [!Border.IsVisibleProperty] = new Binding(isVisibleProperty),
         };
     }
 
-    private static Border CreatePointEditorPanel(AssaDrawViewModel vm)
+    /// <summary>
+    /// A "Label  [field] [field]" row of the properties panel.
+    /// </summary>
+    private static Grid MakePropertyRow(string label, params Control[] fields)
     {
-        var panel = new StackPanel { Orientation = Orientation.Vertical };
-        panel.Children.Add(MakeSectionHeader(Se.Language.Assa.DrawSelectedPoint));
+        var grid = new Grid { ColumnSpacing = 6 };
+        grid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(70)));
+        grid.Children.Add(MakeDimLabel(label, new Thickness(0)));
+        for (var i = 0; i < fields.Length; i++)
+        {
+            grid.ColumnDefinitions.Add(new ColumnDefinition(1, GridUnitType.Star));
+            Grid.SetColumn(fields[i], i + 1);
+            grid.Children.Add(fields[i]);
+        }
 
-        // X and Y on their own rows - side by side the boxes were too narrow for 4 digits
+        return grid;
+    }
+
+    private static Border CreateShapePropertiesPanel(AssaDrawViewModel vm)
+    {
+        var rows = new StackPanel { Spacing = 6 };
+        rows.Children.Add(MakePropertyRow(Se.Language.Assa.DrawPosition,
+            MakeField(nameof(vm.ShapeX), -10000, 10000, prefix: "X", format: "0.#"),
+            MakeField(nameof(vm.ShapeY), -10000, 10000, prefix: "Y", format: "0.#")));
+        rows.Children.Add(MakePropertyRow(Se.Language.Assa.DrawSize,
+            MakeField(nameof(vm.ShapeWidth), 0, 10000, prefix: "W", format: "0.#"),
+            MakeField(nameof(vm.ShapeHeight), 0, 10000, prefix: "H", format: "0.#")));
+
+        var colorButton = UiUtil.MakeColorPickerButton(vm, nameof(vm.LayerColor));
+        colorButton.HorizontalAlignment = HorizontalAlignment.Left;
+        rows.Children.Add(MakePropertyRow(Se.Language.Assa.DrawLayer,
+            MakeField(nameof(vm.ShapeLayer), 0, 1000),
+            colorButton));
+
+        var eraser = new ToggleSwitch
+        {
+            OnContent = null,
+            OffContent = null,
+            MinWidth = 0,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!ToggleSwitch.IsCheckedProperty] = new Binding(nameof(vm.ShapeIsEraser)) { Mode = BindingMode.TwoWay },
+        };
+        AutomationProperties.SetName(eraser, Se.Language.Assa.DrawUseShapeForErase);
+        var eraserRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+        eraserRow.Children.Add(eraser);
+        eraserRow.Children.Add(new TextBlock { Text = Se.Language.Assa.DrawUseShapeForErase, VerticalAlignment = VerticalAlignment.Center, FontSize = 12.5 });
+        rows.Children.Add(eraserRow);
+
+        return MakePropertySection(Se.Language.Assa.DrawSelectedShape, rows, nameof(vm.IsShapeSelected));
+    }
+
+    private static Border CreateLayerPropertiesPanel(AssaDrawViewModel vm)
+    {
+        var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+        row.Children.Add(UiUtil.MakeColorPickerButton(vm, nameof(vm.LayerColor)));
+        var changeLayer = new Button
+        {
+            Content = Se.Language.Assa.DrawChangeLayer,
+            Command = vm.ChangeLayerCommand,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        row.Children.Add(changeLayer);
+        return MakePropertySection(Se.Language.Assa.DrawSelectedLayer, row, nameof(vm.IsLayerSelected));
+    }
+
+    private static Border CreatePointPropertiesPanel(AssaDrawViewModel vm)
+    {
+        var row = MakePropertyRow(Se.Language.Assa.DrawPosition,
+            MakeField(nameof(vm.PointX), -10000, 10000, prefix: "X", format: "0.#"),
+            MakeField(nameof(vm.PointY), -10000, 10000, prefix: "Y", format: "0.#"));
+        return MakePropertySection(Se.Language.Assa.DrawSelectedPoint, row, nameof(vm.IsPointSelected));
+    }
+
+    private static Border CreateStatusBar(AssaDrawViewModel vm)
+    {
+        var left = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 18,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+
+        static StackPanel MakeStatusItem(string icon, Control text)
+        {
+            var item = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6 };
+            item.Children.Add(new Optris.Icons.Avalonia.Icon { Value = icon, FontSize = 11, Foreground = FaintTextBrush, VerticalAlignment = VerticalAlignment.Center });
+            item.Children.Add(text);
+            return item;
+        }
+
+        TextBlock StatusText(string property) => new()
+        {
+            FontSize = 12,
+            Foreground = DimTextBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!TextBlock.TextProperty] = new Binding(property),
+        };
+
+        left.Children.Add(MakeStatusItem("fa-solid fa-crosshairs", StatusText(nameof(vm.PositionText))));
+
+        var toolLabel = StatusText(nameof(vm.CurrentTool));
+        toolLabel.Bind(TextBlock.TextProperty, new Binding(nameof(vm.CurrentTool))
+        {
+            Converter = new FuncValueConverter<DrawingTool, string>(tool => string.Format(Se.Language.Assa.DrawToolX, tool)),
+        });
+        left.Children.Add(MakeStatusItem("fa-solid fa-pen-ruler", toolLabel));
+
+        var selection = MakeStatusItem("fa-solid fa-draw-polygon", StatusText(nameof(vm.SelectionText)));
+        selection.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.SelectionText)) { Converter = StringConverters.IsNotNullOrEmpty });
+        left.Children.Add(selection);
+
+        left.Children.Add(new TextBlock
+        {
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.PreviewStatusText)),
+            Foreground = Brushes.OrangeRed,
+            FontSize = 12,
+            VerticalAlignment = VerticalAlignment.Center,
+        });
+
+        var help = new TextBlock
+        {
+            Text = Se.Language.Assa.DrawHelpText,
+            Foreground = FaintTextBrush,
+            FontSize = 12,
+            VerticalAlignment = VerticalAlignment.Center,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            Margin = new Thickness(18, 0),
+        };
+        ToolTip.SetTip(help, Se.Language.Assa.DrawHelpText);
+
+        // Zoom: - slider + percent Fit
+        var zoom = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4, VerticalAlignment = VerticalAlignment.Center };
+        zoom.Children.Add(CreateToolButton("fa-solid fa-minus", WithoutShortcut(Se.Language.Assa.DrawZoomOut), vm.ZoomOutCommand, 22));
+        zoom.Children.Add(new Slider
+        {
+            Minimum = 10,
+            Maximum = 400,
+            Width = 110,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!Slider.ValueProperty] = new Binding(nameof(vm.ZoomPercent)) { Mode = BindingMode.TwoWay },
+        });
+        zoom.Children.Add(CreateToolButton("fa-solid fa-plus", WithoutShortcut(Se.Language.Assa.DrawZoomIn), vm.ZoomInCommand, 22));
+        zoom.Children.Add(new TextBlock
+        {
+            Width = 44,
+            FontSize = 12,
+            TextAlignment = TextAlignment.Right,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.ZoomPercent)) { StringFormat = "{0:0}%" },
+        });
+        var fit = new Button
+        {
+            Content = WithoutShortcut(Se.Language.Assa.DrawResetView),
+            Command = vm.ResetViewCommand,
+            FontSize = 12,
+            Padding = new Thickness(10, 2),
+            MinHeight = 0,
+            Margin = new Thickness(6, 0, 0, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        zoom.Children.Add(fit);
+
         var grid = new Grid
         {
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
             },
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            RowSpacing = 6,
         };
-
-        var xLabel = new TextBlock { Text = "X", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 6, 0), Opacity = 0.75 };
-        var xBox = new NumericUpDown
-        {
-            Minimum = -10000,
-            Maximum = 10000,
-            Increment = 1,
-            [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.PointX)) { Mode = BindingMode.TwoWay },
-        };
-        var yLabel = new TextBlock { Text = "Y", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 6, 0), Opacity = 0.75 };
-        var yBox = new NumericUpDown
-        {
-            Minimum = -10000,
-            Maximum = 10000,
-            Increment = 1,
-            [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.PointY)) { Mode = BindingMode.TwoWay },
-        };
-        grid.Children.Add(xLabel);
-        Grid.SetColumn(xBox, 1);
-        grid.Children.Add(xBox);
-        Grid.SetRow(yLabel, 1);
-        grid.Children.Add(yLabel);
-        Grid.SetRow(yBox, 1);
-        Grid.SetColumn(yBox, 1);
-        grid.Children.Add(yBox);
-        panel.Children.Add(grid);
-
-        return MakePropertySection(panel, nameof(vm.IsPointSelected));
-    }
-
-    private static Border CreateShapeActionsPanel(AssaDrawViewModel vm)
-    {
-        var panel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 6 };
-        panel.Children.Add(MakeSectionHeader(Se.Language.Assa.DrawSelectedShape));
-
-        panel.Children.Add(new Button
-        {
-            Content = Se.Language.Assa.DrawChangeLayer,
-            Command = vm.ChangeLayerCommand,
-            HorizontalAlignment = HorizontalAlignment.Left,
-        });
-
-        panel.Children.Add(new CheckBox
-        {
-            Content = Se.Language.Assa.DrawUseShapeForErase,
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ShapeIsEraser)) { Mode = BindingMode.TwoWay },
-        });
-
-        return MakePropertySection(panel, nameof(vm.IsShapeSelected));
-    }
-
-    private static Border CreateLayerEditorPanel(AssaDrawViewModel vm)
-    {
-        var panel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 6 };
-        panel.Children.Add(MakeSectionHeader(Se.Language.Assa.DrawSelectedLayer));
-
-        var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
-        row.Children.Add(UiUtil.MakeColorPickerButton(vm, nameof(vm.LayerColor)));
-        row.Children.Add(new Button
-        {
-            Content = Se.Language.Assa.DrawChangeLayer,
-            Command = vm.ChangeLayerCommand,
-            VerticalAlignment = VerticalAlignment.Center,
-        });
-        panel.Children.Add(row);
-
-        return MakePropertySection(panel, nameof(vm.IsLayerSelected));
-    }
-
-    private static Border CreateStatusBar(AssaDrawViewModel vm)
-    {
-        var statusPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 18,
-        };
-
-        static StackPanel MakeStatusItem(string icon, Control text)
-        {
-            var item = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6 };
-            item.Children.Add(new Optris.Icons.Avalonia.Icon { Value = icon, FontSize = 11, Opacity = 0.6, VerticalAlignment = VerticalAlignment.Center });
-            item.Children.Add(text);
-            return item;
-        }
-
-        statusPanel.Children.Add(MakeStatusItem("fa-solid fa-crosshairs", new TextBlock
-        {
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.PositionText)),
-            VerticalAlignment = VerticalAlignment.Center,
-        }));
-
-        statusPanel.Children.Add(MakeStatusItem("fa-solid fa-magnifying-glass", new TextBlock
-        {
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.ZoomText)),
-            VerticalAlignment = VerticalAlignment.Center,
-        }));
-
-        // Current tool indicator
-        var toolLabel = new TextBlock
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        toolLabel.Bind(TextBlock.TextProperty, new Binding(nameof(vm.CurrentTool))
-        {
-            Converter = new FuncValueConverter<DrawingTool, string>(
-                tool => string.Format(Se.Language.Assa.DrawToolX, tool))
-        });
-        statusPanel.Children.Add(MakeStatusItem("fa-solid fa-pen-ruler", toolLabel));
-
-        var previewStatusLabel = new TextBlock
-        {
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.PreviewStatusText)),
-            Foreground = Brushes.OrangeRed,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        statusPanel.Children.Add(previewStatusLabel);
-
-        // Help text
-        var helpLabel = new TextBlock
-        {
-            Text = Se.Language.Assa.DrawHelpText,
-            Foreground = UiUtil.GetTextColor(0.6),
-            VerticalAlignment = VerticalAlignment.Center,
-            TextTrimming = TextTrimming.CharacterEllipsis,
-        };
-        statusPanel.Children.Add(helpLabel);
+        grid.Children.Add(left);
+        Grid.SetColumn(help, 1);
+        grid.Children.Add(help);
+        Grid.SetColumn(zoom, 2);
+        grid.Children.Add(zoom);
 
         return new Border
         {
-            Child = statusPanel,
-            BorderBrush = UiUtil.GetBorderBrush(),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(6),
-            Padding = new Thickness(10, 5),
-            Margin = new Thickness(0, 0, 0, 10),
-            ClipToBounds = true,
+            Child = grid,
+            Background = StatusBrush,
+            BorderBrush = LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(12, 4),
+            MinHeight = 32,
+        };
+    }
+
+    private static Border CreateButtonBar(AssaDrawViewModel vm)
+    {
+        var code = new TextBlock
+        {
+            FontFamily = new FontFamily("Menlo, Consolas, Cascadia Mono, DejaVu Sans Mono, monospace"),
+            FontSize = 12,
+            Foreground = FaintTextBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            Margin = new Thickness(0, 0, 16, 0),
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.CodePreview)),
+        };
+
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+        var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10 };
+        buttons.Children.Add(buttonCancel);
+        buttons.Children.Add(buttonOk);
+
+        var grid = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+            },
+        };
+        grid.Children.Add(code);
+        Grid.SetColumn(buttons, 1);
+        grid.Children.Add(buttons);
+
+        return new Border
+        {
+            Child = grid,
+            Background = ButtonBarBrush,
+            BorderBrush = LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(16, 10),
         };
     }
 }

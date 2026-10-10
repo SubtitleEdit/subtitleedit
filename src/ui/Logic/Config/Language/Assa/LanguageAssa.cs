@@ -42,6 +42,9 @@ public class LanguageAssa
     public string DrawRotateClockwise { get; set; }
     public string DrawConvertToCurve { get; set; }
     public string DrawBackground { get; set; }
+    public string DrawPosition { get; set; }
+    public string DrawSize { get; set; }
+    public string DrawLayer { get; set; }
     public string DrawBackgroundVideoFrame { get; set; }
     public string DrawBackgroundVideoFrameAt { get; set; }
     public string DrawBackgroundImage { get; set; }
@@ -329,6 +332,9 @@ public class LanguageAssa
         DrawRotateClockwise = "Rotate 90° clockwise";
         DrawConvertToCurve = "Convert segment to curve";
         DrawBackground = "Background";
+        DrawPosition = "Position";
+        DrawSize = "Size";
+        DrawLayer = "Layer";
         DrawBackgroundVideoFrame = "Video frame (current position)";
         DrawBackgroundVideoFrameAt = "Video frame at...";
         DrawBackgroundImage = "Image file...";

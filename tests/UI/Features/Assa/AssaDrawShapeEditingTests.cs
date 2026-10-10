@@ -133,6 +133,26 @@ public class AssaDrawShapeEditingTests
     }
 
     [Fact]
+    public void ShapeFields_ShowBounds_AndEditingThemMovesScalesAndRelayers()
+    {
+        var vm = MakeViewModel("{\\p1}m 100 100 l 300 100 300 200 100 200{\\p0}");
+        var shape = vm.Shapes[0];
+        vm.SelectShape(shape);
+        Assert.Equal(100, vm.ShapeX);
+        Assert.Equal(200, vm.ShapeWidth);
+        Assert.Equal(100, vm.ShapeHeight);
+
+        vm.ShapeX = 150;
+        vm.ShapeWidth = 400;
+        vm.ShapeLayer = 5;
+
+        Assert.Equal("m 150 100 l 550 100 550 200 150 200", shape.ToAssa());
+        Assert.Equal(5, shape.Layer);
+        Assert.Same(shape, vm.SelectedTreeItem?.Shape);
+        Assert.Contains("550", vm.CodePreview);
+    }
+
+    [Fact]
     public void ToggleShapeVisibility_SelectionSurvivesTreeRebuild()
     {
         var vm = MakeViewModel("{\\p1}m 0 0 l 10 0 10 10{\\p0}");
