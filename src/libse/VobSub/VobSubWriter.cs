@@ -13,10 +13,10 @@ namespace Nikse.SubtitleEdit.Core.VobSub
     {
         private class MemWriter
         {
-            private readonly byte[] _buf;
-            private long _pos;
+            private byte[] _buf;
+            private int _pos;
 
-            public MemWriter(long size)
+            public MemWriter(int size)
             {
                 _buf = new byte[size];
                 _pos = 0;
@@ -39,9 +39,29 @@ namespace Nikse.SubtitleEdit.Core.VobSub
 
             public void WriteByte(byte val)
             {
+                EnsureCapacity(1);
                 _buf[_pos++] = val;
             }
+
+            public void WriteBytes(byte[] source, int offset, int count)
+            {
+                EnsureCapacity(count);
+                Buffer.BlockCopy(source, offset, _buf, _pos, count);
+                _pos += count;
+            }
+
+            private void EnsureCapacity(int count)
+            {
+                if (_pos + count > _buf.Length)
+                {
+                    Array.Resize(ref _buf, Math.Max(_buf.Length * 2, _pos + count));
+                }
+            }
         }
+
+        // Reused for every sub picture unit: a new 200 KB buffer per unit was a large object
+        // heap allocation (zeroed each time) for units that are usually a few KB.
+        private readonly MemWriter _packetWriter = new MemWriter(0x800 * 16);
 
         private readonly string _subFileName;
         private FileStream _subFile;
@@ -183,7 +203,8 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             var imageBuffer = subPictureUnit;
             int bufferIndex = 0;
             byte vobSubId = (byte)_languageStreamId;
-            var mwsub = new MemWriter(200000);
+            var mwsub = _packetWriter;
+            mwsub.GotoBegin();
             byte[] subHeader = new byte[30];
             byte[] ts = new byte[4];
 
@@ -262,16 +283,11 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                     subHeader[19] = (byte)(j % 0x100);
 
                     // First Write header
-                    for (int x = 0; x < headerSize; x++)
-                    {
-                        mwsub.WriteByte(subHeader[x]);
-                    }
+                    mwsub.WriteBytes(subHeader, 0, (int)headerSize);
 
                     // Write Image Data
-                    for (int x = 0; x < toWrite; x++)
-                    {
-                        mwsub.WriteByte(imageBuffer[bufferIndex++]);
-                    }
+                    mwsub.WriteBytes(imageBuffer, bufferIndex, (int)toWrite);
+                    bufferIndex += (int)toWrite;
 
                     // Pad remaining space, not technically nessesary lots of old things like to assume 2048 blocks
                     long paddingSize = 0x800 - headerSize - toWrite;
@@ -303,16 +319,11 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                     subHeader[19] = (byte)(j % 0x100);
 
                     // First Write header
-                    for (int x = 0; x < headerSize; x++)
-                    {
-                        mwsub.WriteByte(subHeader[x]);
-                    }
+                    mwsub.WriteBytes(subHeader, 0, (int)headerSize);
 
                     // Write Image Data
-                    for (int x = 0; x < blockSize; x++)
-                    {
-                        mwsub.WriteByte(imageBuffer[bufferIndex++]);
-                    }
+                    mwsub.WriteBytes(imageBuffer, bufferIndex, (int)blockSize);
+                    bufferIndex += (int)blockSize;
 
                     toWrite -= blockSize;
                 }
