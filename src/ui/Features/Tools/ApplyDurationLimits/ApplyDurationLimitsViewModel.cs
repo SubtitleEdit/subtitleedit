@@ -331,8 +331,18 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
         // value changed - OK either did nothing or applied the previous limits. Always build it
         // now: the timer clears _isDirty on its own thread and only posts the rebuild, so a tick
         // landing between a change and OK left the flag clear and the list still stale.
+        // The rebuild below re-creates every fix as applied; remember which rows the user
+        // unticked (rows line up with _allSubtitles by index) and put their timing back.
+        var skipIndices = Fixes.Where(f => !f.Apply).Select(f => AllSubtitlesFixed.IndexOf(f.SubtitleLine)).Where(i => i >= 0).ToList();
         _isDirty = false;
         BuildPreview();
+        foreach (var index in skipIndices)
+        {
+            if (index < AllSubtitlesFixed.Count && index < _allSubtitles.Count)
+            {
+                AllSubtitlesFixed[index].EndTime = _allSubtitles[index].EndTime;
+            }
+        }
 
         if (FixMinDurationMs || FixMaxDurationMs)
         {

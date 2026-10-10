@@ -223,6 +223,44 @@ public class ImageRendererFontTagTests
         Assert.True(HasPixelNear(mixed, SKColors.Blue));
     }
 
+    // The bitmap is cropped at the outline's left edge, so per-line boxes laid out from column
+    // 0 sat outlineWidth too far left: wide box on the left, outline poking out on the right.
+    [Fact]
+    public void BoxPerLine_IsCenteredOnTheText()
+    {
+        var ip = MakeParameter("HIH", boxType: ExportBoxType.BoxPerLine);
+        ip.OutlineWidth = 4;
+        ip.ShadowWidth = 0;
+        ip.BoxPaddingLeft = 6;
+        ip.BoxPaddingRight = 6;
+        using var bitmap = ImageRenderer.GenerateBitmap(ip);
+
+        static bool IsBox(SKColor c) => c.Alpha > 200 && c.Blue > 200 && c.Red < 60 && c.Green < 60;
+        var y = bitmap.Height / 2;
+        int firstBox = -1, lastBox = -1, firstText = -1, lastText = -1;
+        for (var x = 0; x < bitmap.Width; x++)
+        {
+            var c = bitmap.GetPixel(x, y);
+            if (IsBox(c))
+            {
+                if (firstBox < 0) firstBox = x;
+                lastBox = x;
+            }
+            else if (c.Alpha > 200 && (c.Blue < 150 || c.Red > 150))
+            {
+                // black outline or white glyph - not the box's antialiased (blue) edge
+                if (firstText < 0) firstText = x;
+                lastText = x;
+            }
+        }
+
+        Assert.True(firstBox >= 0 && firstText >= 0);
+        var leftGap = firstText - firstBox;
+        var rightGap = lastBox - lastText;
+        Assert.True(rightGap > 0, $"outline outside the box: left {leftGap}, right {rightGap}");
+        Assert.True(Math.Abs(leftGap - rightGap) <= 2, $"left {leftGap}, right {rightGap}");
+    }
+
     [Fact]
     public void SizeTag_WithTextEffects_GrowsTheText()
     {

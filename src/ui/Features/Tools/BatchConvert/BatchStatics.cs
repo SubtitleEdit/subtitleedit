@@ -42,6 +42,7 @@ public static class BatchStatics
         var gapMinimum = double.MaxValue;
         var gapMaximum = 0d;
         var gapTotal = 0d;
+        var gapCount = 0; // gaps are counted within each file: lines - files, not lines - 1
 
         var aboveOptimalCpsCount = 0;
         var aboveMaximumCpsCount = 0;
@@ -108,6 +109,7 @@ public static class BatchStatics
                     }
 
                     gapTotal += gap;
+                    gapCount++;
                 }
 
                 foreach (var line in p.Text.SplitToLines())
@@ -227,11 +229,11 @@ public static class BatchStatics
             ((double)aboveMaximumWpmCount / totalNumberOfLines) * 100.0));
         sb.AppendLine();
 
-        if (totalNumberOfLines > 1)
+        if (gapCount > 0)
         {
             sb.AppendLine(string.Format(l.GapMinimum, gapMinimum));
             sb.AppendLine(string.Format(l.GapMaximum, gapMaximum));
-            sb.AppendLine(string.Format(l.GapAverage, gapTotal / totalNumberOfLines - 1));
+            sb.AppendLine(string.Format(l.GapAverage, gapTotal / gapCount));
             sb.AppendLine();
             sb.AppendLine(string.Format(l.GapExceedingMinimum, Configuration.Settings.General.MinimumMillisecondsBetweenLines, belowMinimumGapCount,
                 ((double)belowMinimumGapCount / totalNumberOfLines) * 100.0));

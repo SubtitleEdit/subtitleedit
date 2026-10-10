@@ -212,6 +212,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     fontStyle = "3"; //3==italic
                 }
+                else if (s.StartsWith("<b>") && s.EndsWith("</b>"))
+                {
+                    fontStyle = "2"; //2==bold
+                }
 
                 generatorItem.InnerXml = xmlTrackStructure.Replace("[NUMBER]", number.ToString()).Replace("[FONTSTYLE]", fontStyle);
 

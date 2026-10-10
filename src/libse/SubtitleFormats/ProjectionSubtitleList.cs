@@ -20,9 +20,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.Append($"{GetTimeCodes(p, index)}{{\\uc0\\pard\\qc ");
                 var text = Utilities.RemoveSsaTags(p.Text);
                 text = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagBold, HtmlUtil.TagUnderline, HtmlUtil.TagFont);
+                // Italic is a group per line: \par ends it on load, so an italic run spanning
+                // lines is closed before each \par and reopened on the next line.
+                var italicOpen = false;
                 foreach (var line in text.SplitToLines())
                 {
-                    sb.Append(RftEncode(line));
+                    var l = italicOpen ? "<i>" + line : line;
+                    italicOpen = l.LastIndexOf("<i>", StringComparison.Ordinal) > l.LastIndexOf("</i>", StringComparison.Ordinal);
+                    if (italicOpen)
+                    {
+                        l += "</i>";
+                    }
+
+                    sb.Append(RftEncode(l));
                     sb.Append("\\par ");
                 }
 
@@ -218,6 +228,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     else
                     {
                         sb.Append(ch);
+                        ch = '\0'; // an escaped "\\" must not start a control word
                     }
                 }
                 else if (ch == '\\')
@@ -226,8 +237,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (ch == '{' || ch == '}')
                 {
-                    // start/end of block
+                    // start/end of block - "}" also closes an italic group ("{\\i ... }")
                     codeOn = false;
+                    if (ch == '}' && italicOn)
+                    {
+                        sb.Append("</i>");
+                        italicOn = false;
+                    }
                 }
                 else if (!"\r\n".Contains(ch))
                 {
@@ -240,7 +256,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 sb.Append("</i>");
             }
-            return Utilities.RemoveUnneededSpaces(sb.ToString(), string.Empty);
+            // Italic is written per line, so a multi-line italic run reads back as one per line.
+            var result = Utilities.RemoveUnneededSpaces(sb.ToString(), string.Empty);
+            return result.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
         }
     }
 }

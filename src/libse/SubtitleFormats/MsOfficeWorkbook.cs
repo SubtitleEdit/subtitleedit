@@ -122,7 +122,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             MakeCell(xml, row, HtmlUtil.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, "\n"), true));
             MakeCell(xml, row, string.Empty);
             MakeCell(xml, row, string.Empty);
-            MakeCell(xml, row, "0");
+            MakeCell(xml, row, "0"); // Good
+            MakeCell(xml, row, "0"); // Marked
             MakeAlignmentCell(xml, p, row);
             MakeCell(xml, row, "None");
             MakeCell(xml, row, p.Actor);
@@ -184,13 +185,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var start = cells[0].SelectSingleNode("ss:Data", xmlNamespaceManager)?.InnerText;
                     var end = cells[1].SelectSingleNode("ss:Data", xmlNamespaceManager)?.InnerText;
                     var text = cells[2].SelectSingleNode("ss:Data", xmlNamespaceManager)?.InnerText;
-                    var alignment = cells[7].SelectSingleNode("ss:Data", xmlNamespaceManager)?.InnerText;
-
-                    // The writer puts the actor in the ninth column ("Actors" in the header row),
-                    // but the reader never read it back, so the actor was lost on every load.
-                    var actor = cells.Count > 8
-                        ? cells[8].SelectSingleNode("ss:Data", xmlNamespaceManager)?.InnerText
-                        : null;
+                    // Columns per the header row: Start, End, Text, Description, Comment, Good, Marked,
+                    // Position, Line Shift, Actors. Older SE files wrote 9 cells (no Marked), so
+                    // Position was the 7th cell and the actor the 9th.
+                    var tenColumns = cells.Count >= 10;
+                    var alignment = cells[tenColumns ? 7 : 6].SelectSingleNode("ss:Data", xmlNamespaceManager)?.InnerText;
+                    var actor = cells[tenColumns ? 9 : 8].SelectSingleNode("ss:Data", xmlNamespaceManager)?.InnerText;
 
                     if (string.IsNullOrEmpty(start) || !char.IsDigit(start.TrimStart()[0]))
                     {
