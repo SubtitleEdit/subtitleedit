@@ -132,6 +132,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             Logger?.WriteLine(msg, args);
         }
 
+        // The params overload boxes the value and allocates an array for every token, logger or not.
+        private void WriteLineLog<T>(string msg, T arg)
+        {
+            Logger?.WriteLine(msg, arg);
+        }
+
         private ParserException BuildParserException(string msg)
         {
             if (CollectLineInfo)
@@ -176,11 +182,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return null;
             }
 
-            if (Input.IndexOf(s, Pos, len, StringComparison.Ordinal) != -1)
+            if (string.CompareOrdinal(Input, Pos, s, 0, len) == 0)
             {
-                var match = Input.Substring(Pos, len);
                 AdvanceInput(len);
-                return match;
+                return s;
             }
 
             return null;
@@ -325,6 +330,28 @@ namespace Nikse.SubtitleEdit.Core.Common
         private string String()
         {
             int currentPos = Pos;
+
+            // Most strings have no escapes: slice them out instead of appending char by char.
+            while (currentPos < InputLength)
+            {
+                var ch = Input[currentPos];
+                if (ch == '"')
+                {
+                    var plain = Input.Substring(Pos, currentPos - Pos);
+                    AdvanceInput(currentPos - Pos + 1);
+                    WriteLineLog("string: {0}", plain);
+                    return plain;
+                }
+
+                if (ch == '\\' || ch < 0x20)
+                {
+                    break;
+                }
+
+                currentPos++;
+            }
+
+            currentPos = Pos;
             StringBuilder sb = new StringBuilder();
 
             while (true)

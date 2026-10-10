@@ -4190,9 +4190,17 @@ public partial class TextToSpeechViewModel : ObservableObject
         var startMs = (long)Math.Round(paragraph.StartTime.TotalMilliseconds);
         if (!_originalByStartMs.TryGetValue(startMs, out var best))
         {
-            best = _originalSubtitle.Paragraphs
-                .OrderBy(p => Math.Abs(p.StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds))
-                .First();
+            // Closest start time, earliest line on a tie - one pass, not a sort per moved line.
+            var bestDistance = double.MaxValue;
+            foreach (var p in _originalSubtitle.Paragraphs)
+            {
+                var distance = Math.Abs(p.StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds);
+                if (best == null || distance < bestDistance)
+                {
+                    best = p;
+                    bestDistance = distance;
+                }
+            }
         }
 
         if (Math.Abs(best.StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds) > 500)
