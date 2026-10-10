@@ -50,6 +50,15 @@ public static class ScrubSeekPolicy
     public const double MaxSeekInFlightSeconds = 5.0;
 
     /// <summary>
+    /// The smallest move from the previous seek's target that can join a burst. A keyframe seek
+    /// lands on the keyframe before the target, so for a short step - a held 10 ms or 100 ms
+    /// nudge shortcut - every fast seek resolves to the same keyframe, often seconds back, and the
+    /// picture flips between that keyframe and each exact landing (#15848). Steps this short are
+    /// always served exactly; nothing is saved by serving them fast.
+    /// </summary>
+    public const double MinBurstStepSeconds = 1.0;
+
+    /// <summary>
     /// The flags for a seek issued now: fast if this one is joining a burst, precise otherwise.
     /// </summary>
     public static string FlagsFor(bool joinsBurst)
@@ -68,12 +77,18 @@ public static class ScrubSeekPolicy
     /// have been issued while a seek was in flight. A drag or a wheel spin gets there on its third
     /// event and pays two exact seeks instead of one at its start; a click never gets there.
     /// </para>
+    /// <para>
+    /// A short step never joins a burst either (<see cref="MinBurstStepSeconds"/>): holding a
+    /// small nudge shortcut seeks as fast as a drag, but a keyframe seek cannot get any closer to
+    /// its target than the keyframe it already showed.
+    /// </para>
     /// </summary>
     /// <param name="seekInFlight">A seek SE issued has not landed yet (<see cref="SeekIsInFlight"/>).</param>
     /// <param name="previousSeekIssuedInFlight">That seek was itself issued while a seek was in flight.</param>
-    public static bool JoinsBurst(bool seekInFlight, bool previousSeekIssuedInFlight)
+    /// <param name="stepSeconds">Distance from the previous seek's target to this one's.</param>
+    public static bool JoinsBurst(bool seekInFlight, bool previousSeekIssuedInFlight, double stepSeconds)
     {
-        return seekInFlight && previousSeekIssuedInFlight;
+        return seekInFlight && previousSeekIssuedInFlight && Math.Abs(stepSeconds) >= MinBurstStepSeconds;
     }
 
     /// <summary>
