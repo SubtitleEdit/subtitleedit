@@ -207,7 +207,8 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
         ProgressValue = 100;
         ProgressText = string.Empty;
 
-        if (!File.Exists(_outputFileName))
+        // A failed mux can still leave a truncated output file, or an older one the user chose to overwrite.
+        if (_ffmpegProcess.ExitCode != 0 || !File.Exists(_outputFileName))
         {
             SeLogger.Error("Output video file not found: " + _outputFileName + Environment.NewLine +
                                  "ffmpeg: " + _ffmpegProcess.StartInfo.FileName + Environment.NewLine +

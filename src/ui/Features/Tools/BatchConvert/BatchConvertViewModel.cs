@@ -3207,6 +3207,12 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             MergeSameTimeCode = CloneJson(tools.MergeSameTimeCode, SeJsonContext.Default.SeMergeSameTimeCode),
             BridgeGaps = CloneJson(tools.BridgeGaps, SeJsonContext.Default.SeBridgeGaps),
             ApplyMinGapMilliseconds = tools.ApplyMinGapMilliseconds,
+            SplitRebalanceLongLinesSplit = tools.SplitRebalanceLongLinesSplit,
+            SplitRebalanceLongLinesRebalance = tools.SplitRebalanceLongLinesRebalance,
+            SplitRebalanceLongLinesRebalanceOnlyTooLong = tools.SplitRebalanceLongLinesRebalanceOnlyTooLong,
+            SplitRebalanceLongLinesSingleLineMaxLength = tools.SplitRebalanceLongLinesSingleLineMaxLength,
+            SplitRebalanceLongLinesMaxNumberOfLines = tools.SplitRebalanceLongLinesMaxNumberOfLines,
+            SplitRebalanceLongLinesUnbreakShorterThan = tools.SplitRebalanceLongLinesUnbreakShorterThan,
         });
         Se.SaveSettings();
         RefreshPresetNames(name);
@@ -3297,6 +3303,13 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         {
             tools.ApplyMinGapMilliseconds = preset.ApplyMinGapMilliseconds.Value;
         }
+
+        tools.SplitRebalanceLongLinesSplit = preset.SplitRebalanceLongLinesSplit ?? tools.SplitRebalanceLongLinesSplit;
+        tools.SplitRebalanceLongLinesRebalance = preset.SplitRebalanceLongLinesRebalance ?? tools.SplitRebalanceLongLinesRebalance;
+        tools.SplitRebalanceLongLinesRebalanceOnlyTooLong = preset.SplitRebalanceLongLinesRebalanceOnlyTooLong ?? tools.SplitRebalanceLongLinesRebalanceOnlyTooLong;
+        tools.SplitRebalanceLongLinesSingleLineMaxLength = preset.SplitRebalanceLongLinesSingleLineMaxLength ?? tools.SplitRebalanceLongLinesSingleLineMaxLength;
+        tools.SplitRebalanceLongLinesMaxNumberOfLines = preset.SplitRebalanceLongLinesMaxNumberOfLines ?? tools.SplitRebalanceLongLinesMaxNumberOfLines;
+        tools.SplitRebalanceLongLinesUnbreakShorterThan = preset.SplitRebalanceLongLinesUnbreakShorterThan ?? tools.SplitRebalanceLongLinesUnbreakShorterThan;
 
         _isApplyingPreset = true;
         try

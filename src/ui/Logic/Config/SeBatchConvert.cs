@@ -16,6 +16,12 @@ public class SeBatchConvertPreset
     public SeMergeSameTimeCode? MergeSameTimeCode { get; set; }
     public SeBridgeGaps? BridgeGaps { get; set; }
     public int? ApplyMinGapMilliseconds { get; set; }
+    public bool? SplitRebalanceLongLinesSplit { get; set; }
+    public bool? SplitRebalanceLongLinesRebalance { get; set; }
+    public bool? SplitRebalanceLongLinesRebalanceOnlyTooLong { get; set; }
+    public int? SplitRebalanceLongLinesSingleLineMaxLength { get; set; }
+    public int? SplitRebalanceLongLinesMaxNumberOfLines { get; set; }
+    public int? SplitRebalanceLongLinesUnbreakShorterThan { get; set; }
 }
 
 public class SeBatchConvert
