@@ -461,7 +461,7 @@ public sealed class FfmpegPlayerLiveTests : IDisposable
         // A drag: seeks arrive faster than they land. The ones mid-burst may be served at a key
         // frame, but the last target must end up exact - and the position must never report the
         // key frame it passed through.
-        var targets = new[] { 14.0, 15.0, 16.0, 17.0, 18.0, 18.5, 18.7 };
+        var targets = new[] { 14.0, 15.0, 16.0, 17.0, 18.0, 19.0, 20.0, 18.7 }; // steps of a second or more join a burst (ScrubSeekPolicy.MinBurstStepSeconds)
         foreach (var target in targets)
         {
             _player.Position = target;

@@ -381,11 +381,12 @@ public class LibMpvEventLoopTests
             // A drag: seeks back to back until one is issued into an unfinished seek that was
             // itself issued into an unfinished seek - a burst - and so is served at keyframes and
             // owes an exact landing. On this tiny file mpv can land a seek in well under a
-            // millisecond, so how many it takes varies; a real drag delivers hundreds.
+            // millisecond, so how many it takes varies; a real drag delivers hundreds. Steps a
+            // second or more apart: shorter ones are always exact (ScrubSeekPolicy.MinBurstStepSeconds).
             var target = 0.0;
             for (var i = 0; i < 500 && !player.OwesExactLanding; i++)
             {
-                target = 0.2 + (i % 8) * 0.2;
+                target = i % 2 == 0 ? 0.2 : 1.6;
                 player.Position = target;
             }
 
