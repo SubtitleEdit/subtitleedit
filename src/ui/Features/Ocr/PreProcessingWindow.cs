@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
@@ -92,7 +92,8 @@ public class PreProcessingWindow : Window
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var buttonReset = UiUtil.MakeButton(Se.Language.General.Reset, vm.ResetCommand);
+        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonReset, buttonCancel);
 
         var grid = new Grid
         {
