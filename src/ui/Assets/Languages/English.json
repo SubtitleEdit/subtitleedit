@@ -3564,6 +3564,7 @@
       "textBoxLimitNewLines": "Limit number of lines in subtitle text box",
       "mpvOpenGl": "libmpv - OpenGL",
       "mpvSoftwareRendering": "libmpv - Software rendering (slow)",
+      "mpvMetalRendering": "libmpv - Metal (experimental, needs restart)",
       "mpvWidRendering": "libmpv - Native Window ID rendering",
       "waveFormsAndSpectrogramFoldersContainsX": "\"Waveforms\" and \"spectrogram\" folders contains {0}",
       "deleteWaveformAndSpectrogramFoldersQuestion": "Delete \"Waveforms\" and \"Spectrogram\" files?",

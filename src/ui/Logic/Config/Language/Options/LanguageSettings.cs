@@ -251,6 +251,7 @@ public class LanguageSettings
     public string TextBoxLimitNewLines { get; set; }
     public string MpvOpenGl { get; set; }
     public string MpvSoftwareRendering { get; set; }
+    public string MpvMetalRendering { get; set; }
     public string MpvWidRendering { get; set; }
     public string WaveFormsAndSpectrogramFoldersContainsX { get; set; }
     public string DeleteWaveformAndSpectrogramFoldersQuestion { get; set; }
@@ -614,6 +615,7 @@ public class LanguageSettings
         MpvOpenGl = "libmpv - OpenGL";
         MpvWidRendering = "libmpv - Native Window ID rendering";
         MpvSoftwareRendering = "libmpv - Software rendering (slow)";
+        MpvMetalRendering = "libmpv - Metal (experimental, needs restart)";
         VlcWidRendering = "libVLC - Native Window ID rendering";
         FfmpegSoftwareRendering = "FFmpeg";
         DownloadFfmpegLibs = "Download FFmpeg libraries (for the FFmpeg video player)";
