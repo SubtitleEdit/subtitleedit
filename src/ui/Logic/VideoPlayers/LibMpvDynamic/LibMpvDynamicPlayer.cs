@@ -1781,6 +1781,12 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     /// this is a no-op unless the owner already asked for the player to go away.
     /// </para>
     /// </summary>
+    /// <summary>
+    /// True once the owner disposed the player and the render context waits to be freed on the
+    /// graphics thread - lets a control that owns its own render thread notice it.
+    /// </summary>
+    public bool IsRenderContextFreePending => _disposePendingRenderContextFree;
+
     public void FreeRenderContextIfDisposePending()
     {
         if (!_disposePendingRenderContextFree)
