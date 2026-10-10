@@ -2,10 +2,12 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Optris.Icons.Avalonia;
+using System;
 using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Features.Sync.ChangeFrameRate;
@@ -60,11 +62,12 @@ public class ChangeFrameRateWindow : Window
             IsEditable = true,
             DisplayMemberBinding = FrameRateDisplayBinding(),
         }
-        .WithBindItemsSource(nameof(vm.FromFrameRates))
-        .WithBindSelected(nameof(vm.SelectedFromFrameRate));
+        .WithBindItemsSource(nameof(vm.FromFrameRates));
+        BindSelectedFrameRate(comboFromFrameRate, nameof(vm.SelectedFromFrameRate));
         UiUtil.OnEditableComboBoxCommit(comboFromFrameRate, () =>
         {
             vm.CommitTypedFromFrameRate(comboFromFrameRate.Text);
+            comboFromFrameRate.SelectedItem = vm.SelectedFromFrameRate;
             comboFromFrameRate.Text = FormatFrameRate(vm.SelectedFromFrameRate);
         }, handleEnter: false);
 
@@ -86,11 +89,12 @@ public class ChangeFrameRateWindow : Window
             IsEditable = true,
             DisplayMemberBinding = FrameRateDisplayBinding(),
         }
-        .WithBindItemsSource(nameof(vm.ToFrameRates))
-        .WithBindSelected(nameof(vm.SelectedToFrameRate));
+        .WithBindItemsSource(nameof(vm.ToFrameRates));
+        BindSelectedFrameRate(comboToFrameRate, nameof(vm.SelectedToFrameRate));
         UiUtil.OnEditableComboBoxCommit(comboToFrameRate, () =>
         {
             vm.CommitTypedToFrameRate(comboToFrameRate.Text);
+            comboToFrameRate.SelectedItem = vm.SelectedToFrameRate;
             comboToFrameRate.Text = FormatFrameRate(vm.SelectedToFrameRate);
         }, handleEnter: false);
 
@@ -146,6 +150,32 @@ public class ChangeFrameRateWindow : Window
         Loaded += (_, _) => UiUtil.RestoreWindowPosition(this);
         Closing += (_, _) => UiUtil.SaveWindowPosition(this);
         KeyDown += (_, e) => vm.OnKeyDown(e);
+    }
+
+    /// <summary>
+    /// Binds the selected item to a <see cref="double"/> rate. Text typed into the editable combo
+    /// box that matches no item makes the selection <c>null</c>, which a <see cref="double"/>
+    /// can't hold - that showed "Could not convert '(null)' to System.Double" while typing
+    /// (#15869). The rate keeps its value until the typed text is committed.
+    /// </summary>
+    private static void BindSelectedFrameRate(ComboBox comboBox, string propertyName)
+    {
+        comboBox.Bind(ComboBox.SelectedItemProperty, new Binding
+        {
+            Path = propertyName,
+            Mode = BindingMode.TwoWay,
+            Converter = IgnoreNullSelectionConverter.Instance,
+        });
+    }
+
+    private sealed class IgnoreNullSelectionConverter : IValueConverter
+    {
+        public static readonly IgnoreNullSelectionConverter Instance = new();
+
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => value;
+
+        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+            value ?? BindingOperations.DoNothing;
     }
 
     private static string FormatFrameRate(double frameRate)
