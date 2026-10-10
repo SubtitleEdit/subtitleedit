@@ -226,6 +226,10 @@ public class AssaDrawWindow : Window
 
     private void AddCanvasItems(List<Control> items)
     {
+        items.Add(MakeMenuItem(Se.Language.General.Undo, "fa-solid fa-rotate-left", _vm.UndoCommand, new KeyGesture(Key.Z, KeyModifiers.Control)));
+        items.Add(MakeMenuItem(Se.Language.General.Redo, "fa-solid fa-rotate-right", _vm.RedoCommand, new KeyGesture(Key.Y, KeyModifiers.Control)));
+        AddSeparator(items);
+
         if (_vm.IsDrawing)
         {
             items.Add(MakeMenuItem(WithoutShortcut(Se.Language.Assa.DrawCloseShape), "fa-solid fa-check", _vm.CloseShapeCommand, new KeyGesture(Key.Enter)));
@@ -304,6 +308,11 @@ public class AssaDrawWindow : Window
             Orientation = Orientation.Horizontal,
             Spacing = 4,
         };
+
+        // Undo/redo
+        leftPanel.Children.Add(CreateToolButton("fa-solid fa-rotate-left", Se.Language.General.Undo + " (Ctrl+Z)", vm.UndoCommand));
+        leftPanel.Children.Add(CreateToolButton("fa-solid fa-rotate-right", Se.Language.General.Redo + " (Ctrl+Y)", vm.RedoCommand));
+        leftPanel.Children.Add(MakeToolbarSeparator());
 
         // Shape actions
         leftPanel.Children.Add(CreateToolButton("fa-solid fa-check", Se.Language.Assa.DrawCloseShape, vm.CloseShapeCommand));

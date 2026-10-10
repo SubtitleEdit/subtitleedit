@@ -147,3 +147,111 @@ public class AssaDrawShapeEditingTests
         Assert.True(vm.SelectedTreeItem!.IsHidden);
     }
 }
+
+/// <summary>
+/// Undo/redo in ASSA draw: snapshots before each change, last click while drawing, coalesced nudges.
+/// </summary>
+public class AssaDrawUndoTests
+{
+    private static AssaDrawViewModel MakeViewModel(string text = "{\\p1}m 100 100 l 200 100 200 200{\\p0}")
+    {
+        var vm = new AssaDrawViewModel(new FileHelper(), new StubWindowService());
+        var line = new SubtitleLineViewModel(new Paragraph(text, 0, 2000) { Extra = "Default" }, new AdvancedSubStationAlpha());
+        vm.Initialize(new Subtitle { Header = AdvancedSubStationAlpha.DefaultHeader }, [line], 1920, 1080);
+        return vm;
+    }
+
+    [Fact]
+    public void FreshDrawing_HasNothingToUndo()
+    {
+        var vm = MakeViewModel();
+
+        Assert.False(vm.UndoCommand.CanExecute(null));
+        Assert.False(vm.RedoCommand.CanExecute(null));
+    }
+
+    [Fact]
+    public void UndoRedo_Duplicate_AndSelectionComesBack()
+    {
+        var vm = MakeViewModel();
+        vm.SelectShape(vm.Shapes[0]);
+        vm.DuplicateShapeCommand.Execute(null);
+        Assert.Equal(2, vm.Shapes.Count);
+
+        vm.UndoCommand.Execute(null);
+
+        Assert.Single(vm.Shapes);
+        Assert.Same(vm.Shapes[0], vm.SelectedTreeItem?.Shape);
+        Assert.True(vm.RedoCommand.CanExecute(null));
+
+        vm.RedoCommand.Execute(null);
+
+        Assert.Equal(2, vm.Shapes.Count);
+        Assert.Equal(100 + DrawSettings.GridSize, vm.Shapes[1].Points[0].X);
+        Assert.False(vm.RedoCommand.CanExecute(null));
+    }
+
+    [Fact]
+    public void Undo_RestoresDeletedPointAndFlip()
+    {
+        var vm = MakeViewModel();
+        var original = vm.Shapes[0].ToAssa();
+        vm.SelectShape(vm.Shapes[0]);
+        vm.FlipShapeVerticalCommand.Execute(null);
+        vm.SelectPoint(vm.Shapes[0].Points[1]);
+        vm.DeletePointCommand.Execute(null);
+
+        vm.UndoCommand.Execute(null);
+        vm.UndoCommand.Execute(null);
+
+        Assert.Equal(original, vm.Shapes[0].ToAssa());
+    }
+
+    [Fact]
+    public void NewChange_ClearsRedo()
+    {
+        var vm = MakeViewModel();
+        vm.SelectShape(vm.Shapes[0]);
+        vm.FlipShapeHorizontalCommand.Execute(null);
+        vm.UndoCommand.Execute(null);
+
+        vm.SelectShape(vm.Shapes[0]);
+        vm.FlipShapeVerticalCommand.Execute(null);
+
+        Assert.False(vm.RedoCommand.CanExecute(null));
+    }
+
+    [Fact]
+    public void ClearAllAndSvgImport_CanBeUndone()
+    {
+        var vm = MakeViewModel();
+        vm.ClearAllCommand.Execute(null);
+        Assert.Empty(vm.Shapes);
+
+        vm.UndoCommand.Execute(null);
+        Assert.Single(vm.Shapes);
+
+        vm.ImportSvgText("<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 1920 1080\"><rect width=\"10\" height=\"10\"/></svg>");
+        Assert.Equal(2, vm.Shapes.Count);
+        vm.UndoCommand.Execute(null);
+        Assert.Single(vm.Shapes);
+    }
+
+    [Fact]
+    public void PointEdits_FromNumberBoxes_AreUndoable()
+    {
+        var vm = MakeViewModel();
+        var point = vm.Shapes[0].Points[0];
+        vm.SelectPoint(point);
+
+        vm.PointX = 150;
+        vm.PointX = 160;
+
+        Assert.Equal(160, vm.Shapes[0].Points[0].X);
+        vm.UndoCommand.Execute(null);
+
+        // Quick successive edits of the same box are one step
+        Assert.Equal(100, vm.Shapes[0].Points[0].X);
+        Assert.Equal(100, vm.PointX);
+    }
+}

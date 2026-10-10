@@ -20,6 +20,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -60,6 +61,12 @@ public partial class AssaDrawViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<ShapeTreeItem> _shapeTreeItems = [];
     [ObservableProperty] private ShapeTreeItem? _selectedTreeItem;
     [ObservableProperty] private List<DrawShape> _selectedShapes = [];
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(UndoCommand))]
+    private bool _canUndo;
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(RedoCommand))]
+    private bool _canRedo;
 
     public Subtitle ResultSubtitle { get; set; } = new Subtitle();
 
@@ -79,6 +86,12 @@ public partial class AssaDrawViewModel : ObservableObject
     private string _previewSource = string.Empty;
     private bool _previewBusy;
     private bool _refreshingTree;
+
+    private const int MaxUndoSteps = 100;
+    private readonly List<UndoState> _undoStack = [];
+    private readonly List<UndoState> _redoStack = [];
+    private string? _lastUndoKey;
+    private DateTime _lastUndoTime;
 
     public AssaDrawViewModel(IFileHelper fileHelper, IWindowService windowService)
     {
@@ -187,6 +200,7 @@ public partial class AssaDrawViewModel : ObservableObject
         Canvas.ZoomChanged += OnZoomChanged;
         Canvas.ShapeClicked += OnShapeClicked;
         Canvas.ShapeMoved += OnShapeMoved;
+        Canvas.EditStarting += (_, _) => SaveUndo();
     }
 
     private void OnShapeClicked(object? sender, DrawShape? shape)
@@ -366,6 +380,7 @@ public partial class AssaDrawViewModel : ObservableObject
                     var radius = Math.Max(Math.Abs(x - start.X), Math.Abs(y - start.Y));
                     if (radius > 1)
                     {
+                        SaveUndo();
                         ActiveShape = CircleBezier.MakeCircle(start.X, start.Y, radius, ActiveShape.Layer, ActiveShape.ForeColor);
                         Shapes.Add(ActiveShape);
                         RefreshTreeView();
@@ -388,6 +403,7 @@ public partial class AssaDrawViewModel : ObservableObject
                 if (ActiveShape.Points.Count == 1)
                 {
                     var start = ActiveShape.Points[0];
+                    SaveUndo();
                     ActiveShape = MakeRectangle(start.X, start.Y, x - start.X, y - start.Y, ActiveShape.Layer, ActiveShape.ForeColor);
                     Shapes.Add(ActiveShape);
                     RefreshTreeView();
@@ -545,6 +561,7 @@ public partial class AssaDrawViewModel : ObservableObject
 
         if (!Shapes.Contains(ActiveShape))
         {
+            SaveUndo();
             Shapes.Add(ActiveShape);
         }
 
@@ -583,6 +600,11 @@ public partial class AssaDrawViewModel : ObservableObject
             {
                 ActivePoint = null;
                 IsPointSelected = false;
+            }
+
+            if (Shapes.Contains(shape))
+            {
+                SaveUndo();
             }
 
             Shapes.Remove(shape);
@@ -635,6 +657,7 @@ public partial class AssaDrawViewModel : ObservableObject
         }
 
         var newLayer = vm.Layer;
+        SaveUndo();
 
         // Get color from existing shapes in the new layer (if any)
         var existingShapeInNewLayer = Shapes.FirstOrDefault(s => s.Layer == newLayer);
@@ -675,6 +698,7 @@ public partial class AssaDrawViewModel : ObservableObject
             return;
         }
 
+        SaveUndo();
         var copy = shape.Clone();
         copy.Hidden = false;
         copy.Offset(DrawSettings.GridSize, DrawSettings.GridSize);
@@ -693,6 +717,7 @@ public partial class AssaDrawViewModel : ObservableObject
             return;
         }
 
+        SaveUndo();
         shape.FlipHorizontal();
         RefreshTreeView();
         Canvas?.InvalidateVisual();
@@ -707,6 +732,7 @@ public partial class AssaDrawViewModel : ObservableObject
             return;
         }
 
+        SaveUndo();
         shape.FlipVertical();
         RefreshTreeView();
         Canvas?.InvalidateVisual();
@@ -721,6 +747,7 @@ public partial class AssaDrawViewModel : ObservableObject
             return;
         }
 
+        SaveUndo();
         shape.IsEraser = !shape.IsEraser;
         if (shape == ActiveShape)
         {
@@ -740,6 +767,7 @@ public partial class AssaDrawViewModel : ObservableObject
             return;
         }
 
+        SaveUndo();
         shape.Hidden = !shape.Hidden;
         RefreshTreeView();
         Canvas?.InvalidateVisual();
@@ -755,6 +783,7 @@ public partial class AssaDrawViewModel : ObservableObject
 
         var layerShapes = Shapes.Where(s => s.Layer == SelectedTreeItem.Layer).ToList();
         var hide = layerShapes.Any(s => !s.Hidden);
+        SaveUndo();
         foreach (var shape in layerShapes)
         {
             shape.Hidden = hide;
@@ -773,6 +802,7 @@ public partial class AssaDrawViewModel : ObservableObject
         }
 
         var layer = SelectedTreeItem.Layer;
+        SaveUndo();
         Shapes.RemoveAll(s => s.Layer == layer);
         if (ActiveShape != null && ActiveShape.Layer == layer && !IsDrawing)
         {
@@ -795,6 +825,8 @@ public partial class AssaDrawViewModel : ObservableObject
             return;
         }
 
+        SaveUndo();
+
         // Same rule as Change layer: a shape joining a layer takes that layer's color
         var existing = Shapes.FirstOrDefault(s => s.Layer == layer);
         shape.Layer = layer;
@@ -812,7 +844,13 @@ public partial class AssaDrawViewModel : ObservableObject
     {
         var point = ActivePoint;
         var shape = point == null ? null : point.DrawShape ?? Shapes.FirstOrDefault(s => s.Points.Contains(point));
-        if (point == null || shape == null || !shape.RemovePoint(point))
+        if (point == null || shape == null || point.DrawType is DrawCoordinateType.BezierCurveSupport1 or DrawCoordinateType.BezierCurveSupport2)
+        {
+            return;
+        }
+
+        SaveUndo();
+        if (!shape.RemovePoint(point))
         {
             return;
         }
@@ -859,6 +897,16 @@ public partial class AssaDrawViewModel : ObservableObject
 
     [RelayCommand]
     private void ClearAll()
+    {
+        if (Shapes.Count > 0)
+        {
+            SaveUndo();
+        }
+
+        ClearAllShapes();
+    }
+
+    private void ClearAllShapes()
     {
         Shapes.Clear();
         ActiveShape = null;
@@ -1187,6 +1235,7 @@ public partial class AssaDrawViewModel : ObservableObject
         }
 
         CancelDrawing();
+        SaveUndo();
         Shapes.AddRange(result.Shapes);
         SelectedShapes = result.Shapes.ToList();
         RefreshTreeView();
@@ -1705,7 +1754,12 @@ public partial class AssaDrawViewModel : ObservableObject
 
     private void LoadFromText(string text)
     {
-        ClearAll();
+        if (Shapes.Count > 0)
+        {
+            SaveUndo();
+        }
+
+        ClearAllShapes();
 
         var subtitle = new Subtitle();
         var format = new AdvancedSubStationAlpha();
@@ -1777,6 +1831,20 @@ public partial class AssaDrawViewModel : ObservableObject
         else if (e.Key == Key.Delete && (IsDrawing || TargetShape != null))
         {
             DeleteShape();
+            e.Handled = true;
+        }
+        else if ((e.KeyModifiers & ~KeyModifiers.Shift) is KeyModifiers.Control or KeyModifiers.Meta && e.Key is Key.Z or Key.Y)
+        {
+            // Ctrl/Cmd+Z undo, Ctrl/Cmd+Shift+Z or Ctrl+Y redo
+            if (e.Key == Key.Y || e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            {
+                Redo();
+            }
+            else
+            {
+                Undo();
+            }
+
             e.Handled = true;
         }
         else if (e.KeyModifiers.HasFlag(KeyModifiers.Alt) ||
@@ -1902,6 +1970,14 @@ public partial class AssaDrawViewModel : ObservableObject
 
     private void AdjustPosition(float xAdjust, float yAdjust)
     {
+        if (SelectedShapes.Count == 0 && SelectedTreeItem?.Shape == null && ActiveShape == null)
+        {
+            return;
+        }
+
+        // Holding an arrow key is one undo step, not one per repeat
+        SaveUndo("nudge");
+
         // Check if multiple shapes are selected (Ctrl+A scenario)
         if (SelectedShapes.Count > 0)
         {
@@ -1968,6 +2044,8 @@ public partial class AssaDrawViewModel : ObservableObject
         {
             Canvas.ActiveShape = value;
         }
+
+        UndoCommand.NotifyCanExecuteChanged();
     }
 
     partial void OnActivePointChanged(DrawCoordinate? value)
@@ -1990,6 +2068,7 @@ public partial class AssaDrawViewModel : ObservableObject
     {
         if (ActivePoint != null && Math.Abs(ActivePoint.X - value) > 0.001f)
         {
+            SaveUndo($"point-x-{RuntimeHelpers.GetHashCode(ActivePoint)}");
             ActivePoint.X = value;
             UpdateSelectedPointName();
             Canvas?.InvalidateVisual();
@@ -2000,6 +2079,7 @@ public partial class AssaDrawViewModel : ObservableObject
     {
         if (ActivePoint != null && Math.Abs(ActivePoint.Y - value) > 0.001f)
         {
+            SaveUndo($"point-y-{RuntimeHelpers.GetHashCode(ActivePoint)}");
             ActivePoint.Y = value;
             UpdateSelectedPointName();
             Canvas?.InvalidateVisual();
@@ -2010,6 +2090,11 @@ public partial class AssaDrawViewModel : ObservableObject
     {
         if (ActiveShape != null && ActiveShape.IsEraser != value)
         {
+            if (Shapes.Contains(ActiveShape))
+            {
+                SaveUndo();
+            }
+
             ActiveShape.IsEraser = value;
             RefreshTreeView();
             Canvas?.InvalidateVisual();
@@ -2106,6 +2191,11 @@ public partial class AssaDrawViewModel : ObservableObject
     {
         if (SelectedTreeItem?.IsLayer == true)
         {
+            if (Shapes.Any(s => s.Layer == SelectedTreeItem.Layer && s.ForeColor != value))
+            {
+                SaveUndo("layer-color");
+            }
+
             // Update all shapes in the selected layer
             foreach (var shape in Shapes.Where(s => s.Layer == SelectedTreeItem.Layer))
             {
@@ -2115,6 +2205,160 @@ public partial class AssaDrawViewModel : ObservableObject
             SelectedTreeItem.Swatch = new SolidColorBrush(value);
             Canvas?.InvalidateVisual();
         }
+    }
+
+    /// <summary>
+    /// Remembers the drawing before a change. Changes with the same <paramref name="coalesceKey"/>
+    /// less than a second apart (held arrow key, spinning a number box) share one undo step.
+    /// </summary>
+    private void SaveUndo(string? coalesceKey = null)
+    {
+        var now = DateTime.UtcNow;
+        if (coalesceKey != null && coalesceKey == _lastUndoKey && now - _lastUndoTime < TimeSpan.FromSeconds(1) && _undoStack.Count > 0)
+        {
+            _lastUndoTime = now;
+            return;
+        }
+
+        _lastUndoKey = coalesceKey;
+        _lastUndoTime = now;
+        _undoStack.Add(CaptureState());
+        if (_undoStack.Count > MaxUndoSteps)
+        {
+            _undoStack.RemoveAt(0);
+        }
+
+        _redoStack.Clear();
+        UpdateUndoState();
+    }
+
+    [RelayCommand(CanExecute = nameof(CanUndoOrRemovePoint))]
+    private void Undo()
+    {
+        // While drawing, undo takes back the last click
+        if (IsDrawing)
+        {
+            RemoveLastDrawnPoint();
+            return;
+        }
+
+        if (_undoStack.Count == 0)
+        {
+            return;
+        }
+
+        _redoStack.Add(CaptureState());
+        var state = _undoStack[^1];
+        _undoStack.RemoveAt(_undoStack.Count - 1);
+        RestoreState(state);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanRedo))]
+    private void Redo()
+    {
+        if (_redoStack.Count == 0)
+        {
+            return;
+        }
+
+        CancelDrawing();
+        _undoStack.Add(CaptureState());
+        var state = _redoStack[^1];
+        _redoStack.RemoveAt(_redoStack.Count - 1);
+        RestoreState(state);
+    }
+
+    private bool CanUndoOrRemovePoint() => CanUndo || IsDrawing;
+
+    private void RemoveLastDrawnPoint()
+    {
+        var points = ActiveShape!.Points;
+        var count = points.Count >= 4 && points[^1].DrawType == DrawCoordinateType.BezierCurve &&
+                    points[^2].DrawType == DrawCoordinateType.BezierCurveSupport2
+            ? 3
+            : 1;
+        points.RemoveRange(points.Count - count, count);
+        if (points.Count == 0)
+        {
+            CancelDrawing();
+        }
+
+        Canvas?.InvalidateVisual();
+        UpdateUndoState();
+    }
+
+    private UndoState CaptureState()
+    {
+        var state = new UndoState();
+        foreach (var shape in Shapes)
+        {
+            state.Shapes.Add(shape.Clone());
+        }
+
+        // Selection by position, so it can be restored on the cloned shapes
+        var item = SelectedTreeItem;
+        var selectedShape = item?.Shape ?? item?.Point?.DrawShape;
+        state.SelectedShapeIndex = selectedShape != null ? Shapes.IndexOf(selectedShape) : -1;
+        state.SelectedPointIndex = item?.Point != null && selectedShape != null ? selectedShape.Points.IndexOf(item.Point) : -1;
+        state.SelectedLayer = item?.IsLayer == true ? item.Layer : null;
+        return state;
+    }
+
+    private void RestoreState(UndoState state)
+    {
+        ActivePoint = null;
+        IsPointSelected = false;
+        SelectedShapes = [];
+        if (ActiveShape != null && Shapes.Contains(ActiveShape))
+        {
+            ActiveShape = null;
+        }
+
+        // Same list instance - the canvas holds on to it
+        Shapes.Clear();
+        foreach (var shape in state.Shapes)
+        {
+            Shapes.Add(shape.Clone());
+        }
+
+        if (SelectedTreeItem != null)
+        {
+            SelectedTreeItem = null;
+        }
+
+        RefreshTreeView();
+
+        if (state.SelectedShapeIndex >= 0 && state.SelectedShapeIndex < Shapes.Count)
+        {
+            var shape = Shapes[state.SelectedShapeIndex];
+            if (state.SelectedPointIndex >= 0 && state.SelectedPointIndex < shape.Points.Count)
+            {
+                SelectPoint(shape.Points[state.SelectedPointIndex]);
+            }
+            else
+            {
+                SelectShape(shape);
+            }
+        }
+        else if (state.SelectedLayer.HasValue)
+        {
+            var layerItem = FindTreeItem(null, null, state.SelectedLayer.Value);
+            if (layerItem != null)
+            {
+                SelectedTreeItem = layerItem;
+            }
+        }
+
+        _lastUndoKey = null;
+        Canvas?.InvalidateVisual();
+        UpdateUndoState();
+    }
+
+    private void UpdateUndoState()
+    {
+        CanUndo = _undoStack.Count > 0;
+        CanRedo = _redoStack.Count > 0;
+        UndoCommand.NotifyCanExecuteChanged();
     }
 
     [RelayCommand]
@@ -2138,6 +2382,14 @@ public partial class AssaDrawViewModel : ObservableObject
             Canvas = null;
         }
     }
+}
+
+internal sealed class UndoState
+{
+    public List<DrawShape> Shapes { get; } = [];
+    public int SelectedShapeIndex { get; set; } = -1;
+    public int SelectedPointIndex { get; set; } = -1;
+    public int? SelectedLayer { get; set; }
 }
 
 /// <summary>

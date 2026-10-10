@@ -21,6 +21,7 @@ public class AssaDrawCanvas : Control
     private bool _isPanning;
     private DrawShape? _dragShape;
     private bool _dragShapeMoved;
+    private bool _pointDragStarted;
 
     private static readonly ImmutableSolidColorBrush WorkspaceBrush = new(Color.FromRgb(27, 28, 32));
     private static readonly ImmutableSolidColorBrush CheckerBrush = new(Color.FromArgb(10, 255, 255, 255));
@@ -210,6 +211,11 @@ public class AssaDrawCanvas : Control
     /// Right-click: what is under the pointer, so a context menu can be shown for it.
     /// </summary>
     public event EventHandler<CanvasContextEventArgs>? ContextMenuRequested;
+
+    /// <summary>
+    /// A point or shape drag is about to change the drawing (raised once per drag, for undo).
+    /// </summary>
+    public event EventHandler? EditStarting;
 
     static AssaDrawCanvas()
     {
@@ -767,6 +773,11 @@ public class AssaDrawCanvas : Control
             var dy = (float)(point.Y - _lastMousePosition.Value.Y) / _zoomFactor;
             if (dx != 0 || dy != 0)
             {
+                if (!_dragShapeMoved)
+                {
+                    EditStarting?.Invoke(this, EventArgs.Empty);
+                }
+
                 _dragShape.Offset(dx, dy);
                 _dragShapeMoved = true;
                 _lastMousePosition = point;
@@ -780,6 +791,12 @@ public class AssaDrawCanvas : Control
         // Dragging a point
         if (ActivePoint != null && _lastMousePosition.HasValue && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
         {
+            if (!_pointDragStarted)
+            {
+                _pointDragStarted = true;
+                EditStarting?.Invoke(this, EventArgs.Empty);
+            }
+
             ActivePoint.X = x;
             ActivePoint.Y = y;
             PointDragged?.Invoke(this, ActivePoint);
@@ -795,6 +812,7 @@ public class AssaDrawCanvas : Control
         base.OnPointerReleased(e);
         _isPanning = false;
         _lastMousePosition = null;
+        _pointDragStarted = false;
 
         var dragShape = _dragShape;
         var moved = _dragShapeMoved;
