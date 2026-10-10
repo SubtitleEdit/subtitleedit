@@ -135,13 +135,21 @@ public class SettingsPage : UserControl
 
         UpdateVisibleSections(string.Empty);
 
+        // Search updates immediately, without the category navigation fade.
         _searchBox.TextChanged += (_, e) => UpdateVisibleSections(_searchBox.Text ?? string.Empty);
         ActualThemeVariantChanged += (_, _) => Dispatcher.UIThread.Post(RefreshSections);
         _vm.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName == nameof(SettingsViewModel.SelectedSection))
             {
-                RefreshSections();
+                if (_vm.DeferSectionRefresh)
+                {
+                    UpdateMenuHighlight();
+                }
+                else
+                {
+                    RefreshSections();
+                }
             }
         };
     }
