@@ -833,7 +833,11 @@ public class AssaDrawWindow : Window
                 };
                 button.Classes.Add("tool");
                 button.Classes.Set("active", vm.CurrentLibraryShape?.Name == item.Name && vm.CurrentLibraryShape?.Category == item.Category);
-                ToolTip.SetTip(button, item.Name);
+                if (Se.Settings.Appearance.ShowHints)
+                {
+                    ToolTip.SetTip(button, item.Name);
+                }
+
                 AutomationProperties.SetName(button, item.Name);
                 button.Click += (_, _) =>
                 {
