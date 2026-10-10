@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
 using SkiaSharp;
 using System;
@@ -24,6 +25,15 @@ public class LlamaCppOcr : IDisposable
         _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
         _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
         _httpClient.Timeout = TimeSpan.FromMinutes(Math.Max(1, timeoutMinutes));
+    }
+
+    /// <summary>
+    /// Completes a remote llama-server URL typed as a bare origin ("http://host:8080") or
+    /// "host:8080" to the chat/completions endpoint, like auto-translate and seconv's --ocr-url.
+    /// </summary>
+    public static string CompleteRemoteUrl(string? url)
+    {
+        return AutoTranslateUrl.Complete(url, LlamaCppTranslate.DefaultUrl);
     }
 
     public async Task<string> Ocr(SKBitmap bitmap, string url, string model, string language, string promptTemplate, CancellationToken cancellationToken)
