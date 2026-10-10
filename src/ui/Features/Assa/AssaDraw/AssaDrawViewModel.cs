@@ -78,6 +78,7 @@ public partial class AssaDrawViewModel : ObservableObject
     private DispatcherTimer? _previewTimer;
     private string _previewSource = string.Empty;
     private bool _previewBusy;
+    private bool _refreshingTree;
 
     public AssaDrawViewModel(IFileHelper fileHelper, IWindowService windowService)
     {
@@ -184,6 +185,113 @@ public partial class AssaDrawViewModel : ObservableObject
         Canvas.PointSelected += OnPointSelected;
         Canvas.PointDragged += OnPointDragged;
         Canvas.ZoomChanged += OnZoomChanged;
+        Canvas.ShapeClicked += OnShapeClicked;
+        Canvas.ShapeMoved += OnShapeMoved;
+    }
+
+    private void OnShapeClicked(object? sender, DrawShape? shape)
+    {
+        if (shape == null)
+        {
+            ClearSelection();
+            return;
+        }
+
+        SelectShape(shape);
+    }
+
+    private void OnShapeMoved(object? sender, DrawShape shape)
+    {
+        // Point labels in the tree changed - rebuild once at the end of the drag, not on every move
+        RefreshTreeView();
+    }
+
+    /// <summary>
+    /// Right-click on the canvas: select what is under the pointer so the context menu acts on it.
+    /// </summary>
+    public void PrepareContextMenu(CanvasContextEventArgs e)
+    {
+        if (e.Point != null)
+        {
+            SelectPoint(e.Point);
+        }
+        else if (e.Shape != null)
+        {
+            SelectShape(e.Shape);
+        }
+    }
+
+    public bool IsDrawing => ActiveShape != null && !Shapes.Contains(ActiveShape);
+
+    /// <summary>
+    /// The finished shape the shape commands act on: the one picked in the tree or on the canvas,
+    /// or the shape of the selected point.
+    /// </summary>
+    public DrawShape? TargetShape
+    {
+        get
+        {
+            if (SelectedTreeItem?.Shape != null)
+            {
+                return SelectedTreeItem.Shape;
+            }
+
+            if (SelectedTreeItem?.Point != null)
+            {
+                var pointShape = SelectedTreeItem.Point.DrawShape ?? Shapes.FirstOrDefault(s => s.Points.Contains(SelectedTreeItem.Point));
+                if (pointShape != null && Shapes.Contains(pointShape))
+                {
+                    return pointShape;
+                }
+            }
+
+            return ActiveShape != null && Shapes.Contains(ActiveShape) ? ActiveShape : null;
+        }
+    }
+
+    /// <summary>
+    /// Layers in use, for the "Move to layer" menu.
+    /// </summary>
+    public List<int> UsedLayers => Shapes.Select(s => s.Layer).Distinct().OrderBy(l => l).ToList();
+
+    public void SelectShape(DrawShape shape)
+    {
+        var item = FindTreeItem(null, shape, null);
+        if (item != null)
+        {
+            SelectedTreeItem = item;
+        }
+    }
+
+    public void SelectPoint(DrawCoordinate point)
+    {
+        var item = FindTreeItem(point, null, null);
+        if (item != null)
+        {
+            SelectedTreeItem = item;
+        }
+    }
+
+    private void ClearSelection()
+    {
+        if (SelectedTreeItem != null)
+        {
+            SelectedTreeItem = null;
+        }
+
+        if (ActiveShape != null && Shapes.Contains(ActiveShape))
+        {
+            ActiveShape = null;
+        }
+
+        ActivePoint = null;
+        IsPointSelected = false;
+        SelectedShapes = [];
+        if (Canvas != null)
+        {
+            Canvas.SelectedShape = null;
+            Canvas.InvalidateVisual();
+        }
     }
 
     private void OnZoomChanged(object? sender, float zoomFactor)
@@ -468,16 +576,17 @@ public partial class AssaDrawViewModel : ObservableObject
     [RelayCommand]
     private void DeleteShape()
     {
-        if (ActiveShape != null)
+        var shape = IsDrawing ? ActiveShape : TargetShape;
+        if (shape != null)
         {
-            if (ActivePoint != null && ActiveShape.Points.Contains(ActivePoint))
+            if (ActivePoint != null && shape.Points.Contains(ActivePoint))
             {
                 ActivePoint = null;
                 IsPointSelected = false;
             }
 
-            Shapes.Remove(ActiveShape);
-            SelectedShapes = SelectedShapes.Where(s => s != ActiveShape).ToList();
+            Shapes.Remove(shape);
+            SelectedShapes = SelectedShapes.Where(s => s != shape).ToList();
             ActiveShape = null;
             _currentX = float.MinValue;
             _currentY = float.MinValue;
@@ -555,6 +664,197 @@ public partial class AssaDrawViewModel : ObservableObject
 
         RefreshTreeView();
         Canvas?.InvalidateVisual();
+    }
+
+    [RelayCommand]
+    private void DuplicateShape()
+    {
+        var shape = TargetShape;
+        if (shape == null)
+        {
+            return;
+        }
+
+        var copy = shape.Clone();
+        copy.Hidden = false;
+        copy.Offset(DrawSettings.GridSize, DrawSettings.GridSize);
+        Shapes.Insert(Shapes.IndexOf(shape) + 1, copy);
+        RefreshTreeView();
+        SelectShape(copy);
+        Canvas?.InvalidateVisual();
+    }
+
+    [RelayCommand]
+    private void FlipShapeHorizontal()
+    {
+        var shape = TargetShape;
+        if (shape == null)
+        {
+            return;
+        }
+
+        shape.FlipHorizontal();
+        RefreshTreeView();
+        Canvas?.InvalidateVisual();
+    }
+
+    [RelayCommand]
+    private void FlipShapeVertical()
+    {
+        var shape = TargetShape;
+        if (shape == null)
+        {
+            return;
+        }
+
+        shape.FlipVertical();
+        RefreshTreeView();
+        Canvas?.InvalidateVisual();
+    }
+
+    [RelayCommand]
+    private void ToggleShapeEraser()
+    {
+        var shape = TargetShape;
+        if (shape == null)
+        {
+            return;
+        }
+
+        shape.IsEraser = !shape.IsEraser;
+        if (shape == ActiveShape)
+        {
+            ShapeIsEraser = shape.IsEraser;
+        }
+
+        RefreshTreeView();
+        Canvas?.InvalidateVisual();
+    }
+
+    [RelayCommand]
+    private void ToggleShapeVisibility()
+    {
+        var shape = TargetShape;
+        if (shape == null)
+        {
+            return;
+        }
+
+        shape.Hidden = !shape.Hidden;
+        RefreshTreeView();
+        Canvas?.InvalidateVisual();
+    }
+
+    [RelayCommand]
+    private void ToggleLayerVisibility()
+    {
+        if (SelectedTreeItem?.IsLayer != true)
+        {
+            return;
+        }
+
+        var layerShapes = Shapes.Where(s => s.Layer == SelectedTreeItem.Layer).ToList();
+        var hide = layerShapes.Any(s => !s.Hidden);
+        foreach (var shape in layerShapes)
+        {
+            shape.Hidden = hide;
+        }
+
+        RefreshTreeView();
+        Canvas?.InvalidateVisual();
+    }
+
+    [RelayCommand]
+    private void DeleteLayer()
+    {
+        if (SelectedTreeItem?.IsLayer != true)
+        {
+            return;
+        }
+
+        var layer = SelectedTreeItem.Layer;
+        Shapes.RemoveAll(s => s.Layer == layer);
+        if (ActiveShape != null && ActiveShape.Layer == layer && !IsDrawing)
+        {
+            ActiveShape = null;
+        }
+
+        ActivePoint = null;
+        IsPointSelected = false;
+        SelectedShapes = SelectedShapes.Where(s => s.Layer != layer).ToList();
+        RefreshTreeView();
+        Canvas?.InvalidateVisual();
+    }
+
+    [RelayCommand]
+    private void MoveShapeToLayer(int layer)
+    {
+        var shape = TargetShape;
+        if (shape == null || shape.Layer == layer)
+        {
+            return;
+        }
+
+        // Same rule as Change layer: a shape joining a layer takes that layer's color
+        var existing = Shapes.FirstOrDefault(s => s.Layer == layer);
+        shape.Layer = layer;
+        if (existing != null)
+        {
+            shape.ForeColor = existing.ForeColor;
+        }
+
+        RefreshTreeView();
+        Canvas?.InvalidateVisual();
+    }
+
+    [RelayCommand]
+    private void DeletePoint()
+    {
+        var point = ActivePoint;
+        var shape = point == null ? null : point.DrawShape ?? Shapes.FirstOrDefault(s => s.Points.Contains(point));
+        if (point == null || shape == null || !shape.RemovePoint(point))
+        {
+            return;
+        }
+
+        ActivePoint = null;
+        IsPointSelected = false;
+        if (shape.Points.Count == 0)
+        {
+            Shapes.Remove(shape);
+            if (ActiveShape == shape)
+            {
+                ActiveShape = null;
+            }
+        }
+
+        RefreshTreeView();
+        if (Shapes.Contains(shape))
+        {
+            SelectShape(shape);
+        }
+
+        Canvas?.InvalidateVisual();
+    }
+
+    [RelayCommand]
+    private void CancelDrawing()
+    {
+        if (!IsDrawing)
+        {
+            return;
+        }
+
+        ActiveShape = null;
+        _currentX = float.MinValue;
+        _currentY = float.MinValue;
+        if (Canvas != null)
+        {
+            Canvas.ActiveShape = null;
+            Canvas.CurrentX = float.MinValue;
+            Canvas.CurrentY = float.MinValue;
+            Canvas.InvalidateVisual();
+        }
     }
 
     [RelayCommand]
@@ -1100,40 +1400,120 @@ public partial class AssaDrawViewModel : ObservableObject
 
     private void RefreshTreeView()
     {
-        ShapeTreeItems.Clear();
+        var previous = SelectedTreeItem;
 
-        var layers = Shapes.GroupBy(s => s.Layer).OrderBy(g => g.Key);
-        foreach (var layer in layers)
+        _refreshingTree = true;
+        try
         {
-            var layerItem = new ShapeTreeItem
-            {
-                Name = $"Layer {layer.Key}",
-                IsLayer = true,
-                Layer = layer.Key
-            };
+            ShapeTreeItems.Clear();
 
-            foreach (var shape in layer)
+            var layers = Shapes.GroupBy(s => s.Layer).OrderBy(g => g.Key);
+            foreach (var layer in layers)
             {
-                var shapeItem = new ShapeTreeItem
+                var layerShapes = layer.ToList();
+                var layerItem = new ShapeTreeItem
                 {
-                    Name = $"Shape ({(shape.IsEraser ? "erase" : "draw")})",
-                    Shape = shape
+                    Name = string.Format(Se.Language.Assa.DrawLayerX, layer.Key),
+                    IsLayer = true,
+                    Layer = layer.Key,
+                    IsExpanded = true,
+                    IconName = "fa-solid fa-layer-group",
+                    Swatch = new SolidColorBrush(layerShapes[0].ForeColor),
+                    IsHidden = layerShapes.All(s => s.Hidden),
                 };
 
-                foreach (var point in shape.Points)
+                var shapeNumber = 0;
+                foreach (var shape in layerShapes)
                 {
-                    shapeItem.Children.Add(new ShapeTreeItem
+                    shapeNumber++;
+                    var shapeItem = new ShapeTreeItem
                     {
-                        Name = point.GetText(point.X, point.Y),
-                        Point = point
-                    });
+                        Name = $"Shape {shapeNumber} ({(shape.IsEraser ? "erase" : "draw")})",
+                        Shape = shape,
+                        IsExpanded = shape.Expanded,
+                        IconName = shape.IsEraser ? "fa-solid fa-eraser" : "fa-solid fa-draw-polygon",
+                        IsHidden = shape.Hidden,
+                    };
+
+                    foreach (var point in shape.Points)
+                    {
+                        var isControlPoint = point.DrawType is DrawCoordinateType.BezierCurveSupport1 or DrawCoordinateType.BezierCurveSupport2;
+                        shapeItem.Children.Add(new ShapeTreeItem
+                        {
+                            Name = point.GetText(point.X, point.Y),
+                            Point = point,
+                            IconName = isControlPoint ? "fa-regular fa-circle" : "fa-regular fa-square",
+                            IsHidden = shape.Hidden,
+                        });
+                    }
+
+                    layerItem.Children.Add(shapeItem);
                 }
 
-                layerItem.Children.Add(shapeItem);
+                ShapeTreeItems.Add(layerItem);
+            }
+        }
+        finally
+        {
+            _refreshingTree = false;
+        }
+
+        // Keep the selection across the rebuild - it used to vanish after every edit
+        var restored = previous == null
+            ? null
+            : FindTreeItem(previous.Point, previous.Shape, previous.IsLayer ? previous.Layer : null);
+        if (restored != null)
+        {
+            SelectedTreeItem = restored;
+        }
+        else if (SelectedTreeItem != null)
+        {
+            SelectedTreeItem = null;
+        }
+        else
+        {
+            ApplyTreeSelection(null);
+        }
+    }
+
+    /// <summary>
+    /// The tree item for a point, shape or layer, with its parents expanded so it can be shown selected.
+    /// </summary>
+    private ShapeTreeItem? FindTreeItem(DrawCoordinate? point, DrawShape? shape, int? layer)
+    {
+        foreach (var layerItem in ShapeTreeItems)
+        {
+            if (layer.HasValue && point == null && shape == null && layerItem.Layer == layer.Value)
+            {
+                return layerItem;
             }
 
-            ShapeTreeItems.Add(layerItem);
+            foreach (var shapeItem in layerItem.Children)
+            {
+                if (shape != null && point == null && shapeItem.Shape == shape)
+                {
+                    layerItem.IsExpanded = true;
+                    return shapeItem;
+                }
+
+                if (point == null)
+                {
+                    continue;
+                }
+
+                foreach (var pointItem in shapeItem.Children)
+                {
+                    if (pointItem.Point == point)
+                    {
+                        layerItem.IsExpanded = true;
+                        shapeItem.IsExpanded = true;
+                        return pointItem;
+                    }
+                }
+            }
         }
+
+        return null;
     }
 
     private void ImportAssaDrawingFromText(string text, int layer, Color color, bool isEraser)
@@ -1289,19 +1669,9 @@ public partial class AssaDrawViewModel : ObservableObject
     {
         if (e.Key == Key.Escape)
         {
-            if (ActiveShape != null && !Shapes.Contains(ActiveShape))
+            if (IsDrawing)
             {
-                // Cancel current drawing
-                ActiveShape = null;
-                _currentX = float.MinValue;
-                _currentY = float.MinValue;
-                if (Canvas != null)
-                {
-                    Canvas.ActiveShape = null;
-                    Canvas.CurrentX = float.MinValue;
-                    Canvas.CurrentY = float.MinValue;
-                    Canvas.InvalidateVisual();
-                }
+                CancelDrawing();
                 e.Handled = true;
                 return;
             }
@@ -1314,7 +1684,7 @@ public partial class AssaDrawViewModel : ObservableObject
             CloseShape();
             e.Handled = true;
         }
-        else if (e.Key == Key.Delete && ActiveShape != null)
+        else if (e.Key == Key.Delete && (IsDrawing || TargetShape != null))
         {
             DeleteShape();
             e.Handled = true;
@@ -1391,6 +1761,13 @@ public partial class AssaDrawViewModel : ObservableObject
                     if (e.KeyModifiers.HasFlag(KeyModifiers.Control))
                     {
                         SelectAllShapes();
+                        e.Handled = true;
+                    }
+                    break;
+                case Key.D:
+                    if (e.KeyModifiers.HasFlag(KeyModifiers.Control))
+                    {
+                        DuplicateShape();
                         e.Handled = true;
                     }
                     break;
@@ -1575,6 +1952,39 @@ public partial class AssaDrawViewModel : ObservableObject
 
     partial void OnSelectedTreeItemChanged(ShapeTreeItem? value)
     {
+        if (_refreshingTree)
+        {
+            return;
+        }
+
+        ApplyTreeSelection(value);
+    }
+
+    private void ApplyTreeSelection(ShapeTreeItem? value)
+    {
+        if (value != null)
+        {
+            if (value.Point != null)
+            {
+                ActivePoint = value.Point;
+                PointX = value.Point.X;
+                PointY = value.Point.Y;
+                IsPointSelected = true;
+            }
+            else
+            {
+                ActivePoint = null;
+                IsPointSelected = false;
+            }
+
+            // Active shape for canvas rendering and shape properties
+            if (value.Shape != null)
+            {
+                ActiveShape = value.Shape;
+                ShapeIsEraser = value.Shape.IsEraser;
+            }
+        }
+
         // Update layer selection state
         IsLayerSelected = value?.IsLayer == true;
         IsShapeSelected = value?.Shape != null;
@@ -1597,7 +2007,7 @@ public partial class AssaDrawViewModel : ObservableObject
 
         if (Canvas != null)
         {
-            Canvas.SelectedShape = value?.Shape;
+            Canvas.SelectedShape = value?.Shape ?? value?.Point?.DrawShape;
             Canvas.InvalidateVisual();
         }
     }
@@ -1611,6 +2021,8 @@ public partial class AssaDrawViewModel : ObservableObject
             {
                 shape.ForeColor = value;
             }
+
+            SelectedTreeItem.Swatch = new SolidColorBrush(value);
             Canvas?.InvalidateVisual();
         }
     }
@@ -1645,11 +2057,26 @@ public partial class ShapeTreeItem : ObservableObject
 {
     [ObservableProperty] private string _name = string.Empty;
     [ObservableProperty] private ObservableCollection<ShapeTreeItem> _children = [];
+    [ObservableProperty] private bool _isExpanded;
+    [ObservableProperty] private string _iconName = string.Empty;
+    [ObservableProperty] private IBrush? _swatch;
+    [ObservableProperty] private bool _isHidden;
 
     public bool IsLayer { get; set; }
     public int Layer { get; set; }
     public DrawShape? Shape { get; set; }
     public DrawCoordinate? Point { get; set; }
+
+    public bool HasSwatch => IsLayer;
+
+    partial void OnIsExpandedChanged(bool value)
+    {
+        // Remembered on the shape, so a tree rebuild keeps its points open or closed
+        if (Shape != null)
+        {
+            Shape.Expanded = value;
+        }
+    }
 
     public override string ToString() => Name;
 }

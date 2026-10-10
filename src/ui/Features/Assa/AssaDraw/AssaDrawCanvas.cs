@@ -19,9 +19,14 @@ public class AssaDrawCanvas : Control
     private float _panY;
     private Point? _lastMousePosition;
     private bool _isPanning;
+    private DrawShape? _dragShape;
+    private bool _dragShapeMoved;
 
-    private static readonly ImmutableSolidColorBrush CheckerBrush1 = new(Color.FromRgb(60, 60, 60));
-    private static readonly ImmutableSolidColorBrush CheckerBrush2 = new(Color.FromRgb(80, 80, 80));
+    private static readonly ImmutableSolidColorBrush WorkspaceBrush = new(Color.FromRgb(27, 28, 32));
+    private static readonly ImmutableSolidColorBrush CheckerBrush = new(Color.FromArgb(10, 255, 255, 255));
+    private static readonly Color AccentColor = Color.FromRgb(76, 110, 245);
+    private static readonly Color HandleFillColor = Colors.White;
+    private static readonly Color GuideColor = Color.FromArgb(150, 160, 170, 190);
 
     private readonly Dictionary<Color, IBrush> _brushCache = new();
     private readonly Dictionary<(Color Color, double Thickness, PenLineCap LineCap, PenLineJoin LineJoin, bool Dashed), IPen> _penCache = new();
@@ -191,6 +196,21 @@ public class AssaDrawCanvas : Control
     public event EventHandler<DrawCoordinate>? PointDragged;
     public event EventHandler<float>? ZoomChanged;
 
+    /// <summary>
+    /// Select tool click: the shape under the pointer, or null for empty canvas.
+    /// </summary>
+    public event EventHandler<DrawShape?>? ShapeClicked;
+
+    /// <summary>
+    /// A shape was dragged to a new position with the select tool.
+    /// </summary>
+    public event EventHandler<DrawShape>? ShapeMoved;
+
+    /// <summary>
+    /// Right-click: what is under the pointer, so a context menu can be shown for it.
+    /// </summary>
+    public event EventHandler<CanvasContextEventArgs>? ContextMenuRequested;
+
     static AssaDrawCanvas()
     {
         AffectsRender<AssaDrawCanvas>(
@@ -248,17 +268,20 @@ public class AssaDrawCanvas : Control
         base.Render(context);
 
         var bounds = Bounds;
-
-        // Draw checkered background for transparency indication
-        DrawCheckerBackground(context, bounds);
-
-        // Draw the actual canvas area
-        DrawCanvasArea(context);
+        context.FillRectangle(WorkspaceBrush, new Rect(bounds.Size));
 
         var canvasRect = new Rect(_panX, _panY, CanvasWidth * _zoomFactor, CanvasHeight * _zoomFactor);
+        DrawFrameShadow(context, canvasRect);
+
+        // The frame itself: checkered so it reads as transparent, or the video frame when previewing
+        DrawCanvasArea(context);
         if (ShowPreview && BackgroundImage != null)
         {
             context.DrawImage(BackgroundImage, canvasRect);
+        }
+        else
+        {
+            DrawCheckerBackground(context, canvasRect);
         }
 
         // Draw grid if enabled
@@ -275,6 +298,9 @@ public class AssaDrawCanvas : Control
 
         // Draw resolution border
         DrawResolutionBorder(context);
+
+        // Shapes are filled with their layer color, unless the libass render already shows them
+        var fillShapes = !ShowPreview || PreviewImage == null;
 
         // Draw all shapes
         var shapes = Shapes;
@@ -298,21 +324,39 @@ public class AssaDrawCanvas : Control
 
             var isSelected = selectedSet != null ? selectedSet.Contains(shape) : selectedShapes.Contains(shape);
             var isActive = shape == activeShape || shape == selectedShape || isSelected;
-            DrawShape(context, shape, isActive, isSelected, isInShapes: true);
-            DrawShapePoints(context, shape);
+            DrawShape(context, shape, isActive, isSelected, isInShapes: true, fillShapes);
+        }
+
+        // Handles on top of every shape, so a later shape can't cover the selected one's points
+        for (var idx = 0; idx < shapes.Count; idx++)
+        {
+            var shape = shapes[idx];
+            if (shape.Hidden)
+            {
+                continue;
+            }
+
+            var isSelected = selectedSet != null ? selectedSet.Contains(shape) : selectedShapes.Contains(shape);
+            var isActive = shape == activeShape || shape == selectedShape || isSelected;
+            if (isActive)
+            {
+                DrawSelectionBox(context, shape);
+            }
+
+            DrawShapePoints(context, shape, isActive);
         }
 
         // Draw active shape being created (not yet in Shapes list)
         if (ActiveShape != null && !activeShapeInList)
         {
-            DrawShape(context, ActiveShape, true, false, isInShapes: false);
-            DrawShapePoints(context, ActiveShape);
+            DrawShape(context, ActiveShape, true, false, isInShapes: false, fill: false);
+            DrawShapePoints(context, ActiveShape, true);
 
             // Draw preview to current mouse position
             if (CurrentX > float.MinValue && CurrentY > float.MinValue && ActiveShape.Points.Count > 0)
             {
                 var lastPoint = ActiveShape.Points[^1];
-                var pen = GetPen(DrawSettings.ActiveShapeLineColor, 2, lineCap: PenLineCap.Round);
+                var pen = GetPen(AccentColor, 1.5, lineCap: PenLineCap.Round, dashed: true);
 
                 if (CurrentTool == DrawingTool.Circle && ActiveShape.Points.Count == 1)
                 {
@@ -353,26 +397,43 @@ public class AssaDrawCanvas : Control
         // Highlight active point
         if (ActivePoint != null)
         {
-            var pointColor = new Color(255, ActivePoint.PointColor.R, ActivePoint.PointColor.G, ActivePoint.PointColor.B);
-            var pen = GetPen(pointColor, 3);
-            var x = ToZoomFactorX(ActivePoint.X);
-            var y = ToZoomFactorY(ActivePoint.Y);
-            context.DrawLine(pen, new Point(x - 8, y), new Point(x + 8, y));
-            context.DrawLine(pen, new Point(x, y - 8), new Point(x, y + 8));
+            var center = ToZoomFactorPoint(ActivePoint);
+            context.DrawEllipse(GetBrush(AccentColor), GetPen(HandleFillColor, 2), center, 6, 6);
+            context.DrawEllipse(null, GetPen(Color.FromArgb(110, AccentColor.R, AccentColor.G, AccentColor.B), 2), center, 10, 10);
         }
     }
 
-    private void DrawCheckerBackground(DrawingContext context, Rect bounds)
+    private static void DrawFrameShadow(DrawingContext context, Rect canvasRect)
     {
-        const int size = 10;
-
-        for (var y = 0; y < bounds.Height; y += size)
+        for (var i = 1; i <= 6; i++)
         {
-            for (var x = 0; x < bounds.Width; x += size)
+            var shadow = new ImmutableSolidColorBrush(Color.FromArgb((byte)(28 - i * 4), 0, 0, 0));
+            context.FillRectangle(shadow, canvasRect.Inflate(i * 2).Translate(new Vector(0, i)));
+        }
+    }
+
+    private void DrawCheckerBackground(DrawingContext context, Rect canvasRect)
+    {
+        const double size = 16;
+        var visible = canvasRect.Intersect(new Rect(Bounds.Size));
+        if (visible.Width <= 0 || visible.Height <= 0)
+        {
+            return;
+        }
+
+        using (context.PushClip(visible))
+        {
+            var startColumn = (int)Math.Floor((visible.Left - canvasRect.Left) / size);
+            var startRow = (int)Math.Floor((visible.Top - canvasRect.Top) / size);
+            for (var row = startRow; canvasRect.Top + row * size < visible.Bottom; row++)
             {
-                var isEven = ((x / size) + (y / size)) % 2 == 0;
-                var brush = isEven ? CheckerBrush1 : CheckerBrush2;
-                context.FillRectangle(brush, new Rect(x, y, size, size));
+                for (var column = startColumn; canvasRect.Left + column * size < visible.Right; column++)
+                {
+                    if ((row + column) % 2 == 0)
+                    {
+                        context.FillRectangle(CheckerBrush, new Rect(canvasRect.Left + column * size, canvasRect.Top + row * size, size, size));
+                    }
+                }
             }
         }
     }
@@ -386,8 +447,13 @@ public class AssaDrawCanvas : Control
 
     private void DrawGrid(DrawingContext context)
     {
-        var pen = GetPen(DrawSettings.GridColor, 0.5);
+        var pen = GetPen(DrawSettings.GridColor, 1);
         var gridSize = DrawSettings.GridSize * _zoomFactor;
+        while (gridSize < 8)
+        {
+            // Zoomed far out the lines would merge into a solid sheet - draw every other one
+            gridSize *= 2;
+        }
 
         for (float x = _panX; x < _panX + CanvasWidth * _zoomFactor; x += gridSize)
         {
@@ -402,108 +468,154 @@ public class AssaDrawCanvas : Control
 
     private void DrawResolutionBorder(DrawingContext context)
     {
-        var pen = GetPen(DrawSettings.ScreenSizeColor, 2);
-        var rect = new Rect(_panX - 1, _panY - 1, CanvasWidth * _zoomFactor + 2, CanvasHeight * _zoomFactor + 2);
+        var pen = GetPen(DrawSettings.ScreenSizeColor, 1);
+        var rect = new Rect(_panX - 0.5, _panY - 0.5, CanvasWidth * _zoomFactor + 1, CanvasHeight * _zoomFactor + 1);
         context.DrawRectangle(null, pen, rect);
     }
 
-    private void DrawShape(DrawingContext context, DrawShape shape, bool isActive, bool isSelected, bool isInShapes)
+    private void DrawShape(DrawingContext context, DrawShape shape, bool isActive, bool isSelected, bool isInShapes, bool fill)
     {
         if (shape.Points.Count == 0)
         {
             return;
         }
 
-        // Use different colors for eraser shapes to visually distinguish them
-        var color = isSelected ? Colors.Yellow : (isActive ? DrawSettings.ActiveShapeLineColor : DrawSettings.ShapeLineColor);
+        var isClosed = shape.Points.Count > 2 && isInShapes;
+        var geometry = BuildGeometry(shape, isClosed);
+
+        IBrush? fillBrush = null;
+        if (fill && isClosed)
+        {
+            fillBrush = shape.IsEraser
+                ? GetBrush(Color.FromArgb(40, 255, 69, 0))
+                : GetBrush(Color.FromArgb(215, shape.ForeColor.R, shape.ForeColor.G, shape.ForeColor.B));
+        }
+
+        // Eraser shapes (iclip masks) are dashed and orange so they read as "cut out", not drawn
+        Color color;
         if (shape.IsEraser && !isSelected)
         {
-            // Draw eraser shapes in red/orange to indicate they are iclip masks
             color = isActive ? Colors.OrangeRed : Colors.DarkOrange;
         }
-
-        // Use dashed lines for eraser shapes
-        var pen = GetPen(color, 2, lineCap: PenLineCap.Round, dashed: shape.IsEraser);
-
-        var i = 0;
-        while (i < shape.Points.Count)
+        else
         {
-            var point = shape.Points[i];
-
-            if (point.DrawType == DrawCoordinateType.Line)
-            {
-                if (i > 0)
-                {
-                    var prev = shape.Points[i - 1];
-                    context.DrawLine(pen, ToZoomFactorPoint(prev), ToZoomFactorPoint(point));
-                }
-
-                i++;
-            }
-            else if (point.IsBeizer)
-            {
-                if (i > 0 && shape.Points.Count - i >= 3)
-                {
-                    // Draw bezier curve
-                    var startPoint = shape.Points[i - 1];
-                    var control1 = shape.Points[i];
-                    var control2 = shape.Points[i + 1];
-                    var endPoint = shape.Points[i + 2];
-
-                    var geometry = new StreamGeometry();
-                    using (var ctx = geometry.Open())
-                    {
-                        ctx.BeginFigure(ToZoomFactorPoint(startPoint), false);
-                        ctx.CubicBezierTo(
-                            ToZoomFactorPoint(control1),
-                            ToZoomFactorPoint(control2),
-                            ToZoomFactorPoint(endPoint));
-                    }
-
-                    context.DrawGeometry(null, pen, geometry);
-
-                    // Draw control point lines (guides)
-                    if (isActive)
-                    {
-                        var guidePen = GetPen(Colors.Gray, 1, lineJoin: PenLineJoin.Round, dashed: true);
-                        context.DrawLine(guidePen, ToZoomFactorPoint(startPoint), ToZoomFactorPoint(control1));
-                        context.DrawLine(guidePen, ToZoomFactorPoint(endPoint), ToZoomFactorPoint(control2));
-                    }
-
-                    i += 3;
-                }
-                else
-                {
-                    i++;
-                }
-            }
-            else
-            {
-                i++;
-            }
+            color = isActive || isSelected ? AccentColor : DrawSettings.ShapeLineColor;
         }
 
-        // Close the shape by drawing line from last to first point
-        if (shape.Points.Count > 2 && isInShapes)
+        var pen = GetPen(color, isActive || isSelected ? 2 : 1.5, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round, dashed: shape.IsEraser);
+        context.DrawGeometry(fillBrush, pen, geometry);
+
+        // Bezier control point guides
+        if (isActive)
         {
-            var first = shape.Points[0];
-            var last = shape.Points[^1];
-            context.DrawLine(pen, ToZoomFactorPoint(last), ToZoomFactorPoint(first));
+            var guidePen = GetPen(GuideColor, 1);
+            for (var i = 1; i + 2 < shape.Points.Count; i++)
+            {
+                if (shape.Points[i].DrawType == DrawCoordinateType.BezierCurveSupport1)
+                {
+                    context.DrawLine(guidePen, ToZoomFactorPoint(shape.Points[i - 1]), ToZoomFactorPoint(shape.Points[i]));
+                    context.DrawLine(guidePen, ToZoomFactorPoint(shape.Points[i + 2]), ToZoomFactorPoint(shape.Points[i + 1]));
+                    i += 2;
+                }
+            }
         }
     }
 
-    private void DrawShapePoints(DrawingContext context, DrawShape shape)
+    private StreamGeometry BuildGeometry(DrawShape shape, bool isClosed)
+    {
+        var geometry = new StreamGeometry();
+        using var ctx = geometry.Open();
+        ctx.SetFillRule(FillRule.NonZero);
+        ctx.BeginFigure(ToZoomFactorPoint(shape.Points[0]), isClosed);
+        var i = 1;
+        while (i < shape.Points.Count)
+        {
+            var point = shape.Points[i];
+            if (point.DrawType == DrawCoordinateType.BezierCurveSupport1 && i + 2 < shape.Points.Count)
+            {
+                ctx.CubicBezierTo(
+                    ToZoomFactorPoint(point),
+                    ToZoomFactorPoint(shape.Points[i + 1]),
+                    ToZoomFactorPoint(shape.Points[i + 2]));
+                i += 3;
+            }
+            else
+            {
+                ctx.LineTo(ToZoomFactorPoint(point));
+                i++;
+            }
+        }
+
+        ctx.EndFigure(isClosed);
+        return geometry;
+    }
+
+    private void DrawSelectionBox(DrawingContext context, DrawShape shape)
+    {
+        if (shape.Points.Count < 2)
+        {
+            return;
+        }
+
+        var (left, top, right, bottom) = shape.GetBounds();
+        var rect = new Rect(
+            new Point(ToZoomFactorX(left), ToZoomFactorY(top)),
+            new Point(ToZoomFactorX(right), ToZoomFactorY(bottom))).Inflate(8);
+        context.DrawRectangle(null, GetPen(AccentColor, 1, dashed: true), rect);
+
+        var cornerPen = GetPen(AccentColor, 1.5);
+        var cornerBrush = GetBrush(HandleFillColor);
+        foreach (var corner in new[] { rect.TopLeft, rect.TopRight, rect.BottomLeft, rect.BottomRight })
+        {
+            context.DrawRectangle(cornerBrush, cornerPen, new Rect(corner.X - 3.5, corner.Y - 3.5, 7, 7));
+        }
+    }
+
+    private void DrawShapePoints(DrawingContext context, DrawShape shape, bool isActive)
     {
         foreach (var point in shape.Points)
         {
-            var pen = GetPen(point.PointColor, 2);
-            var x = ToZoomFactorX(point.X);
-            var y = ToZoomFactorY(point.Y);
+            var center = ToZoomFactorPoint(point);
+            var isControlPoint = point.DrawType is DrawCoordinateType.BezierCurveSupport1 or DrawCoordinateType.BezierCurveSupport2;
 
-            // Draw cross marker
-            context.DrawLine(pen, new Point(x - 5, y), new Point(x + 5, y));
-            context.DrawLine(pen, new Point(x, y - 5), new Point(x, y + 5));
+            if (!isActive)
+            {
+                // Small dots keep every point grabbable without cluttering unselected shapes
+                if (!isControlPoint)
+                {
+                    context.DrawEllipse(GetBrush(point.PointColor), null, center, 2.5, 2.5);
+                }
+
+                continue;
+            }
+
+            if (isControlPoint)
+            {
+                context.DrawEllipse(GetBrush(HandleFillColor), GetPen(point.PointColor, 1.5), center, 3.5, 3.5);
+            }
+            else
+            {
+                context.DrawRectangle(GetBrush(HandleFillColor), GetPen(AccentColor, 1.5), new Rect(center.X - 4, center.Y - 4, 8, 8));
+            }
         }
+    }
+
+    /// <summary>
+    /// The topmost visible shape under (x, y) in canvas coordinates.
+    /// </summary>
+    public DrawShape? HitTestShape(float x, float y)
+    {
+        var shapes = Shapes;
+        for (var i = shapes.Count - 1; i >= 0; i--)
+        {
+            var shape = shapes[i];
+            if (!shape.Hidden && shape.HitTest(x, y, 5f / _zoomFactor))
+            {
+                return shape;
+            }
+        }
+
+        return null;
     }
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
@@ -514,9 +626,19 @@ public class AssaDrawCanvas : Control
         var point = e.GetPosition(this);
         var x = FromZoomFactorX((float)point.X);
         var y = FromZoomFactorY((float)point.Y);
+        var properties = e.GetCurrentPoint(this).Properties;
 
-        // Check for shift+click to pan
-        if (e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+        if (properties.IsRightButtonPressed)
+        {
+            var targetPoint = GetClosePoint(x, y);
+            var targetShape = targetPoint == null ? HitTestShape(x, y) : FindShape(targetPoint);
+            ContextMenuRequested?.Invoke(this, new CanvasContextEventArgs(point, x, y, targetPoint, targetShape));
+            e.Handled = true;
+            return;
+        }
+
+        // Shift+drag or middle mouse button pans
+        if (e.KeyModifiers.HasFlag(KeyModifiers.Shift) || properties.IsMiddleButtonPressed)
         {
             _isPanning = true;
             _lastMousePosition = point;
@@ -531,6 +653,23 @@ public class AssaDrawCanvas : Control
             ActivePoint = closePoint;
             _lastMousePosition = point;
             PointSelected?.Invoke(this, closePoint);
+            InvalidateVisual();
+            e.Handled = true;
+            return;
+        }
+
+        if (CurrentTool == DrawingTool.Select)
+        {
+            // Select tool: pick the shape under the pointer, and drag it to move it
+            var shape = HitTestShape(x, y);
+            if (shape != null)
+            {
+                _dragShape = shape;
+                _dragShapeMoved = false;
+                _lastMousePosition = point;
+            }
+
+            ShapeClicked?.Invoke(this, shape);
             InvalidateVisual();
             e.Handled = true;
             return;
@@ -558,6 +697,23 @@ public class AssaDrawCanvas : Control
             return;
         }
 
+        // Dragging a whole shape
+        if (_dragShape != null && _lastMousePosition.HasValue && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        {
+            var dx = (float)(point.X - _lastMousePosition.Value.X) / _zoomFactor;
+            var dy = (float)(point.Y - _lastMousePosition.Value.Y) / _zoomFactor;
+            if (dx != 0 || dy != 0)
+            {
+                _dragShape.Offset(dx, dy);
+                _dragShapeMoved = true;
+                _lastMousePosition = point;
+                InvalidateVisual();
+            }
+
+            CanvasMouseMoved?.Invoke(this, new CanvasMouseEventArgs(x, y));
+            return;
+        }
+
         // Dragging a point
         if (ActivePoint != null && _lastMousePosition.HasValue && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
         {
@@ -576,6 +732,20 @@ public class AssaDrawCanvas : Control
         base.OnPointerReleased(e);
         _isPanning = false;
         _lastMousePosition = null;
+
+        var dragShape = _dragShape;
+        var moved = _dragShapeMoved;
+        _dragShape = null;
+        _dragShapeMoved = false;
+        if (dragShape != null && moved)
+        {
+            ShapeMoved?.Invoke(this, dragShape);
+        }
+    }
+
+    private DrawShape? FindShape(DrawCoordinate point)
+    {
+        return point.DrawShape ?? Shapes.FirstOrDefault(s => s.Points.Contains(point));
     }
 
     protected override void OnPointerWheelChanged(PointerWheelEventArgs e)
@@ -637,5 +807,27 @@ public class CanvasMouseEventArgs : EventArgs
     {
         X = x;
         Y = y;
+    }
+}
+
+public class CanvasContextEventArgs : EventArgs
+{
+    /// <summary>
+    /// Pointer position in control coordinates (where the menu opens).
+    /// </summary>
+    public Point Position { get; }
+
+    public float X { get; }
+    public float Y { get; }
+    public DrawCoordinate? Point { get; }
+    public DrawShape? Shape { get; }
+
+    public CanvasContextEventArgs(Point position, float x, float y, DrawCoordinate? point, DrawShape? shape)
+    {
+        Position = position;
+        X = x;
+        Y = y;
+        Point = point;
+        Shape = shape;
     }
 }

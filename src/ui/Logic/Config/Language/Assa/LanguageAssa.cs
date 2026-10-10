@@ -27,6 +27,17 @@ public class LanguageAssa
     public string DrawSelectedLayer { get; set; }
     public string DrawToolX { get; set; }
     public string DrawHelpText { get; set; }
+    public string DrawMoveToLayer { get; set; }
+    public string DrawFlipHorizontal { get; set; }
+    public string DrawFlipVertical { get; set; }
+    public string DrawHideShape { get; set; }
+    public string DrawShowShape { get; set; }
+    public string DrawHideLayer { get; set; }
+    public string DrawShowLayer { get; set; }
+    public string DrawDeleteLayer { get; set; }
+    public string DrawDeletePoint { get; set; }
+    public string DrawCancelDrawing { get; set; }
+    public string DrawLayerX { get; set; }
 
     // Progress Bar Generator
     public string ProgressBarTitle { get; set; }
@@ -285,7 +296,18 @@ public class LanguageAssa
         DrawSelectedShape = "Selected shape";
         DrawSelectedLayer = "Selected layer";
         DrawToolX = "Tool: {0}";
-        DrawHelpText = "Click to add points • Enter/F8 to close shape • Shift+Drag to pan • Ctrl+Scroll to zoom";
+        DrawHelpText = "Click to add points • Right-click for options • Enter/F8 to close shape • Shift+drag or middle mouse to pan • Ctrl+Scroll to zoom";
+        DrawMoveToLayer = "Move to layer";
+        DrawFlipHorizontal = "Flip horizontally";
+        DrawFlipVertical = "Flip vertically";
+        DrawHideShape = "Hide shape";
+        DrawShowShape = "Show shape";
+        DrawHideLayer = "Hide layer";
+        DrawShowLayer = "Show layer";
+        DrawDeleteLayer = "Delete layer";
+        DrawDeletePoint = "Delete point";
+        DrawCancelDrawing = "Cancel drawing";
+        DrawLayerX = "Layer {0}";
 
         // Progress Bar Generator
         ProgressBarTitle = "ASSA progress bar";
