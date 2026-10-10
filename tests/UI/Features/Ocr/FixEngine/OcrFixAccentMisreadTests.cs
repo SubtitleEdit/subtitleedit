@@ -54,6 +54,27 @@ public class OcrFixAccentMisreadTests : IDisposable
         Assert.Equal("Un café.", engine.FixOcrErrors(0, "Un café.", doTryToGuessUnknownWords: false).GetText());
     }
 
+    [Theory]
+    [InlineData("A café.")]
+    [InlineData("René is here.")]
+    [InlineData("A résumé.")]
+    [InlineData("So naïve.")]
+    public void FixOcrErrors_English_AccentedLoanwordOrName_IsNotStripped(string input)
+    {
+        // English dictionaries are plain ASCII, so "cafe"/"Rene"/"resume" would always be "confirmed".
+        var engine = CreateEngine("eng", "a", "cafe", "rene", "is", "here", "resume", "so", "naive");
+
+        Assert.Equal(input, engine.FixOcrErrors(0, input, doTryToGuessUnknownWords: false).GetText());
+    }
+
+    [Fact]
+    public void FixOcrErrors_French_AccentedToPlain_StillFixed()
+    {
+        var engine = CreateEngine("fra", "il", "est", "là");
+
+        Assert.Equal("Il est là.", engine.FixOcrErrors(0, "Il ést là.", doTryToGuessUnknownWords: false).GetText());
+    }
+
     [Fact]
     public void FixOcrErrors_NoLookalikeInDictionary_IsLeftAlone()
     {
