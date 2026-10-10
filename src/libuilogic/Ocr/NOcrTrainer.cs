@@ -432,10 +432,12 @@ public sealed class NOcrTrainer
         var c = text[0];
         if (char.IsLetterOrDigit(c))
         {
-            return text.Normalize(System.Text.NormalizationForm.FormD).Length > 1 || c is 'Ø' or 'ø';
+            // Cyrillic ы/Ы are a soft sign plus a separate bar.
+            return text.Normalize(System.Text.NormalizationForm.FormD).Length > 1 || c is 'Ø' or 'ø' or 'ы' or 'Ы';
         }
 
-        return c is '"' or '%' or ';' or ':' or '?' or '!' or '=' or '÷' or '¡' or '¿' or '‰';
+        return c is '"' or '%' or ';' or ':' or '?' or '!' or '=' or '÷' or '¡' or '¿' or '‰' or
+            '«' or '»' or '‹' or '›' or '“' or '”' or '„' or '‟' or '″' or '‴' or '…' or '‼' or '⁇' or '⁈' or '⁉';
     }
 
     /// <summary>
