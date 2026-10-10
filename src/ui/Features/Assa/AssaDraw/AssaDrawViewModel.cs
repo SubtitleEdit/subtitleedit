@@ -750,6 +750,12 @@ public partial class AssaDrawViewModel : ObservableObject
 
     private void OnPointSelected(object? sender, DrawCoordinate point)
     {
+        // Select the point in the tree too, so the shape commands act on the clicked point's shape
+        if (FindTreeItem(point, null, null) is { } item && !ReferenceEquals(SelectedTreeItem, item))
+        {
+            SelectedTreeItem = item;
+        }
+
         ActivePoint = point;
         PointX = point.X;
         PointY = point.Y;
