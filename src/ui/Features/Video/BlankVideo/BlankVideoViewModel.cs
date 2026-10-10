@@ -473,13 +473,13 @@ public partial class BlankVideoViewModel : ObservableObject
 
         if (UseBackgroundImage && string.IsNullOrEmpty(_fullBackgroundImageFileName))
         {
-            await MessageBox.Show(Window!, Se.Language.Video.BackgroundImageFileNotSelected, Se.Language.General.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Video.BackgroundImageFileNotSelected, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
         if (UseBackgroundImage && !File.Exists(_fullBackgroundImageFileName))
         {
-            await MessageBox.Show(Window!, string.Format(Se.Language.Video.BackgroundImageFileDoesNotExistX, _fullBackgroundImageFileName), Se.Language.General.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            await MessageBox.Show(Window!, Se.Language.General.Error, string.Format(Se.Language.Video.BackgroundImageFileDoesNotExistX, _fullBackgroundImageFileName), MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
