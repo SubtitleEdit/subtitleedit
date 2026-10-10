@@ -2268,42 +2268,64 @@ public partial class SettingsViewModel : ObservableObject
     /// the focus move after it untested.
     /// </summary>
     internal static bool AnimateScrollToSection { get; set; } = true;
+    internal bool DeferSectionRefresh { get; private set; }
 
-    public async void ScrollElementIntoView(ScrollViewer scrollViewer, Control target, NavigationMethod? focusFirstControl = null)
+    private bool _isSectionTransitionRunning;
+    private (Func<Control?> RefreshContent, NavigationMethod? FocusMethod)? _pendingSectionTransition;
+
+    public async void ScrollElementIntoView(ScrollViewer scrollViewer, Func<Control?> refreshContent, NavigationMethod? focusFirstControl = null)
     {
-        await Dispatcher.UIThread.InvokeAsync(async () =>
+        // Keep only the latest request and run one fade/content transition at a time.
+        _pendingSectionTransition = (refreshContent, focusFirstControl);
+        if (_isSectionTransitionRunning)
         {
-            await Task.Yield(); // Ensures target has been laid out
+            return;
+        }
 
-            // Fade out
-            //await FadeToAsync(ScrollView, 0, TimeSpan.FromMilliseconds(100));
-            if (AnimateScrollToSection)
+        _isSectionTransitionRunning = true;
+        try
+        {
+            await Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                await RunFadeAnimation(ScrollView, from: 1, to: 0, TimeSpan.FromMilliseconds(100));
-            }
+                while (_pendingSectionTransition.HasValue)
+                {
+                    if (AnimateScrollToSection)
+                    {
+                        await RunFadeAnimation(ScrollView, from: 1, to: 0, TimeSpan.FromMilliseconds(100));
+                    }
 
+                    // Include any requests received during fade-out in this content swap.
+                    var request = _pendingSectionTransition.Value;
+                    _pendingSectionTransition = null;
+                    var target = request.RefreshContent();
+                    await Task.Yield(); // Ensures target has been laid out
+                    scrollViewer.ScrollToHome();
+                    await Task.Yield(); // Ensures target has been laid out
 
-            await Task.Yield(); // Ensures target has been laid out
-            scrollViewer.ScrollToHome();
-            await Task.Yield(); // Ensures target has been laid out
+                    var targetPosition = target?.TranslatePoint(new Point(0, 0), scrollViewer);
+                    if (targetPosition.HasValue)
+                    {
+                        scrollViewer.Offset = new Vector(scrollViewer.Offset.X, targetPosition.Value.Y);
+                    }
 
-            var targetPosition = target.TranslatePoint(new Point(0, 0), scrollViewer);
-            if (targetPosition.HasValue)
-            {
-                scrollViewer.Offset = new Vector(scrollViewer.Offset.X, targetPosition.Value.Y);
-            }
+                    if (target != null && request.FocusMethod.HasValue && !_pendingSectionTransition.HasValue)
+                    {
+                        FocusFirstTabStop(target, request.FocusMethod.Value);
+                    }
 
-            if (focusFirstControl.HasValue)
-            {
-                FocusFirstTabStop(target, focusFirstControl.Value);
-            }
-
-            await Task.Yield(); // Ensures target has been laid out
-            if (AnimateScrollToSection)
-            {
-                await RunFadeAnimation(ScrollView, from: 0, to: 1, TimeSpan.FromMilliseconds(200));
-            }
-        }, DispatcherPriority.Background);
+                    await Task.Yield(); // Ensures target has been laid out
+                    if (AnimateScrollToSection)
+                    {
+                        await RunFadeAnimation(ScrollView, from: 0, to: 1, TimeSpan.FromMilliseconds(200));
+                    }
+                    // Requests received during fade-in are coalesced into the next transition.
+                }
+            }, DispatcherPriority.Background);
+        }
+        finally
+        {
+            _isSectionTransitionRunning = false;
+        }
     }
 
     private static void FocusFirstTabStop(Control container, NavigationMethod navigationMethod)
@@ -2851,17 +2873,34 @@ public partial class SettingsViewModel : ObservableObject
 
     private void ShowSection(SettingsSection section, NavigationMethod navigationMethod)
     {
-        SelectedSection = section; // the page rebuilds the content to this section
+        // Keep selection/history immediate; refresh the content after fade-out.
+        DeferSectionRefresh = AnimateScrollToSection && section.IsVisible;
+        try
+        {
+            SelectedSection = section;
+        }
+        finally
+        {
+            DeferSectionRefresh = false;
+        }
 
         // Hidden by the search filter (no matching settings) - nothing to scroll or focus.
-        if (section.Panel == null || !section.IsVisible)
+        if (!section.IsVisible)
         {
             return;
         }
 
         // Move focus into the section, not only the view - with focus left on the category
         // button, the categories did nothing for a screen reader or keyboard user (#12087).
-        ScrollElementIntoView(ScrollView, section.Panel, navigationMethod);
+        ScrollElementIntoView(ScrollView, () =>
+        {
+            if (AnimateScrollToSection && Window != null && UiTheme.GetUnscaledContent(Window) is SettingsPage page)
+            {
+                page.RefreshSections();
+            }
+
+            return SelectedSection?.Panel;
+        }, navigationMethod);
     }
 
     [RelayCommand]
