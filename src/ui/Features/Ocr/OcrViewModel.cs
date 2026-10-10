@@ -111,6 +111,8 @@ public partial class OcrViewModel : ObservableObject
     [ObservableProperty] private bool _isNOcrVisible;
     [ObservableProperty] private bool _isOllamaVisible;
     [ObservableProperty] private bool _isLlamaCppVisible;
+    [ObservableProperty] private bool _isLlamaCppLocalVisible;
+    [ObservableProperty] private bool _isLlamaCppRemoteVisible;
     [ObservableProperty] private bool _isCrispEmbedVisible;
     [ObservableProperty] private bool _isTesseractVisible;
     [ObservableProperty] private bool _isBinaryImageCompareVisible;
@@ -1499,10 +1501,13 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
+        // The dialog edits the persisted URL, so hand it the one typed into the toolbar box.
+        Se.Settings.Ocr.LlamaCppUrl = LlamaCppUrl;
         var result = await _windowService.ShowDialogAsync<LlamaCppOcrSettingsWindow, LlamaCppOcrSettingsViewModel>(Window, vm => vm.Initialize(UpdateLlamaCppOcrEngineAsync));
         if (result.OkPressed)
         {
             LlamaCppUrl = Se.Settings.Ocr.LlamaCppUrl;
+            UpdateLlamaCppModeVisibility();
         }
 
         RefreshLlamaCppOcrDots();
@@ -1541,6 +1546,13 @@ public partial class OcrViewModel : ObservableObject
 
         RefreshLlamaCppOcrDots();
         UpdateLlamaCppOcrServerButtonText();
+    }
+
+    // Local mode shows the model/download/server controls; remote mode only the server URL (#15854).
+    private void UpdateLlamaCppModeVisibility()
+    {
+        IsLlamaCppLocalVisible = IsLlamaCppVisible && !Se.Settings.Ocr.LlamaCppUseRemoteServer;
+        IsLlamaCppRemoteVisible = IsLlamaCppVisible && Se.Settings.Ocr.LlamaCppUseRemoteServer;
     }
 
     private void UpdateLlamaCppOcrServerButtonText()
@@ -4548,12 +4560,15 @@ public partial class OcrViewModel : ObservableObject
         // disposes the HttpClient the moment the task is started, so every request fails and the
         // grid fills with blank lines (#13633).
         var engine = new LlamaCppOcr(Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
-        var selectedModel = SelectedLlamaCppOcrModel?.Model;
+
+        // Remote mode: the user's own llama-server at LlamaCppUrl, so no download or local server.
+        // Its model is unknown, so the generic prompt applies instead of a curated model's (#15854).
+        var selectedModel = Se.Settings.Ocr.LlamaCppUseRemoteServer ? null : SelectedLlamaCppOcrModel?.Model;
         var prompt = LlamaCppServerManager.ResolveOcrPrompt(selectedModel, Se.Settings.Ocr.LlamaCppOcrPrompt);
 
         _ = Task.Run(async () =>
         {
-            var url = LlamaCppUrl;
+            var url = (LlamaCppUrl ?? string.Empty).Trim();
             var modelName = "glmocr";
             try
             {
@@ -5435,6 +5450,7 @@ public partial class OcrViewModel : ObservableObject
         IsInspectLineVisible = et == OcrEngineType.nOcr || et == OcrEngineType.BinaryImageCompare;
         IsOllamaVisible = et == OcrEngineType.Ollama;
         IsLlamaCppVisible = et == OcrEngineType.LlamaCpp;
+        UpdateLlamaCppModeVisibility();
         IsCrispEmbedVisible = et == OcrEngineType.CrispEmbed;
         IsTesseractVisible = et == OcrEngineType.Tesseract;
         IsPaddleOcrVisible = et == OcrEngineType.PaddleOcrStandalone || et == OcrEngineType.PaddleOcrPython;
