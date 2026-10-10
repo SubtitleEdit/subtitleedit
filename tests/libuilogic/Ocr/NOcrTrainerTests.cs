@@ -139,6 +139,18 @@ public class NOcrTrainerTests
     [InlineData("ø", true)]
     [InlineData("\"", true)]
     [InlineData("%", true)]
+    [InlineData("«", true)]
+    [InlineData("»", true)]
+    [InlineData("‹", true)]
+    [InlineData("›", true)]
+    [InlineData("“", true)]
+    [InlineData("”", true)]
+    [InlineData("„", true)]
+    [InlineData("…", true)]
+    [InlineData("‼", true)]
+    [InlineData("ы", true)]
+    [InlineData("Ы", true)]
+    [InlineData("ь", false)]
     [InlineData("f", false)]
     [InlineData("m", false)]
     [InlineData("2", false)]
@@ -148,6 +160,27 @@ public class NOcrTrainerTests
         // A plain letter falling apart is a thin font losing hairlines at the threshold; stored
         // as an expanded "f" it later claimed "t." as one character.
         Assert.Equal(expected, NOcrTrainer.CanBeMultiPart(text));
+    }
+
+    [Theory]
+    [InlineData("«")]
+    [InlineData("»")]
+    [InlineData("„")]
+    [InlineData("“")]
+    [InlineData("ы")]
+    public void Trainer_LearnsMultiPartGlyphs(string text)
+    {
+        var db = new NOcrDb(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".nocr"));
+        var settings = new NOcrTrainerSettings
+        {
+            FontNames = { TestFontName },
+            FontSize = FontSize,
+            CharactersToTrain = text,
+        };
+
+        new NOcrTrainer().Train(settings, db);
+
+        Assert.Contains(db.OcrCharactersExpanded, c => c.Text == text);
     }
 
     [Fact]
