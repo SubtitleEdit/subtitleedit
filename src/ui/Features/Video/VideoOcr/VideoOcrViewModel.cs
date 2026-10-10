@@ -1211,7 +1211,7 @@ public partial class VideoOcrViewModel : ObservableObject
             // Remote mode: the user's own llama-server, whose model is unknown, so the generic prompt applies (#15854).
             var useRemoteServer = Se.Settings.Ocr.LlamaCppUseRemoteServer;
             var model = useRemoteServer ? null : SelectedLlamaCppModel?.Model;
-            var url = useRemoteServer ? (LlamaCppUrl ?? string.Empty).Trim() : LlamaCppServerManager.ApiUrl;
+            var url = useRemoteServer ? LlamaCppOcr.CompleteRemoteUrl(LlamaCppUrl) : LlamaCppServerManager.ApiUrl;
             var modelName = model?.FileName is { } fileName
                 ? Path.GetFileNameWithoutExtension(fileName)
                 : "glmocr";
