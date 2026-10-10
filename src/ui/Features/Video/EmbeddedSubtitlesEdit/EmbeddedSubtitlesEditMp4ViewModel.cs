@@ -196,7 +196,8 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
         ProgressValue = 100;
         ProgressText = string.Empty;
 
-        if (!File.Exists(_outputFileName))
+        // A failed mux can still leave a truncated output file, or an older one the user chose to overwrite.
+        if (_ffmpegProcess.ExitCode != 0 || !File.Exists(_outputFileName))
         {
             // Only log ffmpeg output on failure; successful generates would otherwise spam
             // the error log on every edit.
