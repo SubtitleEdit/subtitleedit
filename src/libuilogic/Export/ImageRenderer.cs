@@ -204,6 +204,10 @@ public static class ImageRenderer
         // under g/p/y was drawn outside the box.
         var firstLineTopInBitmap = firstBaseline - lineMetrics[0].Ascent - bitmapTop;
 
+        // Same for the left edge: the crop starts at the outline's left edge, not at textStartX,
+        // so per-line boxes laid out from column 0 sat outlineWidth too far left.
+        var textLeftInBitmap = textStartX - drawnBounds.Left;
+
         var cropTop = Math.Max(0, bitmapTop);
         var cropBottom = Math.Min(tempBitmap.Height - 1, Math.Max(drawnBounds.Bottom, lineBoxBottom));
         var overflowTop = cropTop - bitmapTop;
@@ -217,7 +221,7 @@ public static class ImageRenderer
 
         if (ip.BoxType != ExportBoxType.None)
         {
-            textBitmap = Replace(textBitmap, DrawBoxBehindText(textBitmap, lines, ip, fonts, lineMetrics, lineSpacing, firstLineTopInBitmap));
+            textBitmap = Replace(textBitmap, DrawBoxBehindText(textBitmap, lines, ip, fonts, lineMetrics, lineSpacing, firstLineTopInBitmap, textLeftInBitmap));
         }
 
         if (ip.PaddingTopBottom == 0 && ip.PaddingLeftRight == 0)
@@ -397,7 +401,8 @@ public static class ImageRenderer
         FontSet fonts,
         LineMetrics[] lineMetrics,
         float lineSpacing,
-        float firstLineTopInBitmap)
+        float firstLineTopInBitmap,
+        float textLeftInBitmap)
     {
         var padLeft = ip.BoxPaddingLeft;
         var padRight = ip.BoxPaddingRight;
@@ -426,11 +431,12 @@ public static class ImageRenderer
         }
         else if (ip.BoxType == ExportBoxType.BoxPerLine)
         {
-            // Pre-calculate line widths (same logic as RenderTextToCanvas)
+            // Pre-calculate line widths (same logic as RenderTextToCanvas, including the RTL
+            // segment order the 0.17em styled-segment padding depends on)
             var lineWidths = new float[lines.Count];
             for (var li = 0; li < lines.Count; li++)
             {
-                var line = lines[li];
+                var line = ip.IsRightToLeft ? lines[li].AsEnumerable().Reverse().ToList() : lines[li];
                 for (var j = 0; j < line.Count; j++)
                 {
                     var seg = line[j];
@@ -448,13 +454,7 @@ public static class ImageRenderer
             {
                 var lineWidth = lineWidths[li];
                 var lineHeight = lineMetrics[li].Ascent + lineMetrics[li].Descent;
-                float textX;
-                if (ip.ResolvedContentAlignment == ExportContentAlignment.Center)
-                    textX = padLeft + (maxLineWidth - lineWidth) / 2;
-                else if (ip.ResolvedContentAlignment == ExportContentAlignment.Right)
-                    textX = padLeft + maxLineWidth - lineWidth;
-                else
-                    textX = padLeft;
+                var textX = GetLineStartX(ip.ResolvedContentAlignment, padLeft + textLeftInBitmap, maxLineWidth, lineWidth);
 
                 canvas.DrawRoundRect(
                     new SKRoundRect(new SKRect(textX - padLeft, currentY - padTop, textX + lineWidth + padRight, currentY + lineHeight + padBottom), radius, radius),

@@ -685,9 +685,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 node = xml.DocumentElement.SelectSingleNode("Font");
                 if (node != null)
                 {
-                    if (node.Attributes?["ID"] != null)
+                    // Interop (and this writer) use "Id"; "ID" is the SMPTE spelling.
+                    var fontIdAttribute = node.Attributes?["Id"] ?? node.Attributes?["ID"];
+                    if (fontIdAttribute != null)
                     {
-                        ss.CurrentDCinemaFontId = node.Attributes["ID"].InnerText;
+                        ss.CurrentDCinemaFontId = fontIdAttribute.InnerText;
                     }
 
                     if (node.Attributes?["Size"] != null)
@@ -1107,6 +1109,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             output.Append("<i>"); // Reopen italics
                             isItalic = true;
                         }
+                    }
+                    else
+                    {
+                        output.Append(tempTag); // font/bold/... tags pass through
                     }
                 }
                 else if (isSkipping)
