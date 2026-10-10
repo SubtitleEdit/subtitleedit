@@ -280,6 +280,9 @@ public class AssaDrawWindow : Window
 
         AddSeparator(items);
         items.Add(MakeMenuItem(Se.Language.Assa.DrawImportSvg, "fa-solid fa-file-import", _vm.ImportSvgCommand));
+        var background = MakeMenuItem(Se.Language.Assa.DrawBackground, "fa-regular fa-image", null);
+        background.ItemsSource = MakeBackgroundItems(_vm);
+        items.Add(background);
 
         if (_vm.Shapes.Count > 0)
         {
@@ -347,6 +350,31 @@ public class AssaDrawWindow : Window
         BindHighlight(previewButton, vm, () => vm.ShowPreview, nameof(vm.ShowPreview));
         leftPanel.Children.Add(gridButton);
         leftPanel.Children.Add(previewButton);
+        leftPanel.Children.Add(MakeToolbarSeparator());
+
+        // Background: video frame or image to trace over, with its opacity
+        var backgroundButton = CreateToolButton("fa-regular fa-image", Se.Language.Assa.DrawBackground, null);
+        BindHighlight(backgroundButton, vm, () => vm.HasBackground, nameof(vm.HasBackground));
+        var backgroundFlyout = new MenuFlyout();
+        backgroundFlyout.Opening += (_, _) => backgroundFlyout.ItemsSource = MakeBackgroundItems(vm);
+        backgroundButton.Flyout = backgroundFlyout;
+        leftPanel.Children.Add(backgroundButton);
+        var opacitySlider = new Slider
+        {
+            Minimum = 0.1,
+            Maximum = 1,
+            Width = 90,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!Slider.ValueProperty] = new Binding(nameof(vm.BackgroundOpacity)) { Mode = BindingMode.TwoWay },
+            [!Slider.IsEnabledProperty] = new Binding(nameof(vm.HasBackground)),
+        };
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(opacitySlider, Se.Language.Assa.DrawBackgroundOpacity);
+        }
+
+        AutomationProperties.SetName(opacitySlider, Se.Language.Assa.DrawBackgroundOpacity);
+        leftPanel.Children.Add(opacitySlider);
         leftPanel.Children.Add(MakeToolbarSeparator());
 
         // Canvas size
@@ -419,6 +447,26 @@ public class AssaDrawWindow : Window
         };
     }
 
+    private static List<Control> MakeBackgroundItems(AssaDrawViewModel vm)
+    {
+        var stretch = MakeMenuItem(Se.Language.Assa.DrawBackgroundStretch, null, vm.ToggleBackgroundStretchCommand);
+        stretch.ToggleType = MenuItemToggleType.CheckBox;
+        stretch.IsChecked = vm.BackgroundStretch;
+
+        var none = MakeMenuItem(Se.Language.Assa.DrawBackgroundNone, "fa-solid fa-xmark", vm.RemoveBackgroundCommand);
+        none.IsEnabled = vm.HasBackground;
+
+        return
+        [
+            MakeMenuItem(Se.Language.Assa.DrawBackgroundVideoFrame, "fa-solid fa-film", vm.BackgroundFromVideoCommand),
+            MakeMenuItem(Se.Language.Assa.DrawBackgroundVideoFrameAt, "fa-solid fa-clock", vm.BackgroundFromVideoAtCommand),
+            MakeMenuItem(Se.Language.Assa.DrawBackgroundImage, "fa-regular fa-image", vm.BackgroundFromImageCommand),
+            new Separator(),
+            stretch,
+            none,
+        ];
+    }
+
     private static Border MakeToolbarSeparator()
     {
         return new Border
@@ -431,7 +479,7 @@ public class AssaDrawWindow : Window
         };
     }
 
-    private static Button CreateToolButton(string icon, string tooltip, System.Windows.Input.ICommand command, double size = 32)
+    private static Button CreateToolButton(string icon, string tooltip, System.Windows.Input.ICommand? command, double size = 32)
     {
         var button = new Button
         {

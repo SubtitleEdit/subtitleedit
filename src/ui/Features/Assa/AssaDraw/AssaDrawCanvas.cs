@@ -195,6 +195,27 @@ public class AssaDrawCanvas : Control
         set => SetValue(BackgroundImageProperty, value);
     }
 
+    public static readonly StyledProperty<double> BackgroundOpacityProperty =
+        AvaloniaProperty.Register<AssaDrawCanvas, double>(nameof(BackgroundOpacity), 1.0);
+
+    public static readonly StyledProperty<bool> BackgroundStretchProperty =
+        AvaloniaProperty.Register<AssaDrawCanvas, bool>(nameof(BackgroundStretch));
+
+    public double BackgroundOpacity
+    {
+        get => GetValue(BackgroundOpacityProperty);
+        set => SetValue(BackgroundOpacityProperty, value);
+    }
+
+    /// <summary>
+    /// Stretch the background to the canvas; otherwise it keeps its aspect ratio, centered.
+    /// </summary>
+    public bool BackgroundStretch
+    {
+        get => GetValue(BackgroundStretchProperty);
+        set => SetValue(BackgroundStretchProperty, value);
+    }
+
     public DrawingTool CurrentTool
     {
         get => GetValue(CurrentToolProperty);
@@ -250,7 +271,9 @@ public class AssaDrawCanvas : Control
             CanvasHeightProperty,
             ShowPreviewProperty,
             PreviewImageProperty,
-            BackgroundImageProperty);
+            BackgroundImageProperty,
+            BackgroundOpacityProperty,
+            BackgroundStretchProperty);
     }
 
     public AssaDrawCanvas()
@@ -300,15 +323,23 @@ public class AssaDrawCanvas : Control
         var canvasRect = new Rect(_panX, _panY, CanvasWidth * _zoomFactor, CanvasHeight * _zoomFactor);
         DrawFrameShadow(context, canvasRect);
 
-        // The frame itself: checkered so it reads as transparent, or the video frame when previewing
+        // The frame itself: checkered so it reads as transparent, with the video frame or image on top
         DrawCanvasArea(context);
-        if (ShowPreview && BackgroundImage != null)
+        DrawCheckerBackground(context, canvasRect);
+        if (BackgroundImage is { } background && background.Size.Width > 0 && background.Size.Height > 0)
         {
-            context.DrawImage(BackgroundImage, canvasRect);
-        }
-        else
-        {
-            DrawCheckerBackground(context, canvasRect);
+            var target = canvasRect;
+            if (!BackgroundStretch)
+            {
+                var scale = Math.Min(canvasRect.Width / background.Size.Width, canvasRect.Height / background.Size.Height);
+                var size = new Size(background.Size.Width * scale, background.Size.Height * scale);
+                target = new Rect(canvasRect.Center.X - size.Width / 2, canvasRect.Center.Y - size.Height / 2, size.Width, size.Height);
+            }
+
+            using (context.PushOpacity(Math.Clamp(BackgroundOpacity, 0.05, 1)))
+            {
+                context.DrawImage(background, target);
+            }
         }
 
         // Draw grid if enabled

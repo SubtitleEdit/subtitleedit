@@ -41,6 +41,14 @@ public class LanguageAssa
     public string DrawImportSvg { get; set; }
     public string DrawRotateClockwise { get; set; }
     public string DrawConvertToCurve { get; set; }
+    public string DrawBackground { get; set; }
+    public string DrawBackgroundVideoFrame { get; set; }
+    public string DrawBackgroundVideoFrameAt { get; set; }
+    public string DrawBackgroundImage { get; set; }
+    public string DrawBackgroundNone { get; set; }
+    public string DrawBackgroundStretch { get; set; }
+    public string DrawBackgroundOpacity { get; set; }
+    public string DrawImages { get; set; }
     public string DrawConvertToLine { get; set; }
     public string DrawConvertShapeToCurves { get; set; }
     public string DrawConvertShapeToLines { get; set; }
@@ -320,6 +328,14 @@ public class LanguageAssa
         DrawImportSvg = "Import SVG image...";
         DrawRotateClockwise = "Rotate 90° clockwise";
         DrawConvertToCurve = "Convert segment to curve";
+        DrawBackground = "Background";
+        DrawBackgroundVideoFrame = "Video frame (current position)";
+        DrawBackgroundVideoFrameAt = "Video frame at...";
+        DrawBackgroundImage = "Image file...";
+        DrawBackgroundNone = "No background";
+        DrawBackgroundStretch = "Stretch image to canvas";
+        DrawBackgroundOpacity = "Background opacity";
+        DrawImages = "Images";
         DrawConvertToLine = "Convert segment to line";
         DrawConvertShapeToCurves = "Convert all lines to curves";
         DrawConvertShapeToLines = "Convert all curves to lines";

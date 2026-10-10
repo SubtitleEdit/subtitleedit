@@ -11,6 +11,7 @@ using Nikse.SubtitleEdit.Features.Assa.AssaSetPosition;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.PickLayer;
+using Nikse.SubtitleEdit.Features.Video.GoToVideoPosition;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
@@ -61,6 +62,9 @@ public partial class AssaDrawViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<ShapeTreeItem> _shapeTreeItems = [];
     [ObservableProperty] private ShapeTreeItem? _selectedTreeItem;
     [ObservableProperty] private List<DrawShape> _selectedShapes = [];
+    [ObservableProperty] private double _backgroundOpacity = Math.Clamp(Se.Settings.Assa.DrawBackgroundOpacity, 0.1, 1);
+    [ObservableProperty] private bool _backgroundStretch = Se.Settings.Assa.DrawBackgroundStretch;
+    [ObservableProperty] private bool _hasBackground;
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(UndoCommand))]
     private bool _canUndo;
@@ -82,6 +86,7 @@ public partial class AssaDrawViewModel : ObservableObject
     private string? _videoFileName;
     private double _videoSeconds;
     private bool _backgroundRequested;
+    private int _backgroundVersion;
     private DispatcherTimer? _previewTimer;
     private string _previewSource = string.Empty;
     private bool _previewBusy;
@@ -192,6 +197,8 @@ public partial class AssaDrawViewModel : ObservableObject
         Canvas.CanvasWidth = CanvasWidth;
         Canvas.CanvasHeight = CanvasHeight;
         Canvas.CurrentTool = CurrentTool;
+        Canvas.BackgroundOpacity = BackgroundOpacity;
+        Canvas.BackgroundStretch = BackgroundStretch;
 
         Canvas.CanvasClicked += OnCanvasClicked;
         Canvas.CanvasMouseMoved += OnCanvasMouseMoved;
@@ -1113,30 +1120,142 @@ public partial class AssaDrawViewModel : ObservableObject
         UpdatePreview();
     }
 
+    /// <summary>
+    /// The libass preview shows over the video frame, so the first preview loads it unless a
+    /// background was already picked (or removed) by hand.
+    /// </summary>
     private void LoadPreviewBackground()
     {
-        if (_backgroundRequested || string.IsNullOrEmpty(_videoFileName) || !File.Exists(_videoFileName))
+        if (_backgroundRequested || !HasVideo)
+        {
+            return;
+        }
+
+        LoadVideoFrameBackground(_videoSeconds);
+    }
+
+    public bool HasVideo => !string.IsNullOrEmpty(_videoFileName) && File.Exists(_videoFileName);
+
+    private void LoadVideoFrameBackground(double seconds)
+    {
+        if (!HasVideo)
         {
             return;
         }
 
         _backgroundRequested = true;
-        var videoFileName = _videoFileName;
-        var seconds = _videoSeconds.ToString("0.###", CultureInfo.InvariantCulture);
+        var version = ++_backgroundVersion;
+        var videoFileName = _videoFileName!;
+        var position = seconds.ToString("0.###", CultureInfo.InvariantCulture);
         _ = Task.Run(() =>
         {
-            var bitmap = LoadBitmapAndDelete(FfmpegGenerator.GetScreenShot(videoFileName, seconds));
-            Dispatcher.UIThread.Post(() =>
-            {
-                if (Canvas == null)
-                {
-                    bitmap?.Dispose();
-                    return;
-                }
-
-                Canvas.BackgroundImage = bitmap;
-            });
+            var bitmap = LoadBitmapAndDelete(FfmpegGenerator.GetScreenShot(videoFileName, position));
+            Dispatcher.UIThread.Post(() => SetBackground(bitmap, version));
         });
+    }
+
+    /// <summary>
+    /// Shows an image file behind the drawing. Returns false when it can't be read as an image.
+    /// </summary>
+    public bool LoadImageBackground(string fileName)
+    {
+        Bitmap bitmap;
+        try
+        {
+            using var stream = File.OpenRead(fileName);
+            bitmap = new Bitmap(stream);
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "ASSA draw: could not load background image " + fileName);
+            return false;
+        }
+
+        _backgroundRequested = true;
+        SetBackground(bitmap, ++_backgroundVersion);
+        return true;
+    }
+
+    private void SetBackground(Bitmap? bitmap, int version)
+    {
+        // A slower ffmpeg grab must not replace a background picked after it was started
+        if (Canvas == null || version != _backgroundVersion)
+        {
+            bitmap?.Dispose();
+            return;
+        }
+
+        var old = Canvas.BackgroundImage as IDisposable;
+        Canvas.BackgroundImage = bitmap;
+        old?.Dispose();
+        HasBackground = bitmap != null;
+    }
+
+    [RelayCommand(CanExecute = nameof(HasVideo))]
+    private void BackgroundFromVideo() => LoadVideoFrameBackground(_videoSeconds);
+
+    [RelayCommand(CanExecute = nameof(HasVideo))]
+    private async Task BackgroundFromVideoAt()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var vm = await _windowService.ShowDialogAsync<GoToVideoPositionWindow, GoToVideoPositionViewModel>(
+            Window, vm => vm.Time = TimeSpan.FromSeconds(_videoSeconds));
+        if (!vm.OkPressed)
+        {
+            return;
+        }
+
+        _videoSeconds = Math.Max(0, vm.Time.TotalSeconds);
+        LoadVideoFrameBackground(_videoSeconds);
+    }
+
+    [RelayCommand]
+    private async Task BackgroundFromImage()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.Assa.DrawBackgroundImage.TrimEnd('.'),
+            Se.Language.Assa.DrawImages, "*.png;*.jpg;*.jpeg;*.bmp;*.webp");
+        if (!string.IsNullOrEmpty(fileName) && !LoadImageBackground(fileName))
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error, Path.GetFileName(fileName), MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    [RelayCommand]
+    private void RemoveBackground()
+    {
+        // Also keeps the preview from bringing the video frame back
+        _backgroundRequested = true;
+        SetBackground(null, ++_backgroundVersion);
+    }
+
+    [RelayCommand]
+    private void ToggleBackgroundStretch() => BackgroundStretch = !BackgroundStretch;
+
+    partial void OnBackgroundOpacityChanged(double value)
+    {
+        Se.Settings.Assa.DrawBackgroundOpacity = value;
+        if (Canvas != null)
+        {
+            Canvas.BackgroundOpacity = value;
+        }
+    }
+
+    partial void OnBackgroundStretchChanged(bool value)
+    {
+        Se.Settings.Assa.DrawBackgroundStretch = value;
+        if (Canvas != null)
+        {
+            Canvas.BackgroundStretch = value;
+        }
     }
 
     internal void UpdatePreview()
@@ -1345,23 +1464,37 @@ public partial class AssaDrawViewModel : ObservableObject
         return true;
     }
 
+    private static readonly string[] BackgroundImageExtensions = [".png", ".jpg", ".jpeg", ".bmp", ".webp"];
+
     internal void OnDragOver(object? sender, DragEventArgs e)
     {
-        e.DragEffects = GetDroppedSvg(e) != null ? DragDropEffects.Copy : DragDropEffects.None;
+        e.DragEffects = GetDroppedFile(e) != null ? DragDropEffects.Copy : DragDropEffects.None;
         e.Handled = true;
     }
 
+    /// <summary>
+    /// An .svg is imported as shapes, an image becomes the background.
+    /// </summary>
     internal void OnDrop(object? sender, DragEventArgs e)
     {
-        var fileName = GetDroppedSvg(e);
-        if (fileName != null)
+        var fileName = GetDroppedFile(e);
+        if (fileName == null)
         {
-            e.Handled = true;
+            return;
+        }
+
+        e.Handled = true;
+        if (fileName.EndsWith(".svg", StringComparison.OrdinalIgnoreCase))
+        {
             Dispatcher.UIThread.Post(() => _ = ImportSvgFile(fileName));
+        }
+        else
+        {
+            Dispatcher.UIThread.Post(() => LoadImageBackground(fileName));
         }
     }
 
-    private static string? GetDroppedSvg(DragEventArgs e)
+    private static string? GetDroppedFile(DragEventArgs e)
     {
         if (!e.DataTransfer.Contains(DataFormat.File))
         {
@@ -1370,7 +1503,8 @@ public partial class AssaDrawViewModel : ObservableObject
 
         return e.DataTransfer.TryGetFiles()?
             .Select(f => f.Path.LocalPath)
-            .FirstOrDefault(f => f.EndsWith(".svg", StringComparison.OrdinalIgnoreCase));
+            .FirstOrDefault(f => f.EndsWith(".svg", StringComparison.OrdinalIgnoreCase) ||
+                                 BackgroundImageExtensions.Any(x => f.EndsWith(x, StringComparison.OrdinalIgnoreCase)));
     }
 
     [RelayCommand]
