@@ -86,7 +86,8 @@ public class SeOcr
     public bool UseWordSplitList { get; set; }
     public string NOcrTrainFonts { get; set; }
     public string NOcrTrainMergedLetters { get; set; }
-    public int NOcrTrainFontSize { get; set; }
+    public string NOcrTrainFontSizes { get; set; }
+    public string NOcrTrainBaseDatabase { get; set; }
     public int NOcrTrainSegmentCount { get; set; }
     public bool NOcrTrainBold { get; set; }
     public bool NOcrTrainItalic { get; set; }
@@ -165,8 +166,9 @@ public class SeOcr
 
         NOcrTrainFonts = string.Empty;
         NOcrTrainMergedLetters = string.Empty;
-        NOcrTrainFontSize = 30;
-        NOcrTrainSegmentCount = 60;
+        NOcrTrainFontSizes = "30, 40";
+        NOcrTrainBaseDatabase = "Latin";
+        NOcrTrainSegmentCount = 100;
 
         VobSubUseCustomColors = false;
         VobSubColorBackground = "#00000000";
