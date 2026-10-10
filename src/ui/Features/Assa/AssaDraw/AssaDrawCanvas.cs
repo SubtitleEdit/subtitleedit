@@ -20,6 +20,9 @@ public class AssaDrawCanvas : Control
     private Point? _lastMousePosition;
     private bool _isPanning;
     private List<DrawShape>? _dragShapes;
+    private (float X, float Y)? _insertStart;
+    private (float X, float Y) _insertEnd;
+    private bool _insertConstrain;
     private DrawShape? _pressedShape;
     private bool _dragShapeMoved;
     private bool _pointDragStarted;
@@ -259,6 +262,16 @@ public class AssaDrawCanvas : Control
     /// </summary>
     public event EventHandler? EditStarting;
 
+    /// <summary>
+    /// Shape tool: place the library shape in this rectangle (canvas coordinates).
+    /// </summary>
+    public event EventHandler<CanvasInsertEventArgs>? InsertRequested;
+
+    /// <summary>
+    /// The library shape the shape tool places (previewed while dragging).
+    /// </summary>
+    public ShapeLibraryItem? InsertShape { get; set; }
+
     static AssaDrawCanvas()
     {
         AffectsRender<AssaDrawCanvas>(
@@ -480,6 +493,19 @@ public class AssaDrawCanvas : Control
                     // Draw preview line for Line and Bezier tools
                     context.DrawLine(pen, ToZoomFactorPoint(lastPoint),
                         new Point(ToZoomFactorX(CurrentX), ToZoomFactorY(CurrentY)));
+                }
+            }
+        }
+
+        // Shape tool: outline of the library shape in the dragged rectangle
+        if (_insertStart != null && InsertShape != null && GetInsertRect() is { IsClick: false } insert)
+        {
+            var previewPen = GetPen(AccentColor, 1.5, lineJoin: PenLineJoin.Round, dashed: true);
+            foreach (var shape in InsertShape.CreateShapes(insert.X, insert.Y, insert.Width, insert.Height, Colors.White, 0))
+            {
+                if (shape.Points.Count > 1)
+                {
+                    context.DrawGeometry(GetBrush(Color.FromArgb(40, AccentColor.R, AccentColor.G, AccentColor.B)), previewPen, BuildGeometry(shape, true));
                 }
             }
         }
@@ -935,6 +961,16 @@ public class AssaDrawCanvas : Control
             return;
         }
 
+        // Shape tool: drag out the rectangle the library shape goes into
+        if (CurrentTool == DrawingTool.Shape && properties.IsLeftButtonPressed && InsertShape != null)
+        {
+            _insertStart = (x, y);
+            _insertEnd = (x, y);
+            _insertConstrain = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
+            e.Handled = true;
+            return;
+        }
+
         // Scale/rotate handles of the selection (select tool)
         if (properties.IsLeftButtonPressed)
         {
@@ -1018,6 +1054,15 @@ public class AssaDrawCanvas : Control
             _panY += (float)(point.Y - _lastMousePosition.Value.Y);
             _lastMousePosition = point;
             InvalidateVisual();
+            return;
+        }
+
+        if (_insertStart != null)
+        {
+            _insertEnd = (x, y);
+            _insertConstrain = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
+            InvalidateVisual();
+            CanvasMouseMoved?.Invoke(this, new CanvasMouseEventArgs(x, y));
             return;
         }
 
@@ -1115,6 +1160,19 @@ public class AssaDrawCanvas : Control
         _lastMousePosition = null;
         _pointDragStarted = false;
 
+        if (_insertStart != null)
+        {
+            var rect = GetInsertRect();
+            _insertStart = null;
+            InvalidateVisual();
+            if (rect != null)
+            {
+                InsertRequested?.Invoke(this, rect);
+            }
+
+            return;
+        }
+
         var dragShapes = _dragShapes;
         var moved = _dragShapeMoved;
         _dragShapes = null;
@@ -1144,6 +1202,45 @@ public class AssaDrawCanvas : Control
         }
 
         InvalidateVisual();
+    }
+
+    /// <summary>
+    /// The rectangle the shape tool drag describes; a click (tiny drag) means "default size here".
+    /// Dragging past the start point flips the rectangle, Shift keeps the shape's proportions.
+    /// </summary>
+    private CanvasInsertEventArgs? GetInsertRect()
+    {
+        if (_insertStart is not { } start || InsertShape == null)
+        {
+            return null;
+        }
+
+        var width = _insertEnd.X - start.X;
+        var height = _insertEnd.Y - start.Y;
+        if (Math.Abs(width) * _zoomFactor < 4 && Math.Abs(height) * _zoomFactor < 4)
+        {
+            return new CanvasInsertEventArgs(start.X, start.Y, 0, 0, isClick: true);
+        }
+
+        if (_insertConstrain)
+        {
+            var aspect = InsertShape.AspectRatio;
+            if (Math.Abs(width) * aspect > Math.Abs(height))
+            {
+                height = Math.Sign(height == 0 ? 1 : height) * Math.Abs(width) * aspect;
+            }
+            else
+            {
+                width = Math.Sign(width == 0 ? 1 : width) * Math.Abs(height) / aspect;
+            }
+        }
+
+        return new CanvasInsertEventArgs(
+            width < 0 ? start.X + width : start.X,
+            height < 0 ? start.Y + height : start.Y,
+            Math.Max(1, Math.Abs(width)),
+            Math.Max(1, Math.Abs(height)),
+            isClick: false);
     }
 
     private DrawShape? FindShape(DrawCoordinate point)
@@ -1232,5 +1329,27 @@ public class CanvasContextEventArgs : EventArgs
         Y = y;
         Point = point;
         Shape = shape;
+    }
+}
+
+public class CanvasInsertEventArgs : EventArgs
+{
+    public float X { get; }
+    public float Y { get; }
+    public float Width { get; }
+    public float Height { get; }
+
+    /// <summary>
+    /// A click without dragging: X/Y is where to center the shape at its default size.
+    /// </summary>
+    public bool IsClick { get; }
+
+    public CanvasInsertEventArgs(float x, float y, float width, float height, bool isClick)
+    {
+        X = x;
+        Y = y;
+        Width = width;
+        Height = height;
+        IsClick = isClick;
     }
 }

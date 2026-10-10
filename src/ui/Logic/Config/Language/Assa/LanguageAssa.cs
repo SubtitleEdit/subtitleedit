@@ -44,6 +44,47 @@ public class LanguageAssa
     public string DrawBackground { get; set; }
     public string DrawPosition { get; set; }
     public string DrawZoom { get; set; }
+    public string DrawShapeTool { get; set; }
+    public string DrawShapeLibrary { get; set; }
+    public string DrawShapeLibraryHint { get; set; }
+    public string DrawAddToLibrary { get; set; }
+    public string DrawRemoveFromLibrary { get; set; }
+    public string DrawShapeName { get; set; }
+    public string DrawCategorySpeechBubbles { get; set; }
+    public string DrawCategoryArrows { get; set; }
+    public string DrawCategoryBasicShapes { get; set; }
+    public string DrawCategorySymbols { get; set; }
+    public string DrawCategoryMyShapes { get; set; }
+    public string DrawShapeSpeechBubble { get; set; }
+    public string DrawShapeSpeechBubbleRight { get; set; }
+    public string DrawShapeSpeechBubbleUp { get; set; }
+    public string DrawShapeOvalBubble { get; set; }
+    public string DrawShapeBoxBubble { get; set; }
+    public string DrawShapeThoughtBubble { get; set; }
+    public string DrawShapeShoutBubble { get; set; }
+    public string DrawShapeCaptionBox { get; set; }
+    public string DrawShapeArrow { get; set; }
+    public string DrawShapeDoubleArrow { get; set; }
+    public string DrawShapeChevron { get; set; }
+    public string DrawShapeCurvedArrow { get; set; }
+    public string DrawShapeRoundedRectangle { get; set; }
+    public string DrawShapeTriangle { get; set; }
+    public string DrawShapeDiamond { get; set; }
+    public string DrawShapePentagon { get; set; }
+    public string DrawShapeHexagon { get; set; }
+    public string DrawShapeOctagon { get; set; }
+    public string DrawShapeStar { get; set; }
+    public string DrawShapeRing { get; set; }
+    public string DrawShapePlus { get; set; }
+    public string DrawShapeBanner { get; set; }
+    public string DrawShapeHeart { get; set; }
+    public string DrawShapeCheck { get; set; }
+    public string DrawShapeMusicNote { get; set; }
+    public string DrawShapeMusicNotes { get; set; }
+    public string DrawShapeLightning { get; set; }
+    public string DrawShapeCloud { get; set; }
+    public string DrawShapeMoon { get; set; }
+    public string DrawShapeBadge { get; set; }
     public string DrawSize { get; set; }
     public string DrawLayer { get; set; }
     public string DrawBackgroundVideoFrame { get; set; }
@@ -335,6 +376,47 @@ public class LanguageAssa
         DrawBackground = "Background";
         DrawPosition = "Position";
         DrawZoom = "Zoom";
+        DrawShapeTool = "Shape tool";
+        DrawShapeLibrary = "Shape library";
+        DrawShapeLibraryHint = "Drag on the canvas to place a shape, or click for the default size. Shift keeps its proportions.";
+        DrawAddToLibrary = "Add to shape library...";
+        DrawRemoveFromLibrary = "Remove from shape library";
+        DrawShapeName = "Shape name";
+        DrawCategorySpeechBubbles = "Speech bubbles";
+        DrawCategoryArrows = "Arrows";
+        DrawCategoryBasicShapes = "Basic shapes";
+        DrawCategorySymbols = "Symbols";
+        DrawCategoryMyShapes = "My shapes";
+        DrawShapeSpeechBubble = "Speech bubble";
+        DrawShapeSpeechBubbleRight = "Speech bubble, tail right";
+        DrawShapeSpeechBubbleUp = "Speech bubble, tail up";
+        DrawShapeOvalBubble = "Oval speech bubble";
+        DrawShapeBoxBubble = "Box speech bubble";
+        DrawShapeThoughtBubble = "Thought bubble";
+        DrawShapeShoutBubble = "Shout bubble";
+        DrawShapeCaptionBox = "Caption box";
+        DrawShapeArrow = "Arrow";
+        DrawShapeDoubleArrow = "Double arrow";
+        DrawShapeChevron = "Chevron";
+        DrawShapeCurvedArrow = "Curved arrow";
+        DrawShapeRoundedRectangle = "Rounded rectangle";
+        DrawShapeTriangle = "Triangle";
+        DrawShapeDiamond = "Diamond";
+        DrawShapePentagon = "Pentagon";
+        DrawShapeHexagon = "Hexagon";
+        DrawShapeOctagon = "Octagon";
+        DrawShapeStar = "Star";
+        DrawShapeRing = "Ring";
+        DrawShapePlus = "Plus";
+        DrawShapeBanner = "Banner";
+        DrawShapeHeart = "Heart";
+        DrawShapeCheck = "Check mark";
+        DrawShapeMusicNote = "Music note";
+        DrawShapeMusicNotes = "Music notes";
+        DrawShapeLightning = "Lightning";
+        DrawShapeCloud = "Cloud";
+        DrawShapeMoon = "Moon";
+        DrawShapeBadge = "Badge";
         DrawSize = "Size";
         DrawLayer = "Layer";
         DrawBackgroundVideoFrame = "Video frame (current position)";

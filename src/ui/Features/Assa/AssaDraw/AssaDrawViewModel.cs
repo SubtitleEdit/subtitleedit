@@ -11,6 +11,7 @@ using Nikse.SubtitleEdit.Features.Assa.AssaSetPosition;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.PickLayer;
+using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 using Nikse.SubtitleEdit.Features.Video.GoToVideoPosition;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -62,6 +63,7 @@ public partial class AssaDrawViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<ShapeTreeItem> _shapeTreeItems = [];
     [ObservableProperty] private ShapeTreeItem? _selectedTreeItem;
     [ObservableProperty] private List<DrawShape> _selectedShapes = [];
+    [ObservableProperty] private ShapeLibraryItem? _currentLibraryShape = ShapeLibrary.BuiltIn[0];
     [ObservableProperty] private float _shapeX;
     [ObservableProperty] private float _shapeY;
     [ObservableProperty] private float _shapeWidth;
@@ -217,6 +219,132 @@ public partial class AssaDrawViewModel : ObservableObject
         Canvas.ShapeClicked += OnShapeClicked;
         Canvas.ShapeMoved += OnShapeMoved;
         Canvas.EditStarting += (_, _) => SaveUndo();
+        Canvas.InsertRequested += OnInsertRequested;
+        Canvas.InsertShape = CurrentLibraryShape;
+    }
+
+    partial void OnCurrentLibraryShapeChanged(ShapeLibraryItem? value)
+    {
+        if (Canvas != null)
+        {
+            Canvas.InsertShape = value;
+        }
+    }
+
+    [RelayCommand]
+    private void ShapeTool() => SetTool(DrawingTool.Shape);
+
+    /// <summary>
+    /// Picks the shape the shape tool places (and switches to the shape tool).
+    /// </summary>
+    [RelayCommand]
+    private void PickLibraryShape(ShapeLibraryItem? item)
+    {
+        if (item == null)
+        {
+            return;
+        }
+
+        CurrentLibraryShape = item;
+        SetTool(DrawingTool.Shape);
+    }
+
+    private void OnInsertRequested(object? sender, CanvasInsertEventArgs e) => InsertLibraryShape(e);
+
+    /// <summary>
+    /// Places the current library shape on a new layer above the drawing, in the current color,
+    /// then selects it with the select tool so it can be moved and resized right away.
+    /// </summary>
+    public void InsertLibraryShape(CanvasInsertEventArgs e)
+    {
+        var item = CurrentLibraryShape;
+        if (item == null)
+        {
+            return;
+        }
+
+        var x = e.X;
+        var y = e.Y;
+        var width = e.Width;
+        var height = e.Height;
+        if (e.IsClick)
+        {
+            // Default size: a fifth of the frame width (or a third of its height for tall shapes)
+            width = CanvasWidth / 5f;
+            height = width * item.AspectRatio;
+            if (height > CanvasHeight / 3f)
+            {
+                height = CanvasHeight / 3f;
+                width = height / item.AspectRatio;
+            }
+
+            x -= width / 2f;
+            y -= height / 2f;
+        }
+
+        CancelDrawing();
+        SaveUndo();
+        var firstLayer = Shapes.Count == 0 ? 0 : Shapes.Max(s => s.Layer) + 1;
+        var shapes = item.CreateShapes(x, y, width, height, LayerColor, firstLayer);
+        Shapes.AddRange(shapes);
+        SetTool(DrawingTool.Select);
+        RefreshTreeView();
+        if (shapes.Count == 1)
+        {
+            SelectShape(shapes[0]);
+        }
+        else
+        {
+            SelectedShapes = shapes;
+            UpdateSelectionInfo();
+        }
+
+        Canvas?.InvalidateVisual();
+    }
+
+    [RelayCommand]
+    private async Task AddToLibrary()
+    {
+        var shapes = SelectedShapes.Count > 1 ? SelectedShapes.ToList() : TargetShape is { } target ? [target] : [];
+        if (shapes.Count == 0 || Window == null)
+        {
+            return;
+        }
+
+        var vm = await _windowService.ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(Window, vm =>
+            vm.Initialize(Se.Language.Assa.DrawShapeName, string.Empty, 300, 30, returnSubmits: true));
+        if (!vm.OkPressed || string.IsNullOrWhiteSpace(vm.Text))
+        {
+            return;
+        }
+
+        AddToLibrary(vm.Text.Trim(), shapes);
+    }
+
+    /// <summary>
+    /// Saves shapes to "My shapes" and makes the new item the shape tool's current shape.
+    /// </summary>
+    public ShapeLibraryItem AddToLibrary(string name, List<DrawShape> shapes)
+    {
+        var saved = ShapeLibrary.Save(name, shapes);
+        var item = ShapeLibrary.GetUserShapes().First(i => i.UserShape == saved);
+        CurrentLibraryShape = item;
+        return item;
+    }
+
+    [RelayCommand]
+    private void RemoveFromLibrary(ShapeLibraryItem? item)
+    {
+        if (item?.UserShape == null)
+        {
+            return;
+        }
+
+        ShapeLibrary.Remove(item.UserShape);
+        if (CurrentLibraryShape == item || CurrentLibraryShape?.UserShape == item.UserShape)
+        {
+            CurrentLibraryShape = ShapeLibrary.BuiltIn[0];
+        }
     }
 
     private void OnShapeClicked(object? sender, DrawShape? shape)
@@ -2016,84 +2144,7 @@ public partial class AssaDrawViewModel : ObservableObject
 
     private void ImportAssaDrawingFromText(string text, int layer, Color color, bool isEraser)
     {
-        text = _regexStart.Replace(text, string.Empty);
-        text = _regexEnd.Replace(text, string.Empty);
-        var arr = text.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries);
-
-        var i = 0;
-        var bezierCount = 0;
-        var state = DrawCoordinateType.None;
-        DrawCoordinate? moveCoordinate = null;
-        DrawShape? drawShape = null;
-
-        while (i < arr.Length)
-        {
-            var v = arr[i];
-
-            if (v == "m" && i < arr.Length - 2 &&
-                float.TryParse(arr[i + 1], NumberStyles.Float, CultureInfo.InvariantCulture, out var mX) &&
-                float.TryParse(arr[i + 2], NumberStyles.Float, CultureInfo.InvariantCulture, out var mY))
-            {
-                bezierCount = 0;
-                moveCoordinate = new DrawCoordinate(null, DrawCoordinateType.Move, mX, mY, DrawSettings.PointColor);
-                state = DrawCoordinateType.Move;
-                i += 2;
-            }
-            else if (v == "l")
-            {
-                state = DrawCoordinateType.Line;
-                bezierCount = 0;
-                if (moveCoordinate != null)
-                {
-                    drawShape = new DrawShape { Layer = layer, ForeColor = color, IsEraser = isEraser };
-                    drawShape.AddPoint(DrawCoordinateType.Line, moveCoordinate.X, moveCoordinate.Y, DrawSettings.PointColor);
-                    moveCoordinate = null;
-                    Shapes.Add(drawShape);
-                }
-            }
-            else if (v == "b")
-            {
-                state = DrawCoordinateType.BezierCurve;
-                if (moveCoordinate != null)
-                {
-                    drawShape = new DrawShape { Layer = layer, ForeColor = color, IsEraser = isEraser };
-                    drawShape.AddPoint(DrawCoordinateType.BezierCurve, moveCoordinate.X, moveCoordinate.Y, DrawSettings.PointColor);
-                    moveCoordinate = null;
-                    Shapes.Add(drawShape);
-                }
-                bezierCount = 1;
-            }
-            else if (state == DrawCoordinateType.Line && drawShape != null && i < arr.Length - 1 &&
-                float.TryParse(arr[i], NumberStyles.Float, CultureInfo.InvariantCulture, out var lX) &&
-                float.TryParse(arr[i + 1], NumberStyles.Float, CultureInfo.InvariantCulture, out var lY))
-            {
-                drawShape.AddPoint(DrawCoordinateType.Line, lX, lY, DrawSettings.PointColor);
-                i++;
-            }
-            else if (state == DrawCoordinateType.BezierCurve && drawShape != null && i < arr.Length - 1 &&
-                float.TryParse(arr[i], NumberStyles.Float, CultureInfo.InvariantCulture, out var bX) &&
-                float.TryParse(arr[i + 1], NumberStyles.Float, CultureInfo.InvariantCulture, out var bY))
-            {
-                bezierCount++;
-                if (bezierCount > 3)
-                {
-                    bezierCount = 1;
-                }
-
-                var pointType = bezierCount switch
-                {
-                    2 => DrawCoordinateType.BezierCurveSupport1,
-                    3 => DrawCoordinateType.BezierCurveSupport2,
-                    _ => DrawCoordinateType.BezierCurve
-                };
-
-                var pointColor = bezierCount is 2 or 3 ? DrawSettings.PointHelperColor : DrawSettings.PointColor;
-                drawShape.AddPoint(pointType, bX, bY, pointColor);
-                i++;
-            }
-
-            i++;
-        }
+        Shapes.AddRange(DrawShape.ParseAssa(text, layer, color, isEraser));
     }
 
     private static bool TryGetPlayRes(string? header, out int width, out int height)
@@ -2290,7 +2341,7 @@ public partial class AssaDrawViewModel : ObservableObject
                     break;
             }
         }
-        else if (e.KeyModifiers == KeyModifiers.None && !IsTextInput(e) && e.Key is Key.V or Key.L or Key.B or Key.R or Key.C)
+        else if (e.KeyModifiers == KeyModifiers.None && !IsTextInput(e) && e.Key is Key.V or Key.L or Key.B or Key.R or Key.C or Key.S)
         {
             // Single-key tools like other drawing programs (not while typing in a number box)
             SetTool(e.Key switch
@@ -2299,6 +2350,7 @@ public partial class AssaDrawViewModel : ObservableObject
                 Key.L => DrawingTool.Line,
                 Key.B => DrawingTool.Bezier,
                 Key.R => DrawingTool.Rectangle,
+                Key.S => DrawingTool.Shape,
                 _ => DrawingTool.Circle,
             });
             e.Handled = true;
