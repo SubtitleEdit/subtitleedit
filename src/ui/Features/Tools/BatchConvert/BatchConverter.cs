@@ -1675,6 +1675,19 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
     private async Task<bool> RunLlamaCppOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, Iso639Dash2LanguageCode? sourceLanguage, CancellationToken cancellationToken)
     {
+        // The user's own llama-server, set up in the OCR window's llama.cpp settings (#15854).
+        if (Se.Settings.Ocr.LlamaCppUseRemoteServer)
+        {
+            var remoteUrl = (Se.Settings.Ocr.LlamaCppUrl ?? string.Empty).Trim();
+            if (string.IsNullOrEmpty(remoteUrl))
+            {
+                item.Status = string.Format(Se.Language.General.XRequiresAValidUrl, Se.Language.Ocr.LlamaCppOcr);
+                return false;
+            }
+
+            return await RunLlamaCppOcrPages(imageSubtitles, item, sourceLanguage, remoteUrl, null, cancellationToken);
+        }
+
         // Curated or self-supplied OCR model from settings (picked in batch convert settings /
         // the OCR window). The batch run never downloads - the settings dialog prompts for that on OK.
         var ocrModels = LlamaCppServerManager.GetAllOcrModels();
@@ -1701,9 +1714,15 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return false;
         }
 
+        return await RunLlamaCppOcrPages(imageSubtitles, item, sourceLanguage, LlamaCppServerManager.ApiUrl, model, cancellationToken);
+    }
+
+    // A null model means a remote server: its model is unknown, so the generic prompt applies.
+    private async Task<bool> RunLlamaCppOcrPages(IOcrSubtitle imageSubtitles, BatchConvertItem item, Iso639Dash2LanguageCode? sourceLanguage,
+        string url, LlamaCppModel? model, CancellationToken cancellationToken)
+    {
         using var engine = new LlamaCppOcr(Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
-        var url = LlamaCppServerManager.ApiUrl;
-        var modelName = Path.GetFileNameWithoutExtension(model.FileName);
+        var modelName = model == null ? string.Empty : Path.GetFileNameWithoutExtension(model.FileName);
         var language = BatchOcrLanguage.ForLanguageNameEngine(sourceLanguage, Se.Settings.Ocr.OllamaLanguage);
         var prompt = LlamaCppServerManager.ResolveOcrPrompt(model, Se.Settings.Ocr.LlamaCppOcrPrompt);
         item.Subtitle = new Subtitle();

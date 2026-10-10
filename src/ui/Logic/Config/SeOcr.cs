@@ -28,6 +28,12 @@ public class SeOcr
     public string OllamaLanguage { get; set; }
     public int OllamaOcrTimeoutMinutes { get; set; }
     public string LlamaCppUrl { get; set; }
+
+    /// <summary>
+    /// When true, OCR posts to the user's own llama-server at <see cref="LlamaCppUrl"/> instead of
+    /// downloading and starting the bundled one (#15854).
+    /// </summary>
+    public bool LlamaCppUseRemoteServer { get; set; }
     public string LlamaCppOcrModel { get; set; }
     public string LlamaCppOcrPrompt { get; set; }
     public int LlamaCppOcrTimeoutMinutes { get; set; }

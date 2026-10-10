@@ -386,8 +386,9 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         }
 
         // The batch run itself never prompts/downloads, so make sure the llama.cpp engine and
-        // the selected OCR model are on disk now (offering the download dialog if not).
-        if (SelectedOcrEngine == "llama.cpp")
+        // the selected OCR model are on disk now (offering the download dialog if not). Not needed
+        // when OCR uses the user's own llama-server (#15854).
+        if (SelectedOcrEngine == "llama.cpp" && !Se.Settings.Ocr.LlamaCppUseRemoteServer)
         {
             var ready = await LlamaCppDownloadHelper.EnsureReadyAsync(Window!, _windowService,
                 SelectedLlamaCppOcrModel?.Model.FileName, LlamaCppServerManager.GetAllOcrModels(), persistAsTranslateModel: false);
