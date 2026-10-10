@@ -595,6 +595,8 @@ public class LanguageGeneral
     public string ShowStartColumn { get; set; }
     public string ShowHideColumn { get; set; }
     public string ShowHistory { get; set; }
+    public string ClearHistory { get; set; }
+    public string RemoveFromHistory { get; set; }
     public string ShowLayerColumn { get; set; }
     public string ShowPreview { get; set; }
     public string ShowShotChangesList { get; set; }
@@ -1454,6 +1456,8 @@ public class LanguageGeneral
         ShowStartColumn = "Show \"Start\" column";
         ShowHideColumn = "Show \"Hide\" column";
         ShowHistory = "Show history";
+        ClearHistory = "Clear history";
+        RemoveFromHistory = "Remove from history";
         ShowLayerColumn = "Show \"Layer\" column";
         ShowPreview = "Show preview";
         ShowShotChangesList = "Show shot changes list";
