@@ -297,8 +297,14 @@ public partial class RestoreAutoBackupViewModel : ObservableObject
             return;
         }
 
+        string? restoreFileName = null;
         try
         {
+            // Restore from a temp copy: the safety backup below prunes the folder to the
+            // configured count, which deletes the oldest backup - possibly the picked one.
+            restoreFileName = Path.GetTempFileName();
+            File.Copy(file.FullPath, restoreFileName, overwrite: true);
+
             // Safety net: the settings being replaced get their own backup, so a wrong pick
             // is itself undoable from this list.
             Se.SaveSettings();
@@ -309,7 +315,7 @@ public partial class RestoreAutoBackupViewModel : ObservableObject
             // in-memory state a moment later. TryLoadSettings, not LoadSettings: the latter
             // swaps in defaults when the file does not parse, which would wipe every setting
             // and then persist the wipe below.
-            if (!Se.TryLoadSettings(file.FullPath))
+            if (!Se.TryLoadSettings(restoreFileName))
             {
                 LoadSettingsBackups();
                 await MessageBox.Show(Window, l.RestoreSettings, string.Format(l.SettingsRestoreFailed, l.SettingsBackupNotValid), MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -325,6 +331,20 @@ public partial class RestoreAutoBackupViewModel : ObservableObject
             LoadSettingsBackups();
             await MessageBox.Show(Window, l.RestoreSettings, string.Format(l.SettingsRestoreFailed, exception.Message), MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
+        }
+        finally
+        {
+            if (restoreFileName != null)
+            {
+                try
+                {
+                    File.Delete(restoreFileName);
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
         }
 
         LoadSettingsBackups();
