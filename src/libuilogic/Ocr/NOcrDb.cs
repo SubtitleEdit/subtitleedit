@@ -760,9 +760,22 @@ public class NOcrDb
     // aspect ratio instead.
     private const int SmallGlyphAreaLimit = 150;
     private const double SmallGlyphMaxAspectRatio = 2.0;
+    private const int SmallGlyphMaxAreaRatio = 5;
 
     private static bool PassFilter(NikseBitmap2 bitmap, double heightToWidthPercent, NOcrChar oc, int topMargin, in MatchPass pass)
     {
+        // A small entry (dot, comma, apostrophe) carries only a few lines of evidence, and since
+        // every gate below scales with the glyph, it fits a much bigger glyph once stretched
+        // onto it: an apostrophe trained at 3x9 read the stem of a 8x22 "t" with zero errors.
+        // Allow about twice the size per axis, as between a DVD and a Blu-ray rendering.
+        var area = bitmap.Width * bitmap.Height;
+        var ocArea = oc.Width * oc.Height;
+        var smallArea = Math.Min(area, ocArea);
+        if (smallArea < SmallGlyphAreaLimit && Math.Max(area, ocArea) > smallArea * SmallGlyphMaxAreaRatio)
+        {
+            return false;
+        }
+
         if (bitmap.Width * bitmap.Height < SmallGlyphAreaLimit)
         {
             // Small glyphs: absolute h/w% deltas are useless here - a dot (aspect ~100) vs a
