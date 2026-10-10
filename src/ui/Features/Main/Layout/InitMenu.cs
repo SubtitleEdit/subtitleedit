@@ -388,6 +388,11 @@ public static class InitMenu
                     Header = l.GoToLineNumber,
                     Command = vm.ShowGoToLineCommand,
                 },
+                new MenuItem
+                {
+                    Header = l.CommandPalette,
+                    Command = vm.ShowCommandPaletteCommand,
+                },
                 new Separator(),
                 new MenuItem
                 {
