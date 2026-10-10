@@ -456,6 +456,16 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 }
                 else if (line.Trim().Equals("[events]", StringComparison.OrdinalIgnoreCase))
                 {
+                    // [Fonts]/[Graphics] before [Events] (Aegisub order) skips the header append above
+                    if ((Environment.NewLine + header).IndexOf(Environment.NewLine + "[events]", StringComparison.OrdinalIgnoreCase) < 0)
+                    {
+                        var h = header.ToString().TrimEnd();
+                        header.Clear();
+                        header.AppendLine(h);
+                        header.AppendLine();
+                        header.AppendLine("[Events]");
+                    }
+
                     eventsStarted = true;
                     fontsStarted = false;
                     graphicsStarted = false;
