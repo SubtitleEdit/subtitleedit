@@ -1410,27 +1410,74 @@ public partial class AssaDrawViewModel : ObservableObject
             return;
         }
 
-        LoadVideoFrameBackground(_videoSeconds);
+        _ = LoadVideoFrameBackgroundAsync(_videoSeconds);
     }
 
     public bool HasVideo => !string.IsNullOrEmpty(_videoFileName) && File.Exists(_videoFileName);
 
-    private void LoadVideoFrameBackground(double seconds)
+    /// <summary>
+    /// Shows a video frame behind the drawing. Returns false, keeping the current background,
+    /// when no frame could be extracted (position past the end, undecodable video, no ffmpeg).
+    /// </summary>
+    internal async Task<bool> LoadVideoFrameBackgroundAsync(double seconds)
     {
         if (!HasVideo)
         {
-            return;
+            return false;
         }
 
+        var wasRequested = _backgroundRequested;
         _backgroundRequested = true;
         var version = ++_backgroundVersion;
         var videoFileName = _videoFileName!;
         var position = seconds.ToString("0.###", CultureInfo.InvariantCulture);
-        _ = Task.Run(() =>
+        Bitmap? bitmap = null;
+        try
         {
-            var bitmap = LoadBitmapAndDelete(FfmpegGenerator.GetScreenShot(videoFileName, position));
-            Dispatcher.UIThread.Post(() => SetBackground(bitmap, version));
-        });
+            bitmap = await Task.Run(() => LoadBitmapAndDelete(FfmpegGenerator.GetScreenShot(videoFileName, position)));
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "ASSA draw: could not get video frame at " + position + " from " + videoFileName);
+        }
+
+        if (bitmap == null)
+        {
+            // A newer background request replaced this one - nothing to report
+            if (version != _backgroundVersion)
+            {
+                return true;
+            }
+
+            _backgroundRequested = wasRequested;
+            return false;
+        }
+
+        SetBackground(bitmap, version);
+        return true;
+    }
+
+    private async Task LoadVideoFrameBackgroundOrShowError(double seconds)
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var ffmpegOk = await FfmpegRequirement.EnsureAsync(
+            Window,
+            async () => (await _windowService.ShowDialogAsync<DownloadFfmpegWindow, DownloadFfmpegViewModel>(Window)).FfmpegFileName);
+        if (!ffmpegOk)
+        {
+            return;
+        }
+
+        if (!await LoadVideoFrameBackgroundAsync(seconds))
+        {
+            var timeCode = new TimeCode(TimeSpan.FromSeconds(seconds)).ToDisplayString();
+            await MessageBox.Show(Window, Se.Language.General.Error,
+                string.Format(Se.Language.Assa.DrawBackgroundVideoFrameFailed, timeCode), MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
     }
 
     /// <summary>
@@ -1471,7 +1518,7 @@ public partial class AssaDrawViewModel : ObservableObject
     }
 
     [RelayCommand(CanExecute = nameof(HasVideo))]
-    private void BackgroundFromVideo() => LoadVideoFrameBackground(_videoSeconds);
+    private Task BackgroundFromVideo() => LoadVideoFrameBackgroundOrShowError(_videoSeconds);
 
     [RelayCommand(CanExecute = nameof(HasVideo))]
     private async Task BackgroundFromVideoAt()
@@ -1489,7 +1536,7 @@ public partial class AssaDrawViewModel : ObservableObject
         }
 
         _videoSeconds = Math.Max(0, vm.Time.TotalSeconds);
-        LoadVideoFrameBackground(_videoSeconds);
+        await LoadVideoFrameBackgroundOrShowError(_videoSeconds);
     }
 
     [RelayCommand]

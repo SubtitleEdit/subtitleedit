@@ -94,6 +94,7 @@ public class LanguageAssa
     public string DrawBackgroundNone { get; set; }
     public string DrawBackgroundStretch { get; set; }
     public string DrawBackgroundOpacity { get; set; }
+    public string DrawBackgroundVideoFrameFailed { get; set; }
     public string DrawImages { get; set; }
     public string DrawConvertToLine { get; set; }
     public string DrawConvertShapeToCurves { get; set; }
@@ -427,6 +428,7 @@ public class LanguageAssa
         DrawBackgroundNone = "No background";
         DrawBackgroundStretch = "Stretch image to canvas";
         DrawBackgroundOpacity = "Background opacity";
+        DrawBackgroundVideoFrameFailed = "Could not get a video frame at {0}.";
         DrawImages = "Images";
         DrawConvertToLine = "Convert segment to line";
         DrawConvertShapeToCurves = "Convert all lines to curves";
