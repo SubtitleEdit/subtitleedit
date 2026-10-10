@@ -196,6 +196,8 @@ public class AssaDrawWindow : Window
         items.Add(moveToLayer);
 
         AddSeparator(items);
+        items.Add(MakeMenuItem(Se.Language.Assa.DrawRotateClockwise, "fa-solid fa-rotate-right", _vm.RotateShapeClockwiseCommand));
+        items.Add(MakeMenuItem(Se.Language.Assa.DrawRotateCounterClockwise, "fa-solid fa-rotate-left", _vm.RotateShapeCounterClockwiseCommand));
         items.Add(MakeMenuItem(Se.Language.Assa.DrawFlipHorizontal, "fa-solid fa-left-right", _vm.FlipShapeHorizontalCommand));
         items.Add(MakeMenuItem(Se.Language.Assa.DrawFlipVertical, "fa-solid fa-up-down", _vm.FlipShapeVerticalCommand));
 

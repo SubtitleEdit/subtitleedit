@@ -724,6 +724,26 @@ public partial class AssaDrawViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void RotateShapeClockwise() => RotateShape(90);
+
+    [RelayCommand]
+    private void RotateShapeCounterClockwise() => RotateShape(-90);
+
+    private void RotateShape(float degrees)
+    {
+        var shape = TargetShape;
+        if (shape == null)
+        {
+            return;
+        }
+
+        SaveUndo();
+        shape.Rotate(degrees);
+        RefreshTreeView();
+        Canvas?.InvalidateVisual();
+    }
+
+    [RelayCommand]
     private void FlipShapeVertical()
     {
         var shape = TargetShape;

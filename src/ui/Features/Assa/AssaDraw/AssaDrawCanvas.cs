@@ -19,9 +19,30 @@ public class AssaDrawCanvas : Control
     private float _panY;
     private Point? _lastMousePosition;
     private bool _isPanning;
-    private DrawShape? _dragShape;
+    private List<DrawShape>? _dragShapes;
+    private DrawShape? _pressedShape;
     private bool _dragShapeMoved;
     private bool _pointDragStarted;
+
+    // Scale/rotate handles: 0-7 scale (TL, T, TR, R, BR, B, BL, L), 8 rotate
+    private const int RotateHandle = 8;
+    private const double HandlePadding = 8;
+    private const double RotateHandleDistance = 26;
+    private int _transformHandle = -1;
+    private List<DrawShape>? _transformShapes;
+    private List<(float X, float Y)[]>? _transformOriginal;
+    private (float Left, float Top, float Right, float Bottom) _transformBounds;
+    private Point _transformStart;
+    private bool _transformStarted;
+    private string? _transformLabel;
+
+    private static readonly Cursor[] HandleCursors =
+    [
+        new(StandardCursorType.TopLeftCorner), new(StandardCursorType.TopSide), new(StandardCursorType.TopRightCorner),
+        new(StandardCursorType.RightSide), new(StandardCursorType.BottomRightCorner), new(StandardCursorType.BottomSide),
+        new(StandardCursorType.BottomLeftCorner), new(StandardCursorType.LeftSide), new(StandardCursorType.Hand),
+    ];
+    private static readonly Cursor MoveCursor = new(StandardCursorType.SizeAll);
 
     private static readonly ImmutableSolidColorBrush WorkspaceBrush = new(Color.FromRgb(27, 28, 32));
     private static readonly ImmutableSolidColorBrush CheckerBrush = new(Color.FromArgb(10, 255, 255, 255));
@@ -348,7 +369,7 @@ public class AssaDrawCanvas : Control
                            (!isMultiSelection && (selectedSet != null ? selectedSet.Contains(shape) : selectedShapes.Contains(shape)));
             if (isActive)
             {
-                DrawSelectionBox(context, shape.GetBounds());
+                DrawSelectionBox(context, shape.GetBounds(), withHandles: CurrentTool == DrawingTool.Select && !isMultiSelection);
             }
 
             DrawShapePoints(context, shape, isActive);
@@ -367,7 +388,7 @@ public class AssaDrawCanvas : Control
                         Math.Max(selectionBounds.Right, b.Right), Math.Max(selectionBounds.Bottom, b.Bottom));
                 }
 
-                DrawSelectionBox(context, selectionBounds);
+                DrawSelectionBox(context, selectionBounds, withHandles: CurrentTool == DrawingTool.Select);
             }
         }
 
@@ -619,7 +640,7 @@ public class AssaDrawCanvas : Control
         ctx.EndFigure(isClosed);
     }
 
-    private void DrawSelectionBox(DrawingContext context, (float Left, float Top, float Right, float Bottom) bounds)
+    private void DrawSelectionBox(DrawingContext context, (float Left, float Top, float Right, float Bottom) bounds, bool withHandles)
     {
         var (left, top, right, bottom) = bounds;
         if (right - left < 0.01f && bottom - top < 0.01f)
@@ -627,16 +648,180 @@ public class AssaDrawCanvas : Control
             return;
         }
 
-        var rect = new Rect(
-            new Point(ToZoomFactorX(left), ToZoomFactorY(top)),
-            new Point(ToZoomFactorX(right), ToZoomFactorY(bottom))).Inflate(8);
+        var rect = GetSelectionRect(bounds);
         context.DrawRectangle(null, GetPen(AccentColor, 1, dashed: true), rect);
-
-        var cornerPen = GetPen(AccentColor, 1.5);
-        var cornerBrush = GetBrush(HandleFillColor);
-        foreach (var corner in new[] { rect.TopLeft, rect.TopRight, rect.BottomLeft, rect.BottomRight })
+        if (!withHandles)
         {
-            context.DrawRectangle(cornerBrush, cornerPen, new Rect(corner.X - 3.5, corner.Y - 3.5, 7, 7));
+            return;
+        }
+
+        // Scale/rotate handles only where they work: the select tool
+        var handles = GetHandlePositions(rect);
+        var handlePen = GetPen(AccentColor, 1.5);
+        var handleBrush = GetBrush(HandleFillColor);
+        context.DrawLine(GetPen(AccentColor, 1), new Point(rect.Center.X, rect.Top), handles[RotateHandle]);
+        for (var i = 0; i < RotateHandle; i++)
+        {
+            context.DrawRectangle(handleBrush, handlePen, new Rect(handles[i].X - 3.5, handles[i].Y - 3.5, 7, 7));
+        }
+
+        context.DrawEllipse(handleBrush, handlePen, handles[RotateHandle], 5, 5);
+
+        if (_transformLabel != null && _transformStarted)
+        {
+            var text = new FormattedText(_transformLabel, System.Globalization.CultureInfo.InvariantCulture, FlowDirection.LeftToRight, Typeface.Default, 12, GetBrush(Colors.White));
+            var origin = new Point(rect.Center.X - text.Width / 2, rect.Bottom + 10);
+            context.DrawRectangle(GetBrush(AccentColor), null, new Rect(origin.X - 6, origin.Y - 3, text.Width + 12, text.Height + 6), 4, 4);
+            context.DrawText(text, origin);
+        }
+    }
+
+    private Rect GetSelectionRect((float Left, float Top, float Right, float Bottom) bounds)
+    {
+        return new Rect(
+            new Point(ToZoomFactorX(bounds.Left), ToZoomFactorY(bounds.Top)),
+            new Point(ToZoomFactorX(bounds.Right), ToZoomFactorY(bounds.Bottom))).Inflate(HandlePadding);
+    }
+
+    private static Point[] GetHandlePositions(Rect rect)
+    {
+        var center = rect.Center;
+        return
+        [
+            rect.TopLeft, new Point(center.X, rect.Top), rect.TopRight, new Point(rect.Right, center.Y),
+            rect.BottomRight, new Point(center.X, rect.Bottom), rect.BottomLeft, new Point(rect.Left, center.Y),
+            new Point(center.X, rect.Top - RotateHandleDistance),
+        ];
+    }
+
+    /// <summary>
+    /// What the handles act on: a multi-selection, or the single selected shape.
+    /// </summary>
+    private List<DrawShape> GetTransformTargets()
+    {
+        var selected = SelectedShapes;
+        if (selected.Count > 1)
+        {
+            return selected.Where(s => !s.Hidden && s.Points.Count > 0).ToList();
+        }
+
+        var shape = SelectedShape ?? ActiveShape;
+        return shape != null && !shape.Hidden && shape.Points.Count > 0 && Shapes.Contains(shape) ? [shape] : [];
+    }
+
+    private static (float Left, float Top, float Right, float Bottom) GetUnionBounds(List<DrawShape> shapes)
+    {
+        var bounds = shapes[0].GetBounds();
+        foreach (var shape in shapes.Skip(1))
+        {
+            var b = shape.GetBounds();
+            bounds = (Math.Min(bounds.Left, b.Left), Math.Min(bounds.Top, b.Top), Math.Max(bounds.Right, b.Right), Math.Max(bounds.Bottom, b.Bottom));
+        }
+
+        return bounds;
+    }
+
+    private int HitTestHandle(Point screenPoint, out List<DrawShape> targets)
+    {
+        targets = CurrentTool == DrawingTool.Select ? GetTransformTargets() : [];
+        if (targets.Count == 0)
+        {
+            return -1;
+        }
+
+        var bounds = GetUnionBounds(targets);
+        if (bounds.Right - bounds.Left < 0.01f && bounds.Bottom - bounds.Top < 0.01f)
+        {
+            return -1;
+        }
+
+        var handles = GetHandlePositions(GetSelectionRect(bounds));
+        for (var i = handles.Length - 1; i >= 0; i--)
+        {
+            if (Math.Abs(handles[i].X - screenPoint.X) <= 7 && Math.Abs(handles[i].Y - screenPoint.Y) <= 7)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private void ApplyTransform(Point screenPoint, KeyModifiers modifiers)
+    {
+        var (left, top, right, bottom) = _transformBounds;
+        var centerX = (left + right) / 2f;
+        var centerY = (top + bottom) / 2f;
+
+        Func<float, float, (float X, float Y)> map;
+        if (_transformHandle == RotateHandle)
+        {
+            var startAngle = Math.Atan2(FromZoomFactorY((float)_transformStart.Y) - centerY, FromZoomFactorX((float)_transformStart.X) - centerX);
+            var angle = Math.Atan2(FromZoomFactorY((float)screenPoint.Y) - centerY, FromZoomFactorX((float)screenPoint.X) - centerX) - startAngle;
+            var degrees = angle * 180 / Math.PI;
+            degrees = (degrees + 540) % 360 - 180;
+            if (modifiers.HasFlag(KeyModifiers.Shift))
+            {
+                degrees = Math.Round(degrees / 15) * 15;
+            }
+
+            var radians = degrees * Math.PI / 180;
+            var cos = (float)Math.Cos(radians);
+            var sin = (float)Math.Sin(radians);
+            map = (x, y) => (centerX + (x - centerX) * cos - (y - centerY) * sin, centerY + (x - centerX) * sin + (y - centerY) * cos);
+            _transformLabel = $"{degrees:0}°";
+        }
+        else
+        {
+            // The dragged edge follows the pointer, the opposite edge stays put
+            var dx = (float)(screenPoint.X - _transformStart.X) / _zoomFactor;
+            var dy = (float)(screenPoint.Y - _transformStart.Y) / _zoomFactor;
+            var h = _transformHandle;
+            var movesLeft = h is 0 or 6 or 7;
+            var movesRight = h is 2 or 3 or 4;
+            var movesTop = h is 0 or 1 or 2;
+            var movesBottom = h is 4 or 5 or 6;
+            var width = right - left;
+            var height = bottom - top;
+
+            var anchorX = movesLeft ? right : left;
+            var anchorY = movesTop ? bottom : top;
+            var scaleX = 1f;
+            var scaleY = 1f;
+            if (width > 0.01f && (movesLeft || movesRight))
+            {
+                scaleX = movesLeft ? (width - dx) / width : (width + dx) / width;
+            }
+
+            if (height > 0.01f && (movesTop || movesBottom))
+            {
+                scaleY = movesTop ? (height - dy) / height : (height + dy) / height;
+            }
+
+            var isCorner = h is 0 or 2 or 4 or 6;
+            if (isCorner && modifiers.HasFlag(KeyModifiers.Shift))
+            {
+                var uniform = Math.Abs(scaleX) > Math.Abs(scaleY) ? scaleX : scaleY;
+                scaleX = Math.Sign(scaleX) * Math.Abs(uniform);
+                scaleY = Math.Sign(scaleY) * Math.Abs(uniform);
+            }
+
+            var sx = scaleX;
+            var sy = scaleY;
+            map = (x, y) => (anchorX + (x - anchorX) * sx, anchorY + (y - anchorY) * sy);
+            _transformLabel = $"{Math.Abs(width * sx):0} × {Math.Abs(height * sy):0}";
+        }
+
+        for (var i = 0; i < _transformShapes!.Count; i++)
+        {
+            var points = _transformShapes[i].Points;
+            var original = _transformOriginal![i];
+            for (var j = 0; j < points.Count && j < original.Length; j++)
+            {
+                var (x, y) = map(original[j].X, original[j].Y);
+                points[j].X = x;
+                points[j].Y = y;
+            }
         }
     }
 
@@ -706,6 +891,24 @@ public class AssaDrawCanvas : Control
             return;
         }
 
+        // Scale/rotate handles of the selection (select tool)
+        if (properties.IsLeftButtonPressed)
+        {
+            var handle = HitTestHandle(point, out var targets);
+            if (handle >= 0)
+            {
+                _transformHandle = handle;
+                _transformShapes = targets;
+                _transformOriginal = targets.Select(s => s.Points.Select(p => (p.X, p.Y)).ToArray()).ToList();
+                _transformBounds = GetUnionBounds(targets);
+                _transformStart = point;
+                _transformStarted = false;
+                _transformLabel = null;
+                e.Handled = true;
+                return;
+            }
+        }
+
         // Shift+drag or middle mouse button pans
         if (e.KeyModifiers.HasFlag(KeyModifiers.Shift) || properties.IsMiddleButtonPressed)
         {
@@ -733,9 +936,17 @@ public class AssaDrawCanvas : Control
             var shape = HitTestShape(x, y);
             if (shape != null)
             {
-                _dragShape = shape;
+                // Dragging a shape of a multi-selection moves the whole selection
+                _dragShapes = SelectedShapes.Count > 1 && SelectedShapes.Contains(shape) ? SelectedShapes.ToList() : [shape];
+                _pressedShape = shape;
                 _dragShapeMoved = false;
                 _lastMousePosition = point;
+                if (_dragShapes.Count > 1)
+                {
+                    InvalidateVisual();
+                    e.Handled = true;
+                    return;
+                }
             }
 
             ShapeClicked?.Invoke(this, shape);
@@ -766,8 +977,27 @@ public class AssaDrawCanvas : Control
             return;
         }
 
+        if (_transformShapes != null && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        {
+            if (!_transformStarted)
+            {
+                if (Math.Abs(point.X - _transformStart.X) < 1 && Math.Abs(point.Y - _transformStart.Y) < 1)
+                {
+                    return;
+                }
+
+                _transformStarted = true;
+                EditStarting?.Invoke(this, EventArgs.Empty);
+            }
+
+            ApplyTransform(point, e.KeyModifiers);
+            InvalidateVisual();
+            CanvasMouseMoved?.Invoke(this, new CanvasMouseEventArgs(x, y));
+            return;
+        }
+
         // Dragging a whole shape
-        if (_dragShape != null && _lastMousePosition.HasValue && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        if (_dragShapes != null && _lastMousePosition.HasValue && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
         {
             var dx = (float)(point.X - _lastMousePosition.Value.X) / _zoomFactor;
             var dy = (float)(point.Y - _lastMousePosition.Value.Y) / _zoomFactor;
@@ -778,7 +1008,11 @@ public class AssaDrawCanvas : Control
                     EditStarting?.Invoke(this, EventArgs.Empty);
                 }
 
-                _dragShape.Offset(dx, dy);
+                foreach (var shape in _dragShapes)
+                {
+                    shape.Offset(dx, dy);
+                }
+
                 _dragShapeMoved = true;
                 _lastMousePosition = point;
                 InvalidateVisual();
@@ -804,7 +1038,30 @@ public class AssaDrawCanvas : Control
             return;
         }
 
+        UpdateHoverCursor(point, x, y);
         CanvasMouseMoved?.Invoke(this, new CanvasMouseEventArgs(x, y));
+    }
+
+    private void UpdateHoverCursor(Point point, float x, float y)
+    {
+        Cursor? cursor = null;
+        if (CurrentTool == DrawingTool.Select)
+        {
+            var handle = HitTestHandle(point, out _);
+            if (handle >= 0)
+            {
+                cursor = HandleCursors[handle];
+            }
+            else if (GetClosePoint(x, y) == null && HitTestShape(x, y) != null)
+            {
+                cursor = MoveCursor;
+            }
+        }
+
+        if (Cursor != cursor)
+        {
+            Cursor = cursor;
+        }
     }
 
     protected override void OnPointerReleased(PointerReleasedEventArgs e)
@@ -814,14 +1071,35 @@ public class AssaDrawCanvas : Control
         _lastMousePosition = null;
         _pointDragStarted = false;
 
-        var dragShape = _dragShape;
+        var dragShapes = _dragShapes;
         var moved = _dragShapeMoved;
-        _dragShape = null;
+        _dragShapes = null;
         _dragShapeMoved = false;
-        if (dragShape != null && moved)
+        if (dragShapes != null && moved)
         {
-            ShapeMoved?.Invoke(this, dragShape);
+            ShapeMoved?.Invoke(this, dragShapes[0]);
         }
+        else if (dragShapes is { Count: > 1 } && _pressedShape != null)
+        {
+            // A click (no drag) on a shape of a multi-selection selects just that shape
+            ShapeClicked?.Invoke(this, _pressedShape);
+        }
+
+        _pressedShape = null;
+
+        var transformShapes = _transformShapes;
+        var transformed = _transformStarted;
+        _transformShapes = null;
+        _transformOriginal = null;
+        _transformHandle = -1;
+        _transformStarted = false;
+        _transformLabel = null;
+        if (transformShapes != null && transformed && transformShapes.Count > 0)
+        {
+            ShapeMoved?.Invoke(this, transformShapes[0]);
+        }
+
+        InvalidateVisual();
     }
 
     private DrawShape? FindShape(DrawCoordinate point)

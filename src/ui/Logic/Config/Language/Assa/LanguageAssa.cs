@@ -39,6 +39,8 @@ public class LanguageAssa
     public string DrawCancelDrawing { get; set; }
     public string DrawLayerX { get; set; }
     public string DrawImportSvg { get; set; }
+    public string DrawRotateClockwise { get; set; }
+    public string DrawRotateCounterClockwise { get; set; }
     public string DrawSvgImages { get; set; }
     public string DrawSvgNoShapes { get; set; }
 
@@ -299,7 +301,7 @@ public class LanguageAssa
         DrawSelectedShape = "Selected shape";
         DrawSelectedLayer = "Selected layer";
         DrawToolX = "Tool: {0}";
-        DrawHelpText = "Click to add points • Right-click for options • Enter/F8 to close shape • Shift+drag or middle mouse to pan • Ctrl+Scroll to zoom";
+        DrawHelpText = "Click to add points • Right-click for options • Select tool: drag handles to scale/rotate (Shift = keep ratio/15°) • Enter/F8 to close shape • Shift+drag or middle mouse to pan • Ctrl+Scroll to zoom";
         DrawMoveToLayer = "Move to layer";
         DrawFlipHorizontal = "Flip horizontally";
         DrawFlipVertical = "Flip vertically";
@@ -312,6 +314,8 @@ public class LanguageAssa
         DrawCancelDrawing = "Cancel drawing";
         DrawLayerX = "Layer {0}";
         DrawImportSvg = "Import SVG image...";
+        DrawRotateClockwise = "Rotate 90° clockwise";
+        DrawRotateCounterClockwise = "Rotate 90° counter-clockwise";
         DrawSvgImages = "SVG images";
         DrawSvgNoShapes = "No filled shapes or strokes found in the SVG file.";
 

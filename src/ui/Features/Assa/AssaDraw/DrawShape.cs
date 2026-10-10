@@ -206,6 +206,26 @@ public class DrawShape
         }
     }
 
+    /// <summary>
+    /// Rotates around the center of the bounding box; positive is clockwise on screen (y points down).
+    /// </summary>
+    public void Rotate(float degrees)
+    {
+        var (left, top, right, bottom) = GetBounds();
+        var centerX = (left + right) / 2f;
+        var centerY = (top + bottom) / 2f;
+        var radians = degrees * MathF.PI / 180f;
+        var cos = MathF.Cos(radians);
+        var sin = MathF.Sin(radians);
+        foreach (var point in Points)
+        {
+            var x = point.X - centerX;
+            var y = point.Y - centerY;
+            point.X = MathF.Round(centerX + x * cos - y * sin, 2);
+            point.Y = MathF.Round(centerY + x * sin + y * cos, 2);
+        }
+    }
+
     public void FlipHorizontal()
     {
         var (left, _, right, _) = GetBounds();
