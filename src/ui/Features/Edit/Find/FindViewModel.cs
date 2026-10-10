@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using static Nikse.SubtitleEdit.Logic.FindService;
 
@@ -71,6 +72,22 @@ public partial class FindViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void RemoveHistoryItem(string text)
+    {
+        SearchHistory.Remove(text);
+        _findService?.RemoveFromSearchHistory(text);
+    }
+
+    [RelayCommand]
+    private void ClearHistory()
+    {
+        foreach (var text in SearchHistory.ToList())
+        {
+            RemoveHistoryItem(text);
+        }
+    }
+
+    [RelayCommand]
     private async Task FindPrevious()
     {
         CountResult = string.Empty;
@@ -124,7 +141,7 @@ public partial class FindViewModel : ObservableObject
             if (!string.IsNullOrWhiteSpace(SearchText) &&
                 SearchHistory.Contains(SearchText))
             {
-                SearchHistory.Remove(SearchText);
+                RemoveHistoryItem(SearchText);
                 SearchText = string.Empty;
                 e.Handled = true;
             }

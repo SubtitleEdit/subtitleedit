@@ -101,6 +101,22 @@ public partial class ReplaceViewModel : ObservableObject
         FocusSearchBox?.Invoke();
     }
 
+    [RelayCommand]
+    private void RemoveHistoryItem(string text)
+    {
+        SearchHistory.Remove(text);
+        _findService?.RemoveFromSearchHistory(text);
+    }
+
+    [RelayCommand]
+    private void ClearHistory()
+    {
+        foreach (var text in SearchHistory.ToList())
+        {
+            RemoveHistoryItem(text);
+        }
+    }
+
     /// <summary>
     /// Called by the main window after Replace all: shows the total in the window itself, where the
     /// user is looking - the status bar underneath the dialog was easy to miss (#15165).
@@ -220,7 +236,7 @@ public partial class ReplaceViewModel : ObservableObject
             if (!string.IsNullOrWhiteSpace(SearchText) &&
                 SearchHistory.Contains(SearchText))
             {
-                SearchHistory.Remove(SearchText);
+                RemoveHistoryItem(SearchText);
                 SearchText = string.Empty;
                 e.Handled = true;
             }

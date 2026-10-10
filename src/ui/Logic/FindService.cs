@@ -327,6 +327,7 @@ public partial class FindService : IFindService
     public void RemoveFromSearchHistory(string searchText)
     {
         _searchHistory.Remove(searchText);
+        Se.Settings.Tools.FindHistory = _searchHistory;
     }
 
     private void ResetSearchState()
