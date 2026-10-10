@@ -330,12 +330,13 @@ public class AudioVisualizer : Control
     private List<double> _shotChanges = new List<double>();
 
     /// <summary>
-    /// Shot changes (seconds)
+    /// Shot changes (seconds), kept sorted - snapping, drawing and the extend-to-shot-change
+    /// commands binary-search them, while imported lists can come in any order.
     /// </summary>
     public List<double> ShotChanges
     {
         get => _shotChanges;
-        set { _shotChanges = value; }
+        set => _shotChanges = ShotChangesHelper.EnsureSorted(value ?? new List<double>());
     }
 
     /// <summary>

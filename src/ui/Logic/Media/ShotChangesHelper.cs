@@ -111,7 +111,25 @@ public class ShotChangesHelper
             }
         }
 
-        return list;
+        return EnsureSorted(list);
+    }
+
+    /// <summary>
+    /// Sorts shot changes (in place) when they are out of order. Consumers binary-search the list,
+    /// but an imported or hand-edited file keeps whatever order it was written in.
+    /// </summary>
+    public static List<double> EnsureSorted(List<double> shotChanges)
+    {
+        for (var i = 1; i < shotChanges.Count; i++)
+        {
+            if (shotChanges[i] < shotChanges[i - 1])
+            {
+                shotChanges.Sort();
+                break;
+            }
+        }
+
+        return shotChanges;
     }
 
     /// <summary>
