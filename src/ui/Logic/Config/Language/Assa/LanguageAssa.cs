@@ -27,6 +27,38 @@ public class LanguageAssa
     public string DrawSelectedLayer { get; set; }
     public string DrawToolX { get; set; }
     public string DrawHelpText { get; set; }
+    public string DrawMoveToLayer { get; set; }
+    public string DrawFlipHorizontal { get; set; }
+    public string DrawFlipVertical { get; set; }
+    public string DrawHideShape { get; set; }
+    public string DrawShowShape { get; set; }
+    public string DrawHideLayer { get; set; }
+    public string DrawShowLayer { get; set; }
+    public string DrawDeleteLayer { get; set; }
+    public string DrawDeletePoint { get; set; }
+    public string DrawCancelDrawing { get; set; }
+    public string DrawLayerX { get; set; }
+    public string DrawImportSvg { get; set; }
+    public string DrawRotateClockwise { get; set; }
+    public string DrawConvertToCurve { get; set; }
+    public string DrawBackground { get; set; }
+    public string DrawPosition { get; set; }
+    public string DrawZoom { get; set; }
+    public string DrawSize { get; set; }
+    public string DrawLayer { get; set; }
+    public string DrawBackgroundVideoFrame { get; set; }
+    public string DrawBackgroundVideoFrameAt { get; set; }
+    public string DrawBackgroundImage { get; set; }
+    public string DrawBackgroundNone { get; set; }
+    public string DrawBackgroundStretch { get; set; }
+    public string DrawBackgroundOpacity { get; set; }
+    public string DrawImages { get; set; }
+    public string DrawConvertToLine { get; set; }
+    public string DrawConvertShapeToCurves { get; set; }
+    public string DrawConvertShapeToLines { get; set; }
+    public string DrawRotateCounterClockwise { get; set; }
+    public string DrawSvgImages { get; set; }
+    public string DrawSvgNoShapes { get; set; }
 
     // Progress Bar Generator
     public string ProgressBarTitle { get; set; }
@@ -285,7 +317,39 @@ public class LanguageAssa
         DrawSelectedShape = "Selected shape";
         DrawSelectedLayer = "Selected layer";
         DrawToolX = "Tool: {0}";
-        DrawHelpText = "Click to add points • Enter/F8 to close shape • Shift+Drag to pan • Ctrl+Scroll to zoom";
+        DrawHelpText = "Click to add points • Right-click for options • Select tool: drag handles to scale/rotate (Shift = keep ratio/15°) • Enter/F8 to close shape • Shift+drag or middle mouse to pan • Ctrl+Scroll to zoom";
+        DrawMoveToLayer = "Move to layer";
+        DrawFlipHorizontal = "Flip horizontally";
+        DrawFlipVertical = "Flip vertically";
+        DrawHideShape = "Hide shape";
+        DrawShowShape = "Show shape";
+        DrawHideLayer = "Hide layer";
+        DrawShowLayer = "Show layer";
+        DrawDeleteLayer = "Delete layer";
+        DrawDeletePoint = "Delete point";
+        DrawCancelDrawing = "Cancel drawing";
+        DrawLayerX = "Layer {0}";
+        DrawImportSvg = "Import SVG image...";
+        DrawRotateClockwise = "Rotate 90° clockwise";
+        DrawConvertToCurve = "Convert segment to curve";
+        DrawBackground = "Background";
+        DrawPosition = "Position";
+        DrawZoom = "Zoom";
+        DrawSize = "Size";
+        DrawLayer = "Layer";
+        DrawBackgroundVideoFrame = "Video frame (current position)";
+        DrawBackgroundVideoFrameAt = "Video frame at...";
+        DrawBackgroundImage = "Image file...";
+        DrawBackgroundNone = "No background";
+        DrawBackgroundStretch = "Stretch image to canvas";
+        DrawBackgroundOpacity = "Background opacity";
+        DrawImages = "Images";
+        DrawConvertToLine = "Convert segment to line";
+        DrawConvertShapeToCurves = "Convert all lines to curves";
+        DrawConvertShapeToLines = "Convert all curves to lines";
+        DrawRotateCounterClockwise = "Rotate 90° counter-clockwise";
+        DrawSvgImages = "SVG images";
+        DrawSvgNoShapes = "No filled shapes or strokes found in the SVG file.";
 
         // Progress Bar Generator
         ProgressBarTitle = "ASSA progress bar";
