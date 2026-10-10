@@ -114,7 +114,7 @@ public class SeOcr
         NOcrBinaryOcrFallbackDatabase = string.Empty;
         BinaryOcrNOcrFallbackDatabase = string.Empty;
         NOcrMaxWrongPixels = 25;
-        NOcrPixelsAreSpace = 12;
+        NOcrPixelsAreSpace = 0; // auto, see NOcrSpaceDetector
         NOcrDrawUnknownText = true;
         NOcrNoOfLinesToAutoDraw = 60;
         NOcrZoomFactor = 4;

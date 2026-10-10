@@ -104,6 +104,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     private readonly INOcrCaseFixer _nOcrCaseFixer;
     private readonly IBinaryOcrMatcher _binaryOcrMatcher;
     private OcrLineHeightTracker _lineHeightTracker = new();
+    private NOcrSpaceDetector _nOcrSpaceDetector = new();
     private readonly INamesList _namesList;
     private string _namesListFolder = string.Empty;
     private string _namesListLanguage = string.Empty;
@@ -1001,6 +1002,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     private void RunNOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
     {
         _lineHeightTracker = new OcrLineHeightTracker { FallbackMinLineHeight = item.Format == FormatBluRaySup ? 25 : 12 };
+        _nOcrSpaceDetector = new NOcrSpaceDetector();
         var fileName = Path.Combine(Se.OcrFolder, Se.Settings.Ocr.NOcrDatabase + ".nocr");
         var nOcrDb = new NOcrDb(fileName);
         var totalCount = imageSubtitles.Count;
@@ -1023,10 +1025,11 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             }
         }
 
-        // Pre-flight: detect pixels-is-space from a sample of images.
+        // Pre-flight: detect pixels-is-space from a sample of images. With "pixels are space"
+        // set to auto (0) every image is measured on its own instead (NOcrSpaceDetector).
         var sampleSize = Math.Min(OcrPreflightSampleSize, totalCount);
-        var pixelsAreSpace = Se.Settings.Ocr.NOcrPixelsAreSpace > 0 ? Se.Settings.Ocr.NOcrPixelsAreSpace : 12;
-        if (sampleSize > 0)
+        var pixelsAreSpace = Se.Settings.Ocr.NOcrPixelsAreSpace;
+        if (sampleSize > 0 && pixelsAreSpace > 0)
         {
             item.Status = Se.Language.General.OcrDotDotDot;
             var detected = DetectPixelsIsSpace(imageSubtitles, sampleSize, cancellationToken);
@@ -1095,11 +1098,18 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     {
         var bitmap = imageSubtitles.GetBitmap(i);
         var parentBitmap = new NikseBitmap2(bitmap);
-        parentBitmap.MakeTwoColor(200);
+        parentBitmap.MakeTwoColor(OcrTwoColorThreshold.Get(parentBitmap));
         parentBitmap.CropTop(0, new SKColor(0, 0, 0, 0));
-        var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, pixelsAreSpace,
+        var isAutoSpace = pixelsAreSpace <= 0;
+        var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap,
+            isAutoSpace ? NOcrSpaceDetector.SplitPixelsAreSpace : pixelsAreSpace,
             false, true, _lineHeightTracker.GetMinLineHeight(), true, _lineHeightTracker.GetAverageLineHeight());
         _lineHeightTracker.Update(letters);
+        if (isAutoSpace)
+        {
+            letters = _nOcrSpaceDetector.RemoveFalseSpaces(letters, out pixelsAreSpace);
+        }
+
         var index = 0;
         var matches = new List<NOcrChar>();
         var maxErrorPercent = Se.Settings.Ocr.BinaryOcrMaxErrorPercent > 0 ? Se.Settings.Ocr.BinaryOcrMaxErrorPercent : 7.5;

@@ -181,6 +181,7 @@ public partial class OcrViewModel : ObservableObject
 
     private IOcrSubtitle? _ocrSubtitle;
     private OcrLineHeightTracker _lineHeightTracker = new();
+    private NOcrSpaceDetector _nOcrSpaceDetector = new();
     private List<OcrSubtitleItem> _allOcrSubtitleItems = new();
     private string _sourceFileName = string.Empty;
     private Iso639Dash2LanguageCode? _sourceLanguageIso;
@@ -242,7 +243,7 @@ public partial class OcrViewModel : ObservableObject
         ImageCompareDatabases = new ObservableCollection<string>(BinaryOcrDb.GetDatabases(Se.OcrFolder));
         SelectedImageCompareDatabase = ImageCompareDatabases.FirstOrDefault();
         NOcrMaxWrongPixelsList = new ObservableCollection<int>(Enumerable.Range(0, 500));
-        NOcrPixelsAreSpaceList = new ObservableCollection<int>(Enumerable.Range(1, 50));
+        NOcrPixelsAreSpaceList = new ObservableCollection<int>(Enumerable.Range(0, 51)); // 0 = auto
         BinaryOcrPixelsAreSpaceList = new ObservableCollection<int>(Enumerable.Range(1, 50));
         OllamaLanguages = new ObservableCollection<string>(Iso639Dash2LanguageCode.List
             .Select(p => p.EnglishName)
@@ -1180,10 +1181,9 @@ public partial class OcrViewModel : ObservableObject
 
         var bitmap = item.GetSkBitmap();
         var nBmp = new NikseBitmap2(bitmap);
-        nBmp.MakeTwoColor(200);
+        nBmp.MakeTwoColor(OcrTwoColorThreshold.Get(nBmp));
         nBmp.CropTop(0, new SKColor(0, 0, 0, 0));
-        var letters =
-            NikseBitmapImageSplitter2.SplitBitmapToLettersNew(nBmp, SelectedNOcrPixelsAreSpace, false, true, _lineHeightTracker.GetMinLineHeight(), true, _lineHeightTracker.GetAverageLineHeight());
+        var letters = SplitNOcrLetters(nBmp, out _);
         var matches = new List<NOcrChar?>(new NOcrChar?[letters.Count]);
         var idx = 0;
         while (idx < letters.Count)
@@ -3289,10 +3289,9 @@ public partial class OcrViewModel : ObservableObject
             var item = OcrSubtitleItems[i];
             var bitmap = item.GetSkBitmap();
             var parentBitmap = new NikseBitmap2(bitmap);
-            parentBitmap.MakeTwoColor(200);
+            parentBitmap.MakeTwoColor(OcrTwoColorThreshold.Get(parentBitmap));
             parentBitmap.CropTop(0, new SKColor(0, 0, 0, 0));
-            var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, SelectedNOcrPixelsAreSpace,
-                false, true, _lineHeightTracker.GetMinLineHeight(), true, _lineHeightTracker.GetAverageLineHeight());
+            var letters = SplitNOcrLetters(parentBitmap, out _);
             _lineHeightTracker.Update(letters);
             var index = 0;
             while (index < letters.Count)
@@ -3329,10 +3328,9 @@ public partial class OcrViewModel : ObservableObject
             var item = OcrSubtitleItems[i];
             var bitmap = item.GetSkBitmap();
             var parentBitmap = new NikseBitmap2(bitmap);
-            parentBitmap.MakeTwoColor(200);
+            parentBitmap.MakeTwoColor(OcrTwoColorThreshold.Get(parentBitmap));
             parentBitmap.CropTop(0, new SKColor(0, 0, 0, 0));
-            var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, SelectedNOcrPixelsAreSpace,
-                false, true, _lineHeightTracker.GetMinLineHeight(), true, _lineHeightTracker.GetAverageLineHeight());
+            var letters = SplitNOcrLetters(parentBitmap, out var pixelsAreSpace);
             _lineHeightTracker.Update(letters);
             OcrUiUpdates.EnqueueSelect(i);
             var index = 0;
@@ -3481,14 +3479,14 @@ public partial class OcrViewModel : ObservableObject
                 return;
             }
 
-            matches = RemoveSpacesAfter1(matches, SelectedNOcrPixelsAreSpace);
+            matches = RemoveSpacesAfter1(matches, pixelsAreSpace);
 
             item.Text = ItalicTextMerger.MergeWithItalicTags(matches).Trim();
             var ocrFixResultTemp = OcrFixLine(i, item);
             if (ocrFixResultTemp.UnknownWords.Count > 0 && item.Text.Contains("<i>", StringComparison.Ordinal))
             {
                 var unItalicFactor = 0.33;
-                var text = ItalicSpaceFixer.GetTextWithMoreSpacesInItalic(matches, letters, parentBitmap, unItalicFactor, SelectedNOcrPixelsAreSpace);
+                var text = ItalicSpaceFixer.GetTextWithMoreSpacesInItalic(matches, letters, parentBitmap, unItalicFactor, pixelsAreSpace);
                 var unItalicItem = new OcrSubtitleItem(item, text);
                 var unItalicResultTemp = OcrFixLine(i, unItalicItem);
                 if (ocrFixResultTemp.UnknownWords.Count > unItalicResultTemp.UnknownWords.Count)
@@ -3525,6 +3523,26 @@ public partial class OcrViewModel : ObservableObject
 
         _isCtrlDown = false;
         IsOcrRunning = false;
+    }
+
+    /// <summary>
+    /// Splits a two-color bitmap into letters for nOCR. "Pixels are space" 0 means auto: split at
+    /// every gap and let <see cref="NOcrSpaceDetector"/> decide the word spaces relative to the
+    /// text size. <paramref name="pixelsAreSpace"/> is the pixel threshold actually used.
+    /// </summary>
+    private List<ImageSplitterItem2> SplitNOcrLetters(NikseBitmap2 parentBitmap, out int pixelsAreSpace)
+    {
+        var isAuto = SelectedNOcrPixelsAreSpace <= 0;
+        var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap,
+            isAuto ? NOcrSpaceDetector.SplitPixelsAreSpace : SelectedNOcrPixelsAreSpace,
+            false, true, _lineHeightTracker.GetMinLineHeight(), true, _lineHeightTracker.GetAverageLineHeight());
+        pixelsAreSpace = SelectedNOcrPixelsAreSpace;
+        if (isAuto)
+        {
+            letters = _nOcrSpaceDetector.RemoveFalseSpaces(letters, out pixelsAreSpace);
+        }
+
+        return letters;
     }
 
     private static List<NOcrChar> RemoveSpacesAfter1(List<NOcrChar> matches, int pixelsAreSpace)
@@ -5269,6 +5287,7 @@ public partial class OcrViewModel : ObservableObject
         {
             FallbackMinLineHeight = _ocrSubtitle is OcrSubtitleBluRay or OcrSubtitleMkvBluRay ? 25 : 12,
         };
+        _nOcrSpaceDetector = new NOcrSpaceDetector();
     }
 
     partial void OnShowOnlyForcedChanged(bool value)
