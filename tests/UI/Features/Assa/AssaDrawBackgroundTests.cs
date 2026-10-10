@@ -169,4 +169,33 @@ public class AssaDrawBackgroundTests
         Assert.False(vm.BackgroundFromVideoAtCommand.CanExecute(null));
         Assert.True(vm.BackgroundFromImageCommand.CanExecute(null));
     }
+
+    [AvaloniaFact]
+    public async Task VideoFrameFailure_KeepsTheCurrentBackground()
+    {
+        var png = MakePng(800, 600);
+        var notAVideo = Path.Combine(Path.GetTempPath(), $"assadraw-bg-{Guid.NewGuid():N}.mp4");
+        File.WriteAllText(notAVideo, "not a video");
+        var vm = new AssaDrawViewModel(new FileHelper(), new StubWindowService());
+        vm.Initialize(new Subtitle { Header = AdvancedSubStationAlpha.DefaultHeader }, [], 1920, 1080, notAVideo, 5);
+        var window = new AssaDrawWindow(vm);
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            Assert.True(vm.LoadImageBackground(png));
+            var image = vm.Canvas!.BackgroundImage;
+
+            Assert.False(await vm.LoadVideoFrameBackgroundAsync(5));
+
+            Assert.True(vm.HasBackground);
+            Assert.Same(image, vm.Canvas.BackgroundImage);
+        }
+        finally
+        {
+            window.Close();
+            File.Delete(png);
+            File.Delete(notAVideo);
+        }
+    }
 }
