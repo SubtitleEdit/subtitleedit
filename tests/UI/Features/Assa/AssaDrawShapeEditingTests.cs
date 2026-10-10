@@ -255,3 +255,66 @@ public class AssaDrawUndoTests
         Assert.Equal(100, vm.PointX);
     }
 }
+
+/// <summary>
+/// Line/curve conversion of single segments and whole shapes.
+/// </summary>
+public class AssaDrawSegmentConversionTests
+{
+    private static AssaDrawViewModel MakeViewModel(string text)
+    {
+        var vm = new AssaDrawViewModel(new FileHelper(), new StubWindowService());
+        var line = new SubtitleLineViewModel(new Paragraph(text, 0, 2000) { Extra = "Default" }, new AdvancedSubStationAlpha());
+        vm.Initialize(new Subtitle { Header = AdvancedSubStationAlpha.DefaultHeader }, [line], 1920, 1080);
+        return vm;
+    }
+
+    [Fact]
+    public void ConvertToCurve_KeepsShape_WithControlPointsAtThirds()
+    {
+        var vm = MakeViewModel("{\\p1}m 0 0 l 300 0 300 300{\\p0}");
+        vm.SelectPoint(vm.Shapes[0].Points[1]);
+
+        vm.ConvertPointToCurveCommand.Execute(null);
+
+        Assert.Equal("m 0 0 b 100 0 200 0 300 0 l 300 300", vm.Shapes[0].ToAssa());
+        vm.UndoCommand.Execute(null);
+        Assert.Equal("m 0 0 l 300 0 300 300", vm.Shapes[0].ToAssa());
+    }
+
+    [Fact]
+    public void ConvertToLine_FromControlPoint_RemovesControls_AndSelectsEndPoint()
+    {
+        var vm = MakeViewModel("{\\p1}m 0 0 b 50 -50 250 -50 300 0 l 300 300{\\p0}");
+        var shape = vm.Shapes[0];
+        vm.SelectPoint(shape.Points[2]);
+
+        vm.ConvertPointToLineCommand.Execute(null);
+
+        Assert.Equal("m 0 0 l 300 0 300 300", shape.ToAssa());
+        Assert.Same(shape.Points[1], vm.SelectedTreeItem?.Point);
+    }
+
+    [Fact]
+    public void FirstPoint_HasNoSegmentToConvert()
+    {
+        var vm = MakeViewModel("{\\p1}m 0 0 l 300 0 300 300{\\p0}");
+        var shape = vm.Shapes[0];
+
+        Assert.False(shape.IsLineSegment(shape.Points[0]));
+        Assert.False(shape.ConvertSegmentToCurve(shape.Points[0]));
+    }
+
+    [Fact]
+    public void WholeShape_RoundTripsBetweenLinesAndCurves()
+    {
+        var vm = MakeViewModel("{\\p1}m 0 0 l 300 0 300 300 0 300{\\p0}");
+        vm.SelectShape(vm.Shapes[0]);
+
+        vm.ConvertShapeToCurvesCommand.Execute(null);
+        Assert.Equal("m 0 0 b 100 0 200 0 300 0 300 100 300 200 300 300 200 300 100 300 0 300", vm.Shapes[0].ToAssa());
+
+        vm.ConvertShapeToLinesCommand.Execute(null);
+        Assert.Equal("m 0 0 l 300 0 300 300 0 300", vm.Shapes[0].ToAssa());
+    }
+}

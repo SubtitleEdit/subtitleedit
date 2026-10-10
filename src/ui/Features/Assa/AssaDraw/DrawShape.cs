@@ -280,6 +280,112 @@ public class DrawShape
         return true;
     }
 
+    /// <summary>
+    /// The end point of the segment a point belongs to: control points map to their curve's end point.
+    /// </summary>
+    public DrawCoordinate? GetSegmentEnd(DrawCoordinate point)
+    {
+        var index = Points.IndexOf(point);
+        if (index < 0)
+        {
+            return null;
+        }
+
+        return point.DrawType switch
+        {
+            DrawCoordinateType.BezierCurveSupport1 when index + 2 < Points.Count => Points[index + 2],
+            DrawCoordinateType.BezierCurveSupport2 when index + 1 < Points.Count => Points[index + 1],
+            DrawCoordinateType.BezierCurveSupport1 or DrawCoordinateType.BezierCurveSupport2 => null,
+            _ => point,
+        };
+    }
+
+    /// <summary>
+    /// True when the segment ending at <paramref name="point"/> is a straight line that can become a curve.
+    /// The first point has no segment of its own (the closing line is implicit in ASSA).
+    /// </summary>
+    public bool IsLineSegment(DrawCoordinate point)
+    {
+        var end = GetSegmentEnd(point);
+        return end != null && Points.IndexOf(end) > 0 && end.DrawType == DrawCoordinateType.Line;
+    }
+
+    public bool IsCurveSegment(DrawCoordinate point)
+    {
+        var end = GetSegmentEnd(point);
+        var index = end == null ? -1 : Points.IndexOf(end);
+        return index >= 3 && end!.DrawType == DrawCoordinateType.BezierCurve &&
+               Points[index - 1].DrawType == DrawCoordinateType.BezierCurveSupport2 &&
+               Points[index - 2].DrawType == DrawCoordinateType.BezierCurveSupport1;
+    }
+
+    /// <summary>
+    /// Turns the straight segment ending at the point into a bezier curve with control points at
+    /// one and two thirds, so it looks the same until a control point is dragged.
+    /// </summary>
+    public bool ConvertSegmentToCurve(DrawCoordinate point)
+    {
+        if (!IsLineSegment(point))
+        {
+            return false;
+        }
+
+        var end = GetSegmentEnd(point)!;
+        var index = Points.IndexOf(end);
+        var start = Points[index - 1];
+        var dx = (end.X - start.X) / 3f;
+        var dy = (end.Y - start.Y) / 3f;
+        end.DrawType = DrawCoordinateType.BezierCurve;
+        Points.Insert(index, new DrawCoordinate(this, DrawCoordinateType.BezierCurveSupport2, start.X + dx * 2, start.Y + dy * 2, DrawSettings.PointHelperColor));
+        Points.Insert(index, new DrawCoordinate(this, DrawCoordinateType.BezierCurveSupport1, start.X + dx, start.Y + dy, DrawSettings.PointHelperColor));
+        return true;
+    }
+
+    /// <summary>
+    /// Turns the curve the point belongs to into a straight line (its control points are removed).
+    /// </summary>
+    public bool ConvertSegmentToLine(DrawCoordinate point)
+    {
+        if (!IsCurveSegment(point))
+        {
+            return false;
+        }
+
+        var end = GetSegmentEnd(point)!;
+        var index = Points.IndexOf(end);
+        Points.RemoveRange(index - 2, 2);
+        end.DrawType = DrawCoordinateType.Line;
+        return true;
+    }
+
+    public int ConvertAllLinesToCurves()
+    {
+        var count = 0;
+        foreach (var point in Points.Where(IsLineSegment).ToList())
+        {
+            if (ConvertSegmentToCurve(point))
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    public int ConvertAllCurvesToLines()
+    {
+        var count = 0;
+        foreach (var point in Points.Where(p => p.DrawType == DrawCoordinateType.BezierCurve && IsCurveSegment(p)).ToList())
+        {
+            if (ConvertSegmentToLine(point))
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
     private static float DistanceToSegment(float px, float py, float ax, float ay, float bx, float by)
     {
         var dx = bx - ax;

@@ -40,6 +40,10 @@ public class LanguageAssa
     public string DrawLayerX { get; set; }
     public string DrawImportSvg { get; set; }
     public string DrawRotateClockwise { get; set; }
+    public string DrawConvertToCurve { get; set; }
+    public string DrawConvertToLine { get; set; }
+    public string DrawConvertShapeToCurves { get; set; }
+    public string DrawConvertShapeToLines { get; set; }
     public string DrawRotateCounterClockwise { get; set; }
     public string DrawSvgImages { get; set; }
     public string DrawSvgNoShapes { get; set; }
@@ -315,6 +319,10 @@ public class LanguageAssa
         DrawLayerX = "Layer {0}";
         DrawImportSvg = "Import SVG image...";
         DrawRotateClockwise = "Rotate 90° clockwise";
+        DrawConvertToCurve = "Convert segment to curve";
+        DrawConvertToLine = "Convert segment to line";
+        DrawConvertShapeToCurves = "Convert all lines to curves";
+        DrawConvertShapeToLines = "Convert all curves to lines";
         DrawRotateCounterClockwise = "Rotate 90° counter-clockwise";
         DrawSvgImages = "SVG images";
         DrawSvgNoShapes = "No filled shapes or strokes found in the SVG file.";

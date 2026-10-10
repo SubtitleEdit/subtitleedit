@@ -896,6 +896,88 @@ public partial class AssaDrawViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void ConvertPointToCurve()
+    {
+        var point = ActivePoint;
+        var shape = point == null ? null : point.DrawShape ?? Shapes.FirstOrDefault(s => s.Points.Contains(point));
+        if (point == null || shape == null || !shape.IsLineSegment(point))
+        {
+            return;
+        }
+
+        SaveUndo();
+        shape.ConvertSegmentToCurve(point);
+        RefreshTreeView();
+        Canvas?.InvalidateVisual();
+    }
+
+    [RelayCommand]
+    private void ConvertPointToLine()
+    {
+        var point = ActivePoint;
+        var shape = point == null ? null : point.DrawShape ?? Shapes.FirstOrDefault(s => s.Points.Contains(point));
+        if (point == null || shape == null || !shape.IsCurveSegment(point))
+        {
+            return;
+        }
+
+        SaveUndo();
+        var end = shape.GetSegmentEnd(point)!;
+        shape.ConvertSegmentToLine(point);
+
+        // A removed control point can't stay selected - select the segment's end point instead
+        if (point != end)
+        {
+            ActivePoint = null;
+            IsPointSelected = false;
+        }
+
+        RefreshTreeView();
+        if (point != end)
+        {
+            SelectPoint(end);
+        }
+
+        Canvas?.InvalidateVisual();
+    }
+
+    [RelayCommand]
+    private void ConvertShapeToCurves()
+    {
+        var shape = TargetShape;
+        if (shape == null || !shape.Points.Any(shape.IsLineSegment))
+        {
+            return;
+        }
+
+        SaveUndo();
+        shape.ConvertAllLinesToCurves();
+        RefreshTreeView();
+        Canvas?.InvalidateVisual();
+    }
+
+    [RelayCommand]
+    private void ConvertShapeToLines()
+    {
+        var shape = TargetShape;
+        if (shape == null || !shape.Points.Any(shape.IsCurveSegment))
+        {
+            return;
+        }
+
+        SaveUndo();
+        if (ActivePoint != null && ActivePoint.DrawType is DrawCoordinateType.BezierCurveSupport1 or DrawCoordinateType.BezierCurveSupport2)
+        {
+            ActivePoint = null;
+            IsPointSelected = false;
+        }
+
+        shape.ConvertAllCurvesToLines();
+        RefreshTreeView();
+        Canvas?.InvalidateVisual();
+    }
+
+    [RelayCommand]
     private void CancelDrawing()
     {
         if (!IsDrawing)

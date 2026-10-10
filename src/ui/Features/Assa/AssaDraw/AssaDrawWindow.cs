@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Automation;
@@ -169,6 +170,16 @@ public class AssaDrawWindow : Window
 
     private void AddPointItems(List<Control> items, DrawCoordinate point)
     {
+        var shape = point.DrawShape;
+        if (shape != null && shape.IsLineSegment(point))
+        {
+            items.Add(MakeMenuItem(Se.Language.Assa.DrawConvertToCurve, "fa-solid fa-bezier-curve", _vm.ConvertPointToCurveCommand));
+        }
+        else if (shape != null && shape.IsCurveSegment(point))
+        {
+            items.Add(MakeMenuItem(Se.Language.Assa.DrawConvertToLine, "fa-solid fa-slash", _vm.ConvertPointToLineCommand));
+        }
+
         var isControlPoint = point.DrawType is DrawCoordinateType.BezierCurveSupport1 or DrawCoordinateType.BezierCurveSupport2;
         var deletePoint = MakeMenuItem(Se.Language.Assa.DrawDeletePoint, "fa-solid fa-xmark", _vm.DeletePointCommand);
         deletePoint.IsEnabled = !isControlPoint;
@@ -200,6 +211,13 @@ public class AssaDrawWindow : Window
         items.Add(MakeMenuItem(Se.Language.Assa.DrawRotateCounterClockwise, "fa-solid fa-rotate-left", _vm.RotateShapeCounterClockwiseCommand));
         items.Add(MakeMenuItem(Se.Language.Assa.DrawFlipHorizontal, "fa-solid fa-left-right", _vm.FlipShapeHorizontalCommand));
         items.Add(MakeMenuItem(Se.Language.Assa.DrawFlipVertical, "fa-solid fa-up-down", _vm.FlipShapeVerticalCommand));
+
+        var toCurves = MakeMenuItem(Se.Language.Assa.DrawConvertShapeToCurves, "fa-solid fa-bezier-curve", _vm.ConvertShapeToCurvesCommand);
+        toCurves.IsEnabled = shape.Points.Any(shape.IsLineSegment);
+        items.Add(toCurves);
+        var toLines = MakeMenuItem(Se.Language.Assa.DrawConvertShapeToLines, "fa-solid fa-draw-polygon", _vm.ConvertShapeToLinesCommand);
+        toLines.IsEnabled = shape.Points.Any(shape.IsCurveSegment);
+        items.Add(toLines);
 
         var eraser = MakeMenuItem(Se.Language.Assa.DrawUseShapeForErase, null, _vm.ToggleShapeEraserCommand);
         eraser.ToggleType = MenuItemToggleType.CheckBox;
@@ -672,15 +690,20 @@ public class AssaDrawWindow : Window
         var panel = new StackPanel { Orientation = Orientation.Vertical };
         panel.Children.Add(MakeSectionHeader(Se.Language.Assa.DrawSelectedPoint));
 
+        // X and Y on their own rows - side by side the boxes were too narrow for 4 digits
         var grid = new Grid
         {
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+            },
+            RowSpacing = 6,
         };
 
         var xLabel = new TextBlock { Text = "X", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 6, 0), Opacity = 0.75 };
@@ -691,7 +714,7 @@ public class AssaDrawWindow : Window
             Increment = 1,
             [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.PointX)) { Mode = BindingMode.TwoWay },
         };
-        var yLabel = new TextBlock { Text = "Y", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(8, 0, 6, 0), Opacity = 0.75 };
+        var yLabel = new TextBlock { Text = "Y", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 6, 0), Opacity = 0.75 };
         var yBox = new NumericUpDown
         {
             Minimum = -10000,
@@ -702,9 +725,10 @@ public class AssaDrawWindow : Window
         grid.Children.Add(xLabel);
         Grid.SetColumn(xBox, 1);
         grid.Children.Add(xBox);
-        Grid.SetColumn(yLabel, 2);
+        Grid.SetRow(yLabel, 1);
         grid.Children.Add(yLabel);
-        Grid.SetColumn(yBox, 3);
+        Grid.SetRow(yBox, 1);
+        Grid.SetColumn(yBox, 1);
         grid.Children.Add(yBox);
         panel.Children.Add(grid);
 
