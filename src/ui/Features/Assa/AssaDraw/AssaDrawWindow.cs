@@ -11,6 +11,7 @@ using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -86,6 +87,11 @@ public class AssaDrawWindow : Window
             PlacementGravity = PopupGravity.BottomRight,
         };
         _canvas.ContextMenuRequested += OnCanvasContextMenuRequested;
+
+        // Drop an .svg file anywhere on the window to import it
+        DragDrop.SetAllowDrop(this, true);
+        AddHandler(DragDrop.DragOverEvent, vm.OnDragOver, RoutingStrategies.Bubble);
+        AddHandler(DragDrop.DropEvent, vm.OnDrop, RoutingStrategies.Bubble);
 
         Loaded += OnLoaded;
         Closing += (_, e) => vm.OnClosing();
@@ -248,6 +254,9 @@ public class AssaDrawWindow : Window
         preview.IsChecked = _vm.ShowPreview;
         items.Add(preview);
 
+        AddSeparator(items);
+        items.Add(MakeMenuItem(Se.Language.Assa.DrawImportSvg, "fa-solid fa-file-import", _vm.ImportSvgCommand));
+
         if (_vm.Shapes.Count > 0)
         {
             AddSeparator(items);
@@ -353,6 +362,7 @@ public class AssaDrawWindow : Window
         };
         var copyButton = CreateToolButton("fa-solid fa-copy", Se.Language.Assa.DrawCopyToClipboard, vm.CopyToClipboardCommand);
         vm.CopyToClipboardButton = copyButton;
+        rightPanel.Children.Add(CreateToolButton("fa-solid fa-file-import", Se.Language.Assa.DrawImportSvg, vm.ImportSvgCommand));
         rightPanel.Children.Add(copyButton);
         rightPanel.Children.Add(CreateToolButton("fa-solid fa-folder-open", "Load", vm.LoadCommand));
         rightPanel.Children.Add(CreateToolButton("fa-solid fa-floppy-disk", "Save", vm.SaveCommand));

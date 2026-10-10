@@ -1141,6 +1141,88 @@ public partial class AssaDrawViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task ImportSvg()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.Assa.DrawImportSvg.TrimEnd('.'), Se.Language.Assa.DrawSvgImages, "*.svg");
+        if (!string.IsNullOrEmpty(fileName))
+        {
+            await ImportSvgFile(fileName);
+        }
+    }
+
+    public async Task ImportSvgFile(string fileName)
+    {
+        try
+        {
+            var text = await File.ReadAllTextAsync(fileName);
+            if (!ImportSvgText(text) && Window != null)
+            {
+                await MessageBox.Show(Window, Se.Language.Assa.DrawImportSvg.TrimEnd('.'), Se.Language.Assa.DrawSvgNoShapes, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+        catch (Exception ex) when (ex is System.Xml.XmlException or IOException or UnauthorizedAccessException)
+        {
+            if (Window != null)
+            {
+                await MessageBox.Show(Window, Se.Language.General.Error, ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Adds the SVG's shapes on new layers above the existing drawing. Returns false when it had none.
+    /// </summary>
+    public bool ImportSvgText(string svgText)
+    {
+        var firstLayer = Shapes.Count == 0 ? 0 : Shapes.Max(s => s.Layer) + 1;
+        var result = SvgImporter.Import(svgText, CanvasWidth, CanvasHeight, firstLayer);
+        if (result.Shapes.Count == 0)
+        {
+            return false;
+        }
+
+        CancelDrawing();
+        Shapes.AddRange(result.Shapes);
+        SelectedShapes = result.Shapes.ToList();
+        RefreshTreeView();
+        Canvas?.InvalidateVisual();
+        return true;
+    }
+
+    internal void OnDragOver(object? sender, DragEventArgs e)
+    {
+        e.DragEffects = GetDroppedSvg(e) != null ? DragDropEffects.Copy : DragDropEffects.None;
+        e.Handled = true;
+    }
+
+    internal void OnDrop(object? sender, DragEventArgs e)
+    {
+        var fileName = GetDroppedSvg(e);
+        if (fileName != null)
+        {
+            e.Handled = true;
+            Dispatcher.UIThread.Post(() => _ = ImportSvgFile(fileName));
+        }
+    }
+
+    private static string? GetDroppedSvg(DragEventArgs e)
+    {
+        if (!e.DataTransfer.Contains(DataFormat.File))
+        {
+            return null;
+        }
+
+        return e.DataTransfer.TryGetFiles()?
+            .Select(f => f.Path.LocalPath)
+            .FirstOrDefault(f => f.EndsWith(".svg", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [RelayCommand]
     private async Task CopyToClipboard()
     {
         var code = GenerateAssaCode();
@@ -1298,6 +1380,14 @@ public partial class AssaDrawViewModel : ObservableObject
     }
 
     private static string GetColorName(Color color)
+    {
+        // Translucent colors get the alpha in the name - otherwise e.g. a 60% white and an opaque
+        // white shared one style name and the second style replaced the first.
+        var name = GetRgbName(color);
+        return color.A < 255 ? $"{name}A{color.A:X2}" : name;
+    }
+
+    private static string GetRgbName(Color color)
     {
         // Create a readable color name based on RGB values
         if (color is { R: 255, G: 255, B: 255 })

@@ -38,6 +38,9 @@ public class LanguageAssa
     public string DrawDeletePoint { get; set; }
     public string DrawCancelDrawing { get; set; }
     public string DrawLayerX { get; set; }
+    public string DrawImportSvg { get; set; }
+    public string DrawSvgImages { get; set; }
+    public string DrawSvgNoShapes { get; set; }
 
     // Progress Bar Generator
     public string ProgressBarTitle { get; set; }
@@ -308,6 +311,9 @@ public class LanguageAssa
         DrawDeletePoint = "Delete point";
         DrawCancelDrawing = "Cancel drawing";
         DrawLayerX = "Layer {0}";
+        DrawImportSvg = "Import SVG image...";
+        DrawSvgImages = "SVG images";
+        DrawSvgNoShapes = "No filled shapes or strokes found in the SVG file.";
 
         // Progress Bar Generator
         ProgressBarTitle = "ASSA progress bar";

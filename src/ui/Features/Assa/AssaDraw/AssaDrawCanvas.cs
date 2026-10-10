@@ -308,26 +308,12 @@ public class AssaDrawCanvas : Control
         var selectedSet = selectedShapes.Count > 4 ? new HashSet<DrawShape>(selectedShapes) : null;
         var activeShape = ActiveShape;
         var selectedShape = SelectedShape;
-        var activeShapeInList = false;
-        for (var idx = 0; idx < shapes.Count; idx++)
+        var activeShapeInList = activeShape != null && shapes.Contains(activeShape);
+        if (fillShapes)
         {
-            var shape = shapes[idx];
-            if (shape == activeShape)
-            {
-                activeShapeInList = true;
-            }
-
-            if (shape.Hidden)
-            {
-                continue;
-            }
-
-            var isSelected = selectedSet != null ? selectedSet.Contains(shape) : selectedShapes.Contains(shape);
-            var isActive = shape == activeShape || shape == selectedShape || isSelected;
-            DrawShape(context, shape, isActive, isSelected, isInShapes: true, fillShapes);
+            DrawLayerFills(context, shapes);
         }
 
-        // Handles on top of every shape, so a later shape can't cover the selected one's points
         for (var idx = 0; idx < shapes.Count; idx++)
         {
             var shape = shapes[idx];
@@ -338,12 +324,45 @@ public class AssaDrawCanvas : Control
 
             var isSelected = selectedSet != null ? selectedSet.Contains(shape) : selectedShapes.Contains(shape);
             var isActive = shape == activeShape || shape == selectedShape || isSelected;
+            DrawShape(context, shape, isActive, isSelected, isInShapes: true, fill: false);
+        }
+
+        // Handles on top of every shape, so a later shape can't cover the selected one's points.
+        // A multi-selection (Ctrl+A, SVG import) gets one box around all of it and no point handles.
+        var isMultiSelection = selectedShapes.Count > 1;
+        for (var idx = 0; idx < shapes.Count; idx++)
+        {
+            var shape = shapes[idx];
+            if (shape.Hidden)
+            {
+                continue;
+            }
+
+            var isActive = shape == activeShape || shape == selectedShape ||
+                           (!isMultiSelection && (selectedSet != null ? selectedSet.Contains(shape) : selectedShapes.Contains(shape)));
             if (isActive)
             {
-                DrawSelectionBox(context, shape);
+                DrawSelectionBox(context, shape.GetBounds());
             }
 
             DrawShapePoints(context, shape, isActive);
+        }
+
+        if (isMultiSelection)
+        {
+            var visible = selectedShapes.Where(s => !s.Hidden && s.Points.Count > 0).ToList();
+            if (visible.Count > 0)
+            {
+                var selectionBounds = visible[0].GetBounds();
+                foreach (var shape in visible.Skip(1))
+                {
+                    var b = shape.GetBounds();
+                    selectionBounds = (Math.Min(selectionBounds.Left, b.Left), Math.Min(selectionBounds.Top, b.Top),
+                        Math.Max(selectionBounds.Right, b.Right), Math.Max(selectionBounds.Bottom, b.Bottom));
+                }
+
+                DrawSelectionBox(context, selectionBounds);
+            }
         }
 
         // Draw active shape being created (not yet in Shapes list)
@@ -484,11 +503,9 @@ public class AssaDrawCanvas : Control
         var geometry = BuildGeometry(shape, isClosed);
 
         IBrush? fillBrush = null;
-        if (fill && isClosed)
+        if (fill && isClosed && !shape.IsEraser)
         {
-            fillBrush = shape.IsEraser
-                ? GetBrush(Color.FromArgb(40, 255, 69, 0))
-                : GetBrush(Color.FromArgb(215, shape.ForeColor.R, shape.ForeColor.G, shape.ForeColor.B));
+            fillBrush = GetBrush(Color.FromArgb(215, shape.ForeColor.R, shape.ForeColor.G, shape.ForeColor.B));
         }
 
         // Eraser shapes (iclip masks) are dashed and orange so they read as "cut out", not drawn
@@ -521,11 +538,58 @@ public class AssaDrawCanvas : Control
         }
     }
 
+    /// <summary>
+    /// Fills each layer as one geometry, like libass renders a layer's line: the shapes' contours
+    /// combine with non-zero winding (so holes of imported SVGs stay open) and the layer's eraser
+    /// shapes (\iclip) are cut out of it.
+    /// </summary>
+    private void DrawLayerFills(DrawingContext context, List<DrawShape> shapes)
+    {
+        foreach (var layer in shapes.Where(s => !s.Hidden && s.Points.Count > 2).GroupBy(s => s.Layer).OrderBy(g => g.Key))
+        {
+            var drawShapes = layer.Where(s => !s.IsEraser).ToList();
+            if (drawShapes.Count == 0)
+            {
+                continue;
+            }
+
+            Geometry geometry = BuildLayerGeometry(drawShapes);
+            var eraserShapes = layer.Where(s => s.IsEraser).ToList();
+            if (eraserShapes.Count > 0)
+            {
+                geometry = new CombinedGeometry(GeometryCombineMode.Exclude, geometry, BuildLayerGeometry(eraserShapes));
+            }
+
+            var color = drawShapes[0].ForeColor;
+            var alpha = (byte)Math.Round(color.A * 215 / 255.0);
+            context.DrawGeometry(GetBrush(Color.FromArgb(alpha, color.R, color.G, color.B)), null, geometry);
+        }
+    }
+
+    private StreamGeometry BuildLayerGeometry(List<DrawShape> shapes)
+    {
+        var geometry = new StreamGeometry();
+        using var ctx = geometry.Open();
+        ctx.SetFillRule(FillRule.NonZero);
+        foreach (var shape in shapes)
+        {
+            AddFigure(ctx, shape, true);
+        }
+
+        return geometry;
+    }
+
     private StreamGeometry BuildGeometry(DrawShape shape, bool isClosed)
     {
         var geometry = new StreamGeometry();
         using var ctx = geometry.Open();
         ctx.SetFillRule(FillRule.NonZero);
+        AddFigure(ctx, shape, isClosed);
+        return geometry;
+    }
+
+    private void AddFigure(StreamGeometryContext ctx, DrawShape shape, bool isClosed)
+    {
         ctx.BeginFigure(ToZoomFactorPoint(shape.Points[0]), isClosed);
         var i = 1;
         while (i < shape.Points.Count)
@@ -547,17 +611,16 @@ public class AssaDrawCanvas : Control
         }
 
         ctx.EndFigure(isClosed);
-        return geometry;
     }
 
-    private void DrawSelectionBox(DrawingContext context, DrawShape shape)
+    private void DrawSelectionBox(DrawingContext context, (float Left, float Top, float Right, float Bottom) bounds)
     {
-        if (shape.Points.Count < 2)
+        var (left, top, right, bottom) = bounds;
+        if (right - left < 0.01f && bottom - top < 0.01f)
         {
             return;
         }
 
-        var (left, top, right, bottom) = shape.GetBounds();
         var rect = new Rect(
             new Point(ToZoomFactorX(left), ToZoomFactorY(top)),
             new Point(ToZoomFactorX(right), ToZoomFactorY(bottom))).Inflate(8);
