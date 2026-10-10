@@ -3,6 +3,22 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-rc1 (10th of October 2026)
+
+* Add search of help topics from the macOS Help menu search field
+* Fix llama.cpp OCR ignoring the server URL (OCR + batch OCR can now use an external server) - thx GitGerby
+* Fix iTT export losing italic in nested formatting spans - thx michi987654
+* Fix Compare window jumping to a scrolled-away row when focus returns - thx WAusJackBauer
+* Fix jitter on held short millisecond seek shortcuts - thx 114562175
+* Update Avalonia to 12.1.4
+* Update German translation - thx FunkyKnilch
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
+
+
+-----------------------------------------------------------------------------------------------------
+
 v5.3.0-beta26 (9th of October 2026)
 
 * Add ElevenLabs Eleven v4 and v4 Turbo TTS models (v4 Turbo is the new default, <break> converted to audio pause tags)
@@ -29,6 +45,7 @@ v5.3.0-beta26 (9th of October 2026)
 * Update Japanese translation - thx hisui3393
 * Update Polish translation - thx potplayer-fanpack
 
+-----------------------------------------------------------------------------------------------------
 
 v5.3.0-beta25 (8th of October 2026)
 
@@ -48,6 +65,7 @@ v5.3.0-beta25 (8th of October 2026)
 * Fix Linux startup crash when Skia reports no default font family - thx MaryJaneInChain
 * Update Italian translation - thx bovirus
 
+-----------------------------------------------------------------------------------------------------
 
 v5.3.0-beta24 (7th of October 2026)
 
@@ -66,6 +84,7 @@ v5.3.0-beta24 (7th of October 2026)
 * Update Korean translation - thx 12si27
 * Update Polish translation - thx potplayer-fanpack
 
+-----------------------------------------------------------------------------------------------------
 
 v5.3.0-beta23 (6th of October 2026)
 
@@ -100,6 +119,7 @@ v5.3.0-beta23 (6th of October 2026)
 * Update Italian translation - thx bovirus
 * Update Polish translation - thx potplayer-fanpack
 
+-----------------------------------------------------------------------------------------------------
 
 v5.3.0-beta22 (5th of October 2026)
 
