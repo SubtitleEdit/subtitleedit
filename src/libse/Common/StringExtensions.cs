@@ -133,6 +133,33 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static List<string> SplitToLines(this string s) => s.SplitToLines(s.Length);
 
         /// <summary>
+        /// Returns the number of lines <see cref="SplitToLines(string)"/> would return, using the same
+        /// line break rules ("\r\r\n" is two breaks, #8854), without allocating the lines.
+        /// </summary>
+        public static int CountLines(this string s)
+        {
+            var span = s.AsSpan();
+            var count = 1;
+            while (true)
+            {
+                var idx = span.IndexOfAny('\r', '\n', '\u2028');
+                if (idx < 0)
+                {
+                    return count;
+                }
+
+                count++;
+                var skip = idx + 1;
+                if (span[idx] == '\r' && skip < span.Length && span[skip] == '\n')
+                {
+                    skip++;
+                }
+
+                span = span.Slice(skip);
+            }
+        }
+
+        /// <summary>
         /// Rewrites every line break to <see cref="Environment.NewLine"/>, so text coming from
         /// the outside (a paste, an API answer) uses the same line break as text SE builds
         /// itself. The breaks recognized - and the "\r\r\n" as two breaks rule (#8854) - are the

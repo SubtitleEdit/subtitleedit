@@ -31,11 +31,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Extension => ".fcpxml";
 
+
+        public override bool StoresFrameNumbers => true;
+
         public override string Name => "Final Cut Pro Xml Name";
 
         
         public override string ToText(Subtitle subtitle, string title)
         {
+            subtitle = ToMediaTime(subtitle);
             string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" + Environment.NewLine +
                 "<fcpxml version=\"1.8\">" + Environment.NewLine +
@@ -112,6 +116,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
+        {
+            LoadSubtitleMediaTime(subtitle, lines, fileName);
+            FromMediaTime(subtitle);
+        }
+
+        private void LoadSubtitleMediaTime(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
             FrameRate = Configuration.Settings.General.CurrentFrameRate;

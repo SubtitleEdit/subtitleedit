@@ -193,6 +193,13 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         private int _slowPollCounter;
         private IVideoPlayer _videoPlayerInstance;
         private string _videoFileName;
+
+        // Duration ffmpeg reported for the open file, 0 when unknown. MPEG transport/program
+        // streams store no duration, so mpv estimates one and re-estimates it after seeks -
+        // a 1.5 h TV recording could jump to 8 h mid-scrub and squash the slider (#15740).
+        // When set, it replaces the player's value for the slider range and total time.
+        private double _probedDuration;
+        private int _durationProbeGeneration;
         private readonly Grid _gridProgress; // Reference to the controls grid
         private DispatcherTimer? _autoHideTimer;
         private DateTime _lastActivityTime;
@@ -952,6 +959,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             // the new Maximum — firing ValueChanged and seeking mpv to EOF.
             SetPositionDisplayOnly(0);
             Duration = 0;
+            StartDurationProbe(videoFileName);
 
             await _videoPlayerInstance.LoadFile(videoFileName, startPositionSeconds);
 
@@ -1179,6 +1187,38 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             _textBlockVideoFileName.Text = string.Empty;
             SetPositionDisplayOnly(0);
             Duration = 0;
+            StartDurationProbe(null);
+        }
+
+        private static readonly HashSet<string> DurationProbeExtensions = new(StringComparer.OrdinalIgnoreCase)
+        {
+            ".ts", ".m2ts", ".mts", ".m2t", ".tp", ".trp", ".mpg", ".mpeg", ".vob",
+        };
+
+        private void StartDurationProbe(string? videoFileName)
+        {
+            _probedDuration = 0;
+            var generation = ++_durationProbeGeneration;
+            if (string.IsNullOrEmpty(videoFileName) ||
+                !DurationProbeExtensions.Contains(System.IO.Path.GetExtension(videoFileName)))
+            {
+                return;
+            }
+
+            _ = Task.Run(() =>
+            {
+                var seconds = Logic.Media.FfmpegMediaInfo2.TryGetDurationSeconds(videoFileName);
+                if (seconds is > 0)
+                {
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        if (generation == _durationProbeGeneration && !IsDisposed)
+                        {
+                            _probedDuration = seconds.Value;
+                        }
+                    });
+                }
+            });
         }
 
         /// <summary>
@@ -1368,7 +1408,8 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 if (_slowPollCounter >= 5)
                 {
                     _slowPollCounter = 0;
-                    Duration = _videoPlayerInstance.Duration;
+                    var playerDuration = _videoPlayerInstance.Duration;
+                    Duration = _probedDuration > 0 && playerDuration > 0 ? _probedDuration : playerDuration;
                     SetPlayPauseIcon(_videoPlayerInstance.IsPlaying);
 
                     // The ffmpeg player only knows its decoder (hardware vs. software) once the

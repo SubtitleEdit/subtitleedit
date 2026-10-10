@@ -202,13 +202,7 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
             return CreateTextLayoutInternal(this, constraint, new string(PasswordChar, text?.Length ?? 0), typeface, textStyleOverrides);
         }
 
-        var layout = CreateTextLayoutInternal(this, constraint, text, typeface, textStyleOverrides);
-
-        // The syntax spans split Latin tags into several runs; inside a right-to-left line
-        // Avalonia then maps runs to the wrong visual positions and hit testing throws (#15531).
-        BidiRunIndexFixer.Fix(layout);
-
-        return layout;
+        return CreateTextLayoutInternal(this, constraint, text, typeface, textStyleOverrides);
     }
 
     /// <summary>

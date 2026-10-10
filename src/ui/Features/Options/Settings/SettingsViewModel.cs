@@ -110,6 +110,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private AlignmentItem _mpvPreviewSelectedFontAlignment;
     [ObservableProperty] private ObservableCollection<MpvJustifyDisplay> _mpvPreviewJustifyItems;
     [ObservableProperty] private MpvJustifyDisplay _mpvPreviewSelectedJustify;
+    [ObservableProperty] private ObservableCollection<MpvDeinterlaceDisplay> _mpvDeinterlaceItems;
+    [ObservableProperty] private MpvDeinterlaceDisplay _mpvSelectedDeinterlace;
     [ObservableProperty] private int _mpvPreviewMargin;
     [ObservableProperty] private bool _mpvPreviewUsePositionFromFile;
     [ObservableProperty] private bool _mpvPreviewMarginIsPartOfSubtitleArea;
@@ -130,6 +132,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _lockTimeCodes;
     [ObservableProperty] private bool _rememberPositionAndSize;
     [ObservableProperty] private bool _titleBarFullFileName;
+    [ObservableProperty] private bool _showRecentFiles;
     [ObservableProperty] private bool _openLastFileOnStart;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsMsMode))]
@@ -277,6 +280,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _waveformCenterVideoPosition;
     [ObservableProperty] private bool _waveformCenterVideoPositionAlsoWhenPaused;
     [ObservableProperty] private bool _waveformSelectCurrentSubtitleWhilePaused;
+    [ObservableProperty] private bool _waveformRememberZoom;
 
     [ObservableProperty] private ObservableCollection<string> _waveformDrawStyles;
     [ObservableProperty] private string _selectedWaveformDrawStyle;
@@ -508,6 +512,8 @@ public partial class SettingsViewModel : ObservableObject
         MpvPreviewSelectedFontAlignment = MpvPreviewFontAlignments[7];
         MpvPreviewJustifyItems = new ObservableCollection<MpvJustifyDisplay>(MpvJustifyDisplay.GetAll());
         MpvPreviewSelectedJustify = MpvPreviewJustifyItems[0];
+        MpvDeinterlaceItems = new ObservableCollection<MpvDeinterlaceDisplay>(MpvDeinterlaceDisplay.GetAll());
+        MpvSelectedDeinterlace = MpvDeinterlaceItems.First(p => p.Code == "auto");
         LibVlcStatus = string.Empty;
         FfmpegLibsStatus = string.Empty;
 
@@ -827,6 +833,7 @@ public partial class SettingsViewModel : ObservableObject
         LockTimeCodes = general.LockTimeCodes;
         RememberPositionAndSize = general.RememberPositionAndSize;
         TitleBarFullFileName = general.TitleBarFullFileName;
+        ShowRecentFiles = Se.Settings.File.ShowRecentFiles;
         OpenLastFileOnStart = Se.Settings.File.OpenLastFileOnStart;
         AutoSave = general.AutoSave;
         AutoBackupOn = general.AutoBackupOn;
@@ -986,6 +993,7 @@ public partial class SettingsViewModel : ObservableObject
         WaveformCenterVideoPosition = Se.Settings.Waveform.CenterVideoPosition;
         WaveformCenterVideoPositionAlsoWhenPaused = Se.Settings.Waveform.CenterVideoPositionAlsoWhenPaused;
         WaveformSelectCurrentSubtitleWhilePaused = Se.Settings.Waveform.SelectCurrentSubtitleWhilePaused;
+        WaveformRememberZoom = Se.Settings.Waveform.RememberZoom;
         WaveformShowToolbar = Se.Settings.Waveform.ShowToolbar;
         WaveformShowOriginalSubtitle = Se.Settings.Waveform.ShowOriginalSubtitle;
 
@@ -1134,6 +1142,7 @@ public partial class SettingsViewModel : ObservableObject
         MpvPreviewMarginIsPartOfSubtitleArea = video.MpvPreviewMarginIsPartOfSubtitleArea;
         MpvPreviewSelectedFontAlignment = MpvPreviewFontAlignments.FirstOrDefault(p => p.Code == video.MpvPreviewAlignment) ?? MpvPreviewFontAlignments[7];
         MpvPreviewSelectedJustify = MpvPreviewJustifyItems.FirstOrDefault(p => p.Code == video.MpvPreviewJustify) ?? MpvPreviewJustifyItems[0];
+        MpvSelectedDeinterlace = MpvDeinterlaceItems.FirstOrDefault(p => p.Code == video.MpvDeinterlace) ?? MpvDeinterlaceItems.First(p => p.Code == "auto");
         MpvPreviewOutlineWidth = video.MpvPreviewOutlineWidth;
         MpvPreviewShadowWidth = video.MpvPreviewShadowWidth;
         MpvPreviewColorPrimary = video.MpvPreviewColorPrimary.FromHexToColor();
@@ -1738,6 +1747,15 @@ public partial class SettingsViewModel : ObservableObject
         general.LockTimeCodes = LockTimeCodes;
         general.RememberPositionAndSize = RememberPositionAndSize;
         general.TitleBarFullFileName = TitleBarFullFileName;
+        Se.Settings.File.ShowRecentFiles = ShowRecentFiles;
+        if (!ShowRecentFiles)
+        {
+            // Turning recent files off means "do not remember what I opened" - drop what is
+            // already stored too, not just stop adding to it.
+            Se.Settings.File.RecentFiles = new List<RecentFile>();
+            Se.Settings.Video.RecentFiles = new List<string>();
+        }
+
         Se.Settings.File.OpenLastFileOnStart = OpenLastFileOnStart;
         general.AutoSave = AutoSave;
         general.AutoBackupOn = AutoBackupOn;
@@ -1874,6 +1892,7 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Waveform.CenterVideoPosition = WaveformCenterVideoPosition;
         Se.Settings.Waveform.CenterVideoPositionAlsoWhenPaused = WaveformCenterVideoPositionAlsoWhenPaused;
         Se.Settings.Waveform.SelectCurrentSubtitleWhilePaused = WaveformSelectCurrentSubtitleWhilePaused;
+        Se.Settings.Waveform.RememberZoom = WaveformRememberZoom;
         Se.Settings.Waveform.FocusTextBoxAfterInsertNew = WaveformFocusTextboxAfterInsertNew;
 
         if (SelectedWaveformDrawStyle == Se.Language.General.Classic)
@@ -1992,6 +2011,7 @@ public partial class SettingsViewModel : ObservableObject
         video.MpvPreviewOutlineWidth = MpvPreviewOutlineWidth;
         video.MpvPreviewAlignment = MpvPreviewSelectedFontAlignment.Code;
         video.MpvPreviewJustify = (MpvPreviewSelectedJustify ?? MpvPreviewJustifyItems[0]).Code;
+        video.MpvDeinterlace = (MpvSelectedDeinterlace ?? MpvDeinterlaceItems.First(p => p.Code == "auto")).Code;
         video.MpvPreviewShadowWidth = MpvPreviewShadowWidth;
         video.MpvPreviewColorPrimary = MpvPreviewColorPrimary.FromColorToHex();
         video.MpvPreviewColorOutline = MpvPreviewColorOutline.FromColorToHex();

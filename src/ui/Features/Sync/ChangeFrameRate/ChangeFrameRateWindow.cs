@@ -52,14 +52,21 @@ public class ChangeFrameRateWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
         };
 
+        // Editable like SE 4, so any rate can be typed - e.g. 1, 2, 5, 10 or 15 fps (#15806).
         var comboFromFrameRate = new ComboBox
         {
             VerticalAlignment = VerticalAlignment.Center,
             MinWidth = 90,
+            IsEditable = true,
             DisplayMemberBinding = FrameRateDisplayBinding(),
         }
         .WithBindItemsSource(nameof(vm.FromFrameRates))
         .WithBindSelected(nameof(vm.SelectedFromFrameRate));
+        UiUtil.OnEditableComboBoxCommit(comboFromFrameRate, () =>
+        {
+            vm.CommitTypedFromFrameRate(comboFromFrameRate.Text);
+            comboFromFrameRate.Text = FormatFrameRate(vm.SelectedFromFrameRate);
+        }, handleEnter: false);
 
         var buttonFromFrameRate = UiUtil.MakeButtonBrowse(vm.BrowseFromFrameRateCommand, accessibleName: Se.Language.Sync.FromFrameRate);
 
@@ -76,10 +83,16 @@ public class ChangeFrameRateWindow : Window
         {
             VerticalAlignment = VerticalAlignment.Center,
             MinWidth = 90,
+            IsEditable = true,
             DisplayMemberBinding = FrameRateDisplayBinding(),
         }
         .WithBindItemsSource(nameof(vm.ToFrameRates))
         .WithBindSelected(nameof(vm.SelectedToFrameRate));
+        UiUtil.OnEditableComboBoxCommit(comboToFrameRate, () =>
+        {
+            vm.CommitTypedToFrameRate(comboToFrameRate.Text);
+            comboToFrameRate.Text = FormatFrameRate(vm.SelectedToFrameRate);
+        }, handleEnter: false);
 
         var buttonToFrameRate = UiUtil.MakeButtonBrowse(vm.BrowseToFrameRateCommand, accessibleName: Se.Language.Sync.ToFrameRate);
 
@@ -133,6 +146,11 @@ public class ChangeFrameRateWindow : Window
         Loaded += (_, _) => UiUtil.RestoreWindowPosition(this);
         Closing += (_, _) => UiUtil.SaveWindowPosition(this);
         KeyDown += (_, e) => vm.OnKeyDown(e);
+    }
+
+    private static string FormatFrameRate(double frameRate)
+    {
+        return frameRate.ToString("0.###", CultureInfo.InvariantCulture);
     }
 
     /// <summary>

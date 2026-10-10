@@ -392,7 +392,7 @@ public static class AssistedMoveCandidateGenerator
             return null;
         }
 
-        var upDown = new MoveWordUpDown(lines[0].Trim(), lines[1].Trim());
+        var upDown = new MoveWordUpDown(lines[0].Trim(), lines[1].Trim()) { SameSubtitle = true };
         if (moveDown)
         {
             upDown.MoveWordDown();
@@ -408,7 +408,7 @@ public static class AssistedMoveCandidateGenerator
         }
 
         var newText = upDown.S1 + Environment.NewLine + upDown.S2;
-        if (newText.SplitToLines().Count > 2)
+        if (newText.CountLines() > 2)
         {
             newText = Utilities.AutoBreakLine(Utilities.UnbreakLine(newText), languageCode);
         }

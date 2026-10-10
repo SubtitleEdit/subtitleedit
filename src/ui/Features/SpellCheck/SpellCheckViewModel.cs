@@ -17,6 +17,7 @@ using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.SpellCheck.EditWholeText;
 using Nikse.SubtitleEdit.Features.SpellCheck.GetDictionaries;
+using Nikse.SubtitleEdit.Features.SpellCheck.UseAlwaysList;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
@@ -168,6 +169,10 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
         {
             return;
         }
+
+        // Undo of Skip all / Change all / Add to names / Add to dictionary reverses the word-list
+        // change in the currently loaded language, which after a switch is the wrong one. (#15767)
+        ClearUndo();
 
         if (_spellCheckManager.WordSpellChecker != null)
         {
@@ -889,6 +894,21 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
     }
 
     [RelayCommand]
+    private async Task EditUseAlwaysList()
+    {
+        var result = await _windowService.ShowDialogAsync<UseAlwaysListWindow, UseAlwaysListViewModel>(Window!, vm =>
+        {
+            vm.Initialize(SelectedDictionary?.DictionaryFileName);
+        });
+
+        if (result.OkPressed)
+        {
+            // Pick up the edited pairs for the rest of this run.
+            _spellCheckManager.ReloadUseAlwaysList();
+        }
+    }
+
+    [RelayCommand]
     private async Task BrowseDictionary()
     {
         var result = await _windowService.ShowDialogAsync<GetDictionariesWindow, GetDictionariesViewModel>(Window!, vm => { });
@@ -902,7 +922,7 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private void SuggestionUseOnce()
     {
-        if (SelectedSuggestion == null || SelectedParagraph == null)
+        if (string.IsNullOrWhiteSpace(SelectedSuggestion) || SelectedParagraph == null)
         {
             return;
         }
@@ -917,7 +937,7 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
     [RelayCommand]
     private void SuggestionUseAlways()
     {
-        if (SelectedSuggestion == null || SelectedParagraph == null)
+        if (string.IsNullOrWhiteSpace(SelectedSuggestion) || SelectedParagraph == null)
         {
             return;
         }
@@ -993,6 +1013,14 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
     }
 
     private bool CanUndo() => _undoList.Count > 0;
+
+    private void ClearUndo()
+    {
+        _undoList.Clear();
+        IsUndoVisible = false;
+        UndoText = string.Empty;
+        UndoCommand.NotifyCanExecuteChanged();
+    }
 
     private void PushUndo(string description, SpellCheckUndoAction action, string actionWord)
     {
@@ -1119,10 +1147,11 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
             }
 
             AreSuggestionsAvailable = true;
-            if (suggestions.Count > 0)
-            {
-                SelectedSuggestion = suggestions[0];
-            }
+
+            // Clear when there are no suggestions - otherwise the previous word's suggestion stayed
+            // selected and "Use"/"Use always" applied it to this unrelated word (and "Use always"
+            // persisted that pair to <lang>_UseAlways.xml). (#15767)
+            SelectedSuggestion = suggestions.Count > 0 ? suggestions[0] : string.Empty;
 
             var lineIndex = Paragraphs.IndexOf(results[0].Paragraph) + 1;
             LineText = string.Format(Se.Language.SpellCheck.LineXofY, lineIndex, Paragraphs.Count);

@@ -288,7 +288,7 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject, IClosingCl
 
     private static int GetPlainLineCount(string? text)
     {
-        return HtmlUtil.RemoveHtmlTags(text ?? string.Empty, true).SplitToLines().Count;
+        return HtmlUtil.RemoveHtmlTags(text ?? string.Empty, true).CountLines();
     }
 
     public static bool HasLineTooLong(string? text, int singleLineMaxLength, int maxNumberOfLines)

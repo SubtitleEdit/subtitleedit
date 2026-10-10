@@ -35,7 +35,8 @@ public class OcrWindow : Window
     {
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = vm.Title;
+        AutomationProperties.SetAutomationId(this, "OcrWindow");
+        UpdateTitle(vm);
         Width = 1200;
         Height = 700;
         MinWidth = 900;
@@ -82,11 +83,18 @@ public class OcrWindow : Window
         // Collapse row when OCR is running, restore when stopped
         PropertyChangedEventHandler ocrRunningHandler = (s, e) =>
         {
+            if (e.PropertyName == nameof(vm.Title))
+            {
+                Avalonia.Threading.Dispatcher.UIThread.Post(() => UpdateTitle(vm));
+            }
+
             if (e.PropertyName == nameof(vm.IsOcrRunning))
             {
                 // Dispatch to UI thread since PropertyChanged may be raised from background thread
                 Avalonia.Threading.Dispatcher.UIThread.Post(() =>
                 {
+                    UpdateTitle(vm);
+
                     try
                     {
                         if (vm.IsOcrRunning)
@@ -724,6 +732,24 @@ public class OcrWindow : Window
         menuItemDelete.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.OneWay });
         flyout.Items.Add(menuItemDelete);
 
+        var menuItemFind = new MenuItem
+        {
+            Header = Se.Language.Main.Menu.Find,
+            DataContext = vm,
+            Command = vm.ShowFindCommand,
+        };
+        menuItemFind.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.OneWay });
+        flyout.Items.Add(menuItemFind);
+
+        var menuItemReplace = new MenuItem
+        {
+            Header = Se.Language.Main.Menu.Replace,
+            DataContext = vm,
+            Command = vm.ShowReplaceCommand,
+        };
+        menuItemReplace.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.OneWay });
+        flyout.Items.Add(menuItemReplace);
+
         var menuItemFillSelectedLinesWithClipboard = new MenuItem
         {
             Header = Se.Language.Ocr.FillSelectedLinesWithClipboard,
@@ -855,6 +881,9 @@ public class OcrWindow : Window
         menuItemSelectAll.Click += (_, _) => textBoxText.SelectAll();
         flyout.Items.Add(menuItemSelectAll);
         flyout.Items.Add(new Separator());
+        flyout.Items.Add(new MenuItem { Header = Se.Language.Main.Menu.Find, DataContext = vm, Command = vm.ShowFindCommand });
+        flyout.Items.Add(new MenuItem { Header = Se.Language.Main.Menu.Replace, DataContext = vm, Command = vm.ShowReplaceCommand });
+        flyout.Items.Add(new Separator());
         var menuItemSetFont = new MenuItem
         {
             Header = Se.Language.General.SetFontDotDotDot,
@@ -863,6 +892,7 @@ public class OcrWindow : Window
         };
         flyout.Items.Add(menuItemSetFont);
         textBoxText.ContextFlyout = flyout;
+        vm.EditTextBox = textBoxText;
         textBoxText.PointerReleased += vm.TextBoxPointerReleased;
         textBoxText.KeyDown += vm.TextBoxKeyDown;
 
@@ -1166,6 +1196,15 @@ public class OcrWindow : Window
         return grid;
     }
 
+    // The " - Running OCR..." suffix doubles as a cheap completion signal for
+    // automation tools (e.g. AutoHotkey WinWaitClose on the title text), see #15769.
+    private void UpdateTitle(OcrViewModel vm)
+    {
+        Title = vm.IsOcrRunning
+            ? $"{vm.Title} - {Se.Language.Ocr.RunningOcrDotDotDot}"
+            : vm.Title;
+    }
+
     private static Grid MakeBottomView(OcrViewModel vm)
     {
         var progressBar = UiUtil.MakeProgressBar();
@@ -1226,6 +1265,18 @@ public class OcrWindow : Window
         };
         subtitleCountText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.SelectionStatus)) { Source = vm });
         subtitleCountText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsOcrRunning)) { Source = vm, Converter = InverseBooleanConverter.Instance });
+
+        // Stable UI Automation ids for external automation (#15769)
+        AutomationProperties.SetAutomationId(progressBar, "OcrProgressBar");
+        AutomationProperties.SetAutomationId(statusText, "OcrProgressText");
+        AutomationProperties.SetAutomationId(subtitleCountText, "OcrSelectionStatus");
+        AutomationProperties.SetAutomationId(buttonStart, "OcrStartButton");
+        AutomationProperties.SetAutomationId(buttonPause, "OcrPauseButton");
+        AutomationProperties.SetAutomationId(buttonInspect, "OcrInspectLineButton");
+        AutomationProperties.SetAutomationId(buttonInspectAdditions, "OcrInspectAdditionsButton");
+        AutomationProperties.SetAutomationId(buttonExport, "OcrExportButton");
+        AutomationProperties.SetAutomationId(buttonOk, "OcrOkButton");
+        AutomationProperties.SetAutomationId(buttonCancel, "OcrCancelButton");
 
         grid.Add(progressBar, 0, 0);
         grid.Add(statusText, 0, 0);

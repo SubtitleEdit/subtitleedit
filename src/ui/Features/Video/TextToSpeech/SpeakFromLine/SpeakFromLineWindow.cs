@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
@@ -16,7 +17,7 @@ public class SpeakFromLineWindow : Window
     public SpeakFromLineWindow(SpeakFromLineViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Video.TextToSpeech.SpeakFromCurrentLineTitle;
+        Bind(TitleProperty, new Binding(nameof(vm.Title)));
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
         MinWidth = 400;
@@ -54,11 +55,24 @@ public class SpeakFromLineWindow : Window
 
         var labelHint = new TextBlock
         {
-            Text = Se.Language.Video.TextToSpeech.SpeakFromCurrentLineHint,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.Hint)),
             Opacity = 0.8,
             MaxWidth = 420,
             TextWrapping = TextWrapping.Wrap,
             HorizontalAlignment = HorizontalAlignment.Left,
+        };
+
+        var checkBoxLowerVolume = new CheckBox
+        {
+            Content = Se.Language.Video.TextToSpeech.LowerVideoVolumeWhileSpeaking,
+            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.LowerVideoVolume)),
+            [!IsVisibleProperty] = new Binding(nameof(vm.IsPlayWithSpeech)),
+        };
+        var checkBoxPauseWhenLate = new CheckBox
+        {
+            Content = Se.Language.Video.TextToSpeech.PauseVideoWhenSpeechRunsLate,
+            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.PauseVideoWhenLate)),
+            [!IsVisibleProperty] = new Binding(nameof(vm.IsPlayWithSpeech)),
         };
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
@@ -70,6 +84,8 @@ public class SpeakFromLineWindow : Window
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = GridLength.Auto },
                 new RowDefinition { Height = GridLength.Auto },
                 new RowDefinition { Height = GridLength.Auto },
                 new RowDefinition { Height = GridLength.Auto },
@@ -95,7 +111,9 @@ public class SpeakFromLineWindow : Window
         grid.Add(comboBoxVoices, 3, 1);
         grid.Add(labelLanguage, 4, 0);
         grid.Add(comboBoxLanguages, 4, 1);
-        grid.Add(buttonPanel, 5, 0, 1, 2);
+        grid.Add(checkBoxLowerVolume, 5, 1);
+        grid.Add(checkBoxPauseWhenLate, 6, 1);
+        grid.Add(buttonPanel, 7, 0, 1, 2);
 
         Content = grid;
 

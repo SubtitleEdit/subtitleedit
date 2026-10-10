@@ -794,6 +794,11 @@ public static class InitMenu
                 },
                 new MenuItem
                 {
+                    Header = Se.Language.Video.TextToSpeech.PlayWithSpeechDotDotDot,
+                    Command = vm.PlayWithSpeechCommand,
+                },
+                new MenuItem
+                {
                     Header = Se.Language.Video.TextToSpeech.VoiceManagerMenuItem,
                     Command = vm.ShowVideoVoiceManagerCommand,
                 },
@@ -1129,38 +1134,20 @@ public static class InitMenu
         }
     }
 
-    private static Style? _menuFontStyle;
-
     /// <summary>
     /// Drops the menu's font one notch below the theme default and tightens each item's
-    /// vertical padding - a denser menu reads better when there are this many entries. The
-    /// style targets nested MenuItems so submenu items inherit the same look. Re-run after the
-    /// settings dialog so a changed font scale (#14812) reaches the main menu without a restart;
-    /// the previous style is swapped out so the items re-evaluate.
+    /// vertical padding - a denser menu reads better when there are this many entries. Re-run
+    /// after the settings dialog so a changed font scale (#14812) reaches the main menu without
+    /// a restart; UI scale changes re-apply it via <see cref="UiTheme.SetLayoutScale"/>.
     /// </summary>
     public static void ApplyFontSize(Menu menu)
     {
-        if (_menuFontStyle != null)
-        {
-            menu.Styles.Remove(_menuFontStyle);
-        }
-
-        menu.FontSize = UiUtil.ScaledFontSize(MenuFontSize);
-        _menuFontStyle = new Style(x => x.OfType<MenuItem>())
-        {
-            Setters =
-            {
-                new Setter(MenuItem.FontSizeProperty, UiUtil.ScaledFontSize(MenuFontSize)),
-                new Setter(MenuItem.PaddingProperty, new Thickness(10, 1)),
-                new Setter(MenuItem.MinHeightProperty, 23.0),
-            },
-        };
-        menu.Styles.Add(_menuFontStyle);
+        UiTheme.ApplyDenseMenuStyle(menu, MenuFontSize);
     }
 
     public static void UpdateRecentFiles(MainViewModel vm)
     {
-        var files = Se.Settings.File.RecentFiles.Where(p => !string.IsNullOrEmpty(p.SubtitleFileName) && System.IO.File.Exists(p.SubtitleFileName)).ToList();
+        var files = Se.Settings.File.RecentFiles.Where(p => Se.Settings.File.ShowRecentFiles && !string.IsNullOrEmpty(p.SubtitleFileName) && System.IO.File.Exists(p.SubtitleFileName)).ToList();
         PopulateRecentMenu(
             vm.MenuReopen,
             files,
@@ -1188,7 +1175,7 @@ public static class InitMenu
     public static void UpdateRecentVideos(MainViewModel vm)
     {
         var files = Se.Settings.Video.RecentFiles
-            .Where(f => !string.IsNullOrWhiteSpace(f))
+            .Where(f => Se.Settings.File.ShowRecentFiles && !string.IsNullOrWhiteSpace(f))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
 

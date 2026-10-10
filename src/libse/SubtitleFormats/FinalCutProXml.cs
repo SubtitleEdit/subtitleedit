@@ -12,6 +12,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         public override string Extension => ".xml";
 
+        public override bool StoresFrameNumbers => true;
+
         public override string Name => "Final Cut Pro Xml";
 
         public static string GetFrameRateAsString()
@@ -69,7 +71,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int duration = 0;
             if (subtitle.Paragraphs.Count > 0)
             {
-                duration = (int)Math.Round(subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds * Configuration.Settings.General.CurrentFrameRate);
+                duration = (int)Math.Round(subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds * ToTimeCodeFrameRate(Configuration.Settings.General.CurrentFrameRate));
             }
 
             string xmlStructure =
@@ -440,7 +442,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var generatorItem = template.CloneNode(true);
                 generatorItem.Attributes["id"].Value = "Outline Text" + number.ToString(CultureInfo.InvariantCulture);
 
-                double frameRate = Configuration.Settings.General.CurrentFrameRate;
+                double frameRate = ToTimeCodeFrameRate(Configuration.Settings.General.CurrentFrameRate);
                 XmlNode start = generatorItem.SelectSingleNode("start");
                 start.InnerText = ((int)Math.Round(p.StartTime.TotalSeconds * frameRate)).ToString();
 
@@ -674,7 +676,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     text = "<i>" + text + "</i>";
                                 }
 
-                                subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble((startFrame / frameRate) * 1000, CultureInfo.InvariantCulture), Convert.ToDouble((endFrame / frameRate) * 1000, CultureInfo.InvariantCulture)));
+                                subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble((startFrame / ToTimeCodeFrameRate(frameRate)) * 1000, CultureInfo.InvariantCulture), Convert.ToDouble((endFrame / ToTimeCodeFrameRate(frameRate)) * 1000, CultureInfo.InvariantCulture)));
                             }
                         }
                     }

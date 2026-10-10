@@ -1087,6 +1087,26 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         SetOptionString("sub-ass-justify", justify == "auto" ? "no" : "yes");
     }
 
+    /// <summary>
+    /// Deinterlaces the video picture, so interlaced (480i/576i/1080i) video does not show
+    /// comb-like scan lines (#15827). "auto" only filters frames flagged as interlaced; mpv
+    /// builds older than 0.38 do not know "auto" and reject it, so that falls back to "no"
+    /// rather than to "yes", which would filter progressive video too.
+    /// </summary>
+    public void ApplyDeinterlace()
+    {
+        var deinterlace = Se.Settings.Video.MpvDeinterlace;
+        if (deinterlace != "no" && deinterlace != "yes")
+        {
+            deinterlace = "auto";
+        }
+
+        if (SetOptionString("deinterlace", deinterlace) < 0 && deinterlace == "auto")
+        {
+            SetOptionString("deinterlace", "no");
+        }
+    }
+
     public int SetOptionString(string name, string value)
     {
         if (_mpvSetOptionString == null || _mpv == IntPtr.Zero)
@@ -2003,6 +2023,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
         SetOptionString("hr-seek", "yes");
 
+        ApplyDeinterlace();
         ApplySubtitleMarginArea();
         ApplySubtitleJustify();
 
@@ -2409,9 +2430,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             // seek are about to be superseded. Those are served fast, at keyframes, and the exact
             // landing is deferred to when the burst settles (ScrubSeekPolicy). An isolated seek,
             // the common case, is exact right away as before - and so is the second seek of a
-            // pair, which is what a waveform click issues (ScrubSeekPolicy.JoinsBurst).
+            // pair, which is what a waveform click issues, and a short step such as a held
+            // 10 ms nudge shortcut (ScrubSeekPolicy.JoinsBurst).
             var seekInFlight = !forceExact && IsSeekInFlight();
-            var inBurst = ScrubSeekPolicy.JoinsBurst(seekInFlight, _lastSeekIssuedInFlight);
+            var previousTarget = BitConverter.Int64BitsToDouble(Interlocked.Read(ref _scrubFollowUpTargetBits));
+            var inBurst = ScrubSeekPolicy.JoinsBurst(seekInFlight, _lastSeekIssuedInFlight, value - previousTarget);
             _lastSeekIssuedInFlight = seekInFlight;
             var seekFlags = ScrubSeekPolicy.FlagsFor(inBurst);
 

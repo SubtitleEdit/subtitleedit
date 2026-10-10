@@ -104,6 +104,7 @@ public class LanguageMain
     public string OriginalIsReadOnlyNotSaved { get; set; }
     public string OriginalIsEmptyNotSaved { get; set; }
     public string OriginalIsReadOnlyReference { get; set; }
+    public string CloseTranslationQuestionXY { get; set; }
     public string AllowEditOfOriginalSubtitle { get; set; }
     public string ShowAllOriginalLinesX { get; set; }
     public string ShowAllOriginalLinesHint { get; set; }
@@ -267,6 +268,7 @@ public class LanguageMain
         OriginalIsReadOnlyNotSaved = "The original subtitle is a read-only reference and was not saved";
         OriginalIsEmptyNotSaved = "The original subtitle has no text at all and was not saved";
         OriginalIsReadOnlyReference = "The original subtitle is open as a read-only reference";
+        CloseTranslationQuestionXY = "Close the translation \"{0}\"?\n\nThe original subtitle \"{1}\" becomes the subtitle you edit. The translation file itself is not changed.";
         AllowEditOfOriginalSubtitle = "Allow edit of original subtitle";
         ShowAllOriginalLinesX = "Show all original lines ({0} have no match here)";
         ShowAllOriginalLinesHint = "The lines with no match are shown as extra rows, so you can see what the translation is missing.";

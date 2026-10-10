@@ -15,6 +15,7 @@ public static class DrawSettings
     public static Color ShapeLineColor { get; set; } = Color.FromRgb(200, 200, 200);
     public static Color GridColor { get; set; } = Color.FromRgb(80, 80, 80);
     public static bool ShowGrid { get; set; } = true;
+    public static bool ShowPreview { get; set; }
     public static int GridSize { get; set; } = 20;
     public static bool SnapToGrid { get; set; } = false;
 }

@@ -226,6 +226,11 @@ public class SplitBreakLongLinesWindow : Window
 
                         var isSplit = item.Name == Se.Language.Tools.SplitBreakLongLines.SplitLongLine;
                         var color = isSplit ? Color.FromRgb(0x5f, 0xc6, 0xd8) : Color.FromRgb(0xb4, 0x8c, 0xe8);
+                        // The pastels are tuned for the dark theme; darker shades of the same
+                        // hues keep the pill text readable on the light theme (#15768).
+                        var textColor = UiTheme.IsDarkThemeEnabled()
+                            ? color
+                            : isSplit ? Color.FromRgb(0x00, 0x6b, 0x7d) : Color.FromRgb(0x6a, 0x3d, 0xb8);
                         return new Border
                         {
                             Background = Brushes.Transparent,
@@ -241,7 +246,7 @@ public class SplitBreakLongLinesWindow : Window
                                 {
                                     Text = item.Name,
                                     FontSize = UiUtil.ScaledFontSize(12),
-                                    Foreground = new SolidColorBrush(color),
+                                    Foreground = new SolidColorBrush(textColor),
                                     VerticalAlignment = VerticalAlignment.Center,
                                 },
                             },

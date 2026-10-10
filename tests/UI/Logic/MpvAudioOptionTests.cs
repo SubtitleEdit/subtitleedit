@@ -117,6 +117,7 @@ public class MpvAudioOptionTests
         "brightness",
         "clipboard-backends",
         "contrast",
+        "deinterlace",
         "end",
         "force-window",
         "gpu-api",

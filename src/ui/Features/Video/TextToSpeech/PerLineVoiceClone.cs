@@ -50,7 +50,7 @@ public static class PerLineVoiceClone
     internal const double MinimumReferenceSeconds = 1.0;
 
     /// <summary>Reference clips are cut at the rate the cloning models work at.</summary>
-    private const int ReferenceSampleRate = 24000;
+    internal const int ReferenceSampleRate = 24000;
 
     /// <summary>ffmpeg cuts are IO bound and independent, so a few run at once.</summary>
     private const int MaxParallelCuts = 4;

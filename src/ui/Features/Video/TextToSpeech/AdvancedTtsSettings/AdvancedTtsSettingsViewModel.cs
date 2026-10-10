@@ -16,6 +16,7 @@ public partial class AdvancedTtsSettingsViewModel : ObservableObject
     [ObservableProperty] private bool _doProAudioChain;
     [ObservableProperty] private bool _doAudioDucking;
     [ObservableProperty] private bool _doRemoveOriginalSpeech;
+    [ObservableProperty] private bool _doCleanCloneReferences;
     [ObservableProperty] private int _audioDuckingVolume;
     [ObservableProperty] private bool _doVadSilenceCompression;
     [ObservableProperty] private int _vadMaxSilenceMs;
@@ -45,6 +46,7 @@ public partial class AdvancedTtsSettingsViewModel : ObservableObject
         DoProAudioChain = s.ProAudioChainEnabled;
         DoAudioDucking = s.AudioDuckingEnabled;
         DoRemoveOriginalSpeech = s.RemoveOriginalSpeech;
+        DoCleanCloneReferences = s.CleanCloneReferences;
         AudioDuckingVolume = s.AudioDuckingOriginalVolume;
         DoVadSilenceCompression = s.VadSilenceCompressionEnabled;
         VadMaxSilenceMs = (int)Math.Round(s.VadMaxSilenceSeconds * 1000);
@@ -75,6 +77,7 @@ public partial class AdvancedTtsSettingsViewModel : ObservableObject
         s.ProAudioChainEnabled = DoProAudioChain;
         s.AudioDuckingEnabled = DoAudioDucking;
         s.RemoveOriginalSpeech = DoRemoveOriginalSpeech;
+        s.CleanCloneReferences = DoCleanCloneReferences;
         s.AudioDuckingOriginalVolume = AudioDuckingVolume;
         s.VadSilenceCompressionEnabled = DoVadSilenceCompression;
         s.VadMaxSilenceSeconds = VadMaxSilenceMs / 1000.0;

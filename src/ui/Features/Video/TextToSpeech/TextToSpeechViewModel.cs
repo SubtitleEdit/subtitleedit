@@ -17,6 +17,7 @@ using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AdvancedTtsSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.CloneReferenceCleaning;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ChatterboxTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.CosyVoice3CrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
@@ -4048,6 +4049,18 @@ public partial class TextToSpeechViewModel : ObservableObject
             progress: (done, total) => ProgressValue = total == 0 ? 0 : (double)done / total * 100.0,
             cancellationToken);
 
+        // Before speech-to-text, which also hears the speech better without the music under it.
+        if (_perLineCloneClips.Count > 0 && await EnsureCloneReferenceCleanerAsync())
+        {
+            ProgressText = Se.Language.Video.TextToSpeech.CleaningCloneReferencesDotDotDot;
+            ProgressValue = 0;
+            await CloneReferenceCleaner.CleanFolderAsync(
+                clipFolder,
+                PerLineVoiceClone.ReferenceSampleRate,
+                (done, total) => Dispatcher.UIThread.Post(() => ProgressValue = total == 0 ? 0 : (double)done / total * 100.0),
+                cancellationToken);
+        }
+
         if (transcribeClips && !await TranscribePerLineCloneClipsAsync())
         {
             return false;
@@ -4093,8 +4106,20 @@ public partial class TextToSpeechViewModel : ObservableObject
             audioTrackFfIndex: -1,
             cancellationToken);
 
+        if (clipFileName != null && await EnsureCloneReferenceCleanerAsync())
+        {
+            await CloneReferenceCleaner.CleanFileAsync(clipFileName, PerLineVoiceClone.ReferenceSampleRate, cancellationToken);
+        }
+
         return clipFileName == null ? null : PerLineVoiceClone.MakeVoiceForClip(engine, clipFileName);
     }
+
+    /// <summary>
+    /// True when "Clean voice-clone references" is on and Sidon is ready, asking for the runtime
+    /// update and the model download when needed. False means clone from the uncleaned clips.
+    /// </summary>
+    private async Task<bool> EnsureCloneReferenceCleanerAsync() =>
+        CloneReferenceCleaner.IsEnabled && await CloneReferenceCleaner.EnsureInstalledAsync(Window!, _windowService);
 
     /// <summary>
     /// Runs speech-to-text over the reference clips that have no transcript and writes what it

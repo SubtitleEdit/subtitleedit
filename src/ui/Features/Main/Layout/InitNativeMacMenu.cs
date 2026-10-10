@@ -367,6 +367,7 @@ public static class InitNativeMacMenu
         videoItems.Items.Add(Item(Clean(l.SpeechToText), v => v.ShowSpeechToTextWhisperCommand));
         videoItems.Items.Add(Item(Clean(l.TextToSpeech), v => v.ShowVideoTextToSpeechCommand));
         videoItems.Items.Add(Item(Clean(Se.Language.Video.TextToSpeech.SpeakFromCurrentLineDotDotDot), v => v.SpeakFromCurrentLineCommand));
+        videoItems.Items.Add(Item(Clean(Se.Language.Video.TextToSpeech.PlayWithSpeechDotDotDot), v => v.PlayWithSpeechCommand));
         videoItems.Items.Add(Item(Clean(Se.Language.Video.TextToSpeech.VoiceManagerMenuItem), v => v.ShowVideoVoiceManagerCommand));
         videoItems.Items.Add(Item(Clean(l.VideoOcr), v => v.ShowVideoOcrCommand));
         videoItems.Items.Add(new NativeMenuItemSeparator());
@@ -749,7 +750,7 @@ public static class InitNativeMacMenu
     public static void UpdateRecentFiles(MainViewModel vm)
     {
         var files = Se.Settings.File.RecentFiles
-            .Where(p => !string.IsNullOrEmpty(p.SubtitleFileName) && System.IO.File.Exists(p.SubtitleFileName))
+            .Where(p => Se.Settings.File.ShowRecentFiles && !string.IsNullOrEmpty(p.SubtitleFileName) && System.IO.File.Exists(p.SubtitleFileName))
             .ToList();
 
         PopulateRecentNativeMenu(
@@ -775,7 +776,7 @@ public static class InitNativeMacMenu
     public static void UpdateRecentVideos(MainViewModel vm)
     {
         var files = Se.Settings.Video.RecentFiles
-            .Where(f => !string.IsNullOrWhiteSpace(f))
+            .Where(f => Se.Settings.File.ShowRecentFiles && !string.IsNullOrWhiteSpace(f))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
 

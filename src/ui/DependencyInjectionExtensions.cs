@@ -121,6 +121,7 @@ using Nikse.SubtitleEdit.Features.SpellCheck.EditWholeText;
 using Nikse.SubtitleEdit.Features.SpellCheck.FindDoubleLines;
 using Nikse.SubtitleEdit.Features.SpellCheck.FindDoubleWords;
 using Nikse.SubtitleEdit.Features.SpellCheck.GetDictionaries;
+using Nikse.SubtitleEdit.Features.SpellCheck.UseAlwaysList;
 using Nikse.SubtitleEdit.Features.Sync.AdjustAllTimes;
 using Nikse.SubtitleEdit.Features.Sync.ChangeFrameRate;
 using Nikse.SubtitleEdit.Features.Sync.ChangeSpeed;
@@ -326,6 +327,7 @@ public static class DependencyInjectionExtensions
         collection.AddHttpClientWithProxy<IFireRedTts3AudioCppDownloadService, FireRedTts3AudioCppDownloadService>();
         collection.AddHttpClientWithProxy<IKugelAudioAudioCppDownloadService, KugelAudioAudioCppDownloadService>();
         collection.AddHttpClientWithProxy<IAceStepAudioCppDownloadService, AceStepAudioCppDownloadService>();
+        collection.AddHttpClientWithProxy<ISidonAudioCppDownloadService, SidonAudioCppDownloadService>();
         collection.AddHttpClientWithProxy<ICosyVoice3CrispAsrDownloadService, CosyVoice3CrispAsrDownloadService>();
         collection.AddHttpClientWithProxy<IF5TtsCrispAsrDownloadService, F5TtsCrispAsrDownloadService>();
         collection.AddHttpClientWithProxy<IOmniVoiceCrispAsrDownloadService, OmniVoiceCrispAsrDownloadService>();
@@ -447,6 +449,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<EditEmbeddedTrackViewModel>();
         collection.AddTransient<EditRuleViewModel>();
         collection.AddTransient<EditWholeTextViewModel>();
+        collection.AddTransient<UseAlwaysListViewModel>();
         collection.AddTransient<ElevenLabsSettingsViewModel>();
         collection.AddTransient<OpenAiCompatibleSettingsViewModel>();
         collection.AddTransient<EmbedTrackPreviewViewModel>();

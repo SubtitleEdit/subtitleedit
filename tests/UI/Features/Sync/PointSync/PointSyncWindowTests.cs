@@ -119,7 +119,7 @@ public class PointSyncWindowTests : IDisposable
         // the dispatcher and this test never pumps it).
         vm.Initialize(lines, lines[0], videoFileName: "/does/not/exist.mp4", subtitleFileName: null, previewContext: VideoPreviewSubtitleContext.Default, audioVisualizer: null);
 
-        var window = Track(new SetSyncPointWindow(vm));
+        var window = Track(new SetSyncPointWindow(vm, WorkingVideoPlayer.MakeControl()));
 
         Assert.True(vm.IsVideoVisible);
         Assert.True(vm.VideoPlayerControl.IsVisible);

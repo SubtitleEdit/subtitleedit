@@ -17,6 +17,8 @@ public class SeVideoTextToSpeech
     public string SpeakFromLineEngine { get; set; }
     public string SpeakFromLineVoice { get; set; }
     public string SpeakFromLineLanguage { get; set; }
+    public bool PlayWithSpeechLowerVideoVolume { get; set; }
+    public bool PlayWithSpeechPauseVideoWhenLate { get; set; }
     public string AllTalkUrl { get; set; }
     public string AzureApiKey { get; set; }
     public string AzureRegion { get; set; }
@@ -152,6 +154,10 @@ public class SeVideoTextToSpeech
     public int AudioDuckingOriginalVolume { get; set; }
     public bool RemoveOriginalSpeech { get; set; }
 
+    // Run voice-clone references through Sidon (audio.cpp) first, to strip music and noise from
+    // under the speech. See Features.Video.TextToSpeech.CloneReferenceCleaning.CloneReferenceCleaner.
+    public bool CleanCloneReferences { get; set; }
+
     // Edge-TTS prosody parameters
     public string EdgeTtsRate { get; set; }
     public string EdgeTtsPitch { get; set; }
@@ -195,7 +201,7 @@ public class SeVideoTextToSpeech
         ElevenLabsApiKey = string.Empty;
         AzureApiKey = string.Empty;
         AzureRegion = string.Empty;
-        ElevenLabsModel = "eleven_turbo_v2_5";
+        ElevenLabsModel = "eleven_v4_turbo";
         ElevenLabsLanguage = string.Empty;
         ElevenLabsStability = 0.5;
         ElevenLabsSimilarity = 0.5;
@@ -211,6 +217,8 @@ public class SeVideoTextToSpeech
         SpeakFromLineEngine = string.Empty;
         SpeakFromLineVoice = string.Empty;
         SpeakFromLineLanguage = string.Empty;
+        PlayWithSpeechLowerVideoVolume = true;
+        PlayWithSpeechPauseVideoWhenLate = true;
         AllTalkUrl = "http://127.0.0.1:7851";
         MurfApiKey = string.Empty;
         MurfStyle = "Conversational";

@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.Forms
 {
-    public class MoveWordUpDown
+    public partial class MoveWordUpDown
     {
         public string S1 { get; private set; }
         public string S2 { get; private set; }
@@ -17,6 +17,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
         /// subtitle: there the user places the line break by hand, and re-breaking undoes the move.
         /// </summary>
         public bool AutoBreak { get; set; } = true;
+
+        /// <summary>
+        /// S1 and S2 are the two lines of one subtitle. ASSA override tags carry across the line
+        /// break, so a moved word needs no tags of its own: only the line break moves.
+        /// </summary>
+        public bool SameSubtitle { get; set; }
 
         public MoveWordUpDown(string s1, string s2)
         {
@@ -31,6 +37,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
         {
             if (string.IsNullOrEmpty(S2))
             {
+                return;
+            }
+
+            if (UseAssaPath())
+            {
+                MoveWordUpAssa();
                 return;
             }
 
@@ -260,6 +272,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return;
             }
 
+            if (UseAssaPath())
+            {
+                MoveWordDownAssa();
+                return;
+            }
+
             var s1Trimmed = S1.Trim();
 
             // Find start of last word and any active tags
@@ -408,6 +426,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
         }
 
         private static readonly Regex EmptyFontTagRegex = new Regex(@"<font\b[^>]*>\s*</font>", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex HtmlTagRegex = new Regex(@"</?(i|b|u|s|font)\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private static readonly Regex DoubleSpaceRegex = new Regex(@"  +", RegexOptions.Compiled);
 
         private static string RemoveEmptyTags(string s)

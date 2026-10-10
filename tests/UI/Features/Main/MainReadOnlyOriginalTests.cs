@@ -7,6 +7,7 @@ using Nikse.SubtitleEdit;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Main.MainHelpers;
+using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -754,6 +755,132 @@ public class MainReadOnlyOriginalTests
     }
 
     /// <summary>
+    /// "Close translation" with nothing unsaved used to drop the translation without a word - and it
+    /// sits next to "Close original" in the File menu (#15749). It now asks, and No keeps everything.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task CloseTranslation_WithoutUnsavedChanges_AsksAndNoKeepsTheTranslation()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            AddLine(vm, "Translated one", string.Empty, 0, 2000);
+            AddLine(vm, "Translated two", string.Empty, 4000, 6000);
+
+            var reference = BuildSampleReference();
+            var match = ImportOriginalHelper.MatchOriginalLines(vm.Subtitles, reference);
+            InvokeImportOriginalSubtitle(vm, "reference.srt", reference, match, isReadOnly: false);
+            SetPrivateField(vm, "_changeSubtitleHash", vm.GetFastHash());
+
+            var asked = false;
+            var method = typeof(MainViewModel).GetMethod(
+                             "FileCloseTranslation", BindingFlags.Instance | BindingFlags.NonPublic)
+                         ?? throw new InvalidOperationException("FileCloseTranslation not found");
+            var task = (Task)method.Invoke(vm, null)!;
+            Dispatcher.UIThread.RunJobs();
+
+            var messageBox = window.OwnedWindows.OfType<MessageBox>()
+                .FirstOrDefault(p => p.Title == Se.Language.Options.Shortcuts.FileCloseTranslation);
+            if (messageBox != null)
+            {
+                asked = true;
+                messageBox.Close(MessageBoxResult.No);
+                Dispatcher.UIThread.RunJobs();
+            }
+
+            await task;
+
+            Assert.True(asked);
+            Assert.True(vm.ShowColumnOriginalText);
+            Assert.True(vm.IsShowingOriginalNonMatchingLines);
+            var saved = vm.GetUpdateSubtitle();
+            Assert.Equal(new[] { "Translated one", "Translated two" }, saved.Paragraphs.Select(p => p.Text));
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>
+    /// A line split in two in the original is matched to the translation's single line by time code
+    /// only - the row keeps the translation's time span. "Remove translation" must hand back the
+    /// original's own time codes, not the row's, or the second half overlaps the first and both show
+    /// stacked on screen (#15749).
+    /// </summary>
+    [AvaloniaFact]
+    public async Task EditableOriginal_RemoveTranslation_KeepsTheOriginalTimeCodes()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            AddLine(vm, "Es culpa mía que las cosas hayan salido así.", string.Empty, 38820, 41800);
+            AddLine(vm, "He dañado a esta familia.", string.Empty, 43950, 45700);
+
+            var original = new Subtitle();
+            original.Paragraphs.Add(new Paragraph("Es toda mi culpa que", 38830, 39890));
+            original.Paragraphs.Add(new Paragraph("ella haya resultado así.", 40170, 41570));
+            original.Paragraphs.Add(new Paragraph("Yo destruí a esta familia.", 43950, 45700));
+            var match = ImportOriginalHelper.MatchOriginalLines(vm.Subtitles, original);
+            InvokeImportOriginalSubtitle(vm, "original.srt", original, match, isReadOnly: false);
+            Assert.True(vm.IsShowingOriginalNonMatchingLines);
+            SetPrivateField(vm, "_changeSubtitleHash", vm.GetFastHash());
+
+            await InvokeFileCloseTranslation(vm);
+
+            Assert.DoesNotContain(vm.Subtitles, p => p.IsReferenceOnly);
+            var saved = vm.GetUpdateSubtitle();
+            Assert.Equal(3, saved.Paragraphs.Count);
+            for (var i = 0; i < original.Paragraphs.Count; i++)
+            {
+                Assert.Equal(original.Paragraphs[i].Text, saved.Paragraphs[i].Text);
+                Assert.Equal(original.Paragraphs[i].StartTime.TotalMilliseconds, saved.Paragraphs[i].StartTime.TotalMilliseconds);
+                Assert.Equal(original.Paragraphs[i].EndTime.TotalMilliseconds, saved.Paragraphs[i].EndTime.TotalMilliseconds);
+            }
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>
+    /// Editing a matched row's original text and saving the original writes the edit with the
+    /// original line's own time codes - not the translation row's (#15749).
+    /// </summary>
+    [AvaloniaFact]
+    public void EditableOriginal_SaveOriginal_KeepsTheOriginalTimeCodesOfMatchedLines()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            AddLine(vm, "Translated one", string.Empty, 0, 2500);
+            AddLine(vm, "Translated two", string.Empty, 4000, 6000);
+
+            var original = new Subtitle();
+            original.Paragraphs.Add(new Paragraph("Reference one", 100, 1900));
+            original.Paragraphs.Add(new Paragraph("Reference only - no translation", 2000, 3900));
+            original.Paragraphs.Add(new Paragraph("Reference two", 4000, 6000));
+            var match = ImportOriginalHelper.MatchOriginalLines(vm.Subtitles, original);
+            InvokeImportOriginalSubtitle(vm, "original.srt", original, match, isReadOnly: false);
+
+            var firstRow = vm.Subtitles.First(p => !p.IsReferenceOnly);
+            Assert.Equal("Reference one", firstRow.OriginalText);
+            firstRow.OriginalText = "Reference one, edited";
+
+            var saved = vm.GetUpdateSubtitleOriginal();
+            Assert.Equal(3, saved.Paragraphs.Count);
+            Assert.Equal("Reference one, edited", saved.Paragraphs[0].Text);
+            Assert.Equal(100, saved.Paragraphs[0].StartTime.TotalMilliseconds);
+            Assert.Equal(1900, saved.Paragraphs[0].EndTime.TotalMilliseconds);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>
     /// The Delete command must skip reference-only rows in the selection: they belong to the
     /// original, and deleting one from an editable original would drop the line for good on the
     /// next capture.
@@ -1012,13 +1139,28 @@ public class MainReadOnlyOriginalTests
         ((Task)method.Invoke(vm, null)!).GetAwaiter().GetResult();
     }
 
-    private static async Task InvokeFileCloseTranslation(MainViewModel vm)
+    /// <summary>
+    /// Runs "Close translation" and answers its "close the translation?" question (#15749) when it
+    /// is asked - only for a translation with no unsaved changes.
+    /// </summary>
+    private static async Task InvokeFileCloseTranslation(MainViewModel vm, MessageBoxResult answer = MessageBoxResult.Yes)
     {
         var method = typeof(MainViewModel).GetMethod(
                          "FileCloseTranslation", BindingFlags.Instance | BindingFlags.NonPublic)
                      ?? throw new InvalidOperationException("FileCloseTranslation not found");
 
-        await (Task)method.Invoke(vm, null)!;
+        var task = (Task)method.Invoke(vm, null)!;
+        Dispatcher.UIThread.RunJobs();
+
+        var messageBox = vm.Window?.OwnedWindows.OfType<MessageBox>()
+            .FirstOrDefault(p => p.Title == Se.Language.Options.Shortcuts.FileCloseTranslation);
+        if (messageBox != null)
+        {
+            messageBox.Close(answer);
+            Dispatcher.UIThread.RunJobs();
+        }
+
+        await task;
     }
 
     private static async Task InvokeDeleteSelectedItems(MainViewModel vm)

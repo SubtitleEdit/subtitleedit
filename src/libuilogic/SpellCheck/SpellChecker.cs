@@ -124,6 +124,10 @@ public class SpellChecker : ISpellChecker, IDoSpell
     public bool Initialize(string dictionaryFile, string twoLetterLanguageCode)
     {
         SkipAllList.Clear();
+
+        // Change-all pairs are per language (<lang>_UseAlways.xml, re-applied below) - switching
+        // dictionary mid-session used to keep the previous language's pairs active. (#15767)
+        ChangeAllDictionary.Clear();
         _twoLetterLanguageCode = twoLetterLanguageCode ?? string.Empty;
 
         // The Voikko marker path need not exist (bundled / system dictionary); TryCreate validates.
@@ -272,6 +276,25 @@ public class SpellChecker : ISpellChecker, IDoSpell
         if (word.Length > 1)
         {
             SkipAllList.Remove(char.ToUpperInvariant(word[0]) + word[1..].ToLowerInvariant());
+        }
+    }
+
+    /// <summary>
+    /// Reloads the persisted "use always" pairs, e.g. after the list was edited in its editor window.
+    /// Session-only pairs (when the list is not remembered) are dropped too.
+    /// </summary>
+    public void ReloadUseAlwaysList()
+    {
+        ChangeAllDictionary.Clear();
+        if (WordLists == null)
+        {
+            return;
+        }
+
+        WordLists.ReloadUseAlwaysList();
+        foreach (var pair in WordLists.GetUseAlwaysList())
+        {
+            ChangeAllDictionary[pair.Key] = pair.Value;
         }
     }
 

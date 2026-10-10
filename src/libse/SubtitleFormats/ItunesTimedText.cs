@@ -298,8 +298,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     paragraph.Attributes.Append(styleP);
                 }
 
+                // Formatting tags become nested spans, so <i><font color="x">text</font></i> is written as
+                // <span italic><span color>text</span></span> - flat sibling spans lost the italic (#15846).
+                // Tags still open at the end of a line are closed before the <br/> and reopened after it.
+                var openTags = new List<XmlAttribute>();
                 var first = true;
-                var italicOn = false;
+                paragraph.AppendChild(xml.CreateTextNode(string.Empty)); // mixed content - stops the writer from indenting the spans
+
                 foreach (var line in text.SplitToLines())
                 {
                     if (!first)
@@ -308,12 +313,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         paragraph.AppendChild(br);
                     }
 
-                    var styles = new Stack<XmlNode>();
+                    // parents[n] is the container that was current before openTags[n] was opened
+                    var parents = new List<XmlNode>();
+                    XmlNode container = paragraph;
+                    foreach (var tag in openTags)
+                    {
+                        parents.Add(container);
+                        container = OpenSpan(xml, container, tag);
+                    }
+
                     // Text is collected here and written to the node once per run - "InnerText += c"
                     // per character re-read and re-set the node text for every character of the line.
                     var pending = new StringBuilder();
-                    XmlNode currentStyle = xml.CreateTextNode(string.Empty);
-                    paragraph.AppendChild(currentStyle);
                     var skipCount = 0;
                     for (var i = 0; i < line.Length; i++)
                     {
@@ -325,28 +336,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                         if (line[i] == '<' && pending.Length > 0)
                         {
-                            currentStyle.InnerText += pending.ToString();
+                            container.AppendChild(xml.CreateTextNode(pending.ToString()));
                             pending.Clear();
                         }
 
+                        XmlAttribute newTag = null;
+                        string closeTagName = null;
                         if (line.StartsWithAt(i, "<i>", StringComparison.OrdinalIgnoreCase))
                         {
-                            styles.Push(currentStyle);
-                            currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
-                            paragraph.AppendChild(currentStyle);
-                            var attr = CreateParagraphStyleAttribute(xml);
-                            attr.InnerText = "italic";
-                            currentStyle.Attributes.Append(attr);
+                            newTag = CreateParagraphStyleAttribute(xml);
+                            newTag.InnerText = "italic";
                             skipCount = 2;
-                            italicOn = true;
                         }
                         else if (line.StartsWithAt(i, "<b>", StringComparison.OrdinalIgnoreCase))
                         {
-                            currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
-                            paragraph.AppendChild(currentStyle);
-                            var attr = xml.CreateAttribute("tts:fontWeight", "http://www.w3.org/ns/ttml#styling");
-                            attr.InnerText = "bold";
-                            currentStyle.Attributes.Append(attr);
+                            newTag = xml.CreateAttribute("tts:fontWeight", "http://www.w3.org/ns/ttml#styling");
+                            newTag.InnerText = "bold";
+                            skipCount = 2;
+                        }
+                        else if (line.StartsWithAt(i, "<u>", StringComparison.OrdinalIgnoreCase))
+                        {
+                            newTag = xml.CreateAttribute("tts:textDecoration", "http://www.w3.org/ns/ttml#styling");
+                            newTag.InnerText = "underline";
                             skipCount = 2;
                         }
                         else if (line.StartsWithAt(i, "<font ", StringComparison.OrdinalIgnoreCase))
@@ -362,61 +373,77 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     var arr = fontContent.Substring(fontContent.IndexOf(" color=", StringComparison.OrdinalIgnoreCase) + 7).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                                     if (arr.Length > 0)
                                     {
-                                        var fontColor = arr[0].Trim('\'').Trim('"').Trim('\'');
-                                        currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
-                                        paragraph.AppendChild(currentStyle);
-                                        var attr = xml.CreateAttribute("tts:color", "http://www.w3.org/ns/ttml#styling");
-                                        attr.InnerText = fontColor;
-                                        currentStyle.Attributes.Append(attr);
+                                        newTag = xml.CreateAttribute("tts:color", "http://www.w3.org/ns/ttml#styling");
+                                        newTag.InnerText = arr[0].Trim('\'').Trim('"').Trim('\'');
                                     }
                                 }
+
+                                // a <font> without color still gets an entry, so its </font> closes the right tag
+                                newTag = newTag ?? xml.CreateAttribute(FontWithoutColor);
                             }
                             else
                             {
                                 skipCount = line.Length;
                             }
                         }
-                        else if (line.StartsWithAt(i, "</i>", StringComparison.OrdinalIgnoreCase) || line.StartsWithAt(i, "</b>", StringComparison.OrdinalIgnoreCase) || line.StartsWithAt(i, "</font>", StringComparison.OrdinalIgnoreCase))
+                        else if (line.StartsWithAt(i, "</i>", StringComparison.OrdinalIgnoreCase))
                         {
-                            currentStyle = xml.CreateTextNode(string.Empty);
-                            if (styles.Count > 0)
-                            {
-                                currentStyle = styles.Pop().CloneNode(true);
-                                currentStyle.InnerText = string.Empty;
-                            }
-                            paragraph.AppendChild(currentStyle);
-                            if (line.StartsWithAt(i, "</font>", StringComparison.OrdinalIgnoreCase))
-                            {
-                                skipCount = 6;
-                            }
-                            else
-                            {
-                                skipCount = 3;
-                            }
-
-                            italicOn = false;
+                            closeTagName = "i";
+                            skipCount = 3;
+                        }
+                        else if (line.StartsWithAt(i, "</b>", StringComparison.OrdinalIgnoreCase))
+                        {
+                            closeTagName = "b";
+                            skipCount = 3;
+                        }
+                        else if (line.StartsWithAt(i, "</u>", StringComparison.OrdinalIgnoreCase))
+                        {
+                            closeTagName = "u";
+                            skipCount = 3;
+                        }
+                        else if (line.StartsWithAt(i, "</font>", StringComparison.OrdinalIgnoreCase))
+                        {
+                            closeTagName = "font";
+                            skipCount = 6;
                         }
                         else
                         {
-                            if (i == 0 && italicOn && !line.StartsWithAt(i, "<i>", StringComparison.OrdinalIgnoreCase))
-                            {
-                                styles.Push(currentStyle);
-                                currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
-                                paragraph.AppendChild(currentStyle);
-                                var attr = xml.CreateAttribute("tts:fontStyle", "http://www.w3.org/ns/ttml#styling");
-                                attr.InnerText = "italic";
-                                currentStyle.Attributes.Append(attr);
-                            }
                             pending.Append(line[i]);
                         }
+
+                        if (newTag != null)
+                        {
+                            openTags.Add(newTag);
+                            parents.Add(container);
+                            container = OpenSpan(xml, container, newTag);
+                        }
+                        else if (closeTagName != null)
+                        {
+                            var idx = openTags.FindLastIndex(t => GetTagName(t) == closeTagName);
+                            if (idx >= 0)
+                            {
+                                // close the tag and everything opened inside it, then reopen the inner ones
+                                container = parents[idx];
+                                openTags.RemoveAt(idx);
+                                parents.RemoveRange(idx, parents.Count - idx);
+                                for (var j = idx; j < openTags.Count; j++)
+                                {
+                                    parents.Add(container);
+                                    container = OpenSpan(xml, container, openTags[j]);
+                                }
+                            }
+                        }
                     }
+
                     if (pending.Length > 0)
                     {
-                        currentStyle.InnerText += pending.ToString();
+                        container.AppendChild(xml.CreateTextNode(pending.ToString()));
                     }
 
                     first = false;
                 }
+
+                RemoveEmptySpans(paragraph);
 
                 var start = xml.CreateAttribute("begin");
                 start.InnerText = ConvertToTimeString(p.StartTime, Configuration.Settings.SubtitleSettings.TimedTextItunesTimeCodeFormat);
@@ -436,6 +463,56 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             return xmlString;
+        }
+
+        private const string FontWithoutColor = "font";
+
+        private static XmlNode OpenSpan(XmlDocument xml, XmlNode container, XmlAttribute tag)
+        {
+            if (tag.Name == FontWithoutColor)
+            {
+                return container;
+            }
+
+            var span = xml.CreateNode(XmlNodeType.Element, "span", null);
+            span.Attributes.Append((XmlAttribute)tag.CloneNode(true));
+            container.AppendChild(span);
+            return span;
+        }
+
+        private static string GetTagName(XmlAttribute tag)
+        {
+            if (tag.Name == "tts:fontWeight")
+            {
+                return "b";
+            }
+
+            if (tag.Name == "tts:textDecoration")
+            {
+                return "u";
+            }
+
+            if (tag.Name == "tts:color" || tag.Name == FontWithoutColor)
+            {
+                return "font";
+            }
+
+            return "i";
+        }
+
+        private static void RemoveEmptySpans(XmlNode node)
+        {
+            foreach (var child in node.ChildNodes.Cast<XmlNode>().ToList())
+            {
+                if (child.Name == "span")
+                {
+                    RemoveEmptySpans(child);
+                    if (!child.HasChildNodes)
+                    {
+                        node.RemoveChild(child);
+                    }
+                }
+            }
         }
 
         private static XmlAttribute CreateParagraphStyleAttribute(XmlDocument xml)

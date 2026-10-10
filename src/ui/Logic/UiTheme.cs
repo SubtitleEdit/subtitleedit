@@ -17,6 +17,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Nikse.SubtitleEdit.Logic;
 
@@ -153,8 +154,9 @@ public static class UiTheme
 
         ApplyMenuScaleStyle(Se.Settings.Appearance.LayoutScale);
         ApplyTextSelectionStyle();
+        ApplyProgressBarContrastStyle();
         ApplyLayoutScaleToAllWindows();
-        ApplyScaleToExistingMenus(Se.Settings.Appearance.LayoutScale);
+        ApplyScaleToDenseMenus();
     }
 
     public static Action? SystemThemeChangedCallback { get; set; }
@@ -179,6 +181,7 @@ public static class UiTheme
         }
 
         ApplyTextSelectionStyle();
+        ApplyProgressBarContrastStyle();
         SystemThemeChangedCallback?.Invoke();
     }
 
@@ -319,7 +322,7 @@ public static class UiTheme
         Se.Settings.Appearance.LayoutScale = factor;
         ApplyMenuScaleStyle(factor);
         ApplyLayoutScaleToAllWindows();
-        ApplyScaleToExistingMenus(factor);
+        ApplyScaleToDenseMenus();
     }
 
     private static void ApplyMenuScaleStyle(double factor)
@@ -346,8 +349,10 @@ public static class UiTheme
         menuItemStyle.Setters.Add(new Setter(Layoutable.MinHeightProperty, 32.0 * factor));
         styles.Add(menuItemStyle);
 
-        // Reset MenuItems inside LayoutTransformControl (already scaled by transform)
-        var ltcMenuItemStyle = new Style(x => x.OfType<LayoutTransformControl>().Descendant().OfType<MenuItem>());
+        // Reset top-level menu bar items (inside the LayoutTransformControl, already scaled
+        // by the transform). Only direct Menu children: submenu and context menu items are
+        // logical descendants of the LTC too, but render in popups outside the transform.
+        var ltcMenuItemStyle = new Style(x => x.OfType<Menu>().Child().OfType<MenuItem>());
         ltcMenuItemStyle.Setters.Add(new Setter(TemplatedControl.FontSizeProperty, DefaultFontSize * FontScale));
         ltcMenuItemStyle.Setters.Add(new Setter(Layoutable.MinHeightProperty, 32.0));
         styles.Add(ltcMenuItemStyle);
@@ -414,6 +419,113 @@ public static class UiTheme
 
     private static Styles? _scrollBarStyle;
     private static Styles? _textSelectionStyle;
+    private static Styles? _progressBarContrastStyle;
+
+    /// <summary>
+    /// Fluent paints the progress bar fill with the plain accent color on a translucent
+    /// track. With a gray Windows accent such as "Storm" (#4C4A48) the fill matches the dark
+    /// track almost exactly and the bar looks like it never moves (#15836). When the accent is
+    /// too close to the track, the fill is blended toward white (dark) or black (light) until
+    /// it stands out; accents that already contrast are left alone.
+    /// </summary>
+    public static void ApplyProgressBarContrastStyle()
+    {
+        if (Application.Current == null)
+        {
+            return;
+        }
+
+        if (_progressBarContrastStyle != null)
+        {
+            Application.Current.Styles.Remove(_progressBarContrastStyle);
+            _progressBarContrastStyle = null;
+        }
+
+        var variant = Application.Current.ActualThemeVariant;
+        if (!Application.Current.TryGetResource("SystemAccentColor", variant, out var value) || value is not Color accent)
+        {
+            return;
+        }
+
+        var isDark = variant == ThemeVariant.Dark;
+        var fill = GetProgressBarFillColor(accent, isDark);
+        if (fill == accent)
+        {
+            return;
+        }
+
+        _progressBarContrastStyle = new Styles
+        {
+            new Style(x => x.Is<ProgressBar>())
+            {
+                Setters =
+                {
+                    new Setter(ProgressBar.ForegroundProperty, new SolidColorBrush(fill)),
+                }
+            },
+        };
+
+        Application.Current.Styles.Add(_progressBarContrastStyle);
+    }
+
+    // The default Windows blue (#0078D4) is about 1.8:1 against the dark track, so only accents
+    // below this are treated as invisible; those are then lifted to a clearly visible fill.
+    public const double MinProgressBarContrast = 1.5;
+    public const double AdjustedProgressBarContrast = 2.5;
+
+    /// <summary>
+    /// Returns <paramref name="accent"/> when it contrasts enough with the Fluent progress bar
+    /// track, otherwise the accent blended toward white (dark theme) or black (light theme)
+    /// just far enough to reach <see cref="AdjustedProgressBarContrast"/>.
+    /// </summary>
+    internal static Color GetProgressBarFillColor(Color accent, bool isDark)
+    {
+        // The Fluent track is SystemBaseLowColor (20% white/black) over the window background.
+        var track = isDark ? Color.FromRgb(77, 77, 77) : Color.FromRgb(204, 204, 204);
+        if (GetContrastRatio(accent, track) >= MinProgressBarContrast)
+        {
+            return accent;
+        }
+
+        var target = isDark ? Colors.White : Colors.Black;
+        for (var step = 1; step <= 10; step++)
+        {
+            var color = Blend(accent, target, step / 10.0);
+            if (GetContrastRatio(color, track) >= AdjustedProgressBarContrast)
+            {
+                return color;
+            }
+        }
+
+        return target;
+    }
+
+    private static Color Blend(Color from, Color to, double amount)
+    {
+        return Color.FromRgb(
+            (byte)Math.Round(from.R + (to.R - from.R) * amount),
+            (byte)Math.Round(from.G + (to.G - from.G) * amount),
+            (byte)Math.Round(from.B + (to.B - from.B) * amount));
+    }
+
+    internal static double GetContrastRatio(Color a, Color b)
+    {
+        var la = GetRelativeLuminance(a);
+        var lb = GetRelativeLuminance(b);
+        return (Math.Max(la, lb) + 0.05) / (Math.Min(la, lb) + 0.05);
+    }
+
+    private static double GetRelativeLuminance(Color c)
+    {
+        static double Channel(byte v)
+        {
+            var s = v / 255.0;
+            return s <= 0.03928 ? s / 12.92 : Math.Pow((s + 0.055) / 1.055, 2.4);
+        }
+
+        return 0.2126 * Channel(c.R) + 0.7152 * Channel(c.G) + 0.0722 * Channel(c.B);
+    }
+
 
     public const int MinTextSelectionOpacity = 10;
 
@@ -514,110 +626,53 @@ public static class UiTheme
 
 
     /// <summary>
-    /// Walk all open windows, find Menu, ContextMenu, and MenuFlyout instances,
-    /// and directly set FontSize/MinHeight on their items. Also register Opened
-    /// handlers so dynamic items get scaled when the menu opens.
+    /// Menus with their own dense style (the main menu) override the application-wide menu
+    /// item style, so they need the new scale baked in again.
     /// </summary>
-    private static void ApplyScaleToExistingMenus(double factor)
+    private static void ApplyScaleToDenseMenus()
     {
-        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+        foreach (var (menu, baseFontSize) in DenseMenuFontSizes.ToList())
         {
-            return;
-        }
-
-        foreach (var window in desktop.Windows)
-        {
-            foreach (var visual in window.GetVisualDescendants())
-            {
-                if (visual is Menu menu)
-                {
-                    // Scale submenu items only (top-level items are inside LTC and already scaled)
-                    foreach (var obj in menu.Items)
-                    {
-                        if (obj is MenuItem topItem)
-                        {
-                            ScaleChildMenuItems(topItem, factor);
-                        }
-                    }
-                }
-
-                if (visual is not Control control)
-                {
-                    continue;
-                }
-
-                if (control.ContextMenu is { } contextMenu)
-                {
-                    ScaleMenuItems(contextMenu, factor);
-                    contextMenu.Opened -= OnContextMenuOpened;
-                    contextMenu.Opened += OnContextMenuOpened;
-                }
-
-                if (control.ContextFlyout is MenuFlyout menuFlyout)
-                {
-                    ScaleMenuFlyoutItems(menuFlyout, factor);
-                    menuFlyout.Opened -= OnMenuFlyoutOpened;
-                    menuFlyout.Opened += OnMenuFlyoutOpened;
-                }
-            }
+            ApplyDenseMenuStyle(menu, baseFontSize.Value);
         }
     }
 
-    private static void ScaleChildMenuItems(MenuItem parent, double factor)
-    {
-        foreach (var obj in parent.Items)
-        {
-            if (obj is MenuItem item)
-            {
-                item.FontSize = PopupFontSize(factor);
-                item.MinHeight = 32.0 * factor;
-                ScaleChildMenuItems(item, factor);
-            }
-        }
-    }
+    private static readonly ConditionalWeakTable<Menu, StrongBox<double>> DenseMenuFontSizes = new();
+    private static readonly ConditionalWeakTable<Menu, Styles> DenseMenuStyles = new();
 
-    private static void ScaleMenuItems(ItemsControl parent, double factor)
+    /// <summary>
+    /// Smaller font and tighter padding for a menu with many entries (the main menu). The style
+    /// lives on the menu, so it beats the application-wide menu item style for every item below
+    /// it - including submenu items, which are logical descendants but render in popups outside
+    /// the window's LayoutTransformControl. Those therefore get the UI scale baked in here, or
+    /// they ignored it at startup (PR #14818 comment). Re-applied on every UI scale change.
+    /// </summary>
+    public static void ApplyDenseMenuStyle(Menu menu, double baseFontSize)
     {
-        foreach (var obj in parent.Items)
+        if (DenseMenuStyles.TryGetValue(menu, out var previous))
         {
-            if (obj is MenuItem item)
-            {
-                item.FontSize = PopupFontSize(factor);
-                item.MinHeight = 32.0 * factor;
-                ScaleMenuItems(item, factor);
-            }
+            menu.Styles.Remove(previous);
         }
-    }
 
-    private static void ScaleMenuFlyoutItems(MenuFlyout flyout, double factor)
-    {
-        foreach (var obj in flyout.Items)
-        {
-            if (obj is MenuItem item)
-            {
-                item.FontSize = PopupFontSize(factor);
-                item.MinHeight = 32.0 * factor;
-                ScaleMenuItems(item, factor);
-            }
-        }
-    }
+        var factor = Se.Settings.Appearance.LayoutScale;
+        var fontSize = baseFontSize * FontScale;
+        menu.FontSize = fontSize;
 
-    private static void OnContextMenuOpened(object? sender, EventArgs e)
-    {
-        if (sender is ContextMenu cm)
-        {
-            var factor = Se.Settings.Appearance.LayoutScale;
-            ScaleMenuItems(cm, factor);
-        }
-    }
+        // Popup items first, so the top-level rule below wins for the menu bar items.
+        var popupItemStyle = new Style(x => x.OfType<MenuItem>());
+        popupItemStyle.Setters.Add(new Setter(TemplatedControl.FontSizeProperty, fontSize * factor));
+        popupItemStyle.Setters.Add(new Setter(TemplatedControl.PaddingProperty, new Thickness(10, 1)));
+        popupItemStyle.Setters.Add(new Setter(Layoutable.MinHeightProperty, 23.0 * factor));
 
-    private static void OnMenuFlyoutOpened(object? sender, EventArgs e)
-    {
-        if (sender is MenuFlyout flyout)
-        {
-            var factor = Se.Settings.Appearance.LayoutScale;
-            ScaleMenuFlyoutItems(flyout, factor);
-        }
+        // Top-level items sit inside the LayoutTransformControl, already scaled by the transform.
+        var topLevelItemStyle = new Style(x => x.OfType<Menu>().Child().OfType<MenuItem>());
+        topLevelItemStyle.Setters.Add(new Setter(TemplatedControl.FontSizeProperty, fontSize));
+        topLevelItemStyle.Setters.Add(new Setter(Layoutable.MinHeightProperty, 23.0));
+
+        var styles = new Styles { popupItemStyle, topLevelItemStyle };
+        DenseMenuStyles.AddOrUpdate(menu, styles);
+        DenseMenuFontSizes.AddOrUpdate(menu, new StrongBox<double>(baseFontSize));
+        menu.Styles.Add(styles);
     }
 
     public static void UpdateRegionColor()

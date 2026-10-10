@@ -3,6 +3,70 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-beta26 (9th of October 2026)
+
+* Add ElevenLabs Eleven v4 and v4 Turbo TTS models (v4 Turbo is the new default, <break> converted to audio pause tags)
+* Add optional Sidon cleaning of voice-clone reference audio
+* Add Find and Replace to the OCR window
+* Add video player deinterlace setting (default auto) - thx MaxBunny1786
+* Add reload of the subtitle file when changed outside SE - thx jojorne
+* Add typing a custom frame rate - thx jojorne
+* Add Cut/Copy/Paste to the Find/Replace regex context menu - thx hisui3393
+* ASSA draw: live resolution change, zoom/reset view and F9 preview of the rendered drawing
+* Set position / Set background / Image color picker: use the paused video frame inside the line - thx 114562175
+* Set start/end and offset the rest: work without waveform focus, F9 default - thx DrDanAharoni
+* Fix no progress shown for whisper.cpp in Speech to text - thx abc16361
+* Fix custom ms seek accumulating after jump to start/end of line - thx 114562175
+* Fix Merge as dialog dash placed inside leading formatting tags - thx accessallareas
+* Fix OCR "All fixes"/"All guesses" line numbers after deleting lines - thx Peter Vella
+* Fix ASSA draw OK overwriting selected text lines + canvas sync bugs
+* Fix main menu dropdown size with UI scale at startup
+* Fix seconv --overwrite emptying the input file if interrupted - thx yottayoshida
+* Update CrispASR to v0.8.42
+* Update audio.cpp runtime to v0.9.1
+* Update Chinese Traditional translation - thx love80312
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+* Update Polish translation - thx potplayer-fanpack
+
+
+v5.3.0-beta25 (8th of October 2026)
+
+* Add taskbar/Dock progress for Speech to text, Text to speech, AI review, Auto-translate, Burn-in and Generate shot changes - thx pdjdev
+* Add spell check editor for the "Use always" list
+* Add "Show recent files" option to disable recent files - thx amymor
+* OCR: automation ids + "Running OCR..." in window title while running - thx skylinekiller
+* Fix seek shortcuts not working in Visual sync - thx amymor
+* Fix plugin time codes changing after apply in frame mode (ArteCheck corrections reappearing) - thx Triathlon-rally
+* Plugins: follow the EBU STL frame rate a plugin sets in the header - thx Triathlon-rally
+* Fix Set sync point stuck at 0:00 when no video player library can be loaded - thx ovencovsky
+* Fix spell check "Change all" pairs changing correctly spelled words (e.g. "and" to "&") - thx fraternl
+* Fix spell check stale suggestion and change-all pairs/undo kept when switching dictionary
+* Fix hard-to-read colored text in light theme (Fix common errors, AI review, Restore auto-backup, Split, Batch convert, Statistics, Translation error) - thx subcor
+* Fix unstable duration/scrubbing for .ts/.mpg video files - thx dsouzabs
+* Fix submenu/context menu item size with UI scale at startup
+* Fix Linux startup crash when Skia reports no default font family - thx MaryJaneInChain
+* Update Italian translation - thx bovirus
+
+
+v5.3.0-beta24 (7th of October 2026)
+
+* Add "Play with speech": speak lines in sync while the video plays - thx Jose4D
+* Add "custom milliseconds back/forward and pause" video shortcuts - thx accessallareas
+* Add option to remember waveform zoom across restarts - thx bichitoxxx
+* Batch convert: ask before adding video files from a folder - thx jsinfate
+* Batch convert: faster adding of many files
+* Close translation: ask before closing, keep the original's timing on a mismatched original - thx bichitoxxx
+* SMPTE timing: frame numbers follow the NDF time code clock (FCP 7 XML + Final Cut Pro X) - thx smt-joen
+* Fix ASSA override tags piling up when moving words - thx rRobis
+* Fix EBU STL import frame-rate race - thx Triathlon-rally
+* Update Flatpak runtime to freedesktop 26.08 (24.08 is end-of-life) - thx Gensplejs
+* Update German translation - thx FunkyKnilch
+* Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
+* Update Polish translation - thx potplayer-fanpack
+
+
 v5.3.0-beta23 (6th of October 2026)
 
 * Add batch convert functions: Remove Unicode control characters, Renumber, Merge continuation lines, Convert actors

@@ -78,6 +78,21 @@ public class AssaDrawCanvas : Control
     public static readonly StyledProperty<float> CurrentYProperty =
         AvaloniaProperty.Register<AssaDrawCanvas, float>(nameof(CurrentY), float.MinValue);
 
+    public static readonly StyledProperty<bool> ShowPreviewProperty =
+        AvaloniaProperty.Register<AssaDrawCanvas, bool>(nameof(ShowPreview));
+
+    /// <summary>
+    /// The drawing as libass renders it, at canvas (PlayRes) size with a transparent background.
+    /// </summary>
+    public static readonly StyledProperty<IImage?> PreviewImageProperty =
+        AvaloniaProperty.Register<AssaDrawCanvas, IImage?>(nameof(PreviewImage));
+
+    /// <summary>
+    /// Video frame shown behind the preview.
+    /// </summary>
+    public static readonly StyledProperty<IImage?> BackgroundImageProperty =
+        AvaloniaProperty.Register<AssaDrawCanvas, IImage?>(nameof(BackgroundImage));
+
     public static readonly StyledProperty<DrawingTool> CurrentToolProperty =
         AvaloniaProperty.Register<AssaDrawCanvas, DrawingTool>(nameof(CurrentTool), DrawingTool.Line);
 
@@ -135,6 +150,24 @@ public class AssaDrawCanvas : Control
         set => SetValue(CurrentYProperty, value);
     }
 
+    public bool ShowPreview
+    {
+        get => GetValue(ShowPreviewProperty);
+        set => SetValue(ShowPreviewProperty, value);
+    }
+
+    public IImage? PreviewImage
+    {
+        get => GetValue(PreviewImageProperty);
+        set => SetValue(PreviewImageProperty, value);
+    }
+
+    public IImage? BackgroundImage
+    {
+        get => GetValue(BackgroundImageProperty);
+        set => SetValue(BackgroundImageProperty, value);
+    }
+
     public DrawingTool CurrentTool
     {
         get => GetValue(CurrentToolProperty);
@@ -154,8 +187,24 @@ public class AssaDrawCanvas : Control
 
     public event EventHandler<CanvasClickEventArgs>? CanvasClicked;
     public event EventHandler<CanvasMouseEventArgs>? CanvasMouseMoved;
+    public event EventHandler<DrawCoordinate>? PointSelected;
     public event EventHandler<DrawCoordinate>? PointDragged;
     public event EventHandler<float>? ZoomChanged;
+
+    static AssaDrawCanvas()
+    {
+        AffectsRender<AssaDrawCanvas>(
+            ShapesProperty,
+            ActiveShapeProperty,
+            SelectedShapeProperty,
+            SelectedShapesProperty,
+            ActivePointProperty,
+            CanvasWidthProperty,
+            CanvasHeightProperty,
+            ShowPreviewProperty,
+            PreviewImageProperty,
+            BackgroundImageProperty);
+    }
 
     public AssaDrawCanvas()
     {
@@ -163,16 +212,28 @@ public class AssaDrawCanvas : Control
         Focusable = true;
     }
 
-    public void ResetView()
+    /// <summary>
+    /// Zooms so the whole frame fits the visible area and centers it.
+    /// </summary>
+    public void FitToView(double padding = 20)
     {
         _isPanning = false;
-        _panX = 0;
-        _panY = 0;
-        ZoomFactor = 1.0f;
+        var availableWidth = Bounds.Width - padding * 2;
+        var availableHeight = Bounds.Height - padding * 2;
+        if (availableWidth < 1 || availableHeight < 1 || CanvasWidth < 1 || CanvasHeight < 1)
+        {
+            return;
+        }
+
+        var zoom = Math.Clamp((float)Math.Min(availableWidth / CanvasWidth, availableHeight / CanvasHeight), 0.1f, 10f);
+        _panX = (float)(Bounds.Width - CanvasWidth * zoom) / 2f;
+        _panY = (float)(Bounds.Height - CanvasHeight * zoom) / 2f;
+        ZoomFactor = zoom;
     }
 
-    public void ZoomIn() => ZoomFactor += 0.02f;
-    public void ZoomOut() => ZoomFactor -= 0.02f;
+    // Same step as Ctrl+mouse wheel - the buttons used 2%, so a click barely changed anything.
+    public void ZoomIn() => ZoomFactor += 0.1f;
+    public void ZoomOut() => ZoomFactor -= 0.1f;
 
     private float ToZoomFactorX(float v) => v * _zoomFactor + _panX;
     private float ToZoomFactorY(float v) => v * _zoomFactor + _panY;
@@ -194,10 +255,22 @@ public class AssaDrawCanvas : Control
         // Draw the actual canvas area
         DrawCanvasArea(context);
 
+        var canvasRect = new Rect(_panX, _panY, CanvasWidth * _zoomFactor, CanvasHeight * _zoomFactor);
+        if (ShowPreview && BackgroundImage != null)
+        {
+            context.DrawImage(BackgroundImage, canvasRect);
+        }
+
         // Draw grid if enabled
         if (DrawSettings.ShowGrid)
         {
             DrawGrid(context);
+        }
+
+        // Rendered result under the outlines, so points stay editable while previewing
+        if (ShowPreview && PreviewImage != null)
+        {
+            context.DrawImage(PreviewImage, canvasRect);
         }
 
         // Draw resolution border
@@ -457,6 +530,7 @@ public class AssaDrawCanvas : Control
         {
             ActivePoint = closePoint;
             _lastMousePosition = point;
+            PointSelected?.Invoke(this, closePoint);
             InvalidateVisual();
             e.Handled = true;
             return;

@@ -28,10 +28,11 @@ A vector drawing tool for creating ASSA drawing commands (\p1 ... \p0) used in A
 ### Toolbar Actions
 - **Save**, **Load**, **Copy to Clipboard** (`Ctrl+C`).
 - **Close Shape** (`F8`/`Enter`), **Delete Shape** (`Del`), **Clear All** (`Ctrl+N`).
-- **Zoom in**, **Zoom out**, **Reset View** (`Ctrl+0`), **Toggle Grid** (`Ctrl+G`).
+- **Zoom in**, **Zoom out** (10% steps, same as `Ctrl`+mouse wheel), **Reset View** (`Ctrl+0`, fits the whole frame), **Toggle Grid** (`Ctrl+G`).
+- **Toggle preview** (`F9`): shows the drawing as it will render (filled, in layer colors, with erase shapes cut out) over the video frame, with the outlines and points still on top for editing. Needs ffmpeg with libass.
 
 ### Canvas
-- Configurable canvas size (default 1920×1080).
+- Canvas size follows the script resolution (PlayResX/PlayResY), else the video size, and can be changed.
 - Zoom in/out for detailed editing.
 - Grid overlay for alignment.
 - Real-time position display.

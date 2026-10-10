@@ -104,6 +104,7 @@ public class LanguageSettings
     public string PromptBeforeDelete { get; set; }
     public string RememberPositionAndSize { get; set; }
     public string TitleBarFullFileName { get; set; }
+    public string ShowRecentFiles { get; set; }
     public string OpenLastFileOnStart { get; set; }
     public string AutoSave { get; set; }
     public string AutoBackupOn { get; set; }
@@ -131,6 +132,7 @@ public class LanguageSettings
     public string WaveformUseSkiaRenderer { get; set; }
     public string WaveformCenterVideoPositionAlsoWhenPaused { get; set; }
     public string WaveformSelectCurrentSubtitleWhilePaused { get; set; }
+    public string WaveformRememberZoom { get; set; }
     public string WaveformShowToolbar { get; set; }
     public string WaveformShowToolbarEdit { get; set; }
     public string WaveformShowToolbarEditLabel { get; set; }
@@ -342,6 +344,10 @@ public class LanguageSettings
     public string UsePositionFromSubtitleFile { get; set; }
     public string MarginIsPartOfSubtitleArea { get; set; }
     public string TextJustify { get; set; }
+    public string Deinterlace { get; set; }
+    public string DeinterlaceOff { get; set; }
+    public string DeinterlaceAuto { get; set; }
+    public string DeinterlaceAlways { get; set; }
     public string PixelWidthInfo { get; set; }
     public string SpellCheckEngineHunSpelll { get; set; }
     public string SpellCheckEngineMsWord { get; set; }
@@ -461,6 +467,7 @@ public class LanguageSettings
         PromptBeforeDelete = "Prompt before delete";
         RememberPositionAndSize = "Remember window position and size";
         TitleBarFullFileName = "Show full file path in title bar";
+        ShowRecentFiles = "Show recent files (for reopen)";
         OpenLastFileOnStart = "Open last recent file on start";
         AutoSave = "Auto-save (save the open file while editing)";
         AutoBackupOn = "Auto-backup";
@@ -489,6 +496,7 @@ public class LanguageSettings
         WaveformFocusOnMouseOver = "Focus on mouse over";
         WaveformCenterVideoPositionAlsoWhenPaused = "Center video position also while paused";
         WaveformSelectCurrentSubtitleWhilePaused = "Select current subtitle also while paused";
+        WaveformRememberZoom = "Remember zoom (horizontal and vertical)";
         WaveformShowToolbar = "Show toolbar";
         WaveformShowToolbarEdit = "Edit toolbar...";
         WaveformShowToolbarEditLabel = "Toolbar items";
@@ -698,6 +706,10 @@ public class LanguageSettings
         UsePositionFromSubtitleFile = "Use position from subtitle file (TTML/PAC/EBU STL)";
         MarginIsPartOfSubtitleArea = "Margin is part of the subtitle area";
         TextJustify = "Justify lines";
+        Deinterlace = "Deinterlace video";
+        DeinterlaceOff = "Off";
+        DeinterlaceAuto = "Auto (interlaced frames only)";
+        DeinterlaceAlways = "Always";
         PixelWidthInfo = "Green lines = max-width limit   |   Red area = text exceeds limit";
         SpellCheckEngineHunSpelll = "Hunspell";
         SpellCheckEngineMsWord = "MS Word";

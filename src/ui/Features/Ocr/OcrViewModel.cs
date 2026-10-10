@@ -2409,10 +2409,12 @@ public partial class OcrViewModel : ObservableObject
             SubtitleGrid.SelectedItem = survivor;
         }
 
+        var removedIndexes = itemsToRemove.Select(item => rowIndexes[item]).OrderBy(index => index).ToList();
+
         // Bottom up, so the indexes of the rows still to go stay valid.
-        foreach (var index in itemsToRemove.Select(item => rowIndexes[item]).OrderByDescending(index => index))
+        for (var i = removedIndexes.Count - 1; i >= 0; i--)
         {
-            OcrSubtitleItems.RemoveAt(index);
+            OcrSubtitleItems.RemoveAt(removedIndexes[i]);
         }
 
         var removed = new HashSet<OcrSubtitleItem>(itemsToRemove);
@@ -2435,6 +2437,8 @@ public partial class OcrViewModel : ObservableObject
             UnknownWords.Remove(item);
         }
 
+        RemapFixAndGuessLineIndexes(removedIndexes);
+
         if (survivor != null)
         {
             SelectedOcrSubtitleItem = survivor;
@@ -2451,6 +2455,47 @@ public partial class OcrViewModel : ObservableObject
         {
             Dispatcher.UIThread.Post(() => TableViewExtras.FocusRow(SubtitleGrid), DispatcherPriority.Background);
         }
+    }
+
+    /// <summary>
+    /// "All fixes" and "All guesses" store the row index the fix was made on, which goes stale
+    /// when rows above it are deleted - the list said #68 for what had become line 50, and
+    /// clicking it jumped to the wrong row. Drops entries of deleted rows and shifts the rest up.
+    /// New items replace the old ones, as the list shows a ToString() snapshot of each.
+    /// </summary>
+    private void RemapFixAndGuessLineIndexes(List<int> removedIndexesSorted)
+    {
+        int? NewIndex(int lineIndex)
+        {
+            var pos = removedIndexesSorted.BinarySearch(lineIndex);
+            if (pos >= 0)
+            {
+                return null; // the row itself was deleted
+            }
+
+            return lineIndex - ~pos; // ~pos = number of deleted rows above
+        }
+
+        var fixes = new ObservableCollection<ReplacementUsedItem>();
+        foreach (var fix in AllFixes)
+        {
+            if (NewIndex(fix.LineIndex) is { } newIndex)
+            {
+                fixes.Add(newIndex == fix.LineIndex ? fix : new ReplacementUsedItem(fix.From, fix.To, newIndex));
+            }
+        }
+
+        var guesses = new ObservableCollection<GuessUsedItem>();
+        foreach (var guess in AllGuesses)
+        {
+            if (NewIndex(guess.LineIndex) is { } newIndex)
+            {
+                guesses.Add(newIndex == guess.LineIndex ? guess : new GuessUsedItem(guess.From, guess.To, newIndex));
+            }
+        }
+
+        AllFixes = fixes;
+        AllGuesses = guesses;
     }
 
     /// <summary>
@@ -5033,6 +5078,11 @@ public partial class OcrViewModel : ObservableObject
     internal void OnKeyDown(KeyEventArgs e)
     {
         _isCtrlDown = e.KeyModifiers.HasFlag(KeyModifiers.Control);
+
+        if (HandleFindReplaceKeys(e))
+        {
+            return;
+        }
 
         if (e.Key == Key.Escape)
         {

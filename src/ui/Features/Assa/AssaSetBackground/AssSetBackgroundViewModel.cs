@@ -63,6 +63,7 @@ public partial class AssSetBackgroundViewModel : ObservableObject
     private int _videoHeight = 1080;
     private readonly Random _random = new();
     private string? _videoFileName;
+    private double? _videoPositionSeconds;
     private readonly string _tempSubtitleFileName;
     private readonly SubtitleFormat _assaFormat;
     private LibMpvDynamicPlayer? _mpvPlayer;
@@ -140,13 +141,15 @@ public partial class AssSetBackgroundViewModel : ObservableObject
         List<SubtitleLineViewModel> selectedItems,
         int videoWidth,
         int videoHeight,
-        string? videoFileName)
+        string? videoFileName,
+        double? videoPositionSeconds = null)
     {
         _subtitle = new Subtitle(subtitle, false);
         _selectedItems = selectedItems;
         _videoWidth = videoWidth > 0 ? videoWidth : 1920;
         _videoHeight = videoHeight > 0 ? videoHeight : 1080;
         _videoFileName = videoFileName;
+        _videoPositionSeconds = videoPositionSeconds;
 
         _previewParagraph = _selectedItems.First().ToParagraph(_assaFormat);
         _previewSubtitle = new Subtitle(subtitle, false);
@@ -779,6 +782,22 @@ public partial class AssSetBackgroundViewModel : ObservableObject
         return previewSubtitle;
     }
 
+    /// <summary>
+    /// Preview frame: the main player position when it is paused inside the previewed line (so a
+    /// specific frame can be used - #15817), else the middle of the line.
+    /// </summary>
+    public static double GetPreviewSeekSeconds(Paragraph paragraph, double? videoPositionSeconds)
+    {
+        if (videoPositionSeconds is { } position &&
+            position >= paragraph.StartTime.TotalSeconds &&
+            position <= paragraph.EndTime.TotalSeconds)
+        {
+            return position;
+        }
+
+        return paragraph.StartTime.TotalSeconds + (paragraph.Duration.TotalSeconds / 2.0);
+    }
+
     internal async void OnLoaded()
     {
         if (string.IsNullOrEmpty(_videoFileName))
@@ -788,7 +807,7 @@ public partial class AssSetBackgroundViewModel : ObservableObject
 
         await VideoPlayerControl.WaitForPlayersReadyAsync();
         VideoPlayerControl.HideVideoControls();
-        VideoPlayerControl.Position = _previewParagraph.StartTime.TotalSeconds + (_previewParagraph.Duration.TotalSeconds / 2.0);
+        VideoPlayerControl.Position = GetPreviewSeekSeconds(_previewParagraph, _videoPositionSeconds);
         _mpvPlayer = VideoPlayerControl.VideoPlayer as LibMpvDynamicPlayer;
         StartPreviewTimer();
     }

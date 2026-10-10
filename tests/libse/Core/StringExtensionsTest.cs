@@ -92,6 +92,24 @@ public class StringExtensionsTest
         Assert.Equal(2, input.SplitToLines().Count);
     }
 
+    [Theory]
+    [InlineData("")]
+    [InlineData("a")]
+    [InlineData("a\r\nb")]
+    [InlineData("a\nb\n")]
+    [InlineData("a\rb")]
+    [InlineData("a\u2028b")]
+    [InlineData("\r\r\n")]
+    [InlineData("\n\n\r")]
+    [InlineData("\r\n\r\n")]
+    [InlineData("\n\nLine3\r\n\r\nLine5\r")]
+    [InlineData("a\n\n\rb")]
+    [InlineData("e\r\r\ne\n\ne\ne\re\r\ne\n\re")]
+    public void CountLinesMatchesSplitToLines(string input)
+    {
+        Assert.Equal(input.SplitToLines().Count, input.CountLines());
+    }
+
     [Fact]
     public void SplitToLinesEmptyLines1()
     {
