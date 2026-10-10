@@ -1695,7 +1695,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 return false;
             }
 
-            return await RunLlamaCppOcrPages(imageSubtitles, item, sourceLanguage, remoteUrl, null, cancellationToken);
+            return await RunLlamaCppOcrPages(imageSubtitles, item, sourceLanguage, LlamaCppOcr.CompleteRemoteUrl(remoteUrl), null, cancellationToken);
         }
 
         // Curated or self-supplied OCR model from settings (picked in batch convert settings /

@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.LogicalTree;
 using Nikse.SubtitleEdit.Features.Ocr;
+using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
 
@@ -79,5 +80,17 @@ public class LlamaCppOcrSettingsRemoteServerTests
 
         Assert.False(vm.OkPressed);
         Assert.False(Se.Settings.Ocr.LlamaCppUseRemoteServer);
+    }
+
+    [Theory]
+    [InlineData("http://192.168.1.10:8080", "http://192.168.1.10:8080/v1/chat/completions")]
+    [InlineData("http://192.168.1.10:8080/", "http://192.168.1.10:8080/v1/chat/completions")]
+    [InlineData("192.168.1.10:8080", "http://192.168.1.10:8080/v1/chat/completions")]
+    [InlineData("http://192.168.1.10:8080/v1", "http://192.168.1.10:8080/v1/chat/completions")]
+    [InlineData(" http://192.168.1.10:8080/v1/chat/completions ", "http://192.168.1.10:8080/v1/chat/completions")]
+    [InlineData("https://proxy.example.com/llama/ocr", "https://proxy.example.com/llama/ocr")]
+    public void CompleteRemoteUrl_CompletesBareOrigin(string typed, string expected)
+    {
+        Assert.Equal(expected, LlamaCppOcr.CompleteRemoteUrl(typed));
     }
 }

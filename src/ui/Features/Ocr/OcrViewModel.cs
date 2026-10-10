@@ -2634,6 +2634,17 @@ public partial class OcrViewModel : ObservableObject
             }
         }
 
+        if (ocrEngine.EngineType == OcrEngineType.LlamaCpp && Se.Settings.Ocr.LlamaCppUseRemoteServer && string.IsNullOrWhiteSpace(LlamaCppUrl))
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                string.Format(Se.Language.General.XRequiresAValidUrl, Se.Language.Ocr.LlamaCppOcr),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return;
+        }
+
         if (SelectedDictionary != null && DoFixOcrErrors && SelectedDictionary.Name != GetDictionaryNameNone())
         {
             var threeLetterCode = SelectedDictionary.GetThreeLetterCode();
@@ -4586,7 +4597,7 @@ public partial class OcrViewModel : ObservableObject
 
         _ = Task.Run(async () =>
         {
-            var url = (LlamaCppUrl ?? string.Empty).Trim();
+            var url = LlamaCppOcr.CompleteRemoteUrl(LlamaCppUrl);
             var modelName = "glmocr";
             try
             {
