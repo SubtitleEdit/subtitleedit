@@ -83,6 +83,7 @@ public partial class NOcrTrainViewModel : ObservableObject
     [ObservableProperty] private bool _isTraining;
     [ObservableProperty] private bool _isNotTraining;
     [ObservableProperty] private string _trainButtonText;
+    [ObservableProperty] private string _trainButtonIcon;
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private bool _isProgressVisible;
     [ObservableProperty] private string _learnedText;
@@ -133,6 +134,7 @@ public partial class NOcrTrainViewModel : ObservableObject
         SkippedText = string.Empty;
         IsNotTraining = true;
         TrainButtonText = Se.Language.Ocr.StartTraining;
+        TrainButtonIcon = IconNames.Play;
 
         ApplyFontFilter();
         UpdateSelectedFontsText();
@@ -369,6 +371,7 @@ public partial class NOcrTrainViewModel : ObservableObject
         LearnedText = string.Empty;
         SkippedText = string.Empty;
         TrainButtonText = Se.Language.Ocr.AbortTraining;
+        TrainButtonIcon = IconNames.Stop;
 
         await Task.Run(() =>
         {
@@ -444,6 +447,7 @@ public partial class NOcrTrainViewModel : ObservableObject
 
         IsTraining = false;
         TrainButtonText = Se.Language.Ocr.StartTraining;
+        TrainButtonIcon = IconNames.Play;
     }
 
     [RelayCommand]
