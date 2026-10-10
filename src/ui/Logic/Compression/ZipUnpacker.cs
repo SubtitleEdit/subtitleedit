@@ -103,7 +103,8 @@ public class ZipUnpacker : IZipUnpacker
     {
         allowedExtensions = allowedExtensions.Select(x => x.ToLowerInvariant()).ToList();
 
-        using var gzipStream = new GZipStream(zipStream, CompressionMode.Decompress);
+        // leaveOpen: true like the zip path - callers hash the archive stream afterwards.
+        using var gzipStream = new GZipStream(zipStream, CompressionMode.Decompress, leaveOpen: true);
         using var tarReader = new TarReader(gzipStream);
 
         TarEntry? entry;
