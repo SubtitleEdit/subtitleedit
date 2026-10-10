@@ -316,8 +316,9 @@ public class LibMpvDynamicIoSurfaceControl : Control
 
         if (!string.IsNullOrEmpty(player.FileName))
         {
-            // flipY: the top video row lands in IOSurface row 0, i.e. a top-left origin.
-            player.RenderToFramebuffer((int)buffer.Framebuffer, width, height, flipY: true);
+            // No flip: mpv's unflipped GL output already puts the top video row in IOSurface
+            // row 0, which Metal shows at the top (flipY: true came out upside down).
+            player.RenderToFramebuffer((int)buffer.Framebuffer, width, height, flipY: false);
         }
 
         // The compositor only waits on the shared event, which cannot follow GL work - so the
@@ -338,6 +339,12 @@ public class LibMpvDynamicIoSurfaceControl : Control
         var interop = _interop;
         var surface = _surface;
         if (!_presenting || interop == null || surface == null || _readyImported == null || _releasedImported == null)
+        {
+            return;
+        }
+
+        // A frame from a buffer a resize already replaced: its import may be on its way out.
+        if (!_buffers.Contains(buffer))
         {
             return;
         }
@@ -366,9 +373,11 @@ public class LibMpvDynamicIoSurfaceControl : Control
                 await image.ImportCompleted;
             }
 
-            if (_surface != surface)
+            // Detached, or a newer frame dropped this import (resize) while it was awaited -
+            // updating with a disposed image throws PlatformGraphicsContextLostException.
+            if (_surface != surface || !_imported.TryGetValue(buffer, out var current) || current != image)
             {
-                return; // detached while importing
+                return;
             }
 
             await surface.UpdateWithTimelineSemaphoresAsync(image, _readyImported, frame, _releasedImported, frame);
