@@ -120,6 +120,10 @@ public class FfmpegSoftwareControl : Control
         var player = _player;
         if (player == null || string.IsNullOrEmpty(player.FileName))
         {
+            // Nothing is drawn, so nothing is shown: without this, CheckOverlay keeps seeing the
+            // lines from before the video was closed and repaints every tick.
+            _overlayLines = [];
+            _overlayCache = null;
             return;
         }
 
