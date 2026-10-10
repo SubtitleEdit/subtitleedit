@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Avalonia.Media;
 
 namespace Nikse.SubtitleEdit.Features.Assa.AssaDraw;
@@ -384,6 +385,97 @@ public class DrawShape
         }
 
         return count;
+    }
+
+    private static readonly Regex RegexDrawStart = new(@"\{[^{]*\\p1[^}]*\}", RegexOptions.Compiled);
+    private static readonly Regex RegexDrawEnd = new(@"\{[^{]*\\p0[^}]*\}", RegexOptions.Compiled);
+
+    /// <summary>
+    /// Parses ASSA drawing commands (m/l/b, several "m" = several shapes) into shapes.
+    /// </summary>
+    public static List<DrawShape> ParseAssa(string text, int layer, Color color, bool isEraser)
+    {
+        var shapes = new List<DrawShape>();
+        text = RegexDrawStart.Replace(text, string.Empty);
+        text = RegexDrawEnd.Replace(text, string.Empty);
+        var arr = text.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries);
+
+        var i = 0;
+        var bezierCount = 0;
+        var state = DrawCoordinateType.None;
+        DrawCoordinate? moveCoordinate = null;
+        DrawShape? drawShape = null;
+
+        while (i < arr.Length)
+        {
+            var v = arr[i];
+
+            if (v == "m" && i < arr.Length - 2 &&
+                float.TryParse(arr[i + 1], NumberStyles.Float, CultureInfo.InvariantCulture, out var mX) &&
+                float.TryParse(arr[i + 2], NumberStyles.Float, CultureInfo.InvariantCulture, out var mY))
+            {
+                bezierCount = 0;
+                moveCoordinate = new DrawCoordinate(null, DrawCoordinateType.Move, mX, mY, DrawSettings.PointColor);
+                state = DrawCoordinateType.Move;
+                i += 2;
+            }
+            else if (v == "l")
+            {
+                state = DrawCoordinateType.Line;
+                bezierCount = 0;
+                if (moveCoordinate != null)
+                {
+                    drawShape = new DrawShape { Layer = layer, ForeColor = color, IsEraser = isEraser };
+                    drawShape.AddPoint(DrawCoordinateType.Line, moveCoordinate.X, moveCoordinate.Y, DrawSettings.PointColor);
+                    moveCoordinate = null;
+                    shapes.Add(drawShape);
+                }
+            }
+            else if (v == "b")
+            {
+                state = DrawCoordinateType.BezierCurve;
+                if (moveCoordinate != null)
+                {
+                    drawShape = new DrawShape { Layer = layer, ForeColor = color, IsEraser = isEraser };
+                    drawShape.AddPoint(DrawCoordinateType.BezierCurve, moveCoordinate.X, moveCoordinate.Y, DrawSettings.PointColor);
+                    moveCoordinate = null;
+                    shapes.Add(drawShape);
+                }
+                bezierCount = 1;
+            }
+            else if (state == DrawCoordinateType.Line && drawShape != null && i < arr.Length - 1 &&
+                float.TryParse(arr[i], NumberStyles.Float, CultureInfo.InvariantCulture, out var lX) &&
+                float.TryParse(arr[i + 1], NumberStyles.Float, CultureInfo.InvariantCulture, out var lY))
+            {
+                drawShape.AddPoint(DrawCoordinateType.Line, lX, lY, DrawSettings.PointColor);
+                i++;
+            }
+            else if (state == DrawCoordinateType.BezierCurve && drawShape != null && i < arr.Length - 1 &&
+                float.TryParse(arr[i], NumberStyles.Float, CultureInfo.InvariantCulture, out var bX) &&
+                float.TryParse(arr[i + 1], NumberStyles.Float, CultureInfo.InvariantCulture, out var bY))
+            {
+                bezierCount++;
+                if (bezierCount > 3)
+                {
+                    bezierCount = 1;
+                }
+
+                var pointType = bezierCount switch
+                {
+                    2 => DrawCoordinateType.BezierCurveSupport1,
+                    3 => DrawCoordinateType.BezierCurveSupport2,
+                    _ => DrawCoordinateType.BezierCurve
+                };
+
+                var pointColor = bezierCount is 2 or 3 ? DrawSettings.PointHelperColor : DrawSettings.PointColor;
+                drawShape.AddPoint(pointType, bX, bY, pointColor);
+                i++;
+            }
+
+            i++;
+        }
+
+        return shapes;
     }
 
     private static float DistanceToSegment(float px, float py, float ax, float ay, float bx, float by)

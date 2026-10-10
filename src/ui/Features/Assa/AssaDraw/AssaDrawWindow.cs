@@ -369,6 +369,9 @@ public class AssaDrawWindow : Window
             _vm.ToggleShapeVisibilityCommand));
 
         AddSeparator(items);
+        items.Add(MakeMenuItem(Se.Language.Assa.DrawAddToLibrary, "fa-solid fa-shapes", _vm.AddToLibraryCommand));
+
+        AddSeparator(items);
         items.Add(MakeMenuItem(WithoutShortcut(Se.Language.Assa.DrawDeleteShape), "fa-solid fa-trash", _vm.DeleteShapeCommand, new KeyGesture(Key.Delete)));
     }
 
@@ -720,6 +723,25 @@ public class AssaDrawWindow : Window
         AddTool("fa-solid fa-bezier-curve", Se.Language.Assa.DrawBezierTool, vm.BezierToolCommand, DrawingTool.Bezier, "B");
         AddTool("fa-regular fa-square", Se.Language.Assa.DrawRectangleTool, vm.RectangleToolCommand, DrawingTool.Rectangle, "R");
         AddTool("fa-regular fa-circle", Se.Language.Assa.DrawCircleTool, vm.CircleToolCommand, DrawingTool.Circle, "C");
+
+        // Shape tool: picks a shape from the library palette that opens next to the strip
+        var shapeButton = CreateToolButton("fa-solid fa-shapes", Se.Language.Assa.DrawShapeTool + " (S)", null, 38, "S");
+        BindHighlight(shapeButton, vm, () => vm.CurrentTool == DrawingTool.Shape, nameof(vm.CurrentTool));
+        var palette = new Popup
+        {
+            PlacementTarget = shapeButton,
+            Placement = PlacementMode.RightEdgeAlignedTop,
+            HorizontalOffset = 8,
+            IsLightDismissEnabled = true,
+        };
+        shapeButton.Click += (_, _) =>
+        {
+            vm.ShapeToolCommand.Execute(null);
+            palette.Child = MakeShapePalette(vm, () => palette.IsOpen = false);
+            palette.IsOpen = true;
+        };
+        panel.Children.Add(shapeButton);
+        panel.Children.Add(palette);
         panel.Children.Add(MakeStripSeparator());
         panel.Children.Add(CreateToolButton("fa-solid fa-magnifying-glass-plus", Se.Language.Assa.DrawZoomIn, vm.ZoomInCommand, 38));
         panel.Children.Add(CreateToolButton("fa-solid fa-magnifying-glass-minus", Se.Language.Assa.DrawZoomOut, vm.ZoomOutCommand, 38));
@@ -752,6 +774,115 @@ public class AssaDrawWindow : Window
             BorderBrush = LineBrush,
             BorderThickness = new Thickness(0, 0, 1, 0),
             Padding = new Thickness(0, 10, 0, 0),
+        };
+    }
+
+    /// <summary>
+    /// The shape library: built-in categories, then "My shapes". Clicking a shape picks it for the
+    /// shape tool; saved shapes have a menu to remove them.
+    /// </summary>
+    private static Border MakeShapePalette(AssaDrawViewModel vm, Action close)
+    {
+        const int columns = 6;
+        const double cell = 46;
+        var content = new StackPanel { Spacing = 6 };
+        content.Children.Add(MakeSectionHeader(Se.Language.Assa.DrawShapeLibrary));
+
+        void AddCategory(string title, IEnumerable<ShapeLibraryItem> items)
+        {
+            var list = items.ToList();
+            if (list.Count == 0)
+            {
+                return;
+            }
+
+            content.Children.Add(new TextBlock
+            {
+                Text = title,
+                FontSize = 12,
+                Foreground = DimTextBrush,
+                Margin = new Thickness(2, 6, 0, 0),
+            });
+
+            var wrap = new WrapPanel { Width = columns * (cell + 4) };
+            foreach (var item in list)
+            {
+                var path = new Avalonia.Controls.Shapes.Path
+                {
+                    Data = item.ToGeometry(),
+                    Fill = item.UserShape != null ? null : new SolidColorBrush(Color.FromRgb(214, 218, 226)),
+                    Stretch = Stretch.Uniform,
+                    Margin = new Thickness(9),
+                };
+                if (item.UserShape != null)
+                {
+                    // Saved shapes show their own (first) color
+                    var color = item.Template.FirstOrDefault(s => !s.IsEraser)?.ForeColor ?? Colors.White;
+                    path.Fill = new SolidColorBrush(color);
+                }
+
+                var button = new Button
+                {
+                    Content = path,
+                    Width = cell,
+                    Height = cell,
+                    Margin = new Thickness(0, 0, 4, 4),
+                    HorizontalContentAlignment = HorizontalAlignment.Stretch,
+                    VerticalContentAlignment = VerticalAlignment.Stretch,
+                };
+                button.Classes.Add("tool");
+                button.Classes.Set("active", vm.CurrentLibraryShape?.Name == item.Name && vm.CurrentLibraryShape?.Category == item.Category);
+                ToolTip.SetTip(button, item.Name);
+                AutomationProperties.SetName(button, item.Name);
+                button.Click += (_, _) =>
+                {
+                    vm.PickLibraryShapeCommand.Execute(item);
+                    close();
+                };
+
+                if (item.UserShape != null)
+                {
+                    var remove = MakeMenuItem(Se.Language.Assa.DrawRemoveFromLibrary, "fa-solid fa-trash", null);
+                    remove.Click += (_, _) =>
+                    {
+                        vm.RemoveFromLibraryCommand.Execute(item);
+                        wrap.Children.Remove(button);
+                    };
+                    button.ContextMenu = new ContextMenu { ItemsSource = new List<Control> { remove } };
+                }
+
+                wrap.Children.Add(button);
+            }
+
+            content.Children.Add(wrap);
+        }
+
+        foreach (var category in ShapeLibrary.BuiltInCategories)
+        {
+            AddCategory(category, ShapeLibrary.BuiltIn.Where(i => i.Category == category));
+        }
+
+        AddCategory(Se.Language.Assa.DrawCategoryMyShapes, ShapeLibrary.GetUserShapes());
+
+        content.Children.Add(new TextBlock
+        {
+            Text = Se.Language.Assa.DrawShapeLibraryHint,
+            FontSize = 11.5,
+            Foreground = FaintTextBrush,
+            TextWrapping = TextWrapping.Wrap,
+            Width = columns * (cell + 4),
+            Margin = new Thickness(2, 4, 0, 0),
+        });
+
+        return new Border
+        {
+            Child = new ScrollViewer { Content = content, MaxHeight = 560 },
+            Background = MenuBrush,
+            BorderBrush = MenuBorderBrush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(10),
+            Padding = new Thickness(12, 10, 8, 10),
+            BoxShadow = new BoxShadows(new BoxShadow { Blur = 24, OffsetY = 8, Color = Color.FromArgb(150, 0, 0, 0) }),
         };
     }
 
