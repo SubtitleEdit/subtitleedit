@@ -102,6 +102,7 @@ public partial class AssaDrawViewModel : ObservableObject
     private bool _previewBusy;
     private bool _refreshingTree;
     private bool _updatingShapeFields;
+    private bool _updatingLayerColor;
 
     private const int MaxUndoSteps = 100;
     private readonly List<UndoState> _undoStack = [];
@@ -2618,7 +2619,7 @@ public partial class AssaDrawViewModel : ObservableObject
             {
                 ActiveShape = value.Shape;
                 ShapeIsEraser = value.Shape.IsEraser;
-                LayerColor = value.Shape.ForeColor;
+                SetLayerColorFromSelection(value.Shape.ForeColor);
             }
         }
 
@@ -2638,7 +2639,7 @@ public partial class AssaDrawViewModel : ObservableObject
             var firstShape = Shapes.FirstOrDefault(s => s.Layer == value.Layer);
             if (firstShape != null)
             {
-                LayerColor = firstShape.ForeColor;
+                SetLayerColorFromSelection(firstShape.ForeColor);
             }
         }
 
@@ -2651,8 +2652,29 @@ public partial class AssaDrawViewModel : ObservableObject
         UpdateSelectionInfo();
     }
 
+    /// <summary>
+    /// Shows the selection's color without recoloring its layer - a layer can hold shapes of different colors.
+    /// </summary>
+    private void SetLayerColorFromSelection(Color color)
+    {
+        _updatingLayerColor = true;
+        try
+        {
+            LayerColor = color;
+        }
+        finally
+        {
+            _updatingLayerColor = false;
+        }
+    }
+
     partial void OnLayerColorChanged(Color value)
     {
+        if (_updatingLayerColor)
+        {
+            return;
+        }
+
         // The color belongs to the layer: picked on a layer, or on a shape of it
         int? layer = SelectedTreeItem?.IsLayer == true ? SelectedTreeItem.Layer : TargetShape?.Layer;
         if (layer == null || !Shapes.Any(s => s.Layer == layer && s.ForeColor != value))
