@@ -33,6 +33,33 @@ Dialogue: Marked=0,0:20:24.01,0:20:26.44,*Default,NTP,0000,0000,0000,,Du wirst s
         Assert.All(subtitle.Paragraphs, p => Assert.Equal("Default", p.Extra));
     }
 
+    // [Fonts]/[Graphics] after [Events] must land in Footer (where the attachments dialog and
+    // the writer look), not be appended to Header under [Events].
+    [Fact]
+    public void FontsSectionAfterEventsGoesToFooter()
+    {
+        var text = SsaWithMarkedDefault + @"
+
+[Fonts]
+fontname: a_0.ttf
+M+>%!LL(G,J-K\=O\\E/.$S,+F%U$\L
+";
+        var subtitle = new Subtitle();
+        var format = new SubStationAlpha();
+        format.LoadSubtitle(subtitle, new List<string>(text.SplitToLines()), "test.ssa");
+
+        Assert.Equal(2, subtitle.Paragraphs.Count);
+        Assert.DoesNotContain("fontname", subtitle.Header);
+        Assert.Contains("[Fonts]", subtitle.Footer);
+        Assert.Contains("fontname: a_0.ttf", subtitle.Footer);
+
+        var reloaded = new Subtitle();
+        format.LoadSubtitle(reloaded, new List<string>(format.ToText(subtitle, "test").SplitToLines()), "test.ssa");
+        Assert.Equal(2, reloaded.Paragraphs.Count);
+        Assert.Contains("fontname: a_0.ttf", reloaded.Footer);
+        Assert.DoesNotContain("fontname", reloaded.Header);
+    }
+
     // A header-less payload (bare event lines, as the clipboard carries) must parse its events
     // without any of them ending up in Header, which consumers treat as pre-[Events] content.
     [Theory]

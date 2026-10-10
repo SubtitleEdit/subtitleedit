@@ -442,7 +442,10 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                     graphicsStarted = false;
                 }
 
-                if (!eventsStarted)
+                // [Fonts]/[Graphics] payload belongs in the footer (like ASSA), not the header.
+                if (!eventsStarted && !fontsStarted && !graphicsStarted &&
+                    !line.Trim().Equals("[fonts]", StringComparison.OrdinalIgnoreCase) &&
+                    !line.Trim().Equals("[graphics]", StringComparison.OrdinalIgnoreCase))
                 {
                     header.AppendLine(line);
                 }
@@ -472,6 +475,10 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                     graphicsStarted = true;
                     footer.AppendLine();
                     footer.AppendLine("[Graphics]");
+                }
+                else if (fontsStarted || graphicsStarted)
+                {
+                    footer.AppendLine(line);
                 }
                 else if (eventsStarted && !string.IsNullOrWhiteSpace(line))
                 {
@@ -519,14 +526,6 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                                 indexMarginV = i;
                             }
                         }
-                    }
-                    else if (fontsStarted)
-                    {
-                        footer.AppendLine(line);
-                    }
-                    else if (graphicsStarted)
-                    {
-                        footer.AppendLine(line);
                     }
                     else if (!string.IsNullOrEmpty(s))
                     {
