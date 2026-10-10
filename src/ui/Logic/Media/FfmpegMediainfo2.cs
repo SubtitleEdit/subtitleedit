@@ -30,8 +30,8 @@ public class FfmpegMediaInfo2
     private static readonly Regex StreamLanguageRegex = new Regex(@"^Stream #\d+:\d+(?:\[[^\]]+\])?\((?<lang>[a-zA-Z]{2,3})\)", RegexOptions.Compiled);
     // Rotation side data ffmpeg prints under a video stream, e.g.
     //   "    Side data:"
-    //   "      Display Matrix: rotation of -90.00 degrees".
-    private static readonly Regex DisplayMatrixRotationRegex = new Regex(@"^Display Matrix: rotation of (?<deg>-?\d+(?:\.\d+)?) degrees", RegexOptions.Compiled);
+    //   "      Display Matrix: rotation of -90.00 degrees" (ffmpeg 4.x prints "displaymatrix: rotation of ...").
+    private static readonly Regex DisplayMatrixRotationRegex = new Regex(@"^(?:Display Matrix|displaymatrix): rotation of (?<deg>-?\d+(?:\.\d+)?) degrees", RegexOptions.Compiled);
 
     private FfmpegMediaInfo2()
     {

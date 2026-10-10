@@ -87,6 +87,11 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
         _timerUpdatePreview.Start();
     }
 
+    // The preview (and what OK imports) is timed with these, so a change must rebuild it.
+    partial void OnUseFixedDurationChanged(bool value) => MarkDirty();
+
+    partial void OnFixedDurationMsChanged(int value) => MarkDirty();
+
     private void MarkDirty()
     {
         lock (_previewFlushLock)
