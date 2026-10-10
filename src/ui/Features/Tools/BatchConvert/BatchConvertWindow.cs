@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Documents;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
@@ -9,7 +10,10 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Threading;
 using Avalonia.Media;
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -525,8 +529,11 @@ public class BatchConvertWindow : Window
         // Fixed width: this grid sits in an Auto-sized outer column, and a TableView
         // with a star column measured without a width constraint demands more than
         // the whole window (star columns have no content-based size).
-        dataGrid.Width = 360;
+        dataGrid.Width = FunctionsListMinWidth;
         dataGrid.Height = 300;
+        // Widen to the longest function name once the effective font is known - 360 fits English,
+        // but Russian/Bulgarian/French names are cut off (#15901).
+        dataGrid.Loaded += (_, _) => dataGrid.Width = GetFunctionsListWidth(dataGrid, vm.BatchFunctions.Select(f => f.Name));
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.BatchFunctions;
         dataGrid.ContextFlyout = new MenuFlyout()
@@ -587,6 +594,29 @@ public class BatchConvertWindow : Window
         UiUtil.AttachMacContextFlyoutHandler(dataGrid);
 
         return UiUtil.MakeBorderForControl(dataGrid);
+    }
+
+    private const double FunctionsListMinWidth = 360;
+    private const double FunctionsListMaxWidth = 560;
+
+    internal static double GetFunctionsListWidth(Control list, IEnumerable<string> names)
+    {
+        var maxNameWidth = 0.0;
+        foreach (var name in names)
+        {
+            var textBlock = new TextBlock
+            {
+                Text = name,
+                FontFamily = list.GetValue(TextElement.FontFamilyProperty),
+                FontSize = list.GetValue(TextElement.FontSizeProperty),
+            };
+            textBlock.Measure(Size.Infinity);
+            maxNameWidth = Math.Max(maxNameWidth, textBlock.DesiredSize.Width);
+        }
+
+        // Enabled column (80) + name cell padding + vertical scroll bar + border, with some slack.
+        const double chrome = 120;
+        return Math.Clamp(Math.Ceiling(maxNameWidth + chrome), FunctionsListMinWidth, FunctionsListMaxWidth);
     }
 
     private static CheckBox MakeSelectedCheckBox(BatchConvertViewModel vm)
