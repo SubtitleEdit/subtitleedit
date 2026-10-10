@@ -216,7 +216,7 @@ public static class SvgImporter
 
         if (properties.TryGetValue("opacity", out var opacity))
         {
-            context.Opacity *= Math.Clamp(ParseFloat(opacity, 1), 0, 1);
+            context.Opacity *= ParseOpacity(opacity);
         }
 
         var transform = (string?)element.Attribute("transform");
@@ -291,7 +291,7 @@ public static class SvgImporter
             return;
         }
 
-        var alpha = context.Opacity * Math.Clamp(ParseFloat(context.Properties.GetValueOrDefault("fill-opacity", "1"), 1), 0, 1);
+        var alpha = context.Opacity * ParseOpacity(context.Properties.GetValueOrDefault("fill-opacity", "1"));
         var path = new SKPath(source)
         {
             FillType = context.Properties.GetValueOrDefault("fill-rule") == "evenodd" ? SKPathFillType.EvenOdd : SKPathFillType.Winding,
@@ -338,7 +338,7 @@ public static class SvgImporter
 
         outline.FillType = SKPathFillType.Winding;
         outline.Transform(context.Matrix);
-        var alpha = context.Opacity * Math.Clamp(ParseFloat(context.Properties.GetValueOrDefault("stroke-opacity", "1"), 1), 0, 1);
+        var alpha = context.Opacity * ParseOpacity(context.Properties.GetValueOrDefault("stroke-opacity", "1"));
         painted.Add(new Painted { Path = outline, Color = WithAlpha(color, alpha) });
     }
 
@@ -811,7 +811,7 @@ public static class SvgImporter
                     return false;
                 }
 
-                var opacity = Math.Clamp(ParseFloat(properties.GetValueOrDefault("stop-opacity", "1"), 1), 0, 1);
+                var opacity = ParseOpacity(properties.GetValueOrDefault("stop-opacity", "1"));
                 color = WithAlpha(color, opacity);
                 return true;
             }
@@ -857,10 +857,28 @@ public static class SvgImporter
             return true;
         }
 
-        if (text.StartsWith('#') && text.Length == 4)
+        if (text.StartsWith('#'))
         {
-            // #rgb shorthand
-            text = $"#{text[1]}{text[1]}{text[2]}{text[2]}{text[3]}{text[3]}";
+            if (text.Length == 4)
+            {
+                // #rgb shorthand
+                text = $"#{text[1]}{text[1]}{text[2]}{text[2]}{text[3]}{text[3]}";
+            }
+            else if (text.Length == 5)
+            {
+                // #rgba shorthand -> #aarrggbb (Avalonia reads 8 hex digits as ARGB)
+                text = $"#{text[4]}{text[4]}{text[1]}{text[1]}{text[2]}{text[2]}{text[3]}{text[3]}";
+            }
+            else if (text.Length == 9)
+            {
+                // CSS #rrggbbaa -> #aarrggbb
+                text = $"#{text[7..9]}{text[1..7]}";
+            }
+        }
+        else if (text.Contains("grey", StringComparison.OrdinalIgnoreCase))
+        {
+            // CSS also accepts the British spelling (grey, lightgrey, slategrey, ...)
+            text = text.Replace("grey", "gray", StringComparison.OrdinalIgnoreCase);
         }
 
         return Color.TryParse(text, out color);
@@ -950,6 +968,17 @@ public static class SvgImporter
         }
 
         return result;
+    }
+
+    private static float ParseOpacity(string text)
+    {
+        var value = ParseFloat(text, 1);
+        if (text != null && text.TrimEnd().EndsWith('%'))
+        {
+            value /= 100f;
+        }
+
+        return Math.Clamp(value, 0, 1);
     }
 
     private static float ParseFloat(string text, float defaultValue)

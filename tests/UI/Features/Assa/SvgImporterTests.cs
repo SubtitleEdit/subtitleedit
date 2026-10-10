@@ -120,6 +120,63 @@ public class SvgImporterTests
         Assert.Equal(Color.FromArgb(128, 255, 128, 0), shape.ForeColor);
     }
 
+    [Theory]
+    [InlineData("#ff000080", 128, 255, 0, 0)]
+    [InlineData("#00ff0040", 64, 0, 255, 0)]
+    [InlineData("#f008", 136, 255, 0, 0)]
+    [InlineData("#0000ffff", 255, 0, 0, 255)]
+    public void HexColorWithAlpha_IsReadAsRgba(string fill, byte a, byte r, byte g, byte b)
+    {
+        var shape = Assert.Single(Import($"<rect width=\"10\" height=\"10\" fill=\"{fill}\"/>"));
+
+        Assert.Equal(Color.FromArgb(a, r, g, b), shape.ForeColor);
+    }
+
+    [Theory]
+    [InlineData("grey", "gray")]
+    [InlineData("lightgrey", "lightgray")]
+    [InlineData("darkgrey", "darkgray")]
+    [InlineData("slategrey", "slategray")]
+    [InlineData("dimgrey", "dimgray")]
+    [InlineData("lightslategrey", "lightslategray")]
+    [InlineData("DarkSlateGrey", "darkslategray")]
+    public void GreySpelling_IsAcceptedLikeGray(string grey, string gray)
+    {
+        var shape = Assert.Single(Import($"<rect width=\"10\" height=\"10\" fill=\"{grey}\"/>"));
+
+        Assert.Equal(Color.Parse(gray), shape.ForeColor);
+    }
+
+    [Theory]
+    [InlineData("opacity=\"50%\"")]
+    [InlineData("fill-opacity=\"50%\"")]
+    [InlineData("style=\"fill-opacity: 50%\"")]
+    public void PercentOpacity_IsFraction(string attribute)
+    {
+        var shape = Assert.Single(Import($"<rect width=\"10\" height=\"10\" fill=\"#ff0000\" {attribute}/>"));
+
+        Assert.Equal(Color.FromArgb(128, 255, 0, 0), shape.ForeColor);
+    }
+
+    [Fact]
+    public void PercentStopOpacity_IsFraction()
+    {
+        var shape = Assert.Single(Import(
+            "<defs><linearGradient id=\"g\"><stop offset=\"0\" stop-color=\"#ff0000\" stop-opacity=\"25%\"/></linearGradient></defs>" +
+            "<rect width=\"10\" height=\"10\" fill=\"url(#g)\"/>"));
+
+        Assert.Equal(Color.FromArgb(64, 255, 0, 0), shape.ForeColor);
+    }
+
+    [Fact]
+    public void PercentStrokeOpacity_IsFraction()
+    {
+        var shapes = Import("<rect x=\"10\" y=\"10\" width=\"100\" height=\"100\" fill=\"none\" stroke=\"#0000ff\" stroke-width=\"4\" stroke-opacity=\"50%\"/>");
+
+        Assert.NotEmpty(shapes);
+        Assert.All(shapes, s => Assert.Equal(Color.FromArgb(128, 0, 0, 255), s.ForeColor));
+    }
+
     [Fact]
     public void DefsHiddenAndUse_OnlyVisibleContentIsImported()
     {
