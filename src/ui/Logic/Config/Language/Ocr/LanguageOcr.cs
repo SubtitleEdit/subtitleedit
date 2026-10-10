@@ -149,6 +149,19 @@ public class LanguageOcr
     public string StartTraining { get; set; }
     public string AbortTraining { get; set; }
     public string TrainingOptions { get; set; }
+    public string TrainNOcrSubtitle { get; set; }
+    public string XFontsSelected { get; set; }
+    public string SubtitleFonts { get; set; }
+    public string EmptyDatabase { get; set; }
+    public string StartFromDatabase { get; set; }
+    public string StartFromDatabaseHint { get; set; }
+    public string FontSizes { get; set; }
+    public string FontSizesHint { get; set; }
+    public string NumberOfLineSegmentsHint { get; set; }
+    public string EnterDatabaseName { get; set; }
+    public string TrainingFontXSizeYCharacterZ { get; set; }
+    public string XLearned { get; set; }
+    public string XSkipped { get; set; }
     public string CharactersToTrain { get; set; }
     public string LetterCombinationsToTrain { get; set; }
     public string ImportCharactersFromSubtitleFile { get; set; }
@@ -312,6 +325,19 @@ public class LanguageOcr
         StartTraining = "Start training";
         AbortTraining = "Abort training";
         TrainingOptions = "Training options";
+        TrainNOcrSubtitle = "Renders characters in installed fonts and teaches nOCR their shapes. Pick the fonts your subtitles use.";
+        XFontsSelected = "{0:#,##0} selected";
+        SubtitleFonts = "Subtitle fonts";
+        EmptyDatabase = "Empty database";
+        StartFromDatabase = "Start from";
+        StartFromDatabaseHint = "Add the trained characters to a copy of an existing database (recommended) or start from an empty one";
+        FontSizes = "Font sizes";
+        FontSizesHint = "Font sizes in pixels to render at, separated by commas, e.g. \"30, 40\"";
+        NumberOfLineSegmentsHint = "Lines checked per character - more is stricter but slower";
+        EnterDatabaseName = "Enter a name for the database";
+        TrainingFontXSizeYCharacterZ = "Training \"{0}\" at {1} px: {2}";
+        XLearned = "{0:#,##0} learned";
+        XSkipped = "{0:#,##0} skipped";
         CharactersToTrain = "Characters to train";
         LetterCombinationsToTrain = "Letter combinations that might be split to one image";
         ImportCharactersFromSubtitleFile = "Import characters from subtitle file...";
