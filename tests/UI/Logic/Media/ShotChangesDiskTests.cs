@@ -56,4 +56,13 @@ public class ShotChangesDiskTests : IDisposable
         Assert.Empty(ShotChangesHelper.FromDisk(_videoFileName, 1));
         Assert.Empty(ShotChangesHelper.FromDisk(_videoFileName));
     }
+
+    // A hand-edited or imported file keeps its own order, but readers binary-search the list.
+    [Fact]
+    public void FromDisk_UnsortedFile_ReturnsSortedList()
+    {
+        ShotChangesHelper.SaveShotChanges(_videoFileName, new List<double> { 2, 0.5, 10 }, -1);
+
+        Assert.Equal(new List<double> { 0.5, 2, 10 }, ShotChangesHelper.FromDisk(_videoFileName));
+    }
 }
