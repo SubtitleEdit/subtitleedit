@@ -37,6 +37,7 @@ public class AssaDrawCanvas : Control
     private int _transformHandle = -1;
     private List<DrawShape>? _transformShapes;
     private List<(float X, float Y)[]>? _transformOriginal;
+    private bool[]? _transformReversed;
     private (float Left, float Top, float Right, float Bottom) _transformBounds;
     private Point _transformStart;
     private bool _transformStarted;
@@ -832,6 +833,7 @@ public class AssaDrawCanvas : Control
         var centerY = (top + bottom) / 2f;
 
         Func<float, float, (float X, float Y)> map;
+        var mirrored = false;
         if (_transformHandle == RotateHandle)
         {
             var startAngle = Math.Atan2(FromZoomFactorY((float)_transformStart.Y) - centerY, FromZoomFactorX((float)_transformStart.X) - centerX);
@@ -887,18 +889,36 @@ public class AssaDrawCanvas : Control
             var sx = scaleX;
             var sy = scaleY;
             map = (x, y) => (anchorX + (x - anchorX) * sx, anchorY + (y - anchorY) * sy);
+            mirrored = sx * sy < 0;
             _transformLabel = $"{Math.Abs(width * sx):0} × {Math.Abs(height * sy):0}";
         }
 
         for (var i = 0; i < _transformShapes!.Count; i++)
         {
-            var points = _transformShapes[i].Points;
+            var shape = _transformShapes[i];
             var original = _transformOriginal![i];
-            for (var j = 0; j < points.Count && j < original.Length; j++)
+
+            // Mirroring (one axis negative) reverses the outline's direction; reverse the point
+            // order too, so non-zero filling keeps holes as holes. Reversed order = original
+            // coordinates back to front.
+            if (_transformReversed![i] != mirrored)
+            {
+                shape.ReverseWinding();
+                _transformReversed[i] = mirrored;
+            }
+
+            var points = shape.Points;
+            if (points.Count != original.Length)
+            {
+                continue;
+            }
+
+            for (var j = 0; j < points.Count; j++)
             {
                 var (x, y) = map(original[j].X, original[j].Y);
-                points[j].X = x;
-                points[j].Y = y;
+                var point = points[mirrored ? points.Count - 1 - j : j];
+                point.X = x;
+                point.Y = y;
             }
         }
     }
@@ -1000,6 +1020,7 @@ public class AssaDrawCanvas : Control
                 _transformHandle = handle;
                 _transformShapes = targets;
                 _transformOriginal = targets.Select(s => s.Points.Select(p => (p.X, p.Y)).ToArray()).ToList();
+                _transformReversed = new bool[targets.Count];
                 _transformBounds = GetUnionBounds(targets);
                 _transformStart = point;
                 _transformStarted = false;
@@ -1223,6 +1244,7 @@ public class AssaDrawCanvas : Control
         var transformed = _transformStarted;
         _transformShapes = null;
         _transformOriginal = null;
+        _transformReversed = null;
         _transformHandle = -1;
         _transformStarted = false;
         _transformLabel = null;

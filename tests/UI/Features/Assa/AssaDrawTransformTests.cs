@@ -3,6 +3,7 @@ using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Input.Raw;
+using Avalonia.Media;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
@@ -169,5 +170,104 @@ public class AssaDrawTransformTests
         Assert.Equal("m 700 300 l 700 700 500 700 500 300", vm.Shapes[0].ToAssa());
         vm.UndoCommand.Execute(null);
         Assert.Equal("m 400 400 l 800 400 800 600 400 600", vm.Shapes[0].ToAssa());
+    }
+
+    private static float SignedArea(DrawShape shape)
+    {
+        var polygon = shape.Flatten();
+        var area = 0f;
+        for (int i = 0, j = polygon.Count - 1; i < polygon.Count; j = i++)
+        {
+            area += polygon[j].X * polygon[i].Y - polygon[i].X * polygon[j].Y;
+        }
+
+        return area / 2f;
+    }
+
+    private const string MixedShape = "{\\p1}m 0 0 l 100 0 b 120 30 120 70 100 100 l 0 100{\\p0}";
+
+    [Fact]
+    public void FlipHorizontal_MirrorsOutline_AndKeepsWinding()
+    {
+        var shape = DrawShape.ParseAssa(MixedShape, 0, Colors.White, false).Single();
+        var area = SignedArea(shape);
+
+        shape.FlipHorizontal();
+
+        Assert.Equal("m 120 100 l 20 100 b 0 70 0 30 20 0 l 120 0", shape.ToAssa());
+        Assert.Equal(area, SignedArea(shape), 1);
+        var reparsed = DrawShape.ParseAssa(shape.ToAssa(), 0, Colors.White, false).Single();
+        Assert.Equal(shape.Points.Select(p => p.DrawType), reparsed.Points.Select(p => p.DrawType));
+    }
+
+    [Fact]
+    public void FlipVertical_MirrorsOutline_AndKeepsWinding()
+    {
+        var shape = DrawShape.ParseAssa("{\\p1}m 0 0 l 100 0 b 120 20 130 60 100 100 l 0 100{\\p0}", 0, Colors.White, false).Single();
+        var area = SignedArea(shape);
+
+        shape.FlipVertical();
+
+        Assert.Equal("m 0 0 l 100 0 b 130 40 120 80 100 100 l 0 100", shape.ToAssa());
+        Assert.Equal(area, SignedArea(shape), 1);
+    }
+
+    [Fact]
+    public void FlipOuterContourOfRing_HoleStaysOppositeWinding()
+    {
+        var shapes = DrawShape.ParseAssa("{\\p1}m 0 0 l 100 0 100 100 0 100 m 25 25 l 25 75 75 75 75 25{\\p0}", 0, Colors.White, false);
+        Assert.True(SignedArea(shapes[0]) * SignedArea(shapes[1]) < 0);
+
+        shapes[0].FlipHorizontal();
+        Assert.True(SignedArea(shapes[0]) * SignedArea(shapes[1]) < 0);
+
+        shapes[0].FlipVertical();
+        shapes[1].FlipHorizontal();
+        Assert.True(SignedArea(shapes[0]) * SignedArea(shapes[1]) < 0);
+    }
+
+    [AvaloniaFact]
+    public void DraggingHandlePastOppositeEdge_MirrorsAndKeepsWinding()
+    {
+        var (window, vm) = Open("{\\p1}m 400 400 l 800 400 800 600 400 600{\\p0}");
+        try
+        {
+            vm.SelectShape(vm.Shapes[0]);
+            Dispatcher.UIThread.RunJobs();
+            var area = SignedArea(vm.Shapes[0]);
+
+            Drag(window,
+                ToWindow(window, vm.Canvas!, 800, 500, Padding),
+                ToWindow(window, vm.Canvas!, 200, 500, Padding));
+
+            var (left, top, right, bottom) = vm.Shapes[0].GetBounds();
+            Assert.Equal(200, left, 0);
+            Assert.Equal(400, right, 0);
+            Assert.Equal(400, top, 0);
+            Assert.Equal(600, bottom, 0);
+            Assert.True(area * SignedArea(vm.Shapes[0]) > 0);
+
+            vm.UndoCommand.Execute(null);
+            Assert.Equal("m 400 400 l 800 400 800 600 400 600", vm.Shapes[0].ToAssa());
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [Fact]
+    public void FlipFromMenu_KeepsWinding()
+    {
+        var vm = new AssaDrawViewModel(new FileHelper(), new StubWindowService());
+        var line = new SubtitleLineViewModel(new Paragraph("{\\p1}m 400 400 l 800 400 800 600 400 600{\\p0}", 0, 2000) { Extra = "Default" }, new AdvancedSubStationAlpha());
+        vm.Initialize(new Subtitle { Header = AdvancedSubStationAlpha.DefaultHeader }, [line], 1920, 1080);
+        vm.SelectShape(vm.Shapes[0]);
+        var area = SignedArea(vm.Shapes[0]);
+
+        vm.FlipShapeHorizontalCommand.Execute(null);
+        Assert.Equal(area, SignedArea(vm.Shapes[0]), 1);
+        vm.FlipShapeVerticalCommand.Execute(null);
+        Assert.Equal(area, SignedArea(vm.Shapes[0]), 1);
     }
 }

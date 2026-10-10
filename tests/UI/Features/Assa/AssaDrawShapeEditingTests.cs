@@ -70,7 +70,8 @@ public class AssaDrawShapeEditingTests
 
         vm.FlipShapeHorizontalCommand.Execute(null);
 
-        Assert.Equal("m 300 100 l 100 100 300 200", vm.Shapes[0].ToAssa());
+        // Mirrored triangle with point order reversed, so the winding direction is kept
+        Assert.Equal("m 300 200 l 100 100 300 100", vm.Shapes[0].ToAssa());
     }
 
     [Fact]
