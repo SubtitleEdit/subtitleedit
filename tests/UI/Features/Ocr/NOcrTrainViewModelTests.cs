@@ -2,7 +2,10 @@ using Avalonia.Headless.XUnit;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;
 using Nikse.SubtitleEdit.Features.Ocr.NOcr;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace UITests.Features.Ocr;
@@ -65,5 +68,63 @@ public class NOcrTrainViewModelTests
 
         Assert.DoesNotContain(vm.Fonts, f => f.IsSelected);
         Assert.StartsWith("0", vm.SelectedFontsText);
+    }
+
+    [Fact]
+    public void StartOrAbortTraining_StaysEnabledWhileRunning()
+    {
+        var attribute = typeof(NOcrTrainViewModel)
+            .GetMethod("StartOrAbortTraining", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!
+            .GetCustomAttributes(typeof(CommunityToolkit.Mvvm.Input.RelayCommandAttribute), false)
+            .Cast<CommunityToolkit.Mvvm.Input.RelayCommandAttribute>()
+            .Single();
+        Assert.True(attribute.AllowConcurrentExecutions);
+    }
+
+    [AvaloniaFact]
+    public void SaveTrainedDatabase_SavesAndSetsName()
+    {
+        var fileName = Path.Combine(Path.GetTempPath(), "nocr-train-" + Guid.NewGuid() + ".nocr");
+        try
+        {
+            var vm = MakeViewModel();
+            var db = new NOcrDb(fileName) { OcrCharacters = new(), OcrCharactersExpanded = new() };
+
+            Assert.True(vm.SaveTrainedDatabase(db, "MyDb"));
+
+            Assert.True(File.Exists(fileName));
+            Assert.Equal("MyDb", vm.TrainedDatabaseName);
+        }
+        finally
+        {
+            File.Delete(fileName);
+        }
+    }
+
+    [AvaloniaFact]
+    public void SaveTrainedDatabase_WhenClosing_DoesNotOverwriteExistingDatabase()
+    {
+        var fileName = Path.Combine(Path.GetTempPath(), "nocr-train-" + Guid.NewGuid() + ".nocr");
+        try
+        {
+            File.WriteAllBytes(fileName, new byte[] { 1, 2, 3 });
+            var vm = MakeViewModel();
+            var db = new NOcrDb(Path.Combine(Path.GetTempPath(), "missing-" + Guid.NewGuid() + ".nocr"))
+            {
+                FileName = fileName,
+                OcrCharacters = new(),
+                OcrCharactersExpanded = new(),
+            };
+
+            vm.OnClosing();
+
+            Assert.False(vm.SaveTrainedDatabase(db, "MyDb"));
+            Assert.Equal(new byte[] { 1, 2, 3 }, File.ReadAllBytes(fileName));
+            Assert.Null(vm.TrainedDatabaseName);
+        }
+        finally
+        {
+            File.Delete(fileName);
+        }
     }
 }
