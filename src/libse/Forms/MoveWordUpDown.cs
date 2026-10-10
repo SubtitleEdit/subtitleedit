@@ -55,6 +55,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             var tagSb = new StringBuilder();
             var inWord = false;
             var wordEndPos = -1;
+            var wordClosedTopTag = false;
 
             for (int i = 0; i < s2Trimmed.Length; i++)
             {
@@ -90,6 +91,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         {
                             // We hit a closing tag after the word started
                             wordEndPos = i + 1;
+                            wordClosedTopTag = true;
                             break;
                         }
                         else if (openTags.Count > 0)
@@ -115,6 +117,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         if (inWord)
                         {
                             wordEndPos = i + 1;
+                            wordClosedTopTag = true;
                             break;
                         }
                         else if (openTags.Count > 0)
@@ -233,7 +236,15 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 // OR if a tag doesn't have a closing equivalent, we need to add back the opening tag
                 var tagsToReopen = new System.Collections.Generic.List<(string opening, string closing)>();
 
-                foreach (var (opening, closing) in openTags.Reverse())
+                // The innermost tag was closed right after the word (moved up with it), so it
+                // must not be reopened just because a later run of the same tag closes in S2.
+                var stillOpen = new System.Collections.Generic.List<(string opening, string closing)>(openTags.Reverse());
+                if (wordClosedTopTag && stillOpen.Count > 0)
+                {
+                    stillOpen.RemoveAt(stillOpen.Count - 1);
+                }
+
+                foreach (var (opening, closing) in stillOpen)
                 {
                     if (string.IsNullOrEmpty(closing))
                     {
