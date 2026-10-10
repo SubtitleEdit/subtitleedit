@@ -516,9 +516,14 @@ public class AssaDrawWindow : Window
         // Background: video frame or image to trace over, with its opacity
         var backgroundButton = CreateToolButton("fa-regular fa-image", Se.Language.Assa.DrawBackground, null);
         BindHighlight(backgroundButton, vm, () => vm.HasBackground, nameof(vm.HasBackground));
-        var backgroundFlyout = new MenuFlyout();
-        backgroundFlyout.Opening += (_, _) => backgroundFlyout.ItemsSource = MakeBackgroundItems(vm);
-        backgroundButton.Flyout = backgroundFlyout;
+        // Items depend on the current state (video loaded, background set), so the menu is built on
+        // click - a MenuFlyout filled in its Opening event showed up empty.
+        var backgroundMenu = new ContextMenu { Placement = PlacementMode.BottomEdgeAlignedLeft };
+        backgroundButton.Click += (_, _) =>
+        {
+            backgroundMenu.ItemsSource = MakeBackgroundItems(vm);
+            backgroundMenu.Open(backgroundButton);
+        };
         leftPanel.Children.Add(backgroundButton);
         var opacitySlider = new Slider
         {
