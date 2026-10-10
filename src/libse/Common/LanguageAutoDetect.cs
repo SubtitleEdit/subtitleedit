@@ -1337,10 +1337,8 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static string AutoDetectGoogleLanguageOrNull(Subtitle subtitle)
         {
-            var s = new Subtitle(subtitle);
-            s.RemoveEmptyLines();
-            var allText = s.GetAllTexts(500000).TrimEnd();
-            var languageId = AutoDetectGoogleLanguage(allText, s.Paragraphs.Count / 14);
+            var allText = GetNonEmptyTexts(subtitle, 500000, out var nonEmptyCount);
+            var languageId = AutoDetectGoogleLanguage(allText, nonEmptyCount / 14);
             if (string.IsNullOrEmpty(languageId))
             {
                 languageId = GetEncodingViaLetter(allText);
@@ -1363,10 +1361,36 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <param name="score">Keyword hits for the returned language - higher is more certain.</param>
         public static string AutoDetectGoogleLanguageFromWordsOrNull(Subtitle subtitle, out int score)
         {
-            var s = new Subtitle(subtitle);
-            s.RemoveEmptyLines();
-            var languageId = AutoDetectGoogleLanguage(s.GetAllTexts(500000).TrimEnd(), s.Paragraphs.Count / 14, out score);
+            var allText = GetNonEmptyTexts(subtitle, 500000, out var nonEmptyCount);
+            var languageId = AutoDetectGoogleLanguage(allText, nonEmptyCount / 14, out score);
             return string.IsNullOrEmpty(languageId) ? null : languageId;
+        }
+
+        /// <summary>
+        /// The texts of the non-empty lines, one per line, stopping once past
+        /// <paramref name="stopAfterBytes"/> and trimmed at the end - what a copy of the subtitle
+        /// with RemoveEmptyLines and GetAllTexts gave, without deep-copying every paragraph.
+        /// </summary>
+        /// <param name="nonEmptyCount">All non-empty lines, also those past the stop.</param>
+        private static string GetNonEmptyTexts(Subtitle subtitle, int stopAfterBytes, out int nonEmptyCount)
+        {
+            nonEmptyCount = 0;
+            var sb = new StringBuilder();
+            foreach (var p in subtitle.Paragraphs)
+            {
+                if (p.Text.IsOnlyControlCharactersOrWhiteSpace())
+                {
+                    continue;
+                }
+
+                nonEmptyCount++;
+                if (sb.Length <= stopAfterBytes)
+                {
+                    sb.AppendLine(p.Text);
+                }
+            }
+
+            return sb.ToString().TrimEnd();
         }
 
         /// <summary>

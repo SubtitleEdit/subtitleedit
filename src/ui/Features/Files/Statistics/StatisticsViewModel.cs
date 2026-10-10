@@ -538,8 +538,7 @@ https://github.com/SubtitleEdit/subtitleedit
 
     private static int GetSingleLineWidth(string s)
     {
-        var textBlock = new TextBlock();
-        var x = TextMeasurer.MeasureString(HtmlUtil.RemoveHtmlTags(s, true), textBlock.FontFamily.Name, (float)textBlock.FontSize);
+        var x = TextMeasurer.MeasureStringWithDefaultFont(HtmlUtil.RemoveHtmlTags(s, true));
         return (int)x.Width;
     }
 

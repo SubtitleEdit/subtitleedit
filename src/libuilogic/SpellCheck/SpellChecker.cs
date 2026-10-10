@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Collections.Concurrent;
 using System.Text.RegularExpressions;
 using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Interfaces;
@@ -30,6 +31,13 @@ public class SpellChecker : ISpellChecker, IDoSpell
     private WordList? _hunspellWeCantSpell;
     // Finnish via libvoikko when the "fi_FI.voikko" pseudo dictionary is selected; null otherwise.
     private VoikkoSpellChecker? _voikko;
+
+    // Dictionary answers per word. A subtitle repeats its words many times (OCR fix also asks
+    // about a line's words more than once, plus spelling variants of the unknown ones), and a
+    // Hunspell check - a miss in particular - costs far more than a lookup. The dictionaries
+    // only change in Initialize, which clears this.
+    private readonly ConcurrentDictionary<string, bool> _dictionaryAnswers = new(StringComparer.Ordinal);
+    private const int MaxDictionaryAnswers = 200_000;
     protected SpellCheckWordLists? WordLists;
     // Case-insensitive so per-word membership tests need no ToUpperInvariant allocation -
     // IsWordCorrect runs per word per grid cell repaint with live spell check on.
@@ -139,6 +147,7 @@ public class SpellChecker : ISpellChecker, IDoSpell
         _voikko?.Dispose();
         _voikko = null;
         _hunspellWeCantSpell = null;
+        _dictionaryAnswers.Clear();
         if (IsVoikkoDictionary(dictionaryFile))
         {
             var dictionaryFolder = Path.GetDirectoryName(Path.GetDirectoryName(dictionaryFile)) ?? string.Empty;
@@ -516,12 +525,24 @@ public class SpellChecker : ISpellChecker, IDoSpell
 
     private bool CheckWithDictionary(string word)
     {
-        if (_voikko != null)
+        if (_voikko == null && _hunspellWeCantSpell == null)
         {
-            return _voikko.Spell(word);
+            return false;
         }
 
-        return _hunspellWeCantSpell != null && _hunspellWeCantSpell.Check(word);
+        if (_dictionaryAnswers.TryGetValue(word, out var correct))
+        {
+            return correct;
+        }
+
+        correct = _voikko != null ? _voikko.Spell(word) : _hunspellWeCantSpell!.Check(word);
+        if (_dictionaryAnswers.Count >= MaxDictionaryAnswers)
+        {
+            _dictionaryAnswers.Clear();
+        }
+
+        _dictionaryAnswers[word] = correct;
+        return correct;
     }
 
     /// <summary>
@@ -531,6 +552,42 @@ public class SpellChecker : ISpellChecker, IDoSpell
     /// as misspelled (#14788, aarondandy/WeCantSpell.Hunspell#118). Native Hunspell ignores the comment.
     /// </summary>
     internal static WordList LoadHunspell(string dictionaryFile, string affixFile)
+    {
+        // Parsing a Hunspell dictionary takes tens of milliseconds and more (en_US is 640 KB),
+        // and it happened for every SpellChecker - per file in a seconv batch, per opening of
+        // spell check. The last one parsed is kept and handed out again while both files are
+        // unchanged; a WordList is read-only after loading and safe for concurrent checks.
+        var key = GetHunspellCacheKey(dictionaryFile, affixFile);
+        lock (HunspellCacheLock)
+        {
+            if (_hunspellCache != null && _hunspellCache.Value.Key == key)
+            {
+                return _hunspellCache.Value.WordList;
+            }
+        }
+
+        var wordList = ParseHunspell(dictionaryFile, affixFile);
+        lock (HunspellCacheLock)
+        {
+            _hunspellCache = (key, wordList);
+        }
+
+        return wordList;
+    }
+
+    private static readonly object HunspellCacheLock = new();
+    private static (string Key, WordList WordList)? _hunspellCache;
+
+    private static string GetHunspellCacheKey(string dictionaryFile, string affixFile)
+    {
+        var dictionary = new FileInfo(dictionaryFile);
+        var affix = new FileInfo(affixFile);
+        return string.Join("|",
+            dictionary.FullName, dictionary.Length, dictionary.LastWriteTimeUtc.Ticks,
+            affix.FullName, affix.Length, affix.LastWriteTimeUtc.Ticks);
+    }
+
+    private static WordList ParseHunspell(string dictionaryFile, string affixFile)
     {
         var affixBytes = StripCompoundRuleComments(File.ReadAllBytes(affixFile));
         using var dictionaryStream = File.OpenRead(dictionaryFile);
