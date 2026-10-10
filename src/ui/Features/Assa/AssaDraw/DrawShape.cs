@@ -227,6 +227,10 @@ public class DrawShape
         }
     }
 
+    /// <summary>
+    /// Mirrors the shape and reverses its point order, so the winding (and with the non-zero
+    /// fill rule, which contours are holes) stays the same.
+    /// </summary>
     public void FlipHorizontal()
     {
         var (left, _, right, _) = GetBounds();
@@ -234,6 +238,8 @@ public class DrawShape
         {
             point.X = left + right - point.X;
         }
+
+        ReverseWinding();
     }
 
     public void FlipVertical()
@@ -243,6 +249,48 @@ public class DrawShape
         {
             point.Y = top + bottom - point.Y;
         }
+
+        ReverseWinding();
+    }
+
+    /// <summary>
+    /// Walks the outline the other way round: same segments, opposite direction. The coordinates
+    /// simply reverse order; each curve's control points swap roles (Support1 ↔ Support2).
+    /// </summary>
+    public void ReverseWinding()
+    {
+        var count = Points.Count;
+        if (count < 2)
+        {
+            return;
+        }
+
+        var newTypes = new DrawCoordinateType[count];
+        newTypes[count - 1] = Points[0].DrawType;
+        var i = 1;
+        while (i < count)
+        {
+            if (Points[i].DrawType == DrawCoordinateType.BezierCurveSupport1 && i + 2 < count &&
+                Points[i + 1].DrawType == DrawCoordinateType.BezierCurveSupport2)
+            {
+                newTypes[i + 1] = DrawCoordinateType.BezierCurveSupport1;
+                newTypes[i] = DrawCoordinateType.BezierCurveSupport2;
+                newTypes[i - 1] = DrawCoordinateType.BezierCurve;
+                i += 3;
+            }
+            else
+            {
+                newTypes[i - 1] = DrawCoordinateType.Line;
+                i++;
+            }
+        }
+
+        for (var j = 0; j < count; j++)
+        {
+            Points[j].DrawType = newTypes[j];
+        }
+
+        Points.Reverse();
     }
 
     /// <summary>
