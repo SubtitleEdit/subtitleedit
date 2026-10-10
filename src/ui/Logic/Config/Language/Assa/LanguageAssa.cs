@@ -43,6 +43,7 @@ public class LanguageAssa
     public string DrawConvertToCurve { get; set; }
     public string DrawBackground { get; set; }
     public string DrawPosition { get; set; }
+    public string DrawZoom { get; set; }
     public string DrawSize { get; set; }
     public string DrawLayer { get; set; }
     public string DrawBackgroundVideoFrame { get; set; }
@@ -333,6 +334,7 @@ public class LanguageAssa
         DrawConvertToCurve = "Convert segment to curve";
         DrawBackground = "Background";
         DrawPosition = "Position";
+        DrawZoom = "Zoom";
         DrawSize = "Size";
         DrawLayer = "Layer";
         DrawBackgroundVideoFrame = "Video frame (current position)";

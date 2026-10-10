@@ -1102,14 +1102,16 @@ public class AssaDrawWindow : Window
         // Zoom: - slider + percent Fit
         var zoom = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4, VerticalAlignment = VerticalAlignment.Center };
         zoom.Children.Add(CreateToolButton("fa-solid fa-minus", WithoutShortcut(Se.Language.Assa.DrawZoomOut), vm.ZoomOutCommand, 22));
-        zoom.Children.Add(new Slider
+        var zoomSlider = new Slider
         {
             Minimum = 10,
             Maximum = 400,
             Width = 110,
             VerticalAlignment = VerticalAlignment.Center,
             [!Slider.ValueProperty] = new Binding(nameof(vm.ZoomPercent)) { Mode = BindingMode.TwoWay },
-        });
+        };
+        AutomationProperties.SetName(zoomSlider, Se.Language.Assa.DrawZoom);
+        zoom.Children.Add(zoomSlider);
         zoom.Children.Add(CreateToolButton("fa-solid fa-plus", WithoutShortcut(Se.Language.Assa.DrawZoomIn), vm.ZoomInCommand, 22));
         zoom.Children.Add(new TextBlock
         {
