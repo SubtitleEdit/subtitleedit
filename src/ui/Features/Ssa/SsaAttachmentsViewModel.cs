@@ -198,7 +198,7 @@ public partial class SsaAttachmentsViewModel : ObservableObject
         }
         catch (Exception exception)
         {
-            await MessageBox.Show(Window, exception.Message, Se.Language.General.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            await MessageBox.Show(Window, Se.Language.General.Error, exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
