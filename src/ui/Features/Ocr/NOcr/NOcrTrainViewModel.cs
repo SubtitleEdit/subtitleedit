@@ -92,7 +92,8 @@ public partial class NOcrTrainViewModel : ObservableObject
     /// <summary>Set when a database was trained and saved; the caller should refresh its database list.</summary>
     public string? TrainedDatabaseName { get; private set; }
 
-    private bool _abort;
+    private volatile bool _abort;
+    private volatile bool _closing;
     private readonly IFileHelper _fileHelper;
 
     public NOcrTrainViewModel(IFileHelper fileHelper)
@@ -302,7 +303,7 @@ public partial class NOcrTrainViewModel : ObservableObject
         CharactersToTrain = NOcrTrainer.DefaultTrainingCharacters;
     }
 
-    [RelayCommand]
+    [RelayCommand(AllowConcurrentExecutions = true)]
     private async Task StartOrAbortTraining()
     {
         if (IsTraining)
@@ -424,12 +425,14 @@ public partial class NOcrTrainViewModel : ObservableObject
                     });
                 }
 
-                db.Save();
+                if (!SaveTrainedDatabase(db, databaseName))
+                {
+                    return;
+                }
 
                 var aborted = _abort;
                 Dispatcher.UIThread.Post(() =>
                 {
-                    TrainedDatabaseName = databaseName;
                     if (!aborted)
                     {
                         ProgressValue = 100;
@@ -448,6 +451,23 @@ public partial class NOcrTrainViewModel : ObservableObject
         IsTraining = false;
         TrainButtonText = Se.Language.Ocr.StartTraining;
         TrainButtonIcon = IconNames.Play;
+    }
+
+    /// <summary>
+    /// Saves the trained database unless the window is closing (Done/Escape/close button), so a
+    /// half-trained database never overwrites an existing one. Stop keeps what was learned so far.
+    /// The name is set here (not via a posted callback) so the caller sees it as soon as the dialog returns.
+    /// </summary>
+    internal bool SaveTrainedDatabase(NOcrDb db, string databaseName)
+    {
+        if (_closing)
+        {
+            return false;
+        }
+
+        db.Save();
+        TrainedDatabaseName = databaseName;
+        return true;
     }
 
     [RelayCommand]
@@ -487,6 +507,7 @@ public partial class NOcrTrainViewModel : ObservableObject
     [RelayCommand]
     private void Done()
     {
+        _closing = true;
         _abort = true;
         SaveSettings(Fonts.Where(f => f.IsSelected).Select(f => f.Name).ToList());
         Close();
@@ -529,6 +550,7 @@ public partial class NOcrTrainViewModel : ObservableObject
 
     internal void OnClosing()
     {
+        _closing = true;
         _abort = true;
     }
 }
