@@ -742,6 +742,7 @@ public class AssaDrawWindow : Window
         };
         panel.Children.Add(shapeButton);
         panel.Children.Add(palette);
+        AddTool("fa-solid fa-eye-dropper", Se.Language.Assa.DrawColorPickerTool, vm.ColorPickerToolCommand, DrawingTool.ColorPicker, "I");
         panel.Children.Add(MakeStripSeparator());
         panel.Children.Add(CreateToolButton("fa-solid fa-magnifying-glass-plus", Se.Language.Assa.DrawZoomIn, vm.ZoomInCommand, 38));
         panel.Children.Add(CreateToolButton("fa-solid fa-magnifying-glass-minus", Se.Language.Assa.DrawZoomOut, vm.ZoomOutCommand, 38));

@@ -45,6 +45,7 @@ public class LanguageAssa
     public string DrawPosition { get; set; }
     public string DrawZoom { get; set; }
     public string DrawShapeTool { get; set; }
+    public string DrawColorPickerTool { get; set; }
     public string DrawShapeLibrary { get; set; }
     public string DrawShapeLibraryHint { get; set; }
     public string DrawAddToLibrary { get; set; }
@@ -377,6 +378,7 @@ public class LanguageAssa
         DrawPosition = "Position";
         DrawZoom = "Zoom";
         DrawShapeTool = "Shape tool";
+        DrawColorPickerTool = "Pick color from a shape or the background";
         DrawShapeLibrary = "Shape library";
         DrawShapeLibraryHint = "Drag on the canvas to place a shape, or click for the default size. Shift keeps its proportions.";
         DrawAddToLibrary = "Add to shape library...";

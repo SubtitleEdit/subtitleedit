@@ -20,6 +20,9 @@ public class AssaDrawCanvas : Control
     private Point? _lastMousePosition;
     private bool _isPanning;
     private List<DrawShape>? _dragShapes;
+    private Point? _pickerPoint;
+    private Color? _pickerColor;
+    private static readonly Cursor PickerCursor = new(StandardCursorType.Cross);
     private (float X, float Y)? _insertStart;
     private (float X, float Y) _insertEnd;
     private bool _insertConstrain;
@@ -268,6 +271,11 @@ public class AssaDrawCanvas : Control
     public event EventHandler<CanvasInsertEventArgs>? InsertRequested;
 
     /// <summary>
+    /// Eyedropper: the color under the pointer was picked.
+    /// </summary>
+    public event EventHandler<Color>? ColorPicked;
+
+    /// <summary>
     /// The library shape the shape tool places (previewed while dragging).
     /// </summary>
     public ShapeLibraryItem? InsertShape { get; set; }
@@ -352,16 +360,8 @@ public class AssaDrawCanvas : Control
         // The frame itself: checkered so it reads as transparent, with the video frame or image on top
         DrawCanvasArea(context);
         DrawCheckerBackground(context, canvasRect);
-        if (BackgroundImage is { } background && background.Size.Width > 0 && background.Size.Height > 0)
+        if (BackgroundImage is { } background && GetBackgroundRect(canvasRect) is { } target)
         {
-            var target = canvasRect;
-            if (!BackgroundStretch)
-            {
-                var scale = Math.Min(canvasRect.Width / background.Size.Width, canvasRect.Height / background.Size.Height);
-                var size = new Size(background.Size.Width * scale, background.Size.Height * scale);
-                target = new Rect(canvasRect.Center.X - size.Width / 2, canvasRect.Center.Y - size.Height / 2, size.Width, size.Height);
-            }
-
             using (context.PushOpacity(Math.Clamp(BackgroundOpacity, 0.05, 1)))
             {
                 context.DrawImage(background, target);
@@ -508,6 +508,14 @@ public class AssaDrawCanvas : Control
                     context.DrawGeometry(GetBrush(Color.FromArgb(40, AccentColor.R, AccentColor.G, AccentColor.B)), previewPen, BuildGeometry(shape, true));
                 }
             }
+        }
+
+        // Eyedropper: the color under the pointer, next to it
+        if (CurrentTool == DrawingTool.ColorPicker && _pickerPoint is { } pickerPoint && _pickerColor is { } pickerColor)
+        {
+            var center = new Point(pickerPoint.X + 22, pickerPoint.Y + 22);
+            context.DrawEllipse(GetBrush(Color.FromRgb(pickerColor.R, pickerColor.G, pickerColor.B)), GetPen(Colors.White, 3), center, 14, 14);
+            context.DrawEllipse(null, GetPen(Color.FromArgb(160, 0, 0, 0), 1), center, 15.5, 15.5);
         }
 
         // Highlight active point
@@ -961,6 +969,18 @@ public class AssaDrawCanvas : Control
             return;
         }
 
+        // Eyedropper: pick the color of the shape or background pixel under the pointer
+        if (CurrentTool == DrawingTool.ColorPicker && properties.IsLeftButtonPressed)
+        {
+            if (SampleColor(x, y) is { } picked)
+            {
+                ColorPicked?.Invoke(this, picked);
+            }
+
+            e.Handled = true;
+            return;
+        }
+
         // Shape tool: drag out the rectangle the library shape goes into
         if (CurrentTool == DrawingTool.Shape && properties.IsLeftButtonPressed && InsertShape != null)
         {
@@ -1133,6 +1153,16 @@ public class AssaDrawCanvas : Control
 
     private void UpdateHoverCursor(Point point, float x, float y)
     {
+        if (CurrentTool == DrawingTool.ColorPicker)
+        {
+            _pickerPoint = point;
+            _pickerColor = SampleColor(x, y);
+            Cursor = PickerCursor;
+            InvalidateVisual();
+            return;
+        }
+
+        _pickerPoint = null;
         Cursor? cursor = null;
         if (CurrentTool == DrawingTool.Select)
         {
@@ -1241,6 +1271,93 @@ public class AssaDrawCanvas : Control
             Math.Max(1, Math.Abs(width)),
             Math.Max(1, Math.Abs(height)),
             isClick: false);
+    }
+
+    /// <summary>
+    /// Where the background image is drawn: the whole frame when stretched, else fitted and centered.
+    /// </summary>
+    private Rect? GetBackgroundRect(Rect canvasRect)
+    {
+        if (BackgroundImage is not { } background || background.Size.Width <= 0 || background.Size.Height <= 0)
+        {
+            return null;
+        }
+
+        if (BackgroundStretch)
+        {
+            return canvasRect;
+        }
+
+        var scale = Math.Min(canvasRect.Width / background.Size.Width, canvasRect.Height / background.Size.Height);
+        var size = new Size(background.Size.Width * scale, background.Size.Height * scale);
+        return new Rect(canvasRect.Center.X - size.Width / 2, canvasRect.Center.Y - size.Height / 2, size.Width, size.Height);
+    }
+
+    /// <summary>
+    /// The color at a canvas position: the topmost filled shape there, else the background pixel.
+    /// </summary>
+    public Color? SampleColor(float x, float y)
+    {
+        var shapes = Shapes;
+        for (var i = shapes.Count - 1; i >= 0; i--)
+        {
+            var shape = shapes[i];
+            if (!shape.Hidden && !shape.IsEraser && shape.Points.Count > 2 && shape.HitTest(x, y, 0))
+            {
+                return shape.ForeColor;
+            }
+        }
+
+        var canvasRect = new Rect(_panX, _panY, CanvasWidth * _zoomFactor, CanvasHeight * _zoomFactor);
+        if (BackgroundImage is not Avalonia.Media.Imaging.Bitmap bitmap || GetBackgroundRect(canvasRect) is not { } target)
+        {
+            return null;
+        }
+
+        var screenX = ToZoomFactorX(x);
+        var screenY = ToZoomFactorY(y);
+        if (!target.Contains(new Point(screenX, screenY)))
+        {
+            return null;
+        }
+
+        var pixelX = Math.Clamp((int)((screenX - target.X) / target.Width * bitmap.PixelSize.Width), 0, bitmap.PixelSize.Width - 1);
+        var pixelY = Math.Clamp((int)((screenY - target.Y) / target.Height * bitmap.PixelSize.Height), 0, bitmap.PixelSize.Height - 1);
+        return ReadPixel(bitmap, pixelX, pixelY);
+    }
+
+    private static unsafe Color? ReadPixel(Avalonia.Media.Imaging.Bitmap bitmap, int x, int y)
+    {
+        try
+        {
+            var format = bitmap.Format;
+            if (format != Avalonia.Platform.PixelFormat.Bgra8888 && format != Avalonia.Platform.PixelFormat.Rgba8888)
+            {
+                return null;
+            }
+
+            var pixel = stackalloc byte[4];
+            bitmap.CopyPixels(new PixelRect(x, y, 1, 1), (nint)pixel, 4, 4);
+            var isBgra = format == Avalonia.Platform.PixelFormat.Bgra8888;
+            var r = isBgra ? pixel[2] : pixel[0];
+            var g = pixel[1];
+            var b = isBgra ? pixel[0] : pixel[2];
+            var a = pixel[3];
+
+            // Decoded images are premultiplied; video frames are opaque so this rarely matters
+            if (a is > 0 and < 255 && bitmap.AlphaFormat == Avalonia.Platform.AlphaFormat.Premul)
+            {
+                r = (byte)Math.Min(255, r * 255 / a);
+                g = (byte)Math.Min(255, g * 255 / a);
+                b = (byte)Math.Min(255, b * 255 / a);
+            }
+
+            return Color.FromRgb(r, g, b);
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     private DrawShape? FindShape(DrawCoordinate point)
