@@ -586,6 +586,21 @@ public partial class MainViewModel :
         return map.TryGetValue(row, out var index) ? index : -1;
     }
 
+    /// <summary>
+    /// <c>rows.IndexOf</c> as a lookup built in one pass: the column and ripple-delete commands
+    /// map every selected row to its position, which was O(rows * selected) with IndexOf.
+    /// </summary>
+    internal static Func<SubtitleLineViewModel, int> IndexLookup(List<SubtitleLineViewModel> rows)
+    {
+        var map = new Dictionary<SubtitleLineViewModel, int>(rows.Count);
+        for (var i = 0; i < rows.Count; i++)
+        {
+            map.TryAdd(rows[i], i); // first position wins, like IndexOf
+        }
+
+        return row => row != null && map.TryGetValue(row, out var index) ? index : -1;
+    }
+
     private List<SubtitleLineViewModel> GetSelectedSubtitlesInOrder(bool includeReferenceOnly)
     {
         var selected = SubtitleGrid.SelectedItems;
@@ -7438,7 +7453,7 @@ public partial class MainViewModel :
         // Insert empty cells at the original selection indices and shift down
         // Use delta to keep correct original target positions
         var indices = selectedItems
-            .Select(x => column.IndexOf(x))
+            .Select(IndexLookup(column))
             .Where(i => i >= 0 && i < total)
             .Distinct()
             .OrderBy(i => i)
@@ -7699,7 +7714,7 @@ public partial class MainViewModel :
         var column = Subtitles.Where(p => !p.IsReferenceOnly).ToList();
         var total = column.Count;
         var sel = selectedItems
-            .Select(x => column.IndexOf(x))
+            .Select(IndexLookup(column))
             .Where(i => i >= 0 && i < total)
             .Distinct()
             .OrderBy(i => i)
@@ -7768,7 +7783,7 @@ public partial class MainViewModel :
         var column = Subtitles.Where(p => !p.IsReferenceOnly).ToList();
         var total = column.Count;
         var sel = selectedItems
-            .Select(x => column.IndexOf(x))
+            .Select(IndexLookup(column))
             .Where(i => i >= 0 && i < total)
             .Distinct()
             .OrderBy(i => i)
@@ -31047,7 +31062,7 @@ public partial class MainViewModel :
             // the shift for the rest of the file.
             var workingRows = Subtitles.Where(p => !p.IsReferenceOnly).ToList();
             var sortedIndices = selectedItems
-                .Select(item => workingRows.IndexOf(item))
+                .Select(IndexLookup(workingRows))
                 .Where(i => i >= 0)
                 .OrderBy(i => i)
                 .ToList();

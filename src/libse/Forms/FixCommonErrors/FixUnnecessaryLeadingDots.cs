@@ -20,6 +20,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             {
                 Paragraph p = subtitle.Paragraphs[i];
                 var text = ContinuationUtilities.SanitizeString(p.Text);
+
+                // A line starting with an ASCII letter or digit cannot start with dots, so skip
+                // the two culture-sensitive StartsWith calls (slow under ICU) for it.
+                if (text.Length > 0 && text[0] < 0x80 && char.IsLetterOrDigit(text[0]))
+                {
+                    continue;
+                }
+
                 if ((text.StartsWith("..") || text.StartsWith("…")) && callbacks.AllowFix(p, fixAction))
                 {
                     var oldText = p.Text;
