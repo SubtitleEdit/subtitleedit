@@ -4,6 +4,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -377,12 +378,12 @@ public class SpellCheckWindow : Window
             HorizontalContentAlignment = HorizontalAlignment.Center,
         };
 
-        var panelButtons = new StackPanel
+        // Side by side when both fit, otherwise stacked - a horizontal StackPanel kept each button at
+        // its natural width, so longer translations (e.g. Russian, Bulgarian) ran past the window edge (#15901).
+        var panelButtons = new ButtonPairPanel
         {
-            Orientation = Orientation.Horizontal,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 5, 0, 10),
-            Spacing = 5,
             Children =
             {
                 buttonUseOnce,
