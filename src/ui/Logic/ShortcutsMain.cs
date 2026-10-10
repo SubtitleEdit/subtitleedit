@@ -315,6 +315,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.ShowReplaceCommand), Se.Language.General.Replace },
         { nameof(MainViewModel.ShowMultipleReplaceCommand), Se.Language.General.MultipleReplace },
         { nameof(MainViewModel.ShowGoToLineCommand), Se.Language.General.GoToLineNumber },
+        { nameof(MainViewModel.ShowCommandPaletteCommand), Se.Language.Main.CommandPaletteTitle },
         { nameof(MainViewModel.RightToLeftToggleCommand), Se.Language.Options.Shortcuts.ToggleRightToLeft },
         { nameof(MainViewModel.ReverseRightToLeftStartEndCommand), Se.Language.General.ReverseRightToLeftStartEnd },
         { nameof(MainViewModel.ShowModifySelectionCommand), Se.Language.Options.Shortcuts.ModifySelection },
@@ -873,6 +874,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.ShowReplaceCommand, nameof(vm.ShowReplaceCommand), ShortcutCategory.General, ShortcutGroup.Search);
         AddShortcut(shortcuts, vm.ShowMultipleReplaceCommand, nameof(vm.ShowMultipleReplaceCommand), ShortcutCategory.General, ShortcutGroup.Search);
         AddShortcut(shortcuts, vm.ShowGoToLineCommand, nameof(vm.ShowGoToLineCommand), ShortcutCategory.General, ShortcutGroup.Search);
+        AddShortcut(shortcuts, vm.ShowCommandPaletteCommand, nameof(vm.ShowCommandPaletteCommand), ShortcutCategory.General, ShortcutGroup.Search);
         AddShortcut(shortcuts, vm.RightToLeftToggleCommand, nameof(vm.RightToLeftToggleCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ReverseRightToLeftStartEndCommand, nameof(vm.ReverseRightToLeftStartEndCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowModifySelectionCommand, nameof(vm.ShowModifySelectionCommand), ShortcutCategory.General);
@@ -1467,6 +1469,7 @@ public static class ShortcutsMain
             new(nameof(vm.UndoCommand), [cmd, "Z"]),
             new(nameof(vm.RedoCommand), [cmd, "Y"]),
             new(nameof(vm.ShowGoToLineCommand), [cmd, "G"]),
+            new(nameof(vm.ShowCommandPaletteCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.K)], ShortcutCategory.General),
             new(nameof(vm.AddOrEditBookmarkCommand), [cmd, "Shift", "B"]),
             new(nameof(vm.GoToPreviousLineCommand), ["Alt", "Up"]),
             new(nameof(vm.GoToNextLineCommand), ["Alt", "Down"]),

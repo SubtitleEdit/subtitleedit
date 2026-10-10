@@ -95,6 +95,7 @@ using Nikse.SubtitleEdit.Features.Shared.ColumnPaste;
 using Nikse.SubtitleEdit.Features.Shared.ErrorList;
 using Nikse.SubtitleEdit.Features.Shared.GetAudioClips;
 using Nikse.SubtitleEdit.Features.Shared.FormatLimitWarning;
+using Nikse.SubtitleEdit.Features.Shared.CommandPalette;
 using Nikse.SubtitleEdit.Features.Shared.GoToLineNumber;
 using Nikse.SubtitleEdit.Features.Shared.MediaInfoView;
 using Nikse.SubtitleEdit.Features.Shared.PickAlignment;
@@ -18825,6 +18826,43 @@ public partial class MainViewModel :
         }
     }
 
+
+    /// <summary>
+    /// Searchable list of every main-window command (the same list as Options > Shortcuts),
+    /// so commands without a menu entry or shortcut are still reachable from the keyboard.
+    /// </summary>
+    [RelayCommand]
+    private async Task ShowCommandPalette()
+    {
+        var items = new List<CommandPaletteItem>();
+        var seen = new HashSet<IRelayCommand>(ReferenceEqualityComparer.Instance);
+        foreach (var shortcut in ShortcutsMain.GetAllShortcuts(this)
+                     .OrderByDescending(p => p.Keys.Count > 0))
+        {
+            // Text box commands only act on a focused text box, which the palette has just taken
+            // focus from; the palette itself is left out so it cannot open itself.
+            if (shortcut.Category == ShortcutCategory.TextBox ||
+                ReferenceEquals(shortcut.Action, ShowCommandPaletteCommand) ||
+                !seen.Add(shortcut.Action))
+            {
+                continue;
+            }
+
+            var displayName = ShortcutsMain.GetCommandDisplayName(shortcut.Name)
+                .Replace("_", string.Empty)
+                .Trim();
+            var keys = shortcut.Keys.Count > 0
+                ? string.Join("+", ShortcutManager.OrderKeys(shortcut.Keys).Select(ShortcutManager.GetKeyDisplayName))
+                : string.Empty;
+            items.Add(new CommandPaletteItem(shortcut.Name, displayName, ShortcutGroupUi.GetName(shortcut.Group), keys, shortcut.Action));
+        }
+
+        var viewModel = await ShowDialogAsync<CommandPaletteWindow, CommandPaletteViewModel>(vm => vm.Initialize(items));
+        if (viewModel.SelectedCommand != null)
+        {
+            await ExecuteCommandAndWait(viewModel.SelectedCommand);
+        }
+    }
 
     [RelayCommand]
     private async Task ShowGoToLine()

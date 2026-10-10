@@ -275,6 +275,7 @@ public static class InitNativeMacMenu
         editItems.Items.Add(Item(Clean(l.Replace), v => v.ShowReplaceCommand));
         editItems.Items.Add(Item(Clean(l.MultipleReplace), v => v.ShowMultipleReplaceCommand));
         editItems.Items.Add(Item(Clean(l.GoToLineNumber), v => v.ShowGoToLineCommand));
+        editItems.Items.Add(Item(Clean(l.CommandPalette), v => v.ShowCommandPaletteCommand));
         editItems.Items.Add(new NativeMenuItemSeparator());
         editItems.Items.Add(Toggle(Clean(l.RightToLeftMode), v => v.RightToLeftToggleCommand,
             v => v.IsRightToLeftEnabled, nameof(MainViewModel.IsRightToLeftEnabled)));

@@ -12,6 +12,9 @@ public class LanguageMain
     public string CharactersPerSecond { get; set; }
     public string ChooseColumn { get; set; }
     public string ColumnPaste { get; set; }
+    public string CommandPaletteTitle { get; set; }
+    public string CommandPaletteSearchPlaceholder { get; set; }
+    public string CommandPaletteNoCommandsFound { get; set; }
     public string CreatedEmptyTranslation { get; set; }
     public string DeleteText { get; set; }
     public string DeleteTextAndShiftCellsUp { get; set; }
@@ -175,6 +178,9 @@ public class LanguageMain
         AutoBreakHint = "Auto-break selected lines";
         CharactersPerSecond = "Chars/second: {0}";
         ChooseColumn = "Choose column";
+        CommandPaletteTitle = "Command palette";
+        CommandPaletteSearchPlaceholder = "Type to search commands...";
+        CommandPaletteNoCommandsFound = "No matching commands";
         ColumnPaste = "Column paste";
         CreatedEmptyTranslation = "Created empty translation from current subtitle";
         DeleteText = "Delete text";
