@@ -288,8 +288,8 @@ public class OcrWindow : Window
                     .WithMarginRight(10)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.Ocr.NumberOfPixelsIsSpace, vm => vm.IsNOcrVisible),
-                UiUtil.MakeComboBox(vm.NOcrPixelsAreSpaceList, vm, nameof(vm.SelectedNOcrPixelsAreSpace),
-                        nameof(vm.IsNOcrVisible))
+                WithPixelsAreSpaceItemTemplate(UiUtil.MakeComboBox(vm.NOcrPixelsAreSpaceList, vm, nameof(vm.SelectedNOcrPixelsAreSpace),
+                        nameof(vm.IsNOcrVisible)))
                     .WithMarginRight(10)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
 
@@ -1336,6 +1336,16 @@ public class OcrWindow : Window
 
     // Model combo item template: a dot (green = downloaded, grey = not downloaded yet) plus the
     // model's download size - same treatment as the speech-to-text model combo.
+    // 0 = auto: word spaces relative to the text size (NOcrSpaceDetector).
+    private static ComboBox WithPixelsAreSpaceItemTemplate(ComboBox comboBox)
+    {
+        comboBox.ItemTemplate = new FuncDataTemplate<int>((value, _) => new TextBlock
+        {
+            Text = value <= 0 ? Se.Language.General.Auto : value.ToString(System.Globalization.CultureInfo.CurrentCulture),
+        }, true);
+        return comboBox;
+    }
+
     private static FuncDataTemplate<CrispEmbedModelDisplay> MakeCrispEmbedModelItemTemplate()
     {
         return StatusDots.ComboItemTemplate<CrispEmbedModelDisplay>(

@@ -654,12 +654,18 @@ public class NOcrDb
 
             // Best-match within the pass: the first candidate that fits the error budget used to
             // win outright, so with generous budgets a mediocre early entry beat a near-perfect
-            // later one. Now the candidate with the fewest wrong pixels wins; ties keep list
-            // order (newest first), so a user's just-added character still takes precedence over
-            // an equally-good older one. The counting loop shrinks its budget to "current best
-            // minus one", so each candidate aborts as soon as it can no longer win.
+            // later one. Now the candidate with the lowest share of wrong points wins; ties keep
+            // list order (newest first), so a user's just-added character still takes precedence
+            // over an equally-good older one. Ranking by share instead of by count matters once
+            // entries differ in line count: a 100-line entry (from Train nOCR) used to beat a
+            // 300-line one on a count that was low only because fewer points were checked, which
+            // read "o" as a sparsely trained "ø" and "i" as "ì".
             NOcrChar? best = null;
-            var bestErrors = int.MaxValue;
+            var bestRate = double.MaxValue;
+            NOcrChar? bestUpper = null;
+            var bestUpperRate = double.MaxValue;
+            NOcrChar? bestLower = null;
+            var bestLowerRate = double.MaxValue;
             foreach (var oc in OcrCharacters)
             {
                 if (!PassFilter(bitmap, heightToWidthPercent, oc, topMargin, pass))
@@ -675,17 +681,70 @@ public class NOcrDb
                     ? pass.ErrorsAllowedSensitive(maxWrongPixels)
                     : errorsAllowed;
 
-                var budget = Math.Min(Math.Min(candidateAllowed, areaErrorCap), bestErrors - 1);
-                if (TryCountErrors(bitmap, oc, budget, out var errors))
+                // The number of points walked grows with the glyph's size, so a character trained
+                // at 20 px and matched at 40 px collects twice the errors for the same fit.
+                var scale = bitmap.Height / (double)oc.Height;
+                if (scale > 1)
                 {
-                    best = oc;
-                    bestErrors = errors;
-                    if (errors == 0)
+                    candidateAllowed = (int)Math.Round(candidateAllowed * scale);
+                }
+
+                var budget = Math.Min(candidateAllowed, areaErrorCap);
+                if (best != null)
+                {
+                    // A candidate can only win with a lower share than the best so far, and its
+                    // share is at least errors / (all its points), so stop counting once that
+                    // bound reaches the best share.
+                    var maxPoints = CountPointsUpperBound(oc, bitmap.Width, bitmap.Height);
+                    budget = Math.Min(budget, (int)Math.Ceiling((bestRate + CaseTwinRateMargin) * maxPoints) - 1);
+                }
+
+                if (TryCountErrors(bitmap, oc, budget, out var errors, out var points) && points > 0)
+                {
+                    var rate = errors / (double)points;
+                    if (IsCaseTwinLetter(oc.Text))
                     {
-                        break;
+                        if (char.IsUpper(oc.Text[0]) && rate < bestUpperRate)
+                        {
+                            bestUpper = oc;
+                            bestUpperRate = rate;
+                        }
+                        else if (char.IsLower(oc.Text[0]) && rate < bestLowerRate)
+                        {
+                            bestLower = oc;
+                            bestLowerRate = rate;
+                        }
+                    }
+
+                    if (rate < bestRate)
+                    {
+                        best = oc;
+                        bestRate = rate;
+                        if (errors == 0 && !IsCaseTwinLetter(oc.Text))
+                        {
+                            break;
+                        }
                     }
                 }
             }
+
+            if (best != null && IsCaseTwinLetter(best.Text) && (bestUpper == null || bestLower == null))
+            {
+                // The strict passes gate on size, so the other case (smaller or bigger by
+                // definition) is often not even a candidate in the pass that found this one.
+                var twinText = char.IsUpper(best.Text[0]) ? best.Text.ToLowerInvariant() : best.Text.ToUpperInvariant();
+                var (twin, twinRate) = FindBestByText(bitmap, twinText, bestRate + CaseTwinRateMargin);
+                if (char.IsUpper(twinText[0]))
+                {
+                    (bestUpper, bestUpperRate) = (twin, twinRate);
+                }
+                else
+                {
+                    (bestLower, bestLowerRate) = (twin, twinRate);
+                }
+            }
+
+            best = ResolveCaseTwin(best, bestRate, bestUpper, bestUpperRate, bestLower, bestLowerRate, bitmap.Height, topMargin);
 
             if (best != null)
             {
@@ -701,9 +760,22 @@ public class NOcrDb
     // aspect ratio instead.
     private const int SmallGlyphAreaLimit = 150;
     private const double SmallGlyphMaxAspectRatio = 2.0;
+    private const int SmallGlyphMaxAreaRatio = 5;
 
     private static bool PassFilter(NikseBitmap2 bitmap, double heightToWidthPercent, NOcrChar oc, int topMargin, in MatchPass pass)
     {
+        // A small entry (dot, comma, apostrophe) carries only a few lines of evidence, and since
+        // every gate below scales with the glyph, it fits a much bigger glyph once stretched
+        // onto it: an apostrophe trained at 3x9 read the stem of a 8x22 "t" with zero errors.
+        // Allow about twice the size per axis, as between a DVD and a Blu-ray rendering.
+        var area = bitmap.Width * bitmap.Height;
+        var ocArea = oc.Width * oc.Height;
+        var smallArea = Math.Min(area, ocArea);
+        if (smallArea < SmallGlyphAreaLimit && Math.Max(area, ocArea) > smallArea * SmallGlyphMaxAreaRatio)
+        {
+            return false;
+        }
+
         if (bitmap.Width * bitmap.Height < SmallGlyphAreaLimit)
         {
             // Small glyphs: absolute h/w% deltas are useless here - a dot (aspect ~100) vs a
@@ -725,8 +797,12 @@ public class NOcrDb
             var aspectMaxDelta = oc.IsSensitive && pass.AspectMaxDeltaSensitive != 0
                 ? pass.AspectMaxDeltaSensitive
                 : pass.AspectMaxDelta;
-            if (aspectMaxDelta != int.MaxValue &&
-                Math.Abs(heightToWidthPercent - oc.HeightToWidthPercent) >= aspectMaxDelta)
+            // Relative difference, in percent of the narrower aspect: an absolute h/w-% delta
+            // treated tall glyphs unfairly - "i" at 4x21 vs 6x43 is 525 vs 717, so a delta of 190
+            // shut it out of every pass although the shapes are the same.
+            var aspectDelta = Math.Abs(heightToWidthPercent - oc.HeightToWidthPercent) * 100.0 /
+                              Math.Min(heightToWidthPercent, oc.HeightToWidthPercent);
+            if (aspectMaxDelta != int.MaxValue && aspectDelta >= aspectMaxDelta)
             {
                 return false;
             }
@@ -739,7 +815,13 @@ public class NOcrDb
             return false;
         }
 
-        if (Math.Abs(oc.MarginTop - topMargin) >= pass.MarginTopMaxDelta)
+        // Top margin and its tolerance are pixels at the size the character was trained at; scale
+        // both to the glyph being matched, or a "." trained at 30 px can never match one at 60 px
+        // (expected top 18, actual 36), while an "8" passes for an "e" at a smaller size.
+        var scale = bitmap.Height / (double)oc.Height;
+        var expectedTop = oc.MarginTop * scale;
+        var topTolerance = pass.MarginTopMaxDelta * Math.Max(1.0, scale);
+        if (Math.Abs(expectedTop - topMargin) >= topTolerance)
         {
             return false;
         }
@@ -855,14 +937,94 @@ public class NOcrDb
         },
     };
 
+    // Letters whose upper and lower case differ only in size ("o"/"O", "s"/"S", ...): scaled to
+    // the glyph they fit equally well, so pixels alone can't pick the case.
+    private const string CaseTwinLetters = "cCoOsSuUvVwWxXzZøØ";
+    private const double CaseTwinRateMargin = 0.01;
+
+    private static bool IsCaseTwinLetter(string text) => text.Length == 1 && CaseTwinLetters.Contains(text[0]);
+
+    /// <summary>
+    /// When the winner is a case-twin letter and its other case scored within
+    /// <see cref="CaseTwinRateMargin"/>, pick the case whose trained top margin, scaled to the
+    /// glyph, is closer to where the glyph sits in its line. The case fixer does this from the
+    /// heights seen so far, but has nothing to go on for the first lines of a file.
+    /// </summary>
+    private static NOcrChar? ResolveCaseTwin(NOcrChar? best, double bestRate, NOcrChar? upper, double upperRate, NOcrChar? lower, double lowerRate, int height, int topMargin)
+    {
+        if (best == null || !IsCaseTwinLetter(best.Text) || upper == null || lower == null ||
+            !string.Equals(upper.Text, lower.Text, StringComparison.OrdinalIgnoreCase) ||
+            Math.Max(upperRate, lowerRate) > bestRate + CaseTwinRateMargin)
+        {
+            return best;
+        }
+
+        double TopDistance(NOcrChar oc) => Math.Abs(oc.MarginTop * height / (double)oc.Height - topMargin);
+        return TopDistance(upper) <= TopDistance(lower) ? upper : lower;
+    }
+
+    /// <summary>
+    /// The entry with text <paramref name="text"/> and a similar aspect that fits
+    /// <paramref name="bitmap"/> best, if its share of wrong points is below <paramref name="maxRate"/>.
+    /// </summary>
+    private (NOcrChar? Match, double Rate) FindBestByText(NikseBitmap2 bitmap, string text, double maxRate)
+    {
+        NOcrChar? best = null;
+        var bestRate = maxRate;
+        var heightToWidthPercent = bitmap.Height * 100.0 / bitmap.Width;
+        foreach (var oc in OcrCharacters)
+        {
+            if (oc.Text != text ||
+                Math.Abs(heightToWidthPercent - oc.HeightToWidthPercent) * 100.0 / Math.Min(heightToWidthPercent, oc.HeightToWidthPercent) >= 30)
+            {
+                continue;
+            }
+
+            var maxPoints = CountPointsUpperBound(oc, bitmap.Width, bitmap.Height);
+            if (TryCountErrors(bitmap, oc, (int)Math.Ceiling(bestRate * maxPoints), out var errors, out var points) &&
+                points > 0 && errors / (double)points <= bestRate)
+            {
+                best = oc;
+                bestRate = errors / (double)points;
+            }
+        }
+
+        return (best, bestRate);
+    }
+
+    /// <summary>
+    /// Number of points <see cref="TryCountErrors"/> walks for <paramref name="oc"/> at the given
+    /// size if none of them falls outside the bitmap.
+    /// </summary>
+    private static int CountPointsUpperBound(NOcrChar oc, int width, int height)
+    {
+        var points = 0;
+        foreach (var op in oc.LinesForeground)
+        {
+            var start = op.GetScaledStart(oc, width, height);
+            var end = op.GetScaledEnd(oc, width, height);
+            points += Math.Max(Math.Abs(end.X - start.X), Math.Abs(end.Y - start.Y)) + 1;
+        }
+
+        foreach (var op in oc.LinesBackground)
+        {
+            var start = op.GetScaledStart(oc, width, height);
+            var end = op.GetScaledEnd(oc, width, height);
+            points += Math.Max(Math.Abs(end.X - start.X), Math.Abs(end.Y - start.Y)) + 1;
+        }
+
+        return points;
+    }
+
     /// <summary>
     /// Like <see cref="IsMatch"/> but reports how many pixels disagreed, so callers can rank
-    /// candidates that all fit the budget. Returns false (and an unspecified count) as soon as
-    /// the budget is exceeded.
+    /// candidates that all fit the budget, and how many points were checked. Returns false (and
+    /// unspecified counts) as soon as the budget is exceeded.
     /// </summary>
-    private static bool TryCountErrors(NikseBitmap2 bitmap, NOcrChar oc, int errorsAllowed, out int errors)
+    private static bool TryCountErrors(NikseBitmap2 bitmap, NOcrChar oc, int errorsAllowed, out int errors, out int points)
     {
         errors = 0;
+        points = 0;
         if (errorsAllowed < 0)
         {
             return false;
@@ -885,6 +1047,7 @@ public class NOcrDb
             {
                 if ((uint)point.X < (uint)width && (uint)point.Y < (uint)height)
                 {
+                    points++;
                     var a = pixelData[point.X * 4 + point.Y * widthX4 + 3];
                     if (a <= 150)
                     {
@@ -903,6 +1066,7 @@ public class NOcrDb
             {
                 if ((uint)point.X < (uint)width && (uint)point.Y < (uint)height)
                 {
+                    points++;
                     var a = pixelData[point.X * 4 + point.Y * widthX4 + 3];
                     if (a > 150)
                     {

@@ -110,8 +110,9 @@ public class Se4FormatInputTest : IDisposable
         var (result, srt) = await ToSubRip(index, ocrDb: ocrDb);
 
         Assert.True(result.Success, string.Join("; ", result.Errors));
-        Assert.Contains("Hello, World!", srt);
-        Assert.Contains("This is a test subtitle.", srt);
+        // Full output in the message: Assert.Contains truncates it, which hides what nOCR read.
+        Assert.True(srt.Contains("Hello, World!"), srt);
+        Assert.True(srt.Contains("This is a test subtitle."), srt);
     }
 
     [Fact]
