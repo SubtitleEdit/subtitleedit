@@ -706,6 +706,24 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
     // Lookalikes across different base letters (the hook of "č" vs the dots of "ë").
     private static readonly string[] AccentCrossGroups = { "čë", "ČË", "šë", "žä", "ŽÄ" };
 
+    // Languages written without accented letters: an accented letter there is a loanword or name
+    // ("café", "René", "résumé") that the dictionary usually lacks, so it must not be stripped.
+    private static readonly HashSet<string> PlainLatinLanguages = new(StringComparer.Ordinal) { "en", "id", "ms" };
+
+    // Letters whose accent sits where the dot is - nOCR's typical misread of a plain "i" ("ìs", "movíes").
+    private const string DotPositionAccents = "ìíîÌÍÎ";
+
+    private string GetAccentLookalikesForLanguage(char c)
+    {
+        var lookalikes = GetAccentLookalikes(c);
+        if (!PlainLatinLanguages.Contains(_twoLetterIsoLanguageName) || DotPositionAccents.IndexOf(c) >= 0)
+        {
+            return lookalikes;
+        }
+
+        return new string(lookalikes.Where(ch => ch > 127).ToArray());
+    }
+
     private static string GetAccentLookalikes(char c)
     {
         var sb = new StringBuilder();
@@ -731,9 +749,9 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         return new string(lookalikes.Where(ch => ch > 127).Concat(lookalikes.Where(ch => ch <= 127)).ToArray());
     }
 
-    private static bool IsAccentCandidate(char c)
+    private bool IsAccentCandidate(char c)
     {
-        return c > 127 && char.IsLetter(c) && GetAccentLookalikes(c).Length > 0;
+        return c > 127 && char.IsLetter(c) && GetAccentLookalikesForLanguage(c).Length > 0;
     }
 
     /// <summary>
@@ -769,7 +787,7 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
             return false;
         }
 
-        var alternatives = positions.Select(p => GetAccentLookalikes(word[p])).ToList();
+        var alternatives = positions.Select(p => GetAccentLookalikesForLanguage(word[p])).ToList();
         var chars = word.ToCharArray();
         string? found = null;
 
