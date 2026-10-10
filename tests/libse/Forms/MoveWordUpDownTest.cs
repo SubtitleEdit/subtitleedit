@@ -24,6 +24,17 @@ public class MoveWordUpDownTest
         Assert.Equal("line here", mover.S2);
     }
 
+    // The moved word closes its own <i>; a later italic run in S2 must not reopen it.
+    [Fact]
+    public void MoveWordUp_ClosedItalicWordWithLaterItalicRun()
+    {
+        var mover = new MoveWordUpDown("Hello", "<i>One</i> two <i>three</i>");
+        mover.MoveWordUp();
+
+        Assert.Equal("Hello <i>One</i>", mover.S1);
+        Assert.Equal("two <i>three</i>", mover.S2);
+    }
+
     [Fact]
     public void MoveWordUp_EmptyS2()
     {
