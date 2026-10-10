@@ -2135,13 +2135,14 @@ public partial class OcrViewModel : ObservableObject
         }
 
         var result = await _windowService
-            .ShowDialogAsync<PreProcessingWindow, PreProcessingViewModel>(Window, vm => { vm.Initialize(_preProcessingSettings, selectedItem.GetSkBitmapClean()); });
+            .ShowDialogAsync<PreProcessingWindow, PreProcessingViewModel>(Window, vm => { vm.Initialize(_preProcessingSettings ?? LoadPreProcessingSettings(), selectedItem.GetSkBitmapClean()); });
 
         _isCtrlDown = false;
 
         if (result.OkPressed)
         {
             _preProcessingSettings = result.PreProcessingSettings;
+            SavePreProcessingSettings(_preProcessingSettings);
             foreach (var item in _allOcrSubtitleItems) // not OcrSubtitleItems - it may be filtered to forced-only
             {
                 item.PreProcessingSettings = _preProcessingSettings;
@@ -2157,6 +2158,40 @@ public partial class OcrViewModel : ObservableObject
         UpdateImagePreProcessingStatus();
     }
 
+    private static PreProcessingSettings LoadPreProcessingSettings()
+    {
+        var ocr = Se.Settings.Ocr;
+        return new PreProcessingSettings
+        {
+            CropTransparentColors = ocr.PreProcessingCropTransparentColors,
+            InverseColors = ocr.PreProcessingInverseColors,
+            Binarize = ocr.PreProcessingBinarize,
+            RemoveBorders = ocr.PreProcessingRemoveBorders,
+            BorderSize = ocr.PreProcessingBorderSize,
+            ToOneColor = ocr.PreProcessingToOneColor,
+            OneColorDarknessThreshold = ocr.PreProcessingOneColorDarknessThreshold,
+        };
+    }
+
+    private static bool IsPreProcessingActive(PreProcessingSettings settings)
+    {
+        return settings.CropTransparentColors || settings.InverseColors || settings.Binarize ||
+               settings.RemoveBorders || settings.ToOneColor;
+    }
+
+    private static void SavePreProcessingSettings(PreProcessingSettings settings)
+    {
+        var ocr = Se.Settings.Ocr;
+        ocr.PreProcessingCropTransparentColors = settings.CropTransparentColors;
+        ocr.PreProcessingInverseColors = settings.InverseColors;
+        ocr.PreProcessingBinarize = settings.Binarize;
+        ocr.PreProcessingRemoveBorders = settings.RemoveBorders;
+        ocr.PreProcessingBorderSize = settings.BorderSize;
+        ocr.PreProcessingToOneColor = settings.ToOneColor;
+        ocr.PreProcessingOneColorDarknessThreshold = settings.OneColorDarknessThreshold;
+        Se.SaveSettings();
+    }
+
     private void UpdateImagePreProcessingStatus()
     {
         Dispatcher.UIThread.Post(() =>
@@ -2167,12 +2202,7 @@ public partial class OcrViewModel : ObservableObject
                 return;
             }
 
-            HasPreProcessingSettings =
-                _preProcessingSettings.CropTransparentColors ||
-                _preProcessingSettings.InverseColors ||
-                _preProcessingSettings.Binarize ||
-                _preProcessingSettings.RemoveBorders ||
-                _preProcessingSettings.ToOneColor;
+            HasPreProcessingSettings = IsPreProcessingActive(_preProcessingSettings);
         });
     }
 
@@ -5289,6 +5319,24 @@ public partial class OcrViewModel : ObservableObject
     private void SetOcrSubtitleItems()
     {
         _allOcrSubtitleItems = _ocrSubtitle!.MakeOcrSubtitleItems();
+        if (_preProcessingSettings == null)
+        {
+            var saved = LoadPreProcessingSettings();
+            if (IsPreProcessingActive(saved))
+            {
+                _preProcessingSettings = saved;
+            }
+        }
+
+        if (_preProcessingSettings != null)
+        {
+            foreach (var item in _allOcrSubtitleItems)
+            {
+                item.PreProcessingSettings = _preProcessingSettings;
+            }
+        }
+
+        UpdateImagePreProcessingStatus();
         HasForcedSubtitles = _allOcrSubtitleItems.Any(p => p.IsForced);
         OcrSubtitleItems = new ObservableCollection<OcrSubtitleItem>(_allOcrSubtitleItems);
 
