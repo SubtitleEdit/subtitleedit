@@ -220,6 +220,7 @@ public partial class AssaDrawViewModel : ObservableObject
         Canvas.ShapeMoved += OnShapeMoved;
         Canvas.EditStarting += (_, _) => SaveUndo();
         Canvas.InsertRequested += OnInsertRequested;
+        Canvas.ColorPicked += (_, color) => PickColor(color);
         Canvas.InsertShape = CurrentLibraryShape;
     }
 
@@ -233,6 +234,35 @@ public partial class AssaDrawViewModel : ObservableObject
 
     [RelayCommand]
     private void ShapeTool() => SetTool(DrawingTool.Shape);
+
+    [RelayCommand]
+    private void ColorPickerTool() => SetTool(DrawingTool.ColorPicker);
+
+    /// <summary>
+    /// Eyedropper result: becomes the current color - new shapes get it, and a selected shape's
+    /// (or layer's) color changes to it.
+    /// </summary>
+    public void PickColor(Color color)
+    {
+        LayerColor = color;
+        UpdateSelectionInfo();
+    }
+
+    /// <summary>
+    /// New shapes join the layer that already has the current color, or start a new layer - one
+    /// color per layer is what the ASSA output can hold (a white shape put on a yellow layer 0
+    /// came out yellow).
+    /// </summary>
+    private int GetLayerForColor(Color color)
+    {
+        var existing = Shapes.FirstOrDefault(s => s.ForeColor == color && !s.IsEraser);
+        if (existing != null)
+        {
+            return existing.Layer;
+        }
+
+        return Shapes.Count == 0 ? 0 : Shapes.Max(s => s.Layer) + 1;
+    }
 
     /// <summary>
     /// Picks the shape the shape tool places (and switches to the shape tool).
@@ -680,7 +710,7 @@ public partial class AssaDrawViewModel : ObservableObject
 
     private void StartNewShape(float x, float y)
     {
-        ActiveShape = new DrawShape();
+        ActiveShape = new DrawShape { ForeColor = LayerColor, Layer = GetLayerForColor(LayerColor) };
 
         switch (CurrentTool)
         {
@@ -2341,7 +2371,7 @@ public partial class AssaDrawViewModel : ObservableObject
                     break;
             }
         }
-        else if (e.KeyModifiers == KeyModifiers.None && !IsTextInput(e) && e.Key is Key.V or Key.L or Key.B or Key.R or Key.C or Key.S)
+        else if (e.KeyModifiers == KeyModifiers.None && !IsTextInput(e) && e.Key is Key.V or Key.L or Key.B or Key.R or Key.C or Key.S or Key.I)
         {
             // Single-key tools like other drawing programs (not while typing in a number box)
             SetTool(e.Key switch
@@ -2351,6 +2381,7 @@ public partial class AssaDrawViewModel : ObservableObject
                 Key.B => DrawingTool.Bezier,
                 Key.R => DrawingTool.Rectangle,
                 Key.S => DrawingTool.Shape,
+                Key.I => DrawingTool.ColorPicker,
                 _ => DrawingTool.Circle,
             });
             e.Handled = true;
