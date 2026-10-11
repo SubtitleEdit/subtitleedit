@@ -618,6 +618,12 @@ public static class UiTheme
             {
                 Setters = { new Setter(ScrollViewer.AllowAutoHideProperty, allowAutoHide) }
             },
+            // Same template binding in the ListBox template - without this the list's scrollbar
+            // overlays right-aligned item content like the command palette shortcuts (#15920).
+            new Style(x => x.Is<ListBox>())
+            {
+                Setters = { new Setter(ScrollViewer.AllowAutoHideProperty, allowAutoHide) }
+            },
         };
 
 
