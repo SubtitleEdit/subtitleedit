@@ -1,6 +1,8 @@
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
+using Avalonia.Input;
 using Avalonia.LogicalTree;
+using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Sync.PointSync;
 using Nikse.SubtitleEdit.Features.Sync.PointSync.SetSyncPoint;
@@ -10,7 +12,10 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using SkiaSharp;
 
 namespace UITests.Features.Sync.PointSync;
 
@@ -224,5 +229,92 @@ public class PointSyncWindowTests : IDisposable
         vm.Initialize(lines, -1, string.Empty, string.Empty, VideoPreviewSubtitleContext.Default, null);
 
         Assert.Same(lines[0], vm.SelectedSubtitle);
+    }
+
+    /// <summary>
+    /// A Blu-ray sup as the other subtitle: loaded with its time codes, its lines shown as images
+    /// instead of text (issue #15911) - a sync point only needs the times, no OCR.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task PointSyncViaOther_BluRaySup_LoadsAsImageLines()
+    {
+        var fileName = Path.Combine(Path.GetTempPath(), "point-sync-other-" + Guid.NewGuid() + ".sup");
+        try
+        {
+            var sup = new List<byte>();
+            for (var i = 0; i < 2; i++)
+            {
+                using var bitmap = new SKBitmap(64, 32);
+                using (var canvas = new SKCanvas(bitmap))
+                {
+                    canvas.Clear(SKColors.Transparent);
+                    canvas.DrawRect(new SKRect(4, 4, 60, 28), new SKPaint { Color = SKColors.White });
+                }
+
+                var pic = new BluRaySupPicture
+                {
+                    StartTime = 1000 + i * 4000,
+                    EndTime = 3000 + i * 4000,
+                    Width = 720,
+                    Height = 480,
+                    CompositionNumber = i * 2,
+                };
+                sup.AddRange(BluRaySupPicture.CreateSupFrame(pic, bitmap, SKColors.White, 25, 10, 10, BluRayContentAlignment.BottomCenter));
+            }
+
+            File.WriteAllBytes(fileName, sup.ToArray());
+
+            var vm = new PointSyncViaOtherViewModel(new FileHelper(), new WindowService(new NullServiceProvider()));
+            vm.Initialize(TwoLines(), 0, string.Empty, string.Empty, VideoPreviewSubtitleContext.Default);
+
+            var result = await vm.TryLoadOtherFromContainer(fileName);
+
+            Assert.NotNull(result);
+            Assert.True(result.IsImageBased);
+            Assert.Null(result.Error);
+            Assert.Equal(2, result.Lines.Count);
+            Assert.All(result.Lines, line => Assert.IsType<PointSyncOtherImageLine>(line));
+            Assert.Equal(TimeSpan.FromSeconds(1), result.Lines[0].StartTime);
+            Assert.Equal(TimeSpan.FromSeconds(5), result.Lines[1].StartTime);
+        }
+        finally
+        {
+            File.Delete(fileName);
+        }
+    }
+
+    [AvaloniaFact]
+    public async Task PointSyncViaOther_SubtitleFile_IsNotAContainer()
+    {
+        var fileName = Path.Combine(Path.GetTempPath(), "point-sync-other-" + Guid.NewGuid() + ".srt");
+        try
+        {
+            File.WriteAllText(fileName, "1\n00:00:01,000 --> 00:00:02,000\nHello\n");
+            var vm = new PointSyncViaOtherViewModel(new FileHelper(), new WindowService(new NullServiceProvider()));
+
+            Assert.Null(await vm.TryLoadOtherFromContainer(fileName));
+        }
+        finally
+        {
+            File.Delete(fileName);
+        }
+    }
+
+    [AvaloniaFact]
+    public void PointSyncViaOther_CtrlPlusMinus_ZoomsImagesOnlyWhenImageBased()
+    {
+        var vm = new PointSyncViaOtherViewModel(new FileHelper(), new WindowService(new NullServiceProvider()));
+        var start = vm.ImageMaxHeight;
+
+        vm.OnKeyDown(new KeyEventArgs { Key = Key.OemPlus, KeyModifiers = KeyModifiers.Control });
+        Assert.Equal(start, vm.ImageMaxHeight);
+
+        vm.IsOtherImageBased = true;
+        vm.OnKeyDown(new KeyEventArgs { Key = Key.OemPlus, KeyModifiers = KeyModifiers.Control });
+        Assert.True(vm.ImageMaxHeight > start);
+
+        vm.OnKeyDown(new KeyEventArgs { Key = Key.OemMinus, KeyModifiers = KeyModifiers.Control });
+        vm.OnKeyDown(new KeyEventArgs { Key = Key.OemMinus, KeyModifiers = KeyModifiers.Control });
+        Assert.True(vm.ImageMaxHeight < start);
     }
 }

@@ -27184,85 +27184,12 @@ public partial class MainViewModel :
         var sub = await ExtractMatroskaSubtitleAsync(matroska, matroskaSubtitleInfo.TrackNumber);
 
         _subtitle.Paragraphs.Clear();
-        var subtitleImages = new List<DvbSubPes>();
         var subtitle = new Subtitle();
         Utilities.LoadMatroskaTextSubtitle(matroskaSubtitleInfo, matroska, sub, _subtitle);
-        for (var index = 0; index < sub.Count; index++)
-        {
-            try
-            {
-                var msub = sub[index];
-                DvbSubPes? pes = null;
-                var data = msub.GetData(matroskaSubtitleInfo);
-                if (data != null && data.Length > 9 && data[0] == 15 &&
-                    data[1] >= SubtitleSegment.PageCompositionSegment &&
-                    data[1] <= SubtitleSegment.DisplayDefinitionSegment) // sync byte + segment id
-                {
-                    var buffer = new byte[data.Length + 3];
-                    Buffer.BlockCopy(data, 0, buffer, 2, data.Length);
-                    buffer[0] = 32;
-                    buffer[1] = 0;
-                    buffer[buffer.Length - 1] = 255;
-                    pes = new DvbSubPes(0, buffer);
-                }
-                else if (VobSubParser.IsMpeg2PackHeader(data))
-                {
-                    pes = new DvbSubPes(data, Mpeg2Header.Length);
-                }
-                else if (VobSubParser.IsPrivateStream1(data, 0))
-                {
-                    pes = new DvbSubPes(data, 0);
-                }
-                else if (data!.Length > 9 && data[0] == 32 && data[1] == 0 && data[2] == 14 && data[3] == 16)
-                {
-                    pes = new DvbSubPes(0, data);
-                }
-
-                if (pes == null && subtitle.Paragraphs.Count > 0)
-                {
-                    var last = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
-                    if (last.DurationTotalMilliseconds < 100)
-                    {
-                        last.EndTime.TotalMilliseconds = msub.Start;
-                        if (last.DurationTotalMilliseconds >
-                            Se.Settings.General.SubtitleMaximumDisplayMilliseconds)
-                        {
-                            last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + 3000;
-                        }
-                    }
-                }
-
-                if (pes != null && pes.PageCompositions != null && pes.PageCompositions.Any(p => p.Regions.Count > 0))
-                {
-                    subtitleImages.Add(pes);
-                    subtitle.Paragraphs.Add(new Paragraph(string.Empty, msub.Start, msub.End));
-                }
-            }
-            catch
-            {
-                // continue
-            }
-        }
-
+        var subtitleImages = MatroskaDvbHelper.ParseImages(matroskaSubtitleInfo, sub, subtitle);
         if (subtitleImages.Count == 0)
         {
             return false;
-        }
-
-        for (var index = 0; index < subtitle.Paragraphs.Count; index++)
-        {
-            var p = subtitle.Paragraphs[index];
-            if (p.DurationTotalMilliseconds < 200)
-            {
-                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 3000;
-            }
-
-            var next = subtitle.GetParagraphOrDefault(index + 1);
-            if (next != null && next.StartTime.TotalMilliseconds < p.EndTime.TotalMilliseconds)
-            {
-                p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds -
-                                              Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
-            }
         }
 
         Dispatcher.UIThread.Post(async () =>
