@@ -1,4 +1,4 @@
-using Spectre.Console;
+﻿using Spectre.Console;
 
 namespace SeConv.Helpers;
 
@@ -168,6 +168,7 @@ internal static class HelpDisplay
         ShowParameter(console, "dump-settings", "Print a full --settings JSON with libse defaults (redirect to a file)");
         ShowParameter(console, "info <file>", "Print format / encoding / duration / language info");
         ShowParameter(console, "lint <pattern>", "Validate subtitle(s); exit 1 if any issues found");
+        ShowParameter(console, "optimize-nocr <db.nocr>", "Remove nOCR lines that don't tell characters apart (in place + .bak, or --output:<path>)");
 
         console.WriteLine();
         ShowSection(console, "Examples", null);

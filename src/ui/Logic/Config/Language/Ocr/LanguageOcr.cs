@@ -146,6 +146,10 @@ public class LanguageOcr
     public string CrispEmbedSettingsTitle { get; set; }
     public string CrispEmbedDescription { get; set; }
     public string TrainNOcrDatabase { get; set; }
+    public string OptimizeNOcrDatabase { get; set; }
+    public string OptimizeNOcrDatabaseQuestionXY { get; set; }
+    public string OptimizingNOcrDatabaseXY { get; set; }
+    public string NOcrDatabaseOptimizedXYZ { get; set; }
     public string StartTraining { get; set; }
     public string AbortTraining { get; set; }
     public string TrainingOptions { get; set; }
@@ -322,6 +326,12 @@ public class LanguageOcr
         CrispEmbedDescription = "Local OCR engine with multiple model backends - download the engine and the models here.";
 
         TrainNOcrDatabase = "Train nOCR database...";
+        OptimizeNOcrDatabase = "Optimize nOCR database...";
+        OptimizeNOcrDatabaseQuestionXY = "Remove the lines that don't tell characters apart from similar characters in nOCR database \"{0}\"?" + Environment.NewLine + Environment.NewLine +
+                                         "This makes the database smaller and OCR faster, usually with fewer errors. Takes up to a minute." + Environment.NewLine + Environment.NewLine +
+                                         "A backup is saved as \"{1}\".";
+        OptimizingNOcrDatabaseXY = "Optimizing nOCR database... {0}/{1}";
+        NOcrDatabaseOptimizedXYZ = "nOCR database \"{0}\" optimized: {1:#,##0} -> {2:#,##0} lines.";
         StartTraining = "Start training";
         AbortTraining = "Abort training";
         TrainingOptions = "Training options";

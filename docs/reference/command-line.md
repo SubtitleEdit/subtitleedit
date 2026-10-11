@@ -85,6 +85,7 @@ seconv list-rf-rules        # list remove-formatting rule IDs (alias: list-remov
 seconv dump-settings        # print a full --settings JSON with libse defaults (alias: default-settings)
 seconv info <file>          # print format/encoding/duration/language for a file
 seconv lint <pattern>       # validate subtitle(s); exit 1 if issues found
+seconv optimize-nocr <db>   # remove nOCR lines that don't tell characters apart (in place + .bak, or --output:<path>)
 seconv --help               # show help (same text as -h, /? and /help)
 seconv --help-json          # print the whole command-line schema as JSON
 seconv --version            # print version and exit

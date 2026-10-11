@@ -374,6 +374,7 @@ internal static class CliSchema
                 new { name = "dump-settings", json = true, description = "Print a full --settings JSON with libse defaults. Always JSON; redirect to a file." },
                 new { name = "info", json = true, description = "Print format / encoding / duration / language for one file. Usage: seconv info <file>" },
                 new { name = "lint", json = true, description = "Validate subtitles; exit 1 if any issues found. Usage: seconv lint <pattern>..." },
+                new { name = "optimize-nocr", json = true, description = "Remove nOCR database lines that don't tell characters apart from lookalikes (smaller, faster, usually more accurate). In place with a .bak backup unless --output:<path>. Usage: seconv optimize-nocr <database.nocr>" },
                 new { name = "--help-json", json = true, description = "Print this schema." },
                 new { name = "--version", json = false, description = "Print the seconv version and exit." },
             },
