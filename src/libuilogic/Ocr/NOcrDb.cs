@@ -506,12 +506,12 @@ public class NOcrDb
         {
             if (cached.ExactMatch != null)
             {
-                return cached.ExactMatch;
+                return ComposeYery(cached.ExactMatch, list, item, deepSeek, maxWrongPixels, lastDitch);
             }
 
             // The expanded scan depends on the neighboring splitter items and the parent
             // bitmap, so it can't be cached per glyph bitmap - always evaluate it live.
-            return GetMatchExpanded(parentBitmap, item, list.IndexOf(item), list) ?? cached.SingleMatch;
+            return GetMatchExpanded(parentBitmap, item, list.IndexOf(item), list) ?? ComposeYery(cached.SingleMatch, list, item, deepSeek, maxWrongPixels, lastDitch);
         }
 
         // A perfect single match (exact size, 0 errors) means the user has explicitly added an
@@ -520,7 +520,7 @@ public class NOcrDb
         if (exactSingle != null)
         {
             CacheMatch(key, new MatchCacheEntry { ExactMatch = exactSingle });
-            return exactSingle;
+            return ComposeYery(exactSingle, list, item, deepSeek, maxWrongPixels, lastDitch);
         }
 
         var expandedResult = GetMatchExpanded(parentBitmap, item, list.IndexOf(item), list);
@@ -553,7 +553,50 @@ public class NOcrDb
         }
 
         CacheMatch(key, new MatchCacheEntry { SingleMatch = single });
-        return single;
+        return ComposeYery(single, list, item, deepSeek, maxWrongPixels, lastDitch);
+    }
+
+    /// <summary>
+    /// "ы"/"Ы" is a soft sign plus a separate bar. The trained two-part entries only fit fonts
+    /// with a similar gap and weight - in a heavy outlined font the pair is far wider than any
+    /// trained one and came out as "ьІ". A soft sign directly followed (no space) by a dotless bar
+    /// of the same height and top is that letter in any font: a capital "І" after a lowercase
+    /// "ь" is taller, and the dotted "і" isn't a bar.
+    /// </summary>
+    private NOcrChar? ComposeYery(NOcrChar? softSign, List<ImageSplitterItem2> list, ImageSplitterItem2 item, bool deepSeek, int maxWrongPixels, bool lastDitch)
+    {
+        if (softSign?.Text is not ("ь" or "Ь") || item.NikseBitmap == null)
+        {
+            return softSign;
+        }
+
+        var index = list.IndexOf(item);
+        var next = index >= 0 && index + 1 < list.Count ? list[index + 1] : null;
+        if (next?.NikseBitmap == null)
+        {
+            return softSign;
+        }
+
+        var height = item.NikseBitmap.Height;
+        var tolerance = Math.Max(2, height / 8);
+        if (Math.Abs(next.NikseBitmap.Height - height) > tolerance ||
+            Math.Abs(next.Top - item.Top) > tolerance ||
+            next.NikseBitmap.Width >= item.NikseBitmap.Width)
+        {
+            return softSign;
+        }
+
+        var bar = GetMatchSingle(next.NikseBitmap, next.Top, deepSeek, maxWrongPixels, lastDitch);
+        if (bar?.Text is not ("І" or "l" or "I" or "|" or "/" or "1"))
+        {
+            return softSign;
+        }
+
+        return new NOcrChar(softSign)
+        {
+            Text = softSign.Text == "ь" ? "ы" : "Ы",
+            ExpandCount = 2,
+        };
     }
 
     private void CacheMatch(MatchCacheKey key, MatchCacheEntry entry)
@@ -938,8 +981,9 @@ public class NOcrDb
     };
 
     // Letters whose upper and lower case differ only in size ("o"/"O", "s"/"S", ...): scaled to
-    // the glyph they fit equally well, so pixels alone can't pick the case.
-    private const string CaseTwinLetters = "cCoOsSuUvVwWxXzZøØ";
+    // the glyph they fit equally well, so pixels alone can't pick the case. Cyrillic has many
+    // more of them than Latin ("о"/"О", "т"/"Т", "и"/"И", ...).
+    private const string CaseTwinLetters = "cCoOsSuUvVwWxXzZøØ" + NOcrCaseFixer.CyrillicCaseTwins;
     private const double CaseTwinRateMargin = 0.01;
 
     private static bool IsCaseTwinLetter(string text) => text.Length == 1 && CaseTwinLetters.Contains(text[0]);
