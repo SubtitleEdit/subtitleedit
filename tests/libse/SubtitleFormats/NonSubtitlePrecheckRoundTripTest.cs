@@ -21,7 +21,7 @@ public class NonSubtitlePrecheckRoundTripTest
     };
 
     private static SubtitleFormat Create(string name) =>
-        (SubtitleFormat)System.Activator.CreateInstance(typeof(SubtitleFormat).Assembly.GetType("Nikse.SubtitleEdit.Core.SubtitleFormats." + name));
+        (SubtitleFormat)System.Activator.CreateInstance(typeof(SubtitleFormat).Assembly.GetType("Nikse.SubtitleEdit.Core.SubtitleFormats." + name, throwOnError: true)!)!;
 
     [Theory]
     [MemberData(nameof(Formats))]

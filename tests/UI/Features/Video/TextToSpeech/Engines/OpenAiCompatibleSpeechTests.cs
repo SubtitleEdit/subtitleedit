@@ -91,7 +91,7 @@ public class OpenAiCompatibleSpeechTests
     public async Task EachProviderKeepsItsOwnKeyAndModel()
     {
         var s = Se.Settings.Video.TextToSpeech;
-        var saved = (s.OpenAiCompatibleProvider, s.OpenAiApiKey, s.OpenRouterTtsApiKey, s.OpenAiModel, s.OpenRouterTtsModel);
+        var saved = (s.OpenAiCompatibleProvider, s.OpenAiApiKey, Se.Settings.Providers.OpenRouterApiKey, s.OpenAiModel, s.OpenRouterTtsModel);
         try
         {
             OpenAiCompatibleSpeech.SetApiKey(OpenAiCompatibleSpeech.ProviderOpenAi, "sk-openai");
@@ -119,7 +119,7 @@ public class OpenAiCompatibleSpeechTests
         }
         finally
         {
-            (s.OpenAiCompatibleProvider, s.OpenAiApiKey, s.OpenRouterTtsApiKey, s.OpenAiModel, s.OpenRouterTtsModel) = saved;
+            (s.OpenAiCompatibleProvider, s.OpenAiApiKey, Se.Settings.Providers.OpenRouterApiKey, s.OpenAiModel, s.OpenRouterTtsModel) = saved;
         }
     }
 

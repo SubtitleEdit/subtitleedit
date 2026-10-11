@@ -20,6 +20,7 @@ public class VoiceManagerViewModelTests
 {
     private sealed class FakeCloneEngine : ITtsEngine
     {
+        public override string ToString() => Name;
         private readonly string _folder;
         public FakeCloneEngine(string folder) => _folder = folder;
         public string Name => "Fake clone engine";

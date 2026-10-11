@@ -271,7 +271,7 @@ public class CompareEditTests : IDisposable
         scrollViewer.Offset = new Vector(0, 600);
         Settle(window);
 
-        var containers = vm.RowsView.GetRealizedContainers().ToList();
+        var containers = vm.RowsView!.GetRealizedContainers().ToList();
         // Near the top, so the opened editor fits in the view - focusing it must not need a scroll
         // (rows are taller with the Linux fonts on CI, and a lower row's editor would overflow).
         var row = (CompareRow)containers[2].DataContext!;
@@ -351,7 +351,7 @@ public class CompareEditTests : IDisposable
         var scrollViewer = vm.RowsView!.GetVisualDescendants().OfType<ScrollViewer>().First();
         vm.SelectRow(420);
         Settle(window);
-        ((Control)vm.RowsView.ContainerFromIndex(420)!).Focus();
+        ((Control)vm.RowsView!.ContainerFromIndex(420)!).Focus();
         Settle(window);
         while (FirstVisibleRow(vm, scrollViewer) < 500)
         {

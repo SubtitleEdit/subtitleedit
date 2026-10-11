@@ -4203,7 +4203,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             }
         }
 
-        if (Math.Abs(best.StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds) > 500)
+        if (best == null || Math.Abs(best.StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds) > 500)
         {
             return null;
         }
