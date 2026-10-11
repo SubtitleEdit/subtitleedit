@@ -80,8 +80,8 @@ public class NOcrCyrillicTests
         // Only "ь" and "І" are trained - no two-part "ы" entry to match.
         var db = Train("ьЬІ");
 
-        Assert.Equal("ы", Recognize(db, "ы"));
-        Assert.Equal("Ы", Recognize(db, "Ы"));
+        Assert.Equal("Іы", Recognize(db, "Іы"));
+        Assert.Equal("ІЫ", Recognize(db, "ІЫ"));
     }
 
     [Fact]
