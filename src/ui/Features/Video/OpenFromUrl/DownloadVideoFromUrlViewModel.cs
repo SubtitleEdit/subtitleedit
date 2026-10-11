@@ -387,5 +387,10 @@ public partial class DownloadVideoFromUrlViewModel : ObservableObject, IClosingC
             e.Handled = true;
             CommandCancel();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/video-player", "opening-video");
+        }
     }
 }

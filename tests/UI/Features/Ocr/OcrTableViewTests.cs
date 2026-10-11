@@ -7,9 +7,12 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;
+using Nikse.SubtitleEdit.Features.Edit.Find;
+using Nikse.SubtitleEdit.Features.Edit.Replace;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 using SkiaSharp;
 
 namespace UITests.Features.Ocr;
@@ -440,6 +443,125 @@ public class OcrTableViewTests
         Assert.Equal(250, tableView.SelectedIndex);
         var topAfter = FirstVisibleIndex(tableView, scrollViewer);
         Assert.True(Math.Abs(topAfter - topBefore) <= 2, $"Viewport moved from row {topBefore} to row {topAfter}");
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void OcrWindow_DeleteLines_KeepsAllFixesAndGuessesOnTheirRows()
+    {
+        var vm = MakeViewModel(10);
+        var window = ShowWindow(vm);
+        var tableView = GetTableView(window);
+
+        vm.AllFixes.Add(new ReplacementUsedItem("l", "I", 1));
+        vm.AllFixes.Add(new ReplacementUsedItem("rn", "m", 3));
+        vm.AllFixes.Add(new ReplacementUsedItem("0", "O", 8));
+        vm.AllGuesses.Add(new GuessUsedItem("tbe", "the", 5));
+        vm.AllGuesses.Add(new GuessUsedItem("wbat", "what", 9));
+
+        tableView.SelectedItems!.Clear();
+        tableView.SelectedItems.Add(vm.OcrSubtitleItems[3]);
+        tableView.SelectedItems.Add(vm.OcrSubtitleItems[0]);
+        tableView.SelectedItems.Add(vm.OcrSubtitleItems[6]);
+        Dispatcher.UIThread.RunJobs();
+
+        vm.DeleteSelectedLinesCommand.Execute(null);
+        Dispatcher.UIThread.RunJobs();
+
+        // Row 3's fix went with it; the others moved up by the deleted rows above them.
+        Assert.Equal(new[] { (0, "#1: l → I"), (5, "#6: 0 → O") },
+            vm.AllFixes.Select(f => (f.LineIndex, f.ToString())).ToArray());
+        Assert.Equal(new[] { 3, 6 }, vm.AllGuesses.Select(g => g.LineIndex).ToArray());
+
+        vm.SelectedAllFix = vm.AllFixes[1];
+        vm.AllFixesTapped();
+        Dispatcher.UIThread.RunJobs();
+        Assert.Equal("Line 9", vm.SelectedOcrSubtitleItem?.Text);
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public async Task OcrWindow_FindNext_SelectsMatchingRowAndText()
+    {
+        var vm = MakeViewModel(5);
+        vm.OcrSubtitleItems[3].Text = "Hello world";
+        var window = ShowWindow(vm);
+        var tableView = GetTableView(window);
+        tableView.SelectedIndex = 0;
+        Dispatcher.UIThread.RunJobs();
+
+        var findVm = new FindViewModel();
+        findVm.InitializeFindData(new FindService(), vm.OcrSubtitleItems.Select(p => p.Text).ToList(), string.Empty, vm);
+        findVm.SearchText = "world";
+        findVm.FindMode = FindService.FindMode.CaseInsensitive;
+        findVm.WholeWord = false;
+        await findVm.FindNextCommand.ExecuteAsync(null);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.True(findVm.ResultFound);
+        Assert.Same(vm.OcrSubtitleItems[3], vm.SelectedOcrSubtitleItem);
+        Assert.Equal("world", vm.EditTextBox!.SelectedText);
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public async Task OcrWindow_ReplaceAll_UpdatesRowsAndFixResults()
+    {
+        var vm = MakeViewModel(4);
+        vm.OcrSubtitleItems[1].Text = "lt is";
+        vm.OcrSubtitleItems[1].FixResult = new OcrFixLineResult(1, "lt is");
+        vm.OcrSubtitleItems[2].Text = "lt was";
+        var window = ShowWindow(vm);
+        GetTableView(window).SelectedIndex = 0;
+        Dispatcher.UIThread.RunJobs();
+
+        var replaceVm = new ReplaceViewModel();
+        replaceVm.InitializeFindData(new FindService(), vm.OcrSubtitleItems.Select(p => p.Text).ToList(), string.Empty, vm);
+        replaceVm.SearchText = "lt ";
+        replaceVm.ReplaceText = "It ";
+        replaceVm.FindMode = FindService.FindMode.CaseSensitive;
+        replaceVm.WholeWord = false;
+        await replaceVm.ReplaceAllCommand.ExecuteAsync(null);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal("It is", vm.OcrSubtitleItems[1].Text);
+        Assert.Equal("It is", vm.OcrSubtitleItems[1].FixResult!.GetText()); // the grid draws this
+        Assert.Equal("It was", vm.OcrSubtitleItems[2].Text);
+        Assert.Equal(2, replaceVm.ReplacedCount);
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public async Task OcrWindow_Replace_ReplacesFoundMatchAndMovesToNext()
+    {
+        var vm = MakeViewModel(4);
+        vm.OcrSubtitleItems[1].Text = "lt is";
+        vm.OcrSubtitleItems[3].Text = "lt was";
+        var window = ShowWindow(vm);
+        GetTableView(window).SelectedIndex = 0;
+        Dispatcher.UIThread.RunJobs();
+
+        var replaceVm = new ReplaceViewModel();
+        replaceVm.InitializeFindData(new FindService(), vm.OcrSubtitleItems.Select(p => p.Text).ToList(), string.Empty, vm);
+        replaceVm.SearchText = "lt";
+        replaceVm.ReplaceText = "It";
+        replaceVm.FindMode = FindService.FindMode.CaseSensitive;
+        replaceVm.WholeWord = true;
+
+        await replaceVm.FindNextCommand.ExecuteAsync(null);
+        Dispatcher.UIThread.RunJobs();
+        Assert.Same(vm.OcrSubtitleItems[1], vm.SelectedOcrSubtitleItem);
+
+        await replaceVm.ReplaceCommand.ExecuteAsync(null);
+        Dispatcher.UIThread.RunJobs();
+        Assert.Equal("It is", vm.OcrSubtitleItems[1].Text);
+        Assert.Equal("lt was", vm.OcrSubtitleItems[3].Text);
+        Assert.Same(vm.OcrSubtitleItems[3], vm.SelectedOcrSubtitleItem);
+        Assert.Equal(1, replaceVm.ReplacedCount);
 
         window.Close();
     }

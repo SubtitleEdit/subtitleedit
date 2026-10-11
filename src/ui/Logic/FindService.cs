@@ -32,6 +32,9 @@ public partial class FindService : IFindService
     private RegexOptions _cachedRegexOptions;
     private Regex? _cachedRegex;
 
+    private string? _wholeWordPatternSearchText;
+    private string? _wholeWordPattern;
+
     private Regex GetCachedRegex(string pattern, RegexOptions options = RegexOptions.None)
     {
         if (_cachedRegex == null || _cachedRegexPattern != pattern || _cachedRegexOptions != options)
@@ -324,6 +327,7 @@ public partial class FindService : IFindService
     public void RemoveFromSearchHistory(string searchText)
     {
         _searchHistory.Remove(searchText);
+        Se.Settings.Tools.FindHistory = _searchHistory;
     }
 
     private void ResetSearchState()
@@ -596,7 +600,14 @@ public partial class FindService : IFindService
 
     private (bool replaced, string newText, int replacementCount) ReplaceWholeWordWithStringComparison(string line, string searchText, string replaceText, int startIndex, int maxReplacements, StringComparison comparison)
     {
-        var pattern = RegexUtils.BuildWholeWordPattern(searchText);
+        // Replace all calls this per line with the same search text - build the pattern once.
+        if (_wholeWordPatternSearchText != searchText)
+        {
+            _wholeWordPattern = RegexUtils.BuildWholeWordPattern(searchText);
+            _wholeWordPatternSearchText = searchText;
+        }
+
+        var pattern = _wholeWordPattern!;
         var options = comparison == StringComparison.OrdinalIgnoreCase ? RegexOptions.IgnoreCase : RegexOptions.None;
 
         try
@@ -616,16 +627,27 @@ public partial class FindService : IFindService
             }
             else
             {
-                // Replace all or limited occurrences
-                var newText = maxReplacements == -1
-                    ? regex.Replace(line, EscapeReplacement(replaceText))
-                    : regex.Replace(line, EscapeReplacement(replaceText), maxReplacements);
-
-                var totalReplacements = regex.Matches(line).Count;
-                if (maxReplacements != -1 && totalReplacements > maxReplacements)
+                // Replace all or limited occurrences. One pass: the evaluator counts the
+                // replacements (min(matches, maxReplacements)) that a second Matches() scan of
+                // the line used to count, and returning the text as is inserts it literally,
+                // like the escaped replacement pattern did. A line without a match - most of
+                // them - is only scanned once.
+                if (replaceText == null)
                 {
-                    totalReplacements = maxReplacements;
+                    throw new ArgumentNullException(nameof(replaceText));
                 }
+
+                if (!regex.IsMatch(line))
+                {
+                    return (false, line, 0);
+                }
+
+                var totalReplacements = 0;
+                var newText = regex.Replace(line, _ =>
+                {
+                    totalReplacements++;
+                    return replaceText;
+                }, maxReplacements);
 
                 return (newText != line, newText, totalReplacements);
             }

@@ -18,6 +18,10 @@ Hardcode (burn-in) subtitles permanently into a video file using FFmpeg.
 6. Select an output folder
 7. Click **Generate** to start encoding (or use the **Generate** split-button item **Prompt for ffmpeg parameters and generate** to edit the FFmpeg command line first)
 
+### Burn in selected lines only
+
+To burn in just part of the subtitle, select the lines in the subtitle grid, right-click and choose **Selected lines → Generate video with burned-in subtitles...**. The window opens with only the selected lines, and **Cut** is set from the first selected line's start to the last one's end, so a short clip needs no manual cut times. If no video is open you are asked to open one first.
+
 ## Font Settings
 
 - **Font name** — Select the subtitle font
@@ -145,4 +149,4 @@ Click **Batch mode** to queue several video/subtitle pairs (**Single mode** swit
 | Key | Action |
 |-----|--------|
 | Escape | Close / Cancel |
-| F1 | Open help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |

@@ -75,7 +75,7 @@ public partial class EncodingSettingsViewModel : ObservableObject
         else if (UiUtil.IsHelp(e))
         {
             e.Handled = true;
-            UiUtil.ShowHelp("features/text-to-speech", "exporting-clips");
+            UiUtil.ShowHelp("features/text-to-speech", "how-to-use");
         }
     }
 }

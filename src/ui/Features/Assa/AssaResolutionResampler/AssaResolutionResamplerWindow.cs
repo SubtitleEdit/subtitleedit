@@ -92,6 +92,7 @@ public class AssaResolutionResamplerWindow : Window
         // initial focus on an input, not an action button - a focused button clicks on bare Space
         UiUtil.FocusOnFirstActivation(this, sourceWidthBox);
         KeyDown += vm.KeyDown;
+        Closing += (_, _) => vm.OnClosing();
     }
 
     private static Border CreateResolutionPanel(string title, string widthBinding, string heightBinding, System.Windows.Input.ICommand fromVideoCommand, out NumericUpDown firstInput)

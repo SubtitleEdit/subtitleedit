@@ -42,6 +42,16 @@ public partial class VisualSyncViewModel : ObservableObject
     public ComboBox ComboBoxLeft { get; set; }
     public ComboBox ComboBoxRight { get; set; }
 
+    // Whole left/right column (player, waveform, combo box, buttons). Keys go to the pane that has
+    // focus anywhere inside it - focus normally sits on a child such as the player's position
+    // slider or a button, never on the player control itself (#15789).
+    public Control? PaneLeft { get; set; }
+    public Control? PaneRight { get; set; }
+
+    // The pane last clicked or focused: keys pressed with focus outside both panes (nothing
+    // focused, or the Sync/OK/Cancel bar) go to the playing video, else to this one.
+    public bool IsRightPaneActive { get; set; }
+
     private readonly IWindowService _windowService;
     private readonly IFileHelper _fileHelper;
 
@@ -554,15 +564,36 @@ public partial class VisualSyncViewModel : ObservableObject
 
     private bool IsLeftFocused()
     {
-        return AudioVisualizerLeft.IsFocused ||
-               VideoPlayerControlLeft.IsFocused ||
-               ComboBoxLeft.IsFocused;
+        return PaneLeft?.IsKeyboardFocusWithin == true;
     }
+
     private bool IsRightFocused()
     {
-        return AudioVisualizerRight.IsFocused ||
-               VideoPlayerControlRight.IsFocused ||
-               ComboBoxRight.IsFocused;
+        return PaneRight?.IsKeyboardFocusWithin == true;
+    }
+
+    /// <summary>
+    /// The pane keys act on: the one with focus inside it, else the only playing video, else the
+    /// pane last clicked or focused.
+    /// </summary>
+    private bool IsRightPaneTarget()
+    {
+        if (IsLeftFocused())
+        {
+            return false;
+        }
+
+        if (IsRightFocused())
+        {
+            return true;
+        }
+
+        if (VideoPlayerControlLeft.IsPlaying != VideoPlayerControlRight.IsPlaying)
+        {
+            return VideoPlayerControlRight.IsPlaying;
+        }
+
+        return IsRightPaneActive;
     }
 
     public void AudioVisualizerLeftPositionChanged(object sender, AudioVisualizer.PositionEventArgs e)
@@ -712,13 +743,23 @@ public partial class VisualSyncViewModel : ObservableObject
             UiUtil.ShowHelp("features/visual-sync");
         }
 
-        if (IsLeftFocused())
+        // Arrows in an open drop-down pick a line, and bare Space on a button outside the panes
+        // (Sync/OK/Cancel) clicks it.
+        if (e.Handled ||
+            ComboBoxLeft.IsDropDownOpen ||
+            ComboBoxRight.IsDropDownOpen ||
+            (e.Key == Key.Space && e.KeyModifiers == KeyModifiers.None && e.Source is Button or SplitButton && !IsLeftFocused() && !IsRightFocused()))
         {
-            HandlePaneKeys(e, VideoPlayerControlLeft, AudioVisualizerLeft);
+            return;
         }
-        else if (IsRightFocused())
+
+        if (IsRightPaneTarget())
         {
             HandlePaneKeys(e, VideoPlayerControlRight, AudioVisualizerRight);
+        }
+        else
+        {
+            HandlePaneKeys(e, VideoPlayerControlLeft, AudioVisualizerLeft);
         }
     }
 
@@ -753,8 +794,10 @@ public partial class VisualSyncViewModel : ObservableObject
     /// <summary>
     /// How far a key moves the focused video, in seconds, or null for other keys.
     /// The main window's "Move start/end X ms back/forward" shortcuts step by the X ms setting
-    /// (finer than a frame, to hit waveform edges); the built-in arrow steps are SE 4's:
-    /// Ctrl = 100 ms, Alt = 500 ms, Ctrl+Shift = 1 s. A user binding wins over a built-in step.
+    /// (finer than a frame, to hit waveform edges); its video seek shortcuts (one second - bare
+    /// Left/Right by default -, 100/500 ms, one frame, custom 1-4) step as they do there; the
+    /// built-in arrow steps are SE 4's: Ctrl = 100 ms, Alt = 500 ms, Ctrl+Shift = 1 s.
+    /// A user binding wins over a built-in step.
     /// </summary>
     internal static double? GetSeekSeconds(KeyEventArgs e)
     {
@@ -769,6 +812,14 @@ public partial class VisualSyncViewModel : ObservableObject
             MainShortcutKeys.Matches(e, nameof(MainViewModel.MoveEndXMsForwardCommand), []))
         {
             return stepSeconds;
+        }
+
+        foreach (var (actionName, defaultKeys, seconds) in GetVideoSeekShortcuts())
+        {
+            if (MainShortcutKeys.Matches(e, actionName, defaultKeys))
+            {
+                return seconds;
+            }
         }
 
         var direction = e.Key switch
@@ -789,6 +840,29 @@ public partial class VisualSyncViewModel : ObservableObject
             KeyModifiers.Alt => direction * 0.5,
             _ => null,
         };
+    }
+
+    /// <summary>The main window's video seek commands with their default keys and step in seconds.</summary>
+    private static IEnumerable<(string ActionName, string[] DefaultKeys, double Seconds)> GetVideoSeekShortcuts()
+    {
+        var frameSeconds = Se.Settings.General.CurrentFrameRate >= 10 ? 1.0 / Se.Settings.General.CurrentFrameRate : 0.04;
+        var video = Se.Settings.Video;
+        yield return (nameof(MainViewModel.VideoOneSecondBackCommand), [nameof(Key.Left)], -1.0);
+        yield return (nameof(MainViewModel.VideoOneSecondForwardCommand), [nameof(Key.Right)], 1.0);
+        yield return (nameof(MainViewModel.Video100MsBackCommand), [], -0.1);
+        yield return (nameof(MainViewModel.Video100MsForwardCommand), [], 0.1);
+        yield return (nameof(MainViewModel.Video500MsBackCommand), [], -0.5);
+        yield return (nameof(MainViewModel.Video500MsForwardCommand), [], 0.5);
+        yield return (nameof(MainViewModel.VideoOneFrameBackCommand), [], -frameSeconds);
+        yield return (nameof(MainViewModel.VideoOneFrameForwardCommand), [], frameSeconds);
+        yield return (nameof(MainViewModel.VideoMoveCustom1BackCommand), [], -video.MoveVideoPositionCustom1Back / 1000.0);
+        yield return (nameof(MainViewModel.VideoMoveCustom1ForwardCommand), [], video.MoveVideoPositionCustom1Forward / 1000.0);
+        yield return (nameof(MainViewModel.VideoMoveCustom2BackCommand), [], -video.MoveVideoPositionCustom2Back / 1000.0);
+        yield return (nameof(MainViewModel.VideoMoveCustom2ForwardCommand), [], video.MoveVideoPositionCustom2Forward / 1000.0);
+        yield return (nameof(MainViewModel.VideoMoveCustom3BackCommand), [], -video.MoveVideoPositionCustom3Back / 1000.0);
+        yield return (nameof(MainViewModel.VideoMoveCustom3ForwardCommand), [], video.MoveVideoPositionCustom3Forward / 1000.0);
+        yield return (nameof(MainViewModel.VideoMoveCustom4BackCommand), [], -video.MoveVideoPositionCustom4Back / 1000.0);
+        yield return (nameof(MainViewModel.VideoMoveCustom4ForwardCommand), [], video.MoveVideoPositionCustom4Forward / 1000.0);
     }
 
     /// <summary>

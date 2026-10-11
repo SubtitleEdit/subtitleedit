@@ -101,10 +101,24 @@ public class SubtitleRetimerTests : IDisposable
     [InlineData("[door slams]", "")]
     [InlineData("♪ ♪", "")]
     [InlineData("(sighs) Fine.", "Fine.")]
-    [InlineData("♪ Let it be ♪", "Let it be")]
+    [InlineData("♪ Let it be ♪", "")] // sung, timed to the music - not for a speech aligner
+    [InlineData("♪ Smelly cat, smelly cat", "")]
+    [InlineData("# Smelly cat #", "")]
+    [InlineData("{\\an8}{\\pos(320,40)}CENTRAL PERK", "")] // a sign on screen
+    [InlineData("{\\move(0,0,10,10)}Moving", "")]
+    [InlineData("#1 fan, that's me.", "1 fan, that's me.")]
     [InlineData("", "")]
     public void GetSpokenText_KeepsOnlyWhatIsSaid(string text, string expected)
         => Assert.Equal(expected, SubtitleRetimer.GetSpokenText(text));
+
+    [Theory]
+    [InlineData(10, 13, 12, 14, true)] // a second over, half the shorter line: two speakers at once
+    [InlineData(10, 20, 12, 14, true)] // a line inside a long one: a sign over dialogue
+    [InlineData(10, 12.2, 12, 14, false)] // 0.2 s: mistiming
+    [InlineData(10, 12.6, 12, 16, false)] // 0.6 s of a 2.6 s line: still mistiming
+    [InlineData(10, 12, 12.1, 14, false)]
+    public void OverlapsOnPurpose_OnlyALargeOverlapIsMeant(double aStart, double aEnd, double bStart, double bEnd, bool expected)
+        => Assert.Equal(expected, SubtitleRetimer.OverlapsOnPurpose(new("a", aStart, aEnd), new("b", bStart, bEnd)));
 
     [Fact]
     public async Task Retime_MovesLinesOntoTheAlignedStarts_AndDiscardsSentinels()
@@ -469,6 +483,83 @@ public class SubtitleRetimerTests : IDisposable
 
         Assert.Equal(13.1, placements[0].EndSeconds, 3);
         Assert.Equal(12.1, placements[1].StartSeconds, 3);
+    }
+
+    [Fact]
+    public void Settle_ClosesASmallOverlapTheSubtitleCameInWith()
+    {
+        // Mistimed on the way in: b started 0.3 s before a ended. Both moved; the overlap is not kept.
+        var original = new List<SubtitleRetimer.Line> { new("a", 10, 12.3), new("b", 12, 14) };
+        var placements = new[] { new SubtitleRetimer.Placement(10.2, 12.5, true), new SubtitleRetimer.Placement(12.3, 14.2, true) };
+
+        SubtitleRetimer.Settle(original, placements, 0.1);
+
+        Assert.Equal(12.2, placements[0].EndSeconds, 3);
+        Assert.Equal(12.3, placements[1].StartSeconds, 3);
+    }
+
+    [Fact]
+    public async Task Retime_ClosesASmallOverlapTheSubtitleCameInWith()
+    {
+        // Chained lines; line 4 came in starting 0.3 s before line 3 ended. Its speech starts
+        // where it should, so the overlap was mistiming and must not survive the re-time.
+        var lines = MakeLines(8, spacing: 2.0, duration: 2.0);
+        lines[4] = lines[4] with { StartSeconds = lines[4].StartSeconds - 0.3 };
+        var audio = new FakeAudio(_folder);
+        var runner = new OracleRunner(audio);
+        for (var i = 0; i < lines.Count; i++)
+        {
+            var start = 10.0 + (i * 2.0) + 0.1;
+            runner.Truth[lines[i].Text] = (start, start + 1.7);
+        }
+
+        var results = await new SubtitleRetimer(runner, audio, new SubtitleRetimer.Options { MinGapSeconds = 0.1 })
+            .RetimeAsync(lines, null, TestContext.Current.CancellationToken);
+
+        Assert.Equal(18.1, results[4].StartSeconds, 2);
+        Assert.True(results[4].StartSeconds - results[3].EndSeconds >= 0.099, $"line 3 ends {results[3].EndSeconds}, line 4 starts {results[4].StartSeconds}");
+    }
+
+    [Fact]
+    public void SnapToFrames_PutsMovedLinesOnFrames_AndKeepsTheGap()
+    {
+        // 25 fps, gap two frames (80 ms). Rounded on its own, a's end would land one frame from b.
+        var original = new List<SubtitleRetimer.Line> { new("a", 10, 12), new("b", 12.5, 14), new("c", 20, 22) };
+        var placements = new[]
+        {
+            new SubtitleRetimer.Placement(10.21, 12.299, true),
+            new SubtitleRetimer.Placement(12.379, 14.03, true),
+            new SubtitleRetimer.Placement(20, 22, false), // not moved - left as it is
+        };
+
+        SubtitleRetimer.SnapToFrames(original, placements, 25, 0.08);
+
+        Assert.Equal(10.2, placements[0].StartSeconds, 6);
+        Assert.Equal(12.28, placements[0].EndSeconds, 6);
+        Assert.Equal(12.36, placements[1].StartSeconds, 6);
+        Assert.Equal(14.04, placements[1].EndSeconds, 6);
+        Assert.Equal(20.0, placements[2].StartSeconds, 6);
+    }
+
+    [Fact]
+    public void SnapToFrames_NextToALineLeftOffTheFrames_RoundsAwayFromIt()
+    {
+        // 25 fps, no minimum gap. a and c were not moved and sit between frames; rounding b to the
+        // nearest frame would start it 10 ms inside a and end it 5 ms inside c.
+        var original = new List<SubtitleRetimer.Line> { new("a", 8, 10.05), new("b", 10.2, 11), new("c", 11.035, 13) };
+        var placements = new[]
+        {
+            new SubtitleRetimer.Placement(8, 10.05, false),
+            new SubtitleRetimer.Placement(10.055, 11.03, true),
+            new SubtitleRetimer.Placement(11.035, 13, false),
+        };
+
+        SubtitleRetimer.SnapToFrames(original, placements, 25, 0);
+
+        Assert.Equal(10.08, placements[1].StartSeconds, 6);
+        Assert.Equal(11.0, placements[1].EndSeconds, 6);
+        Assert.True(placements[1].StartSeconds >= placements[0].EndSeconds);
+        Assert.True(placements[1].EndSeconds <= placements[2].StartSeconds);
     }
 
     [Fact]

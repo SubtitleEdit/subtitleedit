@@ -539,6 +539,7 @@ public class NikseBitmapImageSplitter2
                 list.Add(new ImageSplitterItem2(Environment.NewLine));
             }
 
+            var lineStart = list.Count;
             var horizontalSplit = SplitHorizontalNew(b, xOrMorePixelsMakesSpace);
             if (rightToLeft)
             {
@@ -561,9 +562,47 @@ public class NikseBitmapImageSplitter2
                     list.Add(item);
                 }
             }
+
+            SetBaseline(list, lineStart);
         }
 
         return list;
+    }
+
+    /// <summary>
+    /// Sets <see cref="ImageSplitterItem2.Baseline"/> on the line's glyphs from
+    /// <paramref name="lineStart"/> on: the median glyph bottom, as descenders and raised marks
+    /// (apostrophes, quotes) are the minority in any line of text.
+    /// </summary>
+    private static void SetBaseline(List<ImageSplitterItem2> list, int lineStart)
+    {
+        var bottoms = new List<int>();
+        for (var i = lineStart; i < list.Count; i++)
+        {
+            var bitmap = list[i].NikseBitmap;
+            if (bitmap != null)
+            {
+                bottoms.Add(list[i].Top + bitmap.Height);
+            }
+        }
+
+        if (bottoms.Count == 0)
+        {
+            return;
+        }
+
+        bottoms.Sort();
+
+        // Lower median: with an even count the upper one is a descender in a two-glyph line
+        // ("Ну"), which made the other glyph look capital-height.
+        var baseline = bottoms[(bottoms.Count - 1) / 2];
+        for (var i = lineStart; i < list.Count; i++)
+        {
+            if (list[i].NikseBitmap != null)
+            {
+                list[i].Baseline = baseline;
+            }
+        }
     }
 
 

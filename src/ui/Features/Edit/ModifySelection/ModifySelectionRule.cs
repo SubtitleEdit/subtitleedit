@@ -127,22 +127,20 @@ public class ModifySelectionRule
                 RuleType = RuleType.DurationLessThan,
                 Name = l.DurationLessThan,
                 HasNumber = true,
-                NumberDecimals = true,
                 NumberMinValue = 0,
                 NumberMaxValue = 10000,
-                DefaultValue = 2.0,
-                Number = 2.0,
+                DefaultValue = 2000, // milliseconds, as the rule compares
+                Number = 2000,
             },
             new()
             {
                 RuleType = RuleType.DurationGreaterThan,
                 Name = l.DurationGreaterThan,
                 HasNumber = true,
-                NumberDecimals = true,
                 NumberMinValue = 0,
                 NumberMaxValue = 10000,
-                DefaultValue = 2.0,
-                Number = 2.0,
+                DefaultValue = 2000, // milliseconds, as the rule compares
+                Number = 2000,
             },
             new()
             {

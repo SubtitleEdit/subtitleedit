@@ -18,9 +18,9 @@ public class LlamaCppOcrSettingsWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Ocr.LlamaCppOcrSettingsTitle;
         Width = 680;
-        Height = 460;
+        Height = 500;
         MinWidth = 540;
-        MinHeight = 400;
+        MinHeight = 440;
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
         vm.Window = this;
@@ -32,11 +32,16 @@ public class LlamaCppOcrSettingsWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             DataContext = vm,
         };
+        textBoxUrl.Bind(IsEnabledProperty, new Binding(nameof(vm.UseRemoteServer)));
         textBoxUrl.Bind(TextBox.TextProperty, new Binding(nameof(vm.Url))
         {
             Mode = BindingMode.TwoWay,
             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
         });
+
+        // Off: SE downloads and runs its own llama-server, so the URL is not used. On: OCR posts
+        // to the user's own running server at the URL (#15854).
+        var checkBoxRemote = UiUtil.MakeCheckBox(Se.Language.General.LlamaCppUseRemoteServer, vm, nameof(vm.UseRemoteServer));
 
         var numericTimeout = UiUtil.MakeNumericUpDownInt(1, 120, 5, 140, vm, nameof(vm.TimeoutMinutes));
 
@@ -77,6 +82,7 @@ public class LlamaCppOcrSettingsWindow : Window
                 new RowDefinition { Height = GridLength.Auto },
                 new RowDefinition { Height = GridLength.Auto },
                 new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = GridLength.Auto },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = GridLength.Auto },
             },
@@ -87,16 +93,18 @@ public class LlamaCppOcrSettingsWindow : Window
         detailsGrid.Add(MakeLabel("Engine"), 0, 0);
         detailsGrid.Add(MakeStatusPanel(nameof(vm.EngineBrush), nameof(vm.EngineLabel)), 0, 1);
 
-        detailsGrid.Add(MakeLabel(Se.Language.General.Url), 1, 0);
-        detailsGrid.Add(textBoxUrl, 1, 1);
+        detailsGrid.Add(checkBoxRemote, 1, 1);
 
-        detailsGrid.Add(MakeLabel(Se.Language.Ocr.LlamaCppOcrTimeoutMinutes), 2, 0);
-        detailsGrid.Add(numericTimeout, 2, 1);
+        detailsGrid.Add(MakeLabel(Se.Language.General.Url), 2, 0);
+        detailsGrid.Add(textBoxUrl, 2, 1);
 
-        detailsGrid.Add(promptLabel, 3, 0);
-        detailsGrid.Add(textBoxPrompt, 3, 1);
+        detailsGrid.Add(MakeLabel(Se.Language.Ocr.LlamaCppOcrTimeoutMinutes), 3, 0);
+        detailsGrid.Add(numericTimeout, 3, 1);
 
-        detailsGrid.Add(hintPrompt, 4, 1);
+        detailsGrid.Add(promptLabel, 4, 0);
+        detailsGrid.Add(textBoxPrompt, 4, 1);
+
+        detailsGrid.Add(hintPrompt, 5, 1);
 
         var detailsBorder = new Border
         {
@@ -142,7 +150,7 @@ public class LlamaCppOcrSettingsWindow : Window
 
         Content = rootGrid;
 
-        UiUtil.FocusOnFirstActivation(this, textBoxUrl);
+        UiUtil.FocusOnFirstActivation(this, checkBoxRemote);
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 

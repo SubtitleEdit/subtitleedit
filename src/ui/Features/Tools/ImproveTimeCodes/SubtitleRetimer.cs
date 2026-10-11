@@ -552,14 +552,15 @@ public sealed partial class SubtitleRetimer
             var start = result.StartSeconds;
             var end = result.EndSeconds;
 
-            // Overlaps the user made on purpose are left alone; only ones introduced here are undone.
-            if (i > 0 && lines[i].StartSeconds >= lines[i - 1].EndSeconds)
+            // Overlaps the user made on purpose are left alone; only ones introduced here, or
+            // small ones that are just mistiming, are undone.
+            if (i > 0 && !OverlapsOnPurpose(lines[i - 1], lines[i]))
             {
                 start = Math.Max(start, SettledEnd(lines, results, i - 1) + options.MinGapSeconds);
             }
 
             var room = double.MaxValue;
-            if (i + 1 < results.Length && lines[i + 1].StartSeconds >= lines[i].EndSeconds)
+            if (i + 1 < results.Length && !OverlapsOnPurpose(lines[i], lines[i + 1]))
             {
                 room = SettledStart(lines, results, i + 1) - options.MinGapSeconds;
             }
@@ -665,13 +666,116 @@ public sealed partial class SubtitleRetimer
             ? results[index].EndSeconds
             : lines[index].EndSeconds;
 
+    /// <summary>
+    /// Whether two neighbouring lines overlapped on purpose in the subtitle as it came in - two
+    /// speakers at once, or a sign over dialogue. Such an overlap is large: at least half a
+    /// second and half the shorter line. A smaller one is the mistiming this tool is there to
+    /// fix (measured on a re-timed episode: 80 such overlaps of 0.2 s median were kept when
+    /// every input overlap counted as meant), so it is cleared like any other.
+    /// </summary>
+    internal static bool OverlapsOnPurpose(Line earlier, Line later)
+    {
+        var overlap = earlier.EndSeconds - later.StartSeconds;
+        if (overlap <= 0)
+        {
+            return false;
+        }
+
+        var shorter = Math.Min(earlier.EndSeconds - earlier.StartSeconds, later.EndSeconds - later.StartSeconds);
+        return overlap >= 0.5 && overlap >= shorter / 2.0;
+    }
+
+    /// <summary>
+    /// Puts every line that was moved on whole frames, keeping the minimum gap - in frame mode a
+    /// time between two frames is shown a frame early or late, and a gap of two frames can come
+    /// out as one. A line left where it was is not touched.
+    /// </summary>
+    public static void SnapToFrames(IReadOnlyList<Line> original, Placement[] placements, double framesPerSecond, double minGapSeconds)
+    {
+        if (framesPerSecond < 1)
+        {
+            return;
+        }
+
+        var frame = 1.0 / framesPerSecond;
+        var moved = new bool[placements.Length];
+        for (var i = 0; i < placements.Length; i++)
+        {
+            var p = placements[i];
+            moved[i] = Math.Abs(p.StartSeconds - original[i].StartSeconds) >= 0.0005 ||
+                       Math.Abs(p.EndSeconds - original[i].EndSeconds) >= 0.0005;
+        }
+
+        for (var i = 0; i < placements.Length; i++)
+        {
+            if (!moved[i])
+            {
+                continue;
+            }
+
+            var p = placements[i];
+            var start = Math.Round(p.StartSeconds * framesPerSecond, MidpointRounding.AwayFromZero) * frame;
+            var end = Math.Round(p.EndSeconds * framesPerSecond, MidpointRounding.AwayFromZero) * frame;
+
+            // A line left where it was need not sit on a frame, so rounding to the nearest frame
+            // could cross the gap Settle kept to it: round away from it instead.
+            if (i > 0 && !moved[i - 1] && !OverlapsOnPurpose(original[i - 1], original[i]))
+            {
+                var earliest = placements[i - 1].EndSeconds + minGapSeconds;
+                if (start < earliest - 0.0005 && p.StartSeconds >= earliest - 0.0005)
+                {
+                    start = Math.Ceiling(earliest * framesPerSecond - 0.0001) * frame;
+                }
+            }
+
+            end = Math.Max(end, start + frame);
+            if (i + 1 < placements.Length && !moved[i + 1] && !OverlapsOnPurpose(original[i], original[i + 1]))
+            {
+                var latest = placements[i + 1].StartSeconds - minGapSeconds;
+                if (end > latest + 0.0005 && p.EndSeconds <= latest + 0.0005)
+                {
+                    var flooredEnd = Math.Floor(latest * framesPerSecond + 0.0001) * frame;
+                    end = flooredEnd >= start + frame ? flooredEnd : Math.Max(p.EndSeconds, start + 0.001);
+                }
+            }
+
+            placements[i] = p with { StartSeconds = start, EndSeconds = end };
+        }
+
+        // Rounding each side on its own can take a frame off the gap: the moved earlier line
+        // ends a frame sooner, never the later one starts a frame later.
+        var gapFrames = Math.Ceiling((minGapSeconds * framesPerSecond) - 0.01);
+        for (var i = 1; i < placements.Length; i++)
+        {
+            if (!moved[i - 1] || OverlapsOnPurpose(original[i - 1], original[i]))
+            {
+                continue;
+            }
+
+            var previous = placements[i - 1];
+            var gap = Math.Round((placements[i].StartSeconds - previous.EndSeconds) * framesPerSecond);
+            // An overlap still here was left by Settle on purpose (neither line could give way).
+            if (gap >= gapFrames || gap < 0)
+            {
+                continue;
+            }
+
+            var end = placements[i].StartSeconds - (gapFrames * frame);
+            if (end >= previous.StartSeconds + frame)
+            {
+                placements[i - 1] = previous with { EndSeconds = end };
+            }
+        }
+    }
+
     /// <summary>One line's times on the final timeline, and whether they may still be changed.</summary>
     public record struct Placement(double StartSeconds, double EndSeconds, bool CanMove);
 
     /// <summary>
     /// Makes the lines as they will actually be saved - each one moved or not, as the user
     /// ticked it - keep clear of one another by at least <paramref name="minGapSeconds"/>.
-    /// Lines that overlapped on the way in (two speakers at once) are left overlapping.
+    /// Lines that overlapped on the way in by a lot (two speakers at once, a sign over
+    /// dialogue - see <see cref="OverlapsOnPurpose"/>) are left overlapping.
     ///
     /// Only lines that may move are changed. An end gives way first: it marks when the line
     /// comes down, which can be any time after the speech, while the start is where the speech
@@ -684,7 +788,7 @@ public sealed partial class SubtitleRetimer
         const double shortestSeconds = 0.1;
         for (var i = 1; i < placements.Length; i++)
         {
-            if (original[i].StartSeconds < original[i - 1].EndSeconds)
+            if (OverlapsOnPurpose(original[i - 1], original[i]))
             {
                 continue;
             }
@@ -728,7 +832,22 @@ public sealed partial class SubtitleRetimer
             return string.Empty;
         }
 
+        // Positioned text is a sign or a caption on screen, not speech.
+        if (text.Contains("\\pos(", StringComparison.Ordinal) || text.Contains("\\move(", StringComparison.Ordinal))
+        {
+            return string.Empty;
+        }
+
         var s = HtmlUtil.RemoveHtmlTags(text, true);
+
+        // Song lyrics: sung words are no use to a speech aligner, and a song is timed to the music.
+        var trimmed = s.Trim();
+        if (trimmed.StartsWith('♪') || trimmed.StartsWith('♫') || trimmed.EndsWith('♪') || trimmed.EndsWith('♫') ||
+            (trimmed.Length > 1 && trimmed.StartsWith('#') && trimmed.EndsWith('#')))
+        {
+            return string.Empty;
+        }
+
         s = SoundDescriptionRegex().Replace(s, " ");
 
         var sb = new StringBuilder(s.Length);

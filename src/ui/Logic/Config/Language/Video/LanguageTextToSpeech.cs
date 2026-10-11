@@ -74,6 +74,12 @@ public class LanguageTextToSpeech
     public string SpeakFromCurrentLineHint { get; set; }
     public string StopSpeaking { get; set; }
     public string SpeakingLineX { get; set; }
+    public string PlayWithSpeechTitle { get; set; }
+    public string PlayWithSpeechDotDotDot { get; set; }
+    public string PlayWithSpeechHint { get; set; }
+    public string LowerVideoVolumeWhileSpeaking { get; set; }
+    public string PauseVideoWhenSpeechRunsLate { get; set; }
+    public string WaitingForSpeechLineX { get; set; }
     public string VoiceKindClone { get; set; }
     public string VoiceKindPreset { get; set; }
     public string VoiceKindModel { get; set; }
@@ -144,6 +150,12 @@ public class LanguageTextToSpeech
     public string AdvancedTtsSettings { get; set; }
     public string AdvancedTtsAudioProcessing { get; set; }
     public string AdvancedTtsOutput { get; set; }
+    public string AdvancedTtsVoiceCloning { get; set; }
+    public string CleanCloneReferences { get; set; }
+    public string CleanCloneReferencesDescription { get; set; }
+    public string CleaningCloneReferencesDotDotDot { get; set; }
+    public string DownloadSidonTitle { get; set; }
+    public string DownloadSidonQuestionX { get; set; }
     public string ProAudioPostProcessing { get; set; }
     public string ProAudioPostProcessingDescription { get; set; }
     public string GeneratingSpeechSegmentXOfY { get; set; }
@@ -156,6 +168,10 @@ public class LanguageTextToSpeech
     public string RemoveOriginalSpeechDescription { get; set; }
     public string RemovingOriginalSpeech { get; set; }
     public string RemoveOriginalSpeechFailed { get; set; }
+    public string SpeechRemovalModel { get; set; }
+    public string SpeechRemovalModelDescription { get; set; }
+    public string SpeechRemovalBestQuality { get; set; }
+    public string SpeechRemovalFast { get; set; }
     public string VideoTruncatedWarning { get; set; }
     public string OriginalVolumePercent { get; set; }
     public string VadSilenceCompression { get; set; }
@@ -305,6 +321,12 @@ public class LanguageTextToSpeech
         SpeakFromCurrentLineHint = "Reads the lines aloud one after another, starting at the current line. Press Escape or click another line to stop.";
         StopSpeaking = "Stop speaking";
         SpeakingLineX = "Speaking line {0}... (Escape to stop)";
+        PlayWithSpeechTitle = "Play with speech";
+        PlayWithSpeechDotDotDot = "Play with speech...";
+        PlayWithSpeechHint = "Plays the video and speaks each line when the video reaches it. Pause and seek as usual; press Escape to stop.";
+        LowerVideoVolumeWhileSpeaking = "Lower video volume while speaking";
+        PauseVideoWhenSpeechRunsLate = "Pause video when speech runs into the next line";
+        WaitingForSpeechLineX = "Generating speech for line {0}... (Escape to stop)";
         VoiceKindClone = "Cloned voice";
         VoiceKindPreset = "Built-in";
         VoiceKindModel = "Voice model";
@@ -369,6 +391,12 @@ public class LanguageTextToSpeech
         AdvancedTtsSettings = "Advanced TTS settings";
         AdvancedTtsAudioProcessing = "Audio processing";
         AdvancedTtsOutput = "Output";
+        AdvancedTtsVoiceCloning = "Voice cloning";
+        CleanCloneReferences = "Clean voice-clone references (Sidon)";
+        CleanCloneReferencesDescription = "Removes music, noise and reverb from the audio a voice is cloned from: clips taken from the video and recordings imported in the voice manager. Uses the Sidon speech restoration model on audio.cpp (940 MB download). The cloned voice no longer copies the background, but very quiet or overlapping speech can come out muffled.";
+        CleaningCloneReferencesDotDotDot = "Cleaning voice-clone references...";
+        DownloadSidonTitle = "Download Sidon?";
+        DownloadSidonQuestionX = "Cleaning voice-clone references needs the Sidon speech restoration model ({0})." + Environment.NewLine + Environment.NewLine + "Download it now? Without it the references are used as they are.";
         ProAudioPostProcessing = "Pro audio post-processing";
         ProAudioPostProcessingDescription = "Adds EQ, noise gate, compression, loudness normalization (-16 LUFS) and a short fade in/out to every clip.";
         GeneratingSpeechSegmentXOfY = "Generating speech: segment {0} of {1}";
@@ -381,6 +409,10 @@ public class LanguageTextToSpeech
         RemoveOriginalSpeechDescription = "Keeps the music and sound effects of the original video but removes its speech, and mixes the new speech over that. Takes about as long as the video itself with a GPU, and many times longer without one. With audio ducking on, its volume applies to the music and effects. Only applies when the speech is added to the video file.";
         RemovingOriginalSpeech = "Removing original speech...";
         RemoveOriginalSpeechFailed = "Could not remove the original speech - the speech was added to the video without it.";
+        SpeechRemovalModel = "Model";
+        SpeechRemovalModelDescription = "Best quality keeps the most of the music and sound effects. Fast is about three times quicker, with a little more of the music lost.";
+        SpeechRemovalBestQuality = "Best quality (Mel-Band RoFormer)";
+        SpeechRemovalFast = "Fast (HTDemucs)";
         VideoTruncatedWarning = "The picture in the new video file stops after {0}, but the original video is {1} long - the picture will freeze while the sound continues.\n\nThe file was kept. See error-log.txt in the Subtitle Edit data folder for the ffmpeg output.";
         OriginalVolumePercent = "Original volume %";
         VadSilenceCompression = "VAD silence compression";

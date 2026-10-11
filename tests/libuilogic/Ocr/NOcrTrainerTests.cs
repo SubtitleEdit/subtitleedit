@@ -133,4 +133,121 @@ public class NOcrTrainerTests
         Assert.StartsWith("Hello ", result);
         Assert.Contains("*", result);
     }
+
+    [Theory]
+    [InlineData("é", true)]
+    [InlineData("ø", true)]
+    [InlineData("\"", true)]
+    [InlineData("%", true)]
+    [InlineData("«", true)]
+    [InlineData("»", true)]
+    [InlineData("‹", true)]
+    [InlineData("›", true)]
+    [InlineData("“", true)]
+    [InlineData("”", true)]
+    [InlineData("„", true)]
+    [InlineData("…", true)]
+    [InlineData("‼", true)]
+    [InlineData("ы", true)]
+    [InlineData("Ы", true)]
+    [InlineData("ь", false)]
+    [InlineData("f", false)]
+    [InlineData("m", false)]
+    [InlineData("2", false)]
+    [InlineData("(", false)]
+    public void CanBeMultiPart_OnlyForGlyphsDrawnInPieces(string text, bool expected)
+    {
+        // A plain letter falling apart is a thin font losing hairlines at the threshold; stored
+        // as an expanded "f" it later claimed "t." as one character.
+        Assert.Equal(expected, NOcrTrainer.CanBeMultiPart(text));
+    }
+
+    // « and » are left out: how far apart their two chevrons render depends on the
+    // platform's default font (they fail on the Linux CI font), CanBeMultiPart covers them.
+    [Theory]
+    [InlineData("„")]
+    [InlineData("“")]
+    [InlineData("ы")]
+    public void Trainer_LearnsMultiPartGlyphs(string text)
+    {
+        var db = new NOcrDb(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".nocr"));
+        var settings = new NOcrTrainerSettings
+        {
+            FontNames = { TestFontName },
+            FontSize = FontSize,
+            CharactersToTrain = text,
+        };
+
+        new NOcrTrainer().Train(settings, db);
+
+        Assert.Contains(db.OcrCharactersExpanded, c => c.Text == text);
+    }
+
+    [Fact]
+    public void AddDiscriminativeLines_SeparatesThinFeatureFromLookalike()
+    {
+        // "ø" vs "o": a ring with and without a one pixel slash through the hole. The random
+        // generator puts no lines on a stroke that thin, so the entry matched both.
+        var own = Ring(withSlash: true);
+        var lookalike = Ring(withSlash: false);
+        var nOcrChar = new NOcrChar("ø") { Width = own.Width, Height = own.Height };
+        nOcrChar.LinesForeground.Add(new NOcrLine(new OcrPoint(1, 2), new OcrPoint(1, 17)));
+        Assert.True(NOcrDb.IsMatch(lookalike, nOcrChar, 0));
+
+        NOcrTrainer.AddDiscriminativeLines(nOcrChar, own, lookalike);
+
+        Assert.True(NOcrDb.IsMatch(own, nOcrChar, 0));
+        Assert.False(NOcrDb.IsMatch(lookalike, nOcrChar, 3));
+    }
+
+    private static NikseBitmap2 Ring(bool withSlash)
+    {
+        using var bitmap = new SKBitmap(20, 20);
+        bitmap.Erase(SKColors.Transparent);
+        for (var y = 0; y < 20; y++)
+        {
+            for (var x = 0; x < 20; x++)
+            {
+                var inHole = x >= 5 && x < 15 && y >= 5 && y < 15;
+                var onSlash = withSlash && inHole && x == y;
+                if (!inHole || onSlash)
+                {
+                    bitmap.SetPixel(x, y, SKColors.White);
+                }
+            }
+        }
+
+        return new NikseBitmap2(bitmap);
+    }
+
+    [Fact]
+    public void TrainedDb_RecognizesTextAtTwiceTheTrainedSize()
+    {
+        // Top margins, aspect gates and error budgets used to be absolute pixels at the trained
+        // size, so "." and "i" (tall, thin, or small) never matched at another size.
+        var db = Train("This.");
+
+        var result = RecognizeAtSize(db, "This is his.", FontSize * 2);
+
+        Assert.Equal("This is his.", result);
+    }
+
+    private static string RecognizeAtSize(NOcrDb db, string text, float fontSize)
+    {
+        using var bmp = NOcrTrainer.RenderCharacterImage(text, TestFontName, fontSize, false, false);
+        Assert.NotNull(bmp);
+        var parent = new NikseBitmap2(bmp!);
+        parent.MakeTwoColor(200);
+        parent.CropTop(0, new SKColor(0, 0, 0, 0));
+        var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parent, PixelsAreSpace * 2, false, false, 25, false);
+        var sb = new StringBuilder();
+        foreach (var item in letters)
+        {
+            sb.Append(item.NikseBitmap == null
+                ? item.SpecialCharacter
+                : db.GetMatch(parent, letters, item, item.Top, true, MaxWrongPixels)?.Text ?? "*");
+        }
+
+        return sb.ToString().Trim();
+    }
 }

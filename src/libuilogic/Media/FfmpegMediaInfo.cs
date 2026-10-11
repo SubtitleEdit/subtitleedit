@@ -41,8 +41,8 @@ namespace Nikse.SubtitleEdit.UiLogic.Media
 
         // Rotation side data ffmpeg prints under a video stream, e.g.
         //   "    Side data:"
-        //   "      Display Matrix: rotation of -90.00 degrees".
-        [GeneratedRegex(@"^Display Matrix: rotation of (?<deg>-?\d+(?:\.\d+)?) degrees")]
+        //   "      Display Matrix: rotation of -90.00 degrees" (ffmpeg 4.x prints "displaymatrix: rotation of ...").
+        [GeneratedRegex(@"^(?:Display Matrix|displaymatrix): rotation of (?<deg>-?\d+(?:\.\d+)?) degrees")]
         private static partial Regex DisplayMatrixRotationRegexGen();
         private static readonly Regex DisplayMatrixRotationRegex = DisplayMatrixRotationRegexGen();
 

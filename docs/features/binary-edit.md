@@ -6,7 +6,7 @@ Edit image-based subtitles — Blu-ray SUP, VobSub, DVB, BDN XML — directly, w
 - **Also:** The **Edit/export...** button in the [OCR window](ocr.md) opens the loaded subtitle here
 - **Shortcut:** Configurable (no default)
 
-<!-- Screenshot: Edit image-based subtitle window (binary-edit.png, not yet taken) -->
+![Edit Image-Based Subtitle](../screenshots/binary-edit.png)
 
 ## Supported Files
 

@@ -180,6 +180,38 @@ public class ChangeFrameRateViewModelTests : IDisposable
     }
 
     [Fact]
+    public void CommitTypedFrameRate_CustomRate_IsAddedAndSelected()
+    {
+        // #15806: SE 4 accepted any typed frame rate, e.g. 10 fps for a slide show.
+        var vm = MakeViewModel(savedFrom: 25, savedTo: 30);
+
+        vm.CommitTypedFromFrameRate("10");
+        vm.CommitTypedToFrameRate("12,5");
+
+        Assert.Equal(10, vm.SelectedFromFrameRate, 3);
+        Assert.Contains(10, vm.FromFrameRates);
+        Assert.Equal(vm.FromFrameRates.OrderBy(r => r), vm.FromFrameRates);
+        Assert.Equal(12.5, vm.SelectedToFrameRate, 3);
+        Assert.Contains(12.5, vm.ToFrameRates);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("abc")]
+    [InlineData("0")]
+    [InlineData("5000")]
+    public void CommitTypedFrameRate_InvalidText_KeepsSelection(string text)
+    {
+        var vm = MakeViewModel(savedFrom: 25, savedTo: 30);
+        var countBefore = vm.FromFrameRates.Count;
+
+        vm.CommitTypedFromFrameRate(text);
+
+        Assert.Equal(25, vm.SelectedFromFrameRate, 3);
+        Assert.Equal(countBefore, vm.FromFrameRates.Count);
+    }
+
+    [Fact]
     public void ChangeFrameRate_SourceOverlap_IsKeptNotExtended()
     {
         // An overlap already in the source is the author's problem, not the conversion's -

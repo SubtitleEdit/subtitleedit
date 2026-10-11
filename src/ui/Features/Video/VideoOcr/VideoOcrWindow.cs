@@ -297,11 +297,18 @@ public class VideoOcrWindow : Window
         _comboLlamaCppModel = comboLlamaCppModel;
 
         var llamaCppPanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
-        AddLabeledSetting(llamaCppPanel, Se.Language.General.Model, comboLlamaCppModel);
+        var llamaCppLocalPanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
+        AddLabeledSetting(llamaCppLocalPanel, Se.Language.General.Model, comboLlamaCppModel);
         var llamaCppButtons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 5 };
         llamaCppButtons.Children.Add(UiUtil.MakeButton(vm.DownloadLlamaCppCommand, IconNames.Download, Se.Language.General.Download));
         llamaCppButtons.Children.Add(MakeLlamaCppServerButton(vm));
-        llamaCppPanel.Children.Add(llamaCppButtons);
+        llamaCppLocalPanel.Children.Add(llamaCppButtons);
+        llamaCppLocalPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppLocalVisible)) { Source = vm });
+        llamaCppPanel.Children.Add(llamaCppLocalPanel);
+        var llamaCppRemotePanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
+        AddLabeledSetting(llamaCppRemotePanel, Se.Language.General.Url, UiUtil.MakeTextBox(330, vm, nameof(vm.LlamaCppUrl)));
+        llamaCppRemotePanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppRemoteVisible)) { Source = vm });
+        llamaCppPanel.Children.Add(llamaCppRemotePanel);
         AddLabeledSetting(llamaCppPanel, Se.Language.General.Language, UiUtil.MakeTextBox(330, vm, nameof(vm.LlamaCppLanguage)));
         llamaCppPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppEngine)) { Source = vm });
         panel.Children.Add(llamaCppPanel);

@@ -48,22 +48,32 @@ public class NetflixCheckShotChange : INetflixQualityChecker
         int halfSecGapInFrames = (int)Math.Round(controller.FrameRate / 2, MidpointRounding.AwayFromZero);
         double twoFramesGap = 1000.0 / controller.FrameRate * 2.0;
 
+        // Frame conversion is monotonic, so sorted shot changes have non-decreasing frames: the
+        // shot changes before a frame are a prefix and those after it a suffix. The nearest one
+        // before is the last of the prefix, the nearest one after the first of the suffix - found
+        // by binary search instead of five full scans (each converting every shot change) per line.
+        var sortedShotChanges = shotChanges.ToArray();
+        Array.Sort(sortedShotChanges);
+        var shotChangeFrames = new int[sortedShotChanges.Length];
+        for (var i = 0; i < sortedShotChanges.Length; i++)
+        {
+            shotChangeFrames[i] = SubtitleFormat.MillisecondsToFrames(sortedShotChanges[i] * 1000, controller.FrameRate);
+        }
+
         foreach (Paragraph p in subtitle.Paragraphs)
         {
-            // These frame values are invariant across all shot changes - compute once per paragraph
-            // instead of recomputing inside every Where/FirstOrDefault predicate.
             var startFrame = SubtitleFormat.MillisecondsToFrames(p.StartTime.TotalMilliseconds, controller.FrameRate);
             var endFrame = SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds, controller.FrameRate);
 
-            List<double> previousStartShotChanges = shotChanges.Where(x => SubtitleFormat.MillisecondsToFrames(x * 1000, controller.FrameRate) < startFrame).ToList();
-            List<double> nextStartShotChanges = shotChanges.Where(x => SubtitleFormat.MillisecondsToFrames(x * 1000, controller.FrameRate) > startFrame).ToList();
-            List<double> previousEndShotChanges = shotChanges.Where(x => SubtitleFormat.MillisecondsToFrames(x * 1000, controller.FrameRate) < endFrame).ToList();
-            List<double> nextEndShotChanges = shotChanges.Where(x => SubtitleFormat.MillisecondsToFrames(x * 1000, controller.FrameRate) > endFrame).ToList();
-            var onShotChange = shotChanges.FirstOrDefault(x => SubtitleFormat.MillisecondsToFrames(x * 1000, controller.FrameRate) == endFrame);
+            var startLower = FirstAtOrAbove(shotChangeFrames, startFrame);
+            var startUpper = FirstAbove(shotChangeFrames, startFrame);
+            var endLower = FirstAtOrAbove(shotChangeFrames, endFrame);
+            var endUpper = FirstAbove(shotChangeFrames, endFrame);
+            var onShotChange = endLower < endUpper ? sortedShotChanges[endLower] : 0;
 
-            if (previousStartShotChanges.Count > 0)
+            if (startLower > 0)
             {
-                double nearestStartPrevShotChange = previousStartShotChanges.Aggregate((x, y) => Math.Abs(x - p.StartTime.TotalSeconds) < Math.Abs(y - p.StartTime.TotalSeconds) ? x : y);
+                double nearestStartPrevShotChange = sortedShotChanges[startLower - 1];
                 var gapToShotChange = SubtitleFormat.MillisecondsToFrames(p.StartTime.TotalMilliseconds - nearestStartPrevShotChange * 1000, controller.FrameRate);
                 if (gapToShotChange != 0 && gapToShotChange < halfSecGapInFrames)
                 {
@@ -74,9 +84,9 @@ public class NetflixCheckShotChange : INetflixQualityChecker
                 }
             }
 
-            if (nextStartShotChanges.Count > 0)
+            if (startUpper < sortedShotChanges.Length)
             {
-                double nearestStartNextShotChange = nextStartShotChanges.Aggregate((x, y) => Math.Abs(x - p.StartTime.TotalSeconds) < Math.Abs(y - p.StartTime.TotalSeconds) ? x : y);
+                double nearestStartNextShotChange = sortedShotChanges[startUpper];
                 var gapToShotChange = SubtitleFormat.MillisecondsToFrames(nearestStartNextShotChange * 1000 - p.StartTime.TotalMilliseconds, controller.FrameRate);
                 var threshold = (int)Math.Round(halfSecGapInFrames * 0.75, MidpointRounding.AwayFromZero);
                 if (gapToShotChange != 0 && gapToShotChange < halfSecGapInFrames)
@@ -100,9 +110,9 @@ public class NetflixCheckShotChange : INetflixQualityChecker
                 }
             }
 
-            if (previousEndShotChanges.Count > 0)
+            if (endLower > 0)
             {
-                double nearestEndPrevShotChange = previousEndShotChanges.Aggregate((x, y) => Math.Abs(x - p.EndTime.TotalSeconds) < Math.Abs(y - p.EndTime.TotalSeconds) ? x : y);
+                double nearestEndPrevShotChange = sortedShotChanges[endLower - 1];
                 if (SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds - nearestEndPrevShotChange * 1000, controller.FrameRate) < halfSecGapInFrames)
                 {
                     var fixedParagraph = new Paragraph(p, false);
@@ -112,9 +122,9 @@ public class NetflixCheckShotChange : INetflixQualityChecker
                 }
             }
 
-            if (nextEndShotChanges.Count > 0)
+            if (endUpper < sortedShotChanges.Length)
             {
-                double nearestEndNextShotChange = nextEndShotChanges.Aggregate((x, y) => Math.Abs(x - p.EndTime.TotalSeconds) < Math.Abs(y - p.EndTime.TotalSeconds) ? x : y);
+                double nearestEndNextShotChange = sortedShotChanges[endUpper];
                 // "If an out-time is within half a second of the last frame before the shot change,
                 // extend the out-time to the shot change, respecting the two-frame gap from the shot
                 // change." An out-cue already sitting on the two-frame gap is what we would move it
@@ -137,5 +147,47 @@ public class NetflixCheckShotChange : INetflixQualityChecker
                 controller.AddRecord(p, fixedParagraph, comment, string.Empty, true);
             }
         }
+    }
+
+    /// <summary>Index of the first frame that is at or above <paramref name="frame"/> (length if none).</summary>
+    private static int FirstAtOrAbove(int[] frames, int frame)
+    {
+        var low = 0;
+        var high = frames.Length;
+        while (low < high)
+        {
+            var middle = (low + high) >>> 1;
+            if (frames[middle] < frame)
+            {
+                low = middle + 1;
+            }
+            else
+            {
+                high = middle;
+            }
+        }
+
+        return low;
+    }
+
+    /// <summary>Index of the first frame that is above <paramref name="frame"/> (length if none).</summary>
+    private static int FirstAbove(int[] frames, int frame)
+    {
+        var low = 0;
+        var high = frames.Length;
+        while (low < high)
+        {
+            var middle = (low + high) >>> 1;
+            if (frames[middle] <= frame)
+            {
+                low = middle + 1;
+            }
+            else
+            {
+                high = middle;
+            }
+        }
+
+        return low;
     }
 }

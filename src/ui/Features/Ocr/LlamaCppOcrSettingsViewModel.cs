@@ -22,6 +22,7 @@ public partial class LlamaCppOcrSettingsViewModel : ObservableObject
 
     private Func<Task>? _redownloadAsync;
 
+    [ObservableProperty] private bool _useRemoteServer;
     [ObservableProperty] private string _url;
     [ObservableProperty] private string _prompt;
     [ObservableProperty] private int _timeoutMinutes;
@@ -55,6 +56,7 @@ public partial class LlamaCppOcrSettingsViewModel : ObservableObject
 
     public LlamaCppOcrSettingsViewModel()
     {
+        _useRemoteServer = Se.Settings.Ocr.LlamaCppUseRemoteServer;
         _url = Se.Settings.Ocr.LlamaCppUrl ?? string.Empty;
         _prompt = Se.Settings.Ocr.LlamaCppOcrPrompt ?? string.Empty;
         _timeoutMinutes = Math.Max(1, Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
@@ -131,7 +133,14 @@ public partial class LlamaCppOcrSettingsViewModel : ObservableObject
             return;
         }
 
-        Se.Settings.Ocr.LlamaCppUrl = Url ?? string.Empty;
+        if (UseRemoteServer && string.IsNullOrWhiteSpace(Url))
+        {
+            await ShowPromptError(string.Format(Se.Language.General.XRequiresAValidUrl, Se.Language.Ocr.LlamaCppOcr));
+            return;
+        }
+
+        Se.Settings.Ocr.LlamaCppUseRemoteServer = UseRemoteServer;
+        Se.Settings.Ocr.LlamaCppUrl = Url?.Trim() ?? string.Empty;
         Se.Settings.Ocr.LlamaCppOcrPrompt = Prompt;
         Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes = Math.Max(1, TimeoutMinutes);
         OkPressed = true;

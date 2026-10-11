@@ -27,6 +27,7 @@ public class DownloadVoicePacksViewModelTests
 
     private sealed class FakeCloneEngine : ITtsEngine
     {
+        public override string ToString() => Name;
         public List<string> Imported { get; } = new();
         public string Name => "Fake clone engine";
         public string Description => string.Empty;

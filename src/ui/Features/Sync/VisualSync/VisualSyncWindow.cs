@@ -225,6 +225,14 @@ public class VisualSyncWindow : Window
         grid.Add(UiUtil.MakeBorderForControl(gridRight), 1, 1);
         grid.Add(buttonPanel, 2, 0, 1, 2);
 
+        // Seek/play keys follow the pane last clicked or focused once focus leaves both (#15789).
+        vm.PaneLeft = gridLeft;
+        vm.PaneRight = gridRight;
+        gridLeft.AddHandler(PointerPressedEvent, (_, _) => vm.IsRightPaneActive = false, RoutingStrategies.Tunnel, handledEventsToo: true);
+        gridRight.AddHandler(PointerPressedEvent, (_, _) => vm.IsRightPaneActive = true, RoutingStrategies.Tunnel, handledEventsToo: true);
+        gridLeft.GotFocus += (_, _) => vm.IsRightPaneActive = false;
+        gridRight.GotFocus += (_, _) => vm.IsRightPaneActive = true;
+
         Content = grid;
 
         // The lent waveform arrives a beat after construction, and goes away again when a

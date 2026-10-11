@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -125,6 +125,10 @@ public partial class MergeSameTextViewModel : ObservableObject, IClosingCleanup
             AddRollUpMerges(maxMsBetween, removed);
         }
 
+        // Line numbers held by unchecked merge items. Every item added below starts checked, so
+        // the set stays valid for the whole pass (scanning all items per merge was quadratic).
+        var blockedNumbers = GetUncheckedLineNumbers();
+
         for (var i = 1; i < _subtitles.Count; i++)
         {
             if (removed.Contains(i - 1))
@@ -151,7 +155,7 @@ public partial class MergeSameTextViewModel : ObservableObject, IClosingCleanup
                     Number = nextS.Number,
                 };
                 var incrementText = string.Empty;
-                if ((MergeLinesSameTextUtils.QualifiesForMerge(p, next, maxMsBetween) || fixIncrementing && MergeLinesSameTextUtils.QualifiesForMergeIncrement(p, next, maxMsBetween, out incrementText)) && IsFixAllowed(p))
+                if ((MergeLinesSameTextUtils.QualifiesForMerge(p, next, maxMsBetween) || fixIncrementing && MergeLinesSameTextUtils.QualifiesForMergeIncrement(p, next, maxMsBetween, out incrementText)) && !blockedNumbers.Contains(p.Number))
                 {
                     p.Text = next.Text;
                     p.EndTime.TotalMilliseconds = next.EndTime.TotalMilliseconds;
@@ -235,20 +239,18 @@ public partial class MergeSameTextViewModel : ObservableObject, IClosingCleanup
         }
     }
 
-    private bool IsFixAllowed(Paragraph p)
+    private HashSet<int> GetUncheckedLineNumbers()
     {
+        var numbers = new HashSet<int>();
         foreach (var mi in MergeItems.Where(p => !p.Apply))
         {
             foreach (var line in mi.LinesToMerge)
             {
-                if (line.Number == p.Number)
-                {
-                    return false;
-                }
+                numbers.Add(line.Number);
             }
         }
 
-        return true;
+        return numbers;
     }
 
     private void LoadSettings()

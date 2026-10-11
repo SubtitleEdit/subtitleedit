@@ -60,6 +60,7 @@ public class LanguageImport
     public string ForcedAlignerIsolatingSpeechFailed { get; set; }
     public string ForcedAlignerModel { get; set; }
     public string ForcedAlignerDownloadEngine { get; set; }
+    public string ForcedAlignerEstimatedXOfY { get; set; }
 
     public LanguageImport()
     {
@@ -125,6 +126,7 @@ Rules:
         ForcedAlignerIsolatingSpeechFailed = "Could not isolate the speech - end times were set from reading time instead.";
         ForcedAlignerModel = "Aligner model";
         ForcedAlignerDownloadEngine = "Download / update engine...";
+        ForcedAlignerEstimatedXOfY = "{0} of {1} lines could not be aligned and were placed by reading time - their time codes are only estimated. The script is probably longer than what is spoken in the video.";
         CsvXlsxCustomColumnsDotDotDot = "CSV/XLSX/ODS with custom columns...";
         TitleImportCsvXlsxCustomColumns = "Import CSV/XLSX/ODS with custom columns";
         DetectedSeparatorX = "Detected separator: {0}";

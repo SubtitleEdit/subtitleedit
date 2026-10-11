@@ -14,6 +14,7 @@ using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UITests.Features.Sync.PointSync;
 
 namespace UITests.Features.Sync;
 
@@ -97,7 +98,7 @@ public class SyncWaveformResizeTests : IDisposable
         // A path is enough for the layout decision; nothing opens it here (the open is posted to
         // the dispatcher and this test never pumps it).
         vm.Initialize(lines, lines[0], videoFileName: "/does/not/exist.mp4", subtitleFileName: null, previewContext: VideoPreviewSubtitleContext.Default, audioVisualizer: LentWaveform());
-        var window = Track(new SetSyncPointWindow(vm));
+        var window = Track(new SetSyncPointWindow(vm, WorkingVideoPlayer.MakeControl()));
 
         // The peaks are handed over on the same posted job - flip the flag the way it does.
         vm.IsAudioVisualizerVisible = true;
@@ -116,7 +117,7 @@ public class SyncWaveformResizeTests : IDisposable
         var lines = TwoLines();
         vm.Initialize(lines, lines[0], videoFileName: "/does/not/exist.mp4", subtitleFileName: null, previewContext: VideoPreviewSubtitleContext.Default, audioVisualizer: null);
 
-        var window = Track(new SetSyncPointWindow(vm));
+        var window = Track(new SetSyncPointWindow(vm, WorkingVideoPlayer.MakeControl()));
 
         var split = Assert.Single(SplitsOf(window));
         Assert.False(HandleOf(split).IsVisible);
@@ -130,7 +131,7 @@ public class SyncWaveformResizeTests : IDisposable
         var vm = MakeSetSyncPointViewModel();
         var lines = TwoLines();
         vm.Initialize(lines, lines[0], videoFileName: "/does/not/exist.mp4", subtitleFileName: null, previewContext: VideoPreviewSubtitleContext.Default, audioVisualizer: LentWaveform());
-        var window = new SetSyncPointWindow(vm);
+        var window = new SetSyncPointWindow(vm, WorkingVideoPlayer.MakeControl());
         vm.IsAudioVisualizerVisible = true;
 
         SimulateDrag(SplitsOf(window).Single(), 140);

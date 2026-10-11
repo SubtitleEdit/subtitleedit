@@ -443,7 +443,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        private static string GetStartTags(string input)
+        public static string GetStartTags(string input)
         {
             var pre = new StringBuilder();
             var s = input;

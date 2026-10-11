@@ -197,7 +197,7 @@ public partial class DCinemaInteropPropertiesViewModel : ObservableObject
         }
 
         var vm = await _windowService.ShowDialogAsync<ColorPickerWindow, ColorPickerViewModel>(
-            Window, viewModel => { viewModel.SelectedColor = FontColor; });
+            Window, viewModel => viewModel.Initialize(FontColor));
 
         if (vm.OkPressed)
         {
@@ -214,7 +214,7 @@ public partial class DCinemaInteropPropertiesViewModel : ObservableObject
         }
 
         var vm = await _windowService.ShowDialogAsync<ColorPickerWindow, ColorPickerViewModel>(
-            Window, viewModel => { viewModel.SelectedColor = FontEffectColor; });
+            Window, viewModel => viewModel.Initialize(FontEffectColor));
 
         if (vm.OkPressed)
         {

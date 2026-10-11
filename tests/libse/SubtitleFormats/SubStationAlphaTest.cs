@@ -33,6 +33,93 @@ Dialogue: Marked=0,0:20:24.01,0:20:26.44,*Default,NTP,0000,0000,0000,,Du wirst s
         Assert.All(subtitle.Paragraphs, p => Assert.Equal("Default", p.Extra));
     }
 
+    // [Fonts]/[Graphics] after [Events] must land in Footer (where the attachments dialog and
+    // the writer look), not be appended to Header under [Events].
+    [Fact]
+    public void FontsSectionAfterEventsGoesToFooter()
+    {
+        var text = SsaWithMarkedDefault + @"
+
+[Fonts]
+fontname: a_0.ttf
+M+>%!LL(G,J-K\=O\\E/.$S,+F%U$\L
+";
+        var subtitle = new Subtitle();
+        var format = new SubStationAlpha();
+        format.LoadSubtitle(subtitle, new List<string>(text.SplitToLines()), "test.ssa");
+
+        Assert.Equal(2, subtitle.Paragraphs.Count);
+        Assert.DoesNotContain("fontname", subtitle.Header);
+        Assert.Contains("[Fonts]", subtitle.Footer);
+        Assert.Contains("fontname: a_0.ttf", subtitle.Footer);
+
+        var reloaded = new Subtitle();
+        format.LoadSubtitle(reloaded, new List<string>(format.ToText(subtitle, "test").SplitToLines()), "test.ssa");
+        Assert.Equal(2, reloaded.Paragraphs.Count);
+        Assert.Contains("fontname: a_0.ttf", reloaded.Footer);
+        Assert.DoesNotContain("fontname", reloaded.Header);
+    }
+
+    // Aegisub writes [Fonts]/[Graphics] before [Events]; the [Events] line must still reach Header
+    // (once) so the saved file keeps it, and the payload must stay in Footer.
+    [Theory]
+    [InlineData("[Fonts]", "fontname: a_0.ttf")]
+    [InlineData("[Graphics]", "filename: logo.png")]
+    public void AttachmentSectionBeforeEventsKeepsEventsHeader(string section, string entry)
+    {
+        var text = @"[Script Info]
+ScriptType: v4.00
+
+[V4 Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, AlphaLevel, Encoding
+Style: Default,Arial,20,16777215,65535,0,0,0,0,1,1,1,2,10,10,10,0,1
+
+" + section + @"
+" + entry + @"
+M+>%!LL(G,J-K\=O\\E/.$S,+F%U$\L
+
+[Events]
+Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: Marked=0,0:20:19.02,0:20:23.82,*Default,NTP,0000,0000,0000,,Wir freuen uns sehr,
+Dialogue: Marked=0,0:20:24.01,0:20:26.44,*Default,NTP,0000,0000,0000,,Du wirst sehr reich werden.";
+        var subtitle = new Subtitle();
+        var format = new SubStationAlpha();
+        format.LoadSubtitle(subtitle, new List<string>(text.SplitToLines()), "test.ssa");
+
+        Assert.Equal(2, subtitle.Paragraphs.Count);
+        Assert.Contains("[Events]", subtitle.Header);
+        Assert.DoesNotContain(entry, subtitle.Header);
+        Assert.Contains(section, subtitle.Footer);
+        Assert.Contains(entry, subtitle.Footer);
+
+        var output = format.ToText(subtitle, "test");
+        Assert.Equal(1, CountOccurrences(output, "[Events]"));
+        Assert.Equal(1, CountOccurrences(output, section));
+        Assert.Equal(1, CountOccurrences(output, entry));
+        Assert.True(output.IndexOf("[Events]", StringComparison.Ordinal) < output.IndexOf("Dialogue:", StringComparison.Ordinal));
+
+        var reloaded = new Subtitle();
+        format.LoadSubtitle(reloaded, new List<string>(output.SplitToLines()), "test.ssa");
+        Assert.Equal(2, reloaded.Paragraphs.Count);
+        Assert.Equal("Du wirst sehr reich werden.", reloaded.Paragraphs[1].Text);
+        Assert.Contains(entry, reloaded.Footer);
+        Assert.DoesNotContain(entry, reloaded.Header);
+        Assert.Equal(output, format.ToText(reloaded, "test"));
+    }
+
+    private static int CountOccurrences(string text, string value)
+    {
+        var count = 0;
+        var idx = text.IndexOf(value, StringComparison.Ordinal);
+        while (idx >= 0)
+        {
+            count++;
+            idx = text.IndexOf(value, idx + value.Length, StringComparison.Ordinal);
+        }
+
+        return count;
+    }
+
     // A header-less payload (bare event lines, as the clipboard carries) must parse its events
     // without any of them ending up in Header, which consumers treat as pre-[Events] content.
     [Theory]

@@ -36,6 +36,21 @@ public class SeAssa
     public string BackgroundBoxesShadowColor { get; set; }
     public string BackgroundBoxesOutlineColor { get; set; }
     public bool HideLayersFromWaveform { get; set; }
+
+    /// <summary>
+    /// ASSA draw: opacity of the background (video frame or image) behind the drawing, 0.1-1.
+    /// </summary>
+    public double DrawBackgroundOpacity { get; set; }
+
+    /// <summary>
+    /// ASSA draw: stretch a background image to the canvas instead of fitting it with its aspect ratio.
+    /// </summary>
+    public bool DrawBackgroundStretch { get; set; }
+
+    /// <summary>
+    /// ASSA draw: shapes the user saved to the shape library ("My shapes").
+    /// </summary>
+    public List<SeAssaDrawShape> DrawShapeLibrary { get; set; }
     public bool HideLayersFromSubtitleGrid { get; set; }
     public bool HideLayersFromVideoPreview { get; set; }
     public bool FontCollectorTrimFonts { get; set; }
@@ -72,6 +87,8 @@ public class SeAssa
         BackgroundBoxesOutlineColor = Color.FromArgb(50, 200,200,200).FromColorToHex();
 
         HideLayersFromWaveform = true;
+        DrawBackgroundOpacity = 1.0;
+        DrawShapeLibrary = new List<SeAssaDrawShape>();
         HideLayersFromSubtitleGrid = false;
         HideLayersFromVideoPreview = false;
     }

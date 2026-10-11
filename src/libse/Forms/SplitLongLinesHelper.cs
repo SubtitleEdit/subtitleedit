@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     text = Utilities.AutoBreakLine(oldParagraph.Text, language, true);
                 }
 
-                if (noHtmlLines.Count == 1 && text.SplitToLines().Count <= 2 && noHtmlLines[0].Length > singleLineMaxCharacters && !QualifiesForSplit(text, singleLineMaxCharacters, totalLineMaxCharacters))
+                if (noHtmlLines.Count == 1 && text.CountLines() <= 2 && noHtmlLines[0].Length > singleLineMaxCharacters && !QualifiesForSplit(text, singleLineMaxCharacters, totalLineMaxCharacters))
                 {
                     oldParagraph.Text = text;
                     continue;

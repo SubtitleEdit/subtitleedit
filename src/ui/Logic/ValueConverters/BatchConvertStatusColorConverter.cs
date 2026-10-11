@@ -23,6 +23,12 @@ public class BatchConvertStatusColorConverter : IValueConverter
     private static readonly SolidColorBrush CancelledForeground = new(Color.Parse("#8494a4"));
     private static readonly SolidColorBrush CancelledBackground = new(Color.Parse("#8494a4"), 0.16);
 
+    // Darker text shades for the light theme - the tones above are only ~2.5:1 against their
+    // own tinted badge on white (#15768).
+    private static readonly SolidColorBrush SuccessForegroundLight = new(Color.Parse("#1e7a4a"));
+    private static readonly SolidColorBrush ErrorForegroundLight = new(Color.Parse("#b42828"));
+    private static readonly SolidColorBrush CancelledForegroundLight = new(Color.Parse("#55606c"));
+
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         var status = value as string;
@@ -35,12 +41,12 @@ public class BatchConvertStatusColorConverter : IValueConverter
 
         if (status == Se.Language.General.Converted)
         {
-            return isBackground ? SuccessBackground : SuccessForeground;
+            return isBackground ? SuccessBackground : PickForeground(SuccessForeground, SuccessForegroundLight);
         }
 
         if (status == Se.Language.General.Cancelled)
         {
-            return isBackground ? CancelledBackground : CancelledForeground;
+            return isBackground ? CancelledBackground : PickForeground(CancelledForeground, CancelledForegroundLight);
         }
 
         // "Error: {0}" - match on the part before the placeholder so translated texts work too.
@@ -55,11 +61,16 @@ public class BatchConvertStatusColorConverter : IValueConverter
             (errorPrefix.Length > 0 && status.StartsWith(errorPrefix, StringComparison.OrdinalIgnoreCase)) ||
             status.StartsWith("BinaryOcr database not found", StringComparison.Ordinal))
         {
-            return isBackground ? ErrorBackground : ErrorForeground;
+            return isBackground ? ErrorBackground : PickForeground(ErrorForeground, ErrorForegroundLight);
         }
 
         // In-progress statuses (OCR percentages etc.) keep the default text color, no badge.
         return DefaultBrush(isBackground);
+    }
+
+    private static IBrush PickForeground(IBrush dark, IBrush light)
+    {
+        return UiTheme.IsDarkThemeEnabled() ? dark : light;
     }
 
     // An explicit theme text brush, not UnsetValue: a binding that yields UnsetValue falls

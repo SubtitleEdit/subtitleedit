@@ -135,13 +135,21 @@ public class SettingsPage : UserControl
 
         UpdateVisibleSections(string.Empty);
 
+        // Search updates immediately, without the category navigation fade.
         _searchBox.TextChanged += (_, e) => UpdateVisibleSections(_searchBox.Text ?? string.Empty);
         ActualThemeVariantChanged += (_, _) => Dispatcher.UIThread.Post(RefreshSections);
         _vm.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName == nameof(SettingsViewModel.SelectedSection))
             {
-                RefreshSections();
+                if (_vm.DeferSectionRefresh)
+                {
+                    UpdateMenuHighlight();
+                }
+                else
+                {
+                    RefreshSections();
+                }
             }
         };
     }
@@ -428,7 +436,9 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.General.LockTimeCodes, nameof(_vm.LockTimeCodes)),
             MakeCheckboxSetting(Se.Language.Options.Settings.RememberPositionAndSize, nameof(_vm.RememberPositionAndSize)),
             MakeCheckboxSetting(Se.Language.Options.Settings.TitleBarFullFileName, nameof(_vm.TitleBarFullFileName)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.OpenLastFileOnStart, nameof(_vm.OpenLastFileOnStart)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowRecentFiles, nameof(_vm.ShowRecentFiles)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.OpenLastFileOnStart, nameof(_vm.OpenLastFileOnStart),
+                new Binding(nameof(_vm.ShowRecentFiles)) { Source = _vm }),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoConvertToUtf8, nameof(_vm.AutoConvertToUtf8)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ForceCrLfOnSave, nameof(_vm.ForceCrLfOnSave)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowFormatLimitWarning, nameof(_vm.ShowFormatLimitWarning)),
@@ -611,6 +621,8 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoOpenVideoFile, nameof(_vm.AutoOpenVideoFile)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowSecondarySubtitleDialog, nameof(_vm.ShowSecondarySubtitleDialog)),
             MakeCheckboxSetting(Se.Language.Options.Settings.RememberSecondarySubtitleFile, nameof(_vm.RememberSecondarySubtitleFile)),
+            new SettingsItem(Se.Language.Options.Settings.Deinterlace,
+                () => UiUtil.MakeComboBox(_vm.MpvDeinterlaceItems, _vm, nameof(_vm.MpvSelectedDeinterlace))),
             new SettingsItem(Se.Language.Options.Settings.SubtitlePreviewProperties, () => MakeMpvPreviewSettings(_vm)),
             new SettingsItem(!_vm.IsLibMpvDownloadVisible, Se.Language.Options.Settings.DownloadMpv, () => new StackPanel
             {
@@ -773,6 +785,7 @@ public class SettingsPage : UserControl
                 () => UiUtil.MakeComboBox(_vm.WaveformMouseWheelVideoPositionSteps, _vm, nameof(_vm.SelectedWaveformMouseWheelVideoPositionStep))),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformCenterVideoPositionAlsoWhenPaused, nameof(_vm.WaveformCenterVideoPositionAlsoWhenPaused)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformSelectCurrentSubtitleWhilePaused, nameof(_vm.WaveformSelectCurrentSubtitleWhilePaused)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.WaveformRememberZoom, nameof(_vm.WaveformRememberZoom)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformDrawGridLines, nameof(_vm.WaveformDrawGridLines)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformUseSkiaRenderer, nameof(_vm.WaveformUseSkiaRenderer)),
             // SE 4 parity: the per-paragraph footer in the waveform ("#43  01:10" and the

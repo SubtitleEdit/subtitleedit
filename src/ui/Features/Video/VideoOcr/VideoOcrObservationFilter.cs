@@ -3,6 +3,7 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Features.Video.VideoOcr;
 
@@ -32,13 +33,22 @@ public static class VideoOcrObservationFilter
         // reaches OCR has bright pixels - the grouper classified it non-blank with the same
         // threshold - so when no observation's box covers any of them, the bright thing on
         // screen is not text, and dropping every observation is the correct answer.
-        var pixels = bitmap.Pixels;
+        // The boxes are a small part of the frame - read them from the bitmap's own memory
+        // rather than copying the whole frame out (bitmap.Pixels) for each OCR'd frame.
+        var pixels = VideoOcrFrameGrouper.GetPixelBytes(bitmap, out var red, out var blue, out _);
         var width = bitmap.Width;
         var height = bitmap.Height;
 
-        return observations
-            .Where(o => GetBrightFraction(o, pixels, width, height, brightnessMinimum) >= MinBrightFraction)
-            .ToList();
+        var kept = new List<AppleVisionObservation>(observations.Count);
+        foreach (var observation in observations)
+        {
+            if (GetBrightFraction(observation, pixels, red, blue, width, height, brightnessMinimum) >= MinBrightFraction)
+            {
+                kept.Add(observation);
+            }
+        }
+
+        return kept;
     }
 
     /// <summary>
@@ -46,6 +56,13 @@ public static class VideoOcrObservationFilter
     /// is in Vision's normalized bottom-left-origin coordinates.
     /// </summary>
     internal static double GetBrightFraction(AppleVisionObservation observation, SKColor[] pixels, int width, int height, int brightnessMinimum)
+    {
+        // SKColor is BGRA in memory.
+        return GetBrightFraction(observation, MemoryMarshal.AsBytes(pixels.AsSpan()), 2, 0, width, height, brightnessMinimum);
+    }
+
+    /// <param name="pixels">4 bytes per pixel, green at 1, red and blue at the given offsets.</param>
+    private static double GetBrightFraction(AppleVisionObservation observation, ReadOnlySpan<byte> pixels, int red, int blue, int width, int height, int brightnessMinimum)
     {
         var x0 = Math.Clamp((int)Math.Floor(observation.Left * width), 0, width - 1);
         var x1 = Math.Clamp((int)Math.Ceiling(observation.Right * width), x0 + 1, width);
@@ -59,8 +76,8 @@ public static class VideoOcrObservationFilter
             var row = y * width;
             for (var x = x0; x < x1; x++)
             {
-                var c = pixels[row + x];
-                if ((c.Red * 299 + c.Green * 587 + c.Blue * 114) / 1000 >= brightnessMinimum)
+                var o = (row + x) * 4;
+                if ((pixels[o + red] * 299 + pixels[o + 1] * 587 + pixels[o + blue] * 114) / 1000 >= brightnessMinimum)
                 {
                     bright++;
                 }

@@ -111,7 +111,25 @@ public class ShotChangesHelper
             }
         }
 
-        return list;
+        return EnsureSorted(list);
+    }
+
+    /// <summary>
+    /// Sorts shot changes (in place) when they are out of order. Consumers binary-search the list,
+    /// but an imported or hand-edited file keeps whatever order it was written in.
+    /// </summary>
+    public static List<double> EnsureSorted(List<double> shotChanges)
+    {
+        for (var i = 1; i < shotChanges.Count; i++)
+        {
+            if (shotChanges[i] < shotChanges[i - 1])
+            {
+                shotChanges.Sort();
+                break;
+            }
+        }
+
+        return shotChanges;
     }
 
     /// <summary>
@@ -304,15 +322,28 @@ public class ShotChangesHelper
             }
         }
 
+        // The first shot change at or after the end. The list is sorted, so binary search -
+        // the command runs once per selected line, and a scan from the start made a select-all
+        // cost lines x shot changes.
         double? newEndMs = null;
-        foreach (var shotChange in shotChanges)
+        var low = 0;
+        var high = shotChanges.Count;
+        while (low < high)
         {
-            var shotChangeMs = shotChange * 1000.0;
-            if (shotChangeMs >= endMs)
+            var middle = (low + high) >>> 1;
+            if (shotChanges[middle] * 1000.0 >= endMs)
             {
-                newEndMs = shotChangeMs - outCuesGapMs;
-                break;
+                high = middle;
             }
+            else
+            {
+                low = middle + 1;
+            }
+        }
+
+        if (low < shotChanges.Count)
+        {
+            newEndMs = shotChanges[low] * 1000.0 - outCuesGapMs;
         }
 
         if (nextStartMs.HasValue)
@@ -361,15 +392,26 @@ public class ShotChangesHelper
             }
         }
 
+        // The last shot change at or before the start, by binary search (see GetExtendedEndMs).
         double? newStartMs = null;
-        for (var i = shotChanges.Count - 1; i >= 0; i--)
+        var low = 0;
+        var high = shotChanges.Count;
+        while (low < high)
         {
-            var shotChangeMs = shotChanges[i] * 1000.0;
-            if (shotChangeMs <= startMs)
+            var middle = (low + high) >>> 1;
+            if (shotChanges[middle] * 1000.0 <= startMs)
             {
-                newStartMs = shotChangeMs + inCuesGapMs;
-                break;
+                low = middle + 1;
             }
+            else
+            {
+                high = middle;
+            }
+        }
+
+        if (low > 0)
+        {
+            newStartMs = shotChanges[low - 1] * 1000.0 + inCuesGapMs;
         }
 
         if (previousEndMs.HasValue)

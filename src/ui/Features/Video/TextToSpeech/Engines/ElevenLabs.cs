@@ -191,6 +191,105 @@ public class ElevenLabs : ITtsEngine
             };
         }
 
+        if (model is "eleven_v4" or "eleven_v4_turbo")
+        {
+            // v4 and v4 Turbo share the same 90+ language list
+            languages = new List<TtsLanguage>
+            {
+                new("Afrikaans", "af"),
+                new("Amharic", "am"),
+                new("Arabic", "ar"),
+                new("Armenian", "hy"),
+                new("Assamese", "as"),
+                new("Asturian", "ast"),
+                new("Azerbaijani", "az"),
+                new("Belarusian", "be"),
+                new("Bengali", "bn"),
+                new("Bosnian", "bs"),
+                new("Bulgarian", "bg"),
+                new("Burmese", "my"),
+                new("Cantonese", "yue"),
+                new("Catalan", "ca"),
+                new("Cebuano", "ceb"),
+                new("Croatian", "hr"),
+                new("Czech", "cs"),
+                new("Danish", "da"),
+                new("Dutch", "nl"),
+                new("English", "en"),
+                new("Estonian", "et"),
+                new("Filipino", "fil"),
+                new("Finnish", "fi"),
+                new("French", "fr"),
+                new("Fula", "ff"),
+                new("Galician", "gl"),
+                new("Georgian", "ka"),
+                new("German", "de"),
+                new("Greek", "el"),
+                new("Gujarati", "gu"),
+                new("Hausa", "ha"),
+                new("Hebrew", "he"),
+                new("Hindi", "hi"),
+                new("Hungarian", "hu"),
+                new("Icelandic", "is"),
+                new("Indonesian", "id"),
+                new("Italian", "it"),
+                new("Japanese", "ja"),
+                new("Javanese", "jv"),
+                new("Kamba", "kam"),
+                new("Kannada", "kn"),
+                new("Kazakh", "kk"),
+                new("Korean", "ko"),
+                new("Kyrgyz", "ky"),
+                new("Lao", "lo"),
+                new("Latvian", "lv"),
+                new("Lingala", "ln"),
+                new("Lithuanian", "lt"),
+                new("Luganda", "lg"),
+                new("Luxembourgish", "lb"),
+                new("Macedonian", "mk"),
+                new("Malay", "ms"),
+                new("Malayalam", "ml"),
+                new("Maltese", "mt"),
+                new("Mandarin Chinese", "zh"),
+                new("Maori", "mi"),
+                new("Marathi", "mr"),
+                new("Mongolian", "mn"),
+                new("Nepali", "ne"),
+                new("Norwegian", "no"),
+                new("Occitan", "oc"),
+                new("Odia", "or"),
+                new("Pashto", "ps"),
+                new("Persian", "fa"),
+                new("Polish", "pl"),
+                new("Portuguese", "pt"),
+                new("Punjabi", "pa"),
+                new("Romanian", "ro"),
+                new("Russian", "ru"),
+                new("Serbian", "sr"),
+                new("Shona", "sn"),
+                new("Sindhi", "sd"),
+                new("Slovak", "sk"),
+                new("Slovenian", "sl"),
+                new("Somali", "so"),
+                new("Sorani Kurdish", "ckb"),
+                new("Spanish", "es"),
+                new("Swahili", "sw"),
+                new("Swedish", "sv"),
+                new("Tajik", "tg"),
+                new("Tamil", "ta"),
+                new("Telugu", "te"),
+                new("Thai", "th"),
+                new("Turkish", "tr"),
+                new("Ukrainian", "uk"),
+                new("Urdu", "ur"),
+                new("Uzbek", "uz"),
+                new("Vietnamese", "vi"),
+                new("Welsh", "cy"),
+                new("Wolof", "wo"),
+                new("Zulu", "zu"),
+            };
+        }
+
         if (model is "eleven_multilingual_v2" or "eleven_turbo_v2_5")
         {
             languages = new List<TtsLanguage>
@@ -294,7 +393,7 @@ public class ElevenLabs : ITtsEngine
 
         if (string.IsNullOrEmpty(model))
         {
-            model = "eleven_multilingual_v2";
+            model = "eleven_v4_turbo";
         }
 
         Se.WriteToolsLog($"ElevenLabs: voice={elevenLabVoice.Voice}, voiceId={elevenLabVoice.VoiceId}, model={model}, textLen={text.Length}");
@@ -323,6 +422,8 @@ public class ElevenLabs : ITtsEngine
     {
         return Task.FromResult(new[]
         {
+            "eleven_v4_turbo",
+            "eleven_v4",
             "eleven_turbo_v2_5",
             "eleven_v3",
             "eleven_multilingual_v2"

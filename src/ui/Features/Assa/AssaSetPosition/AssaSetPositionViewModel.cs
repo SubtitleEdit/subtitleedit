@@ -163,7 +163,23 @@ public partial class AssaSetPositionViewModel : ObservableObject
         }
     }
 
-    public void Initialize(Subtitle subtitle, SubtitleLineViewModel line, string? videoFileName, int? videoWidth, int? videoHeight)
+    /// <summary>
+    /// Video time for the background frame: the player position when it is paused inside the
+    /// line (so a mid-line frame can be used for alignment, like SE4 - #15817), else the line start.
+    /// </summary>
+    public static double GetScreenshotSeconds(SubtitleLineViewModel line, double? videoPositionSeconds)
+    {
+        var startSeconds = line.StartTime.TotalMilliseconds / 1000.0;
+        var endSeconds = line.EndTime.TotalMilliseconds / 1000.0;
+        if (videoPositionSeconds is { } position && position >= startSeconds && position <= endSeconds)
+        {
+            return position;
+        }
+
+        return startSeconds;
+    }
+
+    public void Initialize(Subtitle subtitle, SubtitleLineViewModel line, string? videoFileName, int? videoWidth, int? videoHeight, double? videoPositionSeconds = null)
     {
         _subtitle = new Subtitle(subtitle, false);
 
@@ -255,7 +271,7 @@ public partial class AssaSetPositionViewModel : ObservableObject
 
         // Pass exact seconds (not ToDisplayString, which honors the HH:MM:SS:FF time-code format
         // setting and would feed ffmpeg an unparseable "-ss 00:01:23:15", blanking the preview - #12182).
-        var fileName = FfmpegGenerator.GetScreenShot(videoFileName, (line.StartTime.TotalMilliseconds / 1000.0).ToString("0.###", CultureInfo.InvariantCulture));
+        var fileName = FfmpegGenerator.GetScreenShot(videoFileName, GetScreenshotSeconds(line, videoPositionSeconds).ToString("0.###", CultureInfo.InvariantCulture));
         if (System.IO.File.Exists(fileName))
         {
             try

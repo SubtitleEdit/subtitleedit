@@ -37,7 +37,7 @@ Independent of the thematic category, each command has a scope shown in the **Ac
 ## Assigning a Shortcut
 
 1. Select a command from the list
-2. Check the desired modifier keys: **Ctrl**, **Alt**, **Shift**, **Win**
+2. Check the desired modifier keys: **Ctrl**, **Alt**, **Shift**, **Win** — and on Windows also **AltGr** (the right Alt key). A shortcut with AltGr only fires when the right Alt key is held, so Ctrl+Alt shortcuts no longer swallow the characters AltGr types (€, @, …) on many keyboard layouts. Ctrl/Alt and AltGr cannot be combined
 3. Select the key from the dropdown
 4. The shortcut is applied immediately in the list
 5. Alternatively, **double-click a command in the list** to open the key capture dialog, then press the desired key combination directly
@@ -49,6 +49,7 @@ Some commands have additional configuration beyond the shortcut key:
 - **Set color 1–8** — Choose a color for each color shortcut
 - **Surround with 1–8** — Define the left/right text to surround selected text with (this replaces the *Shortcut toggle custom start/end* setting from Subtitle Edit 4), and its **Behavior**: *Toggle* adds the text, or removes it when it is already there; *Add* adds it every time, so pressing the shortcut twice adds it twice; *Remove (all)* only removes it, all at once; *Remove (one each time)* removes one pair per press, so it undoes *Add* step by step. **Works on** picks *Selection, else whole text* (the selected part of the text box, otherwise the whole text of each selected subtitle) or *Each line* (every line of a subtitle gets its own pair, e.g. `[Hello]` / `[Bye]`)
 - **Video move custom 1–4 back/forward** — Set the number of milliseconds to skip. Each one also has a **…and pause** variant that uses the same milliseconds but pauses playback first, so a jog/shuttle step leaves the video paused on the new position
+- **Move selected lines / Move selected lines and forward / Move all lines, custom 1–2 back/forward** — Set the number of milliseconds the lines are moved; the command name shows the current value
 - **Set actor 1–10** — Define the actor name assigned by each actor shortcut
 - **Custom search 1–5** — Set the name and URL for each search slot
 - **Custom shortcut 1–8** — Build your own shortcut from steps (see below)
@@ -67,6 +68,16 @@ Select a configurable command and click the **gear icon** to adjust its settings
 Examples: *Insert text* `\N` at end of text to lift a subtitle one line per key press; *Find and replace* regex `(?m)^- ` with `– ` followed by *Run command* **Go to next line**.
 
 **Active in** sets where the key works: *Everywhere*, *Subtitle list view*, *Text box*, *Subtitle list view & text box* or *Waveform* — so the same key can do something else elsewhere. For text box areas use a key with Ctrl/Alt, as a plain key would no longer type. Handy commands for steps: **Focus subtitle list view**, **Focus text box**, **Focus original text box**, **Focus waveform**, **Text box, go to start** and **Text box, go to end** — each step waits for focus to move before the next one runs. Assign a key like for any other command. The text changes of one run are undone in a single step. A custom shortcut cannot run another custom shortcut; a slot without steps does nothing.
+
+## Worth Knowing
+
+- **Help** — F1 by default. It can be changed here like any other shortcut, and the same key works in every dialog, where it opens the help page for that dialog
+- **Command palette** — Ctrl+Shift+K (Cmd+Shift+K on macOS) by default; search for any command by name and run it, see [Command palette](command-palette.md)
+- **Toggle break/unbreak** — Unbreaks the text if it has a line break, otherwise forces a break (no default key)
+- **Save original** — Saves only the original subtitle in translation mode (no default key; Ctrl+S saves both)
+- **Toggle screen privacy (hide file names, then also texts)** — Each press cycles: hide file names → also blur the subtitle texts → off. Handy for screen sharing and recordings (no default key)
+
+See [Keyboard Shortcuts](../reference/keyboard-shortcuts.md) for the full list of default keys.
 
 ## Resetting Shortcuts
 
@@ -106,4 +117,4 @@ This is useful for sharing shortcut configurations between machines or team memb
 | Key | Action |
 |-----|--------|
 | Escape | Close shortcuts window |
-| F1 | Open help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |

@@ -37,6 +37,7 @@ public class CompareWindow : Window
     private readonly CompareViewModel _vm;
     private readonly CompareOverviewRuler _ruler = new();
     private ScrollViewer? _scrollViewer;
+    private (int Index, double Top)? _scrollAnchor;
 
     public CompareWindow(CompareViewModel vm)
     {
@@ -83,8 +84,24 @@ public class CompareWindow : Window
         // Tunnel, so Ctrl+Enter and Escape reach the edit commands before the line's text box takes them.
         AddHandler(KeyDownEvent, vm.KeyDown, RoutingStrategies.Tunnel);
 
-        vm.RowsRebuilt += (_, _) => _ruler.SetRows(vm.Rows);
+        vm.RowsRebuilt += (_, _) =>
+        {
+            _ruler.SetRows(vm.Rows);
+            _scrollAnchor = null; // a row index from before the rebuild may be another line now
+        };
         _ruler.ScrollRequested += (_, fraction) => ScrollToFraction(fraction);
+
+        // Activating the window gives focus back to the row that had it - when the list was
+        // wheel-scrolled away from that row, the list jumped to an estimate of where it is (#15843).
+        // That scroll comes after Activated, so the place from the last scroll is still the user's.
+        Activated += delegate
+        {
+            var anchor = _scrollAnchor;
+            if (anchor != null)
+            {
+                Dispatcher.UIThread.Post(() => vm.RestoreScrollAnchor(anchor), DispatcherPriority.Background);
+            }
+        };
 
         Closing += vm.WindowClosing;
 
@@ -1106,7 +1123,11 @@ public class CompareWindow : Window
             return;
         }
 
-        _scrollViewer.ScrollChanged += (_, _) => UpdateRulerViewport();
+        _scrollViewer.ScrollChanged += (_, _) =>
+        {
+            UpdateRulerViewport();
+            _scrollAnchor = _vm.GetScrollAnchor();
+        };
         _scrollViewer.PropertyChanged += (_, e) =>
         {
             if (e.Property == ScrollViewer.ExtentProperty || e.Property == ScrollViewer.ViewportProperty)

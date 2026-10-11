@@ -210,18 +210,23 @@ public partial class AssaResolutionResamplerViewModel : ObservableObject
 
     private void Close()
     {
-        // "Ask when a video with a different resolution is opened" is honored whether the user
-        // confirms, cancels or presses Escape - unticking it means "leave it and stop asking".
+        Dispatcher.UIThread.Post(() =>
+        {
+            Window?.Close();
+        });
+    }
+
+    /// <summary>
+    /// "Ask when a video with a different resolution is opened" is honored however the dialog
+    /// closes (OK, Cancel, Escape or the title-bar X) - unticking it means "leave it and stop asking".
+    /// </summary>
+    internal void OnClosing()
+    {
         if (IsVideoPrompt && Se.Settings.Assa.AutoSetResolutionPrompt != AskOnVideoOpen)
         {
             Se.Settings.Assa.AutoSetResolutionPrompt = AskOnVideoOpen;
             Se.SaveSettings();
         }
-
-        Dispatcher.UIThread.Post(() =>
-        {
-            Window?.Close();
-        });
     }
 
     internal void KeyDown(object? sender, KeyEventArgs e)

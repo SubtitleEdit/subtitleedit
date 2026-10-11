@@ -183,6 +183,11 @@ public partial class MergeContinuationLinesViewModel : ObservableObject, IClosin
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/merge-continuation-lines");
+        }
     }
 
     internal void Loaded()

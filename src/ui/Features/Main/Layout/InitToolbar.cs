@@ -567,7 +567,9 @@ public static class InitToolbar
                 new TextBlock
                 {
                     [!TextBlock.TextProperty] = new Binding(nameof(SubtitleFormat.Name)),
-                    Width = 150,
+                    // No fixed width: it cut long names off in the drop-down too, e.g.
+                    // "DVD Studio Pro with one space" (#15901). The closed box trims instead.
+                    TextTrimming = TextTrimming.CharacterEllipsis,
                 }, true)
         };
         comboBoxSubtitleFormat.SelectionChanged += vm.ComboBoxSubtitleFormatChanged;
@@ -614,9 +616,12 @@ public static class InitToolbar
             };
             stackPanelRight.Children.Add(labelFrameRate);
             toolbarPanel.AddCollapsible(labelFrameRate, rankLabels);
+            // Editable like SE 4, so any rate can be typed - e.g. 1, 2, 5, 10 or 15 fps (#15806).
+            // A typed rate is applied on Enter or when focus leaves the combo box.
             var comboBoxFrameRate = new ComboBox
             {
                 Width = 110,
+                IsEditable = true,
                 [AutomationProperties.NameProperty] = Se.Language.General.FrameRate,
                 [!ComboBox.ItemsSourceProperty] = new Binding(nameof(vm.FrameRates)),
                 [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedFrameRate)),
@@ -625,6 +630,20 @@ public static class InitToolbar
             stackPanelRight.Children.Add(comboBoxFrameRate);
             toolbarPanel.AddCollapsible(comboBoxFrameRate, rankFrameRate);
             comboBoxFrameRate.SelectionChanged += vm.ComboBoxFrameRateSelectionChanged;
+            UiUtil.OnEditableComboBoxCommit(comboBoxFrameRate, () =>
+            {
+                vm.CommitTypedFrameRate(comboBoxFrameRate.Text);
+                comboBoxFrameRate.Text = vm.SelectedFrameRate; // shows the applied rate, or restores it after invalid input
+            }, handleEnter: true);
+            comboBoxFrameRate.AddHandler(InputElement.KeyDownEvent, (_, e) =>
+            {
+                if (e.Key == Key.Escape && !comboBoxFrameRate.IsDropDownOpen && comboBoxFrameRate.Text != vm.SelectedFrameRate)
+                {
+                    vm.SetSelectedFrameRate(Se.Settings.General.CurrentFrameRate);
+                    comboBoxFrameRate.Text = vm.SelectedFrameRate;
+                    e.Handled = true;
+                }
+            }, RoutingStrategies.Bubble, handledEventsToo: true);
 
             // SE 4 had a "..." button right next to the combo box for reading the frame rate
             // out of a video file without opening it in the player.

@@ -285,6 +285,7 @@ internal sealed class NoopSpellCheckManager : ISpellCheckManager
     public void AdToUserDictionary(string currentWord) { }
     public void RemoveIgnoreWord(string word) { }
     public void RemoveChangeAllWord(string fromWord) { }
+    public void ReloadUseAlwaysList() { }
     public void RemoveFromNames(string word) { }
     public void RemoveFromUserDictionary(string word) { }
     public List<SpellCheckDictionaryDisplay> GetDictionaryLanguages(string dictionaryFolder) => new();

@@ -65,6 +65,31 @@ public class SpeechIsolationProgressTests
         Assert.Equal(100, progress.Percent);
     }
 
+    [Theory]
+    [InlineData(120.0, 21)] // CrispASR 0.8.41: "segmented 5292000 samples into 21 chunks of 343980 (stride 257985)"
+    [InlineData(7.0, 1)]
+    public void HtDemucsChunkCountMatchesTheSeparator(double seconds, int expected)
+    {
+        Assert.Equal(expected, SpeechIsolationProgress.GetChunkCount(seconds, HtDemucsModel.ChunkSamples, HtDemucsModel.StrideSamples));
+    }
+
+    [Fact]
+    public void HtDemucsChunkDoneLinesMoveTheFraction()
+    {
+        var progress = new SpeechIsolationProgress(4);
+        Assert.False(progress.TryUpdate("htdemucs: encoder OK, output (384, 8, 336)"));
+        Assert.Null(progress.Fraction);
+
+        Assert.True(progress.TryUpdate("htdemucs: separated 343980 samples → 4 sources (2 ch @ 44100 Hz)"));
+        Assert.Equal(0.25, progress.Fraction!.Value, 6);
+
+        Assert.True(progress.TryUpdate("htdemucs: separated 343980 samples → 4 sources (2 ch @ 44100 Hz)"));
+        Assert.Equal(50, progress.Percent);
+
+        Assert.True(progress.TryUpdate("htdemucs: segmented 1031940 samples into 4 chunks of 343980 (stride 257985)"));
+        Assert.Equal(1.0, progress.Fraction!.Value, 6);
+    }
+
     [Fact]
     public void UnknownChunkCountGivesNoPercentage()
     {

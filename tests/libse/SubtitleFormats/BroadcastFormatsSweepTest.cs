@@ -64,6 +64,26 @@ public class BroadcastFormatsSweepTest
         Assert.Equal(0, loaded.Paragraphs[0].StartTime.TotalMilliseconds, 3);
     }
 
+    // Records sharing a start time are one cue's lines; a run of three lost its third line
+    // (merged into the already-deleted second record) and got a zero duration.
+    [Fact]
+    public void CapMakerPlusMergesThreeRecordsWithSameStart()
+    {
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph("Line A", 1000, 3000));
+        subtitle.Paragraphs.Add(new Paragraph("Line B", 1000, 3000));
+        subtitle.Paragraphs.Add(new Paragraph("Line C", 1000, 3000));
+        subtitle.Paragraphs.Add(new Paragraph("Next", 5000, 7000));
+
+        var loaded = SaveAndReloadBinary(new CapMakerPlus(), subtitle, extension: ".cap");
+
+        Assert.Equal(2, loaded.Paragraphs.Count);
+        Assert.Equal("Line A" + Environment.NewLine + "Line B" + Environment.NewLine + "Line C", loaded.Paragraphs[0].Text);
+        Assert.Equal(1000, loaded.Paragraphs[0].StartTime.TotalMilliseconds, 3);
+        Assert.True(loaded.Paragraphs[0].EndTime.TotalMilliseconds > loaded.Paragraphs[0].StartTime.TotalMilliseconds);
+        Assert.Equal("Next", loaded.Paragraphs[1].Text);
+    }
+
     private static Subtitle CheetahSaveAndReload(Subtitle subtitle)
     {
         var old = Configuration.Settings.SubtitleSettings.CheetahCaptionAlwayWriteEndTime;

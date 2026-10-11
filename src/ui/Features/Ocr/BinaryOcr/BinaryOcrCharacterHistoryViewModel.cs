@@ -184,6 +184,11 @@ public partial class BinaryOcrCharacterHistoryViewModel : ObservableObject
         {
             _isControlDown = true;
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/ocr", "binary-ocr");
+        }
     }
 
     public void KeyUp(KeyEventArgs e)

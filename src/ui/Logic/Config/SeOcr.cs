@@ -28,6 +28,12 @@ public class SeOcr
     public string OllamaLanguage { get; set; }
     public int OllamaOcrTimeoutMinutes { get; set; }
     public string LlamaCppUrl { get; set; }
+
+    /// <summary>
+    /// When true, OCR posts to the user's own llama-server at <see cref="LlamaCppUrl"/> instead of
+    /// downloading and starting the bundled one (#15854).
+    /// </summary>
+    public bool LlamaCppUseRemoteServer { get; set; }
     public string LlamaCppOcrModel { get; set; }
     public string LlamaCppOcrPrompt { get; set; }
     public int LlamaCppOcrTimeoutMinutes { get; set; }
@@ -78,9 +84,22 @@ public class SeOcr
     public bool TextBoxFontBold { get; set; }
     public string TextBoxFontName { get; set; }
     public bool UseWordSplitList { get; set; }
+
+    /// <summary>
+    /// Image pre-processing (OCR window "Pre-processing" dialog). Was never persisted, so
+    /// e.g. "One color" + darkness threshold had to be set again every time OCR was opened.
+    /// </summary>
+    public bool PreProcessingCropTransparentColors { get; set; }
+    public bool PreProcessingInverseColors { get; set; }
+    public bool PreProcessingBinarize { get; set; }
+    public bool PreProcessingRemoveBorders { get; set; }
+    public int PreProcessingBorderSize { get; set; }
+    public bool PreProcessingToOneColor { get; set; }
+    public int PreProcessingOneColorDarknessThreshold { get; set; }
     public string NOcrTrainFonts { get; set; }
     public string NOcrTrainMergedLetters { get; set; }
-    public int NOcrTrainFontSize { get; set; }
+    public string NOcrTrainFontSizes { get; set; }
+    public string NOcrTrainBaseDatabase { get; set; }
     public int NOcrTrainSegmentCount { get; set; }
     public bool NOcrTrainBold { get; set; }
     public bool NOcrTrainItalic { get; set; }
@@ -108,7 +127,7 @@ public class SeOcr
         NOcrBinaryOcrFallbackDatabase = string.Empty;
         BinaryOcrNOcrFallbackDatabase = string.Empty;
         NOcrMaxWrongPixels = 25;
-        NOcrPixelsAreSpace = 12;
+        NOcrPixelsAreSpace = 0; // auto, see NOcrSpaceDetector
         NOcrDrawUnknownText = true;
         NOcrNoOfLinesToAutoDraw = 60;
         NOcrZoomFactor = 4;
@@ -153,14 +172,18 @@ public class SeOcr
 
         UseWordSplitList = false;
 
+        PreProcessingBorderSize = 2;
+        PreProcessingOneColorDarknessThreshold = 128;
+
         CaptureAssaPosition = false;
 
         PromptForBlankOcrText = true;
 
         NOcrTrainFonts = string.Empty;
         NOcrTrainMergedLetters = string.Empty;
-        NOcrTrainFontSize = 30;
-        NOcrTrainSegmentCount = 60;
+        NOcrTrainFontSizes = "30, 40";
+        NOcrTrainBaseDatabase = "Latin";
+        NOcrTrainSegmentCount = 100;
 
         VobSubUseCustomColors = false;
         VobSubColorBackground = "#00000000";

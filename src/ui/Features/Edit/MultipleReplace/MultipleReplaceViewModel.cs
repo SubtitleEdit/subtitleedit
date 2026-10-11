@@ -1177,7 +1177,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
         else if (UiUtil.IsHelp(e))
         {
             e.Handled = true;
-            UiUtil.ShowHelp("features/edit");
+            UiUtil.ShowHelp("features/edit", "multiple-replace");
         }
     }
 

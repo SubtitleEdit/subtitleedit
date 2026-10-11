@@ -16,6 +16,12 @@ Convert multiple subtitle files between formats and apply various transformation
 5. Choose an output folder
 6. Click **Convert**
 
+Use **Filter** above the file list to show only some files: **File name contains...**, **Track language contains...**, **Format contains...**, **Extension is...**, **Status is error** or **Forced tracks only**.
+
+### Presets
+
+The function choices and their options can be saved as a named preset: pick **Save preset...**, enter a name, and choose it later from the **Preset** drop-down to restore everything. **Delete preset** removes the selected one.
+
 ## Available Functions
 
 You can chain multiple conversion functions:
@@ -40,6 +46,10 @@ You can chain multiple conversion functions:
 - Unbreak lines — join a cue's lines into one, optionally only for short ones
 - Auto-balance lines
 - Fix right-to-left
+- Remove Unicode control characters — remove the invisible direction control characters (LRM, RLM, LRE, RLE, PDF, LRO and RLO) and replace no-break spaces with normal spaces
+- Convert actors — convert actor/voice labels from one style to another (e.g. inline `[NAME]` text to the Actor property), like [Convert actors](convert-actors.md)
+- Merge continuation lines
+- Renumber
 - Sort by
 - Change resolution — the [ASSA resolution resampler](assa-resolution-resampler.md) applied to every file
 - Change style — swap one ASSA style for another, or import styles from a file, optionally trimming unused ones
@@ -54,14 +64,18 @@ You can chain multiple conversion functions:
 Batch Convert can machine-translate files as part of the conversion. Supported engines:
 
 - Ollama
+- OpenAI Compatible API
 - Ollama advanced (local LLM) — the batch/context engine described in [Advanced local engines](auto-translate-advanced.md), talking to Ollama's OpenAI-compatible endpoint
 - LibreTranslate
-- LM Studio
+- LM Studio (local LLM)
+- LM Studio advanced (local LLM) — the batch/context engine described in [Advanced local engines](auto-translate-advanced.md)
 - llama.cpp — fully managed: Batch Convert reuses an already-running local `llama-server`, or downloads llama.cpp plus a curated translation model (e.g. TranslateGemma) and starts the server for you. Point it at your own server via the remote-server option in [Auto-translate](auto-translate.md) settings.
 - llama.cpp advanced (local LLM) — the batch/context engine described in [Advanced local engines](auto-translate-advanced.md); it gets the context size configured there
 - NLLB (nllb-serve and nllb-api)
 - DeepL (API key required)
 - CrispASR MADLAD
+
+To translate into several languages in one run, click **Add** next to the **To** language and pick more target languages (**Remove** drops one). Every file is translated into each language and saved as its own output file, with the target language code as the language post fix (e.g. `movie.de.srt`, `movie.fr.srt`).
 
 The same feature is available headlessly in `seconv` via `--translate-to` — see the [command line documentation](../reference/command-line.md).
 
@@ -112,11 +126,24 @@ Speech-to-text batch mode can transcribe multiple media files and save the resul
 
 ## Settings
 
-- **Output format** — Choose from 380+ subtitle formats
-- **Output folder** — Where converted files are saved
-- **Overwrite existing** — Whether to overwrite files
-- **Encoding** — Text encoding for output files
-- **Keep source file timestamp** — Give the output file the modification time of the source file
-- **Language post fix** — Append the detected language code (2- or 3-letter) to the output file name, e.g. `movie.en.srt`
+- **Target format** — Choose from 380+ subtitle formats
+- **Target format settings** — shown for formats with export options: ASSA (styles, properties, attachments), EBU STL header, PAC code page, Cavena 890 titles/translator/start of programme, DVB Teletext page number/language/hearing impaired, custom text format, and the image formats (Blu-ray sup, BDN XML, VobSub, D-Cinema, DOST, FCP, images)
+
+The **Settings** button opens **Batch convert settings**:
+
+- **Output**
+  - **Target encoding** — Text encoding for output files
+  - **Use source folder** / **Use output folder** — Where converted files are saved
+  - **Overwrite existing files**
+  - **Keep source file date/time on output files**
+  - **Language post-fix (mkv/mp4/auto-translate)** — Append the detected language code (2- or 3-letter) to the output file name, e.g. `movie.en.srt`
+- **Adding files**
+  - **Include subfolders when adding a folder**
+  - **Video files (mkv, mp4, ts...) when adding a folder** — **Ask** (default; a prompt offers **Add video files** or **Subtitle files only**, with **Do not ask again**), **Add their subtitle tracks**, or **Skip**
+- **Image-based subtitles (OCR)** — OCR engine and its language/database/model, and VobSub color isolation
+- **Other**
+  - **Prevent computer from sleeping while converting**
+
+Text formats are saved with CR+LF line breaks when **Force CR+LF on save (text subtitle files)** is on in [Settings](settings.md).
 
 For headless batch conversion, see [Command Line (seconv)](../reference/command-line.md).

@@ -149,7 +149,7 @@ public class ReplaceWindowFeedbackTests
 
             vm.SearchHistory.Add("foo");
             Assert.True(historyButton.IsVisible);
-            Assert.Single(((MenuFlyout)historyButton.Flyout!).Items);
+            Assert.Single(((MenuFlyout)historyButton.Flyout!).Items.OfType<MenuItem>(), m => m.CommandParameter is string);
 
             vm.ShowHistoryCommand.Execute("foo");
             Assert.Equal("foo", vm.SearchText);

@@ -2132,7 +2132,8 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
         Dispatcher.UIThread.PostSafe(async () =>
         {
-            if (engine is ElevenLabs && model == "eleven_v3")
+            // v4 / v4 Turbo honor the same audio tags as v3 ([whispers], [laughs], [pause]...)
+            if (engine is ElevenLabs && model is "eleven_v3" or "eleven_v4" or "eleven_v4_turbo")
             {
                 IsElevenLabsEngineV3Selected = true;
             }

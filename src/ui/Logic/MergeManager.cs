@@ -386,14 +386,12 @@ namespace Nikse.SubtitleEdit.Logic
                 TwoLetterLanguageCode = language,
                 SkipLineEndingCheck = true, // user explicitly asked for a dialog merge
             };
-            var dialogText = dialogHelper.FixDashesAndSpaces("- " + currentText.TrimStart(' ', '-') + Environment.NewLine + "- " + nextText.TrimStart(' ', '-'));
+            var dialogText = dialogHelper.FixDashesAndSpaces(ToDialogLine(currentText) + Environment.NewLine + ToDialogLine(nextText));
             currentParagraph.Text = dialogText;
 
             if (!string.IsNullOrWhiteSpace(currentOriginalText) || !string.IsNullOrWhiteSpace(nextOriginalText))
             {
-                var dialogOriginalText = dialogHelper.FixDashesAndSpaces("- " + currentOriginalText.TrimStart(' ', '-')
-                                                                              + Environment.NewLine + "- "
-                                                                              + nextOriginalText.TrimStart(' ', '-'));
+                var dialogOriginalText = dialogHelper.FixDashesAndSpaces(ToDialogLine(currentOriginalText) + Environment.NewLine + ToDialogLine(nextOriginalText));
                 currentParagraph.OriginalText = dialogOriginalText;
             }
 
@@ -401,6 +399,13 @@ namespace Nikse.SubtitleEdit.Logic
 
             subtitles.Remove(nextParagraph);
             subtitles.Renumber();
+        }
+
+        // The dash goes after leading formatting tags, so it is formatted like the line (#15600).
+        private static string ToDialogLine(string text)
+        {
+            var startTags = DialogSplitMerge.GetStartTags(text);
+            return startTags + "- " + text.Substring(startTags.Length).TrimStart(' ', '-');
         }
     }
 }

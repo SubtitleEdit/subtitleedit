@@ -132,6 +132,11 @@ public partial class ManualChosenEncodingViewModel : ObservableObject, IClosingC
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/file", "import-subtitle-with-manually-chosen-encoding");
+        }
     }
 
     internal void Initialize(string fileName)

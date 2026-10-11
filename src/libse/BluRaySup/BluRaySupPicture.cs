@@ -1141,9 +1141,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             var fpsId = GetFpsId(fps);
             var writer = new SegmentWriter();
 
-            // Start and end go on the frame grid (issue #15478). That already closes every gap
-            // shorter than half a frame, so the small gap removal - which nudges the start one
-            // tick past the previous end, i.e. off the grid - is only needed without a frame rate.
+            // Start and end go on the frame grid (issue #15478). That closes most gaps shorter
+            // than half a frame, and the export handler bridges the rest (issue #15933), so the
+            // small gap removal - which nudges the start one tick past the previous end, i.e. off
+            // the grid - is only needed without a frame rate.
             var onFrameGrid = TryGetExactFrameRate(fps, out var fpsNumerator, out var fpsDenominator) && pic.StartTime >= 0;
             long pts;
             long endPts;

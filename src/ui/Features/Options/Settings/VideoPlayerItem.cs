@@ -42,7 +42,7 @@ public partial class VideoPlayerItem : ObservableObject
 
         if (OperatingSystem.IsMacOS())
         {
-         //   result.Add(new VideoPlayerItem { Name = "libmpv - Metal", Code = VideoPlayerName.MpvMetal });
+            result.Add(new VideoPlayerItem { Name = Se.Language.Options.Settings.MpvMetalRendering, Code = VideoPlayerName.MpvMetal });
         }
 
         return result;

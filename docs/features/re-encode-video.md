@@ -26,4 +26,4 @@ Re-encode a video file with a different frame rate or container format using FFm
 | Key | Action |
 |-----|--------|
 | Escape | Close / Cancel |
-| F1 | Open help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |

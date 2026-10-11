@@ -487,7 +487,7 @@ public static partial class MergeAndSplitHelper
         Action<Action> applyRowUpdate)
     {
         var translatedLines = mergedTranslation.SplitToLines();
-        if (translatedLines.Count != mergeResult.Text.SplitToLines().Count)
+        if (translatedLines.Count != mergeResult.Text.CountLines())
         {
             return 0;
         }
@@ -500,7 +500,7 @@ public static partial class MergeAndSplitHelper
         foreach (var mergeItem in mergeResult.MergeResultItems)
         {
             var numberOfParagraphs = mergeItem.EndIndex - mergeItem.StartIndex + 1;
-            var numberOfLines = mergeItem.Text.SplitToLines().Count;
+            var numberOfLines = mergeItem.Text.CountLines();
 
             var translatedText = BuildTranslatedText(translatedLines, ref translatedLinesIdx, numberOfLines);
 
@@ -1130,7 +1130,7 @@ public static partial class MergeAndSplitHelper
     private static List<string>? SplitByPreservedLineBreaks(string text, MergeResultItem item)
     {
         var replyLines = text.SplitToLines();
-        var lineCounts = item.Paragraphs.Select(p => p.Text.SplitToLines().Count).ToList();
+        var lineCounts = item.Paragraphs.Select(p => p.Text.CountLines()).ToList();
         if (replyLines.Count != lineCounts.Sum())
         {
             return null;

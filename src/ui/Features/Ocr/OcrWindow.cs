@@ -35,7 +35,8 @@ public class OcrWindow : Window
     {
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = vm.Title;
+        AutomationProperties.SetAutomationId(this, "OcrWindow");
+        UpdateTitle(vm);
         Width = 1200;
         Height = 700;
         MinWidth = 900;
@@ -82,11 +83,18 @@ public class OcrWindow : Window
         // Collapse row when OCR is running, restore when stopped
         PropertyChangedEventHandler ocrRunningHandler = (s, e) =>
         {
+            if (e.PropertyName == nameof(vm.Title))
+            {
+                Avalonia.Threading.Dispatcher.UIThread.Post(() => UpdateTitle(vm));
+            }
+
             if (e.PropertyName == nameof(vm.IsOcrRunning))
             {
                 // Dispatch to UI thread since PropertyChanged may be raised from background thread
                 Avalonia.Threading.Dispatcher.UIThread.Post(() =>
                 {
+                    UpdateTitle(vm);
+
                     try
                     {
                         if (vm.IsOcrRunning)
@@ -244,7 +252,7 @@ public class OcrWindow : Window
         vm.RefreshCrispEmbedModelCombo = () => comboBoxCrispEmbedModels.ItemTemplate = MakeCrispEmbedModelItemTemplate();
 
         var comboBoxLlamaCppModels = UiUtil.MakeComboBox(vm.LlamaCppOcrModels, vm, nameof(vm.SelectedLlamaCppOcrModel),
-                nameof(vm.IsLlamaCppVisible))
+                nameof(vm.IsLlamaCppLocalVisible))
             .WithWidth(220)
             .WithMarginRight(5)
             .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance);
@@ -280,8 +288,8 @@ public class OcrWindow : Window
                     .WithMarginRight(10)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.Ocr.NumberOfPixelsIsSpace, vm => vm.IsNOcrVisible),
-                UiUtil.MakeComboBox(vm.NOcrPixelsAreSpaceList, vm, nameof(vm.SelectedNOcrPixelsAreSpace),
-                        nameof(vm.IsNOcrVisible))
+                WithPixelsAreSpaceItemTemplate(UiUtil.MakeComboBox(vm.NOcrPixelsAreSpaceList, vm, nameof(vm.SelectedNOcrPixelsAreSpace),
+                        nameof(vm.IsNOcrVisible)))
                     .WithMarginRight(10)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
 
@@ -345,15 +353,20 @@ public class OcrWindow : Window
                     .WithWidth(100)
                     .WithMarginRight(10)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
-                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Model, vm => vm.IsLlamaCppVisible),
+                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Model, vm => vm.IsLlamaCppLocalVisible),
                 comboBoxLlamaCppModels,
                 UiUtil.MakeButton(vm.DownloadLlamaCppOcrCommand, IconNames.Download, Se.Language.General.Download)
                     .WithMarginRight(5)
-                    .BindIsVisible(vm, nameof(vm.IsLlamaCppVisible))
+                    .BindIsVisible(vm, nameof(vm.IsLlamaCppLocalVisible))
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
                 MakeLlamaCppOcrToggleServerButton(vm)
                     .WithMarginRight(5)
-                    .BindIsVisible(vm, nameof(vm.IsLlamaCppVisible))
+                    .BindIsVisible(vm, nameof(vm.IsLlamaCppLocalVisible))
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
+                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Url, vm => vm.IsLlamaCppRemoteVisible),
+                UiUtil.MakeTextBox(220, vm, nameof(vm.LlamaCppUrl))
+                    .WithMarginRight(5)
+                    .BindIsVisible(vm, nameof(vm.IsLlamaCppRemoteVisible))
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
                 UiUtil.MakeButton(vm.ShowLlamaCppOcrSettingsCommand, IconNames.Settings, Se.Language.General.Settings)
                     .WithMarginRight(10)
@@ -724,6 +737,24 @@ public class OcrWindow : Window
         menuItemDelete.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.OneWay });
         flyout.Items.Add(menuItemDelete);
 
+        var menuItemFind = new MenuItem
+        {
+            Header = Se.Language.Main.Menu.Find,
+            DataContext = vm,
+            Command = vm.ShowFindCommand,
+        };
+        menuItemFind.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.OneWay });
+        flyout.Items.Add(menuItemFind);
+
+        var menuItemReplace = new MenuItem
+        {
+            Header = Se.Language.Main.Menu.Replace,
+            DataContext = vm,
+            Command = vm.ShowReplaceCommand,
+        };
+        menuItemReplace.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.OneWay });
+        flyout.Items.Add(menuItemReplace);
+
         var menuItemFillSelectedLinesWithClipboard = new MenuItem
         {
             Header = Se.Language.Ocr.FillSelectedLinesWithClipboard,
@@ -855,6 +886,9 @@ public class OcrWindow : Window
         menuItemSelectAll.Click += (_, _) => textBoxText.SelectAll();
         flyout.Items.Add(menuItemSelectAll);
         flyout.Items.Add(new Separator());
+        flyout.Items.Add(new MenuItem { Header = Se.Language.Main.Menu.Find, DataContext = vm, Command = vm.ShowFindCommand });
+        flyout.Items.Add(new MenuItem { Header = Se.Language.Main.Menu.Replace, DataContext = vm, Command = vm.ShowReplaceCommand });
+        flyout.Items.Add(new Separator());
         var menuItemSetFont = new MenuItem
         {
             Header = Se.Language.General.SetFontDotDotDot,
@@ -863,6 +897,7 @@ public class OcrWindow : Window
         };
         flyout.Items.Add(menuItemSetFont);
         textBoxText.ContextFlyout = flyout;
+        vm.EditTextBox = textBoxText;
         textBoxText.PointerReleased += vm.TextBoxPointerReleased;
         textBoxText.KeyDown += vm.TextBoxKeyDown;
 
@@ -1166,6 +1201,15 @@ public class OcrWindow : Window
         return grid;
     }
 
+    // The " - Running OCR..." suffix doubles as a cheap completion signal for
+    // automation tools (e.g. AutoHotkey WinWaitClose on the title text), see #15769.
+    private void UpdateTitle(OcrViewModel vm)
+    {
+        Title = vm.IsOcrRunning
+            ? $"{vm.Title} - {Se.Language.Ocr.RunningOcrDotDotDot}"
+            : vm.Title;
+    }
+
     private static Grid MakeBottomView(OcrViewModel vm)
     {
         var progressBar = UiUtil.MakeProgressBar();
@@ -1227,6 +1271,18 @@ public class OcrWindow : Window
         subtitleCountText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.SelectionStatus)) { Source = vm });
         subtitleCountText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsOcrRunning)) { Source = vm, Converter = InverseBooleanConverter.Instance });
 
+        // Stable UI Automation ids for external automation (#15769)
+        AutomationProperties.SetAutomationId(progressBar, "OcrProgressBar");
+        AutomationProperties.SetAutomationId(statusText, "OcrProgressText");
+        AutomationProperties.SetAutomationId(subtitleCountText, "OcrSelectionStatus");
+        AutomationProperties.SetAutomationId(buttonStart, "OcrStartButton");
+        AutomationProperties.SetAutomationId(buttonPause, "OcrPauseButton");
+        AutomationProperties.SetAutomationId(buttonInspect, "OcrInspectLineButton");
+        AutomationProperties.SetAutomationId(buttonInspectAdditions, "OcrInspectAdditionsButton");
+        AutomationProperties.SetAutomationId(buttonExport, "OcrExportButton");
+        AutomationProperties.SetAutomationId(buttonOk, "OcrOkButton");
+        AutomationProperties.SetAutomationId(buttonCancel, "OcrCancelButton");
+
         grid.Add(progressBar, 0, 0);
         grid.Add(statusText, 0, 0);
         grid.Add(subtitleCountText, 0, 0);
@@ -1280,6 +1336,16 @@ public class OcrWindow : Window
 
     // Model combo item template: a dot (green = downloaded, grey = not downloaded yet) plus the
     // model's download size - same treatment as the speech-to-text model combo.
+    // 0 = auto: word spaces relative to the text size (NOcrSpaceDetector).
+    private static ComboBox WithPixelsAreSpaceItemTemplate(ComboBox comboBox)
+    {
+        comboBox.ItemTemplate = new FuncDataTemplate<int>((value, _) => new TextBlock
+        {
+            Text = value <= 0 ? Se.Language.General.Auto : value.ToString(System.Globalization.CultureInfo.CurrentCulture),
+        }, true);
+        return comboBox;
+    }
+
     private static FuncDataTemplate<CrispEmbedModelDisplay> MakeCrispEmbedModelItemTemplate()
     {
         return StatusDots.ComboItemTemplate<CrispEmbedModelDisplay>(

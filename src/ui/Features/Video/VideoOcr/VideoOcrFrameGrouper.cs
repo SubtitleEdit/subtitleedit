@@ -2,6 +2,7 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace Nikse.SubtitleEdit.Features.Video.VideoOcr;
@@ -223,24 +224,59 @@ public static class VideoOcrFrameGrouper
         var height = bitmap.Height;
         var thumbHeight = Math.Max(1, (int)Math.Round(height * ThumbnailWidth / (double)width));
         var result = new byte[ThumbnailWidth * thumbHeight];
-        var pixels = bitmap.Pixels;
+        ReadOnlySpan<byte> pixels = GetPixelBytes(bitmap, out var red, out var blue, out _);
+
+        var thumbColumns = new int[width];
+        for (var x = 0; x < width; x++)
+        {
+            thumbColumns[x] = Math.Min(ThumbnailWidth - 1, x * ThumbnailWidth / width);
+        }
 
         for (var y = 0; y < height; y++)
         {
             var thumbRow = Math.Min(thumbHeight - 1, y * thumbHeight / height) * ThumbnailWidth;
-            var sourceRow = y * width;
+            var sourceRow = pixels.Slice(y * width * 4, width * 4);
             for (var x = 0; x < width; x++)
             {
-                var c = pixels[sourceRow + x];
-                var luma = (c.Red * 299 + c.Green * 587 + c.Blue * 114) / 1000;
+                var o = x * 4;
+                var luma = (sourceRow[o + red] * 299 + sourceRow[o + 1] * 587 + sourceRow[o + blue] * 114) / 1000;
                 if (luma >= brightnessMinimum)
                 {
-                    result[thumbRow + Math.Min(ThumbnailWidth - 1, x * ThumbnailWidth / width)] = 255;
+                    result[thumbRow + thumbColumns[x]] = 255;
                 }
             }
         }
 
         return result;
+    }
+
+    /// <summary>
+    /// The pixels as 4 bytes each - green at 1, alpha at 3, red and blue at the returned offsets.
+    /// An opaque 8888 bitmap is read in place: with nothing to unpremultiply its bytes are
+    /// exactly what <see cref="SKBitmap.Pixels"/> returns, minus a full-frame copy (a large
+    /// object heap array) per frame. Anything else is copied via Pixels (SKColor is BGRA in
+    /// memory), and <paramref name="copy"/> is that copy, to be written back after changes.
+    /// </summary>
+    internal static Span<byte> GetPixelBytes(SKBitmap bitmap, out int red, out int blue, out SKColor[]? copy)
+    {
+        if (bitmap.AlphaType == SKAlphaType.Opaque &&
+            bitmap.RowBytes == bitmap.Width * 4 &&
+            bitmap.ColorType is SKColorType.Rgba8888 or SKColorType.Bgra8888)
+        {
+            var bytes = bitmap.GetPixelSpan();
+            if (bytes.Length == bitmap.Width * bitmap.Height * 4)
+            {
+                red = bitmap.ColorType == SKColorType.Rgba8888 ? 0 : 2;
+                blue = 2 - red;
+                copy = null;
+                return bytes;
+            }
+        }
+
+        copy = bitmap.Pixels;
+        red = 2;
+        blue = 0;
+        return MemoryMarshal.AsBytes(copy.AsSpan());
     }
 
     /// <summary>
@@ -265,19 +301,24 @@ public static class VideoOcrFrameGrouper
 
             var width = bitmap.Width;
             var height = bitmap.Height;
-            var pixels = bitmap.Pixels;
-            var keep = new bool[pixels.Length];
-            for (var i = 0; i < pixels.Length; i++)
+            var bytes = GetPixelBytes(bitmap, out var red, out var blue, out var copy);
+            var pixelCount = width * height;
+            var keep = new bool[pixelCount];
+            for (var i = 0; i < pixelCount; i++)
             {
-                var c = pixels[i];
-                keep[i] = (c.Red * 299 + c.Green * 587 + c.Blue * 114) / 1000 >= brightnessMinimum;
+                var o = i * 4;
+                keep[i] = (bytes[o + red] * 299 + bytes[o + 1] * 587 + bytes[o + blue] * 114) / 1000 >= brightnessMinimum;
             }
 
+            // Square dilation is separable: dilate each row, then each column of the result.
+            // Painting the full 5x5 block around every kept pixel wrote 25 cells per bright
+            // pixel; with the "marked until" cursors every cell is written at most twice.
             const int dilate = 2;
-            var keepDilated = new bool[pixels.Length];
+            var keepRows = new bool[pixelCount];
             for (var y = 0; y < height; y++)
             {
                 var row = y * width;
+                var markedUntil = -1;
                 for (var x = 0; x < width; x++)
                 {
                     if (!keep[row + x])
@@ -285,29 +326,63 @@ public static class VideoOcrFrameGrouper
                         continue;
                     }
 
-                    var yEnd = Math.Min(height - 1, y + dilate);
                     var xEnd = Math.Min(width - 1, x + dilate);
-                    for (var yy = Math.Max(0, y - dilate); yy <= yEnd; yy++)
+                    for (var xx = Math.Max(markedUntil + 1, x - dilate); xx <= xEnd; xx++)
                     {
-                        var rowOut = yy * width;
-                        for (var xx = Math.Max(0, x - dilate); xx <= xEnd; xx++)
-                        {
-                            keepDilated[rowOut + xx] = true;
-                        }
+                        keepRows[row + xx] = true;
                     }
+
+                    markedUntil = xEnd;
                 }
             }
 
-            var black = new SKColor(0, 0, 0);
-            for (var i = 0; i < pixels.Length; i++)
+            // keep is not read again - the column pass writes into it.
+            var keepDilated = keep;
+            Array.Clear(keepDilated);
+            var markedUntilRow = new int[width];
+            Array.Fill(markedUntilRow, -1);
+            for (var y = 0; y < height; y++)
+            {
+                var row = y * width;
+                var yEnd = Math.Min(height - 1, y + dilate);
+                for (var x = 0; x < width; x++)
+                {
+                    if (!keepRows[row + x])
+                    {
+                        continue;
+                    }
+
+                    for (var yy = Math.Max(markedUntilRow[x] + 1, y - dilate); yy <= yEnd; yy++)
+                    {
+                        keepDilated[yy * width + x] = true;
+                    }
+
+                    markedUntilRow[x] = yEnd;
+                }
+            }
+
+            // Opaque black, the same bytes in RGBA and BGRA order.
+            for (var i = 0; i < pixelCount; i++)
             {
                 if (!keepDilated[i])
                 {
-                    pixels[i] = black;
+                    var o = i * 4;
+                    bytes[o] = 0;
+                    bytes[o + 1] = 0;
+                    bytes[o + 2] = 0;
+                    bytes[o + 3] = 255;
                 }
             }
 
-            bitmap.Pixels = pixels;
+            if (copy != null)
+            {
+                bitmap.Pixels = copy;
+            }
+            else
+            {
+                bitmap.NotifyPixelsChanged();
+            }
+
             using var image = SKImage.FromBitmap(bitmap);
             using var data = image.Encode(SKEncodedImageFormat.Jpeg, 92);
             File.WriteAllBytes(targetFileName, data.ToArray());
@@ -334,7 +409,10 @@ public static class VideoOcrFrameGrouper
             }
 
             var scaled = codec.GetScaledDimensions(targetWidth / (float)codec.Info.Width);
-            var info = new SKImageInfo(scaled.Width, scaled.Height);
+            // Opaque frames (JPEG) decode as opaque rather than premultiplied - the same pixel
+            // values, and the mask can then read them in place (see GetPixelBytes).
+            var alphaType = codec.Info.AlphaType == SKAlphaType.Opaque ? SKAlphaType.Opaque : SKAlphaType.Premul;
+            var info = new SKImageInfo(scaled.Width, scaled.Height, SKImageInfo.PlatformColorType, alphaType);
             return SKBitmap.Decode(codec, info) ?? SKBitmap.Decode(fileName);
         }
         catch

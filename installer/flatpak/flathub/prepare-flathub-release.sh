@@ -31,7 +31,7 @@
 # anything to flathub/flathub, or push to flathub/dk.nikse.subtitleedit.
 #
 # Requires: git, python3 (used to parse/update the manifest's tag/commit fields), and
-# either (a) flatpak + org.freedesktop.Sdk.Extension.dotnet10//24.08, or (b) a system
+# either (a) flatpak + org.freedesktop.Sdk.Extension.dotnet10//26.08, or (b) a system
 # dotnet 10 SDK install (see ../generate-nuget-sources.sh for details on both paths).
 #
 # Usage (from repo root):

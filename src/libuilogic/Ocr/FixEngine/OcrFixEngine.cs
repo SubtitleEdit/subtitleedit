@@ -1,4 +1,5 @@
 ﻿using System.Buffers;
+using System.Text;
 using System.Text.RegularExpressions;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Dictionaries;
@@ -506,6 +507,17 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
                 isWordCorrect = true;
             }
 
+            // nOCR and binary image compare read a plain letter as an accented lookalike when the
+            // accent sits where the letter's own dot or serif is ("ìs", "pà", "vøn") and confuse
+            // accented letters of similar bodies ("č" read as "ë"). Pixels can't settle these;
+            // the dictionary can, so try the lookalikes and keep a result only when it is confirmed.
+            if (!isWordCorrect && TryFixAccentMisread(result, out var accentFixed))
+            {
+                result = accentFixed;
+                word.GuessUsed = true;
+                isWordCorrect = true;
+            }
+
             // Splitting a word via the word split list ("soproudofyou" -> "so proud of you") runs even
             // with "try to guess unknown words" off, like SE4's cautious guess level: every part must
             // be a dictionary word, so it rarely breaks a correct word. The heuristic splitter and the
@@ -678,6 +690,151 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
                     fixedWord = found;
                     return true;
                 }
+            }
+        }
+
+        return false;
+    }
+
+    private static readonly string[] AccentLookalikeGroups =
+    {
+        "aàáâãäåā", "AÀÁÂÃÄÅĀ", "eèéêëēěęė", "EÈÉÊËĒĚĘĖ", "iìíîïī", "IÌÍÎÏĪ", "oòóôõöøō", "OÒÓÔÕÖØŌ",
+        "uùúûüūů", "UÙÚÛÜŪŮ", "cçčć", "CÇČĆ", "sšśş", "SŠŚŞ", "zžźż", "ZŽŹŻ", "nñńň", "NÑŃŇ",
+        "yýÿ", "YÝŸ", "rř", "RŘ", "dď", "DĎ", "tť", "TŤ", "lł", "LŁ", "gğ", "GĞ", "Bß",
+    };
+
+    // Lookalikes across different base letters (the hook of "č" vs the dots of "ë").
+    private static readonly string[] AccentCrossGroups = { "čë", "ČË", "šë", "žä", "ŽÄ" };
+
+    // Languages written without accented letters: an accented letter there is a loanword or name
+    // ("café", "René", "résumé") that the dictionary usually lacks, so it must not be stripped.
+    private static readonly HashSet<string> PlainLatinLanguages = new(StringComparer.Ordinal) { "en", "id", "ms" };
+
+    // Letters whose accent sits where the dot is - nOCR's typical misread of a plain "i" ("ìs", "movíes").
+    private const string DotPositionAccents = "ìíîÌÍÎ";
+
+    private string GetAccentLookalikesForLanguage(char c)
+    {
+        var lookalikes = GetAccentLookalikes(c);
+        if (!PlainLatinLanguages.Contains(_twoLetterIsoLanguageName) || DotPositionAccents.IndexOf(c) >= 0)
+        {
+            return lookalikes;
+        }
+
+        return new string(lookalikes.Where(ch => ch > 127).ToArray());
+    }
+
+    private static string GetAccentLookalikes(char c)
+    {
+        var sb = new StringBuilder();
+        foreach (var group in AccentLookalikeGroups)
+        {
+            if (group.IndexOf(c) >= 0)
+            {
+                sb.Append(group);
+            }
+        }
+
+        foreach (var group in AccentCrossGroups)
+        {
+            if (group.IndexOf(c) >= 0)
+            {
+                sb.Append(group);
+            }
+        }
+
+        // The OCR did see a mark, so other accented letters come first and the plain letter last
+        // (Danish "Màske" is "Måske", not "Maske"); "ìs" still reaches "is" when "ís" is no word.
+        var lookalikes = sb.ToString().Where(ch => ch != c).Distinct().ToList();
+        return new string(lookalikes.Where(ch => ch > 127).Concat(lookalikes.Where(ch => ch <= 127)).ToArray());
+    }
+
+    private bool IsAccentCandidate(char c)
+    {
+        return c > 127 && char.IsLetter(c) && GetAccentLookalikesForLanguage(c).Length > 0;
+    }
+
+    /// <summary>
+    /// Tries the lookalikes of every accented letter in <paramref name="word"/> (fewest changes
+    /// first, other accented letters before the plain letter) and returns the first variant the
+    /// dictionary or names list accepts.
+    /// </summary>
+    private bool TryFixAccentMisread(string word, out string fixedWord)
+    {
+        fixedWord = word;
+        if (word.Length < 2)
+        {
+            return false;
+        }
+
+        var positions = new List<int>();
+        for (var i = 0; i < word.Length; i++)
+        {
+            var ch = word[i];
+            if (IsAccentCandidate(ch))
+            {
+                positions.Add(i);
+            }
+            else if (!char.IsLetter(ch) && ch != '\'' && ch != '-')
+            {
+                return false;
+            }
+        }
+
+        const int maxAccentPositions = 3;
+        if (positions.Count == 0 || positions.Count > maxAccentPositions)
+        {
+            return false;
+        }
+
+        var alternatives = positions.Select(p => GetAccentLookalikesForLanguage(word[p])).ToList();
+        var chars = word.ToCharArray();
+        string? found = null;
+
+        bool Accept()
+        {
+            var candidate = new string(chars);
+            if (IsSpelledCorrect(candidate) || _spellCheckWordLists.HasName(candidate.Trim('\'', '-')))
+            {
+                found = candidate;
+                return true;
+            }
+
+            return false;
+        }
+
+        // Change exactly `changes` of the positions (from index `from` on), recursively.
+        bool Search(int from, int changes)
+        {
+            if (changes == 0)
+            {
+                return Accept();
+            }
+
+            for (var k = from; k < positions.Count; k++)
+            {
+                var pos = positions[k];
+                foreach (var alt in alternatives[k])
+                {
+                    chars[pos] = alt;
+                    if (Search(k + 1, changes - 1))
+                    {
+                        return true;
+                    }
+                }
+
+                chars[pos] = word[pos];
+            }
+
+            return false;
+        }
+
+        for (var changes = 1; changes <= positions.Count; changes++)
+        {
+            if (Search(0, changes))
+            {
+                fixedWord = found!;
+                return true;
             }
         }
 

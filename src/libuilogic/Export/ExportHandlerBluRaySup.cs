@@ -44,6 +44,12 @@ public class ExportHandlerBluRaySup : IExportHandler
     private long _pendingStartPts;
     private long _pendingEndPts;
 
+    /// <summary>
+    /// The pending subtitles' times were changed after <see cref="CreateParagraph"/> made their
+    /// display sets, so even a single one has to be written again.
+    /// </summary>
+    private bool _pendingRetimed;
+
     public void WriteHeader(string fileOrFolderName, ImageParameter imageParameter)
     {
         _width = imageParameter.ScreenWidth;
@@ -78,6 +84,7 @@ public class ExportHandlerBluRaySup : IExportHandler
                               startPts < _pendingEndPts && endPts > _pendingStartPts;
         if (_pending.Count > 0 && !overlapsPending)
         {
+            BridgeGapShorterThanHalfAFrame(picture.StartTime, startPts, param.FramesPerSecond);
             FlushPending();
         }
 
@@ -114,7 +121,7 @@ public class ExportHandlerBluRaySup : IExportHandler
 
         try
         {
-            if (_pending.Count == 1)
+            if (_pending.Count == 1 && !_pendingRetimed)
             {
                 // Nothing to compose - the display sets CreateParagraph made are the file.
                 var buffer = _pending[0].Buffer;
@@ -128,7 +135,36 @@ public class ExportHandlerBluRaySup : IExportHandler
         finally
         {
             _pending.Clear();
+            _pendingRetimed = false;
         }
+    }
+
+    /// <summary>
+    /// A gap shorter than half a frame is not a pause anyone means: the typewriter effect left
+    /// 1 ms between its steps (issue #15933). On the frame grid such a gap usually vanishes, but
+    /// when it straddles the middle of a frame the end rounds down and the next start rounds up,
+    /// and that frame shows nothing. The text flickers, and with a full frame image the video
+    /// shows through. The pending subtitles that end last are kept up until the next one starts.
+    /// </summary>
+    private void BridgeGapShorterThanHalfAFrame(long nextStartMs, long nextStartPts, double fps)
+    {
+        var gapMs = nextStartMs - _pendingEndMs;
+        if (fps <= 0 || gapMs <= 0 || gapMs >= 500.0 / fps || _pendingEndPts >= nextStartPts)
+        {
+            return;
+        }
+
+        foreach (var cue in _pending)
+        {
+            if (cue.Picture.EndTime == _pendingEndMs)
+            {
+                cue.Picture.EndTime = nextStartMs;
+            }
+        }
+
+        _pendingEndMs = nextStartMs;
+        _pendingEndPts = nextStartPts;
+        _pendingRetimed = true;
     }
 
     /// <summary>

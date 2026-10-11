@@ -24,6 +24,17 @@ public class MoveWordUpDownTest
         Assert.Equal("line here", mover.S2);
     }
 
+    // The moved word closes its own <i>; a later italic run in S2 must not reopen it.
+    [Fact]
+    public void MoveWordUp_ClosedItalicWordWithLaterItalicRun()
+    {
+        var mover = new MoveWordUpDown("Hello", "<i>One</i> two <i>three</i>");
+        mover.MoveWordUp();
+
+        Assert.Equal("Hello <i>One</i>", mover.S1);
+        Assert.Equal("two <i>three</i>", mover.S2);
+    }
+
     [Fact]
     public void MoveWordUp_EmptyS2()
     {
@@ -120,7 +131,7 @@ public class MoveWordUpDownTest
         var mover = new MoveWordUpDown("First", "{\\an8}Second word");
         mover.MoveWordUp();
 
-        Assert.Equal("First {\\an8}Second", mover.S1);
+        Assert.Equal("First Second", mover.S1);
         Assert.Equal("{\\an8}word", mover.S2);
     }
 
@@ -231,7 +242,7 @@ public class MoveWordUpDownTest
         mover.MoveWordDown();
 
         Assert.Equal("{\\an8}Hello", mover.S1);
-        Assert.Equal("{\\an8}world today", mover.S2);
+        Assert.Equal("world today", mover.S2);
     }
 
     [Fact]
@@ -302,8 +313,8 @@ public class MoveWordUpDownTest
         var mover = new MoveWordUpDown("Test", "{\\an8}{\\i1}word one{\\i0}");
         mover.MoveWordUp();
 
-        Assert.Equal("Test {\\an8}{\\i1}word{\\i0}", mover.S1);
-        Assert.Equal("{\\an8}{\\i1}one{\\i0}", mover.S2);
+        Assert.Equal("Test {\\i1}word{\\i0}", mover.S1);
+        Assert.Equal("{\\an8\\i1}one{\\i0}", mover.S2);
     }
 
     [Fact]
@@ -313,7 +324,7 @@ public class MoveWordUpDownTest
         mover.MoveWordDown();
 
         Assert.Equal("{\\an8}{\\i1}word{\\i0}", mover.S1);
-        Assert.Equal("{\\an8}{\\i1}one{\\i0} Test", mover.S2);
+        Assert.Equal("{\\i1}one{\\i0} Test", mover.S2);
     }
 
     [Fact]
@@ -402,7 +413,7 @@ public class MoveWordUpDownTest
         var mover = new MoveWordUpDown("Test", "{\\pos(100,200)\\c&H00FFFF&}Hello world");
         mover.MoveWordUp();
 
-        Assert.Equal("Test {\\pos(100,200)\\c&H00FFFF&}Hello", mover.S1);
+        Assert.Equal("Test {\\c&H00FFFF&}Hello", mover.S1);
         Assert.Equal("{\\pos(100,200)\\c&H00FFFF&}world", mover.S2);
     }
 
@@ -413,7 +424,7 @@ public class MoveWordUpDownTest
         mover.MoveWordDown();
 
         Assert.Equal("{\\pos(100,200)\\c&H00FFFF&}Hello", mover.S1);
-        Assert.Equal("{\\pos(100,200)\\c&H00FFFF&}world Test", mover.S2);
+        Assert.Equal("{\\c&H00FFFF&}world{\\c} Test", mover.S2);
     }
 
     [Fact]
@@ -494,5 +505,99 @@ public class MoveWordUpDownTest
 
         Assert.Equal("<font color=\"#ff0000\">This is</font>", mover.S1);
         Assert.Equal("<font color=\"#ff0000\">rather long</font>", mover.S2);
+    }
+
+    [Fact]
+    public void MoveWordDown_SameSubtitle_AssaColorNotRepeated()
+    {
+        var mover = new MoveWordUpDown("{\\c&H0000FF&}Hello world", string.Empty) { AutoBreak = false, SameSubtitle = true };
+        mover.MoveWordDown();
+
+        Assert.Equal("{\\c&H0000FF&}Hello", mover.S1);
+        Assert.Equal("world", mover.S2);
+
+        mover.MoveWordUp();
+
+        Assert.Equal("{\\c&H0000FF&}Hello world", mover.S1);
+        Assert.Equal(string.Empty, mover.S2);
+    }
+
+    [Fact]
+    public void MoveWordDown_SameSubtitle_AssaColorWithClose()
+    {
+        var mover = new MoveWordUpDown("Say {\\c&H0000FF&}hello world{\\c&HFFFFFF&}", "now") { AutoBreak = false, SameSubtitle = true };
+        mover.MoveWordDown();
+
+        Assert.Equal("Say {\\c&H0000FF&}hello", mover.S1);
+        Assert.Equal("world{\\c&HFFFFFF&} now", mover.S2);
+    }
+
+    [Fact]
+    public void MoveWordDown_AssaColor_ClosesColorBeforeNextText()
+    {
+        var mover = new MoveWordUpDown("{\\c&H0000FF&}Hello world", "Next line");
+        mover.MoveWordDown();
+
+        Assert.Equal("{\\c&H0000FF&}Hello", mover.S1);
+        Assert.Equal("{\\c&H0000FF&}world{\\c} Next line", mover.S2);
+    }
+
+    [Fact]
+    public void MoveWordDownAndUp_AssaColor_RoundTripDoesNotPileUpTags()
+    {
+        var mover = new MoveWordUpDown("{\\c&H0000FF&}Hello world", "Next line");
+        for (var i = 0; i < 3; i++)
+        {
+            mover.MoveWordDown();
+            mover.MoveWordUp();
+        }
+
+        Assert.Equal("{\\c&H0000FF&}Hello world", mover.S1);
+        Assert.Equal("Next line", mover.S2);
+    }
+
+    [Fact]
+    public void MoveWordDownAndUp_AssaColorWithClose_RoundTrip()
+    {
+        var mover = new MoveWordUpDown("{\\c&H0000FF&}Hello world{\\c&HFFFFFF&}", "Next line");
+        mover.MoveWordDown();
+
+        Assert.Equal("{\\c&H0000FF&}Hello{\\c&HFFFFFF&}", mover.S1);
+        Assert.Equal("{\\c&H0000FF&}world{\\c&HFFFFFF&} Next line", mover.S2);
+
+        mover.MoveWordUp();
+
+        Assert.Equal("{\\c&H0000FF&}Hello world{\\c&HFFFFFF&}", mover.S1);
+        Assert.Equal("Next line", mover.S2);
+    }
+
+    [Fact]
+    public void MoveWordDown_AssaColor_MergesWithSameColorInNext()
+    {
+        var mover = new MoveWordUpDown("{\\c&H0000FF&}Hello world", "{\\c&H0000FF&}Next line");
+        mover.MoveWordDown();
+
+        Assert.Equal("{\\c&H0000FF&}Hello", mover.S1);
+        Assert.Equal("{\\c&H0000FF&}world Next line", mover.S2);
+    }
+
+    [Fact]
+    public void MoveWordUp_AssaColor_PlainWordAfterColoredText()
+    {
+        var mover = new MoveWordUpDown("{\\c&H0000FF&}Hello", "world now");
+        mover.MoveWordUp();
+
+        Assert.Equal("{\\c&H0000FF&}Hello {\\c}world", mover.S1);
+        Assert.Equal("now", mover.S2);
+    }
+
+    [Fact]
+    public void MoveWordUp_AssaColor_RestKeepsColor()
+    {
+        var mover = new MoveWordUpDown("Hello", "{\\an8\\c&H0000FF&}world now");
+        mover.MoveWordUp();
+
+        Assert.Equal("Hello {\\c&H0000FF&}world", mover.S1);
+        Assert.Equal("{\\an8\\c&H0000FF&}now", mover.S2);
     }
 }

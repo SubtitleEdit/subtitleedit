@@ -198,6 +198,25 @@ public class AdvancedTtsSettingsWindowTests : IDisposable
             .SelectMany(p => p.Children.OfType<NumericUpDown>());
     }
 
+    /// <summary>
+    /// "Clean voice-clone references" has its own checkbox, which shows the stored setting.
+    /// </summary>
+    [AvaloniaTheory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void CleanCloneReferences_CheckBoxShowsTheSetting(bool enabled)
+    {
+        using var _ = new SettingsScope("Video.TextToSpeech.CleanCloneReferences");
+        Se.Settings.Video.TextToSpeech.CleanCloneReferences = enabled;
+
+        var window = BuildWindow();
+
+        var checkBox = Assert.Single(
+            window.GetLogicalDescendants().OfType<CheckBox>(),
+            c => IsCheckBoxFor(c, Se.Language.Video.TextToSpeech.CleanCloneReferences));
+        Assert.Equal(enabled, checkBox.IsChecked);
+    }
+
     private static bool IsCheckBoxFor(CheckBox checkBox, string text)
     {
         return Equals(checkBox.Content, text) || (checkBox.Content is TextBlock tb && tb.Text == text);

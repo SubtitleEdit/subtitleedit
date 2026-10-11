@@ -1051,6 +1051,29 @@ public class FfmpegGenerator
     }
 
     /// <summary>
+    /// Sums separated stems back into one track, e.g. HTDemucs' drums, bass and other into the
+    /// background without the speech. Written as float so the sum cannot clip.
+    /// </summary>
+    public static Process MixStems(IReadOnlyList<string> stemFileNames, string outputWaveFileName, DataReceivedEventHandler? dataReceivedHandler = null)
+    {
+        var inputs = string.Join(" ", stemFileNames.Select(f => $"-i \"{f}\""));
+        var process = new Process
+        {
+            StartInfo =
+            {
+                FileName = GetFfmpegLocation(),
+                Arguments = $"-nostdin -y {inputs} -filter_complex \"amix=inputs={stemFileNames.Count}:duration=longest:normalize=0\" -c:a pcm_f32le \"{outputWaveFileName}\"",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            }
+        };
+
+        SetupDataReceiveHandler(dataReceivedHandler, process);
+
+        return process;
+    }
+
+    /// <summary>
     /// Add audio track to video, mixed over a separate background track (the original sound with
     /// the speech removed) instead of over the video's own audio.
     /// </summary>

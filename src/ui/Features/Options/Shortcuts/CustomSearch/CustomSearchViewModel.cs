@@ -53,7 +53,7 @@ public partial class CustomSearchViewModel : ObservableObject
         else if (UiUtil.IsHelp(e))
         {
             e.Handled = true;
-            UiUtil.ShowHelp("features/shortcuts");
+            UiUtil.ShowHelp("features/shortcuts", "configurable-commands");
         }
     }
 }

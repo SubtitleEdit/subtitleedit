@@ -45,6 +45,7 @@ public class AdvancedTtsSettingsWindow : Window
         var checkBoxVad = MakeCheckBox(l.VadSilenceCompression, nameof(vm.DoVadSilenceCompression));
         var checkBoxTimeStretch = MakeCheckBox(l.HighQualityTimeStretch, nameof(vm.DoHighQualityTimeStretch));
         var checkBoxDeleteTempFiles = MakeCheckBox(l.DeleteTempFiles, nameof(vm.DoDeleteTempFiles));
+        var checkBoxCleanCloneReferences = MakeCheckBox(l.CleanCloneReferences, nameof(vm.DoCleanCloneReferences));
 
         var groupAudio = MakeGroupBox(l.AdvancedTtsAudioProcessing, new StackPanel
         {
@@ -59,6 +60,15 @@ public class AdvancedTtsSettingsWindow : Window
                         nameof(vm.DoAudioDucking))),
 
                 MakeRow(checkBoxRemoveSpeech, l.RemoveOriginalSpeechDescription),
+
+                MakeRow(UiUtil.MakeLabel(l.SpeechRemovalModel), l.SpeechRemovalModelDescription,
+                    new ComboBox
+                    {
+                        Width = 240,
+                        ItemsSource = vm.SpeechRemovalModels,
+                        [!SelectingItemsControl.SelectedIndexProperty] = new Binding(nameof(vm.SpeechRemovalModelIndex)) { Mode = BindingMode.TwoWay },
+                        [!IsEnabledProperty] = new Binding(nameof(vm.DoRemoveOriginalSpeech)) { Mode = BindingMode.OneWay },
+                    }),
 
                 MakeRow(checkBoxVad, l.VadSilenceCompressionDescription,
                     MakeField(l.MaxSilenceMs,
@@ -80,6 +90,15 @@ public class AdvancedTtsSettingsWindow : Window
 
                 MakeRow(UiUtil.MakeLabel(l.OutputSampleRate), l.OutputSampleRateDescription,
                     UiUtil.MakeNumericUpDownInt(0, 192000, 0, 120, vm, nameof(vm.OutputSampleRate))),
+            }
+        });
+
+        var groupVoiceCloning = MakeGroupBox(l.AdvancedTtsVoiceCloning, new StackPanel
+        {
+            Spacing = 6,
+            Children =
+            {
+                MakeRow(checkBoxCleanCloneReferences, l.CleanCloneReferencesDescription),
             }
         });
 
@@ -105,7 +124,7 @@ public class AdvancedTtsSettingsWindow : Window
         var content = new StackPanel
         {
             Spacing = 10,
-            Children = { groupAudio, groupOutput, groupFolder, groupEdgeTts },
+            Children = { groupAudio, groupVoiceCloning, groupOutput, groupFolder, groupEdgeTts },
         };
 
         // Keeps OK/Cancel reachable when the window is clamped to a small working area (#14331).

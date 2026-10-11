@@ -1,6 +1,8 @@
 # Auto Translate: Advanced Local Engines
 
-The **llama.cpp advanced (local LLM)** and **Ollama advanced (local LLM)** engines translate in batches with surrounding context, a synopsis, and a glossary — giving more consistent names, pronouns, and terminology than line-by-line translation. This page covers their **Advanced...** settings dialog and the llama.cpp engine settings.
+The **llama.cpp advanced (local LLM)**, **Ollama advanced (local LLM)** and **LM Studio advanced (local LLM)** engines translate in batches with surrounding context, a synopsis, and a glossary — giving more consistent names, pronouns, and terminology than line-by-line translation. This page covers their **Advanced...** settings dialog and the llama.cpp engine settings.
+
+LM Studio advanced talks to LM Studio's OpenAI-compatible endpoint (default `http://localhost:1234/v1/chat/completions`). LM Studio can have several models loaded; leave the model empty to use the loaded one.
 
 See [Auto Translate](auto-translate.md) for the translation window itself.
 
@@ -8,7 +10,7 @@ See [Auto Translate](auto-translate.md) for the translation window itself.
 
 With an advanced engine selected, click **Advanced...** in the engine settings row.
 
-<!-- Screenshot: Advanced settings window (auto-translate-advanced.png, not yet taken) -->
+![Advanced Settings](../screenshots/auto-translate-advanced.png)
 
 ### Context
 
@@ -27,7 +29,7 @@ With an advanced engine selected, click **Advanced...** in the engine settings r
 - **Temperature** — Randomness. When unset, Subtitle Edit uses the curated value for the model, or 0.2 — low temperatures keep terminology consistent across batches
 - **Top-p**, **Top-k**, **Repeat penalty** — Standard sampling options, passed through when set
 - **Max tokens per reply** — Response length cap; unset means no cap is sent
-- **Server context size (tokens)** — The context window for the locally started llama.cpp server (default 16384). Bigger batches, more history, and a long synopsis/glossary need more context. Only affects the local llama.cpp server; Ollama manages its own context
+- **Server context size (tokens)** — The context window for the locally started llama.cpp server (default 16384). Bigger batches, more history, and a long synopsis/glossary need more context. Only affects the local llama.cpp server; Ollama and LM Studio manage their own context
 - **Extra server parameters** — Additional `llama-server` command-line arguments, e.g. `-ngl 30 --no-mmap`, applied when the local server starts. They are appended after Subtitle Edit's own flags, so a repeated flag overrides Subtitle Edit's value
 - **Use only these parameters** — Start `llama-server` with the parameters above instead of Subtitle Edit's own tuning; only the model, host and port are still set. Ignored while the field is empty
 

@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.Forms
 {
-    public class MoveWordUpDown
+    public partial class MoveWordUpDown
     {
         public string S1 { get; private set; }
         public string S2 { get; private set; }
@@ -17,6 +17,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
         /// subtitle: there the user places the line break by hand, and re-breaking undoes the move.
         /// </summary>
         public bool AutoBreak { get; set; } = true;
+
+        /// <summary>
+        /// S1 and S2 are the two lines of one subtitle. ASSA override tags carry across the line
+        /// break, so a moved word needs no tags of its own: only the line break moves.
+        /// </summary>
+        public bool SameSubtitle { get; set; }
 
         public MoveWordUpDown(string s1, string s2)
         {
@@ -34,6 +40,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return;
             }
 
+            if (UseAssaPath())
+            {
+                MoveWordUpAssa();
+                return;
+            }
+
             var s2Trimmed = S2.Trim();
 
             // Parse to find the first word with its surrounding tags
@@ -43,6 +55,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             var tagSb = new StringBuilder();
             var inWord = false;
             var wordEndPos = -1;
+            var wordClosedTopTag = false;
 
             for (int i = 0; i < s2Trimmed.Length; i++)
             {
@@ -78,6 +91,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         {
                             // We hit a closing tag after the word started
                             wordEndPos = i + 1;
+                            wordClosedTopTag = true;
                             break;
                         }
                         else if (openTags.Count > 0)
@@ -103,6 +117,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         if (inWord)
                         {
                             wordEndPos = i + 1;
+                            wordClosedTopTag = true;
                             break;
                         }
                         else if (openTags.Count > 0)
@@ -221,7 +236,15 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 // OR if a tag doesn't have a closing equivalent, we need to add back the opening tag
                 var tagsToReopen = new System.Collections.Generic.List<(string opening, string closing)>();
 
-                foreach (var (opening, closing) in openTags.Reverse())
+                // The innermost tag was closed right after the word (moved up with it), so it
+                // must not be reopened just because a later run of the same tag closes in S2.
+                var stillOpen = new System.Collections.Generic.List<(string opening, string closing)>(openTags.Reverse());
+                if (wordClosedTopTag && stillOpen.Count > 0)
+                {
+                    stillOpen.RemoveAt(stillOpen.Count - 1);
+                }
+
+                foreach (var (opening, closing) in stillOpen)
                 {
                     if (string.IsNullOrEmpty(closing))
                     {
@@ -257,6 +280,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
         {
             if (string.IsNullOrEmpty(S1))
             {
+                return;
+            }
+
+            if (UseAssaPath())
+            {
+                MoveWordDownAssa();
                 return;
             }
 
@@ -408,6 +437,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
         }
 
         private static readonly Regex EmptyFontTagRegex = new Regex(@"<font\b[^>]*>\s*</font>", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex HtmlTagRegex = new Regex(@"</?(i|b|u|s|font)\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private static readonly Regex DoubleSpaceRegex = new Regex(@"  +", RegexOptions.Compiled);
 
         private static string RemoveEmptyTags(string s)

@@ -34,7 +34,12 @@ public class FfmpegSoftwareControl : Control
     // decoded, yet an edited line must show up. A slow tick checks whether the set of visible
     // lines changed and only then redraws.
     private UiTickPump? _overlayTick;
-    private string _overlayKey = string.Empty;
+    private List<FfmpegPreviewSubtitle.Line> _overlayLines = [];
+
+    // Shaping the text and building its outline geometry is far more expensive than drawing
+    // it, and the same line usually stays up for dozens of frames - so the prepared blocks are
+    // kept until the lines, the video rectangle or the preview style change.
+    private OverlayCache? _overlayCache;
 
     public FfmpegPlayer? Player => _player;
 
@@ -74,23 +79,35 @@ public class FfmpegSoftwareControl : Control
             return;
         }
 
-        var key = OverlayKey(player);
-        if (key != _overlayKey)
+        if (!SameLines(ActiveLines(player), _overlayLines))
         {
-            _overlayKey = key;
             InvalidateVisual();
         }
     }
 
-    private static string OverlayKey(FfmpegPlayer player)
+    private static List<FfmpegPreviewSubtitle.Line> ActiveLines(FfmpegPlayer player)
     {
-        if (!player.PreviewSubtitlesVisible || string.IsNullOrEmpty(player.FileName))
+        return player.PreviewSubtitlesVisible && !string.IsNullOrEmpty(player.FileName)
+            ? player.PreviewSubtitle.GetActive(player.Position)
+            : [];
+    }
+
+    private static bool SameLines(List<FfmpegPreviewSubtitle.Line> a, List<FfmpegPreviewSubtitle.Line> b)
+    {
+        if (a.Count != b.Count)
         {
-            return string.Empty;
+            return false;
         }
 
-        var active = player.PreviewSubtitle.GetActive(player.Position);
-        return active.Count == 0 ? string.Empty : string.Join("", active.Select(l => (l.Secondary ? "s" : "p") + (l.Italic ? "i" : "n") + l.Text));
+        for (var i = 0; i < a.Count; i++)
+        {
+            if (!a[i].Equals(b[i]))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public override void Render(DrawingContext context)
@@ -103,6 +120,10 @@ public class FfmpegSoftwareControl : Control
         var player = _player;
         if (player == null || string.IsNullOrEmpty(player.FileName))
         {
+            // Nothing is drawn, so nothing is shown: without this, CheckOverlay keeps seeing the
+            // lines from before the video was closed and repaints every tick.
+            _overlayLines = [];
+            _overlayCache = null;
             return;
         }
 
@@ -157,41 +178,74 @@ public class FfmpegSoftwareControl : Control
     /// </summary>
     private void RenderOverlay(DrawingContext context, FfmpegPlayer player, Rect videoRect)
     {
-        if (!player.PreviewSubtitlesVisible || videoRect.Height <= 0)
+        var active = ActiveLines(player);
+        _overlayLines = active;
+        if (active.Count == 0 || videoRect.Height <= 0)
         {
             return;
         }
 
-        var active = player.PreviewSubtitle.GetActive(player.Position);
-        _overlayKey = OverlayKey(player);
-        if (active.Count == 0)
+        var style = OverlayStyle.FromSettings(Se.Settings.Video);
+        var cache = _overlayCache;
+        if (cache == null || cache.VideoRect != videoRect || cache.Style != style || !SameLines(cache.Lines, active))
         {
-            return;
+            cache = BuildOverlay(active, videoRect, style);
+            _overlayCache = cache;
         }
 
-        var settings = Se.Settings.Video;
+        foreach (var block in cache.Blocks)
+        {
+            if (block.Geometry == null)
+            {
+                context.DrawText(block.Text, block.Origin);
+                continue;
+            }
+
+            if (cache.ShadowWidth > 0)
+            {
+                using (context.PushTransform(Matrix.CreateTranslation(cache.ShadowWidth, cache.ShadowWidth)))
+                {
+                    context.DrawGeometry(cache.Shadow, cache.ShadowPen, block.Geometry);
+                }
+            }
+
+            if (cache.OutlinePen != null)
+            {
+                context.DrawGeometry(null, cache.OutlinePen, block.Geometry);
+            }
+
+            context.DrawGeometry(cache.Fill, null, block.Geometry);
+        }
+    }
+
+    private static OverlayCache BuildOverlay(List<FfmpegPreviewSubtitle.Line> active, Rect videoRect, OverlayStyle style)
+    {
         var scale = videoRect.Height / 720.0;
-        var fontSize = Math.Max(6, settings.MpvPreviewFontSize * 1.6 * scale);
-        var margin = settings.MpvPreviewMargin * scale;
-        var outlineWidth = (double)settings.MpvPreviewOutlineWidth * scale;
-        var shadowWidth = (double)settings.MpvPreviewShadowWidth * scale;
-        var fill = new SolidColorBrush(settings.MpvPreviewColorPrimary.FromHexToColor());
-        var outline = new Pen(new SolidColorBrush(settings.MpvPreviewColorOutline.FromHexToColor()), outlineWidth * 2, lineJoin: PenLineJoin.Round);
-        var shadow = new SolidColorBrush(settings.MpvPreviewColorShadow.FromHexToColor());
+        var fontSize = Math.Max(6, style.FontSize * 1.6 * scale);
+        var margin = style.Margin * scale;
+        var outlineWidth = (double)style.OutlineWidth * scale;
+        var shadowWidth = (double)style.ShadowWidth * scale;
+        var fill = new SolidColorBrush(style.ColorPrimary.FromHexToColor());
+        var outlinePen = outlineWidth > 0
+            ? new Pen(new SolidColorBrush(style.ColorOutline.FromHexToColor()), outlineWidth * 2, lineJoin: PenLineJoin.Round)
+            : null;
+        var shadow = new SolidColorBrush(style.ColorShadow.FromHexToColor());
+        var shadowPen = outlineWidth > 0 ? new Pen(shadow, outlineWidth * 2, lineJoin: PenLineJoin.Round) : null;
         // The font name is a libass face name ("Arial Light"); Avalonia matches families, so
         // draw the face's family at the face's own weight (issue #15682).
-        FontFaces.TryGetFamilyAndWeight(settings.MpvPreviewFontName, out var fontFamily, out var faceWeight);
-        var weight = (FontWeight)(settings.MpvPreviewFontBold ? Math.Max(faceWeight, (int)FontWeight.Bold) : faceWeight);
-        var alignment = int.TryParse(settings.MpvPreviewAlignment, NumberStyles.Integer, CultureInfo.InvariantCulture, out var a) && a is >= 1 and <= 9 ? a : 2;
+        FontFaces.TryGetFamilyAndWeight(style.FontName, out var fontFamily, out var faceWeight);
+        var weight = (FontWeight)(style.Bold ? Math.Max(faceWeight, (int)FontWeight.Bold) : faceWeight);
+        var alignment = int.TryParse(style.Alignment, NumberStyles.Integer, CultureInfo.InvariantCulture, out var a) && a is >= 1 and <= 9 ? a : 2;
 
         var primary = string.Join(Environment.NewLine, active.Where(l => !l.Secondary).Select(l => l.Text));
         var secondary = string.Join(Environment.NewLine, active.Where(l => l.Secondary).Select(l => l.Text));
         var primaryItalic = active.Any(l => !l.Secondary) && active.Where(l => !l.Secondary).All(l => l.Italic);
         var secondaryItalic = active.Any(l => l.Secondary) && active.Where(l => l.Secondary).All(l => l.Italic);
 
+        var blocks = new List<OverlayBlock>(2);
         if (primary.Length > 0)
         {
-            DrawBlock(context, primary, primaryItalic, alignment);
+            blocks.Add(MakeBlock(primary, primaryItalic, alignment));
         }
 
         if (secondary.Length > 0)
@@ -203,10 +257,12 @@ public class FfmpegSoftwareControl : Control
                 secondaryAlignment = 8;
             }
 
-            DrawBlock(context, secondary, secondaryItalic, secondaryAlignment);
+            blocks.Add(MakeBlock(secondary, secondaryItalic, secondaryAlignment));
         }
 
-        void DrawBlock(DrawingContext ctx, string text, bool italic, int numpadAlignment)
+        return new OverlayCache(active, videoRect, style, blocks, fill, outlinePen, shadow, shadowPen, shadowWidth);
+
+        OverlayBlock MakeBlock(string text, bool italic, int numpadAlignment)
         {
             var typeface = new Typeface(fontFamily, italic ? FontStyle.Italic : FontStyle.Normal, weight);
             var formatted = new FormattedText(text, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, typeface, fontSize, fill)
@@ -226,29 +282,48 @@ public class FfmpegSoftwareControl : Control
             };
 
             var origin = new Point(x, y);
-            var geometry = formatted.BuildGeometry(origin);
-            if (geometry == null)
-            {
-                ctx.DrawText(formatted, origin);
-                return;
-            }
-
-            if (shadowWidth > 0)
-            {
-                using (ctx.PushTransform(Matrix.CreateTranslation(shadowWidth, shadowWidth)))
-                {
-                    ctx.DrawGeometry(shadow, outlineWidth > 0 ? new Pen(shadow, outlineWidth * 2, lineJoin: PenLineJoin.Round) : null, geometry);
-                }
-            }
-
-            if (outlineWidth > 0)
-            {
-                ctx.DrawGeometry(null, outline, geometry);
-            }
-
-            ctx.DrawGeometry(fill, null, geometry);
+            return new OverlayBlock(formatted, origin, formatted.BuildGeometry(origin));
         }
     }
+
+    /// <summary>The preview settings the overlay is drawn with - a change means a rebuild.</summary>
+    private readonly record struct OverlayStyle(
+        string FontName,
+        int FontSize,
+        bool Bold,
+        int Margin,
+        string ColorPrimary,
+        string ColorOutline,
+        string ColorShadow,
+        decimal OutlineWidth,
+        decimal ShadowWidth,
+        string Alignment)
+    {
+        public static OverlayStyle FromSettings(SeVideo settings) => new(
+            settings.MpvPreviewFontName,
+            settings.MpvPreviewFontSize,
+            settings.MpvPreviewFontBold,
+            settings.MpvPreviewMargin,
+            settings.MpvPreviewColorPrimary,
+            settings.MpvPreviewColorOutline,
+            settings.MpvPreviewColorShadow,
+            settings.MpvPreviewOutlineWidth,
+            settings.MpvPreviewShadowWidth,
+            settings.MpvPreviewAlignment);
+    }
+
+    private sealed record OverlayBlock(FormattedText Text, Point Origin, Geometry? Geometry);
+
+    private sealed record OverlayCache(
+        List<FfmpegPreviewSubtitle.Line> Lines,
+        Rect VideoRect,
+        OverlayStyle Style,
+        List<OverlayBlock> Blocks,
+        IBrush Fill,
+        IPen? OutlinePen,
+        IBrush Shadow,
+        IPen? ShadowPen,
+        double ShadowWidth);
 
     /// <summary>The largest rectangle of the given aspect ratio centered in <paramref name="bounds"/>.</summary>
     internal static Rect FitRect(Rect bounds, double aspectRatio)
@@ -299,5 +374,6 @@ public class FfmpegSoftwareControl : Control
 
         _bitmap?.Dispose();
         _bitmap = null;
+        _overlayCache = null;
     }
 }

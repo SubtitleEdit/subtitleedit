@@ -63,6 +63,11 @@ public partial class SetSyncPointViewModel : ObservableObject
 
     private string? _videoFileName;
 
+    // False when the window's player is the EmptyVideoPlayer fallback - no libmpv/libVLC could be
+    // loaded. Such a player always reports position 0, so letting it own the sync point pinned the
+    // time code to 0:00 (issue #15787); the dialog runs in its no-video mode instead.
+    private bool _canPlayVideo = true;
+
     // The audio track picked in the main window's Video > Audio tracks. A brand new mpv instance
     // starts on the file's default track, so it has to be re-applied here or a dubbed track plays
     // while the user syncs against the original (issue #13995).
@@ -158,9 +163,9 @@ public partial class SetSyncPointViewModel : ObservableObject
                 return;
             }
 
-            if (!string.IsNullOrEmpty(_videoFileName))
+            if (HasVideo)
             {
-                _ = OpenPlayerAsync(_videoFileName);
+                _ = OpenPlayerAsync(_videoFileName!);
             }
 
             // An audio visualizer without peaks is just an empty box - only show it when the main
@@ -302,7 +307,18 @@ public partial class SetSyncPointViewModel : ObservableObject
         }
     }
 
-    private bool HasVideo => !string.IsNullOrEmpty(_videoFileName);
+    private bool HasVideo => _canPlayVideo && !string.IsNullOrEmpty(_videoFileName);
+
+    /// <summary>
+    /// Takes the player the window built. The view model is initialized before the window exists,
+    /// so only now is it known whether a player could be loaded at all.
+    /// </summary>
+    internal void SetVideoPlayerControl(VideoPlayerControl videoPlayerControl)
+    {
+        VideoPlayerControl = videoPlayerControl;
+        _canPlayVideo = videoPlayerControl.VideoPlayer is not EmptyVideoPlayer;
+        IsVideoVisible = HasVideo;
+    }
 
     /// <summary>
     /// Where the sync point currently sits. The video owns this while one is loaded; otherwise
@@ -438,6 +454,13 @@ public partial class SetSyncPointViewModel : ObservableObject
         var syncPoint = SyncPointTimeCode;
         VideoFileName = fileName;
         SetVideoInFo(fileName);
+
+        // Nothing to play it with - keep the file for the caller, but leave the typed sync point alone.
+        if (!_canPlayVideo)
+        {
+            _videoFileName = fileName;
+            return;
+        }
 
         // Open at the time code the user already had, rather than snapping the sync point back to
         // the start of the newly opened file. It has to be passed to Open: the position slider is

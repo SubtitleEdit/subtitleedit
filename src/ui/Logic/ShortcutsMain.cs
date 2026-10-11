@@ -315,6 +315,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.ShowReplaceCommand), Se.Language.General.Replace },
         { nameof(MainViewModel.ShowMultipleReplaceCommand), Se.Language.General.MultipleReplace },
         { nameof(MainViewModel.ShowGoToLineCommand), Se.Language.General.GoToLineNumber },
+        { nameof(MainViewModel.ShowCommandPaletteCommand), Se.Language.Main.CommandPaletteTitle },
         { nameof(MainViewModel.RightToLeftToggleCommand), Se.Language.Options.Shortcuts.ToggleRightToLeft },
         { nameof(MainViewModel.ReverseRightToLeftStartEndCommand), Se.Language.General.ReverseRightToLeftStartEnd },
         { nameof(MainViewModel.ShowModifySelectionCommand), Se.Language.Options.Shortcuts.ModifySelection },
@@ -355,6 +356,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.ShowVideoTextToSpeechCommand), Se.Language.Options.Shortcuts.TextToSpeech },
         { nameof(MainViewModel.ShowVideoVoiceManagerCommand), Se.Language.Video.TextToSpeech.VoiceManagerTitle },
         { nameof(MainViewModel.SpeakFromCurrentLineCommand), Se.Language.Video.TextToSpeech.SpeakFromCurrentLineTitle },
+        { nameof(MainViewModel.PlayWithSpeechCommand), Se.Language.Video.TextToSpeech.PlayWithSpeechTitle },
         { nameof(MainViewModel.ShowVideoOcrCommand), Se.Language.Options.Shortcuts.VideoOcr },
         { nameof(MainViewModel.ShowVideoBurnInCommand), Se.Language.Options.Shortcuts.BurnIn },
         { nameof(MainViewModel.ShowVideoTransparentSubtitlesCommand), Se.Language.Options.Shortcuts.GenerateTransparent },
@@ -872,6 +874,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.ShowReplaceCommand, nameof(vm.ShowReplaceCommand), ShortcutCategory.General, ShortcutGroup.Search);
         AddShortcut(shortcuts, vm.ShowMultipleReplaceCommand, nameof(vm.ShowMultipleReplaceCommand), ShortcutCategory.General, ShortcutGroup.Search);
         AddShortcut(shortcuts, vm.ShowGoToLineCommand, nameof(vm.ShowGoToLineCommand), ShortcutCategory.General, ShortcutGroup.Search);
+        AddShortcut(shortcuts, vm.ShowCommandPaletteCommand, nameof(vm.ShowCommandPaletteCommand), ShortcutCategory.General, ShortcutGroup.Search);
         AddShortcut(shortcuts, vm.RightToLeftToggleCommand, nameof(vm.RightToLeftToggleCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ReverseRightToLeftStartEndCommand, nameof(vm.ReverseRightToLeftStartEndCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowModifySelectionCommand, nameof(vm.ShowModifySelectionCommand), ShortcutCategory.General);
@@ -975,6 +978,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.ShowVideoTextToSpeechCommand, nameof(vm.ShowVideoTextToSpeechCommand), ShortcutCategory.General, ShortcutGroup.Ai);
         AddShortcut(shortcuts, vm.ShowVideoVoiceManagerCommand, nameof(vm.ShowVideoVoiceManagerCommand), ShortcutCategory.General, ShortcutGroup.Ai);
         AddShortcut(shortcuts, vm.SpeakFromCurrentLineCommand, nameof(vm.SpeakFromCurrentLineCommand), ShortcutCategory.General, ShortcutGroup.Ai);
+        AddShortcut(shortcuts, vm.PlayWithSpeechCommand, nameof(vm.PlayWithSpeechCommand), ShortcutCategory.General, ShortcutGroup.Ai);
         AddShortcut(shortcuts, vm.ShowVideoOcrCommand, nameof(vm.ShowVideoOcrCommand), ShortcutCategory.General, ShortcutGroup.Ai);
         AddShortcut(shortcuts, vm.ShowVideoBurnInCommand, nameof(vm.ShowVideoBurnInCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.ShowVideoTransparentSubtitlesCommand, nameof(vm.ShowVideoTransparentSubtitlesCommand), ShortcutCategory.General, ShortcutGroup.Video);
@@ -1024,8 +1028,8 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.VideoMoveCustom4BackAndPauseCommand, nameof(vm.VideoMoveCustom4BackAndPauseCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.VideoMoveCustom4ForwardAndPauseCommand, nameof(vm.VideoMoveCustom4ForwardAndPauseCommand), ShortcutCategory.General, ShortcutGroup.Video);
 
-        AddShortcut(shortcuts, vm.WaveformSetStartAndOffsetTheRestCommand, nameof(vm.WaveformSetStartAndOffsetTheRestCommand), ShortcutCategory.Waveform);
-        AddShortcut(shortcuts, vm.WaveformSetEndAndOffsetTheRestCommand, nameof(vm.WaveformSetEndAndOffsetTheRestCommand), ShortcutCategory.Waveform);
+        AddShortcut(shortcuts, vm.WaveformSetStartAndOffsetTheRestCommand, nameof(vm.WaveformSetStartAndOffsetTheRestCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.WaveformSetEndAndOffsetTheRestCommand, nameof(vm.WaveformSetEndAndOffsetTheRestCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.WaveformSetStartCommand, nameof(vm.WaveformSetStartCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.WaveformSetStartAndGoToNextCommand, nameof(vm.WaveformSetStartAndGoToNextCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.WaveformSetStartAndKeepDurationCommand, nameof(vm.WaveformSetStartAndKeepDurationCommand), ShortcutCategory.General);
@@ -1465,6 +1469,7 @@ public static class ShortcutsMain
             new(nameof(vm.UndoCommand), [cmd, "Z"]),
             new(nameof(vm.RedoCommand), [cmd, "Y"]),
             new(nameof(vm.ShowGoToLineCommand), [cmd, "G"]),
+            new(nameof(vm.ShowCommandPaletteCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.K)], ShortcutCategory.General),
             new(nameof(vm.AddOrEditBookmarkCommand), [cmd, "Shift", "B"]),
             new(nameof(vm.GoToPreviousLineCommand), ["Alt", "Up"]),
             new(nameof(vm.GoToNextLineCommand), ["Alt", "Down"]),
@@ -1544,6 +1549,10 @@ public static class ShortcutsMain
             // then wins over the menu toggle. Se.MigrateShortcuts clears the old persisted default.
             new(nameof(vm.WaveformSetStartCommand), [nameof(Avalonia.Input.Key.F11)], ShortcutCategory.General),
             new(nameof(vm.WaveformSetEndCommand), [nameof(Avalonia.Input.Key.F12)], ShortcutCategory.General),
+            // V4 default (#15800). macOS already has F9 on "set start" (MacOsDefaultChanges).
+            .. isMacOS
+                ? []
+                : new SeShortCut[] { new(nameof(vm.WaveformSetStartAndOffsetTheRestCommand), [nameof(Avalonia.Input.Key.F9)], ShortcutCategory.General) },
             new(nameof(vm.InsertLineAfterCommand), ["Alt", nameof(Avalonia.Input.Key.Insert)], ShortcutCategory.General),
             new(nameof(vm.InsertLineBeforeCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.Insert)], ShortcutCategory.General),
             new(nameof(vm.AutoBreakCommand), [cmd, "Alt", nameof(Avalonia.Input.Key.B)], ShortcutCategory.General),

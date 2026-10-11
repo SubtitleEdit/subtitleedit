@@ -1262,6 +1262,7 @@ public partial class CompareViewModel : ObservableObject
             return;
         }
 
+        var anchor = GetScrollAnchor();
         row.IsEditing = false;
         var line = row.Left.Line;
         if (line == null)
@@ -1272,7 +1273,7 @@ public partial class CompareViewModel : ObservableObject
         var end = row.EditEnd < row.EditStart ? row.EditStart : row.EditEnd;
         if (line.Text == row.EditText && IsTimeEqual(line.StartTime, row.EditStart) && IsTimeEqual(line.EndTime, end))
         {
-            FocusRows();
+            FocusRows(anchor);
             return;
         }
 
@@ -1286,12 +1287,13 @@ public partial class CompareViewModel : ObservableObject
     [RelayCommand]
     private void CancelEdit(CompareRow? row)
     {
+        var anchor = GetScrollAnchor();
         if (row != null)
         {
             KeepRowInPlace(row, () => row.IsEditing = false);
         }
 
-        FocusRows();
+        FocusRows(anchor);
     }
 
     /// <summary>
@@ -1313,6 +1315,62 @@ public partial class CompareViewModel : ObservableObject
         if (GetRowTop(row, scrollViewer) is { } after && Math.Abs(after - before.Value) > 0.5)
         {
             scrollViewer.Offset = new Vector(scrollViewer.Offset.X, scrollViewer.Offset.Y + after - before.Value);
+        }
+    }
+
+    /// <summary>
+    /// Where the list is: the first row in view and how far its top sits from the top of the view.
+    /// Wheel scrolling leaves keyboard focus on a row that is now out of view, and the virtualizing
+    /// list keeps that row at an estimated position; when focus goes back to it (the window is
+    /// activated again, the line editor closes) the list scrolls to that estimate - dozens of rows
+    /// away from both the view and the selected row (#15843). The anchor puts the view back.
+    /// </summary>
+    internal (int Index, double Top)? GetScrollAnchor()
+    {
+        var scrollViewer = RowsView?.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
+        if (scrollViewer == null)
+        {
+            return null;
+        }
+
+        (int Index, double Top)? anchor = null;
+        foreach (var container in RowsView!.GetRealizedContainers())
+        {
+            if (container.TranslatePoint(new Point(0, 0), scrollViewer) is not { } point ||
+                point.Y + container.Bounds.Height <= 0 ||
+                point.Y >= scrollViewer.Viewport.Height)
+            {
+                continue;
+            }
+
+            if (anchor == null || point.Y < anchor.Value.Top)
+            {
+                anchor = (RowsView.IndexFromContainer(container), point.Y);
+            }
+        }
+
+        return anchor is { Index: >= 0 } ? anchor : null;
+    }
+
+    internal void RestoreScrollAnchor((int Index, double Top)? anchor)
+    {
+        var scrollViewer = RowsView?.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
+        if (anchor is not { } a || scrollViewer == null || a.Index >= Rows.Count)
+        {
+            return;
+        }
+
+        if (RowsView!.ContainerFromIndex(a.Index) == null)
+        {
+            RowsView.ScrollIntoView(a.Index);
+            RowsView.UpdateLayout();
+        }
+
+        if (RowsView.ContainerFromIndex(a.Index) is Control container &&
+            container.TranslatePoint(new Point(0, 0), scrollViewer) is { } point &&
+            Math.Abs(point.Y - a.Top) > 0.5)
+        {
+            scrollViewer.Offset = new Vector(scrollViewer.Offset.X, scrollViewer.Offset.Y + point.Y - a.Top);
         }
     }
 
@@ -1734,7 +1792,7 @@ public partial class CompareViewModel : ObservableObject
         }
     }
 
-    private void FocusRows()
+    private void FocusRows((int Index, double Top)? anchor = null)
     {
         Dispatcher.UIThread.Post(() =>
         {
@@ -1745,6 +1803,11 @@ public partial class CompareViewModel : ObservableObject
             else
             {
                 RowsView?.Focus();
+            }
+
+            if (anchor != null)
+            {
+                Dispatcher.UIThread.Post(() => RestoreScrollAnchor(anchor), DispatcherPriority.Background);
             }
         });
     }

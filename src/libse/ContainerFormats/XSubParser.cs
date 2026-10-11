@@ -403,15 +403,30 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
                     break;
                 }
 
+                // A header starts with '[', so jump from one '[' to the next with the vectorized
+                // IndexOf instead of testing every byte of what can be a multi-GB file.
                 var span = new ReadOnlySpan<byte>(buffer, 0, bytesRead);
-                for (var i = 0; i <= bytesRead - TimeCodeLength; i++)
+                var lastStart = bytesRead - TimeCodeLength;
+                var i = 0;
+                while (i <= lastStart)
                 {
+                    var next = span.Slice(i, lastStart - i + 1).IndexOf((byte)'[');
+                    if (next < 0)
+                    {
+                        break;
+                    }
+
+                    i += next;
                     var position = blockStart + i;
                     if (position >= nextUnscanned && IsTimeCodeHeader(span.Slice(i, TimeCodeLength)))
                     {
                         positions.Add(position);
-                        i += TimeCodeLength - 1;
+                        i += TimeCodeLength;
                         nextUnscanned = position + TimeCodeLength;
+                    }
+                    else
+                    {
+                        i++;
                     }
                 }
 

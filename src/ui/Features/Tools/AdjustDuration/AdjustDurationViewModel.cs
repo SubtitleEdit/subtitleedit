@@ -201,8 +201,11 @@ public partial class AdjustDurationViewModel : ObservableObject
             var optimalDuration = CpsHelper.GetDurationForCps(charCount, AdjustRecalculateOptimalCharacterPerSecond);
             var maxDuration = CpsHelper.GetDurationForCps(charCount, AdjustRecalculateMaxCharacterPerSecond);
 
+            // Leave the minimum gap before the next line, like libse's RecalculateDisplayTime.
             var nextSubtitle = subtitles.GetOrNull(i + 1);
-            var maxEndTime = nextSubtitle?.StartTime ?? TimeSpan.MaxValue;
+            var maxEndTime = nextSubtitle != null
+                ? nextSubtitle.StartTime - TimeSpan.FromMilliseconds(Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                : TimeSpan.MaxValue;
 
             var proposedEndTime = subtitle.StartTime + optimalDuration;
             var fallbackEndTime = subtitle.StartTime + maxDuration;
@@ -219,7 +222,7 @@ public partial class AdjustDurationViewModel : ObservableObject
             }
             else
             {
-                subtitle.EndTime = maxEndTime;
+                subtitle.EndTime = ClampEndTime(subtitle.StartTime, nextSubtitle!.StartTime);
             }
 
             if (extendOnly && subtitle.EndTime < oldEndTime)

@@ -14,7 +14,7 @@ public class ScrubSeekPolicyTests
     public void IsolatedSeek_IsExact()
     {
         // The single click on the waveform, and every non-drag seek: unchanged from before.
-        Assert.False(ScrubSeekPolicy.JoinsBurst(seekInFlight: false, previousSeekIssuedInFlight: false));
+        Assert.False(ScrubSeekPolicy.JoinsBurst(seekInFlight: false, previousSeekIssuedInFlight: false, stepSeconds: 5.0));
         Assert.Equal(ScrubSeekPolicy.ExactSeekFlags, ScrubSeekPolicy.FlagsFor(joinsBurst: false));
     }
 
@@ -24,22 +24,44 @@ public class ScrubSeekPolicyTests
         // A waveform click seeks twice in one input event (pointer release, then the tap with
         // the frame-snapped position). Serving the second one at keyframes flashed the previous
         // keyframe's frame - seconds back on a long-GOP file - before the exact landing (#14441).
-        Assert.False(ScrubSeekPolicy.JoinsBurst(seekInFlight: true, previousSeekIssuedInFlight: false));
+        Assert.False(ScrubSeekPolicy.JoinsBurst(seekInFlight: true, previousSeekIssuedInFlight: false, stepSeconds: 5.0));
     }
 
     [Fact]
     public void ThirdSeekInARow_IsServedAtKeyframes()
     {
         // The seek in flight was itself issued into an unfinished seek: a drag or wheel spin.
-        Assert.True(ScrubSeekPolicy.JoinsBurst(seekInFlight: true, previousSeekIssuedInFlight: true));
+        Assert.True(ScrubSeekPolicy.JoinsBurst(seekInFlight: true, previousSeekIssuedInFlight: true, stepSeconds: 5.0));
         Assert.Equal(ScrubSeekPolicy.KeyframeSeekFlags, ScrubSeekPolicy.FlagsFor(joinsBurst: true));
+    }
+
+    [Theory]
+    [InlineData(0.01)]
+    [InlineData(-0.01)]
+    [InlineData(0.1)]
+    [InlineData(-0.5)]
+    public void ShortStep_IsExactEvenMidBurst(double stepSeconds)
+    {
+        // A held 10 ms / 100 ms nudge shortcut seeks as fast as a drag, but a keyframe seek to a
+        // target that barely moved shows the same keyframe each time, and the picture flipped
+        // between it and every exact landing (#15848).
+        Assert.False(ScrubSeekPolicy.JoinsBurst(seekInFlight: true, previousSeekIssuedInFlight: true, stepSeconds));
+    }
+
+    [Theory]
+    [InlineData(1.0)]
+    [InlineData(-1.0)]
+    [InlineData(-3.0)]
+    public void LongStep_StillJoinsTheBurst(double stepSeconds)
+    {
+        Assert.True(ScrubSeekPolicy.JoinsBurst(seekInFlight: true, previousSeekIssuedInFlight: true, stepSeconds));
     }
 
     [Fact]
     public void ALandedSeek_EndsTheBurst()
     {
         // Whatever the history, once nothing is in flight the next seek is a fresh start.
-        Assert.False(ScrubSeekPolicy.JoinsBurst(seekInFlight: false, previousSeekIssuedInFlight: true));
+        Assert.False(ScrubSeekPolicy.JoinsBurst(seekInFlight: false, previousSeekIssuedInFlight: true, stepSeconds: 5.0));
     }
 
     [Fact]
@@ -124,15 +146,17 @@ public class ScrubSeekPolicyTests
         var previousIssuedInFlight = false;
 
         // Mouse down, then eight drag steps arriving faster than mpv can land them.
-        foreach (var _ in new[] { 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0 })
+        var previousTarget = 3.0;
+        foreach (var target in new[] { 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0 })
         {
             var inFlight = ScrubSeekPolicy.SeekIsInFlight(
                 eventLoopActive: true,
                 lastSeekCommandId: lastId,
                 restartAckedSeekCommandId: restartAcked,
                 secondsSinceLastSeekIssued: 0.02); // one drag step apart
-            var joinsBurst = ScrubSeekPolicy.JoinsBurst(inFlight, previousIssuedInFlight);
+            var joinsBurst = ScrubSeekPolicy.JoinsBurst(inFlight, previousIssuedInFlight, target - previousTarget);
             previousIssuedInFlight = inFlight;
+            previousTarget = target;
             flags.Add(ScrubSeekPolicy.FlagsFor(joinsBurst));
             lastId++;
             followUpId = joinsBurst ? lastId : 0;

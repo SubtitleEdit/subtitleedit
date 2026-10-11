@@ -11,12 +11,13 @@ using Nikse.SubtitleEdit.Controls;
 namespace UITests.Controls;
 
 /// <summary>
-/// #15531: a Latin stretch split into several style runs inside a right-to-left line makes
+/// #15531: a Latin stretch split into several style runs inside a right-to-left line made
 /// Avalonia 12.1.3 (BidiReorderer) map runs to the wrong visual positions, so hit testing
-/// throws "Covered length must be greater than zero" and SE freezes/crashes when selecting
-/// next to a colored tag. <see cref="BidiRunIndexFixer"/> corrects the mapping.
+/// threw "Covered length must be greater than zero" and SE froze/crashed when selecting
+/// next to a colored tag. Fixed upstream in Avalonia 12.1.4 (SE's BidiRunIndexFixer workaround
+/// was removed); these tests guard against a regression on future Avalonia upgrades.
 /// </summary>
-public class BidiRunIndexFixerTests : IDisposable
+public class RtlSplitRunHitTestTests : IDisposable
 {
     // The line from #15531 ("Surround with" adds "<font size=30>\N" to lift the subtitle).
     private const string RtlLineWithTags = "أريد أن أقول...<font size=30>\\N<font size=30>\\N";
@@ -74,20 +75,10 @@ public class BidiRunIndexFixerTests : IDisposable
         return failures;
     }
 
-    // If Avalonia renames TextLineImpl._indexedTextRuns or IndexedTextRun.RunIndex/TextRun, the
-    // fixer silently turns into a no-op - this makes that visible at upgrade time.
     [AvaloniaFact]
-    public void FixerStillReachesAvaloniaInternals()
-    {
-        Assert.True(BidiRunIndexFixer.IsAvailable);
-    }
-
-    [AvaloniaFact]
-    public void FixedLayoutHitTestsEveryRangeAndMeasuresTheRightRuns()
+    public void SplitLatinInRtlLayoutHitTestsEveryRangeAndMeasuresTheRightRuns()
     {
         var layout = CreateSplitLatinInRtlLayout();
-
-        BidiRunIndexFixer.Fix(layout);
 
         Assert.Empty(GetFailingRanges(layout, 8));
 
@@ -150,17 +141,5 @@ public class BidiRunIndexFixerTests : IDisposable
         }
 
         Assert.Empty(failures);
-    }
-
-    // Canary: a FAILURE here is good news - Avalonia fixed BidiReorderer, and BidiRunIndexFixer
-    // (plus its call in SyntaxHighlightingTextPresenter.CreateTextLayout) can be removed.
-    [AvaloniaFact]
-    public void AvaloniaStillMapsSplitLatinRunsInRtlLinesWrongly()
-    {
-        var layout = CreateSplitLatinInRtlLayout();
-
-        Assert.True(GetFailingRanges(layout, 8).Count > 0,
-            "Avalonia now hit tests split Latin runs in RTL lines correctly - the BidiReorderer " +
-            "RunIndex bug is fixed, so BidiRunIndexFixer is no longer needed (#15531).");
     }
 }

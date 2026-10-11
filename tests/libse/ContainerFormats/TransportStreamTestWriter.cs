@@ -23,7 +23,7 @@ internal sealed class TransportStreamTestWriter
     public static List<byte[]> ReadPesPackets(string fileName, int packetId)
     {
         var result = new List<byte[]>();
-        List<byte> current = null;
+        List<byte>? current = null;
         var data = File.ReadAllBytes(fileName);
         for (var i = 0; i + 188 <= data.Length; i += 188)
         {

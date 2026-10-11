@@ -595,6 +595,8 @@ public class LanguageGeneral
     public string ShowStartColumn { get; set; }
     public string ShowHideColumn { get; set; }
     public string ShowHistory { get; set; }
+    public string ClearHistory { get; set; }
+    public string RemoveFromHistory { get; set; }
     public string ShowLayerColumn { get; set; }
     public string ShowPreview { get; set; }
     public string ShowShotChangesList { get; set; }
@@ -656,12 +658,14 @@ public class LanguageGeneral
     public string StyleExaggeration { get; set; }
     public string Styles { get; set; }
     public string SubtitleFile { get; set; }
+    public string SubtitleFileChangedOutsideX { get; set; }
     public string SubtitleFileName { get; set; }
     public string SubtitleFileSaved { get; set; }
     public string SubtitleFileSavedToX { get; set; }
     public string SubtitleFiles { get; set; }
     public string SubtitleFormats { get; set; }
     public string SubtitleLoadedX { get; set; }
+    public string SubtitleReloadedChangedOutsideX { get; set; }
     public string Suffix { get; set; }
     public string Suggestions { get; set; }
     public string Sync { get; set; }
@@ -1452,6 +1456,8 @@ public class LanguageGeneral
         ShowStartColumn = "Show \"Start\" column";
         ShowHideColumn = "Show \"Hide\" column";
         ShowHistory = "Show history";
+        ClearHistory = "Clear history";
+        RemoveFromHistory = "Remove from history";
         ShowLayerColumn = "Show \"Layer\" column";
         ShowPreview = "Show preview";
         ShowShotChangesList = "Show shot changes list";
@@ -1505,12 +1511,14 @@ public class LanguageGeneral
         StyleExaggeration = "Style exaggeration";
         Styles = "Styles";
         SubtitleFile = "Subtitle file";
+        SubtitleFileChangedOutsideX = "The file \"{0}\" was changed outside Subtitle Edit." + Environment.NewLine + Environment.NewLine + "Reload it and lose your changes?";
         SubtitleFileName = "Subtitle file name";
         SubtitleFileSaved = "Subtitle file saved";
         SubtitleFileSavedToX = "Subtitle file saved to {0}";
         SubtitleFiles = "Subtitle files";
         SubtitleFormats = "Subtitle formats";
         SubtitleLoadedX = "Subtitle loaded: {0}";
+        SubtitleReloadedChangedOutsideX = "Subtitle reloaded (changed outside Subtitle Edit): {0}";
         Suffix = "Suffix";
         Suggestions = "Suggestions";
         Sync = "Sync";

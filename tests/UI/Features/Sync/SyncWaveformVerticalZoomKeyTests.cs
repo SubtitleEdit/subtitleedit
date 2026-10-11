@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
+using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Sync.PointSync.SetSyncPoint;
@@ -9,6 +10,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace UITests.Features.Sync;
 
@@ -94,10 +96,7 @@ public class SyncWaveformVerticalZoomKeyTests : IDisposable
         Assert.Equal(1.0, vm.AudioVisualizer.VerticalZoomFactor, 6);
     }
 
-    [AvaloniaTheory]
-    [InlineData(Key.OemPlus, 0.9)]
-    [InlineData(Key.OemMinus, 1.1)]
-    public void VisualSync_ShiftMainRowPlusOrMinus_ZoomsTheFocusedPane(Key key, double expectedZoom)
+    private VisualSyncViewModel ShowVisualSync()
     {
         var vm = new VisualSyncViewModel(new WindowService(new NullServiceProvider()), new FileHelper(),
             new VideoPreviewSubtitle(new MpvReloader(), new VlcReloader()),
@@ -107,6 +106,15 @@ public class SyncWaveformVerticalZoomKeyTests : IDisposable
         _windows.Add(window);
         vm.IsAudioVisualizerVisible = true;
         window.Show();
+        return vm;
+    }
+
+    [AvaloniaTheory]
+    [InlineData(Key.OemPlus, 0.9)]
+    [InlineData(Key.OemMinus, 1.1)]
+    public void VisualSync_ShiftMainRowPlusOrMinus_ZoomsTheFocusedPane(Key key, double expectedZoom)
+    {
+        var vm = ShowVisualSync();
         vm.AudioVisualizerRight.Focus();
         Assert.True(vm.AudioVisualizerRight.IsFocused);
         var e = ShiftKey(key);
@@ -116,5 +124,54 @@ public class SyncWaveformVerticalZoomKeyTests : IDisposable
         Assert.True(e.Handled);
         Assert.Equal(expectedZoom, vm.AudioVisualizerRight.VerticalZoomFactor, 6);
         Assert.Equal(1.0, vm.AudioVisualizerLeft.VerticalZoomFactor, 6); // only the focused pane zooms
+    }
+
+    // Focus normally sits on a child of a pane (a button under the player, the player's position
+    // slider), never on the player itself - keys used to be dropped then (#15789).
+    [AvaloniaFact]
+    public void VisualSync_FocusOnButtonInsidePane_KeysGoToThatPane()
+    {
+        var vm = ShowVisualSync();
+        var button = vm.PaneRight!.GetVisualDescendants().OfType<Button>().First(b => b.IsEffectivelyVisible);
+        Assert.True(button.Focus());
+        var e = ShiftKey(Key.OemPlus);
+
+        vm.OnKeyDownHandler(null, e);
+
+        Assert.True(e.Handled);
+        Assert.Equal(0.9, vm.AudioVisualizerRight.VerticalZoomFactor, 6);
+        Assert.Equal(1.0, vm.AudioVisualizerLeft.VerticalZoomFactor, 6);
+    }
+
+    private static Button OkButton(VisualSyncViewModel vm)
+        => vm.Window!.GetVisualDescendants().OfType<Button>().First(b => b.Command == vm.OkCommand);
+
+    [AvaloniaTheory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void VisualSync_FocusOutsidePanes_KeysGoToLastActivePane(bool rightActive)
+    {
+        var vm = ShowVisualSync();
+        vm.IsRightPaneActive = rightActive;
+        Assert.True(OkButton(vm).Focus()); // in the Sync/OK/Cancel bar, outside both panes
+        var e = ShiftKey(Key.OemPlus);
+
+        vm.OnKeyDownHandler(null, e);
+
+        Assert.True(e.Handled);
+        Assert.Equal(rightActive ? 0.9 : 1.0, vm.AudioVisualizerRight.VerticalZoomFactor, 6);
+        Assert.Equal(rightActive ? 1.0 : 0.9, vm.AudioVisualizerLeft.VerticalZoomFactor, 6);
+    }
+
+    [AvaloniaFact]
+    public void VisualSync_SpaceOnButtonOutsidePanes_IsLeftToTheButton()
+    {
+        var vm = ShowVisualSync();
+        var okButton = OkButton(vm);
+        var e = new KeyEventArgs { RoutedEvent = InputElement.KeyDownEvent, Key = Key.Space, KeyModifiers = KeyModifiers.None, Source = okButton };
+
+        vm.OnKeyDownHandler(null, e);
+
+        Assert.False(e.Handled);
     }
 }

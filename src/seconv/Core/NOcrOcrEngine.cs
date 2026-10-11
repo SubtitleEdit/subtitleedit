@@ -15,7 +15,7 @@ internal sealed class NOcrOcrEngine : IOcrEngine
     private readonly NOcrDb _db;
     private readonly NOcrCaseFixer _caseFixer = new();
     private const int MaxWrongPixels = 25;
-    private const int PixelsAreSpaceDefault = 12;
+    private readonly NOcrSpaceDetector _spaceDetector = new();
 
     public NOcrOcrEngine(string nOcrDbPath)
     {
@@ -40,12 +40,13 @@ internal sealed class NOcrOcrEngine : IOcrEngine
         }
 
         var parent = new NikseBitmap2(bitmap);
-        parent.MakeTwoColor(200);
+        parent.MakeTwoColor(OcrTwoColorThreshold.Get(parent));
         parent.CropTop(0, new SKColor(0, 0, 0, 0));
         var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(
-            parent, PixelsAreSpaceDefault, rightToLeft: false, topToBottom: true,
+            parent, NOcrSpaceDetector.SplitPixelsAreSpace, rightToLeft: false, topToBottom: true,
             _lineHeightTracker.GetMinLineHeight(), autoHeight: true, _lineHeightTracker.GetAverageLineHeight());
         _lineHeightTracker.Update(letters);
+        letters = _spaceDetector.RemoveFalseSpaces(letters, out _);
 
         var matches = new List<NOcrChar>();
         var i = 0;

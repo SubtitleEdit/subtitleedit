@@ -67,11 +67,25 @@ Close the secondary (original) subtitle file in translation mode.
 
 ## Close Translation
 
-Shown while an editable original is open: discards the translation and makes the original the working subtitle (you are asked to save unsaved changes first). Not offered when the original is a read-only reference.
+Shown while an editable original is open: closes the translation and makes the original the working subtitle. The translation file on disk is not changed.
+
+- You are always asked first: with unsaved changes you get the usual save prompt, otherwise a confirmation ("Close the translation ...? The original subtitle ... becomes the subtitle you edit."), since the item sits right next to **Close original** in the menu.
+- When the original lines up with the translation, the rows keep their time codes and the original text moves into the text column.
+- When the original does **not** line up 1:1 (see [Translation Mode](main-window.md#translation-mode)), the original subtitle itself - with its own lines and time codes, and any edits you made to the original text - becomes the working subtitle. The translation's timing is not carried over.
+- Not offered when the original is a read-only reference.
 
 ## Format Properties
 
 Formats with their own settings (ASSA, EBU STL, PAC, ...) get a **<format> properties...** item here, opening the same dialog as the gear button next to the format combo box.
+
+## Reload When Changed Outside Subtitle Edit
+
+When the open subtitle file is changed by another program - another editor, a script, a sync tool - Subtitle Edit notices it when you switch back to its main window:
+
+- **No unsaved changes:** the file is reloaded right away, and the status bar shows "Subtitle reloaded (changed outside Subtitle Edit)".
+- **Unsaved changes:** you are asked "The file ... was changed outside Subtitle Edit. Reload it and lose your changes?" Answer **No** to keep your edits; you are not asked again until the file changes once more.
+
+The reload keeps the video, the selected line, the encoding, the original subtitle in translation mode, the video offset and SMPTE timing. There is no live file watcher: the file's time stamp and size are compared when the window is activated. A converted import (for example a file opened from a video container) is not checked, and a file that is missing or empty (likely still being written) is skipped until the next time. There is no setting for this.
 
 ## Recent Files
 
@@ -100,6 +114,35 @@ Import image files and create subtitle entries from them.
 ### Import image-based subtitle for OCR
 
 Read the subtitles out of an image-based file (Blu-ray `.sup`, VobSub `.sub`, `.ts`, BDN xml) and run [OCR](ocr.md) on them to get editable text.
+
+### Import subtitles from DVD
+
+Rip the subtitles of a DVD title straight from its IFO and VOB files, then [OCR](ocr.md) them to text.
+
+- **Menu:** File → Import → Subtitles from DVD (IFO/VOB)...
+
+![Import Subtitles from DVD](../screenshots/import-dvd.png)
+
+1. Click the folder button next to **IFO file** and open the title set's IFO file (for example `VIDEO_TS\VTS_01_0.IFO`), or click **Add VOB files** - or drop IFO/VOB files on the window
+2. With an IFO, pick the **Title**. Each title shows its duration, number of chapters and subtitle languages; the longest complete title is selected. Opening `VIDEO_TS.IFO` lists the titles of every title set. A title whose VOB files are not all there is marked "VOB files missing (x% found)"
+3. Check the **VOB files** list - the title's VOB files are filled in. **Remove**, **Move up**, **Move down** and **Clear** edit the list
+4. Check the **Video standard** - *PAL (25 fps)* or *NTSC (29.97 fps)*, taken from the IFO when there is one
+5. Click **Start ripping**. **Abort** (or Escape) stops it
+6. When the DVD has several subtitle streams, pick the language in the next window; then the [OCR](ocr.md) window opens with the chosen stream
+
+Ripping a title from its IFO reads only that title's cells, in play order. If you edit the VOB list, all listed VOB files are read instead. The palette and the stream languages come from the IFO (also for loose VOB files when the title set's IFO is next to them), and the language is passed on to OCR.
+
+Subtitle Edit does not decrypt CSS. If the VOB files were copied from a DVD without decrypting, a warning tells how many subtitle packets are still encrypted (their images would be garbled) and asks whether to continue - decrypt the DVD with a ripping tool first for a clean result.
+
+**File → Open** on an `.ifo` file opens this window with it, and opening a single `.vob` file with subtitles goes straight to the language pick and OCR.
+
+### Other sources opened with File → Open
+
+These are recognised when opened with **File → Open** (or **Import → Image-based subtitle for OCR...**):
+
+- **PSP UMD Video** - `.mps` and `.pmf` files (and `.subs` dumps of their subtitles): the subtitle images are read, you pick the stream when there are several, and they go to [OCR](ocr.md)
+- **HD-DVD `.sup`** - HD-DVD subpicture files are read and sent to [OCR](ocr.md)
+- **CEA-608 closed captions in MPEG video** - DVD `.vob` files without subpictures, program streams (`.mpg`, `.mpeg`, `.m2p`) and bare MPEG video (`.m2v`, `.m1v`, `.mpv`) are searched for Line 21 / ATSC A/53 / SCTE 20 closed captions; you pick the caption track when there are several, and the captions are loaded as text
 
 ### Import image-based subtitle for edit
 

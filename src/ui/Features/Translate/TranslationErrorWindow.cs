@@ -28,7 +28,8 @@ public class TranslationErrorWindow : Window
         {
             Text = "⚠",
             FontSize = UiUtil.ScaledFontSize(32),
-            Foreground = new SolidColorBrush(Color.Parse("#E8A020")),
+            // Darker amber on the light theme - the dark-theme tone is too faint on white (#15768).
+            Foreground = new SolidColorBrush(Color.Parse(UiTheme.IsDarkThemeEnabled() ? "#E8A020" : "#9E5500")),
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 0, 12, 0),
         };

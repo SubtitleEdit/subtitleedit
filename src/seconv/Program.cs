@@ -1,4 +1,4 @@
-using Spectre.Console;
+﻿using Spectre.Console;
 using Spectre.Console.Cli;
 using SeConv.Commands;
 using SeConv.Core;
@@ -29,6 +29,13 @@ internal class Program
 
         // Encoding code pages and the headless EBU UI helper are wired by the
         // module initializer in SeConv.Core.Bootstrap.
+
+        // Before the convert-oriented rewrites below, which would read the database path as
+        // a positional format.
+        if (args.Length > 0 && args[0].TrimStart('/', '-').Equals("optimize-nocr", StringComparison.OrdinalIgnoreCase))
+        {
+            return RunOptimizeNOcrCommand(args.Skip(1).ToArray());
+        }
 
         // Handle legacy /convert syntax and convert to modern syntax
         args = ConvertLegacyArguments(args);
@@ -643,6 +650,124 @@ internal class Program
 
         InfoLintReporter.RenderLint(reports, json);
         return hasError || reports.Any(r => r.Issues.Count > 0) ? 1 : 0;
+    }
+
+    /// <summary>
+    /// Dispatches <c>seconv optimize-nocr &lt;database.nocr&gt; [--output:&lt;path&gt;] [--json]</c>:
+    /// removes the lines that don't tell characters apart from lookalikes (see
+    /// <see cref="Nikse.SubtitleEdit.UiLogic.Ocr.NOcrDbOptimizer"/>). Without --output the
+    /// database is optimized in place and the original kept as &lt;database.nocr&gt;.bak.
+    /// </summary>
+    private static int RunOptimizeNOcrCommand(string[] args)
+    {
+        var json = HasJsonFlag(args);
+        string? output = null;
+        var positional = new List<string>();
+        for (var i = 0; i < args.Length; i++)
+        {
+            var arg = args[i];
+            var name = arg.TrimStart('/', '-');
+
+            // Only "output" itself, optionally with :value or =value, so a Unix path like
+            // /outputs/Latin.nocr stays the input file.
+            var rest = name.StartsWith("output", StringComparison.OrdinalIgnoreCase) ? name.Substring("output".Length) : null;
+            var isOutputOption = rest != null && (rest.Length == 0 || rest[0] is ':' or '=') &&
+                                 (LooksLikeOption(arg) || arg.StartsWith("/output", StringComparison.OrdinalIgnoreCase));
+            if (isOutputOption)
+            {
+                if (rest!.Length > 0)
+                {
+                    output = rest.Substring(1);
+                }
+                else
+                {
+                    // A bare --output with no value is an error, not "optimize in place".
+                    output = i + 1 < args.Length ? args[++i] : string.Empty;
+                }
+
+                continue;
+            }
+
+            if (!LooksLikeOption(arg) && !arg.Equals("/json", StringComparison.OrdinalIgnoreCase))
+            {
+                positional.Add(arg);
+            }
+        }
+
+        if (positional.Count != 1 || output == string.Empty)
+        {
+            const string usage = "Usage: seconv optimize-nocr <database.nocr> [--output:<path>] [--json]";
+            if (json)
+            {
+                Console.Error.WriteLine($"{{\"error\": {JsonOut.Serialize("'seconv optimize-nocr' requires exactly one .nocr file. " + usage)}}}");
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("[red]Error: 'seconv optimize-nocr' requires exactly one .nocr file.[/]");
+                AnsiConsole.MarkupLine($"[dim]{Markup.Escape(usage)}[/]");
+            }
+
+            return 1;
+        }
+
+        var input = positional[0];
+        try
+        {
+            if (!File.Exists(input))
+            {
+                throw new FileNotFoundException($"nOCR database not found: {input}", input);
+            }
+
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            var db = new Nikse.SubtitleEdit.UiLogic.Ocr.NOcrDb(input);
+            var result = Nikse.SubtitleEdit.UiLogic.Ocr.NOcrDbOptimizer.Optimize(db, new Nikse.SubtitleEdit.UiLogic.Ocr.NOcrDbOptimizerSettings())!;
+
+            string? backup = null;
+            if (output == null)
+            {
+                backup = Nikse.SubtitleEdit.UiLogic.Ocr.NOcrDbOptimizer.GetFreeBackupFileName(input);
+                File.Copy(input, backup, false);
+                output = input;
+            }
+
+            new Nikse.SubtitleEdit.UiLogic.Ocr.NOcrDb(db, output).Save();
+
+            if (json)
+            {
+                JsonOut.Write(new
+                {
+                    success = true,
+                    input,
+                    output,
+                    backup,
+                    entries = result.Entries,
+                    linesBefore = result.LinesBefore,
+                    linesAfter = result.LinesAfter,
+                    fonts = result.FontsUsed,
+                    elapsedMs = stopwatch.ElapsedMilliseconds,
+                });
+            }
+            else
+            {
+                AnsiConsole.MarkupLineInterpolated($"[green]Optimized {input}[/]: {result.LinesBefore:#,##0} -> {result.LinesAfter:#,##0} lines in {result.Entries:#,##0} characters ({stopwatch.Elapsed.TotalSeconds:0.0} s)");
+                AnsiConsole.MarkupLineInterpolated($"[dim]Saved to {output}{(backup != null ? $", original kept as {backup}" : string.Empty)}. Fonts: {string.Join(", ", result.FontsUsed)}[/]");
+            }
+
+            return 0;
+        }
+        catch (Exception ex)
+        {
+            if (json)
+            {
+                Console.Error.WriteLine($"{{\"error\": {System.Text.Json.JsonSerializer.Serialize(ex.Message)}}}");
+            }
+            else
+            {
+                AnsiConsole.MarkupLineInterpolated($"[red]Error: {ex.Message}[/]");
+            }
+
+            return 1;
+        }
     }
 
     private static bool HasJsonFlag(string[] args) =>

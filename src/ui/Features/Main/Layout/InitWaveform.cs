@@ -96,6 +96,11 @@ public class InitWaveform
             vm.AudioVisualizer.FocusOnMouseOver = settings.FocusOnMouseOver;
             vm.AudioVisualizer.IsReadOnly = Se.Settings.General.LockTimeCodes;
             vm.AudioVisualizer.WaveformHeightPercentage = settings.SpectrogramCombinedWaveformHeight;
+            if (settings.RememberZoom)
+            {
+                vm.AudioVisualizer.ZoomFactor = Math.Clamp(settings.ZoomFactor, AudioVisualizer.MinZoomFactor, AudioVisualizer.MaxZoomFactor);
+                vm.AudioVisualizer.VerticalZoomFactor = Math.Clamp(settings.VerticalZoomFactor, AudioVisualizer.MinZoomFactor, AudioVisualizer.MaxZoomFactor);
+            }
             // The toggle may have been pressed in a layout without a waveform; a waveform
             // built later must come up on the same side of it as the video preview, or the
             // two previews show different texts (see SetOriginalTextInPreview).

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -248,16 +248,27 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
             return newEndTime;
         }
 
-        // _shotChanges is sorted in Initialize, so the first hit is the earliest one.
-        foreach (var shotChangeSeconds in _shotChanges)
+        // _shotChanges is sorted in Initialize: binary search the first shot change after the
+        // current end (a scan from the start per line was O(lines x shot changes)).
+        var low = 0;
+        var high = _shotChanges.Count;
+        while (low < high)
         {
-            var shotChangeMs = shotChangeSeconds * 1000.0;
-            if (shotChangeMs >= newEndMs)
+            var mid = low + (high - low) / 2;
+            if (_shotChanges[mid] * 1000.0 > currentEndMs)
             {
-                break;
+                high = mid;
             }
+            else
+            {
+                low = mid + 1;
+            }
+        }
 
-            if (shotChangeMs > currentEndMs)
+        if (low < _shotChanges.Count)
+        {
+            var shotChangeMs = _shotChanges[low] * 1000.0;
+            if (shotChangeMs < newEndMs)
             {
                 return TimeSpan.FromMilliseconds(shotChangeMs);
             }
@@ -331,8 +342,18 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
         // value changed - OK either did nothing or applied the previous limits. Always build it
         // now: the timer clears _isDirty on its own thread and only posts the rebuild, so a tick
         // landing between a change and OK left the flag clear and the list still stale.
+        // The rebuild below re-creates every fix as applied; remember which rows the user
+        // unticked (rows line up with _allSubtitles by index) and put their timing back.
+        var skipIndices = Fixes.Where(f => !f.Apply).Select(f => AllSubtitlesFixed.IndexOf(f.SubtitleLine)).Where(i => i >= 0).ToList();
         _isDirty = false;
         BuildPreview();
+        foreach (var index in skipIndices)
+        {
+            if (index < AllSubtitlesFixed.Count && index < _allSubtitles.Count)
+            {
+                AllSubtitlesFixed[index].EndTime = _allSubtitles[index].EndTime;
+            }
+        }
 
         if (FixMinDurationMs || FixMaxDurationMs)
         {

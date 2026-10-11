@@ -186,24 +186,101 @@ public class ItalicTextMerger
         var segments = new List<TextSegment>(words.Count);
         for (var i = 0; i < words.Count; i++)
         {
-            var isWhitespace = slants[i] == WordSlant.Whitespace;
-
-            // Words and whitespace alternate, so whitespace is inside italic only when the words
-            // on both sides of it are italic.
-            var shouldBeItalic = isWhitespace
-                ? i > 0 && i < words.Count - 1 && italic[i - 1] && italic[i + 1]
-                : italic[i];
-
-            segments.Add(new TextSegment
+            if (slants[i] == WordSlant.Whitespace)
             {
-                Text = ConcatCharTexts(words[i].Chars),
-                ShouldBeItalic = shouldBeItalic,
-                IsWhitespace = isWhitespace
-            });
+                segments.Add(new TextSegment { Text = ConcatCharTexts(words[i].Chars), IsWhitespace = true });
+                continue;
+            }
+
+            if (!ContainsItalicTag(words[i].Chars))
+            {
+                segments.Add(new TextSegment { Text = ConcatCharTexts(words[i].Chars), ShouldBeItalic = italic[i] });
+                continue;
+            }
+
+            foreach (var ch in words[i].Chars)
+            {
+                if (HasItalicTag(ch.Text))
+                {
+                    AddTaggedRuns(segments, ch.Text);
+                }
+                else
+                {
+                    segments.Add(new TextSegment { Text = ch.Text, ShouldBeItalic = italic[i] });
+                }
+            }
+        }
+
+        // Words and whitespace alternate, so whitespace is inside italic only when the text on
+        // both sides of it is italic.
+        for (var i = 0; i < segments.Count; i++)
+        {
+            if (segments[i].IsWhitespace)
+            {
+                segments[i].ShouldBeItalic = i > 0 && i < segments.Count - 1 &&
+                                             segments[i - 1].ShouldBeItalic && segments[i + 1].ShouldBeItalic;
+            }
         }
 
         // Post-process to merge consecutive segments with same formatting
         return MergeConsecutiveSegments(segments);
+    }
+
+    /// <summary>
+    /// A glyph trained with italic tags in its text (e.g. "&lt;i&gt;i&lt;/i&gt;t" for an italic i
+    /// joined to an upright t) sets its own formatting: tagged parts are italic, the rest upright,
+    /// whatever the word around it is. Appending the text as-is nested the tags inside the word's
+    /// italic tag ("&lt;i&gt;yada&lt;i&gt;i&lt;/i&gt;t?&lt;/i&gt;").
+    /// </summary>
+    private static void AddTaggedRuns(List<TextSegment> segments, string text)
+    {
+        var inItalic = false;
+        var start = 0;
+        var i = 0;
+        while (i < text.Length)
+        {
+            var tagLength = text.Length - i >= 3 && string.Compare(text, i, "<i>", 0, 3, StringComparison.OrdinalIgnoreCase) == 0 ? 3
+                : text.Length - i >= 4 && string.Compare(text, i, "</i>", 0, 4, StringComparison.OrdinalIgnoreCase) == 0 ? 4
+                : 0;
+            if (tagLength == 0)
+            {
+                i++;
+                continue;
+            }
+
+            if (i > start)
+            {
+                segments.Add(new TextSegment { Text = text.Substring(start, i - start), ShouldBeItalic = inItalic });
+            }
+
+            inItalic = tagLength == 3;
+            i += tagLength;
+            start = i;
+        }
+
+        if (start < text.Length)
+        {
+            segments.Add(new TextSegment { Text = text.Substring(start), ShouldBeItalic = inItalic });
+        }
+    }
+
+    private static bool HasItalicTag(string text)
+    {
+        return text.Contains("<i>", StringComparison.OrdinalIgnoreCase) ||
+               text.Contains("</i>", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool ContainsItalicTag(List<NOcrChar> chars)
+    {
+        for (var i = 0; i < chars.Count; i++)
+        {
+            if (HasItalicTag(chars[i].Text))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -246,7 +323,7 @@ public class ItalicTextMerger
         for (var i = 0; i < word.Chars.Count; i++)
         {
             var ch = word.Chars[i];
-            if (!HasLetterOrDigit(ch.Text))
+            if (!HasLetterOrDigit(ch.Text) || HasItalicTag(ch.Text))
             {
                 continue;
             }

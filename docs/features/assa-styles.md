@@ -52,5 +52,5 @@ Manage Advanced SubStation Alpha (ASS/SSA) subtitle styles, including file style
 
 | Shortcut | Action |
 |----------|--------|
-| F1 | Show help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |
 | Escape | Close dialog |

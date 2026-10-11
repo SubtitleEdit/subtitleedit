@@ -16,6 +16,16 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             string fixAction = Language.FixMusicNotation;
             int fixCount = 0;
             string[] musicSymbols = Configuration.Settings.Tools.MusicSymbolReplace.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+            // Trimmed and upper-cased once per run instead of once per symbol per line.
+            var trimmedSymbols = new string[musicSymbols.Length];
+            var upperSymbols = new string[musicSymbols.Length];
+            for (var k = 0; k < musicSymbols.Length; k++)
+            {
+                trimmedSymbols[k] = musicSymbols[k].Trim();
+                upperSymbols[k] = trimmedSymbols[k].ToUpperInvariant();
+            }
+
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
@@ -24,9 +34,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     var oldText = p.Text;
                     var newText = oldText;
                     bool containsFontTag = oldText.Contains("<font ", StringComparison.OrdinalIgnoreCase);
-                    foreach (string musicSymbol in musicSymbols)
+                    for (var k = 0; k < trimmedSymbols.Length; k++)
                     {
-                        var ms = musicSymbol.Trim();
+                        var ms = trimmedSymbols[k];
                         if (ms.Length == 0)
                         {
                             continue;
@@ -87,7 +97,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             if (fix)
                             {
                                 newText = newText.Replace(ms, Configuration.Settings.Tools.MusicSymbol);
-                                newText = newText.Replace(ms.ToUpperInvariant(), Configuration.Settings.Tools.MusicSymbol);
+                                newText = newText.Replace(upperSymbols[k], Configuration.Settings.Tools.MusicSymbol);
                             }
                         }
                     }
@@ -98,8 +108,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         newText = HandleQuestionMarks(newText);
                     }
 
-                    var noTagsText = HtmlUtil.RemoveHtmlTags(newText);
-                    if (newText != oldText && noTagsText != HtmlUtil.RemoveHtmlTags(oldText))
+                    if (newText != oldText && HtmlUtil.RemoveHtmlTags(newText) != HtmlUtil.RemoveHtmlTags(oldText))
                     {
                         p.Text = newText;
                         fixCount++;

@@ -20,10 +20,21 @@ public sealed class FfmpegPreviewSubtitle
     public static readonly FfmpegPreviewSubtitle Empty = new(Array.Empty<Line>());
 
     private readonly Line[] _lines; // sorted by start
+    private readonly double[] _starts;
+    private readonly double[] _maxEndSoFar; // _maxEndSoFar[i] = latest end among _lines[0..i]
 
     private FfmpegPreviewSubtitle(Line[] lines)
     {
         _lines = lines;
+        _starts = new double[lines.Length];
+        _maxEndSoFar = new double[lines.Length];
+        var maxEnd = double.MinValue;
+        for (var i = 0; i < lines.Length; i++)
+        {
+            _starts[i] = lines[i].StartSeconds;
+            maxEnd = Math.Max(maxEnd, lines[i].EndSeconds);
+            _maxEndSoFar[i] = maxEnd;
+        }
     }
 
     public int Count => _lines.Length;
@@ -78,22 +89,38 @@ public sealed class FfmpegPreviewSubtitle
     }
 
     /// <summary>Lines showing at <paramref name="seconds"/>, in start order.</summary>
+    /// <remarks>
+    /// Called for every video frame, so it must not walk the whole subtitle: lines starting
+    /// after the position are skipped by binary search, and the backward walk stops at the
+    /// first line before which nothing ends after the position.
+    /// </remarks>
     public List<Line> GetActive(double seconds)
     {
         var result = new List<Line>();
-        foreach (var line in _lines)
-        {
-            if (line.StartSeconds > seconds)
-            {
-                break;
-            }
 
-            if (seconds < line.EndSeconds)
+        // First index whose start is after the position.
+        var end = Array.BinarySearch(_starts, seconds);
+        if (end < 0)
+        {
+            end = ~end;
+        }
+        else
+        {
+            while (end < _starts.Length && _starts[end] <= seconds)
             {
-                result.Add(line);
+                end++;
             }
         }
 
+        for (var i = end - 1; i >= 0 && _maxEndSoFar[i] > seconds; i--)
+        {
+            if (seconds < _lines[i].EndSeconds)
+            {
+                result.Add(_lines[i]);
+            }
+        }
+
+        result.Reverse();
         return result;
     }
 }

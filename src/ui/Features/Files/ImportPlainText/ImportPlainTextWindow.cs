@@ -106,9 +106,14 @@ public class ImportPlainTextWindow : Window
             Children = { progressBarAlign, labelAlignProgress },
         };
 
-        var buttonAlignViaWhisper = UiUtil.MakeButton(Se.Language.File.Import.AlignViaSpeechToText, vm.AlignScriptWithTimestampsFromWhisperCommand);
-        var buttonAlignViaForcedAligner = UiUtil.MakeButton(Se.Language.File.Import.AlignViaForcedAligner, vm.AlignScriptWithForcedAlignerCommand);
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        // While aligning, Cancel stops the alignment; nothing else may start or close the window
+        // with lines the aligner is still writing to.
+        var buttonAlignViaWhisper = UiUtil.MakeButton(Se.Language.File.Import.AlignViaSpeechToText, vm.AlignScriptWithTimestampsFromWhisperCommand)
+            .WithBindEnabled(nameof(vm.IsAligning), InverseBooleanConverter.Instance);
+        var buttonAlignViaForcedAligner = UiUtil.MakeButton(Se.Language.File.Import.AlignViaForcedAligner, vm.AlignScriptWithForcedAlignerCommand)
+            .WithBindEnabled(nameof(vm.IsAligning), InverseBooleanConverter.Instance);
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand)
+            .WithBindEnabled(nameof(vm.IsAligning), InverseBooleanConverter.Instance);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonAlignViaForcedAligner, buttonAlignViaWhisper, buttonOk, buttonCancel);
 

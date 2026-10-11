@@ -164,6 +164,16 @@ public static class InitVideoPlayer
                 }
             }
 
+            if (OperatingSystem.IsMacOS() && Se.Settings.Video.VideoPlayer.Equals(VideoPlayerName.MpvMetal, StringComparison.OrdinalIgnoreCase))
+            {
+                var player = new LibMpvDynamicPlayer();
+                if (player.CanLoad())
+                {
+                    var view = new LibMpvDynamicIoSurfaceControl(player);
+                    return MakeVideoPlayerControl(player, view);
+                }
+            }
+
             if (Se.Settings.Video.VideoPlayer.StartsWith("mpv", StringComparison.OrdinalIgnoreCase)) // VideoPlayerCodes.MpvOpenGl
             {
                 var player = new LibMpvDynamicPlayer();

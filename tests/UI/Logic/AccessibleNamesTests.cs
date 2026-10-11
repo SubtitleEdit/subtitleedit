@@ -174,9 +174,9 @@ public class AccessibleNamesTests
             parts.Add($"name={control.Name}");
         }
 
-        if (control is TextBox textBox && !string.IsNullOrEmpty(textBox.Watermark))
+        if (control is TextBox textBox && !string.IsNullOrEmpty(textBox.PlaceholderText))
         {
-            parts.Add($"watermark={textBox.Watermark}");
+            parts.Add($"watermark={textBox.PlaceholderText}");
         }
 
         if (control is ContentControl { Content: { } content })

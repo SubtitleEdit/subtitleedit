@@ -7,6 +7,8 @@ internal class IconNames
     public const string Alert = "mdi-alert";
     public const string AlignHorizontalCenter = "mdi-align-horizontal-center";
     public const string AlignHorizontalDistribute = "mdi-align-horizontal-distribute";
+    public const string AlphabeticalVariant = "mdi-alphabetical-variant";
+    public const string AutoFix = "mdi-auto-fix";
     public const string AnimationPlay = "mdi-animation-play";
     public const string ArrowCollapseVertical = "mdi-arrow-collapse-vertical";
     public const string ArrowDownThin = "mdi-arrow-down-thin";
@@ -116,6 +118,7 @@ internal class IconNames
     public const string Refresh = "mdi-refresh";
     public const string Restore = "mdi-restore";
     public const string ScaleBalance = "mdi-scale-balance";
+    public const string School = "mdi-school-outline";
     public const string SelectAll = "mdi-select-all";
     public const string SetMerge = "mdi-set-merge";
     public const string SetSplit = "mdi-set-split";
@@ -123,6 +126,7 @@ internal class IconNames
     public const string SkipNext = "mdi-skip-next";
     public const string Sort = "mdi-sort";
     public const string Spellcheck = "mdi-spellcheck";
+    public const string Stop = "mdi-stop";
     public const string StopCircle = "mdi-stop-circle";
     public const string SwapVertical = "mdi-swap-vertical";
     public const string PuzzleOutline = "mdi-puzzle-outline";

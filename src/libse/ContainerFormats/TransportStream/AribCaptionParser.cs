@@ -105,6 +105,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         /// </summary>
         private static void MergeContinuations(List<Paragraph> paragraphs)
         {
+            // A merge only removes index i, above everything compared later, so the removals
+            // are collected and done in one compaction (RemoveAt per merge was O(n) each).
+            var removed = new bool[paragraphs.Count];
+            var anyRemoved = false;
             for (var i = paragraphs.Count - 1; i > 0; i--)
             {
                 var previous = paragraphs[i - 1];
@@ -114,8 +118,23 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 {
                     previous.Text = current.Text;
                     previous.EndTime.TotalMilliseconds = current.EndTime.TotalMilliseconds;
-                    paragraphs.RemoveAt(i);
+                    removed[i] = true;
+                    anyRemoved = true;
                 }
+            }
+
+            if (anyRemoved)
+            {
+                var write = 0;
+                for (var read = 0; read < paragraphs.Count; read++)
+                {
+                    if (!removed[read])
+                    {
+                        paragraphs[write++] = paragraphs[read];
+                    }
+                }
+
+                paragraphs.RemoveRange(write, paragraphs.Count - write);
             }
         }
 

@@ -198,7 +198,7 @@ public partial class SsaAttachmentsViewModel : ObservableObject
         }
         catch (Exception exception)
         {
-            await MessageBox.Show(Window, exception.Message, Se.Language.General.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            await MessageBox.Show(Window, Se.Language.General.Error, exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -492,6 +492,16 @@ public partial class SsaAttachmentsViewModel : ObservableObject
     private void ShowImage(byte[] bytes)
     {
         using var skBitmap = SKBitmap.Decode(bytes);
+        if (skBitmap == null)
+        {
+            // Corrupt payload or a format Skia cannot decode.
+            PreviewTitle = $"{Se.Language.General.Image}: {SelectedAttachment?.FileName ?? "untitled"}";
+            PreviewImage?.Dispose();
+            PreviewImage = new SKBitmap(1, 1, true).ToAvaloniaBitmap();
+            IsCopyFontnameToClipboardVisible = false;
+            return;
+        }
+
         PreviewTitle = $"{Se.Language.General.Image}: {SelectedAttachment?.FileName ?? "untitled"}, {skBitmap.Width}x{skBitmap.Height}";
         PreviewImage?.Dispose();
         PreviewImage = skBitmap.ToAvaloniaBitmap();

@@ -17,6 +17,7 @@ using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AdvancedTtsSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.CloneReferenceCleaning;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ChatterboxTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.CosyVoice3CrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
@@ -2386,6 +2387,12 @@ public partial class TextToSpeechViewModel : ObservableObject
             return false;
         }
 
+        if (Se.Settings.Video.TextToSpeech.RemoveOriginalSpeechFast)
+        {
+            return await SpeechIsolationModelDownload.EnsureModelDownloadedAsync(
+                Window!, _windowService, new CrispAsrCohere(), HtDemucsModel.ToWhisperModel(), HtDemucsModel.DisplayName, featureName, "a source separation model");
+        }
+
         return await SpeechIsolationModelDownload.EnsureDownloadedAsync(Window!, _windowService, new CrispAsrCohere(), featureName);
     }
 
@@ -2395,9 +2402,10 @@ public partial class TextToSpeechViewModel : ObservableObject
     /// </summary>
     private async Task<string?> MakeSpeechFreeBackground(string workFolder, CancellationToken cancellationToken)
     {
+        var fast = Se.Settings.Video.TextToSpeech.RemoveOriginalSpeechFast;
         var crispAsr = new CrispAsrCohere();
         var executable = crispAsr.GetExecutable();
-        var modelFileName = crispAsr.GetModelForCmdLine(SpeechIsolationModel.FileName);
+        var modelFileName = crispAsr.GetModelForCmdLine(fast ? HtDemucsModel.FileName : SpeechIsolationModel.FileName);
         if (!File.Exists(executable) || !File.Exists(modelFileName))
         {
             return null;
@@ -2411,14 +2419,17 @@ public partial class TextToSpeechViewModel : ObservableObject
             return null;
         }
 
-        var arguments = SpeechIsolationModel.BuildSeparateArguments(modelFileName, originalAudioFileName, workFolder, SpeechIsolationModel.BackgroundStem);
+        var stems = fast ? HtDemucsModel.BackgroundStems : new[] { SpeechIsolationModel.BackgroundStem };
+        var arguments = SpeechIsolationModel.BuildSeparateArguments(modelFileName, originalAudioFileName, workFolder, string.Join(",", stems));
         Se.WriteToolsLog($"{executable} {arguments}");
 
         // The separator's per-chunk lines on stderr are the only measure of how far it is - and
         // on a machine without a GPU it is minutes per minute of video (#15176). They drive the
         // percentage and the time-left estimate; the GPU path prints none and is quick. The
         // output is also kept: when the separator fails it is the only clue to why.
-        var progress = new SpeechIsolationProgress(SpeechIsolationProgress.GetChunkCountFromWaveFile(originalAudioFileName));
+        var progress = new SpeechIsolationProgress(fast
+            ? SpeechIsolationProgress.GetChunkCountFromWaveFile(originalAudioFileName, HtDemucsModel.ChunkSamples, HtDemucsModel.StrideSamples)
+            : SpeechIsolationProgress.GetChunkCountFromWaveFile(originalAudioFileName));
         var separateLog = new StringBuilder();
         DataReceivedEventHandler onLine = (_, args) =>
         {
@@ -2449,14 +2460,28 @@ public partial class TextToSpeechViewModel : ObservableObject
         separateProcess.ErrorDataReceived += onLine;
         await separateProcess.StartAndWaitAsync(cancellationToken);
 
-        var backgroundFileName = SpeechIsolationModel.GetStemFileName(originalAudioFileName, workFolder, SpeechIsolationModel.BackgroundStem);
-        if (separateProcess.ExitCode != 0 || !File.Exists(backgroundFileName))
+        var stemFileNames = stems.Select(stem => SpeechIsolationModel.GetStemFileName(originalAudioFileName, workFolder, stem)).ToList();
+        if (separateProcess.ExitCode != 0 || !stemFileNames.All(File.Exists))
         {
             lock (separateLog)
             {
                 Se.WriteToolsLog($"TTS remove original speech: separation failed with exit code {separateProcess.ExitCode}:{Environment.NewLine}{separateLog}", true);
             }
 
+            return null;
+        }
+
+        if (stemFileNames.Count == 1)
+        {
+            return stemFileNames[0];
+        }
+
+        var backgroundFileName = Path.Combine(workFolder, "background.wav");
+        using var mixProcess = FfmpegGenerator.MixStems(stemFileNames, backgroundFileName);
+        await mixProcess.StartAndWaitAsync(cancellationToken);
+        if (mixProcess.ExitCode != 0 || !File.Exists(backgroundFileName))
+        {
+            Se.WriteToolsLog($"TTS remove original speech: ffmpeg could not mix the stems (exit code {mixProcess.ExitCode})", true);
             return null;
         }
 
@@ -4048,6 +4073,18 @@ public partial class TextToSpeechViewModel : ObservableObject
             progress: (done, total) => ProgressValue = total == 0 ? 0 : (double)done / total * 100.0,
             cancellationToken);
 
+        // Before speech-to-text, which also hears the speech better without the music under it.
+        if (_perLineCloneClips.Count > 0 && await EnsureCloneReferenceCleanerAsync())
+        {
+            ProgressText = Se.Language.Video.TextToSpeech.CleaningCloneReferencesDotDotDot;
+            ProgressValue = 0;
+            await CloneReferenceCleaner.CleanFolderAsync(
+                clipFolder,
+                PerLineVoiceClone.ReferenceSampleRate,
+                (done, total) => Dispatcher.UIThread.Post(() => ProgressValue = total == 0 ? 0 : (double)done / total * 100.0),
+                cancellationToken);
+        }
+
         if (transcribeClips && !await TranscribePerLineCloneClipsAsync())
         {
             return false;
@@ -4093,8 +4130,20 @@ public partial class TextToSpeechViewModel : ObservableObject
             audioTrackFfIndex: -1,
             cancellationToken);
 
+        if (clipFileName != null && await EnsureCloneReferenceCleanerAsync())
+        {
+            await CloneReferenceCleaner.CleanFileAsync(clipFileName, PerLineVoiceClone.ReferenceSampleRate, cancellationToken);
+        }
+
         return clipFileName == null ? null : PerLineVoiceClone.MakeVoiceForClip(engine, clipFileName);
     }
+
+    /// <summary>
+    /// True when "Clean voice-clone references" is on and Sidon is ready, asking for the runtime
+    /// update and the model download when needed. False means clone from the uncleaned clips.
+    /// </summary>
+    private async Task<bool> EnsureCloneReferenceCleanerAsync() =>
+        CloneReferenceCleaner.IsEnabled && await CloneReferenceCleaner.EnsureInstalledAsync(Window!, _windowService);
 
     /// <summary>
     /// Runs speech-to-text over the reference clips that have no transcript and writes what it
@@ -4165,12 +4214,20 @@ public partial class TextToSpeechViewModel : ObservableObject
         var startMs = (long)Math.Round(paragraph.StartTime.TotalMilliseconds);
         if (!_originalByStartMs.TryGetValue(startMs, out var best))
         {
-            best = _originalSubtitle.Paragraphs
-                .OrderBy(p => Math.Abs(p.StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds))
-                .First();
+            // Closest start time, earliest line on a tie - one pass, not a sort per moved line.
+            var bestDistance = double.MaxValue;
+            foreach (var p in _originalSubtitle.Paragraphs)
+            {
+                var distance = Math.Abs(p.StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds);
+                if (best == null || distance < bestDistance)
+                {
+                    best = p;
+                    bestDistance = distance;
+                }
+            }
         }
 
-        if (Math.Abs(best.StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds) > 500)
+        if (best == null || Math.Abs(best.StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds) > 500)
         {
             return null;
         }

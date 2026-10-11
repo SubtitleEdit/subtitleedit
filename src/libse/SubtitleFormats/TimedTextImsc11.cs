@@ -592,7 +592,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             var arr = frameRateMultiplier.InnerText.Split();
                             if (arr.Length == 2 && Utilities.IsInteger(arr[0]) && Utilities.IsInteger(arr[1]) && int.Parse(arr[1]) > 0)
                             {
-                                fr = double.Parse(arr[0], CultureInfo.InvariantCulture) / double.Parse(arr[1], CultureInfo.InvariantCulture);
+                                // The multiplier scales ttp:frameRate (60 * 1000/1001 = 59.94); it is not a rate itself.
+                                fr = fr * double.Parse(arr[0], CultureInfo.InvariantCulture) / double.Parse(arr[1], CultureInfo.InvariantCulture);
                                 if (fr > 20 && fr < 100)
                                 {
                                     Configuration.Settings.General.CurrentFrameRate = fr;

@@ -4,6 +4,7 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System.Collections;
 using Nikse.SubtitleEdit.Logic;
@@ -96,7 +97,9 @@ public class SplitSubtitleWindow : Window
                 new TextBlock
                 {
                     [!TextBlock.TextProperty] = new Binding(nameof(SubtitleFormat.Name)),
-                    Width = 150,
+                    // No fixed width: it cut long names off in the drop-down too, e.g.
+                    // "DVD Studio Pro with one space" (#15901). The closed box trims instead.
+                    TextTrimming = TextTrimming.CharacterEllipsis,
                 }, true)
         };
 

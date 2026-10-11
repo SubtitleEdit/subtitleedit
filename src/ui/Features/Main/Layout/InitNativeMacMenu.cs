@@ -275,6 +275,7 @@ public static class InitNativeMacMenu
         editItems.Items.Add(Item(Clean(l.Replace), v => v.ShowReplaceCommand));
         editItems.Items.Add(Item(Clean(l.MultipleReplace), v => v.ShowMultipleReplaceCommand));
         editItems.Items.Add(Item(Clean(l.GoToLineNumber), v => v.ShowGoToLineCommand));
+        editItems.Items.Add(Item(Clean(l.CommandPalette), v => v.ShowCommandPaletteCommand));
         editItems.Items.Add(new NativeMenuItemSeparator());
         editItems.Items.Add(Toggle(Clean(l.RightToLeftMode), v => v.RightToLeftToggleCommand,
             v => v.IsRightToLeftEnabled, nameof(MainViewModel.IsRightToLeftEnabled)));
@@ -343,7 +344,8 @@ public static class InitNativeMacMenu
         state.RecentVideosItem = new NativeMenuItem(Clean(Se.Language.Video.OpenRecentVideo)) { Menu = new NativeMenu() };
         videoItems.Items.Add(state.RecentVideosItem);
 
-        videoItems.Items.Add(Item(Clean(l.CloseVideoFile), v => v.CommandVideoCloseCommand));
+        videoItems.Items.Add(Conditional(Clean(l.CloseVideoFile), v => v.CommandVideoCloseCommand,
+            v => v.IsVideoLoaded, nameof(MainViewModel.IsVideoLoaded)));
 
         // Same spot and wording as SE4's Video menu, so it can be found by anyone
         // looking for it there (#14389). Only meaningful with a video to draw on.
@@ -367,6 +369,7 @@ public static class InitNativeMacMenu
         videoItems.Items.Add(Item(Clean(l.SpeechToText), v => v.ShowSpeechToTextWhisperCommand));
         videoItems.Items.Add(Item(Clean(l.TextToSpeech), v => v.ShowVideoTextToSpeechCommand));
         videoItems.Items.Add(Item(Clean(Se.Language.Video.TextToSpeech.SpeakFromCurrentLineDotDotDot), v => v.SpeakFromCurrentLineCommand));
+        videoItems.Items.Add(Item(Clean(Se.Language.Video.TextToSpeech.PlayWithSpeechDotDotDot), v => v.PlayWithSpeechCommand));
         videoItems.Items.Add(Item(Clean(Se.Language.Video.TextToSpeech.VoiceManagerMenuItem), v => v.ShowVideoVoiceManagerCommand));
         videoItems.Items.Add(Item(Clean(l.VideoOcr), v => v.ShowVideoOcrCommand));
         videoItems.Items.Add(new NativeMenuItemSeparator());
@@ -749,7 +752,7 @@ public static class InitNativeMacMenu
     public static void UpdateRecentFiles(MainViewModel vm)
     {
         var files = Se.Settings.File.RecentFiles
-            .Where(p => !string.IsNullOrEmpty(p.SubtitleFileName) && System.IO.File.Exists(p.SubtitleFileName))
+            .Where(p => Se.Settings.File.ShowRecentFiles && !string.IsNullOrEmpty(p.SubtitleFileName) && System.IO.File.Exists(p.SubtitleFileName))
             .ToList();
 
         PopulateRecentNativeMenu(
@@ -775,7 +778,7 @@ public static class InitNativeMacMenu
     public static void UpdateRecentVideos(MainViewModel vm)
     {
         var files = Se.Settings.Video.RecentFiles
-            .Where(f => !string.IsNullOrWhiteSpace(f))
+            .Where(f => Se.Settings.File.ShowRecentFiles && !string.IsNullOrWhiteSpace(f))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
 

@@ -34,8 +34,9 @@ public class ReplaceWindow : Window
             MinimumPrefixLength = 0,
         }.WithAccessibleName(Se.Language.General.Find); // AutoCompleteBox has no watermark-derived name (#12087)
         textBoxFind.KeyDown += vm.FindTextBoxKeyDown;
+        FindWindowParts.SetHistoryItemTemplate(textBoxFind, vm.RemoveHistoryItemCommand);
 
-        var buttonHistory = FindWindowParts.MakeHistoryButton(vm.SearchHistory, vm.ShowHistoryCommand);
+        var buttonHistory = FindWindowParts.MakeHistoryButton(vm.SearchHistory, vm.ShowHistoryCommand, vm.RemoveHistoryItemCommand, vm.ClearHistoryCommand);
         var panelSearch = FindWindowParts.MakeSearchPanel(textBoxFind, buttonHistory);
 
         var checkBoxWholeWord = new CheckBox

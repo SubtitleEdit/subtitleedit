@@ -3,7 +3,6 @@ using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Edit.Find;
-using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -100,6 +99,22 @@ public partial class ReplaceViewModel : ObservableObject
     {
         SearchText = text;
         FocusSearchBox?.Invoke();
+    }
+
+    [RelayCommand]
+    private void RemoveHistoryItem(string text)
+    {
+        SearchHistory.Remove(text);
+        _findService?.RemoveFromSearchHistory(text);
+    }
+
+    [RelayCommand]
+    private void ClearHistory()
+    {
+        foreach (var text in SearchHistory.ToList())
+        {
+            RemoveHistoryItem(text);
+        }
     }
 
     /// <summary>
@@ -221,7 +236,7 @@ public partial class ReplaceViewModel : ObservableObject
             if (!string.IsNullOrWhiteSpace(SearchText) &&
                 SearchHistory.Contains(SearchText))
             {
-                SearchHistory.Remove(SearchText);
+                RemoveHistoryItem(SearchText);
                 SearchText = string.Empty;
                 e.Handled = true;
             }
@@ -244,12 +259,12 @@ public partial class ReplaceViewModel : ObservableObject
         IsScopeVisible = canEditOriginal;
     }
 
-    internal void InitializeFindData(IFindService findService, List<string> subs, string selectedText, MainViewModel mainViewModel, List<string>? originalSubs = null, bool canEditOriginal = false)
+    internal void InitializeFindData(IFindService findService, List<string> subs, string selectedText, IFindResult findResult, List<string>? originalSubs = null, bool canEditOriginal = false)
     {
         _findService = findService;
         _subs = subs;
         _originalSubs = originalSubs;
-        _findResult = mainViewModel;
+        _findResult = findResult;
         IsScopeVisible = canEditOriginal;
         if (!string.IsNullOrEmpty(selectedText))
         {

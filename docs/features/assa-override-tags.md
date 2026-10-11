@@ -41,5 +41,5 @@ Apply ASSA override tags to subtitle lines with a live video preview.
 
 | Shortcut | Action |
 |----------|--------|
-| F1 | Show help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |
 | Escape | Close dialog |

@@ -16,6 +16,8 @@ public partial class AdvancedTtsSettingsViewModel : ObservableObject
     [ObservableProperty] private bool _doProAudioChain;
     [ObservableProperty] private bool _doAudioDucking;
     [ObservableProperty] private bool _doRemoveOriginalSpeech;
+    [ObservableProperty] private int _speechRemovalModelIndex;
+    [ObservableProperty] private bool _doCleanCloneReferences;
     [ObservableProperty] private int _audioDuckingVolume;
     [ObservableProperty] private bool _doVadSilenceCompression;
     [ObservableProperty] private int _vadMaxSilenceMs;
@@ -29,6 +31,13 @@ public partial class AdvancedTtsSettingsViewModel : ObservableObject
     [ObservableProperty] private string _edgeTtsVolume;
     [ObservableProperty] private bool _isEdgeTtsEngine;
     [ObservableProperty] private string _rubberbandStatus;
+
+    /// <summary>Index 0 is Mel-Band RoFormer (best quality), 1 is HTDemucs (fast).</summary>
+    public string[] SpeechRemovalModels { get; } =
+    {
+        Se.Language.Video.TextToSpeech.SpeechRemovalBestQuality,
+        Se.Language.Video.TextToSpeech.SpeechRemovalFast,
+    };
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -45,6 +54,8 @@ public partial class AdvancedTtsSettingsViewModel : ObservableObject
         DoProAudioChain = s.ProAudioChainEnabled;
         DoAudioDucking = s.AudioDuckingEnabled;
         DoRemoveOriginalSpeech = s.RemoveOriginalSpeech;
+        SpeechRemovalModelIndex = s.RemoveOriginalSpeechFast ? 1 : 0;
+        DoCleanCloneReferences = s.CleanCloneReferences;
         AudioDuckingVolume = s.AudioDuckingOriginalVolume;
         DoVadSilenceCompression = s.VadSilenceCompressionEnabled;
         VadMaxSilenceMs = (int)Math.Round(s.VadMaxSilenceSeconds * 1000);
@@ -75,6 +86,8 @@ public partial class AdvancedTtsSettingsViewModel : ObservableObject
         s.ProAudioChainEnabled = DoProAudioChain;
         s.AudioDuckingEnabled = DoAudioDucking;
         s.RemoveOriginalSpeech = DoRemoveOriginalSpeech;
+        s.RemoveOriginalSpeechFast = SpeechRemovalModelIndex == 1;
+        s.CleanCloneReferences = DoCleanCloneReferences;
         s.AudioDuckingOriginalVolume = AudioDuckingVolume;
         s.VadSilenceCompressionEnabled = DoVadSilenceCompression;
         s.VadMaxSilenceSeconds = VadMaxSilenceMs / 1000.0;

@@ -967,7 +967,7 @@ public sealed unsafe class FfmpegPlayer : IVideoPlayer, IDisposable
                 var inFlight = _requestedSerial > 0 &&
                                (_seekPending || _restartSerial < _requestedSerial) &&
                                Stopwatch.GetElapsedTime(_lastSeekRequestTimestamp, now).TotalSeconds < ScrubSeekPolicy.MaxSeekInFlightSeconds;
-                var fast = userSeek && _hasVideo && ScrubSeekPolicy.JoinsBurst(inFlight, _previousSeekIssuedInFlight);
+                var fast = userSeek && _hasVideo && ScrubSeekPolicy.JoinsBurst(inFlight, _previousSeekIssuedInFlight, seconds - _requestedTarget);
                 _previousSeekIssuedInFlight = userSeek && inFlight;
                 _lastSeekRequestTimestamp = now;
 

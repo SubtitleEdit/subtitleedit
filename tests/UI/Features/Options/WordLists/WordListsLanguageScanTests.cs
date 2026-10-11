@@ -50,7 +50,7 @@ public class WordListsLanguageScanTests : IDisposable
         File.WriteAllText(Path.Combine(_folder, fileName), "<ReplaceList><WholeWords/></ReplaceList>");
     }
 
-    private static WordListsViewModel MakeViewModel() => new(new StubFolderHelper());
+    private static WordListsViewModel MakeViewModel() => new(new StubFolderHelper(), new StubWindowService());
 
     [AvaloniaFact]
     public void OcrFixList_PutsTheLanguageInTheDropdown()

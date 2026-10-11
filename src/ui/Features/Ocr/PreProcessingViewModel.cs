@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -118,6 +118,20 @@ public partial class PreProcessingViewModel : ObservableObject, IClosingCleanup
             ToOneColor = ToOneColor,
             OneColorDarknessThreshold = OneColorDarknessThreshold,
         };
+    }
+
+    [RelayCommand]
+    private void Reset()
+    {
+        var defaults = new PreProcessingSettings();
+        CropTransparentColors = defaults.CropTransparentColors;
+        InverseColors = defaults.InverseColors;
+        Binarize = defaults.Binarize;
+        RemoveBorders = defaults.RemoveBorders;
+        BorderSize = defaults.BorderSize;
+        ToOneColor = defaults.ToOneColor;
+        OneColorDarknessThreshold = defaults.OneColorDarknessThreshold;
+        _dirty = true;
     }
 
     [RelayCommand]

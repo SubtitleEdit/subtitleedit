@@ -84,7 +84,11 @@ namespace Nikse.SubtitleEdit.Core.CDG
             // Skia read that back as R,G,B,A - i.e. red and blue swapped in every frame.
             var bitmap = new SKBitmap(FullWidth, FullHeight, SKColorType.Bgra8888, SKAlphaType.Premul);
 
-            // Copy pixel data into the bitmap
+            // Copy pixel data into the bitmap, making the color at (1, 1) transparent on the way
+            // (equivalent to the original's image.MakeTransparent(image.GetPixel(1, 1))). Every
+            // pixel is opaque, so a match is written as 0 - what a Src-blended transparent
+            // DrawPoint used to produce, without two native calls per pixel.
+            var transparentValue = PackOpaque(graphicData[1, 1]);
             var pixelData = bitmap.GetPixels();
             unsafe
             {
@@ -93,41 +97,24 @@ namespace Nikse.SubtitleEdit.Core.CDG
                 {
                     for (var x = 0; x < FullWidth; x++)
                     {
-                        var colorValue = graphicData[y, x];
-                        var a = 255; // Fully opaque
-                        var r = (byte)((colorValue >> 16) & 0xFF);
-                        var g = (byte)((colorValue >> 8) & 0xFF);
-                        var b = (byte)(colorValue & 0xFF);
-
-                        // Pack ARGB components into a single 32-bit integer
-                        pixels[y * FullWidth + x] = (uint)((a << 24) | (r << 16) | (g << 8) | b);
-                    }
-                }
-            }
-
-            // Make a specific color transparent (equivalent to the original's image.MakeTransparent(image.GetPixel(1, 1)))
-            var transparentColor = bitmap.GetPixel(1, 1);
-            using (var canvas = new SKCanvas(bitmap))
-            {
-                var paint = new SKPaint
-                {
-                    Color = SKColors.Transparent,
-                    BlendMode = SKBlendMode.Src
-                };
-
-                for (var y = 0; y < FullHeight; y++)
-                {
-                    for (var x = 0; x < FullWidth; x++)
-                    {
-                        if (bitmap.GetPixel(x, y) == transparentColor)
-                        {
-                            canvas.DrawPoint(x, y, paint);
-                        }
+                        var packed = PackOpaque(graphicData[y, x]);
+                        pixels[y * FullWidth + x] = packed == transparentValue ? 0 : packed;
                     }
                 }
             }
 
             return bitmap;
+        }
+
+        private static uint PackOpaque(int colorValue)
+        {
+            var a = 255; // Fully opaque
+            var r = (byte)((colorValue >> 16) & 0xFF);
+            var g = (byte)((colorValue >> 8) & 0xFF);
+            var b = (byte)(colorValue & 0xFF);
+
+            // Pack ARGB components into a single 32-bit integer
+            return (uint)((a << 24) | (r << 16) | (g << 8) | b);
         }
 
         private bool Process(Packet packet)

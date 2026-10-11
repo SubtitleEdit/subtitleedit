@@ -15,6 +15,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.LlamaCpp;
+using Nikse.SubtitleEdit.Logic.Platform.Progress;
 using System.ComponentModel;
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 using Nikse.SubtitleEdit.UiLogic.Translate;
@@ -464,6 +465,7 @@ public class AutoTranslateWindow : Window
         };
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
         progressBar.Bind(ProgressBar.IsVisibleProperty, new Binding(nameof(vm.IsProgressEnabled)));
+        progressBar.WithPlatformProgress(this, nameof(vm.IsProgressEnabled));
         progressBar.WithAccessibleName(Se.Language.General.Translation);
 
         var progressLabel = new TextBlock

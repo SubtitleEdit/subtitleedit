@@ -47,7 +47,7 @@ public partial class ManualSyncViewModel : ObservableObject
         else if (UiUtil.IsHelp(e))
         {
             e.Handled = true;
-            UiUtil.ShowHelp("features/change-speed");
+            UiUtil.ShowHelp("features/visual-sync");
         }
     }
 

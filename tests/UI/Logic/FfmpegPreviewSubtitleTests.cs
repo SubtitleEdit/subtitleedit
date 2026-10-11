@@ -58,6 +58,32 @@ public class FfmpegPreviewSubtitleTests
     }
 
     [Fact]
+    public void GetActive_FindsLongLineStartedBeforeManyShortOnes()
+    {
+        var lines = new List<(double, double, string)> { (0, 100, "long") };
+        for (var i = 1; i < 90; i++)
+        {
+            lines.Add((i, i + 0.5, "short" + i));
+        }
+
+        var preview = FfmpegPreviewSubtitle.Build(MakeSubtitle(lines.ToArray()), null, false);
+
+        Assert.Equal(["long", "short50"], preview.GetActive(50.2).Select(l => l.Text));
+        Assert.Equal(["long"], preview.GetActive(95).Select(l => l.Text));
+        Assert.Empty(preview.GetActive(100));
+    }
+
+    [Fact]
+    public void GetActive_IncludesAllLinesStartingExactlyAtThePosition()
+    {
+        var preview = FfmpegPreviewSubtitle.Build(MakeSubtitle((1, 2, "before"), (5, 6, "a"), (5, 7, "b"), (5, 8, "c"), (9, 10, "after")), null, false);
+
+        Assert.Equal(["a", "b", "c"], preview.GetActive(5).Select(l => l.Text).Order());
+        Assert.Empty(preview.GetActive(0.5));
+        Assert.Empty(FfmpegPreviewSubtitle.Empty.GetActive(1));
+    }
+
+    [Fact]
     public void Build_MarksSecondaryLines()
     {
         var preview = FfmpegPreviewSubtitle.Build(MakeSubtitle((1, 3, "main")), MakeSubtitle((1, 3, "second")), false);

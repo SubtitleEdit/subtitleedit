@@ -8,6 +8,8 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.FindText;
+using Nikse.SubtitleEdit.Features.Shared.GoToLineNumber;
+using Nikse.SubtitleEdit.Features.Shared.ShowImage;
 using Nikse.SubtitleEdit.Features.Sync.PointSync.SetSyncPoint;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -30,6 +32,24 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
     [ObservableProperty] private string _fileNameOther;
     [ObservableProperty] private bool _isOkEnabled;
 
+    /// <summary>The other subtitle is bitmaps (sup, PGS/VobSub track) - shown as images, no text to find.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsOtherTextBased))]
+    private bool _isOtherImageBased;
+
+    public bool IsOtherTextBased => !IsOtherImageBased;
+
+    // Size of the other grid's images - Ctrl+Plus/Minus zoom, like the OCR window.
+    [ObservableProperty] private double _imageMaxHeight = DefaultImageMaxHeight;
+    [ObservableProperty] private double _imageMaxWidth = DefaultImageMaxHeight * 5;
+
+    private const double DefaultImageMaxHeight = 60;
+    private const double MinImageMaxHeight = 25;
+    private const double MaxImageMaxHeight = 300;
+
+    /// <summary>The grid Ctrl+G goes to a line in - the one focused last, the left one at first.</summary>
+    public bool IsOtherGridActive { get; set; }
+
     public ObservableCollection<SyncPoint> SyncPoints { get; set; }
     [ObservableProperty] private SyncPoint? _selectedSyncPoint;
 
@@ -46,6 +66,10 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
 
     /// <summary>Set by the window; scrolls the "other subtitle" grid to a line without selecting it.</summary>
     public Action<SubtitleLineViewModel>? ScrollOtherToLine { get; set; }
+
+    /// <summary>Set by the window; scrolls a grid to its (just selected) line and focuses it - Ctrl+G.</summary>
+    public Action<SubtitleLineViewModel>? GoToLeftLine { get; set; }
+    public Action<SubtitleLineViewModel>? GoToOtherLine { get; set; }
 
     private readonly IFileHelper _fileHelper;
     private readonly IWindowService _windowService;
@@ -176,33 +200,67 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
             return;
         }
 
-        var subtitle = Subtitle.Parse(fileName);
-        if (subtitle == null)
+        List<SubtitleLineViewModel> lines;
+        bool isImageBased;
+        OtherLoadResult? containerResult;
+        try
         {
-            foreach (var f in SubtitleFormat.GetBinaryFormats(false))
-            {
-                if (f.IsMine(null, fileName))
-                {
-                    subtitle = new Subtitle();
-                    f.LoadSubtitle(subtitle, null, fileName);
-                    subtitle.OriginalFormat = f;
-                    break; // format found, exit the loop
-                }
-            }
+            containerResult = await TryLoadOtherFromContainer(fileName);
         }
-
-        if (subtitle == null)
+        catch (Exception exception)
         {
-            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.General.UnknownSubtitleFormat);
+            Se.LogError(exception);
+            await MessageBox.Show(Window, Se.Language.General.Error, exception.Message);
             return;
         }
 
-        FileNameOther = fileName;
-        Othersubtitles.Clear();
-        foreach (var p in subtitle.Paragraphs)
+        if (containerResult != null)
         {
-            Othersubtitles.Add(new SubtitleLineViewModel(p, subtitle.OriginalFormat));
+            if (!string.IsNullOrEmpty(containerResult.Error))
+            {
+                await MessageBox.Show(Window, Se.Language.General.Error, containerResult.Error);
+                return;
+            }
+
+            if (containerResult.Lines.Count == 0)
+            {
+                return; // track picker cancelled
+            }
+
+            lines = containerResult.Lines;
+            isImageBased = containerResult.IsImageBased;
         }
+        else
+        {
+            var subtitle = Subtitle.Parse(fileName);
+            if (subtitle == null)
+            {
+                foreach (var f in SubtitleFormat.GetBinaryFormats(false))
+                {
+                    if (f.IsMine(null, fileName))
+                    {
+                        subtitle = new Subtitle();
+                        f.LoadSubtitle(subtitle, null, fileName);
+                        subtitle.OriginalFormat = f;
+                        break; // format found, exit the loop
+                    }
+                }
+            }
+
+            if (subtitle == null)
+            {
+                await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.General.UnknownSubtitleFormat);
+                return;
+            }
+
+            lines = subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, subtitle.OriginalFormat)).ToList();
+            isImageBased = false;
+        }
+
+        FileNameOther = fileName;
+        IsOtherImageBased = isImageBased;
+        Othersubtitles.Clear();
+        Othersubtitles.AddRange(lines);
 
         UpdateGaps(Othersubtitles);
         SelectedOtherSubtitle = Othersubtitles.FirstOrDefault();
@@ -360,7 +418,7 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
     [RelayCommand]
     private async Task FindTextOther()
     {
-        if (Window == null || Othersubtitles.Count == 0)
+        if (Window == null || Othersubtitles.Count == 0 || IsOtherImageBased)
         {
             return;
         }
@@ -390,11 +448,128 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
         Close();
     }
 
+    /// <summary>
+    /// Shows the selected image of an image based other subtitle full size, in the same window as
+    /// the OCR window's Ctrl+P - Left/Right (or Up/Down) there steps to the previous/next image.
+    /// </summary>
+    [RelayCommand]
+    private async Task ViewSelectedOtherImage()
+    {
+        if (Window == null || SelectedOtherSubtitle is not PointSyncOtherImageLine line)
+        {
+            return;
+        }
+
+        var title = $"{Se.Language.Ocr.ShowImage} - #{line.Number} {new TimeCode(line.StartTime).ToDisplayString()}";
+        var result = await _windowService.ShowDialogAsync<ShowImageWindow, ShowImageViewModel>(Window, vm =>
+        {
+            vm.Initialize(title, line.ImageItem.GetBitmapCroppedUncached());
+        });
+
+        var index = Othersubtitles.IndexOf(line);
+        var nextIndex = result.LeftPressed ? index - 1 : result.RightPressed ? index + 1 : -1;
+        if (index >= 0 && nextIndex >= 0 && nextIndex < Othersubtitles.Count)
+        {
+            SelectedOtherSubtitle = Othersubtitles[nextIndex];
+            ScrollOtherToLine?.Invoke(Othersubtitles[nextIndex]);
+            await ViewSelectedOtherImage();
+        }
+    }
+
+    /// <summary>Ctrl+G, like the OCR window - in the grid used last.</summary>
+    [RelayCommand]
+    private async Task GoToLine()
+    {
+        var other = IsOtherGridActive && Othersubtitles.Count > 0;
+        var lines = other ? Othersubtitles : Subtitles;
+        if (Window == null || lines.Count == 0)
+        {
+            return;
+        }
+
+        var selected = other ? SelectedOtherSubtitle : SelectedSubtitle;
+        var result = await _windowService.ShowDialogAsync<GoToLineNumberWindow, GoToLineNumberViewModel>(Window, vm =>
+        {
+            vm.Initialize(selected == null ? 1 : lines.IndexOf(selected) + 1, lines.Count);
+        });
+
+        if (!result.OkPressed || result.LineNumber is not { } lineNumber || lineNumber < 1 || lineNumber > lines.Count)
+        {
+            return;
+        }
+
+        var line = lines[(int)lineNumber - 1];
+        if (other)
+        {
+            SelectedOtherSubtitle = line;
+            GoToOtherLine?.Invoke(line);
+        }
+        else
+        {
+            SelectedSubtitle = line;
+            GoToLeftLine?.Invoke(line);
+        }
+    }
+
+    private void ZoomImages(double factor)
+    {
+        var height = ImageMaxHeight * factor;
+        if (height < MinImageMaxHeight || height > MaxImageMaxHeight)
+        {
+            return;
+        }
+
+        // TableView rows auto-size to their content, so the bound sizes re-measure the rows.
+        ImageMaxHeight = height;
+        ImageMaxWidth = height * 5;
+    }
+
     internal void OnKeyDown(KeyEventArgs e)
     {
         if (e.Key == Key.Escape)
         {
             Cancel();
+        }
+        else if (e.Key == Key.G && e.KeyModifiers == KeyModifiers.Control)
+        {
+            e.Handled = true;
+            Dispatcher.UIThread.Post(async void () =>
+            {
+                try
+                {
+                    await GoToLine();
+                }
+                catch (Exception exception)
+                {
+                    Se.LogError(exception);
+                }
+            });
+        }
+        else if (e.Key is Key.Add or Key.OemPlus && e.KeyModifiers.HasFlag(KeyModifiers.Control) && IsOtherImageBased)
+        {
+            e.Handled = true;
+            ZoomImages(1.1);
+        }
+        else if (e.Key is Key.Subtract or Key.OemMinus && e.KeyModifiers.HasFlag(KeyModifiers.Control) && IsOtherImageBased)
+        {
+            e.Handled = true;
+            ZoomImages(0.9);
+        }
+        else if (e.Key == Key.P && e.KeyModifiers == KeyModifiers.Control && IsOtherImageBased)
+        {
+            // Same shortcut as the OCR window's "Show image".
+            e.Handled = true;
+            Dispatcher.UIThread.Post(async void () =>
+            {
+                try
+                {
+                    await ViewSelectedOtherImage();
+                }
+                catch (Exception exception)
+                {
+                    Se.LogError(exception);
+                }
+            });
         }
         else if (UiUtil.IsHelp(e))
         {

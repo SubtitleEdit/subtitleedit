@@ -21,18 +21,18 @@ public class NetflixCheckNumberOfLines : INetflixQualityChecker
     {
         foreach (var p in subtitle.Paragraphs)
         {
-            if (p.Text.SplitToLines().Count > 2)
+            if (p.Text.CountLines() > 2)
             {
                 var fixedParagraph = new Paragraph(p, false);
                 fixedParagraph.Text = Utilities.AutoBreakLine(fixedParagraph.Text, controller.SingleLineMaxLength, controller.SingleLineMaxLength - 3, controller.Language);
-                if (fixedParagraph.Text.SplitToLines().Count > 2)
+                if (fixedParagraph.Text.CountLines() > 2)
                 {
                     fixedParagraph = null; // cannot fix text
                 }
                 var comment = Se.Language.Tools.NetflixCheckAndFix.TwoLinesMaximum;
                 controller.AddRecord(p, fixedParagraph, comment, string.Empty, fixedParagraph != null);
             }
-            else if (p.Text.SplitToLines().Count == 2 && p.Text.Contains(Environment.NewLine) &&
+            else if (p.Text.CountLines() == 2 && p.Text.Contains(Environment.NewLine) &&
                 p.Text.Replace(Environment.NewLine, " ").Replace("  ", " ").CountCharacters(false) <= controller.SingleLineMaxLength &&
                 p.Text != Utilities.AutoBreakLine(p.Text, controller.SingleLineMaxLength, controller.SingleLineMaxLength + 1, controller.Language))
             {

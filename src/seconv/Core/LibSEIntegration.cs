@@ -424,7 +424,7 @@ internal static class LibSEIntegration
             {
                 Directory.CreateDirectory(outputDirCustom);
             }
-            File.WriteAllText(filePath, rendered, new UTF8Encoding(true));
+            AtomicFileWriter.WriteAllText(filePath, rendered, new UTF8Encoding(true));
             return;
         }
 
@@ -453,7 +453,7 @@ internal static class LibSEIntegration
                         parts.Add(text);
                     }
                 }
-                File.WriteAllText(filePath, string.Join(" ", parts), plainEncoding);
+                AtomicFileWriter.WriteAllText(filePath, string.Join(" ", parts), plainEncoding);
                 return;
             }
 
@@ -473,7 +473,7 @@ internal static class LibSEIntegration
                 }
                 sb.AppendLine(text);
             }
-            File.WriteAllText(filePath, sb.ToString(), plainEncoding);
+            AtomicFileWriter.WriteAllText(filePath, sb.ToString(), plainEncoding);
             return;
         }
 
@@ -528,7 +528,12 @@ internal static class LibSEIntegration
                 var headerBytes = File.ReadAllBytes(ebuHeaderFile);
                 header = Ebu.ReadHeader(headerBytes);
             }
-            ebu.Save(filePath, subtitle, true, header);
+            // Ebu.Save(path, ...) truncates the target before writing - write via a temp file.
+            using var ebuStream = new MemoryStream();
+            if (ebu.Save(filePath, ebuStream, subtitle, true, header))
+            {
+                AtomicFileWriter.Write(filePath, s => ebuStream.WriteTo(s));
+            }
             return;
         }
 
@@ -539,15 +544,14 @@ internal static class LibSEIntegration
             // like Subtitle Edit's Export PAC dialog and batch convert.
             pac.CodePage = pacCodePage ?? Pac.CodePageLatin;
             pac.SecondaryCodePage = options?.PacSecondaryCodePage ?? -1;
-            pac.Save(filePath, subtitle);
+            AtomicFileWriter.Write(filePath, s => pac.Save(filePath, s, subtitle));
             return;
         }
 
         // Other binary formats (Cavena890, CheetahCaption, CapMakerPlus, Ayato, ...)
         if (targetFormat is IBinaryPersistableSubtitle binary)
         {
-            using var fs = File.Create(filePath);
-            binary.Save(filePath, fs, subtitle, true);
+            AtomicFileWriter.Write(filePath, s => binary.Save(filePath, s, subtitle, true));
             return;
         }
 
@@ -599,21 +603,21 @@ internal static class LibSEIntegration
         // WebVTT — always UTF-8 with BOM
         if (format is WebVTT)
         {
-            File.WriteAllText(filePath, content, new UTF8Encoding(true));
+            AtomicFileWriter.WriteAllText(filePath, content, new UTF8Encoding(true));
             return;
         }
 
         // iTunes Timed Text — UTF-8 without BOM
         if (format is ItunesTimedText)
         {
-            File.WriteAllText(filePath, content, new UTF8Encoding(false));
+            AtomicFileWriter.WriteAllText(filePath, content, new UTF8Encoding(false));
             return;
         }
 
         // .rtf — always ASCII
         if (string.Equals(Path.GetExtension(filePath), ".rtf", StringComparison.OrdinalIgnoreCase))
         {
-            File.WriteAllText(filePath, content, Encoding.ASCII);
+            AtomicFileWriter.WriteAllText(filePath, content, Encoding.ASCII);
             return;
         }
 
@@ -622,15 +626,15 @@ internal static class LibSEIntegration
         var textEncoding = GetTextEncoding(encodingName);
         if (textEncoding.DisplayName == TextEncoding.Utf8WithBom)
         {
-            File.WriteAllText(filePath, content, new UTF8Encoding(true));
+            AtomicFileWriter.WriteAllText(filePath, content, new UTF8Encoding(true));
         }
         else if (textEncoding.DisplayName == TextEncoding.Utf8WithoutBom)
         {
-            File.WriteAllText(filePath, content, new UTF8Encoding(false));
+            AtomicFileWriter.WriteAllText(filePath, content, new UTF8Encoding(false));
         }
         else
         {
-            File.WriteAllText(filePath, content, encoding);
+            AtomicFileWriter.WriteAllText(filePath, content, encoding);
         }
     }
 

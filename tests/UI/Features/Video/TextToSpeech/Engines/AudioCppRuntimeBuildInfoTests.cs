@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Features.Video.BackgroundMusic;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.CloneReferenceCleaning;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 
 namespace UITests.Features.Video.TextToSpeech.Engines;
@@ -34,6 +35,13 @@ public class AudioCppRuntimeBuildInfoTests
         "models      : index_tts2,higgs_audio_tts,fish_audio,fireredtts3,ace_step,kugelaudio\n" +
         "backend     : metal (arm64)\n";
 
+    private const string BuildInfo2026_10_08b =
+        "audio.cpp build for SubtitleEdit's IndexTTS-2.5 engine\n" +
+        "source      : https://github.com/0xShug0/audio.cpp\n" +
+        "ref         : f04de8ec38e69c5b97c024542395278608b1450b\n" +
+        "models      : index_tts2,higgs_audio_tts,fish_audio,fireredtts3,ace_step,kugelaudio,sidon\n" +
+        "backend     : metal (arm64)\n";
+
     [Fact]
     public void ParseBuiltModelFamilies_ReadsTheModelsLine()
     {
@@ -65,7 +73,7 @@ public class AudioCppRuntimeBuildInfoTests
     [Fact]
     public void EveryAudioCppEngineFamily_IsInThePinnedBuild()
     {
-        var families = AudioCppRuntime.ParseBuiltModelFamilies(BuildInfo2026_10_04)!;
+        var families = AudioCppRuntime.ParseBuiltModelFamilies(BuildInfo2026_10_08b)!;
 
         Assert.Contains(IndexTts25AudioCpp.FamilyName, families);
         Assert.Contains(HiggsTtsAudioCpp.FamilyName, families);
@@ -74,6 +82,14 @@ public class AudioCppRuntimeBuildInfoTests
         Assert.Contains(KugelAudioAudioCpp.FamilyName, families);
         // Video > Generate background music and the TTS window's background music.
         Assert.Contains(AceStepAudioCpp.FamilyName, families);
+        // Text to speech > Advanced > Clean voice-clone references.
+        Assert.Contains(SidonAudioCpp.FamilyName, families);
+    }
+
+    [Fact]
+    public void PreviousBuild_LacksSidon_SoCleaningAsksForTheUpdate()
+    {
+        Assert.DoesNotContain(SidonAudioCpp.FamilyName, AudioCppRuntime.ParseBuiltModelFamilies(BuildInfo2026_10_04)!);
     }
 
     [Fact]

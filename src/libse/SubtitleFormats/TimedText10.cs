@@ -857,7 +857,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             var arr = frameRateMultiplier.InnerText.Split();
                             if (arr.Length == 2 && Utilities.IsInteger(arr[0]) && Utilities.IsInteger(arr[1]) && int.Parse(arr[1]) > 0)
                             {
-                                fr = double.Parse(arr[0], CultureInfo.InvariantCulture) / double.Parse(arr[1], CultureInfo.InvariantCulture);
+                                // The multiplier scales ttp:frameRate (60 * 1000/1001 = 59.94); it is not a rate itself.
+                                fr = fr * double.Parse(arr[0], CultureInfo.InvariantCulture) / double.Parse(arr[1], CultureInfo.InvariantCulture);
                                 if (fr > 20 && fr < 100)
                                 {
                                     Configuration.Settings.General.CurrentFrameRate = fr;
@@ -1200,7 +1201,237 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return $"{style} / {lang}";
         }
 
+        /// <summary>
+        /// Text styling in effect at a node - only changes against the inherited styling become tags,
+        /// so a span using a style with the default color/font does not get a redundant font tag.
+        /// </summary>
+        private sealed class TtmlTextStyle
+        {
+            public bool Italic;
+            public bool Bold;
+            public bool Underline;
+            public string FontFamily;
+            public string Color;
+
+            public TtmlTextStyle Clone() => (TtmlTextStyle)MemberwiseClone();
+        }
+
+        private static void ApplyTtmlTextStyle(TtmlTextStyle style, XmlNode node, List<string> styles, TtmlHeadIndex headIndex)
+        {
+            if (node?.Attributes == null)
+            {
+                return;
+            }
+
+            var styleAttribute = node.Attributes["style"];
+            if (styleAttribute != null && headIndex.HasHead)
+            {
+                foreach (var styleName in styleAttribute.Value.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    if (!styles.Contains(styleName))
+                    {
+                        continue;
+                    }
+
+                    // Indexed once per load - this used to run a document-wide XPath per span.
+                    foreach (var styleNode in headIndex.GetStyles(styleName))
+                    {
+                        ApplyTtmlTextStyleAttributes(style, styleNode);
+                    }
+                }
+            }
+
+            ApplyTtmlTextStyleAttributes(style, node);
+        }
+
+        private static void ApplyTtmlTextStyleAttributes(TtmlTextStyle style, XmlNode node)
+        {
+            var fontStyle = node.Attributes["tts:fontStyle"];
+            if (fontStyle != null)
+            {
+                style.Italic = fontStyle.Value == "italic" || fontStyle.Value == "oblique";
+            }
+
+            var fontWeight = node.Attributes["tts:fontWeight"];
+            if (fontWeight != null)
+            {
+                style.Bold = fontWeight.Value == "bold";
+            }
+
+            var textDecoration = node.Attributes["tts:textDecoration"];
+            if (textDecoration != null)
+            {
+                style.Underline = textDecoration.Value == "underline";
+            }
+
+            var fontFamily = node.Attributes["tts:fontFamily"];
+            if (fontFamily != null)
+            {
+                style.FontFamily = fontFamily.Value;
+            }
+
+            var color = node.Attributes["tts:color"];
+            if (color != null)
+            {
+                style.Color = color.Value;
+            }
+        }
+
+        private static readonly HashSet<string> TtmlGenericFontFamilies = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "default", "monospace", "sansSerif", "serif", "monospaceSansSerif", "monospaceSerif", "proportionalSansSerif", "proportionalSerif",
+        };
+
+        private static bool IsSameTtmlColor(string a, string b)
+        {
+            if (string.Equals(a, b, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            if (string.IsNullOrEmpty(a) || string.IsNullOrEmpty(b))
+            {
+                return false;
+            }
+
+            try
+            {
+                return ColorTranslator.FromHtml(a) == ColorTranslator.FromHtml(b);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Styling a paragraph inherits from body/div. Its color/font are the document default and are
+        /// not written as tags; italic/bold/underline are (and are part of the returned style).
+        /// </summary>
+        private static TtmlTextStyle GetInheritedTtmlTextStyle(XmlNode paragraph, List<string> styles, TtmlHeadIndex headIndex)
+        {
+            var ancestors = new List<XmlNode>();
+            for (var node = paragraph.ParentNode; node != null && node.NodeType == XmlNodeType.Element; node = node.ParentNode)
+            {
+                ancestors.Add(node);
+                if (node.LocalName == "body")
+                {
+                    break;
+                }
+            }
+
+            var style = new TtmlTextStyle { Color = "white" }; // players default to white text
+            for (var i = ancestors.Count - 1; i >= 0; i--)
+            {
+                ApplyTtmlTextStyle(style, ancestors[i], styles, headIndex);
+            }
+
+            return style;
+        }
+
         private static void ReadParagraph(StringBuilder pText, XmlNode node, List<string> styles, TtmlHeadIndex headIndex)
+        {
+            var inherited = GetInheritedTtmlTextStyle(node, styles, headIndex);
+            var paragraphStyle = inherited.Clone();
+            ApplyTtmlTextStyle(paragraphStyle, node, styles, headIndex);
+
+            // italic/bold/underline in effect on the <p> (own or from body/div) become tags;
+            // its color/font are kept as paragraph effects
+            var openTags = new List<string>();
+            var start = pText.Length;
+            SetTtmlTextTags(pText, openTags, paragraphStyle.Italic, paragraphStyle.Bold, paragraphStyle.Underline, null);
+            ReadParagraphChildren(pText, node, styles, headIndex, paragraphStyle, openTags);
+            CloseTtmlTags(pText, openTags, 0);
+            RemoveEmptyTtmlTags(pText, start);
+        }
+
+        private static string GetCloseTag(string openTag)
+        {
+            return openTag.StartsWith("<font", StringComparison.Ordinal) ? "</font>" : "</" + openTag.Substring(1);
+        }
+
+        private static void CloseTtmlTags(StringBuilder pText, List<string> openTags, int count)
+        {
+            while (openTags.Count > count)
+            {
+                pText.Append(GetCloseTag(openTags[openTags.Count - 1]));
+                openTags.RemoveAt(openTags.Count - 1);
+            }
+        }
+
+        /// <summary>
+        /// Makes italic/bold/underline match the given state and opens the optional font tag. A style that
+        /// turns off closes its tag (and the tags opened inside it, which are reopened).
+        /// </summary>
+        private static void SetTtmlTextTags(StringBuilder pText, List<string> openTags, bool italic, bool bold, bool underline, string fontTag)
+        {
+            var keepCount = openTags.Count;
+            for (var i = 0; i < openTags.Count; i++)
+            {
+                var tag = openTags[i];
+                if ((tag == "<i>" && !italic) || (tag == "<b>" && !bold) || (tag == "<u>" && !underline))
+                {
+                    keepCount = i;
+                    break;
+                }
+            }
+
+            var reopen = new List<string>();
+            for (var i = keepCount; i < openTags.Count; i++)
+            {
+                var tag = openTags[i];
+                if (!((tag == "<i>" && !italic) || (tag == "<b>" && !bold) || (tag == "<u>" && !underline)))
+                {
+                    reopen.Add(tag);
+                }
+            }
+
+            CloseTtmlTags(pText, openTags, keepCount);
+
+            if (italic && !reopen.Contains("<i>") && !openTags.Contains("<i>"))
+            {
+                reopen.Add("<i>");
+            }
+
+            if (bold && !reopen.Contains("<b>") && !openTags.Contains("<b>"))
+            {
+                reopen.Add("<b>");
+            }
+
+            if (underline && !reopen.Contains("<u>") && !openTags.Contains("<u>"))
+            {
+                reopen.Add("<u>");
+            }
+
+            if (fontTag != null)
+            {
+                reopen.Add(fontTag);
+            }
+
+            foreach (var tag in reopen)
+            {
+                pText.Append(tag);
+                openTags.Add(tag);
+            }
+        }
+
+        private static readonly Regex EmptyFontTagRegex = new Regex("<font[^>]*></font>", RegexOptions.Compiled);
+
+        private static void RemoveEmptyTtmlTags(StringBuilder pText, int start)
+        {
+            var text = pText.ToString(start, pText.Length - start);
+            string old;
+            do
+            {
+                old = text;
+                text = EmptyFontTagRegex.Replace(text.Replace("<i></i>", string.Empty).Replace("<b></b>", string.Empty).Replace("<u></u>", string.Empty), string.Empty);
+            } while (text != old);
+
+            pText.Length = start;
+            pText.Append(text);
+        }
+
+        private static void ReadParagraphChildren(StringBuilder pText, XmlNode node, List<string> styles, TtmlHeadIndex headIndex, TtmlTextStyle parentStyle, List<string> openTags)
         {
             foreach (XmlNode child in node.ChildNodes)
             {
@@ -1216,127 +1447,54 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     pText.Append(child.InnerText);
                 }
+                else if (child.NodeType == XmlNodeType.Whitespace && child.Value.IndexOfAny(new[] { '\r', '\n' }) < 0)
+                {
+                    pText.Append(child.Value); // e.g. the space in <span>a</span> <span>b</span> - line breaks are just indentation
+                }
                 else if (child.Name == "span" || child.Name == "tt:span")
                 {
-                    var isItalic = false;
-                    var isBold = false;
-                    var isUnderlined = false;
-                    string fontFamily = null;
-                    string color = null;
+                    if (!child.HasChildNodes)
+                    {
+                        continue; // an empty <span tts:fontStyle="italic"/> styles nothing
+                    }
 
                     // Composing styles
+                    var spanStyle = parentStyle.Clone();
+                    ApplyTtmlTextStyle(spanStyle, child, styles, headIndex);
 
-                    if (child.Attributes["style"] != null)
-                    {
-                        var styleName = child.Attributes["style"].Value;
-                        if (styles.Contains(styleName) && headIndex.HasHead)
-                        {
-                            // Indexed once per load - this used to run a document-wide XPath per span.
-                            foreach (var styleNode in headIndex.GetStyles(styleName))
-                            {
-                                if (styleNode.Attributes["tts:fontStyle"] != null && styleNode.Attributes["tts:fontStyle"].Value == "italic")
-                                {
-                                    isItalic = true;
-                                }
-                                if (styleNode.Attributes["tts:fontWeight"] != null && styleNode.Attributes["tts:fontWeight"].Value == "bold")
-                                {
-                                    isBold = true;
-                                }
-                                if (styleNode.Attributes["tts:textDecoration"] != null && styleNode.Attributes["tts:textDecoration"].Value == "underline")
-                                {
-                                    isUnderlined = true;
-                                }
-                                if (styleNode.Attributes["tts:fontFamily"] != null)
-                                {
-                                    fontFamily = styleNode.Attributes["tts:fontFamily"].Value;
-                                }
-                                if (styleNode.Attributes["tts:color"] != null)
-                                {
-                                    color = styleNode.Attributes["tts:color"].Value;
-                                }
-                            }
-                        }
-                    }
-
-                    if (child.Attributes["tts:fontStyle"] != null && child.Attributes["tts:fontStyle"].Value == "italic")
-                    {
-                        isItalic = true;
-                    }
-
-                    if (child.Attributes["tts:fontWeight"] != null && child.Attributes["tts:fontWeight"].Value == "bold")
-                    {
-                        isBold = true;
-                    }
-
-                    if (child.Attributes["tts:textDecoration"] != null && child.Attributes["tts:textDecoration"].Value == "underline")
-                    {
-                        isUnderlined = true;
-                    }
-
-                    if (child.Attributes["tts:fontFamily"] != null)
-                    {
-                        fontFamily = child.Attributes["tts:fontFamily"].Value;
-                    }
-
-                    if (child.Attributes["tts:color"] != null)
-                    {
-                        color = child.Attributes["tts:color"].Value;
-                    }
-
-
-                    // Applying styles
-                    if (isItalic)
-                    {
-                        pText.Append("<i>");
-                    }
-
-                    if (isBold)
-                    {
-                        pText.Append("<b>");
-                    }
-
-                    if (isUnderlined)
-                    {
-                        pText.Append("<u>");
-                    }
-
+                    var fontFamily = !string.IsNullOrEmpty(spanStyle.FontFamily) && spanStyle.FontFamily != parentStyle.FontFamily &&
+                                     !(parentStyle.FontFamily == null && TtmlGenericFontFamilies.Contains(spanStyle.FontFamily))
+                        ? spanStyle.FontFamily
+                        : null;
+                    var color = !string.IsNullOrEmpty(spanStyle.Color) && !IsSameTtmlColor(spanStyle.Color, parentStyle.Color) ? spanStyle.Color : null;
+                    string fontTag = null;
                     if (!string.IsNullOrEmpty(fontFamily) || !string.IsNullOrEmpty(color))
                     {
-                        pText.Append("<font");
-
-                        if (!string.IsNullOrEmpty(fontFamily))
-                        {
-                            pText.Append($" face=\"{fontFamily}\"");
-                        }
-
-                        if (!string.IsNullOrEmpty(color))
-                        {
-                            pText.Append($" color=\"{color}\"");
-                        }
-
-                        pText.Append(">");
+                        fontTag = "<font" +
+                                  (string.IsNullOrEmpty(fontFamily) ? string.Empty : $" face=\"{fontFamily}\"") +
+                                  (string.IsNullOrEmpty(color) ? string.Empty : $" color=\"{color}\"") +
+                                  ">";
                     }
 
-                    ReadParagraph(pText, child, styles, headIndex);
+                    // Applying styles - tags turned off by the span are closed and reopened after it
+                    var parentTags = new List<string>(openTags);
+                    SetTtmlTextTags(pText, openTags, spanStyle.Italic, spanStyle.Bold, spanStyle.Underline, fontTag);
+                    var spanTags = new List<string>(openTags);
 
-                    if (!string.IsNullOrEmpty(fontFamily) || !string.IsNullOrEmpty(color))
+                    ReadParagraphChildren(pText, child, styles, headIndex, spanStyle, openTags);
+
+                    // restore the parent's tags, reusing the ones still open
+                    var common = 0;
+                    while (common < parentTags.Count && common < spanTags.Count && parentTags[common] == spanTags[common])
                     {
-                        pText.Append("</font>");
+                        common++;
                     }
 
-                    if (isUnderlined)
+                    CloseTtmlTags(pText, openTags, common);
+                    for (var i = common; i < parentTags.Count; i++)
                     {
-                        pText.Append("</u>");
-                    }
-
-                    if (isBold)
-                    {
-                        pText.Append("</b>");
-                    }
-
-                    if (isItalic)
-                    {
-                        pText.Append("</i>");
+                        pText.Append(parentTags[i]);
+                        openTags.Add(parentTags[i]);
                     }
                 }
             }

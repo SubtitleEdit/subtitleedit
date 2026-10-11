@@ -1,3 +1,4 @@
+using Avalonia.Controls;
 using SkiaSharp;
 using System.Collections.Generic;
 
@@ -10,6 +11,24 @@ public static class TextMeasurer
     // weight). The lock also serializes MeasureText, which SKFont does not allow concurrently.
     private static readonly object CacheLock = new();
     private static readonly Dictionary<(string family, float size, SKFontStyleWeight weight), SKFont> FontCache = new();
+
+    private static (string family, float size)? _defaultFont;
+
+    /// <summary>
+    /// Measures with the font a new, unattached <see cref="TextBlock"/> has. Callers created a
+    /// TextBlock per measured line just to read those two defaults; they are read once here.
+    /// </summary>
+    public static SKSize MeasureStringWithDefaultFont(string text)
+    {
+        var defaultFont = _defaultFont ??= GetDefaultFont();
+        return MeasureString(text, defaultFont.family, defaultFont.size);
+    }
+
+    private static (string family, float size) GetDefaultFont()
+    {
+        var textBlock = new TextBlock();
+        return (textBlock.FontFamily.Name, (float)textBlock.FontSize);
+    }
 
     public static SKSize MeasureString(string text, string fontFamily, float fontSize, SKFontStyleWeight weight = SKFontStyleWeight.Normal)
     {

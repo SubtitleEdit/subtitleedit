@@ -18,6 +18,8 @@ public class LanguageAssa
     public string DrawZoomOut { get; set; }
     public string DrawResetView { get; set; }
     public string DrawToggleGrid { get; set; }
+    public string DrawTogglePreview { get; set; }
+    public string DrawPreviewFailed { get; set; }
     public string DrawCopyToClipboard { get; set; }
     public string DrawShapes { get; set; }
     public string DrawSelectedPoint { get; set; }
@@ -25,6 +27,81 @@ public class LanguageAssa
     public string DrawSelectedLayer { get; set; }
     public string DrawToolX { get; set; }
     public string DrawHelpText { get; set; }
+    public string DrawMoveToLayer { get; set; }
+    public string DrawFlipHorizontal { get; set; }
+    public string DrawFlipVertical { get; set; }
+    public string DrawHideShape { get; set; }
+    public string DrawShowShape { get; set; }
+    public string DrawHideLayer { get; set; }
+    public string DrawShowLayer { get; set; }
+    public string DrawDeleteLayer { get; set; }
+    public string DrawDeletePoint { get; set; }
+    public string DrawCancelDrawing { get; set; }
+    public string DrawLayerX { get; set; }
+    public string DrawImportSvg { get; set; }
+    public string DrawRotateClockwise { get; set; }
+    public string DrawConvertToCurve { get; set; }
+    public string DrawBackground { get; set; }
+    public string DrawPosition { get; set; }
+    public string DrawZoom { get; set; }
+    public string DrawShapeTool { get; set; }
+    public string DrawColorPickerTool { get; set; }
+    public string DrawShapeLibrary { get; set; }
+    public string DrawShapeLibraryHint { get; set; }
+    public string DrawAddToLibrary { get; set; }
+    public string DrawRemoveFromLibrary { get; set; }
+    public string DrawShapeName { get; set; }
+    public string DrawCategorySpeechBubbles { get; set; }
+    public string DrawCategoryArrows { get; set; }
+    public string DrawCategoryBasicShapes { get; set; }
+    public string DrawCategorySymbols { get; set; }
+    public string DrawCategoryMyShapes { get; set; }
+    public string DrawShapeSpeechBubble { get; set; }
+    public string DrawShapeSpeechBubbleRight { get; set; }
+    public string DrawShapeSpeechBubbleUp { get; set; }
+    public string DrawShapeOvalBubble { get; set; }
+    public string DrawShapeBoxBubble { get; set; }
+    public string DrawShapeThoughtBubble { get; set; }
+    public string DrawShapeShoutBubble { get; set; }
+    public string DrawShapeCaptionBox { get; set; }
+    public string DrawShapeArrow { get; set; }
+    public string DrawShapeDoubleArrow { get; set; }
+    public string DrawShapeChevron { get; set; }
+    public string DrawShapeCurvedArrow { get; set; }
+    public string DrawShapeRoundedRectangle { get; set; }
+    public string DrawShapeTriangle { get; set; }
+    public string DrawShapeDiamond { get; set; }
+    public string DrawShapePentagon { get; set; }
+    public string DrawShapeHexagon { get; set; }
+    public string DrawShapeOctagon { get; set; }
+    public string DrawShapeStar { get; set; }
+    public string DrawShapeRing { get; set; }
+    public string DrawShapePlus { get; set; }
+    public string DrawShapeBanner { get; set; }
+    public string DrawShapeHeart { get; set; }
+    public string DrawShapeCheck { get; set; }
+    public string DrawShapeMusicNote { get; set; }
+    public string DrawShapeMusicNotes { get; set; }
+    public string DrawShapeLightning { get; set; }
+    public string DrawShapeCloud { get; set; }
+    public string DrawShapeMoon { get; set; }
+    public string DrawShapeBadge { get; set; }
+    public string DrawSize { get; set; }
+    public string DrawLayer { get; set; }
+    public string DrawBackgroundVideoFrame { get; set; }
+    public string DrawBackgroundVideoFrameAt { get; set; }
+    public string DrawBackgroundImage { get; set; }
+    public string DrawBackgroundNone { get; set; }
+    public string DrawBackgroundStretch { get; set; }
+    public string DrawBackgroundOpacity { get; set; }
+    public string DrawBackgroundVideoFrameFailed { get; set; }
+    public string DrawImages { get; set; }
+    public string DrawConvertToLine { get; set; }
+    public string DrawConvertShapeToCurves { get; set; }
+    public string DrawConvertShapeToLines { get; set; }
+    public string DrawRotateCounterClockwise { get; set; }
+    public string DrawSvgImages { get; set; }
+    public string DrawSvgNoShapes { get; set; }
 
     // Progress Bar Generator
     public string ProgressBarTitle { get; set; }
@@ -275,13 +352,90 @@ public class LanguageAssa
         DrawZoomOut = "Zoom Out (Ctrl+-)";
         DrawResetView = "Reset View (Ctrl+0)";
         DrawToggleGrid = "Toggle Grid (Ctrl+G)";
+        DrawTogglePreview = "Toggle preview (F9)";
+        DrawPreviewFailed = "Preview failed - ffmpeg with libass (subtitles filter) is required";
         DrawCopyToClipboard = "Copy to Clipboard (Ctrl+C)";
         DrawShapes = "Shapes";
         DrawSelectedPoint = "Selected point";
         DrawSelectedShape = "Selected shape";
         DrawSelectedLayer = "Selected layer";
         DrawToolX = "Tool: {0}";
-        DrawHelpText = "Click to add points • Enter/F8 to close shape • Shift+Drag to pan • Ctrl+Scroll to zoom";
+        DrawHelpText = "Click to add points • Right-click for options • Select tool: drag handles to scale/rotate (Shift = keep ratio/15°) • Enter/F8 to close shape • Shift+drag or middle mouse to pan • Ctrl+Scroll to zoom";
+        DrawMoveToLayer = "Move to layer";
+        DrawFlipHorizontal = "Flip horizontally";
+        DrawFlipVertical = "Flip vertically";
+        DrawHideShape = "Hide shape";
+        DrawShowShape = "Show shape";
+        DrawHideLayer = "Hide layer";
+        DrawShowLayer = "Show layer";
+        DrawDeleteLayer = "Delete layer";
+        DrawDeletePoint = "Delete point";
+        DrawCancelDrawing = "Cancel drawing";
+        DrawLayerX = "Layer {0}";
+        DrawImportSvg = "Import SVG image...";
+        DrawRotateClockwise = "Rotate 90° clockwise";
+        DrawConvertToCurve = "Convert segment to curve";
+        DrawBackground = "Background";
+        DrawPosition = "Position";
+        DrawZoom = "Zoom";
+        DrawShapeTool = "Shape tool";
+        DrawColorPickerTool = "Pick color from a shape or the background";
+        DrawShapeLibrary = "Shape library";
+        DrawShapeLibraryHint = "Drag on the canvas to place a shape, or click for the default size. Shift keeps its proportions.";
+        DrawAddToLibrary = "Add to shape library...";
+        DrawRemoveFromLibrary = "Remove from shape library";
+        DrawShapeName = "Shape name";
+        DrawCategorySpeechBubbles = "Speech bubbles";
+        DrawCategoryArrows = "Arrows";
+        DrawCategoryBasicShapes = "Basic shapes";
+        DrawCategorySymbols = "Symbols";
+        DrawCategoryMyShapes = "My shapes";
+        DrawShapeSpeechBubble = "Speech bubble";
+        DrawShapeSpeechBubbleRight = "Speech bubble, tail right";
+        DrawShapeSpeechBubbleUp = "Speech bubble, tail up";
+        DrawShapeOvalBubble = "Oval speech bubble";
+        DrawShapeBoxBubble = "Box speech bubble";
+        DrawShapeThoughtBubble = "Thought bubble";
+        DrawShapeShoutBubble = "Shout bubble";
+        DrawShapeCaptionBox = "Caption box";
+        DrawShapeArrow = "Arrow";
+        DrawShapeDoubleArrow = "Double arrow";
+        DrawShapeChevron = "Chevron";
+        DrawShapeCurvedArrow = "Curved arrow";
+        DrawShapeRoundedRectangle = "Rounded rectangle";
+        DrawShapeTriangle = "Triangle";
+        DrawShapeDiamond = "Diamond";
+        DrawShapePentagon = "Pentagon";
+        DrawShapeHexagon = "Hexagon";
+        DrawShapeOctagon = "Octagon";
+        DrawShapeStar = "Star";
+        DrawShapeRing = "Ring";
+        DrawShapePlus = "Plus";
+        DrawShapeBanner = "Banner";
+        DrawShapeHeart = "Heart";
+        DrawShapeCheck = "Check mark";
+        DrawShapeMusicNote = "Music note";
+        DrawShapeMusicNotes = "Music notes";
+        DrawShapeLightning = "Lightning";
+        DrawShapeCloud = "Cloud";
+        DrawShapeMoon = "Moon";
+        DrawShapeBadge = "Badge";
+        DrawSize = "Size";
+        DrawLayer = "Layer";
+        DrawBackgroundVideoFrame = "Video frame (current position)";
+        DrawBackgroundVideoFrameAt = "Video frame at...";
+        DrawBackgroundImage = "Image file...";
+        DrawBackgroundNone = "No background";
+        DrawBackgroundStretch = "Stretch image to canvas";
+        DrawBackgroundOpacity = "Background opacity";
+        DrawBackgroundVideoFrameFailed = "Could not get a video frame at {0}.";
+        DrawImages = "Images";
+        DrawConvertToLine = "Convert segment to line";
+        DrawConvertShapeToCurves = "Convert all lines to curves";
+        DrawConvertShapeToLines = "Convert all curves to lines";
+        DrawRotateCounterClockwise = "Rotate 90° counter-clockwise";
+        DrawSvgImages = "SVG images";
+        DrawSvgNoShapes = "No filled shapes or strokes found in the SVG file.";
 
         // Progress Bar Generator
         ProgressBarTitle = "ASSA progress bar";
