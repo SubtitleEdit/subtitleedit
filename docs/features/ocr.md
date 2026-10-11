@@ -31,6 +31,7 @@ Built-in trainable OCR engine.
 - Very accurate once trained
 - Best for consistent fonts (like DVD/Blu-ray subtitles)
 - **Train nOCR database...** - a database can also be trained from installed fonts instead of being taught during OCR. Open the nOCR database settings (the settings button next to the database list) and right-click anywhere in that dialog to reach it. Pick one or more fonts, a font size, the characters to train (or **Import characters from subtitle file...**), letter combinations that might end up in one image, whether to include bold and italic, and the number of line segments; **Start training** renders every character in every selected font and saves the result as a new `.nocr` database in the OCR folder, ready to pick from the database list
+- **Mixed italic in one image** - when an italic letter touches an upright one and both end up in a single image, type the text with italic tags, e.g. `<i>i</i>t`. The tagged part is italic and the rest upright, whatever the surrounding word is, so an italic line comes out as `<i>... i</i>t<i>?</i>` instead of nested tags. This works the same in Binary OCR
 
 ### Binary OCR
 Binary image comparison engine, listed as **Binary image compare** in the engine dropdown.
