@@ -41,7 +41,11 @@ public sealed class ForcedAligner
     /// </param>
     public sealed record Progress(int WindowIndex, int WindowCount, int LinesAligned, int LinesTotal, double Percent);
 
-    public sealed record Result(int TotalLines, int AlignedLines)
+    /// <param name="EstimatedLines">
+    /// Lines the aligner could not place, laid out by reading time instead - their time codes
+    /// are a guess. They are not counted in <paramref name="AlignedLines"/>.
+    /// </param>
+    public sealed record Result(int TotalLines, int AlignedLines, int EstimatedLines = 0)
     {
         public int UnalignedLines => TotalLines - AlignedLines;
     }
@@ -50,17 +54,20 @@ public sealed class ForcedAligner
     private readonly IAudioSource _audio;
     private readonly ForcedAlignPlanner.Options _options;
     private readonly SpeechEnvelope? _speechEnvelope;
+    private readonly double? _minGapMs;
 
     /// <param name="speechEnvelope">
     /// The isolated speech of the same audio, when the caller has it: line ends are then taken
     /// from where the speech goes quiet instead of from reading time.
     /// </param>
-    public ForcedAligner(IRunner runner, IAudioSource audio, ForcedAlignPlanner.Options? options = null, SpeechEnvelope? speechEnvelope = null)
+    /// <param name="minGapMs">The gap between lines; null for the general setting.</param>
+    public ForcedAligner(IRunner runner, IAudioSource audio, ForcedAlignPlanner.Options? options = null, SpeechEnvelope? speechEnvelope = null, double? minGapMs = null)
     {
         _runner = runner;
         _audio = audio;
         _options = options ?? new ForcedAlignPlanner.Options();
         _speechEnvelope = speechEnvelope;
+        _minGapMs = minGapMs;
     }
 
     public async Task<Result> AlignAsync(
@@ -306,8 +313,8 @@ public sealed class ForcedAligner
 
         aligned = await RefineAsync(aligned, texts, readingCps, estimated, progress, cancellationToken).ConfigureAwait(false);
 
-        ApplyTimeCodes(lines, aligned, texts, alignable, _audio.TotalSeconds, _speechEnvelope);
-        return new Result(allTexts.Count, aligned.Count);
+        ApplyTimeCodes(lines, aligned, texts, alignable, _audio.TotalSeconds, _speechEnvelope, _minGapMs);
+        return new Result(allTexts.Count, aligned.Count - estimated.Count, estimated.Count);
     }
 
     /// <summary>
@@ -329,7 +336,7 @@ public sealed class ForcedAligner
         List<(double Start, double End)> aligned,
         IReadOnlyList<string> texts,
         double readingCps,
-        IReadOnlySet<int> estimated,
+        HashSet<int> estimated,
         IProgress<Progress>? progress,
         CancellationToken cancellationToken)
     {
@@ -407,6 +414,9 @@ public sealed class ForcedAligner
                     Math.Min(newEnd, newStart + (texts[index].Length / readingCps * 2.0)));
 
                 refined[index] = (newStart, cappedEnd);
+
+                // Measured now, no longer a guess.
+                estimated.Remove(index);
             }
 
             progress?.Report(new Progress(
@@ -516,7 +526,10 @@ public sealed class ForcedAligner
     /// ten seconds long, one of them 16.8 s, against a true maximum of 4.4 s. Durations
     /// are therefore recomputed the same way the rest of this window does it
     /// (see <see cref="TimeCodeCalculator"/>): reading time for the text, clamped to the
-    /// configured minimum and maximum display duration.
+    /// configured minimum and maximum display duration. Speech that is over before the line
+    /// can be read still leaves the line up long enough for the maximum reading speed, room
+    /// permitting - ending it with the speech left 46 of a sitcom episode's 414 lines over the
+    /// maximum, 29 of them with silence to spare after them.
     /// </summary>
     internal static void ApplyTimeCodes(
         IList<SubtitleLineViewModel> lines,
@@ -524,12 +537,14 @@ public sealed class ForcedAligner
         IReadOnlyList<string> texts,
         IReadOnlyList<int> alignable,
         double audioSeconds,
-        SpeechEnvelope? speechEnvelope = null)
+        SpeechEnvelope? speechEnvelope = null,
+        double? minGapMilliseconds = null)
     {
-        var minGapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        var minGapMs = minGapMilliseconds ?? Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
         var minDurationMs = (double)Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
         var maxDurationMs = (double)Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
         var optimalCps = Se.Settings.General.SubtitleOptimalCharactersPerSeconds;
+        var maxCps = Se.Settings.General.SubtitleMaximumCharactersPerSeconds;
         var previousEndMs = double.NegativeInfinity;
 
         for (var i = 0; i < aligned.Count && i < alignable.Count; i++)
@@ -553,7 +568,11 @@ public sealed class ForcedAligner
             // Whichever is shorter: how long the line actually took, or how long it takes
             // to read. A cue must never outlast the silence the aligner stretched it over.
             var durationMs = Math.Min(spokenMs > 0 ? spokenMs : readingMs, readingMs);
-            durationMs = Math.Clamp(durationMs, minDurationMs, maxDurationMs > 0 ? maxDurationMs : durationMs);
+
+            // Never faster than the maximum reading speed - that is a rule, not a wish.
+            var fastestMs = maxCps > 0 ? (double)texts[i].CountCharacters(true) / maxCps * 1000.0 : 0;
+            durationMs = Math.Max(durationMs, fastestMs);
+            durationMs = Math.Clamp(durationMs, minDurationMs, maxDurationMs > 0 ? Math.Max(minDurationMs, maxDurationMs) : Math.Max(minDurationMs, durationMs));
 
             // With the isolated speech at hand the line ends where it actually goes quiet.
             // Measured against hand-timed subtitles over loud music, with the default minimum
@@ -567,7 +586,7 @@ public sealed class ForcedAligner
                 var spokenEnd = speechEnvelope.FindSpeechEnd(startSeconds, startSeconds + (readingMs * 2.0 / 1000.0));
                 if (spokenEnd.HasValue)
                 {
-                    durationMs = Math.Clamp((spokenEnd.Value * 1000.0) - startMs, minDurationMs, maxDurationMs > 0 ? maxDurationMs : double.MaxValue);
+                    durationMs = Math.Clamp(Math.Max((spokenEnd.Value * 1000.0) - startMs, fastestMs), minDurationMs, maxDurationMs > 0 ? Math.Max(minDurationMs, maxDurationMs) : double.MaxValue);
                 }
             }
 

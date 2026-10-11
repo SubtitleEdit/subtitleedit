@@ -230,11 +230,13 @@ public static class RoughSync
         var synced = lines.Select((l, i) => l with { StartSeconds = l.StartSeconds + sync.Offsets[i], EndSeconds = l.EndSeconds + sync.Offsets[i] }).ToList();
         for (var i = 0; i + 1 < synced.Count; i++)
         {
-            var gap = lines[i + 1].StartSeconds - lines[i].EndSeconds;
-            if (gap < 0)
+            if (SubtitleRetimer.OverlapsOnPurpose(lines[i], lines[i + 1]))
             {
                 continue;
             }
+
+            // A small overlap is mistiming, not meant - it is closed rather than carried along.
+            var gap = Math.Max(0, lines[i + 1].StartSeconds - lines[i].EndSeconds);
 
             var latestEnd = synced[i + 1].StartSeconds - gap;
             if (synced[i].EndSeconds > latestEnd)

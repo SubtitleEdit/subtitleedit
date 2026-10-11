@@ -525,8 +525,9 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
                 MinGapSeconds = MinGapSeconds,
             };
 
+            // An ASSA comment is not shown, let alone spoken: with no text it is left where it is.
             var lines = _originalSubtitles
-                .Select(p => new SubtitleRetimer.Line(p.Text ?? string.Empty, p.StartTime.TotalSeconds, p.EndTime.TotalSeconds))
+                .Select(p => new SubtitleRetimer.Line(p.IsComment ? string.Empty : p.Text ?? string.Empty, p.StartTime.TotalSeconds, p.EndTime.TotalSeconds))
                 .ToList();
 
             // Further out than the aligner may reach: the heard words bring it close enough first.
@@ -695,6 +696,11 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         }
 
         SubtitleRetimer.Settle(original, placements, MinGapSeconds);
+        if (Se.Settings.General.UseFrameMode)
+        {
+            SubtitleRetimer.SnapToFrames(original, placements, Se.Settings.General.CurrentFrameRate, MinGapSeconds);
+        }
+
         _placed = placements;
 
         for (var i = 0; i < count; i++)
