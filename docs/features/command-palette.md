@@ -5,7 +5,7 @@ Find and run any main-window command by typing part of its name, without hunting
 - **Menu:** Edit → Command palette...
 - **Shortcut:** `Ctrl+Shift+K` (`Cmd+Shift+K` on macOS), configurable
 
-<!-- Screenshot: Command palette with a search typed and the matching commands listed (command-palette.png, not yet taken) -->
+![Command Palette](../screenshots/command-palette.png)
 
 The palette lists the same commands as [Options → Shortcuts](shortcuts.md), so commands that have no menu entry and no shortcut can still be reached from the keyboard. Each row shows the command name, its group (File, Edit, Tools, Video, ...) and its current shortcut, if it has one.
 

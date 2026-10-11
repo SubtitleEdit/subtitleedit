@@ -5,7 +5,7 @@ Generate royalty-free instrumental background music from a text prompt, loop it 
 - **Menu:** Video → More → Generate background music...
 - **Shortcut:** None (menu only)
 
-<!-- Screenshot: Generate background music window with preset, prompt and volume settings (background-music.png, not yet taken) -->
+![Generate Background Music](../screenshots/background-music.png)
 
 The music is made on your own computer by **ACE-Step 1.5 Turbo** (MIT license) running on the audio.cpp runtime - nothing is sent to an online service. The **More** submenu is shown while a video is loaded, and ffmpeg is required (you are offered to download it when it is missing).
 

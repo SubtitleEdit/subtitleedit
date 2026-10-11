@@ -5,7 +5,7 @@ Merge subtitles where one sentence has been split across two or more consecutive
 - **Menu:** Tools → Merge continuation lines...
 - **Shortcut:** Configurable (no default)
 
-<!-- Screenshot: Merge continuation lines window with the candidate list (merge-continuation-lines.png, not yet taken) -->
+![Merge Continuation Lines](../screenshots/merge-continuation-lines.png)
 
 Unlike [Merge Short Lines](merge-short-lines.md), which merges by length, this tool looks at punctuation: a line that does not end a sentence is joined with the line after it. This is useful for subtitles made by speech recognition or for scripts that will be read by [Text to Speech](text-to-speech.md), where a sentence spoken as one unit sounds more natural.
 

@@ -10,7 +10,7 @@ See [Auto Translate](auto-translate.md) for the translation window itself.
 
 With an advanced engine selected, click **Advanced...** in the engine settings row.
 
-<!-- Screenshot: Advanced settings window (auto-translate-advanced.png, not yet taken) -->
+![Advanced Settings](../screenshots/auto-translate-advanced.png)
 
 ### Context
 

@@ -5,7 +5,7 @@ List every line that breaks a rule - reading speed, duration, line length, overl
 - **Menu:** Tools → List errors...
 - **Shortcut:** Ctrl+F8 (Cmd+F8 on macOS)
 
-<!-- Screenshot: List errors window with summary cards and the error table (list-errors.png, not yet taken) -->
+![List Errors](../screenshots/list-errors.png)
 
 The checks are the same ones that color cells in the [subtitle grid](subtitle-grid.md): which checks run is set by the **Syntax coloring** switches in [Settings](settings.md#syntax-coloring), and their limits come from the active rules profile in **Settings → Rules**.
 

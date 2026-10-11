@@ -121,7 +121,7 @@ Rip the subtitles of a DVD title straight from its IFO and VOB files, then [OCR]
 
 - **Menu:** File → Import → Subtitles from DVD (IFO/VOB)...
 
-<!-- Screenshot: Import subtitles from DVD window with a title and its VOB files (import-dvd.png, not yet taken) -->
+![Import Subtitles from DVD](../screenshots/import-dvd.png)
 
 1. Click the folder button next to **IFO file** and open the title set's IFO file (for example `VIDEO_TS\VTS_01_0.IFO`), or click **Add VOB files** - or drop IFO/VOB files on the window
 2. With an IFO, pick the **Title**. Each title shows its duration, number of chapters and subtitle languages; the longest complete title is selected. Opening `VIDEO_TS.IFO` lists the titles of every title set. A title whose VOB files are not all there is marked "VOB files missing (x% found)"
