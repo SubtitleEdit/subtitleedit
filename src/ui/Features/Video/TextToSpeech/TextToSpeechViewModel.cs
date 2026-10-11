@@ -2387,6 +2387,12 @@ public partial class TextToSpeechViewModel : ObservableObject
             return false;
         }
 
+        if (Se.Settings.Video.TextToSpeech.RemoveOriginalSpeechFast)
+        {
+            return await SpeechIsolationModelDownload.EnsureModelDownloadedAsync(
+                Window!, _windowService, new CrispAsrCohere(), HtDemucsModel.ToWhisperModel(), HtDemucsModel.DisplayName, featureName, "a source separation model");
+        }
+
         return await SpeechIsolationModelDownload.EnsureDownloadedAsync(Window!, _windowService, new CrispAsrCohere(), featureName);
     }
 
@@ -2396,9 +2402,10 @@ public partial class TextToSpeechViewModel : ObservableObject
     /// </summary>
     private async Task<string?> MakeSpeechFreeBackground(string workFolder, CancellationToken cancellationToken)
     {
+        var fast = Se.Settings.Video.TextToSpeech.RemoveOriginalSpeechFast;
         var crispAsr = new CrispAsrCohere();
         var executable = crispAsr.GetExecutable();
-        var modelFileName = crispAsr.GetModelForCmdLine(SpeechIsolationModel.FileName);
+        var modelFileName = crispAsr.GetModelForCmdLine(fast ? HtDemucsModel.FileName : SpeechIsolationModel.FileName);
         if (!File.Exists(executable) || !File.Exists(modelFileName))
         {
             return null;
@@ -2412,14 +2419,17 @@ public partial class TextToSpeechViewModel : ObservableObject
             return null;
         }
 
-        var arguments = SpeechIsolationModel.BuildSeparateArguments(modelFileName, originalAudioFileName, workFolder, SpeechIsolationModel.BackgroundStem);
+        var stems = fast ? HtDemucsModel.BackgroundStems : new[] { SpeechIsolationModel.BackgroundStem };
+        var arguments = SpeechIsolationModel.BuildSeparateArguments(modelFileName, originalAudioFileName, workFolder, string.Join(",", stems));
         Se.WriteToolsLog($"{executable} {arguments}");
 
         // The separator's per-chunk lines on stderr are the only measure of how far it is - and
         // on a machine without a GPU it is minutes per minute of video (#15176). They drive the
         // percentage and the time-left estimate; the GPU path prints none and is quick. The
         // output is also kept: when the separator fails it is the only clue to why.
-        var progress = new SpeechIsolationProgress(SpeechIsolationProgress.GetChunkCountFromWaveFile(originalAudioFileName));
+        var progress = new SpeechIsolationProgress(fast
+            ? SpeechIsolationProgress.GetChunkCountFromWaveFile(originalAudioFileName, HtDemucsModel.ChunkSamples, HtDemucsModel.StrideSamples)
+            : SpeechIsolationProgress.GetChunkCountFromWaveFile(originalAudioFileName));
         var separateLog = new StringBuilder();
         DataReceivedEventHandler onLine = (_, args) =>
         {
@@ -2450,14 +2460,28 @@ public partial class TextToSpeechViewModel : ObservableObject
         separateProcess.ErrorDataReceived += onLine;
         await separateProcess.StartAndWaitAsync(cancellationToken);
 
-        var backgroundFileName = SpeechIsolationModel.GetStemFileName(originalAudioFileName, workFolder, SpeechIsolationModel.BackgroundStem);
-        if (separateProcess.ExitCode != 0 || !File.Exists(backgroundFileName))
+        var stemFileNames = stems.Select(stem => SpeechIsolationModel.GetStemFileName(originalAudioFileName, workFolder, stem)).ToList();
+        if (separateProcess.ExitCode != 0 || !stemFileNames.All(File.Exists))
         {
             lock (separateLog)
             {
                 Se.WriteToolsLog($"TTS remove original speech: separation failed with exit code {separateProcess.ExitCode}:{Environment.NewLine}{separateLog}", true);
             }
 
+            return null;
+        }
+
+        if (stemFileNames.Count == 1)
+        {
+            return stemFileNames[0];
+        }
+
+        var backgroundFileName = Path.Combine(workFolder, "background.wav");
+        using var mixProcess = FfmpegGenerator.MixStems(stemFileNames, backgroundFileName);
+        await mixProcess.StartAndWaitAsync(cancellationToken);
+        if (mixProcess.ExitCode != 0 || !File.Exists(backgroundFileName))
+        {
+            Se.WriteToolsLog($"TTS remove original speech: ffmpeg could not mix the stems (exit code {mixProcess.ExitCode})", true);
             return null;
         }
 

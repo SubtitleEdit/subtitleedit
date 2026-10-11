@@ -16,6 +16,8 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 /// from the audio's length the same way the separator does: the input is resampled to 44.1 kHz
 /// and cut into 8 s windows with 25% overlap. The GPU path runs one fused graph per chunk and
 /// prints nothing per chunk, so there the progress simply stays at zero - it is also the fast one.
+/// HTDemucs prints "htdemucs: separated (...)" when each chunk is done, on the CPU and GPU path
+/// alike, and the same "segmented" summary at the end.
 /// </remarks>
 public sealed partial class SpeechIsolationProgress
 {
@@ -34,7 +36,10 @@ public sealed partial class SpeechIsolationProgress
     [GeneratedRegex(@"^mel_band_roformer: layer (\d+)/(\d+)", RegexOptions.CultureInvariant)]
     private static partial Regex LayerRegex();
 
-    [GeneratedRegex(@"^mel_band_roformer: segmented \d+ samples into (\d+) chunks", RegexOptions.CultureInvariant)]
+    [GeneratedRegex(@"^htdemucs: separated ", RegexOptions.CultureInvariant)]
+    private static partial Regex ChunkDoneRegex();
+
+    [GeneratedRegex(@"^(?:mel_band_roformer|htdemucs): segmented \d+ samples into (\d+) chunks", RegexOptions.CultureInvariant)]
     private static partial Regex SegmentedRegex();
 
     private readonly object _lock = new();
@@ -74,7 +79,7 @@ public sealed partial class SpeechIsolationProgress
     public int? Percent => Fraction is { } f ? (int)Math.Floor(f * 100.0) : null;
 
     /// <summary>How many chunks the separator cuts <paramref name="durationSeconds"/> of audio into.</summary>
-    public static int GetChunkCount(double durationSeconds)
+    public static int GetChunkCount(double durationSeconds, int chunkSamples = ChunkSamples, int strideSamples = StrideSamples)
     {
         if (double.IsNaN(durationSeconds) || durationSeconds <= 0)
         {
@@ -82,25 +87,25 @@ public sealed partial class SpeechIsolationProgress
         }
 
         var samples = (long)Math.Round(durationSeconds * SampleRate);
-        if (samples <= ChunkSamples)
+        if (samples <= chunkSamples)
         {
             return 1; // short audio is run whole, no chunking
         }
 
-        return (int)((samples + StrideSamples - 1) / StrideSamples);
+        return (int)((samples + strideSamples - 1) / strideSamples);
     }
 
     /// <summary>
     /// The chunk count for the wav the separator is about to read, or 0 when its header cannot be
     /// read - progress is then reported without a percentage.
     /// </summary>
-    public static int GetChunkCountFromWaveFile(string waveFileName)
+    public static int GetChunkCountFromWaveFile(string waveFileName, int chunkSamples = ChunkSamples, int strideSamples = StrideSamples)
     {
         try
         {
             using var stream = File.OpenRead(waveFileName);
             var header = new WaveHeader2(stream);
-            return GetChunkCount(header.LengthInSeconds);
+            return GetChunkCount(header.LengthInSeconds, chunkSamples, strideSamples);
         }
         catch
         {
@@ -129,6 +134,18 @@ public sealed partial class SpeechIsolationProgress
                 if (ChunkCount > 0 && CurrentChunk > ChunkCount)
                 {
                     ChunkCount = CurrentChunk; // the estimate was short - never report more than 100%
+                }
+
+                return true;
+            }
+
+            if (ChunkDoneRegex().IsMatch(line))
+            {
+                CurrentChunk++;
+                _layersDone = _layerCount = 1; // the line comes when the chunk is finished
+                if (ChunkCount > 0 && CurrentChunk > ChunkCount)
+                {
+                    ChunkCount = CurrentChunk;
                 }
 
                 return true;
