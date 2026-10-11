@@ -741,6 +741,7 @@ public static class InitMenu
                 {
                     Header = l.CloseVideoFile,
                     Command = vm.CommandVideoCloseCommand,
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsVideoLoaded)),
                 },
                 // Same spot and wording as SE4's Video menu, so it can be found by anyone
                 // looking for it there (#14389). Only meaningful with a video to draw on.

@@ -344,7 +344,8 @@ public static class InitNativeMacMenu
         state.RecentVideosItem = new NativeMenuItem(Clean(Se.Language.Video.OpenRecentVideo)) { Menu = new NativeMenu() };
         videoItems.Items.Add(state.RecentVideosItem);
 
-        videoItems.Items.Add(Item(Clean(l.CloseVideoFile), v => v.CommandVideoCloseCommand));
+        videoItems.Items.Add(Conditional(Clean(l.CloseVideoFile), v => v.CommandVideoCloseCommand,
+            v => v.IsVideoLoaded, nameof(MainViewModel.IsVideoLoaded)));
 
         // Same spot and wording as SE4's Video menu, so it can be found by anyone
         // looking for it there (#14389). Only meaningful with a video to draw on.
