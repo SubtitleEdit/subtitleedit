@@ -89,6 +89,28 @@ public partial class OcrSubtitleItem : ObservableObject
         return cropped.ToAvaloniaBitmap();
     }
 
+    /// <summary>
+    /// Like <see cref="GetBitmapCropped"/>, but decodes the image fresh and keeps nothing: for
+    /// lists that only show thumbnails, where caching the full frame (1.6 MB for a 720x576 DVB
+    /// image) for every row scrolled past adds up to gigabytes.
+    /// </summary>
+    public Bitmap GetBitmapCroppedUncached(byte alphaThreshold = 0)
+    {
+        using var source = GetSkBitmapClean();
+        var cropped = source.CropTransparentColors(alphaThreshold);
+        try
+        {
+            return cropped.ToAvaloniaBitmap();
+        }
+        finally
+        {
+            if (!ReferenceEquals(cropped, source))
+            {
+                cropped.Dispose();
+            }
+        }
+    }
+
     public bool IsForced => _ocrSubtitle.GetIsForced(_index);
 
     /// <summary>Index into the underlying IOcrSubtitle source - stable across filtering/deletion of the view collection.</summary>

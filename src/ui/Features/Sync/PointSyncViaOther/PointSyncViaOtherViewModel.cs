@@ -463,7 +463,7 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
         var title = $"{Se.Language.Ocr.ShowImage} - #{line.Number} {new TimeCode(line.StartTime).ToDisplayString()}";
         var result = await _windowService.ShowDialogAsync<ShowImageWindow, ShowImageViewModel>(Window, vm =>
         {
-            vm.Initialize(title, line.ImageItem.GetBitmapCropped());
+            vm.Initialize(title, line.ImageItem.GetBitmapCroppedUncached());
         });
 
         var index = Othersubtitles.IndexOf(line);

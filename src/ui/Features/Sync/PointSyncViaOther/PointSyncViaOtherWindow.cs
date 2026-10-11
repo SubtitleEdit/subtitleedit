@@ -310,12 +310,15 @@ public class PointSyncViaOtherWindow : Window
                     Child = image,
                 };
 
-                // Cells are recycled, so the bitmap follows the data context.
+                // Cells are recycled, so the bitmap follows the data context. Each cell owns its
+                // bitmap: decoded fresh, and the one it showed before is freed.
                 container.DataContextChanged += (_, _) =>
                 {
+                    var previous = image.Source as IDisposable;
                     image.Source = container.DataContext is PointSyncOtherImageLine line
-                        ? line.ImageItem.GetBitmapCropped()
+                        ? line.ImageItem.GetBitmapCroppedUncached()
                         : null;
+                    previous?.Dispose();
                     container.IsVisible = image.Source != null;
                 };
 
