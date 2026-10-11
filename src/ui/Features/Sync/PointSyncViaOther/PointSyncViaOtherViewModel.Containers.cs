@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Features.Sync.PointSyncViaOther;
 /// <summary>
 /// "Other subtitle" from a video container or a Blu-ray sup - SE 4 let you pick an embedded track
 /// here, SE 5 only took subtitle files and said "Unknown subtitle format" (issue #15911). Image
-/// tracks are not OCR'ed: a sync point only needs the time codes, so the grid shows the bitmaps.
+/// tracks (PGS, VobSub, DVB) are not OCR'ed: a sync point only needs the time codes, so the grid shows the bitmaps.
 /// </summary>
 public partial class PointSyncViaOtherViewModel
 {
@@ -125,12 +125,14 @@ public partial class PointSyncViaOtherViewModel
             return MakeImageResult(new OcrSubtitleMkvBluRay(track, pcsData));
         }
 
+        var blocks = await RunWithProgress(fileName, cb => matroska.GetSubtitle(track.TrackNumber, cb));
+
         if (track.CodecId.Equals("S_DVBSUB", StringComparison.OrdinalIgnoreCase))
         {
-            return new OtherLoadResult { Error = Se.Language.General.UnknownSubtitleFormat };
+            var dvbSubtitle = new Subtitle();
+            var images = MatroskaDvbHelper.ParseImages(track, blocks, dvbSubtitle);
+            return MakeImageResult(new OcrSubtitleMkvDvb(track, dvbSubtitle, images));
         }
-
-        var blocks = await RunWithProgress(fileName, cb => matroska.GetSubtitle(track.TrackNumber, cb));
 
         if (track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
         {
