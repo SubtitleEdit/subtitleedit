@@ -135,4 +135,34 @@ public class ItalicTextMergerTests
 
         Assert.Equal("- Hi.", ItalicTextMerger.MergeWithItalicTags(chars));
     }
+
+    [Fact]
+    public void TaggedGlyphInItalicWordSplitsTheTag()
+    {
+        // One glyph trained as "<i>i</i>t": italic i joined to an upright t, inside italic text.
+        var chars = Chars("ya ?", "ii.i");
+        chars.Insert(3, new NOcrChar { Text = "<i>i</i>t", Italic = true });
+
+        Assert.Equal("<i>ya i</i>t<i>?</i>", ItalicTextMerger.MergeWithItalicTags(chars));
+    }
+
+    [Fact]
+    public void TaggedGlyphInUprightWordKeepsOnlyItsOwnItalic()
+    {
+        var chars = Chars("No ", "...");
+        chars.Add(new NOcrChar { Text = "<i>i</i>t", Italic = false });
+
+        Assert.Equal("No <i>i</i>t", ItalicTextMerger.MergeWithItalicTags(chars));
+    }
+
+    [Fact]
+    public void TaggedGlyphDoesNotVoteAndIgnoresTagCase()
+    {
+        // The tagged glyph is flagged upright, but only "ab" votes, so "c" stays italic.
+        var chars = Chars("ab", "ii");
+        chars.Add(new NOcrChar { Text = "x<I>y</I>", Italic = false });
+        chars.Add(new NOcrChar { Text = "c", Italic = false });
+
+        Assert.Equal("<i>ab</i>x<i>yc</i>", ItalicTextMerger.MergeWithItalicTags(chars));
+    }
 }
