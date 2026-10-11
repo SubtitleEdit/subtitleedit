@@ -50,10 +50,10 @@ What a single click and a double-click do is configurable: **Waveform single-cli
 
 | Shortcut | Action |
 |----------|--------|
-| Set start | Set the start time of the selected subtitle |
-| Set end | Set the end time of the selected subtitle |
+| Set start | Set the start time of the selected subtitle (F11; F9 on macOS) |
+| Set end | Set the end time of the selected subtitle (F12) |
 | Set end and go to next | Set end time and move to next subtitle |
-| Set start and offset the rest | Set start and shift all following subtitles |
+| Set start and offset the rest | Set start and shift all following subtitles (F9 on Windows / Linux; no default on macOS) |
 | Set end and offset the rest | Set end and shift all following subtitles |
 | Center on video position | Center the waveform on the current video position |
 | Insert at position (focus text) | Insert a new subtitle at video position and focus the text editor |

@@ -37,5 +37,5 @@ Pick colors directly from a video frame screenshot for use in ASSA subtitle styl
 
 | Shortcut | Action |
 |----------|--------|
-| F1 | Show help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |
 | Escape | Close dialog |

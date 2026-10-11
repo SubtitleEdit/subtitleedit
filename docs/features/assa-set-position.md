@@ -35,5 +35,5 @@ Visually position subtitles on screen by dragging them over a video screenshot, 
 
 | Shortcut | Action |
 |----------|--------|
-| F1 | Show help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |
 | Escape | Close dialog |

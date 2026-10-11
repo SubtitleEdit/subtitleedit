@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.Shared.ColumnPaste;
 
@@ -68,6 +69,11 @@ public partial class ColumnPasteViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             Close();
+        }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/subtitle-grid", "column-paste");
         }
     }
 }

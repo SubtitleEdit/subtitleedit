@@ -10,7 +10,7 @@ Synchronize a subtitle file using another subtitle file as reference.
 ## How to Use
 
 1. Open the subtitle you want to sync
-2. Open **Sync → Point sync via other subtitle...**
+2. Open **Synchronization → Point sync via other subtitle...**
 3. Click the browse button in the right pane to load the reference subtitle - a subtitle file, a Blu-ray `.sup`, or a subtitle track in an `.mkv` or `.mp4` (pick the track when there are several)
 4. Select a line in your subtitle and the matching line in the other subtitle, then click **Set sync point** — or **Set sync point via video...** to pick the time from the video for a line the other subtitle does not cover
 5. Repeat for more sync points; they are listed in the middle and can be removed with right-click **Delete** or the Delete/Backspace key
@@ -42,5 +42,5 @@ The window remembers its size and position between sessions.
 | Ctrl+Plus / Ctrl+Minus | Make the images of an image based reference bigger/smaller |
 | Ctrl+G | Go to line number, in the grid used last (the left one at first) |
 | Delete / Backspace | Remove the selected sync point (sync point list focused) |
-| F1 | Help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |
 | Escape | Cancel |

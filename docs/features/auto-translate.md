@@ -17,6 +17,12 @@ Automatically translate subtitles using various translation engines and AI servi
 5. Review the translations in the grid
 6. Click **OK** to apply
 
+### Translating selected lines
+
+Right-click selected lines in the grid and choose **Auto-translate** to translate only those lines. With no original column open, the dialog offers **Translate in place (do not create original)**: the translated text replaces the selected lines' text instead of turning the subtitle into the original. Otherwise the whole subtitle becomes the original, as with a whole-file translation.
+
+The shortcut **Auto-translate selected lines (no prompt, use last engine/languages)** (no default key; set it in [Shortcuts](shortcuts.md)) starts right away with the last used engine and languages; the dialog only shows progress and closes when done. Until a translation has been run once, it prompts as usual.
+
 ## Supported Engines
 
 - **Google Translate V1 API** — Free Google Translate. When Google answers with its "unusual traffic" block page, Subtitle Edit retries the request through a fallback endpoint (`clients5.google.com`) before giving up; a block is on Google's side and is usually lifted again after minutes to a few hours
@@ -27,6 +33,7 @@ Automatically translate subtitles using various translation engines and AI servi
 - **MyMemory Translate** — Free translation memory
 - **ChatGPT** — OpenAI AI translation (requires API key)
 - **LM Studio (local LLM)** — Local LLM translation
+- **LM Studio advanced (local LLM)** — LM Studio translated in batches with surrounding context, a synopsis and a glossary; see [Advanced local engines](auto-translate-advanced.md)
 - **Ollama (local LLM)** — Local LLM-based translation
 - **Ollama advanced (local LLM)** — Ollama translated in batches with surrounding context, a synopsis and a glossary; see [Advanced local engines](auto-translate-advanced.md)
 - **llama.cpp (local LLM)** — Server-managed local LLM translation; Subtitle Edit downloads llama.cpp and a curated model (TranslateGemma, Gemma 4, Qwen, Aya Expanse, MiLMMT, Hy-MT2 or TranslatePsy-AfriSLM for English ↔ 19 African languages) and runs a local `llama-server` for you. See [Using your own model](#llamacpp-using-your-own-model) to run a model we don't ship, such as TranslateGemma 27B
@@ -35,6 +42,7 @@ Automatically translate subtitles using various translation engines and AI servi
 - **Anthropic Claude** — AI translation (requires API key)
 - **Groq** — AI translation (requires API key)
 - **OpenRouter** — AI translation (requires API key)
+- **API Route** — AI translation through [api-route.com](https://www.api-route.com) (requires API key)
 - **Lara** — AI translation (requires API key)
 - **Perplexity** — AI translation (requires API key)
 - **Google Gemini** — AI translation (requires API key)
@@ -105,9 +113,9 @@ Depending on the selected engine, you may need to provide:
 - **API URL** — Custom endpoint URL (for self-hosted services)
 - **Model** — Specific model to use (for AI engines)
 
-The gear button opens the engine's **Settings** dialog with **Line merge**, **Delay in seconds between requests**, **Max bytes per request** and, for engines that have one, the **Prompt text** with a reset-to-default button.
+The gear button opens the engine's **Settings** dialog with **Line merge**, **Delay in seconds between requests**, **Max bytes per request** and, for engines that have one, the **Prompt text** with a reset-to-default button. **Do not translate lines in music symbols (♪ ... ♪)** leaves song lines untranslated.
 
-The **llama.cpp advanced** and **Ollama advanced** engines translate in batches with context, synopsis, and glossary support — see [Advanced Local Engines](auto-translate-advanced.md).
+The **llama.cpp advanced**, **Ollama advanced** and **LM Studio advanced** engines translate in batches with context, synopsis, and glossary support — see [Advanced Local Engines](auto-translate-advanced.md).
 
 ## Translation Review
 
@@ -122,4 +130,4 @@ Switching engine to compare results keeps the source and target languages you pi
 | Key | Action |
 |-----|--------|
 | Escape | Close / Cancel |
-| F1 | Open help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |

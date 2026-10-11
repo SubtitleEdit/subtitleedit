@@ -5,7 +5,7 @@ Find every character outside Latin-1 (code point above 255) in the subtitle and 
 - **Menu:** Tools → Remove/replace Unicode characters...
 - **Shortcut:** None (menu only)
 
-<!-- Screenshot: Remove/replace Unicode characters window with the character table (remove-unicode-characters.png, not yet taken) -->
+![Remove/Replace Unicode Characters](../screenshots/remove-unicode-characters.png)
 
 Typical targets are typographic quotes and apostrophes, the `…` ellipsis, em and en dashes, music notes and emoji - characters that some players, encoders or delivery formats cannot show. Accented Latin-1 letters such as `é`, `ü` and `ñ` are below the limit and are not listed.
 
@@ -48,4 +48,4 @@ Every non-empty **Replace with** is saved when you click OK and filled in again 
 |-----|--------|
 | Space | Toggle Apply for the selected rows |
 | Escape | Close without changes |
-| F1 | Open help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |

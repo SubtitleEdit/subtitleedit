@@ -11,7 +11,7 @@ The previews are produced by running the real split or move on a copy of the lin
 
 ## Assisted Split
 
-<!-- Screenshot: Assisted split window with numbered split candidates (assisted-split.png, not yet taken) -->
+![Assisted Split](../screenshots/assisted-split.png)
 
 Where **Split line** cuts the selected line at the middle (or at the text cursor), assisted split shows the sensible cut points first.
 
@@ -42,7 +42,7 @@ Applying a card uses the same rules as **Split line**: the time codes are divide
 
 ## Assisted Move
 
-<!-- Screenshot: Assisted move window with numbered move candidates (assisted-move.png, not yet taken) -->
+![Assisted Move](../screenshots/assisted-move.png)
 
 Moves words across the boundary between the selected line and the previous or next line, or between the two lines of the selected subtitle. The list is context aware: word moves across a boundary are only offered when the sentence actually continues across it, so words are never pushed into a line that starts a new sentence or a new dialog.
 
@@ -87,4 +87,4 @@ A sentence "continues" when the earlier text does not end with `.`, `!`, `?` or 
 |-----|--------|
 | 1-5 (split) / 1-6 (move) | Apply that candidate |
 | Escape | Close without changes |
-| F1 | Open help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |

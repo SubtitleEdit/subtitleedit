@@ -28,4 +28,4 @@ Subtitle Edit updates the visible subtitle numbers in order. Timing, text, forma
 |-----|--------|
 | Enter | Apply |
 | Escape | Close / Cancel |
-| F1 | Open help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |

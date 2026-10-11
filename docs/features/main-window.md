@@ -19,11 +19,11 @@ The menu bar provides access to all features organized into categories:
 | Menu | Description |
 |------|-------------|
 | **File** | New, New (keep video), New window, Open, Open (keep video), Open original, Edit original subtitle, Close original, Close translation, Reopen, Restore auto-backup, Save, Save as, Save forced lines as, format properties, Open containing folder, Compare, Statistics, Import, Export, Exit |
-| **Edit** | Undo, Redo, Show history for undo, Find, Find next, Replace, Multiple replace, Go to line number, Right-to-left mode and the RTL tools (fix RTL via Unicode control chars, remove Unicode control chars, reverse RTL start/end), Modify selection, Invert selection, Select all |
-| **Tools** | Adjust durations, AI review, Apply duration limits, Apply min. gap between subtitles, Batch convert, Beautify time codes, Bridge gaps, Change casing, Change formatting, Check and fix Netflix errors, Convert actors, Fix common errors, List errors, Make new empty translation from current subtitle, Merge continuation lines, Merge lines with same text, Merge lines with same time codes, Merge short lines, Merge two subtitles, Remove text for hearing impaired, Remove/replace Unicode characters, Renumber, Snap all times to frames, Sort subtitles, Split/rebalance long lines, and below a separator Join subtitles and Split subtitle |
+| **Edit** | Undo, Redo, Show history for undo, Find, Find next, Replace, Multiple replace, Go to line number, [Command palette](command-palette.md), Right-to-left mode and the RTL tools (fix RTL via Unicode control chars, remove Unicode control chars, reverse RTL start/end), Modify selection, Invert selection, Select all |
+| **Tools** | Adjust durations, AI review, Apply duration limits, Apply min. gap between subtitles, Batch convert, Beautify time codes, [Improve time codes (forced alignment)](improve-time-codes.md), Bridge gaps, Change casing, Change formatting, Check and fix Netflix errors, Convert actors, Fix common errors, List errors, Make new empty translation from current subtitle, Merge continuation lines, Merge lines with same text, Merge lines with same time codes, Merge short lines, Merge two subtitles, Remove text for hearing impaired, Remove/replace Unicode characters, Renumber, Snap all times to frames, Sort subtitles, Split/rebalance long lines, and below a separator Join subtitles and Split subtitle |
 | **Plugins** | Run installed plugins; manage installed plugins (only shown when **Options → Settings → Appearance → Show Plugins menu** is on) |
 | **Spell check** | Spell check, Find double words, Find double lines, Add name to names list, Get dictionaries |
-| **Video** | Open video, Open video from URL, Open recent video, Close video file, Open/remove second subtitle file, Audio tracks, Go to video position, Speech to text, Text to speech, OCR burned-in subtitle, Generate video with burned-in subtitles, Generate transparent video with subtitles, Generate blank video, Embed subtitles, Generate/import shot changes, List shot changes, Undock/Dock video controls, Toggle select subtitle while playing, and a **More** submenu (Chapters, Cut video, Find voices in video and clone, Re-encode video, Remux video, Set video offset, SMPTE timing, Toggle waveform toolbar) shown while a video is loaded |
+| **Video** | Open video, Open video from URL, Open recent video, Close video file, Open second subtitle file, Edit second subtitle settings, Remove second subtitle file, Audio tracks, Go to video position, Speech to text, Text to speech, Speak from current line, Play with speech, TTS voice manager, OCR burned-in subtitle, Generate video with burned-in subtitles, Generate transparent video with subtitles, Generate blank video, Embed subtitles, Generate/import shot changes, List shot changes, Undock/Dock video controls, Toggle select subtitle while playing, and a **More** submenu (Chapters, Cut video, Find voices in video and clone, [Generate background music](background-music.md), Re-encode video, Remux video, Set video offset, SMPTE timing, Toggle waveform toolbar) shown while a video is loaded |
 | **Synchronization** | Adjust all times, Visual sync, Point sync, Point sync via other subtitle, Change frame rate, Change speed |
 | **Translate** | Auto-translate, Auto-translate via copy-paste |
 | **Options** | Settings, Shortcuts, Word lists, Choose UI language |
@@ -81,13 +81,15 @@ The subtitle grid shows all subtitle lines in a table format. Each row represent
 | Column | Description |
 |--------|-------------|
 | **#** | Line number |
-| **Start time** | When the subtitle appears (e.g., `00:01:23,456`) |
-| **End time** | When the subtitle disappears |
+| **Show** | When the subtitle appears (e.g., `00:01:23,456`) |
+| **Hide** | When the subtitle disappears |
 | **Duration** | Display duration |
-| **CPS** | Characters per second (reading speed) |
-| **WPM** | Words per minute |
+| **Chars/sec** | Characters per second (reading speed) |
+| **Words/min** | Words per minute |
 | **Text** | The subtitle text content |
-| **Original** | Original text (visible in translation mode) |
+| **Original text** | Original text (visible in translation mode) |
+
+More columns (**Gap**, **Style**, **Actor**, **Layer**, **Pixel width**, **Forced**, ...) can be turned on or off by right-clicking the column header, e.g. **Show "Gap" column**, or with **Columns...**.
 
 **Mouse:**
 - **Click** a row to select it and load its text into the text editor
@@ -354,12 +356,12 @@ Panel sizes can be adjusted by dragging the splitters (dividers) between areas. 
 
 You can undock the video player or audio visualizer into separate windows for multi-monitor setups:
 - **Undock video controls** — Move video player to its own window
-- **Redock video controls** — Return video player to the main window
+- **Dock video controls** — Return video player to the main window
 
 ## Translation Mode
 
 When you open an original subtitle file (**File → Open original subtitle**), the main window enters translation mode:
-- The subtitle grid shows an additional **Original** column
+- The subtitle grid shows an additional **Original text** column
 - The text editor shows both the original and translation text
 - This allows side-by-side translation work
 
@@ -399,7 +401,7 @@ Subtitle Edit accepts a few command-line arguments at startup, useful for deskto
 | `/video:<path>` | Open the given video file alongside the subtitle. `--video:<path>` and `--video <path>` are accepted too. |
 | `/batchconvertui` | Launch directly into the standalone **Batch Convert** window instead of the full editor. `--batchconvertui` is accepted too. |
 
-The video file is always loaded when supplied via `/video:` (or `--video`), even if **Options → Settings → Video → Auto-open** is disabled — a flag on the command line is treated as an explicit instruction.
+The video file is always loaded when supplied via `/video:` (or `--video`), even if **Options → Settings → Video player → Auto-open video file when opening subtitle** is disabled — a flag on the command line is treated as an explicit instruction.
 
 Examples (Windows shell):
 

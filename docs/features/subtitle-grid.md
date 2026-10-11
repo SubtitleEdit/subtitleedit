@@ -25,6 +25,8 @@ The grid can show the columns below. A few are always visible; the others can be
 | **Pixel width** | | Rendered pixel width of the text |
 | **Forced** | | Check mark on lines marked as forced narrative (set with **Toggle forced** in the context menu) |
 | **Layer** | | Layer number (only available for formats that support layers, e.g. ASS/SSA) |
+| **Shot in** | | Signed distance from the start time to the nearest shot change (milliseconds, or frames in frame mode). Highlighted when [Beautify time codes](beautify-time-codes.md) would move the cue. Empty without a video and shot changes |
+| **Shot out** | | The same for the end time |
 
 ## Customizing Visible Columns
 
@@ -50,7 +52,7 @@ Right-click a line to access:
 - Delete
 - Insert before / Insert after
 - Insert subtitle after current line... (insert a whole subtitle file)
-- Column (delete text, insert text, paste from clipboard, shift cells up/down, text up/down)
+- Column (delete text, insert text, paste from clipboard, shift cells up/down, text up/down) — see [Column paste](#column-paste)
 - Split line / Assisted split... / Assisted move...
 - Merge before / Merge after / Merge selected / Merge selected as dialog
 - Extend to line before / Extend to line after
@@ -98,17 +100,33 @@ The actor order is alphabetical when a file is opened. Actors added while workin
 | `Ctrl+C` | Copy |
 | `Ctrl+V` | Paste |
 | `Ctrl+X` | Cut |
+| `Ctrl+Shift+V` | Fill selected lines with clipboard text (also works on one line) |
 | `Enter` | Go to subtitle and set video position (default; **Options → Settings** can change it to *Go to next line*) |
 | `Up/Down` | Navigate lines |
+| `PageUp/PageDown` | Move the selection one page up / down |
+| `Home/End` | Go to the first / last line |
+| `Shift+Up/Down/PageUp/PageDown/Home/End` | Extend the selection (`Ctrl+Shift`, or `Cmd+Shift` on macOS, works too when that chord has no shortcut of its own) |
+| `0`–`9` | Type a line number to jump to it — digits typed within a second add up, so `1` then `2` goes to line 12 |
+
+The navigation keys and the line-number type-ahead are built in. A shortcut you assign to a bare digit in **Options → Shortcuts** wins over the type-ahead.
 
 ### Pasting over several lines
 
-With **one** line selected, `Ctrl+V` inserts the clipboard content below it. With **several** lines selected, the clipboard is pasted *over* the selection instead — handy for translating: copy the lines out, translate them elsewhere, select the same lines here and paste.
+With **one** line selected, `Ctrl+V` inserts the clipboard content as new lines below it, and the status bar says "Inserted N line(s) from the clipboard". To replace the text of that one line instead, use `Ctrl+Shift+V` (**Fill selected lines with clipboard text**): it puts the whole clipboard text into every selected line, time codes untouched. With **several** lines selected, the clipboard is pasted *over* the selection instead — handy for translating: copy the lines out, translate them elsewhere, select the same lines here and paste.
 
 - Clipboard holds a subtitle (SRT, ASSA, …): the selected lines are replaced by the pasted ones, time codes included. The number of pasted lines does not have to match the selection.
 - Clipboard holds plain text: one clipboard line goes into each selected line's text, and the time codes are left alone. Clipboard lines that go past the end of the selection are not pasted.
 
 Both are a normal edit, so `Ctrl+Z` undoes them.
+
+### Column paste
+
+**Column → Paste from clipboard...** in the context menu (shortcut "Column, paste", no default key) pastes the clipboard into one column, starting at the first selected line and going down. It never adds lines: pasting stops at the last line of the subtitle.
+
+- **Choose column** — **All** (time codes and text), **Time codes only**, or **Text only**. When the clipboard holds plain text rather than a subtitle, only **Text only** is available and each clipboard line goes into one line's text.
+- **Overwrite/shift cells down** — **Overwrite existing cells** replaces the cells, **Shift text cells down** moves the existing cells down one row per pasted line first (the cells pushed past the last line are dropped).
+
+Like SE 4's column paste, this is useful for bringing timings from one file into another, or a translated text block into existing time codes.
 
 ## Formatting Display
 

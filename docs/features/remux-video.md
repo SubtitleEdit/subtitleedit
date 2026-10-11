@@ -5,7 +5,7 @@ Repackage the video with new audio tracks and optional soft subtitles into an MP
 - **Menu:** Video → More → Remux video...
 - **Shortcut:** None (menu only)
 
-<!-- Screenshot: Remux video window with the video, audio and subtitle sections (remux-video.png, not yet taken) -->
+![Remux Video](../screenshots/remux-video.png)
 
 Remuxing copies the streams into a new container, so it is quick and lossless. Use it to attach a dubbed or translated audio track (for example from [Text to Speech](text-to-speech.md)), to add subtitle tracks that can be switched on and off in the player, to embed CEA-608 closed captions, or to convert between MP4, MKV, MOV and MPG. To draw the subtitle into the picture instead, see [Burn-In Subtitles](burn-in.md).
 
@@ -76,4 +76,4 @@ The window remembers its size and position.
 | Ctrl+Up / Ctrl+Down | Move the selected audio or subtitle file up / down |
 | Delete | Remove the selected file from its list |
 | Escape | Close (not while remuxing) |
-| F1 | Open help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |

@@ -39,5 +39,5 @@ View detailed statistics about the currently loaded subtitle file, including lin
 
 | Shortcut | Action |
 |----------|--------|
-| F1 | Show help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |
 | Escape | Close dialog |

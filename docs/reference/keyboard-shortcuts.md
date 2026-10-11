@@ -19,6 +19,8 @@ A few defaults differ on macOS so the standard macOS shortcuts keep working and 
 | Delete selected line(s) | Delete | Cmd+Backspace | The Delete key on Apple keyboards is a backspace |
 | Extend selected line to previous | Alt+Shift+E | Cmd+Option+Shift+E | Option+Shift+E types a character (È on Italian keyboards) |
 | Set start time | F11 | F9 | F11 shows the desktop |
+| Set start and offset the rest | F9 | No default | F9 is set start time on macOS |
+| Open data folder | Ctrl+Alt+Shift+D | Control+Cmd+Option+Shift+D | Cmd+Option+Shift+D alone never reaches the app |
 | Toggle play/pause (secondary) | Ctrl+Space | No default | Cmd+Space opens Spotlight |
 
 Settings that still had the old defaults are moved to the new ones on first start. Shortcuts you assigned yourself are left alone.
@@ -48,8 +50,15 @@ Settings that still had the old defaults are moved to the new ones on first star
 | Alt+Down | Go to next line |
 | Ctrl+Home | Go to first line |
 | Ctrl+End | Go to last line |
-| F1 | Show help |
+| Ctrl+Shift+K | [Command palette](../features/command-palette.md) — search and run any command |
+| F1 | Show help (every window opens its own help page) |
 | F2 | Show source view |
+| F10 | Activate the main menu bar (press F10 or Escape again to return to editing) |
+| Ctrl+F8 | List errors |
+| F8 / Shift+F8 | Go to next / previous error |
+| Alt+F7 | Spell check |
+
+F1 is the default for the **Help** action and can be changed in **Options** → **Shortcuts** like any other shortcut. The same key works in every dialog, and opens the help page for that dialog.
 
 ## Editing Lines
 
@@ -76,6 +85,8 @@ Active while the subtitle text box has focus.
 | Ctrl+A | Select all text |
 | Shift+Delete | Cut (Windows-standard gesture; Subtitle Edit binds it because Avalonia does not) |
 | Shift+Backspace | Delete selection or next character — forward delete. Default on macOS only, where the Delete key is a backspace; assign it yourself elsewhere |
+| Option+Backspace | Delete the previous word (macOS only, fixed) |
+| Cmd+Backspace / Cmd+Delete | Delete to the start of the line (macOS only, fixed) |
 
 > **Note:** "Text box: Cut / Copy / Paste (alternative)" exist as separate, unbound actions in **Options** → **Shortcuts** for anyone who wants a second gesture (e.g. Ctrl+Insert / Shift+Insert).
 
@@ -88,10 +99,14 @@ Active while the subtitle text box has focus.
 | Ctrl+Shift+I | Inverse selection |
 | Ctrl+I | Toggle italic on selected lines or text |
 | Ctrl+X / Ctrl+C / Ctrl+V | Cut / copy / paste selected lines |
-| Ctrl+Shift+V | Fill selected lines with clipboard |
-| Ctrl+F8 | List errors |
-| F8 / Shift+F8 | Go to next / previous error |
-| Alt+F7 | Spell check |
+| Ctrl+Shift+V | Fill selected lines with clipboard text (also on a single line) |
+| Up / Down | Previous / next line |
+| PageUp / PageDown | Move the selection one page up / down |
+| Home / End | First / last line |
+| Shift+Up / Down / PageUp / PageDown / Home / End | Extend the selection (Ctrl+Shift, or Cmd+Shift on macOS, also works when that chord has no shortcut of its own) |
+| 0–9 | Type a line number to jump to that line (digits typed within a second add up, e.g. 1 then 2 is line 12) |
+
+The navigation keys and the line-number type-ahead are fixed, not part of **Options** → **Shortcuts**. A shortcut you assign to a bare digit wins over the type-ahead.
 
 ## Source View
 
@@ -134,6 +149,7 @@ Inside the [source view](../features/source-view.md) window (F2), which edits th
 |----------|--------|
 | F11 | Set start time |
 | F12 | Set end time |
+| F9 | Set start and offset the rest (Windows / Linux; no default on macOS) |
 
 "Set end time and go to next line" has no default shortcut: bare F10 activates the
 main menu bar (the Windows standard). Assign F10 to the action in Options →
@@ -146,8 +162,8 @@ wins over the menu activation.
 |----------|--------|
 | Ctrl+V | Paste lines from clipboard at waveform position |
 | Ctrl+C | Copy the selected subtitle to the clipboard ("Copy (text only)" has no default key) |
-| Shift++ | Vertical zoom in |
-| Shift+- | Vertical zoom out |
+| Shift+Numpad + | Vertical zoom in (waveform focused) |
+| Shift+Numpad − | Vertical zoom out (waveform focused) |
 
 ## Tools
 

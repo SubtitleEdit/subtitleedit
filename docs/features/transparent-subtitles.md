@@ -57,4 +57,4 @@ Click **Batch mode** to queue several subtitle files (**Single mode** switches b
 | Key | Action |
 |-----|--------|
 | Escape | Close / Cancel |
-| F1 | Open help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |

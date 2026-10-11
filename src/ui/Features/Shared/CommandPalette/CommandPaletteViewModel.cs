@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -176,6 +177,13 @@ public partial class CommandPaletteViewModel : ObservableObject
 
     public void OnKeyDown(KeyEventArgs e)
     {
+        if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/command-palette");
+            return;
+        }
+
         switch (e.Key)
         {
             case Key.Escape:

@@ -22,7 +22,7 @@ Subtitle Edit can automatically transcribe audio to text using Whisper-based and
 | Alibaba Qwen3-ASR | All | Online Qwen3-ASR via Alibaba Model Studio (DashScope) |
 | Google Cloud Speech-to-Text | All | Online Google Cloud Speech-to-Text v2 (Chirp models) with word-level timings. Needs a service account key file (JSON) - the v2 API does not accept API keys |
 | Qwen3 ASR CPP | Windows, Linux, macOS | Local Qwen3 ASR engine with downloadable GGUF models |
-| Crisp ASR | Windows, Linux, macOS | Single engine with selectable backends: Parakeet, Canary, Cohere, Fire Red, Fun-ASR Nano, GigaAM, GLM, Granite, Qwen3, Mega, MOSS Diarize, Omni, Kyutai, SenseVoice, ARK, Voxtral |
+| Crisp ASR | Windows, Linux, macOS | Single engine with selectable backends: Parakeet, Canary, Cohere, Fire Red, Fun-ASR Nano, GigaAM, GLM, Granite, Index-Echo, Qwen3, Mega, MOSS Diarize, Omni, Kyutai, SenseVoice, ARK, Voxtral |
 
 Engines and models are downloaded automatically on first use.
 
@@ -30,8 +30,10 @@ Engines and models are downloaded automatically on first use.
 
 - **Whisper CPP** is shown as a single entry; the CPU / cuBLAS / Vulkan backends are selected from a secondary dropdown when Whisper CPP is selected.
 - **Qwen3 ASR CPP** includes 0.6B and 1.7B model options, plus a forced-aligner model used for timing workflows.
-- **Crisp ASR** is exposed as one engine that wraps multiple backends (Parakeet, Canary, Cohere, Fire Red, Fun-ASR Nano, GigaAM, GLM, Granite, Qwen3, Mega, MOSS Diarize, Omni, Kyutai, SenseVoice, ARK, Voxtral). Pick the backend from the Crisp ASR backend dropdown - see [Crisp ASR backends](#crisp-asr-backends) for what each one is good at.
+- **Crisp ASR** is exposed as one engine that wraps multiple backends (Parakeet, Canary, Cohere, Fire Red, Fun-ASR Nano, GigaAM, GLM, Granite, Index-Echo, Qwen3, Mega, MOSS Diarize, Omni, Kyutai, SenseVoice, ARK, Voxtral). Pick the backend from the Crisp ASR backend dropdown - see [Crisp ASR backends](#crisp-asr-backends) for what each one is good at.
 - A **Forced aligner** option is shown for Crisp ASR backends and exposes the built-in aligner, Canary CTC, Qwen3, and the wav2vec2 zoo (12 language-specific CTC aligners that run on top of any Crisp ASR backend).
+- **Detect speakers** (Crisp ASR backends, except MOSS Diarize which labels speakers itself) starts each line with the speaker, like `(speaker 0)`, using NVIDIA's Sortformer diarization (up to 8 speakers). The Nemotron-3-Diarization (Sortformer) model (107 MB) is downloaded on first use, and Crisp ASR v0.8.37 or newer is needed. Works best with backends that split lines where the speaker changes, like Parakeet and Cohere.
+- **Purfview Faster Whisper XXL** has a **Multilingual (detect per segment)** language entry below **Auto detect**: the language is detected for every segment instead of once for the whole file, which helps with audio that switches between spoken languages.
 - Automatic language detection: the Whisper engines (Whisper CPP, Purfview Faster Whisper XXL, CTranslate2, WhisperX, Const-me and OpenAI) and every Crisp ASR backend have an **Auto detect** entry at the top of the language list - except the Russian-only GigaAM and MOSS Diarize, which keep their fixed languages.
 - **Google Cloud Speech-to-Text** is Google's v2 API, which does not take API keys. In the Google Cloud console, create a project with billing, enable the Speech-to-Text API, create a service account with the *Cloud Speech Client* and *Storage Admin* roles, add a JSON key to it and pick that file as the **Key file**. If your organisation does not allow service account keys, leave the key file empty, run `gcloud auth application-default login` and fill in the **Project ID**. The other fields are **Region** (`us` or `eu` for chirp_3, or a specific region for other models), **Model** (`chirp_3`, `chirp_2`, `long`, `latest_long`...), a **Language** hint (leave it empty for automatic detection with the Chirp models), the Cloud Storage **bucket name** long audio is uploaded to (one named `<project>-subtitle-edit-stt` is created on first use, and uploads are deleted after each run), **Dynamic batching** (on by default - about a fifth of the price, but Google gives no latency guarantee) and a timeout.
 - Each engine can have separate advanced command-line parameters.
@@ -57,6 +59,7 @@ The languages column counts what the backend dropdown offers (an *auto* entry is
 | **GLM** | 17 | Needs aligner | 1.3 - 4.5 GB | GLM-ASR Nano, Chinese-first with a wide second tier of languages |
 | **SenseVoice** | 5 (zh, yue, en, ja, ko) | Needs aligner | 136 - 469 MB | Tiny and quick for CJK audio - useful on machines where the larger backends are too slow |
 | **Fun-ASR Nano** | 5 (en, zh, yue, ja, ko) | Needs aligner | 0.90 - 1.98 GB | CJK-focused Fun-ASR |
+| **Index-Echo** | 3 target languages (Chinese → en, ja, es) | Native timings | 2.7 - 5.1 GB (model + decoder pair) | Speech *translation*: Chinese audio in, English, Japanese or Spanish subtitles out. The language dropdown picks the target language. Needs Crisp ASR v0.8.41 or newer |
 | **Mega** | 2 (en, zh) | Needs aligner | 1.3 - 4.4 GB | Mega-ASR 1.7B. VAD is on by default (see the VAD section below) |
 | **Granite** | 6 (en, fr, de, es, pt, ja) | Needs aligner | 1.54 - 5.58 GB | IBM Granite Speech 4.1 2B. The `plus` models are the newer revision; `mini` and `f16enc` trade encoder precision for size |
 | **ARK** | 19 (European + zh, ja, ko) | Needs aligner | 3.52 - 7.51 GB | A 3B model - the heaviest backend here, so only worth it when the smaller ones fall short |

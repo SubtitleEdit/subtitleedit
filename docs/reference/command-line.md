@@ -437,14 +437,14 @@ a no-op. `ollama` and `lmstudio` have no per-model template, so it is simply
 
 | Option | Description |
 |---|---|
-| `--multiple-replace:<path>` | Multiple-replace rules applied per paragraph after operations. Accepts the legacy SE *MultipleSearchAndReplaceGroups* XML **and** the file the SE5 GUI exports from *Tools → Multiple replace → export* — either `.template` (JSON) or `.csv`. Supports case-insensitive, `CaseSensitive`, and `RegularExpression` rules; only active rules are applied. The format is chosen by extension, then by content |
+| `--multiple-replace:<path>` | Multiple-replace rules applied per paragraph after operations. Accepts the legacy SE *MultipleSearchAndReplaceGroups* XML **and** the file the SE5 GUI exports from *Edit → Multiple replace → export* — either `.template` (JSON) or `.csv`. Supports case-insensitive, `CaseSensitive`, and `RegularExpression` rules; only active rules are applied. The format is chosen by extension, then by content |
 | `--custom-format:<path.xml>` | SE *CustomFormatItem* XML (use with `--format customtext`) |
 | `--settings:<path.json>` | JSON file overlaying `Configuration.Settings` (general / tools / removeTextForHearingImpaired) plus image-output styling (exportImages). Optional `profiles` map for named overlays. The `tools` section also carries the auto-translate prompts (`llamaCppPrompt`, `ollamaPrompt`, `lmStudioPrompt`), so a `profiles` entry can hold a per-target-language prompt. `tools.ocrUseWordSplitList: true` lets *Fix common OCR errors* split run-together words via the word split list (off by default, as in the GUI, because it also splits valid words missing from the dictionary) |
 | `--profile:<name>` | Selects a named overlay from the settings file's `profiles` map. Requires `--settings` |
 
 #### Multiple-replace rule files
 
-The quickest way to share rules between the GUI and `seconv`: in Subtitle Edit open **Tools → Multiple replace**, then **export** the rules as `.template` (JSON) or `.csv`, and pass that file to `--multiple-replace`. Both are read directly — no conversion needed.
+The quickest way to share rules between the GUI and `seconv`: in Subtitle Edit open **Edit → Multiple replace**, then **export** the rules as `.template` (JSON) or `.csv`, and pass that file to `--multiple-replace`. Both are read directly — no conversion needed.
 
 ```bash
 seconv *.srt subrip --multiple-replace:my-rules.csv       # exported from the GUI

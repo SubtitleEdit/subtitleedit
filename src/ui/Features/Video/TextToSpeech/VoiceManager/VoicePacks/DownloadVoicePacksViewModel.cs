@@ -264,6 +264,11 @@ public partial class DownloadVoicePacksViewModel : ObservableObject
             e.Handled = true;
             Cancel();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/text-to-speech", "voice-manager");
+        }
     }
 
     internal void OnClosing()

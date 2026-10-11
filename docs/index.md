@@ -19,6 +19,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 
 ### Editing
 - [Edit Menu](features/edit.md) — Find, Replace, Multiple Replace, History
+- [Command Palette](features/command-palette.md) — Find and run any command by typing part of its name (Ctrl+Shift+K)
 - [Source View](features/source-view.md) — Edit the raw subtitle source: syntax coloring, live parse check, find/replace, line commands
 - [Modify Selection](features/modify-selection.md) — Select lines by rules: text, hearing-impaired text, duration, CPS, gaps, styles, actors
 - [Assisted Split and Assisted Move](features/assisted-split.md) — Ranked one-click split points and word moves with full previews
@@ -43,6 +44,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 - [Bridge Gaps](features/bridge-gaps.md) — Bridge gaps between subtitles
 - [Apply Minimum Gap](features/apply-min-gap.md) — Set minimum gap between subtitles
 - [Merge Short Lines](features/merge-short-lines.md) — Merge short subtitle lines
+- [Merge Continuation Lines](features/merge-continuation-lines.md) — Merge sentences split across several subtitles, with a preview
 - [Merge Lines with Same Text](features/merge-same-text.md) — Merge duplicate text lines
 - [Merge Lines with Same Time Codes](features/merge-same-timecodes.md) — Merge lines with identical timings
 - [Merge Two Subtitles](features/merge-two-subtitles.md) — Combine two subtitles into one bilingual subtitle
@@ -78,10 +80,11 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 - [Re-encode Video](features/re-encode-video.md) — Re-encode video files
 - [Cut Video](features/cut-video.md) — Cut video segments
 - [Remux Video](features/remux-video.md) — Repackage video with new audio tracks and soft subtitles, without re-encoding
+- [Generate Background Music](features/background-music.md) — Generate looping instrumental music locally (ACE-Step) and add it to the video or under TTS speech
 
 ### Translation
 - [Auto Translate](features/auto-translate.md) — Automatic subtitle translation
-- [Auto Translate: Advanced Local Engines](features/auto-translate-advanced.md) — Batch/context settings for the llama.cpp and Ollama advanced engines
+- [Auto Translate: Advanced Local Engines](features/auto-translate-advanced.md) — Batch/context settings for the llama.cpp, Ollama and LM Studio advanced engines
 - [Copy/Paste Translate](features/copy-paste-translate.md) — Translate via copy/paste workflow
 
 ### Spell Check

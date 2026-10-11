@@ -45,5 +45,5 @@ Manage fonts and images embedded as attachments in an Advanced SubStation Alpha 
 
 | Shortcut | Action |
 |----------|--------|
-| F1 | Show help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |
 | Escape | Close dialog |

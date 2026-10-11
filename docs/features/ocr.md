@@ -167,7 +167,7 @@ number, time codes, duration and image size.
 | F3 / Shift+F3 | Find next / Find previous |
 | Ctrl++ | Zoom in (images in grid) |
 | Ctrl+- | Zoom out (images in grid) |
-| F1 | Show help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |
 
 ### Subtitle Grid
 
@@ -190,12 +190,14 @@ number, time codes, duration and image size.
 
 ## Pre-processing
 
-Before OCR, you can apply image pre-processing:
-- Crop transparent colors
-- Remove borders (with configurable border size)
-- Invert colors
-- To one color (keep pixels brighter than a darkness threshold)
-- Binarize (convert to black/white using Otsu thresholding)
+Before OCR, you can apply image pre-processing via the **Image pre-processing** toggle button in the OCR window (it shows as pressed while any pre-processing is active):
+- **Crop transparent colors**
+- **Remove borders** (with configurable **Border size**)
+- **Inverse colors**
+- **One color (white)** (keep pixels brighter than a **Darkness threshold**)
+- **Binarize** (convert to black/white using Otsu thresholding)
+
+The settings are remembered between sessions and applied automatically the next time you open the OCR window. **Reset** in the **Pre-processing** window sets all options back to their defaults (all off, border size 2, darkness threshold 128).
 
 ## Batch OCR
 

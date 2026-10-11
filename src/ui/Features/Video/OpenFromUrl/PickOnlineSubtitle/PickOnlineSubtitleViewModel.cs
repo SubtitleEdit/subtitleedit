@@ -220,6 +220,11 @@ public partial class PickOnlineSubtitleViewModel : ObservableObject
             Ok();
             e.Handled = true;
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/video-player", "opening-video");
+        }
     }
 
     /// <summary>

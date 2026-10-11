@@ -153,6 +153,11 @@ public partial class BinaryAdjustColorViewModel : ObservableObject, IDisposable,
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/binary-edit", "tools");
+        }
     }
 
     /// <summary>

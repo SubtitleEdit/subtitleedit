@@ -46,10 +46,11 @@ You can use **File → Import → Image-based subtitle for edit...** to work/exp
 
 ### What video players are supported?
 Subtitle Edit supports:
-- **libmpv** — High-quality, wide format support
-- **VLC** - Popular player, limited support in SE
+- **libmpv** — High-quality, wide format support (default). Several rendering modes: OpenGL, Native Window ID (not macOS), Software rendering, and on macOS **libmpv - Metal (experimental, needs restart)**
+- **libVLC** — Popular player, limited support in SE (Windows and Linux only)
+- **FFmpeg** — Plays video through FFmpeg (all platforms)
 
-Configure the video player in **Options → Settings → Video Player**.
+Configure the video player in **Options → Settings → Video player**.
 
 If you have problems with a video, try **Video → More → Re-encode video for better subtitling**.
 
@@ -70,14 +71,16 @@ You can also download FFmpeg in **Options → Settings**.
 
 ### What speech-to-text engines are supported?
 Subtitle Edit supports several local and downloadable speech-to-text engines:
-- **Whisper.cpp** — Cross-platform, CPU-based
-- **Whisper.cpp (cuBLAS)** — GPU-accelerated (Windows, NVIDIA)
-- **Whisper.cpp (Vulkan)** — GPU-accelerated via Vulkan (Windows)
-- **Purfview's Faster-Whisper-XXL** — Fast GPU/CPU-based (Windows, Linux)
-- **CTranslate2** — Fast CPU/GPU-based
-- **Const-me's Whisper** — DirectX-based (Windows)
+- **Whisper CPP** — Cross-platform, CPU-based. On Windows the cuBLAS (NVIDIA) and Vulkan GPU backends are picked from its **Backend** drop-down
+- **Purfview Faster Whisper XXL** — Fast GPU/CPU-based (Windows, Linux x64)
+- **Whisper CTranslate2** — Fast CPU/GPU-based
+- **Whisper Const-me** — DirectX-based (Windows)
 - **WhisperX** — Faster-Whisper with wav2vec2 word-level alignment, standalone build (Windows x64, Linux x64, macOS Apple Silicon)
-- **OpenAI Whisper** — Original Python implementation
+- **Whisper OpenAI** — Original Python implementation
+- **Qwen3 ASR CPP** and **Crisp ASR** (many backends: Parakeet, Canary, Cohere, Qwen3 and more) — local engines
+- **OpenAI Compatible Server**, **OpenRouter**, **Alibaba Qwen3-ASR** and **Google Cloud Speech-to-Text** — online services
+
+See [Speech to Text](features/speech-to-text.md) for details.
 - **OpenAI-compatible STT** — Send audio to any OpenAI-compatible speech endpoint
 - **Qwen3 ASR CPP** — Local GGUF-based engine (Windows, Linux, macOS)
 - **Crisp ASR** — Local engine with multiple backends (Parakeet, Canary, Cohere, Fire Red, Fun-ASR Nano, GigaAM, GLM, Granite, Qwen3, Mega, MOSS Diarize, Omni, Kyutai, SenseVoice, ARK, Voxtral) and a Forced-aligner picker (built-in / Canary CTC / Qwen3 / 12 wav2vec2 language aligners) for word-level timestamps
@@ -135,7 +138,7 @@ Use **Synchronization → Change frame rate...** and select the source and targe
 Go to **Spell check → Get dictionaries...** and download the dictionary for your language. Dictionaries are based on Hunspell/OpenOffice format.
 
 ### How do I add words to the dictionary?
-During spell check, click **Add to dictionary** to add a word. You can also manage custom words in **Options → Word lists**.
+During spell check, click **Add to user dictionary** to add a word. You can also manage custom words in **Options → Word lists**.
 
 ---
 
@@ -163,16 +166,25 @@ See the [Keyboard Shortcuts Reference](reference/keyboard-shortcuts.md) for the 
 
 ### Subtitle Edit won't play video
 - Ensure you have a video player installed (libmpv or VLC)
-- Check that the video player path is correctly set in **Options → Settings → Video Player**
+- Check that the video player path is correctly set in **Options → Settings → Video player**
 - Try to re-encode the video for better compatibility via **Video → More → Re-encode video for better subtitling**
 
 ### Video is black with no sound, but the waveform works
 The waveform is made with FFmpeg while the picture comes from libmpv, so this points at libmpv failing to load rather than at the file.
 - Update your graphics driver from Intel/NVIDIA/AMD directly — the generic Microsoft Basic Display driver has no usable OpenGL
-- Re-download libmpv via **Options → Settings → Video Player → Download libmpv**
+- Re-download libmpv via **Options → Settings → Video player → Download libmpv**
 - If you installed libmpv by hand, make sure `vulkan-1.dll` sits next to `libmpv-2.dll` — recent libmpv builds do not load without it (see [Third-Party Components](third-party-components.md))
 - Check that your antivirus is not blocking `libmpv-2.dll`
-- As a cross-check, switch to VLC under **Options → Settings → Video Player**; if VLC plays the file, the problem is libmpv/OpenGL
+- As a cross-check, switch to VLC under **Options → Settings → Video player**; if VLC plays the file, the problem is libmpv/OpenGL
+
+### Video does not play on Linux
+With the native `.tar.gz` builds, Subtitle Edit uses the system libmpv. If it is not installed (common on Fedora), the video area stays empty, with no picture or sound.
+- Install libmpv and FFmpeg with your package manager, e.g. `sudo apt install libmpv-dev ffmpeg` (Debian/Ubuntu) or `sudo dnf install mpv-libs ffmpeg-free` (Fedora) - see the [README](https://github.com/SubtitleEdit/subtitleedit#linux) for other distributions
+- Or use the Flatpak, which bundles mpv and FFmpeg
+- As a fallback, switch to **FFmpeg** under **Options → Settings → Video player**
+
+### Video does not play on macOS
+The `.dmg` bundles libmpv and FFmpeg, so nothing needs to be installed. If video still does not show, try another player under **Options → Settings → Video player** (e.g. **FFmpeg**, or **libmpv - Metal (experimental, needs restart)** - restart Subtitle Edit after switching to it).
 
 ### Waveform is not showing
 - Ensure FFmpeg is installed and the path is set in settings

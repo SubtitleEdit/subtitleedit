@@ -26,15 +26,25 @@ Subtitle Edit is a free, open-source editor for video subtitles. It allows you t
 ## System Requirements
 
 - Windows 10 (version 22H2 / build 19045) or newer, Linux, or macOS 12 (Monterey) or newer (macOS 14 / Sonoma or newer recommended - that is the oldest macOS .NET 10 is supported on)
-- [FFmpeg](https://ffmpeg.org/) (for audio/video processing)
+- [FFmpeg](https://ffmpeg.org/) (for audio/video processing, waveforms, burn-in etc.)
 - [libmpv](https://mpv.io/) for video playback
+
+How you get FFmpeg and libmpv depends on the platform:
+- **Windows** — not included; Subtitle Edit offers to download them the first time they are needed (libmpv when you open a video, FFmpeg for waveforms and other video features). Both can also be downloaded from **Options → Settings**.
+- **macOS** — the `.dmg` is self-contained: libmpv and FFmpeg are bundled inside `Subtitle Edit.app`.
+- **Linux** — the Flatpak bundles mpv and FFmpeg. The native `.tar.gz` builds use the system libraries, so install libmpv and FFmpeg with your package manager (see the [README](https://github.com/SubtitleEdit/subtitleedit#linux) for the package names per distribution).
+
+All builds are self-contained and do not need a separate .NET installation.
 
 ## Getting Started
 
 Follow these simple steps to begin working with subtitles in Subtitle Edit:
 
 1. **Install Subtitle Edit**  
-   Download and install the latest version from the official website.
+   Download the latest version from the [Releases](https://github.com/SubtitleEdit/subtitleedit/releases) page:
+   - **Windows** — `SubtitleEdit-Windows-x64-Setup.exe` (installer), or `SubtitleEdit-Windows-x64.zip` / `SubtitleEdit-Windows-ARM64.zip` (portable - unzip and run `SubtitleEdit.exe`; settings are kept next to the program)
+   - **macOS** — `SubtitleEdit-macOS-ARM64.dmg` (Apple Silicon) or `SubtitleEdit-macOS-x64.dmg` (Intel). Open the `.dmg` and drag `Subtitle Edit.app` into `Applications`; it is signed and notarized, so it opens normally
+   - **Linux** — `SubtitleEdit-linux-x64.flatpak` (any distribution, install with `flatpak install SubtitleEdit-linux-x64.flatpak`), or the native `SubtitleEdit-Linux-x64.tar.gz` / `SubtitleEdit-Linux-ARM64.tar.gz` builds (need libmpv and FFmpeg from your package manager, see the [README](https://github.com/SubtitleEdit/subtitleedit#linux))
 
 2. **Open a video file**  
    Go to **Video → Open video...** and select your video.  
@@ -71,7 +81,7 @@ The main window consists of several key areas:
 - **Video Player** — Preview video with subtitles
 - **Audio Visualizer** — Waveform/spectrogram for precise timing adjustments
 
-Subtitle Edit offers **12 different layouts** for arranging these areas. Choose one with the **Layout** button on the toolbar or its configurable shortcut.
+Subtitle Edit offers **15 different layouts** for arranging these areas. Choose one with the **Layout** button on the toolbar or its configurable shortcut.
 
 For a detailed guide to each area, mouse interactions, and keyboard shortcuts, see the **[Main Window](features/main-window.md)** documentation.
 

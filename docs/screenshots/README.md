@@ -27,6 +27,7 @@ All listed files exist on disk. Filenames are stable and may be linked from `../
 - `file-menu.png` — File menu
 - `compare.png` — Compare window
 - `import-plain-text.png` — Import plain text window
+- `import-dvd.png` — Import subtitles from DVD window
 - `export-image-based.png` — Export image based window
 
 ## Edit
@@ -38,6 +39,8 @@ All listed files exist on disk. Filenames are stable and may be linked from `../
 - `modify-selection.png` — Modify selection window
 - `show-history.png` — Show history window
 - `ai-assistant.png` — AI assistant window
+- `assisted-split.png` — Assisted split window
+- `assisted-move.png` — Assisted move window
 
 ## Tools
 
@@ -65,6 +68,10 @@ All listed files exist on disk. Filenames are stable and may be linked from `../
 - `renumber.png` — Renumber window
 - `remove-text-hi.png` — Remove text for hearing impaired window
 - `ai-review.png` - AI review window
+- `list-errors.png` — List errors window
+- `merge-continuation-lines.png` — Merge continuation lines window
+- `remove-unicode-characters.png` — Remove/replace Unicode characters window
+- `improve-time-codes.png` — Improve time codes window
 
 ## Synchronization
 
@@ -91,11 +98,14 @@ All listed files exist on disk. Filenames are stable and may be linked from `../
 - `re-encode-video.png` — Re-encode video window
 - `video-ocr.png` — Video OCR window
 - `chapters.png` — Chapters window
+- `remux-video.png` — Remux video window
+- `background-music.png` — Generate background music window
 
 ## Translation
 
 - `auto-translate.png` — Auto translate window
 - `copy-paste-translate.png` — Copy/paste translate window
+- `auto-translate-advanced.png` — Advanced settings for the advanced local LLM translate engines
 
 ## Spell Check
 
@@ -111,6 +121,7 @@ All listed files exist on disk. Filenames are stable and may be linked from `../
 
 - `ocr.png` — OCR window
 - `ocr-preprocessing.png` — OCR pre-processing window
+- `binary-edit.png` — Edit image-based subtitle window
 
 ## ASSA — Tool Windows
 
@@ -118,6 +129,8 @@ All listed files exist on disk. Filenames are stable and may be linked from `../
 - `assa-properties.png` — ASSA properties window
 - `assa-attachments.png` — ASSA attachments window
 - `assa-draw.png` — ASSA draw window
+- `assa-draw-shape-library.png` — ASSA draw shape library
+- `assa-draw-context-menu.png` — ASSA draw right-click menu
 - `assa-set-position.png` — ASSA set position window
 - `assa-set-background.png` — ASSA set background window
 - `assa-progress-bar.png` — ASSA progress bar window
@@ -152,6 +165,7 @@ Used by `../reference/assa-override-tags.md` to illustrate individual override t
 - `subtitle-grid-column-menu.png` — Subtitle grid column menu
 - `text-editor.png` — Text editor standalone
 - `statistics.png` — Statistics window
+- `command-palette.png` — Command palette with a search typed
 
 ## Options
 
@@ -161,9 +175,9 @@ Used by `../reference/assa-override-tags.md` to illustrate individual override t
 
 ## Counts
 
-- Top-level screenshots: **96**
+- Top-level screenshots: **110**
 - ASSA override-tag examples (`assa/`): **35**
-- Total: **131**
+- Total: **145**
 
 ## How the dialog screenshots are made
 
