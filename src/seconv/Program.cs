@@ -667,17 +667,22 @@ internal class Program
         {
             var arg = args[i];
             var name = arg.TrimStart('/', '-');
-            var isOption = LooksLikeOption(arg) || arg.StartsWith("/output", StringComparison.OrdinalIgnoreCase);
-            if (isOption && name.StartsWith("output", StringComparison.OrdinalIgnoreCase))
+
+            // Only "output" itself, optionally with :value or =value, so a Unix path like
+            // /outputs/Latin.nocr stays the input file.
+            var rest = name.StartsWith("output", StringComparison.OrdinalIgnoreCase) ? name.Substring("output".Length) : null;
+            var isOutputOption = rest != null && (rest.Length == 0 || rest[0] is ':' or '=') &&
+                                 (LooksLikeOption(arg) || arg.StartsWith("/output", StringComparison.OrdinalIgnoreCase));
+            if (isOutputOption)
             {
-                var rest = name.Substring("output".Length);
-                if (rest.Length > 0 && rest[0] is ':' or '=')
+                if (rest!.Length > 0)
                 {
                     output = rest.Substring(1);
                 }
-                else if (rest.Length == 0 && i + 1 < args.Length)
+                else
                 {
-                    output = args[++i];
+                    // A bare --output with no value is an error, not "optimize in place".
+                    output = i + 1 < args.Length ? args[++i] : string.Empty;
                 }
 
                 continue;
@@ -720,8 +725,8 @@ internal class Program
             string? backup = null;
             if (output == null)
             {
-                backup = input + ".bak";
-                File.Copy(input, backup, true);
+                backup = Nikse.SubtitleEdit.UiLogic.Ocr.NOcrDbOptimizer.GetFreeBackupFileName(input);
+                File.Copy(input, backup, false);
                 output = input;
             }
 

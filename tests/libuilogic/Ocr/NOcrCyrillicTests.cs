@@ -107,6 +107,19 @@ public class NOcrCyrillicTests
         Assert.True(capital.HeightAboveBaseline > a.HeightAboveBaseline + 5);
     }
 
+    [Fact]
+    public void Splitter_TwoGlyphLineWithDescender_BaselineIsTheLetterBottom()
+    {
+        // With two glyphs the upper median is the descender's bottom, which made "у" look cap high.
+        var letters = Split("Ну", out _).Where(p => p.NikseBitmap != null).ToList();
+
+        Assert.Equal(2, letters.Count);
+        var capital = letters[0];
+        var u = letters[1];
+        Assert.Equal(capital.Top + capital.NikseBitmap!.Height, capital.Baseline);
+        Assert.True(u.NikseBitmap!.Height > u.HeightAboveBaseline, "the descender is below the baseline");
+    }
+
     private static ImageSplitterItem2 Glyph(int height, int top, int baseline = 40) =>
         new(0, top, new NikseBitmap2(20, height)) { Top = top, Baseline = baseline };
 

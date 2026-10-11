@@ -542,6 +542,27 @@ public class SubtitleRetimerTests : IDisposable
     }
 
     [Fact]
+    public void SnapToFrames_NextToALineLeftOffTheFrames_RoundsAwayFromIt()
+    {
+        // 25 fps, no minimum gap. a and c were not moved and sit between frames; rounding b to the
+        // nearest frame would start it 10 ms inside a and end it 5 ms inside c.
+        var original = new List<SubtitleRetimer.Line> { new("a", 8, 10.05), new("b", 10.2, 11), new("c", 11.035, 13) };
+        var placements = new[]
+        {
+            new SubtitleRetimer.Placement(8, 10.05, false),
+            new SubtitleRetimer.Placement(10.055, 11.03, true),
+            new SubtitleRetimer.Placement(11.035, 13, false),
+        };
+
+        SubtitleRetimer.SnapToFrames(original, placements, 25, 0);
+
+        Assert.Equal(10.08, placements[1].StartSeconds, 6);
+        Assert.Equal(11.0, placements[1].EndSeconds, 6);
+        Assert.True(placements[1].StartSeconds >= placements[0].EndSeconds);
+        Assert.True(placements[1].EndSeconds <= placements[2].StartSeconds);
+    }
+
+    [Fact]
     public void Settle_TwoLinesThatMayNotMove_AreLeftAlone()
     {
         var original = new List<SubtitleRetimer.Line> { new("a", 10, 12), new("b", 12.5, 14) };

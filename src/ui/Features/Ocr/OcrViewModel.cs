@@ -4310,7 +4310,7 @@ public partial class OcrViewModel : ObservableObject
 
         var fileName = _nOcrDb.FileName;
         var name = Path.GetFileNameWithoutExtension(fileName);
-        var backupFileName = fileName + ".bak";
+        var backupFileName = NOcrDbOptimizer.GetFreeBackupFileName(fileName);
         var title = Se.Language.Ocr.OptimizeNOcrDatabase.TrimEnd('.');
         var answer = await MessageBox.Show(
             Window,
@@ -4323,13 +4323,19 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
+        var maxWrongPixels = SelectedNOcrMaxWrongPixels;
         try
         {
             var (db, result) = await Task.Run(() =>
             {
-                File.Copy(fileName, backupFileName, true);
+                File.Copy(fileName, backupFileName, false);
                 var optimizedDb = new NOcrDb(fileName);
-                var optimizeResult = NOcrDbOptimizer.Optimize(optimizedDb, new NOcrDbOptimizerSettings(), null, (done, total) =>
+
+                // Keep what tells lookalikes apart under the loosest budget OCR will use here
+                // (the binary OCR fallback runs the last-ditch pass, which doubles it).
+                var settings = new NOcrDbOptimizerSettings();
+                settings.MaxWrongPixels = Math.Max(settings.MaxWrongPixels, maxWrongPixels * 2);
+                var optimizeResult = NOcrDbOptimizer.Optimize(optimizedDb, settings, null, (done, total) =>
                 {
                     if (done % 50 == 0 || done == total)
                     {

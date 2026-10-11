@@ -592,7 +592,10 @@ public class NikseBitmapImageSplitter2
         }
 
         bottoms.Sort();
-        var baseline = bottoms[bottoms.Count / 2];
+
+        // Lower median: with an even count the upper one is a descender in a two-glyph line
+        // ("Ну"), which made the other glyph look capital-height.
+        var baseline = bottoms[(bottoms.Count - 1) / 2];
         for (var i = lineStart; i < list.Count; i++)
         {
             if (list[i].NikseBitmap != null)
