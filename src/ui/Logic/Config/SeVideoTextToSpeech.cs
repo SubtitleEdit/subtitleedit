@@ -154,6 +154,9 @@ public class SeVideoTextToSpeech
     public int AudioDuckingOriginalVolume { get; set; }
     public bool RemoveOriginalSpeech { get; set; }
 
+    // Remove the original speech with HTDemucs (fast) instead of Mel-Band RoFormer (best quality).
+    public bool RemoveOriginalSpeechFast { get; set; }
+
     // Run voice-clone references through Sidon (audio.cpp) first, to strip music and noise from
     // under the speech. See Features.Video.TextToSpeech.CloneReferenceCleaning.CloneReferenceCleaner.
     public bool CleanCloneReferences { get; set; }

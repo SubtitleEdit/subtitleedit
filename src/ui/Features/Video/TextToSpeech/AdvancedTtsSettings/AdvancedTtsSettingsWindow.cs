@@ -61,6 +61,15 @@ public class AdvancedTtsSettingsWindow : Window
 
                 MakeRow(checkBoxRemoveSpeech, l.RemoveOriginalSpeechDescription),
 
+                MakeRow(UiUtil.MakeLabel(l.SpeechRemovalModel), l.SpeechRemovalModelDescription,
+                    new ComboBox
+                    {
+                        Width = 240,
+                        ItemsSource = vm.SpeechRemovalModels,
+                        [!SelectingItemsControl.SelectedIndexProperty] = new Binding(nameof(vm.SpeechRemovalModelIndex)) { Mode = BindingMode.TwoWay },
+                        [!IsEnabledProperty] = new Binding(nameof(vm.DoRemoveOriginalSpeech)) { Mode = BindingMode.OneWay },
+                    }),
+
                 MakeRow(checkBoxVad, l.VadSilenceCompressionDescription,
                     MakeField(l.MaxSilenceMs,
                         UiUtil.MakeNumericUpDownInt(0, 5000, 150, 110, vm, nameof(vm.VadMaxSilenceMs)),
