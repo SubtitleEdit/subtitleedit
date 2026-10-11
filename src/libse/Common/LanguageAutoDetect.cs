@@ -597,6 +597,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             return AutoDetectGoogleLanguage(text, bestCount, out _);
         }
 
+        /// <param name="text">The text to detect the language of.</param>
+        /// <param name="bestCount">The minimum number of keyword hits for a match.</param>
         /// <param name="score">The number of keyword hits for the returned language.</param>
         private static string AutoDetectGoogleLanguage(string text, int bestCount, out int score)
         {
@@ -1371,6 +1373,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <paramref name="stopAfterBytes"/> and trimmed at the end - what a copy of the subtitle
         /// with RemoveEmptyLines and GetAllTexts gave, without deep-copying every paragraph.
         /// </summary>
+        /// <param name="subtitle">The subtitle to read.</param>
+        /// <param name="stopAfterBytes">Stop collecting texts once past this many characters.</param>
         /// <param name="nonEmptyCount">All non-empty lines, also those past the stop.</param>
         private static string GetNonEmptyTexts(Subtitle subtitle, int stopAfterBytes, out int nonEmptyCount)
         {

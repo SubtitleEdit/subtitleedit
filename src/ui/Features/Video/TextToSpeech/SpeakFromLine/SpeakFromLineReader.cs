@@ -48,7 +48,7 @@ public sealed class SpeakFromLineReader
             pending = GenerateAsync(texts[0], folder, cancellationToken);
             for (var i = 0; i < texts.Count; i++)
             {
-                var fileName = await pending;
+                var fileName = await pending!;
                 pending = i + 1 < texts.Count ? GenerateAsync(texts[i + 1], folder, cancellationToken) : null;
                 cancellationToken.ThrowIfCancellationRequested();
                 if (fileName == null)

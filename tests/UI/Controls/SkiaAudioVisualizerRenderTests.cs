@@ -131,7 +131,7 @@ public class SkiaAudioVisualizerRenderTests
 
         using var frame = window.CaptureRenderedFrame()!;
         using var stream = new MemoryStream();
-        frame.Save(stream);
+        frame.Save(stream, PngBitmapEncoderOptions.Default);
         return stream.ToArray();
     }
 }

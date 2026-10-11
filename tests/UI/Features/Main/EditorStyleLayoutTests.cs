@@ -55,7 +55,7 @@ public class EditorStyleLayoutTests
             var timelineGrid = Assert.IsType<Grid>(tracks.GetLogicalParent());
             Assert.Same(timelineGrid, vm.AudioVisualizer!.GetLogicalParent());
             Assert.Equal(0, Grid.GetRow(tracks));
-            Assert.Equal(1, Grid.GetRow(vm.AudioVisualizer));
+            Assert.Equal(1, Grid.GetRow(vm.AudioVisualizer!));
         }
         finally
         {

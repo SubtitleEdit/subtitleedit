@@ -968,6 +968,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <summary>
         /// Removes ASSA override blocks ({\...}), the {Kara Effector...} block and \N, \n, \h.
         /// </summary>
+        /// <param name="input">The text to remove tags from.</param>
+        /// <param name="removeDrawingTags">Return an empty string when what is left is only a drawing ("m 0 0 l ...").</param>
         /// <param name="removeCommentBlocks">
         /// Also remove any other closed {...} block. ASSA renderers never draw a brace block, so
         /// fansubbers use {...} for comments (#15584); an unclosed '{' is drawn as text. Off by

@@ -336,6 +336,8 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         /// A file in <paramref name="folder"/> named <paramref name="fileName"/> ignoring case (a DVD
         /// copied to a case sensitive file system may be all lowercase: video_ts/vts_01_1.vob), or null.
         /// </summary>
+        /// <param name="folder">The folder to look in.</param>
+        /// <param name="fileName">The file name to find.</param>
         /// <param name="folderFiles">The folder's files, listed on the first miss and reused.</param>
         internal static string FindFile(string folder, string fileName, ref string[] folderFiles)
         {
