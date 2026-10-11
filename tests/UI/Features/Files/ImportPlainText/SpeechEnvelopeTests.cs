@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.Features.Files.ImportPlainText;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace UITests.Features.Files.ImportPlainText;
 
@@ -143,6 +144,38 @@ public class SpeechEnvelopeTests
     {
         var texts = lines.Select(l => l.Text).ToList();
         ForcedAligner.ApplyTimeCodes(lines, Aligned, texts, [0, 1, 2], 20, envelope);
+    }
+
+    [Fact]
+    public void Aligner_QuickSpeech_StillHoldsTheLineForTheMaximumReadingSpeed()
+    {
+        using var _ = new SettingsScope(
+            "General.SubtitleMaximumCharactersPerSeconds",
+            "General.SubtitleOptimalCharactersPerSeconds",
+            "General.SubtitleMinimumDisplayMilliseconds",
+            "General.SubtitleMaximumDisplayMilliseconds");
+        Se.Settings.General.SubtitleMaximumCharactersPerSeconds = 20;
+        Se.Settings.General.SubtitleOptimalCharactersPerSeconds = 15;
+        Se.Settings.General.SubtitleMinimumDisplayMilliseconds = 500;
+        Se.Settings.General.SubtitleMaximumDisplayMilliseconds = 8000;
+
+        // 31 characters said in 0.8 s, with seconds of silence after it: 1.55 s at 20 cps.
+        var lines = new List<SubtitleLineViewModel> { new() { Text = "It's just some guy I work with." }, new() { Text = "Come on." } };
+        ForcedAligner.ApplyTimeCodes(lines, [(1.0, 1.8), (6.0, 7.0)], lines.Select(l => l.Text).ToList(), [0, 1], 20);
+
+        Assert.InRange(lines[0].EndTime.TotalSeconds, 2.5, 2.6);
+    }
+
+    [Fact]
+    public void Aligner_UsesTheGapItIsGiven()
+    {
+        var lines = ThreeLines();
+        var texts = lines.Select(l => l.Text).ToList();
+
+        // Line one's speech runs right up to line two: the end gives way by the gap asked for.
+        ForcedAligner.ApplyTimeCodes(lines, [(1.0, 9.0), (3.0, 5.0), (12.0, 15.0)], texts, [0, 1, 2], 20, null, 500);
+
+        Assert.InRange(lines[0].EndTime.TotalSeconds, 2.49, 2.51);
     }
 
     [Fact]

@@ -273,6 +273,11 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
     [RelayCommand]
     private void Ok()
     {
+        if (IsAligning)
+        {
+            return;
+        }
+
         // Remember what was picked - reopening the dialog used to come back at "Auto" and the
         // global default duration every time, while Settings.json carried a dozen SE4-shaped
         // import keys that nothing read.
@@ -291,6 +296,13 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
     [RelayCommand]
     private void Cancel()
     {
+        // Cancel stops a running alignment first - the lines keep the times they had.
+        if (IsAligning)
+        {
+            _alignCancellation?.Cancel();
+            return;
+        }
+
         Close();
     }
 
@@ -331,7 +343,7 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
             return;
         }
 
-        var result = ScriptSyncService.SyncScript(Subtitles.ToList(), whisperVm.TranscribedSubtitle);
+        var result = ScriptSyncService.SyncScript(Subtitles.ToList(), whisperVm.TranscribedSubtitle, MinGapMs);
 
         // If more than a quarter of the script couldn't be matched to the transcription,
         // it's likely the transcription is for the wrong audio / language / model. Tell
@@ -403,8 +415,9 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
     /// </summary>
     private Process? _isolateSpeechProcess;
     private volatile bool _windowClosing;
+    private System.Threading.CancellationTokenSource? _alignCancellation;
 
-    private async Task<SpeechEnvelope?> IsolateSpeechEnvelopeAsync(string executable, string audioFileName, string workFolder)
+    private async Task<SpeechEnvelope?> IsolateSpeechEnvelopeAsync(string executable, string audioFileName, string workFolder, System.Threading.CancellationToken cancellationToken)
     {
         try
         {
@@ -441,6 +454,15 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
             var stopwatch = Stopwatch.StartNew();
             while (!process.HasExited)
             {
+                if (cancellationToken.IsCancellationRequested)
+                {
+#pragma warning disable CA1416
+                    process.Kill(true);
+#pragma warning restore CA1416
+                    await process.WaitForExitAsync();
+                    cancellationToken.ThrowIfCancellationRequested();
+                }
+
                 var elapsed = new TimeCode(stopwatch.ElapsedMilliseconds).ToShortDisplayString();
                 AlignProgress = string.Format(
                     Se.Language.File.Import.ForcedAlignerIsolatingSpeech,
@@ -470,6 +492,10 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
 
             Se.WriteToolsLog($"Forced aligner: speech isolation failed (exit code {process.ExitCode})", true);
         }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
         catch (Exception exception)
         {
             Se.LogError(exception, "Forced aligner: speech isolation failed");
@@ -485,6 +511,8 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
         var workFolder = Path.Combine(Path.GetTempPath(), "se-forced-align-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(workFolder);
         var audioFileName = Path.Combine(workFolder, "audio.wav");
+        _alignCancellation = new System.Threading.CancellationTokenSource();
+        var cancellationToken = _alignCancellation.Token;
 
         try
         {
@@ -492,7 +520,7 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
             AlignPercent = 0;
             AlignProgress = "Extracting audio...";
 
-            if (!await ExtractAudioForAlignmentAsync(audioFileName))
+            if (!await ExtractAudioForAlignmentAsync(audioFileName, cancellationToken))
             {
                 await MessageBox.Show(
                     Window!,
@@ -519,9 +547,9 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
             using var audio = new FfmpegWindowAudioSource(GetFfmpegPath(), audioFileName, totalSeconds, workFolder);
             var runner = new CrispAsrAlignOnlyRunner(executable, alignerPath, Se.WriteToolsLog);
             var speechEnvelope = endsFromIsolatedSpeech
-                ? await IsolateSpeechEnvelopeAsync(executable, audioFileName, workFolder)
+                ? await IsolateSpeechEnvelopeAsync(executable, audioFileName, workFolder, cancellationToken)
                 : null;
-            var forcedAligner = new ForcedAligner(runner, audio, speechEnvelope: speechEnvelope);
+            var forcedAligner = new ForcedAligner(runner, audio, speechEnvelope: speechEnvelope, minGapMs: MinGapMs);
 
             var progress = new Progress<ForcedAligner.Progress>(p => Dispatcher.UIThread.Post(() =>
             {
@@ -531,22 +559,23 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
                 AlignPercent = p.Percent;
             }));
 
-            var result = await forcedAligner.AlignAsync(lines, progress);
+            var result = await forcedAligner.AlignAsync(lines, progress, cancellationToken);
 
             RefreshSubtitlesFrom(lines);
 
-            if (result.UnalignedLines > 0)
+            if (result.EstimatedLines > 0)
             {
                 await MessageBox.Show(
                     Window!,
                     Se.Language.General.Warning,
-                    $"Aligned {result.AlignedLines} of {result.TotalLines} lines."
-                    + Environment.NewLine
-                    + $"{result.UnalignedLines} line(s) at the end kept their previous time codes - the script "
-                    + "is probably longer than what is spoken in the video.",
+                    string.Format(Se.Language.File.Import.ForcedAlignerEstimatedXOfY, result.EstimatedLines, result.TotalLines),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
             }
+        }
+        catch (OperationCanceledException)
+        {
+            // Stopped by the user, or the window closed: the lines keep the times they had.
         }
         catch (ForcedAlignerException exception)
         {
@@ -557,9 +586,25 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
         }
+        catch (Exception exception)
+        {
+            // ffmpeg or the engine could not be started, a temp file could not be written...
+            Se.LogError(exception, "Forced aligner failed");
+            if (!_windowClosing)
+            {
+                await MessageBox.Show(
+                    Window!,
+                    Se.Language.General.Error,
+                    exception.Message,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+        }
         finally
         {
             IsAligning = false;
+            _alignCancellation?.Dispose();
+            _alignCancellation = null;
             AlignProgress = string.Empty;
             AlignPercent = 0;
             TryDeleteFolder(workFolder);
@@ -578,12 +623,12 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
         }
     }
 
-    private async Task<bool> ExtractAudioForAlignmentAsync(string audioFileName)
+    private async Task<bool> ExtractAudioForAlignmentAsync(string audioFileName, System.Threading.CancellationToken cancellationToken)
     {
         // 16 kHz mono PCM - what every CTC aligner expects. "aresample=async=1:first_pts=0" keeps
         // gaps in the audio timestamps as silence, or the aligned times after a gap come out early (#15385).
         var arguments =
-            $"-hide_banner -nostats -y -i \"{_videoFileName}\" -vn -af aresample=async=1:first_pts=0 -ar 16000 -ac 1 -acodec pcm_s16le \"{audioFileName}\"";
+            $"-hide_banner -nostats -loglevel error -y -i \"{_videoFileName}\" -vn -af aresample=async=1:first_pts=0 -ar 16000 -ac 1 -acodec pcm_s16le \"{audioFileName}\"";
 
         using var process = new System.Diagnostics.Process
         {
@@ -597,7 +642,30 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
         };
 
         process.Start();
-        await process.WaitForExitAsync();
+
+        // Read, not just redirected: a full pipe would stall ffmpeg and with it this dialog.
+        var stdErr = process.StandardError.ReadToEndAsync();
+        var stdOut = process.StandardOutput.ReadToEndAsync();
+        try
+        {
+            await process.WaitForExitAsync(cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            try
+            {
+                process.Kill(true);
+                await process.WaitForExitAsync();
+            }
+            catch
+            {
+                // already gone
+            }
+
+            throw;
+        }
+
+        await Task.WhenAll(stdErr, stdOut);
         return process.ExitCode == 0 && File.Exists(audioFileName);
     }
 
@@ -717,6 +785,15 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
         _windowClosing = true;
         try
         {
+            _alignCancellation?.Cancel();
+        }
+        catch (ObjectDisposedException)
+        {
+            // the alignment just finished
+        }
+
+        try
+        {
             var process = _isolateSpeechProcess;
             if (process != null && !process.HasExited)
             {
@@ -735,7 +812,7 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
     {
         if (e.Key == Key.Escape)
         {
-            Close();
+            Cancel();
         }
         else if (UiUtil.IsHelp(e))
         {

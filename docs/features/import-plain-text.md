@@ -40,7 +40,9 @@ Setup dialog:
 - **Engine** — Uses the Crisp ASR engine; click **Download / update engine...** if it is not installed yet
 - **Aligner model** — Pick an alignment model. The wav2vec2 aligners are language-specific and small (~200–300 MB); the Canary CTC and Qwen3 forced aligner models are multilingual
 
-Missing models are downloaded automatically when you press OK. Progress is shown per window and line while aligning. If the script is longer than the speech in the video, the trailing lines cannot be aligned and a warning tells you how many lines were matched.
+Missing models are downloaded automatically when you press OK. Progress is shown per window and line while aligning; **Cancel** (or Esc) stops the alignment and leaves the lines as they were, and OK is unavailable until it has finished. If the script is longer than the speech in the video, the lines that cannot be aligned are placed by reading time and a warning tells you how many lines are only estimated.
+
+Ends are set from reading time (see below), but a line always stays up long enough for the maximum characters per second from Settings → General, as long as that does not run into the next line. Both align buttons use the **Gap (ms)** set in this dialog.
 
 #### Set end times from isolated speech
 

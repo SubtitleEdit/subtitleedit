@@ -56,7 +56,7 @@ One row per subtitle line, with the shift of its start and end in milliseconds a
 | Heard where it was | Speech-to-text heard the line where it already was, not where the aligner moved it. The aligner's time codes are offered **unticked**. |
 | Moved with the sync | The subtitle was synced first, and the aligner left this line where the sync put it - a line with no speech, one already in place after the sync, or one the aligner could not place. |
 | Already in place | The aligner agrees with the current time codes. |
-| No speech | Nothing to listen for - blank lines, `[sound descriptions]`, `(sighs)`, `♪`. These lines are never moved. |
+| No speech | Nothing to listen for - blank lines, `[sound descriptions]`, `(sighs)`, song lyrics (a line starting or ending with `♪`/`♫`, or wrapped in `#`), positioned signs (`{\pos}`/`{\move}`) and ASSA comments. These lines are never moved by the aligner. |
 | Kept - shift too large | The start would have moved more than *Max shift*, so the line was left alone. |
 | Kept - aligner failed | The aligner could not process this group of lines. |
 
@@ -106,6 +106,8 @@ If speech-to-text hears less than 30% of the subtitle's words, the status line a
 
 - The start is where the first word of the line begins.
 - The end is where the last word ends - but a line is never cut shorter than the minimum display time or the optimal reading speed from Settings → General, as long as that does not show it for longer than it used to be shown or run into the next line.
-- Overlaps that were in the subtitle on purpose are left alone; the tool never creates new ones.
+- A line is held long enough for the maximum reading speed (characters per second) from Settings → General, room permitting.
+- Overlaps that were in the subtitle on purpose - at least half a second and half of the shorter line, as with two speakers at once or a sign over dialogue - are left alone. Smaller overlaps are mistiming and are closed, keeping the minimum gap. The tool never creates new ones.
+- In frame mode (Settings → General) the moved lines are put on whole frames, keeping the minimum gap.
 
-Run [Beautify time codes](beautify-time-codes.md) afterwards to snap the result to frames and shot changes.
+Run [Beautify time codes](beautify-time-codes.md) afterwards to snap the result to shot changes.

@@ -44,11 +44,12 @@ public static class ScriptSyncService
         public int MatchedLines => TotalLines - UnmatchedLines;
     }
 
-    public static SyncResult SyncScript(List<SubtitleLineViewModel> scriptLines, Subtitle whisperSubtitle)
+    /// <param name="minGapMilliseconds">The gap between lines; null for the general setting.</param>
+    public static SyncResult SyncScript(List<SubtitleLineViewModel> scriptLines, Subtitle whisperSubtitle, double? minGapMilliseconds = null)
     {
         var minDurationMs = (double)Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
         var maxDurationMs = (double)Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
-        var minGapMs = (double)Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        var minGapMs = minGapMilliseconds ?? Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
 
         var whisperWords = ExtractWordTimestamps(whisperSubtitle);
         if (whisperWords.Count == 0)

@@ -1345,7 +1345,8 @@
       "forcedAlignerIsolatingSpeech": "Isolating speech... {0}",
       "forcedAlignerIsolatingSpeechFailed": "Could not isolate the speech - end times were set from reading time instead.",
       "forcedAlignerModel": "Aligner model",
-      "forcedAlignerDownloadEngine": "Download / update engine..."
+      "forcedAlignerDownloadEngine": "Download / update engine...",
+      "forcedAlignerEstimatedXOfY": "{0} of {1} lines could not be aligned and were placed by reading time - their time codes are only estimated. The script is probably longer than what is spoken in the video."
     },
     "export": {
       "exportImagesProfiles": "Export images profiles",
@@ -2814,6 +2815,10 @@
       "removeOriginalSpeechDescription": "Keeps the music and sound effects of the original video but removes its speech, and mixes the new speech over that. Takes about as long as the video itself with a GPU, and many times longer without one. With audio ducking on, its volume applies to the music and effects. Only applies when the speech is added to the video file.",
       "removingOriginalSpeech": "Removing original speech...",
       "removeOriginalSpeechFailed": "Could not remove the original speech - the speech was added to the video without it.",
+      "speechRemovalModel": "Model",
+      "speechRemovalModelDescription": "Best quality keeps the most of the music and sound effects. Fast is about three times quicker, with a little more of the music lost.",
+      "speechRemovalBestQuality": "Best quality (Mel-Band RoFormer)",
+      "speechRemovalFast": "Fast (HTDemucs)",
       "videoTruncatedWarning": "The picture in the new video file stops after {0}, but the original video is {1} long - the picture will freeze while the sound continues.\n\nThe file was kept. See error-log.txt in the Subtitle Edit data folder for the ffmpeg output.",
       "originalVolumePercent": "Original volume %",
       "vadSilenceCompression": "VAD silence compression",
