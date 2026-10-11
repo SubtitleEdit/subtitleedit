@@ -48,4 +48,4 @@ Every non-empty **Replace with** is saved when you click OK and filled in again 
 |-----|--------|
 | Space | Toggle Apply for the selected rows |
 | Escape | Close without changes |
-| F1 | Open help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |

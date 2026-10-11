@@ -87,4 +87,4 @@ A sentence "continues" when the earlier text does not end with `.`, `!`, `?` or 
 |-----|--------|
 | 1-5 (split) / 1-6 (move) | Apply that candidate |
 | Escape | Close without changes |
-| F1 | Open help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |

@@ -35,7 +35,7 @@ Resample ASSA subtitle styles and positions from one video resolution to another
 
 | Shortcut | Action |
 |----------|--------|
-| F1 | Show help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |
 | Escape | Close dialog |
 
 ## Resolution set from the video

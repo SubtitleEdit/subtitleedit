@@ -52,7 +52,7 @@ Find and replace text in the subtitle.
 - **Menu:** Edit → Replace
 - **Shortcut:** `Ctrl+H` (`Cmd+Option+F` on macOS, since Cmd+H hides the app)
 
-The buttons have Alt accelerators, underlined while Alt is held: `Alt+F` **Find next**, `Alt+R` **Replace & find next**, `Alt+A` **Replace all**. As in Subtitle Edit 4, the bare letter (`F`, `R`, `A`) also works once the focus has left the text boxes, e.g. after clicking a button. The Find window has `Alt+F` **Find next** and `Alt+P` **Find previous** the same way. The history button next to the search box lists recent searches; `Ctrl+Delete` removes the current search text from the search history.
+The buttons have Alt accelerators, underlined while Alt is held: `Alt+F` **Find next**, `Alt+R` **Replace & find next**, `Alt+A` **Replace all**. As in Subtitle Edit 4, the bare letter (`F`, `R`, `A`) also works once the focus has left the text boxes, e.g. after clicking a button. The Find window has `Alt+F` **Find next** and `Alt+P` **Find previous** the same way. The history button next to the search box lists recent searches. Each entry has a **✕** to delete it (in the history menu and in the search box's drop-down; `Delete` on a highlighted entry does the same), and **Clear history** at the bottom of the menu removes them all. `Ctrl+Delete` removes the current search text from the search history.
 
 The line under the buttons reports the outcome: **Count** shows how many matches there are, **Replace all** shows how many occurrences were replaced, and **Replace & find next** keeps a running total of the occurrences replaced with the current search text. Typing a new search text starts the count over.
 
@@ -110,6 +110,8 @@ Each rule has one of three match types, shown as an icon in the tree:
 | Case insensitive | Plain text match, ignores case |
 | Case sensitive | Plain text match, exact case |
 | Regular expression | Full .NET regex syntax. Use `\n` to match a line break between two lines (`\r\n` and `\r` are accepted too and treated as `\n`). |
+
+The **Whole word** checkbox in the rule dialog makes a plain-text rule match only whole words (it is disabled for regular expression rules, where `\b` does the same).
 
 Unlike Find and Replace, regular expression rules here are matched in multiline mode: `^` and `$` match at the start and the end of *every* line, so `^- ` strips the dash from both lines of a two-line subtitle. Put `(?-m)` in front of the pattern to anchor to the whole subtitle text instead. The replacement text follows the same rules as in Replace above - `$1` and `\n` work, other backslash escapes do not.
 
@@ -171,7 +173,7 @@ Rules can also be exported to and imported from **CSV** (choose the `.csv` type 
 The CSV has one row per rule with this header:
 
 ```csv
-Category,Find,ReplaceWith,Description,Active,Type
+Category,Find,ReplaceWith,Description,Active,Type,WholeWord
 ```
 
 | Column | Description |
@@ -182,6 +184,7 @@ Category,Find,ReplaceWith,Description,Active,Type
 | `Description` | Optional note |
 | `Active` | `true` or `false` — whether the rule is enabled |
 | `Type` | `CaseInsensitive`, `CaseSensitive`, or `RegularExpression` |
+| `WholeWord` | `true` or `false` — optional; older files without this column import as `false` |
 
 Values are quoted per RFC 4180, so `Find`/`ReplaceWith` may contain commas, double quotes (written as `""`) and line breaks. The header row is optional on import; unknown `Type` values fall back to `CaseInsensitive`. Files are written as UTF-8 (with BOM) so non-ASCII rules open correctly in spreadsheet apps.
 
@@ -199,6 +202,15 @@ Jump to a subtitle by its line number.
 
 - **Menu:** Edit → Go to line number...
 - **Shortcut:** `Ctrl+G` (`Control+G` on macOS, where Cmd+G is find next)
+
+## Command Palette
+
+Search every command by name and run it from the keyboard.
+
+- **Menu:** Edit → Command palette...
+- **Shortcut:** `Ctrl+Shift+K` (`Cmd+Shift+K` on macOS)
+
+See [Command palette](command-palette.md).
 
 ## Modify Selection
 

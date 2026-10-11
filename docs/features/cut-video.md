@@ -59,4 +59,4 @@ The built-in audio visualizer helps you precisely identify cut points by showing
 |-----|--------|
 | Escape | Close / Cancel |
 | Space | Toggle video play/pause |
-| F1 | Open help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |

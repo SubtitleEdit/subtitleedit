@@ -43,5 +43,5 @@ Edit the script info header properties of an Advanced SubStation Alpha (ASS/SSA)
 
 | Shortcut | Action |
 |----------|--------|
-| F1 | Show help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |
 | Escape | Close dialog |

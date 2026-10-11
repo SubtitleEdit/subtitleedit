@@ -13,7 +13,7 @@ The Visual sync window shows two video player panes ("Start scene" and "End scen
 
 The waveform under each video only appears when the main window has a waveform to share. Drag the handle between the video and the waveform to resize the waveform - both panes follow, and the height is remembered between sessions.
 
-1. Open **Sync → Visual sync...**
+1. Open **Synchronization → Visual sync...**
 2. In the **Start scene** pane, pick a subtitle line near the beginning and play the video to the position where that line should start
 3. In the **End scene** pane, pick a subtitle line near the end and play the video to the position where that line should start
 4. Click **Sync** to apply (or use **Manual sync...** from the Sync split-button for a manual offset/speed adjustment)

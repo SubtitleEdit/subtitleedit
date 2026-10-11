@@ -61,4 +61,4 @@ Every target exports the rows exactly as shown, so an active card filter is part
 | Enter / double-click | Go to the selected line |
 | Home / End | First / last row |
 | Escape | Close |
-| F1 | Open help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |

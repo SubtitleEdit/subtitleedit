@@ -70,11 +70,11 @@ Jump to a specific time code position in the video.
 - **Shortcut:** Configurable
 - Toggle full-screen video playback
 
-## Undock / Redock
+## Undock / Dock
 
 You can undock the video player into a separate window for multi-monitor setups:
 - **Undock video controls**
-- **Redock video controls**
+- **Dock video controls**
 
 ## Secondary Subtitles
 
@@ -95,6 +95,8 @@ Configure the video player backend in **Options → Settings → Video player**:
 - **libmpv - Native Window ID rendering** — default on Windows (not available on macOS)
 - **libmpv - Software rendering (slow)**
 - **libVLC - Native Window ID rendering** — alternative backend (Windows and Linux only)
+- **FFmpeg** — plays video through FFmpeg, no libmpv/libVLC needed (all platforms)
+- **libmpv - Metal (experimental, needs restart)** — macOS only
 
 The same settings page also has:
 - **Video controls** — see [Video Controls](#video-controls)

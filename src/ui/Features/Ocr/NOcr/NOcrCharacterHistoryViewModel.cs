@@ -199,6 +199,11 @@ public partial class NOcrCharacterHistoryViewModel : ObservableObject
             _isControlDown = true;
             NOcrDrawingCanvas.IsControlDown = _isControlDown;
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/ocr", "nocr-nikse-ocr");
+        }
     }
 
     public void KeyUp(KeyEventArgs e)

@@ -58,6 +58,11 @@ public class SetTextWindow : Window
                 vm.CancelCommand.Execute(null);
                 e.Handled = true;
             }
+            else if (UiUtil.IsHelp(e))
+            {
+                e.Handled = true;
+                UiUtil.ShowHelp("features/binary-edit", "tools");
+            }
         };
         Closing += (_, _) => vm.Closing();
     }

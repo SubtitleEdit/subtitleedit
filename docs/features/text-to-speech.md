@@ -26,8 +26,9 @@ By default **Add audio to video file** replaces the video's sound with the new s
 
 **Remove original speech (slow)** (also under **Advanced...**) gets rid of just the voices: it splits the video's sound into speech and everything else, throws the speech away, and mixes the new speech over the music and sound effects. That is what a dub normally sounds like.
 
-- The first use downloads the CrispASR runtime (if no CrispASR engine is installed yet) and a source separation model (Mel-Band RoFormer, 457 MB). Speech to text's **Isolate speech** uses the same model.
-- It is slow: about as long as the video itself on a GPU (Metal, CUDA, Vulkan), and many times longer on CPU only.
+- **Model** (below the checkbox) picks the separation model: **Best quality (Mel-Band RoFormer)** (default) keeps the most of the music and sound effects; **Fast (HTDemucs)** is about three times quicker, with a little more of the music lost.
+- The first use downloads the CrispASR runtime (if no CrispASR engine is installed yet) and the selected separation model (Mel-Band RoFormer 457 MB, HTDemucs 81 MB). Speech to text's **Isolate speech** uses the Mel-Band RoFormer model too.
+- It is slow: with **Best quality**, about as long as the video itself on a GPU (Metal, CUDA, Vulkan), and many times longer on CPU only.
 - The music and effects play at full volume. Turn on **Audio ducking** as well to lower them - its volume then applies to the music and effects.
 - The video's first audio track is used.
 - If the separation fails, the speech is added to the video the normal way and the tools log says why.
@@ -185,6 +186,10 @@ The points that matter:
 
 Declining just means "not now" — nothing is changed, the clone is refused, and you are asked again the next time. The answer is remembered per terms version, so you are asked again if the terms change.
 
+### Clean Voice-Clone References
+
+**Clean voice-clone references (Sidon)** under **Advanced...** removes music, noise and reverb from the audio a voice is cloned from before the engine sees it: clips taken from the video (**Clone voice to**, **Clone from video**, **Find voices in video and clone**) and recordings imported in the voice manager. It uses the Sidon speech restoration model on audio.cpp (940 MB download, asked for on first use). The cloned voice no longer copies the background, but very quiet or overlapping speech can come out muffled. If the download is declined or cleaning fails, the reference is used as it is.
+
 ### Renaming and Deleting Imported Voices
 
 Right-click the voice combo box for **Rename voice...** and **Delete voice...**. Both work on voices you imported or cloned - the engines list those straight from their `voices` folder, one reference recording per voice - and are disabled for engine presets, built-in speakers and the *Clone from video* entry.
@@ -291,10 +296,11 @@ You can control pausing and pacing in ElevenLabs output directly from the subtit
 
 Subtitle Edit sends your text to ElevenLabs with **text normalization turned off**, so these pause cues are preserved instead of being collapsed or rewritten.
 
-Behavior depends on the selected model:
+The models offered are `eleven_v4_turbo` (the default), `eleven_v4`, `eleven_turbo_v2_5`, `eleven_v3` and `eleven_multilingual_v2`. Behavior depends on the selected model:
 
-- **Standard models** (`eleven_turbo_v2_5`, `eleven_multilingual_v2`, …) honor SSML `<break>` tags and punctuation pauses.
-- **Eleven v3** does not support SSML `<break>` tags. Subtitle Edit automatically converts each `<break time="Xs" />` into the nearest v3 audio pause tag — `[short pause]` (under 0.75 s), `[pause]` (up to 1.5 s), or `[long pause]` (longer) — so the same subtitle text keeps working when you switch to v3.
+- **Standard models** (`eleven_turbo_v2_5`, `eleven_multilingual_v2`) honor SSML `<break>` tags and punctuation pauses.
+- **Eleven v4, v4 Turbo and v3** do not support SSML `<break>` tags. Subtitle Edit automatically converts each `<break time="Xs" />` into the nearest audio pause tag — `[short pause]` (under 0.75 s), `[pause]` (up to 1.5 s), or `[long pause]` (longer) — so the same subtitle text keeps working when you switch model.
+- These three models also understand expressive audio tags such as `[whispers]` or `[laughs]`. With one of them selected, a help button next to the **Model** drop-down in the review window opens ElevenLabs' guide to audio tags.
 
 ## Review Audio Clips
 
@@ -370,4 +376,4 @@ From there you can play, edit text, regenerate single lines, and finish the sess
 | R / Ctrl+R | Regenerate selected line |
 | Space | Play / pause the selected line |
 | Escape | Close / Cancel |
-| F1 | Open help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |

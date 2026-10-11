@@ -76,4 +76,4 @@ The window remembers its size and position.
 | Ctrl+Up / Ctrl+Down | Move the selected audio or subtitle file up / down |
 | Delete | Remove the selected file from its list |
 | Escape | Close (not while remuxing) |
-| F1 | Open help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |

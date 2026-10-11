@@ -79,4 +79,4 @@ Spell check requires a dictionary to be installed. If no dictionary is found, yo
 | Key | Action |
 |-----|--------|
 | Escape | Close spell check |
-| F1 | Open help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |

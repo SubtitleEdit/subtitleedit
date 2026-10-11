@@ -5,7 +5,7 @@ Detect scene/shot changes in a video using FFmpeg, or import them from a file.
 - **Menu:** Video → Generate/import shot changes
 - **Shortcut:** Configurable
 
-A second menu item, **Show shot changes list**, appears under the Video menu once the loaded video has any shot changes. It lists the current shot changes with **Go to** (also double-click), **Clear**, and a right-click **Delete** for the selected entry.
+A second menu item, **Show shot changes list**, appears under the Video menu once the loaded video has any shot changes - see [Shot changes list](#shot-changes-list).
 
 <!-- Screenshot: Shot changes window -->
 ![Shot Changes](../screenshots/shot-changes.png)
@@ -35,9 +35,22 @@ The window has two tabs: **Generate shot changes** and **Import shot changes**.
 
 Shot changes are displayed as vertical lines on the audio visualizer waveform.
 
+## Shot Changes List
+
+**Video → Show shot changes list** opens the **Shot changes list** window with every shot change of the loaded video (number and time):
+
+- **Go to** (or double-click) — Move the video position to the selected shot change
+- **Clear** — Remove all shot changes
+- Right-click → **Copy** (or Ctrl+C) copies the selected times; **Delete** removes the selected shot change
+- **Home** / **End** jump to the first / last entry
+
+## Export Shot Changes
+
+**Export...** in the shot changes list saves the shot changes to a `.shotchanges` or `.txt` file (one time in seconds per line, the same format Subtitle Edit stores and imports). The file name defaults to the video's name.
+
 ## Keyboard Shortcuts
 
 | Key | Action |
 |-----|--------|
 | Escape | Close / Cancel |
-| F1 | Open help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |

@@ -630,6 +630,11 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
         {
             _isWinDown = true;
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/ocr", "nocr-nikse-ocr");
+        }
     }
 
     public void KeyUp(KeyEventArgs e)

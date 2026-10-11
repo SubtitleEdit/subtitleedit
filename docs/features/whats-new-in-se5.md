@@ -2,6 +2,108 @@
 
 Subtitle Edit 5 is the Avalonia-based, cross-platform version of Subtitle Edit. It keeps the familiar subtitle editing workflow from the Windows Forms version, but many features were expanded.
 
+The first section lists the highlights of 5.3. The sections after it describe what Subtitle Edit 5 (up to 5.2) added compared to Subtitle Edit 4.
+
+## What's New in 5.3
+
+### Editing
+
+- **Command palette** - **Edit → Command palette...** (Ctrl+Shift+K) finds any command by name (with its shortcut) and runs it (see [Command palette](command-palette.md)).
+- **Custom shortcut slots** built from steps (run commands, insert text, find and replace), and **Surround with** slots with toggle/add/remove behavior, like SE 4 (see [Custom shortcuts](shortcuts.md#custom-shortcuts)).
+- **AltGr** as a shortcut modifier on Windows, and new shortcuts: *Toggle break/unbreak*, *Save original*, *Remove all formatting*, *Delete selection (everywhere)*, *Set style 1-10*, *Toggle screen privacy* and more.
+- **Tools → Merge continuation lines...** merges lines unless a line ends a sentence (see [Merge continuation lines](merge-continuation-lines.md)).
+- **Find/Replace** shows the replace count and a search history whose entries can be deleted one by one; **Multiple replace** rules get a *Whole word* option.
+- **Actor picker**, *Rename...* in the grid's Actors menu, and *Remove/replace Unicode characters* and *Convert actors* for selected lines.
+- Tools report "*N lines changed*" and get their own named undo step; optional *go to changed line* on undo/redo.
+- Built-in interjection lists for 11 languages, a spell check editor for the *Use always* list, and the British English word list.
+- *Merge lines without auto-break* setting, and *Lock time codes* is respected by ripple delete, recalculate duration and the shot-change commands.
+
+### Main window and layout
+
+- **Layout 14** - an editor-style layout with a timeline: a video thumbnail row and subtitle rows (by layer, actor or style) above the waveform (see [Layouts](main-window.md#layouts)).
+- **Layouts 12 and 13** put the text box below the video player, and a **Font scale (%)** setting sits next to UI scale.
+- **Time code mode "Frame numbers"** shows absolute frame numbers, switchable in Settings or from the status bar (see [Settings → General](settings.md#general)).
+- **Reload the subtitle** when the file is changed outside Subtitle Edit.
+- Optional **Shot in / Shot out** grid columns, a *Show recent files* option, the full file path in the title bar, and a text selection opacity setting.
+- Settings show one category at a time (Ctrl+PageUp/Down, Alt+Left/Right), and Settings.json gets automatic backups.
+- Taskbar/Dock progress for speech to text, text to speech, AI review, auto-translate, burn-in and shot-change generation.
+- Screen reader names for lists, grids, combo boxes and buttons across the tool windows.
+
+### Video and waveform
+
+- **FFmpeg video player** - plays video through FFmpeg with hardware decoding, real frame stepping (also variable frame rate), sound on Linux and an audio track picker (see [Supported video players](video-player.md#supported-video-players)).
+- **Remember waveform zoom** across restarts (Options → Settings → Waveform), a waveform grid color, and a **Show speech only** waveform (see [Speech-only waveform](audio-visualizer.md#speech-only-waveform)).
+- Customizable order and visibility of the video player controls, a deinterlace setting, and an experimental mpv **Metal** player on macOS.
+- New video shortcuts: *move X ms back/forward*, *custom milliseconds back/forward and pause*, and *Guess start and end time from waveform*.
+- The waveform toolbar wraps to a second row, and can show the selected line's initial text and *move lines* buttons.
+- **Video → More → Generate background music...** makes local ACE-Step music looped to the video's length (see [Background music](background-music.md)).
+- **Video → More → Remux video...** puts video, several audio tracks and subtitles in one container, can mix audio files and embed CEA-608 captions (see [Remux video](remux-video.md)).
+- **Cut video** opens and generates much faster, with [transitions and fade from/to black](cut-video.md#transitions).
+- **Burn-in** of selected lines from the grid context menu, and burn-in into half side-by-side / top-bottom [3D video](burn-in.md#3d-video).
+
+### Speech to text
+
+- **Detect speakers** (Sortformer diarization), a choice of VAD (Silero, FireRedVAD, WebRTC) and **Isolate speech** for Crisp ASR (see [Isolate speech](speech-to-text.md#isolate-speech-crisp-asr)).
+- New Crisp ASR models: Index-Echo (Chinese speech to English/Japanese/Spanish text), Parakeet Ultra, Phonon-2, ReazonSpeech and Voxtral F16.
+- A *Multilingual* option for Purfview Faster-Whisper XXL, a new standalone WhisperX build with live output, and vLLM support in the OpenAI-compatible engine.
+- Transcribing selected lines keeps the lines that worked and offers to retry the failed ones; the computer no longer sleeps while it runs.
+
+### Text to speech
+
+- **Play with speech** speaks the lines in sync while the video plays, and **Speak from current line** reads aloud from the selected line (see [Play with speech](text-to-speech.md#play-with-speech) and [Speak from current line](text-to-speech.md#speak-from-current-line)).
+- **KugelAudio** (23 European languages), **Supertonic-3** and an **OpenAI-compatible** engine (OpenAI, OpenRouter, custom server) (see [Supported engines](text-to-speech.md#supported-engines)).
+- **ElevenLabs Eleven v4** and **v4 Turbo** (the new default), with `<break>` tags turned into audio pause tags (see [ElevenLabs pauses](text-to-speech.md#elevenlabs-pauses-and-pacing)).
+- **Remove original speech** keeps the music and effects under the new voices, now with a **Fast (HTDemucs)** model option (see [Remove the original speech](text-to-speech.md#remove-the-original-speech-from-the-video)).
+- Optional **Sidon cleaning** of voice-clone reference audio, and a **Voice manager** to copy voices between engines and share voice packs (see [Voice manager](text-to-speech.md#voice-manager)).
+
+### Auto-translate
+
+- New engines: **LM Studio advanced**, **API Route**, and a *Browse models* button for OpenAI-compatible and LM Studio.
+- **Translate in place**, a model drop-down, 22 more languages for the AI engines, and an option to leave music lines untranslated.
+- A shortcut to translate the selected lines without the prompt, and MyMemory works without an API key.
+- More llama.cpp models (Index-Translate, TranslatePsy-AfriSLM), and lines that come back untranslated are retried.
+
+### OCR
+
+- **nOCR** is more accurate (scale-aware matching, automatic spaces, shadow threshold, a better Latin database), and glyphs can carry their own italic (see [nOCR](ocr.md#nocr-nikse-ocr)).
+- The **Train nOCR** window has a preview, can start from an existing database, trains several font sizes, and a database can be optimized.
+- **Find and Replace** in the OCR window, remembered [pre-processing](ocr.md#pre-processing) settings, and the spell check dictionary remembered per language (see [Find and Replace](ocr.md#find-and-replace)).
+
+### Sync and timing
+
+- **Tools → Improve time codes (forced alignment)...** re-times a roughly synced subtitle with a Crisp ASR aligner and can check large moves with speech to text (see [Improve time codes](improve-time-codes.md)).
+- **Point sync via other subtitle** loads subtitles from mkv/mp4/.sup, shows gap badges and a *Gap after* column (see [Point sync via other subtitle](point-sync-via-other.md)).
+- *Move start/end X ms* shortcuts, also in Visual sync, and *Extend to next/previous shot change* resolves overlaps.
+- Custom **Beautify time codes** profiles can be saved, loaded and deleted, and a frame rate can be typed in *Change frame rate*.
+
+### Formats and import
+
+- **File → Import → Subtitles from DVD (IFO/VOB)...** with a title picker, fast rip and exact cell timing (see [Import subtitles from DVD](file.md#import-subtitles-from-dvd)).
+- CEA-608/708 closed captions from `.ts`, `.mkv`, `.mp4`, `.mxf`, `.vob`/`.mpg` and `.m2v`, with a channel/service picker.
+- New readers: EZTitles `.ezt`, PSP UMD Video, HD-DVD sup, Cheetah Caption ASC, ELR Studio and more SE 4 formats that open again.
+- PAC code page detection and a secondary code page, and transport streams saved with a video extension open.
+- The format drop-down shows full format names, and Source view colors WebVTT, LRC and SCC.
+
+### ASSA
+
+- **ASSA draw** has a new layout with menus, undo/redo, scale/rotate, a shape library, backgrounds and SVG import (see [ASSA draw](assa-draw.md)).
+- Styles: overwrite or keep both on import, *Replace style with*, move up/down, and a *Set style...* quick-pick shortcut.
+
+### Batch convert
+
+- **Translate into several languages** in one run, **named presets**, and new filters (format, extension, error status, forced tracks).
+- New functions: *Remove Unicode control characters*, *Renumber*, *Merge continuation lines* and *Convert actors* (see [Available functions](batch-convert.md#available-functions)).
+- Asks before adding video files from a folder, adds many files faster, and shows converted/failed/not processed counts.
+
+### Compare
+
+- **Time tolerance** option and how far the times are off, a merge view to edit while comparing, and right-click on the gutter arrow to take only text or timing (see [Compare](compare.md#comparison-options)).
+
+### macOS and Linux
+
+- Search help topics from the macOS **Help** menu, macOS-standard default shortcuts, and a new rounded app icon.
+- Flatpak runtime moved to freedesktop 26.08, and Finnish spell checking with Voikko in the Flatpak and macOS builds.
+
 ## Application Platform
 
 - Cross-platform Avalonia UI for Windows, Linux, and **macOS** — macOS is a new supported platform in SE 5.
@@ -47,9 +149,9 @@ See [Spell Check](spell-check.md) for details.
 
 ## Video
 
-- New **Video → Re-encode** tool that re-encodes a video into a format better suited for subtitling work.
-- New **Video → Cut video** tool for trimming video segments directly from Subtitle Edit.
-- **Video → Burn-in with logo** — a logo/watermark image can now be included when burning subtitles into video.
+- New **Video → More → Re-encode video for better subtitling...** tool that re-encodes a video into a format better suited for subtitling work (see [Re-encode video](re-encode-video.md)).
+- New **Video → More → Cut video...** tool for trimming video segments directly from Subtitle Edit (see [Cut video](cut-video.md)).
+- **Logo in burn-in** — **Video → Generate video with burned-in subtitles...** can include a logo/watermark image (see [Effect and logo](burn-in.md#effect-and-logo)).
 - Many new speech-to-text engines (see [Speech to Text](#speech-to-text) below).
 - New **Video → OCR burned-in subtitle** tool that extracts hardcoded subtitles from video via OCR (see [Video OCR](video-ocr.md)).
 - Improved reading of subtitles embedded in MP4 files.

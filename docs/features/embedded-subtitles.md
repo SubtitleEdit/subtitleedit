@@ -78,7 +78,7 @@ When the loaded video is `.mp4`, `.m4v` or `.mov`, **Video → Add/remove embedd
 | Insert | Add an external subtitle file |
 | Delete | Mark the selected track for deletion / undo deletion mark |
 | Escape | Close or cancel generation |
-| F1 | Open help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |
 
 ## Notes
 

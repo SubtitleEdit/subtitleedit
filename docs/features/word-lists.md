@@ -47,4 +47,4 @@ Word lists are organized by language. The language dropdown shows all languages 
 | Key | Action |
 |-----|--------|
 | Escape | Close |
-| F1 | Open help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |

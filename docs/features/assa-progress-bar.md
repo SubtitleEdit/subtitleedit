@@ -43,5 +43,5 @@ Generate an animated progress bar overlay in ASSA format, with optional chapter 
 
 | Shortcut | Action |
 |----------|--------|
-| F1 | Show help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |
 | Escape | Close dialog |

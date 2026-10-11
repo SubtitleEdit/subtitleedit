@@ -70,7 +70,7 @@ With a video loaded in a browser-playable container (`.mp4`, `.m4v`, `.webm`, `.
 
 | Shortcut | Action |
 |----------|--------|
-| F1 | Show help |
+| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |
 | Ctrl+Up / Ctrl+Down | Move the selected style up / down |
 | Escape | Close dialog |
 

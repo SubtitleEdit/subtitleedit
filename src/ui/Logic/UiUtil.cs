@@ -3603,7 +3603,7 @@ public static class UiUtil
 
     public static void ShowHelp(string helpName, string section = "")
     {
-        var helpUrl = $"http://subtitleedit.github.io/subtitleedit/{helpName}.html";
+        var helpUrl = $"https://subtitleedit.github.io/subtitleedit/{helpName}.html";
         if (!string.IsNullOrEmpty(section))
         {
             helpUrl += $"#{section}";
@@ -3614,7 +3614,7 @@ public static class UiUtil
 
     public static void ShowHelp()
     {
-        OpenUrl("http://subtitleedit.github.io/subtitleedit");
+        OpenUrl("https://subtitleedit.github.io/subtitleedit");
     }
 
     public static void OpenUrl(string url)

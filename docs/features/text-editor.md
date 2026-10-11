@@ -36,6 +36,8 @@ Additional formatting options:
 | `Ctrl+A` | Select all text |
 | `Ctrl+Z` | Undo |
 
+On macOS, **Option+Backspace** deletes the previous word and **Cmd+Backspace** (or Cmd+Delete) deletes to the start of the line, like in other Mac apps.
+
 ## Split Line
 
 - **Split at cursor** — Split the subtitle at the text cursor position

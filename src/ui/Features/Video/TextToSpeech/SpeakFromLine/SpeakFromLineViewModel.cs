@@ -258,5 +258,10 @@ public partial class SpeakFromLineViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/text-to-speech", IsPlayWithSpeech ? "play-with-speech" : "speak-from-current-line");
+        }
     }
 }
