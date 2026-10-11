@@ -296,6 +296,15 @@ public static class LlamaCppServerManager
         new LlamaCppModel("Phi-4 mini 3.8B (Q4_K_M)", "microsoft_Phi-4-mini-instruct-Q4_K_M.gguf", "2.5 GB",
             "https://huggingface.co/bartowski/microsoft_Phi-4-mini-instruct-GGUF/resolve/main/microsoft_Phi-4-mini-instruct-Q4_K_M.gguf"),
 
+        // PrismML Bonsai 27B, 1-bit (Q1_0, upstream llama.cpp - the ternary Q2_0/PQ2_0/PTQ1_0 files
+        // need PrismML's fork). English only: tested 2026-10-11 on b11425 with the review protocol it
+        // found 8/8 planted English errors with no false edits (Qwen 3.5 4B: 7/8), but only 2/6 in
+        // Danish, and its translations were poor - hence review only, not in TranslateModels.
+        // NoThinking is required: with thinking on a 15-line batch took ~400 s. ~12 tok/s on an M4.
+        new LlamaCppModel("Bonsai 27B 1-bit (Q1_0) - English only", "Bonsai-27B-Q1_0.gguf", "3.8 GB",
+            "https://huggingface.co/prism-ml/Bonsai-27B-gguf/resolve/main/Bonsai-27B-Q1_0.gguf",
+            NoThinking: true),
+
         // EuroLLM 2512 - all 24 official EU languages (incl. Danish/Swedish/Norwegian/Finnish, which
         // the Hy-MT2 family lacks entirely), so these are the best picks for proofreading European
         // subtitles. Replaces the older EuroLLM-9B-Instruct entry; anyone who already downloaded that
