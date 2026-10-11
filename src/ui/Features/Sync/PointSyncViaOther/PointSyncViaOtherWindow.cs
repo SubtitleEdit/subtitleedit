@@ -9,6 +9,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using Avalonia.Styling;
+using System;
 using System.Collections;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
@@ -120,6 +121,23 @@ public class PointSyncViaOtherWindow : Window
             ColumnSpacing = 10,
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
+        };
+
+        // Bitmaps scale down to the column width, so an image based other subtitle gets the
+        // bigger part of a wider window to stay readable (#15911).
+        vm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName != nameof(vm.IsOtherImageBased))
+            {
+                return;
+            }
+
+            grid.ColumnDefinitions[2].Width = new GridLength(vm.IsOtherImageBased ? 1.5 : 1, GridUnitType.Star);
+            if (vm.IsOtherImageBased && WindowState == WindowState.Normal && Width < ImageModeMinWindowWidth)
+            {
+                var maxWidth = Screens.ScreenFromWindow(this)?.WorkingArea.Width / (Screens.ScreenFromWindow(this)?.Scaling ?? 1);
+                Width = maxWidth is > 0 ? Math.Min(ImageModeMinWindowWidth, maxWidth.Value) : ImageModeMinWindowWidth;
+            }
         };
 
         grid.Add(subtitleViewView, 0);
@@ -257,6 +275,63 @@ public class PointSyncViaOtherWindow : Window
                 }
 
                 return cell;
+            }),
+        };
+    }
+
+    private const double ImageModeMinWindowWidth = 1400;
+    private const double ImageMaxWidth = 300;
+    private const double ImageMaxHeight = 60;
+
+    private static SeTableViewColumn MakeImageColumn()
+    {
+        // One brush for every image cell, as in the OCR window.
+        var previewBackground = ImagePreviewBackground.CreateBrush();
+
+        return new SeTableViewColumn
+        {
+            Header = Se.Language.General.Image,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Width = new GridLength(1, GridUnitType.Star),
+            CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((_, _) =>
+            {
+                var image = new Image
+                {
+                    Stretch = Stretch.Uniform,
+                    MaxWidth = ImageMaxWidth,
+                    MaxHeight = ImageMaxHeight,
+                };
+                var container = new Border
+                {
+                    Background = previewBackground,
+                    CornerRadius = new CornerRadius(3),
+                    Padding = new Thickness(3),
+                    Margin = new Thickness(5),
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    Child = image,
+                };
+
+                // Cells are recycled, so the bitmap follows the data context. The thumbnail can
+                // be small, so the tooltip shows it full size.
+                container.DataContextChanged += (_, _) =>
+                {
+                    var bitmap = container.DataContext is PointSyncOtherImageLine line
+                        ? line.ImageItem.GetBitmapCropped()
+                        : null;
+                    image.Source = bitmap;
+                    container.IsVisible = bitmap != null;
+                    ToolTip.SetTip(container, bitmap == null
+                        ? null
+                        : new Border
+                        {
+                            Background = previewBackground,
+                            Padding = new Thickness(3),
+                            Child = new Image { Source = bitmap, Stretch = Stretch.None },
+                        });
+                };
+
+                return container;
             }),
         };
     }
@@ -485,7 +560,8 @@ public class PointSyncViaOtherWindow : Window
         panelOtherBrowse.Add(buttonBrowseOther, 0, 0);
         panelOtherBrowse.Add(labelOtherFileName, 0, 1);
         var buttonFindTextOther = UiUtil.MakeButton(Se.Language.Sync.FindText, vm.FindTextOtherCommand)
-            .WithIconLeft(IconNames.Find);
+            .WithIconLeft(IconNames.Find)
+            .WithBindIsEnabled(nameof(vm.IsOtherTextBased));
         buttonFindTextOther.HorizontalAlignment = HorizontalAlignment.Right;
         var panelOtherHeader = new Grid
         {
@@ -504,35 +580,51 @@ public class PointSyncViaOtherWindow : Window
         dataGridSubtitle.Height = double.NaN;
         dataGridSubtitle.DataContext = vm;
         dataGridSubtitle.ItemsSource = vm.Othersubtitles;
-        dataGridSubtitle.Columns.AddRange(new[]
+
+        var textColumn = new SeTableViewColumn
         {
-            new SeTableViewColumn
-            {
-                Header = Se.Language.General.NumberSymbol,
-                CellTheme = UiUtil.TableViewCellTheme,
-                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-                Binding = new Binding(nameof(SubtitleLineViewModel.Number)),
-                Width = new GridLength(60), // content-sized (Auto) on the DataGrid; TableView treats Auto as star
-            },
-            new SeTableViewColumn
-            {
-                Header = Se.Language.General.Show,
-                CellTheme = UiUtil.TableViewCellTheme,
-                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-                Binding = new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter },
-                Width = new GridLength(115),
-            },
-            MakeGapColumn(),
-            new SeTableViewColumn
-            {
-                Header = Se.Language.General.Text,
-                CellTheme = UiUtil.TableViewCellTheme,
-                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-                CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(SubtitleLineViewModel.Text)),
-                NameBinding = new Binding(nameof(SubtitleLineViewModel.Text)),
-                Width = new GridLength(1, GridUnitType.Star),
-            },
-        });
+            Header = Se.Language.General.Text,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(SubtitleLineViewModel.Text)),
+            NameBinding = new Binding(nameof(SubtitleLineViewModel.Text)),
+            Width = new GridLength(1, GridUnitType.Star),
+        };
+        textColumn.Bind(SeTableViewColumn.IsVisibleProperty, new Binding(nameof(vm.IsOtherTextBased)) { Source = vm, Mode = BindingMode.OneWay });
+
+        // Image based other subtitle (sup, PGS/VobSub track in mkv/mp4): the bitmaps, shown like
+        // the OCR window shows them (#15911).
+        var imageColumn = MakeImageColumn();
+        imageColumn.Bind(SeTableViewColumn.IsVisibleProperty, new Binding(nameof(vm.IsOtherImageBased)) { Source = vm, Mode = BindingMode.OneWay });
+
+        // A column with a bound visibility needs every column to go through a manager.
+        var columnManager = new TableViewColumnManager(dataGridSubtitle);
+        foreach (var column in new TableViewColumn[]
+                 {
+                     new SeTableViewColumn
+                     {
+                         Header = Se.Language.General.NumberSymbol,
+                         CellTheme = UiUtil.TableViewCellTheme,
+                         HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                         Binding = new Binding(nameof(SubtitleLineViewModel.Number)),
+                         Width = new GridLength(60), // content-sized (Auto) on the DataGrid; TableView treats Auto as star
+                     },
+                     new SeTableViewColumn
+                     {
+                         Header = Se.Language.General.Show,
+                         CellTheme = UiUtil.TableViewCellTheme,
+                         HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+                         Binding = new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter },
+                         Width = new GridLength(115),
+                     },
+                     MakeGapColumn(),
+                     textColumn,
+                     imageColumn,
+                 })
+        {
+            columnManager.Add(column);
+        }
+
         dataGridSubtitle.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedOtherSubtitle)));
         dataGridSubtitle.WithLabeledBy(labelOtherFileName); // the file name above the list is its heading (#12087)
         TableViewExtras.AttachListNavigation(dataGridSubtitle);

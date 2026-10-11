@@ -30,6 +30,13 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
     [ObservableProperty] private string _fileNameOther;
     [ObservableProperty] private bool _isOkEnabled;
 
+    /// <summary>The other subtitle is bitmaps (sup, PGS/VobSub track) - shown as images, no text to find.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsOtherTextBased))]
+    private bool _isOtherImageBased;
+
+    public bool IsOtherTextBased => !IsOtherImageBased;
+
     public ObservableCollection<SyncPoint> SyncPoints { get; set; }
     [ObservableProperty] private SyncPoint? _selectedSyncPoint;
 
@@ -176,33 +183,67 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
             return;
         }
 
-        var subtitle = Subtitle.Parse(fileName);
-        if (subtitle == null)
+        List<SubtitleLineViewModel> lines;
+        bool isImageBased;
+        OtherLoadResult? containerResult;
+        try
         {
-            foreach (var f in SubtitleFormat.GetBinaryFormats(false))
-            {
-                if (f.IsMine(null, fileName))
-                {
-                    subtitle = new Subtitle();
-                    f.LoadSubtitle(subtitle, null, fileName);
-                    subtitle.OriginalFormat = f;
-                    break; // format found, exit the loop
-                }
-            }
+            containerResult = await TryLoadOtherFromContainer(fileName);
         }
-
-        if (subtitle == null)
+        catch (Exception exception)
         {
-            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.General.UnknownSubtitleFormat);
+            Se.LogError(exception);
+            await MessageBox.Show(Window, Se.Language.General.Error, exception.Message);
             return;
         }
 
-        FileNameOther = fileName;
-        Othersubtitles.Clear();
-        foreach (var p in subtitle.Paragraphs)
+        if (containerResult != null)
         {
-            Othersubtitles.Add(new SubtitleLineViewModel(p, subtitle.OriginalFormat));
+            if (!string.IsNullOrEmpty(containerResult.Error))
+            {
+                await MessageBox.Show(Window, Se.Language.General.Error, containerResult.Error);
+                return;
+            }
+
+            if (containerResult.Lines.Count == 0)
+            {
+                return; // track picker cancelled
+            }
+
+            lines = containerResult.Lines;
+            isImageBased = containerResult.IsImageBased;
         }
+        else
+        {
+            var subtitle = Subtitle.Parse(fileName);
+            if (subtitle == null)
+            {
+                foreach (var f in SubtitleFormat.GetBinaryFormats(false))
+                {
+                    if (f.IsMine(null, fileName))
+                    {
+                        subtitle = new Subtitle();
+                        f.LoadSubtitle(subtitle, null, fileName);
+                        subtitle.OriginalFormat = f;
+                        break; // format found, exit the loop
+                    }
+                }
+            }
+
+            if (subtitle == null)
+            {
+                await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.General.UnknownSubtitleFormat);
+                return;
+            }
+
+            lines = subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, subtitle.OriginalFormat)).ToList();
+            isImageBased = false;
+        }
+
+        FileNameOther = fileName;
+        IsOtherImageBased = isImageBased;
+        Othersubtitles.Clear();
+        Othersubtitles.AddRange(lines);
 
         UpdateGaps(Othersubtitles);
         SelectedOtherSubtitle = Othersubtitles.FirstOrDefault();
@@ -360,7 +401,7 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
     [RelayCommand]
     private async Task FindTextOther()
     {
-        if (Window == null || Othersubtitles.Count == 0)
+        if (Window == null || Othersubtitles.Count == 0 || IsOtherImageBased)
         {
             return;
         }

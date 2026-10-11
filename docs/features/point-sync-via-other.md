@@ -11,10 +11,12 @@ Synchronize a subtitle file using another subtitle file as reference.
 
 1. Open the subtitle you want to sync
 2. Open **Sync → Point sync via other subtitle...**
-3. Click the browse button in the right pane to load the reference subtitle
+3. Click the browse button in the right pane to load the reference subtitle - a subtitle file, a Blu-ray `.sup`, or a subtitle track in an `.mkv` or `.mp4` (pick the track when there are several)
 4. Select a line in your subtitle and the matching line in the other subtitle, then click **Set sync point** — or **Set sync point via video...** to pick the time from the video for a line the other subtitle does not cover
 5. Repeat for more sync points; they are listed in the middle and can be removed with right-click **Delete** or the Delete/Backspace key
 6. Click **Apply** to apply the sync points and keep working, or **OK** to apply and close
+
+An image based reference (a Blu-ray `.sup`, or a PGS/VobSub track in `.mkv`/`.mp4`) is not OCR'ed: sync points only need its time codes, so the right grid shows each line's image instead of text, the same way the OCR window does. Hover an image to see it full size. **Find text** is not available for an image based reference.
 
 Both grids have a **Gap after** column with the silence after each line, the same as the main window's **Gap** column. Gaps of 3 seconds or more are shown as a green badge that gets stronger at 6, 12 and 25+ seconds, so the long silences stand out. **Find text** above each grid searches that subtitle.
 
