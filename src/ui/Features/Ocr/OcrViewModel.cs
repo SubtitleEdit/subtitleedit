@@ -1801,6 +1801,12 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
+        if (result.OptimizePressed)
+        {
+            await OptimizeNOcrDb();
+            return;
+        }
+
         if (result.RenamePressed)
         {
             var newResult = await _windowService.ShowDialogAsync<NOcrDbNewWindow, NOcrDbNewViewModel>(Window!,
@@ -4289,6 +4295,72 @@ public partial class OcrViewModel : ObservableObject
         return unknownWords;
     }
 
+
+    /// <summary>
+    /// Removes the lines of the current nOCR database that don't tell characters apart from
+    /// lookalikes (see <see cref="NOcrDbOptimizer"/>). Works on a fresh copy loaded from disk and
+    /// swaps it in when done, so OCR never sees half-optimized entries.
+    /// </summary>
+    private async Task OptimizeNOcrDb()
+    {
+        if (Window == null || IsOcrRunning || _nOcrDb == null || !File.Exists(_nOcrDb.FileName))
+        {
+            return;
+        }
+
+        var fileName = _nOcrDb.FileName;
+        var name = Path.GetFileNameWithoutExtension(fileName);
+        var backupFileName = fileName + ".bak";
+        var title = Se.Language.Ocr.OptimizeNOcrDatabase.TrimEnd('.');
+        var answer = await MessageBox.Show(
+            Window,
+            title,
+            string.Format(Se.Language.Ocr.OptimizeNOcrDatabaseQuestionXY, name, Path.GetFileName(backupFileName)),
+            MessageBoxButtons.YesNoCancel,
+            MessageBoxIcon.Question);
+        if (answer != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        try
+        {
+            var (db, result) = await Task.Run(() =>
+            {
+                File.Copy(fileName, backupFileName, true);
+                var optimizedDb = new NOcrDb(fileName);
+                var optimizeResult = NOcrDbOptimizer.Optimize(optimizedDb, new NOcrDbOptimizerSettings(), null, (done, total) =>
+                {
+                    if (done % 50 == 0 || done == total)
+                    {
+                        Dispatcher.UIThread.Post(() => ProgressText = string.Format(Se.Language.Ocr.OptimizingNOcrDatabaseXY, done, total));
+                    }
+                });
+                optimizedDb.Save();
+                return (optimizedDb, optimizeResult!);
+            });
+
+            _nOcrDb = db;
+            ProgressText = string.Empty;
+            await MessageBox.Show(
+                Window,
+                title,
+                string.Format(Se.Language.Ocr.NOcrDatabaseOptimizedXYZ, name, result.LinesBefore, result.LinesAfter),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, $"Failed to optimize nOCR database '{fileName}'");
+            ProgressText = string.Empty;
+            await MessageBox.Show(
+                Window,
+                title,
+                exception.Message,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+        }
+    }
 
     private bool InitNOcrDb()
     {
