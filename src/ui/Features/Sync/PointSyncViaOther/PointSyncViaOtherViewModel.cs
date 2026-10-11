@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.FindText;
+using Nikse.SubtitleEdit.Features.Shared.ShowImage;
 using Nikse.SubtitleEdit.Features.Sync.PointSync.SetSyncPoint;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -431,11 +432,55 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
         Close();
     }
 
+    /// <summary>
+    /// Shows the selected image of an image based other subtitle full size, in the same window as
+    /// the OCR window's Ctrl+P - Left/Right (or Up/Down) there steps to the previous/next image.
+    /// </summary>
+    [RelayCommand]
+    private async Task ViewSelectedOtherImage()
+    {
+        if (Window == null || SelectedOtherSubtitle is not PointSyncOtherImageLine line)
+        {
+            return;
+        }
+
+        var title = $"{Se.Language.Ocr.ShowImage} - #{line.Number} {new TimeCode(line.StartTime).ToDisplayString()}";
+        var result = await _windowService.ShowDialogAsync<ShowImageWindow, ShowImageViewModel>(Window, vm =>
+        {
+            vm.Initialize(title, line.ImageItem.GetBitmapCropped());
+        });
+
+        var index = Othersubtitles.IndexOf(line);
+        var nextIndex = result.LeftPressed ? index - 1 : result.RightPressed ? index + 1 : -1;
+        if (index >= 0 && nextIndex >= 0 && nextIndex < Othersubtitles.Count)
+        {
+            SelectedOtherSubtitle = Othersubtitles[nextIndex];
+            ScrollOtherToLine?.Invoke(Othersubtitles[nextIndex]);
+            await ViewSelectedOtherImage();
+        }
+    }
+
     internal void OnKeyDown(KeyEventArgs e)
     {
         if (e.Key == Key.Escape)
         {
             Cancel();
+        }
+        else if (e.Key == Key.P && e.KeyModifiers == KeyModifiers.Control && IsOtherImageBased)
+        {
+            // Same shortcut as the OCR window's "Show image".
+            e.Handled = true;
+            Dispatcher.UIThread.Post(async void () =>
+            {
+                try
+                {
+                    await ViewSelectedOtherImage();
+                }
+                catch (Exception exception)
+                {
+                    Se.LogError(exception);
+                }
+            });
         }
         else if (UiUtil.IsHelp(e))
         {

@@ -312,23 +312,13 @@ public class PointSyncViaOtherWindow : Window
                     Child = image,
                 };
 
-                // Cells are recycled, so the bitmap follows the data context. The thumbnail can
-                // be small, so the tooltip shows it full size.
+                // Cells are recycled, so the bitmap follows the data context.
                 container.DataContextChanged += (_, _) =>
                 {
-                    var bitmap = container.DataContext is PointSyncOtherImageLine line
+                    image.Source = container.DataContext is PointSyncOtherImageLine line
                         ? line.ImageItem.GetBitmapCropped()
                         : null;
-                    image.Source = bitmap;
-                    container.IsVisible = bitmap != null;
-                    ToolTip.SetTip(container, bitmap == null
-                        ? null
-                        : new Border
-                        {
-                            Background = previewBackground,
-                            Padding = new Thickness(3),
-                            Child = new Image { Source = bitmap, Stretch = Stretch.None },
-                        });
+                    container.IsVisible = image.Source != null;
                 };
 
                 return container;
