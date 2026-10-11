@@ -150,6 +150,19 @@ public class LanguageOcr
     public string OptimizeNOcrDatabaseQuestionXY { get; set; }
     public string OptimizingNOcrDatabaseXY { get; set; }
     public string NOcrDatabaseOptimizedXYZ { get; set; }
+    public string FindErrorsInNOcrDatabase { get; set; }
+    public string FindErrorsInNOcrDatabaseInfo { get; set; }
+    public string CompareWith { get; set; }
+    public string NoOtherOcrEngineToCompareWith { get; set; }
+    public string CheckingLineXOfY { get; set; }
+    public string NOcrErrorCheckStatusXYZ { get; set; }
+    public string OthersRead { get; set; }
+    public string NOcrEntryErrors { get; set; }
+    public string NOcrEntryUsed { get; set; }
+    public string NOcrEntryLines { get; set; }
+    public string ChangeTextToX { get; set; }
+    public string NothingThere { get; set; }
+    public string BackupSavedAsX { get; set; }
     public string StartTraining { get; set; }
     public string AbortTraining { get; set; }
     public string TrainingOptions { get; set; }
@@ -332,6 +345,19 @@ public class LanguageOcr
                                          "A backup is saved as \"{1}\".";
         OptimizingNOcrDatabaseXY = "Optimizing nOCR database... {0}/{1}";
         NOcrDatabaseOptimizedXYZ = "nOCR database \"{0}\" optimized: {1:#,##0} -> {2:#,##0} lines.";
+        FindErrorsInNOcrDatabase = "Find errors in nOCR database...";
+        FindErrorsInNOcrDatabaseInfo = "Reads the subtitle images with nOCR and with one or two other OCR engines. Database entries that give other characters than the other engines read are listed here - change their text or delete them.";
+        CompareWith = "Compare with";
+        NoOtherOcrEngineToCompareWith = "Finding errors needs another OCR engine to compare with: Tesseract with a downloaded language, Paddle OCR, or Apple Vision (macOS).";
+        CheckingLineXOfY = "Checking line {0:#,##0} of {1:#,##0}...";
+        NOcrErrorCheckStatusXYZ = "{0:#,##0} of {1:#,##0} lines compared (where the other engines agree), {2:#,##0} suspicious entries";
+        OthersRead = "Others read";
+        NOcrEntryErrors = "Errors";
+        NOcrEntryUsed = "Used";
+        NOcrEntryLines = "Lines";
+        ChangeTextToX = "Change text to \"{0}\"";
+        NothingThere = "(nothing)";
+        BackupSavedAsX = "Backup saved as \"{0}\"";
         StartTraining = "Start training";
         AbortTraining = "Abort training";
         TrainingOptions = "Training options";

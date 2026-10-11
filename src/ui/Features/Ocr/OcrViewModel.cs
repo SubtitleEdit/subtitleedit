@@ -1172,7 +1172,7 @@ public partial class OcrViewModel : ObservableObject
         }
     }
 
-    private async Task InspectLineNOcr(OcrSubtitleItem item)
+    private async Task InspectLineNOcr(OcrSubtitleItem item, Window? owner = null)
     {
         if (!InitNOcrDb())
         {
@@ -1214,7 +1214,7 @@ public partial class OcrViewModel : ObservableObject
             }
         }
 
-        await _windowService.ShowDialogAsync<NOcrInspectWindow, NOcrInspectViewModel>(Window!,
+        await _windowService.ShowDialogAsync<NOcrInspectWindow, NOcrInspectViewModel>(owner ?? Window!,
             vm =>
             {
                 vm.Initialize(nBmp.GetBitmap(), nBmp, item, _nOcrDb, SelectedNOcrMaxWrongPixels, letters,
@@ -1804,6 +1804,12 @@ public partial class OcrViewModel : ObservableObject
         if (result.OptimizePressed)
         {
             await OptimizeNOcrDb();
+            return;
+        }
+
+        if (result.FindErrorsPressed)
+        {
+            await FindNOcrDbErrors();
             return;
         }
 

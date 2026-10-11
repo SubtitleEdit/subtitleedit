@@ -23,6 +23,7 @@ public partial class NOcrSettingsViewModel : ObservableObject
     public bool RenamePressed { get; set; }
     public bool TrainPressed { get; set; }
     public bool OptimizePressed { get; set; }
+    public bool FindErrorsPressed { get; set; }
     private NOcrDb _nOcrDb;
 
     private readonly IWindowService _windowService;
@@ -95,6 +96,13 @@ public partial class NOcrSettingsViewModel : ObservableObject
     private void Optimize()
     {
         OptimizePressed = true;
+        Close();
+    }
+
+    [RelayCommand]
+    private void FindErrors()
+    {
+        FindErrorsPressed = true;
         Close();
     }
 

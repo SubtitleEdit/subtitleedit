@@ -50,7 +50,7 @@ public class NOcrSettingsWindow : Window
 
         // Semi-hidden power-user features: right-click anywhere in the dialog to train a new
         // nOCR database from installed fonts (port of SE4's "Train nOCR"), or to optimize the
-        // current one.
+        // current one or find its wrong entries.
         var menuFlyout = new MenuFlyout();
         menuFlyout.Items.Add(new MenuItem
         {
@@ -61,6 +61,11 @@ public class NOcrSettingsWindow : Window
         {
             Header = Se.Language.Ocr.OptimizeNOcrDatabase,
             Command = vm.OptimizeCommand,
+        });
+        menuFlyout.Items.Add(new MenuItem
+        {
+            Header = Se.Language.Ocr.FindErrorsInNOcrDatabase,
+            Command = vm.FindErrorsCommand,
         });
         grid.ContextFlyout = menuFlyout;
         UiUtil.AttachMacContextFlyoutHandler(this, grid);
