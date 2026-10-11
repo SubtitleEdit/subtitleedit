@@ -243,6 +243,8 @@
   <PartialWords>
     <WordPart from="Є" to="Е" />
     <WordPart from="ЬІ" to="Ы" />
+    <WordPart from="ьІ" to="ы" />
+    <WordPart from="ьі" to="ы" />
     <WordPart from="КЗ" to="КА" />
     <WordPart from="ЛЗ" to="ЛА" />
     <WordPart from="НЗ" to="НА" />
@@ -282,5 +284,8 @@
     <RegEx find="(?&lt;=[а-яё])3(?![0-9])" replaceWith="з" />
     <RegEx find="(?&lt;=[а-яё])6(?![0-9])" replaceWith="б" />
     <RegEx find="(?&lt;=[а-яё])0(?![0-9])" replaceWith="о" />
+    <!-- 6 вместо б в начале слова перед строчной кириллицей: 6ыл - был, со6аки
+         уже исправлено выше. Число перед словом (6 дней) отделено пробелом. -->
+    <RegEx find="(?&lt;![0-9А-Яа-яЁё])6(?=[а-яё])" replaceWith="б" />
   </RegularExpressions>
 </OCRFixReplaceList>

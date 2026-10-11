@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Logic.Compression;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.IO;
+using System.IO.Compression;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Logic.Initializers;
@@ -20,6 +21,42 @@ public class OcrInitializer(IZipUnpacker zipUnpacker) : IOcrInitializer
         {
             await Unpack();
             WriteNewVersionFile();
+        }
+        else
+        {
+            UnpackMissingFiles();
+        }
+    }
+
+    /// <summary>
+    /// A kept (user-trained) Latin.nocr skips the full unpack, so databases added in a later
+    /// version (e.g. Cyrillic.nocr) would never arrive. Add those without touching existing files.
+    /// </summary>
+    private static void UnpackMissingFiles()
+    {
+        try
+        {
+            var outputDir = Se.OcrFolder;
+            using var zipStream = AssetLoader.Open(new Uri("avares://SubtitleEdit/Assets/Ocr.zip"));
+            using var archive = new ZipArchive(zipStream, ZipArchiveMode.Read);
+            foreach (var entry in archive.Entries)
+            {
+                if (string.IsNullOrEmpty(entry.Name) || entry.FullName.Contains(".."))
+                {
+                    continue;
+                }
+
+                var fileName = Path.Combine(outputDir, entry.FullName);
+                if (!File.Exists(fileName))
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(fileName)!);
+                    entry.ExtractToFile(fileName);
+                }
+            }
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Could not unpack missing OCR files");
         }
     }
 
