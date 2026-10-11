@@ -15,8 +15,11 @@ public sealed class NOcrDbOptimizerSettings
     /// </summary>
     public int MinLines { get; set; } = 52;
 
-    /// <summary>The loosest wrong-pixel budget a lookalike must stay above (the deep-seek default).</summary>
-    public int MaxWrongPixels { get; set; } = 25;
+    /// <summary>
+    /// The loosest wrong-pixel budget a lookalike must stay above: the last-ditch pass (batch
+    /// convert, seconv, binary OCR fallback) doubles the deep-seek default of 25.
+    /// </summary>
+    public int MaxWrongPixels { get; set; } = 50;
 
     public static readonly string[] DefaultFontNames =
     {
@@ -54,6 +57,22 @@ public static class NOcrDbOptimizer
     private const double PositiveShareMargin = 0.005;
 
     private sealed record Glyph(string Text, bool[] Ink, int Width, int Height);
+
+    /// <summary>
+    /// A backup file name for <paramref name="fileName"/> that doesn't exist yet
+    /// (Latin.nocr.bak, then Latin.nocr.2.bak, ...), so optimizing again never overwrites the
+    /// backup of the unoptimized database.
+    /// </summary>
+    public static string GetFreeBackupFileName(string fileName)
+    {
+        var backupFileName = fileName + ".bak";
+        for (var i = 2; File.Exists(backupFileName); i++)
+        {
+            backupFileName = fileName + "." + i + ".bak";
+        }
+
+        return backupFileName;
+    }
 
     /// <summary>
     /// Optimizes the single-part entries of <paramref name="db"/> in place (call

@@ -52,6 +52,10 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
     private readonly SemaphoreSlim _previewLock = new(1, 1);
     private int _trackChangeToken;
 
+    // OK and Export are disabled while a preview is parsing: the caller (and Export) read the
+    // same MatroskaFile, and the caller disposes it once the dialog closes.
+    private int _previewsRunning;
+
     // GetSubtitle reads (and caches) the whole cluster data on its first call; that is the only
     // slow part, so the progress window is only shown until that initial read has completed.
     private bool _clusterLoaded;
@@ -114,7 +118,9 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
         return _previewBluRayTrackNumber == trackNumber ? _previewBluRaySubtitles : null;
     }
 
-    [RelayCommand]
+    private bool IsFileFree() => _previewsRunning == 0;
+
+    [RelayCommand(CanExecute = nameof(IsFileFree))]
     private async Task Export()
     {
         if (Window == null)
@@ -302,9 +308,15 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
         }
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(IsFileFree))]
     private void Ok()
     {
+        // Enter and double-click call this directly, past the disabled button.
+        if (!IsFileFree())
+        {
+            return;
+        }
+
         SelectedMatroskaTrack = SelectedTrack?.MatroskaTrackInfo;
         OkPressed = true;
         Close();
@@ -353,6 +365,27 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
             return;
         }
 
+        _previewsRunning++;
+        NotifyFileFreeChanged();
+        try
+        {
+            await BuildPreviewAsync(trackInfo, matroskaFile, token);
+        }
+        finally
+        {
+            _previewsRunning--;
+            NotifyFileFreeChanged();
+        }
+    }
+
+    private void NotifyFileFreeChanged()
+    {
+        OkCommand.NotifyCanExecuteChanged();
+        ExportCommand.NotifyCanExecuteChanged();
+    }
+
+    private async Task BuildPreviewAsync(MatroskaTrackInfo trackInfo, MatroskaFile matroskaFile, int token)
+    {
         await _previewLock.WaitAsync();
         try
         {

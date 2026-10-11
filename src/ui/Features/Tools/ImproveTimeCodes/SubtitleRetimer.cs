@@ -704,14 +704,42 @@ public sealed partial class SubtitleRetimer
             var p = placements[i];
             moved[i] = Math.Abs(p.StartSeconds - original[i].StartSeconds) >= 0.0005 ||
                        Math.Abs(p.EndSeconds - original[i].EndSeconds) >= 0.0005;
+        }
+
+        for (var i = 0; i < placements.Length; i++)
+        {
             if (!moved[i])
             {
                 continue;
             }
 
+            var p = placements[i];
             var start = Math.Round(p.StartSeconds * framesPerSecond, MidpointRounding.AwayFromZero) * frame;
             var end = Math.Round(p.EndSeconds * framesPerSecond, MidpointRounding.AwayFromZero) * frame;
-            placements[i] = p with { StartSeconds = start, EndSeconds = Math.Max(end, start + frame) };
+
+            // A line left where it was need not sit on a frame, so rounding to the nearest frame
+            // could cross the gap Settle kept to it: round away from it instead.
+            if (i > 0 && !moved[i - 1] && !OverlapsOnPurpose(original[i - 1], original[i]))
+            {
+                var earliest = placements[i - 1].EndSeconds + minGapSeconds;
+                if (start < earliest - 0.0005 && p.StartSeconds >= earliest - 0.0005)
+                {
+                    start = Math.Ceiling(earliest * framesPerSecond - 0.0001) * frame;
+                }
+            }
+
+            end = Math.Max(end, start + frame);
+            if (i + 1 < placements.Length && !moved[i + 1] && !OverlapsOnPurpose(original[i], original[i + 1]))
+            {
+                var latest = placements[i + 1].StartSeconds - minGapSeconds;
+                if (end > latest + 0.0005 && p.EndSeconds <= latest + 0.0005)
+                {
+                    var flooredEnd = Math.Floor(latest * framesPerSecond + 0.0001) * frame;
+                    end = flooredEnd >= start + frame ? flooredEnd : Math.Max(p.EndSeconds, start + 0.001);
+                }
+            }
+
+            placements[i] = p with { StartSeconds = start, EndSeconds = end };
         }
 
         // Rounding each side on its own can take a frame off the gap: the moved earlier line

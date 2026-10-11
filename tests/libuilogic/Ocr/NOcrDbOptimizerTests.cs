@@ -139,4 +139,26 @@ public class NOcrDbOptimizerTests
         Assert.Null(result);
         Assert.Equal(before, db.OcrCharacters.Sum(LineCount));
     }
+
+    [Fact]
+    public void GetFreeBackupFileName_NeverReturnsAnExistingBackup()
+    {
+        var folder = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+        Directory.CreateDirectory(folder);
+        try
+        {
+            var fileName = Path.Combine(folder, "Latin.nocr");
+            Assert.Equal(fileName + ".bak", NOcrDbOptimizer.GetFreeBackupFileName(fileName));
+
+            File.WriteAllText(fileName + ".bak", "original");
+            Assert.Equal(fileName + ".2.bak", NOcrDbOptimizer.GetFreeBackupFileName(fileName));
+
+            File.WriteAllText(fileName + ".2.bak", "second");
+            Assert.Equal(fileName + ".3.bak", NOcrDbOptimizer.GetFreeBackupFileName(fileName));
+        }
+        finally
+        {
+            Directory.Delete(folder, true);
+        }
+    }
 }
