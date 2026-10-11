@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
+using Avalonia.Input;
 using Avalonia.LogicalTree;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Features.Main;
@@ -297,5 +298,23 @@ public class PointSyncWindowTests : IDisposable
         {
             File.Delete(fileName);
         }
+    }
+
+    [AvaloniaFact]
+    public void PointSyncViaOther_CtrlPlusMinus_ZoomsImagesOnlyWhenImageBased()
+    {
+        var vm = new PointSyncViaOtherViewModel(new FileHelper(), new WindowService(new NullServiceProvider()));
+        var start = vm.ImageMaxHeight;
+
+        vm.OnKeyDown(new KeyEventArgs { Key = Key.OemPlus, KeyModifiers = KeyModifiers.Control });
+        Assert.Equal(start, vm.ImageMaxHeight);
+
+        vm.IsOtherImageBased = true;
+        vm.OnKeyDown(new KeyEventArgs { Key = Key.OemPlus, KeyModifiers = KeyModifiers.Control });
+        Assert.True(vm.ImageMaxHeight > start);
+
+        vm.OnKeyDown(new KeyEventArgs { Key = Key.OemMinus, KeyModifiers = KeyModifiers.Control });
+        vm.OnKeyDown(new KeyEventArgs { Key = Key.OemMinus, KeyModifiers = KeyModifiers.Control });
+        Assert.True(vm.ImageMaxHeight < start);
     }
 }

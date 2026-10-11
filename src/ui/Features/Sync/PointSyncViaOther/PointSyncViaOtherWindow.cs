@@ -280,10 +280,7 @@ public class PointSyncViaOtherWindow : Window
     }
 
     private const double ImageModeMinWindowWidth = 1400;
-    private const double ImageMaxWidth = 300;
-    private const double ImageMaxHeight = 60;
-
-    private static SeTableViewColumn MakeImageColumn()
+    private static SeTableViewColumn MakeImageColumn(PointSyncViaOtherViewModel vm)
     {
         // One brush for every image cell, as in the OCR window.
         var previewBackground = ImagePreviewBackground.CreateBrush();
@@ -299,9 +296,10 @@ public class PointSyncViaOtherWindow : Window
                 var image = new Image
                 {
                     Stretch = Stretch.Uniform,
-                    MaxWidth = ImageMaxWidth,
-                    MaxHeight = ImageMaxHeight,
                 };
+                // Ctrl+Plus/Minus zoom, like the OCR window.
+                image.Bind(Image.MaxWidthProperty, new Binding(nameof(vm.ImageMaxWidth)) { Source = vm });
+                image.Bind(Image.MaxHeightProperty, new Binding(nameof(vm.ImageMaxHeight)) { Source = vm });
                 var container = new Border
                 {
                     Background = previewBackground,
@@ -505,6 +503,15 @@ public class PointSyncViaOtherWindow : Window
             }
         };
 
+        // Ctrl+G goes to a line in the grid used last.
+        dataGrid.GotFocus += (_, _) => vm.IsOtherGridActive = false;
+        vm.GoToLeftLine = line =>
+        {
+            dataGrid.ScrollIntoView(line);
+            TableViewExtras.CenterRow(dataGrid, line);
+            TableViewExtras.FocusRow(dataGrid);
+        };
+
         grid.Add(panelHeader, 0);
         grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 1);
 
@@ -584,7 +591,7 @@ public class PointSyncViaOtherWindow : Window
 
         // Image based other subtitle (sup, PGS/VobSub track in mkv/mp4): the bitmaps, shown like
         // the OCR window shows them (#15911).
-        var imageColumn = MakeImageColumn();
+        var imageColumn = MakeImageColumn(vm);
         imageColumn.Bind(SeTableViewColumn.IsVisibleProperty, new Binding(nameof(vm.IsOtherImageBased)) { Source = vm, Mode = BindingMode.OneWay });
 
         // A column with a bound visibility needs every column to go through a manager.
@@ -622,6 +629,13 @@ public class PointSyncViaOtherWindow : Window
         // Clicking a line in the left grid scrolls this grid to the matching time (#12529)
         // without touching its selection.
         vm.ScrollOtherToLine = line => dataGridSubtitle.ScrollIntoView(line);
+        dataGridSubtitle.GotFocus += (_, _) => vm.IsOtherGridActive = true;
+        vm.GoToOtherLine = line =>
+        {
+            dataGridSubtitle.ScrollIntoView(line);
+            TableViewExtras.CenterRow(dataGridSubtitle, line);
+            TableViewExtras.FocusRow(dataGridSubtitle);
+        };
 
         grid.Add(panelOtherHeader, 0);
         grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGridSubtitle), 1);

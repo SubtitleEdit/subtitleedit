@@ -39,6 +39,8 @@ The window remembers its size and position between sessions.
 | Shortcut | Action |
 |----------|--------|
 | Ctrl+P | View the selected image of an image based reference full size (arrow keys step to the previous/next image) |
+| Ctrl+Plus / Ctrl+Minus | Make the images of an image based reference bigger/smaller |
+| Ctrl+G | Go to line number, in the grid used last (the left one at first) |
 | Delete / Backspace | Remove the selected sync point (sync point list focused) |
 | F1 | Help |
 | Escape | Cancel |

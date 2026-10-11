@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.FindText;
+using Nikse.SubtitleEdit.Features.Shared.GoToLineNumber;
 using Nikse.SubtitleEdit.Features.Shared.ShowImage;
 using Nikse.SubtitleEdit.Features.Sync.PointSync.SetSyncPoint;
 using Nikse.SubtitleEdit.Logic;
@@ -38,6 +39,17 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
 
     public bool IsOtherTextBased => !IsOtherImageBased;
 
+    // Size of the other grid's images - Ctrl+Plus/Minus zoom, like the OCR window.
+    [ObservableProperty] private double _imageMaxHeight = DefaultImageMaxHeight;
+    [ObservableProperty] private double _imageMaxWidth = DefaultImageMaxHeight * 5;
+
+    private const double DefaultImageMaxHeight = 60;
+    private const double MinImageMaxHeight = 25;
+    private const double MaxImageMaxHeight = 300;
+
+    /// <summary>The grid Ctrl+G goes to a line in - the one focused last, the left one at first.</summary>
+    public bool IsOtherGridActive { get; set; }
+
     public ObservableCollection<SyncPoint> SyncPoints { get; set; }
     [ObservableProperty] private SyncPoint? _selectedSyncPoint;
 
@@ -54,6 +66,10 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
 
     /// <summary>Set by the window; scrolls the "other subtitle" grid to a line without selecting it.</summary>
     public Action<SubtitleLineViewModel>? ScrollOtherToLine { get; set; }
+
+    /// <summary>Set by the window; scrolls a grid to its (just selected) line and focuses it - Ctrl+G.</summary>
+    public Action<SubtitleLineViewModel>? GoToLeftLine { get; set; }
+    public Action<SubtitleLineViewModel>? GoToOtherLine { get; set; }
 
     private readonly IFileHelper _fileHelper;
     private readonly IWindowService _windowService;
@@ -460,11 +476,84 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
         }
     }
 
+    /// <summary>Ctrl+G, like the OCR window - in the grid used last.</summary>
+    [RelayCommand]
+    private async Task GoToLine()
+    {
+        var other = IsOtherGridActive && Othersubtitles.Count > 0;
+        var lines = other ? Othersubtitles : Subtitles;
+        if (Window == null || lines.Count == 0)
+        {
+            return;
+        }
+
+        var selected = other ? SelectedOtherSubtitle : SelectedSubtitle;
+        var result = await _windowService.ShowDialogAsync<GoToLineNumberWindow, GoToLineNumberViewModel>(Window, vm =>
+        {
+            vm.Initialize(selected == null ? 1 : lines.IndexOf(selected) + 1, lines.Count);
+        });
+
+        if (!result.OkPressed || result.LineNumber is not { } lineNumber || lineNumber < 1 || lineNumber > lines.Count)
+        {
+            return;
+        }
+
+        var line = lines[(int)lineNumber - 1];
+        if (other)
+        {
+            SelectedOtherSubtitle = line;
+            GoToOtherLine?.Invoke(line);
+        }
+        else
+        {
+            SelectedSubtitle = line;
+            GoToLeftLine?.Invoke(line);
+        }
+    }
+
+    private void ZoomImages(double factor)
+    {
+        var height = ImageMaxHeight * factor;
+        if (height < MinImageMaxHeight || height > MaxImageMaxHeight)
+        {
+            return;
+        }
+
+        // TableView rows auto-size to their content, so the bound sizes re-measure the rows.
+        ImageMaxHeight = height;
+        ImageMaxWidth = height * 5;
+    }
+
     internal void OnKeyDown(KeyEventArgs e)
     {
         if (e.Key == Key.Escape)
         {
             Cancel();
+        }
+        else if (e.Key == Key.G && e.KeyModifiers == KeyModifiers.Control)
+        {
+            e.Handled = true;
+            Dispatcher.UIThread.Post(async void () =>
+            {
+                try
+                {
+                    await GoToLine();
+                }
+                catch (Exception exception)
+                {
+                    Se.LogError(exception);
+                }
+            });
+        }
+        else if (e.Key is Key.Add or Key.OemPlus && e.KeyModifiers.HasFlag(KeyModifiers.Control) && IsOtherImageBased)
+        {
+            e.Handled = true;
+            ZoomImages(1.1);
+        }
+        else if (e.Key is Key.Subtract or Key.OemMinus && e.KeyModifiers.HasFlag(KeyModifiers.Control) && IsOtherImageBased)
+        {
+            e.Handled = true;
+            ZoomImages(0.9);
         }
         else if (e.Key == Key.P && e.KeyModifiers == KeyModifiers.Control && IsOtherImageBased)
         {
