@@ -48,7 +48,14 @@ public class WhisperEngineOpenAi : ISpeechToTextEngine
 
     public string GetAndCreateWhisperModelFolder(WhisperModel? whisperModel)
     {
+        // ~/.cache/whisper only exists once Python whisper has run, so create it here -
+        // otherwise downloading a model fails with "Could not find a part of the path".
         var folder = new WhisperModel().ModelFolder;
+        if (!Directory.Exists(folder))
+        {
+            Directory.CreateDirectory(folder);
+        }
+
         return folder;
     }
 
