@@ -561,6 +561,9 @@ public class TimelineTracks : Control, IDisposable
         var tileWidth = step * pixelsPerSecond;
         var firstTile = Math.Max(0, (long)Math.Floor(startSeconds / step));
 
+        // A keyframe within half a tile is the right picture for it, and much cheaper to get
+        var toleranceMilliseconds = (long)Math.Round(step * 500.0);
+
         // No tiles past the end of the media (as far as the waveform knows it): there is no
         // picture there, only an ffmpeg run per tile to find that out.
         var lastTileSeconds = endSeconds;
@@ -575,7 +578,7 @@ public class TimelineTracks : Control, IDisposable
             var tileRect = new Rect(x, row.Y, Math.Max(1, tileWidth - 1), row.Height);
             context.DrawRectangle(_tileBrush, null, tileRect);
 
-            var bitmap = _thumbnails.Get(videoFileName, GetFilmstripFrameMilliseconds(tile, step));
+            var bitmap = _thumbnails.Get(videoFileName, GetFilmstripFrameMilliseconds(tile, step), toleranceMilliseconds);
             if (bitmap == null || bitmap.Size.Height <= 0)
             {
                 continue;
