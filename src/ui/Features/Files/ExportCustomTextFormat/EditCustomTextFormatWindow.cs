@@ -138,7 +138,7 @@ public class EditCustomTextFormatWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             MinWidth = 200,
             Margin = new Thickness(0, 0, 0, 3),
-            PlaceholderText = Se.Language.File.Export.TimeCodeFormat,
+            PlaceholderText = Se.Language.File.Export.NewLineFormat,
             ItemsSource = vm.NewLineList,
             [!AutoCompleteBox.TextProperty] = new Binding(nameof(vm.SelectedCustomFormat) + "." + nameof(CustomFormatItem.FormatNewLine)),
             MinimumPrefixLength = 0,
