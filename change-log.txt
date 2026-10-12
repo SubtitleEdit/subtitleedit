@@ -3,6 +3,34 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-rc3 (12th of October 2026)
+
+* Add nOCR Cyrillic database (Cyrillic.nocr) with case and "ы" handling
+* Add nOCR "Optimize database" (OCR window + seconv optimize-nocr)
+* Add "Fast (HTDemucs)" model option for TTS "Remove original speech" - thx invio-a11y
+* Improve time codes: fix mistimed overlaps kept, skip lyrics/positioned signs/comments, snap to frames in frame mode
+* Import plain text: hold ends for max CPS, use the Gap setting, allow cancel of alignment
+* Improve Latin.nocr (drop lines that don't tell glyphs apart from lookalikes)
+* Improve help: F1 help in 35 more dialogs, docs updates
+* Batch convert: VobSub uses the profile's font and outline color - thx mehdittttt
+* Batch convert: keep fades in Blu-ray sup and alignment in D-Cinema PNG
+* Blu-ray sup: bridge gaps shorter than half a frame
+* Fix settings export/import/reset missing sections - thx FunkyKnilch
+* Fix list scroll bars covering item content (e.g. command palette shortcuts) - thx GrampaWildWilly
+* Fix OCR upgrade replacing user-trained/optimized nOCR databases
+* Fix high memory use with image subtitles in Point sync via other
+* Fix crash risk when clicking OK while the Matroska track picker preview is loading
+* Fix "New line format" placeholder in Custom text format - thx GitGianluc
+* Update llama.cpp to b11553
+* Update French translation - thx Need74
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+* Update Polish translation - thx potplayer-fanpack
+* Update Turkish translation - thx bilimiyorum
+
+
+-----------------------------------------------------------------------------------------------------
+
 v5.3.0-rc2 (11th of October 2026)
 
 * Add command palette (Ctrl+Shift+K)
