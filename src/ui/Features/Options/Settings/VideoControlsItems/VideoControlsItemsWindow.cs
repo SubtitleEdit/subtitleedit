@@ -48,7 +48,9 @@ public class VideoControlsItemsWindow : Window
 
         UpdatePreview();
         vm.LayoutChanged += UpdatePreview;
-        Closed += (_, _) =>
+        // Closing, not Closed: the OpenGL deinit that frees mpv's render context runs before
+        // Closed, so disposing there leaked the preview's mpv core (issue #15971).
+        Closing += (_, _) =>
         {
             vm.LayoutChanged -= UpdatePreview;
             preview.CloseAndDisposePlayer();

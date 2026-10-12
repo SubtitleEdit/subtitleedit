@@ -44,7 +44,6 @@ public class CutVideoPreviewWindow : Window
 
         Loaded += (_, _) => vm.OnLoaded();
         Closing += (_, _) => vm.OnClosing();
-        Closed += (_, _) => vm.OnClosed();
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

@@ -200,15 +200,18 @@ public class FullScreenVideoWindow : Window
             _mouseMoveDetectionTimer = null;
             videoPlayer.FullscreenCollapseRequested -= Close;
             videoPlayer.VideoPlayer.CloseFile();
-        };
 
-        // A fresh player is built for every fullscreen session and this one is never used again,
-        // so destroy it instead of only unloading the file - otherwise each enter/leave fullscreen
-        // leaked a live player core plus its 50 ms position timer (same root cause as issue #13048).
-        // Done from Closed, not Closing: it drops the embedded render host, which is better left
-        // until the window is actually gone. onClose above has already copied position and volume
-        // back to the docked player.
-        Closed += (_, _) => videoPlayer.CloseAndDisposePlayer();
+            // A fresh player is built for every fullscreen session and this one is never used
+            // again, so destroy it instead of only unloading the file - otherwise each enter/leave
+            // fullscreen leaked a live player core plus its 50 ms position timer (same root cause
+            // as issue #13048). onClose above has already copied position and volume back to the
+            // docked player.
+            // Done from Closing, not Closed: Avalonia detaches the visual tree - which fires the
+            // OpenGL deinit, the only place mpv's render context can be freed - before it raises
+            // Closed. Disposing from Closed marked the player too late, so the deinit was a no-op
+            // and every round trip leaked an mpv core with ~600 MiB of VRAM (issue #15971).
+            videoPlayer.CloseAndDisposePlayer();
+        };
 
         UiUtil.FocusOnFirstActivation(this, () => { Focus(); }); // hack to make OnKeyDown work
         Loaded += async(_, _) =>
