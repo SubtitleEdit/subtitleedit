@@ -1163,77 +1163,12 @@ public class Se
 
     private static void SetDefaultValues()
     {
-        if (Settings.Tools == null)
+        foreach (var profile in Settings.General.Profiles)
         {
-            Settings.Tools = new();
-        }
-
-        if (Settings.AutoTranslate == null)
-        {
-            Settings.AutoTranslate = new();
-        }
-
-        if (Settings.File == null)
-        {
-            Settings.File = new();
-        }
-
-        if (Settings.Edit == null)
-        {
-            Settings.Edit = new();
-        }
-
-        if (Settings.Options == null)
-        {
-            Settings.Options = new();
-        }
-
-        if (Settings.General == null)
-        {
-            Settings.General = new();
-        }
-
-        // Custom continuation style is a nested object; an old settings file (or hand edit)
-        // may omit it, so guard against null before the libse bridge dereferences it.
-        if (Settings.General.CustomContinuationStyle == null)
-        {
-            Settings.General.CustomContinuationStyle = new();
-        }
-
-        if (Settings.General.Profiles != null)
-        {
-            foreach (var profile in Settings.General.Profiles)
+            if (profile.CustomContinuationStyle == null)
             {
-                if (profile.CustomContinuationStyle == null)
-                {
-                    profile.CustomContinuationStyle = new();
-                }
+                profile.CustomContinuationStyle = new();
             }
-        }
-
-        if (Settings.Synchronization == null)
-        {
-            Settings.Synchronization = new();
-        }
-
-        if (Settings.SpellCheck == null)
-        {
-            Settings.SpellCheck = new();
-        }
-
-        if (Settings.Appearance == null)
-        {
-            Settings.Appearance = new();
-        }
-
-        if (Settings.Assa == null)
-        {
-            Settings.Assa = new();
-        }
-
-        if (Settings.Video == null)
-        {
-            Settings.Video = new();
         }
 
         MigrateShotChangesFfmpegArguments(Settings.Video);
@@ -1241,45 +1176,12 @@ public class Se
 
         MigrateVideoControlsItems(Settings.Video);
 
-        if (Settings.Waveform == null)
-        {
-            Settings.Waveform = new();
-        }
-
         // Add toolbar items introduced after an older settings file was written (e.g. VideoSeek),
         // so the waveform toolbar's per-type lookup never misses and new items are customizable.
         Settings.Waveform.EnsureAllToolbarItems();
 
-        if (Settings.BeautifyTimeCodes == null)
-        {
-            Settings.BeautifyTimeCodes = new();
-        }
-
-        Settings.BeautifyTimeCodes.CustomProfiles ??= new();
-
-        if (Settings.Ocr == null)
-        {
-            Settings.Ocr = new();
-        }
-
         MigrateLlamaCppOcrPrompt(Settings.Ocr);
 
-        if (Settings.Formats == null)
-        {
-            Settings.Formats = new SeFormats();
-        }
-
-        if (Settings.Plugins == null)
-        {
-            Settings.Plugins = new SePlugins();
-        }
-
-        if (Settings.Providers == null)
-        {
-            Settings.Providers = new SeProviders();
-        }
-
-        Settings.Tools.RemoveTextForHi ??= new();
         Settings.Tools.RemoveTextForHi.MigrateFullInterjectionLists();
 
         MigrateProviderApiKeys(Settings);
