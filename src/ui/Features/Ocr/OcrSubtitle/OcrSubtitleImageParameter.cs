@@ -18,6 +18,19 @@ public class OcrSubtitleImageParameter : IOcrSubtitle
         Count = imageParameters.Count;
     }
 
+    /// <summary>
+    /// The parameters the text was rendered with, or null for an index out of range.
+    /// </summary>
+    public ImageParameter? GetImageParameter(int index)
+    {
+        if (index < 0 || index >= _imageParameterList.Count)
+        {
+            return null;
+        }
+
+        return _imageParameterList[index];
+    }
+
     public SKBitmap GetBitmap(int index)
     {
         if (index < 0 || index >= _imageParameterList.Count)

@@ -2020,6 +2020,16 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 Depth3D = profile.Depth3D,
                 Plane3D = plane3D,
             };
+            // Text rendered from the export-images profile: the colors it was drawn with, not
+            // white/black. VobSub builds its 4-color palette from these, so with white/black a
+            // red or blue text was quantized to the black outline color (#15942).
+            if (imageSubtitle is OcrSubtitleImageParameter textImages &&
+                textImages.GetImageParameter(i) is { } rendered)
+            {
+                param.FontColor = rendered.FontColor;
+                param.OutlineColor = rendered.OutlineColor;
+            }
+
             var position = imageSubtitle.GetPosition(i);
             if (imageSubtitle is OcrSubtitleTransportStream)
             {
