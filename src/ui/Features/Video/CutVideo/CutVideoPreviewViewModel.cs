@@ -94,10 +94,9 @@ public partial class CutVideoPreviewViewModel : ObservableObject
     {
         VideoPlayer.VideoPlayer.CloseFile();
         UiUtil.SaveWindowPosition(Window);
-    }
 
-    internal void OnClosed()
-    {
+        // Here, not from Closed: the OpenGL deinit that frees mpv's render context runs before
+        // Closed, so disposing there leaked the preview's mpv core (issue #15971).
         VideoPlayer.CloseAndDisposePlayer();
     }
 }
