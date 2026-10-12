@@ -404,8 +404,11 @@ public class SettingsPage : UserControl
                         [!TextBlock.TextProperty] = new Binding(nameof(_vm.MinGapFramesAsMs)) { Source = _vm },
                     }.WithBindIsVisible(_vm, nameof(_vm.UseFrameMode)),
                 }
-            }),
-            new SettingsItem(Se.Language.Options.Settings.MaxLines, () => MakeNumericUpDownInt(nameof(_vm.MaxLines), _vm.RuleValueChanged)),
+            })
+            {
+                EnglishLabel = EnglishLabelLookup.English.Options.Settings.MinGapMs + " " + EnglishLabelLookup.English.Options.Settings.MinGapFrames,
+            },
+            new SettingsItem(Se.Language.Options.Settings.MaxLines,() => MakeNumericUpDownInt(nameof(_vm.MaxLines), _vm.RuleValueChanged)),
             new SettingsItem(Se.Language.Options.Settings.UnbreakSubtitlesShortThan, () => MakeNumericUpDownInt(nameof(_vm.UnbreakLinesShorterThan), _vm.RuleValueChanged)),
 
             new SettingsItem(Se.Language.Options.Settings.DialogStyle, () => MakeComboBoxDialogStyle()),
