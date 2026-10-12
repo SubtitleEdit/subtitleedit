@@ -479,6 +479,9 @@ namespace Nikse.SubtitleEdit
 
             // Shift+Delete cut in every text box, in every window (#13711).
             NativeKeymap.AddShiftDeleteCut();
+
+            // Context menus kept their first, too small size (#15965).
+            PointerPopupPlacement.Initialize();
         }
 
         private static void SetupNativeMenu(Application app, ClassicDesktopStyleApplicationLifetime lifetime)
