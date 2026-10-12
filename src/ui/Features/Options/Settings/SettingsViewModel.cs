@@ -468,6 +468,12 @@ public partial class SettingsViewModel : ObservableObject
     /// </summary>
     public string? AppliedSettingsSnapshot { get; private set; }
 
+    /// <summary>
+    /// True once an import has replaced (and saved) the settings. They are live from then on even
+    /// if the dialog is cancelled, so the main window still has to apply them (#15944).
+    /// </summary>
+    public bool SettingsImported { get; private set; }
+
     public Window? Window { get; internal set; }
     public ScrollViewer ScrollView { get; internal set; }
     public List<SettingsSection> Sections { get; internal set; }
@@ -3267,6 +3273,7 @@ public partial class SettingsViewModel : ObservableObject
         {
             // Reload the settings from disk since they were updated
             LoadSettings();
+            SettingsImported = true;
         }
     }
 

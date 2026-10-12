@@ -22,11 +22,15 @@ public partial class GridColumnDisplay : ObservableObject
     /// <summary>Grid column keys (SubtitleGridColumnKeys) this entry covers, in default order.</summary>
     public string[] Keys { get; }
 
+    /// <summary>The factory visibility the dialog's Reset button restores.</summary>
+    public bool DefaultIsVisible { get; init; }
+
     public GridColumnDisplay(string name, bool canToggle, bool isVisible, params string[] keys)
     {
         Name = name;
         CanToggle = canToggle;
         IsVisible = isVisible;
+        DefaultIsVisible = isVisible;
         Keys = keys;
     }
 

@@ -127,6 +127,13 @@ public partial class GridColumnsViewModel : ObservableObject
         Columns.Clear();
         foreach (var entry in _defaultOrder)
         {
+            // Reset used to restore only the order, so after hiding or showing columns the
+            // button seemed to do nothing (#15944).
+            if (entry.CanToggle)
+            {
+                entry.IsVisible = entry.DefaultIsVisible;
+            }
+
             Columns.Add(entry);
         }
 
