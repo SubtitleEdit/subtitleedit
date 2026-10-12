@@ -1081,13 +1081,24 @@ public class Se
     /// bar is constructed at startup and reads <see cref="Language"/> directly, so the translation
     /// has to be in place by then or the menu bar renders in English (issue #11505). English — or a
     /// missing/unreadable translation file — leaves the built-in English defaults untouched.
+    /// Returns true when <see cref="Language"/> changed.
     /// </summary>
-    public static void LoadLanguage()
+    public static bool LoadLanguage()
     {
         Settings.General.Language ??= "English";
         if (Settings.General.Language == "English")
         {
-            return;
+            // The built-in strings are English, but a translation loaded earlier in the session
+            // stays in place until dropped - a reset or an import back to English otherwise only
+            // took effect after a restart (#15944).
+            if (_loadedLanguage == null || _loadedLanguage == "English")
+            {
+                return false;
+            }
+
+            Language = new SeLanguage();
+            _loadedLanguage = null;
+            return true;
         }
 
         // MainView.Build() calls this again as a safety net for windows created via other entry
@@ -1096,7 +1107,7 @@ public class Se
         // translation isn't already the requested one.
         if (_loadedLanguage == Settings.General.Language)
         {
-            return;
+            return false;
         }
 
         try
@@ -1104,7 +1115,7 @@ public class Se
             var jsonFileName = Path.Combine(TranslationFolder, Settings.General.Language + ".json");
             if (!System.IO.File.Exists(jsonFileName))
             {
-                return;
+                return false;
             }
 
             using var stream = System.IO.File.OpenRead(jsonFileName);
@@ -1113,13 +1124,19 @@ public class Se
             {
                 Language = language;
                 _loadedLanguage = Settings.General.Language;
+                return true;
             }
         }
         catch (Exception exception)
         {
             Se.LogError(exception, "Failed to load UI language");
         }
+
+        return false;
     }
+
+    /// <summary>The translation currently in <see cref="Language"/>; null means the built-in English.</summary>
+    public static string? LoadedLanguageName => _loadedLanguage;
 
     /// <summary>
     /// Loads a translation file chosen at runtime (Options > Language) into <see cref="Language"/>.

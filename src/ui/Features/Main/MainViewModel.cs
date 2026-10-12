@@ -14627,7 +14627,7 @@ public partial class MainViewModel :
         var viewModel = await ShowDialogAsync<SettingsWindow, SettingsViewModel>(
     vm => { vm.Initialize(this); });
 
-        if (!viewModel.OkPressed)
+        if (!viewModel.OkPressed && !viewModel.SettingsImported)
         {
             return;
         }
@@ -14771,6 +14771,24 @@ public partial class MainViewModel :
         // editing was lost on Apply and on OK after Apply (issue #14421).
         var selectedIndex = SubtitleGrid.SelectedIndex;
 
+        // An import or a reset can change the interface language, which Options > Language
+        // applies at once but this path never did - the old language stayed until a restart
+        // (#15944). The layout and toolbar rebuilds below pick up the new strings.
+        var wasRightToLeft = SeGeneral.IsLanguageRightToLeft(Se.LoadedLanguageName);
+        var videoPosition = GetVideoPlayerControl()?.VideoPlayer?.Position ?? 0;
+        var languageChanged = Se.LoadLanguage();
+        if (languageChanged)
+        {
+            SettingsViewModel.ReloadLanguageMaps();
+            InitMenu.Make(this);
+            if (OperatingSystem.IsMacOS())
+            {
+                Layout.InitNativeMacMenu.Rebuild(this);
+            }
+
+            ReloadShortcuts();
+        }
+
         UiUtil.SetFontName(Se.Settings.Appearance.FontName);
         UiTheme.SetCurrentTheme();
         InitMenu.ApplyFontSize(Menu);
@@ -14889,6 +14907,7 @@ public partial class MainViewModel :
         _errorColor = Se.Settings.General.ErrorColor.FromHexToColor();
         _errorBrush = new ImmutableSolidColorBrush(_errorColor);
         SubtitleTextInfoHelper.RefreshErrorBrush();
+        RefreshGridColumnsFromSettings();
         if (AreVideoControlsUndocked)
         {
             VideoUndockControls();
@@ -14969,6 +14988,38 @@ public partial class MainViewModel :
         RefreshSubtitlePreview();
 
         SelectAndScrollToRow(selectedIndex);
+
+        if (languageChanged && Se.Settings.General.IsLanguageRightToLeft() != wasRightToLeft)
+        {
+            ApplyLayoutDirectionForCurrentLanguage(videoPosition);
+        }
+    }
+
+    /// <summary>
+    /// Re-reads the grid column visibility and order from the settings. An import or reset
+    /// replaces them in <see cref="Se.Settings"/>, but the grid binds to the view model's own
+    /// copies - so nothing changed until a restart, and closing the window even wrote the old
+    /// copies back over the imported values (#15944).
+    /// </summary>
+    private void RefreshGridColumnsFromSettings()
+    {
+        var general = Se.Settings.General;
+        ShowColumnStartTime = general.ShowColumnStartTime;
+        ShowColumnEndTime = general.ShowColumnEndTime;
+        ShowColumnDuration = general.ShowColumnDuration;
+        ShowColumnTeletext = general.ShowColumnTeletext;
+        TeletextAlignmentPreview = general.TeletextAlignmentPreview;
+        ShowColumnGap = general.ShowColumnGap;
+        ShowColumnShotIn = general.ShowColumnShotIn;
+        ShowColumnShotOut = general.ShowColumnShotOut;
+        ShowColumnActor = general.ShowColumnActor;
+        ShowColumnStyle = general.ShowColumnStyle;
+        ShowColumnCps = general.ShowColumnCps;
+        ShowColumnWpm = general.ShowColumnWpm;
+        ShowColumnPixelWidth = general.ShowColumnPixelWidth;
+        ShowColumnLayer = general.ShowColumnLayer && IsFormatAssa; // the layer column is ASSA only
+        ShowColumnForced = general.ShowColumnForced;
+        SubtitleGridColumnManager?.ApplyOrder(general.SubtitleGridColumnOrder);
     }
 
     public VideoPlayerControl? GetVideoPlayerControl()
@@ -15774,25 +15825,26 @@ public partial class MainViewModel :
             return;
         }
 
+        var defaults = new SeGeneral();
         var entries = new List<GridColumnDisplay>
         {
             new(Se.Language.General.NumberSymbol, false, true, InitListViewAndEditBox.SubtitleGridColumnKeys.Number),
-            new(Se.Language.General.Show, true, ShowColumnStartTime, InitListViewAndEditBox.SubtitleGridColumnKeys.Start),
-            new(Se.Language.General.Hide, true, ShowColumnEndTime, InitListViewAndEditBox.SubtitleGridColumnKeys.End),
-            new(Se.Language.General.Duration, true, ShowColumnDuration, InitListViewAndEditBox.SubtitleGridColumnKeys.Duration),
-            new(Se.Language.File.EbuSaveOptions.Teletext, true, ShowColumnTeletext, InitListViewAndEditBox.SubtitleGridColumnKeys.Teletext),
-            new(Se.Language.General.Forced, true, ShowColumnForced, InitListViewAndEditBox.SubtitleGridColumnKeys.Forced),
+            new(Se.Language.General.Show, true, ShowColumnStartTime, InitListViewAndEditBox.SubtitleGridColumnKeys.Start) { DefaultIsVisible = defaults.ShowColumnStartTime },
+            new(Se.Language.General.Hide, true, ShowColumnEndTime, InitListViewAndEditBox.SubtitleGridColumnKeys.End) { DefaultIsVisible = defaults.ShowColumnEndTime },
+            new(Se.Language.General.Duration, true, ShowColumnDuration, InitListViewAndEditBox.SubtitleGridColumnKeys.Duration) { DefaultIsVisible = defaults.ShowColumnDuration },
+            new(Se.Language.File.EbuSaveOptions.Teletext, true, ShowColumnTeletext, InitListViewAndEditBox.SubtitleGridColumnKeys.Teletext) { DefaultIsVisible = defaults.ShowColumnTeletext },
+            new(Se.Language.General.Forced, true, ShowColumnForced, InitListViewAndEditBox.SubtitleGridColumnKeys.Forced) { DefaultIsVisible = defaults.ShowColumnForced },
             new(Se.Language.General.Text, false, true, InitListViewAndEditBox.SubtitleGridColumnKeys.Text),
             new(Se.Language.General.OriginalText, false, ShowColumnOriginalText, InitListViewAndEditBox.SubtitleGridColumnKeys.OriginalText),
-            new(Se.Language.General.Style, true, ShowColumnStyle, InitListViewAndEditBox.SubtitleGridColumnKeys.Style, InitListViewAndEditBox.SubtitleGridColumnKeys.WebVttStyle),
-            new(Se.Language.General.Gap, true, ShowColumnGap, InitListViewAndEditBox.SubtitleGridColumnKeys.Gap),
-            new(Se.Language.General.ShotIn, true, ShowColumnShotIn, InitListViewAndEditBox.SubtitleGridColumnKeys.ShotIn),
-            new(Se.Language.General.ShotOut, true, ShowColumnShotOut, InitListViewAndEditBox.SubtitleGridColumnKeys.ShotOut),
-            new(Se.Language.General.Actor, true, ShowColumnActor, InitListViewAndEditBox.SubtitleGridColumnKeys.Actor, InitListViewAndEditBox.SubtitleGridColumnKeys.WebVttVoice),
-            new(Se.Language.General.Cps, true, ShowColumnCps, InitListViewAndEditBox.SubtitleGridColumnKeys.Cps),
-            new(Se.Language.General.Wpm, true, ShowColumnWpm, InitListViewAndEditBox.SubtitleGridColumnKeys.Wpm),
-            new(Se.Language.General.PixelWidth, true, ShowColumnPixelWidth, InitListViewAndEditBox.SubtitleGridColumnKeys.PixelWidth),
-            new(Se.Language.General.Layer, true, ShowColumnLayer, InitListViewAndEditBox.SubtitleGridColumnKeys.Layer),
+            new(Se.Language.General.Style, true, ShowColumnStyle, InitListViewAndEditBox.SubtitleGridColumnKeys.Style, InitListViewAndEditBox.SubtitleGridColumnKeys.WebVttStyle) { DefaultIsVisible = defaults.ShowColumnStyle },
+            new(Se.Language.General.Gap, true, ShowColumnGap, InitListViewAndEditBox.SubtitleGridColumnKeys.Gap) { DefaultIsVisible = defaults.ShowColumnGap },
+            new(Se.Language.General.ShotIn, true, ShowColumnShotIn, InitListViewAndEditBox.SubtitleGridColumnKeys.ShotIn) { DefaultIsVisible = defaults.ShowColumnShotIn },
+            new(Se.Language.General.ShotOut, true, ShowColumnShotOut, InitListViewAndEditBox.SubtitleGridColumnKeys.ShotOut) { DefaultIsVisible = defaults.ShowColumnShotOut },
+            new(Se.Language.General.Actor, true, ShowColumnActor, InitListViewAndEditBox.SubtitleGridColumnKeys.Actor, InitListViewAndEditBox.SubtitleGridColumnKeys.WebVttVoice) { DefaultIsVisible = defaults.ShowColumnActor },
+            new(Se.Language.General.Cps, true, ShowColumnCps, InitListViewAndEditBox.SubtitleGridColumnKeys.Cps) { DefaultIsVisible = defaults.ShowColumnCps },
+            new(Se.Language.General.Wpm, true, ShowColumnWpm, InitListViewAndEditBox.SubtitleGridColumnKeys.Wpm) { DefaultIsVisible = defaults.ShowColumnWpm },
+            new(Se.Language.General.PixelWidth, true, ShowColumnPixelWidth, InitListViewAndEditBox.SubtitleGridColumnKeys.PixelWidth) { DefaultIsVisible = defaults.ShowColumnPixelWidth },
+            new(Se.Language.General.Layer, true, ShowColumnLayer, InitListViewAndEditBox.SubtitleGridColumnKeys.Layer) { DefaultIsVisible = defaults.ShowColumnLayer },
         };
 
         var result = await _windowService.ShowDialogAsync<GridColumnsWindow, GridColumnsViewModel>(Window, vm =>

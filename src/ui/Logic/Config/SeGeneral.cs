@@ -751,7 +751,9 @@ public class SeGeneral
         });
     }
 
-    internal bool IsLanguageRightToLeft() => Language is
+    internal bool IsLanguageRightToLeft() => IsLanguageRightToLeft(Language);
+
+    internal static bool IsLanguageRightToLeft(string? language) => language is
         "Arabic" or
         "Dari" or
         "Hebrew" or
