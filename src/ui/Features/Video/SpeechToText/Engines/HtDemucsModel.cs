@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 /// GGUF), about three times faster but with a little more of the music lost.
 /// </summary>
 /// <remarks>
-/// f16 only: the q8_0 file aborts CrispASR on Metal ("unsupported op 'CONT'") up to v0.8.42, see
+/// f16 only: the q8_0 file aborts CrispASR on Metal ("unsupported op 'CONT'") up to v0.8.42 (fixed in v0.8.43), see
 /// CrispStrobe/CrispASR#537.
 /// </remarks>
 public static class HtDemucsModel
