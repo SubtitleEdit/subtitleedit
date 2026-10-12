@@ -21,6 +21,12 @@ public class SettingsItem
     public bool IsHidden { get; set; } = false;
     public bool IsFullWidth { get; init; }
 
+    /// <summary>
+    /// English text the search also matches, for a label not found as one translated string
+    /// (e.g. built from several). Otherwise looked up via <see cref="EnglishLabelLookup"/>.
+    /// </summary>
+    public string? EnglishLabel { get; init; }
+
     public SettingsItem(string label, Func<Control> controlFactory, string? isVisibleBinding = null, bool isHidden = false)
     {
         _label = label;
@@ -53,8 +59,21 @@ public class SettingsItem
             return;
         }
 
-        IsVisible = string.IsNullOrWhiteSpace(filter) || _label != null &&
-                    _label.Contains(filter, StringComparison.OrdinalIgnoreCase);
+        if (string.IsNullOrWhiteSpace(filter))
+        {
+            IsVisible = true;
+            return;
+        }
+
+        if (_label != null && _label.Contains(filter, StringComparison.OrdinalIgnoreCase))
+        {
+            IsVisible = true;
+            return;
+        }
+
+        // With a translated UI, also match the English name used in docs and tutorials (#15945).
+        var english = EnglishLabel ?? EnglishLabelLookup.GetEnglish(_label);
+        IsVisible = english != null && english.Contains(filter, StringComparison.OrdinalIgnoreCase);
     }
 
     public Control Build(bool includeLabel = true)
