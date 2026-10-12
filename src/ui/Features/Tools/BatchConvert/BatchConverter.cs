@@ -2024,13 +2024,16 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             // white/black. VobSub builds its 4-color palette from these, so with white/black a
             // red or blue text was quantized to the black outline color (#15942). "{\fad(..)}"
             // was parsed into fade keyframes when it was rendered - Blu-ray sup writes them as
-            // palette updates, the same as the main window's export.
+            // palette updates, the same as the main window's export. Also the alignment from
+            // "{\an8}" & co.: D-Cinema writes it as Valign/Halign and has no use for the override
+            // position the other handlers place the image with, so top lines ended up at the bottom.
             if (imageSubtitle is OcrSubtitleImageParameter textImages &&
                 textImages.GetImageParameter(i) is { } rendered)
             {
                 param.FontColor = rendered.FontColor;
                 param.OutlineColor = rendered.OutlineColor;
                 param.FadeKeyframes = rendered.FadeKeyframes;
+                param.Alignment = rendered.Alignment;
             }
 
             var position = imageSubtitle.GetPosition(i);
