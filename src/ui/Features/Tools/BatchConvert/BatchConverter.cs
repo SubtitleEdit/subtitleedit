@@ -2022,12 +2022,15 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             };
             // Text rendered from the export-images profile: the colors it was drawn with, not
             // white/black. VobSub builds its 4-color palette from these, so with white/black a
-            // red or blue text was quantized to the black outline color (#15942).
+            // red or blue text was quantized to the black outline color (#15942). "{\fad(..)}"
+            // was parsed into fade keyframes when it was rendered - Blu-ray sup writes them as
+            // palette updates, the same as the main window's export.
             if (imageSubtitle is OcrSubtitleImageParameter textImages &&
                 textImages.GetImageParameter(i) is { } rendered)
             {
                 param.FontColor = rendered.FontColor;
                 param.OutlineColor = rendered.OutlineColor;
+                param.FadeKeyframes = rendered.FadeKeyframes;
             }
 
             var position = imageSubtitle.GetPosition(i);
