@@ -42,6 +42,8 @@ public sealed class CrispAsrVadOption
 /// each one on its own, so the choice of VAD does not depend on the model. It tells the detectors
 /// apart by file name - a "--vad-model" path with "firered" and "vad" in it is FireRedVAD - and
 /// "webrtc" needs no file at all. MarbleNet is left out: on a test clip it dropped nearly all speech.
+/// Whisper-VAD (#15958) is a Whisper-base encoder with a frame classifier, picked by "whisper",
+/// "vad" and ".gguf" in the path; CrispASR lowers its threshold to 0.30 unless "-vt" is given.
 /// Index-Echo is the exception: it loads the VAD model itself, as Silero, to place its own windows.
 /// TEN VAD is not in CrispASR (upstream PLAN.md #106, held back by its licence).
 /// </remarks>
@@ -51,6 +53,7 @@ public static class CrispAsrVadModel
     public const string Automatic = "auto";
     public const string Silero = "silero";
     public const string FireRed = "firered";
+    public const string WhisperVad = "whisper-vad";
     public const string WebRtc = "webrtc";
 
     public static IReadOnlyList<CrispAsrVadOption> Options { get; } = new List<CrispAsrVadOption>
@@ -64,6 +67,14 @@ public static class CrispAsrVadModel
             FileName = "firered-vad.gguf",
             Url = "https://huggingface.co/cstr/firered-vad-GGUF/resolve/main/firered-vad.gguf",
             Size = "2.4 MB",
+        },
+        new()
+        {
+            Choice = WhisperVad,
+            DisplayName = "Whisper-VAD",
+            FileName = "whisper-vad-asmr-q4_k.gguf",
+            Url = "https://huggingface.co/cstr/whisper-vad-encdec-asmr-GGUF/resolve/main/whisper-vad-asmr-q4_k.gguf",
+            Size = "25 MB",
         },
         new() { Choice = WebRtc, DisplayName = "WebRTC" },
     };

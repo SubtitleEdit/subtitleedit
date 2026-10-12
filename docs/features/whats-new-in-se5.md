@@ -43,7 +43,7 @@ The first section lists the highlights of 5.3. The sections after it describe wh
 
 ### Speech to text
 
-- **Detect speakers** (Sortformer diarization), a choice of VAD (Silero, FireRedVAD, WebRTC) and **Isolate speech** for Crisp ASR (see [Isolate speech](speech-to-text.md#isolate-speech-crisp-asr)).
+- **Detect speakers** (Sortformer diarization), a choice of VAD (Silero, FireRedVAD, Whisper-VAD, WebRTC) and **Isolate speech** for Crisp ASR (see [Isolate speech](speech-to-text.md#isolate-speech-crisp-asr)).
 - New Crisp ASR models: Index-Echo (Chinese speech to English/Japanese/Spanish text), Parakeet Ultra, Phonon-2, ReazonSpeech and Voxtral F16.
 - A *Multilingual* option for Purfview Faster-Whisper XXL, a new standalone WhisperX build with live output, and vLLM support in the OpenAI-compatible engine.
 - Transcribing selected lines keeps the lines that worked and offers to retry the failed ones; the computer no longer sleeps while it runs.

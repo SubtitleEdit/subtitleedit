@@ -41,6 +41,14 @@ public class CrispAsrVadModelTests
         var fireRed = CrispAsrVadModel.Get(CrispAsrVadModel.FireRed).FileName!;
         Assert.Contains("firered", fireRed);
         Assert.Contains("vad", fireRed);
+
+        // Checked after FireRedVAD and MarbleNet, so it must not look like either (#15958).
+        var whisperVad = CrispAsrVadModel.Get(CrispAsrVadModel.WhisperVad).FileName!;
+        Assert.Contains("whisper", whisperVad);
+        Assert.Contains("vad", whisperVad);
+        Assert.EndsWith(".gguf", whisperVad);
+        Assert.DoesNotContain("firered", whisperVad);
+        Assert.DoesNotContain("marblenet", whisperVad);
     }
 
     [Fact]

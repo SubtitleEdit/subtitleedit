@@ -102,7 +102,7 @@ public class LanguageAudioToText
         DetectSpeakersNeedsNewerCrispAsr = "\"Detect speakers\" needs Crisp ASR v{0} or newer, but v{1} is installed.\n\nUpdate Crisp ASR (the gear button next to the engine) or turn off \"Detect speakers\".";
         XNeedsNewerCrispAsr = "{0} needs Crisp ASR v{1} or newer, but v{2} is installed.\n\nDownload and install the update now?";
         Vad = "VAD";
-        VadHint = "Voice activity detection: only the speech is transcribed, cut where the speaker pauses.\nAuto: Silero, and only for the engines that need it (Cohere, Mega, Index-Echo).\nSilero, FireRedVAD, WebRTC: always on, for every Crisp ASR engine. FireRedVAD is the most accurate.\nIndex-Echo always uses Silero. --vad, --vad-model or --chunk-seconds in the advanced settings take precedence.";
+        VadHint = "Voice activity detection: only the speech is transcribed, cut where the speaker pauses.\nAuto: Silero, and only for the engines that need it (Cohere, Mega, Index-Echo).\nSilero, FireRedVAD, Whisper-VAD, WebRTC: always on, for every Crisp ASR engine. FireRedVAD is the most accurate, Whisper-VAD gives the fewest, cleanest cuts but is the slowest.\nIndex-Echo always uses Silero. --vad, --vad-model or --chunk-seconds in the advanced settings take precedence.";
         InputLanguage = "Input language";
         AdvancedWhisperSettings = "Advanced speech-to-text parameters";
         DownloadingSpeechToTextEngine = "Downloading speech-to-text engine";
