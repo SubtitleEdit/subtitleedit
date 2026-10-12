@@ -1,7 +1,7 @@
 {
   "title": "SubtitleEdit",
-  "version": "v. 5.3.0-rc2",
-  "translatedBy": "v. 11.10.2026 di bovirus e GitGianluc",
+  "version": "v. 5.3.0-rc3",
+  "translatedBy": "v. 12.10.2026 di bovirus e GitGianluc",
   "cultureName": "it-IT",
   "general": {
     "abort": "Annulla",
@@ -18,7 +18,7 @@
     "stylePickerFilterHint": "Digita per filtrare o digita un nuovo nome stile",
     "stylePickerKeysHint": "Per impostare lo stile su tutte le linee selezionate premi un numero (1-9, 0).",
     "stylePickerNewStyleX": "Nuovo stile '{0}'",
-    "stylePickerNewStyleInfo": "Premi Invio per aggiungere questo stile con le impostazioni predefinite e impostarlo sulle linee selezionate. Per modificare in un secondo momento la font, i colori e la posizione usa 'Gestisci stili...'.",
+    "stylePickerNewStyleInfo": "Per aggiungere questo stile con le impostazioni predefinite e impostarlo sulle linee selezionate premi 'Invio'. Per modificare in un secondo momento la font, i colori e la posizione usa 'Gestisci stili...'.",
     "stylePickerCurrentStyleX": "Stile attuale: {0}",
     "stylePickerLinesUsingStyleX": "Righe che usano questo stile: {0}",
     "stylePickerMarginsXYZ": "Sinistra {0}, destra {1}, verticale {2}",
@@ -1345,7 +1345,8 @@
       "forcedAlignerIsolatingSpeech": "Parlato isolato... {0}",
       "forcedAlignerIsolatingSpeechFailed": "Impossibile isolare il parlato: i punti finali sono stati invece impostati dal tempo di lettura.",
       "forcedAlignerModel": "Modello allineamento",
-      "forcedAlignerDownloadEngine": "Download/aggiornamento motore..."
+      "forcedAlignerDownloadEngine": "Download/aggiornamento motore...",
+      "forcedAlignerEstimatedXOfY": "Non è stato possibile allineare '{0}' righe su '{1}' che sono state posizionate in base al tempo di lettura: i relativi timecode sono solo stimati. Lo script è probabilmente più lungo di quanto detto nel video."
     },
     "export": {
       "exportImagesProfiles": "Esporta profili immagini",
@@ -2814,6 +2815,10 @@
       "removeOriginalSpeechDescription": "Mantieni la musica e gli effetti sonori del video originale ma rimuove il parlato e vi aggiunge il nuovo parlato. Impiega con una GPU circa lo stesso tempo del video stesso e molte volte di più senza GPU. Con l'audio ducking attivo, il suo volume si applica alla musica e agli effetti. Si applica solo quando il parlato viene aggiunto al file video.",
       "removingOriginalSpeech": "Rimozione parlato originale...",
       "removeOriginalSpeechFailed": "Impossibile rimuovere il parlato originale: il parlato è stato aggiunto al video senza di esso.",
+      "speechRemovalModel": "Modello",
+      "speechRemovalModelDescription": "'Migliore qualità' mantiene la maggior parte della musica e degli effetti sonori. 'Veloce' è circa tre volte più veloce, con un po' più di musica persa.",
+      "speechRemovalBestQuality": "Migliore qualità (Mel-Band RoFormer)",
+      "speechRemovalFast": "Veloce (HTDemucs)",
       "videoTruncatedWarning": "L'immagine nel nuovo file video si interrompe dopo '{0}', ma il video originale è lungo '{1}': l'immagine si bloccherà mentre l'audio continua.\r\nIl file è stato conservato.\r\nPer l'output di ffmpeg vedi 'error-log.txt' nella cartella dati di Subtitle Edit.",
       "originalVolumePercent": "% volume originale",
       "vadSilenceCompression": "Compressione silenzio VAD",
