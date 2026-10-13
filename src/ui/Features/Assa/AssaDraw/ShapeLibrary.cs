@@ -25,12 +25,19 @@ public sealed class ShapeLibraryItem
     /// </summary>
     public SeAssaDrawShape? UserShape { get; }
 
-    public ShapeLibraryItem(string name, string category, Func<List<DrawShape>> build, SeAssaDrawShape? userShape = null)
+    /// <summary>
+    /// Where text goes (a speech bubble's body), in the shape's own coordinates; null = no text area.
+    /// </summary>
+    public (float Left, float Top, float Right, float Bottom)? TextArea { get; }
+
+    public ShapeLibraryItem(string name, string category, Func<List<DrawShape>> build, SeAssaDrawShape? userShape = null,
+        (float Left, float Top, float Right, float Bottom)? textArea = null)
     {
         Name = name;
         Category = category;
         _build = build;
         UserShape = userShape;
+        TextArea = textArea;
     }
 
     /// <summary>
@@ -94,6 +101,17 @@ public sealed class ShapeLibraryItem
             }
 
             result.Add(shape);
+        }
+
+        // The text area belongs to the biggest part (the bubble, not the dots of a thought bubble)
+        if (TextArea is { } area && result.Count > 0)
+        {
+            var host = result.OrderByDescending(s => { var b = s.GetBounds(); return (b.Right - b.Left) * (b.Bottom - b.Top); }).First();
+            host.SetTextBounds(
+                x + (area.Left - left) * scaleX,
+                y + (area.Top - top) * scaleY,
+                x + (area.Right - left) * scaleX,
+                y + (area.Bottom - top) * scaleY);
         }
 
         return result;
@@ -212,6 +230,16 @@ public static class ShapeLibrary
         return new ShapeLibraryItem(name, category, () => SvgImporter.FromPathData(union, subtract));
     }
 
+    /// <summary>
+    /// A shape with room for text, the text area given in the same 100-unit coordinates as the path data.
+    /// </summary>
+    private static ShapeLibraryItem TextItem(string name, string category, (float Left, float Top, float Right, float Bottom) textArea, string[] union)
+    {
+        // Path data is scaled by 10 when built (see SvgImporter.FromPathData)
+        var (l, t, r, b) = textArea;
+        return new ShapeLibraryItem(name, category, () => SvgImporter.FromPathData(union), textArea: (l * 10, t * 10, r * 10, b * 10));
+    }
+
     private static string F(double value) => value.ToString("0.##", CultureInfo.InvariantCulture);
 
     private static string Circle(double cx, double cy, double r) =>
@@ -244,19 +272,19 @@ public static class ShapeLibrary
         return
         [
             // Speech bubbles
-            Item(l.DrawShapeSpeechBubble, bubbles, ["M12 0 H88 A12 12 0 0 1 100 12 V58 A12 12 0 0 1 88 70 H38 L14 94 L22 70 H12 A12 12 0 0 1 0 58 V12 A12 12 0 0 1 12 0 Z"]),
-            Item(l.DrawShapeSpeechBubbleRight, bubbles, ["M12 0 H88 A12 12 0 0 1 100 12 V58 A12 12 0 0 1 88 70 H78 L86 94 L62 70 H12 A12 12 0 0 1 0 58 V12 A12 12 0 0 1 12 0 Z"]),
-            Item(l.DrawShapeSpeechBubbleUp, bubbles, ["M12 24 H22 L30 0 L46 24 H88 A12 12 0 0 1 100 36 V82 A12 12 0 0 1 88 94 H12 A12 12 0 0 1 0 82 V36 A12 12 0 0 1 12 24 Z"]),
-            Item(l.DrawShapeOvalBubble, bubbles, ["M0 38 A50 38 0 1 1 100 38 A50 38 0 1 1 0 38 Z", "M22 62 L8 96 L44 72 Z"]),
-            Item(l.DrawShapeBoxBubble, bubbles, ["M0 0 H100 V70 H60 L50 94 L40 70 H0 Z"]),
-            Item(l.DrawShapeThoughtBubble, bubbles,
+            TextItem(l.DrawShapeSpeechBubble, bubbles, (8, 6, 92, 64), ["M12 0 H88 A12 12 0 0 1 100 12 V58 A12 12 0 0 1 88 70 H38 L14 94 L22 70 H12 A12 12 0 0 1 0 58 V12 A12 12 0 0 1 12 0 Z"]),
+            TextItem(l.DrawShapeSpeechBubbleRight, bubbles, (8, 6, 92, 64), ["M12 0 H88 A12 12 0 0 1 100 12 V58 A12 12 0 0 1 88 70 H78 L86 94 L62 70 H12 A12 12 0 0 1 0 58 V12 A12 12 0 0 1 12 0 Z"]),
+            TextItem(l.DrawShapeSpeechBubbleUp, bubbles, (8, 30, 92, 88), ["M12 24 H22 L30 0 L46 24 H88 A12 12 0 0 1 100 36 V82 A12 12 0 0 1 88 94 H12 A12 12 0 0 1 0 82 V36 A12 12 0 0 1 12 24 Z"]),
+            TextItem(l.DrawShapeOvalBubble, bubbles, (14, 11, 86, 65), ["M0 38 A50 38 0 1 1 100 38 A50 38 0 1 1 0 38 Z", "M22 62 L8 96 L44 72 Z"]),
+            TextItem(l.DrawShapeBoxBubble, bubbles, (6, 6, 94, 64), ["M0 0 H100 V70 H60 L50 94 L40 70 H0 Z"]),
+            TextItem(l.DrawShapeThoughtBubble, bubbles, (16, 16, 84, 64),
             [
                 Circle(26, 34, 20), Circle(46, 22, 22), Circle(68, 24, 20), Circle(84, 40, 16),
                 Circle(70, 56, 18), Circle(46, 58, 20), Circle(22, 54, 17), Circle(50, 40, 26),
                 Circle(18, 82, 7), Circle(8, 95, 4),
             ]),
-            Item(l.DrawShapeShoutBubble, bubbles, [Polygon(50, 50, 24, -90, 50, 36, 46, 34, 50, 38, 44, 35)]),
-            Item(l.DrawShapeCaptionBox, bubbles, ["M6 0 H94 A6 6 0 0 1 100 6 V24 A6 6 0 0 1 94 30 H6 A6 6 0 0 1 0 24 V6 A6 6 0 0 1 6 0 Z"]),
+            TextItem(l.DrawShapeShoutBubble, bubbles, (27, 30, 73, 70), [Polygon(50, 50, 24, -90, 50, 36, 46, 34, 50, 38, 44, 35)]),
+            TextItem(l.DrawShapeCaptionBox, bubbles, (4, 3, 96, 27), ["M6 0 H94 A6 6 0 0 1 100 6 V24 A6 6 0 0 1 94 30 H6 A6 6 0 0 1 0 24 V6 A6 6 0 0 1 6 0 Z"]),
 
             // Arrows
             Item(l.DrawShapeArrow, arrows, ["M0 35 H60 V15 L100 50 L60 85 V65 H0 Z"]),

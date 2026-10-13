@@ -102,6 +102,11 @@ public class LanguageAssa
     public string DrawRotateCounterClockwise { get; set; }
     public string DrawSvgImages { get; set; }
     public string DrawSvgNoShapes { get; set; }
+    public string DrawTextTool { get; set; }
+    public string DrawDefaultText { get; set; }
+    public string DrawShrinkToFit { get; set; }
+    public string DrawTextColor { get; set; }
+    public string DrawTextBox { get; set; }
 
     // Progress Bar Generator
     public string ProgressBarTitle { get; set; }
@@ -436,6 +441,11 @@ public class LanguageAssa
         DrawRotateCounterClockwise = "Rotate 90° counter-clockwise";
         DrawSvgImages = "SVG images";
         DrawSvgNoShapes = "No filled shapes or strokes found in the SVG file.";
+        DrawTextTool = "Text tool";
+        DrawDefaultText = "Text";
+        DrawShrinkToFit = "Shrink to fit";
+        DrawTextColor = "Text color";
+        DrawTextBox = "Text box";
 
         // Progress Bar Generator
         ProgressBarTitle = "ASSA progress bar";

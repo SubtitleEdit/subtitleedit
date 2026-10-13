@@ -2621,8 +2621,9 @@ public partial class MainViewModel :
     private static readonly Regex AssaTagBlockRegex = new(@"\{[^}]*\}", RegexOptions.Compiled);
 
     /// <summary>
-    /// A row the ASSA draw dialog imports as drawing: a \p1 drawing, or a mask-only line
-    /// (just an \iclip, no text) as the dialog writes for a layer of erase shapes.
+    /// A row the ASSA draw dialog imports as drawing: a \p1 drawing, a mask-only line
+    /// (just an \iclip, no text) as the dialog writes for a layer of erase shapes, or a text
+    /// line it wrote for a bubble or text box.
     /// </summary>
     internal static bool IsAssaDrawingText(string text)
     {
@@ -2631,7 +2632,7 @@ public partial class MainViewModel :
             return false;
         }
 
-        if (AssaDrawingTagRegex.IsMatch(text))
+        if (AssaDrawingTagRegex.IsMatch(text) || AssaDrawTextLine.IsTextLine(text))
         {
             return true;
         }

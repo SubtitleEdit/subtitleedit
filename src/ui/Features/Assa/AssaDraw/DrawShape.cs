@@ -16,11 +16,45 @@ public class DrawShape
     public List<DrawCoordinate> Points { get; set; } = [];
     public Color ForeColor { get; set; } = Colors.White;
     public Color OutlineColor { get; set; } = Colors.Black;
-    public int OutlineWidth { get; set; }
+
+    /// <summary>
+    /// ASSA \bord. Drawing shapes share their layer's outline (one line per layer); a text box
+    /// outlines its own text.
+    /// </summary>
+    public float OutlineWidth { get; set; }
     public int Layer { get; set; }
     public bool IsEraser { get; set; }
     public bool Hidden { get; set; }
     public bool Expanded { get; set; }
+
+    /// <summary>
+    /// A text-only object: its rectangle is where the text goes, nothing is drawn for it.
+    /// </summary>
+    public bool IsTextBox { get; set; }
+
+    /// <summary>
+    /// Text written inside the shape (a speech bubble) or the text box; "\n" = line break.
+    /// </summary>
+    public string Text { get; set; } = string.Empty;
+    public string FontName { get; set; } = "Arial";
+
+    /// <summary>
+    /// ASSA \fs - with <see cref="ShrinkToFit"/> the largest size, made smaller until the text fits.
+    /// </summary>
+    public float FontSize { get; set; } = 48;
+    public bool FontBold { get; set; }
+    public Color TextColor { get; set; } = Colors.Black;
+    public bool ShrinkToFit { get; set; } = true;
+
+    /// <summary>
+    /// Where the text goes, as fractions of the shape's bounds - so moving and scaling the shape
+    /// takes the text area along (a bubble's body, not its tail).
+    /// </summary>
+    public (float Left, float Top, float Right, float Bottom) TextArea { get; set; } = DefaultTextArea;
+
+    public static readonly (float Left, float Top, float Right, float Bottom) DefaultTextArea = (0.1f, 0.1f, 0.9f, 0.9f);
+
+    public bool HasText => !IsEraser && !string.IsNullOrWhiteSpace(Text);
 
     public DrawShape()
     {
@@ -35,6 +69,14 @@ public class DrawShape
         IsEraser = other.IsEraser;
         Hidden = other.Hidden;
         Expanded = other.Expanded;
+        IsTextBox = other.IsTextBox;
+        Text = other.Text;
+        FontName = other.FontName;
+        FontSize = other.FontSize;
+        FontBold = other.FontBold;
+        TextColor = other.TextColor;
+        ShrinkToFit = other.ShrinkToFit;
+        TextArea = other.TextArea;
 
         foreach (var point in other.Points)
         {
@@ -198,6 +240,55 @@ public class DrawShape
         return (left, top, right, bottom);
     }
 
+    /// <summary>
+    /// The text area in canvas coordinates.
+    /// </summary>
+    public (float Left, float Top, float Right, float Bottom) GetTextBounds()
+    {
+        var (left, top, right, bottom) = GetBounds();
+        var (l, t, r, b) = TextArea;
+        var width = right - left;
+        var height = bottom - top;
+        return (left + l * width, top + t * height, left + r * width, top + b * height);
+    }
+
+    /// <summary>
+    /// Sets the text area from canvas coordinates (stored relative to the current bounds).
+    /// </summary>
+    public void SetTextBounds(float left, float top, float right, float bottom)
+    {
+        var (bl, bt, br, bb) = GetBounds();
+        var width = br - bl;
+        var height = bb - bt;
+        if (width < 0.01f || height < 0.01f)
+        {
+            TextArea = DefaultTextArea;
+            return;
+        }
+
+        TextArea = ((left - bl) / width, (top - bt) / height, (right - bl) / width, (bottom - bt) / height);
+    }
+
+    /// <summary>
+    /// Keeps the text area on the same part of a mirrored shape (a bubble flipped upside down has
+    /// its body at the bottom).
+    /// </summary>
+    public void MirrorTextArea(bool horizontal, bool vertical)
+    {
+        var (l, t, r, b) = TextArea;
+        if (horizontal)
+        {
+            (l, r) = (1 - r, 1 - l);
+        }
+
+        if (vertical)
+        {
+            (t, b) = (1 - b, 1 - t);
+        }
+
+        TextArea = (l, t, r, b);
+    }
+
     public void Offset(float x, float y)
     {
         foreach (var point in Points)
@@ -225,6 +316,17 @@ public class DrawShape
             point.X = MathF.Round(centerX + x * cos - y * sin, 2);
             point.Y = MathF.Round(centerY + x * sin + y * cos, 2);
         }
+
+        // Quarter turns turn the text area with the shape; the text itself stays upright
+        var quarterTurns = (int)MathF.Round(degrees / 90f);
+        if (MathF.Abs(degrees - quarterTurns * 90f) < 0.01f)
+        {
+            for (var i = 0; i < ((quarterTurns % 4) + 4) % 4; i++)
+            {
+                var (l, t, r, b) = TextArea;
+                TextArea = (1 - b, l, 1 - t, r);
+            }
+        }
     }
 
     /// <summary>
@@ -239,6 +341,7 @@ public class DrawShape
             point.X = left + right - point.X;
         }
 
+        MirrorTextArea(horizontal: true, vertical: false);
         ReverseWinding();
     }
 
@@ -250,6 +353,7 @@ public class DrawShape
             point.Y = top + bottom - point.Y;
         }
 
+        MirrorTextArea(horizontal: false, vertical: true);
         ReverseWinding();
     }
 
