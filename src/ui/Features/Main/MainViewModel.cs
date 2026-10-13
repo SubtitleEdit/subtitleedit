@@ -724,6 +724,12 @@ public partial class MainViewModel :
     // setting - that setting answers "no name yet, what do we suggest?", and here there is
     // one. Consumed and cleared by the next "Save as".
     private string? _saveAsFileNameSuggestion;
+
+    // The file the translation was "saved as" over, taking it from the original (#15999). While
+    // the translation still lives there and the original is untitled, Ctrl+S saves the
+    // translation only instead of asking where the original goes every time; closing still
+    // prompts for the original's unsaved changes.
+    private string? _originalFileReplacedByTranslation;
     private Subtitle _subtitle;
     private Subtitle? _subtitleSecondary;
     // The second subtitle as parsed from its file, before styling. "Edit second subtitle
@@ -4649,11 +4655,18 @@ public partial class MainViewModel :
         var saved = await SaveSubtitle();
         var savedOriginal = false;
 
+        // "Save as" may have written the translation over the original's own file (now, or on an
+        // earlier save), which leaves the original untitled. Saving it here would ask for a file
+        // name on every Ctrl+S - or, answered with the same file, put the original straight back
+        // over the translation (#15999).
+        var originalDetached = string.IsNullOrEmpty(_subtitleFileNameOriginal) &&
+                               IsSameFile(_subtitleFileName, _originalFileReplacedByTranslation);
+
         // Only when the subtitle itself was written. Ctrl+S is one gesture: after a translation
         // _converted is set, so SaveSubtitle routes to "Save as" and returns false when the user
         // dismisses the picker - and the original was written anyway, over the file the
         // translation was made from, by a save the user had just cancelled.
-        if (saved && ShowColumnOriginalText && _changeSubtitleHashOriginal != GetFastHashOriginal())
+        if (saved && !originalDetached && ShowColumnOriginalText && _changeSubtitleHashOriginal != GetFastHashOriginal())
         {
             savedOriginal = await SaveSubtitleOriginal();
         }
@@ -28599,6 +28612,20 @@ public partial class MainViewModel :
             _formatChangedByUser = false;
         }
 
+        // Picking the file the translation was made from replaces it with the translation, so the
+        // original no longer has a file of its own. Keeping the name made the next original save
+        // (the same Ctrl+S, or a later one) write the original back over the translation (#15999).
+        // Untitled, the original stays in memory and its unsaved changes are still prompted for.
+        if (ShowColumnOriginalText && IsSameFile(saveAsResult.FileName, _subtitleFileNameOriginal))
+        {
+            _originalFileReplacedByTranslation = saveAsResult.FileName;
+            _subtitleFileNameOriginal = string.Empty;
+            if (_subtitleOriginal != null)
+            {
+                _subtitleOriginal.FileName = string.Empty;
+            }
+        }
+
         _subtitleFileName = saveAsResult.FileName;
         _subtitle.FileName = saveAsResult.FileName;
         _converted = false;
@@ -28813,6 +28840,14 @@ public partial class MainViewModel :
             _subtitleFileNameOriginal = oldSubtitleFileNameOriginal;
             _subtitleOriginal.FileName = oldSubtitleOriginalFileName;
             return false;
+        }
+
+        // The mirror of SaveSubtitleAs: the original now occupies the translation's file, so the
+        // next Ctrl+S must ask where the translation goes instead of writing over it (#15999).
+        if (IsSameFile(fileName, _subtitleFileName))
+        {
+            _subtitleFileName = string.Empty;
+            _subtitle.FileName = string.Empty;
         }
 
         AddToRecentFiles(true);
