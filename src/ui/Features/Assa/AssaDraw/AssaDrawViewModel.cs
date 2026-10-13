@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -2051,10 +2052,45 @@ public partial class AssaDrawViewModel : ObservableObject
 
     private static readonly string[] BackgroundImageExtensions = [".png", ".jpg", ".jpeg", ".bmp", ".webp"];
 
+    /// <summary>
+    /// A shape dragged from the shape palette (same process only).
+    /// </summary>
+    public static readonly DataFormat<ShapeLibraryItem> LibraryShapeFormat = DataFormat.CreateInProcessFormat<ShapeLibraryItem>("se-assa-draw-library-shape");
+
     internal void OnDragOver(object? sender, DragEventArgs e)
     {
+        if (e.DataTransfer.Contains(LibraryShapeFormat))
+        {
+            e.DragEffects = GetCanvasDropPoint(e) != null ? DragDropEffects.Copy : DragDropEffects.None;
+            e.Handled = true;
+            return;
+        }
+
         e.DragEffects = GetDroppedFile(e) != null ? DragDropEffects.Copy : DragDropEffects.None;
         e.Handled = true;
+    }
+
+    /// <summary>
+    /// Where on the drawing a drag is, or null when it is not over the canvas.
+    /// </summary>
+    private (float X, float Y)? GetCanvasDropPoint(DragEventArgs e)
+    {
+        if (Canvas == null)
+        {
+            return null;
+        }
+
+        var position = e.GetPosition(Canvas);
+        return new Rect(Canvas.Bounds.Size).Contains(position) ? Canvas.ToCanvasPoint(position) : null;
+    }
+
+    /// <summary>
+    /// A shape dropped from the palette: default size, centered where it was dropped, selected.
+    /// </summary>
+    public void DropLibraryShape(ShapeLibraryItem item, float x, float y)
+    {
+        CurrentLibraryShape = item;
+        InsertLibraryShape(new CanvasInsertEventArgs(x, y, 0, 0, isClick: true));
     }
 
     /// <summary>
@@ -2062,6 +2098,17 @@ public partial class AssaDrawViewModel : ObservableObject
     /// </summary>
     internal void OnDrop(object? sender, DragEventArgs e)
     {
+        if (e.DataTransfer.TryGetValue(LibraryShapeFormat) is { } item)
+        {
+            e.Handled = true;
+            if (GetCanvasDropPoint(e) is { } point)
+            {
+                DropLibraryShape(item, point.X, point.Y);
+            }
+
+            return;
+        }
+
         var fileName = GetDroppedFile(e);
         if (fileName == null)
         {

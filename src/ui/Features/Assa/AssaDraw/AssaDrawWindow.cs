@@ -856,6 +856,7 @@ public class AssaDrawWindow : Window
                     vm.PickLibraryShapeCommand.Execute(item);
                     close();
                 };
+                AddPaletteDrag(button, item, close);
 
                 if (item.UserShape != null)
                 {
@@ -901,6 +902,54 @@ public class AssaDrawWindow : Window
             Padding = new Thickness(12, 10, 8, 10),
             BoxShadow = new BoxShadows(new BoxShadow { Blur = 24, OffsetY = 8, Color = Color.FromArgb(150, 0, 0, 0) }),
         };
+    }
+
+    /// <summary>
+    /// Dragging a palette shape (instead of clicking it) drops it on the canvas where it is released.
+    /// </summary>
+    private static void AddPaletteDrag(Button button, ShapeLibraryItem item, Action close)
+    {
+        PointerPressedEventArgs? press = null;
+        Point start = default;
+        button.AddHandler(PointerPressedEvent, (_, e) =>
+        {
+            if (e.GetCurrentPoint(button).Properties.IsLeftButtonPressed)
+            {
+                press = e;
+                start = e.GetPosition(button);
+            }
+        }, RoutingStrategies.Tunnel);
+        button.AddHandler(PointerReleasedEvent, (_, _) => press = null, RoutingStrategies.Tunnel);
+        button.AddHandler(PointerMovedEvent, async (_, e) =>
+        {
+            if (press == null || !e.GetCurrentPoint(button).Properties.IsLeftButtonPressed)
+            {
+                return;
+            }
+
+            var position = e.GetPosition(button);
+            if (Math.Abs(position.X - start.X) < 6 && Math.Abs(position.Y - start.Y) < 6)
+            {
+                return;
+            }
+
+            var pressed = press;
+            press = null;
+            try
+            {
+                var transfer = new DataTransfer();
+                transfer.Add(DataTransferItem.Create(AssaDrawViewModel.LibraryShapeFormat, item));
+                await DragDrop.DoDragDropAsync(pressed, transfer, DragDropEffects.Copy);
+            }
+            catch (Exception exception)
+            {
+                Se.LogError(exception, "ASSA draw: could not drag shape from palette");
+            }
+            finally
+            {
+                close();
+            }
+        }, RoutingStrategies.Tunnel);
     }
 
     private static Border MakeStripSeparator()

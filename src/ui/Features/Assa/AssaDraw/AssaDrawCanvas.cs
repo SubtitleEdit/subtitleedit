@@ -341,6 +341,11 @@ public class AssaDrawCanvas : Control
         ZoomFactor = newZoom;
     }
 
+    /// <summary>
+    /// A position on the control in drawing (canvas) coordinates.
+    /// </summary>
+    public (float X, float Y) ToCanvasPoint(Point position) => (FromZoomFactorX((float)position.X), FromZoomFactorY((float)position.Y));
+
     private float ToZoomFactorX(float v) => v * _zoomFactor + _panX;
     private float ToZoomFactorY(float v) => v * _zoomFactor + _panY;
     private float FromZoomFactorX(float v) => (v - _panX) / _zoomFactor;

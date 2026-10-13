@@ -163,4 +163,21 @@ public class AssaDrawShapeLibraryTests
             window.Close();
         }
     }
+
+    [Fact]
+    public void DropFromPalette_PlacesDefaultSize_CenteredOnTheDrop_AndSelectsIt()
+    {
+        var vm = MakeViewModel();
+        var item = ShapeLibrary.BuiltIn.First(i => i.Name == Se.Language.Assa.DrawShapeArrow);
+
+        vm.DropLibraryShape(item, 600, 400);
+
+        var shape = Assert.Single(vm.Shapes);
+        var (left, top, right, bottom) = shape.GetBounds();
+        Assert.Equal(600, (left + right) / 2, 0);
+        Assert.Equal(400, (top + bottom) / 2, 0);
+        Assert.Equal(1920 / 5f, right - left, 0);
+        Assert.Same(item, vm.CurrentLibraryShape);
+        Assert.Same(shape, vm.SelectedTreeItem?.Shape);
+    }
 }
