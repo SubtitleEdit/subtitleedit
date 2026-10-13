@@ -128,4 +128,69 @@ public class TimedTextImsc11Test
             Configuration.Settings.SubtitleSettings.TimedTextImsc11FileExtension = oldExtension;
         }
     }
+
+    private static string TrailingBreaksXml() =>
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+        "<tt xmlns=\"http://www.w3.org/ns/ttml\" xmlns:ttp=\"http://www.w3.org/ns/ttml#parameter\" xml:lang=\"en\" ttp:profile=\"http://www.w3.org/ns/ttml/profile/imsc1/text\" ttp:timeBase=\"media\">" +
+        "<body><div>" +
+        "<p begin=\"00:00:01.000\" end=\"00:00:03.000\">A<br/><br/><br/>B</p>" +
+        "<p begin=\"00:00:04.000\" end=\"00:00:06.000\">C<br/><br/><br/></p>" +
+        "</div></body></tt>";
+
+    [Fact]
+    public void Trailing_Forced_Line_Breaks_Are_Preserved()
+    {
+        // #15289: the reader ran TrimEnd() over ReadParagraph(), so every trailing <br/> was
+        // dropped - three of them is a layout-significant blank line in TTML.
+        var sut = new TimedTextImsc11();
+        var subtitle = new Subtitle();
+
+        sut.LoadSubtitle(subtitle, TrailingBreaksXml().SplitToLines(), "test.xml");
+
+        Assert.Equal(2, subtitle.Paragraphs.Count);
+        Assert.Equal("A" + Environment.NewLine + Environment.NewLine + Environment.NewLine + "B",
+            subtitle.Paragraphs[0].Text);
+        Assert.Equal("C" + Environment.NewLine + Environment.NewLine + Environment.NewLine,
+            subtitle.Paragraphs[1].Text);
+    }
+
+    [Fact]
+    public void Trailing_Source_Whitespace_Is_Still_Trimmed()
+    {
+        // The TrimEnd() also kept source formatting out of the text: an inline trailing space and
+        // an indented paragraph must both come back without trailing whitespace.
+        var sut = new TimedTextImsc11();
+        var compact = TrailingBreaksXml().Replace("C<br/><br/><br/>", "C  ");
+        var indented = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                      "<tt xmlns=\"http://www.w3.org/ns/ttml\" xmlns:ttp=\"http://www.w3.org/ns/ttml#parameter\" xml:lang=\"en\" ttp:profile=\"http://www.w3.org/ns/ttml/profile/imsc1/text\" ttp:timeBase=\"media\">" +
+                      "<body><div>\n" +
+                      "  <p begin=\"00:00:01.000\" end=\"00:00:03.000\">Hello world</p>\n" +
+                      "</div></body></tt>";
+
+        var compactSubtitle = new Subtitle();
+        sut.LoadSubtitle(compactSubtitle, compact.SplitToLines(), "test.xml");
+        var indentedSubtitle = new Subtitle();
+        sut.LoadSubtitle(indentedSubtitle, indented.SplitToLines(), "test.xml");
+
+        Assert.Equal("C", compactSubtitle.Paragraphs[1].Text);
+        Assert.Equal("Hello world", indentedSubtitle.Paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void LoadSaveLoad_Keeps_Trailing_Forced_Line_Breaks()
+    {
+        var sut = new TimedTextImsc11();
+        var subtitle = new Subtitle();
+        sut.LoadSubtitle(subtitle, TrailingBreaksXml().SplitToLines(), "test.xml");
+
+        var saved = sut.ToText(subtitle, "title");
+        var reloaded = new Subtitle();
+        new TimedTextImsc11().LoadSubtitle(reloaded, saved.SplitToLines(), "test.xml");
+
+        Assert.Equal(subtitle.Paragraphs.Count, reloaded.Paragraphs.Count);
+        Assert.Equal("A" + Environment.NewLine + Environment.NewLine + Environment.NewLine + "B",
+            reloaded.Paragraphs[0].Text);
+        Assert.Equal("C" + Environment.NewLine + Environment.NewLine + Environment.NewLine,
+            reloaded.Paragraphs[1].Text);
+    }
 }
