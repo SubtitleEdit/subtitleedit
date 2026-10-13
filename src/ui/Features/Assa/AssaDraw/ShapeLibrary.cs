@@ -296,6 +296,8 @@ public static class ShapeLibrary
             Item(l.DrawShapeDoubleArrow, arrows, ["M0 50 L30 20 V38 H70 V20 L100 50 L70 80 V62 H30 V80 Z"]),
             Item(l.DrawShapeChevron, arrows, ["M0 0 H40 L80 50 L40 100 H0 L40 50 Z"]),
             Item(l.DrawShapeCurvedArrow, arrows, ["M10 90 A60 60 0 0 1 70 30 V10 L100 40 L70 70 V50 A40 40 0 0 0 30 90 Z"]),
+            Item(l.DrawShapeThinArrow, arrows, ["M0 44 H76 V30 L100 50 L76 70 V56 H0 Z"]),
+            Item(l.DrawShapeUTurnArrow, arrows, ["M8 100 V40 A34 34 0 0 1 76 40 V70 H86 L68 100 L50 70 H60 V40 A18 18 0 0 0 24 40 V100 Z"]),
 
             // Basic shapes
             Item(l.DrawShapeRoundedRectangle, basic, ["M15 0 H85 A15 15 0 0 1 100 15 V85 A15 15 0 0 1 85 100 H15 A15 15 0 0 1 0 85 V15 A15 15 0 0 1 15 0 Z"]),

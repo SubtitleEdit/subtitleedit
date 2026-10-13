@@ -72,6 +72,8 @@ public class LanguageAssa
     public string DrawShapeDoubleArrow { get; set; }
     public string DrawShapeChevron { get; set; }
     public string DrawShapeCurvedArrow { get; set; }
+    public string DrawShapeThinArrow { get; set; }
+    public string DrawShapeUTurnArrow { get; set; }
     public string DrawShapeRoundedRectangle { get; set; }
     public string DrawShapeTriangle { get; set; }
     public string DrawShapeDiamond { get; set; }
@@ -421,6 +423,8 @@ public class LanguageAssa
         DrawShapeDoubleArrow = "Double arrow";
         DrawShapeChevron = "Chevron";
         DrawShapeCurvedArrow = "Curved arrow";
+        DrawShapeThinArrow = "Thin arrow";
+        DrawShapeUTurnArrow = "U-turn arrow";
         DrawShapeRoundedRectangle = "Rounded rectangle";
         DrawShapeTriangle = "Triangle";
         DrawShapeDiamond = "Diamond";
