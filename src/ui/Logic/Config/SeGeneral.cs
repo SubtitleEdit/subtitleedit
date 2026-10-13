@@ -70,6 +70,14 @@ public class SeGeneral
     [JsonIgnore]
     public bool UseFrameNumbers => UseFrameMode && UseFrameNumbersPersisted;
 
+    /// <summary>
+    /// In hh:mm:ss:ff frame mode, store a time as the video frame's own time instead of whole
+    /// seconds plus the frame within the second (#16007). At 23.976/29.97 the hh:mm:ss:ff count
+    /// restarts every second and drifts up to a frame from the video, so 00:01:58:22 is 118918 ms
+    /// while the video frame - and the Blu-ray sup PTS - is at 118910 ms.
+    /// </summary>
+    public bool FrameModeSnapToVideoFrames { get; set; }
+
     public double DefaultFrameRate { get; set; }
     public double CurrentFrameRate { get; set; }
     public string DefaultSubtitleFormat { get; set; }
