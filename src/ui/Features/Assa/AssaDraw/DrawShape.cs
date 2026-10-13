@@ -47,12 +47,10 @@ public class DrawShape
     public bool ShrinkToFit { get; set; } = true;
 
     /// <summary>
-    /// Where the text goes, as fractions of the shape's bounds - so moving and scaling the shape
-    /// takes the text area along (a bubble's body, not its tail).
+    /// Where the text goes (a bubble's body, not its tail), in canvas coordinates. It is moved,
+    /// scaled, rotated and mirrored with the shape. Null = inside the shape's bounds.
     /// </summary>
-    public (float Left, float Top, float Right, float Bottom) TextArea { get; set; } = DefaultTextArea;
-
-    public static readonly (float Left, float Top, float Right, float Bottom) DefaultTextArea = (0.1f, 0.1f, 0.9f, 0.9f);
+    public DrawTextFrame? TextFrame { get; set; }
 
     public bool HasText => !IsEraser && !string.IsNullOrWhiteSpace(Text);
 
@@ -76,7 +74,7 @@ public class DrawShape
         FontBold = other.FontBold;
         TextColor = other.TextColor;
         ShrinkToFit = other.ShrinkToFit;
-        TextArea = other.TextArea;
+        TextFrame = other.TextFrame;
 
         foreach (var point in other.Points)
         {
@@ -241,52 +239,82 @@ public class DrawShape
     }
 
     /// <summary>
-    /// The text area in canvas coordinates.
+    /// The text area: the one set, or else the middle 80% of the bounds.
+    /// </summary>
+    public DrawTextFrame GetTextFrame()
+    {
+        if (TextFrame is { } frame)
+        {
+            return frame;
+        }
+
+        var (left, top, right, bottom) = GetBounds();
+        return new DrawTextFrame((left + right) / 2, (top + bottom) / 2, (right - left) * 0.8f, (bottom - top) * 0.8f, 0);
+    }
+
+    /// <summary>
+    /// The text area before rotation (rotated by <see cref="DrawTextFrame.Angle"/> around its center).
     /// </summary>
     public (float Left, float Top, float Right, float Bottom) GetTextBounds()
     {
-        var (left, top, right, bottom) = GetBounds();
-        var (l, t, r, b) = TextArea;
-        var width = right - left;
-        var height = bottom - top;
-        return (left + l * width, top + t * height, left + r * width, top + b * height);
+        var frame = GetTextFrame();
+        return (frame.CenterX - frame.Width / 2, frame.CenterY - frame.Height / 2, frame.CenterX + frame.Width / 2, frame.CenterY + frame.Height / 2);
+    }
+
+    public void SetTextBounds(float left, float top, float right, float bottom, float angle = 0)
+    {
+        TextFrame = new DrawTextFrame((left + right) / 2, (top + bottom) / 2, Math.Abs(right - left), Math.Abs(bottom - top), angle);
     }
 
     /// <summary>
-    /// Sets the text area from canvas coordinates (stored relative to the current bounds).
+    /// Moves the text area along with a transform of the points. A mirror keeps the text readable:
+    /// of the two possible directions the one closest to the old angle is used.
     /// </summary>
-    public void SetTextBounds(float left, float top, float right, float bottom)
+    public void TransformText(Func<float, float, (float X, float Y)> map, bool mirrored)
     {
-        var (bl, bt, br, bb) = GetBounds();
-        var width = br - bl;
-        var height = bb - bt;
-        if (width < 0.01f || height < 0.01f)
+        if (TextFrame is not { } frame)
         {
-            TextArea = DefaultTextArea;
             return;
         }
 
-        TextArea = ((left - bl) / width, (top - bt) / height, (right - bl) / width, (bottom - bt) / height);
+        var radians = frame.Angle * MathF.PI / 180f;
+        var ux = MathF.Cos(radians) * frame.Width / 2;
+        var uy = MathF.Sin(radians) * frame.Width / 2;
+        var vx = -MathF.Sin(radians) * frame.Height / 2;
+        var vy = MathF.Cos(radians) * frame.Height / 2;
+        var center = map(frame.CenterX, frame.CenterY);
+        var u = map(frame.CenterX + ux, frame.CenterY + uy);
+        var v = map(frame.CenterX + vx, frame.CenterY + vy);
+        var newUx = u.X - center.X;
+        var newUy = u.Y - center.Y;
+        var newVx = v.X - center.X;
+        var newVy = v.Y - center.Y;
+
+        var angle = frame.Width > 0.001f ? MathF.Atan2(newUy, newUx) * 180f / MathF.PI : frame.Angle;
+        if (mirrored && Math.Abs(NormalizeAngle(angle + 180 - frame.Angle)) < Math.Abs(NormalizeAngle(angle - frame.Angle)))
+        {
+            angle += 180;
+        }
+
+        TextFrame = new DrawTextFrame(center.X, center.Y,
+            2 * MathF.Sqrt(newUx * newUx + newUy * newUy),
+            2 * MathF.Sqrt(newVx * newVx + newVy * newVy),
+            MathF.Round(NormalizeAngle(angle), 2));
     }
 
-    /// <summary>
-    /// Keeps the text area on the same part of a mirrored shape (a bubble flipped upside down has
-    /// its body at the bottom).
-    /// </summary>
-    public void MirrorTextArea(bool horizontal, bool vertical)
+    private static float NormalizeAngle(float degrees)
     {
-        var (l, t, r, b) = TextArea;
-        if (horizontal)
+        degrees %= 360;
+        if (degrees > 180)
         {
-            (l, r) = (1 - r, 1 - l);
+            degrees -= 360;
+        }
+        else if (degrees <= -180)
+        {
+            degrees += 360;
         }
 
-        if (vertical)
-        {
-            (t, b) = (1 - b, 1 - t);
-        }
-
-        TextArea = (l, t, r, b);
+        return degrees;
     }
 
     public void Offset(float x, float y)
@@ -295,6 +323,11 @@ public class DrawShape
         {
             point.X += x;
             point.Y += y;
+        }
+
+        if (TextFrame is { } frame)
+        {
+            TextFrame = frame with { CenterX = frame.CenterX + x, CenterY = frame.CenterY + y };
         }
     }
 
@@ -317,16 +350,7 @@ public class DrawShape
             point.Y = MathF.Round(centerY + x * sin + y * cos, 2);
         }
 
-        // Quarter turns turn the text area with the shape; the text itself stays upright
-        var quarterTurns = (int)MathF.Round(degrees / 90f);
-        if (MathF.Abs(degrees - quarterTurns * 90f) < 0.01f)
-        {
-            for (var i = 0; i < ((quarterTurns % 4) + 4) % 4; i++)
-            {
-                var (l, t, r, b) = TextArea;
-                TextArea = (1 - b, l, 1 - t, r);
-            }
-        }
+        TransformText((x, y) => (centerX + (x - centerX) * cos - (y - centerY) * sin, centerY + (x - centerX) * sin + (y - centerY) * cos), mirrored: false);
     }
 
     /// <summary>
@@ -341,7 +365,7 @@ public class DrawShape
             point.X = left + right - point.X;
         }
 
-        MirrorTextArea(horizontal: true, vertical: false);
+        TransformText((x, y) => (left + right - x, y), mirrored: true);
         ReverseWinding();
     }
 
@@ -353,7 +377,7 @@ public class DrawShape
             point.Y = top + bottom - point.Y;
         }
 
-        MirrorTextArea(horizontal: false, vertical: true);
+        TransformText((x, y) => (x, top + bottom - y), mirrored: true);
         ReverseWinding();
     }
 
@@ -641,3 +665,9 @@ public class DrawShape
         return MathF.Sqrt(cx * cx + cy * cy);
     }
 }
+
+/// <summary>
+/// A text area: center and size in canvas coordinates, turned <see cref="Angle"/> degrees
+/// clockwise (on screen) around the center.
+/// </summary>
+public readonly record struct DrawTextFrame(float CenterX, float CenterY, float Width, float Height, float Angle);

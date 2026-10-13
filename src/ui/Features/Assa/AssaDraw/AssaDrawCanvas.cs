@@ -38,7 +38,7 @@ public class AssaDrawCanvas : Control
     private List<DrawShape>? _transformShapes;
     private List<(float X, float Y)[]>? _transformOriginal;
     private bool[]? _transformReversed;
-    private (float Left, float Top, float Right, float Bottom)[]? _transformTextAreas;
+    private DrawTextFrame?[]? _transformTextFrames;
     private (float Left, float Top, float Right, float Bottom) _transformBounds;
     private Point _transformStart;
     private bool _transformStarted;
@@ -628,8 +628,11 @@ public class AssaDrawCanvas : Control
         {
             // Where the text of a bubble goes
             var (textLeft, textTop, textRight, textBottom) = shape.GetTextBounds();
-            context.DrawRectangle(null, GetPen(GuideColor, 1, dashed: true),
-                new Rect(new Point(ToZoomFactorX(textLeft), ToZoomFactorY(textTop)), new Point(ToZoomFactorX(textRight), ToZoomFactorY(textBottom))));
+            using (PushTextRotation(context, shape.GetTextFrame()))
+            {
+                context.DrawRectangle(null, GetPen(GuideColor, 1, dashed: true),
+                    new Rect(new Point(ToZoomFactorX(textLeft), ToZoomFactorY(textTop)), new Point(ToZoomFactorX(textRight), ToZoomFactorY(textBottom))));
+            }
         }
 
         IBrush? fillBrush = null;
@@ -735,6 +738,7 @@ public class AssaDrawCanvas : Control
         var outlinePen = shape.IsTextBox && shape.OutlineWidth > 0
             ? GetPen(shape.OutlineColor, shape.OutlineWidth * 2 * _zoomFactor, lineJoin: PenLineJoin.Round)
             : null;
+        using var rotation = PushTextRotation(context, shape.GetTextFrame());
         for (var i = 0; i < layout.Lines.Count; i++)
         {
             if (layout.Lines[i].Length == 0)
@@ -751,6 +755,24 @@ public class AssaDrawCanvas : Control
 
             context.DrawText(text, origin);
         }
+    }
+
+    /// <summary>
+    /// Turns what is drawn next around the text area's center, like \frz does around \pos.
+    /// </summary>
+    private DrawingContext.PushedState? PushTextRotation(DrawingContext context, DrawTextFrame frame)
+    {
+        if (Math.Abs(frame.Angle) < 0.01f)
+        {
+            return null;
+        }
+
+        var centerX = ToZoomFactorX(frame.CenterX);
+        var centerY = ToZoomFactorY(frame.CenterY);
+        return context.PushTransform(
+            Matrix.CreateTranslation(-centerX, -centerY) *
+            Matrix.CreateRotation(frame.Angle * Math.PI / 180) *
+            Matrix.CreateTranslation(centerX, centerY));
     }
 
     private StreamGeometry BuildLayerGeometry(List<DrawShape> shapes)
@@ -915,8 +937,6 @@ public class AssaDrawCanvas : Control
 
         Func<float, float, (float X, float Y)> map;
         var mirrored = false;
-        var mirrorX = false;
-        var mirrorY = false;
         if (_transformHandle == RotateHandle)
         {
             var startAngle = Math.Atan2(FromZoomFactorY((float)_transformStart.Y) - centerY, FromZoomFactorX((float)_transformStart.X) - centerX);
@@ -973,8 +993,6 @@ public class AssaDrawCanvas : Control
             var sy = scaleY;
             map = (x, y) => (anchorX + (x - anchorX) * sx, anchorY + (y - anchorY) * sy);
             mirrored = sx * sy < 0;
-            mirrorX = sx < 0;
-            mirrorY = sy < 0;
             _transformLabel = $"{Math.Abs(width * sx):0} × {Math.Abs(height * sy):0}";
         }
 
@@ -992,9 +1010,9 @@ public class AssaDrawCanvas : Control
                 _transformReversed[i] = mirrored;
             }
 
-            // Dragging an edge past the opposite one mirrors the shape - its text area goes along
-            shape.TextArea = _transformTextAreas![i];
-            shape.MirrorTextArea(mirrorX, mirrorY);
+            // The text area turns, scales and mirrors with the shape
+            shape.TextFrame = _transformTextFrames![i];
+            shape.TransformText(map, mirrored);
 
             var points = shape.Points;
             if (points.Count != original.Length)
@@ -1116,7 +1134,7 @@ public class AssaDrawCanvas : Control
                 _transformShapes = targets;
                 _transformOriginal = targets.Select(s => s.Points.Select(p => (p.X, p.Y)).ToArray()).ToList();
                 _transformReversed = new bool[targets.Count];
-                _transformTextAreas = targets.Select(s => s.TextArea).ToArray();
+                _transformTextFrames = targets.Select(s => s.TextFrame).ToArray();
                 _transformBounds = GetUnionBounds(targets);
                 _transformStart = point;
                 _transformStarted = false;
@@ -1341,7 +1359,7 @@ public class AssaDrawCanvas : Control
         _transformShapes = null;
         _transformOriginal = null;
         _transformReversed = null;
-        _transformTextAreas = null;
+        _transformTextFrames = null;
         _transformHandle = -1;
         _transformStarted = false;
         _transformLabel = null;

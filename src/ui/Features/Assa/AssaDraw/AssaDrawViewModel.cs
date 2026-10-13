@@ -346,7 +346,7 @@ public partial class AssaDrawViewModel : ObservableObject
         var layer = Shapes.Count == 0 ? 0 : Shapes.Max(s => s.Layer) + 1;
         var shape = MakeRectangle(x, y, width, height, layer, LayerColor);
         shape.IsTextBox = true;
-        shape.TextArea = (0, 0, 1, 1);
+        shape.SetTextBounds(x, y, x + width, y + height);
         shape.Text = Se.Language.Assa.DrawDefaultText;
         shape.TextColor = LayerColor;
         shape.FontSize = DefaultFontSize(16f);
@@ -711,6 +711,8 @@ public partial class AssaDrawViewModel : ObservableObject
             point.X = left + (point.X - left) * scaleX;
             point.Y = top + (point.Y - top) * scaleY;
         }
+
+        shape.TransformText((x, y) => (left + (x - left) * scaleX, top + (y - top) * scaleY), mirrored: false);
 
         RefreshTreeView();
         Canvas?.InvalidateVisual();
@@ -2623,6 +2625,7 @@ public partial class AssaDrawViewModel : ObservableObject
             {
                 host = MakeRectangle(left, top, right - left, bottom - top, layer, parsed.Color ?? Colors.White);
                 host.IsTextBox = true;
+                host.Rotate(parsed.Angle);
                 host.OutlineWidth = parsed.OutlineWidth;
                 host.OutlineColor = parsed.OutlineColor;
                 Shapes.Add(host);
@@ -2634,7 +2637,7 @@ public partial class AssaDrawViewModel : ObservableObject
             host.FontBold = parsed.Bold;
             host.ShrinkToFit = parsed.ShrinkToFit;
             host.TextColor = parsed.Color ?? Colors.White;
-            host.SetTextBounds(left, top, right, bottom);
+            host.SetTextBounds(left, top, right, bottom, parsed.Angle);
         }
 
         _importedTexts.Clear();
@@ -2897,11 +2900,7 @@ public partial class AssaDrawViewModel : ObservableObject
         {
             foreach (var shape in SelectedShapes)
             {
-                foreach (var point in shape.Points)
-                {
-                    point.X += xAdjust;
-                    point.Y += yAdjust;
-                }
+                shape.Offset(xAdjust, yAdjust);
             }
             RefreshTreeView();
             Canvas?.InvalidateVisual();
@@ -2911,11 +2910,7 @@ public partial class AssaDrawViewModel : ObservableObject
         // Check if a shape is selected in the tree view
         if (SelectedTreeItem?.Shape != null)
         {
-            foreach (var point in SelectedTreeItem.Shape.Points)
-            {
-                point.X += xAdjust;
-                point.Y += yAdjust;
-            }
+            SelectedTreeItem.Shape.Offset(xAdjust, yAdjust);
             RefreshTreeView();
             Canvas?.InvalidateVisual();
             return;
@@ -2924,11 +2919,7 @@ public partial class AssaDrawViewModel : ObservableObject
         // Fall back to active shape (currently being drawn)
         if (ActiveShape != null)
         {
-            foreach (var point in ActiveShape.Points)
-            {
-                point.X += xAdjust;
-                point.Y += yAdjust;
-            }
+            ActiveShape.Offset(xAdjust, yAdjust);
             RefreshTreeView();
             Canvas?.InvalidateVisual();
         }

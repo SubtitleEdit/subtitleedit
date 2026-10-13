@@ -164,8 +164,8 @@ public class AssaDrawTextTests
         var item = ShapeLibrary.BuiltIn.First(i => i.Name == Se.Language.Assa.DrawShapeThoughtBubble);
         var shapes = item.CreateShapes(0, 0, 1000, 1000, Colors.White, 0);
         var host = shapes.OrderByDescending(s => { var b = s.GetBounds(); return (b.Right - b.Left) * (b.Bottom - b.Top); }).First();
-        Assert.NotEqual(DrawShape.DefaultTextArea, host.TextArea);
-        Assert.All(shapes.Where(s => s != host), s => Assert.Equal(DrawShape.DefaultTextArea, s.TextArea));
+        Assert.NotNull(host.TextFrame);
+        Assert.All(shapes.Where(s => s != host), s => Assert.Null(s.TextFrame));
     }
 
     [Fact]
@@ -185,11 +185,12 @@ public class AssaDrawTextTests
     [Fact]
     public void WrappedLines_UseSoftBreaks_UserBreaksStayHard_AndReadBackAsTyped()
     {
-        var shape = new DrawShape { IsTextBox = true, TextArea = (0, 0, 1, 1), ShrinkToFit = false, FontSize = 40 };
+        var shape = new DrawShape { IsTextBox = true, ShrinkToFit = false, FontSize = 40 };
         shape.AddPoint(DrawCoordinateType.Line, 0, 0, Colors.White);
         shape.AddPoint(DrawCoordinateType.Line, 300, 0, Colors.White);
         shape.AddPoint(DrawCoordinateType.Line, 300, 400, Colors.White);
         shape.AddPoint(DrawCoordinateType.Line, 0, 400, Colors.White);
+        shape.SetTextBounds(0, 0, 300, 400);
         shape.Text = "one two three four five six seven eight\nnine";
 
         var line = AssaDrawTextLine.Format(shape);
@@ -203,11 +204,12 @@ public class AssaDrawTextTests
     [Fact]
     public void BracesAndBackslashes_InText_DoNotBecomeTags()
     {
-        var shape = new DrawShape { IsTextBox = true, TextArea = (0, 0, 1, 1), Text = "{\\i1}x" };
+        var shape = new DrawShape { IsTextBox = true, Text = "{\\i1}x" };
         shape.AddPoint(DrawCoordinateType.Line, 0, 0, Colors.White);
         shape.AddPoint(DrawCoordinateType.Line, 2000, 0, Colors.White);
         shape.AddPoint(DrawCoordinateType.Line, 2000, 400, Colors.White);
         shape.AddPoint(DrawCoordinateType.Line, 0, 400, Colors.White);
+        shape.SetTextBounds(0, 0, 2000, 400);
 
         var line = AssaDrawTextLine.Format(shape);
         Assert.DoesNotContain("{\\i1}", line);
@@ -223,20 +225,77 @@ public class AssaDrawTextTests
         Assert.Equal((900f, 500f, 1100f, 700f), parsed.Box);
     }
 
-    [Fact]
-    public void FlipAndRotate_KeepTheTextAreaOnTheBody()
+    private static DrawShape MakeBubbleLikeShape()
     {
-        var shape = new DrawShape { TextArea = (0.1f, 0.0f, 0.9f, 0.7f) };
+        // 100 x 100, text area in the top part (the "body")
+        var shape = new DrawShape { Text = "Hi" };
         shape.AddPoint(DrawCoordinateType.Line, 0, 0, Colors.White);
         shape.AddPoint(DrawCoordinateType.Line, 100, 0, Colors.White);
         shape.AddPoint(DrawCoordinateType.Line, 100, 100, Colors.White);
+        shape.AddPoint(DrawCoordinateType.Line, 0, 100, Colors.White);
+        shape.SetTextBounds(10, 0, 90, 70);
+        return shape;
+    }
+
+    [Fact]
+    public void Flip_MirrorsTheTextArea_ButKeepsTheTextReadable()
+    {
+        var shape = MakeBubbleLikeShape();
 
         shape.FlipVertical();
-        Assert.Equal((0.1f, 0.3f, 0.9f, 1f), shape.TextArea, new AreaComparer());
+        Assert.Equal(new DrawTextFrame(50, 65, 80, 70, 0), shape.TextFrame);
 
-        shape.FlipVertical();
-        shape.Rotate(90);
-        Assert.Equal((0.3f, 0.1f, 1f, 0.9f), shape.TextArea, new AreaComparer());
+        shape.FlipHorizontal();
+        Assert.Equal(new DrawTextFrame(50, 65, 80, 70, 0), shape.TextFrame);
+    }
+
+    [Fact]
+    public void Rotate_TurnsTheTextAreaAndTheText()
+    {
+        var shape = MakeBubbleLikeShape();
+
+        shape.Rotate(30);
+
+        var frame = shape.TextFrame!.Value;
+        Assert.Equal(30, frame.Angle, 1);
+        Assert.Equal(80, frame.Width, 1);
+        Assert.Equal(70, frame.Height, 1);
+
+        // The area's center turned around the shape's center (50, 50): (50, 35) -> 15 up, rotated 30°
+        Assert.Equal(50 + 15 * MathF.Sin(MathF.PI / 6), frame.CenterX, 1);
+        Assert.Equal(50 - 15 * MathF.Cos(MathF.PI / 6), frame.CenterY, 1);
+    }
+
+    [Fact]
+    public void RotatedText_IsWrittenWithFrz_AndReadBack()
+    {
+        var vm = MakeViewModel();
+        var textBox = vm.InsertTextBox(new CanvasInsertEventArgs(100, 200, 800, 200, isClick: false));
+        textBox.Rotate(-45);
+
+        var result = Ok(vm);
+        var line = Assert.Single(result.Paragraphs);
+        Assert.Contains("\\pos(500,300)", line.Text);
+        Assert.Contains("\\frz45\\", line.Text);
+
+        var shape = Assert.Single(Reopen(result).Shapes);
+        var frame = shape.TextFrame!.Value;
+        Assert.Equal(-45, frame.Angle, 1);
+        Assert.Equal(800, frame.Width, 1);
+        Assert.Equal(200, frame.Height, 1);
+    }
+
+    [Fact]
+    public void ResizeAndNudge_MoveTheTextAreaToo()
+    {
+        var vm = MakeViewModel();
+        var textBox = vm.InsertTextBox(new CanvasInsertEventArgs(100, 200, 800, 200, isClick: false));
+
+        vm.ShapeWidth = 400;
+        Assert.Equal((100f, 200f, 500f, 400f), textBox.GetTextBounds());
+
+        vm.ShapeX = 0;
+        Assert.Equal((0f, 200f, 400f, 400f), textBox.GetTextBounds());
     }
 
     [Fact]
@@ -258,14 +317,5 @@ public class AssaDrawTextTests
         var vm = MakeViewModel(new Paragraph("{\\iclip(m 0 0 l 100 0 100 100)}", 0, 2000) { Extra = "Default" });
         vm.SelectShape(vm.Shapes[0]);
         Assert.False(vm.CanEditText);
-    }
-
-    private sealed class AreaComparer : IEqualityComparer<(float, float, float, float)>
-    {
-        public bool Equals((float, float, float, float) x, (float, float, float, float) y) =>
-            Math.Abs(x.Item1 - y.Item1) < 0.001f && Math.Abs(x.Item2 - y.Item2) < 0.001f &&
-            Math.Abs(x.Item3 - y.Item3) < 0.001f && Math.Abs(x.Item4 - y.Item4) < 0.001f;
-
-        public int GetHashCode((float, float, float, float) obj) => 0;
     }
 }

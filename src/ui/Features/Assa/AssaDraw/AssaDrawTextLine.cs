@@ -26,6 +26,7 @@ public static class AssaDrawTextLine
     private static readonly Regex TagBlockRegex = new(@"\{[^}]*\}", RegexOptions.Compiled);
     private static readonly Regex PosRegex = new(@"\\pos\(\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*\)", RegexOptions.Compiled);
     private static readonly Regex FontNameRegex = new(@"\\fn([^\\}]+)", RegexOptions.Compiled);
+    private static readonly Regex RotationRegex = new(@"\\frz?(-?[\d.]+)", RegexOptions.Compiled);
     private static readonly Regex FontSizeRegex = new(@"\\fs([\d.]+)", RegexOptions.Compiled);
     private static readonly Regex BoldRegex = new(@"\\b(\d+)", RegexOptions.Compiled);
     private static readonly Regex PrimaryColorRegex = new(@"\\1?c&H([0-9a-fA-F]+)&?", RegexOptions.Compiled);
@@ -40,6 +41,11 @@ public static class AssaDrawTextLine
         public (float Left, float Top, float Right, float Bottom) Box { get; set; }
         public string FontName { get; set; } = "Arial";
         public float FontSize { get; set; } = 48;
+
+        /// <summary>
+        /// Degrees clockwise on screen (\frz is counter-clockwise).
+        /// </summary>
+        public float Angle { get; set; }
         public bool Bold { get; set; }
         public bool ShrinkToFit { get; set; }
         public Color? Color { get; set; }
@@ -58,10 +64,17 @@ public static class AssaDrawTextLine
     public static string Format(DrawShape shape)
     {
         var (left, top, right, bottom) = shape.GetTextBounds();
+        var angle = shape.GetTextFrame().Angle;
         var layout = AssaTextLayout.Layout(shape.Text, shape.FontName, shape.FontSize, shape.FontBold, right - left, bottom - top, shape.ShrinkToFit);
 
         var sb = new StringBuilder();
         sb.Append(CultureInfo.InvariantCulture, $"{{\\an5\\pos({N((left + right) / 2)},{N((top + bottom) / 2)})\\q2\\fn{shape.FontName}\\fs{N(layout.FontSize)}");
+        if (Math.Abs(angle) >= 0.01f)
+        {
+            // Turns around \pos (the center) - the text area is stored unrotated
+            sb.Append(CultureInfo.InvariantCulture, $"\\frz{N(-angle)}");
+        }
+
         if (shape.FontBold)
         {
             sb.Append("\\b1");
@@ -165,6 +178,11 @@ public static class AssaDrawTextLine
         else if (FontSizeRegex.Match(tags) is { Success: true } fontSize)
         {
             result.FontSize = F(fontSize.Groups[1].Value);
+        }
+
+        if (RotationRegex.Match(tags) is { Success: true } rotation)
+        {
+            result.Angle = -F(rotation.Groups[1].Value);
         }
 
         result.Bold = BoldRegex.Match(tags) is { Success: true } bold && bold.Groups[1].Value != "0";
