@@ -612,7 +612,7 @@ public class LanguageSettings
         TimeCodeModeTime = "Time (hh:mm:ss,zzz)";
         TimeCodeModeFrames = "Frames (hh:mm:ss:ff)";
         TimeCodeModeFrameNumbers = "Frame numbers";
-        FrameModeSnapToVideoFrames = "Frames: snap times to video frames (as Blu-ray sup)";
+        FrameModeSnapToVideoFrames = "Store times on video frames (not frames within each second)";
         TextBoxLimitNewLines = "Limit number of lines in subtitle text box";
         MpvOpenGl = "libmpv - OpenGL";
         MpvWidRendering = "libmpv - Native Window ID rendering";
