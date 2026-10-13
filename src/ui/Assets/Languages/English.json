@@ -3572,6 +3572,7 @@
       "timeCodeModeTime": "Time (hh:mm:ss,zzz)",
       "timeCodeModeFrames": "Frames (hh:mm:ss:ff)",
       "timeCodeModeFrameNumbers": "Frame numbers",
+      "frameModeSnapToVideoFrames": "Store times on video frames (not frames within each second)",
       "textBoxLimitNewLines": "Limit number of lines in subtitle text box",
       "mpvOpenGl": "libmpv - OpenGL",
       "mpvSoftwareRendering": "libmpv - Software rendering (slow)",
