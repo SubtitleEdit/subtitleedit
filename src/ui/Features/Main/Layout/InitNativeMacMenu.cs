@@ -148,6 +148,7 @@ public static class InitNativeMacMenu
                         UpdateWindowMenus();
                     }
 
+                    MacHelpSearchInterop.TryRegisterHelpMenu(Clean(Se.Language.Main.Menu.HelpTitle));
                     InstallDockMenu();
                 }, Avalonia.Threading.DispatcherPriority.Background);
             };
