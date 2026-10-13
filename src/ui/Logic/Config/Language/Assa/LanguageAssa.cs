@@ -72,7 +72,7 @@ public class LanguageAssa
     public string DrawShapeDoubleArrow { get; set; }
     public string DrawShapeChevron { get; set; }
     public string DrawShapeCurvedArrow { get; set; }
-    public string DrawShapeThinArrow { get; set; }
+    public string DrawShapeRepeatArrow { get; set; }
     public string DrawShapeUTurnArrow { get; set; }
     public string DrawShapeRoundedRectangle { get; set; }
     public string DrawShapeTriangle { get; set; }
@@ -84,6 +84,8 @@ public class LanguageAssa
     public string DrawShapeRing { get; set; }
     public string DrawShapePlus { get; set; }
     public string DrawShapeBanner { get; set; }
+    public string DrawShapeParallelogram { get; set; }
+    public string DrawShapeTrapezoid { get; set; }
     public string DrawShapeHeart { get; set; }
     public string DrawShapeCheck { get; set; }
     public string DrawShapeMusicNote { get; set; }
@@ -423,7 +425,7 @@ public class LanguageAssa
         DrawShapeDoubleArrow = "Double arrow";
         DrawShapeChevron = "Chevron";
         DrawShapeCurvedArrow = "Curved arrow";
-        DrawShapeThinArrow = "Thin arrow";
+        DrawShapeRepeatArrow = "Repeat arrow";
         DrawShapeUTurnArrow = "U-turn arrow";
         DrawShapeRoundedRectangle = "Rounded rectangle";
         DrawShapeTriangle = "Triangle";
@@ -435,6 +437,8 @@ public class LanguageAssa
         DrawShapeRing = "Ring";
         DrawShapePlus = "Plus";
         DrawShapeBanner = "Banner";
+        DrawShapeParallelogram = "Parallelogram";
+        DrawShapeTrapezoid = "Trapezoid";
         DrawShapeHeart = "Heart";
         DrawShapeCheck = "Check mark";
         DrawShapeMusicNote = "Music note";

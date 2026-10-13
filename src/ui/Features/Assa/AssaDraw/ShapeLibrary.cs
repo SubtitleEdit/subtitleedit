@@ -296,7 +296,9 @@ public static class ShapeLibrary
             Item(l.DrawShapeDoubleArrow, arrows, ["M0 50 L30 20 V38 H70 V20 L100 50 L70 80 V62 H30 V80 Z"]),
             Item(l.DrawShapeChevron, arrows, ["M0 0 H40 L80 50 L40 100 H0 L40 50 Z"]),
             Item(l.DrawShapeCurvedArrow, arrows, ["M10 90 A60 60 0 0 1 70 30 V10 L100 40 L70 70 V50 A40 40 0 0 0 30 90 Z"]),
-            Item(l.DrawShapeThinArrow, arrows, ["M0 44 H76 V30 L100 50 L76 70 V56 H0 Z"]),
+            // 300° ring (clockwise) ending in an arrowhead at the top
+            Item(l.DrawShapeRepeatArrow, arrows,
+                ["M78.28 16.29 A44 44 0 1 1 34.95 8.65 L32.22 1.14 L56.15 8.39 L42.48 29.33 L39.74 21.81 A30 30 0 1 0 69.28 27.02 Z"]),
             Item(l.DrawShapeUTurnArrow, arrows, ["M8 100 V40 A34 34 0 0 1 76 40 V70 H86 L68 100 L50 70 H60 V40 A18 18 0 0 0 24 40 V100 Z"]),
 
             // Basic shapes
@@ -310,6 +312,8 @@ public static class ShapeLibrary
             Item(l.DrawShapeRing, basic, [Circle(50, 50, 50)], [Circle(50, 50, 32)]),
             Item(l.DrawShapePlus, basic, ["M35 0 H65 V35 H100 V65 H65 V100 H35 V65 H0 V35 H35 Z"]),
             Item(l.DrawShapeBanner, basic, ["M0 20 H100 L88 45 L100 70 H0 L12 45 Z"]),
+            Item(l.DrawShapeParallelogram, basic, ["M25 0 H100 L75 70 H0 Z"]),
+            Item(l.DrawShapeTrapezoid, basic, ["M22 0 H78 L100 70 H0 Z"]),
 
             // Symbols
             Item(l.DrawShapeHeart, symbols, ["M50 92 C20 70 0 52 0 30 C0 12 13 0 28 0 C38 0 46 6 50 14 C54 6 62 0 72 0 C87 0 100 12 100 30 C100 52 80 70 50 92 Z"]),
