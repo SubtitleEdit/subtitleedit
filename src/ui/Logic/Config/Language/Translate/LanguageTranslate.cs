@@ -6,7 +6,7 @@ public class LanguageTranslate
     public string MaxBlockSize { get; set; }
     public string LineSeparator { get; set; }
     public string BlockCopyInfo { get; set; }
-    public object BlockCopyGetFromClipboard { get; set; }
+    public string BlockCopyGetFromClipboard { get; set; }
     public string ReCopyTextToClipboard { get; set; }
     public string BlockXOfY { get; set; }
     public string NoTextInClipboard { get; set; }
