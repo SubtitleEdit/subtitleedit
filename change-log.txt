@@ -3,6 +3,27 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.3.0-rc4 (13th of October 2026)
+
+* Add Whisper-VAD to the Crisp ASR VAD choices - thx jodilife
+* macOS: show "Search help topics" field with translated menus - thx GitGianluc
+* Fix jitter/crackling in layout 14 (filmstrip thumbnails decode keyframes only) - thx ruonghieu
+* Fix context menu submenu icons not showing on first open - thx GitGianluc
+* Fix Linux/OpenGL fullscreen leaving an mpv instance alive (VRAM leak) - thx vitonique
+* Fix Whisper OpenAI model download "path not found" - thx Shaima-Almarzooqi
+* Fix Auto-translate advanced settings cut off at high UI scaling - thx mmmsh-125
+* Update whisper.cpp to v1.9.5
+* Update Crisp ASR to v0.8.43
+* Update Czech translation - thx Matěj
+* Update French translation - thx Need74
+* Update German translation - thx FunkyKnilch
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
+
+
+-----------------------------------------------------------------------------------------------------
+
 v5.3.0-rc3 (12th of October 2026)
 
 * Add nOCR Cyrillic database (Cyrillic.nocr) with case and "ы" handling
