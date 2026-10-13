@@ -74,6 +74,20 @@ public static class AudioCppTtsSettingsAdapters
         LicenseDefinition: FishTtsAudioCpp.LicenseDefinition,
         StartDownloadModels: (vm, modelKey) => vm.StartDownloadFishTtsAudioCppModels(modelKey));
 
+    public static AudioCppTtsSettingsAdapter Breeze { get; } = new(
+        EngineName: "Breeze TTS 2 (audio.cpp)",
+        FamilyName: BreezeTtsAudioCpp.FamilyName,
+        Description: new BreezeTtsAudioCpp().Description,
+        ModelKeyDefault: BreezeTtsAudioCpp.ModelKeyQ8_0,
+        ModelKeyAlt: BreezeTtsAudioCpp.ModelKeyBf16,
+        ResolveModelKey: BreezeTtsAudioCpp.ResolveModelKey,
+        AreModelsInstalled: BreezeTtsAudioCpp.AreModelsInstalled,
+        GetModelsFolder: BreezeTtsAudioCpp.GetSetModelsFolder,
+        GetVoicesFolder: BreezeTtsAudioCpp.GetSetVoicesFolder,
+        IsLicenseAccepted: BreezeTtsAudioCpp.IsLicenseAccepted,
+        LicenseDefinition: BreezeTtsAudioCpp.LicenseDefinition,
+        StartDownloadModels: (vm, modelKey) => vm.StartDownloadBreezeTtsAudioCppModels(modelKey));
+
     public static AudioCppTtsSettingsAdapter FireRedTts3 { get; } = new(
         EngineName: "FireRedTTS3 (audio.cpp)",
         FamilyName: FireRedTts3AudioCpp.FamilyName,

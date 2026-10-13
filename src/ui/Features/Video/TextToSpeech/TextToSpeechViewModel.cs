@@ -407,6 +407,11 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             Se.Settings.Video.TextToSpeech.FishTtsAudioCppModel = SelectedModel ?? FishTtsAudioCpp.DefaultModelKey;
         }
+        else if (SelectedEngine is BreezeTtsAudioCpp)
+        {
+            Se.Settings.Video.TextToSpeech.BreezeTtsAudioCppModel = SelectedModel ?? BreezeTtsAudioCpp.DefaultModelKey;
+            Se.Settings.Video.TextToSpeech.BreezeTtsAudioCppInstruction = (Instruction ?? string.Empty).Trim();
+        }
         else if (SelectedEngine is FireRedTts3AudioCpp)
         {
             Se.Settings.Video.TextToSpeech.FireRedTts3AudioCppModel = SelectedModel ?? FireRedTts3AudioCpp.DefaultModelKey;
@@ -495,6 +500,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         Qwen3TtsCpp => Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction ?? string.Empty,
         Qwen3TtsCrispAsr => Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction ?? string.Empty,
         OmniVoiceTtsCpp => Se.Settings.Video.TextToSpeech.OmniVoiceTtsCppInstruction ?? string.Empty,
+        BreezeTtsAudioCpp => Se.Settings.Video.TextToSpeech.BreezeTtsAudioCppInstruction ?? string.Empty,
         _ => string.Empty,
     };
 
@@ -515,12 +521,14 @@ public partial class TextToSpeechViewModel : ObservableObject
     }
 
     // Qwen3's free-text instruction only does anything on the VoiceDesign model - the 0.6B and
-    // 1.7B Base models are not instruction-tuned. OmniVoice always shows its keyword picker.
+    // 1.7B Base models are not instruction-tuned. Breeze TTS 2 always takes one (voice design
+    // for "Default", delivery direction for a clone). OmniVoice always shows its keyword picker.
     private void RefreshInstructionVisibility()
     {
         IsInstructionTextVisible =
             (SelectedEngine is Qwen3TtsCpp && Qwen3TtsCpp.IsVoiceDesignModel(SelectedModel))
-            || (SelectedEngine is Qwen3TtsCrispAsr && Qwen3TtsCrispAsr.IsVoiceDesignModel(SelectedModel));
+            || (SelectedEngine is Qwen3TtsCrispAsr && Qwen3TtsCrispAsr.IsVoiceDesignModel(SelectedModel))
+            || SelectedEngine is BreezeTtsAudioCpp;
         IsInstructionPickerVisible = SelectedEngine is OmniVoiceTtsCpp;
         HasInstruction = IsInstructionTextVisible || IsInstructionPickerVisible;
     }
@@ -1501,6 +1509,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             FishTtsAudioCpp.StopServer();
         }
+        if (keepAlive is not BreezeTtsAudioCpp)
+        {
+            BreezeTtsAudioCpp.StopServer();
+        }
         if (keepAlive is not FireRedTts3AudioCpp)
         {
             FireRedTts3AudioCpp.StopServer();
@@ -1835,6 +1847,9 @@ public partial class TextToSpeechViewModel : ObservableObject
             case FishTtsAudioCpp:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadFishTtsAudioCppModels(FishTtsAudioCpp.ResolveModelKey(SelectedModel)));
                 break;
+            case BreezeTtsAudioCpp:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadBreezeTtsAudioCppModels(BreezeTtsAudioCpp.ResolveModelKey(SelectedModel)));
+                break;
             case FireRedTts3AudioCpp:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadFireRedTts3AudioCppModels(FireRedTts3AudioCpp.ResolveModelKey(SelectedModel)));
                 break;
@@ -1930,6 +1945,9 @@ public partial class TextToSpeechViewModel : ObservableObject
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             FishTtsAudioCpp => FishTtsAudioCpp.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            BreezeTtsAudioCpp => BreezeTtsAudioCpp.AreModelsInstalled(modelKey)
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             FireRedTts3AudioCpp => FireRedTts3AudioCpp.AreModelsInstalled(modelKey)
@@ -5138,6 +5156,16 @@ public partial class TextToSpeechViewModel : ObservableObject
             else if (SelectedEngine is FishTtsAudioCpp)
             {
                 SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.FishTtsAudioCppModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+                IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
+            }
+            else if (SelectedEngine is BreezeTtsAudioCpp)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.BreezeTtsAudioCppModel);
                 if (string.IsNullOrEmpty(SelectedModel))
                 {
                     SelectedModel = Models.FirstOrDefault();

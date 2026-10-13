@@ -76,7 +76,8 @@ public partial class ActorVoiceRowSettingsViewModel : ObservableObject
         // selected because omnivoice-tts ignores --instruct in that case.
         IsInstructionTextVisible =
             (row.SelectedEngine is Qwen3TtsCpp && Qwen3TtsCpp.IsVoiceDesignModel(row.SelectedModel))
-            || (row.SelectedEngine is Qwen3TtsCrispAsr && Qwen3TtsCrispAsr.IsVoiceDesignModel(row.SelectedModel));
+            || (row.SelectedEngine is Qwen3TtsCrispAsr && Qwen3TtsCrispAsr.IsVoiceDesignModel(row.SelectedModel))
+            || row.SelectedEngine is BreezeTtsAudioCpp;
 
         IsOmniVoicePickerVisible = row.SelectedEngine is OmniVoiceTtsCpp;
         var isDefaultOmniVoice = row.SelectedVoice?.EngineVoice is OmniVoice ov && string.IsNullOrEmpty(ov.FilePath);

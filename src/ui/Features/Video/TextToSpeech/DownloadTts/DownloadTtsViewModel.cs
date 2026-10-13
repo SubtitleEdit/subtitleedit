@@ -112,6 +112,10 @@ public partial class DownloadTtsViewModel : ObservableObject
     private Task? _downloadTaskFireRedTts3AudioCppModels;
     private readonly MemoryStream _downloadStreamFireRedTts3AudioCppVoices;
     private Task? _downloadTaskFireRedTts3AudioCppVoices;
+    private readonly IBreezeTtsAudioCppDownloadService _breezeTtsAudioCppDownloadService;
+    private Task? _downloadTaskBreezeTtsAudioCppModels;
+    private readonly MemoryStream _downloadStreamBreezeTtsAudioCppVoices;
+    private Task? _downloadTaskBreezeTtsAudioCppVoices;
     private readonly IKugelAudioAudioCppDownloadService _kugelAudioAudioCppDownloadService;
     private Task? _downloadTaskKugelAudioAudioCppModels;
     private readonly ISidonAudioCppDownloadService _sidonAudioCppDownloadService;
@@ -160,6 +164,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         IHiggsTtsAudioCppDownloadService higgsTtsAudioCppDownloadService,
         IFishTtsAudioCppDownloadService fishTtsAudioCppDownloadService,
         IFireRedTts3AudioCppDownloadService fireRedTts3AudioCppDownloadService,
+        IBreezeTtsAudioCppDownloadService breezeTtsAudioCppDownloadService,
         IKugelAudioAudioCppDownloadService kugelAudioAudioCppDownloadService,
         ISidonAudioCppDownloadService sidonAudioCppDownloadService,
         ICosyVoice3CrispAsrDownloadService cosyVoice3CrispAsrDownloadService,
@@ -190,6 +195,8 @@ public partial class DownloadTtsViewModel : ObservableObject
         _downloadStreamFishTtsAudioCppVoices = new MemoryStream();
         _fireRedTts3AudioCppDownloadService = fireRedTts3AudioCppDownloadService;
         _downloadStreamFireRedTts3AudioCppVoices = new MemoryStream();
+        _breezeTtsAudioCppDownloadService = breezeTtsAudioCppDownloadService;
+        _downloadStreamBreezeTtsAudioCppVoices = new MemoryStream();
         _kugelAudioAudioCppDownloadService = kugelAudioAudioCppDownloadService;
         _sidonAudioCppDownloadService = sidonAudioCppDownloadService;
         _cosyVoice3CrispAsrDownloadService = cosyVoice3CrispAsrDownloadService;
@@ -1321,6 +1328,111 @@ public partial class DownloadTtsViewModel : ObservableObject
             {
                 _timer.Stop();
                 var ex = _downloadTaskFireRedTts3AudioCppModels.Exception?.InnerException ?? _downloadTaskFireRedTts3AudioCppModels.Exception;
+                if (ex is OperationCanceledException)
+                {
+                    ProgressText = Se.Language.General.DownloadCanceled;
+                    Close();
+                }
+                else
+                {
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
+                }
+
+                return;
+            }
+
+            if (_downloadTaskBreezeTtsAudioCppModels is { IsCompletedSuccessfully: true })
+            {
+                _timer.Stop();
+                _downloadTaskBreezeTtsAudioCppModels = null;
+
+                // Chain the shared reference-voice pack (the same voices.zip the other cloning
+                // engines use), so there are voices to clone besides the designed "Default".
+                var voicesFolder = BreezeTtsAudioCpp.GetSetVoicesFolder();
+                var voicesAlreadyInstalled = Directory.Exists(voicesFolder)
+                    && Directory.EnumerateFiles(voicesFolder, "*.wav").Any();
+                if (voicesAlreadyInstalled)
+                {
+                    OkPressed = true;
+                    Close();
+                    return;
+                }
+
+                TitleText = string.Format(Se.Language.General.DownloadingX, "Breeze TTS 2 reference voices");
+                ProgressValue = 0;
+                ProgressText = Se.Language.General.StartingDotDotDot;
+                var voicesProgress = new Progress<float>(number =>
+                {
+                    var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
+                    var pctString = percentage.ToString(CultureInfo.InvariantCulture);
+                    ProgressValue = percentage;
+                    ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
+                });
+                _downloadTaskBreezeTtsAudioCppVoices = _qwen3TtsCppDownloadService.DownloadVoices(
+                    _downloadStreamBreezeTtsAudioCppVoices, voicesProgress, _cancellationTokenSource.Token);
+                // OnClosing disposes the timer, so restarting it from a chained download
+                // step threw ObjectDisposedException on a thread-pool thread (#12739).
+                if (!_isClosing)
+                {
+                    _timer.Start();
+                }
+                return;
+            }
+
+            if (_downloadTaskBreezeTtsAudioCppVoices is { IsCompletedSuccessfully: true })
+            {
+                _timer.Stop();
+                _downloadTaskBreezeTtsAudioCppVoices = null;
+                if (_downloadStreamBreezeTtsAudioCppVoices.Length > 0)
+                {
+                    var voicesFolder = BreezeTtsAudioCpp.GetSetVoicesFolder();
+                    try
+                    {
+                        _downloadStreamBreezeTtsAudioCppVoices.Position = 0;
+                        _zipUnpacker.UnpackZipStream(_downloadStreamBreezeTtsAudioCppVoices, voicesFolder, string.Empty, false, new List<string>(), null);
+                        // The pack ships at 16 kHz; the Breeze codec runs at 24 kHz.
+                        ResampleVoicesTo24kHz(voicesFolder);
+                        // The pack's .txt files are attribution blurbs, not transcripts, and
+                        // this engine passes a .txt sidecar as reference_text — a blurb there
+                        // conditions the clone on text nobody spoke. Same cleanup as Qwen3.
+                        Qwen3TtsCrispAsr.NormalizeVoiceTranscripts(voicesFolder);
+                    }
+                    catch (Exception ex)
+                    {
+                        Se.LogError(ex);
+                    }
+
+                    _downloadStreamBreezeTtsAudioCppVoices.Dispose();
+                }
+
+                OkPressed = true;
+                Close();
+                return;
+            }
+
+            if (_downloadTaskBreezeTtsAudioCppVoices is { IsFaulted: true })
+            {
+                _timer.Stop();
+                _downloadTaskBreezeTtsAudioCppVoices = null;
+                if (_cancellationTokenSource.IsCancellationRequested)
+                {
+                    ProgressText = Se.Language.General.DownloadCanceled;
+                    Close();
+                    return;
+                }
+
+                // A missing voice pack is not fatal — the model is already installed and the
+                // user can import their own reference WAV.
+                OkPressed = true;
+                Close();
+                return;
+            }
+
+            if (_downloadTaskBreezeTtsAudioCppModels is { IsFaulted: true })
+            {
+                _timer.Stop();
+                var ex = _downloadTaskBreezeTtsAudioCppModels.Exception?.InnerException ?? _downloadTaskBreezeTtsAudioCppModels.Exception;
                 if (ex is OperationCanceledException)
                 {
                     ProgressText = Se.Language.General.DownloadCanceled;
@@ -2855,6 +2967,29 @@ public partial class DownloadTtsViewModel : ObservableObject
 
         _downloadTaskFireRedTts3AudioCppModels =
             _fireRedTts3AudioCppDownloadService.DownloadModels(resolved, downloadProgress, titleProgress, _cancellationTokenSource.Token);
+    }
+
+    public void StartDownloadBreezeTtsAudioCppModels(string? modelKey = null)
+    {
+        var resolved = BreezeTtsAudioCpp.ResolveModelKey(modelKey);
+        var fileName = BreezeTtsAudioCpp.GetModelFileName(resolved);
+        TitleText = string.Format(Se.Language.General.DownloadingX, $"Breeze TTS 2 model ({resolved}): {fileName}");
+
+        var downloadProgress = new Progress<float>(number =>
+        {
+            var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
+            var pctString = percentage.ToString(CultureInfo.InvariantCulture);
+            ProgressValue = percentage;
+            ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
+        });
+
+        var titleProgress = new Action<string>(title =>
+        {
+            Dispatcher.UIThread.Post(() => TitleText = title);
+        });
+
+        _downloadTaskBreezeTtsAudioCppModels =
+            _breezeTtsAudioCppDownloadService.DownloadModels(resolved, downloadProgress, titleProgress, _cancellationTokenSource.Token);
     }
 
     public void StartDownloadKugelAudioAudioCppModels(string? modelKey = null)

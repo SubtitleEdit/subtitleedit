@@ -121,6 +121,11 @@ public static class TtsEngineCatalog
             // under the Fish Audio Research License (first-run accept window).
             new FishTtsAudioCpp(),
 
+            // Breeze TTS 2 (audio.cpp) — English and Chinese only, but voice design from a
+            // free-text description and cloning steered by the same instruction. Same shared
+            // runtime; weights and output are research / non-commercial (first-run accept window).
+            new BreezeTtsAudioCpp(),
+
             // FireRedTTS3-Base (audio.cpp) — cloning across 24 languages with the best published
             // speaker similarity of the open models (arXiv 2608.17492). Same shared runtime;
             // weights are Apache-2.0, so no licence gate. Needs an explicit language pick

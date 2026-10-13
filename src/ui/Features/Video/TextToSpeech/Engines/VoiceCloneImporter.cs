@@ -36,6 +36,7 @@ public static class VoiceCloneImporter
             F5TtsCrispAsr e => e.ImportVoice(fileName, text),
             FireRedTts3AudioCpp e => e.ImportVoice(fileName, text),
             FishTtsAudioCpp e => e.ImportVoice(fileName, text),
+            BreezeTtsAudioCpp e => e.ImportVoice(fileName, text),
             HiggsTtsAudioCpp e => e.ImportVoice(fileName, text),
             MossTtsCrispAsr e => e.ImportVoice(fileName, text),
             OmniVoiceCrispAsr e => e.ImportVoice(fileName, text),

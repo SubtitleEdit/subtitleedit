@@ -374,6 +374,7 @@ public static class TtsVoiceInstaller
         IndexTts25AudioCpp.StopServer();
         HiggsTtsAudioCpp.StopServer();
         FishTtsAudioCpp.StopServer();
+        BreezeTtsAudioCpp.StopServer();
         FireRedTts3AudioCpp.StopServer();
         KugelAudioAudioCpp.StopServer();
 

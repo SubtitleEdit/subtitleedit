@@ -60,6 +60,10 @@ public static class TtsInstructionSwap
                 var prevQwen = s.Qwen3TtsCppInstruction ?? string.Empty;
                 s.Qwen3TtsCppInstruction = instruction ?? string.Empty;
                 return prevQwen;
+            case BreezeTtsAudioCpp:
+                var prevBreeze = s.BreezeTtsAudioCppInstruction ?? string.Empty;
+                s.BreezeTtsAudioCppInstruction = instruction ?? string.Empty;
+                return prevBreeze;
             case OmniVoiceTtsCpp:
                 var prevOmni = s.OmniVoiceTtsCppInstruction ?? string.Empty;
                 s.OmniVoiceTtsCppInstruction = instruction ?? string.Empty;
@@ -82,6 +86,9 @@ public static class TtsInstructionSwap
             case Qwen3TtsCpp:
             case Qwen3TtsCrispAsr:
                 s.Qwen3TtsCppInstruction = previous;
+                break;
+            case BreezeTtsAudioCpp:
+                s.BreezeTtsAudioCppInstruction = previous;
                 break;
             case OmniVoiceTtsCpp:
                 s.OmniVoiceTtsCppInstruction = previous;

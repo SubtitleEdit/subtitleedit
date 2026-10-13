@@ -503,6 +503,19 @@ public static class TtsEngineInstaller
                 startDownloadModels: (vm, key) => vm.StartDownloadFishTtsAudioCppModels(key));
         }
 
+        if (engine is BreezeTtsAudioCpp)
+        {
+            return await EnsureAudioCppEngineWithLicense(
+                window, windowService, refreshVoices,
+                engineDisplayName: "Breeze TTS 2",
+                requiredFamily: BreezeTtsAudioCpp.FamilyName,
+                licenseDefinition: BreezeTtsAudioCpp.LicenseDefinition,
+                isLicenseAccepted: BreezeTtsAudioCpp.IsLicenseAccepted,
+                modelKey: BreezeTtsAudioCpp.ResolveModelKey(model),
+                areModelsInstalled: BreezeTtsAudioCpp.AreModelsInstalled,
+                startDownloadModels: (vm, key) => vm.StartDownloadBreezeTtsAudioCppModels(key));
+        }
+
         if (engine is FireRedTts3AudioCpp)
         {
             // Apache-2.0 weights: no licence gate, otherwise the same runtime + model flow.
