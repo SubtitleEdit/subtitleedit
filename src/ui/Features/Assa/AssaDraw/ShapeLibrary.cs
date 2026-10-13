@@ -337,6 +337,12 @@ public static class ShapeLibrary
                 "M78.28 21.72 A40 40 0 0 1 78.28 78.28 L72.63 72.63 A32 32 0 0 0 72.63 27.37 Z",
             ]),
             Item(l.DrawShapeCross, symbols, ["M15 0 L50 35 L85 0 L100 15 L65 50 L100 85 L85 100 L50 65 L15 100 L0 85 L35 50 L0 15 Z"]),
+
+            // Faces: eyes and mouth are cut out, so the background shows through
+            Item(l.DrawShapeSmiley, symbols, [Circle(50, 50, 50)],
+                [Circle(34, 36, 8), Circle(66, 36, 8), "M26 58 A24 24 0 0 0 74 58 L64 58 A14 14 0 0 1 36 58 Z"]),
+            Item(l.DrawShapeSadSmiley, symbols, [Circle(50, 50, 50)],
+                [Circle(34, 36, 8), Circle(66, 36, 8), "M26 82 A24 24 0 0 1 74 82 L64 82 A14 14 0 0 0 36 82 Z"]),
         ];
     }
 }

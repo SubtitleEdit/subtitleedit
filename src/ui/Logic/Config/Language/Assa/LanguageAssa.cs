@@ -92,6 +92,8 @@ public class LanguageAssa
     public string DrawShapeBadge { get; set; }
     public string DrawShapeSpeaker { get; set; }
     public string DrawShapeCross { get; set; }
+    public string DrawShapeSmiley { get; set; }
+    public string DrawShapeSadSmiley { get; set; }
     public string DrawSize { get; set; }
     public string DrawLayer { get; set; }
     public string DrawBackgroundVideoFrame { get; set; }
@@ -439,6 +441,8 @@ public class LanguageAssa
         DrawShapeBadge = "Badge";
         DrawShapeSpeaker = "Speaker";
         DrawShapeCross = "Cross";
+        DrawShapeSmiley = "Smiley";
+        DrawShapeSadSmiley = "Sad smiley";
         DrawSize = "Size";
         DrawLayer = "Layer";
         DrawBackgroundVideoFrame = "Video frame (current position)";

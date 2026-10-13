@@ -41,6 +41,10 @@ public class AssaDrawShapeLibraryTests
         }
 
         Assert.Equal(2, ShapeLibrary.BuiltIn.First(i => i.Name == Se.Language.Assa.DrawShapeRing).Template.Count);
+
+        // Face + two eyes + mouth: the eyes and mouth are holes
+        Assert.Equal(4, ShapeLibrary.BuiltIn.First(i => i.Name == Se.Language.Assa.DrawShapeSmiley).Template.Count);
+        Assert.Equal(4, ShapeLibrary.BuiltIn.First(i => i.Name == Se.Language.Assa.DrawShapeSadSmiley).Template.Count);
         Assert.True(ShapeLibrary.BuiltIn.Count(i => i.Category == Se.Language.Assa.DrawCategorySpeechBubbles) >= 6);
     }
 
