@@ -1,7 +1,7 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.3.0-rc2",
-  "translatedBy": "",
+  "version": "v5.3.0-rc4",
+  "translatedBy": "hisui3393",
   "cultureName": "jp-JP",
   "general": {
     "abort": "中止",
@@ -1345,7 +1345,8 @@
       "forcedAlignerIsolatingSpeech": "音声を分離中... {0}",
       "forcedAlignerIsolatingSpeechFailed": "音声を分離できませんでした。代わりに読み上げ時間から終了時間を設定しました。",
       "forcedAlignerModel": "音声照合モデル",
-      "forcedAlignerDownloadEngine": "エンジンをダウンロード／更新..."
+      "forcedAlignerDownloadEngine": "エンジンをダウンロード／更新...",
+      "forcedAlignerEstimatedXOfY": "{0}行のうち{1}行は位置合わせができなかったため、読み上げ時間を基に配置しました。これらのタイムコードは推定値にすぎません。おそらく、台本のほうが動画内で実際に話されている内容より長くなっています。"
     },
     "export": {
       "exportImagesProfiles": "画像書き出しプロファイル",
@@ -2814,6 +2815,10 @@
       "removeOriginalSpeechDescription": "元の動画の音楽や効果音を残したまま、話し声だけを除去し、新しい音声を重ねます。GPU使用時でも動画とほぼ同じ時間がかかり、GPUがない場合は何倍も時間がかかります。音量のダッキングを有効にすると、その音量は音楽や効果音にも適用されます。音声を動画ファイルに追加する場合のみ適用されます。",
       "removingOriginalSpeech": "元の音声を除去中...",
       "removeOriginalSpeechFailed": "元の音声を除去できませんでした。代わりに元の音声を残したまま動画に追加しました。",
+      "speechRemovalModel": "モデル",
+      "speechRemovalModelDescription": "「最高品質」は音楽や効果音をできるだけ多く残します。「高速」は処理が約3倍速くなりますが、音楽がやや多く失われます。",
+      "speechRemovalBestQuality": "最高品質（Mel-Band RoFormer）",
+      "speechRemovalFast": "高速（HTDemucs）",
       "videoTruncatedWarning": "新しい動画ファイルの映像は{0}で終了していますが、元の動画は{1}あります。このため、音声が続いている間も映像は静止します。\n\nファイルはそのまま残しています。ffmpegの出力については、Subtitle Editのデータフォルダーにあるerror-log.txtを確認してください。",
       "originalVolumePercent": "元音声の音量（％）",
       "vadSilenceCompression": "無音圧縮（VAD）",
@@ -4220,6 +4225,10 @@
     "crispEmbedSettingsTitle": "CrispEmbedの設定",
     "crispEmbedDescription": "複数のモデルに対応したローカルOCRエンジン - ここからエンジンとモデルをダウンロードできます。",
     "trainNOcrDatabase": "nOCRデータベースを学習...",
+    "optimizeNOcrDatabase": "nOCRデータベースを最適化...",
+    "optimizeNOcrDatabaseQuestionXY": "nOCRデータベース「{0}」から、類似した文字と区別するための情報を持たない行を削除しますか？\n\nデータベースのサイズが小さくなり、OCRが高速化します。通常、認識エラーも減少します。処理には最大1分かかります。\n\nバックアップは「{1}」として保存されます。",
+    "optimizingNOcrDatabaseXY": "nOCRデータベースを最適化中... {0}/{1}",
+    "nOcrDatabaseOptimizedXYZ": "nOCRデータベース「{0}」を最適化しました：{1:#,##0}行 → {2:#,##0}行。",
     "startTraining": "学習開始",
     "abortTraining": "学習中止",
     "trainingOptions": "学習オプション",
