@@ -90,6 +90,8 @@ public class LanguageAssa
     public string DrawShapeCloud { get; set; }
     public string DrawShapeMoon { get; set; }
     public string DrawShapeBadge { get; set; }
+    public string DrawShapeSpeaker { get; set; }
+    public string DrawShapeCross { get; set; }
     public string DrawSize { get; set; }
     public string DrawLayer { get; set; }
     public string DrawBackgroundVideoFrame { get; set; }
@@ -435,6 +437,8 @@ public class LanguageAssa
         DrawShapeCloud = "Cloud";
         DrawShapeMoon = "Moon";
         DrawShapeBadge = "Badge";
+        DrawShapeSpeaker = "Speaker";
+        DrawShapeCross = "Cross";
         DrawSize = "Size";
         DrawLayer = "Layer";
         DrawBackgroundVideoFrame = "Video frame (current position)";

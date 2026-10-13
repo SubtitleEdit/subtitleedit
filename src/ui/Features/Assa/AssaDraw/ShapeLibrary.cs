@@ -330,6 +330,13 @@ public static class ShapeLibrary
             Item(l.DrawShapeCloud, symbols, [Circle(30, 58, 22), Circle(52, 42, 28), Circle(76, 58, 22), "M30 58 H76 V80 H30 Z"]),
             Item(l.DrawShapeMoon, symbols, [Circle(50, 50, 50)], [Circle(70, 36, 42)]),
             Item(l.DrawShapeBadge, symbols, [Polygon(50, 50, 32, -90, 50, 43)]),
+            Item(l.DrawShapeSpeaker, symbols,
+            [
+                "M0 35 H22 L50 10 V90 L22 65 H0 Z",
+                "M65.56 34.44 A22 22 0 0 1 65.56 65.56 L59.9 59.9 A14 14 0 0 0 59.9 40.1 Z",
+                "M78.28 21.72 A40 40 0 0 1 78.28 78.28 L72.63 72.63 A32 32 0 0 0 72.63 27.37 Z",
+            ]),
+            Item(l.DrawShapeCross, symbols, ["M15 0 L50 35 L85 0 L100 15 L65 50 L100 85 L85 100 L50 65 L15 100 L0 85 L35 50 L0 15 Z"]),
         ];
     }
 }
