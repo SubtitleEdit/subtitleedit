@@ -68,7 +68,6 @@ public class LanguageAssa
     public string DrawShapeRoundBubble { get; set; }
     public string DrawShapePillBubble { get; set; }
     public string DrawShapeScreamBubble { get; set; }
-    public string DrawShapeElectricBubble { get; set; }
     public string DrawShapeArrow { get; set; }
     public string DrawShapeDoubleArrow { get; set; }
     public string DrawShapeChevron { get; set; }
@@ -414,7 +413,6 @@ public class LanguageAssa
         DrawShapeRoundBubble = "Round bubble";
         DrawShapePillBubble = "Pill bubble";
         DrawShapeScreamBubble = "Scream bubble";
-        DrawShapeElectricBubble = "Radio/phone bubble";
         DrawShapeArrow = "Arrow";
         DrawShapeDoubleArrow = "Double arrow";
         DrawShapeChevron = "Chevron";

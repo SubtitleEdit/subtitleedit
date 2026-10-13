@@ -289,11 +289,6 @@ public static class ShapeLibrary
             TextItem(l.DrawShapeRoundBubble, bubbles, (21, 13, 79, 71), [Circle(50, 42, 42), "M30 74 L12 100 L52 82 Z"]),
             TextItem(l.DrawShapePillBubble, bubbles, (12, 6, 88, 44), ["M25 0 H75 A25 25 0 0 1 75 50 H42 L20 76 L28 50 H25 A25 25 0 0 1 25 0 Z"]),
             TextItem(l.DrawShapeScreamBubble, bubbles, (27, 24, 73, 68), [Polygon(50, 46, 22, -90, 46, 34), "M32 70 L12 100 L50 76 Z"]),
-            TextItem(l.DrawShapeElectricBubble, bubbles, (8, 6, 92, 64),
-            [
-                "M12 0 H88 A12 12 0 0 1 100 12 V58 A12 12 0 0 1 88 70 H12 A12 12 0 0 1 0 58 V12 A12 12 0 0 1 12 0 Z",
-                "M26 64 H44 L34 79 H42 L14 100 L24 84 H16 Z",
-            ]),
             TextItem(l.DrawShapeCaptionBox, bubbles, (4, 3, 96, 27), ["M6 0 H94 A6 6 0 0 1 100 6 V24 A6 6 0 0 1 94 30 H6 A6 6 0 0 1 0 24 V6 A6 6 0 0 1 6 0 Z"]),
 
             // Arrows

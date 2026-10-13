@@ -2402,9 +2402,36 @@ public partial class AssaDrawViewModel : ObservableObject
     [RelayCommand]
     private async Task Cancel()
     {
-        if (await ConfirmDiscardChanges())
+        await CloseAfterConfirm();
+    }
+
+    private bool _closeConfirmed;
+    private bool _askingToClose;
+
+    /// <summary>
+    /// Closing without OK (X button) while there are changes - the window cancels the close and asks first.
+    /// </summary>
+    public bool ShouldAskBeforeClosing => !OkPressed && !_closeConfirmed && HasChanges;
+
+    internal async Task CloseAfterConfirm()
+    {
+        if (_askingToClose)
         {
-            Window?.Close();
+            return;
+        }
+
+        _askingToClose = true;
+        try
+        {
+            if (await ConfirmDiscardChanges())
+            {
+                _closeConfirmed = true;
+                Window?.Close();
+            }
+        }
+        finally
+        {
+            _askingToClose = false;
         }
     }
 

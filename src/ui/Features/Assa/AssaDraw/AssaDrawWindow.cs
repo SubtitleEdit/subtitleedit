@@ -117,7 +117,18 @@ public class AssaDrawWindow : Window
         AddHandler(DragDrop.DropEvent, vm.OnDrop, RoutingStrategies.Bubble);
 
         Loaded += OnLoaded;
-        Closing += (_, e) => vm.OnClosing();
+        Closing += (_, e) =>
+        {
+            // The X button asks before discarding changes too (OK and a confirmed Cancel/Esc don't)
+            if (vm.ShouldAskBeforeClosing)
+            {
+                e.Cancel = true;
+                _ = vm.CloseAfterConfirm();
+                return;
+            }
+
+            vm.OnClosing();
+        };
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
