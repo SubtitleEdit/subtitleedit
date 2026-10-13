@@ -333,6 +333,14 @@ public static class DownloadHashManager
         public const string ModelOrig = "FireRedTts3AudioCpp.ModelOrig";
     }
 
+    public static class BreezeTtsAudioCpp
+    {
+        // SHA-256 of the Breeze TTS 2 GGUFs on audio-cpp/audio.cpp-gguf (HF LFS oid).
+        // The engine binaries are the shared audio.cpp archives keyed under IndexTts25AudioCpp.
+        public const string ModelQ8_0 = "BreezeTtsAudioCpp.ModelQ8_0";
+        public const string ModelBf16 = "BreezeTtsAudioCpp.ModelBf16";
+    }
+
     public static class KugelAudioAudioCpp
     {
         // SHA-256 of the KugelAudio-0-Open GGUFs on audio-cpp/audio.cpp-gguf (HF LFS oid).
@@ -2524,6 +2532,16 @@ public static class DownloadHashManager
             [FireRedTts3AudioCpp.ModelOrig] = new[]
             {
                 "1af06f341044121ddebb389c1e6e5181a43f65e2591f77c7eda2ca5810e484c8", // fireredtts3-base-orig.gguf
+            },
+
+            // Breeze TTS 2 weights, from audio-cpp/audio.cpp-gguf (HF LFS oid).
+            [BreezeTtsAudioCpp.ModelQ8_0] = new[]
+            {
+                "0de52d61560f9f6b2dfeca79f9100f8fce0c2b17c52ec30622e23e150df1ad88", // breeze-tts-2-q8_0.gguf
+            },
+            [BreezeTtsAudioCpp.ModelBf16] = new[]
+            {
+                "a00c9f678b4c5ae03d1dcd228f636b329352cda200823faef4e01d3bd97c0a89", // breeze-tts-2-bf16.gguf
             },
 
             // KugelAudio-0-Open weights, from audio-cpp/audio.cpp-gguf (HF LFS oid).

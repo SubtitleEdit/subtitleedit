@@ -289,6 +289,31 @@ public partial class VoiceSettingsViewModel : ObservableObject
 
             ok = fishEngine.ImportVoice(fileName, result.Text.Trim());
         }
+        else if (_engine is BreezeTtsAudioCpp breezeEngine)
+        {
+            // Breeze TTS 2 REQUIRES the transcript at synth time, like Fish S2 Pro: audio.cpp
+            // refuses a Breeze clone without reference_text. Same prompt with sibling autofill.
+            var transcript = TryReadSiblingTranscript(fileName) ?? string.Empty;
+            var audioFileName = fileName;
+            var result = await _windowService.ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(Window!, vm =>
+            {
+                vm.Initialize(
+                    Se.Language.Video.TextToSpeech.VoiceCloneTranscriptTitle,
+                    transcript,
+                    500,
+                    150);
+                vm.ConfigureExtraButton(
+                    Se.Language.Video.TextToSpeech.UseSpeechToTextDotDotDot,
+                    () => RunSpeechToTextAsync(audioFileName));
+            });
+
+            if (!result.OkPressed || string.IsNullOrWhiteSpace(result.Text))
+            {
+                return;
+            }
+
+            ok = breezeEngine.ImportVoice(fileName, result.Text.Trim());
+        }
         else if (_engine is HiggsTtsAudioCpp higgsEngine)
         {
             // Higgs clones zero-shot from audio alone; a transcription (reference_text) is

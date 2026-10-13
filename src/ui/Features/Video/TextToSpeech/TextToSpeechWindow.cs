@@ -201,6 +201,8 @@ public class TextToSpeechWindow : Window
                 return StatusDots.From(engine.IsInstalled(null).Result, FishTtsAudioCpp.GetEngineUpdateStatus());
             case FireRedTts3AudioCpp:
                 return StatusDots.From(engine.IsInstalled(null).Result, FireRedTts3AudioCpp.GetEngineUpdateStatus());
+            case BreezeTtsAudioCpp:
+                return StatusDots.From(engine.IsInstalled(null).Result, BreezeTtsAudioCpp.GetEngineUpdateStatus());
             case KugelAudioAudioCpp:
                 return StatusDots.From(engine.IsInstalled(null).Result, KugelAudioAudioCpp.GetEngineUpdateStatus());
             case CosyVoice3CrispAsr:
