@@ -58,22 +58,39 @@ public class LlamaCppAdvancedSettingsWindow : Window
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var stack = new StackPanel
+        var cards = new StackPanel
         {
             Orientation = Orientation.Vertical,
             Spacing = 12,
             Children =
             {
-                header,
                 MakeCard(BuildContextSection(vm)),
                 MakeCard(BuildSamplingSection(vm)),
-                buttonPanel,
             },
         };
 
+        // The cards scroll while the header and OK/Cancel stay put: at high display scaling
+        // (e.g. 175%) the window is clamped to the screen height and the lower settings and
+        // buttons were cut off with no way to reach them (#15973).
+        var scrollViewer = new ScrollViewer
+        {
+            Content = cards,
+            HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled,
+            VerticalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
+        };
+
+        var grid = new Grid
+        {
+            RowDefinitions = new RowDefinitions("Auto,*,Auto"),
+            RowSpacing = 12,
+        };
+        grid.Add(header, 0, 0);
+        grid.Add(scrollViewer, 1, 0);
+        grid.Add(buttonPanel, 2, 0);
+
         return new Border
         {
-            Child = stack,
+            Child = grid,
             Padding = UiUtil.MakeWindowMargin(),
         };
     }
