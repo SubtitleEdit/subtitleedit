@@ -54,6 +54,35 @@ public class FfmpegBurnInParametersTests
         Assert.DoesNotContain("-cq", parameters);
     }
 
+    /// <summary>
+    /// Issue #15992: "-use_editlist 0" delayed the video by the B-frame reorder delay and, with
+    /// AAC, could stretch the first video sample - Adobe Audition then played black video.
+    /// </summary>
+    [Theory]
+    [InlineData("output.mp4")]
+    [InlineData("output.mov")]
+    [InlineData("output.mkv")]
+    public void EditListsAreLeftToFfmpeg(string outputFileName)
+    {
+        var parameters = Generate("h264_nvenc", "aac", outputFileName);
+
+        Assert.DoesNotContain("-use_editlist", parameters);
+    }
+
+    [Theory]
+    [InlineData("output.mp4", true)]
+    [InlineData("output.m4v", true)]
+    [InlineData("output.mov", true)]
+    [InlineData("output.mkv", false)]
+    [InlineData("output.webm", false)]
+    [InlineData("output.ts", false)]
+    public void Faststart_OnlyForMp4Family(string outputFileName, bool expected)
+    {
+        var parameters = Generate("libx264", "aac", outputFileName);
+
+        Assert.Equal(expected, parameters.Contains("-movflags +faststart"));
+    }
+
     [Fact]
     public void NoTune_WritesNoTuneArgument()
     {

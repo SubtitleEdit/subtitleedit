@@ -298,6 +298,14 @@ public class FfmpegGenerator
             tuneParameter = $" -tune {tune}";
         }
 
+        // "+faststart" only means something to the MP4/QuickTime muxer. Edit lists are left to
+        // ffmpeg: "-use_editlist 0" shifted the video by the B-frame delay (two frames late
+        // against the audio), and with AAC's encoder delay it could also stretch the first
+        // video sample, which Adobe Audition plays back as black video (#15992).
+        var movFlags = Features.Video.BurnIn.OutputContainer.IsMp4Family(Path.GetExtension(outputVideoFileName))
+            ? " -movflags +faststart"
+            : string.Empty;
+
         outputVideoFileName = $"\"{outputVideoFileName}\"";
 
         var passSettings = string.Empty;
@@ -418,7 +426,7 @@ public class FfmpegGenerator
         // Without it ffmpeg hits "File ... already exists. Exiting." and writes nothing - and as
         // the old file is still there, the burn-in looked like it succeeded (issue #14210).
         return
-            $"-y{cutStart}-i \"{inputVideoFileName}\"{canvasInput}{imageSubtitleInput}{logoInput}{cutEnd} {filterParameter} -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings}{tuneParameter} {crfSettings} {pixelFormat} {audioSettings} -use_editlist 0 -movflags +faststart{shortestParameter} {outputVideoFileName}";
+            $"-y{cutStart}-i \"{inputVideoFileName}\"{canvasInput}{imageSubtitleInput}{logoInput}{cutEnd} {filterParameter} -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings}{tuneParameter} {crfSettings} {pixelFormat} {audioSettings}{movFlags}{shortestParameter} {outputVideoFileName}";
     }
 
     /// <summary>
