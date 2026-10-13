@@ -15,7 +15,7 @@ using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using System.Linq;
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
-using System;
+
 namespace Nikse.SubtitleEdit.Features.Video.VideoOcr;
 
 public class VideoOcrWindow : Window
@@ -597,16 +597,7 @@ public class VideoOcrWindow : Window
                     [!ContentControl.ContentProperty] = new Binding(nameof(VideoOcrLineItem.FormattedText)),
                 };
 
-                contentControl[!Visual.EffectProperty] = new MultiBinding
-                {
-                    Converter = ScreenPrivacyBlurConverter.Instance,
-                    Bindings =
-                    {
-                        new Binding(),
-                        new Binding(nameof(tableView.SelectedItem)) { Source = tableView }
-                    }
-                };
-
+                ScreenPrivacyBlurConverter.BlurUnlessSelected(contentControl, tableView);
                 return contentControl;
             }, supportsRecycling: true),
         });
@@ -761,20 +752,5 @@ public class VideoOcrWindow : Window
         grid.Add(statusText, 1, 0);
 
         return grid;
-    }
-    private class ScreenPrivacyBlurConverter : Avalonia.Data.Converters.IMultiValueConverter
-    {
-        public static readonly ScreenPrivacyBlurConverter Instance = new();
-        private static readonly Avalonia.Media.IEffect Blur = new Avalonia.Media.BlurEffect { Radius = 8 };
-
-        public object? Convert(System.Collections.Generic.IList<object?> values, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
-        {
-            if (!UiUtil.HideTexts || values.Count != 2) return null;
-
-            var currentItem = values[0];
-            var selectedItem = values[1];
-
-            return currentItem != null && currentItem != selectedItem ? Blur : null;
-        }
     }
 }

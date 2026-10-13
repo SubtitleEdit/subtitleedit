@@ -600,15 +600,7 @@ public class OcrWindow : Window
                                 Padding = new Thickness(3),
                                 Child = image,
                             };
-                            imageContainer[!Visual.EffectProperty] = new MultiBinding
-                            {
-                                Converter = ScreenPrivacyBlurConverter.Instance,
-                                Bindings =
-                                {
-                                    new Binding(),
-                                    new Binding(nameof(dataGridSubtitle.SelectedItem)) { Source = dataGridSubtitle }
-                                }
-                            };
+                            ScreenPrivacyBlurConverter.BlurUnlessSelected(imageContainer, dataGridSubtitle);
                             stackPanel.Children.Add(imageContainer);
                         }
 
@@ -630,25 +622,16 @@ public class OcrWindow : Window
                             Margin = new Thickness(3, 1, 3, 1)
                         };
 
-                        // The existing text rendering binding
+                        // Bind to HasFormattedText to trigger updates when FixResult changes
                         var binding = new Binding(nameof(OcrSubtitleItem.HasFormattedText))
                         {
                             Source = item,
                             Converter = new FuncValueConverter<bool, TextBlock>(hasFormatted =>
                                 item.CreateFormattedText())
                         };
+
                         contentPresenter.Bind(ContentPresenter.ContentProperty, binding);
-
-                        contentPresenter[!Visual.EffectProperty] = new MultiBinding
-                        {
-                            Converter = ScreenPrivacyBlurConverter.Instance,
-                            Bindings =
-                            {
-                                new Binding(), // Source 1: The row's own data
-                                new Binding(nameof(dataGridSubtitle.SelectedItem)) { Source = dataGridSubtitle } // Source 2: The grid's selection
-                            }
-                        };
-
+                        ScreenPrivacyBlurConverter.BlurUnlessSelected(contentPresenter, dataGridSubtitle);
                         return contentPresenter;
                     })
                 },
@@ -1373,20 +1356,5 @@ public class OcrWindow : Window
             model => model.Backend.IsModelInstalled(model.Model)
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled);
-    }
-    private class ScreenPrivacyBlurConverter : IMultiValueConverter
-    {
-        public static readonly ScreenPrivacyBlurConverter Instance = new();
-        private static readonly IEffect Blur = new BlurEffect { Radius = 8 };
-
-        public object? Convert(System.Collections.Generic.IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
-        {
-            if (!UiUtil.HideTexts || values.Count != 2) return null;
-
-            var currentItem = values[0];
-            var selectedItem = values[1];
-
-            return currentItem != null && currentItem != selectedItem ? Blur : null;
-        }
     }
 }
