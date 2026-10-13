@@ -540,7 +540,7 @@ namespace Nikse.SubtitleEdit.Controls
             try
             {
                 ms = useFrameMode
-                    ? TimeCode.ParseHHMMSSFFToMilliseconds(text)
+                    ? FrameModeTimeSnapper.ToVideoFrame(TimeSpan.FromMilliseconds(TimeCode.ParseHHMMSSFFToMilliseconds(text))).TotalMilliseconds
                     : TimeCode.ParseToMilliseconds(text);
             }
             catch (Exception exception) when (exception is OverflowException or ArgumentOutOfRangeException)
@@ -585,7 +585,7 @@ namespace Nikse.SubtitleEdit.Controls
                     int.TryParse(frameParts[3], out var frames))
                 {
                     var frameMs = SubtitleFormat.FramesToMillisecondsMax999(frames);
-                    return new TimeSpan(0, frameHours, frameMinutes, frameSeconds, frameMs);
+                    return FrameModeTimeSnapper.ToVideoFrame(new TimeSpan(0, frameHours, frameMinutes, frameSeconds, frameMs));
                 }
 
                 return TimeSpan.Zero;

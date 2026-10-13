@@ -140,7 +140,13 @@ public partial class SettingsViewModel : ObservableObject
     private bool _useFrameMode;
 
     [ObservableProperty] private ObservableCollection<TimeCodeModeDisplay> _timeCodeModes;
-    [ObservableProperty] private TimeCodeModeDisplay _selectedTimeCodeMode;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsFramesTimeCodeMode))]
+    private TimeCodeModeDisplay _selectedTimeCodeMode;
+
+    [ObservableProperty] private bool _frameModeSnapToVideoFrames;
+
+    public bool IsFramesTimeCodeMode => SelectedTimeCodeMode?.Mode == TimeCodeMode.Frames;
 
     // Frames and frame numbers are both frame mode (frame stepping, snapping, min gap in frames);
     // frame numbers only changes how a time code is shown and typed.
@@ -829,6 +835,7 @@ public partial class SettingsViewModel : ObservableObject
             ? TimeCodeMode.Time
             : general.UseFrameNumbersPersisted ? TimeCodeMode.FrameNumbers : TimeCodeMode.Frames;
         SelectedTimeCodeMode = TimeCodeModes.First(p => p.Mode == timeCodeMode);
+        FrameModeSnapToVideoFrames = general.FrameModeSnapToVideoFrames;
         TextBoxLimitNewLines = general.SubtitleTextBoxLimitNewLines;
         NewEmptyDefaultMs = general.NewEmptyDefaultMs;
         TimeCodeUpDownStepMs = general.TimeCodeUpDownStepMs;
@@ -1743,6 +1750,7 @@ public partial class SettingsViewModel : ObservableObject
 
         general.UseFrameMode = UseFrameMode;
         general.UseFrameNumbersPersisted = SelectedTimeCodeMode.Mode == TimeCodeMode.FrameNumbers;
+        general.FrameModeSnapToVideoFrames = FrameModeSnapToVideoFrames;
         general.SubtitleTextBoxLimitNewLines = TextBoxLimitNewLines;
         general.NewEmptyDefaultMs = NewEmptyDefaultMs ?? general.NewEmptyDefaultMs;
         general.TimeCodeUpDownStepMs = TimeCodeUpDownStepMs ?? general.TimeCodeUpDownStepMs;
