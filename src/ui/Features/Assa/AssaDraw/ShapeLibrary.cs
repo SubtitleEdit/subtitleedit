@@ -312,8 +312,8 @@ public static class ShapeLibrary
             Item(l.DrawShapeRing, basic, [Circle(50, 50, 50)], [Circle(50, 50, 32)]),
             Item(l.DrawShapePlus, basic, ["M35 0 H65 V35 H100 V65 H65 V100 H35 V65 H0 V35 H35 Z"]),
             Item(l.DrawShapeBanner, basic, ["M0 20 H100 L88 45 L100 70 H0 L12 45 Z"]),
-            Item(l.DrawShapeParallelogram, basic, ["M25 0 H100 L75 70 H0 Z"]),
-            Item(l.DrawShapeTrapezoid, basic, ["M22 0 H78 L100 70 H0 Z"]),
+            Item(l.DrawShapeHalfCircle, basic, ["M0 50 A50 50 0 0 1 100 50 Z"]),
+            Item(l.DrawShapeTeardrop, basic, ["M50 0 C50 0 90 45 90 70 A40 40 0 0 1 10 70 C10 45 50 0 50 0 Z"]),
 
             // Symbols
             Item(l.DrawShapeHeart, symbols, ["M50 92 C20 70 0 52 0 30 C0 12 13 0 28 0 C38 0 46 6 50 14 C54 6 62 0 72 0 C87 0 100 12 100 30 C100 52 80 70 50 92 Z"]),

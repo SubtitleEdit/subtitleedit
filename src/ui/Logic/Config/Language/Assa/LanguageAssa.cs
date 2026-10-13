@@ -84,8 +84,8 @@ public class LanguageAssa
     public string DrawShapeRing { get; set; }
     public string DrawShapePlus { get; set; }
     public string DrawShapeBanner { get; set; }
-    public string DrawShapeParallelogram { get; set; }
-    public string DrawShapeTrapezoid { get; set; }
+    public string DrawShapeHalfCircle { get; set; }
+    public string DrawShapeTeardrop { get; set; }
     public string DrawShapeHeart { get; set; }
     public string DrawShapeCheck { get; set; }
     public string DrawShapeMusicNote { get; set; }
@@ -437,8 +437,8 @@ public class LanguageAssa
         DrawShapeRing = "Ring";
         DrawShapePlus = "Plus";
         DrawShapeBanner = "Banner";
-        DrawShapeParallelogram = "Parallelogram";
-        DrawShapeTrapezoid = "Trapezoid";
+        DrawShapeHalfCircle = "Half circle";
+        DrawShapeTeardrop = "Teardrop";
         DrawShapeHeart = "Heart";
         DrawShapeCheck = "Check mark";
         DrawShapeMusicNote = "Music note";
