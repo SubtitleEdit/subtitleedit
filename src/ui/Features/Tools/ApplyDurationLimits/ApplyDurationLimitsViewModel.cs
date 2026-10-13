@@ -181,10 +181,15 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
                 var wantedEndTime = TimeSpan.FromMilliseconds(item.StartTime.TotalMilliseconds + minMs);
                 var allowedEndTime = wantedEndTime;
 
-                // Never overlap the next line.
-                if (next != null && wantedEndTime > next.StartTime)
+                // Never overlap the next line or eat into the minimum gap - only checking for an
+                // overlap let a short extension shrink the gap below the minimum (#15994).
+                if (next != null)
                 {
-                    allowedEndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds - Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
+                    var latestEndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds - Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
+                    if (wantedEndTime > latestEndTime)
+                    {
+                        allowedEndTime = latestEndTime;
+                    }
                 }
 
                 allowedEndTime = CapAtShotChange(item, allowedEndTime);
