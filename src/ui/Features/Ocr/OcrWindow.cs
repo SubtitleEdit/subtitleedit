@@ -600,6 +600,7 @@ public class OcrWindow : Window
                                 Padding = new Thickness(3),
                                 Child = image,
                             };
+                            ScreenPrivacyBlurConverter.BlurUnlessSelected(imageContainer, dataGridSubtitle);
                             stackPanel.Children.Add(imageContainer);
                         }
 
@@ -617,9 +618,9 @@ public class OcrWindow : Window
                     {
                         var contentPresenter = new ContentPresenter
                         {
-                            VerticalAlignment = VerticalAlignment.Center
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Margin = new Thickness(3, 1, 3, 1)
                         };
-                        contentPresenter.Margin = new Thickness(3, 1, 3, 1);
 
                         // Bind to HasFormattedText to trigger updates when FixResult changes
                         var binding = new Binding(nameof(OcrSubtitleItem.HasFormattedText))
@@ -630,6 +631,7 @@ public class OcrWindow : Window
                         };
 
                         contentPresenter.Bind(ContentPresenter.ContentProperty, binding);
+                        ScreenPrivacyBlurConverter.BlurUnlessSelected(contentPresenter, dataGridSubtitle);
                         return contentPresenter;
                     })
                 },

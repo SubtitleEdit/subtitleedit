@@ -590,11 +590,16 @@ public class VideoOcrWindow : Window
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Width = new GridLength(1, GridUnitType.Star),
             CellTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<VideoOcrLineItem>((_, _) =>
-                new ContentControl
+            {
+                var contentControl = new ContentControl
                 {
                     VerticalContentAlignment = VerticalAlignment.Center,
                     [!ContentControl.ContentProperty] = new Binding(nameof(VideoOcrLineItem.FormattedText)),
-                }, supportsRecycling: true),
+                };
+
+                ScreenPrivacyBlurConverter.BlurUnlessSelected(contentControl, tableView);
+                return contentControl;
+            }, supportsRecycling: true),
         });
 
         var flyout = new MenuFlyout();
