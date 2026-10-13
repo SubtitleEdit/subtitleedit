@@ -14991,7 +14991,8 @@ public partial class MainViewModel :
 
         if (languageChanged && Se.Settings.General.IsLanguageRightToLeft() != wasRightToLeft)
         {
-            ApplyLayoutDirectionForCurrentLanguage(videoPosition);
+            // Undocked, the sizes were not taken above (no docked panels to keep).
+            ApplyLayoutDirectionForCurrentLanguage(videoPosition, AreVideoControlsUndocked ? null : Se.Settings.Appearance.CurrentLayoutPositions);
         }
     }
 
@@ -15613,7 +15614,12 @@ public partial class MainViewModel :
             // taken here to be restored once the new layout is in place.
             var videoPosition = GetVideoPlayerControl()?.VideoPlayer?.Position ?? 0;
 
-            await LoadLanguage(viewModel.SelectedLanguage.FileName);
+            // The panel sizes the user dragged are lost by the rebuild as well, so note
+            // them now too - once, before the first rebuild, as the direction rebuild
+            // below runs later, when the new grids may not be measured yet (#16001).
+            var layoutPositions = InitLayout.SaveLayoutPositions(ContentGrid.Children.FirstOrDefault() as Grid);
+
+            await LoadLanguage(viewModel.SelectedLanguage.FileName, layoutPositions);
 
             // Strings update live already. When the new language flips the layout
             // direction (between a right to left and a left to right language),
@@ -15621,12 +15627,12 @@ public partial class MainViewModel :
             // correct side at once, instead of asking the user to restart.
             if (Se.Settings.General.IsLanguageRightToLeft() != wasRightToLeft)
             {
-                ApplyLayoutDirectionForCurrentLanguage(videoPosition);
+                ApplyLayoutDirectionForCurrentLanguage(videoPosition, layoutPositions);
             }
         }
     }
 
-    private async Task LoadLanguage(string jsonFileName)
+    private async Task LoadLanguage(string jsonFileName, InitLayout.LayoutPositions? layoutPositions = null)
     {
         await Se.LoadLanguageFromFileAsync(jsonFileName);
 
@@ -15639,7 +15645,23 @@ public partial class MainViewModel :
         {
             Layout.InitNativeMacMenu.Rebuild(this);
         }
-        SetLayout(Se.Settings.General.LayoutNumber);
+
+        // Same as closing Options/Settings: re-run the undock flow while the video
+        // controls are undocked (SetLayout would dock fresh panels next to the open
+        // undocked windows, #12520), else rebuild and put back the panel sizes the
+        // user dragged, which the fresh grids would otherwise reset (#16001).
+        if (AreVideoControlsUndocked)
+        {
+            VideoUndockControls();
+        }
+        else
+        {
+            SetLayout(Se.Settings.General.LayoutNumber);
+            if (layoutPositions != null)
+            {
+                InitLayout.RestoreLayoutPositions(layoutPositions, ContentGrid.Children.FirstOrDefault() as Grid);
+            }
+        }
 
         RebuildToolbar();
 
@@ -19073,7 +19095,11 @@ public partial class MainViewModel :
     /// loading the language rebuilds the layout, so by now the player is a fresh one
     /// sitting at the beginning.
     /// </param>
-    private void ApplyLayoutDirectionForCurrentLanguage(double videoPosition)
+    /// <param name="layoutPositions">
+    /// The panel sizes taken before the language was loaded, restored after the rebuild,
+    /// or null to keep the default sizes.
+    /// </param>
+    private void ApplyLayoutDirectionForCurrentLanguage(double videoPosition, InitLayout.LayoutPositions? layoutPositions)
     {
         if (Window == null)
         {
@@ -19110,6 +19136,13 @@ public partial class MainViewModel :
             // are placed on the correct side, exactly as they are at startup (the
             // layout is built after the flow direction is set).
             SetLayout(Se.Settings.General.LayoutNumber);
+
+            // The rebuilt grids start at the default sizes; put back the panel sizes the
+            // user dragged (the column order is the same in both directions, #16001).
+            if (layoutPositions != null)
+            {
+                InitLayout.RestoreLayoutPositions(layoutPositions, ContentGrid.Children.FirstOrDefault() as Grid);
+            }
 
             // Apply the text and grid direction for the new mode in both directions
             // (SetLayout only re-applies it for right to left), so the list is never
