@@ -140,6 +140,7 @@ public partial class AssaDrawViewModel : ObservableObject
     private readonly IFileHelper _fileHelper;
     private readonly IWindowService _windowService;
     private string _fileName = string.Empty;
+    private string? _openedState;
     private Subtitle? _subtitle;
     private string? _videoFileName;
     private double _videoSeconds;
@@ -166,6 +167,7 @@ public partial class AssaDrawViewModel : ObservableObject
 
     public void Initialize()
     {
+        _openedState = GetChangeState();
         UiUtil.RestoreWindowPosition(Window);
         ZoomToFitCurrentVideoResolution();
         RefreshTreeView();
@@ -2398,9 +2400,51 @@ public partial class AssaDrawViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Cancel()
+    private async Task Cancel()
     {
-        Window?.Close();
+        if (await ConfirmDiscardChanges())
+        {
+            Window?.Close();
+        }
+    }
+
+    /// <summary>
+    /// The drawing as it would be written (text, outlines, hidden shapes and canvas size included),
+    /// to tell whether anything changed since the dialog opened.
+    /// </summary>
+    private string GetChangeState()
+    {
+        var subtitle = GenerateSubtitle(includeAll: true);
+        var sb = new StringBuilder();
+        sb.Append(CanvasWidth).Append('x').Append(CanvasHeight).Append('\n');
+        foreach (var p in subtitle.Paragraphs)
+        {
+            sb.Append(p.Layer).Append(' ').Append(p.Extra).Append(' ').Append(p.Text).Append('\n');
+        }
+
+        foreach (var shape in Shapes.Where(s => s.Hidden))
+        {
+            sb.Append("hidden ").Append(Shapes.IndexOf(shape)).Append('\n');
+        }
+
+        return sb.ToString();
+    }
+
+    public bool HasChanges => _openedState != null && _openedState != GetChangeState();
+
+    /// <summary>
+    /// True when the dialog may close without OK: nothing changed, or the user agreed to discard.
+    /// </summary>
+    internal async Task<bool> ConfirmDiscardChanges()
+    {
+        if (Window == null || !HasChanges)
+        {
+            return true;
+        }
+
+        var result = await MessageBox.Show(Window, Se.Language.Assa.DrawDiscardChangesTitle, Se.Language.Assa.DrawDiscardChanges,
+            MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+        return result == MessageBoxResult.Yes;
     }
 
     private void RefreshTreeView()
@@ -2712,7 +2756,7 @@ public partial class AssaDrawViewModel : ObservableObject
             }
 
             e.Handled = true;
-            Window?.Close();
+            await Cancel();
         }
         else if (IsTextInput(e) && e.Key is Key.Enter or Key.Delete or Key.Back)
         {

@@ -64,6 +64,11 @@ public class LanguageAssa
     public string DrawShapeThoughtBubble { get; set; }
     public string DrawShapeShoutBubble { get; set; }
     public string DrawShapeCaptionBox { get; set; }
+    public string DrawShapeSpeechBubbleSide { get; set; }
+    public string DrawShapeRoundBubble { get; set; }
+    public string DrawShapePillBubble { get; set; }
+    public string DrawShapeScreamBubble { get; set; }
+    public string DrawShapeElectricBubble { get; set; }
     public string DrawShapeArrow { get; set; }
     public string DrawShapeDoubleArrow { get; set; }
     public string DrawShapeChevron { get; set; }
@@ -107,6 +112,8 @@ public class LanguageAssa
     public string DrawShrinkToFit { get; set; }
     public string DrawTextColor { get; set; }
     public string DrawTextBox { get; set; }
+    public string DrawDiscardChangesTitle { get; set; }
+    public string DrawDiscardChanges { get; set; }
 
     // Progress Bar Generator
     public string ProgressBarTitle { get; set; }
@@ -403,6 +410,11 @@ public class LanguageAssa
         DrawShapeThoughtBubble = "Thought bubble";
         DrawShapeShoutBubble = "Shout bubble";
         DrawShapeCaptionBox = "Caption box";
+        DrawShapeSpeechBubbleSide = "Speech bubble, tail left side";
+        DrawShapeRoundBubble = "Round bubble";
+        DrawShapePillBubble = "Pill bubble";
+        DrawShapeScreamBubble = "Scream bubble";
+        DrawShapeElectricBubble = "Radio/phone bubble";
         DrawShapeArrow = "Arrow";
         DrawShapeDoubleArrow = "Double arrow";
         DrawShapeChevron = "Chevron";
@@ -446,6 +458,8 @@ public class LanguageAssa
         DrawShrinkToFit = "Shrink to fit";
         DrawTextColor = "Text color";
         DrawTextBox = "Text box";
+        DrawDiscardChangesTitle = "Discard changes?";
+        DrawDiscardChanges = "The drawing has been changed." + System.Environment.NewLine + "Discard the changes?";
 
         // Progress Bar Generator
         ProgressBarTitle = "ASSA progress bar";

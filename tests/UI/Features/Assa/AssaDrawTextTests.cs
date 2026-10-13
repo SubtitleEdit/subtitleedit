@@ -318,4 +318,32 @@ public class AssaDrawTextTests
         vm.SelectShape(vm.Shapes[0]);
         Assert.False(vm.CanEditText);
     }
+
+    [Fact]
+    public void EveryBubble_HasATextAreaInsideIt()
+    {
+        foreach (var item in ShapeLibrary.BuiltIn.Where(i => i.Category == Se.Language.Assa.DrawCategorySpeechBubbles))
+        {
+            Assert.NotNull(item.TextArea);
+            var shapes = item.CreateShapes(0, 0, 1000, 1000, Colors.White, 0);
+            var host = Assert.Single(shapes, s => s.TextFrame != null);
+            var frame = host.TextFrame!.Value;
+            Assert.True(frame.Width > 300 && frame.Height > 150, item.Name);
+            Assert.True(host.HitTest(frame.CenterX, frame.CenterY, 0), item.Name);
+        }
+    }
+
+    [Fact]
+    public void HasChanges_IsFalseWhenOpened_TrueAfterAnEdit_FalseAfterUndo()
+    {
+        var vm = MakeViewModel(new Paragraph("{\\p1}m 0 0 l 100 0 100 100{\\p0}", 0, 2000) { Extra = "Default" });
+        vm.Initialize();
+        Assert.False(vm.HasChanges);
+
+        vm.InsertTextBox(new CanvasInsertEventArgs(960, 540, 0, 0, isClick: true));
+        Assert.True(vm.HasChanges);
+
+        vm.UndoCommand.Execute(null);
+        Assert.False(vm.HasChanges);
+    }
 }
