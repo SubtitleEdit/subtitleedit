@@ -937,8 +937,13 @@ public class AssaDrawWindow : Window
             press = null;
             try
             {
+                // macOS aborts the app on a drag with nothing it can put on its pasteboard (an
+                // in-process format only) - the shape's name goes along as text
+                var dataItem = new DataTransferItem();
+                dataItem.Set(AssaDrawViewModel.LibraryShapeFormat, item);
+                dataItem.SetText(item.Name);
                 var transfer = new DataTransfer();
-                transfer.Add(DataTransferItem.Create(AssaDrawViewModel.LibraryShapeFormat, item));
+                transfer.Add(dataItem);
                 await DragDrop.DoDragDropAsync(pressed, transfer, DragDropEffects.Copy);
             }
             catch (Exception exception)

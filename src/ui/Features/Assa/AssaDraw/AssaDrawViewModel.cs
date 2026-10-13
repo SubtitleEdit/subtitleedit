@@ -2059,7 +2059,7 @@ public partial class AssaDrawViewModel : ObservableObject
 
     internal void OnDragOver(object? sender, DragEventArgs e)
     {
-        if (e.DataTransfer.Contains(LibraryShapeFormat))
+        if (GetDraggedLibraryShape(e) != null)
         {
             e.DragEffects = GetCanvasDropPoint(e) != null ? DragDropEffects.Copy : DragDropEffects.None;
             e.Handled = true;
@@ -2068,6 +2068,25 @@ public partial class AssaDrawViewModel : ObservableObject
 
         e.DragEffects = GetDroppedFile(e) != null ? DragDropEffects.Copy : DragDropEffects.None;
         e.Handled = true;
+    }
+
+    /// <summary>
+    /// The palette shape being dragged: the in-process item, or (if the platform only hands back
+    /// the text that went along) the library shape with that name.
+    /// </summary>
+    private static ShapeLibraryItem? GetDraggedLibraryShape(DragEventArgs e)
+    {
+        if (e.DataTransfer.Contains(LibraryShapeFormat) && e.DataTransfer.TryGetValue(LibraryShapeFormat) is { } item)
+        {
+            return item;
+        }
+
+        if (!e.DataTransfer.Contains(DataFormat.Text) || e.DataTransfer.TryGetText() is not { } name)
+        {
+            return null;
+        }
+
+        return ShapeLibrary.BuiltIn.Concat(ShapeLibrary.GetUserShapes()).FirstOrDefault(i => i.Name == name);
     }
 
     /// <summary>
@@ -2098,7 +2117,7 @@ public partial class AssaDrawViewModel : ObservableObject
     /// </summary>
     internal void OnDrop(object? sender, DragEventArgs e)
     {
-        if (e.DataTransfer.TryGetValue(LibraryShapeFormat) is { } item)
+        if (GetDraggedLibraryShape(e) is { } item)
         {
             e.Handled = true;
             if (GetCanvasDropPoint(e) is { } point)
