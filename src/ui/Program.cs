@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Controls;
@@ -260,6 +260,7 @@ namespace Nikse.SubtitleEdit
                                 AvaloniaNativeRenderingMode.Software
                             ]
                     })
+                    .With(GetWin32PlatformOptions())
                     .AfterSetup(b => ConfigureApplication(b, lifetime))
                     .SetupWithLifetime(lifetime);
 
@@ -320,6 +321,50 @@ namespace Nikse.SubtitleEdit
 
         [LibraryImport("kernel32.dll")]
         private static partial uint SetErrorMode(uint mode);
+
+        // Hidden Settings.json switches (Appearance.WindowsRenderingMode / WindowsCompositionMode)
+        // for diagnosing window flicker with the desktop showing through on some Windows systems
+        // (#15848). Empty or unknown values keep Avalonia's defaults.
+        private static Win32PlatformOptions GetWin32PlatformOptions()
+        {
+            var options = new Win32PlatformOptions();
+            var appearance = Se.Settings.Appearance;
+
+            var renderingModes = ParseEnumList<Win32RenderingMode>(appearance.WindowsRenderingMode);
+            if (renderingModes.Length > 0)
+            {
+                options.RenderingMode = renderingModes;
+            }
+
+            var compositionModes = ParseEnumList<Win32CompositionMode>(appearance.WindowsCompositionMode);
+            if (compositionModes.Length > 0)
+            {
+                options.CompositionMode = compositionModes;
+            }
+
+            if (OperatingSystem.IsWindows() && (renderingModes.Length > 0 || compositionModes.Length > 0))
+            {
+                Se.LogError($"Windows rendering override: RenderingMode={string.Join(",", options.RenderingMode)}, CompositionMode={string.Join(",", options.CompositionMode)}");
+            }
+
+            return options;
+        }
+
+        private static T[] ParseEnumList<T>(string? value) where T : struct, Enum
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return [];
+            }
+
+            return value
+                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Select(p => Enum.TryParse<T>(p, true, out var mode) && Enum.IsDefined(mode) ? (T?)mode : null)
+                .Where(p => p.HasValue)
+                .Select(p => p!.Value)
+                .Distinct()
+                .ToArray();
+        }
 
         /// <summary>
         /// Returns a default font family for Avalonia when Skia has none, or null when Skia's own

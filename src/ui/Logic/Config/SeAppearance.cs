@@ -113,6 +113,20 @@ public class SeAppearance
     public bool TextBoxShowButtonRemoveFormatting { get; set; }
     public bool TextBoxShowButtonAiAssistant { get; set; }
 
+    /// <summary>
+    /// Hidden, Windows only, read once at startup: comma-separated Avalonia Win32RenderingMode names
+    /// tried in order (AngleEgl, Wgl, Vulkan, Software). Empty keeps Avalonia's default. For
+    /// diagnosing window flicker with the desktop showing through on some systems (#15848).
+    /// </summary>
+    public string WindowsRenderingMode { get; set; }
+
+    /// <summary>
+    /// Hidden, Windows only, read once at startup: comma-separated Avalonia Win32CompositionMode
+    /// names tried in order (WinUIComposition, DirectComposition, LowLatencyDxgiSwapChain,
+    /// RedirectionSurface). Empty keeps Avalonia's default (#15848).
+    /// </summary>
+    public string WindowsCompositionMode { get; set; }
+
     public SeAppearance()
     {
         CurrentLayoutPositions = new LayoutPositions();
@@ -122,6 +136,8 @@ public class SeAppearance
         LayoutScale = 1.0;
         FontScale = 1.0;
         TextSelectionOpacity = 100;
+        WindowsRenderingMode = string.Empty;
+        WindowsCompositionMode = string.Empty;
         // On macOS default to Helvetica Neue rather than the hidden system font (.AppleSystemUIFont /
         // San Francisco): SetFontName applies this family explicitly to every control, and Helvetica
         // Neue avoids Avalonia's caret-misplacement with San Francisco's overhanging glyphs (#12009).
