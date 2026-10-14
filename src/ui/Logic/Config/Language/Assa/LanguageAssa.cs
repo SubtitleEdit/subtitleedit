@@ -55,6 +55,27 @@ public class LanguageAssa
     public string DrawCategoryArrows { get; set; }
     public string DrawCategoryBasicShapes { get; set; }
     public string DrawCategorySymbols { get; set; }
+    public string DrawCategoryClipArt { get; set; }
+    public string DrawClipArtRedHeart { get; set; }
+    public string DrawClipArtAngerMark { get; set; }
+    public string DrawClipArtSweatDrop { get; set; }
+    public string DrawClipArtSparkles { get; set; }
+    public string DrawClipArtBlush { get; set; }
+    public string DrawClipArtSurpriseLines { get; set; }
+    public string DrawClipArtBamBurst { get; set; }
+    public string DrawClipArtZzz { get; set; }
+    public string DrawClipArtSun { get; set; }
+    public string DrawClipArtFlame { get; set; }
+    public string DrawClipArtLightBulb { get; set; }
+    public string DrawClipArtLightningBolt { get; set; }
+    public string DrawClipArtColoredMusicNotes { get; set; }
+    public string DrawClipArtPhone { get; set; }
+    public string DrawClipArtQuestionMark { get; set; }
+    public string DrawClipArtExclamationMark { get; set; }
+    public string DrawClipArtGreenCheck { get; set; }
+    public string DrawClipArtRedCross { get; set; }
+    public string DrawClipArtThumbsUp { get; set; }
+    public string DrawClipArtGoldStar { get; set; }
     public string DrawCategoryMyShapes { get; set; }
     public string DrawShapeSpeechBubble { get; set; }
     public string DrawShapeSpeechBubbleRight { get; set; }
@@ -437,6 +458,27 @@ public class LanguageAssa
         DrawCategoryArrows = "Arrows";
         DrawCategoryBasicShapes = "Basic shapes";
         DrawCategorySymbols = "Symbols";
+        DrawCategoryClipArt = "Clip art";
+        DrawClipArtRedHeart = "Red heart";
+        DrawClipArtAngerMark = "Anger mark";
+        DrawClipArtSweatDrop = "Sweat drop";
+        DrawClipArtSparkles = "Sparkles";
+        DrawClipArtBlush = "Blush";
+        DrawClipArtSurpriseLines = "Surprise lines";
+        DrawClipArtBamBurst = "Bam! burst";
+        DrawClipArtZzz = "Zzz";
+        DrawClipArtSun = "Sun";
+        DrawClipArtFlame = "Flame";
+        DrawClipArtLightBulb = "Light bulb";
+        DrawClipArtLightningBolt = "Lightning bolt";
+        DrawClipArtColoredMusicNotes = "Colored music notes";
+        DrawClipArtPhone = "Phone";
+        DrawClipArtQuestionMark = "Question mark";
+        DrawClipArtExclamationMark = "Exclamation mark";
+        DrawClipArtGreenCheck = "Green check";
+        DrawClipArtRedCross = "Red cross";
+        DrawClipArtThumbsUp = "Thumbs up";
+        DrawClipArtGoldStar = "Gold star";
         DrawCategoryMyShapes = "My shapes";
         DrawShapeSpeechBubble = "Speech bubble";
         DrawShapeSpeechBubbleRight = "Speech bubble, tail right";

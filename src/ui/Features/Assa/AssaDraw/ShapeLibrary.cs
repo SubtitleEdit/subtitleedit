@@ -30,14 +30,20 @@ public sealed class ShapeLibraryItem
     /// </summary>
     public (float Left, float Top, float Right, float Bottom)? TextArea { get; }
 
+    /// <summary>
+    /// The parts keep their own colors (saved shapes, clip art) instead of taking the current color.
+    /// </summary>
+    public bool HasOwnColors { get; }
+
     public ShapeLibraryItem(string name, string category, Func<List<DrawShape>> build, SeAssaDrawShape? userShape = null,
-        (float Left, float Top, float Right, float Bottom)? textArea = null)
+        (float Left, float Top, float Right, float Bottom)? textArea = null, bool ownColors = false)
     {
         Name = name;
         Category = category;
         _build = build;
         UserShape = userShape;
         TextArea = textArea;
+        HasOwnColors = ownColors || userShape != null;
     }
 
     /// <summary>
@@ -92,7 +98,7 @@ public sealed class ShapeLibraryItem
         {
             var shape = template.Clone();
             shape.Layer = firstLayer + template.Layer;
-            shape.ForeColor = UserShape != null ? template.ForeColor : color;
+            shape.ForeColor = HasOwnColors ? template.ForeColor : color;
             shape.Hidden = false;
             foreach (var point in shape.Points)
             {
@@ -103,18 +109,81 @@ public sealed class ShapeLibraryItem
             result.Add(shape);
         }
 
-        // The text area belongs to the biggest part (the bubble, not the dots of a thought bubble)
+        // The text area belongs to the topmost part under its center (a burst's yellow middle,
+        // not the red edge below it - text goes on its shape's layer), else the biggest part
         if (TextArea is { } area && result.Count > 0)
         {
-            var host = result.OrderByDescending(s => { var b = s.GetBounds(); return (b.Right - b.Left) * (b.Bottom - b.Top); }).First();
-            host.SetTextBounds(
-                x + (area.Left - left) * scaleX,
-                y + (area.Top - top) * scaleY,
-                x + (area.Right - left) * scaleX,
-                y + (area.Bottom - top) * scaleY);
+            var textLeft = x + (area.Left - left) * scaleX;
+            var textTop = y + (area.Top - top) * scaleY;
+            var textRight = x + (area.Right - left) * scaleX;
+            var textBottom = y + (area.Bottom - top) * scaleY;
+            var centerX = (textLeft + textRight) / 2;
+            var centerY = (textTop + textBottom) / 2;
+            var host = result
+                .Where(s => !s.IsEraser && s.HitTest(centerX, centerY, 0))
+                .OrderByDescending(s => s.Layer)
+                .ThenByDescending(Area)
+                .FirstOrDefault() ?? result.OrderByDescending(Area).First();
+            host.SetTextBounds(textLeft, textTop, textRight, textBottom);
         }
 
         return result;
+    }
+
+    private static float Area(DrawShape shape)
+    {
+        var (left, top, right, bottom) = shape.GetBounds();
+        return (right - left) * (bottom - top);
+    }
+
+    /// <summary>
+    /// Thumbnail geometry per layer with its color, bottom layer first, moved so the shape starts at 0,0.
+    /// </summary>
+    public List<(Color Color, Geometry Geometry)> ToColoredGeometries()
+    {
+        var (left, top, _, _) = Bounds;
+        var result = new List<(Color, Geometry)>();
+        foreach (var layer in Template.Where(s => s.Points.Count > 2 && !s.IsEraser).GroupBy(s => s.Layer).OrderBy(g => g.Key))
+        {
+            var geometry = new StreamGeometry();
+            using (var ctx = geometry.Open())
+            {
+                ctx.SetFillRule(FillRule.NonZero);
+                foreach (var shape in layer)
+                {
+                    AddFigure(ctx, shape, left, top);
+                }
+            }
+
+            result.Add((layer.First().ForeColor, geometry));
+        }
+
+        return result;
+    }
+
+    private static void AddFigure(StreamGeometryContext ctx, DrawShape shape, float left, float top)
+    {
+        ctx.BeginFigure(new Avalonia.Point(shape.Points[0].X - left, shape.Points[0].Y - top), true);
+        var i = 1;
+        while (i < shape.Points.Count)
+        {
+            var point = shape.Points[i];
+            if (point.DrawType == DrawCoordinateType.BezierCurveSupport1 && i + 2 < shape.Points.Count)
+            {
+                ctx.CubicBezierTo(
+                    new Avalonia.Point(point.X - left, point.Y - top),
+                    new Avalonia.Point(shape.Points[i + 1].X - left, shape.Points[i + 1].Y - top),
+                    new Avalonia.Point(shape.Points[i + 2].X - left, shape.Points[i + 2].Y - top));
+                i += 3;
+            }
+            else
+            {
+                ctx.LineTo(new Avalonia.Point(point.X - left, point.Y - top));
+                i++;
+            }
+        }
+
+        ctx.EndFigure(true);
     }
 
     /// <summary>
@@ -169,6 +238,7 @@ public static class ShapeLibrary
         Se.Language.Assa.DrawCategoryArrows,
         Se.Language.Assa.DrawCategoryBasicShapes,
         Se.Language.Assa.DrawCategorySymbols,
+        Se.Language.Assa.DrawCategoryClipArt,
     ];
 
     public static List<ShapeLibraryItem> GetUserShapes()
@@ -238,6 +308,20 @@ public static class ShapeLibrary
         // Path data is scaled by 10 when built (see SvgImporter.FromPathData)
         var (l, t, r, b) = textArea;
         return new ShapeLibraryItem(name, category, () => SvgImporter.FromPathData(union), textArea: (l * 10, t * 10, r * 10, b * 10));
+    }
+
+    /// <summary>
+    /// Colored clip art: an SVG body for a 100 x 100 view box, imported like an SVG file
+    /// (one layer per color run), with an optional text area in the same coordinates.
+    /// </summary>
+    private static ShapeLibraryItem Clip(string name, (float Left, float Top, float Right, float Bottom)? textArea, string svgBody)
+    {
+        var svg = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\">" + svgBody + "</svg>";
+
+        // Imported at 1000 x 1000, so the view box is scaled by 10 like the path data shapes
+        (float, float, float, float)? area = textArea is { } a ? (a.Left * 10, a.Top * 10, a.Right * 10, a.Bottom * 10) : null;
+        return new ShapeLibraryItem(name, Se.Language.Assa.DrawCategoryClipArt, () => SvgImporter.Import(svg, 1000, 1000, 0).Shapes,
+            textArea: area, ownColors: true);
     }
 
     private static string F(double value) => value.ToString("0.##", CultureInfo.InvariantCulture);
@@ -349,6 +433,48 @@ public static class ShapeLibrary
                 [Circle(34, 36, 8), Circle(66, 36, 8), "M26 58 A24 24 0 0 0 74 58 L64 58 A14 14 0 0 1 36 58 Z"]),
             Item(l.DrawShapeSadSmiley, symbols, [Circle(50, 50, 50)],
                 [Circle(34, 36, 8), Circle(66, 36, 8), "M26 82 A24 24 0 0 1 74 82 L64 82 A14 14 0 0 0 36 82 Z"]),
+
+            // Clip art (own colors; each color is one ASSA line, so a few colors each)
+            Clip(l.DrawClipArtRedHeart, (22, 18, 78, 56),
+                """<path fill="#E53935" d="M50 92 C20 70 0 52 0 30 C0 12 13 0 28 0 C38 0 46 6 50 14 C54 6 62 0 72 0 C87 0 100 12 100 30 C100 52 80 70 50 92 Z"/><ellipse fill="#FF8A80" cx="24" cy="22" rx="10" ry="6" transform="rotate(-35 24 22)"/>"""),
+            Clip(l.DrawClipArtAngerMark, null,
+                """<path fill="#E53935" transform="rotate(0 50 50)" d="M6 40 Q30 38 38 8 L48 8 Q46 46 6 50 Z"/><path fill="#E53935" transform="rotate(90 50 50)" d="M6 40 Q30 38 38 8 L48 8 Q46 46 6 50 Z"/><path fill="#E53935" transform="rotate(180 50 50)" d="M6 40 Q30 38 38 8 L48 8 Q46 46 6 50 Z"/><path fill="#E53935" transform="rotate(270 50 50)" d="M6 40 Q30 38 38 8 L48 8 Q46 46 6 50 Z"/>"""),
+            Clip(l.DrawClipArtSweatDrop, null,
+                """<path fill="#4FC3F7" d="M50 0 C50 0 88 46 88 66 A38 34 0 0 1 12 66 C12 46 50 0 50 0 Z"/><path fill="#E1F5FE" d="M30 64 Q30 50 42 38 Q36 54 38 70 Q34 74 30 64 Z"/>"""),
+            Clip(l.DrawClipArtSparkles, null,
+                """<path fill="#FFC107" d="M40 6 Q46 44 80 50 Q46 56 40 94 Q34 56 0 50 Q34 44 40 6 Z"/><path fill="#FFE082" d="M80 2 Q83 18 98 21 Q83 24 80 40 Q77 24 62 21 Q77 18 80 2 Z"/><path fill="#FFE082" d="M84 66 Q86 76 96 78 Q86 80 84 92 Q82 80 72 78 Q82 76 84 66 Z"/>"""),
+            Clip(l.DrawClipArtBlush, null,
+                """<ellipse fill="#F48FB1" fill-opacity="0.85" cx="50" cy="50" rx="48" ry="26"/><g stroke="#D81B60" stroke-width="5" stroke-linecap="round" fill="none"><path d="M28 62 L38 38"/><path d="M46 62 L56 38"/><path d="M64 62 L74 38"/></g>"""),
+            Clip(l.DrawClipArtSurpriseLines, null,
+                """<g fill="#212121"><path d="M14 30 L24 26 L38 70 L33 72 Z"/><path d="M45 4 L55 4 L52 62 L48 62 Z"/><path d="M86 30 L76 26 L62 70 L67 72 Z"/></g>"""),
+            Clip(l.DrawClipArtBamBurst, (28, 32, 72, 68),
+                """<path fill="#E53935" d="M50.0 0.0 L59.3 15.2 L75.0 6.7 L75.5 24.5 L93.3 25.0 L84.8 40.7 L100.0 50.0 L84.8 59.3 L93.3 75.0 L75.5 75.5 L75.0 93.3 L59.3 84.8 L50.0 100.0 L40.7 84.8 L25.0 93.3 L24.5 75.5 L6.7 75.0 L15.2 59.3 L0.0 50.0 L15.2 40.7 L6.7 25.0 L24.5 24.5 L25.0 6.7 L40.7 15.2 Z"/><path fill="#FFEB3B" d="M56.3 10.5 L63.6 23.3 L78.3 21.7 L76.7 36.4 L89.5 43.7 L79.6 54.7 L85.6 68.2 L71.2 71.2 L68.2 85.6 L54.7 79.6 L43.7 89.5 L36.4 76.7 L21.7 78.3 L23.3 63.6 L10.5 56.3 L20.4 45.3 L14.4 31.8 L28.8 28.8 L31.8 14.4 L45.3 20.4 Z"/>"""),
+            Clip(l.DrawClipArtZzz, null,
+                """<g fill="#5C6BC0"><path d="M4 56 H40 V64 L16 90 H40 V98 H4 V90 L28 64 H4 Z"/><path d="M48 30 H76 V36 L57 56 H76 V62 H48 V56 L67 36 H48 Z"/><path d="M80 6 H98 V10 L86 24 H98 V28 H80 V24 L92 10 H80 Z"/></g>"""),
+            Clip(l.DrawClipArtSun, (30, 30, 70, 70),
+                """<g fill="#FF9800"><path transform="rotate(0 50 50)" d="M44 14 L50 0 L56 14 Z"/><path transform="rotate(30 50 50)" d="M44 14 L50 0 L56 14 Z"/><path transform="rotate(60 50 50)" d="M44 14 L50 0 L56 14 Z"/><path transform="rotate(90 50 50)" d="M44 14 L50 0 L56 14 Z"/><path transform="rotate(120 50 50)" d="M44 14 L50 0 L56 14 Z"/><path transform="rotate(150 50 50)" d="M44 14 L50 0 L56 14 Z"/><path transform="rotate(180 50 50)" d="M44 14 L50 0 L56 14 Z"/><path transform="rotate(210 50 50)" d="M44 14 L50 0 L56 14 Z"/><path transform="rotate(240 50 50)" d="M44 14 L50 0 L56 14 Z"/><path transform="rotate(270 50 50)" d="M44 14 L50 0 L56 14 Z"/><path transform="rotate(300 50 50)" d="M44 14 L50 0 L56 14 Z"/><path transform="rotate(330 50 50)" d="M44 14 L50 0 L56 14 Z"/></g><circle fill="#FFC107" cx="50" cy="50" r="30"/><circle fill="#FFE082" cx="40" cy="40" r="8"/>"""),
+            Clip(l.DrawClipArtFlame, null,
+                """<path fill="#FF5722" d="M50 0 C58 22 84 36 84 64 A34 34 0 0 1 16 64 C16 46 28 38 32 24 C38 34 42 38 44 44 C48 30 50 16 50 0 Z"/><path fill="#FFC107" d="M50 46 C56 58 68 64 68 78 A18 18 0 0 1 32 78 C32 66 44 60 50 46 Z"/>"""),
+            Clip(l.DrawClipArtLightBulb, null,
+                """<path fill="#FFEB3B" d="M50 4 A30 30 0 0 1 68 58 Q63 63 63 72 H37 Q37 63 32 58 A30 30 0 0 1 50 4 Z"/><path fill="#FFF9C4" d="M36 32 A16 16 0 0 1 48 16 A22 22 0 0 0 40 40 Z"/><rect fill="#9E9E9E" x="36" y="74" width="28" height="9" rx="2"/><rect fill="#616161" x="39" y="85" width="22" height="9" rx="3"/>"""),
+            Clip(l.DrawClipArtLightningBolt, null,
+                """<path fill="#FFD600" stroke="#F57F17" stroke-width="3" stroke-linejoin="round" d="M60 2 L14 58 H44 L36 98 L86 38 H56 Z"/>"""),
+            Clip(l.DrawClipArtColoredMusicNotes, null,
+                """<g fill="#7E57C2"><ellipse cx="20" cy="82" rx="14" ry="10" transform="rotate(-20 20 82)"/><path d="M29 20 H35 V80 H29 Z"/><path d="M35 20 C40 32 56 36 56 54 C52 44 44 42 35 40 Z"/></g><g fill="#26A69A"><ellipse cx="70" cy="72" rx="12" ry="9" transform="rotate(-20 70 72)"/><ellipse cx="88" cy="62" rx="12" ry="9" transform="rotate(-20 88 62)"/><path d="M77 22 H82 V70 H77 Z"/><path d="M95 12 H100 V60 H95 Z"/><path d="M77 22 L100 12 V22 L77 32 Z"/></g>"""),
+            Clip(l.DrawClipArtPhone, (31, 14, 69, 80),
+                """<rect fill="#37474F" x="24" y="0" width="52" height="100" rx="8"/><rect fill="#81D4FA" x="29" y="10" width="42" height="74" rx="2"/><circle fill="#90A4AE" cx="50" cy="92" r="4"/>"""),
+            Clip(l.DrawClipArtQuestionMark, null,
+                """<circle fill="#1E88E5" cx="50" cy="50" r="50"/><path fill="none" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" d="M35 36 Q35 20 50 20 Q65 20 65 34 Q65 44 50 50 V58"/><circle fill="#FFFFFF" cx="50" cy="76" r="7"/>"""),
+            Clip(l.DrawClipArtExclamationMark, null,
+                """<circle fill="#E53935" cx="50" cy="50" r="50"/><path fill="#FFFFFF" d="M43 18 H57 L54 62 H46 Z"/><circle fill="#FFFFFF" cx="50" cy="77" r="7"/>"""),
+            Clip(l.DrawClipArtGreenCheck, null,
+                """<circle fill="#43A047" cx="50" cy="50" r="50"/><path fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" d="M27 52 L43 68 L74 34"/>"""),
+            Clip(l.DrawClipArtRedCross, null,
+                """<circle fill="#E53935" cx="50" cy="50" r="50"/><path fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round" d="M32 32 L68 68 M68 32 L32 68"/>"""),
+            Clip(l.DrawClipArtThumbsUp, null,
+                """<rect fill="#1E88E5" x="4" y="44" width="22" height="52" rx="3"/><path fill="#FFCA28" d="M30 46 L46 18 Q50 8 58 12 Q66 16 62 30 L58 42 H84 Q96 42 94 54 L88 86 Q86 96 74 96 H30 Z"/><path fill="none" stroke="#F9A825" stroke-width="3" stroke-linecap="round" d="M62 60 H90 M60 74 H87"/>"""),
+            Clip(l.DrawClipArtGoldStar, null,
+                """<path fill="#FFC107" d="M50.0 5.0 L61.2 37.6 L95.7 38.2 L68.1 58.9 L78.2 91.8 L50.0 72.0 L21.8 91.8 L31.9 58.9 L4.3 38.2 L38.8 37.6 Z"/><path fill="#FFE082" d="M50.0 23.0 L57.1 43.3 L78.5 43.7 L61.4 56.7 L67.6 77.3 L50.0 65.0 L32.4 77.3 L38.6 56.7 L21.5 43.7 L42.9 43.3 Z"/>"""),
         ];
     }
 }

@@ -820,23 +820,34 @@ public class AssaDrawWindow : Window
             var wrap = new WrapPanel { Width = columns * (cell + 4) };
             foreach (var item in list)
             {
-                var path = new Avalonia.Controls.Shapes.Path
+                Control thumbnail;
+                if (item.HasOwnColors)
                 {
-                    Data = item.ToGeometry(),
-                    Fill = item.UserShape != null ? null : new SolidColorBrush(Color.FromRgb(214, 218, 226)),
-                    Stretch = Stretch.Uniform,
-                    Margin = new Thickness(9),
-                };
-                if (item.UserShape != null)
+                    // Saved shapes and clip art show all their colors: one path per layer, in one
+                    // coordinate space, scaled together
+                    var (left, top, right, bottom) = item.Bounds;
+                    var parts = new Canvas { Width = Math.Max(1, right - left), Height = Math.Max(1, bottom - top) };
+                    foreach (var (color, geometry) in item.ToColoredGeometries())
+                    {
+                        parts.Children.Add(new Avalonia.Controls.Shapes.Path { Data = geometry, Fill = new SolidColorBrush(color) });
+                    }
+
+                    thumbnail = new Viewbox { Child = parts, Stretch = Stretch.Uniform, Margin = new Thickness(7) };
+                }
+                else
                 {
-                    // Saved shapes show their own (first) color
-                    var color = item.Template.FirstOrDefault(s => !s.IsEraser)?.ForeColor ?? Colors.White;
-                    path.Fill = new SolidColorBrush(color);
+                    thumbnail = new Avalonia.Controls.Shapes.Path
+                    {
+                        Data = item.ToGeometry(),
+                        Fill = new SolidColorBrush(Color.FromRgb(214, 218, 226)),
+                        Stretch = Stretch.Uniform,
+                        Margin = new Thickness(9),
+                    };
                 }
 
                 var button = new Button
                 {
-                    Content = path,
+                    Content = thumbnail,
                     Width = cell,
                     Height = cell,
                     Margin = new Thickness(0, 0, 4, 4),
