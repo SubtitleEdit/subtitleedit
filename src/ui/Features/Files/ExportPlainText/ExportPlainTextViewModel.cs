@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -16,6 +16,7 @@ using System.Globalization;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.UiLogic.Export;
 
 namespace Nikse.SubtitleEdit.Features.Files.ExportPlainText;
 
@@ -41,6 +42,11 @@ public partial class ExportPlainTextViewModel : ObservableObject, IClosingCleanu
     [ObservableProperty] private TextEncoding? _selectedEncoding;
 
     [ObservableProperty] private string _previewText;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsNotBatchMode))]
+    private bool _isBatchMode;
+
+    public bool IsNotBatchMode => !IsBatchMode;
 
 
     public Window? Window { get; set; }
@@ -49,7 +55,7 @@ public partial class ExportPlainTextViewModel : ObservableObject, IClosingCleanu
     private IWindowService _windowService;
     private IFileHelper _fileHelper;
 
-    private List<SubtitleLineViewModel> _subtitles;
+    private List<Paragraph> _paragraphs;
     private string? _videoFileName;
     private string _title;
     private readonly System.Timers.Timer _timerUpdatePreview;
@@ -92,7 +98,7 @@ public partial class ExportPlainTextViewModel : ObservableObject, IClosingCleanu
         SelectedEncoding = Encodings.FirstOrDefault(p => p.DisplayName == Se.Settings.General.DefaultEncoding) ??
                            Encodings[0];
         PreviewText = string.Empty;
-        _subtitles = new List<SubtitleLineViewModel>();
+        _paragraphs = new List<Paragraph>();
 
         _timerUpdatePreview = new System.Timers.Timer();
         _timerUpdatePreview.Interval = 250;
@@ -125,19 +131,26 @@ public partial class ExportPlainTextViewModel : ObservableObject, IClosingCleanu
         AddLineBetweenSubtitles = Se.Settings.File.ExportPlainText.AddLineBetweenSubtitles;
     }
 
+    private SeExportPlainText MakeSettings()
+    {
+        return new SeExportPlainText
+        {
+            TextProcessing = FormatTextMerge ? "Merge" : FormatTextUnbreak ? "Unbreak" : "None",
+            TextRemoveStyling = TextRemoveStyling,
+            ShowLineNumbers = ShowLineNumbers,
+            AddNewLineAfterLineNumber = AddNewLineAfterLineNumber,
+            ShowTimeCodes = ShowTimeCodes,
+            AddNewLineAfterTimeCode = AddNewLineAfterTimeCode,
+            TimeCodeFormat = SelectedTimeCodeFormat,
+            TimeCodeSeparator = SelectedTimeCodeSeparator,
+            AddLineAfterText = AddLineAfterText,
+            AddLineBetweenSubtitles = AddLineBetweenSubtitles,
+        };
+    }
+
     private void SaveSettings()
     {
-        Se.Settings.File.ExportPlainText.TextProcessing = FormatTextMerge ? "Merge" : FormatTextUnbreak ? "Unbreak" : "None";
-        Se.Settings.File.ExportPlainText.TextRemoveStyling = TextRemoveStyling;
-        Se.Settings.File.ExportPlainText.ShowLineNumbers = ShowLineNumbers;
-        Se.Settings.File.ExportPlainText.AddNewLineAfterLineNumber = AddNewLineAfterLineNumber;
-        Se.Settings.File.ExportPlainText.ShowTimeCodes = ShowTimeCodes;
-        Se.Settings.File.ExportPlainText.AddNewLineAfterTimeCode = AddNewLineAfterTimeCode;
-        Se.Settings.File.ExportPlainText.TimeCodeFormat = SelectedTimeCodeFormat;
-        Se.Settings.File.ExportPlainText.TimeCodeSeparator = SelectedTimeCodeSeparator;
-        Se.Settings.File.ExportPlainText.AddLineAfterText = AddLineAfterText;
-        Se.Settings.File.ExportPlainText.AddLineBetweenSubtitles = AddLineBetweenSubtitles;
-
+        Se.Settings.File.ExportPlainText = MakeSettings();
         Se.SaveSettings();
     }
 
@@ -172,109 +185,7 @@ public partial class ExportPlainTextViewModel : ObservableObject, IClosingCleanu
 
     private string GetExportText()
     {
-        if (FormatTextMerge)
-        {
-            var parts = new List<string>();
-            foreach (var subtitleLine in _subtitles)
-            {
-                var text = subtitleLine.Text ?? string.Empty;
-                if (TextRemoveStyling)
-                {
-                    text = HtmlUtil.RemoveHtmlTags(text, true);
-                }
-                text = text.Replace(Environment.NewLine, " ").Trim();
-                if (!string.IsNullOrEmpty(text))
-                {
-                    parts.Add(text);
-                }
-            }
-            return string.Join(" ", parts);
-        }
-
-        var sb = new StringBuilder();
-
-        foreach (var subtitleLine in _subtitles)
-        {
-            var text = subtitleLine.Text ?? string.Empty;
-
-            // Remove styling tags if requested
-            if (TextRemoveStyling)
-            {
-                text = HtmlUtil.RemoveHtmlTags(text, true);
-            }
-
-            if (FormatTextUnbreak)
-            {
-                text = text.Replace(Environment.NewLine, " ");
-                text = Utilities.UnbreakLine(text);
-            }
-
-            // Line number
-            if (ShowLineNumbers)
-            {
-                sb.Append(subtitleLine.Number);
-                if (AddNewLineAfterLineNumber)
-                {
-                    sb.AppendLine();
-                }
-                else
-                {
-                    sb.Append(' ');
-                }
-            }
-
-            // Time codes
-            if (ShowTimeCodes)
-            {
-                var start = FormatTimeCode(subtitleLine.StartTime.TotalMilliseconds);
-                var end = FormatTimeCode(subtitleLine.EndTime.TotalMilliseconds);
-                sb.Append(start);
-                sb.Append(SelectedTimeCodeSeparator);
-                sb.Append(end);
-                if (AddNewLineAfterTimeCode)
-                {
-                    sb.AppendLine();
-                }
-                else
-                {
-                    sb.Append(' ');
-                }
-            }
-
-            // Subtitle text
-            sb.AppendLine(text.Trim());
-
-            // Add optional blank line(s)
-            if (AddLineAfterText)
-            {
-                sb.AppendLine();
-            }
-
-            if (AddLineBetweenSubtitles)
-            {
-                sb.AppendLine();
-            }
-        }
-
-        return sb.ToString().TrimEnd();
-    }
-
-    private string FormatTimeCode(double totalMilliseconds)
-    {
-        var tc = new TimeCode(totalMilliseconds);
-
-        if (SelectedTimeCodeFormat == Se.Language.General.Seconds)
-        {
-            return tc.TotalSeconds.ToString("0.000", CultureInfo.InvariantCulture);
-        }
-
-        return SelectedTimeCodeFormat switch
-        {
-            "hh:mm:ss,zzz" => tc.ToString(false),
-            "hh:mm:ss.zzz" => tc.ToString().Replace(',', '.'),
-            "hh:mm:ss:ff" => tc.ToHHMMSSFF(),
-            _ => tc.ToString()
-        };
+        return PlainTextFormatter.Generate(_paragraphs, MakeSettings().ToOptions());
     }
 
     [RelayCommand]
@@ -343,7 +254,22 @@ public partial class ExportPlainTextViewModel : ObservableObject, IClosingCleanu
 
     internal void Initialize(List<SubtitleLineViewModel> subtitles, string? subtitleFileName, string? videoFileName)
     {
-        _subtitles = subtitles;
+        Initialize(subtitles.Select(p => new Paragraph(p.Text ?? string.Empty, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds)).ToList(),
+            subtitleFileName, videoFileName);
+    }
+
+    /// <summary>
+    /// Batch convert mode: no encoding/Save as, OK stores the options batch convert writes with.
+    /// </summary>
+    internal void InitializeBatchMode(List<Paragraph> paragraphs)
+    {
+        IsBatchMode = true;
+        Initialize(paragraphs, null, null);
+    }
+
+    private void Initialize(List<Paragraph> paragraphs, string? subtitleFileName, string? videoFileName)
+    {
+        _paragraphs = paragraphs;
         _subtitleFileName = subtitleFileName;
         _videoFileName = videoFileName;
         _timerUpdatePreview.Start();

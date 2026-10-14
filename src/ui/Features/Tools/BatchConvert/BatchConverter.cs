@@ -656,16 +656,14 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         if (_config.TargetFormatName == FormatPlainText && item.Subtitle != null)
         {
             var path = MakeOutputFileName(item, ".txt");
-            var sb = new StringBuilder();
-            foreach (var p in item.Subtitle.Paragraphs)
-            {
-                sb.AppendLine(HtmlUtil.RemoveHtmlTags(p.Text, true));
-            }
+
+            // Same options as File -> Export -> Plain text (set via the target format settings button).
+            var text = PlainTextFormatter.Generate(item.Subtitle.Paragraphs, Se.Settings.File.ExportPlainText.ToOptions());
 
             try
             {
                 var encoding = EncodingHelper.ResolveEncoding(_config.TargetEncoding, item.FileName);
-                await File.WriteAllTextAsync(path, sb.ToString(), encoding, cancellationToken);
+                await File.WriteAllTextAsync(path, text, encoding, cancellationToken);
                 item.Status = Se.Language.General.Converted;
             }
             catch (Exception exception) when (exception is not OperationCanceledException)

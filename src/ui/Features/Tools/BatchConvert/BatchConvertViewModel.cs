@@ -23,6 +23,7 @@ using Nikse.SubtitleEdit.Features.Files.ExportEbuStl;
 using Nikse.SubtitleEdit.Features.Files.Export.ExportEbuStl;
 using Nikse.SubtitleEdit.Features.Files.ExportImageBased;
 using Nikse.SubtitleEdit.Features.Files.ExportPac;
+using Nikse.SubtitleEdit.Features.Files.ExportPlainText;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Ocr.Download;
@@ -547,6 +548,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             BatchConverter.FormatFcpImage,
             BatchConverter.FormatImagesWithTimeCodesInFileName,
             BatchConverter.FormatPac,
+            BatchConverter.FormatPlainText,
             BatchConverter.FormatVobSub,
             new AdvancedSubStationAlpha().Name,
         };
@@ -2096,6 +2098,21 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
+        if (targetFormat == BatchConverter.FormatPlainText)
+        {
+            var paragraphs = new List<Paragraph>
+            {
+                new("This is a sample text.", 1000, 3000),
+                new("This is a sample text" + Environment.NewLine + "with two lines.", 3500, 6000),
+                new("<i>This is the last sample text.</i>", 6500, 8000),
+            };
+
+            // OK stores the options in Se.Settings.File.ExportPlainText, which BatchConverter writes with.
+            await _windowService.ShowDialogAsync<ExportPlainTextWindow, ExportPlainTextViewModel>(Window,
+                vm => { vm.InitializeBatchMode(paragraphs); });
+            return;
+        }
+
         // check for Advadvanced SubStation Alpha
         if (targetFormat == AdvancedSubStationAlpha.NameOfFormat)
         {
@@ -2585,7 +2602,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             new("This is a sample subtitle.", 3500, 6000),
         };
 
-        var plainTextPreview = string.Join(Environment.NewLine + Environment.NewLine, sample.Select(p => p.Text));
+        var plainTextPreview = PlainTextFormatter.Generate(sample, Se.Settings.File.ExportPlainText.ToOptions());
 
         string? customTextPreview = null;
         var customFormats = Se.Settings.File.ExportCustomFormats.Select(c => new CustomFormatItem(c)).ToList();
