@@ -36,6 +36,12 @@ public enum EffectPreviewKind
     WordByWord,
     Karaoke,
     WordPop,
+    HighlightBox,
+    SingleWordPop,
+    BoldCaptions,
+    SmoothFill,
+    BlurInWords,
+    RollingCaptions,
     ScrambleReveal,
     WordFlip3D,
     WordSpacing,
@@ -86,10 +92,12 @@ public static class AdvancedEffectCatalog
         {
             AdvancedEffectKaraoke or AdvancedEffectFancyKaraoke or AdvancedEffectWordByWord or
                 AdvancedEffectTypewriter or AdvancedEffectTypewriterWithHighlight or AdvancedEffectWordFlip3D or
-                AdvancedEffectScrambleReveal or AdvancedEffectWordSpacing => AdvancedEffectCategory.Words,
+                AdvancedEffectScrambleReveal or AdvancedEffectWordSpacing or AdvancedEffectHighlightBox or
+                AdvancedEffectSingleWordPop or AdvancedEffectBoldCaptions or AdvancedEffectSmoothFill or
+                AdvancedEffectBlurInWords => AdvancedEffectCategory.Words,
             AdvancedEffectFadeIn or AdvancedEffectFadeOut or AdvancedEffectFadeInOut or AdvancedEffectSlideInLeft or
                 AdvancedEffectSlideInRight or AdvancedEffectBounceIn or AdvancedEffectSlowZoomIn or
-                AdvancedEffectSlowZoomOut or AdvancedEffectTvClose => AdvancedEffectCategory.InOut,
+                AdvancedEffectSlowZoomOut or AdvancedEffectTvClose or AdvancedEffectRollingCaptions => AdvancedEffectCategory.InOut,
             AdvancedEffectSnow or AdvancedEffectRain or AdvancedEffectStarfield or AdvancedEffectFireflies or
                 AdvancedEffectConfetti or AdvancedEffectHearts or AdvancedEffectMatrix or
                 AdvancedEffectOldMovie => AdvancedEffectCategory.Scenes,
@@ -117,6 +125,12 @@ public static class AdvancedEffectCatalog
             AdvancedEffectWordByWord => EffectPreviewKind.WordByWord,
             AdvancedEffectKaraoke => EffectPreviewKind.Karaoke,
             AdvancedEffectFancyKaraoke => EffectPreviewKind.WordPop,
+            AdvancedEffectHighlightBox => EffectPreviewKind.HighlightBox,
+            AdvancedEffectSingleWordPop => EffectPreviewKind.SingleWordPop,
+            AdvancedEffectBoldCaptions => EffectPreviewKind.BoldCaptions,
+            AdvancedEffectSmoothFill => EffectPreviewKind.SmoothFill,
+            AdvancedEffectBlurInWords => EffectPreviewKind.BlurInWords,
+            AdvancedEffectRollingCaptions => EffectPreviewKind.RollingCaptions,
             AdvancedEffectScrambleReveal => EffectPreviewKind.ScrambleReveal,
             AdvancedEffectWordFlip3D => EffectPreviewKind.WordFlip3D,
             AdvancedEffectWordSpacing => EffectPreviewKind.WordSpacing,

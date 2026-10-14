@@ -370,8 +370,13 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
             idx++;
         }
 
+        if (effect is IAdvancedEffectHeaderUpdater headerUpdater)
+        {
+            result.Header = headerUpdater.UpdateHeader(result.Header, toAffect);
+        }
+
         var transformed = effect.ApplyEffect(
-            _subtitle.Header,
+            result.Header,
             toAffect,
             _mediaInfo?.Dimension.Width ?? 1920,
             _mediaInfo?.Dimension.Height ?? 1080,
@@ -404,6 +409,7 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
     private void Ok()
     {
         UpdatedSubtitle = BuildPreviewSubtitle();
+        _subtitle.Header = UpdatedSubtitle.Header; // effects may add styles (the main window keeps this subtitle's header)
         OkPressed = true;
         Window?.Close();
     }

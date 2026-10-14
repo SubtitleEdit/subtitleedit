@@ -362,6 +362,24 @@ public class LanguageAssa
     public string AdvancedEffectNoSettings { get; set; }
     public string AdvancedEffectAmount { get; set; }
     public string AdvancedEffectPreviewNoVideo { get; set; }
+    public string AdvancedEffectHighlightBox { get; set; }
+    public string AdvancedEffectHighlightBoxDescription { get; set; }
+    public string AdvancedEffectSingleWordPop { get; set; }
+    public string AdvancedEffectSingleWordPopDescription { get; set; }
+    public string AdvancedEffectBoldCaptions { get; set; }
+    public string AdvancedEffectBoldCaptionsDescription { get; set; }
+    public string AdvancedEffectBoxColor { get; set; }
+    public string AdvancedEffectHighlightColor { get; set; }
+    public string AdvancedEffectUpperCase { get; set; }
+    public string AdvancedEffectTextSizePercent { get; set; }
+    public string AdvancedEffectSmoothFill { get; set; }
+    public string AdvancedEffectSmoothFillDescription { get; set; }
+    public string AdvancedEffectBlurInWords { get; set; }
+    public string AdvancedEffectBlurInWordsDescription { get; set; }
+    public string AdvancedEffectRollingCaptions { get; set; }
+    public string AdvancedEffectRollingCaptionsDescription { get; set; }
+    public string AdvancedEffectFillColor { get; set; }
+    public string AdvancedEffectRise { get; set; }
     public string OverrideTagsHistory { get; set; }
 
     public LanguageAssa()
@@ -723,6 +741,24 @@ public class LanguageAssa
         AdvancedEffectNoSettings = "This effect has no settings - it works as is.";
         AdvancedEffectAmount = "Amount";
         AdvancedEffectPreviewNoVideo = "Sample preview - open a video to see the real rendering";
+        AdvancedEffectHighlightBox = "Highlight box";
+        AdvancedEffectHighlightBoxDescription = "A colored box jumps from word to word as the line is spoken - CapCut-style captions";
+        AdvancedEffectSingleWordPop = "Single word pop";
+        AdvancedEffectSingleWordPopDescription = "Shows one big word at a time, popping in as it is spoken - short-video caption style";
+        AdvancedEffectBoldCaptions = "Bold captions";
+        AdvancedEffectBoldCaptionsDescription = "Bold captions with a thick outline - the spoken word lights up in color and grows";
+        AdvancedEffectBoxColor = "Box color";
+        AdvancedEffectHighlightColor = "Highlight color";
+        AdvancedEffectUpperCase = "Uppercase";
+        AdvancedEffectTextSizePercent = "Text size (%)";
+        AdvancedEffectSmoothFill = "Smooth fill";
+        AdvancedEffectSmoothFillDescription = "A highlight color sweeps smoothly through each word as it is spoken";
+        AdvancedEffectBlurInWords = "Blur-in words";
+        AdvancedEffectBlurInWordsDescription = "Words appear one by one as they are spoken - each sharpens from a blur and rises into place";
+        AdvancedEffectRollingCaptions = "Rolling captions";
+        AdvancedEffectRollingCaptionsDescription = "Each line slides up into place and pushes the previous line up, like a live chat or teleprompter";
+        AdvancedEffectFillColor = "Fill color";
+        AdvancedEffectRise = "Rise from baseline";
         OverrideTagsHistory = "Override tags history";
         MouseOverColor = "Mouse-over color";
         ClickedColor = "Clicked color";

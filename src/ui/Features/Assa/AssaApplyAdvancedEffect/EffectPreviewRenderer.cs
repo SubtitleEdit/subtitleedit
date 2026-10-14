@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect.Effects;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect;
 
@@ -78,6 +79,11 @@ public static class EffectPreviewRenderer
             EffectPreviewKind.TvClose => 0.35,
             EffectPreviewKind.Typewriter or EffectPreviewKind.TypewriterHighlight => 0.42,
             EffectPreviewKind.Karaoke or EffectPreviewKind.WordPop or EffectPreviewKind.ScrambleReveal => 0.45,
+            EffectPreviewKind.HighlightBox or EffectPreviewKind.BoldCaptions => 0.35,
+            EffectPreviewKind.SingleWordPop => 0.3,
+            EffectPreviewKind.SmoothFill => 0.42,
+            EffectPreviewKind.BlurInWords => 0.32,
+            EffectPreviewKind.RollingCaptions => 0.7,
             EffectPreviewKind.WordByWord => 0.4,
             EffectPreviewKind.SlideInLeft or EffectPreviewKind.SlideInRight => 0.13,
             EffectPreviewKind.BounceIn => 0.13,
@@ -111,6 +117,12 @@ public static class EffectPreviewRenderer
         if (kind is EffectPreviewKind.LowerThird or EffectPreviewKind.CreditsScroll)
         {
             fontSize *= 0.8;
+        }
+
+        if (effect is AdvancedEffectHighlightBox { UpperCase: true } or AdvancedEffectSingleWordPop { UpperCase: true } or
+            AdvancedEffectBoldCaptions { UpperCase: true } or AdvancedEffectSmoothFill { UpperCase: true } or AdvancedEffectBlurInWords { UpperCase: true })
+        {
+            text = text.ToUpper(CultureInfo.CurrentCulture);
         }
 
         var layout = GetLayout(text, fontSize, bounds.Width * 0.86, maxLines);
@@ -221,6 +233,24 @@ public static class EffectPreviewRenderer
             }
             case EffectPreviewKind.WordPop:
                 DrawWordPop(ctx, layout, origin, p, effect as AdvancedEffectFancyKaraoke);
+                break;
+            case EffectPreviewKind.HighlightBox:
+                DrawHighlightBox(ctx, layout, origin, p, effect as AdvancedEffectHighlightBox);
+                break;
+            case EffectPreviewKind.SingleWordPop:
+                DrawSingleWordPop(ctx, bounds, text, fontSize, p, effect as AdvancedEffectSingleWordPop);
+                break;
+            case EffectPreviewKind.BoldCaptions:
+                DrawBoldCaptions(ctx, layout, origin, p, effect as AdvancedEffectBoldCaptions);
+                break;
+            case EffectPreviewKind.SmoothFill:
+                DrawSmoothFill(ctx, layout, origin, p, effect as AdvancedEffectSmoothFill);
+                break;
+            case EffectPreviewKind.BlurInWords:
+                DrawBlurInWords(ctx, layout, origin, p, effect as AdvancedEffectBlurInWords);
+                break;
+            case EffectPreviewKind.RollingCaptions:
+                DrawRollingCaptions(ctx, bounds, text, fontSize, p);
                 break;
             case EffectPreviewKind.ScrambleReveal:
             {
@@ -702,6 +732,190 @@ public static class EffectPreviewRenderer
             : GlyphStyle.Default(inactiveBrush) with { Opacity = inactiveOpacity });
     }
 
+    private static (int Active, double SecondsIntoWord) GetActiveWord(PreviewTextLayout layout, double p)
+    {
+        var progress = Clamp01(p / 0.9) * layout.WordCount;
+        var active = Math.Min(layout.WordCount - 1, (int)progress);
+        return (active, (progress - active) * CycleSeconds * 0.9 / layout.WordCount);
+    }
+
+    private static (double Left, double Right, double Top, double Height) GetWordBounds(PreviewTextLayout layout, int word)
+    {
+        double left = double.MaxValue, right = double.MinValue, top = 0, height = 0;
+        foreach (var g in layout.Glyphs)
+        {
+            if (g.Word == word && !g.IsSpace)
+            {
+                left = Math.Min(left, g.X);
+                right = Math.Max(right, g.X + g.Width);
+                top = g.Y;
+                height = g.Height;
+            }
+        }
+
+        return left > right ? (0, 0, 0, 0) : (left, right, top, height);
+    }
+
+    /// <summary>
+    /// Horizontal shift for a glyph when word <paramref name="active"/> is scaled by <paramref name="scale"/>:
+    /// the word grows around its center and pushes the rest of its line aside, like libass lays it out.
+    /// </summary>
+    private static double ScaledWordShift(PreviewGlyph g, int active, int activeLine, double wordLeft, double wordRight, double scale)
+    {
+        if (g.Line != activeLine)
+        {
+            return 0;
+        }
+
+        var extra = (scale - 1) * (wordRight - wordLeft) / 2;
+        if (g.Word < active)
+        {
+            return -extra;
+        }
+
+        return g.Word > active ? extra : (g.X + g.Width / 2 - (wordLeft + wordRight) / 2) * (scale - 1);
+    }
+
+    private static int GetWordLine(PreviewTextLayout layout, int word)
+    {
+        foreach (var g in layout.Glyphs)
+        {
+            if (g.Word == word && !g.IsSpace)
+            {
+                return g.Line;
+            }
+        }
+
+        return 0;
+    }
+
+    // a quick overshoot when a word becomes active: 1.12 -> 1 over ~0.12 s
+    private static double WordPopScale(double secondsIntoWord, double from = 1.12) =>
+        secondsIntoWord >= 0.12 ? 1 : from + (1 - from) * EaseOutCubic(secondsIntoWord / 0.12);
+
+    private static void DrawHighlightBox(DrawingContext ctx, PreviewTextLayout layout, Point origin, double p, AdvancedEffectHighlightBox? effect)
+    {
+        var boxColor = effect?.BoxColor ?? Color.FromRgb(0x7C, 0x3A, 0xED);
+        var activeBrush = new SolidColorBrush(effect?.ActiveTextColor ?? Colors.White);
+        var (active, seconds) = GetActiveWord(layout, p);
+        var (left, right, top, height) = GetWordBounds(layout, active);
+        var s = WordPopScale(seconds, 1.1);
+        var center = new Point(origin.X + (left + right) / 2, origin.Y + top + height / 2);
+        var pad = layout.FontSize * 0.16;
+        var line = GetWordLine(layout, active);
+        using (ctx.PushTransform(ScaleAbout(center, s, s)))
+        {
+            var box = new Rect(origin.X + left - pad, origin.Y + top + height * 0.08, right - left + pad * 2, height * 0.92);
+            ctx.DrawRectangle(new SolidColorBrush(boxColor), null, box, layout.FontSize * 0.06, layout.FontSize * 0.06);
+        }
+
+        DrawText(ctx, layout, origin, g => g.Word == active
+            ? GlyphStyle.Default(activeBrush) with { ScaleX = s, ScaleY = s, Dx = ScaledWordShift(g, active, line, left, right, s) }
+            : GlyphStyle.Default(Brushes.White) with { Dx = ScaledWordShift(g, active, line, left, right, s) });
+    }
+
+    private static void DrawSingleWordPop(DrawingContext ctx, Rect bounds, string text, double fontSize, double p, AdvancedEffectSingleWordPop? effect)
+    {
+        var words = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (words.Length == 0)
+        {
+            return;
+        }
+
+        var progress = Clamp01(p / 0.9) * words.Length;
+        var active = Math.Min(words.Length - 1, (int)progress);
+        var seconds = (progress - active) * CycleSeconds * 0.9 / words.Length;
+        var size = Math.Clamp((effect?.TextSizePercent ?? 150) / 100.0, 0.5, 2.2);
+        var layout = GetLayout(words[active], fontSize * size, bounds.Width * 0.9, 1);
+        var origin = new Point(bounds.X + (bounds.Width - layout.Width) / 2, bounds.Bottom - layout.Height - bounds.Height * 0.1);
+        var center = new Point(origin.X + layout.Width / 2, origin.Y + layout.Height / 2);
+        var s = seconds < 0.09
+            ? 0.55 + (1.12 - 0.55) * EaseOutCubic(seconds / 0.09)
+            : WordPopScale(seconds - 0.09);
+        var fill = new SolidColorBrush(effect?.TextColor ?? Colors.White);
+        using (ctx.PushTransform(ScaleAbout(center, s, s)))
+        {
+            DrawText(ctx, layout, origin, g => GlyphStyle.Default(fill));
+        }
+    }
+
+    private static void DrawBoldCaptions(DrawingContext ctx, PreviewTextLayout layout, Point origin, double p, AdvancedEffectBoldCaptions? effect)
+    {
+        var highlight = new SolidColorBrush(effect?.HighlightColor ?? Color.FromRgb(0xFF, 0xD6, 0x0A));
+        var (active, seconds) = GetActiveWord(layout, p);
+        var (left, right, _, _) = GetWordBounds(layout, active);
+        var line = GetWordLine(layout, active);
+        var s = 1.15 * WordPopScale(seconds, 1.09);
+        DrawText(ctx, layout, origin, g => g.Word == active
+            ? GlyphStyle.Default(highlight) with { ScaleX = s, ScaleY = s, Dx = ScaledWordShift(g, active, line, left, right, s) }
+            : GlyphStyle.Default(Brushes.White) with { Dx = ScaledWordShift(g, active, line, left, right, s) }, outlineScale: 1.6);
+    }
+
+    private static void DrawSmoothFill(DrawingContext ctx, PreviewTextLayout layout, Point origin, double p, AdvancedEffectSmoothFill? effect)
+    {
+        var fill = new SolidColorBrush(effect?.FillColor ?? Color.FromRgb(0xFF, 0xD6, 0x0A));
+        var baseBrush = new SolidColorBrush(effect?.BaseColor ?? Colors.White);
+        var progress = Clamp01(p / 0.9) * layout.WordCount;
+        var active = Math.Min(layout.WordCount - 1, (int)progress);
+        var fraction = progress - active;
+        DrawText(ctx, layout, origin, g => GlyphStyle.Default(g.Word < active ? fill : baseBrush));
+
+        // the active word: the fill sweeps across it left to right
+        var (left, right, top, height) = GetWordBounds(layout, active);
+        using (ctx.PushClip(new Rect(origin.X + left - layout.FontSize * 0.2, origin.Y + top - layout.FontSize * 0.2, (right - left) * fraction + layout.FontSize * 0.2, height + layout.FontSize * 0.4)))
+        {
+            DrawText(ctx, layout, origin, g => GlyphStyle.Default(fill) with { Opacity = g.Word == active ? 1 : 0 });
+        }
+    }
+
+    private static void DrawBlurInWords(DrawingContext ctx, PreviewTextLayout layout, Point origin, double p, AdvancedEffectBlurInWords? effect)
+    {
+        var rise = effect?.Rise ?? true;
+        var seconds = p * CycleSeconds;
+        var perWord = CycleSeconds * 0.8 / layout.WordCount;
+        DrawText(ctx, layout, origin, g =>
+        {
+            var local = seconds - g.Word * perWord;
+            if (local <= 0)
+            {
+                return GlyphStyle.Default(Brushes.White) with { Opacity = 0 };
+            }
+
+            var reveal = Clamp01(local / 0.25);
+            var sy = !rise ? 1 : local < 0.25 ? 0.4 + (1.12 - 0.4) * EaseOutCubic(reveal) : WordPopScale(local - 0.25);
+            return GlyphStyle.Default(Brushes.White) with
+            {
+                Opacity = reveal,
+                ScaleY = sy,
+                Dy = (1 - sy) * g.Height * 0.25, // grow from the baseline, not the middle
+                Glow = reveal < 1 ? Color.FromArgb((byte)(200 * (1 - reveal)), 0xFF, 0xFF, 0xFF) : null,
+            };
+        });
+    }
+
+    private static void DrawRollingCaptions(DrawingContext ctx, Rect bounds, string text, double fontSize, double p)
+    {
+        var words = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        var half = Math.Max(1, (words.Length + 1) / 2);
+        var first = GetLayout(string.Join(' ', words.Take(half)), fontSize, bounds.Width * 0.9, 1);
+        var second = GetLayout(words.Length > half ? string.Join(' ', words.Skip(half)) : string.Join(' ', words), fontSize, bounds.Width * 0.9, 1);
+        var bottom = bounds.Bottom - bounds.Height * 0.1;
+        var slide = first.LineHeight * 0.8;
+
+        // first line slides in, then the second slides in and pushes it up
+        var firstIn = EaseOutCubic(Clamp01(p / 0.08));
+        var secondIn = EaseOutCubic(Clamp01((p - 0.45) / 0.08));
+        var fadeOut = Clamp01((1 - p) / 0.06);
+        var firstY = bottom - first.Height + (1 - firstIn) * slide - secondIn * second.LineHeight;
+        var firstOpacity = Math.Min(firstIn, 1 - 0.45 * secondIn) * fadeOut;
+        DrawText(ctx, first, new Point(bounds.X + (bounds.Width - first.Width) / 2, firstY), g => GlyphStyle.Default(Brushes.White) with { Opacity = firstOpacity });
+        if (p >= 0.45)
+        {
+            var secondY = bottom - second.Height + (1 - secondIn) * slide;
+            DrawText(ctx, second, new Point(bounds.X + (bounds.Width - second.Width) / 2, secondY), g => GlyphStyle.Default(Brushes.White) with { Opacity = secondIn * fadeOut });
+        }
+    }
+
     private static void DrawGlitch(DrawingContext ctx, Rect bounds, PreviewTextLayout layout, Point origin, double time)
     {
         var frame = (int)(time * 12);
@@ -796,9 +1010,9 @@ public static class EffectPreviewRenderer
         }, outline: false);
     }
 
-    private static void DrawText(DrawingContext ctx, PreviewTextLayout layout, Point origin, Func<PreviewGlyph, GlyphStyle> styleFor, bool outline = true)
+    private static void DrawText(DrawingContext ctx, PreviewTextLayout layout, Point origin, Func<PreviewGlyph, GlyphStyle> styleFor, bool outline = true, double outlineScale = 1)
     {
-        var outlineWidth = Math.Max(1, layout.FontSize * 0.12);
+        var outlineWidth = Math.Max(1, layout.FontSize * 0.12 * outlineScale);
         foreach (var glyph in layout.Glyphs)
         {
             if (glyph.IsSpace)

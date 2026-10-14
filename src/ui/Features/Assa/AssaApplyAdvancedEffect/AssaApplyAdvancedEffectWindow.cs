@@ -577,6 +577,29 @@ public class AssaApplyAdvancedEffectWindow : Window
                 AddRow(l.AdvancedEffectFancyKaraokeInactiveColor, UiUtil.MakeColorPickerButton(fancyKaraoke, nameof(AdvancedEffectFancyKaraoke.InactiveWordColor), true));
                 break;
             }
+            case AdvancedEffectHighlightBox highlightBox:
+                AddRow(l.AdvancedEffectBoxColor, UiUtil.MakeColorPickerButton(highlightBox, nameof(AdvancedEffectHighlightBox.BoxColor), false));
+                AddRow(l.AdvancedEffectFancyKaraokeActiveColor, UiUtil.MakeColorPickerButton(highlightBox, nameof(AdvancedEffectHighlightBox.ActiveTextColor), false));
+                AddRow(l.AdvancedEffectUpperCase, UiUtil.MakeCheckBox(highlightBox, nameof(AdvancedEffectHighlightBox.UpperCase)));
+                break;
+            case AdvancedEffectSingleWordPop singleWordPop:
+                AddRow(Se.Language.General.TextColor, UiUtil.MakeColorPickerButton(singleWordPop, nameof(AdvancedEffectSingleWordPop.TextColor), false));
+                AddRow(l.AdvancedEffectTextSizePercent, UiUtil.MakeNumericUpDownInt(50, 500, 150, 140, singleWordPop, nameof(AdvancedEffectSingleWordPop.TextSizePercent)));
+                AddRow(l.AdvancedEffectUpperCase, UiUtil.MakeCheckBox(singleWordPop, nameof(AdvancedEffectSingleWordPop.UpperCase)));
+                break;
+            case AdvancedEffectBoldCaptions boldCaptions:
+                AddRow(l.AdvancedEffectHighlightColor, UiUtil.MakeColorPickerButton(boldCaptions, nameof(AdvancedEffectBoldCaptions.HighlightColor), false));
+                AddRow(l.AdvancedEffectUpperCase, UiUtil.MakeCheckBox(boldCaptions, nameof(AdvancedEffectBoldCaptions.UpperCase)));
+                break;
+            case AdvancedEffectSmoothFill smoothFill:
+                AddRow(l.AdvancedEffectFillColor, UiUtil.MakeColorPickerButton(smoothFill, nameof(AdvancedEffectSmoothFill.FillColor), false));
+                AddRow(Se.Language.General.TextColor, UiUtil.MakeColorPickerButton(smoothFill, nameof(AdvancedEffectSmoothFill.BaseColor), false));
+                AddRow(l.AdvancedEffectUpperCase, UiUtil.MakeCheckBox(smoothFill, nameof(AdvancedEffectSmoothFill.UpperCase)));
+                break;
+            case AdvancedEffectBlurInWords blurInWords:
+                AddRow(l.AdvancedEffectRise, UiUtil.MakeCheckBox(blurInWords, nameof(AdvancedEffectBlurInWords.Rise)));
+                AddRow(l.AdvancedEffectUpperCase, UiUtil.MakeCheckBox(blurInWords, nameof(AdvancedEffectBlurInWords.UpperCase)));
+                break;
             case AdvancedEffectLowerThird lowerThird:
                 AddRow(l.AdvancedEffectLowerThirdAccentColor, UiUtil.MakeColorPickerButton(lowerThird, nameof(AdvancedEffectLowerThird.AccentColor), false));
                 break;
