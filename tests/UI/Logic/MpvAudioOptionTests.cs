@@ -136,6 +136,7 @@ public class MpvAudioOptionTests
         "sub-use-margins",
         "vo",
         "wid",
+        "ytdl-raw-options",
     };
 
     private static string PlayerSourcePath => Path.Combine(
