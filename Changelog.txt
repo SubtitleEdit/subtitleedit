@@ -67,6 +67,19 @@ Translations and engines:
 * All language files synced with English
 * Updated engines: Crisp ASR v0.8.43, whisper.cpp v1.9.5, llama.cpp b11553, CrispEmbed v0.17.12, audio.cpp v0.9.1, WhisperX build 103, FFmpeg 9.0.2 (Windows), libVLC 3.0.24 (Windows), Avalonia 12.1.4 and Flatpak runtime 26.08
 
+Fixes since 5.3.0-rc4:
+* Fix "Apply duration limits" creating overlaps when extending - it now keeps the minimum gap - thx willian-as
+* Fix MP4 burn-in with AAC audio stretching the first video frame (black start in Adobe Audition) - thx BrainDeLook
+* Fix Save as over the original's file losing the translation on later saves - thx mister-pc
+* Fix changing the UI language resetting the dragged main window layout - thx FunkyKnilch
+* Fix grid/text box shortcuts not working while the waveform or video player has focus - thx kadrimarzouki
+* Fix "Surround with" losing the whole-line selection when the text box is not focused - thx kadrimarzouki
+* Fix remaining layout 14 jitter (no thumbnail extraction while the video plays) - thx ruonghieu
+* Fix Linux crash in HarfBuzz with Indic scripts when distro packages move the native library - thx erratos
+* Fix Settings search not matching English names with a translated UI - thx FunkyKnilch
+* Fix IMSC 1.1 dropping trailing <br/> forced line breaks - thx chiragjangiir
+* Fix Japanese missing from the Crisp ASR Parakeet languages - thx jodilife
+
   A big thank you to everyone who tested the pre-releases, reported issues and
   contributed code and translations - and a special thanks to Anthropic for
   sponsoring a Claude subscription used in the development of this release :)
