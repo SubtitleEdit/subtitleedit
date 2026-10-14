@@ -468,8 +468,14 @@ modules:
       # AppStream metainfo
       - install -Dm644 installer/flatpak/dk.nikse.subtitleedit.metainfo.xml /app/share/metainfo/dk.nikse.subtitleedit.metainfo.xml
 
-      # Icon (256x256 PNG from the source tree)
+      # Icon (256x256 PNG from the source tree, plus pre-scaled smaller sizes so
+      # desktop menus/panels don't show a blank icon when they look up e.g. 48x48)
       - install -Dm644 src/ui/Assets/SE.png /app/share/icons/hicolor/256x256/apps/dk.nikse.subtitleedit.png
+      - |
+        for size in 16 24 32 48 64 128; do
+          install -Dm644 "installer/flatpak/icons/dk.nikse.subtitleedit-${size}.png" \
+            "/app/share/icons/hicolor/${size}x${size}/apps/dk.nikse.subtitleedit.png"
+        done
 
       # MIT license — distribute the project's terms alongside the app (issue #11278).
       - install -Dm644 LICENSE /app/share/licenses/dk.nikse.subtitleedit/LICENSE
@@ -486,15 +492,11 @@ modules:
       # regeneration pass before merging; see ../flathub/README.md.
       - type: git
         url: https://github.com/SubtitleEdit/subtitleedit.git
-        tag: v5.2.0
-        commit: d8e3b8b41e856a896c541ce7e59b490a99c21196
+        tag: v5.3.0
+        commit: 89f14c8273cac44bae33a613d3adf4a6efe6b3ad
         x-checker-data:
           type: git
           tag-pattern: ^v(\d+\.\d+\.\d+)$
-
-      - type: shell
-        commands:
-          - sed -i 's|/subtitleedit/images/main.png|/subtitleedit/screenshots/main-window.png|' installer/flatpak/dk.nikse.subtitleedit.metainfo.xml
 
       # NuGet packages pre-fetched for the exact commit pinned above.
       # Regenerate with ./prepare-flathub-release.sh whenever the pin changes.
