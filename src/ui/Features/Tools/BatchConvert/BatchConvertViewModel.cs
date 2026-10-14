@@ -49,6 +49,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.UiLogic.BatchConvert;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.Logic.Plugins;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -301,6 +302,12 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     // Renumber
     [ObservableProperty] private int _renumberStartNumber = 1;
 
+    // Run plugin - only enabled plugins whose manifest says they support batch convert
+    [ObservableProperty] private ObservableCollection<string> _runPluginNames = new();
+    [ObservableProperty] private string? _selectedRunPluginName;
+    [ObservableProperty] private bool _hasRunPlugins;
+    private List<InstalledPlugin> _batchPlugins = new();
+
     // Merge continuation lines
     [ObservableProperty] private int _mergeContinuationLinesMaxMillisecondsBetweenLines = 250;
     [ObservableProperty] private int _mergeContinuationLinesMaxCharacters = 86;
@@ -343,6 +350,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     private readonly IFolderHelper _folderHelper;
     private readonly IBatchConverter _batchConverter;
     private readonly IBatchConvertItemSplitter _batchConvertItemSplitter;
+    private readonly IPluginCatalog _pluginCatalog;
+    private readonly IPluginRunner _pluginRunner;
     private CancellationToken _cancellationToken;
     private CancellationTokenSource _cancellationTokenSource;
 
@@ -360,13 +369,18 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         IFileHelper fileHelper,
         IBatchConverter batchConverter,
         IFolderHelper folderHelper,
-        IBatchConvertItemSplitter batchConvertItemSplitter)
+        IBatchConvertItemSplitter batchConvertItemSplitter,
+        IPluginCatalog pluginCatalog,
+        IPluginRunner pluginRunner)
     {
         _windowService = windowService;
         _fileHelper = fileHelper;
         _batchConverter = batchConverter;
         _folderHelper = folderHelper;
         _batchConvertItemSplitter = batchConvertItemSplitter;
+        _pluginCatalog = pluginCatalog;
+        _pluginRunner = pluginRunner;
+        LoadBatchPlugins();
 
         BatchItems = new ObservableCollection<BatchConvertItem>();
         _allBatchItems = new List<BatchConvertItem>();
@@ -911,6 +925,12 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         // Renumber
         Se.Settings.Tools.BatchConvert.RenumberStartNumber = RenumberStartNumber;
 
+        // Run plugin - keep the saved name when the plugin is (temporarily) not installed
+        if (SelectedRunPluginName != null)
+        {
+            Se.Settings.Tools.BatchConvert.RunPluginName = SelectedRunPluginName;
+        }
+
         // Merge continuation lines
         Se.Settings.Tools.BatchConvert.MergeContinuationLinesMaxGapMs = MergeContinuationLinesMaxMillisecondsBetweenLines;
         Se.Settings.Tools.BatchConvert.MergeContinuationLinesMaxCharacters = MergeContinuationLinesMaxCharacters;
@@ -1110,6 +1130,10 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         // Renumber
         RenumberStartNumber = Se.Settings.Tools.BatchConvert.RenumberStartNumber;
+
+        // Run plugin
+        SelectedRunPluginName = RunPluginNames.FirstOrDefault(p => p == Se.Settings.Tools.BatchConvert.RunPluginName)
+                                ?? RunPluginNames.FirstOrDefault();
 
         // Merge continuation lines - max characters 0 = max line length x max number of lines, like the dialog
         MergeContinuationLinesMaxMillisecondsBetweenLines = Se.Settings.Tools.BatchConvert.MergeContinuationLinesMaxGapMs;
@@ -1414,6 +1438,11 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         }
 
         if (!await EnsureLlamaCppAvailable(config))
+        {
+            return;
+        }
+
+        if (!await EnsureRunPluginAvailable(config))
         {
             return;
         }
@@ -1766,6 +1795,102 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         }
 
         return true;
+    }
+
+    private async Task<bool> EnsureRunPluginAvailable(BatchConvertConfig config)
+    {
+        if (!config.RunPlugin.IsActive || config.RunPlugin.Plugin is { CanRun: true })
+        {
+            return true;
+        }
+
+        await MessageBox.Show(
+            Window,
+            Se.Language.General.Error,
+            config.RunPlugin.Plugin == null
+                ? string.Format(Se.Language.Plugins.PluginXNotAvailable, config.RunPlugin.PluginName)
+                : string.Format(Se.Language.Plugins.PluginXHasNoExecutable, config.RunPlugin.PluginName),
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Error);
+        return false;
+    }
+
+    private void LoadBatchPlugins()
+    {
+        try
+        {
+            _batchPlugins = _pluginCatalog.GetPlugins()
+                .Where(p => p.Manifest.Batch && !Se.Settings.Plugins.DisabledPluginNames.Contains(p.Manifest.Name))
+                .OrderBy(p => p.Manifest.Name, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Failed to load plugins for batch convert");
+            _batchPlugins = new List<InstalledPlugin>();
+        }
+
+        RunPluginNames = new ObservableCollection<string>(_batchPlugins.Select(p => p.Manifest.Name));
+        HasRunPlugins = RunPluginNames.Count > 0;
+    }
+
+    private InstalledPlugin? GetSelectedRunPlugin()
+    {
+        return _batchPlugins.FirstOrDefault(p => p.Manifest.Name == SelectedRunPluginName);
+    }
+
+    /// <summary>
+    /// Sends a "configure" request: the plugin shows only its settings and returns them, so the
+    /// next batch run (which never shows plugin UI) uses them.
+    /// </summary>
+    [RelayCommand]
+    private async Task ConfigureRunPlugin()
+    {
+        var plugin = GetSelectedRunPlugin();
+        if (Window == null || plugin == null)
+        {
+            return;
+        }
+
+        if (!plugin.CanRun)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error,
+                string.Format(Se.Language.Plugins.PluginXHasNoExecutable, plugin.Manifest.Name),
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        var request = PluginRequestHelper.CreateRequest(plugin, PluginConstants.RequestTypeConfigure);
+        request.Subtitle = new PluginSubtitle { Format = SelectedTargetFormat ?? string.Empty };
+        var runResult = await _pluginRunner.RunAsync(plugin, request, CancellationToken.None);
+        if (runResult.WasCancelled)
+        {
+            return;
+        }
+
+        if (!runResult.Succeeded || runResult.Response == null)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error,
+                runResult.ErrorMessage ?? string.Format(Se.Language.Plugins.PluginXFailed, plugin.Manifest.Name),
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        var response = runResult.Response;
+        if (response.Status == PluginConstants.StatusError)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error,
+                string.IsNullOrWhiteSpace(response.Message)
+                    ? string.Format(Se.Language.Plugins.PluginXReportedError, plugin.Manifest.Name)
+                    : response.Message!,
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        if (response.Status == PluginConstants.StatusOk)
+        {
+            PluginRequestHelper.SaveSettings(plugin, response);
+        }
     }
 
     private async Task<bool> EnsureLlamaCppAvailable(BatchConvertConfig config)
@@ -3673,6 +3798,13 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                 IsActive = activeFunctions.Contains(BatchConvertFunctionType.MergeContinuationLines),
                 MaxMillisecondsBetweenLines = MergeContinuationLinesMaxMillisecondsBetweenLines,
                 MaxCharacters = MergeContinuationLinesMaxCharacters,
+            },
+
+            RunPlugin = new BatchConvertConfig.RunPluginSettings
+            {
+                IsActive = activeFunctions.Contains(BatchConvertFunctionType.RunPlugin),
+                PluginName = SelectedRunPluginName ?? Se.Settings.Tools.BatchConvert.RunPluginName,
+                Plugin = GetSelectedRunPlugin(),
             },
 
             ConvertActors = new BatchConvertConfig.ConvertActorsSettings
