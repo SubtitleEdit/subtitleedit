@@ -22,14 +22,29 @@ public class ExportPlainTextWindow : Window
         DataContext = vm;
 
         // Encoding section + buttons
-        var labelEncoding = UiUtil.MakeLabel(Se.Language.General.Encoding).WithBold().WithMarginTop(10);
+        var labelEncoding = UiUtil.MakeLabel(Se.Language.General.Encoding).WithBold().WithMarginTop(10)
+            .WithBindIsVisible(nameof(vm.IsNotBatchMode));
         var comboBoxEncoding = UiUtil.MakeComboBox(vm.Encodings, vm, nameof(vm.SelectedEncoding))
             .WithMinWidth(180)
-            .WithMarginRight(10);
-        var buttonSaveAs = UiUtil.MakeButton(Se.Language.General.SaveDotDotDot, vm.SaveAsCommand);
-        buttonSaveAs.IsDefault = true; // the dialog's accept button - Enter runs it (#14586)
-        var buttonDone = UiUtil.MakeButtonDone(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar( labelEncoding, comboBoxEncoding, buttonSaveAs, buttonDone);
+            .WithMarginRight(10)
+            .WithBindIsVisible(nameof(vm.IsNotBatchMode));
+        var buttonSaveAs = UiUtil.MakeButton(Se.Language.General.SaveDotDotDot, vm.SaveAsCommand)
+            .WithBindIsVisible(nameof(vm.IsNotBatchMode));
+        var buttonDone = UiUtil.MakeButtonDone(vm.CancelCommand)
+            .WithBindIsVisible(nameof(vm.IsNotBatchMode));
+
+        // Batch convert mode: OK stores the options, Cancel leaves them as they were.
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand)
+            .WithBindIsVisible(nameof(vm.IsBatchMode));
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand)
+            .WithBindIsVisible(nameof(vm.IsBatchMode));
+
+        // The accept button answers Enter (#14586) - only the visible one, so a hidden Save as
+        // never runs in batch mode.
+        buttonSaveAs.Bind(Button.IsDefaultProperty, new Binding(nameof(vm.IsNotBatchMode)));
+        buttonDone.Bind(Button.IsDefaultProperty, new Binding(nameof(vm.IsNotBatchMode)));
+        buttonOk.Bind(Button.IsDefaultProperty, new Binding(nameof(vm.IsBatchMode)));
+        var panelButtons = UiUtil.MakeButtonBar(labelEncoding, comboBoxEncoding, buttonSaveAs, buttonDone, buttonOk, buttonCancel);
 
         var grid = new Grid
         {
@@ -50,19 +65,19 @@ public class ExportPlainTextWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(MakeSettingsView(vm), 0);
+        grid.Add(MakeSettingsView(vm, out var firstSettingsControl), 0);
         grid.Add(MakePreviewView(vm), 0, 1);
         grid.Add(panelButtons, 2, 0, 1, 2);
 
         Content = grid;
 
-        UiUtil.FocusOnFirstActivation(this, comboBoxEncoding); // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, () => (vm.IsBatchMode ? firstSettingsControl : comboBoxEncoding).Focus()); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.OnKeyDown;
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
     }
 
-    private static Grid MakeSettingsView(ExportPlainTextViewModel vm)
+    private static Grid MakeSettingsView(ExportPlainTextViewModel vm, out Control firstSettingsControl)
     {
         var grid = new Grid
         {
@@ -85,6 +100,7 @@ public class ExportPlainTextWindow : Window
         var labelLineNumbers = UiUtil.MakeLabel(Se.Language.File.Export.LineNumbers).WithBold().WithMarginTop(10);
         var checkBoxShowLineNumbers = UiUtil.MakeCheckBox(Se.Language.File.Export.ShowLineNumbers, vm, nameof(vm.ShowLineNumbers));
         checkBoxShowLineNumbers.IsCheckedChanged += (s, e) => vm.SetDirty();
+        firstSettingsControl = checkBoxShowLineNumbers;
         var checkBoxAddNewLineAfterLineNumber = UiUtil.MakeCheckBox(Se.Language.File.Export.AddNewLineAfterLineNumber, vm, nameof(vm.AddNewLineAfterLineNumber))
             .WithBindEnabled(nameof(vm.ShowLineNumbers));
         checkBoxAddNewLineAfterLineNumber.IsCheckedChanged += (s, e) => vm.SetDirty();
