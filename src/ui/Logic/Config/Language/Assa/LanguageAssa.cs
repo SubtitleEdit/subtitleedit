@@ -76,6 +76,20 @@ public class LanguageAssa
     public string DrawClipArtRedCross { get; set; }
     public string DrawClipArtThumbsUp { get; set; }
     public string DrawClipArtGoldStar { get; set; }
+    public string DrawClipArtBrokenHeart { get; set; }
+    public string DrawClipArtGhost { get; set; }
+    public string DrawClipArtSkull { get; set; }
+    public string DrawClipArtSnowflake { get; set; }
+    public string DrawClipArtMoonAndStars { get; set; }
+    public string DrawClipArtRainCloud { get; set; }
+    public string DrawClipArtBomb { get; set; }
+    public string DrawClipArtGift { get; set; }
+    public string DrawClipArtCrown { get; set; }
+    public string DrawClipArtClock { get; set; }
+    public string DrawClipArtClapperboard { get; set; }
+    public string DrawClipArtMicrophone { get; set; }
+    public string DrawClipArtWarningSign { get; set; }
+    public string DrawClipArtNoEntry { get; set; }
     public string DrawCategoryMyShapes { get; set; }
     public string DrawShapeSpeechBubble { get; set; }
     public string DrawShapeSpeechBubbleRight { get; set; }
@@ -479,6 +493,20 @@ public class LanguageAssa
         DrawClipArtRedCross = "Red cross";
         DrawClipArtThumbsUp = "Thumbs up";
         DrawClipArtGoldStar = "Gold star";
+        DrawClipArtBrokenHeart = "Broken heart";
+        DrawClipArtGhost = "Ghost";
+        DrawClipArtSkull = "Skull";
+        DrawClipArtSnowflake = "Snowflake";
+        DrawClipArtMoonAndStars = "Moon and stars";
+        DrawClipArtRainCloud = "Rain cloud";
+        DrawClipArtBomb = "Bomb";
+        DrawClipArtGift = "Gift";
+        DrawClipArtCrown = "Crown";
+        DrawClipArtClock = "Clock";
+        DrawClipArtClapperboard = "Clapperboard";
+        DrawClipArtMicrophone = "Microphone";
+        DrawClipArtWarningSign = "Warning sign";
+        DrawClipArtNoEntry = "No entry";
         DrawCategoryMyShapes = "My shapes";
         DrawShapeSpeechBubble = "Speech bubble";
         DrawShapeSpeechBubbleRight = "Speech bubble, tail right";
