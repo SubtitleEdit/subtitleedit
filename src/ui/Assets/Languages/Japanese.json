@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.3.0-rc4",
+  "version": "v5.3.0",
   "translatedBy": "hisui3393",
   "cultureName": "jp-JP",
   "general": {
@@ -527,7 +527,7 @@
     "rules": "ルール",
     "saveChangesMessage": "現在の字幕ファイルへの変更を保存しますか?",
     "saveChangesTitle": "変更を保存しますか?",
-    "saveChangesToX": " \"{0}\"への変更を保存しますか?",
+    "saveChangesToX": "\"{0}\"への変更を保存しますか?",
     "saveChangesToXOriginal": "別の字幕ファイル \"{0}\"への変更を保存しますか?",
     "saveDotDotDot": "保存...",
     "saveFileAsTitle": "ファイルに 名前を付けて保存",
@@ -665,7 +665,7 @@
     "subtitleFiles": "字幕ファイル",
     "subtitleFormats": "字幕フォーマット",
     "subtitleLoadedX": "字幕が読み込まれました: {0}",
-    "subtitleReloadedChangedOutsideX": "外部で変更された字幕を再読み込みしました",
+    "subtitleReloadedChangedOutsideX": "外部で変更された字幕を再読み込みしました: {0}",
     "suffix": "接尾語",
     "suggestions": "候補",
     "sync": "同期",
@@ -895,7 +895,7 @@
       "commandPalette": "コマンドパレット...",
       "rightToLeftMode": "右から左モード",
       "modifySelectionDotDotDot": "選択範囲を変更",
-      "tools": " ツール",
+      "tools": "ツール",
       "adjustDurations": "_表示時間の調整",
       "applyDurationLimits": "表示時間の適用",
       "batchConvert": "_一括変換",
@@ -2239,7 +2239,7 @@
       "deletePreset": "プリセットを削除",
       "presetName": "プリセット名",
       "deletePresetX": "プリセット「{0}」を削除しますか？"
-          },
+    },
     "changeCasing": {
       "fixNames": "名前を修正",
       "namesX": "名前数: {0:#,##0}",
@@ -2905,7 +2905,7 @@
       "deleteSelectedShotChangeQuestion": "選択したショット変更を削除しますか?",
       "shotChanges": "ショットチェンジ",
       "exportShotChanges": "ショットチェンジをエクスポート"
-          },
+    },
     "chapters": {
       "title": "チャプター",
       "chaptersDotDotDot": "チャプター...",
@@ -3572,6 +3572,7 @@
       "timeCodeModeTime": "時間（hh:mm:ss,zzz）",
       "timeCodeModeFrames": "フレーム（hh:mm:ss:ff）",
       "timeCodeModeFrameNumbers": "フレーム番号",
+      "frameModeSnapToVideoFrames": "時間を動画のフレームに合わせて保存（各秒内のフレームではなく）",
       "textBoxLimitNewLines": "テキストボックスの行数を制限します",
       "mpvOpenGl": "GPU (OpenGL):高速,滑らか",
       "mpvSoftwareRendering": "CPUのみ:互換性重視(低速)",

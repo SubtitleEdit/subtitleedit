@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.3.0-rc4",
+  "version": "v5.3.0",
   "translatedBy": "",
   "cultureName": "en-US",
   "general": {
@@ -1093,7 +1093,7 @@
     "deleteTextAndShiftCellsUp": "Delete text and shift cells up",
     "endTimeMustBeAfterStartTime": "End time must be after start time.",
     "errorLoad7Zip": "This file seems to be a compressed 7-Zip file.\n\nSubtitle Edit cannot open compressed files.",
-    "errorLoadBinaryZeroes": "Sorry, this file contains only binary zeroes!\n\nIf you have edited this file with Subtitle Edit you might be able to find a backup via the menu item File -&gt; Restore auto-backup...",
+    "errorLoadBinaryZeroes": "Sorry, this file contains only binary zeroes!\n\nIf you have edited this file with Subtitle Edit you might be able to find a backup via the menu item File -> Restore auto-backup...",
     "errorLoadGZip": "This file seems to be a compressed GZip file.\n\nSubtitle Edit cannot open compressed files.",
     "errorLoadLargeFile": "This file is too large to open as a subtitle file.",
     "errorLoadVideoFilePrompt": "This file seems to be a video file:\n{0}\n\nYou can open a video via \"Video -> Open video\" or by dragging and dropping a video onto the video player.\n\nDo you want to open it as a video file?",

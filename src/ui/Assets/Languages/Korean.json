@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.3.0-rc3",
+  "version": "v5.3.0",
   "translatedBy": "Hack茶ん, 12시27분(@12si27)",
   "cultureName": "ko-KR",
   "general": {
@@ -3572,6 +3572,7 @@
       "timeCodeModeTime": "시간 (hh:mm:ss,zzz)",
       "timeCodeModeFrames": "프레임 (hh:mm:ss:ff)",
       "timeCodeModeFrameNumbers": "프레임 번호",
+      "frameModeSnapToVideoFrames": "시간을 동영상 프레임에 맞춰 저장 (초 단위 내 프레임이 아님)",
       "textBoxLimitNewLines": "자막 입력칸 줄 수 제한",
       "mpvOpenGl": "libmpv - OpenGL",
       "mpvSoftwareRendering": "libmpv - 소프트웨어 렌더링(느림)",
