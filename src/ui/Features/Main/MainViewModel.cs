@@ -33438,9 +33438,25 @@ public partial class MainViewModel :
                 }
             }
 
-            if (AudioVisualizer != null && AudioVisualizer.IsFocused)
+            var isWaveformFocused = AudioVisualizer != null && AudioVisualizer.IsFocused;
+            if (isWaveformFocused)
             {
                 var relayCommand = _shortcutManager.CheckShortcuts(keyEventArgs, CategoryWaveform);
+                if (relayCommand != null)
+                {
+                    keyEventArgs.Handled = true;
+                    relayCommand.Execute(null);
+                    return;
+                }
+            }
+
+            // Selecting a line by clicking the waveform (or using the video player's buttons/sliders)
+            // moves focus there, which left SubtitleGridAndTextBox shortcuts like "Toggle dialog
+            // dashes" dead until the grid or text box was clicked again. They act on the grid
+            // selection, so run them from these controls too, like SE 4 did (#16013).
+            if (isWaveformFocused || GetVideoPlayerControl()?.IsKeyboardFocusWithin == true)
+            {
+                var relayCommand = _shortcutManager.CheckShortcuts(keyEventArgs, CategorySubtitleGridAndTextBox);
                 if (relayCommand != null)
                 {
                     keyEventArgs.Handled = true;
