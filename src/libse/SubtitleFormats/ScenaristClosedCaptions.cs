@@ -691,24 +691,136 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             sb.AppendLine("Scenarist_SCC V1.0");
             sb.AppendLine();
             var language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
-            for (var i = 0; i < subtitle.Paragraphs.Count; i++)
+
+            // One byte pair is sent per frame, so everything is scheduled on a frame grid:
+            // timecodes must only go forward and two lines must never claim the same frame.
+            // A caption is loaded into non-displayed memory (94ae erases it first), so its
+            // load may only start once the previous caption has been flipped on screen (942f).
+            var cursor = 0; // first frame not yet used by a transmission
+            var pendingClear = -1; // frame of the previous caption's 942c, -1 = none
+            foreach (var p in subtitle.Paragraphs)
             {
-                var p = subtitle.Paragraphs[i];
                 var sccText = ToSccText(p.Text, language);
-                var loadData = $"94ae 94ae 9420 9420 {sccText}";
-                var preRollMilliseconds = CalculatePreRollMilliseconds(loadData);
-                var loadTime = Math.Max(0, p.StartTime.TotalMilliseconds - preRollMilliseconds);
+                var loadCodes = $"94ae 94ae 9420 9420 {sccText}".Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var startFrame = Math.Max(cursor, MillisecondsToFrame(p.StartTime.TotalMilliseconds));
 
-                sb.AppendLine($"{ToTimeCode(loadTime)}\t{loadData}");
-                sb.AppendLine();
-                sb.AppendLine($"{ToTimeCode(p.StartTime.TotalMilliseconds)}\t942f 942f");
-                sb.AppendLine();
+                // No room for the 942c pair before this caption is flipped on screen: the flip
+                // replaces the displayed caption anyway.
+                if (pendingClear >= 0 && StepFrames(pendingClear, 2) > startFrame)
+                {
+                    pendingClear = -1;
+                }
 
-                sb.AppendLine($"{ToTimeCode(p.EndTime.TotalMilliseconds)}\t942c 942c");
-                sb.AppendLine();
+                var loadStart = Math.Max(cursor, StepFrames(startFrame, -(loadCodes.Length + 2)));
+                int loadEnd;
+                if (pendingClear < 0 || loadStart >= StepFrames(pendingClear, 2))
+                {
+                    if (pendingClear >= 0)
+                    {
+                        AppendSccLine(sb, pendingClear, "942c 942c");
+                    }
+
+                    AppendSccLine(sb, loadStart, string.Join(" ", loadCodes));
+                    loadEnd = StepFrames(loadStart, loadCodes.Length);
+                }
+                else
+                {
+                    // The previous caption is cleared while this one should be loading: load it
+                    // before the clear. If there is not enough time for that, the clear waits
+                    // until the load is sent (a load is never split - decoders and our own
+                    // reader treat 942c inside a load differently), or is dropped when the flip
+                    // comes first anyway.
+                    var earlyStart = Math.Max(cursor, StepFrames(pendingClear, -loadCodes.Length));
+                    AppendSccLine(sb, earlyStart, string.Join(" ", loadCodes));
+                    loadEnd = StepFrames(earlyStart, loadCodes.Length);
+                    var clearFrame = Math.Max(pendingClear, loadEnd);
+                    if (StepFrames(clearFrame, 2) <= startFrame)
+                    {
+                        AppendSccLine(sb, clearFrame, "942c 942c");
+                        loadEnd = StepFrames(clearFrame, 2);
+                    }
+                }
+
+                var displayFrame = Math.Max(startFrame, loadEnd);
+                AppendSccLine(sb, displayFrame, "942f 942f");
+                cursor = StepFrames(displayFrame, 2);
+                pendingClear = Math.Max(cursor, MillisecondsToFrame(p.EndTime.TotalMilliseconds));
+            }
+
+            if (pendingClear >= 0)
+            {
+                AppendSccLine(sb, pendingClear, "942c 942c");
             }
 
             return sb.ToString();
+        }
+
+        private void AppendSccLine(StringBuilder sb, int frame, string codes)
+        {
+            sb.AppendLine($"{FrameToTimeCode(frame)}\t{codes}");
+            sb.AppendLine();
+        }
+
+        private static int TimeCodeFramesPerSecond => Math.Max(1, (int)Math.Round(Configuration.Settings.General.CurrentFrameRate));
+
+        /// <summary>
+        /// Frame number on the timecode label grid (seconds * fps + frame label), so it
+        /// converts back to the exact label. In drop-frame the skipped labels are numbers
+        /// no frame ever gets.
+        /// </summary>
+        private int MillisecondsToFrame(double totalMilliseconds)
+        {
+            var totalSeconds = (int)Math.Floor(Math.Max(0, totalMilliseconds) / 1000.0);
+            var frame = MillisecondsToFramesMaxFrameRate(Math.Max(0, totalMilliseconds) - totalSeconds * 1000.0);
+            frame = Math.Min(frame, TimeCodeFramesPerSecond - 1);
+            var result = totalSeconds * TimeCodeFramesPerSecond + frame;
+            while (IsDroppedFrameLabel(result))
+            {
+                result++;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 29.97 drop-frame skips frame numbers 00 and 01 at the start of every minute except
+        /// every tenth, so those labels do not exist in a DF file - emitting them produced
+        /// timecodes no DF-aware tool accepts. Same skip MacCaption10's StepToNextFrame and
+        /// <see cref="ParseTimeCode"/> apply.
+        /// </summary>
+        private bool IsDroppedFrameLabel(int frame)
+        {
+            if (!DropFrame || frame % TimeCodeFramesPerSecond >= 2)
+            {
+                return false;
+            }
+
+            var totalSeconds = frame / TimeCodeFramesPerSecond;
+            var minutes = totalSeconds / 60;
+            return totalSeconds % 60 == 0 && minutes % 10 != 0;
+        }
+
+        private int StepFrames(int frame, int count)
+        {
+            var direction = Math.Sign(count);
+            for (var i = Math.Abs(count); i > 0; i--)
+            {
+                do
+                {
+                    frame += direction;
+                }
+                while (IsDroppedFrameLabel(frame));
+            }
+
+            return Math.Max(0, frame);
+        }
+
+        private string FrameToTimeCode(int frame)
+        {
+            var framesPerSecond = TimeCodeFramesPerSecond;
+            var totalSeconds = frame / framesPerSecond;
+            var separator = DropFrame ? ";" : ":";
+            return $"{totalSeconds / 3600:00}:{totalSeconds / 60 % 60:00}:{totalSeconds % 60:00}{separator}{frame % framesPerSecond:00}";
         }
 
         // A style change is written as a CEA-608 mid-row code. It is put into the prepared line
@@ -1272,27 +1384,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             return $"{code} {code} ";
-        }
-
-        private string ToTimeCode(double totalMilliseconds)
-        {
-            var ts = TimeSpan.FromMilliseconds(totalMilliseconds);
-            if (DropFrame)
-            {
-                // 29.97 drop-frame skips frame numbers 00 and 01 at the start of every minute
-                // except every tenth, so those labels do not exist in a DF file - emitting them
-                // produced timecodes no DF-aware tool accepts. Same skip MacCaption10's
-                // StepToNextFrame already applies.
-                var frames = MillisecondsToFramesMaxFrameRate(ts.Milliseconds);
-                if (ts.Seconds == 0 && ts.Minutes % 10 != 0 && frames < 2)
-                {
-                    frames = 2;
-                }
-
-                return $"{ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00};{frames:00}";
-            }
-
-            return $"{ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00}:{MillisecondsToFramesMaxFrameRate(ts.Milliseconds):00}";
         }
 
         private static Dictionary<string, SccPositionAndStyle> _styleLookup;
@@ -1932,14 +2023,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var totalMilliseconds = hours * 3600000.0 + minutes * 60000.0 + seconds * 1000.0 + FramesToMilliseconds(frames);
             return new TimeCode(totalMilliseconds);
-        }
-
-        private static int CalculatePreRollMilliseconds(string loadData)
-        {
-            var frameDuration = Math.Max(1, FramesToMillisecondsMax999(1));
-            var codeCount = loadData.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).Length;
-            var frameCount = Math.Max(2, codeCount + 2);
-            return frameCount * frameDuration;
         }
 
         private static bool ContainsSccCommand(IEnumerable<string> parts, string command)
