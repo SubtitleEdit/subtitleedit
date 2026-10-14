@@ -17899,8 +17899,11 @@ public partial class MainViewModel :
             return;
         }
 
-        var focusedTextBox = selectedItems.Count == 1 ? GetFocusedTextBoxWrapper() : null;
-        var reselectAll = TextBoxSurroundToggler.IsWholeTextSelected(focusedTextBox);
+        // Not gated on focus: the edit box keeps (and shows) its selection without focus, and on
+        // Windows the box can briefly report no focus during an Alt shortcut - the stale range
+        // then cut off the last characters again (#16015).
+        var editTextBox = selectedItems.Count == 1 ? GetFocusedTextBoxWrapper() ?? EditTextBox : null;
+        var reselectAll = TextBoxSurroundToggler.IsWholeTextSelected(editTextBox);
 
         var newTexts = TextBoxSurroundToggler.ApplyToTexts(
             behavior, scope, surroundLeft, selectedItems.Select(p => p.Text), surroundRight);
@@ -17911,7 +17914,7 @@ public partial class MainViewModel :
 
         if (reselectAll)
         {
-            TextBoxSurroundToggler.SelectAllAfterTextChange(focusedTextBox!);
+            TextBoxSurroundToggler.SelectAllAfterTextChange(editTextBox!);
         }
 
         _updateAudioVisualizer = true;
