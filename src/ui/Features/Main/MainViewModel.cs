@@ -870,6 +870,8 @@ public partial class MainViewModel :
     private readonly HashSet<string> _waveformsBeingGenerated = new(StringComparer.OrdinalIgnoreCase);
     private readonly Lock _waveformsBeingGeneratedLock = new();
     private VideoPlayerControl? _fullScreenVideoPlayerControl;
+    private FullScreenVideoWindow? _fullScreenVideoWindow;
+    private bool _fullScreenOwnsKeyboard; // keys reaching the main window belong to the fullscreen window (#16039)
     private static readonly IBrush _transparentBrush = new ImmutableSolidColorBrush(Colors.Transparent);
     private static IBrush _errorBrush = new ImmutableSolidColorBrush(_errorColor);
     private SpellCheckDictionaryDisplay? _currentSpellCheckDictionary;
@@ -20083,6 +20085,12 @@ public partial class MainViewModel :
             control!.Position = _fullScreenVideoPlayerControl.PositionForRestore;
             control!.Volume = _fullScreenVideoPlayerControl.Volume;
             _fullScreenVideoPlayerControl = null;
+            _fullScreenVideoWindow = null;
+            _fullScreenOwnsKeyboard = false;
+            if (Window != null)
+            {
+                Window.Activated -= OnMainWindowActivatedWhileFullScreen;
+            }
 
             // A track switched while fullscreen (toggle-audio-track shortcut) only ever reached the
             // fullscreen player, so hand it to the player we are going back to - otherwise playback
@@ -20116,6 +20124,14 @@ public partial class MainViewModel :
             ReapplySelectedAudioTrack(readyPlayer); // the selected audio track (#12844)
             RefreshSubtitlePreview();               // and the subtitle itself (#13407)
         });
+        // Keys that still reach the main window while fullscreen is up are forwarded there (see
+        // TryForwardKeyDownToFullScreen) until the user goes back to the main window on purpose -
+        // by clicking it or activating it - e.g. to edit on another monitor.
+        _fullScreenVideoWindow = fullScreenWindow;
+        _fullScreenOwnsKeyboard = true;
+        fullScreenWindow.Activated += (_, _) => _fullScreenOwnsKeyboard = true;
+        fullScreenWindow.AddHandler(InputElement.PointerPressedEvent, (_, _) => _fullScreenOwnsKeyboard = true, RoutingStrategies.Tunnel, handledEventsToo: true);
+        Window!.Activated += OnMainWindowActivatedWhileFullScreen;
         fullScreenWindow.Show(Window!);
         _shortcutManager.ClearKeys();
 
@@ -20124,6 +20140,51 @@ public partial class MainViewModel :
         // fullscreen mpv core is initialized lazily by its rendering surface and has not even
         // loaded the video yet, so mpv rejected the sub-add and nothing tried again (#13407).
         RefreshSubtitlePreview();
+    }
+
+    private void OnMainWindowActivatedWhileFullScreen(object? sender, EventArgs e) => _fullScreenOwnsKeyboard = false;
+
+    /// <summary>
+    /// Sends a key that reached the main window to the fullscreen video window instead, when that
+    /// window should have had it. On some X11 window managers (Hyprland's XWayland) the fullscreen
+    /// window gets the OS focus but Avalonia never sees it activated, so keyboard focus - and with
+    /// it Escape and the seek keys - stayed in the main window. There, arrow keys could even reach
+    /// the main menu and hang the UI thread in Avalonia's menu navigation (#16039).
+    /// </summary>
+    private bool TryForwardKeyDownToFullScreen(KeyEventArgs e)
+    {
+        if (!_fullScreenOwnsKeyboard || _fullScreenVideoWindow is not { } fullScreenWindow || e.Handled)
+        {
+            return false;
+        }
+
+        if (Menu is { IsOpen: true })
+        {
+            Menu.Close();
+        }
+
+        fullScreenWindow.FocusVideo();
+        fullScreenWindow.HandleForwardedKeyDown(e);
+        e.Handled = true;
+        return true;
+    }
+
+    private bool TryForwardKeyUpToFullScreen(KeyEventArgs e)
+    {
+        if (!_fullScreenOwnsKeyboard || _fullScreenVideoWindow is not { } fullScreenWindow)
+        {
+            return false;
+        }
+
+        // Handled also keeps Avalonia's access-key handler from opening the main menu on an Alt
+        // release (the key-up handler is attached for both tunnel and bubble, so forward once).
+        if (!e.Handled)
+        {
+            fullScreenWindow.HandleForwardedKeyUp(e);
+            e.Handled = true;
+        }
+
+        return true;
     }
 
     private List<(string name, List<string> keys, IRelayCommand command)> BuildFullScreenShortcutBindings()
@@ -33042,6 +33103,11 @@ public partial class MainViewModel :
 
     internal void OnKeyDownHandler(object? sender, KeyEventArgs keyEventArgs)
     {
+        if (TryForwardKeyDownToFullScreen(keyEventArgs))
+        {
+            return;
+        }
+
         lock (_onKeyDownHandlerLock)
         {
             AudioVisualizer?.SetKeyModifiers(keyEventArgs);
@@ -33529,6 +33595,8 @@ public partial class MainViewModel :
     /// </summary>
     internal void OnPointerPressedHandler(object? sender, PointerPressedEventArgs e)
     {
+        _fullScreenOwnsKeyboard = false; // a click in the main window takes the keyboard back from fullscreen
+
         if (!e.KeyModifiers.HasFlag(KeyModifiers.Alt))
         {
             return; // plain clicks arm nothing, and this runs on every press in the window
@@ -33546,6 +33614,11 @@ public partial class MainViewModel :
 
     public void OnKeyUpHandler(object? sender, KeyEventArgs e)
     {
+        if (TryForwardKeyUpToFullScreen(e))
+        {
+            return;
+        }
+
         if (_setEndAtKeyUpLine != null)
         {
             var vp = GetVideoPlayerControl();
