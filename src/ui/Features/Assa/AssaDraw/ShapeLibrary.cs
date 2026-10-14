@@ -25,12 +25,19 @@ public sealed class ShapeLibraryItem
     /// </summary>
     public SeAssaDrawShape? UserShape { get; }
 
-    public ShapeLibraryItem(string name, string category, Func<List<DrawShape>> build, SeAssaDrawShape? userShape = null)
+    /// <summary>
+    /// Where text goes (a speech bubble's body), in the shape's own coordinates; null = no text area.
+    /// </summary>
+    public (float Left, float Top, float Right, float Bottom)? TextArea { get; }
+
+    public ShapeLibraryItem(string name, string category, Func<List<DrawShape>> build, SeAssaDrawShape? userShape = null,
+        (float Left, float Top, float Right, float Bottom)? textArea = null)
     {
         Name = name;
         Category = category;
         _build = build;
         UserShape = userShape;
+        TextArea = textArea;
     }
 
     /// <summary>
@@ -94,6 +101,17 @@ public sealed class ShapeLibraryItem
             }
 
             result.Add(shape);
+        }
+
+        // The text area belongs to the biggest part (the bubble, not the dots of a thought bubble)
+        if (TextArea is { } area && result.Count > 0)
+        {
+            var host = result.OrderByDescending(s => { var b = s.GetBounds(); return (b.Right - b.Left) * (b.Bottom - b.Top); }).First();
+            host.SetTextBounds(
+                x + (area.Left - left) * scaleX,
+                y + (area.Top - top) * scaleY,
+                x + (area.Right - left) * scaleX,
+                y + (area.Bottom - top) * scaleY);
         }
 
         return result;
@@ -212,6 +230,16 @@ public static class ShapeLibrary
         return new ShapeLibraryItem(name, category, () => SvgImporter.FromPathData(union, subtract));
     }
 
+    /// <summary>
+    /// A shape with room for text, the text area given in the same 100-unit coordinates as the path data.
+    /// </summary>
+    private static ShapeLibraryItem TextItem(string name, string category, (float Left, float Top, float Right, float Bottom) textArea, string[] union)
+    {
+        // Path data is scaled by 10 when built (see SvgImporter.FromPathData)
+        var (l, t, r, b) = textArea;
+        return new ShapeLibraryItem(name, category, () => SvgImporter.FromPathData(union), textArea: (l * 10, t * 10, r * 10, b * 10));
+    }
+
     private static string F(double value) => value.ToString("0.##", CultureInfo.InvariantCulture);
 
     private static string Circle(double cx, double cy, double r) =>
@@ -244,25 +272,34 @@ public static class ShapeLibrary
         return
         [
             // Speech bubbles
-            Item(l.DrawShapeSpeechBubble, bubbles, ["M12 0 H88 A12 12 0 0 1 100 12 V58 A12 12 0 0 1 88 70 H38 L14 94 L22 70 H12 A12 12 0 0 1 0 58 V12 A12 12 0 0 1 12 0 Z"]),
-            Item(l.DrawShapeSpeechBubbleRight, bubbles, ["M12 0 H88 A12 12 0 0 1 100 12 V58 A12 12 0 0 1 88 70 H78 L86 94 L62 70 H12 A12 12 0 0 1 0 58 V12 A12 12 0 0 1 12 0 Z"]),
-            Item(l.DrawShapeSpeechBubbleUp, bubbles, ["M12 24 H22 L30 0 L46 24 H88 A12 12 0 0 1 100 36 V82 A12 12 0 0 1 88 94 H12 A12 12 0 0 1 0 82 V36 A12 12 0 0 1 12 24 Z"]),
-            Item(l.DrawShapeOvalBubble, bubbles, ["M0 38 A50 38 0 1 1 100 38 A50 38 0 1 1 0 38 Z", "M22 62 L8 96 L44 72 Z"]),
-            Item(l.DrawShapeBoxBubble, bubbles, ["M0 0 H100 V70 H60 L50 94 L40 70 H0 Z"]),
-            Item(l.DrawShapeThoughtBubble, bubbles,
+            TextItem(l.DrawShapeSpeechBubble, bubbles, (8, 6, 92, 64), ["M12 0 H88 A12 12 0 0 1 100 12 V58 A12 12 0 0 1 88 70 H38 L14 94 L22 70 H12 A12 12 0 0 1 0 58 V12 A12 12 0 0 1 12 0 Z"]),
+            TextItem(l.DrawShapeSpeechBubbleRight, bubbles, (8, 6, 92, 64), ["M12 0 H88 A12 12 0 0 1 100 12 V58 A12 12 0 0 1 88 70 H78 L86 94 L62 70 H12 A12 12 0 0 1 0 58 V12 A12 12 0 0 1 12 0 Z"]),
+            TextItem(l.DrawShapeSpeechBubbleUp, bubbles, (8, 30, 92, 88), ["M12 24 H22 L30 0 L46 24 H88 A12 12 0 0 1 100 36 V82 A12 12 0 0 1 88 94 H12 A12 12 0 0 1 0 82 V36 A12 12 0 0 1 12 24 Z"]),
+            TextItem(l.DrawShapeOvalBubble, bubbles, (14, 11, 86, 65), ["M0 38 A50 38 0 1 1 100 38 A50 38 0 1 1 0 38 Z", "M22 62 L8 96 L44 72 Z"]),
+            TextItem(l.DrawShapeBoxBubble, bubbles, (6, 6, 94, 64), ["M0 0 H100 V70 H60 L50 94 L40 70 H0 Z"]),
+            TextItem(l.DrawShapeThoughtBubble, bubbles, (16, 16, 84, 64),
             [
                 Circle(26, 34, 20), Circle(46, 22, 22), Circle(68, 24, 20), Circle(84, 40, 16),
                 Circle(70, 56, 18), Circle(46, 58, 20), Circle(22, 54, 17), Circle(50, 40, 26),
                 Circle(18, 82, 7), Circle(8, 95, 4),
             ]),
-            Item(l.DrawShapeShoutBubble, bubbles, [Polygon(50, 50, 24, -90, 50, 36, 46, 34, 50, 38, 44, 35)]),
-            Item(l.DrawShapeCaptionBox, bubbles, ["M6 0 H94 A6 6 0 0 1 100 6 V24 A6 6 0 0 1 94 30 H6 A6 6 0 0 1 0 24 V6 A6 6 0 0 1 6 0 Z"]),
+            TextItem(l.DrawShapeShoutBubble, bubbles, (27, 30, 73, 70), [Polygon(50, 50, 24, -90, 50, 36, 46, 34, 50, 38, 44, 35)]),
+            TextItem(l.DrawShapeSpeechBubbleSide, bubbles, (28, 6, 92, 64),
+                ["M32 0 H88 A12 12 0 0 1 100 12 V58 A12 12 0 0 1 88 70 H32 A12 12 0 0 1 20 58 V50 L0 66 L20 34 V12 A12 12 0 0 1 32 0 Z"]),
+            TextItem(l.DrawShapeRoundBubble, bubbles, (21, 13, 79, 71), [Circle(50, 42, 42), "M30 74 L12 100 L52 82 Z"]),
+            TextItem(l.DrawShapePillBubble, bubbles, (12, 6, 88, 44), ["M25 0 H75 A25 25 0 0 1 75 50 H42 L20 76 L28 50 H25 A25 25 0 0 1 25 0 Z"]),
+            TextItem(l.DrawShapeScreamBubble, bubbles, (27, 24, 73, 68), [Polygon(50, 46, 22, -90, 46, 34), "M32 70 L12 100 L50 76 Z"]),
+            TextItem(l.DrawShapeCaptionBox, bubbles, (4, 3, 96, 27), ["M6 0 H94 A6 6 0 0 1 100 6 V24 A6 6 0 0 1 94 30 H6 A6 6 0 0 1 0 24 V6 A6 6 0 0 1 6 0 Z"]),
 
             // Arrows
             Item(l.DrawShapeArrow, arrows, ["M0 35 H60 V15 L100 50 L60 85 V65 H0 Z"]),
             Item(l.DrawShapeDoubleArrow, arrows, ["M0 50 L30 20 V38 H70 V20 L100 50 L70 80 V62 H30 V80 Z"]),
             Item(l.DrawShapeChevron, arrows, ["M0 0 H40 L80 50 L40 100 H0 L40 50 Z"]),
             Item(l.DrawShapeCurvedArrow, arrows, ["M10 90 A60 60 0 0 1 70 30 V10 L100 40 L70 70 V50 A40 40 0 0 0 30 90 Z"]),
+            // 300° ring (clockwise) ending in an arrowhead at the top
+            Item(l.DrawShapeRepeatArrow, arrows,
+                ["M78.28 16.29 A44 44 0 1 1 34.95 8.65 L32.22 1.14 L56.15 8.39 L42.48 29.33 L39.74 21.81 A30 30 0 1 0 69.28 27.02 Z"]),
+            Item(l.DrawShapeUTurnArrow, arrows, ["M8 100 V40 A34 34 0 0 1 76 40 V70 H86 L68 100 L50 70 H60 V40 A18 18 0 0 0 24 40 V100 Z"]),
 
             // Basic shapes
             Item(l.DrawShapeRoundedRectangle, basic, ["M15 0 H85 A15 15 0 0 1 100 15 V85 A15 15 0 0 1 85 100 H15 A15 15 0 0 1 0 85 V15 A15 15 0 0 1 15 0 Z"]),
@@ -275,6 +312,8 @@ public static class ShapeLibrary
             Item(l.DrawShapeRing, basic, [Circle(50, 50, 50)], [Circle(50, 50, 32)]),
             Item(l.DrawShapePlus, basic, ["M35 0 H65 V35 H100 V65 H65 V100 H35 V65 H0 V35 H35 Z"]),
             Item(l.DrawShapeBanner, basic, ["M0 20 H100 L88 45 L100 70 H0 L12 45 Z"]),
+            Item(l.DrawShapeHalfCircle, basic, ["M0 50 A50 50 0 0 1 100 50 Z"]),
+            Item(l.DrawShapeTeardrop, basic, ["M50 0 C50 0 90 45 90 70 A40 40 0 0 1 10 70 C10 45 50 0 50 0 Z"]),
 
             // Symbols
             Item(l.DrawShapeHeart, symbols, ["M50 92 C20 70 0 52 0 30 C0 12 13 0 28 0 C38 0 46 6 50 14 C54 6 62 0 72 0 C87 0 100 12 100 30 C100 52 80 70 50 92 Z"]),
@@ -297,6 +336,19 @@ public static class ShapeLibrary
             Item(l.DrawShapeCloud, symbols, [Circle(30, 58, 22), Circle(52, 42, 28), Circle(76, 58, 22), "M30 58 H76 V80 H30 Z"]),
             Item(l.DrawShapeMoon, symbols, [Circle(50, 50, 50)], [Circle(70, 36, 42)]),
             Item(l.DrawShapeBadge, symbols, [Polygon(50, 50, 32, -90, 50, 43)]),
+            Item(l.DrawShapeSpeaker, symbols,
+            [
+                "M0 35 H22 L50 10 V90 L22 65 H0 Z",
+                "M65.56 34.44 A22 22 0 0 1 65.56 65.56 L59.9 59.9 A14 14 0 0 0 59.9 40.1 Z",
+                "M78.28 21.72 A40 40 0 0 1 78.28 78.28 L72.63 72.63 A32 32 0 0 0 72.63 27.37 Z",
+            ]),
+            Item(l.DrawShapeCross, symbols, ["M15 0 L50 35 L85 0 L100 15 L65 50 L100 85 L85 100 L50 65 L15 100 L0 85 L35 50 L0 15 Z"]),
+
+            // Faces: eyes and mouth are cut out, so the background shows through
+            Item(l.DrawShapeSmiley, symbols, [Circle(50, 50, 50)],
+                [Circle(34, 36, 8), Circle(66, 36, 8), "M26 58 A24 24 0 0 0 74 58 L64 58 A14 14 0 0 1 36 58 Z"]),
+            Item(l.DrawShapeSadSmiley, symbols, [Circle(50, 50, 50)],
+                [Circle(34, 36, 8), Circle(66, 36, 8), "M26 82 A24 24 0 0 1 74 82 L64 82 A14 14 0 0 0 36 82 Z"]),
         ];
     }
 }

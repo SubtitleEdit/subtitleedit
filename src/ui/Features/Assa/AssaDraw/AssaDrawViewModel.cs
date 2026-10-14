@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -69,6 +70,18 @@ public partial class AssaDrawViewModel : ObservableObject
     [ObservableProperty] private float _shapeWidth;
     [ObservableProperty] private float _shapeHeight;
     [ObservableProperty] private int _shapeLayer;
+    [ObservableProperty] private float _shapeOutlineWidth;
+    [ObservableProperty] private Color _shapeOutlineColor = Colors.Black;
+    [ObservableProperty] private bool _isTextBoxSelected;
+    [ObservableProperty] private bool _isDrawShapeSelected;
+    [ObservableProperty] private bool _canEditText;
+    [ObservableProperty] private bool _canEditOutline;
+    [ObservableProperty] private string _shapeText = string.Empty;
+    [ObservableProperty] private string _textFontName = "Arial";
+    [ObservableProperty] private float _textFontSize = 48;
+    [ObservableProperty] private bool _textBold;
+    [ObservableProperty] private Color _textColor = Colors.Black;
+    [ObservableProperty] private bool _textShrinkToFit = true;
     [ObservableProperty] private string _selectionText = string.Empty;
     [ObservableProperty] private string _codePreview = string.Empty;
     [ObservableProperty] private double _zoomPercent = 100;
@@ -84,6 +97,42 @@ public partial class AssaDrawViewModel : ObservableObject
 
     public Subtitle ResultSubtitle { get; set; } = new Subtitle();
 
+    /// <summary>
+    /// A text box or bubble was just placed: the window puts the cursor in the text field.
+    /// </summary>
+    public event EventHandler? TextEditRequested;
+
+    private List<string>? _fontNames;
+
+    /// <summary>
+    /// Fonts by the names libass knows them by.
+    /// </summary>
+    public List<string> FontNames
+    {
+        get
+        {
+            if (_fontNames == null)
+            {
+                try
+                {
+                    _fontNames = FontHelper.GetLibAssaFonts().Distinct().OrderBy(f => f).ToList();
+                }
+                catch (Exception exception)
+                {
+                    Se.LogError(exception, "ASSA draw: could not list fonts");
+                    _fontNames = [];
+                }
+
+                if (!_fontNames.Contains("Arial"))
+                {
+                    _fontNames.Insert(0, "Arial");
+                }
+            }
+
+            return _fontNames;
+        }
+    }
+
     private float _currentX = float.MinValue;
     private float _currentY = float.MinValue;
     private readonly Regex _regexStart = new(@"\{[^{]*\\p1[^}]*\}");
@@ -92,6 +141,7 @@ public partial class AssaDrawViewModel : ObservableObject
     private readonly IFileHelper _fileHelper;
     private readonly IWindowService _windowService;
     private string _fileName = string.Empty;
+    private string? _openedState;
     private Subtitle? _subtitle;
     private string? _videoFileName;
     private double _videoSeconds;
@@ -118,6 +168,7 @@ public partial class AssaDrawViewModel : ObservableObject
 
     public void Initialize()
     {
+        _openedState = GetChangeState();
         UiUtil.RestoreWindowPosition(Window);
         ZoomToFitCurrentVideoResolution();
         RefreshTreeView();
@@ -174,30 +225,10 @@ public partial class AssaDrawViewModel : ObservableObject
         foreach (var line in selectedLines)
         {
             var style = styles.FirstOrDefault(s => s.Name.Equals(line.Style, StringComparison.OrdinalIgnoreCase)) ?? new SsaStyle();
-            var color = style.Primary.ToAvaloniaColor();
-
-            // 1. Process iclip (Vector Mask)
-            var iclipMatch = _regexIclip.Match(line.Text);
-            if (iclipMatch.Success)
-            {
-                // Extract only the drawing commands inside the parentheses
-                var clipCommands = iclipMatch.Groups[1].Value;
-                ImportAssaDrawingFromText(clipCommands, line.Layer, color, true);
-            }
-
-            // 2. Process \p1 Drawing (the \p1 can share its tag block with \pos, \an etc.)
-            if (_regexStart.IsMatch(line.Text))
-            {
-                // Remove all tags (anything inside curly braces) to get raw vector data
-                string drawingOnly = Regex.Replace(line.Text, @"\{[^}]+\}", string.Empty).Trim();
-
-                if (!string.IsNullOrWhiteSpace(drawingOnly))
-                {
-                    ImportAssaDrawingFromText(drawingOnly, line.Layer, color, false);
-                }
-            }
+            ImportLine(line.Text, line.Layer, style.Primary.ToAvaloniaColor());
         }
 
+        AttachTextLines();
         RefreshTreeView();
         Canvas?.InvalidateVisual();
     }
@@ -239,6 +270,9 @@ public partial class AssaDrawViewModel : ObservableObject
     [RelayCommand]
     private void ColorPickerTool() => SetTool(DrawingTool.ColorPicker);
 
+    [RelayCommand]
+    private void TextTool() => SetTool(DrawingTool.Text);
+
     /// <summary>
     /// Eyedropper result: becomes the current color - new shapes get it, and a selected shape's
     /// (or layer's) color changes to it.
@@ -256,7 +290,7 @@ public partial class AssaDrawViewModel : ObservableObject
     /// </summary>
     private int GetLayerForColor(Color color)
     {
-        var existing = Shapes.FirstOrDefault(s => s.ForeColor == color && !s.IsEraser);
+        var existing = Shapes.FirstOrDefault(s => s.ForeColor == color && !s.IsEraser && !s.IsTextBox);
         if (existing != null)
         {
             return existing.Layer;
@@ -280,7 +314,69 @@ public partial class AssaDrawViewModel : ObservableObject
         SetTool(DrawingTool.Shape);
     }
 
-    private void OnInsertRequested(object? sender, CanvasInsertEventArgs e) => InsertLibraryShape(e);
+    private void OnInsertRequested(object? sender, CanvasInsertEventArgs e)
+    {
+        if (CurrentTool == DrawingTool.Text)
+        {
+            InsertTextBox(e);
+        }
+        else
+        {
+            InsertLibraryShape(e);
+        }
+    }
+
+    /// <summary>
+    /// Text tool: a text box on a new layer above the drawing, in the current color with a black
+    /// outline like a subtitle, selected with its text ready to be typed over.
+    /// </summary>
+    public DrawShape InsertTextBox(CanvasInsertEventArgs e)
+    {
+        var x = e.X;
+        var y = e.Y;
+        var width = e.Width;
+        var height = e.Height;
+        if (e.IsClick)
+        {
+            width = CanvasWidth * 0.4f;
+            height = CanvasHeight * 0.12f;
+            x -= width / 2f;
+            y -= height / 2f;
+        }
+
+        CancelDrawing();
+        SaveUndo();
+        var layer = Shapes.Count == 0 ? 0 : Shapes.Max(s => s.Layer) + 1;
+        var shape = MakeRectangle(x, y, width, height, layer, LayerColor);
+        shape.IsTextBox = true;
+        shape.SetTextBounds(x, y, x + width, y + height);
+        shape.Text = Se.Language.Assa.DrawDefaultText;
+        shape.TextColor = LayerColor;
+        shape.FontSize = DefaultFontSize(16f);
+        shape.OutlineWidth = 2;
+        shape.OutlineColor = Colors.Black;
+        Shapes.Add(shape);
+        SetTool(DrawingTool.Select);
+        RefreshTreeView();
+        SelectShape(shape);
+        Canvas?.InvalidateVisual();
+        TextEditRequested?.Invoke(this, EventArgs.Empty);
+        return shape;
+    }
+
+    /// <summary>
+    /// A font size that suits the frame: a fraction of its height (54 for 1080p with 20).
+    /// </summary>
+    private float DefaultFontSize(float linesPerFrame) => MathF.Max(AssaTextLayout.MinFontSize, MathF.Round(CanvasHeight / linesPerFrame));
+
+    /// <summary>
+    /// Black text on light shapes, white on dark ones.
+    /// </summary>
+    private static Color ContrastColor(Color color)
+    {
+        var luminance = 0.299 * color.R + 0.587 * color.G + 0.114 * color.B;
+        return luminance > 140 ? Colors.Black : Colors.White;
+    }
 
     /// <summary>
     /// Places the current library shape on a new layer above the drawing, in the current color,
@@ -317,12 +413,22 @@ public partial class AssaDrawViewModel : ObservableObject
         SaveUndo();
         var firstLayer = Shapes.Count == 0 ? 0 : Shapes.Max(s => s.Layer) + 1;
         var shapes = item.CreateShapes(x, y, width, height, LayerColor, firstLayer);
+        foreach (var shape in shapes)
+        {
+            shape.TextColor = ContrastColor(shape.ForeColor);
+            shape.FontSize = DefaultFontSize(20f);
+        }
+
         Shapes.AddRange(shapes);
         SetTool(DrawingTool.Select);
         RefreshTreeView();
         if (shapes.Count == 1)
         {
             SelectShape(shapes[0]);
+            if (item.TextArea != null)
+            {
+                TextEditRequested?.Invoke(this, EventArgs.Empty);
+            }
         }
         else
         {
@@ -518,12 +624,34 @@ public partial class AssaDrawViewModel : ObservableObject
                 ShapeWidth = MathF.Round(right - left, 1);
                 ShapeHeight = MathF.Round(bottom - top, 1);
                 ShapeLayer = shape.Layer;
+                ShapeText = shape.Text;
+                TextFontName = shape.FontName;
+                TextFontSize = shape.FontSize;
+                TextBold = shape.FontBold;
+                TextColor = shape.TextColor;
+                TextShrinkToFit = shape.ShrinkToFit;
+                if (!FontNames.Contains(shape.FontName))
+                {
+                    FontNames.Add(shape.FontName);
+                }
+            }
+
+            var outlineShape = GetOutlineShapes().FirstOrDefault();
+            if (outlineShape != null)
+            {
+                ShapeOutlineWidth = outlineShape.OutlineWidth;
+                ShapeOutlineColor = outlineShape.OutlineColor;
             }
         }
         finally
         {
             _updatingShapeFields = false;
         }
+
+        IsTextBoxSelected = shape?.IsTextBox == true;
+        IsDrawShapeSelected = shape != null && !shape.IsTextBox;
+        CanEditText = shape != null && !shape.IsEraser;
+        CanEditOutline = GetOutlineShapes().Count > 0;
 
         var item = SelectedTreeItem;
         SelectionText = SelectedShapes.Count > 1
@@ -536,8 +664,7 @@ public partial class AssaDrawViewModel : ObservableObject
                         ? item.Name
                         : string.Empty;
 
-        var code = GenerateAssaCode();
-        CodePreview = code.Length > 400 ? code[..400] + "..." : code;
+        UpdateCodePreview();
     }
 
     partial void OnShapeXChanged(float value) => MoveTargetShape(value - (TargetShape?.GetBounds().Left ?? value), 0, "shape-x");
@@ -588,8 +715,134 @@ public partial class AssaDrawViewModel : ObservableObject
             point.Y = top + (point.Y - top) * scaleY;
         }
 
+        shape.TransformText((x, y) => (left + (x - left) * scaleX, top + (y - top) * scaleY), mirrored: false);
+
         RefreshTreeView();
         Canvas?.InvalidateVisual();
+    }
+
+    /// <summary>
+    /// What the outline fields change: a selected text box, or else the drawing shapes of the
+    /// selected layer (or of the selected shape's layer) - the layer is one ASSA line with one outline.
+    /// </summary>
+    private List<DrawShape> GetOutlineShapes()
+    {
+        var shape = TargetShape;
+        if (shape?.IsTextBox == true)
+        {
+            return [shape];
+        }
+
+        int? layer = SelectedTreeItem?.IsLayer == true ? SelectedTreeItem.Layer : shape?.Layer;
+        return layer == null ? [] : Shapes.Where(s => s.Layer == layer && !s.IsEraser && !s.IsTextBox).ToList();
+    }
+
+    partial void OnShapeOutlineWidthChanged(float value) => ApplyOutline();
+
+    partial void OnShapeOutlineColorChanged(Color value) => ApplyOutline();
+
+    private void ApplyOutline()
+    {
+        if (_updatingShapeFields)
+        {
+            return;
+        }
+
+        var width = Math.Max(0, ShapeOutlineWidth);
+        var color = ShapeOutlineColor;
+        var shapes = GetOutlineShapes();
+        if (!shapes.Any(s => Math.Abs(s.OutlineWidth - width) > 0.001f || s.OutlineColor != color))
+        {
+            return;
+        }
+
+        SaveUndo($"outline-{RuntimeHelpers.GetHashCode(shapes[0])}");
+        foreach (var shape in shapes)
+        {
+            shape.OutlineWidth = width;
+            shape.OutlineColor = color;
+        }
+
+        UpdateCodePreview();
+        Canvas?.InvalidateVisual();
+    }
+
+    partial void OnShapeTextChanged(string value) => EditText("text", shape =>
+    {
+        // First text in a plain shape: pick a color that shows on it
+        if (string.IsNullOrEmpty(shape.Text) && !shape.IsTextBox && shape.TextColor == Colors.Black)
+        {
+            shape.TextColor = ContrastColor(shape.ForeColor);
+            SetTextColorField(shape.TextColor);
+        }
+
+        if (string.IsNullOrEmpty(shape.Text) && shape.FontSize == 48)
+        {
+            shape.FontSize = DefaultFontSize(20f);
+            SetTextFontSizeField(shape.FontSize);
+        }
+
+        shape.Text = value ?? string.Empty;
+    });
+
+    partial void OnTextFontNameChanged(string value) => EditText("font", shape => shape.FontName = string.IsNullOrWhiteSpace(value) ? "Arial" : value);
+
+    partial void OnTextFontSizeChanged(float value) => EditText("font-size", shape => shape.FontSize = Math.Clamp(value, AssaTextLayout.MinFontSize, 1000));
+
+    partial void OnTextBoldChanged(bool value) => EditText("bold", shape => shape.FontBold = value);
+
+    partial void OnTextColorChanged(Color value) => EditText("text-color", shape => shape.TextColor = value);
+
+    partial void OnTextShrinkToFitChanged(bool value) => EditText("shrink", shape => shape.ShrinkToFit = value);
+
+    private void EditText(string undoKey, Action<DrawShape> apply)
+    {
+        var shape = TargetShape;
+        if (_updatingShapeFields || shape == null || shape.IsEraser)
+        {
+            return;
+        }
+
+        SaveUndo($"{undoKey}-{RuntimeHelpers.GetHashCode(shape)}");
+        apply(shape);
+        if (undoKey == "text")
+        {
+            UpdateShapeTreeName(shape);
+        }
+
+        Canvas?.InvalidateVisual();
+    }
+
+    private void SetTextColorField(Color color)
+    {
+        _updatingShapeFields = true;
+        try
+        {
+            TextColor = color;
+        }
+        finally
+        {
+            _updatingShapeFields = false;
+        }
+    }
+
+    private void SetTextFontSizeField(float size)
+    {
+        _updatingShapeFields = true;
+        try
+        {
+            TextFontSize = size;
+        }
+        finally
+        {
+            _updatingShapeFields = false;
+        }
+    }
+
+    private void UpdateCodePreview()
+    {
+        var code = GenerateAssaCode();
+        CodePreview = code.Length > 400 ? code[..400] + "..." : code;
     }
 
     partial void OnShapeLayerChanged(int value)
@@ -1799,10 +2052,64 @@ public partial class AssaDrawViewModel : ObservableObject
 
     private static readonly string[] BackgroundImageExtensions = [".png", ".jpg", ".jpeg", ".bmp", ".webp"];
 
+    /// <summary>
+    /// A shape dragged from the shape palette (same process only).
+    /// </summary>
+    public static readonly DataFormat<ShapeLibraryItem> LibraryShapeFormat = DataFormat.CreateInProcessFormat<ShapeLibraryItem>("se-assa-draw-library-shape");
+
     internal void OnDragOver(object? sender, DragEventArgs e)
     {
+        if (GetDraggedLibraryShape(e) != null)
+        {
+            e.DragEffects = GetCanvasDropPoint(e) != null ? DragDropEffects.Copy : DragDropEffects.None;
+            e.Handled = true;
+            return;
+        }
+
         e.DragEffects = GetDroppedFile(e) != null ? DragDropEffects.Copy : DragDropEffects.None;
         e.Handled = true;
+    }
+
+    /// <summary>
+    /// The palette shape being dragged: the in-process item, or (if the platform only hands back
+    /// the text that went along) the library shape with that name.
+    /// </summary>
+    private static ShapeLibraryItem? GetDraggedLibraryShape(DragEventArgs e)
+    {
+        if (e.DataTransfer.Contains(LibraryShapeFormat) && e.DataTransfer.TryGetValue(LibraryShapeFormat) is { } item)
+        {
+            return item;
+        }
+
+        if (!e.DataTransfer.Contains(DataFormat.Text) || e.DataTransfer.TryGetText() is not { } name)
+        {
+            return null;
+        }
+
+        return ShapeLibrary.BuiltIn.Concat(ShapeLibrary.GetUserShapes()).FirstOrDefault(i => i.Name == name);
+    }
+
+    /// <summary>
+    /// Where on the drawing a drag is, or null when it is not over the canvas.
+    /// </summary>
+    private (float X, float Y)? GetCanvasDropPoint(DragEventArgs e)
+    {
+        if (Canvas == null)
+        {
+            return null;
+        }
+
+        var position = e.GetPosition(Canvas);
+        return new Rect(Canvas.Bounds.Size).Contains(position) ? Canvas.ToCanvasPoint(position) : null;
+    }
+
+    /// <summary>
+    /// A shape dropped from the palette: default size, centered where it was dropped, selected.
+    /// </summary>
+    public void DropLibraryShape(ShapeLibraryItem item, float x, float y)
+    {
+        CurrentLibraryShape = item;
+        InsertLibraryShape(new CanvasInsertEventArgs(x, y, 0, 0, isClick: true));
     }
 
     /// <summary>
@@ -1810,6 +2117,17 @@ public partial class AssaDrawViewModel : ObservableObject
     /// </summary>
     internal void OnDrop(object? sender, DragEventArgs e)
     {
+        if (GetDraggedLibraryShape(e) is { } item)
+        {
+            e.Handled = true;
+            if (GetCanvasDropPoint(e) is { } point)
+            {
+                DropLibraryShape(item, point.X, point.Y);
+            }
+
+            return;
+        }
+
         var fileName = GetDroppedFile(e);
         if (fileName == null)
         {
@@ -1911,6 +2229,24 @@ public partial class AssaDrawViewModel : ObservableObject
             }
         }
 
+        var hasText = layers.Any(l => l.Any(s => s.HasText));
+        if (hasText)
+        {
+            // Own style for the text lines: centered, no margins, outline or shadow - so a Default
+            // style with an opaque box or big margins doesn't change them
+            subtitle.Header = AdvancedSubStationAlpha.AddSsaStyle(new SsaStyle
+            {
+                Name = AssaDrawTextLine.StyleName,
+                Alignment = "5",
+                MarginVertical = 0,
+                MarginLeft = 0,
+                MarginRight = 0,
+                ShadowWidth = 0,
+                OutlineWidth = 0,
+                BorderStyle = "1",
+            }, subtitle.Header);
+        }
+
         // Generate paragraphs with style names
         var sbDraw = new StringBuilder();
         var sbErase = new StringBuilder();
@@ -1922,14 +2258,14 @@ public partial class AssaDrawViewModel : ObservableObject
             var firstShape = GetLayerStyleShape(layer);
 
             // Collect draw shapes (normal shapes)
-            foreach (var shape in layer.Where(p => !p.IsEraser))
+            foreach (var shape in layer.Where(p => !p.IsEraser && !p.IsTextBox))
             {
                 sbDraw.Append(shape.ToAssa());
                 sbDraw.Append("  ");
             }
 
             // Collect erase shapes (iclip shapes)
-            foreach (var shape in layer.Where(p => p.IsEraser))
+            foreach (var shape in layer.Where(p => p.IsEraser && !p.IsTextBox))
             {
                 sbErase.Append(shape.ToAssa());
                 sbErase.Append("  ");
@@ -1949,10 +2285,16 @@ public partial class AssaDrawViewModel : ObservableObject
                     finalText.Append($"{{\\iclip({eraseText})}}");
                 }
 
-                // Add draw shapes
+                // Add draw shapes, with the layer's outline
                 if (!string.IsNullOrEmpty(drawText))
                 {
-                    finalText.Append($"{{\\p1}}{drawText}{{\\p0}}");
+                    finalText.Append('{');
+                    if (firstShape is { IsEraser: false, OutlineWidth: > 0 })
+                    {
+                        AssaDrawTextLine.AppendOutline(finalText, firstShape.OutlineWidth, firstShape.OutlineColor);
+                    }
+
+                    finalText.Append($"\\p1}}{drawText}{{\\p0}}");
                 }
 
                 if (finalText.Length > 0)
@@ -1971,6 +2313,17 @@ public partial class AssaDrawViewModel : ObservableObject
                     subtitle.Paragraphs.Add(p);
                 }
             }
+
+            // Text after the layer's drawing, on the same layer: libass draws later lines of a
+            // layer on top, so the text shows over its bubble and under the layers above
+            foreach (var shape in layer.Where(s => s.HasText && s.Points.Count > 0))
+            {
+                subtitle.Paragraphs.Add(new Paragraph(AssaDrawTextLine.Format(shape), 0, 10000)
+                {
+                    Layer = layer.Key,
+                    Extra = AssaDrawTextLine.StyleName,
+                });
+            }
         }
 
         return subtitle;
@@ -1986,6 +2339,11 @@ public partial class AssaDrawViewModel : ObservableObject
         DrawShape? firstEraser = null;
         foreach (var shape in layer)
         {
+            if (shape.IsTextBox)
+            {
+                continue;
+            }
+
             if (!shape.IsEraser)
             {
                 return shape;
@@ -2057,14 +2415,14 @@ public partial class AssaDrawViewModel : ObservableObject
         }
 
         var sbDraw = new StringBuilder();
-        foreach (var shape in Shapes.Where(s => !s.IsEraser && !s.Hidden))
+        foreach (var shape in Shapes.Where(s => !s.IsEraser && !s.Hidden && !s.IsTextBox))
         {
             sbDraw.Append(shape.ToAssa());
             sbDraw.Append(' ');
         }
 
         var sbErase = new StringBuilder();
-        foreach (var shape in Shapes.Where(s => s.IsEraser && !s.Hidden))
+        foreach (var shape in Shapes.Where(s => s.IsEraser && !s.Hidden && !s.IsTextBox))
         {
             sbErase.Append(shape.ToAssa());
             sbErase.Append(' ');
@@ -2085,7 +2443,14 @@ public partial class AssaDrawViewModel : ObservableObject
         }
         if (!string.IsNullOrEmpty(drawCode))
         {
-            result.Append($"{{\\p1}}{drawCode}{{\\p0}}");
+            result.Append('{');
+            var outlineShape = Shapes.FirstOrDefault(s => !s.IsEraser && !s.Hidden && !s.IsTextBox);
+            if (outlineShape is { OutlineWidth: > 0 })
+            {
+                AssaDrawTextLine.AppendOutline(result, outlineShape.OutlineWidth, outlineShape.OutlineColor);
+            }
+
+            result.Append($"\\p1}}{drawCode}{{\\p0}}");
         }
 
         return result.ToString();
@@ -2101,9 +2466,78 @@ public partial class AssaDrawViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Cancel()
+    private async Task Cancel()
     {
-        Window?.Close();
+        await CloseAfterConfirm();
+    }
+
+    private bool _closeConfirmed;
+    private bool _askingToClose;
+
+    /// <summary>
+    /// Closing without OK (X button) while there are changes - the window cancels the close and asks first.
+    /// </summary>
+    public bool ShouldAskBeforeClosing => !OkPressed && !_closeConfirmed && HasChanges;
+
+    internal async Task CloseAfterConfirm()
+    {
+        if (_askingToClose)
+        {
+            return;
+        }
+
+        _askingToClose = true;
+        try
+        {
+            if (await ConfirmDiscardChanges())
+            {
+                _closeConfirmed = true;
+                Window?.Close();
+            }
+        }
+        finally
+        {
+            _askingToClose = false;
+        }
+    }
+
+    /// <summary>
+    /// The drawing as it would be written (text, outlines, hidden shapes and canvas size included),
+    /// to tell whether anything changed since the dialog opened.
+    /// </summary>
+    private string GetChangeState()
+    {
+        var subtitle = GenerateSubtitle(includeAll: true);
+        var sb = new StringBuilder();
+        sb.Append(CanvasWidth).Append('x').Append(CanvasHeight).Append('\n');
+        foreach (var p in subtitle.Paragraphs)
+        {
+            sb.Append(p.Layer).Append(' ').Append(p.Extra).Append(' ').Append(p.Text).Append('\n');
+        }
+
+        foreach (var shape in Shapes.Where(s => s.Hidden))
+        {
+            sb.Append("hidden ").Append(Shapes.IndexOf(shape)).Append('\n');
+        }
+
+        return sb.ToString();
+    }
+
+    public bool HasChanges => _openedState != null && _openedState != GetChangeState();
+
+    /// <summary>
+    /// True when the dialog may close without OK: nothing changed, or the user agreed to discard.
+    /// </summary>
+    internal async Task<bool> ConfirmDiscardChanges()
+    {
+        if (Window == null || !HasChanges)
+        {
+            return true;
+        }
+
+        var result = await MessageBox.Show(Window, Se.Language.Assa.DrawDiscardChangesTitle, Se.Language.Assa.DrawDiscardChanges,
+            MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+        return result == MessageBoxResult.Yes;
     }
 
     private void RefreshTreeView()
@@ -2137,15 +2571,16 @@ public partial class AssaDrawViewModel : ObservableObject
                     shapeNumber++;
                     var shapeItem = new ShapeTreeItem
                     {
-                        Name = $"Shape {shapeNumber} ({(shape.IsEraser ? "erase" : "draw")})",
+                        Name = GetShapeTreeName(shape, shapeNumber),
                         Shape = shape,
                         IsExpanded = shape.Expanded,
-                        IconName = shape.IsEraser ? "fa-solid fa-eraser" : "fa-solid fa-draw-polygon",
+                        IconName = shape.IsTextBox ? "fa-solid fa-font" : shape.IsEraser ? "fa-solid fa-eraser" : "fa-solid fa-draw-polygon",
                         IsHidden = shape.Hidden,
-                        Meta = shape.Points.Count.ToString(CultureInfo.InvariantCulture),
+                        Meta = shape.IsTextBox ? string.Empty : shape.Points.Count.ToString(CultureInfo.InvariantCulture),
                     };
 
-                    foreach (var point in shape.Points)
+                    // A text box is sized with the handles, its corners aren't points to edit
+                    foreach (var point in shape.IsTextBox ? [] : shape.Points)
                     {
                         var isControlPoint = point.DrawType is DrawCoordinateType.BezierCurveSupport1 or DrawCoordinateType.BezierCurveSupport2;
                         shapeItem.Children.Add(new ShapeTreeItem
@@ -2183,6 +2618,41 @@ public partial class AssaDrawViewModel : ObservableObject
         else
         {
             ApplyTreeSelection(null);
+        }
+    }
+
+    private static string GetShapeTreeName(DrawShape shape, int shapeNumber)
+    {
+        var text = shape.Text.Replace("\r", string.Empty).Replace('\n', ' ').Trim();
+        if (text.Length > 24)
+        {
+            text = text[..24] + "…";
+        }
+
+        if (shape.IsTextBox)
+        {
+            return text.Length > 0 ? $"{Se.Language.Assa.DrawTextBox}: {text}" : Se.Language.Assa.DrawTextBox;
+        }
+
+        var name = $"Shape {shapeNumber} ({(shape.IsEraser ? "erase" : "draw")})";
+        return text.Length > 0 && !shape.IsEraser ? $"{name}: {text}" : name;
+    }
+
+    /// <summary>
+    /// Typing renames the shape's tree row - rebuilding the tree per key press would drop the text field's focus.
+    /// </summary>
+    private void UpdateShapeTreeName(DrawShape shape)
+    {
+        foreach (var layerItem in ShapeTreeItems)
+        {
+            for (var i = 0; i < layerItem.Children.Count; i++)
+            {
+                if (layerItem.Children[i].Shape == shape)
+                {
+                    layerItem.Children[i].Name = GetShapeTreeName(shape, i + 1);
+                    return;
+                }
+            }
         }
     }
 
@@ -2229,6 +2699,85 @@ public partial class AssaDrawViewModel : ObservableObject
     private void ImportAssaDrawingFromText(string text, int layer, Color color, bool isEraser)
     {
         Shapes.AddRange(DrawShape.ParseAssa(text, layer, color, isEraser));
+    }
+
+    private readonly List<(int Layer, AssaDrawTextLine.Parsed Text)> _importedTexts = [];
+
+    /// <summary>
+    /// One line of a script: its \iclip erase shapes, its \p1 drawing (with the line's outline),
+    /// or an ASSA draw text line - those are attached to their shapes by <see cref="AttachTextLines"/>.
+    /// </summary>
+    private void ImportLine(string text, int layer, Color color)
+    {
+        if (AssaDrawTextLine.TryParse(text, out var parsedText))
+        {
+            _importedTexts.Add((layer, parsedText));
+            return;
+        }
+
+        // 1. Process iclip (Vector Mask)
+        var iclipMatch = _regexIclip.Match(text);
+        if (iclipMatch.Success)
+        {
+            // Extract only the drawing commands inside the parentheses
+            ImportAssaDrawingFromText(iclipMatch.Groups[1].Value, layer, color, true);
+        }
+
+        // 2. Process \p1 Drawing (the \p1 can share its tag block with \pos, \an etc.)
+        if (_regexStart.IsMatch(text))
+        {
+            // Remove all tags (anything inside curly braces) to get raw vector data
+            var drawingOnly = Regex.Replace(text, @"\{[^}]+\}", string.Empty).Trim();
+            if (!string.IsNullOrWhiteSpace(drawingOnly))
+            {
+                var shapes = DrawShape.ParseAssa(drawingOnly, layer, color, false);
+                AssaDrawTextLine.ParseOutline(text, out var outlineWidth, out var outlineColor);
+                foreach (var shape in shapes)
+                {
+                    shape.OutlineWidth = outlineWidth;
+                    shape.OutlineColor = outlineColor;
+                }
+
+                Shapes.AddRange(shapes);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Imported text goes back into the shape it was written for: the smallest drawing shape of
+    /// its layer that holds the center of the text area. Text without one becomes a text box.
+    /// </summary>
+    private void AttachTextLines()
+    {
+        foreach (var (layer, parsed) in _importedTexts)
+        {
+            var (left, top, right, bottom) = parsed.Box;
+            var centerX = (left + right) / 2;
+            var centerY = (top + bottom) / 2;
+            var host = Shapes
+                .Where(s => s.Layer == layer && !s.IsEraser && !s.IsTextBox && !s.HasText && s.Points.Count > 2 && s.HitTest(centerX, centerY, 0))
+                .OrderBy(s => { var b = s.GetBounds(); return (b.Right - b.Left) * (b.Bottom - b.Top); })
+                .FirstOrDefault();
+            if (host == null)
+            {
+                host = MakeRectangle(left, top, right - left, bottom - top, layer, parsed.Color ?? Colors.White);
+                host.IsTextBox = true;
+                host.Rotate(parsed.Angle);
+                host.OutlineWidth = parsed.OutlineWidth;
+                host.OutlineColor = parsed.OutlineColor;
+                Shapes.Add(host);
+            }
+
+            host.Text = parsed.Text;
+            host.FontName = parsed.FontName;
+            host.FontSize = parsed.FontSize;
+            host.FontBold = parsed.Bold;
+            host.ShrinkToFit = parsed.ShrinkToFit;
+            host.TextColor = parsed.Color ?? Colors.White;
+            host.SetTextBounds(left, top, right, bottom, parsed.Angle);
+        }
+
+        _importedTexts.Clear();
     }
 
     private static bool TryGetPlayRes(string? header, out int width, out int height)
@@ -2280,25 +2829,10 @@ public partial class AssaDrawViewModel : ObservableObject
                 }
             }
 
-            // Handle iclip
-            var iclipMatch = _regexIclip.Match(paragraph.Text);
-            if (iclipMatch.Success)
-            {
-                ImportAssaDrawingFromText(iclipMatch.Groups[1].Value, paragraph.Layer, color, true);
-            }
-
-            // Handle \p1 Drawing (the \p1 can share its tag block with \pos, \an etc.)
-            if (_regexStart.IsMatch(paragraph.Text))
-            {
-                // Strip tags to avoid parsing non-coordinate text
-                string drawingOnly = Regex.Replace(paragraph.Text, @"\{[^}]+\}", string.Empty).Trim();
-                if (!string.IsNullOrWhiteSpace(drawingOnly))
-                {
-                    ImportAssaDrawingFromText(drawingOnly, paragraph.Layer, color, false);
-                }
-            }
+            ImportLine(paragraph.Text, paragraph.Layer, color);
         }
 
+        AttachTextLines();
         RefreshTreeView();
         Canvas?.InvalidateVisual();
     }
@@ -2315,7 +2849,11 @@ public partial class AssaDrawViewModel : ObservableObject
             }
 
             e.Handled = true;
-            Window?.Close();
+            await Cancel();
+        }
+        else if (IsTextInput(e) && e.Key is Key.Enter or Key.Delete or Key.Back)
+        {
+            // Typing in the text field (or a number box) - not a canvas command
         }
         else if (e.Key == Key.Enter)
         {
@@ -2425,7 +2963,7 @@ public partial class AssaDrawViewModel : ObservableObject
                     break;
             }
         }
-        else if (e.KeyModifiers == KeyModifiers.None && !IsTextInput(e) && e.Key is Key.V or Key.L or Key.B or Key.R or Key.C or Key.S or Key.I)
+        else if (e.KeyModifiers == KeyModifiers.None && !IsTextInput(e) && e.Key is Key.V or Key.L or Key.B or Key.R or Key.C or Key.S or Key.I or Key.T)
         {
             // Single-key tools like other drawing programs (not while typing in a number box)
             SetTool(e.Key switch
@@ -2436,6 +2974,7 @@ public partial class AssaDrawViewModel : ObservableObject
                 Key.R => DrawingTool.Rectangle,
                 Key.S => DrawingTool.Shape,
                 Key.I => DrawingTool.ColorPicker,
+                Key.T => DrawingTool.Text,
                 _ => DrawingTool.Circle,
             });
             e.Handled = true;
@@ -2498,11 +3037,7 @@ public partial class AssaDrawViewModel : ObservableObject
         {
             foreach (var shape in SelectedShapes)
             {
-                foreach (var point in shape.Points)
-                {
-                    point.X += xAdjust;
-                    point.Y += yAdjust;
-                }
+                shape.Offset(xAdjust, yAdjust);
             }
             RefreshTreeView();
             Canvas?.InvalidateVisual();
@@ -2512,11 +3047,7 @@ public partial class AssaDrawViewModel : ObservableObject
         // Check if a shape is selected in the tree view
         if (SelectedTreeItem?.Shape != null)
         {
-            foreach (var point in SelectedTreeItem.Shape.Points)
-            {
-                point.X += xAdjust;
-                point.Y += yAdjust;
-            }
+            SelectedTreeItem.Shape.Offset(xAdjust, yAdjust);
             RefreshTreeView();
             Canvas?.InvalidateVisual();
             return;
@@ -2525,11 +3056,7 @@ public partial class AssaDrawViewModel : ObservableObject
         // Fall back to active shape (currently being drawn)
         if (ActiveShape != null)
         {
-            foreach (var point in ActiveShape.Points)
-            {
-                point.X += xAdjust;
-                point.Y += yAdjust;
-            }
+            ActiveShape.Offset(xAdjust, yAdjust);
             RefreshTreeView();
             Canvas?.InvalidateVisual();
         }

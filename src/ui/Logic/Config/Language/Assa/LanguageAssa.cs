@@ -64,10 +64,16 @@ public class LanguageAssa
     public string DrawShapeThoughtBubble { get; set; }
     public string DrawShapeShoutBubble { get; set; }
     public string DrawShapeCaptionBox { get; set; }
+    public string DrawShapeSpeechBubbleSide { get; set; }
+    public string DrawShapeRoundBubble { get; set; }
+    public string DrawShapePillBubble { get; set; }
+    public string DrawShapeScreamBubble { get; set; }
     public string DrawShapeArrow { get; set; }
     public string DrawShapeDoubleArrow { get; set; }
     public string DrawShapeChevron { get; set; }
     public string DrawShapeCurvedArrow { get; set; }
+    public string DrawShapeRepeatArrow { get; set; }
+    public string DrawShapeUTurnArrow { get; set; }
     public string DrawShapeRoundedRectangle { get; set; }
     public string DrawShapeTriangle { get; set; }
     public string DrawShapeDiamond { get; set; }
@@ -78,6 +84,8 @@ public class LanguageAssa
     public string DrawShapeRing { get; set; }
     public string DrawShapePlus { get; set; }
     public string DrawShapeBanner { get; set; }
+    public string DrawShapeHalfCircle { get; set; }
+    public string DrawShapeTeardrop { get; set; }
     public string DrawShapeHeart { get; set; }
     public string DrawShapeCheck { get; set; }
     public string DrawShapeMusicNote { get; set; }
@@ -86,6 +94,10 @@ public class LanguageAssa
     public string DrawShapeCloud { get; set; }
     public string DrawShapeMoon { get; set; }
     public string DrawShapeBadge { get; set; }
+    public string DrawShapeSpeaker { get; set; }
+    public string DrawShapeCross { get; set; }
+    public string DrawShapeSmiley { get; set; }
+    public string DrawShapeSadSmiley { get; set; }
     public string DrawSize { get; set; }
     public string DrawLayer { get; set; }
     public string DrawBackgroundVideoFrame { get; set; }
@@ -102,6 +114,13 @@ public class LanguageAssa
     public string DrawRotateCounterClockwise { get; set; }
     public string DrawSvgImages { get; set; }
     public string DrawSvgNoShapes { get; set; }
+    public string DrawTextTool { get; set; }
+    public string DrawDefaultText { get; set; }
+    public string DrawShrinkToFit { get; set; }
+    public string DrawTextColor { get; set; }
+    public string DrawTextBox { get; set; }
+    public string DrawDiscardChangesTitle { get; set; }
+    public string DrawDiscardChanges { get; set; }
 
     // Progress Bar Generator
     public string ProgressBarTitle { get; set; }
@@ -398,10 +417,16 @@ public class LanguageAssa
         DrawShapeThoughtBubble = "Thought bubble";
         DrawShapeShoutBubble = "Shout bubble";
         DrawShapeCaptionBox = "Caption box";
+        DrawShapeSpeechBubbleSide = "Speech bubble, tail left side";
+        DrawShapeRoundBubble = "Round bubble";
+        DrawShapePillBubble = "Pill bubble";
+        DrawShapeScreamBubble = "Scream bubble";
         DrawShapeArrow = "Arrow";
         DrawShapeDoubleArrow = "Double arrow";
         DrawShapeChevron = "Chevron";
         DrawShapeCurvedArrow = "Curved arrow";
+        DrawShapeRepeatArrow = "Repeat arrow";
+        DrawShapeUTurnArrow = "U-turn arrow";
         DrawShapeRoundedRectangle = "Rounded rectangle";
         DrawShapeTriangle = "Triangle";
         DrawShapeDiamond = "Diamond";
@@ -412,6 +437,8 @@ public class LanguageAssa
         DrawShapeRing = "Ring";
         DrawShapePlus = "Plus";
         DrawShapeBanner = "Banner";
+        DrawShapeHalfCircle = "Half circle";
+        DrawShapeTeardrop = "Teardrop";
         DrawShapeHeart = "Heart";
         DrawShapeCheck = "Check mark";
         DrawShapeMusicNote = "Music note";
@@ -420,6 +447,10 @@ public class LanguageAssa
         DrawShapeCloud = "Cloud";
         DrawShapeMoon = "Moon";
         DrawShapeBadge = "Badge";
+        DrawShapeSpeaker = "Speaker";
+        DrawShapeCross = "Cross";
+        DrawShapeSmiley = "Smiley";
+        DrawShapeSadSmiley = "Sad smiley";
         DrawSize = "Size";
         DrawLayer = "Layer";
         DrawBackgroundVideoFrame = "Video frame (current position)";
@@ -436,6 +467,13 @@ public class LanguageAssa
         DrawRotateCounterClockwise = "Rotate 90° counter-clockwise";
         DrawSvgImages = "SVG images";
         DrawSvgNoShapes = "No filled shapes or strokes found in the SVG file.";
+        DrawTextTool = "Text tool";
+        DrawDefaultText = "Text";
+        DrawShrinkToFit = "Shrink to fit";
+        DrawTextColor = "Text color";
+        DrawTextBox = "Text box";
+        DrawDiscardChangesTitle = "Discard changes?";
+        DrawDiscardChanges = "The drawing has been changed." + System.Environment.NewLine + "Discard the changes?";
 
         // Progress Bar Generator
         ProgressBarTitle = "ASSA progress bar";

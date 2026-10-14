@@ -38,6 +38,7 @@ public class AssaDrawCanvas : Control
     private List<DrawShape>? _transformShapes;
     private List<(float X, float Y)[]>? _transformOriginal;
     private bool[]? _transformReversed;
+    private DrawTextFrame?[]? _transformTextFrames;
     private (float Left, float Top, float Right, float Bottom) _transformBounds;
     private Point _transformStart;
     private bool _transformStarted;
@@ -340,6 +341,11 @@ public class AssaDrawCanvas : Control
         ZoomFactor = newZoom;
     }
 
+    /// <summary>
+    /// A position on the control in drawing (canvas) coordinates.
+    /// </summary>
+    public (float X, float Y) ToCanvasPoint(Point position) => (FromZoomFactorX((float)position.X), FromZoomFactorY((float)position.Y));
+
     private float ToZoomFactorX(float v) => v * _zoomFactor + _panX;
     private float ToZoomFactorY(float v) => v * _zoomFactor + _panY;
     private float FromZoomFactorX(float v) => (v - _panX) / _zoomFactor;
@@ -498,8 +504,15 @@ public class AssaDrawCanvas : Control
             }
         }
 
+        // Text tool: the dragged text box
+        if (_insertStart != null && CurrentTool == DrawingTool.Text && GetInsertRect() is { IsClick: false } textInsert)
+        {
+            context.DrawRectangle(GetBrush(Color.FromArgb(40, AccentColor.R, AccentColor.G, AccentColor.B)), GetPen(AccentColor, 1.5, dashed: true),
+                new Rect(ToZoomFactorX(textInsert.X), ToZoomFactorY(textInsert.Y), textInsert.Width * _zoomFactor, textInsert.Height * _zoomFactor));
+        }
+
         // Shape tool: outline of the library shape in the dragged rectangle
-        if (_insertStart != null && InsertShape != null && GetInsertRect() is { IsClick: false } insert)
+        if (_insertStart != null && CurrentTool == DrawingTool.Shape && InsertShape != null && GetInsertRect() is { IsClick: false } insert)
         {
             var previewPen = GetPen(AccentColor, 1.5, lineJoin: PenLineJoin.Round, dashed: true);
             foreach (var shape in InsertShape.CreateShapes(insert.X, insert.Y, insert.Width, insert.Height, Colors.White, 0))
@@ -608,6 +621,25 @@ public class AssaDrawCanvas : Control
         var isClosed = shape.Points.Count > 2 && isInShapes;
         var geometry = BuildGeometry(shape, isClosed);
 
+        if (shape.IsTextBox)
+        {
+            // Nothing is drawn for a text box - just a dashed frame to grab it by
+            var framePen = GetPen(isActive || isSelected ? AccentColor : Color.FromArgb(150, 200, 200, 200), isActive || isSelected ? 1.5 : 1, dashed: true);
+            context.DrawGeometry(null, framePen, BuildGeometry(shape, true));
+            return;
+        }
+
+        if (isActive && isInShapes && shape.HasText && shape.Points.Count > 2)
+        {
+            // Where the text of a bubble goes
+            var (textLeft, textTop, textRight, textBottom) = shape.GetTextBounds();
+            using (PushTextRotation(context, shape.GetTextFrame()))
+            {
+                context.DrawRectangle(null, GetPen(GuideColor, 1, dashed: true),
+                    new Rect(new Point(ToZoomFactorX(textLeft), ToZoomFactorY(textTop)), new Point(ToZoomFactorX(textRight), ToZoomFactorY(textBottom))));
+            }
+        }
+
         IBrush? fillBrush = null;
         if (fill && isClosed && !shape.IsEraser)
         {
@@ -647,29 +679,105 @@ public class AssaDrawCanvas : Control
     /// <summary>
     /// Fills each layer as one geometry, like libass renders a layer's line: the shapes' contours
     /// combine with non-zero winding (so holes of imported SVGs stay open) and the layer's eraser
-    /// shapes (\iclip) are cut out of it.
+    /// shapes (\iclip) are cut out of it. The layer's outline goes under the fill (libass draws
+    /// \bord outside the shape), and the layer's text on top of it.
     /// </summary>
     private void DrawLayerFills(DrawingContext context, List<DrawShape> shapes)
     {
         foreach (var layer in shapes.Where(s => !s.Hidden && s.Points.Count > 2).GroupBy(s => s.Layer).OrderBy(g => g.Key))
         {
-            var drawShapes = layer.Where(s => !s.IsEraser).ToList();
-            if (drawShapes.Count == 0)
+            var drawShapes = layer.Where(s => !s.IsEraser && !s.IsTextBox).ToList();
+            if (drawShapes.Count > 0)
+            {
+                Geometry geometry = BuildLayerGeometry(drawShapes);
+                var eraserShapes = layer.Where(s => s.IsEraser).ToList();
+                if (eraserShapes.Count > 0)
+                {
+                    geometry = new CombinedGeometry(GeometryCombineMode.Exclude, geometry, BuildLayerGeometry(eraserShapes));
+                }
+
+                var styleShape = drawShapes[0];
+                if (styleShape.OutlineWidth > 0)
+                {
+                    var outline = styleShape.OutlineColor;
+                    var outlineAlpha = (byte)Math.Round(outline.A * 215 / 255.0);
+                    context.DrawGeometry(null, GetPen(Color.FromArgb(outlineAlpha, outline.R, outline.G, outline.B),
+                        styleShape.OutlineWidth * 2 * _zoomFactor, lineJoin: PenLineJoin.Round), geometry);
+                }
+
+                var color = styleShape.ForeColor;
+                var alpha = (byte)Math.Round(color.A * 215 / 255.0);
+                context.DrawGeometry(GetBrush(Color.FromArgb(alpha, color.R, color.G, color.B)), null, geometry);
+            }
+
+            foreach (var shape in layer.Where(s => s.HasText))
+            {
+                DrawShapeText(context, shape);
+            }
+        }
+    }
+
+    /// <summary>
+    /// The shape's text, wrapped and sized like the generated line (the F9 preview shows the real libass render).
+    /// </summary>
+    private void DrawShapeText(DrawingContext context, DrawShape shape)
+    {
+        var (left, top, right, bottom) = shape.GetTextBounds();
+        if (right - left < 1 || bottom - top < 1)
+        {
+            return;
+        }
+
+        var layout = AssaTextLayout.Layout(shape.Text, shape.FontName, shape.FontSize, shape.FontBold, right - left, bottom - top, shape.ShrinkToFit);
+        var typeface = new Typeface(new FontFamily(AssaTextLayout.GetSkiaFontName(shape.FontName)), FontStyle.Normal, shape.FontBold ? FontWeight.Bold : FontWeight.Normal);
+        var emSize = layout.EmSize * _zoomFactor;
+        if (emSize < 1)
+        {
+            return;
+        }
+
+        var lineHeight = layout.FontSize * _zoomFactor;
+        var centerX = ToZoomFactorX((left + right) / 2);
+        var blockTop = ToZoomFactorY((top + bottom) / 2) - lineHeight * layout.Lines.Count / 2;
+        var brush = GetBrush(shape.TextColor);
+        var outlinePen = shape.IsTextBox && shape.OutlineWidth > 0
+            ? GetPen(shape.OutlineColor, shape.OutlineWidth * 2 * _zoomFactor, lineJoin: PenLineJoin.Round)
+            : null;
+        using var rotation = PushTextRotation(context, shape.GetTextFrame());
+        for (var i = 0; i < layout.Lines.Count; i++)
+        {
+            if (layout.Lines[i].Length == 0)
             {
                 continue;
             }
 
-            Geometry geometry = BuildLayerGeometry(drawShapes);
-            var eraserShapes = layer.Where(s => s.IsEraser).ToList();
-            if (eraserShapes.Count > 0)
+            var text = new FormattedText(layout.Lines[i], System.Globalization.CultureInfo.CurrentCulture, FlowDirection.LeftToRight, typeface, emSize, brush);
+            var origin = new Point(centerX - text.Width / 2, blockTop + i * lineHeight + (lineHeight - text.Height) / 2);
+            if (outlinePen != null && text.BuildGeometry(origin) is { } textGeometry)
             {
-                geometry = new CombinedGeometry(GeometryCombineMode.Exclude, geometry, BuildLayerGeometry(eraserShapes));
+                context.DrawGeometry(null, outlinePen, textGeometry);
             }
 
-            var color = drawShapes[0].ForeColor;
-            var alpha = (byte)Math.Round(color.A * 215 / 255.0);
-            context.DrawGeometry(GetBrush(Color.FromArgb(alpha, color.R, color.G, color.B)), null, geometry);
+            context.DrawText(text, origin);
         }
+    }
+
+    /// <summary>
+    /// Turns what is drawn next around the text area's center, like \frz does around \pos.
+    /// </summary>
+    private DrawingContext.PushedState? PushTextRotation(DrawingContext context, DrawTextFrame frame)
+    {
+        if (Math.Abs(frame.Angle) < 0.01f)
+        {
+            return null;
+        }
+
+        var centerX = ToZoomFactorX(frame.CenterX);
+        var centerY = ToZoomFactorY(frame.CenterY);
+        return context.PushTransform(
+            Matrix.CreateTranslation(-centerX, -centerY) *
+            Matrix.CreateRotation(frame.Angle * Math.PI / 180) *
+            Matrix.CreateTranslation(centerX, centerY));
     }
 
     private StreamGeometry BuildLayerGeometry(List<DrawShape> shapes)
@@ -907,6 +1015,10 @@ public class AssaDrawCanvas : Control
                 _transformReversed[i] = mirrored;
             }
 
+            // The text area turns, scales and mirrors with the shape
+            shape.TextFrame = _transformTextFrames![i];
+            shape.TransformText(map, mirrored);
+
             var points = shape.Points;
             if (points.Count != original.Length)
             {
@@ -925,6 +1037,12 @@ public class AssaDrawCanvas : Control
 
     private void DrawShapePoints(DrawingContext context, DrawShape shape, bool isActive)
     {
+        if (shape.IsTextBox)
+        {
+            // A text box is moved and sized with the selection handles
+            return;
+        }
+
         foreach (var point in shape.Points)
         {
             var center = ToZoomFactorPoint(point);
@@ -1001,8 +1119,8 @@ public class AssaDrawCanvas : Control
             return;
         }
 
-        // Shape tool: drag out the rectangle the library shape goes into
-        if (CurrentTool == DrawingTool.Shape && properties.IsLeftButtonPressed && InsertShape != null)
+        // Shape tool: drag out the rectangle the library shape goes into (text tool: the text box)
+        if (properties.IsLeftButtonPressed && IsInsertTool)
         {
             _insertStart = (x, y);
             _insertEnd = (x, y);
@@ -1021,6 +1139,7 @@ public class AssaDrawCanvas : Control
                 _transformShapes = targets;
                 _transformOriginal = targets.Select(s => s.Points.Select(p => (p.X, p.Y)).ToArray()).ToList();
                 _transformReversed = new bool[targets.Count];
+                _transformTextFrames = targets.Select(s => s.TextFrame).ToArray();
                 _transformBounds = GetUnionBounds(targets);
                 _transformStart = point;
                 _transformStarted = false;
@@ -1245,6 +1364,7 @@ public class AssaDrawCanvas : Control
         _transformShapes = null;
         _transformOriginal = null;
         _transformReversed = null;
+        _transformTextFrames = null;
         _transformHandle = -1;
         _transformStarted = false;
         _transformLabel = null;
@@ -1256,13 +1376,15 @@ public class AssaDrawCanvas : Control
         InvalidateVisual();
     }
 
+    private bool IsInsertTool => CurrentTool == DrawingTool.Text || (CurrentTool == DrawingTool.Shape && InsertShape != null);
+
     /// <summary>
     /// The rectangle the shape tool drag describes; a click (tiny drag) means "default size here".
     /// Dragging past the start point flips the rectangle, Shift keeps the shape's proportions.
     /// </summary>
     private CanvasInsertEventArgs? GetInsertRect()
     {
-        if (_insertStart is not { } start || InsertShape == null)
+        if (_insertStart is not { } start || !IsInsertTool)
         {
             return null;
         }
@@ -1274,7 +1396,7 @@ public class AssaDrawCanvas : Control
             return new CanvasInsertEventArgs(start.X, start.Y, 0, 0, isClick: true);
         }
 
-        if (_insertConstrain)
+        if (_insertConstrain && CurrentTool == DrawingTool.Shape && InsertShape != null)
         {
             var aspect = InsertShape.AspectRatio;
             if (Math.Abs(width) * aspect > Math.Abs(height))
@@ -1324,7 +1446,7 @@ public class AssaDrawCanvas : Control
         for (var i = shapes.Count - 1; i >= 0; i--)
         {
             var shape = shapes[i];
-            if (!shape.Hidden && !shape.IsEraser && shape.Points.Count > 2 && shape.HitTest(x, y, 0))
+            if (!shape.Hidden && !shape.IsEraser && !shape.IsTextBox && shape.Points.Count > 2 && shape.HitTest(x, y, 0))
             {
                 return shape.ForeColor;
             }
@@ -1406,7 +1528,7 @@ public class AssaDrawCanvas : Control
         DrawCoordinate? closest = null;
         var minDist = float.MaxValue;
 
-        foreach (var shape in Shapes.Where(s => !s.Hidden))
+        foreach (var shape in Shapes.Where(s => !s.Hidden && !s.IsTextBox))
         {
             foreach (var point in shape.Points)
             {
