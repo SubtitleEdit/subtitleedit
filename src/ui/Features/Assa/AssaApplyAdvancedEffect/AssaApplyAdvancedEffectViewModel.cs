@@ -34,6 +34,14 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
     [ObservableProperty] private bool _adjustSelectedLines;
     [ObservableProperty] private bool _adjustSelectedLinesAndForward;
     [ObservableProperty] private string _selectionInfo;
+    [ObservableProperty] private ObservableCollection<IAdvancedEffectDisplay> _filteredEffects;
+    [ObservableProperty] private IAdvancedEffectDisplay? _selectedGalleryEffect;
+    [ObservableProperty] private ObservableCollection<AdvancedEffectCategoryItem> _categories;
+    [ObservableProperty] private AdvancedEffectCategoryItem? _selectedCategory;
+    [ObservableProperty] private string _searchText;
+    [ObservableProperty] private bool _hasNoMatches;
+    [ObservableProperty] private bool _hasVideo;
+    [ObservableProperty] private string _previewText;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -50,6 +58,8 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
     private Subtitle _subtitle;
     private string? _videoFileName;
     private bool _closed; // set by OnClosing; stops the posted half of Initialize from starting a pump on a disposed player
+    private const string SamplePreviewText = "Subtitle Edit";
+    private bool _isFiltering;
     private UiTickPump _positionTimer = new(TimeSpan.FromMilliseconds(750)); // posted ticks, not a DispatcherTimer - see UiTickPump
     private List<SubtitleLineViewModel> _subtitleLines = new List<SubtitleLineViewModel>();
     private List<SubtitleLineViewModel> _selectedSubtitleLines = new List<SubtitleLineViewModel>();
@@ -75,7 +85,12 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
         // Toggle play/pause on surface click
         VideoPlayerControl.SurfacePointerPressed += (_, __) => VideoPlayerControl.TogglePlayPause();
 
-        SelectedOverrideTag = OverrideTags[0];
+        _searchText = string.Empty;
+        _previewText = SamplePreviewText;
+        FilteredEffects = new ObservableCollection<IAdvancedEffectDisplay>();
+        Categories = new ObservableCollection<AdvancedEffectCategoryItem>();
+        RebuildCategories();
+        SelectedOverrideTag = FilteredEffects.FirstOrDefault() ?? OverrideTags[0];
 
         _tempSubtitleFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".ass");
     }
@@ -118,6 +133,18 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
             }
         }
 
+        // Without pre-marked active words the "word pop" effect would only dim the lines - sequence
+        // the words automatically instead, like the gallery preview shows.
+        if (!paragraphs.Any(p => p.Text.Contains("\\u1") || p.Text.Contains("\\1c") || p.Text.Contains("\\c&")))
+        {
+            foreach (var effect in OverrideTags.OfType<AdvancedEffectFancyKaraoke>())
+            {
+                effect.AutoDetectActiveWord = true;
+            }
+        }
+
+        HasVideo = !string.IsNullOrEmpty(videoFileName);
+
         if (audioVisualizer == null || audioVisualizer.WavePeaks == null || audioVisualizer.WavePeaks.Peaks.Count == 0)
         {
             // remove audio visualizer related effects if no audio visualizer data is available
@@ -132,10 +159,11 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
                 i--;
             }
 
+            RebuildCategories();
             if (SelectedOverrideTag == null || !OverrideTags.Contains(SelectedOverrideTag))
             {
                 // The constructor's default selection may just have been removed
-                SelectedOverrideTag = OverrideTags.FirstOrDefault();
+                SelectedOverrideTag = FilteredEffects.FirstOrDefault() ?? OverrideTags.FirstOrDefault();
             }
         }
 
@@ -171,6 +199,94 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
 
             StartTitleTimer();
         });
+    }
+
+    private void RebuildCategories()
+    {
+        var selected = SelectedCategory?.Category ?? AdvancedEffectCategory.All;
+        var items = AdvancedEffectCatalog.MakeCategories();
+        foreach (var item in items)
+        {
+            item.Count = item.Category == AdvancedEffectCategory.All
+                ? OverrideTags.Count
+                : OverrideTags.Count(e => AdvancedEffectCatalog.GetCategory(e) == item.Category);
+        }
+
+        Categories = new ObservableCollection<AdvancedEffectCategoryItem>(items.Where(c => c.Count > 0));
+        SelectedCategory = Categories.FirstOrDefault(c => c.Category == selected) ?? Categories.FirstOrDefault();
+        ApplyFilter();
+    }
+
+    private void ApplyFilter()
+    {
+        var category = SelectedCategory?.Category ?? AdvancedEffectCategory.All;
+        var search = SearchText.Trim();
+        var matches = OverrideTags
+            .Where(e => category == AdvancedEffectCategory.All || AdvancedEffectCatalog.GetCategory(e) == category)
+            .Where(e => search.Length == 0 ||
+                        e.Name.Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
+                        e.Description.Contains(search, StringComparison.CurrentCultureIgnoreCase))
+            .OrderBy(e => AdvancedEffectCatalog.GetCategory(e))
+            .ThenBy(e => e.Name)
+            .ToList();
+
+        _isFiltering = true;
+        try
+        {
+            FilteredEffects = new ObservableCollection<IAdvancedEffectDisplay>(matches);
+            SelectedGalleryEffect = SelectedOverrideTag != null && matches.Contains(SelectedOverrideTag) ? SelectedOverrideTag : null;
+        }
+        finally
+        {
+            _isFiltering = false;
+        }
+
+        HasNoMatches = matches.Count == 0;
+    }
+
+    partial void OnSearchTextChanged(string value) => ApplyFilter();
+
+    partial void OnSelectedCategoryChanged(AdvancedEffectCategoryItem? value)
+    {
+        if (value != null)
+        {
+            ApplyFilter();
+        }
+    }
+
+    partial void OnSelectedGalleryEffectChanged(IAdvancedEffectDisplay? value)
+    {
+        // A filter that hides the chosen effect clears the gallery selection - keep the effect
+        if (value != null && !_isFiltering)
+        {
+            SelectedOverrideTag = value;
+        }
+    }
+
+    partial void OnSelectedOverrideTagChanged(IAdvancedEffectDisplay? value)
+    {
+        if (value != null && SelectedGalleryEffect != value && FilteredEffects.Contains(value))
+        {
+            SelectedGalleryEffect = value;
+        }
+    }
+
+    partial void OnSelectedParagraphIndexChanged(int value)
+    {
+        PreviewText = SamplePreviewText;
+        if (value < 0 || value >= Paragraphs.Count)
+        {
+            return;
+        }
+
+        var text = HtmlUtil.RemoveHtmlTags(Utilities.RemoveSsaTags(Paragraphs[value].Subtitle.Text), true)
+            .Replace("\\N", " ").Replace("\r\n", " ").Replace('\n', ' ').Trim();
+
+        // the preview lays out letters one by one, which would break joined (Arabic) and RTL scripts
+        if (text.Length > 0 && !LanguageAutoDetect.ContainsRightToLeftLetter(text))
+        {
+            PreviewText = text;
+        }
     }
 
     private void StartTitleTimer()
@@ -254,8 +370,13 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
             idx++;
         }
 
+        if (effect is IAdvancedEffectHeaderUpdater headerUpdater)
+        {
+            result.Header = headerUpdater.UpdateHeader(result.Header, toAffect);
+        }
+
         var transformed = effect.ApplyEffect(
-            _subtitle.Header,
+            result.Header,
             toAffect,
             _mediaInfo?.Dimension.Width ?? 1920,
             _mediaInfo?.Dimension.Height ?? 1080,
@@ -288,6 +409,7 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
     private void Ok()
     {
         UpdatedSubtitle = BuildPreviewSubtitle();
+        _subtitle.Header = UpdatedSubtitle.Header; // effects may add styles (the main window keeps this subtitle's header)
         OkPressed = true;
         Window?.Close();
     }

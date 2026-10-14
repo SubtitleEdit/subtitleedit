@@ -14,6 +14,14 @@ public interface IAdvancedEffectDisplay
     List<SubtitleLineViewModel> ApplyEffect(string header, List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks);
 }
 
+/// <summary>
+/// An effect that needs extra styles in the script header (e.g. an opaque-box style).
+/// </summary>
+public interface IAdvancedEffectHeaderUpdater
+{
+    string UpdateHeader(string header, List<SubtitleLineViewModel> subtitles);
+}
+
 public static class AdvancedEffectDisplayFactory
 {
     public static List<IAdvancedEffectDisplay> List()
@@ -21,6 +29,8 @@ public static class AdvancedEffectDisplayFactory
         return new List<IAdvancedEffectDisplay>
         {
             new AdvancedEffectAudioTextPulse(),
+            new AdvancedEffectBlurInWords(),
+            new AdvancedEffectBoldCaptions(),
             new AdvancedEffectBounceIn(),
             new AdvancedEffectCinematicTitle(),
             new AdvancedEffectConfetti(),
@@ -32,6 +42,7 @@ public static class AdvancedEffectDisplayFactory
             new AdvancedEffectFireflies(),
             new AdvancedEffectGlitch(),
             new AdvancedEffectHearts(),
+            new AdvancedEffectHighlightBox(),
             new AdvancedEffectKaraoke(),
             new AdvancedEffectLowerThird(),
             new AdvancedEffectMatrix(),
@@ -39,10 +50,13 @@ public static class AdvancedEffectDisplayFactory
             new AdvancedEffectOldMovie(),
             new AdvancedEffectRain(),
             new AdvancedEffectRainbowPulse(),
+            new AdvancedEffectRollingCaptions(),
             new AdvancedEffectScrambleReveal(),
+            new AdvancedEffectSingleWordPop(),
             new AdvancedEffectSlideInLeft(),
             new AdvancedEffectSlideInRight(),
             new AdvancedEffectSlowZoomIn(),
+            new AdvancedEffectSmoothFill(),
             new AdvancedEffectSlowZoomOut(),
             new AdvancedEffectSnow(),
             new AdvancedEffectStarWarsScroll(),
