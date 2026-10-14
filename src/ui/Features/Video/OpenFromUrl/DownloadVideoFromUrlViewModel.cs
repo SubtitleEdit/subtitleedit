@@ -318,6 +318,14 @@ public partial class DownloadVideoFromUrlViewModel : ObservableObject, IClosingC
                 {
                     StatusText = Se.Language.General.DownloadFailed;
                     Error = ex?.Message ?? Se.Language.General.UnknownError;
+                    if (YtDlpDownloadService.IsBotCheckError(Error))
+                    {
+                        var browser = YtDlpDownloadService.GetCookiesBrowser();
+                        var hint = browser == null
+                            ? Se.Language.Video.OpenFromUrlBotCheckHint
+                            : string.Format(Se.Language.Video.OpenFromUrlBotCheckHintWithBrowserX, YtDlpDownloadService.GetBrowserDisplayName(browser));
+                        Error = hint + Environment.NewLine + Environment.NewLine + Error;
+                    }
                     TryDeletePartial();
                     Se.LogError(ex ?? new Exception("Unknown download error"), "yt-dlp video download failed");
                 }

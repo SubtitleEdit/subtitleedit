@@ -1145,6 +1145,19 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         {
             Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer could not set " + value);
         }
+
+        // Streaming hits YouTube's "confirm you're not a bot" check just like downloading does,
+        // so hand ytdl_hook the same browser cookies (#16032).
+        var browser = YtDlpDownloadService.GetCookiesBrowser();
+        if (browser != null)
+        {
+            var rawOptions = "cookies-from-browser=" + browser;
+            err = SetOptionString("ytdl-raw-options", rawOptions);
+            if (err < 0)
+            {
+                Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer could not set ytdl-raw-options=" + rawOptions);
+            }
+        }
     }
 
     /// <summary>

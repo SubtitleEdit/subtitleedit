@@ -262,4 +262,22 @@ public class YtDlpDownloadServiceTests
             Directory.Delete(dir, recursive: true);
         }
     }
+
+    [Theory]
+    [InlineData("ERROR: [youtube] G4E4eHd-Hg4: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication.", true)]
+    [InlineData("ERROR: [youtube] abc: Sign in to confirm you're not a bot.", true)]
+    [InlineData("ERROR: [youtube] abc: Video unavailable", false)]
+    [InlineData("", false)]
+    [InlineData(null, false)]
+    public void IsBotCheckError_DetectsYouTubeBotCheck(string? message, bool expected)
+    {
+        Assert.Equal(expected, YtDlpDownloadService.IsBotCheckError(message));
+    }
+
+    [Fact]
+    public void CookieBrowsers_AreDisplayedCapitalized()
+    {
+        Assert.Equal("Firefox", YtDlpDownloadService.GetBrowserDisplayName("firefox"));
+        Assert.Contains("firefox", YtDlpDownloadService.CookieBrowsers);
+    }
 }
