@@ -33,6 +33,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.LlamaCpp;
+using Nikse.SubtitleEdit.Logic.Plugins;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
 using SkiaSharp;
 using System;
@@ -106,14 +107,16 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     private OcrLineHeightTracker _lineHeightTracker = new();
     private NOcrSpaceDetector _nOcrSpaceDetector = new();
     private readonly INamesList _namesList;
+    private readonly IPluginRunner _pluginRunner;
     private string _namesListFolder = string.Empty;
     private string _namesListLanguage = string.Empty;
 
-    public BatchConverter(INOcrCaseFixer nOcrCaseFixer, IBinaryOcrMatcher binaryOcrMatcher, INamesList namesList)
+    public BatchConverter(INOcrCaseFixer nOcrCaseFixer, IBinaryOcrMatcher binaryOcrMatcher, INamesList namesList, IPluginRunner? pluginRunner = null)
     {
         _nOcrCaseFixer = nOcrCaseFixer;
         _binaryOcrMatcher = binaryOcrMatcher;
         _namesList = namesList;
+        _pluginRunner = pluginRunner ?? new PluginRunner();
         _config = new BatchConvertConfig();
         _subtitleFormats = new List<SubtitleFormat>();
         _compiledRegExList = new Dictionary<string, Regex>();
@@ -2518,11 +2521,70 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             s = AssaChangeStyleProperties(s);
             s = BeautifyTimeCodes(s, item.FileName);
             s = SnapTimeCodesToFrames(s, item.FileName);
+            s = await RunPlugin(s, item, cancellationToken);
             s = SortBy(s);
             s = Renumber(s);
         }
 
         return s;
+    }
+
+    /// <summary>
+    /// Runs the chosen batch-capable plugin with a "batch" request: no UI, all lines, the plugin's
+    /// saved settings. Any failure throws so this file is marked as failed and the batch goes on.
+    /// Settings the plugin returns are not persisted - a run must not change its own configuration.
+    /// </summary>
+    private async Task<Subtitle> RunPlugin(Subtitle subtitle, BatchConvertItem item, CancellationToken cancellationToken)
+    {
+        if (!_config.RunPlugin.IsActive)
+        {
+            return subtitle;
+        }
+
+        var plugin = _config.RunPlugin.Plugin;
+        if (plugin == null)
+        {
+            throw new InvalidOperationException(string.Format(Se.Language.Plugins.PluginXNotAvailable, _config.RunPlugin.PluginName));
+        }
+
+        var format = subtitle.OriginalFormat ?? new SubRip();
+        var request = PluginRequestHelper.CreateRequest(plugin, PluginConstants.RequestTypeBatch);
+        request.Subtitle = PluginRequestHelper.ToPluginSubtitle(subtitle, format, item.FileName);
+
+        var runResult = await _pluginRunner.RunAsync(plugin, request, cancellationToken);
+        if (runResult.WasCancelled)
+        {
+            throw new OperationCanceledException(cancellationToken);
+        }
+
+        if (!runResult.Succeeded || runResult.Response == null)
+        {
+            throw new InvalidOperationException(runResult.ErrorMessage ?? string.Format(Se.Language.Plugins.PluginXFailed, plugin.Manifest.Name));
+        }
+
+        var response = runResult.Response;
+        if (response.Status == PluginConstants.StatusError)
+        {
+            throw new InvalidOperationException(string.IsNullOrWhiteSpace(response.Message)
+                ? string.Format(Se.Language.Plugins.PluginXReportedError, plugin.Manifest.Name)
+                : response.Message);
+        }
+
+        if (response.Status != PluginConstants.StatusOk || !PluginRequestHelper.HasSubtitle(response.Subtitle))
+        {
+            return subtitle;
+        }
+
+        var result = PluginRequestHelper.ReadSubtitle(response.Subtitle!);
+        if (result.Paragraphs.Count == 0)
+        {
+            throw new InvalidOperationException(string.Format(Se.Language.Plugins.PluginXReturnedUnparsableSubtitle, plugin.Manifest.Name));
+        }
+
+        subtitle.Paragraphs.Clear();
+        subtitle.Paragraphs.AddRange(result.Paragraphs);
+        subtitle.Header = response.Subtitle!.Header ?? (response.Subtitle.Paragraphs is { Count: > 0 } ? subtitle.Header : result.Header ?? subtitle.Header);
+        return subtitle;
     }
 
     private Subtitle RemoveUnicodeControlCharacters(Subtitle subtitle)

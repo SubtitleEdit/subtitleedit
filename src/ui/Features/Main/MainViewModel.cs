@@ -9167,9 +9167,9 @@ public partial class MainViewModel :
             return;
         }
 
-        SavePluginSettings(plugin, response);
+        PluginRequestHelper.SaveSettings(plugin, response);
 
-        if (!HasPluginSubtitle(response.Subtitle))
+        if (!PluginRequestHelper.HasSubtitle(response.Subtitle))
         {
             if (!string.IsNullOrWhiteSpace(response.Message))
             {
@@ -9219,185 +9219,27 @@ public partial class MainViewModel :
 
     private PluginRequest BuildPluginRequest(InstalledPlugin plugin, List<int> selectedIndices)
     {
-        var subtitle = GetUpdateSubtitle();
-        var format = SelectedSubtitleFormat;
-
-        var frameRate = _mediaInfo != null
-            ? (double)_mediaInfo.FramesRateNonNormalized
-            : Se.Settings.General.CurrentFrameRate;
-
-        JsonElement? settings = null;
-        if (Se.Settings.Plugins.Settings.TryGetValue(plugin.Manifest.Name, out var settingsJson) &&
-            !string.IsNullOrWhiteSpace(settingsJson))
+        var request = PluginRequestHelper.CreateRequest(plugin, PluginConstants.RequestTypeRun);
+        request.Subtitle = PluginRequestHelper.ToPluginSubtitle(GetUpdateSubtitle(), SelectedSubtitleFormat, _subtitleFileName ?? string.Empty);
+        request.SubtitleEncoding = SelectedEncoding?.DisplayName ?? string.Empty;
+        request.SelectedIndices = selectedIndices;
+        request.VideoFileName = _videoFileName ?? string.Empty;
+        if (_mediaInfo != null)
         {
-            try
-            {
-                using var doc = JsonDocument.Parse(settingsJson);
-                settings = doc.RootElement.Clone();
-            }
-            catch (Exception exception)
-            {
-                Se.LogError(exception, "Invalid stored plugin settings for " + plugin.Manifest.Name);
-            }
+            request.FrameRate = (double)_mediaInfo.FramesRateNonNormalized;
         }
 
-        int? settingsVersion = null;
-        if (Se.Settings.Plugins.SettingsVersions.TryGetValue(plugin.Manifest.Name, out var storedVersion))
-        {
-            settingsVersion = storedVersion;
-        }
-
-        var videoPositionSeconds = _videoFileName != null ? GetVideoPlayerControl()?.Position : null;
-
-        return new PluginRequest
-        {
-            PluginDataDirectory = GetPluginDataDirectory(plugin),
-            Subtitle = new PluginSubtitle
-            {
-                Format = format.Name,
-                FileName = _subtitleFileName ?? string.Empty,
-                // A binary format (EBU STL, PAC, ...) has no text form - Ebu.ToText returns
-                // "Not supported!" - so plugins get its header and paragraphs only.
-                Native = format.IsTextBased ? subtitle.ToText(format) : string.Empty,
-                SubRip = subtitle.ToText(new Nikse.SubtitleEdit.Core.SubtitleFormats.SubRip()),
-                Header = subtitle.Header,
-                Paragraphs = subtitle.Paragraphs.Select(ToPluginParagraph).ToList(),
-            },
-            SubtitleEncoding = SelectedEncoding?.DisplayName ?? string.Empty,
-            SelectedIndices = selectedIndices,
-            VideoFileName = _videoFileName ?? string.Empty,
-            FrameRate = frameRate,
-            VideoDurationSeconds = _mediaInfo?.Duration?.TotalSeconds,
-            VideoPositionSeconds = videoPositionSeconds,
-            VideoWidth = _mediaInfo?.Dimension.Width,
-            VideoHeight = _mediaInfo?.Dimension.Height,
-            UiLanguage = Se.Settings.General.Language ?? string.Empty,
-            Theme = UiTheme.ThemeName,
-            ThemeColors = PluginThemeColorsFactory.Build(),
-            SeVersion = Se.Version,
-            Rules = BuildPluginRules(),
-            Settings = settings,
-            SettingsVersion = settingsVersion,
-        };
-    }
-
-    // Persistent, writable folder private to a plugin, keyed by its (sanitized) manifest name -
-    // the same identity used to persist plugin settings. Lives under Plugins/Data so it survives
-    // plugin updates (which replace the install folder). Created here so the plugin can rely on it.
-    private static string GetPluginDataDirectory(InstalledPlugin plugin)
-    {
-        var name = plugin.Manifest.Name;
-        foreach (var c in Path.GetInvalidFileNameChars())
-        {
-            name = name.Replace(c, '_');
-        }
-
-        var path = Path.Combine(Se.PluginsDataFolder, name);
-        try
-        {
-            Directory.CreateDirectory(path);
-        }
-        catch (Exception exception)
-        {
-            Se.LogError(exception, "Could not create plugin data directory: " + path);
-        }
-
-        return path;
-    }
-
-    private static PluginRules BuildPluginRules()
-    {
-        var general = Se.Settings.General;
-        return new PluginRules
-        {
-            SubtitleMinimumDisplayMilliseconds = general.SubtitleMinimumDisplayMilliseconds,
-            SubtitleMaximumDisplayMilliseconds = general.SubtitleMaximumDisplayMilliseconds,
-            SubtitleMaximumCharactersPerSeconds = general.SubtitleMaximumCharactersPerSeconds,
-            SubtitleOptimalCharactersPerSeconds = general.SubtitleOptimalCharactersPerSeconds,
-            SubtitleLineMaximumLength = general.SubtitleLineMaximumLength,
-            MaxNumberOfLines = general.MaxNumberOfLines,
-            MinimumMillisecondsBetweenLines = general.MinimumBetweenLines.GetMilliseconds(),
-            MinimumFramesBetweenLines = general.MinimumBetweenLines.Frames,
-            UseFrameMode = general.UseFrameMode,
-            EbuStlTeletextUseBox = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox,
-            EbuStlTeletextUseDoubleHeight = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight,
-            VideoOffsetMs = general.CurrentVideoOffsetInMs,
-        };
-    }
-
-    private static PluginParagraph ToPluginParagraph(Paragraph p)
-    {
-        return new PluginParagraph
-        {
-            StartMs = p.StartTime.TotalMilliseconds,
-            EndMs = p.EndTime.TotalMilliseconds,
-            Text = p.Text ?? string.Empty,
-            Style = p.Style,
-            Actor = p.Actor,
-            Language = p.Language,
-            Region = p.Region,
-            Effect = p.Effect,
-            Extra = p.Extra,
-            MarginL = p.MarginL,
-            MarginR = p.MarginR,
-            MarginV = p.MarginV,
-            Layer = p.Layer,
-            IsComment = p.IsComment,
-            Forced = p.Forced,
-            NewSection = p.NewSection,
-            Bookmark = p.Bookmark,
-        };
-    }
-
-    private static Paragraph FromPluginParagraph(PluginParagraph p)
-    {
-        return new Paragraph(new TimeCode(p.StartMs), new TimeCode(p.EndMs), p.Text ?? string.Empty)
-        {
-            Style = p.Style,
-            Actor = p.Actor,
-            Language = p.Language,
-            Region = p.Region,
-            Effect = p.Effect,
-            Extra = p.Extra,
-            MarginL = p.MarginL,
-            MarginR = p.MarginR,
-            MarginV = p.MarginV,
-            Layer = p.Layer,
-            IsComment = p.IsComment,
-            Forced = p.Forced,
-            NewSection = p.NewSection,
-            Bookmark = p.Bookmark,
-        };
-    }
-
-    private static bool HasPluginSubtitle(PluginSubtitle? subtitle)
-    {
-        return subtitle != null && (subtitle.Paragraphs is { Count: > 0 } || !string.IsNullOrWhiteSpace(subtitle.Native));
+        request.VideoDurationSeconds = _mediaInfo?.Duration?.TotalSeconds;
+        request.VideoPositionSeconds = _videoFileName != null ? GetVideoPlayerControl()?.Position : null;
+        request.VideoWidth = _mediaInfo?.Dimension.Width;
+        request.VideoHeight = _mediaInfo?.Dimension.Height;
+        return request;
     }
 
     private async Task<bool> ApplyPluginSubtitle(InstalledPlugin plugin, PluginResponse response)
     {
         var pluginSubtitle = response.Subtitle!;
-        var subtitle = new Subtitle();
-        if (pluginSubtitle.Paragraphs is { Count: > 0 })
-        {
-            // Lossless path: the lines come back exactly as SE holds them, so the current format
-            // (and for EBU STL the teletext rows and GSI header) survive - no re-parse involved.
-            subtitle.Paragraphs.AddRange(pluginSubtitle.Paragraphs.Select(FromPluginParagraph));
-            subtitle.Renumber();
-        }
-        else
-        {
-            var lines = pluginSubtitle.Native.SplitToLines().ToList();
-            var format = SubtitleFormat.AllSubtitleFormats
-                .FirstOrDefault(f => f.Name.Equals(pluginSubtitle.Format, StringComparison.OrdinalIgnoreCase));
-
-            var loadedFormat = subtitle.ReloadLoadSubtitle(lines, string.Empty, format);
-            if (loadedFormat == null)
-            {
-                subtitle.Paragraphs.Clear();
-            }
-        }
+        var subtitle = PluginRequestHelper.ReadSubtitle(pluginSubtitle);
 
         if (subtitle.Paragraphs.Count == 0)
         {
@@ -9412,8 +9254,8 @@ public partial class MainViewModel :
         if (pluginSubtitle.Paragraphs is { Count: > 0 })
         {
             var current = GetUpdateSubtitle();
-            var currentParagraphs = JsonSerializer.Serialize(current.Paragraphs.Select(ToPluginParagraph).ToList(), PluginJsonContext.Default.Options);
-            var resultParagraphs = JsonSerializer.Serialize(subtitle.Paragraphs.Select(ToPluginParagraph).ToList(), PluginJsonContext.Default.Options);
+            var currentParagraphs = JsonSerializer.Serialize(current.Paragraphs.Select(PluginRequestHelper.ToPluginParagraph).ToList(), PluginJsonContext.Default.Options);
+            var resultParagraphs = JsonSerializer.Serialize(subtitle.Paragraphs.Select(PluginRequestHelper.ToPluginParagraph).ToList(), PluginJsonContext.Default.Options);
             if ((pluginSubtitle.Header ?? current.Header) == current.Header && currentParagraphs == resultParagraphs)
             {
                 return true;
@@ -9472,32 +9314,6 @@ public partial class MainViewModel :
 
         SetSelectedFrameRate(frameRate);
         ApplyCurrentFrameRate(frameRate);
-    }
-
-    private static void SavePluginSettings(InstalledPlugin plugin, PluginResponse response)
-    {
-        if (!response.Settings.HasValue)
-        {
-            return;
-        }
-
-        try
-        {
-            Se.Settings.Plugins.Settings[plugin.Manifest.Name] = response.Settings.Value.GetRawText();
-            if (response.SettingsVersion.HasValue)
-            {
-                Se.Settings.Plugins.SettingsVersions[plugin.Manifest.Name] = response.SettingsVersion.Value;
-            }
-            else
-            {
-                Se.Settings.Plugins.SettingsVersions.Remove(plugin.Manifest.Name);
-            }
-            Se.SaveSettings();
-        }
-        catch (Exception exception)
-        {
-            Se.LogError(exception, "Failed to persist plugin settings for " + plugin.Manifest.Name);
-        }
     }
 
     [RelayCommand]

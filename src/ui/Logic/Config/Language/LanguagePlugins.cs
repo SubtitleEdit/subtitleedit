@@ -36,6 +36,12 @@ public class LanguagePlugins
     public string ApplyPluginsTo { get; set; }
     public string AskEachTime { get; set; }
     public string AllLines { get; set; }
+    public string RunPlugin { get; set; }
+    public string Plugin { get; set; }
+    public string ConfigurePlugin { get; set; }
+    public string NoBatchPluginsInstalled { get; set; }
+    public string BatchPluginInfo { get; set; }
+    public string PluginXNotAvailable { get; set; }
 
     public LanguagePlugins()
     {
@@ -73,5 +79,11 @@ public class LanguagePlugins
         ApplyPluginsTo = "Apply plugins to";
         AskEachTime = "Ask each time";
         AllLines = "All lines";
+        RunPlugin = "Run plugin";
+        Plugin = "Plugin";
+        ConfigurePlugin = "Configure...";
+        NoBatchPluginsInstalled = "No installed plugin supports batch convert.";
+        BatchPluginInfo = "The plugin runs on each file without showing its window, using its saved settings.";
+        PluginXNotAvailable = "Plugin '{0}' is not installed, is disabled, or does not support batch convert.";
     }
 }
