@@ -1,7 +1,7 @@
 ﻿{
   "title": "Subtitle Edit",
   "version": "v5.3.0",
-  "translatedBy": "Adam Malich (ostatnia aktualizacja: 11.10.2026)",
+  "translatedBy": "Adam Malich (ostatnia aktualizacja: 14.10.2026)",
   "cultureName": "pl-PL",
   "general": {
     "abort": "Przerwij",
@@ -1346,7 +1346,7 @@
       "forcedAlignerIsolatingSpeechFailed": "Nie udało się wyodrębnić mowy – zamiast tego czasy zakończenia ustalono na podstawie czasu odczytu.",
       "forcedAlignerModel": "Model wyrównywacza",
       "forcedAlignerDownloadEngine": "Pobierz / Zaktualizuj silnik...",
-      "forcedAlignerEstimatedXOfY": "Nie udało się wyrównać {0} z {1} wierszy, więc zostały rozmieszczone według czasu czytania - ich kody czasowe są jedynie szacunkowe. Skrypt jest prawdopodobnie dłuższy niż to, co pada w filmie."
+      "forcedAlignerEstimatedXOfY": "Nie udało się wyrównać {0} z {1} linii, więc rozmieszczono je na podstawie czasu odczytu – ich kody czasowe są jedynie szacunkowe. Scenariusz jest prawdopodobnie dłuższy niż to, co zostało wypowiedziane w filmie."
     },
     "export": {
       "exportImagesProfiles": "Eksportuj profile obrazów",
@@ -2598,7 +2598,7 @@
       "detectSpeakersNeedsNewerCrispAsr": "Funkcja \"Wykrywaj mówców\" wymaga systemu Crisp ASR w wersji {0} lub nowszej, a zainstalowana wersja to {1}.\n\nZaktualizuj Crisp ASR (przycisk z ikoną koła zębatego obok silnika) lub wyłącz opcję \"Wykrywaj mówców\".",
       "xNeedsNewerCrispAsr": "{0} wymaga Crisp ASR w wersji {1} lub nowszej, ale zainstalowana jest wersja {2}.\n\nPobrać i zainstalować aktualizację teraz?",
       "vad": "VAD",
-      "vadHint": "Wykrywanie aktywności głosowej: transkrybowana jest tylko mowa, z podziałem w miejscach, w których mówca robi pauzę.\nAuto: Silero – i tylko dla silników, które tego wymagają (Cohere, Mega, Index-Echo).\nSilero, FireRedVAD, WebRTC: zawsze aktywne, dla każdego silnika ASR Crisp. FireRedVAD jest najdokładniejszy.\nIndex-Echo zawsze korzysta z Silero. --vad, --vad-model lub --chunk-seconds w ustawieniach zaawansowanych mają pierwszeństwo.",
+      "vadHint": "Wykrywanie aktywności głosowej: transkrybowana jest tylko mowa, z podziałem w miejscach, w których mówca robi pauzę.\nAuto: Silero - i to tylko w przypadku silników, które tego wymagają (Cohere, Mega, Index-Echo).\nSilero, FireRedVAD, Whisper-VAD, WebRTC: zawsze włączone dla każdego silnika Crisp ASR. FireRedVAD jest najdokładniejszy, natomiast Whisper-VAD wykonuje najmniej cięć i zapewnia ich największą czystość, ale działa najwolniej.\nIndex-Echo zawsze korzysta z Silero. --vad, --vad-model or --chunk-seconds w ustawieniach zaawansowanych mają pierwszeństwo.",
       "inputLanguage": "Język wejściowy",
       "advancedWhisperSettings": "Zaawansowane parametry funkcji zamiany mowy na tekst",
       "downloadingSpeechToTextEngine": "Pobieranie silnika zamiany mowy na tekst",
@@ -2816,8 +2816,8 @@
       "removingOriginalSpeech": "Usuwanie oryginalnej mowy...",
       "removeOriginalSpeechFailed": "Nie udało się usunąć oryginalnej mowy – mowa została dodana do wideo bez niej.",
       "speechRemovalModel": "Model",
-      "speechRemovalModelDescription": "Najlepsza jakość zachowuje najwięcej muzyki i efektów dźwiękowych. Tryb szybki jest około trzy razy szybszy, ale traci się nieco więcej muzyki.",
-      "speechRemovalBestQuality": "Najlepsza jakość (Mel-Band RoFormer)",
+      "speechRemovalModelDescription": "Najwyższa jakość pozwala zachować większość muzyki i efektów dźwiękowych. Tryb 'Szybki' jest około trzy razy szybszy, ale traci się przy tym nieco więcej szczegółów muzycznych.",
+      "speechRemovalBestQuality": "Najwyższa jakość (Mel-Band RoFormer)",
       "speechRemovalFast": "Szybki (HTDemucs)",
       "videoTruncatedWarning": "Obraz w nowym pliku wideo zatrzymuje się po {0}, podczas gdy oryginalne nagranie trwa {1} – obraz się zawiesi, a dźwięk będzie nadal odtwarzany.\n\nPlik został zachowany. Informacje wyjściowe programu ffmpeg znajdują się w pliku error-log.txt w folderze danych aplikacji Subtitle Edit.",
       "originalVolumePercent": "Oryginalna głośność %",
@@ -3572,7 +3572,7 @@
       "timeCodeModeTime": "Czas (hh:mm:ss,zzz)",
       "timeCodeModeFrames": "Klatki (hh:mm:ss:ff)",
       "timeCodeModeFrameNumbers": "Numery klatek",
-      "frameModeSnapToVideoFrames": "Zapisuj czasy na klatkach wideo (a nie na klatkach w obrębie każdej sekundy)",
+      "frameModeSnapToVideoFrames": "Zapisuj znaczniki czasu dla klatek wideo (a nie dla klatek w obrębie każdej sekundy)",
       "textBoxLimitNewLines": "Ogranicz liczbę linii w polu tekstowym napisów",
       "mpvOpenGl": "libmpv - OpenGL",
       "mpvSoftwareRendering": "libmpv - renderowanie programowe (wolno)",
