@@ -503,6 +503,10 @@ public static class ShapeLibrary
                 """<path fill="#FFC107" stroke="#FFC107" stroke-width="8" stroke-linejoin="round" d="M50 8 L94 88 H6 Z"/><g fill="#212121"><path d="M45 34 H55 L53 66 H47 Z"/><circle cx="50" cy="77" r="5"/></g>"""),
             Clip(l.DrawClipArtNoEntry, null,
                 """<circle fill="#E53935" cx="50" cy="50" r="48"/><rect fill="#FFFFFF" x="16" y="40" width="68" height="20" rx="3"/>"""),
+            Clip(l.DrawClipArtPopcorn, null,
+                """<g fill="#FFF3C4"><circle cx="28" cy="30" r="13"/><circle cx="44" cy="20" r="14"/><circle cx="60" cy="22" r="13"/><circle cx="74" cy="32" r="12"/><circle cx="50" cy="34" r="13"/></g><path fill="#E53935" d="M16 38 H84 L74 98 H26 Z"/><g fill="#FFFFFF"><path d="M30 38 H40 L42 98 H34 Z"/><path d="M60 38 H70 L66 98 H58 Z"/></g>"""),
+            Clip(l.DrawClipArtCoffeeCup, null,
+                """<g fill="none" stroke="#B0BEC5" stroke-width="4" stroke-linecap="round"><path d="M34 30 Q28 23 34 16 Q40 9 34 3"/><path d="M50 30 Q44 23 50 16 Q56 9 50 3"/><path d="M66 30 Q60 23 66 16 Q72 9 66 3"/></g><path fill="#ECEFF1" d="M14 34 H78 V70 Q78 92 56 92 H36 Q14 92 14 70 Z M78 42 A16 16 0 0 1 78 74 V66 A8 8 0 0 0 78 50 Z"/><path fill="#6D4C41" d="M14 34 H78 V44 H14 Z"/>"""),
         ];
     }
 }

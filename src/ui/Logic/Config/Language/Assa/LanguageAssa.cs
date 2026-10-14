@@ -90,6 +90,8 @@ public class LanguageAssa
     public string DrawClipArtMicrophone { get; set; }
     public string DrawClipArtWarningSign { get; set; }
     public string DrawClipArtNoEntry { get; set; }
+    public string DrawClipArtPopcorn { get; set; }
+    public string DrawClipArtCoffeeCup { get; set; }
     public string DrawCategoryMyShapes { get; set; }
     public string DrawShapeSpeechBubble { get; set; }
     public string DrawShapeSpeechBubbleRight { get; set; }
@@ -507,6 +509,8 @@ public class LanguageAssa
         DrawClipArtMicrophone = "Microphone";
         DrawClipArtWarningSign = "Warning sign";
         DrawClipArtNoEntry = "No entry";
+        DrawClipArtPopcorn = "Popcorn";
+        DrawClipArtCoffeeCup = "Coffee cup";
         DrawCategoryMyShapes = "My shapes";
         DrawShapeSpeechBubble = "Speech bubble";
         DrawShapeSpeechBubbleRight = "Speech bubble, tail right";
