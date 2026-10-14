@@ -351,6 +351,17 @@ public class LanguageAssa
     public string AdvancedEffectLowerThird { get; set; }
     public string AdvancedEffectLowerThirdDescription { get; set; }
     public string AdvancedEffectLowerThirdAccentColor { get; set; }
+    public string AdvancedEffectCategoryWords { get; set; }
+    public string AdvancedEffectCategoryInOut { get; set; }
+    public string AdvancedEffectCategoryTextFx { get; set; }
+    public string AdvancedEffectCategoryScenes { get; set; }
+    public string AdvancedEffectCategoryTitles { get; set; }
+    public string AdvancedEffectSearchWatermark { get; set; }
+    public string AdvancedEffectNoMatches { get; set; }
+    public string AdvancedEffectCustomize { get; set; }
+    public string AdvancedEffectNoSettings { get; set; }
+    public string AdvancedEffectAmount { get; set; }
+    public string AdvancedEffectPreviewNoVideo { get; set; }
     public string OverrideTagsHistory { get; set; }
 
     public LanguageAssa()
@@ -701,6 +712,17 @@ public class LanguageAssa
         AdvancedEffectLowerThird = "Lower third";
         AdvancedEffectLowerThirdDescription = "Name and role banner bottom-left with an accent bar sliding in — interview/documentary style (first line = name, following lines = role)";
         AdvancedEffectLowerThirdAccentColor = "Accent color";
+        AdvancedEffectCategoryWords = "Words & karaoke";
+        AdvancedEffectCategoryInOut = "In & out";
+        AdvancedEffectCategoryTextFx = "Text effects";
+        AdvancedEffectCategoryScenes = "Scenes";
+        AdvancedEffectCategoryTitles = "Titles & credits";
+        AdvancedEffectSearchWatermark = "Search effects...";
+        AdvancedEffectNoMatches = "No effects match the search";
+        AdvancedEffectCustomize = "Customize";
+        AdvancedEffectNoSettings = "This effect has no settings - it works as is.";
+        AdvancedEffectAmount = "Amount";
+        AdvancedEffectPreviewNoVideo = "Sample preview - open a video to see the real rendering";
         OverrideTagsHistory = "Override tags history";
         MouseOverColor = "Mouse-over color";
         ClickedColor = "Clicked color";
