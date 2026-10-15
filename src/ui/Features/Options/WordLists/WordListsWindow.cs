@@ -143,7 +143,8 @@ public class WordListsWindow : Window
             Width = double.NaN,
             Height = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            ItemContainerTheme = MakeListBoxTheme()
+            ItemContainerTheme = MakeListBoxTheme(),
+            IsTextSearchEnabled = true, // type a letter (or a few quickly) to jump to the first matching entry (#16078)
         };
 
         var textBox = UiUtil.MakeTextBox(110, vm, nameof(vm.NewName)).WithAccessibleName(Se.Language.Options.WordLists.AddName);
@@ -202,7 +203,8 @@ public class WordListsWindow : Window
             Width = double.NaN,
             Height = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            ItemContainerTheme = MakeListBoxTheme()
+            ItemContainerTheme = MakeListBoxTheme(),
+            IsTextSearchEnabled = true, // type a letter (or a few quickly) to jump to the first matching entry (#16078)
         };
 
         var textBox = UiUtil.MakeTextBox(110, vm, nameof(vm.NewUserWord)).WithAccessibleName(Se.Language.General.AddToUserDictionary);
@@ -248,7 +250,8 @@ public class WordListsWindow : Window
             Width = double.NaN,
             Height = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            ItemContainerTheme = MakeListBoxTheme()
+            ItemContainerTheme = MakeListBoxTheme(),
+            IsTextSearchEnabled = true, // type a letter (or a few quickly) to jump to the first matching entry (#16078)
         };
 
         var textBoxFind = UiUtil.MakeTextBox(110, vm, nameof(vm.NewOcrFixFind)).WithAccessibleName(Se.Language.General.Find);
