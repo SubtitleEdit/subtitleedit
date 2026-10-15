@@ -363,7 +363,6 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<Features.Assa.FontCollector.FontCollectorViewModel>();
         collection.AddTransient<AssaResolutionResamplerViewModel>();
         collection.AddTransient<AssaSetPositionViewModel>();
-        collection.AddTransient<AssaSingleStyleViewModel>();
         collection.AddTransient<AssaStylePickerViewModel>();
         collection.AddTransient<AssaStylesViewModel>();
         collection.AddTransient<SsaStylesViewModel>();
