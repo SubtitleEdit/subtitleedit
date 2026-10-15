@@ -1,5 +1,8 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
+using Nikse.SubtitleEdit.Features.Edit;
+using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -14,21 +17,35 @@ public class CustomSearchWindow : Window
         MinWidth = 500;
         CanResize = false;
         Title = Se.Language.Options.Shortcuts.SearchVia;
+        EditDialogChrome.Apply(this);
         vm.Window = this;
         DataContext = vm;
 
-        var labelName = UiUtil.MakeLabel(Se.Language.General.Name);
-        var textBoxName = UiUtil.MakeTextBox(300, vm, nameof(vm.Name));
+        const double labelWidth = 80;
 
-        var labelUrl = UiUtil.MakeLabel(Se.Language.General.Url);
-        var textBoxUrl = UiUtil.MakeTextBox(300, vm, nameof(vm.Url));
+        var textBoxName = VideoSubDialogChrome.MakeTextBox(nameof(vm.Name), Se.Language.General.Name, 300);
+        var textBoxUrl = VideoSubDialogChrome.MakeTextBox(nameof(vm.Url), Se.Language.General.Url, 380);
 
         // The URL is a template, which is not obvious from an empty text box.
-        var labelHint = UiUtil.MakeLabel(Se.Language.Options.Shortcuts.SearchViaUrlHint);
+        var labelHint = VideoSubDialogChrome.MakeHintText(Se.Language.Options.Shortcuts.SearchViaUrlHint);
+        labelHint.MaxWidth = 380;
+        labelHint.HorizontalAlignment = HorizontalAlignment.Left;
+
+        var rows = new StackPanel
+        {
+            Spacing = 8,
+            Children =
+            {
+                VideoSubDialogChrome.MakeRow(Se.Language.General.Name, textBoxName, labelWidth),
+                VideoSubDialogChrome.MakeRow(Se.Language.General.Url, textBoxUrl, labelWidth),
+                VideoSubDialogChrome.MakeRow(string.Empty, labelHint, labelWidth),
+            },
+        };
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var buttonPanel = VideoSubDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         var grid = new Grid
         {
@@ -36,27 +53,13 @@ public class CustomSearchWindow : Window
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(labelName, 0);
-        grid.Add(textBoxName, 0, 1);
-        grid.Add(labelUrl, 1);
-        grid.Add(textBoxUrl, 1, 1);
-        grid.Add(labelHint, 2, 1);
-        grid.Add(buttonPanel, 3, 0, 1, 2);
+        grid.Add(VideoSubDialogChrome.MakePanel(EditorChrome.MakeEditorSection(Se.Language.Options.Shortcuts.SearchVia, rows, first: true)), 0);
+        grid.Add(buttonPanel, 1);
 
         Content = grid;
 

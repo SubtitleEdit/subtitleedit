@@ -1,5 +1,9 @@
+using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Layout;
+using Nikse.SubtitleEdit.Features.Edit;
+using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -14,15 +18,21 @@ public class PickMillisecondsWindow : Window
         MinWidth = 400;
         CanResize = false;
         Title = Se.Language.Options.Shortcuts.MoveVideoPositionMilliseconds;
+        EditDialogChrome.Apply(this);
         vm.Window = this;
         DataContext = vm;
 
-        var labelMilliseconds = UiUtil.MakeLabel(Se.Language.General.Milliseconds);
-        var numericUpDownMilliseconds = UiUtil.MakeNumericUpDownInt(1, 1_000_000, 5000, 200, vm, nameof(vm.Milliseconds));
+        var numericUpDownMilliseconds = UiUtil.MakeNumericUpDownInt(1, 1_000_000, 5000, 160, vm, nameof(vm.Milliseconds));
+        numericUpDownMilliseconds.HorizontalAlignment = HorizontalAlignment.Left;
+        AutomationProperties.SetName(numericUpDownMilliseconds, Se.Language.General.Milliseconds);
+
+        var row = VideoSubDialogChrome.MakeRow(Se.Language.General.Milliseconds, numericUpDownMilliseconds, 110);
+        row.Margin = new Thickness(16, 18);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var buttonPanel = VideoSubDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         var grid = new Grid
         {
@@ -30,23 +40,13 @@ public class PickMillisecondsWindow : Window
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(labelMilliseconds, 0);
-        grid.Add(numericUpDownMilliseconds, 0, 1);
-        grid.Add(buttonPanel, 2, 0, 1, 2);
+        grid.Add(VideoSubDialogChrome.MakePanel(row), 0);
+        grid.Add(buttonPanel, 1);
 
         Content = grid;
 

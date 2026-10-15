@@ -1,9 +1,12 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Features.Edit;
+using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -18,14 +21,16 @@ public class CustomShortcutStepWindow : Window
         Title = language.CustomShortcutStep;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        EditDialogChrome.Apply(this);
         vm.Window = this;
         DataContext = vm;
 
         const double inputWidth = InputWidth;
 
-        var labelType = UiUtil.MakeLabel(Se.Language.General.Type);
+        var labelType = MakeLabel(Se.Language.General.Type);
         var comboBoxType = UiUtil.MakeComboBox(vm.StepTypes, vm, nameof(vm.SelectedStepType));
         comboBoxType.Width = inputWidth; // same right edge as the inputs below
+        AutomationProperties.SetName(comboBoxType, Se.Language.General.Type);
         var panelType = MakeFormGrid((labelType, comboBoxType));
 
         // Run command: a searchable list of every shortcut command.
@@ -36,10 +41,10 @@ public class CustomShortcutStepWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
             [!TextBox.TextProperty] = new Binding(nameof(vm.CommandSearchText)) { Mode = BindingMode.TwoWay },
         }.WithSearchAndClearIcons().WithAccessibleName(Se.Language.General.Search);
-        var accentColor = UiUtil.GetAccentBrush() is ISolidColorBrush accentSolid ? accentSolid.Color : Colors.DodgerBlue;
+        textBoxSearch.Classes.Add("text");
         var badgeCount = new Border
         {
-            Background = new SolidColorBrush(accentColor, 0.18),
+            Background = EditorChrome.AccentSoftBrush,
             CornerRadius = new CornerRadius(10),
             Padding = new Thickness(8, 3, 8, 2),
             Margin = new Thickness(8, 0, 0, 0),
@@ -50,7 +55,7 @@ public class CustomShortcutStepWindow : Window
                 FontSize = UiUtil.ScaledFontSize(10),
                 FontWeight = FontWeight.SemiBold,
                 VerticalAlignment = VerticalAlignment.Center,
-                Foreground = new SolidColorBrush(accentColor),
+                Foreground = EditorChrome.IsLightTheme ? EditorChrome.AccentBrush : EditorChrome.StrongTextBrush,
             },
         };
         var panelSearch = new Grid
@@ -70,22 +75,24 @@ public class CustomShortcutStepWindow : Window
             [!Avalonia.Controls.Primitives.SelectingItemsControl.SelectedItemProperty] = new Binding(nameof(vm.SelectedCommand)) { Mode = BindingMode.TwoWay },
             Width = inputWidth,
             Height = 300,
+            Background = Brushes.Transparent, // the frame's field color shows through
             ItemTemplate = new FuncDataTemplate<CustomShortcutCommandItem>((item, _) =>
             {
-                var name = new TextBlock { Text = item?.DisplayName, TextTrimming = TextTrimming.CharacterEllipsis };
-                var group = new TextBlock { Text = item?.GroupName, Opacity = 0.6, FontSize = 11, TextTrimming = TextTrimming.CharacterEllipsis };
+                var name = new TextBlock { Text = item?.DisplayName, FontSize = 12.5, TextTrimming = TextTrimming.CharacterEllipsis };
+                var group = new TextBlock { Text = item?.GroupName, Foreground = EditorChrome.DimTextBrush, FontSize = 11, TextTrimming = TextTrimming.CharacterEllipsis };
                 return new StackPanel { Children = { name, group } };
             }),
         };
         listBoxCommands.DoubleTapped += (_, _) => vm.CommandListDoubleTapped();
-        var labelSearch = UiUtil.MakeLabel(Se.Language.General.Search);
+        AutomationProperties.SetName(listBoxCommands, language.CustomShortcutStepRunCommand);
+        var labelSearch = MakeLabel(Se.Language.General.Search);
         var panelRunCommand = MakeFormGrid(
             (labelSearch, panelSearch),
-            (null, UiUtil.MakeBorderForControlNoPadding(listBoxCommands)));
+            (null, VideoSubDialogChrome.MakeListFrame(listBoxCommands)));
         panelRunCommand.Bind(IsVisibleProperty, new Binding(nameof(vm.IsRunCommand)));
 
         // Insert text
-        var labelText = UiUtil.MakeLabel(Se.Language.General.Text);
+        var labelText = MakeLabel(Se.Language.General.Text);
         var textBoxText = new TextBox
         {
             Width = inputWidth,
@@ -94,30 +101,54 @@ public class CustomShortcutStepWindow : Window
             TextWrapping = TextWrapping.NoWrap,
             [!TextBox.TextProperty] = new Binding(nameof(vm.Text)) { Mode = BindingMode.TwoWay },
         }.WithAccessibleName(Se.Language.General.Text);
-        var labelPosition = UiUtil.MakeLabel(Se.Language.General.Position);
+        textBoxText.Classes.Add("text");
+        textBoxText.VerticalContentAlignment = VerticalAlignment.Top;
+        var labelPosition = MakeLabel(Se.Language.General.Position);
         var comboBoxPosition = UiUtil.MakeComboBox(vm.Positions, vm, nameof(vm.SelectedPosition));
         comboBoxPosition.Width = 250;
+        AutomationProperties.SetName(comboBoxPosition, Se.Language.General.Position);
         var panelInsertText = MakeFormGrid(
             (labelText, textBoxText),
             (labelPosition, comboBoxPosition));
         panelInsertText.Bind(IsVisibleProperty, new Binding(nameof(vm.IsInsertText)));
 
         // Find and replace
-        var labelFind = UiUtil.MakeLabel(Se.Language.General.Find);
-        var textBoxFind = UiUtil.MakeTextBox(inputWidth, vm, nameof(vm.Find));
-        var labelReplace = UiUtil.MakeLabel(Se.Language.General.ReplaceWith);
-        var textBoxReplace = UiUtil.MakeTextBox(inputWidth, vm, nameof(vm.ReplaceWith));
-        var checkBoxRegex = UiUtil.MakeCheckBox(Se.Language.General.RegularExpression, vm, nameof(vm.UseRegex));
-        var checkBoxCaseSensitive = UiUtil.MakeCheckBox(Se.Language.General.CaseSensitive, vm, nameof(vm.CaseSensitive));
+        var labelFind = MakeLabel(Se.Language.General.Find);
+        var textBoxFind = VideoSubDialogChrome.MakeTextBox(nameof(vm.Find), Se.Language.General.Find, inputWidth);
+        var labelReplace = MakeLabel(Se.Language.General.ReplaceWith);
+        var textBoxReplace = VideoSubDialogChrome.MakeTextBox(nameof(vm.ReplaceWith), Se.Language.General.ReplaceWith, inputWidth);
+        var switchRegex = VideoSubDialogChrome.MakeSwitchRow(
+            VideoSubDialogChrome.MakeSwitch(nameof(vm.UseRegex), Se.Language.General.RegularExpression),
+            Se.Language.General.RegularExpression);
+        var switchCaseSensitive = VideoSubDialogChrome.MakeSwitchRow(
+            VideoSubDialogChrome.MakeSwitch(nameof(vm.CaseSensitive), Se.Language.General.CaseSensitive),
+            Se.Language.General.CaseSensitive);
+        var panelSwitches = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 20,
+            Children = { switchRegex, switchCaseSensitive },
+        };
         var panelReplace = MakeFormGrid(
             (labelFind, textBoxFind),
             (labelReplace, textBoxReplace),
-            (null, UiUtil.MakeHorizontalPanel(checkBoxRegex, checkBoxCaseSensitive)));
+            (null, panelSwitches));
         panelReplace.Bind(IsVisibleProperty, new Binding(nameof(vm.IsReplace)));
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var buttonPanel = VideoSubDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk);
+
+        var panels = new Panel { Children = { panelRunCommand, panelInsertText, panelReplace } };
+
+        // Every row uses the same label column and input width, so left and right edges line up.
+        var form = new StackPanel
+        {
+            Spacing = 12,
+            Margin = new Thickness(16, 16, 16, 18),
+            Children = { panelType, panels },
+        };
 
         var grid = new Grid
         {
@@ -125,18 +156,10 @@ public class CustomShortcutStepWindow : Window
             {
                 new RowDefinition { Height = GridLength.Auto },
                 new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 12,
         };
-
-        var panels = new Panel { Children = { panelRunCommand, panelInsertText, panelReplace } };
-
-        // Every row uses the same label column and input width, so left and right edges line up.
-        grid.Add(panelType, 0);
-        grid.Add(panels, 1);
-        grid.Add(buttonPanel, 2);
+        grid.Add(VideoSubDialogChrome.MakePanel(form), 0);
+        grid.Add(buttonPanel, 1);
 
         Content = grid;
 
@@ -146,6 +169,13 @@ public class CustomShortcutStepWindow : Window
 
     private const double LabelWidth = 110;
     private const double InputWidth = 420;
+
+    private static TextBlock MakeLabel(string text)
+    {
+        var label = EditorChrome.MakeDimLabel(text, new Thickness(0));
+        label.TextTrimming = TextTrimming.CharacterEllipsis;
+        return label;
+    }
 
     /// <summary>
     /// Label + input rows with fixed column widths, so every section of the dialog (type, run
