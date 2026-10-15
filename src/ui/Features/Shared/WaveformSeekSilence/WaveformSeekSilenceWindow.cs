@@ -1,3 +1,5 @@
+using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
@@ -5,67 +7,68 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Shared.WaveformSeekSilence;
 
+/// <summary>
+/// Seek silence, in the editor look (see <see cref="SharedDialogChrome"/>).
+/// </summary>
 public class WaveformSeekSilenceWindow : Window
 {
     public WaveformSeekSilenceWindow(WaveformSeekSilenceViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Waveform.SeekSilence;
-        CanResize = true;
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
+        SharedDialogChrome.Apply(this);
         vm.Window = this;
         DataContext = vm;
 
-        var label = UiUtil.MakeLabel(Se.Language.General.SearchDirection);
-
-        var checkBoxSeekForward = UiUtil.MakeRadioButton(Se.Language.General.Forward, vm, nameof(vm.SeekForward), "seek")
-            .WithMarginLeft(10);
-        var checkBoxSeekBackward = UiUtil.MakeRadioButton(Se.Language.General.Backward, vm, nameof(vm.SeekBackward), "seek")
-            .WithMarginLeft(10);
-
-        var labelMinSilenceDuration = UiUtil.MakeLabel(Se.Language.Waveform.MinSilenceDurationSeconds);
-        var numericUpDownMinSilenceDuration = UiUtil.MakeNumericUpDownThreeDecimals(0, 10000, 140, vm, nameof(vm.SilenceMinDuration));
-        var panelMinSilenceDuration = UiUtil.MakeHorizontalPanel(labelMinSilenceDuration, numericUpDownMinSilenceDuration);
-
-        var labelMaxSilenceVolume = UiUtil.MakeLabel(Se.Language.Waveform.MaxSilenceVolume);
-        var numericUpDownMaxSilenceVolume = UiUtil.MakeNumericUpDownTwoDecimals(0, 1, 140, vm, nameof(vm.SilenceMaxVolume));
-        var panelMaxSilenceVolume = UiUtil.MakeHorizontalPanel(labelMaxSilenceVolume, numericUpDownMaxSilenceVolume);
-
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-
-        var grid = new Grid
+        var checkBoxSeekForward = UiUtil.MakeRadioButton(Se.Language.General.Forward, vm, nameof(vm.SeekForward), "seek");
+        var checkBoxSeekBackward = UiUtil.MakeRadioButton(Se.Language.General.Backward, vm, nameof(vm.SeekBackward), "seek");
+        var panelDirection = new StackPanel
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Orientation = Orientation.Horizontal,
+            Spacing = 16,
+            Children = { checkBoxSeekForward, checkBoxSeekBackward },
         };
 
-        grid.Add(label, 0);
-        grid.Add(checkBoxSeekForward, 1);
-        grid.Add(checkBoxSeekBackward, 2);
-        grid.Add(panelMinSilenceDuration, 3);
-        grid.Add(panelMaxSilenceVolume, 4);
-        grid.Add(panelButtons, 5);
+        var numericUpDownMinSilenceDuration = UiUtil.MakeNumericUpDownThreeDecimals(0, 10000, 140, vm, nameof(vm.SilenceMinDuration));
+        AutomationProperties.SetName(numericUpDownMinSilenceDuration, Se.Language.Waveform.MinSilenceDurationSeconds);
+        var numericUpDownMaxSilenceVolume = UiUtil.MakeNumericUpDownTwoDecimals(0, 1, 140, vm, nameof(vm.SilenceMaxVolume));
+        AutomationProperties.SetName(numericUpDownMaxSilenceVolume, Se.Language.Waveform.MaxSilenceVolume);
 
-        Content = grid;
+        var gridSettings = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = GridLength.Auto },
+                new ColumnDefinition { Width = GridLength.Auto },
+            },
+            RowDefinitions =
+            {
+                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = GridLength.Auto },
+            },
+            ColumnSpacing = 12,
+            RowSpacing = 8,
+        };
+        gridSettings.Add(EditorChrome.MakeDimLabel(Se.Language.Waveform.MinSilenceDurationSeconds, new Thickness(0)), 0, 0);
+        gridSettings.Add(numericUpDownMinSilenceDuration, 0, 1);
+        gridSettings.Add(EditorChrome.MakeDimLabel(Se.Language.Waveform.MaxSilenceVolume, new Thickness(0)), 1, 0);
+        gridSettings.Add(numericUpDownMaxSilenceVolume, 1, 1);
+
+        var sections = new StackPanel
+        {
+            Children =
+            {
+                SharedDialogChrome.MakeSection(Se.Language.General.SearchDirection, panelDirection, first: true),
+                SharedDialogChrome.MakeSection(Se.Language.General.Settings, gridSettings),
+            },
+        };
+
+        var buttonOk = SharedDialogChrome.Primary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+
+        Content = SharedDialogChrome.MakeRoot(sections, SharedDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, checkBoxSeekForward); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;

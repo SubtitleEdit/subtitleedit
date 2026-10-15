@@ -22,7 +22,7 @@ public class PromptFilesSavedWindow : Window
     private readonly IBrush _okBackground;
     private readonly IBrush _warnForeground;
     private readonly IBrush _warnBackground;
-    private static readonly IBrush ChipBackground = new SolidColorBrush(Color.FromArgb(28, 128, 128, 128));
+    private static IBrush ChipBackground => EditorChrome.HoverBrush;
 
     public PromptFilesSavedWindow(PromptFilesSavedViewModel vm)
     {
@@ -30,11 +30,12 @@ public class PromptFilesSavedWindow : Window
         Bind(TitleProperty, new Binding(nameof(vm.Title)));
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        SharedDialogChrome.Apply(this);
         _vm = vm;
         vm.Window = this;
         DataContext = vm;
 
-        var isDark = UiTheme.IsDarkThemeEnabled();
+        var isDark = !EditorChrome.IsLightTheme;
         _okForeground = new SolidColorBrush(isDark ? Color.FromRgb(76, 194, 122) : Color.FromRgb(46, 158, 91));
         _okBackground = new SolidColorBrush(isDark ? Color.FromArgb(60, 46, 158, 91) : Color.FromArgb(36, 46, 158, 91));
         _warnForeground = new SolidColorBrush(isDark ? Color.FromRgb(240, 180, 70) : Color.FromRgb(196, 128, 16));
@@ -55,7 +56,7 @@ public class PromptFilesSavedWindow : Window
         var labelFolderSummary = new TextBlock
         {
             FontSize = UiUtil.ScaledFontSize(11.5),
-            Opacity = 0.65,
+            Foreground = EditorChrome.DimTextBrush,
             TextTrimming = TextTrimming.CharacterEllipsis,
             MaxWidth = 460,
             HorizontalAlignment = HorizontalAlignment.Left,
@@ -78,7 +79,7 @@ public class PromptFilesSavedWindow : Window
         {
             Orientation = Orientation.Horizontal,
             Spacing = 14,
-            Margin = new Thickness(6, 6, 6, 4),
+            Margin = new Thickness(4, 0, 4, 0),
             Children =
             {
                 headerBall,
@@ -107,11 +108,10 @@ public class PromptFilesSavedWindow : Window
             Padding = new Thickness(0, 0, 4, 0),
         };
 
-        var buttonOpenFolder = UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.OpenOutputFolderCommand)
-            .WithIconLeft(IconNames.FolderOpen)
+        var buttonOpenFolder = SharedDialogChrome.MakeTextToolButton("fa-solid fa-folder-open", Se.Language.General.OpenContainingFolder, vm.OpenOutputFolderCommand)
             .WithBindIsVisible(nameof(vm.HasOutputFolder));
-        var buttonDone = UiUtil.MakeButtonDone(vm.OkCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOpenFolder, buttonDone);
+        buttonOpenFolder.Margin = new Thickness(-8, 0, 0, 0); // the flat button's text lines up with the content
+        var buttonDone = SharedDialogChrome.Primary(UiUtil.MakeButtonDone(vm.OkCommand));
 
         var grid = new Grid
         {
@@ -119,21 +119,19 @@ public class PromptFilesSavedWindow : Window
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 12,
+            Margin = new Thickness(16, 18, 16, 16),
+            RowSpacing = 14,
         };
 
         grid.Add(panelHeader, 0);
         grid.Add(scrollViewer, 1);
-        grid.Add(buttonPanel, 2);
 
-        Content = grid;
+        Content = SharedDialogChrome.MakeRoot(grid, SharedDialogChrome.MakeButtonBar(buttonOpenFolder, buttonDone));
 
         UiUtil.FocusOnFirstActivation(this, buttonDone); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -177,7 +175,7 @@ public class PromptFilesSavedWindow : Window
         {
             Text = item.FolderDisplay,
             FontSize = UiUtil.ScaledFontSize(11),
-            Opacity = 0.6,
+            Foreground = EditorChrome.DimTextBrush,
             TextTrimming = TextTrimming.CharacterEllipsis,
             Margin = new Thickness(0, 1, 0, 0),
             IsVisible = item.ShowFolder,
@@ -256,8 +254,8 @@ public class PromptFilesSavedWindow : Window
         {
             CornerRadius = new CornerRadius(8),
             Padding = new Thickness(10, 8),
-            Background = new SolidColorBrush(Color.FromArgb(16, 128, 128, 128)),
-            BorderBrush = new SolidColorBrush(Color.FromArgb(40, 128, 128, 128)),
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
             BorderThickness = new Thickness(1),
             Child = grid,
         };
@@ -267,7 +265,9 @@ public class PromptFilesSavedWindow : Window
     {
         var button = UiUtil.MakeButton(command, iconName, hint);
         button.CommandParameter = item;
-        button.Padding = new Thickness(6, 4);
+        button.Classes.Add("tool");
+        button.Width = 28;
+        button.Height = 28;
         return button;
     }
 
