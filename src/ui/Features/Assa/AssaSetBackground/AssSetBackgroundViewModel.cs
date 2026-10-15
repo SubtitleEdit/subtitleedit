@@ -34,6 +34,15 @@ public partial class AssSetBackgroundViewModel : ObservableObject
 
     [ObservableProperty] private string _progressText = string.Empty;
 
+    /// <summary>
+    /// "2 / 5  Line text" - which selected line the preview shows.
+    /// </summary>
+    [ObservableProperty] private string _previewLineInfo = string.Empty;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(PreviousLineCommand), nameof(NextLineCommand))]
+    private int _previewIndex;
+
     // Padding settings
     [ObservableProperty] private int _paddingLeft = 10;
     [ObservableProperty] private int _paddingRight = 10;
@@ -107,6 +116,9 @@ public partial class AssSetBackgroundViewModel : ObservableObject
         BoxStyles.Add(Se.Language.Assa.BackgroundBoxBrushStroke);
         BoxStyles.Add(Se.Language.Assa.BackgroundBoxCornerBrackets);
         BoxStyles.Add(Se.Language.Assa.BackgroundBoxUnderline);
+        BoxStyles.Add(Se.Language.Assa.BackgroundBoxFrame);
+        BoxStyles.Add(Se.Language.Assa.BackgroundBoxArrowTag);
+        BoxStyles.Add(Se.Language.Assa.BackgroundBoxSideBar);
 
         VideoPlayerControl = new VideoPlayerControl(new EmptyVideoPlayer());
 
@@ -174,6 +186,8 @@ public partial class AssSetBackgroundViewModel : ObservableObject
         _videoPositionSeconds = videoPositionSeconds;
 
         _previewParagraph = _selectedItems.First().ToParagraph(_assaFormat);
+        PreviewIndex = 0;
+        UpdatePreviewLineInfo();
         _previewSubtitle = new Subtitle(subtitle, false);
         _previewSubtitle.Paragraphs.Clear();
         _previewSubtitle.Paragraphs.Add(_previewParagraph);
@@ -442,6 +456,18 @@ public partial class AssSetBackgroundViewModel : ObservableObject
         {
             return GenerateUnderlineBox(left, right, top, bottom);
         }
+        else if (boxStyleIndex == 21)
+        {
+            return GenerateFrameBox(left, right, top, bottom);
+        }
+        else if (boxStyleIndex == 22)
+        {
+            return GenerateArrowTagBox(left, right, top, bottom);
+        }
+        else if (boxStyleIndex == 23)
+        {
+            return GenerateSideBarBox(left, right, top, bottom);
+        }
 
         // Square corners (default)
         return $"{{\\p1}}m {left} {top} l {right} {top} {right} {bottom} {left} {bottom}{{\\p0}}";
@@ -562,6 +588,35 @@ public partial class AssSetBackgroundViewModel : ObservableObject
     {
         var t = Math.Max(4, (bottom - top) / 10);
         return $"{{\\p1}}m {left} {bottom - t} l {right} {bottom - t} {right} {bottom} {left} {bottom}{{\\p0}}";
+    }
+
+    /// <summary>
+    /// Only the border: the inner rectangle is wound the other way, so it is a hole.
+    /// </summary>
+    private static string GenerateFrameBox(int left, int right, int top, int bottom)
+    {
+        var t = Math.Max(3, (bottom - top) / 10);
+        return $"{{\\p1}}m {left} {top} l {right} {top} {right} {bottom} {left} {bottom} " +
+               $"m {left + t} {top + t} l {left + t} {bottom - t} {right - t} {bottom - t} {right - t} {top + t}{{\\p0}}";
+    }
+
+    /// <summary>
+    /// A label tag: square on the left, pointed on the right.
+    /// </summary>
+    private static string GenerateArrowTagBox(int left, int right, int top, int bottom)
+    {
+        var d = Math.Max(4, (bottom - top) / 2);
+        var cy = (top + bottom) / 2;
+        return $"{{\\p1}}m {left} {top} l {right} {top} {right + d} {cy} {right} {bottom} {left} {bottom}{{\\p0}}";
+    }
+
+    /// <summary>
+    /// A vertical accent bar at the left of the padded box, lower-third style.
+    /// </summary>
+    private static string GenerateSideBarBox(int left, int right, int top, int bottom)
+    {
+        var t = Math.Max(4, (bottom - top) / 8);
+        return $"{{\\p1}}m {left} {top} l {left + t} {top} {left + t} {bottom} {left} {bottom}{{\\p0}}";
     }
 
     private static string GenerateWaveBox(int left, int right, int top, int bottom)
@@ -825,6 +880,52 @@ public partial class AssSetBackgroundViewModel : ObservableObject
                $"b {right + curve} {top + q} {right - curve} {bottom - q} {right} {bottom} " +
                $"l {left} {bottom} " +
                $"b {left - curve} {bottom - q} {left + curve} {top + q} {left} {top}{{\\p0}}";
+    }
+
+    private bool CanGoToPreviousLine() => PreviewIndex > 0;
+
+    private bool CanGoToNextLine() => PreviewIndex < _selectedItems.Count - 1;
+
+    [RelayCommand(CanExecute = nameof(CanGoToPreviousLine))]
+    private void PreviousLine() => ShowPreviewLine(PreviewIndex - 1);
+
+    [RelayCommand(CanExecute = nameof(CanGoToNextLine))]
+    private void NextLine() => ShowPreviewLine(PreviewIndex + 1);
+
+    /// <summary>
+    /// Previews the box on another of the selected lines: its own text size, at its own time.
+    /// </summary>
+    internal void ShowPreviewLine(int index)
+    {
+        if (index < 0 || index >= _selectedItems.Count || index == PreviewIndex)
+        {
+            return;
+        }
+
+        PreviewIndex = index;
+        _previewParagraph = _selectedItems[index].ToParagraph(_assaFormat);
+
+        // The box is sized from a render of the previewed line - measure the new one
+        _trimResult?.Dispose();
+        _trimResult = null;
+        _oldSubtitleText = string.Empty;
+        UpdatePreviewLineInfo();
+
+        if (_mpvPlayer != null)
+        {
+            VideoPlayerControl.Position = GetPreviewSeekSeconds(_previewParagraph, null);
+        }
+    }
+
+    private void UpdatePreviewLineInfo()
+    {
+        var text = HtmlUtil.RemoveHtmlTags(_previewParagraph.Text, true).Replace(Environment.NewLine, " ").Replace("\\N", " ").Trim();
+        if (text.Length > 48)
+        {
+            text = text[..48] + "…";
+        }
+
+        PreviewLineInfo = $"{PreviewIndex + 1} / {_selectedItems.Count}   {text}";
     }
 
     private string GenerateUniqueStyleName()
