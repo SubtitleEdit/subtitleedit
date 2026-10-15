@@ -364,6 +364,9 @@ public class LanguageAssa
     public string Angle { get; set; }
     public string ImageColorPicker { get; set; }
     public string CopyColorAsHextoClipboard { get; set; }
+    public string ImageColorPickerHint { get; set; }
+    public string CopyColorAsAssaToClipboard { get; set; }
+    public string CopyColorAsAssaTagToClipboard { get; set; }
     public string GeneratingBackgroundBoxXOfY { get; set; }
 
     // Apply Advanced Effect
@@ -839,6 +842,9 @@ public class LanguageAssa
         Angle = "Angle";
         ImageColorPicker = "Image color picker";
         CopyColorAsHextoClipboard = "Copy color as hex to clipboard";
+        ImageColorPickerHint = "Click the frame to pick a color";
+        CopyColorAsAssaToClipboard = "Copy color as ASSA (&HBBGGRR&) to clipboard";
+        CopyColorAsAssaTagToClipboard = "Copy color as ASSA \\c tag to clipboard";
         GeneratingBackgroundBoxXOfY = "Generating background box {0} of {1}...";
 
         // Apply Advanced Effect
