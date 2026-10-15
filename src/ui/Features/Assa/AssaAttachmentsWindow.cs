@@ -33,7 +33,6 @@ public class AssaAttachmentsWindow : Window
         Height = 820;
         MinWidth = 900;
         MinHeight = 550;
-        RequestedThemeVariant = ThemeVariant.Dark;
         Background = AssaDrawWindow.WindowBrush;
         AssaDrawWindow.AddEditorStyles(Styles);
 

@@ -18,13 +18,11 @@ using Nikse.SubtitleEdit.Logic.Config;
 namespace Nikse.SubtitleEdit.Features.Assa.AssaProgressBar;
 
 /// <summary>
-/// Progress bar generator, styled like ASSA draw: always dark, settings on the left with the bar
+/// Progress bar generator, styled like ASSA draw: settings on the left with the bar
 /// styles as a gallery, the libass preview on the right.
 /// </summary>
 public class AssaProgressBarWindow : Window
 {
-    private static readonly IBrush ThumbnailBrush = new SolidColorBrush(Color.FromRgb(96, 102, 116));
-    private static readonly IBrush ThumbnailFillBrush = new SolidColorBrush(Color.FromRgb(214, 218, 226));
 
     public AssaProgressBarWindow(AssaProgressBarViewModel vm)
     {
@@ -35,7 +33,6 @@ public class AssaProgressBarWindow : Window
         Height = 800;
         MinWidth = 950;
         MinHeight = 650;
-        RequestedThemeVariant = ThemeVariant.Dark;
         Background = AssaDrawWindow.WindowBrush;
         AssaDrawWindow.AddEditorStyles(Styles);
 
@@ -178,11 +175,11 @@ public class AssaProgressBarWindow : Window
         const double height = 14;
         var geometry = AssaDrawingGeometry.FromDrawing(ProgressBarStyles.Drawing(styleIndex, (int)width, (int)height));
         var canvas = new Canvas { Width = width, Height = height };
-        canvas.Children.Add(new Avalonia.Controls.Shapes.Path { Data = geometry, Fill = ThumbnailBrush });
+        canvas.Children.Add(new Avalonia.Controls.Shapes.Path { Data = geometry, Fill = AssaDrawWindow.ThumbnailMutedBrush });
         canvas.Children.Add(new Avalonia.Controls.Shapes.Path
         {
             Data = geometry,
-            Fill = ThumbnailFillBrush,
+            Fill = AssaDrawWindow.ThumbnailBrush,
             Clip = new RectangleGeometry(new Rect(0, 0, width * 0.6, height)),
         });
 

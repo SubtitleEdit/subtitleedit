@@ -34,7 +34,6 @@ public class AssaSetPositionWindow : Window
         MinHeight = 500;
         Width = 1150;
         Height = 760;
-        RequestedThemeVariant = ThemeVariant.Dark;
         Background = AssaDrawWindow.WindowBrush;
         AssaDrawWindow.AddEditorStyles(Styles);
 
@@ -133,7 +132,7 @@ public class AssaSetPositionWindow : Window
             {
                 var on = vm.AnchorIndex == index;
                 button.Classes.Set("active", on);
-                ((Ellipse)button.Content!).Fill = on ? Brushes.White : AssaDrawWindow.FaintTextBrush;
+                ((Ellipse)button.Content!).Fill = on ? Brushes.White : AssaDrawWindow.FaintTextBrush; // on the accent fill
             }
 
             Update();

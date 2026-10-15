@@ -47,7 +47,6 @@ public class AssaStylesWindow : Window
         Height = 850;
         MinWidth = 1050;
         MinHeight = 600;
-        RequestedThemeVariant = ThemeVariant.Dark;
         Background = AssaDrawWindow.WindowBrush;
         AssaDrawWindow.AddEditorStyles(Styles);
         AddStyles(Styles);
@@ -143,7 +142,7 @@ public class AssaStylesWindow : Window
         {
             Setters =
             {
-                new Setter(Border.BackgroundProperty, AssaDrawWindow.AccentSoftBrush),
+                new Setter(Border.BackgroundProperty, AssaDrawWindow.AccentBrush),
                 new Setter(Border.BorderBrushProperty, AssaDrawWindow.AccentBrush),
             },
         });

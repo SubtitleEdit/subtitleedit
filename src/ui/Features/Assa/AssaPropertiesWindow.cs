@@ -27,7 +27,6 @@ public class AssaPropertiesWindow : Window
         Width = 640;
         SizeToContent = SizeToContent.Height;
         CanResize = false;
-        RequestedThemeVariant = ThemeVariant.Dark;
         Background = AssaDrawWindow.WindowBrush;
         AssaDrawWindow.AddEditorStyles(Styles);
 

@@ -17,12 +17,11 @@ using Nikse.SubtitleEdit.Logic.Config;
 namespace Nikse.SubtitleEdit.Features.Assa.AssaSetBackground;
 
 /// <summary>
-/// Background box generator, styled like ASSA draw: always dark, a properties panel on the
+/// Background box generator, styled like ASSA draw: a properties panel on the
 /// left with the box styles as a gallery, the libass preview on the right.
 /// </summary>
 public class AssSetBackgroundWindow : Window
 {
-    private static readonly IBrush ThumbnailBrush = new SolidColorBrush(Color.FromRgb(214, 218, 226));
 
     public AssSetBackgroundWindow(AssSetBackgroundViewModel vm)
     {
@@ -33,7 +32,6 @@ public class AssSetBackgroundWindow : Window
         Height = 760;
         MinWidth = 950;
         MinHeight = 650;
-        RequestedThemeVariant = ThemeVariant.Dark;
         Background = AssaDrawWindow.WindowBrush;
         AssaDrawWindow.AddEditorStyles(Styles);
 
@@ -174,7 +172,6 @@ public class AssSetBackgroundWindow : Window
 
     // The sample box the thumbnails are drawn around, and the "text" inside it
     private static readonly Rect SampleBox = new(10, 10, 140, 60);
-    private static readonly IBrush TextPlaceholderBrush = new SolidColorBrush(Color.FromRgb(96, 102, 116));
 
     /// <summary>
     /// A tile: the style drawn around a sample text box, scaled as a whole - so a bar under the
@@ -185,7 +182,7 @@ public class AssSetBackgroundWindow : Window
         var geometry = MakeThumbnail(styleIndex);
         var bounds = geometry.Bounds.Union(SampleBox);
         var canvas = new Canvas { Width = bounds.Width, Height = bounds.Height };
-        var path = new Avalonia.Controls.Shapes.Path { Data = geometry, Fill = ThumbnailBrush };
+        var path = new Avalonia.Controls.Shapes.Path { Data = geometry, Fill = AssaDrawWindow.ThumbnailBrush };
         Canvas.SetLeft(path, -bounds.X);
         Canvas.SetTop(path, -bounds.Y);
         canvas.Children.Add(path);
@@ -193,7 +190,7 @@ public class AssSetBackgroundWindow : Window
         // Two lines of "text" in the middle of the sample box
         foreach (var (width, y) in new[] { (80.0, 30.0), (56.0, 44.0) })
         {
-            var line = new Border { Width = width, Height = 7, CornerRadius = new CornerRadius(3.5), Background = TextPlaceholderBrush };
+            var line = new Border { Width = width, Height = 7, CornerRadius = new CornerRadius(3.5), Background = AssaDrawWindow.ThumbnailMutedBrush };
             Canvas.SetLeft(line, SampleBox.Center.X - width / 2 - bounds.X);
             Canvas.SetTop(line, y - bounds.Y);
             canvas.Children.Add(line);
