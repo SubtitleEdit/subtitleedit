@@ -140,13 +140,7 @@ public class AssSetBackgroundWindow : Window
             var index = i;
             var button = new Button
             {
-                Content = new Avalonia.Controls.Shapes.Path
-                {
-                    Data = MakeThumbnail(index),
-                    Fill = ThumbnailBrush,
-                    Stretch = Stretch.Uniform,
-                    Margin = new Thickness(12, 10),
-                },
+                Content = MakeThumbnailView(index),
                 Height = 54,
                 Margin = new Thickness(0, 0, 6, 6),
                 HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -201,8 +195,38 @@ public class AssSetBackgroundWindow : Window
         return MakeSection(Se.Language.General.Style, content, name, first: true);
     }
 
+    // The sample box the thumbnails are drawn around, and the "text" inside it
+    private static readonly Rect SampleBox = new(10, 10, 140, 60);
+    private static readonly IBrush TextPlaceholderBrush = new SolidColorBrush(Color.FromRgb(96, 102, 116));
+
     /// <summary>
-    /// A box style drawn into a 140 x 60 sample box, as geometry for its gallery tile.
+    /// A tile: the style drawn around a sample text box, scaled as a whole - so a bar under the
+    /// text stays under it (stretching the bar alone showed the underline as a line at the top).
+    /// </summary>
+    private static Control MakeThumbnailView(int styleIndex)
+    {
+        var geometry = MakeThumbnail(styleIndex);
+        var bounds = geometry.Bounds.Union(SampleBox);
+        var canvas = new Canvas { Width = bounds.Width, Height = bounds.Height };
+        var path = new Avalonia.Controls.Shapes.Path { Data = geometry, Fill = ThumbnailBrush };
+        Canvas.SetLeft(path, -bounds.X);
+        Canvas.SetTop(path, -bounds.Y);
+        canvas.Children.Add(path);
+
+        // Two lines of "text" in the middle of the sample box
+        foreach (var (width, y) in new[] { (80.0, 30.0), (56.0, 44.0) })
+        {
+            var line = new Border { Width = width, Height = 7, CornerRadius = new CornerRadius(3.5), Background = TextPlaceholderBrush };
+            Canvas.SetLeft(line, SampleBox.Center.X - width / 2 - bounds.X);
+            Canvas.SetTop(line, y - bounds.Y);
+            canvas.Children.Add(line);
+        }
+
+        return new Viewbox { Child = canvas, Stretch = Stretch.Uniform, Margin = new Thickness(10, 8) };
+    }
+
+    /// <summary>
+    /// A box style drawn into the 140 x 60 sample box, as geometry for its gallery tile.
     /// </summary>
     internal static Geometry MakeThumbnail(int styleIndex)
     {
