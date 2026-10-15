@@ -28,6 +28,7 @@ namespace Nikse.SubtitleEdit.Features.Assa;
 public class AssaStylesWindow : Window
 {
     private const string Current = nameof(AssaStylesViewModel.CurrentStyle) + ".";
+    private static readonly IBrush DefaultStarBrush = new SolidColorBrush(Color.FromRgb(255, 193, 7));
 
     public AssaStylesWindow(AssaStylesViewModel vm)
     {
@@ -347,12 +348,25 @@ public class AssaStylesWindow : Window
             Binding = new Binding(nameof(StyleDisplay.CategoryDisplay)),
             Width = new GridLength(100),
         });
+        // The default style gets a yellow star instead of "True"/"False"
         dataGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.IsDefault,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(StyleDisplay.IsDefault)),
+            CellTemplate = new FuncDataTemplate<StyleDisplay>((_, _) => new Optris.Icons.Avalonia.Icon
+            {
+                Value = "fa-solid fa-star",
+                FontSize = 13,
+                Foreground = DefaultStarBrush,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                [!Visual.IsVisibleProperty] = new Binding(nameof(StyleDisplay.IsDefault)),
+            }),
+            NameBinding = new Binding(nameof(StyleDisplay.IsDefault))
+            {
+                Converter = new FuncValueConverter<bool, string>(isDefault => isDefault ? Se.Language.General.IsDefault : string.Empty),
+            },
             Width = new GridLength(70),
         });
 
