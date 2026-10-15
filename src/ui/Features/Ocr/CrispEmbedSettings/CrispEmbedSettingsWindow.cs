@@ -1,6 +1,6 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
-using Avalonia.Controls.Shapes;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
@@ -8,6 +8,7 @@ using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Chrome = Nikse.SubtitleEdit.Features.Ocr.OcrDialogChrome;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.CrispEmbedSettings;
 
@@ -29,84 +30,37 @@ public class CrispEmbedSettingsWindow : Window
 
         vm.Window = this;
         DataContext = vm;
+        Chrome.Apply(this);
 
-        var buttonClose = UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand);
+        var buttonClose = Chrome.MakePrimary(UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand));
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-            },
-            RowSpacing = 14,
-            Margin = UiUtil.MakeWindowMargin(),
-        };
-        grid.Add(BuildHeader(), 0, 0);
-        grid.Add(BuildEngineSection(vm), 1, 0);
-        grid.Add(BuildModelsSection(vm), 2, 0);
-        grid.Add(UiUtil.MakeButtonBar(buttonClose), 3, 0);
+        var sections = new StackPanel();
+        sections.Children.Add(Chrome.MakeHeader(CrispEmbedEngine.StaticName, Se.Language.Ocr.CrispEmbedDescription));
+        sections.Children.Add(EditorChrome.MakeEditorSection(Se.Language.General.Engine, BuildEngineSection(vm)));
+        sections.Children.Add(EditorChrome.MakeEditorSection(Se.Language.General.Models, BuildModelsSection(vm)));
 
-        Content = grid;
+        Content = Chrome.Root(sections, Chrome.ButtonBar(null, buttonClose));
 
         UiUtil.FocusOnFirstActivation(this, buttonClose);
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
-    private static StackPanel BuildHeader()
+    private static StackPanel BuildEngineSection(CrispEmbedSettingsViewModel vm)
     {
-        var title = new TextBlock
-        {
-            Text = CrispEmbedEngine.StaticName,
-            FontSize = UiUtil.ScaledFontSize(18),
-            FontWeight = FontWeight.SemiBold,
-        };
+        var engineButton = Chrome.Flat(UiUtil.MakeButton(string.Empty, vm.RedownloadEngineCommand)
+            .WithIconLeftBindText(IconNames.CloudDownload, nameof(vm.EngineDownloadButtonText)));
 
-        var subtitle = new TextBlock
-        {
-            Text = Se.Language.Ocr.CrispEmbedDescription,
-            FontSize = UiUtil.ScaledFontSize(12),
-            Opacity = 0.75,
-            TextWrapping = TextWrapping.Wrap,
-            Margin = new Thickness(0, 2, 0, 0),
-        };
-
-        return new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 0,
-            Children = { title, subtitle },
-        };
-    }
-
-    private static Border BuildEngineSection(CrispEmbedSettingsViewModel vm)
-    {
-        var grid = new Grid
+        var enginePanel = new Grid
         {
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(LabelWidth, GridUnitType.Pixel) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = GridLength.Auto },
             },
-            RowDefinitions =
-            {
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-            },
-            ColumnSpacing = 12,
-            RowSpacing = 10,
+            ColumnSpacing = 8,
         };
-
-        var enginePanel = MakeStatusPanel(nameof(vm.EngineBrush), nameof(vm.EngineLabel));
-        var engineButton = UiUtil.MakeButton(string.Empty, vm.RedownloadEngineCommand)
-            .WithIconLeftBindText(IconNames.CloudDownload, nameof(vm.EngineDownloadButtonText))
-            .WithMarginLeft(12);
-        enginePanel.Children.Add(engineButton);
-
-        grid.Add(MakeLabel(Se.Language.General.Engine), 0, 0);
-        grid.Add(enginePanel, 0, 1);
+        enginePanel.Add(Chrome.StatusPanel(nameof(vm.EngineBrush), nameof(vm.EngineLabel)), 0, 0);
+        enginePanel.Add(engineButton, 0, 1);
 
         var folderText = new TextBox
         {
@@ -115,10 +69,11 @@ public class CrispEmbedSettingsWindow : Window
             Background = Brushes.Transparent,
             Padding = new Thickness(0),
             VerticalContentAlignment = VerticalAlignment.Center,
-            FontSize = UiUtil.ScaledFontSize(12),
+            FontSize = 12.5,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             [!TextBox.TextProperty] = new Binding(nameof(vm.InstallFolder)),
         };
+        AutomationProperties.SetName(folderText, Se.Language.General.InstallFolder);
 
         var folderPanel = new Grid
         {
@@ -130,32 +85,29 @@ public class CrispEmbedSettingsWindow : Window
             ColumnSpacing = 8,
         };
         folderPanel.Add(folderText, 0, 0);
-        folderPanel.Add(
-            UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.OpenInstallFolderCommand)
-                .WithIconLeft(IconNames.FolderOpen), 0, 1);
+        folderPanel.Add(Chrome.Flat(UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.OpenInstallFolderCommand)
+            .WithIconLeft(IconNames.FolderOpen)), 0, 1);
 
-        grid.Add(MakeLabel(Se.Language.General.InstallFolder), 1, 0);
-        grid.Add(folderPanel, 1, 1);
-
-        return MakeSectionBorder(grid);
+        return new StackPanel
+        {
+            Spacing = 6,
+            Children =
+            {
+                Chrome.Row(Se.Language.General.Status, enginePanel, LabelWidth),
+                Chrome.Row(Se.Language.General.InstallFolder, folderPanel, LabelWidth),
+            },
+        };
     }
 
     private static Border BuildModelsSection(CrispEmbedSettingsViewModel vm)
     {
-        var header = new TextBlock
+        // Scrolls when the screen is too short for every model row
+        return Chrome.ListFrame(new ScrollViewer
         {
-            Text = Se.Language.General.Models,
-            Opacity = 0.7,
-            Margin = new Thickness(0, 0, 0, 8),
-        };
-
-        var stack = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Children = { header, MakeModelList(vm) },
-        };
-
-        return MakeSectionBorder(stack);
+            MaxHeight = 420,
+            HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled,
+            Content = MakeModelList(vm),
+        });
     }
 
     /// <summary>
@@ -168,18 +120,22 @@ public class CrispEmbedSettingsWindow : Window
         return new ItemsControl
         {
             ItemsSource = vm.Models,
+            Padding = new Thickness(0, 4),
             ItemTemplate = new FuncDataTemplate<CrispEmbedModelStatusViewModel>((_, _) =>
             {
                 var backend = new TextBlock
                 {
                     Width = 120,
+                    FontSize = 12.5,
+                    Foreground = EditorChrome.DimTextBrush,
                     VerticalAlignment = VerticalAlignment.Center,
                     TextTrimming = TextTrimming.CharacterEllipsis,
                     [!TextBlock.TextProperty] = new Binding(nameof(CrispEmbedModelStatusViewModel.BackendName)),
                 };
                 var name = new TextBlock
                 {
-                    Width = 265,
+                    Width = 260,
+                    FontSize = 12.5,
                     VerticalAlignment = VerticalAlignment.Center,
                     TextTrimming = TextTrimming.CharacterEllipsis,
                     [!TextBlock.TextProperty] = new Binding(nameof(CrispEmbedModelStatusViewModel.ModelName)),
@@ -187,11 +143,12 @@ public class CrispEmbedSettingsWindow : Window
                 var size = new TextBlock
                 {
                     Width = 70,
-                    Opacity = 0.7,
+                    FontSize = 12,
+                    Foreground = EditorChrome.FaintTextBrush,
                     VerticalAlignment = VerticalAlignment.Center,
                     [!TextBlock.TextProperty] = new Binding(nameof(CrispEmbedModelStatusViewModel.SizeText)),
                 };
-                var status = MakeStatusPanel(
+                var status = Chrome.StatusPanel(
                     nameof(CrispEmbedModelStatusViewModel.StatusBrush),
                     nameof(CrispEmbedModelStatusViewModel.StatusLabel));
                 status.Width = 110;
@@ -200,11 +157,12 @@ public class CrispEmbedSettingsWindow : Window
                 // "Re-download" are different lengths and the rows mix both.
                 // The accessible name carries the model, as the rows are a column of
                 // identical "Download" buttons to a screen reader (#12087).
-                var button = UiUtil.MakeButton(string.Empty)
+                var button = Chrome.Flat(UiUtil.MakeButton(string.Empty)
                     .WithIconLeftBindText(IconNames.Download,
                         nameof(CrispEmbedModelStatusViewModel.DownloadButtonText),
-                        nameof(CrispEmbedModelStatusViewModel.DownloadButtonAccessibleName));
+                        nameof(CrispEmbedModelStatusViewModel.DownloadButtonAccessibleName)));
                 button.Width = 140;
+                button.Height = 28;
                 button.Bind(Button.CommandProperty,
                     new Binding(nameof(CrispEmbedModelStatusViewModel.DownloadCommand)));
 
@@ -212,49 +170,10 @@ public class CrispEmbedSettingsWindow : Window
                 {
                     Orientation = Orientation.Horizontal,
                     Spacing = 8,
-                    Margin = new Thickness(0, 0, 0, 6),
+                    Margin = new Thickness(12, 1, 6, 1),
                     Children = { backend, name, size, status, button },
                 };
             }, true),
         };
     }
-
-    private static StackPanel MakeStatusPanel(string brushBindingPath, string labelBindingPath)
-    {
-        var dot = new Ellipse
-        {
-            Width = 10,
-            Height = 10,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!Ellipse.FillProperty] = new Binding(brushBindingPath),
-        };
-        var text = new TextBlock
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            FontWeight = FontWeight.SemiBold,
-            Margin = new Thickness(8, 0, 0, 0),
-            [!TextBlock.TextProperty] = new Binding(labelBindingPath),
-        };
-        return new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Children = { dot, text },
-        };
-    }
-
-    private static Border MakeSectionBorder(Control content) => new()
-    {
-        Child = content,
-        Padding = new Thickness(14),
-        CornerRadius = new CornerRadius(6),
-        BorderThickness = new Thickness(1),
-        BorderBrush = new SolidColorBrush(Color.FromArgb(0x40, 0x80, 0x80, 0x80)),
-    };
-
-    private static TextBlock MakeLabel(string text) => new()
-    {
-        Text = text,
-        Opacity = 0.7,
-        VerticalAlignment = VerticalAlignment.Center,
-    };
 }

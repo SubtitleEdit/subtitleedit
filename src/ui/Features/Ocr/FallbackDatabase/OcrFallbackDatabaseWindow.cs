@@ -1,8 +1,10 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
+using Chrome = Nikse.SubtitleEdit.Features.Ocr.OcrDialogChrome;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.FallbackDatabase;
 
@@ -17,49 +19,33 @@ public class OcrFallbackDatabaseWindow : Window
         MinWidth = 400;
         vm.Window = this;
         DataContext = vm;
+        Chrome.Apply(this);
 
-        var labelDatabase = new TextBlock
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 0, 2),
-        };
+        var labelDatabase = EditorChrome.MakeDimLabel(string.Empty, new Thickness(0));
         labelDatabase.Bind(TextBlock.TextProperty, new Binding(nameof(vm.Label)));
 
         var comboBoxDatabases = new ComboBox
         {
-            Width = 300,
+            Width = 340,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
             [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedDatabase)) { Mode = BindingMode.TwoWay },
             [!ComboBox.ItemsSourceProperty] = new Binding(nameof(vm.Databases)) { Mode = BindingMode.TwoWay },
         };
+        AutomationProperties.SetLabeledBy(comboBoxDatabases, labelDatabase);
+        comboBoxDatabases.Bind(AutomationProperties.NameProperty, new Binding(nameof(vm.Label)));
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        var buttonOk = Chrome.MakePrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var buttonBar = Chrome.ButtonBar(null, buttonCancel, buttonOk);
 
-        var grid = new Grid
+        var body = new StackPanel
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 2,
-            RowSpacing = 0,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Spacing = 6,
+            Margin = new Thickness(16, 14, 16, 16),
+            Children = { labelDatabase, comboBoxDatabases },
         };
 
-        grid.Add(labelDatabase, 0);
-        grid.Add(comboBoxDatabases, 1);
-        grid.Add(buttonPanel, 2);
-
-        Content = grid;
+        Content = Chrome.Root(body, buttonBar);
 
         UiUtil.FocusOnFirstActivation(this, comboBoxDatabases);
         KeyDown += vm.KeyDown;
