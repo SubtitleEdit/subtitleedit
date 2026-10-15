@@ -305,6 +305,8 @@ public class LanguageAssa
     public string TakeUsagesFromDotDotDot { get; set; }
     public string ReplaceStyleWithDotDotDot { get; set; }
     public string NoAttachmentsFound { get; set; }
+    public string AttachmentsDropHint { get; set; }
+    public string AttachmentsSummary { get; set; }
     public string DeleteStyleQuestion { get; set; }
     public string DeleteStylesQuestion { get; set; }
     public string DeleteXStylesQuestion { get; set; }
@@ -769,6 +771,8 @@ public class LanguageAssa
         TakeUsagesFromDotDotDot = "Take usages from...";
         ReplaceStyleWithDotDotDot = "Replace style with...";
         NoAttachmentsFound = "No attachments found in selected ASSA file.";
+        AttachmentsDropHint = "Drop font or image files here to attach them";
+        AttachmentsSummary = "{0} fonts · {1} graphics · {2}";
         DeleteStyleQuestion = "Delete style?";
         DeleteStylesQuestion = "Delete styles?";
         DeleteXStylesQuestion = "Do you want to delete {0} styles?";
