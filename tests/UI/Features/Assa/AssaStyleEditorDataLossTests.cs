@@ -43,7 +43,7 @@ public class AssaStyleEditorDataLossTests : IDisposable
 
     private static StackPanel MakeAlignmentRadios(AssaStylesViewModel vm)
     {
-        // Same construction as AssaStylesWindow/SsaStylesWindow/AssaSingleStyleWindow.
+        // Same construction as AssaStylesWindow/SsaStylesWindow.
         var panel = new StackPanel();
         panel.Children.Add(UiUtil.MakeRadioButton(string.Empty, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.AlignmentAn7), "align"));
         panel.Children.Add(UiUtil.MakeRadioButton(string.Empty, vm, nameof(vm.CurrentStyle) + "." + nameof(StyleDisplay.AlignmentAn8), "align"));
