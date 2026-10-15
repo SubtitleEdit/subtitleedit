@@ -128,6 +128,8 @@ public class LanguageOcr
     public string LlamaCppOcrPromptEmpty { get; set; }
     public string LlamaCppOcrPromptMissingLanguagePlaceholder { get; set; }
     public string LlamaCppOcrTimeoutMinutes { get; set; }
+    public string AiOcrMaxImageSize { get; set; }
+    public string AiOcrMaxImageSizeHint { get; set; }
     public string NOcrBinaryOcrFallbackDatabase { get; set; }
     public string NOcrBinaryOcrFallbackNone { get; set; }
     public string BinaryOcrNOcrFallbackDatabase { get; set; }
@@ -305,6 +307,8 @@ public class LanguageOcr
         LlamaCppOcrPromptEmpty = "The prompt cannot be empty.";
         LlamaCppOcrPromptMissingLanguagePlaceholder = "The prompt must contain the {language} placeholder.";
         LlamaCppOcrTimeoutMinutes = "Request timeout (minutes)";
+        AiOcrMaxImageSize = "Max image size (pixels)";
+        AiOcrMaxImageSizeHint = "0 = no limit. 1024 or 768 makes video OCR several times faster and uses less GPU memory.";
 
         NOcrBinaryOcrFallbackDatabase = "BinaryOCR fallback database";
         NOcrBinaryOcrFallbackNone = "(none)";

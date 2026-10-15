@@ -37,6 +37,13 @@ public class SeOcr
     public string LlamaCppOcrModel { get; set; }
     public string LlamaCppOcrPrompt { get; set; }
     public int LlamaCppOcrTimeoutMinutes { get; set; }
+
+    /// <summary>
+    /// Largest side in pixels of the padded square image sent to the llama.cpp and Ollama vision
+    /// models; 0 = no cap. A 720p Video OCR crop is otherwise a 1536 square (~3000 image tokens),
+    /// which is slow and too much for small GPUs (#16043).
+    /// </summary>
+    public int AiOcrMaxImageSize { get; set; }
     public string CrispEmbedBackend { get; set; }
     public string CrispEmbedModel { get; set; }
     public int CrispEmbedOcrTimeoutMinutes { get; set; }
@@ -147,6 +154,7 @@ public class SeOcr
         LlamaCppOcrModel = string.Empty;
         LlamaCppOcrPrompt = SeOcrDefaults.LlamaCppOcrPrompt;
         LlamaCppOcrTimeoutMinutes = 5;
+        AiOcrMaxImageSize = 0;
 
         CrispEmbedBackend = "GLM-OCR";
         CrispEmbedModel = "glm-ocr-q8_0.gguf"; // the CrispEmbed registry's default GLM-OCR quant

@@ -1453,6 +1453,12 @@ internal record class ConversionOptions
     /// </summary>
     public string? OcrPrompt { get; init; }
 
+    /// <summary>
+    /// Largest side in pixels of the padded square sent to the llamacpp/ollama OCR models
+    /// (UiLogic AiOcrImagePadding); 0 = no cap.
+    /// </summary>
+    public int OcrMaxImageSize { get; init; }
+
     /// <summary>Auto-translate target language (code or English name). Non-null enables translation.</summary>
     public string? TranslateTo { get; init; }
 

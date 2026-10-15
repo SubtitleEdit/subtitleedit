@@ -120,6 +120,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("Prompt for --ocr-engine=llamacpp/ollama (or a path to a text file holding it); {language} is replaced with --ocr-language. Default: the same prompt as the OCR window")]
         public string? OcrPrompt { get; init; }
 
+        [CommandOption("--ocr-max-image-size|--ocrmaximagesize")]
+        [Description("llamacpp/ollama OCR: largest side in pixels of the padded image sent to the model, e.g. 1024 or 768 (default: no cap). Faster video-frame OCR, less VRAM")]
+        public int? OcrMaxImageSize { get; init; }
+
         [CommandOption("--dictionary-folder|--dictionaryfolder")]
         [Description("Folder with Hunspell dictionaries + *_OCRFixReplaceList.xml; enables the 'Fix common OCR errors' pass of --fix-common-errors")]
         public string? DictionaryFolder { get; init; }
@@ -505,6 +509,21 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 return Fail(settings, "--ocr-model/--ocr-url require --ocr-engine:llamacpp.");
             }
 
+            if (settings.OcrMaxImageSize.HasValue)
+            {
+                var isOllamaOcr = !string.IsNullOrWhiteSpace(settings.OcrEngine) &&
+                                  settings.OcrEngine.Trim().Equals("ollama", StringComparison.OrdinalIgnoreCase);
+                if (!isLlamaCppOcr && !isOllamaOcr)
+                {
+                    return Fail(settings, "--ocr-max-image-size requires --ocr-engine:llamacpp or --ocr-engine:ollama.");
+                }
+
+                if (settings.OcrMaxImageSize.Value < 64)
+                {
+                    return Fail(settings, $"--ocr-max-image-size must be at least 64 (got {settings.OcrMaxImageSize.Value}).");
+                }
+            }
+
             // --ocr-prompt only means something to the two prompt-driven OCR engines; tesseract,
             // nOCR, binary image compare and Paddle have no prompt at all. Fail instead of
             // silently ignoring it, and read the prompt (it may be a file) up front so a typo'd
@@ -855,6 +874,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 OcrUrl = settings.OcrUrl,
                 OcrModel = settings.OcrModel,
                 OcrPrompt = AutoTranslateRunner.ReadPromptOption(settings.OcrPrompt, "--ocr-prompt", "{language}"),
+                OcrMaxImageSize = settings.OcrMaxImageSize ?? 0,
                 TranslateTo = settings.TranslateTo,
                 TranslateFrom = settings.TranslateFrom,
                 TranslateEngine = settings.TranslateEngine,

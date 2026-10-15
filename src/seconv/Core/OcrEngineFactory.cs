@@ -15,7 +15,7 @@ internal static class OcrEngineFactory
             "tesseract" or "" => TesseractOcrEngine.Create(options.OcrLanguage ?? "eng"),
             "nocr" => new NOcrOcrEngine(ResolveOcrDbPath(options, "nocr", ".nocr")),
             "binaryocr" or "binary" => new BinaryOcrOcrEngine(ResolveOcrDbPath(options, "binaryocr", ".db")),
-            "ollama" => new OllamaOcrEngine(options.OllamaUrl, options.OllamaModel, options.OcrLanguage, options.OcrPrompt),
+            "ollama" => new OllamaOcrEngine(options.OllamaUrl, options.OllamaModel, options.OcrLanguage, options.OcrPrompt, options.OcrMaxImageSize),
             "llamacpp" or "llama.cpp" or "llama" => LlamaCppOcrEngine.Create(options),
             "paddle" or "paddleocr" => PaddleOcrEngine.Create(options.OcrLanguage ?? "en"),
             "applevision" or "apple-vision" => AppleVisionOcrEngine.Create(options.OcrLanguage),

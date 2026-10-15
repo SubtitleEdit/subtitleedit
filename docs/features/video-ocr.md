@@ -31,6 +31,8 @@ Engines are listed best-first for burned-in subtitles:
 - **CrispEmbed** — local OCR engine with several model backends, downloaded automatically. For video the offered backends are GLM-OCR (default), DeepSeek-OCR-2 and PP-OCRv6 (see [OCR](ocr.md#crispembed)).
 - **llama.cpp** — local vision model via a managed llama.cpp server; the engine and models are downloaded automatically. Available models, listed best-first for subtitles: GLM-OCR 0.9B (the default), LFM2.5-VL 3B, PaddleOCR-VL 1.6 (109 languages), HunyuanOCR 1.5 and LightOnOCR 1B. A green dot marks models that are already downloaded; custom vision models in the llama.cpp models folder also appear, as long as the `mmproj` vision projector sits next to the `*.gguf` (see [OCR](ocr.md#llamacpp)).
 - **Ollama vision** — local vision model via a self-managed [Ollama](https://ollama.com) installation, e.g. `glm-ocr`
+
+For llama.cpp and Ollama, the engine settings have a **Max image size**. Video-frame crops are large, so a limit of 1024 or 768 makes each frame several times faster and helps GPUs with little memory (see [OCR](ocr.md#llamacpp)).
 - **GLM API** — GLM vision model via the Z.ai / bigmodel.cn cloud API (requires an API key)
 
 ## How It Works

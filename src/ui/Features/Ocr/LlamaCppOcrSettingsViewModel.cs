@@ -26,6 +26,7 @@ public partial class LlamaCppOcrSettingsViewModel : ObservableObject
     [ObservableProperty] private string _url;
     [ObservableProperty] private string _prompt;
     [ObservableProperty] private int _timeoutMinutes;
+    [ObservableProperty] private int _maxImageSize;
     [ObservableProperty] private string _engineLabel = string.Empty;
     [ObservableProperty] private IBrush _engineBrush = Brushes.Gray;
 
@@ -60,6 +61,7 @@ public partial class LlamaCppOcrSettingsViewModel : ObservableObject
         _url = Se.Settings.Ocr.LlamaCppUrl ?? string.Empty;
         _prompt = Se.Settings.Ocr.LlamaCppOcrPrompt ?? string.Empty;
         _timeoutMinutes = Math.Max(1, Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
+        _maxImageSize = Math.Max(0, Se.Settings.Ocr.AiOcrMaxImageSize);
     }
 
     /// <summary>
@@ -143,6 +145,7 @@ public partial class LlamaCppOcrSettingsViewModel : ObservableObject
         Se.Settings.Ocr.LlamaCppUrl = Url?.Trim() ?? string.Empty;
         Se.Settings.Ocr.LlamaCppOcrPrompt = Prompt;
         Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes = Math.Max(1, TimeoutMinutes);
+        Se.Settings.Ocr.AiOcrMaxImageSize = Math.Max(0, MaxImageSize);
         OkPressed = true;
         Close();
     }

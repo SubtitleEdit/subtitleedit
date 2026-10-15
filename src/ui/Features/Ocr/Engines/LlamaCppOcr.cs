@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
 using SkiaSharp;
@@ -40,8 +41,8 @@ public class LlamaCppOcr : IDisposable
     {
         try
         {
-            // Pad to square to improve OCR accuracy
-            using var paddedBitmap = PreprocessImage(bitmap);
+            // Pad to square to improve OCR accuracy, optionally capped in size (#16043)
+            using var paddedBitmap = AiOcrImagePadding.PadToSquare(bitmap, Se.Settings.Ocr.AiOcrMaxImageSize);
             string base64Image = paddedBitmap.ToBase64String();
 
             //var pngBytes = paddedBitmap.ToPngArray();
@@ -111,31 +112,6 @@ public class LlamaCppOcr : IDisposable
             SeLogger.Error(ex, "Error calling llama.cpp for OCR");
             return string.Empty;
         }
-    }
-
-    public SKBitmap PreprocessImage(SKBitmap source)
-    {
-        int margin = (int)(Math.Max(source.Width, source.Height) * 0.2);
-        int side = Math.Max(source.Width, source.Height) + margin;
-        var info = new SKImageInfo(side, side, SKColorType.Rgba8888, SKAlphaType.Opaque);
-        var squareBitmap = new SKBitmap(info);
-
-        using (var canvas = new SKCanvas(squareBitmap))
-        {
-            canvas.Clear(SKColors.Black);
-            using (var image = SKImage.FromBitmap(source))
-            {
-                float left = (side - source.Width) / 2f;
-                float top = (side - source.Height) / 2f;
-                var destRect = new SKRect(left, top, left + source.Width, top + source.Height);
-                var sampling = new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.None);
-                canvas.DrawImage(image, destRect, sampling, null);
-            }
-
-            canvas.Flush();
-        }
-
-        return squareBitmap;
     }
 
     /// <summary>

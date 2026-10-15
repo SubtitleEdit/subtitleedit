@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 using SkiaSharp;
 using System.Globalization;
 using System.Net.Http;
@@ -29,8 +30,9 @@ internal sealed class OllamaOcrEngine : IOcrEngine
     private readonly string _model;
     private readonly string _language;
     private readonly string? _promptTemplate;
+    private readonly int _maxImageSize;
 
-    public OllamaOcrEngine(string? url, string? model, string? language, string? prompt = null)
+    public OllamaOcrEngine(string? url, string? model, string? language, string? prompt = null, int maxImageSize = 0)
     {
         // Trailing slash costs a 307 redirect on every single image (Ollama's route is
         // /api/chat), which the GUI already trims.
@@ -40,6 +42,7 @@ internal sealed class OllamaOcrEngine : IOcrEngine
         // Ollama OCR has no prompt in the GUI, so its built-in wording stays the default here;
         // --ocr-prompt replaces it for users driving a model that wants different phrasing.
         _promptTemplate = string.IsNullOrWhiteSpace(prompt) ? null : prompt;
+        _maxImageSize = maxImageSize;
 
         _httpClient = new HttpClient
         {
@@ -55,7 +58,7 @@ internal sealed class OllamaOcrEngine : IOcrEngine
             return string.Empty;
         }
 
-        using var padded = PadToSquare(bitmap);
+        using var padded = AiOcrImagePadding.PadToSquare(bitmap, _maxImageSize);
         using var image = SKImage.FromBitmap(padded);
         using var data = image.Encode(SKEncodedImageFormat.Png, 90);
         var pngBytes = data.ToArray();
@@ -106,21 +109,6 @@ internal sealed class OllamaOcrEngine : IOcrEngine
 
     private static string Escape(string s) =>
         s.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", "\\n").Replace("\r", "\\r");
-
-    private static SKBitmap PadToSquare(SKBitmap source)
-    {
-        var margin = (int)(Math.Max(source.Width, source.Height) * 0.2);
-        var side = Math.Max(source.Width, source.Height) + margin;
-        var info = new SKImageInfo(side, side, SKColorType.Rgba8888, SKAlphaType.Opaque);
-        var square = new SKBitmap(info);
-        using var canvas = new SKCanvas(square);
-        canvas.Clear(SKColors.Black);
-        var left = (side - source.Width) / 2f;
-        var top = (side - source.Height) / 2f;
-        canvas.DrawBitmap(source, new SKRect(left, top, left + source.Width, top + source.Height));
-        canvas.Flush();
-        return square;
-    }
 
     public void Dispose() => _httpClient.Dispose();
 }

@@ -5,6 +5,7 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -87,7 +88,7 @@ public class VideoOcrEngineSettingsWindow : Window
             RowSpacing = 10,
         };
 
-        for (var i = 0; i < 5; i++)
+        for (var i = 0; i < 6; i++)
         {
             grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
         }
@@ -133,11 +134,18 @@ public class VideoOcrEngineSettingsWindow : Window
         grid.Add(UiUtil.MakeNumericUpDownInt(1, 120, 5, 140, vm, nameof(vm.TimeoutMinutes))
             .WithBindIsVisible(nameof(vm.HasTimeout)), 3, 1);
 
+        // Max image size - only for the vision-model engine here (Ollama)
+        grid.Add(MakeLabel(Se.Language.Ocr.AiOcrMaxImageSize).WithBindIsVisible(nameof(vm.HasMaxImageSize)), 4, 0);
+        var panelMaxImageSize = LlamaCppOcrSettingsWindow.MakeMaxImageSizePanel(vm, nameof(vm.MaxImageSize));
+        panelMaxImageSize.MaxWidth = ValueWidth;
+        panelMaxImageSize.HorizontalAlignment = HorizontalAlignment.Left;
+        grid.Add(panelMaxImageSize.WithBindIsVisible(nameof(vm.HasMaxImageSize)), 4, 1);
+
         // Website
-        grid.Add(MakeLabel(Se.Language.Video.VideoOcr.Website).WithBindIsVisible(nameof(vm.HasWebsite)), 4, 0);
+        grid.Add(MakeLabel(Se.Language.Video.VideoOcr.Website).WithBindIsVisible(nameof(vm.HasWebsite)), 5, 0);
         var link = UiUtil.MakeLink(string.Empty, vm.OpenWebsiteCommand, vm, nameof(vm.WebsiteUrl));
         link.HorizontalAlignment = HorizontalAlignment.Left;
-        grid.Add(link.WithBindIsVisible(nameof(vm.HasWebsite)), 4, 1);
+        grid.Add(link.WithBindIsVisible(nameof(vm.HasWebsite)), 5, 1);
 
         return new Border
         {

@@ -28,8 +28,9 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
     private readonly string? _url;          // non-null = user-managed server via --ocr-url
     private readonly LlamaCppModel? _model; // non-null = local server mode; started on first Recognize
     private readonly bool _quiet;
+    private readonly int _maxImageSize;
 
-    private LlamaCppOcrEngine(string? url, LlamaCppModel? model, string modelName, string? language, string? prompt, bool quiet)
+    private LlamaCppOcrEngine(string? url, LlamaCppModel? model, string modelName, string? language, string? prompt, bool quiet, int maxImageSize)
     {
         _url = url;
         _model = model;
@@ -39,6 +40,7 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
         // curated model with its own tuned prompt (LFM2.5-VL) gets that unless --ocr-prompt is set.
         _promptTemplate = LlamaCppServerManager.ResolveOcrPrompt(model, prompt);
         _quiet = quiet;
+        _maxImageSize = maxImageSize;
         _httpClient = new HttpClient
         {
             Timeout = TimeSpan.FromMinutes(25),
@@ -74,12 +76,12 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
             var curated = LlamaCppServerManager.OcrModels.FirstOrDefault(m =>
                 Path.GetFileNameWithoutExtension(m.FileName).Equals(modelName, StringComparison.OrdinalIgnoreCase));
             var promptTemplate = LlamaCppServerManager.ResolveOcrPrompt(curated, options.OcrPrompt);
-            return new LlamaCppOcrEngine(fullUrl, null, modelName, options.OcrLanguage, promptTemplate, options.Quiet);
+            return new LlamaCppOcrEngine(fullUrl, null, modelName, options.OcrLanguage, promptTemplate, options.Quiet, options.OcrMaxImageSize);
         }
 
         LlamaCppLocal.EnsureServerBinary("the OCR window > llama.cpp", "--ocr-url");
         var model = ResolveOcrModel(options.OcrModel);
-        return new LlamaCppOcrEngine(null, model, Path.GetFileNameWithoutExtension(model.FileName), options.OcrLanguage, options.OcrPrompt, options.Quiet);
+        return new LlamaCppOcrEngine(null, model, Path.GetFileNameWithoutExtension(model.FileName), options.OcrLanguage, options.OcrPrompt, options.Quiet, options.OcrMaxImageSize);
     }
 
     public string Recognize(SKBitmap bitmap)
@@ -103,7 +105,7 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
             url = LlamaCppServerManager.ApiUrl;
         }
 
-        using var padded = PadToSquare(bitmap);
+        using var padded = AiOcrImagePadding.PadToSquare(bitmap, _maxImageSize);
         using var image = SKImage.FromBitmap(padded);
         using var data = image.Encode(SKEncodedImageFormat.Png, 90);
         var base64 = Convert.ToBase64String(data.ToArray());
@@ -201,21 +203,6 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
 
     private static string Escape(string s) =>
         s.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", "\\n").Replace("\r", "\\r");
-
-    private static SKBitmap PadToSquare(SKBitmap source)
-    {
-        var margin = (int)(Math.Max(source.Width, source.Height) * 0.2);
-        var side = Math.Max(source.Width, source.Height) + margin;
-        var info = new SKImageInfo(side, side, SKColorType.Rgba8888, SKAlphaType.Opaque);
-        var square = new SKBitmap(info);
-        using var canvas = new SKCanvas(square);
-        canvas.Clear(SKColors.Black);
-        var left = (side - source.Width) / 2f;
-        var top = (side - source.Height) / 2f;
-        canvas.DrawBitmap(source, new SKRect(left, top, left + source.Width, top + source.Height));
-        canvas.Flush();
-        return square;
-    }
 
     public void Dispose() => _httpClient.Dispose();
 }

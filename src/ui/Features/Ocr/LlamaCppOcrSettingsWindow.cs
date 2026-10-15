@@ -18,9 +18,9 @@ public class LlamaCppOcrSettingsWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Ocr.LlamaCppOcrSettingsTitle;
         Width = 680;
-        Height = 500;
+        Height = 560;
         MinWidth = 540;
-        MinHeight = 440;
+        MinHeight = 500;
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
         vm.Window = this;
@@ -44,6 +44,7 @@ public class LlamaCppOcrSettingsWindow : Window
         var checkBoxRemote = UiUtil.MakeCheckBox(Se.Language.General.LlamaCppUseRemoteServer, vm, nameof(vm.UseRemoteServer));
 
         var numericTimeout = UiUtil.MakeNumericUpDownInt(1, 120, 5, 140, vm, nameof(vm.TimeoutMinutes));
+        var panelMaxImageSize = MakeMaxImageSizePanel(vm, nameof(vm.MaxImageSize));
 
         var textBoxPrompt = new TextBox
         {
@@ -83,6 +84,7 @@ public class LlamaCppOcrSettingsWindow : Window
                 new RowDefinition { Height = GridLength.Auto },
                 new RowDefinition { Height = GridLength.Auto },
                 new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = GridLength.Auto },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = GridLength.Auto },
             },
@@ -101,10 +103,13 @@ public class LlamaCppOcrSettingsWindow : Window
         detailsGrid.Add(MakeLabel(Se.Language.Ocr.LlamaCppOcrTimeoutMinutes), 3, 0);
         detailsGrid.Add(numericTimeout, 3, 1);
 
-        detailsGrid.Add(promptLabel, 4, 0);
-        detailsGrid.Add(textBoxPrompt, 4, 1);
+        detailsGrid.Add(MakeLabel(Se.Language.Ocr.AiOcrMaxImageSize), 4, 0);
+        detailsGrid.Add(panelMaxImageSize, 4, 1);
 
-        detailsGrid.Add(hintPrompt, 5, 1);
+        detailsGrid.Add(promptLabel, 5, 0);
+        detailsGrid.Add(textBoxPrompt, 5, 1);
+
+        detailsGrid.Add(hintPrompt, 6, 1);
 
         var detailsBorder = new Border
         {
@@ -197,6 +202,29 @@ public class LlamaCppOcrSettingsWindow : Window
         {
             Orientation = Orientation.Horizontal,
             Children = { dot, text },
+        };
+    }
+
+    /// <summary>
+    /// Max image size for the vision-model OCR engines (llama.cpp and Ollama share the setting):
+    /// steps of 128, 0 = no limit (#16043).
+    /// </summary>
+    internal static StackPanel MakeMaxImageSizePanel(object vm, string propertyPath)
+    {
+        var numeric = UiUtil.MakeNumericUpDownInt(0, 4096, 0, 140, vm, propertyPath);
+        numeric.Increment = 128;
+
+        var hint = UiUtil.MakeTextBlock(Se.Language.Ocr.AiOcrMaxImageSizeHint);
+        hint.Opacity = 0.7;
+        hint.FontSize = UiUtil.ScaledFontSize(12);
+        hint.TextWrapping = TextWrapping.Wrap;
+        hint.VerticalAlignment = VerticalAlignment.Center;
+
+        return new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Spacing = 2,
+            Children = { numeric, hint },
         };
     }
 

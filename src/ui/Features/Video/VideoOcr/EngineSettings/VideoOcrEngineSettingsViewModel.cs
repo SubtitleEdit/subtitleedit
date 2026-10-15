@@ -37,6 +37,8 @@ public partial class VideoOcrEngineSettingsViewModel : ObservableObject
     [ObservableProperty] private bool _canRedownload;
     [ObservableProperty] private bool _hasTimeout;
     [ObservableProperty] private int _timeoutMinutes = 5;
+    [ObservableProperty] private bool _hasMaxImageSize;
+    [ObservableProperty] private int _maxImageSize;
     [ObservableProperty] private string _websiteUrl = string.Empty;
     [ObservableProperty] private bool _hasWebsite;
 
@@ -77,6 +79,8 @@ public partial class VideoOcrEngineSettingsViewModel : ObservableObject
             case OcrEngineType.Ollama:
                 HasTimeout = true;
                 TimeoutMinutes = Math.Max(1, Se.Settings.Ocr.OllamaOcrTimeoutMinutes);
+                HasMaxImageSize = true;
+                MaxImageSize = Math.Max(0, Se.Settings.Ocr.AiOcrMaxImageSize);
                 HasWebsite = true;
                 WebsiteUrl = "https://ollama.com";
                 BackendLabel = Se.Language.Video.VideoOcr.EngineExternalServer;
@@ -192,6 +196,7 @@ public partial class VideoOcrEngineSettingsViewModel : ObservableObject
         if (HasTimeout && _engine?.EngineType == OcrEngineType.Ollama)
         {
             Se.Settings.Ocr.OllamaOcrTimeoutMinutes = Math.Max(1, TimeoutMinutes);
+            Se.Settings.Ocr.AiOcrMaxImageSize = Math.Max(0, MaxImageSize);
         }
 
         OkPressed = true;
