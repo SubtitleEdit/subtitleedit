@@ -50,11 +50,8 @@ public class AssSetBackgroundWindow : Window
         var videoPanel = new Border
         {
             Child = vm.VideoPlayerControl,
-            Margin = new Thickness(12, 12, 12, 0),
+            Margin = new Thickness(12),
         };
-        var previewArea = new Grid { RowDefinitions = { new RowDefinition(new GridLength(1, GridUnitType.Star)), new RowDefinition(GridLength.Auto) } };
-        previewArea.Add(videoPanel, 0, 0);
-        previewArea.Add(CreateLineNavigation(vm), 1, 0);
 
         var sidePanel = CreateSidePanel(vm, out var firstInput);
 
@@ -66,7 +63,7 @@ public class AssSetBackgroundWindow : Window
                 new ColumnDefinition(new GridLength(320)),
             },
         };
-        content.Add(previewArea, 0, 0);
+        content.Add(videoPanel, 0, 0);
         content.Add(sidePanel, 0, 1);
 
         var mainGrid = new Grid
@@ -363,32 +360,6 @@ public class AssSetBackgroundWindow : Window
         content.Children.Add(AssaDrawWindow.MakePropertyRow(Se.Language.General.Outline, Swatch(nameof(vm.OutlineColor), Se.Language.General.Outline), outlineWidth));
         content.Children.Add(AssaDrawWindow.MakePropertyRow(Se.Language.General.Shadow, Swatch(nameof(vm.ShadowColor), Se.Language.General.Shadow), shadowDistance));
         return MakeSection(Se.Language.General.Color, content);
-    }
-
-    /// <summary>
-    /// Previous / next selected line, so the box can be checked on short and long lines.
-    /// </summary>
-    private static Control CreateLineNavigation(AssSetBackgroundViewModel vm)
-    {
-        var previous = AssaDrawWindow.CreateToolButton("fa-solid fa-chevron-left", Se.Language.General.Previous, vm.PreviousLineCommand);
-        var next = AssaDrawWindow.CreateToolButton("fa-solid fa-chevron-right", Se.Language.General.Next, vm.NextLineCommand);
-        var info = new TextBlock
-        {
-            FontSize = 12,
-            Foreground = AssaDrawWindow.DimTextBrush,
-            VerticalAlignment = VerticalAlignment.Center,
-            TextTrimming = TextTrimming.CharacterEllipsis,
-            Margin = new Thickness(8, 0),
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.PreviewLineInfo)),
-        };
-
-        var bar = new DockPanel { Margin = new Thickness(12, 8, 12, 10) };
-        DockPanel.SetDock(previous, Dock.Left);
-        DockPanel.SetDock(next, Dock.Left);
-        bar.Children.Add(previous);
-        bar.Children.Add(next);
-        bar.Children.Add(info);
-        return bar;
     }
 
     private static Border CreateButtonBar(AssSetBackgroundViewModel vm)

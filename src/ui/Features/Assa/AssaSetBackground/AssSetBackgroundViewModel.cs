@@ -34,15 +34,6 @@ public partial class AssSetBackgroundViewModel : ObservableObject
 
     [ObservableProperty] private string _progressText = string.Empty;
 
-    /// <summary>
-    /// "2 / 5  Line text" - which selected line the preview shows.
-    /// </summary>
-    [ObservableProperty] private string _previewLineInfo = string.Empty;
-
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(PreviousLineCommand), nameof(NextLineCommand))]
-    private int _previewIndex;
-
     // Padding settings
     [ObservableProperty] private int _paddingLeft = 10;
     [ObservableProperty] private int _paddingRight = 10;
@@ -186,8 +177,6 @@ public partial class AssSetBackgroundViewModel : ObservableObject
         _videoPositionSeconds = videoPositionSeconds;
 
         _previewParagraph = _selectedItems.First().ToParagraph(_assaFormat);
-        PreviewIndex = 0;
-        UpdatePreviewLineInfo();
         _previewSubtitle = new Subtitle(subtitle, false);
         _previewSubtitle.Paragraphs.Clear();
         _previewSubtitle.Paragraphs.Add(_previewParagraph);
@@ -880,52 +869,6 @@ public partial class AssSetBackgroundViewModel : ObservableObject
                $"b {right + curve} {top + q} {right - curve} {bottom - q} {right} {bottom} " +
                $"l {left} {bottom} " +
                $"b {left - curve} {bottom - q} {left + curve} {top + q} {left} {top}{{\\p0}}";
-    }
-
-    private bool CanGoToPreviousLine() => PreviewIndex > 0;
-
-    private bool CanGoToNextLine() => PreviewIndex < _selectedItems.Count - 1;
-
-    [RelayCommand(CanExecute = nameof(CanGoToPreviousLine))]
-    private void PreviousLine() => ShowPreviewLine(PreviewIndex - 1);
-
-    [RelayCommand(CanExecute = nameof(CanGoToNextLine))]
-    private void NextLine() => ShowPreviewLine(PreviewIndex + 1);
-
-    /// <summary>
-    /// Previews the box on another of the selected lines: its own text size, at its own time.
-    /// </summary>
-    internal void ShowPreviewLine(int index)
-    {
-        if (index < 0 || index >= _selectedItems.Count || index == PreviewIndex)
-        {
-            return;
-        }
-
-        PreviewIndex = index;
-        _previewParagraph = _selectedItems[index].ToParagraph(_assaFormat);
-
-        // The box is sized from a render of the previewed line - measure the new one
-        _trimResult?.Dispose();
-        _trimResult = null;
-        _oldSubtitleText = string.Empty;
-        UpdatePreviewLineInfo();
-
-        if (_mpvPlayer != null)
-        {
-            VideoPlayerControl.Position = GetPreviewSeekSeconds(_previewParagraph, null);
-        }
-    }
-
-    private void UpdatePreviewLineInfo()
-    {
-        var text = HtmlUtil.RemoveHtmlTags(_previewParagraph.Text, true).Replace(Environment.NewLine, " ").Replace("\\N", " ").Trim();
-        if (text.Length > 48)
-        {
-            text = text[..48] + "…";
-        }
-
-        PreviewLineInfo = $"{PreviewIndex + 1} / {_selectedItems.Count}   {text}";
     }
 
     private string GenerateUniqueStyleName()
