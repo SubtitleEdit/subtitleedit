@@ -338,6 +338,10 @@ public static class LlamaCppServerManager
     /// and every music note; PaddleOCR-VL 12/14 recognized (0.32% char error) but merges two-line
     /// subtitles; HunyuanOCR 12/14 recognized (0.6%) with the same merging; LightOnOCR 9/14
     /// recognized (2.53%) at 18.5 s/image - weakest and ~7x slower, hence last.
+    /// LightOnOCR-3 (2026-10-15, b11553): measured on 390 real Blu-ray subtitle images - 150 Dutch
+    /// from #16031 plus 60 each German/Danish/French/English, reference hand-checked against the
+    /// image wherever any model disagreed - exact lines: GLM-OCR 385, LightOnOCR-3 4B 384,
+    /// LightOnOCR-3 0.8B 379 - the 4B ranks second, the 0.8B took LightOnOCR 1B's last place.
     /// </summary>
     // DeepSeek-OCR-2 was evaluated for this list and rejected (2026-08-26): through
     // mainline llama.cpp with the OCR prompt it captions the image ("The image displays a
@@ -351,6 +355,23 @@ public static class LlamaCppServerManager
             "https://huggingface.co/ggml-org/GLM-OCR-GGUF/resolve/main/GLM-OCR-Q8_0.gguf",
             MmprojFileName: "mmproj-GLM-OCR-Q8_0.gguf",
             MmprojUrl: "https://huggingface.co/ggml-org/GLM-OCR-GGUF/resolve/main/mmproj-GLM-OCR-Q8_0.gguf"),
+        // LightOnOCR-3 4B (LightOn, Apache-2.0, Qwen 3.5 VL) as mradermacher's Q8_0 - no official
+        // GGUF exists. As accurate as GLM-OCR on the 390 real images (384 vs 385 exact) and ~2.5x
+        // faster (1.3-1.8 s vs 3.5-5 s per image), and right where GLM-OCR fails: it keeps the line
+        // break in two-line ♪ lyrics and reads capital I where GLM-OCR writes "lst"/"ledereen". Its
+        // misses: two misread words, a closing quote added to a quotation that continues in the next
+        // cue, and "- Hi!" for "-Hi!" on English dialogue dashes. Second, not first, because it is
+        // a 5.2 GB download against GLM-OCR's 1.4 GB. Q8_0 only: the i1-Q4_K_M was no better than
+        // the 0.8B (143/150 Dutch vs 147/150 for Q8_0).
+        // NoThinking: the Qwen 3.5 template thinks by default and the answer then lands in
+        // reasoning_content, leaving content empty on most images. Border: the square cost it
+        // accuracy on every corpus (synthetic 16/19 vs 17/19) and ~2.5x the time.
+        new LlamaCppModel("LightOnOCR-3 4B (Q8_0)", "LightOnOCR-3-4B.Q8_0.gguf", "5.2 GB",
+            "https://huggingface.co/mradermacher/LightOnOCR-3-4B-GGUF/resolve/main/LightOnOCR-3-4B.Q8_0.gguf",
+            MmprojFileName: "mmproj-LightOnOCR-3-4B.Q8_0.gguf",
+            MmprojUrl: "https://huggingface.co/mradermacher/LightOnOCR-3-4B-GGUF/resolve/main/LightOnOCR-3-4B.mmproj-f16.gguf",
+            NoThinking: true,
+            OcrPadding: AiOcrPadding.Border),
         // Liquid AI's general vision model (3B), not an OCR specialist. Measured 2026-09-05 on the
         // same 14-image corpus: 0.00% character error - flawless across all eight scripts, italics,
         // busy video backgrounds and small text, where GLM-OCR misread one Russian word - and with
@@ -410,14 +431,21 @@ public static class LlamaCppServerManager
             MmprojFileName: "mmproj-Qari-OCR-0.2.2.1-VL-2B-Instruct-merged.Q8_0.gguf",
             MmprojUrl: "https://huggingface.co/mradermacher/Qari-OCR-0.2.2.1-VL-2B-Instruct-merged-GGUF/resolve/main/Qari-OCR-0.2.2.1-VL-2B-Instruct-merged.mmproj-Q8_0.gguf",
             OcrPadding: AiOcrPadding.Border),
-        // Last on purpose: the weakest and by far the slowest of the four on subtitle images
-        // (9/14 recognized, 2.53% character error, 18.5 s/image against GLM-OCR's 2.5 s). It loses
-        // line breaks, drops ♪ note marks, misreads Cyrillic ё as е and Chinese 的, and wraps
-        // Japanese output in ``` fences. Kept for users who already rely on it.
-        new LlamaCppModel("LightOnOCR 1B (Q8_0)", "LightOnOCR-1B-1025-Q8_0.gguf", "1.2 GB",
-            "https://huggingface.co/ggml-org/LightOnOCR-1B-1025-GGUF/resolve/main/LightOnOCR-1B-1025-Q8_0.gguf",
-            MmprojFileName: "mmproj-LightOnOCR-1B-1025-Q8_0.gguf",
-            MmprojUrl: "https://huggingface.co/ggml-org/LightOnOCR-1B-1025-GGUF/resolve/main/mmproj-LightOnOCR-1B-1025-Q8_0.gguf"),
+        // LightOnOCR-3 0.8B (LightOn, Apache-2.0, Qwen 3.5 VL) as Prathat's Q8_0 - no official GGUF.
+        // Replaces LightOnOCR 1B (18.5 s/image, last in every measurement); anyone who already
+        // downloaded that one still sees it, as a custom entry from the models folder. The fast
+        // pick: 0.35-0.85 s per real image, 6-12x GLM-OCR, at about 1.0 GB. Last because it is the
+        // least accurate of the general models on real data (379/390 vs GLM-OCR's 385): five
+        // fluent misreads (four of them Dutch), a closing quote added to a quotation that continues
+        // in the next cue, and "- " after dialogue dashes. Best of all on the synthetic corpus
+        // (18/19), so the misses are language-prior guesses rather than unreadable images.
+        // Q8_0 and f16 gave identical output. NoThinking and Border for the same reasons as the 4B.
+        new LlamaCppModel("LightOnOCR-3 0.8B (Q8_0)", "LightOnOCR-3-0.8B-Q8_0.gguf", "1.0 GB",
+            "https://huggingface.co/Prathat/LightOnOCR-3-0.8B-GGUF/resolve/main/LightOnOCR-3-0.8B-Q8_0.gguf",
+            MmprojFileName: "mmproj-LightOnOCR-3-0.8B-Q8_0.gguf",
+            MmprojUrl: "https://huggingface.co/Prathat/LightOnOCR-3-0.8B-GGUF/resolve/main/LightOnOCR-3-0.8B-mmproj-f16.gguf",
+            NoThinking: true,
+            OcrPadding: AiOcrPadding.Border),
     };
 
     /// <summary>

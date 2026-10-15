@@ -84,6 +84,7 @@ public class LlamaCppOcr : IDisposable
             // sanitize
             resultText = resultText.Trim();
             resultText = resultText.Replace("\\n", Environment.NewLine);
+            resultText = OcrHelper.TrimAiOcrLines(resultText);
             resultText = OcrHelper.FixAiOcrPunctuationSpaces(resultText, language);
 
             return resultText.Trim();
