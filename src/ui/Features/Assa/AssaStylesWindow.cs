@@ -199,10 +199,25 @@ public class AssaStylesWindow : Window
     /// </summary>
     private static Grid MakeListSection(string title, Control actions, Control? subHeader, TableView table, bool first)
     {
-        var header = new DockPanel { Margin = new Thickness(14, first ? 10 : 12, 10, 8) };
+        // Title on its own line; under it the actions, after the category picker for saved styles
+        var tools = new DockPanel { Margin = new Thickness(0, 6, 0, 0) };
         DockPanel.SetDock(actions, Dock.Right);
-        header.Children.Add(actions);
+        actions.HorizontalAlignment = subHeader == null ? HorizontalAlignment.Left : HorizontalAlignment.Right;
+        if (subHeader == null)
+        {
+            DockPanel.SetDock(actions, Dock.Left);
+        }
+
+        tools.Children.Add(actions);
+        if (subHeader != null)
+        {
+            subHeader.Margin = new Thickness(0, 0, 8, 0);
+            tools.Children.Add(subHeader);
+        }
+
+        var header = new StackPanel { Margin = new Thickness(14, first ? 10 : 12, 10, 8) };
         header.Children.Add(AssaDrawWindow.MakeSectionHeader(title));
+        header.Children.Add(tools);
 
         var grid = new Grid
         {
@@ -219,11 +234,6 @@ public class AssaStylesWindow : Window
             BorderBrush = AssaDrawWindow.LineBrush,
             BorderThickness = new Thickness(0, first ? 0 : 1, 0, 0),
         }, 0, 0);
-        if (subHeader != null)
-        {
-            subHeader.Margin = new Thickness(14, 0, 14, 8);
-            grid.Add(subHeader, 1, 0);
-        }
 
         table.Margin = new Thickness(8, 0, 8, 8);
         grid.Add(table, 2, 0);
