@@ -31,8 +31,6 @@ public class VoxCPM2CrispAsrSettingsWindow : Window
             TtsSettingsChrome.MakeButtonBar(close),
             BuildModels(vm),
             BuildVoice(vm));
-
-        UiUtil.FocusOnFirstActivation(this, close);
     }
 
     private static Border BuildModels(VoxCPM2CrispAsrSettingsViewModel vm)

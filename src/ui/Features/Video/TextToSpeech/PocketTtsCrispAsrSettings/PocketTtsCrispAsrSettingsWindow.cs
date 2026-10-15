@@ -34,8 +34,6 @@ public class PocketTtsCrispAsrSettingsWindow : Window
             TtsSettingsChrome.MakeButtonBar(close),
             BuildModels(vm),
             BuildVoice(vm));
-
-        UiUtil.FocusOnFirstActivation(this, close);
     }
 
     private static Border BuildModels(PocketTtsCrispAsrSettingsViewModel vm)

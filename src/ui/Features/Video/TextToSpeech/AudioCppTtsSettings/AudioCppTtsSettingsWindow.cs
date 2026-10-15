@@ -33,8 +33,6 @@ public class AudioCppTtsSettingsWindow : Window
             TtsSettingsChrome.MakeHeader(vm.Adapter.EngineName, vm.Adapter.Description),
             TtsSettingsChrome.MakeButtonBar(close),
             BuildModels(vm));
-
-        UiUtil.FocusOnFirstActivation(this, close);
     }
 
     private static Border BuildModels(AudioCppTtsSettingsViewModel vm)

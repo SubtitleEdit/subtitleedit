@@ -34,8 +34,6 @@ public class IndexTts25AudioCppSettingsWindow : Window
             TtsSettingsChrome.MakeButtonBar(close),
             BuildModels(vm),
             BuildVoice(vm));
-
-        UiUtil.FocusOnFirstActivation(this, close);
     }
 
     private static Border BuildModels(IndexTts25AudioCppSettingsViewModel vm)

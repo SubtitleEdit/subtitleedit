@@ -31,8 +31,6 @@ public class Qwen3TtsCrispAsrSettingsWindow : Window
             TtsSettingsChrome.MakeButtonBar(close),
             BuildModels(vm),
             BuildVoice(vm));
-
-        UiUtil.FocusOnFirstActivation(this, close);
     }
 
     private static Border BuildModels(Qwen3TtsCrispAsrSettingsViewModel vm)

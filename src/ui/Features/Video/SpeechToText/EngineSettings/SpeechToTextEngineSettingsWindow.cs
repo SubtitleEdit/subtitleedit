@@ -34,8 +34,6 @@ public class SpeechToTextEngineSettingsWindow : Window
 
         var close = Chrome.Primary(UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand));
         Content = BuildContent(vm, close);
-
-        UiUtil.FocusOnFirstActivation(this, close);
     }
 
     private static StackPanel BuildContent(SpeechToTextEngineSettingsViewModel vm, Button close)

@@ -31,8 +31,6 @@ public class VibeVoiceCrispAsrSettingsWindow : Window
             TtsSettingsChrome.MakeButtonBar(close),
             BuildModels(vm),
             BuildVoice(vm));
-
-        UiUtil.FocusOnFirstActivation(this, close);
     }
 
     private static Border BuildModels(VibeVoiceCrispAsrSettingsViewModel vm)

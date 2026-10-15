@@ -35,8 +35,6 @@ public class SupertonicCrispAsrSettingsWindow : Window
             TtsSettingsChrome.MakeButtonBar(close),
             BuildModels(vm),
             BuildVoice(vm));
-
-        UiUtil.FocusOnFirstActivation(this, close);
     }
 
     private static Border BuildModels(SupertonicCrispAsrSettingsViewModel vm)
