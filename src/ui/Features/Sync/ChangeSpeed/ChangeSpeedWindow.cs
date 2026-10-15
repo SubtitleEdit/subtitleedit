@@ -1,55 +1,63 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Sync.ChangeSpeed;
 
+/// <summary>
+/// Change speed, in the editor look (see <see cref="EditorChrome"/>): the speed (with the
+/// drop-frame presets) and which lines to adjust side by side, Apply and Done at the bottom.
+/// </summary>
 public class ChangeSpeedWindow : Window
 {
-
     public ChangeSpeedWindow(ChangeSpeedViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = UiUtil.MakeWindowTitle(Se.Language.General.ChangeSpeed);
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        SyncTimingChrome.Apply(this);
         vm.Window = this;
         DataContext = vm;
 
-        var labelSpeed = new Label
-        {
-            Content = Se.Language.Sync.SpeedInPercentage,
-        };
-
         var numericUpDownSpeed = new NumericUpDown
         {
-            Width = 150,
+            Width = 120,
             HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
             Minimum = 1, // a speed of 0% means a 100/0 factor (divide by zero / infinite times)
             Maximum = 1000,
             Increment = 0.1m,
             DataContext = vm,
+            InnerLeftContent = new TextBlock
+            {
+                Text = "%",
+                Foreground = EditorChrome.FaintTextBrush,
+                FontSize = 11,
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(8, 0, 0, 0),
+            },
             [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.SpeedPercent))
             {
                 Mode = BindingMode.TwoWay,
                 Converter = new DoubleToFourDecimalConverter(),
             },
         };
+        numericUpDownSpeed.Classes.Add("field");
+        AutomationProperties.SetName(numericUpDownSpeed, Se.Language.Sync.SpeedInPercentage);
 
-        var buttonFromDropFrame = UiUtil.MakeButton(Se.Language.Sync.FromDropFrameValue, vm.SetFromDropFrameValueCommand);
-        buttonFromDropFrame.HorizontalAlignment = HorizontalAlignment.Stretch;
-        var buttonToDropFrame = UiUtil.MakeButton(Se.Language.Sync.ToDropFrameValue, vm.SetToDropFrameValueCommand);
-        buttonToDropFrame.HorizontalAlignment = HorizontalAlignment.Stretch;
-
+        var buttonFromDropFrame = SyncTimingChrome.MakeTextToolButton("fa-solid fa-film", Se.Language.Sync.FromDropFrameValue, vm.SetFromDropFrameValueCommand);
+        var buttonToDropFrame = SyncTimingChrome.MakeTextToolButton("fa-solid fa-film", Se.Language.Sync.ToDropFrameValue, vm.SetToDropFrameValueCommand);
         var panelFromToButtons = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            VerticalAlignment = VerticalAlignment.Top,
-            Spacing = 10,
+            Spacing = 2,
             Children =
             {
                 buttonFromDropFrame,
@@ -57,64 +65,26 @@ public class ChangeSpeedWindow : Window
             },
         };
 
-        var panelRadioButtons = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 0,
-            Children =
-            {
-                new RadioButton
-                {
-                    Content = Se.Language.Sync.AdjustAll,
-                    [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.AdjustAll))
-                },
-                new RadioButton
-                {
-                    Content = Se.Language.Sync.AdjustSelectedLines,
-                    [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.AdjustSelectedLines)),
-                    [!RadioButton.IsEnabledProperty] = new Binding(nameof(vm.IsSelectionAvailable)),
-                },
-                new RadioButton
-                {
-                    Content = Se.Language.Sync.AdjustSelectedLinesAndForward,
-                    [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.AdjustSelectedLinesAndForward)),
-                    [!RadioButton.IsEnabledProperty] = new Binding(nameof(vm.IsSelectionAvailable)),
-                }
-            },
-        };
+        var speedRows = new StackPanel { Spacing = 8 };
+        speedRows.Children.Add(SyncTimingChrome.Row(Se.Language.Sync.SpeedInPercentage, numericUpDownSpeed, 80));
+        speedRows.Children.Add(panelFromToButtons);
+        var speedSection = EditorChrome.MakeEditorSection(Se.Language.General.Speed, speedRows, first: true);
+        speedSection.MinWidth = 250;
+
+        var panelRadioButtons = SyncTimingChrome.MakeApplyToRadioButtons(
+            nameof(vm.AdjustAll),
+            nameof(vm.AdjustSelectedLines),
+            nameof(vm.AdjustSelectedLinesAndForward),
+            nameof(vm.IsSelectionAvailable));
+        var linesSection = EditorChrome.MakeEditorSection(Se.Language.General.ApplyTo, panelRadioButtons, first: true);
 
         var buttonApply = UiUtil.MakeButton(Se.Language.General.Apply, vm.ApplyCommand);
         var buttonDone = UiUtil.MakeButtonDone(vm.DoneCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonApply, buttonDone);
+        buttonDone.Classes.Add("primary");
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(labelSpeed,         0, 0);
-        grid.Add(numericUpDownSpeed, 1, 0);
-        grid.Add(panelFromToButtons, 1, 1, 2, 1);
-        grid.Add(panelRadioButtons,  2, 0);
-        grid.Add(buttonPanel,        3, 0, 1, 2);
-
-        Content = grid;
+        Content = SyncTimingChrome.MakeRoot(
+            SyncTimingChrome.SideBySide(speedSection, linesSection),
+            SyncTimingChrome.MakeButtonBar(null, buttonApply, buttonDone));
 
         UiUtil.FocusOnFirstActivation(this, buttonDone); // hack to make OnKeyDown work
         Loaded += (_, _) => UiUtil.RestoreWindowPosition(this);
