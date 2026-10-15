@@ -196,27 +196,10 @@ public class AssaSetPositionWindow : Window
 
     private static Border CreateGuidesSection(AssaSetPositionViewModel vm)
     {
-        static StackPanel Toggle(string property, string text)
-        {
-            var toggle = new ToggleSwitch
-            {
-                OnContent = null,
-                OffContent = null,
-                MinWidth = 0,
-                VerticalAlignment = VerticalAlignment.Center,
-                [!ToggleSwitch.IsCheckedProperty] = new Binding(property) { Mode = BindingMode.TwoWay },
-            };
-            AutomationProperties.SetName(toggle, text);
-            var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
-            row.Children.Add(toggle);
-            row.Children.Add(new TextBlock { Text = text, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center });
-            return row;
-        }
-
         var content = new StackPanel { Spacing = 4 };
-        content.Children.Add(Toggle(nameof(vm.ShowSafeArea), Se.Language.Assa.SetPositionSafeArea));
-        content.Children.Add(Toggle(nameof(vm.ShowCenterLines), Se.Language.Assa.SetPositionCenterLines));
-        content.Children.Add(Toggle(nameof(vm.SnapToGuides), Se.Language.Assa.SetPositionSnapToGuides));
+        content.Children.Add(AssaDrawWindow.MakeToggleRow(nameof(vm.ShowSafeArea), Se.Language.Assa.SetPositionSafeArea));
+        content.Children.Add(AssaDrawWindow.MakeToggleRow(nameof(vm.ShowCenterLines), Se.Language.Assa.SetPositionCenterLines));
+        content.Children.Add(AssaDrawWindow.MakeToggleRow(nameof(vm.SnapToGuides), Se.Language.Assa.SetPositionSnapToGuides));
         return AssaDrawWindow.MakeEditorSection(Se.Language.Assa.SetPositionGuides, content);
     }
 
