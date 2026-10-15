@@ -197,7 +197,45 @@ public class LlamaCppAdvancedClientReasoningTests
         Assert.False(client.ReplyFromReasoning);
     }
 
-    private static async Task<string> ChatAgainstFakeServerAsync(LlamaCppAdvancedClient client, string sseBody)
+    [Fact]
+    public void RequestLeavesThinkingAloneByDefault()
+    {
+        var json = LlamaCppAdvancedClient.BuildRequestJson("system", "user", null, null, 100);
+
+        Assert.DoesNotContain("chat_template_kwargs", json);
+    }
+
+    [Fact]
+    public void RequestCanTurnThinkingOff()
+    {
+        var json = LlamaCppAdvancedClient.BuildRequestJson("system", "user", null, null, 100, disableThinking: true);
+
+        using var doc = System.Text.Json.JsonDocument.Parse(json);
+        Assert.False(doc.RootElement.GetProperty("chat_template_kwargs").GetProperty("enable_thinking").GetBoolean());
+    }
+
+    /// <summary>
+    /// A hybrid Qwen model on a server started without "--reasoning off" thinks until the token
+    /// budget runs out, leaving only reasoning_content; the next request must ask for no thinking.
+    /// </summary>
+    [Fact]
+    public async Task ReasoningOnlyReplyTurnsThinkingOffForTheNextRequest()
+    {
+        using var client = new LlamaCppAdvancedClient();
+        var firstRequest = string.Empty;
+        await ChatAgainstFakeServerAsync(client, "data: " + Chunk("reasoning_content", "Okay, let's see. The user wants Danish.") + "\n\ndata: [DONE]\n\n", body => firstRequest = body);
+        Assert.True(client.DisableThinking);
+        Assert.DoesNotContain("enable_thinking", firstRequest);
+
+        var secondRequest = string.Empty;
+        var reply = await ChatAgainstFakeServerAsync(client, "data: " + Chunk("content", TranslationJson) + "\n\ndata: [DONE]\n\n", body => secondRequest = body);
+
+        Assert.Equal(TranslationJson, reply);
+        Assert.False(client.ReplyFromReasoning);
+        Assert.Contains("\"enable_thinking\":false", secondRequest);
+    }
+
+    private static async Task<string> ChatAgainstFakeServerAsync(LlamaCppAdvancedClient client, string sseBody, Action<string>? onRequest = null)
     {
         var (listener, url) = StartListener();
         using (listener)
@@ -207,7 +245,8 @@ public class LlamaCppAdvancedClientReasoningTests
                 var context = await listener.GetContextAsync();
                 using (var reader = new StreamReader(context.Request.InputStream))
                 {
-                    await reader.ReadToEndAsync();
+                    var requestBody = await reader.ReadToEndAsync();
+                    onRequest?.Invoke(requestBody);
                 }
 
                 var bytes = Encoding.UTF8.GetBytes(sseBody);

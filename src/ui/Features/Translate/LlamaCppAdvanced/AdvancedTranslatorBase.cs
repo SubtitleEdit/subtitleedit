@@ -226,7 +226,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
         }
 
         return fromReasoning
-            ? "the server left \"content\" empty and answered in \"reasoning_content\" only - the model looks to be in thinking mode, turn thinking off on the server: " + reply
+            ? "the server left \"content\" empty and answered in \"reasoning_content\" only - the model looks to be in thinking mode and kept thinking with \"enable_thinking\" off, turn thinking off on the server (e.g. \"--reasoning off\"): " + reply
             : reply;
     }
 
