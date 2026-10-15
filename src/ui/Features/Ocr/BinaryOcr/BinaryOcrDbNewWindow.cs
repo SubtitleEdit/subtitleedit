@@ -1,9 +1,15 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
+using Nikse.SubtitleEdit.Features.Edit;
+using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.BinaryOcr;
 
+/// <summary>
+/// Name a new (or renamed) binary image compare database, in the editor look (see
+/// <see cref="EditorChrome"/>): the name in a section, Cancel and OK in the button bar.
+/// </summary>
 public class BinaryOcrDbNewWindow : Window
 {
     public BinaryOcrDbNewWindow(BinaryOcrDbNewViewModel vm)
@@ -14,39 +20,18 @@ public class BinaryOcrDbNewWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        EditDialogChrome.Apply(this);
         DataContext = vm;
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Select action
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Buttons
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            Width = double.NaN,
-            Height = double.NaN,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch,
-        };
+        var textBoxDatabaseName = BinaryOcrChrome.AsField(UiUtil.MakeTextBox(200, vm, nameof(vm.DatabaseName)))
+            .WithAccessibleName(Se.Language.General.Name);
+        textBoxDatabaseName.Width = 320;
 
-        var labelTitle = UiUtil.MakeLabel(Se.Language.Ocr.EditBinaryOcrDatabase);
-        var textBoxDatabaseName = UiUtil.MakeTextBox(200, vm, nameof(vm.DatabaseName));
+        var buttonOk = BinaryOcrChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonCancel = BinaryOcrChrome.AsBarButton(UiUtil.MakeButtonCancel(vm.CancelCommand));
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-
-        grid.Add(labelTitle, 0, 0);
-        grid.Add(textBoxDatabaseName, 0, 1);
-        grid.Add(buttonBar, 1, 0, 1, 2);
-
-        Content = grid;
+        var section = EditorChrome.MakeEditorSection(Se.Language.General.Name, textBoxDatabaseName, first: true);
+        Content = SyncTimingChrome.MakeRoot(section, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, () =>
         {
