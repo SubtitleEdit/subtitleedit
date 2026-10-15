@@ -27,6 +27,7 @@ public class LanguageAiReview
     public string EngineError { get; set; }
     public string PlayCurrentLineHint { get; set; }
     public string EditAfterHint { get; set; }
+    public string Prompt { get; set; }
     public string Template { get; set; }
     public string TemplatePlaceholder { get; set; }
     public string TemplateStandard { get; set; }
@@ -70,6 +71,7 @@ public class LanguageAiReview
         EngineError = "The AI engine could not be reached: {0}";
         PlayCurrentLineHint = "Play the selected line in the video player and pause at its end (also double-click a line)";
         EditAfterHint = "Click the selected row's text to edit the fix before applying it (Enter saves, Escape cancels)";
+        Prompt = "Prompt";
         Template = "Template";
         TemplatePlaceholder = "Choose a template to replace the prompt";
         TemplateStandard = "Standard proofreading";
