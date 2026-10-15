@@ -8,7 +8,6 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
-using Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -36,8 +35,8 @@ public class FontCollectorWindow : Window
         MinWidth = 700;
         MinHeight = 480;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        Background = AssaDrawWindow.WindowBrush;
-        AssaDrawWindow.AddEditorStyles(Styles);
+        Background = EditorChrome.WindowBrush;
+        EditorChrome.AddEditorStyles(Styles);
 
         _vm = vm;
         vm.Window = this;
@@ -60,7 +59,7 @@ public class FontCollectorWindow : Window
         content.Add(new Border
         {
             Child = lists,
-            Background = AssaDrawWindow.PanelBrush,
+            Background = EditorChrome.PanelBrush,
             Padding = new Thickness(8),
         }, 0, 0);
         content.Add(MakePreview(vm), 1, 0);
@@ -157,14 +156,14 @@ public class FontCollectorWindow : Window
 
         var panel = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2, VerticalAlignment = VerticalAlignment.Center };
         panel.Children.Add(views);
-        panel.Children.Add(AssaDrawWindow.MakeToolbarSeparator());
+        panel.Children.Add(EditorChrome.MakeToolbarSeparator());
         panel.Children.Add(actions);
 
         return new Border
         {
             Child = panel,
-            Background = AssaDrawWindow.PanelBrush,
-            BorderBrush = AssaDrawWindow.LineBrush,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 0, 0, 1),
             Padding = new Thickness(10, 6),
         };
@@ -234,7 +233,7 @@ public class FontCollectorWindow : Window
                 return NotFoundBrush;
             }
 
-            return AssaDrawWindow.AccentBrush;
+            return EditorChrome.AccentBrush;
         }
 
         return new Border
@@ -308,20 +307,20 @@ public class FontCollectorWindow : Window
         var stage = new Border
         {
             Child = image,
-            Background = AssaDrawWindow.FieldBrush,
-            BorderBrush = AssaDrawWindow.FieldBorderBrush,
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
             BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(8),
             Padding = new Thickness(12),
         };
 
         var panel = new Grid { RowSpacing = 8, RowDefinitions = { new RowDefinition(GridLength.Auto), new RowDefinition(new GridLength(1, GridUnitType.Star)) } };
-        panel.Add(AssaDrawWindow.MakeSectionHeader(Se.Language.General.Preview), 0, 0);
+        panel.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Preview), 0, 0);
         panel.Add(stage, 1, 0);
         return new Border
         {
             Child = panel,
-            BorderBrush = AssaDrawWindow.LineBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 1, 0, 0),
             Padding = new Thickness(14, 10, 14, 12),
         };
@@ -332,7 +331,7 @@ public class FontCollectorWindow : Window
         var status = new TextBlock
         {
             FontSize = 12,
-            Foreground = AssaDrawWindow.DimTextBrush,
+            Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.StatusText)),
         };
@@ -341,7 +340,7 @@ public class FontCollectorWindow : Window
         buttonDone.Classes.Add("primary");
 
         // Embed option, beside Done while the subtitle's fonts show
-        var trim = OnTab(vm, 0, AssaDrawWindow.MakeToggleRow(nameof(vm.TrimFontsToUsedCharacters), Se.Language.Assa.FontCollectorTrimFonts));
+        var trim = OnTab(vm, 0, EditorChrome.MakeToggleRow(nameof(vm.TrimFontsToUsedCharacters), Se.Language.Assa.FontCollectorTrimFonts));
         trim.Margin = new Thickness(0, 0, 16, 0);
 
         var bar = new DockPanel();
@@ -353,8 +352,8 @@ public class FontCollectorWindow : Window
         return new Border
         {
             Child = bar,
-            Background = AssaDrawWindow.ButtonBarBrush,
-            BorderBrush = AssaDrawWindow.LineBrush,
+            Background = EditorChrome.ButtonBarBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 1, 0, 0),
             Padding = new Thickness(16, 10),
         };

@@ -32,8 +32,8 @@ public class AssSetBackgroundWindow : Window
         Height = 760;
         MinWidth = 950;
         MinHeight = 650;
-        Background = AssaDrawWindow.WindowBrush;
-        AssaDrawWindow.AddEditorStyles(Styles);
+        Background = EditorChrome.WindowBrush;
+        EditorChrome.AddEditorStyles(Styles);
 
         vm.Window = this;
         DataContext = vm;
@@ -96,8 +96,8 @@ public class AssSetBackgroundWindow : Window
         return new Border
         {
             Child = new ScrollViewer { Content = sections, HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled },
-            Background = AssaDrawWindow.PanelBrush,
-            BorderBrush = AssaDrawWindow.LineBrush,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 0, 1, 0),
         };
     }
@@ -151,9 +151,9 @@ public class AssSetBackgroundWindow : Window
             }
         };
 
-        var radius = AssaDrawWindow.MakeField(nameof(vm.Radius), 0, 200);
+        var radius = EditorChrome.MakeField(nameof(vm.Radius), 0, 200);
         AutomationProperties.SetName(radius, Se.Language.Assa.BackgroundBoxRadius);
-        var radiusRow = AssaDrawWindow.MakePropertyRow(Se.Language.Assa.BackgroundBoxRadius, radius, new Control());
+        var radiusRow = EditorChrome.MakePropertyRow(Se.Language.Assa.BackgroundBoxRadius, radius, new Control());
         radiusRow.Bind(Grid.IsVisibleProperty, new Binding(nameof(vm.IsRadiusEnabled)));
 
         var content = new StackPanel { Spacing = 6 };
@@ -163,11 +163,11 @@ public class AssSetBackgroundWindow : Window
         var name = new TextBlock
         {
             FontSize = 12,
-            Foreground = AssaDrawWindow.DimTextBrush,
+            Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.BoxStyleName)),
         };
-        return AssaDrawWindow.MakeEditorSection(Se.Language.General.Style, content, name, first: true);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Style, content, name, first: true);
     }
 
     // The sample box the thumbnails are drawn around, and the "text" inside it
@@ -182,7 +182,7 @@ public class AssSetBackgroundWindow : Window
         var geometry = MakeThumbnail(styleIndex);
         var bounds = geometry.Bounds.Union(SampleBox);
         var canvas = new Canvas { Width = bounds.Width, Height = bounds.Height };
-        var path = new Avalonia.Controls.Shapes.Path { Data = geometry, Fill = AssaDrawWindow.ThumbnailBrush };
+        var path = new Avalonia.Controls.Shapes.Path { Data = geometry, Fill = EditorChrome.ThumbnailBrush };
         Canvas.SetLeft(path, -bounds.X);
         Canvas.SetTop(path, -bounds.Y);
         canvas.Children.Add(path);
@@ -190,7 +190,7 @@ public class AssSetBackgroundWindow : Window
         // Two lines of "text" in the middle of the sample box
         foreach (var (width, y) in new[] { (80.0, 30.0), (56.0, 44.0) })
         {
-            var line = new Border { Width = width, Height = 7, CornerRadius = new CornerRadius(3.5), Background = AssaDrawWindow.ThumbnailMutedBrush };
+            var line = new Border { Width = width, Height = 7, CornerRadius = new CornerRadius(3.5), Background = EditorChrome.ThumbnailMutedBrush };
             Canvas.SetLeft(line, SampleBox.Center.X - width / 2 - bounds.X);
             Canvas.SetTop(line, y - bounds.Y);
             canvas.Children.Add(line);
@@ -212,7 +212,7 @@ public class AssSetBackgroundWindow : Window
     {
         NumericUpDown Side(string property, string prefix, string name)
         {
-            var field = AssaDrawWindow.MakeField(property, 0, 500, 74, prefix);
+            var field = EditorChrome.MakeField(property, 0, 500, 74, prefix);
             AutomationProperties.SetName(field, name);
             if (Se.Settings.Appearance.ShowHints)
             {
@@ -232,8 +232,8 @@ public class AssSetBackgroundWindow : Window
 
         var text = new Border
         {
-            Background = AssaDrawWindow.AccentSoftBrush,
-            BorderBrush = AssaDrawWindow.AccentBrush,
+            Background = EditorChrome.AccentSoftBrush,
+            BorderBrush = EditorChrome.AccentBrush,
             BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(5),
             Height = 28,
@@ -268,7 +268,7 @@ public class AssSetBackgroundWindow : Window
         grid.Add(text, 1, 1);
         grid.Add(right, 1, 2);
         grid.Add(bottom, 2, 1);
-        return AssaDrawWindow.MakeEditorSection(Se.Language.General.Padding, grid);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Padding, grid);
     }
 
     private static Border CreateFillWidthSection(AssSetBackgroundViewModel vm)
@@ -286,8 +286,8 @@ public class AssSetBackgroundWindow : Window
         toggleRow.Children.Add(toggle);
         toggleRow.Children.Add(new TextBlock { Text = Se.Language.Assa.BackgroundBoxFillWidth, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center });
 
-        var left = AssaDrawWindow.MakeField(nameof(vm.FillWidthMarginLeft), 0, 2000, prefix: "L");
-        var right = AssaDrawWindow.MakeField(nameof(vm.FillWidthMarginRight), 0, 2000, prefix: "R");
+        var left = EditorChrome.MakeField(nameof(vm.FillWidthMarginLeft), 0, 2000, prefix: "L");
+        var right = EditorChrome.MakeField(nameof(vm.FillWidthMarginRight), 0, 2000, prefix: "R");
         AutomationProperties.SetName(left, Se.Language.General.Left);
         AutomationProperties.SetName(right, Se.Language.General.Right);
         left.Bind(NumericUpDown.IsEnabledProperty, new Binding(nameof(vm.FillWidth)));
@@ -295,8 +295,8 @@ public class AssSetBackgroundWindow : Window
 
         var content = new StackPanel { Spacing = 8 };
         content.Children.Add(toggleRow);
-        content.Children.Add(AssaDrawWindow.MakePropertyRow(Se.Language.General.Margin, left, right));
-        return AssaDrawWindow.MakeEditorSection(Se.Language.Assa.BackgroundBoxFillWidth, content);
+        content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.Margin, left, right));
+        return EditorChrome.MakeEditorSection(Se.Language.Assa.BackgroundBoxFillWidth, content);
     }
 
     /// <summary>
@@ -312,8 +312,8 @@ public class AssSetBackgroundWindow : Window
             return button;
         }
 
-        var outlineWidth = AssaDrawWindow.MakeField(nameof(vm.OutlineWidth), 0, 20, prefix: "W");
-        var shadowDistance = AssaDrawWindow.MakeField(nameof(vm.ShadowDistance), 0, 20, prefix: "D");
+        var outlineWidth = EditorChrome.MakeField(nameof(vm.OutlineWidth), 0, 20, prefix: "W");
+        var shadowDistance = EditorChrome.MakeField(nameof(vm.ShadowDistance), 0, 20, prefix: "D");
         AutomationProperties.SetName(outlineWidth, Se.Language.General.OutlineWidth);
         AutomationProperties.SetName(shadowDistance, Se.Language.General.ShadowWidth);
         if (Se.Settings.Appearance.ShowHints)
@@ -323,10 +323,10 @@ public class AssSetBackgroundWindow : Window
         }
 
         var content = new StackPanel { Spacing = 8 };
-        content.Children.Add(AssaDrawWindow.MakePropertyRow(Se.Language.General.BoxColor, Swatch(nameof(vm.BoxColor), Se.Language.General.BoxColor), new Control()));
-        content.Children.Add(AssaDrawWindow.MakePropertyRow(Se.Language.General.Outline, Swatch(nameof(vm.OutlineColor), Se.Language.General.Outline), outlineWidth));
-        content.Children.Add(AssaDrawWindow.MakePropertyRow(Se.Language.General.Shadow, Swatch(nameof(vm.ShadowColor), Se.Language.General.Shadow), shadowDistance));
-        return AssaDrawWindow.MakeEditorSection(Se.Language.General.Color, content);
+        content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.BoxColor, Swatch(nameof(vm.BoxColor), Se.Language.General.BoxColor), new Control()));
+        content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.Outline, Swatch(nameof(vm.OutlineColor), Se.Language.General.Outline), outlineWidth));
+        content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.Shadow, Swatch(nameof(vm.ShadowColor), Se.Language.General.Shadow), shadowDistance));
+        return EditorChrome.MakeEditorSection(Se.Language.General.Color, content);
     }
 
     private static Border CreateButtonBar(AssSetBackgroundViewModel vm)
@@ -334,7 +334,7 @@ public class AssSetBackgroundWindow : Window
         var progress = new TextBlock
         {
             FontSize = 12,
-            Foreground = AssaDrawWindow.DimTextBrush,
+            Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ProgressText)),
         };
@@ -359,8 +359,8 @@ public class AssSetBackgroundWindow : Window
         return new Border
         {
             Child = grid,
-            Background = AssaDrawWindow.ButtonBarBrush,
-            BorderBrush = AssaDrawWindow.LineBrush,
+            Background = EditorChrome.ButtonBarBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 1, 0, 0),
             Padding = new Thickness(16, 10),
         };

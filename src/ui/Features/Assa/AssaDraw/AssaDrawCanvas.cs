@@ -7,6 +7,8 @@ using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 
+using Nikse.SubtitleEdit.Logic;
+
 namespace Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 
 /// <summary>
@@ -67,7 +69,7 @@ public class AssaDrawCanvas : Control
     private static readonly Color AccentColor = Color.FromRgb(76, 110, 245);
     private static readonly Color HandleFillColor = Colors.White;
 
-    private static bool IsLight => AssaDrawWindow.IsLightTheme;
+    private static bool IsLight => EditorChrome.IsLightTheme;
     private static IBrush WorkspaceBrush => IsLight ? LightWorkspaceBrush : DarkWorkspaceBrush;
     private static IBrush CheckerBrush => IsLight ? LightCheckerBrush : DarkCheckerBrush;
     private static Color CanvasColor => IsLight ? LightCanvasColor : DrawSettings.BackgroundColor;

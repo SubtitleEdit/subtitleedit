@@ -7,7 +7,6 @@ using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.Input;
-using Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -32,27 +31,27 @@ public class AssaStylePickerWindow : Window
         Height = 550;
         MinWidth = 550;
         MinHeight = 400;
-        Background = AssaDrawWindow.WindowBrush;
-        AssaDrawWindow.AddEditorStyles(Styles);
+        Background = EditorChrome.WindowBrush;
+        EditorChrome.AddEditorStyles(Styles);
 
         vm.Window = this;
         DataContext = vm;
 
         // Header: title with check all / none
         var actions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2 };
-        actions.Children.Add(AssaDrawWindow.CreateToolButton("fa-solid fa-square-check", Se.Language.General.SelectAll, new RelayCommand(() => SetAll(vm, true)), 24));
-        actions.Children.Add(AssaDrawWindow.CreateToolButton("fa-regular fa-square", Se.Language.General.SelectNone, new RelayCommand(() => SetAll(vm, false)), 24));
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-square-check", Se.Language.General.SelectAll, new RelayCommand(() => SetAll(vm, true)), 24));
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-regular fa-square", Se.Language.General.SelectNone, new RelayCommand(() => SetAll(vm, false)), 24));
         var header = new DockPanel { Margin = new Thickness(14, 10, 10, 8) };
         DockPanel.SetDock(actions, Dock.Right);
         header.Children.Add(actions);
-        header.Children.Add(AssaDrawWindow.MakeSectionHeader(Se.Language.General.Styles));
+        header.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Styles));
 
         var list = new Grid { RowDefinitions = { new RowDefinition(GridLength.Auto), new RowDefinition(new GridLength(1, GridUnitType.Star)) } };
         list.Add(header, 0, 0);
         list.Add(MakeDataGrid(vm, out var stylesGrid), 1, 0);
 
         var mainGrid = new Grid { RowDefinitions = { new RowDefinition(new GridLength(1, GridUnitType.Star)), new RowDefinition(GridLength.Auto) } };
-        mainGrid.Add(new Border { Child = list, Background = AssaDrawWindow.PanelBrush }, 0, 0);
+        mainGrid.Add(new Border { Child = list, Background = EditorChrome.PanelBrush }, 0, 0);
         mainGrid.Add(MakeButtonBar(vm), 1, 0);
         Content = mainGrid;
 
@@ -82,8 +81,8 @@ public class AssaStylePickerWindow : Window
         return new Border
         {
             Child = buttons,
-            Background = AssaDrawWindow.ButtonBarBrush,
-            BorderBrush = AssaDrawWindow.LineBrush,
+            Background = EditorChrome.ButtonBarBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 1, 0, 0),
             Padding = new Thickness(16, 10),
         };

@@ -5,7 +5,6 @@ using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
-using Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -27,13 +26,13 @@ public class AssaPropertiesWindow : Window
         Width = 640;
         SizeToContent = SizeToContent.Height;
         CanResize = false;
-        Background = AssaDrawWindow.WindowBrush;
-        AssaDrawWindow.AddEditorStyles(Styles);
+        Background = EditorChrome.WindowBrush;
+        EditorChrome.AddEditorStyles(Styles);
 
         vm.Window = this;
         DataContext = vm;
 
-        var sections = new StackPanel { Background = AssaDrawWindow.PanelBrush };
+        var sections = new StackPanel { Background = EditorChrome.PanelBrush };
         sections.Children.Add(MakeScriptSection(vm, out var textBoxTitle));
         sections.Children.Add(MakeResolutionSection(vm));
         sections.Children.Add(MakeOptionsSection(vm));
@@ -59,15 +58,15 @@ public class AssaPropertiesWindow : Window
         {
             FontSize = 12.5,
             MinHeight = 28,
-            Background = AssaDrawWindow.FieldBrush,
-            BorderBrush = AssaDrawWindow.FieldBorderBrush,
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
             CornerRadius = new CornerRadius(6),
             [!TextBox.TextProperty] = new Binding(property) { Mode = BindingMode.TwoWay },
         };
         AutomationProperties.SetName(textBox, label);
 
         var panel = new StackPanel { Spacing = 4 };
-        panel.Children.Add(new TextBlock { Text = label, FontSize = 12, Foreground = AssaDrawWindow.DimTextBrush });
+        panel.Children.Add(new TextBlock { Text = label, FontSize = 12, Foreground = EditorChrome.DimTextBrush });
         panel.Children.Add(textBox);
         return panel;
     }
@@ -95,23 +94,23 @@ public class AssaPropertiesWindow : Window
         content.Children.Add(title);
         content.Children.Add(grid);
         content.Children.Add(MakeTextField(Se.Language.General.UpdateDetails, nameof(vm.UpdateDetails), out _));
-        return AssaDrawWindow.MakeEditorSection(Se.Language.General.Script, content, first: true);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Script, content, first: true);
     }
 
     private static Border MakeResolutionSection(AssaPropertiesViewModel vm)
     {
-        var width = AssaDrawWindow.MakeField(nameof(vm.VideoWidth), 0, 10000, 90, "W");
-        var height = AssaDrawWindow.MakeField(nameof(vm.VideoHeight), 0, 10000, 90, "H");
+        var width = EditorChrome.MakeField(nameof(vm.VideoWidth), 0, 10000, 90, "W");
+        var height = EditorChrome.MakeField(nameof(vm.VideoHeight), 0, 10000, 90, "H");
         AutomationProperties.SetName(width, Se.Language.General.Width);
         AutomationProperties.SetName(height, Se.Language.General.Height);
 
-        var browse = AssaDrawWindow.CreateToolButton("fa-solid fa-folder-open", Se.Language.General.VideoResolution, vm.BrowseResolutionCommand, 28);
-        var fromVideo = AssaDrawWindow.CreateToolButton("fa-solid fa-film", Se.Language.General.PickResolutionFromCurrentVideo, vm.GetResolutionFromCurrentVideoCommand, 28);
+        var browse = EditorChrome.CreateToolButton("fa-solid fa-folder-open", Se.Language.General.VideoResolution, vm.BrowseResolutionCommand, 28);
+        var fromVideo = EditorChrome.CreateToolButton("fa-solid fa-film", Se.Language.General.PickResolutionFromCurrentVideo, vm.GetResolutionFromCurrentVideoCommand, 28);
         fromVideo.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.ShowGetResolutionFromCurrentVideo)) { Source = vm });
 
         var size = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6 };
         size.Children.Add(width);
-        size.Children.Add(new TextBlock { Text = "×", Foreground = AssaDrawWindow.DimTextBrush, VerticalAlignment = VerticalAlignment.Center });
+        size.Children.Add(new TextBlock { Text = "×", Foreground = EditorChrome.DimTextBrush, VerticalAlignment = VerticalAlignment.Center });
         size.Children.Add(height);
         size.Children.Add(browse);
         size.Children.Add(fromVideo);
@@ -149,7 +148,7 @@ public class AssaPropertiesWindow : Window
         var content = new StackPanel { Spacing = 8 };
         content.Children.Add(size);
         content.Children.Add(presets);
-        return AssaDrawWindow.MakeEditorSection(Se.Language.General.VideoResolution, content);
+        return EditorChrome.MakeEditorSection(Se.Language.General.VideoResolution, content);
     }
 
     private static Border MakeOptionsSection(AssaPropertiesViewModel vm)
@@ -168,13 +167,13 @@ public class AssaPropertiesWindow : Window
         };
         grid.Add(Labeled(Se.Language.Assa.WrapStyle, wrapStyle), 0, 0);
         grid.Add(Labeled(Se.Language.Assa.BorderAndShadowScaling, scaling), 0, 1);
-        return AssaDrawWindow.MakeEditorSection(Se.Language.General.Options, grid);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Options, grid);
     }
 
     private static StackPanel Labeled(string label, Control control)
     {
         var panel = new StackPanel { Spacing = 4 };
-        panel.Children.Add(new TextBlock { Text = label, FontSize = 12, Foreground = AssaDrawWindow.DimTextBrush, TextTrimming = TextTrimming.CharacterEllipsis });
+        panel.Children.Add(new TextBlock { Text = label, FontSize = 12, Foreground = EditorChrome.DimTextBrush, TextTrimming = TextTrimming.CharacterEllipsis });
         panel.Children.Add(control);
         return panel;
     }
@@ -191,8 +190,8 @@ public class AssaPropertiesWindow : Window
         return new Border
         {
             Child = buttons,
-            Background = AssaDrawWindow.ButtonBarBrush,
-            BorderBrush = AssaDrawWindow.LineBrush,
+            Background = EditorChrome.ButtonBarBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 1, 0, 0),
             Padding = new Thickness(16, 10),
         };

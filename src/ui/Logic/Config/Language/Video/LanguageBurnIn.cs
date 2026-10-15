@@ -26,6 +26,9 @@ public class LanguageBurnIn
     public string LogoInfo { get; set; }
     public string NoSubtitlesGenerateAnyway { get; set; }
     public string NoSubtitlesInXItemsGenerateAnyway { get; set; }
+    public string SubtitleStyle { get; set; }
+    public string VideoOutput { get; set; }
+    public string TargetSize { get; set; }
 
     public LanguageBurnIn()
     {
@@ -53,5 +56,8 @@ public class LanguageBurnIn
         LogoInfo = "Pick a PNG image and drag it to position it on the video.";
         NoSubtitlesGenerateAnyway = "There are no subtitle lines to burn in.\n\nGenerate the video without subtitles?";
         NoSubtitlesInXItemsGenerateAnyway = "{0} batch item(s) have no subtitle lines to burn in.\n\nGenerate those videos without subtitles?";
+        SubtitleStyle = "Subtitle style";
+        VideoOutput = "Video output";
+        TargetSize = "Target size";
     }
 }

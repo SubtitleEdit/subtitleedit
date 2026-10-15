@@ -6,7 +6,6 @@ using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -33,25 +32,25 @@ public class WebVttStylePickerWindow : Window
         Height = 540;
         MinWidth = 420;
         MinHeight = 320;
-        Background = AssaDrawWindow.WindowBrush;
-        AssaDrawWindow.AddEditorStyles(Styles);
+        Background = EditorChrome.WindowBrush;
+        EditorChrome.AddEditorStyles(Styles);
 
         vm.Window = this;
         DataContext = vm;
 
         // Header: title with select all / invert
         var actions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2 };
-        actions.Children.Add(AssaDrawWindow.CreateToolButton("fa-solid fa-square-check", Se.Language.General.SelectAll, vm.SelectAllCommand, 24));
-        actions.Children.Add(AssaDrawWindow.CreateToolButton("fa-solid fa-right-left", Se.Language.General.InvertSelection, vm.InvertSelectionCommand, 24));
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-square-check", Se.Language.General.SelectAll, vm.SelectAllCommand, 24));
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-right-left", Se.Language.General.InvertSelection, vm.InvertSelectionCommand, 24));
         var header = new DockPanel { Margin = new Thickness(14, 10, 10, 8) };
         DockPanel.SetDock(actions, Dock.Right);
         header.Children.Add(actions);
-        header.Children.Add(AssaDrawWindow.MakeSectionHeader(Se.Language.General.Styles));
+        header.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Styles));
 
         var css = new Border
         {
-            Background = AssaDrawWindow.FieldBrush,
-            BorderBrush = AssaDrawWindow.FieldBorderBrush,
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
             BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(6),
             Padding = new Thickness(8, 6),
@@ -80,7 +79,7 @@ public class WebVttStylePickerWindow : Window
         list.Add(css, 2, 0);
 
         var mainGrid = new Grid { RowDefinitions = { new RowDefinition(new GridLength(1, GridUnitType.Star)), new RowDefinition(GridLength.Auto) } };
-        mainGrid.Add(new Border { Child = list, Background = AssaDrawWindow.PanelBrush }, 0, 0);
+        mainGrid.Add(new Border { Child = list, Background = EditorChrome.PanelBrush }, 0, 0);
         mainGrid.Add(MakeButtonBar(vm), 1, 0);
         Content = mainGrid;
 
@@ -101,8 +100,8 @@ public class WebVttStylePickerWindow : Window
         return new Border
         {
             Child = buttons,
-            Background = AssaDrawWindow.ButtonBarBrush,
-            BorderBrush = AssaDrawWindow.LineBrush,
+            Background = EditorChrome.ButtonBarBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 1, 0, 0),
             Padding = new Thickness(16, 10),
         };

@@ -10,7 +10,6 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
-using Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -40,8 +39,8 @@ public class WebVttStylesWindow : Window
         Height = 800;
         MinWidth = 950;
         MinHeight = 600;
-        Background = AssaDrawWindow.WindowBrush;
-        AssaDrawWindow.AddEditorStyles(Styles);
+        Background = EditorChrome.WindowBrush;
+        EditorChrome.AddEditorStyles(Styles);
         AddStyles(Styles);
 
         vm.Window = this;
@@ -101,7 +100,7 @@ public class WebVttStylesWindow : Window
                 new Setter(ToggleButton.BackgroundProperty, Brushes.Transparent),
                 new Setter(ToggleButton.BorderThicknessProperty, new Thickness(0)),
                 new Setter(ToggleButton.CornerRadiusProperty, new CornerRadius(6)),
-                new Setter(ToggleButton.ForegroundProperty, AssaDrawWindow.IconBrush),
+                new Setter(ToggleButton.ForegroundProperty, EditorChrome.IconBrush),
                 new Setter(ToggleButton.PaddingProperty, new Thickness(0)),
             },
         });
@@ -109,7 +108,7 @@ public class WebVttStylesWindow : Window
         {
             Setters =
             {
-                new Setter(ContentPresenter.BackgroundProperty, AssaDrawWindow.AccentBrush),
+                new Setter(ContentPresenter.BackgroundProperty, EditorChrome.AccentBrush),
                 new Setter(ContentPresenter.ForegroundProperty, Brushes.White),
             },
         });
@@ -141,14 +140,14 @@ public class WebVttStylesWindow : Window
 
         // Title, then the actions under it
         var actions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2, Margin = new Thickness(0, 6, 0, 0) };
-        actions.Children.Add(AssaDrawWindow.CreateToolButton("fa-solid fa-plus", Se.Language.General.New, vm.NewCommand, 24));
-        actions.Children.Add(AssaDrawWindow.CreateToolButton("fa-regular fa-clone", Se.Language.General.Duplicate, vm.DuplicateCommand, 24));
-        actions.Children.Add(AssaDrawWindow.CreateToolButton("fa-solid fa-trash", Se.Language.General.Delete, vm.RemoveCommand, 24));
-        actions.Children.Add(AssaDrawWindow.MakeToolbarSeparator());
-        actions.Children.Add(AssaDrawWindow.CreateToolButton("fa-solid fa-file-import", Se.Language.General.Import, vm.ImportCommand, 24));
-        actions.Children.Add(AssaDrawWindow.CreateToolButton("fa-solid fa-file-export", Se.Language.General.Export, vm.ExportCommand, 24));
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-plus", Se.Language.General.New, vm.NewCommand, 24));
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-regular fa-clone", Se.Language.General.Duplicate, vm.DuplicateCommand, 24));
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-trash", Se.Language.General.Delete, vm.RemoveCommand, 24));
+        actions.Children.Add(EditorChrome.MakeToolbarSeparator());
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-file-import", Se.Language.General.Import, vm.ImportCommand, 24));
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-file-export", Se.Language.General.Export, vm.ExportCommand, 24));
         var header = new StackPanel { Margin = new Thickness(14, 10, 10, 8) };
-        header.Children.Add(AssaDrawWindow.MakeSectionHeader(Se.Language.General.Styles));
+        header.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Styles));
         header.Children.Add(actions);
 
         // Two styles with one name would overwrite each other on save
@@ -185,8 +184,8 @@ public class WebVttStylesWindow : Window
         return new Border
         {
             Child = grid,
-            Background = AssaDrawWindow.PanelBrush,
-            BorderBrush = AssaDrawWindow.LineBrush,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 0, 1, 0),
         };
     }
@@ -219,7 +218,7 @@ public class WebVttStylesWindow : Window
         columns.Add(new Border
         {
             Child = MakeColorsSection(vm),
-            BorderBrush = AssaDrawWindow.LineBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(1, 0),
         }, 0, 1);
         columns.Add(MakeCssSection(vm), 0, 2);
@@ -227,8 +226,8 @@ public class WebVttStylesWindow : Window
         return new Border
         {
             Child = columns,
-            Background = AssaDrawWindow.PanelBrush,
-            BorderBrush = AssaDrawWindow.LineBrush,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 1, 0, 0),
             [!Border.IsEnabledProperty] = new Binding(nameof(vm.SelectedStyle)) { Converter = ObjectConverters.IsNotNull },
         };
@@ -239,8 +238,8 @@ public class WebVttStylesWindow : Window
         var name = new TextBox
         {
             FontSize = 12.5,
-            Background = AssaDrawWindow.FieldBrush,
-            BorderBrush = AssaDrawWindow.FieldBorderBrush,
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
             CornerRadius = new CornerRadius(6),
             [!TextBox.TextProperty] = new Binding(Current + nameof(WebVttStyleDisplay.Name)) { Mode = BindingMode.TwoWay },
         };
@@ -250,10 +249,10 @@ public class WebVttStylesWindow : Window
         name.Bind(TemplatedControl.BorderBrushProperty, new Binding(nameof(vm.IsNameInvalid))
         {
             Source = vm,
-            Converter = new FuncValueConverter<bool, IBrush?>(invalid => invalid ? Brushes.OrangeRed : AssaDrawWindow.FieldBorderBrush),
+            Converter = new FuncValueConverter<bool, IBrush?>(invalid => invalid ? Brushes.OrangeRed : EditorChrome.FieldBorderBrush),
         });
 
-        return AssaDrawWindow.MakeEditorSection(Se.Language.General.Name, name, first: true);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Name, name, first: true);
     }
 
     private static Border MakeFontSection(WebVttStylesViewModel vm)
@@ -262,7 +261,7 @@ public class WebVttStylesWindow : Window
         fontName.HorizontalAlignment = HorizontalAlignment.Stretch;
         AutomationProperties.SetName(fontName, Se.Language.General.FontName);
 
-        var size = AssaDrawWindow.MakeField(Current + nameof(WebVttStyleDisplay.FontSize), 0, 500, 76, "Aa", "0.#");
+        var size = EditorChrome.MakeField(Current + nameof(WebVttStyleDisplay.FontSize), 0, 500, 76, "Aa", "0.#");
         AutomationProperties.SetName(size, Se.Language.General.FontSize);
 
         ToggleButton Toggle(string text, string property, string name, FontWeight weight = FontWeight.Normal, FontStyle style = FontStyle.Normal, TextDecorationCollection? decorations = null)
@@ -297,7 +296,7 @@ public class WebVttStylesWindow : Window
         var content = new StackPanel { Spacing = 8 };
         content.Children.Add(fontName);
         content.Children.Add(styleRow);
-        return AssaDrawWindow.MakeEditorSection(Se.Language.General.Font, content);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Font, content);
     }
 
     /// <summary>
@@ -311,12 +310,12 @@ public class WebVttStylesWindow : Window
         rows.Children.Add(MakeColorRow(vm, Se.Language.General.Background, nameof(WebVttStyleDisplay.UseBackgroundColor), nameof(WebVttStyleDisplay.BackgroundColor)));
         rows.Children.Add(MakeColorRow(vm, Se.Language.General.Shadow, nameof(WebVttStyleDisplay.UseShadow), nameof(WebVttStyleDisplay.ShadowColor)));
 
-        var shadowWidth = AssaDrawWindow.MakeField(Current + nameof(WebVttStyleDisplay.ShadowWidth), 0, 100, double.NaN, "W", "0.#");
+        var shadowWidth = EditorChrome.MakeField(Current + nameof(WebVttStyleDisplay.ShadowWidth), 0, 100, double.NaN, "W", "0.#");
         AutomationProperties.SetName(shadowWidth, Se.Language.General.ShadowWidth);
         shadowWidth.Bind(IsEnabledProperty, new Binding(Current + nameof(WebVttStyleDisplay.UseShadow)));
-        rows.Children.Add(AssaDrawWindow.MakePropertyRow(Se.Language.General.Width, shadowWidth));
+        rows.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.Width, shadowWidth));
 
-        return AssaDrawWindow.MakeEditorSection(Se.Language.General.Color, rows, first: true);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Color, rows, first: true);
     }
 
     private static Grid MakeColorRow(WebVttStylesViewModel vm, string text, string useProperty, string colorProperty)
@@ -354,8 +353,8 @@ public class WebVttStylesWindow : Window
     {
         Border Code(string property) => new()
         {
-            Background = AssaDrawWindow.FieldBrush,
-            BorderBrush = AssaDrawWindow.FieldBorderBrush,
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
             BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(6),
             Padding = new Thickness(8, 6),
@@ -370,11 +369,11 @@ public class WebVttStylesWindow : Window
         };
 
         var content = new StackPanel { Spacing = 4 };
-        content.Children.Add(AssaDrawWindow.MakeDimLabel(Se.Language.General.Before, new Thickness(0)));
+        content.Children.Add(EditorChrome.MakeDimLabel(Se.Language.General.Before, new Thickness(0)));
         content.Children.Add(Code(nameof(vm.CssBefore)));
-        content.Children.Add(AssaDrawWindow.MakeDimLabel(Se.Language.General.After, new Thickness(0, 6, 0, 0)));
+        content.Children.Add(EditorChrome.MakeDimLabel(Se.Language.General.After, new Thickness(0, 6, 0, 0)));
         content.Children.Add(Code(nameof(vm.CssAfter)));
-        return AssaDrawWindow.MakeEditorSection("CSS", content, first: true);
+        return EditorChrome.MakeEditorSection("CSS", content, first: true);
     }
 
     private static Control MakePreview(WebVttStylesViewModel vm)
@@ -396,7 +395,7 @@ public class WebVttStylesWindow : Window
         var summary = new TextBlock
         {
             FontSize = 12,
-            Foreground = AssaDrawWindow.DimTextBrush,
+            Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
         };
         void UpdateSummary() => summary.Text = $"{vm.Styles.Count} {Se.Language.General.Styles.ToLowerInvariant()}";
@@ -420,8 +419,8 @@ public class WebVttStylesWindow : Window
         return new Border
         {
             Child = bar,
-            Background = AssaDrawWindow.ButtonBarBrush,
-            BorderBrush = AssaDrawWindow.LineBrush,
+            Background = EditorChrome.ButtonBarBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 1, 0, 0),
             Padding = new Thickness(16, 10),
         };
@@ -435,7 +434,7 @@ public class WebVttStylesWindow : Window
             Height = 22,
             CornerRadius = new CornerRadius(5),
             BorderThickness = new Thickness(1),
-            BorderBrush = AssaDrawWindow.MenuBorderBrush,
+            BorderBrush = EditorChrome.MenuBorderBrush,
             VerticalAlignment = VerticalAlignment.Center,
         };
         swatch.Bind(Border.BackgroundProperty, new Binding(Current + colorPropertyName)

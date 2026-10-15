@@ -5,7 +5,6 @@ using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -25,8 +24,8 @@ public class AssaTagHistoryWindow : Window
         CanResize = false;
         Width = 520;
         SizeToContent = SizeToContent.Height;
-        Background = AssaDrawWindow.WindowBrush;
-        AssaDrawWindow.AddEditorStyles(Styles);
+        Background = EditorChrome.WindowBrush;
+        EditorChrome.AddEditorStyles(Styles);
 
         vm.Window = this;
         DataContext = vm;
@@ -36,8 +35,8 @@ public class AssaTagHistoryWindow : Window
             [!ListBox.ItemsSourceProperty] = new Binding(nameof(vm.OverrideTags)) { Mode = BindingMode.OneWay },
             [!ListBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedOverrideTag)) { Mode = BindingMode.TwoWay },
             Height = 300,
-            Background = AssaDrawWindow.FieldBrush,
-            BorderBrush = AssaDrawWindow.FieldBorderBrush,
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
             BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(8),
             Padding = new Thickness(4),
@@ -52,9 +51,9 @@ public class AssaTagHistoryWindow : Window
         AutomationProperties.SetName(listBox, Se.Language.Assa.OverrideTagsHistory);
         listBox.DoubleTapped += (_, _) => vm.OkCommand.Execute(null);
 
-        var delete = AssaDrawWindow.CreateToolButton("fa-solid fa-trash", Se.Language.General.Delete, vm.DeleteItemCommand, 24);
-        var section = AssaDrawWindow.MakeEditorSection(Se.Language.General.History, listBox, delete, first: true);
-        section.Background = AssaDrawWindow.PanelBrush;
+        var delete = EditorChrome.CreateToolButton("fa-solid fa-trash", Se.Language.General.Delete, vm.DeleteItemCommand, 24);
+        var section = EditorChrome.MakeEditorSection(Se.Language.General.History, listBox, delete, first: true);
+        section.Background = EditorChrome.PanelBrush;
 
         var root = new DockPanel();
         var buttonBar = MakeButtonBar(vm);
@@ -80,8 +79,8 @@ public class AssaTagHistoryWindow : Window
         return new Border
         {
             Child = buttons,
-            Background = AssaDrawWindow.ButtonBarBrush,
-            BorderBrush = AssaDrawWindow.LineBrush,
+            Background = EditorChrome.ButtonBarBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 1, 0, 0),
             Padding = new Thickness(16, 10),
         };
