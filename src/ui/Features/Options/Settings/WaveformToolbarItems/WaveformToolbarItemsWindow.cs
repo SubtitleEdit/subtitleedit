@@ -4,32 +4,42 @@ using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
+using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Options.Settings.WaveformToolbarItems;
 
+/// <summary>
+/// Order, visibility and sizes of the waveform toolbar items in the editor look (see
+/// <see cref="EditorChrome"/>): the reorderable list, the selected item's settings to the right,
+/// Cancel + OK in the button bar.
+/// </summary>
 public class WaveformToolbarItemsWindow : Window
 {
+    private const double LabelWidth = 90;
+
     public WaveformToolbarItemsWindow(WaveformToolbarItemsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Options.Settings.WaveformToolbarItems;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        OptionsListChrome.Apply(this);
         vm.Window = this;
         DataContext = vm;
 
         var listBox = new ListBox
         {
-            Width = 380,
+            Width = 340,
             Height = 380,
         };
         listBox.Bind(ListBox.ItemsSourceProperty, new Binding(nameof(WaveformToolbarItemsViewModel.ToolbarItems)));
         listBox.Bind(ListBox.SelectedItemProperty, new Binding(nameof(WaveformToolbarItemsViewModel.SelectedToolbarItem)) { Mode = BindingMode.TwoWay });
+        AutomationProperties.SetName(listBox, Se.Language.Options.Settings.WaveformToolbarItems);
         listBox.ItemTemplate = new FuncDataTemplate<ToolbarItemDisplay>((_, _) =>
         {
-            var checkBox = new CheckBox();
+            var checkBox = new CheckBox { MinWidth = 0 };
             checkBox.Bind(CheckBox.IsCheckedProperty, new Binding(nameof(ToolbarItemDisplay.IsVisible)) { Mode = BindingMode.TwoWay });
             // Shift+Tab back into the list lands on this check box rather than the row, and a
             // check box with no content is announced as a nameless "check box" (#12087).
@@ -45,66 +55,41 @@ public class WaveformToolbarItemsWindow : Window
             };
         }, true);
 
-        var buttonMoveUp = UiUtil.MakeButton(Se.Language.General.MoveUp, vm.MoveUpCommand).WithMinWidth(100);
-        var buttonMoveDown = UiUtil.MakeButton(Se.Language.General.MoveDown, vm.MoveDownCommand).WithMinWidth(100);
-
-        // Only the items that have a width (the initial text box) show the setting.
-        var numericUpDownWidth = UiUtil.MakeNumericUpDownInt(100, 3000, 400, 120, vm, nameof(vm.SelectedWidth));
-        numericUpDownWidth.Increment = 10;
-        var panelWidth = new StackPanel
+        var moveButtons = new StackPanel
         {
             Orientation = Orientation.Vertical,
             Spacing = 2,
+            HorizontalAlignment = HorizontalAlignment.Left,
             Children =
             {
-                UiUtil.MakeLabel(Se.Language.General.Width),
-                numericUpDownWidth,
+                SyncTimingChrome.MakeTextToolButton(IconNames.ArrowUpThin, Se.Language.General.MoveUp, vm.MoveUpCommand),
+                SyncTimingChrome.MakeTextToolButton(IconNames.ArrowDownThin, Se.Language.General.MoveDown, vm.MoveDownCommand),
             },
         };
-        panelWidth.Bind(IsVisibleProperty, new Binding(nameof(vm.IsWidthVisible)));
+
+        // Only the items that have a width (the initial text box) show the setting.
+        var numericUpDownWidth = UiUtil.MakeNumericUpDownInt(100, 3000, 400, 100, vm, nameof(vm.SelectedWidth))
+            .AsField(Se.Language.General.Width);
+        numericUpDownWidth.Increment = 10;
+        var rowWidth = SyncTimingChrome.Row(Se.Language.General.Width, numericUpDownWidth, LabelWidth);
+        rowWidth.Bind(IsVisibleProperty, new Binding(nameof(vm.IsWidthVisible)));
 
         var sidePanel = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            Spacing = 5,
-            Margin = new Thickness(10, 0, 0, 0),
+            Spacing = 8,
+            Margin = new Thickness(14, 0, 0, 0),
             VerticalAlignment = VerticalAlignment.Top,
             Children =
             {
-                buttonMoveUp,
-                buttonMoveDown,
-                new StackPanel
-                {
-                    Orientation = Orientation.Vertical,
-                    Spacing = 2,
-                    Margin = new Thickness(0, 5, 0, 0),
-                    Children =
-                    {
-                        UiUtil.MakeLabel(Se.Language.General.FontSize),
-                        UiUtil.MakeNumericUpDownInt(6, 72, 12, 120, vm, nameof(vm.SelectedFontSize)),
-                    },
-                },
-                new StackPanel
-                {
-                    Orientation = Orientation.Vertical,
-                    Spacing = 2,
-                    Children =
-                    {
-                        UiUtil.MakeLabel(Se.Language.General.LeftMargin),
-                        UiUtil.MakeNumericUpDownInt(0, 100, 5, 120, vm, nameof(vm.SelectedLeftMargin)),
-                    },
-                },
-                new StackPanel
-                {
-                    Orientation = Orientation.Vertical,
-                    Spacing = 2,
-                    Children =
-                    {
-                        UiUtil.MakeLabel(Se.Language.General.RightMargin),
-                        UiUtil.MakeNumericUpDownInt(0, 100, 5, 120, vm, nameof(vm.SelectedRightMargin)),
-                    },
-                },
-                panelWidth,
+                moveButtons,
+                SyncTimingChrome.Row(Se.Language.General.FontSize,
+                    UiUtil.MakeNumericUpDownInt(6, 72, 12, 100, vm, nameof(vm.SelectedFontSize)).AsField(Se.Language.General.FontSize), LabelWidth),
+                SyncTimingChrome.Row(Se.Language.General.LeftMargin,
+                    UiUtil.MakeNumericUpDownInt(0, 100, 5, 100, vm, nameof(vm.SelectedLeftMargin)).AsField(Se.Language.General.LeftMargin), LabelWidth),
+                SyncTimingChrome.Row(Se.Language.General.RightMargin,
+                    UiUtil.MakeNumericUpDownInt(0, 100, 5, 100, vm, nameof(vm.SelectedRightMargin)).AsField(Se.Language.General.RightMargin), LabelWidth),
+                rowWidth,
             },
         };
 
@@ -116,29 +101,16 @@ public class WaveformToolbarItemsWindow : Window
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
             },
         };
-        contentGrid.Add(listBox, 0, 0);
+        contentGrid.Add(OptionsListChrome.MakeListFrame(listBox), 0, 0);
         contentGrid.Add(sidePanel, 0, 1);
 
+        var section = EditorChrome.MakeEditorSection(Se.Language.Options.Settings.WaveformToolbarItems, contentGrid, first: true);
+
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-        grid.Add(contentGrid, 0, 0);
-        grid.Add(panelButtons, 1, 0);
-
-        Content = grid;
+        Content = SyncTimingChrome.MakeRoot(section, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, listBox); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
