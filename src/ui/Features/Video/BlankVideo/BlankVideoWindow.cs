@@ -64,9 +64,6 @@ public class BlankVideoWindow : Window
         var settingsPanel = new Border
         {
             Child = settings,
-            Background = EditorChrome.PanelBrush,
-            BorderBrush = EditorChrome.LineBrush,
-            BorderThickness = new Thickness(0, 0, 0, 1),
             VerticalAlignment = VerticalAlignment.Top,
         };
 
@@ -79,11 +76,17 @@ public class BlankVideoWindow : Window
                 new RowDefinition(GridLength.Auto), // buttons
             },
         };
-        root.Add(new ScrollViewer
+        // The panel color fills the whole row, so the room kept for the progress strip does not
+        // show as an empty band under the settings
+        root.Add(new Border
         {
-            Content = settingsPanel,
-            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+            Background = EditorChrome.PanelBrush,
+            Child = new ScrollViewer
+            {
+                Content = settingsPanel,
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+            },
         }, 0, 0);
         root.Add(MakeProgressView(vm), 1, 0);
         root.Add(MakeButtonBar(vm), 2, 0);
