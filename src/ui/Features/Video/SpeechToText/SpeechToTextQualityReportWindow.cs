@@ -9,6 +9,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Chrome = Nikse.SubtitleEdit.Features.Video.SpeechToText.SpeechToTextChrome;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
@@ -30,6 +31,7 @@ public class SpeechToTextQualityReportWindow : Window
         MinWidth = 720;
         MinHeight = 460;
         CanResize = true;
+        Chrome.Apply(this);
 
         _vm = vm;
         vm.Window = this;
@@ -41,13 +43,14 @@ public class SpeechToTextQualityReportWindow : Window
         var labelTitle = new TextBlock
         {
             Text = l.QualityReportTitle,
-            FontSize = UiUtil.ScaledFontSize(20),
-            FontWeight = FontWeight.Bold,
+            FontSize = UiUtil.ScaledFontSize(18),
+            FontWeight = FontWeight.SemiBold,
         };
         var labelSummary = new TextBlock
         {
-            FontSize = UiUtil.ScaledFontSize(14),
-            Opacity = 0.75,
+            FontSize = UiUtil.ScaledFontSize(13),
+            Foreground = EditorChrome.DimTextBrush,
+            TextWrapping = TextWrapping.Wrap,
             Margin = new Thickness(0, 4, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.Summary)),
         };
@@ -136,31 +139,24 @@ public class SpeechToTextQualityReportWindow : Window
             Width = new GridLength(1, GridUnitType.Star),
         });
         AutomationProperties.SetName(table, l.QualityReportTitle);
-        var tableBorder = UiUtil.MakeBorderForControlNoPadding(table);
+        var tableBorder = Chrome.FieldFrame(table);
 
-        // Footer: tip, "do not show again", OK
+        // Tip under the table; "do not show again", Export and OK in the button bar
         var labelTip = new TextBlock
         {
             TextWrapping = TextWrapping.Wrap,
-            Opacity = 0.7,
-            Margin = new Thickness(0, 10, 0, 10),
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
+            Margin = new Thickness(0, 10, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.Tip)),
         };
 
-        var checkDoNotShowAgain = UiUtil.MakeCheckBox(l.QualityReportDoNotShowAgain, vm, nameof(vm.DoNotShowAgain));
-        checkDoNotShowAgain.VerticalAlignment = VerticalAlignment.Center;
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        var switchDoNotShowAgain = Chrome.Switch(vm, nameof(vm.DoNotShowAgain), l.QualityReportDoNotShowAgain);
+        var rowDoNotShowAgain = Chrome.SwitchRow(switchDoNotShowAgain, UiUtil.MakeTextBlock(l.QualityReportDoNotShowAgain));
+        rowDoNotShowAgain.VerticalAlignment = VerticalAlignment.Center;
+        var buttonOk = Chrome.Primary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonExport = MakeExportButton(vm);
-        var footer = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-        };
-        footer.Add(checkDoNotShowAgain, 0, 0);
-        footer.Add(UiUtil.MakeButtonBar(MakeExportStatusLabel(vm), buttonExport, buttonOk), 0, 1);
+        var buttonBar = Chrome.ButtonBar(rowDoNotShowAgain, MakeExportStatusLabel(vm), buttonExport, buttonOk);
 
         var grid = new Grid
         {
@@ -170,21 +166,30 @@ public class SpeechToTextQualityReportWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
-            Margin = UiUtil.MakeWindowMargin(),
+            Margin = new Thickness(16, 14, 16, 14),
         };
         grid.Add(header, 0, 0);
         grid.Add(cards, 1, 0);
         grid.Add(tableBorder, 2, 0);
         grid.Add(labelTip, 3, 0);
-        grid.Add(footer, 4, 0);
 
-        Content = grid;
+        var root = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+            },
+        };
+        root.Add(grid, 0, 0);
+        root.Add(buttonBar, 1, 0);
+
+        Content = root;
 
         UiUtil.FocusOnFirstActivation(this, buttonOk); // hack to make OnKeyDown work
     }
@@ -233,8 +238,8 @@ public class SpeechToTextQualityReportWindow : Window
         return new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 10, 0),
-            Opacity = 0.75,
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ExportStatus)),
         };
     }
