@@ -68,7 +68,7 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
                 : url.TrimEnd('/') + "/v1/chat/completions";
             var modelName = string.IsNullOrWhiteSpace(options.OcrModel)
                 ? "glmocr"
-                : Path.GetFileNameWithoutExtension(options.OcrModel.Trim());
+                : ModelStem(options.OcrModel);
             // Only for the prompt: a curated model named by file/stem still gets its own tuned
             // prompt against a user-managed server. The engine itself stays in URL mode.
             var curated = LlamaCppServerManager.OcrModels.FirstOrDefault(m =>
@@ -80,6 +80,20 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
         LlamaCppLocal.EnsureServerBinary("the OCR window > llama.cpp", "--ocr-url");
         var model = ResolveOcrModel(options.OcrModel);
         return new LlamaCppOcrEngine(null, model, Path.GetFileNameWithoutExtension(model.FileName), options.OcrLanguage, options.OcrPrompt, options.Quiet);
+    }
+
+    /// <summary>
+    /// The model name for a user-managed server: the file name without a trailing <c>.gguf</c>,
+    /// the form the curated lookups (padding, prompt) match on. Only <c>.gguf</c> is stripped -
+    /// <see cref="Path.GetFileNameWithoutExtension(string)"/> would cut "LightOnOCR-3-0.8B-Q8_0"
+    /// to "LightOnOCR-3-0", so the model lost its border padding and was sent the square.
+    /// </summary>
+    internal static string ModelStem(string model)
+    {
+        var fileName = Path.GetFileName(model.Trim());
+        return fileName.EndsWith(".gguf", StringComparison.OrdinalIgnoreCase)
+            ? fileName[..^".gguf".Length]
+            : fileName;
     }
 
     public string Recognize(SKBitmap bitmap)
@@ -129,7 +143,7 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
         var contents = parser.GetAllTagsByNameAsStrings(json, "content");
         var text = string.Join(string.Empty, contents).Trim();
         text = text.Replace("\\n", Environment.NewLine).Replace("\\\"", "\"");
-        return text.Trim();
+        return OcrHelper.TrimAiOcrLines(text);
     }
 
     /// <summary>
