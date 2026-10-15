@@ -237,6 +237,18 @@ public class LanguageAssa
     public string BackgroundBoxTornPaperDouble { get; set; }
     public string BackgroundBoxStarburst { get; set; }
     public string BackgroundBoxScroll { get; set; }
+    public string BackgroundBoxPill { get; set; }
+    public string BackgroundBoxCutCorners { get; set; }
+    public string BackgroundBoxSlanted { get; set; }
+    public string BackgroundBoxTicket { get; set; }
+    public string BackgroundBoxSpeechBubble { get; set; }
+    public string BackgroundBoxRibbon { get; set; }
+    public string BackgroundBoxBrushStroke { get; set; }
+    public string BackgroundBoxCornerBrackets { get; set; }
+    public string BackgroundBoxUnderline { get; set; }
+    public string BackgroundBoxFrame { get; set; }
+    public string BackgroundBoxArrowTag { get; set; }
+    public string BackgroundBoxSideBar { get; set; }
 
     public string StylesInFile { get; set; }
     public string StylesSaved { get; set; }
@@ -653,6 +665,18 @@ public class LanguageAssa
         BackgroundBoxTornPaperDouble = "Torn paper (top & bottom)";
         BackgroundBoxStarburst = "Starburst";
         BackgroundBoxScroll = "Scroll / Parchment";
+        BackgroundBoxPill = "Pill";
+        BackgroundBoxCutCorners = "Cut corners";
+        BackgroundBoxSlanted = "Slanted";
+        BackgroundBoxTicket = "Ticket";
+        BackgroundBoxSpeechBubble = "Speech bubble";
+        BackgroundBoxRibbon = "Ribbon";
+        BackgroundBoxBrushStroke = "Brush stroke";
+        BackgroundBoxCornerBrackets = "Corner brackets";
+        BackgroundBoxUnderline = "Underline bar";
+        BackgroundBoxFrame = "Frame";
+        BackgroundBoxArrowTag = "Arrow tag";
+        BackgroundBoxSideBar = "Side bar";
 
         StylesInFile = "Styles in file";
         StylesSaved = "Styles saved";

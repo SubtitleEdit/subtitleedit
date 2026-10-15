@@ -753,6 +753,9 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
         // Enable/disable click-to-toggle behavior (default on)
         public bool ClickToTogglePlay { get; set; } = true;
+
+        // Mouse wheel / trackpad scroll over the video seeks (default on)
+        public bool WheelToSeek { get; set; } = true;
         public bool IsSmpteTimingEnabled { get; set; }
         private bool _surfaceLeftButtonDown;
 
@@ -822,6 +825,11 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
         private void OnVideoWheelChanged(object? sender, PointerWheelEventArgs e)
         {
+            if (!WheelToSeek)
+            {
+                return;
+            }
+
             // Ignore wheel events over the controls row (sliders, buttons).
             try
             {
