@@ -14,7 +14,6 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
-using Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -47,8 +46,8 @@ public class AssaStylesWindow : Window
         Height = 850;
         MinWidth = 1050;
         MinHeight = 600;
-        Background = AssaDrawWindow.WindowBrush;
-        AssaDrawWindow.AddEditorStyles(Styles);
+        Background = EditorChrome.WindowBrush;
+        EditorChrome.AddEditorStyles(Styles);
         AddStyles(Styles);
 
         vm.Window = this;
@@ -113,7 +112,7 @@ public class AssaStylesWindow : Window
                 new Setter(ToggleButton.BackgroundProperty, Brushes.Transparent),
                 new Setter(ToggleButton.BorderThicknessProperty, new Thickness(0)),
                 new Setter(ToggleButton.CornerRadiusProperty, new CornerRadius(6)),
-                new Setter(ToggleButton.ForegroundProperty, AssaDrawWindow.IconBrush),
+                new Setter(ToggleButton.ForegroundProperty, EditorChrome.IconBrush),
                 new Setter(ToggleButton.PaddingProperty, new Thickness(0)),
             },
         });
@@ -121,7 +120,7 @@ public class AssaStylesWindow : Window
         {
             Setters =
             {
-                new Setter(ContentPresenter.BackgroundProperty, AssaDrawWindow.AccentBrush),
+                new Setter(ContentPresenter.BackgroundProperty, EditorChrome.AccentBrush),
                 new Setter(ContentPresenter.ForegroundProperty, Brushes.White),
             },
         });
@@ -130,25 +129,25 @@ public class AssaStylesWindow : Window
         {
             Setters =
             {
-                new Setter(Border.BackgroundProperty, AssaDrawWindow.FieldBrush),
-                new Setter(Border.BorderBrushProperty, AssaDrawWindow.FieldBorderBrush),
+                new Setter(Border.BackgroundProperty, EditorChrome.FieldBrush),
+                new Setter(Border.BorderBrushProperty, EditorChrome.FieldBorderBrush),
             },
         });
         styles.Add(new Style(x => x.OfType<RadioButton>().Class("anchor").Class(":pointerover").Template().OfType<Border>())
         {
-            Setters = { new Setter(Border.BackgroundProperty, AssaDrawWindow.HoverBrush) },
+            Setters = { new Setter(Border.BackgroundProperty, EditorChrome.HoverBrush) },
         });
         styles.Add(new Style(x => x.OfType<RadioButton>().Class("anchor").Class(":checked").Template().OfType<Border>())
         {
             Setters =
             {
-                new Setter(Border.BackgroundProperty, AssaDrawWindow.AccentBrush),
-                new Setter(Border.BorderBrushProperty, AssaDrawWindow.AccentBrush),
+                new Setter(Border.BackgroundProperty, EditorChrome.AccentBrush),
+                new Setter(Border.BorderBrushProperty, EditorChrome.AccentBrush),
             },
         });
         styles.Add(new Style(x => x.OfType<RadioButton>().Class("anchor").Template().OfType<Ellipse>())
         {
-            Setters = { new Setter(Shape.FillProperty, AssaDrawWindow.FaintTextBrush) },
+            Setters = { new Setter(Shape.FillProperty, EditorChrome.FaintTextBrush) },
         });
         styles.Add(new Style(x => x.OfType<RadioButton>().Class("anchor").Class(":checked").Template().OfType<Ellipse>())
         {
@@ -172,8 +171,8 @@ public class AssaStylesWindow : Window
         return new Border
         {
             Child = grid,
-            Background = AssaDrawWindow.PanelBrush,
-            BorderBrush = AssaDrawWindow.LineBrush,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 0, 1, 0),
         };
     }
@@ -183,7 +182,7 @@ public class AssaStylesWindow : Window
     /// </summary>
     private static Button MakeMoreButton(Func<List<Control>> items)
     {
-        var button = AssaDrawWindow.CreateToolButton("fa-solid fa-ellipsis", Se.Language.General.More, null, 24);
+        var button = EditorChrome.CreateToolButton("fa-solid fa-ellipsis", Se.Language.General.More, null, 24);
         var menu = new ContextMenu { Placement = PlacementMode.BottomEdgeAlignedRight };
         button.Click += (_, _) =>
         {
@@ -195,7 +194,7 @@ public class AssaStylesWindow : Window
 
     private static MenuItem MenuItem(string header, string? icon, System.Windows.Input.ICommand command, bool isEnabled = true)
     {
-        var item = AssaDrawWindow.MakeMenuItem(header, icon, command);
+        var item = EditorChrome.MakeMenuItem(header, icon, command);
         item.IsEnabled = isEnabled;
         return item;
     }
@@ -222,10 +221,10 @@ public class AssaStylesWindow : Window
         }
 
         var header = new StackPanel { Margin = new Thickness(14, first ? 10 : 12, 10, 8) };
-        var titleText = AssaDrawWindow.MakeSectionHeader(title);
+        var titleText = EditorChrome.MakeSectionHeader(title);
         titleText.Bind(TextBlock.ForegroundProperty, new Binding(nameof(AssaStylesViewModel.CurrentTitle))
         {
-            Converter = new FuncValueConverter<string, IBrush>(current => current == title ? (title == Se.Language.Assa.StylesSaved ? SavedBrush : AssaDrawWindow.AccentBrush) : AssaDrawWindow.DimTextBrush),
+            Converter = new FuncValueConverter<string, IBrush>(current => current == title ? (title == Se.Language.Assa.StylesSaved ? SavedBrush : EditorChrome.AccentBrush) : EditorChrome.DimTextBrush),
         });
         header.Children.Add(titleText);
         header.Children.Add(tools);
@@ -242,7 +241,7 @@ public class AssaStylesWindow : Window
         grid.Add(new Border
         {
             Child = header,
-            BorderBrush = AssaDrawWindow.LineBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, first ? 0 : 1, 0, 0),
         }, 0, 0);
 
@@ -305,9 +304,9 @@ public class AssaStylesWindow : Window
         StylesDialogHelper.AddMoveMenuItems(flyout, vm, nameof(vm.IsMoveVisible), vm.FileMoveUpCommand, vm.FileMoveDownCommand, vm.FileMoveToTopCommand, vm.FileMoveToBottomCommand);
 
         var actions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2 };
-        actions.Children.Add(AssaDrawWindow.CreateToolButton("fa-solid fa-plus", Se.Language.General.New, vm.FileNewCommand, 24));
-        actions.Children.Add(AssaDrawWindow.CreateToolButton("fa-regular fa-clone", Se.Language.General.Duplicate, vm.FilesDuplicateCommand, 24));
-        actions.Children.Add(AssaDrawWindow.CreateToolButton("fa-solid fa-trash", Se.Language.General.Delete, vm.FileRemoveCommand, 24));
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-plus", Se.Language.General.New, vm.FileNewCommand, 24));
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-regular fa-clone", Se.Language.General.Duplicate, vm.FilesDuplicateCommand, 24));
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-trash", Se.Language.General.Delete, vm.FileRemoveCommand, 24));
         actions.Children.Add(MakeMoreButton(() =>
         [
             MenuItem(Se.Language.Assa.CopyToStorageStyles, "fa-solid fa-arrow-down", vm.FileCopyToStorageCommand, vm.IsFileStyleSelected),
@@ -406,9 +405,9 @@ public class AssaStylesWindow : Window
         StylesDialogHelper.AddMoveMenuItems(flyout, vm, nameof(vm.IsMoveVisible), vm.StorageMoveUpCommand, vm.StorageMoveDownCommand, vm.StorageMoveToTopCommand, vm.StorageMoveToBottomCommand);
 
         var actions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2 };
-        actions.Children.Add(AssaDrawWindow.CreateToolButton("fa-solid fa-arrow-up", Se.Language.Assa.CopyToFileStyles, vm.StorageCopyToFilesCommand, 24));
-        actions.Children.Add(AssaDrawWindow.CreateToolButton("fa-solid fa-plus", Se.Language.General.New, vm.StorageNewCommand, 24));
-        actions.Children.Add(AssaDrawWindow.CreateToolButton("fa-solid fa-trash", Se.Language.General.Delete, vm.StorageRemoveCommand, 24));
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-arrow-up", Se.Language.Assa.CopyToFileStyles, vm.StorageCopyToFilesCommand, 24));
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-plus", Se.Language.General.New, vm.StorageNewCommand, 24));
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-trash", Se.Language.General.Delete, vm.StorageRemoveCommand, 24));
         actions.Children.Add(MakeMoreButton(() =>
         [
             MenuItem(Se.Language.General.Duplicate, "fa-regular fa-clone", vm.StorageDuplicateCommand, vm.IsStorageStyleSelected),
@@ -448,7 +447,7 @@ public class AssaStylesWindow : Window
         columns.Add(new Border
         {
             Child = Column(MakeColorsSection(vm), MakeBorderSection(vm)),
-            BorderBrush = AssaDrawWindow.LineBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(1, 0),
         }, 0, 1);
         columns.Add(Column(MakeAlignmentSection(vm), MakeTransformSection(vm)), 0, 2);
@@ -456,8 +455,8 @@ public class AssaStylesWindow : Window
         return new Border
         {
             Child = columns,
-            Background = AssaDrawWindow.PanelBrush,
-            BorderBrush = AssaDrawWindow.LineBrush,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 1, 0, 0),
             [!Border.IsEnabledProperty] = new Binding(nameof(vm.CurrentStyle)) { Converter = ObjectConverters.IsNotNull },
         };
@@ -465,7 +464,7 @@ public class AssaStylesWindow : Window
 
     private static NumericUpDown Field(string property, double min, double max, string prefix, string name, string format = "0.#", decimal increment = 1)
     {
-        var field = AssaDrawWindow.MakeField(Current + property, min, max, prefix: prefix, format: format);
+        var field = EditorChrome.MakeField(Current + property, min, max, prefix: prefix, format: format);
         field.Increment = increment;
         AutomationProperties.SetName(field, name);
         if (Se.Settings.Appearance.ShowHints)
@@ -490,13 +489,13 @@ public class AssaStylesWindow : Window
 
         var icon = new Optris.Icons.Avalonia.Icon { FontSize = 14, VerticalAlignment = VerticalAlignment.Center };
         icon.Bind(Optris.Icons.Avalonia.Icon.ValueProperty, Pick("fa-solid fa-file-lines", "fa-solid fa-bookmark"));
-        icon.Bind(Optris.Icons.Avalonia.Icon.ForegroundProperty, Pick(AssaDrawWindow.AccentBrush, SavedBrush));
+        icon.Bind(Optris.Icons.Avalonia.Icon.ForegroundProperty, Pick(EditorChrome.AccentBrush, SavedBrush));
 
         var editing = new TextBlock
         {
             Text = Se.Language.Assa.StylesEditing,
             FontSize = 12.5,
-            Foreground = AssaDrawWindow.DimTextBrush,
+            Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
         };
         var name = new TextBlock
@@ -521,7 +520,7 @@ public class AssaStylesWindow : Window
             Padding = new Thickness(9, 2),
             VerticalAlignment = VerticalAlignment.Center,
         };
-        badge.Bind(Border.BackgroundProperty, Pick(AssaDrawWindow.AccentBrush, SavedBrush));
+        badge.Bind(Border.BackgroundProperty, Pick(EditorChrome.AccentBrush, SavedBrush));
         badgeText.Bind(TextBlock.ForegroundProperty, Pick(Brushes.White, new SolidColorBrush(Color.FromRgb(60, 38, 0))));
 
         var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
@@ -537,8 +536,8 @@ public class AssaStylesWindow : Window
             BorderThickness = new Thickness(3, 1, 0, 0),
             [!Border.IsVisibleProperty] = new Binding(nameof(vm.CurrentStyle)) { Converter = ObjectConverters.IsNotNull },
         };
-        banner.Bind(Border.BackgroundProperty, Pick(AssaDrawWindow.AccentSoftBrush, SavedSoftBrush));
-        banner.Bind(Border.BorderBrushProperty, Pick(AssaDrawWindow.AccentBrush, SavedBrush));
+        banner.Bind(Border.BackgroundProperty, Pick(EditorChrome.AccentSoftBrush, SavedSoftBrush));
+        banner.Bind(Border.BorderBrushProperty, Pick(EditorChrome.AccentBrush, SavedBrush));
         AutomationProperties.SetName(banner, Se.Language.Assa.StylesEditing);
         return banner;
     }
@@ -548,14 +547,14 @@ public class AssaStylesWindow : Window
         var name = new TextBox
         {
             FontSize = 12.5,
-            Background = AssaDrawWindow.FieldBrush,
-            BorderBrush = AssaDrawWindow.FieldBorderBrush,
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
             CornerRadius = new CornerRadius(6),
             [!TextBox.TextProperty] = new Binding(Current + nameof(StyleDisplay.Name)) { Mode = BindingMode.TwoWay },
         };
         AutomationProperties.SetName(name, Se.Language.General.Name);
 
-        return AssaDrawWindow.MakeEditorSection(Se.Language.General.Name, name, first: true);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Name, name, first: true);
     }
 
     private static Border MakeFontSection(AssaStylesViewModel vm)
@@ -563,8 +562,8 @@ public class AssaStylesWindow : Window
         var fontName = UiUtil.MakeComboBox(vm.Fonts, vm, Current + nameof(StyleDisplay.FontName));
         fontName.HorizontalAlignment = HorizontalAlignment.Stretch;
         AutomationProperties.SetName(fontName, Se.Language.General.FontName);
-        var pick = AssaDrawWindow.CreateToolButton("fa-solid fa-magnifying-glass", Se.Language.Tools.PickFontNameTitle, vm.PickFontNameCommand, 28);
-        var attachments = AssaDrawWindow.CreateToolButton("fa-solid fa-paperclip", Se.Language.Assa.Attachments, vm.BrowseFontNameCommand, 28);
+        var pick = EditorChrome.CreateToolButton("fa-solid fa-magnifying-glass", Se.Language.Tools.PickFontNameTitle, vm.PickFontNameCommand, 28);
+        var attachments = EditorChrome.CreateToolButton("fa-solid fa-paperclip", Se.Language.Assa.Attachments, vm.BrowseFontNameCommand, 28);
         var fontRow = new Grid { ColumnSpacing = 4, ColumnDefinitions = { new ColumnDefinition(new GridLength(1, GridUnitType.Star)), new ColumnDefinition(GridLength.Auto), new ColumnDefinition(GridLength.Auto) } };
         fontRow.Add(fontName, 0, 0);
         fontRow.Add(pick, 0, 1);
@@ -605,7 +604,7 @@ public class AssaStylesWindow : Window
         var content = new StackPanel { Spacing = 8 };
         content.Children.Add(fontRow);
         content.Children.Add(styleRow);
-        return AssaDrawWindow.MakeEditorSection(Se.Language.General.Font, content);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Font, content);
     }
 
     private static Border MakeColorsSection(AssaStylesViewModel vm)
@@ -628,14 +627,14 @@ public class AssaStylesWindow : Window
             {
                 Text = name,
                 FontSize = 11,
-                Foreground = AssaDrawWindow.DimTextBrush,
+                Foreground = EditorChrome.DimTextBrush,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 TextTrimming = TextTrimming.CharacterEllipsis,
             });
             grid.Children.Add(cell);
         }
 
-        return AssaDrawWindow.MakeEditorSection(Se.Language.General.Color, grid, first: true);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Color, grid, first: true);
     }
 
     private static Border MakeBorderSection(AssaStylesViewModel vm)
@@ -650,8 +649,8 @@ public class AssaStylesWindow : Window
 
         var content = new StackPanel { Spacing = 8 };
         content.Children.Add(borderType);
-        content.Children.Add(AssaDrawWindow.MakePropertyRow(Se.Language.General.Size, outline, shadow));
-        return AssaDrawWindow.MakeEditorSection(Se.Language.General.BorderStyle, content);
+        content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.Size, outline, shadow));
+        return EditorChrome.MakeEditorSection(Se.Language.General.BorderStyle, content);
     }
 
     /// <summary>
@@ -689,18 +688,18 @@ public class AssaStylesWindow : Window
         var row = new Grid { ColumnSpacing = 14, ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(new GridLength(1, GridUnitType.Star)) } };
         row.Add(anchors, 0, 0);
         row.Add(margins, 0, 1);
-        return AssaDrawWindow.MakeEditorSection(Se.Language.General.Alignment + " · " + Se.Language.General.Margin, row, first: true);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Alignment + " · " + Se.Language.General.Margin, row, first: true);
     }
 
     private static Border MakeTransformSection(AssaStylesViewModel vm)
     {
         var content = new StackPanel { Spacing = 8 };
-        content.Children.Add(AssaDrawWindow.MakePropertyRow(Se.Language.Assa.StylesScale,
+        content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.Assa.StylesScale,
             Field(nameof(StyleDisplay.ScaleX), 1, 1000, "X", Se.Language.Assa.ScaleX),
             Field(nameof(StyleDisplay.ScaleY), 1, 1000, "Y", Se.Language.Assa.ScaleY)));
-        content.Children.Add(AssaDrawWindow.MakePropertyRow(Se.Language.Assa.Spacing, Field(nameof(StyleDisplay.Spacing), -100, 100, "↔", Se.Language.Assa.Spacing)));
-        content.Children.Add(AssaDrawWindow.MakePropertyRow(Se.Language.Assa.Angle, Field(nameof(StyleDisplay.Angle), -360, 360, "°", Se.Language.Assa.Angle)));
-        return AssaDrawWindow.MakeEditorSection(Se.Language.Assa.StylesTransform, content);
+        content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.Assa.Spacing, Field(nameof(StyleDisplay.Spacing), -100, 100, "↔", Se.Language.Assa.Spacing)));
+        content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.Assa.Angle, Field(nameof(StyleDisplay.Angle), -360, 360, "°", Se.Language.Assa.Angle)));
+        return EditorChrome.MakeEditorSection(Se.Language.Assa.StylesTransform, content);
     }
 
     private static Control MakePreview(AssaStylesViewModel vm)
@@ -721,7 +720,7 @@ public class AssaStylesWindow : Window
         {
             Text = Se.Language.General.Preview,
             FontSize = 12,
-            Foreground = AssaDrawWindow.DimTextBrush,
+            Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 0, 6, 0),
         });
@@ -753,8 +752,8 @@ public class AssaStylesWindow : Window
         var sampleText = new TextBox
         {
             FontSize = 12.5,
-            Background = AssaDrawWindow.FieldBrush,
-            BorderBrush = AssaDrawWindow.FieldBorderBrush,
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
             CornerRadius = new CornerRadius(6),
             PlaceholderText = Se.Language.Assa.StylesPreviewSampleTextHint,
             VerticalAlignment = VerticalAlignment.Center,
@@ -787,7 +786,7 @@ public class AssaStylesWindow : Window
         var summary = new TextBlock
         {
             FontSize = 12,
-            Foreground = AssaDrawWindow.DimTextBrush,
+            Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.SummaryText)),
         };
@@ -815,8 +814,8 @@ public class AssaStylesWindow : Window
         return new Border
         {
             Child = grid,
-            Background = AssaDrawWindow.ButtonBarBrush,
-            BorderBrush = AssaDrawWindow.LineBrush,
+            Background = EditorChrome.ButtonBarBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 1, 0, 0),
             Padding = new Thickness(16, 10),
         };
@@ -830,7 +829,7 @@ public class AssaStylesWindow : Window
             Height = 22,
             CornerRadius = new CornerRadius(5),
             BorderThickness = new Thickness(1),
-            BorderBrush = AssaDrawWindow.MenuBorderBrush,
+            BorderBrush = EditorChrome.MenuBorderBrush,
             VerticalAlignment = VerticalAlignment.Center,
         };
         swatch.Bind(Border.BackgroundProperty, new Binding(Current + colorPropertyName)

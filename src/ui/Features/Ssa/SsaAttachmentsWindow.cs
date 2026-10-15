@@ -10,7 +10,6 @@ using System.Linq;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Assa;
-using Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -35,8 +34,8 @@ public class SsaAttachmentsWindow : Window
         Height = 820;
         MinWidth = 900;
         MinHeight = 550;
-        Background = AssaDrawWindow.WindowBrush;
-        AssaDrawWindow.AddEditorStyles(Styles);
+        Background = EditorChrome.WindowBrush;
+        EditorChrome.AddEditorStyles(Styles);
 
         vm.Window = this;
         DataContext = vm;
@@ -102,14 +101,14 @@ public class SsaAttachmentsWindow : Window
         panel.Children.Add(MakeAction("fa-solid fa-paperclip", Se.Language.General.AttachDotDotDot, vm.FileAttachCommand));
         panel.Children.Add(MakeAction("fa-solid fa-file-import", Se.Language.General.ImportDotDotDot, vm.FileImportCommand));
         panel.Children.Add(MakeAction("fa-solid fa-file-export", Se.Language.General.ExportDotDotDot, vm.FileExportCommand));
-        panel.Children.Add(AssaDrawWindow.MakeToolbarSeparator());
+        panel.Children.Add(EditorChrome.MakeToolbarSeparator());
         panel.Children.Add(MakeAction("fa-solid fa-scissors", Se.Language.Assa.TrimFontsDotDotDot, vm.TrimFontsToUsedCharactersCommand));
 
         return new Border
         {
             Child = panel,
-            Background = AssaDrawWindow.PanelBrush,
-            BorderBrush = AssaDrawWindow.LineBrush,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 0, 0, 1),
             Padding = new Thickness(10, 6),
         };
@@ -121,7 +120,7 @@ public class SsaAttachmentsWindow : Window
         var summary = new TextBlock
         {
             FontSize = 12,
-            Foreground = AssaDrawWindow.DimTextBrush,
+            Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
         };
         void UpdateSummary()
@@ -154,8 +153,8 @@ public class SsaAttachmentsWindow : Window
         return new Border
         {
             Child = grid,
-            Background = AssaDrawWindow.ButtonBarBrush,
-            BorderBrush = AssaDrawWindow.LineBrush,
+            Background = EditorChrome.ButtonBarBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 1, 0, 0),
             Padding = new Thickness(16, 10),
         };
@@ -247,13 +246,13 @@ public class SsaAttachmentsWindow : Window
 
         // Header: title with move/delete actions, then the list
         var actions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2 };
-        actions.Children.Add(AssaDrawWindow.CreateToolButton("fa-solid fa-arrow-up", Se.Language.General.MoveUp, vm.MoveUpCommand, 24));
-        actions.Children.Add(AssaDrawWindow.CreateToolButton("fa-solid fa-arrow-down", Se.Language.General.MoveDown, vm.MoveDownCommand, 24));
-        actions.Children.Add(AssaDrawWindow.CreateToolButton("fa-solid fa-trash", Se.Language.General.Delete, vm.AttachmentRemoveCommand, 24));
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-arrow-up", Se.Language.General.MoveUp, vm.MoveUpCommand, 24));
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-arrow-down", Se.Language.General.MoveDown, vm.MoveDownCommand, 24));
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-trash", Se.Language.General.Delete, vm.AttachmentRemoveCommand, 24));
         var header = new DockPanel { Margin = new Thickness(14, 10, 10, 8) };
         DockPanel.SetDock(actions, Dock.Right);
         header.Children.Add(actions);
-        header.Children.Add(AssaDrawWindow.MakeSectionHeader(Se.Language.Assa.FontsAndGraphics));
+        header.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.Assa.FontsAndGraphics));
 
         var panel = new Grid { RowDefinitions = { new RowDefinition(GridLength.Auto), new RowDefinition(new GridLength(1, GridUnitType.Star)) } };
         grid.Margin = new Thickness(8, 0);
@@ -262,8 +261,8 @@ public class SsaAttachmentsWindow : Window
         return new Border
         {
             Child = panel,
-            Background = AssaDrawWindow.PanelBrush,
-            BorderBrush = AssaDrawWindow.LineBrush,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 0, 1, 0),
         };
     }
@@ -273,7 +272,7 @@ public class SsaAttachmentsWindow : Window
         var title = new TextBlock
         {
             FontSize = 12.5,
-            Foreground = AssaDrawWindow.DimTextBrush,
+            Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.PreviewTitle)),
@@ -286,8 +285,8 @@ public class SsaAttachmentsWindow : Window
             Spacing = 2,
             [!StackPanel.IsVisibleProperty] = new Binding(nameof(vm.IsCopyFontnameToClipboardVisible)),
         };
-        fontActions.Children.Add(AssaDrawWindow.CreateToolButton("fa-solid fa-copy", Se.Language.General.CopyToClipboard, vm.CopyFontNameToClipboardCommand, 28));
-        fontActions.Children.Add(AssaDrawWindow.CreateToolButton("fa-solid fa-font", Se.Language.Assa.FontCollectorCopyFontsToSeFontsFolder, vm.CopyToSeFontsFolderCommand, 28));
+        fontActions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-copy", Se.Language.General.CopyToClipboard, vm.CopyFontNameToClipboardCommand, 28));
+        fontActions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-font", Se.Language.Assa.FontCollectorCopyFontsToSeFontsFolder, vm.CopyToSeFontsFolderCommand, 28));
 
         var header = new DockPanel { Margin = new Thickness(0, 0, 0, 10) };
         DockPanel.SetDock(fontActions, Dock.Right);
@@ -306,8 +305,8 @@ public class SsaAttachmentsWindow : Window
         var stage = new Border
         {
             Child = image,
-            Background = AssaDrawWindow.FieldBrush,
-            BorderBrush = AssaDrawWindow.FieldBorderBrush,
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
             BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(8),
             Padding = new Thickness(16),

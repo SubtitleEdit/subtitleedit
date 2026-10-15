@@ -5,7 +5,6 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -27,13 +26,13 @@ public class AssaResolutionResamplerWindow : Window
         CanResize = false;
         Width = 560;
         SizeToContent = SizeToContent.Height;
-        Background = AssaDrawWindow.WindowBrush;
-        AssaDrawWindow.AddEditorStyles(Styles);
+        Background = EditorChrome.WindowBrush;
+        EditorChrome.AddEditorStyles(Styles);
 
         vm.Window = this;
         DataContext = vm;
 
-        var sections = new StackPanel { Background = AssaDrawWindow.PanelBrush };
+        var sections = new StackPanel { Background = EditorChrome.PanelBrush };
 
         // Opened as the video-open prompt: say why the dialog appeared (#14367)
         if (vm.IsVideoPrompt)
@@ -71,7 +70,7 @@ public class AssaResolutionResamplerWindow : Window
         {
             Value = "fa-solid fa-circle-info",
             FontSize = 14,
-            Foreground = AssaDrawWindow.AccentBrush,
+            Foreground = EditorChrome.AccentBrush,
             VerticalAlignment = VerticalAlignment.Top,
             Margin = new Thickness(0, 1, 0, 0),
         });
@@ -86,7 +85,7 @@ public class AssaResolutionResamplerWindow : Window
         return new Border
         {
             Child = row,
-            Background = AssaDrawWindow.AccentSoftBrush,
+            Background = EditorChrome.AccentSoftBrush,
             Padding = new Thickness(14, 10),
         };
     }
@@ -102,15 +101,15 @@ public class AssaResolutionResamplerWindow : Window
         bool first,
         out NumericUpDown widthBox)
     {
-        widthBox = AssaDrawWindow.MakeField(widthProperty, 1, 8192, 90, "W");
-        var heightBox = AssaDrawWindow.MakeField(heightProperty, 1, 8192, 90, "H");
+        widthBox = EditorChrome.MakeField(widthProperty, 1, 8192, 90, "W");
+        var heightBox = EditorChrome.MakeField(heightProperty, 1, 8192, 90, "H");
         AutomationProperties.SetName(widthBox, title + " - " + Se.Language.General.Width);
         AutomationProperties.SetName(heightBox, title + " - " + Se.Language.General.Height);
-        var fromVideo = AssaDrawWindow.CreateToolButton("fa-solid fa-film", Se.Language.Assa.ResolutionResamplerFromVideo, fromVideoCommand, 28);
+        var fromVideo = EditorChrome.CreateToolButton("fa-solid fa-film", Se.Language.Assa.ResolutionResamplerFromVideo, fromVideoCommand, 28);
 
         var size = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6 };
         size.Children.Add(widthBox);
-        size.Children.Add(new TextBlock { Text = "×", Foreground = AssaDrawWindow.DimTextBrush, VerticalAlignment = VerticalAlignment.Center });
+        size.Children.Add(new TextBlock { Text = "×", Foreground = EditorChrome.DimTextBrush, VerticalAlignment = VerticalAlignment.Center });
         size.Children.Add(heightBox);
         size.Children.Add(fromVideo);
 
@@ -144,22 +143,22 @@ public class AssaResolutionResamplerWindow : Window
         var content = new StackPanel { Spacing = 8 };
         content.Children.Add(size);
         content.Children.Add(presets);
-        return AssaDrawWindow.MakeEditorSection(title, content, first: first);
+        return EditorChrome.MakeEditorSection(title, content, first: first);
     }
 
     private static Border MakeOptionsSection(AssaResolutionResamplerViewModel vm)
     {
         var content = new StackPanel { Spacing = 4 };
-        content.Children.Add(AssaDrawWindow.MakeToggleRow(nameof(vm.ChangeMargins), Se.Language.Assa.ResolutionResamplerChangeMargins));
-        content.Children.Add(AssaDrawWindow.MakeToggleRow(nameof(vm.ChangeFontSize), Se.Language.Assa.ResolutionResamplerChangeFontSize));
-        content.Children.Add(AssaDrawWindow.MakeToggleRow(nameof(vm.ChangePositions), Se.Language.Assa.ResolutionResamplerChangePositions));
-        content.Children.Add(AssaDrawWindow.MakeToggleRow(nameof(vm.ChangeDrawing), Se.Language.Assa.ResolutionResamplerChangeDrawing));
+        content.Children.Add(EditorChrome.MakeToggleRow(nameof(vm.ChangeMargins), Se.Language.Assa.ResolutionResamplerChangeMargins));
+        content.Children.Add(EditorChrome.MakeToggleRow(nameof(vm.ChangeFontSize), Se.Language.Assa.ResolutionResamplerChangeFontSize));
+        content.Children.Add(EditorChrome.MakeToggleRow(nameof(vm.ChangePositions), Se.Language.Assa.ResolutionResamplerChangePositions));
+        content.Children.Add(EditorChrome.MakeToggleRow(nameof(vm.ChangeDrawing), Se.Language.Assa.ResolutionResamplerChangeDrawing));
         if (vm.IsVideoPrompt)
         {
-            content.Children.Add(AssaDrawWindow.MakeToggleRow(nameof(vm.AskOnVideoOpen), Se.Language.Assa.ResolutionResamplerAskOnVideoOpen));
+            content.Children.Add(EditorChrome.MakeToggleRow(nameof(vm.AskOnVideoOpen), Se.Language.Assa.ResolutionResamplerAskOnVideoOpen));
         }
 
-        return AssaDrawWindow.MakeEditorSection(Se.Language.General.Options, content);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Options, content);
     }
 
     private static Border MakeButtonBar(AssaResolutionResamplerViewModel vm)
@@ -168,7 +167,7 @@ public class AssaResolutionResamplerWindow : Window
         var scale = new TextBlock
         {
             FontSize = 12,
-            Foreground = AssaDrawWindow.DimTextBrush,
+            Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
         };
 
@@ -209,8 +208,8 @@ public class AssaResolutionResamplerWindow : Window
         return new Border
         {
             Child = bar,
-            Background = AssaDrawWindow.ButtonBarBrush,
-            BorderBrush = AssaDrawWindow.LineBrush,
+            Background = EditorChrome.ButtonBarBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 1, 0, 0),
             Padding = new Thickness(16, 10),
         };

@@ -10,7 +10,6 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using Avalonia.Styling;
-using Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -34,8 +33,8 @@ public class AssaSetPositionWindow : Window
         MinHeight = 500;
         Width = 1150;
         Height = 760;
-        Background = AssaDrawWindow.WindowBrush;
-        AssaDrawWindow.AddEditorStyles(Styles);
+        Background = EditorChrome.WindowBrush;
+        EditorChrome.AddEditorStyles(Styles);
 
         vm.Window = this;
         DataContext = vm;
@@ -78,8 +77,8 @@ public class AssaSetPositionWindow : Window
         return new Border
         {
             Child = new ScrollViewer { Content = sections, HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled },
-            Background = AssaDrawWindow.PanelBrush,
-            BorderBrush = AssaDrawWindow.LineBrush,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 0, 1, 0),
         };
     }
@@ -87,15 +86,15 @@ public class AssaSetPositionWindow : Window
     private static TextBlock MakeHeaderValue(string property, string? format = null) => new()
     {
         FontSize = 12,
-        Foreground = AssaDrawWindow.DimTextBrush,
+        Foreground = EditorChrome.DimTextBrush,
         VerticalAlignment = VerticalAlignment.Center,
         [!TextBlock.TextProperty] = new Binding(property) { StringFormat = format },
     };
 
     private static Border CreatePositionSection(AssaSetPositionViewModel vm, out Control firstInput)
     {
-        var x = AssaDrawWindow.MakeField(nameof(vm.PositionX), -10000, 10000, prefix: "X");
-        var y = AssaDrawWindow.MakeField(nameof(vm.PositionY), -10000, 10000, prefix: "Y");
+        var x = EditorChrome.MakeField(nameof(vm.PositionX), -10000, 10000, prefix: "X");
+        var y = EditorChrome.MakeField(nameof(vm.PositionY), -10000, 10000, prefix: "Y");
         AutomationProperties.SetName(x, "X");
         AutomationProperties.SetName(y, "Y");
         firstInput = x;
@@ -111,13 +110,13 @@ public class AssaSetPositionWindow : Window
                 Height = 26,
                 Margin = new Thickness(0, 0, 4, 4),
                 Padding = new Thickness(0),
-                Background = AssaDrawWindow.FieldBrush,
-                BorderBrush = AssaDrawWindow.FieldBorderBrush,
+                Background = EditorChrome.FieldBrush,
+                BorderBrush = EditorChrome.FieldBorderBrush,
                 BorderThickness = new Thickness(1),
                 CornerRadius = new CornerRadius(6),
                 HorizontalContentAlignment = HorizontalAlignment.Center,
                 VerticalContentAlignment = VerticalAlignment.Center,
-                Content = new Ellipse { Width = 6, Height = 6, Fill = AssaDrawWindow.FaintTextBrush },
+                Content = new Ellipse { Width = 6, Height = 6, Fill = EditorChrome.FaintTextBrush },
                 Command = vm.SetAnchorCommand,
                 CommandParameter = index,
             };
@@ -132,7 +131,7 @@ public class AssaSetPositionWindow : Window
             {
                 var on = vm.AnchorIndex == index;
                 button.Classes.Set("active", on);
-                ((Ellipse)button.Content!).Fill = on ? Brushes.White : AssaDrawWindow.FaintTextBrush; // on the accent fill
+                ((Ellipse)button.Content!).Fill = on ? Brushes.White : EditorChrome.FaintTextBrush; // on the accent fill
             }
 
             Update();
@@ -147,25 +146,25 @@ public class AssaSetPositionWindow : Window
         }
 
         var actions = new StackPanel { Spacing = 4 };
-        actions.Children.Add(AssaDrawWindow.CreateToolButton("fa-solid fa-arrows-left-right", Se.Language.General.CenterHorizontally, vm.CenterHorizontallyCommand, 28));
-        actions.Children.Add(AssaDrawWindow.CreateToolButton("fa-solid fa-arrows-up-down", Se.Language.General.CenterVertically, vm.CenterVerticallyCommand, 28));
-        actions.Children.Add(AssaDrawWindow.CreateToolButton("fa-solid fa-rotate-left", Se.Language.Assa.SetPositionReset, vm.ResetPositionCommand, 28));
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-arrows-left-right", Se.Language.General.CenterHorizontally, vm.CenterHorizontallyCommand, 28));
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-arrows-up-down", Se.Language.General.CenterVertically, vm.CenterVerticallyCommand, 28));
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-rotate-left", Se.Language.Assa.SetPositionReset, vm.ResetPositionCommand, 28));
 
         var anchorRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 14 };
         anchorRow.Children.Add(anchors);
         anchorRow.Children.Add(actions);
 
         var content = new StackPanel { Spacing = 10 };
-        content.Children.Add(AssaDrawWindow.MakePropertyRow(Se.Language.General.Position, x, y));
+        content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.Position, x, y));
         content.Children.Add(anchorRow);
         content.Children.Add(new TextBlock
         {
             Text = Se.Language.Assa.SetPositionNudgeHint,
             FontSize = 11.5,
-            Foreground = AssaDrawWindow.FaintTextBrush,
+            Foreground = EditorChrome.FaintTextBrush,
             TextWrapping = TextWrapping.Wrap,
         });
-        return AssaDrawWindow.MakeEditorSection(Se.Language.General.Position, content, MakeHeaderValue(nameof(vm.AnchorName)), first: true);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Position, content, MakeHeaderValue(nameof(vm.AnchorName)), first: true);
     }
 
     private static Border CreateRotationSection(AssaSetPositionViewModel vm)
@@ -183,24 +182,24 @@ public class AssaSetPositionWindow : Window
         };
         AutomationProperties.SetName(slider, Se.Language.Assa.Rotation);
 
-        var field = AssaDrawWindow.MakeField(nameof(vm.Rotation), -360, 360, 64, "°", "0.##");
+        var field = EditorChrome.MakeField(nameof(vm.Rotation), -360, 360, 64, "°", "0.##");
         AutomationProperties.SetName(field, Se.Language.Assa.Rotation);
-        var reset = AssaDrawWindow.CreateToolButton("fa-solid fa-rotate", Se.Language.Assa.SetPositionResetRotation, vm.ResetRotationCommand, 28);
+        var reset = EditorChrome.CreateToolButton("fa-solid fa-rotate", Se.Language.Assa.SetPositionResetRotation, vm.ResetRotationCommand, 28);
 
         var row = new Grid { ColumnSpacing = 8, ColumnDefinitions = { new ColumnDefinition(new GridLength(1, GridUnitType.Star)), new ColumnDefinition(GridLength.Auto), new ColumnDefinition(GridLength.Auto) } };
         row.Add(slider, 0, 0);
         row.Add(field, 0, 1);
         row.Add(reset, 0, 2);
-        return AssaDrawWindow.MakeEditorSection(Se.Language.Assa.Rotation, row, MakeHeaderValue(nameof(vm.Rotation), "{0:0.##}°"));
+        return EditorChrome.MakeEditorSection(Se.Language.Assa.Rotation, row, MakeHeaderValue(nameof(vm.Rotation), "{0:0.##}°"));
     }
 
     private static Border CreateGuidesSection(AssaSetPositionViewModel vm)
     {
         var content = new StackPanel { Spacing = 4 };
-        content.Children.Add(AssaDrawWindow.MakeToggleRow(nameof(vm.ShowSafeArea), Se.Language.Assa.SetPositionSafeArea));
-        content.Children.Add(AssaDrawWindow.MakeToggleRow(nameof(vm.ShowCenterLines), Se.Language.Assa.SetPositionCenterLines));
-        content.Children.Add(AssaDrawWindow.MakeToggleRow(nameof(vm.SnapToGuides), Se.Language.Assa.SetPositionSnapToGuides));
-        return AssaDrawWindow.MakeEditorSection(Se.Language.Assa.SetPositionGuides, content);
+        content.Children.Add(EditorChrome.MakeToggleRow(nameof(vm.ShowSafeArea), Se.Language.Assa.SetPositionSafeArea));
+        content.Children.Add(EditorChrome.MakeToggleRow(nameof(vm.ShowCenterLines), Se.Language.Assa.SetPositionCenterLines));
+        content.Children.Add(EditorChrome.MakeToggleRow(nameof(vm.SnapToGuides), Se.Language.Assa.SetPositionSnapToGuides));
+        return EditorChrome.MakeEditorSection(Se.Language.Assa.SetPositionGuides, content);
     }
 
     /// <summary>
@@ -245,7 +244,7 @@ public class AssaSetPositionWindow : Window
         };
         var selection = new Rectangle
         {
-            Stroke = AssaDrawWindow.AccentBrush,
+            Stroke = EditorChrome.AccentBrush,
             StrokeThickness = 1,
             StrokeDashArray = [4, 3],
             Margin = new Thickness(-3),
@@ -254,7 +253,7 @@ public class AssaSetPositionWindow : Window
         {
             Width = 10,
             Height = 10,
-            Fill = AssaDrawWindow.AccentBrush,
+            Fill = EditorChrome.AccentBrush,
             Stroke = Brushes.White,
             StrokeThickness = 1.5,
             Margin = new Thickness(-5),
@@ -338,7 +337,7 @@ public class AssaSetPositionWindow : Window
         info.Children.Add(new TextBlock
         {
             FontSize = 12,
-            Foreground = AssaDrawWindow.DimTextBrush,
+            Foreground = EditorChrome.DimTextBrush,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.LineInfo)),
         });
 
@@ -354,7 +353,7 @@ public class AssaSetPositionWindow : Window
         {
             FontFamily = new FontFamily("Menlo, Consolas, Cascadia Mono, DejaVu Sans Mono, monospace"),
             FontSize = 12,
-            Foreground = AssaDrawWindow.FaintTextBrush,
+            Foreground = EditorChrome.FaintTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.TagsPreview)),
@@ -380,8 +379,8 @@ public class AssaSetPositionWindow : Window
         return new Border
         {
             Child = grid,
-            Background = AssaDrawWindow.ButtonBarBrush,
-            BorderBrush = AssaDrawWindow.LineBrush,
+            Background = EditorChrome.ButtonBarBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 1, 0, 0),
             Padding = new Thickness(16, 10),
         };

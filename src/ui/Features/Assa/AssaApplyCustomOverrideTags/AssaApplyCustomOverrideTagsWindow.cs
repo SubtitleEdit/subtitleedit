@@ -9,7 +9,6 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
-using Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Features.Sync.VisualSync;
 using Nikse.SubtitleEdit.Logic;
@@ -34,8 +33,8 @@ public class AssaApplyCustomOverrideTagsWindow : Window
         Height = 780;
         MinWidth = 950;
         MinHeight = 600;
-        Background = AssaDrawWindow.WindowBrush;
-        AssaDrawWindow.AddEditorStyles(Styles);
+        Background = EditorChrome.WindowBrush;
+        EditorChrome.AddEditorStyles(Styles);
         vm.Window = this;
         DataContext = vm;
 
@@ -89,8 +88,8 @@ public class AssaApplyCustomOverrideTagsWindow : Window
         return new Border
         {
             Child = grid,
-            Background = AssaDrawWindow.PanelBrush,
-            BorderBrush = AssaDrawWindow.LineBrush,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 0, 1, 0),
         };
     }
@@ -110,13 +109,13 @@ public class AssaApplyCustomOverrideTagsWindow : Window
                     return new Panel();
                 }
 
-                var use = AssaDrawWindow.CreateToolButton("fa-solid fa-check", Se.Language.General.Use + ": " + preset.Name, null, 24);
+                var use = EditorChrome.CreateToolButton("fa-solid fa-check", Se.Language.General.Use + ": " + preset.Name, null, 24);
                 use.Click += (_, _) =>
                 {
                     vm.SelectedOverrideTag = preset;
                     vm.UseCommand.Execute(null);
                 };
-                var append = AssaDrawWindow.CreateToolButton("fa-solid fa-plus", Se.Language.General.Append + ": " + preset.Name, null, 24);
+                var append = EditorChrome.CreateToolButton("fa-solid fa-plus", Se.Language.General.Append + ": " + preset.Name, null, 24);
                 append.Click += (_, _) =>
                 {
                     vm.SelectedOverrideTag = preset;
@@ -130,7 +129,7 @@ public class AssaApplyCustomOverrideTagsWindow : Window
                     Text = preset.Tag,
                     FontFamily = MonoFont,
                     FontSize = 11,
-                    Foreground = AssaDrawWindow.FaintTextBrush,
+                    Foreground = EditorChrome.FaintTextBrush,
                     TextTrimming = TextTrimming.CharacterEllipsis,
                 });
 
@@ -166,14 +165,14 @@ public class AssaApplyCustomOverrideTagsWindow : Window
                     }
                 };
                 border.Cursor = new Cursor(StandardCursorType.Hand);
-                border.PointerEntered += (_, _) => border.Background = AssaDrawWindow.HoverBrush;
+                border.PointerEntered += (_, _) => border.Background = EditorChrome.HoverBrush;
                 border.PointerExited += (_, _) => border.Background = Brushes.Transparent;
                 return border;
             }),
         };
 
         var header = new DockPanel { Margin = new Thickness(14, 10, 10, 6) };
-        header.Children.Add(AssaDrawWindow.MakeSectionHeader(Se.Language.Assa.ChooseOverrideTagToAdd));
+        header.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.Assa.ChooseOverrideTagToAdd));
 
         var grid = new Grid
         {
@@ -199,8 +198,8 @@ public class AssaApplyCustomOverrideTagsWindow : Window
             MaxHeight = 140,
             FontFamily = MonoFont,
             FontSize = 12.5,
-            Background = AssaDrawWindow.FieldBrush,
-            BorderBrush = AssaDrawWindow.FieldBorderBrush,
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
             CornerRadius = new CornerRadius(6),
             [!TextBox.TextProperty] = new Binding(nameof(vm.CurrentTag)) { Mode = BindingMode.TwoWay },
         };
@@ -208,12 +207,12 @@ public class AssaApplyCustomOverrideTagsWindow : Window
         firstInput = textBox;
 
         var actions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2 };
-        actions.Children.Add(AssaDrawWindow.CreateToolButton("fa-solid fa-eraser", Se.Language.General.Clear, vm.ClearCommand, 24));
-        var history = AssaDrawWindow.CreateToolButton("fa-solid fa-clock-rotate-left", Se.Language.General.History, vm.ShowHistoryCommand, 24);
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-eraser", Se.Language.General.Clear, vm.ClearCommand, 24));
+        var history = EditorChrome.CreateToolButton("fa-solid fa-clock-rotate-left", Se.Language.General.History, vm.ShowHistoryCommand, 24);
         history.Bind(IsVisibleProperty, new Binding(nameof(vm.IsHistoryVisible)));
         actions.Children.Add(history);
 
-        return AssaDrawWindow.MakeEditorSection(Se.Language.Assa.ApplyOverrideTags, textBox, actions);
+        return EditorChrome.MakeEditorSection(Se.Language.Assa.ApplyOverrideTags, textBox, actions);
     }
 
     private static Border MakeApplyToSection(AssaApplyCustomOverrideTagsViewModel vm)
@@ -232,12 +231,12 @@ public class AssaApplyCustomOverrideTagsWindow : Window
         content.Children.Add(new TextBlock
         {
             FontSize = 11.5,
-            Foreground = AssaDrawWindow.FaintTextBrush,
+            Foreground = EditorChrome.FaintTextBrush,
             Margin = new Thickness(0, 4, 0, 0),
             TextWrapping = TextWrapping.Wrap,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.SelectionInfo)),
         });
-        return AssaDrawWindow.MakeEditorSection(Se.Language.General.Lines, content);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Lines, content);
     }
 
     private static Control MakePreview(AssaApplyCustomOverrideTagsViewModel vm)
@@ -253,7 +252,7 @@ public class AssaApplyCustomOverrideTagsWindow : Window
         vm.ComboBoxLeft = comboBoxLeft;
         comboBoxLeft.SelectionChanged += vm.ComboBoxParagraphsChanged;
 
-        var play = AssaDrawWindow.CreateToolButton("fa-solid fa-play", Se.Language.General.PlayCurrent, vm.PlayAndBackCommand, 40);
+        var play = EditorChrome.CreateToolButton("fa-solid fa-play", Se.Language.General.PlayCurrent, vm.PlayAndBackCommand, 40);
 
         var lineRow = new Grid
         {
@@ -287,8 +286,8 @@ public class AssaApplyCustomOverrideTagsWindow : Window
         return new Border
         {
             Child = buttons,
-            Background = AssaDrawWindow.ButtonBarBrush,
-            BorderBrush = AssaDrawWindow.LineBrush,
+            Background = EditorChrome.ButtonBarBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 1, 0, 0),
             Padding = new Thickness(16, 10),
         };

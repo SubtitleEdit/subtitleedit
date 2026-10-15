@@ -7,7 +7,6 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
-using Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -28,8 +27,8 @@ public class AssaImageColorPickerWindow : Window
         MinHeight = 500;
         Width = 1050;
         Height = 780;
-        Background = AssaDrawWindow.WindowBrush;
-        AssaDrawWindow.AddEditorStyles(Styles);
+        Background = EditorChrome.WindowBrush;
+        EditorChrome.AddEditorStyles(Styles);
 
         vm.Window = this;
         DataContext = vm;
@@ -81,7 +80,7 @@ public class AssaImageColorPickerWindow : Window
         var info = new TextBlock
         {
             FontSize = 12,
-            Foreground = AssaDrawWindow.DimTextBrush,
+            Foreground = EditorChrome.DimTextBrush,
             Margin = new Thickness(2, 8, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ScreenshotOverlayPosiion))
             {
@@ -104,7 +103,7 @@ public class AssaImageColorPickerWindow : Window
             Height = height,
             CornerRadius = new CornerRadius(6),
             BorderThickness = new Thickness(1),
-            BorderBrush = AssaDrawWindow.MenuBorderBrush,
+            BorderBrush = EditorChrome.MenuBorderBrush,
             [!Border.BackgroundProperty] = new Binding(property),
         };
     }
@@ -113,7 +112,7 @@ public class AssaImageColorPickerWindow : Window
     {
         FontFamily = new FontFamily("Menlo, Consolas, Cascadia Mono, DejaVu Sans Mono, monospace"),
         FontSize = 12.5,
-        Foreground = foreground ?? AssaDrawWindow.StrongTextBrush,
+        Foreground = foreground ?? EditorChrome.StrongTextBrush,
         [!TextBlock.TextProperty] = new Binding(property),
     };
 
@@ -146,8 +145,8 @@ public class AssaImageColorPickerWindow : Window
             CornerRadius = new CornerRadius(6),
             ClipToBounds = true,
             BorderThickness = new Thickness(1),
-            BorderBrush = AssaDrawWindow.FieldBorderBrush,
-            Background = AssaDrawWindow.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            Background = EditorChrome.FieldBrush,
             Child = new Image { [!Image.SourceProperty] = new Binding(nameof(vm.Magnifier)), Stretch = Stretch.Fill },
         };
         var pointerInfo = new StackPanel { Spacing = 8, VerticalAlignment = VerticalAlignment.Center };
@@ -160,7 +159,7 @@ public class AssaImageColorPickerWindow : Window
         // Picked: swatch, hex and ASSA code, copy as hex / ASSA / \c tag
         var codes = new StackPanel { Spacing = 4, VerticalAlignment = VerticalAlignment.Center };
         codes.Children.Add(Mono(nameof(vm.ClickedColorRgbHex)));
-        codes.Children.Add(Mono(nameof(vm.ClickedColorAssa), AssaDrawWindow.DimTextBrush));
+        codes.Children.Add(Mono(nameof(vm.ClickedColorAssa), EditorChrome.DimTextBrush));
         var pickedTop = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 12 };
         pickedTop.Children.Add(Swatch(nameof(vm.ClickedColor), 72, 44));
         pickedTop.Children.Add(codes);
@@ -177,7 +176,7 @@ public class AssaImageColorPickerWindow : Window
         picked.Children.Add(new TextBlock
         {
             FontSize = 11.5,
-            Foreground = AssaDrawWindow.DimTextBrush,
+            Foreground = EditorChrome.DimTextBrush,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.CopiedText)),
         });
 
@@ -201,7 +200,7 @@ public class AssaImageColorPickerWindow : Window
                     {
                         CornerRadius = new CornerRadius(4),
                         BorderThickness = new Thickness(1),
-                        BorderBrush = AssaDrawWindow.MenuBorderBrush,
+                        BorderBrush = EditorChrome.MenuBorderBrush,
                         Background = item?.Brush,
                     },
                     HorizontalContentAlignment = HorizontalAlignment.Stretch,
@@ -220,9 +219,9 @@ public class AssaImageColorPickerWindow : Window
 
         Border Column(string title, Control content, bool first) => new()
         {
-            Child = new StackPanel { Spacing = 10, Children = { AssaDrawWindow.MakeSectionHeader(title), content } },
+            Child = new StackPanel { Spacing = 10, Children = { EditorChrome.MakeSectionHeader(title), content } },
             Padding = new Thickness(16, 12, 16, 14),
-            BorderBrush = AssaDrawWindow.LineBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(first ? 0 : 1, 0, 0, 0),
         };
 
@@ -242,8 +241,8 @@ public class AssaImageColorPickerWindow : Window
         return new Border
         {
             Child = columns,
-            Background = AssaDrawWindow.PanelBrush,
-            BorderBrush = AssaDrawWindow.LineBrush,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 1, 0, 0),
         };
     }
@@ -256,8 +255,8 @@ public class AssaImageColorPickerWindow : Window
         return new Border
         {
             Child = buttonDone,
-            Background = AssaDrawWindow.ButtonBarBrush,
-            BorderBrush = AssaDrawWindow.LineBrush,
+            Background = EditorChrome.ButtonBarBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 1, 0, 0),
             Padding = new Thickness(16, 10),
         };
