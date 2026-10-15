@@ -43,10 +43,12 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             "nvidia/nvidia-nemotron-nano-9b-v2",
 
             // NVIDIA Riva (translation-specific)
+            "nvidia/riva-translate-4b-instruct-v2",
             "nvidia/riva-translate-4b-instruct-v1.1",
             "nvidia/riva-translate-4b-instruct",
 
             // DeepSeek
+            "deepseek-ai/deepseek-v4.1-flash",
             "deepseek-ai/deepseek-v4-pro",
             "deepseek-ai/deepseek-v4-flash",
 
@@ -69,6 +71,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             "moonshotai/kimi-k2.6",
 
             // Zhipu GLM
+            "z-ai/glm-5.3",
             "z-ai/glm-5.2",
 
             // OpenAI (open weights)

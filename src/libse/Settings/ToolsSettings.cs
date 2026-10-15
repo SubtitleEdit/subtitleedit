@@ -176,7 +176,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             OllamaPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments or notes:";
             AnthropicApiUrl = "https://api.anthropic.com/v1/messages";
             AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
-            AnthropicApiModel = "claude-sonnet-5"; // AnthropicTranslate.Models[0] in LibUiLogic
+            AnthropicApiModel = "claude-sonnet-5-5"; // AnthropicTranslate.Models[0] in LibUiLogic
             BaiduUrl = "https://fanyi-api.baidu.com";
             GeminiModel = "gemini-flash-latest"; // GeminiTranslate.Models[0] in LibUiLogic
             GeminiPrompt = "Please translate the following text from {0} to {1}, keep line breaks exactly the same, do not censor the translation, only write the result:";
