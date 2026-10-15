@@ -1,5 +1,4 @@
-﻿using Avalonia.Controls;
-using Nikse.SubtitleEdit.Logic;
+using Avalonia.Controls;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert.FunctionViews;
@@ -8,57 +7,22 @@ public static class ViewBridgeGaps
 {
     public static Control Make(BatchConvertViewModel vm)
     {
-        var labelHeader = new Label
-        {
-            Content = Se.Language.General.BridgeGaps,
-            FontWeight = Avalonia.Media.FontWeight.Bold,
-            Margin = new Avalonia.Thickness(0, 0, 0, 10),
-        };
-
         var useFrames = Se.Settings.General.UseFrameMode;
-        var labelBridgeGapSmallerThan = UiUtil.MakeLabel(useFrames
+        var textBridgeGapSmallerThan = useFrames
             ? Se.Language.Tools.BridgeGaps.BridgeGapsSmallerThanFrames
-            : Se.Language.Tools.BridgeGaps.BridgeGapsSmallerThan);
-        var numericUpDownBridgeGapSmallerThan = UiUtil.MakeNumericUpDownInt(1, 10000, Se.Settings.Tools.BridgeGaps.GetBridgeGapsSmallerThan(useFrames), 130, vm, nameof(vm.BridgeGapsSmallerThanMsOrFrames));
+            : Se.Language.Tools.BridgeGaps.BridgeGapsSmallerThan;
+        var numericUpDownBridgeGapSmallerThan = FunctionViewChrome.MakeIntField(vm, nameof(vm.BridgeGapsSmallerThanMsOrFrames), 1, 10000, Se.Settings.Tools.BridgeGaps.GetBridgeGapsSmallerThan(useFrames), textBridgeGapSmallerThan);
 
-        var labelMinGap = UiUtil.MakeLabel(useFrames
+        var textMinGap = useFrames
             ? Se.Language.Tools.BridgeGaps.MinGapFrames
-            : Se.Language.Tools.BridgeGaps.MinGap);
-        var numericUpDownMinGap = UiUtil.MakeNumericUpDownInt(0, 1000, Se.Settings.Tools.BridgeGaps.GetMinGap(useFrames), 130, vm, nameof(vm.BridgeGapsMinGapMsOrFrames));
+            : Se.Language.Tools.BridgeGaps.MinGap;
+        var numericUpDownMinGap = FunctionViewChrome.MakeIntField(vm, nameof(vm.BridgeGapsMinGapMsOrFrames), 0, 1000, Se.Settings.Tools.BridgeGaps.GetMinGap(useFrames), textMinGap);
 
-        var labelPercentForLeft = UiUtil.MakeLabel(Se.Language.Tools.BridgeGaps.PercentFoPrevious);
-        var numericUpDownPercentForLeft = UiUtil.MakeNumericUpDownInt(0, 100, Se.Settings.Tools.BridgeGaps.PercentForLeft, 130, vm, nameof(vm.BridgeGapsPercentForLeft));
+        var numericUpDownPercentForLeft = FunctionViewChrome.MakeIntField(vm, nameof(vm.BridgeGapsPercentForLeft), 0, 100, Se.Settings.Tools.BridgeGaps.PercentForLeft, Se.Language.Tools.BridgeGaps.PercentFoPrevious);
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Header
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Bridge gap smaller than
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Min gap
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Percent for left
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = new Avalonia.Thickness(10),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-        };
-
-        grid.Add(labelHeader, 0);
-
-        grid.Add(labelBridgeGapSmallerThan, 1);
-        grid.Add(numericUpDownBridgeGapSmallerThan, 1, 1);
-
-        grid.Add(labelMinGap, 2);
-        grid.Add(numericUpDownMinGap, 2, 1);
-
-        grid.Add(labelPercentForLeft, 3);
-        grid.Add(numericUpDownPercentForLeft, 3, 1);
-
-        return grid;
+        return FunctionViewChrome.MakePanel(vm, Se.Language.General.BridgeGaps,
+            FunctionViewChrome.MakeRow(textBridgeGapSmallerThan, numericUpDownBridgeGapSmallerThan),
+            FunctionViewChrome.MakeRow(textMinGap, numericUpDownMinGap),
+            FunctionViewChrome.MakeRow(Se.Language.Tools.BridgeGaps.PercentFoPrevious, numericUpDownPercentForLeft));
     }
 }
