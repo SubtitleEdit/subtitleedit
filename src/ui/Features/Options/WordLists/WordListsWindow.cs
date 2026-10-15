@@ -159,6 +159,7 @@ public class WordListsWindow : Window
             [!ListBox.SelectedItemProperty] = new Binding(selectedPath) { Mode = BindingMode.TwoWay },
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
+            IsTextSearchEnabled = true, // type a letter (or a few quickly) to jump to the first matching entry (#16078)
         };
     }
 
