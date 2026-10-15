@@ -43,8 +43,10 @@ public class AssSetBackgroundWindow : Window
         vm.VideoPlayerControl = InitVideoPlayer.MakeVideoPlayer();
         vm.VideoPlayerControl.FullScreenIsVisible = false;
 
-        // A click on the preview would start playback and run off the line being styled
+        // A click (or a wheel / trackpad scroll) on the preview would play or seek away from
+        // the line being styled
         vm.VideoPlayerControl.ClickToTogglePlay = false;
+        vm.VideoPlayerControl.WheelToSeek = false;
         // No clip or rounded corners around the player: on macOS the video is a native surface
         // (composition child visual), and a clipped parent kept it from showing
         var videoPanel = new Border
