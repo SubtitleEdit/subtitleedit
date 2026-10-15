@@ -39,6 +39,7 @@ public class SeAssa
     public string BackgroundBoxesOutlineColor { get; set; }
     public int BackgroundBoxesOutlineWidth { get; set; }
     public bool SetPositionShowSafeArea { get; set; }
+    public int StylesPreviewBackground { get; set; }
     public bool SetPositionShowCenterLines { get; set; }
     public bool SetPositionSnapToGuides { get; set; }
     public int BackgroundBoxesShadowDistance { get; set; }

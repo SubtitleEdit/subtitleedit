@@ -452,7 +452,7 @@ public class AssaDrawWindow : Window
         }
     }
 
-    private static MenuItem MakeMenuItem(string header, string? icon, System.Windows.Input.ICommand? command, KeyGesture? gesture = null)
+    internal static MenuItem MakeMenuItem(string header, string? icon, System.Windows.Input.ICommand? command, KeyGesture? gesture = null)
     {
         var item = new MenuItem
         {

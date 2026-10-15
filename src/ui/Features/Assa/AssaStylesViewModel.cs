@@ -52,6 +52,16 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private bool _isCategoryActionVisible;
     [ObservableProperty] private bool _isMoveVisible;
 
+    /// <summary>
+    /// "4 styles in file · 3 saved" - the bottom bar.
+    /// </summary>
+    [ObservableProperty] private string _summaryText = string.Empty;
+
+    /// <summary>
+    /// What the preview text sits on: 0 = dark, 1 = checker (transparency), 2 = light.
+    /// </summary>
+    [ObservableProperty] private int _previewBackgroundIndex = Se.Settings.Assa.StylesPreviewBackground;
+
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
     public string Header { get; set; }
@@ -113,6 +123,10 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         };
         RefreshStorageStylesView();
         RebuildStorageCategories();
+
+        FileStyles.CollectionChanged += (_, _) => UpdateSummary();
+        StorageStylesView.CollectionChanged += (_, _) => UpdateSummary();
+        UpdateSummary();
 
         _timerUpdatePreview = new System.Timers.Timer(500);
         _timerUpdatePreview.Elapsed += TimerUpdatePreviewElapsed;
@@ -1410,6 +1424,54 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     private int _previewRequestId;
     private string _lastPreviewSignature = string.Empty;
 
+    private void UpdateSummary()
+    {
+        SummaryText = string.Format(Se.Language.Assa.StylesSummary, FileStyles.Count, StorageStylesView.Count);
+    }
+
+    partial void OnPreviewBackgroundIndexChanged(int value)
+    {
+        Se.Settings.Assa.StylesPreviewBackground = value;
+
+        // Forget the last render so the preview timer draws it again on the new background
+        _lastPreviewSignature = string.Empty;
+        UpdatePreview();
+    }
+
+    /// <summary>
+    /// The libass render (transparent) on the chosen preview background, with a thin frame.
+    /// </summary>
+    internal static SKBitmap ComposeOnBackground(SKBitmap bitmap, int backgroundIndex)
+    {
+        if (backgroundIndex is not (1 or 2))
+        {
+            return NonAssaPreviewRenderer.ComposeOnDarkFrame(bitmap);
+        }
+
+        var frame = new SKBitmap(bitmap.Width, bitmap.Height);
+        using var canvas = new SKCanvas(frame);
+        if (backgroundIndex == 2)
+        {
+            canvas.Clear(new SKColor(232, 233, 236));
+        }
+        else
+        {
+            const int cell = 24;
+            canvas.Clear(new SKColor(70, 70, 70));
+            using var paint = new SKPaint { Color = new SKColor(100, 100, 100) };
+            for (var y = 0; y < bitmap.Height; y += cell)
+            {
+                for (var x = (y / cell) % 2 * cell; x < bitmap.Width; x += cell * 2)
+                {
+                    canvas.DrawRect(x, y, cell, cell, paint);
+                }
+            }
+        }
+
+        canvas.DrawBitmap(bitmap, 0, 0);
+        return frame;
+    }
+
     private void UpdatePreview()
     {
         var style = CurrentStyle;
@@ -1469,7 +1531,9 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
 
                 if (bitmap != null)
                 {
-                    ImagePreview = NonAssaPreviewRenderer.ComposeOnDarkFrame(bitmap).ToAvaloniaBitmap();
+                    using var composed = ComposeOnBackground(bitmap, PreviewBackgroundIndex);
+                    ImagePreview = composed.ToAvaloniaBitmap();
+                    bitmap.Dispose();
                 }
                 else
                 {
