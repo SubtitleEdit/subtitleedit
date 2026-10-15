@@ -12,6 +12,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustAlpha;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using SkiaSharp;
 using System;
@@ -30,7 +31,15 @@ public partial class AssaSetPositionViewModel : ObservableObject
     public Window? Window { get; internal set; }
     public bool OkPressed { get; private set; }
     public Image? ScreenshotImage { get; set; }
-    public Image? ScreenshotOverlayImage { get; set; }
+    /// <summary>
+    /// The draggable text (with its selection box and anchor dot) - sized, placed and rotated here.
+    /// </summary>
+    public Control? ScreenshotOverlayImage { get; set; }
+
+    /// <summary>
+    /// Where the frame is shown inside <see cref="VideoGrid"/>, for drawing the guides over it.
+    /// </summary>
+    public event EventHandler<Rect>? FrameRectChanged;
     public Grid? VideoGrid { get; set; }
 
     [ObservableProperty] private int _sourceWidth = 1920;
@@ -43,6 +52,44 @@ public partial class AssaSetPositionViewModel : ObservableObject
     [ObservableProperty] private Bitmap _screenshot;
     [ObservableProperty] private string _screenshotOverlayPosiion;
     [ObservableProperty] private decimal _rotation;
+
+    /// <summary>
+    /// The \pos point in script (PlayRes) space - shown and edited in the X/Y fields.
+    /// </summary>
+    [ObservableProperty] private int _positionX;
+    [ObservableProperty] private int _positionY;
+
+    /// <summary>
+    /// The anchor grid cell the line was last placed with (0 = top left ... 8 = bottom right), -1 after a drag or edit.
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AnchorName))]
+    private int _anchorIndex = -1;
+
+    [ObservableProperty] private string _tagsPreview = string.Empty;
+    [ObservableProperty] private string _lineInfo = string.Empty;
+    [ObservableProperty] private bool _showSafeArea = Se.Settings.Assa.SetPositionShowSafeArea;
+    [ObservableProperty] private bool _showCenterLines = Se.Settings.Assa.SetPositionShowCenterLines;
+    [ObservableProperty] private bool _snapToGuides = Se.Settings.Assa.SetPositionSnapToGuides;
+
+    /// <summary>
+    /// The title-safe frame the anchor grid places the line inside, as a fraction of each side.
+    /// </summary>
+    public const double SafeAreaMargin = 0.05;
+
+    public static IReadOnlyList<string> AnchorNames =>
+    [
+        Se.Language.Assa.SetPositionTopLeft, Se.Language.Assa.SetPositionTopCenter, Se.Language.Assa.SetPositionTopRight,
+        Se.Language.Assa.SetPositionMiddleLeft, Se.Language.Assa.SetPositionCenter, Se.Language.Assa.SetPositionMiddleRight,
+        Se.Language.Assa.SetPositionBottomLeft, Se.Language.Assa.SetPositionBottomCenter, Se.Language.Assa.SetPositionBottomRight,
+    ];
+
+    public string AnchorName => AnchorIndex >= 0 && AnchorIndex < 9 ? AnchorNames[AnchorIndex] : Se.Language.Assa.SetPositionCustom;
+
+    private bool _updatingPositionFields;
+    private int _initialScreenshotX;
+    private int _initialScreenshotY;
+    private decimal _initialRotation;
 
     private static readonly Regex FrzRegex = new(@"\\frz\(?(-?\d+(\.\d+)?)\)?", RegexOptions.Compiled);
     private static readonly Regex PosRegex = new(@"\\pos\(\s*-?\d+(\.\d+)?\s*,\s*-?\d+(\.\d+)?\s*\)", RegexOptions.Compiled);
@@ -76,6 +123,16 @@ public partial class AssaSetPositionViewModel : ObservableObject
     private bool _isBottomAligned = true;
 
     public Subtitle ResultSubtitle => _subtitle;
+
+    /// <summary>
+    /// The effective \an alignment (1-9) - where on the text box \pos is.
+    /// </summary>
+    public string Alignment => _alignment;
+
+    /// <summary>
+    /// Width of the canvas the text was rendered on (ScreenshotX/Y space).
+    /// </summary>
+    public int RenderWidth => _renderWidth;
 
     public AssaSetPositionViewModel()
     {
@@ -137,12 +194,139 @@ public partial class AssaSetPositionViewModel : ObservableObject
         return (int)Math.Round(renderValue * playRes / renderSize, MidpointRounding.AwayFromZero);
     }
 
+    partial void OnPositionXChanged(int value) => MoveAnchorTo(value, null);
+
+    partial void OnPositionYChanged(int value) => MoveAnchorTo(null, value);
+
+    /// <summary>
+    /// X/Y fields: put the \pos point there (script space), keeping the text's size.
+    /// </summary>
+    private void MoveAnchorTo(int? x, int? y)
+    {
+        if (_updatingPositionFields)
+        {
+            return;
+        }
+
+        AnchorIndex = -1;
+        if (x.HasValue)
+        {
+            ScreenshotX += (int)Math.Round((x.Value - ResultX) * (double)_renderWidth / Math.Max(1, SourceWidth));
+        }
+
+        if (y.HasValue)
+        {
+            ScreenshotY += (int)Math.Round((y.Value - ResultY) * (double)_renderHeight / Math.Max(1, SourceHeight));
+        }
+    }
+
+    partial void OnShowSafeAreaChanged(bool value) => Se.Settings.Assa.SetPositionShowSafeArea = value;
+
+    partial void OnShowCenterLinesChanged(bool value) => Se.Settings.Assa.SetPositionShowCenterLines = value;
+
+    partial void OnSnapToGuidesChanged(bool value) => Se.Settings.Assa.SetPositionSnapToGuides = value;
+
+    /// <summary>
+    /// Anchor grid: places the text box inside the safe area - left/center/right, top/middle/bottom.
+    /// </summary>
+    [RelayCommand]
+    private void SetAnchor(int index)
+    {
+        if (index < 0 || index > 8)
+        {
+            return;
+        }
+
+        var width = ScreenshotOverlayText.Size.Width;
+        var height = ScreenshotOverlayText.Size.Height;
+        var marginX = _renderWidth * SafeAreaMargin;
+        var marginY = _renderHeight * SafeAreaMargin;
+        var column = index % 3;
+        var row = index / 3;
+        var x = column switch { 0 => marginX, 1 => (_renderWidth - width) / 2, _ => _renderWidth - marginX - width };
+        var y = row switch { 0 => marginY, 1 => (_renderHeight - height) / 2, _ => _renderHeight - marginY - height };
+        ScreenshotX = (int)Math.Round(x, MidpointRounding.AwayFromZero);
+        ScreenshotY = (int)Math.Round(y, MidpointRounding.AwayFromZero);
+        AnchorIndex = index;
+    }
+
+    /// <summary>
+    /// Back to where the line was when the dialog opened.
+    /// </summary>
+    [RelayCommand]
+    private void ResetPosition()
+    {
+        ScreenshotX = _initialScreenshotX;
+        ScreenshotY = _initialScreenshotY;
+        Rotation = _initialRotation;
+        AnchorIndex = -1;
+    }
+
+    [RelayCommand]
+    private void ResetRotation() => Rotation = 0;
+
+    /// <summary>
+    /// A drag moved the text box to this render-space top-left. With snapping on, an edge or the
+    /// center that comes close to a guide (center lines, safe area) sticks to it.
+    /// </summary>
+    public void DragTo(int x, int y)
+    {
+        AnchorIndex = -1;
+        if (SnapToGuides)
+        {
+            var width = ScreenshotOverlayText.Size.Width;
+            var height = ScreenshotOverlayText.Size.Height;
+            x = (int)Math.Round(Snap(x, width, _renderWidth));
+            y = (int)Math.Round(Snap(y, height, _renderHeight));
+        }
+
+        ScreenshotX = x;
+        ScreenshotY = y;
+    }
+
+    /// <summary>
+    /// Snaps a box start so its start, center or end lands on a guide within 1% of the frame.
+    /// </summary>
+    internal static double Snap(double start, double size, double frameSize)
+    {
+        var threshold = frameSize * 0.01;
+        var margin = frameSize * SafeAreaMargin;
+        var best = start;
+        var bestDistance = threshold;
+        foreach (var (guide, offset) in new[] { (margin, 0.0), (frameSize / 2, size / 2), (frameSize - margin, size) })
+        {
+            var candidate = guide - offset;
+            var distance = Math.Abs(candidate - start);
+            if (distance <= bestDistance)
+            {
+                best = candidate;
+                bestDistance = distance;
+            }
+        }
+
+        return best;
+    }
+
+    /// <summary>
+    /// Arrow keys: move by one render pixel (ten with Shift).
+    /// </summary>
+    internal void Nudge(int dx, int dy)
+    {
+        AnchorIndex = -1;
+        ScreenshotX += dx;
+        ScreenshotY += dy;
+    }
+
     partial void OnScreenshotXChanged(int value)
     {
         // Only update if UI elements are initialized
         if (VideoGrid != null && ScreenshotOverlayImage != null && ScreenshotImage != null)
         {
             UpdateOverlayPosition();
+        }
+        else
+        {
+            UpdatePositionFields();
         }
     }
 
@@ -153,6 +337,10 @@ public partial class AssaSetPositionViewModel : ObservableObject
         {
             UpdateOverlayPosition();
         }
+        else
+        {
+            UpdatePositionFields();
+        }
     }
 
     partial void OnRotationChanged(decimal value)
@@ -160,6 +348,10 @@ public partial class AssaSetPositionViewModel : ObservableObject
         if (VideoGrid != null && ScreenshotOverlayImage != null && ScreenshotImage != null)
         {
             UpdateOverlayPosition();
+        }
+        else
+        {
+            UpdatePositionFields();
         }
     }
 
@@ -237,6 +429,12 @@ public partial class AssaSetPositionViewModel : ObservableObject
                 ScreenshotY = trimResult.Top;
             }
         }
+
+        _initialScreenshotX = ScreenshotX;
+        _initialScreenshotY = ScreenshotY;
+        _initialRotation = Rotation;
+        LineInfo = $"#{line.Number}   {new TimeCode(line.StartTime).ToDisplayString()}   ·   {SourceWidth} × {SourceHeight}";
+        UpdatePositionFields();
 
         // Set target resolution from video if available
         if (videoWidth.HasValue && videoWidth.Value > 0)
@@ -474,6 +672,7 @@ public partial class AssaSetPositionViewModel : ObservableObject
     [RelayCommand]
     private async Task CenterHorizontally()
     {
+        AnchorIndex = -1;
         // ScreenshotX/Y are render-space, so center on the render canvas - centering on
         // SourceWidth (PlayRes) was off whenever the two resolutions differed.
         ScreenshotX = (int)Math.Round(_renderWidth / 2.0 - ScreenshotOverlayText.Size.Width / 2.0, MidpointRounding.AwayFromZero);
@@ -482,6 +681,7 @@ public partial class AssaSetPositionViewModel : ObservableObject
     [RelayCommand]
     private async Task CenterVertically()
     {
+        AnchorIndex = -1;
         ScreenshotY = (int)Math.Round(_renderHeight / 2.0 - ScreenshotOverlayText.Size.Height / 2.0, MidpointRounding.AwayFromZero);
     }
 
@@ -508,7 +708,15 @@ public partial class AssaSetPositionViewModel : ObservableObject
 
     internal void KeyDown(object? sender, KeyEventArgs e)
     {
-        if (e.Key == Key.Escape)
+        var isTyping = e.Source is Avalonia.Visual visual &&
+                       (visual is TextBox || Avalonia.VisualTree.VisualExtensions.FindAncestorOfType<TextBox>(visual) != null);
+        if (!isTyping && e.Key is Key.Left or Key.Right or Key.Up or Key.Down && (e.KeyModifiers & ~KeyModifiers.Shift) == KeyModifiers.None)
+        {
+            var step = e.KeyModifiers.HasFlag(KeyModifiers.Shift) ? 10 : 1;
+            Nudge(e.Key == Key.Left ? -step : e.Key == Key.Right ? step : 0, e.Key == Key.Up ? -step : e.Key == Key.Down ? step : 0);
+            e.Handled = true;
+        }
+        else if (e.Key == Key.Escape)
         {
             Close();
         }
@@ -575,5 +783,26 @@ public partial class AssaSetPositionViewModel : ObservableObject
         ScreenshotOverlayPosiion = Rotation == 0
             ? $"X: {ResultX}, Y: {ResultY}"
             : $"X: {ResultX}, Y: {ResultY}, {Rotation}°";
+        UpdatePositionFields();
+        FrameRectChanged?.Invoke(this, new Rect(offsetX, offsetY, screenshotImageWidth, screenshotImageHeight));
+    }
+
+    /// <summary>
+    /// X/Y fields and the tag preview follow the text box (without moving it again).
+    /// </summary>
+    private void UpdatePositionFields()
+    {
+        _updatingPositionFields = true;
+        try
+        {
+            PositionX = ResultX;
+            PositionY = ResultY;
+        }
+        finally
+        {
+            _updatingPositionFields = false;
+        }
+
+        TagsPreview = "{" + ResultTags + "}";
     }
 }

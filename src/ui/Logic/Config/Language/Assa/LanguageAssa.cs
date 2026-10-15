@@ -330,6 +330,23 @@ public class LanguageAssa
     public string SpinIn { get; set; }
     public string SetPosition { get; set; }
     public string Rotation { get; set; }
+    public string SetPositionTopLeft { get; set; }
+    public string SetPositionTopCenter { get; set; }
+    public string SetPositionTopRight { get; set; }
+    public string SetPositionMiddleLeft { get; set; }
+    public string SetPositionCenter { get; set; }
+    public string SetPositionMiddleRight { get; set; }
+    public string SetPositionBottomLeft { get; set; }
+    public string SetPositionBottomCenter { get; set; }
+    public string SetPositionBottomRight { get; set; }
+    public string SetPositionCustom { get; set; }
+    public string SetPositionReset { get; set; }
+    public string SetPositionResetRotation { get; set; }
+    public string SetPositionGuides { get; set; }
+    public string SetPositionSafeArea { get; set; }
+    public string SetPositionCenterLines { get; set; }
+    public string SetPositionSnapToGuides { get; set; }
+    public string SetPositionNudgeHint { get; set; }
     public string ScaleX { get; set; }
     public string ScaleY { get; set; }
     public string Spacing { get; set; }
@@ -777,6 +794,23 @@ public class LanguageAssa
         SpinIn = "Spin in";
         SetPosition = "Set position";
         Rotation = "Rotation";
+        SetPositionTopLeft = "Top left";
+        SetPositionTopCenter = "Top center";
+        SetPositionTopRight = "Top right";
+        SetPositionMiddleLeft = "Middle left";
+        SetPositionCenter = "Center";
+        SetPositionMiddleRight = "Middle right";
+        SetPositionBottomLeft = "Bottom left";
+        SetPositionBottomCenter = "Bottom center";
+        SetPositionBottomRight = "Bottom right";
+        SetPositionCustom = "Custom";
+        SetPositionReset = "Reset to the line's position";
+        SetPositionResetRotation = "Reset rotation";
+        SetPositionGuides = "Guides";
+        SetPositionSafeArea = "Safe area";
+        SetPositionCenterLines = "Center lines";
+        SetPositionSnapToGuides = "Snap to guides";
+        SetPositionNudgeHint = "Arrow keys nudge 1 px, Shift 10 px";
         ScaleX = "Scale X";
         ScaleY = "Scale Y";
         Spacing = "Spacing";

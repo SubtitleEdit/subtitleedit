@@ -38,6 +38,9 @@ public class SeAssa
     public string BackgroundBoxesShadowColor { get; set; }
     public string BackgroundBoxesOutlineColor { get; set; }
     public int BackgroundBoxesOutlineWidth { get; set; }
+    public bool SetPositionShowSafeArea { get; set; }
+    public bool SetPositionShowCenterLines { get; set; }
+    public bool SetPositionSnapToGuides { get; set; }
     public int BackgroundBoxesShadowDistance { get; set; }
     public bool HideLayersFromWaveform { get; set; }
 
@@ -92,6 +95,9 @@ public class SeAssa
         BackgroundBoxesShadowColor = Color.FromArgb(50, 0,0,0).FromColorToHex();    
         BackgroundBoxesOutlineColor = Color.FromArgb(50, 200,200,200).FromColorToHex();
         BackgroundBoxesOutlineWidth = 2;
+        SetPositionShowSafeArea = true;
+        SetPositionShowCenterLines = true;
+        SetPositionSnapToGuides = true;
         BackgroundBoxesShadowDistance = 1;
 
         HideLayersFromWaveform = true;
