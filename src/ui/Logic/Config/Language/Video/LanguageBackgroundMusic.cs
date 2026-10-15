@@ -42,6 +42,7 @@ public class LanguageBackgroundMusic
     public string OutputLengthTextToSpeech { get; set; }
     public string AddBackgroundMusic { get; set; }
     public string AddBackgroundMusicHint { get; set; }
+    public string Music { get; set; }
     public string GeneratingBackgroundMusicDotDotDot { get; set; }
     public string MixingBackgroundMusicDotDotDot { get; set; }
 
@@ -87,6 +88,7 @@ public class LanguageBackgroundMusic
         OutputLengthTextToSpeech = "Follows the generated speech - the music loops seamlessly and dips while someone talks";
         AddBackgroundMusic = "Add background music";
         AddBackgroundMusicHint = "Generate music locally with ACE-Step 1.5 and mix it under the speech - it dips while someone talks";
+        Music = "Music";
         GeneratingBackgroundMusicDotDotDot = "Generating background music...";
         MixingBackgroundMusicDotDotDot = "Mixing background music...";
     }
