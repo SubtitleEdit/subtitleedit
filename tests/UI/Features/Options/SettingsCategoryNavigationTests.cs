@@ -204,7 +204,7 @@ public class SettingsCategoryNavigationTests : IDisposable
     [AvaloniaTheory]
     [InlineData(typeof(TextBox))]
     [InlineData(typeof(ComboBox))]
-    [InlineData(typeof(CheckBox))]
+    [InlineData(typeof(ToggleSwitch))] // the on/off settings (check boxes before the editor look)
     [InlineData(typeof(NumericUpDown))]
     public void CtrlPageDown_WorksWithFocusOnASetting(Type controlType)
     {
@@ -273,7 +273,8 @@ public class SettingsCategoryNavigationTests : IDisposable
                 Assert.Equal(section.Title, peer.GetName());
                 Assert.True(peer.IsControlElement());
 
-                var header = section.Panel!.GetVisualDescendants().OfType<TextBlock>().First(t => t.Text == section.Title);
+                // The header is shown in small caps (the editor look); the group keeps the title as written.
+                var header = section.Panel!.GetVisualDescendants().OfType<TextBlock>().First(t => t.Text == section.Title.ToUpperInvariant());
                 Assert.Equal(2, AutomationProperties.GetHeadingLevel(header));
             }
         }
