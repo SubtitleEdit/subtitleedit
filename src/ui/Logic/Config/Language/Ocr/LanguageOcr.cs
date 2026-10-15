@@ -175,6 +175,10 @@ public class LanguageOcr
     public string TrainingXLearnedYSkipped { get; set; }
     public string TrainingDoneXLearned { get; set; }
     public string SelectAtLeastOneFont { get; set; }
+    public string NOcrZoomIn { get; set; }
+    public string NOcrZoomOut { get; set; }
+    public string NOcrLineAlgorithm { get; set; }
+    public string NOcrLineAlgorithmHint { get; set; }
 
     public LanguageOcr()
     {
@@ -357,5 +361,9 @@ public class LanguageOcr
         TrainingXLearnedYSkipped = "Training \"{0}\" - {1:#,##0} characters learned, {2:#,##0} skipped";
         TrainingDoneXLearned = "Training done - {0:#,##0} characters learned";
         SelectAtLeastOneFont = "Please select at least one font";
+        NOcrZoomIn = "Zoom in";
+        NOcrZoomOut = "Zoom out";
+        NOcrLineAlgorithm = "Algorithm";
+        NOcrLineAlgorithmHint = "Algorithm used by Auto-draw to generate foreground/background lines";
     }
 }

@@ -1,9 +1,17 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Layout;
+using Avalonia.Media;
+using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.NOcr;
 
+/// <summary>
+/// The nOCR database actions in the editor look (see <see cref="EditorChrome"/>): what to do
+/// with the current database as icon actions in one section, Cancel in the button bar.
+/// </summary>
 public class NOcrSettingsWindow : Window
 {
     public NOcrSettingsWindow(NOcrSettingsViewModel vm)
@@ -14,39 +22,39 @@ public class NOcrSettingsWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        NOcrChrome.Apply(this);
         DataContext = vm;
 
-        var grid = new Grid
+        var labelTitle = new TextBlock
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Select action
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Buttons
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            Width = double.NaN,
-            Height = double.NaN,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch,
+            FontSize = 12.5,
+            TextWrapping = TextWrapping.Wrap,
+            MaxWidth = 460,
+        }.WithBindText(vm, nameof(vm.ActionText));
+
+        var buttonEdit = NOcrChrome.MakeAction(IconNames.Pencil, Se.Language.General.Edit, vm.EditCommand);
+        var buttonDelete = NOcrChrome.MakeAction(IconNames.Trash, Se.Language.General.Delete, vm.DeleteCommand);
+        var buttonRename = NOcrChrome.MakeAction(IconNames.FormTextBox, Se.Language.General.Rename, vm.RenameCommand);
+        var buttonNew = NOcrChrome.MakeAction(IconNames.Plus, Se.Language.General.New, vm.NewCommand);
+        var actions = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 4,
+            Children = { buttonEdit, buttonRename, buttonNew, buttonDelete },
         };
 
-        var labelTitle = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.ActionText)).HorizontalContentAlignmentCenter();
+        var content = new StackPanel
+        {
+            Spacing = 12,
+            Children = { labelTitle, actions },
+        };
 
-        var buttonEdit = UiUtil.MakeButton(Se.Language.General.Edit, vm.EditCommand);
-        var buttonDelete = UiUtil.MakeButton(Se.Language.General.Delete, vm.DeleteCommand);
-        var buttonRename = UiUtil.MakeButton(Se.Language.General.Rename, vm.RenameCommand);
-        var buttonNew = UiUtil.MakeButton(Se.Language.General.New, vm.NewCommand);
+        var section = EditorChrome.MakeEditorSection(Se.Language.Ocr.NOcrDatabase, content, first: true);
+        section.MinWidth = 380;
+
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonEdit, buttonDelete, buttonRename, buttonNew, buttonCancel);
-
-        grid.Add(labelTitle, 0);
-        grid.Add(buttonBar, 1);
-
-        Content = grid;
+        var root = NOcrChrome.MakeRoot(section, SyncTimingChrome.MakeButtonBar(null, buttonCancel));
+        Content = root;
 
         // Semi-hidden power-user features: right-click anywhere in the dialog to train a new
         // nOCR database from installed fonts (port of SE4's "Train nOCR"), or to optimize the
@@ -62,8 +70,8 @@ public class NOcrSettingsWindow : Window
             Header = Se.Language.Ocr.OptimizeNOcrDatabase,
             Command = vm.OptimizeCommand,
         });
-        grid.ContextFlyout = menuFlyout;
-        UiUtil.AttachMacContextFlyoutHandler(this, grid);
+        root.ContextFlyout = menuFlyout;
+        UiUtil.AttachMacContextFlyoutHandler(this, root);
 
         UiUtil.FocusOnFirstActivation(this, () =>
         {
