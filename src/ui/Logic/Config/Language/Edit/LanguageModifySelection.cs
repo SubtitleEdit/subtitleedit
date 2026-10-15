@@ -40,6 +40,8 @@ public class LanguageModifySelection
     public string HearingImpairedMusicSymbols { get; set; }
     public string HearingImpairedInterjections { get; set; }
     public string HearingImpairedSettingsHint { get; set; }
+    public string Selection { get; set; }
+    public string HearingImpairedOther { get; set; }
     public string SelectionNew { get; set; }
     public string SelectionAdd { get; set; }
     public string SelectionSubtract { get; set; }
@@ -82,6 +84,8 @@ public class LanguageModifySelection
         HearingImpairedMusicSymbols = "Only music symbols";
         HearingImpairedInterjections = "Interjections";
         HearingImpairedSettingsHint = "Details come from Tools > Remove text for hearing impaired";
+        Selection = "Selection";
+        HearingImpairedOther = "Other";
         SelectionNew = "New selection";
         SelectionAdd = "Add to selection";
         SelectionSubtract = "Subtract from selection";

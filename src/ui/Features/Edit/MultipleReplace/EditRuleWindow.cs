@@ -5,6 +5,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -24,6 +25,7 @@ public class EditRuleWindow : Window
         MinWidth = 450;
         MinHeight = 320;
         CanResize = true;
+        VideoSubDialogChrome.Apply(this);
         vm.Window = this;
         DataContext = vm;
 
@@ -33,32 +35,42 @@ public class EditRuleWindow : Window
         var labelReplaceWith = MakeTopLabel(Se.Language.General.ReplaceWith);
         var textBoxReplaceWith = MakeWrappingTextBox(vm, nameof(vm.ReplaceWith), Se.Language.General.ReplaceWith);
 
-        var labelDescription = UiUtil.MakeLabel(Se.Language.Edit.MultipleReplace.DescriptionOptional);
+        var labelDescription = EditorChrome.MakeDimLabel(Se.Language.Edit.MultipleReplace.DescriptionOptional, new Thickness(0));
         var textBoxDescription = MakeStretchingTextBox(vm, nameof(vm.Description), Se.Language.General.Description);
 
         var radioButtonRegularExpression = UiUtil.MakeRadioButton(Se.Language.General.RegularExpression, vm, nameof(vm.IsRegularExpression));
         var radioButtonCaseSensitive = UiUtil.MakeRadioButton(Se.Language.General.CaseSensitive, vm, nameof(vm.IsCaseSensitive));
         var radioButtonCaseInsensitive = UiUtil.MakeRadioButton(Se.Language.General.CaseInsensitive, vm, nameof(vm.IsCaseInsensitive));
-        var checkBoxWholeWord = UiUtil.MakeCheckBox(Se.Language.Edit.Find.WholeWord, vm, nameof(vm.IsWholeWord))
-            .WithBindIsEnabled(nameof(vm.IsWholeWordEnabled));
-        checkBoxWholeWord.Margin = new Thickness(0, 5, 0, 0);
-        var panelType = new StackPanel
+        var panelType = new WrapPanel
         {
-            Orientation = Orientation.Vertical,
-            Margin = new Thickness(0, 10, 0, 0),
+            Orientation = Orientation.Horizontal,
+            ItemSpacing = 18,
             Children =
             {
                 radioButtonRegularExpression,
                 radioButtonCaseSensitive,
                 radioButtonCaseInsensitive,
-                checkBoxWholeWord,
+            }
+        };
+
+        var switchWholeWord = VideoSubDialogChrome.MakeSwitch(nameof(vm.IsWholeWord), Se.Language.Edit.Find.WholeWord)
+            .WithBindIsEnabled(nameof(vm.IsWholeWordEnabled));
+        var panelOptions = new StackPanel
+        {
+            Spacing = 8,
+            Children =
+            {
+                panelType,
+                VideoSubDialogChrome.MakeSwitchRow(switchWholeWord, Se.Language.Edit.Find.WholeWord),
             }
         };
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var buttonPanel = VideoSubDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
+        // Label column and a star field column: nothing pins the width of the boxes (#13530).
         var grid = new Grid
         {
             RowDefinitions =
@@ -66,16 +78,14 @@ public class EditRuleWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
+            Margin = new Thickness(16, 14, 16, 14),
+            ColumnSpacing = 12,
             RowSpacing = 10,
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -90,11 +100,23 @@ public class EditRuleWindow : Window
         grid.Add(labelDescription, 2, 0);
         grid.Add(textBoxDescription, 2, 1);
 
-        grid.Add(panelType, 3, 1);
+        var sectionOptions = EditorChrome.MakeEditorSection(Se.Language.General.Type, panelOptions);
+        sectionOptions.Padding = new Thickness(16, 12, 16, 14);
 
-        grid.Add(buttonPanel, 4, 0, 1, 2);
+        var root = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+            },
+        };
+        root.Add(VideoSubDialogChrome.MakePanel(grid), 0, 0);
+        root.Add(new Border { Child = sectionOptions, Background = EditorChrome.PanelBrush }, 1, 0);
+        root.Add(buttonPanel, 2, 0);
 
-        Content = grid;
+        Content = root;
 
         RegexContextFlyout.Attach(textBoxFindWhat, vm, () => vm.IsRegularExpression);
         RegexContextFlyout.Attach(textBoxReplaceWith, vm, () => vm.IsRegularExpression, isReplaceBox: true);
@@ -109,9 +131,10 @@ public class EditRuleWindow : Window
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
     }
 
-    private static Label MakeTopLabel(string text)
+    private static TextBlock MakeTopLabel(string text)
     {
-        var label = UiUtil.MakeLabel(text);
+        // Lines up with the first text line of the wrapping box beside it.
+        var label = EditorChrome.MakeDimLabel(text, new Thickness(0, 6, 0, 0));
         label.VerticalAlignment = VerticalAlignment.Top;
         return label;
     }
@@ -129,6 +152,7 @@ public class EditRuleWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
             VerticalContentAlignment = VerticalAlignment.Top,
+            Classes = { "text" },
             DataContext = vm,
             [!TextBox.TextProperty] = new Binding(propertyTextPath) { Mode = BindingMode.TwoWay },
         };
@@ -145,6 +169,7 @@ public class EditRuleWindow : Window
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Center,
+            Classes = { "text" },
             DataContext = vm,
             [!TextBox.TextProperty] = new Binding(propertyTextPath) { Mode = BindingMode.TwoWay },
         };
