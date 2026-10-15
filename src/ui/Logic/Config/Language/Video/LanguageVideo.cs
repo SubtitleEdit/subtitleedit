@@ -99,6 +99,10 @@ public class LanguageVideo
     public string CutVideoTransitionRadial { get; set; }
     public string CutVideoTransitionPixelize { get; set; }
     public string CutVideoTransitionBlur { get; set; }
+    public string CutVideoSegments { get; set; }
+    public string CutVideoTransitions { get; set; }
+    public string CutVideoOutput { get; set; }
+    public string CutVideoCutType { get; set; }
     public string ImportCurrentSubtitle { get; set; }
     public string AddRemoveEmbeddedSubtitlesTitle { get; set; }
     public string AddRemoveEmbeddedSubtitlesMp4Title { get; set; }
@@ -268,6 +272,10 @@ public class LanguageVideo
         CutVideoTransitionRadial = "Radial";
         CutVideoTransitionPixelize = "Pixelize";
         CutVideoTransitionBlur = "Blur";
+        CutVideoSegments = "Segments";
+        CutVideoTransitions = "Transitions";
+        CutVideoOutput = "Output";
+        CutVideoCutType = "Cut type";
         ImportCurrentSubtitle = "Import current subtitle";
         AddRemoveEmbeddedSubtitlesTitle = "Add/remove embedded subtitles";
         AddRemoveEmbeddedSubtitlesMp4Title = "Add/remove embedded subtitles (MP4)";
