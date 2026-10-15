@@ -103,7 +103,7 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
             url = LlamaCppServerManager.ApiUrl;
         }
 
-        using var padded = PadToSquare(bitmap);
+        using var padded = AiOcrImagePadding.Pad(bitmap, LlamaCppServerManager.GetOcrPadding(_modelName));
         using var image = SKImage.FromBitmap(padded);
         using var data = image.Encode(SKEncodedImageFormat.Png, 90);
         var base64 = Convert.ToBase64String(data.ToArray());
@@ -201,21 +201,6 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
 
     private static string Escape(string s) =>
         s.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", "\\n").Replace("\r", "\\r");
-
-    private static SKBitmap PadToSquare(SKBitmap source)
-    {
-        var margin = (int)(Math.Max(source.Width, source.Height) * 0.2);
-        var side = Math.Max(source.Width, source.Height) + margin;
-        var info = new SKImageInfo(side, side, SKColorType.Rgba8888, SKAlphaType.Opaque);
-        var square = new SKBitmap(info);
-        using var canvas = new SKCanvas(square);
-        canvas.Clear(SKColors.Black);
-        var left = (side - source.Width) / 2f;
-        var top = (side - source.Height) / 2f;
-        canvas.DrawBitmap(source, new SKRect(left, top, left + source.Width, top + source.Height));
-        canvas.Flush();
-        return square;
-    }
 
     public void Dispose() => _httpClient.Dispose();
 }
