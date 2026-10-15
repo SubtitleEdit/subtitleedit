@@ -1,6 +1,5 @@
 using Avalonia.Controls;
 using Avalonia.Data;
-using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -10,15 +9,10 @@ public class DetectSpeakersWindow : Window
 {
     public DetectSpeakersWindow(DetectSpeakersViewModel vm)
     {
-        var panelOptions = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 15,
-        };
-        panelOptions.Children.Add(UiUtil.MakeCheckBox(
-            Se.Language.Video.TextToSpeech.DetectSpeakersSticky, vm, nameof(vm.StickySpeakers)));
-        panelOptions.Children.Add(UiUtil.MakeButton(Se.Language.General.SelectAll, vm.SelectAllCommand));
-        panelOptions.Children.Add(UiUtil.MakeButton(Se.Language.General.InvertSelection, vm.InverseSelectionCommand));
+        // Sticky speakers sits with the selection actions in the list header
+        var switchSticky = TtsMainEditorLook.SwitchRow(nameof(vm.StickySpeakers), Se.Language.Video.TextToSpeech.DetectSpeakersSticky);
+        switchSticky.DataContext = vm;
+        switchSticky.Margin = new Avalonia.Thickness(0, 0, 4, 0);
 
         var rowsView = SelectLinesWindowBuilder.MakeRowsView(vm,
             Se.Language.Video.TextToSpeech.DetectSpeakersColumnUse,
@@ -32,6 +26,6 @@ public class DetectSpeakersWindow : Window
             });
 
         SelectLinesWindowBuilder.Initialize(this, vm,
-            Se.Language.Video.TextToSpeech.DetectSpeakersTitle, width: 900, panelOptions, rowsView);
+            Se.Language.Video.TextToSpeech.DetectSpeakersTitle, width: 900, switchSticky, rowsView);
     }
 }

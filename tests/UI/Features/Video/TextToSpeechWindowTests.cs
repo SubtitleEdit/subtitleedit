@@ -67,12 +67,12 @@ public class TextToSpeechWindowTests : IDisposable
     }
 
     [AvaloniaFact]
-    public void GenerateButton_IsTheAccentPrimaryAction()
+    public void GenerateButton_IsTheOnlyPrimaryAction()
     {
         var window = BuildWindow();
 
-        var accentButtons = AllButtons(window).Where(b => b.Classes.Contains("accent")).ToList();
+        var primaryButtons = AllButtons(window).Where(b => b.Classes.Contains("primary")).ToList();
 
-        Assert.Single(accentButtons);
+        Assert.Single(primaryButtons);
     }
 }
