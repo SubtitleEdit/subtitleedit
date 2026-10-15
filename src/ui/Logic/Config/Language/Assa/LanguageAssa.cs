@@ -271,6 +271,15 @@ public class LanguageAssa
 
     public string StylesInFile { get; set; }
     public string StylesSaved { get; set; }
+    public string StylesSummary { get; set; }
+    public string StylesTransform { get; set; }
+    public string StylesEditing { get; set; }
+    public string StylesPreviewSampleText { get; set; }
+    public string StylesPreviewSampleTextHint { get; set; }
+    public string StylesScale { get; set; }
+    public string StylesPreviewDark { get; set; }
+    public string StylesPreviewChecker { get; set; }
+    public string StylesPreviewLight { get; set; }
     public string AllCategories { get; set; }
     public string NewCategory { get; set; }
     public string RenameCategory { get; set; }
@@ -737,6 +746,15 @@ public class LanguageAssa
 
         StylesInFile = "Styles in file";
         StylesSaved = "Styles saved";
+        StylesSummary = "{0} styles in file · {1} saved";
+        StylesTransform = "Transform";
+        StylesEditing = "Editing";
+        StylesPreviewSampleText = "Sample text";
+        StylesPreviewSampleTextHint = "Sample text - \\N for a new line";
+        StylesScale = "Scale %";
+        StylesPreviewDark = "Dark";
+        StylesPreviewChecker = "Checker";
+        StylesPreviewLight = "Light";
         AllCategories = "[All]";
         NewCategory = "New category...";
         RenameCategory = "Rename category...";
