@@ -95,8 +95,6 @@ public class LlamaCppEngineSettingsWindow : Window
         };
 
         Content = Chrome.Root(sections, Chrome.ButtonBar(leftPanel, close));
-
-        UiUtil.FocusOnFirstActivation(this, close);
     }
 
     private static TextBlock MakeValue(string bindingPath) => new()
