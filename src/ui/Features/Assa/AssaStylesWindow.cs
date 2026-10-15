@@ -750,9 +750,36 @@ public class AssaStylesWindow : Window
             backgrounds.Children.Add(button);
         }
 
+        // The preview's text - saved in Settings.json
+        var sampleText = new TextBox
+        {
+            FontSize = 12.5,
+            Background = AssaDrawWindow.FieldBrush,
+            BorderBrush = AssaDrawWindow.FieldBorderBrush,
+            CornerRadius = new CornerRadius(6),
+            PlaceholderText = Se.Language.Assa.StylesPreviewSampleTextHint,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!TextBox.TextProperty] = new Binding(nameof(vm.PreviewText)) { Mode = BindingMode.TwoWay },
+        };
+        AutomationProperties.SetName(sampleText, Se.Language.Assa.StylesPreviewSampleText);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(sampleText, Se.Language.Assa.StylesPreviewSampleTextHint);
+        }
+
+        var bottom = new Grid
+        {
+            ColumnSpacing = 12,
+            Margin = new Thickness(0, 10, 0, 0),
+            ColumnDefinitions = { new ColumnDefinition(new GridLength(1, GridUnitType.Star)), new ColumnDefinition(GridLength.Auto) },
+        };
+        backgrounds.Margin = new Thickness(0);
+        bottom.Add(sampleText, 0, 0);
+        bottom.Add(backgrounds, 0, 1);
+
         var grid = new Grid { Margin = new Thickness(16, 12, 16, 10), RowDefinitions = { new RowDefinition(new GridLength(1, GridUnitType.Star)), new RowDefinition(GridLength.Auto) } };
         grid.Add(image, 0, 0);
-        grid.Add(backgrounds, 1, 0);
+        grid.Add(bottom, 1, 0);
         return grid;
     }
 

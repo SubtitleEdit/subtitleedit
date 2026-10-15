@@ -62,6 +62,15 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     /// </summary>
     [ObservableProperty] private int _previewBackgroundIndex = Se.Settings.Assa.StylesPreviewBackground;
 
+    /// <summary>
+    /// The text the preview shows (saved in Settings.json); \N is a line break like in ASSA.
+    /// </summary>
+    [ObservableProperty] private string _previewText = Se.Settings.Assa.StylesPreviewText;
+
+    private const string DefaultPreviewText = "This is a test";
+
+    private string EffectivePreviewText => string.IsNullOrWhiteSpace(PreviewText) ? DefaultPreviewText : PreviewText;
+
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
     public string Header { get; set; }
@@ -1429,6 +1438,14 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         SummaryText = string.Format(Se.Language.Assa.StylesSummary, FileStyles.Count, StorageStylesView.Count);
     }
 
+    partial void OnPreviewTextChanged(string value)
+    {
+        Se.Settings.Assa.StylesPreviewText = value ?? string.Empty;
+
+        // The render is keyed on the style - forget it so the next timer tick shows the new text
+        _lastPreviewSignature = string.Empty;
+    }
+
     partial void OnPreviewBackgroundIndexChanged(int value)
     {
         Se.Settings.Assa.StylesPreviewBackground = value;
@@ -1485,7 +1502,8 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         // The preview timer polls every 500 ms; only re-render (spawn ffmpeg) when the style
         // actually changed. Renders via libass so the preview matches playback/burn-in exactly.
         var ssaStyle = style.ToSsaStyle();
-        var signature = ssaStyle.ToRawAss();
+        var previewText = EffectivePreviewText;
+        var signature = ssaStyle.ToRawAss() + "\n" + previewText;
         if (signature == _lastPreviewSignature)
         {
             return;
@@ -1503,7 +1521,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
             };
             previewSubtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(
                 previewSubtitle.Header, new List<SsaStyle> { ssaStyle });
-            previewSubtitle.Paragraphs.Add(new Paragraph("This is a test", 0, 2000) { Extra = ssaStyle.Name });
+            previewSubtitle.Paragraphs.Add(new Paragraph(previewText, 0, 2000) { Extra = ssaStyle.Name });
 
             SKBitmap? bitmap = null;
             try
@@ -1545,7 +1563,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
 
     private void UpdatePreviewSkia(StyleDisplay style)
     {
-        var text = "This is a test";
+        var text = EffectivePreviewText.Replace("\\N", "\n").Replace("\\n", "\n");
 
         // Scale the rendered font size to the preview canvas height (~360px) the same way
         // libass scales fonts against PlayResY. Default to 288 (libass default) when missing.

@@ -40,6 +40,7 @@ public class SeAssa
     public int BackgroundBoxesOutlineWidth { get; set; }
     public bool SetPositionShowSafeArea { get; set; }
     public int StylesPreviewBackground { get; set; }
+    public string StylesPreviewText { get; set; }
     public bool SetPositionShowCenterLines { get; set; }
     public bool SetPositionSnapToGuides { get; set; }
     public int BackgroundBoxesShadowDistance { get; set; }
@@ -97,6 +98,7 @@ public class SeAssa
         BackgroundBoxesOutlineColor = Color.FromArgb(50, 200,200,200).FromColorToHex();
         BackgroundBoxesOutlineWidth = 2;
         SetPositionShowSafeArea = true;
+        StylesPreviewText = "This is a test";
         SetPositionShowCenterLines = true;
         SetPositionSnapToGuides = true;
         BackgroundBoxesShadowDistance = 1;
