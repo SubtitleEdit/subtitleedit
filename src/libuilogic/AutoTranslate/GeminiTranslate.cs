@@ -35,11 +35,12 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             "gemini-flash-latest",
             "gemini-flash-lite-latest",
 
-            // Gemini 3.x - Latest Generation
+            // Gemini 4
+            "gemini-4-argon",
+
+            // Gemini 3.x
             "gemini-3.8-flash",
-            "gemini-3.7-flash",
             "gemini-3.6-flash",
-            "gemini-3.5-flash",
             "gemini-3.5-flash-lite",
             "gemini-3.1-pro-preview",
             "gemini-3.1-flash-lite",
