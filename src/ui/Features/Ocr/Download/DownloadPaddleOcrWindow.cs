@@ -1,10 +1,8 @@
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Data;
-using Avalonia.Media;
-using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Chrome = Nikse.SubtitleEdit.Features.Ocr.OcrDialogChrome;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.Download;
 
@@ -18,44 +16,28 @@ public class DownloadPaddleOcrWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        Chrome.Apply(this);
 
         DataContext = vm;
 
-        var titleText = new TextBlock
-        {
-            FontSize = UiUtil.ScaledFontSize(20),
-            FontWeight = FontWeight.Bold,
-        }.WithBindText(vm, nameof(vm.StatusText));
+        var titleText = Chrome.DownloadTitle().WithBindText(vm, nameof(vm.StatusText));
 
-        var progressBar = UiUtil.MakeProgressBar();
-        progressBar.MinWidth = 400;
-        progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
+        var progressBar = Chrome.DownloadProgressBar(nameof(vm.ProgressValue));
         progressBar.Bind(ProgressBar.OpacityProperty, new Binding(nameof(vm.ProgressOpacity)));
 
-        var statusText = new TextBlock();
-        statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
+        var statusText = Chrome.DownloadStatus(nameof(vm.ProgressText));
+        var errorText = Chrome.DownloadError(nameof(vm.Error));
 
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CommandCancelCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonCancel);
+        var buttonBar = Chrome.ButtonBar(null, buttonCancel);
 
-        Content = new StackPanel
-        {
-            Spacing = 8,
-            Margin = UiUtil.MakeWindowMargin(),
-            Children =
-            {
-                titleText,
-                progressBar,
-                statusText,
-                buttonBar,
-            }
-        };
+        Content = Chrome.Root(Chrome.DownloadBody(titleText, progressBar, statusText, errorText), buttonBar);
 
         Loaded += delegate
         {
             buttonCancel.Focus(); // hack to make OnKeyDown work
             vm.StartDownload();
-        }; 
+        };
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }
