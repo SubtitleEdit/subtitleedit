@@ -25,29 +25,84 @@ namespace Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 
 /// <summary>
 /// ASSA draw - laid out like a vector editor: options bar on top, tool strip on the left, canvas,
-/// shapes/properties panel on the right. Always dark, like most drawing programs, so the artwork
-/// stands out; the colors below are the editor palette.
+/// shapes/properties panel on the right. The chrome follows the app theme (the editor palette
+/// below, dark or light); the canvas workspace stays dark so the artwork stands out.
 /// </summary>
 public class AssaDrawWindow : Window
 {
-    internal static readonly IBrush WindowBrush = new ImmutableSolidColorBrush(Color.FromRgb(30, 31, 36));
-    internal static readonly IBrush PanelBrush = new ImmutableSolidColorBrush(Color.FromRgb(36, 38, 44));
-    internal static readonly IBrush StatusBrush = new ImmutableSolidColorBrush(Color.FromRgb(27, 28, 33));
-    internal static readonly IBrush ButtonBarBrush = new ImmutableSolidColorBrush(Color.FromRgb(32, 34, 39));
-    internal static readonly IBrush LineBrush = new ImmutableSolidColorBrush(Color.FromRgb(47, 50, 58));
-    internal static readonly IBrush SeparatorBrush = new ImmutableSolidColorBrush(Color.FromRgb(55, 58, 67));
-    internal static readonly IBrush DimTextBrush = new ImmutableSolidColorBrush(Color.FromRgb(140, 146, 160));
-    internal static readonly IBrush FaintTextBrush = new ImmutableSolidColorBrush(Color.FromRgb(111, 117, 131));
-    internal static readonly IBrush IconBrush = new ImmutableSolidColorBrush(Color.FromRgb(174, 180, 194));
-    internal static readonly IBrush HoverBrush = new ImmutableSolidColorBrush(Color.FromRgb(51, 54, 63));
-    internal static readonly IBrush PressedBrush = new ImmutableSolidColorBrush(Color.FromRgb(59, 62, 71));
-    internal static readonly IBrush AccentBrush = new ImmutableSolidColorBrush(Color.FromRgb(76, 110, 245));
-    internal static readonly IBrush AccentHoverBrush = new ImmutableSolidColorBrush(Color.FromRgb(92, 124, 250));
-    internal static readonly IBrush AccentSoftBrush = new ImmutableSolidColorBrush(Color.FromArgb(70, 76, 110, 245));
-    internal static readonly IBrush FieldBrush = new ImmutableSolidColorBrush(Color.FromRgb(27, 28, 33));
-    internal static readonly IBrush FieldBorderBrush = new ImmutableSolidColorBrush(Color.FromRgb(54, 57, 68));
-    internal static readonly IBrush MenuBrush = new ImmutableSolidColorBrush(Color.FromRgb(42, 44, 51));
-    internal static readonly IBrush MenuBorderBrush = new ImmutableSolidColorBrush(Color.FromRgb(66, 69, 79));
+    // The editor palette, in a dark and a light version: these windows follow the app theme
+    // (picked when a window is built). Accent colors are the same in both.
+    internal static bool IsLightTheme => Application.Current?.ActualThemeVariant == ThemeVariant.Light;
+
+    /// <summary>
+    /// Text and icons on hover - white on the dark palette, near black on the light one.
+    /// </summary>
+    internal static IBrush StrongTextBrush => IsLightTheme ? Brushes.Black : Brushes.White;
+
+    /// <summary>
+    /// Shape thumbnails (shape library, box and bar styles): light gray on dark, dark gray on light.
+    /// </summary>
+    internal static IBrush ThumbnailBrush => IsLightTheme ? LightThumbnail : DarkThumbnail;
+    internal static IBrush ThumbnailMutedBrush => IsLightTheme ? LightThumbnailMuted : DarkThumbnailMuted;
+    private static readonly IBrush DarkThumbnail = new ImmutableSolidColorBrush(Color.FromRgb(214, 218, 226));
+    private static readonly IBrush LightThumbnail = new ImmutableSolidColorBrush(Color.FromRgb(72, 78, 92));
+    private static readonly IBrush DarkThumbnailMuted = new ImmutableSolidColorBrush(Color.FromRgb(96, 102, 116));
+    private static readonly IBrush LightThumbnailMuted = new ImmutableSolidColorBrush(Color.FromRgb(188, 193, 204));
+
+    private static readonly IBrush DarkWindowBrush = new ImmutableSolidColorBrush(Color.FromRgb(30, 31, 36));
+    private static readonly IBrush LightWindowBrush = new ImmutableSolidColorBrush(Color.FromRgb(243, 244, 247));
+    internal static IBrush WindowBrush => IsLightTheme ? LightWindowBrush : DarkWindowBrush;
+    private static readonly IBrush DarkPanelBrush = new ImmutableSolidColorBrush(Color.FromRgb(36, 38, 44));
+    private static readonly IBrush LightPanelBrush = new ImmutableSolidColorBrush(Color.FromRgb(250, 250, 252));
+    internal static IBrush PanelBrush => IsLightTheme ? LightPanelBrush : DarkPanelBrush;
+    private static readonly IBrush DarkStatusBrush = new ImmutableSolidColorBrush(Color.FromRgb(27, 28, 33));
+    private static readonly IBrush LightStatusBrush = new ImmutableSolidColorBrush(Color.FromRgb(236, 238, 242));
+    internal static IBrush StatusBrush => IsLightTheme ? LightStatusBrush : DarkStatusBrush;
+    private static readonly IBrush DarkButtonBarBrush = new ImmutableSolidColorBrush(Color.FromRgb(32, 34, 39));
+    private static readonly IBrush LightButtonBarBrush = new ImmutableSolidColorBrush(Color.FromRgb(238, 240, 244));
+    internal static IBrush ButtonBarBrush => IsLightTheme ? LightButtonBarBrush : DarkButtonBarBrush;
+    private static readonly IBrush DarkLineBrush = new ImmutableSolidColorBrush(Color.FromRgb(47, 50, 58));
+    private static readonly IBrush LightLineBrush = new ImmutableSolidColorBrush(Color.FromRgb(222, 225, 232));
+    internal static IBrush LineBrush => IsLightTheme ? LightLineBrush : DarkLineBrush;
+    private static readonly IBrush DarkSeparatorBrush = new ImmutableSolidColorBrush(Color.FromRgb(55, 58, 67));
+    private static readonly IBrush LightSeparatorBrush = new ImmutableSolidColorBrush(Color.FromRgb(208, 212, 220));
+    internal static IBrush SeparatorBrush => IsLightTheme ? LightSeparatorBrush : DarkSeparatorBrush;
+    private static readonly IBrush DarkDimTextBrush = new ImmutableSolidColorBrush(Color.FromRgb(140, 146, 160));
+    private static readonly IBrush LightDimTextBrush = new ImmutableSolidColorBrush(Color.FromRgb(92, 98, 112));
+    internal static IBrush DimTextBrush => IsLightTheme ? LightDimTextBrush : DarkDimTextBrush;
+    private static readonly IBrush DarkFaintTextBrush = new ImmutableSolidColorBrush(Color.FromRgb(111, 117, 131));
+    private static readonly IBrush LightFaintTextBrush = new ImmutableSolidColorBrush(Color.FromRgb(122, 128, 142));
+    internal static IBrush FaintTextBrush => IsLightTheme ? LightFaintTextBrush : DarkFaintTextBrush;
+    private static readonly IBrush DarkIconBrush = new ImmutableSolidColorBrush(Color.FromRgb(174, 180, 194));
+    private static readonly IBrush LightIconBrush = new ImmutableSolidColorBrush(Color.FromRgb(70, 76, 90));
+    internal static IBrush IconBrush => IsLightTheme ? LightIconBrush : DarkIconBrush;
+    private static readonly IBrush DarkHoverBrush = new ImmutableSolidColorBrush(Color.FromRgb(51, 54, 63));
+    private static readonly IBrush LightHoverBrush = new ImmutableSolidColorBrush(Color.FromRgb(226, 229, 236));
+    internal static IBrush HoverBrush => IsLightTheme ? LightHoverBrush : DarkHoverBrush;
+    private static readonly IBrush DarkPressedBrush = new ImmutableSolidColorBrush(Color.FromRgb(59, 62, 71));
+    private static readonly IBrush LightPressedBrush = new ImmutableSolidColorBrush(Color.FromRgb(214, 218, 227));
+    internal static IBrush PressedBrush => IsLightTheme ? LightPressedBrush : DarkPressedBrush;
+    private static readonly IBrush DarkAccentBrush = new ImmutableSolidColorBrush(Color.FromRgb(76, 110, 245));
+    private static readonly IBrush LightAccentBrush = new ImmutableSolidColorBrush(Color.FromRgb(76, 110, 245));
+    internal static IBrush AccentBrush => IsLightTheme ? LightAccentBrush : DarkAccentBrush;
+    private static readonly IBrush DarkAccentHoverBrush = new ImmutableSolidColorBrush(Color.FromRgb(92, 124, 250));
+    private static readonly IBrush LightAccentHoverBrush = new ImmutableSolidColorBrush(Color.FromRgb(92, 124, 250));
+    internal static IBrush AccentHoverBrush => IsLightTheme ? LightAccentHoverBrush : DarkAccentHoverBrush;
+    private static readonly IBrush DarkAccentSoftBrush = new ImmutableSolidColorBrush(Color.FromArgb(70, 76, 110, 245));
+    private static readonly IBrush LightAccentSoftBrush = new ImmutableSolidColorBrush(Color.FromArgb(46, 76, 110, 245));
+    internal static IBrush AccentSoftBrush => IsLightTheme ? LightAccentSoftBrush : DarkAccentSoftBrush;
+    private static readonly IBrush DarkFieldBrush = new ImmutableSolidColorBrush(Color.FromRgb(27, 28, 33));
+    private static readonly IBrush LightFieldBrush = new ImmutableSolidColorBrush(Color.FromRgb(255, 255, 255));
+    internal static IBrush FieldBrush => IsLightTheme ? LightFieldBrush : DarkFieldBrush;
+    private static readonly IBrush DarkFieldBorderBrush = new ImmutableSolidColorBrush(Color.FromRgb(54, 57, 68));
+    private static readonly IBrush LightFieldBorderBrush = new ImmutableSolidColorBrush(Color.FromRgb(204, 209, 219));
+    internal static IBrush FieldBorderBrush => IsLightTheme ? LightFieldBorderBrush : DarkFieldBorderBrush;
+    private static readonly IBrush DarkMenuBrush = new ImmutableSolidColorBrush(Color.FromRgb(42, 44, 51));
+    private static readonly IBrush LightMenuBrush = new ImmutableSolidColorBrush(Color.FromRgb(255, 255, 255));
+    internal static IBrush MenuBrush => IsLightTheme ? LightMenuBrush : DarkMenuBrush;
+    private static readonly IBrush DarkMenuBorderBrush = new ImmutableSolidColorBrush(Color.FromRgb(66, 69, 79));
+    private static readonly IBrush LightMenuBorderBrush = new ImmutableSolidColorBrush(Color.FromRgb(208, 212, 220));
+    internal static IBrush MenuBorderBrush => IsLightTheme ? LightMenuBorderBrush : DarkMenuBorderBrush;
 
     private readonly AssaDrawViewModel _vm;
     private readonly AssaDrawCanvas _canvas;
@@ -63,7 +118,6 @@ public class AssaDrawWindow : Window
         MinWidth = 900;
         MinHeight = 600;
         CanResize = true;
-        RequestedThemeVariant = ThemeVariant.Dark;
         Background = WindowBrush;
         vm.Window = this;
         DataContext = vm;
@@ -167,7 +221,7 @@ public class AssaDrawWindow : Window
             },
         });
         styles.Add(ToolPresenter(x => x.OfType<Button>().Class("tool").Class(":pointerover"),
-            (ContentPresenter.BackgroundProperty, HoverBrush), (ContentPresenter.ForegroundProperty, Brushes.White)));
+            (ContentPresenter.BackgroundProperty, HoverBrush), (ContentPresenter.ForegroundProperty, StrongTextBrush)));
         styles.Add(ToolPresenter(x => x.OfType<Button>().Class("tool").Class(":pressed"),
             (ContentPresenter.BackgroundProperty, PressedBrush)));
         styles.Add(ToolPresenter(x => x.OfType<Button>().Class("tool").Class(":disabled"),
@@ -766,7 +820,7 @@ public class AssaDrawWindow : Window
             Width = 24,
             Height = 24,
             CornerRadius = new CornerRadius(5),
-            BorderBrush = Brushes.White,
+            BorderBrush = StrongTextBrush,
             BorderThickness = new Thickness(2),
             HorizontalAlignment = HorizontalAlignment.Center,
             [!Border.BackgroundProperty] = new Binding(nameof(vm.LayerColor)) { Converter = new FuncValueConverter<Color, IBrush>(c => new SolidColorBrush(c)) },
@@ -839,7 +893,7 @@ public class AssaDrawWindow : Window
                     thumbnail = new Avalonia.Controls.Shapes.Path
                     {
                         Data = item.ToGeometry(),
-                        Fill = new SolidColorBrush(Color.FromRgb(214, 218, 226)),
+                        Fill = ThumbnailBrush,
                         Stretch = Stretch.Uniform,
                         Margin = new Thickness(9),
                     };

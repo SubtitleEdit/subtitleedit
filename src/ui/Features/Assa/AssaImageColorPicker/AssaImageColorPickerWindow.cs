@@ -28,7 +28,6 @@ public class AssaImageColorPickerWindow : Window
         MinHeight = 500;
         Width = 1050;
         Height = 780;
-        RequestedThemeVariant = ThemeVariant.Dark;
         Background = AssaDrawWindow.WindowBrush;
         AssaDrawWindow.AddEditorStyles(Styles);
 
@@ -114,7 +113,7 @@ public class AssaImageColorPickerWindow : Window
     {
         FontFamily = new FontFamily("Menlo, Consolas, Cascadia Mono, DejaVu Sans Mono, monospace"),
         FontSize = 12.5,
-        Foreground = foreground ?? Brushes.White,
+        Foreground = foreground ?? AssaDrawWindow.StrongTextBrush,
         [!TextBlock.TextProperty] = new Binding(property),
     };
 
@@ -186,6 +185,7 @@ public class AssaImageColorPickerWindow : Window
         var history = new ItemsControl
         {
             ItemsSource = vm.History,
+            HorizontalAlignment = HorizontalAlignment.Left,
             ItemsPanel = new FuncTemplate<Panel?>(() => new WrapPanel { MaxWidth = 230 }),
             ItemTemplate = new FuncDataTemplate<PickedColorItem>((item, _) =>
             {

@@ -34,7 +34,6 @@ public class AssaApplyCustomOverrideTagsWindow : Window
         Height = 780;
         MinWidth = 950;
         MinHeight = 600;
-        RequestedThemeVariant = ThemeVariant.Dark;
         Background = AssaDrawWindow.WindowBrush;
         AssaDrawWindow.AddEditorStyles(Styles);
         vm.Window = this;
