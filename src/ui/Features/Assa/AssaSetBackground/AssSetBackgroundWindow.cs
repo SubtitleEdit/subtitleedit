@@ -17,8 +17,8 @@ using Nikse.SubtitleEdit.Logic.Config;
 namespace Nikse.SubtitleEdit.Features.Assa.AssaSetBackground;
 
 /// <summary>
-/// Background box generator, laid out like ASSA draw: always dark, the libass preview in the
-/// middle and a properties panel on the right with the box styles as a gallery.
+/// Background box generator, styled like ASSA draw: always dark, a properties panel on the
+/// left with the box styles as a gallery, the libass preview on the right.
 /// </summary>
 public class AssSetBackgroundWindow : Window
 {
@@ -61,12 +61,12 @@ public class AssSetBackgroundWindow : Window
         {
             ColumnDefinitions =
             {
-                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
                 new ColumnDefinition(new GridLength(320)),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
             },
         };
-        content.Add(videoPanel, 0, 0);
-        content.Add(sidePanel, 0, 1);
+        content.Add(sidePanel, 0, 0);
+        content.Add(videoPanel, 0, 1);
 
         var mainGrid = new Grid
         {
@@ -100,7 +100,7 @@ public class AssSetBackgroundWindow : Window
             Child = new ScrollViewer { Content = sections, HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled },
             Background = AssaDrawWindow.PanelBrush,
             BorderBrush = AssaDrawWindow.LineBrush,
-            BorderThickness = new Thickness(1, 0, 0, 0),
+            BorderThickness = new Thickness(0, 0, 1, 0),
         };
     }
 
