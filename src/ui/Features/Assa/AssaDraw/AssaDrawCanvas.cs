@@ -52,11 +52,29 @@ public class AssaDrawCanvas : Control
     ];
     private static readonly Cursor MoveCursor = new(StandardCursorType.SizeAll);
 
-    private static readonly ImmutableSolidColorBrush WorkspaceBrush = new(Color.FromRgb(22, 23, 27));
-    private static readonly ImmutableSolidColorBrush CheckerBrush = new(Color.FromArgb(10, 255, 255, 255));
+    // Workspace colors follow the app theme; the light frame is a mid gray so white shapes (the ASSA default) still show
+    private static readonly ImmutableSolidColorBrush DarkWorkspaceBrush = new(Color.FromRgb(22, 23, 27));
+    private static readonly ImmutableSolidColorBrush LightWorkspaceBrush = new(Color.FromRgb(226, 228, 233));
+    private static readonly ImmutableSolidColorBrush DarkCheckerBrush = new(Color.FromArgb(10, 255, 255, 255));
+    private static readonly ImmutableSolidColorBrush LightCheckerBrush = new(Color.FromArgb(14, 0, 0, 0));
+    private static readonly Color LightCanvasColor = Color.FromRgb(196, 200, 208);
+    private static readonly Color LightGridColor = Color.FromArgb(40, 0, 0, 0);
+    private static readonly Color LightShapeLineColor = Color.FromRgb(70, 76, 90);
+    private static readonly Color DarkGuideColor = Color.FromArgb(150, 160, 170, 190);
+    private static readonly Color LightGuideColor = Color.FromArgb(170, 80, 88, 106);
+    private static readonly Color DarkTextFrameColor = Color.FromArgb(150, 200, 200, 200);
+    private static readonly Color LightTextFrameColor = Color.FromArgb(170, 70, 76, 90);
     private static readonly Color AccentColor = Color.FromRgb(76, 110, 245);
     private static readonly Color HandleFillColor = Colors.White;
-    private static readonly Color GuideColor = Color.FromArgb(150, 160, 170, 190);
+
+    private static bool IsLight => AssaDrawWindow.IsLightTheme;
+    private static IBrush WorkspaceBrush => IsLight ? LightWorkspaceBrush : DarkWorkspaceBrush;
+    private static IBrush CheckerBrush => IsLight ? LightCheckerBrush : DarkCheckerBrush;
+    private static Color CanvasColor => IsLight ? LightCanvasColor : DrawSettings.BackgroundColor;
+    private static Color GridColor => IsLight ? LightGridColor : DrawSettings.GridColor;
+    private static Color ShapeLineColor => IsLight ? LightShapeLineColor : ShapeLineColor;
+    private static Color GuideColor => IsLight ? LightGuideColor : DarkGuideColor;
+    private static Color TextFrameColor => IsLight ? LightTextFrameColor : DarkTextFrameColor;
 
     private readonly Dictionary<Color, IBrush> _brushCache = new();
     private readonly Dictionary<(Color Color, double Thickness, PenLineCap LineCap, PenLineJoin LineJoin, bool Dashed), IPen> _penCache = new();
@@ -578,14 +596,14 @@ public class AssaDrawCanvas : Control
 
     private void DrawCanvasArea(DrawingContext context)
     {
-        var brush = GetBrush(DrawSettings.BackgroundColor);
+        var brush = GetBrush(CanvasColor);
         var rect = new Rect(_panX, _panY, CanvasWidth * _zoomFactor, CanvasHeight * _zoomFactor);
         context.FillRectangle(brush, rect);
     }
 
     private void DrawGrid(DrawingContext context)
     {
-        var pen = GetPen(DrawSettings.GridColor, 1);
+        var pen = GetPen(GridColor, 1);
         var gridSize = DrawSettings.GridSize * _zoomFactor;
         while (gridSize < 8)
         {
@@ -624,7 +642,7 @@ public class AssaDrawCanvas : Control
         if (shape.IsTextBox)
         {
             // Nothing is drawn for a text box - just a dashed frame to grab it by
-            var framePen = GetPen(isActive || isSelected ? AccentColor : Color.FromArgb(150, 200, 200, 200), isActive || isSelected ? 1.5 : 1, dashed: true);
+            var framePen = GetPen(isActive || isSelected ? AccentColor : TextFrameColor, isActive || isSelected ? 1.5 : 1, dashed: true);
             context.DrawGeometry(null, framePen, BuildGeometry(shape, true));
             return;
         }
@@ -654,7 +672,7 @@ public class AssaDrawCanvas : Control
         }
         else
         {
-            color = isActive || isSelected ? AccentColor : DrawSettings.ShapeLineColor;
+            color = isActive || isSelected ? AccentColor : ShapeLineColor;
         }
 
         var pen = GetPen(color, isActive || isSelected ? 2 : 1.5, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round, dashed: shape.IsEraser);
