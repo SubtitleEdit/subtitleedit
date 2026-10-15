@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 /// <summary>
 /// ASSA draw - laid out like a vector editor: options bar on top, tool strip on the left, canvas,
 /// shapes/properties panel on the right. The chrome follows the app theme (the editor palette
-/// below, dark or light); the canvas workspace stays dark so the artwork stands out.
+/// below, dark or light), and so does the canvas workspace.
 /// </summary>
 public class AssaDrawWindow : Window
 {
@@ -1186,6 +1186,8 @@ public class AssaDrawWindow : Window
                     Width = 13,
                     Height = 13,
                     CornerRadius = new CornerRadius(4),
+                    BorderThickness = new Thickness(1),
+                    BorderBrush = SeparatorBrush,
                     VerticalAlignment = VerticalAlignment.Center,
                     [!Border.BackgroundProperty] = new Binding(nameof(ShapeTreeItem.Swatch)),
                     [!Border.IsVisibleProperty] = new Binding(nameof(ShapeTreeItem.HasSwatch)),
