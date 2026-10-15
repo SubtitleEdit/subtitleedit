@@ -1,5 +1,4 @@
 using Avalonia.Controls;
-using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -9,60 +8,24 @@ public static class ViewRunPlugin
 {
     public static Control Make(BatchConvertViewModel vm)
     {
-        var labelHeader = new Label
-        {
-            Content = Se.Language.Plugins.RunPlugin,
-            FontWeight = FontWeight.Bold,
-            Margin = new Avalonia.Thickness(0, 0, 0, 10),
-        };
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = new Avalonia.Thickness(10),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-        };
-
-        grid.Add(labelHeader, 0, 0, 1, 3);
-
         if (!vm.HasRunPlugins)
         {
-            grid.Add(new TextBlock
-            {
-                Text = Se.Language.Plugins.NoBatchPluginsInstalled,
-                TextWrapping = TextWrapping.Wrap,
-            }, 1, 0, 1, 3);
-            return grid;
+            return FunctionViewChrome.MakePanel(vm, Se.Language.Plugins.RunPlugin,
+                FunctionViewChrome.MakeHint(Se.Language.Plugins.NoBatchPluginsInstalled));
         }
 
-        var labelPlugin = UiUtil.MakeLabel(Se.Language.Plugins.Plugin);
-        var comboPlugin = UiUtil.MakeComboBox(vm.RunPluginNames, vm, nameof(vm.SelectedRunPluginName), null)
-            .WithMinWidth(220);
-        var buttonConfigure = UiUtil.MakeButton(Se.Language.Plugins.ConfigurePlugin, vm.ConfigureRunPluginCommand);
-        var textInfo = new TextBlock
+        var comboPlugin = FunctionViewChrome.Compact(UiUtil.MakeComboBox(vm.RunPluginNames, vm, nameof(vm.SelectedRunPluginName), null), Se.Language.Plugins.Plugin, 220);
+        var buttonConfigure = FunctionViewChrome.MakeButton("fa-solid fa-sliders", Se.Language.Plugins.ConfigurePlugin, vm.ConfigureRunPluginCommand);
+
+        var panelPlugin = new StackPanel
         {
-            Text = Se.Language.Plugins.BatchPluginInfo,
-            TextWrapping = TextWrapping.Wrap,
-            Opacity = 0.7,
+            Orientation = Avalonia.Layout.Orientation.Horizontal,
+            Spacing = 8,
+            Children = { comboPlugin, buttonConfigure },
         };
 
-        grid.Add(labelPlugin, 1, 0);
-        grid.Add(comboPlugin, 1, 1);
-        grid.Add(buttonConfigure, 1, 2);
-        grid.Add(textInfo, 2, 0, 1, 3);
-
-        return grid;
+        return FunctionViewChrome.MakePanel(vm, Se.Language.Plugins.RunPlugin,
+            FunctionViewChrome.MakeRow(Se.Language.Plugins.Plugin, panelPlugin),
+            FunctionViewChrome.MakeHint(Se.Language.Plugins.BatchPluginInfo));
     }
 }
