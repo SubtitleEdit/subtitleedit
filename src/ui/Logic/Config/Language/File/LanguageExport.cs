@@ -26,6 +26,8 @@ public class LanguageExport
     public string ExportDvbTeletextSubtitleType { get; set; }
     public string ExportDvbTeletextSubtitleTypeNormal { get; set; }
     public string ExportDvbTeletextSubtitleTypeHearingImpaired { get; set; }
+    public string ExportPacCodePage { get; set; }
+    public string ExportPacSecondaryCodePage { get; set; }
     public string CustomTextFormatsDotDotDot { get; set; }
     public string PlainTextDotDotDot { get; set; }
     public string CustomTextFormats { get; set; }
@@ -114,6 +116,8 @@ public class LanguageExport
         ExportDvbTeletextSubtitleType = "Subtitle type";
         ExportDvbTeletextSubtitleTypeNormal = "Normal";
         ExportDvbTeletextSubtitleTypeHearingImpaired = "Hearing impaired";
+        ExportPacCodePage = "Choose PAC code page";
+        ExportPacSecondaryCodePage = "Secondary code page";
         CustomTextFormatsDotDotDot = "_Custom text formats...";
         PlainTextDotDotDot = "_Plain text...";
         CustomTextFormats = "Custom text formats";
