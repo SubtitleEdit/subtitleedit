@@ -15,6 +15,10 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameText;
 
+/// <summary>
+/// Merge lines with same text, in the editor look (see <see cref="EditorChrome"/>): the options on top, the
+/// lines to merge and a preview of the result below, Cancel and OK in the button bar.
+/// </summary>
 public class MergeSameTextWindow : Window
 {
     public MergeSameTextWindow(MergeSameTextViewModel vm)
@@ -26,39 +30,21 @@ public class MergeSameTextWindow : Window
         Height = 800;
         MinWidth = 600;
         MinHeight = 400;
+        LineToolsChrome.Apply(this);
         vm.Window = this;
         DataContext = vm;
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindEnabled(nameof(vm.IsOkEnabled));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(MakeControlsView(vm), 0);
-        grid.Add(MakeMergesView(vm), 1);
-        grid.Add(MakeSubtitlesView(vm), 2);
-        grid.Add(panelButtons, 3);
-
-        Content = grid;
+        Content = LineToolsChrome.MakeRoot(
+            LineToolsChrome.MakeSections(
+                EditorChrome.MakeEditorSection(Se.Language.General.Options, MakeControlsView(vm), first: true),
+                LineToolsChrome.MakeListSection(Se.Language.General.MergeLines, MakeMergesView(vm)),
+                LineToolsChrome.MakeListSection(Se.Language.General.Preview, MakeSubtitlesView(vm))),
+            null,
+            buttonCancel,
+            buttonOk);
 
         UiUtil.FocusOnFirstActivation(this, buttonCancel); // hack to make OnKeyDown work
         KeyDown += vm.OnKeyDown;
@@ -67,21 +53,26 @@ public class MergeSameTextWindow : Window
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
-    private static StackPanel MakeControlsView(MergeSameTextViewModel vm)
+    private static Grid MakeControlsView(MergeSameTextViewModel vm)
     {
-        var labelGap = UiUtil.MakeLabel(vm.MaxBetweenLinesLabel);
-        var numericUpDownGap = UiUtil.MakeNumericUpDownInt(0, 10000, vm.MaxMsOrFramesBetweenLines, 130, vm, nameof(vm.MaxMsOrFramesBetweenLines));
+        var numericUpDownGap = LineToolsChrome.MakeCompact(UiUtil.MakeNumericUpDownInt(0, 10000, vm.MaxMsOrFramesBetweenLines, 130, vm, nameof(vm.MaxMsOrFramesBetweenLines)), vm.MaxBetweenLinesLabel);
         numericUpDownGap.ValueChanged += (s, e) => { vm.SetDirty(); };
-        var checkBoxIncludeIncrementText = UiUtil.MakeCheckBox(Se.Language.Tools.MergeLinesWithSameText.IncludeIncrementingLines, vm, nameof(vm.IncludeIncrementingLines));
+        var rowIncludeIncrementText = LineToolsChrome.MakeSwitchRow(nameof(vm.IncludeIncrementingLines), Se.Language.Tools.MergeLinesWithSameText.IncludeIncrementingLines, out var checkBoxIncludeIncrementText);
         checkBoxIncludeIncrementText.IsCheckedChanged += (s, e) => { vm.SetDirty(); };
-        var checkBoxIncludeRollUp = UiUtil.MakeCheckBox(Se.Language.Tools.MergeLinesWithSameText.IncludeRollUpCaptions, vm, nameof(vm.IncludeRollUpCaptions));
+        var rowIncludeRollUp = LineToolsChrome.MakeSwitchRow(nameof(vm.IncludeRollUpCaptions), Se.Language.Tools.MergeLinesWithSameText.IncludeRollUpCaptions, out var checkBoxIncludeRollUp);
         checkBoxIncludeRollUp.IsCheckedChanged += (s, e) => { vm.SetDirty(); };
-        var panelGap = UiUtil.MakeHorizontalPanel(labelGap, numericUpDownGap, checkBoxIncludeIncrementText, checkBoxIncludeRollUp);
 
-        return panelGap;
+        var grid = new Grid
+        {
+            ColumnSpacing = 40,
+            ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(GridLength.Auto) },
+        };
+        grid.Add(LineToolsChrome.MakeFieldGrid((vm.MaxBetweenLinesLabel, numericUpDownGap)), 0, 0);
+        grid.Add(new StackPanel { Spacing = 8, Children = { rowIncludeIncrementText, rowIncludeRollUp } }, 0, 1);
+        return grid;
     }
 
-    private static Border MakeMergesView(MergeSameTextViewModel vm)
+    private static TableView MakeMergesView(MergeSameTextViewModel vm)
     {
         // Sorting dropped in the DataGrid -> TableView conversion: the grid shows
         // merge candidates in subtitle order.
@@ -152,10 +143,10 @@ public class MergeSameTextWindow : Window
             }
         }, RoutingStrategies.Tunnel);
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGrid);
+        return dataGrid;
     }
 
-    private static Border MakeSubtitlesView(MergeSameTextViewModel vm)
+    private static TableView MakeSubtitlesView(MergeSameTextViewModel vm)
     {
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
 
@@ -225,6 +216,6 @@ public class MergeSameTextWindow : Window
             }
         }, RoutingStrategies.Tunnel);
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGrid);
+        return dataGrid;
     }
 }
