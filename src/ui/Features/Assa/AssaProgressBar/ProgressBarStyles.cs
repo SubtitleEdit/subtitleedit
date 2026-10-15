@@ -39,7 +39,8 @@ public static class ProgressBarStyles
                 l.ProgressBarStyleTapered,
                 l.ProgressBarStyleRuler,
                 l.ProgressBarStyleDoubleLine,
-                l.ProgressBarStyleThinTrack,
+                l.ProgressBarStyleEqualizer,
+                l.ProgressBarStyleStars,
             ];
         }
     }
@@ -68,7 +69,8 @@ public static class ProgressBarStyles
             13 => $"m 0 {N(h * 0.7)} l {w} 0 {w} {h} 0 {h}",
             14 => Ruler(w, h),
             15 => Rect(0, 0, w, h * 0.3) + " " + Rect(0, h * 0.7, w, h),
-            16 => Rect(0, h * 0.35, w, h * 0.65),
+            16 => Equalizer(w, h),
+            17 => Stars(w, h),
             _ => $"m 0 0 l {w} 0 {w} {h} 0 {h}",
         };
     }
@@ -239,6 +241,54 @@ public static class ProgressBarStyles
         for (var i = teeth; i >= 0; i--)
         {
             sb.Append($"{N(i * step)} {N((i % 2 == 1 ? amplitude : 0) + thickness)} ");
+        }
+
+        return sb.ToString().TrimEnd();
+    }
+
+    /// <summary>
+    /// Vertical bars of varying height standing on the bottom edge, like an audio level meter.
+    /// The heights follow a fixed pattern, so the bar looks the same every time.
+    /// </summary>
+    private static string Equalizer(int w, int h)
+    {
+        var (count, barWidth, gap) = Pieces(w, Math.Max(2, h * 0.35), Math.Max(1, h * 0.2));
+        var sb = new StringBuilder();
+        for (var i = 0; i < count; i++)
+        {
+            var x = i * (barWidth + gap);
+            var level = 0.3 + 0.7 * Math.Abs(Math.Sin(i * 0.9) * 0.6 + Math.Sin(i * 0.37) * 0.4);
+            sb.Append(Rect(x, h - h * Math.Min(1, level), x + barWidth, h)).Append(' ');
+        }
+
+        return sb.ToString().TrimEnd();
+    }
+
+    /// <summary>
+    /// A row of five-pointed stars.
+    /// </summary>
+    private static string Stars(int w, int h)
+    {
+        var (count, size, gap) = Pieces(w, h, Math.Max(1, h / 5.0));
+        var sb = new StringBuilder();
+        for (var i = 0; i < count; i++)
+        {
+            var cx = i * (size + gap) + size / 2;
+            var outer = Math.Min(size, h) / 2.0;
+            var cy = outer * 1.05; // the five points sit a little high - nudge down to fill the height
+            sb.Append('m');
+            for (var p = 0; p < 10; p++)
+            {
+                var angle = (-90 + 36 * p) * Math.PI / 180;
+                var r = p % 2 == 0 ? outer : outer * 0.42;
+                sb.Append(' ').Append(N(cx + r * Math.Cos(angle))).Append(' ').Append(N(Math.Min(h, cy + r * Math.Sin(angle))));
+                if (p == 0)
+                {
+                    sb.Append(" l");
+                }
+            }
+
+            sb.Append(' ');
         }
 
         return sb.ToString().TrimEnd();

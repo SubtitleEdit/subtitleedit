@@ -14,7 +14,7 @@ public class AssaProgressBarStylesTests
     [Fact]
     public void EveryStyle_FitsTheBarBox_AndSpansTheWidth()
     {
-        Assert.Equal(17, ProgressBarStyles.Names.Count);
+        Assert.Equal(18, ProgressBarStyles.Names.Count);
         for (var i = 0; i < ProgressBarStyles.Names.Count; i++)
         {
             var bounds = AssaDrawingGeometry.FromDrawing(ProgressBarStyles.Drawing(i, 1920, 40)).Bounds;

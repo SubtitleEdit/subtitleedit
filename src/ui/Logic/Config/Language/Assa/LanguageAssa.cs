@@ -187,7 +187,8 @@ public class LanguageAssa
     public string ProgressBarStyleTapered { get; set; }
     public string ProgressBarStyleRuler { get; set; }
     public string ProgressBarStyleDoubleLine { get; set; }
-    public string ProgressBarStyleThinTrack { get; set; }
+    public string ProgressBarStyleEqualizer { get; set; }
+    public string ProgressBarStyleStars { get; set; }
     public string ProgressBarPlayhead { get; set; }
     public string ProgressBarEdgeMargin { get; set; }
     public string ProgressBarSplitter { get; set; }
@@ -634,7 +635,8 @@ public class LanguageAssa
         ProgressBarStyleTapered = "Tapered";
         ProgressBarStyleRuler = "Ruler";
         ProgressBarStyleDoubleLine = "Double line";
-        ProgressBarStyleThinTrack = "Thin track";
+        ProgressBarStyleEqualizer = "Equalizer";
+        ProgressBarStyleStars = "Stars";
         ProgressBarPlayhead = "Playhead";
         ProgressBarEdgeMargin = "Edge margin";
         ProgressBarSplitter = "Splitter";
