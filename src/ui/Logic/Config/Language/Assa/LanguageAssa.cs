@@ -173,6 +173,25 @@ public class LanguageAssa
     public string ProgressBarXAdjustment { get; set; }
     public string ProgressBarYAdjustment { get; set; }
     public string ProgressBarTextAlignment { get; set; }
+    public string ProgressBarStyleCutCorners { get; set; }
+    public string ProgressBarStyleArrow { get; set; }
+    public string ProgressBarStyleSlanted { get; set; }
+    public string ProgressBarStyleSegments { get; set; }
+    public string ProgressBarStyleRoundedSegments { get; set; }
+    public string ProgressBarStyleDots { get; set; }
+    public string ProgressBarStyleDiamonds { get; set; }
+    public string ProgressBarStyleChevrons { get; set; }
+    public string ProgressBarStyleStripes { get; set; }
+    public string ProgressBarStyleWave { get; set; }
+    public string ProgressBarStyleZigzag { get; set; }
+    public string ProgressBarStyleTapered { get; set; }
+    public string ProgressBarStyleRuler { get; set; }
+    public string ProgressBarStyleDoubleLine { get; set; }
+    public string ProgressBarStyleEqualizer { get; set; }
+    public string ProgressBarStyleStars { get; set; }
+    public string ProgressBarPlayhead { get; set; }
+    public string ProgressBarEdgeMargin { get; set; }
+    public string ProgressBarSplitter { get; set; }
 
     // Font collector
     public string FontCollectorTitle { get; set; }
@@ -602,6 +621,25 @@ public class LanguageAssa
         ProgressBarXAdjustment = "X adjustment";
         ProgressBarYAdjustment = "Y adjustment";
         ProgressBarTextAlignment = "Text alignment";
+        ProgressBarStyleCutCorners = "Cut corners";
+        ProgressBarStyleArrow = "Arrow";
+        ProgressBarStyleSlanted = "Slanted";
+        ProgressBarStyleSegments = "Segments";
+        ProgressBarStyleRoundedSegments = "Rounded segments";
+        ProgressBarStyleDots = "Dots";
+        ProgressBarStyleDiamonds = "Diamonds";
+        ProgressBarStyleChevrons = "Chevrons";
+        ProgressBarStyleStripes = "Stripes";
+        ProgressBarStyleWave = "Wave";
+        ProgressBarStyleZigzag = "Zigzag";
+        ProgressBarStyleTapered = "Tapered";
+        ProgressBarStyleRuler = "Ruler";
+        ProgressBarStyleDoubleLine = "Double line";
+        ProgressBarStyleEqualizer = "Equalizer";
+        ProgressBarStyleStars = "Stars";
+        ProgressBarPlayhead = "Playhead";
+        ProgressBarEdgeMargin = "Edge margin";
+        ProgressBarSplitter = "Splitter";
 
         // Resolution Resampler
         FontCollectorTitle = "Font collector";

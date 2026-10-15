@@ -1005,6 +1005,31 @@ public class AssaDrawWindow : Window
         return contentGrid;
     }
 
+    /// <summary>
+    /// A properties section like ASSA draw's: small caps header (with optional text on the right), line on top.
+    /// </summary>
+    internal static Border MakeEditorSection(string title, Control content, Control? headerRight = null, bool first = false)
+    {
+        var header = new DockPanel();
+        if (headerRight != null)
+        {
+            DockPanel.SetDock(headerRight, Dock.Right);
+            header.Children.Add(headerRight);
+        }
+
+        header.Children.Add(MakeSectionHeader(title));
+        var panel = new StackPanel { Spacing = 10 };
+        panel.Children.Add(header);
+        panel.Children.Add(content);
+        return new Border
+        {
+            Child = panel,
+            BorderBrush = LineBrush,
+            BorderThickness = new Thickness(0, first ? 0 : 1, 0, 0),
+            Padding = new Thickness(14, 12, 14, 14),
+        };
+    }
+
     internal static TextBlock MakeSectionHeader(string text)
     {
         return new TextBlock
