@@ -643,7 +643,7 @@ public class AssaDrawWindow : Window
         return field;
     }
 
-    private static Border MakeToolbarSeparator()
+    internal static Border MakeToolbarSeparator()
     {
         return new Border
         {

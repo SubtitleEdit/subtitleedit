@@ -33,6 +33,11 @@ public partial class AssaAttachmentsViewModel : ObservableObject
     [ObservableProperty] private bool _isDeleteAllVisible;
     [ObservableProperty] private bool _isMoveVisible;
 
+    /// <summary>
+    /// "3 fonts · 2 graphics · 1.2 MB" - shown in the bottom bar.
+    /// </summary>
+    [ObservableProperty] private string _summaryText = string.Empty;
+
     public Window? Window { get; internal set; }
     public TableView AttachmentGrid { get; set; }
     public bool OkPressed { get; private set; }
@@ -63,6 +68,70 @@ public partial class AssaAttachmentsViewModel : ObservableObject
         Footer = string.Empty;
         _subtitle = new Subtitle();
         AttachmentGrid = new TableView();
+    }
+
+    // The constructor's assignment comes through here too, so every list gets the summary hook once
+    partial void OnAttachmentsChanged(ObservableCollection<AssaAttachmentItem> value)
+    {
+        value.CollectionChanged += (_, _) => UpdateSummary();
+        UpdateSummary();
+    }
+
+    private void UpdateSummary()
+    {
+        var fonts = Attachments.Count(a => a.Category == Se.Language.General.Fonts);
+        var graphics = Attachments.Count - fonts;
+        var bytes = Attachments.Sum(a => (long)a.Bytes.Length);
+        SummaryText = string.Format(Se.Language.Assa.AttachmentsSummary, fonts, graphics, Utilities.FormatBytesToDisplayFileSize(bytes));
+    }
+
+    private static readonly string[] AttachableExtensions = [".ttf", ".png", ".jpg", ".jpeg", ".gif", ".bmp", ".ico"];
+
+    /// <summary>
+    /// Adds files as attachments (fonts by .ttf, the rest as graphics) and selects the last one.
+    /// </summary>
+    public void AttachFiles(IEnumerable<string> fileNames)
+    {
+        foreach (var fileName in fileNames)
+        {
+            if (!File.Exists(fileName) || !AttachableExtensions.Contains(Path.GetExtension(fileName).ToLowerInvariant()))
+            {
+                continue;
+            }
+
+            var attachment = new AssaAttachmentItem(fileName);
+            Attachments.Add(attachment);
+            SelectedAttachment = attachment;
+        }
+    }
+
+    internal void OnDragOver(object? sender, DragEventArgs e)
+    {
+        e.DragEffects = GetDroppedFiles(e).Count > 0 ? DragDropEffects.Copy : DragDropEffects.None;
+        e.Handled = true;
+    }
+
+    internal void OnDrop(object? sender, DragEventArgs e)
+    {
+        var files = GetDroppedFiles(e);
+        if (files.Count > 0)
+        {
+            e.Handled = true;
+            Dispatcher.UIThread.Post(() => AttachFiles(files));
+        }
+    }
+
+    private static List<string> GetDroppedFiles(DragEventArgs e)
+    {
+        if (!e.DataTransfer.Contains(DataFormat.File))
+        {
+            return [];
+        }
+
+        return e.DataTransfer.TryGetFiles()?
+            .Select(f => f.Path.LocalPath)
+            .Where(f => AttachableExtensions.Contains(Path.GetExtension(f).ToLowerInvariant()))
+            .ToList() ?? [];
     }
 
     [RelayCommand]
@@ -129,15 +198,7 @@ public partial class AssaAttachmentsViewModel : ObservableObject
     private async Task FileAttach()
     {
         var fileNames = await _fileHelper.PickOpenFiles(Window!, "Select attachment", "True type font", ["*.ttf"], Se.Language.Assa.Graphics, _imageExtensions);
-
-        foreach (var fileName in fileNames)
-        {
-            var attachmentFileName = Path.GetFileName(fileName);
-            var attachment = new AssaAttachmentItem(fileName);
-            var ext = Path.GetExtension(attachmentFileName)?.ToLowerInvariant();
-            Attachments.Add(attachment);
-            SelectedAttachment = attachment;
-        }
+        AttachFiles(fileNames);
     }
 
     [RelayCommand]
