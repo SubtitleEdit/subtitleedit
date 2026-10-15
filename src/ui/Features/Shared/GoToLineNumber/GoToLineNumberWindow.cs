@@ -1,12 +1,19 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
+using Nikse.SubtitleEdit.Features.Edit;
+using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Shared.GoToLineNumber;
 
+/// <summary>
+/// Go to line number, in the editor look (see <see cref="EditorChrome"/>): one field, Cancel and
+/// OK at the bottom.
+/// </summary>
 public class GoToLineNumberWindow : Window
 {
     public GoToLineNumberWindow(GoToLineNumberViewModel vm)
@@ -15,6 +22,7 @@ public class GoToLineNumberWindow : Window
         Title = Se.Language.General.GoToLineNumber;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        EditDialogChrome.Apply(this);
         vm.Window = this;
         DataContext = vm;
 
@@ -31,41 +39,18 @@ public class GoToLineNumberWindow : Window
             Increment = 1,          // Only step in whole numbers
             FormatString = "F0",    // Show 0 decimal places
         };
+        vm.UpDown.Classes.Add("field");
+        AutomationProperties.SetName(vm.UpDown, Se.Language.General.GoToLineNumber);
         vm.UpDown.KeyDown += (sender, args) => vm.OnKeyDown(args);
 
-        var panel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 15,
-            Margin = new Thickness(10, 20, 10, 10),
-            Children =
-            {
-                new Label
-                {
-                    Content = Se.Language.General.GoToLineNumber,
-                    VerticalAlignment = VerticalAlignment.Center,
-                },
-                vm.UpDown,
-            }
-        };
+        var row = SyncTimingChrome.Row(Se.Language.General.GoToLineNumber, vm.UpDown, 130);
+        row.Margin = new Thickness(16, 18, 16, 18);
 
-        var buttonPanel = UiUtil.MakeButtonBar(
-            UiUtil.MakeButtonOk(vm.OkCommand),
-            UiUtil.MakeButtonCancel(vm.CancelCommand));
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        var contentPanel = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 15,
-            Margin = UiUtil.MakeWindowMargin(),
-            Children =
-            {
-                panel,
-                buttonPanel,
-            }
-        };
-
-        Content = contentPanel;
+        Content = SyncTimingChrome.MakeRoot(row, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, () => { vm.Activated(); });
         KeyDown += (_, args) => vm.OnKeyDown(args);

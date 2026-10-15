@@ -1,12 +1,15 @@
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Data;
-using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Chrome = Nikse.SubtitleEdit.Features.Ocr.OcrDialogChrome;
 
 namespace Nikse.SubtitleEdit.Features.Shared;
 
+/// <summary>
+/// Downloads the FFmpeg libraries, in the editor download layout (see <see cref="Chrome"/>): title, progress,
+/// status and error on the panel color, Retry (after a failure) and Cancel in the button bar.
+/// </summary>
 public class DownloadFfmpegLibsWindow : Window
 {
     public DownloadFfmpegLibsWindow(DownloadFfmpegLibsViewModel vm)
@@ -17,42 +20,25 @@ public class DownloadFfmpegLibsWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        Chrome.Apply(this);
 
         DataContext = vm;
 
-        var titleText = new TextBlock
-        {
-            FontSize = UiUtil.ScaledFontSize(20),
-            FontWeight = FontWeight.Bold,
-        }.WithBindText(vm, nameof(vm.StatusText));
+        // The title shows the current step ("Downloading...", "Unpacking..."), the status line the progress.
+        var titleText = Chrome.DownloadTitle();
+        titleText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.StatusText)));
+        var progressBar = Chrome.DownloadProgressBar(nameof(vm.ProgressValue));
+        progressBar.Bind(Avalonia.Visual.OpacityProperty, new Binding(nameof(vm.ProgressOpacity)));
+        var statusText = Chrome.DownloadStatus(nameof(vm.ProgressText));
 
-        var progressBar = UiUtil.MakeProgressBar();
-        progressBar.MinWidth = 450;
-        progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
-        progressBar.Bind(ProgressBar.OpacityProperty, new Binding(nameof(vm.ProgressOpacity)));
-
-        var statusText = new TextBlock();
-        statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
-
-        var errorText = DownloadWindowUi.MakeErrorText(450);
+        // Download/unpack failures (no data, file in use, ...) - otherwise the window just sits there.
+        var errorText = Chrome.DownloadError(DownloadWindowUi.ErrorPropertyName);
 
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CommandCancelCommand);
         var buttonRetry = DownloadWindowUi.MakeButtonRetry(vm.RetryCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonRetry, buttonCancel);
+        var buttonBar = Chrome.ButtonBar(null, buttonRetry, buttonCancel);
 
-        Content = new StackPanel
-        {
-            Spacing = 8,
-            Margin = UiUtil.MakeWindowMargin(),
-            Children =
-            {
-                titleText,
-                progressBar,
-                statusText,
-                errorText,
-                buttonBar,
-            }
-        };
+        Content = Chrome.Root(Chrome.DownloadBody(titleText, progressBar, statusText, errorText), buttonBar);
 
         Loaded += delegate
         {
