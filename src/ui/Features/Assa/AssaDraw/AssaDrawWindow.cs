@@ -1084,6 +1084,26 @@ public class AssaDrawWindow : Window
         };
     }
 
+    /// <summary>
+    /// A compact on/off switch with its label to the right.
+    /// </summary>
+    internal static StackPanel MakeToggleRow(string property, string text)
+    {
+        var toggle = new ToggleSwitch
+        {
+            OnContent = null,
+            OffContent = null,
+            MinWidth = 0,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!ToggleSwitch.IsCheckedProperty] = new Binding(property) { Mode = BindingMode.TwoWay },
+        };
+        AutomationProperties.SetName(toggle, text);
+        var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+        row.Children.Add(toggle);
+        row.Children.Add(new TextBlock { Text = text, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center, TextWrapping = TextWrapping.Wrap });
+        return row;
+    }
+
     internal static TextBlock MakeSectionHeader(string text)
     {
         return new TextBlock
