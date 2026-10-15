@@ -22,8 +22,8 @@ using Nikse.SubtitleEdit.Logic.Config;
 namespace Nikse.SubtitleEdit.Features.Assa;
 
 /// <summary>
-/// ASSA styles, styled like ASSA draw: the style lists (in the file, saved) on the left, the style
-/// editor in sections in the middle, the libass preview on the right.
+/// ASSA styles, styled like ASSA draw: the style lists (in the file, saved) on the left, the libass
+/// preview on the right with the style editor in three columns of sections under it.
 /// </summary>
 public class AssaStylesWindow : Window
 {
@@ -55,13 +55,25 @@ public class AssaStylesWindow : Window
             ColumnDefinitions =
             {
                 new ColumnDefinition(new GridLength(360)),
-                new ColumnDefinition(new GridLength(320)),
                 new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
             },
         };
+
+        // Right side: the preview across the full width on top (a 16:9 frame), the editor
+        // sections in three columns under it - a tall preview column was mostly empty space
+        var right = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
+                new RowDefinition(GridLength.Auto),
+            },
+        };
+        right.Add(MakePreview(vm), 0, 0);
+        right.Add(MakeEditorPanel(vm), 1, 0);
+
         content.Add(MakeListsPanel(vm), 0, 0);
-        content.Add(MakeEditorPanel(vm), 0, 1);
-        content.Add(MakePreview(vm), 0, 2);
+        content.Add(right, 0, 1);
 
         var mainGrid = new Grid
         {
@@ -375,20 +387,41 @@ public class AssaStylesWindow : Window
 
     private static Border MakeEditorPanel(AssaStylesViewModel vm)
     {
-        var sections = new StackPanel();
-        sections.Children.Add(MakeNameSection(vm));
-        sections.Children.Add(MakeFontSection(vm));
-        sections.Children.Add(MakeColorsSection(vm));
-        sections.Children.Add(MakeBorderSection(vm));
-        sections.Children.Add(MakeAlignmentSection(vm));
-        sections.Children.Add(MakeTransformSection(vm));
+        StackPanel Column(params Border[] sections)
+        {
+            var column = new StackPanel();
+            foreach (var section in sections)
+            {
+                column.Children.Add(section);
+            }
+
+            return column;
+        }
+
+        var columns = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+            },
+        };
+        columns.Add(Column(MakeNameSection(vm), MakeFontSection(vm)), 0, 0);
+        columns.Add(new Border
+        {
+            Child = Column(MakeColorsSection(vm), MakeBorderSection(vm)),
+            BorderBrush = AssaDrawWindow.LineBrush,
+            BorderThickness = new Thickness(1, 0),
+        }, 0, 1);
+        columns.Add(Column(MakeAlignmentSection(vm), MakeTransformSection(vm)), 0, 2);
 
         return new Border
         {
-            Child = new ScrollViewer { Content = sections, HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled },
+            Child = columns,
             Background = AssaDrawWindow.PanelBrush,
             BorderBrush = AssaDrawWindow.LineBrush,
-            BorderThickness = new Thickness(0, 0, 1, 0),
+            BorderThickness = new Thickness(0, 1, 0, 0),
             [!Border.IsEnabledProperty] = new Binding(nameof(vm.CurrentStyle)) { Converter = ObjectConverters.IsNotNull },
         };
     }
@@ -507,7 +540,7 @@ public class AssaStylesWindow : Window
             grid.Children.Add(cell);
         }
 
-        return AssaDrawWindow.MakeEditorSection(Se.Language.General.Color, grid);
+        return AssaDrawWindow.MakeEditorSection(Se.Language.General.Color, grid, first: true);
     }
 
     private static Border MakeBorderSection(AssaStylesViewModel vm)
@@ -561,7 +594,7 @@ public class AssaStylesWindow : Window
         var row = new Grid { ColumnSpacing = 14, ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(new GridLength(1, GridUnitType.Star)) } };
         row.Add(anchors, 0, 0);
         row.Add(margins, 0, 1);
-        return AssaDrawWindow.MakeEditorSection(Se.Language.General.Alignment + " · " + Se.Language.General.Margin, row);
+        return AssaDrawWindow.MakeEditorSection(Se.Language.General.Alignment + " · " + Se.Language.General.Margin, row, first: true);
     }
 
     private static Border MakeTransformSection(AssaStylesViewModel vm)
@@ -621,7 +654,7 @@ public class AssaStylesWindow : Window
             backgrounds.Children.Add(button);
         }
 
-        var grid = new Grid { Margin = new Thickness(16), RowDefinitions = { new RowDefinition(new GridLength(1, GridUnitType.Star)), new RowDefinition(GridLength.Auto) } };
+        var grid = new Grid { Margin = new Thickness(16, 12, 16, 10), RowDefinitions = { new RowDefinition(new GridLength(1, GridUnitType.Star)), new RowDefinition(GridLength.Auto) } };
         grid.Add(image, 0, 0);
         grid.Add(backgrounds, 1, 0);
         return grid;
