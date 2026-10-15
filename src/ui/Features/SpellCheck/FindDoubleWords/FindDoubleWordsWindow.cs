@@ -1,14 +1,20 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
-using Avalonia.Layout;
 using System.Collections;
+using Nikse.SubtitleEdit.Features.Edit;
+using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.SpellCheck.FindDoubleWords;
 
+/// <summary>
+/// Lines with a word twice in a row, in the editor look (see <see cref="EditorChrome"/>): the list,
+/// Done and Go to at the bottom.
+/// </summary>
 public class FindDoubleWordsWindow : Window
 {
     public FindDoubleWordsWindow(FindDoubleWordsViewModel vm)
@@ -20,37 +26,26 @@ public class FindDoubleWordsWindow : Window
         Height = 700;
         MinWidth = 600;
         MinHeight = 400;
+        EditDialogChrome.Apply(this);
         vm.Window = this;
         DataContext = vm;
 
         var buttonGoTo = UiUtil.MakeButton(Se.Language.General.GoTo, vm.GoToCommand).WithBindIsEnabled(nameof(vm.HasDoubleWords));
+        buttonGoTo.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonDone(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonGoTo, buttonCancel);
 
-        var grid = new Grid
+        var tableView = MakeGridView(vm);
+        var list = new Border
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Child = EditDialogChrome.MakeListFrame(tableView),
+            Padding = new Thickness(14),
         };
 
-        grid.Add(MakeGridView(vm), 0);
-        grid.Add(panelButtons, 1);
+        Content = SyncTimingChrome.MakeRoot(list, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonGoTo));
 
-        Content = grid;
-
-        UiUtil.FocusOnFirstActivation(this, buttonCancel); // hack to make OnKeyDown work
+        // The list, not an action button, gets first focus (hack to make OnKeyDown work) - a
+        // focused button clicks on bare Space; Enter in the list goes to the line.
+        UiUtil.FocusOnFirstActivation(this, tableView);
 
         KeyDown += (s, e) => vm.OnKeyDown(e);
 
@@ -58,13 +53,13 @@ public class FindDoubleWordsWindow : Window
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
-    private static Border MakeGridView(FindDoubleWordsViewModel vm)
+    private static TableView MakeGridView(FindDoubleWordsViewModel vm)
     {
         var tableView = TableViewExtras.MakeTableView();
         tableView.Height = double.NaN; // auto size inside scroll viewer
-        tableView.Margin = new Thickness(2);
         tableView.ItemsSource = vm.Subtitles;
         tableView.DataContext = vm.Subtitles;
+        AutomationProperties.SetName(tableView, Se.Language.General.DoubleWords);
 
         tableView.DoubleTapped += vm.OnBookmarksGridDoubleTapped;
 
@@ -113,6 +108,6 @@ public class FindDoubleWordsWindow : Window
             }
         }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
 
-        return UiUtil.MakeBorderForControlNoPadding(tableView);
+        return tableView;
     }
 }
