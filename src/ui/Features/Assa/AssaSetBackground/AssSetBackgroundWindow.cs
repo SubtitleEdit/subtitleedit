@@ -105,31 +105,6 @@ public class AssSetBackgroundWindow : Window
     }
 
     /// <summary>
-    /// A properties section like ASSA draw's: small caps header (with optional text on the right), line on top.
-    /// </summary>
-    private static Border MakeSection(string title, Control content, Control? headerRight = null, bool first = false)
-    {
-        var header = new DockPanel();
-        if (headerRight != null)
-        {
-            DockPanel.SetDock(headerRight, Dock.Right);
-            header.Children.Add(headerRight);
-        }
-
-        header.Children.Add(AssaDrawWindow.MakeSectionHeader(title));
-        var panel = new StackPanel { Spacing = 10 };
-        panel.Children.Add(header);
-        panel.Children.Add(content);
-        return new Border
-        {
-            Child = panel,
-            BorderBrush = AssaDrawWindow.LineBrush,
-            BorderThickness = new Thickness(0, first ? 0 : 1, 0, 0),
-            Padding = new Thickness(14, 12, 14, 14),
-        };
-    }
-
-    /// <summary>
     /// The box styles as a gallery, each thumbnail drawn by the generator itself.
     /// </summary>
     private static Border CreateStyleSection(AssSetBackgroundViewModel vm)
@@ -194,7 +169,7 @@ public class AssSetBackgroundWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.BoxStyleName)),
         };
-        return MakeSection(Se.Language.General.Style, content, name, first: true);
+        return AssaDrawWindow.MakeEditorSection(Se.Language.General.Style, content, name, first: true);
     }
 
     // The sample box the thumbnails are drawn around, and the "text" inside it
@@ -230,39 +205,8 @@ public class AssSetBackgroundWindow : Window
     /// <summary>
     /// A box style drawn into the 140 x 60 sample box, as geometry for its gallery tile.
     /// </summary>
-    internal static Geometry MakeThumbnail(int styleIndex)
-    {
-        var drawing = AssSetBackgroundViewModel.GenerateBackgroundBox(styleIndex, 14, 10, 150, 10, 70);
-        var shapes = DrawShape.ParseAssa(drawing, 0, Colors.White, false);
-        var geometry = new StreamGeometry();
-        using var ctx = geometry.Open();
-        ctx.SetFillRule(FillRule.NonZero);
-        foreach (var shape in shapes.Where(s => s.Points.Count > 2))
-        {
-            ctx.BeginFigure(new Point(shape.Points[0].X, shape.Points[0].Y), true);
-            var i = 1;
-            while (i < shape.Points.Count)
-            {
-                var point = shape.Points[i];
-                if (point.DrawType == DrawCoordinateType.BezierCurveSupport1 && i + 2 < shape.Points.Count)
-                {
-                    ctx.CubicBezierTo(new Point(point.X, point.Y),
-                        new Point(shape.Points[i + 1].X, shape.Points[i + 1].Y),
-                        new Point(shape.Points[i + 2].X, shape.Points[i + 2].Y));
-                    i += 3;
-                }
-                else
-                {
-                    ctx.LineTo(new Point(point.X, point.Y));
-                    i++;
-                }
-            }
-
-            ctx.EndFigure(true);
-        }
-
-        return geometry;
-    }
+    internal static Geometry MakeThumbnail(int styleIndex) =>
+        AssaDrawingGeometry.FromDrawing(AssSetBackgroundViewModel.GenerateBackgroundBox(styleIndex, 14, 10, 150, 10, 70));
 
     /// <summary>
     /// Padding as a box diagram: the four sides around the text they pad.
@@ -327,7 +271,7 @@ public class AssSetBackgroundWindow : Window
         grid.Add(text, 1, 1);
         grid.Add(right, 1, 2);
         grid.Add(bottom, 2, 1);
-        return MakeSection(Se.Language.General.Padding, grid);
+        return AssaDrawWindow.MakeEditorSection(Se.Language.General.Padding, grid);
     }
 
     private static Border CreateFillWidthSection(AssSetBackgroundViewModel vm)
@@ -355,7 +299,7 @@ public class AssSetBackgroundWindow : Window
         var content = new StackPanel { Spacing = 8 };
         content.Children.Add(toggleRow);
         content.Children.Add(AssaDrawWindow.MakePropertyRow(Se.Language.General.Margin, left, right));
-        return MakeSection(Se.Language.Assa.BackgroundBoxFillWidth, content);
+        return AssaDrawWindow.MakeEditorSection(Se.Language.Assa.BackgroundBoxFillWidth, content);
     }
 
     /// <summary>
@@ -385,7 +329,7 @@ public class AssSetBackgroundWindow : Window
         content.Children.Add(AssaDrawWindow.MakePropertyRow(Se.Language.General.BoxColor, Swatch(nameof(vm.BoxColor), Se.Language.General.BoxColor), new Control()));
         content.Children.Add(AssaDrawWindow.MakePropertyRow(Se.Language.General.Outline, Swatch(nameof(vm.OutlineColor), Se.Language.General.Outline), outlineWidth));
         content.Children.Add(AssaDrawWindow.MakePropertyRow(Se.Language.General.Shadow, Swatch(nameof(vm.ShadowColor), Se.Language.General.Shadow), shadowDistance));
-        return MakeSection(Se.Language.General.Color, content);
+        return AssaDrawWindow.MakeEditorSection(Se.Language.General.Color, content);
     }
 
     private static Border CreateButtonBar(AssSetBackgroundViewModel vm)

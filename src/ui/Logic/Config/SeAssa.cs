@@ -23,6 +23,8 @@ public class SeAssa
     public string ProgressBarForegroundColor { get; set; }
     public string ProgressBarBackgroundColor { get; set; }
     public int ProgressBarCornerStyleIndex { get; set; }
+    public int ProgressBarEdgeMargin { get; set; }
+    public bool ProgressBarShowPlayhead { get; set; }
     public int BackgroundBoxesPaddingLeft { get; set; }
     public int BackgroundBoxesPaddingRight { get; set; }
     public int BackgroundBoxesPaddingTop { get; set; }
@@ -73,6 +75,8 @@ public class SeAssa
         ProgressBarForegroundColor = "#FF0000";
         ProgressBarBackgroundColor = "#80000000";
         ProgressBarCornerStyleIndex = 0;
+        ProgressBarEdgeMargin = 0;
+        ProgressBarShowPlayhead = false;
 
         BackgroundBoxesPaddingLeft = 25;
         BackgroundBoxesPaddingRight = 25;
