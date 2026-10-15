@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.LogicalTree;
@@ -45,7 +46,7 @@ public class AdvancedTtsSettingsWindowTests : IDisposable
     }
 
     [AvaloniaFact]
-    public void GenerationFolderSection_ShowsTheConfiguredFolderAndTheSweepCheckBox()
+    public void GenerationFolderSection_ShowsTheConfiguredFolderAndTheSweepSwitch()
     {
         using var _ = new SettingsScope(
             "Video.TextToSpeech.GenerationFolder",
@@ -59,10 +60,10 @@ public class AdvancedTtsSettingsWindowTests : IDisposable
             window.GetLogicalDescendants().OfType<TextBox>(),
             t => t.Text == Se.Settings.Video.TextToSpeech.GenerationFolder);
 
-        var sweepCheckBox = Assert.Single(
-            window.GetLogicalDescendants().OfType<CheckBox>(),
-            c => IsCheckBoxFor(c, Se.Language.Video.TextToSpeech.DeleteTempFiles));
-        Assert.False(sweepCheckBox.IsChecked);
+        var sweepSwitch = Assert.Single(
+            window.GetLogicalDescendants().OfType<ToggleSwitch>(),
+            c => IsSwitchFor(c, Se.Language.Video.TextToSpeech.DeleteTempFiles));
+        Assert.False(sweepSwitch.IsChecked);
     }
 
     /// <summary>
@@ -199,26 +200,26 @@ public class AdvancedTtsSettingsWindowTests : IDisposable
     }
 
     /// <summary>
-    /// "Clean voice-clone references" has its own checkbox, which shows the stored setting.
+    /// "Clean voice-clone references" has its own switch, which shows the stored setting.
     /// </summary>
     [AvaloniaTheory]
     [InlineData(false)]
     [InlineData(true)]
-    public void CleanCloneReferences_CheckBoxShowsTheSetting(bool enabled)
+    public void CleanCloneReferences_SwitchShowsTheSetting(bool enabled)
     {
         using var _ = new SettingsScope("Video.TextToSpeech.CleanCloneReferences");
         Se.Settings.Video.TextToSpeech.CleanCloneReferences = enabled;
 
         var window = BuildWindow();
 
-        var checkBox = Assert.Single(
-            window.GetLogicalDescendants().OfType<CheckBox>(),
-            c => IsCheckBoxFor(c, Se.Language.Video.TextToSpeech.CleanCloneReferences));
-        Assert.Equal(enabled, checkBox.IsChecked);
+        var toggle = Assert.Single(
+            window.GetLogicalDescendants().OfType<ToggleSwitch>(),
+            c => IsSwitchFor(c, Se.Language.Video.TextToSpeech.CleanCloneReferences));
+        Assert.Equal(enabled, toggle.IsChecked);
     }
 
-    private static bool IsCheckBoxFor(CheckBox checkBox, string text)
+    private static bool IsSwitchFor(ToggleSwitch toggle, string text)
     {
-        return Equals(checkBox.Content, text) || (checkBox.Content is TextBlock tb && tb.Text == text);
+        return AutomationProperties.GetName(toggle) == text;
     }
 }
