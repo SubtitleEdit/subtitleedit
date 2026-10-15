@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -93,6 +94,9 @@ public class AssaAttachmentsWindow : Window
             VerticalContentAlignment = VerticalAlignment.Center,
         };
         button.Classes.Add("tool");
+
+        // Icon + label in a panel: a screen reader needs the name spelled out (#12087)
+        AutomationProperties.SetName(button, text);
         return button;
     }
 
@@ -173,6 +177,7 @@ public class AssaAttachmentsWindow : Window
         // order is not presentation-only.
         var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
         tableView = dataGrid;
+        AutomationProperties.SetName(dataGrid, Se.Language.Assa.FontsAndGraphics);
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.Attachments;
 
