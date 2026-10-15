@@ -25,7 +25,11 @@ namespace Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 ///
 /// A server that files the answer under "reasoning_content" is read from there when "content"
 /// stays empty: KoboldCpp does that for the whole reply when the chat template opens a think
-/// block, because the JSON grammar never lets the model close it (#15009).
+/// block, because the JSON grammar never lets the model close it (#15009). A reasoning-only
+/// reply also switches thinking off for the following requests of this client
+/// (chat_template_kwargs.enable_thinking=false): a hybrid model the server was started without
+/// "--reasoning off" for (a self-supplied .gguf, custom server arguments, a server SE did not
+/// start) otherwise spends the whole token budget thinking and never reaches the translation.
 /// </summary>
 public class LlamaCppAdvancedClient : IDisposable
 {
@@ -43,6 +47,12 @@ public class LlamaCppAdvancedClient : IDisposable
     /// <summary>True when the last reply had no "content" and was taken from "reasoning_content".</summary>
     public bool ReplyFromReasoning { get; private set; }
 
+    /// <summary>
+    /// Set once a reply came back in "reasoning_content" only; from then on every request asks
+    /// the chat template to skip thinking. Servers that do not know the field ignore it.
+    /// </summary>
+    public bool DisableThinking { get; private set; }
+
     public LlamaCppAdvancedClient()
     {
         _httpClient = HttpClientFactoryWithProxy.CreateHttpClientWithProxy();
@@ -54,18 +64,18 @@ public class LlamaCppAdvancedClient : IDisposable
         Error = string.Empty;
         ReplyFromReasoning = false;
 
-        var response = await PostAsync(url, BuildRequestJson(systemPrompt, userContent, responseFormatJson, model, defaultMaxTokens, temperatureBump), cancellationToken);
+        var response = await PostAsync(url, BuildRequestJson(systemPrompt, userContent, responseFormatJson, model, defaultMaxTokens, temperatureBump, DisableThinking), cancellationToken);
 
         // A stall is not a format rejection - retrying the same prompt with a looser format
         // would just burn another watchdog period, so only the format fallbacks run here.
         if (!response.ok && !response.stalled && responseFormatJson != null && !cancellationToken.IsCancellationRequested)
         {
-            response = await PostAsync(url, BuildRequestJson(systemPrompt, userContent, "{\"type\":\"json_object\"}", model, defaultMaxTokens, temperatureBump), cancellationToken);
+            response = await PostAsync(url, BuildRequestJson(systemPrompt, userContent, "{\"type\":\"json_object\"}", model, defaultMaxTokens, temperatureBump, DisableThinking), cancellationToken);
         }
 
         if (!response.ok && !response.stalled && responseFormatJson != null && !cancellationToken.IsCancellationRequested)
         {
-            response = await PostAsync(url, BuildRequestJson(systemPrompt, userContent, null, model, defaultMaxTokens, temperatureBump), cancellationToken);
+            response = await PostAsync(url, BuildRequestJson(systemPrompt, userContent, null, model, defaultMaxTokens, temperatureBump, DisableThinking), cancellationToken);
         }
 
         if (!response.ok)
@@ -81,6 +91,8 @@ public class LlamaCppAdvancedClient : IDisposable
             ? PickReply(response.body, response.reasoning, out var fromReasoning)
             : ExtractContent(response.body, out fromReasoning);
         ReplyFromReasoning = fromReasoning;
+        DisableThinking |= fromReasoning;
+
         return reply;
     }
 
@@ -88,8 +100,10 @@ public class LlamaCppAdvancedClient : IDisposable
     /// The "model" field is only written when the caller supplies one (Ollama requires it;
     /// llama-server serves the single model it was started with, and sending one would only
     /// risk a mismatch). cache_prompt is llama.cpp-specific; other servers ignore it.
+    /// chat_template_kwargs.enable_thinking=false is read by llama-server (Jinja templates) and
+    /// vLLM - the Qwen 3 / Qwen 3.5 family and their fine-tunes honour it.
     /// </summary>
-    private static string BuildRequestJson(string systemPrompt, string userContent, string? responseFormatJson, string? model, int defaultMaxTokens, double temperatureBump = 0)
+    internal static string BuildRequestJson(string systemPrompt, string userContent, string? responseFormatJson, string? model, int defaultMaxTokens, double temperatureBump = 0, bool disableThinking = false)
     {
         using var stream = new System.IO.MemoryStream();
         using (var writer = new Utf8JsonWriter(stream))
@@ -104,6 +118,13 @@ public class LlamaCppAdvancedClient : IDisposable
             writer.WriteBoolean("cache_prompt", true);
 
             WriteSampling(writer, defaultMaxTokens, temperatureBump);
+
+            if (disableThinking)
+            {
+                writer.WriteStartObject("chat_template_kwargs");
+                writer.WriteBoolean("enable_thinking", false);
+                writer.WriteEndObject();
+            }
 
             if (responseFormatJson != null)
             {
