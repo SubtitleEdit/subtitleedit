@@ -1706,6 +1706,13 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
 
     private void SwitchToFileStyle()
     {
+        // The grid can show a selection the view model never got (the first row is selected
+        // when the grid fills): clicking that row only raises GotFocus, and the editor stayed empty
+        if (SelectedFileStyle == null && FileStyleGrid.SelectedItem is StyleDisplay gridSelected)
+        {
+            SelectedFileStyle = gridSelected;
+        }
+
         var selectedStyle = SelectedFileStyle;
         CurrentStyle = selectedStyle;
         CurrentTitle = Se.Language.Assa.StylesInFile;
@@ -1716,6 +1723,12 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
 
     private void SwitchToStorageStyle()
     {
+        // See SwitchToFileStyle: the first saved style showed selected but could not be edited
+        if (SelectedStorageStyle == null && StorageStyleGrid.SelectedItem is StyleDisplay gridSelected)
+        {
+            SelectedStorageStyle = gridSelected;
+        }
+
         var selectedStyle = SelectedStorageStyle;
         CurrentStyle = selectedStyle;
         CurrentTitle = Se.Language.Assa.StylesSaved;

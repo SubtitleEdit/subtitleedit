@@ -321,9 +321,16 @@ public class AssaStylesWindow : Window
 
     private static Grid MakeStorageStyles(AssaStylesViewModel vm)
     {
-        var comboBoxCategory = UiUtil.MakeComboBox(vm.StorageCategories, vm, nameof(vm.SelectedStorageCategory));
-        comboBoxCategory.HorizontalAlignment = HorizontalAlignment.Stretch;
-        AutomationProperties.SetName(comboBoxCategory, Se.Language.General.Category);
+        // No category picker: the list always shows every saved style (the category is a column).
+        // Creating or moving to a category switches the view model's filter - put it back.
+        vm.SelectedStorageCategory = Se.Language.Assa.AllCategories;
+        vm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(vm.SelectedStorageCategory) && vm.SelectedStorageCategory != Se.Language.Assa.AllCategories)
+            {
+                Avalonia.Threading.Dispatcher.UIThread.Post(() => vm.SelectedStorageCategory = Se.Language.Assa.AllCategories);
+            }
+        };
 
         // No header sorting: the storage style order is persisted to settings in
         // list order on OK, so the collection order is not presentation-only.
@@ -400,13 +407,9 @@ public class AssaStylesWindow : Window
             new Separator(),
             MenuItem(Se.Language.General.Import, "fa-solid fa-file-import", vm.StorageImportCommand),
             MenuItem(Se.Language.General.Export, "fa-solid fa-file-export", vm.StorageExportCommand),
-            new Separator(),
-            MenuItem(Se.Language.Assa.NewCategory, "fa-solid fa-folder-plus", vm.NewCategoryCommand),
-            MenuItem(Se.Language.Assa.RenameCategory, "fa-solid fa-pen", vm.RenameCategoryCommand, vm.IsCategoryActionVisible),
-            MenuItem(Se.Language.Assa.DeleteCategory, "fa-solid fa-folder-minus", vm.DeleteCategoryCommand, vm.IsCategoryActionVisible),
         ]));
 
-        return MakeListSection(Se.Language.Assa.StylesSaved, actions, comboBoxCategory, dataGrid, first: false);
+        return MakeListSection(Se.Language.Assa.StylesSaved, actions, null, dataGrid, first: false);
     }
 
     private static Border MakeEditorPanel(AssaStylesViewModel vm)
@@ -475,16 +478,18 @@ public class AssaStylesWindow : Window
         };
         AutomationProperties.SetName(name, Se.Language.General.Name);
 
+        // "Styles in file" / "Styles saved" on its own line - beside the header it was cut off
         var title = new TextBlock
         {
             FontSize = 12,
             Foreground = AssaDrawWindow.DimTextBrush,
-            VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
-            MaxWidth = 170,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.CurrentTitle)),
         };
-        return AssaDrawWindow.MakeEditorSection(Se.Language.General.Name, name, title, first: true);
+        var content = new StackPanel { Spacing = 6 };
+        content.Children.Add(title);
+        content.Children.Add(name);
+        return AssaDrawWindow.MakeEditorSection(Se.Language.General.Name, content, first: true);
     }
 
     private static Border MakeFontSection(AssaStylesViewModel vm)
