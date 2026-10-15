@@ -9,6 +9,7 @@ using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
+using System.Windows.Input;
 
 namespace Nikse.SubtitleEdit.Features.Options.WordLists;
 
@@ -150,9 +151,9 @@ public class WordListsWindow : Window
         return OptionsListChrome.MakeHeader(titlePanel, badge);
     }
 
-    private static ListBox MakeListBox(string accessibleName, string itemsPath, string selectedPath)
+    private static ListBox MakeListBox(string accessibleName, string itemsPath, string selectedPath, ICommand removeCommand)
     {
-        return new ListBox
+        var listBox = new ListBox
         {
             [AutomationProperties.NameProperty] = accessibleName,
             [!ListBox.ItemsSourceProperty] = new Binding(itemsPath) { Mode = BindingMode.OneWay },
@@ -161,6 +162,14 @@ public class WordListsWindow : Window
             VerticalAlignment = VerticalAlignment.Stretch,
             IsTextSearchEnabled = true, // type a letter (or a few quickly) to jump to the first matching entry (#16078)
         };
+
+        // Right-click selects the item under the pointer, so Remove acts on the clicked entry.
+        var flyout = new MenuFlyout();
+        flyout.Items.Add(new MenuItem { Header = Se.Language.General.Remove, Command = removeCommand });
+        listBox.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(listBox);
+
+        return listBox;
     }
 
     // Header, list and the add row of one list - the list takes the free height.
@@ -210,7 +219,7 @@ public class WordListsWindow : Window
         var panelTitle = MakePanelTitle(Se.Language.Options.WordLists.NameAndIgnoreList, IconNames.Account, "#4ec98a",
             new Binding(nameof(vm.Names) + ".Count") { Mode = BindingMode.OneWay, Converter = new NumberToStringWithThousandSeparator() });
 
-        var listBox = MakeListBox(Se.Language.Options.WordLists.NameAndIgnoreList, nameof(vm.Names), nameof(vm.SelectedName));
+        var listBox = MakeListBox(Se.Language.Options.WordLists.NameAndIgnoreList, nameof(vm.Names), nameof(vm.SelectedName), vm.RemoveNameCommand);
 
         var textBox = UiUtil.MakeTextBox(110, vm, nameof(vm.NewName)).AsField(Se.Language.Options.WordLists.AddName);
         textBox.PlaceholderText = Se.Language.Options.WordLists.AddName;
@@ -226,7 +235,7 @@ public class WordListsWindow : Window
         var panelTitle = MakePanelTitle(Se.Language.Options.WordLists.UserWords, IconNames.Spellcheck, "#7fa8f0",
             new Binding(nameof(vm.UserWords) + ".Count") { Source = vm, Mode = BindingMode.OneWay, Converter = new NumberToStringWithThousandSeparator() });
 
-        var listBox = MakeListBox(Se.Language.Options.WordLists.UserWords, nameof(vm.UserWords), nameof(vm.SelectedUserWord));
+        var listBox = MakeListBox(Se.Language.Options.WordLists.UserWords, nameof(vm.UserWords), nameof(vm.SelectedUserWord), vm.RemoveWordCommand);
 
         var textBox = UiUtil.MakeTextBox(110, vm, nameof(vm.NewUserWord)).AsField(Se.Language.General.AddToUserDictionary);
         textBox.PlaceholderText = Se.Language.General.AddToUserDictionary;
@@ -242,7 +251,7 @@ public class WordListsWindow : Window
         var panelTitle = MakePanelTitle(Se.Language.Options.WordLists.OcrFixList, IconNames.Ocr, "#f0885a",
             new Binding(nameof(vm.OcrFixes) + ".Count") { Mode = BindingMode.OneWay, Converter = new NumberToStringWithThousandSeparator() });
 
-        var listBox = MakeListBox(Se.Language.Options.WordLists.OcrFixList, nameof(vm.OcrFixes), nameof(vm.SelectedOcrFix));
+        var listBox = MakeListBox(Se.Language.Options.WordLists.OcrFixList, nameof(vm.OcrFixes), nameof(vm.SelectedOcrFix), vm.RemoveOcrFixCommand);
 
         var textBoxFind = UiUtil.MakeTextBox(110, vm, nameof(vm.NewOcrFixFind)).AsField(Se.Language.General.Find);
         textBoxFind.PlaceholderText = Se.Language.General.Find;
