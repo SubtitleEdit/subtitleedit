@@ -25,6 +25,14 @@ public class LlamaCppOcrModelOrderTests
     }
 
     [Fact]
+    public void QariOcr_RanksBehindTheGeneralModels_BecauseItIsAnArabicSpecialist()
+    {
+        // Best on Arabic, but it merges every two-line subtitle, so it must not become the
+        // headless fallback ahead of GLM-OCR/LFM2.5-VL/PaddleOCR-VL/HunyuanOCR.
+        Assert.Equal("Qari-OCR-0.2.2.1-VL-2B-Instruct-merged.Q8_0.gguf", LlamaCppServerManager.OcrModels[^2].FileName);
+    }
+
+    [Fact]
     public void EveryCuratedOcrModel_ShipsAVisionProjector()
     {
         Assert.All(LlamaCppServerManager.OcrModels, m =>

@@ -380,6 +380,25 @@ public static class LlamaCppServerManager
             "https://huggingface.co/ggml-org/HunyuanOCR-GGUF/resolve/main/HunyuanOCR-Q8_0.gguf",
             MmprojFileName: "mmproj-HunyuanOCR-Q8_0.gguf",
             MmprojUrl: "https://huggingface.co/ggml-org/HunyuanOCR-GGUF/resolve/main/mmproj-HunyuanOCR-Q8_0.gguf"),
+        // QARI-OCR 0.2.2.1 (NAMAA-Space, Apache-2.0): Qwen2-VL-2B fine-tuned for Arabic, here as
+        // mradermacher's merged GGUF. The pick for Arabic, not a general default - see #16043.
+        // Measured 2026-10-14 on b10840 with SE's flags, shared prompt and square pad over 61
+        // Arabic images (20 HD bitmaps, 20 SD bitmaps, 20 burned-in 720p bottom-third crops, one
+        // real anime frame), exact / character error / median s per image:
+        //   QARI 0.2.2.1 29/61, 5.2% (HD bitmaps 0.6%), 4.5 s - no loops, no empty answers
+        //   HunyuanOCR 26/61, 9.3%, 1.5 s; LFM2.5-VL 10/61, 10.1%; PaddleOCR-VL 4/61, 12.7%
+        //   (writes أ/إ as ا and ى as ي); GLM-OCR 1/61, 56% (fluent invented Arabic);
+        //   LightOnOCR 1/61 (loops); plain Qwen2-VL-2B 0/61 (chats about the image).
+        // Rejected alongside it: QARI 0.3 (13-17/61, emits HTML tags - a document-structure
+        // model), QARI 0.4 4B (25/61 with its own prompt, 0/61 under the shared prompt) and
+        // Arabic-GLM-OCR-v2 (18/61 with 16 repetition loops and 7 empty answers).
+        // It follows the shared prompt as-is and reads Latin text correctly, but it joins every
+        // two-line subtitle into one line (all 12 two-line Arabic cases, and English too) and
+        // turns ♪ into لَ, so it ranks behind the general models for non-Arabic subtitles.
+        new LlamaCppModel("QARI-OCR 0.2.2.1 Arabic 2B (Q8_0)", "Qari-OCR-0.2.2.1-VL-2B-Instruct-merged.Q8_0.gguf", "2.4 GB",
+            "https://huggingface.co/mradermacher/Qari-OCR-0.2.2.1-VL-2B-Instruct-merged-GGUF/resolve/main/Qari-OCR-0.2.2.1-VL-2B-Instruct-merged.Q8_0.gguf",
+            MmprojFileName: "mmproj-Qari-OCR-0.2.2.1-VL-2B-Instruct-merged.Q8_0.gguf",
+            MmprojUrl: "https://huggingface.co/mradermacher/Qari-OCR-0.2.2.1-VL-2B-Instruct-merged-GGUF/resolve/main/Qari-OCR-0.2.2.1-VL-2B-Instruct-merged.mmproj-Q8_0.gguf"),
         // Last on purpose: the weakest and by far the slowest of the four on subtitle images
         // (9/14 recognized, 2.53% character error, 18.5 s/image against GLM-OCR's 2.5 s). It loses
         // line breaks, drops ♪ note marks, misreads Cyrillic ё as е and Chinese 的, and wraps
