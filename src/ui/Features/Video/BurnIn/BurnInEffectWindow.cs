@@ -8,6 +8,9 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.BurnIn;
 
+/// <summary>
+/// Pick burn-in effects, in the editor look (see <see cref="EditorChrome"/>).
+/// </summary>
 public class BurnInEffectWindow : Window
 {
     private readonly BurnInEffectViewModel _vm;
@@ -18,14 +21,16 @@ public class BurnInEffectWindow : Window
         Title = Se.Language.General.Effect;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        VideoSubDialogChrome.Apply(this);
 
         _vm = vm;
         vm.Window = this;
         DataContext = vm;
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var panelButtons = VideoSubDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         var grid = new Grid
         {
@@ -34,24 +39,14 @@ public class BurnInEffectWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
         };
 
-        // Create a StackPanel to hold all checkboxes
+        // A StackPanel to hold all checkboxes (the view model keeps them in CheckBoxes)
         var checkBoxPanel = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            Spacing = 10,
-            Margin = new Thickness(10)
+            Spacing = 4,
+            MinWidth = 260,
         };
 
         // Create checkboxes for each effect
@@ -62,6 +57,7 @@ public class BurnInEffectWindow : Window
                 Content = effect.Name,
                 Tag = effect, // Store the effect item for later reference
                 Name = effect.Type.ToString(),
+                FontSize = 12.5,
             };
             vm.CheckBoxes.Add(checkBox);
 
@@ -87,7 +83,7 @@ public class BurnInEffectWindow : Window
             checkBoxPanel.Children.Add(checkBox);
         }
 
-        grid.Add(checkBoxPanel, 0, 0);
+        grid.Add(VideoSubDialogChrome.MakePanel(EditorChrome.MakeEditorSection(Se.Language.General.Effect, checkBoxPanel, first: true)), 0, 0);
         grid.Add(panelButtons, 1, 0);
 
         Content = grid;
