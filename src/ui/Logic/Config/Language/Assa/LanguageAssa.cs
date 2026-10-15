@@ -273,6 +273,7 @@ public class LanguageAssa
     public string StylesSaved { get; set; }
     public string StylesSummary { get; set; }
     public string StylesTransform { get; set; }
+    public string StylesEditing { get; set; }
     public string StylesScale { get; set; }
     public string StylesPreviewDark { get; set; }
     public string StylesPreviewChecker { get; set; }
@@ -745,6 +746,7 @@ public class LanguageAssa
         StylesSaved = "Styles saved";
         StylesSummary = "{0} styles in file · {1} saved";
         StylesTransform = "Transform";
+        StylesEditing = "Editing";
         StylesScale = "Scale %";
         StylesPreviewDark = "Dark";
         StylesPreviewChecker = "Checker";

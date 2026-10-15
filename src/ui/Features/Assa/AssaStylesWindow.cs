@@ -30,6 +30,10 @@ public class AssaStylesWindow : Window
     private const string Current = nameof(AssaStylesViewModel.CurrentStyle) + ".";
     private static readonly IBrush DefaultStarBrush = new SolidColorBrush(Color.FromRgb(255, 193, 7));
 
+    // Which list the edited style comes from: file styles in the editor accent, saved styles in amber
+    private static readonly IBrush SavedBrush = new SolidColorBrush(Color.FromRgb(240, 168, 48));
+    private static readonly IBrush SavedSoftBrush = new SolidColorBrush(Color.FromArgb(46, 240, 168, 48));
+
     public AssaStylesWindow(AssaStylesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -68,10 +72,12 @@ public class AssaStylesWindow : Window
             {
                 new RowDefinition(new GridLength(1, GridUnitType.Star)),
                 new RowDefinition(GridLength.Auto),
+                new RowDefinition(GridLength.Auto),
             },
         };
         right.Add(MakePreview(vm), 0, 0);
-        right.Add(MakeEditorPanel(vm), 1, 0);
+        right.Add(MakeEditorPanel(vm), 2, 0);
+        right.Add(MakeEditingBanner(vm), 1, 0);
 
         content.Add(MakeListsPanel(vm), 0, 0);
         content.Add(right, 0, 1);
@@ -217,7 +223,12 @@ public class AssaStylesWindow : Window
         }
 
         var header = new StackPanel { Margin = new Thickness(14, first ? 10 : 12, 10, 8) };
-        header.Children.Add(AssaDrawWindow.MakeSectionHeader(title));
+        var titleText = AssaDrawWindow.MakeSectionHeader(title);
+        titleText.Bind(TextBlock.ForegroundProperty, new Binding(nameof(AssaStylesViewModel.CurrentTitle))
+        {
+            Converter = new FuncValueConverter<string, IBrush>(current => current == title ? (title == Se.Language.Assa.StylesSaved ? SavedBrush : AssaDrawWindow.AccentBrush) : AssaDrawWindow.DimTextBrush),
+        });
+        header.Children.Add(titleText);
         header.Children.Add(tools);
 
         var grid = new Grid
@@ -466,6 +477,73 @@ public class AssaStylesWindow : Window
         return field;
     }
 
+    /// <summary>
+    /// What is being edited, above the editor: "Editing Default" with an "In file" (blue) or
+    /// "Saved" (amber) badge - changing a saved style does not change the subtitle, and the
+    /// other way round, so this has to be hard to miss.
+    /// </summary>
+    private static Border MakeEditingBanner(AssaStylesViewModel vm)
+    {
+        Binding Pick(object file, object saved) => new Binding(nameof(vm.CurrentTitle))
+        {
+            Converter = new FuncValueConverter<string, object>(title => title == Se.Language.Assa.StylesSaved ? saved : file),
+        };
+
+        var icon = new Optris.Icons.Avalonia.Icon { FontSize = 14, VerticalAlignment = VerticalAlignment.Center };
+        icon.Bind(Optris.Icons.Avalonia.Icon.ValueProperty, Pick("fa-solid fa-file-lines", "fa-solid fa-bookmark"));
+        icon.Bind(Optris.Icons.Avalonia.Icon.ForegroundProperty, Pick(AssaDrawWindow.AccentBrush, SavedBrush));
+
+        var editing = new TextBlock
+        {
+            Text = Se.Language.Assa.StylesEditing,
+            FontSize = 12.5,
+            Foreground = AssaDrawWindow.DimTextBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        var name = new TextBlock
+        {
+            FontSize = 13.5,
+            FontWeight = FontWeight.SemiBold,
+            VerticalAlignment = VerticalAlignment.Center,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            [!TextBlock.TextProperty] = new Binding(Current + nameof(StyleDisplay.Name)),
+        };
+        var badgeText = new TextBlock
+        {
+            FontSize = 11.5,
+            FontWeight = FontWeight.SemiBold,
+            Foreground = Brushes.White,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.CurrentTitle)),
+        };
+        var badge = new Border
+        {
+            Child = badgeText,
+            CornerRadius = new CornerRadius(9),
+            Padding = new Thickness(9, 2),
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        badge.Bind(Border.BackgroundProperty, Pick(AssaDrawWindow.AccentBrush, SavedBrush));
+        badgeText.Bind(TextBlock.ForegroundProperty, Pick(Brushes.White, new SolidColorBrush(Color.FromRgb(60, 38, 0))));
+
+        var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+        row.Children.Add(icon);
+        row.Children.Add(editing);
+        row.Children.Add(name);
+        row.Children.Add(badge);
+
+        var banner = new Border
+        {
+            Child = row,
+            Padding = new Thickness(14, 8),
+            BorderThickness = new Thickness(3, 1, 0, 0),
+            [!Border.IsVisibleProperty] = new Binding(nameof(vm.CurrentStyle)) { Converter = ObjectConverters.IsNotNull },
+        };
+        banner.Bind(Border.BackgroundProperty, Pick(AssaDrawWindow.AccentSoftBrush, SavedSoftBrush));
+        banner.Bind(Border.BorderBrushProperty, Pick(AssaDrawWindow.AccentBrush, SavedBrush));
+        AutomationProperties.SetName(banner, Se.Language.Assa.StylesEditing);
+        return banner;
+    }
+
     private static Border MakeNameSection(AssaStylesViewModel vm)
     {
         var name = new TextBox
@@ -478,18 +556,7 @@ public class AssaStylesWindow : Window
         };
         AutomationProperties.SetName(name, Se.Language.General.Name);
 
-        // "Styles in file" / "Styles saved" on its own line - beside the header it was cut off
-        var title = new TextBlock
-        {
-            FontSize = 12,
-            Foreground = AssaDrawWindow.DimTextBrush,
-            TextTrimming = TextTrimming.CharacterEllipsis,
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.CurrentTitle)),
-        };
-        var content = new StackPanel { Spacing = 6 };
-        content.Children.Add(title);
-        content.Children.Add(name);
-        return AssaDrawWindow.MakeEditorSection(Se.Language.General.Name, content, first: true);
+        return AssaDrawWindow.MakeEditorSection(Se.Language.General.Name, name, first: true);
     }
 
     private static Border MakeFontSection(AssaStylesViewModel vm)
