@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Declarative;
 using Avalonia.Threading;
@@ -83,6 +84,22 @@ public partial class MainView : ViewBase
 
         // Menu bar
         InitMenu.Make(_vm);
+
+        // PageUp on the menu bar makes Avalonia wrap to the last top-level item. When that item is
+        // hidden (ASSA/SSA tools outside those formats), ItemsControl.GetNextControl keeps getting
+        // the same hidden item back and loops forever on the UI thread (#16039). Close the menu
+        // and go back to the text box instead - PageUp/PageDown are line navigation keys in SE.
+        _vm.Menu.AddHandler(InputElement.KeyDownEvent, (_, e) =>
+        {
+            if (e.Key is Key.PageUp or Key.PageDown &&
+                (e.Source == _vm.Menu || e.Source is MenuItem { IsTopLevel: true }))
+            {
+                e.Handled = true;
+                _vm.Menu.Close();
+                _vm.FocusTextBoxCommand.Execute(null);
+            }
+        }, RoutingStrategies.Tunnel);
+
         if (OperatingSystem.IsMacOS())
         {
             _vm.Menu.IsVisible = false;
