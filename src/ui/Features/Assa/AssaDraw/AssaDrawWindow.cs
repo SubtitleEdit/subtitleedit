@@ -324,6 +324,26 @@ public class AssaDrawWindow : Window
         return Regex.Replace(text, @"\s*\([^()]*\)\s*$", string.Empty);
     }
 
+    /// <summary>
+    /// The tool's translated name, for the status bar (older translations still end in "(F4)" etc.).
+    /// </summary>
+    internal static string GetToolName(DrawingTool tool)
+    {
+        var l = Se.Language.Assa;
+        return WithoutShortcut(tool switch
+        {
+            DrawingTool.Select => l.DrawSelectTool,
+            DrawingTool.Line => l.DrawLineTool,
+            DrawingTool.Bezier => l.DrawBezierTool,
+            DrawingTool.Rectangle => l.DrawRectangleTool,
+            DrawingTool.Circle => l.DrawCircleTool,
+            DrawingTool.Shape => l.DrawShapeTool,
+            DrawingTool.Text => l.DrawTextTool,
+            DrawingTool.ColorPicker => l.DrawColorPickerToolName,
+            _ => tool.ToString(),
+        });
+    }
+
     private static List<Control> MakeBackgroundItems(AssaDrawViewModel vm)
     {
         var stretch = MakeMenuItem(Se.Language.Assa.DrawBackgroundStretch, null, vm.ToggleBackgroundStretchCommand);
@@ -422,8 +442,8 @@ public class AssaDrawWindow : Window
         vm.CopyToClipboardButton = copyButton;
         rightPanel.Children.Add(CreateToolButton("fa-solid fa-file-import", Se.Language.Assa.DrawImportSvg, vm.ImportSvgCommand));
         rightPanel.Children.Add(copyButton);
-        rightPanel.Children.Add(CreateToolButton("fa-solid fa-folder-open", "Load", vm.LoadCommand));
-        rightPanel.Children.Add(CreateToolButton("fa-solid fa-floppy-disk", "Save", vm.SaveCommand));
+        rightPanel.Children.Add(CreateToolButton("fa-solid fa-folder-open", Se.Language.Assa.DrawOpenDrawing, vm.LoadCommand));
+        rightPanel.Children.Add(CreateToolButton("fa-solid fa-floppy-disk", Se.Language.Assa.DrawSaveDrawing, vm.SaveCommand));
 
         var grid = new Grid
         {
@@ -471,22 +491,24 @@ public class AssaDrawWindow : Window
             HorizontalAlignment = HorizontalAlignment.Center,
         };
 
-        void AddTool(string icon, string tooltip, System.Windows.Input.ICommand command, DrawingTool tool, string shortcut)
+        // Each tool's shortcut shown once: the letter, plus the function key where there is one
+        void AddTool(string icon, string tooltip, System.Windows.Input.ICommand command, DrawingTool tool, string shortcut, string? functionKey = null)
         {
-            var button = CreateToolButton(icon, tooltip + " (" + shortcut + ")", command, 38, shortcut);
+            var keys = functionKey == null ? shortcut : shortcut + ", " + functionKey;
+            var button = CreateToolButton(icon, WithoutShortcut(tooltip) + " (" + keys + ")", command, 38, shortcut);
             BindHighlight(button, vm, () => vm.CurrentTool == tool, nameof(vm.CurrentTool));
             panel.Children.Add(button);
         }
 
         AddTool("fa-solid fa-arrow-pointer", Se.Language.Assa.DrawSelectTool, vm.SelectToolCommand, DrawingTool.Select, "V");
         panel.Children.Add(MakeStripSeparator());
-        AddTool("fa-solid fa-pen-nib", Se.Language.Assa.DrawLineTool, vm.LineToolCommand, DrawingTool.Line, "L");
-        AddTool("fa-solid fa-bezier-curve", Se.Language.Assa.DrawBezierTool, vm.BezierToolCommand, DrawingTool.Bezier, "B");
-        AddTool("fa-regular fa-square", Se.Language.Assa.DrawRectangleTool, vm.RectangleToolCommand, DrawingTool.Rectangle, "R");
-        AddTool("fa-regular fa-circle", Se.Language.Assa.DrawCircleTool, vm.CircleToolCommand, DrawingTool.Circle, "C");
+        AddTool("fa-solid fa-pen-nib", Se.Language.Assa.DrawLineTool, vm.LineToolCommand, DrawingTool.Line, "L", "F4");
+        AddTool("fa-solid fa-bezier-curve", Se.Language.Assa.DrawBezierTool, vm.BezierToolCommand, DrawingTool.Bezier, "B", "F5");
+        AddTool("fa-regular fa-square", Se.Language.Assa.DrawRectangleTool, vm.RectangleToolCommand, DrawingTool.Rectangle, "R", "F6");
+        AddTool("fa-regular fa-circle", Se.Language.Assa.DrawCircleTool, vm.CircleToolCommand, DrawingTool.Circle, "C", "F7");
 
         // Shape tool: picks a shape from the library palette that opens next to the strip
-        var shapeButton = CreateToolButton("fa-solid fa-shapes", Se.Language.Assa.DrawShapeTool + " (S)", null, 38, "S");
+        var shapeButton = CreateToolButton("fa-solid fa-shapes", WithoutShortcut(Se.Language.Assa.DrawShapeTool) + " (S)", null, 38, "S");
         BindHighlight(shapeButton, vm, () => vm.CurrentTool == DrawingTool.Shape, nameof(vm.CurrentTool));
         var palette = new Popup
         {
@@ -1113,7 +1135,7 @@ public class AssaDrawWindow : Window
         var toolLabel = StatusText(nameof(vm.CurrentTool));
         toolLabel.Bind(TextBlock.TextProperty, new Binding(nameof(vm.CurrentTool))
         {
-            Converter = new FuncValueConverter<DrawingTool, string>(tool => string.Format(Se.Language.Assa.DrawToolX, tool)),
+            Converter = new FuncValueConverter<DrawingTool, string>(tool => string.Format(Se.Language.Assa.DrawToolX, GetToolName(tool))),
         });
         left.Children.Add(MakeStatusItem("fa-solid fa-pen-ruler", toolLabel));
 
