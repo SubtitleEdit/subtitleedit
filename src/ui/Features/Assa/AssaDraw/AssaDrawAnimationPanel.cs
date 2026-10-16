@@ -77,14 +77,6 @@ internal static class AssaDrawAnimationPanel
 
         rows.Children.Add(new TextBlock
         {
-            Text = Se.Language.Assa.DrawAnimationSlideConflict,
-            FontSize = 11.5,
-            TextWrapping = TextWrapping.Wrap,
-            Foreground = new SolidColorBrush(Color.FromRgb(230, 160, 40)),
-            [!TextBlock.IsVisibleProperty] = new Binding(nameof(vm.IsAnimationSlideConflict)),
-        });
-        rows.Children.Add(new TextBlock
-        {
             Text = Se.Language.Assa.DrawAnimationLayerHint,
             FontSize = 11,
             TextWrapping = TextWrapping.Wrap,

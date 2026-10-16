@@ -55,10 +55,16 @@ public sealed class DrawAnimation : IEquatable<DrawAnimation>
     public static bool IsSlide(DrawAnimationEffect effect) => effect >= DrawAnimationEffect.Left;
 
     /// <summary>
-    /// The out effect as written: ASSA moves a line only once (one \move), so a slide out after a
-    /// slide in fades out instead.
+    /// A slide in and a slide out: ASSA has one \move per line, so the slide in uses it and the slide
+    /// out turns the line a tiny bit around an \org far away - a straight move over the frame.
     /// </summary>
-    public DrawAnimationEffect EffectiveOut => IsSlide(In) && IsSlide(Out) ? DrawAnimationEffect.Fade : Out;
+    public bool IsDoubleSlide => IsSlide(In) && IsSlide(Out);
+
+    /// <summary>
+    /// How far away the \org of a double slide is: far enough that the arc is straight to a fraction
+    /// of a pixel over a frame width (2 px off at 2000 px), near enough for float renderers.
+    /// </summary>
+    private const double FarOriginDistance = 1_000_000;
 
     /// <summary>
     /// The in effect gets the start of the line and the out effect the end; on a short line they
@@ -67,7 +73,7 @@ public sealed class DrawAnimation : IEquatable<DrawAnimation>
     public (int InMs, int OutMs) GetDurations(int lineMs)
     {
         var inMs = In == DrawAnimationEffect.None ? 0 : Math.Max(1, InMs);
-        var outMs = EffectiveOut == DrawAnimationEffect.None ? 0 : Math.Max(1, OutMs);
+        var outMs = Out == DrawAnimationEffect.None ? 0 : Math.Max(1, OutMs);
         if (lineMs > 0 && inMs + outMs > lineMs)
         {
             var factor = lineMs / (double)(inMs + outMs);
@@ -120,7 +126,7 @@ public sealed class DrawAnimation : IEquatable<DrawAnimation>
         {
             var q = Math.Clamp((timeMs - outStart) / outMs, 0, 1);
             var eased = (float)Math.Pow(q, EaseIn);
-            switch (EffectiveOut)
+            switch (Out)
             {
                 case DrawAnimationEffect.Fade:
                     opacity = (float)(1 - q);
@@ -139,9 +145,11 @@ public sealed class DrawAnimation : IEquatable<DrawAnimation>
                     rotation = -360 * eased;
                     break;
                 default:
-                    var (sx, sy) = GetSlideOffset(EffectiveOut, bounds, frameWidth, frameHeight);
-                    dx = sx * (float)q;
-                    dy = sy * (float)q;
+                    // \move is linear; the \org turn of a double slide is eased like the other out effects
+                    var (sx, sy) = GetSlideOffset(Out, bounds, frameWidth, frameHeight);
+                    var progress = IsDoubleSlide ? eased : (float)q;
+                    dx = sx * progress;
+                    dy = sy * progress;
                     break;
             }
         }
@@ -167,38 +175,75 @@ public sealed class DrawAnimation : IEquatable<DrawAnimation>
     }
 
     /// <summary>
-    /// The position tag: \move for a slide, else \pos.
+    /// The position tag: \move for a slide (the slide in when there are two), else \pos.
+    /// <paramref name="map"/> turns where something should show into the position to write (a line
+    /// with its own \frz and an \org elsewhere, see <see cref="MapAroundOrigin"/>).
     /// </summary>
-    public string GetPositionTag(float x, float y, int lineMs, (float Left, float Top, float Right, float Bottom) bounds, float frameWidth, float frameHeight)
+    public string GetPositionTag(float x, float y, int lineMs, (float Left, float Top, float Right, float Bottom) bounds, float frameWidth, float frameHeight,
+        Func<double, double, (double X, double Y)>? map = null)
     {
+        map ??= (px, py) => (px, py);
         var (inMs, outMs) = GetDurations(lineMs);
+        var rest = map(x, y);
         if (IsSlide(In))
         {
             var (dx, dy) = GetSlideOffset(In, bounds, frameWidth, frameHeight);
-            return $"\\move({N(x + dx)},{N(y + dy)},{N(x)},{N(y)},0,{inMs})";
+            var start = map(x + dx, y + dy);
+            return $"\\move({N(start.X)},{N(start.Y)},{N(rest.X)},{N(rest.Y)},0,{inMs})";
         }
 
-        if (IsSlide(EffectiveOut))
+        if (IsSlide(Out))
         {
-            var (dx, dy) = GetSlideOffset(EffectiveOut, bounds, frameWidth, frameHeight);
-            return $"\\move({N(x)},{N(y)},{N(x + dx)},{N(y + dy)},{lineMs - outMs},{lineMs})";
+            var (dx, dy) = GetSlideOffset(Out, bounds, frameWidth, frameHeight);
+            var end = map(x + dx, y + dy);
+            return $"\\move({N(rest.X)},{N(rest.Y)},{N(end.X)},{N(end.Y)},{lineMs - outMs},{lineMs})";
         }
 
-        return $"\\pos({N(x)},{N(y)})";
+        return $"\\pos({N(rest.X)},{N(rest.Y)})";
     }
 
     /// <summary>
-    /// \fad and the scale/rotation tags (everything but the position). <paramref name="baseFrz"/> is
-    /// the line's own \frz, which a spin turns from and back to.
+    /// The far \org of a double slide and how far (degrees, \frz) the line turns around it: the
+    /// anchor moves by the slide-out offset.
     /// </summary>
-    public string GetEffectTags(int lineMs, float baseFrz = 0)
+    public (double X, double Y, double Degrees) GetOutSlideRotation(float anchorX, float anchorY, (float Left, float Top, float Right, float Bottom) bounds, float frameWidth, float frameHeight)
+    {
+        var (dx, dy) = GetSlideOffset(Out, bounds, frameWidth, frameHeight);
+        var distance = Math.Sqrt(dx * dx + dy * dy);
+
+        // \frz turns counter-clockwise on screen, so with the \org on this side of the anchor (at a
+        // right angle to the slide) a positive turn sets the anchor off in the slide direction
+        var originX = anchorX + FarOriginDistance * dy / distance;
+        var originY = anchorY - FarOriginDistance * dx / distance;
+        return (originX, originY, Math.Asin(distance / FarOriginDistance) * 180 / Math.PI);
+    }
+
+    /// <summary>
+    /// Where to put a line with its own \frz (<paramref name="frz"/>) so it shows at (x, y) although
+    /// it turns around (originX, originY) instead of its position.
+    /// </summary>
+    public static (double X, double Y) MapAroundOrigin(double x, double y, double originX, double originY, double frz)
+    {
+        // libass turns counter-clockwise on screen (y down) by \frz; undo that turn
+        var radians = -frz * Math.PI / 180;
+        var vx = x - originX;
+        var vy = y - originY;
+        return (originX + vx * Math.Cos(radians) + vy * Math.Sin(radians), originY - vx * Math.Sin(radians) + vy * Math.Cos(radians));
+    }
+
+    /// <summary>
+    /// \fad and the scale/rotation tags (everything but the position and \org). <paramref name="baseFrz"/>
+    /// is the line's own \frz, which a spin turns from and back to; <paramref name="outSlideDegrees"/>
+    /// the turn of a double slide's slide out (<see cref="GetOutSlideRotation"/>).
+    /// </summary>
+    public string GetEffectTags(int lineMs, float baseFrz = 0, double outSlideDegrees = 0)
     {
         var (inMs, outMs) = GetDurations(lineMs);
         var outStart = lineMs - outMs;
         var sb = new StringBuilder();
 
         var fadeIn = In == DrawAnimationEffect.Fade ? inMs : 0;
-        var fadeOut = EffectiveOut == DrawAnimationEffect.Fade ? outMs : 0;
+        var fadeOut = Out == DrawAnimationEffect.Fade ? outMs : 0;
         if (fadeIn > 0 || fadeOut > 0)
         {
             sb.Append(CultureInfo.InvariantCulture, $"\\fad({fadeIn},{fadeOut})");
@@ -218,7 +263,7 @@ public sealed class DrawAnimation : IEquatable<DrawAnimation>
                 break;
         }
 
-        switch (EffectiveOut)
+        switch (Out)
         {
             case DrawAnimationEffect.Zoom:
                 sb.Append(CultureInfo.InvariantCulture, $"\\t({outStart},{lineMs},{N(EaseIn)},\\fscx0\\fscy0)");
@@ -230,12 +275,21 @@ public sealed class DrawAnimation : IEquatable<DrawAnimation>
             case DrawAnimationEffect.Spin:
                 sb.Append(CultureInfo.InvariantCulture, $"\\t({outStart},{lineMs},{N(EaseIn)},\\frz{N(baseFrz - 360)}\\fscx0\\fscy0)");
                 break;
+            default:
+                if (IsDoubleSlide)
+                {
+                    // Seven decimals: the far \org turns a thousandth of a degree into ~17 px
+                    var degrees = (baseFrz + outSlideDegrees).ToString("0.#######", CultureInfo.InvariantCulture);
+                    sb.Append(CultureInfo.InvariantCulture, $"\\t({outStart},{lineMs},{N(EaseIn)},\\frz{degrees})");
+                }
+
+                break;
         }
 
         return sb.ToString();
     }
 
-    public bool HasRotation => In == DrawAnimationEffect.Spin || EffectiveOut == DrawAnimationEffect.Spin;
+    public bool HasRotation => In == DrawAnimationEffect.Spin || Out == DrawAnimationEffect.Spin;
 
     private static readonly Regex MarkerRegex = new(
         @"\{assadraw-anim c=(-?[\d.]+),(-?[\d.]+) in=(\w+),(\d+) out=(\w+),(\d+)\}",
@@ -271,14 +325,15 @@ public sealed class DrawAnimation : IEquatable<DrawAnimation>
 
     private static readonly Regex DrawingAnimationRegex = new(@"^\{\\an7[^}]*\}\{assadraw-anim [^}]*\}", RegexOptions.Compiled);
     private static readonly Regex TextAnimationRegex = new(@"\{assadraw-anim [^}]*\}(\{[^}]*\})?", RegexOptions.Compiled);
-    private static readonly Regex MoveRegex = new(@"\\move\(\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)[^)]*\)", RegexOptions.Compiled);
+    private static readonly Regex MoveRegex = new(@"\\move\([^)]*\)", RegexOptions.Compiled);
+    private static readonly Regex PosRegex = new(@"\\pos\([^)]*\)", RegexOptions.Compiled);
 
     /// <summary>
     /// The line without its animation: a drawing line loses its leading position/effect block (its
-    /// coordinates are then relative to the anchor), a text line its effect block, and its \move
-    /// becomes the \pos it rests at.
+    /// coordinates are then relative to the anchor), a text line its effect block and position (its
+    /// text area comment says where it goes; the written position allows for the \org).
     /// </summary>
-    public static string RemoveFromLine(string text, DrawAnimation animation)
+    public static string RemoveFromLine(string text)
     {
         if (DrawingAnimationRegex.IsMatch(text))
         {
@@ -286,12 +341,8 @@ public sealed class DrawAnimation : IEquatable<DrawAnimation>
         }
 
         text = TextAnimationRegex.Replace(text, string.Empty, 1);
-        return MoveRegex.Replace(text, m =>
-        {
-            var restX = IsSlide(animation.In) ? m.Groups[3].Value : m.Groups[1].Value;
-            var restY = IsSlide(animation.In) ? m.Groups[4].Value : m.Groups[2].Value;
-            return $"\\pos({restX},{restY})";
-        }, 1);
+        text = MoveRegex.Replace(text, string.Empty, 1);
+        return PosRegex.Replace(text, string.Empty, 1);
     }
 
     /// <summary>

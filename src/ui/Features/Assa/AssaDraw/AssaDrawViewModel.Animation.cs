@@ -29,7 +29,6 @@ public partial class AssaDrawViewModel
     /// </summary>
     [ObservableProperty] private bool _isEditingOutEffect;
     [ObservableProperty] private bool _canAnimate;
-    [ObservableProperty] private bool _isAnimationSlideConflict;
     [ObservableProperty] private bool _isPlayingAnimation;
     [ObservableProperty] private bool _hasAnyAnimation;
     [ObservableProperty] private bool _isAnimationExpanded = Se.Settings.Assa.DrawAnimationExpanded;
@@ -185,7 +184,6 @@ public partial class AssaDrawViewModel
         AnimationSummary = AnimationIn == DrawAnimationEffect.None && AnimationOut == DrawAnimationEffect.None
             ? string.Empty
             : AssaDrawAnimationPanel.GetName(AnimationIn, isOut: false) + " · " + AssaDrawAnimationPanel.GetName(AnimationOut, isOut: true);
-        IsAnimationSlideConflict = DrawAnimation.IsSlide(AnimationIn) && DrawAnimation.IsSlide(AnimationOut);
         HasAnyAnimation = Shapes.Any(s => s.Animation is { IsNone: false });
         if (!HasAnyAnimation && IsPlayingAnimation)
         {

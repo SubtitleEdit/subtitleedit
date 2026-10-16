@@ -122,7 +122,6 @@ public class LanguageAssa
     public string DrawAnimationToBottom { get; set; }
     public string DrawAnimationPlay { get; set; }
     public string DrawAnimationStop { get; set; }
-    public string DrawAnimationSlideConflict { get; set; }
     public string DrawAnimationLayerHint { get; set; }
     public string DrawCategoryMyShapes { get; set; }
     public string DrawShapeSpeechBubble { get; set; }
@@ -648,7 +647,6 @@ public class LanguageAssa
         DrawAnimationToBottom = "To bottom";
         DrawAnimationPlay = "Play animation";
         DrawAnimationStop = "Stop animation";
-        DrawAnimationSlideConflict = "ASSA can move a line only once, so the out slide fades instead.";
         DrawAnimationLayerHint = "Applies to the whole layer (one subtitle line); a group moves as one.";
         DrawCategoryMyShapes = "My shapes";
         DrawShapeSpeechBubble = "Speech bubble";

@@ -2811,9 +2811,18 @@ public partial class AssaDrawViewModel : ObservableObject
 
                 if (finalText.Length > 0 && animation != null)
                 {
+                    var origin = string.Empty;
+                    double outSlideDegrees = 0;
+                    if (animation.IsDoubleSlide)
+                    {
+                        var (originX, originY, degrees) = animation.GetOutSlideRotation(anchor.X, anchor.Y, anchor.Bounds, CanvasWidth, CanvasHeight);
+                        origin = $"\\org({FormatCoordinate(originX)},{FormatCoordinate(originY)})";
+                        outSlideDegrees = degrees;
+                    }
+
                     finalText.Insert(0, "{\\an7" +
                         animation.GetPositionTag(anchor.X, anchor.Y, LineDurationMs, anchor.Bounds, CanvasWidth, CanvasHeight) +
-                        animation.GetEffectTags(LineDurationMs) + "}" +
+                        origin + animation.GetEffectTags(LineDurationMs, 0, outSlideDegrees) + "}" +
                         animation.FormatMarker(anchor.X, anchor.Y));
                 }
 
@@ -2884,14 +2893,26 @@ public partial class AssaDrawViewModel : ObservableObject
     }
 
     /// <summary>
-    /// A text line follows its shape's animation: \move instead of \pos for a slide, and after its
-    /// tag block the marker and the effects, turning around the shape's anchor (\org).
+    /// A text line follows its shape's animation: it turns around the same \org as its drawing (the
+    /// anchor, or a double slide's far one), so its position is written to allow for its own \frz
+    /// turning around that point; \move instead of \pos for a slide. The marker and the effects go
+    /// after its tag block.
     /// </summary>
     private string AddTextAnimation(string textLine, DrawShape shape, DrawAnimation animation)
     {
         var anchor = GetAnimationAnchor(shape);
         var (left, top, right, bottom) = shape.GetTextBounds();
-        var position = animation.GetPositionTag((left + right) / 2, (top + bottom) / 2, LineDurationMs, anchor.Bounds, CanvasWidth, CanvasHeight);
+
+        // The \frz as the text line writes it (two decimals) - a far \org magnifies any difference
+        var baseFrz = (float)Math.Round(-shape.GetTextFrame().Angle, 2);
+        double originX = anchor.X, originY = anchor.Y, outSlideDegrees = 0;
+        if (animation.IsDoubleSlide)
+        {
+            (originX, originY, outSlideDegrees) = animation.GetOutSlideRotation(anchor.X, anchor.Y, anchor.Bounds, CanvasWidth, CanvasHeight);
+        }
+
+        var position = animation.GetPositionTag((left + right) / 2, (top + bottom) / 2, LineDurationMs, anchor.Bounds, CanvasWidth, CanvasHeight,
+            (x, y) => DrawAnimation.MapAroundOrigin(x, y, originX, originY, baseFrz));
         var posStart = textLine.IndexOf("\\pos(", StringComparison.Ordinal);
         if (posStart >= 0)
         {
@@ -2900,10 +2921,12 @@ public partial class AssaDrawViewModel : ObservableObject
         }
 
         var blockEnd = textLine.IndexOf('}');
-        var effects = "{\\org(" + anchor.X.ToString("0.##", CultureInfo.InvariantCulture) + "," + anchor.Y.ToString("0.##", CultureInfo.InvariantCulture) + ")" +
-                      animation.GetEffectTags(LineDurationMs, -shape.GetTextFrame().Angle) + "}";
+        var effects = $"{{\\org({FormatCoordinate(originX)},{FormatCoordinate(originY)})" + animation.GetEffectTags(LineDurationMs, baseFrz, outSlideDegrees) + "}";
         return textLine[..(blockEnd + 1)] + animation.FormatMarker(anchor.X, anchor.Y) + effects + textLine[(blockEnd + 1)..];
     }
+
+    private static string FormatCoordinate(double value) =>
+        Math.Abs(value) < 0.005 ? "0" : value.ToString("0.##", CultureInfo.InvariantCulture);
 
     /// <summary>
     /// The shape whose color names the layer's style: the first draw shape, or for a layer of only
@@ -3486,7 +3509,7 @@ public partial class AssaDrawViewModel : ObservableObject
         {
             animation = parsedAnimation.IsNone ? null : parsedAnimation;
             anchored = DrawAnimation.IsAnchoredDrawingLine(text);
-            text = DrawAnimation.RemoveFromLine(text, parsedAnimation);
+            text = DrawAnimation.RemoveFromLine(text);
         }
 
         if (AssaDrawTextLine.TryParse(text, out var parsedText))

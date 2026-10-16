@@ -74,19 +74,66 @@ public class AssaDrawAnimationTests
     }
 
     [AvaloniaFact]
-    public void SlideIn_UsesMove_AndASecondSlideOutFadesInstead()
+    public void SlideInAndOut_MovesTwice_TheSlideOutTurnsAroundAFarOrigin()
     {
         var vm = MakeViewModel(SquareC);
         vm.SetSelection([vm.Shapes[0]]);
         vm.AnimationIn = DrawAnimationEffect.Left;
         vm.AnimationOut = DrawAnimationEffect.Bottom;
 
-        Assert.True(vm.IsAnimationSlideConflict);
         vm.OkCommand.Execute(null);
         var line = vm.ResultSubtitle.Paragraphs[0].Text;
 
-        // From just left of the frame (right edge 700 + 4) to the anchor 650,650, then a 400 ms fade out
-        Assert.StartsWith("{\\an7\\move(-54,650,650,650,0,400)\\fad(0,400)}", line);
+        // In: from just left of the frame (right edge 700 + 4) to the anchor 650,650
+        Assert.StartsWith("{\\an7\\move(-54,650,650,650,0,400)\\org(", line);
+
+        // Out: turning around the \org moves the anchor just under the frame (top 600 -> 1084 + 4 - 600 = 484 down)
+        var match = System.Text.RegularExpressions.Regex.Match(line, @"\\org\(([-\d.]+),([-\d.]+)\)\\t\(2600,3000,2,\\frz([-\d.]+)\)");
+        Assert.True(match.Success, line);
+        var (x, y) = TurnLikeLibass(650, 650, double.Parse(match.Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture),
+            double.Parse(match.Groups[2].Value, System.Globalization.CultureInfo.InvariantCulture),
+            double.Parse(match.Groups[3].Value, System.Globalization.CultureInfo.InvariantCulture));
+        Assert.Equal(650, x, 0.5);
+        Assert.Equal(1134, y, 0.5);
+
+        // The canvas plays the same: eased like the other out effects
+        var end = vm.GetCanvasAnimationTransform(vm.Shapes[0], 3000).State;
+        Assert.Equal(484, end.Dy, 0.01);
+    }
+
+    /// <summary>
+    /// libass \frz: counter-clockwise on screen (y down) around the \org.
+    /// </summary>
+    private static (double X, double Y) TurnLikeLibass(double x, double y, double originX, double originY, double frz)
+    {
+        var radians = frz * Math.PI / 180;
+        var vx = x - originX;
+        var vy = y - originY;
+        return (originX + vx * Math.Cos(radians) + vy * Math.Sin(radians), originY - vx * Math.Sin(radians) + vy * Math.Cos(radians));
+    }
+
+    [AvaloniaFact]
+    public void TurnedText_InASpinningShape_StillShowsWhereItWas()
+    {
+        var vm = MakeViewModel(SquareA, SquareB);
+        vm.SetSelection([vm.Shapes[1]]);
+        vm.ShapeText = "Hi";
+        vm.Shapes[1].SetTextBounds(310, 110, 390, 190, 30);
+        vm.SetSelection([vm.Shapes[0], vm.Shapes[1]]);
+        vm.GroupShapesCommand.Execute(null);
+        vm.AnimationIn = DrawAnimationEffect.Spin;
+
+        vm.OkCommand.Execute(null);
+        var textLine = vm.ResultSubtitle.Paragraphs.Single(p => AssaDrawTextLine.IsTextLine(p.Text)).Text;
+
+        // The text turns -30 (its own angle) around the group's center 250,150, so it is written
+        // where that turn brings it back to its center 350,150
+        Assert.Contains("\\org(250,150)\\frz330", textLine);
+        var pos = System.Text.RegularExpressions.Regex.Match(textLine, @"\\pos\(([-\d.]+),([-\d.]+)\)");
+        var (x, y) = TurnLikeLibass(double.Parse(pos.Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture),
+            double.Parse(pos.Groups[2].Value, System.Globalization.CultureInfo.InvariantCulture), 250, 150, -30);
+        Assert.Equal(350, x, 0.05);
+        Assert.Equal(150, y, 0.05);
     }
 
     [AvaloniaFact]
