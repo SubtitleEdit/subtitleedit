@@ -5,8 +5,6 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
 {
     public class CalcAll : ICalcLength
     {
-        public static readonly CalcAll Instance = new CalcAll();
-
         /// <summary>
         /// Calculate length of all text including space but excluding composition characters (tags are not counted).
         /// </summary>

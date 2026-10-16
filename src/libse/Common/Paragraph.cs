@@ -172,7 +172,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public double GetCharactersPerSecond()
         {
-            return GetCharactersPerSecond(CalcAll.Instance);
+            return GetCharactersPerSecond(CalcFactory.MakeCalculator(Configuration.Settings.General.CpsLineLengthStrategy));
         }
 
         public double GetCharactersPerSecond(ICalcLength calc)
