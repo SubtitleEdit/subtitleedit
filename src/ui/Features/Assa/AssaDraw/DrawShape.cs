@@ -239,6 +239,28 @@ public class DrawShape
     }
 
     /// <summary>
+    /// Bounding box around several shapes (shapes without points are skipped).
+    /// </summary>
+    public static (float Left, float Top, float Right, float Bottom) GetBounds(IEnumerable<DrawShape> shapes)
+    {
+        (float Left, float Top, float Right, float Bottom)? bounds = null;
+        foreach (var shape in shapes)
+        {
+            if (shape.Points.Count == 0)
+            {
+                continue;
+            }
+
+            var b = shape.GetBounds();
+            bounds = bounds is { } u
+                ? (Math.Min(u.Left, b.Left), Math.Min(u.Top, b.Top), Math.Max(u.Right, b.Right), Math.Max(u.Bottom, b.Bottom))
+                : b;
+        }
+
+        return bounds ?? (0, 0, 0, 0);
+    }
+
+    /// <summary>
     /// The text area: the one set, or else the middle 80% of the bounds.
     /// </summary>
     public DrawTextFrame GetTextFrame()
@@ -337,8 +359,14 @@ public class DrawShape
     public void Rotate(float degrees)
     {
         var (left, top, right, bottom) = GetBounds();
-        var centerX = (left + right) / 2f;
-        var centerY = (top + bottom) / 2f;
+        Rotate(degrees, (left + right) / 2f, (top + bottom) / 2f);
+    }
+
+    /// <summary>
+    /// Rotates around a given center, e.g. the middle of a multi-selection.
+    /// </summary>
+    public void Rotate(float degrees, float centerX, float centerY)
+    {
         var radians = degrees * MathF.PI / 180f;
         var cos = MathF.Cos(radians);
         var sin = MathF.Sin(radians);
@@ -360,6 +388,14 @@ public class DrawShape
     public void FlipHorizontal()
     {
         var (left, _, right, _) = GetBounds();
+        FlipHorizontal(left, right);
+    }
+
+    /// <summary>
+    /// Mirrors inside the given horizontal range, e.g. the bounds of a multi-selection.
+    /// </summary>
+    public void FlipHorizontal(float left, float right)
+    {
         foreach (var point in Points)
         {
             point.X = left + right - point.X;
@@ -372,6 +408,14 @@ public class DrawShape
     public void FlipVertical()
     {
         var (_, top, _, bottom) = GetBounds();
+        FlipVertical(top, bottom);
+    }
+
+    /// <summary>
+    /// Mirrors inside the given vertical range, e.g. the bounds of a multi-selection.
+    /// </summary>
+    public void FlipVertical(float top, float bottom)
+    {
         foreach (var point in Points)
         {
             point.Y = top + bottom - point.Y;
