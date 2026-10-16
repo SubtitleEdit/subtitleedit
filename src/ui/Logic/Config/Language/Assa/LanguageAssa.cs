@@ -154,7 +154,7 @@ public class LanguageAssa
     public string DrawClipArtRingingPhone { get; set; }
     public string DrawClipArtBeatingHeart { get; set; }
     public string DrawClipArtBouncingArrow { get; set; }
-    public string DrawClipArtGear { get; set; }
+    public string DrawClipArtRingingBell { get; set; }
     public string DrawCategoryMyShapes { get; set; }
     public string DrawShapeSpeechBubble { get; set; }
     public string DrawShapeSpeechBubbleRight { get; set; }
@@ -711,7 +711,7 @@ public class LanguageAssa
         DrawClipArtRingingPhone = "Ringing phone";
         DrawClipArtBeatingHeart = "Beating heart";
         DrawClipArtBouncingArrow = "Bouncing arrow";
-        DrawClipArtGear = "Gear";
+        DrawClipArtRingingBell = "Ringing bell";
         DrawCategoryMyShapes = "My shapes";
         DrawShapeSpeechBubble = "Speech bubble";
         DrawShapeSpeechBubbleRight = "Speech bubble, tail right";
