@@ -966,6 +966,7 @@ public class AssaDrawWindow : Window
         properties.Children.Add(CreateShapePropertiesPanel(vm));
         properties.Children.Add(CreateTextPropertiesPanel(vm));
         properties.Children.Add(CreateLayerPropertiesPanel(vm));
+        properties.Children.Add(AssaDrawAnimationPanel.Create(vm));
         properties.Children.Add(CreatePointPropertiesPanel(vm));
         var propertiesScroll = new ScrollViewer
         {

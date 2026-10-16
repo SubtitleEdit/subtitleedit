@@ -195,6 +195,10 @@ public partial class AssaDrawViewModel : ObservableObject
     {
         _subtitle = subtitle;
         _videoFileName = videoFileName;
+        if (selectedLines.Count > 0 && selectedLines[0].Duration.TotalMilliseconds >= 1)
+        {
+            LineDurationMs = (int)Math.Round(selectedLines[0].Duration.TotalMilliseconds);
+        }
 
         // Same frame Set position uses: the paused player position when it is inside the line
         _videoSeconds = selectedLines.Count > 0
@@ -964,6 +968,7 @@ public partial class AssaDrawViewModel : ObservableObject
                         ? item.Name
                         : string.Empty;
 
+        RefreshAnimationFields();
         UpdateCodePreview();
     }
 
@@ -2303,7 +2308,8 @@ public partial class AssaDrawViewModel : ObservableObject
             return;
         }
 
-        var subtitle = GenerateSubtitle();
+        // The still preview shows the drawing at rest - the canvas plays the animation
+        var subtitle = GenerateSubtitle(withAnimation: false);
         var source = new AdvancedSubStationAlpha().ToText(subtitle, string.Empty) + CanvasWidth + "x" + CanvasHeight;
         if (source == _previewSource)
         {
@@ -2657,8 +2663,9 @@ public partial class AssaDrawViewModel : ObservableObject
     /// The drawing as ASSA lines. <paramref name="hiddenAsComments"/> (.assadraw save) writes hidden
     /// shapes as Comment lines, which <see cref="LoadFromText"/> turns back into hidden shapes.
     /// <paramref name="withGroups"/> (.assadraw save too) writes the shapes' groups in the Effect field.
+    /// <paramref name="withAnimation"/> false (the still preview) leaves the in/out effects out.
     /// </summary>
-    private Subtitle GenerateSubtitle(bool includeAll = false, bool hiddenAsComments = false, bool withGroups = false)
+    private Subtitle GenerateSubtitle(bool includeAll = false, bool hiddenAsComments = false, bool withGroups = false, bool withAnimation = true)
     {
         var subtitle = new Subtitle
         {
@@ -2759,10 +2766,13 @@ public partial class AssaDrawViewModel : ObservableObject
             sbErase.Clear();
             var firstShape = GetLayerStyleShape(layer);
 
-            // Collect draw shapes (normal shapes)
+            var animation = withAnimation ? GetLineAnimation(firstShape) : null;
+            var anchor = animation != null ? GetAnimationAnchor(firstShape!) : default;
+
+            // Collect draw shapes (normal shapes) - relative to the anchor when animated
             foreach (var shape in layer.Where(p => !p.IsEraser && !p.IsTextBox))
             {
-                sbDraw.Append(shape.ToAssa());
+                sbDraw.Append(animation != null ? shape.ToAssa(anchor.X, anchor.Y) : shape.ToAssa());
                 sbDraw.Append("  ");
             }
 
@@ -2799,6 +2809,14 @@ public partial class AssaDrawViewModel : ObservableObject
                     finalText.Append($"\\p1}}{drawText}{{\\p0}}");
                 }
 
+                if (finalText.Length > 0 && animation != null)
+                {
+                    finalText.Insert(0, "{\\an7" +
+                        animation.GetPositionTag(anchor.X, anchor.Y, LineDurationMs, anchor.Bounds, CanvasWidth, CanvasHeight) +
+                        animation.GetEffectTags(LineDurationMs) + "}" +
+                        animation.FormatMarker(anchor.X, anchor.Y));
+                }
+
                 if (finalText.Length > 0)
                 {
                     string styleName = string.Empty;
@@ -2822,7 +2840,14 @@ public partial class AssaDrawViewModel : ObservableObject
             // layer on top, so the text shows over its bubble and under the layers above
             foreach (var shape in layer.Where(s => s.HasText && s.Points.Count > 0))
             {
-                subtitle.Paragraphs.Add(new Paragraph(AssaDrawTextLine.Format(shape), 0, 10000)
+                var textAnimation = withAnimation ? GetLineAnimation(shape) : null;
+                var textLine = AssaDrawTextLine.Format(shape);
+                if (textAnimation != null)
+                {
+                    textLine = AddTextAnimation(textLine, shape, textAnimation);
+                }
+
+                subtitle.Paragraphs.Add(new Paragraph(textLine, 0, 10000)
                 {
                     Layer = layerKey,
                     IsComment = isComment,
@@ -2835,6 +2860,49 @@ public partial class AssaDrawViewModel : ObservableObject
         }
 
         return subtitle;
+    }
+
+    /// <summary>
+    /// Duration of the line the drawing is written to (the first selected line), for the out effect.
+    /// </summary>
+    public int LineDurationMs { get; set; } = 2000;
+
+    private static DrawAnimation? GetLineAnimation(DrawShape? shape) =>
+        shape?.Animation is { IsNone: false } animation ? animation : null;
+
+    /// <summary>
+    /// What an animation scales and turns around, and what it slides out of the frame: the shape's
+    /// group, or else its layer.
+    /// </summary>
+    internal (float X, float Y, (float Left, float Top, float Right, float Bottom) Bounds) GetAnimationAnchor(DrawShape shape)
+    {
+        var members = shape.GroupId != 0
+            ? Shapes.Where(s => s.GroupId == shape.GroupId && !s.IsEraser)
+            : Shapes.Where(s => s.Layer == shape.Layer && !s.IsEraser);
+        var bounds = DrawShape.GetBounds(members);
+        return ((bounds.Left + bounds.Right) / 2, (bounds.Top + bounds.Bottom) / 2, bounds);
+    }
+
+    /// <summary>
+    /// A text line follows its shape's animation: \move instead of \pos for a slide, and after its
+    /// tag block the marker and the effects, turning around the shape's anchor (\org).
+    /// </summary>
+    private string AddTextAnimation(string textLine, DrawShape shape, DrawAnimation animation)
+    {
+        var anchor = GetAnimationAnchor(shape);
+        var (left, top, right, bottom) = shape.GetTextBounds();
+        var position = animation.GetPositionTag((left + right) / 2, (top + bottom) / 2, LineDurationMs, anchor.Bounds, CanvasWidth, CanvasHeight);
+        var posStart = textLine.IndexOf("\\pos(", StringComparison.Ordinal);
+        if (posStart >= 0)
+        {
+            var posEnd = textLine.IndexOf(')', posStart);
+            textLine = textLine[..posStart] + position + textLine[(posEnd + 1)..];
+        }
+
+        var blockEnd = textLine.IndexOf('}');
+        var effects = "{\\org(" + anchor.X.ToString("0.##", CultureInfo.InvariantCulture) + "," + anchor.Y.ToString("0.##", CultureInfo.InvariantCulture) + ")" +
+                      animation.GetEffectTags(LineDurationMs, -shape.GetTextFrame().Angle) + "}";
+        return textLine[..(blockEnd + 1)] + animation.FormatMarker(anchor.X, anchor.Y) + effects + textLine[(blockEnd + 1)..];
     }
 
     /// <summary>
@@ -3398,7 +3466,7 @@ public partial class AssaDrawViewModel : ObservableObject
         Shapes.AddRange(DrawShape.ParseAssa(text, layer, color, isEraser));
     }
 
-    private readonly List<(int Layer, AssaDrawTextLine.Parsed Text, bool Hidden, int GroupId)> _importedTexts = [];
+    private readonly List<(int Layer, AssaDrawTextLine.Parsed Text, bool Hidden, int GroupId, DrawAnimation? Animation)> _importedTexts = [];
 
     /// <summary>
     /// One line of a script: its \iclip erase shapes, its \p1 drawing (with the line's outline),
@@ -3409,9 +3477,21 @@ public partial class AssaDrawViewModel : ObservableObject
     private void ImportLine(string text, int layer, Color color, bool hidden = false, string? effect = null)
     {
         var (drawGroups, eraseGroups) = ParseGroupEffect(effect);
+
+        // An animated line: the effects come off, and its drawing (written relative to the anchor) goes back in place
+        DrawAnimation? animation = null;
+        float anchorX = 0, anchorY = 0;
+        var anchored = false;
+        if (DrawAnimation.TryParseMarker(text, out var parsedAnimation, out anchorX, out anchorY))
+        {
+            animation = parsedAnimation.IsNone ? null : parsedAnimation;
+            anchored = DrawAnimation.IsAnchoredDrawingLine(text);
+            text = DrawAnimation.RemoveFromLine(text, parsedAnimation);
+        }
+
         if (AssaDrawTextLine.TryParse(text, out var parsedText))
         {
-            _importedTexts.Add((layer, parsedText, hidden, drawGroups.FirstOrDefault()));
+            _importedTexts.Add((layer, parsedText, hidden, drawGroups.FirstOrDefault(), animation));
             return;
         }
 
@@ -3425,6 +3505,11 @@ public partial class AssaDrawViewModel : ObservableObject
             var groups = shape.IsEraser ? eraseGroups : drawGroups;
             var index = shape.IsEraser ? eraseIndex++ : drawIndex++;
             shape.GroupId = index < groups.Count ? groups[index] : 0;
+            shape.Animation = animation?.Clone();
+            if (anchored && !shape.IsEraser)
+            {
+                shape.Offset(anchorX, anchorY);
+            }
         }
     }
 
@@ -3464,7 +3549,7 @@ public partial class AssaDrawViewModel : ObservableObject
     /// </summary>
     private void AttachTextLines()
     {
-        foreach (var (layer, parsed, hidden, groupId) in _importedTexts)
+        foreach (var (layer, parsed, hidden, groupId, animation) in _importedTexts)
         {
             var (left, top, right, bottom) = parsed.Box;
             var centerX = (left + right) / 2;
@@ -3484,6 +3569,8 @@ public partial class AssaDrawViewModel : ObservableObject
                 host.GroupId = groupId;
                 Shapes.Add(host);
             }
+
+            host.Animation ??= animation?.Clone();
 
             host.Text = parsed.Text;
             host.FontName = parsed.FontName;
@@ -3945,6 +4032,7 @@ public partial class AssaDrawViewModel : ObservableObject
         }
 
         NotifyCommandStates();
+        RefreshAnimationFields();
     }
 
     partial void OnPointXChanged(float value)
@@ -4337,6 +4425,7 @@ public partial class AssaDrawViewModel : ObservableObject
         UiUtil.SaveWindowPosition(Window);
 
         _previewTimer?.Stop();
+        StopAnimationPlayback();
         if (Canvas != null)
         {
             (Canvas.PreviewImage as IDisposable)?.Dispose();

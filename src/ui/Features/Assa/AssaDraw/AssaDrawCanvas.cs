@@ -212,6 +212,17 @@ public class AssaDrawCanvas : Control
         set => SetValue(CurrentYProperty, value);
     }
 
+    /// <summary>
+    /// While the animation plays: the time into the line (ms). The canvas then shows just the
+    /// layers, each moved, scaled, turned and faded like libass shows it at that time.
+    /// </summary>
+    public double? AnimationTime { get; set; }
+
+    /// <summary>
+    /// The animation state and anchor of a layer (given its first drawing shape) at a time.
+    /// </summary>
+    public Func<DrawShape, double, (DrawAnimationState State, float AnchorX, float AnchorY)>? GetAnimationTransform { get; set; }
+
     public bool ShowPreview
     {
         get => GetValue(ShowPreviewProperty);
@@ -454,6 +465,13 @@ public class AssaDrawCanvas : Control
 
         // Draw resolution border
         DrawResolutionBorder(context);
+
+        // Playing the animation: only the animated result, no outlines or handles
+        if (AnimationTime is { } animationTime && GetAnimationTransform != null)
+        {
+            DrawLayerFills(context, Shapes, animationTime);
+            return;
+        }
 
         // Shapes are filled with their layer color, unless the libass render already shows them
         var fillShapes = !ShowPreview || PreviewImage == null;
@@ -759,10 +777,11 @@ public class AssaDrawCanvas : Control
     /// shapes (\iclip) are cut out of it. The layer's outline goes under the fill (libass draws
     /// \bord outside the shape), and the layer's text on top of it.
     /// </summary>
-    private void DrawLayerFills(DrawingContext context, List<DrawShape> shapes)
+    private void DrawLayerFills(DrawingContext context, List<DrawShape> shapes, double? animationTime = null)
     {
         foreach (var layer in shapes.Where(s => !s.Hidden && s.Points.Count > 2).GroupBy(s => s.Layer).OrderBy(g => g.Key))
         {
+            using var animation = animationTime is { } time ? PushAnimation(context, layer, time) : null;
             var drawShapes = layer.Where(s => !s.IsEraser && !s.IsTextBox).ToList();
             if (drawShapes.Count > 0)
             {
@@ -791,6 +810,44 @@ public class AssaDrawCanvas : Control
             {
                 DrawShapeText(context, shape);
             }
+        }
+    }
+
+    /// <summary>
+    /// Moves, scales and turns what is drawn next around the layer's anchor, and fades it, as its
+    /// animation has it at <paramref name="timeMs"/>.
+    /// </summary>
+    private AnimationScope? PushAnimation(DrawingContext context, IEnumerable<DrawShape> layer, double timeMs)
+    {
+        var styleShape = layer.FirstOrDefault(s => !s.IsEraser);
+        if (styleShape == null || GetAnimationTransform == null)
+        {
+            return null;
+        }
+
+        var (state, anchorX, anchorY) = GetAnimationTransform(styleShape, timeMs);
+        if (state == DrawAnimationState.Rest)
+        {
+            return null;
+        }
+
+        var centerX = ToZoomFactorX(anchorX);
+        var centerY = ToZoomFactorY(anchorY);
+        var transform = context.PushTransform(
+            Matrix.CreateTranslation(-centerX, -centerY) *
+            Matrix.CreateScale(Math.Max(0.001, state.Scale), Math.Max(0.001, state.Scale)) *
+            Matrix.CreateRotation(state.Rotation * Math.PI / 180) *
+            Matrix.CreateTranslation(centerX + state.Dx * _zoomFactor, centerY + state.Dy * _zoomFactor));
+        var opacity = context.PushOpacity(state.Opacity);
+        return new AnimationScope(transform, opacity);
+    }
+
+    private sealed class AnimationScope(DrawingContext.PushedState transform, DrawingContext.PushedState opacity) : IDisposable
+    {
+        public void Dispose()
+        {
+            opacity.Dispose();
+            transform.Dispose();
         }
     }
 
