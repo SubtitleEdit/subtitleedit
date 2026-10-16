@@ -4,6 +4,7 @@ using Avalonia.Platform;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Compression;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -30,6 +31,7 @@ public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanu
     [ObservableProperty] private double _progress;
     [ObservableProperty] private string _statusText;
     [ObservableProperty] private bool _isDownloadEnabled;
+    [ObservableProperty] private bool _isUninstallVisible;
     [ObservableProperty] private bool _isProgressVisible;
     [ObservableProperty] private double _progressOpacity;
     [ObservableProperty] private string _selectedStatusText;
@@ -387,11 +389,29 @@ public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanu
         UpdateSelectedStatus();
     }
 
+    partial void OnIsDownloadEnabledChanged(bool value)
+    {
+        UpdateSelectedStatus();
+    }
+
     /// <summary>
     /// Marks each dictionary as installed or not by checking the dictionaries folder,
     /// and updates the green/gray status dots accordingly.
     /// </summary>
     private void RefreshInstalledStatus()
+    {
+        var installedDicFiles = GetInstalledDicFileNames();
+        foreach (var dictionary in Dictionaries)
+        {
+            dictionary.IsInstalled = dictionary.Voikko
+                ? VoikkoSpellChecker.HasDictionary(Se.DictionariesFolder)
+                : GetInstalledDicFiles(dictionary, installedDicFiles).Count > 0;
+        }
+
+        UpdateSelectedStatus();
+    }
+
+    private static List<string> GetInstalledDicFileNames()
     {
         var installedDicFiles = new List<string>();
         if (Directory.Exists(Se.DictionariesFolder))
@@ -402,35 +422,30 @@ public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanu
             }
         }
 
-        foreach (var dictionary in Dictionaries)
-        {
-            dictionary.IsInstalled = IsEntryInstalled(dictionary, installedDicFiles);
-        }
-
-        UpdateSelectedStatus();
+        return installedDicFiles;
     }
 
     private void UpdateSelectedStatus()
     {
         var selected = SelectedDictionary;
+        IsUninstallVisible = selected is { IsInstalled: true } && IsDownloadEnabled;
         if (selected == null)
         {
             SelectedStatusText = string.Empty;
             DownloadButtonText = Se.Language.General.Download;
             return;
         }
-        
+
         SelectedStatusText = selected.IsInstalled ? Se.Language.General.Installed : Se.Language.General.NotInstalled;
         DownloadButtonText = selected.IsInstalled ? Se.Language.General.Redownload : Se.Language.General.Download;
     }
 
-    private static bool IsEntryInstalled(GetSpellCheckDictionaryDisplay entry, List<string> installedDicFiles)
+    /// <summary>
+    /// The installed .dic file names (from <paramref name="installedDicFiles"/>) that belong to a
+    /// Hunspell entry. Used both for the installed state and for what Uninstall deletes.
+    /// </summary>
+    private static List<string> GetInstalledDicFiles(GetSpellCheckDictionaryDisplay entry, List<string> installedDicFiles)
     {
-        if (entry.Voikko)
-        {
-            return VoikkoSpellChecker.HasDictionary(Se.DictionariesFolder);
-        }
-
         var dicNames = entry.Files
             .Select(GetFileNameFromUrl)
             .Where(name => name.EndsWith(".dic", StringComparison.OrdinalIgnoreCase))
@@ -438,11 +453,20 @@ public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanu
 
         if (dicNames.Count > 0)
         {
-            return dicNames.Any(name => installedDicFiles.Any(f => f.Equals(name, StringComparison.OrdinalIgnoreCase)));
+            return installedDicFiles
+                .Where(f => dicNames.Any(name => f.Equals(name, StringComparison.OrdinalIgnoreCase)))
+                .ToList();
         }
 
-        return LegacyDicPrefixes.TryGetValue(entry.EnglishName, out var prefix) &&
-               installedDicFiles.Any(f => f.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
+        if (!LegacyDicPrefixes.TryGetValue(entry.EnglishName, out var prefix))
+        {
+            return new List<string>();
+        }
+
+        // The prefix must be followed by a separator, so e.g. Khmer "km" does not match Kurmanji "kmr_Latn.dic".
+        return installedDicFiles
+            .Where(f => f.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) && "_-.".Contains(f[prefix.Length]))
+            .ToList();
     }
 
     [RelayCommand]
@@ -468,6 +492,60 @@ public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanu
         });
 
         _downloadTask = DownloadAndUnpackAsync(selected, downloadProgress, _cancellationTokenSource.Token);
+    }
+
+    /// <summary>
+    /// Deletes the selected dictionary: its .dic files plus the .aff files with the same name, or
+    /// the whole Voikko folder. User word lists and names files in the folder are kept.
+    /// </summary>
+    [RelayCommand]
+    private async Task Uninstall()
+    {
+        var selected = SelectedDictionary;
+        if (selected is not { IsInstalled: true } || Window == null)
+        {
+            return;
+        }
+
+        var answer = await MessageBox.Show(
+            Window,
+            Se.Language.SpellCheck.GetDictionariesTitle,
+            string.Format(Se.Language.SpellCheck.UninstallDictionaryX, selected.DisplayName),
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+        if (answer != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        try
+        {
+            if (selected.Voikko)
+            {
+                var voikkoFolder = VoikkoSpellChecker.GetVoikkoFolder(Se.DictionariesFolder);
+                if (Directory.Exists(voikkoFolder))
+                {
+                    Directory.Delete(voikkoFolder, true);
+                }
+            }
+            else
+            {
+                foreach (var dicFile in GetInstalledDicFiles(selected, GetInstalledDicFileNames()))
+                {
+                    var dicFileName = Path.Combine(Se.DictionariesFolder, dicFile);
+                    File.Delete(dicFileName);
+                    File.Delete(Path.ChangeExtension(dicFileName, ".aff"));
+                }
+            }
+
+            StatusText = Se.Language.General.Uninstalled;
+        }
+        catch (Exception exception)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error, exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        RefreshInstalledStatus();
     }
 
     [RelayCommand]
