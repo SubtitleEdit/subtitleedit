@@ -59,8 +59,11 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         public static readonly StyledProperty<ICommand?> NextSubtitleCommandProperty =
             AvaloniaProperty.Register<VideoPlayerControl, ICommand?>(nameof(NextSubtitleCommand));
 
-        public static readonly StyledProperty<bool> SubtitleNavigationIsVisibleProperty =
-            AvaloniaProperty.Register<VideoPlayerControl, bool>(nameof(SubtitleNavigationIsVisible));
+        public static readonly StyledProperty<ICommand?> ToggleSubtitlesCommandProperty =
+            AvaloniaProperty.Register<VideoPlayerControl, ICommand?>(nameof(ToggleSubtitlesCommand));
+
+        public static readonly StyledProperty<bool> SubtitleButtonsIsVisibleProperty =
+            AvaloniaProperty.Register<VideoPlayerControl, bool>(nameof(SubtitleButtonsIsVisible));
 
         public static readonly StyledProperty<bool> StopIsVisibleProperty =
             AvaloniaProperty.Register<VideoPlayerControl, bool>(nameof(StopIsVisible));
@@ -148,14 +151,21 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             set => SetValue(NextSubtitleCommandProperty, value);
         }
 
-        /// <summary>
-        /// The previous/next subtitle buttons need a subtitle list, so only the main window's
-        /// players (and the controls preview) show them - when the controls layout does (#16047).
-        /// </summary>
-        public bool SubtitleNavigationIsVisible
+        public ICommand? ToggleSubtitlesCommand
         {
-            get => GetValue(SubtitleNavigationIsVisibleProperty);
-            set => SetValue(SubtitleNavigationIsVisibleProperty, value);
+            get => GetValue(ToggleSubtitlesCommandProperty);
+            set => SetValue(ToggleSubtitlesCommandProperty, value);
+        }
+
+        /// <summary>
+        /// The previous/next subtitle and toggle subtitles buttons need the main window's
+        /// subtitle, so only its players (and the controls preview) show them - when the
+        /// controls layout does (#16047).
+        /// </summary>
+        public bool SubtitleButtonsIsVisible
+        {
+            get => GetValue(SubtitleButtonsIsVisibleProperty);
+            set => SetValue(SubtitleButtonsIsVisibleProperty, value);
         }
 
         public bool StopIsVisible
@@ -216,6 +226,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         private readonly Button _buttonStop;
         private readonly Button _buttonPreviousSubtitle;
         private readonly Button _buttonNextSubtitle;
+        private readonly Button _buttonToggleSubtitles;
         private readonly StackPanel _panelFullScreen;
         private readonly Slider _sliderPosition;
         private readonly StackPanel _panelVolume;
@@ -558,15 +569,19 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 Source = this
             });
 
-            // Previous/next subtitle (#16047)
-            _buttonPreviousSubtitle = MakeSubtitleNavigationButton(
+            // Previous/next subtitle and toggle subtitles on the video (#16047)
+            _buttonPreviousSubtitle = MakeSubtitleButton(
                 Se.Language.Options.Settings.VideoControlsPreviousSubtitle,
                 "fa-solid fa-backward-step",
                 nameof(PreviousSubtitleCommand));
-            _buttonNextSubtitle = MakeSubtitleNavigationButton(
+            _buttonNextSubtitle = MakeSubtitleButton(
                 Se.Language.Options.Settings.VideoControlsNextSubtitle,
                 "fa-solid fa-forward-step",
                 nameof(NextSubtitleCommand));
+            _buttonToggleSubtitles = MakeSubtitleButton(
+                Se.Language.Video.ToggleSubtitlesOnVideoPlayer,
+                "fa-solid fa-closed-captioning",
+                nameof(ToggleSubtitlesCommand));
 
             // Fullscreen
             _buttonFullScreen = new NonSpaceButton
@@ -1075,6 +1090,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                     SeVideoControlsItemType.Stop => _buttonStop,
                     SeVideoControlsItemType.PreviousSubtitle => _buttonPreviousSubtitle,
                     SeVideoControlsItemType.NextSubtitle => _buttonNextSubtitle,
+                    SeVideoControlsItemType.ToggleSubtitles => _buttonToggleSubtitles,
                     SeVideoControlsItemType.FullScreen => _panelFullScreen,
                     SeVideoControlsItemType.PositionSlider => _sliderPosition,
                     SeVideoControlsItemType.Volume => _panelVolume,
@@ -1161,7 +1177,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             UpdateVideoFileNameMaxWidth();
         }
 
-        private NonSpaceButton MakeSubtitleNavigationButton(string name, string iconName, string commandPropertyName)
+        private NonSpaceButton MakeSubtitleButton(string name, string iconName, string commandPropertyName)
         {
             var button = new NonSpaceButton
             {
@@ -1170,7 +1186,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             };
             button.Bind(IsVisibleProperty, new Binding
             {
-                Path = nameof(SubtitleNavigationIsVisible),
+                Path = nameof(SubtitleButtonsIsVisible),
                 Source = this
             });
             Attached.SetIcon(button, iconName);
@@ -1191,7 +1207,8 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         {
             static bool IsButton(SeVideoControlsItemType type) =>
                 type is SeVideoControlsItemType.Play or SeVideoControlsItemType.Stop or SeVideoControlsItemType.FullScreen or
-                    SeVideoControlsItemType.PreviousSubtitle or SeVideoControlsItemType.NextSubtitle;
+                    SeVideoControlsItemType.PreviousSubtitle or SeVideoControlsItemType.NextSubtitle or
+                    SeVideoControlsItemType.ToggleSubtitles;
 
             if (IsButton(left) && IsButton(right))
             {

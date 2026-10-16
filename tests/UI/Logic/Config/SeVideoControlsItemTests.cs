@@ -5,12 +5,13 @@ namespace UITests.Logic.Config;
 public class SeVideoControlsItemTests
 {
     [Fact]
-    public void MakeDefaults_SubtitleNavigationButtonsHidden()
+    public void MakeDefaults_SubtitleButtonsHidden()
     {
         var items = SeVideoControlsItem.MakeDefaults();
 
         Assert.False(items.Single(p => p.Type == SeVideoControlsItemType.PreviousSubtitle).IsVisible);
         Assert.False(items.Single(p => p.Type == SeVideoControlsItemType.NextSubtitle).IsVisible);
+        Assert.False(items.Single(p => p.Type == SeVideoControlsItemType.ToggleSubtitles).IsVisible);
     }
 
     [Fact]
@@ -38,6 +39,7 @@ public class SeVideoControlsItemTests
             SeVideoControlsItemType.Stop,
             SeVideoControlsItemType.PreviousSubtitle,
             SeVideoControlsItemType.NextSubtitle,
+            SeVideoControlsItemType.ToggleSubtitles,
             SeVideoControlsItemType.PositionSlider,
             SeVideoControlsItemType.Volume,
             SeVideoControlsItemType.PositionText,
@@ -46,6 +48,7 @@ public class SeVideoControlsItemTests
         ], result.Select(p => p.Type));
         Assert.False(result[3].IsVisible);
         Assert.False(result[4].IsVisible);
+        Assert.False(result[5].IsVisible);
         Assert.Equal(Enumerable.Range(1, result.Count).Select(i => i * 10), result.Select(p => p.SortOrder));
     }
 

@@ -32,6 +32,7 @@ public class SeVideoControlsItem
             new SeVideoControlsItem { Type = SeVideoControlsItemType.Stop, SortOrder = 20 },
             new SeVideoControlsItem { Type = SeVideoControlsItemType.PreviousSubtitle, IsVisible = false, SortOrder = 22 },
             new SeVideoControlsItem { Type = SeVideoControlsItemType.NextSubtitle, IsVisible = false, SortOrder = 24 },
+            new SeVideoControlsItem { Type = SeVideoControlsItemType.ToggleSubtitles, IsVisible = false, SortOrder = 26 },
             new SeVideoControlsItem { Type = SeVideoControlsItemType.FullScreen, SortOrder = 30 },
             new SeVideoControlsItem { Type = SeVideoControlsItemType.PositionSlider, SortOrder = 40 },
             new SeVideoControlsItem { Type = SeVideoControlsItemType.Volume, SortOrder = 50 },

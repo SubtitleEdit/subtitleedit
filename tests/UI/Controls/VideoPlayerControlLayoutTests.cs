@@ -139,11 +139,11 @@ public class VideoPlayerControlLayoutTests
     }
 
     [AvaloniaFact]
-    public void SubtitleNavigationButtons_ShownOnlyWhenEnabledAndInLayout()
+    public void SubtitleButtons_ShownOnlyWhenEnabledAndInLayout()
     {
         var control = new VideoPlayerControl(new EmptyVideoPlayer());
         var items = SeVideoControlsItem.MakeDefaults();
-        foreach (var item in items.Where(p => p.Type is SeVideoControlsItemType.PreviousSubtitle or SeVideoControlsItemType.NextSubtitle))
+        foreach (var item in items.Where(p => p.Type is SeVideoControlsItemType.PreviousSubtitle or SeVideoControlsItemType.NextSubtitle or SeVideoControlsItemType.ToggleSubtitles))
         {
             item.IsVisible = true;
         }
@@ -153,11 +153,14 @@ public class VideoPlayerControlLayoutTests
         var next = GetButton(control, Se.Language.Options.Settings.VideoControlsNextSubtitle);
         Assert.Equal(2, Grid.GetColumn(previous));
         Assert.Equal(3, Grid.GetColumn(next));
+        var toggle = GetButton(control, Se.Language.Video.ToggleSubtitlesOnVideoPlayer);
+        Assert.Equal(4, Grid.GetColumn(toggle));
         Assert.False(previous.IsVisible); // dialogs without a subtitle list
 
-        control.SubtitleNavigationIsVisible = true;
+        control.SubtitleButtonsIsVisible = true;
         Assert.True(previous.IsVisible);
         Assert.True(next.IsVisible);
+        Assert.True(toggle.IsVisible);
 
         control.ApplyControlsLayout(SeVideoControlsItem.MakeDefaults());
         Assert.DoesNotContain(previous, GetControlsGrid(control).Children);
