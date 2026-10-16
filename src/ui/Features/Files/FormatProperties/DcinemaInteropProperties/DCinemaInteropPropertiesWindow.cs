@@ -45,11 +45,11 @@ public class DCinemaInteropPropertiesWindow : Window
         // Font section
         var textBoxFontId = EditorChrome.AsTextField(UiUtil.MakeTextBox(200, vm, nameof(vm.FontId)), lang.FontId);
         var textBoxFontUri = EditorChrome.AsTextField(UiUtil.MakeTextBox(340, vm, nameof(vm.FontUri)), lang.FontUri);
-        var buttonFontColor = FormatPropertiesChrome.ColorButton(lang.ChooseColor, Se.Language.General.FontColor, vm.ChooseFontColorCommand, nameof(vm.FontColor));
+        var buttonFontColor = FormatPropertiesChrome.ColorButton(Se.Language.General.ChooseColor, Se.Language.General.FontColor, vm.ChooseFontColorCommand, nameof(vm.FontColor));
         var comboBoxFontEffect = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox<string>(vm.FontEffects, vm, nameof(vm.SelectedFontEffect)), lang.FontEffect, 140);
-        var buttonFontEffectColor = FormatPropertiesChrome.ColorButton(lang.ChooseColor, lang.EffectColor, vm.ChooseFontEffectColorCommand, nameof(vm.FontEffectColor));
+        var buttonFontEffectColor = FormatPropertiesChrome.ColorButton(Se.Language.General.ChooseColor, lang.EffectColor, vm.ChooseFontEffectColorCommand, nameof(vm.FontEffectColor));
         var numericUpDownFontSize = FormatPropertiesChrome.Number(UiUtil.MakeNumericUpDownInt(0, 250, 42, 90, vm, nameof(vm.FontSize)), Se.Language.General.FontSize);
-        var numericUpDownTopBottomMargin = FormatPropertiesChrome.Number(UiUtil.MakeNumericUpDownInt(1, 50, 8, 90, vm, nameof(vm.TopBottomMargin)), lang.TopBottomMargin);
+        var numericUpDownTopBottomMargin = FormatPropertiesChrome.Number(UiUtil.MakeNumericUpDownInt(1, 50, 8, 90, vm, nameof(vm.TopBottomMargin)), Se.Language.General.TopBottomMargin);
         var numericUpDownZPosition = FormatPropertiesChrome.Number(UiUtil.MakeNumericUpDownTwoDecimals(-10, 10, 90, vm, nameof(vm.ZPosition)), lang.ZPosition);
         var labelZPositionHelp = FormatPropertiesChrome.Hint(lang.ZPositionHelp, 300);
         var numericUpDownFadeUpTime = FormatPropertiesChrome.Number(UiUtil.MakeNumericUpDownInt(0, 50, 0, 90, vm, nameof(vm.FadeUpTime)), lang.FadeUpTime);
@@ -60,7 +60,7 @@ public class DCinemaInteropPropertiesWindow : Window
             FormatPropertiesChrome.Row(lang.FontUri, textBoxFontUri),
             FormatPropertiesChrome.Row(Se.Language.General.FontColor, buttonFontColor),
             FormatPropertiesChrome.Row(lang.FontEffect, comboBoxFontEffect, FormatPropertiesChrome.InlineLabel(lang.EffectColor), buttonFontEffectColor),
-            FormatPropertiesChrome.Row(Se.Language.General.FontSize, numericUpDownFontSize, FormatPropertiesChrome.InlineLabel(lang.TopBottomMargin), numericUpDownTopBottomMargin),
+            FormatPropertiesChrome.Row(Se.Language.General.FontSize, numericUpDownFontSize, FormatPropertiesChrome.InlineLabel(Se.Language.General.TopBottomMargin), numericUpDownTopBottomMargin),
             FormatPropertiesChrome.Row(lang.ZPosition, numericUpDownZPosition, labelZPositionHelp),
             FormatPropertiesChrome.Row(lang.FadeUpTime, numericUpDownFadeUpTime, FormatPropertiesChrome.Unit(Se.Language.General.Frames),
                 FormatPropertiesChrome.InlineLabel(lang.FadeDownTime), numericUpDownFadeDownTime, FormatPropertiesChrome.Unit(Se.Language.General.Frames)));

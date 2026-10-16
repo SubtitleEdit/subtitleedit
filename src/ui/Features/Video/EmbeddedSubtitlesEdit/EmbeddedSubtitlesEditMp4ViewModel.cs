@@ -342,7 +342,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
             {
                 await MessageBox.Show(
                     Window,
-                    Se.Language.Video.EmbeddedTrackNoSubtitlesFoundTitle,
+                    Se.Language.General.NoSubtitlesFoundTitle,
                     Se.Language.Video.EmbeddedTrackNoSubtitlesFoundMessage,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);

@@ -47,7 +47,7 @@ public partial class CopyPasteTranslateBlockViewModel : ObservableObject
 
         if (TranslatedText == string.Empty)
         {
-            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Translate.NoTextInClipboard,
+            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.General.NoTextInClipboard,
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             return;

@@ -43,7 +43,7 @@ public static class ErrorListExport
             Summary = summary,
             FileName = subtitleFileName,
             CategoryHeader = Se.Language.General.Error,
-            DetailHeader = l.Detail,
+            DetailHeader = Se.Language.General.Detail,
             AllLabel = l.All,
             AllColor = LineError.AllColor,
             Chips = Enum.GetValues<LineErrorType>().Select(type => new ReportExportChip

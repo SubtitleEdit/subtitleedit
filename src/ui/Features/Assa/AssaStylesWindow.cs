@@ -724,7 +724,7 @@ public class AssaStylesWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 0, 6, 0),
         });
-        var names = new[] { Se.Language.Assa.StylesPreviewDark, Se.Language.Assa.StylesPreviewChecker, Se.Language.Assa.StylesPreviewLight };
+        var names = new[] { Se.Language.General.Dark, Se.Language.Assa.StylesPreviewChecker, Se.Language.General.Light };
         for (var i = 0; i < names.Length; i++)
         {
             var index = i;
@@ -759,7 +759,7 @@ public class AssaStylesWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBox.TextProperty] = new Binding(nameof(vm.PreviewText)) { Mode = BindingMode.TwoWay },
         };
-        AutomationProperties.SetName(sampleText, Se.Language.Assa.StylesPreviewSampleText);
+        AutomationProperties.SetName(sampleText, Se.Language.General.SampleText);
         if (Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(sampleText, Se.Language.Assa.StylesPreviewSampleTextHint);

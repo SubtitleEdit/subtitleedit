@@ -244,7 +244,7 @@ public class ErrorListWindow : Window
         });
         dataGrid.Columns.Add(new SeTableViewColumn
         {
-            Header = l.Detail,
+            Header = Se.Language.General.Detail,
             Binding = new Binding(nameof(ErrorListItem.Detail)),
             Width = new GridLength(200),
             CellTheme = UiUtil.TableViewCellTheme,

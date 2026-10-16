@@ -76,7 +76,7 @@ public class AdvancedTtsSettingsWindow : Window
 
                 MakeRow(switchRemoveSpeech, l.RemoveOriginalSpeechDescription, describes: toggleRemoveSpeech),
 
-                MakeRow(MakeLabel(l.SpeechRemovalModel), l.SpeechRemovalModelDescription, speechRemovalModel),
+                MakeRow(MakeLabel(Se.Language.General.Model), l.SpeechRemovalModelDescription, speechRemovalModel),
 
                 MakeRow(switchVad, l.VadSilenceCompressionDescription,
                     MakeField(l.MaxSilenceMs,
@@ -89,7 +89,7 @@ public class AdvancedTtsSettingsWindow : Window
             }
         }, first: true);
 
-        var groupOutput = EditorChrome.MakeEditorSection(l.AdvancedTtsOutput, new StackPanel
+        var groupOutput = EditorChrome.MakeEditorSection(Se.Language.General.Output, new StackPanel
         {
             Spacing = 8,
             Children =

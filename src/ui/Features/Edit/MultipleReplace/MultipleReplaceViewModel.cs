@@ -1548,7 +1548,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
             }
             catch (ArgumentException exception)
             {
-                return string.Format(Se.Language.Edit.MultipleReplace.InvalidRegularExpressionX, exception.Message);
+                return string.Format(Se.Language.General.InvalidRegularExpressionX, exception.Message);
             }
         });
     }

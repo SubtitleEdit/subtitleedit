@@ -93,7 +93,7 @@ public class PromptUnknownWordWindow : Window
     private static Border MakeWholeTextView(PromptUnknownWordViewModel vm)
     {
         vm.TextBoxWholeText.Bind(TextBox.TextProperty, new Binding(nameof(vm.WholeText)) { Mode = BindingMode.TwoWay });
-        vm.TextBoxWholeText.WithAccessibleName(Se.Language.Ocr.EditWholeText);
+        vm.TextBoxWholeText.WithAccessibleName(Se.Language.General.EditWholeText);
         vm.TextBoxWholeText.Classes.Add("text");
         vm.TextBoxWholeText
             .WithHorizontalAlignmentStretch()

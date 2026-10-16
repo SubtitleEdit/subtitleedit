@@ -19,7 +19,7 @@ public class ColorPickerWindow : Window
     public ColorPickerWindow(ColorPickerViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Tools.ColorPickerTitle;
+        Title = Se.Language.General.ChooseColor;
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;

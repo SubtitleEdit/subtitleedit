@@ -7781,7 +7781,7 @@ public partial class MainViewModel :
         var text = await ClipboardHelper.GetTextAsync(Window);
         if (string.IsNullOrEmpty(text))
         {
-            ShowStatus(Se.Language.Main.NoTextInClipboard);
+            ShowStatus(Se.Language.General.NoTextInClipboard);
             return;
         }
 
@@ -14213,7 +14213,7 @@ public partial class MainViewModel :
         var text = await ClipboardHelper.GetTextAsync(Window);
         if (string.IsNullOrEmpty(text))
         {
-            ShowStatus(Se.Language.Main.NoTextInClipboard);
+            ShowStatus(Se.Language.General.NoTextInClipboard);
             _shortcutManager.ClearKeys();
             return;
         }
@@ -18954,14 +18954,14 @@ public partial class MainViewModel :
                     // they were on - jumping to the top on every Apply lost their place, and Apply
                     // is meant to be used several times in a row (issue #13822).
                     ApplyFixedSubtitle(fixedSubtitle, rowByParagraphId, SelectedSubtitleIndex ?? 0, SelectedSubtitleFormat);
-                    ShowStatus(string.Format(Se.Language.Main.ReplacedXOccurrences, count));
+                    ShowStatus(string.Format(Se.Language.General.ReplacedXOccurrences, count));
                 };
             });
 
         if (result.OkPressed)
         {
             ApplyFixedSubtitle(result.FixedSubtitle, rowByParagraphId, SelectedSubtitleIndex ?? 0, SelectedSubtitleFormat);
-            ShowStatus(string.Format(Se.Language.Main.ReplacedXOccurrences, result.TotalReplaced));
+            ShowStatus(string.Format(Se.Language.General.ReplacedXOccurrences, result.TotalReplaced));
         }
     }
 

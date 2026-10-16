@@ -368,7 +368,7 @@ public class ExportImageBasedWindow : Window
             Row(Se.Language.General.Alignment, Combo(vm.Alignments, vm, nameof(vm.SelectedAlignment), Se.Language.General.Alignment)),
             Row(Se.Language.General.ContentAlignment, Combo(vm.ContentAlignments, vm, nameof(vm.SelectedContentAlignment), Se.Language.General.ContentAlignment)),
             Row(Se.Language.File.Export.LeftRightMargin, Combo(vm.LeftRightMargins, vm, nameof(vm.SelectedLeftRightMargin), Se.Language.File.Export.LeftRightMargin)),
-            Row(Se.Language.File.Export.TopBottomMargin, Combo(vm.TopBottomMargins, vm, nameof(vm.SelectedTopBottomMargin), Se.Language.File.Export.TopBottomMargin)),
+            Row(Se.Language.General.TopBottomMargin, Combo(vm.TopBottomMargins, vm, nameof(vm.SelectedTopBottomMargin), Se.Language.General.TopBottomMargin)),
             Row(Se.Language.File.Export.PaddingLeftRight, Combo(vm.PaddingsLeftRight, vm, nameof(vm.SelectedPaddingLeftRight), Se.Language.File.Export.PaddingLeftRight)),
             Row(Se.Language.File.Export.PaddingTopBottom, Combo(vm.PaddingsTopBottom, vm, nameof(vm.SelectedPaddingTopBottom), Se.Language.File.Export.PaddingTopBottom))));
     }

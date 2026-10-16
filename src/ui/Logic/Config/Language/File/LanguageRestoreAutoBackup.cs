@@ -9,7 +9,6 @@ public class LanguageRestoreAutoBackup
     public string RestoreXFromY { get; set; }
     public string DeleteAllSubtitleBackups { get; set; }
     public string DeleteAll { get; set; }
-    public string Subtitles { get; set; }
     public string SettingsBackupInfo { get; set; }
     public string SettingsBackupInfoEveryStart { get; set; }
     public string SettingsBackupOff { get; set; }
@@ -34,7 +33,6 @@ public class LanguageRestoreAutoBackup
         RestoreXFromY = "Do you want to restore \"{0}\" from {1}?";
         DeleteAllSubtitleBackups = "Do you want to delete all subtitle backup files?";
         DeleteAll = "Delete all";
-        Subtitles = "Subtitles";
         SettingsBackupInfo = "Settings.json is backed up when Subtitle Edit starts, at most once every {0} day(s) and only if the settings have changed. The newest {1} backups are kept.";
         SettingsBackupInfoEveryStart = "Settings.json is backed up every time Subtitle Edit starts, if the settings have changed. The newest {0} backups are kept.";
         SettingsBackupOff = "Automatic settings backup is turned off (Options → Settings → File).";

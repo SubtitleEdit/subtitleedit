@@ -35,7 +35,7 @@ public class TextEffectWindow : Window
 
         var comboPreset = UiUtil.MakeComboBox(vm.Presets, vm, nameof(vm.SelectedPreset));
         comboPreset.HorizontalAlignment = HorizontalAlignment.Stretch;
-        AutomationProperties.SetName(comboPreset, Se.Language.File.Export.TextEffectPreset);
+        AutomationProperties.SetName(comboPreset, Se.Language.General.Preset);
 
         var sliders = new StackPanel { Spacing = 4 };
         sliders.Children.Add(MakeSliderRow(Se.Language.File.Export.TextEffectStrength, nameof(vm.Strength), 25, 300, "{0}%"));
@@ -44,7 +44,7 @@ public class TextEffectWindow : Window
         sliders.Children.Add(MakeSliderRow(Se.Language.File.Export.TextEffectWave, nameof(vm.Wave), 0, 100, "{0}"));
 
         var sections = new StackPanel();
-        sections.Children.Add(EditorChrome.MakeEditorSection(Se.Language.File.Export.TextEffectPreset, comboPreset, first: true));
+        sections.Children.Add(EditorChrome.MakeEditorSection(Se.Language.General.Preset, comboPreset, first: true));
         sections.Children.Add(EditorChrome.MakeEditorSection(Se.Language.General.Settings, sliders));
 
         var buttonReset = EditorChrome.MakeTextToolButton("fa-solid fa-rotate-left", Se.Language.General.Reset, vm.ResetCommand);

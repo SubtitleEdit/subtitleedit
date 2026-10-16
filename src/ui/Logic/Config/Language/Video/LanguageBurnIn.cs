@@ -9,8 +9,6 @@ public class LanguageBurnIn
     public string BitRate { get; set; }
     public string TotalBitRateX { get; set; }
     public string SampleRate { get; set; }
-    public string Audio { get; set; }
-    public string Preset { get; set; }
     public string Tune { get; set; }
     public string PixelFormat { get; set; }
     public string Crf { get; set; }
@@ -39,8 +37,6 @@ public class LanguageBurnIn
         BitRate = "Bit rate";
         TotalBitRateX = "Total bit rate: {0}";
         SampleRate = "Sample rate";
-        Audio = "Audio";
-        Preset = "Preset";
         Tune = "Tune";
         PixelFormat = "Pixel format";
         Crf = "CRF";

@@ -187,7 +187,7 @@ public class RemoveTextForHearingImpairedWindow : Window
             }
         };
 
-        return EditorChrome.MakeEditorSection(Se.Language.Edit.ModifySelection.HearingImpairedOther, panel);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Other, panel);
     }
 
     private static Border MakeInterjectionsView(RemoveTextForHearingImpairedViewModel vm)
@@ -211,7 +211,7 @@ public class RemoveTextForHearingImpairedWindow : Window
             }
         };
 
-        return EditorChrome.MakeEditorSection(l.Interjections, panel, buttonEdit);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Interjections, panel, buttonEdit);
     }
 
     /// <summary>

@@ -73,11 +73,11 @@ public class EditCustomTextFormatWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
             MinWidth = 160,
             BorderBrush = EditorChrome.FieldBorderBrush,
-            PlaceholderText = Se.Language.File.Export.TimeCodeFormat,
+            PlaceholderText = Se.Language.General.TimeCodeFormat,
             ItemsSource = vm.TimeCodeList,
             [!AutoCompleteBox.TextProperty] = new Binding(nameof(vm.SelectedCustomFormat) + "." + nameof(CustomFormatItem.FormatTimeCode)),
             MinimumPrefixLength = 0,
-        }.WithAccessibleName(Se.Language.File.Export.TimeCodeFormat);
+        }.WithAccessibleName(Se.Language.General.TimeCodeFormat);
 
         var textBoxNewLine = new AutoCompleteBox
         {
@@ -111,7 +111,7 @@ public class EditCustomTextFormatWindow : Window
         {
             (Se.Language.General.Name, textBoxName),
             (Se.Language.General.FileExtension, textBoxFileExtension),
-            (Se.Language.File.Export.TimeCodeFormat, textBoxTimeCode),
+            (Se.Language.General.TimeCodeFormat, textBoxTimeCode),
             (Se.Language.File.Export.NewLineFormat, textBoxNewLine),
         };
         for (var i = 0; i < rows.Length; i++)

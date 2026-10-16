@@ -138,7 +138,7 @@ public class BeautifyTimeCodesWindow : Window
     {
         var l = Se.Language.Tools.BeautifyTimeCodes;
 
-        var (labelOriginal, borderOriginal, avOriginal) = BuildLabeledVisualizer(l.Original);
+        var (labelOriginal, borderOriginal, avOriginal) = BuildLabeledVisualizer(Se.Language.General.Original);
         var (labelBeautified, borderBeautified, avBeautified) = BuildLabeledVisualizer(l.Beautified);
 
         vm.AudioVisualizerOriginal = avOriginal;
@@ -203,14 +203,12 @@ public class BeautifyTimeCodesWindow : Window
 
     private static Control BuildChangeNavBar(BeautifyTimeCodesViewModel vm)
     {
-        var l = Se.Language.Tools.BeautifyTimeCodes;
-
         // The same steps are on the keyboard (see BeautifyTimeCodesViewModel.OnKeyDown); the
         // tooltips are the only place that advertises it, so name the keys there.
-        var buttonPrev = EditorChrome.CreateToolButton("fa-solid fa-chevron-up", $"{l.PreviousChange} (Up / PageUp)", vm.PreviousChangeCommand, 28);
+        var buttonPrev = EditorChrome.CreateToolButton("fa-solid fa-chevron-up", $"{Se.Language.General.PreviousChange} (Up / PageUp)", vm.PreviousChangeCommand, 28);
         buttonPrev.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.CanGoPrevious)) { Source = vm });
 
-        var buttonNext = EditorChrome.CreateToolButton("fa-solid fa-chevron-down", $"{l.NextChange} (Down / PageDown)", vm.NextChangeCommand, 28);
+        var buttonNext = EditorChrome.CreateToolButton("fa-solid fa-chevron-down", $"{Se.Language.General.NextChange} (Down / PageDown)", vm.NextChangeCommand, 28);
         buttonNext.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.CanGoNext)) { Source = vm });
 
         var labelPosition = new TextBlock

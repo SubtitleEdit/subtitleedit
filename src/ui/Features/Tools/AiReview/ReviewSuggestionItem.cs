@@ -31,7 +31,7 @@ public partial class ReviewSuggestionItem : ObservableObject
         ReviewCategory.Grammar => Se.Language.Tools.AiReview.CategoryGrammar,
         ReviewCategory.Punctuation => Se.Language.Tools.AiReview.CategoryPunctuation,
         ReviewCategory.Casing => Se.Language.Tools.AiReview.CategoryCasing,
-        _ => Se.Language.Tools.AiReview.CategoryOther,
+        _ => Se.Language.General.Other,
     };
 
     public IBrush CategoryBrush => GetBrushForCategory(Category);

@@ -51,7 +51,7 @@ public class AiReviewPromptWindow : Window
             Children = { EditorChrome.MakeDimLabel(l.Template, new Thickness(0)), comboTemplate },
         };
 
-        var promptSection = MakeSection(l.Prompt, panelTemplate, l.PromptInfo, textBox, first: true);
+        var promptSection = MakeSection(Se.Language.General.Prompt, panelTemplate, l.PromptInfo, textBox, first: true);
 
         // ---------- reference context ----------
         var buttonGenerate = UiUtil.MakeButton(l.GenerateContext, vm.GenerateContextCommand);

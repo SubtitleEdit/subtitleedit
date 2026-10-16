@@ -66,7 +66,6 @@ public class LanguageSettings
     public string GridAlternatingRowColor { get; set; }
     public string GridAlternatingRowColorDark { get; set; }
     public string UiFont { get; set; }
-    public string Theme { get; set; }
     public string IconTheme { get; set; }
     public string DarkThemeForegroundColor { get; set; }
     public string DarkThemeBackgroundColor { get; set; }
@@ -76,7 +75,6 @@ public class LanguageSettings
     public string SpellCheckHighlightColor { get; set; }
     public string SingleLineMaxLength { get; set; }
     public string OptimalCharsPerSec { get; set; }
-    public string MaxCharsPerSec { get; set; }
     public string MaxWordsPerMin { get; set; }
     public string MinDurationMs { get; set; }
     public string MaxDurationMs { get; set; }
@@ -87,7 +85,6 @@ public class LanguageSettings
     public string MinGapCalculateFrames { get; set; }
     public string MinGapCalculateXFramesAtYGivesZMs { get; set; }
     public string MinGapCalculateUseXAsNewGap { get; set; }
-    public string MaxLines { get; set; }
     public string UnbreakSubtitlesShortThan { get; set; }
     public string AutoBreakLineEndingEarly { get; set; }
     public string AutoBreakCommaBreakEarly { get; set; }
@@ -434,7 +431,6 @@ public class LanguageSettings
         GridAlternatingRowColor = "Alternating row color (light theme)";
         GridAlternatingRowColorDark = "Alternating row color (dark theme)";
         UiFont = "UI font";
-        Theme = "Theme";
         IconTheme = "Icon theme";
         DarkThemeForegroundColor = "Dark theme foreground color";
         DarkThemeBackgroundColor = "Dark theme background color";
@@ -444,7 +440,6 @@ public class LanguageSettings
         SpellCheckHighlightColor = "Spell check highlight color";
         SingleLineMaxLength = "Single line max length";
         OptimalCharsPerSec = "Optimal chars/sec";
-        MaxCharsPerSec = "Max chars/sec";
         MaxWordsPerMin = "Max words/min";
         MinDurationMs = "Min duration (ms)";
         MaxDurationMs = "Max duration (ms)";
@@ -455,7 +450,6 @@ public class LanguageSettings
         MinGapCalculateFrames = "Min. gap in frames";
         MinGapCalculateXFramesAtYGivesZMs = "{0} frames at a frame rate of {1} gives {2} milliseconds.";
         MinGapCalculateUseXAsNewGap = "Use \"{0}\" milliseconds as new minimum gap?";
-        MaxLines = "Max number of lines";
         UnbreakSubtitlesShortThan = "Unbreak subtitles shorter than";
         AutoBreakLineEndingEarly = "Auto-break early for end of sentence (.!?)";
         AutoBreakCommaBreakEarly = "Auto-break early for comma";

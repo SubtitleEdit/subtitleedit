@@ -135,7 +135,7 @@ public class BatchConvertTsSettingsWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        var sections = EditorChrome.MakeSectionStack(new Border { Child = labelInfo, Padding = new Thickness(14, 12, 14, 0) }, EditorChrome.MakeEditorSection(Se.Language.General.Position, position, first: true), EditorChrome.MakeEditorSection(Se.Language.General.VideoResolution, videoSize), EditorChrome.MakeEditorSection(Se.Language.Tools.BatchConvert.SettingsSectionOutput, outputFiles));
+        var sections = EditorChrome.MakeSectionStack(new Border { Child = labelInfo, Padding = new Thickness(14, 12, 14, 0) }, EditorChrome.MakeEditorSection(Se.Language.General.Position, position, first: true), EditorChrome.MakeEditorSection(Se.Language.General.VideoResolution, videoSize), EditorChrome.MakeEditorSection(Se.Language.General.Output, outputFiles));
         sections.MinWidth = 600;
 
         Content = new StackPanel

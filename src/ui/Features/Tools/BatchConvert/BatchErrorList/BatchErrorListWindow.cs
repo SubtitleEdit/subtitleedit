@@ -172,7 +172,7 @@ public class BatchErrorListWindow : Window
         });
         dataGrid.Columns.Add(new SeTableViewColumn
         {
-            Header = l.Detail,
+            Header = Se.Language.General.Detail,
             Binding = new Binding(nameof(BatchErrorListItem.Detail)),
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,

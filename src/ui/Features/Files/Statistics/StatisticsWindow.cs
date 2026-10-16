@@ -125,7 +125,7 @@ public class StatisticsWindow : Window
             ColumnDefinitions = new ColumnDefinitions("*,*,*,*"),
             ColumnSpacing = 10,
         };
-        kpiRow.Add(MakeKpiTile(l.Subtitles, vm.KpiSubtitles), 0, 0);
+        kpiRow.Add(MakeKpiTile(Se.Language.General.Subtitles, vm.KpiSubtitles), 0, 0);
         kpiRow.Add(MakeKpiTile(l.Words, vm.KpiWords), 0, 1);
         kpiRow.Add(MakeKpiTile(Se.Language.General.Characters, vm.KpiCharacters), 0, 2);
         kpiRow.Add(MakeKpiTile(l.TotalDurationShort, vm.KpiDuration), 0, 3);

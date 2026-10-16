@@ -161,7 +161,7 @@ public class BatchConvertSettingsWindow : Window
             Width = ColumnWidth,
             BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 0, 1, 0),
-            Child = EditorChrome.MakeSectionStack(EditorChrome.MakeEditorSection(Se.Language.Tools.BatchConvert.SettingsSectionOutput, output, first: true), EditorChrome.MakeEditorSection(Se.Language.Tools.BatchConvert.SettingsSectionOther, other)),
+            Child = EditorChrome.MakeSectionStack(EditorChrome.MakeEditorSection(Se.Language.General.Output, output, first: true), EditorChrome.MakeEditorSection(Se.Language.General.Other, other)),
         };
         var right = new Border
         {

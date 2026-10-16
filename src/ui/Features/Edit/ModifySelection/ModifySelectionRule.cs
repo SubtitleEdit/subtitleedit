@@ -249,7 +249,7 @@ public class ModifySelectionRule
             new()
             {
                 RuleType = RuleType.BlankLines,
-                Name = l.BlankLines,
+                Name = Se.Language.General.BlankLines,
             },
             new()
             {

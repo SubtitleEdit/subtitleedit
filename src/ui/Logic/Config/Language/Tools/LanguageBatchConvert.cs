@@ -67,10 +67,8 @@ public class LanguageBatchConvert
     public string AddVideoFiles { get; set; }
     public string SkipVideoFiles { get; set; }
     public string DoNotAskAgainVideoFiles { get; set; }
-    public string SettingsSectionOutput { get; set; }
     public string SettingsSectionAddingFiles { get; set; }
     public string SettingsSectionImageBasedSubtitles { get; set; }
-    public string SettingsSectionOther { get; set; }
     public string KeepSourceFileTimestamp { get; set; }
     public string PreventSleepWhileConverting { get; set; }
     public string ScanningFolderX { get; set; }
@@ -95,7 +93,6 @@ public class LanguageBatchConvert
     public string XNotProcessed { get; set; }
     public string RemoveUnicodeControlCharactersTitle { get; set; }
     public string RemoveUnicodeControlCharactersInfo { get; set; }
-    public string Preset { get; set; }
     public string SavePresetDotDotDot { get; set; }
     public string DeletePreset { get; set; }
     public string PresetName { get; set; }
@@ -165,10 +162,8 @@ public class LanguageBatchConvert
         AddVideoFiles = "Add video files";
         SkipVideoFiles = "Subtitle files only";
         DoNotAskAgainVideoFiles = "Do not ask again (change in Batch convert settings)";
-        SettingsSectionOutput = "Output";
         SettingsSectionAddingFiles = "Adding files";
         SettingsSectionImageBasedSubtitles = "Image-based subtitles (OCR)";
-        SettingsSectionOther = "Other";
         KeepSourceFileTimestamp = "Keep source file date/time on output files";
         PreventSleepWhileConverting = "Prevent computer from sleeping while converting";
         ScanningFolderX = "Scanning {0}...";
@@ -193,7 +188,6 @@ public class LanguageBatchConvert
         XNotProcessed = "{0:#,###,##0} not processed";
         RemoveUnicodeControlCharactersTitle = "Remove Unicode control characters";
         RemoveUnicodeControlCharactersInfo = "Removes the invisible Unicode direction control characters (LRM, RLM, LRE, RLE, PDF, LRO and RLO) from the text, and replaces no-break spaces with normal spaces.";
-        Preset = "Preset";
         SavePresetDotDotDot = "Save preset...";
         DeletePreset = "Delete preset";
         PresetName = "Preset name";

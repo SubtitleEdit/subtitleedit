@@ -533,8 +533,8 @@ public class BatchConvertWindow : Window
     {
         var comboBoxPreset = UiUtil.MakeComboBox(vm.PresetNames, vm, nameof(vm.SelectedPresetName));
         comboBoxPreset.HorizontalAlignment = HorizontalAlignment.Stretch;
-        comboBoxPreset.PlaceholderText = Se.Language.Tools.BatchConvert.Preset;
-        comboBoxPreset.WithAccessibleName(Se.Language.Tools.BatchConvert.Preset);
+        comboBoxPreset.PlaceholderText = Se.Language.General.Preset;
+        comboBoxPreset.WithAccessibleName(Se.Language.General.Preset);
         var buttonSavePreset = EditorChrome.CreateToolButton("fa-solid fa-floppy-disk", Se.Language.Tools.BatchConvert.SavePresetDotDotDot, vm.SavePresetCommand, 28);
         var buttonDeletePreset = EditorChrome.CreateToolButton("fa-solid fa-trash", Se.Language.Tools.BatchConvert.DeletePreset, vm.DeletePresetCommand, 28);
         var panelPresets = new Grid
@@ -548,7 +548,7 @@ public class BatchConvertWindow : Window
                 new ColumnDefinition(GridLength.Auto),
             },
         };
-        panelPresets.Add(EditorChrome.MakeDimLabel(Se.Language.Tools.BatchConvert.Preset, new Thickness(0, 0, 4, 0)), 0, 0);
+        panelPresets.Add(EditorChrome.MakeDimLabel(Se.Language.General.Preset, new Thickness(0, 0, 4, 0)), 0, 0);
         panelPresets.Add(comboBoxPreset, 0, 1);
         panelPresets.Add(buttonSavePreset, 0, 2);
         panelPresets.Add(buttonDeletePreset, 0, 3);

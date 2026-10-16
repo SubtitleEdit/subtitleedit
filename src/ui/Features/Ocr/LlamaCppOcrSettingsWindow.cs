@@ -63,7 +63,7 @@ public class LlamaCppOcrSettingsWindow : Window
             DataContext = vm,
         };
         textBoxPrompt.Classes.Add(EditorChrome.TextClass);
-        AutomationProperties.SetName(textBoxPrompt, Se.Language.General.OpenAiCompatibleSttPrompt);
+        AutomationProperties.SetName(textBoxPrompt, Se.Language.General.Prompt);
         textBoxPrompt.Bind(TextBox.TextProperty, new Binding(nameof(vm.Prompt))
         {
             Mode = BindingMode.TwoWay,
@@ -97,7 +97,7 @@ public class LlamaCppOcrSettingsWindow : Window
             RowSpacing = 8,
             Margin = new Thickness(14, 12, 14, 14),
         };
-        promptGrid.Add(EditorChrome.MakeSectionHeader(Se.Language.General.OpenAiCompatibleSttPrompt), 0, 0);
+        promptGrid.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Prompt), 0, 0);
         promptGrid.Add(textBoxPrompt, 1, 0);
         promptGrid.Add(hintPrompt, 2, 0);
 

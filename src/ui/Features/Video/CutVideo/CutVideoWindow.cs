@@ -269,7 +269,7 @@ public class CutVideoWindow : Window
         rows.Children.Add(Row(Se.Language.General.Format, extension));
         rows.Children.Add(encoding);
         rows.Children.Add(cutSubtitle);
-        return EditorChrome.MakeEditorSection(Se.Language.Video.CutVideoOutput, rows, first: true);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Output, rows, first: true);
     }
 
     private static Border MakeTransitionsSection(CutVideoViewModel vm)

@@ -176,7 +176,7 @@ public class ReviewSpeechWindow : Window
                 buttonHistory.CommandParameter = item;
                 buttonHistory.Bind(Button.OpacityProperty, new Binding(nameof(ReviewRow.HistoryButtonOpacity)));
 
-                var buttonPlay = EditorChrome.CreateToolButton("fa-solid fa-play", Se.Language.Video.TextToSpeech.PlayLine, vm.PlayRowCommand, 26)
+                var buttonPlay = EditorChrome.CreateToolButton("fa-solid fa-play", Se.Language.General.PlayLine, vm.PlayRowCommand, 26)
                     .WithBindIsVisible(nameof(item.IsPlaying), InverseBooleanConverter.Instance)
                     .WithBindEnabled(nameof(item.IsPlayingEnabled));
                 buttonPlay.CommandParameter = item;
@@ -657,7 +657,7 @@ public class ReviewSpeechWindow : Window
         // Context menu: the row actions from the grid plus the two timing fixes that only make
         // sense here. The target is the row under the pointer (selected on open), so the items
         // take it as CommandParameter rather than relying on SelectedLine.
-        var menuPlay = new MenuItem { Header = Se.Language.Video.TextToSpeech.PlayLine, Command = vm.PlayRowCommand };
+        var menuPlay = new MenuItem { Header = Se.Language.General.PlayLine, Command = vm.PlayRowCommand };
         var menuRegenerate = new MenuItem { Header = Se.Language.Video.TextToSpeech.RegenerateAudio, Command = vm.RegenerateAudioCommand };
         var menuHistory = new MenuItem { Header = Se.Language.General.ShowHistory, Command = vm.ShowHistoryCommand };
         var menuFit = new MenuItem { Header = Se.Language.Video.TextToSpeech.FitDurationToGeneratedAudio, Command = vm.FitDurationToAudioCommand };

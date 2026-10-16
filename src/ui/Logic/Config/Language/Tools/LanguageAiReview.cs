@@ -18,16 +18,13 @@ public class LanguageAiReview
     public string CategoryGrammar { get; set; }
     public string CategoryPunctuation { get; set; }
     public string CategoryCasing { get; set; }
-    public string CategoryOther { get; set; }
     public string XNeedACloserLook { get; set; }
-    public string LineX { get; set; }
     public string LinesXToY { get; set; }
     public string LargeChangeWarning { get; set; }
     public string MismatchWarning { get; set; }
     public string EngineError { get; set; }
     public string PlayCurrentLineHint { get; set; }
     public string EditAfterHint { get; set; }
-    public string Prompt { get; set; }
     public string Template { get; set; }
     public string TemplatePlaceholder { get; set; }
     public string TemplateStandard { get; set; }
@@ -62,16 +59,13 @@ public class LanguageAiReview
         CategoryGrammar = "Grammar";
         CategoryPunctuation = "Punctuation";
         CategoryCasing = "Casing";
-        CategoryOther = "Other";
         XNeedACloserLook = "{0} suggestion(s) need a closer look";
-        LineX = "Line {0}";
         LinesXToY = "Lines {0}-{1}";
         LargeChangeWarning = "Large change - looks like a rewrite, review carefully";
         MismatchWarning = "Does not resemble the original - may belong to a different line";
         EngineError = "The AI engine could not be reached: {0}";
         PlayCurrentLineHint = "Play the selected line in the video player and pause at its end (also double-click a line)";
         EditAfterHint = "Click the selected row's text to edit the fix before applying it (Enter saves, Escape cancels)";
-        Prompt = "Prompt";
         Template = "Template";
         TemplatePlaceholder = "Choose a template to replace the prompt";
         TemplateStandard = "Standard proofreading";

@@ -123,7 +123,7 @@ public class SpeechToTextQualityReportWindow : Window
         });
         table.Columns.Add(new SeTableViewColumn
         {
-            Header = l.QualityReportDetail,
+            Header = Se.Language.General.Detail,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Binding = new Binding(nameof(QualityReportDisplayItem.Detail)),

@@ -28,7 +28,6 @@ public class LanguageModifySelection
     public string Bookmarked { get; set; }
     public string Forced { get; set; } = string.Empty;
     public string BookmarkContains { get; set; }
-    public string BlankLines { get; set; }
     public string HearingImpaired { get; set; }
     public string HearingImpairedBrackets { get; set; }
     public string HearingImpairedCurlyBrackets { get; set; }
@@ -38,10 +37,8 @@ public class LanguageModifySelection
     public string HearingImpairedUppercaseLine { get; set; }
     public string HearingImpairedLineContains { get; set; }
     public string HearingImpairedMusicSymbols { get; set; }
-    public string HearingImpairedInterjections { get; set; }
     public string HearingImpairedSettingsHint { get; set; }
     public string Selection { get; set; }
-    public string HearingImpairedOther { get; set; }
     public string SelectionNew { get; set; }
     public string SelectionAdd { get; set; }
     public string SelectionSubtract { get; set; }
@@ -72,7 +69,6 @@ public class LanguageModifySelection
         Bookmarked = "Bookmarked";
         Forced = "Forced";
         BookmarkContains = "Bookmark contains";
-        BlankLines = "Blank lines";
         HearingImpaired = "Hearing impaired (SDH)";
         HearingImpairedBrackets = "Brackets [...]";
         HearingImpairedCurlyBrackets = "Curly brackets {...}";
@@ -82,10 +78,8 @@ public class LanguageModifySelection
         HearingImpairedUppercaseLine = "Uppercase line";
         HearingImpairedLineContains = "Line contains";
         HearingImpairedMusicSymbols = "Only music symbols";
-        HearingImpairedInterjections = "Interjections";
         HearingImpairedSettingsHint = "Details come from Tools > Remove text for hearing impaired";
         Selection = "Selection";
-        HearingImpairedOther = "Other";
         SelectionNew = "New selection";
         SelectionAdd = "Add to selection";
         SelectionSubtract = "Subtract from selection";

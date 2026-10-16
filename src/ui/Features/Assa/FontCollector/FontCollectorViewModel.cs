@@ -374,7 +374,7 @@ public partial class FontCollectorViewModel : ObservableObject
 
             foreach (Match match in AssaFontEmbedder.FontNameTagRegex.Matches(paragraph.Text))
             {
-                AddUsage(match.Groups["name"].Value, string.Format(Se.Language.Assa.FontCollectorInlineLineX, paragraph.Number));
+                AddUsage(match.Groups["name"].Value, string.Format(Se.Language.General.LineX, paragraph.Number));
             }
         }
 

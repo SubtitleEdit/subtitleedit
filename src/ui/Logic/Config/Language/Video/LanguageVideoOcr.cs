@@ -20,13 +20,10 @@ public class LanguageVideoOcr
     public string StartOcr { get; set; }
     public string ExtractingFramesX { get; set; }
     public string AnalyzingFramesXY { get; set; }
-    public string RunningOcrXY { get; set; }
-    public string NoLinesFoundTitle { get; set; }
     public string NoLinesFoundMessage { get; set; }
     public string OcrStoppedEarlyMessage { get; set; }
     public string LinesFoundX { get; set; }
     public string RefiningTimingXY { get; set; }
-    public string FixOcrErrors { get; set; }
     public string EditLineX { get; set; }
     public string DownloadDictionaryHint { get; set; }
     public string FramesPerSecondHint { get; set; }
@@ -72,13 +69,10 @@ public class LanguageVideoOcr
         StartOcr = "Start OCR";
         ExtractingFramesX = "Extracting image frames... {0}%";
         AnalyzingFramesXY = "Analyzing frames... {0}/{1}";
-        RunningOcrXY = "Running OCR... {0}/{1}";
-        NoLinesFoundTitle = "No subtitles found";
         NoLinesFoundMessage = "No text was found in the scan area - try adjusting the scan area, engine, or brightness minimum.";
         OcrStoppedEarlyMessage = "The OCR engine stopped before all frames were read, so the lines found so far are kept and the rest are missing.{0}{0}{1}";
         LinesFoundX = "{0} lines found";
         RefiningTimingXY = "Refining timing... {0}/{1}";
-        FixOcrErrors = "Fix OCR errors";
         EditLineX = "Edit line {0}";
         DownloadDictionaryHint = "Download a spell check dictionary...";
         FramesPerSecondHint = "How many frames per second are scanned. 5 covers normal subtitles; higher catches very short lines and tightens grouping, but costs more OCR time.";

@@ -161,7 +161,7 @@ public class ImportDvdWindow : Window
         duration.Bind(TextBlock.TextProperty, new Binding(nameof(DvdTitleDisplay.Duration)) { Converter = new TimeSpanToDisplayShortConverter() });
 
         var chapters = new TextBlock { Opacity = 0.7, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(12, 0, 0, 0) };
-        chapters.Bind(TextBlock.TextProperty, new Binding(nameof(DvdTitleDisplay.Chapters)) { StringFormat = "{0} " + Se.Language.File.Chapters.ToLowerInvariant() });
+        chapters.Bind(TextBlock.TextProperty, new Binding(nameof(DvdTitleDisplay.Chapters)) { StringFormat = "{0} " + Se.Language.General.Chapters.ToLowerInvariant() });
 
         var status = new TextBlock { Foreground = Brushes.OrangeRed, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(12, 0, 0, 0) };
         status.Bind(TextBlock.TextProperty, new Binding(nameof(DvdTitleDisplay.Status)));

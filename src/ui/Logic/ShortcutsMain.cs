@@ -484,7 +484,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.ToggleShotChangesAtVideoPositionCommand),  Se.Language.General.ToggleShotChangesAtVideoPosition },
         { nameof(MainViewModel.GoToPreviousShotChangeCommand),  Se.Language.General.GoToPreviousShotChange },
         { nameof(MainViewModel.GoToNextShotChangeCommand),  Se.Language.General.GoToNextShotChange },
-        { nameof(MainViewModel.ShowVideoChaptersCommand),  Se.Language.Video.Chapters.Title },
+        { nameof(MainViewModel.ShowVideoChaptersCommand),  Se.Language.General.Chapters },
         { nameof(MainViewModel.ToggleChapterAtVideoPositionCommand),  Se.Language.Video.Chapters.ToggleChapterAtVideoPosition },
         { nameof(MainViewModel.GoToPreviousChapterCommand),  Se.Language.Video.Chapters.GoToPreviousChapter },
         { nameof(MainViewModel.GoToNextChapterCommand),  Se.Language.Video.Chapters.GoToNextChapter },

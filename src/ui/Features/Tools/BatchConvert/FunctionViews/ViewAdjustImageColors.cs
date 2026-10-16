@@ -19,7 +19,7 @@ public static class ViewAdjustImageColors
             EditorChrome.MakeHint(Se.Language.Tools.BatchConvert.AdjustImageColorsInfo),
 
             EditorChrome.MakeSwitchRow(nameof(vm.ImageAdjustBrightnessOn), Se.Language.Tools.ImageBasedEdit.AdjustBrightness),
-            MakePair(vm, Se.Language.Tools.ImageBasedEdit.Brightness, nameof(vm.ImageAdjustBrightness), nameof(vm.ImageAdjustBrightnessOn), -100, 100, 1),
+            MakePair(vm, Se.Language.General.Brightness, nameof(vm.ImageAdjustBrightness), nameof(vm.ImageAdjustBrightnessOn), -100, 100, 1),
             MakePair(vm, Se.Language.Tools.ImageBasedEdit.Contrast, nameof(vm.ImageAdjustContrast), nameof(vm.ImageAdjustBrightnessOn), -100, 100, 1),
             MakePair(vm, Se.Language.Tools.ImageBasedEdit.Gamma + " (%)", nameof(vm.ImageAdjustGamma), nameof(vm.ImageAdjustBrightnessOn), 20, 400, 5),
 

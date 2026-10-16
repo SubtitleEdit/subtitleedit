@@ -81,7 +81,7 @@ public partial class PromptUnknownWordViewModel : ObservableObject
         WholeText = wholeText;
         _wordOriginal = word.Word.FixedWord;
         Word = word.Word.FixedWord;
-        EditButtonLabel = Se.Language.Ocr.EditWholeText;
+        EditButtonLabel = Se.Language.General.EditWholeText;
         Suggestions.AddRange(suggestions);
 
         Dispatcher.UIThread.Invoke(() =>
@@ -161,7 +161,7 @@ public partial class PromptUnknownWordViewModel : ObservableObject
 
     partial void OnDoEditWholeTextChanged(bool value)
     {
-        EditButtonLabel = value ? Se.Language.Ocr.EditWordOnly : Se.Language.Ocr.EditWholeText;
+        EditButtonLabel = value ? Se.Language.Ocr.EditWordOnly : Se.Language.General.EditWholeText;
     }
 
     private bool CanChangeAll() => !DoEditWholeText && !string.IsNullOrWhiteSpace(Word) && Word != _wordOriginal;

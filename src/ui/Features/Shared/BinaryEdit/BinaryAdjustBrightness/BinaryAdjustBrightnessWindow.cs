@@ -61,7 +61,7 @@ public class BinaryAdjustBrightnessWindow : Window
         var panel = new StackPanel();
 
         brightnessInputSlider = MakeSlider(nameof(vm.Brightness), -100, 100);
-        panel.Children.Add(BinaryEditChrome.MakeSliderSection(l.Brightness, brightnessInputSlider, nameof(vm.BrightnessDisplay), first: true));
+        panel.Children.Add(BinaryEditChrome.MakeSliderSection(Se.Language.General.Brightness, brightnessInputSlider, nameof(vm.BrightnessDisplay), first: true));
         panel.Children.Add(BinaryEditChrome.MakeSliderSection(l.Contrast, MakeSlider(nameof(vm.Contrast), -100, 100), nameof(vm.ContrastDisplay)));
         panel.Children.Add(BinaryEditChrome.MakeSliderSection(l.Gamma, MakeSlider(nameof(vm.Gamma), 1, 300), nameof(vm.GammaDisplay)));
 

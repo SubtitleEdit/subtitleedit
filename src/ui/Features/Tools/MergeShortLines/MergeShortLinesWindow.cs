@@ -55,7 +55,7 @@ public class MergeShortLinesWindow : Window
         _numericUpDownSingleLineMaxLength = numericUpDownSingleLineMaxLength;
         numericUpDownSingleLineMaxLength.ValueChanged += (s, e) => vm.SetChanged();
 
-        var labelMaxNumberOfLines = Se.Language.Options.Settings.MaxLines;
+        var labelMaxNumberOfLines = Se.Language.General.MaxNumberOfLines;
         var numericUpDownMaxNumberOfLines = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(2, 10, 2, 130, vm, nameof(vm.MaxNumberOfLines)), labelMaxNumberOfLines.TrimEnd(':'), 100, alignLeft: true, center: true);
         numericUpDownMaxNumberOfLines.ValueChanged += (s, e) => vm.SetChanged();
 

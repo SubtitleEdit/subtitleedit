@@ -2,7 +2,6 @@ namespace Nikse.SubtitleEdit.Logic.Config.Language;
 
 public class LanguageSourceView
 {
-    public string DiscardChangesTitle { get; set; }
     public string DiscardChanges { get; set; }
     public string XLinesYSubtitles { get; set; }
     public string XLinesYSubtitlesZErrors { get; set; }
@@ -20,7 +19,6 @@ public class LanguageSourceView
 
     public LanguageSourceView()
     {
-        DiscardChangesTitle = "Discard changes?";
         DiscardChanges = "The source text has been changed." + System.Environment.NewLine + "Discard the changes?";
         XLinesYSubtitles = "{0} lines, {1} subtitles";
         XLinesYSubtitlesZErrors = "{0} lines, {1} subtitles, {2} error(s)";

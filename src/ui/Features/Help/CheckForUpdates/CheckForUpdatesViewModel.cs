@@ -103,7 +103,7 @@ public partial class CheckForUpdatesViewModel : ObservableObject
         IsInstallVisible = false;
         IsDownloading = true;
         DownloadProgress = 0;
-        StatusText = string.Format(Se.Language.Help.CheckForUpdatesDownloadingX, _latestVersion);
+        StatusText = string.Format(Se.Language.General.DownloadingXDotDotDot, _latestVersion);
         _downloadCancellation = new CancellationTokenSource();
         var progress = new Progress<float>(p => DownloadProgress = p * 100.0);
 

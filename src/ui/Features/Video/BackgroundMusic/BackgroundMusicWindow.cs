@@ -40,7 +40,7 @@ public class BackgroundMusicWindow : Window
         comboBoxPreset.Width = double.NaN;
         comboBoxPreset.HorizontalAlignment = HorizontalAlignment.Stretch;
         comboBoxPreset.WithBindEnabled(nameof(vm.IsNotBusy));
-        AutomationProperties.SetName(comboBoxPreset, l.Preset);
+        AutomationProperties.SetName(comboBoxPreset, Se.Language.General.Preset);
 
         var settings = new Grid
         {
@@ -101,7 +101,7 @@ public class BackgroundMusicWindow : Window
         };
         textBoxPrompt.Classes.Add("text");
         textBoxPrompt.VerticalContentAlignment = VerticalAlignment.Top;
-        AutomationProperties.SetName(textBoxPrompt, l.Prompt);
+        AutomationProperties.SetName(textBoxPrompt, Se.Language.General.Prompt);
 
         var numericBpm = Field(nameof(vm.Bpm), 40, 200, l.TempoBpm);
         var numericGenerateSeconds = Field(nameof(vm.GenerateSeconds), 20, 240, l.GenerateSeconds);
@@ -125,7 +125,7 @@ public class BackgroundMusicWindow : Window
             [!TextBlock.TextProperty] = new Binding(nameof(vm.OutputLengthText)),
         };
 
-        var labelPrompt = EditorChrome.MakeDimLabel(l.Prompt, new Thickness(0, 6, 0, 0));
+        var labelPrompt = EditorChrome.MakeDimLabel(Se.Language.General.Prompt, new Thickness(0, 6, 0, 0));
         labelPrompt.VerticalAlignment = VerticalAlignment.Top;
         var promptRow = new Grid
         {
@@ -136,7 +136,7 @@ public class BackgroundMusicWindow : Window
         promptRow.Add(textBoxPrompt, 0, 1);
 
         var rows = new StackPanel { Spacing = 8 };
-        rows.Children.Add(EditorChrome.MakeLabeledRow(l.Preset, comboBoxPreset, LabelWidth, spacing: 6));
+        rows.Children.Add(EditorChrome.MakeLabeledRow(Se.Language.General.Preset, comboBoxPreset, LabelWidth, spacing: 6));
         rows.Children.Add(promptRow);
         rows.Children.Add(EditorChrome.MakeLabeledRow(l.TempoBpm, numericBpm, LabelWidth, spacing: 6));
         rows.Children.Add(EditorChrome.MakeLabeledRow(l.GenerateSeconds, numericGenerateSeconds, LabelWidth, spacing: 6));
@@ -166,7 +166,7 @@ public class BackgroundMusicWindow : Window
         rows.Children.Add(rowRemoveAudio);
         rows.Children.Add(rowOriginalVolume);
 
-        return EditorChrome.MakeEditorSection(Se.Language.Video.BurnIn.Audio, rows, first: true);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Audio, rows, first: true);
     }
 
     /// <summary>
@@ -229,7 +229,7 @@ public class BackgroundMusicWindow : Window
         rows.Children.Add(status);
         rows.Children.Add(actions);
 
-        return EditorChrome.MakeEditorSection(Se.Language.Video.CutVideoOutput, rows);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Output, rows);
     }
 
     private static Button MakeAction(string icon, string text, System.Windows.Input.ICommand command)

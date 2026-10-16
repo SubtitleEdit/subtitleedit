@@ -64,7 +64,7 @@ public class BinaryAdjustColorWindow : Window
                 [!Border.BackgroundProperty] = new Binding(nameof(vm.ColorSwatchBrush)),
             },
             // The swatch is the whole content, so name the button or it reads as "Border" (#12087).
-            [AutomationProperties.NameProperty] = Se.Language.Tools.ColorPickerTitle,
+            [AutomationProperties.NameProperty] = Se.Language.General.ChooseColor,
         };
         panel.Children.Add(swatchButton);
         panel.Children.Add(EditorChrome.MakeHint(Se.Language.Tools.ImageBasedEdit.ColorAdjustmentInfo));

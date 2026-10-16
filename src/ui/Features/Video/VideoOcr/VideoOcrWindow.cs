@@ -402,7 +402,7 @@ public class VideoOcrWindow : Window
             NumberField(vm, nameof(vm.MinDurationMs), 0, 10_000, 250),
             Se.Language.Video.VideoOcr.MinDurationHint));
         postRows.Children.Add(EditorChrome.MakeSwitchRow(nameof(vm.AddAssaPositionTag), Se.Language.Video.VideoOcr.AddAssaPositionTag));
-        postRows.Children.Add(EditorChrome.MakeSwitchRow(nameof(vm.DoFixOcrErrors), Se.Language.Video.VideoOcr.FixOcrErrors));
+        postRows.Children.Add(EditorChrome.MakeSwitchRow(nameof(vm.DoFixOcrErrors), Se.Language.General.FixOcrErrors));
         var buttonDownloadDictionary = EditorChrome.CreateToolButton("fa-solid fa-ellipsis", Se.Language.Video.VideoOcr.DownloadDictionaryHint, vm.DownloadDictionaryCommand, 28)
             .WithBindEnabled(nameof(vm.DoFixOcrErrors));
 

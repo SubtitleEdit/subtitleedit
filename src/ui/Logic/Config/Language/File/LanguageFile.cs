@@ -78,7 +78,6 @@ public class LanguageFile
     public string SaveCompareHtmlTitle { get; set; }
     public string PickMatroskaTrackX { get; set; }
     public string PickTransportStreamTrackX { get; set; }
-    public string Chapters { get; set; }
     public string DvdVobFilesMissingX { get; set; }
     public string PickMp4TrackX { get; set; }
     public string PickMxfTrackX { get; set; }
@@ -91,7 +90,6 @@ public class LanguageFile
     public string PropertyDefaultStyle { get; set; }
     public string PropertyDefaultRegion { get; set; }
     public string PropertyStyleAttributeName { get; set; }
-    public string PropertyTimeCodeFormat { get; set; }
     public string PropertyTopOrigin { get; set; }
     public string PropertyTopExtent { get; set; }
     public string PropertyBottomOrigin { get; set; }
@@ -166,7 +164,6 @@ public class LanguageFile
         SaveCompareHtmlTitle = "Save compare HTML file";
         PickMatroskaTrackX = "Pick Matroska track - {0}";
         PickTransportStreamTrackX = "Pick transport stream track - {0}";
-        Chapters = "Chapters";
         DvdVobFilesMissingX = "VOB files missing ({0}% found)";
         PickMp4TrackX = "Pick MP4 track - {0}";
         PickMxfTrackX = "Pick MXF track - {0}";
@@ -179,7 +176,6 @@ public class LanguageFile
         PropertyDefaultStyle = "Default style";
         PropertyDefaultRegion = "Default region";
         PropertyStyleAttributeName = "Style attribute name";
-        PropertyTimeCodeFormat = "Time code format";
         PropertyTopOrigin = "Top origin";
         PropertyTopExtent = "Top extent";
         PropertyBottomOrigin = "Bottom origin";

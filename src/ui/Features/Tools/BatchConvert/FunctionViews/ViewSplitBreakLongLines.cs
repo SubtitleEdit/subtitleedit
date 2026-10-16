@@ -18,7 +18,7 @@ public static class ViewSplitBreakLongLines
         switchRebalanceOnlyTooLong[!InputElement.IsEnabledProperty] = new Binding(nameof(vm.SplitBreakRebalanceLongLines)) { Source = vm };
 
         var numericUpDownSingleLineMaxLength = FunctionViewChrome.MakeIntField(vm, nameof(vm.SplitBreakSingleLineMaxLength), 5, 1000, 10, Se.Language.Options.Settings.SingleLineMaxLength);
-        var numericUpDownMaxNumberOfLines = FunctionViewChrome.MakeIntField(vm, nameof(vm.SplitBreakMaxNumberOfLines), 1, 10, 2, Se.Language.Options.Settings.MaxLines);
+        var numericUpDownMaxNumberOfLines = FunctionViewChrome.MakeIntField(vm, nameof(vm.SplitBreakMaxNumberOfLines), 1, 10, 2, Se.Language.General.MaxNumberOfLines);
         var numericUpDownUnbreakLinesShorterThan = FunctionViewChrome.MakeIntField(vm, nameof(vm.SplitBreakUnbreakLinesShorterThan), 1, 1000, 33, Se.Language.Options.Settings.UnbreakSubtitlesShortThan);
         var rowUnbreakLinesShorterThan = FunctionViewChrome.MakeRow(Se.Language.Options.Settings.UnbreakSubtitlesShortThan, numericUpDownUnbreakLinesShorterThan);
         if (Se.Settings.Appearance.ShowHints)
@@ -33,7 +33,7 @@ public static class ViewSplitBreakLongLines
             switchRebalanceLongLines,
             switchRebalanceOnlyTooLong,
             FunctionViewChrome.MakeRow(Se.Language.Options.Settings.SingleLineMaxLength, numericUpDownSingleLineMaxLength),
-            FunctionViewChrome.MakeRow(Se.Language.Options.Settings.MaxLines, numericUpDownMaxNumberOfLines),
+            FunctionViewChrome.MakeRow(Se.Language.General.MaxNumberOfLines, numericUpDownMaxNumberOfLines),
             rowUnbreakLinesShorterThan);
     }
 }
