@@ -14,7 +14,8 @@ namespace UITests.Features.Assa;
 
 /// <summary>
 /// Enter in a property field (layer, position, size...) commits the value - it must not press the
-/// default OK button and close the editor.
+/// OK button and close the editor. OK isn't the default button at all, so Enter elsewhere (the layer
+/// tree, a check box) doesn't close the editor either.
 /// </summary>
 public class AssaDrawEnterKeyTests
 {
@@ -48,6 +49,34 @@ public class AssaDrawEnterKeyTests
                 Assert.False(vm.OkPressed);
                 Assert.True(window.IsVisible);
             }
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Enter_InLayerTree_DoesNotPressOk()
+    {
+        var vm = new AssaDrawViewModel(new FileHelper(), new StubWindowService());
+        var rows = new List<SubtitleLineViewModel> { new(new Paragraph(Square, 0, 2000) { Extra = "Default" }, new AdvancedSubStationAlpha()) };
+        vm.Initialize(new Subtitle { Header = AdvancedSubStationAlpha.DefaultHeader }, rows, 1920, 1080);
+        var window = new AssaDrawWindow(vm) { Width = 1400, Height = 900 };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            var tree = window.GetVisualDescendants().OfType<TreeView>().First(t => t.IsEffectivelyVisible);
+            tree.Focus();
+            Dispatcher.UIThread.RunJobs();
+
+            window.KeyPress(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, null);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.False(vm.OkPressed);
+            Assert.True(window.IsVisible);
+            Assert.DoesNotContain(window.GetVisualDescendants().OfType<Button>(), b => b.IsDefault);
         }
         finally
         {

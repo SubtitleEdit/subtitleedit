@@ -1293,6 +1293,10 @@ public class AssaDrawWindow : Window
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
+
+        // Not the default button: Enter means "close shape" on the canvas, and closing the
+        // editor from wherever focus happens to be (layer tree, check box...) is a surprise.
+        buttonOk.IsDefault = false;
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10 };
         buttons.Children.Add(buttonCancel);
