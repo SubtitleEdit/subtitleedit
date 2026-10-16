@@ -201,6 +201,92 @@ public class AssaDrawAnimationTests
         Assert.Null(vm.Shapes[0].Animation);
     }
 
+    [AvaloniaFact]
+    public void Loop_IsOneTPerCycle_FittedBetweenInAndOut_AndOpensAgain()
+    {
+        var vm = MakeViewModel(SquareA);
+        vm.SetSelection([vm.Shapes[0]]);
+        vm.AnimationIn = DrawAnimationEffect.Fade;
+        vm.AnimationOut = DrawAnimationEffect.Spin;
+        vm.AnimationLoop = DrawLoopEffect.Spin;
+        vm.AnimationLoopMs = 1000;
+        var text = vm.GetAssaDrawFileText();
+
+        vm.OkCommand.Execute(null);
+        var line = vm.ResultSubtitle.Paragraphs[0].Text;
+
+        // 400-2600 ms between the effects: two whole turns of 1100 ms, then the spin out goes on from there
+        Assert.Contains("\\t(400,1500,\\frz-360)\\t(1500,2600,\\frz-720)\\t(2600,3000,2,\\frz-1080\\fscx0\\fscy0)", line);
+        Assert.Contains("loop=Spin,1000}", line);
+
+        var loaded = MakeViewModel();
+        loaded.LineDurationMs = vm.LineDurationMs;
+        loaded.LoadFromText(text);
+        Assert.Equal(DrawLoopEffect.Spin, loaded.Shapes[0].Animation?.Loop);
+        Assert.Equal(text, loaded.GetAssaDrawFileText());
+    }
+
+    [AvaloniaFact]
+    public void Loop_TurningAroundAnotherOrigin_IsLeftOut()
+    {
+        var vm = MakeViewModel(SquareA);
+        vm.SetSelection([vm.Shapes[0]]);
+        vm.AnimationIn = DrawAnimationEffect.Spin;
+        vm.AnimationLoop = DrawLoopEffect.Swing;
+
+        Assert.True(vm.IsLoopBlocked);
+        vm.OkCommand.Execute(null);
+        Assert.DoesNotContain("\\frz14", vm.ResultSubtitle.Paragraphs[0].Text);
+    }
+
+    [AvaloniaFact]
+    public void Swing_TurnsAroundTheTopEdge_BounceAroundAFarOrigin()
+    {
+        var vm = MakeViewModel(SquareA, SquareC);
+        vm.SetSelection([vm.Shapes[0]]);
+        vm.AnimationLoop = DrawLoopEffect.Swing;
+        vm.SetSelection([vm.Shapes[1]]);
+        vm.AnimationLoop = DrawLoopEffect.Bounce;
+
+        vm.OkCommand.Execute(null);
+        var lines = vm.ResultSubtitle.Paragraphs;
+
+        Assert.StartsWith("{\\an7\\pos(150,150)\\org(150,100)\\t(0,250,0.5,\\frz14)", lines[0].Text);
+        Assert.StartsWith("{\\an7\\pos(650,650)\\org(-999350,650)\\t(0,500,0.5,\\frz0.0005", lines[1].Text);
+
+        // The canvas: the swing's middle goes out to the side, the bounce goes up a tenth of the height
+        Assert.Equal(50 * Math.Sin(14 * Math.PI / 180), vm.GetCanvasAnimationTransform(vm.Shapes[0], 250).State.Dx, 0.5);
+        Assert.Equal(-10, vm.GetCanvasAnimationTransform(vm.Shapes[1], 500).State.Dy, 0.01);
+    }
+
+    [AvaloniaFact]
+    public void AnimatedClipArt_ComesWithItsLoop_OnlyOnItsAnimatedPart()
+    {
+        var vm = MakeViewModel();
+        vm.CurrentLibraryShape = ShapeLibrary.BuiltIn.First(i => i.Name == Nikse.SubtitleEdit.Logic.Config.Se.Language.Assa.DrawClipArtRec);
+        vm.InsertLibraryShape(new CanvasInsertEventArgs(100, 100, 400, 200, isClick: false));
+
+        var dot = Assert.Single(vm.Shapes, s => s.Animation != null);
+        Assert.Equal(DrawLoopEffect.Blink, dot.Animation!.Loop);
+        Assert.Equal(Avalonia.Media.Color.Parse("#E53935"), dot.ForeColor);
+
+        vm.CurrentLibraryShape = ShapeLibrary.BuiltIn.First(i => i.Name == Nikse.SubtitleEdit.Logic.Config.Se.Language.Assa.DrawClipArtLoadingSpinner);
+        var before = vm.Shapes.Count;
+        vm.InsertLibraryShape(new CanvasInsertEventArgs(600, 100, 200, 200, isClick: false));
+        Assert.All(vm.Shapes.Skip(before), s => Assert.Equal(DrawLoopEffect.Spin, s.Animation?.Loop));
+    }
+
+    [Fact]
+    public void Blink_IsOffInTheSecondHalfOfEachCycle()
+    {
+        var animation = new DrawAnimation { Loop = DrawLoopEffect.Blink, LoopMs = 1000 };
+        var bounds = (100f, 100f, 200f, 200f);
+
+        Assert.Equal(1, animation.GetState(250, 3000, bounds, 1920, 1080).Scale);
+        Assert.Equal(0, animation.GetState(750, 3000, bounds, 1920, 1080).Scale);
+        Assert.Equal(1, animation.GetState(1250, 3000, bounds, 1920, 1080).Scale);
+    }
+
     [Fact]
     public void State_MatchesTheTags_AtTheEdges()
     {

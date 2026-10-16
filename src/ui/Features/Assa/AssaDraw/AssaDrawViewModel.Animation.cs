@@ -10,7 +10,7 @@ using System.Linq;
 namespace Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 
 /// <summary>
-/// In/out effects of the selected layers (a group's layers move as one) and playing them on the canvas.
+/// In, loop and out effects of the selected layers (a group's layers move as one) and playing them on the canvas.
 /// </summary>
 public partial class AssaDrawViewModel
 {
@@ -23,6 +23,18 @@ public partial class AssaDrawViewModel
     [ObservableProperty] private DrawAnimationEffect _animationOut;
     [ObservableProperty] private int _animationInMs = DrawAnimation.DefaultDurationMs;
     [ObservableProperty] private int _animationOutMs = DrawAnimation.DefaultDurationMs;
+    [ObservableProperty] private DrawLoopEffect _animationLoop;
+    [ObservableProperty] private int _animationLoopMs = DrawAnimation.DefaultLoopMs;
+
+    /// <summary>
+    /// The effect gallery edits the loop (else the in or out effect).
+    /// </summary>
+    [ObservableProperty] private bool _isEditingLoop;
+
+    /// <summary>
+    /// The loop needs another \org than the in/out effect, so it is left out.
+    /// </summary>
+    [ObservableProperty] private bool _isLoopBlocked;
 
     /// <summary>
     /// The effect gallery edits the out effect (false: the in effect).
@@ -59,10 +71,14 @@ public partial class AssaDrawViewModel
 
     public int EditedEffectMs
     {
-        get => IsEditingOutEffect ? AnimationOutMs : AnimationInMs;
+        get => IsEditingLoop ? AnimationLoopMs : IsEditingOutEffect ? AnimationOutMs : AnimationInMs;
         set
         {
-            if (IsEditingOutEffect)
+            if (IsEditingLoop)
+            {
+                AnimationLoopMs = value;
+            }
+            else if (IsEditingOutEffect)
             {
                 AnimationOutMs = value;
             }
@@ -93,10 +109,28 @@ public partial class AssaDrawViewModel
     private void PickEffect(DrawAnimationEffect effect) => EditedEffect = effect;
 
     [RelayCommand]
-    private void EditInEffect() => IsEditingOutEffect = false;
+    private void PickLoopEffect(DrawLoopEffect effect) => AnimationLoop = effect;
 
     [RelayCommand]
-    private void EditOutEffect() => IsEditingOutEffect = true;
+    private void EditInEffect()
+    {
+        IsEditingLoop = false;
+        IsEditingOutEffect = false;
+    }
+
+    [RelayCommand]
+    private void EditLoopEffect()
+    {
+        IsEditingOutEffect = false;
+        IsEditingLoop = true;
+    }
+
+    [RelayCommand]
+    private void EditOutEffect()
+    {
+        IsEditingLoop = false;
+        IsEditingOutEffect = true;
+    }
 
     private void RefreshAnimationFields()
     {
@@ -110,6 +144,8 @@ public partial class AssaDrawViewModel
             AnimationOut = animation.Out;
             AnimationInMs = animation.InMs;
             AnimationOutMs = animation.OutMs;
+            AnimationLoop = animation.Loop;
+            AnimationLoopMs = animation.LoopMs;
         }
         finally
         {
@@ -127,11 +163,17 @@ public partial class AssaDrawViewModel
 
     partial void OnAnimationOutMsChanged(int value) => ApplyAnimation("animation-out-ms");
 
+    partial void OnAnimationLoopChanged(DrawLoopEffect value) => ApplyAnimation("animation-loop");
+
+    partial void OnAnimationLoopMsChanged(int value) => ApplyAnimation("animation-loop-ms");
+
     partial void OnIsEditingOutEffectChanged(bool value)
     {
         OnPropertyChanged(nameof(EditedEffect));
         OnPropertyChanged(nameof(EditedEffectMs));
     }
+
+    partial void OnIsEditingLoopChanged(bool value) => OnPropertyChanged(nameof(EditedEffectMs));
 
     private void ApplyAnimation(string undoKey)
     {
@@ -151,6 +193,8 @@ public partial class AssaDrawViewModel
                 Out = AnimationOut,
                 InMs = Math.Clamp(AnimationInMs, 1, 60_000),
                 OutMs = Math.Clamp(AnimationOutMs, 1, 60_000),
+                Loop = AnimationLoop,
+                LoopMs = Math.Clamp(AnimationLoopMs, 50, 60_000),
             };
 
             if (shapes.Any(s => !Equals(s.Animation ?? new DrawAnimation(), animation)))
@@ -181,9 +225,24 @@ public partial class AssaDrawViewModel
 
     private void UpdateAnimationState()
     {
-        AnimationSummary = AnimationIn == DrawAnimationEffect.None && AnimationOut == DrawAnimationEffect.None
-            ? string.Empty
-            : AssaDrawAnimationPanel.GetName(AnimationIn, isOut: false) + " · " + AssaDrawAnimationPanel.GetName(AnimationOut, isOut: true);
+        var parts = new List<string>();
+        if (AnimationIn != DrawAnimationEffect.None)
+        {
+            parts.Add(AssaDrawAnimationPanel.GetName(AnimationIn, isOut: false));
+        }
+
+        if (AnimationLoop != DrawLoopEffect.None)
+        {
+            parts.Add(AssaDrawAnimationPanel.GetLoopName(AnimationLoop));
+        }
+
+        if (AnimationOut != DrawAnimationEffect.None)
+        {
+            parts.Add(AssaDrawAnimationPanel.GetName(AnimationOut, isOut: true));
+        }
+
+        AnimationSummary = string.Join(" · ", parts);
+        IsLoopBlocked = new DrawAnimation { In = AnimationIn, Out = AnimationOut, Loop = AnimationLoop }.IsLoopBlocked;
         HasAnyAnimation = Shapes.Any(s => s.Animation is { IsNone: false });
         if (!HasAnyAnimation && IsPlayingAnimation)
         {

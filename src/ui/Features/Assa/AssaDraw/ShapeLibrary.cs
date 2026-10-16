@@ -35,6 +35,16 @@ public sealed class ShapeLibraryItem
     /// </summary>
     public bool HasOwnColors { get; }
 
+    /// <summary>
+    /// Animated clip art: the animation the inserted shapes get (a spinner spins).
+    /// </summary>
+    public DrawAnimation? Animation { get; init; }
+
+    /// <summary>
+    /// Only the parts of this color get <see cref="Animation"/> (the dot of a REC badge); null for all.
+    /// </summary>
+    public Color? AnimatedColor { get; init; }
+
     public ShapeLibraryItem(string name, string category, Func<List<DrawShape>> build, SeAssaDrawShape? userShape = null,
         (float Left, float Top, float Right, float Bottom)? textArea = null, bool ownColors = false)
     {
@@ -314,14 +324,19 @@ public static class ShapeLibrary
     /// Colored clip art: an SVG body for a 100 x 100 view box, imported like an SVG file
     /// (one layer per color run), with an optional text area in the same coordinates.
     /// </summary>
-    private static ShapeLibraryItem Clip(string name, (float Left, float Top, float Right, float Bottom)? textArea, string svgBody)
+    private static ShapeLibraryItem Clip(string name, (float Left, float Top, float Right, float Bottom)? textArea, string svgBody, DrawLoopEffect loop = DrawLoopEffect.None,
+        int loopMs = DrawAnimation.DefaultLoopMs, string? animatedColor = null)
     {
         var svg = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\">" + svgBody + "</svg>";
 
         // Imported at 1000 x 1000, so the view box is scaled by 10 like the path data shapes
         (float, float, float, float)? area = textArea is { } a ? (a.Left * 10, a.Top * 10, a.Right * 10, a.Bottom * 10) : null;
         return new ShapeLibraryItem(name, Se.Language.Assa.DrawCategoryClipArt, () => SvgImporter.Import(svg, 1000, 1000, 0).Shapes,
-            textArea: area, ownColors: true);
+            textArea: area, ownColors: true)
+        {
+            Animation = loop == DrawLoopEffect.None ? null : new DrawAnimation { Loop = loop, LoopMs = loopMs },
+            AnimatedColor = animatedColor == null ? null : Color.Parse(animatedColor),
+        };
     }
 
     private static string F(double value) => value.ToString("0.##", CultureInfo.InvariantCulture);
@@ -591,6 +606,20 @@ public static class ShapeLibrary
                 """<circle fill="#FFCA28" cx="50" cy="58" r="40"/><path fill="none" stroke="#5D4037" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M30 50 Q36 56 42 50 M58 50 Q64 56 70 50 M47 64 Q55 66 49 70 Q55 74 47 76"/><path fill="#FFFFFF" d="M28 30 Q20 14 34 12 Q42 2 54 8 Q70 4 72 20 Q80 24 72 30 Z"/><path fill="#E53935" d="M76 75.6 C67.6 70 69 63 76 67.2 C83 63 84.4 70 76 75.6 Z"/>"""),
             Clip(l.DrawClipArtLoveIt, null,
                 """<circle fill="#FFCA28" cx="50" cy="50" r="44"/><g fill="#E53935"><path d="M33 50.4 C17.4 40 20 27 33 34.8 C46 27 48.6 40 33 50.4 Z"/><path d="M67 50.4 C51.4 40 54 27 67 34.8 C80 27 82.6 40 67 50.4 Z"/></g><path fill="#5D4037" d="M28 58 Q50 84 72 58 Z"/>"""),
+
+            // Animated: these come with a loop
+            Clip(l.DrawClipArtLoadingSpinner, null,
+                """<g fill="#1565C0"><circle cx="50" cy="16" r="9"/><circle cx="25.96" cy="25.96" r="8.4"/></g><g fill="#1E88E5"><circle cx="16" cy="50" r="7.8"/><circle cx="25.96" cy="74.04" r="7.2"/></g><g fill="#64B5F6"><circle cx="50" cy="84" r="6.6"/><circle cx="74.04" cy="74.04" r="6"/></g><g fill="#BBDEFB"><circle cx="84" cy="50" r="5.4"/><circle cx="74.04" cy="25.96" r="4.8"/></g>""", DrawLoopEffect.Spin, 1000),
+            Clip(l.DrawClipArtRec, null,
+                """<rect fill="#212121" x="4" y="28" width="92" height="44" rx="10"/><circle fill="#E53935" cx="22" cy="50" r="9"/><path fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" d="M40 60 L40 40 L48 40 Q54 40 54 45 Q54 50 48 50 L40 50 M48 50 L55 60 M62 40 L62 60 M62 40 L72 40 M62 50 L70 50 M62 60 L72 60 M90 42 Q86 40 84 40 Q78 40 78 50 Q78 60 84 60 Q86 60 90 58"/>""", DrawLoopEffect.Blink, 1000, animatedColor: "#E53935"),
+            Clip(l.DrawClipArtRingingPhone, null,
+                """<path fill="#43A047" d="M30 18 Q22 18 18 26 Q14 40 26 58 Q40 78 58 84 Q70 88 76 80 L80 74 Q82 70 78 66 L68 58 Q64 56 60 58 L54 62 Q46 58 40 50 Q34 42 34 38 L38 32 Q40 28 38 24 L34 18 Q32 16 30 18 Z"/><path fill="none" stroke="#66BB6A" stroke-width="5" stroke-linecap="round" d="M62 20 A18 18 0 0 1 80 38 M62 8 A30 30 0 0 1 92 38"/>""", DrawLoopEffect.Shake, 400),
+            Clip(l.DrawClipArtBeatingHeart, null,
+                """<path fill="#E53935" d="M50 82.4 C4.4 52 12 14 50 36.8 C88 14 95.6 52 50 82.4 Z"/><ellipse fill="#FF8A80" cx="32" cy="34" rx="7" ry="5" transform="rotate(-35 32 34)"/>""", DrawLoopEffect.Pulse, 800),
+            Clip(l.DrawClipArtBouncingArrow, null,
+                """<path fill="#FF7043" d="M38 8 L62 8 L62 48 L80 48 L50 86 L20 48 L38 48 Z"/>""", DrawLoopEffect.Bounce, 900),
+            Clip(l.DrawClipArtGear, null,
+                """<path fill="#78909C" d="M84 50 L93.46 56.88 L91.85 63.6 L80.29 65.44 L77.51 69.98 L81.11 81.11 L75.86 85.6 L65.44 80.29 L60.51 82.34 L56.88 93.46 L50 94 L44.68 83.58 L39.49 82.34 L30.02 89.2 L24.14 85.6 L25.96 74.04 L22.49 69.98 L10.8 69.98 L8.15 63.6 L16.42 55.32 L16 50 L6.54 43.12 L8.15 36.4 L19.71 34.56 L22.49 30.02 L18.89 18.89 L24.14 14.4 L34.56 19.71 L39.49 17.66 L43.12 6.54 L50 6 L55.32 16.42 L60.51 17.66 L69.98 10.8 L75.86 14.4 L74.04 25.96 L77.51 30.02 L89.2 30.02 L91.85 36.4 L83.58 44.68 Z"/><circle fill="#ECEFF1" cx="50" cy="50" r="12"/>""", DrawLoopEffect.Spin, 3000),
 
             // Star ratings 0-5: gold stars for the rating, gray for the rest
             .. Enumerable.Range(0, 6).Select(stars => Clip(string.Format(l.DrawClipArtStarRating, stars), null, StarRatingSvg(stars))),
