@@ -29,7 +29,14 @@ public class AssaDrawCanvas : Control
     private (float X, float Y) _insertEnd;
     private bool _insertConstrain;
     private DrawShape? _pressedShape;
+    private bool _pressedClickPending;
     private bool _dragShapeMoved;
+
+    // Rubber-band selection (select tool, drag on empty canvas), in canvas coordinates
+    private (float X, float Y)? _marqueeStart;
+    private (float X, float Y) _marqueeEnd;
+    private bool _marqueeAdditive;
+    private bool _marqueeParts;
     private bool _pointDragStarted;
 
     // Scale/rotate handles: 0-7 scale (TL, T, TR, R, BR, B, BL, L), 8 rotate
@@ -268,9 +275,20 @@ public class AssaDrawCanvas : Control
     public event EventHandler<float>? ZoomChanged;
 
     /// <summary>
-    /// Select tool click: the shape under the pointer, or null for empty canvas.
+    /// Select tool click: the shape under the pointer, or null for empty canvas. With Alt or a
+    /// double-click <see cref="ShapeClickEventArgs.SelectPart"/> asks for the part, not its group.
     /// </summary>
-    public event EventHandler<DrawShape?>? ShapeClicked;
+    public event EventHandler<ShapeClickEventArgs>? ShapeClicked;
+
+    /// <summary>
+    /// Select tool Ctrl/Cmd+click on a shape: add it to the selection or take it out.
+    /// </summary>
+    public event EventHandler<ShapeClickEventArgs>? ShapeToggled;
+
+    /// <summary>
+    /// Select tool drag on empty canvas: select what the rectangle touches.
+    /// </summary>
+    public event EventHandler<CanvasMarqueeEventArgs>? MarqueeSelected;
 
     /// <summary>
     /// A shape was dragged to a new position with the select tool.
@@ -548,6 +566,18 @@ public class AssaDrawCanvas : Control
                     context.DrawLine(pen, ToZoomFactorPoint(lastPoint),
                         new Point(ToZoomFactorX(CurrentX), ToZoomFactorY(CurrentY)));
                 }
+            }
+        }
+
+        // Select tool: the rubber-band selection rectangle
+        if (_marqueeStart is { } marqueeStart)
+        {
+            var marquee = new Rect(
+                new Point(ToZoomFactorX(marqueeStart.X), ToZoomFactorY(marqueeStart.Y)),
+                new Point(ToZoomFactorX(_marqueeEnd.X), ToZoomFactorY(_marqueeEnd.Y)));
+            if (marquee.Width >= 1 || marquee.Height >= 1)
+            {
+                context.DrawRectangle(GetBrush(Color.FromArgb(40, AccentColor.R, AccentColor.G, AccentColor.B)), GetPen(AccentColor, 1, dashed: true), marquee);
             }
         }
 
@@ -1118,22 +1148,29 @@ public class AssaDrawCanvas : Control
     }
 
     /// <summary>
-    /// The topmost visible shape under (x, y) in canvas coordinates.
+    /// The topmost visible shape under (x, y) in canvas coordinates: highest layer first (libass
+    /// draws higher layers on top), then the later shape of a layer.
     /// </summary>
     public DrawShape? HitTestShape(float x, float y)
     {
         var shapes = Shapes;
-        for (var i = shapes.Count - 1; i >= 0; i--)
+        DrawShape? best = null;
+        for (var i = 0; i < shapes.Count; i++)
         {
             var shape = shapes[i];
-            if (!shape.Hidden && shape.HitTest(x, y, 5f / _zoomFactor))
+            if ((best == null || shape.Layer >= best.Layer) && !shape.Hidden && shape.HitTest(x, y, 5f / _zoomFactor))
             {
-                return shape;
+                best = shape;
             }
         }
 
-        return null;
+        return best;
     }
+
+    /// <summary>
+    /// Select tool: a grouped shape's points can be grabbed only once the part itself is selected.
+    /// </summary>
+    private bool CanPickPointsOf(DrawShape shape) => shape.GroupId == 0 || shape == SelectedShape;
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
@@ -1147,7 +1184,7 @@ public class AssaDrawCanvas : Control
 
         if (properties.IsRightButtonPressed)
         {
-            var targetPoint = GetClosePoint(x, y);
+            var targetPoint = GetClosePoint(x, y, CurrentTool == DrawingTool.Select && !e.KeyModifiers.HasFlag(KeyModifiers.Alt) ? CanPickPointsOf : null);
             var targetShape = targetPoint == null ? HitTestShape(x, y) : FindShape(targetPoint);
             ContextMenuRequested?.Invoke(this, new CanvasContextEventArgs(point, x, y, targetPoint, targetShape));
             e.Handled = true;
@@ -1205,8 +1242,13 @@ public class AssaDrawCanvas : Control
             return;
         }
 
-        // Check if clicking near an existing point
-        var closePoint = GetClosePoint(x, y);
+        var isSelectTool = CurrentTool == DrawingTool.Select;
+        var selectPart = e.KeyModifiers.HasFlag(KeyModifiers.Alt) || e.ClickCount >= 2;
+        var toggle = isSelectTool && (e.KeyModifiers.HasFlag(KeyModifiers.Control) || e.KeyModifiers.HasFlag(KeyModifiers.Meta));
+
+        // Check if clicking near an existing point (not on Ctrl+click, which toggles shapes; a
+        // grouped shape's points only once the part itself is picked - Alt+click or double-click)
+        var closePoint = toggle ? null : GetClosePoint(x, y, isSelectTool && !selectPart ? CanPickPointsOf : null);
         if (closePoint != null)
         {
             ActivePoint = closePoint;
@@ -1217,26 +1259,50 @@ public class AssaDrawCanvas : Control
             return;
         }
 
-        if (CurrentTool == DrawingTool.Select)
+        if (isSelectTool)
         {
             // Select tool: pick the shape under the pointer, and drag it to move it
             var shape = HitTestShape(x, y);
-            if (shape != null)
+            if (shape == null)
             {
-                // Dragging a shape of a multi-selection moves the whole selection
-                _dragShapes = SelectedShapes.Count > 1 && SelectedShapes.Contains(shape) ? SelectedShapes.ToList() : [shape];
-                _pressedShape = shape;
-                _dragShapeMoved = false;
-                _lastMousePosition = point;
-                if (_dragShapes.Count > 1)
-                {
-                    InvalidateVisual();
-                    e.Handled = true;
-                    return;
-                }
+                // Empty canvas: drag a selection rectangle (a click clears the selection)
+                _marqueeStart = (x, y);
+                _marqueeEnd = (x, y);
+                _marqueeAdditive = toggle;
+                _marqueeParts = e.KeyModifiers.HasFlag(KeyModifiers.Alt);
+                e.Handled = true;
+                return;
             }
 
-            ShapeClicked?.Invoke(this, shape);
+            if (toggle)
+            {
+                ShapeToggled?.Invoke(this, new ShapeClickEventArgs(shape, selectPart));
+                InvalidateVisual();
+                e.Handled = true;
+                return;
+            }
+
+            var selected = SelectedShapes;
+            if (selected.Count > 1 && selected.Contains(shape) && !selectPart)
+            {
+                // Dragging a shape of a multi-selection (or group) moves the whole selection;
+                // a click without dragging is handled on release
+                _dragShapes = selected.ToList();
+                _pressedClickPending = true;
+            }
+            else
+            {
+                ShapeClicked?.Invoke(this, new ShapeClickEventArgs(shape, selectPart));
+
+                // The click may have picked the shape's whole group
+                var nowSelected = SelectedShapes;
+                _dragShapes = nowSelected.Count > 1 && nowSelected.Contains(shape) ? nowSelected.ToList() : [shape];
+                _pressedClickPending = false;
+            }
+
+            _pressedShape = shape;
+            _dragShapeMoved = false;
+            _lastMousePosition = point;
             InvalidateVisual();
             e.Handled = true;
             return;
@@ -1268,6 +1334,14 @@ public class AssaDrawCanvas : Control
         {
             _insertEnd = (x, y);
             _insertConstrain = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
+            InvalidateVisual();
+            CanvasMouseMoved?.Invoke(this, new CanvasMouseEventArgs(x, y));
+            return;
+        }
+
+        if (_marqueeStart != null)
+        {
+            _marqueeEnd = (x, y);
             InvalidateVisual();
             CanvasMouseMoved?.Invoke(this, new CanvasMouseEventArgs(x, y));
             return;
@@ -1358,7 +1432,7 @@ public class AssaDrawCanvas : Control
             {
                 cursor = HandleCursors[handle];
             }
-            else if (GetClosePoint(x, y) == null && HitTestShape(x, y) != null)
+            else if (GetClosePoint(x, y, CanPickPointsOf) == null && HitTestShape(x, y) != null)
             {
                 cursor = MoveCursor;
             }
@@ -1390,6 +1464,30 @@ public class AssaDrawCanvas : Control
             return;
         }
 
+        if (_marqueeStart is { } marqueeStart)
+        {
+            var end = _marqueeEnd;
+            _marqueeStart = null;
+            InvalidateVisual();
+            if (Math.Abs(end.X - marqueeStart.X) * _zoomFactor < 4 && Math.Abs(end.Y - marqueeStart.Y) * _zoomFactor < 4)
+            {
+                // A click on empty canvas clears the selection (Ctrl+click keeps it)
+                if (!_marqueeAdditive)
+                {
+                    ShapeClicked?.Invoke(this, new ShapeClickEventArgs(null, false));
+                }
+            }
+            else
+            {
+                MarqueeSelected?.Invoke(this, new CanvasMarqueeEventArgs(
+                    Math.Min(marqueeStart.X, end.X), Math.Min(marqueeStart.Y, end.Y),
+                    Math.Max(marqueeStart.X, end.X), Math.Max(marqueeStart.Y, end.Y),
+                    _marqueeAdditive, _marqueeParts));
+            }
+
+            return;
+        }
+
         var dragShapes = _dragShapes;
         var moved = _dragShapeMoved;
         _dragShapes = null;
@@ -1398,13 +1496,14 @@ public class AssaDrawCanvas : Control
         {
             ShapeMoved?.Invoke(this, dragShapes[0]);
         }
-        else if (dragShapes is { Count: > 1 } && _pressedShape != null)
+        else if (_pressedClickPending && _pressedShape != null)
         {
-            // A click (no drag) on a shape of a multi-selection selects just that shape
-            ShapeClicked?.Invoke(this, _pressedShape);
+            // A click (no drag) on a shape of a multi-selection selects just that shape (or its group)
+            ShapeClicked?.Invoke(this, new ShapeClickEventArgs(_pressedShape, false));
         }
 
         _pressedShape = null;
+        _pressedClickPending = false;
 
         var transformShapes = _transformShapes;
         var transformed = _transformStarted;
@@ -1489,14 +1588,21 @@ public class AssaDrawCanvas : Control
     /// </summary>
     public Color? SampleColor(float x, float y)
     {
+        // Topmost first, as drawn: highest layer, then the later shape of a layer
         var shapes = Shapes;
-        for (var i = shapes.Count - 1; i >= 0; i--)
+        DrawShape? top = null;
+        for (var i = 0; i < shapes.Count; i++)
         {
             var shape = shapes[i];
-            if (!shape.Hidden && !shape.IsEraser && !shape.IsTextBox && shape.Points.Count > 2 && shape.HitTest(x, y, 0))
+            if ((top == null || shape.Layer >= top.Layer) && !shape.Hidden && !shape.IsEraser && !shape.IsTextBox && shape.Points.Count > 2 && shape.HitTest(x, y, 0))
             {
-                return shape.ForeColor;
+                top = shape;
             }
+        }
+
+        if (top != null)
+        {
+            return top.ForeColor;
         }
 
         var canvasRect = new Rect(_panX, _panY, CanvasWidth * _zoomFactor, CanvasHeight * _zoomFactor);
@@ -1569,13 +1675,13 @@ public class AssaDrawCanvas : Control
         }
     }
 
-    private DrawCoordinate? GetClosePoint(float x, float y)
+    private DrawCoordinate? GetClosePoint(float x, float y, Func<DrawShape, bool>? canPick = null)
     {
         const float maxDistance = 10f;
         DrawCoordinate? closest = null;
         var minDist = float.MaxValue;
 
-        foreach (var shape in Shapes.Where(s => !s.Hidden && !s.IsTextBox))
+        foreach (var shape in Shapes.Where(s => !s.Hidden && !s.IsTextBox && (canPick == null || canPick(s))))
         {
             foreach (var point in shape.Points)
             {
@@ -1589,6 +1695,56 @@ public class AssaDrawCanvas : Control
         }
 
         return closest;
+    }
+}
+
+public class ShapeClickEventArgs : EventArgs
+{
+    /// <summary>
+    /// The shape under the pointer, null for empty canvas.
+    /// </summary>
+    public DrawShape? Shape { get; }
+
+    /// <summary>
+    /// Alt+click or double-click: the part itself, not its whole group.
+    /// </summary>
+    public bool SelectPart { get; }
+
+    public ShapeClickEventArgs(DrawShape? shape, bool selectPart)
+    {
+        Shape = shape;
+        SelectPart = selectPart;
+    }
+}
+
+/// <summary>
+/// A rubber-band selection rectangle in canvas coordinates.
+/// </summary>
+public class CanvasMarqueeEventArgs : EventArgs
+{
+    public float Left { get; }
+    public float Top { get; }
+    public float Right { get; }
+    public float Bottom { get; }
+
+    /// <summary>
+    /// Ctrl/Cmd held: add to the selection instead of replacing it.
+    /// </summary>
+    public bool Additive { get; }
+
+    /// <summary>
+    /// Alt held: just the touched shapes, not the rest of their groups.
+    /// </summary>
+    public bool SelectParts { get; }
+
+    public CanvasMarqueeEventArgs(float left, float top, float right, float bottom, bool additive, bool selectParts)
+    {
+        Left = left;
+        Top = top;
+        Right = right;
+        Bottom = bottom;
+        Additive = additive;
+        SelectParts = selectParts;
     }
 }
 

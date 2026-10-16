@@ -4271,7 +4271,7 @@
     "DrawZoomIn": "Inzoomen (Ctrl++)",
     "DrawZoomOut": "Uitzoomen (Ctrl+-)",
     "DrawResetView": "Weergave herstellen (Ctrl+0)",
-    "DrawToggleGrid": "Raster in-/uitschakelen (Ctrl+G)",
+    "DrawToggleGrid": "Raster in-/uitschakelen (Ctrl+')",
     "DrawTogglePreview": "Voorbeeld aan/uit (F9)",
     "DrawPreviewFailed": "Voorbeeld mislukt - ffmpeg met libass (subtitles-filter) is vereist",
     "DrawCopyToClipboard": "Naar klembord kopiëren (Ctrl+C)",

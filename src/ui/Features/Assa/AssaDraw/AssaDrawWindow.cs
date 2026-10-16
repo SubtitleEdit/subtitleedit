@@ -158,6 +158,10 @@ public class AssaDrawWindow : Window
         {
             AddLayerItems(items, item);
         }
+        else if (item?.IsGroup == true)
+        {
+            AddGroupNodeItems(items);
+        }
         else if (item?.Point != null)
         {
             AddPointItems(items, item.Point);
@@ -203,6 +207,7 @@ public class AssaDrawWindow : Window
     private void AddShapeItems(List<Control> items, DrawShape shape)
     {
         items.Add(MakeMenuItem(Se.Language.General.Duplicate, "fa-regular fa-clone", _vm.DuplicateShapeCommand, new KeyGesture(Key.D, KeyModifiers.Control)));
+        AddGroupItems(items);
 
         var moveToLayer = MakeMenuItem(Se.Language.Assa.DrawMoveToLayer, "fa-solid fa-layer-group", null);
         var layerItems = new List<Control>();
@@ -250,6 +255,40 @@ public class AssaDrawWindow : Window
         items.Add(MakeMenuItem(WithoutShortcut(Se.Language.Assa.DrawDeleteShape), "fa-solid fa-trash", _vm.DeleteShapeCommand, new KeyGesture(Key.Delete)));
     }
 
+    /// <summary>
+    /// Group / Ungroup, each shown only when it can do something.
+    /// </summary>
+    private void AddGroupItems(List<Control> items)
+    {
+        if (_vm.GroupShapesCommand.CanExecute(null))
+        {
+            items.Add(MakeMenuItem(WithoutShortcut(Se.Language.Assa.DrawGroup), "fa-regular fa-object-group", _vm.GroupShapesCommand, new KeyGesture(Key.G, KeyModifiers.Control)));
+        }
+
+        if (_vm.UngroupShapesCommand.CanExecute(null))
+        {
+            items.Add(MakeMenuItem(WithoutShortcut(Se.Language.Assa.DrawUngroup), "fa-regular fa-object-ungroup", _vm.UngroupShapesCommand, new KeyGesture(Key.G, KeyModifiers.Control | KeyModifiers.Shift)));
+        }
+    }
+
+    /// <summary>
+    /// A group node in the tree: what acts on the whole group.
+    /// </summary>
+    private void AddGroupNodeItems(List<Control> items)
+    {
+        items.Add(MakeMenuItem(Se.Language.General.Duplicate, "fa-regular fa-clone", _vm.DuplicateShapeCommand, new KeyGesture(Key.D, KeyModifiers.Control)));
+        AddGroupItems(items);
+        AddSeparator(items);
+        items.Add(MakeMenuItem(Se.Language.Assa.DrawRotateClockwise, "fa-solid fa-rotate-right", _vm.RotateShapeClockwiseCommand));
+        items.Add(MakeMenuItem(Se.Language.Assa.DrawRotateCounterClockwise, "fa-solid fa-rotate-left", _vm.RotateShapeCounterClockwiseCommand));
+        items.Add(MakeMenuItem(Se.Language.Assa.DrawFlipHorizontal, "fa-solid fa-left-right", _vm.FlipShapeHorizontalCommand));
+        items.Add(MakeMenuItem(Se.Language.Assa.DrawFlipVertical, "fa-solid fa-up-down", _vm.FlipShapeVerticalCommand));
+        AddSeparator(items);
+        items.Add(MakeMenuItem(Se.Language.Assa.DrawAddToLibrary, "fa-solid fa-shapes", _vm.AddToLibraryCommand));
+        AddSeparator(items);
+        items.Add(MakeMenuItem(WithoutShortcut(Se.Language.Assa.DrawDeleteShape), "fa-solid fa-trash", _vm.DeleteShapeCommand, new KeyGesture(Key.Delete)));
+    }
+
     private void AddLayerItems(List<Control> items, ShapeTreeItem layerItem)
     {
         items.Add(MakeMenuItem(
@@ -285,7 +324,7 @@ public class AssaDrawWindow : Window
         items.Add(MakeMenuItem(WithoutShortcut(Se.Language.Assa.DrawResetView), "fa-solid fa-expand", _vm.ResetViewCommand, new KeyGesture(Key.D0, KeyModifiers.Control)));
         AddSeparator(items);
 
-        var grid = MakeMenuItem(WithoutShortcut(Se.Language.Assa.DrawToggleGrid), null, _vm.ToggleGridCommand, new KeyGesture(Key.G, KeyModifiers.Control));
+        var grid = MakeMenuItem(WithoutShortcut(Se.Language.Assa.DrawToggleGrid), null, _vm.ToggleGridCommand, new KeyGesture(Key.OemQuotes, KeyModifiers.Control));
         grid.ToggleType = MenuItemToggleType.CheckBox;
         grid.IsChecked = _vm.ShowGrid;
         items.Add(grid);
@@ -381,6 +420,8 @@ public class AssaDrawWindow : Window
         // Shape actions
         leftPanel.Children.Add(CreateToolButton("fa-solid fa-check", Se.Language.Assa.DrawCloseShape, vm.CloseShapeCommand));
         leftPanel.Children.Add(CreateToolButton("fa-regular fa-clone", Se.Language.General.Duplicate + " (Ctrl+D)", vm.DuplicateShapeCommand));
+        leftPanel.Children.Add(CreateToolButton("fa-regular fa-object-group", Se.Language.Assa.DrawGroup, vm.GroupShapesCommand));
+        leftPanel.Children.Add(CreateToolButton("fa-regular fa-object-ungroup", Se.Language.Assa.DrawUngroup, vm.UngroupShapesCommand));
         leftPanel.Children.Add(CreateToolButton("fa-solid fa-trash", Se.Language.Assa.DrawDeleteShape, vm.DeleteShapeCommand));
         leftPanel.Children.Add(CreateToolButton("fa-solid fa-eraser", Se.Language.Assa.DrawClearAll, vm.ClearAllCommand));
         leftPanel.Children.Add(MakeToolbarSeparator());
@@ -806,6 +847,21 @@ public class AssaDrawWindow : Window
             [!TreeView.ItemsSourceProperty] = new Binding(nameof(vm.ShapeTreeItems)),
             [!TreeView.SelectedItemProperty] = new Binding(nameof(vm.SelectedTreeItem)) { Mode = BindingMode.TwoWay },
             Margin = new Thickness(6, 0, 6, 6),
+
+            // Ctrl/Shift+click picks several shapes or groups; a plain click still picks one
+            SelectionMode = SelectionMode.Multiple,
+        };
+        treeView.SelectionChanged += (_, _) =>
+        {
+            if (treeView.SelectedItems is { Count: > 1 } selectedItems)
+            {
+                vm.SetTreeMultiSelection(selectedItems.OfType<ShapeTreeItem>().ToList());
+            }
+            else if (treeView.SelectedItems is { Count: 1 } single && single[0] is ShapeTreeItem item)
+            {
+                // A plain click on the row that was already the tree's current item ends the multi-selection
+                vm.OnTreeSingleSelection(item);
+            }
         };
         treeView.Styles.Add(new Style(x => x.OfType<TreeViewItem>())
         {

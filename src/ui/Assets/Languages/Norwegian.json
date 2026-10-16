@@ -4271,7 +4271,7 @@
     "DrawZoomIn": "Zoom inn (Ctrl++)",
     "DrawZoomOut": "Zoom ut (Ctrl+-)",
     "DrawResetView": "Tilbakestill visning (Ctrl+0)",
-    "DrawToggleGrid": "Veksle rutenett (Ctrl+G)",
+    "DrawToggleGrid": "Veksle rutenett (Ctrl+')",
     "DrawTogglePreview": "Veksle forhåndsvisning (F9)",
     "DrawPreviewFailed": "Forhåndsvisning mislyktes - ffmpeg med libass (subtitles-filter) kreves",
     "DrawCopyToClipboard": "Kopier til utklippstavle (Ctrl+C)",

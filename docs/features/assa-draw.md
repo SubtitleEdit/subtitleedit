@@ -44,6 +44,21 @@ With the **Select** tool, a selected shape (or a multi-selection, `Ctrl+A`) gets
 - The size or angle is shown while dragging.
 - Dragging a shape that is part of a multi-selection moves the whole selection.
 
+### Selecting several shapes
+
+- **Drag on empty canvas** to draw a selection rectangle: every shape it touches is selected. Hold `Ctrl` to add to the selection, or `Alt` to leave out the rest of a touched shape's group.
+- **`Ctrl`+click** (`⌘`+click on macOS) adds a shape to the selection or takes it out. In the shapes panel, `Ctrl`+click and `Shift`+click select several rows.
+- A plain click on empty canvas clears the selection.
+
+### Groups
+
+A multi-part shape from the shape library (clip art, the ring) and an imported SVG are placed as a **group**:
+
+- A click on any part selects the whole group, so moving, scaling, rotating, flipping, duplicating and deleting act on all of it.
+- `Alt`+click or double-click selects a single part, to edit its points.
+- **Group** (`Ctrl+G`) makes one group of the selected shapes, **Ungroup** (`Ctrl+Shift+G`) takes the selected shapes out of their groups. Both are in the options bar and the right-click menu.
+- Groups are only for editing: they are saved in `.assadraw` files, but the ASSA result is the same with or without them.
+
 ## Shape Library
 
 ![Shape library](../screenshots/assa-draw-shape-library.png)
@@ -78,7 +93,7 @@ ASSA drawings have one color per line, so each **layer** has one color. The laye
 ![Right-click menu](../screenshots/assa-draw-context-menu.png)
 
 - **Shape:**
-  - Duplicate (`Ctrl+D`), Move to layer
+  - Duplicate (`Ctrl+D`), Group (`Ctrl+G`) / Ungroup (`Ctrl+Shift+G`), Move to layer
   - Rotate 90° clockwise/counter-clockwise, Flip horizontally/vertically
   - Convert all lines to curves / all curves to lines
   - Use shape for erase, Hide shape
@@ -90,11 +105,12 @@ ASSA drawings have one color per line, so each **layer** has one color. The laye
   - Undo/redo, Close shape/Cancel drawing (while drawing), Select all
   - Zoom, Grid, Preview
   - Import SVG image..., Background, Clear all
-- **Shapes panel:** the same shape and point items. On a layer: Hide/show layer, Change layer, Delete layer.
+- **Shapes panel:** the same shape and point items. On a layer: Hide/show layer, Change layer, Delete layer. On a group: Duplicate, Ungroup, Rotate, Flip, Add to shape library, Delete.
 
 ## Shapes Panel
 
-- Layers contain shapes, and shapes contain their points. Click the eye button to hide or show a layer or shape. Hidden shapes are not included in the preview.
+- Layers contain shapes, and shapes contain their points. Click the eye button to hide or show a layer, group or shape. Hidden shapes are not included in the preview.
+- A group on one layer is shown inside that layer. A group spread over several layers (clip art has one layer per color) is shown as one group row next to its lowest layer, with the layer in each shape's name. Selecting a group row selects the whole group.
 - **Selected shape:** edit its position (X/Y), size (W/H), layer number and color, and turn **Use shape for erase (iclip)** on or off.
 - **Selected point:** edit its exact X/Y coordinates.
 - Selecting a shape or point on the canvas selects it in the panel, and the other way around.
@@ -141,11 +157,14 @@ Every change can be undone with `Ctrl+Z` and redone with `Ctrl+Y` or `Ctrl+Shift
 | `Ctrl+Z` / `Ctrl+Y` | Undo / redo |
 | `Ctrl+D` | Duplicate the selected shape |
 | `Ctrl+A` | Select all shapes |
+| `Ctrl+G` / `Ctrl+Shift+G` | Group / ungroup the selected shapes |
+| `Ctrl`+click, `Ctrl`+drag | Add to or take out of the selection |
+| `Alt`+click, double-click | Select one part of a group |
 | `Ctrl+Arrow` / `Alt+Arrow` | Move the selection 10 px / 1 px |
 | `Ctrl` + mouse wheel | Zoom around the pointer |
 | `Ctrl++` / `Ctrl+-` / `Ctrl+0` | Zoom in / zoom out / fit the frame |
 | `Shift` + drag, middle mouse button | Pan |
-| `Ctrl+G` | Toggle the grid |
+| `Ctrl+'` | Toggle the grid |
 | `F9` | Toggle the libass preview |
 | `Ctrl+C` | Copy the ASSA code to the clipboard |
 | `Ctrl+N` | Clear all |

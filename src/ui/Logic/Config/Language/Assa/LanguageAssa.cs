@@ -168,6 +168,9 @@ public class LanguageAssa
     public string DrawXPoints { get; set; }
     public string DrawShapeXDraw { get; set; }
     public string DrawShapeXErase { get; set; }
+    public string DrawGroup { get; set; }
+    public string DrawUngroup { get; set; }
+    public string DrawGroupX { get; set; }
 
     // Progress Bar Generator
     public string ProgressBarTitle { get; set; }
@@ -508,7 +511,7 @@ public class LanguageAssa
         DrawZoomIn = "Zoom In (Ctrl++)";
         DrawZoomOut = "Zoom Out (Ctrl+-)";
         DrawResetView = "Reset View (Ctrl+0)";
-        DrawToggleGrid = "Toggle Grid (Ctrl+G)";
+        DrawToggleGrid = "Toggle Grid (Ctrl+')";
         DrawTogglePreview = "Toggle preview (F9)";
         DrawPreviewFailed = "Preview failed - ffmpeg with libass (subtitles filter) is required";
         DrawCopyToClipboard = "Copy to Clipboard (Ctrl+C)";
@@ -659,6 +662,9 @@ public class LanguageAssa
         DrawXPoints = "{0} points";
         DrawShapeXDraw = "Shape {0} (draw)";
         DrawShapeXErase = "Shape {0} (erase)";
+        DrawGroup = "Group (Ctrl+G)";
+        DrawUngroup = "Ungroup (Ctrl+Shift+G)";
+        DrawGroupX = "Group {0}";
 
         // Progress Bar Generator
         ProgressBarTitle = "ASSA progress bar";
