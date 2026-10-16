@@ -197,6 +197,12 @@ public class SettingsItem
                 control.VerticalAlignment = VerticalAlignment.Center;
             }
 
+            // A wide combo box or text box shrinks with a narrow window instead of being cut off
+            // at the right edge - its width becomes the most it takes.
+            var field = control is ComboBox or TextBox && !double.IsNaN(control.Width)
+                ? SettingsChrome.ShrinkToFit(control)
+                : control;
+
             // A control of fixed width would be centered in the field column
             if (control.HorizontalAlignment == HorizontalAlignment.Stretch && !double.IsNaN(control.Width))
             {
@@ -206,7 +212,7 @@ public class SettingsItem
             // Top aligned, in line with the first line of a taller control (a list, a group)
             labelTextBlock.VerticalAlignment = VerticalAlignment.Top;
             labelTextBlock.Margin = new Thickness(0, 6, 0, 0);
-            row = MakeColumns(labelTextBlock, control);
+            row = MakeColumns(labelTextBlock, field);
         }
 
         row.MinHeight = 30;
@@ -224,10 +230,16 @@ public class SettingsItem
     /// </summary>
     private static Grid MakeColumns(Control left, Control content)
     {
+        // The label column has its full width where there is room; on a narrow window it gives
+        // up some of it (the labels wrap) so the fields are not cut off at the right edge.
         var grid = new Grid
         {
             ColumnSpacing = 12,
-            ColumnDefinitions = { new ColumnDefinition(new GridLength(SettingsChrome.LabelWidth)), new ColumnDefinition(new GridLength(1, GridUnitType.Star)) },
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(2, GridUnitType.Star) { MaxWidth = SettingsChrome.LabelWidth },
+                new ColumnDefinition(3, GridUnitType.Star),
+            },
         };
         grid.Add(left, 0, 0);
         grid.Add(content, 0, 1);

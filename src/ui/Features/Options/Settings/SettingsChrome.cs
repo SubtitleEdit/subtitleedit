@@ -209,6 +209,24 @@ internal static class SettingsChrome
     }
 
     /// <summary>
+    /// Turns the fixed width of <paramref name="control"/> into the most it takes: it keeps that
+    /// width (left aligned) where there is room and shrinks with a narrow window instead of being
+    /// cut off at the right edge of the field column.
+    /// </summary>
+    internal static Grid ShrinkToFit(Control control)
+    {
+        var grid = new Grid
+        {
+            ColumnDefinitions = { new ColumnDefinition(1, GridUnitType.Star) { MaxWidth = control.Width } },
+            VerticalAlignment = control.VerticalAlignment == VerticalAlignment.Stretch ? VerticalAlignment.Center : control.VerticalAlignment,
+        };
+        control.Width = double.NaN;
+        control.HorizontalAlignment = HorizontalAlignment.Stretch;
+        grid.Children.Add(control);
+        return grid;
+    }
+
+    /// <summary>
     /// Cuts a long text (a file path) with an ellipsis at the edge of the field column.
     /// </summary>
     internal static TextBlock WithEllipsis(this TextBlock textBlock)

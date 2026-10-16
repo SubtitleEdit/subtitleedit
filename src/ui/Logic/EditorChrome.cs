@@ -219,6 +219,36 @@ internal static class EditorChrome
             },
         });
 
+        // Text boxes keep their own background while hovered/focused - the theme turns a focused
+        // box black (dark) or white (light), which reads as a different control on the field color.
+        foreach (var state in new[] { ":pointerover", ":focus" })
+        {
+            styles.Add(new Style(x => x.OfType<TextBox>().Class(state).Template().OfType<Border>().Name("PART_BorderElement"))
+            {
+                Setters =
+                {
+                    new Setter(Border.BackgroundProperty, new Binding(nameof(TextBox.Background))
+                    {
+                        RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent),
+                    }),
+                },
+            });
+        }
+
+        // A switch without on/off texts and header is just the 40px knob track - the theme keeps a
+        // 12px content column after it, which put a wide gap between a switch and its label.
+        styles.Add(new Style(x => x.OfType<ToggleSwitch>()
+            .PropertyEquals(ContentControl.ContentProperty, null)
+            .PropertyEquals(ToggleSwitch.OnContentProperty, null)
+            .PropertyEquals(ToggleSwitch.OffContentProperty, null))
+        {
+            Setters =
+            {
+                new Setter(Layoutable.WidthProperty, 40.0),
+                new Setter(Layoutable.MinWidthProperty, 0.0),
+            },
+        });
+
         // Menus: rounded, darker, accent highlight
         foreach (var menuType in new[] { typeof(ContextMenu), typeof(MenuFlyoutPresenter) })
         {

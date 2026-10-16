@@ -155,11 +155,16 @@ public class ShortcutsWindow : Window
                 };
                 glyph.Bind(Border.BackgroundProperty, new Binding(nameof(ShortcutGroupTile.Brush)));
 
+                // Long group names ("Subtitle list view & ...") wrap to a second line instead of
+                // being cut off at the tile width.
                 var name = new TextBlock
                 {
                     FontSize = UiUtil.ScaledFontSize(11),
                     HorizontalAlignment = HorizontalAlignment.Center,
                     TextAlignment = TextAlignment.Center,
+                    TextWrapping = TextWrapping.Wrap,
+                    MaxLines = 2,
+                    TextTrimming = TextTrimming.CharacterEllipsis,
                 };
                 name.Bind(TextBlock.TextProperty, new Binding(nameof(ShortcutGroupTile.Name)));
 
