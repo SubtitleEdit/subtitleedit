@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -13,6 +14,7 @@ using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -45,6 +47,10 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
     [ObservableProperty] private int _topBottomMargin;
     [ObservableProperty] private int _fadeUpTime;
     [ObservableProperty] private int _fadeDownTime;
+
+    // MXF track file export: the font embedded as the LoadFont resource
+    [ObservableProperty] private bool _isMxfExport;
+    [ObservableProperty] private string _mxfFontFile = string.Empty;
 
     public Window? Window { get; set; }
 
@@ -183,6 +189,8 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
             FadeUpTime = ss.DCinemaFadeUpTime;
             FadeDownTime = ss.DCinemaFadeDownTime;
         }
+
+        MxfFontFile = ss.MxfFontFile ?? string.Empty;
     }
 
     private void SaveSettings()
@@ -226,6 +234,10 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
         ss.DCinemaBottomMargin = TopBottomMargin;
         ss.DCinemaFadeUpTime = FadeUpTime;
         ss.DCinemaFadeDownTime = FadeDownTime;
+        if (IsMxfExport)
+        {
+            ss.MxfFontFile = MxfFontFile;
+        }
 
         Se.SaveSettings();
     }
@@ -425,8 +437,39 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Ok()
+    private async Task BrowseMxfFontFile()
     {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var folder = string.IsNullOrEmpty(MxfFontFile) ? null : Path.GetDirectoryName(MxfFontFile);
+        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.File.PropertiesDCinema.ChooseFontFile, Se.Language.General.Font, ".ttf;.otf", suggestedStartFolder: folder);
+        if (!string.IsNullOrEmpty(fileName))
+        {
+            MxfFontFile = fileName;
+        }
+    }
+
+    [RelayCommand]
+    private async Task Ok()
+    {
+        if (IsMxfExport)
+        {
+            if (string.IsNullOrWhiteSpace(MxfFontFile) || !File.Exists(MxfFontFile))
+            {
+                await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.File.PropertiesDCinema.FontFileMissing, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // The track file carries the font under the LoadFont urn:uuid
+            if (!FontUri.StartsWith("urn:uuid:", StringComparison.OrdinalIgnoreCase) || !Guid.TryParse(FontUri.Substring(9), out _))
+            {
+                FontUri = "urn:uuid:" + Guid.NewGuid();
+            }
+        }
+
         SaveSettings();
         OkPressed = true;
         Window?.Close();
@@ -460,6 +503,13 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
     internal void Initialize(Subtitle subtitle, SubtitleFormat format)
     {
         InitializeCore(subtitle, format);
+    }
+
+    internal void InitializeMxfExport(Subtitle subtitle)
+    {
+        IsMxfExport = true;
+        InitializeCore(subtitle, null);
+        WindowTitle = string.Format(Se.Language.File.XProperties, Se.Language.File.Export.TitleExportDCinemaSmpte2014Mxf);
     }
 
     private void InitializeCore(Subtitle? subtitle, SubtitleFormat? format)

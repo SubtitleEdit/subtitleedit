@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Nikse.SubtitleEdit.Logic;
@@ -62,7 +63,13 @@ public class DCinemaSmptePropertiesWindow : Window
         var numericUpDownFadeUpTime = FormatPropertiesChrome.Number(UiUtil.MakeNumericUpDownInt(0, 50, 0, 90, vm, nameof(vm.FadeUpTime)), lang.FadeUpTime);
         var numericUpDownFadeDownTime = FormatPropertiesChrome.Number(UiUtil.MakeNumericUpDownInt(0, 50, 0, 90, vm, nameof(vm.FadeDownTime)), lang.FadeDownTime);
 
+        var textBoxMxfFontFile = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(340, vm, nameof(vm.MxfFontFile)), lang.FontFile);
+        var buttonBrowseMxfFontFile = FormatPropertiesChrome.MakeAction("fa-solid fa-folder-open", lang.ChooseFontFile, vm.BrowseMxfFontFileCommand);
+        var rowMxfFontFile = FormatPropertiesChrome.Row(lang.FontFile, textBoxMxfFontFile, buttonBrowseMxfFontFile);
+        rowMxfFontFile.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsMxfExport)) { Source = vm, Mode = BindingMode.OneWay });
+
         var font = FormatPropertiesChrome.MakeRows(
+            rowMxfFontFile,
             FormatPropertiesChrome.Row(lang.FontId, textBoxFontId),
             FormatPropertiesChrome.Row(lang.FontUri, textBoxFontUri, buttonGenerateFontUri),
             FormatPropertiesChrome.Row(Se.Language.General.FontColor, buttonFontColor),
