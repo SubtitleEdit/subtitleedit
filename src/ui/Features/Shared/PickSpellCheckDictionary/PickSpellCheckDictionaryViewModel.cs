@@ -107,6 +107,12 @@ public partial class PickSpellCheckDictionaryViewModel : ObservableObject
             LoadDictionaries();
             SelectedDictionary = Dictionaries.FirstOrDefault(d => d.DictionaryFileName == result.SpellCheckDictionary?.DictionaryFileName);
         }
+        else if (result.DictionariesChanged)
+        {
+            var currentFileName = SelectedDictionary?.DictionaryFileName;
+            LoadDictionaries();
+            SelectedDictionary = Dictionaries.FirstOrDefault(d => d.DictionaryFileName == currentFileName) ?? SelectedDictionary;
+        }
     }
 
     [RelayCommand]

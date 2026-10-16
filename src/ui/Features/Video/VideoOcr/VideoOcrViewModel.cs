@@ -1587,6 +1587,17 @@ public partial class VideoOcrViewModel : ObservableObject
                     d.Name.Contains(result.SelectedDictionary.NativeName, StringComparison.OrdinalIgnoreCase))
                 ?? SelectedDictionary;
         }
+        else if (result.DictionariesChanged)
+        {
+            // Keep the current dictionary unless it was the one uninstalled.
+            var currentFileName = SelectedDictionary?.DictionaryFileName;
+            SelectedDictionary = null;
+            LoadDictionaries(currentFileName ?? string.Empty);
+            if (currentFileName == string.Empty)
+            {
+                SelectedDictionary = Dictionaries[0]; // "None" stays "None"
+            }
+        }
     }
 
     /// <summary>The current engine's OCR language as a two-letter code, for the dictionary auto-pick.</summary>

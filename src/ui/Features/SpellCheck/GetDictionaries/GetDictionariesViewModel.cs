@@ -41,6 +41,9 @@ public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanu
     public Window? Window { get; set; }
 
     public bool OkPressed { get; private set; }
+
+    /// <summary>A dictionary was uninstalled, so callers should reload their dictionary list.</summary>
+    public bool DictionariesChanged { get; private set; }
     public SpellCheckDictionaryDisplay? SpellCheckDictionary { get; private set; }
 
     private Task? _downloadTask;
@@ -428,7 +431,9 @@ public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanu
     private void UpdateSelectedStatus()
     {
         var selected = SelectedDictionary;
-        IsUninstallVisible = selected is { IsInstalled: true } && IsDownloadEnabled;
+        // Voikko can also be found in system/bundled folders, which Uninstall does not touch.
+        IsUninstallVisible = selected is { IsInstalled: true } && IsDownloadEnabled &&
+                             (!selected.Voikko || Directory.Exists(VoikkoSpellChecker.GetVoikkoFolder(Se.DictionariesFolder)));
         if (selected == null)
         {
             SelectedStatusText = string.Empty;
@@ -525,6 +530,13 @@ public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanu
                 var voikkoFolder = VoikkoSpellChecker.GetVoikkoFolder(Se.DictionariesFolder);
                 if (Directory.Exists(voikkoFolder))
                 {
+                    // Delete the library first: while loaded (Windows) it cannot be deleted, and
+                    // failing here keeps the dictionary instead of leaving only the library behind.
+                    foreach (var library in Directory.GetFiles(voikkoFolder, "libvoikko*"))
+                    {
+                        File.Delete(library);
+                    }
+
                     Directory.Delete(voikkoFolder, true);
                 }
             }
@@ -545,6 +557,7 @@ public partial class GetDictionariesViewModel : ObservableObject, IClosingCleanu
             await MessageBox.Show(Window, Se.Language.General.Error, exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
+        DictionariesChanged = true;
         RefreshInstalledStatus();
     }
 

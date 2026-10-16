@@ -917,6 +917,12 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
             LoadDictionaries();
             SetLanguage(result.SpellCheckDictionary);
         }
+        else if (result.DictionariesChanged)
+        {
+            var current = SelectedDictionary;
+            LoadDictionaries();
+            SetLanguage(current);
+        }
     }
 
     [RelayCommand]
