@@ -57,6 +57,11 @@ public class SeAssa
     public bool DrawBackgroundStretch { get; set; }
 
     /// <summary>
+    /// ASSA draw: the Animation section of the properties panel is open.
+    /// </summary>
+    public bool DrawAnimationExpanded { get; set; }
+
+    /// <summary>
     /// ASSA draw: shapes the user saved to the shape library ("My shapes").
     /// </summary>
     public List<SeAssaDrawShape> DrawShapeLibrary { get; set; }

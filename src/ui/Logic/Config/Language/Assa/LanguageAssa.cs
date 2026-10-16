@@ -104,6 +104,25 @@ public class LanguageAssa
     public string DrawClipArtCatFace { get; set; }
     public string DrawClipArtKey { get; set; }
     public string DrawClipArtChristmasTree { get; set; }
+    public string DrawAnimation { get; set; }
+    public string DrawAnimationIn { get; set; }
+    public string DrawAnimationOut { get; set; }
+    public string DrawAnimationNone { get; set; }
+    public string DrawAnimationFade { get; set; }
+    public string DrawAnimationPop { get; set; }
+    public string DrawAnimationZoom { get; set; }
+    public string DrawAnimationSpin { get; set; }
+    public string DrawAnimationFromLeft { get; set; }
+    public string DrawAnimationFromRight { get; set; }
+    public string DrawAnimationFromTop { get; set; }
+    public string DrawAnimationFromBottom { get; set; }
+    public string DrawAnimationToLeft { get; set; }
+    public string DrawAnimationToRight { get; set; }
+    public string DrawAnimationToTop { get; set; }
+    public string DrawAnimationToBottom { get; set; }
+    public string DrawAnimationPlay { get; set; }
+    public string DrawAnimationStop { get; set; }
+    public string DrawAnimationLayerHint { get; set; }
     public string DrawCategoryMyShapes { get; set; }
     public string DrawShapeSpeechBubble { get; set; }
     public string DrawShapeSpeechBubbleRight { get; set; }
@@ -610,6 +629,25 @@ public class LanguageAssa
         DrawClipArtCatFace = "Cat face";
         DrawClipArtKey = "Key";
         DrawClipArtChristmasTree = "Christmas tree";
+        DrawAnimation = "Animation";
+        DrawAnimationIn = "In";
+        DrawAnimationOut = "Out";
+        DrawAnimationNone = "None";
+        DrawAnimationFade = "Fade";
+        DrawAnimationPop = "Pop";
+        DrawAnimationZoom = "Zoom";
+        DrawAnimationSpin = "Spin";
+        DrawAnimationFromLeft = "From left";
+        DrawAnimationFromRight = "From right";
+        DrawAnimationFromTop = "From top";
+        DrawAnimationFromBottom = "From bottom";
+        DrawAnimationToLeft = "To left";
+        DrawAnimationToRight = "To right";
+        DrawAnimationToTop = "To top";
+        DrawAnimationToBottom = "To bottom";
+        DrawAnimationPlay = "Play animation";
+        DrawAnimationStop = "Stop animation";
+        DrawAnimationLayerHint = "Applies to the whole layer (one subtitle line); a group moves as one.";
         DrawCategoryMyShapes = "My shapes";
         DrawShapeSpeechBubble = "Speech bubble";
         DrawShapeSpeechBubbleRight = "Speech bubble, tail right";

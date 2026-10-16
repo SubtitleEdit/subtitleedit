@@ -34,6 +34,12 @@ public class DrawShape
     public int GroupId { get; set; }
 
     /// <summary>
+    /// The in/out effect of the shape's line (a line is a layer, so every shape of a layer has the
+    /// same one); null = not animated.
+    /// </summary>
+    public DrawAnimation? Animation { get; set; }
+
+    /// <summary>
     /// A text-only object: its rectangle is where the text goes, nothing is drawn for it.
     /// </summary>
     public bool IsTextBox { get; set; }
@@ -74,6 +80,7 @@ public class DrawShape
         Hidden = other.Hidden;
         Expanded = other.Expanded;
         GroupId = other.GroupId;
+        Animation = other.Animation?.Clone();
         IsTextBox = other.IsTextBox;
         Text = other.Text;
         FontName = other.FontName;
@@ -97,9 +104,10 @@ public class DrawShape
     }
 
     /// <summary>
-    /// Converts the shape to ASSA drawing commands.
+    /// Converts the shape to ASSA drawing commands, optionally relative to an anchor (an animated
+    /// line is positioned at its anchor with \pos or \move).
     /// </summary>
-    public string ToAssa()
+    public string ToAssa(float originX = 0, float originY = 0)
     {
         if (Points.Count == 0)
         {
@@ -110,7 +118,7 @@ public class DrawShape
         var first = Points[0];
 
         // Start with move command using the first point
-        sb.Append(CultureInfo.InvariantCulture, $"m {first.X:0.##} {first.Y:0.##} ");
+        sb.Append(CultureInfo.InvariantCulture, $"m {first.X - originX:0.##} {first.Y - originY:0.##} ");
 
         // A shape can mix line and bezier segments (the importer appends "l" and "b" runs to
         // the same shape, and switching tools mid-shape does too). Emit each point under the
@@ -130,7 +138,7 @@ public class DrawShape
                 currentCommand = command;
             }
 
-            sb.Append(CultureInfo.InvariantCulture, $"{point.X:0.##} {point.Y:0.##} ");
+            sb.Append(CultureInfo.InvariantCulture, $"{point.X - originX:0.##} {point.Y - originY:0.##} ");
         }
 
         return sb.ToString().Trim();
