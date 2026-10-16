@@ -13,13 +13,15 @@ public class AutoUpdateServiceTests
     private static AutoUpdateKind Detect(
         bool isWindows = false,
         bool isLinux = false,
+        bool isMacOs = false,
         Architecture architecture = Architecture.X64,
         bool isPackageManaged = false,
         bool writable = true,
+        string folder = Folder,
         params string[] files)
     {
-        var existing = new HashSet<string>(files.Select(f => f.StartsWith('/') ? f : Path.Combine(Folder, f)));
-        return AutoUpdateService.DetectKind(isWindows, isLinux, architecture, isPackageManaged, Folder, existing.Contains, _ => writable);
+        var existing = new HashSet<string>(files.Select(f => f.StartsWith('/') ? f : Path.Combine(folder, f)));
+        return AutoUpdateService.DetectKind(isWindows, isLinux, isMacOs, architecture, isPackageManaged, folder, existing.Contains, _ => writable);
     }
 
     [Fact]
@@ -66,16 +68,60 @@ public class AutoUpdateServiceTests
         Assert.Equal(AutoUpdateKind.None, Detect(isLinux: true, files: "SubtitleEdit"));
     }
 
-    [Fact]
-    public void DetectKind_MacOs_IsNone()
+    private const string MacExeFolder = "/Applications/Subtitle Edit.app/Contents/MacOS/";
+
+    [Theory]
+    [InlineData(Architecture.X64)]
+    [InlineData(Architecture.Arm64)]
+    public void DetectKind_MacAppBundleInWritableFolder_IsMacAppBundle(Architecture architecture)
     {
-        Assert.Equal(AutoUpdateKind.None, Detect(files: "SubtitleEdit"));
+        Assert.Equal(AutoUpdateKind.MacAppBundle, Detect(isMacOs: true, architecture: architecture, folder: MacExeFolder));
+    }
+
+    [Fact]
+    public void DetectKind_MacReadOnlyFolder_IsNone()
+    {
+        Assert.Equal(AutoUpdateKind.None, Detect(isMacOs: true, writable: false, folder: MacExeFolder));
+    }
+
+    [Fact]
+    public void DetectKind_MacTranslocated_IsNone()
+    {
+        Assert.Equal(AutoUpdateKind.None, Detect(isMacOs: true,
+            folder: "/private/var/folders/x/AppTranslocation/ABC/d/Subtitle Edit.app/Contents/MacOS/"));
+    }
+
+    [Fact]
+    public void DetectKind_MacNotInBundle_IsNone()
+    {
+        Assert.Equal(AutoUpdateKind.None, Detect(isMacOs: true, folder: "/Users/me/se/bin/Debug/net10.0/"));
+    }
+
+    [Theory]
+    [InlineData("/Applications/Subtitle Edit.app/Contents/MacOS/", "/Applications/Subtitle Edit.app")]
+    [InlineData("/Users/me/Apps/SE.app/Contents/MacOS", "/Users/me/Apps/SE.app")]
+    [InlineData("/Users/me/se/bin/Debug/net10.0/", null)]
+    [InlineData("/Applications/Subtitle Edit/Contents/MacOS/", null)]
+    public void GetMacAppBundle(string exeFolder, string? expected)
+    {
+        Assert.Equal(expected, AutoUpdateService.GetMacAppBundle(exeFolder));
+    }
+
+    [Theory]
+    [InlineData("Identifier=dk.nikse.subtitleedit\nAuthority=Developer ID Application: X (MFC9L2T4RB)\nTeamIdentifier=MFC9L2T4RB\n", "MFC9L2T4RB")]
+    [InlineData("Identifier=x\nSignature=adhoc\nTeamIdentifier=not set\n", "")]
+    [InlineData("code object is not signed at all\n", "")]
+    public void ParseTeamIdentifier(string output, string expected)
+    {
+        Assert.Equal(expected, AutoUpdateService.ParseTeamIdentifier(output));
     }
 
     [Theory]
     [InlineData(AutoUpdateKind.WindowsInstaller, Architecture.X64, "SubtitleEdit-Windows-x64-Setup.exe")]
     [InlineData(AutoUpdateKind.LinuxTarball, Architecture.X64, "SubtitleEdit-Linux-x64.tar.gz")]
     [InlineData(AutoUpdateKind.LinuxTarball, Architecture.Arm64, "SubtitleEdit-Linux-ARM64.tar.gz")]
+    [InlineData(AutoUpdateKind.MacAppBundle, Architecture.X64, "SubtitleEdit-macOS-x64.dmg")]
+    [InlineData(AutoUpdateKind.MacAppBundle, Architecture.Arm64, "SubtitleEdit-macOS-ARM64.dmg")]
     [InlineData(AutoUpdateKind.None, Architecture.X64, "")]
     public void GetAssetName(AutoUpdateKind kind, Architecture architecture, string expected)
     {
@@ -263,6 +309,52 @@ public class AutoUpdateServiceTests
             Assert.True(File.Exists(Path.Combine(appFolder, "old.txt"))); // user files in the folder survive
             Assert.False(File.Exists(archive));
             Assert.True(File.Exists(marker));
+        }
+        finally
+        {
+            Directory.Delete(root, true);
+        }
+    }
+
+    [Fact]
+    public async Task MacScript_SwapsBundleAfterExitAndOpensIt()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            return;
+        }
+
+        var root = Directory.CreateTempSubdirectory("se-update-test").FullName;
+        try
+        {
+            var target = Directory.CreateDirectory(Path.Combine(root, "Applications", "Subtitle Edit.app", "Contents")).Parent!.FullName;
+            await File.WriteAllTextAsync(Path.Combine(target, "Contents", "version.txt"), "1");
+            var staged = Directory.CreateDirectory(Path.Combine(root, "staged", "Subtitle Edit.app", "Contents")).Parent!.FullName;
+            await File.WriteAllTextAsync(Path.Combine(staged, "Contents", "version.txt"), "2");
+
+            // A fake "open" first on PATH records what would be launched.
+            var bin = Directory.CreateDirectory(Path.Combine(root, "bin")).FullName;
+            var marker = Path.Combine(root, "opened.txt");
+            await File.WriteAllTextAsync(Path.Combine(bin, "open"), $"#!/bin/sh\necho \"$1\" > '{marker}'\n");
+            File.SetUnixFileMode(Path.Combine(bin, "open"), (UnixFileMode)0b111_101_101);
+
+            var exited = System.Diagnostics.Process.Start("/bin/sh", ["-c", "exit 0"]);
+            await exited.WaitForExitAsync();
+
+            var script = Path.Combine(root, "install-update.sh");
+            await File.WriteAllTextAsync(script, AutoUpdateService.MacScript.Replace("\r\n", "\n"));
+            var startInfo = new System.Diagnostics.ProcessStartInfo("/bin/sh", [script, exited.Id.ToString(), staged, target]);
+            startInfo.Environment["PATH"] = bin + ":" + Environment.GetEnvironmentVariable("PATH");
+            using (var process = System.Diagnostics.Process.Start(startInfo)!)
+            {
+                await process.WaitForExitAsync();
+                Assert.Equal(0, process.ExitCode);
+            }
+
+            Assert.Equal("2", await File.ReadAllTextAsync(Path.Combine(target, "Contents", "version.txt")));
+            Assert.False(Directory.Exists(staged));
+            Assert.False(Directory.Exists(target + ".se-update-old"));
+            Assert.Equal(target, (await File.ReadAllTextAsync(marker)).Trim());
         }
         finally
         {
