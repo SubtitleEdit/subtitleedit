@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -29,10 +30,12 @@ public class ChangeCasingWindow : Window
         var rowNormalCasingFixNames = EditorChrome.MakeToggleRow(nameof(vm.NormalCasingFixNames), Se.Language.Tools.ChangeCasing.FixNames);
         rowNormalCasingFixNames.Margin = new Thickness(28, 2, 0, 4);
         rowNormalCasingFixNames.Bind(IsEnabledProperty, new Binding(nameof(vm.NormalCasing)));
+        rowNormalCasingFixNames.Bind(OpacityProperty, new Binding(nameof(vm.NormalCasing)) { Converter = EnabledOpacityConverter });
 
         var rowNormalCasingOnlyUpper = EditorChrome.MakeToggleRow(nameof(vm.NormalCasingOnlyUpper), Se.Language.Tools.ChangeCasing.OnlyFixUppercaseLines);
         rowNormalCasingOnlyUpper.Margin = new Thickness(28, 0, 0, 8);
         rowNormalCasingOnlyUpper.Bind(IsEnabledProperty, new Binding(nameof(vm.NormalCasing)));
+        rowNormalCasingOnlyUpper.Bind(OpacityProperty, new Binding(nameof(vm.NormalCasing)) { Converter = EnabledOpacityConverter });
 
         var panel = new StackPanel
         {
@@ -60,6 +63,9 @@ public class ChangeCasingWindow : Window
         UiUtil.FocusOnFirstActivation(this, radioButtonNormalCasing); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
+
+    // a disabled row's label (plain TextBlock) has no disabled look, so dim the whole row
+    private static readonly FuncValueConverter<bool, double> EnabledOpacityConverter = new(on => on ? 1.0 : 0.5);
 
     private static RadioButton MakeRadio(string text, string property)
     {
