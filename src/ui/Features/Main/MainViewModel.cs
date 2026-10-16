@@ -1915,6 +1915,12 @@ public partial class MainViewModel :
     internal void CancelPausePlayheadFreeze()
     {
         CancelFrameStepPlayBlip(); // playback the user started must not be stopped by a stale blip
+
+        // Playback moves the player away from the last relative-seek target. A short play
+        // (under the tracker's 0.5 s guard) left it armed, so the next 500 ms / custom step
+        // after pausing continued from the old target and moved only a few frames (#16101).
+        _relativeSeekTargetSeconds = null;
+
         AlignPausedPlayerWithCursor();
         _pauseRequested = false;
         _playStartGate.PlayRequested(Stopwatch.GetTimestamp());
