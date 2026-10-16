@@ -480,6 +480,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.FrameModeSnapToVideoFrames, nameof(_vm.FrameModeSnapToVideoFrames),
                 new Binding(nameof(_vm.IsFramesTimeCodeMode)) { Source = _vm }),
             MakeCheckboxSetting(Se.Language.Options.Settings.TextBoxLimitNewLines, nameof(_vm.TextBoxLimitNewLines)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.TextBoxAutoWrapWhileTyping, nameof(_vm.TextBoxAutoWrapWhileTyping)),
             MakeCheckboxSetting(Se.Language.General.LockTimeCodes, nameof(_vm.LockTimeCodes)),
             MakeCheckboxSetting(Se.Language.Options.Settings.RememberPositionAndSize, nameof(_vm.RememberPositionAndSize)),
             MakeCheckboxSetting(Se.Language.Options.Settings.TitleBarFullFileName, nameof(_vm.TitleBarFullFileName)),

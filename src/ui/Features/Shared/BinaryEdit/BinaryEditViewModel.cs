@@ -1227,6 +1227,18 @@ public partial class BinaryEditViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task ExportDCinemaSmpte2014PngMxf()
+    {
+        // A DCP reel's assets share one duration - with a video open, run the track to its end
+        var videoSeconds = VideoPlayerControl?.VideoPlayer?.Duration ?? 0;
+        var handler = new ExportHandlerDCinemaSmpte2014Mxf
+        {
+            ReelDuration = videoSeconds > 0 ? TimeSpan.FromSeconds(videoSeconds) : null,
+        };
+        await DoExport(handler, ".mxf");
+    }
+
+    [RelayCommand]
     private async Task ExportImscImage()
     {
         // Single self-contained TTML file; the binary sub's own bitmaps and X/Y placement carry

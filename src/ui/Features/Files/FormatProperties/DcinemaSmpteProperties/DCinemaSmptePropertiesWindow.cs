@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Nikse.SubtitleEdit.Logic;
@@ -40,6 +41,14 @@ public class DCinemaSmptePropertiesWindow : Window
         var textBoxEditRate = EditorChrome.AsTextField(UiUtil.MakeTextBox(90, vm, nameof(vm.EditRate)), lang.EditRate);
         var comboBoxTimeCodeRate = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.TimeCodeRates, vm, nameof(vm.SelectedTimeCodeRate)), lang.TimeCodeRate, 90);
         var textBoxStartTime = EditorChrome.AsTextField(UiUtil.MakeTextBox(120, vm, nameof(vm.StartTime)), lang.StartTime);
+        var textBoxReelDuration = EditorChrome.AsTextField(UiUtil.MakeTextBox(120, vm, nameof(vm.ReelDuration)), lang.ReelDuration);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(textBoxReelDuration, lang.ReelDurationHint);
+        }
+
+        var rowReelDuration = FormatPropertiesChrome.Row(lang.ReelDuration, textBoxReelDuration);
+        rowReelDuration.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsMxfExport)) { Source = vm, Mode = BindingMode.OneWay });
 
         var general = FormatPropertiesChrome.MakeRows(
             FormatPropertiesChrome.Row(string.Empty, switchGenerateIdAuto),
@@ -48,7 +57,8 @@ public class DCinemaSmptePropertiesWindow : Window
             FormatPropertiesChrome.Row(lang.ReelNumber, numericUpDownReelNumber, FormatPropertiesChrome.InlineLabel(Se.Language.General.Language), comboBoxLanguage),
             FormatPropertiesChrome.Row(lang.IssueDate, textBoxIssueDate, buttonToday),
             FormatPropertiesChrome.Row(lang.EditRate, textBoxEditRate, FormatPropertiesChrome.InlineLabel(lang.TimeCodeRate), comboBoxTimeCodeRate),
-            FormatPropertiesChrome.Row(lang.StartTime, textBoxStartTime));
+            FormatPropertiesChrome.Row(lang.StartTime, textBoxStartTime),
+            rowReelDuration);
 
         // Font section
         var textBoxFontId = EditorChrome.AsTextField(UiUtil.MakeTextBox(200, vm, nameof(vm.FontId)), lang.FontId);
@@ -62,7 +72,13 @@ public class DCinemaSmptePropertiesWindow : Window
         var numericUpDownFadeUpTime = FormatPropertiesChrome.Number(UiUtil.MakeNumericUpDownInt(0, 50, 0, 90, vm, nameof(vm.FadeUpTime)), lang.FadeUpTime);
         var numericUpDownFadeDownTime = FormatPropertiesChrome.Number(UiUtil.MakeNumericUpDownInt(0, 50, 0, 90, vm, nameof(vm.FadeDownTime)), lang.FadeDownTime);
 
+        var textBoxMxfFontFile = EditorChrome.AsTextField(UiUtil.MakeTextBox(340, vm, nameof(vm.MxfFontFile)), lang.FontFile);
+        var buttonBrowseMxfFontFile = FormatPropertiesChrome.MakeAction("fa-solid fa-folder-open", lang.ChooseFontFile, vm.BrowseMxfFontFileCommand);
+        var rowMxfFontFile = FormatPropertiesChrome.Row(lang.FontFile, textBoxMxfFontFile, buttonBrowseMxfFontFile);
+        rowMxfFontFile.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsMxfExport)) { Source = vm, Mode = BindingMode.OneWay });
+
         var font = FormatPropertiesChrome.MakeRows(
+            rowMxfFontFile,
             FormatPropertiesChrome.Row(lang.FontId, textBoxFontId),
             FormatPropertiesChrome.Row(lang.FontUri, textBoxFontUri, buttonGenerateFontUri),
             FormatPropertiesChrome.Row(Se.Language.General.FontColor, buttonFontColor),

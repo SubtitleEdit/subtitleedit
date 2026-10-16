@@ -5163,6 +5163,105 @@ public partial class MainViewModel :
         }
     }
 
+    /// <summary>
+    /// D-Cinema SMPTE 2014 image subtitles as one SMPTE ST 429-5 track file, the PNGs embedded.
+    /// </summary>
+    [RelayCommand]
+    private async Task ExportDCinemaSmpte2014PngMxf()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (IsEmpty)
+        {
+            ShowSubtitleNotLoadedMessage();
+            return;
+        }
+
+        IExportHandler exportHandler = new ExportHandlerDCinemaSmpte2014Mxf();
+        var result = await ShowDialogAsync<ExportImageBasedWindow, ExportImageBasedViewModel>(vm =>
+        {
+            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName, _subtitle.Header, removeAssaCommentBlocks: IsFormatAssaOrSsa);
+        });
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+    }
+
+    /// <summary>
+    /// SMPTE ST 429-5 timed text track file - the subtitle asset of a SMPTE DCP: the D-Cinema
+    /// SMPTE 2014 XML wrapped in MXF with the font it loads embedded.
+    /// </summary>
+    [RelayCommand]
+    private async Task ExportDCinemaSmpte2014Mxf()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (IsEmpty)
+        {
+            ShowSubtitleNotLoadedMessage();
+            return;
+        }
+
+        CopyCurrentDCinemaSettingsToSe();
+        var result = await ShowDialogAsync<DCinemaSmptePropertiesWindow, DCinemaSmptePropertiesViewModel>(vm => { vm.InitializeMxfExport(GetUpdateSubtitle(), _mediaInfo?.Duration is { } videoDuration ? TimeSpan.FromMilliseconds(videoDuration.TotalMilliseconds) : null); });
+        CopyCurrentDCinemaSettingsFromSe();
+        SetLibSeSettings();
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        var title = Se.Language.File.Export.TitleExportDCinemaSmpte2014Mxf;
+        var fileName = await _fileHelper.PickSaveFile(
+            Window!,
+            new[] { (title, ".mxf") },
+            Utilities.GetPathAndFileNameWithoutExtension(GetNewFileName()) + ".mxf",
+            string.Format(Se.Language.Main.SaveXFileAs, title));
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return;
+        }
+
+        try
+        {
+            var xml = new DCinemaSmpte2014().ToText(GetExportSubtitle(), Path.GetFileNameWithoutExtension(fileName));
+            // Embed the font under the id the XML loads it by
+            var fontId = TimedTextMxfWriter.GetLoadFontIds(xml).FirstOrDefault();
+            if (fontId == Guid.Empty)
+            {
+                fontId = Guid.Parse(Configuration.Settings.SubtitleSettings.CurrentDCinemaFontUri.Substring("urn:uuid:".Length));
+            }
+
+            var writer = new TimedTextMxfWriter();
+            if (TimedTextMxfWriter.TryParseTimeCode(result.ReelDuration, result.GetEditRateFrames(), out var reelFrames))
+            {
+                writer.ContainerDuration = reelFrames;
+            }
+
+            writer.Resources.Add(new TimedTextMxfResource(fontId, TimedTextMxfResource.MimeTypeFont, await File.ReadAllBytesAsync(result.MxfFontFile)));
+            writer.Write(fileName, xml);
+        }
+        catch (Exception ex)
+        {
+            SeLogger.Error(ex, "Export to D-Cinema SMPTE MXF failed for " + fileName);
+            await MessageBox.Show(Window!, Se.Language.General.Error,
+                string.Format(Se.Language.General.CouldNotSaveFileXErrorY, fileName, ex.Message),
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        ShowStatus(string.Format(Se.Language.Main.FileExportedInFormatXToY, title, fileName));
+        await ShowExportFileSavedPrompt(fileName);
+    }
+
     [RelayCommand]
     private async Task ExportDostPng()
     {
@@ -26174,7 +26273,7 @@ public partial class MainViewModel :
     // so the code is cached here and reset on file load/new and after translation.
     private string? _detectedLanguageCode;
 
-    private string GetDetectedLanguageCode()
+    internal string GetDetectedLanguageCode()
     {
         return _detectedLanguageCode ??= Subtitles.AutoDetectGoogleLanguageOrNull() ?? string.Empty;
     }

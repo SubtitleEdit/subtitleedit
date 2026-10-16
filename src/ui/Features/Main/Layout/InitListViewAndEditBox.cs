@@ -2453,6 +2453,7 @@ public static partial class InitListViewAndEditBox
         });
 
         textBox.TextChanged += vm.SubtitleTextChanged;
+        TextBoxAutoWrap.Attach(textBox, vm.GetDetectedLanguageCode);
         textBox.GotFocus += (_, _) => vm.SubtitleTextBoxGotFocus();
         textBox.AddHandler(InputElement.PointerPressedEvent, (_, e) => vm.StoreTextEditorPointerArgs(e), RoutingStrategies.Tunnel);
 
@@ -2669,6 +2670,9 @@ public static partial class InitListViewAndEditBox
             Source = vm
         });
 
+        // The cached language is the working subtitle's; the original's would need its own
+        // detection, and only the rare far-too-long auto-break uses it.
+        TextBoxAutoWrap.Attach(textBox, () => string.Empty);
         SetupMacContextMenuForTextBox(textBox, vm);
         MainHelpers.RightToLeftHelper.FollowContentDirection(textBox);
 

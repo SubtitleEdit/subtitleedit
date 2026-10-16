@@ -1377,6 +1377,12 @@ internal record class ConversionOptions
     /// <summary>PAC code page for lines in another script, written flagged as "secondary code page".</summary>
     public int? PacSecondaryCodePage { get; init; }
     public string? EbuHeaderFile { get; init; }
+
+    /// <summary>Font embedded in D-Cinema SMPTE 2014 MXF (text) output.</summary>
+    public string? DCinemaFontFile { get; init; }
+
+    /// <summary>D-Cinema MXF output: reel length as hh:mm:ss:ff, null = until the last subtitle.</summary>
+    public string? ReelDuration { get; init; }
     public string? MultipleReplaceFile { get; init; }
     public string? CustomFormatFile { get; init; }
     public IReadOnlyList<int> TrackNumbers { get; init; } = [];

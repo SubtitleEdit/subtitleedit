@@ -786,6 +786,11 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             _ = Task.Run(() =>
             {
                 var mediaInfo = FfmpegMediaInfo2.Parse(videoFileName);
+                if (exportHandler is ExportHandlerDCinemaSmpte2014Mxf mxfHandler && mediaInfo?.Duration is { TotalMilliseconds: > 0 } videoDuration)
+                {
+                    mxfHandler.ReelDuration = TimeSpan.FromMilliseconds(videoDuration.TotalMilliseconds);
+                }
+
                 if (mediaInfo?.Dimension is { Width: > 0, Height: > 0 } dimension)
                 {
                     Dispatcher.UIThread.Post(() =>

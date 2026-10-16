@@ -160,6 +160,7 @@ public partial class SettingsViewModel : ObservableObject
         ? Se.Language.Options.Settings.MinGapFrames
         : Se.Language.Options.Settings.MinGapMs;
     [ObservableProperty] private bool _textBoxLimitNewLines;
+    [ObservableProperty] private bool _textBoxAutoWrapWhileTyping;
     [ObservableProperty] private bool _autoSave;
     [ObservableProperty] private bool _autoBackupOn;
     [ObservableProperty] private int? _autoBackupIntervalMinutes;
@@ -837,6 +838,7 @@ public partial class SettingsViewModel : ObservableObject
         SelectedTimeCodeMode = TimeCodeModes.First(p => p.Mode == timeCodeMode);
         FrameModeSnapToVideoFrames = general.FrameModeSnapToVideoFrames;
         TextBoxLimitNewLines = general.SubtitleTextBoxLimitNewLines;
+        TextBoxAutoWrapWhileTyping = general.SubtitleTextBoxAutoWrapWhileTyping;
         NewEmptyDefaultMs = general.NewEmptyDefaultMs;
         TimeCodeUpDownStepMs = general.TimeCodeUpDownStepMs;
         MoveSelectedLinesStepMs = general.MoveSelectedLinesStepMs;
@@ -1752,6 +1754,7 @@ public partial class SettingsViewModel : ObservableObject
         general.UseFrameNumbersPersisted = SelectedTimeCodeMode.Mode == TimeCodeMode.FrameNumbers;
         general.FrameModeSnapToVideoFrames = FrameModeSnapToVideoFrames;
         general.SubtitleTextBoxLimitNewLines = TextBoxLimitNewLines;
+        general.SubtitleTextBoxAutoWrapWhileTyping = TextBoxAutoWrapWhileTyping;
         general.NewEmptyDefaultMs = NewEmptyDefaultMs ?? general.NewEmptyDefaultMs;
         general.TimeCodeUpDownStepMs = TimeCodeUpDownStepMs ?? general.TimeCodeUpDownStepMs;
         general.MoveSelectedLinesStepMs = MoveSelectedLinesStepMs ?? general.MoveSelectedLinesStepMs;

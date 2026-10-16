@@ -23,6 +23,12 @@ public class LanguageFilePropertiesDCinema
     public string FadeDownTime { get; internal set; }
     public string ZPosition { get; internal set; }
     public string ZPositionHelp { get; internal set; }
+    public string FontFile { get; internal set; }
+    public string ChooseFontFile { get; internal set; }
+    public string FontFileMissing { get; internal set; }
+    public string ReelDuration { get; internal set; }
+    public string ReelDurationHint { get; internal set; }
+    public string ReelDurationInvalid { get; internal set; }
 
     public LanguageFilePropertiesDCinema()
     {
@@ -47,6 +53,12 @@ public class LanguageFilePropertiesDCinema
         FadeDownTime = "Fade down time";
         ZPosition = "Z-position";
         ZPositionHelp = "Positive numbers move text away, negative numbers move text closer, if z-position is zero then it's 2D";
+        FontFile = "Font file";
+        ChooseFontFile = "Choose font file";
+        FontFileMissing = "Choose the TrueType/OpenType font file to embed in the MXF track file.";
+        ReelDuration = "Reel duration";
+        ReelDurationHint = "HH:MM:SS:FF - the picture length, which every asset of a DCP reel must have. Empty = until the last subtitle.";
+        ReelDurationInvalid = "Reel duration must be empty or HH:MM:SS:FF.";
     }
 
 }

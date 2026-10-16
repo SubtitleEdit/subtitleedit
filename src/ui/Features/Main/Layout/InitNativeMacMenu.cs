@@ -251,6 +251,8 @@ public static class InitNativeMacMenu
         exportItems.Items.Add(Item(lExport.TitleExportDvbTeletext, v => v.ExportDvbTeletextCommand));
         exportItems.Items.Add(Item(lExport.TitleExportDCinemaInteropPng, v => v.ExportDCinemaInteropPngCommand));
         exportItems.Items.Add(Item(lExport.TitleExportDCinemaSmpte2014Png, v => v.ExportDCinemaSmpte2014PngCommand));
+        exportItems.Items.Add(Item(lExport.TitleExportDCinemaSmpte2014PngMxf, v => v.ExportDCinemaSmpte2014PngMxfCommand));
+        exportItems.Items.Add(Item(lExport.TitleExportDCinemaSmpte2014Mxf, v => v.ExportDCinemaSmpte2014MxfCommand));
         exportItems.Items.Add(Item(Ebu.NameOfFormat, v => v.ExportEbuStlCommand));
         exportItems.Items.Add(Item(lExport.TitleExportDostPng, v => v.ExportDostPngCommand));
         exportItems.Items.Add(Item(lExport.TitleExportDvdSup, v => v.ExportDvdSupCommand));
