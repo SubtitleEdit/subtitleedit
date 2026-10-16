@@ -17,7 +17,6 @@ public class LanguageMultipleReplace
     public string DeleteRuleConfirm { get; set; }
     public string FindWhat { get; set; }
     public string DescriptionOptional { get; set; }
-    public string InvalidRegularExpressionX { get; set; }
     public string RegularExpressionTooSlowX { get; set; }
     public string MoveToCategory { get; set; }
 
@@ -38,7 +37,6 @@ public class LanguageMultipleReplace
         DeleteRuleConfirm = "Delete rule '{0}'?";
         FindWhat = "Find what";
         DescriptionOptional = "Description (optional)";
-        InvalidRegularExpressionX = "Invalid regular expression: {0}";
         RegularExpressionTooSlowX = "Regular expression gave up after {0} seconds - the rule is skipped, try a simpler pattern";
         MoveToCategory = "Move to category";
     }

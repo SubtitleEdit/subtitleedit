@@ -2266,7 +2266,7 @@ public partial class AssaDrawViewModel : ObservableObject
         }
 
         var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.Assa.DrawBackgroundImage.TrimEnd('.'),
-            Se.Language.Assa.DrawImages, "*.png;*.jpg;*.jpeg;*.bmp;*.webp");
+            Se.Language.General.Images, "*.png;*.jpg;*.jpeg;*.bmp;*.webp");
         if (!string.IsNullOrEmpty(fileName) && !LoadImageBackground(fileName))
         {
             await MessageBox.Show(Window, Se.Language.General.Error, Path.GetFileName(fileName), MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -3174,7 +3174,7 @@ public partial class AssaDrawViewModel : ObservableObject
             return true;
         }
 
-        var result = await MessageBox.Show(Window, Se.Language.Assa.DrawDiscardChangesTitle, Se.Language.Assa.DrawDiscardChanges,
+        var result = await MessageBox.Show(Window, Se.Language.General.DiscardChangesTitle, Se.Language.Assa.DrawDiscardChanges,
             MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         return result == MessageBoxResult.Yes;
     }

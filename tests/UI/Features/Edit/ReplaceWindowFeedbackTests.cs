@@ -30,7 +30,7 @@ public class ReplaceWindowFeedbackTests
         vm.ReportReplaceAll(12);
 
         Assert.Equal(12, vm.ReplacedCount);
-        Assert.Equal(string.Format(Se.Language.Edit.Find.ReplacedXOccurrences, 12), vm.CountResult);
+        Assert.Equal(string.Format(Se.Language.General.ReplacedXOccurrences, 12), vm.CountResult);
         Assert.Equal(IconNames.CheckCircle, vm.ResultIcon);
     }
 
@@ -59,7 +59,7 @@ public class ReplaceWindowFeedbackTests
         vm.ReportReplaced(1);
 
         Assert.Equal(3, vm.ReplacedCount);
-        Assert.Equal(string.Format(Se.Language.Edit.Find.ReplacedXOccurrences, 3), vm.CountResult);
+        Assert.Equal(string.Format(Se.Language.General.ReplacedXOccurrences, 3), vm.CountResult);
     }
 
     [AvaloniaFact]
@@ -103,7 +103,7 @@ public class ReplaceWindowFeedbackTests
 
         // The next single replace continues the count rather than restarting at one.
         vm.ReportReplaced(1);
-        Assert.Equal(string.Format(Se.Language.Edit.Find.ReplacedXOccurrences, 2), vm.CountResult);
+        Assert.Equal(string.Format(Se.Language.General.ReplacedXOccurrences, 2), vm.CountResult);
     }
 
     [AvaloniaFact]
@@ -125,7 +125,7 @@ public class ReplaceWindowFeedbackTests
             Dispatcher.UIThread.RunJobs();
 
             Assert.True(resultPanel.IsVisible);
-            Assert.Equal(string.Format(Se.Language.Edit.Find.ReplacedXOccurrences, 2), resultText.Text);
+            Assert.Equal(string.Format(Se.Language.General.ReplacedXOccurrences, 2), resultText.Text);
         }
         finally
         {

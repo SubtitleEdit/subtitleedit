@@ -32,7 +32,7 @@ public static class InitNativeMacMenuBinaryEdit
         Add(exportMenu, Se.Language.File.Export.TitleExportWebVttThumbnails, vm.ExportWebVttThumbnailCommand);
         fileMenu.Items.Add(new NativeMenuItem(Clean(l.Export)) { Menu = exportMenu });
         fileMenu.Items.Add(new NativeMenuItemSeparator());
-        Add(fileMenu, Se.Language.Tools.ImageBasedEdit.ImportTimeCodes, vm.ImportTimeCodesCommand);
+        Add(fileMenu, Se.Language.General.ImportTimeCodesDotDotDot, vm.ImportTimeCodesCommand);
         fileMenu.Items.Add(new NativeMenuItemSeparator());
         Add(fileMenu, l.Exit, vm.CancelCommand);
         root.Items.Add(new NativeMenuItem(Clean(l.File)) { Menu = fileMenu });

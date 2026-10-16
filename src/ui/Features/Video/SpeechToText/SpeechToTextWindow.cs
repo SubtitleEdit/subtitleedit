@@ -422,7 +422,7 @@ public class SpeechToTextWindow : Window
             ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(GridLength.Auto) },
         };
         numbers.Add(OnlineRow(Se.Language.General.OpenAiCompatibleSttTimeout, OnlineNumber(vm, nameof(vm.OpenAiCompatibleSttTimeoutSeconds), 10, 3600, "F0")), 0, 0);
-        numbers.Add(OnlineRow(Se.Language.General.OpenAiCompatibleSttTemperature, OnlineNumber(vm, nameof(vm.OpenAiCompatibleSttTemperature), 0, 1, "F2", 0.1m)), 0, 1);
+        numbers.Add(OnlineRow(Se.Language.General.Temperature, OnlineNumber(vm, nameof(vm.OpenAiCompatibleSttTemperature), 0, 1, "F2", 0.1m)), 0, 1);
 
         return new Control[]
         {
@@ -431,7 +431,7 @@ public class SpeechToTextWindow : Window
             OnlineRow(Se.Language.General.Model, OnlineText(vm, nameof(vm.OpenAiCompatibleSttModel))),
             OnlineRow(Se.Language.General.OpenAiCompatibleSttLanguage, OnlineText(vm, nameof(vm.OpenAiCompatibleSttLanguage))),
             numbers,
-            OnlineRow(Se.Language.General.OpenAiCompatibleSttPrompt, OnlineText(vm, nameof(vm.OpenAiCompatibleSttPrompt))),
+            OnlineRow(Se.Language.General.Prompt, OnlineText(vm, nameof(vm.OpenAiCompatibleSttPrompt))),
             OnlineRow(Se.Language.General.OpenAiCompatibleSttExtraHeaders, textExtraHeaders),
             OnlineRow(Se.Language.General.OpenAiCompatibleSttAudioFormat, comboAudioFormat),
             OnlineSwitch(vm, nameof(vm.OpenAiCompatibleSttStream), Se.Language.General.OpenAiCompatibleSttStream, Se.Language.General.OpenAiCompatibleSttStreamHint),
@@ -446,7 +446,7 @@ public class SpeechToTextWindow : Window
             ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(GridLength.Auto) },
         };
         numbers.Add(OnlineRow(Se.Language.General.OpenAiCompatibleSttTimeout, OnlineNumber(vm, nameof(vm.OpenRouterSttTimeoutSeconds), 10, 3600, "F0")), 0, 0);
-        numbers.Add(OnlineRow(Se.Language.General.OpenAiCompatibleSttTemperature, OnlineNumber(vm, nameof(vm.OpenRouterSttTemperature), 0, 1, "F2", 0.1m)), 0, 1);
+        numbers.Add(OnlineRow(Se.Language.General.Temperature, OnlineNumber(vm, nameof(vm.OpenRouterSttTemperature), 0, 1, "F2", 0.1m)), 0, 1);
 
         return new Control[]
         {
@@ -454,7 +454,7 @@ public class SpeechToTextWindow : Window
             OnlineRow(Se.Language.General.Model, OnlineText(vm, nameof(vm.OpenRouterSttModel))),
             OnlineRow(Se.Language.General.OpenAiCompatibleSttLanguage, OnlineText(vm, nameof(vm.OpenRouterSttLanguage))),
             numbers,
-            OnlineRow(Se.Language.General.OpenAiCompatibleSttPrompt, OnlineText(vm, nameof(vm.OpenRouterSttPrompt))),
+            OnlineRow(Se.Language.General.Prompt, OnlineText(vm, nameof(vm.OpenRouterSttPrompt))),
         };
     }
 

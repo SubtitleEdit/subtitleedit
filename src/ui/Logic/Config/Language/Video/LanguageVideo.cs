@@ -110,13 +110,11 @@ public class LanguageVideo
     public string CutVideoTransitionBlur { get; set; }
     public string CutVideoSegments { get; set; }
     public string CutVideoTransitions { get; set; }
-    public string CutVideoOutput { get; set; }
     public string CutVideoCutType { get; set; }
     public string ImportCurrentSubtitle { get; set; }
     public string AddRemoveEmbeddedSubtitlesTitle { get; set; }
     public string AddRemoveEmbeddedSubtitlesMp4Title { get; set; }
     public string AddCurrentSubtitle { get; set; }
-    public string EmbeddedTrackNoSubtitlesFoundTitle { get; set; }
     public string EmbeddedTrackNoSubtitlesFoundMessage { get; set; }
     public string EmbeddedTrackNoTracksTitle { get; set; }
     public string EmbeddedTrackNoTracksMessage { get; set; }
@@ -293,13 +291,11 @@ public class LanguageVideo
         CutVideoTransitionBlur = "Blur";
         CutVideoSegments = "Segments";
         CutVideoTransitions = "Transitions";
-        CutVideoOutput = "Output";
         CutVideoCutType = "Cut type";
         ImportCurrentSubtitle = "Import current subtitle";
         AddRemoveEmbeddedSubtitlesTitle = "Add/remove embedded subtitles";
         AddRemoveEmbeddedSubtitlesMp4Title = "Add/remove embedded subtitles (MP4)";
         AddCurrentSubtitle = "Add current subtitle";
-        EmbeddedTrackNoSubtitlesFoundTitle = "No subtitles found";
         EmbeddedTrackNoSubtitlesFoundMessage = "The selected subtitle file does not contain any subtitles.";
         EmbeddedTrackNoTracksTitle = "No tracks added";
         EmbeddedTrackNoTracksMessage = "Add one or more subtitle tracks, or load a video that already has embedded subtitles.";

@@ -984,7 +984,7 @@ public class OcrWindow : Window
             }
         };
 
-        var switchFixOcrErrors = EditorChrome.MakeSwitchRow(nameof(vm.DoFixOcrErrors), Se.Language.Ocr.FixOcrErrors);
+        var switchFixOcrErrors = EditorChrome.MakeSwitchRow(nameof(vm.DoFixOcrErrors), Se.Language.General.FixOcrErrors);
         switchFixOcrErrors.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsDictionaryLoaded)));
         var switchPromptForUnknownWords = EditorChrome.MakeSwitchRow(nameof(vm.DoPromptForUnknownWords), Se.Language.Ocr.PromptForUknownWords);
         switchPromptForUnknownWords.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsDictionaryLoaded)));

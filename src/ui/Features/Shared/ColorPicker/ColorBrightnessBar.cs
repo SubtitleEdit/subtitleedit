@@ -51,7 +51,7 @@ public class ColorBrightnessBar : Control
         Width = 20 + MarkerWidth;
         Height = 200;
         Cursor = new Cursor(StandardCursorType.Hand);
-        AutomationProperties.SetName(this, Se.Language.Tools.ColorPickerBrightness);
+        AutomationProperties.SetName(this, Se.Language.General.Brightness);
     }
 
     private Rect BarRect => new Rect(0, 0, Math.Max(0, Bounds.Width - MarkerWidth), Bounds.Height);

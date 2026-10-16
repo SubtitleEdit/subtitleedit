@@ -2,9 +2,7 @@ namespace Nikse.SubtitleEdit.Logic.Config.Language;
 
 public class LanguageChapters
 {
-    public string Title { get; set; }
     public string ChaptersDotDotDot { get; set; }
-    public string Chapters { get; set; }
     public string SelectedChapter { get; set; }
     public string ChapterTitle { get; set; }
     public string StartTime { get; set; }
@@ -25,7 +23,6 @@ public class LanguageChapters
     public string AdjustTimes { get; set; }
     public string ShiftAllTimes { get; set; }
     public string ShiftAllTimesDescription { get; set; }
-    public string ScaleTimes { get; set; }
     public string ScaleTimesDescription { get; set; }
     public string FromFrameRate { get; set; }
     public string ToFrameRate { get; set; }
@@ -42,9 +39,7 @@ public class LanguageChapters
 
     public LanguageChapters()
     {
-        Title = "Chapters";
         ChaptersDotDotDot = "Chapters...";
-        Chapters = "Chapters";
         SelectedChapter = "Selected chapter";
         ChapterTitle = "Chapter title";
         StartTime = "Start time";
@@ -65,7 +60,6 @@ public class LanguageChapters
         AdjustTimes = "Adjust times";
         ShiftAllTimes = "Shift all times";
         ShiftAllTimesDescription = "Move every chapter forward or backward by the same amount.";
-        ScaleTimes = "Change frame rate";
         ScaleTimesDescription = "Scale every chapter time from one frame rate to another.";
         FromFrameRate = "From";
         ToFrameRate = "To";

@@ -15,10 +15,8 @@ public class LanguageFilePropertiesDCinema
     public string StartTime { get; internal set; }
     public string FontId { get; internal set; }
     public string FontUri { get; internal set; }
-    public string ChooseColor { get; internal set; }
     public string FontEffect { get; internal set; }
     public string EffectColor { get; internal set; }
-    public string TopBottomMargin { get; internal set; }
     public string FadeUpTime { get; internal set; }
     public string FadeDownTime { get; internal set; }
     public string ZPosition { get; internal set; }
@@ -45,10 +43,8 @@ public class LanguageFilePropertiesDCinema
         StartTime = "Start time";
         FontId = "Font ID";
         FontUri = "Font URI";
-        ChooseColor = "Choose color";
         FontEffect = "Font effect";
         EffectColor = "Effect color";
-        TopBottomMargin = "Top/bottom margin";
         FadeUpTime = "Fade up time";
         FadeDownTime = "Fade down time";
         ZPosition = "Z-position";

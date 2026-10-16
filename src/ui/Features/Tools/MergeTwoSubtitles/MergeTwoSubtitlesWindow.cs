@@ -210,10 +210,10 @@ public class MergeTwoSubtitlesWindow : Window
 
     private static StackPanel MakeFormatRow(MergeTwoSubtitlesViewModel vm)
     {
-        var label = EditorChrome.MakeDimLabel(Se.Language.Tools.MergeTwoSubtitles.OutputFormat, new Thickness(0));
+        var label = EditorChrome.MakeDimLabel(Se.Language.General.OutputFormat, new Thickness(0));
         var combo = UiUtil.MakeComboBox(vm.OutputFormats, vm, nameof(vm.SelectedOutputFormat))
             .WithMinWidth(260)
-            .WithAccessibleName(Se.Language.Tools.MergeTwoSubtitles.OutputFormat);
+            .WithAccessibleName(Se.Language.General.OutputFormat);
 
         return new StackPanel
         {

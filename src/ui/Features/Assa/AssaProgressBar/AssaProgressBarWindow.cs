@@ -316,7 +316,7 @@ public class AssaProgressBarWindow : Window
         var content = new StackPanel { Spacing = 8 };
         content.Children.Add(listBox);
         content.Children.Add(editor);
-        return EditorChrome.MakeEditorSection(Se.Language.Assa.ProgressBarChapters, content, buttons);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Chapters, content, buttons);
     }
 
     private static Border CreateChapterTextSection(AssaProgressBarViewModel vm)
@@ -355,7 +355,7 @@ public class AssaProgressBarWindow : Window
         content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.Size, size, alignment));
         content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.Position, x, y));
         content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.Assa.ProgressBarSplitter, splitterWidth, splitterHeight));
-        return EditorChrome.MakeEditorSection(Se.Language.Assa.ProgressBarChapters + " - " + Se.Language.General.Text, content);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Chapters + " - " + Se.Language.General.Text, content);
     }
 
     private static Border CreateButtonBar(AssaProgressBarViewModel vm)

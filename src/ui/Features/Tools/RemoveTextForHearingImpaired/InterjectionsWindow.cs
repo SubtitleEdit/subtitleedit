@@ -18,7 +18,7 @@ public class InterjectionsWindow : Window
     public InterjectionsWindow(InterjectionsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Tools.RemoveTextForHearingImpaired.Interjections;
+        Title = Se.Language.General.Interjections;
         CanResize = false;
         Width = 700;
         Height = 600;
@@ -28,7 +28,7 @@ public class InterjectionsWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var textBoxInterjections = MakeListTextBox(nameof(vm.InterjectionsText), Se.Language.Tools.RemoveTextForHearingImpaired.Interjections);
+        var textBoxInterjections = MakeListTextBox(nameof(vm.InterjectionsText), Se.Language.General.Interjections);
         var textBoxSkipList = MakeListTextBox(nameof(vm.InterjectionsSkipStartText), Se.Language.Tools.RemoveTextForHearingImpaired.SkipIfStartWith);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
@@ -43,7 +43,7 @@ public class InterjectionsWindow : Window
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
         };
-        sections.Add(MakeListSection(Se.Language.Tools.RemoveTextForHearingImpaired.Interjections, textBoxInterjections, false), 0, 0);
+        sections.Add(MakeListSection(Se.Language.General.Interjections, textBoxInterjections, false), 0, 0);
         sections.Add(MakeListSection(Se.Language.Tools.RemoveTextForHearingImpaired.SkipIfStartWith, textBoxSkipList, true), 0, 1);
 
         Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));

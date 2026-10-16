@@ -60,7 +60,7 @@ public class HearingImpairedRuleSettingsWindow : Window
                 EditorChrome.MakeToggleRow(nameof(vm.IsUppercaseLineOn), l.HearingImpairedUppercaseLine),
                 EditorChrome.MakeToggleRow(nameof(vm.IsLineContainsOn), l.HearingImpairedLineContains),
                 EditorChrome.MakeToggleRow(nameof(vm.IsMusicSymbolsOn), l.HearingImpairedMusicSymbols),
-                EditorChrome.MakeToggleRow(nameof(vm.IsInterjectionsOn), l.HearingImpairedInterjections),
+                EditorChrome.MakeToggleRow(nameof(vm.IsInterjectionsOn), Se.Language.General.Interjections),
             }
         };
 
@@ -83,7 +83,7 @@ public class HearingImpairedRuleSettingsWindow : Window
 
         var sections = new StackPanel { MinWidth = 320 };
         sections.Children.Add(EditorChrome.MakeEditorSection(Se.Language.Tools.RemoveTextForHearingImpaired.RemoveTextBetween, betweenPanel, first: true));
-        sections.Children.Add(EditorChrome.MakeEditorSection(l.HearingImpairedOther, otherPanel));
+        sections.Children.Add(EditorChrome.MakeEditorSection(Se.Language.General.Other, otherPanel));
         sections.Children.Add(hintSection);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);

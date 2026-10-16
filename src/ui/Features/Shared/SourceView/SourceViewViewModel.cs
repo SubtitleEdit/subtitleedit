@@ -844,7 +844,7 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
 
         var result = await MessageBox.Show(
             Window,
-            Se.Language.SourceView.DiscardChangesTitle,
+            Se.Language.General.DiscardChangesTitle,
             Se.Language.SourceView.DiscardChanges,
             MessageBoxButtons.YesNo,
             MessageBoxIcon.Question);

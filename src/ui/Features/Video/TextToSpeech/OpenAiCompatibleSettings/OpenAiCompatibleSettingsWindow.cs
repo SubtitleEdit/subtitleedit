@@ -55,7 +55,7 @@ public class OpenAiCompatibleSettingsWindow : Window
         var comboBoxResponseFormat = UiUtil.MakeComboBox(vm.ResponseFormats, vm, nameof(vm.SelectedResponseFormat));
         comboBoxResponseFormat.MinWidth = 120;
         comboBoxResponseFormat.HorizontalAlignment = HorizontalAlignment.Left;
-        AutomationProperties.SetName(comboBoxResponseFormat, l.OutputFormat);
+        AutomationProperties.SetName(comboBoxResponseFormat, Se.Language.General.OutputFormat);
 
         var server = new StackPanel { Spacing = 8 };
         server.Children.Add(Row(l.CustomServerUrl, textBoxUrl, l.CustomServerUrlHint));
@@ -65,7 +65,7 @@ public class OpenAiCompatibleSettingsWindow : Window
         var voice = new StackPanel { Spacing = 8 };
         voice.Children.Add(Row(l.Instructions, textBoxInstructions, l.InstructionsHint));
         voice.Children.Add(Row(Se.Language.General.Speed, numericSpeed, l.OpenAiSpeedHint));
-        voice.Children.Add(Row(l.OutputFormat, comboBoxResponseFormat, l.OutputFormatHint));
+        voice.Children.Add(Row(Se.Language.General.OutputFormat, comboBoxResponseFormat, l.OutputFormatHint));
 
         var headerActions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2 };
         headerActions.Children.Add(EditorChrome.CreateToolButton(IconNames.Web, Se.Language.General.MoreInfo, vm.ShowMoreOnWebCommand, 26));

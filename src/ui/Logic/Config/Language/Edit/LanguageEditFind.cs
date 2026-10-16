@@ -14,7 +14,6 @@ public class LanguageEditFind
     public string ReplaceInTextOnly { get; set; }
     public string ReplaceInOriginalOnly { get; set; }
     public string ReplacedOneOccurrence { get; set; }
-    public string ReplacedXOccurrences { get; set; }
 
     public LanguageEditFind()
     {
@@ -30,6 +29,5 @@ public class LanguageEditFind
         ReplaceInTextOnly = "Text only";
         ReplaceInOriginalOnly = "Original text only";
         ReplacedOneOccurrence = "Replaced one occurrence";
-        ReplacedXOccurrences = "Replaced {0} occurrences";
     }
 }

@@ -255,7 +255,7 @@ internal static class AssaDrawAnimationPanel
             DrawLoopEffect.Shake => l.DrawAnimationShake,
             DrawLoopEffect.Swing => l.DrawAnimationSwing,
             DrawLoopEffect.Flip => l.DrawAnimationFlip,
-            _ => l.DrawAnimationNone,
+            _ => Se.Language.General.None,
         };
     }
 
@@ -318,7 +318,7 @@ internal static class AssaDrawAnimationPanel
             DrawAnimationEffect.Right => isOut ? l.DrawAnimationToRight : l.DrawAnimationFromRight,
             DrawAnimationEffect.Top => isOut ? l.DrawAnimationToTop : l.DrawAnimationFromTop,
             DrawAnimationEffect.Bottom => isOut ? l.DrawAnimationToBottom : l.DrawAnimationFromBottom,
-            _ => l.DrawAnimationNone,
+            _ => Se.Language.General.None,
         };
     }
 }

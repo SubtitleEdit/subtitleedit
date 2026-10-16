@@ -34,13 +34,13 @@ public class TimedText10PropertiesWindow : Window
         var textBoxFrameRate = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.SelectedFrameRate)), Se.Language.General.FrameRate);
         var textBoxFrameRateMultiplier = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.SelectedFrameRateMultiplier)), Se.Language.File.PropertyFrameRateMultiplier);
         var comboBoxDropMode = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.DropModes, vm, nameof(vm.SelectedDropMode)), Se.Language.File.PropertyDropMode, FieldWidth);
-        var comboBoxTimeCodeFormat = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.TimeCodeFormats, vm, nameof(vm.SelectedTimeCodeFormat)), Se.Language.File.PropertyTimeCodeFormat, FieldWidth);
+        var comboBoxTimeCodeFormat = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.TimeCodeFormats, vm, nameof(vm.SelectedTimeCodeFormat)), Se.Language.General.TimeCodeFormat, FieldWidth);
         var timing = FormatPropertiesChrome.MakeRows(
             FormatPropertiesChrome.Row(Se.Language.File.PropertyTimeBase, comboBoxTimeBase),
             FormatPropertiesChrome.Row(Se.Language.General.FrameRate, textBoxFrameRate),
             FormatPropertiesChrome.Row(Se.Language.File.PropertyFrameRateMultiplier, textBoxFrameRateMultiplier),
             FormatPropertiesChrome.Row(Se.Language.File.PropertyDropMode, comboBoxDropMode),
-            FormatPropertiesChrome.Row(Se.Language.File.PropertyTimeCodeFormat, comboBoxTimeCodeFormat));
+            FormatPropertiesChrome.Row(Se.Language.General.TimeCodeFormat, comboBoxTimeCodeFormat));
 
         var comboBoxDefaultStyle = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox<string>(vm.DefaultStyles, vm, nameof(vm.SelectedDefaultStyle)), Se.Language.File.PropertyDefaultStyle, FieldWidth);
         var comboBoxDefaultRegion = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.DefaultRegions, vm, nameof(vm.SelectedDefaultRegion)), Se.Language.File.PropertyDefaultRegion, FieldWidth);

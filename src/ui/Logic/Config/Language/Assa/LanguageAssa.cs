@@ -41,8 +41,6 @@ public class LanguageAssa
     public string DrawImportSvg { get; set; }
     public string DrawRotateClockwise { get; set; }
     public string DrawConvertToCurve { get; set; }
-    public string DrawBackground { get; set; }
-    public string DrawPosition { get; set; }
     public string DrawZoom { get; set; }
     public string DrawShapeTool { get; set; }
     public string DrawColorPickerTool { get; set; }
@@ -126,7 +124,6 @@ public class LanguageAssa
     public string DrawAnimation { get; set; }
     public string DrawAnimationIn { get; set; }
     public string DrawAnimationOut { get; set; }
-    public string DrawAnimationNone { get; set; }
     public string DrawAnimationFade { get; set; }
     public string DrawAnimationPop { get; set; }
     public string DrawAnimationZoom { get; set; }
@@ -205,8 +202,6 @@ public class LanguageAssa
     public string DrawShapeCross { get; set; }
     public string DrawShapeSmiley { get; set; }
     public string DrawShapeSadSmiley { get; set; }
-    public string DrawSize { get; set; }
-    public string DrawLayer { get; set; }
     public string DrawBackgroundVideoFrame { get; set; }
     public string DrawBackgroundVideoFrameAt { get; set; }
     public string DrawBackgroundImage { get; set; }
@@ -214,7 +209,6 @@ public class LanguageAssa
     public string DrawBackgroundStretch { get; set; }
     public string DrawBackgroundOpacity { get; set; }
     public string DrawBackgroundVideoFrameFailed { get; set; }
-    public string DrawImages { get; set; }
     public string DrawConvertToLine { get; set; }
     public string DrawConvertShapeToCurves { get; set; }
     public string DrawConvertShapeToLines { get; set; }
@@ -224,9 +218,7 @@ public class LanguageAssa
     public string DrawTextTool { get; set; }
     public string DrawDefaultText { get; set; }
     public string DrawShrinkToFit { get; set; }
-    public string DrawTextColor { get; set; }
     public string DrawTextBox { get; set; }
-    public string DrawDiscardChangesTitle { get; set; }
     public string DrawDiscardChanges { get; set; }
     public string DrawColorPickerToolName { get; set; }
     public string DrawOpenDrawing { get; set; }
@@ -250,7 +242,6 @@ public class LanguageAssa
     public string ProgressBarForeColor { get; set; }
     public string ProgressBarSquareCorners { get; set; }
     public string ProgressBarRoundedCorners { get; set; }
-    public string ProgressBarChapters { get; set; }
     public string ProgressBarSplitterWidth { get; set; }
     public string ProgressBarSplitterHeight { get; set; }
     public string ProgressBarXAdjustment { get; set; }
@@ -281,7 +272,6 @@ public class LanguageAssa
     public string FontCollectorUsedIn { get; set; }
     public string FontCollectorFontFiles { get; set; }
     public string FontCollectorStyleX { get; set; }
-    public string FontCollectorInlineLineX { get; set; }
     public string FontCollectorFound { get; set; }
     public string FontCollectorNotFound { get; set; }
     public string FontCollectorEmbedded { get; set; }
@@ -357,12 +347,9 @@ public class LanguageAssa
     public string StylesSummary { get; set; }
     public string StylesTransform { get; set; }
     public string StylesEditing { get; set; }
-    public string StylesPreviewSampleText { get; set; }
     public string StylesPreviewSampleTextHint { get; set; }
     public string StylesScale { get; set; }
-    public string StylesPreviewDark { get; set; }
     public string StylesPreviewChecker { get; set; }
-    public string StylesPreviewLight { get; set; }
     public string AllCategories { get; set; }
     public string NewCategory { get; set; }
     public string RenameCategory { get; set; }
@@ -428,7 +415,6 @@ public class LanguageAssa
     public string SetPositionTopCenter { get; set; }
     public string SetPositionTopRight { get; set; }
     public string SetPositionMiddleLeft { get; set; }
-    public string SetPositionCenter { get; set; }
     public string SetPositionMiddleRight { get; set; }
     public string SetPositionBottomLeft { get; set; }
     public string SetPositionBottomCenter { get; set; }
@@ -550,7 +536,6 @@ public class LanguageAssa
     public string AdvancedEffectSingleWordPopDescription { get; set; }
     public string AdvancedEffectBoldCaptions { get; set; }
     public string AdvancedEffectBoldCaptionsDescription { get; set; }
-    public string AdvancedEffectBoxColor { get; set; }
     public string AdvancedEffectHighlightColor { get; set; }
     public string AdvancedEffectUpperCase { get; set; }
     public string AdvancedEffectTextSizePercent { get; set; }
@@ -605,8 +590,6 @@ public class LanguageAssa
         DrawImportSvg = "Import SVG image...";
         DrawRotateClockwise = "Rotate 90° clockwise";
         DrawConvertToCurve = "Convert segment to curve";
-        DrawBackground = "Background";
-        DrawPosition = "Position";
         DrawZoom = "Zoom";
         DrawShapeTool = "Shape tool";
         DrawColorPickerTool = "Pick color from a shape or the background";
@@ -690,7 +673,6 @@ public class LanguageAssa
         DrawAnimation = "Animation";
         DrawAnimationIn = "In";
         DrawAnimationOut = "Out";
-        DrawAnimationNone = "None";
         DrawAnimationFade = "Fade";
         DrawAnimationPop = "Pop";
         DrawAnimationZoom = "Zoom";
@@ -769,8 +751,6 @@ public class LanguageAssa
         DrawShapeCross = "Cross";
         DrawShapeSmiley = "Smiley";
         DrawShapeSadSmiley = "Sad smiley";
-        DrawSize = "Size";
-        DrawLayer = "Layer";
         DrawBackgroundVideoFrame = "Video frame (current position)";
         DrawBackgroundVideoFrameAt = "Video frame at...";
         DrawBackgroundImage = "Image file...";
@@ -778,7 +758,6 @@ public class LanguageAssa
         DrawBackgroundStretch = "Stretch image to canvas";
         DrawBackgroundOpacity = "Background opacity";
         DrawBackgroundVideoFrameFailed = "Could not get a video frame at {0}.";
-        DrawImages = "Images";
         DrawConvertToLine = "Convert segment to line";
         DrawConvertShapeToCurves = "Convert all lines to curves";
         DrawConvertShapeToLines = "Convert all curves to lines";
@@ -788,9 +767,7 @@ public class LanguageAssa
         DrawTextTool = "Text tool";
         DrawDefaultText = "Text";
         DrawShrinkToFit = "Shrink to fit";
-        DrawTextColor = "Text color";
         DrawTextBox = "Text box";
-        DrawDiscardChangesTitle = "Discard changes?";
         DrawDiscardChanges = "The drawing has been changed." + System.Environment.NewLine + "Discard the changes?";
         DrawColorPickerToolName = "Color picker";
         DrawOpenDrawing = "Open ASSA drawing";
@@ -812,7 +789,6 @@ public class LanguageAssa
         ProgressBarForeColor = "Foreground color";
         ProgressBarSquareCorners = "Square corners";
         ProgressBarRoundedCorners = "Rounded corners";
-        ProgressBarChapters = "Chapters";
         ProgressBarSplitterWidth = "Splitter width";
         ProgressBarSplitterHeight = "Splitter height";
         ProgressBarXAdjustment = "X adjustment";
@@ -843,7 +819,6 @@ public class LanguageAssa
         FontCollectorUsedIn = "Used in";
         FontCollectorFontFiles = "Font file(s)";
         FontCollectorStyleX = "Style: {0}";
-        FontCollectorInlineLineX = "Line {0}";
         FontCollectorFound = "Found";
         FontCollectorNotFound = "Not found";
         FontCollectorEmbedded = "Embedded";
@@ -918,12 +893,9 @@ public class LanguageAssa
         StylesSummary = "{0} styles in file · {1} saved";
         StylesTransform = "Transform";
         StylesEditing = "Editing";
-        StylesPreviewSampleText = "Sample text";
         StylesPreviewSampleTextHint = "Sample text - \\N for a new line";
         StylesScale = "Scale %";
-        StylesPreviewDark = "Dark";
         StylesPreviewChecker = "Checker";
-        StylesPreviewLight = "Light";
         AllCategories = "[All]";
         NewCategory = "New category...";
         RenameCategory = "Rename category...";
@@ -989,7 +961,6 @@ public class LanguageAssa
         SetPositionTopCenter = "Top center";
         SetPositionTopRight = "Top right";
         SetPositionMiddleLeft = "Middle left";
-        SetPositionCenter = "Center";
         SetPositionMiddleRight = "Middle right";
         SetPositionBottomLeft = "Bottom left";
         SetPositionBottomCenter = "Bottom center";
@@ -1111,7 +1082,6 @@ public class LanguageAssa
         AdvancedEffectSingleWordPopDescription = "Shows one big word at a time, popping in as it is spoken - short-video caption style";
         AdvancedEffectBoldCaptions = "Bold captions";
         AdvancedEffectBoldCaptionsDescription = "Bold captions with a thick outline - the spoken word lights up in color and grows";
-        AdvancedEffectBoxColor = "Box color";
         AdvancedEffectHighlightColor = "Highlight color";
         AdvancedEffectUpperCase = "Uppercase";
         AdvancedEffectTextSizePercent = "Text size (%)";

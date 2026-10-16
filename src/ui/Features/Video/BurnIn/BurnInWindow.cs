@@ -640,7 +640,7 @@ public class BurnInWindow : Window
 
         var encoder = Combo(vm.VideoEncodings, vm, nameof(vm.SelectedVideoEncoding), Se.Language.General.Encoding);
         encoder.SelectionChanged += vm.VideoEncodingChanged;
-        var preset = Combo(vm.VideoPresets, vm, nameof(vm.SelectedVideoPreset), Se.Language.Video.BurnIn.Preset);
+        var preset = Combo(vm.VideoPresets, vm, nameof(vm.SelectedVideoPreset), Se.Language.General.Preset);
 
         // Only the NVIDIA encoders have a tuning mode, so the row is hidden for the rest
         var tune = Row(Se.Language.Video.BurnIn.Tune, Combo(vm.VideoTunes, vm, nameof(vm.SelectedVideoTune), Se.Language.Video.BurnIn.Tune));
@@ -680,7 +680,7 @@ public class BurnInWindow : Window
         rows.Children.Add(Row(Se.Language.Video.BurnIn.SampleRate, Combo(vm.AudioSampleRates, vm, nameof(vm.SelectedAudioSampleRate), Se.Language.Video.BurnIn.SampleRate)));
         rows.Children.Add(Row(Se.Language.Video.BurnIn.BitRate, Combo(vm.AudioBitRates, vm, nameof(vm.SelectedAudioBitRate), Se.Language.Video.BurnIn.BitRate)));
         rows.Children.Add(SwitchRow(Switch(nameof(vm.AudioIsStereo), Se.Language.General.Stereo), Se.Language.General.Stereo));
-        return EditorChrome.MakeEditorSection(Se.Language.Video.BurnIn.Audio, rows, first: true);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Audio, rows, first: true);
     }
 
     private static Border MakeTargetSizeSection(BurnInViewModel vm)

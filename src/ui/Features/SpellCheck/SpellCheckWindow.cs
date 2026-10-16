@@ -124,7 +124,7 @@ public class SpellCheckWindow : Window
             ToolTip.SetTip(buttonPlay, Se.Language.SpellCheck.PlayCurrentLineHint);
         }
 
-        var buttonEditWholeText = EditorChrome.CreateToolButton(IconNames.Pencil, Se.Language.SpellCheck.EditWholeText, vm.EditWholeTextCommand, 28);
+        var buttonEditWholeText = EditorChrome.CreateToolButton(IconNames.Pencil, Se.Language.General.EditWholeText, vm.EditWholeTextCommand, 28);
 
         var headerRight = new StackPanel
         {

@@ -32,11 +32,11 @@ public record LineError(LineErrorType Type, string Detail)
         {
             LineErrorType.TooManyLines => l.TooManyLines,
             LineErrorType.CharactersPerSecond => l.CharactersPerSecond,
-            LineErrorType.DurationTooShort => l.DurationTooShort,
-            LineErrorType.DurationTooLong => l.DurationTooLong,
+            LineErrorType.DurationTooShort => Se.Language.General.TooShort,
+            LineErrorType.DurationTooLong => Se.Language.General.TooLong,
             LineErrorType.LineTooLong => l.LineTooLong,
             LineErrorType.LineTooWide => l.LineTooWide,
-            LineErrorType.Overlap => l.Overlap,
+            LineErrorType.Overlap => Se.Language.General.Overlapping,
             LineErrorType.GapTooShort => l.GapTooShort,
             _ => type.ToString(),
         };

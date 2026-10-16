@@ -210,7 +210,7 @@ public class ProfilesWindow : Window
                 Row(Se.Language.Options.Settings.MinDurationMs, numericUpDownMinDurationMs),
                 Row(Se.Language.Options.Settings.MaxDurationMs, numericUpDownMaxDurationMs),
                 Row(Se.Language.Options.Settings.MinGapMs, numericUpDownMinGapMs),
-                Row(Se.Language.Options.Settings.MaxLines, numericUpDownMaxLines),
+                Row(Se.Language.General.MaxNumberOfLines, numericUpDownMaxLines),
                 Row(Se.Language.Options.Settings.UnbreakSubtitlesShortThan, numericUpDownUnbreakLinesShorterThan),
                 Row(Se.Language.Options.Settings.DialogStyle, comboBoxDialogStyle),
                 Row(Se.Language.Options.Settings.ContinuationStyle, comboBoxContinuationStyle),

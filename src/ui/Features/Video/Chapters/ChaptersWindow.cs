@@ -24,9 +24,8 @@ public class ChaptersWindow : Window
 
     public ChaptersWindow(ChaptersViewModel vm)
     {
-        var language = Se.Language.Video.Chapters;
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = language.Title;
+        Title = Se.Language.General.Chapters;
         CanResize = true;
         Width = 980;
         Height = 660;
@@ -305,7 +304,7 @@ public class ChaptersWindow : Window
         actions.Children.Add(buttonDelete);
         actions.Children.Add(buttonClear);
 
-        var title = EditorChrome.MakeSectionHeader(language.Chapters);
+        var title = EditorChrome.MakeSectionHeader(Se.Language.General.Chapters);
         var badge = MakeCountBadge(new Binding(nameof(vm.ChapterCountDisplay)));
         var header = new DockPanel { Margin = new Thickness(0, 0, 0, 8) };
         DockPanel.SetDock(actions, Dock.Right);

@@ -821,7 +821,7 @@ public partial class OcrViewModel : ObservableObject
         var clampedItemNumber = Math.Clamp(currentItemNumber, 0, totalItems);
         OcrUiUpdates.EnqueueProgress(
             clampedItemNumber * 100.0 / totalItems,
-            string.Format(Se.Language.Ocr.RunningOcrDotDotDotXY, clampedItemNumber, totalItems));
+            string.Format(Se.Language.General.RunningOcrXY, clampedItemNumber, totalItems));
     }
 
     [RelayCommand]
@@ -1657,7 +1657,7 @@ public partial class OcrViewModel : ObservableObject
             }
             else if (!engineInstalled)
             {
-                message = Se.Language.Ocr.LlamaCppDownloadEnginePrompt;
+                message = Se.Language.General.LlamaCppDownloadEnginePrompt;
             }
             else
             {

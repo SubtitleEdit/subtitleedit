@@ -26,8 +26,6 @@ public class RestoreAutoBackupWindow : Window
         DataContext = vm;
         EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
-        var l = Se.Language.File.RestoreAutoBackup;
-
         var subtitleGrid = MakeSubtitleGrid(vm);
         var settingsGrid = MakeSettingsGrid(vm);
 
@@ -40,7 +38,7 @@ public class RestoreAutoBackupWindow : Window
             {
                 new TabItem
                 {
-                    Header = MakeTabHeader(IconNames.ClosedCaption, l.Subtitles),
+                    Header = MakeTabHeader(IconNames.ClosedCaption, Se.Language.General.Subtitles),
                     Content = MakeSubtitlesView(vm, subtitleGrid),
                 },
                 new TabItem
@@ -69,7 +67,7 @@ public class RestoreAutoBackupWindow : Window
 
     private static TableView MakeSubtitleGrid(RestoreAutoBackupViewModel vm)
     {
-        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false).WithAccessibleName(Se.Language.File.RestoreAutoBackup.Subtitles); // the tab header (#12087)
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false).WithAccessibleName(Se.Language.General.Subtitles); // the tab header (#12087)
         dataGrid.Width = double.NaN;
         dataGrid.Height = double.NaN;
         dataGrid.DataContext = vm;
@@ -139,7 +137,7 @@ public class RestoreAutoBackupWindow : Window
         buttonRestore.Classes.Add("primary");
         buttonRestore.BindIsEnabled(vm, nameof(vm.IsOkButtonEnabled));
 
-        return MakeTabLayout(l.Subtitles, dataGrid, null, buttonOpenFolder, summaryText, buttonDeleteAll, buttonRestore);
+        return MakeTabLayout(Se.Language.General.Subtitles, dataGrid, null, buttonOpenFolder, summaryText, buttonDeleteAll, buttonRestore);
     }
 
     private static Control MakeSettingsView(RestoreAutoBackupViewModel vm, TableView dataGrid)

@@ -540,7 +540,7 @@ public partial class VideoOcrViewModel : ObservableObject
             }
             else if (!engineInstalled)
             {
-                message = Se.Language.Ocr.LlamaCppDownloadEnginePrompt;
+                message = Se.Language.General.LlamaCppDownloadEnginePrompt;
             }
             else
             {
@@ -925,7 +925,7 @@ public partial class VideoOcrViewModel : ObservableObject
             {
                 await MessageBox.Show(
                     Window!,
-                    Se.Language.Video.VideoOcr.NoLinesFoundTitle,
+                    Se.Language.General.NoSubtitlesFoundTitle,
                     Se.Language.Video.VideoOcr.NoLinesFoundMessage,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
@@ -1078,7 +1078,7 @@ public partial class VideoOcrViewModel : ObservableObject
             var current = Interlocked.Increment(ref done);
             Dispatcher.UIThread.Post(() =>
             {
-                ProgressText = string.Format(Se.Language.Video.VideoOcr.RunningOcrXY, current, ocrGroups.Count);
+                ProgressText = string.Format(Se.Language.General.RunningOcrXY, current, ocrGroups.Count);
                 ProgressValue = current * 100.0 / ocrGroups.Count;
             });
         }
@@ -1107,7 +1107,7 @@ public partial class VideoOcrViewModel : ObservableObject
         Dispatcher.UIThread.Post(() =>
         {
             ProgressValue = 0;
-            ProgressText = string.Format(Se.Language.Video.VideoOcr.RunningOcrXY, 0, ocrGroups.Count);
+            ProgressText = string.Format(Se.Language.General.RunningOcrXY, 0, ocrGroups.Count);
         });
 
         _ocrStoppedEarlyError = string.Empty;

@@ -166,7 +166,7 @@ public class ShotChangesWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
         };
-        grid.Add(EditorChrome.MakeListPane(Se.Language.Video.ShotChanges.ShotChanges, tableView, margin: new Thickness(6, 12, 6, 12)), 0);
+        grid.Add(EditorChrome.MakeListPane(Se.Language.General.ShotChanges, tableView, margin: new Thickness(6, 12, 6, 12)), 0);
         var settings = EditorChrome.MakeEditorSection(Se.Language.General.Settings, panelSensitivity);
         settings.Padding = new Thickness(6, 12, 6, 14);
         grid.Add(settings, 1);
@@ -249,7 +249,7 @@ public class ShotChangesWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
         };
-        grid.Add(EditorChrome.MakeListPane(Se.Language.Video.ShotChanges.ShotChanges, EditorChrome.MakeListFrame(textBoxImport), buttonImport, new Thickness(6, 12, 6, 12)), 0);
+        grid.Add(EditorChrome.MakeListPane(Se.Language.General.ShotChanges, EditorChrome.MakeListFrame(textBoxImport), buttonImport, new Thickness(6, 12, 6, 12)), 0);
         var settings = EditorChrome.MakeEditorSection(Se.Language.General.Settings, panelTimeCodeFormat);
         settings.Padding = new Thickness(6, 12, 6, 14);
         grid.Add(settings, 1);

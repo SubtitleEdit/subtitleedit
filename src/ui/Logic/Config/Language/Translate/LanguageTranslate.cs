@@ -9,7 +9,6 @@ public class LanguageTranslate
     public string BlockCopyGetFromClipboard { get; set; }
     public string ReCopyTextToClipboard { get; set; }
     public string BlockXOfY { get; set; }
-    public string NoTextInClipboard { get; set; }
     public string TextInClipboardIsSameAsSourceText { get; set; }
     public string LineMerge { get; set; }
     public string DelayInSecondsBetweenRequests { get; set; }
@@ -43,7 +42,6 @@ public class LanguageTranslate
     public string KeepLineBreaks { get; set; }
     public string SamplingParameters { get; set; }
     public string MinusOneMeansDefault { get; set; }
-    public string Temperature { get; set; }
     public string TopP { get; set; }
     public string TopK { get; set; }
     public string RepeatPenalty { get; set; }
@@ -57,7 +55,6 @@ public class LanguageTranslate
     public string CustomPromptHint { get; set; }
     public string EditTranslationHint { get; set; }
     public string LlamaCppDownloadEngineAndModelPrompt { get; set; }
-    public string LlamaCppDownloadEnginePrompt { get; set; }
     public string LlamaCppDownloadModelPrompt { get; set; }
 
     public LanguageTranslate()
@@ -69,7 +66,6 @@ public class LanguageTranslate
         BlockCopyGetFromClipboard = "Get text from clipboard (from translator/AI)";
         ReCopyTextToClipboard = "Re-copy text to clipboard (for translator/AI)";
         BlockXOfY = "Block {0} of {1}";
-        NoTextInClipboard = "No text in clipboard";
         TextInClipboardIsSameAsSourceText = "The text in clipboard is the same as the source text, please try again.";
         LineMerge = "Line merge";
         DelayInSecondsBetweenRequests = "Delay in seconds between requests";
@@ -103,7 +99,6 @@ public class LanguageTranslate
         KeepLineBreaks = "Keep line breaks";
         SamplingParameters = "Sampling parameters";
         MinusOneMeansDefault = "-1 = model/server default";
-        Temperature = "Temperature";
         TopP = "Top-p";
         TopK = "Top-k";
         RepeatPenalty = "Repeat penalty";
@@ -117,7 +112,6 @@ public class LanguageTranslate
         CustomPromptHint = "Custom instructions ({0} = source language, {1} = target language); empty = built-in prompt";
         EditTranslationHint = "Click the selected row's translation to edit it (Enter saves, Escape cancels)";
         LlamaCppDownloadEngineAndModelPrompt = "llama.cpp requires the llama-server engine and a translation model to be downloaded. Download now?";
-        LlamaCppDownloadEnginePrompt = "llama.cpp requires the llama-server engine to be downloaded. Download now?";
         LlamaCppDownloadModelPrompt = "llama.cpp requires the selected translation model to be downloaded. Download now?";
     }
 }

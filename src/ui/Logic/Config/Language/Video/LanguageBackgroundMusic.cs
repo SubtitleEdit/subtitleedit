@@ -4,8 +4,6 @@ public class LanguageBackgroundMusic
 {
     public string Title { get; set; }
     public string GenerateBackgroundMusicDotDotDot { get; set; }
-    public string Preset { get; set; }
-    public string Prompt { get; set; }
     public string TempoBpm { get; set; }
     public string GenerateSeconds { get; set; }
     public string Seed { get; set; }
@@ -50,8 +48,6 @@ public class LanguageBackgroundMusic
     {
         Title = "Generate background music";
         GenerateBackgroundMusicDotDotDot = "Generate background music...";
-        Preset = "Preset";
-        Prompt = "Prompt";
         TempoBpm = "Tempo (BPM)";
         GenerateSeconds = "Generate (seconds)";
         Seed = "Seed";

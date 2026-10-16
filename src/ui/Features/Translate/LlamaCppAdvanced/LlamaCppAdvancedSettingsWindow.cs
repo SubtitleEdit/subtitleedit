@@ -165,8 +165,8 @@ public class LlamaCppAdvancedSettingsWindow : Window
             RowSpacing = 10,
         };
 
-        sampling.Add(Label(Se.Language.Translate.Temperature), 0, 0);
-        sampling.Add(Field(UiUtil.MakeNumericUpDownTwoDecimals(-1, 2, 110, vm, nameof(vm.Temperature)), Se.Language.Translate.Temperature), 0, 1);
+        sampling.Add(Label(Se.Language.General.Temperature), 0, 0);
+        sampling.Add(Field(UiUtil.MakeNumericUpDownTwoDecimals(-1, 2, 110, vm, nameof(vm.Temperature)), Se.Language.General.Temperature), 0, 1);
         sampling.Add(Label(Se.Language.Translate.TopP, new Thickness(16, 0, 0, 0)), 0, 2);
         sampling.Add(Field(UiUtil.MakeNumericUpDownTwoDecimals(-1, 1, 110, vm, nameof(vm.TopP)), Se.Language.Translate.TopP), 0, 3);
 

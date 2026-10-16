@@ -336,7 +336,7 @@ public class AssaDrawWindow : Window
 
         AddSeparator(items);
         items.Add(MakeMenuItem(Se.Language.Assa.DrawImportSvg, "fa-solid fa-file-import", _vm.ImportSvgCommand));
-        var background = MakeMenuItem(Se.Language.Assa.DrawBackground, "fa-regular fa-image", null);
+        var background = MakeMenuItem(Se.Language.General.Background, "fa-regular fa-image", null);
         background.ItemsSource = MakeBackgroundItems(_vm);
         items.Add(background);
 
@@ -436,7 +436,7 @@ public class AssaDrawWindow : Window
         leftPanel.Children.Add(MakeToolbarSeparator());
 
         // Background: video frame or image to trace over, with its opacity
-        var backgroundButton = CreateToolButton("fa-regular fa-image", Se.Language.Assa.DrawBackground, null);
+        var backgroundButton = CreateToolButton("fa-regular fa-image", Se.Language.General.Background, null);
         BindHighlight(backgroundButton, vm, () => vm.HasBackground, nameof(vm.HasBackground));
         // Items depend on the current state (video loaded, background set), so the menu is built on
         // click - a MenuFlyout filled in its Opening event showed up empty.
@@ -1006,17 +1006,17 @@ public class AssaDrawWindow : Window
     private static Border CreateShapePropertiesPanel(AssaDrawViewModel vm)
     {
         var rows = new StackPanel { Spacing = 6 };
-        rows.Children.Add(MakePropertyRow(Se.Language.Assa.DrawPosition,
+        rows.Children.Add(MakePropertyRow(Se.Language.General.Position,
             MakeField(nameof(vm.ShapeX), -10000, 10000, prefix: "X", format: "0.#"),
             MakeField(nameof(vm.ShapeY), -10000, 10000, prefix: "Y", format: "0.#")));
-        rows.Children.Add(MakePropertyRow(Se.Language.Assa.DrawSize,
+        rows.Children.Add(MakePropertyRow(Se.Language.General.Size,
             MakeField(nameof(vm.ShapeWidth), 0, 10000, prefix: "W", format: "0.#"),
             MakeField(nameof(vm.ShapeHeight), 0, 10000, prefix: "H", format: "0.#")));
 
         var colorButton = UiUtil.MakeColorPickerButton(vm, nameof(vm.LayerColor));
         colorButton.HorizontalAlignment = HorizontalAlignment.Left;
         colorButton.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsDrawShapeSelected)));
-        rows.Children.Add(MakePropertyRow(Se.Language.Assa.DrawLayer,
+        rows.Children.Add(MakePropertyRow(Se.Language.General.Layer,
             MakeField(nameof(vm.ShapeLayer), 0, 1000),
             colorButton));
         rows.Children.Add(MakeOutlineRow(vm));
@@ -1120,10 +1120,10 @@ public class AssaDrawWindow : Window
         textColor.HorizontalAlignment = HorizontalAlignment.Left;
         if (Se.Settings.Appearance.ShowHints)
         {
-            ToolTip.SetTip(textColor, Se.Language.Assa.DrawTextColor);
+            ToolTip.SetTip(textColor, Se.Language.General.TextColor);
         }
 
-        AutomationProperties.SetName(textColor, Se.Language.Assa.DrawTextColor);
+        AutomationProperties.SetName(textColor, Se.Language.General.TextColor);
         rows.Children.Add(MakePropertyRow(Se.Language.General.FontSize, sizeAndBold, textColor));
 
         var shrink = new CheckBox
@@ -1156,7 +1156,7 @@ public class AssaDrawWindow : Window
 
     private static Border CreatePointPropertiesPanel(AssaDrawViewModel vm)
     {
-        var row = MakePropertyRow(Se.Language.Assa.DrawPosition,
+        var row = MakePropertyRow(Se.Language.General.Position,
             MakeField(nameof(vm.PointX), -10000, 10000, prefix: "X", format: "0.#"),
             MakeField(nameof(vm.PointY), -10000, 10000, prefix: "Y", format: "0.#"));
         return MakePropertySection(Se.Language.Assa.DrawSelectedPoint, row, nameof(vm.IsPointSelected));

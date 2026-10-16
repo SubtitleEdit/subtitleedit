@@ -49,7 +49,6 @@ public class LanguageMain
     public string LoadingWaveInfoFromCache { get; set; }
     public string ClickToGenerateWaveform { get; set; }
     public string WaveformFfmpegNotFoundClickToSetUp { get; set; }
-    public string NoTextInClipboard { get; set; }
     public string NumberOfLinesEvenlyDistributedX { get; set; }
     public string OneLineCopiedFromOriginal { get; set; }
     public string OneLineCopiedToOriginal { get; set; }
@@ -145,7 +144,6 @@ public class LanguageMain
     public string ToolXChangedYLines { get; set; }
     public string TranscriptionCompletedWithXLines { get; set; }
     public string OpenSubtitleFileX { get; set; }
-    public string ReplacedXOccurrences { get; set; }
     public string FfmpegDownloadedAndInstalledToX { get; set; }
     public string NothingToSave { get; set; }
     public string FormatLimitWarningTitle { get; set; }
@@ -216,7 +214,6 @@ public class LanguageMain
         LoadingWaveInfoFromCache = "Loading wave info from cache...";
         ClickToGenerateWaveform = "Click to generate waveform";
         WaveformFfmpegNotFoundClickToSetUp = "FFmpeg not found - click the waveform to set up FFmpeg and generate the waveform";
-        NoTextInClipboard = "No text in clipboard";
         NumberOfLinesEvenlyDistributedX = "Evenly distributed {0} lines";
         OneLineCopiedFromOriginal = "One line copied from original subtitle";
         OneLineCopiedToOriginal = "One line copied to original subtitle";
@@ -312,7 +309,6 @@ public class LanguageMain
         ToolXChangedYLines = "{0}: {1} lines changed";
         TranscriptionCompletedWithXLines = "Transcription completed with {0} lines";
         OpenSubtitleFileX = "Open subtitle file \"{0}\"?";
-        ReplacedXOccurrences = "Replaced {0} occurrences";
         FfmpegDownloadedAndInstalledToX = "ffmpeg downloaded and installed to {0}";
         NothingToSave = "Nothing to save";
         FormatLimitWarningTitle = "Format limits exceeded";

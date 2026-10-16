@@ -253,7 +253,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
         CanGoPrevious = _currentChangeIndex > 0;
         CanGoNext = _currentChangeIndex < _changedIndices.Count - 1;
         ChangePositionLabel = string.Format(
-            Se.Language.Tools.BeautifyTimeCodes.ChangeXOfY,
+            Se.Language.General.ChangeXOfY,
             _currentChangeIndex + 1, _changedIndices.Count);
 
         var idx = _changedIndices[_currentChangeIndex];

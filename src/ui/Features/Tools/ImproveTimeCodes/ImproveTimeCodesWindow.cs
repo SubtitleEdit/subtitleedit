@@ -202,7 +202,7 @@ public class ImproveTimeCodesWindow : Window
     {
         var l = Se.Language.Tools.ImproveTimeCodes;
 
-        var (labelOriginal, borderOriginal, avOriginal) = BuildLabeledVisualizer(l.Original, OriginalTint);
+        var (labelOriginal, borderOriginal, avOriginal) = BuildLabeledVisualizer(Se.Language.General.Original, OriginalTint);
         var (labelAligned, borderAligned, avAligned) = BuildLabeledVisualizer(l.Aligned, AlignedTint);
 
         vm.AudioVisualizerOriginal = avOriginal;
@@ -289,7 +289,7 @@ public class ImproveTimeCodesWindow : Window
         av.OnDragEnded += (_, _) => vm.OnAlignedDragEnded();
 
         var l = Se.Language.Tools.ImproveTimeCodes;
-        var menuPlay = new Avalonia.Controls.MenuItem { Header = l.PlayLine, Command = vm.PlayRowCommand };
+        var menuPlay = new Avalonia.Controls.MenuItem { Header = Se.Language.General.PlayLine, Command = vm.PlayRowCommand };
         var menuUndo = new Avalonia.Controls.MenuItem { Header = l.UndoAdjustment, Command = vm.UndoAdjustmentCommand };
         var flyout = new MenuFlyout();
         flyout.Items.Add(menuPlay);
@@ -356,10 +356,10 @@ public class ImproveTimeCodesWindow : Window
     {
         var l = Se.Language.Tools.ImproveTimeCodes;
 
-        var buttonPrev = EditorChrome.CreateToolButton(IconNames.ArrowUpThin, $"{l.PreviousChange} (F7)", vm.PreviousChangeCommand, 28);
+        var buttonPrev = EditorChrome.CreateToolButton(IconNames.ArrowUpThin, $"{Se.Language.General.PreviousChange} (F7)", vm.PreviousChangeCommand, 28);
         buttonPrev.Bind(IsEnabledProperty, new Binding(nameof(vm.CanGoPrevious)) { Source = vm });
 
-        var buttonNext = EditorChrome.CreateToolButton(IconNames.ArrowDownThin, $"{l.NextChange} (F8)", vm.NextChangeCommand, 28);
+        var buttonNext = EditorChrome.CreateToolButton(IconNames.ArrowDownThin, $"{Se.Language.General.NextChange} (F8)", vm.NextChangeCommand, 28);
         buttonNext.Bind(IsEnabledProperty, new Binding(nameof(vm.CanGoNext)) { Source = vm });
 
         var labelPosition = new TextBlock
@@ -447,7 +447,7 @@ public class ImproveTimeCodesWindow : Window
 
         var applyColumn = new SeTableViewColumn
         {
-            Header = l.Apply,
+            Header = Se.Language.General.Apply,
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             CellTemplate = new FuncDataTemplate<ImproveTimeCodesRow>((_, _) => new Border

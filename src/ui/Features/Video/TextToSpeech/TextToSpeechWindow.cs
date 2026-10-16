@@ -565,7 +565,7 @@ public class TextToSpeechWindow : Window
         rows.Children.Add(panelAddBackgroundMusicWithHint);
         rows.Children.Add(buttonAdvanced);
 
-        var section = EditorChrome.MakeEditorSection(language.Output, rows, first: true);
+        var section = EditorChrome.MakeEditorSection(Se.Language.General.Output, rows, first: true);
         section.Width = 330;
         return section;
     }

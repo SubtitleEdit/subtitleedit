@@ -578,7 +578,7 @@ public class AssaApplyAdvancedEffectWindow : Window
                 break;
             }
             case AdvancedEffectHighlightBox highlightBox:
-                AddRow(l.AdvancedEffectBoxColor, UiUtil.MakeColorPickerButton(highlightBox, nameof(AdvancedEffectHighlightBox.BoxColor), false));
+                AddRow(Se.Language.General.BoxColor, UiUtil.MakeColorPickerButton(highlightBox, nameof(AdvancedEffectHighlightBox.BoxColor), false));
                 AddRow(l.AdvancedEffectFancyKaraokeActiveColor, UiUtil.MakeColorPickerButton(highlightBox, nameof(AdvancedEffectHighlightBox.ActiveTextColor), false));
                 AddRow(l.AdvancedEffectUpperCase, UiUtil.MakeCheckBox(highlightBox, nameof(AdvancedEffectHighlightBox.UpperCase)));
                 break;

@@ -291,7 +291,7 @@ public class BinaryEditWindow : Window
                 new Separator(),
                 new MenuItem
                 {
-                    Header = Se.Language.Tools.ImageBasedEdit.ImportTimeCodes,
+                    Header = Se.Language.General.ImportTimeCodesDotDotDot,
                     Command = vm.ImportTimeCodesCommand,
                 },
                 new Separator(),

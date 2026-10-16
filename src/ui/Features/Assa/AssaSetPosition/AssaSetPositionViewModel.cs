@@ -80,7 +80,7 @@ public partial class AssaSetPositionViewModel : ObservableObject
     public static IReadOnlyList<string> AnchorNames =>
     [
         Se.Language.Assa.SetPositionTopLeft, Se.Language.Assa.SetPositionTopCenter, Se.Language.Assa.SetPositionTopRight,
-        Se.Language.Assa.SetPositionMiddleLeft, Se.Language.Assa.SetPositionCenter, Se.Language.Assa.SetPositionMiddleRight,
+        Se.Language.Assa.SetPositionMiddleLeft, Se.Language.General.Center, Se.Language.Assa.SetPositionMiddleRight,
         Se.Language.Assa.SetPositionBottomLeft, Se.Language.Assa.SetPositionBottomCenter, Se.Language.Assa.SetPositionBottomRight,
     ];
 

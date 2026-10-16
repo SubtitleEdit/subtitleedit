@@ -34,7 +34,6 @@ public class LanguageSettingsShortcuts
     public string CustomShortcutPickCommand { get; set; }
     public string CustomShortcutEnterText { get; set; }
     public string CustomShortcutEnterFind { get; set; }
-    public string CustomShortcutInvalidRegexX { get; set; }
     public string CustomShortcutStepsHint { get; set; }
     public string ActiveIn { get; set; }
     public string ActiveInEverywhere { get; set; }
@@ -376,7 +375,6 @@ public class LanguageSettingsShortcuts
         CustomShortcutPickCommand = "Please select a command to run.";
         CustomShortcutEnterText = "Please enter the text to insert.";
         CustomShortcutEnterFind = "Please enter the text to find.";
-        CustomShortcutInvalidRegexX = "Invalid regular expression: {0}";
         CustomShortcutStepsHint = "Steps run from top to bottom. Text steps work on the selected lines; commands that open a window continue after it closes.";
         ActiveIn = "Active in";
         ActiveInEverywhere = "Everywhere";

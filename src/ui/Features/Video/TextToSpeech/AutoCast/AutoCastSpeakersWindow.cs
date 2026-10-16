@@ -167,7 +167,7 @@ public class AutoCastSpeakersWindow : Window
         });
         tableView.Columns.Add(new SeTableViewColumn
         {
-            Header = Se.Language.Video.TextToSpeech.AutoCastAudio,
+            Header = Se.Language.General.Audio,
             Binding = new Binding(nameof(AutoCastSpeakerRow.TotalDurationDisplay)),
             Width = new GridLength(80),
             CellTheme = UiUtil.TableViewCellTheme,
