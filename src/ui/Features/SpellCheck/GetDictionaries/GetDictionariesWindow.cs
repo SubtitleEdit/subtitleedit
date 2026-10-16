@@ -39,6 +39,11 @@ public class GetDictionariesWindow : Window
         downloadButton.Classes.Add("primary");
         AutomationProperties.SetName(downloadButton, Se.Language.General.Download);
 
+        var uninstallButton = UiUtil.MakeButton(Se.Language.General.Uninstall, vm.UninstallCommand)
+            .WithIconLeft(IconNames.Trash)
+            .WithBindIsVisible(nameof(vm.IsUninstallVisible));
+        AutomationProperties.SetName(uninstallButton, Se.Language.General.Uninstall);
+
         var close = UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand)
             .WithBindIsVisible(nameof(vm.IsDownloadEnabled));
         var cancel = UiUtil.MakeButtonCancel(vm.CancelCommand)
@@ -64,7 +69,7 @@ public class GetDictionariesWindow : Window
         };
         root.Add(new Border { Background = EditorChrome.PanelBrush, Child = sections }, 0, 0);
         root.Add(BuildProgress(vm), 1, 0);
-        root.Add(EditorChrome.MakeDockedButtonBar(BuildStatus(vm), close, cancel, downloadButton), 2, 0);
+        root.Add(EditorChrome.MakeDockedButtonBar(BuildStatus(vm), close, cancel, uninstallButton, downloadButton), 2, 0);
         Content = root;
 
         UiUtil.FocusOnFirstActivation(this, downloadButton); // hack to make OnKeyDown work

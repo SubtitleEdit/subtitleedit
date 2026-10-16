@@ -769,6 +769,13 @@ public partial class OcrViewModel : ObservableObject
                     d.Name.Contains(result.SelectedDictionary.NativeName, StringComparison.OrdinalIgnoreCase))
                 ?? Dictionaries.FirstOrDefault();
         }
+        else if (result.DictionariesChanged)
+        {
+            // Keep the current dictionary unless it was the one uninstalled.
+            var currentFileName = SelectedDictionary?.DictionaryFileName;
+            LoadDictionaries();
+            SelectedDictionary = Dictionaries.FirstOrDefault(d => d.DictionaryFileName == currentFileName) ?? Dictionaries.FirstOrDefault();
+        }
     }
 
     [RelayCommand]

@@ -7,6 +7,7 @@ public class LanguageSpellCheck
     public string SpellCheck { get; set; }
     public string GetDictionariesTitle { get; set; }
     public string GetDictionaryInstructions { get; set; }
+    public string UninstallDictionaryX { get; set; }
     public string AddNameToUserDictionary { get; set; }
     public string AddNameToNamesList { get; set; }
     public string AddNamesToNamesList { get; set; }
@@ -65,6 +66,7 @@ public class LanguageSpellCheck
         SpellCheck = "Spell check";
         GetDictionariesTitle = "Spell check - get dictionaries";
         GetDictionaryInstructions = "Choose your language and click download";
+        UninstallDictionaryX = "Uninstall dictionary \"{0}\"?";
         AddNameToUserDictionary = "Add name to user dictionary";
         AddNameToNamesList = "Add name to names list";
         AddNamesToNamesList = "Add names to names list";

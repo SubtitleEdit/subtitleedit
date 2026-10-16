@@ -714,6 +714,8 @@ public class LanguageGeneral
     public string Undelete { get; set; }
     public string Underline { get; set; }
     public string Undo { get; set; }
+    public string Uninstall { get; set; }
+    public string Uninstalled { get; set; }
     public string Unknown { get; set; }
     public string UnknownNoInstallRecord { get; set; }
     public string UnknownSubtitleFormat { get; set; }
@@ -1567,6 +1569,8 @@ public class LanguageGeneral
         Undelete = "Undelete";
         Underline = "Underline";
         Undo = "Undo";
+        Uninstall = "Uninstall";
+        Uninstalled = "Uninstalled";
         Unknown = "Unknown";
         UnknownNoInstallRecord = "Unknown (no install record)";
         UnknownSubtitleFormat = "Unknown subtitle format";
