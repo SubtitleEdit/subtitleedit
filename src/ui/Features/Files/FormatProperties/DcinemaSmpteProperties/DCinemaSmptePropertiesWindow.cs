@@ -41,6 +41,14 @@ public class DCinemaSmptePropertiesWindow : Window
         var textBoxEditRate = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(90, vm, nameof(vm.EditRate)), lang.EditRate);
         var comboBoxTimeCodeRate = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.TimeCodeRates, vm, nameof(vm.SelectedTimeCodeRate)), lang.TimeCodeRate, 90);
         var textBoxStartTime = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(120, vm, nameof(vm.StartTime)), lang.StartTime);
+        var textBoxReelDuration = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(120, vm, nameof(vm.ReelDuration)), lang.ReelDuration);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(textBoxReelDuration, lang.ReelDurationHint);
+        }
+
+        var rowReelDuration = FormatPropertiesChrome.Row(lang.ReelDuration, textBoxReelDuration);
+        rowReelDuration.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsMxfExport)) { Source = vm, Mode = BindingMode.OneWay });
 
         var general = FormatPropertiesChrome.MakeRows(
             FormatPropertiesChrome.Row(string.Empty, switchGenerateIdAuto),
@@ -49,7 +57,8 @@ public class DCinemaSmptePropertiesWindow : Window
             FormatPropertiesChrome.Row(lang.ReelNumber, numericUpDownReelNumber, FormatPropertiesChrome.InlineLabel(Se.Language.General.Language), comboBoxLanguage),
             FormatPropertiesChrome.Row(lang.IssueDate, textBoxIssueDate, buttonToday),
             FormatPropertiesChrome.Row(lang.EditRate, textBoxEditRate, FormatPropertiesChrome.InlineLabel(lang.TimeCodeRate), comboBoxTimeCodeRate),
-            FormatPropertiesChrome.Row(lang.StartTime, textBoxStartTime));
+            FormatPropertiesChrome.Row(lang.StartTime, textBoxStartTime),
+            rowReelDuration);
 
         // Font section
         var textBoxFontId = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(200, vm, nameof(vm.FontId)), lang.FontId);

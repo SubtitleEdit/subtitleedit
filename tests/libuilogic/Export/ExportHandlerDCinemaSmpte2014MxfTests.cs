@@ -68,6 +68,18 @@ public class ExportHandlerDCinemaSmpte2014MxfTests : IDisposable
     }
 
     [Fact]
+    public void ReelDurationSetsTrackDuration()
+    {
+        var fileName = Path.Combine(_dir, "out.mxf");
+        Export(new ExportHandlerDCinemaSmpte2014Mxf { ReelDuration = TimeSpan.FromSeconds(12) }, fileName);
+
+        // ContainerDuration (local tag 3002) of the descriptor: 12 s at 24 fps
+        var bytes = File.ReadAllBytes(fileName);
+        var tag = new byte[] { 0x30, 0x02, 0x00, 0x08, 0, 0, 0, 0, 0, 0, 0x01, 0x20 };
+        Assert.True(bytes.AsSpan().IndexOf(tag) > 0);
+    }
+
+    [Fact]
     public void PngExportStillWritesFolder()
     {
         Export(new ExportHandlerDCinemaSmpte2014Png(), _dir);
@@ -76,6 +88,9 @@ public class ExportHandlerDCinemaSmpte2014MxfTests : IDisposable
         var pngs = Directory.GetFiles(_dir, "*.png");
         Assert.Equal(2, pngs.Length);
         var xml = File.ReadAllText(Path.Combine(_dir, "index.xml"));
+        // DCP-o-matic warns on a fractional/zoned IssueDate, ClairMeta rejects encoding="utf-8"
+        Assert.StartsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>", xml);
+        Assert.Matches("<IssueDate>\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d</IssueDate>", xml);
         foreach (var png in pngs)
         {
             Assert.Contains("urn:uuid:" + Path.GetFileNameWithoutExtension(png), xml);

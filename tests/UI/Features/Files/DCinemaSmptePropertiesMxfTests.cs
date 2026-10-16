@@ -36,7 +36,7 @@ public class DCinemaSmptePropertiesMxfTests
         Se.Settings.File.DCinemaSmpte = new SeDCinemaSmpte { CurrentDCinemaFontUri = "Arial.ttf" };
         var fontFile = Path.GetTempFileName();
         var vm = MakeViewModel();
-        vm.InitializeMxfExport(MakeSubtitle());
+        vm.InitializeMxfExport(MakeSubtitle(), TimeSpan.FromSeconds(12));
         var window = new DCinemaSmptePropertiesWindow(vm);
         try
         {
@@ -44,6 +44,7 @@ public class DCinemaSmptePropertiesMxfTests
             Dispatcher.UIThread.RunJobs();
             Assert.True(vm.IsMxfExport);
             Assert.Contains("MXF", vm.WindowTitle);
+            Assert.Equal("00:00:12:00", vm.ReelDuration); // the video's length at the default 24 fps
 
             vm.MxfFontFile = fontFile;
             vm.OkCommand.Execute(null);

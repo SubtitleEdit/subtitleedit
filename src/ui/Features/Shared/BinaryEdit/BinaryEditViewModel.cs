@@ -1229,7 +1229,13 @@ public partial class BinaryEditViewModel : ObservableObject
     [RelayCommand]
     private async Task ExportDCinemaSmpte2014PngMxf()
     {
-        await DoExport(new ExportHandlerDCinemaSmpte2014Mxf(), ".mxf");
+        // A DCP reel's assets share one duration - with a video open, run the track to its end
+        var videoSeconds = VideoPlayerControl?.VideoPlayer?.Duration ?? 0;
+        var handler = new ExportHandlerDCinemaSmpte2014Mxf
+        {
+            ReelDuration = videoSeconds > 0 ? TimeSpan.FromSeconds(videoSeconds) : null,
+        };
+        await DoExport(handler, ".mxf");
     }
 
     [RelayCommand]
