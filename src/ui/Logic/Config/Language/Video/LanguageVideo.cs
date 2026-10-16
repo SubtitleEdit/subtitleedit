@@ -63,6 +63,15 @@ public class LanguageVideo
     public string RemuxVideoVolumeX { get; set; }
     public string RemuxVideoFastStart { get; set; }
     public string EmbedSubtitlesDotDotDot { get; set; }
+    public string SyncAudioTrackDotDotDot { get; set; }
+    public string SyncAudioTrackTitle { get; set; }
+    public string SyncAudioTrackAudioTrack { get; set; }
+    public string SyncAudioTrackOffset { get; set; }
+    public string SyncAudioTrackHint { get; set; }
+    public string SyncAudioTrackPreviewNeedsMpv { get; set; }
+    public string SyncAudioTrackNoAudio { get; set; }
+    public string SyncAudioTrackSaveVideoDotDotDot { get; set; }
+    public string SyncAudioTrackSaving { get; set; }
     public string GenerateTimeCodes { get; set; }
     public string CheckeredImage { get; set; }
     public string PromptForFfmpegParamsAndGenerate { get; set; }
@@ -237,6 +246,15 @@ public class LanguageVideo
         RemuxVideoVolumeX = "Volume {0}%";
         RemuxVideoFastStart = "Optimize for web streaming (move index to front - slower)";
         EmbedSubtitlesDotDotDot = "Add/remove embedded subtitles...";
+        SyncAudioTrackDotDotDot = "Sync audio track...";
+        SyncAudioTrackTitle = "Sync audio track";
+        SyncAudioTrackAudioTrack = "Audio track";
+        SyncAudioTrackOffset = "Offset (ms)";
+        SyncAudioTrackHint = "Positive values play the audio later, negative values earlier. The saved video is a copy with only this track moved - nothing is re-encoded.";
+        SyncAudioTrackPreviewNeedsMpv = "The live preview of the offset needs the mpv video player (Options > Settings > Video) - the saved video gets the offset all the same.";
+        SyncAudioTrackNoAudio = "The video has no audio track.";
+        SyncAudioTrackSaveVideoDotDotDot = "Save video...";
+        SyncAudioTrackSaving = "Saving video...";
         GenerateTimeCodes = "Generate time codes";
         CheckeredImage = "Checkered image";
         PromptForFfmpegParamsAndGenerate = "Prompt for ffmpeg parameters and generate";
