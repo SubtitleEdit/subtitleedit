@@ -98,6 +98,12 @@ public class LanguageAssa
     public string DrawClipArtBalloon { get; set; }
     public string DrawClipArtCamera { get; set; }
     public string DrawClipArtPartyPopper { get; set; }
+    public string DrawClipArtPizzaSlice { get; set; }
+    public string DrawClipArtIceCream { get; set; }
+    public string DrawClipArtUmbrella { get; set; }
+    public string DrawClipArtCatFace { get; set; }
+    public string DrawClipArtKey { get; set; }
+    public string DrawClipArtChristmasTree { get; set; }
     public string DrawCategoryMyShapes { get; set; }
     public string DrawShapeSpeechBubble { get; set; }
     public string DrawShapeSpeechBubbleRight { get; set; }
@@ -598,6 +604,12 @@ public class LanguageAssa
         DrawClipArtBalloon = "Balloon";
         DrawClipArtCamera = "Camera";
         DrawClipArtPartyPopper = "Party popper";
+        DrawClipArtPizzaSlice = "Pizza slice";
+        DrawClipArtIceCream = "Ice cream";
+        DrawClipArtUmbrella = "Umbrella";
+        DrawClipArtCatFace = "Cat face";
+        DrawClipArtKey = "Key";
+        DrawClipArtChristmasTree = "Christmas tree";
         DrawCategoryMyShapes = "My shapes";
         DrawShapeSpeechBubble = "Speech bubble";
         DrawShapeSpeechBubbleRight = "Speech bubble, tail right";
