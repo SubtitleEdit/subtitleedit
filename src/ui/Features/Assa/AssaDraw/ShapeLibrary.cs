@@ -620,6 +620,18 @@ public static class ShapeLibrary
                 """<path fill="#FF7043" d="M38 8 L62 8 L62 48 L80 48 L50 86 L20 48 L38 48 Z"/>""", DrawLoopEffect.Bounce, 900),
             Clip(l.DrawClipArtRingingBell, null,
                 """<path fill="#FFC107" d="M50 14 C34 14 26 26 26 42 L26 60 L16 72 L84 72 L74 60 L74 42 C74 26 66 14 50 14 Z"/><g fill="#FFA000"><circle cx="50" cy="80" r="9"/><circle cx="50" cy="10" r="6"/></g>""", DrawLoopEffect.Swing, 1200),
+            Clip(l.DrawClipArtPointingHand, null,
+                """<rect fill="#1E88E5" x="28" y="2" width="44" height="14" rx="4"/><g fill="#FFCC80"><rect x="26" y="14" width="48" height="40" rx="14"/><rect x="44" y="36" width="13" height="56" rx="6.5"/><circle cx="34" cy="54" r="7"/><circle cx="66" cy="52" r="7"/></g>""", DrawLoopEffect.Bounce, 800),
+            Clip(l.DrawClipArtWiFi, null,
+                """<circle fill="#1E88E5" cx="50" cy="78" r="8"/><path fill="none" stroke="#1E88E5" stroke-width="9" stroke-linecap="round" d="M34.44 62.44 A22 22 0 0 1 65.56 62.44 M21.72 49.72 A40 40 0 0 1 78.28 49.72 M8.99 36.99 A58 58 0 0 1 91.01 36.99"/>""", DrawLoopEffect.Pulse, 900),
+            Clip(l.DrawClipArtTwinklingStar, null,
+                """<path fill="#FFC107" d="M46 16 L55.99 42.25 L84.04 43.64 L62.17 61.25 L69.51 88.36 L46 73 L22.49 88.36 L29.83 61.25 L7.96 43.64 L36.01 42.25 Z"/><g fill="#FFF59D"><path d="M84 4 Q86.16 13.84 96 16 Q86.16 18.16 84 28 Q81.84 18.16 72 16 Q81.84 13.84 84 4 Z"/><path d="M14 6 Q15.44 12.56 22 14 Q15.44 15.44 14 22 Q12.56 15.44 6 14 Q12.56 12.56 14 6 Z"/></g>""", DrawLoopEffect.Pulse, 700),
+            Clip(l.DrawClipArtAlarmClock, null,
+                """<g fill="#E53935"><circle cx="24" cy="22" r="12"/><circle cx="76" cy="22" r="12"/><circle cx="50" cy="54" r="36"/></g><path fill="none" stroke="#E53935" stroke-width="6" stroke-linecap="round" d="M28 82 L22 94 M72 82 L78 94"/><circle fill="#FFFFFF" cx="50" cy="54" r="28"/><path fill="none" stroke="#212121" stroke-width="4" stroke-linecap="round" d="M50 54 L50 36 M50 54 L62 60"/>""", DrawLoopEffect.Shake, 300),
+            Clip(l.DrawClipArtHourglass, null,
+                """<path fill="#B3E5FC" d="M28 14 L72 14 Q72 34 54 50 Q72 66 72 86 L28 86 Q28 66 46 50 Q28 34 28 14 Z"/><g fill="#FFB300"><path d="M36 26 L64 26 Q60 36 50 44 Q40 36 36 26 Z"/><path d="M36 74 L64 74 Q60 64 50 56 Q40 64 36 74 Z"/></g><g fill="#6D4C41"><rect x="22" y="6" width="56" height="8" rx="3"/><rect x="22" y="86" width="56" height="8" rx="3"/></g>""", DrawLoopEffect.Flip, 1600),
+            Clip(l.DrawClipArtIdea, null,
+                """<path fill="none" stroke="#FFD54F" stroke-width="5" stroke-linecap="round" d="M50 4 L50 12 M20 16 L26 22 M80 16 L74 22 M8 44 L16 44 M84 44 L92 44"/><g fill="#FFC107"><circle cx="50" cy="44" r="24"/><path d="M38 60 L62 60 L58 72 L42 72 Z"/></g><g fill="#90A4AE"><rect x="40" y="72" width="20" height="6" rx="2"/><rect x="42" y="80" width="16" height="6" rx="2"/></g>""", DrawLoopEffect.Blink, 800, animatedColor: "#FFD54F"),
 
             // Star ratings 0-5: gold stars for the rating, gray for the rest
             .. Enumerable.Range(0, 6).Select(stars => Clip(string.Format(l.DrawClipArtStarRating, stars), null, StarRatingSvg(stars))),

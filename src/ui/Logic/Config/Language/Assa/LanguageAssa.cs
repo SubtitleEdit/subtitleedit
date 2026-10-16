@@ -148,6 +148,7 @@ public class LanguageAssa
     public string DrawAnimationBounce { get; set; }
     public string DrawAnimationShake { get; set; }
     public string DrawAnimationSwing { get; set; }
+    public string DrawAnimationFlip { get; set; }
     public string DrawAnimationLoopBlocked { get; set; }
     public string DrawClipArtLoadingSpinner { get; set; }
     public string DrawClipArtRec { get; set; }
@@ -155,6 +156,12 @@ public class LanguageAssa
     public string DrawClipArtBeatingHeart { get; set; }
     public string DrawClipArtBouncingArrow { get; set; }
     public string DrawClipArtRingingBell { get; set; }
+    public string DrawClipArtPointingHand { get; set; }
+    public string DrawClipArtWiFi { get; set; }
+    public string DrawClipArtTwinklingStar { get; set; }
+    public string DrawClipArtAlarmClock { get; set; }
+    public string DrawClipArtHourglass { get; set; }
+    public string DrawClipArtIdea { get; set; }
     public string DrawCategoryMyShapes { get; set; }
     public string DrawShapeSpeechBubble { get; set; }
     public string DrawShapeSpeechBubbleRight { get; set; }
@@ -705,6 +712,7 @@ public class LanguageAssa
         DrawAnimationBounce = "Bounce";
         DrawAnimationShake = "Shake";
         DrawAnimationSwing = "Swing";
+        DrawAnimationFlip = "Flip";
         DrawAnimationLoopBlocked = "This loop turns around another point than the in/out effect, so it is left out.";
         DrawClipArtLoadingSpinner = "Loading spinner";
         DrawClipArtRec = "REC";
@@ -712,6 +720,12 @@ public class LanguageAssa
         DrawClipArtBeatingHeart = "Beating heart";
         DrawClipArtBouncingArrow = "Bouncing arrow";
         DrawClipArtRingingBell = "Ringing bell";
+        DrawClipArtPointingHand = "Pointing hand";
+        DrawClipArtWiFi = "Wi-Fi";
+        DrawClipArtTwinklingStar = "Twinkling star";
+        DrawClipArtAlarmClock = "Alarm clock";
+        DrawClipArtHourglass = "Hourglass";
+        DrawClipArtIdea = "Idea";
         DrawCategoryMyShapes = "My shapes";
         DrawShapeSpeechBubble = "Speech bubble";
         DrawShapeSpeechBubbleRight = "Speech bubble, tail right";

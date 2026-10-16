@@ -277,6 +277,18 @@ public class AssaDrawAnimationTests
     }
 
     [Fact]
+    public void Flip_TurnsHalfWayEachCycle_ThenPauses()
+    {
+        var animation = new DrawAnimation { Loop = DrawLoopEffect.Flip, LoopMs = 1000 };
+        var bounds = (100f, 100f, 200f, 200f);
+
+        // A half turn in the first 35% of the cycle (clockwise on screen), then it stays
+        Assert.Equal("\\t(0,350,0.5,\\frz-180)\\t(1000,1350,0.5,\\frz-360)", animation.GetEffectTags(2000, 0, bounds, 1920, 1080));
+        Assert.Equal(180, animation.GetState(700, 2000, bounds, 1920, 1080).Rotation, 0.01);
+        Assert.Equal(360, animation.GetState(1500, 2000, bounds, 1920, 1080).Rotation, 0.01);
+    }
+
+    [Fact]
     public void Blink_IsOffInTheSecondHalfOfEachCycle()
     {
         var animation = new DrawAnimation { Loop = DrawLoopEffect.Blink, LoopMs = 1000 };

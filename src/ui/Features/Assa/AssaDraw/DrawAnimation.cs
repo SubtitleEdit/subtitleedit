@@ -34,6 +34,11 @@ public enum DrawLoopEffect
     Bounce,
     Shake,
     Swing,
+
+    /// <summary>
+    /// A quick half turn, then a pause (an hourglass loader).
+    /// </summary>
+    Flip,
 }
 
 /// <summary>
@@ -87,6 +92,11 @@ public sealed class DrawAnimation : IEquatable<DrawAnimation>
     private const float ShakeDegrees = 8;
     private const float SwingDegrees = 14;
 
+    /// <summary>
+    /// Share of a flip cycle spent turning; the rest is the pause.
+    /// </summary>
+    private const double FlipTurnShare = 0.35;
+
     public bool IsNone => In == DrawAnimationEffect.None && Out == DrawAnimationEffect.None && Loop == DrawLoopEffect.None;
 
     public DrawAnimation Clone() => new() { In = In, InMs = InMs, Out = Out, OutMs = OutMs, Loop = Loop, LoopMs = LoopMs };
@@ -98,7 +108,7 @@ public sealed class DrawAnimation : IEquatable<DrawAnimation>
 
     private DrawAnimationOrigin LoopOrigin => Loop switch
     {
-        DrawLoopEffect.Spin or DrawLoopEffect.Shake => DrawAnimationOrigin.Anchor,
+        DrawLoopEffect.Spin or DrawLoopEffect.Shake or DrawLoopEffect.Flip => DrawAnimationOrigin.Anchor,
         DrawLoopEffect.Swing => DrawAnimationOrigin.Top,
         DrawLoopEffect.Bounce => DrawAnimationOrigin.FarBounce,
         _ => DrawAnimationOrigin.None,
@@ -248,11 +258,16 @@ public sealed class DrawAnimation : IEquatable<DrawAnimation>
             {
                 var period = (loopEnd - loopStart) / (double)cycles;
                 var u = (timeMs - loopStart) / period;
-                u -= Math.Floor(u);
+                var cycle = Math.Min(Math.Floor(u), cycles - 1);
+                u -= cycle;
                 switch (EffectiveLoop)
                 {
                     case DrawLoopEffect.Spin:
                         rotation = (float)(-360 * u);
+                        break;
+                    case DrawLoopEffect.Flip:
+                        var turned = u < FlipTurnShare ? Math.Pow(u / FlipTurnShare, EaseOut) : 1;
+                        rotation = (float)(-180 * (cycle + turned));
                         break;
                     case DrawLoopEffect.Pulse:
                         scale = 1 + (PulseScale - 1) * (float)(u < 0.5 ? u * 2 : 2 - u * 2);
@@ -474,6 +489,11 @@ public sealed class DrawAnimation : IEquatable<DrawAnimation>
                     // Clockwise: \frz goes down a whole turn per cycle
                     restFrz = baseFrz - 360 * (k + 1);
                     sb.Append(CultureInfo.InvariantCulture, $"\\t({T(k)},{T(k + 1)},\\frz{N(restFrz)})");
+                    break;
+                case DrawLoopEffect.Flip:
+                    // Clockwise half turn easing out (accel 0.5), then a pause
+                    restFrz = baseFrz - 180 * (k + 1);
+                    sb.Append(CultureInfo.InvariantCulture, $"\\t({T(k)},{T(k + FlipTurnShare)},{N(EaseOut)},\\frz{N(restFrz)})");
                     break;
                 case DrawLoopEffect.Pulse:
                     sb.Append(CultureInfo.InvariantCulture, $"\\t({T(k)},{T(k + 0.5)},\\fscx{pulse}\\fscy{pulse})\\t({T(k + 0.5)},{T(k + 1)},\\fscx100\\fscy100)");
