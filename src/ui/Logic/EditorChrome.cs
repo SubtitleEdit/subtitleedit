@@ -9,6 +9,7 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
+using Avalonia.Threading;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Logic;
@@ -107,15 +108,25 @@ internal static partial class EditorChrome
             _dark = dark;
             _light = light;
             _brush = new SolidColorBrush(dark);
-            All.Add(this);
+            lock (All)
+            {
+                All.Add(this);
+            }
         }
 
         public IBrush Brush
         {
             get
             {
-                Hook();
-                Refresh();
+                // A brush may only be changed on the UI thread; a read from elsewhere (a view model
+                // or test built off the UI thread) gets the brush as it is, and the UI thread
+                // brings it up to date on its next read or theme change.
+                if (Dispatcher.UIThread.CheckAccess())
+                {
+                    Hook();
+                    Refresh();
+                }
+
                 return _brush;
             }
         }
@@ -140,7 +151,13 @@ internal static partial class EditorChrome
             _hookedApplication = application;
             application.ActualThemeVariantChanged += (_, _) =>
             {
-                foreach (var entry in All)
+                ThemedBrush[] entries;
+                lock (All)
+                {
+                    entries = All.ToArray();
+                }
+
+                foreach (var entry in entries)
                 {
                     entry.Refresh();
                 }
