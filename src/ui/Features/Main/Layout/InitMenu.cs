@@ -277,6 +277,11 @@ public static class InitMenu
                         },
                         new MenuItem
                         {
+                            Header = Se.Language.File.Export.TitleExportDCinemaSmpte2014PngMxf,
+                            Command = vm.ExportDCinemaSmpte2014PngMxfCommand,
+                        },
+                        new MenuItem
+                        {
                             Header = Se.Language.File.Export.TitleExportDCinemaSmpte2014Mxf,
                             Command = vm.ExportDCinemaSmpte2014MxfCommand,
                         },

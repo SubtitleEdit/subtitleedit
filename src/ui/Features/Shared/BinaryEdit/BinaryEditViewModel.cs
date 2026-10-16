@@ -1227,6 +1227,12 @@ public partial class BinaryEditViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task ExportDCinemaSmpte2014PngMxf()
+    {
+        await DoExport(new ExportHandlerDCinemaSmpte2014Mxf(), ".mxf");
+    }
+
+    [RelayCommand]
     private async Task ExportImscImage()
     {
         // Single self-contained TTML file; the binary sub's own bitmaps and X/Y placement carry
