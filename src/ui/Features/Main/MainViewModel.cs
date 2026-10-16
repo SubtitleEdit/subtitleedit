@@ -5164,6 +5164,35 @@ public partial class MainViewModel :
     }
 
     /// <summary>
+    /// D-Cinema SMPTE 2014 image subtitles as one SMPTE ST 429-5 track file, the PNGs embedded.
+    /// </summary>
+    [RelayCommand]
+    private async Task ExportDCinemaSmpte2014PngMxf()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (IsEmpty)
+        {
+            ShowSubtitleNotLoadedMessage();
+            return;
+        }
+
+        IExportHandler exportHandler = new ExportHandlerDCinemaSmpte2014Mxf();
+        var result = await ShowDialogAsync<ExportImageBasedWindow, ExportImageBasedViewModel>(vm =>
+        {
+            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName, _subtitle.Header, removeAssaCommentBlocks: IsFormatAssaOrSsa);
+        });
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+    }
+
+    /// <summary>
     /// SMPTE ST 429-5 timed text track file - the subtitle asset of a SMPTE DCP: the D-Cinema
     /// SMPTE 2014 XML wrapped in MXF with the font it loads embedded.
     /// </summary>

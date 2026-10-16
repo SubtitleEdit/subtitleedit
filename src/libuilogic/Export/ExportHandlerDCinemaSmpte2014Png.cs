@@ -9,9 +9,9 @@ namespace Nikse.SubtitleEdit.UiLogic.Export;
 public class ExportHandlerDCinemaSmpte2014Png : IExportHandler
 {
     public ExportImageType ExportImageType => ExportImageType.DCinemaPng;
-    public string Extension => "";
-    public bool UseFileName => false;
-    public string Title => string.Format("Export to {0}", "DCinema SMPTE 2014/png");
+    public virtual string Extension => "";
+    public virtual bool UseFileName => false;
+    public virtual string Title => string.Format("Export to {0}", "DCinema SMPTE 2014/png");
     public double FrameRate { get; set; } = 23.976;
 
     private int _width;
@@ -34,12 +34,7 @@ public class ExportHandlerDCinemaSmpte2014Png : IExportHandler
             FrameRate = imageParameter.FramesPerSecond;
         }
 
-        _folderName = fileOrFolderName;
-        if (!Directory.Exists(_folderName))
-        {
-            Directory.CreateDirectory(_folderName);
-        }
-
+        PrepareOutput(fileOrFolderName);
         _sb.Clear();
         _imagesSavedCount = 0;
     }
@@ -53,8 +48,7 @@ public class ExportHandlerDCinemaSmpte2014Png : IExportHandler
         // string numberString = $"{i:0000}";
         _imagesSavedCount++;
         string uuidString = Guid.NewGuid().ToString().RemoveChar('-').Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
-        string fileName = Path.Combine(_folderName, uuidString + ".png");
-        File.WriteAllBytes(fileName, param.Bitmap.ToPngArray());
+        SaveImage(uuidString, param.Bitmap.ToPngArray());
 
         string verticalAlignment = "bottom";
         string horizontalAlignment = "center";
@@ -145,9 +139,30 @@ public class ExportHandlerDCinemaSmpte2014Png : IExportHandler
         xml = xml.Replace("[FRAMERATE]", ((int)Math.Round(FrameRate, MidpointRounding.AwayFromZero)).ToString(CultureInfo.InvariantCulture));
 
         doc.LoadXml(xml);
-        var fName = Path.Combine(_folderName, "index.xml");
+        SaveXml(SubtitleFormat.ToUtf8XmlString(doc));
+    }
 
-        File.WriteAllText(fName, SubtitleFormat.ToUtf8XmlString(doc));
+    /// <summary>
+    /// The PNGs and index.xml go into a folder; see <see cref="ExportHandlerDCinemaSmpte2014Mxf"/>
+    /// for the same subtitles wrapped in one MXF track file.
+    /// </summary>
+    protected virtual void PrepareOutput(string fileOrFolderName)
+    {
+        _folderName = fileOrFolderName;
+        if (!Directory.Exists(_folderName))
+        {
+            Directory.CreateDirectory(_folderName);
+        }
+    }
+
+    protected virtual void SaveImage(string uuid, byte[] png)
+    {
+        File.WriteAllBytes(Path.Combine(_folderName, uuid + ".png"), png);
+    }
+
+    protected virtual void SaveXml(string xml)
+    {
+        File.WriteAllText(Path.Combine(_folderName, "index.xml"), xml);
     }
 
     private static string FormatUtf8Xml(XmlDocument doc)

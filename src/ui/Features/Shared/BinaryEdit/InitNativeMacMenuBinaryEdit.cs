@@ -22,6 +22,7 @@ public static class InitNativeMacMenuBinaryEdit
         Add(exportMenu, Se.Language.File.Export.TitleExportImscImage, vm.ExportImscImageCommand);
         Add(exportMenu, Se.Language.File.Export.TitleExportDCinemaInteropPng, vm.ExportDCinemaInteropPngCommand);
         Add(exportMenu, Se.Language.File.Export.TitleExportDCinemaSmpte2014Png, vm.ExportDCinemaSmpte2014PngCommand);
+        Add(exportMenu, Se.Language.File.Export.TitleExportDCinemaSmpte2014PngMxf, vm.ExportDCinemaSmpte2014PngMxfCommand);
         Add(exportMenu, Se.Language.File.Export.TitleExportDostPng, vm.ExportDostPngCommand);
         Add(exportMenu, Se.Language.File.Export.TitleExportDvdSup, vm.ExportDvdSupCommand);
         Add(exportMenu, Se.Language.File.Export.TitleExportFcpImage, vm.ExportFcpPngCommand);
