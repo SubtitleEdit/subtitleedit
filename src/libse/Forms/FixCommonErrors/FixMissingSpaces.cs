@@ -374,7 +374,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
 
-                if (p.Text.IndexOf('<') >= 0) // fix: You!<font color="#ffff00">Well, bye!</font>
+                if (p.Text.Contains('<')) // fix: You!<font color="#ffff00">Well, bye!</font>
                 {
                     var matchFontStart = FixMissingSpacesReFontStart.Match(p.Text);
                     var jumpOut = 0;

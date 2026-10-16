@@ -270,7 +270,7 @@ public static class XlsxWriter
         var sb = new StringBuilder();
         foreach (var ch in sheetName)
         {
-            sb.Append("[]:*?/\\".IndexOf(ch) >= 0 ? '-' : ch);
+            sb.Append("[]:*?/\\".Contains(ch) ? '-' : ch);
         }
 
         var name = sb.ToString().Trim('\'');

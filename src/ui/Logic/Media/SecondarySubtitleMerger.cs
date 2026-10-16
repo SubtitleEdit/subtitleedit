@@ -58,7 +58,7 @@ public static class SecondarySubtitleMerger
         foreach (var p in subtitleSecondary.Paragraphs)
         {
             var paragraph = smpteMode ? SmptePreviewStretch.Stretched(p) : p;
-            if (playResChanged && paragraph.Text.IndexOf("\\pos", StringComparison.Ordinal) >= 0)
+            if (playResChanged && paragraph.Text.Contains("\\pos"))
             {
                 if (!smpteMode)
                 {

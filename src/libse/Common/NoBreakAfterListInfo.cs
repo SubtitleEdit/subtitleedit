@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     HasRegex = true;
                 }
-                else if (item.Text != null && item.Text.IndexOf(' ') >= 0)
+                else if (item.Text != null && item.Text.Contains(' '))
                 {
                     MultiWordItems = MultiWordItems ?? new List<NoBreakAfterItem>();
                     MultiWordItems.Add(item);

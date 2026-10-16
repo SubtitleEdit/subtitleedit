@@ -1562,7 +1562,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             // Row-code first byte: low 7 bits in 0x10-0x17 (parity-stripped 10-17), plus the
             // odd-parity forms that differ (11->91, 12->92, 14->94, 17->97).
             var firstByte = code.Substring(0, 2);
-            return IsPreambleAddressRowCode(firstByte) && "4567cdef".IndexOf(code[2]) >= 0;
+            return IsPreambleAddressRowCode(firstByte) && "4567cdef".Contains(code[2]);
         }
 
         private static bool IsPreambleAddressRowCode(string firstByte)

@@ -603,7 +603,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                     }
 
                     // Inline options like "(?i)" change how the rest of the pattern matches.
-                    if (i + 2 < pattern.Length && pattern[i + 1] == '?' && "imnsx-".IndexOf(pattern[i + 2]) >= 0)
+                    if (i + 2 < pattern.Length && pattern[i + 1] == '?' && "imnsx-".Contains(pattern[i + 2]))
                     {
                         return null;
                     }

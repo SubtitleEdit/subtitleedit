@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static bool Contains(this string source, char value)
         {
-            return source.IndexOf(value) >= 0;
+            return source.Contains(value);
         }
 
         public static bool Contains(this string source, char[] value)
@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static bool Contains(this string source, string value, StringComparison comparisonType)
         {
-            return source.IndexOf(value, comparisonType) >= 0;
+            return source.Contains(value, comparisonType);
         }
 
         public static List<string> SplitToLines(this string s) => s.SplitToLines(s.Length);

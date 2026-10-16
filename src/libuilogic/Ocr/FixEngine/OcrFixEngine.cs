@@ -238,8 +238,8 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
             return text;
         }
 
-        var hasOpening = text.IndexOf('‘') >= 0;
-        var hasClosing = text.IndexOf('’') >= 0;
+        var hasOpening = text.Contains('‘');
+        var hasClosing = text.Contains('’');
         if (hasOpening == hasClosing)
         {
             return text; // neither, or a quotation pair
@@ -716,7 +716,7 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
     private string GetAccentLookalikesForLanguage(char c)
     {
         var lookalikes = GetAccentLookalikes(c);
-        if (!PlainLatinLanguages.Contains(_twoLetterIsoLanguageName) || DotPositionAccents.IndexOf(c) >= 0)
+        if (!PlainLatinLanguages.Contains(_twoLetterIsoLanguageName) || DotPositionAccents.Contains(c))
         {
             return lookalikes;
         }
@@ -729,7 +729,7 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         var sb = new StringBuilder();
         foreach (var group in AccentLookalikeGroups)
         {
-            if (group.IndexOf(c) >= 0)
+            if (group.Contains(c))
             {
                 sb.Append(group);
             }
@@ -737,7 +737,7 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
 
         foreach (var group in AccentCrossGroups)
         {
-            if (group.IndexOf(c) >= 0)
+            if (group.Contains(c))
             {
                 sb.Append(group);
             }

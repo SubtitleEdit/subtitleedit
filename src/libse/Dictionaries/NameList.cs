@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                                 var name = reader.ReadElementContentAsString().Trim();
                                 if (name.Length > 0)
                                 {
-                                    if (name.IndexOf(' ') >= 0)
+                                    if (name.Contains(' '))
                                     {
                                         _namesMultiList.Add(name);
                                     }
@@ -399,7 +399,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             }
 
             Dictionary<string, string> index;
-            if (name.IndexOf(' ') >= 0)
+            if (name.Contains(' '))
             {
                 index = _namesMultiListCaseInsensitive ?? (_namesMultiListCaseInsensitive = BuildCaseInsensitiveIndex(_namesMultiList));
             }

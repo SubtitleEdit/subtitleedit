@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         continue;
                     }
 
-                    if (xmlAsString.IndexOf('\0') >= 0)
+                    if (xmlAsString.Contains('\0'))
                     {
                         _errorCount++;
                         continue;
