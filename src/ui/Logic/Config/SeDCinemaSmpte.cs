@@ -10,6 +10,7 @@ public class SeDCinemaSmpte
     public int DCinemaFadeUpTime { get; set; }
     public int DCinemaFadeDownTime { get; set; }
     public bool DCinemaAutoGenerateSubtitleId { get; set; }
+    public string MxfFontFile { get; set; }
 
     public string CurrentDCinemaSubtitleId { get; set; }
     public string CurrentDCinemaMovieTitle { get; set; }
@@ -36,6 +37,7 @@ public class SeDCinemaSmpte
         DCinemaFadeUpTime = 0;
         DCinemaFadeDownTime = 0;
         DCinemaAutoGenerateSubtitleId = true;
+        MxfFontFile = string.Empty;
 
         CurrentDCinemaSubtitleId = string.Empty;
         CurrentDCinemaMovieTitle = string.Empty;
