@@ -20186,6 +20186,8 @@ public partial class MainViewModel :
             (nameof(VideoToggleBrightnessCommand),  VideoToggleBrightnessCommand),
             (nameof(VideoToggleContrastCommand),    VideoToggleContrastCommand),
             (nameof(ToggleSubtitlesOnVideoPlayerCommand), ToggleSubtitlesOnVideoPlayerCommand),
+            (nameof(GoToPreviousLineAndSetVideoPositionCommand), GoToPreviousLineAndSetVideoPositionCommand),
+            (nameof(GoToNextLineAndSetVideoPositionCommand), GoToNextLineAndSetVideoPositionCommand),
         };
 
         var bindings = new List<(string name, List<string> keys, IRelayCommand command)>(commands.Length);
