@@ -377,6 +377,7 @@ public static class TtsVoiceInstaller
         BreezeTtsAudioCpp.StopServer();
         FireRedTts3AudioCpp.StopServer();
         KugelAudioAudioCpp.StopServer();
+        VoxtralTtsAudioCpp.StopServer();
 
         var dlResult = await windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(
             window, vm => vm.StartDownloadIndexTts25AudioCppEngine(backend));

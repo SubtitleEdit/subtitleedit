@@ -106,6 +106,10 @@ public class SeVideoTextToSpeech
     // Holds the accepted BreezeBlue licence version; see BreezeTtsAudioCpp.LicenseVersion.
     public string BreezeTtsAudioCppLicenseAccepted { get; set; }
     public string KugelAudioAudioCppVoice { get; set; }
+    public string VoxtralTtsAudioCppModel { get; set; }
+    public string VoxtralTtsAudioCppVoice { get; set; }
+    // Holds the accepted CC BY-NC licence version; see VoxtralTtsAudioCpp.LicenseVersion.
+    public string VoxtralTtsAudioCppLicenseAccepted { get; set; }
     public string CosyVoice3CrispAsrModel { get; set; }
     public double CosyVoice3CrispAsrSpeed { get; set; }
     // Display name of the picked CosyVoice3 target language ("Auto" = plain zero-shot cloning).
@@ -277,6 +281,9 @@ public class SeVideoTextToSpeech
         BreezeTtsAudioCppInstruction = string.Empty;
         BreezeTtsAudioCppLicenseAccepted = string.Empty;
         KugelAudioAudioCppVoice = "default";
+        VoxtralTtsAudioCppModel = "Q8_0 (~4.7 GB)";
+        VoxtralTtsAudioCppVoice = "casual_male";
+        VoxtralTtsAudioCppLicenseAccepted = string.Empty;
         CosyVoice3CrispAsrModel = "Q4_K (~1.6 GB total)";
         CosyVoice3CrispAsrSpeed = 1.0;
         CosyVoice3CrispAsrLanguage = string.Empty;

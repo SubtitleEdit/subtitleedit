@@ -544,6 +544,20 @@ public static class TtsEngineInstaller
                 startDownloadModels: (vm, key) => vm.StartDownloadKugelAudioAudioCppModels(key));
         }
 
+        if (engine is VoxtralTtsAudioCpp)
+        {
+            // CC BY-NC 4.0 weights and voices: licence gate first, like Fish and Breeze.
+            return await EnsureAudioCppEngineWithLicense(
+                window, windowService, refreshVoices,
+                engineDisplayName: "Voxtral TTS",
+                requiredFamily: VoxtralTtsAudioCpp.FamilyName,
+                licenseDefinition: VoxtralTtsAudioCpp.LicenseDefinition,
+                isLicenseAccepted: VoxtralTtsAudioCpp.IsLicenseAccepted,
+                modelKey: VoxtralTtsAudioCpp.ResolveModelKey(model),
+                areModelsInstalled: VoxtralTtsAudioCpp.AreModelsInstalled,
+                startDownloadModels: (vm, key) => vm.StartDownloadVoxtralTtsAudioCppModels(key));
+        }
+
         if (engine is ZonosTtsCrispAsr)
         {
             if (!await TtsVoiceInstaller.EnsureCrispAsrForZonos(window, windowService, forceRedownload: false))

@@ -49,6 +49,13 @@ public class AudioCppRuntimeBuildInfoTests
         "models      : index_tts2,higgs_audio_tts,fish_audio,fireredtts3,ace_step,kugelaudio,sidon,breeze_tts\n" +
         "backend     : metal (arm64)\n";
 
+    private const string BuildInfo2026_10_16b =
+        "audio.cpp build for SubtitleEdit's IndexTTS-2.5 engine\n" +
+        "source      : https://github.com/0xShug0/audio.cpp\n" +
+        "ref         : 0097d365a00b52a6991ad7618f0a04e8d2935e47\n" +
+        "models      : index_tts2,higgs_audio_tts,fish_audio,fireredtts3,ace_step,kugelaudio,sidon,breeze_tts,voxtral_tts\n" +
+        "backend     : metal (arm64)\n";
+
     [Fact]
     public void ParseBuiltModelFamilies_ReadsTheModelsLine()
     {
@@ -80,7 +87,7 @@ public class AudioCppRuntimeBuildInfoTests
     [Fact]
     public void EveryAudioCppEngineFamily_IsInThePinnedBuild()
     {
-        var families = AudioCppRuntime.ParseBuiltModelFamilies(BuildInfo2026_10_13)!;
+        var families = AudioCppRuntime.ParseBuiltModelFamilies(BuildInfo2026_10_16b)!;
 
         Assert.Contains(IndexTts25AudioCpp.FamilyName, families);
         Assert.Contains(HiggsTtsAudioCpp.FamilyName, families);
@@ -88,10 +95,17 @@ public class AudioCppRuntimeBuildInfoTests
         Assert.Contains(FireRedTts3AudioCpp.FamilyName, families);
         Assert.Contains(KugelAudioAudioCpp.FamilyName, families);
         Assert.Contains(BreezeTtsAudioCpp.FamilyName, families);
+        Assert.Contains(VoxtralTtsAudioCpp.FamilyName, families);
         // Video > Generate background music and the TTS window's background music.
         Assert.Contains(AceStepAudioCpp.FamilyName, families);
         // Text to speech > Advanced > Clean voice-clone references.
         Assert.Contains(SidonAudioCpp.FamilyName, families);
+    }
+
+    [Fact]
+    public void PreviousBuild_LacksVoxtral_SoItAsksForTheUpdate()
+    {
+        Assert.DoesNotContain(VoxtralTtsAudioCpp.FamilyName, AudioCppRuntime.ParseBuiltModelFamilies(BuildInfo2026_10_13)!);
     }
 
     [Fact]
