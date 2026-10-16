@@ -519,6 +519,18 @@ public static class ShapeLibrary
                 """<g fill="#455A64"><rect x="4" y="26" width="92" height="64" rx="8"/><path d="M32 28 L38 14 H62 L68 28 Z"/></g><circle fill="#90A4AE" cx="50" cy="58" r="24"/><circle fill="#1E88E5" cx="50" cy="58" r="15"/><rect fill="#FFC107" x="76" y="34" width="12" height="7" rx="2"/>"""),
             Clip(l.DrawClipArtPartyPopper, null,
                 """<path fill="#FF7043" d="M6 96 L30 36 L66 72 Z"/><path fill="none" stroke="#FFCA28" stroke-width="8" stroke-linecap="round" d="M30 36 L66 72"/><g fill="#E91E63"><circle cx="52" cy="22" r="5"/><rect x="74" y="44" width="11" height="5" rx="2" transform="rotate(30 79 46)"/><circle cx="92" cy="22" r="4"/></g><g fill="#29B6F6"><rect x="62" y="6" width="11" height="5" rx="2" transform="rotate(-20 67 8)"/><circle cx="82" cy="68" r="5"/><rect x="38" y="6" width="9" height="4" rx="2"/></g>"""),
+            Clip(l.DrawClipArtPizzaSlice, null,
+                """<path fill="#FFCA28" d="M12 22 Q50 10 88 22 L50 96 Z"/><path fill="#D7A86E" d="M8 14 Q50 2 92 14 L88 26 Q50 14 12 26 Z"/><g fill="#E53935"><circle cx="40" cy="36" r="7"/><circle cx="63" cy="40" r="6"/><circle cx="50" cy="62" r="6"/></g>"""),
+            Clip(l.DrawClipArtIceCream, null,
+                """<path fill="#D7A86E" d="M28 50 L72 50 L50 98 Z"/><path fill="none" stroke="#A1887F" stroke-width="3" d="M33 58 L55 84 M45 54 L62 70 M67 58 L45 84 M55 54 L38 70"/><path fill="#F48FB1" d="M24 52 Q20 40 30 34 Q32 16 50 16 Q68 16 70 34 Q80 40 76 52 Z"/><circle fill="#E53935" cx="50" cy="12" r="7"/>"""),
+            Clip(l.DrawClipArtUmbrella, null,
+                """<path fill="#1E88E5" d="M6 50 A44 44 0 0 1 94 50 Q83 42 72 50 Q61 42 50 50 Q39 42 28 50 Q17 42 6 50 Z"/><path fill="#90CAF9" d="M50 6 Q36 26 39 47 Q44 44 50 50 Q56 44 61 47 Q64 26 50 6 Z"/><path fill="none" stroke="#5D4037" stroke-width="5" stroke-linecap="round" d="M50 48 L50 86 Q50 96 41 95 Q34 94 34 86 M50 2 L50 7"/>"""),
+            Clip(l.DrawClipArtCatFace, null,
+                """<path fill="#FF9800" d="M16 46 L20 8 L46 28 Z M84 46 L80 8 L54 28 Z"/><circle fill="#FF9800" cx="50" cy="58" r="38"/><path fill="#FFCC80" d="M25 34 L26 18 L38 28 Z M75 34 L74 18 L62 28 Z"/><ellipse fill="#FFCC80" cx="50" cy="74" rx="18" ry="13"/><g fill="#3E2723"><ellipse cx="35" cy="52" rx="5" ry="8"/><ellipse cx="65" cy="52" rx="5" ry="8"/><path d="M44 66 L56 66 L50 73 Z"/></g>"""),
+            Clip(l.DrawClipArtKey, null,
+                """<path fill="none" stroke="#FFC107" stroke-width="12" d="M14 50 A18 18 0 1 1 50 50 A18 18 0 1 1 14 50 Z"/><path fill="#FFC107" d="M48 45 L94 45 L94 55 L88 55 L88 70 L78 70 L78 55 L72 55 L72 64 L63 64 L63 55 L48 55 Z"/><path fill="#FFE082" d="M20 40 A14 14 0 0 1 32 32 L33 37 A9 9 0 0 0 25 42 Z"/>"""),
+            Clip(l.DrawClipArtChristmasTree, null,
+                """<rect fill="#6D4C41" x="42" y="80" width="16" height="16"/><g fill="#2E7D32"><path d="M50 40 L92 84 L8 84 Z"/><path d="M50 22 L82 60 L18 60 Z"/><path d="M50 8 L74 38 L26 38 Z"/></g><g fill="#E53935"><circle cx="40" cy="50" r="4"/><circle cx="62" cy="68" r="4"/><circle cx="32" cy="74" r="4"/><circle cx="56" cy="30" r="3"/></g><path fill="#FFC107" d="M50 0 L53 7 L60 7 L54 11 L57 18 L50 14 L43 18 L46 11 L40 7 L47 7 Z"/>"""),
         ];
     }
 }
