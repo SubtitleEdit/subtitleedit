@@ -42,6 +42,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--adjust-duration:<ms>", "Adjust duration in milliseconds");
         ShowParameter(console, "--assa-style-file:<file name>", "ASSA style file");
         ShowParameter(console, "--change-speed:<percent>", "Change speed by percent (e.g. 125 = 1.25x faster)");
+        ShowParameter(console, "--dcinema-font:<file name>", "Font (.ttf/.otf) embedded in dcinemasmpte2014mxf output");
         ShowParameter(console, "--ebu-header-file:<file name>", "EBU header file");
         ShowParameter(console, "--encoding:<encoding name>", "Character encoding (e.g., utf-8, windows-1252, or 'source' to keep the input file's encoding)");
         ShowParameter(console, "--input-encoding-fallback:<name>", "Assumed input encoding when no BOM and not UTF-8 (skips ANSI guess)");
@@ -58,6 +59,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--pac-codepage:<code page>", "PAC code page");
         ShowParameter(console, "--pac-secondary-codepage:<code page>", "PAC code page for lines in another script (e.g. Cyrillic lines in a Hebrew file)");
         ShowParameter(console, "--profile:<profile name>", "Profile name");
+        ShowParameter(console, "--reel-duration:<hh:mm:ss:ff>", "D-Cinema MXF output: reel (picture) length, which every asset of a DCP reel must have (default: until the last subtitle)");
         ShowParameter(console, "--renumber:<starting number>", "Renumber subtitles from this number");
         ShowParameter(console, "--resolution:<width>x<height>", "Video resolution (e.g., 1920x1080)");
         ShowParameter(console, "--target-fps:<frame rate>", "Target frame rate");
