@@ -52,6 +52,14 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("ASSA style file name")]
         public string? AssaStyleFile { get; init; }
 
+        [CommandOption("--dcinema-font|--dcinemafont")]
+        [Description("Font file (.ttf/.otf) embedded in dcinemasmpte2014mxf output")]
+        public string? DCinemaFont { get; init; }
+
+        [CommandOption("--reel-duration|--reelduration")]
+        [Description("D-Cinema MXF output: the reel (picture) length as hh:mm:ss:ff - every asset of a DCP reel must have it (default: until the last subtitle)")]
+        public string? ReelDuration { get; init; }
+
         [CommandOption("--ebu-header-file|--ebuheaderfile")]
         [Description("EBU header file name")]
         public string? EbuHeaderFile { get; init; }
@@ -824,6 +832,8 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 PacCodePage = pacCodePage,
                 PacSecondaryCodePage = pacSecondaryCodePage,
                 EbuHeaderFile = settings.EbuHeaderFile,
+                DCinemaFontFile = settings.DCinemaFont,
+                ReelDuration = settings.ReelDuration,
                 MultipleReplaceFile = settings.MultipleReplace,
                 CustomFormatFile = settings.CustomFormat,
                 PlainTextMerge = settings.PlainTextMerge,

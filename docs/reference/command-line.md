@@ -10,7 +10,7 @@
 - **Container input** — Matroska (`.mkv` / `.mks`), MP4, MCC, MXF, AVI (`.avi` / `.divx`), transport stream teletext, Blu-Ray `.sup`.
 - **OCR for image-based sources** via seven engines (Tesseract subprocess, nOCR built-in, BinaryOCR built-in, Ollama HTTP, llama.cpp HTTP with automatic server start, PaddleOCR subprocess, Apple Vision built into macOS).
 - **Auto-translate** via local LLMs (llama.cpp with automatic server start, Ollama, LM Studio), any OpenAI-compatible API, DeepL, or self-hosted services (LibreTranslate, NLLB).
-- **Image-based output** — Blu-Ray sup, BDN-XML, DOST, FCP (Final Cut Pro + image), D-Cinema interop / SMPTE 2014, images-with-time-code.
+- **Image-based output** — Blu-Ray sup, BDN-XML, DOST, FCP (Final Cut Pro + image), D-Cinema interop / SMPTE 2014 (also as a DCP-ready SMPTE MXF track file), images-with-time-code.
 - **Operations pipeline** — offset, fps change, change-speed, renumber, adjust-duration, fix-common-errors, merge/split, balance, redo casing, RTL fixes, multiple-replace, custom-text format, plain text.
 - **Cross-platform** — Windows, Linux, macOS. Only requires the .NET runtime; no display or GUI needed.
 
@@ -162,6 +162,8 @@ seconv lint *.srt --json             # CI-friendly: exit 1 on any issue
 | `--pac-codepage:<page>` | PAC | Code page name (`Latin`, `Greek`, `Hebrew`, …) or numeric (0–12). See `seconv list-pac-codepages` |
 | `--pac-secondary-codepage:<page>` | PAC | Code page for lines in another script (e.g. `Cyrillic` for the Russian lines of a Hebrew file); those lines are flagged "secondary code page". Reading detects it automatically |
 | `--ebu-header-file:<file>` | EBU STL | Reuse the GSI header block from an existing `.stl` file |
+| `--dcinema-font:<file>` | D-Cinema SMPTE MXF (`dcinemasmpte2014mxf`) | Font (`.ttf`/`.otf`) embedded in the track file under the `LoadFont` `urn:uuid` (required) |
+| `--reel-duration:<hh:mm:ss:ff>` | D-Cinema SMPTE MXF (text and png) | Reel (picture) length at the output frame rate. Every asset of a DCP reel must have it, so set it to the picture's length; default ends the track at the last subtitle |
 | `--plaintext-merge` | Plain text (`txt`) | Merge all subtitles into one space-separated block (no blank lines). Takes precedence over the two options below |
 | `--plaintext-unbreak` | Plain text (`txt`) | Unbreak each subtitle, joining its lines into one |
 | `--plaintext-no-blank-line` | Plain text (`txt`) | Do not put a blank line between subtitles (default keeps it) |
@@ -797,6 +799,8 @@ This mirrors the desktop app, where batch convert's *Remove formatting* function
 | `fcpimage`, `fcp` | FCP/image |
 | `dcinemainterop`, `dcinema-interop` | D-Cinema interop/png |
 | `dcinemasmpte2014`, `dcinema-smpte` | D-Cinema SMPTE 2014/png |
+| `dcinemasmpte2014mxf`, `dcinema-smpte-mxf` | D-Cinema SMPTE 2014 as a SMPTE ST 429-5 MXF track file (DCP subtitle asset), font embedded (requires `--dcinema-font`) |
+| `dcinemasmpte2014pngmxf`, `dcinema-smpte-png-mxf` | D-Cinema SMPTE 2014/png as one MXF track file, PNGs embedded — image |
 | `imageswithtimecode`, `imagesintc` | Images with time codes in file name |
 | `webvttthumbnail`, `webvtt-thumbnail`, `vttthumb` | WebVTT Thumbnail — image (sprite sheet + `.vtt`) |
 | `plaintext`, `text`, `txt` | Plain text (HTML stripped) |
@@ -840,6 +844,14 @@ seconv subs.sup subrip \
   --remove-text-for-hi \
   --split-long-lines \
   --overwrite
+```
+
+### DCP subtitle track file (SMPTE MXF)
+```bash
+# text, font embedded; reel duration = the picture's length (here 1:32:10 + 4 frames at 24 fps)
+seconv movie.srt dcinemasmpte2014mxf --fps:24 --dcinema-font:Arial.ttf --reel-duration:01:32:10:04
+# rendered images instead of text, e.g. from a Blu-ray sup
+seconv movie.sup dcinemasmpte2014pngmxf --fps:24 --reel-duration:01:32:10:04
 ```
 
 ### Round-trip via image-based output
