@@ -49,8 +49,7 @@ public partial class AssaDrawViewModel : ObservableObject
     [ObservableProperty] private DrawingTool _currentTool = DrawingTool.Line;
     [ObservableProperty] private int _canvasWidth = 1920;
     [ObservableProperty] private int _canvasHeight = 1080;
-    [ObservableProperty] private string _positionText = "Position: 0, 0";
-    [ObservableProperty] private string _zoomText = "Zoom: 100%";
+    [ObservableProperty] private string _positionText = string.Format(Se.Language.Assa.DrawPositionXY, 0, 0);
     [ObservableProperty] private float _pointX;
     [ObservableProperty] private float _pointY;
     [ObservableProperty] private bool _isPointSelected;
@@ -188,11 +187,7 @@ public partial class AssaDrawViewModel : ObservableObject
         }
 
         // Wait a bit to ensure the canvas bounds are updated
-        Dispatcher.UIThread.Post(() =>
-        {
-            Canvas?.FitToView();
-            UpdateZoomText();
-        }, DispatcherPriority.Background);
+        Dispatcher.UIThread.Post(() => Canvas?.FitToView(), DispatcherPriority.Background);
     }
 
     public void Initialize(Subtitle subtitle, List<SubtitleLineViewModel> selectedLines, int? width, int? height,
@@ -591,7 +586,6 @@ public partial class AssaDrawViewModel : ObservableObject
 
     private void OnZoomChanged(object? sender, float zoomFactor)
     {
-        ZoomText = $"Zoom: {zoomFactor * 100:0}%";
         if (Math.Abs(ZoomPercent - zoomFactor * 100) > 0.5)
         {
             ZoomPercent = Math.Round(zoomFactor * 100);
@@ -655,11 +649,11 @@ public partial class AssaDrawViewModel : ObservableObject
 
         var item = SelectedTreeItem;
         SelectionText = SelectedShapes.Count > 1
-            ? $"{SelectedShapes.Count} shapes"
+            ? string.Format(Se.Language.Assa.DrawXShapes, SelectedShapes.Count)
             : item?.Point != null
                 ? item.Name.Trim()
                 : shape != null
-                    ? $"{string.Format(Se.Language.Assa.DrawLayerX, shape.Layer)} · {shape.Points.Count} points"
+                    ? $"{string.Format(Se.Language.Assa.DrawLayerX, shape.Layer)} · {string.Format(Se.Language.Assa.DrawXPoints, shape.Points.Count)}"
                     : item?.IsLayer == true
                         ? item.Name
                         : string.Empty;
@@ -994,7 +988,7 @@ public partial class AssaDrawViewModel : ObservableObject
     {
         _currentX = e.X;
         _currentY = e.Y;
-        PositionText = $"Position: {e.X:0}, {e.Y:0}";
+        PositionText = string.Format(Se.Language.Assa.DrawPositionXY, e.X.ToString("0", CultureInfo.CurrentCulture), e.Y.ToString("0", CultureInfo.CurrentCulture));
 
         if (Canvas != null)
         {
@@ -1727,14 +1721,12 @@ public partial class AssaDrawViewModel : ObservableObject
     private void ZoomIn()
     {
         Canvas?.ZoomIn();
-        UpdateZoomText();
     }
 
     [RelayCommand]
     private void ZoomOut()
     {
         Canvas?.ZoomOut();
-        UpdateZoomText();
     }
 
     [RelayCommand]
@@ -1743,15 +1735,6 @@ public partial class AssaDrawViewModel : ObservableObject
         // Back to the opening view: whole frame fitted and centered (was 100% at the top-left
         // corner, which for a 1080p frame is mostly off screen).
         Canvas?.FitToView();
-        UpdateZoomText();
-    }
-
-    private void UpdateZoomText()
-    {
-        if (Canvas != null)
-        {
-            ZoomText = $"Zoom: {Canvas.ZoomFactor * 100:0}%";
-        }
     }
 
     [RelayCommand]
@@ -2089,7 +2072,7 @@ public partial class AssaDrawViewModel : ObservableObject
             Window,
             ".assadraw",
             string.IsNullOrEmpty(_fileName) ? "untitled.assadraw" : Path.GetFileName(_fileName),
-            "Save ASSA drawing");
+            Se.Language.Assa.DrawSaveDrawing);
 
         if (string.IsNullOrEmpty(fileName))
         {
@@ -2127,10 +2110,10 @@ public partial class AssaDrawViewModel : ObservableObject
 
         var fileName = await _fileHelper.PickOpenFile(
             Window,
-            "Open ASSA drawing",
-            "ASSA drawing files",
+            Se.Language.Assa.DrawOpenDrawing,
+            Se.Language.Assa.DrawDrawingFiles,
             "*.assadraw",
-            "ASS files",
+            Se.Language.Assa.DrawAssFiles,
             "*.ass");
 
         if (string.IsNullOrEmpty(fileName))
@@ -2818,7 +2801,7 @@ public partial class AssaDrawViewModel : ObservableObject
             return text.Length > 0 ? $"{Se.Language.Assa.DrawTextBox}: {text}" : Se.Language.Assa.DrawTextBox;
         }
 
-        var name = $"Shape {shapeNumber} ({(shape.IsEraser ? "erase" : "draw")})";
+        var name = string.Format(shape.IsEraser ? Se.Language.Assa.DrawShapeXErase : Se.Language.Assa.DrawShapeXDraw, shapeNumber);
         return text.Length > 0 && !shape.IsEraser ? $"{name}: {text}" : name;
     }
 

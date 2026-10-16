@@ -158,6 +158,16 @@ public class LanguageAssa
     public string DrawTextBox { get; set; }
     public string DrawDiscardChangesTitle { get; set; }
     public string DrawDiscardChanges { get; set; }
+    public string DrawColorPickerToolName { get; set; }
+    public string DrawOpenDrawing { get; set; }
+    public string DrawSaveDrawing { get; set; }
+    public string DrawDrawingFiles { get; set; }
+    public string DrawAssFiles { get; set; }
+    public string DrawPositionXY { get; set; }
+    public string DrawXShapes { get; set; }
+    public string DrawXPoints { get; set; }
+    public string DrawShapeXDraw { get; set; }
+    public string DrawShapeXErase { get; set; }
 
     // Progress Bar Generator
     public string ProgressBarTitle { get; set; }
@@ -485,12 +495,12 @@ public class LanguageAssa
     {
         // ASSA Draw
         AssaDraw = "ASSA Draw";
-        DrawSelectTool = "Select (move points)";
+        DrawSelectTool = "Select and move shapes";
         DrawUseShapeForErase = "Use shape for erase (iclip)";
-        DrawLineTool = "Line Tool (F4)";
-        DrawBezierTool = "Bezier Curve (F5)";
-        DrawRectangleTool = "Rectangle (F6)";
-        DrawCircleTool = "Circle (F7)";
+        DrawLineTool = "Line tool";
+        DrawBezierTool = "Bezier curve";
+        DrawRectangleTool = "Rectangle";
+        DrawCircleTool = "Circle";
         DrawCloseShape = "Close Shape (F8/Enter)";
         DrawDeleteShape = "Delete Shape (Del)";
         DrawChangeLayer = "Change Layer";
@@ -639,6 +649,16 @@ public class LanguageAssa
         DrawTextBox = "Text box";
         DrawDiscardChangesTitle = "Discard changes?";
         DrawDiscardChanges = "The drawing has been changed." + System.Environment.NewLine + "Discard the changes?";
+        DrawColorPickerToolName = "Color picker";
+        DrawOpenDrawing = "Open ASSA drawing";
+        DrawSaveDrawing = "Save ASSA drawing";
+        DrawDrawingFiles = "ASSA drawing files";
+        DrawAssFiles = "ASS files";
+        DrawPositionXY = "Position: {0}, {1}";
+        DrawXShapes = "{0} shapes";
+        DrawXPoints = "{0} points";
+        DrawShapeXDraw = "Shape {0} (draw)";
+        DrawShapeXErase = "Shape {0} (erase)";
 
         // Progress Bar Generator
         ProgressBarTitle = "ASSA progress bar";
