@@ -4126,7 +4126,11 @@
     "checkForUpdatesUpToDate": "You are running the latest version.",
     "checkForUpdatesNewVersionAvailable": "New version available: {0}",
     "checkForUpdatesUnableToCheck": "Unable to check for updates.",
-    "checkForUpdatesDownloadNewVersion": "Download new version"
+    "checkForUpdatesDownloadNewVersion": "Download new version",
+    "checkForUpdatesInstallAndRestart": "Install and restart",
+    "checkForUpdatesDownloadingX": "Downloading {0}...",
+    "checkForUpdatesInstallFailed": "Automatic update failed - please use \"Download new version\" instead.",
+    "checkForUpdatesInstallsWhenClosed": "The update will be installed when Subtitle Edit closes."
   },
   "ocr": {
     "linesToDraw": "Lines to draw",

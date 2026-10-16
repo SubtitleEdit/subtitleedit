@@ -312,6 +312,7 @@ public static class DependencyInjectionExtensions
         collection.AddHttpClientWithProxy<IWhisperDownloadService, WhisperDownloadService>();
         collection.AddHttpClientWithProxy<IYtDlpDownloadService, YtDlpDownloadService>();
         collection.AddHttpClientWithProxy<IUpdateCheckService, UpdateCheckService>();
+        collection.AddHttpClientWithProxy<IAutoUpdateService, AutoUpdateService>();
         collection.AddHttpClientWithProxy<ILlamaCppDownloadService, LlamaCppDownloadService>();
         collection.AddHttpClientWithProxy<IQwen3AsrCppDownloadService, Qwen3AsrCppDownloadService>();
         collection.AddHttpClientWithProxy<IQwen3TtsCppDownloadService, Qwen3TtsCppDownloadService>();
