@@ -30,7 +30,7 @@ public class ExportEbuStlWindow : Window
         Title = Se.Language.Options.Shortcuts.FileExportEbuStl;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        FormatPropertiesChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Form);
         vm.Window = this;
         DataContext = vm;
 
@@ -57,7 +57,7 @@ public class ExportEbuStlWindow : Window
         tabControl.Items.Add(tabErrors);
 
         var buttonImport = FormatPropertiesChrome.MakeAction("fa-solid fa-file-import", Se.Language.General.ImportDotDotDot, vm.ImportCommand);
-        var buttonBar = FormatPropertiesChrome.MakeButtonBar(buttonImport, UiUtil.MakeButtonOk(vm.OkCommand), UiUtil.MakeButtonCancel(vm.CancelCommand));
+        var buttonBar = EditorChrome.MakeDockedCancelOkBar(buttonImport, UiUtil.MakeButtonCancel(vm.CancelCommand), UiUtil.MakeButtonOk(vm.OkCommand));
 
         Content = FormatPropertiesChrome.MakeContentRoot(new Border { Child = tabControl, Padding = new Thickness(8, 4, 8, 0) }, buttonBar);
 
@@ -152,7 +152,7 @@ public class ExportEbuStlWindow : Window
 
     private static TextBox HeaderText(ExportEbuStlViewModel vm, string property, string name, int maxLength)
     {
-        var textBox = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(FieldWidth, vm, property), name);
+        var textBox = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, property), name);
         textBox.MaxLength = maxLength; // EBU STL header field width
         return textBox;
     }
@@ -175,9 +175,9 @@ public class ExportEbuStlWindow : Window
 
         // Both are teletext control codes: "0 Open subtitling" writes neither, so leaving them
         // enabled there only promises a box the file and the video preview never show.
-        var switchUseBox = FormatPropertiesChrome.SwitchRow(nameof(vm.UseBox), l.UseBox);
+        var switchUseBox = EditorChrome.MakeSwitchRow(nameof(vm.UseBox), l.UseBox);
         switchUseBox.Bind(IsEnabledProperty, new Binding(nameof(vm.IsTeletext)));
-        var switchUseDoubleHeight = FormatPropertiesChrome.SwitchRow(nameof(vm.UseDoubleHeight), l.DoubleHeight);
+        var switchUseDoubleHeight = EditorChrome.MakeSwitchRow(nameof(vm.UseDoubleHeight), l.DoubleHeight);
         switchUseDoubleHeight.Bind(IsEnabledProperty, new Binding(nameof(vm.IsTeletext)));
         var teletext = FormatPropertiesChrome.MakeRows(switchUseBox, switchUseDoubleHeight);
 

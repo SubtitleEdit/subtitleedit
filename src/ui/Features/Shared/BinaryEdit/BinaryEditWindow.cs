@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -157,11 +157,7 @@ public class BinaryEditWindow : Window
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
-        var buttonBar = VideoDialogChrome.ButtonBar(
-            statusTextBlock,
-            frameRatePanel,
-            UiUtil.MakeButtonCancel(vm.CancelCommand),
-            buttonOk);
+        var buttonBar = EditorChrome.MakeButtonBar(statusTextBlock, frameRatePanel, UiUtil.MakeButtonCancel(vm.CancelCommand), buttonOk);
         mainGrid.Add(buttonBar, 2);
 
         Content = mainGrid;
@@ -858,8 +854,7 @@ public class BinaryEditWindow : Window
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
 
-        mainGrid.Add(VideoDialogChrome.ListSection(Se.Language.General.ImageBasedSubtitles, dataGrid,
-            margin: new Thickness(14, 12, 14, 12)), 0);
+        mainGrid.Add(EditorChrome.MakeListPane(Se.Language.General.ImageBasedSubtitles, dataGrid, margin: new Thickness(14, 12, 14, 12)), 0);
 
         controlsGrid = MakeControls(vm);
         mainGrid.Add(new Border
@@ -924,9 +919,9 @@ public class BinaryEditWindow : Window
             (Se.Language.Tools.ImageBasedEdit.ScreenHeight, screenHeightUpDown)), 0, 2);
 
         // Actions on the selected image
-        var exportBtn = VideoDialogChrome.Action("fa-solid fa-file-export", Se.Language.General.Export, vm.ExportImageCommand);
-        var importBtn = VideoDialogChrome.Action("fa-solid fa-file-import", Se.Language.General.Import, vm.ImportImageCommand);
-        var setTextBtn = VideoDialogChrome.Action("fa-solid fa-font", Se.Language.Tools.ImageBasedEdit.SetText, vm.SetTextCommand);
+        var exportBtn = EditorChrome.MakeActionButton("fa-solid fa-file-export", Se.Language.General.Export, vm.ExportImageCommand);
+        var importBtn = EditorChrome.MakeActionButton("fa-solid fa-file-import", Se.Language.General.Import, vm.ImportImageCommand);
+        var setTextBtn = EditorChrome.MakeActionButton("fa-solid fa-font", Se.Language.Tools.ImageBasedEdit.SetText, vm.SetTextCommand);
 
         var buttonStack = new StackPanel
         {
@@ -1237,7 +1232,7 @@ public class BinaryEditWindow : Window
         barHeightUpDown.Classes.Add("field");
         AutomationProperties.SetName(barHeightUpDown, lang.BarHeightPx);
 
-        var titleSafeSwitch = VideoDialogChrome.Switch(nameof(vm.ShowTitleSafeArea), lang.TitleSafePercent);
+        var titleSafeSwitch = EditorChrome.MakeSwitch(nameof(vm.ShowTitleSafeArea), lang.TitleSafePercent);
         titleSafeSwitch.DataContext = vm;
 
         var titleSafeUpDown = new NumericUpDown

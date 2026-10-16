@@ -7,7 +7,6 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Chrome = Nikse.SubtitleEdit.Features.Ocr.OcrDialogChrome;
 
 namespace Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 
@@ -30,7 +29,7 @@ public class LlamaCppAdvancedSettingsWindow : Window
         Width = 680;
         SizeToContent = SizeToContent.Height;
         CanResize = false;
-        Chrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.EngineDialog);
 
         _vm = vm;
         vm.Window = this;
@@ -41,11 +40,11 @@ public class LlamaCppAdvancedSettingsWindow : Window
 
     private static Grid BuildContent(LlamaCppAdvancedSettingsViewModel vm)
     {
-        var header = Chrome.MakeHeader(Se.Language.General.AdvancedSettings, Se.Language.Translate.AdvancedSettingsSubtitle);
+        var header = EditorChrome.MakeDialogHeader(Se.Language.General.AdvancedSettings, Se.Language.Translate.AdvancedSettingsSubtitle);
 
-        var buttonOk = Chrome.MakePrimary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = Chrome.ButtonBar(null, buttonCancel, buttonOk);
+        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonCancel, buttonOk);
 
         var sections = new StackPanel
         {
@@ -121,7 +120,7 @@ public class LlamaCppAdvancedSettingsWindow : Window
 
         var comboFormality = UiUtil.MakeComboBox(vm.Formalities, vm, nameof(vm.SelectedFormality)).WithWidth(130)
             .WithAccessibleName(Se.Language.General.Formality);
-        var switchKeepLineBreaks = Chrome.Switch(nameof(vm.KeepLineBreaks), Se.Language.Translate.KeepLineBreaks);
+        var switchKeepLineBreaks = EditorChrome.MakeSwitch(nameof(vm.KeepLineBreaks), Se.Language.Translate.KeepLineBreaks);
         var stylePanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -129,7 +128,7 @@ public class LlamaCppAdvancedSettingsWindow : Window
             Children =
             {
                 comboFormality,
-                Chrome.SwitchRow(switchKeepLineBreaks, Se.Language.Translate.KeepLineBreaks),
+                EditorChrome.MakeSwitchRow(switchKeepLineBreaks, Se.Language.Translate.KeepLineBreaks),
             },
         };
 
@@ -138,12 +137,12 @@ public class LlamaCppAdvancedSettingsWindow : Window
             Spacing = 10,
             Children =
             {
-                Chrome.Row(Se.Language.Translate.Synopsis, synopsisBox, LabelWidth, alignTop: true),
-                Chrome.Row(Se.Language.Translate.Glossary, glossaryBox, LabelWidth, alignTop: true),
+                EditorChrome.MakeLabeledRow(Se.Language.Translate.Synopsis, synopsisBox, LabelWidth, spacing: 10, alignTop: true),
+                EditorChrome.MakeLabeledRow(Se.Language.Translate.Glossary, glossaryBox, LabelWidth, spacing: 10, alignTop: true),
                 promptRow,
-                Chrome.Row(Se.Language.Translate.PreviousLinesAsContext, historyPairs, LabelWidth),
-                Chrome.Row(Se.Language.Translate.LinesPerBatch, batchSize, LabelWidth),
-                Chrome.Row(Se.Language.General.Formality, stylePanel, LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.Translate.PreviousLinesAsContext, historyPairs, LabelWidth, spacing: 10),
+                EditorChrome.MakeLabeledRow(Se.Language.Translate.LinesPerBatch, batchSize, LabelWidth, spacing: 10),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Formality, stylePanel, LabelWidth, spacing: 10),
             },
         };
     }
@@ -185,14 +184,14 @@ public class LlamaCppAdvancedSettingsWindow : Window
         // tune flags SE does not curate (e.g. partial GPU offload on a too-small card).
         var serverArguments = UiUtil.MakeTextBox(300, vm, nameof(vm.ServerArguments))
             .WithAccessibleName(Se.Language.Translate.ExtraServerParameters);
-        serverArguments.Classes.Add(Chrome.TextClass);
+        serverArguments.Classes.Add(EditorChrome.TextClass);
         serverArguments.HorizontalAlignment = HorizontalAlignment.Left;
         SetHint(serverArguments, Se.Language.Translate.ExtraServerParametersHint);
 
         // Opt out of SE's own launch flags entirely (#13865): appending user arguments last already
         // overrides anything that takes a value, but a bare switch like --swa-full cannot be undone.
-        var switchServerArgumentsOnly = Chrome.Switch(nameof(vm.ServerArgumentsOnly), Se.Language.Translate.UseOnlyExtraServerParameters);
-        var rowServerArgumentsOnly = Chrome.SwitchRow(switchServerArgumentsOnly, Se.Language.Translate.UseOnlyExtraServerParameters);
+        var switchServerArgumentsOnly = EditorChrome.MakeSwitch(nameof(vm.ServerArgumentsOnly), Se.Language.Translate.UseOnlyExtraServerParameters);
+        var rowServerArgumentsOnly = EditorChrome.MakeSwitchRow(switchServerArgumentsOnly, Se.Language.Translate.UseOnlyExtraServerParameters);
         SetHint(rowServerArgumentsOnly, Se.Language.Translate.UseOnlyExtraServerParametersHint);
 
         return new StackPanel
@@ -201,10 +200,10 @@ public class LlamaCppAdvancedSettingsWindow : Window
             Children =
             {
                 sampling,
-                Chrome.Row(Se.Language.Translate.MaxTokensPerReply, maxTokens, LabelWidth),
-                Chrome.Row(Se.Language.Translate.ServerContextSizeTokens, contextSize, LabelWidth),
-                Chrome.Row(Se.Language.Translate.ExtraServerParameters, serverArguments, LabelWidth),
-                Chrome.Row(string.Empty, rowServerArgumentsOnly, LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.Translate.MaxTokensPerReply, maxTokens, LabelWidth, spacing: 10),
+                EditorChrome.MakeLabeledRow(Se.Language.Translate.ServerContextSizeTokens, contextSize, LabelWidth, spacing: 10),
+                EditorChrome.MakeLabeledRow(Se.Language.Translate.ExtraServerParameters, serverArguments, LabelWidth, spacing: 10),
+                EditorChrome.MakeLabeledRow(string.Empty, rowServerArgumentsOnly, LabelWidth, spacing: 10),
             },
         };
     }
@@ -227,7 +226,7 @@ public class LlamaCppAdvancedSettingsWindow : Window
     private static TextBox MakeMultilineTextBox(LlamaCppAdvancedSettingsViewModel vm, string propertyPath, double height, string name)
     {
         var textBox = UiUtil.MakeTextBox(double.NaN, vm, propertyPath);
-        textBox.Classes.Add(Chrome.TextClass);
+        textBox.Classes.Add(EditorChrome.TextClass);
         textBox.HorizontalAlignment = HorizontalAlignment.Stretch;
         textBox.Height = height;
         textBox.AcceptsReturn = true;

@@ -43,7 +43,7 @@ public class ActorVoiceRowSettingsWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 460;
-        TtsVoicesChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TextFieldsUncentered | EditorWindowStyles.MuteDisabledPrimary);
 
         _vm = vm;
         vm.Window = this;
@@ -56,7 +56,7 @@ public class ActorVoiceRowSettingsWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttons = TtsVoicesChrome.MakeButtonBar(null, buttonCancel, buttonOk);
+        var buttons = EditorChrome.MakeFlushButtonBar(null, buttonCancel, buttonOk);
 
         var sections = new StackPanel
         {
@@ -150,7 +150,7 @@ public class ActorVoiceRowSettingsWindow : Window
         };
         AutomationProperties.SetName(textBox, Se.Language.Video.TextToSpeech.VoiceInstruction);
 
-        var hint = TtsVoicesChrome.MakeHint(Se.Language.Video.TextToSpeech.VoiceInstructionFreeTextHint);
+        var hint = EditorChrome.MakeHint(Se.Language.Video.TextToSpeech.VoiceInstructionFreeTextHint);
         hint.MaxWidth = 430;
         hint.HorizontalAlignment = HorizontalAlignment.Left;
 

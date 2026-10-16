@@ -40,7 +40,7 @@ public class F5TtsCrispAsrSettingsWindow : Window
                 TtsSettingsChrome.MakeEngineDownloadButton(vm.RedownloadEngineCommand, nameof(vm.EngineDownloadButtonText)))),
             (string.Format(Se.Language.Video.TalkerX, F5TtsCrispAsr.ModelKeyF16), TtsSettingsChrome.MakeStatus(nameof(vm.TalkerF16Brush), nameof(vm.TalkerF16Label))),
             (Se.Language.General.InstallFolder, TtsSettingsChrome.MakeFolder(nameof(vm.ModelsFolder), vm.OpenModelsFolderCommand)));
-        return TtsSettingsChrome.MakeSection(Se.Language.General.Models, rows);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Models, rows);
     }
 
     private static Border BuildVoice(F5TtsCrispAsrSettingsViewModel vm)
@@ -49,7 +49,7 @@ public class F5TtsCrispAsrSettingsWindow : Window
             (Se.Language.Video.Voices, TtsSettingsChrome.MakeValue(nameof(vm.VoicesLabel),
                 TtsSettingsChrome.MakeFolderButton(Se.Language.Video.TextToSpeech.OpenVoicesFolder, vm.OpenVoicesFolderCommand))),
             (Se.Language.General.Speed, TtsSettingsChrome.MakeSlider(Se.Language.General.Speed, 0.5, 2.0, 0.05, nameof(vm.Speed), nameof(vm.SpeedLabel))));
-        return TtsSettingsChrome.MakeSection(Se.Language.General.Voice, rows);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Voice, rows);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

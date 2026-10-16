@@ -4,7 +4,6 @@ using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Main.Layout;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Optris.Icons.Avalonia;
@@ -22,7 +21,7 @@ public class SpellCheckCompletedWindow : Window
         Title = Se.Language.SpellCheck.SpellCheck;
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
-        SyncTimingChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TimeCodes);
         vm.Window = this;
         DataContext = vm;
 
@@ -86,9 +85,7 @@ public class SpellCheckCompletedWindow : Window
         buttonDone.Classes.Add("primary");
         buttonDone.Margin = new Thickness(0);
 
-        Content = SyncTimingChrome.MakeRoot(
-            new Border { Child = body, Padding = new Thickness(18, 16, 18, 18) },
-            SyncTimingChrome.MakeButtonBar(toggleDoNotShowAgain, buttonDone));
+        Content = EditorChrome.MakeRoot(new Border { Child = body, Padding = new Thickness(18, 16, 18, 18) }, EditorChrome.MakeDockedButtonBar(toggleDoNotShowAgain, buttonDone));
 
         UiUtil.FocusOnFirstActivation(this, buttonDone); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);

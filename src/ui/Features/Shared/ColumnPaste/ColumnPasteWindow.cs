@@ -1,7 +1,5 @@
 using Avalonia.Controls;
 using Avalonia.Layout;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -19,7 +17,7 @@ public class ColumnPasteWindow : Window
         Title = Se.Language.Main.ColumnPaste;
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -27,11 +25,9 @@ public class ColumnPasteWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        var sections = SyncTimingChrome.SideBySide(
-            MakeChooseColumnView(vm, out var radioButtonColumnsAll, out var radioButtonColumnsTextOnly),
-            MakeOverwriteView(vm));
+        var sections = EditorChrome.MakeSideBySide(MakeChooseColumnView(vm, out var radioButtonColumnsAll, out var radioButtonColumnsTextOnly), MakeOverwriteView(vm));
 
-        Content = SyncTimingChrome.MakeRoot(sections, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         // Plain text has no time codes, so the only enabled column choice is "text only"
         var initialFocusControl = vm.IsTextOnlySource ? radioButtonColumnsTextOnly : radioButtonColumnsAll;

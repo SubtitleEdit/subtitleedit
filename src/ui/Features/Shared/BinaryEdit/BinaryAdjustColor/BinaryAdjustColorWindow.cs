@@ -32,7 +32,7 @@ public class BinaryAdjustColorWindow : Window
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        Content = BinaryEditChrome.MakePreviewDialogRoot(leftPanel, rightPanel, BinaryEditChrome.MakeButtonBar(null, buttonCancel, buttonOk), 260);
+        Content = BinaryEditChrome.MakePreviewDialogRoot(leftPanel, rightPanel, EditorChrome.MakeCancelOkBar(null, buttonCancel, buttonOk), 260);
 
         UiUtil.FocusOnFirstActivation(this, buttonCancel); // initial focus on a safe button, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -67,7 +67,7 @@ public class BinaryAdjustColorWindow : Window
             [AutomationProperties.NameProperty] = Se.Language.Tools.ColorPickerTitle,
         };
         panel.Children.Add(swatchButton);
-        panel.Children.Add(BinaryEditChrome.MakeHint(Se.Language.Tools.ImageBasedEdit.ColorAdjustmentInfo));
+        panel.Children.Add(EditorChrome.MakeHint(Se.Language.Tools.ImageBasedEdit.ColorAdjustmentInfo));
 
         return EditorChrome.MakeEditorSection(Se.Language.General.Color, panel, first: true);
     }

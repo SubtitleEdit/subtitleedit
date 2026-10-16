@@ -1,10 +1,8 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Tools;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -24,9 +22,9 @@ public class ManualChosenEncodingWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
-        var searchBox = FileIoChrome.StyleTextField(new TextBox
+        var searchBox = EditorChrome.AsCenteredTextField(new TextBox
         {
             PlaceholderText = Se.Language.File.ManualChosenEncoding.SearchEncodings,
             Width = 240,
@@ -37,7 +35,7 @@ public class ManualChosenEncodingWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        var labelCurrentEncoding = FileIoChrome.MakeDimText();
+        var labelCurrentEncoding = EditorChrome.MakeDimText();
         labelCurrentEncoding.DataContext = vm;
         labelCurrentEncoding.Bind(TextBlock.TextProperty, new Binding(nameof(vm.CurrentEncodingText)));
 
@@ -49,10 +47,10 @@ public class ManualChosenEncodingWindow : Window
                 new RowDefinition(new GridLength(1, GridUnitType.Star)) { MinHeight = 120 },
             },
         };
-        sections.Add(LineToolsChrome.MakeListSection(Se.Language.General.Encoding, MakeEncodingsView(vm), searchBox, first: true), 0, 0);
-        sections.Add(FileIoChrome.MakeFillSection(Se.Language.General.Preview, MakePreviewBox(vm)), 1, 0);
+        sections.Add(EditorChrome.MakeListSection(Se.Language.General.Encoding, MakeEncodingsView(vm), searchBox, first: true), 0, 0);
+        sections.Add(EditorChrome.MakeFillSection(Se.Language.General.Preview, MakePreviewBox(vm)), 1, 0);
 
-        Content = LineToolsChrome.MakeRoot(sections, labelCurrentEncoding, buttonCancel, buttonOk);
+        Content = EditorChrome.MakeCancelOkRoot(sections, labelCurrentEncoding, buttonCancel, buttonOk);
 
         UiUtil.FocusOnFirstActivation(this, searchBox); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -118,7 +116,7 @@ public class ManualChosenEncodingWindow : Window
 
     private static TextBox MakePreviewBox(ManualChosenEncodingViewModel vm)
     {
-        var textBox = FileIoChrome.StyleTextArea(new TextBox
+        var textBox = EditorChrome.AsTextArea(new TextBox
         {
             AcceptsReturn = true,
             // Read-only: a typed tab could never land here anyway, and accepting it only

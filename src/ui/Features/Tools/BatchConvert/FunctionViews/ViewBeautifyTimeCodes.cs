@@ -35,10 +35,10 @@ public static class ViewBeautifyTimeCodes
         var buttonEditProfile = FunctionViewChrome.MakeButton("fa-solid fa-sliders", Se.Language.Tools.BeautifyTimeCodes.EditProfile, vm.ShowBeautifyTimeCodesProfileCommand);
 
         return FunctionViewChrome.MakePanel(vm, Se.Language.Tools.BeautifyTimeCodes.Title,
-            FunctionViewChrome.MakeSwitchRow(nameof(vm.BeautifyTimeCodesSnapToShotChanges), Se.Language.Tools.BeautifyTimeCodes.BatchSnapToShotChanges),
+            EditorChrome.MakeSwitchRow(nameof(vm.BeautifyTimeCodesSnapToShotChanges), Se.Language.Tools.BeautifyTimeCodes.BatchSnapToShotChanges),
             radioFrameRateFromVideo,
             panelFrameRateFixed,
             buttonEditProfile,
-            FunctionViewChrome.MakeHint(Se.Language.Tools.BeautifyTimeCodes.BatchInfo));
+            EditorChrome.MakeHint(Se.Language.Tools.BeautifyTimeCodes.BatchInfo));
     }
 }

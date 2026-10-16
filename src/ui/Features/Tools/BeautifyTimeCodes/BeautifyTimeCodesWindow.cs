@@ -5,7 +5,6 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -27,7 +26,7 @@ public class BeautifyTimeCodesWindow : Window
         Height = 600;
         MinWidth = 900;
         MinHeight = 460;
-        SyncTimingChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TimeCodes);
         vm.Window = this;
         DataContext = vm;
 
@@ -41,7 +40,7 @@ public class BeautifyTimeCodesWindow : Window
         sections.Add(BuildVisualizerArea(vm), 1, 0);
         sections.Add(BuildChangeNavBar(vm), 2, 0);
 
-        Content = SyncTimingChrome.MakeRoot(sections, BuildButtonBar(vm));
+        Content = EditorChrome.MakeRoot(sections, BuildButtonBar(vm));
 
         // Change navigation keys (arrows, PageUp/Down, Home/End) are handled at window level, so
         // they work whichever control has focus - nothing here needs to own them.
@@ -116,7 +115,7 @@ public class BeautifyTimeCodesWindow : Window
             [!TextBlock.TextProperty] = new Binding(nameof(vm.TimeCodesStatus)) { Source = vm },
         };
 
-        var buttonExtract = SyncTimingChrome.MakeTextToolButton("fa-solid fa-film", l.ExtractTimeCodes, vm.ExtractTimeCodesCommand);
+        var buttonExtract = EditorChrome.MakeTextToolButton("fa-solid fa-film", l.ExtractTimeCodes, vm.ExtractTimeCodesCommand);
         buttonExtract.VerticalAlignment = VerticalAlignment.Center;
         buttonExtract.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.CanExtractTimeCodes)) { Source = vm });
 
@@ -272,11 +271,11 @@ public class BeautifyTimeCodesWindow : Window
 
     private static Border BuildButtonBar(BeautifyTimeCodesViewModel vm)
     {
-        var buttonEditProfile = SyncTimingChrome.MakeTextToolButton("fa-solid fa-sliders", Se.Language.Tools.BeautifyTimeCodes.EditProfile, vm.EditProfileCommand);
+        var buttonEditProfile = EditorChrome.MakeTextToolButton("fa-solid fa-sliders", Se.Language.Tools.BeautifyTimeCodes.EditProfile, vm.EditProfileCommand);
         buttonEditProfile.HorizontalAlignment = HorizontalAlignment.Left;
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        return SyncTimingChrome.MakeButtonBar(buttonEditProfile, buttonCancel, buttonOk);
+        return EditorChrome.MakeDockedButtonBar(buttonEditProfile, buttonCancel, buttonOk);
     }
 }

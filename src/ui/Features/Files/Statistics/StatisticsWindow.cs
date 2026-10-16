@@ -8,7 +8,6 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Automation;
 using CommunityToolkit.Mvvm.Input;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Globalization;
@@ -71,7 +70,7 @@ public class StatisticsWindow : Window
 
         vm.Window = this;
         DataContext = vm;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
 
         var grid = new Grid
         {
@@ -105,7 +104,7 @@ public class StatisticsWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonExport = UiUtil.MakeButton(Se.Language.General.Export, vm.ExportCommand).WithIconLeft(IconNames.Export);
-        var panelButtons = VideoSubDialogChrome.MakeButtonBar(null, buttonExport, buttonOk);
+        var panelButtons = EditorChrome.MakeButtonBar(null, buttonExport, buttonOk);
         grid.Add(panelButtons, 1);
 
         Content = grid;

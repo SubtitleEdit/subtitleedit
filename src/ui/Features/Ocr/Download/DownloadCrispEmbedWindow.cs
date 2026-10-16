@@ -1,7 +1,6 @@
 using Avalonia.Controls;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Chrome = Nikse.SubtitleEdit.Features.Ocr.OcrDialogChrome;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.Download;
 
@@ -15,19 +14,19 @@ public class DownloadCrispEmbedWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        Chrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.EngineDialog);
 
         DataContext = vm;
 
-        var titleText = Chrome.DownloadTitle().WithBindText(vm, nameof(vm.TitleText));
-        var progressBar = Chrome.DownloadProgressBar(nameof(vm.ProgressValue));
-        var statusText = Chrome.DownloadStatus(nameof(vm.ProgressText));
-        var errorText = Chrome.DownloadError(nameof(vm.Error));
+        var titleText = EditorChrome.MakeDownloadTitle().WithBindText(vm, nameof(vm.TitleText));
+        var progressBar = EditorChrome.MakeDownloadProgressBar(nameof(vm.ProgressValue));
+        var statusText = EditorChrome.MakeDownloadStatus(nameof(vm.ProgressText));
+        var errorText = EditorChrome.MakeDownloadError(nameof(vm.Error));
 
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CommandCancelCommand);
-        var buttonBar = Chrome.ButtonBar(null, buttonCancel);
+        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonCancel);
 
-        Content = Chrome.Root(Chrome.DownloadBody(titleText, progressBar, statusText, errorText), buttonBar);
+        Content = EditorChrome.MakeRoot(EditorChrome.MakeDownloadBody(titleText, progressBar, statusText, errorText), buttonBar, stretch: false);
 
         Loaded += delegate
         {

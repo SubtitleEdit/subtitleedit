@@ -6,7 +6,6 @@ using Avalonia.Controls.Shapes;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Windows.Input;
@@ -14,9 +13,9 @@ using System.Windows.Input;
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech;
 
 /// <summary>
-/// The shared editor look (see <see cref="EditorChrome"/>) of the local TTS engine settings
-/// dialogs (CrispASR and audio.cpp engines): an engine header, a "Models" section with the
-/// runtime/model status rows, a "Voice" section with the per-request knobs, and a button bar.
+/// The layout of the local TTS engine settings dialogs (CrispASR and audio.cpp engines) on top of
+/// <see cref="EditorChrome"/>: an engine header, a "Models" section with the runtime/model status
+/// rows, a "Voice" section with the per-request knobs, and a button bar with Close.
 /// </summary>
 internal static class TtsSettingsChrome
 {
@@ -37,20 +36,7 @@ internal static class TtsSettingsChrome
         window.Width = width;
         window.SizeToContent = SizeToContent.Height;
         window.CanResize = false;
-        window.Background = EditorChrome.WindowBrush;
-        EditorChrome.AddEditorStyles(window.Styles);
-
-        // Compact combo boxes
-        window.Styles.Add(new Style(x => x.OfType<ComboBox>())
-        {
-            Setters =
-            {
-                new Setter(TemplatedControl.FontSizeProperty, 12.5),
-                new Setter(TemplatedControl.MinHeightProperty, 28.0),
-                new Setter(TemplatedControl.PaddingProperty, new Thickness(8, 2, 4, 2)),
-                new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(6)),
-            },
-        });
+        EditorChrome.ApplyWindow(window);
     }
 
     /// <summary>
@@ -366,32 +352,12 @@ internal static class TtsSettingsChrome
     }
 
     /// <summary>
-    /// A dim, wrapping hint below a field.
-    /// </summary>
-    internal static TextBlock MakeHint(string text) => new()
-    {
-        Text = text,
-        FontSize = 11.5,
-        Foreground = EditorChrome.DimTextBrush,
-        TextWrapping = TextWrapping.Wrap,
-    };
-
-    internal static Border MakeSection(string title, Control content) => EditorChrome.MakeEditorSection(title, content);
-
-    /// <summary>
     /// The bottom button bar with the accent close button on the right.
     /// </summary>
     internal static Border MakeButtonBar(Button close)
     {
         close.Classes.Add("primary");
         close.HorizontalAlignment = HorizontalAlignment.Right;
-        return new Border
-        {
-            Child = close,
-            Background = EditorChrome.ButtonBarBrush,
-            BorderBrush = EditorChrome.LineBrush,
-            BorderThickness = new Thickness(0, 1, 0, 0),
-            Padding = new Thickness(16, 10),
-        };
+        return EditorChrome.WrapButtonBar(close);
     }
 }

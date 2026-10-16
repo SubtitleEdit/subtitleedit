@@ -8,7 +8,7 @@ using Nikse.SubtitleEdit.Logic;
 namespace Nikse.SubtitleEdit.Features.Shared.PromptCheckBox;
 
 /// <summary>
-/// A yes/no option prompt in the editor look (see <see cref="SharedDialogChrome"/>).
+/// A yes/no option prompt in the editor look (see <see cref="EditorChrome"/>).
 /// </summary>
 public class PromptCheckBoxWindow : Window
 {
@@ -19,7 +19,7 @@ public class PromptCheckBoxWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         MinWidth = 300;
         CanResize = false;
-        SharedDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
 
@@ -30,7 +30,7 @@ public class PromptCheckBoxWindow : Window
         };
         AutomationProperties.SetName(checkBox, vm.CheckBoxText);
 
-        var buttonOk = SharedDialogChrome.Primary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
         var panel = new Border
@@ -39,7 +39,7 @@ public class PromptCheckBoxWindow : Window
             Padding = new Thickness(16, 16, 16, 18),
         };
 
-        Content = SharedDialogChrome.MakeRoot(panel, SharedDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(panel, EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, checkBox); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);

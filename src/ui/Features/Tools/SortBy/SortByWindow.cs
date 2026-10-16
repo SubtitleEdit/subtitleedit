@@ -6,9 +6,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using System.Collections;
-using Nikse.SubtitleEdit.Features.Edit;
 using Nikse.SubtitleEdit.Features.Main;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Features.Tools.BridgeGaps;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -31,18 +29,14 @@ public class SortByWindow : Window
         Height = 800;
         MinWidth = 1000;
         MinHeight = 500;
-        LineToolsChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = LineToolsChrome.MakeRoot(
-            LineToolsChrome.MakeSections(MakeSortControls(vm), MakeSubtitleView(vm)),
-            null,
-            buttonCancel,
-            buttonOk);
+        Content = EditorChrome.MakeCancelOkRoot(EditorChrome.MakeOptionsAndLists(MakeSortControls(vm), MakeSubtitleView(vm)), null, buttonCancel, buttonOk);
 
         Loaded += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -62,9 +56,9 @@ public class SortByWindow : Window
         }.WithAccessibleName(Se.Language.General.Property);
         comboBoxProperty.Bind(ComboBox.SelectedItemProperty, new Binding(nameof(SortByViewModel.SelectedAvailableProperty)) { Mode = BindingMode.TwoWay });
 
-        var rowAscending = LineToolsChrome.MakeSwitchRow(nameof(SortByViewModel.NewCriterionAscending), Se.Language.General.Ascending, out _);
+        var rowAscending = EditorChrome.MakeToggleRow(nameof(SortByViewModel.NewCriterionAscending), Se.Language.General.Ascending, out _);
 
-        var buttonAdd = SyncTimingChrome.MakeTextToolButton("fa-solid fa-plus", Se.Language.General.Add, vm.AddSortCriterionCommand);
+        var buttonAdd = EditorChrome.MakeTextToolButton("fa-solid fa-plus", Se.Language.General.Add, vm.AddSortCriterionCommand);
 
         var listBoxSortCriteria = new ListBox
         {
@@ -118,7 +112,7 @@ public class SortByWindow : Window
             Orientation = Orientation.Horizontal,
             Children =
             {
-                EditDialogChrome.MakeListFrame(listBoxSortCriteria),
+                EditorChrome.MakeListFrame(listBoxSortCriteria, clearListBackground: true),
                 stackPanelButtons
             }
         };
@@ -206,6 +200,6 @@ public class SortByWindow : Window
             }
         }, RoutingStrategies.Tunnel);
 
-        return LineToolsChrome.MakeListSection(Se.Language.General.Preview, dataGridSubtitle);
+        return EditorChrome.MakeListSection(Se.Language.General.Preview, dataGridSubtitle);
     }
 }

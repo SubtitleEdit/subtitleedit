@@ -8,7 +8,6 @@ using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Chrome = Nikse.SubtitleEdit.Features.Ocr.OcrDialogChrome;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.CrispEmbedSettings;
 
@@ -30,16 +29,16 @@ public class CrispEmbedSettingsWindow : Window
 
         vm.Window = this;
         DataContext = vm;
-        Chrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.EngineDialog);
 
-        var buttonClose = Chrome.MakePrimary(UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand));
+        var buttonClose = EditorChrome.AsPrimary(UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand));
 
         var sections = new StackPanel();
-        sections.Children.Add(Chrome.MakeHeader(CrispEmbedEngine.StaticName, Se.Language.Ocr.CrispEmbedDescription));
+        sections.Children.Add(EditorChrome.MakeDialogHeader(CrispEmbedEngine.StaticName, Se.Language.Ocr.CrispEmbedDescription));
         sections.Children.Add(EditorChrome.MakeEditorSection(Se.Language.General.Engine, BuildEngineSection(vm)));
         sections.Children.Add(EditorChrome.MakeEditorSection(Se.Language.General.Models, BuildModelsSection(vm)));
 
-        Content = Chrome.Root(sections, Chrome.ButtonBar(null, buttonClose));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeFlushButtonBar(null, buttonClose), stretch: false);
 
         UiUtil.FocusOnFirstActivation(this, buttonClose);
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -47,7 +46,7 @@ public class CrispEmbedSettingsWindow : Window
 
     private static StackPanel BuildEngineSection(CrispEmbedSettingsViewModel vm)
     {
-        var engineButton = Chrome.Flat(UiUtil.MakeButton(string.Empty, vm.RedownloadEngineCommand)
+        var engineButton = EditorChrome.AsFlatAction(UiUtil.MakeButton(string.Empty, vm.RedownloadEngineCommand)
             .WithIconLeftBindText(IconNames.CloudDownload, nameof(vm.EngineDownloadButtonText)));
 
         var enginePanel = new Grid
@@ -59,7 +58,7 @@ public class CrispEmbedSettingsWindow : Window
             },
             ColumnSpacing = 8,
         };
-        enginePanel.Add(Chrome.StatusPanel(nameof(vm.EngineBrush), nameof(vm.EngineLabel)), 0, 0);
+        enginePanel.Add(EditorChrome.MakeStatusDot(nameof(vm.EngineBrush), nameof(vm.EngineLabel)), 0, 0);
         enginePanel.Add(engineButton, 0, 1);
 
         var folderText = new TextBox
@@ -85,7 +84,7 @@ public class CrispEmbedSettingsWindow : Window
             ColumnSpacing = 8,
         };
         folderPanel.Add(folderText, 0, 0);
-        folderPanel.Add(Chrome.Flat(UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.OpenInstallFolderCommand)
+        folderPanel.Add(EditorChrome.AsFlatAction(UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.OpenInstallFolderCommand)
             .WithIconLeft(IconNames.FolderOpen)), 0, 1);
 
         return new StackPanel
@@ -93,8 +92,8 @@ public class CrispEmbedSettingsWindow : Window
             Spacing = 6,
             Children =
             {
-                Chrome.Row(Se.Language.General.Status, enginePanel, LabelWidth),
-                Chrome.Row(Se.Language.General.InstallFolder, folderPanel, LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Status, enginePanel, LabelWidth, spacing: 10),
+                EditorChrome.MakeLabeledRow(Se.Language.General.InstallFolder, folderPanel, LabelWidth, spacing: 10),
             },
         };
     }
@@ -102,7 +101,7 @@ public class CrispEmbedSettingsWindow : Window
     private static Border BuildModelsSection(CrispEmbedSettingsViewModel vm)
     {
         // Scrolls when the screen is too short for every model row
-        return Chrome.ListFrame(new ScrollViewer
+        return EditorChrome.MakeListFrame(new ScrollViewer
         {
             MaxHeight = 420,
             HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled,
@@ -148,16 +147,14 @@ public class CrispEmbedSettingsWindow : Window
                     VerticalAlignment = VerticalAlignment.Center,
                     [!TextBlock.TextProperty] = new Binding(nameof(CrispEmbedModelStatusViewModel.SizeText)),
                 };
-                var status = Chrome.StatusPanel(
-                    nameof(CrispEmbedModelStatusViewModel.StatusBrush),
-                    nameof(CrispEmbedModelStatusViewModel.StatusLabel));
+                var status = EditorChrome.MakeStatusDot(nameof(CrispEmbedModelStatusViewModel.StatusBrush), nameof(CrispEmbedModelStatusViewModel.StatusLabel));
                 status.Width = 110;
 
                 // Fixed width so the buttons line up down the column - "Download" and
                 // "Re-download" are different lengths and the rows mix both.
                 // The accessible name carries the model, as the rows are a column of
                 // identical "Download" buttons to a screen reader (#12087).
-                var button = Chrome.Flat(UiUtil.MakeButton(string.Empty)
+                var button = EditorChrome.AsFlatAction(UiUtil.MakeButton(string.Empty)
                     .WithIconLeftBindText(IconNames.Download,
                         nameof(CrispEmbedModelStatusViewModel.DownloadButtonText),
                         nameof(CrispEmbedModelStatusViewModel.DownloadButtonAccessibleName)));

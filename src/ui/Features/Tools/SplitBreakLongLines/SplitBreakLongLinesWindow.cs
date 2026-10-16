@@ -32,18 +32,14 @@ public class SplitBreakLongLinesWindow : Window
         Height = 800;
         MinWidth = 600;
         MinHeight = 400;
-        LineToolsChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = LineToolsChrome.MakeRoot(
-            LineToolsChrome.MakeSections(MakeControlsView(vm), MakeFixesView(vm)),
-            LineToolsChrome.MakeStatusText(vm, nameof(vm.FixesInfo)),
-            buttonCancel,
-            buttonOk);
+        Content = EditorChrome.MakeCancelOkRoot(EditorChrome.MakeOptionsAndLists(MakeControlsView(vm), MakeFixesView(vm)), EditorChrome.MakeStatusText(nameof(vm.FixesInfo), vm), buttonCancel, buttonOk);
 
         UiUtil.FocusOnFirstActivation(this, _checkBoxSplitLongLines); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
@@ -55,35 +51,32 @@ public class SplitBreakLongLinesWindow : Window
 
     private Border MakeControlsView(SplitBreakLongLinesViewModel vm)
     {
-        var rowSplitLongLines = LineToolsChrome.MakeSwitchRow(nameof(vm.SplitLongLines), Se.Language.Tools.SplitBreakLongLines.SplitLongLines, out var checkBoxSplitLongLines);
+        var rowSplitLongLines = EditorChrome.MakeToggleRow(nameof(vm.SplitLongLines), Se.Language.Tools.SplitBreakLongLines.SplitLongLines, out var checkBoxSplitLongLines);
         _checkBoxSplitLongLines = checkBoxSplitLongLines;
         checkBoxSplitLongLines.IsCheckedChanged += (s, e) => vm.SetChanged();
 
-        var rowRebalanceLongLines = LineToolsChrome.MakeSwitchRow(nameof(vm.RebalanceLongLines), Se.Language.Tools.SplitBreakLongLines.RebalanceLongLines, out var checkBoxRebalanceLongLines);
+        var rowRebalanceLongLines = EditorChrome.MakeToggleRow(nameof(vm.RebalanceLongLines), Se.Language.Tools.SplitBreakLongLines.RebalanceLongLines, out var checkBoxRebalanceLongLines);
         checkBoxRebalanceLongLines.IsCheckedChanged += (s, e) => vm.SetChanged();
 
-        var rowRebalanceOnlyTooLong = LineToolsChrome.MakeSwitchRow(nameof(vm.RebalanceOnlyLinesTooLong), Se.Language.Tools.SplitBreakLongLines.RebalanceOnlyLinesTooLong, out var checkBoxRebalanceOnlyTooLong);
+        var rowRebalanceOnlyTooLong = EditorChrome.MakeToggleRow(nameof(vm.RebalanceOnlyLinesTooLong), Se.Language.Tools.SplitBreakLongLines.RebalanceOnlyLinesTooLong, out var checkBoxRebalanceOnlyTooLong);
         rowRebalanceOnlyTooLong.Margin = new Thickness(25, 0, 0, 0);
         rowRebalanceOnlyTooLong[!InputElement.IsEnabledProperty] = new Binding(nameof(vm.RebalanceLongLines));
         rowRebalanceOnlyTooLong[!Visual.OpacityProperty] = new Binding(nameof(vm.RebalanceLongLines)) { Converter = new FuncValueConverter<bool, double>(on => on ? 1.0 : 0.5) };
         checkBoxRebalanceOnlyTooLong.IsCheckedChanged += (s, e) => vm.SetChanged();
 
         var labelSingleLineMaxLength = Se.Language.Options.Settings.SingleLineMaxLength;
-        var numericUpDownSingleLineMaxLength = LineToolsChrome.MakeCompact(UiUtil.MakeNumericUpDownInt(5, 1000, 10, 130, vm, nameof(vm.SingleLineMaxLength)), labelSingleLineMaxLength);
+        var numericUpDownSingleLineMaxLength = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(5, 1000, 10, 130, vm, nameof(vm.SingleLineMaxLength)), labelSingleLineMaxLength.TrimEnd(':'), 100, alignLeft: true, center: true);
         numericUpDownSingleLineMaxLength.ValueChanged += (s, e) => vm.SetChanged();
 
         var labelMaxNumberOfLines = Se.Language.Options.Settings.MaxLines;
-        var numericUpDownMaxNumberOfLines = LineToolsChrome.MakeCompact(UiUtil.MakeNumericUpDownInt(1, 10, 2, 130, vm, nameof(vm.MaxNumberOfLines)), labelMaxNumberOfLines);
+        var numericUpDownMaxNumberOfLines = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(1, 10, 2, 130, vm, nameof(vm.MaxNumberOfLines)), labelMaxNumberOfLines.TrimEnd(':'), 100, alignLeft: true, center: true);
         numericUpDownMaxNumberOfLines.ValueChanged += (s, e) => vm.SetChanged();
 
         var labelUnbreakLinesShorterThan = Se.Language.Options.Settings.UnbreakSubtitlesShortThan;
-        var numericUpDownUnbreakLinesShorterThan = LineToolsChrome.MakeCompact(UiUtil.MakeNumericUpDownInt(1, 1000, 33, 130, vm, nameof(vm.UnbreakLinesShorterThan)), labelUnbreakLinesShorterThan);
+        var numericUpDownUnbreakLinesShorterThan = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(1, 1000, 33, 130, vm, nameof(vm.UnbreakLinesShorterThan)), labelUnbreakLinesShorterThan.TrimEnd(':'), 100, alignLeft: true, center: true);
         numericUpDownUnbreakLinesShorterThan.ValueChanged += (s, e) => vm.SetChanged();
 
-        var fields = LineToolsChrome.MakeFieldGrid(
-            (labelSingleLineMaxLength, numericUpDownSingleLineMaxLength),
-            (labelMaxNumberOfLines, numericUpDownMaxNumberOfLines),
-            (labelUnbreakLinesShorterThan, numericUpDownUnbreakLinesShorterThan));
+        var fields = EditorChrome.MakeFieldGrid((labelSingleLineMaxLength, numericUpDownSingleLineMaxLength), (labelMaxNumberOfLines, numericUpDownMaxNumberOfLines), (labelUnbreakLinesShorterThan, numericUpDownUnbreakLinesShorterThan));
         if (Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(fields.Children[4], Se.Language.Tools.SplitBreakLongLines.UnbreakLinesShorterThanHint); // the label
@@ -217,10 +210,8 @@ public class SplitBreakLongLinesWindow : Window
         }, RoutingStrategies.Tunnel);
 
         // Select all / none only touch the rebalance rows (the ones with a checkbox).
-        var actions = LineToolsChrome.MakeListActions(
-            LineToolsChrome.MakeSelectAllButton(vm.SelectAllCommand),
-            LineToolsChrome.MakeSelectNoneButton(vm.SelectNoneCommand));
+        var actions = EditorChrome.MakeListActions(EditorChrome.MakeSelectAllButton(vm.SelectAllCommand), EditorChrome.MakeSelectNoneButton(vm.SelectNoneCommand));
 
-        return LineToolsChrome.MakeListSection(Se.Language.General.Preview, dataGrid, actions);
+        return EditorChrome.MakeListSection(Se.Language.General.Preview, dataGrid, actions);
     }
 }

@@ -8,8 +8,6 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System.Collections;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -32,7 +30,7 @@ public class SplitSubtitleWindow : Window
         Height = 700;
         MinWidth = 700;
         MinHeight = 420;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -66,7 +64,7 @@ public class SplitSubtitleWindow : Window
         sections.Add(top, 0, 0);
         sections.Add(MakeListView(vm), 1, 0);
 
-        Content = SyncTimingChrome.MakeRoot(sections, SyncTimingChrome.MakeButtonBar(labelSubtitleInfo, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(labelSubtitleInfo, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, _textBoxOutputFolder); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
@@ -126,9 +124,9 @@ public class SplitSubtitleWindow : Window
             Orientation = Orientation.Vertical,
             Children =
             {
-                SyncTimingChrome.Row(Se.Language.General.OutputFolder, panelOutputFolder, labelWidth),
-                SyncTimingChrome.Row(Se.Language.General.Format, comboBoxFormat, labelWidth),
-                SyncTimingChrome.Row(Se.Language.General.Encoding, comboBoxEncoding, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.OutputFolder, panelOutputFolder, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Format, comboBoxFormat, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Encoding, comboBoxEncoding, labelWidth),
             },
             Spacing = 8,
         };
@@ -238,7 +236,7 @@ public class SplitSubtitleWindow : Window
             RowDefinitions = { new RowDefinition(GridLength.Auto), new RowDefinition(new GridLength(1, GridUnitType.Star)) },
         };
         content.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Preview), 0, 0);
-        content.Add(EditDialogChrome.MakeListFrame(dataGrid), 1, 0);
+        content.Add(EditorChrome.MakeListFrame(dataGrid, clearListBackground: true), 1, 0);
         return new Border
         {
             Child = content,

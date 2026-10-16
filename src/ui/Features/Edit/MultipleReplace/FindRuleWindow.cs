@@ -3,7 +3,6 @@ using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -20,7 +19,7 @@ public class FindRuleWindow : Window
         MinWidth = 600;
         MinHeight = 300;
         CanResize = true;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         vm.Window = this;
         DataContext = vm;
 
@@ -44,7 +43,7 @@ public class FindRuleWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = VideoSubDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk);
+        var panelButtons = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         var grid = new Grid
         {
@@ -61,7 +60,7 @@ public class FindRuleWindow : Window
         var rulesList = MakeDataGrid(vm);
         rulesList.Margin = new Thickness(14, 12, 14, 14);
 
-        grid.Add(VideoSubDialogChrome.MakeToolbar(searchPanel), 0, 0);
+        grid.Add(EditorChrome.MakeToolbar(searchPanel), 0, 0);
         grid.Add(rulesList, 1, 0);
         grid.Add(panelButtons, 2, 0);
 
@@ -143,6 +142,6 @@ public class FindRuleWindow : Window
         };
 
         AutomationProperties.SetName(dataGrid, Se.Language.General.Rules);
-        return VideoSubDialogChrome.MakeListFrame(dataGrid);
+        return EditorChrome.MakeListFrame(dataGrid);
     }
 }

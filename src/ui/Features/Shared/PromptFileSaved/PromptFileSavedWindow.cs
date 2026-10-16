@@ -10,31 +10,31 @@ using Optris.Icons.Avalonia;
 namespace Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 
 /// <summary>
-/// "File saved" in the editor look (see <see cref="SharedDialogChrome"/>): a green check, the file
+/// "File saved" in the editor look (see <see cref="EditorChrome"/>): a green check, the file
 /// name, where it went and meta chips, the file actions and Done in the button bar.
 /// </summary>
 public class PromptFileSavedWindow : Window
 {
+    // Follow the app theme, also when it changes while the dialog is open
+    private static readonly IBrush OkForeground = EditorChrome.Themed(Color.FromRgb(76, 194, 122), Color.FromRgb(46, 158, 91));
+    private static readonly IBrush OkBackground = EditorChrome.Themed(Color.FromArgb(60, 46, 158, 91), Color.FromArgb(36, 46, 158, 91));
+
     public PromptFileSavedWindow(PromptFileSavedViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Bind(TitleProperty, new Binding(nameof(vm.Title)));
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        SharedDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
-
-        var isDark = !EditorChrome.IsLightTheme;
-        var okForeground = new SolidColorBrush(isDark ? Color.FromRgb(76, 194, 122) : Color.FromRgb(46, 158, 91));
-        var okBackground = new SolidColorBrush(isDark ? Color.FromArgb(60, 46, 158, 91) : Color.FromArgb(36, 46, 158, 91));
 
         // Green check in a soft circle: success is readable before the text is.
         var checkIcon = new ContentControl
         {
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
-            Foreground = okForeground,
+            Foreground = OkForeground,
         };
         Attached.SetIcon(checkIcon, IconNames.Check);
         var okBall = new Border
@@ -42,7 +42,7 @@ public class PromptFileSavedWindow : Window
             Width = 44,
             Height = 44,
             CornerRadius = new CornerRadius(22),
-            Background = okBackground,
+            Background = OkBackground,
             VerticalAlignment = VerticalAlignment.Top,
             Child = checkIcon,
         };
@@ -116,13 +116,13 @@ public class PromptFileSavedWindow : Window
             Children = { okBall, panelDetails },
         };
 
-        var buttonOpenContainingFolder = SharedDialogChrome.MakeTextToolButton("fa-solid fa-folder-open", Se.Language.General.OpenContainingFolder, vm.ShowInFolderCommand)
+        var buttonOpenContainingFolder = EditorChrome.MakeTextToolButton("fa-solid fa-folder-open", Se.Language.General.OpenContainingFolder, vm.ShowInFolderCommand)
             .WithBindIsVisible(nameof(vm.IsShowInFolderVisible));
         // "Play" for media files, "Open file" for everything else - same command; the view model
         // is initialized before the window is constructed, so the label/icon read is static.
-        var buttonOpenFile = SharedDialogChrome.MakeTextToolButton(vm.IsMediaFile ? "fa-solid fa-play" : "fa-regular fa-file-lines", vm.OpenFileButtonText, vm.ShowFileCommand)
+        var buttonOpenFile = EditorChrome.MakeTextToolButton(vm.IsMediaFile ? "fa-solid fa-play" : "fa-regular fa-file-lines", vm.OpenFileButtonText, vm.ShowFileCommand)
             .WithBindIsVisible(nameof(vm.IsShowFileVisible));
-        var buttonDone = SharedDialogChrome.Primary(UiUtil.MakeButtonDone(vm.OkCommand));
+        var buttonDone = EditorChrome.AsPrimary(UiUtil.MakeButtonDone(vm.OkCommand));
         var panelActions = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -131,7 +131,7 @@ public class PromptFileSavedWindow : Window
             Children = { buttonOpenContainingFolder, buttonOpenFile },
         };
 
-        Content = SharedDialogChrome.MakeRoot(panelMain, SharedDialogChrome.MakeButtonBar(panelActions, buttonDone));
+        Content = EditorChrome.MakeRoot(panelMain, EditorChrome.MakeButtonBar(panelActions, buttonDone));
 
         UiUtil.FocusOnFirstActivation(this, buttonDone); // hack to make OnKeyDown work
         KeyDown += (s, e) => vm.OnKeyDown(e);

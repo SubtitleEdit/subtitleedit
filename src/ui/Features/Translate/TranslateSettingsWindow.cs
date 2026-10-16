@@ -4,8 +4,6 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
-using Nikse.SubtitleEdit.Features.Sync;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -44,7 +42,7 @@ public class TranslateSettingsWindow : Window
             CanResize = false;
         }
 
-        Features.Edit.EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         var comboMerge = UiUtil.MakeComboBox(vm.MergeOptions, vm, nameof(vm.SelectedMergeOptions))
             .WithAccessibleName(Se.Language.Translate.LineMerge);
@@ -77,17 +75,17 @@ public class TranslateSettingsWindow : Window
         maxBytesNumericUpDown.Classes.Add("field");
         AutomationProperties.SetName(maxBytesNumericUpDown, Se.Language.Translate.MaxBytesPerRequest);
 
-        var switchKeepMusicLines = VideoSubDialogChrome.MakeSwitch(nameof(vm.KeepMusicLinesUntranslated), Se.Language.Translate.KeepMusicLinesUntranslated);
+        var switchKeepMusicLines = EditorChrome.MakeSwitch(nameof(vm.KeepMusicLinesUntranslated), Se.Language.Translate.KeepMusicLinesUntranslated);
 
         var settingsRows = new StackPanel
         {
             Spacing = 10,
             Children =
             {
-                VideoSubDialogChrome.MakeRow(Se.Language.Translate.LineMerge, comboMerge, LabelWidth),
-                VideoSubDialogChrome.MakeRow(Se.Language.Translate.DelayInSecondsBetweenRequests, delayNumericUpDown, LabelWidth),
-                VideoSubDialogChrome.MakeRow(Se.Language.Translate.MaxBytesPerRequest, maxBytesNumericUpDown, LabelWidth),
-                VideoSubDialogChrome.MakeSwitchRow(switchKeepMusicLines, Se.Language.Translate.KeepMusicLinesUntranslated),
+                EditorChrome.MakeLabeledRow(Se.Language.Translate.LineMerge, comboMerge, LabelWidth, spacing: 6),
+                EditorChrome.MakeLabeledRow(Se.Language.Translate.DelayInSecondsBetweenRequests, delayNumericUpDown, LabelWidth, spacing: 6),
+                EditorChrome.MakeLabeledRow(Se.Language.Translate.MaxBytesPerRequest, maxBytesNumericUpDown, LabelWidth, spacing: 6),
+                EditorChrome.MakeSwitchRow(switchKeepMusicLines, Se.Language.Translate.KeepMusicLinesUntranslated),
             },
         };
 
@@ -140,9 +138,9 @@ public class TranslateSettingsWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = VideoSubDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk);
+        var buttonBar = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
-        Content = SyncTimingChrome.MakeRoot(sections, buttonBar);
+        Content = EditorChrome.MakeRoot(sections, buttonBar);
         if (!vm.PromptIsVisible)
         {
             // Sized to the settings, so the panel row must not ask for the rest of the height

@@ -12,7 +12,7 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 namespace Nikse.SubtitleEdit.Features.Shared.SourceView;
 
 /// <summary>
-/// Source view, in the editor look (see <see cref="SharedDialogChrome"/>): the syntax editor in a
+/// Source view, in the editor look (see <see cref="EditorChrome"/>): the syntax editor in a
 /// field frame, the find bar as a strip below it, cursor/validation status in the button bar.
 /// </summary>
 public class SourceViewWindow : Window
@@ -29,7 +29,7 @@ public class SourceViewWindow : Window
         MinWidth = 700;
         MinHeight = 400;
         CanResize = true;
-        SharedDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
 
@@ -97,7 +97,7 @@ public class SourceViewWindow : Window
         grid.Add(contentBorder, 0);
         grid.Add(findBar, 1);
 
-        Content = SharedDialogChrome.MakeRoot(grid, MakeBottomPanel(vm));
+        Content = EditorChrome.MakeRoot(grid, MakeBottomPanel(vm));
 
         Opened += delegate { Avalonia.Threading.Dispatcher.UIThread.Post(vm.FocusEditor); };
         AddHandler(KeyDownEvent, vm.OnKeyDown, RoutingStrategies.Tunnel);
@@ -153,13 +153,13 @@ public class SourceViewWindow : Window
         Avalonia.Automation.AutomationProperties.SetName(replaceTextBox, Se.Language.General.ReplaceWith);
         vm.ReplaceTextBox = replaceTextBox;
 
-        var buttonFindPrevious = SharedDialogChrome.MakeTextToolButton("fa-solid fa-chevron-up", Se.Language.Edit.Find.FindPrevious, vm.FindPreviousCommand);
-        var buttonFindNext = SharedDialogChrome.MakeTextToolButton("fa-solid fa-chevron-down", Se.Language.Edit.Find.FindNext, vm.FindNextCommand);
+        var buttonFindPrevious = EditorChrome.MakeTextToolButton("fa-solid fa-chevron-up", Se.Language.Edit.Find.FindPrevious, vm.FindPreviousCommand);
+        var buttonFindNext = EditorChrome.MakeTextToolButton("fa-solid fa-chevron-down", Se.Language.Edit.Find.FindNext, vm.FindNextCommand);
 
-        var buttonReplace = SharedDialogChrome.MakeTextToolButton("fa-solid fa-right-left", Se.Language.General.Replace, vm.ReplaceCommand);
+        var buttonReplace = EditorChrome.MakeTextToolButton("fa-solid fa-right-left", Se.Language.General.Replace, vm.ReplaceCommand);
         buttonReplace.Bind(IsVisibleProperty, new Binding(nameof(vm.IsReplaceVisible)));
 
-        var buttonReplaceAll = SharedDialogChrome.MakeTextToolButton("fa-solid fa-repeat", Se.Language.Edit.Find.ReplaceAll, vm.ReplaceAllCommand);
+        var buttonReplaceAll = EditorChrome.MakeTextToolButton("fa-solid fa-repeat", Se.Language.Edit.Find.ReplaceAll, vm.ReplaceAllCommand);
         buttonReplaceAll.Bind(IsVisibleProperty, new Binding(nameof(vm.IsReplaceVisible)));
 
         // The options sit shoulder to shoulder after the buttons, so they need their own gap.
@@ -171,7 +171,7 @@ public class SourceViewWindow : Window
         var checkBoxRegex = UiUtil.MakeCheckBox(Se.Language.General.RegularExpression, vm, nameof(vm.UseRegularExpression));
         checkBoxRegex.Margin = optionMargin;
 
-        var labelStatus = SharedDialogChrome.MakeHint(nameof(vm.FindStatus));
+        var labelStatus = EditorChrome.MakeBoundHint(nameof(vm.FindStatus));
         labelStatus.Margin = optionMargin;
 
         var buttonClose = EditorChrome.CreateToolButton("fa-solid fa-xmark", Se.Language.SourceView.CloseSearch, vm.CloseFindBarCommand, 28);
@@ -226,11 +226,11 @@ public class SourceViewWindow : Window
 
     private static Border MakeBottomPanel(SourceViewViewModel vm)
     {
-        var labelCursorPosition = SharedDialogChrome.MakeHint(nameof(vm.LineAndColumnInfo));
-        var labelSelection = SharedDialogChrome.MakeHint(nameof(vm.SelectionInfo));
+        var labelCursorPosition = EditorChrome.MakeBoundHint(nameof(vm.LineAndColumnInfo));
+        var labelSelection = EditorChrome.MakeBoundHint(nameof(vm.SelectionInfo));
 
         // Red only when the source does not parse - the count is ordinary information otherwise.
-        var labelValidation = SharedDialogChrome.MakeHint(nameof(vm.ValidationInfo));
+        var labelValidation = EditorChrome.MakeBoundHint(nameof(vm.ValidationInfo));
         labelValidation.Bind(TextBlock.ForegroundProperty, new Binding(nameof(vm.IsValidationError))
         {
             Converter = new BooleanToBrushConverter
@@ -248,9 +248,9 @@ public class SourceViewWindow : Window
             Children = { labelCursorPosition, labelSelection, labelValidation },
         };
 
-        var buttonOk = SharedDialogChrome.Primary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        return SharedDialogChrome.MakeButtonBar(statusPanel, buttonCancel, buttonOk);
+        return EditorChrome.MakeButtonBar(statusPanel, buttonCancel, buttonOk);
     }
 }

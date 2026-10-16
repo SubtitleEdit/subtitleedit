@@ -6,7 +6,6 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Chrome = Nikse.SubtitleEdit.Features.Video.SpeechToText.SpeechToTextChrome;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
@@ -21,7 +20,7 @@ public class DownloadSpeechToTextEngineWindow : Window
         SizeToContent = SizeToContent.Height;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        Chrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.SpeechToText);
         DataContext = vm;
 
         var titleText = new TextBlock
@@ -58,7 +57,7 @@ public class DownloadSpeechToTextEngineWindow : Window
         });
 
         var buttonCancel = UiUtil.MakeButton(Se.Language.General.Cancel, vm.CommandCancelCommand);
-        var buttonBar = Chrome.ButtonBar(null, buttonCancel);
+        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonCancel);
 
         Content = new StackPanel
         {

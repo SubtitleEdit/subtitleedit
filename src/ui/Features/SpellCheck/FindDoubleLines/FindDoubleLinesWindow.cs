@@ -4,8 +4,6 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
 using System.Collections;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -26,7 +24,7 @@ public class FindDoubleLinesWindow : Window
         Height = 700;
         MinWidth = 600;
         MinHeight = 400;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -37,11 +35,11 @@ public class FindDoubleLinesWindow : Window
         var tableView = MakeGridView(vm);
         var list = new Border
         {
-            Child = EditDialogChrome.MakeListFrame(tableView),
+            Child = EditorChrome.MakeListFrame(tableView, clearListBackground: true),
             Padding = new Thickness(14),
         };
 
-        Content = SyncTimingChrome.MakeRoot(list, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonGoTo));
+        Content = EditorChrome.MakeRoot(list, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonGoTo));
 
         // The list, not an action button, gets first focus (hack to make OnKeyDown work) - a
         // focused button clicks on bare Space; Enter in the list goes to the line.

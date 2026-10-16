@@ -3,8 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -25,7 +23,7 @@ public class CheckForUpdatesWindow : Window
         MinWidth = 500;
         MinHeight = 400;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -47,7 +45,7 @@ public class CheckForUpdatesWindow : Window
         };
         statusLabel.Bind(TextBlock.TextProperty, new Binding(nameof(vm.StatusText)));
 
-        var downloadButton = SyncTimingChrome.MakeTextToolButton(IconNames.Web, Se.Language.Help.CheckForUpdatesDownloadNewVersion, vm.OpenDownloadPageCommand);
+        var downloadButton = EditorChrome.MakeTextToolButton(IconNames.Web, Se.Language.Help.CheckForUpdatesDownloadNewVersion, vm.OpenDownloadPageCommand);
         downloadButton.Foreground = EditorChrome.AccentBrush;
         downloadButton.VerticalAlignment = VerticalAlignment.Center;
         downloadButton.DataContext = vm;
@@ -91,7 +89,7 @@ public class CheckForUpdatesWindow : Window
         changeLogBox.Bind(TextBox.TextProperty, new Binding(nameof(vm.ChangeLogText)));
         changeLogBox.WithLabeledBy(statusLabel); // read-only changelog; the status line above is its only heading (#12087)
 
-        var changeLogFrame = EditDialogChrome.MakeListFrame(changeLogBox);
+        var changeLogFrame = EditorChrome.MakeListFrame(changeLogBox, clearListBackground: true);
         changeLogFrame.Margin = new Thickness(14, 12, 14, 14);
 
         var sections = new Grid
@@ -104,7 +102,7 @@ public class CheckForUpdatesWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
 
-        Content = SyncTimingChrome.MakeRoot(sections, SyncTimingChrome.MakeButtonBar(null, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonOk));
 
         Activated += async delegate
         {

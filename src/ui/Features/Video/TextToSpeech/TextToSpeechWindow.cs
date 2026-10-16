@@ -37,7 +37,7 @@ public class TextToSpeechWindow : Window
         Title = UiUtil.MakeWindowTitle(Se.Language.Video.TextToSpeech.Title);
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        TtsMainEditorLook.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TextFieldsBare | EditorWindowStyles.MuteDisabledPrimary);
 
         _vm = vm;
         vm.Window = this;
@@ -106,9 +106,9 @@ public class TextToSpeechWindow : Window
     /// </summary>
     private static Border MakeToolbar(TextToSpeechViewModel vm)
     {
-        var buttonImport = TtsMainEditorLook.MakeAction("fa-solid fa-file-import", Se.Language.General.ImportDotDotDot, vm.ImportCommand)
+        var buttonImport = EditorChrome.MakeActionButton("fa-solid fa-file-import", Se.Language.General.ImportDotDotDot, vm.ImportCommand)
             .WithBindIsEnabled("!" + nameof(vm.IsGenerating));
-        var buttonCast = TtsMainEditorLook.MakeAction("fa-solid fa-users", null, vm.ShowCastCommand, nameof(vm.CastButtonText))
+        var buttonCast = EditorChrome.MakeActionButton("fa-solid fa-users", null, vm.ShowCastCommand, nameof(vm.CastButtonText))
             .WithBindIsVisible(nameof(vm.HasCast))
             .WithBindIsEnabled("!" + nameof(vm.IsGenerating));
         if (Se.Settings.Appearance.ShowHints)
@@ -185,11 +185,11 @@ public class TextToSpeechWindow : Window
         var buttonGenerate = UiUtil.MakeButton(Se.Language.Video.TextToSpeech.GenerateSpeechFromText, vm.GenerateTtsCommand)
             .WithIconLeft(IconNames.Waveform)
             .WithBindIsEnabled("!" + nameof(vm.IsGenerating));
-        TtsMainEditorLook.MakePrimary(buttonGenerate);
+        EditorChrome.AsPrimary(buttonGenerate);
 
         // The context is as wide as the buttons leave room for (trimmed), it never widens the
         // window - see WidthIgnoringPanel.
-        return TtsMainEditorLook.MakeButtonBar(new WidthIgnoringPanel { Children = { context } }, buttonCancel, buttonOk, buttonGenerate);
+        return EditorChrome.MakeButtonBar(new WidthIgnoringPanel { Children = { context } }, buttonCancel, buttonOk, buttonGenerate);
     }
 
     // Install-status dot for the engine combo: green = ready, amber = a newer build is available,
@@ -287,7 +287,7 @@ public class TextToSpeechWindow : Window
         }
     }
 
-    private static Grid Row(string? label, Control content, string? labelBinding = null) => TtsMainEditorLook.Row(label, content, LabelWidth, labelBinding);
+    private static Grid Row(string? label, Control content, string? labelBinding = null) => EditorChrome.MakeLabeledRow(label, content, LabelWidth, spacing: 6, labelBinding: labelBinding);
 
     private static ComboBox Combo<T>(ObservableCollection<T> items, TextToSpeechViewModel vm, string property, string name, double width = ComboWidth)
     {
@@ -319,7 +319,7 @@ public class TextToSpeechWindow : Window
         var panelEngineDescription = Row(null, labelEngineDescription);
         panelEngineDescription.Bind(IsVisibleProperty, new Binding(nameof(vm.HasEngineDescription)) { Mode = BindingMode.OneWay });
 
-        var buttonTestVoice = TtsMainEditorLook.MakeAction("fa-solid fa-play", Se.Language.Video.TextToSpeech.TestVoice, vm.TestVoiceCommand)
+        var buttonTestVoice = EditorChrome.MakeActionButton("fa-solid fa-play", Se.Language.Video.TextToSpeech.TestVoice, vm.TestVoiceCommand)
             .WithBindIsEnabled(nameof(vm.IsVoiceTestEnabled));
         buttonTestVoice.Height = 28;
 
@@ -553,7 +553,7 @@ public class TextToSpeechWindow : Window
         var panelAddBackgroundMusicWithHint = TtsMainEditorLook.SwitchRow(nameof(vm.DoAddBackgroundMusic), backgroundMusic.AddBackgroundMusic, backgroundMusic.AddBackgroundMusicHint, buttonBackgroundMusicSettings);
 
         // Left-aligned under the switches above it.
-        var buttonAdvanced = TtsMainEditorLook.MakeAction("fa-solid fa-sliders", Se.Language.General.AdvancedDotDotDot, vm.ShowAdvancedSettingsCommand);
+        var buttonAdvanced = EditorChrome.MakeActionButton("fa-solid fa-sliders", Se.Language.General.AdvancedDotDotDot, vm.ShowAdvancedSettingsCommand);
         buttonAdvanced.HorizontalAlignment = HorizontalAlignment.Left;
         buttonAdvanced.Margin = new Thickness(-10, 0, 0, 0);
 

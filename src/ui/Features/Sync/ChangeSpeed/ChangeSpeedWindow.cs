@@ -22,7 +22,7 @@ public class ChangeSpeedWindow : Window
         Title = UiUtil.MakeWindowTitle(Se.Language.General.ChangeSpeed);
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        SyncTimingChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TimeCodes);
         vm.Window = this;
         DataContext = vm;
 
@@ -52,8 +52,8 @@ public class ChangeSpeedWindow : Window
         numericUpDownSpeed.Classes.Add("field");
         AutomationProperties.SetName(numericUpDownSpeed, Se.Language.Sync.SpeedInPercentage);
 
-        var buttonFromDropFrame = SyncTimingChrome.MakeTextToolButton("fa-solid fa-film", Se.Language.Sync.FromDropFrameValue, vm.SetFromDropFrameValueCommand);
-        var buttonToDropFrame = SyncTimingChrome.MakeTextToolButton("fa-solid fa-film", Se.Language.Sync.ToDropFrameValue, vm.SetToDropFrameValueCommand);
+        var buttonFromDropFrame = EditorChrome.MakeTextToolButton("fa-solid fa-film", Se.Language.Sync.FromDropFrameValue, vm.SetFromDropFrameValueCommand);
+        var buttonToDropFrame = EditorChrome.MakeTextToolButton("fa-solid fa-film", Se.Language.Sync.ToDropFrameValue, vm.SetToDropFrameValueCommand);
         var panelFromToButtons = new StackPanel
         {
             Orientation = Orientation.Vertical,
@@ -66,7 +66,7 @@ public class ChangeSpeedWindow : Window
         };
 
         var speedRows = new StackPanel { Spacing = 8 };
-        speedRows.Children.Add(SyncTimingChrome.Row(Se.Language.Sync.SpeedInPercentage, numericUpDownSpeed, 80));
+        speedRows.Children.Add(EditorChrome.MakeLabeledRow(Se.Language.Sync.SpeedInPercentage, numericUpDownSpeed, 80));
         speedRows.Children.Add(panelFromToButtons);
         var speedSection = EditorChrome.MakeEditorSection(Se.Language.General.Speed, speedRows, first: true);
         speedSection.MinWidth = 250;
@@ -82,9 +82,7 @@ public class ChangeSpeedWindow : Window
         var buttonDone = UiUtil.MakeButtonDone(vm.DoneCommand);
         buttonDone.Classes.Add("primary");
 
-        Content = SyncTimingChrome.MakeRoot(
-            SyncTimingChrome.SideBySide(speedSection, linesSection),
-            SyncTimingChrome.MakeButtonBar(null, buttonApply, buttonDone));
+        Content = EditorChrome.MakeRoot(EditorChrome.MakeSideBySide(speedSection, linesSection), EditorChrome.MakeDockedButtonBar(null, buttonApply, buttonDone));
 
         UiUtil.FocusOnFirstActivation(this, buttonDone); // hack to make OnKeyDown work
         Loaded += (_, _) => UiUtil.RestoreWindowPosition(this);

@@ -8,7 +8,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 namespace Nikse.SubtitleEdit.Features.Shared.WaveformSeekSilence;
 
 /// <summary>
-/// Seek silence, in the editor look (see <see cref="SharedDialogChrome"/>).
+/// Seek silence, in the editor look (see <see cref="EditorChrome"/>).
 /// </summary>
 public class WaveformSeekSilenceWindow : Window
 {
@@ -18,7 +18,7 @@ public class WaveformSeekSilenceWindow : Window
         Title = Se.Language.Waveform.SeekSilence;
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
-        SharedDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
 
@@ -60,15 +60,15 @@ public class WaveformSeekSilenceWindow : Window
         {
             Children =
             {
-                SharedDialogChrome.MakeSection(Se.Language.General.SearchDirection, panelDirection, first: true),
-                SharedDialogChrome.MakeSection(Se.Language.General.Settings, gridSettings),
+                EditorChrome.MakeEditorSection(Se.Language.General.SearchDirection, panelDirection, first: true),
+                EditorChrome.MakeEditorSection(Se.Language.General.Settings, gridSettings),
             },
         };
 
-        var buttonOk = SharedDialogChrome.Primary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = SharedDialogChrome.MakeRoot(sections, SharedDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, checkBoxSeekForward); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;

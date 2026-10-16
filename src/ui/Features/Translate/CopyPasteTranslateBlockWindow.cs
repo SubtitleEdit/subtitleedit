@@ -4,8 +4,6 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Sync;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -25,7 +23,7 @@ public class CopyPasteTranslateBlockWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        Features.Edit.EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         var labelInfo = new TextBlock
         {
@@ -69,9 +67,9 @@ public class CopyPasteTranslateBlockWindow : Window
 
         var buttonReCopy = UiUtil.MakeButton(Se.Language.Translate.ReCopyTextToClipboard, vm.CopyToClipboardCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = VideoSubDialogChrome.MakeButtonBar(null, buttonReCopy, buttonCancel);
+        var buttonBar = EditorChrome.MakeButtonBar(null, buttonReCopy, buttonCancel);
 
-        Content = SyncTimingChrome.MakeRoot(body, buttonBar);
+        Content = EditorChrome.MakeRoot(body, buttonBar);
 
         UiUtil.FocusOnFirstActivation(this, buttonCancel); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;

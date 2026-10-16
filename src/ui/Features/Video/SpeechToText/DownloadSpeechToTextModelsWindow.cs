@@ -9,7 +9,6 @@ using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Optris.Icons.Avalonia;
-using Chrome = Nikse.SubtitleEdit.Features.Video.SpeechToText.SpeechToTextChrome;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
@@ -24,7 +23,7 @@ public class DownloadSpeechToTextModelsWindow : Window
         MinWidth = 500;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        Chrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.SpeechToText);
 
         DataContext = vm;
 
@@ -32,7 +31,7 @@ public class DownloadSpeechToTextModelsWindow : Window
         comboBoxModel.HorizontalAlignment = HorizontalAlignment.Stretch;
         AutomationProperties.SetName(comboBoxModel, Se.Language.Video.AudioToText.SelectModel);
 
-        var buttonDownload = Chrome.Primary(UiUtil.MakeButton(Se.Language.General.Download, vm.DownloadCommand));
+        var buttonDownload = EditorChrome.AsPrimary(UiUtil.MakeButton(Se.Language.General.Download, vm.DownloadCommand));
         buttonDownload.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.DownloadIsEnabled)));
 
         var buttonOpenFolder = EditorChrome.CreateToolButton("fa-solid fa-folder-open", Se.Language.General.OpenContainingFolder, vm.OpenModelFolderCommand, 28);
@@ -55,7 +54,7 @@ public class DownloadSpeechToTextModelsWindow : Window
         labelCustomModelHelp.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.SupportsCustomModels)));
 
         var modelRows = new StackPanel { Spacing = 8 };
-        modelRows.Children.Add(Chrome.WithTrailing(comboBoxModel, buttonOpenFolder));
+        modelRows.Children.Add(SpeechToTextChrome.WithTrailing(comboBoxModel, buttonOpenFolder));
         modelRows.Children.Add(buttonAddCustomModel);
         modelRows.Children.Add(labelCustomModelHelp);
 
@@ -113,7 +112,7 @@ public class DownloadSpeechToTextModelsWindow : Window
         };
 
         var buttonCancel = UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelCommand);
-        var buttonBar = Chrome.ButtonBar(null, buttonCancel, buttonDownload);
+        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonCancel, buttonDownload);
 
         Content = new StackPanel
         {

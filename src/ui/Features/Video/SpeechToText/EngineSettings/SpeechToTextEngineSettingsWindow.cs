@@ -8,7 +8,6 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Chrome = Nikse.SubtitleEdit.Features.Video.SpeechToText.SpeechToTextChrome;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.EngineSettings;
 
@@ -26,13 +25,13 @@ public class SpeechToTextEngineSettingsWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 540;
-        Chrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.SpeechToText);
 
         _vm = vm;
         vm.Window = this;
         DataContext = vm;
 
-        var close = Chrome.Primary(UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand));
+        var close = EditorChrome.AsPrimary(UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand));
         Content = BuildContent(vm, close);
     }
 
@@ -162,7 +161,7 @@ public class SpeechToTextEngineSettingsWindow : Window
             Children = { redownload, openFolder },
         };
 
-        return Chrome.ButtonBar(leftPanel, close);
+        return EditorChrome.MakeFlushButtonBar(leftPanel, close);
     }
 
     private static TextBlock MakeLabel(string text) => new()

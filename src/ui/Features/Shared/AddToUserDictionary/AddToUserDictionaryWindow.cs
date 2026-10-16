@@ -2,8 +2,6 @@ using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -21,16 +19,16 @@ public class AddToUserDictionaryWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 400;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
-        var labelWord = EditDialogChrome.MakeLabel(Se.Language.Ocr.WordToAdd);
+        var labelWord = EditorChrome.MakeWrappingDimLabel(Se.Language.Ocr.WordToAdd);
         var textBoxWord = UiUtil.MakeTextBox(260, vm, nameof(vm.Word));
         textBoxWord.Classes.Add("text");
         AutomationProperties.SetName(textBoxWord, Se.Language.Ocr.WordToAdd);
 
-        var labelDictionary = EditDialogChrome.MakeLabel(Se.Language.General.Dictionary);
+        var labelDictionary = EditorChrome.MakeWrappingDimLabel(Se.Language.General.Dictionary);
         labelDictionary.Margin = new Thickness(0, 8, 0, 0);
         var comboBoxDictionaries = new ComboBox
         {
@@ -57,7 +55,7 @@ public class AddToUserDictionaryWindow : Window
             },
         };
 
-        Content = SyncTimingChrome.MakeRoot(panel, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(panel, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, textBoxWord); // hack to make OnKeyDown work
         KeyDown += vm.KeyDown;

@@ -26,7 +26,7 @@ public class GeneratingAudioWindow : Window
         SizeToContent = SizeToContent.Height;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        TtsMainEditorLook.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TextFieldsBare | EditorWindowStyles.MuteDisabledPrimary);
 
         DataContext = vm;
 
@@ -67,7 +67,7 @@ public class GeneratingAudioWindow : Window
                     Padding = new Thickness(24, 22),
                     Child = panel,
                 },
-                TtsMainEditorLook.MakeButtonBar(null, buttonCancel),
+                EditorChrome.MakeButtonBar(null, buttonCancel),
             }
         };
 

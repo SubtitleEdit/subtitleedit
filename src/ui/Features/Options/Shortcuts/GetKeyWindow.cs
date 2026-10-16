@@ -5,8 +5,6 @@ using Avalonia.Interactivity;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -31,7 +29,7 @@ public class GetKeyWindow : Window
         UiUtil.SetWindowSystemMenuOverride(this, () => true);
         DataContext = vm;
 
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         var labelShortcutName = new TextBlock
         {
@@ -88,7 +86,7 @@ public class GetKeyWindow : Window
         buttonOk.Focusable = false;
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         buttonCancel.Focusable = false;
-        var buttonPanel = VideoSubDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk);
+        var buttonPanel = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         var grid = new Grid
         {
@@ -101,7 +99,7 @@ public class GetKeyWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(VideoSubDialogChrome.MakePanel(panel), 0);
+        grid.Add(EditorChrome.MakePanel(panel), 0);
         grid.Add(buttonPanel, 1);
 
         Content = grid;

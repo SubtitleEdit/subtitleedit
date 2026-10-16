@@ -6,8 +6,6 @@ using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Linq;
@@ -32,7 +30,7 @@ public class PluginManagerWindow : Window
         Height = 480;
         MinWidth = 600;
         MinHeight = 320;
-        OptionsListChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.CompactListRows);
         vm.Window = this;
         DataContext = vm;
 
@@ -90,14 +88,14 @@ public class PluginManagerWindow : Window
             return row;
         }, true);
 
-        var buttonGetPlugins = EditDialogChrome.StyleActionButton(UiUtil.MakeButton(Se.Language.Plugins.GetPluginsOnline, vm.GetPluginsOnlineCommand)
+        var buttonGetPlugins = EditorChrome.StyleActionColumnButton(UiUtil.MakeButton(Se.Language.Plugins.GetPluginsOnline, vm.GetPluginsOnlineCommand)
             .WithIconLeft(IconNames.CloudDownload));
         buttonGetPlugins.Classes.Add("primary");
-        var buttonOpenFolder = EditDialogChrome.StyleActionButton(UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.OpenPluginsFolderCommand)
+        var buttonOpenFolder = EditorChrome.StyleActionColumnButton(UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.OpenPluginsFolderCommand)
             .WithIconLeft(IconNames.FolderOpen));
-        var buttonRemove = EditDialogChrome.StyleActionButton(UiUtil.MakeButton(Se.Language.General.Remove, vm.RemovePluginCommand)
+        var buttonRemove = EditorChrome.StyleActionColumnButton(UiUtil.MakeButton(Se.Language.General.Remove, vm.RemovePluginCommand)
             .WithIconLeft(IconNames.Trash));
-        var buttonUpdateAll = EditDialogChrome.StyleActionButton(UiUtil.MakeButton(string.Empty, vm.UpdateAllCommand)
+        var buttonUpdateAll = EditorChrome.StyleActionColumnButton(UiUtil.MakeButton(string.Empty, vm.UpdateAllCommand)
             .WithIconLeft(IconNames.Refresh));
         // Replace the empty placeholder text with a bound TextBlock inside the icon+text panel.
         if (buttonUpdateAll.Content is StackPanel stack && stack.Children.OfType<TextBlock>().FirstOrDefault() is { } labelTb)
@@ -108,7 +106,7 @@ public class PluginManagerWindow : Window
         buttonUpdateAll.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.HasUpdates)));
         buttonUpdateAll.Bind(IsEnabledProperty, new Binding(nameof(vm.CanUpdateAll)));
 
-        var actions = EditDialogChrome.MakeActionColumn(new StackPanel
+        var actions = EditorChrome.MakeActionColumn(new StackPanel
         {
             Orientation = Orientation.Vertical,
             Spacing = 6,
@@ -129,10 +127,7 @@ public class PluginManagerWindow : Window
             Children = { EditorChrome.MakeDimLabel(Se.Language.Plugins.ApplyPluginsTo, new Thickness(0)), comboBoxApplyTo },
         };
 
-        var countBadge = OptionsListChrome.MakeCountBadge(
-            new Binding(nameof(vm.Plugins) + ".Count") { Mode = BindingMode.OneWay },
-            EditorChrome.StrongTextBrush,
-            EditorChrome.AccentSoftBrush);
+        var countBadge = EditorChrome.MakeCountBadge(new Binding(nameof(vm.Plugins) + ".Count") { Mode = BindingMode.OneWay }, EditorChrome.StrongTextBrush, EditorChrome.AccentSoftBrush);
 
         var listSection = new Grid
         {
@@ -145,16 +140,14 @@ public class PluginManagerWindow : Window
             RowSpacing = 10,
             Margin = new Thickness(14, 12, 14, 14),
         };
-        listSection.Add(OptionsListChrome.MakeHeader(EditorChrome.MakeSectionHeader(Se.Language.General.Installed), countBadge), 0);
-        listSection.Add(OptionsListChrome.MakeListFrame(listBox, compact: false), 1);
+        listSection.Add(EditorChrome.MakeHeaderRow(EditorChrome.MakeSectionHeader(Se.Language.General.Installed), countBadge), 0);
+        listSection.Add(EditorChrome.MakeCompactListFrame(listBox, compact: false), 1);
         listSection.Add(panelApplyTo, 2);
 
         var buttonClose = UiUtil.MakeButton(Se.Language.General.Close, vm.CloseCommand);
         buttonClose.Classes.Add("primary");
 
-        Content = SyncTimingChrome.MakeRoot(
-            EditDialogChrome.MakeSidePanelRoot(listSection, actions),
-            SyncTimingChrome.MakeButtonBar(null, buttonClose));
+        Content = EditorChrome.MakeRoot(EditorChrome.MakeSidePanelRoot(listSection, actions), EditorChrome.MakeDockedButtonBar(null, buttonClose));
 
         UiUtil.FocusOnFirstActivation(this, buttonClose);
         KeyDown += (_, e) => vm.OnKeyDown(e);

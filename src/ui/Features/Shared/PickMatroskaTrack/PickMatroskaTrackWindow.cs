@@ -25,20 +25,18 @@ public class PickMatroskaTrackWindow : Window
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
-        SharedDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         DataContext = vm;
 
-        var tracksView = SharedDialogChrome.MakeListSection(Se.Language.Video.EmbeddedTracks, MakeTracksView(vm));
-        var labelSubtitleCount = SharedDialogChrome.MakeHint(nameof(vm.SubtitleCountText));
-        var subtitleView = SharedDialogChrome.MakeListSection(Se.Language.General.Preview, MakeSubtitleView(vm), labelSubtitleCount);
+        var tracksView = EditorChrome.MakePickerListSection(Se.Language.Video.EmbeddedTracks, MakeTracksView(vm));
+        var labelSubtitleCount = EditorChrome.MakeBoundHint(nameof(vm.SubtitleCountText));
+        var subtitleView = EditorChrome.MakePickerListSection(Se.Language.General.Preview, MakeSubtitleView(vm), labelSubtitleCount);
 
-        var buttonExport = SharedDialogChrome.MakeTextToolButton("fa-solid fa-file-export", Se.Language.General.ExportDotDotDot, vm.ExportCommand);
-        var buttonOk = SharedDialogChrome.Primary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonExport = EditorChrome.MakeTextToolButton("fa-solid fa-file-export", Se.Language.General.ExportDotDotDot, vm.ExportCommand);
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = SharedDialogChrome.MakeRoot(
-            SharedDialogChrome.MakeTwoPanes(tracksView, subtitleView),
-            SharedDialogChrome.MakeButtonBar(buttonExport, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(EditorChrome.MakeTwoPanes(tracksView, subtitleView), EditorChrome.MakeButtonBar(buttonExport, buttonCancel, buttonOk));
 
         //KeyDown += (_, e) => vm.OnKeyDown(e);
         AddHandler(KeyDownEvent, vm.OnKeyDownHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);

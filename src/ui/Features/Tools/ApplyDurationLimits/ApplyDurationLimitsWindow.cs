@@ -10,7 +10,6 @@ using Avalonia.Threading;
 using Avalonia.Media;
 using System.Collections;
 using Nikse.SubtitleEdit.Features.Main;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -35,7 +34,7 @@ public class ApplyDurationLimitsWindow : Window
         Height = 800;
         MinWidth = 600;
         MinHeight = 400;
-        SyncTimingChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TimeCodes);
         vm.Window = this;
         DataContext = vm;
 
@@ -57,7 +56,7 @@ public class ApplyDurationLimitsWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = SyncTimingChrome.MakeRoot(sections, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, _toggleFixMinDuration); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
@@ -85,14 +84,13 @@ public class ApplyDurationLimitsWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        var switchFixMinDuration = TimingToolChrome.MakeSwitch(vm.FixMinDurationLabel, nameof(vm.FixMinDurationMs), out var toggleFixMinDuration);
+        var switchFixMinDuration = EditorChrome.MakeToggleRow(nameof(vm.FixMinDurationMs), vm.FixMinDurationLabel, out var toggleFixMinDuration);
         _toggleFixMinDuration = toggleFixMinDuration;
         toggleFixMinDuration.IsCheckedChanged += (s, e) => vm.SetChanged();
-        var numericUpDownMinDuration = TimingToolChrome.Field(
-                UiUtil.MakeNumericUpDownInt(1, 10000, 1000, 90, vm, nameof(vm.MinDurationMsOrFrames)), vm.FixMinDurationLabel)
+        var numericUpDownMinDuration = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(1, 10000, 1000, 90, vm, nameof(vm.MinDurationMsOrFrames)), vm.FixMinDurationLabel, 90, center: true)
             .WithBindEnabled(nameof(vm.FixMinDurationMs));
         numericUpDownMinDuration.ValueChanged += (s, e) => vm.SetChanged();
-        var switchDoNotGoPastShotChange = TimingToolChrome.MakeSwitch(Se.Language.Tools.ApplyDurationLimits.DoNotGoPastShotChange, nameof(vm.DoNotGoPastShotChange), out var toggleDoNotGoPastShotChange)
+        var switchDoNotGoPastShotChange = EditorChrome.MakeToggleRow(nameof(vm.DoNotGoPastShotChange), Se.Language.Tools.ApplyDurationLimits.DoNotGoPastShotChange, out var toggleDoNotGoPastShotChange)
             .WithBindIsEnabled(nameof(vm.FixMinDurationMs))
             .WithMarginLeft(14)
             .BindIsVisible(vm, nameof(vm.IsDoNotGoPastShotChangeVisible));
@@ -104,10 +102,9 @@ public class ApplyDurationLimitsWindow : Window
             Children = { numericUpDownMinDuration, switchDoNotGoPastShotChange },
         };
 
-        var switchFixMaxDuration = TimingToolChrome.MakeSwitch(vm.FixMaxDurationLabel, nameof(vm.FixMaxDurationMs), out var toggleFixMaxDuration);
+        var switchFixMaxDuration = EditorChrome.MakeToggleRow(nameof(vm.FixMaxDurationMs), vm.FixMaxDurationLabel, out var toggleFixMaxDuration);
         toggleFixMaxDuration.IsCheckedChanged += (s, e) => vm.SetChanged();
-        var numericUpDownMaxDuration = TimingToolChrome.Field(
-                UiUtil.MakeNumericUpDownInt(1, 10000, 1000, 90, vm, nameof(vm.MaxDurationMsOrFrames)), vm.FixMaxDurationLabel)
+        var numericUpDownMaxDuration = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(1, 10000, 1000, 90, vm, nameof(vm.MaxDurationMsOrFrames)), vm.FixMaxDurationLabel, 90, center: true)
             .WithBindEnabled(nameof(vm.FixMaxDurationMs));
         numericUpDownMaxDuration.ValueChanged += (s, e) => vm.SetChanged();
 
@@ -122,7 +119,7 @@ public class ApplyDurationLimitsWindow : Window
 
     private static Border MakeFixesView(ApplyDurationLimitsViewModel vm)
     {
-        var labelFixesAvailable = TimingToolChrome.MakeBoundHeader(nameof(vm.FixesInfo));
+        var labelFixesAvailable = EditorChrome.MakeBoundSectionHeader(nameof(vm.FixesInfo));
 
         // No header-click sorting (the DataGrid's CanUserSortColumns is not carried
         // over): the fixes are previews in subtitle order. The DataGrid-era
@@ -174,12 +171,12 @@ public class ApplyDurationLimitsWindow : Window
         TableViewExtras.AddSpaceToggle<ApplyDurationLimitItem>(dataGrid,
             item => item.Apply, (item, v) => item.Apply = v);
 
-        return TimingToolChrome.MakeListSection(labelFixesAvailable, dataGrid);
+        return EditorChrome.MakeFillSection(labelFixesAvailable, EditorChrome.MakeListFrame(dataGrid));
     }
 
     private static Border MakeCannotFixView(ApplyDurationLimitsViewModel vm)
     {
-        var labelFixesAvailable = TimingToolChrome.MakeBoundHeader(nameof(vm.FixesSkippedInfo));
+        var labelFixesAvailable = EditorChrome.MakeBoundSectionHeader(nameof(vm.FixesSkippedInfo));
 
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
@@ -242,6 +239,6 @@ public class ApplyDurationLimitsWindow : Window
             }
         }, RoutingStrategies.Tunnel);
 
-        return TimingToolChrome.MakeListSection(labelFixesAvailable, dataGrid);
+        return EditorChrome.MakeFillSection(labelFixesAvailable, EditorChrome.MakeListFrame(dataGrid));
     }
 }

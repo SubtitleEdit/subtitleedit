@@ -31,6 +31,6 @@ public static class ViewConvertActors
             FunctionViewChrome.MakeRow(Se.Language.Tools.ConvertActors.ConvertActorTo, comboBoxTo),
             FunctionViewChrome.MakeSwitchRow(nameof(vm.ConvertActorsSetColor), Se.Language.Tools.ConvertActors.SetColor, colorPicker),
             FunctionViewChrome.MakeSwitchRow(nameof(vm.ConvertActorsChangeCasing), Se.Language.General.ChangeCasing, comboBoxCasing),
-            FunctionViewChrome.MakeSwitchRow(nameof(vm.ConvertActorsOnlyNames), Se.Language.Tools.ConvertActors.OnlyNames));
+            EditorChrome.MakeSwitchRow(nameof(vm.ConvertActorsOnlyNames), Se.Language.Tools.ConvertActors.OnlyNames));
     }
 }

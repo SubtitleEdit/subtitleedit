@@ -3,8 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -30,7 +28,7 @@ public class BinaryOcrCharacterAddWindow : Window
         MinHeight = 600;
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         DataContext = vm;
 
         var image = new Image
@@ -56,16 +54,16 @@ public class BinaryOcrCharacterAddWindow : Window
         body.Add(EditorChrome.MakeEditorSection(Se.Language.Ocr.OcrImage, imageBackdrop, first: true), 0, 0);
         body.Add(MakeControlsView(vm), 1, 0);
 
-        var buttonOk = BinaryOcrChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
-        var buttonInspectAdditions = SyncTimingChrome.MakeTextToolButton(IconNames.History, Se.Language.General.InspectAdditions, vm.InspectAdditionsCommand)
+        var buttonOk = EditorChrome.AsFlushPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonInspectAdditions = EditorChrome.MakeTextToolButton(IconNames.History, Se.Language.General.InspectAdditions, vm.InspectAdditionsCommand)
             .WithBindIsVisible(nameof(vm.IsInspectAdditionsVisible));
         buttonInspectAdditions.HorizontalAlignment = HorizontalAlignment.Left;
-        var buttonUseOnce = BinaryOcrChrome.AsBarButton(UiUtil.MakeButton(Se.Language.General.UseOnce, vm.UseOnceCommand).WithBindIsVisible(nameof(vm.ShowUseOnce)));
-        var buttonSkip = BinaryOcrChrome.AsBarButton(UiUtil.MakeButton(Se.Language.General.Skip, vm.SkipCommand).WithBindIsVisible(nameof(vm.ShowSkip)));
-        var buttonAbort = BinaryOcrChrome.AsBarButton(UiUtil.MakeButton(Se.Language.General.Abort, vm.AbortCommand));
-        var buttonBar = SyncTimingChrome.MakeButtonBar(buttonInspectAdditions, buttonAbort, buttonSkip, buttonUseOnce, buttonOk);
+        var buttonUseOnce = EditorChrome.WithoutMargin(UiUtil.MakeButton(Se.Language.General.UseOnce, vm.UseOnceCommand).WithBindIsVisible(nameof(vm.ShowUseOnce)));
+        var buttonSkip = EditorChrome.WithoutMargin(UiUtil.MakeButton(Se.Language.General.Skip, vm.SkipCommand).WithBindIsVisible(nameof(vm.ShowSkip)));
+        var buttonAbort = EditorChrome.WithoutMargin(UiUtil.MakeButton(Se.Language.General.Abort, vm.AbortCommand));
+        var buttonBar = EditorChrome.MakeDockedButtonBar(buttonInspectAdditions, buttonAbort, buttonSkip, buttonUseOnce, buttonOk);
 
-        Content = SyncTimingChrome.MakeRoot(body, buttonBar);
+        Content = EditorChrome.MakeRoot(body, buttonBar);
 
         vm.TextBoxNew.KeyDown += vm.TextBoxNewOnKeyDown;
         vm.TextBoxNew.KeyUp += vm.TextBoxNewOnKeyUp;
@@ -109,10 +107,10 @@ public class BinaryOcrCharacterAddWindow : Window
         var panelCurrentImage = BinaryOcrChrome.MakeImageFrame(image, ImagePreviewBackground.CreateBrush());
         panelCurrentImage.HorizontalAlignment = HorizontalAlignment.Left;
 
-        var switchItalic = BinaryOcrChrome.MakeSwitch(nameof(vm.IsNewTextItalic), Se.Language.General.Italic);
+        var switchItalic = EditorChrome.MakeSwitch(nameof(vm.IsNewTextItalic), Se.Language.General.Italic);
         switchItalic.IsCheckedChanged += vm.ItalicCheckChanged;
 
-        var switchAutoSubmitFirstChar = BinaryOcrChrome.MakeSwitch(nameof(vm.SubmitOnFirstLetter), Se.Language.Ocr.AutoSubmitFirstCharacter);
+        var switchAutoSubmitFirstChar = EditorChrome.MakeSwitch(nameof(vm.SubmitOnFirstLetter), Se.Language.Ocr.AutoSubmitFirstCharacter);
 
         var panelCurrent = new StackPanel
         {
@@ -128,9 +126,9 @@ public class BinaryOcrCharacterAddWindow : Window
         };
 
         // Shrink/expand the letter selection - in the section header, right
-        var buttonShrink = SyncTimingChrome.MakeTextToolButton(IconNames.Minus, Se.Language.General.Shrink, vm.ShrinkCommand)
+        var buttonShrink = EditorChrome.MakeTextToolButton(IconNames.Minus, Se.Language.General.Shrink, vm.ShrinkCommand)
             .WithBindEnabled(nameof(vm.CanShrink));
-        var buttonExpand = SyncTimingChrome.MakeTextToolButton(IconNames.Plus, Se.Language.General.Expand, vm.ExpandCommand)
+        var buttonExpand = EditorChrome.MakeTextToolButton(IconNames.Plus, Se.Language.General.Expand, vm.ExpandCommand)
             .WithBindEnabled(nameof(vm.CanExpand));
         var panelButtons = new StackPanel
         {

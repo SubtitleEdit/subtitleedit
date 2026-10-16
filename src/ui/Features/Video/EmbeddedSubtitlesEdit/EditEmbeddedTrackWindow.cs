@@ -17,28 +17,25 @@ public class EditEmbeddedTrackWindow : Window
         Title = Se.Language.General.Settings;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         vm.Window = this;
         DataContext = vm;
 
-        var textBoxName = VideoSubDialogChrome.MakeTextBox(nameof(vm.Name), Se.Language.General.Name, 300);
-        var textBoxTitleOrLanguage = VideoSubDialogChrome.MakeTextBox(nameof(vm.TitleOrlanguage), Se.Language.General.Language, 300);
+        var textBoxName = EditorChrome.MakeTextField(nameof(vm.Name), Se.Language.General.Name, 300);
+        var textBoxTitleOrLanguage = EditorChrome.MakeTextField(nameof(vm.TitleOrlanguage), Se.Language.General.Language, 300);
 
-        var switchForced = VideoSubDialogChrome.MakeSwitch(nameof(vm.IsForced), Se.Language.General.Forced);
-        var switchDefault = VideoSubDialogChrome.MakeSwitch(nameof(vm.IsDefault), Se.Language.General.Default);
+        var switchForced = EditorChrome.MakeSwitch(nameof(vm.IsForced), Se.Language.General.Forced);
+        var switchDefault = EditorChrome.MakeSwitch(nameof(vm.IsDefault), Se.Language.General.Default);
 
         var rows = new StackPanel { Spacing = 8 };
-        rows.Children.Add(VideoSubDialogChrome.MakeRow(Se.Language.General.Name, textBoxName, LabelWidth));
-        rows.Children.Add(VideoSubDialogChrome.MakeRow(Se.Language.General.Language, textBoxTitleOrLanguage, LabelWidth));
-        rows.Children.Add(VideoSubDialogChrome.MakeRow(string.Empty, VideoSubDialogChrome.MakeSwitchRow(switchForced, Se.Language.General.Forced), LabelWidth));
-        rows.Children.Add(VideoSubDialogChrome.MakeRow(string.Empty, VideoSubDialogChrome.MakeSwitchRow(switchDefault, Se.Language.General.Default), LabelWidth));
+        rows.Children.Add(EditorChrome.MakeLabeledRow(Se.Language.General.Name, textBoxName, LabelWidth, spacing: 6));
+        rows.Children.Add(EditorChrome.MakeLabeledRow(Se.Language.General.Language, textBoxTitleOrLanguage, LabelWidth, spacing: 6));
+        rows.Children.Add(EditorChrome.MakeLabeledRow(string.Empty, EditorChrome.MakeSwitchRow(switchForced, Se.Language.General.Forced), LabelWidth, spacing: 6));
+        rows.Children.Add(EditorChrome.MakeLabeledRow(string.Empty, EditorChrome.MakeSwitchRow(switchDefault, Se.Language.General.Default), LabelWidth, spacing: 6));
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
-        var buttonPanel = VideoSubDialogChrome.MakeButtonBar(
-            null,
-            UiUtil.MakeButtonCancel(vm.CancelCommand),
-            buttonOk);
+        var buttonPanel = EditorChrome.MakeButtonBar(null, UiUtil.MakeButtonCancel(vm.CancelCommand), buttonOk);
 
         var grid = new Grid
         {
@@ -49,7 +46,7 @@ public class EditEmbeddedTrackWindow : Window
             },
         };
 
-        grid.Add(VideoSubDialogChrome.MakePanel(EditorChrome.MakeEditorSection(Se.Language.General.Settings, rows, first: true)), 0);
+        grid.Add(EditorChrome.MakePanel(EditorChrome.MakeEditorSection(Se.Language.General.Settings, rows, first: true)), 0);
         grid.Add(buttonPanel, 1);
 
         Content = grid;

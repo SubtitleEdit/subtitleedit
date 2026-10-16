@@ -17,7 +17,6 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Platform.Progress;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
-using Chrome = Nikse.SubtitleEdit.Features.Video.SpeechToText.SpeechToTextChrome;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
@@ -55,7 +54,7 @@ public class SpeechToTextWindow : Window
         MinWidth = 820;
         MinHeight = 480;
         CanResize = true;
-        Chrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.SpeechToText);
         vm.Window = this;
         DataContext = vm;
 
@@ -161,14 +160,14 @@ public class SpeechToTextWindow : Window
         // install-status dot reflects the freshly-written .installed.sha256 sidecar instead
         // of the snapshot taken when each row was first realised.
         vm.RefreshEngineCombo = () => comboEngine.ItemTemplate = MakeEngineItemTemplate();
-        var buttonEngineWebsite = Chrome.Tool(UiUtil.MakeButton(vm.ShowWebLinkCommand, IconNames.Web))
+        var buttonEngineWebsite = EditorChrome.AsToolButton(UiUtil.MakeButton(vm.ShowWebLinkCommand, IconNames.Web))
             .WithAccessibleName($"{Se.Language.General.Engine} - {Se.Language.General.MoreInfo}");
         if (Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(buttonEngineWebsite, Se.Language.General.MoreInfo);
         }
 
-        var buttonEngineDownload = Chrome.Tool(UiUtil.MakeButton(vm.DownloadSelectedEngineCommand, IconNames.Download))
+        var buttonEngineDownload = EditorChrome.AsToolButton(UiUtil.MakeButton(vm.DownloadSelectedEngineCommand, IconNames.Download))
             .BindIsVisible(vm, nameof(vm.IsEngineDownloadButtonVisible))
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
             .WithAccessibleName(Se.Language.General.Download);
@@ -179,7 +178,7 @@ public class SpeechToTextWindow : Window
             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
         });
 
-        var buttonEngineSettings = Chrome.Tool(UiUtil.MakeButton(vm.ShowEngineSettingsCommand, IconNames.Settings))
+        var buttonEngineSettings = EditorChrome.AsToolButton(UiUtil.MakeButton(vm.ShowEngineSettingsCommand, IconNames.Settings))
             .BindIsVisible(vm, nameof(vm.IsEngineSettingsButtonVisible))
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
             .WithAccessibleName(Se.Language.Video.AudioToText.BackendAndUpdateStatus);
@@ -188,7 +187,7 @@ public class SpeechToTextWindow : Window
             ToolTip.SetTip(buttonEngineSettings, Se.Language.Video.AudioToText.BackendAndUpdateStatus);
         }
 
-        var engineRow = Chrome.WithTrailing(comboEngine, buttonEngineWebsite, buttonEngineDownload, buttonEngineSettings);
+        var engineRow = SpeechToTextChrome.WithTrailing(comboEngine, buttonEngineWebsite, buttonEngineDownload, buttonEngineSettings);
 
         var labelBackend = Label(Se.Language.General.Backend);
         var comboWhisperCppBackend = UiUtil.MakeComboBox(vm.WhisperCppBackends, vm, nameof(vm.SelectedWhisperCppBackend))
@@ -202,7 +201,7 @@ public class SpeechToTextWindow : Window
             .WithLabeledBy(labelBackend);
         comboCrispAsrBackend.HorizontalAlignment = HorizontalAlignment.Stretch;
         var backends = new Panel { Children = { comboWhisperCppBackend, comboCrispAsrBackend } };
-        var rowBackend = Chrome.Row(labelBackend, backends, LabelWidth)
+        var rowBackend = EditorChrome.MakeLabeledRow(labelBackend, backends, LabelWidth)
             .BindIsVisible(vm, nameof(vm.IsBackendSelectionVisible));
 
         var labelModel = Label(Se.Language.General.Model);
@@ -212,10 +211,10 @@ public class SpeechToTextWindow : Window
         comboModel.HorizontalAlignment = HorizontalAlignment.Stretch;
         comboModel.ItemTemplate = MakeModelItemTemplate();
 
-        var buttonModelDownload = Chrome.Tool(UiUtil.MakeButtonBrowse(vm.DownloadModelCommand, accessibleName: Se.Language.General.Download))
+        var buttonModelDownload = EditorChrome.AsToolButton(UiUtil.MakeButtonBrowse(vm.DownloadModelCommand, accessibleName: Se.Language.General.Download))
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
             .BindIsVisible(vm, nameof(vm.IsModelDownloadVisible));
-        var rowModel = Chrome.Row(labelModel, Chrome.WithTrailing(comboModel, buttonModelDownload), LabelWidth)
+        var rowModel = EditorChrome.MakeLabeledRow(labelModel, SpeechToTextChrome.WithTrailing(comboModel, buttonModelDownload), LabelWidth)
             .BindIsVisible(vm, nameof(vm.IsModelSelectionVisible));
 
         var labelLanguage = Label(Se.Language.Video.AudioToText.InputLanguage);
@@ -223,7 +222,7 @@ public class SpeechToTextWindow : Window
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
             .WithLabeledBy(labelLanguage);
         comboLanguage.HorizontalAlignment = HorizontalAlignment.Stretch;
-        var rowLanguage = Chrome.Row(labelLanguage, comboLanguage, LabelWidth)
+        var rowLanguage = EditorChrome.MakeLabeledRow(labelLanguage, comboLanguage, LabelWidth)
             .BindIsVisible(vm, nameof(vm.IsLanguageSelectionVisible));
 
         var rows = new StackPanel { Spacing = 8 };
@@ -246,9 +245,9 @@ public class SpeechToTextWindow : Window
             .WithLabeledBy(labelForcedAligner);
         comboForcedAligner.HorizontalAlignment = HorizontalAlignment.Stretch;
         comboForcedAligner.ItemTemplate = MakeForcedAlignerItemTemplate();
-        var buttonForcedAlignerDownload = Chrome.Tool(UiUtil.MakeButtonBrowse(vm.DownloadForcedAlignerCommand, accessibleName: Se.Language.General.Download))
+        var buttonForcedAlignerDownload = EditorChrome.AsToolButton(UiUtil.MakeButtonBrowse(vm.DownloadForcedAlignerCommand, accessibleName: Se.Language.General.Download))
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
-        var rowForcedAligner = Chrome.Row(labelForcedAligner, Chrome.WithTrailing(comboForcedAligner, buttonForcedAlignerDownload), LabelWidth)
+        var rowForcedAligner = EditorChrome.MakeLabeledRow(labelForcedAligner, SpeechToTextChrome.WithTrailing(comboForcedAligner, buttonForcedAlignerDownload), LabelWidth)
             .BindIsVisible(vm, nameof(vm.IsForcedAlignerVisible));
 
         var labelVad = Label(Se.Language.Video.AudioToText.Vad);
@@ -262,12 +261,12 @@ public class SpeechToTextWindow : Window
             ToolTip.SetTip(comboVad, Se.Language.Video.AudioToText.VadHint);
         }
 
-        var rowVad = Chrome.Row(labelVad, comboVad, LabelWidth)
+        var rowVad = EditorChrome.MakeLabeledRow(labelVad, comboVad, LabelWidth)
             .BindIsVisible(vm, nameof(vm.IsVadVisible));
 
         Grid MakeSwitchRow(string property, string text, string? visibleProperty, string? hint, params Control[] trailing)
         {
-            var toggle = Chrome.EnabledBy(Chrome.Switch(vm, property, text), vm, nameof(vm.IsTranscribeEnabled));
+            var toggle = EditorChrome.EnabledBy(EditorChrome.MakeSwitch(property, text, vm), vm, nameof(vm.IsTranscribeEnabled));
             var label = Label(text);
             if (hint != null && Se.Settings.Appearance.ShowHints)
             {
@@ -275,7 +274,7 @@ public class SpeechToTextWindow : Window
                 ToolTip.SetTip(toggle, hint);
             }
 
-            var row = Chrome.SwitchRow(toggle, label, trailing);
+            var row = EditorChrome.MakeSwitchRow(toggle, label, trailing);
             if (visibleProperty != null)
             {
                 row.BindIsVisible(vm, visibleProperty);
@@ -284,7 +283,7 @@ public class SpeechToTextWindow : Window
             return row;
         }
 
-        var buttonPostProcessing = Chrome.Tool(UiUtil.MakeButton(vm.ShowPostProcessingSettingsCommand, IconNames.Settings), 26)
+        var buttonPostProcessing = EditorChrome.AsToolButton(UiUtil.MakeButton(vm.ShowPostProcessingSettingsCommand, IconNames.Settings), 26)
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
             .WithAccessibleName(Se.Language.General.PostProcessing);
         if (Se.Settings.Appearance.ShowHints)
@@ -356,12 +355,12 @@ public class SpeechToTextWindow : Window
     {
         var label = Label(text);
         AutomationProperties.SetLabeledBy(control, label);
-        return Chrome.Stacked(label, control);
+        return SpeechToTextChrome.Stacked(label, control);
     }
 
     private static Grid OnlineSwitch(SpeechToTextViewModel vm, string property, string text, string? hint = null)
     {
-        var toggle = Chrome.Switch(vm, property, text);
+        var toggle = EditorChrome.MakeSwitch(property, text, vm);
         var label = Label(text);
         if (hint != null && Se.Settings.Appearance.ShowHints)
         {
@@ -369,12 +368,12 @@ public class SpeechToTextWindow : Window
             ToolTip.SetTip(label, hint);
         }
 
-        return Chrome.SwitchRow(toggle, label);
+        return EditorChrome.MakeSwitchRow(toggle, label);
     }
 
     private static TextBox OnlineText(SpeechToTextViewModel vm, string property)
     {
-        return Chrome.AsText(new TextBox
+        return EditorChrome.AsTextField(new TextBox
         {
             DataContext = vm,
             HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -394,12 +393,12 @@ public class SpeechToTextWindow : Window
 
     private static StackPanel OnlineApiKey(SpeechToTextViewModel vm, string property)
     {
-        return Chrome.CompactApiKey(UiUtil.MakeApiKeyTextBox(SettingsWidth - 60, vm, property), SettingsWidth - 60);
+        return SpeechToTextChrome.CompactApiKey(UiUtil.MakeApiKeyTextBox(SettingsWidth - 60, vm, property), SettingsWidth - 60);
     }
 
     private static Control[] MakeOpenAiCompatibleSttRows(SpeechToTextViewModel vm)
     {
-        var textExtraHeaders = Chrome.AsText(new TextBox
+        var textExtraHeaders = EditorChrome.AsTextField(new TextBox
         {
             DataContext = vm,
             Height = 60,
@@ -477,10 +476,10 @@ public class SpeechToTextWindow : Window
 
     private static Control[] MakeGoogleCloudSttRows(SpeechToTextViewModel vm)
     {
-        var buttonBrowse = Chrome.Tool(UiUtil.MakeButtonBrowse(vm.BrowseGoogleCloudSttKeyFileCommand, accessibleName: Se.Language.General.KeyFile));
+        var buttonBrowse = EditorChrome.AsToolButton(UiUtil.MakeButtonBrowse(vm.BrowseGoogleCloudSttKeyFileCommand, accessibleName: Se.Language.General.KeyFile));
         var textKeyFile = OnlineText(vm, nameof(vm.GoogleCloudSttKeyFile));
-        var keyFile = Chrome.WithTrailing(textKeyFile, buttonBrowse);
-        var keyFileRow = Chrome.Stacked(Label(Se.Language.General.KeyFile), keyFile);
+        var keyFile = SpeechToTextChrome.WithTrailing(textKeyFile, buttonBrowse);
+        var keyFileRow = SpeechToTextChrome.Stacked(Label(Se.Language.General.KeyFile), keyFile);
         AutomationProperties.SetLabeledBy(textKeyFile, keyFileRow.Children[0]);
 
         return new Control[]
@@ -501,7 +500,7 @@ public class SpeechToTextWindow : Window
     /// </summary>
     private static Border MakeAdvancedSection(SpeechToTextViewModel vm)
     {
-        var buttonAdvancedSettings = Chrome.Tool(UiUtil.MakeButton(vm.ShowAdvancedSettingsCommand, IconNames.Settings), 26)
+        var buttonAdvancedSettings = EditorChrome.AsToolButton(UiUtil.MakeButton(vm.ShowAdvancedSettingsCommand, IconNames.Settings), 26)
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
             .WithAccessibleName(Se.Language.General.AdvancedSettings);
         if (Se.Settings.Appearance.ShowHints)
@@ -538,7 +537,7 @@ public class SpeechToTextWindow : Window
     /// </summary>
     private static Grid MakeLogPanel(SpeechToTextViewModel vm)
     {
-        var buttonCopyConsoleLog = Chrome.Tool(UiUtil.MakeButton(
+        var buttonCopyConsoleLog = EditorChrome.AsToolButton(UiUtil.MakeButton(
             vm.CopyConsoleLogCommand,
             IconNames.Copy,
             Se.Language.General.CopyTextToClipboard), 26);
@@ -557,7 +556,7 @@ public class SpeechToTextWindow : Window
             },
             Margin = new Thickness(14, 12, 14, 14),
         };
-        grid.Add(Chrome.ListHeader(Se.Language.General.ConsoleLog, buttonCopyConsoleLog), 0, 0);
+        grid.Add(SpeechToTextChrome.ListHeader(Se.Language.General.ConsoleLog, buttonCopyConsoleLog), 0, 0);
         grid.Add(body, 1, 0);
         return grid;
     }
@@ -638,16 +637,14 @@ public class SpeechToTextWindow : Window
         var buttonClear = Action("fa-solid fa-trash", Se.Language.General.Clear, vm.ClearCommand);
 
         var labelAddLanguageCode = Label(Se.Language.Video.AudioToText.AddLanguageCodeToFileName);
-        var switchAddLanguageCode = Chrome.EnabledBy(
-            Chrome.Switch(vm, nameof(vm.AddLanguageCodeToFileName), Se.Language.Video.AudioToText.AddLanguageCodeToFileName),
-            vm, nameof(vm.IsTranscribeEnabled));
+        var switchAddLanguageCode = EditorChrome.EnabledBy(EditorChrome.MakeSwitch(nameof(vm.AddLanguageCodeToFileName), Se.Language.Video.AudioToText.AddLanguageCodeToFileName, vm), vm, nameof(vm.IsTranscribeEnabled));
         if (Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(switchAddLanguageCode, Se.Language.Video.AudioToText.AddLanguageCodeToFileNameHint);
             ToolTip.SetTip(labelAddLanguageCode, Se.Language.Video.AudioToText.AddLanguageCodeToFileNameHint);
         }
 
-        var rowAddLanguageCode = Chrome.SwitchRow(switchAddLanguageCode, labelAddLanguageCode);
+        var rowAddLanguageCode = EditorChrome.MakeSwitchRow(switchAddLanguageCode, labelAddLanguageCode);
         rowAddLanguageCode.Margin = new Thickness(0, 8, 0, 0);
 
         // hack to make drag and drop work on the grid - also on empty rows
@@ -660,7 +657,7 @@ public class SpeechToTextWindow : Window
         dropHost.AddHandler(DragDrop.DragOverEvent, vm.FileGridOnDragOver, RoutingStrategies.Bubble);
         dropHost.AddHandler(DragDrop.DropEvent, vm.FileGridOnDrop, RoutingStrategies.Bubble);
 
-        var batchHeader = Chrome.ListHeader(Se.Language.General.BatchMode, buttonAdd, buttonRemove, buttonClear);
+        var batchHeader = SpeechToTextChrome.ListHeader(Se.Language.General.BatchMode, buttonAdd, buttonRemove, buttonClear);
         batchHeader.Margin = new Thickness(0, 14, 0, 8);
 
         var grid = new Grid
@@ -675,9 +672,9 @@ public class SpeechToTextWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(Chrome.FieldFrame(textBoxConsoleLog), 0, 0);
+        grid.Add(EditorChrome.MakeListFrame(textBoxConsoleLog), 0, 0);
         grid.Add(batchHeader, 1, 0);
-        grid.Add(Chrome.FieldFrame(dropHost), 2, 0);
+        grid.Add(EditorChrome.MakeListFrame(dropHost), 2, 0);
         grid.Add(rowAddLanguageCode, 3, 0);
 
         grid.WithBindVisible(vm, nameof(vm.IsBatchMode));
@@ -690,7 +687,7 @@ public class SpeechToTextWindow : Window
         var textBoxConsoleLog = MakeConsoleLogTextBox(vm);
         vm.TextBoxConsoleLogSingle = textBoxConsoleLog;
 
-        var frame = Chrome.FieldFrame(textBoxConsoleLog);
+        var frame = EditorChrome.MakeListFrame(textBoxConsoleLog);
         frame.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsBatchMode)) { Source = vm, Converter = InverseBooleanConverter.Instance });
         return frame;
     }
@@ -712,9 +709,9 @@ public class SpeechToTextWindow : Window
             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
         });
 
-        var progressText = Chrome.Hint(nameof(vm.ProgressText));
-        var elapsedTimeText = Chrome.Hint(nameof(vm.ElapsedText));
-        var estimatedTimeText = Chrome.Hint(nameof(vm.EstimatedText));
+        var progressText = EditorChrome.MakeBoundHint(nameof(vm.ProgressText), 12);
+        var elapsedTimeText = EditorChrome.MakeBoundHint(nameof(vm.ElapsedText), 12);
+        var estimatedTimeText = EditorChrome.MakeBoundHint(nameof(vm.EstimatedText), 12);
 
         var times = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 16, VerticalAlignment = VerticalAlignment.Center };
         times.Children.Add(elapsedTimeText);
@@ -805,9 +802,9 @@ public class SpeechToTextWindow : Window
             },
         });
 
-        var transcribeButton = Chrome.Primary(UiUtil.MakeButton(Se.Language.Video.AudioToText.Transcribe, vm.TranscribeCommand))
+        var transcribeButton = EditorChrome.AsPrimary(UiUtil.MakeButton(Se.Language.Video.AudioToText.Transcribe, vm.TranscribeCommand))
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
-        var bar = Chrome.ButtonBar(modes, UiUtil.MakeButtonCancel(vm.CancelCommand), transcribeButton);
+        var bar = EditorChrome.MakeFlushButtonBar(modes, UiUtil.MakeButtonCancel(vm.CancelCommand), transcribeButton);
         bar.Name = ButtonBarName;
         return bar;
     }

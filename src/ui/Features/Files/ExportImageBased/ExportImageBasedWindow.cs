@@ -6,9 +6,7 @@ using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
 using Nikse.SubtitleEdit.Features.Main;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -35,7 +33,7 @@ public class ExportImageBasedWindow : Window
         Height = 800;
         MinWidth = 920;
         MinHeight = 600;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -546,7 +544,7 @@ public class ExportImageBasedWindow : Window
         return new Border
         {
             Padding = new Thickness(14, 12, 14, 12),
-            Child = MakeHeaderPanel(Se.Language.General.Lines, EditDialogChrome.MakeListFrame(vm.SubtitleGrid), count),
+            Child = MakeHeaderPanel(Se.Language.General.Lines, EditorChrome.MakeListFrame(vm.SubtitleGrid, clearListBackground: true), count),
         };
     }
 
@@ -599,8 +597,8 @@ public class ExportImageBasedWindow : Window
 
         var actions = Horizontal(
             imageInfo,
-            SyncTimingChrome.MakeTextToolButton("fa-solid fa-floppy-disk", Se.Language.General.SaveDotDotDot, vm.SavePreviewCommand),
-            SyncTimingChrome.MakeTextToolButton("fa-solid fa-expand", Se.Language.General.ShowPreview, vm.ShowPreviewCommand));
+            EditorChrome.MakeTextToolButton("fa-solid fa-floppy-disk", Se.Language.General.SaveDotDotDot, vm.SavePreviewCommand),
+            EditorChrome.MakeTextToolButton("fa-solid fa-expand", Se.Language.General.ShowPreview, vm.ShowPreviewCommand));
         actions.Spacing = 2;
 
         return new Border
@@ -663,6 +661,6 @@ public class ExportImageBasedWindow : Window
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand).WithBindIsVisible(nameof(vm.IsGenerating));
         var buttonDone = UiUtil.MakeButtonDone(vm.CancelCommand).WithBindIsVisible(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
 
-        return SyncTimingChrome.MakeButtonBar(profile, buttonDone, buttonCancel, buttonExport);
+        return EditorChrome.MakeDockedButtonBar(profile, buttonDone, buttonCancel, buttonExport);
     }
 }

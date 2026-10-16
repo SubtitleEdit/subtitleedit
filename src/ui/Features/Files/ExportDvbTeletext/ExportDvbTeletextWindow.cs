@@ -16,13 +16,13 @@ public class ExportDvbTeletextWindow : Window
         Title = Se.Language.File.Export.TitleExportDvbTeletext;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        FormatPropertiesChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Form);
         vm.Window = this;
         DataContext = vm;
 
         var l = Se.Language.File.Export;
         var numericPageNumber = FormatPropertiesChrome.Number(UiUtil.MakeNumericUpDownInt(100, 899, 888, 120, vm, nameof(vm.PageNumber)), l.ExportDvbTeletextPageNumber);
-        var textBoxLanguage = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(90, vm, nameof(vm.LanguageCode)), Se.Language.General.Language);
+        var textBoxLanguage = EditorChrome.AsTextField(UiUtil.MakeTextBox(90, vm, nameof(vm.LanguageCode)), Se.Language.General.Language);
         var comboBoxSubtitleType = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.SubtitleTypes, vm, nameof(vm.SelectedSubtitleType)), l.ExportDvbTeletextSubtitleType, 180);
 
         var rows = FormatPropertiesChrome.MakeRows(
@@ -30,7 +30,7 @@ public class ExportDvbTeletextWindow : Window
             FormatPropertiesChrome.Row(Se.Language.General.Language, textBoxLanguage),
             FormatPropertiesChrome.Row(l.ExportDvbTeletextSubtitleType, comboBoxSubtitleType));
 
-        var buttonBar = FormatPropertiesChrome.MakeButtonBar(null, UiUtil.MakeButtonOk(vm.OkCommand), UiUtil.MakeButtonCancel(vm.CancelCommand));
+        var buttonBar = EditorChrome.MakeDockedCancelOkBar(null, UiUtil.MakeButtonCancel(vm.CancelCommand), UiUtil.MakeButtonOk(vm.OkCommand));
 
         Content = FormatPropertiesChrome.MakeRoot(
             buttonBar,

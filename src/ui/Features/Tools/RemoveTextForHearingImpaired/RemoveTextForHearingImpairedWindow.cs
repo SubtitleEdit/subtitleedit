@@ -10,8 +10,6 @@ using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Styling;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 
@@ -40,7 +38,7 @@ public class RemoveTextForHearingImpairedWindow : Window
         MinWidth = 820;
         MinHeight = 480;
         CanResize = true;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         // The text of the editable (symbol) combo boxes in the middle of the compact box
         Styles.Add(new Style(x => x.OfType<ComboBox>().Template().OfType<TextBox>().Name("PART_EditableTextBox"))
@@ -81,9 +79,8 @@ public class RemoveTextForHearingImpairedWindow : Window
             StringFormat = Se.Language.Tools.RemoveTextForHearingImpaired.LinesFoundX,
         });
 
-        var sections = SyncTimingChrome.SideBySide(settingsView, fixesView);
-        Content = SyncTimingChrome.MakeRoot(sections,
-            SyncTimingChrome.MakeButtonBar(labelLinesFound, buttonCancel, buttonApply, buttonOk, buttonDone));
+        var sections = EditorChrome.MakeSideBySide(settingsView, fixesView);
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(labelLinesFound, buttonCancel, buttonApply, buttonOk, buttonDone));
 
         UiUtil.FocusOnFirstActivation(this, () => { (vm.IsApplyVisible ? buttonDone : buttonOk).Focus(); }); // hack to make OnKeyDown work
 
@@ -197,7 +194,7 @@ public class RemoveTextForHearingImpairedWindow : Window
     {
         var l = Se.Language.Tools.RemoveTextForHearingImpaired;
 
-        var buttonEdit = SyncTimingChrome.MakeTextToolButton("fa-solid fa-pen-to-square", Se.Language.General.Edit, vm.EditInterjectionsCommand);
+        var buttonEdit = EditorChrome.MakeTextToolButton("fa-solid fa-pen-to-square", Se.Language.General.Edit, vm.EditInterjectionsCommand);
 
         var comboBoxLanguage = UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage))
             .WithAccessibleName(Se.Language.General.Language);
@@ -209,7 +206,7 @@ public class RemoveTextForHearingImpairedWindow : Window
             Children =
             {
                 EditorChrome.MakeToggleRow(nameof(vm.IsRemoveInterjectionsOn), l.RemoveInterjections),
-                SyncTimingChrome.Row(Se.Language.General.Language, comboBoxLanguage, 80).WithMarginTop(4),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Language, comboBoxLanguage, 80).WithMarginTop(4),
                 EditorChrome.MakeToggleRow(nameof(vm.IsInterjectionsSeparateLineOn), l.OnlySeparateLines).WithMarginTop(4),
             }
         };
@@ -325,7 +322,7 @@ public class RemoveTextForHearingImpairedWindow : Window
         };
 
         grid.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Preview), 0, 0);
-        grid.Add(EditDialogChrome.MakeListFrame(dataGrid), 1, 0);
+        grid.Add(EditorChrome.MakeListFrame(dataGrid, clearListBackground: true), 1, 0);
 
         return grid;
     }

@@ -3,7 +3,6 @@ using Avalonia.Data;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Chrome = Nikse.SubtitleEdit.Features.Ocr.OcrDialogChrome;
 
 namespace Nikse.SubtitleEdit.Features.Translate;
 
@@ -22,21 +21,21 @@ public class DownloadLlamaCppWindow : Window
         SizeToContent = SizeToContent.Height;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        Chrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.EngineDialog);
         DataContext = vm;
 
-        var titleText = Chrome.DownloadTitle();
+        var titleText = EditorChrome.MakeDownloadTitle();
         titleText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.TitleText)));
 
-        var progressBar = Chrome.DownloadProgressBar(nameof(vm.ProgressValue));
-        var statusText = Chrome.DownloadStatus(nameof(vm.ProgressText));
-        var errorText = Chrome.DownloadError(nameof(vm.Error));
+        var progressBar = EditorChrome.MakeDownloadProgressBar(nameof(vm.ProgressValue));
+        var statusText = EditorChrome.MakeDownloadStatus(nameof(vm.ProgressText));
+        var errorText = EditorChrome.MakeDownloadError(nameof(vm.Error));
 
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonRetry = Chrome.MakePrimary(DownloadWindowUi.MakeButtonRetry(vm.RetryCommand));
-        var buttonBar = Chrome.ButtonBar(null, buttonCancel, buttonRetry);
+        var buttonRetry = EditorChrome.AsPrimary(DownloadWindowUi.MakeButtonRetry(vm.RetryCommand));
+        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonCancel, buttonRetry);
 
-        Content = Chrome.Root(Chrome.DownloadBody(titleText, progressBar, statusText, errorText), buttonBar);
+        Content = EditorChrome.MakeRoot(EditorChrome.MakeDownloadBody(titleText, progressBar, statusText, errorText), buttonBar, stretch: false);
 
         UiUtil.FocusOnFirstActivation(this, buttonCancel);
         KeyDown += (s, e) => vm.OnKeyDown(e);

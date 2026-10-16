@@ -1,10 +1,8 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -28,7 +26,7 @@ public class NOcrCharacterHistoryWindow : Window
         MinHeight = 600;
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        NOcrChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.TextToolToggles | EditorWindowStyles.CompactSplitButtons);
         DataContext = vm;
 
         var sections = new Grid
@@ -48,7 +46,7 @@ public class NOcrCharacterHistoryWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
 
-        Content = NOcrChrome.MakeRoot(sections, SyncTimingChrome.MakeButtonBar(null, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonOk));
 
         vm.TextBoxNew.KeyDown += vm.TextBoxNewOnKeyDown;
 
@@ -69,12 +67,12 @@ public class NOcrCharacterHistoryWindow : Window
         listBoxCurrentItems.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(vm.HistoryItems)));
         listBoxCurrentItems.SelectionChanged += vm.HistoryItemChanged;
 
-        return NOcrChrome.MakeFillColumn(Se.Language.General.History, EditDialogChrome.MakeListFrame(listBoxCurrentItems), first: true);
+        return NOcrChrome.MakeFillColumn(Se.Language.General.History, EditorChrome.MakeListFrame(listBoxCurrentItems, clearListBackground: true), first: true);
     }
 
     private static Border MakeCurrentView(NOcrCharacterHistoryViewModel vm)
     {
-        vm.TextBoxNew = NOcrChrome.StyleTextBox(UiUtil.MakeTextBox(100, vm, nameof(vm.NewText)), Se.Language.General.Text);
+        vm.TextBoxNew = EditorChrome.AsTextField(UiUtil.MakeTextBox(100, vm, nameof(vm.NewText)), Se.Language.General.Text);
         vm.TextBoxNew.Width = double.NaN;
         vm.TextBoxNew.Margin = new Thickness(0);
         vm.TextBoxNew.HorizontalAlignment = HorizontalAlignment.Stretch;
@@ -113,9 +111,9 @@ public class NOcrCharacterHistoryWindow : Window
             Margin = new Thickness(-8, 6, 0, 0),
             Children =
             {
-                NOcrChrome.MakeAction(IconNames.Check, Se.Language.General.Update, vm.UpdateCommand),
-                NOcrChrome.MakeAction(IconNames.CheckBold, Se.Language.General.UpdateAndClose, vm.UpdateAndCloseCommand),
-                NOcrChrome.MakeAction(IconNames.Trash, Se.Language.General.Delete, vm.DeleteCommand),
+                EditorChrome.MakeTextToolButton(IconNames.Check, Se.Language.General.Update, vm.UpdateCommand),
+                EditorChrome.MakeTextToolButton(IconNames.CheckBold, Se.Language.General.UpdateAndClose, vm.UpdateAndCloseCommand),
+                EditorChrome.MakeTextToolButton(IconNames.Trash, Se.Language.General.Delete, vm.DeleteCommand),
             },
         };
         foreach (var action in actions.Children)
@@ -130,8 +128,8 @@ public class NOcrCharacterHistoryWindow : Window
             Width = 240,
             Children =
             {
-                NOcrChrome.MakeInfo(nameof(vm.ResolutionAndTopMargin)),
-                NOcrChrome.MakeInfo(nameof(vm.LineIndex)),
+                EditorChrome.MakeBoundInfo(nameof(vm.ResolutionAndTopMargin)),
+                EditorChrome.MakeBoundInfo(nameof(vm.LineIndex)),
                 panelCurrentImage,
                 vm.TextBoxNew,
                 italicRow,
@@ -139,7 +137,7 @@ public class NOcrCharacterHistoryWindow : Window
             },
         };
 
-        return NOcrChrome.MakeColumn(Se.Language.Ocr.CurrentImage, panelCurrent);
+        return NOcrChrome.MakeFillColumn(Se.Language.Ocr.CurrentImage, panelCurrent);
     }
 
     private static Border MakeCanvasView(NOcrCharacterHistoryViewModel vm)

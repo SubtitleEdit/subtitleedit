@@ -8,7 +8,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 namespace Nikse.SubtitleEdit.Features.Shared.PickLanguage;
 
 /// <summary>
-/// Pick a language, in the shared picker layout (see <see cref="SharedDialogChrome"/>).
+/// Pick a language, in the shared picker layout (see <see cref="EditorChrome"/>).
 /// </summary>
 public class PickLanguageWindow : Window
 {
@@ -21,11 +21,11 @@ public class PickLanguageWindow : Window
         Height = 600;
         MinWidth = 350;
         MinHeight = 400;
-        SharedDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
 
-        var textBoxSearch = SharedDialogChrome.MakeSearchBox(vm, nameof(vm.SearchText), null, 220);
+        var textBoxSearch = EditorChrome.MakeSearchBox(vm, nameof(vm.SearchText), null, 220);
         textBoxSearch.TextChanged += (_, _) => vm.SearchTextChanged();
 
         var listBoxLanguages = new ListBox
@@ -39,12 +39,12 @@ public class PickLanguageWindow : Window
         listBoxLanguages.DoubleTapped += (_, _) => vm.OkCommand.Execute(null);
         AutomationProperties.SetName(listBoxLanguages, Se.Language.General.Language);
 
-        var section = SharedDialogChrome.MakeListSection(Se.Language.General.Language, listBoxLanguages, textBoxSearch);
+        var section = EditorChrome.MakePickerListSection(Se.Language.General.Language, listBoxLanguages, textBoxSearch);
 
-        var buttonOk = SharedDialogChrome.Primary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = SharedDialogChrome.MakeRoot(section, SharedDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(section, EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, textBoxSearch);
         KeyDown += (_, e) => vm.OnKeyDown(e);

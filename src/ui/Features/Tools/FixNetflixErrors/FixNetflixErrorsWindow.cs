@@ -9,10 +9,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Threading;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
 using Nikse.SubtitleEdit.Features.Files.Compare;
-using Nikse.SubtitleEdit.Features.Sync;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -32,7 +29,7 @@ public class FixNetflixErrorsWindow : Window
         MinWidth = 900;
         MinHeight = 640;
         CanResize = true;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         _vm = vm;
         vm.Window = this;
@@ -46,14 +43,10 @@ public class FixNetflixErrorsWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
 
-        var summaryText = VideoSubDialogChrome.MakeHint(nameof(vm.FixesSummaryText));
+        var summaryText = EditorChrome.MakeBoundHint(nameof(vm.FixesSummaryText));
         summaryText.FontSize = 12;
 
-        var panelButtons = VideoSubDialogChrome.MakeButtonBar(
-            summaryText,
-            buttonGenerateReport,
-            UiUtil.MakeButtonCancel(vm.CancelCommand),
-            buttonOk);
+        var panelButtons = EditorChrome.MakeButtonBar(summaryText, buttonGenerateReport, UiUtil.MakeButtonCancel(vm.CancelCommand), buttonOk);
 
         var columns = new Grid
         {
@@ -71,7 +64,7 @@ public class FixNetflixErrorsWindow : Window
             BorderThickness = new Thickness(1, 0, 0, 0),
         }, 0, 1);
 
-        Content = SyncTimingChrome.MakeRoot(columns, panelButtons);
+        Content = EditorChrome.MakeRoot(columns, panelButtons);
 
         UiUtil.FocusOnFirstActivation(this, _comboBoxLanguage); // initial focus on an input, not an action button - a focused button clicks on bare Space
 
@@ -94,13 +87,9 @@ public class FixNetflixErrorsWindow : Window
             Spacing = 10,
             Children =
             {
-                VideoSubDialogChrome.MakeRow(Se.Language.General.Language, _comboBoxLanguage, 80),
-                VideoSubDialogChrome.MakeSwitchRow(
-                    VideoSubDialogChrome.MakeSwitch(nameof(vm.IsChildrenProgram), Se.Language.Tools.NetflixCheckAndFix.ChildrensProgram),
-                    Se.Language.Tools.NetflixCheckAndFix.ChildrensProgram),
-                VideoSubDialogChrome.MakeSwitchRow(
-                    VideoSubDialogChrome.MakeSwitch(nameof(vm.IsSdh), Se.Language.Tools.NetflixCheckAndFix.Sdh),
-                    Se.Language.Tools.NetflixCheckAndFix.Sdh),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Language, _comboBoxLanguage, 80, spacing: 6),
+                EditorChrome.MakeSwitchRow(EditorChrome.MakeSwitch(nameof(vm.IsChildrenProgram), Se.Language.Tools.NetflixCheckAndFix.ChildrensProgram), Se.Language.Tools.NetflixCheckAndFix.ChildrensProgram),
+                EditorChrome.MakeSwitchRow(EditorChrome.MakeSwitch(nameof(vm.IsSdh), Se.Language.Tools.NetflixCheckAndFix.Sdh), Se.Language.Tools.NetflixCheckAndFix.Sdh),
             }
         };
 
@@ -175,7 +164,7 @@ public class FixNetflixErrorsWindow : Window
             Margin = new Thickness(14, 10, 14, 14),
         };
         checksPanel.Add(checksHeader, 0);
-        checksPanel.Add(EditDialogChrome.MakeListFrame(dataGrid), 1);
+        checksPanel.Add(EditorChrome.MakeListFrame(dataGrid, clearListBackground: true), 1);
 
         var grid = new Grid
         {
@@ -194,7 +183,7 @@ public class FixNetflixErrorsWindow : Window
             BorderThickness = new Thickness(0, 1, 0, 0),
         }, 1, 0);
 
-        return VideoSubDialogChrome.MakePanel(grid);
+        return EditorChrome.MakePanel(grid);
     }
 
     private Border MakeFixesView(FixNetflixErrorsViewModel vm)
@@ -322,9 +311,9 @@ public class FixNetflixErrorsWindow : Window
         var fixesHeader = EditorChrome.MakeSectionHeader(Se.Language.Tools.FixCommonErrors.Fixes);
         fixesHeader.Margin = new Thickness(0, 0, 0, 10);
         fixesPanel.Add(fixesHeader, 0);
-        fixesPanel.Add(EditDialogChrome.MakeListFrame(dataGrid), 1);
+        fixesPanel.Add(EditorChrome.MakeListFrame(dataGrid, clearListBackground: true), 1);
 
-        return VideoSubDialogChrome.MakePanel(fixesPanel);
+        return EditorChrome.MakePanel(fixesPanel);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

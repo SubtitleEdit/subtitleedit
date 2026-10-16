@@ -21,7 +21,7 @@ public class ChangeFrameRateWindow : Window
         Title = UiUtil.MakeWindowTitle(Se.Language.General.ChangeFrameRate);
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        SyncTimingChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TimeCodes);
         vm.Window = this;
         DataContext = vm;
 
@@ -132,7 +132,7 @@ public class ChangeFrameRateWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = SyncTimingChrome.MakeRoot(section, SyncTimingChrome.MakeButtonBar(panelVideoInfo, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(section, EditorChrome.MakeDockedButtonBar(panelVideoInfo, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, comboFromFrameRate); // initial focus on an input, not an action button - a focused button clicks on bare Space
         Loaded += (_, _) => UiUtil.RestoreWindowPosition(this);

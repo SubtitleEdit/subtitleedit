@@ -8,8 +8,6 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -30,7 +28,7 @@ public class CommandPaletteWindow : Window
         Height = 500;
         MinWidth = 400;
         MinHeight = 250;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -91,9 +89,9 @@ public class CommandPaletteWindow : Window
         };
 
         grid.Add(textBoxSearch, 0);
-        grid.Add(EditDialogChrome.MakeListFrame(listPanel), 1);
+        grid.Add(EditorChrome.MakeListFrame(listPanel, clearListBackground: true), 1);
 
-        Content = SyncTimingChrome.MakeRoot(grid, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(grid, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, textBoxSearch);
         KeyDown += (_, e) => vm.OnKeyDown(e);

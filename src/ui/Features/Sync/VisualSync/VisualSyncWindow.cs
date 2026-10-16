@@ -186,13 +186,13 @@ public class VisualSyncWindow : Window
         // Wraps rather than clipping when the pane is narrow or the texts are long (translations)
         var panel = new WrapPanel { Orientation = Orientation.Horizontal, ItemSpacing = 2, LineSpacing = 2 };
         panel.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-arrow-left", Se.Language.General.OneSecondBack, oneSecondBack, 28));
-        panel.Children.Add(SyncTimingChrome.MakeTextToolButton("fa-solid fa-play", Se.Language.Sync.PlayTwoSecondsAndBack, playTwoSecondsAndBack));
+        panel.Children.Add(EditorChrome.MakeTextToolButton("fa-solid fa-play", Se.Language.Sync.PlayTwoSecondsAndBack, playTwoSecondsAndBack));
         panel.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-arrow-right", Se.Language.General.OneSecondForward, oneSecondForward, 28));
         var separator = EditorChrome.MakeToolbarSeparator();
         separator.Margin = new Thickness(4, 0);
         panel.Children.Add(separator);
-        panel.Children.Add(SyncTimingChrome.MakeTextToolButton("fa-solid fa-location-crosshairs", Se.Language.Sync.GoToSubPos, goToSubtitle));
-        panel.Children.Add(SyncTimingChrome.MakeTextToolButton("fa-solid fa-magnifying-glass", Se.Language.Sync.FindText, findText));
+        panel.Children.Add(EditorChrome.MakeTextToolButton("fa-solid fa-location-crosshairs", Se.Language.Sync.GoToSubPos, goToSubtitle));
+        panel.Children.Add(EditorChrome.MakeTextToolButton("fa-solid fa-magnifying-glass", Se.Language.Sync.FindText, findText));
         return panel;
     }
 
@@ -238,7 +238,7 @@ public class VisualSyncWindow : Window
     {
         // Entering visual sync without a video used to be a dead end - two blank players and no
         // way to load one from here. SE4 had the same button.
-        var buttonOpenVideo = SyncTimingChrome.MakeTextToolButton("fa-solid fa-film", Se.Language.General.OpenVideoFile, vm.OpenVideoFileCommand);
+        var buttonOpenVideo = EditorChrome.MakeTextToolButton("fa-solid fa-film", Se.Language.General.OpenVideoFile, vm.OpenVideoFileCommand);
 
         var labelVideoInfo = EditorChrome.MakeDimLabel(string.Empty, new Thickness(0)).WithBindText(vm, nameof(vm.VideoInfo));
         labelVideoInfo.TextTrimming = TextTrimming.CharacterEllipsis;

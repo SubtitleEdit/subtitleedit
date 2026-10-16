@@ -17,23 +17,21 @@ public class RenumberWindow : Window
         CanResize = false;
         SizeToContent = SizeToContent.Height;
         Width = 360;
-        LineToolsChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
-        var numericUpDown = LineToolsChrome.MakeCompact(
-            UiUtil.MakeNumericUpDownInt(0, 99999, 1, 150, vm, nameof(vm.StartNumber)),
-            Se.Language.Tools.Renumber.StartFromNumber);
+        var numericUpDown = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(0, 99999, 1, 150, vm, nameof(vm.StartNumber)), Se.Language.Tools.Renumber.StartFromNumber.TrimEnd(':'), 100, alignLeft: true, center: true);
 
         var section = EditorChrome.MakeEditorSection(
             Se.Language.Tools.Renumber.Title,
-            LineToolsChrome.MakeFieldGrid((Se.Language.Tools.Renumber.StartFromNumber, numericUpDown)),
+            EditorChrome.MakeFieldGrid((Se.Language.Tools.Renumber.StartFromNumber, numericUpDown)),
             first: true);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = LineToolsChrome.MakeRoot(section, null, buttonCancel, buttonOk);
+        Content = EditorChrome.MakeCancelOkRoot(section, null, buttonCancel, buttonOk);
 
         Loaded += delegate { numericUpDown.Focus(); };
         KeyDown += (_, e) => vm.OnKeyDown(e);

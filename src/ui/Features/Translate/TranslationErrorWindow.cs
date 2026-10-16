@@ -5,8 +5,6 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Sync;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -31,7 +29,7 @@ public class TranslationErrorWindow : Window
         DataContext = vm;
         vm.Window = this;
 
-        Features.Edit.EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         // ── Header row: icon + bold title ──────────────────────────────────────
         var errorIcon = new TextBlock
@@ -108,7 +106,7 @@ public class TranslationErrorWindow : Window
         // ── OK button ─────────────────────────────────────────────────────────
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
-        var buttonBar = VideoSubDialogChrome.MakeButtonBar(toggleButton, buttonOk);
+        var buttonBar = EditorChrome.MakeButtonBar(toggleButton, buttonOk);
 
         // ── Main content stack ────────────────────────────────────────────────
         var sections = new StackPanel
@@ -120,7 +118,7 @@ public class TranslationErrorWindow : Window
             },
         };
 
-        Content = SyncTimingChrome.MakeRoot(sections, buttonBar);
+        Content = EditorChrome.MakeRoot(sections, buttonBar);
 
         UiUtil.FocusOnFirstActivation(this, buttonOk);
     }

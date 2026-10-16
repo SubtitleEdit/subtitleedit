@@ -4,8 +4,6 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -31,7 +29,7 @@ public class TextEffectWindow : Window
         // visible area. Only the width is fixed (SizeToContent.WidthAndHeight measures too
         // wide on macOS).
         SizeToContent = SizeToContent.Height;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -49,11 +47,11 @@ public class TextEffectWindow : Window
         sections.Children.Add(EditorChrome.MakeEditorSection(Se.Language.File.Export.TextEffectPreset, comboPreset, first: true));
         sections.Children.Add(EditorChrome.MakeEditorSection(Se.Language.General.Settings, sliders));
 
-        var buttonReset = SyncTimingChrome.MakeTextToolButton("fa-solid fa-rotate-left", Se.Language.General.Reset, vm.ResetCommand);
+        var buttonReset = EditorChrome.MakeTextToolButton("fa-solid fa-rotate-left", Se.Language.General.Reset, vm.ResetCommand);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        Content = SyncTimingChrome.MakeRoot(sections, SyncTimingChrome.MakeButtonBar(buttonReset, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(buttonReset, buttonCancel, buttonOk));
 
         KeyDown += (_, e) => vm.OnKeyDown(e);
         UiUtil.FocusOnFirstActivation(this, buttonOk);

@@ -12,11 +12,8 @@ using Avalonia.Threading;
 using Avalonia.Controls.Presenters;
 using Avalonia.Styling;
 using System;
-using Nikse.SubtitleEdit.Features.Edit;
 using Nikse.SubtitleEdit.Features.Files.Compare;
 using Nikse.SubtitleEdit.Features.Main;
-using Nikse.SubtitleEdit.Features.Sync;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -25,6 +22,10 @@ namespace Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
 
 public class FixCommonErrorsWindow : Window
 {
+    // Follow the app theme, also when it changes while the window is open
+    private static readonly IBrush NothingToFixBrush = EditorChrome.Themed(Color.FromRgb(0x6e, 0xcb, 0x87), Color.FromRgb(0x1e, 0x7e, 0x34));
+    private static readonly IBrush ErrorsFoundBrush = EditorChrome.Themed(Color.FromRgb(0xff, 0x8a, 0x80), Color.FromRgb(0xc4, 0x28, 0x28));
+
     private readonly FixCommonErrorsViewModel _vm;
     private Button? _buttonApplySelectedFixes;
 
@@ -37,7 +38,7 @@ public class FixCommonErrorsWindow : Window
         MinWidth = 800;
         MinHeight = 600;
         CanResize = true;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         AddChipStyles(Styles);
 
         _vm = vm;
@@ -75,7 +76,7 @@ public class FixCommonErrorsWindow : Window
         textBoxSearch.Bind(IsVisibleProperty, new Binding(nameof(vm.Step1IsVisible)));
         // Off by default (#12441) - keep it reachable here, next to the language it depends on,
         // instead of only in the OCR window where a Fix-common-errors user would never look.
-        var switchGuessUnknownWords = VideoSubDialogChrome.MakeSwitch(nameof(vm.TryToGuessUnknownWords), Se.Language.Ocr.TryToGuessUnknownWords);
+        var switchGuessUnknownWords = EditorChrome.MakeSwitch(nameof(vm.TryToGuessUnknownWords), Se.Language.Ocr.TryToGuessUnknownWords);
         var panelGuessUnknownWords = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -112,7 +113,7 @@ public class FixCommonErrorsWindow : Window
         DockPanel.SetDock(panelTopRight, Dock.Right);
         toolbarContent.Children.Add(panelTopRight);
         toolbarContent.Children.Add(new Panel { Children = { labelStep1, labelStep2 }, VerticalAlignment = VerticalAlignment.Center });
-        var toolbar = VideoSubDialogChrome.MakeToolbar(toolbarContent);
+        var toolbar = EditorChrome.MakeToolbar(toolbarContent);
         toolbar.Padding = new Thickness(12, 8);
 
         var rulesGrid = TableViewExtras.MakeTableView();
@@ -210,8 +211,8 @@ public class FixCommonErrorsWindow : Window
             Margin = new Thickness(14, 12, 14, 14),
         };
         rulesPanel.Add(rulesHeader, 0);
-        rulesPanel.Add(EditDialogChrome.MakeListFrame(rulesGrid), 1);
-        var step1View = VideoSubDialogChrome.MakePanel(rulesPanel);
+        rulesPanel.Add(EditorChrome.MakeListFrame(rulesGrid, clearListBackground: true), 1);
+        var step1View = EditorChrome.MakePanel(rulesPanel);
         step1View.Bind(IsVisibleProperty, new Binding(nameof(vm.Step1IsVisible)));
 
         var step2Grid = MakeStep2Grid();
@@ -230,15 +231,13 @@ public class FixCommonErrorsWindow : Window
             .BindIsVisible(vm, nameof(vm.Step2IsVisible));
         buttonDone.Classes.Add("primary");
 
-        var labelFixesApplied = VideoSubDialogChrome.MakeHint(nameof(vm.FixesAppliedText));
+        var labelFixesApplied = EditorChrome.MakeBoundHint(nameof(vm.FixesAppliedText));
         labelFixesApplied.FontSize = 12;
         labelFixesApplied.Bind(IsVisibleProperty, new Binding(nameof(vm.FixesAppliedText)) { Converter = StringConverters.IsNotNullOrEmpty });
 
         // Green check + "Nothing to fix" so an empty re-scan gives visible feedback; the counters
         // stay as they were, which on its own reads as "the button did nothing" (#12849).
-        var nothingToFixBrush = new SolidColorBrush(EditorChrome.IsLightTheme
-            ? Color.FromRgb(0x1e, 0x7e, 0x34)
-            : Color.FromRgb(0x6e, 0xcb, 0x87));
+        var nothingToFixBrush = NothingToFixBrush;
         var nothingToFixText = new TextBlock
         {
             Text = Se.Language.Tools.FixCommonErrors.NothingToFix,
@@ -268,9 +267,7 @@ public class FixCommonErrorsWindow : Window
         // Errors the rules found but could not fix (e.g. a display time that is too short with no
         // room to extend it). Without this they are silent, and a subtitle full of them still shows
         // the green "Nothing to fix" - click the warning to see one log line per error (#13645).
-        var errorsFoundBrush = new SolidColorBrush(EditorChrome.IsLightTheme
-            ? Color.FromRgb(0xc4, 0x28, 0x28)
-            : Color.FromRgb(0xff, 0x8a, 0x80));
+        var errorsFoundBrush = ErrorsFoundBrush;
         var errorsFoundIcon = new Optris.Icons.Avalonia.Icon
         {
             Value = IconNames.Alert,
@@ -325,12 +322,7 @@ public class FixCommonErrorsWindow : Window
         };
         panelStep2Status.Bind(IsVisibleProperty, new Binding(nameof(vm.Step2IsVisible)));
 
-        var buttonBar = VideoSubDialogChrome.MakeButtonBar(
-            panelStep2Status,
-            buttonBackToFixList,
-            UiUtil.MakeButtonCancel(vm.CancelCommand),
-            buttonToApplyFixes,
-            buttonDone);
+        var buttonBar = EditorChrome.MakeButtonBar(panelStep2Status, buttonBackToFixList, UiUtil.MakeButtonCancel(vm.CancelCommand), buttonToApplyFixes, buttonDone);
 
         var body = new Panel { Children = { step1View, step2Grid } };
 
@@ -559,7 +551,7 @@ public class FixCommonErrorsWindow : Window
         };
 
         // Fixes header: select all/none, re-scan and apply - the repeated step 2 action.
-        var buttonSelectAll = SyncTimingChrome.MakeTextToolButton("fa-solid fa-square-check", Se.Language.General.SelectAll, _vm.FixesSelectAllCommand);
+        var buttonSelectAll = EditorChrome.MakeTextToolButton("fa-solid fa-square-check", Se.Language.General.SelectAll, _vm.FixesSelectAllCommand);
         // Caption toggles between "Select all" and "Select none" as the current category fills up.
         if (buttonSelectAll.Content is StackPanel { Children: [_, TextBlock selectAllText] })
         {
@@ -567,7 +559,7 @@ public class FixCommonErrorsWindow : Window
         }
 
         buttonSelectAll.Bind(AutomationProperties.NameProperty, new Binding(nameof(_vm.FixesSelectAllText)) { Source = _vm });
-        var buttonRefreshFixes = SyncTimingChrome.MakeTextToolButton("fa-solid fa-rotate", Se.Language.Tools.FixCommonErrors.RefreshFixes, _vm.DoRefreshFixesCommand);
+        var buttonRefreshFixes = EditorChrome.MakeTextToolButton("fa-solid fa-rotate", Se.Language.Tools.FixCommonErrors.RefreshFixes, _vm.DoRefreshFixesCommand);
 
         // Caption carries the live count of fixes the button will apply, e.g. "Apply selected fixes (706)".
         _buttonApplySelectedFixes = UiUtil.MakeButton(Se.Language.Tools.FixCommonErrors.ApplySelectedFixes, _vm.DoApplyFixesCommand)
@@ -647,9 +639,9 @@ public class FixCommonErrorsWindow : Window
         };
         gridFixes.Add(fixesHeader, 0);
         gridFixes.Add(chipsItems, 1);
-        gridFixes.Add(EditDialogChrome.MakeListFrame(dataGridFixes), 2);
+        gridFixes.Add(EditorChrome.MakeListFrame(dataGridFixes, clearListBackground: true), 2);
 
-        var borderFixes = VideoSubDialogChrome.MakePanel(gridFixes);
+        var borderFixes = EditorChrome.MakePanel(gridFixes);
 
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
@@ -782,10 +774,10 @@ public class FixCommonErrorsWindow : Window
         var subtitlesHeader = EditorChrome.MakeSectionHeader(Se.Language.General.Preview);
         subtitlesHeader.Margin = new Thickness(0, 0, 0, 8);
         gridSubtitles.Add(subtitlesHeader, 0);
-        gridSubtitles.Add(EditDialogChrome.MakeListFrame(dataGridSubtitles), 1);
+        gridSubtitles.Add(EditorChrome.MakeListFrame(dataGridSubtitles, clearListBackground: true), 1);
         gridSubtitles.Add(gridCurrentSubtbtitle, 2);
 
-        var borderSubtitles = VideoSubDialogChrome.MakePanel(gridSubtitles);
+        var borderSubtitles = EditorChrome.MakePanel(gridSubtitles);
 
         var grid = new Grid
         {

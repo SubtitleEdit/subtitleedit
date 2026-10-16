@@ -2,8 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -24,7 +22,7 @@ public class MediaInfoViewWindow : Window
         MinWidth = 500;
         MinHeight = 400;
         CanResize = true;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -37,7 +35,7 @@ public class MediaInfoViewWindow : Window
         };
         vm.TextBoxContainer = contentBorder;
 
-        var buttonOpenContainingFolder = SyncTimingChrome.MakeTextToolButton("fa-solid fa-folder-open", Se.Language.General.OpenContainingFolder, vm.OpenContainingFolderCommand);
+        var buttonOpenContainingFolder = EditorChrome.MakeTextToolButton("fa-solid fa-folder-open", Se.Language.General.OpenContainingFolder, vm.OpenContainingFolderCommand);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
 
@@ -47,7 +45,7 @@ public class MediaInfoViewWindow : Window
             Padding = new Thickness(14),
         };
 
-        Content = SyncTimingChrome.MakeRoot(body, SyncTimingChrome.MakeButtonBar(buttonOpenContainingFolder, buttonOk));
+        Content = EditorChrome.MakeRoot(body, EditorChrome.MakeDockedButtonBar(buttonOpenContainingFolder, buttonOk));
 
         AddHandler(KeyDownEvent, vm.OnKeyDownHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
     }

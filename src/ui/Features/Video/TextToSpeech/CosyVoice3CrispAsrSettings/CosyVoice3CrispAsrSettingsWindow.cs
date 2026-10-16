@@ -46,7 +46,7 @@ public class CosyVoice3CrispAsrSettingsWindow : Window
             (CosyVoice3CrispAsr.ModelKeyRlQ4K, TtsSettingsChrome.MakeStatus(nameof(vm.RlQ4KBundleBrush), nameof(vm.RlQ4KBundleLabel))),
             (CosyVoice3CrispAsr.ModelKeyRlF16, TtsSettingsChrome.MakeStatus(nameof(vm.RlF16BundleBrush), nameof(vm.RlF16BundleLabel))),
             (Se.Language.General.InstallFolder, TtsSettingsChrome.MakeFolder(nameof(vm.ModelsFolder), vm.OpenModelsFolderCommand)));
-        return TtsSettingsChrome.MakeSection(Se.Language.General.Models, rows);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Models, rows);
     }
 
     private static Border BuildVoice(CosyVoice3CrispAsrSettingsViewModel vm)
@@ -64,7 +64,7 @@ public class CosyVoice3CrispAsrSettingsWindow : Window
             Children =
             {
                 sourceLanguageCombo,
-                TtsSettingsChrome.MakeHint("Language spoken in imported reference WAVs (for cross-lingual cloning). "
+                EditorChrome.MakeHint("Language spoken in imported reference WAVs (for cross-lingual cloning). "
                                            + "Auto detects it from each voice's transcript."),
             },
         };
@@ -75,7 +75,7 @@ public class CosyVoice3CrispAsrSettingsWindow : Window
                 TtsSettingsChrome.MakeFolderButton(Se.Language.Video.TextToSpeech.OpenVoicesFolder, vm.OpenVoicesFolderCommand))),
             (Se.Language.General.Speed, TtsSettingsChrome.MakeSlider(Se.Language.General.Speed, 0.5, 2.0, 0.05, nameof(vm.Speed), nameof(vm.SpeedLabel))),
             ("Reference language", sourceLanguage));
-        return TtsSettingsChrome.MakeSection(Se.Language.General.Voice, rows);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Voice, rows);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

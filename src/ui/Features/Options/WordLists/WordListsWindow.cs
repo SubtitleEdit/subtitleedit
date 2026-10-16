@@ -1,11 +1,10 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -30,7 +29,7 @@ public class WordListsWindow : Window
         Height = 720;
         MinWidth = 760;
         MinHeight = 400;
-        OptionsListChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.CompactListRows);
 
         _vm = vm;
         vm.Window = this;
@@ -78,8 +77,8 @@ public class WordListsWindow : Window
         }, 0, 0);
         sections.Add(lists, 1, 0);
 
-        var buttonOpenFolder = SyncTimingChrome.MakeTextToolButton(IconNames.FolderOpen, Se.Language.General.OpenDictionaryFolder, vm.OpenDictionariesFolderCommand);
-        var buttonUseAlwaysList = SyncTimingChrome.MakeTextToolButton(IconNames.FormatListChecks, Se.Language.SpellCheck.EditUseAlwaysList, vm.EditUseAlwaysListCommand);
+        var buttonOpenFolder = EditorChrome.MakeTextToolButton(IconNames.FolderOpen, Se.Language.General.OpenDictionaryFolder, vm.OpenDictionariesFolderCommand);
+        var buttonUseAlwaysList = EditorChrome.MakeTextToolButton(IconNames.FormatListChecks, Se.Language.SpellCheck.EditUseAlwaysList, vm.EditUseAlwaysListCommand);
         var panelLinks = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -91,7 +90,7 @@ public class WordListsWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
 
-        Content = SyncTimingChrome.MakeRoot(sections, SyncTimingChrome.MakeButtonBar(panelLinks, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(panelLinks, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, comboLanguages); // initial focus on an input, not an action button - a focused button clicks on bare Space
         Closing += (s, e) => _vm.Closing();
@@ -146,9 +145,9 @@ public class WordListsWindow : Window
             Children = { glyph, labelTitle },
         };
 
-        var badge = OptionsListChrome.MakeCountBadge(countBinding, new SolidColorBrush(color), new SolidColorBrush(color, 0.16));
+        var badge = EditorChrome.MakeCountBadge(countBinding, new SolidColorBrush(color), new SolidColorBrush(color, 0.16));
         badge.Margin = new Thickness(6, 0, 0, 0);
-        return OptionsListChrome.MakeHeader(titlePanel, badge);
+        return EditorChrome.MakeHeaderRow(titlePanel, badge);
     }
 
     private static ListBox MakeListBox(string accessibleName, string itemsPath, string selectedPath, ICommand removeCommand)
@@ -188,7 +187,7 @@ public class WordListsWindow : Window
         };
 
         grid.Add(header, 0);
-        grid.Add(OptionsListChrome.MakeListFrame(listBox), 1);
+        grid.Add(EditorChrome.MakeCompactListFrame(listBox), 1);
         grid.Add(addRow, 2);
         return grid;
     }
@@ -221,7 +220,7 @@ public class WordListsWindow : Window
 
         var listBox = MakeListBox(Se.Language.Options.WordLists.NameAndIgnoreList, nameof(vm.Names), nameof(vm.SelectedName), vm.RemoveNameCommand);
 
-        var textBox = UiUtil.MakeTextBox(110, vm, nameof(vm.NewName)).AsField(Se.Language.Options.WordLists.AddName);
+        var textBox = UiUtil.MakeTextBox(110, vm, nameof(vm.NewName)).AsTextField(Se.Language.Options.WordLists.AddName);
         textBox.PlaceholderText = Se.Language.Options.WordLists.AddName;
         textBox.KeyDown += (s, e) => vm.NameTextBoxKeyDown(e);
         var buttonAdd = EditorChrome.CreateToolButton(IconNames.Plus, Se.Language.General.New, vm.AddNameCommand, 28);
@@ -237,7 +236,7 @@ public class WordListsWindow : Window
 
         var listBox = MakeListBox(Se.Language.Options.WordLists.UserWords, nameof(vm.UserWords), nameof(vm.SelectedUserWord), vm.RemoveWordCommand);
 
-        var textBox = UiUtil.MakeTextBox(110, vm, nameof(vm.NewUserWord)).AsField(Se.Language.General.AddToUserDictionary);
+        var textBox = UiUtil.MakeTextBox(110, vm, nameof(vm.NewUserWord)).AsTextField(Se.Language.General.AddToUserDictionary);
         textBox.PlaceholderText = Se.Language.General.AddToUserDictionary;
         textBox.KeyDown += (s, e) => vm.UserWordTextBoxKeyDown(e);
         var buttonAdd = EditorChrome.CreateToolButton(IconNames.Plus, Se.Language.General.New, vm.AddWordCommand, 28);
@@ -253,9 +252,9 @@ public class WordListsWindow : Window
 
         var listBox = MakeListBox(Se.Language.Options.WordLists.OcrFixList, nameof(vm.OcrFixes), nameof(vm.SelectedOcrFix), vm.RemoveOcrFixCommand);
 
-        var textBoxFind = UiUtil.MakeTextBox(110, vm, nameof(vm.NewOcrFixFind)).AsField(Se.Language.General.Find);
+        var textBoxFind = UiUtil.MakeTextBox(110, vm, nameof(vm.NewOcrFixFind)).AsTextField(Se.Language.General.Find);
         textBoxFind.PlaceholderText = Se.Language.General.Find;
-        var textBoxReplace = UiUtil.MakeTextBox(110, vm, nameof(vm.NewOcrFixReplace)).AsField(Se.Language.General.ReplaceWith);
+        var textBoxReplace = UiUtil.MakeTextBox(110, vm, nameof(vm.NewOcrFixReplace)).AsTextField(Se.Language.General.ReplaceWith);
         textBoxReplace.PlaceholderText = Se.Language.General.ReplaceWith;
         textBoxReplace.KeyDown += (s, e) => vm.OcrFixTextBoxKeyDown(e);
         var buttonAdd = EditorChrome.CreateToolButton(IconNames.Plus, Se.Language.General.New, vm.AddOcrFixCommand, 28);

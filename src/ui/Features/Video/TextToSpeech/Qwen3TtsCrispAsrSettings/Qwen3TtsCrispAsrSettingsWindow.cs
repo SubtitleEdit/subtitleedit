@@ -43,7 +43,7 @@ public class Qwen3TtsCrispAsrSettingsWindow : Window
             ("1.7B Voice clone", TtsSettingsChrome.MakeStatus(nameof(vm.CloneTalkerBrush), nameof(vm.CloneTalkerLabel))),
             ("Codec (12 Hz)", TtsSettingsChrome.MakeStatus(nameof(vm.CodecBrush), nameof(vm.CodecLabel))),
             (Se.Language.General.InstallFolder, TtsSettingsChrome.MakeFolder(nameof(vm.ModelsFolder), vm.OpenModelsFolderCommand)));
-        return TtsSettingsChrome.MakeSection(Se.Language.General.Models, rows);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Models, rows);
     }
 
     private static Border BuildVoice(Qwen3TtsCrispAsrSettingsViewModel vm)
@@ -51,7 +51,7 @@ public class Qwen3TtsCrispAsrSettingsWindow : Window
         var rows = TtsSettingsChrome.MakeRows(LabelWidth,
             (Se.Language.Video.Voices, TtsSettingsChrome.MakeValue(nameof(vm.VoicesLabel),
                 TtsSettingsChrome.MakeFolderButton(Se.Language.Video.TextToSpeech.OpenVoicesFolder, vm.OpenVoicesFolderCommand))));
-        return TtsSettingsChrome.MakeSection(Se.Language.General.Voice, rows);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Voice, rows);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

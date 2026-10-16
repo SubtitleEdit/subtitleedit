@@ -26,7 +26,7 @@ public sealed class DownloadTtsWindow : Window
         DataContext = vm;
         _vm = vm;
 
-        TtsVoicesChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TextFieldsUncentered | EditorWindowStyles.MuteDisabledPrimary);
 
         var titleText = new TextBlock
         {
@@ -67,7 +67,7 @@ public sealed class DownloadTtsWindow : Window
         });
 
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = TtsVoicesChrome.MakeButtonBar(null, buttonCancel);
+        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonCancel);
 
         var body = new Border
         {

@@ -22,16 +22,14 @@ public class PickRuleProfileWindow : Window
         Height = 750;
         MinWidth = 800;
         MinHeight = 700;
-        SharedDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
 
-        var buttonOk = SharedDialogChrome.Primary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = SharedDialogChrome.MakeRoot(
-            SharedDialogChrome.MakeListSection(Se.Language.General.Profiles, MakeProfilesView(vm)),
-            SharedDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(EditorChrome.MakePickerListSection(Se.Language.General.Profiles, MakeProfilesView(vm)), EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, () =>
         {

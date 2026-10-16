@@ -43,7 +43,7 @@ public class Confucius4TtsCrispAsrSettingsWindow : Window
             ("BigVGAN vocoder", TtsSettingsChrome.MakeStatus(nameof(vm.VocoderBrush), nameof(vm.VocoderLabel))),
             ("w2v-BERT encoder", TtsSettingsChrome.MakeStatus(nameof(vm.W2vBrush), nameof(vm.W2vLabel))),
             (Se.Language.General.InstallFolder, TtsSettingsChrome.MakeFolder(nameof(vm.ModelsFolder), vm.OpenModelsFolderCommand)));
-        return TtsSettingsChrome.MakeSection(Se.Language.General.Models, rows);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Models, rows);
     }
 
     private static Border BuildVoice(Confucius4TtsCrispAsrSettingsViewModel vm)
@@ -54,7 +54,7 @@ public class Confucius4TtsCrispAsrSettingsWindow : Window
             // Flow-matching Euler steps for the S2A stage — the quality/speed knob this backend exposes
             // (--tts-steps; CrispASR default 20, upstream reference samples at 25).
             (Se.Language.General.Quality, TtsSettingsChrome.MakeSlider(Se.Language.General.Quality, Confucius4TtsCrispAsr.MinOdeSteps, Confucius4TtsCrispAsr.MaxOdeSteps, 1, nameof(vm.OdeSteps), nameof(vm.OdeStepsLabel))));
-        return TtsSettingsChrome.MakeSection(Se.Language.General.Voice, rows);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Voice, rows);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

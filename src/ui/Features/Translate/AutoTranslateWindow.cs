@@ -13,7 +13,6 @@ using Avalonia.Styling;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.UiLogic.Translate;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Platform.Progress;
@@ -41,7 +40,7 @@ public class AutoTranslateWindow : Window
         Height = 780;
         MinHeight = 480;
         // The Edit dialogs' styles: compact combos and text fields that keep the field color while focused
-        Features.Edit.EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         // The editable model combo's text box: as compact as the other fields, text centered
         Styles.Add(new Style(x => x.OfType<ComboBox>().Template().OfType<TextBox>().Name("PART_EditableTextBox"))
         {
@@ -191,7 +190,7 @@ public class AutoTranslateWindow : Window
         toolbarGrid.Add(targetCombo, 0, 8);
         toolbarGrid.Add(settingsButton, 0, 10);
 
-        var toolbar = VideoSubDialogChrome.MakeToolbar(toolbarGrid);
+        var toolbar = EditorChrome.MakeToolbar(toolbarGrid);
         toolbar.Padding = new Thickness(12, 8);
         return toolbar;
     }
@@ -284,8 +283,8 @@ public class AutoTranslateWindow : Window
         settingsPanel.Children.Add(Group(nameof(vm.FormalityIsVisible), Label(Se.Language.General.Formality),
             UiUtil.MakeComboBox(vm.Formalities, vm, nameof(vm.SelectedFormality)).WithWidth(200).WithAccessibleName(Se.Language.General.Formality)));
 
-        var switchLlamaCppRemote = VideoSubDialogChrome.MakeSwitch(nameof(vm.LlamaCppUseRemoteServer), Se.Language.General.LlamaCppUseRemoteServer);
-        var rowLlamaCppRemote = VideoSubDialogChrome.MakeSwitchRow(switchLlamaCppRemote, Se.Language.General.LlamaCppUseRemoteServer);
+        var switchLlamaCppRemote = EditorChrome.MakeSwitch(nameof(vm.LlamaCppUseRemoteServer), Se.Language.General.LlamaCppUseRemoteServer);
+        var rowLlamaCppRemote = EditorChrome.MakeSwitchRow(switchLlamaCppRemote, Se.Language.General.LlamaCppUseRemoteServer);
         rowLlamaCppRemote.VerticalAlignment = VerticalAlignment.Center;
         rowLlamaCppRemote.Bind(IsVisibleProperty, new Binding(nameof(vm.LlamaCppRemoteToggleIsVisible)));
         settingsPanel.Children.Add(rowLlamaCppRemote);
@@ -455,9 +454,9 @@ public class AutoTranslateWindow : Window
         tableView.WithAccessibleName(Se.Language.General.Lines);
         vm.RowGrid = tableView;
 
-        var frame = VideoSubDialogChrome.MakeListFrame(tableView);
+        var frame = EditorChrome.MakeListFrame(tableView);
         frame.Margin = new Thickness(14, 12);
-        return VideoSubDialogChrome.MakePanel(frame);
+        return EditorChrome.MakePanel(frame);
     }
 
     /// <summary>
@@ -478,11 +477,11 @@ public class AutoTranslateWindow : Window
         progressBar.WithPlatformProgress(this, nameof(vm.IsProgressEnabled));
         progressBar.WithAccessibleName(Se.Language.General.Translation);
 
-        var statusText = VideoSubDialogChrome.MakeHint(nameof(vm.StatusText));
+        var statusText = EditorChrome.MakeBoundHint(nameof(vm.StatusText));
         statusText.FontSize = 12;
         statusText.MaxWidth = 300;
 
-        var progressLabel = VideoSubDialogChrome.MakeHint(nameof(vm.ProgressText));
+        var progressLabel = EditorChrome.MakeBoundHint(nameof(vm.ProgressText));
         progressLabel.FontSize = 12;
         progressLabel.MinWidth = 40;
         progressLabel.TextAlignment = TextAlignment.Right;
@@ -535,8 +534,8 @@ public class AutoTranslateWindow : Window
             Children = { poweredByLabel, poweredByLink },
         };
 
-        var switchTranslateInPlace = VideoSubDialogChrome.MakeSwitch(nameof(vm.TranslateInPlace), Se.Language.Translate.TranslateInPlaceNoOriginal);
-        var rowTranslateInPlace = VideoSubDialogChrome.MakeSwitchRow(switchTranslateInPlace, Se.Language.Translate.TranslateInPlaceNoOriginal);
+        var switchTranslateInPlace = EditorChrome.MakeSwitch(nameof(vm.TranslateInPlace), Se.Language.Translate.TranslateInPlaceNoOriginal);
+        var rowTranslateInPlace = EditorChrome.MakeSwitchRow(switchTranslateInPlace, Se.Language.Translate.TranslateInPlaceNoOriginal);
         rowTranslateInPlace.VerticalAlignment = VerticalAlignment.Center;
         rowTranslateInPlace.Bind(IsVisibleProperty, new Binding(nameof(vm.TranslateInPlaceIsVisible)));
 
@@ -555,7 +554,7 @@ public class AutoTranslateWindow : Window
 
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        return VideoSubDialogChrome.MakeButtonBar(leftPanel, _buttonTranslate, buttonCancel, _buttonOk);
+        return EditorChrome.MakeButtonBar(leftPanel, _buttonTranslate, buttonCancel, _buttonOk);
     }
 
     private static Grid Group(string isVisibleProperty, params Control[] controls)

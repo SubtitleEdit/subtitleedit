@@ -24,7 +24,7 @@ public class PickLayerFilterWindow : Window
         Height = 700;
         MinWidth = 500;
         MinHeight = 400;
-        SharedDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
 
@@ -34,7 +34,7 @@ public class PickLayerFilterWindow : Window
         var actions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2 };
         actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-square-check", Se.Language.General.SelectAll, vm.SelectAllCommand, 26));
         actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-right-left", Se.Language.General.InvertSelection, vm.InvertSelectionCommand, 26));
-        var layersView = SharedDialogChrome.MakeListSection(Se.Language.General.Layer, MakeLayersView(vm), actions, lineOnTop: true);
+        var layersView = EditorChrome.MakePickerListSection(Se.Language.General.Layer, MakeLayersView(vm), actions, lineOnTop: true);
 
         var sections = new Grid
         {
@@ -47,11 +47,11 @@ public class PickLayerFilterWindow : Window
         sections.Add(settingsView, 0);
         sections.Add(layersView, 1);
 
-        var buttonRemoveFilter = SharedDialogChrome.MakeTextToolButton("fa-solid fa-filter-circle-xmark", Se.Language.General.RemoveFilter, vm.RemoveFilterCommand);
-        var buttonOk = SharedDialogChrome.Primary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonRemoveFilter = EditorChrome.MakeTextToolButton("fa-solid fa-filter-circle-xmark", Se.Language.General.RemoveFilter, vm.RemoveFilterCommand);
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = SharedDialogChrome.MakeRoot(sections, SharedDialogChrome.MakeButtonBar(buttonRemoveFilter, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeButtonBar(buttonRemoveFilter, buttonCancel, buttonOk));
 
         Loaded += delegate
         {
@@ -69,13 +69,13 @@ public class PickLayerFilterWindow : Window
             Spacing = 8,
             Children =
             {
-                SharedDialogChrome.MakeSwitchRow(nameof(vm.HideFromWaveform), Se.Language.Tools.FilterLayersHideFromWaveform),
-                SharedDialogChrome.MakeSwitchRow(nameof(vm.HideFromGridView), Se.Language.Tools.FilterLayersHideFromSubtitleGrid),
-                SharedDialogChrome.MakeSwitchRow(nameof(vm.HideFromVideoPreview), Se.Language.Tools.FilterLayersHideFromVideoPreview),
+                EditorChrome.MakeSwitchRow(nameof(vm.HideFromWaveform), Se.Language.Tools.FilterLayersHideFromWaveform),
+                EditorChrome.MakeSwitchRow(nameof(vm.HideFromGridView), Se.Language.Tools.FilterLayersHideFromSubtitleGrid),
+                EditorChrome.MakeSwitchRow(nameof(vm.HideFromVideoPreview), Se.Language.Tools.FilterLayersHideFromVideoPreview),
             }
         };
 
-        return SharedDialogChrome.MakeSection(Se.Language.General.Options, panel, first: true);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Options, panel, first: true);
     }
 
     private static TableView MakeLayersView(PickLayerFilterViewModel vm)

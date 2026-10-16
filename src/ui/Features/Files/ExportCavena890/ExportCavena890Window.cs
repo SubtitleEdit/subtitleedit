@@ -18,17 +18,17 @@ public class ExportCavena890Window : Window
         Title = Se.Language.File.Export.TitleExportCavena890;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        FormatPropertiesChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Form);
         vm.Window = this;
         DataContext = vm;
 
         var l = Se.Language.File.Export;
-        var textBoxTranslatedTitle = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.TranslatedTitle)), l.ExportCavenaTranslatedTitle);
-        var textBoxOriginalTitle = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.OriginalTitle)), l.ExportCavenaOriginalTitle);
-        var textBoxTranslator = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.Translator)), l.ExportCavenaTranslator);
-        var textBoxComment = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.Comment)), l.ExportCavenaComment);
-        var textBoxLanguage = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.Language)), Se.Language.General.Language);
-        var textBoxStartOfProgramme = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.StartOfProgramme)), l.ExportCavenaStartOfProgramme);
+        var textBoxTranslatedTitle = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.TranslatedTitle)), l.ExportCavenaTranslatedTitle);
+        var textBoxOriginalTitle = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.OriginalTitle)), l.ExportCavenaOriginalTitle);
+        var textBoxTranslator = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.Translator)), l.ExportCavenaTranslator);
+        var textBoxComment = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.Comment)), l.ExportCavenaComment);
+        var textBoxLanguage = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.Language)), Se.Language.General.Language);
+        var textBoxStartOfProgramme = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.StartOfProgramme)), l.ExportCavenaStartOfProgramme);
 
         var rows = FormatPropertiesChrome.MakeRows(
             FormatPropertiesChrome.Row(l.ExportCavenaTranslatedTitle, textBoxTranslatedTitle),
@@ -38,7 +38,7 @@ public class ExportCavena890Window : Window
             FormatPropertiesChrome.Row(Se.Language.General.Language, textBoxLanguage),
             FormatPropertiesChrome.Row(l.ExportCavenaStartOfProgramme, textBoxStartOfProgramme));
 
-        var buttonBar = FormatPropertiesChrome.MakeButtonBar(null, UiUtil.MakeButtonOk(vm.OkCommand), UiUtil.MakeButtonCancel(vm.CancelCommand));
+        var buttonBar = EditorChrome.MakeDockedCancelOkBar(null, UiUtil.MakeButtonCancel(vm.CancelCommand), UiUtil.MakeButtonOk(vm.OkCommand));
 
         Content = FormatPropertiesChrome.MakeRoot(
             buttonBar,

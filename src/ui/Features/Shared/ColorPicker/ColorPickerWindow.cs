@@ -1,12 +1,10 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -25,7 +23,7 @@ public class ColorPickerWindow : Window
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -35,7 +33,7 @@ public class ColorPickerWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = SyncTimingChrome.MakeRoot(colorView, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(colorView, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, hexTextBox); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -114,9 +112,7 @@ public class ColorPickerWindow : Window
         // RGBA Sliders
         var slidersPanel = CreateSlidersPanel(vm, out hexTextBox);
 
-        var sections = SyncTimingChrome.SideBySide(
-            new Border { Child = leftPanel, Padding = new Thickness(16, 16, 16, 14) },
-            new Border { Child = slidersPanel, Padding = new Thickness(16, 16, 16, 14) });
+        var sections = EditorChrome.MakeSideBySide(new Border { Child = leftPanel, Padding = new Thickness(16, 16, 16, 14) }, new Border { Child = slidersPanel, Padding = new Thickness(16, 16, 16, 14) });
 
         // Recent colors
         var recentColorsPanel = CreateLastColorsPanel(vm);

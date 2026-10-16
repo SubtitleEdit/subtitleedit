@@ -35,6 +35,6 @@ public static class ViewSnapTimeCodesToFrames
         return FunctionViewChrome.MakePanel(vm, Se.Language.Main.Menu.SnapAllTimesToFrames,
             radioFrameRateFromVideo,
             panelFrameRateFixed,
-            FunctionViewChrome.MakeHint(Se.Language.Tools.BatchConvert.SnapTimeCodesToFramesInfo));
+            EditorChrome.MakeHint(Se.Language.Tools.BatchConvert.SnapTimeCodesToFramesInfo));
     }
 }

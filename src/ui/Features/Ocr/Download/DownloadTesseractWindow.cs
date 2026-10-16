@@ -2,7 +2,6 @@ using Avalonia.Controls;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Chrome = Nikse.SubtitleEdit.Features.Ocr.OcrDialogChrome;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.Download;
 
@@ -16,19 +15,19 @@ public class DownloadTesseractWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        Chrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.EngineDialog);
 
         DataContext = vm;
 
-        var titleText = Chrome.DownloadTitle(string.Format(Se.Language.General.DownloadingX, "Tesseract"));
-        var progressBar = Chrome.DownloadProgressBar(nameof(DownloadFfmpegViewModel.Progress));
-        var statusText = Chrome.DownloadStatus(nameof(DownloadFfmpegViewModel.StatusText));
-        var errorText = Chrome.DownloadError(nameof(vm.Error));
+        var titleText = EditorChrome.MakeDownloadTitle(string.Format(Se.Language.General.DownloadingX, "Tesseract"));
+        var progressBar = EditorChrome.MakeDownloadProgressBar(nameof(DownloadFfmpegViewModel.Progress));
+        var statusText = EditorChrome.MakeDownloadStatus(nameof(DownloadFfmpegViewModel.StatusText));
+        var errorText = EditorChrome.MakeDownloadError(nameof(vm.Error));
 
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CommandCancelCommand);
-        var buttonBar = Chrome.ButtonBar(null, buttonCancel);
+        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonCancel);
 
-        Content = Chrome.Root(Chrome.DownloadBody(titleText, progressBar, statusText, errorText), buttonBar);
+        Content = EditorChrome.MakeRoot(EditorChrome.MakeDownloadBody(titleText, progressBar, statusText, errorText), buttonBar, stretch: false);
 
         Loaded += delegate
         {

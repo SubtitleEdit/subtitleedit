@@ -8,7 +8,7 @@ using Nikse.SubtitleEdit.Logic;
 namespace Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 
 /// <summary>
-/// A text prompt in the editor look (see <see cref="SharedDialogChrome"/>). Bare Space in the text
+/// A text prompt in the editor look (see <see cref="EditorChrome"/>). Bare Space in the text
 /// box types a space (#15028) - no window key handling may take it.
 /// </summary>
 public class PromptTextBoxWindow : Window
@@ -19,7 +19,7 @@ public class PromptTextBoxWindow : Window
         Bind(TitleProperty, new Binding(nameof(vm.Title)));
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        SharedDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
 
@@ -40,7 +40,7 @@ public class PromptTextBoxWindow : Window
         var buttonExtra = UiUtil.MakeButton(string.Empty, vm.ExtraButtonCommand)
             .WithBindIsVisible(nameof(vm.IsExtraButtonVisible));
         buttonExtra.Bind(ContentControl.ContentProperty, new Binding(nameof(vm.ExtraButtonText)));
-        var buttonOk = SharedDialogChrome.Primary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
         var panel = new Border
@@ -49,7 +49,7 @@ public class PromptTextBoxWindow : Window
             Padding = new Thickness(16),
         };
 
-        Content = SharedDialogChrome.MakeRoot(panel, SharedDialogChrome.MakeButtonBar(buttonExtra, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(panel, EditorChrome.MakeButtonBar(buttonExtra, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, textBox); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);

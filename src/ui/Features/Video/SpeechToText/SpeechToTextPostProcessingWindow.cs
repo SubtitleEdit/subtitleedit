@@ -6,7 +6,6 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Chrome = Nikse.SubtitleEdit.Features.Video.SpeechToText.SpeechToTextChrome;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
@@ -25,7 +24,7 @@ public class SpeechToTextPostProcessingWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 400;
-        Chrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.SpeechToText);
 
         _vm = vm;
         vm.Window = this;
@@ -73,10 +72,7 @@ public class SpeechToTextPostProcessingWindow : Window
             VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
         };
 
-        var buttonBar = Chrome.ButtonBar(
-            null,
-            UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelCommand),
-            Chrome.Primary(UiUtil.MakeButton(Se.Language.General.Ok, vm.OKCommand)));
+        var buttonBar = EditorChrome.MakeFlushButtonBar(null, UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelCommand), EditorChrome.AsPrimary(UiUtil.MakeButton(Se.Language.General.Ok, vm.OKCommand)));
 
         var outerGrid = new Grid
         {
@@ -100,7 +96,7 @@ public class SpeechToTextPostProcessingWindow : Window
 
     private static Grid MakeSwitchRow(SpeechToTextPostProcessingViewModel vm, string property, string text, string? hint = null, params Control[] trailing)
     {
-        var toggle = Chrome.Switch(vm, property, text);
+        var toggle = EditorChrome.MakeSwitch(property, text, vm);
         var label = UiUtil.MakeTextBlock(text);
         if (hint != null && Se.Settings.Appearance.ShowHints)
         {
@@ -113,7 +109,7 @@ public class SpeechToTextPostProcessingWindow : Window
             control.VerticalAlignment = VerticalAlignment.Center;
         }
 
-        return Chrome.SwitchRow(toggle, label, trailing);
+        return EditorChrome.MakeSwitchRow(toggle, label, trailing);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

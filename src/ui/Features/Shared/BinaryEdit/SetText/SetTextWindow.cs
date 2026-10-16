@@ -53,7 +53,7 @@ public class SetTextWindow : Window
         grid.Add(fontView, 1);
         grid.Add(previewView, 2);
 
-        Content = BinaryEditChrome.MakeRoot(grid, buttonPanel);
+        Content = EditorChrome.MakeRoot(grid, buttonPanel);
 
         KeyDown += (sender, e) =>
         {
@@ -100,7 +100,7 @@ public class SetTextWindow : Window
         var numericUpDownFontSize = UiUtil.MakeNumericUpDownInt(8, 200, 48, 90, vm, nameof(vm.FontSize));
         numericUpDownFontSize.Classes.Add("field");
 
-        var switchBold = VideoDialogChrome.SwitchRow(nameof(vm.FontIsBold), Se.Language.General.Bold);
+        var switchBold = EditorChrome.MakeSwitchRow(nameof(vm.FontIsBold), Se.Language.General.Bold);
 
         var colorPickerFontColor = UiUtil.MakeColorPickerButton(vm, nameof(vm.FontColor));
         var colorPickerOutlineColor = UiUtil.MakeColorPickerButton(vm, nameof(vm.OutlineColor));
@@ -224,6 +224,6 @@ public class SetTextWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        return BinaryEditChrome.MakeButtonBar(null, buttonCancel, buttonOk);
+        return EditorChrome.MakeCancelOkBar(null, buttonCancel, buttonOk);
     }
 }

@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Features.Shared.WaveformGuessTimeCodes;
 /// to the working area, and the clamp cut off the bottom options and the OK/Cancel buttons. The
 /// boxes are laid out in two columns so the window fits at a high scale, and the options scroll
 /// with the buttons pinned below them for the cases where it still does not. In the editor look
-/// (see <see cref="SharedDialogChrome"/>).
+/// (see <see cref="EditorChrome"/>).
 /// </summary>
 public class WaveformGuessTimeCodesWindow : Window
 {
@@ -27,11 +27,11 @@ public class WaveformGuessTimeCodesWindow : Window
         Title = Se.Language.Waveform.GuessTimeCodes;
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
-        SharedDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
 
-        var buttonOk = SharedDialogChrome.Primary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
         // Two columns: the two short "which lines" sections stacked on the left, the taller
@@ -78,7 +78,7 @@ public class WaveformGuessTimeCodesWindow : Window
             VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
         };
 
-        Content = SharedDialogChrome.MakeRoot(scrollViewer, SharedDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(scrollViewer, EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, radioStartFromVideoPosition); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
@@ -101,7 +101,7 @@ public class WaveformGuessTimeCodesWindow : Window
             }
         };
 
-        return SharedDialogChrome.MakeSection(Se.Language.General.StartFrom, stackPanel, first: true);
+        return EditorChrome.MakeEditorSection(Se.Language.General.StartFrom, stackPanel, first: true);
     }
 
     private static Border MakeDeleteLinesView(WaveformGuessTimeCodesViewModel vm)
@@ -122,7 +122,7 @@ public class WaveformGuessTimeCodesWindow : Window
             }
         };
 
-        return SharedDialogChrome.MakeSection(Se.Language.General.DeleteLines, stackPanel);
+        return EditorChrome.MakeEditorSection(Se.Language.General.DeleteLines, stackPanel);
     }
 
     private static Border MakeDetectOptionsView(WaveformGuessTimeCodesViewModel vm)
@@ -160,6 +160,6 @@ public class WaveformGuessTimeCodesWindow : Window
         // A gap: splitting long subtitles is a step of its own, after the detection
         AddRow(Se.Language.Waveform.GuessTimeCodesSplitLongSubtitlesAt, UiUtil.MakeNumericUpDownInt(500, 20000, 3500, 130, vm, nameof(vm.SplitLongSubtitlesAtMs)), new Thickness(0, 12, 0, 0));
 
-        return SharedDialogChrome.MakeSection(Se.Language.General.Settings, grid, first: true);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Settings, grid, first: true);
     }
 }

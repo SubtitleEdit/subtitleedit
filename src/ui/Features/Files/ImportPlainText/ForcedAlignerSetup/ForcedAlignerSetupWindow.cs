@@ -4,9 +4,6 @@ using Avalonia.Controls.Shapes;
 using Avalonia.Data;
 using Avalonia.Media;
 using Avalonia.Layout;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
-using Nikse.SubtitleEdit.Features.Tools;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -27,7 +24,7 @@ public class ForcedAlignerSetupWindow : Window
         Title = Se.Language.File.Import.ForcedAlignerSetupTitle;
         vm.Window = this;
         DataContext = vm;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         var labelIntro = UiUtil.MakeTextBlock(Se.Language.File.Import.ForcedAlignerSetupIntro);
         labelIntro.TextWrapping = TextWrapping.Wrap;
@@ -84,8 +81,7 @@ public class ForcedAlignerSetupWindow : Window
             Children = { engineDot, labelEngineStatus },
         };
 
-        var buttonDownloadEngine = SyncTimingChrome.MakeTextToolButton(IconNames.CloudDownload,
-            Se.Language.File.Import.ForcedAlignerDownloadEngine, vm.DownloadEngineCommand);
+        var buttonDownloadEngine = EditorChrome.MakeTextToolButton(IconNames.CloudDownload, Se.Language.File.Import.ForcedAlignerDownloadEngine, vm.DownloadEngineCommand);
         buttonDownloadEngine.Margin = new Thickness(10, 0, 0, 0);
 
         var comboAligner = UiUtil.MakeComboBox(vm.Aligners, vm, nameof(vm.SelectedAligner));
@@ -120,7 +116,7 @@ public class ForcedAlignerSetupWindow : Window
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var rowEndsFromSpeech = LineToolsChrome.MakeSwitchRow(nameof(vm.EndsFromIsolatedSpeech), Se.Language.File.Import.ForcedAlignerEndsFromSpeech, out _);
+        var rowEndsFromSpeech = EditorChrome.MakeToggleRow(nameof(vm.EndsFromIsolatedSpeech), Se.Language.File.Import.ForcedAlignerEndsFromSpeech, out _);
         if (Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(rowEndsFromSpeech, Se.Language.File.Import.ForcedAlignerEndsFromSpeechHint);
@@ -154,7 +150,7 @@ public class ForcedAlignerSetupWindow : Window
             },
         };
 
-        Content = LineToolsChrome.MakeRoot(sections, null, buttonCancel, buttonOk);
+        Content = EditorChrome.MakeCancelOkRoot(sections, null, buttonCancel, buttonOk);
 
         UiUtil.FocusOnFirstActivation(this, comboAligner); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (s, e) => vm.OnKeyDown(e);

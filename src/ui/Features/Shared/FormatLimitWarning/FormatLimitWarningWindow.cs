@@ -4,8 +4,6 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Optris.Icons.Avalonia;
@@ -26,7 +24,7 @@ public class FormatLimitWarningWindow : Window
         Title = Se.Language.Main.FormatLimitWarningTitle;
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -121,7 +119,7 @@ public class FormatLimitWarningWindow : Window
             Children = { header, card, explanation },
         };
 
-        Content = SyncTimingChrome.MakeRoot(panel, SyncTimingChrome.MakeButtonBar(doNotShowAgainRow, buttonCancel, buttonSaveAnyway));
+        Content = EditorChrome.MakeRoot(panel, EditorChrome.MakeDockedButtonBar(doNotShowAgainRow, buttonCancel, buttonSaveAnyway));
 
         // Cancel is the safe default: Enter must not accidentally commit a lossy save.
         UiUtil.FocusOnFirstActivation(this, buttonCancel);

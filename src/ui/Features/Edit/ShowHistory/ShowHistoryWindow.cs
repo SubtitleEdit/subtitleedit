@@ -3,7 +3,6 @@ using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -22,7 +21,7 @@ public class ShowHistoryWindow : Window
         Width = 810;
         Height = 640;
         CanResize = true;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -73,11 +72,11 @@ public class ShowHistoryWindow : Window
 
         var list = new Border
         {
-            Child = EditDialogChrome.MakeListFrame(tableView),
+            Child = EditorChrome.MakeListFrame(tableView, clearListBackground: true),
             Padding = new Thickness(14),
         };
 
-        Content = SyncTimingChrome.MakeRoot(list, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonRollback));
+        Content = EditorChrome.MakeRoot(list, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonRollback));
 
         // The list, not an action button, gets first focus (hack to make OnKeyDown work) - a
         // focused button clicks on bare Space.

@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -39,7 +39,7 @@ public class VoiceManagerWindow : Window
         MinWidth = 720;
         MinHeight = 480;
         CanResize = true;
-        TtsVoicesChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TextFieldsUncentered | EditorWindowStyles.MuteDisabledPrimary);
         // Rounded, slightly tighter engine rows
         Styles.Add(new Style(x => x.OfType<ListBoxItem>())
         {
@@ -441,7 +441,7 @@ public class VoiceManagerWindow : Window
         };
 
         tableView.Margin = new Thickness(2);
-        return TtsVoicesChrome.MakeListFrame(new Grid { Children = { tableView, emptyText, loading } });
+        return EditorChrome.MakeListFrame(new Grid { Children = { tableView, emptyText, loading } });
     }
 
     private Control MakeDetailsPane(VoiceManagerViewModel vm)
@@ -506,7 +506,7 @@ public class VoiceManagerWindow : Window
             [!TextBlock.TextProperty] = new Binding(nameof(vm.TranscriptHint)),
         };
         var buttonStt = EditorChrome.CreateToolButton("fa-solid fa-microphone-lines", Se.Language.Video.TextToSpeech.UseSpeechToTextDotDotDot, vm.TranscribeWithSpeechToTextCommand, 28);
-        var buttonSave = TtsVoicesChrome.MakeAction("fa-solid fa-floppy-disk", Se.Language.Video.TextToSpeech.SaveTranscript, vm.SaveTranscriptCommand)
+        var buttonSave = EditorChrome.MakeActionButton("fa-solid fa-floppy-disk", Se.Language.Video.TextToSpeech.SaveTranscript, vm.SaveTranscriptCommand)
             .WithBindEnabled(nameof(vm.IsTranscriptDirty));
         buttonSave.Height = 28;
         var transcriptBar = new Grid
@@ -588,7 +588,7 @@ public class VoiceManagerWindow : Window
         };
         left.Add(status, 0, 0);
         left.Add(count, 0, 1);
-        return TtsVoicesChrome.MakeButtonBar(left, buttonClose);
+        return EditorChrome.MakeFlushButtonBar(left, buttonClose);
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)

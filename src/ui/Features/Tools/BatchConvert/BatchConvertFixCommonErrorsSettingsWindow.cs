@@ -6,7 +6,6 @@ using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -27,7 +26,7 @@ public class BatchConvertFixCommonErrorsSettingsWindow : Window
         Height = 800;
         MinWidth = 600;
         MinHeight = 400;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         vm.Window = this;
         DataContext = vm;
 
@@ -54,7 +53,7 @@ public class BatchConvertFixCommonErrorsSettingsWindow : Window
         };
 
         grid.Add(MakeRulesView(vm), 0, 0);
-        grid.Add(VideoSubDialogChrome.MakeButtonBar(profile, buttonCancel, buttonOk), 1, 0);
+        grid.Add(EditorChrome.MakeButtonBar(profile, buttonCancel, buttonOk), 1, 0);
         Content = grid;
 
         UiUtil.FocusOnFirstActivation(this, comboProfile); // initial focus on an input, not an action button - a focused button clicks on bare Space
@@ -120,7 +119,7 @@ public class BatchConvertFixCommonErrorsSettingsWindow : Window
             RowDefinitions = { new RowDefinition(GridLength.Auto), new RowDefinition(new GridLength(1, GridUnitType.Star)) },
         };
         grid.Add(header, 0, 0);
-        grid.Add(VideoSubDialogChrome.MakeListFrame(rulesGrid), 1, 0);
+        grid.Add(EditorChrome.MakeListFrame(rulesGrid), 1, 0);
 
         return new Border
         {

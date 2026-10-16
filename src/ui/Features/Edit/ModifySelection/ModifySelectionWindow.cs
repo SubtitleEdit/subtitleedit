@@ -6,7 +6,6 @@ using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Assa;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -29,7 +28,7 @@ public class ModifySelectionWindow : Window
         Height = 700;
         MinWidth = 825;
         MinHeight = 450;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -60,7 +59,7 @@ public class ModifySelectionWindow : Window
         sections.Add(top, 0, 0);
         sections.Add(MakeSubtitleView(vm), 1, 0);
 
-        Content = SyncTimingChrome.MakeRoot(sections, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         // The rule (or its text) gets first focus, not an action button - a focused button
         // clicks on bare Space.
@@ -138,12 +137,12 @@ public class ModifySelectionWindow : Window
             Binding = new Binding(nameof(StyleDisplay.Name)),
             Width = new GridLength(1, GridUnitType.Star),
         });
-        var frameMultiSelect = EditDialogChrome.MakeListFrame(dataGridMultiSelect);
+        var frameMultiSelect = EditorChrome.MakeListFrame(dataGridMultiSelect, clearListBackground: true);
         frameMultiSelect.VerticalAlignment = VerticalAlignment.Top;
         frameMultiSelect.BindIsVisible(vm, nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.HasMultiSelect));
         dataGridMultiSelect.Bind(TableView.ItemsSourceProperty, new Binding(nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.MultiSelectItems)) { Source = vm });
 
-        var buttonRuleSettings = SyncTimingChrome.MakeTextToolButton("fa-solid fa-gear", Se.Language.General.Settings, vm.ShowRuleSettingsCommand);
+        var buttonRuleSettings = EditorChrome.MakeTextToolButton("fa-solid fa-gear", Se.Language.General.Settings, vm.ShowRuleSettingsCommand);
         buttonRuleSettings.VerticalAlignment = VerticalAlignment.Top;
         buttonRuleSettings.BindIsVisible(vm, nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.HasSettings));
 
@@ -283,7 +282,7 @@ public class ModifySelectionWindow : Window
             RowDefinitions = { new RowDefinition(GridLength.Auto), new RowDefinition(new GridLength(1, GridUnitType.Star)) },
         };
         content.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Preview), 0, 0);
-        content.Add(EditDialogChrome.MakeListFrame(dataGrid), 1, 0);
+        content.Add(EditorChrome.MakeListFrame(dataGrid, clearListBackground: true), 1, 0);
         return new Border
         {
             Child = content,

@@ -23,25 +23,25 @@ public class DCinemaSmptePropertiesWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 560;
-        FormatPropertiesChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Form);
         vm.Window = this;
         DataContext = vm;
 
         var lang = Se.Language.File.PropertiesDCinema;
 
         // General section
-        var switchGenerateIdAuto = FormatPropertiesChrome.SwitchRow(nameof(vm.GenerateIdAuto), lang.GenerateIdAuto, out var toggleGenerateIdAuto);
-        var textBoxSubtitleId = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(340, vm, nameof(vm.SubtitleId)), lang.SubtitleId);
+        var switchGenerateIdAuto = EditorChrome.MakeSwitchRow(nameof(vm.GenerateIdAuto), lang.GenerateIdAuto, out var toggleGenerateIdAuto);
+        var textBoxSubtitleId = EditorChrome.AsTextField(UiUtil.MakeTextBox(340, vm, nameof(vm.SubtitleId)), lang.SubtitleId);
         var buttonGenerateId = FormatPropertiesChrome.MakeAction("fa-solid fa-rotate", lang.GenerateId, vm.GenerateSubtitleIdCommand);
-        var textBoxMovieTitle = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(340, vm, nameof(vm.MovieTitle)), lang.MovieTitle);
+        var textBoxMovieTitle = EditorChrome.AsTextField(UiUtil.MakeTextBox(340, vm, nameof(vm.MovieTitle)), lang.MovieTitle);
         var numericUpDownReelNumber = FormatPropertiesChrome.Number(UiUtil.MakeNumericUpDownInt(1, 250, 1, 90, vm, nameof(vm.ReelNumber)), lang.ReelNumber);
         var comboBoxLanguage = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage)), Se.Language.General.Language, 140);
-        var textBoxIssueDate = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(200, vm, nameof(vm.IssueDate)), lang.IssueDate);
+        var textBoxIssueDate = EditorChrome.AsTextField(UiUtil.MakeTextBox(200, vm, nameof(vm.IssueDate)), lang.IssueDate);
         var buttonToday = FormatPropertiesChrome.MakeAction("fa-solid fa-clock", lang.Now, vm.SetTodayIssueDateCommand);
-        var textBoxEditRate = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(90, vm, nameof(vm.EditRate)), lang.EditRate);
+        var textBoxEditRate = EditorChrome.AsTextField(UiUtil.MakeTextBox(90, vm, nameof(vm.EditRate)), lang.EditRate);
         var comboBoxTimeCodeRate = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.TimeCodeRates, vm, nameof(vm.SelectedTimeCodeRate)), lang.TimeCodeRate, 90);
-        var textBoxStartTime = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(120, vm, nameof(vm.StartTime)), lang.StartTime);
-        var textBoxReelDuration = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(120, vm, nameof(vm.ReelDuration)), lang.ReelDuration);
+        var textBoxStartTime = EditorChrome.AsTextField(UiUtil.MakeTextBox(120, vm, nameof(vm.StartTime)), lang.StartTime);
+        var textBoxReelDuration = EditorChrome.AsTextField(UiUtil.MakeTextBox(120, vm, nameof(vm.ReelDuration)), lang.ReelDuration);
         if (Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(textBoxReelDuration, lang.ReelDurationHint);
@@ -61,8 +61,8 @@ public class DCinemaSmptePropertiesWindow : Window
             rowReelDuration);
 
         // Font section
-        var textBoxFontId = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(200, vm, nameof(vm.FontId)), lang.FontId);
-        var textBoxFontUri = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(340, vm, nameof(vm.FontUri)), lang.FontUri);
+        var textBoxFontId = EditorChrome.AsTextField(UiUtil.MakeTextBox(200, vm, nameof(vm.FontId)), lang.FontId);
+        var textBoxFontUri = EditorChrome.AsTextField(UiUtil.MakeTextBox(340, vm, nameof(vm.FontUri)), lang.FontUri);
         var buttonGenerateFontUri = FormatPropertiesChrome.MakeAction("fa-solid fa-wand-magic-sparkles", Se.Language.General.Generate, vm.GenerateFontUriCommand);
         var buttonFontColor = FormatPropertiesChrome.ColorButton(lang.ChooseColor, Se.Language.General.FontColor, vm.ChooseFontColorCommand, nameof(vm.FontColor));
         var comboBoxFontEffect = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox<string>(vm.FontEffects, vm, nameof(vm.SelectedFontEffect)), lang.FontEffect, 140);
@@ -72,7 +72,7 @@ public class DCinemaSmptePropertiesWindow : Window
         var numericUpDownFadeUpTime = FormatPropertiesChrome.Number(UiUtil.MakeNumericUpDownInt(0, 50, 0, 90, vm, nameof(vm.FadeUpTime)), lang.FadeUpTime);
         var numericUpDownFadeDownTime = FormatPropertiesChrome.Number(UiUtil.MakeNumericUpDownInt(0, 50, 0, 90, vm, nameof(vm.FadeDownTime)), lang.FadeDownTime);
 
-        var textBoxMxfFontFile = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(340, vm, nameof(vm.MxfFontFile)), lang.FontFile);
+        var textBoxMxfFontFile = EditorChrome.AsTextField(UiUtil.MakeTextBox(340, vm, nameof(vm.MxfFontFile)), lang.FontFile);
         var buttonBrowseMxfFontFile = FormatPropertiesChrome.MakeAction("fa-solid fa-folder-open", lang.ChooseFontFile, vm.BrowseMxfFontFileCommand);
         var rowMxfFontFile = FormatPropertiesChrome.Row(lang.FontFile, textBoxMxfFontFile, buttonBrowseMxfFontFile);
         rowMxfFontFile.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsMxfExport)) { Source = vm, Mode = BindingMode.OneWay });
@@ -89,10 +89,7 @@ public class DCinemaSmptePropertiesWindow : Window
 
         var buttonImport = FormatPropertiesChrome.MakeAction("fa-solid fa-file-import", Se.Language.General.ImportDotDotDot, vm.ImportCommand);
         var buttonExport = FormatPropertiesChrome.MakeAction("fa-solid fa-file-export", Se.Language.General.ExportDotDotDot, vm.ExportCommand);
-        var buttonBar = FormatPropertiesChrome.MakeButtonBar(
-            FormatPropertiesChrome.MakeActions(buttonImport, buttonExport),
-            UiUtil.MakeButtonOk(vm.OkCommand),
-            UiUtil.MakeButtonCancel(vm.CancelCommand));
+        var buttonBar = EditorChrome.MakeDockedCancelOkBar(FormatPropertiesChrome.MakeActions(buttonImport, buttonExport), UiUtil.MakeButtonCancel(vm.CancelCommand), UiUtil.MakeButtonOk(vm.OkCommand));
 
         Content = FormatPropertiesChrome.MakeRoot(
             buttonBar,

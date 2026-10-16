@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Features.Shared.ShowImage;
 
 /// <summary>
 /// Shows a subtitle image (with its text below, if any) in the editor look (see
-/// <see cref="SharedDialogChrome"/>), on the image preview background.
+/// <see cref="EditorChrome"/>), on the image preview background.
 /// </summary>
 public class ShowImageWindow : Window
 {
@@ -23,7 +23,7 @@ public class ShowImageWindow : Window
         MinWidth = 400;
         MinHeight = 300;
         CanResize = true;
-        SharedDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
 
@@ -77,7 +77,7 @@ public class ShowImageWindow : Window
             ClipToBounds = true,
         };
 
-        var buttonOk = SharedDialogChrome.Primary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
 
         var grid = new Grid
         {
@@ -92,7 +92,7 @@ public class ShowImageWindow : Window
         grid.Add(imageFrame, 0);
         grid.Add(label, 1);
 
-        Content = SharedDialogChrome.MakeRoot(grid, SharedDialogChrome.MakeButtonBar(null, buttonOk));
+        Content = EditorChrome.MakeRoot(grid, EditorChrome.MakeButtonBar(null, buttonOk));
 
         Loaded += delegate { buttonOk.Focus(); vm.Loaded(); }; // hack to make OnKeyDown work
         Closing += (_, e) => vm.Closing(e);

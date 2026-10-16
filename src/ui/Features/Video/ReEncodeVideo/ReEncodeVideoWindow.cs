@@ -30,7 +30,7 @@ public class ReEncodeVideoWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         MinWidth = 600;
         CanResize = false;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
 
         _vm = vm;
         vm.Window = this;
@@ -48,7 +48,7 @@ public class ReEncodeVideoWindow : Window
         var videoSettingsView = MakeVideoSettingsView(vm, labelInfoText);
         var progressBar = UiUtil.MakeProgressBar();
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
-        var progressView = VideoSubDialogChrome.MakeProgressStrip(progressBar, nameof(vm.ProgressText), nameof(vm.IsGenerating));
+        var progressView = EditorChrome.MakeProgressStrip(progressBar, nameof(vm.ProgressText), nameof(vm.IsGenerating));
         var buttonGenerate = new SeSplitButton
         {
             Content = Se.Language.General.Generate,
@@ -70,12 +70,7 @@ public class ReEncodeVideoWindow : Window
         AutomationProperties.SetName(buttonGenerate, Se.Language.General.Generate);
 
         var buttonDone = UiUtil.MakeButtonDone(vm.OkCommand).WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
-        var buttonPanel = VideoSubDialogChrome.MakeButtonBar(
-            null,
-            UiUtil.MakeButtonCancel(vm.CancelCommand).WithBindIsVisible(nameof(vm.IsGenerating)),
-            buttonDone,
-            buttonGenerate
-        );
+        var buttonPanel = EditorChrome.MakeButtonBar(null, UiUtil.MakeButtonCancel(vm.CancelCommand).WithBindIsVisible(nameof(vm.IsGenerating)), buttonDone, buttonGenerate);
 
         var grid = new Grid
         {
@@ -87,7 +82,7 @@ public class ReEncodeVideoWindow : Window
             },
         };
 
-        grid.Add(VideoSubDialogChrome.MakePanel(videoSettingsView), 0);
+        grid.Add(EditorChrome.MakePanel(videoSettingsView), 0);
         grid.Add(progressView, 1);
         grid.Add(buttonPanel, 2);
 
@@ -98,9 +93,9 @@ public class ReEncodeVideoWindow : Window
 
     private Border MakeVideoSettingsView(ReEncodeVideoViewModel vm, TextBlock labelInfoText)
     {
-        var textBoxWidth = VideoSubDialogChrome.MakeTextBox(nameof(vm.VideoWidth), Se.Language.General.Width, 76);
+        var textBoxWidth = EditorChrome.MakeTextField(nameof(vm.VideoWidth), Se.Language.General.Width, 76);
         var labelX = EditorChrome.MakeDimLabel(Se.Language.Video.ResolutionSeparator, new Thickness(0));
-        var textBoxHeight = VideoSubDialogChrome.MakeTextBox(nameof(vm.VideoHeight), Se.Language.General.Height, 76);
+        var textBoxHeight = EditorChrome.MakeTextField(nameof(vm.VideoHeight), Se.Language.General.Height, 76);
         var buttonResolution = EditorChrome.CreateToolButton("fa-solid fa-ellipsis", Se.Language.General.Resolution, vm.BrowseResolutionCommand, 28);
         var panelResolution = new StackPanel
         {
@@ -141,11 +136,11 @@ public class ReEncodeVideoWindow : Window
         rows.Children.Add(labelInfoText);
 
         // The resolution rows are not shown (yet)
-        //rows.Children.Add(VideoSubDialogChrome.MakeRow(Se.Language.General.Resolution, panelResolution, LabelWidth));
-        //rows.Children.Add(VideoSubDialogChrome.MakeRow(Se.Language.General.Resolution, panelResolutionSource, LabelWidth));
+        //rows.Children.Add(EditorChrome.MakeLabeledRow(Se.Language.General.Resolution, panelResolution, LabelWidth, spacing: 6));
+        //rows.Children.Add(EditorChrome.MakeLabeledRow(Se.Language.General.Resolution, panelResolutionSource, LabelWidth, spacing: 6));
 
-        rows.Children.Add(VideoSubDialogChrome.MakeRow(Se.Language.General.FrameRate, WrapLeft(comboBoxFrameRate), LabelWidth));
-        rows.Children.Add(VideoSubDialogChrome.MakeRow(Se.Language.General.VideoExtension, WrapLeft(comboBoxVideoExtensions), LabelWidth));
+        rows.Children.Add(EditorChrome.MakeLabeledRow(Se.Language.General.FrameRate, WrapLeft(comboBoxFrameRate), LabelWidth, spacing: 6));
+        rows.Children.Add(EditorChrome.MakeLabeledRow(Se.Language.General.VideoExtension, WrapLeft(comboBoxVideoExtensions), LabelWidth, spacing: 6));
 
         return EditorChrome.MakeEditorSection(Se.Language.Video.BurnIn.VideoOutput, rows, first: true);
     }

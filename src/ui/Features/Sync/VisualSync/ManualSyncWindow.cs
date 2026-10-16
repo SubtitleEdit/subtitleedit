@@ -18,7 +18,7 @@ public class ManualSyncWindow : Window
         Title = Se.Language.General.ManualSync;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        SyncTimingChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TimeCodes);
         vm.Window = this;
         DataContext = vm;
 
@@ -59,7 +59,7 @@ public class ManualSyncWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = SyncTimingChrome.MakeRoot(section, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(section, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, numericUpDownOffsetSeconds); // initial focus on an input, not an action button - a focused button clicks on bare Space
         Loaded += (_, _) => UiUtil.RestoreWindowPosition(this);

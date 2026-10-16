@@ -24,7 +24,7 @@ public class IndexTts25LicenseWindow : Window
         Width = 640;
         SizeToContent = SizeToContent.Height;
         CanResize = false;
-        TtsVoicesChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TextFieldsUncentered | EditorWindowStyles.MuteDisabledPrimary);
 
         vm.Window = this;
         DataContext = vm;
@@ -102,6 +102,6 @@ public class IndexTts25LicenseWindow : Window
 
         var cancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        return TtsVoicesChrome.MakeButtonBar(null, cancel, accept);
+        return EditorChrome.MakeFlushButtonBar(null, cancel, accept);
     }
 }

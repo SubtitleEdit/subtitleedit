@@ -6,7 +6,6 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Chrome = Nikse.SubtitleEdit.Features.Ocr.OcrDialogChrome;
 
 namespace Nikse.SubtitleEdit.Features.Ocr;
 
@@ -26,7 +25,7 @@ public class LlamaCppOcrSettingsWindow : Window
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
         vm.Window = this;
         DataContext = vm;
-        Chrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.EngineDialog);
 
         var textBoxUrl = new TextBox
         {
@@ -34,7 +33,7 @@ public class LlamaCppOcrSettingsWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             DataContext = vm,
         };
-        textBoxUrl.Classes.Add(Chrome.TextClass);
+        textBoxUrl.Classes.Add(EditorChrome.TextClass);
         AutomationProperties.SetName(textBoxUrl, Se.Language.General.Url);
         textBoxUrl.Bind(IsEnabledProperty, new Binding(nameof(vm.UseRemoteServer)));
         textBoxUrl.Bind(TextBox.TextProperty, new Binding(nameof(vm.Url))
@@ -45,7 +44,7 @@ public class LlamaCppOcrSettingsWindow : Window
 
         // Off: SE downloads and runs its own llama-server, so the URL is not used. On: OCR posts
         // to the user's own running server at the URL (#15854).
-        var switchRemote = Chrome.Switch(nameof(vm.UseRemoteServer), Se.Language.General.LlamaCppUseRemoteServer);
+        var switchRemote = EditorChrome.MakeSwitch(nameof(vm.UseRemoteServer), Se.Language.General.LlamaCppUseRemoteServer);
 
         var numericTimeout = UiUtil.MakeNumericUpDownInt(1, 120, 5, 140, vm, nameof(vm.TimeoutMinutes));
         numericTimeout.Classes.Add("field");
@@ -63,7 +62,7 @@ public class LlamaCppOcrSettingsWindow : Window
             MinHeight = 90,
             DataContext = vm,
         };
-        textBoxPrompt.Classes.Add(Chrome.TextClass);
+        textBoxPrompt.Classes.Add(EditorChrome.TextClass);
         AutomationProperties.SetName(textBoxPrompt, Se.Language.General.OpenAiCompatibleSttPrompt);
         textBoxPrompt.Bind(TextBox.TextProperty, new Binding(nameof(vm.Prompt))
         {
@@ -71,7 +70,7 @@ public class LlamaCppOcrSettingsWindow : Window
             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
         });
 
-        var hintPrompt = Chrome.Hint(Se.Language.Ocr.LlamaCppOcrPromptHint);
+        var hintPrompt = EditorChrome.MakeHint(Se.Language.Ocr.LlamaCppOcrPromptHint, 12);
 
         // Engine: status, own server or remote one, timeout
         var serverRows = new StackPanel
@@ -79,10 +78,10 @@ public class LlamaCppOcrSettingsWindow : Window
             Spacing = 10,
             Children =
             {
-                Chrome.Row(Se.Language.General.Status, Chrome.StatusPanel(nameof(vm.EngineBrush), nameof(vm.EngineLabel)), LabelWidth),
-                Chrome.Row(string.Empty, Chrome.SwitchRow(switchRemote, Se.Language.General.LlamaCppUseRemoteServer), LabelWidth),
-                Chrome.Row(Se.Language.General.Url, textBoxUrl, LabelWidth),
-                Chrome.Row(Se.Language.Ocr.LlamaCppOcrTimeoutMinutes, numericTimeout, LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Status, EditorChrome.MakeStatusDot(nameof(vm.EngineBrush), nameof(vm.EngineLabel)), LabelWidth, spacing: 10),
+                EditorChrome.MakeLabeledRow(string.Empty, EditorChrome.MakeSwitchRow(switchRemote, Se.Language.General.LlamaCppUseRemoteServer), LabelWidth, spacing: 10),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Url, textBoxUrl, LabelWidth, spacing: 10),
+                EditorChrome.MakeLabeledRow(Se.Language.Ocr.LlamaCppOcrTimeoutMinutes, numericTimeout, LabelWidth, spacing: 10),
             },
         };
 
@@ -111,7 +110,7 @@ public class LlamaCppOcrSettingsWindow : Window
                 new RowDefinition(new GridLength(1, GridUnitType.Star)),
             },
         };
-        sections.Add(Chrome.MakeHeader(Se.Language.Ocr.LlamaCppOcr, Se.Language.Ocr.LlamaCppOcrDescription), 0, 0);
+        sections.Add(EditorChrome.MakeDialogHeader(Se.Language.Ocr.LlamaCppOcr, Se.Language.Ocr.LlamaCppOcrDescription), 0, 0);
         sections.Add(EditorChrome.MakeEditorSection(Se.Language.General.Engine, serverRows), 1, 0);
         sections.Add(new Border
         {
@@ -120,15 +119,15 @@ public class LlamaCppOcrSettingsWindow : Window
             BorderThickness = new Thickness(0, 1, 0, 0),
         }, 2, 0);
 
-        var buttonRedownload = Chrome.Flat(UiUtil.MakeButton(string.Empty, vm.RedownloadCommand)
+        var buttonRedownload = EditorChrome.AsFlatAction(UiUtil.MakeButton(string.Empty, vm.RedownloadCommand)
             .WithIconLeftBindText(IconNames.Download, nameof(vm.DownloadButtonLabel)));
 
-        var buttonOk = Chrome.MakePrimary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = Chrome.ButtonBar(buttonRedownload, buttonCancel, buttonOk);
+        var buttonBar = EditorChrome.MakeFlushButtonBar(buttonRedownload, buttonCancel, buttonOk);
         buttonRedownload.HorizontalAlignment = HorizontalAlignment.Left;
 
-        Content = Chrome.Root(sections, buttonBar, stretch: true);
+        Content = EditorChrome.MakeRoot(sections, buttonBar, stretch: true);
 
         UiUtil.FocusOnFirstActivation(this, switchRemote);
         KeyDown += (_, e) => vm.OnKeyDown(e);

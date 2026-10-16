@@ -7,7 +7,6 @@ using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Options.Settings;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -24,7 +23,7 @@ public class CategoryPickerWindow : Window
         Height = 750;
         MinWidth = 800;
         MinHeight = 700;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         vm.Window = this;
         DataContext = vm;
 
@@ -42,7 +41,7 @@ public class CategoryPickerWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = VideoSubDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk);
+        var panelButtons = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         // The list header carries the select all/none/invert actions, the button bar OK/Cancel:
         // each in its own row. Sharing one cell (the button bar spanning both columns) only kept
@@ -152,6 +151,6 @@ public class CategoryPickerWindow : Window
 
         grid.Add(dataGrid, 0);
 
-        return VideoSubDialogChrome.MakeListFrame(grid);
+        return EditorChrome.MakeListFrame(grid);
     }
 }

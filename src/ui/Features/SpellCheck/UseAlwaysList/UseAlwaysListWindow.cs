@@ -6,8 +6,6 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Optris.Icons.Avalonia;
@@ -34,7 +32,7 @@ public class UseAlwaysListWindow : Window
         Height = 640;
         MinWidth = 560;
         MinHeight = 420;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         _vm = vm;
         vm.Window = this;
@@ -74,7 +72,7 @@ public class UseAlwaysListWindow : Window
         header.Children.Add(badges);
         header.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.SpellCheck.UseAlwaysListHeader));
 
-        var description = EditDialogChrome.MakeLabel(Se.Language.SpellCheck.UseAlwaysListDescription);
+        var description = EditorChrome.MakeWrappingDimLabel(Se.Language.SpellCheck.UseAlwaysListDescription);
         description.FontSize = 12.5;
 
         var listSection = new Grid
@@ -112,10 +110,10 @@ public class UseAlwaysListWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonOpenFolder = SyncTimingChrome.MakeTextToolButton(IconNames.FolderOpen, Se.Language.General.OpenDictionaryFolder, vm.OpenDictionariesFolderCommand);
+        var buttonOpenFolder = EditorChrome.MakeTextToolButton(IconNames.FolderOpen, Se.Language.General.OpenDictionaryFolder, vm.OpenDictionariesFolderCommand);
         buttonOpenFolder.HorizontalAlignment = HorizontalAlignment.Left;
 
-        Content = SyncTimingChrome.MakeRoot(sections, SyncTimingChrome.MakeButtonBar(buttonOpenFolder, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(buttonOpenFolder, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, textBoxSearch); // an input, not a button - a focused button clicks on bare Space
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
@@ -215,7 +213,7 @@ public class UseAlwaysListWindow : Window
         unusedBadge.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.HasUnused)));
         SetHint(unusedBadge, Se.Language.SpellCheck.UseAlwaysUnusedHint);
 
-        var buttonRemoveUnused = SyncTimingChrome.MakeTextToolButton(IconNames.Trash, Se.Language.SpellCheck.RemoveUnused, vm.RemoveUnusedCommand)
+        var buttonRemoveUnused = EditorChrome.MakeTextToolButton(IconNames.Trash, Se.Language.SpellCheck.RemoveUnused, vm.RemoveUnusedCommand)
             .WithBindIsVisible(nameof(vm.HasUnused));
         buttonRemoveUnused.Height = 24;
         buttonRemoveUnused.VerticalAlignment = VerticalAlignment.Center;
@@ -364,7 +362,7 @@ public class UseAlwaysListWindow : Window
         noMatch.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsNoMatch)));
 
         var panel = new Panel { Children = { table, emptyState, noMatch } };
-        return EditDialogChrome.MakeListFrame(panel);
+        return EditorChrome.MakeListFrame(panel, clearListBackground: true);
     }
 
     private static Control MakeEditRow(UseAlwaysListViewModel vm)
@@ -392,11 +390,11 @@ public class UseAlwaysListWindow : Window
         textBoxTo.KeyDown += (_, e) => vm.EditTextBoxKeyDown(e);
 
         // Same command, but a pencil instead of a plus when the word already has a pair.
-        var buttonAdd = SyncTimingChrome.MakeTextToolButton(IconNames.Plus, Se.Language.General.Add, vm.AddOrUpdateCommand);
+        var buttonAdd = EditorChrome.MakeTextToolButton(IconNames.Plus, Se.Language.General.Add, vm.AddOrUpdateCommand);
         buttonAdd.VerticalAlignment = VerticalAlignment.Center;
         buttonAdd.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsEditingExisting)) { Converter = Avalonia.Data.Converters.BoolConverters.Not });
 
-        var buttonUpdate = SyncTimingChrome.MakeTextToolButton(IconNames.Pencil, Se.Language.General.Update, vm.AddOrUpdateCommand)
+        var buttonUpdate = EditorChrome.MakeTextToolButton(IconNames.Pencil, Se.Language.General.Update, vm.AddOrUpdateCommand)
             .WithBindIsVisible(nameof(vm.IsEditingExisting));
         buttonUpdate.VerticalAlignment = VerticalAlignment.Center;
 

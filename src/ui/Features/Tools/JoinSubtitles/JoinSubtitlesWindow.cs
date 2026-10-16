@@ -6,8 +6,6 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using System.Collections;
 using System.Windows.Input;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -32,7 +30,7 @@ public class JoinSubtitlesWindow : Window
         Height = 700;
         MinWidth = 600;
         MinHeight = 400;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -60,7 +58,7 @@ public class JoinSubtitlesWindow : Window
         sections.Add(MakeFilesView(vm), 0);
         sections.Add(MakeControlsView(vm), 1);
 
-        Content = SyncTimingChrome.MakeRoot(sections, SyncTimingChrome.MakeButtonBar(labelFileCount, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(labelFileCount, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, () => { TableViewExtras.FocusRow(_tableViewFiles); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
@@ -178,7 +176,7 @@ public class JoinSubtitlesWindow : Window
 
         // hack to make drag and drop work on the DataGrid - also on empty rows (the frame has
         // a background, so it is hit-tested everywhere)
-        var dropHost = EditDialogChrome.MakeListFrame(dataGrid);
+        var dropHost = EditorChrome.MakeListFrame(dataGrid, clearListBackground: true);
         DragDrop.SetAllowDrop(dropHost, true);
         dropHost.AddHandler(DragDrop.DragOverEvent, vm.FileGridOnDragOver, RoutingStrategies.Bubble);
         dropHost.AddHandler(DragDrop.DropEvent, vm.FileGridOnDrop, RoutingStrategies.Bubble);

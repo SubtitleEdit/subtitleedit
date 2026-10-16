@@ -1,7 +1,6 @@
 using Avalonia.Controls;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Chrome = Nikse.SubtitleEdit.Features.Ocr.OcrDialogChrome;
 
 namespace Nikse.SubtitleEdit.Features.Shared.GetAudioClips;
 
@@ -19,19 +18,19 @@ public class GetAudioClipsWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        Chrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.EngineDialog);
 
         DataContext = vm;
 
-        var titleText = Chrome.DownloadTitle(Se.Language.General.ExtractingAudioClips);
-        var progressBar = Chrome.DownloadProgressBar(nameof(GetAudioClipsViewModel.Progress));
-        var statusText = Chrome.DownloadStatus(nameof(GetAudioClipsViewModel.StatusText));
-        var errorText = Chrome.DownloadError(nameof(GetAudioClipsViewModel.Error));
+        var titleText = EditorChrome.MakeDownloadTitle(Se.Language.General.ExtractingAudioClips);
+        var progressBar = EditorChrome.MakeDownloadProgressBar(nameof(GetAudioClipsViewModel.Progress));
+        var statusText = EditorChrome.MakeDownloadStatus(nameof(GetAudioClipsViewModel.StatusText));
+        var errorText = EditorChrome.MakeDownloadError(nameof(GetAudioClipsViewModel.Error));
 
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CommandCancelCommand);
-        var buttonBar = Chrome.ButtonBar(null, buttonCancel);
+        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonCancel);
 
-        Content = Chrome.Root(Chrome.DownloadBody(titleText, progressBar, statusText, errorText), buttonBar);
+        Content = EditorChrome.MakeRoot(EditorChrome.MakeDownloadBody(titleText, progressBar, statusText, errorText), buttonBar, stretch: false);
 
         UiUtil.FocusOnFirstActivation(this, buttonCancel); // hack to make OnKeyDown work
 

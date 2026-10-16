@@ -121,6 +121,9 @@ public class ColorChannelSlider : Grid
         Children.Add(sliderContainer);
         Children.Add(_valueLabel);
 
+        // A bound value of 0 is the default, so it raises no change below - show it from the start
+        _valueLabel.Text = Value.ToString();
+
         PropertyChanged += (s, e) =>
         {
             if (e.Property == ValueProperty)

@@ -8,7 +8,6 @@ using Avalonia.Data.Converters;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Config.Language.Tools;
@@ -55,7 +54,7 @@ public class BeautifyTimeCodesProfileWindow : Window
         Height = 640;
         MinWidth = 960;
         MinHeight = 520;
-        SyncTimingChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TimeCodes);
         vm.Window = this;
         DataContext = vm;
 
@@ -77,7 +76,7 @@ public class BeautifyTimeCodesProfileWindow : Window
         ok.Classes.Add("primary");
         var cancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = SyncTimingChrome.MakeRoot(scrollViewer, SyncTimingChrome.MakeButtonBar(presetButton, cancel, ok));
+        Content = EditorChrome.MakeRoot(scrollViewer, EditorChrome.MakeDockedButtonBar(presetButton, cancel, ok));
 
         UiUtil.FocusOnFirstActivation(this, ok);
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -478,7 +477,7 @@ public class BeautifyTimeCodesProfileWindow : Window
 
         if (checkGeneralPath != null)
         {
-            var switchRow = TimingToolChrome.MakeSwitch(_l.CheckGeneral, checkGeneralPath, out _);
+            var switchRow = EditorChrome.MakeToggleRow(checkGeneralPath, _l.CheckGeneral, out _);
             switchRow.Margin = new Thickness(0, 2, 0, 0);
             stack.Children.Add(switchRow);
         }
@@ -588,7 +587,7 @@ public class BeautifyTimeCodesProfileWindow : Window
             panel.Children.Add(control);
         }
 
-        return SyncTimingChrome.Row(label, panel, LabelWidth);
+        return EditorChrome.MakeLabeledRow(label, panel, LabelWidth);
     }
 
     private static TextBlock MakeUnit(string text)

@@ -8,7 +8,6 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Tools.BatchConvert.BatchErrorList;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections;
@@ -25,7 +24,7 @@ public class BatchErrorListWindow : Window
     public BatchErrorListWindow(BatchErrorListViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         Title = Se.Language.ErrorList.Title;
         CanResize = true;
         Width = 1100;
@@ -65,7 +64,7 @@ public class BatchErrorListWindow : Window
             Children = { header, cards },
         };
 
-        var buttonExport = VideoSubDialogChrome.MakeAction("fa-solid fa-file-export", Se.Language.General.ExportDotDotDot, vm.ExportCommand)
+        var buttonExport = EditorChrome.MakeActionButton("fa-solid fa-file-export", Se.Language.General.ExportDotDotDot, vm.ExportCommand)
             .WithBindIsEnabled(nameof(vm.HasErrors));
         var buttonCancel = UiUtil.MakeButtonDone(vm.CancelCommand);
         buttonCancel.Classes.Add("primary");
@@ -93,7 +92,7 @@ public class BatchErrorListWindow : Window
             Padding = new Thickness(16, 14, 16, 14),
         }, 0, 0);
         grid.Add(new Border { Child = MakeErrorsGridView(vm), Padding = new Thickness(14, 12, 14, 14) }, 1, 0);
-        grid.Add(VideoSubDialogChrome.MakeButtonBar(buttonExport, buttonCancel), 2, 0);
+        grid.Add(EditorChrome.MakeButtonBar(buttonExport, buttonCancel), 2, 0);
 
         Content = grid;
 
@@ -201,6 +200,6 @@ public class BatchErrorListWindow : Window
             }
         }, RoutingStrategies.Tunnel);
 
-        return VideoSubDialogChrome.MakeListFrame(dataGrid);
+        return EditorChrome.MakeListFrame(dataGrid);
     }
 }

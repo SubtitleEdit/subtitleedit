@@ -17,7 +17,7 @@ public class TmpegEncXmlPropertiesWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 400;
-        FormatPropertiesChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Form);
         vm.Window = this;
         DataContext = vm;
 
@@ -35,13 +35,13 @@ public class TmpegEncXmlPropertiesWindow : Window
         var font = FormatPropertiesChrome.MakeRows(
             FormatPropertiesChrome.Row(Se.Language.General.FontName, comboBoxFontName),
             FormatPropertiesChrome.Row(Se.Language.General.FontHeight, numericUpDownFontHeight),
-            FormatPropertiesChrome.Row(string.Empty, FormatPropertiesChrome.SwitchRow(nameof(vm.IsFontBold), Se.Language.General.Bold)));
+            FormatPropertiesChrome.Row(string.Empty, EditorChrome.MakeSwitchRow(nameof(vm.IsFontBold), Se.Language.General.Bold)));
 
         var position = FormatPropertiesChrome.MakeRows(
             FormatPropertiesChrome.Row(Se.Language.General.OffsetX, numericUpDownOffsetX),
             FormatPropertiesChrome.Row(Se.Language.General.OffsetY, numericUpDownOffsetY));
 
-        var buttonBar = FormatPropertiesChrome.MakeButtonBar(null, UiUtil.MakeButtonOk(vm.OkCommand), UiUtil.MakeButtonCancel(vm.CancelCommand));
+        var buttonBar = EditorChrome.MakeDockedCancelOkBar(null, UiUtil.MakeButtonCancel(vm.CancelCommand), UiUtil.MakeButtonOk(vm.OkCommand));
 
         Content = FormatPropertiesChrome.MakeRoot(
             buttonBar,

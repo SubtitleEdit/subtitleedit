@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Nikse.SubtitleEdit.Features.Tools.AdjustDuration;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert.FunctionViews;
 
@@ -27,7 +28,7 @@ public static class ViewAdjustDuration
             panelPercent,
             panelFixed,
             panelRecalculate,
-            FunctionViewChrome.MakeHint(Se.Language.Tools.AdjustDurations.Note));
+            EditorChrome.MakeHint(Se.Language.Tools.AdjustDurations.Note));
     }
 
     private static NumericUpDown MakeField(BatchConvertViewModel vm, string property, decimal minimum, decimal maximum, string accessibleName)

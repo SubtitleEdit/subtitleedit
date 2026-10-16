@@ -3,7 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Linq;
@@ -25,7 +24,7 @@ public class HearingImpairedRuleSettingsWindow : Window
         Title = Se.Language.Edit.ModifySelection.HearingImpaired;
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         _vm = vm;
         vm.Window = this;
@@ -91,7 +90,7 @@ public class HearingImpairedRuleSettingsWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = SyncTimingChrome.MakeRoot(sections, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         // not an action button - a focused button clicks on bare Space
         UiUtil.FocusOnFirstActivation(this, rowBrackets.Children.OfType<ToggleSwitch>().First());

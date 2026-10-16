@@ -2,9 +2,7 @@ using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Layout;
-using Avalonia.Media;
 using Avalonia.VisualTree;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert.FunctionViews;
@@ -100,7 +98,7 @@ internal static class FunctionViewChrome
     /// </summary>
     internal static Grid MakeRow(string label, Control content, string? visibleProperty = null)
     {
-        return BatchConvertChrome.MakeRow(label, content, LabelWidth, visibleProperty);
+        return EditorChrome.MakeLabeledRow(label, content, LabelWidth, wrap: true, visibleProperty: visibleProperty);
     }
 
     /// <summary>
@@ -118,12 +116,7 @@ internal static class FunctionViewChrome
     /// </summary>
     internal static NumericUpDown Compact(NumericUpDown field, string accessibleName)
     {
-        field.Classes.Add("field");
-        field.Width = FieldWidth;
-        field.HorizontalAlignment = HorizontalAlignment.Left;
-        field.VerticalAlignment = VerticalAlignment.Center;
-        AutomationProperties.SetName(field, accessibleName);
-        return field;
+        return field.AsField(accessibleName, FieldWidth, alignLeft: true, center: true);
     }
 
     /// <summary>
@@ -155,44 +148,12 @@ internal static class FunctionViewChrome
     }
 
     /// <summary>
-    /// A text field that stretches to the width of the pane.
-    /// </summary>
-    internal static TextBox MakeTextBox(string property, string accessibleName)
-    {
-        return VideoSubDialogChrome.MakeTextBox(property, accessibleName);
-    }
-
-    /// <summary>
-    /// An on/off switch with its label beside it.
-    /// </summary>
-    internal static Grid MakeSwitchRow(string property, string text)
-    {
-        return BatchConvertChrome.MakeSwitchRow(property, text);
-    }
-
-    /// <summary>
     /// An on/off switch with its label and a control that belongs to it (the value it turns on)
     /// at the end of the row, lined up with the fields of the label rows.
     /// </summary>
     internal static Grid MakeSwitchRow(string property, string text, Control trailing)
     {
-        var toggle = VideoSubDialogChrome.MakeSwitch(property, text);
-        var label = new TextBlock
-        {
-            Text = text,
-            FontSize = 12.5,
-            VerticalAlignment = VerticalAlignment.Center,
-            TextWrapping = TextWrapping.Wrap,
-        };
-
-        var left = new Grid
-        {
-            ColumnSpacing = 8,
-            ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(new GridLength(1, GridUnitType.Star)) },
-        };
-        left.Add(toggle, 0, 0);
-        left.Add(label, 0, 1);
-
+        var left = EditorChrome.MakeSwitchRow(property, text);
         trailing.HorizontalAlignment = HorizontalAlignment.Left;
         trailing.VerticalAlignment = VerticalAlignment.Center;
         return MakeRowWithControl(left, trailing);
@@ -211,14 +172,6 @@ internal static class FunctionViewChrome
         grid.Add(left, 0, 0);
         grid.Add(content, 0, 1);
         return grid;
-    }
-
-    /// <summary>
-    /// Dim explanatory text that wraps to the pane width.
-    /// </summary>
-    internal static TextBlock MakeHint(string text)
-    {
-        return VideoSubDialogChrome.MakeHintText(text);
     }
 
     /// <summary>

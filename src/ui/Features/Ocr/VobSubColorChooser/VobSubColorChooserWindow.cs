@@ -5,10 +5,8 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.Input;
-using Nikse.SubtitleEdit.Features.Edit;
 using Nikse.SubtitleEdit.Features.Ocr.BinaryOcr;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -29,7 +27,7 @@ public class VobSubColorChooserWindow : Window
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -84,10 +82,10 @@ public class VobSubColorChooserWindow : Window
             },
         };
 
-        var buttonReset = SyncTimingChrome.MakeTextToolButton(IconNames.Restore, Se.Language.General.Reset, vm.ResetToDefaultsCommand);
-        var buttonInvert = SyncTimingChrome.MakeTextToolButton(IconNames.SwapVertical, Se.Language.Ocr.VobSubColorsInvert, vm.InvertBackgroundForegroundCommand);
-        var buttonOk = BinaryOcrChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
-        var buttonCancel = BinaryOcrChrome.AsBarButton(UiUtil.MakeButtonCancel(vm.CancelCommand));
+        var buttonReset = EditorChrome.MakeTextToolButton(IconNames.Restore, Se.Language.General.Reset, vm.ResetToDefaultsCommand);
+        var buttonInvert = EditorChrome.MakeTextToolButton(IconNames.SwapVertical, Se.Language.Ocr.VobSubColorsInvert, vm.InvertBackgroundForegroundCommand);
+        var buttonOk = EditorChrome.AsFlushPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonCancel = EditorChrome.WithoutMargin(UiUtil.MakeButtonCancel(vm.CancelCommand));
 
         var leftButtonsPanel = new StackPanel
         {
@@ -98,7 +96,7 @@ public class VobSubColorChooserWindow : Window
             Children = { buttonReset, buttonInvert }
         };
 
-        Content = SyncTimingChrome.MakeRoot(sections, SyncTimingChrome.MakeButtonBar(leftButtonsPanel, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(leftButtonsPanel, buttonCancel, buttonOk));
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
         UiUtil.FocusOnFirstActivation(this, buttonCancel);

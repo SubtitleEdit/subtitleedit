@@ -6,7 +6,6 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -36,7 +35,7 @@ public class LayoutWindow : Window
         Width = 1180;
         Height = 590;
         CanResize = false;
-        SyncTimingChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TimeCodes);
 
         var wrapPanel = new WrapPanel
         {
@@ -131,7 +130,7 @@ public class LayoutWindow : Window
         var buttonCancel = UiUtil.MakeButton(Se.Language.General.Cancel);
         buttonCancel.Click += (_, _) => Close();
 
-        Content = SyncTimingChrome.MakeRoot(new ScrollViewer { Content = wrapPanel }, SyncTimingChrome.MakeButtonBar(null, buttonCancel));
+        Content = EditorChrome.MakeRoot(new ScrollViewer { Content = wrapPanel }, EditorChrome.MakeDockedButtonBar(null, buttonCancel));
     }
 
     /// <summary>

@@ -2,8 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -24,7 +22,7 @@ public class BookmarkEditWindow : Window
         Height = 400;
         MinWidth = 500;
         MinHeight = 300;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -40,8 +38,8 @@ public class BookmarkEditWindow : Window
         Avalonia.Automation.AutomationProperties.SetName(textBox, Se.Language.General.Text);
         textBox.KeyDown += (sender, args) => vm.OnTextBoxKeyDown(args);
 
-        var buttonList = SyncTimingChrome.MakeTextToolButton("fa-solid fa-list", Se.Language.General.BookmarksList, vm.ListCommand).WithBindIsVisible(nameof(vm.ShowListButton));
-        var buttonRemove = SyncTimingChrome.MakeTextToolButton("fa-solid fa-trash-can", Se.Language.General.Remove, vm.DeleteCommand).WithBindIsVisible(nameof(vm.ShowRemoveButton));
+        var buttonList = EditorChrome.MakeTextToolButton("fa-solid fa-list", Se.Language.General.BookmarksList, vm.ListCommand).WithBindIsVisible(nameof(vm.ShowListButton));
+        var buttonRemove = EditorChrome.MakeTextToolButton("fa-solid fa-trash-can", Se.Language.General.Remove, vm.DeleteCommand).WithBindIsVisible(nameof(vm.ShowRemoveButton));
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
@@ -60,7 +58,7 @@ public class BookmarkEditWindow : Window
             Padding = new Thickness(14),
         };
 
-        Content = SyncTimingChrome.MakeRoot(body, SyncTimingChrome.MakeButtonBar(leftActions, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(body, EditorChrome.MakeDockedButtonBar(leftActions, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, textBox); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);

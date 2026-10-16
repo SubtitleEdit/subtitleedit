@@ -22,7 +22,7 @@ public class FindWindow : Window
         Title = UiUtil.RemoveAccessKey(Se.Language.General.Find);
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -51,12 +51,12 @@ public class FindWindow : Window
         sections.Children.Add(EditorChrome.MakeEditorSection(UiUtil.RemoveAccessKey(Se.Language.General.Find), findRows, first: true));
         sections.Children.Add(EditorChrome.MakeEditorSection(Se.Language.General.Match, MakeFindModeRadioButtons()));
 
-        var buttonFindNext = EditDialogChrome.StyleActionButton(UiUtil.MakeButton(Se.Language.Edit.Find.FindNext, vm.FindNextCommand)
+        var buttonFindNext = EditorChrome.StyleActionColumnButton(UiUtil.MakeButton(Se.Language.Edit.Find.FindNext, vm.FindNextCommand)
             .WithIconLeft(IconNames.ChevronRight));
         buttonFindNext.Classes.Add("primary");
-        var buttonFindPrevious = EditDialogChrome.StyleActionButton(UiUtil.MakeButton(Se.Language.Edit.Find.FindPrevious, vm.FindPreviousCommand)
+        var buttonFindPrevious = EditorChrome.StyleActionColumnButton(UiUtil.MakeButton(Se.Language.Edit.Find.FindPrevious, vm.FindPreviousCommand)
             .WithIconLeft(IconNames.ChevronLeft));
-        var buttonCount = EditDialogChrome.StyleActionButton(UiUtil.MakeButton(Se.Language.General.Count, vm.CountCommand)
+        var buttonCount = EditorChrome.StyleActionColumnButton(UiUtil.MakeButton(Se.Language.General.Count, vm.CountCommand)
             .WithIconLeft(IconNames.Counter));
 
         var panelResult = FindWindowParts.MakeResultPanel(nameof(vm.CountResult), nameof(vm.ResultIcon));
@@ -76,7 +76,7 @@ public class FindWindow : Window
             }
         };
 
-        Content = EditDialogChrome.MakeSidePanelRoot(sections, EditDialogChrome.MakeActionColumn(panelButtons));
+        Content = EditorChrome.MakeSidePanelRoot(sections, EditorChrome.MakeActionColumn(panelButtons));
 
         vm.FocusSearchBox = () => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
         {

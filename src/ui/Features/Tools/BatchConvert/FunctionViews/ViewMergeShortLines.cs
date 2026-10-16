@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert.FunctionViews;
 
@@ -13,6 +14,6 @@ public static class ViewMergeShortLines
         return FunctionViewChrome.MakePanel(vm, Se.Language.Tools.MergeShortLines.Title,
             FunctionViewChrome.MakeRow(Se.Language.Tools.MergeShortLines.MaxCharacters, numericMaxChars),
             FunctionViewChrome.MakeRow(Se.Language.Tools.MergeShortLines.MaxMillisecondsBetweenLines, numericMaxMs),
-            FunctionViewChrome.MakeSwitchRow(nameof(vm.MergeShortLinesOnlyContinuationLines), Se.Language.Tools.MergeShortLines.OnlyContinuationLines));
+            EditorChrome.MakeSwitchRow(nameof(vm.MergeShortLinesOnlyContinuationLines), Se.Language.Tools.MergeShortLines.OnlyContinuationLines));
     }
 }

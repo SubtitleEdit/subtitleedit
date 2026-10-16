@@ -29,7 +29,7 @@ public class SpeakFromLineWindow : Window
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
         MinWidth = 400;
-        TtsMainEditorLook.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TextFieldsBare | EditorWindowStyles.MuteDisabledPrimary);
         vm.Window = this;
         DataContext = vm;
 
@@ -54,7 +54,7 @@ public class SpeakFromLineWindow : Window
 
         var comboBoxLanguages = UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage)).WithWidth(ComboWidth);
         AutomationProperties.SetName(comboBoxLanguages, Se.Language.General.Language);
-        var rowLanguage = TtsMainEditorLook.Row(Se.Language.General.Language, comboBoxLanguages, LabelWidth);
+        var rowLanguage = EditorChrome.MakeLabeledRow(Se.Language.General.Language, comboBoxLanguages, LabelWidth, spacing: 6);
         rowLanguage.Bind(IsVisibleProperty, new Binding(nameof(vm.HasLanguageParameter)));
 
         var labelHint = new TextBlock
@@ -78,13 +78,13 @@ public class SpeakFromLineWindow : Window
 
         var rows = new StackPanel { Spacing = 8 };
         rows.Children.Add(labelHint);
-        rows.Children.Add(TtsMainEditorLook.Row(Se.Language.General.Engine, comboBoxEngines, LabelWidth));
-        rows.Children.Add(TtsMainEditorLook.Row(null, labelEngineDescription, LabelWidth));
-        rows.Children.Add(TtsMainEditorLook.Row(Se.Language.General.Voice, comboBoxVoices, LabelWidth));
+        rows.Children.Add(EditorChrome.MakeLabeledRow(Se.Language.General.Engine, comboBoxEngines, LabelWidth, spacing: 6));
+        rows.Children.Add(EditorChrome.MakeLabeledRow((string?)null, labelEngineDescription, LabelWidth, spacing: 6));
+        rows.Children.Add(EditorChrome.MakeLabeledRow(Se.Language.General.Voice, comboBoxVoices, LabelWidth, spacing: 6));
         rows.Children.Add(rowLanguage);
         rows.Children.Add(playback);
 
-        var buttonOk = TtsMainEditorLook.MakePrimary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         buttonOk.Bind(IsEnabledProperty, new Binding(nameof(vm.IsBusy)) { Converter = Avalonia.Data.Converters.BoolConverters.Not });
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
@@ -101,7 +101,7 @@ public class SpeakFromLineWindow : Window
             Background = EditorChrome.PanelBrush,
             Child = EditorChrome.MakeEditorSection(Se.Language.Video.TextToSpeech.EngineAndVoice, rows, first: true),
         }, 0, 0);
-        grid.Add(TtsMainEditorLook.MakeButtonBar(null, buttonCancel, buttonOk), 1, 0);
+        grid.Add(EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk), 1, 0);
 
         Content = grid;
 

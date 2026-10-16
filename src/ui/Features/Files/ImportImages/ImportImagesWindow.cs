@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
@@ -9,8 +9,6 @@ using System;
 using System.Collections;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -32,7 +30,7 @@ public class ImportImagesWindow : Window
         Height = 780;
         MinWidth = 900;
         MinHeight = 520;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         vm.Window = this;
         DataContext = vm;
@@ -63,7 +61,7 @@ public class ImportImagesWindow : Window
             [!TextBlock.TextProperty] = new Binding($"{nameof(vm.Images)}.Count") { StringFormat = "{0} " + Se.Language.General.Images.ToLowerInvariant() },
         };
 
-        Content = SyncTimingChrome.MakeRoot(sections, SyncTimingChrome.MakeButtonBar(count, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(count, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, () => { TableViewExtras.FocusRow(imagesGrid); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
@@ -325,12 +323,12 @@ public class ImportImagesWindow : Window
             Children =
             {
                 info,
-                SyncTimingChrome.MakeTextToolButton("fa-solid fa-plus", Se.Language.General.ImportDotDotDot, vm.FileImportCommand),
+                EditorChrome.MakeTextToolButton("fa-solid fa-plus", Se.Language.General.ImportDotDotDot, vm.FileImportCommand),
                 buttonRemove,
                 buttonClear,
             },
         };
 
-        return MakeHeaderPanel(Se.Language.General.Images, EditDialogChrome.MakeListFrame(dropHost), actions);
+        return MakeHeaderPanel(Se.Language.General.Images, EditorChrome.MakeListFrame(dropHost, clearListBackground: true), actions);
     }
 }

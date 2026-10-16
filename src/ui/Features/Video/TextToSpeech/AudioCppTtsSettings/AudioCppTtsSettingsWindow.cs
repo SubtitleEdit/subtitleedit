@@ -49,7 +49,7 @@ public class AudioCppTtsSettingsWindow : Window
                 TtsSettingsChrome.MakeModelDownloadButton(vm.DownloadModelCommand, vm.Adapter.ModelKeyAlt))),
             (Se.Language.Video.Voices, TtsSettingsChrome.MakeValue(nameof(vm.VoicesLabel), openVoicesFolder)),
             (Se.Language.General.InstallFolder, TtsSettingsChrome.MakeFolder(nameof(vm.ModelsFolder), vm.OpenModelsFolderCommand)));
-        return TtsSettingsChrome.MakeSection(Se.Language.General.Models, rows);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Models, rows);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

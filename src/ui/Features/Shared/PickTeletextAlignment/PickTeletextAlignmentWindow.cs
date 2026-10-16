@@ -8,7 +8,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 namespace Nikse.SubtitleEdit.Features.Shared.PickTeletextAlignment;
 
 /// <summary>
-/// Teletext line/alignment, in the editor look (see <see cref="SharedDialogChrome"/>): the opt-in
+/// Teletext line/alignment, in the editor look (see <see cref="EditorChrome"/>): the opt-in
 /// edit rows in one section, the view options as switches below.
 /// </summary>
 public class PickTeletextAlignmentWindow : Window
@@ -20,7 +20,7 @@ public class PickTeletextAlignmentWindow : Window
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
         MinWidth = 520;
-        SharedDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
 
@@ -66,10 +66,10 @@ public class PickTeletextAlignmentWindow : Window
         };
 
         // View options, separated from the opt-in edit rows above.
-        var previewSwitch = SharedDialogChrome.MakeSwitchRow(nameof(vm.Preview), Se.Language.General.PreviewAlignmentInListView);
-        var showTeletextSwitch = SharedDialogChrome.MakeSwitchRow(nameof(vm.ShowTeletextColumn), Se.Language.General.ShowTeletext);
+        var previewSwitch = EditorChrome.MakeSwitchRow(nameof(vm.Preview), Se.Language.General.PreviewAlignmentInListView);
+        var showTeletextSwitch = EditorChrome.MakeSwitchRow(nameof(vm.ShowTeletextColumn), Se.Language.General.ShowTeletext);
 
-        var buttonOk = SharedDialogChrome.Primary(UiUtil.MakeButton(Se.Language.General.Ok, vm.OkCommand));
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButton(Se.Language.General.Ok, vm.OkCommand));
         var buttonCancel = UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelCommand);
 
         var grid = new Grid
@@ -112,12 +112,12 @@ public class PickTeletextAlignmentWindow : Window
         {
             Children =
             {
-                SharedDialogChrome.MakeSection(Se.Language.General.TeletextAlignment, grid, first: true),
-                SharedDialogChrome.MakeSection(Se.Language.General.Preview, viewPanel),
+                EditorChrome.MakeEditorSection(Se.Language.General.TeletextAlignment, grid, first: true),
+                EditorChrome.MakeEditorSection(Se.Language.General.Preview, viewPanel),
             },
         };
 
-        Content = SharedDialogChrome.MakeRoot(sections, SharedDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, lineBox);
         KeyDown += (_, e) => vm.OnKeyDown(e);

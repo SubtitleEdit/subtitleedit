@@ -5,7 +5,6 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -25,7 +24,7 @@ public class EditRuleWindow : Window
         MinWidth = 450;
         MinHeight = 320;
         CanResize = true;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         vm.Window = this;
         DataContext = vm;
 
@@ -53,7 +52,7 @@ public class EditRuleWindow : Window
             }
         };
 
-        var switchWholeWord = VideoSubDialogChrome.MakeSwitch(nameof(vm.IsWholeWord), Se.Language.Edit.Find.WholeWord)
+        var switchWholeWord = EditorChrome.MakeSwitch(nameof(vm.IsWholeWord), Se.Language.Edit.Find.WholeWord)
             .WithBindIsEnabled(nameof(vm.IsWholeWordEnabled));
         var panelOptions = new StackPanel
         {
@@ -61,14 +60,14 @@ public class EditRuleWindow : Window
             Children =
             {
                 panelType,
-                VideoSubDialogChrome.MakeSwitchRow(switchWholeWord, Se.Language.Edit.Find.WholeWord),
+                EditorChrome.MakeSwitchRow(switchWholeWord, Se.Language.Edit.Find.WholeWord),
             }
         };
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = VideoSubDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk);
+        var buttonPanel = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         // Label column and a star field column: nothing pins the width of the boxes (#13530).
         var grid = new Grid
@@ -112,7 +111,7 @@ public class EditRuleWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
         };
-        root.Add(VideoSubDialogChrome.MakePanel(grid), 0, 0);
+        root.Add(EditorChrome.MakePanel(grid), 0, 0);
         root.Add(new Border { Child = sectionOptions, Background = EditorChrome.PanelBrush }, 1, 0);
         root.Add(buttonPanel, 2, 0);
 

@@ -7,7 +7,6 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -27,7 +26,7 @@ public class WaveformThemesWindow : Window
         Title = Se.Language.Options.Settings.WaveformColorThemesDotDotDot;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        SyncTimingChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TimeCodes);
         vm.Window = this;
         DataContext = vm;
 
@@ -122,9 +121,9 @@ public class WaveformThemesWindow : Window
             },
         };
 
-        var buttonLoad = SyncTimingChrome.MakeTextToolButton(IconNames.FolderOpen, Se.Language.Options.Settings.WaveformLoadThemeDotDotDot, vm.LoadThemeCommand);
-        var buttonExport = SyncTimingChrome.MakeTextToolButton(IconNames.Export, Se.Language.Options.Settings.WaveformExportThemeDotDotDot, vm.ExportThemeCommand);
-        var buttonSaveAs = SyncTimingChrome.MakeTextToolButton(IconNames.ContentSave, Se.Language.Options.Settings.WaveformSaveAsCustomTheme, vm.SaveAsCustomThemeCommand);
+        var buttonLoad = EditorChrome.MakeTextToolButton(IconNames.FolderOpen, Se.Language.Options.Settings.WaveformLoadThemeDotDotDot, vm.LoadThemeCommand);
+        var buttonExport = EditorChrome.MakeTextToolButton(IconNames.Export, Se.Language.Options.Settings.WaveformExportThemeDotDotDot, vm.ExportThemeCommand);
+        var buttonSaveAs = EditorChrome.MakeTextToolButton(IconNames.ContentSave, Se.Language.Options.Settings.WaveformSaveAsCustomTheme, vm.SaveAsCustomThemeCommand);
         var panelLeft = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -138,7 +137,7 @@ public class WaveformThemesWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = SyncTimingChrome.MakeRoot(sections, SyncTimingChrome.MakeButtonBar(panelLeft, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(panelLeft, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, themeComboBox); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) =>

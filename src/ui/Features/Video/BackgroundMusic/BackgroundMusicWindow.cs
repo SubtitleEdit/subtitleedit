@@ -30,7 +30,7 @@ public class BackgroundMusicWindow : Window
         MinWidth = 640;
         SizeToContent = SizeToContent.Height;
         CanResize = true;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
 
         _vm = vm;
         vm.Window = this;
@@ -108,13 +108,13 @@ public class BackgroundMusicWindow : Window
 
         var numericSeed = Field(nameof(vm.Seed), 0, int.MaxValue, l.Seed);
         numericSeed.Width = 120;
-        var switchRandomSeed = VideoSubDialogChrome.MakeSwitch(nameof(vm.UseRandomSeed), l.RandomSeed);
+        var switchRandomSeed = EditorChrome.MakeSwitch(nameof(vm.UseRandomSeed), l.RandomSeed);
         switchRandomSeed.Bind(IsEnabledProperty, new Binding(nameof(vm.IsNotBusy)));
         var panelSeed = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 12,
-            Children = { numericSeed, VideoSubDialogChrome.MakeSwitchRow(switchRandomSeed, l.RandomSeed) },
+            Children = { numericSeed, EditorChrome.MakeSwitchRow(switchRandomSeed, l.RandomSeed) },
         };
 
         var textOutputLength = new TextBlock
@@ -136,12 +136,12 @@ public class BackgroundMusicWindow : Window
         promptRow.Add(textBoxPrompt, 0, 1);
 
         var rows = new StackPanel { Spacing = 8 };
-        rows.Children.Add(VideoSubDialogChrome.MakeRow(l.Preset, comboBoxPreset, LabelWidth));
+        rows.Children.Add(EditorChrome.MakeLabeledRow(l.Preset, comboBoxPreset, LabelWidth, spacing: 6));
         rows.Children.Add(promptRow);
-        rows.Children.Add(VideoSubDialogChrome.MakeRow(l.TempoBpm, numericBpm, LabelWidth));
-        rows.Children.Add(VideoSubDialogChrome.MakeRow(l.GenerateSeconds, numericGenerateSeconds, LabelWidth));
-        rows.Children.Add(VideoSubDialogChrome.MakeRow(l.Seed, panelSeed, LabelWidth));
-        rows.Children.Add(VideoSubDialogChrome.MakeRow(l.OutputLength, textOutputLength, LabelWidth));
+        rows.Children.Add(EditorChrome.MakeLabeledRow(l.TempoBpm, numericBpm, LabelWidth, spacing: 6));
+        rows.Children.Add(EditorChrome.MakeLabeledRow(l.GenerateSeconds, numericGenerateSeconds, LabelWidth, spacing: 6));
+        rows.Children.Add(EditorChrome.MakeLabeledRow(l.Seed, panelSeed, LabelWidth, spacing: 6));
+        rows.Children.Add(EditorChrome.MakeLabeledRow(l.OutputLength, textOutputLength, LabelWidth, spacing: 6));
 
         return EditorChrome.MakeEditorSection(l.Music, rows, first: true);
     }
@@ -152,17 +152,17 @@ public class BackgroundMusicWindow : Window
 
         var numericMusicVolume = Field(nameof(vm.MusicVolumePercent), 0, 200, l.MusicVolumePercent);
 
-        var switchRemoveAudio = VideoSubDialogChrome.MakeSwitch(nameof(vm.RemoveExistingAudioTracks), l.RemoveExistingAudioTracks);
+        var switchRemoveAudio = EditorChrome.MakeSwitch(nameof(vm.RemoveExistingAudioTracks), l.RemoveExistingAudioTracks);
         switchRemoveAudio.Bind(IsEnabledProperty, new Binding(nameof(vm.IsNotBusy)));
-        var rowRemoveAudio = VideoSubDialogChrome.MakeSwitchRow(switchRemoveAudio, l.RemoveExistingAudioTracks);
+        var rowRemoveAudio = EditorChrome.MakeSwitchRow(switchRemoveAudio, l.RemoveExistingAudioTracks);
         rowRemoveAudio.Bind(IsVisibleProperty, new Binding(nameof(vm.IsVideoMode)));
 
         var numericOriginalVolume = Field(nameof(vm.OriginalAudioVolumePercent), 0, 200, l.OriginalAudioVolumePercent);
-        var rowOriginalVolume = VideoSubDialogChrome.MakeRow(l.OriginalAudioVolumePercent, numericOriginalVolume, LabelWidth);
+        var rowOriginalVolume = EditorChrome.MakeLabeledRow(l.OriginalAudioVolumePercent, numericOriginalVolume, LabelWidth, spacing: 6);
         rowOriginalVolume.Bind(IsVisibleProperty, new Binding(nameof(vm.ShowOriginalAudioVolume)));
 
         var rows = new StackPanel { Spacing = 8 };
-        rows.Children.Add(VideoSubDialogChrome.MakeRow(l.MusicVolumePercent, numericMusicVolume, LabelWidth));
+        rows.Children.Add(EditorChrome.MakeLabeledRow(l.MusicVolumePercent, numericMusicVolume, LabelWidth, spacing: 6));
         rows.Children.Add(rowRemoveAudio);
         rows.Children.Add(rowOriginalVolume);
 
@@ -178,7 +178,7 @@ public class BackgroundMusicWindow : Window
 
         var progressBar = UiUtil.MakeProgressBar();
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
-        var textProgress = VideoSubDialogChrome.MakeHint(nameof(vm.ProgressText));
+        var textProgress = EditorChrome.MakeBoundHint(nameof(vm.ProgressText));
         var panelBusy = new StackPanel
         {
             Spacing = 6,
@@ -234,7 +234,7 @@ public class BackgroundMusicWindow : Window
 
     private static Button MakeAction(string icon, string text, System.Windows.Input.ICommand command)
     {
-        var button = VideoSubDialogChrome.MakeAction(icon, text, command);
+        var button = EditorChrome.MakeActionButton(icon, text, command);
         ((StackPanel)button.Content!).Margin = new Thickness(8, 0);
         return button;
     }
@@ -274,7 +274,7 @@ public class BackgroundMusicWindow : Window
             Converter = new FuncValueConverter<bool, string>(busy => busy ? Se.Language.General.Cancel : Se.Language.General.Close),
         });
 
-        return VideoSubDialogChrome.MakeButtonBar(engine, buttonCancel, buttonOk, buttonGenerate);
+        return EditorChrome.MakeButtonBar(engine, buttonCancel, buttonOk, buttonGenerate);
     }
 
     protected override void OnClosing(WindowClosingEventArgs e)

@@ -2,7 +2,6 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Chrome = Nikse.SubtitleEdit.Features.Ocr.OcrDialogChrome;
 
 namespace Nikse.SubtitleEdit.Features.Shared;
 
@@ -20,25 +19,25 @@ public class DownloadLibVlcWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        Chrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.EngineDialog);
 
         DataContext = vm;
 
         // The title shows the current step ("Downloading...", "Unpacking..."), the status line the progress.
-        var titleText = Chrome.DownloadTitle();
+        var titleText = EditorChrome.MakeDownloadTitle();
         titleText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.StatusText)));
-        var progressBar = Chrome.DownloadProgressBar(nameof(vm.ProgressValue));
+        var progressBar = EditorChrome.MakeDownloadProgressBar(nameof(vm.ProgressValue));
         progressBar.Bind(Avalonia.Visual.OpacityProperty, new Binding(nameof(vm.ProgressOpacity)));
-        var statusText = Chrome.DownloadStatus(nameof(vm.ProgressText));
+        var statusText = EditorChrome.MakeDownloadStatus(nameof(vm.ProgressText));
 
         // Download/unpack failures (no data, file in use, ...) - otherwise the window just sits there.
-        var errorText = Chrome.DownloadError(DownloadWindowUi.ErrorPropertyName);
+        var errorText = EditorChrome.MakeDownloadError(DownloadWindowUi.ErrorPropertyName);
 
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CommandCancelCommand);
         var buttonRetry = DownloadWindowUi.MakeButtonRetry(vm.RetryCommand);
-        var buttonBar = Chrome.ButtonBar(null, buttonRetry, buttonCancel);
+        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonRetry, buttonCancel);
 
-        Content = Chrome.Root(Chrome.DownloadBody(titleText, progressBar, statusText, errorText), buttonBar);
+        Content = EditorChrome.MakeRoot(EditorChrome.MakeDownloadBody(titleText, progressBar, statusText, errorText), buttonBar, stretch: false);
 
         Loaded += delegate
         {

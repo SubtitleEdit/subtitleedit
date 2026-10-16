@@ -3,7 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Layout;
-using Nikse.SubtitleEdit.Features.Video.VideoOcr;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -33,7 +32,7 @@ public class BinaryAdjustBrightnessWindow : Window
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        Content = BinaryEditChrome.MakePreviewDialogRoot(leftPanel, rightPanel, BinaryEditChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = BinaryEditChrome.MakePreviewDialogRoot(leftPanel, rightPanel, EditorChrome.MakeCancelOkBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, brightnessInputSlider); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -67,12 +66,12 @@ public class BinaryAdjustBrightnessWindow : Window
         panel.Children.Add(BinaryEditChrome.MakeSliderSection(l.Gamma, MakeSlider(nameof(vm.Gamma), 1, 300), nameof(vm.GammaDisplay)));
 
         // Reset button and info text
-        var resetButton = VideoDialogChrome.Action("fa-solid fa-rotate-left", l.ResetToDefaults, vm.ResetCommand);
+        var resetButton = EditorChrome.MakeActionButton("fa-solid fa-rotate-left", l.ResetToDefaults, vm.ResetCommand);
         resetButton.HorizontalAlignment = HorizontalAlignment.Left;
         resetButton.Margin = new Thickness(-10, 0, 0, 0); // the flat button pads its icon; line it up with the text
         var resetPanel = new StackPanel { Spacing = 10 };
         resetPanel.Children.Add(resetButton);
-        resetPanel.Children.Add(BinaryEditChrome.MakeHint(l.BrightnessAdjustmentInfo));
+        resetPanel.Children.Add(EditorChrome.MakeHint(l.BrightnessAdjustmentInfo));
         panel.Children.Add(new Border
         {
             Child = resetPanel,

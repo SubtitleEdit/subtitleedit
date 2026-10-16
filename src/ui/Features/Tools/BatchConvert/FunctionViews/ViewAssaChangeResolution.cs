@@ -14,13 +14,13 @@ public static class ViewAssaChangeResolution
         var labelTargetResolution = EditorChrome.MakeDimLabel(Se.Language.Assa.ResolutionResamplerTargetRes, new Avalonia.Thickness(0, 4, 0, 0));
 
         return FunctionViewChrome.MakePanel(vm, Se.Language.Assa.ResolutionResamplerTitle,
-            FunctionViewChrome.MakeHint(Se.Language.Tools.BatchConvert.AssaChangeResolutionOnlyAppliesToAssa),
+            EditorChrome.MakeHint(Se.Language.Tools.BatchConvert.AssaChangeResolutionOnlyAppliesToAssa),
             labelTargetResolution,
             FunctionViewChrome.MakeRow(Se.Language.General.Width, numericUpDownTargetWidth),
             FunctionViewChrome.MakeRow(Se.Language.General.Height, numericUpDownTargetHeight),
-            FunctionViewChrome.MakeSwitchRow(nameof(vm.AssaChangeResolutionChangeMargins), Se.Language.Assa.ResolutionResamplerChangeMargins),
-            FunctionViewChrome.MakeSwitchRow(nameof(vm.AssaChangeResolutionChangeFontSize), Se.Language.Assa.ResolutionResamplerChangeFontSize),
-            FunctionViewChrome.MakeSwitchRow(nameof(vm.AssaChangeResolutionChangePosition), Se.Language.Assa.ResolutionResamplerChangePositions),
-            FunctionViewChrome.MakeSwitchRow(nameof(vm.AssaChangeResolutionChangeDrawing), Se.Language.Assa.ResolutionResamplerChangeDrawing));
+            EditorChrome.MakeSwitchRow(nameof(vm.AssaChangeResolutionChangeMargins), Se.Language.Assa.ResolutionResamplerChangeMargins),
+            EditorChrome.MakeSwitchRow(nameof(vm.AssaChangeResolutionChangeFontSize), Se.Language.Assa.ResolutionResamplerChangeFontSize),
+            EditorChrome.MakeSwitchRow(nameof(vm.AssaChangeResolutionChangePosition), Se.Language.Assa.ResolutionResamplerChangePositions),
+            EditorChrome.MakeSwitchRow(nameof(vm.AssaChangeResolutionChangeDrawing), Se.Language.Assa.ResolutionResamplerChangeDrawing));
     }
 }

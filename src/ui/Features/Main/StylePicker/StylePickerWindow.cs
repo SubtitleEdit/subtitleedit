@@ -9,8 +9,6 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.VisualTree;
-using Nikse.SubtitleEdit.Features.Options;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -33,7 +31,7 @@ public class StylePickerWindow : Window
         SizeToContent = SizeToContent.Height;
         CanResize = false;
         Width = 840;
-        OptionsListChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.CompactListRows);
 
         vm.Window = this;
         DataContext = vm;
@@ -53,7 +51,7 @@ public class StylePickerWindow : Window
         {
             PlaceholderText = Se.Language.General.StylePickerFilterHint,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-        }.AsField(Se.Language.General.StylePickerFilterHint);
+        }.AsTextField(Se.Language.General.StylePickerFilterHint);
         textBoxFilter.InnerLeftContent = new Optris.Icons.Avalonia.Icon
         {
             Value = "fa-solid fa-magnifying-glass",
@@ -92,7 +90,7 @@ public class StylePickerWindow : Window
             }
         };
 
-        var labelKeysHint = OptionsListChrome.MakeHint(Se.Language.General.StylePickerKeysHint);
+        var labelKeysHint = EditorChrome.MakeWrappingDimLabel(Se.Language.General.StylePickerKeysHint);
         labelKeysHint.FontSize = 11.5;
 
         var panelList = new StackPanel
@@ -103,7 +101,7 @@ public class StylePickerWindow : Window
             {
                 panelInfo,
                 textBoxFilter,
-                OptionsListChrome.MakeListFrame(listBox, compact: false),
+                EditorChrome.MakeCompactListFrame(listBox, compact: false),
                 labelKeysHint,
             },
         };
@@ -119,7 +117,7 @@ public class StylePickerWindow : Window
         gridContent.Add(panelList, 0, 0);
         gridContent.Add(MakeDetailsPanel(vm), 0, 1);
 
-        var buttonManageStyles = SyncTimingChrome.MakeTextToolButton("fa-solid fa-palette", Se.Language.General.StylePickerManageStyles, null);
+        var buttonManageStyles = EditorChrome.MakeTextToolButton("fa-solid fa-palette", Se.Language.General.StylePickerManageStyles, null);
         buttonManageStyles.Click += (_, _) => vm.ShowStylesManager();
         if (Se.Settings.Appearance.ShowHints)
         {
@@ -133,7 +131,7 @@ public class StylePickerWindow : Window
         var buttonCancel = UiUtil.MakeButton(Se.Language.General.Cancel);
         buttonCancel.Click += (_, _) => vm.Cancel();
 
-        Content = SyncTimingChrome.MakeRoot(gridContent, SyncTimingChrome.MakeButtonBar(buttonManageStyles, buttonCancel, buttonSet));
+        Content = EditorChrome.MakeRoot(gridContent, EditorChrome.MakeDockedButtonBar(buttonManageStyles, buttonCancel, buttonSet));
 
         UiUtil.FocusOnFirstActivation(this, textBoxFilter);
 

@@ -11,7 +11,6 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Files.Compare;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Optris.Icons.Avalonia;
@@ -20,6 +19,10 @@ namespace Nikse.SubtitleEdit.Features.Edit.MultipleReplace;
 
 public class MultipleReplaceWindow : Window
 {
+    // Follow the app theme, also when it changes while the window is open
+    private static readonly IBrush ErrorBrush = EditorChrome.Themed(Color.FromRgb(255, 100, 100), Color.FromRgb(183, 28, 28));
+    private static readonly IBrush ReplacedBrush = EditorChrome.Themed(Color.FromRgb(100, 220, 100), Color.FromRgb(27, 94, 32));
+
     public MultipleReplaceWindow(MultipleReplaceViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -29,7 +32,7 @@ public class MultipleReplaceWindow : Window
         MinWidth = 850;
         MinHeight = 400;
         CanResize = true;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         vm.Window = this;
         DataContext = vm;
 
@@ -42,9 +45,9 @@ public class MultipleReplaceWindow : Window
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
         // How many lines the checked fixes change, on the left of the button bar.
-        var labelFixesInfo = VideoSubDialogChrome.MakeHint(nameof(vm.FixesInfo));
+        var labelFixesInfo = EditorChrome.MakeBoundHint(nameof(vm.FixesInfo));
         labelFixesInfo.FontSize = 12;
-        var panelButtons = VideoSubDialogChrome.MakeButtonBar(labelFixesInfo, buttonApply, buttonCancel, buttonOk);
+        var panelButtons = EditorChrome.MakeButtonBar(labelFixesInfo, buttonApply, buttonCancel, buttonOk);
 
         var content = new Grid
         {
@@ -233,9 +236,7 @@ public class MultipleReplaceWindow : Window
             // nothing (#13534).
             var labelError = new Label
             {
-                Foreground = new SolidColorBrush(EditorChrome.IsLightTheme
-                    ? Color.FromRgb(183, 28, 28)
-                    : Color.FromRgb(255, 100, 100)),
+                Foreground = ErrorBrush,
                 VerticalAlignment = VerticalAlignment.Center,
                 VerticalContentAlignment = VerticalAlignment.Center,
                 Margin = new Thickness(0, 0, 4, 0),
@@ -379,9 +380,9 @@ public class MultipleReplaceWindow : Window
             Margin = new Thickness(14, 12, 14, 14),
         };
         panel.Add(header, 0);
-        panel.Add(VideoSubDialogChrome.MakeListFrame(scrollViewer), 1);
+        panel.Add(EditorChrome.MakeListFrame(scrollViewer), 1);
 
-        return VideoSubDialogChrome.MakePanel(panel);
+        return EditorChrome.MakePanel(panel);
     }
 
     /// <summary>
@@ -579,9 +580,8 @@ public class MultipleReplaceWindow : Window
             [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(vm.SelectedFixHits)) { Source = vm },
             ItemTemplate = new FuncDataTemplate<ReplaceExpression>((hit, _) =>
             {
-                var isDark = !EditorChrome.IsLightTheme;
-                var redFg = new SolidColorBrush(isDark ? Color.FromRgb(255, 100, 100) : Color.FromRgb(183, 28, 28));
-                var greenFg = new SolidColorBrush(isDark ? Color.FromRgb(100, 220, 100) : Color.FromRgb(27, 94, 32));
+                var redFg = ErrorBrush;
+                var greenFg = ReplacedBrush;
 
                 var iconLabel = new Label { Padding = new Thickness(0, 0, 2, 0), VerticalAlignment = VerticalAlignment.Center };
                 if (hit.RuleTreeNode != null)
@@ -699,7 +699,7 @@ public class MultipleReplaceWindow : Window
             Margin = new Thickness(14, 12, 14, 14),
         };
         gridPreview.Add(previewHeader, 0, 0);
-        gridPreview.Add(VideoSubDialogChrome.MakeListFrame(dataGrid), 1, 0);
+        gridPreview.Add(EditorChrome.MakeListFrame(dataGrid), 1, 0);
         gridPreview.Add(hitsPanel, 2, 0);
 
         var gridFixes = new Grid

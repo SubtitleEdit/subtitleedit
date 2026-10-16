@@ -2,8 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -24,7 +22,7 @@ public class InterjectionsWindow : Window
         CanResize = false;
         Width = 700;
         Height = 600;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         _vm = vm;
         vm.Window = this;
@@ -48,7 +46,7 @@ public class InterjectionsWindow : Window
         sections.Add(MakeListSection(Se.Language.Tools.RemoveTextForHearingImpaired.Interjections, textBoxInterjections, false), 0, 0);
         sections.Add(MakeListSection(Se.Language.Tools.RemoveTextForHearingImpaired.SkipIfStartWith, textBoxSkipList, true), 0, 1);
 
-        Content = SyncTimingChrome.MakeRoot(sections, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, textBoxInterjections); // initial focus on an input, not an action button - a focused button clicks on bare Space
     }

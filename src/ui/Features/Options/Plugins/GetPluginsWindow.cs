@@ -6,7 +6,6 @@ using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Optris.Icons.Avalonia;
@@ -28,7 +27,7 @@ public class GetPluginsWindow : Window
         Height = 540;
         MinWidth = 500;
         MinHeight = 300;
-        OptionsListChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.CompactListRows);
         vm.Window = this;
         DataContext = vm;
 
@@ -198,7 +197,7 @@ public class GetPluginsWindow : Window
             Margin = new Thickness(14, 12, 14, 14),
         };
         listSection.Add(EditorChrome.MakeSectionHeader(Se.Language.Plugins.GetPluginsTitle), 0);
-        listSection.Add(OptionsListChrome.MakeListFrame(listBox, compact: false), 1);
+        listSection.Add(EditorChrome.MakeCompactListFrame(listBox, compact: false), 1);
 
         var statusMessage = new TextBlock
         {
@@ -209,11 +208,11 @@ public class GetPluginsWindow : Window
         };
         statusMessage.Bind(TextBlock.TextProperty, new Binding(nameof(vm.StatusMessage)));
 
-        var buttonRefresh = SyncTimingChrome.MakeTextToolButton(IconNames.Refresh, Se.Language.General.Refresh, vm.RefreshCommand);
+        var buttonRefresh = EditorChrome.MakeTextToolButton(IconNames.Refresh, Se.Language.General.Refresh, vm.RefreshCommand);
         var buttonClose = UiUtil.MakeButton(Se.Language.General.Close, vm.CloseCommand);
         buttonClose.Classes.Add("primary");
 
-        Content = SyncTimingChrome.MakeRoot(listSection, SyncTimingChrome.MakeButtonBar(statusMessage, buttonRefresh, buttonClose));
+        Content = EditorChrome.MakeRoot(listSection, EditorChrome.MakeDockedButtonBar(statusMessage, buttonRefresh, buttonClose));
 
         UiUtil.FocusOnFirstActivation(this, buttonClose);
         KeyDown += (_, e) => vm.OnKeyDown(e);

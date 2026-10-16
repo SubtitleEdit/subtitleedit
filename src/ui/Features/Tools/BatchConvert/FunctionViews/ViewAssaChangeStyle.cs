@@ -1,7 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -11,14 +10,14 @@ public static class ViewAssaChangeStyle
 {
     public static Control Make(BatchConvertViewModel vm)
     {
-        var textBoxFrom = FunctionViewChrome.MakeTextBox(nameof(vm.AssaChangeStyleFromStyle), Se.Language.Tools.BatchConvert.AssaChangeStyleFromStyle);
+        var textBoxFrom = EditorChrome.MakeTextField(nameof(vm.AssaChangeStyleFromStyle), Se.Language.Tools.BatchConvert.AssaChangeStyleFromStyle);
         var buttonBrowseFrom = UiUtil.MakeButtonBrowse(vm.AssaChangeStyleBrowseFromStyleCommand, accessibleName: Se.Language.Tools.BatchConvert.AssaChangeStyleFromStyle);
 
-        var textBoxTo = FunctionViewChrome.MakeTextBox(nameof(vm.AssaChangeStyleToStyle), Se.Language.Tools.BatchConvert.AssaChangeStyleToStyle);
+        var textBoxTo = EditorChrome.MakeTextField(nameof(vm.AssaChangeStyleToStyle), Se.Language.Tools.BatchConvert.AssaChangeStyleToStyle);
         var buttonBrowseTo = UiUtil.MakeButtonBrowse(vm.AssaChangeStyleBrowseToStyleCommand, accessibleName: Se.Language.Tools.BatchConvert.AssaChangeStyleToStyle);
 
         var buttonImport = FunctionViewChrome.MakeButton("fa-solid fa-file-import", Se.Language.Tools.BatchConvert.AssaChangeStyleImportStyle, vm.AssaChangeStyleImportStyleCommand);
-        var labelImported = VideoSubDialogChrome.MakeHint(nameof(vm.AssaChangeStyleImportFileName));
+        var labelImported = EditorChrome.MakeBoundHint(nameof(vm.AssaChangeStyleImportFileName));
         labelImported.Bind(TextBlock.TextProperty, new Binding
         {
             Path = nameof(vm.AssaChangeStyleImportFileName),
@@ -34,11 +33,11 @@ public static class ViewAssaChangeStyle
         };
 
         return FunctionViewChrome.MakePanel(vm, Se.Language.Tools.BatchConvert.AssaChangeStyleTitle,
-            FunctionViewChrome.MakeHint(Se.Language.Tools.BatchConvert.AssaChangeResolutionOnlyAppliesToAssa),
+            EditorChrome.MakeHint(Se.Language.Tools.BatchConvert.AssaChangeResolutionOnlyAppliesToAssa),
             panelImport,
             FunctionViewChrome.MakeRow(Se.Language.Tools.BatchConvert.AssaChangeStyleFromStyle, WithButton(textBoxFrom, buttonBrowseFrom)),
             FunctionViewChrome.MakeRow(Se.Language.Tools.BatchConvert.AssaChangeStyleToStyle, WithButton(textBoxTo, buttonBrowseTo)),
-            FunctionViewChrome.MakeSwitchRow(nameof(vm.AssaChangeStyleTrimUnusedStyles), Se.Language.Tools.BatchConvert.AssaChangeStyleTrimUnusedStyles));
+            EditorChrome.MakeSwitchRow(nameof(vm.AssaChangeStyleTrimUnusedStyles), Se.Language.Tools.BatchConvert.AssaChangeStyleTrimUnusedStyles));
     }
 
     /// <summary>

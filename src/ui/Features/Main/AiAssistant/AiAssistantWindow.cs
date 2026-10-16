@@ -6,10 +6,8 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
-using Nikse.SubtitleEdit.Features.Edit;
 using Nikse.SubtitleEdit.Features.Tools.AiReview;
 using Nikse.SubtitleEdit.Features.Translate;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Linq;
@@ -35,7 +33,7 @@ public class AiAssistantWindow : Window
         MinHeight = 500;
         CanResize = true;
         // The Edit dialogs' styles: compact fields that keep the field color while focused
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -147,7 +145,7 @@ public class AiAssistantWindow : Window
         toolbarGrid.Add(comboLlamaCppModel, 0, 3);
         toolbarGrid.Add(panelOpenAiCompatible, 0, 4);
         toolbarGrid.Add(languageChip, 0, 6);
-        var toolbar = VideoSubDialogChrome.MakeToolbar(toolbarGrid);
+        var toolbar = EditorChrome.MakeToolbar(toolbarGrid);
         toolbar.Padding = new Thickness(12, 8);
 
         // ---------- current line + context ----------
@@ -315,7 +313,7 @@ public class AiAssistantWindow : Window
             .WithIconLeft("fa-solid fa-check")
             .WithBindEnabled(nameof(vm.HasResult));
         var closeButton = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var bottomBar = VideoSubDialogChrome.MakeButtonBar(null, closeButton, applyButton);
+        var bottomBar = EditorChrome.MakeButtonBar(null, closeButton, applyButton);
 
         // The accent marks the next step: Ask until there is a result, then Apply.
         void UpdateAccent()
@@ -347,7 +345,7 @@ public class AiAssistantWindow : Window
             RowDefinitions = new RowDefinitions("Auto,*,Auto,Auto"),
         };
         grid.Add(toolbar, 0, 0);
-        grid.Add(VideoSubDialogChrome.MakePanel(panel), 1, 0);
+        grid.Add(EditorChrome.MakePanel(panel), 1, 0);
         grid.Add(statusStrip, 2, 0);
         grid.Add(bottomBar, 3, 0);
 
@@ -415,7 +413,7 @@ public class AiAssistantWindow : Window
     private static Button MakeActionButton(AiAssistantViewModel vm, string text,
         CommunityToolkit.Mvvm.Input.IRelayCommand command, string iconName)
     {
-        var button = VideoSubDialogChrome.MakeAction(iconName, text, command)
+        var button = EditorChrome.MakeActionButton(iconName, text, command)
             .WithBindEnabled("!" + nameof(vm.IsBusy));
         button.Margin = new Thickness(0, 0, 6, 4);
         return button;

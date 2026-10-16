@@ -18,17 +18,17 @@ public class TimedTextImsc11PropertiesWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 450;
-        FormatPropertiesChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Form);
         vm.Window = this;
         DataContext = vm;
 
-        var textBoxTitle = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.Title)), Se.Language.General.Title);
+        var textBoxTitle = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.Title)), Se.Language.General.Title);
         var general = FormatPropertiesChrome.MakeRows(
             FormatPropertiesChrome.Row(Se.Language.General.Title, textBoxTitle));
 
         var comboBoxTimeBase = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.TimeBases, vm, nameof(vm.SelectedTimeBase)), Se.Language.File.PropertyTimeBase, FieldWidth);
-        var textBoxFrameRate = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.SelectedFrameRate)), Se.Language.General.FrameRate);
-        var textBoxFrameRateMultiplier = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.SelectedFrameRateMultiplier)), Se.Language.File.PropertyFrameRateMultiplier);
+        var textBoxFrameRate = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.SelectedFrameRate)), Se.Language.General.FrameRate);
+        var textBoxFrameRateMultiplier = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.SelectedFrameRateMultiplier)), Se.Language.File.PropertyFrameRateMultiplier);
         var comboBoxDropMode = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.DropModes, vm, nameof(vm.SelectedDropMode)), Se.Language.File.PropertyDropMode, FieldWidth);
         var comboBoxTimeCodeFormat = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.TimeCodeFormats, vm, nameof(vm.SelectedTimeCodeFormat)), Se.Language.File.PropertyTimeCodeFormat, FieldWidth);
         var timing = FormatPropertiesChrome.MakeRows(
@@ -46,7 +46,7 @@ public class TimedTextImsc11PropertiesWindow : Window
             FormatPropertiesChrome.Row(Se.Language.File.PropertyDefaultRegion, comboBoxDefaultRegion),
             FormatPropertiesChrome.Row(Se.Language.General.FileExtension, comboBoxFileExtension));
 
-        var buttonBar = FormatPropertiesChrome.MakeButtonBar(null, UiUtil.MakeButtonOk(vm.OkCommand), UiUtil.MakeButtonCancel(vm.CancelCommand));
+        var buttonBar = EditorChrome.MakeDockedCancelOkBar(null, UiUtil.MakeButtonCancel(vm.CancelCommand), UiUtil.MakeButtonOk(vm.OkCommand));
 
         Content = FormatPropertiesChrome.MakeRoot(
             buttonBar,

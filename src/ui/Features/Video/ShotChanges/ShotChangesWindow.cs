@@ -7,7 +7,6 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
-using Nikse.SubtitleEdit.Features.Video.VideoOcr;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Platform.Progress;
@@ -33,9 +32,9 @@ public class ShotChangesWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        VideoDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.VideoTool);
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).BindIsEnabled(vm, nameof(vm.IsGenerating), InverseBooleanConverter.Instance).Primary();
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).BindIsEnabled(vm, nameof(vm.IsGenerating), InverseBooleanConverter.Instance).AsPrimary();
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
         var grid = new Grid
@@ -75,7 +74,7 @@ public class ShotChangesWindow : Window
             Child = tabControl,
         }, 0);
         grid.Add(MakeProgressView(vm), 1);
-        grid.Add(VideoDialogChrome.ButtonBar(null, buttonCancel, buttonOk), 2);
+        grid.Add(EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk), 2);
 
         Content = grid;
 
@@ -167,7 +166,7 @@ public class ShotChangesWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
         };
-        grid.Add(VideoDialogChrome.ListSection(Se.Language.Video.ShotChanges.ShotChanges, tableView, margin: new Thickness(6, 12, 6, 12)), 0);
+        grid.Add(EditorChrome.MakeListPane(Se.Language.Video.ShotChanges.ShotChanges, tableView, margin: new Thickness(6, 12, 6, 12)), 0);
         var settings = EditorChrome.MakeEditorSection(Se.Language.General.Settings, panelSensitivity);
         settings.Padding = new Thickness(6, 12, 6, 14);
         grid.Add(settings, 1);
@@ -184,7 +183,7 @@ public class ShotChangesWindow : Window
         progressBar.WithPlatformProgress(this, nameof(vm.IsGenerating));
         progressBar.VerticalAlignment = VerticalAlignment.Center;
         progressBar[!ProgressBar.ValueProperty] = new Binding(nameof(vm.ProgressValue)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged };
-        var progressText = VideoDialogChrome.Hint(nameof(ShotChangesViewModel.ProgressText));
+        var progressText = EditorChrome.MakeBoundHint(nameof(ShotChangesViewModel.ProgressText), 12);
         progressText.MinWidth = 60;
         var gridProgress = new Grid
         {
@@ -198,14 +197,14 @@ public class ShotChangesWindow : Window
         gridProgress.Add(progressBar, 0, 0);
         gridProgress.Add(progressText, 0, 1);
 
-        var strip = VideoDialogChrome.ProgressStrip(gridProgress);
+        var strip = EditorChrome.MakeProgressStrip(gridProgress);
         strip.Bind(IsVisibleProperty, new Binding(nameof(vm.IsGenerating)));
         return strip;
     }
 
     private static Grid MakeImportView(ShotChangesViewModel vm)
     {
-        var buttonImport = VideoDialogChrome.Action("fa-solid fa-file-import", Se.Language.Video.ShotChanges.ImportShotChangesFromFile, vm.ImportFromTextFileCommand);
+        var buttonImport = EditorChrome.MakeActionButton("fa-solid fa-file-import", Se.Language.Video.ShotChanges.ImportShotChangesFromFile, vm.ImportFromTextFileCommand);
 
         var radioButtonFrames = UiUtil.MakeRadioButton(Se.Language.General.Frames, vm, nameof(ShotChangesViewModel.TimeCodeFrames), "TimeCode");
         var radioButtonSeconds = UiUtil.MakeRadioButton(Se.Language.General.Seconds, vm, nameof(ShotChangesViewModel.TimeCodeSeconds), "TimeCode");
@@ -250,7 +249,7 @@ public class ShotChangesWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
         };
-        grid.Add(VideoDialogChrome.ListSection(Se.Language.Video.ShotChanges.ShotChanges, VideoDialogChrome.ListFrame(textBoxImport), buttonImport, new Thickness(6, 12, 6, 12)), 0);
+        grid.Add(EditorChrome.MakeListPane(Se.Language.Video.ShotChanges.ShotChanges, EditorChrome.MakeListFrame(textBoxImport), buttonImport, new Thickness(6, 12, 6, 12)), 0);
         var settings = EditorChrome.MakeEditorSection(Se.Language.General.Settings, panelTimeCodeFormat);
         settings.Padding = new Thickness(6, 12, 6, 14);
         grid.Add(settings, 1);

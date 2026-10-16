@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
@@ -6,9 +6,6 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Optris.Icons.Avalonia;
@@ -26,7 +23,7 @@ public class FixCommonErrorsProfileWindow : Window
         Width = 680;
         Height = 420;
         CanResize = false;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         _vm = vm;
         vm.Window = this;
@@ -86,7 +83,7 @@ public class FixCommonErrorsProfileWindow : Window
         };
         AutomationProperties.SetName(listBoxProfiles, Se.Language.General.Profiles);
 
-        var buttonNewProfile = SyncTimingChrome.MakeTextToolButton("fa-solid fa-plus", Se.Language.General.NewProfile, vm.NewProfileCommand);
+        var buttonNewProfile = EditorChrome.MakeTextToolButton("fa-solid fa-plus", Se.Language.General.NewProfile, vm.NewProfileCommand);
         var profilesHeader = new DockPanel { Margin = new Thickness(0, 0, 0, 8) };
         DockPanel.SetDock(buttonNewProfile, Dock.Right);
         profilesHeader.Children.Add(buttonNewProfile);
@@ -98,7 +95,7 @@ public class FixCommonErrorsProfileWindow : Window
             Margin = new Thickness(14, 8, 14, 14),
         };
         profilesPanel.Add(profilesHeader, 0);
-        profilesPanel.Add(EditDialogChrome.MakeListFrame(listBoxProfiles), 1);
+        profilesPanel.Add(EditorChrome.MakeListFrame(listBoxProfiles, clearListBackground: true), 1);
 
         // Right: the selected profile's name
         var nameBox = new TextBox
@@ -131,9 +128,9 @@ public class FixCommonErrorsProfileWindow : Window
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
-        var buttonBar = VideoSubDialogChrome.MakeButtonBar(null, UiUtil.MakeButtonCancel(vm.CancelCommand), buttonOk);
+        var buttonBar = EditorChrome.MakeButtonBar(null, UiUtil.MakeButtonCancel(vm.CancelCommand), buttonOk);
 
-        Content = SyncTimingChrome.MakeRoot(columns, buttonBar);
+        Content = EditorChrome.MakeRoot(columns, buttonBar);
 
         UiUtil.FocusOnFirstActivation(this, () => { Focus(); }); // hack to make OnKeyDown work
     }

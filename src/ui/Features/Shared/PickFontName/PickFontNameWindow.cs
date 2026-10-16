@@ -3,14 +3,13 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Shared.PickFontName;
 
 /// <summary>
-/// Pick a font name, in the shared picker layout (see <see cref="SharedDialogChrome"/>): the font
+/// Pick a font name, in the shared picker layout (see <see cref="EditorChrome"/>): the font
 /// lists with the search box in the header, the preview below, Cancel and OK at the bottom.
 /// </summary>
 public class PickFontNameWindow : Window
@@ -24,21 +23,21 @@ public class PickFontNameWindow : Window
         Height = 700;
         MinWidth = 500;
         MinHeight = 400;
-        SharedDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
 
-        var textBoxSearch = SharedDialogChrome.MakeSearchBox(vm, nameof(vm.SearchText), Se.Language.General.SearchFontNames);
+        var textBoxSearch = EditorChrome.MakeSearchBox(vm, nameof(vm.SearchText), Se.Language.General.SearchFontNames);
         textBoxSearch.TextChanged += (s, e) => vm.SearchTextChanged();
 
         var numericUpDownFontSize = UiUtil.MakeNumericUpDownOneDecimal(5, 1000, 130, vm, nameof(vm.FontSize));
         Avalonia.Automation.AutomationProperties.SetName(numericUpDownFontSize, Se.Language.General.FontSize);
-        var panelFontSize = SharedDialogChrome.MakeRow(Se.Language.General.FontSize, numericUpDownFontSize, 90)
+        var panelFontSize = EditorChrome.MakeLabeledRow(Se.Language.General.FontSize, numericUpDownFontSize, 90)
             .WithBindIsVisible(nameof(vm.IsFontSizeVisible));
 
-        var switchFontBold = VideoSubDialogChrome.MakeSwitch(nameof(vm.IsFontBold), Se.Language.General.Bold);
+        var switchFontBold = EditorChrome.MakeSwitch(nameof(vm.IsFontBold), Se.Language.General.Bold);
         switchFontBold.IsCheckedChanged += (s, e) => vm.FontBoldChanged();
-        var panelFontBold = VideoSubDialogChrome.MakeSwitchRow(switchFontBold, Se.Language.General.Bold)
+        var panelFontBold = EditorChrome.MakeSwitchRow(switchFontBold, Se.Language.General.Bold)
             .WithBindIsVisible(nameof(vm.IsFontBoldVisible));
 
         var panelOptions = new StackPanel
@@ -102,10 +101,10 @@ public class PickFontNameWindow : Window
         sections.Add(fontsSection, 0);
         sections.Add(previewSection, 1);
 
-        var buttonOk = SharedDialogChrome.Primary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = SharedDialogChrome.MakeRoot(sections, SharedDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, textBoxSearch); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -138,7 +137,7 @@ public class PickFontNameWindow : Window
         new TableViewHeaderSorter(dataGrid)
             .AddSortable<string, string>(fontNameColumn, x => x);
 
-        return Edit.EditDialogChrome.MakeListFrame(dataGrid);
+        return EditorChrome.MakeListFrame(dataGrid, clearListBackground: true);
     }
 
     private static Border MakePreviewView(PickFontNameViewModel vm)

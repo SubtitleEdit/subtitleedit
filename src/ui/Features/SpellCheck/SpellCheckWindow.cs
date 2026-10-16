@@ -7,8 +7,6 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -28,7 +26,7 @@ public class SpellCheckWindow : Window
         SizeToContent = SizeToContent.Height;
         Width = 720;
         CanResize = false;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -119,7 +117,7 @@ public class SpellCheckWindow : Window
         // Plays the line the current word is in, in the main window's video player, and pauses at
         // its end - hidden when no video is loaded (the view model then gets no play hook). Mainly
         // for STT output, where only the audio says what an unknown word should be (#14145).
-        var buttonPlay = SyncTimingChrome.MakeTextToolButton("fa-solid fa-play", Se.Language.General.PlayCurrent, vm.PlayCurrentLineCommand);
+        var buttonPlay = EditorChrome.MakeTextToolButton("fa-solid fa-play", Se.Language.General.PlayCurrent, vm.PlayCurrentLineCommand);
         buttonPlay.Bind(Visual.IsVisibleProperty, new Binding(nameof(SpellCheckViewModel.IsPlayVisible)));
         if (Se.Settings.Appearance.ShowHints)
         {
@@ -184,7 +182,7 @@ public class SpellCheckWindow : Window
             TextTrimming = TextTrimming.CharacterEllipsis,
             [!TextBlock.TextProperty] = new Binding(nameof(SpellCheckViewModel.UndoText)) { Mode = BindingMode.OneWay },
         };
-        var buttonUndo = EditDialogChrome.StyleActionButton(new Button
+        var buttonUndo = EditorChrome.StyleActionColumnButton(new Button
         {
             Content = new StackPanel
             {
@@ -245,7 +243,7 @@ public class SpellCheckWindow : Window
             Content = text,
             [!Button.CommandProperty] = new Binding(commandProperty) { Mode = BindingMode.OneWay },
         }.WithIconLeft(icon);
-        return EditDialogChrome.StyleActionButton(button);
+        return EditorChrome.StyleActionColumnButton(button);
     }
 
     private static Border MakeDictionarySection(SpellCheckViewModel vm)
@@ -383,7 +381,7 @@ public class SpellCheckWindow : Window
         var buttonDone = UiUtil.MakeButtonDone(vm.OkCommand);
         buttonDone.Classes.Add("primary");
         buttonDone.Margin = new Thickness(0);
-        return SyncTimingChrome.MakeButtonBar(labelStatus, buttonLoadSourceImage, buttonDone);
+        return EditorChrome.MakeDockedButtonBar(labelStatus, buttonLoadSourceImage, buttonDone);
     }
 
     /// <summary>

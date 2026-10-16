@@ -6,8 +6,6 @@ using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -31,7 +29,7 @@ public class GetDictionariesWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 520;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -66,7 +64,7 @@ public class GetDictionariesWindow : Window
         };
         root.Add(new Border { Background = EditorChrome.PanelBrush, Child = sections }, 0, 0);
         root.Add(BuildProgress(vm), 1, 0);
-        root.Add(SyncTimingChrome.MakeButtonBar(BuildStatus(vm), close, cancel, downloadButton), 2, 0);
+        root.Add(EditorChrome.MakeDockedButtonBar(BuildStatus(vm), close, cancel, downloadButton), 2, 0);
         Content = root;
 
         UiUtil.FocusOnFirstActivation(this, downloadButton); // hack to make OnKeyDown work
@@ -75,7 +73,7 @@ public class GetDictionariesWindow : Window
 
     private static StackPanel BuildDetails(GetDictionariesViewModel vm)
     {
-        var instructions = EditDialogChrome.MakeLabel(Se.Language.SpellCheck.GetDictionaryInstructions);
+        var instructions = EditorChrome.MakeWrappingDimLabel(Se.Language.SpellCheck.GetDictionaryInstructions);
         instructions.FontSize = 12.5;
         instructions.MaxWidth = LabelWidth + ContentWidth + 12;
         instructions.HorizontalAlignment = HorizontalAlignment.Left;

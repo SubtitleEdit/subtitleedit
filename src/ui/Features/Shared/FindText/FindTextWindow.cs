@@ -2,9 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
-using Nikse.SubtitleEdit.Features.Edit;
 using Nikse.SubtitleEdit.Features.Main;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -26,7 +24,7 @@ public class FindTextWindow : Window
         Height = 600;
         MinWidth = 600;
         MinHeight = 400;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -67,7 +65,7 @@ public class FindTextWindow : Window
         grid.Add(textBoxSearch, 0);
         grid.Add(subtitlesView, 1);
 
-        Content = SyncTimingChrome.MakeRoot(grid, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(grid, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, textBoxSearch); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -132,6 +130,6 @@ public class FindTextWindow : Window
         vm.SubtitleGrid.DoubleTapped += vm.OnSubtitleGridDoubleTapped;
         vm.SubtitleGrid.KeyDown += vm.SubtitleGridKeyDown;
 
-        return EditDialogChrome.MakeListFrame(vm.SubtitleGrid);
+        return EditorChrome.MakeListFrame(vm.SubtitleGrid, clearListBackground: true);
     }
 }

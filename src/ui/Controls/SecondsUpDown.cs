@@ -55,28 +55,23 @@ public class SecondsUpDown : TemplatedControl
         }
         else if (change.Property == BackgroundProperty)
         {
-            ApplyBackgroundToTextBox(change.NewValue as IBrush);
+            ApplyBackgroundToField(change.NewValue as IBrush);
         }
     }
 
-    // The templated control's Background isn't drawn behind the inner TextBox —
-    // propagate it explicitly so bindings (e.g. duration min/max warning color)
-    // become visible. Transparent / null means "use default TextBox style".
-    private void ApplyBackgroundToTextBox(IBrush? brush)
+    // The templated control's Background isn't drawn by the template - propagate it to the whole
+    // field (the spinner, so the up/down area is colored too) so bindings such as the duration
+    // min/max warning color become visible. Transparent / null means the normal field color.
+    private void ApplyBackgroundToField(IBrush? brush)
     {
-        if (_textBox == null)
+        if (_spinner == null)
         {
             return;
         }
 
-        if (brush is null || (brush is SolidColorBrush solid && solid.Color == Colors.Transparent))
-        {
-            _textBox.ClearValue(TextBox.BackgroundProperty);
-        }
-        else
-        {
-            _textBox.Background = brush;
-        }
+        _spinner.Background = brush is null || (brush is ISolidColorBrush solid && solid.Color.A == 0)
+            ? EditorChrome.FieldBrush
+            : brush;
     }
 
     private static TimeSpan CoerceValue(AvaloniaObject sender, TimeSpan value)
@@ -176,7 +171,7 @@ public class SecondsUpDown : TemplatedControl
                 args.Handled = true;
             };
 
-            ApplyBackgroundToTextBox(Background);
+            ApplyBackgroundToField(Background);
         }
     }
 

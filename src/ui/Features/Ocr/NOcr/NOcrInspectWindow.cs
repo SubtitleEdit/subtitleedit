@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -9,7 +9,6 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -36,7 +35,7 @@ public class NOcrInspectWindow : Window
         MinHeight = 600;
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        NOcrChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.TextToolToggles | EditorWindowStyles.CompactSplitButtons);
         AddLetterButtonStyles();
         DataContext = vm;
 
@@ -54,7 +53,7 @@ public class NOcrInspectWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
 
-        Content = NOcrChrome.MakeRoot(sections, SyncTimingChrome.MakeButtonBar(null, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonOk));
 
         vm.TextBoxNew.KeyDown += vm.TextBoxNewOnKeyDown;
 
@@ -141,7 +140,7 @@ public class NOcrInspectWindow : Window
             },
         };
 
-        vm.TextBoxNew = NOcrChrome.StyleTextBox(UiUtil.MakeTextBox(100, vm, nameof(vm.NewText)), Se.Language.General.Text)
+        vm.TextBoxNew = EditorChrome.AsTextField(UiUtil.MakeTextBox(100, vm, nameof(vm.NewText)), Se.Language.General.Text)
             .WithBindEnabled(nameof(vm.IsEditControlsEnabled));
         vm.TextBoxNew.Width = double.NaN;
         vm.TextBoxNew.Margin = new Thickness(0);
@@ -175,11 +174,11 @@ public class NOcrInspectWindow : Window
         switchItalic.Bind(InputElement.IsEnabledProperty, new Binding(nameof(vm.IsEditControlsEnabled)));
         switchItalic.IsCheckedChanged += vm.ItalicCheckChanged;
 
-        var buttonUpdate = NOcrChrome.MakeAction(IconNames.Check, Se.Language.General.Update, vm.UpdateCommand);
+        var buttonUpdate = EditorChrome.MakeTextToolButton(IconNames.Check, Se.Language.General.Update, vm.UpdateCommand);
         buttonUpdate.Bind(InputElement.IsEnabledProperty, new Binding(nameof(vm.IsEditControlsEnabled)));
-        var buttonDelete = NOcrChrome.MakeAction(IconNames.Trash, Se.Language.General.Delete, vm.DeleteCommand);
+        var buttonDelete = EditorChrome.MakeTextToolButton(IconNames.Trash, Se.Language.General.Delete, vm.DeleteCommand);
         buttonDelete.Bind(InputElement.IsEnabledProperty, new Binding(nameof(vm.IsEditControlsEnabled)));
-        var buttonAddBetterMatch = NOcrChrome.MakeAction(IconNames.Plus, Se.Language.Ocr.AddBetterMatch, vm.AddBetterMatchCommand);
+        var buttonAddBetterMatch = EditorChrome.MakeTextToolButton(IconNames.Plus, Se.Language.Ocr.AddBetterMatch, vm.AddBetterMatchCommand);
         var actions = new StackPanel
         {
             Spacing = 2,
@@ -199,11 +198,11 @@ public class NOcrInspectWindow : Window
             Children =
             {
                 panelCurrentImage,
-                NOcrChrome.MakeInfo(nameof(vm.ResolutionAndTopMargin)),
+                EditorChrome.MakeBoundInfo(nameof(vm.ResolutionAndTopMargin)),
                 EditorChrome.MakeSectionHeader(Se.Language.General.Match).WithMarginTop(10),
                 vm.TextBoxNew,
                 italicRow,
-                NOcrChrome.MakeInfo(nameof(vm.MatchResolutionAndTopMargin)),
+                EditorChrome.MakeBoundInfo(nameof(vm.MatchResolutionAndTopMargin)),
                 actions,
             },
         };
@@ -248,7 +247,7 @@ public class NOcrInspectWindow : Window
             }
         };
 
-        var buttonDrawAgain = NOcrChrome.MakeAction(IconNames.Refresh, Se.Language.Ocr.AutoDrawAgain, vm.DrawAgainCommand);
+        var buttonDrawAgain = EditorChrome.MakeTextToolButton(IconNames.Refresh, Se.Language.Ocr.AutoDrawAgain, vm.DrawAgainCommand);
         buttonDrawAgain.HorizontalAlignment = HorizontalAlignment.Left;
         buttonDrawAgain.Margin = new Thickness(-8, 4, 0, 0);
         buttonDrawAgain.Bind(InputElement.IsEnabledProperty, new Binding(nameof(vm.IsEditControlsEnabled)));
@@ -278,7 +277,7 @@ public class NOcrInspectWindow : Window
             NOcrChrome.MakeZoomBar(vm.ZoomOutCommand, vm.ZoomInCommand, nameof(vm.ZoomFactorInfo), nameof(vm.IsEditControlsEnabled)),
             NOcrChrome.MakeDrawModeBar(toggleButtonForeground, toggleButtonBackground));
 
-        var drawColumn = NOcrChrome.MakeColumn(Se.Language.Ocr.LinesToDraw, panelDrawControls);
+        var drawColumn = NOcrChrome.MakeFillColumn(Se.Language.Ocr.LinesToDraw, panelDrawControls);
         drawColumn.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsEditControlsEnabled)));
         var canvasColumn = NOcrChrome.MakeFillColumn(Se.Language.General.Preview, canvasContent);
         canvasColumn.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsEditControlsEnabled)));

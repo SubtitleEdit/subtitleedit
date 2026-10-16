@@ -4,7 +4,6 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
-using Chrome = Nikse.SubtitleEdit.Features.Ocr.OcrDialogChrome;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.FallbackDatabase;
 
@@ -19,7 +18,7 @@ public class OcrFallbackDatabaseWindow : Window
         MinWidth = 400;
         vm.Window = this;
         DataContext = vm;
-        Chrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.EngineDialog);
 
         var labelDatabase = EditorChrome.MakeDimLabel(string.Empty, new Thickness(0));
         labelDatabase.Bind(TextBlock.TextProperty, new Binding(nameof(vm.Label)));
@@ -34,9 +33,9 @@ public class OcrFallbackDatabaseWindow : Window
         AutomationProperties.SetLabeledBy(comboBoxDatabases, labelDatabase);
         comboBoxDatabases.Bind(AutomationProperties.NameProperty, new Binding(nameof(vm.Label)));
 
-        var buttonOk = Chrome.MakePrimary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = Chrome.ButtonBar(null, buttonCancel, buttonOk);
+        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonCancel, buttonOk);
 
         var body = new StackPanel
         {
@@ -45,7 +44,7 @@ public class OcrFallbackDatabaseWindow : Window
             Children = { labelDatabase, comboBoxDatabases },
         };
 
-        Content = Chrome.Root(body, buttonBar);
+        Content = EditorChrome.MakeRoot(body, buttonBar, stretch: false);
 
         UiUtil.FocusOnFirstActivation(this, comboBoxDatabases);
         KeyDown += vm.KeyDown;

@@ -4,7 +4,6 @@ using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Video.VideoOcr;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -24,7 +23,7 @@ public class PickOnlineSubtitleWindow : Window
         MinHeight = 500;
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        VideoDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.VideoTool);
         DataContext = vm;
 
         var tracksView = MakeTracksView(vm);
@@ -32,7 +31,7 @@ public class PickOnlineSubtitleWindow : Window
 
         var buttonSave = UiUtil.MakeButton(Se.Language.General.SaveDotDotDot, vm.SaveCommand);
         buttonSave.Bind(IsEnabledProperty, new Binding(nameof(vm.IsOkEnabled)));
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).Primary();
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).AsPrimary();
         buttonOk.Bind(IsEnabledProperty, new Binding(nameof(vm.IsOkEnabled)));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
@@ -46,8 +45,8 @@ public class PickOnlineSubtitleWindow : Window
             },
             Background = EditorChrome.PanelBrush,
         };
-        splitGrid.Add(VideoDialogChrome.ListSection(Se.Language.Video.PickOnlineSubtitleTitle, tracksView, margin: new Thickness(14, 12, 7, 14)), 0, 0);
-        splitGrid.Add(VideoDialogChrome.ListSection(Se.Language.General.Preview, previewView, margin: new Thickness(7, 12, 14, 14)), 0, 1);
+        splitGrid.Add(EditorChrome.MakeListPane(Se.Language.Video.PickOnlineSubtitleTitle, tracksView, margin: new Thickness(14, 12, 7, 14)), 0, 0);
+        splitGrid.Add(EditorChrome.MakeListPane(Se.Language.General.Preview, previewView, margin: new Thickness(7, 12, 14, 14)), 0, 1);
 
         var outer = new Grid
         {
@@ -58,7 +57,7 @@ public class PickOnlineSubtitleWindow : Window
             },
         };
         outer.Add(splitGrid, 0);
-        outer.Add(VideoDialogChrome.ButtonBar(MakeStatusText(vm), buttonSave, buttonCancel, buttonOk), 1);
+        outer.Add(EditorChrome.MakeButtonBar(MakeStatusText(vm), buttonSave, buttonCancel, buttonOk), 1);
 
         Content = outer;
 
@@ -121,7 +120,7 @@ public class PickOnlineSubtitleWindow : Window
         };
         vm.TracksGrid = dataGridTracks;
 
-        return VideoDialogChrome.ListFrame(dataGridTracks);
+        return EditorChrome.MakeListFrame(dataGridTracks);
     }
 
     private static Border MakePreviewView(PickOnlineSubtitleViewModel vm)
@@ -170,12 +169,12 @@ public class PickOnlineSubtitleWindow : Window
             Width = new GridLength(1, GridUnitType.Star),
         });
 
-        return VideoDialogChrome.ListFrame(dataGridPreview);
+        return EditorChrome.MakeListFrame(dataGridPreview);
     }
 
     private static TextBlock MakeStatusText(PickOnlineSubtitleViewModel vm)
     {
-        var statusText = VideoDialogChrome.Hint(nameof(vm.StatusText));
+        var statusText = EditorChrome.MakeBoundHint(nameof(vm.StatusText), 12);
         statusText.TextWrapping = TextWrapping.NoWrap;
         return statusText;
     }

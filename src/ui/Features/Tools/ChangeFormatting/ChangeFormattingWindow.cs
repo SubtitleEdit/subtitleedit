@@ -25,7 +25,7 @@ public class ChangeFormattingWindow : Window
         Height = 800;
         MinWidth = 900;
         MinHeight = 500;
-        LineToolsChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -68,13 +68,7 @@ public class ChangeFormattingWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = LineToolsChrome.MakeRoot(
-            LineToolsChrome.MakeSections(
-                EditorChrome.MakeEditorSection(Se.Language.General.Convert, panelControls, first: true),
-                MakeSubtitleView(vm)),
-            LineToolsChrome.MakeStatusText(vm, nameof(vm.StatusText)),
-            buttonCancel,
-            buttonOk);
+        Content = EditorChrome.MakeCancelOkRoot(EditorChrome.MakeOptionsAndLists(EditorChrome.MakeEditorSection(Se.Language.General.Convert, panelControls, first: true), MakeSubtitleView(vm)), EditorChrome.MakeStatusText(nameof(vm.StatusText), vm), buttonCancel, buttonOk);
 
         UiUtil.FocusOnFirstActivation(this, comboBoxFrom); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -181,6 +175,6 @@ public class ChangeFormattingWindow : Window
             },
         });
 
-        return LineToolsChrome.MakeListSection(Se.Language.General.Preview, dataGridSubtitle);
+        return EditorChrome.MakeListSection(Se.Language.General.Preview, dataGridSubtitle);
     }
 }

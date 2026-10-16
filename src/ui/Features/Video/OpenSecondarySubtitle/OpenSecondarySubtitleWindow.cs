@@ -9,7 +9,6 @@ using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Features.Sync.VisualSync;
-using Nikse.SubtitleEdit.Features.Video.VideoOcr;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -31,7 +30,7 @@ public class OpenSecondarySubtitleWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        VideoDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.VideoTool);
         const double labelWidth = 96;
 
         // Color row
@@ -73,17 +72,17 @@ public class OpenSecondarySubtitleWindow : Window
             Spacing = 8,
             Children =
             {
-                VideoDialogChrome.Row(Se.Language.General.Color, panelColor, labelWidth),
-                VideoDialogChrome.Row(Se.Language.General.FontSize, numericFontSize, labelWidth),
-                VideoDialogChrome.SwitchRow(nameof(vm.FontBold), Se.Language.General.Bold),
-                VideoDialogChrome.Row(Se.Language.General.BorderStyle, comboBoxBorderStyle, labelWidth),
-                VideoDialogChrome.Row(Se.Language.General.Alignment, comboBoxAlignment, labelWidth),
-                VideoDialogChrome.Row(Se.Language.Video.SecondarySubtitleJustifyLines, comboBoxJustify, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Color, panelColor, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.FontSize, numericFontSize, labelWidth),
+                EditorChrome.MakeSwitchRow(nameof(vm.FontBold), Se.Language.General.Bold),
+                EditorChrome.MakeLabeledRow(Se.Language.General.BorderStyle, comboBoxBorderStyle, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Alignment, comboBoxAlignment, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.Video.SecondarySubtitleJustifyLines, comboBoxJustify, labelWidth),
             },
         };
 
-        var rowOverrideStyle = VideoDialogChrome.SwitchRow(nameof(vm.OverrideStyle), Se.Language.Video.SecondarySubtitleRememberSettings);
-        var rowDoNotShowAgain = VideoDialogChrome.SwitchRow(nameof(vm.DoNotShowAgain), Se.Language.Video.SecondarySubtitleDoNotShowAgain);
+        var rowOverrideStyle = EditorChrome.MakeSwitchRow(nameof(vm.OverrideStyle), Se.Language.Video.SecondarySubtitleRememberSettings);
+        var rowDoNotShowAgain = EditorChrome.MakeSwitchRow(nameof(vm.DoNotShowAgain), Se.Language.Video.SecondarySubtitleDoNotShowAgain);
         // Skipping the dialog applies the remembered settings, so there must be some.
         rowDoNotShowAgain.Bind(IsEnabledProperty, new Binding(nameof(vm.OverrideStyle)) { Source = vm });
         // "Do not show again" is about opening a file; editing the current second subtitle
@@ -126,7 +125,7 @@ public class OpenSecondarySubtitleWindow : Window
         vm.ComboBoxParagraphs = comboBoxParagraphs;
         comboBoxParagraphs.SelectionChanged += vm.ComboBoxParagraphsChanged;
 
-        var buttonPlay = VideoDialogChrome.Action("fa-solid fa-play", Se.Language.General.PlayCurrent, vm.PlayAndBackCommand);
+        var buttonPlay = EditorChrome.MakeActionButton("fa-solid fa-play", Se.Language.General.PlayCurrent, vm.PlayAndBackCommand);
 
         var lineRow = new Grid
         {
@@ -153,7 +152,7 @@ public class OpenSecondarySubtitleWindow : Window
         videoGrid.Add(lineRow, 1);
 
         // Main layout
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).Primary();
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).AsPrimary();
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
         var content = new Grid
@@ -168,7 +167,7 @@ public class OpenSecondarySubtitleWindow : Window
             RowDefinitions = new RowDefinitions("*,Auto"),
         };
         mainGrid.Add(content, 0, 0);
-        mainGrid.Add(VideoDialogChrome.ButtonBar(null, buttonCancel, buttonOk), 1, 0);
+        mainGrid.Add(EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk), 1, 0);
 
         Content = mainGrid;
 

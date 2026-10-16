@@ -5,8 +5,6 @@ using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -21,7 +19,7 @@ public class CustomShortcutStepWindow : Window
         Title = language.CustomShortcutStep;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -55,7 +53,7 @@ public class CustomShortcutStepWindow : Window
                 FontSize = UiUtil.ScaledFontSize(10),
                 FontWeight = FontWeight.SemiBold,
                 VerticalAlignment = VerticalAlignment.Center,
-                Foreground = EditorChrome.IsLightTheme ? EditorChrome.AccentBrush : EditorChrome.StrongTextBrush,
+                Foreground = EditorChrome.BadgeTextBrush,
             },
         };
         var panelSearch = new Grid
@@ -88,7 +86,7 @@ public class CustomShortcutStepWindow : Window
         var labelSearch = MakeLabel(Se.Language.General.Search);
         var panelRunCommand = MakeFormGrid(
             (labelSearch, panelSearch),
-            (null, VideoSubDialogChrome.MakeListFrame(listBoxCommands)));
+            (null, EditorChrome.MakeListFrame(listBoxCommands)));
         panelRunCommand.Bind(IsVisibleProperty, new Binding(nameof(vm.IsRunCommand)));
 
         // Insert text
@@ -114,15 +112,11 @@ public class CustomShortcutStepWindow : Window
 
         // Find and replace
         var labelFind = MakeLabel(Se.Language.General.Find);
-        var textBoxFind = VideoSubDialogChrome.MakeTextBox(nameof(vm.Find), Se.Language.General.Find, inputWidth);
+        var textBoxFind = EditorChrome.MakeTextField(nameof(vm.Find), Se.Language.General.Find, inputWidth);
         var labelReplace = MakeLabel(Se.Language.General.ReplaceWith);
-        var textBoxReplace = VideoSubDialogChrome.MakeTextBox(nameof(vm.ReplaceWith), Se.Language.General.ReplaceWith, inputWidth);
-        var switchRegex = VideoSubDialogChrome.MakeSwitchRow(
-            VideoSubDialogChrome.MakeSwitch(nameof(vm.UseRegex), Se.Language.General.RegularExpression),
-            Se.Language.General.RegularExpression);
-        var switchCaseSensitive = VideoSubDialogChrome.MakeSwitchRow(
-            VideoSubDialogChrome.MakeSwitch(nameof(vm.CaseSensitive), Se.Language.General.CaseSensitive),
-            Se.Language.General.CaseSensitive);
+        var textBoxReplace = EditorChrome.MakeTextField(nameof(vm.ReplaceWith), Se.Language.General.ReplaceWith, inputWidth);
+        var switchRegex = EditorChrome.MakeSwitchRow(EditorChrome.MakeSwitch(nameof(vm.UseRegex), Se.Language.General.RegularExpression), Se.Language.General.RegularExpression);
+        var switchCaseSensitive = EditorChrome.MakeSwitchRow(EditorChrome.MakeSwitch(nameof(vm.CaseSensitive), Se.Language.General.CaseSensitive), Se.Language.General.CaseSensitive);
         var panelSwitches = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -138,7 +132,7 @@ public class CustomShortcutStepWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = VideoSubDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk);
+        var buttonPanel = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         var panels = new Panel { Children = { panelRunCommand, panelInsertText, panelReplace } };
 
@@ -158,7 +152,7 @@ public class CustomShortcutStepWindow : Window
                 new RowDefinition { Height = GridLength.Auto },
             },
         };
-        grid.Add(VideoSubDialogChrome.MakePanel(form), 0);
+        grid.Add(EditorChrome.MakePanel(form), 0);
         grid.Add(buttonPanel, 1);
 
         Content = grid;

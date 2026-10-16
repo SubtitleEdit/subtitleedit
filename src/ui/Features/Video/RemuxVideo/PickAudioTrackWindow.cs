@@ -21,7 +21,7 @@ public class PickAudioTrackWindow : Window
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
         MinWidth = 500;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
 
         DataContext = vm;
 
@@ -55,7 +55,7 @@ public class PickAudioTrackWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = VideoSubDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk);
+        var buttonBar = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         var panel = new StackPanel
         {
@@ -77,7 +77,7 @@ public class PickAudioTrackWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
         };
-        grid.Add(VideoSubDialogChrome.MakePanel(panel), 0);
+        grid.Add(EditorChrome.MakePanel(panel), 0);
         grid.Add(buttonBar, 1);
 
         Content = grid;

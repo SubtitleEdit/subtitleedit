@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
@@ -12,7 +12,6 @@ using Avalonia.Styling;
 using System.Linq;
 using Nikse.SubtitleEdit.Features.Files.Compare;
 using Nikse.SubtitleEdit.Features.Main;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Platform.Progress;
@@ -37,7 +36,7 @@ public class AiReviewWindow : Window
         MinHeight = 500;
         CanResize = true;
         // The Edit dialogs' styles: compact fields that keep the field color while focused
-        Features.Edit.EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         AddChipStyles(Styles);
         vm.Window = this;
         DataContext = vm;
@@ -166,7 +165,7 @@ public class AiReviewWindow : Window
             },
         };
 
-        var buttonEditPrompt = VideoSubDialogChrome.MakeAction("fa-solid fa-pen", l.EditPrompt, vm.EditPromptCommand);
+        var buttonEditPrompt = EditorChrome.MakeActionButton("fa-solid fa-pen", l.EditPrompt, vm.EditPromptCommand);
 
         var toolbarGrid = new Grid
         {
@@ -180,7 +179,7 @@ public class AiReviewWindow : Window
         toolbarGrid.Add(panelOpenAiCompatible, 0, 4);
         toolbarGrid.Add(languageChip, 0, 5);
         toolbarGrid.Add(buttonEditPrompt, 0, 7);
-        var toolbar = VideoSubDialogChrome.MakeToolbar(toolbarGrid);
+        var toolbar = EditorChrome.MakeToolbar(toolbarGrid);
         toolbar.Padding = new Thickness(12, 8);
 
         // ---------- filter chips ----------
@@ -400,7 +399,7 @@ public class AiReviewWindow : Window
             item => item.IsSelected, (item, v) => item.IsSelected = v);
         dataGrid.DoubleTapped += (_, _) => vm.OnSuggestionsGridDoubleTapped();
 
-        var borderGrid = VideoSubDialogChrome.MakeListFrame(dataGrid);
+        var borderGrid = EditorChrome.MakeListFrame(dataGrid);
 
         // ---------- reason strip ----------
         var reasonTextBlock = MakeBoundTextBlock(nameof(vm.ReasonText));
@@ -529,12 +528,12 @@ public class AiReviewWindow : Window
         };
 
         // ---------- bottom bar ----------
-        var summaryText = VideoSubDialogChrome.MakeHint(nameof(vm.SummaryText));
+        var summaryText = EditorChrome.MakeBoundHint(nameof(vm.SummaryText));
         summaryText.FontSize = 12;
 
         // Plays the selected suggestion's line in the main window's video player - hidden when no
         // video is loaded (the view model gets no play hook then).
-        var buttonPlay = VideoSubDialogChrome.MakeAction("fa-solid fa-play", Se.Language.General.PlayCurrent, vm.PlayCurrentLineCommand);
+        var buttonPlay = EditorChrome.MakeActionButton("fa-solid fa-play", Se.Language.General.PlayCurrent, vm.PlayCurrentLineCommand);
         buttonPlay.Bind(IsVisibleProperty, new Binding(nameof(vm.IsPlayVisible)));
         if (Se.Settings.Appearance.ShowHints)
         {
@@ -587,7 +586,7 @@ public class AiReviewWindow : Window
         };
         UpdateAccent();
 
-        var bottomBar = VideoSubDialogChrome.MakeButtonBar(leftPanel, buttonReview, buttonStop, buttonApply, buttonCancel, buttonOk);
+        var bottomBar = EditorChrome.MakeButtonBar(leftPanel, buttonReview, buttonStop, buttonApply, buttonCancel, buttonOk);
 
         // ---------- layout ----------
         var grid = new Grid
@@ -595,7 +594,7 @@ public class AiReviewWindow : Window
             RowDefinitions = new RowDefinitions("Auto,*,Auto,Auto"),
         };
         grid.Add(toolbar, 0, 0);
-        grid.Add(VideoSubDialogChrome.MakePanel(listGrid), 1, 0);
+        grid.Add(EditorChrome.MakePanel(listGrid), 1, 0);
         grid.Add(progressStrip, 2, 0);
         grid.Add(bottomBar, 3, 0);
 

@@ -10,7 +10,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 namespace Nikse.SubtitleEdit.Features.Shared.PickTeletextColor;
 
 /// <summary>
-/// Pick a teletext color, in the editor look (see <see cref="SharedDialogChrome"/>): flat color
+/// Pick a teletext color, in the editor look (see <see cref="EditorChrome"/>): flat color
 /// tiles, the current color framed in the accent. Picking a tile closes the window.
 /// </summary>
 public class PickTeletextColorWindow : Window
@@ -24,7 +24,7 @@ public class PickTeletextColorWindow : Window
         Title = Se.Language.General.TeletextColor;
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
-        SharedDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
 
@@ -84,12 +84,10 @@ public class PickTeletextColorWindow : Window
         Button? buttonCustom = null;
         if (vm.IsLevel25)
         {
-            buttonCustom = SharedDialogChrome.MakeTextToolButton("fa-solid fa-palette", Se.Language.General.ChooseColorDotDotDot, vm.PickCustomColorCommand);
+            buttonCustom = EditorChrome.MakeTextToolButton("fa-solid fa-palette", Se.Language.General.ChooseColorDotDotDot, vm.PickCustomColorCommand);
         }
 
-        Content = SharedDialogChrome.MakeRoot(
-            SharedDialogChrome.MakeSection(Se.Language.General.TeletextColor, panel, first: true),
-            SharedDialogChrome.MakeButtonBar(buttonCustom, buttonCancel));
+        Content = EditorChrome.MakeRoot(EditorChrome.MakeEditorSection(Se.Language.General.TeletextColor, panel, first: true), EditorChrome.MakeButtonBar(buttonCustom, buttonCancel));
 
         UiUtil.FocusOnFirstActivation(this, buttonCancel);
         KeyDown += (_, e) => vm.OnKeyDown(e);

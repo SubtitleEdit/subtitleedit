@@ -5,10 +5,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
 using Nikse.SubtitleEdit.Features.Main;
-using Nikse.SubtitleEdit.Features.Sync;
-using Nikse.SubtitleEdit.Features.Tools;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -30,13 +27,13 @@ public class ImportPlainTextWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
-        var buttonImportFiles = SyncTimingChrome.MakeTextToolButton("fa-regular fa-folder-open", Se.Language.File.Import.ImportFilesDotDotDot, vm.FilesImportCommand);
+        var buttonImportFiles = EditorChrome.MakeTextToolButton("fa-regular fa-folder-open", Se.Language.File.Import.ImportFilesDotDotDot, vm.FilesImportCommand);
         buttonImportFiles.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsImportFilesVisible)) { Source = vm });
-        var buttonImportFile = SyncTimingChrome.MakeTextToolButton("fa-regular fa-folder-open", Se.Language.General.ImportDotDotDot, vm.FileImportCommand);
+        var buttonImportFile = EditorChrome.MakeTextToolButton("fa-regular fa-folder-open", Se.Language.General.ImportDotDotDot, vm.FileImportCommand);
         buttonImportFile.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsImportFilesVisible)) { Source = vm, Converter = InverseBooleanConverter.Instance });
-        var rowImportFiles = LineToolsChrome.MakeSwitchRow(nameof(vm.IsImportFilesVisible), Se.Language.File.Import.MultipleFiles, out var switchImportFiles);
+        var rowImportFiles = EditorChrome.MakeToggleRow(nameof(vm.IsImportFilesVisible), Se.Language.File.Import.MultipleFiles, out var switchImportFiles);
         switchImportFiles.IsCheckedChanged += (s, e) => vm.CheckBoxImportFilesChanged();
         var panelImport = new StackPanel
         {
@@ -51,7 +48,7 @@ public class ImportPlainTextWindow : Window
             Spacing = 14,
         };
 
-        var labelNumberOfSubtitles = FileIoChrome.MakeDimText();
+        var labelNumberOfSubtitles = EditorChrome.MakeDimText();
         labelNumberOfSubtitles.DataContext = vm;
         labelNumberOfSubtitles.Bind(TextBlock.TextProperty, new Binding($"{nameof(vm.Subtitles)}.{nameof(vm.Subtitles.Count)}")
         {
@@ -60,7 +57,7 @@ public class ImportPlainTextWindow : Window
 
         // Progress sits above the button bar; forced alignment of a long video runs for
         // minutes, so the window must show that something is happening.
-        var labelAlignProgress = FileIoChrome.MakeDimText();
+        var labelAlignProgress = EditorChrome.MakeDimText();
         labelAlignProgress.DataContext = vm;
         labelAlignProgress.Bind(TextBlock.TextProperty, new Binding(nameof(vm.AlignProgress)));
 
@@ -94,9 +91,9 @@ public class ImportPlainTextWindow : Window
 
         // While aligning, Cancel stops the alignment; nothing else may start or close the window
         // with lines the aligner is still writing to.
-        var buttonAlignViaWhisper = SyncTimingChrome.MakeTextToolButton("fa-solid fa-microphone", Se.Language.File.Import.AlignViaSpeechToText, vm.AlignScriptWithTimestampsFromWhisperCommand)
+        var buttonAlignViaWhisper = EditorChrome.MakeTextToolButton("fa-solid fa-microphone", Se.Language.File.Import.AlignViaSpeechToText, vm.AlignScriptWithTimestampsFromWhisperCommand)
             .WithBindEnabled(nameof(vm.IsAligning), InverseBooleanConverter.Instance);
-        var buttonAlignViaForcedAligner = SyncTimingChrome.MakeTextToolButton(IconNames.Waveform, Se.Language.File.Import.AlignViaForcedAligner, vm.AlignScriptWithForcedAlignerCommand)
+        var buttonAlignViaForcedAligner = EditorChrome.MakeTextToolButton(IconNames.Waveform, Se.Language.File.Import.AlignViaForcedAligner, vm.AlignScriptWithForcedAlignerCommand)
             .WithBindEnabled(nameof(vm.IsAligning), InverseBooleanConverter.Instance);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand)
             .WithBindEnabled(nameof(vm.IsAligning), InverseBooleanConverter.Instance);
@@ -132,7 +129,7 @@ public class ImportPlainTextWindow : Window
         };
         root.Add(new Border { Background = EditorChrome.PanelBrush, Child = sections }, 0);
         root.Add(progressStrip, 1);
-        root.Add(SyncTimingChrome.MakeButtonBar(labelNumberOfSubtitles, buttonCancel, buttonOk), 2);
+        root.Add(EditorChrome.MakeDockedButtonBar(labelNumberOfSubtitles, buttonCancel, buttonOk), 2);
         Content = root;
 
         UiUtil.FocusOnFirstActivation(this, switchImportFiles); // initial focus on an input, not an action button - a focused button clicks on bare Space
@@ -150,7 +147,7 @@ public class ImportPlainTextWindow : Window
             },
         };
 
-        var textBox = FileIoChrome.StyleTextArea(new TextBox
+        var textBox = EditorChrome.AsTextArea(new TextBox
         {
             IsReadOnly = false,
             AcceptsReturn = true,
@@ -227,11 +224,11 @@ public class ImportPlainTextWindow : Window
 
         var source = new Grid();
         source.Children.Add(textBox);
-        var filesFrame = EditDialogChrome.MakeListFrame(dropHost);
+        var filesFrame = EditorChrome.MakeListFrame(dropHost, clearListBackground: true);
         filesFrame.Bind(Border.IsVisibleProperty, new Binding(nameof(vm.IsImportFilesVisible)) { Source = vm });
         source.Children.Add(filesFrame);
 
-        grid.Add(FileIoChrome.MakeFillSection(Se.Language.General.Text, source, importActions, first: true), 0, 0);
+        grid.Add(EditorChrome.MakeFillSection(Se.Language.General.Text, source, importActions, first: true), 0, 0);
         grid.Add(MakeControlsView(vm), 0, 1);
 
         return grid;
@@ -249,11 +246,11 @@ public class ImportPlainTextWindow : Window
         comboBoxSplit.Bind(ComboBox.IsEnabledProperty, new Binding(nameof(vm.IsImportFilesVisible)) { Source = vm, Converter = InverseBooleanConverter.Instance });
         comboBoxSplit.SelectionChanged += (s, e) => vm.SplitAtOptionChanged();
 
-        var numericUpDownGap = LineToolsChrome.MakeCompact(UiUtil.MakeNumericUpDownInt(0, 100000, Se.Settings.Tools.BridgeGaps.MinGapMs, 130, vm, nameof(vm.MinGapMs)), Se.Language.File.Import.GapMs);
+        var numericUpDownGap = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(0, 100000, Se.Settings.Tools.BridgeGaps.MinGapMs, 130, vm, nameof(vm.MinGapMs)), Se.Language.File.Import.GapMs.TrimEnd(':'), 100, alignLeft: true, center: true);
         numericUpDownGap.ValueChanged += vm.GapChanged;
 
-        var rowUseFixedDuration = LineToolsChrome.MakeSwitchRow(nameof(vm.UseFixedDuration), Se.Language.File.Import.UseFixedDuration, out _);
-        var numericUpDownFixedDurationMs = LineToolsChrome.MakeCompact(UiUtil.MakeNumericUpDownInt(0, 100000, (int)Se.Settings.Tools.AdjustDurations.AdjustDurationFixed, 130, vm, nameof(vm.FixedDurationMs)), Se.Language.File.Import.FixedDurationMs);
+        var rowUseFixedDuration = EditorChrome.MakeToggleRow(nameof(vm.UseFixedDuration), Se.Language.File.Import.UseFixedDuration, out _);
+        var numericUpDownFixedDurationMs = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(0, 100000, (int)Se.Settings.Tools.AdjustDurations.AdjustDurationFixed, 130, vm, nameof(vm.FixedDurationMs)), Se.Language.File.Import.FixedDurationMs.TrimEnd(':'), 100, alignLeft: true, center: true);
         numericUpDownFixedDurationMs.Bind(NumericUpDown.IsEnabledProperty, new Binding(nameof(vm.UseFixedDuration)));
 
         var panel = new StackPanel
@@ -261,11 +258,9 @@ public class ImportPlainTextWindow : Window
             Spacing = 12,
             Children =
             {
-                LineToolsChrome.MakeFieldGrid(
-                    (Se.Language.File.Import.SplitTextAt, comboBoxSplit),
-                    (Se.Language.File.Import.GapMs, numericUpDownGap)),
+                EditorChrome.MakeFieldGrid((Se.Language.File.Import.SplitTextAt, comboBoxSplit), (Se.Language.File.Import.GapMs, numericUpDownGap)),
                 rowUseFixedDuration,
-                LineToolsChrome.MakeFieldGrid((Se.Language.File.Import.FixedDurationMs, numericUpDownFixedDurationMs)),
+                EditorChrome.MakeFieldGrid((Se.Language.File.Import.FixedDurationMs, numericUpDownFixedDurationMs)),
             },
         };
 
@@ -332,6 +327,6 @@ public class ImportPlainTextWindow : Window
         });
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedSubtitle)) { Source = vm });
 
-        return LineToolsChrome.MakeListSection(Se.Language.General.Preview, dataGrid, alignActions);
+        return EditorChrome.MakeListSection(Se.Language.General.Preview, dataGrid, alignActions);
     }
 }
