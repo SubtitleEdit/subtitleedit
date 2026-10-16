@@ -49,7 +49,7 @@ public class PocketTtsCrispAsrSettingsWindow : Window
             (PocketTtsCrispAsr.ModelKeyPortugueseQ8_0, TtsSettingsChrome.MakeStatus(nameof(vm.PortugueseBrush), nameof(vm.PortugueseLabel))),
             (PocketTtsCrispAsr.ModelKeyFrenchQ8_0, TtsSettingsChrome.MakeStatus(nameof(vm.FrenchBrush), nameof(vm.FrenchLabel))),
             (Se.Language.General.InstallFolder, TtsSettingsChrome.MakeFolder(nameof(vm.ModelsFolder), vm.OpenModelsFolderCommand)));
-        return TtsSettingsChrome.MakeSection(Se.Language.General.Models, rows);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Models, rows);
     }
 
     private static Border BuildVoice(PocketTtsCrispAsrSettingsViewModel vm)
@@ -60,7 +60,7 @@ public class PocketTtsCrispAsrSettingsWindow : Window
             // Server accepts 0.25-4.0; cap UI at 0.5-2.0 since anything outside that range is
             // already a hack rather than a "preferred pace" choice.
             (Se.Language.General.Speed, TtsSettingsChrome.MakeSlider(Se.Language.General.Speed, 0.5, 2.0, 0.05, nameof(vm.Speed), nameof(vm.SpeedLabel))));
-        return TtsSettingsChrome.MakeSection(Se.Language.General.Voice, rows);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Voice, rows);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

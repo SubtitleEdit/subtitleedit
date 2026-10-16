@@ -2,8 +2,6 @@ using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Layout;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -18,7 +16,7 @@ public class PickMillisecondsWindow : Window
         MinWidth = 400;
         CanResize = false;
         Title = Se.Language.Options.Shortcuts.MoveVideoPositionMilliseconds;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -26,13 +24,13 @@ public class PickMillisecondsWindow : Window
         numericUpDownMilliseconds.HorizontalAlignment = HorizontalAlignment.Left;
         AutomationProperties.SetName(numericUpDownMilliseconds, Se.Language.General.Milliseconds);
 
-        var row = VideoSubDialogChrome.MakeRow(Se.Language.General.Milliseconds, numericUpDownMilliseconds, 110);
+        var row = EditorChrome.MakeLabeledRow(Se.Language.General.Milliseconds, numericUpDownMilliseconds, 110, spacing: 6);
         row.Margin = new Thickness(16, 18);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = VideoSubDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk);
+        var buttonPanel = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         var grid = new Grid
         {
@@ -45,7 +43,7 @@ public class PickMillisecondsWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(VideoSubDialogChrome.MakePanel(row), 0);
+        grid.Add(EditorChrome.MakePanel(row), 0);
         grid.Add(buttonPanel, 1);
 
         Content = grid;

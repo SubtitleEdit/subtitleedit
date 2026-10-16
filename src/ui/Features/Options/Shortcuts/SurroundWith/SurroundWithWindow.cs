@@ -2,8 +2,6 @@ using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Layout;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -18,14 +16,14 @@ public class SurroundWithWindow : Window
         MinWidth = 400;
         CanResize = false;
         Title = Se.Language.Options.Shortcuts.SurroundWith;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
         const double labelWidth = 120;
 
-        var textBoxBefore = VideoSubDialogChrome.MakeTextBox(nameof(vm.Before), Se.Language.General.Before, 200);
-        var textBoxAfter = VideoSubDialogChrome.MakeTextBox(nameof(vm.After), Se.Language.General.After, 200);
+        var textBoxBefore = EditorChrome.MakeTextField(nameof(vm.Before), Se.Language.General.Before, 200);
+        var textBoxAfter = EditorChrome.MakeTextField(nameof(vm.After), Se.Language.General.After, 200);
 
         var comboBoxBehavior = UiUtil.MakeComboBox(vm.Behaviors, vm, nameof(vm.SelectedBehavior));
         comboBoxBehavior.Width = 300;
@@ -42,8 +40,8 @@ public class SurroundWithWindow : Window
             Spacing = 8,
             Children =
             {
-                VideoSubDialogChrome.MakeRow(Se.Language.General.Before, textBoxBefore, labelWidth),
-                VideoSubDialogChrome.MakeRow(Se.Language.General.After, textBoxAfter, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Before, textBoxBefore, labelWidth, spacing: 6),
+                EditorChrome.MakeLabeledRow(Se.Language.General.After, textBoxAfter, labelWidth, spacing: 6),
             },
         };
         var optionRows = new StackPanel
@@ -51,8 +49,8 @@ public class SurroundWithWindow : Window
             Spacing = 8,
             Children =
             {
-                VideoSubDialogChrome.MakeRow(Se.Language.Options.Shortcuts.SurroundWithBehavior, comboBoxBehavior, labelWidth),
-                VideoSubDialogChrome.MakeRow(Se.Language.Options.Shortcuts.SurroundWithWorksOn, comboBoxScope, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.Options.Shortcuts.SurroundWithBehavior, comboBoxBehavior, labelWidth, spacing: 6),
+                EditorChrome.MakeLabeledRow(Se.Language.Options.Shortcuts.SurroundWithWorksOn, comboBoxScope, labelWidth, spacing: 6),
             },
         };
 
@@ -68,7 +66,7 @@ public class SurroundWithWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = VideoSubDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk);
+        var buttonPanel = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         var grid = new Grid
         {
@@ -81,7 +79,7 @@ public class SurroundWithWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(VideoSubDialogChrome.MakePanel(sections), 0);
+        grid.Add(EditorChrome.MakePanel(sections), 0);
         grid.Add(buttonPanel, 1);
 
         Content = grid;

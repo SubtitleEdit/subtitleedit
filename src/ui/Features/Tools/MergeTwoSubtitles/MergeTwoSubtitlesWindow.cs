@@ -6,8 +6,6 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using System.Collections;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -32,7 +30,7 @@ public class MergeTwoSubtitlesWindow : Window
         Height = 800;
         MinWidth = 950;
         MinHeight = 600;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -55,7 +53,7 @@ public class MergeTwoSubtitlesWindow : Window
         sections.Add(listsView, 0, 0);
         sections.Add(stylesView, 1, 0);
 
-        Content = SyncTimingChrome.MakeRoot(sections, SyncTimingChrome.MakeButtonBar(MakeFormatRow(vm), buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(MakeFormatRow(vm), buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, () =>
         {
@@ -116,7 +114,7 @@ public class MergeTwoSubtitlesWindow : Window
         var labelTitle = EditorChrome.MakeSectionHeader(title);
         var labelFile = EditorChrome.MakeDimLabel(string.Empty, new Thickness(10, 0, 0, 0)).WithBindText(vm, fileNamePath);
         labelFile.TextTrimming = TextTrimming.CharacterEllipsis;
-        var buttonLoad = SyncTimingChrome.MakeTextToolButton("fa-solid fa-folder-open", Se.Language.Tools.MergeTwoSubtitles.LoadFromFile, loadCommand);
+        var buttonLoad = EditorChrome.MakeTextToolButton("fa-solid fa-folder-open", Se.Language.Tools.MergeTwoSubtitles.LoadFromFile, loadCommand);
 
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
 
@@ -193,7 +191,7 @@ public class MergeTwoSubtitlesWindow : Window
             VerticalAlignment = VerticalAlignment.Stretch,
         };
         grid.Add(header, 0, 0);
-        grid.Add(EditDialogChrome.MakeListFrame(dataGrid), 1, 0);
+        grid.Add(EditorChrome.MakeListFrame(dataGrid, clearListBackground: true), 1, 0);
 
         // Drop a file onto this side to load it into this slot.
         var border = new Border
@@ -350,14 +348,14 @@ public class MergeTwoSubtitlesWindow : Window
             Spacing = 6,
             Children =
             {
-                SyncTimingChrome.Row(Se.Language.General.FontName, comboFontName, labelWidth),
-                SyncTimingChrome.Row(Se.Language.General.FontSize, numFontSize, labelWidth),
-                SyncTimingChrome.Row(string.Empty, stylePanel, labelWidth),
-                SyncTimingChrome.Row(Se.Language.General.TextColor, primaryPicker, labelWidth),
-                SyncTimingChrome.Row(Se.Language.General.OutlineColor, outlinePicker, labelWidth),
-                SyncTimingChrome.Row(Se.Language.General.OutlineWidth, numOutlineWidth, labelWidth),
-                SyncTimingChrome.Row(Se.Language.General.ShadowWidth, numShadowWidth, labelWidth),
-                SyncTimingChrome.Row(Se.Language.General.Alignment, alignPanel, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.FontName, comboFontName, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.FontSize, numFontSize, labelWidth),
+                EditorChrome.MakeLabeledRow(string.Empty, stylePanel, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.TextColor, primaryPicker, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.OutlineColor, outlinePicker, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.OutlineWidth, numOutlineWidth, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.ShadowWidth, numShadowWidth, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Alignment, alignPanel, labelWidth),
             },
         };
     }

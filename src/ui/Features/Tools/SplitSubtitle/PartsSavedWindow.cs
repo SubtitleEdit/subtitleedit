@@ -3,8 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -25,7 +23,7 @@ public class PartsSavedWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 400;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         _vm = vm;
         vm.Window = this;
@@ -69,7 +67,7 @@ public class PartsSavedWindow : Window
             Padding = new Thickness(16, 16, 16, 18),
         };
 
-        Content = SyncTimingChrome.MakeRoot(section, SyncTimingChrome.MakeButtonBar(null, buttonOk));
+        Content = EditorChrome.MakeRoot(section, EditorChrome.MakeDockedButtonBar(null, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, buttonOk); // hack to make OnKeyDown work
     }

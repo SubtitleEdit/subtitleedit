@@ -1,7 +1,6 @@
 using Avalonia.Controls;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Chrome = Nikse.SubtitleEdit.Features.Ocr.OcrDialogChrome;
 
 namespace Nikse.SubtitleEdit.Features.Shared;
 
@@ -19,22 +18,22 @@ public class DownloadFfmpegWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        Chrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.EngineDialog);
 
         DataContext = vm;
 
-        var titleText = Chrome.DownloadTitle(string.Format(Se.Language.General.DownloadingX, "ffmpeg"));
-        var progressBar = Chrome.DownloadProgressBar(nameof(DownloadFfmpegViewModel.Progress));
-        var statusText = Chrome.DownloadStatus(nameof(DownloadFfmpegViewModel.StatusText));
+        var titleText = EditorChrome.MakeDownloadTitle(string.Format(Se.Language.General.DownloadingX, "ffmpeg"));
+        var progressBar = EditorChrome.MakeDownloadProgressBar(nameof(DownloadFfmpegViewModel.Progress));
+        var statusText = EditorChrome.MakeDownloadStatus(nameof(DownloadFfmpegViewModel.StatusText));
 
         // Download/unpack failures (no data, file in use, ...) - otherwise the window just sits there.
-        var errorText = Chrome.DownloadError(DownloadWindowUi.ErrorPropertyName);
+        var errorText = EditorChrome.MakeDownloadError(DownloadWindowUi.ErrorPropertyName);
 
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CommandCancelCommand);
         var buttonRetry = DownloadWindowUi.MakeButtonRetry(vm.RetryCommand);
-        var buttonBar = Chrome.ButtonBar(null, buttonRetry, buttonCancel);
+        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonRetry, buttonCancel);
 
-        Content = Chrome.Root(Chrome.DownloadBody(titleText, progressBar, statusText, errorText), buttonBar);
+        Content = EditorChrome.MakeRoot(EditorChrome.MakeDownloadBody(titleText, progressBar, statusText, errorText), buttonBar, stretch: false);
 
         Loaded += delegate
         {

@@ -7,7 +7,7 @@ using Nikse.SubtitleEdit.Logic;
 namespace Nikse.SubtitleEdit.Features.Shared;
 
 /// <summary>
-/// Busy indicator in the editor look (see <see cref="SharedDialogChrome"/>): the status text over
+/// Busy indicator in the editor look (see <see cref="EditorChrome"/>): the status text over
 /// an accent progress bar.
 /// </summary>
 public class PleaseWaitWindow : Window
@@ -27,7 +27,7 @@ public class PleaseWaitWindow : Window
         ShowInTaskbar = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
-        SharedDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         DataContext = vm;
 
         var titleText = new TextBlock

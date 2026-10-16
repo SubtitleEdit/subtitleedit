@@ -12,8 +12,8 @@ public static class ViewAssaChangeStyleProperties
         var comboBoxAlignment = FunctionViewChrome.Compact(UiUtil.MakeComboBox(vm.AssaChangeStylePropertiesAlignmentOptions, vm, nameof(vm.SelectedAssaChangeStylePropertiesAlignment)), Se.Language.Tools.BatchConvert.AssaChangeStylePropertiesSetAlignment, 120);
 
         return FunctionViewChrome.MakePanel(vm, Se.Language.Tools.BatchConvert.AssaChangeStylePropertiesTitle,
-            FunctionViewChrome.MakeHint(Se.Language.Tools.BatchConvert.AssaChangeResolutionOnlyAppliesToAssa),
-            FunctionViewChrome.MakeHint(Se.Language.Tools.BatchConvert.AssaChangeStylePropertiesInfo),
+            EditorChrome.MakeHint(Se.Language.Tools.BatchConvert.AssaChangeResolutionOnlyAppliesToAssa),
+            EditorChrome.MakeHint(Se.Language.Tools.BatchConvert.AssaChangeStylePropertiesInfo),
             FunctionViewChrome.MakeSwitchRow(nameof(vm.AssaChangeStylePropertiesSetSpacing), Se.Language.Tools.BatchConvert.AssaChangeStylePropertiesSetSpacing, numericUpDownSpacing),
             FunctionViewChrome.MakeSwitchRow(nameof(vm.AssaChangeStylePropertiesSetAlignment), Se.Language.Tools.BatchConvert.AssaChangeStylePropertiesSetAlignment, comboBoxAlignment));
     }

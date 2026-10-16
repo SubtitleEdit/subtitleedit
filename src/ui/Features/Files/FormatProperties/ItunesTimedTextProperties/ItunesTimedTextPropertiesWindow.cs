@@ -18,21 +18,21 @@ public class ItunesTimedTextPropertiesWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 480;
-        FormatPropertiesChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Form);
         vm.Window = this;
         DataContext = vm;
 
-        var textBoxTitle = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.Title)), Se.Language.General.Title);
-        var textBoxDescription = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.Description)), Se.Language.General.Description);
-        var textBoxLanguage = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.SelectedLanguage)), Se.Language.General.Language);
+        var textBoxTitle = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.Title)), Se.Language.General.Title);
+        var textBoxDescription = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.Description)), Se.Language.General.Description);
+        var textBoxLanguage = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.SelectedLanguage)), Se.Language.General.Language);
         var general = FormatPropertiesChrome.MakeRows(
             FormatPropertiesChrome.Row(Se.Language.General.Title, textBoxTitle),
             FormatPropertiesChrome.Row(Se.Language.General.Description, textBoxDescription),
             FormatPropertiesChrome.Row(Se.Language.General.Language, textBoxLanguage));
 
         var comboBoxTimeBase = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.TimeBases, vm, nameof(vm.SelectedTimeBase)), Se.Language.File.PropertyTimeBase, FieldWidth);
-        var textBoxFrameRate = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.SelectedFrameRate)), Se.Language.General.FrameRate);
-        var textBoxFrameRateMultiplier = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.SelectedFrameRateMultiplier)), Se.Language.File.PropertyFrameRateMultiplier);
+        var textBoxFrameRate = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.SelectedFrameRate)), Se.Language.General.FrameRate);
+        var textBoxFrameRateMultiplier = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.SelectedFrameRateMultiplier)), Se.Language.File.PropertyFrameRateMultiplier);
         var comboBoxDropMode = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.DropModes, vm, nameof(vm.SelectedDropMode)), Se.Language.File.PropertyDropMode, FieldWidth);
         var comboBoxTimeCodeFormat = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.TimeCodeFormats, vm, nameof(vm.SelectedTimeCodeFormat)), Se.Language.File.PropertyTimeCodeFormat, FieldWidth);
         var timing = FormatPropertiesChrome.MakeRows(
@@ -51,17 +51,17 @@ public class ItunesTimedTextPropertiesWindow : Window
             FormatPropertiesChrome.Row(Se.Language.File.PropertyStyleAttributeName, comboBoxStyleAttribute));
 
         // Alignment section: where the top and bottom regions are
-        var textBoxTopOrigin = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.TopOrigin)), Se.Language.File.PropertyTopOrigin);
-        var textBoxTopExtent = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.TopExtent)), Se.Language.File.PropertyTopExtent);
-        var textBoxBottomOrigin = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.BottomOrigin)), Se.Language.File.PropertyBottomOrigin);
-        var textBoxBottomExtent = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.BottomExtent)), Se.Language.File.PropertyBottomExtent);
+        var textBoxTopOrigin = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.TopOrigin)), Se.Language.File.PropertyTopOrigin);
+        var textBoxTopExtent = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.TopExtent)), Se.Language.File.PropertyTopExtent);
+        var textBoxBottomOrigin = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.BottomOrigin)), Se.Language.File.PropertyBottomOrigin);
+        var textBoxBottomExtent = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.BottomExtent)), Se.Language.File.PropertyBottomExtent);
         var alignment = FormatPropertiesChrome.MakeRows(
             FormatPropertiesChrome.Row(Se.Language.File.PropertyTopOrigin, textBoxTopOrigin),
             FormatPropertiesChrome.Row(Se.Language.File.PropertyTopExtent, textBoxTopExtent),
             FormatPropertiesChrome.Row(Se.Language.File.PropertyBottomOrigin, textBoxBottomOrigin),
             FormatPropertiesChrome.Row(Se.Language.File.PropertyBottomExtent, textBoxBottomExtent));
 
-        var buttonBar = FormatPropertiesChrome.MakeButtonBar(null, UiUtil.MakeButtonOk(vm.OkCommand), UiUtil.MakeButtonCancel(vm.CancelCommand));
+        var buttonBar = EditorChrome.MakeDockedCancelOkBar(null, UiUtil.MakeButtonCancel(vm.CancelCommand), UiUtil.MakeButtonOk(vm.OkCommand));
 
         Content = FormatPropertiesChrome.MakeRoot(
             buttonBar,

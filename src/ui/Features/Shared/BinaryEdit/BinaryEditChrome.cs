@@ -7,15 +7,14 @@ using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
-using Nikse.SubtitleEdit.Features.Video.VideoOcr;
 using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.Shared.BinaryEdit;
 
 /// <summary>
-/// The pieces the image-based subtitle editor (Binary edit) and its tool dialogs share to get the
-/// editor look of <see cref="EditorChrome"/>: settings column on the panel color, a framed image
-/// preview, compact fields and the bottom button bar with an accent OK.
+/// The pieces only the image-based subtitle editor (Binary edit) and its tool dialogs use: the
+/// segmented toggles, the settings column beside a framed image preview and slider sections; the
+/// rest of their editor look comes from <see cref="EditorChrome"/>.
 /// </summary>
 internal static class BinaryEditChrome
 {
@@ -25,7 +24,7 @@ internal static class BinaryEditChrome
     /// </summary>
     internal static void Apply(Window window)
     {
-        VideoDialogChrome.Apply(window);
+        EditorChrome.ApplyWindow(window, EditorWindowStyles.VideoTool);
 
         static Style Presenter(System.Func<Selector?, Selector> toggle, params (AvaloniaProperty Property, object Value)[] setters)
         {
@@ -116,24 +115,6 @@ internal static class BinaryEditChrome
     }
 
     /// <summary>
-    /// The sections of a small dialog on the panel color, above the button bar.
-    /// </summary>
-    internal static Grid MakeRoot(Control sections, Border buttonBar)
-    {
-        var root = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition(new GridLength(1, GridUnitType.Star)),
-                new RowDefinition(GridLength.Auto),
-            },
-        };
-        root.Add(new Border { Background = EditorChrome.PanelBrush, Child = sections }, 0, 0);
-        root.Add(buttonBar, 1, 0);
-        return root;
-    }
-
-    /// <summary>
     /// A rounded frame around a large image preview, with <paramref name="background"/> behind the
     /// transparent subtitle bitmap.
     /// </summary>
@@ -148,15 +129,6 @@ internal static class BinaryEditChrome
             CornerRadius = new CornerRadius(8),
             ClipToBounds = true,
         };
-    }
-
-    /// <summary>
-    /// Cancel and the accent OK on the right, optional status on the left.
-    /// </summary>
-    internal static Border MakeButtonBar(Control? left, Button buttonCancel, Button buttonOk)
-    {
-        buttonOk.Classes.Add("primary");
-        return VideoDialogChrome.ButtonBar(left, buttonCancel, buttonOk);
     }
 
     /// <summary>
@@ -186,17 +158,6 @@ internal static class BinaryEditChrome
     }
 
     /// <summary>
-    /// Dim explanatory text that wraps.
-    /// </summary>
-    internal static TextBlock MakeHint(string text) => new()
-    {
-        Text = text,
-        FontSize = 11.5,
-        Foreground = EditorChrome.DimTextBrush,
-        TextWrapping = TextWrapping.Wrap,
-    };
-
-    /// <summary>
     /// A dim label of fixed width and the control after it, so the rows line up.
     /// </summary>
     internal static Grid MakeRow(string label, Control content, double labelWidth)
@@ -207,19 +168,6 @@ internal static class BinaryEditChrome
             AutomationProperties.SetName(content, label);
         }
 
-        return VideoDialogChrome.Row(label, content, labelWidth);
-    }
-
-    /// <summary>
-    /// A compact number field (no spinner) with a screen reader name.
-    /// </summary>
-    internal static NumericUpDown MakeField(NumericUpDown field, string accessibleName, double width = 110)
-    {
-        field.Classes.Add("field");
-        field.Width = width;
-        field.HorizontalAlignment = HorizontalAlignment.Left;
-        field.VerticalAlignment = VerticalAlignment.Center;
-        AutomationProperties.SetName(field, accessibleName);
-        return field;
+        return EditorChrome.MakeLabeledRow(label, content, labelWidth);
     }
 }

@@ -68,9 +68,7 @@ public class BinaryAdjustAllTimesWindow : Window
         var buttonOk = UiUtil.MakeButtonDone(vm.OkCommand);
         buttonOk.Classes.Add("primary");
 
-        Content = BinaryEditChrome.MakeRoot(
-            SyncTimingChrome.SideBySide(adjustmentSection, linesSection),
-            Video.VideoOcr.VideoDialogChrome.ButtonBar(totalAdjustmentLabel, buttonOk));
+        Content = EditorChrome.MakeRoot(EditorChrome.MakeSideBySide(adjustmentSection, linesSection), EditorChrome.MakeButtonBar(totalAdjustmentLabel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, timeCodeUpDown); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);

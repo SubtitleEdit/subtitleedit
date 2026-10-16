@@ -16,7 +16,7 @@ public class ExportPacWindow : Window
         Title = Se.Language.Options.Shortcuts.FileExportPac;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        FormatPropertiesChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Form);
         vm.Window = this;
         DataContext = vm;
 
@@ -30,7 +30,7 @@ public class ExportPacWindow : Window
             FormatPropertiesChrome.Row(l.ExportPacCodePage, comboBoxPacFormats),
             FormatPropertiesChrome.Row(l.ExportPacSecondaryCodePage, comboBoxSecondary));
 
-        var buttonBar = FormatPropertiesChrome.MakeButtonBar(null, UiUtil.MakeButtonOk(vm.OkCommand), UiUtil.MakeButtonCancel(vm.CancelCommand));
+        var buttonBar = EditorChrome.MakeDockedCancelOkBar(null, UiUtil.MakeButtonCancel(vm.CancelCommand), UiUtil.MakeButtonOk(vm.OkCommand));
 
         Content = FormatPropertiesChrome.MakeRoot(
             buttonBar,

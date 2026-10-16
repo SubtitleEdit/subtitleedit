@@ -38,7 +38,7 @@ public class ProfilesExportWindow : Window
             },
         };
 
-        grid.Add(SettingsChrome.MakePanel(MakeDataGrid(vm, out var dataGrid)), 0);
+        grid.Add(EditorChrome.MakePanel(MakeDataGrid(vm, out var dataGrid)), 0);
         grid.Add(SettingsChrome.MakeButtonBar(null, buttonCancel, buttonOk), 1);
 
         Content = grid;
@@ -103,7 +103,7 @@ public class ProfilesExportWindow : Window
             Margin = new Thickness(14, 12, 14, 14),
         };
         panel.Add(header, 0);
-        panel.Add(SettingsChrome.MakeListFrame(dataGrid), 1);
+        panel.Add(EditorChrome.MakeListFrame(dataGrid), 1);
         return panel;
     }
 }

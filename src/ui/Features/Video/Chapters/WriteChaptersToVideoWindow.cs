@@ -29,7 +29,7 @@ public class WriteChaptersToVideoWindow : Window
         MinWidth = 560;
         MinHeight = 280;
 
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
 
         _vm = vm;
         vm.Window = this;
@@ -37,9 +37,9 @@ public class WriteChaptersToVideoWindow : Window
 
         var header = MakeHeader(vm);
 
-        var hint = VideoSubDialogChrome.MakeHintText(language.WriteToVideoDescription);
+        var hint = EditorChrome.MakeHint(language.WriteToVideoDescription);
 
-        var textBoxOutput = VideoSubDialogChrome.MakeTextBox(nameof(vm.OutputFileName), language.OutputFileName);
+        var textBoxOutput = EditorChrome.MakeTextField(nameof(vm.OutputFileName), language.OutputFileName);
 
         var buttonBrowse = EditorChrome.CreateToolButton("fa-solid fa-ellipsis", language.OutputFileName, vm.BrowseOutputFileNameCommand, 28);
 
@@ -57,13 +57,13 @@ public class WriteChaptersToVideoWindow : Window
 
         var progressBar = UiUtil.MakeProgressBar();
         progressBar.IsIndeterminate = true;
-        var progressView = VideoSubDialogChrome.MakeProgressStrip(progressBar, nameof(vm.ProgressText), nameof(vm.IsWriting));
+        var progressView = EditorChrome.MakeProgressStrip(progressBar, nameof(vm.ProgressText), nameof(vm.IsWriting));
 
         var buttonWrite = UiUtil.MakeButton(language.WriteToVideo, vm.WriteCommand)
             .WithBindIsEnabled(nameof(vm.IsWriting), InverseBooleanConverter.Instance);
         buttonWrite.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = VideoSubDialogChrome.MakeButtonBar(null, buttonCancel, buttonWrite);
+        var panelButtons = EditorChrome.MakeButtonBar(null, buttonCancel, buttonWrite);
 
         var rows = new StackPanel { Spacing = 8 };
         rows.Children.Add(hint);

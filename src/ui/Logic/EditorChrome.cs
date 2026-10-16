@@ -8,7 +8,6 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -19,7 +18,7 @@ namespace Nikse.SubtitleEdit.Logic;
 /// with a dark and a light version that follows the app theme, flat tool buttons, compact fields,
 /// section headers and accent menus.
 /// </summary>
-internal static class EditorChrome
+internal static partial class EditorChrome
 {
     // The editor palette, in a dark and a light version. Each color is one shared brush whose color
     // follows the app theme (also when it changes while windows are open), so everything built

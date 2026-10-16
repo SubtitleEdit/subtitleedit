@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -31,9 +31,9 @@ public sealed class DownloadVoicePacksWindow : Window
         vm.Window = this;
         DataContext = vm;
         _vm = vm;
-        TtsVoicesChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TextFieldsUncentered | EditorWindowStyles.MuteDisabledPrimary);
 
-        var intro = TtsVoicesChrome.MakeHint(Se.Language.Video.TextToSpeech.VoicePackIntro);
+        var intro = EditorChrome.MakeHint(Se.Language.Video.TextToSpeech.VoicePackIntro);
         intro.FontSize = 12.5;
 
         var listBox = new ListBox
@@ -93,7 +93,7 @@ public sealed class DownloadVoicePacksWindow : Window
         var progressBar = UiUtil.MakeProgressBar();
         progressBar.VerticalAlignment = VerticalAlignment.Center;
         progressBar.Bind(RangeBase.ValueProperty, new Binding(nameof(vm.ProgressValue)));
-        var progressStrip = TtsVoicesChrome.MakeProgressStrip(progressBar);
+        var progressStrip = EditorChrome.MakeProgressStrip(progressBar);
         progressStrip.Bind(IsVisibleProperty, new Binding(nameof(vm.IsDownloading)));
 
         // In the button bar rather than the strip: after the run it says how many packs were
@@ -120,7 +120,7 @@ public sealed class DownloadVoicePacksWindow : Window
             .WithBindEnabled(nameof(vm.IsIdle));
         buttonDownload.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = TtsVoicesChrome.MakeButtonBar(progressText, buttonCancel, buttonDownload);
+        var buttonBar = EditorChrome.MakeFlushButtonBar(progressText, buttonCancel, buttonDownload);
 
         var packsHeader = EditorChrome.MakeSectionHeader(Se.Language.Video.Voices);
         var content = new Grid
@@ -138,7 +138,7 @@ public sealed class DownloadVoicePacksWindow : Window
         };
         content.Add(intro, 0);
         content.Add(packsHeader, 1);
-        content.Add(TtsVoicesChrome.MakeListFrame(listBox), 2);
+        content.Add(EditorChrome.MakeListFrame(listBox), 2);
         content.Add(panelTarget, 3);
         content.Add(errorText, 4);
 

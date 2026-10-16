@@ -39,7 +39,7 @@ public class VideoOcrWindow : Window
         MinHeight = 650;
         vm.Window = this;
         DataContext = vm;
-        VideoDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.VideoTool);
 
         var previewView = MakePreviewView(vm);
         var settingsView = MakeSettingsView(vm);
@@ -47,15 +47,10 @@ public class VideoOcrWindow : Window
         var progressView = MakeProgressView(vm);
 
         var buttonStart = UiUtil.MakeButton(Se.Language.Video.VideoOcr.StartOcr, vm.StartOcrCommand)
-            .WithBindEnabled(nameof(vm.IsRunning), InverseBooleanConverter.Instance)
-            .Primary();
+            .WithBindEnabled(nameof(vm.IsRunning), InverseBooleanConverter.Instance).AsPrimary();
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand)
             .WithBindEnabled(nameof(vm.IsOkEnabled));
-        var buttonPanel = VideoDialogChrome.ButtonBar(
-            MakeStatusText(vm),
-            UiUtil.MakeButtonCancel(vm.CancelCommand),
-            buttonOk,
-            buttonStart);
+        var buttonPanel = EditorChrome.MakeButtonBar(MakeStatusText(vm), UiUtil.MakeButtonCancel(vm.CancelCommand), buttonOk, buttonStart);
 
         // Preview on the left, the settings column on the right (it scrolls on its own), the
         // result lines under both; the lines give up height first on a short screen.
@@ -202,7 +197,7 @@ public class VideoOcrWindow : Window
         // screen reader user cannot reach or hear (#12087). The button is disabled while the test
         // runs, which drops keyboard focus to nothing - put it back on the button when the test
         // is done, with the result as its description, so NVDA reads the result right away.
-        var testButton = VideoDialogChrome.Action("fa-solid fa-flask", Se.Language.Video.VideoOcr.TestOcr, vm.TestOcrCommand)
+        var testButton = EditorChrome.MakeActionButton("fa-solid fa-flask", Se.Language.Video.VideoOcr.TestOcr, vm.TestOcrCommand)
             .WithBindEnabled(nameof(vm.IsRunning), InverseBooleanConverter.Instance);
         testButton.Bind(AutomationProperties.HelpTextProperty, new Binding(nameof(vm.TestOcrResult)) { Source = vm });
         RefocusWhenReEnabled(testButton);
@@ -406,8 +401,8 @@ public class VideoOcrWindow : Window
             Se.Language.Video.VideoOcr.MinDurationMs,
             NumberField(vm, nameof(vm.MinDurationMs), 0, 10_000, 250),
             Se.Language.Video.VideoOcr.MinDurationHint));
-        postRows.Children.Add(VideoDialogChrome.SwitchRow(nameof(vm.AddAssaPositionTag), Se.Language.Video.VideoOcr.AddAssaPositionTag));
-        postRows.Children.Add(VideoDialogChrome.SwitchRow(nameof(vm.DoFixOcrErrors), Se.Language.Video.VideoOcr.FixOcrErrors));
+        postRows.Children.Add(EditorChrome.MakeSwitchRow(nameof(vm.AddAssaPositionTag), Se.Language.Video.VideoOcr.AddAssaPositionTag));
+        postRows.Children.Add(EditorChrome.MakeSwitchRow(nameof(vm.DoFixOcrErrors), Se.Language.Video.VideoOcr.FixOcrErrors));
         var buttonDownloadDictionary = EditorChrome.CreateToolButton("fa-solid fa-ellipsis", Se.Language.Video.VideoOcr.DownloadDictionaryHint, vm.DownloadDictionaryCommand, 28)
             .WithBindEnabled(nameof(vm.DoFixOcrErrors));
 
@@ -754,7 +749,7 @@ public class VideoOcrWindow : Window
             }
         }, RoutingStrategies.Tunnel);
 
-        return VideoDialogChrome.ListSection(Se.Language.General.Lines, tableView);
+        return EditorChrome.MakeListPane(Se.Language.General.Lines, tableView);
     }
 
     /// <summary>
@@ -800,7 +795,7 @@ public class VideoOcrWindow : Window
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
         progressBar.DataContext = vm;
 
-        var statusText = VideoDialogChrome.Hint(nameof(vm.ProgressText));
+        var statusText = EditorChrome.MakeBoundHint(nameof(vm.ProgressText), 12);
         statusText.DataContext = vm;
         statusText.MaxWidth = 420;
 
@@ -818,7 +813,7 @@ public class VideoOcrWindow : Window
         grid.Add(progressBar, 0, 0);
         grid.Add(statusText, 0, 1);
 
-        var strip = VideoDialogChrome.ProgressStrip(grid);
+        var strip = EditorChrome.MakeProgressStrip(grid);
         strip.Bind(IsVisibleProperty, new Binding(nameof(vm.IsRunning)));
         return strip;
     }
@@ -829,7 +824,7 @@ public class VideoOcrWindow : Window
     /// </summary>
     private static TextBlock MakeStatusText(VideoOcrViewModel vm)
     {
-        var statusText = VideoDialogChrome.Hint(nameof(vm.ProgressText));
+        var statusText = EditorChrome.MakeBoundHint(nameof(vm.ProgressText), 12);
         statusText.Bind(IsVisibleProperty, new Binding(nameof(vm.IsRunning)) { Converter = InverseBooleanConverter.Instance });
         return statusText;
     }

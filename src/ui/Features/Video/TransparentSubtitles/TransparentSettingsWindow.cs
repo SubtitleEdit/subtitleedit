@@ -15,7 +15,7 @@ public class TransparentSettingsWindow : Window
         Title = Se.Language.Video.OutputSettingsTitle;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         vm.Window = this;
         DataContext = vm;
 
@@ -69,7 +69,7 @@ public class TransparentSettingsWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = VideoSubDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk);
+        var panelButtons = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         var rows = new StackPanel
         {
@@ -91,7 +91,7 @@ public class TransparentSettingsWindow : Window
             },
         };
 
-        grid.Add(VideoSubDialogChrome.MakePanel(EditorChrome.MakeEditorSection(Se.Language.General.OutputFolder, rows, first: true)), 0);
+        grid.Add(EditorChrome.MakePanel(EditorChrome.MakeEditorSection(Se.Language.General.OutputFolder, rows, first: true)), 0);
         grid.Add(panelButtons, 1);
 
         Content = grid;

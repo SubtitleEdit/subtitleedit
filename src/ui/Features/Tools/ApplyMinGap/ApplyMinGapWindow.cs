@@ -4,7 +4,6 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -27,13 +26,11 @@ public class ApplyMinGapWindow : Window
         Height = 800;
         MinWidth = 900;
         MinHeight = 500;
-        SyncTimingChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TimeCodes);
         vm.Window = this;
         DataContext = vm;
 
-        var numericUpDownMinGap = TimingToolChrome.Field(
-            UiUtil.MakeNumericUpDownInt(0, 1000, Se.Settings.Tools.BridgeGaps.MinGapMs, 90, vm, nameof(vm.MinGapMsOrFrames)),
-            vm.MinXBetweenLines);
+        var numericUpDownMinGap = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(0, 1000, Se.Settings.Tools.BridgeGaps.MinGapMs, 90, vm, nameof(vm.MinGapMsOrFrames)), vm.MinXBetweenLines, 90, center: true);
         numericUpDownMinGap.ValueChanged += vm.ValueChanged;
 
         var buttonCalculate = EditorChrome.CreateToolButton("fa-solid fa-calculator", Se.Language.Options.Settings.MinGapCalculateDotDotDot, vm.CalculateMinGapMsCommand, 28)
@@ -46,7 +43,7 @@ public class ApplyMinGapWindow : Window
         panelControls.Children.Add(buttonCalculate);
         var optionsSection = EditorChrome.MakeEditorSection(Se.Language.General.Options, panelControls, first: true);
 
-        var listSection = TimingToolChrome.MakeListSection(EditorChrome.MakeSectionHeader(Se.Language.General.Preview), MakeSubtitleView(vm));
+        var listSection = EditorChrome.MakeFillSection(EditorChrome.MakeSectionHeader(Se.Language.General.Preview), EditorChrome.MakeListFrame(MakeSubtitleView(vm)));
 
         var sections = new Grid
         {
@@ -63,9 +60,7 @@ public class ApplyMinGapWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = SyncTimingChrome.MakeRoot(
-            sections,
-            SyncTimingChrome.MakeButtonBar(TimingToolChrome.MakeStatus(nameof(vm.StatusText)), buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(EditorChrome.MakeBoundHint(nameof(vm.StatusText), 12), buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, numericUpDownMinGap); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);

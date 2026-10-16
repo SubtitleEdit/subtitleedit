@@ -1,12 +1,9 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using System.Collections;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
-using Nikse.SubtitleEdit.Features.Tools;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -26,7 +23,7 @@ public class ExportCustomTextFormatWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         var buttonSaveAs = UiUtil.MakeButton(Se.Language.General.SaveDotDotDot, vm.SaveAsCommand)
             .WithBindIsVisible(vm, nameof(vm.IsSaveButtonVisible));
@@ -62,7 +59,7 @@ public class ExportCustomTextFormatWindow : Window
         sections.Add(MakeFormatsView(vm, out var formatsGrid), 0, 0);
         sections.Add(MakePreviewView(vm), 0, 1);
 
-        Content = SyncTimingChrome.MakeRoot(sections, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonOk, buttonSaveAs));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk, buttonSaveAs));
 
         UiUtil.FocusOnFirstActivation(this, () => { TableViewExtras.FocusRow(formatsGrid); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.OnKeyDown;
@@ -137,17 +134,14 @@ public class ExportCustomTextFormatWindow : Window
         dataGrid.ContextFlyout = flyout;
         UiUtil.AttachMacContextFlyoutHandler(dataGrid);
 
-        var actions = LineToolsChrome.MakeListActions(
-            EditorChrome.CreateToolButton("fa-solid fa-plus", Se.Language.General.New, vm.FormatNewCommand, 26),
-            EditorChrome.CreateToolButton("fa-solid fa-pen", Se.Language.General.Edit, vm.FormatEditCommand, 26),
-            EditorChrome.CreateToolButton("fa-solid fa-trash-can", Se.Language.General.Remove, vm.FormatDeleteCommand, 26));
+        var actions = EditorChrome.MakeListActions(EditorChrome.CreateToolButton("fa-solid fa-plus", Se.Language.General.New, vm.FormatNewCommand, 26), EditorChrome.CreateToolButton("fa-solid fa-pen", Se.Language.General.Edit, vm.FormatEditCommand, 26), EditorChrome.CreateToolButton("fa-solid fa-trash-can", Se.Language.General.Remove, vm.FormatDeleteCommand, 26));
 
-        return LineToolsChrome.MakeListSection(Se.Language.File.Export.CustomTextFormats, dataGrid, actions, first: true);
+        return EditorChrome.MakeListSection(Se.Language.File.Export.CustomTextFormats, dataGrid, actions, first: true);
     }
 
     private static Border MakePreviewView(ExportCustomTextFormatViewModel vm)
     {
-        var textBox = FileIoChrome.StyleTextArea(new TextBox
+        var textBox = EditorChrome.AsTextArea(new TextBox
         {
             AcceptsReturn = true,
             // Read-only preview - see ManualChosenEncodingWindow (#14313).
@@ -158,6 +152,6 @@ public class ExportCustomTextFormatWindow : Window
         }).WithAccessibleName(Se.Language.General.Preview);
         textBox.Bind(TextBox.TextProperty, new Binding(nameof(vm.PreviewText)));
 
-        return FileIoChrome.MakeFillSection(Se.Language.General.Preview, textBox, lineLeft: true);
+        return EditorChrome.MakeFillSection(Se.Language.General.Preview, textBox, lineLeft: true);
     }
 }

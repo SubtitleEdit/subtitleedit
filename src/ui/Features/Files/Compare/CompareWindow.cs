@@ -15,7 +15,6 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Features.Files.Compare;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Optris.Icons.Avalonia;
@@ -54,7 +53,7 @@ public class CompareWindow : Window
         vm.Window = this;
         DataContext = vm;
         _vm = vm;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         AddStyles(Styles);
 
         // The two file headers and the aligned rows; the rows give up height first, so the status
@@ -83,7 +82,7 @@ public class CompareWindow : Window
             },
         };
 
-        grid.Add(VideoSubDialogChrome.MakeToolbar(MakeToolbar(vm)), 0);
+        grid.Add(EditorChrome.MakeToolbar(MakeToolbar(vm)), 0);
         grid.Add(body, 1);
         grid.Add(MakeStatusStrip(vm), 2);
         grid.Add(MakeBottomBar(vm), 3);
@@ -275,7 +274,7 @@ public class CompareWindow : Window
 
     private static Control MakeOption(CompareViewModel vm, string text, string hint, string propertyPath)
     {
-        var toggle = VideoSubDialogChrome.MakeSwitch(propertyPath, text);
+        var toggle = EditorChrome.MakeSwitch(propertyPath, text);
         toggle.IsCheckedChanged += vm.CheckBoxChanged;
         var row = new StackPanel
         {
@@ -348,7 +347,7 @@ public class CompareWindow : Window
         var pillRight = MakePill(IconNames.Lock, string.Empty, highlighted: false, fixedText: Se.Language.File.CompareReadOnly);
         // A short label, the file name in the hint: the whole name made the button so wide that the
         // "Reference" caption was pushed under the read-only pill (#15619).
-        var buttonRightReload = VideoSubDialogChrome.MakeAction(IconNames.Refresh, Se.Language.File.CompareLoadSavedFile, vm.ReloadRightFromFileCommand)
+        var buttonRightReload = EditorChrome.MakeActionButton(IconNames.Refresh, Se.Language.File.CompareLoadSavedFile, vm.ReloadRightFromFileCommand)
             .WithBindIsVisible(nameof(vm.IsReloadFromFileVisible));
         buttonRightReload.Height = 28;
         AddHint(buttonRightReload, vm.ReloadFromFileHint);
@@ -562,7 +561,7 @@ public class CompareWindow : Window
 
         vm.RowsView = listBox;
 
-        var listBorder = VideoSubDialogChrome.MakeListFrame(listBox);
+        var listBorder = EditorChrome.MakeListFrame(listBox);
 
         var area = new Grid
         {
@@ -1084,10 +1083,10 @@ public class CompareWindow : Window
             [!IsVisibleProperty] = new Binding(nameof(vm.HasSyncPointHint)),
         };
 
-        var buttonApply = VideoSubDialogChrome.MakeAction(IconNames.LinkVariant, UiUtil.RemoveAccessKey(Se.Language.File.CompareSyncApply), vm.ApplySyncCommand)
+        var buttonApply = EditorChrome.MakeActionButton(IconNames.LinkVariant, UiUtil.RemoveAccessKey(Se.Language.File.CompareSyncApply), vm.ApplySyncCommand)
             .WithBindIsVisible(nameof(vm.HasSyncPointHint));
         buttonApply.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.CanApplySync)));
-        var buttonCancel = VideoSubDialogChrome.MakeAction(IconNames.Close, UiUtil.RemoveAccessKey(Se.Language.General.Cancel), vm.CancelSyncPickCommand)
+        var buttonCancel = EditorChrome.MakeActionButton(IconNames.Close, UiUtil.RemoveAccessKey(Se.Language.General.Cancel), vm.CancelSyncPickCommand)
             .WithBindIsVisible(nameof(vm.HasSyncPointHint));
         AddHint(buttonCancel, Se.Language.General.Cancel + " (Esc)");
         var buttonClear = UiUtil.MakeButton(string.Empty, vm.ClearSyncPointsCommand)
@@ -1162,7 +1161,7 @@ public class CompareWindow : Window
             MaxWidth = 360,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.LastChangeText)),
         };
-        var buttonUndo = VideoSubDialogChrome.MakeAction(IconNames.Undo, UiUtil.RemoveAccessKey(Se.Language.General.Undo), vm.UndoCommand);
+        var buttonUndo = EditorChrome.MakeActionButton(IconNames.Undo, UiUtil.RemoveAccessKey(Se.Language.General.Undo), vm.UndoCommand);
         AddHint(buttonUndo, Se.Language.General.Undo + " (Ctrl+Z)");
 
         var tray = new StackPanel
@@ -1184,7 +1183,7 @@ public class CompareWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindContent(nameof(vm.OkButtonText));
         buttonOk.Classes.Add("primary");
 
-        return VideoSubDialogChrome.MakeButtonBar(tray, buttonExport, buttonCancel, buttonOk);
+        return EditorChrome.MakeButtonBar(tray, buttonExport, buttonCancel, buttonOk);
     }
 
     private void HookScrollViewer()

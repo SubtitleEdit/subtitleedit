@@ -4,7 +4,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -25,7 +24,7 @@ public class WaveformToolbarItemsWindow : Window
         Title = Se.Language.Options.Settings.WaveformToolbarItems;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        OptionsListChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.CompactListRows);
         vm.Window = this;
         DataContext = vm;
 
@@ -62,16 +61,16 @@ public class WaveformToolbarItemsWindow : Window
             HorizontalAlignment = HorizontalAlignment.Left,
             Children =
             {
-                SyncTimingChrome.MakeTextToolButton(IconNames.ArrowUpThin, Se.Language.General.MoveUp, vm.MoveUpCommand),
-                SyncTimingChrome.MakeTextToolButton(IconNames.ArrowDownThin, Se.Language.General.MoveDown, vm.MoveDownCommand),
+                EditorChrome.MakeTextToolButton(IconNames.ArrowUpThin, Se.Language.General.MoveUp, vm.MoveUpCommand),
+                EditorChrome.MakeTextToolButton(IconNames.ArrowDownThin, Se.Language.General.MoveDown, vm.MoveDownCommand),
             },
         };
 
         // Only the items that have a width (the initial text box) show the setting.
         var numericUpDownWidth = UiUtil.MakeNumericUpDownInt(100, 3000, 400, 100, vm, nameof(vm.SelectedWidth))
-            .AsField(Se.Language.General.Width);
+            .AsField(Se.Language.General.Width, themeForeground: true);
         numericUpDownWidth.Increment = 10;
-        var rowWidth = SyncTimingChrome.Row(Se.Language.General.Width, numericUpDownWidth, LabelWidth);
+        var rowWidth = EditorChrome.MakeLabeledRow(Se.Language.General.Width, numericUpDownWidth, LabelWidth);
         rowWidth.Bind(IsVisibleProperty, new Binding(nameof(vm.IsWidthVisible)));
 
         var sidePanel = new StackPanel
@@ -83,12 +82,9 @@ public class WaveformToolbarItemsWindow : Window
             Children =
             {
                 moveButtons,
-                SyncTimingChrome.Row(Se.Language.General.FontSize,
-                    UiUtil.MakeNumericUpDownInt(6, 72, 12, 100, vm, nameof(vm.SelectedFontSize)).AsField(Se.Language.General.FontSize), LabelWidth),
-                SyncTimingChrome.Row(Se.Language.General.LeftMargin,
-                    UiUtil.MakeNumericUpDownInt(0, 100, 5, 100, vm, nameof(vm.SelectedLeftMargin)).AsField(Se.Language.General.LeftMargin), LabelWidth),
-                SyncTimingChrome.Row(Se.Language.General.RightMargin,
-                    UiUtil.MakeNumericUpDownInt(0, 100, 5, 100, vm, nameof(vm.SelectedRightMargin)).AsField(Se.Language.General.RightMargin), LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.FontSize, UiUtil.MakeNumericUpDownInt(6, 72, 12, 100, vm, nameof(vm.SelectedFontSize)).AsField(Se.Language.General.FontSize, themeForeground: true), LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.LeftMargin, UiUtil.MakeNumericUpDownInt(0, 100, 5, 100, vm, nameof(vm.SelectedLeftMargin)).AsField(Se.Language.General.LeftMargin, themeForeground: true), LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.RightMargin, UiUtil.MakeNumericUpDownInt(0, 100, 5, 100, vm, nameof(vm.SelectedRightMargin)).AsField(Se.Language.General.RightMargin, themeForeground: true), LabelWidth),
                 rowWidth,
             },
         };
@@ -101,7 +97,7 @@ public class WaveformToolbarItemsWindow : Window
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
             },
         };
-        contentGrid.Add(OptionsListChrome.MakeListFrame(listBox), 0, 0);
+        contentGrid.Add(EditorChrome.MakeCompactListFrame(listBox), 0, 0);
         contentGrid.Add(sidePanel, 0, 1);
 
         var section = EditorChrome.MakeEditorSection(Se.Language.Options.Settings.WaveformToolbarItems, contentGrid, first: true);
@@ -110,7 +106,7 @@ public class WaveformToolbarItemsWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = SyncTimingChrome.MakeRoot(section, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(section, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, listBox); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);

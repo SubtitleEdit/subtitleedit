@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -9,7 +9,6 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Chrome = Nikse.SubtitleEdit.Features.Video.SpeechToText.SpeechToTextChrome;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
@@ -31,7 +30,7 @@ public class SpeechToTextQualityReportWindow : Window
         MinWidth = 720;
         MinHeight = 460;
         CanResize = true;
-        Chrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.SpeechToText);
 
         _vm = vm;
         vm.Window = this;
@@ -139,7 +138,7 @@ public class SpeechToTextQualityReportWindow : Window
             Width = new GridLength(1, GridUnitType.Star),
         });
         AutomationProperties.SetName(table, l.QualityReportTitle);
-        var tableBorder = Chrome.FieldFrame(table);
+        var tableBorder = EditorChrome.MakeListFrame(table);
 
         // Tip under the table; "do not show again", Export and OK in the button bar
         var labelTip = new TextBlock
@@ -151,12 +150,12 @@ public class SpeechToTextQualityReportWindow : Window
             [!TextBlock.TextProperty] = new Binding(nameof(vm.Tip)),
         };
 
-        var switchDoNotShowAgain = Chrome.Switch(vm, nameof(vm.DoNotShowAgain), l.QualityReportDoNotShowAgain);
-        var rowDoNotShowAgain = Chrome.SwitchRow(switchDoNotShowAgain, UiUtil.MakeTextBlock(l.QualityReportDoNotShowAgain));
+        var switchDoNotShowAgain = EditorChrome.MakeSwitch(nameof(vm.DoNotShowAgain), l.QualityReportDoNotShowAgain, vm);
+        var rowDoNotShowAgain = EditorChrome.MakeSwitchRow(switchDoNotShowAgain, UiUtil.MakeTextBlock(l.QualityReportDoNotShowAgain));
         rowDoNotShowAgain.VerticalAlignment = VerticalAlignment.Center;
-        var buttonOk = Chrome.Primary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonExport = MakeExportButton(vm);
-        var buttonBar = Chrome.ButtonBar(rowDoNotShowAgain, MakeExportStatusLabel(vm), buttonExport, buttonOk);
+        var buttonBar = EditorChrome.MakeFlushButtonBar(rowDoNotShowAgain, MakeExportStatusLabel(vm), buttonExport, buttonOk);
 
         var grid = new Grid
         {

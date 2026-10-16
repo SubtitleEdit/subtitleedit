@@ -13,7 +13,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -37,7 +36,7 @@ public class BatchConvertWindow : Window
         MinWidth = 900;
         MinHeight = 600;
         CanResize = true;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         vm.Window = this;
         DataContext = vm;
 
@@ -70,14 +69,14 @@ public class BatchConvertWindow : Window
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand).WithBindIsVisible(vm, nameof(vm.IsConverting));
 
         // "No files to convert" and the end-of-run summary
-        var statusText = VideoSubDialogChrome.MakeHint(nameof(vm.StatusText));
+        var statusText = EditorChrome.MakeBoundHint(nameof(vm.StatusText));
         statusText.FontSize = 12;
-        var buttonBar = VideoSubDialogChrome.MakeButtonBar(statusText, buttonCancel, buttonDone, buttonConvert);
+        var buttonBar = EditorChrome.MakeButtonBar(statusText, buttonCancel, buttonDone, buttonConvert);
 
         var progressBar = UiUtil.MakeProgressBar(6);
         progressBar.Maximum = 1; // ProgressValue is the converted fraction
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
-        var progressStrip = VideoSubDialogChrome.MakeProgressStrip(progressBar, nameof(vm.ProgressText), nameof(vm.IsConverting));
+        var progressStrip = EditorChrome.MakeProgressStrip(progressBar, nameof(vm.ProgressText), nameof(vm.IsConverting));
 
         // The file list and the functions share the height (the functions up to what they need),
         // so both stay usable and the progress and the buttons reachable at the minimum height.
@@ -149,9 +148,9 @@ public class BatchConvertWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Children =
             {
-                Action(VideoSubDialogChrome.MakeAction("fa-solid fa-plus", Se.Language.General.Add, vm.AddFilesCommand)),
-                Action(VideoSubDialogChrome.MakeAction("fa-solid fa-folder-plus", Se.Language.Tools.BatchConvert.AddFolderDotDotDot, vm.AddFolderCommand)),
-                Action(VideoSubDialogChrome.MakeAction("fa-solid fa-folder-tree", Se.Language.Tools.BatchConvert.AddFolderRecursiveDotDotDot, vm.AddFolderRecursiveCommand)),
+                Action(EditorChrome.MakeActionButton("fa-solid fa-plus", Se.Language.General.Add, vm.AddFilesCommand)),
+                Action(EditorChrome.MakeActionButton("fa-solid fa-folder-plus", Se.Language.Tools.BatchConvert.AddFolderDotDotDot, vm.AddFolderCommand)),
+                Action(EditorChrome.MakeActionButton("fa-solid fa-folder-tree", Se.Language.Tools.BatchConvert.AddFolderRecursiveDotDotDot, vm.AddFolderRecursiveCommand)),
                 EditorChrome.MakeToolbarSeparator(),
                 Action(EditorChrome.CreateToolButton("fa-solid fa-minus", Se.Language.General.Remove, vm.RemoveSelectedFilesCommand)),
                 Action(EditorChrome.CreateToolButton("fa-solid fa-trash", Se.Language.General.Clear, vm.ClearAllFilesCommand)),
@@ -188,7 +187,7 @@ public class BatchConvertWindow : Window
         DockPanel.SetDock(filter, Dock.Right);
         bar.Children.Add(filter);
         bar.Children.Add(actions);
-        return VideoSubDialogChrome.MakeToolbar(bar);
+        return EditorChrome.MakeToolbar(bar);
     }
 
     private static Border MakeFileView(BatchConvertViewModel vm)
@@ -354,12 +353,12 @@ public class BatchConvertWindow : Window
         {
             Children =
             {
-                VideoSubDialogChrome.MakeListFrame(dropHost),
+                EditorChrome.MakeListFrame(dropHost),
                 MakeBusyOverlay(vm),
             }
         };
 
-        var count = VideoSubDialogChrome.MakeHint(nameof(vm.BatchItemsInfo));
+        var count = EditorChrome.MakeBoundHint(nameof(vm.BatchItemsInfo));
         var grid = new Grid
         {
             RowSpacing = 10,
@@ -425,7 +424,7 @@ public class BatchConvertWindow : Window
         linkLabelOutputFolder.FontSize = 12;
         linkLabelOutputFolder.TextTrimming = TextTrimming.CharacterEllipsis;
         var folder = new Panel { VerticalAlignment = VerticalAlignment.Center, Children = { labelOutputSourceFolder, linkLabelOutputFolder } };
-        var encoding = VideoSubDialogChrome.MakeHint(nameof(vm.OutputEncodingLabel));
+        var encoding = EditorChrome.MakeBoundHint(nameof(vm.OutputEncodingLabel));
 
         var output = new Grid
         {
@@ -563,7 +562,7 @@ public class BatchConvertWindow : Window
         functions.Add(MakeFunctionsList(vm), 1, 0);
 
         // "N actions selected" beside the header
-        var actionsSelected = VideoSubDialogChrome.MakeHint(nameof(vm.ActionsSelected));
+        var actionsSelected = EditorChrome.MakeBoundHint(nameof(vm.ActionsSelected));
         var left = new Border
         {
             Child = MakeFillSection(Se.Language.General.Options, functions, actionsSelected),
@@ -672,7 +671,7 @@ public class BatchConvertWindow : Window
             item => item.IsSelected, (item, v) => item.IsSelected = v);
         UiUtil.AttachMacContextFlyoutHandler(dataGrid);
 
-        var frame = VideoSubDialogChrome.MakeListFrame(dataGrid);
+        var frame = EditorChrome.MakeListFrame(dataGrid);
         frame.HorizontalAlignment = HorizontalAlignment.Left;
         return frame;
     }

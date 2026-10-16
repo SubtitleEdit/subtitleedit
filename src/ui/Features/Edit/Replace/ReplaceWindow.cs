@@ -24,7 +24,7 @@ public class ReplaceWindow : Window
         Title = UiUtil.RemoveAccessKey(Se.Language.General.Replace);
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -73,14 +73,14 @@ public class ReplaceWindow : Window
         sections.Children.Add(EditorChrome.MakeEditorSection(Se.Language.General.Match, FindWindow.MakeFindModeRadioButtons()));
         sections.Children.Add(sectionScope);
 
-        var buttonFindNext = EditDialogChrome.StyleActionButton(UiUtil.MakeButton(Se.Language.Edit.Find.FindNext, vm.FindNextCommand)
+        var buttonFindNext = EditorChrome.StyleActionColumnButton(UiUtil.MakeButton(Se.Language.Edit.Find.FindNext, vm.FindNextCommand)
             .WithIconLeft(IconNames.ChevronRight));
-        var buttonReplace = EditDialogChrome.StyleActionButton(UiUtil.MakeButton(Se.Language.Edit.Find.ReplaceAndFindNext, vm.ReplaceCommand)
+        var buttonReplace = EditorChrome.StyleActionColumnButton(UiUtil.MakeButton(Se.Language.Edit.Find.ReplaceAndFindNext, vm.ReplaceCommand)
             .WithIconLeft(IconNames.FindReplace));
         buttonReplace.Classes.Add("primary");
-        var buttonReplaceAll = EditDialogChrome.StyleActionButton(UiUtil.MakeButton(Se.Language.Edit.Find.ReplaceAll, vm.ReplaceAllCommand)
+        var buttonReplaceAll = EditorChrome.StyleActionColumnButton(UiUtil.MakeButton(Se.Language.Edit.Find.ReplaceAll, vm.ReplaceAllCommand)
             .WithIconLeft(IconNames.FileReplaceOutline));
-        var buttonCount = EditDialogChrome.StyleActionButton(UiUtil.MakeButton(Se.Language.General.Count, vm.CountCommand)
+        var buttonCount = EditorChrome.StyleActionColumnButton(UiUtil.MakeButton(Se.Language.General.Count, vm.CountCommand)
             .WithIconLeft(IconNames.Counter));
         var panelResult = FindWindowParts.MakeResultPanel(nameof(vm.CountResult), nameof(vm.ResultIcon));
         panelResult.Margin = new Thickness(2, 4, 0, 0);
@@ -100,7 +100,7 @@ public class ReplaceWindow : Window
             }
         };
 
-        Content = EditDialogChrome.MakeSidePanelRoot(sections, EditDialogChrome.MakeActionColumn(panelButtons));
+        Content = EditorChrome.MakeSidePanelRoot(sections, EditorChrome.MakeActionColumn(panelButtons));
 
         vm.FocusSearchBox = () => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
         {

@@ -32,7 +32,7 @@ public class BinaryChangeResolutionWindow : Window
         Content = BinaryEditChrome.MakePreviewDialogRoot(
             MakeControlsPanel(vm, out var presetComboBox),
             MakePreviewPanel(vm),
-            BinaryEditChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+            EditorChrome.MakeCancelOkBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, presetComboBox); // an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -88,7 +88,7 @@ public class BinaryChangeResolutionWindow : Window
                 Converter = new NullableIntConverter(),
             },
         };
-        return BinaryEditChrome.MakeField(field, name, 100);
+        return EditorChrome.AsField(field, name, 100, alignLeft: true, center: true);
     }
 
     private static Border MakePreviewPanel(BinaryChangeResolutionViewModel vm)

@@ -18,7 +18,7 @@ public class BurnInSettingsWindow : Window
         Title = Se.Language.Video.OutputSettingsTitle;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         
         _vm = vm;
         vm.Window = this;
@@ -71,7 +71,7 @@ public class BurnInSettingsWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = VideoSubDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk);
+        var panelButtons = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         var rows = new StackPanel
         {
@@ -93,7 +93,7 @@ public class BurnInSettingsWindow : Window
             },
         };
 
-        grid.Add(VideoSubDialogChrome.MakePanel(EditorChrome.MakeEditorSection(Se.Language.General.OutputFolder, rows, first: true)), 0);
+        grid.Add(EditorChrome.MakePanel(EditorChrome.MakeEditorSection(Se.Language.General.OutputFolder, rows, first: true)), 0);
         grid.Add(panelButtons, 1);
 
         Content = grid;

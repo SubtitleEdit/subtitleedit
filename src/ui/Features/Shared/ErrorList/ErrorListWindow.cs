@@ -7,8 +7,6 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections;
@@ -31,7 +29,7 @@ public class ErrorListWindow : Window
         Height = 680;
         MinWidth = 720;
         MinHeight = 460;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -123,7 +121,7 @@ public class ErrorListWindow : Window
             Padding = new Thickness(16, 14, 16, 14),
         }, 0, 0);
         grid.Add(listArea, 1, 0);
-        grid.Add(SyncTimingChrome.MakeButtonBar(left, buttonGoTo, buttonCancel), 2, 0);
+        grid.Add(EditorChrome.MakeDockedButtonBar(left, buttonGoTo, buttonCancel), 2, 0);
 
         Content = grid;
 
@@ -139,7 +137,7 @@ public class ErrorListWindow : Window
     private static Button MakeExportButton(ErrorListViewModel vm)
     {
         var l = Se.Language.ErrorList;
-        var button = SyncTimingChrome.MakeTextToolButton("fa-solid fa-file-export", Se.Language.General.ExportDotDotDot, null);
+        var button = EditorChrome.MakeTextToolButton("fa-solid fa-file-export", Se.Language.General.ExportDotDotDot, null);
         button.Flyout = new MenuFlyout
         {
             Items =
@@ -280,6 +278,6 @@ public class ErrorListWindow : Window
             }
         }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
 
-        return EditDialogChrome.MakeListFrame(dataGrid);
+        return EditorChrome.MakeListFrame(dataGrid, clearListBackground: true);
     }
 }

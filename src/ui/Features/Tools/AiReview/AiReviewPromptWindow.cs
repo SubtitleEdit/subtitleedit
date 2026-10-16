@@ -3,7 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -26,7 +25,7 @@ public class AiReviewPromptWindow : Window
         MinHeight = 520;
         CanResize = true;
         // The Edit dialogs' styles: compact fields that keep the field color while focused
-        Features.Edit.EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -68,7 +67,7 @@ public class AiReviewPromptWindow : Window
             ToolTip.SetTip(buttonGenerate, l.GenerateContextHint);
         }
 
-        var labelGenerateStatus = VideoSubDialogChrome.MakeHint(nameof(vm.GenerateStatus));
+        var labelGenerateStatus = EditorChrome.MakeBoundHint(nameof(vm.GenerateStatus));
         labelGenerateStatus.FontSize = 12;
         labelGenerateStatus.MaxWidth = 260;
         var panelGenerate = new StackPanel
@@ -86,7 +85,7 @@ public class AiReviewPromptWindow : Window
         var contextSection = MakeSection(l.ReferenceContext, panelGenerate, l.ReferenceContextInfo, textBoxContext, first: false);
 
         // ---------- protocol note ----------
-        var labelProtocol = VideoSubDialogChrome.MakeHintText(l.ProtocolInfo);
+        var labelProtocol = EditorChrome.MakeHint(l.ProtocolInfo);
         var borderProtocol = new Border
         {
             BorderBrush = EditorChrome.LineBrush,
@@ -113,11 +112,11 @@ public class AiReviewPromptWindow : Window
         Grid.SetColumn(labelProtocol, 1);
 
         // ---------- buttons ----------
-        var buttonReset = VideoSubDialogChrome.MakeAction("fa-solid fa-rotate-left", l.ResetToDefault, vm.ResetToDefaultCommand);
+        var buttonReset = EditorChrome.MakeActionButton("fa-solid fa-rotate-left", l.ResetToDefault, vm.ResetToDefaultCommand);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = VideoSubDialogChrome.MakeButtonBar(buttonReset, buttonCancel, buttonOk);
+        var buttonBar = EditorChrome.MakeButtonBar(buttonReset, buttonCancel, buttonOk);
 
         // The prompt editor takes the star row so a long prompt scrolls inside the
         // text box instead of growing the window past the screen edge and pushing
@@ -134,7 +133,7 @@ public class AiReviewPromptWindow : Window
         {
             RowDefinitions = new RowDefinitions("*,Auto"),
         };
-        root.Add(VideoSubDialogChrome.MakePanel(sections), 0, 0);
+        root.Add(EditorChrome.MakePanel(sections), 0, 0);
         root.Add(buttonBar, 1, 0);
 
         Content = root;
@@ -186,7 +185,7 @@ public class AiReviewPromptWindow : Window
             RowSpacing = 8,
         };
         grid.Add(header, 0, 0);
-        grid.Add(VideoSubDialogChrome.MakeHintText(info), 1, 0);
+        grid.Add(EditorChrome.MakeHint(info), 1, 0);
         grid.Add(textBox, 2, 0);
 
         return new Border

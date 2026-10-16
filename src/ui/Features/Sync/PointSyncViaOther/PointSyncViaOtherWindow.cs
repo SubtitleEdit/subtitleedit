@@ -13,7 +13,6 @@ using System;
 using System.Collections;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Sync.PointSync;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -94,7 +93,7 @@ public class PointSyncViaOtherWindow : Window
         MinHeight = 480;
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         DataContext = vm;
 
         var subtitleViewView = MakeSubtitleView(vm);
@@ -105,7 +104,7 @@ public class PointSyncViaOtherWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindIsEnabled(nameof(vm.IsOkEnabled));
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = VideoSubDialogChrome.MakeButtonBar(MakeGapLegend(), buttonApply, buttonCancel, buttonOk);
+        var panelButtons = EditorChrome.MakeButtonBar(MakeGapLegend(), buttonApply, buttonCancel, buttonOk);
 
         var content = new Grid
         {
@@ -362,7 +361,7 @@ public class PointSyncViaOtherWindow : Window
         // TextBlock in a star column so a long file name shrinks with an ellipsis
         // instead of pushing under the "Find text" button.
         var labelFileName = PointSyncChrome.MakeFileNameLabel(vm, nameof(vm.FileName));
-        var buttonFindText = VideoSubDialogChrome.MakeAction(IconNames.Find, Se.Language.Sync.FindText, vm.FindTextLeftCommand);
+        var buttonFindText = EditorChrome.MakeActionButton(IconNames.Find, Se.Language.Sync.FindText, vm.FindTextLeftCommand);
         var fileNamePanel = new Grid
         {
             ColumnDefinitions =
@@ -437,7 +436,7 @@ public class PointSyncViaOtherWindow : Window
             TableViewExtras.FocusRow(dataGrid);
         };
 
-        return PointSyncChrome.MakeListPane(panelHeader, VideoSubDialogChrome.MakeListFrame(dataGrid));
+        return PointSyncChrome.MakeListPane(panelHeader, EditorChrome.MakeListFrame(dataGrid));
     }
 
     private static Grid MakeSubtitleOtherView(PointSyncViaOtherViewModel vm)
@@ -471,7 +470,7 @@ public class PointSyncViaOtherWindow : Window
         };
         panelOtherBrowse.Add(buttonBrowseOther, 0, 0);
         panelOtherBrowse.Add(new Panel { Children = { labelOtherFileName, labelOpenHint } }, 0, 1);
-        var buttonFindTextOther = VideoSubDialogChrome.MakeAction(IconNames.Find, Se.Language.Sync.FindText, vm.FindTextOtherCommand)
+        var buttonFindTextOther = EditorChrome.MakeActionButton(IconNames.Find, Se.Language.Sync.FindText, vm.FindTextOtherCommand)
             .WithBindIsEnabled(nameof(vm.IsOtherTextBased));
         var panelOtherHeader = PointSyncChrome.MakeHeaderRow(panelOtherBrowse, buttonFindTextOther);
 
@@ -541,7 +540,7 @@ public class PointSyncViaOtherWindow : Window
             TableViewExtras.FocusRow(dataGridSubtitle);
         };
 
-        return PointSyncChrome.MakeListPane(panelOtherHeader, VideoSubDialogChrome.MakeListFrame(dataGridSubtitle));
+        return PointSyncChrome.MakeListPane(panelOtherHeader, EditorChrome.MakeListFrame(dataGridSubtitle));
     }
 
 }

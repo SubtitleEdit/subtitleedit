@@ -5,8 +5,6 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using System.Windows.Input;
 
@@ -25,7 +23,7 @@ internal static class AssistedCardChrome
     /// </summary>
     internal static void Apply(Window window)
     {
-        EditDialogChrome.Apply(window);
+        EditorChrome.ApplyWindow(window, EditorWindowStyles.Dialog);
         var styles = window.Styles;
         styles.Add(new Style(x => x.OfType<Button>().Class("card"))
         {
@@ -198,6 +196,6 @@ internal static class AssistedCardChrome
         };
         sections.Add(header, 0, 0);
         sections.Add(cards, 1, 0);
-        return SyncTimingChrome.MakeRoot(sections, SyncTimingChrome.MakeButtonBar(null, buttonCancel));
+        return EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonCancel));
     }
 }

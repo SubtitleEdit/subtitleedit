@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
@@ -25,7 +25,7 @@ public class BurnInResolutionPickerWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         MaxHeight = 900;
         CanResize = false;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
 
         _vm = vm;
         vm.Window = this;
@@ -114,7 +114,7 @@ public class BurnInResolutionPickerWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = VideoSubDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk);
+        var panelButtons = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         var grid = new Grid
         {
@@ -127,7 +127,7 @@ public class BurnInResolutionPickerWindow : Window
 
         grid.Add(new Border
         {
-            Child = VideoSubDialogChrome.MakeListFrame(listBoxResolutions),
+            Child = EditorChrome.MakeListFrame(listBoxResolutions),
             Background = EditorChrome.PanelBrush,
             Padding = new Thickness(14),
         }, 0);

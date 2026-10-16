@@ -28,11 +28,11 @@ public static class SelectLinesWindowBuilder
         window.Height = 600;
         window.MinWidth = 600;
         window.MinHeight = 400;
-        TtsMainEditorLook.Apply(window);
+        EditorChrome.ApplyWindow(window, EditorWindowStyles.TextFieldsBare | EditorWindowStyles.MuteDisabledPrimary);
         vm.Window = window;
         window.DataContext = vm;
 
-        var buttonOk = TtsMainEditorLook.MakePrimary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
         // Selection actions on the right of the list header, after the window's own options
@@ -62,7 +62,7 @@ public static class SelectLinesWindowBuilder
             Margin = new Avalonia.Thickness(14, 10, 14, 14),
         };
         list.Add(header, 0);
-        list.Add(TtsMainEditorLook.MakeListFrame(rowsView), 1);
+        list.Add(EditorChrome.MakeListFrame(rowsView), 1);
 
         var labelInfo = new TextBlock
         {
@@ -81,7 +81,7 @@ public static class SelectLinesWindowBuilder
             },
         };
         grid.Add(new Border { Background = EditorChrome.PanelBrush, Child = list }, 0);
-        grid.Add(TtsMainEditorLook.MakeButtonBar(labelInfo, buttonCancel, buttonOk), 1);
+        grid.Add(EditorChrome.MakeButtonBar(labelInfo, buttonCancel, buttonOk), 1);
 
         window.Content = grid;
 

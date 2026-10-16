@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert.FunctionViews;
 
@@ -11,7 +12,7 @@ public static class ViewMergeLinesWithSameTimeCodes
 
         return FunctionViewChrome.MakePanel(vm, Se.Language.General.MergeLinesWithSameTimeCodes,
             FunctionViewChrome.MakeRow(Se.Language.Tools.MergeLinesWithSameTimeCodes.MaxMsDifference, numericUpDownMaxDiff),
-            FunctionViewChrome.MakeSwitchRow(nameof(vm.MergeSameTimeMergeDialog), Se.Language.Tools.MergeLinesWithSameTimeCodes.MakeDialog),
-            FunctionViewChrome.MakeSwitchRow(nameof(vm.MergeSameTimeAutoBreak), Se.Language.General.AutoBreak));
+            EditorChrome.MakeSwitchRow(nameof(vm.MergeSameTimeMergeDialog), Se.Language.Tools.MergeLinesWithSameTimeCodes.MakeDialog),
+            EditorChrome.MakeSwitchRow(nameof(vm.MergeSameTimeAutoBreak), Se.Language.General.AutoBreak));
     }
 }

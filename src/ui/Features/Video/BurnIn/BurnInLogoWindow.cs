@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -29,7 +29,7 @@ public class BurnInLogoWindow : Window
         Width = 1000;
         Height = 700;
 
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
 
         _vm = vm;
         vm.Window = this;
@@ -53,8 +53,8 @@ public class BurnInLogoWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
         };
 
-        var buttonPickLogo = VideoSubDialogChrome.MakeAction("fa-solid fa-image", Se.Language.General.OpenImageFile + "...", vm.PickLogoCommand);
-        var labelLogoPosition = VideoSubDialogChrome.MakeHint(nameof(vm.LogoPositionText));
+        var buttonPickLogo = EditorChrome.MakeActionButton("fa-solid fa-image", Se.Language.General.OpenImageFile + "...", vm.PickLogoCommand);
+        var labelLogoPosition = EditorChrome.MakeBoundHint(nameof(vm.LogoPositionText));
         labelLogoPosition.FontSize = 12;
         labelLogoPosition.MinWidth = 110;
         labelLogoPosition.Margin = new Thickness(8, 0, 0, 0);
@@ -244,14 +244,14 @@ public class BurnInLogoWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = VideoSubDialogChrome.MakeButtonBar(instructionsLabel, buttonCancel, buttonOk);
+        var panelButtons = EditorChrome.MakeButtonBar(instructionsLabel, buttonCancel, buttonOk);
 
         // The player in a plain border - no corner radius or clipping, the macOS native video
         // surface disappears inside either
-        grid.Add(VideoSubDialogChrome.MakeToolbar(topPanel), 0);
+        grid.Add(EditorChrome.MakeToolbar(topPanel), 0);
         grid.Add(new Border
         {
-            Child = VideoSubDialogChrome.MakeVideoFrame(videoGrid),
+            Child = EditorChrome.MakeVideoFrame(videoGrid),
             Padding = new Thickness(12),
         }, 1);
         grid.Add(panelButtons, 2);

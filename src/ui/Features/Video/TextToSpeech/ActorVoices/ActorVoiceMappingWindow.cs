@@ -44,7 +44,7 @@ public class ActorVoiceMappingWindow : Window
         MinWidth = 700;
         MinHeight = 400;
         CanResize = true;
-        TtsVoicesChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TextFieldsUncentered | EditorWindowStyles.MuteDisabledPrimary);
 
         _vm = vm;
         vm.Window = this;
@@ -326,7 +326,7 @@ public class ActorVoiceMappingWindow : Window
             Width = new GridLength(110),
         });
 
-        return TtsVoicesChrome.MakeListFrame(tableView);
+        return EditorChrome.MakeListFrame(tableView);
     }
 
     /// <summary>
@@ -334,14 +334,14 @@ public class ActorVoiceMappingWindow : Window
     /// </summary>
     private static Border BuildButtons(ActorVoiceMappingViewModel vm)
     {
-        var applyDefault = TtsVoicesChrome.MakeAction("fa-solid fa-wand-magic-sparkles", Se.Language.Video.TextToSpeech.ApplyDefaultToAll, vm.ApplyDefaultToAllCommand);
-        var clearAll = TtsVoicesChrome.MakeAction("fa-solid fa-eraser", Se.Language.General.Clear, vm.ClearAllCommand);
+        var applyDefault = EditorChrome.MakeActionButton("fa-solid fa-wand-magic-sparkles", Se.Language.Video.TextToSpeech.ApplyDefaultToAll, vm.ApplyDefaultToAllCommand);
+        var clearAll = EditorChrome.MakeActionButton("fa-solid fa-eraser", Se.Language.General.Clear, vm.ClearAllCommand);
         var ok = UiUtil.MakeButtonOk(vm.OkCommand);
         ok.Classes.Add("primary");
         var cancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
         var actions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2, Margin = new Thickness(-10, 0, 0, 0), Children = { applyDefault, clearAll } };
-        return TtsVoicesChrome.MakeButtonBar(actions, cancel, ok);
+        return EditorChrome.MakeFlushButtonBar(actions, cancel, ok);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

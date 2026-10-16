@@ -227,7 +227,7 @@ internal static class EmbeddedTracksUi
     {
         var progressBar = UiUtil.MakeProgressBar();
         progressBar.Bind(ProgressBar.ValueProperty, new Binding("ProgressValue"));
-        return VideoSubDialogChrome.MakeProgressStrip(progressBar, "ProgressText", "IsGenerating");
+        return EditorChrome.MakeProgressStrip(progressBar, "ProgressText", "IsGenerating");
     }
 
     /// <summary>
@@ -251,7 +251,7 @@ internal static class EmbeddedTracksUi
             Margin = new Thickness(14, 12, 14, 14),
         };
         panel.Add(header, 0);
-        panel.Add(VideoSubDialogChrome.MakeListFrame(MakeTracksWithEmptyHint(tracksTable)), 1);
+        panel.Add(EditorChrome.MakeListFrame(MakeTracksWithEmptyHint(tracksTable)), 1);
         return panel;
     }
 
@@ -269,7 +269,7 @@ internal static class EmbeddedTracksUi
             VerticalAlignment = VerticalAlignment.Center,
         };
         var label = EditorChrome.MakeDimLabel(Se.Language.General.VideoFile, new Thickness(0));
-        var fileSize = VideoSubDialogChrome.MakeHint("VideoFileSize");
+        var fileSize = EditorChrome.MakeBoundHint("VideoFileSize");
 
         var grid = new Grid
         {

@@ -19,12 +19,12 @@ public class SettingsResetWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var switchResetAll = SettingsChrome.MakeSwitch(vm, nameof(vm.ResetAll));
+        var switchResetAll = EditorChrome.MakeSwitch(nameof(vm.ResetAll), null, vm);
 
         // The parts can only be picked when not resetting everything
         ToggleSwitch MakePartSwitch(string property)
         {
-            var toggle = SettingsChrome.MakeSwitch(vm, property);
+            var toggle = EditorChrome.MakeSwitch(property, null, vm);
             toggle[!IsEnabledProperty] = new Binding(nameof(vm.ResetAll)) { Converter = InverseBooleanConverter.Instance };
             return toggle;
         }
@@ -69,7 +69,7 @@ public class SettingsResetWindow : Window
                 new RowDefinition { Height = GridLength.Auto },
             },
         };
-        grid.Add(SettingsChrome.MakePanel(EditorChrome.MakeEditorSection(Se.Language.Options.Settings.ResetSettingsTitle, content, first: true)), 0);
+        grid.Add(EditorChrome.MakePanel(EditorChrome.MakeEditorSection(Se.Language.Options.Settings.ResetSettingsTitle, content, first: true)), 0);
         grid.Add(SettingsChrome.MakeButtonBar(null, buttonCancel, buttonOk), 1);
 
         Content = grid;

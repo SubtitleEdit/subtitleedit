@@ -11,7 +11,6 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Files.Compare;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Optris.Icons.Avalonia;
@@ -33,7 +32,7 @@ public class MultipleReplaceWindow : Window
         MinWidth = 850;
         MinHeight = 400;
         CanResize = true;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         vm.Window = this;
         DataContext = vm;
 
@@ -46,9 +45,9 @@ public class MultipleReplaceWindow : Window
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
         // How many lines the checked fixes change, on the left of the button bar.
-        var labelFixesInfo = VideoSubDialogChrome.MakeHint(nameof(vm.FixesInfo));
+        var labelFixesInfo = EditorChrome.MakeBoundHint(nameof(vm.FixesInfo));
         labelFixesInfo.FontSize = 12;
-        var panelButtons = VideoSubDialogChrome.MakeButtonBar(labelFixesInfo, buttonApply, buttonCancel, buttonOk);
+        var panelButtons = EditorChrome.MakeButtonBar(labelFixesInfo, buttonApply, buttonCancel, buttonOk);
 
         var content = new Grid
         {
@@ -381,9 +380,9 @@ public class MultipleReplaceWindow : Window
             Margin = new Thickness(14, 12, 14, 14),
         };
         panel.Add(header, 0);
-        panel.Add(VideoSubDialogChrome.MakeListFrame(scrollViewer), 1);
+        panel.Add(EditorChrome.MakeListFrame(scrollViewer), 1);
 
-        return VideoSubDialogChrome.MakePanel(panel);
+        return EditorChrome.MakePanel(panel);
     }
 
     /// <summary>
@@ -700,7 +699,7 @@ public class MultipleReplaceWindow : Window
             Margin = new Thickness(14, 12, 14, 14),
         };
         gridPreview.Add(previewHeader, 0, 0);
-        gridPreview.Add(VideoSubDialogChrome.MakeListFrame(dataGrid), 1, 0);
+        gridPreview.Add(EditorChrome.MakeListFrame(dataGrid), 1, 0);
         gridPreview.Add(hitsPanel, 2, 0);
 
         var gridFixes = new Grid

@@ -5,8 +5,6 @@ using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -25,7 +23,7 @@ public class ImageBasedProfileWindow : Window
         Width = 640;
         Height = 420;
         CanResize = false;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -67,8 +65,8 @@ public class ImageBasedProfileWindow : Window
         };
         AutomationProperties.SetName(listBox, Se.Language.General.Profiles);
 
-        var buttonNew = SyncTimingChrome.MakeTextToolButton("fa-solid fa-plus", Se.Language.General.NewProfile, vm.NewProfileCommand);
-        var profileList = MakeHeaderPanel(Se.Language.General.Profiles, EditDialogChrome.MakeListFrame(listBox), buttonNew);
+        var buttonNew = EditorChrome.MakeTextToolButton("fa-solid fa-plus", Se.Language.General.NewProfile, vm.NewProfileCommand);
+        var profileList = MakeHeaderPanel(Se.Language.General.Profiles, EditorChrome.MakeListFrame(listBox, clearListBackground: true), buttonNew);
         profileList.Margin = new Thickness(14, 12, 14, 14);
 
         // Right column: Profile editor
@@ -102,8 +100,8 @@ public class ImageBasedProfileWindow : Window
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
-        var buttonBar = SyncTimingChrome.MakeButtonBar(null, UiUtil.MakeButtonCancel(vm.CancelCommand), buttonOk);
-        Content = SyncTimingChrome.MakeRoot(sections, buttonBar);
+        var buttonBar = EditorChrome.MakeDockedButtonBar(null, UiUtil.MakeButtonCancel(vm.CancelCommand), buttonOk);
+        Content = EditorChrome.MakeRoot(sections, buttonBar);
 
         UiUtil.FocusOnFirstActivation(this, () => { Focus(); }); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);

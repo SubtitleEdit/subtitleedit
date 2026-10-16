@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -23,11 +22,11 @@ public class BatchConvertAssaWindow : Window
         Height = 700;
         MinWidth = 600;
         MinHeight = 400;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         vm.Window = this;
         DataContext = vm;
 
-        var keepSourceFonts = BatchConvertChrome.MakeSwitchRow(nameof(vm.KeepSourceEmbeddedFonts), Se.Language.Tools.BatchConvert.KeepSourceEmbeddedFonts);
+        var keepSourceFonts = EditorChrome.MakeSwitchRow(nameof(vm.KeepSourceEmbeddedFonts), Se.Language.Tools.BatchConvert.KeepSourceEmbeddedFonts);
         keepSourceFonts.Bind(IsEnabledProperty, new Binding(nameof(vm.KeepSourceEmbeddedFontsIsEnabled)));
 
         var panelOptions = new StackPanel
@@ -36,7 +35,7 @@ public class BatchConvertAssaWindow : Window
             Spacing = 8,
             Children =
             {
-                BatchConvertChrome.MakeSwitchRow(nameof(vm.UseSourceStylesIfPossible), Se.Language.Tools.BatchConvert.UseSourceStylesIfPossible),
+                EditorChrome.MakeSwitchRow(nameof(vm.UseSourceStylesIfPossible), Se.Language.Tools.BatchConvert.UseSourceStylesIfPossible),
                 keepSourceFonts,
             },
         };
@@ -63,7 +62,7 @@ public class BatchConvertAssaWindow : Window
             BorderThickness = new Thickness(0, 0, 0, 1),
         }, 0, 0);
         grid.Add(MakeEditView(vm), 1, 0);
-        grid.Add(VideoSubDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk), 2, 0);
+        grid.Add(EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk), 2, 0);
 
         Content = grid;
 
@@ -92,9 +91,9 @@ public class BatchConvertAssaWindow : Window
             Spacing = 2,
             Children =
             {
-                VideoSubDialogChrome.MakeAction("fa-solid fa-palette", Se.Language.Tools.BatchConvert.EditStyles, vm.EditStylesCommand),
-                VideoSubDialogChrome.MakeAction("fa-solid fa-sliders", Se.Language.Tools.BatchConvert.EditProperties, vm.EditPropertiesCommand),
-                VideoSubDialogChrome.MakeAction("fa-solid fa-paperclip", Se.Language.Tools.BatchConvert.EditAttachments, vm.EditAttachmentCommand),
+                EditorChrome.MakeActionButton("fa-solid fa-palette", Se.Language.Tools.BatchConvert.EditStyles, vm.EditStylesCommand),
+                EditorChrome.MakeActionButton("fa-solid fa-sliders", Se.Language.Tools.BatchConvert.EditProperties, vm.EditPropertiesCommand),
+                EditorChrome.MakeActionButton("fa-solid fa-paperclip", Se.Language.Tools.BatchConvert.EditAttachments, vm.EditAttachmentCommand),
             },
         };
 
@@ -114,7 +113,7 @@ public class BatchConvertAssaWindow : Window
         };
 
         grid.Add(header, 0, 0);
-        grid.Add(VideoSubDialogChrome.MakeListFrame(contentBorder), 1, 0);
+        grid.Add(EditorChrome.MakeListFrame(contentBorder), 1, 0);
 
         return new Border
         {

@@ -3,9 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
 using Nikse.SubtitleEdit.Features.Ocr.BinaryOcr;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -27,27 +25,27 @@ public class PreProcessingWindow : Window
         Height = 600;
         MinWidth = 700;
         MinHeight = 500;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
-        var switchCropTransparent = BinaryOcrChrome.MakeSwitch(nameof(vm.CropTransparentColors), Se.Language.Ocr.CropTransparent);
+        var switchCropTransparent = EditorChrome.MakeSwitch(nameof(vm.CropTransparentColors), Se.Language.Ocr.CropTransparent);
         switchCropTransparent.IsCheckedChanged += (s, e) => vm.RequestPreviewUpdate();
 
-        var switchInverseColors = BinaryOcrChrome.MakeSwitch(nameof(vm.InverseColors), Se.Language.Ocr.InverseColors);
+        var switchInverseColors = EditorChrome.MakeSwitch(nameof(vm.InverseColors), Se.Language.Ocr.InverseColors);
         switchInverseColors.IsCheckedChanged += (s, e) => vm.RequestPreviewUpdate();
 
-        var switchBinarize = BinaryOcrChrome.MakeSwitch(nameof(vm.Binarize), Se.Language.Ocr.Binarize);
+        var switchBinarize = EditorChrome.MakeSwitch(nameof(vm.Binarize), Se.Language.Ocr.Binarize);
         switchBinarize.IsCheckedChanged += (s, e) => vm.RequestPreviewUpdate();
 
-        var switchOneColor = BinaryOcrChrome.MakeSwitch(nameof(vm.ToOneColor), Se.Language.Ocr.OneColor);
+        var switchOneColor = EditorChrome.MakeSwitch(nameof(vm.ToOneColor), Se.Language.Ocr.OneColor);
         switchOneColor.IsCheckedChanged += (s, e) => vm.RequestPreviewUpdate();
         var numericUpDownOneColorThreshold = EditorChrome.MakeField(nameof(vm.OneColorDarknessThreshold), 1, 255, 80)
             .WithBindEnabled(nameof(vm.ToOneColor))
             .WithAccessibleName(Se.Language.Ocr.DarknessThreshold);
         numericUpDownOneColorThreshold.ValueChanged += (s, e) => vm.RequestPreviewUpdate();
 
-        var switchRemoveBorders = BinaryOcrChrome.MakeSwitch(nameof(vm.RemoveBorders), Se.Language.Ocr.RemoveBorders);
+        var switchRemoveBorders = EditorChrome.MakeSwitch(nameof(vm.RemoveBorders), Se.Language.Ocr.RemoveBorders);
         switchRemoveBorders.IsCheckedChanged += (s, e) => vm.RequestPreviewUpdate();
         var numericUpDownBorderSize = EditorChrome.MakeField(nameof(vm.BorderSize), 1, 20, 80)
             .WithBindEnabled(nameof(vm.RemoveBorders))
@@ -87,14 +85,14 @@ public class PreProcessingWindow : Window
             },
         };
         body.Add(EditorChrome.MakeEditorSection(Se.Language.General.Options, options, first: true), 0, 0);
-        body.Add(BinaryOcrChrome.MakeFillSection(Se.Language.General.Before, MakeOriginalImageView(vm)), 1, 0);
-        body.Add(BinaryOcrChrome.MakeFillSection(Se.Language.General.After, MakePostProcessedImageView(vm)), 2, 0);
+        body.Add(EditorChrome.MakeDockedFillSection(Se.Language.General.Before, MakeOriginalImageView(vm)), 1, 0);
+        body.Add(EditorChrome.MakeDockedFillSection(Se.Language.General.After, MakePostProcessedImageView(vm)), 2, 0);
 
-        var buttonOk = BinaryOcrChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
-        var buttonCancel = BinaryOcrChrome.AsBarButton(UiUtil.MakeButtonCancel(vm.CancelCommand));
-        var buttonReset = SyncTimingChrome.MakeTextToolButton(IconNames.Restore, Se.Language.General.Reset, vm.ResetCommand);
+        var buttonOk = EditorChrome.AsFlushPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonCancel = EditorChrome.WithoutMargin(UiUtil.MakeButtonCancel(vm.CancelCommand));
+        var buttonReset = EditorChrome.MakeTextToolButton(IconNames.Restore, Se.Language.General.Reset, vm.ResetCommand);
         buttonReset.HorizontalAlignment = HorizontalAlignment.Left;
-        Content = SyncTimingChrome.MakeRoot(body, SyncTimingChrome.MakeButtonBar(buttonReset, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(body, EditorChrome.MakeDockedButtonBar(buttonReset, buttonCancel, buttonOk));
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
         UiUtil.FocusOnFirstActivation(this, switchCropTransparent);

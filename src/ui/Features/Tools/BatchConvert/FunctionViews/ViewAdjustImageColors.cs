@@ -16,14 +16,14 @@ public static class ViewAdjustImageColors
         AutomationProperties.SetName(colorPicker, Se.Language.Tools.ImageBasedEdit.AdjustColor);
 
         return FunctionViewChrome.MakePanel(vm, Se.Language.Tools.BatchConvert.AdjustImageColorsTitle,
-            FunctionViewChrome.MakeHint(Se.Language.Tools.BatchConvert.AdjustImageColorsInfo),
+            EditorChrome.MakeHint(Se.Language.Tools.BatchConvert.AdjustImageColorsInfo),
 
-            FunctionViewChrome.MakeSwitchRow(nameof(vm.ImageAdjustBrightnessOn), Se.Language.Tools.ImageBasedEdit.AdjustBrightness),
+            EditorChrome.MakeSwitchRow(nameof(vm.ImageAdjustBrightnessOn), Se.Language.Tools.ImageBasedEdit.AdjustBrightness),
             MakePair(vm, Se.Language.Tools.ImageBasedEdit.Brightness, nameof(vm.ImageAdjustBrightness), nameof(vm.ImageAdjustBrightnessOn), -100, 100, 1),
             MakePair(vm, Se.Language.Tools.ImageBasedEdit.Contrast, nameof(vm.ImageAdjustContrast), nameof(vm.ImageAdjustBrightnessOn), -100, 100, 1),
             MakePair(vm, Se.Language.Tools.ImageBasedEdit.Gamma + " (%)", nameof(vm.ImageAdjustGamma), nameof(vm.ImageAdjustBrightnessOn), 20, 400, 5),
 
-            FunctionViewChrome.MakeSwitchRow(nameof(vm.ImageAdjustAlphaOn), Se.Language.General.AdjustAlpha),
+            EditorChrome.MakeSwitchRow(nameof(vm.ImageAdjustAlphaOn), Se.Language.General.AdjustAlpha),
             MakePair(vm, Se.Language.General.AlphaAdjustment, nameof(vm.ImageAdjustAlpha), nameof(vm.ImageAdjustAlphaOn), -255, 255, 5),
             MakePair(vm, Se.Language.General.AlphaThreshold, nameof(vm.ImageAdjustAlphaThreshold), nameof(vm.ImageAdjustAlphaOn), 0, 255, 5),
 

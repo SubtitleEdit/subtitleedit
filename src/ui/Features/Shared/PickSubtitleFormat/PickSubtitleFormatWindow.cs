@@ -9,7 +9,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 namespace Nikse.SubtitleEdit.Features.Shared.PickSubtitleFormat;
 
 /// <summary>
-/// Pick a subtitle format, in the shared picker layout (see <see cref="SharedDialogChrome"/>): the
+/// Pick a subtitle format, in the shared picker layout (see <see cref="EditorChrome"/>): the
 /// formats with the search box in the header, the source preview of the selected format below.
 /// </summary>
 public class PickSubtitleFormatWindow : Window
@@ -23,11 +23,11 @@ public class PickSubtitleFormatWindow : Window
         Height = 700;
         MinWidth = 600;
         MinHeight = 500;
-        SharedDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
 
-        var textBoxSearch = SharedDialogChrome.MakeSearchBox(vm, nameof(vm.SearchText), Se.Language.General.SearchSubtitleFormats, 260);
+        var textBoxSearch = EditorChrome.MakeSearchBox(vm, nameof(vm.SearchText), Se.Language.General.SearchSubtitleFormats, 260);
         textBoxSearch.TextChanged += (_, _) => vm.SearchTextChanged();
 
         var listBoxFormats = new ListBox
@@ -42,12 +42,12 @@ public class PickSubtitleFormatWindow : Window
         listBoxFormats.DoubleTapped += (_, _) => vm.OkCommand.Execute(null);
         AutomationProperties.SetName(listBoxFormats, Se.Language.General.SubtitleFormats);
 
-        var formatsSection = SharedDialogChrome.MakeListSection(Se.Language.General.SubtitleFormats, listBoxFormats, textBoxSearch);
+        var formatsSection = EditorChrome.MakePickerListSection(Se.Language.General.SubtitleFormats, listBoxFormats, textBoxSearch);
 
         // Use the PreviewContainer from ViewModel (the section's frame is its border)
         vm.PreviewContainer.VerticalAlignment = VerticalAlignment.Stretch;
         vm.PreviewContainer.HorizontalAlignment = HorizontalAlignment.Stretch;
-        var previewSection = SharedDialogChrome.MakeListSection(Se.Language.General.Preview, vm.PreviewContainer, lineOnTop: true);
+        var previewSection = EditorChrome.MakePickerListSection(Se.Language.General.Preview, vm.PreviewContainer, lineOnTop: true);
 
         var sections = new Grid
         {
@@ -60,10 +60,10 @@ public class PickSubtitleFormatWindow : Window
         sections.Add(formatsSection, 0);
         sections.Add(previewSection, 1);
 
-        var buttonOk = SharedDialogChrome.Primary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = SharedDialogChrome.MakeRoot(sections, SharedDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, () =>
         {

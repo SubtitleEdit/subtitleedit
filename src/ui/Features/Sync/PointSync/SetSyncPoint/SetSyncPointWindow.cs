@@ -11,7 +11,6 @@ using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Features.Main.Layout;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -34,7 +33,7 @@ public class SetSyncPointWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Sync.SetSyncPoint;
         CanResize = true;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         AddStyles();
         vm.Window = this;
         DataContext = vm;
@@ -69,7 +68,7 @@ public class SetSyncPointWindow : Window
 
         // Entering point sync without a video used to be a dead end - the sync point can be typed,
         // but there was no way to load a video from here (issue #13341).
-        var buttonOpenVideo = VideoSubDialogChrome.MakeAction(IconNames.MovieOpenOutline, Se.Language.General.OpenVideoFile, vm.OpenVideoFileCommand);
+        var buttonOpenVideo = EditorChrome.MakeActionButton(IconNames.MovieOpenOutline, Se.Language.General.OpenVideoFile, vm.OpenVideoFileCommand);
 
         var panelVideo = new Grid
         {
@@ -123,8 +122,8 @@ public class SetSyncPointWindow : Window
 
         // Playback is the one thing with no meaning when there is no video - the nudge buttons and
         // "Go to sub pos" still move the sync point time code, so they stay.
-        var buttonPlayTwoSecondsAndBack = VideoSubDialogChrome
-            .MakeAction("fa-solid fa-play", Se.Language.Sync.PlayTwoSecondsAndBack, vm.PlayTwoSecondsAndBackLeftCommand)
+        var buttonPlayTwoSecondsAndBack = EditorChrome
+            .MakeActionButton("fa-solid fa-play", Se.Language.Sync.PlayTwoSecondsAndBack, vm.PlayTwoSecondsAndBackLeftCommand)
             .WithBindIsVisible(nameof(vm.IsVideoVisible));
 
         var panelLeftButtons = new StackPanel
@@ -138,8 +137,8 @@ public class SetSyncPointWindow : Window
                 buttonPlayTwoSecondsAndBack,
                 EditorChrome.CreateToolButton(IconNames.ArrowRightThick, Se.Language.General.OneSecondForward, vm.LeftOneSecondForwardCommand),
                 EditorChrome.MakeToolbarSeparator(),
-                VideoSubDialogChrome.MakeAction("fa-solid fa-location-crosshairs", Se.Language.Sync.GoToSubPos, vm.GoToLeftSubtitleCommand),
-                VideoSubDialogChrome.MakeAction(IconNames.Find, Se.Language.Sync.FindText, vm.FindTextLeftCommand),
+                EditorChrome.MakeActionButton("fa-solid fa-location-crosshairs", Se.Language.Sync.GoToSubPos, vm.GoToLeftSubtitleCommand),
+                EditorChrome.MakeActionButton(IconNames.Find, Se.Language.Sync.FindText, vm.FindTextLeftCommand),
             }
         };
 
@@ -160,7 +159,7 @@ public class SetSyncPointWindow : Window
         var buttonOk = UiUtil.MakeButton(Se.Language.Sync.SetSyncPoint, vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = VideoSubDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk);
+        var buttonPanel = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         // The waveform used to be pinned at 80 px under the player, too little to pick a precise
         // sync point from; the drag handle between them mirrors the main window (issue #14414).
@@ -209,7 +208,7 @@ public class SetSyncPointWindow : Window
         // surface disappears inside either.
         var videoArea = new Border
         {
-            Child = VideoSubDialogChrome.MakeVideoFrame(split),
+            Child = EditorChrome.MakeVideoFrame(split),
             Padding = new Thickness(12),
         };
 
@@ -224,7 +223,7 @@ public class SetSyncPointWindow : Window
             },
         };
 
-        grid.Add(VideoSubDialogChrome.MakeToolbar(panelVideo), 0);
+        grid.Add(EditorChrome.MakeToolbar(panelVideo), 0);
         grid.Add(videoArea, 1);
         grid.Add(sectionControls, 2);
         grid.Add(buttonPanel, 3);

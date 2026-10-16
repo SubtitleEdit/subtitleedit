@@ -44,7 +44,7 @@ public class DotsTtsCrispAsrSettingsWindow : Window
             ("BigVGAN vocoder", TtsSettingsChrome.MakeStatus(nameof(vm.VocoderBrush), nameof(vm.VocoderLabel))),
             ("CAM++ speaker encoder", TtsSettingsChrome.MakeStatus(nameof(vm.SpeakerEncoderBrush), nameof(vm.SpeakerEncoderLabel))),
             (Se.Language.General.InstallFolder, TtsSettingsChrome.MakeFolder(nameof(vm.ModelsFolder), vm.OpenModelsFolderCommand)));
-        return TtsSettingsChrome.MakeSection(Se.Language.General.Models, rows);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Models, rows);
     }
 
     private static Border BuildVoice(DotsTtsCrispAsrSettingsViewModel vm)
@@ -56,7 +56,7 @@ public class DotsTtsCrispAsrSettingsWindow : Window
             // M4 Metal with the F16 core, 4 steps synthesised in 25 s where 16 steps took 38 s for a
             // comparable line, so this is worth surfacing rather than hard-coding.
             (Se.Language.General.Quality, TtsSettingsChrome.MakeSlider(Se.Language.General.Quality, DotsTtsCrispAsr.MinOdeSteps, DotsTtsCrispAsr.MaxOdeSteps, 1, nameof(vm.OdeSteps), nameof(vm.OdeStepsLabel))));
-        return TtsSettingsChrome.MakeSection(Se.Language.General.Voice, rows);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Voice, rows);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

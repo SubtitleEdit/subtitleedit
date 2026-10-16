@@ -35,7 +35,7 @@ public class BinaryApplyDurationLimitsWindow : Window
                 Mode = BindingMode.TwoWay,
             }
         };
-        BinaryEditChrome.MakeField(minimumNumeric, Se.Language.Tools.ApplyDurationLimits.MinimumDurationMilliseconds);
+        EditorChrome.AsField(minimumNumeric, Se.Language.Tools.ApplyDurationLimits.MinimumDurationMilliseconds, 110, alignLeft: true, center: true);
 
         // Maximum duration
         var maximumNumeric = new NumericUpDown
@@ -49,7 +49,7 @@ public class BinaryApplyDurationLimitsWindow : Window
                 Mode = BindingMode.TwoWay,
             }
         };
-        BinaryEditChrome.MakeField(maximumNumeric, Se.Language.Tools.ApplyDurationLimits.MaximumDurationMilliseconds);
+        EditorChrome.AsField(maximumNumeric, Se.Language.Tools.ApplyDurationLimits.MaximumDurationMilliseconds, 110, alignLeft: true, center: true);
 
         var rows = new StackPanel { Spacing = 10 };
         rows.Children.Add(BinaryEditChrome.MakeRow(Se.Language.Tools.ApplyDurationLimits.MinimumDurationMilliseconds, minimumNumeric, LabelWidth));
@@ -59,7 +59,7 @@ public class BinaryApplyDurationLimitsWindow : Window
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        Content = BinaryEditChrome.MakeRoot(section, BinaryEditChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(section, EditorChrome.MakeCancelOkBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, minimumNumeric); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);

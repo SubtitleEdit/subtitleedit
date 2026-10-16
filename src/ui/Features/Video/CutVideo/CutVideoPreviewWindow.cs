@@ -20,7 +20,7 @@ public class CutVideoPreviewWindow : Window
         Height = 500;
         MinWidth = 400;
         MinHeight = 300;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         vm.Window = this;
         DataContext = vm;
 
@@ -29,7 +29,7 @@ public class CutVideoPreviewWindow : Window
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
-        var buttonPanel = VideoSubDialogChrome.MakeButtonBar(null, buttonOk);
+        var buttonPanel = EditorChrome.MakeButtonBar(null, buttonOk);
 
         var grid = new Grid
         {
@@ -44,7 +44,7 @@ public class CutVideoPreviewWindow : Window
         // surface disappears inside either
         grid.Add(new Border
         {
-            Child = VideoSubDialogChrome.MakeVideoFrame(vm.VideoPlayer),
+            Child = EditorChrome.MakeVideoFrame(vm.VideoPlayer),
             Padding = new Avalonia.Thickness(12),
         }, 0, 0);
         grid.Add(buttonPanel, 1, 0);

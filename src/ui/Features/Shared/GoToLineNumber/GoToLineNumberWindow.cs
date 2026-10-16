@@ -3,8 +3,6 @@ using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -22,7 +20,7 @@ public class GoToLineNumberWindow : Window
         Title = Se.Language.General.GoToLineNumber;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -43,14 +41,14 @@ public class GoToLineNumberWindow : Window
         AutomationProperties.SetName(vm.UpDown, Se.Language.General.GoToLineNumber);
         vm.UpDown.KeyDown += (sender, args) => vm.OnKeyDown(args);
 
-        var row = SyncTimingChrome.Row(Se.Language.General.GoToLineNumber, vm.UpDown, 130);
+        var row = EditorChrome.MakeLabeledRow(Se.Language.General.GoToLineNumber, vm.UpDown, 130);
         row.Margin = new Thickness(16, 18, 16, 18);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = SyncTimingChrome.MakeRoot(row, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(row, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, () => { vm.Activated(); });
         KeyDown += (_, args) => vm.OnKeyDown(args);

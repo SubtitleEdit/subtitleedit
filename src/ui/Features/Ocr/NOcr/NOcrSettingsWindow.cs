@@ -1,8 +1,7 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -22,7 +21,7 @@ public class NOcrSettingsWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        NOcrChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.TextToolToggles | EditorWindowStyles.CompactSplitButtons);
         DataContext = vm;
 
         var labelTitle = new TextBlock
@@ -32,10 +31,10 @@ public class NOcrSettingsWindow : Window
             MaxWidth = 460,
         }.WithBindText(vm, nameof(vm.ActionText));
 
-        var buttonEdit = NOcrChrome.MakeAction(IconNames.Pencil, Se.Language.General.Edit, vm.EditCommand);
-        var buttonDelete = NOcrChrome.MakeAction(IconNames.Trash, Se.Language.General.Delete, vm.DeleteCommand);
-        var buttonRename = NOcrChrome.MakeAction(IconNames.FormTextBox, Se.Language.General.Rename, vm.RenameCommand);
-        var buttonNew = NOcrChrome.MakeAction(IconNames.Plus, Se.Language.General.New, vm.NewCommand);
+        var buttonEdit = EditorChrome.MakeTextToolButton(IconNames.Pencil, Se.Language.General.Edit, vm.EditCommand);
+        var buttonDelete = EditorChrome.MakeTextToolButton(IconNames.Trash, Se.Language.General.Delete, vm.DeleteCommand);
+        var buttonRename = EditorChrome.MakeTextToolButton(IconNames.FormTextBox, Se.Language.General.Rename, vm.RenameCommand);
+        var buttonNew = EditorChrome.MakeTextToolButton(IconNames.Plus, Se.Language.General.New, vm.NewCommand);
         var actions = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -53,7 +52,7 @@ public class NOcrSettingsWindow : Window
         section.MinWidth = 380;
 
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var root = NOcrChrome.MakeRoot(section, SyncTimingChrome.MakeButtonBar(null, buttonCancel));
+        var root = EditorChrome.MakeRoot(section, EditorChrome.MakeDockedButtonBar(null, buttonCancel));
         Content = root;
 
         // Semi-hidden power-user features: right-click anywhere in the dialog to train a new

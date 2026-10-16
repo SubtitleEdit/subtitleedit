@@ -15,9 +15,9 @@ public static class ViewAddFormatting
         AutomationProperties.SetName(colorPickerAdd, Se.Language.Tools.BatchConvert.AddColor);
 
         return FunctionViewChrome.MakePanel(vm, Se.Language.Tools.BatchConvert.AddFormatting,
-            FunctionViewChrome.MakeSwitchRow(nameof(vm.FormattingAddItalic), Se.Language.Tools.BatchConvert.AddItalic),
-            FunctionViewChrome.MakeSwitchRow(nameof(vm.FormattingAddBold), Se.Language.Tools.BatchConvert.AddBold),
-            FunctionViewChrome.MakeSwitchRow(nameof(vm.FormattingAddUnderline), Se.Language.Tools.BatchConvert.AddUnderline),
+            EditorChrome.MakeSwitchRow(nameof(vm.FormattingAddItalic), Se.Language.Tools.BatchConvert.AddItalic),
+            EditorChrome.MakeSwitchRow(nameof(vm.FormattingAddBold), Se.Language.Tools.BatchConvert.AddBold),
+            EditorChrome.MakeSwitchRow(nameof(vm.FormattingAddUnderline), Se.Language.Tools.BatchConvert.AddUnderline),
             FunctionViewChrome.MakeSwitchRow(nameof(vm.FormattingAddAlignmentTag), Se.Language.Tools.BatchConvert.AddAlignment, comboBoxAlignment),
             FunctionViewChrome.MakeSwitchRow(nameof(vm.FormattingAddColor), Se.Language.Tools.BatchConvert.AddColor, colorPickerAdd));
     }

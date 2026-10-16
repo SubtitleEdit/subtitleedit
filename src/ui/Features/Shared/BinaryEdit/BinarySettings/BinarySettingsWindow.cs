@@ -39,7 +39,7 @@ public class BinarySettingsWindow : Window
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        Content = BinaryEditChrome.MakeRoot(section, BinaryEditChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(section, EditorChrome.MakeCancelOkBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, numericUpDownMarginLeft); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -59,6 +59,6 @@ public class BinarySettingsWindow : Window
             Mode = BindingMode.TwoWay,
             Source = vm,
         });
-        return BinaryEditChrome.MakeField(numericUpDown, name, 100);
+        return EditorChrome.AsField(numericUpDown, name, 100, alignLeft: true, center: true);
     }
 }

@@ -6,7 +6,6 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Sync.PointSyncViaOther;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -27,7 +26,7 @@ public class PointSyncWindow : Window
         MinHeight = 480;
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         DataContext = vm;
 
         var subtitleView = PointSyncChrome.MakeListPane(
@@ -40,7 +39,7 @@ public class PointSyncWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindIsEnabled(nameof(vm.IsOkEnabled));
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = VideoSubDialogChrome.MakeButtonBar(MakeFileInfo(vm), buttonCancel, buttonOk);
+        var panelButtons = EditorChrome.MakeButtonBar(MakeFileInfo(vm), buttonCancel, buttonOk);
 
         var content = new Grid
         {
@@ -167,6 +166,6 @@ public class PointSyncWindow : Window
             }
         };
 
-        return VideoSubDialogChrome.MakeListFrame(dataGrid);
+        return EditorChrome.MakeListFrame(dataGrid);
     }
 }

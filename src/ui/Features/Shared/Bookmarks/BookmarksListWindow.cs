@@ -6,9 +6,7 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using System.Collections;
-using Nikse.SubtitleEdit.Features.Edit;
 using Nikse.SubtitleEdit.Features.Main;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -30,12 +28,12 @@ public class BookmarksListWindow : Window
         Height = 700;
         MinWidth = 600;
         MinHeight = 400;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
         var buttonGoTo = UiUtil.MakeButton(Se.Language.General.GoTo, vm.GoToCommand).WithBindIsEnabled(nameof(vm.HasBookmarks));
-        var buttonClear = SyncTimingChrome.MakeTextToolButton("fa-solid fa-trash-can", Se.Language.General.Clear, vm.ClearCommand).WithBindIsEnabled(nameof(vm.HasBookmarks));
+        var buttonClear = EditorChrome.MakeTextToolButton("fa-solid fa-trash-can", Se.Language.General.Clear, vm.ClearCommand).WithBindIsEnabled(nameof(vm.HasBookmarks));
         var buttonCancel = UiUtil.MakeButtonDone(vm.CancelCommand);
         buttonCancel.Classes.Add("primary");
 
@@ -66,7 +64,7 @@ public class BookmarksListWindow : Window
             Padding = new Thickness(14),
         };
 
-        Content = SyncTimingChrome.MakeRoot(list, SyncTimingChrome.MakeButtonBar(left, buttonGoTo, buttonCancel));
+        Content = EditorChrome.MakeRoot(list, EditorChrome.MakeDockedButtonBar(left, buttonGoTo, buttonCancel));
 
         UiUtil.FocusOnFirstActivation(this, buttonCancel); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -167,6 +165,6 @@ public class BookmarksListWindow : Window
 
         AutomationProperties.SetName(dataGrid, Se.Language.General.BookmarksList);
 
-        return EditDialogChrome.MakeListFrame(dataGrid);
+        return EditorChrome.MakeListFrame(dataGrid, clearListBackground: true);
     }
 }

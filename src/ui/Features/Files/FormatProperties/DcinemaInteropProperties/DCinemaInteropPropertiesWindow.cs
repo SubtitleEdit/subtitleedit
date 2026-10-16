@@ -22,17 +22,17 @@ public class DCinemaInteropPropertiesWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 560;
-        FormatPropertiesChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Form);
         vm.Window = this;
         DataContext = vm;
 
         var lang = Se.Language.File.PropertiesDCinema;
 
         // General section
-        var switchGenerateIdAuto = FormatPropertiesChrome.SwitchRow(nameof(vm.GenerateIdAuto), lang.GenerateIdAuto, out var toggleGenerateIdAuto);
-        var textBoxSubtitleId = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(340, vm, nameof(vm.SubtitleId)), lang.SubtitleId);
+        var switchGenerateIdAuto = EditorChrome.MakeSwitchRow(nameof(vm.GenerateIdAuto), lang.GenerateIdAuto, out var toggleGenerateIdAuto);
+        var textBoxSubtitleId = EditorChrome.AsTextField(UiUtil.MakeTextBox(340, vm, nameof(vm.SubtitleId)), lang.SubtitleId);
         var buttonGenerateId = FormatPropertiesChrome.MakeAction("fa-solid fa-rotate", lang.GenerateId, vm.GenerateSubtitleIdCommand);
-        var textBoxMovieTitle = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(340, vm, nameof(vm.MovieTitle)), lang.MovieTitle);
+        var textBoxMovieTitle = EditorChrome.AsTextField(UiUtil.MakeTextBox(340, vm, nameof(vm.MovieTitle)), lang.MovieTitle);
         var numericUpDownReelNumber = FormatPropertiesChrome.Number(UiUtil.MakeNumericUpDownInt(1, 250, 1, 90, vm, nameof(vm.ReelNumber)), lang.ReelNumber);
         var comboBoxLanguage = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage)), Se.Language.General.Language, 150);
 
@@ -43,8 +43,8 @@ public class DCinemaInteropPropertiesWindow : Window
             FormatPropertiesChrome.Row(lang.ReelNumber, numericUpDownReelNumber, FormatPropertiesChrome.InlineLabel(Se.Language.General.Language), comboBoxLanguage));
 
         // Font section
-        var textBoxFontId = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(200, vm, nameof(vm.FontId)), lang.FontId);
-        var textBoxFontUri = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(340, vm, nameof(vm.FontUri)), lang.FontUri);
+        var textBoxFontId = EditorChrome.AsTextField(UiUtil.MakeTextBox(200, vm, nameof(vm.FontId)), lang.FontId);
+        var textBoxFontUri = EditorChrome.AsTextField(UiUtil.MakeTextBox(340, vm, nameof(vm.FontUri)), lang.FontUri);
         var buttonFontColor = FormatPropertiesChrome.ColorButton(lang.ChooseColor, Se.Language.General.FontColor, vm.ChooseFontColorCommand, nameof(vm.FontColor));
         var comboBoxFontEffect = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox<string>(vm.FontEffects, vm, nameof(vm.SelectedFontEffect)), lang.FontEffect, 140);
         var buttonFontEffectColor = FormatPropertiesChrome.ColorButton(lang.ChooseColor, lang.EffectColor, vm.ChooseFontEffectColorCommand, nameof(vm.FontEffectColor));
@@ -67,10 +67,7 @@ public class DCinemaInteropPropertiesWindow : Window
 
         var buttonImport = FormatPropertiesChrome.MakeAction("fa-solid fa-file-import", Se.Language.General.ImportDotDotDot, vm.ImportCommand);
         var buttonExport = FormatPropertiesChrome.MakeAction("fa-solid fa-file-export", Se.Language.General.ExportDotDotDot, vm.ExportCommand);
-        var buttonBar = FormatPropertiesChrome.MakeButtonBar(
-            FormatPropertiesChrome.MakeActions(buttonImport, buttonExport),
-            UiUtil.MakeButtonOk(vm.OkCommand),
-            UiUtil.MakeButtonCancel(vm.CancelCommand));
+        var buttonBar = EditorChrome.MakeDockedCancelOkBar(FormatPropertiesChrome.MakeActions(buttonImport, buttonExport), UiUtil.MakeButtonCancel(vm.CancelCommand), UiUtil.MakeButtonOk(vm.OkCommand));
 
         Content = FormatPropertiesChrome.MakeRoot(
             buttonBar,

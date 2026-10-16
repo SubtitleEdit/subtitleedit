@@ -30,9 +30,9 @@ public class VideoOcrEngineSettingsWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        VideoDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.VideoTool);
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).Primary();
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).AsPrimary();
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
         var sections = new StackPanel { Background = EditorChrome.PanelBrush };
@@ -44,7 +44,7 @@ public class VideoOcrEngineSettingsWindow : Window
             RowDefinitions = { new RowDefinition(GridLength.Auto), new RowDefinition(GridLength.Auto) },
         };
         root.Add(sections, 0, 0);
-        root.Add(VideoDialogChrome.ButtonBar(BuildActions(vm), buttonCancel, buttonOk), 1, 0);
+        root.Add(EditorChrome.MakeButtonBar(BuildActions(vm), buttonCancel, buttonOk), 1, 0);
         Content = root;
 
         UiUtil.FocusOnFirstActivation(this, buttonOk);

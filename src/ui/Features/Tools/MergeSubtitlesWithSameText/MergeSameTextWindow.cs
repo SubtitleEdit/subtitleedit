@@ -30,21 +30,14 @@ public class MergeSameTextWindow : Window
         Height = 800;
         MinWidth = 600;
         MinHeight = 400;
-        LineToolsChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindEnabled(nameof(vm.IsOkEnabled));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = LineToolsChrome.MakeRoot(
-            LineToolsChrome.MakeSections(
-                EditorChrome.MakeEditorSection(Se.Language.General.Options, MakeControlsView(vm), first: true),
-                LineToolsChrome.MakeListSection(Se.Language.General.MergeLines, MakeMergesView(vm)),
-                LineToolsChrome.MakeListSection(Se.Language.General.Preview, MakeSubtitlesView(vm))),
-            null,
-            buttonCancel,
-            buttonOk);
+        Content = EditorChrome.MakeCancelOkRoot(EditorChrome.MakeOptionsAndLists(EditorChrome.MakeEditorSection(Se.Language.General.Options, MakeControlsView(vm), first: true), EditorChrome.MakeListSection(Se.Language.General.MergeLines, MakeMergesView(vm)), EditorChrome.MakeListSection(Se.Language.General.Preview, MakeSubtitlesView(vm))), null, buttonCancel, buttonOk);
 
         UiUtil.FocusOnFirstActivation(this, buttonCancel); // hack to make OnKeyDown work
         KeyDown += vm.OnKeyDown;
@@ -55,11 +48,11 @@ public class MergeSameTextWindow : Window
 
     private static Grid MakeControlsView(MergeSameTextViewModel vm)
     {
-        var numericUpDownGap = LineToolsChrome.MakeCompact(UiUtil.MakeNumericUpDownInt(0, 10000, vm.MaxMsOrFramesBetweenLines, 130, vm, nameof(vm.MaxMsOrFramesBetweenLines)), vm.MaxBetweenLinesLabel);
+        var numericUpDownGap = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(0, 10000, vm.MaxMsOrFramesBetweenLines, 130, vm, nameof(vm.MaxMsOrFramesBetweenLines)), vm.MaxBetweenLinesLabel.TrimEnd(':'), 100, alignLeft: true, center: true);
         numericUpDownGap.ValueChanged += (s, e) => { vm.SetDirty(); };
-        var rowIncludeIncrementText = LineToolsChrome.MakeSwitchRow(nameof(vm.IncludeIncrementingLines), Se.Language.Tools.MergeLinesWithSameText.IncludeIncrementingLines, out var checkBoxIncludeIncrementText);
+        var rowIncludeIncrementText = EditorChrome.MakeToggleRow(nameof(vm.IncludeIncrementingLines), Se.Language.Tools.MergeLinesWithSameText.IncludeIncrementingLines, out var checkBoxIncludeIncrementText);
         checkBoxIncludeIncrementText.IsCheckedChanged += (s, e) => { vm.SetDirty(); };
-        var rowIncludeRollUp = LineToolsChrome.MakeSwitchRow(nameof(vm.IncludeRollUpCaptions), Se.Language.Tools.MergeLinesWithSameText.IncludeRollUpCaptions, out var checkBoxIncludeRollUp);
+        var rowIncludeRollUp = EditorChrome.MakeToggleRow(nameof(vm.IncludeRollUpCaptions), Se.Language.Tools.MergeLinesWithSameText.IncludeRollUpCaptions, out var checkBoxIncludeRollUp);
         checkBoxIncludeRollUp.IsCheckedChanged += (s, e) => { vm.SetDirty(); };
 
         var grid = new Grid
@@ -67,7 +60,7 @@ public class MergeSameTextWindow : Window
             ColumnSpacing = 40,
             ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(GridLength.Auto) },
         };
-        grid.Add(LineToolsChrome.MakeFieldGrid((vm.MaxBetweenLinesLabel, numericUpDownGap)), 0, 0);
+        grid.Add(EditorChrome.MakeFieldGrid((vm.MaxBetweenLinesLabel, numericUpDownGap)), 0, 0);
         grid.Add(new StackPanel { Spacing = 8, Children = { rowIncludeIncrementText, rowIncludeRollUp } }, 0, 1);
         return grid;
     }

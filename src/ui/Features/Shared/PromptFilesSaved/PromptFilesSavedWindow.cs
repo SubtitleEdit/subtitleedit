@@ -31,7 +31,7 @@ public class PromptFilesSavedWindow : Window
         Bind(TitleProperty, new Binding(nameof(vm.Title)));
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        SharedDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         _vm = vm;
         vm.Window = this;
         DataContext = vm;
@@ -103,10 +103,10 @@ public class PromptFilesSavedWindow : Window
             Padding = new Thickness(0, 0, 4, 0),
         };
 
-        var buttonOpenFolder = SharedDialogChrome.MakeTextToolButton("fa-solid fa-folder-open", Se.Language.General.OpenContainingFolder, vm.OpenOutputFolderCommand)
+        var buttonOpenFolder = EditorChrome.MakeTextToolButton("fa-solid fa-folder-open", Se.Language.General.OpenContainingFolder, vm.OpenOutputFolderCommand)
             .WithBindIsVisible(nameof(vm.HasOutputFolder));
         buttonOpenFolder.Margin = new Thickness(-8, 0, 0, 0); // the flat button's text lines up with the content
-        var buttonDone = SharedDialogChrome.Primary(UiUtil.MakeButtonDone(vm.OkCommand));
+        var buttonDone = EditorChrome.AsPrimary(UiUtil.MakeButtonDone(vm.OkCommand));
 
         var grid = new Grid
         {
@@ -126,7 +126,7 @@ public class PromptFilesSavedWindow : Window
         grid.Add(panelHeader, 0);
         grid.Add(scrollViewer, 1);
 
-        Content = SharedDialogChrome.MakeRoot(grid, SharedDialogChrome.MakeButtonBar(buttonOpenFolder, buttonDone));
+        Content = EditorChrome.MakeRoot(grid, EditorChrome.MakeButtonBar(buttonOpenFolder, buttonDone));
 
         UiUtil.FocusOnFirstActivation(this, buttonDone); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);

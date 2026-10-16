@@ -6,7 +6,6 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Optris.Icons.Avalonia;
@@ -26,7 +25,7 @@ public class VideoControlsItemsWindow : Window
         Title = Se.Language.Options.Settings.VideoControls;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        OptionsListChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.CompactListRows);
         vm.Window = this;
         DataContext = vm;
 
@@ -130,8 +129,8 @@ public class VideoControlsItemsWindow : Window
             HorizontalAlignment = HorizontalAlignment.Left,
             Children =
             {
-                SyncTimingChrome.MakeTextToolButton(IconNames.ArrowUpThin, Se.Language.General.MoveUp, vm.MoveUpCommand),
-                SyncTimingChrome.MakeTextToolButton(IconNames.ArrowDownThin, Se.Language.General.MoveDown, vm.MoveDownCommand),
+                EditorChrome.MakeTextToolButton(IconNames.ArrowUpThin, Se.Language.General.MoveUp, vm.MoveUpCommand),
+                EditorChrome.MakeTextToolButton(IconNames.ArrowDownThin, Se.Language.General.MoveDown, vm.MoveDownCommand),
             },
         };
 
@@ -145,7 +144,7 @@ public class VideoControlsItemsWindow : Window
             {
                 moveButtons,
                 checkBoxVisible,
-                SyncTimingChrome.MakeTextToolButton(IconNames.Restore, Se.Language.General.Reset, vm.ResetCommand),
+                EditorChrome.MakeTextToolButton(IconNames.Restore, Se.Language.General.Reset, vm.ResetCommand),
             },
         };
 
@@ -157,7 +156,7 @@ public class VideoControlsItemsWindow : Window
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
             },
         };
-        contentGrid.Add(OptionsListChrome.MakeListFrame(listBox), 0, 0);
+        contentGrid.Add(EditorChrome.MakeCompactListFrame(listBox), 0, 0);
         contentGrid.Add(sidePanel, 0, 1);
 
         var sections = new StackPanel
@@ -174,7 +173,7 @@ public class VideoControlsItemsWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = SyncTimingChrome.MakeRoot(sections, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, listBox); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);

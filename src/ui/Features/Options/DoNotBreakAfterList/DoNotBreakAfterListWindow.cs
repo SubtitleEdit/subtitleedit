@@ -5,7 +5,6 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -28,7 +27,7 @@ public class DoNotBreakAfterListWindow : Window
         Height = 600;
         MinWidth = 440;
         MinHeight = 400;
-        OptionsListChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.CompactListRows);
 
         _vm = vm;
         vm.Window = this;
@@ -39,7 +38,7 @@ public class DoNotBreakAfterListWindow : Window
         comboLanguages.MinWidth = 220;
         comboLanguages.VerticalAlignment = VerticalAlignment.Center;
         AutomationProperties.SetName(comboLanguages, Se.Language.General.Language);
-        var buttonNewLanguage = SyncTimingChrome.MakeTextToolButton(IconNames.Plus, Se.Language.General.New, vm.NewLanguageCommand);
+        var buttonNewLanguage = EditorChrome.MakeTextToolButton(IconNames.Plus, Se.Language.General.New, vm.NewLanguageCommand);
         var panelLanguage = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -56,10 +55,7 @@ public class DoNotBreakAfterListWindow : Window
         };
         AutomationProperties.SetName(listBoxItems, Se.Language.Options.Settings.UseDoNotBreakAfterList);
 
-        var countBadge = OptionsListChrome.MakeCountBadge(
-            new Binding(nameof(vm.Items) + ".Count") { Mode = BindingMode.OneWay },
-            EditorChrome.StrongTextBrush,
-            EditorChrome.AccentSoftBrush);
+        var countBadge = EditorChrome.MakeCountBadge(new Binding(nameof(vm.Items) + ".Count") { Mode = BindingMode.OneWay }, EditorChrome.StrongTextBrush, EditorChrome.AccentSoftBrush);
 
         var listSection = new Grid
         {
@@ -73,10 +69,10 @@ public class DoNotBreakAfterListWindow : Window
             Margin = new Thickness(14, 12, 14, 14),
         };
         listSection.Add(panelLanguage, 0);
-        listSection.Add(OptionsListChrome.MakeHeader(EditorChrome.MakeSectionHeader(Se.Language.Options.Settings.UseDoNotBreakAfterList), countBadge), 1);
-        listSection.Add(OptionsListChrome.MakeListFrame(listBoxItems), 2);
+        listSection.Add(EditorChrome.MakeHeaderRow(EditorChrome.MakeSectionHeader(Se.Language.Options.Settings.UseDoNotBreakAfterList), countBadge), 1);
+        listSection.Add(EditorChrome.MakeCompactListFrame(listBoxItems), 2);
 
-        var textBoxItem = UiUtil.MakeTextBox(150, vm, nameof(vm.NewItemText)).AsField(Se.Language.General.Text);
+        var textBoxItem = UiUtil.MakeTextBox(150, vm, nameof(vm.NewItemText)).AsTextField(Se.Language.General.Text);
         textBoxItem.Width = double.NaN;
         textBoxItem.HorizontalAlignment = HorizontalAlignment.Stretch;
         textBoxItem.KeyDown += (_, e) => vm.ItemTextBoxKeyDown(e);
@@ -137,7 +133,7 @@ public class DoNotBreakAfterListWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
 
-        Content = SyncTimingChrome.MakeRoot(sections, SyncTimingChrome.MakeButtonBar(null, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, comboLanguages); // initial focus on an input, not an action button - a focused button clicks on bare Space
         Loaded += (_, _) => vm.SelectedLanguageChanged();

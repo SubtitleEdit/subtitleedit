@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
@@ -6,7 +6,6 @@ using Avalonia.Data;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Features.Translate;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
@@ -28,7 +27,7 @@ public class BatchConvertSettingsWindow : Window
         Title = Se.Language.Tools.BatchConvert.BatchConvertSettings;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         vm.Window = this;
         DataContext = vm;
 
@@ -52,7 +51,7 @@ public class BatchConvertSettingsWindow : Window
             [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.UseOutputFolder)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
         };
 
-        var textBoxOutputFolder = VideoSubDialogChrome.MakeTextBox(nameof(vm.OutputFolder), Se.Language.General.OutputFolder);
+        var textBoxOutputFolder = EditorChrome.MakeTextField(nameof(vm.OutputFolder), Se.Language.General.OutputFolder);
         textBoxOutputFolder.Text = vm.OutputFolder;
         textBoxOutputFolder.Bind(IsEnabledProperty, new Binding(nameof(vm.UseOutputFolder)) { Mode = BindingMode.OneWay });
 
@@ -76,11 +75,11 @@ public class BatchConvertSettingsWindow : Window
             Spacing = 8,
             Children =
             {
-                BatchConvertChrome.MakeRow(Se.Language.General.TargetEncoding, comboBoxTargetEncoding, LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.TargetEncoding, comboBoxTargetEncoding, LabelWidth, wrap: true),
                 folder,
-                BatchConvertChrome.MakeSwitchRow(nameof(vm.Overwrite), Se.Language.General.OverwriteExistingFiles),
-                BatchConvertChrome.MakeSwitchRow(nameof(vm.KeepSourceTimestamp), Se.Language.Tools.BatchConvert.KeepSourceFileTimestamp),
-                BatchConvertChrome.MakeRow(Se.Language.General.LanguagePostFix, comboBoxLanguagePostFix, LabelWidth),
+                EditorChrome.MakeSwitchRow(nameof(vm.Overwrite), Se.Language.General.OverwriteExistingFiles),
+                EditorChrome.MakeSwitchRow(nameof(vm.KeepSourceTimestamp), Se.Language.Tools.BatchConvert.KeepSourceFileTimestamp),
+                EditorChrome.MakeLabeledRow(Se.Language.General.LanguagePostFix, comboBoxLanguagePostFix, LabelWidth, wrap: true),
             }
         };
 
@@ -90,8 +89,8 @@ public class BatchConvertSettingsWindow : Window
             Spacing = 8,
             Children =
             {
-                BatchConvertChrome.MakeSwitchRow(nameof(vm.ScanFolderRecursive), Se.Language.Tools.BatchConvert.IncludeSubfolders),
-                BatchConvertChrome.MakeRow(Se.Language.Tools.BatchConvert.VideoFilesWhenAddingFolder, comboBoxScanFolderVideoFiles, LabelWidth),
+                EditorChrome.MakeSwitchRow(nameof(vm.ScanFolderRecursive), Se.Language.Tools.BatchConvert.IncludeSubfolders),
+                EditorChrome.MakeLabeledRow(Se.Language.Tools.BatchConvert.VideoFilesWhenAddingFolder, comboBoxScanFolderVideoFiles, LabelWidth, wrap: true),
             }
         };
 
@@ -127,7 +126,7 @@ public class BatchConvertSettingsWindow : Window
         vm.RefreshCrispEmbedModelCombo = () => comboBoxCrispEmbedModels.ItemTemplate = MakeCrispEmbedModelItemTemplate();
         comboBoxOcrEngine.SelectionChanged += (s, e) => vm.OnOcrEngineChanged();
 
-        var vobSubIsolateColors = BatchConvertChrome.MakeSwitchRow(nameof(vm.VobSubIsolateColors), Se.Language.Ocr.VobSubIsolateColors, out var toggleVobSubIsolateColors);
+        var vobSubIsolateColors = EditorChrome.MakeSwitchRow(nameof(vm.VobSubIsolateColors), Se.Language.Ocr.VobSubIsolateColors, out var toggleVobSubIsolateColors);
         if (Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(toggleVobSubIsolateColors, Se.Language.Ocr.VobSubIsolateColorsHint);
@@ -139,39 +138,35 @@ public class BatchConvertSettingsWindow : Window
             Spacing = 8,
             Children =
             {
-                BatchConvertChrome.MakeRow(Se.Language.Ocr.OcrEngine, comboBoxOcrEngine, LabelWidth),
-                BatchConvertChrome.MakeRow(Se.Language.General.Language, new Panel { Children = { comboBoxTesseractLanguages, comboBoxPaddleLanguages } }, LabelWidth, nameof(vm.IsOcrLanguageVisible)),
-                BatchConvertChrome.MakeRow(Se.Language.Ocr.TesseractEngineMode, comboBoxTesseractEngineMode, LabelWidth, nameof(vm.IsTesseractOcrVisible)),
-                BatchConvertChrome.MakeRow(Se.Language.Ocr.Database, comboBoxBinaryOcrDatabases, LabelWidth, nameof(vm.IsBinaryOcrVisible)),
-                BatchConvertChrome.MakeRow(Se.Language.Ocr.BinaryOcrNOcrFallbackDatabase, comboBoxBinaryOcrFallback, LabelWidth, nameof(vm.IsBinaryOcrVisible)),
-                BatchConvertChrome.MakeRow(Se.Language.Ocr.Database, comboBoxNOcrDatabases, LabelWidth, nameof(vm.IsNOcrVisible)),
-                BatchConvertChrome.MakeRow(Se.Language.Ocr.NOcrBinaryOcrFallbackDatabase, comboBoxNOcrFallback, LabelWidth, nameof(vm.IsNOcrVisible)),
-                BatchConvertChrome.MakeRow(Se.Language.General.Model, ollama, LabelWidth, nameof(vm.IsOllamaVisible)),
-                BatchConvertChrome.MakeRow(Se.Language.General.Model, comboBoxLlamaCppModels, LabelWidth, nameof(vm.IsLlamaCppVisible)),
-                BatchConvertChrome.MakeRow(Se.Language.General.Backend, comboBoxCrispEmbedBackends, LabelWidth, nameof(vm.IsCrispEmbedVisible)),
-                BatchConvertChrome.MakeRow(Se.Language.General.Model, comboBoxCrispEmbedModels, LabelWidth, nameof(vm.IsCrispEmbedVisible)),
-                BatchConvertChrome.MakeRow(Se.Language.General.Language, comboBoxAppleVisionLanguages, LabelWidth, nameof(vm.IsAppleVisionVisible)),
+                EditorChrome.MakeLabeledRow(Se.Language.Ocr.OcrEngine, comboBoxOcrEngine, LabelWidth, wrap: true),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Language, new Panel { Children = { comboBoxTesseractLanguages, comboBoxPaddleLanguages } }, LabelWidth, wrap: true, visibleProperty: nameof(vm.IsOcrLanguageVisible)),
+                EditorChrome.MakeLabeledRow(Se.Language.Ocr.TesseractEngineMode, comboBoxTesseractEngineMode, LabelWidth, wrap: true, visibleProperty: nameof(vm.IsTesseractOcrVisible)),
+                EditorChrome.MakeLabeledRow(Se.Language.Ocr.Database, comboBoxBinaryOcrDatabases, LabelWidth, wrap: true, visibleProperty: nameof(vm.IsBinaryOcrVisible)),
+                EditorChrome.MakeLabeledRow(Se.Language.Ocr.BinaryOcrNOcrFallbackDatabase, comboBoxBinaryOcrFallback, LabelWidth, wrap: true, visibleProperty: nameof(vm.IsBinaryOcrVisible)),
+                EditorChrome.MakeLabeledRow(Se.Language.Ocr.Database, comboBoxNOcrDatabases, LabelWidth, wrap: true, visibleProperty: nameof(vm.IsNOcrVisible)),
+                EditorChrome.MakeLabeledRow(Se.Language.Ocr.NOcrBinaryOcrFallbackDatabase, comboBoxNOcrFallback, LabelWidth, wrap: true, visibleProperty: nameof(vm.IsNOcrVisible)),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Model, ollama, LabelWidth, wrap: true, visibleProperty: nameof(vm.IsOllamaVisible)),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Model, comboBoxLlamaCppModels, LabelWidth, wrap: true, visibleProperty: nameof(vm.IsLlamaCppVisible)),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Backend, comboBoxCrispEmbedBackends, LabelWidth, wrap: true, visibleProperty: nameof(vm.IsCrispEmbedVisible)),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Model, comboBoxCrispEmbedModels, LabelWidth, wrap: true, visibleProperty: nameof(vm.IsCrispEmbedVisible)),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Language, comboBoxAppleVisionLanguages, LabelWidth, wrap: true, visibleProperty: nameof(vm.IsAppleVisionVisible)),
                 vobSubIsolateColors,
             }
         };
 
-        var other = BatchConvertChrome.MakeSwitchRow(nameof(vm.PreventSleep), Se.Language.Tools.BatchConvert.PreventSleepWhileConverting);
+        var other = EditorChrome.MakeSwitchRow(nameof(vm.PreventSleep), Se.Language.Tools.BatchConvert.PreventSleepWhileConverting);
 
         var left = new Border
         {
             Width = ColumnWidth,
             BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 0, 1, 0),
-            Child = BatchConvertChrome.MakeSections(
-                EditorChrome.MakeEditorSection(Se.Language.Tools.BatchConvert.SettingsSectionOutput, output, first: true),
-                EditorChrome.MakeEditorSection(Se.Language.Tools.BatchConvert.SettingsSectionOther, other)),
+            Child = EditorChrome.MakeSectionStack(EditorChrome.MakeEditorSection(Se.Language.Tools.BatchConvert.SettingsSectionOutput, output, first: true), EditorChrome.MakeEditorSection(Se.Language.Tools.BatchConvert.SettingsSectionOther, other)),
         };
         var right = new Border
         {
             Width = ColumnWidth,
-            Child = BatchConvertChrome.MakeSections(
-                EditorChrome.MakeEditorSection(Se.Language.Tools.BatchConvert.SettingsSectionAddingFiles, addingFiles, first: true),
-                EditorChrome.MakeEditorSection(Se.Language.Tools.BatchConvert.SettingsSectionImageBasedSubtitles, ocr)),
+            Child = EditorChrome.MakeSectionStack(EditorChrome.MakeEditorSection(Se.Language.Tools.BatchConvert.SettingsSectionAddingFiles, addingFiles, first: true), EditorChrome.MakeEditorSection(Se.Language.Tools.BatchConvert.SettingsSectionImageBasedSubtitles, ocr)),
         };
 
         var columns = new Grid
@@ -190,8 +185,8 @@ public class BatchConvertSettingsWindow : Window
         {
             Children =
             {
-                VideoSubDialogChrome.MakePanel(columns),
-                VideoSubDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk),
+                EditorChrome.MakePanel(columns),
+                EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk),
             }
         };
 

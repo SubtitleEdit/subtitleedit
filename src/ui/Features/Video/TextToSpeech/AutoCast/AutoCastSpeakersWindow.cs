@@ -40,7 +40,7 @@ public class AutoCastSpeakersWindow : Window
         MinWidth = 600;
         MinHeight = 360;
         CanResize = true;
-        TtsMainEditorLook.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TextFieldsBare | EditorWindowStyles.MuteDisabledPrimary);
 
         vm.Window = this;
         DataContext = vm;
@@ -185,7 +185,7 @@ public class AutoCastSpeakersWindow : Window
         TableViewExtras.BindSelectedItem(tableView, vm, nameof(vm.SelectedRow));
         AutomationProperties.SetName(tableView, Se.Language.Video.TextToSpeech.AutoCastSpeakersTitle);
 
-        return TtsMainEditorLook.MakeListFrame(tableView);
+        return EditorChrome.MakeListFrame(tableView);
     }
 
     private static Border BuildButtons(AutoCastSpeakersViewModel vm)
@@ -209,8 +209,6 @@ public class AutoCastSpeakersWindow : Window
             Children = { EditorChrome.MakeDimLabel(Se.Language.General.Engine, new Thickness(0)), engineCombo },
         };
 
-        return TtsMainEditorLook.MakeButtonBar(enginePanel,
-            UiUtil.MakeButtonCancel(vm.CancelCommand),
-            TtsMainEditorLook.MakePrimary(UiUtil.MakeButtonOk(vm.OkCommand)));
+        return EditorChrome.MakeButtonBar(enginePanel, UiUtil.MakeButtonCancel(vm.CancelCommand), EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand)));
     }
 }

@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Data;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert.FunctionViews;
 
@@ -12,9 +13,9 @@ public static class ViewChangeCasing
 
         // Options of "Normal casing", in under it
         var switchNormalCasingFixNames = FunctionViewChrome.Indented(
-            FunctionViewChrome.MakeSwitchRow(nameof(vm.NormalCasingFixNames), Se.Language.Tools.ChangeCasing.FixNames));
+            EditorChrome.MakeSwitchRow(nameof(vm.NormalCasingFixNames), Se.Language.Tools.ChangeCasing.FixNames));
         var switchNormalCasingOnlyUpper = FunctionViewChrome.Indented(
-            FunctionViewChrome.MakeSwitchRow(nameof(vm.NormalCasingOnlyUpper), Se.Language.Tools.ChangeCasing.OnlyFixUppercaseLines));
+            EditorChrome.MakeSwitchRow(nameof(vm.NormalCasingOnlyUpper), Se.Language.Tools.ChangeCasing.OnlyFixUppercaseLines));
 
         var radioFixNamesOnly = MakeRadio(Se.Language.Tools.ChangeCasing.FixNamesOnly, nameof(vm.FixNamesOnly));
         var radioAllUppercase = MakeRadio(Se.Language.Tools.ChangeCasing.AllUppercase, nameof(vm.AllUppercase));

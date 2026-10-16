@@ -1,9 +1,7 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Tools;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.Generic;
@@ -29,7 +27,7 @@ public class EditCustomTextFormatWindow : Window
         Bind(Window.TitleProperty, new Binding(nameof(vm.Title)));
         vm.Window = this;
         DataContext = vm;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
@@ -45,7 +43,7 @@ public class EditCustomTextFormatWindow : Window
         sections.Add(MakeFormatsView(vm, out var textBoxName), 0, 0);
         sections.Add(MakePreviewView(vm), 0, 1);
 
-        Content = LineToolsChrome.MakeRoot(sections, null, buttonCancel, buttonOk);
+        Content = EditorChrome.MakeCancelOkRoot(sections, null, buttonCancel, buttonOk);
 
         UiUtil.FocusOnFirstActivation(this, textBoxName); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.OnKeyDown;
@@ -53,12 +51,12 @@ public class EditCustomTextFormatWindow : Window
 
     private static Grid MakeFormatsView(EditCustomTextFormatViewModel vm, out TextBox textBoxName)
     {
-        textBoxName = FileIoChrome.StyleTextField(UiUtil.MakeTextBox(double.NaN, vm, nameof(vm.SelectedCustomFormat) + "." + nameof(CustomFormatItem.Name)))
+        textBoxName = EditorChrome.AsCenteredTextField(UiUtil.MakeTextBox(double.NaN, vm, nameof(vm.SelectedCustomFormat) + "." + nameof(CustomFormatItem.Name)))
             .WithAccessibleName(Se.Language.General.Name);
         textBoxName.HorizontalAlignment = HorizontalAlignment.Stretch;
 
         // The extension keeps its dot handling in CustomFormatItem (#15699).
-        var textBoxFileExtension = FileIoChrome.StyleTextField(UiUtil.MakeTextBox(double.NaN, vm, nameof(vm.SelectedCustomFormat) + "." + nameof(CustomFormatItem.Extension)))
+        var textBoxFileExtension = EditorChrome.AsCenteredTextField(UiUtil.MakeTextBox(double.NaN, vm, nameof(vm.SelectedCustomFormat) + "." + nameof(CustomFormatItem.Extension)))
             .WithAccessibleName(Se.Language.General.FileExtension);
         textBoxFileExtension.HorizontalAlignment = HorizontalAlignment.Stretch;
 
@@ -134,15 +132,15 @@ public class EditCustomTextFormatWindow : Window
             },
         };
         grid.Add(EditorChrome.MakeEditorSection(Se.Language.General.Format, fields, first: true), 0, 0);
-        grid.Add(FileIoChrome.MakeFillSection(Se.Language.General.Header, textBoxHeader), 1, 0);
-        grid.Add(FileIoChrome.MakeFillSection(Se.Language.General.Text, textBoxParagraph), 2, 0);
-        grid.Add(FileIoChrome.MakeFillSection(Se.Language.General.Footer, textBoxFooter), 3, 0);
+        grid.Add(EditorChrome.MakeFillSection(Se.Language.General.Header, textBoxHeader), 1, 0);
+        grid.Add(EditorChrome.MakeFillSection(Se.Language.General.Text, textBoxParagraph), 2, 0);
+        grid.Add(EditorChrome.MakeFillSection(Se.Language.General.Footer, textBoxFooter), 3, 0);
         return grid;
     }
 
     private static TextBox MakeTemplateBox(EditCustomTextFormatViewModel vm, string property, string accessibleName)
     {
-        var textBox = FileIoChrome.StyleTextArea(UiUtil.MakeTextBox(double.NaN, vm, nameof(vm.SelectedCustomFormat) + "." + property));
+        var textBox = EditorChrome.AsTextArea(UiUtil.MakeTextBox(double.NaN, vm, nameof(vm.SelectedCustomFormat) + "." + property));
         textBox.AcceptsReturn = true;
         textBox.Margin = new Thickness(0);
         return textBox.WithAccessibleName(accessibleName);
@@ -171,7 +169,7 @@ public class EditCustomTextFormatWindow : Window
 
     private static Border MakePreviewView(EditCustomTextFormatViewModel vm)
     {
-        var textBox = FileIoChrome.StyleTextArea(new TextBox
+        var textBox = EditorChrome.AsTextArea(new TextBox
         {
             AcceptsReturn = true,
             // Read-only preview - see ManualChosenEncodingWindow (#14313).
@@ -182,6 +180,6 @@ public class EditCustomTextFormatWindow : Window
         }).WithAccessibleName(Se.Language.General.Preview);
         textBox.Bind(TextBox.TextProperty, new Binding(nameof(vm.PreviewText)));
 
-        return FileIoChrome.MakeFillSection(Se.Language.General.Preview, textBox, lineLeft: true);
+        return EditorChrome.MakeFillSection(Se.Language.General.Preview, textBox, lineLeft: true);
     }
 }

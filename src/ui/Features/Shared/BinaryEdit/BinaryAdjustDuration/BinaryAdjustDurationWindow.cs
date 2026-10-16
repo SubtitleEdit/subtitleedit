@@ -86,7 +86,7 @@ public class BinaryAdjustDurationWindow : Window
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        Content = BinaryEditChrome.MakeRoot(section, BinaryEditChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(section, EditorChrome.MakeCancelOkBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, combo); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -99,7 +99,7 @@ public class BinaryAdjustDurationWindow : Window
             Minimum = minimum,
             Maximum = maximum,
         };
-        return BinaryEditChrome.MakeField(numericUpDown, label, NumericUpDownWidth);
+        return EditorChrome.AsField(numericUpDown, label, NumericUpDownWidth, alignLeft: true, center: true);
     }
 
     private static Grid MakeAdjustSeconds(BinaryAdjustDurationViewModel vm)

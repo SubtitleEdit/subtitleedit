@@ -2,10 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
-using Nikse.SubtitleEdit.Features.Edit;
 using Nikse.SubtitleEdit.Features.Main;
-using Nikse.SubtitleEdit.Features.Sync;
-using Nikse.SubtitleEdit.Features.Tools;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -32,13 +29,13 @@ public class ImportCsvXlsxCustomColumnsWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
-        var buttonPickFile = SyncTimingChrome.MakeTextToolButton("fa-regular fa-folder-open", Se.Language.General.OpenFile, vm.PickFileCommand);
-        var labelFile = FileIoChrome.MakeDimText();
+        var buttonPickFile = EditorChrome.MakeTextToolButton("fa-regular fa-folder-open", Se.Language.General.OpenFile, vm.PickFileCommand);
+        var labelFile = EditorChrome.MakeDimText();
         labelFile.DataContext = vm;
         labelFile.Bind(TextBlock.TextProperty, new Binding(nameof(vm.FilePath)));
-        var labelSeparator = FileIoChrome.MakeDimText();
+        var labelSeparator = EditorChrome.MakeDimText();
         labelSeparator.DataContext = vm;
         labelSeparator.Bind(TextBlock.TextProperty, new Binding(nameof(vm.SeparatorDisplay)));
         labelSeparator.Margin = new Thickness(12, 0, 0, 0);
@@ -65,7 +62,7 @@ public class ImportCsvXlsxCustomColumnsWindow : Window
         _previewGrid.ItemsSource = vm.PreviewSubtitles;
         BuildPreviewColumns(_previewGrid);
 
-        var labelPreview = FileIoChrome.MakeDimText();
+        var labelPreview = EditorChrome.MakeDimText();
         labelPreview.DataContext = vm;
         labelPreview.Bind(TextBlock.TextProperty, new Binding($"{nameof(vm.PreviewSubtitles)}.{nameof(vm.PreviewSubtitles.Count)}")
         {
@@ -96,11 +93,11 @@ public class ImportCsvXlsxCustomColumnsWindow : Window
         };
 
         sections.Add(new Border { Padding = new Thickness(10, 8, 14, 8), Child = toolbar }, 0);
-        sections.Add(LineToolsChrome.MakeListSection(Se.Language.General.Columns, _sourceGrid), 1);
+        sections.Add(EditorChrome.MakeListSection(Se.Language.General.Columns, _sourceGrid), 1);
         sections.Add(splitter, 2);
-        sections.Add(LineToolsChrome.MakeListSection(Se.Language.General.Preview, _previewGrid, first: true), 3);
+        sections.Add(EditorChrome.MakeListSection(Se.Language.General.Preview, _previewGrid, first: true), 3);
 
-        Content = LineToolsChrome.MakeRoot(sections, labelPreview, buttonCancel, buttonOk);
+        Content = EditorChrome.MakeCancelOkRoot(sections, labelPreview, buttonCancel, buttonOk);
 
         vm.ColumnsRebuilt += (_, _) => RebuildSourceGridColumns(vm);
         UiUtil.FocusOnFirstActivation(this, () => { TableViewExtras.FocusRow(_sourceGrid); }); // initial focus on an input, not an action button - a focused button clicks on bare Space

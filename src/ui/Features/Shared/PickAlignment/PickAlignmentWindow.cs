@@ -10,7 +10,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 namespace Nikse.SubtitleEdit.Features.Shared.PickAlignment;
 
 /// <summary>
-/// Choose alignment, in the editor look (see <see cref="SharedDialogChrome"/>): a "screen" with the
+/// Choose alignment, in the editor look (see <see cref="EditorChrome"/>): a "screen" with the
 /// nine positions as anchors, each placed where the text would go - like the Edit menu's alignment
 /// picker. Picking one closes the window.
 /// </summary>
@@ -22,7 +22,7 @@ public class PickAlignmentWindow : Window
         Title = Se.Language.General.ChooseAlignment;
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
-        SharedDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
 

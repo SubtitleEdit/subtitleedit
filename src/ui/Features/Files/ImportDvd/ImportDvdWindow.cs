@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -9,8 +9,6 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -39,7 +37,7 @@ public class ImportDvdWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         var vobFiles = MakeVobFilesView(vm);
         vobFiles.Margin = new Thickness(14, 12, 14, 12);
@@ -259,7 +257,7 @@ public class ImportDvdWindow : Window
         var panel = new DockPanel();
         DockPanel.SetDock(header, Dock.Top);
         panel.Children.Add(header);
-        panel.Children.Add(EditDialogChrome.MakeListFrame(listHost));
+        panel.Children.Add(EditorChrome.MakeListFrame(listHost, clearListBackground: true));
         return panel;
     }
 
@@ -344,6 +342,6 @@ public class ImportDvdWindow : Window
         // The result (or what went wrong) once ripping is done; while ripping it sits beside the progress bar
         var status = MakeStatusText(vm);
         status.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsNotRipping)));
-        return SyncTimingChrome.MakeButtonBar(status, buttonCancel, buttonAbort, buttonStart);
+        return EditorChrome.MakeDockedButtonBar(status, buttonCancel, buttonAbort, buttonStart);
     }
 }

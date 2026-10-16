@@ -4,8 +4,6 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -23,18 +21,18 @@ public class CustomShortcutEditWindow : Window
         MinWidth = 500;
         MinHeight = 360;
         CanResize = true;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
         const double labelWidth = 90;
 
-        var textBoxName = VideoSubDialogChrome.MakeTextBox(nameof(vm.Name), Se.Language.General.Name, 300);
+        var textBoxName = EditorChrome.MakeTextField(nameof(vm.Name), Se.Language.General.Name, 300);
         var comboBoxActiveIn = UiUtil.MakeComboBox(vm.ActiveInChoices, vm, nameof(vm.SelectedActiveIn));
         comboBoxActiveIn.MinWidth = 200;
         comboBoxActiveIn.HorizontalAlignment = HorizontalAlignment.Left;
         AutomationProperties.SetName(comboBoxActiveIn, language.ActiveIn);
-        var labelTextBoxKeyHint = VideoSubDialogChrome.MakeHintText(language.CustomShortcutTextBoxKeyHint);
+        var labelTextBoxKeyHint = EditorChrome.MakeHint(language.CustomShortcutTextBoxKeyHint);
         labelTextBoxKeyHint[!IsVisibleProperty] = new Binding(nameof(vm.IsTextBoxKeyHintVisible));
 
         var panelName = new StackPanel
@@ -42,9 +40,9 @@ public class CustomShortcutEditWindow : Window
             Spacing = 8,
             Children =
             {
-                VideoSubDialogChrome.MakeRow(Se.Language.General.Name, textBoxName, labelWidth),
-                VideoSubDialogChrome.MakeRow(language.ActiveIn, comboBoxActiveIn, labelWidth),
-                VideoSubDialogChrome.MakeRow(string.Empty, labelTextBoxKeyHint, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Name, textBoxName, labelWidth, spacing: 6),
+                EditorChrome.MakeLabeledRow(language.ActiveIn, comboBoxActiveIn, labelWidth, spacing: 6),
+                EditorChrome.MakeLabeledRow(string.Empty, labelTextBoxKeyHint, labelWidth, spacing: 6),
             },
         };
         var nameSection = EditorChrome.MakeEditorSection(Se.Language.General.General, panelName, first: true);
@@ -59,7 +57,7 @@ public class CustomShortcutEditWindow : Window
         };
         listBoxSteps.DoubleTapped += (_, _) => vm.EditStepCommand.Execute(null);
         AutomationProperties.SetName(listBoxSteps, language.CustomShortcutSteps);
-        var listBorder = VideoSubDialogChrome.MakeListFrame(listBoxSteps);
+        var listBorder = EditorChrome.MakeListFrame(listBoxSteps);
 
         var buttonAdd = EditorChrome.CreateToolButton("fa-solid fa-plus", Se.Language.General.Add, vm.AddStepCommand, 26);
         var buttonEdit = EditorChrome.CreateToolButton("fa-solid fa-pen", Se.Language.General.Edit, vm.EditStepCommand, 26)
@@ -83,7 +81,7 @@ public class CustomShortcutEditWindow : Window
         stepsHeader.Children.Add(panelStepButtons);
         stepsHeader.Children.Add(EditorChrome.MakeSectionHeader(language.CustomShortcutSteps));
 
-        var hint = VideoSubDialogChrome.MakeHintText(language.CustomShortcutStepsHint);
+        var hint = EditorChrome.MakeHint(language.CustomShortcutStepsHint);
         hint.Margin = new Thickness(0, 8, 0, 0);
 
         // The steps fill the window: header, list (shrinks/grows with the window), hint.
@@ -111,7 +109,7 @@ public class CustomShortcutEditWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = VideoSubDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk);
+        var buttonPanel = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         var sections = new Grid
         {
@@ -133,7 +131,7 @@ public class CustomShortcutEditWindow : Window
             },
         };
 
-        grid.Add(VideoSubDialogChrome.MakePanel(sections), 0);
+        grid.Add(EditorChrome.MakePanel(sections), 0);
         grid.Add(buttonPanel, 1);
 
         Content = grid;

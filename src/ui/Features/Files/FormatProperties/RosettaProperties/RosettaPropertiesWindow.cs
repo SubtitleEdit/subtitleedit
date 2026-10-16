@@ -16,12 +16,12 @@ public class RosettaPropertiesWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 420;
-        FormatPropertiesChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Form);
         vm.Window = this;
         DataContext = vm;
 
         var comboBoxLanguage = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox<string>(vm.Languages, vm, nameof(vm.SelectedLanguage)), Se.Language.General.Language, 160);
-        var textBoxLineHeight = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(120, vm, nameof(vm.SelectedLineHeight)), Se.Language.General.LineHeight);
+        var textBoxLineHeight = EditorChrome.AsTextField(UiUtil.MakeTextBox(120, vm, nameof(vm.SelectedLineHeight)), Se.Language.General.LineHeight);
         var numericUpDownFontSize = FormatPropertiesChrome.Number(UiUtil.MakeNumericUpDownOneDecimal(1, 100, 120, vm, nameof(vm.SelectedFontSize)), Se.Language.File.RosettaFontSize, 120);
 
         var rows = FormatPropertiesChrome.MakeRows(
@@ -30,7 +30,7 @@ public class RosettaPropertiesWindow : Window
             FormatPropertiesChrome.Row(Se.Language.File.RosettaFontSize, numericUpDownFontSize));
 
         var buttonImport = FormatPropertiesChrome.MakeAction("fa-solid fa-file-import", Se.Language.General.ImportDotDotDot, vm.ImportCommand);
-        var buttonBar = FormatPropertiesChrome.MakeButtonBar(buttonImport, UiUtil.MakeButtonOk(vm.OkCommand), UiUtil.MakeButtonCancel(vm.CancelCommand));
+        var buttonBar = EditorChrome.MakeDockedCancelOkBar(buttonImport, UiUtil.MakeButtonCancel(vm.CancelCommand), UiUtil.MakeButtonOk(vm.OkCommand));
 
         Content = FormatPropertiesChrome.MakeRoot(
             buttonBar,

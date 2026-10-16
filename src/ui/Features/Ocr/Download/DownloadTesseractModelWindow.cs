@@ -6,7 +6,6 @@ using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
-using Chrome = Nikse.SubtitleEdit.Features.Ocr.OcrDialogChrome;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.Download;
 
@@ -20,12 +19,12 @@ public class DownloadTesseractModelWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        Chrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.EngineDialog);
 
         DataContext = vm;
 
         // Before the download: pick the dictionary. While downloading: title, progress and status.
-        var titleText = Chrome.DownloadTitle(string.Format(Se.Language.General.DownloadingX, "Tesseract model"));
+        var titleText = EditorChrome.MakeDownloadTitle(string.Format(Se.Language.General.DownloadingX, "Tesseract model"));
         titleText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsProgressVisible)));
 
         var comboBoxDictionary = new ComboBox
@@ -50,21 +49,21 @@ public class DownloadTesseractModelWindow : Window
         };
         panelPickDictionary.Bind(Panel.IsVisibleProperty, new Binding(nameof(vm.IsProgressVisible)) { Converter = InverseBooleanConverter.Instance });
 
-        var progressBar = Chrome.DownloadProgressBar(nameof(DownloadFfmpegViewModel.Progress));
+        var progressBar = EditorChrome.MakeDownloadProgressBar(nameof(DownloadFfmpegViewModel.Progress));
         progressBar.Bind(ProgressBar.IsVisibleProperty, new Binding(nameof(vm.IsProgressVisible)));
 
-        var statusText = Chrome.DownloadStatus(nameof(DownloadFfmpegViewModel.StatusText));
+        var statusText = EditorChrome.MakeDownloadStatus(nameof(DownloadFfmpegViewModel.StatusText));
         statusText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsProgressVisible)));
 
-        var errorText = Chrome.DownloadError(nameof(vm.Error));
+        var errorText = EditorChrome.MakeDownloadError(nameof(vm.Error));
 
-        var buttonDownload = Chrome.MakePrimary(UiUtil.MakeButton(Se.Language.General.Download, vm.DownloadCommand));
+        var buttonDownload = EditorChrome.AsPrimary(UiUtil.MakeButton(Se.Language.General.Download, vm.DownloadCommand));
         buttonDownload.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsProgressVisible)) { Converter = InverseBooleanConverter.Instance });
 
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CommandCancelCommand);
-        var buttonBar = Chrome.ButtonBar(null, buttonCancel, buttonDownload);
+        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonCancel, buttonDownload);
 
-        Content = Chrome.Root(Chrome.DownloadBody(titleText, panelPickDictionary, progressBar, statusText, errorText), buttonBar);
+        Content = EditorChrome.MakeRoot(EditorChrome.MakeDownloadBody(titleText, panelPickDictionary, progressBar, statusText, errorText), buttonBar, stretch: false);
 
         UiUtil.FocusOnFirstActivation(this, () =>
         {

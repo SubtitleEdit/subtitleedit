@@ -23,7 +23,7 @@ public class EmbeddedSubtitlesEditMp4Window : Window
         Height = 640;
         MinWidth = 800;
         MinHeight = 420;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         vm.Window = this;
         DataContext = vm;
 
@@ -43,11 +43,7 @@ public class EmbeddedSubtitlesEditMp4Window : Window
             .WithBindIsVisible(nameof(vm.HasVideoFileName));
         buttonGenerate.IsDefault = true; // the dialog's accept button - Enter runs it (#14586)
         buttonGenerate.Classes.Add("primary");
-        var buttonPanel = VideoSubDialogChrome.MakeButtonBar(
-            null,
-            UiUtil.MakeButtonCancel(vm.CancelCommand),
-            buttonGenerate
-        );
+        var buttonPanel = EditorChrome.MakeButtonBar(null, UiUtil.MakeButtonCancel(vm.CancelCommand), buttonGenerate);
 
         var grid = new Grid
         {

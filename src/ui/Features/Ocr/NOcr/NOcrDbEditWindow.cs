@@ -1,10 +1,8 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -24,7 +22,7 @@ public class NOcrDbEditWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        NOcrChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.TextToolToggles | EditorWindowStyles.CompactSplitButtons);
         DataContext = vm;
         Width = 955;
         Height = 800;
@@ -49,7 +47,7 @@ public class NOcrDbEditWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = NOcrChrome.MakeRoot(sections, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, () =>
         {
@@ -78,14 +76,14 @@ public class NOcrDbEditWindow : Window
         var dock = new DockPanel { LastChildFill = true };
         DockPanel.SetDock(charactersComboBox, Dock.Top);
         dock.Children.Add(charactersComboBox);
-        dock.Children.Add(EditDialogChrome.MakeListFrame(listBoxCurrentItems));
+        dock.Children.Add(EditorChrome.MakeListFrame(listBoxCurrentItems, clearListBackground: true));
 
         return NOcrChrome.MakeFillColumn(Se.Language.General.Characters, dock, first: true);
     }
 
     private static Border MakeCurrentItemView(NOcrDbEditViewModel vm)
     {
-        vm.TextBoxItem = NOcrChrome.StyleTextBox(UiUtil.MakeTextBox(100, vm, nameof(vm.ItemText)), Se.Language.General.Text);
+        vm.TextBoxItem = EditorChrome.AsTextField(UiUtil.MakeTextBox(100, vm, nameof(vm.ItemText)), Se.Language.General.Text);
         vm.TextBoxItem.Width = double.NaN;
         vm.TextBoxItem.Margin = new Thickness(0);
         vm.TextBoxItem.HorizontalAlignment = HorizontalAlignment.Stretch;
@@ -102,8 +100,8 @@ public class NOcrDbEditWindow : Window
             Margin = new Thickness(-8, 6, 0, 0),
             Children =
             {
-                NOcrChrome.MakeAction(IconNames.Check, Se.Language.General.Update, vm.UpdateCommand),
-                NOcrChrome.MakeAction(IconNames.Trash, Se.Language.General.Delete, vm.DeleteCommand),
+                EditorChrome.MakeTextToolButton(IconNames.Check, Se.Language.General.Update, vm.UpdateCommand),
+                EditorChrome.MakeTextToolButton(IconNames.Trash, Se.Language.General.Delete, vm.DeleteCommand),
             },
         };
         foreach (var action in actions.Children)
@@ -120,13 +118,13 @@ public class NOcrDbEditWindow : Window
             {
                 vm.TextBoxItem,
                 italicRow,
-                NOcrChrome.MakeInfo(nameof(vm.ResolutionAndTopMargin)),
-                NOcrChrome.MakeInfo(nameof(vm.ExpandInfo)),
+                EditorChrome.MakeBoundInfo(nameof(vm.ResolutionAndTopMargin)),
+                EditorChrome.MakeBoundInfo(nameof(vm.ExpandInfo)),
                 actions,
             },
         };
 
-        return NOcrChrome.MakeColumn(Se.Language.Ocr.CurrentImage, panelCurrent);
+        return NOcrChrome.MakeFillColumn(Se.Language.Ocr.CurrentImage, panelCurrent);
     }
 
     private static Border MakeCanvasView(NOcrDbEditViewModel vm)

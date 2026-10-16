@@ -42,7 +42,7 @@ public class OmniVoiceCrispAsrSettingsWindow : Window
             ("Model " + OmniVoiceCrispAsr.ModelKeyQ8_0, TtsSettingsChrome.MakeStatus(nameof(vm.ModelQ8_0Brush), nameof(vm.ModelQ8_0Label))),
             ("Model " + OmniVoiceCrispAsr.ModelKeyF16, TtsSettingsChrome.MakeStatus(nameof(vm.ModelF16Brush), nameof(vm.ModelF16Label))),
             (Se.Language.General.InstallFolder, TtsSettingsChrome.MakeFolder(nameof(vm.ModelsFolder), vm.OpenModelsFolderCommand)));
-        return TtsSettingsChrome.MakeSection(Se.Language.General.Models, rows);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Models, rows);
     }
 
     private static Border BuildVoice(OmniVoiceCrispAsrSettingsViewModel vm)
@@ -51,7 +51,7 @@ public class OmniVoiceCrispAsrSettingsWindow : Window
             (Se.Language.Video.Voices, TtsSettingsChrome.MakeValue(nameof(vm.VoicesLabel),
                 TtsSettingsChrome.MakeFolderButton(Se.Language.Video.TextToSpeech.OpenVoicesFolder, vm.OpenVoicesFolderCommand))),
             (Se.Language.General.Speed, TtsSettingsChrome.MakeSlider(Se.Language.General.Speed, 0.5, 2.0, 0.05, nameof(vm.Speed), nameof(vm.SpeedLabel))));
-        return TtsSettingsChrome.MakeSection(Se.Language.General.Voice, rows);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Voice, rows);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

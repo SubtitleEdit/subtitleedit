@@ -4,7 +4,6 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Features.Main;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -29,13 +28,13 @@ public class CopyPasteTranslateWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        Features.Edit.EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         var buttonTranslate = UiUtil.MakeButton(Se.Language.General.Translate, vm.TranslateCommand);
         buttonTranslate.Classes.Add("primary");
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = VideoSubDialogChrome.MakeButtonBar(null, buttonTranslate, buttonCancel, buttonOk);
+        var buttonBar = EditorChrome.MakeButtonBar(null, buttonTranslate, buttonCancel, buttonOk);
 
         var listFrame = MakeSubtitlesView(vm);
         listFrame.Margin = new Thickness(14, 12);
@@ -45,7 +44,7 @@ public class CopyPasteTranslateWindow : Window
             RowDefinitions = new RowDefinitions("Auto,*,Auto"),
         };
         grid.Add(MakeControlsView(vm), 0, 0);
-        grid.Add(VideoSubDialogChrome.MakePanel(listFrame), 1, 0);
+        grid.Add(EditorChrome.MakePanel(listFrame), 1, 0);
         grid.Add(buttonBar, 2, 0);
 
         Content = grid;
@@ -90,7 +89,7 @@ public class CopyPasteTranslateWindow : Window
             }
         };
 
-        var toolbar = VideoSubDialogChrome.MakeToolbar(panel);
+        var toolbar = EditorChrome.MakeToolbar(panel);
         toolbar.Padding = new Thickness(12, 8);
         return toolbar;
     }
@@ -153,6 +152,6 @@ public class CopyPasteTranslateWindow : Window
             Mode = BindingMode.TwoWay
         });
 
-        return VideoSubDialogChrome.MakeListFrame(vm.SubtitleGrid);
+        return EditorChrome.MakeListFrame(vm.SubtitleGrid);
     }
 }

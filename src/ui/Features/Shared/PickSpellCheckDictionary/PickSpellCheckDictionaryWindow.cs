@@ -7,7 +7,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 namespace Nikse.SubtitleEdit.Features.Shared.PickSpellCheckDictionary;
 
 /// <summary>
-/// Pick a spell check dictionary, in the editor look (see <see cref="SharedDialogChrome"/>).
+/// Pick a spell check dictionary, in the editor look (see <see cref="EditorChrome"/>).
 /// </summary>
 public class PickSpellCheckDictionaryWindow : Window
 {
@@ -18,7 +18,7 @@ public class PickSpellCheckDictionaryWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 400;
-        SharedDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
 
@@ -49,12 +49,12 @@ public class PickSpellCheckDictionaryWindow : Window
         panelDownload.Add(combo, 0, 0);
         panelDownload.Add(buttonDownload, 0, 1);
 
-        var section = SharedDialogChrome.MakeSection(Se.Language.General.Dictionary, panelDownload, first: true);
+        var section = EditorChrome.MakeEditorSection(Se.Language.General.Dictionary, panelDownload, first: true);
 
-        var buttonOk = SharedDialogChrome.Primary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = SharedDialogChrome.MakeRoot(section, SharedDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(section, EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, combo); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);

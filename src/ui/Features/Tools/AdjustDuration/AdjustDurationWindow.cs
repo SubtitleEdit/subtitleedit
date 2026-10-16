@@ -5,7 +5,6 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -27,7 +26,7 @@ public class AdjustDurationWindow : Window
         Title = UiUtil.MakeWindowTitle(Se.Language.Tools.AdjustDurations.Title);
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        SyncTimingChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TimeCodes);
         vm.Window = this;
         DataContext = vm;
 
@@ -65,7 +64,7 @@ public class AdjustDurationWindow : Window
         };
 
         var rows = new StackPanel { Spacing = 10 };
-        rows.Children.Add(SyncTimingChrome.Row(Se.Language.Tools.AdjustDurations.AdjustVia, combo, LabelWidth));
+        rows.Children.Add(EditorChrome.MakeLabeledRow(Se.Language.Tools.AdjustDurations.AdjustVia, combo, LabelWidth));
         rows.Children.Add(panelValues);
         rows.Children.Add(labelInfo);
         var section = EditorChrome.MakeEditorSection(Se.Language.General.Adjustment, rows, first: true);
@@ -75,7 +74,7 @@ public class AdjustDurationWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = SyncTimingChrome.MakeRoot(section, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(section, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, combo); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -107,7 +106,7 @@ public class AdjustDurationWindow : Window
             Converter = new DoubleToThreeDecimalConverter(),
         });
 
-        var panel = SyncTimingChrome.Row(Se.Language.General.Seconds, numericUpDownSeconds, LabelWidth);
+        var panel = EditorChrome.MakeLabeledRow(Se.Language.General.Seconds, numericUpDownSeconds, LabelWidth);
         panel.Bind(IsVisibleProperty, new Binding()
         {
             Path = $"{nameof(vm.SelectedAdjustType)}.{nameof(AdjustDurationDisplay.IsSecondsVisible)}",
@@ -129,7 +128,7 @@ public class AdjustDurationWindow : Window
             Converter = new NullableIntConverter(),
         });
 
-        var panel = SyncTimingChrome.Row(Se.Language.General.Percent, numericUpDownPercent, LabelWidth);
+        var panel = EditorChrome.MakeLabeledRow(Se.Language.General.Percent, numericUpDownPercent, LabelWidth);
         panel.Bind(IsVisibleProperty, new Binding
         {
             Path = $"{nameof(vm.SelectedAdjustType)}.{nameof(AdjustDurationDisplay.IsPercentVisible)}",
@@ -151,7 +150,7 @@ public class AdjustDurationWindow : Window
             Converter = new DoubleToThreeDecimalConverter(),
         });
 
-        var panel = SyncTimingChrome.Row(Se.Language.Tools.AdjustDurations.Fixed, numericUpDownFixed, LabelWidth);
+        var panel = EditorChrome.MakeLabeledRow(Se.Language.Tools.AdjustDurations.Fixed, numericUpDownFixed, LabelWidth);
         panel.Bind(IsVisibleProperty, new Binding
         {
             Path = $"{nameof(vm.SelectedAdjustType)}.{nameof(AdjustDurationDisplay.IsFixedVisible)}",
@@ -211,9 +210,9 @@ public class AdjustDurationWindow : Window
             Spacing = 10,
             Children =
             {
-                SyncTimingChrome.Row(Se.Language.General.MaxCharactersPerSecond, numericUpDownMax, LabelWidth),
-                SyncTimingChrome.Row(Se.Language.General.OptimalCharactersPerSecond, numericUpDownOptimal, LabelWidth),
-                SyncTimingChrome.Row(string.Empty, rowExtendOnly, LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.MaxCharactersPerSecond, numericUpDownMax, LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.OptimalCharactersPerSecond, numericUpDownOptimal, LabelWidth),
+                EditorChrome.MakeLabeledRow(string.Empty, rowExtendOnly, LabelWidth),
             },
         };
 

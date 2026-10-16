@@ -32,7 +32,7 @@ public class BinaryResizeImagesWindow : Window
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        Content = BinaryEditChrome.MakePreviewDialogRoot(leftPanel, rightPanel, BinaryEditChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = BinaryEditChrome.MakePreviewDialogRoot(leftPanel, rightPanel, EditorChrome.MakeCancelOkBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, percentageInput); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -59,7 +59,7 @@ public class BinaryResizeImagesWindow : Window
                 Converter = new NullableIntConverter(),
             },
         };
-        BinaryEditChrome.MakeField(percentageUpDown, Se.Language.Tools.ImageBasedEdit.Percentage, 100);
+        EditorChrome.AsField(percentageUpDown, Se.Language.Tools.ImageBasedEdit.Percentage, 100, alignLeft: true, center: true);
         percentageUpDown.InnerRightContent = new TextBlock
         {
             Text = "%",
@@ -82,7 +82,7 @@ public class BinaryResizeImagesWindow : Window
         panel.Children.Add(imageSizeLabel);
 
         // Info text
-        panel.Children.Add(BinaryEditChrome.MakeHint(Se.Language.Tools.ImageBasedEdit.ResizeImagesInfo));
+        panel.Children.Add(EditorChrome.MakeHint(Se.Language.Tools.ImageBasedEdit.ResizeImagesInfo));
 
         return EditorChrome.MakeEditorSection(Se.Language.Tools.ImageBasedEdit.Percentage, panel, first: true);
     }

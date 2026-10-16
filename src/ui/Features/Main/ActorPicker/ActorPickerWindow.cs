@@ -9,8 +9,6 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.VisualTree;
-using Nikse.SubtitleEdit.Features.Options;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -31,7 +29,7 @@ public class ActorPickerWindow : Window
         SizeToContent = SizeToContent.Height;
         CanResize = false;
         Width = 460;
-        OptionsListChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.CompactListRows);
 
         vm.Window = this;
         DataContext = vm;
@@ -44,7 +42,7 @@ public class ActorPickerWindow : Window
         {
             PlaceholderText = Se.Language.General.ActorPickerFilterHint,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-        }.AsField(Se.Language.General.ActorPickerFilterHint);
+        }.AsTextField(Se.Language.General.ActorPickerFilterHint);
         textBoxFilter.InnerLeftContent = new Optris.Icons.Avalonia.Icon
         {
             Value = "fa-solid fa-magnifying-glass",
@@ -79,7 +77,7 @@ public class ActorPickerWindow : Window
             }
         };
 
-        var labelKeysHint = OptionsListChrome.MakeHint(Se.Language.General.ActorPickerKeysHint);
+        var labelKeysHint = EditorChrome.MakeWrappingDimLabel(Se.Language.General.ActorPickerKeysHint);
         labelKeysHint.FontSize = 11.5;
 
         var panel = new StackPanel
@@ -90,7 +88,7 @@ public class ActorPickerWindow : Window
             {
                 labelSelectionInfo,
                 textBoxFilter,
-                OptionsListChrome.MakeListFrame(listBox),
+                EditorChrome.MakeCompactListFrame(listBox),
                 labelKeysHint,
             },
         };
@@ -100,7 +98,7 @@ public class ActorPickerWindow : Window
         var buttonCancel = UiUtil.MakeButton(Se.Language.General.Cancel);
         buttonCancel.Click += (_, _) => vm.Cancel();
 
-        Content = SyncTimingChrome.MakeRoot(panel, SyncTimingChrome.MakeButtonBar(null, buttonRemove, buttonCancel));
+        Content = EditorChrome.MakeRoot(panel, EditorChrome.MakeDockedButtonBar(null, buttonRemove, buttonCancel));
 
         UiUtil.FocusOnFirstActivation(this, textBoxFilter);
 

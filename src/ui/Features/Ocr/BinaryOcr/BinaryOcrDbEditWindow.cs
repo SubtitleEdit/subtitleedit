@@ -3,8 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -25,7 +23,7 @@ public class BinaryOcrDbEditWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         DataContext = vm;
         Width = 955;
         Height = 800;
@@ -47,10 +45,10 @@ public class BinaryOcrDbEditWindow : Window
         body.Add(charactersView, 0, 0);
         body.Add(currentItemView, 0, 1);
 
-        var buttonOk = BinaryOcrChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
-        var buttonBar = SyncTimingChrome.MakeButtonBar(null, buttonOk);
+        var buttonOk = EditorChrome.AsFlushPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonBar = EditorChrome.MakeDockedButtonBar(null, buttonOk);
 
-        Content = SyncTimingChrome.MakeRoot(body, buttonBar);
+        Content = EditorChrome.MakeRoot(body, buttonBar);
 
         UiUtil.FocusOnFirstActivation(this, () =>
         {
@@ -82,9 +80,9 @@ public class BinaryOcrDbEditWindow : Window
             RowSpacing = 8,
         };
         grid.Add(charactersComboBox, 0, 0);
-        grid.Add(EditDialogChrome.MakeListFrame(listBoxCurrentItems), 1, 0);
+        grid.Add(EditorChrome.MakeListFrame(listBoxCurrentItems, clearListBackground: true), 1, 0);
 
-        return BinaryOcrChrome.MakeFillSection(Se.Language.General.Characters, grid, first: true);
+        return EditorChrome.MakeDockedFillSection(Se.Language.General.Characters, grid, first: true);
     }
 
     private static Border MakeCurrentItemControlsView(BinaryOcrDbEditViewModel vm)
@@ -109,7 +107,7 @@ public class BinaryOcrDbEditWindow : Window
         imageBorder.MinWidth = 40;
         imageBorder.MinHeight = 40;
 
-        var switchItalic = BinaryOcrChrome.MakeSwitch(nameof(vm.IsItemItalic), Se.Language.General.Italic);
+        var switchItalic = EditorChrome.MakeSwitch(nameof(vm.IsItemItalic), Se.Language.General.Italic);
 
         var panelCurrent = new StackPanel
         {

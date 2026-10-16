@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
@@ -46,7 +46,7 @@ public class OcrWindow : Window
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
         DataContext = vm;
 
-        VideoDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.VideoTool);
         AddOcrStyles(Styles);
 
         var topControlsView = MakeTopControlsView(vm);
@@ -868,8 +868,7 @@ public class OcrWindow : Window
 
         return new Border
         {
-            Child = VideoDialogChrome.ListSection(Se.Language.General.ImageBasedSubtitles, scrollBarHost,
-                margin: new Thickness(14, 10, 14, 12)),
+            Child = EditorChrome.MakeListPane(Se.Language.General.ImageBasedSubtitles, scrollBarHost, margin: new Thickness(14, 10, 14, 12)),
             Background = EditorChrome.PanelBrush,
         };
     }
@@ -985,14 +984,13 @@ public class OcrWindow : Window
             }
         };
 
-        var switchFixOcrErrors = VideoDialogChrome.SwitchRow(nameof(vm.DoFixOcrErrors), Se.Language.Ocr.FixOcrErrors);
+        var switchFixOcrErrors = EditorChrome.MakeSwitchRow(nameof(vm.DoFixOcrErrors), Se.Language.Ocr.FixOcrErrors);
         switchFixOcrErrors.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsDictionaryLoaded)));
-        var switchPromptForUnknownWords = VideoDialogChrome.SwitchRow(nameof(vm.DoPromptForUnknownWords), Se.Language.Ocr.PromptForUknownWords);
+        var switchPromptForUnknownWords = EditorChrome.MakeSwitchRow(nameof(vm.DoPromptForUnknownWords), Se.Language.Ocr.PromptForUknownWords);
         switchPromptForUnknownWords.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsDictionaryLoaded)));
-        var switchTryToGuessUnknownWords = VideoDialogChrome.SwitchRow(nameof(vm.DoTryToGuessUnknownWords), Se.Language.Ocr.TryToGuessUnknownWords);
+        var switchTryToGuessUnknownWords = EditorChrome.MakeSwitchRow(nameof(vm.DoTryToGuessUnknownWords), Se.Language.Ocr.TryToGuessUnknownWords);
         switchTryToGuessUnknownWords.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsDictionaryLoaded)));
-        var switchAutoBreak = VideoDialogChrome.SwitchRow(nameof(vm.DoAutoBreak),
-            string.Format(Se.Language.Ocr.AutoBreakIfMoreThanXLines, Se.Settings.General.MaxNumberOfLines));
+        var switchAutoBreak = EditorChrome.MakeSwitchRow(nameof(vm.DoAutoBreak), string.Format(Se.Language.Ocr.AutoBreakIfMoreThanXLines, Se.Settings.General.MaxNumberOfLines));
 
         var panelOptions = new StackPanel
         {
@@ -1170,7 +1168,7 @@ public class OcrWindow : Window
         };
 
         grid.ColumnSpacing = 8;
-        grid.Add(VideoDialogChrome.ListFrame(listBox), 0, 0);
+        grid.Add(EditorChrome.MakeListFrame(listBox), 0, 0);
         grid.Add(panelButtons, 0, 1);
 
         return grid;
@@ -1221,7 +1219,7 @@ public class OcrWindow : Window
         listBox.SelectionChanged += (s, e) => vm.AllFixesTapped();
         listBox.Tapped += (s, e) => vm.AllFixesTapped();
 
-        grid.Add(VideoDialogChrome.ListFrame(listBox), 0, 0);
+        grid.Add(EditorChrome.MakeListFrame(listBox), 0, 0);
 
         return grid;
     }
@@ -1269,7 +1267,7 @@ public class OcrWindow : Window
         listBox.SelectionChanged += (s, e) => vm.GuessUsedTapped();
         listBox.Tapped += (s, e) => vm.GuessUsedTapped();
 
-        grid.Add(VideoDialogChrome.ListFrame(listBox), 0, 0);
+        grid.Add(EditorChrome.MakeListFrame(listBox), 0, 0);
 
         return grid;
     }
@@ -1294,7 +1292,7 @@ public class OcrWindow : Window
         progressBar.VerticalAlignment = VerticalAlignment.Center;
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
 
-        var statusText = VideoDialogChrome.Hint(nameof(vm.ProgressText));
+        var statusText = EditorChrome.MakeBoundHint(nameof(vm.ProgressText), 12);
         statusText.MaxWidth = 520;
 
         // Stable UI Automation ids for external automation (#15769)
@@ -1314,7 +1312,7 @@ public class OcrWindow : Window
         grid.Add(progressBar, 0, 0);
         grid.Add(statusText, 0, 1);
 
-        var strip = VideoDialogChrome.ProgressStrip(grid);
+        var strip = EditorChrome.MakeProgressStrip(grid);
         strip.Bind(Border.IsVisibleProperty, new Binding(nameof(vm.IsOcrRunning)) { Source = vm });
         return strip;
     }
@@ -1322,11 +1320,9 @@ public class OcrWindow : Window
     private static Border MakeBottomView(OcrViewModel vm)
     {
         var buttonStart = UiUtil.MakeButton(Se.Language.Ocr.StartOcr, vm.StartOcrCommand)
-            .WithBindIsVisible(nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance)
-            .Primary();
+            .WithBindIsVisible(nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance).AsPrimary();
         var buttonPause = UiUtil.MakeButton(Se.Language.Ocr.PauseOcr, vm.PauseOcrCommand)
-            .WithBindIsVisible(nameof(OcrViewModel.IsOcrRunning))
-            .Primary();
+            .WithBindIsVisible(nameof(OcrViewModel.IsOcrRunning)).AsPrimary();
         var buttonInspect = UiUtil.MakeButton(Se.Language.Ocr.InspectLine, vm.InspectLineCommand)
             .WithBindIsVisible(nameof(OcrViewModel.IsInspectLineVisible))
             .WithBindIsEnabled(nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance);
@@ -1360,15 +1356,7 @@ public class OcrWindow : Window
         AutomationProperties.SetAutomationId(buttonOk, "OcrOkButton");
         AutomationProperties.SetAutomationId(buttonCancel, "OcrCancelButton");
 
-        return VideoDialogChrome.ButtonBar(
-            subtitleCountText,
-            buttonInspect,
-            buttonInspectAdditions,
-            buttonExport,
-            buttonStart,
-            buttonPause,
-            buttonOk,
-            buttonCancel);
+        return EditorChrome.MakeButtonBar(subtitleCountText, buttonInspect, buttonInspectAdditions, buttonExport, buttonStart, buttonPause, buttonOk, buttonCancel);
     }
 
     /// <summary>

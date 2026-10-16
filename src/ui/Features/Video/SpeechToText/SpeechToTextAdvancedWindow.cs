@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -11,7 +11,6 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Chrome = Nikse.SubtitleEdit.Features.Video.SpeechToText.SpeechToTextChrome;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
@@ -26,7 +25,7 @@ public class SpeechToTextAdvancedWindow : Window
         MinWidth = 800;
         MinHeight = 400;
         CanResize = true;
-        Chrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.SpeechToText);
         vm.Window = this;
         DataContext = vm;
 
@@ -46,7 +45,7 @@ public class SpeechToTextAdvancedWindow : Window
             VerticalContentAlignment = VerticalAlignment.Top,
             DataContext = vm,
         }.WithAccessibleName(Se.Language.General.Parameters);
-        Chrome.AsText(textBoxParameters);
+        EditorChrome.AsTextField(textBoxParameters);
         textBoxParameters.Bind(TextBox.TextProperty, new Binding(nameof(vm.Parameters))
         {
             Mode = BindingMode.TwoWay,
@@ -228,10 +227,7 @@ public class SpeechToTextAdvancedWindow : Window
             },
         };
 
-        var buttonBar = Chrome.ButtonBar(
-            presets,
-            UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelCommand),
-            Chrome.Primary(UiUtil.MakeButton(Se.Language.General.Ok, vm.OkCommand)));
+        var buttonBar = EditorChrome.MakeFlushButtonBar(presets, UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelCommand), EditorChrome.AsPrimary(UiUtil.MakeButton(Se.Language.General.Ok, vm.OkCommand)));
 
         var parameters = new Border
         {
@@ -250,8 +246,8 @@ public class SpeechToTextAdvancedWindow : Window
             },
             Margin = new Thickness(14, 12, 14, 14),
         };
-        help.Add(Chrome.ListHeader(Se.Language.General.Help), 0, 0);
-        help.Add(Chrome.FieldFrame(scrollViewer), 1, 0);
+        help.Add(SpeechToTextChrome.ListHeader(Se.Language.General.Help), 0, 0);
+        help.Add(EditorChrome.MakeListFrame(scrollViewer), 1, 0);
 
         var middle = new Grid
         {

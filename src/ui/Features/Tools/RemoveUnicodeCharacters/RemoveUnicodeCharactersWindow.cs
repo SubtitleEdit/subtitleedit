@@ -26,7 +26,7 @@ public class RemoveUnicodeCharactersWindow : Window
         Height = 600;
         MinWidth = 600;
         MinHeight = 400;
-        LineToolsChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -135,18 +135,12 @@ public class RemoveUnicodeCharactersWindow : Window
             e.Handled = true;
         }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
 
-        var actions = LineToolsChrome.MakeListActions(
-            LineToolsChrome.MakeSelectAllButton(vm.SelectAllCommand),
-            LineToolsChrome.MakeInvertSelectionButton(vm.InvertSelectionCommand));
+        var actions = EditorChrome.MakeListActions(EditorChrome.MakeSelectAllButton(vm.SelectAllCommand), EditorChrome.MakeInvertSelectionButton(vm.InvertSelectionCommand));
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = LineToolsChrome.MakeRoot(
-            LineToolsChrome.MakeSections(null, LineToolsChrome.MakeListSection(Se.Language.General.Characters, dataGrid, actions, first: true)),
-            LineToolsChrome.MakeStatusText(vm, nameof(vm.StatusText)),
-            buttonCancel,
-            buttonOk);
+        Content = EditorChrome.MakeCancelOkRoot(EditorChrome.MakeOptionsAndLists(null, EditorChrome.MakeListSection(Se.Language.General.Characters, dataGrid, actions, first: true)), EditorChrome.MakeStatusText(nameof(vm.StatusText), vm), buttonCancel, buttonOk);
 
         UiUtil.FocusOnFirstActivation(this, () => { TableViewExtras.FocusRow(dataGrid); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);

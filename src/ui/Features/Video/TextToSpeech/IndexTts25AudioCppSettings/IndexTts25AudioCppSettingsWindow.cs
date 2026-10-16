@@ -46,7 +46,7 @@ public class IndexTts25AudioCppSettingsWindow : Window
             ("Model " + IndexTts25AudioCpp.ModelKeyF16, TtsSettingsChrome.MakeStatus(nameof(vm.ModelF16Brush), nameof(vm.ModelF16Label),
                 TtsSettingsChrome.MakeModelDownloadButton(vm.DownloadModelCommand, IndexTts25AudioCpp.ModelKeyF16))),
             (Se.Language.General.InstallFolder, TtsSettingsChrome.MakeFolder(nameof(vm.ModelsFolder), vm.OpenModelsFolderCommand)));
-        return TtsSettingsChrome.MakeSection(Se.Language.General.Models, rows);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Models, rows);
     }
 
     private static Border BuildVoice(IndexTts25AudioCppSettingsViewModel vm)
@@ -73,7 +73,7 @@ public class IndexTts25AudioCppSettingsWindow : Window
             // this to IndexTTS-2.5's own `duration_factor`, which runs the other way (>1 = longer
             // output = slower speech). Range capped at 0.5-2.0, which is what the model supports.
             (Se.Language.General.Speed, TtsSettingsChrome.MakeSlider(Se.Language.General.Speed, 0.5, 2.0, 0.05, nameof(vm.Speed), nameof(vm.SpeedLabel))));
-        return TtsSettingsChrome.MakeSection(Se.Language.General.Voice, rows);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Voice, rows);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

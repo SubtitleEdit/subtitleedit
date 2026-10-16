@@ -4,9 +4,6 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Optris.Icons.Avalonia;
@@ -27,7 +24,7 @@ public class FixCommonErrorsLogWindow : Window
         Height = 500;
         MinWidth = 400;
         MinHeight = 250;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -87,7 +84,7 @@ public class FixCommonErrorsLogWindow : Window
 
         var buttonDone = UiUtil.MakeButtonDone(vm.CloseCommand);
         buttonDone.Classes.Add("primary");
-        var panelButtons = VideoSubDialogChrome.MakeButtonBar(null, buttonDone);
+        var panelButtons = EditorChrome.MakeButtonBar(null, buttonDone);
 
         var body = new Grid
         {
@@ -97,7 +94,7 @@ public class FixCommonErrorsLogWindow : Window
         body.Add(panelHeader, 0);
         body.Add(textBoxLog, 1);
 
-        Content = SyncTimingChrome.MakeRoot(body, panelButtons);
+        Content = EditorChrome.MakeRoot(body, panelButtons);
 
         UiUtil.FocusOnFirstActivation(this, buttonDone);
         KeyDown += (s, e) => vm.OnKeyDown(e);

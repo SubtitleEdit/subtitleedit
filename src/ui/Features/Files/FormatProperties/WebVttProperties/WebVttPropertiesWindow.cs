@@ -19,7 +19,7 @@ public class WebVttPropertiesWindow : Window
         SizeToContent = SizeToContent.Height;
         Width = 700;
         CanResize = false;
-        FormatPropertiesChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Form);
         vm.Window = this;
         DataContext = vm;
 
@@ -66,11 +66,11 @@ public class WebVttPropertiesWindow : Window
         var buttonReset = FormatPropertiesChrome.MakeAction("fa-solid fa-rotate-left", Se.Language.General.Reset, vm.ResetCueSettingsCommand);
 
         var options = FormatPropertiesChrome.MakeRows(
-            FormatPropertiesChrome.SwitchRow(nameof(vm.UseXTimestampMap), l.UseXTimeStamp),
-            FormatPropertiesChrome.SwitchRow(nameof(vm.MergeLinesWithSameText), l.MergeLines),
-            FormatPropertiesChrome.SwitchRow(nameof(vm.MergeStyleTags), l.MergeStyleTags));
+            EditorChrome.MakeSwitchRow(nameof(vm.UseXTimestampMap), l.UseXTimeStamp),
+            EditorChrome.MakeSwitchRow(nameof(vm.MergeLinesWithSameText), l.MergeLines),
+            EditorChrome.MakeSwitchRow(nameof(vm.MergeStyleTags), l.MergeStyleTags));
 
-        var buttonBar = FormatPropertiesChrome.MakeButtonBar(null, UiUtil.MakeButtonOk(vm.OkCommand), UiUtil.MakeButtonCancel(vm.CancelCommand));
+        var buttonBar = EditorChrome.MakeDockedCancelOkBar(null, UiUtil.MakeButtonCancel(vm.CancelCommand), UiUtil.MakeButtonOk(vm.OkCommand));
 
         Content = FormatPropertiesChrome.MakeRoot(
             buttonBar,
@@ -83,7 +83,7 @@ public class WebVttPropertiesWindow : Window
 
     private static TextBox MakeCueSetting(Grid grid, int row, int column, string title, WebVttPropertiesViewModel vm, string propertyName)
     {
-        var textBox = FormatPropertiesChrome.Text(UiUtil.MakeTextBox(180, vm, propertyName), title);
+        var textBox = EditorChrome.AsTextField(UiUtil.MakeTextBox(180, vm, propertyName), title);
         textBox.Width = double.NaN;
         textBox.HorizontalAlignment = HorizontalAlignment.Stretch;
 

@@ -1,6 +1,5 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -20,22 +19,22 @@ public class NOcrDbNewWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        NOcrChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.TextToolToggles | EditorWindowStyles.CompactSplitButtons);
         DataContext = vm;
 
-        var textBoxDatabaseName = NOcrChrome.StyleTextBox(UiUtil.MakeTextBox(300, vm, nameof(vm.DatabaseName)), Se.Language.General.Name);
+        var textBoxDatabaseName = EditorChrome.AsTextField(UiUtil.MakeTextBox(300, vm, nameof(vm.DatabaseName)), Se.Language.General.Name);
         textBoxDatabaseName.Margin = new Thickness(0);
 
         var section = EditorChrome.MakeEditorSection(
             Se.Language.Ocr.Database,
-            SyncTimingChrome.Row(Se.Language.General.Name, textBoxDatabaseName, 60),
+            EditorChrome.MakeLabeledRow(Se.Language.General.Name, textBoxDatabaseName, 60),
             first: true);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = NOcrChrome.MakeRoot(section, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(section, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, () =>
         {

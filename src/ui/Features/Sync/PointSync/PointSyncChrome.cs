@@ -5,7 +5,6 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Sync.PointSyncViaOther;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -15,8 +14,8 @@ using System.Windows.Input;
 namespace Nikse.SubtitleEdit.Features.Sync.PointSync;
 
 /// <summary>
-/// The pieces the point sync windows share to get the editor look of <see cref="EditorChrome"/>:
-/// the sync point side panel, list headers with a count, file name labels and action buttons.
+/// The pieces only the point sync windows use, on top of <see cref="EditorChrome"/>: the sync point
+/// side panel, list headers with a count, file name labels and wide action buttons.
 /// </summary>
 internal static class PointSyncChrome
 {
@@ -95,7 +94,7 @@ internal static class PointSyncChrome
     /// </summary>
     internal static Button MakeWideAction(string icon, string text, ICommand command)
     {
-        var button = VideoSubDialogChrome.MakeAction(icon, text, command);
+        var button = EditorChrome.MakeActionButton(icon, text, command);
         button.HorizontalAlignment = HorizontalAlignment.Stretch;
         button.HorizontalContentAlignment = HorizontalAlignment.Left;
         button.BorderThickness = new Thickness(1);
@@ -152,7 +151,7 @@ internal static class PointSyncChrome
             }
         };
 
-        return VideoSubDialogChrome.MakeListFrame(dataGrid);
+        return EditorChrome.MakeListFrame(dataGrid);
     }
 
     /// <summary>

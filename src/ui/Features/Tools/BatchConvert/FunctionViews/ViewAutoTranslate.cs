@@ -38,7 +38,7 @@ public static class ViewAutoTranslate
         // Model gets a row of its own - the engine row is already crowded with the engine combo and
         // its settings buttons, and the three model editors (Ollama text box + browse, the CrispASR
         // combo, the llama.cpp combo) are never visible at the same time, so they share the row.
-        var textBoxModel = FunctionViewChrome.MakeTextBox(nameof(vm.AutoTranslateModel), Se.Language.General.Model);
+        var textBoxModel = EditorChrome.MakeTextField(nameof(vm.AutoTranslateModel), Se.Language.General.Model);
         textBoxModel.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.AutoTranslateModelIsVisible)));
         var buttonModel = UiUtil.MakeButtonBrowse(vm.AutoTranslateBrowseModelCommand, nameof(vm.AutoTranslateModelBrowseIsVisible), Se.Language.General.Model);
         buttonModel.Margin = new Thickness(6, 0, 0, 0);
@@ -110,7 +110,7 @@ public static class ViewAutoTranslate
         // Batch convert's own local/external llama-server switch (#14005) - independent of the one
         // in the Auto-translate window. Shown only for the llama.cpp engines.
         var switchLlamaCppRemote = FunctionViewChrome.MakeRowWithControl(new Panel(),
-            FunctionViewChrome.MakeSwitchRow(nameof(vm.LlamaCppUseRemoteServer), Se.Language.General.LlamaCppUseRemoteServer));
+            EditorChrome.MakeSwitchRow(nameof(vm.LlamaCppUseRemoteServer), Se.Language.General.LlamaCppUseRemoteServer));
         switchLlamaCppRemote.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.LlamaCppRemoteToggleIsVisible)));
 
         var sourceLangCombo = FunctionViewChrome.Compact(UiUtil.MakeComboBox(vm.SourceLanguages, vm, nameof(vm.SelectedSourceLanguage)), Se.Language.General.From);
@@ -160,7 +160,7 @@ public static class ViewAutoTranslate
             Children = { targetLangCombo, extraTargetLanguages, buttonAddTargetLanguage },
         };
 
-        var textBoxUrl = FunctionViewChrome.MakeTextBox(nameof(vm.AutoTranslateUrl), Se.Language.General.Url);
+        var textBoxUrl = EditorChrome.MakeTextField(nameof(vm.AutoTranslateUrl), Se.Language.General.Url);
 
         // Masked API key with its reveal button; the text box takes the width the button leaves
         var apiKeyPanel = UiUtil.MakeApiKeyTextBox(double.NaN, vm, nameof(vm.AutoTranslateApiKey));

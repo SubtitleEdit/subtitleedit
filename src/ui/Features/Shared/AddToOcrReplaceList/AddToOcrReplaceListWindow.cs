@@ -3,8 +3,6 @@ using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -22,11 +20,11 @@ public class AddToOcrReplaceListWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 400;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
-        var labelFromTo = EditDialogChrome.MakeLabel(Se.Language.Ocr.ChangeWordFromTo);
+        var labelFromTo = EditorChrome.MakeWrappingDimLabel(Se.Language.Ocr.ChangeWordFromTo);
         var textBoxFrom = UiUtil.MakeTextBox(200, vm, nameof(vm.From));
         textBoxFrom.Classes.Add("text");
         AutomationProperties.SetName(textBoxFrom, Se.Language.General.From);
@@ -45,7 +43,7 @@ public class AddToOcrReplaceListWindow : Window
             },
         };
 
-        var labelDictionary = EditDialogChrome.MakeLabel(Se.Language.General.Dictionary);
+        var labelDictionary = EditorChrome.MakeWrappingDimLabel(Se.Language.General.Dictionary);
         labelDictionary.Margin = new Thickness(0, 8, 0, 0);
         var comboBoxDictionaries = new ComboBox
         {
@@ -72,7 +70,7 @@ public class AddToOcrReplaceListWindow : Window
             },
         };
 
-        Content = SyncTimingChrome.MakeRoot(panel, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(panel, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, textBoxFrom); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;

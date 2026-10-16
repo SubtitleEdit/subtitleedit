@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -21,7 +21,7 @@ public class BurnInEffectWindow : Window
         Title = Se.Language.General.Effect;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
 
         _vm = vm;
         vm.Window = this;
@@ -30,7 +30,7 @@ public class BurnInEffectWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = VideoSubDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk);
+        var panelButtons = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         var grid = new Grid
         {
@@ -83,7 +83,7 @@ public class BurnInEffectWindow : Window
             checkBoxPanel.Children.Add(checkBox);
         }
 
-        grid.Add(VideoSubDialogChrome.MakePanel(EditorChrome.MakeEditorSection(Se.Language.General.Effect, checkBoxPanel, first: true)), 0, 0);
+        grid.Add(EditorChrome.MakePanel(EditorChrome.MakeEditorSection(Se.Language.General.Effect, checkBoxPanel, first: true)), 0, 0);
         grid.Add(panelButtons, 1, 0);
 
         Content = grid;

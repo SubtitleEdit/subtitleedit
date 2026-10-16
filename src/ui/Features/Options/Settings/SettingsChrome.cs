@@ -1,10 +1,8 @@
 using System.Runtime.CompilerServices;
 using Avalonia;
-using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
-using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.LogicalTree;
@@ -49,7 +47,7 @@ internal static class SettingsChrome
         }
 
         var styles = new Styles();
-        EditorChrome.AddEditorStyles(styles);
+        EditorChrome.AddWindowStyles(styles, EditorWindowStyles.TextFields);
         AddStyles(styles);
         window.Styles.Add(styles);
         AppliedStyles.Add(window, styles);
@@ -57,30 +55,6 @@ internal static class SettingsChrome
 
     private static void AddStyles(Styles styles)
     {
-        styles.Add(new Style(x => x.OfType<ComboBox>())
-        {
-            Setters =
-            {
-                new Setter(TemplatedControl.FontSizeProperty, 12.5),
-                new Setter(TemplatedControl.MinHeightProperty, 28.0),
-                new Setter(TemplatedControl.PaddingProperty, new Thickness(8, 2, 4, 2)),
-                new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(6)),
-            },
-        });
-        styles.Add(new Style(x => x.OfType<TextBox>().Class("text"))
-        {
-            Setters =
-            {
-                new Setter(TemplatedControl.FontSizeProperty, 12.5),
-                new Setter(TemplatedControl.MinHeightProperty, 28.0),
-                new Setter(TemplatedControl.PaddingProperty, new Thickness(8, 4)),
-                new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(6)),
-                new Setter(TemplatedControl.BackgroundProperty, EditorChrome.FieldBrush),
-                new Setter(TemplatedControl.BorderBrushProperty, EditorChrome.FieldBorderBrush),
-                new Setter(TextBox.VerticalContentAlignmentProperty, VerticalAlignment.Center),
-            },
-        });
-
         // Compact rows in the lists (favorite formats and languages)
         styles.Add(new Style(x => x.OfType<ListBoxItem>())
         {
@@ -146,50 +120,14 @@ internal static class SettingsChrome
     }
 
     /// <summary>
-    /// A compact on/off switch bound to <paramref name="property"/> of <paramref name="source"/>.
-    /// </summary>
-    internal static ToggleSwitch MakeSwitch(object source, string property, string? accessibleName = null)
-    {
-        var toggle = new ToggleSwitch
-        {
-            OnContent = null,
-            OffContent = null,
-            MinWidth = 0,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!ToggleButton.IsCheckedProperty] = new Binding(property) { Source = source, Mode = BindingMode.TwoWay },
-        };
-
-        if (!string.IsNullOrEmpty(accessibleName))
-        {
-            AutomationProperties.SetName(toggle, accessibleName);
-        }
-
-        return toggle;
-    }
-
-    /// <summary>
     /// A switch with its label beside it; the label wraps instead of being cut off.
     /// </summary>
     internal static Grid MakeSwitchRow(ToggleSwitch toggle, string text)
     {
-        var label = new TextBlock
-        {
-            Text = text,
-            FontSize = 12.5,
-            VerticalAlignment = VerticalAlignment.Center,
-            TextWrapping = TextWrapping.Wrap,
-        };
+        var label = EditorChrome.MakeSwitchLabel(text);
         AccessibleLabels.LinkToLabel(toggle, label);
         DimLabelWhenDisabled(toggle, label);
-
-        var row = new Grid
-        {
-            ColumnSpacing = 8,
-            ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(new GridLength(1, GridUnitType.Star)) },
-        };
-        row.Add(toggle, 0, 0);
-        row.Add(label, 0, 1);
-        return row;
+        return EditorChrome.MakeSwitchRow(toggle, label);
     }
 
     /// <summary>
@@ -296,22 +234,6 @@ internal static class SettingsChrome
     }
 
     /// <summary>
-    /// A list in a rounded field frame.
-    /// </summary>
-    internal static Border MakeListFrame(Control list)
-    {
-        return new Border
-        {
-            Child = list,
-            Background = EditorChrome.FieldBrush,
-            BorderBrush = EditorChrome.FieldBorderBrush,
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(8),
-            ClipToBounds = true,
-        };
-    }
-
-    /// <summary>
     /// A group of sub-settings (the video preview font, the border style) in a rounded frame.
     /// </summary>
     internal static Border MakeGroupFrame(Control content)
@@ -332,45 +254,11 @@ internal static class SettingsChrome
     /// </summary>
     internal static Border MakeButtonBar(Control? left, params Control[] buttons)
     {
-        var panel = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, VerticalAlignment = VerticalAlignment.Center };
-        foreach (var button in buttons)
-        {
-            panel.Children.Add(button);
-        }
-
-        var grid = new Grid
-        {
-            ColumnSpacing = 12,
-            ColumnDefinitions = { new ColumnDefinition(new GridLength(1, GridUnitType.Star)), new ColumnDefinition(GridLength.Auto) },
-        };
         if (left != null)
         {
-            left.VerticalAlignment = VerticalAlignment.Center;
             left.HorizontalAlignment = HorizontalAlignment.Left;
-            grid.Add(left, 0, 0);
         }
 
-        grid.Add(panel, 0, 1);
-
-        return new Border
-        {
-            Child = grid,
-            Background = EditorChrome.ButtonBarBrush,
-            BorderBrush = EditorChrome.LineBrush,
-            BorderThickness = new Thickness(0, 1, 0, 0),
-            Padding = new Thickness(16, 10),
-        };
-    }
-
-    /// <summary>
-    /// The panel color behind <paramref name="content"/>.
-    /// </summary>
-    internal static Border MakePanel(Control content)
-    {
-        return new Border
-        {
-            Child = content,
-            Background = EditorChrome.PanelBrush,
-        };
+        return EditorChrome.MakeButtonBar(left, buttons);
     }
 }

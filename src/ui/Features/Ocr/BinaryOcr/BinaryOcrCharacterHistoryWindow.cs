@@ -3,8 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -28,7 +26,7 @@ public class BinaryOcrCharacterHistoryWindow : Window
         MinHeight = 600;
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         DataContext = vm;
 
         var body = new Grid
@@ -46,11 +44,11 @@ public class BinaryOcrCharacterHistoryWindow : Window
         body.Add(listView, 0, 0);
         body.Add(detailsView, 0, 1);
 
-        var buttonOk = BinaryOcrChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
-        var labelInfo = BinaryOcrChrome.MakeStatusText("Binary OCR uses pixel-by-pixel comparison. No manual drawing required.");
-        var buttonBar = SyncTimingChrome.MakeButtonBar(labelInfo, buttonOk);
+        var buttonOk = EditorChrome.AsFlushPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var labelInfo = EditorChrome.MakeDimStatusText("Binary OCR uses pixel-by-pixel comparison. No manual drawing required.");
+        var buttonBar = EditorChrome.MakeDockedButtonBar(labelInfo, buttonOk);
 
-        Content = SyncTimingChrome.MakeRoot(body, buttonBar);
+        Content = EditorChrome.MakeRoot(body, buttonBar);
 
         vm.TextBoxNew.KeyDown += vm.TextBoxNewOnKeyDown;
 
@@ -71,7 +69,7 @@ public class BinaryOcrCharacterHistoryWindow : Window
         listBoxCurrentItems.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(vm.HistoryItems)));
         listBoxCurrentItems.SelectionChanged += vm.HistoryItemChanged;
 
-        return BinaryOcrChrome.MakeFillSection(Se.Language.General.History, EditDialogChrome.MakeListFrame(listBoxCurrentItems), first: true);
+        return EditorChrome.MakeDockedFillSection(Se.Language.General.History, EditorChrome.MakeListFrame(listBoxCurrentItems, clearListBackground: true), first: true);
     }
 
     private static Border MakeDetailsView(BinaryOcrCharacterHistoryViewModel vm)
@@ -98,7 +96,7 @@ public class BinaryOcrCharacterHistoryWindow : Window
         var panelCurrentImage = BinaryOcrChrome.MakeImageFrame(image, ImagePreviewBackground.CreateBrush());
         panelCurrentImage.HorizontalAlignment = HorizontalAlignment.Left;
 
-        var switchItalic = BinaryOcrChrome.MakeSwitch(nameof(vm.IsNewTextItalic), Se.Language.General.Italic);
+        var switchItalic = EditorChrome.MakeSwitch(nameof(vm.IsNewTextItalic), Se.Language.General.Italic);
         switchItalic.IsCheckedChanged += vm.ItalicCheckChanged;
 
         var panelCurrent = new StackPanel

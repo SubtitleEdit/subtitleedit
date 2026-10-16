@@ -23,7 +23,7 @@ public class AdjustAllTimesWindow : Window
         Title = UiUtil.MakeWindowTitle(Se.Language.Sync.AdjustAllTimes);
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        SyncTimingChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TimeCodes);
         vm.Window = this;
         DataContext = vm;
 
@@ -66,9 +66,7 @@ public class AdjustAllTimesWindow : Window
         var labelStatus = EditorChrome.MakeDimLabel(string.Empty, new Thickness(0)).WithBindText(vm, nameof(vm.StatusText));
         labelStatus.TextTrimming = TextTrimming.CharacterEllipsis;
 
-        Content = SyncTimingChrome.MakeRoot(
-            SyncTimingChrome.SideBySide(adjustmentSection, linesSection),
-            SyncTimingChrome.MakeButtonBar(labelStatus, buttonHelp, buttonOk));
+        Content = EditorChrome.MakeRoot(EditorChrome.MakeSideBySide(adjustmentSection, linesSection), EditorChrome.MakeDockedButtonBar(labelStatus, buttonHelp, buttonOk));
 
         Loaded += delegate
         {

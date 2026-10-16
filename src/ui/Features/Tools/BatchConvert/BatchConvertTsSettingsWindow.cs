@@ -3,7 +3,6 @@ using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.BatchConvert;
@@ -24,16 +23,16 @@ public class BatchConvertTsSettingsWindow : Window
         Title = Se.Language.Tools.BatchConvert.TransportStreamSettings;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         vm.Window = this;
         DataContext = vm;
 
-        var labelInfo = VideoSubDialogChrome.MakeHintText(Se.Language.Tools.BatchConvert.TransportStreamSettingsInfo);
+        var labelInfo = EditorChrome.MakeHint(Se.Language.Tools.BatchConvert.TransportStreamSettingsInfo);
         labelInfo.MaxWidth = 560;
         labelInfo.HorizontalAlignment = HorizontalAlignment.Left;
 
         // X position
-        var switchOverrideX = BatchConvertChrome.MakeSwitchRow(nameof(vm.OverrideXPosition), Se.Language.Tools.BatchConvert.TransportStreamOverrideXPosition, out var toggleOverrideX);
+        var switchOverrideX = EditorChrome.MakeSwitchRow(nameof(vm.OverrideXPosition), Se.Language.Tools.BatchConvert.TransportStreamOverrideXPosition, out var toggleOverrideX);
         var comboBoxAlignment = UiUtil.MakeComboBox(vm.HorizontalAlignments, vm, nameof(vm.SelectedHorizontalAlignment))
             .WithBindEnabled(nameof(vm.OverrideXPosition));
         comboBoxAlignment.MinWidth = 140;
@@ -41,24 +40,24 @@ public class BatchConvertTsSettingsWindow : Window
         var numericHMargin = Field(UiUtil.MakeNumericUpDownInt(0, 100, 5, 80, vm, nameof(vm.HorizontalMarginPercent)), Se.Language.File.Export.LeftRightMargin)
             .WithBindEnabled(nameof(vm.OverrideXPosition));
         var panelX = Indented(
-            BatchConvertChrome.MakeRow(Se.Language.General.Alignment, comboBoxAlignment, LabelWidth),
-            BatchConvertChrome.MakeRow(Se.Language.File.Export.LeftRightMargin, Percent(numericHMargin), LabelWidth));
+            EditorChrome.MakeLabeledRow(Se.Language.General.Alignment, comboBoxAlignment, LabelWidth, wrap: true),
+            EditorChrome.MakeLabeledRow(Se.Language.File.Export.LeftRightMargin, Percent(numericHMargin), LabelWidth, wrap: true));
 
         // Y position
-        var switchOverrideY = BatchConvertChrome.MakeSwitchRow(nameof(vm.OverrideYPosition), Se.Language.Tools.BatchConvert.TransportStreamOverrideYPosition);
+        var switchOverrideY = EditorChrome.MakeSwitchRow(nameof(vm.OverrideYPosition), Se.Language.Tools.BatchConvert.TransportStreamOverrideYPosition);
         var numericBottomMargin = Field(UiUtil.MakeNumericUpDownInt(0, 100, 5, 80, vm, nameof(vm.BottomMarginPercent)), Se.Language.Tools.BatchConvert.TransportStreamBottomMargin)
             .WithBindEnabled(nameof(vm.OverrideYPosition));
-        var panelY = Indented(BatchConvertChrome.MakeRow(Se.Language.Tools.BatchConvert.TransportStreamBottomMargin, Percent(numericBottomMargin), LabelWidth));
+        var panelY = Indented(EditorChrome.MakeLabeledRow(Se.Language.Tools.BatchConvert.TransportStreamBottomMargin, Percent(numericBottomMargin), LabelWidth, wrap: true));
 
         var position = new StackPanel { Spacing = 8, Children = { switchOverrideX, panelX, switchOverrideY, panelY } };
 
         // Video size
-        var switchOverrideSize = BatchConvertChrome.MakeSwitchRow(nameof(vm.OverrideVideoSize), Se.Language.Tools.BatchConvert.TransportStreamOverrideVideoSize);
+        var switchOverrideSize = EditorChrome.MakeSwitchRow(nameof(vm.OverrideVideoSize), Se.Language.Tools.BatchConvert.TransportStreamOverrideVideoSize);
         var numericWidth = Field(UiUtil.MakeNumericUpDownInt(1, 9999, 1920, 80, vm, nameof(vm.VideoWidth)), Se.Language.General.Width, "W")
             .WithBindEnabled(nameof(vm.OverrideVideoSize));
         var numericHeight = Field(UiUtil.MakeNumericUpDownInt(1, 9999, 1080, 80, vm, nameof(vm.VideoHeight)), Se.Language.General.Height, "H")
             .WithBindEnabled(nameof(vm.OverrideVideoSize));
-        var buttonGetSizeFromVideo = VideoSubDialogChrome.MakeAction("fa-solid fa-film", Se.Language.Tools.BatchConvert.TransportStreamGetSizeFromVideo, vm.GetSizeFromVideoCommand);
+        var buttonGetSizeFromVideo = EditorChrome.MakeActionButton("fa-solid fa-film", Se.Language.Tools.BatchConvert.TransportStreamGetSizeFromVideo, vm.GetSizeFromVideoCommand);
         var panelSize = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -75,7 +74,7 @@ public class BatchConvertTsSettingsWindow : Window
         var videoSize = new StackPanel { Spacing = 8, Children = { switchOverrideSize, panelSize } };
 
         // File name ending
-        var textBoxFileNameEnding = VideoSubDialogChrome.MakeTextBox(nameof(vm.FileNameEnding), Se.Language.Tools.BatchConvert.TransportStreamFileNameEnding, 220);
+        var textBoxFileNameEnding = EditorChrome.MakeTextField(nameof(vm.FileNameEnding), Se.Language.Tools.BatchConvert.TransportStreamFileNameEnding, 220);
         vm.GetFileNameEndingCaretIndex = () => textBoxFileNameEnding.CaretIndex;
         vm.SetFileNameEndingCaretIndex = index =>
         {
@@ -108,7 +107,7 @@ public class BatchConvertTsSettingsWindow : Window
             ToolTip.SetTip(buttonInsertPlaceholder, Se.Language.Tools.BatchConvert.TransportStreamFileNameEndingInfo);
         }
 
-        var labelSample = VideoSubDialogChrome.MakeHint(nameof(vm.FileNameEndingSample));
+        var labelSample = EditorChrome.MakeBoundHint(nameof(vm.FileNameEndingSample));
         var panelFileNameEnding = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -116,7 +115,7 @@ public class BatchConvertTsSettingsWindow : Window
             Children = { textBoxFileNameEnding, buttonInsertPlaceholder, labelSample }
         };
 
-        var fileNameInfo = VideoSubDialogChrome.MakeHintText(Se.Language.Tools.BatchConvert.TransportStreamFileNameEndingInfo);
+        var fileNameInfo = EditorChrome.MakeHint(Se.Language.Tools.BatchConvert.TransportStreamFileNameEndingInfo);
         fileNameInfo.MaxWidth = 480;
         fileNameInfo.HorizontalAlignment = HorizontalAlignment.Left;
         fileNameInfo.Margin = new Thickness(LabelWidth + 8, 0, 0, 0);
@@ -126,9 +125,9 @@ public class BatchConvertTsSettingsWindow : Window
             Spacing = 8,
             Children =
             {
-                BatchConvertChrome.MakeRow(Se.Language.Tools.BatchConvert.TransportStreamFileNameEnding, panelFileNameEnding, LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.Tools.BatchConvert.TransportStreamFileNameEnding, panelFileNameEnding, LabelWidth, wrap: true),
                 fileNameInfo,
-                BatchConvertChrome.MakeSwitchRow(nameof(vm.OnlyTeletext), Se.Language.Tools.BatchConvert.TransportStreamOnlyTeletext),
+                EditorChrome.MakeSwitchRow(nameof(vm.OnlyTeletext), Se.Language.Tools.BatchConvert.TransportStreamOnlyTeletext),
             }
         };
 
@@ -136,19 +135,15 @@ public class BatchConvertTsSettingsWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        var sections = BatchConvertChrome.MakeSections(
-            new Border { Child = labelInfo, Padding = new Thickness(14, 12, 14, 0) },
-            EditorChrome.MakeEditorSection(Se.Language.General.Position, position, first: true),
-            EditorChrome.MakeEditorSection(Se.Language.General.VideoResolution, videoSize),
-            EditorChrome.MakeEditorSection(Se.Language.Tools.BatchConvert.SettingsSectionOutput, outputFiles));
+        var sections = EditorChrome.MakeSectionStack(new Border { Child = labelInfo, Padding = new Thickness(14, 12, 14, 0) }, EditorChrome.MakeEditorSection(Se.Language.General.Position, position, first: true), EditorChrome.MakeEditorSection(Se.Language.General.VideoResolution, videoSize), EditorChrome.MakeEditorSection(Se.Language.Tools.BatchConvert.SettingsSectionOutput, outputFiles));
         sections.MinWidth = 600;
 
         Content = new StackPanel
         {
             Children =
             {
-                VideoSubDialogChrome.MakePanel(sections),
-                VideoSubDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk),
+                EditorChrome.MakePanel(sections),
+                EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk),
             }
         };
 

@@ -5,8 +5,6 @@ using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
-using Nikse.SubtitleEdit.Features.Options;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -24,7 +22,7 @@ public class GridColumnsWindow : Window
         Title = Se.Language.General.Columns;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        OptionsListChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.CompactListRows);
         vm.Window = this;
         DataContext = vm;
 
@@ -67,13 +65,13 @@ public class GridColumnsWindow : Window
             Children = { buttonMoveUp, buttonMoveDown, EditorChrome.MakeToolbarSeparator(), buttonReset },
         };
 
-        var section = EditorChrome.MakeEditorSection(Se.Language.General.Columns, OptionsListChrome.MakeListFrame(listBox), panelActions, first: true);
+        var section = EditorChrome.MakeEditorSection(Se.Language.General.Columns, EditorChrome.MakeCompactListFrame(listBox), panelActions, first: true);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = SyncTimingChrome.MakeRoot(section, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(section, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, listBox); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);

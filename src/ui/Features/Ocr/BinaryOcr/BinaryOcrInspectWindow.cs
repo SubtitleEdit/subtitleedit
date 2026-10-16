@@ -3,8 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -28,7 +26,7 @@ public class BinaryOcrInspectWindow : Window
         MinHeight = 600;
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         DataContext = vm;
 
         var body = new Grid
@@ -42,11 +40,11 @@ public class BinaryOcrInspectWindow : Window
         body.Add(MakeLinesView(vm), 0, 0);
         body.Add(MakeControlsView(vm), 1, 0);
 
-        var buttonOk = BinaryOcrChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
-        var labelInfo = BinaryOcrChrome.MakeStatusText("Binary OCR uses pixel-by-pixel comparison. No manual drawing required.");
-        var buttonBar = SyncTimingChrome.MakeButtonBar(labelInfo, buttonOk);
+        var buttonOk = EditorChrome.AsFlushPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var labelInfo = EditorChrome.MakeDimStatusText("Binary OCR uses pixel-by-pixel comparison. No manual drawing required.");
+        var buttonBar = EditorChrome.MakeDockedButtonBar(labelInfo, buttonOk);
 
-        Content = SyncTimingChrome.MakeRoot(body, buttonBar);
+        Content = EditorChrome.MakeRoot(body, buttonBar);
 
         vm.TextBoxNew.KeyDown += vm.TextBoxNewOnKeyDown;
 
@@ -77,11 +75,11 @@ public class BinaryOcrInspectWindow : Window
             Orientation = Orientation.Vertical,
             Margin = new Thickness(4),
         };
-        var linesFrame = EditDialogChrome.MakeListFrame(new ScrollViewer
+        var linesFrame = EditorChrome.MakeListFrame(new ScrollViewer
         {
             Content = vm.PanelLines,
             MaxHeight = 220,
-        });
+        }, clearListBackground: true);
 
         var image = new Image
         {
@@ -138,7 +136,8 @@ public class BinaryOcrInspectWindow : Window
             },
         };
 
-        var switchItalic = BinaryOcrChrome.MakeSwitch(nameof(vm.IsNewTextItalic), Se.Language.General.Italic, nameof(vm.IsEditControlsEnabled));
+        var switchItalic = EditorChrome.MakeSwitch(nameof(vm.IsNewTextItalic), Se.Language.General.Italic);
+        switchItalic.Bind(Avalonia.Input.InputElement.IsEnabledProperty, new Binding(nameof(vm.IsEditControlsEnabled)));
         switchItalic.IsCheckedChanged += vm.ItalicCheckChanged;
 
         var buttonUpdate = BinaryOcrChrome.MakeActionButton(Se.Language.General.Update, IconNames.Check, vm.UpdateCommand)

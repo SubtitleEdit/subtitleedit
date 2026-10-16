@@ -7,10 +7,8 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Features.Edit;
 using Nikse.SubtitleEdit.Features.Ocr.BinaryOcr;
 using Nikse.SubtitleEdit.Features.SpellCheck;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -33,7 +31,7 @@ public class PromptUnknownWordWindow : Window
         Height = 640;
         MinWidth = 700;
         MinHeight = 560;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -83,8 +81,8 @@ public class PromptUnknownWordWindow : Window
         body.Add(MakeWholeTextView(vm), 1, 0);
         body.Add(columns, 2, 0);
 
-        var buttonCancel = BinaryOcrChrome.AsBarButton(UiUtil.MakeButton(Se.Language.General.Abort, vm.CancelCommand));
-        Content = SyncTimingChrome.MakeRoot(body, SyncTimingChrome.MakeButtonBar(null, buttonCancel));
+        var buttonCancel = EditorChrome.WithoutMargin(UiUtil.MakeButton(Se.Language.General.Abort, vm.CancelCommand));
+        Content = EditorChrome.MakeRoot(body, EditorChrome.MakeDockedButtonBar(null, buttonCancel));
 
         UiUtil.FocusOnFirstActivation(this, vm.TextBoxWord); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -119,7 +117,7 @@ public class PromptUnknownWordWindow : Window
             Content = vm.PanelWholeText,
             Height = 86,
         };
-        var scrollViewerWholeTextBorder = EditDialogChrome.MakeListFrame(scrollViewerWholeText);
+        var scrollViewerWholeTextBorder = EditorChrome.MakeListFrame(scrollViewerWholeText, clearListBackground: true);
         scrollViewerWholeTextBorder.Bind(Border.IsVisibleProperty, new Binding(nameof(vm.DoEditWholeText))
         {
             Converter = InverseBooleanConverter.Instance,
@@ -218,7 +216,7 @@ public class PromptUnknownWordWindow : Window
             Content = text,
             Command = command,
         }.WithIconLeft(icon);
-        return EditDialogChrome.StyleActionButton(button);
+        return EditorChrome.StyleActionColumnButton(button);
     }
 
     private static Border MakeWordSuggestionsView(PromptUnknownWordViewModel vm)
@@ -262,7 +260,7 @@ public class PromptUnknownWordWindow : Window
         listBoxSuggestions.SelectionChanged += vm.ListBoxSuggestionsSelectionChanged;
 
         var panel = new StackPanel { Spacing = 8 };
-        panel.Children.Add(EditDialogChrome.MakeListFrame(listBoxSuggestions));
+        panel.Children.Add(EditorChrome.MakeListFrame(listBoxSuggestions, clearListBackground: true));
         panel.Children.Add(panelButtons);
         return EditorChrome.MakeEditorSection(Se.Language.General.Suggestions, panel);
     }

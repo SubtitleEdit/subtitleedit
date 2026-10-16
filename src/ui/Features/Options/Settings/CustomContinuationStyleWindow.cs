@@ -5,8 +5,6 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -30,7 +28,7 @@ public class CustomContinuationStyleWindow : Window
         Height = 700;
         MinWidth = 760;
         MinHeight = 480;
-        OptionsListChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.CompactListRows);
         vm.Window = this;
         DataContext = vm;
 
@@ -61,7 +59,7 @@ public class CustomContinuationStyleWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = SyncTimingChrome.MakeRoot(columns, SyncTimingChrome.MakeButtonBar(MakeLoadDefaultsButton(vm), buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(columns, EditorChrome.MakeDockedButtonBar(MakeLoadDefaultsButton(vm), buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, comboBoxFirstInput); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
@@ -79,7 +77,7 @@ public class CustomContinuationStyleWindow : Window
 
     private static StackPanel MakeSwitch(string property, string text, CustomContinuationStyleViewModel vm, string? isEnabledProperty = null)
     {
-        var row = OptionsListChrome.MakeSwitchRow(property, text, out var toggle);
+        var row = EditorChrome.MakeToggleRow(property, text, out var toggle);
         toggle.IsCheckedChanged += (s, e) => vm.StyleChanged();
         if (isEnabledProperty != null)
         {
@@ -99,7 +97,7 @@ public class CustomContinuationStyleWindow : Window
             Spacing = 8,
             Children =
             {
-                SyncTimingChrome.Row(Se.Language.General.Prefix, comboBoxPrefix, LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Prefix, comboBoxPrefix, LabelWidth),
                 MakeSwitch(nameof(vm.SelectedPrefixAddSpace), Se.Language.Options.Settings.AddSpace, vm),
             },
         };
@@ -111,18 +109,18 @@ public class CustomContinuationStyleWindow : Window
             Spacing = 8,
             Children =
             {
-                SyncTimingChrome.Row(Se.Language.General.Suffix, comboBoxSuffix, LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Suffix, comboBoxSuffix, LabelWidth),
                 MakeSwitch(nameof(vm.SelectedSuffixesProcessIfEndWithComma), Se.Language.Options.Settings.ProcessIfEndsWithComma, vm),
                 MakeSwitch(nameof(vm.SelectedSuffixesAddSpace), Se.Language.Options.Settings.AddSpace, vm),
                 MakeSwitch(nameof(vm.SelectedSuffixesRemoveComma), Se.Language.Options.Settings.RemoveComma, vm),
             },
         };
 
-        var switchUseSpecialStyleAfterLongGaps = OptionsListChrome.MakeSwitchRow(nameof(vm.UseSpecialStyleAfterLongGaps), Se.Language.Options.Settings.UseSpecialStyleAfterLongGaps, out var toggleLongGaps);
+        var switchUseSpecialStyleAfterLongGaps = EditorChrome.MakeToggleRow(nameof(vm.UseSpecialStyleAfterLongGaps), Se.Language.Options.Settings.UseSpecialStyleAfterLongGaps, out var toggleLongGaps);
         toggleLongGaps.PropertyChanged += (s, e) => vm.StyleChanged();
         var numericUpDownLongGapThreshold = UiUtil.MakeNumericUpDownInt(0, 10_000, 300, 120, vm, nameof(vm.LongGapMs))
             .WithBindEnabled(nameof(vm.UseSpecialStyleAfterLongGaps))
-            .AsField(Se.Language.Options.Settings.LongGapThreshold);
+            .AsField(Se.Language.Options.Settings.LongGapThreshold, themeForeground: true);
         var comboBoxLongPrefix = MakeCombo(vm, nameof(vm.SelectedLongGapPrefix), Se.Language.General.Prefix)
             .WithBindEnabled(nameof(vm.UseSpecialStyleAfterLongGaps));
         comboBoxLongPrefix.SelectionChanged += (s, e) => vm.StyleChanged();
@@ -135,9 +133,9 @@ public class CustomContinuationStyleWindow : Window
             Children =
             {
                 switchUseSpecialStyleAfterLongGaps,
-                SyncTimingChrome.Row(Se.Language.Options.Settings.LongGapThreshold, numericUpDownLongGapThreshold, LabelWidth),
-                SyncTimingChrome.Row(Se.Language.General.Prefix, comboBoxLongPrefix, LabelWidth),
-                SyncTimingChrome.Row(Se.Language.General.Suffix, comboBoxLongSuffix, LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.Options.Settings.LongGapThreshold, numericUpDownLongGapThreshold, LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Prefix, comboBoxLongPrefix, LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Suffix, comboBoxLongSuffix, LabelWidth),
                 MakeSwitch(nameof(vm.SelectedLongGapSuffixesProcessIfEndWithComma), Se.Language.Options.Settings.ProcessIfEndsWithComma, vm, nameof(vm.UseSpecialStyleAfterLongGaps)),
                 MakeSwitch(nameof(vm.SelectedLongGapSuffixesAddSpace), Se.Language.Options.Settings.AddSpace, vm, nameof(vm.UseSpecialStyleAfterLongGaps)),
                 MakeSwitch(nameof(vm.SelectedLongGapSuffixesRemoveComma), Se.Language.Options.Settings.RemoveComma, vm, nameof(vm.UseSpecialStyleAfterLongGaps)),
@@ -247,7 +245,7 @@ public class CustomContinuationStyleWindow : Window
         };
 
         grid.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Preview), 0);
-        grid.Add(EditDialogChrome.MakeListFrame(previewScroll), 1);
+        grid.Add(EditorChrome.MakeListFrame(previewScroll, clearListBackground: true), 1);
         return grid;
     }
 }

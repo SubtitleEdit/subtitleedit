@@ -11,7 +11,7 @@ public static class ViewRunPlugin
         if (!vm.HasRunPlugins)
         {
             return FunctionViewChrome.MakePanel(vm, Se.Language.Plugins.RunPlugin,
-                FunctionViewChrome.MakeHint(Se.Language.Plugins.NoBatchPluginsInstalled));
+                EditorChrome.MakeHint(Se.Language.Plugins.NoBatchPluginsInstalled));
         }
 
         var comboPlugin = FunctionViewChrome.Compact(UiUtil.MakeComboBox(vm.RunPluginNames, vm, nameof(vm.SelectedRunPluginName), null), Se.Language.Plugins.Plugin, 220);
@@ -26,6 +26,6 @@ public static class ViewRunPlugin
 
         return FunctionViewChrome.MakePanel(vm, Se.Language.Plugins.RunPlugin,
             FunctionViewChrome.MakeRow(Se.Language.Plugins.Plugin, panelPlugin),
-            FunctionViewChrome.MakeHint(Se.Language.Plugins.BatchPluginInfo));
+            EditorChrome.MakeHint(Se.Language.Plugins.BatchPluginInfo));
     }
 }

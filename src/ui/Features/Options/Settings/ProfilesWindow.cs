@@ -148,7 +148,7 @@ public class ProfilesWindow : Window
             Margin = new Thickness(14, 12, 14, 14),
         };
         panel.Add(header, 0);
-        panel.Add(SettingsChrome.MakeListFrame(dataGrid), 1);
+        panel.Add(EditorChrome.MakeListFrame(dataGrid), 1);
         return panel;
     }
 

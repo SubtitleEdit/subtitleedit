@@ -4,7 +4,6 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -27,38 +26,32 @@ public class BridgeGapsWindow : Window
         Height = 800;
         MinWidth = 900;
         MinHeight = 500;
-        SyncTimingChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TimeCodes);
         vm.Window = this;
         DataContext = vm;
 
-        var numericUpDownBridgeGapSmallerThan = TimingToolChrome.Field(
-            UiUtil.MakeNumericUpDownInt(1, 10000, vm.BridgeGapsSmallerThanMsOrFrames, 90, vm, nameof(vm.BridgeGapsSmallerThanMsOrFrames)),
-            vm.BridgeGapsSmallerThanLabel);
+        var numericUpDownBridgeGapSmallerThan = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(1, 10000, vm.BridgeGapsSmallerThanMsOrFrames, 90, vm, nameof(vm.BridgeGapsSmallerThanMsOrFrames)), vm.BridgeGapsSmallerThanLabel, 90, center: true);
         numericUpDownBridgeGapSmallerThan.ValueChanged += vm.ValueChanged;
         var buttonCalculateBridgeGapSmallerThan = EditorChrome.CreateToolButton("fa-solid fa-calculator",
                 Se.Language.Tools.BridgeGaps.CalculateBridgeGapsSmallerThanDotDotDot, vm.CalculateBridgeGapsSmallerThanMsCommand, 28)
             .WithBindIsVisible(vm, nameof(vm.IsMsMode));
 
-        var numericUpDownMinGap = TimingToolChrome.Field(
-            UiUtil.MakeNumericUpDownInt(0, 1000, vm.MinGapMsOrFrames, 90, vm, nameof(vm.MinGapMsOrFrames)),
-            vm.MinGapLabel);
+        var numericUpDownMinGap = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(0, 1000, vm.MinGapMsOrFrames, 90, vm, nameof(vm.MinGapMsOrFrames)), vm.MinGapLabel, 90, center: true);
         numericUpDownMinGap.ValueChanged += vm.ValueChanged;
         var buttonCalculateMinGap = EditorChrome.CreateToolButton("fa-solid fa-calculator",
                 Se.Language.Options.Settings.MinGapCalculateDotDotDot, vm.CalculateMinGapMsCommand, 28)
             .WithBindIsVisible(vm, nameof(vm.IsMsMode));
 
-        var numericUpDownPercentForLeft = TimingToolChrome.Field(
-            UiUtil.MakeNumericUpDownInt(0, 100, Se.Settings.Tools.BridgeGaps.PercentForLeft, 90, vm, nameof(vm.PercentForLeft)),
-            Se.Language.Tools.BridgeGaps.PercentFoPrevious);
+        var numericUpDownPercentForLeft = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(0, 100, Se.Settings.Tools.BridgeGaps.PercentForLeft, 90, vm, nameof(vm.PercentForLeft)), Se.Language.Tools.BridgeGaps.PercentFoPrevious, 90, center: true);
         numericUpDownPercentForLeft.ValueChanged += vm.ValueChanged;
 
         var panelControls = new WrapPanel { Orientation = Orientation.Horizontal, ItemSpacing = 28, LineSpacing = 8 };
-        panelControls.Children.Add(TimingToolChrome.LabeledField(vm.BridgeGapsSmallerThanLabel, numericUpDownBridgeGapSmallerThan, buttonCalculateBridgeGapSmallerThan));
-        panelControls.Children.Add(TimingToolChrome.LabeledField(vm.MinGapLabel, numericUpDownMinGap, buttonCalculateMinGap));
-        panelControls.Children.Add(TimingToolChrome.LabeledField(Se.Language.Tools.BridgeGaps.PercentFoPrevious, numericUpDownPercentForLeft));
+        panelControls.Children.Add(EditorChrome.MakeLabeledField(vm.BridgeGapsSmallerThanLabel, numericUpDownBridgeGapSmallerThan, buttonCalculateBridgeGapSmallerThan));
+        panelControls.Children.Add(EditorChrome.MakeLabeledField(vm.MinGapLabel, numericUpDownMinGap, buttonCalculateMinGap));
+        panelControls.Children.Add(EditorChrome.MakeLabeledField(Se.Language.Tools.BridgeGaps.PercentFoPrevious, numericUpDownPercentForLeft));
         var optionsSection = EditorChrome.MakeEditorSection(Se.Language.General.Options, panelControls, first: true);
 
-        var listSection = TimingToolChrome.MakeListSection(EditorChrome.MakeSectionHeader(Se.Language.General.Preview), MakeSubtitleView(vm));
+        var listSection = EditorChrome.MakeFillSection(EditorChrome.MakeSectionHeader(Se.Language.General.Preview), EditorChrome.MakeListFrame(MakeSubtitleView(vm)));
 
         var sections = new Grid
         {
@@ -75,9 +68,7 @@ public class BridgeGapsWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = SyncTimingChrome.MakeRoot(
-            sections,
-            SyncTimingChrome.MakeButtonBar(TimingToolChrome.MakeStatus(nameof(vm.StatusText)), buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(EditorChrome.MakeBoundHint(nameof(vm.StatusText), 12), buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, numericUpDownBridgeGapSmallerThan); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);

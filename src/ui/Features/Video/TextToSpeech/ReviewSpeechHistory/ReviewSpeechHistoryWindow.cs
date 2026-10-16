@@ -28,11 +28,11 @@ public class ReviewSpeechHistoryWindow : Window
         MinWidth = 600;
         MinHeight = 400;
         CanResize = true;
-        TtsMainEditorLook.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TextFieldsBare | EditorWindowStyles.MuteDisabledPrimary);
         vm.Window = this;
         DataContext = vm;
 
-        var buttonOk = TtsMainEditorLook.MakePrimary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
         var header = EditorChrome.MakeSectionHeader(Se.Language.General.History);
@@ -60,7 +60,7 @@ public class ReviewSpeechHistoryWindow : Window
         };
 
         grid.Add(new Border { Background = EditorChrome.PanelBrush, Child = list }, 0);
-        grid.Add(TtsMainEditorLook.MakeButtonBar(null, buttonCancel, buttonOk), 1);
+        grid.Add(EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk), 1);
 
         Content = grid;
 
@@ -125,6 +125,6 @@ public class ReviewSpeechHistoryWindow : Window
             Width = new GridLength(90),
         });
 
-        return TtsMainEditorLook.MakeListFrame(tableView);
+        return EditorChrome.MakeListFrame(tableView);
     }
 }

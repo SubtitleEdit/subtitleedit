@@ -1,11 +1,8 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
-using Nikse.SubtitleEdit.Features.Tools;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -29,7 +26,7 @@ public class ExportPlainTextWindow : Window
         MinHeight = 400;
         vm.Window = this;
         DataContext = vm;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         // Encoding + buttons
         var labelEncoding = EditorChrome.MakeDimLabel(Se.Language.General.Encoding, new Thickness(0, 0, 8, 0));
@@ -73,8 +70,7 @@ public class ExportPlainTextWindow : Window
         sections.Add(MakeSettingsView(vm, out var firstSettingsControl), 0, 0);
         sections.Add(MakePreviewView(vm), 0, 1);
 
-        Content = SyncTimingChrome.MakeRoot(sections,
-            SyncTimingChrome.MakeButtonBar(panelEncoding, buttonDone, buttonSaveAs, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(panelEncoding, buttonDone, buttonSaveAs, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, () => (vm.IsBatchMode ? firstSettingsControl : comboBoxEncoding).Focus()); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.OnKeyDown;
@@ -85,15 +81,15 @@ public class ExportPlainTextWindow : Window
     private static ScrollViewer MakeSettingsView(ExportPlainTextViewModel vm, out Control firstSettingsControl)
     {
         // Line numbers section
-        var rowShowLineNumbers = LineToolsChrome.MakeSwitchRow(nameof(vm.ShowLineNumbers), Se.Language.File.Export.ShowLineNumbers, out var switchShowLineNumbers);
+        var rowShowLineNumbers = EditorChrome.MakeToggleRow(nameof(vm.ShowLineNumbers), Se.Language.File.Export.ShowLineNumbers, out var switchShowLineNumbers);
         switchShowLineNumbers.IsCheckedChanged += (s, e) => vm.SetDirty();
         firstSettingsControl = switchShowLineNumbers;
-        var rowAddNewLineAfterLineNumber = LineToolsChrome.MakeSwitchRow(nameof(vm.AddNewLineAfterLineNumber), Se.Language.File.Export.AddNewLineAfterLineNumber, out var switchAddNewLineAfterLineNumber);
+        var rowAddNewLineAfterLineNumber = EditorChrome.MakeToggleRow(nameof(vm.AddNewLineAfterLineNumber), Se.Language.File.Export.AddNewLineAfterLineNumber, out var switchAddNewLineAfterLineNumber);
         rowAddNewLineAfterLineNumber.Bind(IsEnabledProperty, new Binding(nameof(vm.ShowLineNumbers)));
         switchAddNewLineAfterLineNumber.IsCheckedChanged += (s, e) => vm.SetDirty();
 
         // Time codes section
-        var rowShowTimeCodes = LineToolsChrome.MakeSwitchRow(nameof(vm.ShowTimeCodes), Se.Language.General.ShowTimeCodes, out var switchShowTimeCodes);
+        var rowShowTimeCodes = EditorChrome.MakeToggleRow(nameof(vm.ShowTimeCodes), Se.Language.General.ShowTimeCodes, out var switchShowTimeCodes);
         switchShowTimeCodes.IsCheckedChanged += (s, e) => vm.SetDirty();
         var comboBoxTimeCodeFormat = UiUtil.MakeComboBox(vm.TimeCodeFormats, vm, nameof(vm.SelectedTimeCodeFormat))
             .BindIsEnabled(vm, nameof(vm.ShowTimeCodes))
@@ -105,10 +101,8 @@ public class ExportPlainTextWindow : Window
             .WithAccessibleName(Se.Language.General.Separator);
         comboBoxTimeCodeSeparator.MinWidth = 160;
         comboBoxTimeCodeSeparator.SelectionChanged += (sender, args) => vm.SetDirty();
-        var gridTimeCodeFields = LineToolsChrome.MakeFieldGrid(
-            (Se.Language.General.Format, comboBoxTimeCodeFormat),
-            (Se.Language.General.Separator, comboBoxTimeCodeSeparator));
-        var rowAddNewLineAfterTimeCode = LineToolsChrome.MakeSwitchRow(nameof(vm.AddNewLineAfterTimeCode), Se.Language.File.Export.AddNewLineAfterTimeCode, out var switchAddNewLineAfterTimeCode);
+        var gridTimeCodeFields = EditorChrome.MakeFieldGrid((Se.Language.General.Format, comboBoxTimeCodeFormat), (Se.Language.General.Separator, comboBoxTimeCodeSeparator));
+        var rowAddNewLineAfterTimeCode = EditorChrome.MakeToggleRow(nameof(vm.AddNewLineAfterTimeCode), Se.Language.File.Export.AddNewLineAfterTimeCode, out var switchAddNewLineAfterTimeCode);
         rowAddNewLineAfterTimeCode.Bind(IsEnabledProperty, new Binding(nameof(vm.ShowTimeCodes)));
         switchAddNewLineAfterTimeCode.IsCheckedChanged += (sender, args) => vm.SetDirty();
 
@@ -129,13 +123,13 @@ public class ExportPlainTextWindow : Window
             ((RadioButton)radioButton).FontSize = 12.5;
         }
 
-        var rowRemoveStyling = LineToolsChrome.MakeSwitchRow(nameof(vm.TextRemoveStyling), Se.Language.General.RemoveStyling, out var switchRemoveStyling);
+        var rowRemoveStyling = EditorChrome.MakeToggleRow(nameof(vm.TextRemoveStyling), Se.Language.General.RemoveStyling, out var switchRemoveStyling);
         switchRemoveStyling.IsCheckedChanged += (sender, args) => vm.SetDirty();
-        var rowAddLineAfterText = LineToolsChrome.MakeSwitchRow(nameof(vm.AddLineAfterText), Se.Language.File.Export.AddNewLineAfterText, out var switchAddLineAfterText);
+        var rowAddLineAfterText = EditorChrome.MakeToggleRow(nameof(vm.AddLineAfterText), Se.Language.File.Export.AddNewLineAfterText, out var switchAddLineAfterText);
         switchAddLineAfterText.IsCheckedChanged += (sender, args) => vm.SetDirty();
 
         // Spacing section
-        var rowAddLineBetweenSubtitles = LineToolsChrome.MakeSwitchRow(nameof(vm.AddLineBetweenSubtitles), Se.Language.File.Export.AddLineBetweenSubtitles, out var switchAddLineBetweenSubtitles);
+        var rowAddLineBetweenSubtitles = EditorChrome.MakeToggleRow(nameof(vm.AddLineBetweenSubtitles), Se.Language.File.Export.AddLineBetweenSubtitles, out var switchAddLineBetweenSubtitles);
         switchAddLineBetweenSubtitles.IsCheckedChanged += (sender, args) => vm.SetDirty();
 
         static StackPanel Stack(params Control[] controls)
@@ -167,7 +161,7 @@ public class ExportPlainTextWindow : Window
 
     private static Border MakePreviewView(ExportPlainTextViewModel vm)
     {
-        var textBox = FileIoChrome.StyleTextArea(new TextBox
+        var textBox = EditorChrome.AsTextArea(new TextBox
         {
             AcceptsReturn = true,
             // Read-only preview - see ManualChosenEncodingWindow (#14313).
@@ -179,6 +173,6 @@ public class ExportPlainTextWindow : Window
         }).WithAccessibleName(Se.Language.General.Preview);
         textBox.Bind(TextBox.TextProperty, new Binding(nameof(vm.PreviewText)));
 
-        return FileIoChrome.MakeFillSection(Se.Language.General.Preview, textBox, lineLeft: true);
+        return EditorChrome.MakeFillSection(Se.Language.General.Preview, textBox, lineLeft: true);
     }
 }

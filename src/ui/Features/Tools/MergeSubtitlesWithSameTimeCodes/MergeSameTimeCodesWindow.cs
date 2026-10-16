@@ -33,7 +33,7 @@ public class MergeSameTimeCodesWindow : Window
         Height = 750;
         MinWidth = 600;
         MinHeight = 400;
-        LineToolsChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         _vm = vm;
         vm.Window = this;
@@ -42,14 +42,7 @@ public class MergeSameTimeCodesWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindEnabled(nameof(vm.IsOkEnabled));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = LineToolsChrome.MakeRoot(
-            LineToolsChrome.MakeSections(
-                EditorChrome.MakeEditorSection(Se.Language.General.Options, MakeControlsView(vm), first: true),
-                LineToolsChrome.MakeListSection(Se.Language.General.MergeLines, MakeMergesView(vm)),
-                LineToolsChrome.MakeListSection(Se.Language.General.Preview, MakeSubtitlesView(vm))),
-            null,
-            buttonCancel,
-            buttonOk);
+        Content = EditorChrome.MakeCancelOkRoot(EditorChrome.MakeOptionsAndLists(EditorChrome.MakeEditorSection(Se.Language.General.Options, MakeControlsView(vm), first: true), EditorChrome.MakeListSection(Se.Language.General.MergeLines, MakeMergesView(vm)), EditorChrome.MakeListSection(Se.Language.General.Preview, MakeSubtitlesView(vm))), null, buttonCancel, buttonOk);
 
         UiUtil.FocusOnFirstActivation(this, _numericUpDownMaxDiff); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += _vm.OnKeyDown;
@@ -60,12 +53,12 @@ public class MergeSameTimeCodesWindow : Window
 
     private Grid MakeControlsView(MergeSameTimeCodesViewModel vm)
     {
-        var numericUpDownMaxDiff = LineToolsChrome.MakeCompact(UiUtil.MakeNumericUpDownInt(0, 10000, vm.MaxMsOrFramesDifference, 130, vm, nameof(vm.MaxMsOrFramesDifference)), vm.MaxDifferenceLabel);
+        var numericUpDownMaxDiff = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(0, 10000, vm.MaxMsOrFramesDifference, 130, vm, nameof(vm.MaxMsOrFramesDifference)), vm.MaxDifferenceLabel.TrimEnd(':'), 100, alignLeft: true, center: true);
         _numericUpDownMaxDiff = numericUpDownMaxDiff;
         numericUpDownMaxDiff.ValueChanged += (s, e) => { vm.SetDirty(); };
-        var rowMergeAsDialog = LineToolsChrome.MakeSwitchRow(nameof(vm.MergeDialog), Se.Language.Tools.MergeLinesWithSameTimeCodes.MakeDialog, out var checkBoxMergeAsDialog);
+        var rowMergeAsDialog = EditorChrome.MakeToggleRow(nameof(vm.MergeDialog), Se.Language.Tools.MergeLinesWithSameTimeCodes.MakeDialog, out var checkBoxMergeAsDialog);
         checkBoxMergeAsDialog.IsCheckedChanged += (s, e) => { vm.SetDirty(); };
-        var rowAutoBreak = LineToolsChrome.MakeSwitchRow(nameof(vm.AutoBreak), Se.Language.General.AutoBreak, out var checkBoxAutoBreak);
+        var rowAutoBreak = EditorChrome.MakeToggleRow(nameof(vm.AutoBreak), Se.Language.General.AutoBreak, out var checkBoxAutoBreak);
         checkBoxAutoBreak.IsCheckedChanged += (s, e) => { vm.SetDirty(); };
 
         var grid = new Grid
@@ -73,7 +66,7 @@ public class MergeSameTimeCodesWindow : Window
             ColumnSpacing = 40,
             ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(GridLength.Auto) },
         };
-        grid.Add(LineToolsChrome.MakeFieldGrid((vm.MaxDifferenceLabel, numericUpDownMaxDiff)), 0, 0);
+        grid.Add(EditorChrome.MakeFieldGrid((vm.MaxDifferenceLabel, numericUpDownMaxDiff)), 0, 0);
         grid.Add(new StackPanel { Spacing = 8, Children = { rowMergeAsDialog, rowAutoBreak } }, 0, 1);
         return grid;
     }

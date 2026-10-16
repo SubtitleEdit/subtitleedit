@@ -7,7 +7,6 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Chrome = Nikse.SubtitleEdit.Features.Ocr.OcrDialogChrome;
 
 namespace Nikse.SubtitleEdit.Features.Translate.LlamaCppEngineSettings;
 
@@ -35,7 +34,7 @@ public class LlamaCppEngineSettingsWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        Chrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.EngineDialog);
 
         var folderText = new TextBox
         {
@@ -66,10 +65,10 @@ public class LlamaCppEngineSettingsWindow : Window
             Spacing = 10,
             Children =
             {
-                Chrome.Row(Se.Language.General.Backend, MakeValue(nameof(vm.BackendLabel)), LabelWidth),
-                Chrome.Row(Se.Language.General.Status, Chrome.StatusPanel(nameof(vm.StatusBrush), nameof(vm.StatusLabel)), LabelWidth),
-                Chrome.Row(Se.Language.General.Release, releaseText, LabelWidth),
-                Chrome.Row(Se.Language.General.InstallFolder, folderText, LabelWidth, alignTop: true),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Backend, MakeValue(nameof(vm.BackendLabel)), LabelWidth, spacing: 10),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Status, EditorChrome.MakeStatusDot(nameof(vm.StatusBrush), nameof(vm.StatusLabel)), LabelWidth, spacing: 10),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Release, releaseText, LabelWidth, spacing: 10),
+                EditorChrome.MakeLabeledRow(Se.Language.General.InstallFolder, folderText, LabelWidth, spacing: 10, alignTop: true),
             },
         };
 
@@ -77,15 +76,15 @@ public class LlamaCppEngineSettingsWindow : Window
         {
             Children =
             {
-                Chrome.MakeHeader("llama.cpp", Se.Language.General.LlamaCppEngineSettingsSubtitle),
+                EditorChrome.MakeDialogHeader("llama.cpp", Se.Language.General.LlamaCppEngineSettingsSubtitle),
                 EditorChrome.MakeEditorSection(Se.Language.General.Engine, rows),
             },
         };
 
-        var redownload = Chrome.Flat(UiUtil.MakeButton(string.Empty, vm.RedownloadCommand)
+        var redownload = EditorChrome.AsFlatAction(UiUtil.MakeButton(string.Empty, vm.RedownloadCommand)
             .WithIconLeftBindText(IconNames.Download, nameof(vm.DownloadButtonLabel)));
-        var openFolder = Chrome.Flat(UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.OpenFolderCommand).WithIconLeft(IconNames.FolderOpen));
-        var close = Chrome.MakePrimary(UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand));
+        var openFolder = EditorChrome.AsFlatAction(UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.OpenFolderCommand).WithIconLeft(IconNames.FolderOpen));
+        var close = EditorChrome.AsPrimary(UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand));
 
         var leftPanel = new StackPanel
         {
@@ -94,7 +93,7 @@ public class LlamaCppEngineSettingsWindow : Window
             Children = { redownload, openFolder },
         };
 
-        Content = Chrome.Root(sections, Chrome.ButtonBar(leftPanel, close));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeFlushButtonBar(leftPanel, close), stretch: false);
     }
 
     private static TextBlock MakeValue(string bindingPath) => new()

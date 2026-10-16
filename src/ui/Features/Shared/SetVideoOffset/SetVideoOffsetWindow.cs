@@ -10,7 +10,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 namespace Nikse.SubtitleEdit.Features.Shared.SetVideoOffset;
 
 /// <summary>
-/// Set video offset, in the editor look (see <see cref="SharedDialogChrome"/>): the offset with
+/// Set video offset, in the editor look (see <see cref="EditorChrome"/>): the offset with
 /// the recently used ones, the options as switches, Reset on the left of the button bar.
 /// </summary>
 public class SetVideoOffsetWindow : Window
@@ -21,7 +21,7 @@ public class SetVideoOffsetWindow : Window
         Title = Se.Language.General.SetVideoOffset;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        SharedDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
 
@@ -72,8 +72,8 @@ public class SetVideoOffsetWindow : Window
             Spacing = 8,
             Children =
             {
-                SharedDialogChrome.MakeSwitchRow(nameof(vm.RelativeToCurrentVideoPosition), Se.Language.General.RelativeToCurrentVideoPosition),
-                SharedDialogChrome.MakeSwitchRow(nameof(vm.KeepTimeCodes), Se.Language.General.KeepExistingTimeCodes),
+                EditorChrome.MakeSwitchRow(nameof(vm.RelativeToCurrentVideoPosition), Se.Language.General.RelativeToCurrentVideoPosition),
+                EditorChrome.MakeSwitchRow(nameof(vm.KeepTimeCodes), Se.Language.General.KeepExistingTimeCodes),
             }
         };
 
@@ -81,19 +81,15 @@ public class SetVideoOffsetWindow : Window
         {
             Children =
             {
-                SharedDialogChrome.MakeSection(Se.Language.General.VideoOffset, panelTimeCode, first: true),
-                SharedDialogChrome.MakeSection(Se.Language.General.Options, panelOptions),
+                EditorChrome.MakeEditorSection(Se.Language.General.VideoOffset, panelTimeCode, first: true),
+                EditorChrome.MakeEditorSection(Se.Language.General.Options, panelOptions),
             }
         };
 
         var buttonReset = UiUtil.MakeButton(Se.Language.General.Reset, vm.ResetCommand);
-        var buttonBar = SharedDialogChrome.MakeButtonBar(
-            buttonReset,
-            UiUtil.MakeButtonCancel(vm.CancelCommand),
-            UiUtil.MakeButton(Se.Language.General.Apply, vm.ApplyCommand),
-            SharedDialogChrome.Primary(UiUtil.MakeButtonOk(vm.OkCommand)));
+        var buttonBar = EditorChrome.MakeButtonBar(buttonReset, UiUtil.MakeButtonCancel(vm.CancelCommand), UiUtil.MakeButton(Se.Language.General.Apply, vm.ApplyCommand), EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand)));
 
-        Content = SharedDialogChrome.MakeRoot(sections, buttonBar);
+        Content = EditorChrome.MakeRoot(sections, buttonBar);
 
         UiUtil.FocusOnFirstActivation(this, timeCodeUpDownOffset);
         KeyDown += (sender, args) => vm.OnKeyDown(args);

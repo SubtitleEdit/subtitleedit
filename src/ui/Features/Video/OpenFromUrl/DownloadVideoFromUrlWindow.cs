@@ -3,7 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Video.VideoOcr;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -23,7 +22,7 @@ public class DownloadVideoFromUrlWindow : Window
         CanResize = false;
         Width = 480;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        VideoDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.VideoTool);
 
         DataContext = vm;
 
@@ -41,7 +40,7 @@ public class DownloadVideoFromUrlWindow : Window
         // Post-processing reports nothing, so the bar animates instead of sitting frozen at 100%.
         progressBar.Bind(ProgressBar.IsIndeterminateProperty, new Binding(nameof(vm.IsProgressIndeterminate)));
 
-        var statusText = VideoDialogChrome.Hint(nameof(vm.StatusText));
+        var statusText = EditorChrome.MakeBoundHint(nameof(vm.StatusText), 12);
 
         var errorText = new TextBlock
         {
@@ -77,7 +76,7 @@ public class DownloadVideoFromUrlWindow : Window
             RowDefinitions = { new RowDefinition(GridLength.Auto), new RowDefinition(GridLength.Auto) },
         };
         root.Add(section, 0, 0);
-        root.Add(VideoDialogChrome.ButtonBar(null, buttonCancel), 1, 0);
+        root.Add(EditorChrome.MakeButtonBar(null, buttonCancel), 1, 0);
         Content = root;
 
         Loaded += delegate

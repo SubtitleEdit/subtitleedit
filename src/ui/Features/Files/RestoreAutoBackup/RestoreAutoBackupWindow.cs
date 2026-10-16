@@ -5,8 +5,6 @@ using Avalonia.Media;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Optris.Icons.Avalonia;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -26,7 +24,7 @@ public class RestoreAutoBackupWindow : Window
         CanResize = true;
         vm.Window = this;
         DataContext = vm;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         var l = Se.Language.File.RestoreAutoBackup;
 
@@ -62,7 +60,7 @@ public class RestoreAutoBackupWindow : Window
             Padding = new Thickness(8, 4, 8, 0),
             Child = tabControl,
         };
-        Content = SyncTimingChrome.MakeRoot(tabs, SyncTimingChrome.MakeButtonBar(null, buttonOk));
+        Content = EditorChrome.MakeRoot(tabs, EditorChrome.MakeDockedButtonBar(null, buttonOk));
 
         // Initial focus on an input, not an action button - a focused button clicks on bare Space.
         UiUtil.FocusOnFirstActivation(this, () => { TableViewExtras.FocusRow(vm.SelectedTabIndex == 1 ? settingsGrid : subtitleGrid); });
@@ -131,10 +129,10 @@ public class RestoreAutoBackupWindow : Window
     {
         var l = Se.Language.File.RestoreAutoBackup;
 
-        var buttonOpenFolder = SyncTimingChrome.MakeTextToolButton("fa-regular fa-folder-open", l.OpenAutoBackupFolder, vm.OpenFolderCommand);
+        var buttonOpenFolder = EditorChrome.MakeTextToolButton("fa-regular fa-folder-open", l.OpenAutoBackupFolder, vm.OpenFolderCommand);
         var summaryText = MakeSummaryText($"{nameof(vm.Files)}.{nameof(vm.Files.Count)}");
 
-        var buttonDeleteAll = SyncTimingChrome.MakeTextToolButton("fa-solid fa-trash", l.DeleteAll, vm.DeleteAllFilesCommand)
+        var buttonDeleteAll = EditorChrome.MakeTextToolButton("fa-solid fa-trash", l.DeleteAll, vm.DeleteAllFilesCommand)
             .WithBindIsVisible(nameof(vm.IsEmptyFilesVisible));
         var buttonRestore = UiUtil.MakeButton(l.RestoreAutoBackupFile, vm.RestoreFileCommand)
             .WithIconLeft("fa-solid fa-clock-rotate-left");
@@ -197,12 +195,12 @@ public class RestoreAutoBackupWindow : Window
             },
         };
 
-        var buttonOpenFolder = SyncTimingChrome.MakeTextToolButton("fa-regular fa-folder-open", l.OpenSettingsBackupFolder, vm.OpenSettingsFolderCommand);
+        var buttonOpenFolder = EditorChrome.MakeTextToolButton("fa-regular fa-folder-open", l.OpenSettingsBackupFolder, vm.OpenSettingsFolderCommand);
         var summaryText = MakeSummaryText($"{nameof(vm.SettingsFiles)}.{nameof(vm.SettingsFiles.Count)}");
 
-        var buttonDeleteAll = SyncTimingChrome.MakeTextToolButton("fa-solid fa-trash", l.DeleteAll, vm.DeleteAllSettingsFilesCommand)
+        var buttonDeleteAll = EditorChrome.MakeTextToolButton("fa-solid fa-trash", l.DeleteAll, vm.DeleteAllSettingsFilesCommand)
             .WithBindIsVisible(nameof(vm.IsSettingsFilesVisible));
-        var buttonBackupNow = SyncTimingChrome.MakeTextToolButton("fa-solid fa-floppy-disk", l.BackUpSettingsNow, vm.BackupSettingsNowCommand);
+        var buttonBackupNow = EditorChrome.MakeTextToolButton("fa-solid fa-floppy-disk", l.BackUpSettingsNow, vm.BackupSettingsNowCommand);
         var buttonRestore = UiUtil.MakeButton(l.RestoreSettings, vm.RestoreSettingsCommand)
             .WithIconLeft("fa-solid fa-clock-rotate-left");
         buttonRestore.Classes.Add("primary");
@@ -252,7 +250,7 @@ public class RestoreAutoBackupWindow : Window
             RowDefinitions = { new RowDefinition(GridLength.Auto), new RowDefinition(new GridLength(1, GridUnitType.Star)) },
         };
         list.Add(listHeader, 0, 0);
-        list.Add(EditDialogChrome.MakeListFrame(dataGrid), 1, 0);
+        list.Add(EditorChrome.MakeListFrame(dataGrid, clearListBackground: true), 1, 0);
         grid.Add(list, 1, 0);
 
         var panelButtons = new StackPanel
@@ -275,7 +273,7 @@ public class RestoreAutoBackupWindow : Window
 
     private static TextBlock MakeSummaryText(string countPath)
     {
-        var text = FileIoChrome.MakeDimText();
+        var text = EditorChrome.MakeDimText();
         text.Bind(TextBlock.TextProperty, new Binding(countPath)
         {
             StringFormat = Se.Language.File.RestoreAutoBackup.XBackups,

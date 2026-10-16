@@ -1,8 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -22,7 +20,7 @@ public class BinaryOcrSettingsWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         DataContext = vm;
 
         var labelTitle = new TextBlock
@@ -37,7 +35,7 @@ public class BinaryOcrSettingsWindow : Window
         var buttonDelete = BinaryOcrChrome.MakeActionButton(Se.Language.General.Delete, IconNames.Trash, vm.DeleteCommand);
         var buttonRename = BinaryOcrChrome.MakeActionButton(Se.Language.General.Rename, IconNames.FormTextBox, vm.RenameCommand);
         var buttonNew = BinaryOcrChrome.MakeActionButton(Se.Language.General.New, IconNames.Plus, vm.NewCommand);
-        var buttonCancel = BinaryOcrChrome.AsBarButton(UiUtil.MakeButtonCancel(vm.CancelCommand));
+        var buttonCancel = EditorChrome.WithoutMargin(UiUtil.MakeButtonCancel(vm.CancelCommand));
 
         var panel = new StackPanel
         {
@@ -56,7 +54,7 @@ public class BinaryOcrSettingsWindow : Window
 
         var section = EditorChrome.MakeEditorSection(Se.Language.Ocr.Database, panel, first: true);
         section.MinWidth = 420;
-        Content = SyncTimingChrome.MakeRoot(section, SyncTimingChrome.MakeButtonBar(null, buttonCancel));
+        Content = EditorChrome.MakeRoot(section, EditorChrome.MakeDockedButtonBar(null, buttonCancel));
 
         UiUtil.FocusOnFirstActivation(this, () =>
         {

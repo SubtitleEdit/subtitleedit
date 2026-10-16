@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert.FunctionViews;
 
@@ -9,11 +10,11 @@ public static class ViewSplitBreakLongLines
 {
     public static Control Make(BatchConvertViewModel vm)
     {
-        var switchSplitLongLines = FunctionViewChrome.MakeSwitchRow(nameof(vm.SplitBreakSplitLongLines), Se.Language.Tools.SplitBreakLongLines.SplitLongLines);
-        var switchRebalanceLongLines = FunctionViewChrome.MakeSwitchRow(nameof(vm.SplitBreakRebalanceLongLines), Se.Language.Tools.SplitBreakLongLines.RebalanceLongLines);
+        var switchSplitLongLines = EditorChrome.MakeSwitchRow(nameof(vm.SplitBreakSplitLongLines), Se.Language.Tools.SplitBreakLongLines.SplitLongLines);
+        var switchRebalanceLongLines = EditorChrome.MakeSwitchRow(nameof(vm.SplitBreakRebalanceLongLines), Se.Language.Tools.SplitBreakLongLines.RebalanceLongLines);
 
         var switchRebalanceOnlyTooLong = FunctionViewChrome.Indented(
-            FunctionViewChrome.MakeSwitchRow(nameof(vm.SplitBreakRebalanceOnlyLinesTooLong), Se.Language.Tools.SplitBreakLongLines.RebalanceOnlyLinesTooLong));
+            EditorChrome.MakeSwitchRow(nameof(vm.SplitBreakRebalanceOnlyLinesTooLong), Se.Language.Tools.SplitBreakLongLines.RebalanceOnlyLinesTooLong));
         switchRebalanceOnlyTooLong[!InputElement.IsEnabledProperty] = new Binding(nameof(vm.SplitBreakRebalanceLongLines)) { Source = vm };
 
         var numericUpDownSingleLineMaxLength = FunctionViewChrome.MakeIntField(vm, nameof(vm.SplitBreakSingleLineMaxLength), 5, 1000, 10, Se.Language.Options.Settings.SingleLineMaxLength);

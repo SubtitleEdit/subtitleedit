@@ -17,7 +17,7 @@ public class SettingsImportExportPage : UserControl
 
         ToggleSwitch MakeSwitch(string property, string? isEnabledProperty = null)
         {
-            var toggle = SettingsChrome.MakeSwitch(vm, property);
+            var toggle = EditorChrome.MakeSwitch(property, null, vm);
             if (isEnabledProperty != null)
             {
                 toggle[!IsEnabledProperty] = new Binding(isEnabledProperty);
@@ -72,7 +72,7 @@ public class SettingsImportExportPage : UserControl
                 new RowDefinition { Height = GridLength.Auto },
             },
         };
-        grid.Add(SettingsChrome.MakePanel(EditorChrome.MakeEditorSection(title, content, first: true)), 0);
+        grid.Add(EditorChrome.MakePanel(EditorChrome.MakeEditorSection(title, content, first: true)), 0);
         grid.Add(SettingsChrome.MakeButtonBar(null, buttonCancel, buttonOk), 1);
 
         Content = grid;

@@ -5,7 +5,6 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Features.Video.VideoOcr;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -24,7 +23,7 @@ public class GoToVideoPositionWindow : Window
         Title = Se.Language.Video.GoToVideoPosition;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        VideoDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.VideoTool);
 
         _vm = vm;
         vm.Window = this;
@@ -48,7 +47,7 @@ public class GoToVideoPositionWindow : Window
         section.Background = EditorChrome.PanelBrush;
         section.MinWidth = 300;
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).Primary();
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).AsPrimary();
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
         var root = new Grid
@@ -60,7 +59,7 @@ public class GoToVideoPositionWindow : Window
             },
         };
         root.Add(section, 0, 0);
-        root.Add(VideoDialogChrome.ButtonBar(null, buttonCancel, buttonOk), 1, 0);
+        root.Add(EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk), 1, 0);
 
         Content = root;
 

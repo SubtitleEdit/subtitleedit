@@ -11,9 +11,6 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -44,7 +41,7 @@ public class ShortcutsWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         AddKeyCapStyles(Styles);
 
         _searchBox = new TextBox
@@ -448,7 +445,7 @@ public class ShortcutsWindow : Window
             .AddSortable<ShortcutTreeNode, string>(columnName, x => x.Title)
             .AddSortable<ShortcutTreeNode, string>(columnShortcut, x => x.DisplayShortcut);
 
-        var borderShortcutsGrid = EditDialogChrome.MakeListFrame(shortcutsGrid);
+        var borderShortcutsGrid = EditorChrome.MakeListFrame(shortcutsGrid, clearListBackground: true);
 
         var flyout = new MenuFlyout();
         shortcutsGrid.ContextFlyout = flyout;
@@ -514,8 +511,8 @@ public class ShortcutsWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.CommandOkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CommandCancelCommand);
-        var buttonResetAllShortcuts = SyncTimingChrome.MakeTextToolButton("fa-solid fa-arrows-rotate", language.ResetShortcuts, vm.ResetAllShortcutsCommand);
-        var buttonImportSe4 = SyncTimingChrome.MakeTextToolButton("fa-solid fa-file-import", language.ImportFromSe4, vm.ImportFromSe4Command);
+        var buttonResetAllShortcuts = EditorChrome.MakeTextToolButton("fa-solid fa-arrows-rotate", language.ResetShortcuts, vm.ResetAllShortcutsCommand);
+        var buttonImportSe4 = EditorChrome.MakeTextToolButton("fa-solid fa-file-import", language.ImportFromSe4, vm.ImportFromSe4Command);
 
         // Utility actions on the left, dialog actions on the right.
         var buttonBarLeft = new StackPanel
@@ -524,7 +521,7 @@ public class ShortcutsWindow : Window
             Spacing = 4,
             Children = { buttonImportSe4, buttonResetAllShortcuts },
         };
-        var buttonPanel = VideoSubDialogChrome.MakeButtonBar(buttonBarLeft, buttonCancel, buttonOk);
+        var buttonPanel = EditorChrome.MakeButtonBar(buttonBarLeft, buttonCancel, buttonOk);
 
         // Get platform-specific labels
         var isMac = OperatingSystem.IsMacOS();
@@ -574,7 +571,7 @@ public class ShortcutsWindow : Window
         buttonConfig.Bind(IsVisibleProperty, new Binding(nameof(vm.IsConfigureVisible)) { Source = vm });
 
         // Reset button
-        var buttonReset = SyncTimingChrome.MakeTextToolButton("fa-solid fa-rotate-left", Se.Language.General.Reset, vm.ResetShortcutCommand);
+        var buttonReset = EditorChrome.MakeTextToolButton("fa-solid fa-rotate-left", Se.Language.General.Reset, vm.ResetShortcutCommand);
         buttonReset.Bind(IsEnabledProperty, new Binding(nameof(vm.IsControlsEnabled)) { Source = vm });
 
         var editPanel = new StackPanel
@@ -640,8 +637,8 @@ public class ShortcutsWindow : Window
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
         };
-        grid.Add(VideoSubDialogChrome.MakeToolbar(topGrid), 0);
-        grid.Add(VideoSubDialogChrome.MakePanel(listPanel), 1);
+        grid.Add(EditorChrome.MakeToolbar(topGrid), 0);
+        grid.Add(EditorChrome.MakePanel(listPanel), 1);
         grid.Add(editSection, 2);
         grid.Add(buttonPanel, 3);
 

@@ -24,18 +24,16 @@ public class PickVobSubLanguageWindow : Window
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
-        SharedDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         DataContext = vm;
 
-        var languagesView = SharedDialogChrome.MakeListSection(Se.Language.General.Language, MakeLanguagesView(vm));
-        var previewView = SharedDialogChrome.MakeListSection(Se.Language.General.Preview, MakePreviewView(vm));
+        var languagesView = EditorChrome.MakePickerListSection(Se.Language.General.Language, MakeLanguagesView(vm));
+        var previewView = EditorChrome.MakePickerListSection(Se.Language.General.Preview, MakePreviewView(vm));
 
-        var buttonOk = SharedDialogChrome.Primary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = SharedDialogChrome.MakeRoot(
-            SharedDialogChrome.MakeTwoPanes(languagesView, previewView),
-            SharedDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(EditorChrome.MakeTwoPanes(languagesView, previewView), EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk));
 
         AddHandler(KeyDownEvent, vm.OnKeyDownHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
 

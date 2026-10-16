@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -7,7 +7,6 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -31,7 +30,7 @@ public class NOcrCharacterAddWindow : Window
         MinHeight = 600;
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        NOcrChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.TextToolToggles | EditorWindowStyles.CompactSplitButtons);
         DataContext = vm;
 
         var image = new Image
@@ -77,10 +76,10 @@ public class NOcrCharacterAddWindow : Window
         var buttonSkip = UiUtil.MakeButton(Se.Language.General.Skip, vm.SkipCommand).WithBindIsVisible(nameof(vm.ShowSkip));
         var buttonAbort = UiUtil.MakeButton(Se.Language.General.Abort, vm.AbortCommand).WithBindIsVisible(nameof(vm.ShowAbort));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.AbortCommand).WithBindIsVisible(nameof(vm.ShowCancel));
-        var buttonBar = SyncTimingChrome.MakeButtonBar(buttonInspectAdditions, buttonUseOnce, buttonSkip, buttonAbort, buttonCancel, buttonOk);
+        var buttonBar = EditorChrome.MakeDockedButtonBar(buttonInspectAdditions, buttonUseOnce, buttonSkip, buttonAbort, buttonCancel, buttonOk);
         buttonInspectAdditions.HorizontalAlignment = HorizontalAlignment.Left;
 
-        Content = NOcrChrome.MakeRoot(sections, buttonBar);
+        Content = EditorChrome.MakeRoot(sections, buttonBar);
 
         vm.TextBoxNew.KeyDown += vm.TextBoxNewOnKeyDown;
         vm.TextBoxNew.KeyUp += vm.TextBoxNewOnKeyUp;
@@ -112,7 +111,7 @@ public class NOcrCharacterAddWindow : Window
             },
         };
 
-        vm.TextBoxNew = NOcrChrome.StyleTextBox(UiUtil.MakeTextBox(100, vm, nameof(vm.NewText)), Se.Language.General.Text);
+        vm.TextBoxNew = EditorChrome.AsTextField(UiUtil.MakeTextBox(100, vm, nameof(vm.NewText)), Se.Language.General.Text);
         vm.TextBoxNew.Width = double.NaN;
         vm.TextBoxNew.Margin = new Thickness(0);
         vm.TextBoxNew.HorizontalAlignment = HorizontalAlignment.Stretch;
@@ -174,7 +173,7 @@ public class NOcrCharacterAddWindow : Window
             Width = 220,
             Children =
             {
-                NOcrChrome.MakeInfo(nameof(vm.ResolutionAndTopMargin)),
+                EditorChrome.MakeBoundInfo(nameof(vm.ResolutionAndTopMargin)),
                 panelCurrentImage,
                 vm.TextBoxNew,
                 checkBoxItalic,
@@ -229,7 +228,7 @@ public class NOcrCharacterAddWindow : Window
             HorizontalAlignment = HorizontalAlignment.Left,
         };
 
-        var buttonDrawAgain = NOcrChrome.MakeAction(IconNames.Refresh, Se.Language.Ocr.AutoDrawAgain, vm.DrawAgainCommand);
+        var buttonDrawAgain = EditorChrome.MakeTextToolButton(IconNames.Refresh, Se.Language.Ocr.AutoDrawAgain, vm.DrawAgainCommand);
         buttonDrawAgain.HorizontalAlignment = HorizontalAlignment.Left;
         buttonDrawAgain.Margin = new Thickness(-8, 4, 0, 0);
 
@@ -243,7 +242,7 @@ public class NOcrCharacterAddWindow : Window
                 panelLinesToDraw,
                 EditorChrome.MakeDimLabel(Se.Language.Ocr.NOcrLineAlgorithm, new Thickness(0, 4, 0, 0)),
                 comboBoxAlgorithm,
-                NOcrChrome.MakeInfo(nameof(vm.LinesGeneratedInfo)),
+                EditorChrome.MakeBoundInfo(nameof(vm.LinesGeneratedInfo)),
                 buttonDrawAgain,
                 buttonClear,
             }
@@ -256,9 +255,9 @@ public class NOcrCharacterAddWindow : Window
         var toggleButtonBackground = NOcrChrome.MakeToggle(Se.Language.General.Background, nameof(vm.IsNewLinesBackgroundActive), vm);
         toggleButtonBackground.IsCheckedChanged += vm.DrawModeBackgroundChanged;
 
-        var buttonShrink = NOcrChrome.MakeAction(IconNames.ArrowCollapseVertical, Se.Language.General.Shrink, vm.ShrinkCommand);
+        var buttonShrink = EditorChrome.MakeTextToolButton(IconNames.ArrowCollapseVertical, Se.Language.General.Shrink, vm.ShrinkCommand);
         buttonShrink.Bind(InputElement.IsEnabledProperty, new Binding(nameof(vm.CanShrink)));
-        var buttonExpand = NOcrChrome.MakeAction(IconNames.ArrowExpandRight, Se.Language.General.Expand, vm.ExpandCommand);
+        var buttonExpand = EditorChrome.MakeTextToolButton(IconNames.ArrowExpandRight, Se.Language.General.Expand, vm.ExpandCommand);
         buttonExpand.Bind(InputElement.IsEnabledProperty, new Binding(nameof(vm.CanExpand)));
         var panelShrinkExpand = new StackPanel
         {
@@ -274,7 +273,7 @@ public class NOcrCharacterAddWindow : Window
             panelShrinkExpand);
 
         grid.Add(NOcrChrome.MakeScrollingColumn(Se.Language.Ocr.CurrentImage, panelCurrent, first: true), 0, 0);
-        grid.Add(NOcrChrome.MakeColumn(Se.Language.Ocr.LinesToDraw, panelDrawControls), 0, 1);
+        grid.Add(NOcrChrome.MakeFillColumn(Se.Language.Ocr.LinesToDraw, panelDrawControls), 0, 1);
         grid.Add(NOcrChrome.MakeFillColumn(Se.Language.General.Preview, canvasContent), 0, 2);
 
         return grid;

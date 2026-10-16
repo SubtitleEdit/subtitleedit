@@ -3,8 +3,6 @@ using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -29,18 +27,18 @@ public class AddToNamesListWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 400;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
-        var labelWord = EditDialogChrome.MakeLabel(Se.Language.Ocr.NameToAdd);
+        var labelWord = EditorChrome.MakeWrappingDimLabel(Se.Language.Ocr.NameToAdd);
         labelWord.Bind(IsVisibleProperty, new Binding(nameof(vm.IsSingleMode)));
 
         var textBoxWord = UiUtil.MakeTextBox(ContentWidth, vm, nameof(vm.Name), nameof(vm.IsSingleMode));
         textBoxWord.Classes.Add("text");
         AutomationProperties.SetName(textBoxWord, Se.Language.Ocr.NameToAdd);
 
-        var labelMultiNames = EditDialogChrome.MakeLabel(Se.Language.SpellCheck.EnterOneNamePerLine);
+        var labelMultiNames = EditorChrome.MakeWrappingDimLabel(Se.Language.SpellCheck.EnterOneNamePerLine);
         labelMultiNames.Bind(IsVisibleProperty, new Binding(nameof(vm.IsMultiMode)));
 
         var textBoxMultiNames = new TextBox
@@ -57,7 +55,7 @@ public class AddToNamesListWindow : Window
         textBoxMultiNames.Classes.Add("text");
         AutomationProperties.SetName(textBoxMultiNames, Se.Language.SpellCheck.EnterOneNamePerLine);
 
-        var labelDictionary = EditDialogChrome.MakeLabel(Se.Language.General.Dictionary);
+        var labelDictionary = EditorChrome.MakeWrappingDimLabel(Se.Language.General.Dictionary);
         labelDictionary.Margin = new Thickness(0, 8, 0, 0);
         var comboBoxDictionaries = new ComboBox
         {
@@ -87,7 +85,7 @@ public class AddToNamesListWindow : Window
             },
         };
 
-        Content = SyncTimingChrome.MakeRoot(panel, SyncTimingChrome.MakeButtonBar(MakeMultiModeButton(vm), buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(panel, EditorChrome.MakeDockedButtonBar(MakeMultiModeButton(vm), buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, () => { (vm.IsSingleMode ? textBoxWord : textBoxMultiNames).Focus(); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;

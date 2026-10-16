@@ -38,7 +38,7 @@ public class ReviewSpeechWindow : Window
         MinWidth = 760;
         MinHeight = 520;
         CanResize = true;
-        TtsMainEditorLook.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TextFieldsBare | EditorWindowStyles.MuteDisabledPrimary);
 
         _vm = vm;
         vm.Window = this;
@@ -126,9 +126,9 @@ public class ReviewSpeechWindow : Window
         // Disabled while a regenerate runs: its progress popup is non-modal, and publishing
         // (OK/Export) or closing mid-run would commit the row's half-updated step result.
         var buttonExport = UiUtil.MakeButton(Se.Language.General.ExportDotDotDot, vm.ExportCommand).WithBindEnabled(nameof(vm.IsRegenerateEnabled));
-        var buttonOk = TtsMainEditorLook.MakePrimary(UiUtil.MakeButtonOk(vm.OkCommand).WithBindEnabled(nameof(vm.IsRegenerateEnabled)));
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand).WithBindEnabled(nameof(vm.IsRegenerateEnabled)));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand).WithBindEnabled(nameof(vm.IsRegenerateEnabled));
-        return TtsMainEditorLook.MakeButtonBar(left, buttonExport, buttonCancel, buttonOk);
+        return EditorChrome.MakeButtonBar(left, buttonExport, buttonCancel, buttonOk);
     }
 
     private static Grid MakeLineGrid(ReviewSpeechViewModel vm)
@@ -282,12 +282,12 @@ public class ReviewSpeechWindow : Window
         };
 
         grid.Add(header, 0, 0);
-        grid.Add(TtsMainEditorLook.MakeListFrame(lineGrid), 1, 0);
+        grid.Add(EditorChrome.MakeListFrame(lineGrid), 1, 0);
         grid.Add(textBox, 2, 0);
         return grid;
     }
 
-    private static Grid Row(string? label, Control content, string? labelBinding = null) => TtsMainEditorLook.Row(label, content, LabelWidth, labelBinding);
+    private static Grid Row(string? label, Control content, string? labelBinding = null) => EditorChrome.MakeLabeledRow(label, content, LabelWidth, spacing: 6, labelBinding: labelBinding);
 
     /// <summary>
     /// A combo box filling the row, with optional tool buttons after it.
@@ -483,7 +483,7 @@ public class ReviewSpeechWindow : Window
         grid.Add(slider, 0, 0);
         grid.Add(value, 0, 1);
         grid.Add(help, 0, 2);
-        return TtsMainEditorLook.Row(label, grid, SliderLabelWidth);
+        return EditorChrome.MakeLabeledRow(label, grid, SliderLabelWidth, spacing: 6);
     }
 
     private static TextBlock SliderValue(ReviewSpeechViewModel vm, string property)

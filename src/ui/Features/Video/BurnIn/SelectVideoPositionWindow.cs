@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
@@ -23,7 +23,7 @@ public class SelectVideoPositionWindow : Window
         Width = 1280;
         Height = 800;
         CanResize = true;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
 
         _vm = vm;
         vm.Window = this;
@@ -41,7 +41,7 @@ public class SelectVideoPositionWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = VideoSubDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk);
+        var panelButtons = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         var grid = new Grid
         {
@@ -56,7 +56,7 @@ public class SelectVideoPositionWindow : Window
         // surface disappears inside either
         grid.Add(new Border
         {
-            Child = VideoSubDialogChrome.MakeVideoFrame(vm.VideoPlayerControl),
+            Child = EditorChrome.MakeVideoFrame(vm.VideoPlayerControl),
             Padding = new Avalonia.Thickness(12),
         }, 0, 0);
         grid.Add(panelButtons, 1, 0);

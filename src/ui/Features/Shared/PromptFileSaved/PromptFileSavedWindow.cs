@@ -10,7 +10,7 @@ using Optris.Icons.Avalonia;
 namespace Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 
 /// <summary>
-/// "File saved" in the editor look (see <see cref="SharedDialogChrome"/>): a green check, the file
+/// "File saved" in the editor look (see <see cref="EditorChrome"/>): a green check, the file
 /// name, where it went and meta chips, the file actions and Done in the button bar.
 /// </summary>
 public class PromptFileSavedWindow : Window
@@ -25,7 +25,7 @@ public class PromptFileSavedWindow : Window
         Bind(TitleProperty, new Binding(nameof(vm.Title)));
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        SharedDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
 
@@ -116,13 +116,13 @@ public class PromptFileSavedWindow : Window
             Children = { okBall, panelDetails },
         };
 
-        var buttonOpenContainingFolder = SharedDialogChrome.MakeTextToolButton("fa-solid fa-folder-open", Se.Language.General.OpenContainingFolder, vm.ShowInFolderCommand)
+        var buttonOpenContainingFolder = EditorChrome.MakeTextToolButton("fa-solid fa-folder-open", Se.Language.General.OpenContainingFolder, vm.ShowInFolderCommand)
             .WithBindIsVisible(nameof(vm.IsShowInFolderVisible));
         // "Play" for media files, "Open file" for everything else - same command; the view model
         // is initialized before the window is constructed, so the label/icon read is static.
-        var buttonOpenFile = SharedDialogChrome.MakeTextToolButton(vm.IsMediaFile ? "fa-solid fa-play" : "fa-regular fa-file-lines", vm.OpenFileButtonText, vm.ShowFileCommand)
+        var buttonOpenFile = EditorChrome.MakeTextToolButton(vm.IsMediaFile ? "fa-solid fa-play" : "fa-regular fa-file-lines", vm.OpenFileButtonText, vm.ShowFileCommand)
             .WithBindIsVisible(nameof(vm.IsShowFileVisible));
-        var buttonDone = SharedDialogChrome.Primary(UiUtil.MakeButtonDone(vm.OkCommand));
+        var buttonDone = EditorChrome.AsPrimary(UiUtil.MakeButtonDone(vm.OkCommand));
         var panelActions = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -131,7 +131,7 @@ public class PromptFileSavedWindow : Window
             Children = { buttonOpenContainingFolder, buttonOpenFile },
         };
 
-        Content = SharedDialogChrome.MakeRoot(panelMain, SharedDialogChrome.MakeButtonBar(panelActions, buttonDone));
+        Content = EditorChrome.MakeRoot(panelMain, EditorChrome.MakeButtonBar(panelActions, buttonDone));
 
         UiUtil.FocusOnFirstActivation(this, buttonDone); // hack to make OnKeyDown work
         KeyDown += (s, e) => vm.OnKeyDown(e);

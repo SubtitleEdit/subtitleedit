@@ -4,8 +4,6 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -22,7 +20,7 @@ public class EditWholeTextWindow : Window
         Title = Se.Language.SpellCheck.EditWholeTextTitle;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -63,9 +61,7 @@ public class EditWholeTextWindow : Window
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         buttonCancel.Margin = new Thickness(0);
 
-        Content = SyncTimingChrome.MakeRoot(
-            new Border { Child = panel, Padding = new Thickness(14, 12, 14, 14) },
-            SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(new Border { Child = panel, Padding = new Thickness(14, 12, 14, 14) }, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         // The text box gets the focus, so a bare Space types a space (#15028)
         UiUtil.FocusOnFirstActivation(this, textBoxWholeText); // hack to make OnKeyDown work

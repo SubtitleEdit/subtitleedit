@@ -11,7 +11,6 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Features.Main.Layout;
-using Nikse.SubtitleEdit.Features.Video;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -38,7 +37,7 @@ public class ImproveTimeCodesWindow : Window
         MinWidth = 900;
         MinHeight = 560;
         // The Edit dialogs' styles: compact fields, a dimmed disabled primary (Align while aligning)
-        Features.Edit.EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         AddStyles(Styles);
         vm.Window = this;
         DataContext = vm;
@@ -64,7 +63,7 @@ public class ImproveTimeCodesWindow : Window
             ColumnDefinitions = new ColumnDefinitions("*"),
         };
         grid.Add(BuildSetupBar(vm), 0, 0);
-        grid.Add(VideoSubDialogChrome.MakePanel(middle), 1, 0);
+        grid.Add(EditorChrome.MakePanel(middle), 1, 0);
         grid.Add(BuildProgressStrip(vm), 2, 0);
         grid.Add(BuildButtonBar(vm), 3, 0);
         Content = grid;
@@ -90,9 +89,9 @@ public class ImproveTimeCodesWindow : Window
 
     private static Grid SwitchRow(ImproveTimeCodesViewModel vm, string property, string text)
     {
-        var toggle = VideoSubDialogChrome.MakeSwitch(property, text);
+        var toggle = EditorChrome.MakeSwitch(property, text);
         toggle.DataContext = vm;
-        var row = VideoSubDialogChrome.MakeSwitchRow(toggle, text);
+        var row = EditorChrome.MakeSwitchRow(toggle, text);
         row.Classes.Add("switch-row");
         return row;
     }
@@ -382,7 +381,7 @@ public class ImproveTimeCodesWindow : Window
         };
 
         var buttonPlayPause = EditorChrome.CreateToolButton("mdi-play-pause", $"{l.PlayPause} (Space)", vm.TogglePlayPauseCommand, 28);
-        var buttonPlayAligned = VideoSubDialogChrome.MakeAction(IconNames.Play, l.PlayAligned, vm.PlaySelectedAlignedCommand);
+        var buttonPlayAligned = EditorChrome.MakeActionButton(IconNames.Play, l.PlayAligned, vm.PlaySelectedAlignedCommand);
         if (Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(buttonPlayAligned, $"{l.PlayAlignedHint} (F5)");
@@ -427,7 +426,7 @@ public class ImproveTimeCodesWindow : Window
         grid.Add(BuildRowsView(vm), 0, 0);
         grid.Add(new GridSplitter { Width = 4, ResizeDirection = GridResizeDirection.Columns, Background = Brushes.Transparent }, 0, 1);
         // A plain border: the native video surface on macOS disappears under a rounded, clipping one
-        grid.Add(VideoSubDialogChrome.MakeVideoFrame(vm.VideoPlayer), 0, 2);
+        grid.Add(EditorChrome.MakeVideoFrame(vm.VideoPlayer), 0, 2);
         return grid;
     }
 
@@ -523,7 +522,7 @@ public class ImproveTimeCodesWindow : Window
             ToolTip.SetTip(tableView, $"{l.ApplyHint}{System.Environment.NewLine}{System.Environment.NewLine}{l.Heard}: {l.HeardHint}");
         }
 
-        return VideoSubDialogChrome.MakeListFrame(tableView);
+        return EditorChrome.MakeListFrame(tableView);
     }
 
     /// <summary>
@@ -590,7 +589,7 @@ public class ImproveTimeCodesWindow : Window
             [!IsVisibleProperty] = new Binding("!" + nameof(vm.IsAligning)) { Source = vm },
         };
 
-        return VideoSubDialogChrome.MakeButtonBar(status, buttonAlign, buttonCancel, buttonOk);
+        return EditorChrome.MakeButtonBar(status, buttonAlign, buttonCancel, buttonOk);
     }
 
     /// <summary>
@@ -602,7 +601,7 @@ public class ImproveTimeCodesWindow : Window
         progress.Bind(RangeBase.ValueProperty, new Binding(nameof(vm.ProgressValue)) { Source = vm });
         progress.Bind(ProgressBar.IsIndeterminateProperty, new Binding(nameof(vm.IsProgressIndeterminate)) { Source = vm });
 
-        var strip = VideoSubDialogChrome.MakeProgressStrip(progress, nameof(vm.StatusText), nameof(vm.IsAligning));
+        var strip = EditorChrome.MakeProgressStrip(progress, nameof(vm.StatusText), nameof(vm.IsAligning));
         strip.DataContext = vm;
         return strip;
     }

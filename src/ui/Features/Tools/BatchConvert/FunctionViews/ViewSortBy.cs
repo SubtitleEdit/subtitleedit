@@ -12,6 +12,6 @@ public static class ViewSortBy
 
         return FunctionViewChrome.MakePanel(vm, Se.Language.Tools.SortBy.Title,
             FunctionViewChrome.MakeRow(Se.Language.Tools.SortBy.SortOrder, comboSortBy),
-            FunctionViewChrome.MakeSwitchRow(nameof(vm.SortByDescending), Se.Language.General.Descending));
+            EditorChrome.MakeSwitchRow(nameof(vm.SortByDescending), Se.Language.General.Descending));
     }
 }

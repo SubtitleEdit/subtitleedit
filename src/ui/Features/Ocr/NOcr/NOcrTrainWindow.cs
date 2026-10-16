@@ -8,8 +8,6 @@ using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Optris.Icons.Avalonia;
@@ -36,7 +34,7 @@ public class NOcrTrainWindow : Window
         SizeToContent = SizeToContent.Height;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        NOcrChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.TextToolToggles | EditorWindowStyles.CompactSplitButtons);
         DataContext = vm;
 
         var buttonTrain = new Button
@@ -123,7 +121,7 @@ public class NOcrTrainWindow : Window
             HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled,
         }, 0, 0);
         root.Add(BuildProgressStrip(vm), 1, 0);
-        root.Add(SyncTimingChrome.MakeButtonBar(BuildStatus(vm), buttonDone, buttonTrain), 2, 0);
+        root.Add(EditorChrome.MakeDockedButtonBar(BuildStatus(vm), buttonDone, buttonTrain), 2, 0);
         Content = root;
 
         UiUtil.FocusOnFirstActivation(this, () =>
@@ -238,8 +236,8 @@ public class NOcrTrainWindow : Window
             Margin = new Thickness(-8, 0, 0, 0),
             Children =
             {
-                NOcrChrome.MakeAction(IconNames.AutoFix, Se.Language.Ocr.SubtitleFonts, vm.SelectSubtitleFontsCommand),
-                NOcrChrome.MakeAction(IconNames.Close, Se.Language.General.Clear, vm.ClearFontsCommand),
+                EditorChrome.MakeTextToolButton(IconNames.AutoFix, Se.Language.Ocr.SubtitleFonts, vm.SelectSubtitleFontsCommand),
+                EditorChrome.MakeTextToolButton(IconNames.Close, Se.Language.General.Clear, vm.ClearFontsCommand),
             },
         };
 
@@ -278,7 +276,7 @@ public class NOcrTrainWindow : Window
             {
                 search,
                 buttons,
-                EditDialogChrome.MakeListFrame(fontsListBox),
+                EditorChrome.MakeListFrame(fontsListBox, clearListBackground: true),
             },
             [!InputElement.IsEnabledProperty] = new Binding(nameof(vm.IsNotTraining)),
         };
@@ -334,7 +332,7 @@ public class NOcrTrainWindow : Window
             grid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
         }
 
-        var nameBox = NOcrChrome.StyleTextBox(UiUtil.MakeTextBox(220, vm, nameof(vm.DatabaseName)), Se.Language.General.Name);
+        var nameBox = EditorChrome.AsTextField(UiUtil.MakeTextBox(220, vm, nameof(vm.DatabaseName)), Se.Language.General.Name);
         nameBox.HorizontalAlignment = HorizontalAlignment.Stretch;
         nameBox.Width = double.NaN;
         nameBox.Margin = new Thickness(0);
@@ -347,7 +345,7 @@ public class NOcrTrainWindow : Window
         SetHint(baseCombo, Se.Language.Ocr.StartFromDatabaseHint);
         AddRow(grid, 1, Se.Language.Ocr.StartFromDatabase, baseCombo);
 
-        var sizesBox = NOcrChrome.StyleTextBox(UiUtil.MakeTextBox(220, vm, nameof(vm.FontSizes)), Se.Language.Ocr.FontSizes);
+        var sizesBox = EditorChrome.AsTextField(UiUtil.MakeTextBox(220, vm, nameof(vm.FontSizes)), Se.Language.Ocr.FontSizes);
         sizesBox.HorizontalAlignment = HorizontalAlignment.Stretch;
         sizesBox.Width = double.NaN;
         sizesBox.Margin = new Thickness(0);
@@ -385,7 +383,7 @@ public class NOcrTrainWindow : Window
 
     private static Control BuildCharactersSection(NOcrTrainViewModel vm)
     {
-        var charactersTextBox = NOcrChrome.StyleTextBox(UiUtil.MakeTextBox(200, vm, nameof(vm.CharactersToTrain)), Se.Language.Ocr.CharactersToTrain);
+        var charactersTextBox = EditorChrome.AsTextField(UiUtil.MakeTextBox(200, vm, nameof(vm.CharactersToTrain)), Se.Language.Ocr.CharactersToTrain);
         charactersTextBox.Width = double.NaN;
         charactersTextBox.Margin = new Thickness(0);
         charactersTextBox.HorizontalAlignment = HorizontalAlignment.Stretch;
@@ -402,12 +400,12 @@ public class NOcrTrainWindow : Window
             Margin = new Thickness(-8, 0, 0, 0),
             Children =
             {
-                NOcrChrome.MakeAction(IconNames.Restore, Se.Language.General.Reset, vm.ResetCharactersCommand),
-                NOcrChrome.MakeAction(IconNames.Import, Se.Language.Ocr.ImportCharactersFromSubtitleFile, vm.ImportCharactersFromFileCommand),
+                EditorChrome.MakeTextToolButton(IconNames.Restore, Se.Language.General.Reset, vm.ResetCharactersCommand),
+                EditorChrome.MakeTextToolButton(IconNames.Import, Se.Language.Ocr.ImportCharactersFromSubtitleFile, vm.ImportCharactersFromFileCommand),
             },
         };
 
-        var mergedTextBox = NOcrChrome.StyleTextBox(UiUtil.MakeTextBox(200, vm, nameof(vm.MergedLetters)), Se.Language.Ocr.LetterCombinationsToTrain);
+        var mergedTextBox = EditorChrome.AsTextField(UiUtil.MakeTextBox(200, vm, nameof(vm.MergedLetters)), Se.Language.Ocr.LetterCombinationsToTrain);
         mergedTextBox.Width = double.NaN;
         mergedTextBox.Margin = new Thickness(0);
         mergedTextBox.HorizontalAlignment = HorizontalAlignment.Stretch;

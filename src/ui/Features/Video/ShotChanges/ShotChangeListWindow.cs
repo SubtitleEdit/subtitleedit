@@ -6,7 +6,6 @@ using Avalonia.Layout;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Nikse.SubtitleEdit.Features.Video.VideoOcr;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -31,7 +30,7 @@ public class ShotChangeListWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        VideoDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.VideoTool);
 
         var buttonGoTo = EditorChrome.CreateToolButton("fa-solid fa-location-arrow", Se.Language.General.GoTo, vm.GoToCommand, 26)
             .WithBindIsEnabled(nameof(vm.HasShotChanges));
@@ -45,7 +44,7 @@ public class ShotChangeListWindow : Window
         actions.Children.Add(EditorChrome.MakeToolbarSeparator());
         actions.Children.Add(buttonClear);
 
-        var buttonCancel = UiUtil.MakeButtonDone(vm.CancelCommand).Primary();
+        var buttonCancel = UiUtil.MakeButtonDone(vm.CancelCommand).AsPrimary();
 
         var grid = new Grid
         {
@@ -59,9 +58,9 @@ public class ShotChangeListWindow : Window
         grid.Add(new Border
         {
             Background = EditorChrome.PanelBrush,
-            Child = VideoDialogChrome.ListSection(Se.Language.Video.ShotChanges.ShotChangesList, MakeBookmarkGridView(vm), actions),
+            Child = EditorChrome.MakeListPane(Se.Language.Video.ShotChanges.ShotChangesList, MakeBookmarkGridView(vm), actions),
         }, 0);
-        grid.Add(VideoDialogChrome.ButtonBar(null, buttonCancel), 1);
+        grid.Add(EditorChrome.MakeButtonBar(null, buttonCancel), 1);
 
         Content = grid;
 
@@ -139,7 +138,7 @@ public class ShotChangeListWindow : Window
         UiUtil.AttachMacContextFlyoutHandler(tableView);
 
         tableView.WithAccessibleName(Se.Language.Video.ShotChanges.ShotChangesList);
-        return VideoDialogChrome.ListFrame(tableView);
+        return EditorChrome.MakeListFrame(tableView);
     }
 
     private static List<ShotChangeItem> GetSelected(TableView tableView)

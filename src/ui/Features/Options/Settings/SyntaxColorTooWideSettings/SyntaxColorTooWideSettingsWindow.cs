@@ -4,7 +4,6 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -27,7 +26,7 @@ public class SyntaxColorTooWideSettingsWindow : Window
         Width = 660;
         MinWidth = 460;
         SizeToContent = SizeToContent.Height;
-        OptionsListChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.CompactListRows);
         vm.Window = this;
         DataContext = vm;
 
@@ -40,12 +39,12 @@ public class SyntaxColorTooWideSettingsWindow : Window
 
         // Font size
         var numericFontSize = UiUtil.MakeNumericUpDownInt(4, 200, 24, 100, vm, nameof(vm.FontSize))
-            .AsField(Se.Language.General.FontSize);
+            .AsField(Se.Language.General.FontSize, themeForeground: true);
         numericFontSize.ValueChanged += (_, _) => vm.MarkPreviewDirty();
 
         // Max width
         var numericMaxWidth = UiUtil.MakeNumericUpDownInt(10, 9999, 560, 100, vm, nameof(vm.MaxWidthPixels))
-            .AsField(Se.Language.General.MaxWidthPixels);
+            .AsField(Se.Language.General.MaxWidthPixels, themeForeground: true);
         numericMaxWidth.ValueChanged += (_, _) => vm.MarkPreviewDirty();
 
         var measureContent = new StackPanel
@@ -53,9 +52,9 @@ public class SyntaxColorTooWideSettingsWindow : Window
             Spacing = 8,
             Children =
             {
-                SyncTimingChrome.Row(Se.Language.General.FontName, comboFont, LabelWidth),
-                SyncTimingChrome.Row(Se.Language.General.FontSize, numericFontSize, LabelWidth),
-                SyncTimingChrome.Row(Se.Language.General.MaxWidthPixels, numericMaxWidth, LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.FontName, comboFont, LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.FontSize, numericFontSize, LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.MaxWidthPixels, numericMaxWidth, LabelWidth),
             },
         };
 
@@ -65,12 +64,12 @@ public class SyntaxColorTooWideSettingsWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBox.TextProperty] = new Binding(nameof(vm.SampleText)) { Mode = BindingMode.TwoWay },
-        }.AsField(Se.Language.General.SampleText);
+        }.AsTextField(Se.Language.General.SampleText);
         textBoxSampleText.TextChanged += (_, _) => vm.MarkPreviewDirty();
 
         // Box width
         var numericBoxWidth = UiUtil.MakeNumericUpDownInt(100, 9999, 720, 100, vm, nameof(vm.SampleBoxWidth))
-            .AsField(Se.Language.General.BoxWidthPixels);
+            .AsField(Se.Language.General.BoxWidthPixels, themeForeground: true);
         numericBoxWidth.ValueChanged += (_, _) => vm.MarkPreviewDirty();
 
         // Preview image
@@ -96,15 +95,15 @@ public class SyntaxColorTooWideSettingsWindow : Window
         };
 
         // Hint
-        var hint = OptionsListChrome.MakeHint(Se.Language.Options.Settings.PixelWidthInfo);
+        var hint = EditorChrome.MakeWrappingDimLabel(Se.Language.Options.Settings.PixelWidthInfo);
 
         var sampleContent = new StackPanel
         {
             Spacing = 8,
             Children =
             {
-                SyncTimingChrome.Row(Se.Language.General.SampleText, textBoxSampleText, LabelWidth),
-                SyncTimingChrome.Row(Se.Language.General.BoxWidthPixels, numericBoxWidth, LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.SampleText, textBoxSampleText, LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.BoxWidthPixels, numericBoxWidth, LabelWidth),
                 previewBorder,
                 hint,
             },
@@ -123,7 +122,7 @@ public class SyntaxColorTooWideSettingsWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = SyncTimingChrome.MakeRoot(sections, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, comboFont); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);

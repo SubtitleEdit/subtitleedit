@@ -31,18 +31,14 @@ public class MergeShortLinesWindow : Window
         Height = 800;
         MinWidth = 600;
         MinHeight = 400;
-        LineToolsChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = LineToolsChrome.MakeRoot(
-            LineToolsChrome.MakeSections(MakeControlsView(vm), MakeFixesView(vm)),
-            LineToolsChrome.MakeStatusText(vm, nameof(vm.FixesInfo)),
-            buttonCancel,
-            buttonOk);
+        Content = EditorChrome.MakeCancelOkRoot(EditorChrome.MakeOptionsAndLists(MakeControlsView(vm), MakeFixesView(vm)), EditorChrome.MakeStatusText(nameof(vm.FixesInfo), vm), buttonCancel, buttonOk);
 
         UiUtil.FocusOnFirstActivation(this, _numericUpDownSingleLineMaxLength); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
@@ -55,15 +51,15 @@ public class MergeShortLinesWindow : Window
     private Border MakeControlsView(MergeShortLinesViewModel vm)
     {
         var labelSingleLineMaxLength = Se.Language.Options.Settings.SingleLineMaxLength;
-        var numericUpDownSingleLineMaxLength = LineToolsChrome.MakeCompact(UiUtil.MakeNumericUpDownInt(5, 1000, 10, 130, vm, nameof(vm.SingleLineMaxLength)), labelSingleLineMaxLength);
+        var numericUpDownSingleLineMaxLength = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(5, 1000, 10, 130, vm, nameof(vm.SingleLineMaxLength)), labelSingleLineMaxLength.TrimEnd(':'), 100, alignLeft: true, center: true);
         _numericUpDownSingleLineMaxLength = numericUpDownSingleLineMaxLength;
         numericUpDownSingleLineMaxLength.ValueChanged += (s, e) => vm.SetChanged();
 
         var labelMaxNumberOfLines = Se.Language.Options.Settings.MaxLines;
-        var numericUpDownMaxNumberOfLines = LineToolsChrome.MakeCompact(UiUtil.MakeNumericUpDownInt(2, 10, 2, 130, vm, nameof(vm.MaxNumberOfLines)), labelMaxNumberOfLines);
+        var numericUpDownMaxNumberOfLines = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(2, 10, 2, 130, vm, nameof(vm.MaxNumberOfLines)), labelMaxNumberOfLines.TrimEnd(':'), 100, alignLeft: true, center: true);
         numericUpDownMaxNumberOfLines.ValueChanged += (s, e) => vm.SetChanged();
 
-        var rowHighlightParts = LineToolsChrome.MakeSwitchRow(nameof(vm.HighLight), Se.Language.Tools.MergeShortLines.HighlightParts, out var checkBoxHighlightParts);
+        var rowHighlightParts = EditorChrome.MakeToggleRow(nameof(vm.HighLight), Se.Language.Tools.MergeShortLines.HighlightParts, out var checkBoxHighlightParts);
         checkBoxHighlightParts.IsCheckedChanged += (s, e) => vm.SetChanged();
 
         var grid = new Grid
@@ -71,9 +67,7 @@ public class MergeShortLinesWindow : Window
             ColumnSpacing = 40,
             ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(GridLength.Auto) },
         };
-        grid.Add(LineToolsChrome.MakeFieldGrid(
-            (labelSingleLineMaxLength, numericUpDownSingleLineMaxLength),
-            (labelMaxNumberOfLines, numericUpDownMaxNumberOfLines)), 0, 0);
+        grid.Add(EditorChrome.MakeFieldGrid((labelSingleLineMaxLength, numericUpDownSingleLineMaxLength), (labelMaxNumberOfLines, numericUpDownMaxNumberOfLines)), 0, 0);
         rowHighlightParts.VerticalAlignment = VerticalAlignment.Top;
         grid.Add(rowHighlightParts, 0, 1);
 
@@ -195,11 +189,8 @@ public class MergeShortLinesWindow : Window
             }
         }, RoutingStrategies.Tunnel);
 
-        var actions = LineToolsChrome.MakeListActions(
-            LineToolsChrome.MakeSelectAllButton(vm.SelectAllCommand),
-            LineToolsChrome.MakeSelectNoneButton(vm.SelectNoneCommand),
-            LineToolsChrome.MakeInvertSelectionButton(vm.InvertSelectionCommand));
+        var actions = EditorChrome.MakeListActions(EditorChrome.MakeSelectAllButton(vm.SelectAllCommand), EditorChrome.MakeSelectNoneButton(vm.SelectNoneCommand), EditorChrome.MakeInvertSelectionButton(vm.InvertSelectionCommand));
 
-        return LineToolsChrome.MakeListSection(Se.Language.General.Preview, dataGrid, actions);
+        return EditorChrome.MakeListSection(Se.Language.General.Preview, dataGrid, actions);
     }
 }

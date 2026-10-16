@@ -31,18 +31,14 @@ public class MergeContinuationLinesWindow : Window
         Height = 700;
         MinWidth = 700;
         MinHeight = 400;
-        LineToolsChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = LineToolsChrome.MakeRoot(
-            LineToolsChrome.MakeSections(MakeControlsView(vm), MakeCandidatesView(vm)),
-            LineToolsChrome.MakeStatusText(vm, nameof(vm.CandidatesInfo)),
-            buttonCancel,
-            buttonOk);
+        Content = EditorChrome.MakeCancelOkRoot(EditorChrome.MakeOptionsAndLists(MakeControlsView(vm), MakeCandidatesView(vm)), EditorChrome.MakeStatusText(nameof(vm.CandidatesInfo), vm), buttonCancel, buttonOk);
 
         UiUtil.FocusOnFirstActivation(this, _numericGap); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
@@ -55,15 +51,15 @@ public class MergeContinuationLinesWindow : Window
     private Border MakeControlsView(MergeContinuationLinesViewModel vm)
     {
         var labelGap = Se.Language.Tools.MergeContinuationLines.MaxMillisecondsBetweenLines;
-        var numericGap = LineToolsChrome.MakeCompact(UiUtil.MakeNumericUpDownInt(0, 10000, 250, 150, vm, nameof(vm.MaxMillisecondsBetweenLines)), labelGap);
+        var numericGap = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(0, 10000, 250, 150, vm, nameof(vm.MaxMillisecondsBetweenLines)), labelGap.TrimEnd(':'), 100, alignLeft: true, center: true);
         _numericGap = numericGap;
         numericGap.ValueChanged += (_, _) => vm.SetChanged();
 
         var labelMax = Se.Language.Tools.MergeContinuationLines.MaxCharacters;
-        var numericMax = LineToolsChrome.MakeCompact(UiUtil.MakeNumericUpDownInt(20, 1000, 100, 150, vm, nameof(vm.MaxCharacters)), labelMax);
+        var numericMax = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(20, 1000, 100, 150, vm, nameof(vm.MaxCharacters)), labelMax.TrimEnd(':'), 100, alignLeft: true, center: true);
         numericMax.ValueChanged += (_, _) => vm.SetChanged();
 
-        var fields = LineToolsChrome.MakeFieldGrid((labelGap, numericGap), (labelMax, numericMax));
+        var fields = EditorChrome.MakeFieldGrid((labelGap, numericGap), (labelMax, numericMax));
         return EditorChrome.MakeEditorSection(Se.Language.General.Options, fields, first: true);
     }
 
@@ -143,10 +139,8 @@ public class MergeContinuationLinesWindow : Window
             item => item.IsSelected,
             (item, value) => item.IsSelected = value);
 
-        var actions = LineToolsChrome.MakeListActions(
-            LineToolsChrome.MakeSelectAllButton(vm.SelectAllCommand),
-            LineToolsChrome.MakeInvertSelectionButton(vm.InverseSelectionCommand));
+        var actions = EditorChrome.MakeListActions(EditorChrome.MakeSelectAllButton(vm.SelectAllCommand), EditorChrome.MakeInvertSelectionButton(vm.InverseSelectionCommand));
 
-        return LineToolsChrome.MakeListSection(Se.Language.General.Preview, dataGrid, actions);
+        return EditorChrome.MakeListSection(Se.Language.General.Preview, dataGrid, actions);
     }
 }

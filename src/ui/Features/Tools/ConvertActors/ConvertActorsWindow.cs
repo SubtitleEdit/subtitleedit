@@ -28,7 +28,7 @@ public class ConvertActorsWindow : Window
         Height = 800;
         MinWidth = 900;
         MinHeight = 500;
-        LineToolsChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -40,14 +40,14 @@ public class ConvertActorsWindow : Window
             .WithAccessibleName(Se.Language.Tools.ConvertActors.ConvertActorTo);
         comboBoxTo.SelectionChanged += vm.SelectionChanged;
 
-        var rowSetColor = LineToolsChrome.MakeSwitchRow(nameof(vm.SetColor), Se.Language.Tools.ConvertActors.SetColor, out _);
+        var rowSetColor = EditorChrome.MakeToggleRow(nameof(vm.SetColor), Se.Language.Tools.ConvertActors.SetColor, out _);
         var colorPicker = UiUtil.MakeColorPickerButton(vm, nameof(vm.SelectedColor))
             .WithAccessibleName(Se.Language.General.Color);
         colorPicker.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.SetColor)) { Source = vm, Mode = BindingMode.OneWay });
         colorPicker.Margin = new Thickness(4, 0, 0, 0);
         rowSetColor.Children.Add(colorPicker);
 
-        var rowChangeCasing = LineToolsChrome.MakeSwitchRow(nameof(vm.ChangeCasing), Se.Language.General.ChangeCasing, out _);
+        var rowChangeCasing = EditorChrome.MakeToggleRow(nameof(vm.ChangeCasing), Se.Language.General.ChangeCasing, out _);
         var comboBoxCasing = new ComboBox
         {
             ItemsSource = vm.CasingOptions,
@@ -61,7 +61,7 @@ public class ConvertActorsWindow : Window
         comboBoxCasing.SelectionChanged += vm.SelectionChanged;
         rowChangeCasing.Children.Add(comboBoxCasing);
 
-        var rowOnlyNames = LineToolsChrome.MakeSwitchRow(nameof(vm.OnlyNames), Se.Language.Tools.ConvertActors.OnlyNames, out _);
+        var rowOnlyNames = EditorChrome.MakeToggleRow(nameof(vm.OnlyNames), Se.Language.Tools.ConvertActors.OnlyNames, out _);
 
         // The color and casing pickers show up next to their switch, so the rows keep a fixed
         // height and the list below does not jump.
@@ -70,9 +70,7 @@ public class ConvertActorsWindow : Window
             row.MinHeight = 30;
         }
 
-        var panelConversion = LineToolsChrome.MakeFieldGrid(
-            (Se.Language.Tools.ConvertActors.ConvertActorFrom, comboBoxFrom),
-            (Se.Language.Tools.ConvertActors.ConvertActorTo, comboBoxTo));
+        var panelConversion = EditorChrome.MakeFieldGrid((Se.Language.Tools.ConvertActors.ConvertActorFrom, comboBoxFrom), (Se.Language.Tools.ConvertActors.ConvertActorTo, comboBoxTo));
 
         var panelOptions = new StackPanel
         {
@@ -95,11 +93,7 @@ public class ConvertActorsWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = LineToolsChrome.MakeRoot(
-            LineToolsChrome.MakeSections(panelControls, MakeSubtitleView(vm)),
-            LineToolsChrome.MakeStatusText(vm, nameof(vm.StatusText)),
-            buttonCancel,
-            buttonOk);
+        Content = EditorChrome.MakeCancelOkRoot(EditorChrome.MakeOptionsAndLists(panelControls, MakeSubtitleView(vm)), EditorChrome.MakeStatusText(nameof(vm.StatusText), vm), buttonCancel, buttonOk);
 
         UiUtil.FocusOnFirstActivation(this, comboBoxFrom); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -208,6 +202,6 @@ public class ConvertActorsWindow : Window
         TableViewExtras.AddSpaceToggle<ConvertActorsDisplayItem>(dataGrid,
             item => item.IsChecked, (item, v) => item.IsChecked = v);
 
-        return LineToolsChrome.MakeListSection(Se.Language.General.Preview, dataGrid);
+        return EditorChrome.MakeListSection(Se.Language.General.Preview, dataGrid);
     }
 }

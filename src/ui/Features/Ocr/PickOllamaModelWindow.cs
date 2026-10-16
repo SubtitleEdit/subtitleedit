@@ -4,7 +4,6 @@ using Avalonia.Data;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Chrome = Nikse.SubtitleEdit.Features.Ocr.OcrDialogChrome;
 
 namespace Nikse.SubtitleEdit.Features.Ocr;
 
@@ -21,11 +20,11 @@ public class PickOllamaModelWindow : Window
         MinHeight = 200;
         vm.Window = this;
         DataContext = vm;
-        Chrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.EngineDialog);
 
-        var buttonOk = Chrome.MakePrimary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = Chrome.ButtonBar(null, buttonCancel, buttonOk);
+        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonCancel, buttonOk);
 
         var listBox = new ListBox
         {
@@ -41,7 +40,7 @@ public class PickOllamaModelWindow : Window
 
         // Only the OCR callers filter to vision-capable models, so only they get the "show all" escape
         // hatch; for the text callers the list is unfiltered already and the checkbox would be a no-op.
-        var switchShowAll = Chrome.SwitchRow(Chrome.Switch(nameof(vm.ShowAllModels), Se.Language.Ocr.ShowAllOllamaModels), Se.Language.Ocr.ShowAllOllamaModels);
+        var switchShowAll = EditorChrome.MakeSwitchRow(EditorChrome.MakeSwitch(nameof(vm.ShowAllModels), Se.Language.Ocr.ShowAllOllamaModels), Se.Language.Ocr.ShowAllOllamaModels);
         switchShowAll.Bind(IsVisibleProperty, new Binding(nameof(vm.ShowAllModelsVisible)));
 
         var grid = new Grid
@@ -57,10 +56,10 @@ public class PickOllamaModelWindow : Window
         };
 
         grid.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Models), 0);
-        grid.Add(Chrome.ListFrame(listBox), 1);
+        grid.Add(EditorChrome.MakeListFrame(listBox), 1);
         grid.Add(switchShowAll, 2);
 
-        Content = Chrome.Root(grid, buttonBar, stretch: true);
+        Content = EditorChrome.MakeRoot(grid, buttonBar, stretch: true);
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
         UiUtil.FocusOnFirstActivation(this, listBox);

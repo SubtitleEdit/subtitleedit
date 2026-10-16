@@ -6,8 +6,6 @@ using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Edit;
-using Nikse.SubtitleEdit.Features.Sync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -32,7 +30,7 @@ public class FixNamesWindow : Window
         MinWidth = 800;
         MinHeight = 500;
         CanResize = true;
-        EditDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         _vm = vm;
         vm.Window = this;
@@ -52,7 +50,7 @@ public class FixNamesWindow : Window
         textBoxExtraNames.Classes.Add("text");
         textBoxExtraNames.HorizontalAlignment = HorizontalAlignment.Stretch;
         textBoxExtraNames.PlaceholderText = lang.EnterExtraNamesHint;
-        var buttonAddExtraName = SyncTimingChrome.MakeTextToolButton("fa-solid fa-rotate", Se.Language.General.Refresh, vm.AddExtraNameCommand);
+        var buttonAddExtraName = EditorChrome.MakeTextToolButton("fa-solid fa-rotate", Se.Language.General.Refresh, vm.AddExtraNameCommand);
         var gridExtraNames = new Grid
         {
             ColumnSpacing = 8,
@@ -71,7 +69,7 @@ public class FixNamesWindow : Window
             },
         };
         namesContent.Add(MakeNamesView(vm), 0, 0);
-        namesContent.Add(SyncTimingChrome.Row(lang.ExtraNames, gridExtraNames, 90), 1, 0);
+        namesContent.Add(EditorChrome.MakeLabeledRow(lang.ExtraNames, gridExtraNames, 90), 1, 0);
 
         // Hits
         var labelHits = EditorChrome.MakeDimLabel(string.Empty, new Thickness(0));
@@ -98,7 +96,7 @@ public class FixNamesWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = SyncTimingChrome.MakeRoot(sections, SyncTimingChrome.MakeButtonBar(null, buttonCancel, buttonOk));
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
@@ -179,7 +177,7 @@ public class FixNamesWindow : Window
         dataGrid.ContextFlyout = flyout;
         UiUtil.AttachMacContextFlyoutHandler(dataGrid);
 
-        return EditDialogChrome.MakeListFrame(dataGrid);
+        return EditorChrome.MakeListFrame(dataGrid, clearListBackground: true);
     }
 
     private static Border MakeHitsView(FixNamesViewModel vm)
@@ -242,7 +240,7 @@ public class FixNamesWindow : Window
         dataGrid.ContextFlyout = flyout;
         UiUtil.AttachMacContextFlyoutHandler(dataGrid);
 
-        return EditDialogChrome.MakeListFrame(dataGrid);
+        return EditorChrome.MakeListFrame(dataGrid, clearListBackground: true);
     }
 
 

@@ -29,13 +29,13 @@ public class EmbedTrackPreviewWindow : Window
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
         DataContext = vm;
-        VideoSubDialogChrome.Apply(this);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
 
         var subtitleView = MakeSubtitleView(vm);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
-        var panelButtons = VideoSubDialogChrome.MakeButtonBar(null, buttonOk);
+        var panelButtons = EditorChrome.MakeButtonBar(null, buttonOk);
 
         var grid = new Grid
         {
@@ -153,6 +153,6 @@ public class EmbedTrackPreviewWindow : Window
             })
         });
 
-        return VideoSubDialogChrome.MakeListFrame(dataGridSubtitle);
+        return EditorChrome.MakeListFrame(dataGridSubtitle);
     }
 }
