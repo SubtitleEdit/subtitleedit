@@ -20,12 +20,6 @@ namespace Nikse.SubtitleEdit.Controls
 {
     public class TimeCodeUpDown : TemplatedControl
     {
-        /// <summary>
-        /// Narrow stacked up/down buttons instead of the two wide side-by-side ones (set before the
-        /// template is applied) - used where space is tight, like the main window's edit box.
-        /// </summary>
-        public bool UseCompactSpinner { get; init; }
-
         public bool UseVideoOffset { get; set; } = false;
 
         private TextBox? _textBox;
@@ -103,7 +97,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             _textBox = e.NameScope.Find<TextBox>("PART_TextBox");
             _spinner = e.NameScope.Find<ButtonSpinner>("PART_Spinner");
-            if (UseCompactSpinner && _spinner != null)
+            if (_spinner != null)
             {
                 CompactSpinner.Attach(_spinner);
             }
@@ -181,8 +175,8 @@ namespace Nikse.SubtitleEdit.Controls
             if (spinnerButtonsWidth <= 0)
             {
                 // Conservative estimate for spinner buttons (varies by platform)
-                // macOS: ~84px, Windows/Linux: ~50-60px
-                spinnerButtonsWidth = 84;
+                // The narrow stacked up/down pair (CompactSpinner)
+                spinnerButtonsWidth = 24;
             }
 
             // Account for textbox internal padding (9 left, 2 right from template)
@@ -229,7 +223,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     Name = "PART_TextBox",
                     IsReadOnly = false,
-                    Padding = new Thickness(9, 2, 2, 2),
+                    Padding = new Thickness(10, 2, 4, 2),
                     Margin = new Thickness(0),
                     VerticalContentAlignment = VerticalAlignment.Center,
                     HorizontalContentAlignment = HorizontalAlignment.Left,
@@ -263,6 +257,7 @@ namespace Nikse.SubtitleEdit.Controls
                     Width = double.NaN,
                     Margin = new Thickness(0),
                     Padding = new Thickness(0),
+                    CornerRadius = new CornerRadius(6),
                 };
 
                 scope.Register("PART_Spinner", spinner);

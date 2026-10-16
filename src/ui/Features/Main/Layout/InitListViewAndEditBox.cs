@@ -4,7 +4,6 @@ using System.Windows.Input;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
@@ -1596,8 +1595,7 @@ public static partial class InitListViewAndEditBox
             Margin = new Thickness(0, 0, 0, 0),
             VerticalAlignment = VerticalAlignment.Top,
         };
-        AddCompactTimeControlStyles(timeControlsPanel.Styles);
-
+        
         // Start Time controls
         var startTimePanel = new StackPanel
         {
@@ -1613,7 +1611,6 @@ public static partial class InitListViewAndEditBox
         startTimePanel.Children.Add(startTimeLabel);
         var timeCodeUpDown = new TimeCodeUpDown
         {
-            UseCompactSpinner = true,
             DataContext = vm,
             UseVideoOffset = true,
             [AutomationProperties.NameProperty] = Se.Language.General.StartTime,
@@ -1655,7 +1652,6 @@ public static partial class InitListViewAndEditBox
         endTimePanel.Children.Add(endTimeLabel);
         var endCodeUpDown = new TimeCodeUpDown
         {
-            UseCompactSpinner = true,
             DataContext = vm,
             // Like the start time above: the row holds a video-relative time, the box shows
             // (and reads back) "time code + video offset", so it matches the grid's Hide column.
@@ -1691,7 +1687,6 @@ public static partial class InitListViewAndEditBox
         durationPanel.Children.Add(durationLabel);
         var durationUpDown = new SecondsUpDown
         {
-            UseCompactSpinner = true,
             DataContext = vm,
             [AutomationProperties.NameProperty] = Se.Language.General.Duration,
             [!SecondsUpDown.ValueProperty] = new Binding($"{nameof(vm.SelectedSubtitle)}.{nameof(SubtitleLineViewModel.Duration)}")
@@ -2483,36 +2478,6 @@ public static partial class InitListViewAndEditBox
     /// layout pass replaces both with the measured value (TrackEditSectionMinimumHeight), which is
     /// exactly what the Auto row used to settle at, so the default look is unchanged.
     /// </summary>
-    /// <summary>
-    /// Time fields for the edit box: the text gets room inside a rounded field that follows the
-    /// theme (the narrow stacked up/down buttons come from UseCompactSpinner).
-    /// </summary>
-    private static void AddCompactTimeControlStyles(Styles styles)
-    {
-        foreach (var type in new[] { typeof(TimeCodeUpDown), typeof(SecondsUpDown) })
-        {
-            styles.Add(new Style(x => x.OfType(type).Template().OfType<ButtonSpinner>())
-            {
-                Setters =
-                {
-                    new Setter(TemplatedControl.MinHeightProperty, 30.0),
-                    new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(6)),
-                    new Setter(TemplatedControl.BackgroundProperty, EditorChrome.FieldBrush),
-                    new Setter(TemplatedControl.BorderBrushProperty, EditorChrome.FieldBorderBrush),
-                },
-            });
-            styles.Add(new Style(x => x.OfType(type).Template().OfType<TextBox>())
-            {
-                Setters =
-                {
-                    new Setter(TemplatedControl.PaddingProperty, new Thickness(10, 2, 4, 2)),
-                    new Setter(TemplatedControl.BackgroundProperty, Brushes.Transparent),
-                    new Setter(TemplatedControl.FontSizeProperty, 13.0),
-                },
-            });
-        }
-    }
-
     private static RowDefinition MakeEditSectionRow(MainViewModel? vm)
     {
         var floor = EditGridMinimumHeight + EditGridMargin * 2;

@@ -5,7 +5,8 @@ using Avalonia.Layout;
 namespace Nikse.SubtitleEdit.Controls;
 
 /// <summary>
-/// Turns a ButtonSpinner's two wide side-by-side up/down buttons into a narrow stacked pair.
+/// Turns a ButtonSpinner's two wide side-by-side up/down buttons into a narrow stacked pair
+/// (used by TimeCodeUpDown and SecondsUpDown everywhere).
 /// The theme sets the panel orientation and button sizes inside its template, where they beat
 /// any style, so they are changed here once the template is applied.
 /// </summary>
