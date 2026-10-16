@@ -19,7 +19,7 @@ public class AssaDrawClipArtTests
     [Fact]
     public void ClipArt_KeepsItsColors_InAFewLayers()
     {
-        Assert.Equal(54, ClipArt.Count);
+        Assert.Equal(66, ClipArt.Count);
         foreach (var item in ClipArt)
         {
             Assert.True(item.HasOwnColors, item.Name);

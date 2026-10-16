@@ -110,6 +110,13 @@ public class LanguageAssa
     public string DrawClipArtFacebook { get; set; }
     public string DrawClipArtX { get; set; }
     public string DrawClipArtTikTok { get; set; }
+    public string DrawClipArtClosedCaptions { get; set; }
+    public string DrawClipArtSpeakerLabel { get; set; }
+    public string DrawClipArtTranslation { get; set; }
+    public string DrawClipArtSignLanguage { get; set; }
+    public string DrawClipArtAi { get; set; }
+    public string DrawClipArtHeadphones { get; set; }
+    public string DrawClipArtStarRating { get; set; }
     public string DrawAnimation { get; set; }
     public string DrawAnimationIn { get; set; }
     public string DrawAnimationOut { get; set; }
@@ -641,6 +648,13 @@ public class LanguageAssa
         DrawClipArtFacebook = "Facebook";
         DrawClipArtX = "X";
         DrawClipArtTikTok = "TikTok";
+        DrawClipArtClosedCaptions = "Closed captions";
+        DrawClipArtSpeakerLabel = "Speaker";
+        DrawClipArtTranslation = "Translation";
+        DrawClipArtSignLanguage = "Sign language";
+        DrawClipArtAi = "AI";
+        DrawClipArtHeadphones = "Headphones";
+        DrawClipArtStarRating = "{0} of 5 stars";
         DrawAnimation = "Animation";
         DrawAnimationIn = "In";
         DrawAnimationOut = "Out";

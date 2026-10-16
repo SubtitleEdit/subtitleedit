@@ -326,6 +326,29 @@ public static class ShapeLibrary
 
     private static string F(double value) => value.ToString("0.##", CultureInfo.InvariantCulture);
 
+    /// <summary>
+    /// Five stars in a row, the first <paramref name="stars"/> of them gold.
+    /// </summary>
+    private static string StarRatingSvg(int stars)
+    {
+        var sb = new StringBuilder();
+        for (var i = 0; i < 5; i++)
+        {
+            var cx = 10 + i * 20;
+            sb.Append("<path fill=\"").Append(i < stars ? "#FFC107" : "#BDBDBD").Append("\" d=\"");
+            for (var p = 0; p < 10; p++)
+            {
+                var angle = -Math.PI / 2 + p * Math.PI / 5;
+                var r = p % 2 == 0 ? 9.5 : 3.9;
+                sb.Append(p == 0 ? "M" : " L").Append(F(cx + r * Math.Cos(angle))).Append(' ').Append(F(50 + r * Math.Sin(angle)));
+            }
+
+            sb.Append(" Z\"/>");
+        }
+
+        return sb.ToString();
+    }
+
     private static string Circle(double cx, double cy, double r) =>
         $"M{F(cx - r)} {F(cy)} A{F(r)} {F(r)} 0 1 0 {F(cx + r)} {F(cy)} A{F(r)} {F(r)} 0 1 0 {F(cx - r)} {F(cy)} Z";
 
@@ -543,6 +566,21 @@ public static class ShapeLibrary
                 """<rect fill="#000000" x="6" y="6" width="88" height="88" rx="18"/><path fill="#FFFFFF" d="M24 22 L40 22 L77 78 L61 78 Z M71 22 L78 22 L53 51 L49 46 Z M47 54 L51 59 L29 78 L22 78 Z"/><path fill="#000000" d="M31 26 L38 26 L70 74 L63 74 Z"/>"""),
             Clip(l.DrawClipArtTikTok, null,
                 """<rect fill="#000000" x="6" y="6" width="88" height="88" rx="18"/><path fill="#25F4EE" transform="translate(-3 -3)" d="M56 18 L66 18 Q68 30 80 32 L80 42 Q72 42 66 38 L66 62 Q66 79 49 80 Q33 80 32 64 Q32 48 50 46 L52 46 L52 56 Q42 56 42 64 Q43 70 49 70 Q56 70 56 62 Z"/><path fill="#FE2C55" transform="translate(3 3)" d="M56 18 L66 18 Q68 30 80 32 L80 42 Q72 42 66 38 L66 62 Q66 79 49 80 Q33 80 32 64 Q32 48 50 46 L52 46 L52 56 Q42 56 42 64 Q43 70 49 70 Q56 70 56 62 Z"/><path fill="#FFFFFF" d="M56 18 L66 18 Q68 30 80 32 L80 42 Q72 42 66 38 L66 62 Q66 79 49 80 Q33 80 32 64 Q32 48 50 46 L52 46 L52 56 Q42 56 42 64 Q43 70 49 70 Q56 70 56 62 Z"/>"""),
+            Clip(l.DrawClipArtClosedCaptions, null,
+                """<rect fill="#212121" x="4" y="22" width="92" height="56" rx="10"/><path fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" d="M44 40 A12 12 0 1 0 44 60 M76 40 A12 12 0 1 0 76 60"/>"""),
+            Clip(l.DrawClipArtSpeakerLabel, null,
+                """<g fill="#455A64"><circle cx="36" cy="34" r="14"/><path d="M12 86 Q12 56 36 56 Q60 56 60 86 Z"/></g><path fill="none" stroke="#1E88E5" stroke-width="5" stroke-linecap="round" d="M62 24 A16 16 0 0 1 62 48 M72 14 A28 28 0 0 1 72 58"/>"""),
+            Clip(l.DrawClipArtTranslation, null,
+                """<circle fill="#1E88E5" cx="40" cy="44" r="30"/><path fill="none" stroke="#FFFFFF" stroke-width="4" d="M40 14 A14 30 0 0 0 40 74 A14 30 0 0 0 40 14 Z M10 44 L70 44"/><path fill="#FF9800" d="M62 52 L92 52 Q96 52 96 56 L96 80 Q96 84 92 84 L74 84 L66 92 L67 84 L62 84 Q58 84 58 80 L58 56 Q58 52 62 52 Z"/><path fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" d="M69 78 L77 58 L85 78 M72 71 L82 71"/>"""),
+            Clip(l.DrawClipArtSignLanguage, null,
+                """<g fill="#FFCC80"><rect x="30" y="48" width="42" height="40" rx="14"/><rect x="30" y="20" width="9" height="40" rx="4.5"/><rect x="41" y="12" width="9" height="46" rx="4.5"/><rect x="52" y="15" width="9" height="42" rx="4.5"/><rect x="63" y="23" width="9" height="36" rx="4.5"/><rect x="20" y="50" width="11" height="30" rx="5.5" transform="rotate(-30 26 75)"/></g><path fill="none" stroke="#1E88E5" stroke-width="4" stroke-linecap="round" d="M12 30 A16 16 0 0 1 24 14 M80 14 A16 16 0 0 1 92 30"/>"""),
+            Clip(l.DrawClipArtAi, null,
+                """<path fill="#7C4DFF" d="M44 10 Q48 40 78 44 Q48 48 44 78 Q40 48 10 44 Q40 40 44 10 Z"/><path fill="#B388FF" d="M78 60 Q80 72 92 74 Q80 76 78 88 Q76 76 64 74 Q76 72 78 60 Z"/><path fill="#40C4FF" d="M80 8 Q81 17 90 18 Q81 19 80 28 Q79 19 70 18 Q79 17 80 8 Z"/>"""),
+            Clip(l.DrawClipArtHeadphones, null,
+                """<path fill="none" stroke="#37474F" stroke-width="8" stroke-linecap="round" d="M18 62 A32 32 0 0 1 82 62"/><g fill="#E53935"><rect x="10" y="54" width="18" height="32" rx="6"/><rect x="72" y="54" width="18" height="32" rx="6"/></g>"""),
+
+            // Star ratings 0-5: gold stars for the rating, gray for the rest
+            .. Enumerable.Range(0, 6).Select(stars => Clip(string.Format(l.DrawClipArtStarRating, stars), null, StarRatingSvg(stars))),
         ];
     }
 }
