@@ -57,6 +57,7 @@ using Nikse.SubtitleEdit.Features.Files.ExportCustomTextFormat;
 using Nikse.SubtitleEdit.Features.Files.ExportEbuStl;
 using Nikse.SubtitleEdit.Features.Files.ExportImageBased;
 using Nikse.SubtitleEdit.Features.Files.ExportPac;
+using Nikse.SubtitleEdit.Features.Files.ExportDialogueList;
 using Nikse.SubtitleEdit.Features.Files.ExportPlainText;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.DCinemaInteropProperties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.DCinemaSmpteProperties;
@@ -5440,6 +5441,49 @@ public partial class MainViewModel :
         // writes (video offset included), and the read-only reference rows must stay out.
         var lines = GetExportSubtitle().Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)).ToList();
         var result = await ShowDialogAsync<ExportPlainTextWindow, ExportPlainTextViewModel>(vm => { vm.Initialize(lines, _subtitleFileName, _videoFileName); });
+    }
+
+    [RelayCommand]
+    private async Task ShowExportDialogueList()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (IsEmpty)
+        {
+            ShowSubtitleNotLoadedMessage();
+            return;
+        }
+
+        var rows = GetDialogueListRows();
+        await ShowDialogAsync<ExportDialogueListWindow, ExportDialogueListViewModel>(vm =>
+        {
+            vm.Initialize(rows, _subtitleFileName, Configuration.Settings.General.CurrentFrameRate);
+        });
+    }
+
+    /// <summary>
+    /// The working lines (no read-only reference rows) with the time codes a save writes - the
+    /// video offset added - and the original text of each row.
+    /// </summary>
+    internal List<DialogueListRow> GetDialogueListRows()
+    {
+        var offset = TimeSpan.FromMilliseconds(Se.Settings.General.CurrentVideoOffsetInMs);
+        return Subtitles
+            .Where(line => !line.IsReferenceOnly)
+            .Select((line, index) => new DialogueListRow(
+                index + 1,
+                line.StartTime + offset,
+                line.EndTime + offset,
+                line.Text?.TrimEnd() ?? string.Empty,
+                line.OriginalText ?? string.Empty,
+                line.Actor ?? string.Empty,
+                line.Style ?? string.Empty,
+                line.Layer,
+                line.Forced))
+            .ToList();
     }
 
     [RelayCommand]

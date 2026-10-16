@@ -21,6 +21,7 @@ using Nikse.SubtitleEdit.Features.Files.ExportDvbTeletext;
 using Nikse.SubtitleEdit.Features.Files.ExportCustomTextFormat;
 using Nikse.SubtitleEdit.Features.Files.ExportImageBased;
 using Nikse.SubtitleEdit.Features.Files.ExportPac;
+using Nikse.SubtitleEdit.Features.Files.ExportDialogueList;
 using Nikse.SubtitleEdit.Features.Files.ExportPlainText;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.DCinemaInteropProperties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.DCinemaSmpteProperties;
@@ -466,6 +467,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<TextEffectViewModel>();
         collection.AddTransient<ExportPacViewModel>();
         collection.AddTransient<ExportPlainTextViewModel>();
+        collection.AddTransient<ExportDialogueListViewModel>();
         collection.AddTransient<FindDoubleLinesViewModel>();
         collection.AddTransient<FindDoubleWordsViewModel>();
         collection.AddTransient<FindRuleViewModel>();
