@@ -618,8 +618,8 @@ public static class ShapeLibrary
                 """<path fill="#E53935" d="M50 82.4 C4.4 52 12 14 50 36.8 C88 14 95.6 52 50 82.4 Z"/><ellipse fill="#FF8A80" cx="32" cy="34" rx="7" ry="5" transform="rotate(-35 32 34)"/>""", DrawLoopEffect.Pulse, 800),
             Clip(l.DrawClipArtBouncingArrow, null,
                 """<path fill="#FF7043" d="M38 8 L62 8 L62 48 L80 48 L50 86 L20 48 L38 48 Z"/>""", DrawLoopEffect.Bounce, 900),
-            Clip(l.DrawClipArtGear, null,
-                """<path fill="#78909C" d="M84 50 L93.46 56.88 L91.85 63.6 L80.29 65.44 L77.51 69.98 L81.11 81.11 L75.86 85.6 L65.44 80.29 L60.51 82.34 L56.88 93.46 L50 94 L44.68 83.58 L39.49 82.34 L30.02 89.2 L24.14 85.6 L25.96 74.04 L22.49 69.98 L10.8 69.98 L8.15 63.6 L16.42 55.32 L16 50 L6.54 43.12 L8.15 36.4 L19.71 34.56 L22.49 30.02 L18.89 18.89 L24.14 14.4 L34.56 19.71 L39.49 17.66 L43.12 6.54 L50 6 L55.32 16.42 L60.51 17.66 L69.98 10.8 L75.86 14.4 L74.04 25.96 L77.51 30.02 L89.2 30.02 L91.85 36.4 L83.58 44.68 Z"/><circle fill="#ECEFF1" cx="50" cy="50" r="12"/>""", DrawLoopEffect.Spin, 3000),
+            Clip(l.DrawClipArtRingingBell, null,
+                """<path fill="#FFC107" d="M50 14 C34 14 26 26 26 42 L26 60 L16 72 L84 72 L74 60 L74 42 C74 26 66 14 50 14 Z"/><g fill="#FFA000"><circle cx="50" cy="80" r="9"/><circle cx="50" cy="10" r="6"/></g>""", DrawLoopEffect.Swing, 1200),
 
             // Star ratings 0-5: gold stars for the rating, gray for the rest
             .. Enumerable.Range(0, 6).Select(stars => Clip(string.Format(l.DrawClipArtStarRating, stars), null, StarRatingSvg(stars))),
