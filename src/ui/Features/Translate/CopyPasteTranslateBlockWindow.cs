@@ -67,9 +67,9 @@ public class CopyPasteTranslateBlockWindow : Window
             Children = { labelInfo, buttonGetFromClipboard },
         };
 
-        var buttonOk = UiUtil.MakeButton(Se.Language.Translate.ReCopyTextToClipboard, vm.CopyFromClipboardCommand);
+        var buttonReCopy = UiUtil.MakeButton(Se.Language.Translate.ReCopyTextToClipboard, vm.CopyToClipboardCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = VideoSubDialogChrome.MakeButtonBar(null, buttonOk, buttonCancel);
+        var buttonBar = VideoSubDialogChrome.MakeButtonBar(null, buttonReCopy, buttonCancel);
 
         Content = SyncTimingChrome.MakeRoot(body, buttonBar);
 
