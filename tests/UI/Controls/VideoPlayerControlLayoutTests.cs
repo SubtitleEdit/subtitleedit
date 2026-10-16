@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Controls;
 using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Automation;
@@ -161,6 +162,10 @@ public class VideoPlayerControlLayoutTests
         Assert.True(previous.IsVisible);
         Assert.True(next.IsVisible);
         Assert.True(toggle.IsVisible);
+        var toggleButton = Assert.IsType<NonSpaceToggleButton>(toggle);
+        Assert.True(toggleButton.IsChecked);
+        control.SubtitlesOnVideoIsVisible = false;
+        Assert.False(toggleButton.IsChecked);
 
         control.ApplyControlsLayout(SeVideoControlsItem.MakeDefaults());
         Assert.DoesNotContain(previous, GetControlsGrid(control).Children);

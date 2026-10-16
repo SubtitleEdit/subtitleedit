@@ -62,6 +62,9 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         public static readonly StyledProperty<ICommand?> ToggleSubtitlesCommandProperty =
             AvaloniaProperty.Register<VideoPlayerControl, ICommand?>(nameof(ToggleSubtitlesCommand));
 
+        public static readonly StyledProperty<bool> SubtitlesOnVideoIsVisibleProperty =
+            AvaloniaProperty.Register<VideoPlayerControl, bool>(nameof(SubtitlesOnVideoIsVisible), true);
+
         public static readonly StyledProperty<bool> SubtitleButtonsIsVisibleProperty =
             AvaloniaProperty.Register<VideoPlayerControl, bool>(nameof(SubtitleButtonsIsVisible));
 
@@ -158,6 +161,16 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         }
 
         /// <summary>
+        /// Whether the subtitles are shown on the video - the checked state of the toggle
+        /// subtitles button. Set by the owner after <see cref="ToggleSubtitlesCommand"/> runs.
+        /// </summary>
+        public bool SubtitlesOnVideoIsVisible
+        {
+            get => GetValue(SubtitlesOnVideoIsVisibleProperty);
+            set => SetValue(SubtitlesOnVideoIsVisibleProperty, value);
+        }
+
+        /// <summary>
         /// The previous/next subtitle and toggle subtitles buttons need the main window's
         /// subtitle, so only its players (and the controls preview) show them - when the
         /// controls layout does (#16047).
@@ -226,7 +239,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         private readonly Button _buttonStop;
         private readonly Button _buttonPreviousSubtitle;
         private readonly Button _buttonNextSubtitle;
-        private readonly Button _buttonToggleSubtitles;
+        private readonly NonSpaceToggleButton _buttonToggleSubtitles;
         private readonly StackPanel _panelFullScreen;
         private readonly Slider _sliderPosition;
         private readonly StackPanel _panelVolume;
@@ -571,17 +584,27 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
             // Previous/next subtitle and toggle subtitles on the video (#16047)
             _buttonPreviousSubtitle = MakeSubtitleButton(
+                new NonSpaceButton(),
                 Se.Language.Options.Settings.VideoControlsPreviousSubtitle,
                 "fa-solid fa-backward-step",
                 nameof(PreviousSubtitleCommand));
             _buttonNextSubtitle = MakeSubtitleButton(
+                new NonSpaceButton(),
                 Se.Language.Options.Settings.VideoControlsNextSubtitle,
                 "fa-solid fa-forward-step",
                 nameof(NextSubtitleCommand));
+            // Checked (and a filled icon) while the subtitles are shown on the video.
             _buttonToggleSubtitles = MakeSubtitleButton(
+                new NonSpaceToggleButton(),
                 Se.Language.Video.ToggleSubtitlesOnVideoPlayer,
                 "fa-solid fa-closed-captioning",
                 nameof(ToggleSubtitlesCommand));
+            _buttonToggleSubtitles.Bind(ToggleButton.IsCheckedProperty, new Binding
+            {
+                Path = nameof(SubtitlesOnVideoIsVisible),
+                Source = this,
+                Mode = BindingMode.OneWay,
+            });
 
             // Fullscreen
             _buttonFullScreen = new NonSpaceButton
@@ -1177,13 +1200,10 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             UpdateVideoFileNameMaxWidth();
         }
 
-        private NonSpaceButton MakeSubtitleButton(string name, string iconName, string commandPropertyName)
+        private T MakeSubtitleButton<T>(T button, string name, string iconName, string commandPropertyName) where T : Button
         {
-            var button = new NonSpaceButton
-            {
-                VerticalAlignment = VerticalAlignment.Center,
-                [AutomationProperties.NameProperty] = name,
-            };
+            button.VerticalAlignment = VerticalAlignment.Center;
+            AutomationProperties.SetName(button, name);
             button.Bind(IsVisibleProperty, new Binding
             {
                 Path = nameof(SubtitleButtonsIsVisible),
@@ -1201,6 +1221,18 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 Source = this
             });
             return button;
+        }
+
+        protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+        {
+            base.OnPropertyChanged(change);
+
+            if (change.Property == SubtitlesOnVideoIsVisibleProperty)
+            {
+                Attached.SetIcon(_buttonToggleSubtitles, SubtitlesOnVideoIsVisible
+                    ? "fa-solid fa-closed-captioning"
+                    : "fa-regular fa-closed-captioning");
+            }
         }
 
         private static double GetControlsSpacing(SeVideoControlsItemType left, SeVideoControlsItemType right)

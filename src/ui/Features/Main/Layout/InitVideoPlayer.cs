@@ -93,6 +93,7 @@ public static class InitVideoPlayer
         control.PreviousSubtitleCommand = vm.PlayPreviousCommand;
         control.NextSubtitleCommand = vm.PlayNextCommand;
         control.ToggleSubtitlesCommand = vm.ToggleSubtitlesOnVideoPlayerCommand;
+        control.SubtitlesOnVideoIsVisible = vm.SubtitlesOnVideoPlayerVisible;
         control.SubtitleButtonsIsVisible = true;
         videoPlayerControl = control;
         vm.VideoPlayerControl = control;

@@ -4869,6 +4869,24 @@ public partial class MainViewModel :
         }
     }
 
+    /// <summary>
+    /// Whether the user has the subtitles shown on the video (the toggle subtitles action).
+    /// </summary>
+    public bool SubtitlesOnVideoPlayerVisible => _mpvReloader.SubtitlesVisible;
+
+    // The video controls' toggle subtitles button shows the state (#16047); the docked and the
+    // fullscreen player can both exist, so update every one.
+    private void UpdateSubtitlesOnVideoToggleButtons()
+    {
+        foreach (var control in new[] { VideoPlayerControl, _fullScreenVideoPlayerControl, _videoPlayerUndockedViewModel?.VideoPlayerControl })
+        {
+            if (control != null)
+            {
+                control.SubtitlesOnVideoIsVisible = _mpvReloader.SubtitlesVisible;
+            }
+        }
+    }
+
     [RelayCommand]
     private void ToggleSubtitlesOnVideoPlayer()
     {
@@ -4877,6 +4895,7 @@ public partial class MainViewModel :
         {
             _mpvReloader.SubtitlesVisible = !_mpvReloader.SubtitlesVisible;
             ffmpeg.PreviewSubtitlesVisible = _mpvReloader.SubtitlesEffectivelyVisible;
+            UpdateSubtitlesOnVideoToggleButtons();
             ShowStatus(_mpvReloader.SubtitlesVisible ? Se.Language.Video.SubtitlesOnVideoPlayerOn : Se.Language.Video.SubtitlesOnVideoPlayerOff);
             _shortcutManager.ClearKeys();
             return;
@@ -4889,6 +4908,7 @@ public partial class MainViewModel :
 
         _mpvReloader.SubtitlesVisible = !_mpvReloader.SubtitlesVisible;
         mpv.SetSubtitleVisibility(_mpvReloader.SubtitlesEffectivelyVisible);
+        UpdateSubtitlesOnVideoToggleButtons();
 
         if (_mpvReloader.SubtitlesVisible)
         {
@@ -20067,6 +20087,7 @@ public partial class MainViewModel :
         _fullScreenVideoPlayerControl.PreviousSubtitleCommand = PlayPreviousCommand;
         _fullScreenVideoPlayerControl.NextSubtitleCommand = PlayNextCommand;
         _fullScreenVideoPlayerControl.ToggleSubtitlesCommand = ToggleSubtitlesOnVideoPlayerCommand;
+        _fullScreenVideoPlayerControl.SubtitlesOnVideoIsVisible = _mpvReloader.SubtitlesVisible;
         _fullScreenVideoPlayerControl.SubtitleButtonsIsVisible = true;
         // The fullscreen player is created bare (not via MakeLayoutVideoPlayer), so wire the
         // pause/stop cursor-freeze here as well (issue #12233).
