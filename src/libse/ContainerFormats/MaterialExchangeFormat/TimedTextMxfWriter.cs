@@ -26,6 +26,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
 
         public DateTime ModifiedUtc { get; set; } = DateTime.UtcNow;
 
+        /// <summary>
+        /// The track's duration in edit units. 0 = from StartTime to the latest TimeOut, like
+        /// asdcplib - but in a DCP every asset of a reel must have the reel's duration (DCP-o-matic's
+        /// verifier rejects a shorter subtitle track), so set it to the picture's length.
+        /// </summary>
+        public long ContainerDuration { get; set; }
+
         public List<TimedTextMxfResource> Resources { get; } = new List<TimedTextMxfResource>();
 
         /// <summary>
@@ -135,6 +142,17 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
         public void Write(Stream stream, string xml)
         {
             var info = TimedTextInfo.Parse(xml);
+            if (ContainerDuration > 0)
+            {
+                info.Duration = ContainerDuration;
+            }
+
+            // A LoadFont/Image the track does not carry plays without its font or image
+            var missing = info.ResourceReferences.FirstOrDefault(id => Resources.All(r => r.Id != id));
+            if (missing != Guid.Empty)
+            {
+                throw new InvalidDataException("Timed text XML references resource urn:uuid:" + missing + ", which is not in the track file");
+            }
             var xmlBytes = new UTF8Encoding(false).GetBytes(xml);
 
             var metadata = MakeHeaderMetadata(info);
@@ -580,7 +598,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
             public int EditRateNumerator { get; private set; }
             public int EditRateDenominator { get; private set; }
             public int TimecodeRate { get; private set; }
-            public long Duration { get; private set; }
+            public long Duration { get; set; }
+            public List<Guid> ResourceReferences { get; } = new List<Guid>();
 
             public static TimedTextInfo Parse(string xml)
             {
@@ -624,7 +643,21 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
                 }
 
                 info.Duration = end - start;
+                info.ResourceReferences.AddRange(GetResourceReferences(root, "LoadFont"));
+                info.ResourceReferences.AddRange(GetResourceReferences(root, "Image"));
                 return info;
+            }
+
+            public static IEnumerable<Guid> GetResourceReferences(XmlElement root, string localName)
+            {
+                foreach (var element in root.GetElementsByTagName("*").OfType<XmlElement>().Where(e => e.LocalName == localName))
+                {
+                    var text = element.InnerText.Trim();
+                    if (text.StartsWith("urn:uuid:", StringComparison.OrdinalIgnoreCase) && Guid.TryParse(text.Substring(9), out var id))
+                    {
+                        yield return id;
+                    }
+                }
             }
 
             private static string Child(XmlElement root, string localName)
@@ -632,23 +665,57 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
                 return root.ChildNodes.OfType<XmlElement>().FirstOrDefault(e => e.LocalName == localName)?.InnerText;
             }
 
-            /// <summary>
-            /// HH:MM:SS:FF (frames) or HH:MM:SS:EEE at TimeCodeRate ticks - both count frames here.
-            /// </summary>
             private static long FramesFromTimeCode(string timeCode, int frameRate)
             {
-                var parts = (timeCode ?? string.Empty).Trim().Split(':');
-                if (parts.Length != 4 || parts.Any(p => !int.TryParse(p, NumberStyles.None, CultureInfo.InvariantCulture, out _)))
-                {
-                    return 0;
-                }
-
-                var p0 = int.Parse(parts[0], CultureInfo.InvariantCulture);
-                var p1 = int.Parse(parts[1], CultureInfo.InvariantCulture);
-                var p2 = int.Parse(parts[2], CultureInfo.InvariantCulture);
-                var p3 = int.Parse(parts[3], CultureInfo.InvariantCulture);
-                return ((p0 * 60L + p1) * 60 + p2) * frameRate + p3;
+                return TryParseTimeCode(timeCode, frameRate, out var frames) ? frames : 0;
             }
+        }
+
+        /// <summary>
+        /// The urn:uuid ids of the fonts the XML loads (LoadFont) - the ids to embed the fonts under.
+        /// </summary>
+        public static List<Guid> GetLoadFontIds(string xml)
+        {
+            var doc = new XmlDocument { XmlResolver = null };
+            doc.LoadXml(xml);
+            return doc.DocumentElement == null
+                ? new List<Guid>()
+                : TimedTextInfo.GetResourceReferences(doc.DocumentElement, "LoadFont").Distinct().ToList();
+        }
+
+        /// <summary>
+        /// HH:MM:SS:FF as a frame count at the given (integer) time code rate.
+        /// </summary>
+        public static bool TryParseTimeCode(string timeCode, int frameRate, out long frames)
+        {
+            frames = 0;
+            var parts = (timeCode ?? string.Empty).Trim().Split(':');
+            var values = new int[4];
+            if (parts.Length != 4)
+            {
+                return false;
+            }
+
+            for (var i = 0; i < 4; i++)
+            {
+                if (!int.TryParse(parts[i], NumberStyles.None, CultureInfo.InvariantCulture, out values[i]))
+                {
+                    return false;
+                }
+            }
+
+            frames = ((values[0] * 60L + values[1]) * 60 + values[2]) * frameRate + values[3];
+            return true;
+        }
+
+        /// <summary>
+        /// A duration as HH:MM:SS:FF at the given (integer) time code rate, rounded to whole frames.
+        /// </summary>
+        public static string ToTimeCode(TimeSpan duration, int frameRate)
+        {
+            var frames = (long)Math.Round(duration.TotalSeconds * frameRate);
+            var seconds = frames / frameRate;
+            return string.Format(CultureInfo.InvariantCulture, "{0:00}:{1:00}:{2:00}:{3:00}", seconds / 3600, seconds / 60 % 60, seconds % 60, frames % frameRate);
         }
     }
 }

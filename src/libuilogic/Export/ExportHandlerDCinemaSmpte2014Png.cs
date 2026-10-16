@@ -124,7 +124,8 @@ public class ExportHandlerDCinemaSmpte2014Png : IExportHandler
             "  <Id>urn:uuid:" + guid + "</Id>" + Environment.NewLine +
             "  <ContentTitleText>Movie Title</ContentTitleText>" + Environment.NewLine +
             "  <AnnotationText>This is a subtitle file</AnnotationText>" + Environment.NewLine +
-            "  <IssueDate>" + DateTime.Now.ToString("o") + "</IssueDate>" + Environment.NewLine +
+            // xs:dateTime without fractions or zone - DCP-o-matic's verifier warns on "o" (Bv2.1)
+            "  <IssueDate>" + DateTime.Now.ToString("s") + "</IssueDate>" + Environment.NewLine +
             "  <ReelNumber>1</ReelNumber>" + Environment.NewLine +
             "  <Language>en</Language>" + Environment.NewLine +
             "  <EditRate>[FRAMERATE] 1</EditRate>" + Environment.NewLine +
@@ -139,7 +140,8 @@ public class ExportHandlerDCinemaSmpte2014Png : IExportHandler
         xml = xml.Replace("[FRAMERATE]", ((int)Math.Round(FrameRate, MidpointRounding.AwayFromZero)).ToString(CultureInfo.InvariantCulture));
 
         doc.LoadXml(xml);
-        SaveXml(SubtitleFormat.ToUtf8XmlString(doc));
+        // "UTF-8" like the text D-Cinema formats - ClairMeta rejects the lowercase declaration
+        SaveXml(SubtitleFormat.ToUtf8XmlString(doc).Replace("encoding=\"utf-8\"", "encoding=\"UTF-8\""));
     }
 
     /// <summary>

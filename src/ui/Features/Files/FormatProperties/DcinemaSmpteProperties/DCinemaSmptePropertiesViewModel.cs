@@ -4,6 +4,7 @@ using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat;
 using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Shared;
@@ -51,6 +52,7 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
     // MXF track file export: the font embedded as the LoadFont resource
     [ObservableProperty] private bool _isMxfExport;
     [ObservableProperty] private string _mxfFontFile = string.Empty;
+    [ObservableProperty] private string _reelDuration = string.Empty;
 
     public Window? Window { get; set; }
 
@@ -463,6 +465,12 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
                 return;
             }
 
+            if (!string.IsNullOrWhiteSpace(ReelDuration) && !TimedTextMxfWriter.TryParseTimeCode(ReelDuration, 1, out _))
+            {
+                await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.File.PropertiesDCinema.ReelDurationInvalid, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             // The track file carries the font under the LoadFont urn:uuid
             if (!FontUri.StartsWith("urn:uuid:", StringComparison.OrdinalIgnoreCase) || !Guid.TryParse(FontUri.Substring(9), out _))
             {
@@ -505,11 +513,33 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
         InitializeCore(subtitle, format);
     }
 
-    internal void InitializeMxfExport(Subtitle subtitle)
+    internal void InitializeMxfExport(Subtitle subtitle, TimeSpan? videoDuration)
     {
         IsMxfExport = true;
         InitializeCore(subtitle, null);
+        if (videoDuration is { TotalMilliseconds: > 0 } duration)
+        {
+            ReelDuration = TimedTextMxfWriter.ToTimeCode(duration, GetEditRateFrames());
+        }
+
         WindowTitle = string.Format(Se.Language.File.XProperties, Se.Language.File.Export.TitleExportDCinemaSmpte2014Mxf);
+    }
+
+    /// <summary>
+    /// The integer time code rate of the edit rate ("24000 1001" -> 24), 24 if unparsable.
+    /// </summary>
+    internal int GetEditRateFrames()
+    {
+        var parts = (EditRate ?? string.Empty).Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 2 &&
+            double.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out var numerator) &&
+            double.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out var denominator) &&
+            numerator > 0 && denominator > 0)
+        {
+            return (int)Math.Round(numerator / denominator, MidpointRounding.AwayFromZero);
+        }
+
+        return 24;
     }
 
     private void InitializeCore(Subtitle? subtitle, SubtitleFormat? format)

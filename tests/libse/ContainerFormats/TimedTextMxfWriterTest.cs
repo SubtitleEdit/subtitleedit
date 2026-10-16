@@ -93,6 +93,64 @@ public class TimedTextMxfWriterTest
         Assert.Throws<InvalidDataException>(() => WriteSample(xml));
     }
 
+    /// <summary>
+    /// A DCP reel's assets must share one duration - DCP-o-matic's verifier rejects a subtitle
+    /// track ending at its last TimeOut when the picture runs longer.
+    /// </summary>
+    [Fact]
+    public void ContainerDurationOverridesLastTimeOut()
+    {
+        var xml = File.ReadAllText(FilePath("sample_mxf_429-5_asdcplib.xml"));
+        var writer = new TimedTextMxfWriter { AssetId = AssetId, ContainerDuration = 300 };
+        writer.Resources.Add(new TimedTextMxfResource(FontId, TimedTextMxfResource.MimeTypeFont, Font));
+        writer.Resources.Add(new TimedTextMxfResource(ImageId, TimedTextMxfResource.MimeTypePng, Png));
+        using var ms = new MemoryStream();
+        writer.Write(ms, xml);
+
+        var durations = ReadKlvs(ms.ToArray())
+            .Where(k => k.Key[4] == 0x02 && k.Key[5] == 0x53)
+            .SelectMany(k => ReadLocalSet(k.Value))
+            .Where(x => x.Tag is 0x0202 or 0x3002)
+            .Select(x => Convert.ToHexString(x.Value))
+            .Distinct();
+        Assert.Equal("000000000000012C", Assert.Single(durations)); // 300 in every sequence, component and the descriptor
+    }
+
+    [Fact]
+    public void ResourceMissingFromTrackThrows()
+    {
+        var xml = File.ReadAllText(FilePath("sample_mxf_429-5_asdcplib.xml"));
+        var writer = new TimedTextMxfWriter();
+        writer.Resources.Add(new TimedTextMxfResource(FontId, TimedTextMxfResource.MimeTypeFont, Font)); // no PNG
+
+        var exception = Assert.Throws<InvalidDataException>(() => writer.Write(new MemoryStream(), xml));
+        Assert.Contains(ImageId.ToString(), exception.Message);
+    }
+
+    [Fact]
+    public void GetLoadFontIds()
+    {
+        var xml = File.ReadAllText(FilePath("sample_mxf_429-5_asdcplib.xml"));
+        Assert.Equal(FontId, Assert.Single(TimedTextMxfWriter.GetLoadFontIds(xml)));
+    }
+
+    [Theory]
+    [InlineData("00:00:12:00", 24, 288)]
+    [InlineData("01:00:00:01", 25, 90001)]
+    public void TryParseTimeCode(string timeCode, int frameRate, long expected)
+    {
+        Assert.True(TimedTextMxfWriter.TryParseTimeCode(timeCode, frameRate, out var frames));
+        Assert.Equal(expected, frames);
+        Assert.False(TimedTextMxfWriter.TryParseTimeCode("12.5", frameRate, out _));
+    }
+
+    [Fact]
+    public void ToTimeCode()
+    {
+        Assert.Equal("00:00:12:00", TimedTextMxfWriter.ToTimeCode(TimeSpan.FromSeconds(12), 24));
+        Assert.Equal("01:02:03:12", TimedTextMxfWriter.ToTimeCode(new TimeSpan(0, 1, 2, 3, 500), 24));
+    }
+
     private static List<(long Offset, byte[] Key, byte[] Value)> ReadKlvs(byte[] data)
     {
         var list = new List<(long, byte[], byte[])>();

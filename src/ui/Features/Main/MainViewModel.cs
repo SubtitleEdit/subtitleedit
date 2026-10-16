@@ -5211,7 +5211,7 @@ public partial class MainViewModel :
         }
 
         CopyCurrentDCinemaSettingsToSe();
-        var result = await ShowDialogAsync<DCinemaSmptePropertiesWindow, DCinemaSmptePropertiesViewModel>(vm => { vm.InitializeMxfExport(GetUpdateSubtitle()); });
+        var result = await ShowDialogAsync<DCinemaSmptePropertiesWindow, DCinemaSmptePropertiesViewModel>(vm => { vm.InitializeMxfExport(GetUpdateSubtitle(), _mediaInfo?.Duration is { } videoDuration ? TimeSpan.FromMilliseconds(videoDuration.TotalMilliseconds) : null); });
         CopyCurrentDCinemaSettingsFromSe();
         SetLibSeSettings();
         if (!result.OkPressed)
@@ -5233,8 +5233,19 @@ public partial class MainViewModel :
         try
         {
             var xml = new DCinemaSmpte2014().ToText(GetExportSubtitle(), Path.GetFileNameWithoutExtension(fileName));
-            var fontId = Guid.Parse(Configuration.Settings.SubtitleSettings.CurrentDCinemaFontUri.Substring("urn:uuid:".Length));
+            // Embed the font under the id the XML loads it by
+            var fontId = TimedTextMxfWriter.GetLoadFontIds(xml).FirstOrDefault();
+            if (fontId == Guid.Empty)
+            {
+                fontId = Guid.Parse(Configuration.Settings.SubtitleSettings.CurrentDCinemaFontUri.Substring("urn:uuid:".Length));
+            }
+
             var writer = new TimedTextMxfWriter();
+            if (TimedTextMxfWriter.TryParseTimeCode(result.ReelDuration, result.GetEditRateFrames(), out var reelFrames))
+            {
+                writer.ContainerDuration = reelFrames;
+            }
+
             writer.Resources.Add(new TimedTextMxfResource(fontId, TimedTextMxfResource.MimeTypeFont, await File.ReadAllBytesAsync(result.MxfFontFile)));
             writer.Write(fileName, xml);
         }
