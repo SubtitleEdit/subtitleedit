@@ -3577,7 +3577,12 @@ public partial class AssaDrawViewModel : ObservableObject
         }
         else if (IsTextInput(e) && e.Key is Key.Enter or Key.Delete or Key.Back)
         {
-            // Typing in the text field (or a number box) - not a canvas command
+            // Typing in the text field (or a number box) - not a canvas command. Enter there only
+            // commits the value: handled here, it no longer reaches the default OK button.
+            if (e.Key == Key.Enter)
+            {
+                e.Handled = true;
+            }
         }
         else if (e.Key == Key.Enter)
         {
