@@ -28,9 +28,11 @@ public class ChangeCasingWindow : Window
 
         var rowNormalCasingFixNames = EditorChrome.MakeToggleRow(nameof(vm.NormalCasingFixNames), Se.Language.Tools.ChangeCasing.FixNames);
         rowNormalCasingFixNames.Margin = new Thickness(28, 2, 0, 4);
+        rowNormalCasingFixNames.Bind(IsEnabledProperty, new Binding(nameof(vm.NormalCasing)));
 
         var rowNormalCasingOnlyUpper = EditorChrome.MakeToggleRow(nameof(vm.NormalCasingOnlyUpper), Se.Language.Tools.ChangeCasing.OnlyFixUppercaseLines);
         rowNormalCasingOnlyUpper.Margin = new Thickness(28, 0, 0, 8);
+        rowNormalCasingOnlyUpper.Bind(IsEnabledProperty, new Binding(nameof(vm.NormalCasing)));
 
         var panel = new StackPanel
         {
