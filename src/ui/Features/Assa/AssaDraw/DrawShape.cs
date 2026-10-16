@@ -28,6 +28,12 @@ public class DrawShape
     public bool Expanded { get; set; }
 
     /// <summary>
+    /// Editor-only group (0 = none): a click selects every shape with the same id. Not part of
+    /// the ASSA output; an .assadraw file keeps it in the Effect field.
+    /// </summary>
+    public int GroupId { get; set; }
+
+    /// <summary>
     /// A text-only object: its rectangle is where the text goes, nothing is drawn for it.
     /// </summary>
     public bool IsTextBox { get; set; }
@@ -67,6 +73,7 @@ public class DrawShape
         IsEraser = other.IsEraser;
         Hidden = other.Hidden;
         Expanded = other.Expanded;
+        GroupId = other.GroupId;
         IsTextBox = other.IsTextBox;
         Text = other.Text;
         FontName = other.FontName;

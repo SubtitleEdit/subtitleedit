@@ -4271,7 +4271,7 @@
     "DrawZoomIn": "Zoom + (Ctrl++)",
     "DrawZoomOut": "Zoom - (Ctrl+-)",
     "DrawResetView": "Reset vista (Ctrl+0)",
-    "DrawToggleGrid": "Cuadrícula (Ctrl+G)",
+    "DrawToggleGrid": "Cuadrícula (Ctrl+')",
     "DrawTogglePreview": "Alternar vista previa (F9)",
     "DrawPreviewFailed": "La vista previa falló: se requiere ffmpeg con libass (filtro subtitles)",
     "DrawCopyToClipboard": "Copiar (Ctrl+C)",
