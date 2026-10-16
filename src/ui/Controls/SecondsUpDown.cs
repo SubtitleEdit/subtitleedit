@@ -99,6 +99,8 @@ public class SecondsUpDown : TemplatedControl
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 Width = double.NaN,
                 BorderBrush = Brushes.Transparent,
+                BorderThickness = new Thickness(0),
+                Background = Brushes.Transparent,
             };
 
             var grid = new Grid

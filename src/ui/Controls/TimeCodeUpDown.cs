@@ -230,6 +230,8 @@ namespace Nikse.SubtitleEdit.Controls
                     HorizontalAlignment = HorizontalAlignment.Stretch,
                     Width = double.NaN,
                     BorderBrush = Brushes.Transparent,
+                    BorderThickness = new Thickness(0),
+                    Background = Brushes.Transparent,
                     CaretIndex = control.LastPartCaretIndex,
                 };
 
