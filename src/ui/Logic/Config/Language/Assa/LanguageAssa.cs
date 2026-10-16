@@ -104,6 +104,12 @@ public class LanguageAssa
     public string DrawClipArtCatFace { get; set; }
     public string DrawClipArtKey { get; set; }
     public string DrawClipArtChristmasTree { get; set; }
+    public string DrawClipArtYouTube { get; set; }
+    public string DrawClipArtInstagram { get; set; }
+    public string DrawClipArtLinkedIn { get; set; }
+    public string DrawClipArtFacebook { get; set; }
+    public string DrawClipArtX { get; set; }
+    public string DrawClipArtTikTok { get; set; }
     public string DrawAnimation { get; set; }
     public string DrawAnimationIn { get; set; }
     public string DrawAnimationOut { get; set; }
@@ -629,6 +635,12 @@ public class LanguageAssa
         DrawClipArtCatFace = "Cat face";
         DrawClipArtKey = "Key";
         DrawClipArtChristmasTree = "Christmas tree";
+        DrawClipArtYouTube = "YouTube";
+        DrawClipArtInstagram = "Instagram";
+        DrawClipArtLinkedIn = "LinkedIn";
+        DrawClipArtFacebook = "Facebook";
+        DrawClipArtX = "X";
+        DrawClipArtTikTok = "TikTok";
         DrawAnimation = "Animation";
         DrawAnimationIn = "In";
         DrawAnimationOut = "Out";

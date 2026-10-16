@@ -531,6 +531,18 @@ public static class ShapeLibrary
                 """<path fill="none" stroke="#FFC107" stroke-width="12" d="M14 50 A18 18 0 1 1 50 50 A18 18 0 1 1 14 50 Z"/><path fill="#FFC107" d="M48 45 L94 45 L94 55 L88 55 L88 70 L78 70 L78 55 L72 55 L72 64 L63 64 L63 55 L48 55 Z"/><path fill="#FFE082" d="M20 40 A14 14 0 0 1 32 32 L33 37 A9 9 0 0 0 25 42 Z"/>"""),
             Clip(l.DrawClipArtChristmasTree, null,
                 """<rect fill="#6D4C41" x="42" y="80" width="16" height="16"/><g fill="#2E7D32"><path d="M50 40 L92 84 L8 84 Z"/><path d="M50 22 L82 60 L18 60 Z"/><path d="M50 8 L74 38 L26 38 Z"/></g><g fill="#E53935"><circle cx="40" cy="50" r="4"/><circle cx="62" cy="68" r="4"/><circle cx="32" cy="74" r="4"/><circle cx="56" cy="30" r="3"/></g><path fill="#FFC107" d="M50 0 L53 7 L60 7 L54 11 L57 18 L50 14 L43 18 L46 11 L40 7 L47 7 Z"/>"""),
+            Clip(l.DrawClipArtYouTube, null,
+                """<rect fill="#FF0000" x="4" y="20" width="92" height="60" rx="16"/><path fill="#FFFFFF" d="M41 36 L66 50 L41 64 Z"/>"""),
+            Clip(l.DrawClipArtInstagram, null,
+                """<rect fill="#E1306C" x="6" y="6" width="88" height="88" rx="24"/><path fill="none" stroke="#FFFFFF" stroke-width="7" d="M39 24 L61 24 Q76 24 76 39 L76 61 Q76 76 61 76 L39 76 Q24 76 24 61 L24 39 Q24 24 39 24 Z M38 50 A12 12 0 1 1 62 50 A12 12 0 1 1 38 50 Z"/><circle fill="#FFFFFF" cx="66" cy="34" r="4"/>"""),
+            Clip(l.DrawClipArtLinkedIn, null,
+                """<rect fill="#0A66C2" x="6" y="6" width="88" height="88" rx="12"/><g fill="#FFFFFF"><circle cx="31" cy="30" r="7"/><rect x="25" y="42" width="12" height="34"/><path d="M45 42 L56 42 L56 48 Q61 40 70 40 Q80 40 80 54 L80 76 L68 76 L68 57 Q68 51 62 51 Q57 51 57 58 L57 76 L45 76 Z"/></g>"""),
+            Clip(l.DrawClipArtFacebook, null,
+                """<circle fill="#1877F2" cx="50" cy="50" r="46"/><path fill="#FFFFFF" d="M55 95 L55 62 L66 62 L68 49 L55 49 L55 41 Q55 35 61 35 L68 35 L68 24 Q63 23 58 23 Q42 23 42 40 L42 49 L31 49 L31 62 L42 62 L42 95 Z"/>"""),
+            Clip(l.DrawClipArtX, null,
+                """<rect fill="#000000" x="6" y="6" width="88" height="88" rx="18"/><path fill="#FFFFFF" d="M24 22 L40 22 L77 78 L61 78 Z M71 22 L78 22 L53 51 L49 46 Z M47 54 L51 59 L29 78 L22 78 Z"/><path fill="#000000" d="M31 26 L38 26 L70 74 L63 74 Z"/>"""),
+            Clip(l.DrawClipArtTikTok, null,
+                """<rect fill="#000000" x="6" y="6" width="88" height="88" rx="18"/><path fill="#25F4EE" transform="translate(-3 -3)" d="M56 18 L66 18 Q68 30 80 32 L80 42 Q72 42 66 38 L66 62 Q66 79 49 80 Q33 80 32 64 Q32 48 50 46 L52 46 L52 56 Q42 56 42 64 Q43 70 49 70 Q56 70 56 62 Z"/><path fill="#FE2C55" transform="translate(3 3)" d="M56 18 L66 18 Q68 30 80 32 L80 42 Q72 42 66 38 L66 62 Q66 79 49 80 Q33 80 32 64 Q32 48 50 46 L52 46 L52 56 Q42 56 42 64 Q43 70 49 70 Q56 70 56 62 Z"/><path fill="#FFFFFF" d="M56 18 L66 18 Q68 30 80 32 L80 42 Q72 42 66 38 L66 62 Q66 79 49 80 Q33 80 32 64 Q32 48 50 46 L52 46 L52 56 Q42 56 42 64 Q43 70 49 70 Q56 70 56 62 Z"/>"""),
         ];
     }
 }
