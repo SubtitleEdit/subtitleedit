@@ -629,9 +629,9 @@ public static class ShapeLibrary
             Clip(l.DrawClipArtAlarmClock, null,
                 """<g fill="#E53935"><circle cx="24" cy="22" r="12"/><circle cx="76" cy="22" r="12"/><circle cx="50" cy="54" r="36"/></g><path fill="none" stroke="#E53935" stroke-width="6" stroke-linecap="round" d="M28 82 L22 94 M72 82 L78 94"/><circle fill="#FFFFFF" cx="50" cy="54" r="28"/><path fill="none" stroke="#212121" stroke-width="4" stroke-linecap="round" d="M50 54 L50 36 M50 54 L62 60"/>""", DrawLoopEffect.Shake, 300),
             Clip(l.DrawClipArtHourglass, null,
-                """<path fill="#B3E5FC" d="M28 14 L72 14 Q72 34 54 50 Q72 66 72 86 L28 86 Q28 66 46 50 Q28 34 28 14 Z"/><g fill="#FFB300"><path d="M36 22 L64 22 Q60 34 50 44 Q40 34 36 22 Z"/><path d="M34 84 Q50 64 66 84 Z"/><rect x="49" y="44" width="2" height="30"/></g><g fill="#6D4C41"><rect x="22" y="6" width="56" height="8" rx="3"/><rect x="22" y="86" width="56" height="8" rx="3"/></g>""", DrawLoopEffect.Spin, 2000),
-            Clip(l.DrawClipArtBasketball, null,
-                """<circle fill="#FF7043" cx="50" cy="50" r="44"/><path fill="none" stroke="#5D4037" stroke-width="3" d="M6 50 L94 50 M50 6 L50 94 M18 20 Q40 50 18 80 M82 20 Q60 50 82 80"/>""", DrawLoopEffect.Bounce, 700),
+                """<path fill="#B3E5FC" d="M28 14 L72 14 Q72 34 54 50 Q72 66 72 86 L28 86 Q28 66 46 50 Q28 34 28 14 Z"/><g fill="#FFB300"><path d="M36 26 L64 26 Q60 36 50 44 Q40 36 36 26 Z"/><path d="M36 74 L64 74 Q60 64 50 56 Q40 64 36 74 Z"/></g><g fill="#6D4C41"><rect x="22" y="6" width="56" height="8" rx="3"/><rect x="22" y="86" width="56" height="8" rx="3"/></g>""", DrawLoopEffect.Flip, 1600),
+            Clip(l.DrawClipArtIdea, null,
+                """<path fill="none" stroke="#FFD54F" stroke-width="5" stroke-linecap="round" d="M50 4 L50 12 M20 16 L26 22 M80 16 L74 22 M8 44 L16 44 M84 44 L92 44"/><g fill="#FFC107"><circle cx="50" cy="44" r="24"/><path d="M38 60 L62 60 L58 72 L42 72 Z"/></g><g fill="#90A4AE"><rect x="40" y="72" width="20" height="6" rx="2"/><rect x="42" y="80" width="16" height="6" rx="2"/></g>""", DrawLoopEffect.Blink, 800, animatedColor: "#FFD54F"),
 
             // Star ratings 0-5: gold stars for the rating, gray for the rest
             .. Enumerable.Range(0, 6).Select(stars => Clip(string.Format(l.DrawClipArtStarRating, stars), null, StarRatingSvg(stars))),
