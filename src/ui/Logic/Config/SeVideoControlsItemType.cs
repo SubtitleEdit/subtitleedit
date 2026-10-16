@@ -20,4 +20,8 @@ public enum SeVideoControlsItemType
 
     // Small label in the top right corner (e.g. "libmpv 2.5 sw").
     PlayerName = 7,
+
+    // Buttons that go to the previous/next subtitle and play it (#16047). Hidden by default.
+    PreviousSubtitle = 8,
+    NextSubtitle = 9,
 }

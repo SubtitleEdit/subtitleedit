@@ -64,12 +64,13 @@ public class VideoPlayerControlLayoutTests
         var control = new VideoPlayerControl(new EmptyVideoPlayer());
         control.ApplyControlsLayout(Order(
             SeVideoControlsItemType.PositionSlider,
+            SeVideoControlsItemType.Volume,
             SeVideoControlsItemType.Play,
             SeVideoControlsItemType.Stop));
 
         Assert.Equal(0, Grid.GetColumn(GetPositionSlider(control)));
-        Assert.Equal(1, Grid.GetColumn(GetButton(control, Se.Language.General.Play)));
-        Assert.Equal(2, Grid.GetColumn(GetButton(control, Se.Language.General.Stop)));
+        Assert.Equal(2, Grid.GetColumn(GetButton(control, Se.Language.General.Play)));
+        Assert.Equal(3, Grid.GetColumn(GetButton(control, Se.Language.General.Stop)));
     }
 
     [AvaloniaFact]
@@ -135,6 +136,31 @@ public class VideoPlayerControlLayoutTests
         Assert.Equal(SeVideoControlsItemType.Volume, result[0].Type);
         Assert.True(result[0].IsVisible);
         Assert.Equal(result.Count, result.Select(p => p.Type).Distinct().Count());
+    }
+
+    [AvaloniaFact]
+    public void SubtitleNavigationButtons_ShownOnlyWhenEnabledAndInLayout()
+    {
+        var control = new VideoPlayerControl(new EmptyVideoPlayer());
+        var items = SeVideoControlsItem.MakeDefaults();
+        foreach (var item in items.Where(p => p.Type is SeVideoControlsItemType.PreviousSubtitle or SeVideoControlsItemType.NextSubtitle))
+        {
+            item.IsVisible = true;
+        }
+
+        control.ApplyControlsLayout(items);
+        var previous = GetButton(control, Se.Language.Options.Settings.VideoControlsPreviousSubtitle);
+        var next = GetButton(control, Se.Language.Options.Settings.VideoControlsNextSubtitle);
+        Assert.Equal(2, Grid.GetColumn(previous));
+        Assert.Equal(3, Grid.GetColumn(next));
+        Assert.False(previous.IsVisible); // dialogs without a subtitle list
+
+        control.SubtitleNavigationIsVisible = true;
+        Assert.True(previous.IsVisible);
+        Assert.True(next.IsVisible);
+
+        control.ApplyControlsLayout(SeVideoControlsItem.MakeDefaults());
+        Assert.DoesNotContain(previous, GetControlsGrid(control).Children);
     }
 
     [Fact]

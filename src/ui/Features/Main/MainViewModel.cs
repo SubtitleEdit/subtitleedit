@@ -20064,6 +20064,9 @@ public partial class MainViewModel :
 
         _fullScreenVideoPlayerControl = InitVideoPlayer.MakeVideoPlayer();
         _fullScreenVideoPlayerControl.IsFullScreen = true;
+        _fullScreenVideoPlayerControl.PreviousSubtitleCommand = PlayPreviousCommand;
+        _fullScreenVideoPlayerControl.NextSubtitleCommand = PlayNextCommand;
+        _fullScreenVideoPlayerControl.SubtitleNavigationIsVisible = true;
         // The fullscreen player is created bare (not via MakeLayoutVideoPlayer), so wire the
         // pause/stop cursor-freeze here as well (issue #12233).
         _fullScreenVideoPlayerControl.PlayPauseRequested += willPause =>

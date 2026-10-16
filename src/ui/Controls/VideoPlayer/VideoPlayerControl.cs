@@ -53,6 +53,15 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         public static readonly StyledProperty<ICommand> FullScreenCommandProperty =
             AvaloniaProperty.Register<VideoPlayerControl, ICommand>(nameof(FullScreenCommand));
 
+        public static readonly StyledProperty<ICommand?> PreviousSubtitleCommandProperty =
+            AvaloniaProperty.Register<VideoPlayerControl, ICommand?>(nameof(PreviousSubtitleCommand));
+
+        public static readonly StyledProperty<ICommand?> NextSubtitleCommandProperty =
+            AvaloniaProperty.Register<VideoPlayerControl, ICommand?>(nameof(NextSubtitleCommand));
+
+        public static readonly StyledProperty<bool> SubtitleNavigationIsVisibleProperty =
+            AvaloniaProperty.Register<VideoPlayerControl, bool>(nameof(SubtitleNavigationIsVisible));
+
         public static readonly StyledProperty<bool> StopIsVisibleProperty =
             AvaloniaProperty.Register<VideoPlayerControl, bool>(nameof(StopIsVisible));
 
@@ -127,6 +136,28 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             set => SetValue(FullScreenCommandProperty, value);
         }
 
+        public ICommand? PreviousSubtitleCommand
+        {
+            get => GetValue(PreviousSubtitleCommandProperty);
+            set => SetValue(PreviousSubtitleCommandProperty, value);
+        }
+
+        public ICommand? NextSubtitleCommand
+        {
+            get => GetValue(NextSubtitleCommandProperty);
+            set => SetValue(NextSubtitleCommandProperty, value);
+        }
+
+        /// <summary>
+        /// The previous/next subtitle buttons need a subtitle list, so only the main window's
+        /// players (and the controls preview) show them - when the controls layout does (#16047).
+        /// </summary>
+        public bool SubtitleNavigationIsVisible
+        {
+            get => GetValue(SubtitleNavigationIsVisibleProperty);
+            set => SetValue(SubtitleNavigationIsVisibleProperty, value);
+        }
+
         public bool StopIsVisible
         {
             get => GetValue(StopIsVisibleProperty);
@@ -183,6 +214,8 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         private readonly Button _buttonFullScreen;
         private readonly Button _buttonFullScreenCollapse;
         private readonly Button _buttonStop;
+        private readonly Button _buttonPreviousSubtitle;
+        private readonly Button _buttonNextSubtitle;
         private readonly StackPanel _panelFullScreen;
         private readonly Slider _sliderPosition;
         private readonly StackPanel _panelVolume;
@@ -524,6 +557,16 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 Path = nameof(StopCommand),
                 Source = this
             });
+
+            // Previous/next subtitle (#16047)
+            _buttonPreviousSubtitle = MakeSubtitleNavigationButton(
+                Se.Language.Options.Settings.VideoControlsPreviousSubtitle,
+                "fa-solid fa-backward-step",
+                nameof(PreviousSubtitleCommand));
+            _buttonNextSubtitle = MakeSubtitleNavigationButton(
+                Se.Language.Options.Settings.VideoControlsNextSubtitle,
+                "fa-solid fa-forward-step",
+                nameof(NextSubtitleCommand));
 
             // Fullscreen
             _buttonFullScreen = new NonSpaceButton
@@ -1030,6 +1073,8 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 {
                     SeVideoControlsItemType.Play => _buttonPlay,
                     SeVideoControlsItemType.Stop => _buttonStop,
+                    SeVideoControlsItemType.PreviousSubtitle => _buttonPreviousSubtitle,
+                    SeVideoControlsItemType.NextSubtitle => _buttonNextSubtitle,
                     SeVideoControlsItemType.FullScreen => _panelFullScreen,
                     SeVideoControlsItemType.PositionSlider => _sliderPosition,
                     SeVideoControlsItemType.Volume => _panelVolume,
@@ -1116,10 +1161,37 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             UpdateVideoFileNameMaxWidth();
         }
 
+        private NonSpaceButton MakeSubtitleNavigationButton(string name, string iconName, string commandPropertyName)
+        {
+            var button = new NonSpaceButton
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                [AutomationProperties.NameProperty] = name,
+            };
+            button.Bind(IsVisibleProperty, new Binding
+            {
+                Path = nameof(SubtitleNavigationIsVisible),
+                Source = this
+            });
+            Attached.SetIcon(button, iconName);
+            if (Se.Settings.Appearance.ShowHints)
+            {
+                ToolTip.SetTip(button, name);
+            }
+
+            button.Bind(Button.CommandProperty, new Binding
+            {
+                Path = commandPropertyName,
+                Source = this
+            });
+            return button;
+        }
+
         private static double GetControlsSpacing(SeVideoControlsItemType left, SeVideoControlsItemType right)
         {
             static bool IsButton(SeVideoControlsItemType type) =>
-                type is SeVideoControlsItemType.Play or SeVideoControlsItemType.Stop or SeVideoControlsItemType.FullScreen;
+                type is SeVideoControlsItemType.Play or SeVideoControlsItemType.Stop or SeVideoControlsItemType.FullScreen or
+                    SeVideoControlsItemType.PreviousSubtitle or SeVideoControlsItemType.NextSubtitle;
 
             if (IsButton(left) && IsButton(right))
             {

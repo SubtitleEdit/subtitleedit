@@ -193,6 +193,8 @@ public class LanguageSettings
     public string VideoControlsPositionText { get; set; }
     public string VideoControlsVideoFileName { get; set; }
     public string VideoControlsPlayerName { get; set; }
+    public string VideoControlsPreviousSubtitle { get; set; }
+    public string VideoControlsNextSubtitle { get; set; }
     public string FullscreenHideControls { get; set; }
     public string ShowSecondarySubtitleDialog { get; set; }
     public string RememberSecondarySubtitleFile { get; set; }
@@ -552,6 +554,8 @@ public class LanguageSettings
         VideoControlsPositionText = "Position / duration text";
         VideoControlsVideoFileName = "Video file name";
         VideoControlsPlayerName = "Video player name";
+        VideoControlsPreviousSubtitle = "Previous subtitle";
+        VideoControlsNextSubtitle = "Next subtitle";
         FullscreenHideControls = "Hide video controls in full-screen";
         ShowSecondarySubtitleDialog = "Show style dialog when opening a second subtitle file";
         RememberSecondarySubtitleFile = "Remember second subtitle file";

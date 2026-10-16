@@ -90,6 +90,9 @@ public static class InitVideoPlayer
         }
 
         control.FullScreenCommand = vm.VideoFullScreenCommand;
+        control.PreviousSubtitleCommand = vm.PlayPreviousCommand;
+        control.NextSubtitleCommand = vm.PlayNextCommand;
+        control.SubtitleNavigationIsVisible = true;
         videoPlayerControl = control;
         vm.VideoPlayerControl = control;
         control.VideoPlayerDisplayTimeLeft = Se.Settings.Video.VideoPlayerDisplayTimeLeft;
