@@ -42,6 +42,8 @@ public class LanguageEbuSaveOptions
     public string MaxLengthErrorTeletextWhite { get; set; }
     public string MaxLengthErrorTeletextSingleHeight { get; set; }
     public string DiscSequenceNumber { get; set; }
+    public string Programme { get; set; }
+    public string DiscAndDisplay { get; set; }
 
     public LanguageEbuSaveOptions()
     {
@@ -85,5 +87,7 @@ public class LanguageEbuSaveOptions
         MaxLengthErrorTeletextWhite = "Line {0}-{1}: 37 (not {2}) should be maximum characters for double height white text";
         MaxLengthErrorTeletextSingleHeight = "Line {0}: 38 (not {1}) should be maximum characters for single height white text";
         DiscSequenceNumber = "Disc sequence number";
+        Programme = "Programme";
+        DiscAndDisplay = "Disc and display";
     }
 }

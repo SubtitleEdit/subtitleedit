@@ -1,13 +1,14 @@
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
-using Avalonia.Data;
-using Avalonia.Media;
-using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Chrome = Nikse.SubtitleEdit.Features.Ocr.OcrDialogChrome;
 
 namespace Nikse.SubtitleEdit.Features.Shared;
 
+/// <summary>
+/// Downloads libmpv, in the editor download layout (see <see cref="Chrome"/>): title, progress,
+/// status and error on the panel color, Retry (after a failure) and Cancel in the button bar.
+/// </summary>
 public class DownloadLibMpvWindow : Window
 {
     public DownloadLibMpvWindow(DownloadLibMpvViewModel vm)
@@ -18,48 +19,28 @@ public class DownloadLibMpvWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        Chrome.Apply(this);
 
         DataContext = vm;
 
-        var titleText = new TextBlock
-        {
-            Text = string.Format(Se.Language.General.DownloadingX, "libmpv"),
-            FontSize = UiUtil.ScaledFontSize(20),
-            FontWeight = FontWeight.Bold,
-        };
+        var titleText = Chrome.DownloadTitle(string.Format(Se.Language.General.DownloadingX, "libmpv"));
+        var progressBar = Chrome.DownloadProgressBar(nameof(DownloadLibMpvViewModel.Progress));
+        var statusText = Chrome.DownloadStatus(nameof(DownloadLibMpvViewModel.StatusText));
 
-        var progressBar = UiUtil.MakeProgressBar();
-        progressBar.MinWidth = 400;
-        progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(DownloadLibMpvViewModel.Progress)));
-
-        var statusText = new TextBlock();
-        statusText.Bind(TextBlock.TextProperty, new Binding(nameof(DownloadLibMpvViewModel.StatusText)));
-
-        var errorText = DownloadWindowUi.MakeErrorText();
+        // Download/unpack failures (no data, file in use, ...) - otherwise the window just sits there.
+        var errorText = Chrome.DownloadError(DownloadWindowUi.ErrorPropertyName);
 
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CommandCancelCommand);
         var buttonRetry = DownloadWindowUi.MakeButtonRetry(vm.RetryCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonRetry, buttonCancel);
+        var buttonBar = Chrome.ButtonBar(null, buttonRetry, buttonCancel);
 
-        Content = new StackPanel
-        {
-            Spacing = 8,
-            Margin = UiUtil.MakeWindowMargin(),
-            Children =
-            {
-                titleText,
-                progressBar,
-                statusText,
-                errorText,
-                buttonBar,
-            }
-        };
+        Content = Chrome.Root(Chrome.DownloadBody(titleText, progressBar, statusText, errorText), buttonBar);
 
         Loaded += delegate
         {
             buttonCancel.Focus(); // hack to make OnKeyDown work
             vm.StartDownload();
         };
-        KeyDown += (s, e) => vm.OnKeyDown(e);
+        KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

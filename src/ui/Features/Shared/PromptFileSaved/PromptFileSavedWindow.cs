@@ -9,6 +9,10 @@ using Optris.Icons.Avalonia;
 
 namespace Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 
+/// <summary>
+/// "File saved" in the editor look (see <see cref="SharedDialogChrome"/>): a green check, the file
+/// name, where it went and meta chips, the file actions and Done in the button bar.
+/// </summary>
 public class PromptFileSavedWindow : Window
 {
     public PromptFileSavedWindow(PromptFileSavedViewModel vm)
@@ -17,10 +21,11 @@ public class PromptFileSavedWindow : Window
         Bind(TitleProperty, new Binding(nameof(vm.Title)));
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        SharedDialogChrome.Apply(this);
         vm.Window = this;
         DataContext = vm;
 
-        var isDark = UiTheme.IsDarkThemeEnabled();
+        var isDark = !EditorChrome.IsLightTheme;
         var okForeground = new SolidColorBrush(isDark ? Color.FromRgb(76, 194, 122) : Color.FromRgb(46, 158, 91));
         var okBackground = new SolidColorBrush(isDark ? Color.FromArgb(60, 46, 158, 91) : Color.FromArgb(36, 46, 158, 91));
 
@@ -62,14 +67,16 @@ public class PromptFileSavedWindow : Window
         var labelFolder = new TextBlock
         {
             FontSize = UiUtil.ScaledFontSize(11.5),
-            Opacity = 0.65,
+            Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
             MaxWidth = 310,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.FolderDisplay)) { Mode = BindingMode.OneWay },
         };
         var buttonCopyPath = UiUtil.MakeButton(vm.CopyPathCommand, IconNames.Copy, Se.Language.General.Copy);
-        buttonCopyPath.Padding = new Thickness(4);
+        buttonCopyPath.Classes.Add("tool");
+        buttonCopyPath.Width = 24;
+        buttonCopyPath.Height = 24;
         buttonCopyPath.Margin = new Thickness(2, 0, 0, 0);
         vm.CopyPathButton = buttonCopyPath; // for the copied-feedback icon flip
 
@@ -105,46 +112,26 @@ public class PromptFileSavedWindow : Window
         {
             Orientation = Orientation.Horizontal,
             Spacing = 14,
-            Margin = new Thickness(6, 6, 6, 4),
+            Margin = new Thickness(20, 18, 24, 18),
             Children = { okBall, panelDetails },
         };
 
-        var buttonOpenContainingFolder = UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.ShowInFolderCommand)
-            .WithIconLeft(IconNames.FolderOpen)
+        var buttonOpenContainingFolder = SharedDialogChrome.MakeTextToolButton("fa-solid fa-folder-open", Se.Language.General.OpenContainingFolder, vm.ShowInFolderCommand)
             .WithBindIsVisible(nameof(vm.IsShowInFolderVisible));
         // "Play" for media files, "Open file" for everything else - same command; the view model
         // is initialized before the window is constructed, so the label/icon read is static.
-        var buttonOpenFile = UiUtil.MakeButton(vm.OpenFileButtonText, vm.ShowFileCommand)
+        var buttonOpenFile = SharedDialogChrome.MakeTextToolButton(vm.IsMediaFile ? "fa-solid fa-play" : "fa-regular fa-file-lines", vm.OpenFileButtonText, vm.ShowFileCommand)
             .WithBindIsVisible(nameof(vm.IsShowFileVisible));
-        if (vm.IsMediaFile)
+        var buttonDone = SharedDialogChrome.Primary(UiUtil.MakeButtonDone(vm.OkCommand));
+        var panelActions = new StackPanel
         {
-            buttonOpenFile = buttonOpenFile.WithIconLeft(IconNames.Play);
-        }
-        var buttonDone = UiUtil.MakeButtonDone(vm.OkCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOpenContainingFolder, buttonOpenFile, buttonDone);
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Orientation = Orientation.Horizontal,
+            Spacing = 4,
+            Margin = new Thickness(-8, 0, 0, 0), // the flat buttons' text lines up with the content
+            Children = { buttonOpenContainingFolder, buttonOpenFile },
         };
 
-        grid.Add(panelMain, 0);
-        grid.Add(buttonPanel, 1);
-
-        Content = grid;
+        Content = SharedDialogChrome.MakeRoot(panelMain, SharedDialogChrome.MakeButtonBar(panelActions, buttonDone));
 
         UiUtil.FocusOnFirstActivation(this, buttonDone); // hack to make OnKeyDown work
         KeyDown += (s, e) => vm.OnKeyDown(e);
@@ -159,7 +146,7 @@ public class PromptFileSavedWindow : Window
             CornerRadius = new CornerRadius(10),
             Padding = new Thickness(9, 1, 9, 2),
             VerticalAlignment = VerticalAlignment.Center,
-            Background = new SolidColorBrush(Color.FromArgb(28, 128, 128, 128)),
+            Background = EditorChrome.HoverBrush,
             Child = new TextBlock
             {
                 FontSize = UiUtil.ScaledFontSize(11),

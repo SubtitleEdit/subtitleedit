@@ -24,38 +24,18 @@ public class PickVobSubLanguageWindow : Window
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
+        SharedDialogChrome.Apply(this);
         DataContext = vm;
 
-        var languagesView = MakeLanguagesView(vm);
-        var previewView = MakePreviewView(vm);
+        var languagesView = SharedDialogChrome.MakeListSection(Se.Language.General.Language, MakeLanguagesView(vm));
+        var previewView = SharedDialogChrome.MakeListSection(Se.Language.General.Preview, MakePreviewView(vm));
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        var buttonOk = SharedDialogChrome.Primary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(languagesView, 0);
-        grid.Add(previewView, 0, 1);
-        grid.Add(panelButtons, 1, 0, 1, 2);
-
-        Content = grid;
+        Content = SharedDialogChrome.MakeRoot(
+            SharedDialogChrome.MakeTwoPanes(languagesView, previewView),
+            SharedDialogChrome.MakeButtonBar(null, buttonCancel, buttonOk));
 
         AddHandler(KeyDownEvent, vm.OnKeyDownHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
 
@@ -69,7 +49,7 @@ public class PickVobSubLanguageWindow : Window
         };
     }
 
-    private static Border MakeLanguagesView(PickVobSubLanguageViewModel vm)
+    private static TableView MakeLanguagesView(PickVobSubLanguageViewModel vm)
     {
         var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
         dataGrid.WithAccessibleName(Se.Language.General.Language);
@@ -121,10 +101,10 @@ public class PickVobSubLanguageWindow : Window
             .AddSortable<VobSubLanguageDisplay, string>(languageColumn, x => x.Language)
             .AddSortable<VobSubLanguageDisplay, int>(countColumn, x => x.Count);
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGrid);
+        return dataGrid;
     }
 
-    private static Border MakePreviewView(PickVobSubLanguageViewModel vm)
+    private static TableView MakePreviewView(PickVobSubLanguageViewModel vm)
     {
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
@@ -187,6 +167,6 @@ public class PickVobSubLanguageWindow : Window
                 },
         });
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGrid);
+        return dataGrid;
     }
 }

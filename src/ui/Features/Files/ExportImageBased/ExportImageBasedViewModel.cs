@@ -157,6 +157,9 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     private readonly IFolderHelper _folderHelper;
     private readonly IWindowService _windowService;
 
+    /// <summary>For the preview's "Image background color..." menu entry.</summary>
+    internal IWindowService WindowService => _windowService;
+
     public ExportImageBasedViewModel(IFileHelper fileHelper, IFolderHelper folderHelper, IWindowService windowService)
     {
         _fileHelper = fileHelper;

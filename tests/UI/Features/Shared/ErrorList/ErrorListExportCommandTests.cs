@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.LogicalTree;
@@ -103,7 +104,7 @@ public class ErrorListExportCommandTests
     {
         var (vm, window, _) = MakeWindow();
 
-        var button = window.GetLogicalDescendants().OfType<Button>().First(b => Equals(b.Content, Se.Language.General.ExportDotDotDot));
+        var button = window.GetLogicalDescendants().OfType<Button>().First(b => AutomationProperties.GetName(b) == Se.Language.General.ExportDotDotDot);
         var items = ((MenuFlyout)button.Flyout!).Items.Cast<MenuItem>().ToList();
 
         Assert.Equal(
@@ -133,7 +134,7 @@ public class ErrorListExportCommandTests
         window.Show();
         Dispatcher.UIThread.RunJobs();
 
-        var button = window.GetLogicalDescendants().OfType<Button>().First(b => Equals(b.Content, Se.Language.General.ExportDotDotDot));
+        var button = window.GetLogicalDescendants().OfType<Button>().First(b => AutomationProperties.GetName(b) == Se.Language.General.ExportDotDotDot);
 
         Assert.False(vm.CanExport);
         Assert.False(button.IsEnabled);
