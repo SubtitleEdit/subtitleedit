@@ -341,6 +341,11 @@ public static class InitMenu
                             Header = Se.Language.File.Export.PlainTextDotDotDot,
                             Command = vm.ShowExportPlainTextCommand,
                         },
+                        new MenuItem
+                        {
+                            Header = Se.Language.File.Export.DialogueListDotDotDot,
+                            Command = vm.ShowExportDialogueListCommand,
+                        },
                     }
                 },
                 new Separator(),

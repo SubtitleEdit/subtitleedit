@@ -265,6 +265,7 @@ public static class InitNativeMacMenu
         exportItems.Items.Add(new NativeMenuItemSeparator());
         exportItems.Items.Add(Item(Clean(lExport.CustomTextFormatsDotDotDot), v => v.ShowExportCustomTextFormatCommand));
         exportItems.Items.Add(Item(Clean(lExport.PlainTextDotDotDot), v => v.ShowExportPlainTextCommand));
+        exportItems.Items.Add(Item(Clean(lExport.DialogueListDotDotDot), v => v.ShowExportDialogueListCommand));
         fileItems.Items.Add(new NativeMenuItem(Clean(l.Export)) { Menu = exportItems });
 
         // ── Edit ──────────────────────────────────────────────────────────────

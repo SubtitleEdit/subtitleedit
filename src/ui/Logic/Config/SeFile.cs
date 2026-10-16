@@ -14,6 +14,7 @@ public class SeFile
     public List<SeExportCustomFormatItem> ExportCustomFormats { get; set; } = new();
     public SeExportImages ExportImages { get; set; } = new();
     public SeExportPlainText ExportPlainText { get; set; } = new();
+    public SeExportDialogueList ExportDialogueList { get; set; } = new();
     public SeDCinemaSmpte DCinemaSmpte { get; set; } = new();
     public SeEbuSaveOptions EbuSaveOptions { get; set; } = new();
     public SeCompare Compare { get; set; } = new();

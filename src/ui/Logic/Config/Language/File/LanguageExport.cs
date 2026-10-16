@@ -30,6 +30,13 @@ public class LanguageExport
     public string ExportPacSecondaryCodePage { get; set; }
     public string CustomTextFormatsDotDotDot { get; set; }
     public string PlainTextDotDotDot { get; set; }
+    public string DialogueListDotDotDot { get; set; }
+    public string TitleExportDialogueList { get; set; }
+    public string DialogueListLineBreaksInCell { get; set; }
+    public string DialogueListHeaderRow { get; set; }
+    public string DialogueListFramesFormat { get; set; }
+    public string DialogueListNoColumns { get; set; }
+    public string DialogueListEnd { get; set; }
     public string CustomTextFormats { get; set; }
     public string TitleExportCustomFormat { get; set; }
     public string EditCustomFormat { get; set; }
@@ -122,6 +129,13 @@ public class LanguageExport
         ExportPacSecondaryCodePage = "Secondary code page";
         CustomTextFormatsDotDotDot = "_Custom text formats...";
         PlainTextDotDotDot = "_Plain text...";
+        DialogueListDotDotDot = "Excel dialogue list (.xlsx)...";
+        TitleExportDialogueList = "Export Excel dialogue list";
+        DialogueListLineBreaksInCell = "Keep line breaks inside the cell (off: join lines with \" | \")";
+        DialogueListHeaderRow = "Header row";
+        DialogueListFramesFormat = "hh:mm:ss:ff (frames)";
+        DialogueListNoColumns = "Choose at least one column.";
+        DialogueListEnd = "End";
         CustomTextFormats = "Custom text formats";
         TitleExportCustomFormat = "Export custom text format";
         EditCustomFormat = "Edit custom text format";
