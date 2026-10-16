@@ -349,6 +349,14 @@ public static class DownloadHashManager
         public const string ModelQ8_0 = "KugelAudioAudioCpp.ModelQ8_0";
     }
 
+    public static class VoxtralTtsAudioCpp
+    {
+        // SHA-256 of the Voxtral-4B-TTS-2603 GGUFs on audio-cpp/audio.cpp-gguf (HF LFS oid).
+        // The engine binaries are the shared audio.cpp archives keyed under IndexTts25AudioCpp.
+        public const string ModelQ8_0 = "VoxtralTtsAudioCpp.ModelQ8_0";
+        public const string ModelBf16 = "VoxtralTtsAudioCpp.ModelBf16";
+    }
+
     public static class ZonosTtsCrispAsr
     {
         // SHA-256 of the Zonos-v0.1 transformer (Q8_0) and the shared DAC 44 kHz codec.
@@ -2552,6 +2560,16 @@ public static class DownloadHashManager
             [KugelAudioAudioCpp.ModelQ8_0] = new[]
             {
                 "9cff404eeafed33ac419f855002fa5fc6f6ef719f160b6fe333095b9cfb5be52", // kugelaudio-0-open-q8_0.gguf
+            },
+
+            // Voxtral-4B-TTS-2603 weights, from audio-cpp/audio.cpp-gguf (HF LFS oid).
+            [VoxtralTtsAudioCpp.ModelQ8_0] = new[]
+            {
+                "46eca2bfc66c89c415b66995d3544e91dea3320c93765ec0596f5c616354972d", // voxtral-4b-tts-2603-q8_0.gguf
+            },
+            [VoxtralTtsAudioCpp.ModelBf16] = new[]
+            {
+                "883f53bc9e54412110649f2725819c2453d871cc0f02d9dde1aaec495960081d", // voxtral-4b-tts-2603-bf16.gguf
             },
 
             // audio.cpp engine archives we build in SubtitleEdit/support-files

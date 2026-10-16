@@ -425,6 +425,14 @@ public partial class TextToSpeechViewModel : ObservableObject
                 Se.Settings.Video.TextToSpeech.KugelAudioAudioCppVoice = kugelVoice.Voice;
             }
         }
+        else if (SelectedEngine is VoxtralTtsAudioCpp)
+        {
+            Se.Settings.Video.TextToSpeech.VoxtralTtsAudioCppModel = SelectedModel ?? VoxtralTtsAudioCpp.DefaultModelKey;
+            if (SelectedVoice?.EngineVoice is VoxtralTtsVoice voxtralVoice && !string.IsNullOrEmpty(voxtralVoice.Voice))
+            {
+                Se.Settings.Video.TextToSpeech.VoxtralTtsAudioCppVoice = voxtralVoice.Voice;
+            }
+        }
         else if (SelectedEngine is CosyVoice3CrispAsr)
         {
             Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrModel = SelectedModel ?? CosyVoice3CrispAsr.DefaultModelKey;
@@ -1521,6 +1529,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             KugelAudioAudioCpp.StopServer();
         }
+        if (keepAlive is not VoxtralTtsAudioCpp)
+        {
+            VoxtralTtsAudioCpp.StopServer();
+        }
         if (keepAlive is not CosyVoice3CrispAsr)
         {
             CosyVoice3CrispAsr.StopServer();
@@ -1856,6 +1868,9 @@ public partial class TextToSpeechViewModel : ObservableObject
             case KugelAudioAudioCpp:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadKugelAudioAudioCppModels(KugelAudioAudioCpp.ResolveModelKey(SelectedModel)));
                 break;
+            case VoxtralTtsAudioCpp:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadVoxtralTtsAudioCppModels(VoxtralTtsAudioCpp.ResolveModelKey(SelectedModel)));
+                break;
             case CosyVoice3CrispAsr:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadCosyVoice3CrispAsrModels(CosyVoice3CrispAsr.ResolveModelKey(SelectedModel)));
                 break;
@@ -1954,6 +1969,9 @@ public partial class TextToSpeechViewModel : ObservableObject
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             KugelAudioAudioCpp => KugelAudioAudioCpp.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            VoxtralTtsAudioCpp => VoxtralTtsAudioCpp.AreModelsInstalled(modelKey)
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             CosyVoice3CrispAsr => CosyVoice3CrispAsr.AreModelsInstalled(modelKey)
@@ -5249,6 +5267,24 @@ public partial class TextToSpeechViewModel : ObservableObject
 
                 var savedVoice = Se.Settings.Video.TextToSpeech.KugelAudioAudioCppVoice;
                 var match = Voices.FirstOrDefault(v => v.EngineVoice is KugelAudioVoice kv && kv.Voice == savedVoice);
+                if (match != null)
+                {
+                    SelectedVoice = match;
+                }
+
+                IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
+            }
+            else if (SelectedEngine is VoxtralTtsAudioCpp)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.VoxtralTtsAudioCppModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+
+                var savedVoice = Se.Settings.Video.TextToSpeech.VoxtralTtsAudioCppVoice;
+                var match = Voices.FirstOrDefault(v => v.EngineVoice is VoxtralTtsVoice vv && vv.Voice == savedVoice);
                 if (match != null)
                 {
                     SelectedVoice = match;

@@ -118,6 +118,8 @@ public partial class DownloadTtsViewModel : ObservableObject
     private Task? _downloadTaskBreezeTtsAudioCppVoices;
     private readonly IKugelAudioAudioCppDownloadService _kugelAudioAudioCppDownloadService;
     private Task? _downloadTaskKugelAudioAudioCppModels;
+    private readonly IVoxtralTtsAudioCppDownloadService _voxtralTtsAudioCppDownloadService;
+    private Task? _downloadTaskVoxtralTtsAudioCppModels;
     private readonly ISidonAudioCppDownloadService _sidonAudioCppDownloadService;
     private Task? _downloadTaskSidonAudioCppModel;
     private readonly ICosyVoice3CrispAsrDownloadService _cosyVoice3CrispAsrDownloadService;
@@ -166,6 +168,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         IFireRedTts3AudioCppDownloadService fireRedTts3AudioCppDownloadService,
         IBreezeTtsAudioCppDownloadService breezeTtsAudioCppDownloadService,
         IKugelAudioAudioCppDownloadService kugelAudioAudioCppDownloadService,
+        IVoxtralTtsAudioCppDownloadService voxtralTtsAudioCppDownloadService,
         ISidonAudioCppDownloadService sidonAudioCppDownloadService,
         ICosyVoice3CrispAsrDownloadService cosyVoice3CrispAsrDownloadService,
         IF5TtsCrispAsrDownloadService f5TtsCrispAsrDownloadService,
@@ -198,6 +201,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         _breezeTtsAudioCppDownloadService = breezeTtsAudioCppDownloadService;
         _downloadStreamBreezeTtsAudioCppVoices = new MemoryStream();
         _kugelAudioAudioCppDownloadService = kugelAudioAudioCppDownloadService;
+        _voxtralTtsAudioCppDownloadService = voxtralTtsAudioCppDownloadService;
         _sidonAudioCppDownloadService = sidonAudioCppDownloadService;
         _cosyVoice3CrispAsrDownloadService = cosyVoice3CrispAsrDownloadService;
         _f5TtsCrispAsrDownloadService = f5TtsCrispAsrDownloadService;
@@ -1770,6 +1774,36 @@ public partial class DownloadTtsViewModel : ObservableObject
                 return;
             }
 
+            if (_downloadTaskVoxtralTtsAudioCppModels is { IsCompletedSuccessfully: true })
+            {
+                _timer.Stop();
+                _downloadTaskVoxtralTtsAudioCppModels = null;
+
+                // Model-only: the 20 preset voices are inside the GGUF and the engine does not
+                // clone, so there is no reference-voice pack to fetch afterwards.
+                OkPressed = true;
+                Close();
+                return;
+            }
+
+            if (_downloadTaskVoxtralTtsAudioCppModels is { IsFaulted: true })
+            {
+                _timer.Stop();
+                var ex = _downloadTaskVoxtralTtsAudioCppModels.Exception?.InnerException ?? _downloadTaskVoxtralTtsAudioCppModels.Exception;
+                if (ex is OperationCanceledException)
+                {
+                    ProgressText = Se.Language.General.DownloadCanceled;
+                    Close();
+                }
+                else
+                {
+                    ProgressText = Se.Language.General.DownloadFailed;
+                    Error = ex?.Message ?? Se.Language.General.UnknownError;
+                }
+
+                return;
+            }
+
             if (_downloadTaskSupertonicCrispAsrModels is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
@@ -3013,6 +3047,29 @@ public partial class DownloadTtsViewModel : ObservableObject
 
         _downloadTaskKugelAudioAudioCppModels =
             _kugelAudioAudioCppDownloadService.DownloadModels(resolved, downloadProgress, titleProgress, _cancellationTokenSource.Token);
+    }
+
+    public void StartDownloadVoxtralTtsAudioCppModels(string? modelKey = null)
+    {
+        var resolved = VoxtralTtsAudioCpp.ResolveModelKey(modelKey);
+        var fileName = VoxtralTtsAudioCpp.GetModelFileName(resolved);
+        TitleText = string.Format(Se.Language.General.DownloadingX, $"Voxtral TTS model ({resolved}): {fileName}");
+
+        var downloadProgress = new Progress<float>(number =>
+        {
+            var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
+            var pctString = percentage.ToString(CultureInfo.InvariantCulture);
+            ProgressValue = percentage;
+            ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
+        });
+
+        var titleProgress = new Action<string>(title =>
+        {
+            Dispatcher.UIThread.Post(() => TitleText = title);
+        });
+
+        _downloadTaskVoxtralTtsAudioCppModels =
+            _voxtralTtsAudioCppDownloadService.DownloadModels(resolved, downloadProgress, titleProgress, _cancellationTokenSource.Token);
     }
 
     public void StartDownloadSidonAudioCppModel()
