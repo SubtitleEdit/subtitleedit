@@ -422,6 +422,7 @@ public partial class AssaDrawViewModel : ObservableObject
             shape.TextColor = ContrastColor(shape.ForeColor);
             shape.FontSize = DefaultFontSize(20f);
             shape.GroupId = groupId;
+            shape.Animation = item.AnimatedColor is not { } animated || shape.ForeColor == animated ? item.Animation?.Clone() : null;
         }
 
         Shapes.AddRange(shapes);
@@ -2811,18 +2812,17 @@ public partial class AssaDrawViewModel : ObservableObject
 
                 if (finalText.Length > 0 && animation != null)
                 {
+                    // A drawing turns around its \\pos (the anchor) unless the animation needs another \\org
                     var origin = string.Empty;
-                    double outSlideDegrees = 0;
-                    if (animation.IsDoubleSlide)
+                    if (animation.OriginKind != DrawAnimationOrigin.Anchor &&
+                        animation.GetOrigin(anchor.X, anchor.Y, anchor.Bounds, CanvasWidth, CanvasHeight) is { } org)
                     {
-                        var (originX, originY, degrees) = animation.GetOutSlideRotation(anchor.X, anchor.Y, anchor.Bounds, CanvasWidth, CanvasHeight);
-                        origin = $"\\org({FormatCoordinate(originX)},{FormatCoordinate(originY)})";
-                        outSlideDegrees = degrees;
+                        origin = $"\\org({FormatCoordinate(org.X)},{FormatCoordinate(org.Y)})";
                     }
 
                     finalText.Insert(0, "{\\an7" +
                         animation.GetPositionTag(anchor.X, anchor.Y, LineDurationMs, anchor.Bounds, CanvasWidth, CanvasHeight) +
-                        origin + animation.GetEffectTags(LineDurationMs, 0, outSlideDegrees) + "}" +
+                        origin + animation.GetEffectTags(LineDurationMs, 0, anchor.Bounds, CanvasWidth, CanvasHeight) + "}" +
                         animation.FormatMarker(anchor.X, anchor.Y));
                 }
 
@@ -2894,7 +2894,7 @@ public partial class AssaDrawViewModel : ObservableObject
 
     /// <summary>
     /// A text line follows its shape's animation: it turns around the same \org as its drawing (the
-    /// anchor, or a double slide's far one), so its position is written to allow for its own \frz
+    /// anchor, its top edge, or a far one), so its position is written to allow for its own \frz
     /// turning around that point; \move instead of \pos for a slide. The marker and the effects go
     /// after its tag block.
     /// </summary>
@@ -2905,11 +2905,7 @@ public partial class AssaDrawViewModel : ObservableObject
 
         // The \frz as the text line writes it (two decimals) - a far \org magnifies any difference
         var baseFrz = (float)Math.Round(-shape.GetTextFrame().Angle, 2);
-        double originX = anchor.X, originY = anchor.Y, outSlideDegrees = 0;
-        if (animation.IsDoubleSlide)
-        {
-            (originX, originY, outSlideDegrees) = animation.GetOutSlideRotation(anchor.X, anchor.Y, anchor.Bounds, CanvasWidth, CanvasHeight);
-        }
+        var (originX, originY) = animation.GetOrigin(anchor.X, anchor.Y, anchor.Bounds, CanvasWidth, CanvasHeight) ?? (anchor.X, anchor.Y);
 
         var position = animation.GetPositionTag((left + right) / 2, (top + bottom) / 2, LineDurationMs, anchor.Bounds, CanvasWidth, CanvasHeight,
             (x, y) => DrawAnimation.MapAroundOrigin(x, y, originX, originY, baseFrz));
@@ -2921,7 +2917,7 @@ public partial class AssaDrawViewModel : ObservableObject
         }
 
         var blockEnd = textLine.IndexOf('}');
-        var effects = $"{{\\org({FormatCoordinate(originX)},{FormatCoordinate(originY)})" + animation.GetEffectTags(LineDurationMs, baseFrz, outSlideDegrees) + "}";
+        var effects = $"{{\\org({FormatCoordinate(originX)},{FormatCoordinate(originY)})" + animation.GetEffectTags(LineDurationMs, baseFrz, anchor.Bounds, CanvasWidth, CanvasHeight) + "}";
         return textLine[..(blockEnd + 1)] + animation.FormatMarker(anchor.X, anchor.Y) + effects + textLine[(blockEnd + 1)..];
     }
 

@@ -11,6 +11,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using static Nikse.SubtitleEdit.Logic.EditorChrome;
 
 namespace Nikse.SubtitleEdit.Features.Assa.AssaDraw;
@@ -27,21 +28,32 @@ internal static class AssaDrawAnimationPanel
     {
         var rows = new StackPanel { Spacing = 8, [!StackPanel.IsVisibleProperty] = new Binding(nameof(vm.IsAnimationExpanded)) };
 
-        var inOut = new Grid { ColumnDefinitions = new ColumnDefinitions("*,*"), ColumnSpacing = 4 };
-        var inButton = MakeSegment(Se.Language.Assa.DrawAnimationIn, vm.EditInEffectCommand, isOut: false);
-        var outButton = MakeSegment(Se.Language.Assa.DrawAnimationOut, vm.EditOutEffectCommand, isOut: true);
-        Grid.SetColumn(outButton, 1);
+        var inOut = new Grid { ColumnDefinitions = new ColumnDefinitions("*,*,*"), ColumnSpacing = 4 };
+        var inButton = MakeSegment(Se.Language.Assa.DrawAnimationIn, vm.EditInEffectCommand, Part.In);
+        var loopButton = MakeSegment(Se.Language.Assa.DrawAnimationLoop, vm.EditLoopEffectCommand, Part.Loop);
+        var outButton = MakeSegment(Se.Language.Assa.DrawAnimationOut, vm.EditOutEffectCommand, Part.Out);
+        Grid.SetColumn(loopButton, 1);
+        Grid.SetColumn(outButton, 2);
         inOut.Children.Add(inButton);
+        inOut.Children.Add(loopButton);
         inOut.Children.Add(outButton);
         rows.Children.Add(inOut);
 
-        var gallery = new UniformGrid { Columns = 3 };
+        var gallery = new UniformGrid { Columns = 3, [!UniformGrid.IsVisibleProperty] = new Binding(nameof(vm.IsEditingLoop)) { Converter = new FuncValueConverter<bool, bool>(loop => !loop) } };
         foreach (var effect in Effects)
         {
             gallery.Children.Add(MakeTile(vm, effect));
         }
 
         rows.Children.Add(gallery);
+
+        var loopGallery = new UniformGrid { Columns = 3, [!UniformGrid.IsVisibleProperty] = new Binding(nameof(vm.IsEditingLoop)) };
+        foreach (var effect in Enum.GetValues<DrawLoopEffect>())
+        {
+            loopGallery.Children.Add(MakeLoopTile(vm, effect));
+        }
+
+        rows.Children.Add(loopGallery);
 
         var duration = MakeField(nameof(vm.EditedEffectMs), 1, 60_000, prefix: "ms");
         duration.Increment = 50;
@@ -74,6 +86,15 @@ internal static class AssaDrawAnimationPanel
         }
 
         rows.Children.Add(MakePropertyRow(Se.Language.General.Duration, duration, play));
+
+        rows.Children.Add(new TextBlock
+        {
+            Text = Se.Language.Assa.DrawAnimationLoopBlocked,
+            FontSize = 11.5,
+            TextWrapping = TextWrapping.Wrap,
+            Foreground = new SolidColorBrush(Color.FromRgb(230, 160, 40)),
+            [!TextBlock.IsVisibleProperty] = new Binding(nameof(vm.IsLoopBlocked)),
+        });
 
         rows.Children.Add(new TextBlock
         {
@@ -143,8 +164,28 @@ internal static class AssaDrawAnimationPanel
         return header;
     }
 
-    private static Button MakeSegment(string text, System.Windows.Input.ICommand command, bool isOut)
+    private enum Part
     {
+        In,
+        Loop,
+        Out,
+    }
+
+    private static Button MakeSegment(string text, System.Windows.Input.ICommand command, Part part)
+    {
+        // Selected when the loop flag and the out flag say this part
+        bool IsSelected(IReadOnlyList<object?> values) =>
+            values is [bool loop, bool isOut] && (part == Part.Loop ? loop : !loop && isOut == (part == Part.Out));
+        MultiBinding Selected(Func<bool, object> pick) => new()
+        {
+            Bindings =
+            {
+                new Binding(nameof(AssaDrawViewModel.IsEditingLoop)),
+                new Binding(nameof(AssaDrawViewModel.IsEditingOutEffect)),
+            },
+            Converter = new FuncMultiValueConverter<object?, object>(values => pick(IsSelected(values.ToList()))),
+        };
+
         var button = new Button
         {
             Content = text,
@@ -155,21 +196,66 @@ internal static class AssaDrawAnimationPanel
             FontSize = 12,
             CornerRadius = new CornerRadius(6),
             BorderThickness = new Thickness(1),
-            [!Button.BackgroundProperty] = new Binding(nameof(AssaDrawViewModel.IsEditingOutEffect))
-            {
-                Converter = new FuncValueConverter<bool, IBrush>(editingOut => editingOut == isOut ? AccentSoftBrush : Brushes.Transparent),
-            },
-            [!Button.BorderBrushProperty] = new Binding(nameof(AssaDrawViewModel.IsEditingOutEffect))
-            {
-                Converter = new FuncValueConverter<bool, IBrush>(editingOut => editingOut == isOut ? AccentBrush : SeparatorBrush),
-            },
+            [!Button.BackgroundProperty] = Selected(selected => selected ? AccentSoftBrush : Brushes.Transparent),
+            [!Button.BorderBrushProperty] = Selected(selected => selected ? AccentBrush : SeparatorBrush),
+            [!Button.FontWeightProperty] = Selected(selected => selected ? FontWeight.SemiBold : FontWeight.Normal),
         };
         AutomationProperties.SetName(button, text);
-        button.Bind(Button.FontWeightProperty, new Binding(nameof(AssaDrawViewModel.IsEditingOutEffect))
-        {
-            Converter = new FuncValueConverter<bool, FontWeight>(editingOut => editingOut == isOut ? FontWeight.SemiBold : FontWeight.Normal),
-        });
         return button;
+    }
+
+    private static Button MakeLoopTile(AssaDrawViewModel vm, DrawLoopEffect effect)
+    {
+        var thumbnail = new AnimationThumbnail { LoopEffect = effect, Width = 64, Height = 36 };
+        var name = GetLoopName(effect);
+        var label = new TextBlock
+        {
+            Text = name,
+            FontSize = 10.5,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            Foreground = DimTextBrush,
+        };
+        var content = new StackPanel { Spacing = 2 };
+        content.Children.Add(thumbnail);
+        content.Children.Add(label);
+        var tile = new Button
+        {
+            Content = content,
+            Command = vm.PickLoopEffectCommand,
+            CommandParameter = effect,
+            Padding = new Thickness(3),
+            Margin = new Thickness(2),
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            HorizontalContentAlignment = HorizontalAlignment.Center,
+            CornerRadius = new CornerRadius(6),
+            BorderThickness = new Thickness(1.5),
+            [!Button.BorderBrushProperty] = new Binding(nameof(vm.AnimationLoop))
+            {
+                Converter = new FuncValueConverter<DrawLoopEffect, IBrush>(e => e == effect ? AccentBrush : Brushes.Transparent),
+            },
+            [!Button.BackgroundProperty] = new Binding(nameof(vm.AnimationLoop))
+            {
+                Converter = new FuncValueConverter<DrawLoopEffect, IBrush>(e => e == effect ? AccentSoftBrush : Brushes.Transparent),
+            },
+        };
+        AutomationProperties.SetName(tile, name);
+        return tile;
+    }
+
+    public static string GetLoopName(DrawLoopEffect effect)
+    {
+        var l = Se.Language.Assa;
+        return effect switch
+        {
+            DrawLoopEffect.Spin => l.DrawAnimationSpin,
+            DrawLoopEffect.Pulse => l.DrawAnimationPulse,
+            DrawLoopEffect.Blink => l.DrawAnimationBlink,
+            DrawLoopEffect.Bounce => l.DrawAnimationBounce,
+            DrawLoopEffect.Shake => l.DrawAnimationShake,
+            DrawLoopEffect.Swing => l.DrawAnimationSwing,
+            _ => l.DrawAnimationNone,
+        };
     }
 
     private static Button MakeTile(AssaDrawViewModel vm, DrawAnimationEffect effect)
@@ -257,6 +343,11 @@ internal sealed class AnimationThumbnail : Control
 
     public DrawAnimationEffect Effect { get; set; }
 
+    /// <summary>
+    /// Shows this loop instead of the in/out effect.
+    /// </summary>
+    public DrawLoopEffect? LoopEffect { get; set; }
+
     public bool IsOut
     {
         get => GetValue(IsOutProperty);
@@ -310,9 +401,11 @@ internal sealed class AnimationThumbnail : Control
         var height = (float)Bounds.Height;
         context.FillRectangle(FrameBrush, new Rect(0, 0, width, height), 4);
 
-        var animation = IsOut
-            ? new DrawAnimation { Out = Effect, OutMs = EffectMs }
-            : new DrawAnimation { In = Effect, InMs = EffectMs };
+        var animation = LoopEffect is { } loop
+            ? new DrawAnimation { Loop = loop, LoopMs = loop == DrawLoopEffect.Shake ? 400 : 900 }
+            : IsOut
+                ? new DrawAnimation { Out = Effect, OutMs = EffectMs }
+                : new DrawAnimation { In = Effect, InMs = EffectMs };
         var time = Clock.Elapsed.TotalMilliseconds % LoopMs;
         var radius = height * 0.36f;
         var cx = width / 2;
