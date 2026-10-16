@@ -26139,7 +26139,7 @@ public partial class MainViewModel :
     // so the code is cached here and reset on file load/new and after translation.
     private string? _detectedLanguageCode;
 
-    private string GetDetectedLanguageCode()
+    internal string GetDetectedLanguageCode()
     {
         return _detectedLanguageCode ??= Subtitles.AutoDetectGoogleLanguageOrNull() ?? string.Empty;
     }
