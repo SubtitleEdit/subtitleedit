@@ -116,6 +116,12 @@ public class LanguageAssa
     public string DrawClipArtSignLanguage { get; set; }
     public string DrawClipArtAi { get; set; }
     public string DrawClipArtHeadphones { get; set; }
+    public string DrawClipArtYummy { get; set; }
+    public string DrawClipArtDrooling { get; set; }
+    public string DrawClipArtDisgusted { get; set; }
+    public string DrawClipArtTooSpicy { get; set; }
+    public string DrawClipArtChefsKiss { get; set; }
+    public string DrawClipArtLoveIt { get; set; }
     public string DrawClipArtStarRating { get; set; }
     public string DrawAnimation { get; set; }
     public string DrawAnimationIn { get; set; }
@@ -654,6 +660,12 @@ public class LanguageAssa
         DrawClipArtSignLanguage = "Sign language";
         DrawClipArtAi = "AI";
         DrawClipArtHeadphones = "Headphones";
+        DrawClipArtYummy = "Yummy";
+        DrawClipArtDrooling = "Drooling";
+        DrawClipArtDisgusted = "Disgusted";
+        DrawClipArtTooSpicy = "Too spicy";
+        DrawClipArtChefsKiss = "Chef's kiss";
+        DrawClipArtLoveIt = "Love it";
         DrawClipArtStarRating = "{0} of 5 stars";
         DrawAnimation = "Animation";
         DrawAnimationIn = "In";

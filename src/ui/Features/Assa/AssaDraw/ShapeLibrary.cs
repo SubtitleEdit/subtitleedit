@@ -579,6 +579,19 @@ public static class ShapeLibrary
             Clip(l.DrawClipArtHeadphones, null,
                 """<path fill="none" stroke="#37474F" stroke-width="8" stroke-linecap="round" d="M18 62 A32 32 0 0 1 82 62"/><g fill="#E53935"><rect x="10" y="54" width="18" height="32" rx="6"/><rect x="72" y="54" width="18" height="32" rx="6"/></g>"""),
 
+            Clip(l.DrawClipArtYummy, null,
+                """<circle fill="#FFCA28" cx="50" cy="50" r="44"/><path fill="none" stroke="#5D4037" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M28 42 Q34 34 40 42 M60 42 Q66 34 72 42 M30 60 Q50 76 70 60"/><path fill="#E57373" d="M56 66 Q67 66 69 76 Q68 85 59 81 Q54 74 56 66 Z"/>"""),
+            Clip(l.DrawClipArtDrooling, null,
+                """<circle fill="#FFCA28" cx="50" cy="50" r="44"/><g fill="#5D4037"><circle cx="34" cy="40" r="5"/><circle cx="66" cy="40" r="5"/></g><path fill="none" stroke="#5D4037" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M34 62 Q50 72 66 62"/><path fill="#4FC3F7" d="M62 67 Q67 77 67 83 A5 5 0 0 1 57 83 Q57 77 62 67 Z"/>"""),
+            Clip(l.DrawClipArtDisgusted, null,
+                """<circle fill="#9CCC65" cx="50" cy="50" r="44"/><path fill="none" stroke="#33691E" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M26 36 L38 42 L26 48 M74 36 L62 42 L74 48 M30 66 Q37 60 44 66 Q51 72 58 66 Q65 60 72 66"/>"""),
+            Clip(l.DrawClipArtTooSpicy, null,
+                """<circle fill="#EF5350" cx="50" cy="50" r="44"/><path fill="none" stroke="#5D4037" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M28 36 L40 42 L28 48 M72 36 L60 42 L72 48"/><circle fill="#5D4037" cx="50" cy="66" r="11"/><path fill="#4FC3F7" d="M76 14 Q82 24 82 28 A6 6 0 0 1 70 28 Q70 24 76 14 Z"/>"""),
+            Clip(l.DrawClipArtChefsKiss, null,
+                """<circle fill="#FFCA28" cx="50" cy="58" r="40"/><path fill="none" stroke="#5D4037" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M30 50 Q36 56 42 50 M58 50 Q64 56 70 50 M47 64 Q55 66 49 70 Q55 74 47 76"/><path fill="#FFFFFF" d="M28 30 Q20 14 34 12 Q42 2 54 8 Q70 4 72 20 Q80 24 72 30 Z"/><path fill="#E53935" d="M76 75.6 C67.6 70 69 63 76 67.2 C83 63 84.4 70 76 75.6 Z"/>"""),
+            Clip(l.DrawClipArtLoveIt, null,
+                """<circle fill="#FFCA28" cx="50" cy="50" r="44"/><g fill="#E53935"><path d="M33 50.4 C17.4 40 20 27 33 34.8 C46 27 48.6 40 33 50.4 Z"/><path d="M67 50.4 C51.4 40 54 27 67 34.8 C80 27 82.6 40 67 50.4 Z"/></g><path fill="#5D4037" d="M28 58 Q50 84 72 58 Z"/>"""),
+
             // Star ratings 0-5: gold stars for the rating, gray for the rest
             .. Enumerable.Range(0, 6).Select(stars => Clip(string.Format(l.DrawClipArtStarRating, stars), null, StarRatingSvg(stars))),
         ];
