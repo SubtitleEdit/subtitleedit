@@ -507,6 +507,18 @@ public static class ShapeLibrary
                 """<g fill="#FFF3C4"><circle cx="28" cy="30" r="13"/><circle cx="44" cy="20" r="14"/><circle cx="60" cy="22" r="13"/><circle cx="74" cy="32" r="12"/><circle cx="50" cy="34" r="13"/></g><path fill="#E53935" d="M16 38 H84 L74 98 H26 Z"/><g fill="#FFFFFF"><path d="M30 38 H40 L42 98 H34 Z"/><path d="M60 38 H70 L66 98 H58 Z"/></g>"""),
             Clip(l.DrawClipArtCoffeeCup, null,
                 """<g fill="none" stroke="#B0BEC5" stroke-width="4" stroke-linecap="round"><path d="M34 30 Q28 23 34 16 Q40 9 34 3"/><path d="M50 30 Q44 23 50 16 Q56 9 50 3"/><path d="M66 30 Q60 23 66 16 Q72 9 66 3"/></g><path fill="#ECEFF1" d="M14 34 H78 V70 Q78 92 56 92 H36 Q14 92 14 70 Z M78 42 A16 16 0 0 1 78 74 V66 A8 8 0 0 0 78 50 Z"/><path fill="#6D4C41" d="M14 34 H78 V44 H14 Z"/>"""),
+            Clip(l.DrawClipArtRainbow, null,
+                """<g fill="none" stroke-width="9"><path stroke="#E53935" d="M8 80 A42 42 0 0 1 92 80"/><path stroke="#FFC107" d="M18 80 A32 32 0 0 1 82 80"/><path stroke="#1E88E5" d="M28 80 A22 22 0 0 1 72 80"/></g><g fill="#ECEFF1"><circle cx="12" cy="82" r="10"/><circle cx="24" cy="86" r="9"/><circle cx="88" cy="82" r="10"/><circle cx="76" cy="86" r="9"/></g>"""),
+            Clip(l.DrawClipArtTrophy, null,
+                """<path fill="none" stroke="#FFA000" stroke-width="6" stroke-linecap="round" d="M27 16 H12 Q10 38 30 42 M73 16 H88 Q90 38 70 42"/><path fill="#FFC107" d="M26 8 H74 V30 Q74 58 50 62 Q26 58 26 30 Z"/><g fill="#FFA000"><rect x="44" y="60" width="12" height="16"/><rect x="30" y="76" width="40" height="8" rx="2"/></g><rect fill="#6D4C41" x="24" y="84" width="52" height="12" rx="2"/>"""),
+            Clip(l.DrawClipArtRocket, null,
+                """<path fill="#ECEFF1" d="M34 32 Q34 14 50 4 Q66 14 66 32 V76 H34 Z"/><path fill="#E53935" d="M37 22 Q42 10 50 4 Q58 10 63 22 Z M34 56 L18 80 L34 76 Z M66 56 L82 80 L66 76 Z"/><circle fill="#42A5F5" cx="50" cy="44" r="8"/><path fill="#FF9800" d="M38 76 H62 L50 98 Z"/>"""),
+            Clip(l.DrawClipArtBalloon, null,
+                """<path fill="#E53935" d="M50 2 C72 2 84 20 84 38 C84 58 66 72 50 74 C34 72 16 58 16 38 C16 20 28 2 50 2 Z M44 80 L50 72 L56 80 Z"/><ellipse fill="#FF8A80" cx="36" cy="24" rx="7" ry="11" transform="rotate(30 36 24)"/><path fill="none" stroke="#757575" stroke-width="2" stroke-linecap="round" d="M50 80 Q42 88 52 93 Q60 97 50 100"/>"""),
+            Clip(l.DrawClipArtCamera, null,
+                """<g fill="#455A64"><rect x="4" y="26" width="92" height="64" rx="8"/><path d="M32 28 L38 14 H62 L68 28 Z"/></g><circle fill="#90A4AE" cx="50" cy="58" r="24"/><circle fill="#1E88E5" cx="50" cy="58" r="15"/><rect fill="#FFC107" x="76" y="34" width="12" height="7" rx="2"/>"""),
+            Clip(l.DrawClipArtPartyPopper, null,
+                """<path fill="#FF7043" d="M6 96 L30 36 L66 72 Z"/><path fill="none" stroke="#FFCA28" stroke-width="8" stroke-linecap="round" d="M30 36 L66 72"/><g fill="#E91E63"><circle cx="52" cy="22" r="5"/><rect x="74" y="44" width="11" height="5" rx="2" transform="rotate(30 79 46)"/><circle cx="92" cy="22" r="4"/></g><g fill="#29B6F6"><rect x="62" y="6" width="11" height="5" rx="2" transform="rotate(-20 67 8)"/><circle cx="82" cy="68" r="5"/><rect x="38" y="6" width="9" height="4" rx="2"/></g>"""),
         ];
     }
 }
