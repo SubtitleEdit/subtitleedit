@@ -22,6 +22,7 @@ public class SeGeneral
     public int SubtitleLineMaximumLength { get; set; } = 43;
     public int MaxNumberOfLines { get; set; }
     public bool SubtitleTextBoxLimitNewLines { get; set; } = true;
+    public bool SubtitleTextBoxAutoWrapWhileTyping { get; set; }
     public double SubtitleMaximumCharactersPerSeconds { get; set; }
     public double SubtitleOptimalCharactersPerSeconds { get; set; }
     public double SubtitleMaximumWordsPerMinute { get; set; }

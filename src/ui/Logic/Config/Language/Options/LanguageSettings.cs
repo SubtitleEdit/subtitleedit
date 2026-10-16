@@ -250,6 +250,7 @@ public class LanguageSettings
     public string TimeCodeModeFrameNumbers { get; set; }
     public string FrameModeSnapToVideoFrames { get; set; }
     public string TextBoxLimitNewLines { get; set; }
+    public string TextBoxAutoWrapWhileTyping { get; set; }
     public string MpvOpenGl { get; set; }
     public string MpvSoftwareRendering { get; set; }
     public string MpvMetalRendering { get; set; }
@@ -614,6 +615,7 @@ public class LanguageSettings
         TimeCodeModeFrameNumbers = "Frame numbers";
         FrameModeSnapToVideoFrames = "Store times on video frames (not frames within each second)";
         TextBoxLimitNewLines = "Limit number of lines in subtitle text box";
+        TextBoxAutoWrapWhileTyping = "Auto-wrap while typing";
         MpvOpenGl = "libmpv - OpenGL";
         MpvWidRendering = "libmpv - Native Window ID rendering";
         MpvSoftwareRendering = "libmpv - Software rendering (slow)";
