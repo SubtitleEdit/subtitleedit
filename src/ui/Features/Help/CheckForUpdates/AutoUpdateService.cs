@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
 /// <summary>How this copy of Subtitle Edit can update itself, if at all.</summary>
 public enum AutoUpdateKind
 {
-    /// <summary>No in-app update - the user gets the download page (zip, dmg, Flatpak, AUR, ...).</summary>
+    /// <summary>No in-app update - the user gets the download page (zip, Flatpak, AUR, ...).</summary>
     None,
 
     /// <summary>Installed by the Inno Setup installer: run the new installer silently.</summary>
@@ -27,6 +27,9 @@ public enum AutoUpdateKind
 
     /// <summary>Unpacked Linux tarball in a user-writable folder: extract the new tarball over it.</summary>
     LinuxTarball,
+
+    /// <summary>App bundle in a user-writable folder: swap in the bundle from the new dmg.</summary>
+    MacAppBundle,
 }
 
 public class AutoUpdateAsset
@@ -65,6 +68,8 @@ public class AutoUpdateService : IAutoUpdateService
     internal const string LinuxX64Asset = "SubtitleEdit-Linux-x64.tar.gz";
     internal const string LinuxArm64Asset = "SubtitleEdit-Linux-ARM64.tar.gz";
     internal const string LinuxExecutable = "SubtitleEdit";
+    internal const string MacArm64Asset = "SubtitleEdit-macOS-ARM64.dmg";
+    internal const string MacX64Asset = "SubtitleEdit-macOS-x64.dmg";
 
     private readonly HttpClient _httpClient;
     private readonly Lazy<AutoUpdateKind> _kind;
@@ -84,6 +89,7 @@ public class AutoUpdateService : IAutoUpdateService
             return DetectKind(
                 OperatingSystem.IsWindows(),
                 OperatingSystem.IsLinux(),
+                OperatingSystem.IsMacOS(),
                 RuntimeInformation.ProcessArchitecture,
                 UpdateCheckService.IsStoreManagedInstall ||
                 !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("APPIMAGE")),
@@ -101,6 +107,7 @@ public class AutoUpdateService : IAutoUpdateService
     internal static AutoUpdateKind DetectKind(
         bool isWindows,
         bool isLinux,
+        bool isMacOs,
         Architecture architecture,
         bool isPackageManaged,
         string exeFolder,
@@ -132,6 +139,17 @@ public class AutoUpdateService : IAutoUpdateService
             return AutoUpdateKind.LinuxTarball;
         }
 
+        // Swapping the bundle renames it inside its parent folder, so that must be writable -
+        // which also rules out running straight from the mounted dmg and App Translocation.
+        if (isMacOs &&
+            architecture is Architecture.X64 or Architecture.Arm64 &&
+            GetMacAppBundle(exeFolder) is { } bundle &&
+            !bundle.Contains("/AppTranslocation/", StringComparison.Ordinal) &&
+            isDirectoryWritable(Path.GetDirectoryName(bundle)!))
+        {
+            return AutoUpdateKind.MacAppBundle;
+        }
+
         return AutoUpdateKind.None;
     }
 
@@ -141,8 +159,23 @@ public class AutoUpdateService : IAutoUpdateService
         {
             AutoUpdateKind.WindowsInstaller => WindowsInstallerAsset,
             AutoUpdateKind.LinuxTarball => architecture == Architecture.Arm64 ? LinuxArm64Asset : LinuxX64Asset,
+            AutoUpdateKind.MacAppBundle => architecture == Architecture.Arm64 ? MacArm64Asset : MacX64Asset,
             _ => string.Empty,
         };
+    }
+
+    /// <summary>"/Applications/Subtitle Edit.app" for ".../Subtitle Edit.app/Contents/MacOS/", else null.</summary>
+    internal static string? GetMacAppBundle(string exeFolder)
+    {
+        var macOsFolder = exeFolder.TrimEnd('/');
+        var contents = Path.GetDirectoryName(macOsFolder);
+        var bundle = contents == null ? null : Path.GetDirectoryName(contents);
+        return Path.GetFileName(macOsFolder) == "MacOS" &&
+               Path.GetFileName(contents) == "Contents" &&
+               bundle != null &&
+               bundle.EndsWith(".app", StringComparison.OrdinalIgnoreCase)
+            ? bundle
+            : null;
     }
 
     private static bool IsDirectoryWritable(string folder)
@@ -189,6 +222,15 @@ public class AutoUpdateService : IAutoUpdateService
         if (Kind == AutoUpdateKind.LinuxTarball)
         {
             await Task.Run(() => ValidateLinuxTarball(path), cancellationToken);
+        }
+
+        if (Kind == AutoUpdateKind.MacAppBundle)
+        {
+            var currentBundle = GetMacAppBundle(AppContext.BaseDirectory)
+                                ?? throw new InvalidOperationException("Not running from an app bundle");
+            var stagedApp = await PrepareMacAppBundleAsync(path, folder, currentBundle, cancellationToken);
+            TryDelete(path);
+            return stagedApp;
         }
 
         return path;
@@ -300,6 +342,108 @@ public class AutoUpdateService : IAutoUpdateService
         }
     }
 
+    /// <summary>
+    /// Copies the app bundle out of the dmg into the staging folder and checks it is signed
+    /// intact by the same Apple team as the running app - so the bundle swapped in after exit
+    /// is the genuine, notarized build. Our own download carries no quarantine flag, so the
+    /// new bundle opens without a Gatekeeper prompt.
+    /// </summary>
+    internal static async Task<string> PrepareMacAppBundleAsync(string dmgPath, string folder, string currentBundle, CancellationToken cancellationToken)
+    {
+        var currentTeam = await GetMacTeamIdentifierAsync(currentBundle, cancellationToken);
+        if (string.IsNullOrEmpty(currentTeam))
+        {
+            throw new InvalidOperationException("The running app is not signed - cannot verify the update");
+        }
+
+        var mountPoint = Path.Combine(folder, "mount");
+        var staging = Path.Combine(folder, "staged");
+        if (Directory.Exists(staging))
+        {
+            Directory.Delete(staging, true);
+        }
+
+        Directory.CreateDirectory(mountPoint);
+        Directory.CreateDirectory(staging);
+
+        await RunAsync("hdiutil", cancellationToken, "attach", "-nobrowse", "-readonly", "-noautoopen", "-mountpoint", mountPoint, dmgPath);
+        string stagedApp;
+        try
+        {
+            var appInDmg = Directory.GetDirectories(mountPoint, "*.app").FirstOrDefault()
+                           ?? throw new InvalidDataException("No app bundle in the update dmg");
+            stagedApp = Path.Combine(staging, Path.GetFileName(appInDmg));
+            await RunAsync("ditto", cancellationToken, appInDmg, stagedApp);
+        }
+        finally
+        {
+            await RunAsync("hdiutil", CancellationToken.None, "detach", mountPoint, "-force");
+        }
+
+        await RunAsync("codesign", cancellationToken, "--verify", "--deep", "--strict", stagedApp);
+        var newTeam = await GetMacTeamIdentifierAsync(stagedApp, cancellationToken);
+        if (!string.Equals(newTeam, currentTeam, StringComparison.Ordinal))
+        {
+            Directory.Delete(staging, true);
+            throw new InvalidDataException($"Update is signed by team '{newTeam}', expected '{currentTeam}'");
+        }
+
+        return stagedApp;
+    }
+
+    private static async Task<string> GetMacTeamIdentifierAsync(string bundle, CancellationToken cancellationToken)
+    {
+        // codesign -d writes its details to stderr; an unsigned bundle exits non-zero.
+        var (exitCode, output) = await RunAsync("codesign", cancellationToken, false, "-dv", "--verbose=2", bundle);
+        return exitCode == 0 ? ParseTeamIdentifier(output) : string.Empty;
+    }
+
+    internal static string ParseTeamIdentifier(string codesignOutput)
+    {
+        foreach (var line in codesignOutput.Split('\n'))
+        {
+            const string prefix = "TeamIdentifier=";
+            var trimmed = line.Trim();
+            if (trimmed.StartsWith(prefix, StringComparison.Ordinal))
+            {
+                var team = trimmed.Substring(prefix.Length);
+                return team == "not set" ? string.Empty : team;
+            }
+        }
+
+        return string.Empty;
+    }
+
+    private static Task RunAsync(string fileName, CancellationToken cancellationToken, params string[] arguments) =>
+        RunAsync(fileName, cancellationToken, true, arguments);
+
+    private static async Task<(int ExitCode, string Output)> RunAsync(string fileName, CancellationToken cancellationToken, bool throwOnError, params string[] arguments)
+    {
+        var startInfo = new ProcessStartInfo(fileName)
+        {
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            CreateNoWindow = true,
+        };
+        foreach (var argument in arguments)
+        {
+            startInfo.ArgumentList.Add(argument);
+        }
+
+        using var process = Process.Start(startInfo) ?? throw new InvalidOperationException("Could not start " + fileName);
+        var stdout = process.StandardOutput.ReadToEndAsync(cancellationToken);
+        var stderr = process.StandardError.ReadToEndAsync(cancellationToken);
+        await process.WaitForExitAsync(cancellationToken);
+        var output = await stdout + await stderr;
+        if (throwOnError && process.ExitCode != 0)
+        {
+            throw new InvalidOperationException($"{fileName} failed with exit code {process.ExitCode}: {output.Trim()}");
+        }
+
+        return (process.ExitCode, output);
+    }
+
     public void StartInstallAfterExit(string downloadedFile)
     {
         var processId = Environment.ProcessId;
@@ -347,6 +491,22 @@ public class AutoUpdateService : IAutoUpdateService
                 Process.Start(startInfo);
                 break;
             }
+            case AutoUpdateKind.MacAppBundle:
+            {
+                var script = Path.Combine(Path.GetDirectoryName(scriptFolder)!, "install-update.sh");
+                File.WriteAllText(script, MacScript.Replace("\r\n", "\n"));
+                var startInfo = new ProcessStartInfo("/bin/sh") { UseShellExecute = false };
+                foreach (var argument in new[]
+                         {
+                             script, processId.ToString(), downloadedFile, GetMacAppBundle(AppContext.BaseDirectory)!,
+                         })
+                {
+                    startInfo.ArgumentList.Add(argument);
+                }
+
+                Process.Start(startInfo);
+                break;
+            }
             default:
                 throw new InvalidOperationException("Automatic update is not available for this installation");
         }
@@ -380,6 +540,29 @@ public class AutoUpdateService : IAutoUpdateService
         if tar -xzf "$archive" -C "$dir"; then rm -f "$archive"; fi
         cd "$dir" || exit 1
         nohup "$app" >/dev/null 2>&1 &
+        """;
+
+    /// <summary>
+    /// Waits for Subtitle Edit to exit, then swaps the verified bundle in under the same name:
+    /// the old bundle is renamed aside first and restored if the move fails, so there is always
+    /// a working app. Opens the app again either way.
+    /// </summary>
+    internal const string MacScript = """
+        #!/bin/sh
+        trap '' HUP
+        pid="$1"; staged="$2"; target="$3"
+        while kill -0 "$pid" 2>/dev/null; do sleep 1; done
+        backup="$target.se-update-old"
+        rm -rf "$backup"
+        if mv "$target" "$backup"; then
+            if mv "$staged" "$target"; then
+                rm -rf "$backup"
+            else
+                rm -rf "$target"
+                mv "$backup" "$target"
+            fi
+        fi
+        open "$target"
         """;
 
     private static void TryDelete(string path)
