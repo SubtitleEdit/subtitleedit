@@ -42,6 +42,17 @@ public interface IVideoPlayer
     {
     }
 
+    /// <summary>True when <see cref="SetAudioDelay"/> moves the audio (mpv).</summary>
+    bool SupportsAudioDelay => false;
+
+    /// <summary>
+    /// Plays the audio this many seconds later (negative = earlier) than the picture - the live
+    /// preview of Video > Sync audio track.
+    /// </summary>
+    void SetAudioDelay(double seconds)
+    {
+    }
+
     bool IsPlaying { get; }
     bool IsPaused { get; }
 

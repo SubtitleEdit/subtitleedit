@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.Media;
@@ -977,6 +978,126 @@ public class FfmpegGenerator
         var isExperimental = string.Equals(audioEncoding, "truehd", StringComparison.OrdinalIgnoreCase) ||
                              string.Equals(audioEncoding, "mlp", StringComparison.OrdinalIgnoreCase);
         return "-c:a " + audioEncoding + (isExperimental ? " -strict -2 " : " ");
+    }
+
+    /// <summary>
+    /// Video > Sync audio track: a copy of the video (no re-encode) with one audio stream moved
+    /// <paramref name="offsetSeconds"/> later (negative = earlier). The file is read twice; only
+    /// the chosen audio stream is taken from the second, time-shifted input (-itsoffset), every
+    /// other stream from the first - mapped in the original order, so the track keeps its place,
+    /// language, title and default flag.
+    /// </summary>
+    /// <remarks>
+    /// Moving audio earlier puts its first packets before zero. ffmpeg's default then shifts the
+    /// whole file later in .mkv (the video started at the offset, out of step with the
+    /// subtitles), so negative timestamps are allowed through, and with
+    /// <paramref name="dropNegativePackets"/> (ffmpeg 5.1+ "noise" bsf drop option) the audio
+    /// packets before zero are dropped instead.
+    /// </remarks>
+    /// <param name="streamIndexes">All stream indexes of the input in order ("Stream #0:N"); empty
+    /// = unknown, then the shifted track is added last instead of in its old place.</param>
+    public static Process ShiftAudioTrack(string inputFileName, string outputFileName, IReadOnlyList<int> streamIndexes, int audioStreamIndex, double offsetSeconds, bool dropNegativePackets, DataReceivedEventHandler? dataReceivedHandler = null)
+    {
+        var process = new Process
+        {
+            StartInfo =
+            {
+                FileName = GetFfmpegLocation(),
+                Arguments = GetShiftAudioTrackArguments(inputFileName, outputFileName, streamIndexes, audioStreamIndex, offsetSeconds, dropNegativePackets),
+                UseShellExecute = false,
+                CreateNoWindow = true
+            }
+        };
+
+        SetupDataReceiveHandler(dataReceivedHandler, process);
+        return process;
+    }
+
+    internal static string GetShiftAudioTrackArguments(string inputFileName, string outputFileName, IReadOnlyList<int> streamIndexes, int audioStreamIndex, double offsetSeconds, bool dropNegativePackets)
+    {
+        var offset = offsetSeconds.ToString("0.000", CultureInfo.InvariantCulture);
+
+        var maps = new StringBuilder();
+        var outputIndex = -1;
+        if (streamIndexes.Count > 0 && streamIndexes.Contains(audioStreamIndex))
+        {
+            for (var i = 0; i < streamIndexes.Count; i++)
+            {
+                var index = streamIndexes[i];
+                if (index == audioStreamIndex)
+                {
+                    maps.Append($"-map 1:{index} ");
+                    outputIndex = i;
+                }
+                else
+                {
+                    maps.Append($"-map 0:{index} ");
+                }
+            }
+        }
+        else
+        {
+            maps.Append($"-map 0 -map -0:{audioStreamIndex} -map 1:{audioStreamIndex} ");
+        }
+
+        var negative = string.Empty;
+        if (offsetSeconds < 0)
+        {
+            negative = dropNegativePackets && outputIndex >= 0
+                ? $"-bsf:{outputIndex} \"noise=drop=lt(pts*tb\\,0)\" -avoid_negative_ts disabled "
+                : "-avoid_negative_ts disabled ";
+        }
+
+        return $"{FfmpegProgressTracker.ProgressArguments} -nostdin -y {GeneratePtsForVideoCopy}-i \"{inputFileName}\" -itsoffset {offset} -i \"{inputFileName}\" {maps}-c copy {negative}-map_metadata 0 -map_chapters 0 \"{outputFileName}\"";
+    }
+
+    private static bool? _noiseBsfHasDrop;
+
+    /// <summary>
+    /// The "-drop" option line of "ffmpeg -h bsf=noise" - not "-dropamount", which older
+    /// versions (4.x) have and which cannot drop by timestamp.
+    /// </summary>
+    internal static bool NoiseHelpHasDropOption(string help) =>
+        Regex.IsMatch(help, @"^\s*-drop\s", RegexOptions.Multiline);
+
+    /// <summary>
+    /// True when this ffmpeg's "noise" bitstream filter has the drop option (ffmpeg 5.1+).
+    /// </summary>
+    public static bool NoiseBitstreamFilterCanDrop()
+    {
+        if (_noiseBsfHasDrop.HasValue)
+        {
+            return _noiseBsfHasDrop.Value;
+        }
+
+        try
+        {
+            using var process = new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetFfmpegLocation(),
+                    Arguments = "-hide_banner -h bsf=noise",
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                }
+            };
+#pragma warning disable CA1416 // Validate platform compatibility
+            process.Start();
+#pragma warning restore CA1416
+            var stdout = process.StandardOutput.ReadToEndAsync();
+            var stderr = process.StandardError.ReadToEndAsync();
+            process.WaitForExit(10000);
+            _noiseBsfHasDrop = NoiseHelpHasDropOption(stdout.Result + stderr.Result);
+        }
+        catch
+        {
+            _noiseBsfHasDrop = false;
+        }
+
+        return _noiseBsfHasDrop.Value;
     }
 
     public static Process AddAudioTrack(string inputFileName, string audioFileName, string outputFileName, string audioEncoding, bool? stereo, DataReceivedEventHandler? dataReceivedHandler = null)

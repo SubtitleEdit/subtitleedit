@@ -849,6 +849,11 @@ public static class InitMenu
                     Header = Se.Language.Video.EmbedSubtitlesDotDotDot,
                     Command = vm.VideoEmbedCommand,
                 },
+                new MenuItem
+                {
+                    Header = Se.Language.Video.SyncAudioTrackDotDotDot,
+                    Command = vm.ShowSyncAudioTrackCommand,
+                },
                 new Separator(),
                 new MenuItem
                 {

@@ -2970,6 +2970,23 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         }
     }
 
+    public bool SupportsAudioDelay => true;
+
+    public void SetAudioDelay(double seconds)
+    {
+        EnsureNotDisposed();
+        if (_mpv == IntPtr.Zero)
+        {
+            return;
+        }
+
+        var err = DoMpvCommand("set", "audio-delay", seconds.ToString("0.000", CultureInfo.InvariantCulture));
+        if (err < 0)
+        {
+            Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer SetAudioDelay");
+        }
+    }
+
     public void InitializeWithSoftwareRendering()
     {
         // LoadLib(), not LoadLibraryInternal(): the latter always calls mpv_create() and

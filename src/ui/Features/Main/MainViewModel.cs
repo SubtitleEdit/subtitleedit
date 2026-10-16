@@ -174,6 +174,7 @@ using Nikse.SubtitleEdit.Features.Video.ReEncodeVideo;
 using Nikse.SubtitleEdit.Features.Video.RemuxVideo;
 using Nikse.SubtitleEdit.Features.Video.Chapters;
 using Nikse.SubtitleEdit.Features.Video.ShotChanges;
+using Nikse.SubtitleEdit.Features.Video.SyncAudioTrack;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
 using Nikse.SubtitleEdit.Features.Video.VideoOcr;
@@ -8087,6 +8088,31 @@ public partial class MainViewModel :
         {
             return;
         }
+    }
+
+    [RelayCommand]
+    private async Task ShowSyncAudioTrack()
+    {
+        if (Window == null || !await RequireFfmpegOk())
+        {
+            return;
+        }
+
+        var videoFileName = _videoFileName;
+        if (string.IsNullOrEmpty(videoFileName) || !File.Exists(videoFileName))
+        {
+            videoFileName = await _fileHelper.PickOpenVideoFile(Window, Se.Language.General.OpenVideoFileTitle, lastOpenedFilePath: _subtitleFileName);
+            if (string.IsNullOrEmpty(videoFileName))
+            {
+                return;
+            }
+        }
+
+        // One player at a time: the dialog plays the video with the shifted audio
+        var vp = GetVideoPlayerControl();
+        vp?.VideoPlayer.Pause();
+        var position = videoFileName == _videoFileName ? vp?.Position ?? 0 : 0;
+        await ShowDialogAsync<SyncAudioTrackWindow, SyncAudioTrackViewModel>(vm => vm.Initialize(videoFileName, position));
     }
 
     [RelayCommand]
