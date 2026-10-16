@@ -25,6 +25,10 @@ namespace Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
 
 public class FixCommonErrorsWindow : Window
 {
+    // Follow the app theme, also when it changes while the window is open
+    private static readonly IBrush NothingToFixBrush = EditorChrome.Themed(Color.FromRgb(0x6e, 0xcb, 0x87), Color.FromRgb(0x1e, 0x7e, 0x34));
+    private static readonly IBrush ErrorsFoundBrush = EditorChrome.Themed(Color.FromRgb(0xff, 0x8a, 0x80), Color.FromRgb(0xc4, 0x28, 0x28));
+
     private readonly FixCommonErrorsViewModel _vm;
     private Button? _buttonApplySelectedFixes;
 
@@ -236,9 +240,7 @@ public class FixCommonErrorsWindow : Window
 
         // Green check + "Nothing to fix" so an empty re-scan gives visible feedback; the counters
         // stay as they were, which on its own reads as "the button did nothing" (#12849).
-        var nothingToFixBrush = new SolidColorBrush(EditorChrome.IsLightTheme
-            ? Color.FromRgb(0x1e, 0x7e, 0x34)
-            : Color.FromRgb(0x6e, 0xcb, 0x87));
+        var nothingToFixBrush = NothingToFixBrush;
         var nothingToFixText = new TextBlock
         {
             Text = Se.Language.Tools.FixCommonErrors.NothingToFix,
@@ -268,9 +270,7 @@ public class FixCommonErrorsWindow : Window
         // Errors the rules found but could not fix (e.g. a display time that is too short with no
         // room to extend it). Without this they are silent, and a subtitle full of them still shows
         // the green "Nothing to fix" - click the warning to see one log line per error (#13645).
-        var errorsFoundBrush = new SolidColorBrush(EditorChrome.IsLightTheme
-            ? Color.FromRgb(0xc4, 0x28, 0x28)
-            : Color.FromRgb(0xff, 0x8a, 0x80));
+        var errorsFoundBrush = ErrorsFoundBrush;
         var errorsFoundIcon = new Optris.Icons.Avalonia.Icon
         {
             Value = IconNames.Alert,

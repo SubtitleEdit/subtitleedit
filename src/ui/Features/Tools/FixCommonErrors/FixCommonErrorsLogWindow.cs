@@ -15,6 +15,9 @@ namespace Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
 
 public class FixCommonErrorsLogWindow : Window
 {
+    // Follows the app theme, also when it changes while the window is open
+    private static readonly IBrush ImportantBrush = EditorChrome.Themed(Color.FromRgb(0xff, 0x8a, 0x80), Color.FromRgb(0xc4, 0x28, 0x28));
+
     public FixCommonErrorsLogWindow(FixCommonErrorsLogViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -51,9 +54,7 @@ public class FixCommonErrorsLogWindow : Window
         var labelImportant = new TextBlock
         {
             FontSize = 12,
-            Foreground = new SolidColorBrush(EditorChrome.IsLightTheme
-                ? Color.FromRgb(0xc4, 0x28, 0x28)
-                : Color.FromRgb(0xff, 0x8a, 0x80)),
+            Foreground = ImportantBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
             Margin = new Thickness(12, 0),

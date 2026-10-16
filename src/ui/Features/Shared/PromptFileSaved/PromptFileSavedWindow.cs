@@ -15,6 +15,10 @@ namespace Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 /// </summary>
 public class PromptFileSavedWindow : Window
 {
+    // Follow the app theme, also when it changes while the dialog is open
+    private static readonly IBrush OkForeground = EditorChrome.Themed(Color.FromRgb(76, 194, 122), Color.FromRgb(46, 158, 91));
+    private static readonly IBrush OkBackground = EditorChrome.Themed(Color.FromArgb(60, 46, 158, 91), Color.FromArgb(36, 46, 158, 91));
+
     public PromptFileSavedWindow(PromptFileSavedViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -25,16 +29,12 @@ public class PromptFileSavedWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var isDark = !EditorChrome.IsLightTheme;
-        var okForeground = new SolidColorBrush(isDark ? Color.FromRgb(76, 194, 122) : Color.FromRgb(46, 158, 91));
-        var okBackground = new SolidColorBrush(isDark ? Color.FromArgb(60, 46, 158, 91) : Color.FromArgb(36, 46, 158, 91));
-
         // Green check in a soft circle: success is readable before the text is.
         var checkIcon = new ContentControl
         {
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
-            Foreground = okForeground,
+            Foreground = OkForeground,
         };
         Attached.SetIcon(checkIcon, IconNames.Check);
         var okBall = new Border
@@ -42,7 +42,7 @@ public class PromptFileSavedWindow : Window
             Width = 44,
             Height = 44,
             CornerRadius = new CornerRadius(22),
-            Background = okBackground,
+            Background = OkBackground,
             VerticalAlignment = VerticalAlignment.Top,
             Child = checkIcon,
         };

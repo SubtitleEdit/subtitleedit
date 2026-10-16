@@ -74,7 +74,7 @@ public class ShortcutsWindow : Window
                 FontSize = UiUtil.ScaledFontSize(10),
                 FontWeight = FontWeight.SemiBold,
                 VerticalAlignment = VerticalAlignment.Center,
-                Foreground = EditorChrome.IsLightTheme ? EditorChrome.AccentBrush : EditorChrome.StrongTextBrush,
+                Foreground = EditorChrome.BadgeTextBrush,
                 HorizontalAlignment = HorizontalAlignment.Center
             }
         };

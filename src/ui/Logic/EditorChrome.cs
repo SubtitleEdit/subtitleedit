@@ -56,6 +56,11 @@ internal static class EditorChrome
     internal static IBrush MenuBrush => MenuColor.Brush;
     internal static IBrush MenuBorderBrush => MenuBorderColor.Brush;
 
+    /// <summary>
+    /// Text on an AccentSoftBrush badge (counts): white on dark, accent on light.
+    /// </summary>
+    internal static IBrush BadgeTextBrush => BadgeTextColor.Brush;
+
     private static readonly ThemedBrush StrongTextColor = new(Colors.White, Colors.Black);
     private static readonly ThemedBrush ThumbnailColor = new(Color.FromRgb(214, 218, 226), Color.FromRgb(72, 78, 92));
     private static readonly ThemedBrush ThumbnailMutedColor = new(Color.FromRgb(96, 102, 116), Color.FromRgb(188, 193, 204));
@@ -77,6 +82,7 @@ internal static class EditorChrome
     private static readonly ThemedBrush FieldBorderColor = new(Color.FromRgb(54, 57, 68), Color.FromRgb(204, 209, 219));
     private static readonly ThemedBrush MenuColor = new(Color.FromRgb(42, 44, 51), Color.FromRgb(255, 255, 255));
     private static readonly ThemedBrush MenuBorderColor = new(Color.FromRgb(66, 69, 79), Color.FromRgb(208, 212, 220));
+    private static readonly ThemedBrush BadgeTextColor = new(Colors.White, Color.FromRgb(76, 110, 245));
 
     /// <summary>
     /// A brush outside the palette that also follows the app theme (e.g. a status color with a

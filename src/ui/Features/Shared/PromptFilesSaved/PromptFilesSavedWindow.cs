@@ -18,10 +18,11 @@ namespace Nikse.SubtitleEdit.Features.Shared.PromptFilesSaved;
 public class PromptFilesSavedWindow : Window
 {
     private readonly PromptFilesSavedViewModel _vm;
-    private readonly IBrush _okForeground;
-    private readonly IBrush _okBackground;
-    private readonly IBrush _warnForeground;
-    private readonly IBrush _warnBackground;
+    // Follow the app theme, also when it changes while the dialog is open
+    private static readonly IBrush OkForeground = EditorChrome.Themed(Color.FromRgb(76, 194, 122), Color.FromRgb(46, 158, 91));
+    private static readonly IBrush OkBackground = EditorChrome.Themed(Color.FromArgb(60, 46, 158, 91), Color.FromArgb(36, 46, 158, 91));
+    private static readonly IBrush WarnForeground = EditorChrome.Themed(Color.FromRgb(240, 180, 70), Color.FromRgb(196, 128, 16));
+    private static readonly IBrush WarnBackground = EditorChrome.Themed(Color.FromArgb(60, 220, 150, 30), Color.FromArgb(36, 220, 150, 30));
     private static IBrush ChipBackground => EditorChrome.HoverBrush;
 
     public PromptFilesSavedWindow(PromptFilesSavedViewModel vm)
@@ -34,12 +35,6 @@ public class PromptFilesSavedWindow : Window
         _vm = vm;
         vm.Window = this;
         DataContext = vm;
-
-        var isDark = !EditorChrome.IsLightTheme;
-        _okForeground = new SolidColorBrush(isDark ? Color.FromRgb(76, 194, 122) : Color.FromRgb(46, 158, 91));
-        _okBackground = new SolidColorBrush(isDark ? Color.FromArgb(60, 46, 158, 91) : Color.FromArgb(36, 46, 158, 91));
-        _warnForeground = new SolidColorBrush(isDark ? Color.FromRgb(240, 180, 70) : Color.FromRgb(196, 128, 16));
-        _warnBackground = new SolidColorBrush(isDark ? Color.FromArgb(60, 220, 150, 30) : Color.FromArgb(36, 220, 150, 30));
 
         // Header: same language as PromptFileSaved - a green check (amber alert when some jobs
         // produced nothing) in a soft circle, headline, where the files went and summary chips.
@@ -143,7 +138,7 @@ public class PromptFilesSavedWindow : Window
         {
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
-            Foreground = isSuccess ? _okForeground : _warnForeground,
+            Foreground = isSuccess ? OkForeground : WarnForeground,
             FontSize = iconFontSize,
         };
         Attached.SetIcon(icon, isSuccess ? IconNames.Check : IconNames.Alert);
@@ -153,7 +148,7 @@ public class PromptFilesSavedWindow : Window
             Width = size,
             Height = size,
             CornerRadius = new CornerRadius(size / 2),
-            Background = isSuccess ? _okBackground : _warnBackground,
+            Background = isSuccess ? OkBackground : WarnBackground,
             VerticalAlignment = VerticalAlignment.Center,
             Child = icon,
         };
@@ -200,8 +195,8 @@ public class PromptFilesSavedWindow : Window
         else
         {
             var statusChip = MakeChip(item.StatusText, emphasized: true);
-            statusChip.Background = _warnBackground;
-            ((TextBlock)statusChip.Child!).Foreground = _warnForeground;
+            statusChip.Background = WarnBackground;
+            ((TextBlock)statusChip.Child!).Foreground = WarnForeground;
             panelChips.Children.Add(statusChip);
         }
 

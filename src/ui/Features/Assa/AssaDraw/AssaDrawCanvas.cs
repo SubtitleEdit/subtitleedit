@@ -74,7 +74,7 @@ public class AssaDrawCanvas : Control
     private static IBrush CheckerBrush => IsLight ? LightCheckerBrush : DarkCheckerBrush;
     private static Color CanvasColor => IsLight ? LightCanvasColor : DrawSettings.BackgroundColor;
     private static Color GridColor => IsLight ? LightGridColor : DrawSettings.GridColor;
-    private static Color ShapeLineColor => IsLight ? LightShapeLineColor : ShapeLineColor;
+    private static Color ShapeLineColor => IsLight ? LightShapeLineColor : DrawSettings.ShapeLineColor;
     private static Color GuideColor => IsLight ? LightGuideColor : DarkGuideColor;
     private static Color TextFrameColor => IsLight ? LightTextFrameColor : DarkTextFrameColor;
 
@@ -324,6 +324,33 @@ public class AssaDrawCanvas : Control
         ClipToBounds = true;
         Focusable = true;
     }
+
+    // The workspace colors are picked at render time from the app theme, so repaint when it
+    // changes while the window is open.
+    private Application? _themeApplication;
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _themeApplication = Application.Current;
+        if (_themeApplication != null)
+        {
+            _themeApplication.ActualThemeVariantChanged += OnThemeChanged;
+        }
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        if (_themeApplication != null)
+        {
+            _themeApplication.ActualThemeVariantChanged -= OnThemeChanged;
+            _themeApplication = null;
+        }
+
+        base.OnDetachedFromVisualTree(e);
+    }
+
+    private void OnThemeChanged(object? sender, EventArgs e) => InvalidateVisual();
 
     /// <summary>
     /// Zooms so the whole frame fits the visible area and centers it.

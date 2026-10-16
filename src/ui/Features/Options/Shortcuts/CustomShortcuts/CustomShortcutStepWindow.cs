@@ -55,7 +55,7 @@ public class CustomShortcutStepWindow : Window
                 FontSize = UiUtil.ScaledFontSize(10),
                 FontWeight = FontWeight.SemiBold,
                 VerticalAlignment = VerticalAlignment.Center,
-                Foreground = EditorChrome.IsLightTheme ? EditorChrome.AccentBrush : EditorChrome.StrongTextBrush,
+                Foreground = EditorChrome.BadgeTextBrush,
             },
         };
         var panelSearch = new Grid

@@ -20,6 +20,10 @@ namespace Nikse.SubtitleEdit.Features.Edit.MultipleReplace;
 
 public class MultipleReplaceWindow : Window
 {
+    // Follow the app theme, also when it changes while the window is open
+    private static readonly IBrush ErrorBrush = EditorChrome.Themed(Color.FromRgb(255, 100, 100), Color.FromRgb(183, 28, 28));
+    private static readonly IBrush ReplacedBrush = EditorChrome.Themed(Color.FromRgb(100, 220, 100), Color.FromRgb(27, 94, 32));
+
     public MultipleReplaceWindow(MultipleReplaceViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -233,9 +237,7 @@ public class MultipleReplaceWindow : Window
             // nothing (#13534).
             var labelError = new Label
             {
-                Foreground = new SolidColorBrush(EditorChrome.IsLightTheme
-                    ? Color.FromRgb(183, 28, 28)
-                    : Color.FromRgb(255, 100, 100)),
+                Foreground = ErrorBrush,
                 VerticalAlignment = VerticalAlignment.Center,
                 VerticalContentAlignment = VerticalAlignment.Center,
                 Margin = new Thickness(0, 0, 4, 0),
@@ -579,9 +581,8 @@ public class MultipleReplaceWindow : Window
             [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(vm.SelectedFixHits)) { Source = vm },
             ItemTemplate = new FuncDataTemplate<ReplaceExpression>((hit, _) =>
             {
-                var isDark = !EditorChrome.IsLightTheme;
-                var redFg = new SolidColorBrush(isDark ? Color.FromRgb(255, 100, 100) : Color.FromRgb(183, 28, 28));
-                var greenFg = new SolidColorBrush(isDark ? Color.FromRgb(100, 220, 100) : Color.FromRgb(27, 94, 32));
+                var redFg = ErrorBrush;
+                var greenFg = ReplacedBrush;
 
                 var iconLabel = new Label { Padding = new Thickness(0, 0, 2, 0), VerticalAlignment = VerticalAlignment.Center };
                 if (hit.RuleTreeNode != null)
