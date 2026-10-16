@@ -97,6 +97,10 @@ namespace Nikse.SubtitleEdit.Controls
 
             _textBox = e.NameScope.Find<TextBox>("PART_TextBox");
             _spinner = e.NameScope.Find<ButtonSpinner>("PART_Spinner");
+            if (_spinner != null)
+            {
+                CompactSpinner.Attach(_spinner);
+            }
 
             if (_spinner != null)
             {
@@ -171,8 +175,8 @@ namespace Nikse.SubtitleEdit.Controls
             if (spinnerButtonsWidth <= 0)
             {
                 // Conservative estimate for spinner buttons (varies by platform)
-                // macOS: ~84px, Windows/Linux: ~50-60px
-                spinnerButtonsWidth = 84;
+                // The narrow stacked up/down pair (CompactSpinner)
+                spinnerButtonsWidth = 24;
             }
 
             // Account for textbox internal padding (9 left, 2 right from template)
@@ -219,13 +223,15 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     Name = "PART_TextBox",
                     IsReadOnly = false,
-                    Padding = new Thickness(9, 2, 2, 2),
+                    Padding = new Thickness(10, 2, 4, 2),
                     Margin = new Thickness(0),
                     VerticalContentAlignment = VerticalAlignment.Center,
                     HorizontalContentAlignment = HorizontalAlignment.Left,
                     HorizontalAlignment = HorizontalAlignment.Stretch,
                     Width = double.NaN,
                     BorderBrush = Brushes.Transparent,
+                    BorderThickness = new Thickness(0),
+                    Background = Brushes.Transparent,
                     CaretIndex = control.LastPartCaretIndex,
                 };
 
@@ -253,6 +259,7 @@ namespace Nikse.SubtitleEdit.Controls
                     Width = double.NaN,
                     Margin = new Thickness(0),
                     Padding = new Thickness(0),
+                    CornerRadius = new CornerRadius(6),
                 };
 
                 scope.Register("PART_Spinner", spinner);

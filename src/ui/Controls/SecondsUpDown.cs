@@ -92,13 +92,15 @@ public class SecondsUpDown : TemplatedControl
             {
                 Name = "PART_TextBox",
                 IsReadOnly = false,
-                Padding = new Thickness(9, 2, 2, 2),
+                Padding = new Thickness(10, 2, 4, 2),
                 Margin = new Thickness(0),
                 VerticalContentAlignment = VerticalAlignment.Center,
                 HorizontalContentAlignment = HorizontalAlignment.Left,
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 Width = double.NaN,
                 BorderBrush = Brushes.Transparent,
+                BorderThickness = new Thickness(0),
+                Background = Brushes.Transparent,
             };
 
             var grid = new Grid
@@ -125,6 +127,7 @@ public class SecondsUpDown : TemplatedControl
                 Width = double.NaN,
                 Margin = new Thickness(0),
                 Padding = new Thickness(0),
+                CornerRadius = new CornerRadius(6),
             };
 
             scope.Register("PART_Spinner", spinner);
@@ -140,6 +143,10 @@ public class SecondsUpDown : TemplatedControl
 
         _textBox = e.NameScope.Find<TextBox>("PART_TextBox");
         _spinner = e.NameScope.Find<ButtonSpinner>("PART_Spinner");
+        if (_spinner != null)
+        {
+            CompactSpinner.Attach(_spinner);
+        }
 
         if (_spinner != null)
         {
