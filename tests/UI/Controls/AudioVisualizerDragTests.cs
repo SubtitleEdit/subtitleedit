@@ -66,9 +66,9 @@ public class AudioVisualizerDragTests : IDisposable
         return new WavePeakData2(SampleRate, peaks);
     }
 
-    private static SubtitleLineViewModel Line(double startSeconds, double endSeconds) => new()
+    private static SubtitleLineViewModel Line(double startSeconds, double endSeconds, string text = "text") => new()
     {
-        Text = "text",
+        Text = text,
         StartTime = TimeSpan.FromSeconds(startSeconds),
         EndTime = TimeSpan.FromSeconds(endSeconds),
     };
@@ -98,6 +98,44 @@ public class AudioVisualizerDragTests : IDisposable
         Dispatcher.UIThread.RunJobs();
 
         return (window, av, list);
+    }
+
+    [AvaloniaFact]
+    public void Move_DrawingLayersWithTheSameTimes_MoveTogether()
+    {
+        // A clip art is one ASSA drawing line per layer, all 1-3 s; dragging one moved only that layer
+        var a = Line(1, 3, "{\\p1}m 0 0 l 10 0 10 10{\\p0}");
+        var b = Line(1, 3, "{\\p1}m 5 5 l 15 5 15 15{\\p0}");
+        var text = Line(1, 3, "{\\an5\\pos(5,5)}{assadraw-text box=0,0,10,10}Hi");
+        var other = Line(1, 3, "Dialogue with the same times");
+        var (window, _, _) = Open(other, a, b, text);
+
+        window.MouseDown(new Point(252, 100), MouseButton.Left, RawInputModifiers.None);
+        window.MouseMove(new Point(378, 100), RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
+        window.MouseUp(new Point(378, 100), MouseButton.Left, RawInputModifiers.None);
+
+        // +126 px = +1 s for every drawing layer; an ordinary line with the same times stays
+        Assert.All(new[] { a, b, text }, line => Assert.Equal(2, line.StartTime.TotalSeconds, 2));
+        Assert.All(new[] { a, b, text }, line => Assert.Equal(4, line.EndTime.TotalSeconds, 2));
+        Assert.Equal(1, other.StartTime.TotalSeconds, 2);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void Move_OrdinaryLinesWithTheSameTimes_MovesJustTheOne()
+    {
+        var a = Line(1, 3);
+        var b = Line(1, 3);
+        var (window, _, _) = Open(a, b);
+
+        window.MouseDown(new Point(252, 100), MouseButton.Left, RawInputModifiers.None);
+        window.MouseMove(new Point(378, 100), RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
+        window.MouseUp(new Point(378, 100), MouseButton.Left, RawInputModifiers.None);
+
+        Assert.Single(new[] { a, b }, line => Math.Abs(line.StartTime.TotalSeconds - 2) < 0.01);
+        window.Close();
     }
 
     [AvaloniaFact]

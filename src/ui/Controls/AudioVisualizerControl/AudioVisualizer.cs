@@ -1411,6 +1411,18 @@ public class AudioVisualizer : Control
 
                 _interactionMode = InteractionMode.MovingSelection;
             }
+            else if (GetDrawingStack(p) is { Count: > 1 } stack)
+            {
+                // An ASSA drawing (clip art) is one line per layer, all with the same times:
+                // dragging one moved just that layer out of the picture
+                _selectionMoveSnapshot.Clear();
+                foreach (var layer in stack)
+                {
+                    _selectionMoveSnapshot.Add((layer, layer.StartTime.TotalSeconds, layer.Duration.TotalSeconds));
+                }
+
+                _interactionMode = InteractionMode.MovingSelection;
+            }
             else
             {
                 _interactionMode = InteractionMode.Moving;
@@ -1422,6 +1434,37 @@ public class AudioVisualizer : Control
         {
             OnDragStarted?.Invoke(this, new ParagraphEventArgs(_startPointerSeconds, _activeParagraph));
         }
+    }
+
+    /// <summary>
+    /// The ASSA drawing lines (\p1 drawings and ASSA draw text) with exactly the times of
+    /// <paramref name="paragraph"/>, itself included - the layers of one drawing; null when it is
+    /// not a drawing line.
+    /// </summary>
+    private List<SubtitleLineViewModel>? GetDrawingStack(SubtitleLineViewModel paragraph)
+    {
+        if (!IsDrawingLine(paragraph))
+        {
+            return null;
+        }
+
+        var stack = new List<SubtitleLineViewModel>();
+        foreach (var p in _displayableParagraphs)
+        {
+            if (p.StartTime == paragraph.StartTime && p.EndTime == paragraph.EndTime && IsDrawingLine(p))
+            {
+                stack.Add(p);
+            }
+        }
+
+        return stack;
+    }
+
+    private static bool IsDrawingLine(SubtitleLineViewModel paragraph)
+    {
+        var text = paragraph.Text;
+        return !string.IsNullOrEmpty(text) &&
+               (text.Contains("\\p1", StringComparison.Ordinal) || text.Contains("{assadraw-text ", StringComparison.Ordinal));
     }
 
     /// <summary>
