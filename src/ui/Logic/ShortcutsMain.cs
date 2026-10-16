@@ -730,6 +730,8 @@ public static class ShortcutsMain
         { nameof(MainViewModel.ShowPickLayerCommand), Se.Language.General.PickLayer },
         { nameof(MainViewModel.CopyTextToClipboardCommand), Se.Language.Options.Shortcuts.CopyTextToClipboard },
         { nameof(MainViewModel.CopyTextFromOriginalToClipboardCommand), Se.Language.Options.Shortcuts.CopyTextFromOriginalToClipboard },
+        { nameof(MainViewModel.CopyPlainTextToClipboardCommand), Se.Language.Options.Shortcuts.CopyPlainTextToClipboard },
+        { nameof(MainViewModel.CopyPlainTextFromOriginalToClipboardCommand), Se.Language.Options.Shortcuts.CopyPlainTextFromOriginalToClipboard },
         { nameof(MainViewModel.ShowAssaImageColorPickerCommand), Se.Language.Assa.ImageColorPicker },
         { nameof(MainViewModel.ShowAssaSetPositionCommand), Se.Language.Assa.SetPosition },
         { nameof(MainViewModel.ShowAssaApplyCustomOverrideTagsCommand), Se.Language.Assa.ApplyOverrideTags },
@@ -1284,6 +1286,8 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.ShowPickLayerCommand, nameof(vm.ShowPickLayerCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.CopyTextToClipboardCommand, nameof(vm.CopyTextToClipboardCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.CopyTextFromOriginalToClipboardCommand, nameof(vm.CopyTextFromOriginalToClipboardCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.CopyPlainTextToClipboardCommand, nameof(vm.CopyPlainTextToClipboardCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.CopyPlainTextFromOriginalToClipboardCommand, nameof(vm.CopyPlainTextFromOriginalToClipboardCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowAssaImageColorPickerCommand, nameof(vm.ShowAssaImageColorPickerCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowAssaSetPositionCommand, nameof(vm.ShowAssaSetPositionCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowAssaApplyCustomOverrideTagsCommand, nameof(vm.ShowAssaApplyCustomOverrideTagsCommand), ShortcutCategory.General);

@@ -293,6 +293,8 @@ public class LanguageSettingsShortcuts
     public string DuplicatesFound { get; set; }
     public string CopyTextToClipboard { get; set; }
     public string CopyTextFromOriginalToClipboard { get; set; }
+    public string CopyPlainTextToClipboard { get; set; }
+    public string CopyPlainTextFromOriginalToClipboard { get; set; }
     public string AssaDraw { get; set; }
     public string AssaGenerateProgressBar { get; set; }
     public string AssaGenerateBackgroundBox { get; set; }
@@ -638,6 +640,8 @@ public class LanguageSettingsShortcuts
         DuplicatesFound = "The following duplicate shortcuts were found:";
         CopyTextToClipboard = "Copy text to clipboard (selected lines)";
         CopyTextFromOriginalToClipboard = "Copy text from original to clipboard (selected lines)";
+        CopyPlainTextToClipboard = "Copy plain text to clipboard (selected lines)";
+        CopyPlainTextFromOriginalToClipboard = "Copy plain text from original to clipboard (selected lines)";
         AssaDraw = "ASSA Draw";
         AssaGenerateProgressBar = "ASSA Generate progress bar";
         AssaGenerateBackgroundBox = "ASSA Generate background box";
