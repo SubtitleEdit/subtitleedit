@@ -9,6 +9,10 @@ public class LanguageHelp
     public string CheckForUpdatesNewVersionAvailable { get; set; }
     public string CheckForUpdatesUnableToCheck { get; set; }
     public string CheckForUpdatesDownloadNewVersion { get; set; }
+    public string CheckForUpdatesInstallAndRestart { get; set; }
+    public string CheckForUpdatesDownloadingX { get; set; }
+    public string CheckForUpdatesInstallFailed { get; set; }
+    public string CheckForUpdatesInstallsWhenClosed { get; set; }
 
     public LanguageHelp()
     {
@@ -19,6 +23,10 @@ public class LanguageHelp
         CheckForUpdatesNewVersionAvailable = "New version available: {0}";
         CheckForUpdatesUnableToCheck = "Unable to check for updates.";
         CheckForUpdatesDownloadNewVersion = "Download new version";
+        CheckForUpdatesInstallAndRestart = "Install and restart";
+        CheckForUpdatesDownloadingX = "Downloading {0}...";
+        CheckForUpdatesInstallFailed = "Automatic update failed - please use \"Download new version\" instead.";
+        CheckForUpdatesInstallsWhenClosed = "The update will be installed when Subtitle Edit closes.";
     }
 
 }

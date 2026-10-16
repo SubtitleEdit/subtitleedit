@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
 
 /// <summary>
 /// Check for updates in the editor look (see <see cref="EditorChrome"/>): the status line with the
-/// download action on top, the changelog in a field frame under it, OK in the button bar.
+/// download/install actions on top, the changelog in a field frame under it, OK in the button bar.
 /// </summary>
 public class CheckForUpdatesWindow : Window
 {
@@ -51,14 +51,37 @@ public class CheckForUpdatesWindow : Window
         downloadButton.DataContext = vm;
         downloadButton.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsDownloadLinkVisible)));
 
+        // In-app update (Windows installer, Linux tarball): download, verify, install after exit.
+        var installButton = EditorChrome.MakeTextToolButton(IconNames.Download, Se.Language.Help.CheckForUpdatesInstallAndRestart, vm.InstallUpdateCommand);
+        installButton.Foreground = EditorChrome.AccentBrush;
+        installButton.VerticalAlignment = VerticalAlignment.Center;
+        installButton.DataContext = vm;
+        installButton.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsInstallVisible)));
+
+        var downloadProgress = new ProgressBar
+        {
+            Minimum = 0,
+            Maximum = 100,
+            Width = 120,
+            MinWidth = 0,
+            ShowProgressText = true,
+            ProgressTextFormat = "{0:0}%",
+            VerticalAlignment = VerticalAlignment.Center,
+            DataContext = vm,
+        };
+        downloadProgress.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.DownloadProgress)));
+        downloadProgress.Bind(ProgressBar.IsVisibleProperty, new Binding(nameof(vm.IsDownloading)));
+
         var statusRow = new Grid
         {
             ColumnSpacing = 10,
-            ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto"),
+            ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto,Auto,Auto"),
         };
         statusRow.Add(statusIcon, 0, 0);
         statusRow.Add(statusLabel, 0, 1);
-        statusRow.Add(downloadButton, 0, 2);
+        statusRow.Add(downloadProgress, 0, 2);
+        statusRow.Add(installButton, 0, 3);
+        statusRow.Add(downloadButton, 0, 4);
         var statusStrip = new Border
         {
             Child = statusRow,
@@ -110,5 +133,6 @@ public class CheckForUpdatesWindow : Window
             await vm.CheckForUpdates();
         };
         KeyDown += vm.OnKeyDown;
+        Closed += delegate { vm.OnClosed(); };
     }
 }
