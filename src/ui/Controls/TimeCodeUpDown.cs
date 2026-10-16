@@ -20,6 +20,12 @@ namespace Nikse.SubtitleEdit.Controls
 {
     public class TimeCodeUpDown : TemplatedControl
     {
+        /// <summary>
+        /// Narrow stacked up/down buttons instead of the two wide side-by-side ones (set before the
+        /// template is applied) - used where space is tight, like the main window's edit box.
+        /// </summary>
+        public bool UseCompactSpinner { get; init; }
+
         public bool UseVideoOffset { get; set; } = false;
 
         private TextBox? _textBox;
@@ -97,6 +103,10 @@ namespace Nikse.SubtitleEdit.Controls
 
             _textBox = e.NameScope.Find<TextBox>("PART_TextBox");
             _spinner = e.NameScope.Find<ButtonSpinner>("PART_Spinner");
+            if (UseCompactSpinner && _spinner != null)
+            {
+                CompactSpinner.Attach(_spinner);
+            }
 
             if (_spinner != null)
             {
