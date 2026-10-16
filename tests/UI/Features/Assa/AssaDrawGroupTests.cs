@@ -96,7 +96,7 @@ public class AssaDrawGroupTests
     private static IEnumerable<ShapeTreeItem> AllTreeItems(IEnumerable<ShapeTreeItem> items) =>
         items.SelectMany(i => new[] { i }.Concat(AllTreeItems(i.Children)));
 
-    [Fact]
+    [AvaloniaFact]
     public void InsertClipArt_IsOneGroup_SelectedAsAGroupNodeOfItsOwn()
     {
         var vm = MakeViewModel(SquareA);
@@ -121,7 +121,7 @@ public class AssaDrawGroupTests
         Assert.Equal(string.Format(Se.Language.Assa.DrawXShapes, inserted.Count), vm.SelectionText[(vm.SelectionText.IndexOf('·') + 2)..]);
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void InsertRing_OnOneLayer_IsAGroupNodeInsideItsLayer()
     {
         var vm = MakeViewModel();
@@ -139,7 +139,7 @@ public class AssaDrawGroupTests
         Assert.Equal(string.Format(Se.Language.Assa.DrawShapeXDraw, 1), groupItem.Children[0].Name);
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void SvgImport_IsOneGroup()
     {
         var vm = MakeViewModel();
@@ -219,7 +219,7 @@ public class AssaDrawGroupTests
         }
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void CtrlG_Groups_CtrlShiftG_Ungroups_BothUndoable()
     {
         var vm = MakeViewModel(SquareA, SquareB, SquareC);
@@ -254,7 +254,7 @@ public class AssaDrawGroupTests
         Assert.All(vm.Shapes, s => Assert.Equal(0, s.GroupId));
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void CtrlQuote_TogglesTheGrid()
     {
         var vm = MakeViewModel(SquareA);
@@ -271,7 +271,7 @@ public class AssaDrawGroupTests
         }
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void Ungroup_OnePart_LeavesNoOneShapeGroup()
     {
         var vm = MakeViewModel(SquareA, SquareB);
@@ -285,7 +285,7 @@ public class AssaDrawGroupTests
         Assert.DoesNotContain(AllTreeItems(vm.ShapeTreeItems), i => i.IsGroup);
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void Duplicate_OfAGroup_GetsANewGroup_ACopiedPartGetsNone()
     {
         var vm = MakeViewModel(SquareA, SquareB, SquareC);
@@ -310,7 +310,7 @@ public class AssaDrawGroupTests
         Assert.Equal(2, vm.Shapes.Count(s => s.GroupId == groupId));
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void Delete_OfAGroupNode_DeletesTheWholeGroup()
     {
         var vm = MakeViewModel(SquareA, SquareB, SquareC);
@@ -323,7 +323,7 @@ public class AssaDrawGroupTests
         Assert.Equal(600, remaining.Points[0].X);
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void SaveAndLoad_KeepsGroups_OutputHasNoGroupData()
     {
         var vm = MakeViewModel(SquareA, SquareB, SquareC);
@@ -357,7 +357,7 @@ public class AssaDrawGroupTests
         Assert.Equal(text, loaded.GetAssaDrawFileText());
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void LoadingAFileWithoutGroups_GivesNoGroups()
     {
         var vm = MakeViewModel(SquareA, SquareB);
@@ -457,7 +457,7 @@ public class AssaDrawGroupTests
         }
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void GroupTreeNode_SelectsTheWholeGroup_AndKeepsIt()
     {
         var vm = MakeViewModel(SquareA, SquareB, SquareC);
@@ -530,7 +530,7 @@ public class AssaDrawGroupTests
         Dispatcher.UIThread.RunJobs();
     }
 
-    [Fact]
+    [AvaloniaFact]
     public void HitTest_PicksTheHigherLayer_EvenWhenItComesFirstInTheList()
     {
         var vm = MakeViewModel(SquareA, SquareA);
