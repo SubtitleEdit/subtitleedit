@@ -8553,15 +8553,25 @@ public partial class MainViewModel :
             return;
         }
 
-        var sb = new StringBuilder();
-        foreach (var subtitle in selectedItems)
+        await CopyLinesToClipboard(selectedItems.Select(p => p.OriginalText));
+    }
+
+    [RelayCommand]
+    private async Task CopyPlainTextFromOriginalToClipboard()
+    {
+        var selectedItems = SubtitleGridSelectedItemsWithReference;
+        if (Window == null || selectedItems.Count == 0 || !ShowColumnOriginalText)
         {
-            sb.AppendLine(subtitle.OriginalText);
+            return;
         }
 
-        await ClipboardHelper.SetTextAsync(Window, sb.ToString());
+        if (IsEmpty)
+        {
+            ShowSubtitleNotLoadedMessage();
+            return;
+        }
 
-        ShowStatus(string.Format("{0} lines copied to clipboard", selectedItems.Count));
+        await CopyLinesToClipboard(selectedItems.Select(p => HtmlUtil.RemoveHtmlTags(p.OriginalText, true)));
     }
 
     [RelayCommand]
@@ -8579,15 +8589,40 @@ public partial class MainViewModel :
             return;
         }
 
-        var sb = new StringBuilder();
-        foreach (var subtitle in selectedItems)
+        await CopyLinesToClipboard(selectedItems.Select(p => p.Text));
+    }
+
+    [RelayCommand]
+    private async Task CopyPlainTextToClipboard()
+    {
+        var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (Window == null || selectedItems.Count == 0)
         {
-            sb.AppendLine(subtitle.Text);
+            return;
         }
 
-        await ClipboardHelper.SetTextAsync(Window, sb.ToString());
+        if (IsEmpty)
+        {
+            ShowSubtitleNotLoadedMessage();
+            return;
+        }
 
-        ShowStatus(string.Format("{0} lines copied to clipboard", selectedItems.Count));
+        await CopyLinesToClipboard(selectedItems.Select(p => HtmlUtil.RemoveHtmlTags(p.Text, true)));
+    }
+
+    private async Task CopyLinesToClipboard(IEnumerable<string> lines)
+    {
+        var sb = new StringBuilder();
+        var count = 0;
+        foreach (var line in lines)
+        {
+            sb.AppendLine(line);
+            count++;
+        }
+
+        await ClipboardHelper.SetTextAsync(Window!, sb.ToString());
+
+        ShowStatus(string.Format("{0} lines copied to clipboard", count));
     }
 
     /// <summary>

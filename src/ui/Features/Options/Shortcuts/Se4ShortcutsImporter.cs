@@ -243,8 +243,8 @@ public static class Se4ShortcutsImporter
         ["MainListViewSetNewActor"] = nameof(MainViewModel.SetNewActorCommand),
         ["MainListViewSplit"] = nameof(MainViewModel.SplitCommand),
         ["MainListViewToggleDashes"] = nameof(MainViewModel.ToggleDialogDashesCommand),
-        ["MainListViewCopyPlainText"] = nameof(MainViewModel.CopyTextToClipboardCommand),
-        ["MainListViewCopyOriginalPlainText"] = nameof(MainViewModel.CopyTextFromOriginalToClipboardCommand),
+        ["MainListViewCopyPlainText"] = nameof(MainViewModel.CopyPlainTextToClipboardCommand),
+        ["MainListViewCopyOriginalPlainText"] = nameof(MainViewModel.CopyPlainTextFromOriginalToClipboardCommand),
         ["MainRemoveFormatting"] = nameof(MainViewModel.TextBoxRemoveAllFormattingCommand),
 
         // Text box
