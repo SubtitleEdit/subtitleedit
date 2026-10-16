@@ -105,6 +105,17 @@ public class SeAppearance
     public bool ShowUpDownDuration { get; set; }
     public bool ShowUpDownLabels { get; set; }
 
+    /// <summary>
+    /// Link toggle beside the edit box's Duration field: true = changing Show moves the whole line
+    /// (keeps the duration), false = changing Show moves only the start (keeps the end). Null until
+    /// the user clicks the toggle, and then the old rule applies: linked while the separate end-time
+    /// editor is hidden, unlinked while it is shown (see <see cref="IsEditBoxStartLinkedToDuration"/>).
+    /// </summary>
+    public bool? EditBoxStartKeepsDuration { get; set; }
+
+    [System.Text.Json.Serialization.JsonIgnore]
+    public bool IsEditBoxStartLinkedToDuration => EditBoxStartKeepsDuration ?? !ShowUpDownEndTime;
+
     public LayoutPositions CurrentLayoutPositions { get; set; }
     public bool TextBoxShowButtonAutoBreak { get; set; }
     public bool TextBoxShowButtonUnbreak { get; set; }

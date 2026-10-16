@@ -246,6 +246,8 @@ public partial class MainViewModel :
     [ObservableProperty] private string _editText;
     [ObservableProperty] private string _editTextCharactersPerSecond;
     [ObservableProperty] private IBrush _editTextCharactersPerSecondBackground;
+    // The same CPS as a number, for the reading-speed bar of the edit box (0 when no single line is selected).
+    [ObservableProperty] private double _editTextCharactersPerSecondValue;
     [ObservableProperty] private string _editTextTotalLength;
     [ObservableProperty] private string _initialLineText = string.Empty;
 
@@ -1047,6 +1049,7 @@ public partial class MainViewModel :
         _loading = true;
         EditText = string.Empty;
         EditTextCharactersPerSecond = string.Empty;
+        EditTextCharactersPerSecondValue = 0;
         EditTextCharactersPerSecondBackground = Brushes.Transparent;
         EditTextTotalLength = string.Empty;
         EditTextTotalLengthBackground = Brushes.Transparent;
@@ -33903,6 +33906,7 @@ public partial class MainViewModel :
             outgoing?.TrimTrailingTextWhitespace();
             StatusTextRight = string.Empty;
             EditTextCharactersPerSecond = string.Empty;
+            EditTextCharactersPerSecondValue = 0;
             EditTextCharactersPerSecondBackground = Brushes.Transparent;
             EditTextTotalLength = string.Empty;
             EditTextTotalLengthBackground = Brushes.Transparent;
@@ -33929,6 +33933,7 @@ public partial class MainViewModel :
         {
             StatusTextRight = string.Format(Se.Language.Main.XLinesSelectedOfY, selectedItems.Count, Subtitles.Count);
             EditTextCharactersPerSecond = string.Empty;
+            EditTextCharactersPerSecondValue = 0;
             EditTextCharactersPerSecondBackground = Brushes.Transparent;
             EditTextTotalLengthBackground = Brushes.Transparent;
             EditTextTotalLength = string.Empty;
@@ -34007,8 +34012,10 @@ public partial class MainViewModel :
         SubtitleTextInfoHelper.Populate(
             text ?? string.Empty, item, PanelSingleLineLengths,
             out var cpsText, out var cpsBg,
-            out var totalText, out var totalBg);
+            out var totalText, out var totalBg,
+            out var cps);
         EditTextCharactersPerSecond = cpsText;
+        EditTextCharactersPerSecondValue = cps;
         EditTextCharactersPerSecondBackground = cpsBg;
         EditTextTotalLength = totalText;
         EditTextTotalLengthBackground = totalBg;

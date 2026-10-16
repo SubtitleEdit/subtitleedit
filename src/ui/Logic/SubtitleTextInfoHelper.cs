@@ -26,7 +26,7 @@ internal static class SubtitleTextInfoHelper
     /// <summary>
     /// Populates <paramref name="panel"/> with per-line character count labels and
     /// writes formatted CPS / total-length strings with their error backgrounds to
-    /// the four out parameters.
+    /// the out parameters (<paramref name="cps"/> is the unformatted value).
     /// </summary>
     /// <param name="text">Raw subtitle text (HTML tags are stripped internally).</param>
     /// <param name="item">Provides timing for the CPS calculation.</param>
@@ -37,7 +37,8 @@ internal static class SubtitleTextInfoHelper
         out string cpsText,
         out IBrush cpsBackground,
         out string totalText,
-        out IBrush totalBackground)
+        out IBrush totalBackground,
+        out double cps)
     {
         // This runs on every keystroke in the edit box, right after the row view model's own
         // bindings (text error tint, pixel width) already stripped and split the same text.
@@ -55,7 +56,7 @@ internal static class SubtitleTextInfoHelper
 
         var maxCps = Se.Settings.General.SubtitleMaximumCharactersPerSeconds;
 
-        var cps = GetCharactersPerSecond(text, item.StartTime, item.EndTime);
+        cps = GetCharactersPerSecond(text, item.StartTime, item.EndTime);
         cpsText = string.Format(Se.Language.Main.CharactersPerSecond, $"{cps:0.0}");
         // Same rounded comparison as the grid row, so the label cannot read "15.0" in red while
         // the row for the same line is not flagged (#14418).

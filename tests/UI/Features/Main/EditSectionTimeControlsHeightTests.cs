@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.LogicalTree;
@@ -50,14 +51,24 @@ public class EditSectionTimeControlsHeightTests
 
             var textEditGrid = Assert.Single(window.GetLogicalDescendants().OfType<Grid>(), g => g.Name == "SubtitleTextEditGrid");
             var editGrid = Assert.IsType<Grid>(textEditGrid.GetLogicalParent());
-            var timeControls = Assert.Single(editGrid.Children.OfType<StackPanel>(), p => p.Name == InitListViewAndEditBox.TimeControlsPanelName);
+            // The rows live in the timing card (a border on the edit grid's first column).
+            var timeControls = Assert.Single(editGrid.GetLogicalDescendants().OfType<StackPanel>(), p => p.Name == InitListViewAndEditBox.TimeControlsPanelName);
 
             var visible = timeControls.Children.Where(c => c.IsVisible).ToList();
             Assert.Equal(showEndTime ? (showLayer ? 4 : 3) : 2, visible.Count);
 
-            var lowestBottom = visible.Max(c => c.Bounds.Bottom) + timeControls.Bounds.Top;
-            Assert.True(lowestBottom <= editGrid.Bounds.Height + 0.5,
-                $"up/down column runs to {lowestBottom} px in a {editGrid.Bounds.Height} px edit section");
+            // Everything in the card - the rows and the gaps under them - must fit, card border included.
+            var timingContent = Assert.Single(editGrid.GetLogicalDescendants().OfType<StackPanel>(), p => p.Name == InitListViewAndEditBox.TimingCardContentName);
+            var card = Assert.IsType<Border>(timingContent.Parent);
+            var lowestRow = timeControls.TranslatePoint(new Point(0, visible.Max(c => c.Bounds.Bottom)), editGrid)!.Value.Y;
+            var lowestContent = timingContent.TranslatePoint(new Point(0, timingContent.Children.Where(c => c.IsVisible).Max(c => c.Bounds.Bottom)), editGrid)!.Value.Y;
+            var cardBottom = card.TranslatePoint(new Point(0, card.Bounds.Height), editGrid)!.Value.Y;
+            Assert.True(lowestRow <= editGrid.Bounds.Height + 0.5,
+                $"up/down column runs to {lowestRow} px in a {editGrid.Bounds.Height} px edit section");
+            Assert.True(lowestContent <= cardBottom - card.Padding.Bottom + 0.5,
+                $"timing card content runs to {lowestContent} px, past its card ({cardBottom} px)");
+            Assert.True(cardBottom <= editGrid.Bounds.Height + 0.5,
+                $"timing card runs to {cardBottom} px in a {editGrid.Bounds.Height} px edit section");
         }
         finally
         {

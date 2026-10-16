@@ -18,6 +18,13 @@ public class LanguageMain
     public string CreatedEmptyTranslation { get; set; }
     public string DeleteText { get; set; }
     public string DeleteTextAndShiftCellsUp { get; set; }
+    public string EditBoxEndEarlier { get; set; }
+    public string EditBoxEndLater { get; set; }
+    public string EditBoxMaxLengthAndLinesXY { get; set; }
+    public string EditBoxStartEarlier { get; set; }
+    public string EditBoxStartLater { get; set; }
+    public string EditBoxGapAfterX { get; set; }
+    public string EditBoxGapBeforeX { get; set; }
     public string EndTimeMustBeAfterStartTime { get; set; }
     public string ErrorLoad7Zip { get; set; }
     public string ErrorLoadBinaryZeroes { get; set; }
@@ -185,6 +192,13 @@ public class LanguageMain
         CreatedEmptyTranslation = "Created empty translation from current subtitle";
         DeleteText = "Delete text";
         DeleteTextAndShiftCellsUp = "Delete text and shift cells up";
+        EditBoxEndEarlier = "Move end earlier";
+        EditBoxEndLater = "Move end later";
+        EditBoxMaxLengthAndLinesXY = "max {0} · {1} lines";
+        EditBoxStartEarlier = "Move start earlier";
+        EditBoxStartLater = "Move start later";
+        EditBoxGapAfterX = "Gap after {0}";
+        EditBoxGapBeforeX = "Gap before {0}";
         EndTimeMustBeAfterStartTime = "End time must be after start time.";
         ErrorLoad7Zip = "This file seems to be a compressed 7-Zip file.\n\nSubtitle Edit cannot open compressed files.";
         ErrorLoadBinaryZeroes = "Sorry, this file contains only binary zeroes!\n\nIf you have edited this file with Subtitle Edit you might be able to find a backup via the menu item File -> Restore auto-backup...";

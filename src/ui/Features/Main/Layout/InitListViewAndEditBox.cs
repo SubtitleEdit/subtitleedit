@@ -1575,10 +1575,11 @@ public static partial class InitListViewAndEditBox
         dropHost.AddHandler(InputElement.PointerReleasedEvent, vm.SubtitleGrid_PointerReleased, RoutingStrategies.Tunnel, handledEventsToo: true);
         dropHost.AddHandler(InputElement.PointerMovedEvent, vm.SubtitleGrid_PointerMoved, RoutingStrategies.Tunnel, handledEventsToo: true);
 
-        // Edit area - restructured with time controls on left, multiline text on right
+        // Edit area in the editor look: a timing card on the left (Show/Hide/Duration/Layer)
+        // and the text card(s) on the right, on the editor window color.
         var editGrid = new Grid
         {
-            Margin = new Thickness(EditGridMargin),
+            Background = EditorChrome.WindowBrush,
             MinHeight = EditGridMinimumHeight,
             ColumnDefinitions = new ColumnDefinitions("Auto, *"), // Two columns: left for time controls, right for text
             // Star so the section grows when the user drags the splitter above it (#10271):
@@ -1586,70 +1587,88 @@ public static partial class InitListViewAndEditBox
             // the fixed-height text box.
             RowDefinitions = new RowDefinitions("*")
         };
+        AddEditAreaStyles(editGrid.Styles);
 
-        // Left panel for time controls
+        // Left card for time controls: header, the rows, the gaps to the neighbours.
+        var timingCard = MakeEditCardBackground();
+        timingCard.Margin = new Thickness(EditGridMargin, EditGridMargin, 0, EditGridMargin);
+        timingCard.Padding = new Thickness(12, 10, 12, 10);
+        var timingContent = new StackPanel
+        {
+            Name = TimingCardContentName,
+            Spacing = 8,
+            VerticalAlignment = VerticalAlignment.Top,
+        };
+        timingCard.Child = timingContent;
+
+        var timingHeader = new DockPanel();
+        var lineNumberChip = new Border
+        {
+            Background = EditorChrome.AccentSoftBrush,
+            CornerRadius = new CornerRadius(4),
+            Padding = new Thickness(6, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.SelectedSubtitle) + "." + nameof(SubtitleLineViewModel.NumberDisplay))
+            {
+                Source = vm,
+                Converter = StringConverters.IsNotNullOrEmpty,
+                FallbackValue = false,
+            },
+            Child = new TextBlock
+            {
+                FontSize = UiUtil.ScaledFontSize(11),
+                [UiUtil.DesignFontSizeProperty] = 11,
+                Foreground = EditorChrome.StrongTextBrush,
+                [!TextBlock.TextProperty] = new Binding(nameof(vm.SelectedSubtitle) + "." + nameof(SubtitleLineViewModel.NumberDisplay))
+                {
+                    Source = vm,
+                    StringFormat = "#{0}",
+                    FallbackValue = string.Empty,
+                },
+            },
+        };
+        DockPanel.SetDock(lineNumberChip, Dock.Right);
+        timingHeader.Children.Add(lineNumberChip);
+        timingHeader.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Timing));
+        timingContent.Children.Add(timingHeader);
+
+        // The rows - one per up/down, hidden as set in Settings (Show up/down ...).
         var timeControlsPanel = new StackPanel
         {
             Name = TimeControlsPanelName,
             Spacing = 6,
-            Margin = new Thickness(0, 0, 0, 0),
             VerticalAlignment = VerticalAlignment.Top,
         };
-        
+        Grid.SetIsSharedSizeScope(timeControlsPanel, true);
+
         // Start Time controls
-        var startTimePanel = new StackPanel
-        {
-            Spacing = 0,
-            Orientation = Orientation.Vertical,
-            Margin = new Thickness(0, 0, 10, vm.ShowUpDownLabels ? 0 : 2),
-        }.WithBindVisible(vm, nameof(vm.ShowUpDownStartTime));
-        var startTimeLabel = new TextBlock
-        {
-            Text = Se.Language.General.Show,
-            FontWeight = FontWeight.Bold
-        }.WithBindVisible(vm, nameof(vm.ShowUpDownLabels));
-        startTimePanel.Children.Add(startTimeLabel);
         var timeCodeUpDown = new TimeCodeUpDown
         {
             DataContext = vm,
             UseVideoOffset = true,
             [AutomationProperties.NameProperty] = Se.Language.General.StartTime,
         };
-        // With a separate end-time editor, moving start should keep the end fixed
-        // (StartTimeOnly). Without one, moving start drags the whole line keeping
-        // its duration (StartTimeKeepDuration).
-        var startTimeBindingName = nameof(vm.SelectedSubtitle) + "." + (Se.Settings.Appearance.ShowUpDownEndTime
-            ? nameof(SubtitleLineViewModel.StartTimeOnly)
-            : nameof(SubtitleLineViewModel.StartTimeKeepDuration));
-        timeCodeUpDown[!TimeCodeUpDown.ValueProperty] = new Binding(startTimeBindingName)
-        {
-            Mode = BindingMode.TwoWay,
-        };
+        // Changing start either drags the whole line keeping its duration (StartTimeKeepDuration,
+        // "linked") or moves only the start and keeps the end (StartTimeOnly). The link toggle
+        // beside Duration picks it; until the user clicks it, the old rule applies - linked
+        // without a separate end-time editor, unlinked with one.
+        BindStartTimeUpDown(timeCodeUpDown, Se.Settings.Appearance.IsEditBoxStartLinkedToDuration);
 
         if (!vm.ShowUpDownLabels && Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(timeCodeUpDown, Se.Language.General.Show);
         }
         timeCodeUpDown.Bind(TimeCodeUpDown.IsEnabledProperty, new Binding(nameof(vm.AreTimeCodesEditable)) { Mode = BindingMode.OneWay });
-        startTimePanel.Children.Add(timeCodeUpDown);
         timeCodeUpDown.ValueChanged += vm.StartTimeChanged;
         vm.EditBoxStartTimeUpDown = timeCodeUpDown;
+        HideSpinnerButtons(timeCodeUpDown);
+        var startTimePanel = MakeTimingRow(Se.Language.General.Show, vm.ShowUpDownLabels, timeCodeUpDown,
+            MakeNudgeButtons(vm, timeCodeUpDown, Se.Language.Main.EditBoxStartEarlier, Se.Language.Main.EditBoxStartLater))
+            .WithBindVisible(vm, nameof(vm.ShowUpDownStartTime));
         timeControlsPanel.Children.Add(startTimePanel);
 
 
         // End Time controls
-        var endTimePanel = new StackPanel
-        {
-            Spacing = 0,
-            Orientation = Orientation.Vertical,
-            Margin = new Thickness(0, 0, 10, vm.ShowUpDownLabels ? 0 : 2),
-        }.WithBindVisible(vm, nameof(vm.ShowUpDownEndTime));
-        var endTimeLabel = new TextBlock
-        {
-            Text = Se.Language.General.Hide,
-            FontWeight = FontWeight.Bold
-        }.WithBindVisible(vm, nameof(vm.ShowUpDownLabels));
-        endTimePanel.Children.Add(endTimeLabel);
         var endCodeUpDown = new TimeCodeUpDown
         {
             DataContext = vm,
@@ -1667,24 +1686,15 @@ public static partial class InitListViewAndEditBox
             ToolTip.SetTip(endCodeUpDown, Se.Language.General.Hide);
         }
         endCodeUpDown.Bind(TimeCodeUpDown.IsEnabledProperty, new Binding(nameof(vm.AreTimeCodesEditable)) { Mode = BindingMode.OneWay });
-        endTimePanel.Children.Add(endCodeUpDown);
         endCodeUpDown.ValueChanged += vm.EndTimeChanged;
         vm.EditBoxEndTimeUpDown = endCodeUpDown;
+        HideSpinnerButtons(endCodeUpDown);
+        var endTimePanel = MakeTimingRow(Se.Language.General.Hide, vm.ShowUpDownLabels, endCodeUpDown,
+            MakeNudgeButtons(vm, endCodeUpDown, Se.Language.Main.EditBoxEndEarlier, Se.Language.Main.EditBoxEndLater))
+            .WithBindVisible(vm, nameof(vm.ShowUpDownEndTime));
         timeControlsPanel.Children.Add(endTimePanel);
 
-        // Duration display
-        var durationPanel = new StackPanel
-        {
-            Spacing = 0,
-            Orientation = Orientation.Vertical,
-            Margin = new Thickness(0, 0, 10, vm.ShowUpDownLabels ? 0 : 2),
-        }.WithBindVisible(vm, nameof(vm.ShowUpDownDuration));
-        var durationLabel = new TextBlock
-        {
-            Text = Se.Language.General.Duration,
-            FontWeight = FontWeight.Bold,
-        }.WithBindVisible(vm, nameof(vm.ShowUpDownLabels));
-        durationPanel.Children.Add(durationLabel);
+        // Duration, with the Show link toggle and the reading-speed bar under it
         var durationUpDown = new SecondsUpDown
         {
             DataContext = vm,
@@ -1702,68 +1712,75 @@ public static partial class InitListViewAndEditBox
         durationUpDown.Bind(SecondsUpDown.IsEnabledProperty, new Binding(nameof(vm.AreTimeCodesEditable)) { Mode = BindingMode.OneWay });
         durationUpDown.ValueChanged += (_, _) => vm.DurationChanged();
         vm.EditBoxDurationUpDown = durationUpDown;
-        durationPanel.Children.Add(durationUpDown);
+        HideSpinnerButtons(durationUpDown);
+        var durationPanel = MakeTimingRow(Se.Language.General.Duration, vm.ShowUpDownLabels, durationUpDown,
+            MakeStartDurationLinkToggle(timeCodeUpDown))
+            .WithBindVisible(vm, nameof(vm.ShowUpDownDuration));
+        if (Se.Settings.General.SubtitleMaximumCharactersPerSeconds > 0)
+        {
+            var readingSpeedBar = new ReadingSpeedBar
+            {
+                Height = 8,
+                Margin = new Thickness(0, 4, 0, 0),
+                [!ReadingSpeedBar.CpsProperty] = new Binding(nameof(vm.EditTextCharactersPerSecondValue)) { Source = vm },
+            };
+            if (Se.Settings.Appearance.ShowHints)
+            {
+                ToolTip.SetTip(readingSpeedBar,
+                    $"{Se.Language.General.MaxCharactersPerSecond}: {Se.Settings.General.SubtitleMaximumCharactersPerSeconds:0.#}" +
+                    (Se.Settings.General.SubtitleOptimalCharactersPerSeconds > 0
+                        ? $"{Environment.NewLine}{Se.Language.General.OptimalCharactersPerSecond}: {Se.Settings.General.SubtitleOptimalCharactersPerSeconds:0.#}"
+                        : string.Empty));
+            }
+
+            durationPanel.RowDefinitions = new RowDefinitions("Auto,Auto");
+            durationPanel.Add(readingSpeedBar, 1, 1);
+        }
         timeControlsPanel.Children.Add(durationPanel);
 
 
-        // Layer display
-        var panelLayer = new StackPanel
-        {
-            Spacing = 0,
-            Orientation = Orientation.Vertical,
-            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.ShowLayer)),
-            Margin = new Thickness(0, 0, 10, 0),
-        };
-        var labelLayer = new TextBlock
-        {
-            Text = Se.Language.General.Layer,
-            FontWeight = FontWeight.Bold,
-        }.WithBindVisible(vm, nameof(vm.ShowUpDownLabels));
-        panelLayer.Children.Add(labelLayer);
+        // Layer (ASSA)
         var upDownLayer = UiUtil.MakeNumericUpDownInt(int.MinValue, int.MaxValue, 0, double.NaN, vm, $"{nameof(vm.SelectedSubtitle)}.{nameof(SubtitleLineViewModel.Layer)}");
         AutomationProperties.SetName(upDownLayer, Se.Language.General.Layer);
         upDownLayer.HorizontalAlignment = HorizontalAlignment.Stretch;
+        upDownLayer.Classes.Add("field");
         if (!vm.ShowUpDownLabels && Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(upDownLayer, Se.Language.General.Layer);
         }
-        panelLayer.Children.Add(upDownLayer);
+        var panelLayer = MakeTimingRow(Se.Language.General.Layer, vm.ShowUpDownLabels, upDownLayer, null);
+        panelLayer[!Visual.IsVisibleProperty] = new Binding(nameof(vm.ShowLayer)) { Source = vm };
         timeControlsPanel.Children.Add(panelLayer);
+        timingContent.Children.Add(timeControlsPanel);
 
-        if (!Se.Settings.Appearance.ShowUpDownStartTime ||
-            !Se.Settings.Appearance.ShowUpDownEndTime || 
-            !Se.Settings.Appearance.ShowUpDownDuration)
-        {
-            if (Se.Settings.Appearance.ShowUpDownLabels)
-            {
-                timeControlsPanel.Margin = new Thickness(0, 4, 0, 0);
-            }
-            else
-            {
-                //TODO: find better way to top-align with textbox
-                timeControlsPanel.Margin = new Thickness(0, 18, 0, 0);
-            }
-        }
-        
-        Grid.SetColumn(timeControlsPanel, 0);
-        editGrid.Children.Add(timeControlsPanel);
+        // Gaps to the previous/next line (kept up to date by MainViewModel.UpdateGaps); hidden
+        // for the first/last line, which have no neighbour on that side.
+        var gapsPanel = new StackPanel { Spacing = 1 };
+        gapsPanel.Children.Add(MakeGapText(vm, nameof(SubtitleLineViewModel.PreviousGap), Se.Language.Main.EditBoxGapBeforeX));
+        gapsPanel.Children.Add(MakeGapText(vm, nameof(SubtitleLineViewModel.Gap), Se.Language.Main.EditBoxGapAfterX));
+        timingContent.Children.Add(gapsPanel);
 
-        // Right panel for text editing (show/duration is to the left)
+        Grid.SetColumn(timingCard, 0);
+        editGrid.Children.Add(timingCard);
+
+        // Right panel for text editing (show/duration is to the left). Each text card is a
+        // background border spanning the three rows (header strip, text frame, info chips), so
+        // RightToLeftHelper can still mirror this grid column by column.
         var textEditGrid = new Grid
         {
             // RightToLeftHelper mirrors this grid by name so the current/original
             // text boxes keep matching the mirrored subtitle grid columns.
             Name = "SubtitleTextEditGrid",
-            ColumnDefinitions = new ColumnDefinitions("*,*,Auto"),
+            ColumnDefinitions = new ColumnDefinitions("*,*"),
             RowDefinitions = new RowDefinitions("Auto,*,Auto"),
+            Margin = new Thickness(CardGap, EditGridMargin, EditGridMargin, EditGridMargin),
         };
 
-        var textLabel = new TextBlock
-        {
-            Text = Se.Language.General.Text,
-            FontWeight = FontWeight.Bold,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
+        var textCard = MakeEditCardBackground();
+        Grid.SetRowSpan(textCard, 3);
+        textEditGrid.Children.Add(textCard);
+
+        var textLabel = EditorChrome.MakeSectionHeader(Se.Language.General.Text);
 
         var bookmarkIcon = new Icon
         {
@@ -1824,60 +1841,97 @@ public static partial class InitListViewAndEditBox
             }
         };
 
-
-        textEditGrid.Children.Add(panelForTextLabel);
-
-        var textCharsSecLabel = new TextBlock
+        // Header strip: "TEXT" (+ bookmark) on the left, the formatting tool buttons on the
+        // right - the same buttons, commands and Show* settings as the old button column.
+        var buttonPanel = new StackPanel
         {
-            HorizontalAlignment = HorizontalAlignment.Right,
-            VerticalAlignment = VerticalAlignment.Bottom,
-            FontSize = UiUtil.ScaledFontSize(12),
-            [UiUtil.DesignFontSizeProperty] = 12,
-            Padding = new Thickness(2, 2, 2, 2),
-        };
-        textCharsSecLabel.Bind(TextBlock.TextProperty, new Binding(nameof(vm.EditTextCharactersPerSecond))
-        {
-            Mode = BindingMode.OneWay
-        });
-        textCharsSecLabel.Bind(TextBlock.BackgroundProperty, new Binding(nameof(vm.EditTextCharactersPerSecondBackground))
-        {
-            Mode = BindingMode.OneWay
-        });
-        textEditGrid.Children.Add(textCharsSecLabel);
-        var textEditor = MakeTextBox(vm);
-
-        textEditGrid.Children.Add(textEditor);
-        Grid.SetRow(textEditor, 1);
-
-        var textTotalLengthLabel = new TextBlock
-        {
-            HorizontalAlignment = HorizontalAlignment.Right,
-            VerticalAlignment = VerticalAlignment.Top,
-            FontSize = UiUtil.ScaledFontSize(12),
-            [UiUtil.DesignFontSizeProperty] = 12,
-            Padding = new Thickness(2, 2, 2, 2),
-        };
-        textTotalLengthLabel.Bind(TextBlock.TextProperty, new Binding(nameof(vm.EditTextTotalLength))
-        {
-            Mode = BindingMode.OneWay
-        });
-        textTotalLengthLabel.Bind(TextBlock.BackgroundProperty, new Binding(nameof(vm.EditTextTotalLengthBackground))
-        {
-            Mode = BindingMode.OneWay
-        });
-        textEditGrid.Children.Add(textTotalLengthLabel);
-        Grid.SetRow(textTotalLengthLabel, 2);
-
-
-        var panelSingleLineLengths = new StackPanel
-        {
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Top,
             Orientation = Orientation.Horizontal,
+            Spacing = 1,
+            VerticalAlignment = VerticalAlignment.Center,
         };
+
+        if (Se.Settings.Appearance.TextBoxShowButtonItalic)
+        {
+            var italicButton = MakeEditToolButton(vm.ToggleLinesItalicOrSelectedTextCommand, IconNames.Italic, Se.Language.Main.ItalicHint);
+            buttonPanel.Children.Add(italicButton);
+        }
+
+        if (Se.Settings.Appearance.TextBoxShowButtonColor)
+        {
+            var colorButton = MakeEditToolButton(vm.ShowColorPickerCommand, IconNames.Palette, Se.Language.Main.ColorHint);
+            buttonPanel.Children.Add(colorButton);
+        }
+
+        var hasFormattingButtons = buttonPanel.Children.Count > 0;
+        var hasBreakButtons = Se.Settings.Appearance.TextBoxShowButtonAutoBreak ||
+                              Se.Settings.Appearance.TextBoxShowButtonUnbreak ||
+                              Se.Settings.Appearance.TextBoxShowButtonRemoveFormatting ||
+                              Se.Settings.Appearance.TextBoxShowButtonAiAssistant;
+        if (hasFormattingButtons && hasBreakButtons)
+        {
+            var separator = EditorChrome.MakeToolbarSeparator();
+            separator.Height = 16;
+            separator.Margin = new Thickness(5, 0);
+            buttonPanel.Children.Add(separator);
+        }
+
+        if (Se.Settings.Appearance.TextBoxShowButtonAutoBreak)
+        {
+            var autoBreakButton = MakeEditToolButton(vm.AutoBreakCommand, IconNames.ScaleBalance, Se.Language.Main.AutoBreakHint);
+            buttonPanel.Children.Add(autoBreakButton);
+        }
+
+        if (Se.Settings.Appearance.TextBoxShowButtonUnbreak)
+        {
+            var unbreakButton = MakeEditToolButton(vm.UnbreakCommand, IconNames.SetMerge, Se.Language.Main.UnbreakHint);
+            buttonPanel.Children.Add(unbreakButton);
+        }
+
+        if (Se.Settings.Appearance.TextBoxShowButtonRemoveFormatting)
+        {
+            var removeFormattingButton = MakeEditToolButton(vm.RemoveFormattingAllCommand, IconNames.FormatClear, Se.Language.Main.RemoveFormattingHint);
+            buttonPanel.Children.Add(removeFormattingButton);
+        }
+
+        if (Se.Settings.Appearance.TextBoxShowButtonAiAssistant)
+        {
+            var aiAssistantButton = MakeEditToolButton(vm.ShowAiAssistantCommand, IconNames.Robot, Se.Language.Tools.AiAssistant.Hint);
+            buttonPanel.Children.Add(aiAssistantButton);
+        }
+
+        var textHeader = new DockPanel
+        {
+            // Same height with or without tool buttons, so both cards line up.
+            MinHeight = 26,
+            Margin = new Thickness(12, 6, 6, 4),
+        };
+        DockPanel.SetDock(buttonPanel, Dock.Right);
+        textHeader.Children.Add(buttonPanel);
+        textHeader.Children.Add(panelForTextLabel);
+        textEditGrid.Add(textHeader, 0, 0);
+
+        var textEditor = MakeTextBox(vm);
+        var panelSingleLineLengths = MakeLineLengthsColumn((TextBox)textEditor);
         vm.PanelSingleLineLengths = panelSingleLineLengths;
-        textEditGrid.Children.Add(panelSingleLineLengths);
-        Grid.SetRow(panelSingleLineLengths, 2);
+        var textFrame = MakeTextFrame(textEditor, panelSingleLineLengths);
+        textFrame.Margin = new Thickness(12, 0, 12, 0);
+        textEditGrid.Add(textFrame, 1, 0);
+
+        // Info strip under the box: CPS and total length chips (red when over, as before) and
+        // the line limits. A wrap panel, so a narrow card wraps them instead of overlapping.
+        var textInfo = new WrapPanel { Margin = new Thickness(12, 6, 12, 8), MinHeight = 20, ItemSpacing = 0, LineSpacing = 4 };
+        textInfo.Children.Add(MakeInfoChip(vm, nameof(vm.EditTextCharactersPerSecond), nameof(vm.EditTextCharactersPerSecondBackground)));
+        textInfo.Children.Add(MakeInfoChip(vm, nameof(vm.EditTextTotalLength), nameof(vm.EditTextTotalLengthBackground)));
+        textInfo.Children.Add(new TextBlock
+        {
+            Text = string.Format(Se.Language.Main.EditBoxMaxLengthAndLinesXY, Se.Settings.General.SubtitleLineMaximumLength, Se.Settings.General.MaxNumberOfLines),
+            Foreground = EditorChrome.FaintTextBrush,
+            FontSize = UiUtil.ScaledFontSize(11.5),
+            [UiUtil.DesignFontSizeProperty] = 11.5,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(2, 0, 0, 0),
+        });
+        textEditGrid.Add(textInfo, 2, 0);
 
         // Create a Flyout for the subtitle text box.
         // The TextBox may have TextAlignment=Center; that inherited property would otherwise flow
@@ -2075,19 +2129,29 @@ public static partial class InitListViewAndEditBox
         flyoutTextBox.Items.Add(menuItemTextBoxAiAssistant);
 
 
-        // translation mode (original text)
-        var textLabelOriginal = new TextBlock
+        // translation mode (original text) - a matching second card in column 1
+        var originalCard = MakeEditCardBackground();
+        originalCard.Margin = new Thickness(CardGap, 0, 0, 0);
+        textEditGrid.Add(originalCard, 0, 1);
+        Grid.SetRowSpan(originalCard, 3);
+        originalCard.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowColumnOriginalText))
         {
-            FontWeight = FontWeight.Bold,
-            Margin = new Thickness(3, 0, 0, 0),
-        };
+            Mode = BindingMode.OneWay,
+            Source = vm
+        });
+
+        var textLabelOriginal = EditorChrome.MakeSectionHeader(string.Empty);
+        textLabelOriginal.Margin = new Thickness(CardGap + 12, 6, 12, 4);
+        textLabelOriginal.MinHeight = 26;
+        textLabelOriginal.TextTrimming = TextTrimming.CharacterEllipsis;
         textEditGrid.Add(textLabelOriginal, 0, 1);
         // The label doubles as the read-only indicator - it says "Original text (read-only)"
         // when the original was opened as a reference (issue #13449).
         textLabelOriginal.Bind(TextBlock.TextProperty, new Binding(nameof(vm.OriginalTextLabel))
         {
             Mode = BindingMode.OneWay,
-            Source = vm
+            Source = vm,
+            Converter = UpperCaseConverter,
         });
         textLabelOriginal.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowColumnOriginalText))
         {
@@ -2095,125 +2159,37 @@ public static partial class InitListViewAndEditBox
             Source = vm
         });
 
-        var textCharsSecLabelOriginal = new TextBlock
-        {
-            HorizontalAlignment = HorizontalAlignment.Right,
-            VerticalAlignment = VerticalAlignment.Bottom,
-            FontSize = UiUtil.ScaledFontSize(12),
-            [UiUtil.DesignFontSizeProperty] = 12,
-            Padding = new Thickness(2, 2, 2, 2),
-        };
-        textCharsSecLabelOriginal.Bind(TextBlock.TextProperty, new Binding(nameof(vm.EditTextCharactersPerSecondOriginal))
-        {
-            Mode = BindingMode.OneWay
-        });
-        textCharsSecLabelOriginal.Bind(TextBlock.BackgroundProperty, new Binding(nameof(vm.EditTextCharactersPerSecondBackgroundOriginal))
-        {
-            Mode = BindingMode.OneWay
-        });
-        textEditGrid.Add(textCharsSecLabelOriginal, 0, 1);
-        textCharsSecLabelOriginal.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowColumnOriginalText))
-        {
-            Mode = BindingMode.OneWay,
-            Source = vm
-        });
-
         var textBoxOriginal = MakeTextBoxOriginal(vm);
-        // A small gap between the two text boxes so their borders do not touch (the
-        // margin is flipped when the grid is mirrored for right to left).
-        textBoxOriginal.Margin = new Thickness(2, 0, 0, 0);
-        textEditGrid.Add(textBoxOriginal, 1, 1);
-        textBoxOriginal.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowColumnOriginalText))
-        {
-            Mode = BindingMode.OneWay,
-            Source = vm
-        });
-
-        var textTotalLengthLabelOriginal = new TextBlock
-        {
-            HorizontalAlignment = HorizontalAlignment.Right,
-            VerticalAlignment = VerticalAlignment.Top,
-            FontSize = UiUtil.ScaledFontSize(12),
-            [UiUtil.DesignFontSizeProperty] = 12,
-            Padding = new Thickness(2, 2, 2, 2),
-        };
-        textTotalLengthLabelOriginal.Bind(TextBlock.TextProperty, new Binding(nameof(vm.EditTextTotalLengthOriginal))
-        {
-            Mode = BindingMode.OneWay
-        });
-        textTotalLengthLabelOriginal.Bind(TextBlock.BackgroundProperty, new Binding(nameof(vm.EditTextTotalLengthBackgroundOriginal))
-        {
-            Mode = BindingMode.OneWay
-        });
-        textEditGrid.Add(textTotalLengthLabelOriginal, 2, 1);
-        textTotalLengthLabelOriginal.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowColumnOriginalText))
-        {
-            Mode = BindingMode.OneWay,
-            Source = vm
-        });
-
-
-        var panelSingleLineLengthsOriginal = new StackPanel
-        {
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Top,
-            Orientation = Orientation.Horizontal,
-        };
+        var panelSingleLineLengthsOriginal = MakeLineLengthsColumn((TextBox)textBoxOriginal);
         vm.PanelSingleLineLengthsOriginal = panelSingleLineLengthsOriginal;
-        textEditGrid.Add(panelSingleLineLengthsOriginal, 2, 1);
         panelSingleLineLengthsOriginal.DataContext = vm;
-        panelSingleLineLengthsOriginal.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowColumnOriginalText))
-        {
-            Mode = BindingMode.OneWay,
-            Source = vm
-        });
         // no seed label here - SubtitleTextInfoHelper.FillLineLengthPanel writes the
         // "Single line length" label into index 0 itself (and reuses the text blocks)
-
-        var buttonPanel = new StackPanel
+        var textFrameOriginal = MakeTextFrame(textBoxOriginal, panelSingleLineLengthsOriginal);
+        // The card gap keeps the two text boxes apart (the margin is flipped when the grid is
+        // mirrored for right to left).
+        textFrameOriginal.Margin = new Thickness(CardGap + 12, 0, 12, 0);
+        textEditGrid.Add(textFrameOriginal, 1, 1);
+        textFrameOriginal.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowColumnOriginalText))
         {
-            Orientation = Orientation.Vertical,
-            Spacing = 3,
-            Margin = new Thickness(6,3,3,3)
+            Mode = BindingMode.OneWay,
+            Source = vm
+        });
+
+        var textChipsOriginal = new WrapPanel
+        {
+            MinHeight = 20,
+            LineSpacing = 4,
+            Margin = new Thickness(CardGap + 12, 6, 12, 8),
         };
-
-        if (Se.Settings.Appearance.TextBoxShowButtonAutoBreak)
+        textChipsOriginal.Children.Add(MakeInfoChip(vm, nameof(vm.EditTextCharactersPerSecondOriginal), nameof(vm.EditTextCharactersPerSecondBackgroundOriginal)));
+        textChipsOriginal.Children.Add(MakeInfoChip(vm, nameof(vm.EditTextTotalLengthOriginal), nameof(vm.EditTextTotalLengthBackgroundOriginal)));
+        textEditGrid.Add(textChipsOriginal, 2, 1);
+        textChipsOriginal.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowColumnOriginalText))
         {
-            var autoBreakButton = UiUtil.MakeButton(vm.AutoBreakCommand, IconNames.ScaleBalance, Se.Language.Main.AutoBreakHint);
-            buttonPanel.Children.Add(autoBreakButton);
-        }
-
-        if (Se.Settings.Appearance.TextBoxShowButtonUnbreak)
-        {
-            var unbreakButton = UiUtil.MakeButton(vm.UnbreakCommand, IconNames.SetMerge, Se.Language.Main.UnbreakHint);
-            buttonPanel.Children.Add(unbreakButton);
-        }
-
-        if (Se.Settings.Appearance.TextBoxShowButtonItalic)
-        {
-            var italicButton = UiUtil.MakeButton(vm.ToggleLinesItalicOrSelectedTextCommand, IconNames.Italic, Se.Language.Main.ItalicHint);
-            buttonPanel.Children.Add(italicButton);
-        }
-
-        if (Se.Settings.Appearance.TextBoxShowButtonColor)
-        {
-            var colorButton = UiUtil.MakeButton(vm.ShowColorPickerCommand, IconNames.Palette, Se.Language.Main.ColorHint);
-            buttonPanel.Children.Add(colorButton);
-        }
-
-        if (Se.Settings.Appearance.TextBoxShowButtonRemoveFormatting)
-        {
-            var removeFormattingButton = UiUtil.MakeButton(vm.RemoveFormattingAllCommand, IconNames.FormatClear, Se.Language.Main.RemoveFormattingHint);
-            buttonPanel.Children.Add(removeFormattingButton);
-        }
-
-        if (Se.Settings.Appearance.TextBoxShowButtonAiAssistant)
-        {
-            var aiAssistantButton = UiUtil.MakeButton(vm.ShowAiAssistantCommand, IconNames.Robot, Se.Language.Tools.AiAssistant.Hint);
-            buttonPanel.Children.Add(aiAssistantButton);
-        }
-
-        textEditGrid.Add(buttonPanel, 1, 2);
+            Mode = BindingMode.OneWay,
+            Source = vm
+        });
 
         Grid.SetColumn(textEditGrid, 1);
         editGrid.Children.Add(textEditGrid);
@@ -2236,7 +2212,8 @@ public static partial class InitListViewAndEditBox
                 Height = UiUtil.SplitterWidthOrHeight,
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Top,
-                Margin = new Thickness(0, -UiUtil.SplitterWidthOrHeight / 2.0, 0, 0)
+                Margin = new Thickness(0, -UiUtil.SplitterWidthOrHeight / 2.0, 0, 0),
+                Background = EditorChrome.LineBrush,
             };
             Grid.SetRow(editBoxSplitter, 1);
             mainGrid.Children.Add(editBoxSplitter);
@@ -2273,7 +2250,8 @@ public static partial class InitListViewAndEditBox
             Height = UiUtil.SplitterWidthOrHeight,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Top,
-            Margin = new Thickness(0, -UiUtil.SplitterWidthOrHeight / 2.0, 0, 0)
+            Margin = new Thickness(0, -UiUtil.SplitterWidthOrHeight / 2.0, 0, 0),
+            Background = EditorChrome.LineBrush,
         };
         Grid.SetRow(editBoxSplitter, 1);
         hostGrid.Children.Add(editBoxSplitter);
@@ -2534,9 +2512,13 @@ public static partial class InitListViewAndEditBox
     /// </summary>
     private static void TrackEditSectionMinimumHeight(Grid mainGrid, Grid textEditGrid)
     {
-        var timeControlsPanel = (textEditGrid.Parent as Grid)?.Children
+        // The timing card's content stack (header, the up/down rows, the gaps) - see
+        // GetTimeControlsMinimumHeight.
+        var timingContent = (textEditGrid.Parent as Grid)?.Children
+            .OfType<Border>()
+            .Select(b => b.Child)
             .OfType<StackPanel>()
-            .FirstOrDefault(p => p.Name == TimeControlsPanelName);
+            .FirstOrDefault(p => p.Name == TimingCardContentName);
 
         textEditGrid.LayoutUpdated += (_, _) =>
         {
@@ -2552,8 +2534,11 @@ public static partial class InitListViewAndEditBox
                 return;
             }
 
-            var needed = SubtitleTextBoxMinimumHeight + labelRows + EditGridMargin * 2;
-            var timeControlsNeeded = GetTimeControlsMinimumHeight(timeControlsPanel);
+            // The text box sits in its editor frame (border on both sides), and the text card
+            // grid carries the section margin.
+            var needed = SubtitleTextBoxMinimumHeight + TextFrameBorder * 2 + labelRows +
+                         textEditGrid.Margin.Top + textEditGrid.Margin.Bottom;
+            var timeControlsNeeded = GetTimeControlsMinimumHeight(timingContent);
             if (timeControlsNeeded > needed)
             {
                 needed = timeControlsNeeded;
@@ -2580,20 +2565,20 @@ public static partial class InitListViewAndEditBox
     }
 
     /// <summary>
-    /// Height the edit section needs for the up/down column: the bottom edge of its lowest
-    /// visible child (the column stacks Start/End/Duration/Layer top-down, so that is its
-    /// content extent even when the row it was arranged in is shorter) plus the panel's
-    /// margin and the section margin. Zero when nothing is laid out yet.
+    /// Height the edit section needs for the timing card: the bottom edge of the lowest visible
+    /// child of its content stack (header, the Start/End/Duration/Layer rows, the gaps - stacked
+    /// top-down, so that is the content extent even when the row it was arranged in is shorter)
+    /// plus the card's padding, border and margin above and below. Zero when nothing is laid out yet.
     /// </summary>
-    private static double GetTimeControlsMinimumHeight(StackPanel? timeControlsPanel)
+    private static double GetTimeControlsMinimumHeight(StackPanel? timingContent)
     {
-        if (timeControlsPanel == null)
+        if (timingContent?.Parent is not Border card)
         {
             return 0;
         }
 
         var bottom = 0.0;
-        foreach (var child in timeControlsPanel.Children)
+        foreach (var child in timingContent.Children)
         {
             if (child.IsVisible && child.Bounds.Bottom > bottom)
             {
@@ -2606,7 +2591,9 @@ public static partial class InitListViewAndEditBox
             return 0;
         }
 
-        return bottom + timeControlsPanel.Margin.Top + timeControlsPanel.Margin.Bottom + EditGridMargin * 2;
+        return bottom +
+               card.Margin.Top + card.BorderThickness.Top + card.Padding.Top +
+               card.Padding.Bottom + card.BorderThickness.Bottom + card.Margin.Bottom;
     }
 
     private static TextBox MakeSubtitleTextBox()
@@ -2617,6 +2604,8 @@ public static partial class InitListViewAndEditBox
             ? new SyntaxHighlightingTextBox()
             : new TextBox();
 
+        // Borderless inside the editor frame of the edit area (see AddEditAreaStyles).
+        textBox.Classes.Add("editorText");
         textBox.AcceptsReturn = true;
         textBox.TextWrapping = TextWrapping.Wrap;
         // MinHeight keeps the default layout; no fixed Height so the text box grows with the
