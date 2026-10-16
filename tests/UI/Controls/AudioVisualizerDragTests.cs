@@ -101,29 +101,51 @@ public class AudioVisualizerDragTests : IDisposable
     }
 
     [AvaloniaFact]
-    public void Move_DrawingLayersWithTheSameTimes_MoveTogether()
+    public void Assa_Move_LinesWithTheSameTimes_MoveTogether()
     {
         // A clip art is one ASSA drawing line per layer, all 1-3 s; dragging one moved only that layer
         var a = Line(1, 3, "{\\p1}m 0 0 l 10 0 10 10{\\p0}");
         var b = Line(1, 3, "{\\p1}m 5 5 l 15 5 15 15{\\p0}");
-        var text = Line(1, 3, "{\\an5\\pos(5,5)}{assadraw-text box=0,0,10,10}Hi");
-        var other = Line(1, 3, "Dialogue with the same times");
-        var (window, _, _) = Open(other, a, b, text);
+        var sign = Line(1, 3, "A sign with the same times");
+        var neighbour = Line(3.5, 5);
+        var (window, av, _) = Open(a, b, sign, neighbour);
+        av.MovesSameTimeLinesTogether = () => true;
 
         window.MouseDown(new Point(252, 100), MouseButton.Left, RawInputModifiers.None);
-        window.MouseMove(new Point(378, 100), RawInputModifiers.None);
+        window.MouseMove(new Point(315, 100), RawInputModifiers.None);
         Dispatcher.UIThread.RunJobs();
-        window.MouseUp(new Point(378, 100), MouseButton.Left, RawInputModifiers.None);
+        window.MouseUp(new Point(315, 100), MouseButton.Left, RawInputModifiers.None);
 
-        // +126 px = +1 s for every drawing layer; an ordinary line with the same times stays
-        Assert.All(new[] { a, b, text }, line => Assert.Equal(2, line.StartTime.TotalSeconds, 2));
-        Assert.All(new[] { a, b, text }, line => Assert.Equal(4, line.EndTime.TotalSeconds, 2));
-        Assert.Equal(1, other.StartTime.TotalSeconds, 2);
+        // +63 px = +0.5 s for the whole stack; the line after it is not part of it
+        Assert.All(new[] { a, b, sign }, line => Assert.Equal(1.5, line.StartTime.TotalSeconds, 2));
+        Assert.All(new[] { a, b, sign }, line => Assert.Equal(3.5, line.EndTime.TotalSeconds, 2));
+        Assert.Equal(3.5, neighbour.StartTime.TotalSeconds, 2);
+        window.Close();
+    }
+
+    [AvaloniaTheory]
+    [InlineData(126, 1.5, 3)]  // left edge at x = 1 s, +63 px -> 1.5 s
+    [InlineData(378, 1, 3.5)]  // right edge at x = 3 s, +63 px -> 3.5 s
+    public void Assa_EdgeDrag_ResizesTheLinesWithTheSameTimes(double edgeX, double expectedStart, double expectedEnd)
+    {
+        var a = Line(1, 3);
+        var b = Line(1, 3);
+        var c = Line(1, 3);
+        var (window, av, _) = Open(a, b, c);
+        av.MovesSameTimeLinesTogether = () => true;
+
+        window.MouseDown(new Point(edgeX, 100), MouseButton.Left, RawInputModifiers.None);
+        window.MouseMove(new Point(edgeX + 63, 100), RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
+        window.MouseUp(new Point(edgeX + 63, 100), MouseButton.Left, RawInputModifiers.None);
+
+        Assert.All(new[] { a, b, c }, line => Assert.Equal(expectedStart, line.StartTime.TotalSeconds, 2));
+        Assert.All(new[] { a, b, c }, line => Assert.Equal(expectedEnd, line.EndTime.TotalSeconds, 2));
         window.Close();
     }
 
     [AvaloniaFact]
-    public void Move_OrdinaryLinesWithTheSameTimes_MovesJustTheOne()
+    public void NotAssa_Move_LinesWithTheSameTimes_MovesJustTheOne()
     {
         var a = Line(1, 3);
         var b = Line(1, 3);

@@ -93,6 +93,7 @@ public class InitWaveform
             vm.AudioVisualizer.Height = double.NaN; // Auto height
             vm.AudioVisualizer.WaveformDrawStyle = GetWaveformDrawStyle(settings.WaveformDrawStyle);
             vm.AudioVisualizer.MinGapSeconds = Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / 1000.0;
+            vm.AudioVisualizer.MovesSameTimeLinesTogether = () => vm.IsFormatAssa;
             vm.AudioVisualizer.FocusOnMouseOver = settings.FocusOnMouseOver;
             vm.AudioVisualizer.IsReadOnly = Se.Settings.General.LockTimeCodes;
             vm.AudioVisualizer.WaveformHeightPercentage = settings.SpectrogramCombinedWaveformHeight;

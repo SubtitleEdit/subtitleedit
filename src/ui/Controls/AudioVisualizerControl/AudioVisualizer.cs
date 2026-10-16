@@ -380,8 +380,15 @@ public class AudioVisualizer : Control
 
         var isSameTrack = IsSameTrack;
         var paragraph = paragraphs[index];
+        var stack = _dragStack;
         for (var i = index + step; i >= 0 && i < paragraphs.Count; i += step)
         {
+            // Lines dragged along are not neighbours to stop at
+            if (stack != null && stack.Contains(paragraphs[i]))
+            {
+                continue;
+            }
+
             if (isSameTrack == null || isSameTrack(paragraph, paragraphs[i]))
             {
                 return i;
@@ -845,6 +852,8 @@ public class AudioVisualizer : Control
             }
 
             _activeParagraph = null;
+
+            _dragStack = null;
             return;
         }
 
@@ -1114,6 +1123,7 @@ public class AudioVisualizer : Control
 
             _interactionMode = InteractionMode.None;
             _activeParagraph = null;
+            _dragStack = null;
         }
 
         var showContextMenu = false;
@@ -1158,6 +1168,7 @@ public class AudioVisualizer : Control
             {
                 _interactionMode = InteractionMode.None;
                 _activeParagraph = null;
+                _dragStack = null;
                 return;
             }
         }
@@ -1172,6 +1183,8 @@ public class AudioVisualizer : Control
             // }
 
             _activeParagraph = null;
+
+            _dragStack = null;
             return;
         }
 
@@ -1204,6 +1217,8 @@ public class AudioVisualizer : Control
                 }
 
                 _activeParagraph = null;
+
+                _dragStack = null;
                 return;
             }
         }
@@ -1219,6 +1234,7 @@ public class AudioVisualizer : Control
 
             _interactionMode = InteractionMode.None;
             _activeParagraph = null;
+            _dragStack = null;
             return;
         }
 
@@ -1245,6 +1261,7 @@ public class AudioVisualizer : Control
 
         _interactionMode = InteractionMode.None;
         _activeParagraph = null;
+        _dragStack = null;
         _selectionMoveSnapshot.Clear();
 
         InvalidateVisual();
@@ -1314,6 +1331,7 @@ public class AudioVisualizer : Control
         _originalStartSeconds = p.StartTime.TotalSeconds;
         _originalEndSeconds = p.EndTime.TotalSeconds;
         _originalDurationSeconds = p.Duration.TotalSeconds;
+        _dragStack = GetSameTimeStack(p);
 
         var displayableParagraphs = _displayableParagraphs;
         if (displayableParagraphs.Count == 0)
@@ -1411,10 +1429,10 @@ public class AudioVisualizer : Control
 
                 _interactionMode = InteractionMode.MovingSelection;
             }
-            else if (GetDrawingStack(p) is { Count: > 1 } stack)
+            else if (_dragStack is { } stack)
             {
-                // An ASSA drawing (clip art) is one line per layer, all with the same times:
-                // dragging one moved just that layer out of the picture
+                // ASSA lines with the same times move together - a drawing (clip art) is one line
+                // per layer, and dragging one moved just that layer out of the picture
                 _selectionMoveSnapshot.Clear();
                 foreach (var layer in stack)
                 {
@@ -1437,13 +1455,20 @@ public class AudioVisualizer : Control
     }
 
     /// <summary>
-    /// The ASSA drawing lines (\p1 drawings and ASSA draw text) with exactly the times of
-    /// <paramref name="paragraph"/>, itself included - the layers of one drawing; null when it is
-    /// not a drawing line.
+    /// True when lines with exactly the same times belong together (ASSA: a drawing is one line
+    /// per layer, a sign often several lines) - a drag on one then moves or resizes all of them.
     /// </summary>
-    private List<SubtitleLineViewModel>? GetDrawingStack(SubtitleLineViewModel paragraph)
+    internal Func<bool>? MovesSameTimeLinesTogether { get; set; }
+
+    /// <summary>
+    /// The lines dragged along with the active one: the lines with exactly its times, itself
+    /// included; null for a drag of one line.
+    /// </summary>
+    private List<SubtitleLineViewModel>? _dragStack;
+
+    private List<SubtitleLineViewModel>? GetSameTimeStack(SubtitleLineViewModel paragraph)
     {
-        if (!IsDrawingLine(paragraph))
+        if (MovesSameTimeLinesTogether?.Invoke() != true)
         {
             return null;
         }
@@ -1451,20 +1476,13 @@ public class AudioVisualizer : Control
         var stack = new List<SubtitleLineViewModel>();
         foreach (var p in _displayableParagraphs)
         {
-            if (p.StartTime == paragraph.StartTime && p.EndTime == paragraph.EndTime && IsDrawingLine(p))
+            if (p.StartTime == paragraph.StartTime && p.EndTime == paragraph.EndTime)
             {
                 stack.Add(p);
             }
         }
 
-        return stack;
-    }
-
-    private static bool IsDrawingLine(SubtitleLineViewModel paragraph)
-    {
-        var text = paragraph.Text;
-        return !string.IsNullOrEmpty(text) &&
-               (text.Contains("\\p1", StringComparison.Ordinal) || text.Contains("{assadraw-text ", StringComparison.Ordinal));
+        return stack.Count > 1 ? stack : null;
     }
 
     /// <summary>
@@ -1925,6 +1943,19 @@ public class AudioVisualizer : Control
                 }
 
                 break;
+        }
+
+        // An edge drag resizes the lines with the same times along with it
+        if (_dragStack != null && _activeParagraph != null && _dragStack.Contains(_activeParagraph) &&
+            _interactionMode is InteractionMode.ResizingLeft or InteractionMode.ResizingRight)
+        {
+            foreach (var line in _dragStack)
+            {
+                if (line != _activeParagraph)
+                {
+                    line.SetTimes(_activeParagraph.StartTime, _activeParagraph.EndTime);
+                }
+            }
         }
 
         // Past the early returns above, every remaining interaction mode has just rewritten
