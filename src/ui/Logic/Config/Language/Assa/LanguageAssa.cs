@@ -155,6 +155,12 @@ public class LanguageAssa
     public string DrawClipArtBeatingHeart { get; set; }
     public string DrawClipArtBouncingArrow { get; set; }
     public string DrawClipArtRingingBell { get; set; }
+    public string DrawClipArtPointingHand { get; set; }
+    public string DrawClipArtWiFi { get; set; }
+    public string DrawClipArtTwinklingStar { get; set; }
+    public string DrawClipArtAlarmClock { get; set; }
+    public string DrawClipArtHourglass { get; set; }
+    public string DrawClipArtBasketball { get; set; }
     public string DrawCategoryMyShapes { get; set; }
     public string DrawShapeSpeechBubble { get; set; }
     public string DrawShapeSpeechBubbleRight { get; set; }
@@ -712,6 +718,12 @@ public class LanguageAssa
         DrawClipArtBeatingHeart = "Beating heart";
         DrawClipArtBouncingArrow = "Bouncing arrow";
         DrawClipArtRingingBell = "Ringing bell";
+        DrawClipArtPointingHand = "Pointing hand";
+        DrawClipArtWiFi = "Wi-Fi";
+        DrawClipArtTwinklingStar = "Twinkling star";
+        DrawClipArtAlarmClock = "Alarm clock";
+        DrawClipArtHourglass = "Hourglass";
+        DrawClipArtBasketball = "Basketball";
         DrawCategoryMyShapes = "My shapes";
         DrawShapeSpeechBubble = "Speech bubble";
         DrawShapeSpeechBubbleRight = "Speech bubble, tail right";
