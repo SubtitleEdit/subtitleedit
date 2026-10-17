@@ -592,7 +592,24 @@ public class NOcrDb
         // skipExactCheck: the exact scan already ran (and missed) above - without the flag,
         // GetMatchSingle re-scanned the whole single-character list a second time for every
         // glyph that wasn't an exact match.
-        var single = GetMatchSingle(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels, lastDitch, skipExactCheck: true, placement);
+        var single = GetMatchSingle(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels, lastDitch: false, skipExactCheck: true, placement);
+
+        // Two letters drawn touching ("av", "wt", "As") are one glyph that fits nothing. Read it
+        // as two unless the last-ditch pass finds a single character that fits better than the
+        // worse of the two halves: a touching "ay" beat a loose "U" ("alwUs"), while a "D" the
+        // last-ditch pass read right must not turn into "77".
+        if (single == null)
+        {
+            var pair = MatchTouchingLetters(item.NikseBitmap, topMargin, maxWrongPixels, depth: 0, out var pairRate);
+            NOcrChar? guess = null;
+            var guessRate = double.MaxValue;
+            if (lastDitch)
+            {
+                guess = GetMatchSingle(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels, true, true, placement, out guessRate);
+            }
+
+            single = pair != null && (guess == null || pairRate < guessRate) ? pair : guess;
+        }
 
         if (single == null && italicFactor > 0)
         {
@@ -612,6 +629,138 @@ public class NOcrDb
 
         CacheMatch(key, new MatchCacheEntry { SingleMatch = single });
         return ComposeYery(single, list, item, deepSeek, maxWrongPixels, lastDitch);
+    }
+
+    /// <summary>
+    /// Reads a glyph that matched nothing as two touching letters: cut it at one of the
+    /// thinnest columns of its middle half, trim each side to its ink and match both strictly
+    /// (no deep-seek or last-ditch guessing). One side may itself be a touching pair ("ryw").
+    /// Only letters and digits count, so a stray mark can't make a split look good.
+    /// </summary>
+    private NOcrChar? MatchTouchingLetters(NikseBitmap2 bitmap, int topMargin, int maxWrongPixels, int depth, out double rate)
+    {
+        rate = double.MaxValue;
+        var width = bitmap.Width;
+        var height = bitmap.Height;
+        if (width < 10 || width * 10 < height * 7)
+        {
+            return null;
+        }
+
+        var ink = new int[width];
+        for (var x = 0; x < width; x++)
+        {
+            for (var y = 0; y < height; y++)
+            {
+                if (bitmap.GetAlpha(x, y) > 150)
+                {
+                    ink[x]++;
+                }
+            }
+        }
+
+        var cuts = Enumerable.Range(width / 4, width / 2 + 1)
+            .Where(x => x > 0 && x < width - 1)
+            .OrderBy(x => ink[x])
+            .ThenBy(x => Math.Abs(x - width / 2))
+            .ToList();
+        var tried = new List<int>();
+        foreach (var cut in cuts)
+        {
+            if (tried.Count == 3)
+            {
+                break;
+            }
+
+            if (tried.Any(t => Math.Abs(t - cut) <= 2))
+            {
+                continue;
+            }
+
+            tried.Add(cut);
+            var left = TrimToInk(bitmap.CopyRectangle(new NikseRectangle(0, 0, cut, height)), out var leftTop);
+            var right = TrimToInk(bitmap.CopyRectangle(new NikseRectangle(cut + 1, 0, width - cut - 1, height)), out var rightTop);
+            if (left == null || right == null)
+            {
+                continue;
+            }
+
+            var leftMatch = MatchLetterOrPair(left, topMargin + leftTop, maxWrongPixels, depth, out var leftRate);
+            if (leftMatch == null)
+            {
+                continue;
+            }
+
+            var rightMatch = MatchLetterOrPair(right, topMargin + rightTop, maxWrongPixels, depth, out var rightRate);
+            if (rightMatch == null ||
+                leftMatch.Text.All(char.IsDigit) != rightMatch.Text.All(char.IsDigit))
+            {
+                // Touching letters or touching digits, never one of each: an "M" cut in two
+                // read as "b1" or "A4".
+                continue;
+            }
+
+            rate = Math.Max(leftRate, rightRate);
+
+            // A "w" cut down its middle is two "v"s - it was one letter all along.
+            var text = (leftMatch.Text + rightMatch.Text) switch
+            {
+                "vv" => "w",
+                "VV" => "W",
+                var pair => pair,
+            };
+
+            return new NOcrChar(text)
+            {
+                Width = width,
+                Height = height,
+                MarginTop = topMargin,
+                Italic = leftMatch.Italic && rightMatch.Italic,
+            };
+        }
+
+        return null;
+    }
+
+    private NOcrChar? MatchLetterOrPair(NikseBitmap2 part, int topMargin, int maxWrongPixels, int depth, out double rate)
+    {
+        var match = GetMatchSingle(part, topMargin, false, maxWrongPixels, false, false, BaselinePlacement.Unknown, out rate);
+        if (match != null)
+        {
+            return match.Text.All(char.IsLetterOrDigit) ? match : null;
+        }
+
+        rate = double.MaxValue;
+        return depth == 0 ? MatchTouchingLetters(part, topMargin, maxWrongPixels, depth + 1, out rate) : null;
+    }
+
+    /// <summary>The part of <paramref name="bitmap"/> that has ink, and how many rows were cut off its top.</summary>
+    private static NikseBitmap2? TrimToInk(NikseBitmap2 bitmap, out int top)
+    {
+        top = 0;
+        int minX = bitmap.Width, minY = bitmap.Height, maxX = -1, maxY = -1;
+        for (var y = 0; y < bitmap.Height; y++)
+        {
+            for (var x = 0; x < bitmap.Width; x++)
+            {
+                if (bitmap.GetAlpha(x, y) > 150)
+                {
+                    minX = Math.Min(minX, x);
+                    maxX = Math.Max(maxX, x);
+                    minY = Math.Min(minY, y);
+                    maxY = Math.Max(maxY, y);
+                }
+            }
+        }
+
+        // Too small to be a letter: a sliver of the neighbour's stroke.
+        if (maxX < 0 || maxX - minX + 1 < 3 || maxY - minY + 1 < bitmap.Height / 3)
+        {
+            return null;
+        }
+
+        top = minY;
+        return bitmap.CopyRectangle(new NikseRectangle(minX, minY, maxX - minX + 1, maxY - minY + 1));
     }
 
     /// <summary>
@@ -718,11 +867,19 @@ public class NOcrDb
 
     public NOcrChar? GetMatchSingle(NikseBitmap2 bitmap, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch = false, bool skipExactCheck = false, BaselinePlacement placement = BaselinePlacement.Unknown)
     {
+        return GetMatchSingle(bitmap, topMargin, deepSeek, maxWrongPixels, lastDitch, skipExactCheck, placement, out _);
+    }
+
+    /// <param name="matchRate">The winner's share of wrong points (0 for an exact match, <see cref="double.MaxValue"/> for none).</param>
+    private NOcrChar? GetMatchSingle(NikseBitmap2 bitmap, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch, bool skipExactCheck, BaselinePlacement placement, out double matchRate)
+    {
+        matchRate = double.MaxValue;
         if (!skipExactCheck)
         {
             var exact = GetExactMatchSingle(bitmap, topMargin, placement);
             if (exact != null)
             {
+                matchRate = 0;
                 return exact;
             }
         }
@@ -854,6 +1011,7 @@ public class NOcrDb
 
             if (best != null)
             {
+                matchRate = bestRate;
                 return best;
             }
         }
