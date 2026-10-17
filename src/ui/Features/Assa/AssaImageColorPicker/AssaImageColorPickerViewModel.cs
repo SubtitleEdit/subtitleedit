@@ -84,6 +84,19 @@ public partial class AssaImageColorPickerViewModel : ObservableObject
     }
 
     /// <summary>
+    /// The Skia copy of the frame and the magnifier bitmap are only freed when replaced - free
+    /// them when the window closes too.
+    /// </summary>
+    public void OnClosed()
+    {
+        _screenshotPixels?.Dispose();
+        _screenshotPixels = null;
+        var magnifier = Magnifier;
+        Magnifier = null;
+        magnifier?.Dispose();
+    }
+
+    /// <summary>
     /// A Skia copy of the frame for the magnifier (made once, not on every pointer move).
     /// </summary>
     private SKBitmap Pixels => _screenshotPixels ??= Screenshot.ToSkBitmap();

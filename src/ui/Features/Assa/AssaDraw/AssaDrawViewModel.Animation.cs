@@ -135,7 +135,7 @@ public partial class AssaDrawViewModel
     private void RefreshAnimationFields()
     {
         var shapes = GetAnimationShapes();
-        var animation = shapes.Select(s => s.Animation).FirstOrDefault(a => a != null) ?? new DrawAnimation();
+        var animation = shapes.Select(s => s.Animation).FirstOrDefault(a => a is { IsNone: false }) ?? new DrawAnimation();
         _updatingAnimationFields = true;
         try
         {
@@ -310,7 +310,7 @@ public partial class AssaDrawViewModel
     /// </summary>
     internal (DrawAnimationState State, float AnchorX, float AnchorY) GetCanvasAnimationTransform(DrawShape styleShape, double timeMs)
     {
-        if (styleShape.Animation is not { IsNone: false } animation)
+        if (GetLayerAnimation(styleShape.Layer) is not { } animation)
         {
             return (DrawAnimationState.Rest, 0, 0);
         }

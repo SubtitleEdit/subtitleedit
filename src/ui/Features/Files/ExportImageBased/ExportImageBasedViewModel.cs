@@ -460,9 +460,20 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         {
             await ExportRun(fileOrFolderName, cancellationToken);
         }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            // cancelled by the user or a new run
+        }
         catch (Exception exception)
         {
             Se.LogError(exception);
+            if (Window != null)
+            {
+                // e.g. a D-Cinema MXF with more images than one track file can hold
+                await MessageBox.Show(Window, Se.Language.General.Error,
+                    string.Format(Se.Language.General.CouldNotSaveFileXErrorY, fileOrFolderName, exception.Message),
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         finally
         {

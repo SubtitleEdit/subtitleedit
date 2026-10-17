@@ -53,6 +53,13 @@ public class LlamaCppAdvancedClient : IDisposable
     /// </summary>
     public bool DisableThinking { get; private set; }
 
+    /// <summary>
+    /// True when the request that produced the last reply (or failure) carried
+    /// chat_template_kwargs.enable_thinking=false - <see cref="DisableThinking"/> can be set by
+    /// that very reply, so it does not tell whether the server already had the flag.
+    /// </summary>
+    public bool LastRequestDisabledThinking { get; private set; }
+
     public LlamaCppAdvancedClient()
     {
         _httpClient = HttpClientFactoryWithProxy.CreateHttpClientWithProxy();
@@ -64,18 +71,18 @@ public class LlamaCppAdvancedClient : IDisposable
         Error = string.Empty;
         ReplyFromReasoning = false;
 
-        var response = await PostAsync(url, BuildRequestJson(systemPrompt, userContent, responseFormatJson, model, defaultMaxTokens, temperatureBump, DisableThinking), cancellationToken);
+        var response = await PostWithThinkingFallbackAsync(url, systemPrompt, userContent, responseFormatJson, model, defaultMaxTokens, temperatureBump, cancellationToken);
 
         // A stall is not a format rejection - retrying the same prompt with a looser format
         // would just burn another watchdog period, so only the format fallbacks run here.
         if (!response.ok && !response.stalled && responseFormatJson != null && !cancellationToken.IsCancellationRequested)
         {
-            response = await PostAsync(url, BuildRequestJson(systemPrompt, userContent, "{\"type\":\"json_object\"}", model, defaultMaxTokens, temperatureBump, DisableThinking), cancellationToken);
+            response = await PostWithThinkingFallbackAsync(url, systemPrompt, userContent, "{\"type\":\"json_object\"}", model, defaultMaxTokens, temperatureBump, cancellationToken);
         }
 
         if (!response.ok && !response.stalled && responseFormatJson != null && !cancellationToken.IsCancellationRequested)
         {
-            response = await PostAsync(url, BuildRequestJson(systemPrompt, userContent, null, model, defaultMaxTokens, temperatureBump, DisableThinking), cancellationToken);
+            response = await PostWithThinkingFallbackAsync(url, systemPrompt, userContent, null, model, defaultMaxTokens, temperatureBump, cancellationToken);
         }
 
         if (!response.ok)
@@ -94,6 +101,34 @@ public class LlamaCppAdvancedClient : IDisposable
         DisableThinking |= fromReasoning;
 
         return reply;
+    }
+
+    /// <summary>
+    /// Posts one request with the current <see cref="DisableThinking"/> flag. A strict
+    /// OpenAI-compatible server can reject the unknown chat_template_kwargs field with a 4xx, so
+    /// such a rejection is retried once without it; the flag stays off only when that retry gets
+    /// through - when it fails too, the field was not the problem (e.g. a json_schema rejection
+    /// that the format fallbacks handle) and the flag is kept.
+    /// </summary>
+    private async Task<(bool ok, bool stalled, bool isAssembledContent, string body, string reasoning, int status)> PostWithThinkingFallbackAsync(string url, string systemPrompt, string userContent, string? responseFormatJson, string? model, int defaultMaxTokens, double temperatureBump, CancellationToken cancellationToken)
+    {
+        LastRequestDisabledThinking = DisableThinking;
+        var response = await PostAsync(url, BuildRequestJson(systemPrompt, userContent, responseFormatJson, model, defaultMaxTokens, temperatureBump, DisableThinking), cancellationToken);
+        if (response.ok || response.stalled || !DisableThinking || response.status < 400 || response.status >= 500 || cancellationToken.IsCancellationRequested)
+        {
+            return response;
+        }
+
+        var retry = await PostAsync(url, BuildRequestJson(systemPrompt, userContent, responseFormatJson, model, defaultMaxTokens, temperatureBump, false), cancellationToken);
+        if (!retry.ok)
+        {
+            return response;
+        }
+
+        SeLogger.Error("llama.cpp advanced translate: server rejected chat_template_kwargs.enable_thinking, sending requests without it: " + response.body);
+        DisableThinking = false;
+        LastRequestDisabledThinking = false;
+        return retry;
     }
 
     /// <summary>
@@ -200,7 +235,7 @@ public class LlamaCppAdvancedClient : IDisposable
     /// with a different response format. A user cancellation propagates as
     /// <see cref="OperationCanceledException"/> instead.
     /// </summary>
-    private async Task<(bool ok, bool stalled, bool isAssembledContent, string body, string reasoning)> PostAsync(string url, string json, CancellationToken cancellationToken)
+    private async Task<(bool ok, bool stalled, bool isAssembledContent, string body, string reasoning, int status)> PostAsync(string url, string json, CancellationToken cancellationToken)
     {
         using var overall = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         overall.CancelAfter(TotalTimeout);
@@ -220,7 +255,7 @@ public class LlamaCppAdvancedClient : IDisposable
             if (!result.IsSuccessStatusCode)
             {
                 var errorBody = await result.Content.ReadAsStringAsync(idle.Token).ConfigureAwait(false);
-                return (false, false, false, errorBody, string.Empty);
+                return (false, false, false, errorBody, string.Empty, (int)result.StatusCode);
             }
 
             await using var stream = await result.Content.ReadAsStreamAsync(idle.Token).ConfigureAwait(false);
@@ -257,13 +292,13 @@ public class LlamaCppAdvancedClient : IDisposable
                 sawSseData = true;
                 if (!TryAppendDelta(payload, assembled, reasoning, out var chunkError))
                 {
-                    return (false, false, false, chunkError, string.Empty);
+                    return (false, false, false, chunkError, string.Empty, 0);
                 }
             }
 
             return sawSseData
-                ? (true, false, true, assembled.ToString(), reasoning.ToString())
-                : (true, false, false, raw.ToString(), string.Empty);
+                ? (true, false, true, assembled.ToString(), reasoning.ToString(), (int)result.StatusCode)
+                : (true, false, false, raw.ToString(), string.Empty, (int)result.StatusCode);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
@@ -274,11 +309,11 @@ public class LlamaCppAdvancedClient : IDisposable
             return (false, true, false,
                 "The server stopped sending data (generation looks stalled) and the request was aborted - " +
                 "the model may not fit in GPU memory, or it may be stuck in a generation loop.",
-                string.Empty);
+                string.Empty, 0);
         }
         catch (Exception e)
         {
-            return (false, false, false, e.Message, string.Empty);
+            return (false, false, false, e.Message, string.Empty, 0);
         }
     }
 

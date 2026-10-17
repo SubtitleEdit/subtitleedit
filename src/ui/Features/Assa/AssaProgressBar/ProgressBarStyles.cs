@@ -75,6 +75,25 @@ public static class ProgressBarStyles
         };
     }
 
+    /// <summary>
+    /// How far chapter text keeps from the bar's left and right ends for a style whose ends narrow
+    /// (rounded, cut, pointed, slanted) - 0 for a square end, where the normal small margin is enough.
+    /// Only rounded corners had an inset, so text on the other shaped ends ran over the edge.
+    /// </summary>
+    public static (double Left, double Right) GetEndCapInset(int style, int height)
+    {
+        var h = (double)Math.Max(2, height);
+        return style switch
+        {
+            Rounded or 6 or 7 => (h, h), // rounded corners, rounded segments, dots
+            2 => (h / 3.0, h / 3.0), // cut corners
+            3 => (0.0, h / 2.0), // arrow: pointed right end
+            4 => (h * 0.6, h * 0.6), // slanted
+            8 or 9 => (h / 2.0, h / 2.0), // diamonds, chevrons: pointed pieces
+            _ => (0.0, 0.0),
+        };
+    }
+
     private static string N(double value) => Math.Round(value, 1).ToString("0.#", CultureInfo.InvariantCulture);
 
     private static string Rect(double left, double top, double right, double bottom) =>

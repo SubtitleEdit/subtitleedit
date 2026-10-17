@@ -538,6 +538,10 @@ public class AudioVisualizer : Control
     private readonly List<SubtitleLineViewModel> _displayableParagraphs = new();
     private protected IReadOnlyList<SubtitleLineViewModel> DisplayableParagraphs => _displayableParagraphs;
 
+    // The whole list the last LoadParagraphs got, unthinned - a dense section drops lines from
+    // _displayableParagraphs, and a same-time drag must not leave those layers behind.
+    private IReadOnlyList<SubtitleLineViewModel> _allParagraphs = Array.Empty<SubtitleLineViewModel>();
+
     // The paragraph sets as they stood before the current LoadParagraphs, so it can tell whether
     // anything it draws actually changed. Reused across calls, so the check allocates nothing.
     private readonly List<SubtitleLineViewModel> _previousDisplayableParagraphs = new();
@@ -1422,27 +1426,18 @@ public class AudioVisualizer : Control
             if (AllSelectedParagraphs is { Count: > 1 } && AllSelectedParagraphs.Contains(p))
             {
                 _selectionMoveSnapshot.Clear();
-                foreach (var selected in AllSelectedParagraphs)
+                foreach (var line in GetSelectionWithSameTimeStacks(AllSelectedParagraphs))
                 {
-                    _selectionMoveSnapshot.Add((selected, selected.StartTime.TotalSeconds, selected.Duration.TotalSeconds));
-                }
-
-                _interactionMode = InteractionMode.MovingSelection;
-            }
-            else if (_dragStack is { } stack)
-            {
-                // ASSA lines with the same times move together - a drawing (clip art) is one line
-                // per layer, and dragging one moved just that layer out of the picture
-                _selectionMoveSnapshot.Clear();
-                foreach (var layer in stack)
-                {
-                    _selectionMoveSnapshot.Add((layer, layer.StartTime.TotalSeconds, layer.Duration.TotalSeconds));
+                    _selectionMoveSnapshot.Add((line, line.StartTime.TotalSeconds, line.Duration.TotalSeconds));
                 }
 
                 _interactionMode = InteractionMode.MovingSelection;
             }
             else
             {
+                // A same-time stack (ASSA: a drawing is one line per layer) moves as the grabbed
+                // line does - clamped against the lines around the stack and snapped like any
+                // single-line move - and the rest of the stack follows (see _dragStack)
                 _interactionMode = InteractionMode.Moving;
             }
         }
@@ -1473,16 +1468,69 @@ public class AudioVisualizer : Control
             return null;
         }
 
+        // The full list, not _displayableParagraphs: thinning drops same-start lines. Lines in
+        // another layout-14 track are not part of the stack. Drag start only, so a linear scan.
+        var isSameTrack = IsSameTrack;
         var stack = new List<SubtitleLineViewModel>();
-        foreach (var p in _displayableParagraphs)
+        foreach (var p in _allParagraphs)
         {
-            if (p.StartTime == paragraph.StartTime && p.EndTime == paragraph.EndTime)
+            if (p.StartTime == paragraph.StartTime && p.EndTime == paragraph.EndTime &&
+                (p == paragraph || isSameTrack == null || isSameTrack(paragraph, p)))
             {
                 stack.Add(p);
             }
         }
 
         return stack.Count > 1 ? stack : null;
+    }
+
+    /// <summary>
+    /// The selected lines plus, when same-time lines move together, every line in the same
+    /// track with exactly the times of a selected one - so dragging a selection that holds one
+    /// layer of a drawing does not split the drawing. One pass over the full list.
+    /// </summary>
+    private List<SubtitleLineViewModel> GetSelectionWithSameTimeStacks(List<SubtitleLineViewModel> selection)
+    {
+        var result = new List<SubtitleLineViewModel>(selection);
+        if (MovesSameTimeLinesTogether?.Invoke() != true)
+        {
+            return result;
+        }
+
+        var added = new HashSet<SubtitleLineViewModel>(selection);
+        var selectedByTimes = new Dictionary<(TimeSpan Start, TimeSpan End), List<SubtitleLineViewModel>>();
+        foreach (var selected in selection)
+        {
+            var key = (selected.StartTime, selected.EndTime);
+            if (!selectedByTimes.TryGetValue(key, out var list))
+            {
+                list = new List<SubtitleLineViewModel>();
+                selectedByTimes[key] = list;
+            }
+
+            list.Add(selected);
+        }
+
+        var isSameTrack = IsSameTrack;
+        foreach (var p in _allParagraphs)
+        {
+            if (added.Contains(p) || !selectedByTimes.TryGetValue((p.StartTime, p.EndTime), out var sameTimes))
+            {
+                continue;
+            }
+
+            foreach (var selected in sameTimes)
+            {
+                if (isSameTrack == null || isSameTrack(selected, p))
+                {
+                    added.Add(p);
+                    result.Add(p);
+                    break;
+                }
+            }
+        }
+
+        return result;
     }
 
     /// <summary>
@@ -1657,6 +1705,8 @@ public class AudioVisualizer : Control
                 _activeParagraph = _activeParagraphPrevious;
                 _originalStartSeconds = _activeParagraph.StartTime.TotalSeconds;
                 _originalEndSeconds = _activeParagraph.EndTime.TotalSeconds;
+                // The stack dragged along is now the other paragraph's
+                _dragStack = GetSameTimeStack(_activeParagraph);
                 // The originals were just re-captured from the other paragraph, so the drag
                 // anchor must restart from the current pointer position too.
                 _startPointerSeconds = RelativeXPositionToSeconds(point.X);
@@ -1680,6 +1730,7 @@ public class AudioVisualizer : Control
                 _activeParagraph = _activeParagraphNext;
                 _originalStartSeconds = _activeParagraph.StartTime.TotalSeconds;
                 _originalEndSeconds = _activeParagraph.EndTime.TotalSeconds;
+                _dragStack = GetSameTimeStack(_activeParagraph);
                 // See the ResizingLeftOr branch above.
                 _startPointerSeconds = RelativeXPositionToSeconds(point.X);
                 dragDeltaSeconds = 0;
@@ -1945,9 +1996,12 @@ public class AudioVisualizer : Control
                 break;
         }
 
-        // An edge drag resizes the lines with the same times along with it
+        // A move or edge drag takes the lines with the same times along with it. They started
+        // with the active line's times, so copying its clamped and snapped times keeps the stack
+        // together; the neighbours it was clamped against already skip the stack members.
         if (_dragStack != null && _activeParagraph != null && _dragStack.Contains(_activeParagraph) &&
-            _interactionMode is InteractionMode.ResizingLeft or InteractionMode.ResizingRight)
+            _interactionMode is InteractionMode.Moving or InteractionMode.ResizingLeft or InteractionMode.ResizingRight or
+                InteractionMode.ResizeLeftAnd or InteractionMode.ResizeRightAnd)
         {
             foreach (var line in _dragStack)
             {
@@ -4487,6 +4541,7 @@ public class AudioVisualizer : Control
     private void LoadParagraphsInLock(IReadOnlyList<SubtitleLineViewModel> subtitle, int primarySelectedIndex, List<SubtitleLineViewModel> selectedIndexes)
     {
         _displayableParagraphs.Clear();
+        _allParagraphs = subtitle;
         SelectedParagraph = null;
         AllSelectedParagraphs.Clear();
 

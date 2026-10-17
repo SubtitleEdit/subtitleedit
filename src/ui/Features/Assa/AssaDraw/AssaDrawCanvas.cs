@@ -43,6 +43,11 @@ public class AssaDrawCanvas : Control
     private const int RotateHandle = 8;
     private const double HandlePadding = 8;
     private const double RotateHandleDistance = 26;
+
+    /// <summary>
+    /// Screen pixels the pointer must move before pressing a shape starts dragging it.
+    /// </summary>
+    private const double DragSlop = 3;
     private int _transformHandle = -1;
     private List<DrawShape>? _transformShapes;
     private List<(float X, float Y)[]>? _transformOriginal;
@@ -789,7 +794,15 @@ public class AssaDrawCanvas : Control
                 var eraserShapes = layer.Where(s => s.IsEraser).ToList();
                 if (eraserShapes.Count > 0)
                 {
-                    geometry = new CombinedGeometry(GeometryCombineMode.Exclude, geometry, BuildLayerGeometry(eraserShapes));
+                    // The \iclip doesn't follow the animation in libass, so the erasers stand still
+                    // here too: undo the layer's animation transform for them
+                    Geometry eraserGeometry = BuildLayerGeometry(eraserShapes);
+                    if (animation != null && animation.Matrix.TryInvert(out var inverse))
+                    {
+                        eraserGeometry.Transform = new MatrixTransform(inverse);
+                    }
+
+                    geometry = new CombinedGeometry(GeometryCombineMode.Exclude, geometry, eraserGeometry);
                 }
 
                 var styleShape = drawShapes[0];
@@ -819,7 +832,8 @@ public class AssaDrawCanvas : Control
     /// </summary>
     private AnimationScope? PushAnimation(DrawingContext context, IEnumerable<DrawShape> layer, double timeMs)
     {
-        var styleShape = layer.FirstOrDefault(s => !s.IsEraser);
+        // The shape the output takes the layer's anchor from: its first draw shape
+        var styleShape = layer.FirstOrDefault(s => !s.IsEraser && !s.IsTextBox) ?? layer.FirstOrDefault(s => !s.IsEraser);
         if (styleShape == null || GetAnimationTransform == null)
         {
             return null;
@@ -833,17 +847,20 @@ public class AssaDrawCanvas : Control
 
         var centerX = ToZoomFactorX(anchorX);
         var centerY = ToZoomFactorY(anchorY);
-        var transform = context.PushTransform(
+        var matrix =
             Matrix.CreateTranslation(-centerX, -centerY) *
             Matrix.CreateScale(Math.Max(0.001, state.Scale), Math.Max(0.001, state.Scale)) *
             Matrix.CreateRotation(state.Rotation * Math.PI / 180) *
-            Matrix.CreateTranslation(centerX + state.Dx * _zoomFactor, centerY + state.Dy * _zoomFactor));
+            Matrix.CreateTranslation(centerX + state.Dx * _zoomFactor, centerY + state.Dy * _zoomFactor);
+        var transform = context.PushTransform(matrix);
         var opacity = context.PushOpacity(state.Opacity);
-        return new AnimationScope(transform, opacity);
+        return new AnimationScope(matrix, transform, opacity);
     }
 
-    private sealed class AnimationScope(DrawingContext.PushedState transform, DrawingContext.PushedState opacity) : IDisposable
+    private sealed class AnimationScope(Matrix matrix, DrawingContext.PushedState transform, DrawingContext.PushedState opacity) : IDisposable
     {
+        public Matrix Matrix => matrix;
+
         public void Dispose()
         {
             opacity.Dispose();
@@ -1426,6 +1443,17 @@ public class AssaDrawCanvas : Control
         // Dragging a whole shape
         if (_dragShapes != null && _lastMousePosition.HasValue && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
         {
+            // A small slop before a click becomes a move, so a click that jitters a pixel doesn't
+            // nudge the shape (and add an undo step). The press point is kept until then, so the
+            // shape still follows the pointer exactly once it moves.
+            if (!_dragShapeMoved &&
+                Math.Abs(point.X - _lastMousePosition.Value.X) < DragSlop &&
+                Math.Abs(point.Y - _lastMousePosition.Value.Y) < DragSlop)
+            {
+                CanvasMouseMoved?.Invoke(this, new CanvasMouseEventArgs(x, y));
+                return;
+            }
+
             var dx = (float)(point.X - _lastMousePosition.Value.X) / _zoomFactor;
             var dy = (float)(point.Y - _lastMousePosition.Value.Y) / _zoomFactor;
             if (dx != 0 || dy != 0)

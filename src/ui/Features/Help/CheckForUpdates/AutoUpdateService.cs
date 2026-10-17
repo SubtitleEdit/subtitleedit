@@ -43,6 +43,9 @@ public interface IAutoUpdateService
 {
     AutoUpdateKind Kind { get; }
 
+    /// <summary>True once the install helper has been started in this session - it is already waiting for exit.</summary>
+    bool IsInstallPending { get; }
+
     /// <summary>Downloads the release file for this platform and verifies its SHA-256; returns the local path.</summary>
     Task<string> DownloadAsync(string version, IProgress<float>? progress, CancellationToken cancellationToken);
 
@@ -74,6 +77,10 @@ public class AutoUpdateService : IAutoUpdateService
     private readonly HttpClient _httpClient;
     private readonly Lazy<AutoUpdateKind> _kind;
 
+    // Static: the dialog (and its view model) is created anew each time, but only one helper
+    // may wait for this process - a second one would install the update twice.
+    private static volatile bool _helperStarted;
+
     public AutoUpdateService(HttpClient httpClient)
     {
         _httpClient = httpClient;
@@ -81,6 +88,8 @@ public class AutoUpdateService : IAutoUpdateService
     }
 
     public AutoUpdateKind Kind => _kind.Value;
+
+    public bool IsInstallPending => _helperStarted;
 
     private static AutoUpdateKind DetectCurrentKind()
     {
@@ -203,13 +212,8 @@ public class AutoUpdateService : IAutoUpdateService
 
         var asset = await GetReleaseAssetAsync(version, assetName, cancellationToken);
 
-        var folder = Path.Combine(Path.GetTempPath(), "SubtitleEdit-update");
-        Directory.CreateDirectory(folder);
+        var folder = CreateStagingFolder();
         var path = Path.Combine(folder, asset.Name);
-        if (File.Exists(path))
-        {
-            File.Delete(path);
-        }
 
         await DownloadHelper.DownloadFileAsync(_httpClient, asset.DownloadUrl, path, progress, cancellationToken);
 
@@ -234,6 +238,42 @@ public class AutoUpdateService : IAutoUpdateService
         }
 
         return path;
+    }
+
+    /// <summary>
+    /// A fresh, per-user staging folder. Not a fixed name in the shared temp folder: on Linux
+    /// that is /tmp, where another user could pre-create the folder and swap files in before
+    /// the helper runs at exit. The per-user data folder is owned by the user; the staging
+    /// folder is also created owner-only off Windows.
+    /// </summary>
+    private static string CreateStagingFolder()
+    {
+        var parent = OperatingSystem.IsWindows() ? Path.GetTempPath() : Se.DataFolder;
+        var folder = Path.Combine(parent, "SubtitleEdit-update");
+        if (Directory.Exists(folder))
+        {
+            try
+            {
+                Directory.Delete(folder, true);
+            }
+            catch (Exception exception)
+            {
+                // e.g. a file still locked by a previous attempt - stage in a new folder instead
+                Se.LogError(exception, "AutoUpdateService.CreateStagingFolder");
+                folder += "-" + Guid.NewGuid().ToString("N");
+            }
+        }
+
+        if (OperatingSystem.IsWindows())
+        {
+            Directory.CreateDirectory(folder);
+        }
+        else
+        {
+            Directory.CreateDirectory(folder, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
+        }
+
+        return folder;
     }
 
     private async Task<AutoUpdateAsset> GetReleaseAssetAsync(string version, string assetName, CancellationToken cancellationToken)
@@ -446,6 +486,11 @@ public class AutoUpdateService : IAutoUpdateService
 
     public void StartInstallAfterExit(string downloadedFile)
     {
+        if (_helperStarted)
+        {
+            return; // a helper already waits for this process to exit
+        }
+
         var processId = Environment.ProcessId;
         var exeFolder = AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar);
         var scriptFolder = Path.GetDirectoryName(downloadedFile)!;
@@ -472,6 +517,7 @@ public class AutoUpdateService : IAutoUpdateService
                 }
 
                 Process.Start(startInfo);
+                _helperStarted = true;
                 break;
             }
             case AutoUpdateKind.LinuxTarball:
@@ -489,6 +535,7 @@ public class AutoUpdateService : IAutoUpdateService
                 }
 
                 Process.Start(startInfo);
+                _helperStarted = true;
                 break;
             }
             case AutoUpdateKind.MacAppBundle:
@@ -505,6 +552,7 @@ public class AutoUpdateService : IAutoUpdateService
                 }
 
                 Process.Start(startInfo);
+                _helperStarted = true;
                 break;
             }
             default:
@@ -529,12 +577,12 @@ public class AutoUpdateService : IAutoUpdateService
 
     /// <summary>
     /// Waits for Subtitle Edit to exit, extracts the tarball over the install folder and starts the
-    /// app again. Ignores SIGHUP so closing the terminal Subtitle Edit was started from does not
-    /// stop it halfway.
+    /// app again. Ignores SIGHUP and SIGTERM so closing the terminal Subtitle Edit was started
+    /// from, or logging out, does not stop the extraction halfway and leave a half-updated install.
     /// </summary>
     internal const string LinuxScript = """
         #!/bin/sh
-        trap '' HUP
+        trap '' HUP TERM
         pid="$1"; archive="$2"; dir="$3"; app="$4"
         while kill -0 "$pid" 2>/dev/null; do sleep 1; done
         if tar -xzf "$archive" -C "$dir"; then rm -f "$archive"; fi

@@ -515,21 +515,18 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 positionNextX = (int)Math.Round(_videoWidth * percentNext / 100.0);
             }
 
-            if (CornerStyleIndex == 1 && chapterIndex == Chapters.Count - 1)
-            {
-                return (int)Math.Round((double)(positionNextX - BarHeight + XAdjustment));
-            }
-
-            return (int)Math.Round(positionNextX - 10.0 + XAdjustment);
+            // The last chapter's text keeps clear of the bar's right end where its shape narrows
+            var rightInset = chapterIndex == Chapters.Count - 1
+                ? Math.Max(10.0, ProgressBarStyles.GetEndCapInset(CornerStyleIndex, BarHeight).Right)
+                : 10.0;
+            return (int)Math.Round(positionNextX - rightInset + XAdjustment);
         }
 
-        // Left
-        if (CornerStyleIndex == 1 && chapterIndex == 0)
-        {
-            return (int)Math.Round(position + (double)BarHeight + SplitterWidth + XAdjustment);
-        }
-
-        return (int)Math.Round(position + 8.0 + SplitterWidth + XAdjustment);
+        // Left - the first chapter's text keeps clear of the bar's left end where its shape narrows
+        var leftInset = chapterIndex == 0
+            ? Math.Max(8.0, ProgressBarStyles.GetEndCapInset(CornerStyleIndex, BarHeight).Left)
+            : 8.0;
+        return (int)Math.Round(position + leftInset + SplitterWidth + XAdjustment);
     }
 
     private static string ToAssaColor(Color color)

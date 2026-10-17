@@ -63,7 +63,14 @@ public partial class CheckForUpdatesViewModel : ObservableObject
                 return;
             }
 
-            if (result.IsNewVersionAvailable)
+            if (result.IsNewVersionAvailable && _autoUpdateService.IsInstallPending)
+            {
+                // Downloaded and handed to the helper earlier in this session (the user stayed
+                // at the unsaved-changes prompt) - it installs when Subtitle Edit closes.
+                StatusText = Se.Language.Help.CheckForUpdatesInstallsWhenClosed;
+                IsDownloadLinkVisible = true;
+            }
+            else if (result.IsNewVersionAvailable)
             {
                 StatusText = string.Format(Se.Language.Help.CheckForUpdatesNewVersionAvailable, result.LatestVersion);
                 IsDownloadLinkVisible = true;
@@ -100,6 +107,13 @@ public partial class CheckForUpdatesViewModel : ObservableObject
             return;
         }
 
+        if (_autoUpdateService.IsInstallPending)
+        {
+            IsInstallVisible = false;
+            StatusText = Se.Language.Help.CheckForUpdatesInstallsWhenClosed;
+            return;
+        }
+
         IsInstallVisible = false;
         IsDownloading = true;
         DownloadProgress = 0;
@@ -112,11 +126,11 @@ public partial class CheckForUpdatesViewModel : ObservableObject
             var file = await _autoUpdateService.DownloadAsync(_latestVersion, progress, _downloadCancellation.Token);
             _autoUpdateService.StartInstallAfterExit(file);
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException) when (_downloadCancellation?.IsCancellationRequested == true)
         {
             return; // dialog closed while downloading
         }
-        catch (Exception exception)
+        catch (Exception exception) // also timeouts, which surface as OperationCanceledException
         {
             Se.LogError(exception, "Automatic update");
             IsDownloading = false;
