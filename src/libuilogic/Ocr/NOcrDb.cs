@@ -500,8 +500,28 @@ public class NOcrDb
         }
 
         var placement = GetBaselinePlacement(list, item);
-        return PlaceMark(GetMatch(parentBitmap, list, item, topMargin, deepSeek, maxWrongPixels, lastDitch, italicFactor, placement), placement);
+        var match = GetMatch(parentBitmap, list, item, topMargin, deepSeek, maxWrongPixels, lastDitch, italicFactor, placement);
+        if (placement == BaselinePlacement.OnBaseline && match is { Text: "„", ExpandCount: 2 })
+        {
+            // Both halves of a low quote are commas. A comma and a period side by side (",..")
+            // fit a two-part "„" entry too - keep the first glyph on its own then.
+            var index = list.IndexOf(item);
+            if (index + 1 < list.Count && !HangsBelowBaseline(list[index + 1]))
+            {
+                match = GetMatchSingle(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels, lastDitch, placement: placement);
+            }
+        }
+
+        return PlaceMark(match, placement, item);
     }
+
+    /// <summary>
+    /// The glyph reaches more than a twentieth of the line height below the baseline, like a
+    /// comma's tail (a period sits on it).
+    /// </summary>
+    private static bool HangsBelowBaseline(ImageSplitterItem2 item) =>
+        item.Baseline is { } baseline && item.NikseBitmap != null &&
+        item.Top + item.NikseBitmap.Height - baseline > Math.Max(1, baseline / 20);
 
     private NOcrChar? GetMatch(NikseBitmap2 parentBitmap, List<ImageSplitterItem2> list, ImageSplitterItem2 item, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch, double italicFactor, BaselinePlacement placement)
     {
@@ -571,11 +591,13 @@ public class NOcrDb
     /// with a similar gap and weight - in a heavy outlined font the pair is far wider than any
     /// trained one and came out as "ьІ". A soft sign directly followed (no space) by a dotless bar
     /// of the same height and top is that letter in any font: a capital "І" after a lowercase
-    /// "ь" is taller, and the dotted "і" isn't a bar.
+    /// "ь" is taller, and a dotted "і"/"ї" is taller than its neighbours too. In heavy italic the
+    /// soft sign half can read as a hard sign and the bar as "Ї" or "/" ("тъЇ", "мъ/"); neither
+    /// "ъ" nor "ь" is ever followed by such a bar, so those count as well.
     /// </summary>
     private NOcrChar? ComposeYery(NOcrChar? softSign, List<ImageSplitterItem2> list, ImageSplitterItem2 item, bool deepSeek, int maxWrongPixels, bool lastDitch)
     {
-        if (softSign?.Text is not ("ь" or "Ь") || item.NikseBitmap == null)
+        if (softSign?.Text is not ("ь" or "Ь" or "ъ" or "Ъ") || item.NikseBitmap == null)
         {
             return softSign;
         }
@@ -597,14 +619,14 @@ public class NOcrDb
         }
 
         var bar = GetMatchSingle(next.NikseBitmap, next.Top, deepSeek, maxWrongPixels, lastDitch);
-        if (bar?.Text is not ("І" or "l" or "I" or "|" or "/" or "1"))
+        if (bar?.Text is not ("І" or "і" or "Ї" or "ї" or "l" or "I" or "|" or "/" or "1"))
         {
             return softSign;
         }
 
         return new NOcrChar(softSign)
         {
-            Text = softSign.Text == "ь" ? "ы" : "Ы",
+            Text = softSign.Text is "ь" or "ъ" ? "ы" : "Ы",
             ExpandCount = 2,
         };
     }
@@ -884,12 +906,16 @@ public class NOcrDb
 
     /// <summary>
     /// Commas and quotes are the same shapes at different heights: a comma above the baseline
-    /// is an apostrophe ("we,ve"), a raised quote on the baseline is a comma or a low quote.
+    /// is an apostrophe ("we,ve"), a raised quote on the baseline is a comma or a low quote. A
+    /// "comma" that doesn't hang below the baseline and is about as wide as tall is a period -
+    /// in heavy fonts a solid dot fits a comma entry scaled down.
     /// </summary>
-    private static NOcrChar? PlaceMark(NOcrChar? match, BaselinePlacement placement)
+    private static NOcrChar? PlaceMark(NOcrChar? match, BaselinePlacement placement, ImageSplitterItem2 item)
     {
         var text = (placement, match?.Text) switch
         {
+            (BaselinePlacement.OnBaseline, ",") when !HangsBelowBaseline(item) &&
+                                                     item.NikseBitmap!.Height * 2 <= item.NikseBitmap.Width * 3 => ".",
             (BaselinePlacement.AboveBaseline, ",") => "'",
             (BaselinePlacement.AboveBaseline, "„") => "\"",
             (BaselinePlacement.OnBaseline, "'" or "’" or "‘" or "`" or "´") => ",",

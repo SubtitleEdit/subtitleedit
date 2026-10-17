@@ -116,4 +116,50 @@ public class NOcrDbBaselinePlacementTests
         Assert.Equal(",", Match(db, Line(mark, Baseline - 6)));
         Assert.Equal("'", Match(db, Line(mark, 2)));
     }
+
+    [Fact]
+    public void SquareDotReadAsComma_NotHangingBelowBaseline_IsPeriod()
+    {
+        // A heavy dot fits a comma entry scaled down; it sits on the baseline instead of hanging.
+        var dot = Solid(8, 8);
+        var db = new NOcrDb(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".nocr"));
+        db.Add(Entry(",", dot, Baseline - 8));
+
+        Assert.Equal(".", Match(db, Line(dot, Baseline - 8)));
+    }
+
+    [Fact]
+    public void CommaHangingBelowBaseline_StaysComma()
+    {
+        var comma = Solid(8, 14);
+        var db = new NOcrDb(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".nocr"));
+        db.Add(Entry(",", comma, Baseline - 8));
+
+        Assert.Equal(",", Match(db, Line(comma, Baseline - 8)));
+    }
+
+    [Theory]
+    [InlineData("ъ", "Ї", "ы")]
+    [InlineData("ъ", "/", "ы")]
+    [InlineData("ь", "і", "ы")]
+    [InlineData("Ъ", "І", "Ы")]
+    public void SoftOrHardSignFollowedBySameHeightBar_IsYery(string sign, string bar, string expected)
+    {
+        // Heavy italic: the soft-sign half reads as a hard sign, the bar as "Ї" or "/".
+        var signBitmap = Solid(14, 20);
+        var barBitmap = Solid(4, 20);
+        var db = new NOcrDb(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".nocr"));
+        db.Add(Entry(sign, signBitmap, 10));
+        db.Add(Entry(bar, barBitmap, 10));
+        var line = new List<ImageSplitterItem2>
+        {
+            new(0, 10, signBitmap) { Top = 10, Baseline = Baseline },
+            new(16, 10, barBitmap) { Top = 10, Baseline = Baseline },
+        };
+
+        var match = db.GetMatch(new NikseBitmap2(200, 40), line, line[0], 10, true, 25);
+
+        Assert.Equal(expected, match?.Text);
+        Assert.Equal(2, match?.ExpandCount);
+    }
 }
