@@ -17,6 +17,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Features.Options.CustomErrorRules;
 using Nikse.SubtitleEdit.Features.Options.DoNotBreakAfterList;
 using Nikse.SubtitleEdit.Features.Options.Settings.MinGapCalculate;
 using Nikse.SubtitleEdit.Features.Options.Settings.SyntaxColorTooWideSettings;
@@ -270,6 +271,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _colorWordsPerMinute;
     [ObservableProperty] private bool _colorOverlap;
     [ObservableProperty] private bool _colorGapTooShort;
+    [ObservableProperty] private bool _colorCustomErrorRules;
+    private List<SeCustomErrorRule> _customErrorRules = new();
     [ObservableProperty] private Color _errorColor;
 
     [ObservableProperty] private ObservableCollection<VideoPlayerItem> _videoPlayers;
@@ -1125,6 +1128,8 @@ public partial class SettingsViewModel : ObservableObject
         ColorOverlap = general.ColorTimeCodeOverlap;
         ColorGapTooShort = general.ColorGapTooShort;
         ErrorColor = general.ErrorColor.FromHexToColor();
+        ColorCustomErrorRules = general.ColorCustomErrorRules;
+        _customErrorRules = general.CustomErrorRules.Select(CopyCustomErrorRule).ToList();
 
         _editCustomContinuationStyle = new CustomContinuationStyle(general.CustomContinuationStyle);
 
@@ -2009,6 +2014,8 @@ public partial class SettingsViewModel : ObservableObject
         general.ColorTimeCodeOverlap = ColorOverlap;
         general.ColorGapTooShort = ColorGapTooShort;
         general.ErrorColor = ErrorColor.FromColorToHex();
+        general.ColorCustomErrorRules = ColorCustomErrorRules;
+        general.CustomErrorRules = _customErrorRules.Select(CopyCustomErrorRule).ToList();
 
         general.CustomContinuationStyle = new CustomContinuationStyle(_editCustomContinuationStyle);
 
@@ -2376,6 +2383,35 @@ public partial class SettingsViewModel : ObservableObject
 
         return animation.RunAsync(control);
     }
+
+    [RelayCommand]
+    private async Task EditCustomErrorRules()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var viewModel = await _windowService.ShowDialogAsync<CustomErrorRulesWindow, CustomErrorRulesViewModel>(Window, vm =>
+        {
+            vm.Initialize(ColorCustomErrorRules, _customErrorRules);
+        });
+
+        if (viewModel.OkPressed)
+        {
+            ColorCustomErrorRules = viewModel.IsHighlightEnabled;
+            _customErrorRules = viewModel.GetRules();
+        }
+    }
+
+    private static SeCustomErrorRule CopyCustomErrorRule(SeCustomErrorRule rule) => new()
+    {
+        Enabled = rule.Enabled,
+        Name = rule.Name,
+        Pattern = rule.Pattern,
+        MatchCase = rule.MatchCase,
+        Color = rule.Color,
+    };
 
     [RelayCommand]
     private async Task EditTextTooWideSettings()
@@ -3051,6 +3087,7 @@ public partial class SettingsViewModel : ObservableObject
                 Se.Settings.General.ColorTimeCodeOverlap = g.ColorTimeCodeOverlap;
                 Se.Settings.General.ColorGapTooShort = g.ColorGapTooShort;
                 Se.Settings.General.ErrorColor = g.ErrorColor;
+                Se.Settings.General.ColorCustomErrorRules = g.ColorCustomErrorRules; // the rules themselves are user data and stay
             }
         }
 

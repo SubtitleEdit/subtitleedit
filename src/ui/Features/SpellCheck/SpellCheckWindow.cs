@@ -78,6 +78,11 @@ public class SpellCheckWindow : Window
         // bare Space instead.
         UiUtil.FocusOnFirstActivation(this, textBoxWord); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
+
+        // Remember where the user parked the window, e.g. off to the side of the text (#9762).
+        // The size is not restored: the window is not resizable and sizes to its content.
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
     private static TextBox MakeWordTextBox(SpellCheckViewModel vm)

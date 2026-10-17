@@ -80,6 +80,7 @@ using Nikse.SubtitleEdit.Features.Main.GridColumns;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Features.Main.MainHelpers;
 using Nikse.SubtitleEdit.Features.Ocr;
+using Nikse.SubtitleEdit.Features.Options.CustomErrorRules;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts.CustomShortcuts;
 using Nikse.SubtitleEdit.Features.Options.Language;
 using Nikse.SubtitleEdit.Features.Options.Plugins;
@@ -2109,6 +2110,47 @@ public partial class MainViewModel :
     private async Task ShowHelp()
     {
         UiUtil.ShowHelp("features/main-window");
+    }
+
+    /// <summary>The user's regex rules that color a line as an error (#10136).</summary>
+    [RelayCommand]
+    private async Task ShowCustomErrorRules()
+    {
+        var general = Se.Settings.General;
+        var result = await ShowDialogAsync<CustomErrorRulesWindow, CustomErrorRulesViewModel>(vm =>
+        {
+            vm.Initialize(general.ColorCustomErrorRules, general.CustomErrorRules);
+        });
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        general.ColorCustomErrorRules = result.IsHighlightEnabled;
+        general.CustomErrorRules = result.GetRules();
+        Se.SaveSettings();
+        RefreshCustomErrorRules();
+    }
+
+    [RelayCommand]
+    private void ToggleCustomErrorRules()
+    {
+        var general = Se.Settings.General;
+        general.ColorCustomErrorRules = !general.ColorCustomErrorRules;
+        RefreshCustomErrorRules();
+        ShowStatus(general.ColorCustomErrorRules
+            ? Se.Language.Options.Settings.CustomErrorRulesOn
+            : Se.Language.Options.Settings.CustomErrorRulesOff);
+    }
+
+    private void RefreshCustomErrorRules()
+    {
+        CustomErrorRuleMatcher.Invalidate();
+        foreach (var row in Subtitles)
+        {
+            row.RefreshAfterSettingsChanged();
+        }
     }
 
     [RelayCommand]
@@ -15039,6 +15081,7 @@ public partial class MainViewModel :
         UpdateVideoOffsetStatus();
         SetLibSeSettings();
         SubtitleLineViewModel.ErrorColor = Se.Settings.General.ErrorColor.FromHexToColor();
+        CustomErrorRuleMatcher.Invalidate();
 
         // Settings that feed into CPS / line-length / colour calculations
         // (CpsLineLengthStrategy, SubtitleLineMaximumLength, the various
@@ -16530,6 +16573,25 @@ public partial class MainViewModel :
 
     [RelayCommand]
     private void MoveAllLinesXMsForward() => MoveLinesByStep(1, MoveLinesScope.All);
+
+    // #9367: the same moves by exactly one frame of the current frame rate.
+    [RelayCommand]
+    private void MoveSelectedLinesOneFrameBack() => MoveLinesByMs(FramesToMilliseconds(-1), MoveLinesScope.Selected);
+
+    [RelayCommand]
+    private void MoveSelectedLinesOneFrameForward() => MoveLinesByMs(FramesToMilliseconds(1), MoveLinesScope.Selected);
+
+    [RelayCommand]
+    private void MoveSelectedLinesAndForwardOneFrameBack() => MoveLinesByMs(FramesToMilliseconds(-1), MoveLinesScope.SelectedAndForward);
+
+    [RelayCommand]
+    private void MoveSelectedLinesAndForwardOneFrameForward() => MoveLinesByMs(FramesToMilliseconds(1), MoveLinesScope.SelectedAndForward);
+
+    [RelayCommand]
+    private void MoveAllLinesOneFrameBack() => MoveLinesByMs(FramesToMilliseconds(-1), MoveLinesScope.All);
+
+    [RelayCommand]
+    private void MoveAllLinesOneFrameForward() => MoveLinesByMs(FramesToMilliseconds(1), MoveLinesScope.All);
 
     // Per-shortcut steps, configured with the gear button in Options > Shortcuts (like the custom
     // video seek amounts). A slot's value is shared by its back and forward commands.
@@ -20636,6 +20698,70 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void SplitAtVideoPositionAndPlay()
+    {
+        SplitSelectedLineAndPlay(true, false);
+    }
+
+    [RelayCommand]
+    private void SplitAtTextBoxCursorPositionAndPlay()
+    {
+        SplitSelectedLineAndPlay(false, true);
+    }
+
+    [RelayCommand]
+    private void SplitAtVideoPositionAndTextBoxCursorPositionAndPlay()
+    {
+        SplitSelectedLineAndPlay(true, true);
+    }
+
+    /// <summary>
+    /// SE 4's "split ... and play" (#9180): split, move on to the second part and play from where
+    /// the line was cut, so a long block can be chopped up in one pass without play/pause per cut.
+    /// A split at the video position while the video plays keeps playing undisturbed - the cut is
+    /// where the video already is.
+    /// </summary>
+    private void SplitSelectedLineAndPlay(bool atVideoPosition, bool atTextBoxPosition)
+    {
+        var s = SelectedSubtitle;
+        if (s == null)
+        {
+            return;
+        }
+
+        var countBefore = Subtitles.Count;
+        SplitLine(atVideoPosition, atTextBoxPosition, s);
+        if (Subtitles.Count <= countBefore)
+        {
+            return;
+        }
+
+        var secondIndex = Subtitles.IndexOf(s) + 1;
+        var second = Subtitles.GetOrNull(secondIndex);
+        if (second == null)
+        {
+            return;
+        }
+
+        SelectAndScrollToRow(secondIndex);
+
+        var vp = GetVideoPlayerControl();
+        if (vp == null || string.IsNullOrEmpty(_videoFileName))
+        {
+            return;
+        }
+
+        if (atVideoPosition && vp.IsPlaying)
+        {
+            return;
+        }
+
+        SeekVideoPlayer(vp, second.StartTime.TotalSeconds);
+        PinPlayheadTo(second.StartTime.TotalSeconds);
+        PlayVideo(vp);
+    }
+
+    [RelayCommand]
     private async Task AssistedSplit()
     {
         var s = SelectedSubtitle;
@@ -22125,6 +22251,61 @@ public partial class MainViewModel :
     private void MoveTextFromCursorToNextAndGoToNextAndPlayAndPause()
     {
         WithoutReferenceOnlyRows(() => MoveTextFromCursorToNext(play: true, pauseAtEnd: true));
+    }
+
+    [RelayCommand]
+    private void MoveTextBeforeCursorToPrevious()
+    {
+        WithoutReferenceOnlyRows(MoveTextBeforeCursorToPreviousCore);
+    }
+
+    /// <summary>
+    /// The mirror of <see cref="MoveTextFromCursorToNext"/> (#9537): the text before the caret is
+    /// appended to the previous subtitle and the rest stays on the current line, which stays
+    /// selected with the caret at its start - a speech-to-text line that started too early is
+    /// fixed in one keystroke instead of a split plus a merge.
+    /// </summary>
+    private void MoveTextBeforeCursorToPreviousCore()
+    {
+        var s = SelectedSubtitle;
+        if (s == null || s.IsReferenceOnly)
+        {
+            return;
+        }
+
+        var index = Subtitles.IndexOf(s);
+        var prev = index < 0 ? null : GetPreviousWorkingRow(index);
+        if (prev == null)
+        {
+            return;
+        }
+
+        var isOriginal = EditTextBoxOriginal.IsFocused && CanEditOriginal;
+        var textBox = isOriginal ? EditTextBoxOriginal : EditTextBox;
+        var currentText = (isOriginal ? s.OriginalText : s.Text) ?? string.Empty;
+
+        var caret = Math.Clamp(textBox.SelectionStart, 0, currentText.Length);
+        var textBefore = currentText.Substring(0, caret).Trim();
+        var textAfter = currentText.Substring(caret).Trim();
+        if (textBefore.Length == 0)
+        {
+            return;
+        }
+
+        if (isOriginal)
+        {
+            prev.OriginalText = ((prev.OriginalText ?? string.Empty).Trim() + Environment.NewLine + textBefore).Trim();
+            s.OriginalText = textAfter;
+        }
+        else
+        {
+            prev.Text = (prev.Text.Trim() + Environment.NewLine + textBefore).Trim();
+            s.Text = textAfter;
+        }
+
+        // The text box picks up the new text through its binding; put the caret at the start after that.
+        Dispatcher.UIThread.Post(() => textBox.Select(0, 0));
+        _updateAudioVisualizer = true;
     }
 
     private void MoveTextFromCursorToNext(bool play, bool pauseAtEnd = false)

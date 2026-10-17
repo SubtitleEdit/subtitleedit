@@ -99,9 +99,10 @@ public partial class ModifySelectionViewModel : ObservableObject, IClosingCleanu
         Dispatcher.UIThread.Post(() =>
         {
             var matches = new List<PreviewItem>();
-            foreach (var item in _allSubtitles)
+            for (var i = 0; i < _allSubtitles.Count; i++)
             {
-                if (rule.IsMatch(item))
+                var item = _allSubtitles[i];
+                if (IsMatch(rule, i))
                 {
                     matches.Add(new PreviewItem(item.Number, true, item.StartTime, item.Duration, item.Text, item));
                 }
@@ -109,6 +110,13 @@ public partial class ModifySelectionViewModel : ObservableObject, IClosingCleanu
 
             Subtitles = new ObservableCollection<PreviewItem>(matches);
         });
+    }
+
+    private bool IsMatch(ModifySelectionRule rule, int index)
+    {
+        var prev = index > 0 ? _allSubtitles[index - 1] : null;
+        var next = index < _allSubtitles.Count - 1 ? _allSubtitles[index + 1] : null;
+        return rule.IsMatch(_allSubtitles[index], prev, next);
     }
 
     private void LoadSettings()
@@ -185,9 +193,10 @@ public partial class ModifySelectionViewModel : ObservableObject, IClosingCleanu
         {
             var excluded = new HashSet<SubtitleLineViewModel>(
                 Subtitles.Where(s => !s.Apply).Select(s => s.Subtitle));
-            foreach (var item in _allSubtitles)
+            for (var i = 0; i < _allSubtitles.Count; i++)
             {
-                if (rule.IsMatch(item) && !excluded.Contains(item))
+                var item = _allSubtitles[i];
+                if (IsMatch(rule, i) && !excluded.Contains(item))
                 {
                     Selection.Add(item);
                 }

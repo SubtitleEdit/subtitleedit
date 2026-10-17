@@ -251,7 +251,7 @@ public static class Se4ShortcutsImporter
         ["MainTextBoxSplitAtCursor"] = nameof(MainViewModel.SplitAtTextBoxCursorPositionCommand),
         ["MainTextBoxSplitAtCursorAndAutoBr"] = nameof(MainViewModel.SplitAtTextBoxCursorPositionCommand),
         ["MainTextBoxSplitAtCursorAndVideoPos"] = nameof(MainViewModel.SplitAtVideoPositionAndTextBoxCursorPositionCommand),
-        ["MainTextBoxSplitAtCursorAndVideoPosPlay"] = nameof(MainViewModel.SplitAtVideoPositionAndTextBoxCursorPositionCommand),
+        ["MainTextBoxSplitAtCursorAndVideoPosPlay"] = nameof(MainViewModel.SplitAtVideoPositionAndTextBoxCursorPositionAndPlayCommand),
         ["MainTextBoxMoveLastWordDown"] = nameof(MainViewModel.MoveLastWordToNextSubtitleCommand),
         ["MainTextBoxMoveLastWordDownCurrent"] = nameof(MainViewModel.MoveLastWordFromFirstLineDownCurrentSubtitleCommand),
         ["MainTextBoxMoveFirstWordUpCurrent"] = nameof(MainViewModel.MoveFirstWordFromNextLineUpCurrentSubtitleCommand),

@@ -125,6 +125,15 @@ public class LanguageSettings
     public string ColorOverlap { get; set; }
     public string ColorGapTooShort { get; set; }
     public string ErrorBackgroundColor { get; set; }
+    public string CustomErrorRules { get; set; }
+    public string CustomErrorRulesHighlight { get; set; }
+    public string CustomErrorRulesHint { get; set; }
+    public string CustomErrorRuleSelected { get; set; }
+    public string CustomErrorRuleTest { get; set; }
+    public string CustomErrorRuleTestMatch { get; set; }
+    public string CustomErrorRuleTestNoMatch { get; set; }
+    public string CustomErrorRulesOn { get; set; }
+    public string CustomErrorRulesOff { get; set; }
     public string WaveformDrawGridLines { get; set; }
     public string WaveformUseSkiaRenderer { get; set; }
     public string WaveformCenterVideoPositionAlsoWhenPaused { get; set; }
@@ -490,6 +499,15 @@ public class LanguageSettings
         ColorOverlap = "Color time code overlap";
         ColorGapTooShort = "Color if gap is too short";
         ErrorBackgroundColor = "Error background color";
+        CustomErrorRules = "Custom error rules";
+        CustomErrorRulesHighlight = "Color lines matching a custom error rule";
+        CustomErrorRulesHint = "A line whose text matches an enabled rule's regular expression is colored with the rule's color and counts as an error (List errors, Go to next error). The first matching rule decides the color.";
+        CustomErrorRuleSelected = "Selected rule";
+        CustomErrorRuleTest = "Test";
+        CustomErrorRuleTestMatch = "The selected rule matches the sample text";
+        CustomErrorRuleTestNoMatch = "The selected rule does not match the sample text";
+        CustomErrorRulesOn = "Custom error rules: on";
+        CustomErrorRulesOff = "Custom error rules: off";
         WaveformDrawGridLines = "Draw grid lines";
         WaveformUseSkiaRenderer = "Use experimental fast renderer";
         WaveformFocusOnMouseOver = "Focus on mouse over";

@@ -12,6 +12,7 @@ public class LanguageErrorList
     public string LineTooLong { get; set; }
     public string LineTooWide { get; set; }
     public string GapTooShort { get; set; }
+    public string CustomRule { get; set; }
     public string TooManyLinesHint { get; set; }
     public string CharactersPerSecondHint { get; set; }
     public string DurationTooShortHint { get; set; }
@@ -20,6 +21,7 @@ public class LanguageErrorList
     public string LineTooWideHint { get; set; }
     public string OverlapHint { get; set; }
     public string GapTooShortHint { get; set; }
+    public string CustomRuleHint { get; set; }
     public string DetailXGreaterThanY { get; set; }
     public string DetailXLessThanY { get; set; }
     public string DetailOverlapFromPrevious { get; set; }
@@ -46,6 +48,7 @@ public class LanguageErrorList
         LineTooLong = "Line too long";
         LineTooWide = "Line too wide";
         GapTooShort = "Gap too short";
+        CustomRule = "Custom rule";
         TooManyLinesHint = "More lines than the maximum number of lines";
         CharactersPerSecondHint = "Characters per second above the maximum";
         DurationTooShortHint = "Shorter than the minimum display time";
@@ -54,6 +57,7 @@ public class LanguageErrorList
         LineTooWideHint = "A line is wider (in pixels) than the maximum width";
         OverlapHint = "Overlaps the previous or next line";
         GapTooShortHint = "Gap to the previous or next line is below the minimum";
+        CustomRuleHint = "The text matches one of your custom error rules";
         DetailXGreaterThanY = "{0} > {1}";
         DetailXLessThanY = "{0} < {1}";
         DetailOverlapFromPrevious = "from previous: {0} ms";

@@ -248,6 +248,11 @@ public class ModifySelectionRule
             },
             new()
             {
+                RuleType = RuleType.HasErrors,
+                Name = l.HasErrors,
+            },
+            new()
+            {
                 RuleType = RuleType.BlankLines,
                 Name = Se.Language.General.BlankLines,
             },
@@ -288,7 +293,9 @@ public class ModifySelectionRule
         return list;
     }
 
-    internal bool IsMatch(SubtitleLineViewModel item)
+    /// <param name="prev">The line before <paramref name="item"/> (gap and overlap errors), if any.</param>
+    /// <param name="next">The line after <paramref name="item"/> (gap and overlap errors), if any.</param>
+    internal bool IsMatch(SubtitleLineViewModel item, SubtitleLineViewModel? prev = null, SubtitleLineViewModel? next = null)
     {
         // Evaluate based on RuleType
         var text = item.Text ?? string.Empty;
@@ -433,6 +440,10 @@ public class ModifySelectionRule
 
             case RuleType.Forced:
                 return item.Forced;
+
+            // The same rules that color a line in the subtitle grid (#9621).
+            case RuleType.HasErrors:
+                return item.HasErrors(prev, next);
 
             case RuleType.BlankLines:
                 return string.IsNullOrWhiteSpace(text);

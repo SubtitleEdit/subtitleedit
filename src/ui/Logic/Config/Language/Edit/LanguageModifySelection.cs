@@ -27,6 +27,7 @@ public class LanguageModifySelection
     public string MoreThanTwoLines { get; set; }
     public string Bookmarked { get; set; }
     public string Forced { get; set; } = string.Empty;
+    public string HasErrors { get; set; } = string.Empty;
     public string BookmarkContains { get; set; }
     public string HearingImpaired { get; set; }
     public string HearingImpairedBrackets { get; set; }
@@ -68,6 +69,7 @@ public class LanguageModifySelection
         MoreThanTwoLines = "More than two lines";
         Bookmarked = "Bookmarked";
         Forced = "Forced";
+        HasErrors = "Has errors (highlighted in the list)";
         BookmarkContains = "Bookmark contains";
         HearingImpaired = "Hearing impaired (SDH)";
         HearingImpairedBrackets = "Brackets [...]";
