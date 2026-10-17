@@ -19,7 +19,7 @@ public class NOcrTrainerTests
 
     private static string TestFontName => SKTypeface.Default.FamilyName;
 
-    private static NOcrDb Train(string characters, bool italic = false)
+    private static NOcrDb Train(string characters, bool italic = false, int? randomSeed = null)
     {
         var db = new NOcrDb(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".nocr"));
         var trainer = new NOcrTrainer();
@@ -29,6 +29,7 @@ public class NOcrTrainerTests
             FontSize = FontSize,
             CharactersToTrain = characters,
             IncludeItalic = italic,
+            RandomSeed = randomSeed,
         };
         var learned = trainer.Train(settings, db);
         Assert.True(learned > 0, "training should learn at least one character");
@@ -226,6 +227,25 @@ public class NOcrTrainerTests
         // Top margins, aspect gates and error budgets used to be absolute pixels at the trained
         // size, so "." and "i" (tall, thin, or small) never matched at another size.
         var db = Train("This.");
+
+        var result = RecognizeAtSize(db, "This is his.", FontSize * 2);
+
+        Assert.Equal("This is his.", result);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(5)]
+    [InlineData(7)]
+    [InlineData(8)]
+    public void TrainedDb_RecognizesSmallGlyphAtTwiceTheTrainedSize_ForAnySeed(int seed)
+    {
+        // Random lines on a dot used to run along its anti-aliased rim and missed the rim of the
+        // bigger dot - these seeds all read "." as "*" before the trainer kept only the lines
+        // that also fit the glyph rendered bigger.
+        var db = Train("This.", randomSeed: seed);
 
         var result = RecognizeAtSize(db, "This is his.", FontSize * 2);
 
