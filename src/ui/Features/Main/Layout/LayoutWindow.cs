@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -131,6 +132,70 @@ public class LayoutWindow : Window
         buttonCancel.Click += (_, _) => Close();
 
         Content = EditorChrome.MakeRoot(new ScrollViewer { Content = wrapPanel }, EditorChrome.MakeDockedButtonBar(null, buttonCancel));
+
+        // Tunnel, so the scroll viewer doesn't take Up/Down for scrolling and a focused button doesn't take Enter
+        AddHandler(KeyDownEvent, (_, e) =>
+        {
+            if (e.KeyModifiers != KeyModifiers.None)
+            {
+                return;
+            }
+
+            if (e.Key is Key.Up or Key.Down)
+            {
+                e.Handled = true;
+                MoveVertically(e.Key == Key.Up ? -1 : 1);
+            }
+            else if (e.Key == Key.Enter && _focusedLayout >= 0)
+            {
+                e.Handled = true;
+                _vm.SelectedLayout = _focusedLayout + 1;
+                _vm.OkPressed = true;
+                Close();
+            }
+        }, RoutingStrategies.Tunnel);
+    }
+
+    /// <summary>
+    /// Moves the picked card one row up/down in the wrap panel, keeping the column.
+    /// </summary>
+    private void MoveVertically(int direction)
+    {
+        if (_focusedLayout < 0)
+        {
+            ResetOldLayout();
+            _focusedLayout = direction > 0 ? 0 : LayoutCount - 1;
+            SetHighlight(_borders[_focusedLayout], true);
+            _borders[_focusedLayout].BringIntoView();
+            return;
+        }
+
+        var columns = 0;
+        foreach (var border in _borders)
+        {
+            if (Math.Abs(border.Bounds.Y - _borders[0].Bounds.Y) > 1)
+            {
+                break;
+            }
+
+            columns++;
+        }
+
+        if (columns <= 0)
+        {
+            return;
+        }
+
+        var newIndex = _focusedLayout + direction * columns;
+        if (newIndex < 0 || newIndex >= LayoutCount)
+        {
+            return;
+        }
+
+        ResetOldLayout();
+        _focusedLayout = newIndex;
+        SetHighlight(_borders[_focusedLayout], true);
+        _borders[_focusedLayout].BringIntoView();
     }
 
     /// <summary>
