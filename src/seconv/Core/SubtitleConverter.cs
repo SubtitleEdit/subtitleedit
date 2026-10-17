@@ -962,8 +962,10 @@ internal class SubtitleConverter
         foreach (var entry in options.Patterns)
         {
             // Support comma-separated patterns within a single value for backward compatibility,
-            // but only when the entry itself is not a rooted path (to avoid splitting paths that contain commas).
-            var subPatterns = !Path.IsPathRooted(entry) && entry.Contains(',')
+            // but only when the entry itself is not a rooted path or an existing file - file names
+            // contain commas too ("00800 - 22 - Subtitle (PGS), English, 1792 captions.sup").
+            var subPatterns = !Path.IsPathRooted(entry) && entry.Contains(',') &&
+                              !File.Exists(Path.Combine(baseFolder, entry.Trim()))
                 ? entry.Split(',', StringSplitOptions.RemoveEmptyEntries)
                 : (IEnumerable<string>)[entry];
 
