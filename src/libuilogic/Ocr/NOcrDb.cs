@@ -259,7 +259,8 @@ public class NOcrDb
                 IsExpandedLineMatch(oc, targetItem, nikseBitmap, list, listIndex))
             {
                 var size = GetTotalSize(listIndex, list, oc.ExpandCount);
-                if (Math.Abs(size.X - oc.Width) < 3 && Math.Abs(size.Y - oc.Height) < 3)
+                if (Math.Abs(size.X - oc.Width) < 3 && Math.Abs(size.Y - oc.Height) < 3 &&
+                    IsPlausibleGroup(oc, list, listIndex))
                 {
                     return oc;
                 }
@@ -282,7 +283,8 @@ public class NOcrDb
                 if (Math.Abs(heightToWidthPercent - oc.HeightToWidthPercent) < 15 &&
                     Math.Abs(size.X - oc.Width) < 25 && Math.Abs(size.Y - oc.Height) < 20 &&
                     IsScaleRatioSane(size.X, oc.Width) && IsScaleRatioSane(size.Y, oc.Height) &&
-                    IsExpandedLineMatchScaled(oc, targetItem, nikseBitmap, size.X, size.Y, list, listIndex))
+                    IsExpandedLineMatchScaled(oc, targetItem, nikseBitmap, size.X, size.Y, list, listIndex) &&
+                    IsPlausibleGroup(oc, list, listIndex))
                 {
                     return oc;
                 }
@@ -290,6 +292,32 @@ public class NOcrDb
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// An accented letter split into parts ("û" as "u" plus a separate "^") has every part but
+    /// the letter itself above the letter's top. Two bars side by side ("ll") or a bar with an
+    /// apostrophe next to its top ("I'") fit a slanted "û"/"ù" entry scaled onto them, but no
+    /// part of those sits above the other.
+    /// </summary>
+    private static bool IsPlausibleGroup(NOcrChar oc, List<ImageSplitterItem2> list, int listIndex)
+    {
+        if (oc.Text.Length != 1 || !char.IsLetter(oc.Text[0]) ||
+            oc.Text.Normalize(System.Text.NormalizationForm.FormD).Length < 2 ||
+            listIndex < 0 || listIndex + oc.ExpandCount > list.Count)
+        {
+            return true;
+        }
+
+        var parts = list.GetRange(listIndex, oc.ExpandCount);
+        if (parts.Any(p => p.NikseBitmap == null))
+        {
+            return true;
+        }
+
+        var letter = parts.MaxBy(p => p.NikseBitmap!.Height)!;
+        var tolerance = Math.Max(2, letter.NikseBitmap!.Height / 6);
+        return parts.All(p => p == letter || p.Top + p.NikseBitmap!.Height <= letter.Top + tolerance);
     }
 
     /// <summary>
@@ -707,6 +735,7 @@ public class NOcrDb
         // of area leaves normal letters unaffected and only tightens tiny glyphs; the floor of 8
         // keeps cross-size matching of small glyphs possible.
         var areaErrorCap = Math.Max(8, bitmap.Width * bitmap.Height / 8);
+        var hasRowGap = HasGapOrNeck(bitmap);
 
         foreach (var pass in MatchPasses)
         {
@@ -743,7 +772,8 @@ public class NOcrDb
             var bestLowerRate = double.MaxValue;
             foreach (var oc in OcrCharacters)
             {
-                if (!PassFilter(bitmap, heightToWidthPercent, oc, topMargin, pass) || !FitsBaselinePlacement(oc, placement))
+                if (!PassFilter(bitmap, heightToWidthPercent, oc, topMargin, pass) || !FitsBaselinePlacement(oc, placement) ||
+                    !hasRowGap && IsDottedOrAccentedI(oc.Text))
                 {
                     continue;
                 }
@@ -820,6 +850,7 @@ public class NOcrDb
             }
 
             best = ResolveCaseTwin(best, bestRate, bestUpper, bestUpperRate, bestLower, bestLowerRate, bitmap.Height, topMargin);
+            best = PreferUnaccented(bitmap, best, bestRate);
 
             if (best != null)
             {
@@ -1115,6 +1146,77 @@ public class NOcrDb
     // more of them than Latin ("о"/"О", "т"/"Т", "и"/"И", ...).
     private const string CaseTwinLetters = "cCoOsSuUvVwWxXzZøØ" + NOcrCaseFixer.CyrillicCaseTwins;
     private const double CaseTwinRateMargin = 0.01;
+
+    /// <summary>
+    /// "i", "j" and their accented forms are a stem with a separate dot or accent above it, so the
+    /// glyph has an empty row between them. A slanted italic "l" is one solid stroke and fitted
+    /// an italic "ì"/"Ì" entry, whose grave continues the slant of the stem ("shouìders").
+    /// </summary>
+    private static bool IsDottedOrAccentedI(string text) =>
+        text.Length == 1 && "iìíîïjĵÌÍÎÏĴ".Contains(text[0]);
+
+    /// <summary>
+    /// The glyph has a row between a top part and the rest that is empty, or a neck: at most 40%
+    /// of the ink of both the widest row above it and the row below it. In rounded bold fonts the
+    /// corners of the stem reach into the gap under the dot of "i", so the gap row isn't quite
+    /// empty. A solid stroke ("l") keeps its width, and a "t" is wider at the crossbar than below.
+    /// </summary>
+    private static bool HasGapOrNeck(NikseBitmap2 bitmap)
+    {
+        var counts = new int[bitmap.Height];
+        for (var y = 0; y < bitmap.Height; y++)
+        {
+            for (var x = 0; x < bitmap.Width; x++)
+            {
+                if (bitmap.GetAlpha(x, y) > 150)
+                {
+                    counts[y]++;
+                }
+            }
+        }
+
+        var maxAbove = counts.Length > 0 ? counts[0] : 0;
+        for (var y = 1; y < counts.Length - 1; y++)
+        {
+            if (counts[y] == 0 ||
+                counts[y] * 10 <= Math.Min(maxAbove, counts[y + 1]) * 4)
+            {
+                return true;
+            }
+
+            maxAbove = Math.Max(maxAbove, counts[y]);
+        }
+
+        return false;
+    }
+
+    // How much worse (share of wrong points) "i"/"I" may fit and still beat "ì"/"Ì".
+    private const double UnaccentedRateMargin = 0.02;
+
+    /// <summary>
+    /// "ì"/"Ì" must clearly beat "i"/"I". Scaled onto the glyph's box they differ only in the
+    /// shape of the mark on top, so the big round dot of a font the database wasn't trained on
+    /// read as a grave ("thìs", "ìs") all through English text. Only the grave "i": it is rare
+    /// (Italian, word-final), while "í", "Á", "Å", ... are everyday letters whose plain twin
+    /// can fit about as well and must not win.
+    /// </summary>
+    private NOcrChar? PreferUnaccented(NikseBitmap2 bitmap, NOcrChar? best, double bestRate)
+    {
+        var plainText = best?.Text switch
+        {
+            "ì" => "i",
+            "Ì" => "I",
+            _ => null,
+        };
+
+        if (plainText == null)
+        {
+            return best;
+        }
+
+        var (plain, _) = FindBestByText(bitmap, plainText, bestRate + UnaccentedRateMargin);
+        return plain ?? best;
+    }
 
     private static bool IsCaseTwinLetter(string text) => text.Length == 1 && CaseTwinLetters.Contains(text[0]);
 

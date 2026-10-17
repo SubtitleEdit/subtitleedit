@@ -37,6 +37,13 @@ public class NOcrCaseFixer : INOcrCaseFixer
             return result.Text;
         }
 
+        // "p" and "P" are the same shape; only "p" hangs below the baseline ("oPPonent").
+        if (result.Text is "p" or "P" && targetItem.Baseline is { } baseline)
+        {
+            var descent = targetItem.Top + targetItem.NikseBitmap.Height - baseline;
+            return descent > Math.Max(2, baseline / 10) ? "p" : "P";
+        }
+
         // Reference heights: letters with no lookalike in the other case.
         if (result.Text is "e" or "a" or "d" or "t" or "а" or "е")
         {
