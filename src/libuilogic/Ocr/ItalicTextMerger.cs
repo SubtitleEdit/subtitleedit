@@ -37,7 +37,7 @@ public class ItalicTextMerger
             result.Append("</i>");
         }
 
-        return result.ToString();
+        return OcrDigitLetterFixer.Fix(result.ToString());
     }
 
     private static List<TextSegment> GroupIntoSegments(List<BinaryOcrMatcher.CompareMatch> chars)
@@ -119,7 +119,7 @@ public class ItalicTextMerger
             result.Append("</i>");
         }
 
-        return result.ToString();
+        return OcrDigitLetterFixer.Fix(result.ToString());
     }
 
     private static List<TextSegment> GroupIntoSegments(List<NOcrChar> chars)
