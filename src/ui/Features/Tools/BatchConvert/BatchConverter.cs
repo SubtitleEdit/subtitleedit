@@ -234,7 +234,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             vobSubParser.VobSubPacks.Clear();
             imageSubtitle = new OcrSubtitleVobSub(vobSubMergedPackList, palette)
             {
-                IsolateColors = Se.Settings.Tools.BatchConvert.VobSubIsolateColors,
+                IsolateColors = IsolateVobSubColors(),
             };
             //TODO: multi track
         }
@@ -260,7 +260,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                                 var vobSubs = LoadVobSubFromMatroska(track, matroska, out var idx);
                                 imageSubtitle = new OcrSubtitleVobSub(vobSubs, idx?.Palette)
                                 {
-                                    IsolateColors = Se.Settings.Tools.BatchConvert.VobSubIsolateColors,
+                                    IsolateColors = IsolateVobSubColors(),
                                 };
                                 var fileName = Path.GetFileName(item.FileName);
                                 item.OutputFileName = fileName.Substring(0, fileName.LastIndexOf('.')).TrimEnd('.') + ".mkv";
@@ -998,6 +998,19 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 break;
             }
         }
+    }
+
+    /// <summary>
+    /// VobSub colour isolation hands the OCR engine an opaque black-on-white bitmap. nOCR and
+    /// BinaryOCR split letters on the transparency of the original, so for them the whole
+    /// subpicture became one blob read as "*" - isolate only for the other engines.
+    /// </summary>
+    private static bool IsolateVobSubColors()
+    {
+        var engine = Se.Settings.Tools.BatchConvert.OcrEngine;
+        return Se.Settings.Tools.BatchConvert.VobSubIsolateColors &&
+               !engine.Equals("nOcr", StringComparison.OrdinalIgnoreCase) &&
+               !engine.Equals("BinaryOcr", StringComparison.OrdinalIgnoreCase);
     }
 
     private void RunNOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
