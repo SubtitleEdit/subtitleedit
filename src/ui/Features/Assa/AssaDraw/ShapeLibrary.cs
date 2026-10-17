@@ -621,7 +621,7 @@ public static class ShapeLibrary
             Clip(l.DrawClipArtRingingBell, null,
                 """<path fill="#FFC107" d="M50 14 C34 14 26 26 26 42 L26 60 L16 72 L84 72 L74 60 L74 42 C74 26 66 14 50 14 Z"/><g fill="#FFA000"><circle cx="50" cy="80" r="9"/><circle cx="50" cy="10" r="6"/></g>""", DrawLoopEffect.Swing, 1200),
             Clip(l.DrawClipArtPointingHand, null,
-                """<rect fill="#1E88E5" x="28" y="2" width="44" height="14" rx="4"/><g fill="#FFCC80"><rect x="26" y="14" width="48" height="40" rx="14"/><rect x="44" y="36" width="13" height="56" rx="6.5"/><circle cx="34" cy="54" r="7"/><circle cx="66" cy="52" r="7"/></g>""", DrawLoopEffect.Bounce, 800),
+                """<rect fill="#1E88E5" x="30" y="2" width="46" height="14" rx="4"/><g fill="#FFCC80"><rect x="28" y="14" width="50" height="36" rx="14"/><rect x="28" y="34" width="13" height="58" rx="6.5"/><circle cx="48" cy="50" r="7"/><circle cx="61" cy="50" r="7"/><circle cx="72" cy="46" r="6"/></g><path fill="none" stroke="#D99A55" stroke-width="2.5" stroke-linecap="round" d="M41 42 L41 52 M54.5 45 L54.5 53 M67 42 L67 50 M30 30 Q40 34 50 30"/>""", DrawLoopEffect.Bounce, 800),
             Clip(l.DrawClipArtWiFi, null,
                 """<circle fill="#1E88E5" cx="50" cy="78" r="8"/><path fill="none" stroke="#1E88E5" stroke-width="9" stroke-linecap="round" d="M34.44 62.44 A22 22 0 0 1 65.56 62.44 M21.72 49.72 A40 40 0 0 1 78.28 49.72 M8.99 36.99 A58 58 0 0 1 91.01 36.99"/>""", DrawLoopEffect.Pulse, 900),
             Clip(l.DrawClipArtTwinklingStar, null,
