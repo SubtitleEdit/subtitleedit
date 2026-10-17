@@ -158,8 +158,10 @@ public partial class OcrViewModel : ObservableObject
     [ObservableProperty] private bool _isFallbackDatabaseVisible;
     [ObservableProperty] private string _nOcrBinaryOcrFallbackDatabase;
     [ObservableProperty] private string _binaryOcrNOcrFallbackDatabase;
-    [ObservableProperty] private double _imageMaxHeight = 100;
-    [ObservableProperty] private double _imageMaxWidth = 200;
+    private const double DefaultImageMaxHeight = 100;
+    private const double DefaultImageMaxWidth = 200;
+    [ObservableProperty] private double _imageMaxHeight = DefaultImageMaxHeight;
+    [ObservableProperty] private double _imageMaxWidth = DefaultImageMaxWidth;
     [ObservableProperty] private FontFamily _textBoxFontFamily;
     [ObservableProperty] private decimal _textBoxFontSize;
     [ObservableProperty] private FontWeight _textBoxFontWeight;
@@ -5213,6 +5215,37 @@ public partial class OcrViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Ctrl+mouse wheel over the grid zooms the image thumbnails, like Ctrl+plus/minus.
+    /// Attached as a tunnel handler so the grid's ScrollViewer doesn't scroll as well.
+    /// </summary>
+    internal void SubtitleGridPointerWheelChanged(object? sender, PointerWheelEventArgs e)
+    {
+        if (e.Delta.Y == 0 || !(e.KeyModifiers.HasFlag(KeyModifiers.Control) || e.KeyModifiers.HasFlag(KeyModifiers.Meta)))
+        {
+            return;
+        }
+
+        e.Handled = true;
+        ZoomImages(e.Delta.Y > 0);
+    }
+
+    private void ZoomImages(bool zoomIn)
+    {
+        // TableView rows auto-size to their content, so changing the bound
+        // Image Max sizes re-measures the rows - no explicit RowHeight needed.
+        if (zoomIn && ImageMaxHeight < 300)
+        {
+            ImageMaxHeight *= 1.1;
+            ImageMaxWidth *= 1.1;
+        }
+        else if (!zoomIn && ImageMaxHeight > 50)
+        {
+            ImageMaxHeight *= 0.9;
+            ImageMaxWidth *= 0.9;
+        }
+    }
+
     internal void SubtitleGridDoubleTapped()
     {
         CommandInspectLine();
@@ -5256,22 +5289,18 @@ public partial class OcrViewModel : ObservableObject
         else if ((e.Key == Key.Add || e.Key == Key.OemPlus) && e.KeyModifiers.HasFlag(KeyModifiers.Control))
         {
             e.Handled = true;
-            if (ImageMaxHeight < 300)
-            {
-                // TableView rows auto-size to their content, so changing the bound
-                // Image Max sizes re-measures the rows - no explicit RowHeight needed.
-                ImageMaxHeight *= 1.1;
-                ImageMaxWidth *= 1.1;
-            }
+            ZoomImages(true);
         }
         else if ((e.Key == Key.Subtract || e.Key == Key.OemMinus) && e.KeyModifiers.HasFlag(KeyModifiers.Control))
         {
             e.Handled = true;
-            if (ImageMaxHeight > 50)
-            {
-                ImageMaxHeight *= 0.9;
-                ImageMaxWidth *= 0.9;
-            }
+            ZoomImages(false);
+        }
+        else if ((e.Key == Key.D0 || e.Key == Key.NumPad0) && e.KeyModifiers.HasFlag(KeyModifiers.Control))
+        {
+            e.Handled = true;
+            ImageMaxHeight = DefaultImageMaxHeight;
+            ImageMaxWidth = DefaultImageMaxWidth;
         }
         else if (e.Key == Key.V && e.KeyModifiers.HasFlag(KeyModifiers.Control) && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
         {
