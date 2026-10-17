@@ -25,6 +25,7 @@ public enum RuleType
     Bookmarked,
     BookmarkContains,
     Forced,
+    HasErrors,
     BlankLines,
     HearingImpaired,
     Style,
