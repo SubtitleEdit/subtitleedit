@@ -125,6 +125,8 @@ public class LanguageSettingsShortcuts
     public string MoveTextFromCursorToNextAndGoToNextAndPlay { get; set; }
     public string MoveTextFromCursorToNextAndGoToNextAndPlayAndPause { get; set; }
     public string MoveTextBeforeCursorToPrevious { get; set; }
+    public string ShowCustomErrorRules { get; set; }
+    public string ToggleCustomErrorRules { get; set; }
     public string SplitAtVideoPositionAndPlay { get; set; }
     public string SplitAtTextBoxCursorPositionAndPlay { get; set; }
     public string SplitAtVideoAndTextBoxPositionAndPlay { get; set; }
@@ -481,6 +483,8 @@ public class LanguageSettingsShortcuts
         MoveTextFromCursorToNextAndGoToNextAndPlay = "Move text after cursor position to next subtitle, go to next and play";
         MoveTextFromCursorToNextAndGoToNextAndPlayAndPause = "Move text after cursor position to next subtitle, go to next, play it and pause at its end";
         MoveTextBeforeCursorToPrevious = "Move text before cursor position to previous subtitle";
+        ShowCustomErrorRules = "Show custom error rules";
+        ToggleCustomErrorRules = "Toggle custom error rules coloring on/off";
         SplitAtVideoPositionAndPlay = "Split line at video position, go to second part and play";
         SplitAtTextBoxCursorPositionAndPlay = "Split line at text box cursor position, go to second part and play";
         SplitAtVideoAndTextBoxPositionAndPlay = "Split line at video and text box position, go to second part and play";

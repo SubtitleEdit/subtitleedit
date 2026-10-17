@@ -647,6 +647,12 @@ public class SettingsPage : UserControl
             MakeSeparator(),
             MakeCheckboxSetting(Se.Language.Options.Settings.ColorGapTooShort, nameof(_vm.ColorGapTooShort)),
             MakeSeparator(),
+            new SettingsItem(Se.Language.Options.Settings.CustomErrorRules, () => EditorChrome.MakeSwitch(nameof(_vm.ColorCustomErrorRules), null, _vm))
+            {
+                IsSwitch = true,
+                TrailingFactory = () => UiUtil.MakeButtonBrowse(_vm.EditCustomErrorRulesCommand, accessibleName: Se.Language.Options.Settings.CustomErrorRules),
+            },
+            MakeSeparator(),
             new SettingsItem(Se.Language.Options.Settings.ErrorBackgroundColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.ErrorColor))),
         ]));
 

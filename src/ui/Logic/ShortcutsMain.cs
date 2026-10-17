@@ -592,6 +592,8 @@ public static class ShortcutsMain
         { nameof(MainViewModel.MoveTextFromCursorToNextAndGoToNextAndPlayCommand), Se.Language.Options.Shortcuts.MoveTextFromCursorToNextAndGoToNextAndPlay },
         { nameof(MainViewModel.MoveTextFromCursorToNextAndGoToNextAndPlayAndPauseCommand), Se.Language.Options.Shortcuts.MoveTextFromCursorToNextAndGoToNextAndPlayAndPause },
         { nameof(MainViewModel.MoveTextBeforeCursorToPreviousCommand), Se.Language.Options.Shortcuts.MoveTextBeforeCursorToPrevious },
+        { nameof(MainViewModel.ShowCustomErrorRulesCommand), Se.Language.Options.Shortcuts.ShowCustomErrorRules },
+        { nameof(MainViewModel.ToggleCustomErrorRulesCommand), Se.Language.Options.Shortcuts.ToggleCustomErrorRules },
         { nameof(MainViewModel.BreakAtFirstSpaceFromCursorCommand), Se.Language.Options.Shortcuts.BreakAtFirstSpaceFromCursor },
         { nameof(MainViewModel.BreakAtFirstSpaceFromCursorAndGoToNextCommand), Se.Language.Options.Shortcuts.BreakAtFirstSpaceFromCursorAndGoToNext },
         { nameof(MainViewModel.ToggleFocusGridAndWaveformCommand), Se.Language.Options.Shortcuts.ToggleFocusGridAndWaveform },
@@ -1162,6 +1164,8 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.MoveTextFromCursorToNextAndGoToNextAndPlayCommand, nameof(vm.MoveTextFromCursorToNextAndGoToNextAndPlayCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveTextFromCursorToNextAndGoToNextAndPlayAndPauseCommand, nameof(vm.MoveTextFromCursorToNextAndGoToNextAndPlayAndPauseCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveTextBeforeCursorToPreviousCommand, nameof(vm.MoveTextBeforeCursorToPreviousCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.ShowCustomErrorRulesCommand, nameof(vm.ShowCustomErrorRulesCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.ToggleCustomErrorRulesCommand, nameof(vm.ToggleCustomErrorRulesCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ToggleFocusGridAndWaveformCommand, nameof(vm.ToggleFocusGridAndWaveformCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ToggleFocusTextBoxAndWaveformCommand, nameof(vm.ToggleFocusTextBoxAndWaveformCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ToggleFocusTextBoxAndSubtitleGridCommand, nameof(vm.ToggleFocusTextBoxAndSubtitleGridCommand), ShortcutCategory.General);

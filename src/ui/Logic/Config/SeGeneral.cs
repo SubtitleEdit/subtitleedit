@@ -184,6 +184,8 @@ public class SeGeneral
     public bool ColorTimeCodeOverlap { get; set; }
     public bool ColorGapTooShort { get; set; }
     public string ErrorColor { get; set; }
+    public bool ColorCustomErrorRules { get; set; }
+    public List<SeCustomErrorRule> CustomErrorRules { get; set; } = new();
 
     public string FfmpegPath { get; set; }
     public bool FfmpegUseCenterChannelOnly { get; set; }
@@ -353,6 +355,7 @@ public class SeGeneral
         ColorTimeCodeOverlap = true;
         ColorGapTooShort = true;
         ErrorColor = Color.FromArgb(50, 255, 0, 0).FromColorToHex();
+        ColorCustomErrorRules = true;
 
         FfmpegPath = string.Empty;
         LibMpvPath = string.Empty;

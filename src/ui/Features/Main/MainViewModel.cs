@@ -80,6 +80,7 @@ using Nikse.SubtitleEdit.Features.Main.GridColumns;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Features.Main.MainHelpers;
 using Nikse.SubtitleEdit.Features.Ocr;
+using Nikse.SubtitleEdit.Features.Options.CustomErrorRules;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts.CustomShortcuts;
 using Nikse.SubtitleEdit.Features.Options.Language;
 using Nikse.SubtitleEdit.Features.Options.Plugins;
@@ -2109,6 +2110,47 @@ public partial class MainViewModel :
     private async Task ShowHelp()
     {
         UiUtil.ShowHelp("features/main-window");
+    }
+
+    /// <summary>The user's regex rules that color a line as an error (#10136).</summary>
+    [RelayCommand]
+    private async Task ShowCustomErrorRules()
+    {
+        var general = Se.Settings.General;
+        var result = await ShowDialogAsync<CustomErrorRulesWindow, CustomErrorRulesViewModel>(vm =>
+        {
+            vm.Initialize(general.ColorCustomErrorRules, general.CustomErrorRules);
+        });
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        general.ColorCustomErrorRules = result.IsHighlightEnabled;
+        general.CustomErrorRules = result.GetRules();
+        Se.SaveSettings();
+        RefreshCustomErrorRules();
+    }
+
+    [RelayCommand]
+    private void ToggleCustomErrorRules()
+    {
+        var general = Se.Settings.General;
+        general.ColorCustomErrorRules = !general.ColorCustomErrorRules;
+        RefreshCustomErrorRules();
+        ShowStatus(general.ColorCustomErrorRules
+            ? Se.Language.Options.Settings.CustomErrorRulesOn
+            : Se.Language.Options.Settings.CustomErrorRulesOff);
+    }
+
+    private void RefreshCustomErrorRules()
+    {
+        CustomErrorRuleMatcher.Invalidate();
+        foreach (var row in Subtitles)
+        {
+            row.RefreshAfterSettingsChanged();
+        }
     }
 
     [RelayCommand]
@@ -15039,6 +15081,7 @@ public partial class MainViewModel :
         UpdateVideoOffsetStatus();
         SetLibSeSettings();
         SubtitleLineViewModel.ErrorColor = Se.Settings.General.ErrorColor.FromHexToColor();
+        CustomErrorRuleMatcher.Invalidate();
 
         // Settings that feed into CPS / line-length / colour calculations
         // (CpsLineLengthStrategy, SubtitleLineMaximumLength, the various

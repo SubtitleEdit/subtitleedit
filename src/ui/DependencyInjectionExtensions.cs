@@ -55,6 +55,7 @@ using Nikse.SubtitleEdit.Features.Ocr.Download;
 using Nikse.SubtitleEdit.Features.Ocr.FixEngine;
 using Nikse.SubtitleEdit.Features.Ocr.NOcr;
 using Nikse.SubtitleEdit.Features.Ocr.VobSubColorChooser;
+using Nikse.SubtitleEdit.Features.Options.CustomErrorRules;
 using Nikse.SubtitleEdit.Features.Options.DoNotBreakAfterList;
 using Nikse.SubtitleEdit.Features.Options.Language;
 using Nikse.SubtitleEdit.Features.Options.Plugins;
@@ -631,6 +632,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<CustomShortcutStepViewModel>();
         collection.AddTransient<CustomSearchViewModel>();
         collection.AddTransient<SyntaxColorTooWideSettingsViewModel>();
+        collection.AddTransient<CustomErrorRulesViewModel>();
         collection.AddTransient<MinGapCalculateViewModel>();
         collection.AddTransient<TextToSpeechViewModel>();
         collection.AddTransient<SpeakFromLineViewModel>();
