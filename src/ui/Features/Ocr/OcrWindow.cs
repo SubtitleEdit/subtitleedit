@@ -743,6 +743,7 @@ public class OcrWindow : Window
             Header = Se.Language.Ocr.ShowImage,
             DataContext = vm,
             Command = vm.ViewSelectedImageCommand,
+            InputGesture = new KeyGesture(Key.P, KeyModifiers.Control), // handled in SubtitleGridKeyDown
         };
         menuItemShowImage.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.OneWay });
         flyout.Items.Add(menuItemShowImage);
