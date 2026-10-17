@@ -116,6 +116,12 @@ public class NOcrCaseFixer : INOcrCaseFixer
             return result.Text;
         }
 
+        if ((UppercaseWithAccent.Contains(result.Text) || LowercaseWithAccent.Contains(result.Text)) &&
+            FixAccentedCaseFromBaseline(targetItem, result.Text) is { } fromBaseline)
+        {
+            return fromBaseline;
+        }
+
         if (UppercaseWithAccent.Contains(result.Text))
         {
             var averageUppercase = _ocrUppercaseHeightsTotal / (double)_ocrUppercaseHeightsTotalCount;
@@ -137,6 +143,30 @@ public class NOcrCaseFixer : INOcrCaseFixer
         }
 
         return result.Text;
+    }
+
+    /// <summary>
+    /// Case of an accented letter from its height above the baseline: an accent on a capital
+    /// ("Ì") stands well above the cap height, one on a lowercase letter ("ì") reaches about the
+    /// cap height - the old "taller than the average capital + 3 px" read an Italian "così" as
+    /// "cosÌ". A mark below the letter (cedilla) leaves the body to tell: x-height or cap height.
+    /// Null until the cap and x-heights have been seen a few times.
+    /// </summary>
+    private string? FixAccentedCaseFromBaseline(ImageSplitterItem2 targetItem, string text)
+    {
+        if (_capHeightCount <= 2 || _xHeightCount <= 2 || !targetItem.Baseline.HasValue)
+        {
+            return null;
+        }
+
+        var capHeight = _capHeightTotal / (double)_capHeightCount;
+        var xHeight = _xHeightTotal / (double)_xHeightCount;
+        var height = targetItem.HeightAboveBaseline;
+        var markBelow = text.Normalize(System.Text.NormalizationForm.FormD).Any(c => c is '̧' or '̨');
+        var upper = markBelow
+            ? Math.Abs(height - capHeight) < Math.Abs(height - xHeight)
+            : height > capHeight * 1.18;
+        return upper ? text.ToUpperInvariant() : text.ToLowerInvariant();
     }
 
     /// <summary>
