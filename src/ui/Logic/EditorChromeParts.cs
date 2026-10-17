@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -858,9 +858,14 @@ internal static partial class EditorChrome
     /// </summary>
     internal static Border MakeListFrame(Control list, bool clearListBackground = false)
     {
-        if (clearListBackground && list is TemplatedControl templated)
+        if (list is TemplatedControl templated)
         {
-            templated.Background = Brushes.Transparent;
+            // The frame draws the border - not the list's own field border too
+            templated.BorderThickness = new Thickness(0);
+            if (clearListBackground)
+            {
+                templated.Background = Brushes.Transparent;
+            }
         }
 
         return new Border

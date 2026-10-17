@@ -152,6 +152,7 @@ public static class UiTheme
             Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
         }
 
+        ApplyFieldStyle();
         ApplyMenuScaleStyle(Se.Settings.Appearance.LayoutScale);
         ApplyTextSelectionStyle();
         ApplyProgressBarContrastStyle();
@@ -180,6 +181,7 @@ public static class UiTheme
             ApplyLighterDark();
         }
 
+        ApplyFieldStyle();
         ApplyTextSelectionStyle();
         ApplyProgressBarContrastStyle();
         SystemThemeChangedCallback?.Invoke();
@@ -418,6 +420,7 @@ public static class UiTheme
     }
 
     private static Styles? _scrollBarStyle;
+    private static Styles? _fieldStyle;
     private static Styles? _textSelectionStyle;
     private static Styles? _progressBarContrastStyle;
 
@@ -573,6 +576,104 @@ public static class UiTheme
 
         Application.Current.Styles.Add(_textSelectionStyle);
     }
+    /// <summary>
+    /// Text boxes, combo boxes, number fields and lists (list boxes, table views, trees) in one
+    /// field look all over the app: the editor field color, a subtle border and rounded corners.
+    /// Not for the Classic and Pastel themes, which have their own field colors. Added after the
+    /// theme override styles so it wins over them - call it again after re-adding those.
+    /// </summary>
+    public static void ApplyFieldStyle()
+    {
+        if (Application.Current == null)
+        {
+            return;
+        }
+
+        if (_fieldStyle != null)
+        {
+            Application.Current.Styles.Remove(_fieldStyle);
+            _fieldStyle = null;
+        }
+
+        var theme = Se.Settings.Appearance.Theme;
+        if (theme == ThemeNameClassic || theme == ThemeNamePastel)
+        {
+            return;
+        }
+
+        var cornerRadius = new CornerRadius(6);
+        _fieldStyle = new Styles();
+        foreach (var fieldType in new[] { typeof(TextBox), typeof(ComboBox), typeof(NumericUpDown) })
+        {
+            _fieldStyle.Add(new Style(x => x.Is(fieldType))
+            {
+                Setters =
+                {
+                    new Setter(TemplatedControl.BackgroundProperty, EditorChrome.FieldBrush),
+                    new Setter(TemplatedControl.BorderBrushProperty, EditorChrome.FieldBorderBrush),
+                    new Setter(TemplatedControl.CornerRadiusProperty, cornerRadius),
+                },
+            });
+        }
+
+        foreach (var listType in new[] { typeof(ListBox), typeof(TableView), typeof(TreeView) })
+        {
+            _fieldStyle.Add(new Style(x => x.Is(listType))
+            {
+                Setters =
+                {
+                    new Setter(TemplatedControl.BackgroundProperty, EditorChrome.FieldBrush),
+                    new Setter(TemplatedControl.BorderBrushProperty, EditorChrome.FieldBorderBrush),
+                    new Setter(TemplatedControl.BorderThicknessProperty, new Thickness(1)),
+                    new Setter(TemplatedControl.CornerRadiusProperty, cornerRadius),
+                },
+            });
+        }
+
+        // The combo box arrow in the same blue-gray as the field border, light enough to read;
+        // brighter while hovered. Disabled keeps the theme's dimmed arrow.
+        _fieldStyle.Add(new Style(x => x.OfType<ComboBox>().Not(y => y.Class(":disabled")).Template().OfType<PathIcon>().Name("DropDownGlyph"))
+        {
+            Setters = { new Setter(TemplatedControl.ForegroundProperty, EditorChrome.FaintTextBrush) },
+        });
+        _fieldStyle.Add(new Style(x => x.OfType<ComboBox>().Class(":pointerover").Not(y => y.Class(":disabled")).Template().OfType<PathIcon>().Name("DropDownGlyph"))
+        {
+            Setters = { new Setter(TemplatedControl.ForegroundProperty, EditorChrome.IconBrush) },
+        });
+
+        // A text box keeps its own background while hovered/focused - the theme paints its own
+        // hover/focus colors there
+        foreach (var state in new[] { ":pointerover", ":focus" })
+        {
+            _fieldStyle.Add(new Style(x => x.Is<TextBox>().Class(state).Template().OfType<Border>().Name("PART_BorderElement"))
+            {
+                Setters =
+                {
+                    new Setter(Border.BackgroundProperty, new Binding(nameof(TextBox.Background))
+                    {
+                        RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent),
+                    }),
+                },
+            });
+        }
+
+        // ...except the text box of an editable combo box: it covers the combo's border, so an
+        // opaque fill would wipe that out (see ApplyLighterDark)
+        _fieldStyle.Add(new Style(x => x.OfType<ComboBox>().Template().OfType<TextBox>())
+        {
+            Setters = { new Setter(TemplatedControl.BackgroundProperty, Brushes.Transparent) },
+        });
+        foreach (var state in new[] { ":pointerover", ":focus" })
+        {
+            _fieldStyle.Add(new Style(x => x.OfType<ComboBox>().Template().OfType<TextBox>().Class(state).Template().OfType<Border>().Name("PART_BorderElement"))
+            {
+                Setters = { new Setter(Border.BackgroundProperty, Brushes.Transparent) },
+            });
+        }
+
+        Application.Current.Styles.Add(_fieldStyle);
+    }
+
     private static bool _scrollBarAllowAutoHide;
     /// <summary>
     /// Applies scrollbar visibility styles based on the OS preference.
