@@ -577,7 +577,8 @@ public class NOcrDb
     private NOcrChar? GetMatch(NikseBitmap2 parentBitmap, List<ImageSplitterItem2> list, ImageSplitterItem2 item, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch, double italicFactor, BaselinePlacement placement)
     {
         // The public GetMatch returns early for an item without a bitmap.
-        var key = new MatchCacheKey(item.NikseBitmap!, topMargin, deepSeek, maxWrongPixels, lastDitch, italicFactor, placement);
+        var bitmap = item.NikseBitmap!;
+        var key = new MatchCacheKey(bitmap, topMargin, deepSeek, maxWrongPixels, lastDitch, italicFactor, placement);
         MatchCacheEntry? cached;
         lock (_lock)
         {
@@ -598,7 +599,7 @@ public class NOcrDb
 
         // A perfect single match (exact size, 0 errors) means the user has explicitly added an
         // entry for this bitmap, so prefer it over a possibly-greedy expanded match.
-        var exactSingle = GetExactMatchSingle(item.NikseBitmap, topMargin, placement);
+        var exactSingle = GetExactMatchSingle(bitmap, topMargin, placement);
         if (exactSingle != null)
         {
             CacheMatch(key, new MatchCacheEntry { ExactMatch = exactSingle });
@@ -616,7 +617,7 @@ public class NOcrDb
         // skipExactCheck: the exact scan already ran (and missed) above - without the flag,
         // GetMatchSingle re-scanned the whole single-character list a second time for every
         // glyph that wasn't an exact match.
-        var single = GetMatchSingle(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels, lastDitch: false, skipExactCheck: true, placement);
+        var single = GetMatchSingle(bitmap, topMargin, deepSeek, maxWrongPixels, lastDitch: false, skipExactCheck: true, placement);
 
         // Two letters drawn touching ("av", "wt", "As") are one glyph that fits nothing. Read it
         // as two unless the last-ditch pass finds a single character that fits better than the
@@ -624,12 +625,12 @@ public class NOcrDb
         // last-ditch pass read right must not turn into "77".
         if (single == null)
         {
-            var pair = MatchTouchingLetters(item.NikseBitmap, topMargin, maxWrongPixels, depth: 0, out var pairRate);
+            var pair = MatchTouchingLetters(bitmap, topMargin, maxWrongPixels, depth: 0, out var pairRate);
             NOcrChar? guess = null;
             var guessRate = double.MaxValue;
             if (lastDitch)
             {
-                guess = GetMatchSingle(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels, true, true, placement, out guessRate);
+                guess = GetMatchSingle(bitmap, topMargin, deepSeek, maxWrongPixels, true, true, placement, out guessRate);
             }
 
             single = pair != null && (guess == null || pairRate < guessRate) ? pair : guess;
@@ -640,7 +641,7 @@ public class NOcrDb
             // Nothing matched upright. Straighten the glyph and try once more - this is how an
             // italic 'l' stops being read as an 'i'. A hit is italic by construction, so flag a
             // copy; the database entry itself must stay upright.
-            var unItalic = item.NikseBitmap.UnItalic(italicFactor);
+            var unItalic = bitmap.UnItalic(italicFactor);
             if (unItalic.Width > 0 && unItalic.Height > 0)
             {
                 var italicMatch = GetMatchSingle(unItalic, topMargin, deepSeek, maxWrongPixels, lastDitch, placement: placement);
