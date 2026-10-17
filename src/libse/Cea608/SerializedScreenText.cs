@@ -137,7 +137,7 @@ namespace Nikse.SubtitleEdit.Core.Cea608
         private static bool IsOpeningMark(StringBuilder sb, int index)
         {
             var ch = sb[index];
-            if ("([{“‘¿¡".IndexOf(ch) >= 0)
+            if ("([{“‘¿¡".Contains(ch))
             {
                 return true;
             }
@@ -147,7 +147,7 @@ namespace Nikse.SubtitleEdit.Core.Cea608
                 // A straight quote opens at the start or after a space or bracket: "<i>Jaws</i>"
                 // - after a word it closes (or is an apostrophe).
                 var before = GetPreviousCharIndex(sb, index);
-                return before < 0 || char.IsWhiteSpace(sb[before]) || "([{".IndexOf(sb[before]) >= 0;
+                return before < 0 || char.IsWhiteSpace(sb[before]) || "([{".Contains(sb[before]);
             }
 
             return false;
@@ -156,7 +156,7 @@ namespace Nikse.SubtitleEdit.Core.Cea608
         private static bool IsClosingMark(SerializedStyledUnicodeChar[] columns, int index)
         {
             var ch = columns[index].Character[0];
-            if (".,!?;:)]}'…’”".IndexOf(ch) >= 0)
+            if (".,!?;:)]}'…’”".Contains(ch))
             {
                 return true; // a straight apostrophe right after a word: "<i>Jaws</i>'s"
             }

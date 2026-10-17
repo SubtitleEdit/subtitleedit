@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return text != null &&
                    text.Length > 3 &&
                    Array.IndexOf(Apostrophes, text[0]) >= 0 &&
-                   ContractionLetters.IndexOf(char.ToLowerInvariant(text[1])) >= 0 &&
+                   ContractionLetters.Contains(char.ToLowerInvariant(text[1])) &&
                    text[2] == ' ';
         }
 

@@ -172,7 +172,7 @@ public class ColorService : IColorService
         }
 
         string pre = string.Empty;
-        if (text.StartsWith("{\\", StringComparison.Ordinal) && text.IndexOf('}') >= 0)
+        if (text.StartsWith("{\\", StringComparison.Ordinal) && text.Contains('}'))
         {
             int endIndex = text.IndexOf('}') + 1;
             pre = text.Substring(0, endIndex);
@@ -266,7 +266,7 @@ public class ColorService : IColorService
         }
 
         string pre = string.Empty;
-        if (text.StartsWith("{\\", StringComparison.Ordinal) && text.IndexOf('}') >= 0)
+        if (text.StartsWith("{\\", StringComparison.Ordinal) && text.Contains('}'))
         {
             int endIndex = text.IndexOf('}') + 1;
             pre = text.Substring(0, endIndex);

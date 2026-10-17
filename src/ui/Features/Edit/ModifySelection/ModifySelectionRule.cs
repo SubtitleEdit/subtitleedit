@@ -301,7 +301,7 @@ public class ModifySelectionRule
                     return false;
                 }
 
-                return HasMatchCase && MatchCase ? text.Contains(Text) : text.IndexOf(Text, StringComparison.OrdinalIgnoreCase) >= 0;
+                return HasMatchCase && MatchCase ? text.Contains(Text) : text.Contains(Text, StringComparison.OrdinalIgnoreCase);
 
             case RuleType.StartsWith:
                 if (string.IsNullOrEmpty(Text))
@@ -429,7 +429,7 @@ public class ModifySelectionRule
                     return false;
                 }
 
-                return HasMatchCase && MatchCase ? item.Bookmark.Contains(Text) : item.Bookmark.IndexOf(Text, StringComparison.OrdinalIgnoreCase) >= 0;
+                return HasMatchCase && MatchCase ? item.Bookmark.Contains(Text) : item.Bookmark.Contains(Text, StringComparison.OrdinalIgnoreCase);
 
             case RuleType.Forced:
                 return item.Forced;

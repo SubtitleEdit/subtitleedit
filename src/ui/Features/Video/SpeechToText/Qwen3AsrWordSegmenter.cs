@@ -133,7 +133,7 @@ public static class Qwen3AsrWordSegmenter
 
     private static bool NeedsSpace(char previous, char next)
     {
-        if (char.IsWhiteSpace(previous) || NoSpaceBefore.IndexOf(next) >= 0 || NoSpaceAfter.IndexOf(previous) >= 0)
+        if (char.IsWhiteSpace(previous) || NoSpaceBefore.Contains(next) || NoSpaceAfter.Contains(previous))
         {
             return false;
         }
@@ -153,18 +153,18 @@ public static class Qwen3AsrWordSegmenter
     private static bool EndsSentence(string token)
     {
         var i = token.Length - 1;
-        while (i >= 0 && ClosingMarks.IndexOf(token[i]) >= 0)
+        while (i >= 0 && ClosingMarks.Contains(token[i]))
         {
             i--;
         }
 
-        return i >= 0 && SentenceTerminators.IndexOf(token[i]) >= 0;
+        return i >= 0 && SentenceTerminators.Contains(token[i]);
     }
 
     /// <summary>True when the token starts with a closing mark or a terminator, i.e. it attaches to what came before it.</summary>
     private static bool ClosesText(string token)
     {
-        return ClosingMarks.IndexOf(token[0]) >= 0 || NoSpaceBefore.IndexOf(token[0]) >= 0;
+        return ClosingMarks.Contains(token[0]) || NoSpaceBefore.Contains(token[0]);
     }
 
     private static bool IsPunctuationOnly(string token)

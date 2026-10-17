@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     var s = p.Text;
                     var oldText = s;
 
-                    if (p.Text.IndexOf(',') >= 0)
+                    if (p.Text.Contains(','))
                     {
                         s = CommaDouble.Replace(s, "$1,$2");
                         s = CommaTriple.Replace(s, "$1...$2");
@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         s = RemoveCommaBeforeSentenceEndingChar(s, ',');
                     }
 
-                    if (p.Text.IndexOf('،') >= 0)
+                    if (p.Text.Contains('،'))
                     {
                         s = CommaDoubleAr.Replace(s, "$1،$2");
                         s = CommaTripleAr.Replace(s, "$1...$2");

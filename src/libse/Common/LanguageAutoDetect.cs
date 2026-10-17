@@ -1960,11 +1960,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
 
                 var spanishCount1252 = counts1252.Get(AutoDetectWordsSpanish);
-                if (textEnc1252.IndexOf('¡') >= 0)
+                if (textEnc1252.Contains('¡'))
                 {
                     spanishCount1252 += 5;
                 }
-                if (textEnc1252.IndexOf('¿') >= 0)
+                if (textEnc1252.Contains('¿'))
                 {
                     spanishCount1252 += 5;
                 }

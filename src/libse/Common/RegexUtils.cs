@@ -489,7 +489,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static bool ContainsNonLineFeedNewLine(string text)
         {
-            return text.IndexOf('\r') >= 0 || text.IndexOf('\u2028') >= 0;
+            return text.Contains('\r') || text.Contains('\u2028');
         }
     }
 }

@@ -255,7 +255,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                             list.Add("false");
                         }
                     }
-                    else if ("+-0123456789".IndexOf(ch) >= 0)
+                    else if ("+-0123456789".Contains(ch))
                     {
                         sb.Clear();
                         // Bounds check FIRST: this indexed content[i] before testing i < max,
@@ -562,7 +562,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                             list.Add("false");
                         }
                     }
-                    else if ("+-0123456789".IndexOf(ch) >= 0)
+                    else if ("+-0123456789".Contains(ch))
                     {
                         sb.Clear();
                         while (i < max && IsNumberChar(content[i]))
@@ -860,7 +860,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                             state.Peek().Count++;
                         }
                     }
-                    else if ("+-0123456789".IndexOf(ch) >= 0)
+                    else if ("+-0123456789".Contains(ch))
                     {
                         // Bounds check FIRST: this indexed content[i] before testing i < max,
                         // so a file whose last characters are a number (a truncated one)
@@ -1189,7 +1189,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                             state.Peek().Count++;
                         }
                     }
-                    else if ("+-0123456789".IndexOf(ch) >= 0)
+                    else if ("+-0123456789".Contains(ch))
                     {
                         sb.Clear();
                         // Bounds check FIRST: this indexed content[i] before testing i < max,
@@ -1537,7 +1537,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         //    list.Add("false");
                         //}
                     }
-                    else if ("+-0123456789".IndexOf(ch) >= 0)
+                    else if ("+-0123456789".Contains(ch))
                     {
                         while (i < max && IsNumberChar(content[i]))
                         {

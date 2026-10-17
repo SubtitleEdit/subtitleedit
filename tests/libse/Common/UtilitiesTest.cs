@@ -143,7 +143,7 @@ public class UtilitiesTest
 
             var lines = result.SplitToLines();
             Assert.True(lines.Count == 2, "Expected two lines, got: " + result);
-            foreach (var item in listItems.Where(p => p.IndexOf(' ') >= 0))
+            foreach (var item in listItems.Where(p => p.Contains(' ')))
             {
                 Assert.True(lines[0].Contains(item) || lines[1].Contains(item),
                     "Phrase \"" + item + "\" was split: " + result);

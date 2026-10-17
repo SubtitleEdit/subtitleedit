@@ -742,7 +742,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             string result = null;
 
             // If we can find it...
-            if (originalText.IndexOf(firstWord, StringComparison.Ordinal) >= 0)
+            if (originalText.Contains(firstWord))
             {
                 // Replace it
                 result = ReplaceFirstOccurrence(originalText, firstWord, newFirstWord);
@@ -903,7 +903,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return false;
             }
 
-            while (input.IndexOf("<i>", StringComparison.Ordinal) >= 0)
+            while (input.Contains("<i>"))
             {
                 var startIndex = input.IndexOf("<i>", StringComparison.Ordinal);
                 var endIndex = input.IndexOf("</i>", startIndex, StringComparison.Ordinal);
@@ -932,7 +932,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return false;
             }
 
-            while (input.IndexOf("<b>", StringComparison.Ordinal) >= 0)
+            while (input.Contains("<b>"))
             {
                 var startIndex = input.IndexOf("<b>", StringComparison.Ordinal);
                 // From startIndex, as IsItalic does: searching from 0 found a stray leading
