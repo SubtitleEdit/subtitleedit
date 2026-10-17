@@ -250,12 +250,29 @@ public class AssaImageColorPickerWindow : Window
 
     private static Border MakeButtonBar(AssaImageColorPickerViewModel vm, out Button buttonDone)
     {
-        buttonDone = UiUtil.MakeButtonDone(vm.OkCommand);
+        buttonDone = vm.IsColorSelection ? UiUtil.MakeButtonOk(vm.OkCommand) : UiUtil.MakeButtonDone(vm.OkCommand);
         buttonDone.Classes.Add("primary");
         buttonDone.HorizontalAlignment = HorizontalAlignment.Right;
+        if (vm.IsColorSelection)
+        {
+            buttonDone.Bind(IsEnabledProperty, new Binding(nameof(vm.HasPickedColor)));
+        }
+
+        var buttons = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            Spacing = 8,
+        };
+        if (vm.IsColorSelection)
+        {
+            buttons.Children.Add(UiUtil.MakeButtonCancel(vm.CancelCommand));
+        }
+
+        buttons.Children.Add(buttonDone);
         return new Border
         {
-            Child = buttonDone,
+            Child = buttons,
             Background = EditorChrome.ButtonBarBrush,
             BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 1, 0, 0),

@@ -2960,6 +2960,35 @@ public partial class MainViewModel :
         RefreshSubtitlePreview();
     }
 
+    internal bool CanPickColorFromImage => !string.IsNullOrEmpty(_videoFileName) &&
+        _mediaInfo?.Dimension is { Width: > 0, Height: > 0 };
+
+    internal async Task<Color?> PickColorFromImageAsync(Window owner)
+    {
+        if (!CanPickColorFromImage)
+        {
+            return null;
+        }
+
+        var player = GetVideoPlayerControl();
+        if (player != null)
+        {
+            PauseVideoAndFreezePlayhead(player);
+        }
+
+        var position = player?.Position ?? 0;
+        if (!await FfmpegRequirement.EnsureAsync(owner,
+                async () => (await _windowService.ShowDialogAsync<DownloadFfmpegWindow, DownloadFfmpegViewModel>(owner)).FfmpegFileName))
+        {
+            return null;
+        }
+
+        var result = await ShowDialogAsync<AssaImageColorPickerWindow, AssaImageColorPickerViewModel>(
+            vm => vm.InitializeForColorSelection(_videoFileName!, _mediaInfo!.Dimension.Width, _mediaInfo.Dimension.Height, position),
+            owner: owner);
+        return result.OkPressed ? result.SelectedColor : null;
+    }
+
     [RelayCommand]
     private async Task ShowAssaSetPosition()
     {

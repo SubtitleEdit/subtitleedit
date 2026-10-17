@@ -5,8 +5,11 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.VisualTree;
+using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 
@@ -37,6 +40,24 @@ public class ColorPickerWindow : Window
 
         UiUtil.FocusOnFirstActivation(this, hexTextBox); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
+        Opened += (_, _) => ConfigureImagePicker(vm);
+    }
+
+    private void ConfigureImagePicker(ColorPickerViewModel vm)
+    {
+        // Use this dialog's editor, including when opened through a style/settings dialog
+        // or from a second editor window.
+        for (var owner = Owner; owner != null; owner = owner.Owner)
+        {
+            var main = owner.DataContext as MainViewModel ??
+                owner.GetVisualDescendants().OfType<MainView>().FirstOrDefault()?.DataContext as MainViewModel;
+            if (main != null)
+            {
+                vm.CanSelectFromImage = main.CanPickColorFromImage;
+                vm.PickFromImageAsync = main.PickColorFromImageAsync;
+                break;
+            }
+        }
     }
 
     private static StackPanel MakeColorView(ColorPickerViewModel vm, out TextBox hexTextBox)
@@ -264,6 +285,12 @@ public class ColorPickerWindow : Window
         panel.Children.Add(blueSlider);
         panel.Children.Add(alphaSlider);
         panel.Children.Add(hexPanel);
+
+        var selectFromImage = UiUtil.MakeButton(Se.Language.Assa.ImageColorPicker + "...", vm.SelectFromImageCommand);
+        selectFromImage.HorizontalAlignment = HorizontalAlignment.Left;
+        selectFromImage.Margin = new Thickness(0, 8, 0, 0);
+        selectFromImage.Bind(IsVisibleProperty, new Binding(nameof(vm.CanSelectFromImage)));
+        panel.Children.Add(selectFromImage);
 
         return panel;
     }

@@ -25,6 +25,8 @@ public partial class AssaImageColorPickerViewModel : ObservableObject
 {
     public Window? Window { get; internal set; }
     public bool OkPressed { get; private set; }
+    public bool IsColorSelection { get; private set; }
+    public Color? SelectedColor => HasPickedColor ? ClickedColor.Color : null;
     public Image? ScreenshotImage { get; set; }
     public Image? ScreenshotOverlayImage { get; set; }
     public Grid? VideoGrid { get; set; }
@@ -260,6 +262,19 @@ public partial class AssaImageColorPickerViewModel : ObservableObject
             TargetHeight = 1080;
         }
 
+        LoadFrame(videoFileName, AssaSetPositionViewModel.GetScreenshotSeconds(line, videoPositionSeconds));
+    }
+
+    public void InitializeForColorSelection(string? videoFileName, int videoWidth, int videoHeight, double positionSeconds)
+    {
+        IsColorSelection = true;
+        TargetWidth = videoWidth;
+        TargetHeight = videoHeight;
+        LoadFrame(videoFileName, positionSeconds);
+    }
+
+    private void LoadFrame(string? videoFileName, double positionSeconds)
+    {
         if (string.IsNullOrEmpty(videoFileName))
         {
             Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetWidth, TargetHeight);
@@ -268,7 +283,7 @@ public partial class AssaImageColorPickerViewModel : ObservableObject
 
         // Pass exact seconds (not ToDisplayString, which honors the HH:MM:SS:FF time-code format
         // setting and would feed ffmpeg an unparseable "-ss 00:01:23:15", blanking the preview - #12182).
-        var fileName = FfmpegGenerator.GetScreenShot(videoFileName, AssaSetPositionViewModel.GetScreenshotSeconds(line, videoPositionSeconds).ToString("0.###", CultureInfo.InvariantCulture));
+        var fileName = FfmpegGenerator.GetScreenShot(videoFileName, positionSeconds.ToString("0.###", CultureInfo.InvariantCulture));
         if (System.IO.File.Exists(fileName))
         {
             try
@@ -290,6 +305,11 @@ public partial class AssaImageColorPickerViewModel : ObservableObject
     [RelayCommand]
     private async Task Ok()
     {
+        if (IsColorSelection && !HasPickedColor)
+        {
+            return;
+        }
+
         OkPressed = true;
         Close();
     }
@@ -312,6 +332,7 @@ public partial class AssaImageColorPickerViewModel : ObservableObject
     {
         if (e.Key == Key.Escape)
         {
+            e.Handled = true;
             Close();
         }
         else if (UiUtil.IsHelp(e))
