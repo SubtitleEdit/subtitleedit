@@ -72,6 +72,29 @@ public class LanguageVideo
     public string SyncAudioTrackNoAudio { get; set; }
     public string SyncAudioTrackSaveVideoDotDotDot { get; set; }
     public string SyncAudioTrackSaving { get; set; }
+    public string SyncToAudioDotDotDot { get; set; }
+    public string SyncToAudioTitle { get; set; }
+    public string SyncToAudioReference { get; set; }
+    public string SyncToAudioReferenceAudio { get; set; }
+    public string SyncToAudioReferenceSubtitle { get; set; }
+    public string SyncToAudioPickReferenceSubtitle { get; set; }
+    public string SyncToAudioNoReferenceSubtitle { get; set; }
+    public string SyncToAudioMaxOffsetSeconds { get; set; }
+    public string SyncToAudioTryFrameRates { get; set; }
+    public string SyncToAudioResult { get; set; }
+    public string SyncToAudioAnalyze { get; set; }
+    public string SyncToAudioAnalyzing { get; set; }
+    public string SyncToAudioResultOffsetX { get; set; }
+    public string SyncToAudioResultFrameRateXToY { get; set; }
+    public string SyncToAudioResultFrameRateUnchanged { get; set; }
+    public string SyncToAudioResultConfidenceX { get; set; }
+    public string SyncToAudioLowConfidence { get; set; }
+    public string SyncToAudioNoWaveform { get; set; }
+    public string SyncToAudioNoLines { get; set; }
+    public string SyncToAudioNoSpeechFound { get; set; }
+    public string SyncToAudioReferenceSubtitleEmpty { get; set; }
+    public string SyncToAudioHint { get; set; }
+    public string SyncToAudioAppliedX { get; set; }
     public string GenerateTimeCodes { get; set; }
     public string CheckeredImage { get; set; }
     public string PromptForFfmpegParamsAndGenerate { get; set; }
@@ -253,6 +276,29 @@ public class LanguageVideo
         SyncAudioTrackNoAudio = "The video has no audio track.";
         SyncAudioTrackSaveVideoDotDotDot = "Save video...";
         SyncAudioTrackSaving = "Saving video...";
+        SyncToAudioDotDotDot = "Sync subtitle to audio...";
+        SyncToAudioTitle = "Sync subtitle to audio";
+        SyncToAudioReference = "Sync against";
+        SyncToAudioReferenceAudio = "Speech in the video's audio (from the waveform)";
+        SyncToAudioReferenceSubtitle = "Another subtitle file that is already in sync";
+        SyncToAudioPickReferenceSubtitle = "Pick the subtitle file to sync against";
+        SyncToAudioNoReferenceSubtitle = "No file chosen";
+        SyncToAudioMaxOffsetSeconds = "Max offset (seconds)";
+        SyncToAudioTryFrameRates = "Also try frame rate conversions (23.976, 24, 25, 29.97, 30)";
+        SyncToAudioResult = "Result";
+        SyncToAudioAnalyze = "Analyze";
+        SyncToAudioAnalyzing = "Analyzing...";
+        SyncToAudioResultOffsetX = "Offset: {0}";
+        SyncToAudioResultFrameRateXToY = "Frame rate: {0} → {1}";
+        SyncToAudioResultFrameRateUnchanged = "Frame rate: unchanged";
+        SyncToAudioResultConfidenceX = "Confidence: {0}%";
+        SyncToAudioLowConfidence = "Low confidence - the subtitle may belong to another cut of the video, or the audio may be mostly music. Check a few lines before saving.";
+        SyncToAudioNoWaveform = "The audio can only be used once the waveform has been generated - sync against another subtitle file, or generate the waveform first.";
+        SyncToAudioNoLines = "The subtitle has no lines.";
+        SyncToAudioNoSpeechFound = "No speech could be told from silence in the audio.";
+        SyncToAudioReferenceSubtitleEmpty = "The reference subtitle has no lines.";
+        SyncToAudioHint = "Finds one offset for the whole subtitle (and a frame rate mismatch, if any) by matching when text is shown against when someone speaks. A subtitle that is out of sync differently in different parts needs Point sync or Improve time codes instead.";
+        SyncToAudioAppliedX = "Sync subtitle to audio: {0}";
         GenerateTimeCodes = "Generate time codes";
         CheckeredImage = "Checkered image";
         PromptForFfmpegParamsAndGenerate = "Prompt for ffmpeg parameters and generate";

@@ -23,6 +23,7 @@ using Nikse.SubtitleEdit.Features.Files.ExportImageBased;
 using Nikse.SubtitleEdit.Features.Files.ExportPac;
 using Nikse.SubtitleEdit.Features.Files.ExportDialogueList;
 using Nikse.SubtitleEdit.Features.Video.SyncAudioTrack;
+using Nikse.SubtitleEdit.Features.Video.SyncToAudio;
 using Nikse.SubtitleEdit.Features.Files.ExportPlainText;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.DCinemaInteropProperties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.DCinemaSmpteProperties;
@@ -473,6 +474,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<ExportPlainTextViewModel>();
         collection.AddTransient<ExportDialogueListViewModel>();
         collection.AddTransient<SyncAudioTrackViewModel>();
+        collection.AddTransient<SyncToAudioViewModel>();
         collection.AddTransient<FindDoubleLinesViewModel>();
         collection.AddTransient<FindDoubleWordsViewModel>();
         collection.AddTransient<FindRuleViewModel>();

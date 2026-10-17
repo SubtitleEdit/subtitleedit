@@ -176,6 +176,7 @@ using Nikse.SubtitleEdit.Features.Video.RemuxVideo;
 using Nikse.SubtitleEdit.Features.Video.Chapters;
 using Nikse.SubtitleEdit.Features.Video.ShotChanges;
 using Nikse.SubtitleEdit.Features.Video.SyncAudioTrack;
+using Nikse.SubtitleEdit.Features.Video.SyncToAudio;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
 using Nikse.SubtitleEdit.Features.Video.VideoOcr;
@@ -8197,6 +8198,38 @@ public partial class MainViewModel :
         vp?.VideoPlayer.Pause();
         var position = videoFileName == _videoFileName ? vp?.Position ?? 0 : 0;
         await ShowDialogAsync<SyncAudioTrackWindow, SyncAudioTrackViewModel>(vm => vm.Initialize(videoFileName, position));
+    }
+
+    /// <summary>
+    /// Video > More > Sync subtitle to audio: one offset (and frame rate ratio) for the whole
+    /// subtitle, found by correlating it with the speech in the waveform, applied as one undo step.
+    /// </summary>
+    [RelayCommand]
+    private async Task ShowSyncToAudio()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (IsEmpty)
+        {
+            ShowSubtitleNotLoadedMessage();
+            return;
+        }
+
+        var toolApply = BeginToolApply(Se.Language.Video.SyncToAudioTitle);
+        var result = await ShowDialogAsync<SyncToAudioWindow, SyncToAudioViewModel>(vm =>
+        {
+            vm.Initialize(Subtitles, AudioVisualizer?.WavePeaks, (double)(_mediaInfo?.FramesRate ?? 0), _subtitleFileName ?? _videoFileName);
+        });
+
+        if (result.OkPressed && result.Result != null)
+        {
+            var syncResult = result.Result;
+            EndToolApply(toolApply, () => SyncToAudioViewModel.Apply(Subtitles, syncResult));
+            ShowStatus(string.Format(Se.Language.Video.SyncToAudioAppliedX, SyncToAudioViewModel.Describe(syncResult)));
+        }
     }
 
     [RelayCommand]
