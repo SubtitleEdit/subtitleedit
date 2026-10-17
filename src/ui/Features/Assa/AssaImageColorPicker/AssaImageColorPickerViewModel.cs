@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -57,6 +57,7 @@ public partial class AssaImageColorPickerViewModel : ObservableObject
     /// </summary>
     [ObservableProperty] private string _clickedColorAssa = string.Empty;
     [ObservableProperty] private bool _hasPickedColor;
+    [ObservableProperty] private bool _isLoadingFrame;
     [ObservableProperty] private string _copiedText = string.Empty;
 
     /// <summary>
@@ -68,6 +69,7 @@ public partial class AssaImageColorPickerViewModel : ObservableObject
     private const int MagnifierCellSize = 8;
     private const int MaxHistory = 14;
     private SKBitmap? _screenshotPixels;
+    private bool _isClosed;
 
     private Subtitle _subtitle = new();
 
@@ -91,6 +93,7 @@ public partial class AssaImageColorPickerViewModel : ObservableObject
     /// </summary>
     public void OnClosed()
     {
+        _isClosed = true;
         _screenshotPixels?.Dispose();
         _screenshotPixels = null;
         var magnifier = Magnifier;
@@ -273,33 +276,54 @@ public partial class AssaImageColorPickerViewModel : ObservableObject
         LoadFrame(videoFileName, positionSeconds);
     }
 
+    /// <summary>
+    /// Shows a checkered placeholder at once and grabs the frame with ffmpeg in the background,
+    /// so the window opens without waiting for ffmpeg; picking waits for the frame.
+    /// </summary>
     private void LoadFrame(string? videoFileName, double positionSeconds)
     {
+        Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetWidth, TargetHeight);
         if (string.IsNullOrEmpty(videoFileName))
         {
-            Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetWidth, TargetHeight);
             return;
         }
 
-        // Pass exact seconds (not ToDisplayString, which honors the HH:MM:SS:FF time-code format
-        // setting and would feed ffmpeg an unparseable "-ss 00:01:23:15", blanking the preview - #12182).
-        var fileName = FfmpegGenerator.GetScreenShot(videoFileName, positionSeconds.ToString("0.###", CultureInfo.InvariantCulture));
-        if (System.IO.File.Exists(fileName))
+        IsLoadingFrame = true;
+        _ = LoadFrameAsync(videoFileName, positionSeconds);
+    }
+
+    private async Task LoadFrameAsync(string videoFileName, double positionSeconds)
+    {
+        var frame = await Task.Run(() =>
         {
             try
             {
-                Screenshot = new Bitmap(fileName);
+                // Pass exact seconds (not ToDisplayString, which honors the HH:MM:SS:FF time-code format
+                // setting and would feed ffmpeg an unparseable "-ss 00:01:23:15", blanking the preview - #12182).
+                var fileName = FfmpegGenerator.GetScreenShot(videoFileName, positionSeconds.ToString("0.###", CultureInfo.InvariantCulture));
+                return System.IO.File.Exists(fileName) ? new Bitmap(fileName) : null;
             }
             catch
             {
-                Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetWidth, TargetHeight);
+                return null;
             }
-        }
-        else
-        {
-            Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetWidth, TargetHeight);
-        }
+        });
 
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (_isClosed)
+            {
+                frame?.Dispose();
+                return;
+            }
+
+            if (frame != null)
+            {
+                Screenshot = frame;
+            }
+
+            IsLoadingFrame = false;
+        });
     }
 
     [RelayCommand]
@@ -362,7 +386,7 @@ public partial class AssaImageColorPickerViewModel : ObservableObject
 
     public void OnImagePointerMoved(object? sender, PointerEventArgs e)
     {
-        if (ScreenshotImage == null || Screenshot == null)
+        if (ScreenshotImage == null || Screenshot == null || IsLoadingFrame)
         {
             return;
         }
@@ -402,7 +426,7 @@ public partial class AssaImageColorPickerViewModel : ObservableObject
 
     public void OnImagePointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (ScreenshotImage == null || Screenshot == null)
+        if (ScreenshotImage == null || Screenshot == null || IsLoadingFrame)
         {
             return;
         }

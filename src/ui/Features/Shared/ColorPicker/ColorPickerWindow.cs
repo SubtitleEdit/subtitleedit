@@ -5,11 +5,8 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Avalonia.VisualTree;
-using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 
@@ -47,16 +44,11 @@ public class ColorPickerWindow : Window
     {
         // Use this dialog's editor, including when opened through a style/settings dialog
         // or from a second editor window.
-        for (var owner = Owner; owner != null; owner = owner.Owner)
+        var source = ImageColorSource.Find(this);
+        if (source != null)
         {
-            var main = owner.DataContext as MainViewModel ??
-                owner.GetVisualDescendants().OfType<MainView>().FirstOrDefault()?.DataContext as MainViewModel;
-            if (main != null)
-            {
-                vm.CanSelectFromImage = main.CanPickColorFromImage;
-                vm.PickFromImageAsync = main.PickColorFromImageAsync;
-                break;
-            }
+            vm.CanSelectFromImage = source.CanPick();
+            vm.PickFromImageAsync = source.PickAsync;
         }
     }
 

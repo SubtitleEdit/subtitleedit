@@ -7,6 +7,7 @@ using Avalonia.Markup.Declarative;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit.Features.Main.Layout;
+using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -55,6 +56,7 @@ public partial class MainView : ViewBase
         if (hostWindow != null)
         {
             _vm.Window = hostWindow;
+            ImageColorSource.Register(hostWindow, () => _vm.CanPickColorFromImage, _vm.PickColorFromImageAsync);
             // A user-assigned Alt+Space shortcut beats the Windows system menu (#14536).
             UiUtil.SetWindowSystemMenuOverride(hostWindow, _vm.HasAltSpaceShortcut);
             _vm.Window.Closing += _vm.OnClosing;

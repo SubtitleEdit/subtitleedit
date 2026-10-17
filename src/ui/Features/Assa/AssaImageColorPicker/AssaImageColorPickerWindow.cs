@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
@@ -47,7 +47,9 @@ public class AssaImageColorPickerWindow : Window
         mainGrid.Add(MakeButtonBar(vm, out var buttonDone), 2, 0);
         Content = mainGrid;
 
-        UiUtil.FocusOnFirstActivation(this, buttonDone);
+        // In color selection OK stays disabled until a color is picked, so start on the frame
+        // (named with the picking hint) instead - and never on Cancel, a focused button clicks on bare Space.
+        UiUtil.FocusOnFirstActivation(this, vm.IsColorSelection ? vm.ScreenshotImage! : buttonDone);
         KeyDown += vm.KeyDown;
         Closed += (_, _) => vm.OnClosed();
     }
@@ -67,6 +69,7 @@ public class AssaImageColorPickerWindow : Window
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
             Cursor = new Cursor(StandardCursorType.Cross),
+            Focusable = vm.IsColorSelection,
         };
         bitmapImage.PointerMoved += vm.OnImagePointerMoved;
         bitmapImage.PointerPressed += vm.OnImagePointerPressed;

@@ -2970,21 +2970,15 @@ public partial class MainViewModel :
             return null;
         }
 
-        var player = GetVideoPlayerControl();
-        if (player != null)
-        {
-            PauseVideoAndFreezePlayhead(player);
-        }
-
-        var position = player?.Position ?? 0;
         if (!await FfmpegRequirement.EnsureAsync(owner,
                 async () => (await _windowService.ShowDialogAsync<DownloadFfmpegWindow, DownloadFfmpegViewModel>(owner)).FfmpegFileName))
         {
             return null;
         }
 
+        // ShowDialogAsync pauses the video before configuring the view model, so the position read there is the paused frame.
         var result = await ShowDialogAsync<AssaImageColorPickerWindow, AssaImageColorPickerViewModel>(
-            vm => vm.InitializeForColorSelection(_videoFileName!, _mediaInfo!.Dimension.Width, _mediaInfo.Dimension.Height, position),
+            vm => vm.InitializeForColorSelection(_videoFileName!, _mediaInfo!.Dimension.Width, _mediaInfo.Dimension.Height, GetVideoPlayerControl()?.Position ?? 0),
             owner: owner);
         return result.OkPressed ? result.SelectedColor : null;
     }
