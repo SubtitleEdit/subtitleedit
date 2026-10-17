@@ -689,7 +689,7 @@ public class OcrWindow : Window
         // panel re-estimates its pixel extent, and the grid scrolled away from the line.
         TableViewScrollAnchor.Attach(dataGridSubtitle);
 
-        // The image thumbnails scale with Ctrl+plus/minus (Image.MaxWidth/MaxHeight are
+        // The image thumbnails scale with Ctrl+plus/minus/0 and Ctrl+wheel (Image.MaxWidth/MaxHeight are
         // bound to the VM) - keep the pixel-sized image column in step with the zoom.
         var imageColumn = dataGridSubtitle.Columns[dataGridSubtitle.Columns.Count - 2];
         vm.PropertyChanged += (_, args) =>
@@ -712,6 +712,7 @@ public class OcrWindow : Window
         dataGridSubtitle.DoubleTapped += (s, e) => vm.SubtitleGridDoubleTapped();
         dataGridSubtitle.AddHandler(InputElement.PointerPressedEvent, vm.DataGridSubtitleMacPointerPressed, Avalonia.Interactivity.RoutingStrategies.Tunnel);
         dataGridSubtitle.AddHandler(InputElement.PointerReleasedEvent, vm.DataGridSubtitleMacPointerReleased, Avalonia.Interactivity.RoutingStrategies.Tunnel);
+        dataGridSubtitle.AddHandler(InputElement.PointerWheelChangedEvent, vm.SubtitleGridPointerWheelChanged, Avalonia.Interactivity.RoutingStrategies.Tunnel);
         dataGridSubtitle.SelectionChanged += vm.SubtitleGridSelectionChanged;
         vm.SubtitleGrid = dataGridSubtitle;
 
