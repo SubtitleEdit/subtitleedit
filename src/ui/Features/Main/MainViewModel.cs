@@ -22210,6 +22210,61 @@ public partial class MainViewModel :
         WithoutReferenceOnlyRows(() => MoveTextFromCursorToNext(play: true, pauseAtEnd: true));
     }
 
+    [RelayCommand]
+    private void MoveTextBeforeCursorToPrevious()
+    {
+        WithoutReferenceOnlyRows(MoveTextBeforeCursorToPreviousCore);
+    }
+
+    /// <summary>
+    /// The mirror of <see cref="MoveTextFromCursorToNext"/> (#9537): the text before the caret is
+    /// appended to the previous subtitle and the rest stays on the current line, which stays
+    /// selected with the caret at its start - a speech-to-text line that started too early is
+    /// fixed in one keystroke instead of a split plus a merge.
+    /// </summary>
+    private void MoveTextBeforeCursorToPreviousCore()
+    {
+        var s = SelectedSubtitle;
+        if (s == null || s.IsReferenceOnly)
+        {
+            return;
+        }
+
+        var index = Subtitles.IndexOf(s);
+        var prev = index < 0 ? null : GetPreviousWorkingRow(index);
+        if (prev == null)
+        {
+            return;
+        }
+
+        var isOriginal = EditTextBoxOriginal.IsFocused && CanEditOriginal;
+        var textBox = isOriginal ? EditTextBoxOriginal : EditTextBox;
+        var currentText = (isOriginal ? s.OriginalText : s.Text) ?? string.Empty;
+
+        var caret = Math.Clamp(textBox.SelectionStart, 0, currentText.Length);
+        var textBefore = currentText.Substring(0, caret).Trim();
+        var textAfter = currentText.Substring(caret).Trim();
+        if (textBefore.Length == 0)
+        {
+            return;
+        }
+
+        if (isOriginal)
+        {
+            prev.OriginalText = ((prev.OriginalText ?? string.Empty).Trim() + Environment.NewLine + textBefore).Trim();
+            s.OriginalText = textAfter;
+        }
+        else
+        {
+            prev.Text = (prev.Text.Trim() + Environment.NewLine + textBefore).Trim();
+            s.Text = textAfter;
+        }
+
+        // The text box picks up the new text through its binding; put the caret at the start after that.
+        Dispatcher.UIThread.Post(() => textBox.Select(0, 0));
+        _updateAudioVisualizer = true;
+    }
+
     private void MoveTextFromCursorToNext(bool play, bool pauseAtEnd = false)
     {
         var s = SelectedSubtitle;
