@@ -403,6 +403,7 @@ public static class InitNativeMacMenu
             Item(Clean(lVideo.CutVideoDotDotDot), v => v.VideoCutCommand),
             Item(Clean(lVideo.BackgroundMusic.GenerateBackgroundMusicDotDotDot), v => v.ShowVideoBackgroundMusicCommand),
             Item(Clean(lVideo.RemuxVideoDotDotDot), v => v.ShowVideoRemuxVideoCommand),
+            Item(Clean(lVideo.SyncToAudioDotDotDot), v => v.ShowSyncToAudioCommand),
 
             // Finds who speaks in the video, clones each of them and assigns the cast, so the
             // whole thing can be dubbed in its own voices (#13698).

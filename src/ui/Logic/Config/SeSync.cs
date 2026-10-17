@@ -9,6 +9,11 @@ public class SeSync
     public double ChangeFrameRateFrom { get; set; } = 23.976;
     public double ChangeFrameRateTo { get; set; } = 25.0;
 
+    // Video > More > Sync subtitle to audio: how far the subtitle may be moved, and whether the
+    // standard frame rate conversions are tried as well.
+    public int SyncToAudioMaxOffsetSeconds { get; set; } = 120;
+    public bool SyncToAudioTryFrameRates { get; set; } = true;
+
     // Last used Change speed values ("All", "Selected", "SelectedAndForward"; empty = default by selection).
     public double ChangeSpeedPercent { get; set; } = 100.0;
     public string ChangeSpeedLineSelectionChoice { get; set; } = string.Empty;
