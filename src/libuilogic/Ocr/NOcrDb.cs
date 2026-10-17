@@ -540,7 +540,30 @@ public class NOcrDb
             }
         }
 
+        match ??= MatchUnplacedMark(item, placement);
         return PlaceMark(match, placement, item);
+    }
+
+    // Share of wrong points a comma/apostrophe shape may have when its position is ignored.
+    private const double UnplacedMarkMaxRate = 0.15;
+
+    /// <summary>
+    /// A small mark that matched nothing, tried against the comma and apostrophe shapes without
+    /// their trained position: a curly apostrophe is a raised comma, and comma entries sit at the
+    /// baseline, so the top-margin gate kept them off it ("You*ll", "didn*t"). Where the mark
+    /// sits then decides what it is (<see cref="PlaceMark"/>).
+    /// </summary>
+    private NOcrChar? MatchUnplacedMark(ImageSplitterItem2 item, BaselinePlacement placement)
+    {
+        if (placement == BaselinePlacement.Unknown || item.NikseBitmap is not { } bitmap ||
+            item.Baseline is not { } baseline || bitmap.Height * 2 > baseline)
+        {
+            return null;
+        }
+
+        var (comma, commaRate) = FindBestByText(bitmap, ",", UnplacedMarkMaxRate);
+        var (apostrophe, apostropheRate) = FindBestByText(bitmap, "'", UnplacedMarkMaxRate);
+        return comma != null && (apostrophe == null || commaRate <= apostropheRate) ? comma : apostrophe;
     }
 
     /// <summary>

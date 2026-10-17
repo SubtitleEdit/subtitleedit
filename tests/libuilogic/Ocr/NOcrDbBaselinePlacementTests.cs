@@ -118,6 +118,18 @@ public class NOcrDbBaselinePlacementTests
     }
 
     [Fact]
+    public void CommaShapeAtTopOfLine_WithOnlyBaselineCommaEntry_IsApostrophe()
+    {
+        // A curly apostrophe is a raised comma; the only comma entry was trained at the
+        // baseline, so the top-margin gate kept it off the mark and it came out as "*".
+        var mark = Solid(4, 9);
+        var db = new NOcrDb(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".nocr"));
+        db.Add(Entry(",", mark, Baseline - 6));
+
+        Assert.Equal("'", Match(db, Line(mark, 0)));
+    }
+
+    [Fact]
     public void SquareDotReadAsComma_NotHangingBelowBaseline_IsPeriod()
     {
         // A heavy dot fits a comma entry scaled down; it sits on the baseline instead of hanging.
