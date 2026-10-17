@@ -689,7 +689,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <returns>True if the text is considered a URL, otherwise false.</returns>
         public static bool IsUrl(string text)
         {
-            if (string.IsNullOrWhiteSpace(text) || text.Length < 6 || text.IndexOf('.') < 0 || text.Contains(' '))
+            if (string.IsNullOrWhiteSpace(text) || text.Length < 6 || !text.Contains('.') || text.Contains(' '))
             {
                 return false;
             }
