@@ -131,8 +131,16 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
             (0xffff, "060e2b34010101090601010406100000"), // GenericDescriptor SubDescriptors
         };
 
+        /// <summary>
+        /// The most fonts/images one track file can carry: the descriptor's SubDescriptors batch
+        /// (8 + 16 bytes per resource) is a local set item, whose length is a 16-bit value.
+        /// </summary>
+        public const int MaxResources = (ushort.MaxValue - 8) / 16;
+
         public void Write(string fileName, string xml)
         {
+            // Fail before the file is created/truncated
+            ThrowIfTooManyResources();
             using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None))
             {
                 Write(fs, xml);
@@ -141,6 +149,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
 
         public void Write(Stream stream, string xml)
         {
+            ThrowIfTooManyResources();
             var info = TimedTextInfo.Parse(xml);
             if (ContainerDuration > 0)
             {
@@ -434,6 +443,16 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
             return Klv(key, ms.ToArray());
         }
 
+        private void ThrowIfTooManyResources()
+        {
+            if (Resources.Count > MaxResources)
+            {
+                throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture,
+                    "A D-Cinema MXF timed text track file can hold at most {0} images/fonts, this one has {1} - split the subtitle into more reels.",
+                    MaxResources, Resources.Count));
+            }
+        }
+
         private static void WriteSet(Stream stream, byte setType, Guid instanceId, params (ushort Tag, byte[] Value)[] items)
         {
             var key = Hex("060e2b34025301010d01010101010000");
@@ -448,6 +467,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
         {
             foreach (var item in items)
             {
+                if (item.Value.Length > ushort.MaxValue)
+                {
+                    // The local set length is 16 bits - a cast would silently corrupt the header
+                    throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture,
+                        "MXF local set item 0x{0:x4} is {1} bytes, the limit is {2} (a track file can hold at most {3} images/fonts).",
+                        item.Tag, item.Value.Length, ushort.MaxValue, MaxResources));
+                }
+
                 WriteUInt16(stream, item.Tag);
                 WriteUInt16(stream, (ushort)item.Value.Length);
                 WriteBytes(stream, item.Value);
@@ -689,6 +716,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
         public static bool TryParseTimeCode(string timeCode, int frameRate, out long frames)
         {
             frames = 0;
+            if (frameRate <= 0)
+            {
+                return false;
+            }
+
             var parts = (timeCode ?? string.Empty).Trim().Split(':');
             var values = new int[4];
             if (parts.Length != 4)
@@ -704,6 +736,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
                 }
             }
 
+            if (values[1] >= 60 || values[2] >= 60 || values[3] >= frameRate)
+            {
+                return false;
+            }
+
             frames = ((values[0] * 60L + values[1]) * 60 + values[2]) * frameRate + values[3];
             return true;
         }
@@ -713,7 +750,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
         /// </summary>
         public static string ToTimeCode(TimeSpan duration, int frameRate)
         {
-            var frames = (long)Math.Round(duration.TotalSeconds * frameRate);
+            return ToTimeCode((long)Math.Round(duration.TotalSeconds * frameRate), frameRate);
+        }
+
+        /// <summary>
+        /// A frame count as HH:MM:SS:FF at the given (integer) time code rate.
+        /// </summary>
+        public static string ToTimeCode(long frames, int frameRate)
+        {
             var seconds = frames / frameRate;
             return string.Format(CultureInfo.InvariantCulture, "{0:00}:{1:00}:{2:00}:{3:00}", seconds / 3600, seconds / 60 % 60, seconds % 60, frames % frameRate);
         }

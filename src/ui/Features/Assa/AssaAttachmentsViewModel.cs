@@ -92,6 +92,7 @@ public partial class AssaAttachmentsViewModel : ObservableObject
     /// </summary>
     public void AttachFiles(IEnumerable<string> fileNames)
     {
+        var problems = new List<string>();
         foreach (var fileName in fileNames)
         {
             if (!File.Exists(fileName) || !AttachableExtensions.Contains(Path.GetExtension(fileName).ToLowerInvariant()))
@@ -99,9 +100,42 @@ public partial class AssaAttachmentsViewModel : ObservableObject
                 continue;
             }
 
-            var attachment = new AssaAttachmentItem(fileName);
+            // The footer stores only the file name, so a second file with the same name in the
+            // same section would be ambiguous - skip it and say so
+            var name = Path.GetFileName(fileName);
+            var isFont = fileName.EndsWith(".ttf", StringComparison.OrdinalIgnoreCase);
+            if (Attachments.Any(a => a.Category == (isFont ? Se.Language.General.Fonts : Se.Language.Assa.Graphics) &&
+                                     string.Equals(Path.GetFileName(a.FileName), name, StringComparison.OrdinalIgnoreCase)))
+            {
+                problems.Add(string.Format(Se.Language.General.FileXAlreadyExists, name));
+                continue;
+            }
+
+            // Reading a dropped file can fail (locked, no permission, gone) - this runs from a
+            // posted callback on drop, where an exception crashed the app
+            AssaAttachmentItem attachment;
+            try
+            {
+                attachment = new AssaAttachmentItem(fileName);
+            }
+            catch (Exception exception)
+            {
+                Se.LogError(exception, "AssaAttachments: unable to read " + fileName);
+                problems.Add(name + ": " + exception.Message);
+                continue;
+            }
+
             Attachments.Add(attachment);
             SelectedAttachment = attachment;
+        }
+
+        if (problems.Count > 0 && Window != null)
+        {
+            var window = Window;
+            Dispatcher.UIThread.Post(async void () =>
+            {
+                await MessageBox.Show(window, Se.Language.General.Error, string.Join(Environment.NewLine, problems), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            });
         }
     }
 

@@ -118,7 +118,9 @@ internal static class ImageOutputWriter
             throw new InvalidOperationException($"--reel-duration must be hh:mm:ss:ff, not '{options.ReelDuration}'.");
         }
 
-        mxf.ReelDuration = TimeSpan.FromSeconds(frames / (double)frameRate);
+        // A time code is a frame count already - converting it to seconds at the integer rate and
+        // back at the real (e.g. 23.976) rate would shrink it.
+        mxf.ReelFrames = frames;
     }
 
     /// <summary>

@@ -63,7 +63,7 @@ public static class TextBoxAutoWrap
         }
         else
         {
-            var lastSpace = text.LastIndexOf(' ');
+            var lastSpace = LastSpaceOutsideTags(text);
             if (lastSpace <= 0)
             {
                 return false;
@@ -79,15 +79,83 @@ public static class TextBoxAutoWrap
         }
 
         newText = wrapped;
-        if (caretIndex >= text.Length)
-        {
-            newCaretIndex = wrapped.Length;
-        }
-        else if (caretIndex > breakIndex)
-        {
-            newCaretIndex = Math.Min(wrapped.Length, caretIndex + wrapped.Length - text.Length);
-        }
+        newCaretIndex = caretIndex >= text.Length
+            ? wrapped.Length
+            : MapCaret(text, caretIndex, wrapped);
 
         return true;
+    }
+
+    // The last space that is not inside an HTML tag (<font face="Arial">) or an ASSA override
+    // block ({\fn Times New Roman}) - breaking there would corrupt the tag. -1 when none.
+    private static int LastSpaceOutsideTags(string text)
+    {
+        var lastSpace = -1;
+        var inHtmlTag = false;
+        var inAssaTag = false;
+        for (var i = 0; i < text.Length; i++)
+        {
+            var c = text[i];
+            if (inHtmlTag)
+            {
+                inHtmlTag = c != '>';
+            }
+            else if (inAssaTag)
+            {
+                inAssaTag = c != '}';
+            }
+            else if (c == '<')
+            {
+                inHtmlTag = true;
+            }
+            else if (c == '{')
+            {
+                inAssaTag = true;
+            }
+            else if (c == ' ')
+            {
+                lastSpace = i;
+            }
+        }
+
+        return lastSpace;
+    }
+
+    // Re-breaking can add, remove or move whitespace anywhere in the line, so map the caret by the
+    // number of non-whitespace characters in front of it rather than by the length difference.
+    private static int MapCaret(string oldText, int caretIndex, string newText)
+    {
+        var count = 0;
+        for (var i = 0; i < caretIndex && i < oldText.Length; i++)
+        {
+            if (!char.IsWhiteSpace(oldText[i]))
+            {
+                count++;
+            }
+        }
+
+        var index = 0;
+        var seen = 0;
+        while (index < newText.Length && seen < count)
+        {
+            if (!char.IsWhiteSpace(newText[index]))
+            {
+                seen++;
+            }
+
+            index++;
+        }
+
+        // The caret was after whitespace (e.g. the space just typed, now a line break) - keep it
+        // after the whitespace in the new text too, so it sits at the start of the next word.
+        if (caretIndex > 0 && char.IsWhiteSpace(oldText[caretIndex - 1]))
+        {
+            while (index < newText.Length && char.IsWhiteSpace(newText[index]))
+            {
+                index++;
+            }
+        }
+
+        return Math.Min(index, newText.Length);
     }
 }

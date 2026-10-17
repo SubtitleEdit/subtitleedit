@@ -15,7 +15,7 @@ public class FfmpegShiftAudioTrackTests
     [Fact]
     public void Later_KeepsStreamOrder_TakesTrackFromShiftedInput()
     {
-        var args = FfmpegGenerator.GetShiftAudioTrackArguments("in.mkv", "out.mkv", Streams, 2, 0.5, dropNegativePackets: true);
+        var args = FfmpegGenerator.GetShiftAudioTrackArguments("in.mkv", "out.mkv", Streams, 2, 2, 0.5, dropNegativePackets: true);
 
         Assert.Contains("-i \"in.mkv\" -itsoffset 0.500 -i \"in.mkv\" -map 0:0 -map 0:1 -map 1:2 -map 0:3 -c copy ", args);
         Assert.DoesNotContain("avoid_negative_ts", args);
@@ -31,11 +31,11 @@ public class FfmpegShiftAudioTrackTests
     [Fact]
     public void Earlier_AllowsNegativeTimestamps_AndDropsThemWhenSupported()
     {
-        var withDrop = FfmpegGenerator.GetShiftAudioTrackArguments("in.mkv", "out.mkv", Streams, 2, -0.25, dropNegativePackets: true);
+        var withDrop = FfmpegGenerator.GetShiftAudioTrackArguments("in.mkv", "out.mkv", Streams, 2, 2, -0.25, dropNegativePackets: true);
         Assert.Contains("-itsoffset -0.250 ", withDrop);
         Assert.Contains("-bsf:2 \"noise=drop=lt(pts*tb\\,0)\" -avoid_negative_ts disabled ", withDrop);
 
-        var withoutDrop = FfmpegGenerator.GetShiftAudioTrackArguments("in.mkv", "out.mkv", Streams, 2, -0.25, dropNegativePackets: false);
+        var withoutDrop = FfmpegGenerator.GetShiftAudioTrackArguments("in.mkv", "out.mkv", Streams, 2, 2, -0.25, dropNegativePackets: false);
         Assert.Contains("-c copy -avoid_negative_ts disabled -map_metadata", withoutDrop);
         Assert.DoesNotContain("-bsf", withoutDrop);
     }
@@ -53,9 +53,9 @@ public class FfmpegShiftAudioTrackTests
     [Fact]
     public void UnknownStreamIndexes_AppendsTheShiftedTrack()
     {
-        var args = FfmpegGenerator.GetShiftAudioTrackArguments("in.mp4", "out.mp4", Array.Empty<int>(), 1, 1.0, dropNegativePackets: true);
+        var args = FfmpegGenerator.GetShiftAudioTrackArguments("in.mp4", "out.mp4", Array.Empty<int>(), 1, 1, 1.0, dropNegativePackets: true);
 
-        Assert.Contains("-map 0 -map -0:1 -map 1:1 -c copy ", args);
+        Assert.Contains("-map 0 -map -0:a:0 -map -0:d -map 1:a:0 -c copy ", args);
     }
 
     [Fact]

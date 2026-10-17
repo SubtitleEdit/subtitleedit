@@ -994,16 +994,20 @@ public class FfmpegGenerator
     /// <paramref name="dropNegativePackets"/> (ffmpeg 5.1+ "noise" bsf drop option) the audio
     /// packets before zero are dropped instead.
     /// </remarks>
-    /// <param name="streamIndexes">All stream indexes of the input in order ("Stream #0:N"); empty
-    /// = unknown, then the shifted track is added last instead of in its old place.</param>
-    public static Process ShiftAudioTrack(string inputFileName, string outputFileName, IReadOnlyList<int> streamIndexes, int audioStreamIndex, double offsetSeconds, bool dropNegativePackets, DataReceivedEventHandler? dataReceivedHandler = null)
+    /// <param name="streamIndexes">The stream indexes of the input to copy, in order ("Stream #0:N"),
+    /// without data streams (they have no codec and make the muxer abort); empty = unknown, then
+    /// the shifted track is added last instead of in its old place.</param>
+    /// <param name="audioStreamIndex">The ffmpeg stream index of the audio track to shift.</param>
+    /// <param name="audioNumber">1-based position of that track among the audio streams - used
+    /// when the stream indexes are unknown.</param>
+    public static Process ShiftAudioTrack(string inputFileName, string outputFileName, IReadOnlyList<int> streamIndexes, int audioStreamIndex, int audioNumber, double offsetSeconds, bool dropNegativePackets, DataReceivedEventHandler? dataReceivedHandler = null)
     {
         var process = new Process
         {
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = GetShiftAudioTrackArguments(inputFileName, outputFileName, streamIndexes, audioStreamIndex, offsetSeconds, dropNegativePackets),
+                Arguments = GetShiftAudioTrackArguments(inputFileName, outputFileName, streamIndexes, audioStreamIndex, audioNumber, offsetSeconds, dropNegativePackets),
                 UseShellExecute = false,
                 CreateNoWindow = true
             }
@@ -1013,7 +1017,7 @@ public class FfmpegGenerator
         return process;
     }
 
-    internal static string GetShiftAudioTrackArguments(string inputFileName, string outputFileName, IReadOnlyList<int> streamIndexes, int audioStreamIndex, double offsetSeconds, bool dropNegativePackets)
+    internal static string GetShiftAudioTrackArguments(string inputFileName, string outputFileName, IReadOnlyList<int> streamIndexes, int audioStreamIndex, int audioNumber, double offsetSeconds, bool dropNegativePackets)
     {
         var offset = offsetSeconds.ToString("0.000", CultureInfo.InvariantCulture);
 
@@ -1037,7 +1041,10 @@ public class FfmpegGenerator
         }
         else
         {
-            maps.Append($"-map 0 -map -0:{audioStreamIndex} -map 1:{audioStreamIndex} ");
+            // Relative audio specifier: without known stream indexes there may be no absolute one.
+            // "-map -0:d" leaves out data streams, which "-c copy" cannot mux.
+            var audio = $"a:{Math.Max(0, audioNumber - 1)}";
+            maps.Append($"-map 0 -map -0:{audio} -map -0:d -map 1:{audio} ");
         }
 
         var negative = string.Empty;

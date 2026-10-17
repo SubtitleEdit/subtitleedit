@@ -1323,7 +1323,20 @@ public partial class BinaryEditViewModel : ObservableObject
             return false;
         }
 
-        WriteExport(exportHandler, fileOrFolderName);
+        try
+        {
+            WriteExport(exportHandler, fileOrFolderName);
+        }
+        catch (Exception exception)
+        {
+            // e.g. a D-Cinema MXF with more images than one track file can hold
+            Se.LogError(exception);
+            await MessageBox.Show(Window, Se.Language.General.Error,
+                string.Format(Se.Language.General.CouldNotSaveFileXErrorY, fileOrFolderName, exception.Message),
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
+        }
+
         _isDirty = false;
         return true;
     }

@@ -195,14 +195,20 @@ public partial class AssaDrawViewModel : ObservableObject
     {
         _subtitle = subtitle;
         _videoFileName = videoFileName;
-        if (selectedLines.Count > 0 && selectedLines[0].Duration.TotalMilliseconds >= 1)
+        // The main window writes the result into the selected drawing rows, which keep their own
+        // times, so the animation must be timed by the first drawing row - a 2 s dialogue line
+        // selected above a 5 s drawing made the out-animation fire after 2 s. Without a drawing
+        // row the new rows get the times of the last selected line.
+        var timingLine = selectedLines.FirstOrDefault(p => MainViewModel.IsAssaDrawingText(p.Text)) ??
+                         selectedLines.LastOrDefault();
+        if (timingLine != null && timingLine.Duration.TotalMilliseconds >= 1)
         {
-            LineDurationMs = (int)Math.Round(selectedLines[0].Duration.TotalMilliseconds);
+            LineDurationMs = (int)Math.Round(timingLine.Duration.TotalMilliseconds);
         }
 
         // Same frame Set position uses: the paused player position when it is inside the line
-        _videoSeconds = selectedLines.Count > 0
-            ? AssaSetPositionViewModel.GetScreenshotSeconds(selectedLines[0], videoPositionSeconds)
+        _videoSeconds = timingLine != null
+            ? AssaSetPositionViewModel.GetScreenshotSeconds(timingLine, videoPositionSeconds)
             : videoPositionSeconds ?? 0;
 
         // Drawing coordinates live in script (PlayRes) space, so the script resolution wins. The main
@@ -1582,9 +1588,10 @@ public partial class AssaDrawViewModel : ObservableObject
         var newLayer = vm.Layer;
         SaveUndo();
 
-        // Get color from existing shapes in the new layer (if any)
+        // Get color and animation from existing shapes in the new layer (if any)
         var existingShapeInNewLayer = Shapes.FirstOrDefault(s => s.Layer == newLayer);
         var newColor = existingShapeInNewLayer?.ForeColor;
+        var newAnimation = existingShapeInNewLayer != null ? GetLayerAnimation(newLayer) : null;
 
         if (SelectedTreeItem.IsLayer)
         {
@@ -1595,6 +1602,7 @@ public partial class AssaDrawViewModel : ObservableObject
                 if (newColor.HasValue)
                 {
                     shape.ForeColor = newColor.Value;
+                    shape.Animation = newAnimation?.Clone();
                 }
             }
         }
@@ -1605,6 +1613,7 @@ public partial class AssaDrawViewModel : ObservableObject
             if (newColor.HasValue)
             {
                 SelectedTreeItem.Shape.ForeColor = newColor.Value;
+                SelectedTreeItem.Shape.Animation = newAnimation?.Clone();
             }
         }
 
@@ -1849,14 +1858,16 @@ public partial class AssaDrawViewModel : ObservableObject
 
         SaveUndo();
 
-        // Same rule as Change layer: a shape joining a layer takes that layer's color
+        // Same rule as Change layer: a shape joining a layer takes that layer's color and animation
         var existing = Shapes.FirstOrDefault(s => s.Layer == layer);
+        var layerAnimation = existing != null ? GetLayerAnimation(layer) : null;
         foreach (var shape in shapes)
         {
             shape.Layer = layer;
             if (existing != null)
             {
                 shape.ForeColor = existing.ForeColor;
+                shape.Animation = layerAnimation?.Clone();
             }
         }
 
@@ -1880,6 +1891,13 @@ public partial class AssaDrawViewModel : ObservableObject
         var point = ActivePoint;
         var shape = point == null ? null : point.DrawShape ?? Shapes.FirstOrDefault(s => s.Points.Contains(point));
         if (point == null || shape == null || point.DrawType is DrawCoordinateType.BezierCurveSupport1 or DrawCoordinateType.BezierCurveSupport2)
+        {
+            return;
+        }
+
+        // RemovePoint refuses a point that isn't in the shape - check first, so no empty undo step
+        // is saved (it also cleared the redo stack)
+        if (!shape.Points.Contains(point))
         {
             return;
         }
@@ -2767,7 +2785,7 @@ public partial class AssaDrawViewModel : ObservableObject
             sbErase.Clear();
             var firstShape = GetLayerStyleShape(layer);
 
-            var animation = withAnimation ? GetLineAnimation(firstShape) : null;
+            var animation = withAnimation && firstShape != null ? GetLayerAnimation(layerKey) : null;
             var anchor = animation != null ? GetAnimationAnchor(firstShape!) : default;
 
             // Collect draw shapes (normal shapes) - relative to the anchor when animated
@@ -2777,7 +2795,11 @@ public partial class AssaDrawViewModel : ObservableObject
                 sbDraw.Append("  ");
             }
 
-            // Collect erase shapes (iclip shapes)
+            // Collect erase shapes (iclip shapes). These stay in absolute coordinates even when the
+            // layer is animated: libass never moves, scales or turns a vector \iclip with \pos/\move,
+            // \fscx or \frz, and \t can't animate one. They erase the right spot when the animation
+            // is at rest (and always for a fade or blink), so the clip is kept rather than dropped; the
+            // canvas animation preview shows them standing still the same way.
             foreach (var shape in layer.Where(p => p.IsEraser && !p.IsTextBox))
             {
                 sbErase.Append(shape.ToAssa());
@@ -2849,7 +2871,7 @@ public partial class AssaDrawViewModel : ObservableObject
             // layer on top, so the text shows over its bubble and under the layers above
             foreach (var shape in layer.Where(s => s.HasText && s.Points.Count > 0))
             {
-                var textAnimation = withAnimation ? GetLineAnimation(shape) : null;
+                var textAnimation = withAnimation ? GetLayerAnimation(layerKey) : null;
                 var textLine = AssaDrawTextLine.Format(shape);
                 if (textAnimation != null)
                 {
@@ -2876,8 +2898,13 @@ public partial class AssaDrawViewModel : ObservableObject
     /// </summary>
     public int LineDurationMs { get; set; } = 2000;
 
-    private static DrawAnimation? GetLineAnimation(DrawShape? shape) =>
-        shape?.Animation is { IsNone: false } animation ? animation : null;
+    /// <summary>
+    /// A layer is one line, so it has one animation: the first one set on any of its shapes. The
+    /// output, the canvas preview and the animation panel all read it this way - the output used
+    /// the first draw shape's, so a shape without one at the top of the layer dropped the effect.
+    /// </summary>
+    internal DrawAnimation? GetLayerAnimation(int layer) =>
+        Shapes.Where(s => s.Layer == layer).Select(s => s.Animation).FirstOrDefault(a => a is { IsNone: false });
 
     /// <summary>
     /// What an animation scales and turns around, and what it slides out of the frame: the shape's
@@ -4435,7 +4462,8 @@ public partial class AssaDrawViewModel : ObservableObject
     [RelayCommand]
     private void SelectAllShapes()
     {
-        SelectedShapes = Shapes.ToList();
+        // Like the rubber band: hidden shapes can't be seen, so they aren't moved or deleted with the rest
+        SelectedShapes = Shapes.Where(s => !s.Hidden).ToList();
         Canvas?.InvalidateVisual();
     }
 

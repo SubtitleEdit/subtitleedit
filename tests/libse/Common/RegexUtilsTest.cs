@@ -131,6 +131,8 @@ public class RegexUtilsTest
     [InlineData(@"(\w+)", "word", @"\\u$1", @"\uword")]
     [InlineData(@"(\w+)", "word", @"a\b$1", @"a\bword")]
     [InlineData(@"(?<w>\w+)", "word", @"\U${w}", "WORD")]
+    [InlineData(@"<u>(.*?)</u>", "<u>word</u>", @"{\u1}$1{\u0}", @"{\u1}word{\u0}")]
+    [InlineData(@"(\w+)", "word", @"{\u1}\u$1", @"{\u1}Word")]
     public void ReplaceNewLineSafe_CaseConversion(string pattern, string text, string replaceWith, string expected)
     {
         var regex = new Regex(pattern, RegexOptions.Multiline);

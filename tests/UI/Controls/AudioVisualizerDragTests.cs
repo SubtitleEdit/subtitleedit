@@ -107,7 +107,7 @@ public class AudioVisualizerDragTests : IDisposable
         var a = Line(1, 3, "{\\p1}m 0 0 l 10 0 10 10{\\p0}");
         var b = Line(1, 3, "{\\p1}m 5 5 l 15 5 15 15{\\p0}");
         var sign = Line(1, 3, "A sign with the same times");
-        var neighbour = Line(3.5, 5);
+        var neighbour = Line(4, 5);
         var (window, av, _) = Open(a, b, sign, neighbour);
         av.MovesSameTimeLinesTogether = () => true;
 
@@ -119,6 +119,28 @@ public class AudioVisualizerDragTests : IDisposable
         // +63 px = +0.5 s for the whole stack; the line after it is not part of it
         Assert.All(new[] { a, b, sign }, line => Assert.Equal(1.5, line.StartTime.TotalSeconds, 2));
         Assert.All(new[] { a, b, sign }, line => Assert.Equal(3.5, line.EndTime.TotalSeconds, 2));
+        Assert.Equal(4, neighbour.StartTime.TotalSeconds, 2);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void Assa_Move_LinesWithTheSameTimes_StopAtTheNeighbour()
+    {
+        // A dialogue line with a Comment twin at the same times is a stack too - it must still keep
+        // the minimum gap to the next line instead of sliding over it
+        var line = Line(1, 3, "Dialogue");
+        var twin = Line(1, 3, "Dialogue (original)");
+        var neighbour = Line(3.5, 5);
+        var (window, av, _) = Open(line, twin, neighbour);
+        av.MovesSameTimeLinesTogether = () => true;
+
+        window.MouseDown(new Point(252, 100), MouseButton.Left, RawInputModifiers.None);
+        window.MouseMove(new Point(315, 100), RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
+        window.MouseUp(new Point(315, 100), MouseButton.Left, RawInputModifiers.None);
+
+        Assert.All(new[] { line, twin }, l => Assert.Equal(3.4, l.EndTime.TotalSeconds, 2));
+        Assert.All(new[] { line, twin }, l => Assert.Equal(1.4, l.StartTime.TotalSeconds, 2));
         Assert.Equal(3.5, neighbour.StartTime.TotalSeconds, 2);
         window.Close();
     }

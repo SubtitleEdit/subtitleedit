@@ -55,6 +55,20 @@ public class TextBoxAutoWrapTests : IDisposable
     }
 
     [Theory]
+    [InlineData("<font face=\"Arial\">", "</font>")]
+    [InlineData("{\\fn Times New Roman}", "")]
+    public void TryWrap_NoSpaceOutsideTags_LeavesTagsAlone(string startTag, string endTag)
+    {
+        // CJK text has no spaces - the only one is inside the tag, and breaking there corrupts it
+        var text = startTag + new string('あ', 35) + endTag;
+
+        var wrapped = TextBoxAutoWrap.TryWrap(text, text.Length, 30, () => "ja", out var newText, out _);
+
+        Assert.False(wrapped);
+        Assert.Equal(text, newText);
+    }
+
+    [Theory]
     [InlineData("Short line")]
     [InlineData("This is a line that is too long\r\nbut already has two lines")]
     [InlineData("Thisisalinewithoutanyspacesthatistoolong")]

@@ -1635,7 +1635,12 @@ public partial class MainViewModel :
             return;
         }
 
-        var next = Subtitles.FirstOrDefault(s => s.StartTime.TotalSeconds >= vp.Position);
+        // Time order, not list order (the grid may be sorted by text), and strictly after the
+        // position: after a seek onto a subtitle's start, ">=" handed back that same subtitle.
+        var position = vp.Position;
+        var next = Subtitles
+            .OrderBy(s => s.StartTime.TotalMilliseconds)
+            .FirstOrDefault(s => s.StartTime.TotalSeconds > position + PlayPreviousNextToleranceSeconds);
         if (next == null)
         {
             return;
@@ -1712,17 +1717,34 @@ public partial class MainViewModel :
             return;
         }
 
-        var previous = Subtitles.LastOrDefault(s => s.StartTime.TotalSeconds < vp.Position);
-        if (previous == null)
+        // Like a media player's "previous track": well into the current subtitle (the one playing,
+        // or the last one that started before the position) restarts it, near its start goes to
+        // the one before - picking "last start before the position" alone restarted the playing
+        // subtitle forever. Time order, not list order (the grid may be sorted by text).
+        var position = vp.Position;
+        var sorted = Subtitles.OrderBy(s => s.StartTime.TotalMilliseconds).ToList();
+        var currentIndex = sorted.FindLastIndex(s => s.StartTime.TotalSeconds <= position + PlayPreviousNextToleranceSeconds);
+        if (currentIndex < 0)
         {
             return;
         }
+
+        var previous = position - sorted[currentIndex].StartTime.TotalSeconds > PlayPreviousRestartThresholdSeconds || currentIndex == 0
+            ? sorted[currentIndex]
+            : sorted[currentIndex - 1];
 
         SeekVideoPlayer(vp, previous.StartTime.TotalSeconds);
         PinPlayheadTo(previous.StartTime.TotalSeconds);
         SelectAndScrollToSubtitle(previous);
         PlayVideo(vp);
     }
+
+    // A seek lands on (or a hair off) the requested start, so "at the start" allows this much.
+    private const double PlayPreviousNextToleranceSeconds = 0.01;
+
+    // Play previous within this long after the current subtitle's start goes to the one before;
+    // later it restarts the current one.
+    private const double PlayPreviousRestartThresholdSeconds = 1.0;
 
     [RelayCommand]
     private void PlayPreviousAndStop()

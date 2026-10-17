@@ -222,7 +222,7 @@ public class FfmpegMediaInfo2
                     }
                     else
                     {
-                        info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Other, TrackInfo = trackInfo, Language = language, StreamIndex = streamIndex });
+                        info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Other, TypeName = trackType, TrackInfo = trackInfo, Language = language, StreamIndex = streamIndex });
                     }
                 }
             }

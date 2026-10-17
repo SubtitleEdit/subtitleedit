@@ -465,7 +465,7 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
                 return;
             }
 
-            if (!string.IsNullOrWhiteSpace(ReelDuration) && !TimedTextMxfWriter.TryParseTimeCode(ReelDuration, 1, out _))
+            if (!string.IsNullOrWhiteSpace(ReelDuration) && !TimedTextMxfWriter.TryParseTimeCode(ReelDuration, GetEditRateFrames(), out _))
             {
                 await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.File.PropertiesDCinema.ReelDurationInvalid, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -519,7 +519,15 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
         InitializeCore(subtitle, null);
         if (videoDuration is { TotalMilliseconds: > 0 } duration)
         {
-            ReelDuration = TimedTextMxfWriter.ToTimeCode(duration, GetEditRateFrames());
+            // The picture reel has duration x the video's real rate frames (1 h of 23.976 = 86314,
+            // not 86400) - count those, then express them as edit rate time code.
+            var editRateFrames = GetEditRateFrames();
+            var videoFrameRate = Se.Settings.General.CurrentFrameRate;
+            var frameRate = videoFrameRate > 0 && (int)Math.Round(videoFrameRate, MidpointRounding.AwayFromZero) == editRateFrames
+                ? videoFrameRate
+                : editRateFrames;
+            var frames = (long)Math.Round(duration.TotalSeconds * frameRate, MidpointRounding.AwayFromZero);
+            ReelDuration = TimedTextMxfWriter.ToTimeCode(frames, editRateFrames);
         }
 
         WindowTitle = string.Format(Se.Language.File.XProperties, Se.Language.File.Export.TitleExportDCinemaSmpte2014Mxf);

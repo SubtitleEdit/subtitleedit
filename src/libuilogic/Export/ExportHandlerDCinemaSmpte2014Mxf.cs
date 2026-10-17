@@ -19,6 +19,12 @@ public class ExportHandlerDCinemaSmpte2014Mxf : ExportHandlerDCinemaSmpte2014Png
     /// </summary>
     public TimeSpan? ReelDuration { get; set; }
 
+    /// <summary>
+    /// The reel length as a picture frame count (e.g. a time code typed by the user) - takes
+    /// precedence over <see cref="ReelDuration"/>.
+    /// </summary>
+    public long? ReelFrames { get; set; }
+
     private string _fileName = string.Empty;
     private readonly List<TimedTextMxfResource> _images = new();
 
@@ -36,14 +42,34 @@ public class ExportHandlerDCinemaSmpte2014Mxf : ExportHandlerDCinemaSmpte2014Png
     protected override void SaveXml(string xml)
     {
         var writer = new TimedTextMxfWriter();
-        if (ReelDuration is { TotalMilliseconds: > 0 } reelDuration)
+        if (ReelFrames is { } reelFrames && reelFrames > 0)
         {
-            var frameRate = (int)Math.Round(FrameRate, MidpointRounding.AwayFromZero);
-            writer.ContainerDuration = (long)Math.Round(reelDuration.TotalSeconds * frameRate);
+            writer.ContainerDuration = reelFrames;
+        }
+        else if (ReelDuration is { TotalMilliseconds: > 0 } reelDuration)
+        {
+            writer.ContainerDuration = GetReelFrames(reelDuration, FrameRate);
         }
 
+        // Throws (before the file is created) when there are more images than
+        // TimedTextMxfWriter.MaxResources - one track file cannot hold them.
         writer.Resources.AddRange(_images);
         writer.Write(_fileName, xml);
         _images.Clear();
+    }
+
+    /// <summary>
+    /// The picture frame count of a reel from its real-time length: a 23.976 video plays as 24
+    /// frames per second in a DCP, but it has duration x 23.976 frames (1 h = 86314, not 86400),
+    /// so count with the actual (fractional) rate, not the integer edit rate.
+    /// </summary>
+    public static long GetReelFrames(TimeSpan duration, double frameRate)
+    {
+        if (frameRate <= 0)
+        {
+            frameRate = 24;
+        }
+
+        return (long)Math.Round(duration.TotalSeconds * frameRate, MidpointRounding.AwayFromZero);
     }
 }

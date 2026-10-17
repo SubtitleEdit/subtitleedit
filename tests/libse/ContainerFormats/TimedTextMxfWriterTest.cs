@@ -128,6 +128,24 @@ public class TimedTextMxfWriterTest
     }
 
     [Fact]
+    public void TooManyResourcesThrows()
+    {
+        // 4096 sub-descriptor ids no longer fit the 16-bit local set length of the batch
+        var xml = File.ReadAllText(FilePath("sample_mxf_429-5_asdcplib.xml"));
+        var writer = new TimedTextMxfWriter();
+        writer.Resources.Add(new TimedTextMxfResource(FontId, TimedTextMxfResource.MimeTypeFont, Font));
+        writer.Resources.Add(new TimedTextMxfResource(ImageId, TimedTextMxfResource.MimeTypePng, Png));
+        while (writer.Resources.Count <= TimedTextMxfWriter.MaxResources)
+        {
+            writer.Resources.Add(new TimedTextMxfResource(Guid.NewGuid(), TimedTextMxfResource.MimeTypePng, Png));
+        }
+
+        var exception = Assert.Throws<InvalidOperationException>(() => writer.Write(new MemoryStream(), xml));
+        Assert.Contains("4095", exception.Message);
+        Assert.Equal(4095, TimedTextMxfWriter.MaxResources);
+    }
+
+    [Fact]
     public void GetLoadFontIds()
     {
         var xml = File.ReadAllText(FilePath("sample_mxf_429-5_asdcplib.xml"));
@@ -144,11 +162,23 @@ public class TimedTextMxfWriterTest
         Assert.False(TimedTextMxfWriter.TryParseTimeCode("12.5", frameRate, out _));
     }
 
+    [Theory]
+    [InlineData("00:60:00:00", 24)]
+    [InlineData("00:00:60:00", 24)]
+    [InlineData("00:00:00:24", 24)]
+    [InlineData("00:00:00:25", 25)]
+    [InlineData("00:00:01:00", 0)]
+    public void TryParseTimeCodeOutOfRange(string timeCode, int frameRate)
+    {
+        Assert.False(TimedTextMxfWriter.TryParseTimeCode(timeCode, frameRate, out _));
+    }
+
     [Fact]
     public void ToTimeCode()
     {
         Assert.Equal("00:00:12:00", TimedTextMxfWriter.ToTimeCode(TimeSpan.FromSeconds(12), 24));
         Assert.Equal("01:02:03:12", TimedTextMxfWriter.ToTimeCode(new TimeSpan(0, 1, 2, 3, 500), 24));
+        Assert.Equal("00:59:56:10", TimedTextMxfWriter.ToTimeCode(86314L, 24)); // 1 h of 23.976 picture
     }
 
     private static List<(long Offset, byte[] Key, byte[] Value)> ReadKlvs(byte[] data)

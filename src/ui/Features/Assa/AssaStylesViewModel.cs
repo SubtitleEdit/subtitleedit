@@ -956,9 +956,10 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        var category = CategoryForNewStyle();
         foreach (var selectedStyle in selectedItems)
         {
+            // A duplicate stays in its source style's category
+            var category = selectedStyle.Category ?? string.Empty;
             var name = selectedStyle.Name + " - " + Se.Language.General.Copy;
             if (StorageStylesInCategory(category).Any(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
             {
@@ -1068,8 +1069,21 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         => IsSameCategoryLabel(SelectedStorageCategory, AllCategoriesLabel) ||
            IsSameCategoryLabel(StoredToCategoryLabel(style.Category), SelectedStorageCategory);
 
+    /// <summary>
+    /// Category a new, copied or imported saved style goes to: the filtered category, or - as the
+    /// window has no category picker and always shows all saved styles - the category of the
+    /// selected saved style, else Default. Everything landed in Default before.
+    /// </summary>
     private string CategoryForNewStyle()
-        => SelectedStorageCategory == AllCategoriesLabel ? string.Empty : CategoryLabelToStored(SelectedStorageCategory);
+    {
+        if (!IsSameCategoryLabel(SelectedStorageCategory, AllCategoriesLabel))
+        {
+            return CategoryLabelToStored(SelectedStorageCategory);
+        }
+
+        var selected = SelectedStorageStyle ?? StorageStyleGrid?.SelectedItem as StyleDisplay;
+        return selected?.Category ?? string.Empty;
+    }
 
     // Categories are independent style sets, so a style name only has to be unique within its
     // category - the same name in another category is not a clash (#15332).
@@ -1257,9 +1271,13 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
 
         MoveStylesToCategory(selectedItems, stored);
 
+        // The filter is left alone (the window always shows all saved styles, and switching it
+        // rebuilt the list twice and dropped the selection) - the category column updates itself
         RebuildStorageCategories();
-        SelectedStorageCategory = StorageCategories.FirstOrDefault(c => IsSameCategoryLabel(c, label)) ?? SelectedStorageCategory;
-        RefreshStorageStylesView();
+        if (!IsSameCategoryLabel(SelectedStorageCategory, AllCategoriesLabel))
+        {
+            RefreshStorageStylesView();
+        }
     }
 
     /// <summary>

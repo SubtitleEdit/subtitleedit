@@ -49,6 +49,7 @@ public class AssaImageColorPickerWindow : Window
 
         UiUtil.FocusOnFirstActivation(this, buttonDone);
         KeyDown += vm.KeyDown;
+        Closed += (_, _) => vm.OnClosed();
     }
 
     private static Control MakeFrame(AssaImageColorPickerViewModel vm)

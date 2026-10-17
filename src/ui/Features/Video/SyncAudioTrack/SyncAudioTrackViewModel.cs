@@ -86,8 +86,11 @@ public partial class SyncAudioTrackViewModel : ObservableObject
     /// </summary>
     internal void SetMediaInfo(FfmpegMediaInfo2 mediaInfo)
     {
-        _streamIndexes = mediaInfo.Tracks.Select(t => t.StreamIndex).Where(i => i >= 0).ToList();
-        if (_streamIndexes.Count != mediaInfo.Tracks.Count)
+        // Data streams (MOV timecode, SCTE-35, ...) have no codec - "-c copy" cannot mux them and
+        // ffmpeg aborts, so they are left out of the copy.
+        var copiedTracks = mediaInfo.Tracks.Where(t => !IsDataStream(t)).ToList();
+        _streamIndexes = copiedTracks.Select(t => t.StreamIndex).Where(i => i >= 0).ToList();
+        if (_streamIndexes.Count != copiedTracks.Count)
         {
             _streamIndexes.Clear(); // not all indexes known - the remux then appends the track
         }
@@ -111,6 +114,10 @@ public partial class SyncAudioTrackViewModel : ObservableObject
         ErrorText = AudioTracks.Count == 0 ? Se.Language.Video.SyncAudioTrackNoAudio : string.Empty;
         SelectedAudioTrack = AudioTracks.FirstOrDefault();
     }
+
+    private static bool IsDataStream(FfmpegTrackInfo track) =>
+        track.TrackType == FfmpegTrackType.Other &&
+        track.TypeName is "Data" or "Unknown";
 
     partial void OnOffsetMsChanged(int value)
     {
@@ -181,11 +188,12 @@ public partial class SyncAudioTrackViewModel : ObservableObject
         ProgressValue = 0;
         ProgressText = Se.Language.Video.SyncAudioTrackSaving;
         int exitCode;
+        Process? process = null;
         try
         {
             var dropNegativePackets = OffsetMs < 0 && await Task.Run(FfmpegGenerator.NoiseBitstreamFilterCanDrop);
-            using var process = FfmpegGenerator.ShiftAudioTrack(_videoFileName, outputFileName, _streamIndexes,
-                SelectedAudioTrack.StreamIndex, OffsetMs / 1000.0, dropNegativePackets, (_, e) =>
+            process = FfmpegGenerator.ShiftAudioTrack(_videoFileName, outputFileName, _streamIndexes,
+                SelectedAudioTrack.StreamIndex, SelectedAudioTrack.AudioNumber, OffsetMs / 1000.0, dropNegativePackets, (_, e) =>
                 {
                     if (string.IsNullOrEmpty(e.Data))
                     {
@@ -207,11 +215,19 @@ public partial class SyncAudioTrackViewModel : ObservableObject
         }
         catch (OperationCanceledException)
         {
+            // The cancel kills ffmpeg without waiting for it to exit - until it has, the partial
+            // output is still open and (on Windows) cannot be deleted.
+            if (process != null)
+            {
+                await Task.Run(() => WaitForExitNoError(process, 2000));
+            }
+
             TryDelete(outputFileName);
             return;
         }
         finally
         {
+            process?.Dispose();
             IsSaving = false;
             ProgressText = string.Empty;
         }
@@ -243,6 +259,18 @@ public partial class SyncAudioTrackViewModel : ObservableObject
     {
         var lines = text.SplitToLines().Where(l => !string.IsNullOrWhiteSpace(l)).ToList();
         return string.Join(Environment.NewLine, lines.Skip(Math.Max(0, lines.Count - count)));
+    }
+
+    private static void WaitForExitNoError(Process process, int milliseconds)
+    {
+        try
+        {
+            process.WaitForExit(milliseconds);
+        }
+        catch
+        {
+            // not started, or already gone
+        }
     }
 
     private static void TryDelete(string fileName)

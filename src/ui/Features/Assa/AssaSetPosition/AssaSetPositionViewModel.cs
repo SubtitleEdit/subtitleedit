@@ -218,6 +218,11 @@ public partial class AssaSetPositionViewModel : ObservableObject
         {
             ScreenshotY += (int)Math.Round((y.Value - ResultY) * (double)_renderHeight / Math.Max(1, SourceHeight));
         }
+
+        // The text box moves in whole render pixels, so a typed script-space value can round to no
+        // move at all (PlayRes larger than the video) - the field then showed 961 while OK wrote
+        // 960. Show the value that will be written.
+        UpdatePositionFields();
     }
 
     partial void OnShowSafeAreaChanged(bool value) => Se.Settings.Assa.SetPositionShowSafeArea = value;
