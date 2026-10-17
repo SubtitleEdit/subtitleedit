@@ -426,6 +426,9 @@ public static class ShortcutsMain
         { nameof(MainViewModel.SplitAtVideoPositionCommand), Se.Language.General.SplitLineAtVideoPosition },
         { nameof(MainViewModel.SplitAtTextBoxCursorPositionCommand), Se.Language.General.SplitAtTextBoxCursorPosition },
         { nameof(MainViewModel.SplitAtVideoPositionAndTextBoxCursorPositionCommand), Se.Language.General.SplitLineAtVideoAndTextBoxPosition },
+        { nameof(MainViewModel.SplitAtVideoPositionAndPlayCommand), Se.Language.Options.Shortcuts.SplitAtVideoPositionAndPlay },
+        { nameof(MainViewModel.SplitAtTextBoxCursorPositionAndPlayCommand), Se.Language.Options.Shortcuts.SplitAtTextBoxCursorPositionAndPlay },
+        { nameof(MainViewModel.SplitAtVideoPositionAndTextBoxCursorPositionAndPlayCommand), Se.Language.Options.Shortcuts.SplitAtVideoAndTextBoxPositionAndPlay },
         { nameof(MainViewModel.TextBoxDeleteForwardCommand), Se.Language.Options.Shortcuts.TextBoxDeleteForward },
         { nameof(MainViewModel.TextBoxCutCommand), Se.Language.Options.Shortcuts.TextBoxCut },
         { nameof(MainViewModel.TextBoxCut2Command), Se.Language.Options.Shortcuts.TextBoxCut2 },
@@ -931,6 +934,9 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.SplitAtVideoPositionCommand, nameof(vm.SplitAtVideoPositionCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SplitAtTextBoxCursorPositionCommand, nameof(vm.SplitAtTextBoxCursorPositionCommand), ShortcutCategory.TextBox);
         AddShortcut(shortcuts, vm.SplitAtVideoPositionAndTextBoxCursorPositionCommand, nameof(vm.SplitAtVideoPositionAndTextBoxCursorPositionCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SplitAtVideoPositionAndPlayCommand, nameof(vm.SplitAtVideoPositionAndPlayCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SplitAtTextBoxCursorPositionAndPlayCommand, nameof(vm.SplitAtTextBoxCursorPositionAndPlayCommand), ShortcutCategory.TextBox);
+        AddShortcut(shortcuts, vm.SplitAtVideoPositionAndTextBoxCursorPositionAndPlayCommand, nameof(vm.SplitAtVideoPositionAndTextBoxCursorPositionAndPlayCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.TextBoxDeleteForwardCommand, nameof(vm.TextBoxDeleteForwardCommand), ShortcutCategory.TextBox);
         AddShortcut(shortcuts, vm.TextBoxCutCommand, nameof(vm.TextBoxCutCommand), ShortcutCategory.TextBox);
         AddShortcut(shortcuts, vm.TextBoxCut2Command, nameof(vm.TextBoxCut2Command), ShortcutCategory.TextBox);

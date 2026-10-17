@@ -20636,6 +20636,70 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void SplitAtVideoPositionAndPlay()
+    {
+        SplitSelectedLineAndPlay(true, false);
+    }
+
+    [RelayCommand]
+    private void SplitAtTextBoxCursorPositionAndPlay()
+    {
+        SplitSelectedLineAndPlay(false, true);
+    }
+
+    [RelayCommand]
+    private void SplitAtVideoPositionAndTextBoxCursorPositionAndPlay()
+    {
+        SplitSelectedLineAndPlay(true, true);
+    }
+
+    /// <summary>
+    /// SE 4's "split ... and play" (#9180): split, move on to the second part and play from where
+    /// the line was cut, so a long block can be chopped up in one pass without play/pause per cut.
+    /// A split at the video position while the video plays keeps playing undisturbed - the cut is
+    /// where the video already is.
+    /// </summary>
+    private void SplitSelectedLineAndPlay(bool atVideoPosition, bool atTextBoxPosition)
+    {
+        var s = SelectedSubtitle;
+        if (s == null)
+        {
+            return;
+        }
+
+        var countBefore = Subtitles.Count;
+        SplitLine(atVideoPosition, atTextBoxPosition, s);
+        if (Subtitles.Count <= countBefore)
+        {
+            return;
+        }
+
+        var secondIndex = Subtitles.IndexOf(s) + 1;
+        var second = Subtitles.GetOrNull(secondIndex);
+        if (second == null)
+        {
+            return;
+        }
+
+        SelectAndScrollToRow(secondIndex);
+
+        var vp = GetVideoPlayerControl();
+        if (vp == null || string.IsNullOrEmpty(_videoFileName))
+        {
+            return;
+        }
+
+        if (atVideoPosition && vp.IsPlaying)
+        {
+            return;
+        }
+
+        SeekVideoPlayer(vp, second.StartTime.TotalSeconds);
+        PinPlayheadTo(second.StartTime.TotalSeconds);
+        PlayVideo(vp);
+    }
+
+    [RelayCommand]
     private async Task AssistedSplit()
     {
         var s = SelectedSubtitle;
