@@ -340,6 +340,12 @@ public class LanguageSettingsShortcuts
     public string MoveSelectedLinesAndForwardXMsForward { get; set; }
     public string MoveAllLinesXMsBack { get; set; }
     public string MoveAllLinesXMsForward { get; set; }
+    public string MoveSelectedLinesOneFrameBack { get; set; }
+    public string MoveSelectedLinesOneFrameForward { get; set; }
+    public string MoveSelectedLinesAndForwardOneFrameBack { get; set; }
+    public string MoveSelectedLinesAndForwardOneFrameForward { get; set; }
+    public string MoveAllLinesOneFrameBack { get; set; }
+    public string MoveAllLinesOneFrameForward { get; set; }
     public string MoveSelectedLinesCustomMsBack { get; set; }
     public string MoveSelectedLinesCustomMsForward { get; set; }
     public string MoveSelectedLinesAndForwardCustomMsBack { get; set; }
@@ -689,6 +695,12 @@ public class LanguageSettingsShortcuts
         MoveSelectedLinesAndForwardXMsForward = "Move selected lines and all following X ms forward (X set in Settings)";
         MoveAllLinesXMsBack = "Move all lines X ms back (X set in Settings)";
         MoveAllLinesXMsForward = "Move all lines X ms forward (X set in Settings)";
+        MoveSelectedLinesOneFrameBack = "Move selected lines one frame back";
+        MoveSelectedLinesOneFrameForward = "Move selected lines one frame forward";
+        MoveSelectedLinesAndForwardOneFrameBack = "Move selected lines and all following one frame back";
+        MoveSelectedLinesAndForwardOneFrameForward = "Move selected lines and all following one frame forward";
+        MoveAllLinesOneFrameBack = "Move all lines one frame back";
+        MoveAllLinesOneFrameForward = "Move all lines one frame forward";
         MoveSelectedLinesCustomMsBack = "Move selected lines, custom milliseconds ({0:#,###,##0}) back, {1}";
         MoveSelectedLinesCustomMsForward = "Move selected lines, custom milliseconds ({0:#,###,##0}) forward, {1}";
         MoveSelectedLinesAndForwardCustomMsBack = "Move selected lines and all following, custom milliseconds ({0:#,###,##0}) back, {1}";

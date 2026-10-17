@@ -16531,6 +16531,25 @@ public partial class MainViewModel :
     [RelayCommand]
     private void MoveAllLinesXMsForward() => MoveLinesByStep(1, MoveLinesScope.All);
 
+    // #9367: the same moves by exactly one frame of the current frame rate.
+    [RelayCommand]
+    private void MoveSelectedLinesOneFrameBack() => MoveLinesByMs(FramesToMilliseconds(-1), MoveLinesScope.Selected);
+
+    [RelayCommand]
+    private void MoveSelectedLinesOneFrameForward() => MoveLinesByMs(FramesToMilliseconds(1), MoveLinesScope.Selected);
+
+    [RelayCommand]
+    private void MoveSelectedLinesAndForwardOneFrameBack() => MoveLinesByMs(FramesToMilliseconds(-1), MoveLinesScope.SelectedAndForward);
+
+    [RelayCommand]
+    private void MoveSelectedLinesAndForwardOneFrameForward() => MoveLinesByMs(FramesToMilliseconds(1), MoveLinesScope.SelectedAndForward);
+
+    [RelayCommand]
+    private void MoveAllLinesOneFrameBack() => MoveLinesByMs(FramesToMilliseconds(-1), MoveLinesScope.All);
+
+    [RelayCommand]
+    private void MoveAllLinesOneFrameForward() => MoveLinesByMs(FramesToMilliseconds(1), MoveLinesScope.All);
+
     // Per-shortcut steps, configured with the gear button in Options > Shortcuts (like the custom
     // video seek amounts). A slot's value is shared by its back and forward commands.
     [RelayCommand]

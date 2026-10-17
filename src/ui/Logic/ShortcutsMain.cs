@@ -551,6 +551,12 @@ public static class ShortcutsMain
         { nameof(MainViewModel.MoveSelectedLinesAndForwardXMsForwardCommand), Se.Language.Options.Shortcuts.MoveSelectedLinesAndForwardXMsForward },
         { nameof(MainViewModel.MoveAllLinesXMsBackCommand), Se.Language.Options.Shortcuts.MoveAllLinesXMsBack },
         { nameof(MainViewModel.MoveAllLinesXMsForwardCommand), Se.Language.Options.Shortcuts.MoveAllLinesXMsForward },
+        { nameof(MainViewModel.MoveSelectedLinesOneFrameBackCommand), Se.Language.Options.Shortcuts.MoveSelectedLinesOneFrameBack },
+        { nameof(MainViewModel.MoveSelectedLinesOneFrameForwardCommand), Se.Language.Options.Shortcuts.MoveSelectedLinesOneFrameForward },
+        { nameof(MainViewModel.MoveSelectedLinesAndForwardOneFrameBackCommand), Se.Language.Options.Shortcuts.MoveSelectedLinesAndForwardOneFrameBack },
+        { nameof(MainViewModel.MoveSelectedLinesAndForwardOneFrameForwardCommand), Se.Language.Options.Shortcuts.MoveSelectedLinesAndForwardOneFrameForward },
+        { nameof(MainViewModel.MoveAllLinesOneFrameBackCommand), Se.Language.Options.Shortcuts.MoveAllLinesOneFrameBack },
+        { nameof(MainViewModel.MoveAllLinesOneFrameForwardCommand), Se.Language.Options.Shortcuts.MoveAllLinesOneFrameForward },
         { nameof(MainViewModel.MoveSelectedLinesCustom1BackCommand), GetMoveLinesCustomTitle(MoveLinesScope.Selected, 1, back: true) },
         { nameof(MainViewModel.MoveSelectedLinesCustom1ForwardCommand), GetMoveLinesCustomTitle(MoveLinesScope.Selected, 1, back: false) },
         { nameof(MainViewModel.MoveSelectedLinesCustom2BackCommand), GetMoveLinesCustomTitle(MoveLinesScope.Selected, 2, back: true) },
@@ -1122,6 +1128,12 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.MoveSelectedLinesAndForwardXMsForwardCommand, nameof(vm.MoveSelectedLinesAndForwardXMsForwardCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveAllLinesXMsBackCommand, nameof(vm.MoveAllLinesXMsBackCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveAllLinesXMsForwardCommand, nameof(vm.MoveAllLinesXMsForwardCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveSelectedLinesOneFrameBackCommand, nameof(vm.MoveSelectedLinesOneFrameBackCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveSelectedLinesOneFrameForwardCommand, nameof(vm.MoveSelectedLinesOneFrameForwardCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveSelectedLinesAndForwardOneFrameBackCommand, nameof(vm.MoveSelectedLinesAndForwardOneFrameBackCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveSelectedLinesAndForwardOneFrameForwardCommand, nameof(vm.MoveSelectedLinesAndForwardOneFrameForwardCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveAllLinesOneFrameBackCommand, nameof(vm.MoveAllLinesOneFrameBackCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveAllLinesOneFrameForwardCommand, nameof(vm.MoveAllLinesOneFrameForwardCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveSelectedLinesCustom1BackCommand, nameof(vm.MoveSelectedLinesCustom1BackCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveSelectedLinesCustom1ForwardCommand, nameof(vm.MoveSelectedLinesCustom1ForwardCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveSelectedLinesCustom2BackCommand, nameof(vm.MoveSelectedLinesCustom2BackCommand), ShortcutCategory.General);
