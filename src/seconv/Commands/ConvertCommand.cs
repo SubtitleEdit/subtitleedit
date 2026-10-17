@@ -850,7 +850,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 OcrDb = settings.OcrDb,
                 DictionaryFolder = settings.DictionaryFolder,
                 TimeCodesOnly = settings.TimeCodesOnly,
-                VobSubIsolateColors = !settings.NoVobSubIsolateColors,
+                // Same for VobSub/DVD sup: nOCR and BinaryOCR need the transparent original, or
+                // every line is one opaque blob read as "*".
+                VobSubIsolateColors = !settings.NoVobSubIsolateColors &&
+                                      settings.OcrEngine?.Trim().ToLowerInvariant() is not ("nocr" or "binaryocr" or "binary"),
                 // Apple Vision reads the original PGS/DVB-sub images better than binarised ones -
                 // binarising costs it umlauts and trailing punctuation - and the GUI never
                 // binarises for it either, so isolation stays off for that engine.
