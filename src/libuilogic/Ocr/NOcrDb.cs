@@ -576,7 +576,8 @@ public class NOcrDb
 
     private NOcrChar? GetMatch(NikseBitmap2 parentBitmap, List<ImageSplitterItem2> list, ImageSplitterItem2 item, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch, double italicFactor, BaselinePlacement placement)
     {
-        var key = new MatchCacheKey(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels, lastDitch, italicFactor, placement);
+        // The public GetMatch returns early for an item without a bitmap.
+        var key = new MatchCacheKey(item.NikseBitmap!, topMargin, deepSeek, maxWrongPixels, lastDitch, italicFactor, placement);
         MatchCacheEntry? cached;
         lock (_lock)
         {
