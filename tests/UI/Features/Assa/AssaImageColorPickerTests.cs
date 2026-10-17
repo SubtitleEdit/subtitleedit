@@ -36,6 +36,26 @@ public class AssaImageColorPickerTests
         Assert.Equal(vm.History[0].Hex, vm.ClickedColorRgbHex);
     }
 
+    [AvaloniaFact]
+    public void ColorSelection_WithoutVideo_OpensOnPlaceholder_AndOnlyConfirmsAPickedColor()
+    {
+        var vm = new AssaImageColorPickerViewModel();
+        vm.InitializeForColorSelection(null, 640, 360, 0);
+
+        Assert.True(vm.IsColorSelection);
+        Assert.False(vm.IsLoadingFrame);
+        Assert.Equal(640, vm.Screenshot.PixelSize.Width);
+        Assert.Null(vm.SelectedColor);
+
+        vm.OkCommand.Execute(null);
+        Assert.False(vm.OkPressed);
+
+        vm.Pick(Color.FromRgb(0x10, 0x20, 0x30));
+        vm.OkCommand.Execute(null);
+        Assert.True(vm.OkPressed);
+        Assert.Equal(Color.FromRgb(0x10, 0x20, 0x30), vm.SelectedColor);
+    }
+
     [Fact]
     public void Magnifier_IsElevenPixelsEightTimesLarger_CenteredOnThePointer()
     {

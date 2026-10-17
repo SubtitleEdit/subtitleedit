@@ -37,6 +37,19 @@ public class ColorPickerWindow : Window
 
         UiUtil.FocusOnFirstActivation(this, hexTextBox); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
+        Opened += (_, _) => ConfigureImagePicker(vm);
+    }
+
+    private void ConfigureImagePicker(ColorPickerViewModel vm)
+    {
+        // Use this dialog's editor, including when opened through a style/settings dialog
+        // or from a second editor window.
+        var source = ImageColorSource.Find(this);
+        if (source != null)
+        {
+            vm.CanSelectFromImage = source.CanPick();
+            vm.PickFromImageAsync = source.PickAsync;
+        }
     }
 
     private static StackPanel MakeColorView(ColorPickerViewModel vm, out TextBox hexTextBox)
@@ -264,6 +277,12 @@ public class ColorPickerWindow : Window
         panel.Children.Add(blueSlider);
         panel.Children.Add(alphaSlider);
         panel.Children.Add(hexPanel);
+
+        var selectFromImage = UiUtil.MakeButton(Se.Language.Assa.ImageColorPicker + "...", vm.SelectFromImageCommand);
+        selectFromImage.HorizontalAlignment = HorizontalAlignment.Left;
+        selectFromImage.Margin = new Thickness(0, 8, 0, 0);
+        selectFromImage.Bind(IsVisibleProperty, new Binding(nameof(vm.CanSelectFromImage)));
+        panel.Children.Add(selectFromImage);
 
         return panel;
     }

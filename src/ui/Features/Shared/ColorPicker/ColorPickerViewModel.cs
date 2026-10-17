@@ -9,6 +9,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 
@@ -33,6 +34,9 @@ public partial class ColorPickerViewModel : ObservableObject
     [ObservableProperty] private Color _alphaGradientEnd = Colors.White;
 
     [ObservableProperty] private bool _showAlpha = true;
+    [ObservableProperty] private bool _canSelectFromImage;
+
+    internal Func<Window, Task<Color?>>? PickFromImageAsync { get; set; }
 
     // HSV state for the color wheel (hue/saturation) and the brightness bar. Kept separately
     // from RGB so hue and saturation survive dragging the brightness down to black and back.
@@ -67,6 +71,21 @@ public partial class ColorPickerViewModel : ObservableObject
         SelectedColor = initialColor;
         UpdateFromColor(initialColor);
         _isUpdating = false;
+    }
+
+    [RelayCommand]
+    private async Task SelectFromImage()
+    {
+        if (!CanSelectFromImage || Window == null || PickFromImageAsync == null)
+        {
+            return;
+        }
+
+        var color = await PickFromImageAsync(Window);
+        if (color is { } picked)
+        {
+            Initialize(Color.FromArgb(Alpha, picked.R, picked.G, picked.B));
+        }
     }
 
     partial void OnRedChanged(byte value)
