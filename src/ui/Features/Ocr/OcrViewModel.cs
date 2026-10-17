@@ -1313,29 +1313,23 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
-        var result = await _windowService.ShowDialogAsync<ShowImageWindow, ShowImageViewModel>(Window!, vm => { vm.Initialize(Se.Language.Ocr.OcrImage, item.GetBitmapCropped(), item.Text); });
-        _isCtrlDown = false;
+        await _windowService.ShowDialogAsync<ShowImageWindow, ShowImageViewModel>(Window!, vm =>
+        {
+            vm.Initialize(Se.Language.Ocr.OcrImage, item.GetBitmapCropped(), item.Text);
+            vm.Navigate = direction =>
+            {
+                var idx = OcrSubtitleItems.IndexOf(item) + direction;
+                if (idx < 0 || idx >= OcrSubtitleItems.Count)
+                {
+                    return null;
+                }
 
-        if (result.LeftPressed)
-        {
-            var idx = OcrSubtitleItems.IndexOf(item);
-            var prevIdx = idx - 1;
-            if (prevIdx >= 0)
-            {
-                SelectedOcrSubtitleItem = OcrSubtitleItems[prevIdx];
-                await ViewSelectedImage();
-            }
-        }
-        else if (result.RightPressed)
-        {
-            var idx = OcrSubtitleItems.IndexOf(item);
-            var nextIdx = idx + 1;
-            if (nextIdx < OcrSubtitleItems.Count)
-            {
-                SelectedOcrSubtitleItem = OcrSubtitleItems[nextIdx];
-                await ViewSelectedImage();
-            }
-        }
+                item = OcrSubtitleItems[idx];
+                SelectedOcrSubtitleItem = item;
+                return new ShowImageItem(Se.Language.Ocr.OcrImage, item.GetBitmapCropped(), item.Text);
+            };
+        });
+        _isCtrlDown = false;
     }
 
     [RelayCommand]

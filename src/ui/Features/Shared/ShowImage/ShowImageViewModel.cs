@@ -22,6 +22,13 @@ public partial class ShowImageViewModel : ObservableObject
     public bool LeftPressed { get; set; }
     public bool RightPressed { get; set; }
 
+    /// <summary>
+    /// Steps to the previous (-1) or next (+1) image and returns it, or null at either end.
+    /// When set, Left/Right (Up/Down) swap the image in place instead of closing the window,
+    /// so the caller doesn't reopen it for every step (which flickered).
+    /// </summary>
+    public Func<int, ShowImageItem?>? Navigate { get; set; }
+
     private readonly IFileHelper _fileHelper;
 
     public ShowImageViewModel(IFileHelper fileHelper)
@@ -91,15 +98,32 @@ public partial class ShowImageViewModel : ObservableObject
         else if (e.Key == Key.Left || e.Key == Key.Up)
         {
             e.Handled = true;
-            LeftPressed = true;
-            Window?.Close();
+            Step(-1);
         }
         else if (e.Key == Key.Right || e.Key == Key.Down)
         {
             e.Handled = true;
-            RightPressed = true;
-            Window?.Close();
+            Step(1);
         }
+    }
+
+    private void Step(int direction)
+    {
+        if (Navigate != null)
+        {
+            if (Navigate(direction) is { } item)
+            {
+                Title = item.Title;
+                PreviewImage = item.Bitmap;
+                Text = item.Text;
+            }
+
+            return;
+        }
+
+        LeftPressed = direction < 0;
+        RightPressed = direction > 0;
+        Window?.Close();
     }
 
     internal void Loaded()
@@ -112,3 +136,5 @@ public partial class ShowImageViewModel : ObservableObject
         UiUtil.SaveWindowPosition(Window);
     }
 }
+
+public record ShowImageItem(string Title, Bitmap Bitmap, string Text = "");
