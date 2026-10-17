@@ -65,9 +65,10 @@ public class NOcrDb
         private readonly bool _deepSeek;
         private readonly bool _lastDitch;
         private readonly double _italicFactor;
+        private readonly BaselinePlacement _placement;
         private readonly int _hashCode;
 
-        public MatchCacheKey(NikseBitmap2 bitmap, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch, double italicFactor)
+        public MatchCacheKey(NikseBitmap2 bitmap, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch, double italicFactor, BaselinePlacement placement)
         {
             _pixels = bitmap.GetPixelData().ToArray();
             _width = bitmap.Width;
@@ -76,6 +77,7 @@ public class NOcrDb
             _deepSeek = deepSeek;
             _lastDitch = lastDitch;
             _italicFactor = italicFactor;
+            _placement = placement;
 
             // FNV-1a over the pixel bytes plus the match parameters.
             var hash = unchecked((int)2166136261);
@@ -89,6 +91,7 @@ public class NOcrDb
             hash = unchecked((hash ^ _maxWrongPixels) * 16777619);
             hash = unchecked((hash ^ (_deepSeek ? 1 : 0) ^ (_lastDitch ? 2 : 0)) * 16777619);
             hash = unchecked((hash ^ _italicFactor.GetHashCode()) * 16777619);
+            hash = unchecked((hash ^ (int)_placement) * 16777619);
             _hashCode = hash;
         }
 
@@ -101,6 +104,7 @@ public class NOcrDb
                    _deepSeek == other._deepSeek &&
                    _lastDitch == other._lastDitch &&
                    _italicFactor.Equals(other._italicFactor) &&
+                   _placement == other._placement &&
                    _pixels.AsSpan().SequenceEqual(other._pixels);
         }
 
@@ -495,7 +499,13 @@ public class NOcrDb
             return null;
         }
 
-        var key = new MatchCacheKey(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels, lastDitch, italicFactor);
+        var placement = GetBaselinePlacement(list, item);
+        return PlaceMark(GetMatch(parentBitmap, list, item, topMargin, deepSeek, maxWrongPixels, lastDitch, italicFactor, placement), placement);
+    }
+
+    private NOcrChar? GetMatch(NikseBitmap2 parentBitmap, List<ImageSplitterItem2> list, ImageSplitterItem2 item, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch, double italicFactor, BaselinePlacement placement)
+    {
+        var key = new MatchCacheKey(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels, lastDitch, italicFactor, placement);
         MatchCacheEntry? cached;
         lock (_lock)
         {
@@ -516,7 +526,7 @@ public class NOcrDb
 
         // A perfect single match (exact size, 0 errors) means the user has explicitly added an
         // entry for this bitmap, so prefer it over a possibly-greedy expanded match.
-        var exactSingle = GetExactMatchSingle(item.NikseBitmap, topMargin);
+        var exactSingle = GetExactMatchSingle(item.NikseBitmap, topMargin, placement);
         if (exactSingle != null)
         {
             CacheMatch(key, new MatchCacheEntry { ExactMatch = exactSingle });
@@ -534,7 +544,7 @@ public class NOcrDb
         // skipExactCheck: the exact scan already ran (and missed) above - without the flag,
         // GetMatchSingle re-scanned the whole single-character list a second time for every
         // glyph that wasn't an exact match.
-        var single = GetMatchSingle(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels, lastDitch, skipExactCheck: true);
+        var single = GetMatchSingle(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels, lastDitch, skipExactCheck: true, placement);
 
         if (single == null && italicFactor > 0)
         {
@@ -544,7 +554,7 @@ public class NOcrDb
             var unItalic = item.NikseBitmap.UnItalic(italicFactor);
             if (unItalic.Width > 0 && unItalic.Height > 0)
             {
-                var italicMatch = GetMatchSingle(unItalic, topMargin, deepSeek, maxWrongPixels, lastDitch);
+                var italicMatch = GetMatchSingle(unItalic, topMargin, deepSeek, maxWrongPixels, lastDitch, placement: placement);
                 if (italicMatch != null)
                 {
                     single = new NOcrChar(italicMatch) { Italic = true };
@@ -612,7 +622,7 @@ public class NOcrDb
         }
     }
 
-    private NOcrChar? GetExactMatchSingle(NikseBitmap2 bitmap, int topMargin)
+    private NOcrChar? GetExactMatchSingle(NikseBitmap2 bitmap, int topMargin, BaselinePlacement placement = BaselinePlacement.Unknown)
     {
         var index = _exactSizeIndex;
         if (index == null)
@@ -647,7 +657,7 @@ public class NOcrDb
 
         foreach (var oc in candidates)
         {
-            if (Math.Abs(oc.MarginTop - topMargin) < 5 && IsMatch(bitmap, oc, 0))
+            if (Math.Abs(oc.MarginTop - topMargin) < 5 && FitsBaselinePlacement(oc, placement) && IsMatch(bitmap, oc, 0))
             {
                 return oc;
             }
@@ -656,11 +666,11 @@ public class NOcrDb
         return null;
     }
 
-    public NOcrChar? GetMatchSingle(NikseBitmap2 bitmap, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch = false, bool skipExactCheck = false)
+    public NOcrChar? GetMatchSingle(NikseBitmap2 bitmap, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch = false, bool skipExactCheck = false, BaselinePlacement placement = BaselinePlacement.Unknown)
     {
         if (!skipExactCheck)
         {
-            var exact = GetExactMatchSingle(bitmap, topMargin);
+            var exact = GetExactMatchSingle(bitmap, topMargin, placement);
             if (exact != null)
             {
                 return exact;
@@ -711,7 +721,7 @@ public class NOcrDb
             var bestLowerRate = double.MaxValue;
             foreach (var oc in OcrCharacters)
             {
-                if (!PassFilter(bitmap, heightToWidthPercent, oc, topMargin, pass))
+                if (!PassFilter(bitmap, heightToWidthPercent, oc, topMargin, pass) || !FitsBaselinePlacement(oc, placement))
                 {
                     continue;
                 }
@@ -796,6 +806,100 @@ public class NOcrDb
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Where a glyph's bottom is relative to its line's baseline: dots, commas and low quotes
+    /// sit on it, dashes and raised quotes float above it. Pixels alone can't tell a heavy dot
+    /// from a short dash (both a solid blob), and the loose passes' top-margin tolerance let a
+    /// dash entry claim the period at the end of a line.
+    /// </summary>
+    public enum BaselinePlacement
+    {
+        Unknown,
+        OnBaseline,
+        AboveBaseline,
+    }
+
+    /// <summary>
+    /// For a small mark in a line of text: <see cref="BaselinePlacement.OnBaseline"/> when its
+    /// bottom is within a tenth of the line height of the baseline (or below it),
+    /// <see cref="BaselinePlacement.AboveBaseline"/> when it is at least a fifth of the line height
+    /// above it, otherwise unknown. Also unknown unless at least three glyphs in the line are half
+    /// as tall again as this one - in a line of nothing but marks ("■ ■ ■") the median bottom is
+    /// no baseline, and letters don't need the check.
+    /// </summary>
+    public static BaselinePlacement GetBaselinePlacement(List<ImageSplitterItem2> list, ImageSplitterItem2 item)
+    {
+        if (item.Baseline is not { } baseline || item.NikseBitmap == null || baseline <= 0)
+        {
+            return BaselinePlacement.Unknown;
+        }
+
+        var index = list.IndexOf(item);
+        var start = index;
+        while (start > 0 && list[start - 1].SpecialCharacter != Environment.NewLine)
+        {
+            start--;
+        }
+
+        var tallerGlyphs = 0;
+        for (var i = start; i < list.Count && list[i].SpecialCharacter != Environment.NewLine; i++)
+        {
+            if (list[i].NikseBitmap is { } bitmap && bitmap.Height * 2 >= item.NikseBitmap.Height * 3)
+            {
+                tallerGlyphs++;
+            }
+        }
+
+        if (index < 0 || tallerGlyphs < 3)
+        {
+            return BaselinePlacement.Unknown;
+        }
+
+        var gap = baseline - (item.Top + item.NikseBitmap.Height);
+        if (gap <= Math.Max(2, baseline / 10))
+        {
+            return BaselinePlacement.OnBaseline;
+        }
+
+        if (gap >= Math.Max(3, baseline / 5))
+        {
+            return BaselinePlacement.AboveBaseline;
+        }
+
+        return BaselinePlacement.Unknown;
+    }
+
+    /// <summary>
+    /// Marks whose shape has no lookalike at the other height: a dash or a degree sign never sits
+    /// on the baseline, a period, ellipsis or underscore never floats above it.
+    /// </summary>
+    private static bool FitsBaselinePlacement(NOcrChar oc, BaselinePlacement placement) => placement switch
+    {
+        BaselinePlacement.OnBaseline => oc.Text is not ("-" or "‐" or "–" or "—" or "°" or "^"),
+        BaselinePlacement.AboveBaseline => oc.Text is not ("." or "…" or "_"),
+        _ => true,
+    };
+
+    /// <summary>
+    /// Commas and quotes are the same shapes at different heights: a comma above the baseline
+    /// is an apostrophe ("we,ve"), a raised quote on the baseline is a comma or a low quote.
+    /// </summary>
+    private static NOcrChar? PlaceMark(NOcrChar? match, BaselinePlacement placement)
+    {
+        var text = (placement, match?.Text) switch
+        {
+            (BaselinePlacement.AboveBaseline, ",") => "'",
+            (BaselinePlacement.AboveBaseline, "„") => "\"",
+            (BaselinePlacement.OnBaseline, "'" or "’" or "‘" or "`" or "´") => ",",
+            (BaselinePlacement.OnBaseline, "\"" or "“" or "”") => "„",
+            _ => null,
+        };
+
+        // The copy constructor doesn't carry ExpandCount - a two-part quote must still consume
+        // both parts.
+        return text == null ? match : new NOcrChar(match!) { Text = text, ExpandCount = match!.ExpandCount };
     }
 
     // Below this pixel area a glyph is a "small glyph" (dot, comma, dash, apostrophe, ...):
