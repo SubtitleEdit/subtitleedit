@@ -259,6 +259,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _textBoxButtonShowColor;
     [ObservableProperty] private bool _textBoxButtonShowRemoveFormatting;
     [ObservableProperty] private bool _textBoxButtonShowAiAssistant;
+    [ObservableProperty] private bool _textBoxButtonShowRecordSpeech;
 
     [ObservableProperty] private bool _colorDurationTooShort;
     [ObservableProperty] private bool _colorDurationTooLong;
@@ -985,6 +986,7 @@ public partial class SettingsViewModel : ObservableObject
         TextBoxButtonShowColor = appearance.TextBoxShowButtonColor;
         TextBoxButtonShowRemoveFormatting = appearance.TextBoxShowButtonRemoveFormatting;
         TextBoxButtonShowAiAssistant = appearance.TextBoxShowButtonAiAssistant;
+        TextBoxButtonShowRecordSpeech = appearance.TextBoxShowButtonRecordSpeech;
         ShowButtonHints = appearance.ShowHints;
         GridCompactMode = appearance.GridCompactMode;
         GridAlternatingRows = appearance.GridAlternatingRows;
@@ -1889,6 +1891,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.TextBoxShowButtonColor = TextBoxButtonShowColor;
         appearance.TextBoxShowButtonRemoveFormatting = TextBoxButtonShowRemoveFormatting;
         appearance.TextBoxShowButtonAiAssistant = TextBoxButtonShowAiAssistant;
+        appearance.TextBoxShowButtonRecordSpeech = TextBoxButtonShowRecordSpeech;
         appearance.ShowHints = ShowButtonHints;
         appearance.DarkModeBackgroundColor = DarkModeBackgroundColor.FromColorToHex();
         appearance.DarkModeForegroundColor = DarkModeForegroundColor.FromColorToHex();

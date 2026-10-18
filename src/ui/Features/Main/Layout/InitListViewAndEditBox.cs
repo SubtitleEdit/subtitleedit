@@ -2213,6 +2213,14 @@ public static partial class InitListViewAndEditBox
             buttonPanel.Children.Add(aiAssistantButton);
         }
 
+        if (Se.Settings.Appearance.TextBoxShowButtonRecordSpeech)
+        {
+            var recordSpeechButton = UiUtil.MakeButton(vm.RecordSpeechToTextBoxCommand, IconNames.Microphone, Se.Language.Main.RecordSpeechHint);
+            vm.RecordSpeechToTextBoxButton = recordSpeechButton;
+            vm.UpdateRecordSpeechButtonState();
+            buttonPanel.Children.Add(recordSpeechButton);
+        }
+
         textEditGrid.Add(buttonPanel, 1, 2);
 
         Grid.SetColumn(textEditGrid, 1);

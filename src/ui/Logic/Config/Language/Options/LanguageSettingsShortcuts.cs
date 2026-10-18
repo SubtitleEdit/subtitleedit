@@ -56,6 +56,7 @@ public class LanguageSettingsShortcuts
     public string AlsoSetVideoPosition { get; set; }
     public string GeneralGoToVideoPosition { get; set; }
     public string GeneralToggleItalic { get; set; }
+    public string GeneralRecordSpeechToTextBox { get; set; }
     public string GeneralToggleBold { get; set; }
     public string GeneralToggleUnderline { get; set; }
     public string GeneralToggleBox { get; set; }
@@ -409,6 +410,7 @@ public class LanguageSettingsShortcuts
         AlsoSetVideoPosition = "Also set video position";
         GeneralGoToVideoPosition = "Go to video position";
         GeneralToggleItalic = "Toggle italic";
+        GeneralRecordSpeechToTextBox = "Record speech to text box (start/stop)";
         GeneralToggleBold = "Toggle bold";
         GeneralToggleUnderline = "Toggle underline";
         GeneralToggleBox = "Toggle box (EBU STL)";

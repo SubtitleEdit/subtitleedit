@@ -42,6 +42,11 @@ public class LanguageMain
     public string CopyTextFromOriginalToCurrent { get; set; }
     public string InsertedXTextsFromSubtitleY { get; set; }
     public string ItalicHint { get; set; }
+    public string RecordSpeechHint { get; set; }
+    public string RecordingSpeechClickToStop { get; set; }
+    public string RecordingFailedX { get; set; }
+    public string NoMicrophoneFound { get; set; }
+    public string NoSpeechRecognized { get; set; }
     public string JoinedSubtitleLoaded { get; set; }
     public string LineXTextAndTimingChanged { get; set; }
     public string LineXTextChangedFromYToZ { get; set; }
@@ -207,6 +212,11 @@ public class LanguageMain
         CopyTextFromOriginalToCurrent = "Copy text from original to current subtitle";
         InsertedXTextsFromSubtitleY = "Inserted {0} texts from subtitle file \"{1}\"";
         ItalicHint = "Italic selected lines/text";
+        RecordSpeechHint = "Record speech from microphone into text box (click again to stop)";
+        RecordingSpeechClickToStop = "Recording... click the microphone button again to stop";
+        RecordingFailedX = "Recording failed: {0}";
+        NoMicrophoneFound = "No microphone found";
+        NoSpeechRecognized = "No speech recognized";
         JoinedSubtitleLoaded = "Joined subtitle loaded";
         LineXTextAndTimingChanged = "Line {0}: Text and timing changed";
         LineXTextChangedFromYToZ = "Line {0}: Text changed from \"{1}\" to \"{2}\"";

@@ -11105,6 +11105,171 @@ public partial class MainViewModel :
         return true;
     }
 
+    private MicrophoneRecorder? _microphoneRecorder;
+    private ITextBoxWrapper? _recordSpeechTextBox;
+    private bool _recordSpeechEngineChosen;
+
+    /// <summary>The text box "record speech" button, when shown - its icon flips while recording.</summary>
+    public Button? RecordSpeechToTextBoxButton { get; set; }
+
+    /// <summary>
+    /// The text box "record speech" button (Options > Settings > Appearance, off by default) and
+    /// its shortcut: the first call records the microphone, the second stops it and runs the
+    /// recording through the speech-to-text window; the recognized text is inserted at the caret
+    /// of the text box that was focused when the recording started (the main text box when none).
+    /// The engine/model/language are asked the first time only; later recordings transcribe
+    /// at once with the same choice.
+    /// </summary>
+    [RelayCommand]
+    private async Task RecordSpeechToTextBox()
+    {
+        if (_microphoneRecorder != null)
+        {
+            await StopRecordingSpeechAndInsert();
+            return;
+        }
+
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (SelectedSubtitle == null)
+        {
+            ShowStatus(Se.Language.General.NothingSelected);
+            return;
+        }
+
+        var ffmpegOk = await RequireFfmpegOk();
+        if (!ffmpegOk)
+        {
+            return;
+        }
+
+        var recorder = new MicrophoneRecorder();
+        var error = await recorder.StartAsync();
+        if (error != null)
+        {
+            recorder.Dispose();
+            ShowStatus(error, 6000);
+            return;
+        }
+
+        _recordSpeechTextBox = GetFocusedTextBoxWrapper() ?? EditTextBox;
+        _microphoneRecorder = recorder;
+        UpdateRecordSpeechButtonState();
+        ShowStatus(Se.Language.Main.RecordingSpeechClickToStop, 10_000);
+    }
+
+    private async Task StopRecordingSpeechAndInsert()
+    {
+        var recorder = _microphoneRecorder;
+        var textBox = _recordSpeechTextBox ?? EditTextBox;
+        _microphoneRecorder = null;
+        _recordSpeechTextBox = null;
+        UpdateRecordSpeechButtonState();
+        if (recorder == null || Window == null)
+        {
+            return;
+        }
+
+        try
+        {
+            var hasAudio = await recorder.StopAsync();
+            if (!hasAudio)
+            {
+                Se.LogError("Record speech: ffmpeg wrote no audio" + Environment.NewLine + recorder.FfmpegOutput);
+                ShowStatus(string.Format(Se.Language.Main.RecordingFailedX, Se.Language.Main.NoSpeechRecognized), 6000);
+                return;
+            }
+
+            // The batch speech-to-text window works on audio clips tied to a line; the line is
+            // only a carrier here, the text goes into the text box rather than onto the line.
+            var line = SelectedSubtitle ?? new SubtitleLineViewModel();
+            var clips = new List<AudioClip> { new(recorder.OutputFileName, line) };
+            var result = await ShowDialogAsync<SpeechToTextWindow, SpeechToTextViewModel>(vm =>
+            {
+                vm.InitializeBatch(clips, -1, autoStart: _recordSpeechEngineChosen, language: null);
+            });
+
+            if (!result.OkPressed)
+            {
+                return;
+            }
+
+            _recordSpeechEngineChosen = true;
+
+            var text = string.Join(" ", result.ResultAudioClips
+                .SelectMany(p => p.Transcription.Paragraphs)
+                .Select(p => p.Text.Replace(Environment.NewLine, " ").Replace("\n", " ").Trim())
+                .Where(p => p.Length > 0));
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                ShowStatus(Se.Language.Main.NoSpeechRecognized);
+                return;
+            }
+
+            InsertTextAtCaret(textBox, text);
+        }
+        finally
+        {
+            recorder.Dispose(); // kills a still-running ffmpeg and removes the temp wav
+        }
+    }
+
+    /// <summary>
+    /// Inserts dictated text at the caret (replacing a selection), with a space on either side
+    /// where it would otherwise glue to a word. A text box that was never clicked has its caret
+    /// at 0 even when the line has text - dictation then appends, the more common intent.
+    /// </summary>
+    internal static void InsertTextAtCaret(ITextBoxWrapper tb, string text)
+    {
+        var existing = tb.Text ?? string.Empty;
+        var start = Math.Clamp(Math.Min(tb.SelectionStart, tb.SelectionEnd), 0, existing.Length);
+        var end = Math.Clamp(Math.Max(tb.SelectionStart, tb.SelectionEnd), start, existing.Length);
+        if (start == 0 && end == 0 && existing.Length > 0)
+        {
+            start = existing.Length;
+            end = existing.Length;
+        }
+
+        if (start > 0 && !char.IsWhiteSpace(existing[start - 1]))
+        {
+            text = " " + text;
+        }
+
+        if (end < existing.Length && !char.IsWhiteSpace(existing[end]))
+        {
+            text += " ";
+        }
+
+        tb.Select(start, end - start);
+        tb.SelectedText = text;
+        tb.Select(start + text.Length, 0);
+        tb.Focus();
+    }
+
+    /// <summary>Microphone icon while idle, a red stop icon while recording.</summary>
+    public void UpdateRecordSpeechButtonState()
+    {
+        var button = RecordSpeechToTextBoxButton;
+        if (button == null)
+        {
+            return;
+        }
+
+        var recording = _microphoneRecorder != null;
+        Optris.Icons.Avalonia.Attached.SetIcon(button, recording ? IconNames.Stop : IconNames.Microphone);
+        if (recording)
+        {
+            button.Foreground = Brushes.Red;
+        }
+        else
+        {
+            button.ClearValue(TemplatedControl.ForegroundProperty);
+        }
+    }
+
     private void ResetPlaySelection()
     {
         _playSelectionItem = null;
@@ -29321,6 +29486,8 @@ public partial class MainViewModel :
     {
         _videoOpenTokenSource?.Cancel();
         StopSpeakFromLine();
+        _microphoneRecorder?.Dispose();
+        _microphoneRecorder = null;
         AddToRecentFiles(false);
 
         if (Window != null)
