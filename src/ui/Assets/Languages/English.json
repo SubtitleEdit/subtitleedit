@@ -1436,6 +1436,7 @@
       "addNewLineAfterTimeCode": "Add new line after time code",
       "addNewLineAfterText": "Add new line after text",
       "addLineBetweenSubtitles": "Add line between subtitles",
+      "mergeAllLines": "Merge all lines",
       "titleExportDCinemaInteropPng": "D-Cinema interop/png",
       "titleExportDCinemaSmpte2014Png": "D-Cinema SMPTE 2014/png",
       "titleExportDCinemaSmpte2014Mxf": "D-Cinema SMPTE 2014 (MXF)",
