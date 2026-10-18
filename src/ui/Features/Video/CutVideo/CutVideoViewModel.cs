@@ -51,6 +51,9 @@ public partial class CutVideoViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<BurnInJobItem> _jobItems;
     [ObservableProperty] private BurnInJobItem? _selectedJobItem;
     [ObservableProperty] private bool _isGenerating;
+    // Hold off system sleep while the job runs (#16183); the display may still turn off.
+    private readonly SleepInhibitorScope _sleepInhibitor = new(Se.Language.Video.CutVideoTitle);
+
     [ObservableProperty] private bool _isAudioVisualizerVisible;
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _segments;
     [ObservableProperty] private SubtitleLineViewModel? _selectedSegment;
@@ -1119,7 +1122,11 @@ public partial class CutVideoViewModel : ObservableObject
         });
     }
 
-    partial void OnIsGeneratingChanged(bool value) => UpdatePreviewState();
+    partial void OnIsGeneratingChanged(bool value)
+    {
+        _sleepInhibitor.SetActive(value);
+        UpdatePreviewState();
+    }
     partial void OnIsPreviewingChanged(bool value) => UpdatePreviewState();
     partial void OnTransitionEnabledChanged(bool value) => UpdatePreviewState();
 
@@ -1454,6 +1461,7 @@ public partial class CutVideoViewModel : ObservableObject
         _tempSubtitleFiles.Delete();
 
         _isClosing = true;
+        _sleepInhibitor.Dispose();
         _positionTimer.Stop();
         _timerGenerate.StopAndDispose(TimerGenerateElapsed);
         VideoPlayer.CloseAndDisposePlayer();

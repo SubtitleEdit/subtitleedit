@@ -83,6 +83,9 @@ public partial class VideoOcrViewModel : ObservableObject
     [ObservableProperty] private bool _addAssaPositionTag;
     [ObservableProperty] private ObservableCollection<VideoOcrLineItem> _lines;
     [ObservableProperty] private bool _isRunning;
+    // Hold off system sleep while the job runs (#16183); the display may still turn off.
+    private readonly SleepInhibitorScope _sleepInhibitor = new(Se.Language.Video.VideoOcr.Title);
+
     [ObservableProperty] private bool _isOkEnabled;
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private string _progressText;
@@ -1950,10 +1953,13 @@ public partial class VideoOcrViewModel : ObservableObject
         }
     }
 
+    partial void OnIsRunningChanged(bool value) => _sleepInhibitor.SetActive(value);
+
     internal void OnClosing()
     {
         _previewTimer.Stop();
         _cancellationTokenSource.Cancel();
+        _sleepInhibitor.Dispose();
 
         try
         {

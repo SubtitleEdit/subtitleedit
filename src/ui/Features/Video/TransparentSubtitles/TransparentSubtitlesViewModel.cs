@@ -82,6 +82,9 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<BurnInJobItem> _jobItems;
     [ObservableProperty] private BurnInJobItem? _selectedJobItem;
     [ObservableProperty] private bool _isGenerating;
+    // Hold off system sleep while the job runs (#16183); the display may still turn off.
+    private readonly SleepInhibitorScope _sleepInhibitor = new(Se.Language.Video.VideoTransparent.Title);
+
     [ObservableProperty] private bool _isBatchMode;
     [ObservableProperty] private Bitmap? _imagePreview;
     [ObservableProperty] private bool _useSourceResolution;
@@ -1666,6 +1669,8 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         });
     }
 
+    partial void OnIsGeneratingChanged(bool value) => _sleepInhibitor.SetActive(value);
+
     internal void OnClosing()
     {
         // Stop the poll timers and any still-running encode - closing the window (title bar X)
@@ -1674,6 +1679,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         // "done" dialog on the closed window.
         _isClosing = true;
         _doAbort = true;
+        _sleepInhibitor.Dispose();
         _timerGenerate.StopAndDispose(TimerGenerateElapsed);
         _timerAnalyze.StopAndDispose(TimerAnalyzeElapsed);
         if (_ffmpegProcess != null)

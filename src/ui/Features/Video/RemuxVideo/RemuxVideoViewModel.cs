@@ -62,6 +62,9 @@ public partial class RemuxVideoViewModel : ObservableObject
     [ObservableProperty] private string _progressText = string.Empty;
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private bool _isRemuxing;
+    // Hold off system sleep while the job runs (#16183); the display may still turn off.
+    private readonly SleepInhibitorScope _sleepInhibitor = new(Se.Language.Video.RemuxVideoTitle);
+
     [ObservableProperty] private bool _isFinalizing;
     [ObservableProperty] private bool _isNotRemuxing = true;
     [ObservableProperty] private bool _canRemux;
@@ -490,6 +493,7 @@ public partial class RemuxVideoViewModel : ObservableObject
     partial void OnIsRemuxingChanged(bool value)
     {
         IsNotRemuxing = !value;
+        _sleepInhibitor.SetActive(value);
         UpdateCanRemux();
     }
 
@@ -1722,6 +1726,8 @@ public partial class RemuxVideoViewModel : ObservableObject
         {
             AbortRemux();
         }
+
+        _sleepInhibitor.Dispose();
     }
 
     private void AbortRemux()
