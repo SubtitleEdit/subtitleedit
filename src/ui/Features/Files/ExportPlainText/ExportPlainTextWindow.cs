@@ -109,7 +109,7 @@ public class ExportPlainTextWindow : Window
         // Format text section
         var radioButtonFormatTextNone = UiUtil.MakeRadioButton(Se.Language.General.DoNoChange, vm, nameof(vm.FormatTextNone), "formatText");
         radioButtonFormatTextNone.IsCheckedChanged += (sender, args) => vm.SetDirty();
-        var radioButtonFormatTextMerge = UiUtil.MakeRadioButton(Se.Language.General.MergeLines, vm, nameof(vm.FormatTextMerge), "formatText");
+        var radioButtonFormatTextMerge = UiUtil.MakeRadioButton(Se.Language.File.Export.MergeAllLines, vm, nameof(vm.FormatTextMerge), "formatText");
         radioButtonFormatTextMerge.IsCheckedChanged += (sender, args) => vm.SetDirty();
         var radioButtonFormatTextUnbreak = UiUtil.MakeRadioButton(Se.Language.General.UnbreakLines, vm, nameof(vm.FormatTextUnbreak), "formatText");
         radioButtonFormatTextUnbreak.IsCheckedChanged += (sender, args) => vm.SetDirty();

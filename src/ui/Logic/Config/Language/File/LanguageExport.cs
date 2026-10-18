@@ -50,6 +50,7 @@ public class LanguageExport
     public string AddNewLineAfterTimeCode { get; set; }
     public string AddNewLineAfterText { get; set; }
     public string AddLineBetweenSubtitles { get; set; }
+    public string MergeAllLines { get; set; }
     public string TitleExportDCinemaInteropPng { get; set; }
     public string TitleExportDCinemaSmpte2014Png { get; set; }
     public string TitleExportDCinemaSmpte2014Mxf { get; set; }
@@ -146,6 +147,7 @@ public class LanguageExport
         AddNewLineAfterTimeCode = "Add new line after time code";
         AddNewLineAfterText = "Add new line after text";
         AddLineBetweenSubtitles = "Add line between subtitles";
+        MergeAllLines = "Merge all lines";
         TitleExportDCinemaInteropPng = "D-Cinema interop/png";
         TitleExportDCinemaSmpte2014Png = "D-Cinema SMPTE 2014/png";
         TitleExportDCinemaSmpte2014Mxf = "D-Cinema SMPTE 2014 (MXF)";
