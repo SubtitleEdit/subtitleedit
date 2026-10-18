@@ -18,13 +18,15 @@ public partial class CheckForUpdatesViewModel : ObservableObject
 
     private readonly IUpdateCheckService _updateCheckService;
     private readonly IAutoUpdateService _autoUpdateService;
+    private readonly IWindowService _windowService;
     private string _latestVersion = string.Empty;
     private CancellationTokenSource? _downloadCancellation;
 
-    public CheckForUpdatesViewModel(IUpdateCheckService updateCheckService, IAutoUpdateService autoUpdateService)
+    public CheckForUpdatesViewModel(IUpdateCheckService updateCheckService, IAutoUpdateService autoUpdateService, IWindowService windowService)
     {
         _updateCheckService = updateCheckService;
         _autoUpdateService = autoUpdateService;
+        _windowService = windowService;
     }
 
     public Window? Window { get; set; }
@@ -144,6 +146,19 @@ public partial class CheckForUpdatesViewModel : ObservableObject
         StatusText = Se.Language.Help.CheckForUpdatesInstallsWhenClosed;
         Window?.Close();
         Dispatcher.UIThread.Post(MainWindowFactory.CloseAllMainWindows);
+    }
+
+    [RelayCommand]
+    private async Task OpenSettings()
+    {
+        if (Window == null || IsDownloading)
+        {
+            return;
+        }
+
+        // The window re-checks on re-activation (see CheckForUpdatesWindow), which happens when
+        // this dialog closes - so a changed channel shows its releases without a second call here.
+        await _windowService.ShowDialogAsync<CheckForUpdatesSettingsWindow, CheckForUpdatesSettingsViewModel>(Window, vm => vm.LoadValues());
     }
 
     public void OnClosed()

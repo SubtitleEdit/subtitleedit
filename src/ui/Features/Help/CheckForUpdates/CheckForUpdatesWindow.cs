@@ -10,7 +10,8 @@ namespace Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
 
 /// <summary>
 /// Check for updates in the editor look (see <see cref="EditorChrome"/>): the status line with the
-/// download/install actions on top, the changelog in a field frame under it, OK in the button bar.
+/// download/install actions and the update settings gear on top, the changelog in a field frame
+/// under it, OK in the button bar.
 /// </summary>
 public class CheckForUpdatesWindow : Window
 {
@@ -72,16 +73,21 @@ public class CheckForUpdatesWindow : Window
         downloadProgress.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.DownloadProgress)));
         downloadProgress.Bind(ProgressBar.IsVisibleProperty, new Binding(nameof(vm.IsDownloading)));
 
+        // Startup check and release channel - the same settings as Settings > Updates
+        var settingsButton = EditorChrome.CreateToolButton(IconNames.Settings, Se.Language.General.Settings, vm.OpenSettingsCommand, 30);
+        settingsButton.VerticalAlignment = VerticalAlignment.Center;
+
         var statusRow = new Grid
         {
             ColumnSpacing = 10,
-            ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto,Auto,Auto"),
+            ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto,Auto,Auto,Auto"),
         };
         statusRow.Add(statusIcon, 0, 0);
         statusRow.Add(statusLabel, 0, 1);
         statusRow.Add(downloadProgress, 0, 2);
         statusRow.Add(installButton, 0, 3);
         statusRow.Add(downloadButton, 0, 4);
+        statusRow.Add(settingsButton, 0, 5);
         var statusStrip = new Border
         {
             Child = statusRow,

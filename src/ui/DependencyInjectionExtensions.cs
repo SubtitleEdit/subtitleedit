@@ -425,6 +425,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<ChangeFrameRateViewModel>();
         collection.AddTransient<ChangeSpeedViewModel>();
         collection.AddTransient<CheckForUpdatesViewModel>();
+        collection.AddTransient<CheckForUpdatesSettingsViewModel>();
         collection.AddTransient<ColorPickerViewModel>();
         collection.AddTransient<ColumnPasteViewModel>();
         collection.AddTransient<CompareViewModel>();
