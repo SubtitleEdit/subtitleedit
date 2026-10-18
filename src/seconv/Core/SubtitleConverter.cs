@@ -242,6 +242,10 @@ internal class SubtitleConverter
                         if (!options.Quiet)
                         {
                             AnsiConsole.MarkupLine(" [green]done.[/]");
+                            if (!string.IsNullOrEmpty(options.BurnInVideo))
+                            {
+                                AnsiConsole.MarkupLineInterpolated($"   [dim]burned in ->[/] [green]{BurnInRunner.GetOutputFileName(outputFile, options.BurnInVideo)}[/]");
+                            }
                             foreach (var warning in warnings)
                             {
                                 AnsiConsole.MarkupLineInterpolated($"   [yellow]warning: {warning}[/]");
@@ -273,6 +277,10 @@ internal class SubtitleConverter
                             if (!options.Quiet)
                             {
                                 AnsiConsole.MarkupLine(" [green]done.[/]");
+                                if (!string.IsNullOrEmpty(options.BurnInVideo))
+                                {
+                                    AnsiConsole.MarkupLineInterpolated($"   [dim]burned in ->[/] [green]{BurnInRunner.GetOutputFileName(outputFile, options.BurnInVideo)}[/]");
+                                }
                             }
                         }
                     }
@@ -1152,6 +1160,11 @@ internal class SubtitleConverter
         // ASSA-only post-processing: resolution + style-file overlay
         LibSEIntegration.ApplyAssaPostProcess(subtitle, normalizedFormat, options.Resolution, options.AssaStyleFile);
 
+        if (options.BurnInEffects.Count > 0)
+        {
+            BurnInRunner.ApplyEffects(subtitle, options.BurnInEffects);
+        }
+
         LibSEIntegration.SaveSubtitle(
             subtitle,
             outputFile,
@@ -1161,6 +1174,11 @@ internal class SubtitleConverter
             options.PacCodePage,
             options.EbuHeaderFile,
             options);
+
+        if (!string.IsNullOrEmpty(options.BurnInVideo))
+        {
+            BurnInRunner.Run(outputFile, options.BurnInVideo, options.BurnInFfmpegArgs, options.Overwrite);
+        }
     }
 
     /// <summary>
@@ -1374,6 +1392,15 @@ internal record class ConversionOptions
     /// <summary>Appended to the output file name stem (before any language/track suffix). Ignored with <see cref="OutputFilename"/>.</summary>
     public string? OutputFilenameAppend { get; init; }
     public string? AssaStyleFile { get; init; }
+
+    /// <summary>--burn-in-video: video the written ASSA file is burned into (see <see cref="BurnInRunner"/>).</summary>
+    public string? BurnInVideo { get; init; }
+
+    /// <summary>--burn-in-ffmpeg-args: encoder arguments replacing <see cref="BurnInRunner.DefaultFfmpegArgs"/>.</summary>
+    public string? BurnInFfmpegArgs { get; init; }
+
+    /// <summary>--burn-in-effects, parsed by <see cref="BurnInRunner.ParseEffects"/>; only used for the ass target.</summary>
+    public IReadOnlyList<string> BurnInEffects { get; init; } = [];
     public int? PacCodePage { get; init; }
 
     /// <summary>PAC code page for lines in another script, written flagged as "secondary code page".</summary>

@@ -41,6 +41,9 @@ internal static class HelpDisplay
         ShowSection(console, "Optional Parameters", null);
         ShowParameter(console, "--adjust-duration:<ms>", "Adjust duration in milliseconds");
         ShowParameter(console, "--assa-style-file:<file name>", "ASSA style file");
+        ShowParameter(console, "--burn-in-video:<file name>", "Burn the ass output into this video with ffmpeg (-> <name>_burn-in.<ext>)");
+        ShowParameter(console, "--burn-in-ffmpeg-args:<args>", "Encoder args for --burn-in-video (default: libx264 CRF 23, audio copy)");
+        ShowParameter(console, "--burn-in-effects:<list>", "Effects for the ass output: fade[:<ms>], font-kerning, font-size-change, scroll-up, scroll-down, rotate-in, tilt-bounce, font-size-bounce-in, fix-rtl");
         ShowParameter(console, "--change-speed:<percent>", "Change speed by percent (e.g. 125 = 1.25x faster)");
         ShowParameter(console, "--dcinema-font:<file name>", "Font (.ttf/.otf) embedded in dcinemasmpte2014mxf output");
         ShowParameter(console, "--ebu-header-file:<file name>", "EBU header file");
