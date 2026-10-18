@@ -349,12 +349,22 @@ public class NOcrDb
     /// trained "fi" pair swallowing "t"+"i") runs at 9%+. An area-based budget grows with the
     /// group being claimed, so it was loosest exactly for those letter-pair steals.
     /// </summary>
+    /// <summary>
+    /// The scaled pass stretches an entry over a group up to 25 px wider than it was drawn
+    /// with, and tolerates a few misplaced points. An entry drawn with a handful of lines then
+    /// fits almost any group of the right size: a shipped "%" with five lines claimed a dialog
+    /// dash plus an opening quote, its lines all landing on the dash and one quote stroke. A
+    /// match that claims a piece none of its foreground lines touches says nothing about that
+    /// piece, so every claimed piece must be hit. (The exact pass keeps its own, stricter walk.)
+    /// </summary>
     private static bool IsExpandedLineMatchScaled(NOcrChar oc, ImageSplitterItem2 targetItem, NikseBitmap2 nikseBitmap, int targetWidth, int targetHeight, List<ImageSplitterItem2> list, int listIndex)
     {
         var errors = 0;
         var points = 0;
         var scaledMarginTop = (int)Math.Round(oc.MarginTop * targetHeight / (double)Math.Max(1, oc.Height), MidpointRounding.AwayFromZero);
         var originY = targetItem.Y - scaledMarginTop;
+        var pieceCount = Math.Min(oc.ExpandCount, list.Count - listIndex);
+        Span<bool> touched = pieceCount <= 16 ? stackalloc bool[pieceCount] : new bool[pieceCount];
 
         foreach (var op in oc.LinesForeground)
         {
@@ -363,11 +373,25 @@ public class NOcrDb
                 points++;
                 var p = new OcrPoint(point.X + targetItem.X, point.Y + originY);
                 // Out-of-bounds foreground points can't be on text - count them as errors.
-                if (p.X < 0 || p.Y < 0 || p.X >= nikseBitmap.Width || p.Y >= nikseBitmap.Height ||
-                    !IsGroupForeground(list, listIndex, oc.ExpandCount, p.X, p.Y))
+                var piece = p.X < 0 || p.Y < 0 || p.X >= nikseBitmap.Width || p.Y >= nikseBitmap.Height
+                    ? -1
+                    : GroupForegroundPiece(list, listIndex, oc.ExpandCount, p.X, p.Y);
+                if (piece < 0)
                 {
                     errors++;
                 }
+                else
+                {
+                    touched[piece] = true;
+                }
+            }
+        }
+
+        for (var i = 0; i < pieceCount; i++)
+        {
+            if (!touched[i] && list[listIndex + i].NikseBitmap != null)
+            {
+                return false;
             }
         }
 
@@ -450,6 +474,12 @@ public class NOcrDb
     /// </summary>
     private static bool IsGroupForeground(List<ImageSplitterItem2> list, int listIndex, int count, int x, int y)
     {
+        return GroupForegroundPiece(list, listIndex, count, x, y) >= 0;
+    }
+
+    /// <summary>Index (from the group start) of the claimed piece with ink at (x, y), or -1.</summary>
+    private static int GroupForegroundPiece(List<ImageSplitterItem2> list, int listIndex, int count, int x, int y)
+    {
         var end = Math.Min(list.Count, listIndex + count);
         for (var i = listIndex; i < end; i++)
         {
@@ -464,11 +494,11 @@ public class NOcrDb
             var localY = y - item.Y;
             if (localX >= 0 && localY >= 0 && localX < bmp.Width && localY < bmp.Height && bmp.GetAlpha(localX, localY) > 150)
             {
-                return true;
+                return i - listIndex;
             }
         }
 
-        return false;
+        return -1;
     }
 
     private static OcrPoint GetTotalSize(int listIndex, List<ImageSplitterItem2> items, int count)
