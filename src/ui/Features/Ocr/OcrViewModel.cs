@@ -3529,7 +3529,7 @@ public partial class OcrViewModel : ObservableObject
                 return;
             }
 
-            matches = RemoveSpacesAfter1(matches, pixelsAreSpace);
+            matches = NOcrSpaceDetector.RemoveFalseSpacesInNumbers(matches, pixelsAreSpace);
 
             item.Text = ItalicTextMerger.MergeWithItalicTags(matches).Trim();
             var ocrFixResultTemp = OcrFixLine(i, item);
@@ -3595,37 +3595,6 @@ public partial class OcrViewModel : ObservableObject
         return letters;
     }
 
-    private static List<NOcrChar> RemoveSpacesAfter1(List<NOcrChar> matches, int pixelsAreSpace)
-    {
-        var deleteItems = new List<NOcrChar>();
-        for (var i = 0; i < matches.Count - 1; i++)
-        {
-            var match = matches[i];
-            if (match.Text.EndsWith('1') && !match.Italic)
-            {
-                var pixelsLess = 0;
-                if (pixelsAreSpace > 7)
-                {
-                    pixelsLess = (int)Math.Round(pixelsAreSpace * 0.3m, MidpointRounding.AwayFromZero);
-                }
-
-                var nextMatch = matches[i + 1];
-                if (nextMatch.ImageSplitterItem != null &&
-                    nextMatch.ImageSplitterItem.SpecialCharacter == " " &&
-                    nextMatch.ImageSplitterItem.SpacePixels - pixelsLess < pixelsAreSpace)
-                {
-                    deleteItems.Add(nextMatch);
-                }
-            }
-        }
-
-        foreach (var deleteItem in deleteItems)
-        {
-            matches.Remove(deleteItem);
-        }
-
-        return matches;
-    }
 
 
     private void RunBinaryImageCompareOcr(List<int> selectedIndices, CancellationToken cancellationToken)
