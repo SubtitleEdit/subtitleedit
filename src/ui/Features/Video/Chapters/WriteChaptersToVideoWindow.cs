@@ -25,7 +25,7 @@ public class WriteChaptersToVideoWindow : Window
         Title = language.WriteToVideoTitle;
         CanResize = true;
         Width = 640;
-        Height = 320;
+        SizeToContent = SizeToContent.Height; // a fixed 320 px left an empty band below the output file
         MinWidth = 560;
         MinHeight = 280;
 

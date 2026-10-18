@@ -22,14 +22,14 @@ public partial class BurnInEffectViewModel : ObservableObject
     public bool OkPressed { get; private set; }
     public VideoPlayerControl? VideoPlayerControl { get; set; }
     public double PositionInSeconds { get; set; }
-    public List<CheckBox> CheckBoxes { get; set; }
+    public List<Avalonia.Controls.Primitives.ToggleButton> CheckBoxes { get; set; }
 
     public BurnInEffectViewModel()
     {
         VideoFileName = string.Empty;
         Effects = new ObservableCollection<BurnInEffectItem>(BurnInEffectItem.List());
         SelectedEffects = new ObservableCollection<BurnInEffectItem>();
-        CheckBoxes = new List<CheckBox>();
+        CheckBoxes = new List<Avalonia.Controls.Primitives.ToggleButton>();
     }
 
     public void Initialize(string videoFileName, List<BurnInEffectItem> selectedEffects)

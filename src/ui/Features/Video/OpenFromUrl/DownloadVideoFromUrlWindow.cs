@@ -54,18 +54,21 @@ public class DownloadVideoFromUrlWindow : Window
             Converter = new Avalonia.Data.Converters.FuncValueConverter<string?, bool>(s => !string.IsNullOrEmpty(s)),
         });
 
+        // The big "Downloading ..." title of the other download windows, not a small section header
+        var titleText = EditorChrome.MakeDownloadTitle(Se.Language.Video.OpenFromUrlDownloadingTitle);
         var rows = new StackPanel
         {
-            Spacing = 8,
+            Spacing = 10,
             Children =
             {
+                titleText,
                 fileName,
                 progressBar,
                 statusText,
                 errorText,
             },
         };
-        var section = EditorChrome.MakeEditorSection(Se.Language.Video.OpenFromUrlDownloadingTitle, rows, first: true);
+        var section = new Border { Child = rows, Padding = new Thickness(20, 18) }; // like EditorChrome.MakeDownloadBody
         section.Background = EditorChrome.PanelBrush;
         section.Width = 480; // SizeToContent ignores the window Width: fixed here so the bar has room and long names wrap
 

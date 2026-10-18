@@ -45,27 +45,30 @@ public class BurnInEffectWindow : Window
         var checkBoxPanel = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            Spacing = 4,
+            Spacing = 8,
             MinWidth = 260,
         };
 
         // Create checkboxes for each effect
         foreach (var effect in vm.Effects)
         {
-            var checkBox = new CheckBox
+            // On/off switches like the other dialogs' options (these were checkboxes)
+            var checkBox = new ToggleSwitch
             {
-                Content = effect.Name,
+                OnContent = null,
+                OffContent = null,
+                MinWidth = 0,
                 Tag = effect, // Store the effect item for later reference
                 Name = effect.Type.ToString(),
-                FontSize = 12.5,
+                VerticalAlignment = VerticalAlignment.Center,
             };
+            Avalonia.Automation.AutomationProperties.SetName(checkBox, effect.Name);
             vm.CheckBoxes.Add(checkBox);
-
 
             // Handle checkbox state changes
             checkBox.IsCheckedChanged += (sender, e) =>
             {
-                var cb = sender as CheckBox;
+                var cb = sender as ToggleSwitch;
                 var effectItem = cb?.Tag as BurnInEffectItem;
                 if (effectItem != null && cb != null)
                 {
@@ -80,7 +83,7 @@ public class BurnInEffectWindow : Window
                 }
             };
 
-            checkBoxPanel.Children.Add(checkBox);
+            checkBoxPanel.Children.Add(EditorChrome.MakeSwitchRow(checkBox, effect.Name));
         }
 
         grid.Add(EditorChrome.MakePanel(EditorChrome.MakeEditorSection(Se.Language.General.Effect, checkBoxPanel, first: true)), 0, 0);
@@ -88,7 +91,7 @@ public class BurnInEffectWindow : Window
 
         Content = grid;
 
-        UiUtil.FocusOnFirstActivation(this, () => { (checkBoxPanel.Children.Count > 0 ? checkBoxPanel.Children[0] : buttonCancel).Focus(); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, () => { (vm.CheckBoxes.Count > 0 ? vm.CheckBoxes[0] : buttonCancel).Focus(); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
     }
 
     protected override void OnLoaded(RoutedEventArgs e)
