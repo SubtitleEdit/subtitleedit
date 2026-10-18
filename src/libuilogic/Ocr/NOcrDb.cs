@@ -577,6 +577,15 @@ public class NOcrDb
     // Share of wrong points a comma/apostrophe shape may have when its position is ignored.
     private const double UnplacedMarkMaxRate = 0.15;
 
+    // An upright match with a higher share of wrong points than this is challenged by the
+    // straightened glyph (sheared by the italic factor and by 1.5 x it), which wins when its
+    // share is at most two thirds of the upright one. Measured on 38 Blu-ray discs: a steep bold
+    // italic went from "/f* accogd/ng fo plan" to "/t* accord/ng to plan" while upright discs
+    // were byte-identical.
+    private const double ItalicChallengeMinRate = 0.02;
+    private const double ItalicChallengeRatio = 1.5;
+    private const double ItalicChallengeSteeperShear = 1.5;
+
     /// <summary>
     /// A small mark that matched nothing, tried against the comma and apostrophe shapes without
     /// their trained position: a curly apostrophe is a raised comma, and comma entries sit at the
@@ -647,7 +656,44 @@ public class NOcrDb
         // skipExactCheck: the exact scan already ran (and missed) above - without the flag,
         // GetMatchSingle re-scanned the whole single-character list a second time for every
         // glyph that wasn't an exact match.
-        var single = GetMatchSingle(bitmap, topMargin, deepSeek, maxWrongPixels, lastDitch: false, skipExactCheck: true, placement);
+        var single = GetMatchSingle(bitmap, topMargin, deepSeek, maxWrongPixels, lastDitch: false, skipExactCheck: true, placement, out var singleRate);
+
+        // A slanted glyph often still fits some entry loosely - an italic "t" read as an italic
+        // "f", "r" as "g", "y" as "x" - and a loose hit used to end the search before the
+        // straightened glyph was ever tried. When the upright match is not a close one, match the
+        // straightened glyph too and keep whichever fits clearly better.
+        if (single != null && italicFactor > 0 && singleRate > ItalicChallengeMinRate &&
+            bitmap.Width * bitmap.Height >= SmallGlyphAreaLimit)
+        {
+            // Slants differ between fonts: a bold italic sheared by the configured factor is
+            // still half slanted, and a half-straightened "h" fits "b". Try a steeper shear too
+            // and keep the better fit.
+            NOcrChar? challenger = null;
+            var challengerRate = double.MaxValue;
+            foreach (var factor in new[] { italicFactor, italicFactor * ItalicChallengeSteeperShear })
+            {
+                var straightened = bitmap.UnItalic(factor);
+                if (straightened.Width <= 0 || straightened.Height <= 0)
+                {
+                    continue;
+                }
+
+                var candidate = GetMatchSingle(straightened, topMargin, deepSeek, maxWrongPixels, lastDitch: false, skipExactCheck: false, placement, out var candidateRate);
+                if (candidate != null && candidateRate < challengerRate)
+                {
+                    challenger = candidate;
+                    challengerRate = candidateRate;
+                }
+            }
+
+            // A mark may not replace a mark: a straightened comma is a period, which says
+            // nothing about slant.
+            if (challenger != null && challengerRate * ItalicChallengeRatio <= singleRate &&
+                (single.Text.All(char.IsLetterOrDigit) || challenger.Text.All(char.IsLetterOrDigit)))
+            {
+                single = new NOcrChar(challenger) { Italic = true };
+            }
+        }
 
         // Two letters drawn touching ("av", "wt", "As") are one glyph that fits nothing. Read it
         // as two unless the last-ditch pass finds a single character that fits better than the
