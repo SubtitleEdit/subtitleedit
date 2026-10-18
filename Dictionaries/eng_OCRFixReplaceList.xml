@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <OCRFixReplaceList>
 	<WholeWords>
+		<Word from="gasPs" to="gasps" />
+		<Word from="gasPing" to="gasping" />
+		<Word from="yelPs" to="yelps" />
+		<Word from="yelPing" to="yelping" />
         <Word from="tñere" to="there" />
         <Word from="ri9ht" to="right" />
 		<Word from="$COff$" to="scoffs" />
@@ -3394,6 +3398,8 @@
 		<RegEx find="(2 )(nd\b)" replaceWith="2$2" />
 		<RegEx find="(3 )(rd\b)" replaceWith="3$2" />
 		<RegEx find="([456789])( th\b)" replaceWith="$1th" />
+		<!-- nOCR: "p" and "P" are the same shape; a capital P between lowercase letters before an ending is a "p" ("gasPs", "sleePing") -->
+		<RegEx find="(?&lt;=\p{Ll})P(?=(?:s|ing|ed)\b)" replaceWith="p" />
 	</RegularExpressions>
 	<RegularExpressionsIfSpelledCorrectly>
 		<RegEx find="\[([A-Zl]+)\]" replaceAllFrom="l" replaceAllTo="I" spellCheck="$1" replaceWith="[$1]" />		

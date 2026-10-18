@@ -17,6 +17,13 @@ public static partial class OcrDigitLetterFixer
     [GeneratedRegex(@"(?<![\p{L}\d])[\p{L}0]*0[\p{L}0]*(?![\p{L}\d])")]
     private static partial Regex WordWithZero();
 
+    // A percent sign split into its parts: ring, slash, ring ("7o/o" -> "7%").
+    [GeneratedRegex(@"(?<=\d) ?[oO0]/[oO0](?![\p{L}\d])")]
+    private static partial Regex SplitPercent();
+
+    // Letters that pass for digits, so "З000" (3000 with a misread "3") stays a number.
+    private const string DigitLookalikes = "ЗзOoIlSsBbZzбg";
+
     [GeneratedRegex(@"(?:^|[.!?])[\s\-–—""'“‘]*(?:<[^>]+>[\s\-–—""'“‘]*)*$")]
     private static partial Regex SentenceStartBefore();
 
@@ -25,6 +32,11 @@ public static partial class OcrDigitLetterFixer
         if (string.IsNullOrEmpty(text))
         {
             return text;
+        }
+
+        if (text.Contains('/'))
+        {
+            text = SplitPercent().Replace(text, "%");
         }
 
         if (text.Contains('O'))
@@ -39,9 +51,10 @@ public static partial class OcrDigitLetterFixer
             {
                 var word = m.Value;
                 var letters = word.Where(char.IsLetter).ToList();
-                if (letters.Count == 0 || word.Count(c => c == '0') > letters.Count)
+                if (letters.Count == 0 || word.Count(c => c == '0') > letters.Count && letters.All(c => DigitLookalikes.Contains(c)))
                 {
-                    // Mostly zeros is a number with a misread digit ("З000" = 3000), not a word.
+                    // Mostly zeros next to a digit lookalike is a number with a misread digit
+                    // ("З000" = 3000), not a word - but "D00-wah" is "Doo".
                     return word;
                 }
 

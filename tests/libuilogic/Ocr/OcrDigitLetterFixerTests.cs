@@ -16,6 +16,9 @@ public class OcrDigitLetterFixerTests
     [InlineData("Fine. 0kay.", "Fine. Okay.")]
     [InlineData("- 0kay.", "- Okay.")]
     [InlineData("STAND D0WN", "STAND DOWN")]
+    [InlineData("7o/o of childhood accidents", "7% of childhood accidents")]
+    [InlineData("34o/o of accidents", "34% of accidents")]
+    [InlineData("<i>♪ D00-wah-doo-wah</i>", "<i>♪ Doo-wah-doo-wah</i>")]
     public void Fixes(string input, string expected)
     {
         Assert.Equal(expected, OcrDigitLetterFixer.Fix(input));
@@ -29,6 +32,7 @@ public class OcrDigitLetterFixerTests
     [InlineData("The 5Os were great")]
     [InlineData("O, Romeo")]
     [InlineData("100 or 0")]
+    [InlineData("and/or he/she")]
     [InlineData("З000 долларов.")] // Cyrillic "З" read for "3" - still a number
     public void LeavesAlone(string input)
     {

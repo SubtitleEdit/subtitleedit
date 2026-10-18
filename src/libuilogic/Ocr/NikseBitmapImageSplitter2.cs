@@ -513,7 +513,14 @@ public class NikseBitmapImageSplitter2
             // as a bogus second line (#14292).
             if (lineBitmaps.Count == 1 && lineBitmaps[0].NikseBitmap?.GetNonTransparentHeight() > minLineHeight * 2.2)
             {
-                lineBitmaps = SplitToLinesNew(lineBitmaps[0], minLineHeight, averageLineHeight);
+                // A single line of large text (tall parentheses) clears that height too; the cut
+                // then shaved the tip off a parenthesis into a bogus second line, read as "*".
+                // A "line" of crumbs isn't one: keep the text whole then.
+                var split = SplitToLinesNew(lineBitmaps[0], minLineHeight, averageLineHeight);
+                if (split.Count < 2 || split.All(l => l.NikseBitmap?.GetNonTransparentHeight() >= minLineHeight / 2))
+                {
+                    lineBitmaps = split;
+                }
             }
         }
         else
