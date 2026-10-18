@@ -22,6 +22,7 @@ public class PickMillisecondsWindow : Window
 
         var numericUpDownMilliseconds = UiUtil.MakeNumericUpDownInt(1, 1_000_000, 5000, 160, vm, nameof(vm.Milliseconds));
         numericUpDownMilliseconds.HorizontalAlignment = HorizontalAlignment.Left;
+        numericUpDownMilliseconds.Classes.Add("field"); // the compact field, not the theme's big spinner
         AutomationProperties.SetName(numericUpDownMilliseconds, Se.Language.General.Milliseconds);
 
         var row = EditorChrome.MakeLabeledRow(Se.Language.General.Milliseconds, numericUpDownMilliseconds, 110, spacing: 6);

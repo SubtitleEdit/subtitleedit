@@ -33,11 +33,8 @@ public class FindDoubleLinesWindow : Window
         var buttonCancel = UiUtil.MakeButtonDone(vm.CancelCommand);
 
         var tableView = MakeGridView(vm);
-        var list = new Border
-        {
-            Child = EditorChrome.MakeListFrame(tableView, clearListBackground: true),
-            Padding = new Thickness(14),
-        };
+        // A section header over the list, like the other list windows
+        var list = EditorChrome.MakeListSection(Se.Language.General.DoubleLines, tableView, first: true);
 
         Content = EditorChrome.MakeRoot(list, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonGoTo));
 

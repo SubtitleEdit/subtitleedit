@@ -141,6 +141,19 @@ internal static partial class EditorChrome
             },
         });
 
+        // An editable combo box's text sat at the top of the 28 px box (the theme's text box keeps
+        // its own top-aligned padding); center it like a read-only combo's selected item
+        styles.Add(new Style(x => x.OfType<ComboBox>().Template().OfType<TextBox>().Name("PART_EditableTextBox"))
+        {
+            Setters =
+            {
+                new Setter(Layoutable.VerticalAlignmentProperty, VerticalAlignment.Center),
+                new Setter(TextBox.VerticalContentAlignmentProperty, VerticalAlignment.Center),
+                new Setter(TemplatedControl.PaddingProperty, new Thickness(0)),
+                new Setter(Layoutable.MinHeightProperty, 0.0),
+            },
+        });
+
         if (extra.HasFlag(EditorWindowStyles.TimeCodes) || extra.HasFlag(EditorWindowStyles.CompactTimeCodes))
         {
             styles.Add(new Style(x => x.OfType<TimeCodeUpDown>())
