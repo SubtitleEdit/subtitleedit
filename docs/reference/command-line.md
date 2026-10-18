@@ -159,6 +159,8 @@ seconv lint *.srt --json             # CI-friendly: exit 1 on any issue
 |---|---|---|
 | `--resolution:<WxH>` | ASSA, image-based | Sets `PlayResX`/`PlayResY` for ASSA; sets canvas for image outputs (default `1920x1080`) |
 | `--assa-style-file:<file>` | ASSA | Apply `[V4+ Styles]` block from another ASSA file |
+| `--burn-in-video:<file>` | ASSA | After writing the `.ass`, burn it into this video with ffmpeg's `ass` filter (needs ffmpeg). Output: `<subtitle name>_burn-in.<video ext>` next to the `.ass`. Without `--resolution` the video's size is used. Example: `seconv movie.srt ass --assa-style-file:style.ass --burn-in-video:movie.mp4` |
+| `--burn-in-ffmpeg-args:<args>` | ASSA + `--burn-in-video` | ffmpeg encoder arguments (default: `-c:v libx264 -preset medium -crf 23 -pix_fmt yuv420p -c:a copy`), e.g. `"-c:v h264_nvenc -cq 23 -c:a copy"` |
 | `--pac-codepage:<page>` | PAC | Code page name (`Latin`, `Greek`, `Hebrew`, …) or numeric (0–12). See `seconv list-pac-codepages` |
 | `--pac-secondary-codepage:<page>` | PAC | Code page for lines in another script (e.g. `Cyrillic` for the Russian lines of a Hebrew file); those lines are flagged "secondary code page". Reading detects it automatically |
 | `--ebu-header-file:<file>` | EBU STL | Reuse the GSI header block from an existing `.stl` file |

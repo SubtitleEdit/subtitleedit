@@ -52,6 +52,14 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("ASSA style file name")]
         public string? AssaStyleFile { get; init; }
 
+        [CommandOption("--burn-in-video")]
+        [Description("Burn the converted ASSA subtitle into this video with ffmpeg (target format must be ass); output: <subtitle name>_burn-in.<video ext>")]
+        public string? BurnInVideo { get; init; }
+
+        [CommandOption("--burn-in-ffmpeg-args")]
+        [Description("ffmpeg encoder arguments for --burn-in-video (default: \"" + BurnInRunner.DefaultFfmpegArgs + "\")")]
+        public string? BurnInFfmpegArgs { get; init; }
+
         [CommandOption("--dcinema-font|--dcinemafont")]
         [Description("Font file (.ttf/.otf) embedded in dcinemasmpte2014mxf output")]
         public string? DCinemaFont { get; init; }
@@ -770,6 +778,30 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 }
             }
 
+            if (!string.IsNullOrWhiteSpace(settings.BurnInVideo))
+            {
+                if (!File.Exists(settings.BurnInVideo))
+                {
+                    return Fail(settings, $"--burn-in-video: video file not found: {settings.BurnInVideo}");
+                }
+
+                if (LibSEIntegration.NormalizeFormatName(settings.Format) != "AdvancedSubStationAlpha")
+                {
+                    return Fail(settings, "--burn-in-video needs the ass target format, e.g. seconv movie.srt ass --burn-in-video:movie.mp4");
+                }
+
+                // Without PlayResX/Y libass assumes 384x288 and scales the style up; take the
+                // video's own size so --assa-style-file sizes mean pixels, like the UI burn-in.
+                if (resolution is null)
+                {
+                    var dimension = Nikse.SubtitleEdit.UiLogic.Media.FfmpegMediaInfo.Parse(settings.BurnInVideo).Dimension;
+                    if (dimension is { Width: > 0, Height: > 0 })
+                    {
+                        resolution = (dimension.Width, dimension.Height);
+                    }
+                }
+            }
+
             // Parse PAC code page if supplied
             int? pacCodePage = null;
             if (!string.IsNullOrWhiteSpace(settings.PacCodepage))
@@ -829,6 +861,8 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 Resolution = resolution,
                 ImageStyle = imageStyle,
                 AssaStyleFile = settings.AssaStyleFile,
+                BurnInVideo = settings.BurnInVideo,
+                BurnInFfmpegArgs = settings.BurnInFfmpegArgs,
                 PacCodePage = pacCodePage,
                 PacSecondaryCodePage = pacSecondaryCodePage,
                 EbuHeaderFile = settings.EbuHeaderFile,
