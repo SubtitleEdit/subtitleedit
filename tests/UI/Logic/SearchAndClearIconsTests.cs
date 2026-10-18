@@ -84,24 +84,25 @@ public partial class SearchAndClearIconsTests
         }
     }
 
-    public static TheoryData<Type, Type> WindowsWithSearchBoxes => new()
+    // Batch convert has two: the file list filter and the function search.
+    public static TheoryData<Type, Type, int> WindowsWithSearchBoxes => new()
     {
-        { typeof(FixCommonErrorsWindow), typeof(FixCommonErrorsViewModel) },
-        { typeof(PickLanguageWindow), typeof(PickLanguageViewModel) },
-        { typeof(PickFontNameWindow), typeof(PickFontNameViewModel) },
-        { typeof(PickSubtitleFormatWindow), typeof(PickSubtitleFormatViewModel) },
-        { typeof(ManualChosenEncodingWindow), typeof(ManualChosenEncodingViewModel) },
-        { typeof(FindRuleWindow), typeof(FindRuleViewModel) },
-        { typeof(FindTextWindow), typeof(FindTextViewModel) },
-        { typeof(ShortcutsWindow), typeof(ShortcutsViewModel) },
-        { typeof(BatchConvertWindow), typeof(BatchConvertViewModel) },
-        { typeof(VoiceManagerWindow), typeof(VoiceManagerViewModel) },
-        { typeof(SettingsWindow), typeof(SettingsViewModel) },
+        { typeof(FixCommonErrorsWindow), typeof(FixCommonErrorsViewModel), 1 },
+        { typeof(PickLanguageWindow), typeof(PickLanguageViewModel), 1 },
+        { typeof(PickFontNameWindow), typeof(PickFontNameViewModel), 1 },
+        { typeof(PickSubtitleFormatWindow), typeof(PickSubtitleFormatViewModel), 1 },
+        { typeof(ManualChosenEncodingWindow), typeof(ManualChosenEncodingViewModel), 1 },
+        { typeof(FindRuleWindow), typeof(FindRuleViewModel), 1 },
+        { typeof(FindTextWindow), typeof(FindTextViewModel), 1 },
+        { typeof(ShortcutsWindow), typeof(ShortcutsViewModel), 1 },
+        { typeof(BatchConvertWindow), typeof(BatchConvertViewModel), 2 },
+        { typeof(VoiceManagerWindow), typeof(VoiceManagerViewModel), 1 },
+        { typeof(SettingsWindow), typeof(SettingsViewModel), 1 },
     };
 
     [AvaloniaTheory]
     [MemberData(nameof(WindowsWithSearchBoxes))]
-    public void Window_SearchBox_HasTheClearButton(Type windowType, Type viewModelType)
+    public void Window_SearchBox_HasTheClearButton(Type windowType, Type viewModelType, int searchBoxCount)
     {
         var services = new ServiceCollection();
         services.AddSubtitleEditServices();
@@ -113,7 +114,7 @@ public partial class SearchAndClearIconsTests
             var decorated = window.GetLogicalDescendants().OfType<TextBox>()
                 .Where(t => t.InnerLeftContent is Icon { Value: IconNames.Find } && t.InnerRightContent is Button)
                 .ToList();
-            Assert.Single(decorated);
+            Assert.Equal(searchBoxCount, decorated.Count);
         }
         finally
         {
