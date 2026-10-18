@@ -40,6 +40,9 @@ public partial class ReEncodeVideoViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<BurnInJobItem> _jobItems;
     [ObservableProperty] private BurnInJobItem? _selectedJobItem;
     [ObservableProperty] private bool _isGenerating;
+    // Hold off system sleep while the job runs (#16183); the display may still turn off.
+    private readonly SleepInhibitorScope _sleepInhibitor = new(Se.Language.Video.ReEncodeVideoForBetterSubtitlingTitle);
+
     [ObservableProperty] private bool _useSourceResolution;
     [ObservableProperty] private string _infoText;
     [ObservableProperty] private bool _promptForFfmpegParameters;
@@ -548,11 +551,14 @@ public partial class ReEncodeVideoViewModel : ObservableObject
         Window?.Close();
     }
 
+    partial void OnIsGeneratingChanged(bool value) => _sleepInhibitor.SetActive(value);
+
     internal void OnClosing()
     {
         // The subtitle files handed to ffmpeg live as long as the window does - nothing else
         // removes them, and they used to pile up in the temp folder run after run (#13332).
         _tempSubtitleFiles.Delete();
+        _sleepInhibitor.Dispose();
 
         // Stop the poll timer and any still-running encode - closing the window used to leave the
         // ffmpeg process encoding to completion in the background, with the timer still firing

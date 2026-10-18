@@ -39,6 +39,9 @@ public partial class ShotChangesViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private string _progressText;
     [ObservableProperty] private bool _isGenerating;
+    // Hold off system sleep while the job runs (#16183); the display may still turn off.
+    private readonly SleepInhibitorScope _sleepInhibitor = new(Se.Language.General.GenerateImportShotChanges);
+
 
     public Window? Window { get; set; }
     public double LastSeconds { get; private set; }
@@ -315,9 +318,12 @@ public partial class ShotChangesViewModel : ObservableObject, IClosingCleanup
         Window?.Close();
     }
 
+    partial void OnIsGeneratingChanged(bool value) => _sleepInhibitor.SetActive(value);
+
     public void OnClosingCleanup()
     {
         _timerGenerate.StopAndDispose(TimerGenerateElapsed);
+        _sleepInhibitor.Dispose();
     }
 
     /// <summary>

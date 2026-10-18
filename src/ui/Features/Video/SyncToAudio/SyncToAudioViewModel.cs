@@ -35,6 +35,9 @@ public partial class SyncToAudioViewModel : ObservableObject
     [ObservableProperty] private int _maxOffsetSeconds;
     [ObservableProperty] private bool _tryFrameRates;
     [ObservableProperty] private bool _isAnalyzing;
+    // Hold off system sleep while the job runs (#16183); the display may still turn off.
+    private readonly SleepInhibitorScope _sleepInhibitor = new(Se.Language.Video.SyncToAudioTitle);
+
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private string _progressText = string.Empty;
     [ObservableProperty] private bool _hasResult;
@@ -91,9 +94,12 @@ public partial class SyncToAudioViewModel : ObservableObject
         }
     }
 
+    partial void OnIsAnalyzingChanged(bool value) => _sleepInhibitor.SetActive(value);
+
     public void OnClosing()
     {
         _cancellationTokenSource?.Cancel();
+        _sleepInhibitor.Dispose();
     }
 
     partial void OnUseAudioReferenceChanged(bool value)

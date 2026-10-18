@@ -51,6 +51,9 @@ public partial class SyncAudioTrackViewModel : ObservableObject
     [ObservableProperty] private int _offsetMs;
     [ObservableProperty] private bool _isPreviewNotSupported;
     [ObservableProperty] private bool _isSaving;
+    // Hold off system sleep while the job runs (#16183); the display may still turn off.
+    private readonly SleepInhibitorScope _sleepInhibitor = new(Se.Language.Video.SyncAudioTrackTitle);
+
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private string _progressText = string.Empty;
     [ObservableProperty] private string _errorText = string.Empty;
@@ -341,9 +344,12 @@ public partial class SyncAudioTrackViewModel : ObservableObject
         });
     }
 
+    partial void OnIsSavingChanged(bool value) => _sleepInhibitor.SetActive(value);
+
     internal void OnClosing()
     {
         _cancellationTokenSource?.Cancel();
+        _sleepInhibitor.Dispose();
         VideoPlayer.VideoPlayer.CloseFile();
         UiUtil.SaveWindowPosition(Window);
 
