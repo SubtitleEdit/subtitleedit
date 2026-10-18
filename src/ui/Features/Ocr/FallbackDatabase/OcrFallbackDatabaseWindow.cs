@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 
@@ -20,8 +21,12 @@ public class OcrFallbackDatabaseWindow : Window
         DataContext = vm;
         EditorChrome.ApplyWindow(this, EditorWindowStyles.EngineDialog);
 
-        var labelDatabase = EditorChrome.MakeDimLabel(string.Empty, new Thickness(0));
-        labelDatabase.Bind(TextBlock.TextProperty, new Binding(nameof(vm.Label)));
+        // A section header, like the other pickers (it was a plain label)
+        var labelDatabase = EditorChrome.MakeBoundSectionHeader(nameof(vm.Label));
+        labelDatabase.Bind(TextBlock.TextProperty, new Binding(nameof(vm.Label))
+        {
+            Converter = new FuncValueConverter<string?, string>(text => (text ?? string.Empty).ToUpperInvariant()),
+        });
 
         var comboBoxDatabases = new ComboBox
         {

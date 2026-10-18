@@ -24,7 +24,7 @@ public class BinaryMoveCaptionsWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = l.MoveCaptions;
         Width = 460;
-        Height = 400;
+        SizeToContent = SizeToContent.Height; // a fixed 400 px left an empty band above the buttons
         CanResize = false;
         BinaryEditChrome.Apply(this);
         vm.Window = this;
