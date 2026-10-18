@@ -158,6 +158,24 @@ internal static partial class EditorChrome
 
         AddComboBoxEllipsisStyle(styles);
 
+        // A disabled text box was a light gray slab on the dark panels (the theme's disabled
+        // brush); keep the field look, dimmed, like the disabled number fields
+        styles.Add(new Style(x => x.OfType<TextBox>().Class(":disabled").Template().OfType<Border>().Name("PART_BorderElement"))
+        {
+            Setters =
+            {
+                new Setter(Border.BackgroundProperty, FieldBrush),
+                new Setter(Border.BorderBrushProperty, Brushes.Transparent),
+            },
+        });
+        styles.Add(new Style(x => x.OfType<TextBox>().Class(":disabled"))
+        {
+            Setters =
+            {
+                new Setter(Visual.OpacityProperty, 0.5),
+            },
+        });
+
         // An editable combo box's text sat at the top of the 28 px box (the theme's text box keeps
         // its own top-aligned padding); center it like a read-only combo's selected item
         styles.Add(new Style(x => x.OfType<ComboBox>().Template().OfType<TextBox>().Name("PART_EditableTextBox"))
