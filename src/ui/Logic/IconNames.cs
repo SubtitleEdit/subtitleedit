@@ -82,6 +82,7 @@ internal class IconNames
     public const string Lock = "mdi-lock";
     public const string LockClock = "mdi-lock-clock";
     public const string MagnifyMinus = "mdi-magnify-minus";
+    public const string Microphone = "mdi-microphone";
     public const string MagnifyPlus = "mdi-magnify-plus";
     public const string MenuDown = "mdi-menu-down";
     public const string Minus = "mdi-minus";
