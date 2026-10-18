@@ -16,6 +16,12 @@ public class TimedTextMxfWriterTest
 
     private static string FilePath(string name) => Path.Combine(Directory.GetCurrentDirectory(), "Files", name);
 
+    /// <summary>
+    /// The XML asdcplib wrapped, with its LF line breaks - a Windows checkout with core.autocrlf
+    /// gives it CRLF, and the 22 extra bytes moved every offset after the XML in the written file.
+    /// </summary>
+    private static string ReadReferenceXml() => File.ReadAllText(FilePath("sample_mxf_429-5_asdcplib.xml")).Replace("\r\n", "\n");
+
     private static byte[] WriteSample(string xml)
     {
         var writer = new TimedTextMxfWriter { AssetId = AssetId };
@@ -35,7 +41,7 @@ public class TimedTextMxfWriterTest
     public void MatchesAsdcplibReference()
     {
         var reference = ReadKlvs(File.ReadAllBytes(FilePath("sample_mxf_429-5_asdcplib.mxf")));
-        var written = ReadKlvs(WriteSample(File.ReadAllText(FilePath("sample_mxf_429-5_asdcplib.xml"))));
+        var written = ReadKlvs(WriteSample(ReadReferenceXml()));
 
         Assert.Equal(reference.Select(k => Convert.ToHexString(k.Key)), written.Select(k => Convert.ToHexString(k.Key)));
         for (var i = 0; i < reference.Count; i++)
@@ -77,7 +83,7 @@ public class TimedTextMxfWriterTest
     [Fact]
     public void ReadBackWithMxfParser()
     {
-        var xml = File.ReadAllText(FilePath("sample_mxf_429-5_asdcplib.xml"));
+        var xml = ReadReferenceXml();
         var parser = new MxfParser(new MemoryStream(WriteSample(xml)));
 
         Assert.True(parser.IsValid);
@@ -88,7 +94,7 @@ public class TimedTextMxfWriterTest
     [Fact]
     public void XmlWithoutIdThrows()
     {
-        var xml = File.ReadAllText(FilePath("sample_mxf_429-5_asdcplib.xml"));
+        var xml = ReadReferenceXml();
         xml = xml.Replace("<dcst:Id>urn:uuid:7be835a3-cfb4-43d0-bb4b-f0b4c95e962e</dcst:Id>", string.Empty);
         Assert.Throws<InvalidDataException>(() => WriteSample(xml));
     }
@@ -100,7 +106,7 @@ public class TimedTextMxfWriterTest
     [Fact]
     public void ContainerDurationOverridesLastTimeOut()
     {
-        var xml = File.ReadAllText(FilePath("sample_mxf_429-5_asdcplib.xml"));
+        var xml = ReadReferenceXml();
         var writer = new TimedTextMxfWriter { AssetId = AssetId, ContainerDuration = 300 };
         writer.Resources.Add(new TimedTextMxfResource(FontId, TimedTextMxfResource.MimeTypeFont, Font));
         writer.Resources.Add(new TimedTextMxfResource(ImageId, TimedTextMxfResource.MimeTypePng, Png));
@@ -119,7 +125,7 @@ public class TimedTextMxfWriterTest
     [Fact]
     public void ResourceMissingFromTrackThrows()
     {
-        var xml = File.ReadAllText(FilePath("sample_mxf_429-5_asdcplib.xml"));
+        var xml = ReadReferenceXml();
         var writer = new TimedTextMxfWriter();
         writer.Resources.Add(new TimedTextMxfResource(FontId, TimedTextMxfResource.MimeTypeFont, Font)); // no PNG
 
@@ -131,7 +137,7 @@ public class TimedTextMxfWriterTest
     public void TooManyResourcesThrows()
     {
         // 4096 sub-descriptor ids no longer fit the 16-bit local set length of the batch
-        var xml = File.ReadAllText(FilePath("sample_mxf_429-5_asdcplib.xml"));
+        var xml = ReadReferenceXml();
         var writer = new TimedTextMxfWriter();
         writer.Resources.Add(new TimedTextMxfResource(FontId, TimedTextMxfResource.MimeTypeFont, Font));
         writer.Resources.Add(new TimedTextMxfResource(ImageId, TimedTextMxfResource.MimeTypePng, Png));
@@ -148,7 +154,7 @@ public class TimedTextMxfWriterTest
     [Fact]
     public void GetLoadFontIds()
     {
-        var xml = File.ReadAllText(FilePath("sample_mxf_429-5_asdcplib.xml"));
+        var xml = ReadReferenceXml();
         Assert.Equal(FontId, Assert.Single(TimedTextMxfWriter.GetLoadFontIds(xml)));
     }
 
