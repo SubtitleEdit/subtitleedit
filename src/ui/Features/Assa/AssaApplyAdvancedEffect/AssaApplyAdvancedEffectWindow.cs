@@ -170,9 +170,13 @@ public class AssaApplyAdvancedEffectWindow : Window
         rightGrid.SizeChanged += (_, e) => optionsScrollViewer.MaxHeight = e.NewSize.Height * 0.45;
 
         // ── Main layout ───────────────────────────────────────────────────────
+        // Cancel, then the primary (accent) OK - like every other dialog. This window has its own
+        // look without the editor styles, so the accent is set here.
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Background = EditorChrome.AccentBrush;
+        buttonOk.Foreground = Brushes.White;
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var buttonPanel = UiUtil.MakeButtonBar(buttonCancel, buttonOk);
 
         var mainGrid = new Grid
         {

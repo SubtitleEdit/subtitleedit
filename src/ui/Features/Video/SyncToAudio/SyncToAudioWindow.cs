@@ -71,6 +71,7 @@ public class SyncToAudioWindow : Window
         var numericMaxOffset = UiUtil.MakeNumericUpDownInt(1, 36000, 120, 110, vm, nameof(vm.MaxOffsetSeconds))
             .WithAccessibleName(lang.SyncToAudioMaxOffsetSeconds);
         numericMaxOffset.Increment = 10;
+        numericMaxOffset.Classes.Add("field"); // the compact field, not the theme's big spinner
         var panelMaxOffset = new StackPanel
         {
             Orientation = Orientation.Horizontal,
