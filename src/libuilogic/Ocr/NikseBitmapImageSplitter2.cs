@@ -1045,7 +1045,69 @@ public class NikseBitmapImageSplitter2
             }
         }
 
+        RemoveCrumbs(parts);
         return parts;
+    }
+
+    /// <summary>
+    /// The vertical path search above slides around strokes, and on a bold "a" it slips
+    /// between the bowl and the 2 px foot that sticks out at the bottom right (also the leg of
+    /// "R", "x", "k", "A" and the accented "à"): the foot comes out as its own 2x2 part that no
+    /// database entry can match, so the OCR prompts for an unusable "character" (#16195). A
+    /// part a hundredth the area of the glyph whose box it touches is a crumb of that glyph.
+    /// It is dropped rather than merged back: the glyph matched without it before, and giving
+    /// "à" its foot back changed its match to "á".
+    /// </summary>
+    private static void RemoveCrumbs(List<ImageSplitterItem2> parts)
+    {
+        for (var i = parts.Count - 1; i >= 0; i--)
+        {
+            var crumb = parts[i];
+            if (crumb.NikseBitmap == null || (!IsCrumbOf(parts, i, -1) && !IsCrumbOf(parts, i, 1)))
+            {
+                continue;
+            }
+
+            parts.RemoveAt(i);
+
+            // A space item on both sides of the crumb is one gap now.
+            if (i > 0 && i < parts.Count && parts[i - 1].NikseBitmap == null && parts[i].NikseBitmap == null &&
+                parts[i - 1].SpecialCharacter == " " && parts[i].SpecialCharacter == " ")
+            {
+                parts[i - 1].SpacePixels += parts[i].SpacePixels + crumb.NikseBitmap.Width;
+                parts.RemoveAt(i);
+            }
+        }
+    }
+
+    private static bool IsCrumbOf(List<ImageSplitterItem2> parts, int crumbIndex, int direction)
+    {
+        // The path that cut the crumb off can count as a clean column, so a space item may sit
+        // between the crumb and its glyph although their boxes touch; the boxes decide.
+        var index = crumbIndex + direction;
+        while (index >= 0 && index < parts.Count && parts[index].NikseBitmap == null)
+        {
+            index += direction;
+        }
+
+        if (index < 0 || index >= parts.Count)
+        {
+            return false;
+        }
+
+        var crumb = parts[crumbIndex];
+        var glyph = parts[index];
+        var a = crumb.NikseBitmap!;
+        var b = glyph.NikseBitmap!;
+        if (a.Width * a.Height * 100 > b.Width * b.Height || a.Width * 4 > b.Width || a.Height * 4 > b.Height)
+        {
+            return false;
+        }
+
+        // Touching boxes: no column between them, and no row either (the foot of "R" starts
+        // on the row under its box).
+        var gap = direction < 0 ? crumb.X - (glyph.X + b.Width) : glyph.X - (crumb.X + a.Width);
+        return gap <= 0 && crumb.Y <= glyph.Y + b.Height && glyph.Y <= crumb.Y + a.Height;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
