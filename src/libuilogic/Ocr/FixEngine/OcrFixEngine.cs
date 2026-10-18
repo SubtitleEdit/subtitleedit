@@ -98,6 +98,7 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
         {
             replacedLine = NormalizeApostrophes(replacedLine);
+            replacedLine = NormalizeSpacedEllipses(replacedLine);
         }
 
         replacedLine = FixStartWithUppercaseLetterAfterSentenceEnd(index, replacedLine);
@@ -223,6 +224,26 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         var lastWord = lastSpace < 0 ? lastLine : lastLine.Substring(lastSpace + 1);
         return _abbreviations.Contains(lastWord);
     }
+
+    /// <summary>
+    /// Image matchers split the dots of a wide-set ellipsis far enough apart to read each as a
+    /// word: ". . ." ("voor. . .", "<i>. . .en</i>"). No subtitle means three spaced periods, so
+    /// join them (SE4's hardcoded rules did the same at the line start and end). The two-dot
+    /// forms ". .." and ".. ." are Tesseract's and stay with the replace lists, which only join
+    /// them at the end of a line after a letter or digit.
+    /// </summary>
+    internal static string NormalizeSpacedEllipses(string text)
+    {
+        if (string.IsNullOrEmpty(text) || !text.Contains(". . .", StringComparison.Ordinal))
+        {
+            return text;
+        }
+
+        return SpacedEllipsis().Replace(text, "...");
+    }
+
+    [GeneratedRegex(@"(?<![.…])\. \. \.(?![.…])")]
+    private static partial Regex SpacedEllipsis();
 
     /// <summary>
     /// Tesseract emits typographic single quotes for apostrophes ("‘cause", "didn’t"); subtitles
