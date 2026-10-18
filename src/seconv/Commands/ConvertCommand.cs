@@ -789,10 +789,19 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                     return Fail(settings, $"--burn-in-video: video file not found: {settings.BurnInVideo}");
                 }
 
-                if (LibSEIntegration.NormalizeFormatName(settings.Format) != "AdvancedSubStationAlpha")
+                if (!IsAssTarget(settings.Format))
                 {
                     return Fail(settings, "--burn-in-video needs the ass target format, e.g. seconv movie.srt ass --burn-in-video:movie.mp4");
                 }
+
+                var ffmpeg = BurnInRunner.FindFfmpeg();
+                if (ffmpeg is null)
+                {
+                    return Fail(settings, "--burn-in-video needs ffmpeg, but it was not found on PATH. Install ffmpeg or add its folder to PATH.");
+                }
+
+                // FfmpegMediaInfo only trusts FFmpegLocation on Windows, so point it at the one found.
+                Configuration.Settings.General.FFmpegLocation = ffmpeg;
 
                 // Without PlayResX/Y libass assumes 384x288 and scales the style up; take the
                 // video's own size so --assa-style-file sizes mean pixels, like the UI burn-in.
@@ -802,6 +811,15 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                     if (dimension is { Width: > 0, Height: > 0 })
                     {
                         resolution = (dimension.Width, dimension.Height);
+                    }
+                    else
+                    {
+                        const string warning = "--burn-in-video: could not read the video's size; pass --resolution:<WxH> so style sizes match the video.";
+                        settingsWarnings.Add(warning);
+                        if (!silent)
+                        {
+                            AnsiConsole.MarkupLineInterpolated($"[yellow]Warning: {warning}[/]");
+                        }
                     }
                 }
             }
@@ -816,7 +834,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 return Fail(settings, ex.Message);
             }
 
-            if (burnInEffects.Count > 0 && LibSEIntegration.NormalizeFormatName(settings.Format) != "AdvancedSubStationAlpha")
+            if (burnInEffects.Count > 0 && !IsAssTarget(settings.Format))
             {
                 return Fail(settings, "--burn-in-effects needs the ass target format, e.g. seconv movie.srt ass --burn-in-effects:fade");
             }
@@ -1101,6 +1119,17 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
     /// one document shape on every path instead of JSON on success and plain text on a bad
     /// option value.
     /// </summary>
+    /// <summary>
+    /// True for every name the ass target resolves from - "ass", "assa", "AdvancedSubStationAlpha",
+    /// "Advanced Sub Station Alpha" (any case) - as ApplyAssaPostProcess matches it.
+    /// </summary>
+    internal static bool IsAssTarget(string? format)
+    {
+        return !string.IsNullOrWhiteSpace(format) &&
+               LibSEIntegration.NormalizeFormatName(format).Replace(" ", string.Empty)
+                   .Equals("AdvancedSubStationAlpha", StringComparison.OrdinalIgnoreCase);
+    }
+
     private static int Fail(Settings settings, string message)
     {
         if (settings.Json)

@@ -101,6 +101,8 @@ public class BurnInVideoTest : IDisposable
     [InlineData("fade:0")]
     [InlineData("fade:fast")]
     [InlineData("scroll-left")]
+    [InlineData("font-kerning:5")]
+    [InlineData("fix-rtl:1")]
     public void ParseEffects_RejectsUnknownEffectsAndBadFadeLengths(string value)
     {
         Assert.Throws<FormatException>(() => BurnInRunner.ParseEffects(value));
@@ -160,6 +162,80 @@ public class BurnInVideoTest : IDisposable
         Assert.False(result.Success);
         Assert.Contains(result.Errors, e => e.Contains("--overwrite"));
         Assert.Equal("earlier output", await File.ReadAllTextAsync(existing, TestContext.Current.CancellationToken));
+        Assert.False(File.Exists(Path.Combine(_tempRoot, "in.ass"))); // refused before the .ass is written
+    }
+
+    [Theory]
+    [InlineData("out.mp4", true)]
+    [InlineData("out.MOV", true)]
+    [InlineData("out.mkv", false)]
+    [InlineData("out.ts", false)]
+    public void BuildArguments_AddsFaststartOnlyForMp4Family(string output, bool expected)
+    {
+        var args = BurnInRunner.BuildArguments("in.mp4", output, null);
+
+        Assert.Equal(expected, args.Contains("-movflags +faststart"));
+        Assert.Contains(BurnInRunner.DefaultFfmpegArgs, args);
+    }
+
+    [Fact]
+    public void BuildArguments_UsesVp9DefaultForWebm()
+    {
+        Assert.Contains(BurnInRunner.DefaultWebmFfmpegArgs, BurnInRunner.BuildArguments("in.webm", "out.webm", null));
+        Assert.Contains("-c:v libx264 -crf 20", BurnInRunner.BuildArguments("in.webm", "out.webm", "-c:v libx264 -crf 20"));
+    }
+
+    [Theory]
+    [InlineData("ass", true)]
+    [InlineData("assa", true)]
+    [InlineData("AdvancedSubStationAlpha", true)]
+    [InlineData("advancedsubstationalpha", true)]
+    [InlineData("Advanced Sub Station Alpha", true)]
+    [InlineData("srt", false)]
+    [InlineData("ssa", false)]
+    public void IsAssTarget_AcceptsEveryAssName(string format, bool expected)
+    {
+        Assert.Equal(expected, SeConv.Commands.ConvertCommand.IsAssTarget(format));
+    }
+
+    [Fact]
+    public async Task ConvertAsync_BurnInVideo_FailedEncodeKeepsTheEarlierOutput()
+    {
+        if (!FfmpegAvailable())
+        {
+            Assert.Skip("ffmpeg not on PATH");
+        }
+
+        var video = Path.Combine(_tempRoot, "black.mp4");
+        Ffmpeg($"-f lavfi -i color=c=black:s=320x240:d=1 -c:v libx264 -pix_fmt yuv420p \"{video}\"");
+        var existing = Path.Combine(_tempRoot, "in_burn-in.mp4");
+        await File.WriteAllTextAsync(existing, "earlier output", TestContext.Current.CancellationToken);
+        var input = Path.Combine(_tempRoot, "in.srt");
+        await File.WriteAllTextAsync(input, SrtContent, TestContext.Current.CancellationToken);
+
+        var result = await new SubtitleConverter().ConvertAsync(new ConversionOptions
+        {
+            Patterns = [input],
+            Format = "ass",
+            OutputFolder = _tempRoot,
+            Overwrite = true,
+            BurnInVideo = video,
+            BurnInFfmpegArgs = "-c:v no-such-encoder",
+        });
+
+        Assert.False(result.Success);
+        Assert.Equal("earlier output", await File.ReadAllTextAsync(existing, TestContext.Current.CancellationToken));
+        Assert.DoesNotContain(Directory.GetFiles(_tempRoot), f => Path.GetFileName(f).StartsWith(".in_burn-in.", StringComparison.Ordinal));
+    }
+
+    [Theory]
+    [InlineData("Duration: 00:11:37.04, start: 0.000000, bitrate: 5000 kb/s", "Duration:", 697)]
+    [InlineData("frame=  250 fps=50 q=28.0 size=512kB time=00:00:10.00 bitrate=419.4kbits/s speed=2x", "time=", 10)]
+    [InlineData("Duration: N/A, bitrate: N/A", "Duration:", 0)]
+    [InlineData("no time here", "time=", 0)]
+    public void ParseSeconds_ReadsFfmpegDurationAndStatsTime(string line, string prefix, int expected)
+    {
+        Assert.Equal(expected, BurnInRunner.ParseSeconds(line, prefix));
     }
 
     private static bool FfmpegAvailable()

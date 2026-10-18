@@ -225,6 +225,7 @@ internal class SubtitleConverter
                     {
                         // Regular single-file path (text or binary subtitle file)
                         var outputFile = ResolveOutputFileName(inputFile, options, translateToSuffix, null, _usedOutputFileNames);
+                        EnsureBurnInWritable(outputFile, options);
                         if (!options.Quiet)
                         {
                             AnsiConsole.MarkupInterpolated($"[dim]{fileIndex}:[/] [cyan]{Path.GetFileName(inputFile)}[/] [dim]->[/] [green]{outputFile}[/]...");
@@ -264,6 +265,7 @@ internal class SubtitleConverter
                         foreach (var track in tracks)
                         {
                             var outputFile = ResolveOutputFileName(inputFile, options, AppendForcedToken(translateToSuffix ?? LanguageToken(options, track.LanguageCode), track.IsForced), track.TrackNumber, _usedOutputFileNames);
+                            EnsureBurnInWritable(outputFile, options);
                             var trackLabel = track.TrackNumber.HasValue ? $"#{track.TrackNumber.Value} " : string.Empty;
                             var langLabel = string.IsNullOrEmpty(track.LanguageCode) ? string.Empty : $"[{track.LanguageCode}] ";
                             if (!options.Quiet)
@@ -1177,7 +1179,30 @@ internal class SubtitleConverter
 
         if (!string.IsNullOrEmpty(options.BurnInVideo))
         {
-            BurnInRunner.Run(outputFile, options.BurnInVideo, options.BurnInFfmpegArgs, options.Overwrite);
+            Action<int, int>? progress = options.Quiet ? null : (done, total) => ProgressLine.Report("Burn-in seconds", done, total);
+            try
+            {
+                BurnInRunner.Run(outputFile, options.BurnInVideo, options.BurnInFfmpegArgs, options.Overwrite, progress);
+            }
+            finally
+            {
+                if (progress != null)
+                {
+                    ProgressLine.Finish();
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Refuses a burn-in that would overwrite an existing video before the .ass is written, so a
+    /// refused file leaves no .ass behind either.
+    /// </summary>
+    private static void EnsureBurnInWritable(string outputFile, ConversionOptions options)
+    {
+        if (!string.IsNullOrEmpty(options.BurnInVideo))
+        {
+            BurnInRunner.EnsureOutputWritable(outputFile, options.BurnInVideo, options.Overwrite);
         }
     }
 
