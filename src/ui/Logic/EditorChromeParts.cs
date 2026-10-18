@@ -125,6 +125,21 @@ internal static partial class EditorChrome
     }
 
     /// <summary>
+    /// A combo box's selected item too long for the box ended in a cut-off letter ("United States]");
+    /// this ends it in "..." instead.
+    /// </summary>
+    internal static void AddComboBoxEllipsisStyle(Styles styles)
+    {
+        styles.Add(new Style(x => x.OfType<ComboBox>().Template().OfType<ContentControl>().Name("ContentPresenter").Descendant().OfType<TextBlock>())
+        {
+            Setters =
+            {
+                new Setter(TextBlock.TextTrimmingProperty, TextTrimming.CharacterEllipsis),
+            },
+        });
+    }
+
+    /// <summary>
     /// The styles of <see cref="ApplyWindow"/> without the window background.
     /// </summary>
     internal static void AddWindowStyles(Styles styles, EditorWindowStyles extra = EditorWindowStyles.None)
@@ -140,6 +155,8 @@ internal static partial class EditorChrome
                 new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(6)),
             },
         });
+
+        AddComboBoxEllipsisStyle(styles);
 
         // An editable combo box's text sat at the top of the 28 px box (the theme's text box keeps
         // its own top-aligned padding); center it like a read-only combo's selected item

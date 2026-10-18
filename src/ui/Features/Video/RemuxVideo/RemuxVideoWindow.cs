@@ -108,6 +108,7 @@ public class RemuxVideoWindow : Window
     /// </summary>
     private void AddStyles()
     {
+        EditorChrome.AddComboBoxEllipsisStyle(Styles);
         Styles.Add(new Style(x => x.OfType<ComboBox>())
         {
             Setters =
