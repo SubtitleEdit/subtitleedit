@@ -1470,11 +1470,17 @@ public class OcrWindow : Window
     // Model combo item template: a dot (green = downloaded, grey = not downloaded yet) plus the
     // model's download size - same treatment as the speech-to-text model combo.
     // 0 = auto: word spaces relative to the text size (NOcrSpaceDetector).
+    // Text is bound (not set once) - the template recycles, so the closed combo's presenter
+    // keeps its TextBlock and only gets a new DataContext when the selection changes (#16187).
     private static ComboBox WithPixelsAreSpaceItemTemplate(ComboBox comboBox)
     {
-        comboBox.ItemTemplate = new FuncDataTemplate<int>((value, _) => new TextBlock
+        comboBox.ItemTemplate = new FuncDataTemplate<int>((_, _) => new TextBlock
         {
-            Text = value <= 0 ? Se.Language.General.Auto : value.ToString(System.Globalization.CultureInfo.CurrentCulture),
+            [!TextBlock.TextProperty] = new Binding(".")
+            {
+                Converter = new FuncValueConverter<int, string>(value =>
+                    value <= 0 ? Se.Language.General.Auto : value.ToString(CultureInfo.CurrentCulture)),
+            },
         }, true);
         return comboBox;
     }
