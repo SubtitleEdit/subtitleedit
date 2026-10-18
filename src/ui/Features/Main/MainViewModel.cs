@@ -15147,6 +15147,7 @@ public partial class MainViewModel :
         // the previous values until the user edits a row (issue #11379).
         foreach (var row in Subtitles)
         {
+            row.ClearStrippedTextCaches();
             row.RefreshAfterSettingsChanged();
         }
 

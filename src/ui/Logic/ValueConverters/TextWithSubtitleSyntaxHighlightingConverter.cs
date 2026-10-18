@@ -3,6 +3,7 @@ using Avalonia.Data.Converters;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -177,7 +178,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                 str = str.Substring(0, MaxRawLength);
             }
 
-            str = HtmlUtil.RemoveHtmlTags(Utilities.RemoveSsaTags(str, removeDrawingTags: true));
+            str = CalcFactory.RemoveIgnoredTags(HtmlUtil.RemoveHtmlTags(Utilities.RemoveSsaTags(str, removeDrawingTags: true)));
             if (string.IsNullOrEmpty(str))
             {
                 return new InlineCollection();

@@ -103,6 +103,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private ContinuationStyleDisplay _continuationStyle;
     [ObservableProperty] private ObservableCollection<CpsLineLengthStrategyDisplay> _cpsLineLengthStrategies;
     [ObservableProperty] private CpsLineLengthStrategyDisplay _cpsLineLengthStrategy;
+    [ObservableProperty] private string _cpsLineLengthIgnoreTagsRegex = string.Empty;
     [ObservableProperty] private ObservableCollection<string> _fonts;
     [ObservableProperty] private string _mpvPreviewFontName;
     [ObservableProperty] private int _mpvPreviewFontSize;
@@ -832,6 +833,7 @@ public partial class SettingsViewModel : ObservableObject
         ContinuationStyle = ContinuationStyles.FirstOrDefault(p => p.Code == general.ContinuationStyle) ?? ContinuationStyles.First();
         IsEditCustomContinuationStyleVisible = ContinuationStyle?.Code == nameof(Core.Enums.ContinuationStyle.Custom);
         CpsLineLengthStrategy = CpsLineLengthStrategies.FirstOrDefault(p => p.Code == general.CpsLineLengthStrategy) ?? CpsLineLengthStrategies.First();
+        CpsLineLengthIgnoreTagsRegex = general.CpsLineLengthIgnoreTagsRegex ?? string.Empty;
 
         // The persisted choice, not the effective value - EBU STL may have frame mode forced on
         // temporarily, and that must not stick just because the settings dialog was OK'ed.
@@ -1754,6 +1756,7 @@ public partial class SettingsViewModel : ObservableObject
         general.DialogStyle = DialogStyle.Code;
         general.ContinuationStyle = ContinuationStyle.Code;
         general.CpsLineLengthStrategy = CpsLineLengthStrategy.Code;
+        general.CpsLineLengthIgnoreTagsRegex = CpsLineLengthIgnoreTagsRegex?.Trim() ?? string.Empty;
 
         general.UseFrameMode = UseFrameMode;
         general.UseFrameNumbersPersisted = SelectedTimeCodeMode.Mode == TimeCodeMode.FrameNumbers;

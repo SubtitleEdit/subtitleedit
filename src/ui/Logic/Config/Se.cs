@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
@@ -1526,6 +1527,7 @@ public class Se
         libSe.MaxNumberOfLines = g.MaxNumberOfLines;
         libSe.MergeLinesShorterThan = g.UnbreakLinesShorterThan;
         libSe.CpsLineLengthStrategy = g.CpsLineLengthStrategy;
+        CalcFactory.SetIgnoreTagsPattern(g.CpsLineLengthIgnoreTagsRegex);
 
         if (Enum.TryParse<Core.Enums.DialogType>(g.DialogStyle, out var dt))
         {

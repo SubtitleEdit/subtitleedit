@@ -25,6 +25,7 @@ public class LanguageSettings
     public string ContinuationStyleLeadingTrailingDashDots { get; set; }
 
     public string CpsLineLengthStyle { get; set; }
+    public string CpsLineLengthIgnoreTagsRegex { get; set; }
     public string CpsLineLengthStyleCalcAll { get; set; }
     public string CpsLineLengthStyleCalcNoSpaceCpsOnly { get; set; }
     public string CpsLineLengthStyleCalcNoSpace { get; set; }
@@ -399,6 +400,7 @@ public class LanguageSettings
         ContinuationStyleLeadingTrailingDashDots = "Dash, but dots for pauses";
 
         CpsLineLengthStyle = "Cps/line-length";
+        CpsLineLengthIgnoreTagsRegex = "Ignore custom tags (regex)";
         CpsLineLengthStyleCalcAll = "Count all characters";
         CpsLineLengthStyleCalcNoSpaceCpsOnly = "Count all except space, cps only";
         CpsLineLengthStyleCalcNoSpace = "Count all except space";
