@@ -21,10 +21,13 @@ public class SplitterBaselineTests
         var glyphs = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parent, 1, false, true, 25, true)
             .Where(i => i.NikseBitmap != null)
             .ToList();
-        var tallest = glyphs.MaxBy(g => g.NikseBitmap!.Height)!;
-        var letterBottom = tallest.Top + tallest.NikseBitmap!.Height;
+        var maxHeight = glyphs.Max(g => g.NikseBitmap!.Height);
+        var marks = glyphs.Where(g => g.NikseBitmap!.Height * 10 < maxHeight * 3).ToList();
+        var letterBottoms = glyphs.Except(marks).Select(g => g.Top + g.NikseBitmap!.Height).Order().ToList();
+        var letterBottom = letterBottoms[(letterBottoms.Count - 1) / 2]; // "J" may hang below the line
 
-        // Round letters overshoot the baseline by a pixel or two; a dash is far above it.
+        Assert.NotEmpty(marks);
         Assert.All(glyphs, g => Assert.InRange(g.Baseline!.Value, letterBottom - 2, letterBottom + 2));
+        Assert.All(marks, m => Assert.True(m.Top + m.NikseBitmap!.Height < letterBottom - 2));
     }
 }
