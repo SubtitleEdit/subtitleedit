@@ -38,6 +38,7 @@ public class NOcrSpaceDetector
     public List<ImageSplitterItem2> RemoveFalseSpaces(List<ImageSplitterItem2> letters, out int pixelsAreSpace)
     {
         var lines = GetLines(letters);
+        var gaps = GetEffectiveGaps(letters, lines);
         var relativeThreshold = FindRelativeThreshold(letters, lines);
 
         var result = new List<ImageSplitterItem2>(letters.Count);
@@ -53,7 +54,7 @@ public class NOcrSpaceDetector
             for (var i = start; i < end; i++)
             {
                 var item = letters[i];
-                if (item.SpecialCharacter == " " && item.NikseBitmap == null && item.SpacePixels < threshold)
+                if (item.SpecialCharacter == " " && item.NikseBitmap == null && gaps[i] < threshold)
                 {
                     continue;
                 }
@@ -136,6 +137,125 @@ public class NOcrSpaceDetector
         }
 
         return DefaultRelativeThreshold;
+    }
+
+    // Share of the extra width the glyph bodies leave that counts towards the gap.
+    private const double BodyGapWeight = 0.25;
+
+    /// <summary>
+    /// Width of each gap item, widened by part of the room between the glyph bodies on either
+    /// side. Overhangs - the hook of "f", the tail of "y"/"j", the bar of "T" - reach into the
+    /// space, so the gap between the boxes understates it ("ofyou", "ifwe", "wasjust"). Only a
+    /// quarter of the extra counts, so a kerned pair inside a word ("To", "Ty") stays a letter gap,
+    /// and only between letter-sized glyphs. The threshold itself still comes from the box gaps.
+    /// </summary>
+    private static double[] GetEffectiveGaps(List<ImageSplitterItem2> letters, List<(int Start, int End, int Height)> lines)
+    {
+        var gaps = new double[letters.Count];
+        foreach (var (start, end, height) in lines)
+        {
+            for (var i = start; i < end; i++)
+            {
+                var item = letters[i];
+                if (item.SpecialCharacter != " " || item.NikseBitmap != null)
+                {
+                    continue;
+                }
+
+                gaps[i] = item.SpacePixels;
+                var before = i - 1;
+                while (before >= start && letters[before].NikseBitmap == null)
+                {
+                    before--;
+                }
+
+                var after = i + 1;
+                while (after < end && letters[after].NikseBitmap == null)
+                {
+                    after++;
+                }
+
+                // Letters on both sides: an apostrophe, quote or period shares few rows with its
+                // neighbour, and a colon is two dots - their "body gap" says nothing about the space.
+                if (before >= start && after < end &&
+                    IsLetterSized(letters[before].NikseBitmap!, height) &&
+                    IsLetterSized(letters[after].NikseBitmap!, height))
+                {
+                    var body = BodyGap(letters[before], letters[after]);
+                    if (body > item.SpacePixels)
+                    {
+                        gaps[i] = item.SpacePixels + BodyGapWeight * (body - item.SpacePixels);
+                    }
+                }
+            }
+        }
+
+        return gaps;
+    }
+
+    /// <summary>At least 45% of the line height, with ink on at least three quarters of its rows.</summary>
+    private static bool IsLetterSized(NikseBitmap2 bitmap, int lineHeight)
+    {
+        if (bitmap.Height * 100 < lineHeight * 45)
+        {
+            return false;
+        }
+
+        var inkRows = 0;
+        for (var y = 0; y < bitmap.Height; y++)
+        {
+            for (var x = 0; x < bitmap.Width; x++)
+            {
+                if (bitmap.GetAlpha(x, y) > 150)
+                {
+                    inkRows++;
+                    break;
+                }
+            }
+        }
+
+        return inkRows * 4 >= bitmap.Height * 3;
+    }
+
+    /// <summary>
+    /// Closest horizontal distance between the ink of <paramref name="left"/> and
+    /// <paramref name="right"/> on the rows where both have ink, or -1 when no row has both.
+    /// </summary>
+    private static int BodyGap(ImageSplitterItem2 left, ImageSplitterItem2 right)
+    {
+        var a = left.NikseBitmap!;
+        var b = right.NikseBitmap!;
+        var top = Math.Max(left.Top, right.Top);
+        var bottom = Math.Min(left.Top + a.Height, right.Top + b.Height);
+        var best = int.MaxValue;
+        for (var y = top; y < bottom; y++)
+        {
+            var rightEdge = -1;
+            for (var x = a.Width - 1; x >= 0; x--)
+            {
+                if (a.GetAlpha(x, y - left.Top) > 150)
+                {
+                    rightEdge = left.X + x;
+                    break;
+                }
+            }
+
+            if (rightEdge < 0)
+            {
+                continue;
+            }
+
+            for (var x = 0; x < b.Width; x++)
+            {
+                if (b.GetAlpha(x, y - right.Top) > 150)
+                {
+                    best = Math.Min(best, right.X + x - rightEdge - 1);
+                    break;
+                }
+            }
+        }
+
+        return best == int.MaxValue ? -1 : best;
     }
 
     /// <summary>Item ranges per text line (end exclusive, at the line break) with the line's ink height.</summary>
