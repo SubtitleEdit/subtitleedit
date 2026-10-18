@@ -670,11 +670,15 @@ public class NOcrDb
         {
             // Nothing matched upright. Straighten the glyph and try once more - this is how an
             // italic 'l' stops being read as an 'i'. A hit is italic by construction, so flag a
-            // copy; the database entry itself must stay upright.
+            // copy; the database entry itself must stay upright. Two touching italic letters
+            // ("fa", "is", "ts", "rs" in a bold italic) are cut along a vertical column too, which
+            // on the slanted pair leaves ragged halves that fit nothing - so the straightened
+            // glyph gets the touching-pair split as well.
             var unItalic = bitmap.UnItalic(italicFactor);
             if (unItalic.Width > 0 && unItalic.Height > 0)
             {
-                var italicMatch = GetMatchSingle(unItalic, topMargin, deepSeek, maxWrongPixels, lastDitch, placement: placement);
+                var italicMatch = GetMatchSingle(unItalic, topMargin, deepSeek, maxWrongPixels, lastDitch, placement: placement)
+                                  ?? MatchTouchingLetters(unItalic, topMargin, maxWrongPixels, depth: 0, out _, returnStrokeEnds: true);
                 if (italicMatch != null)
                 {
                     single = new NOcrChar(italicMatch) { Italic = true };
@@ -692,7 +696,7 @@ public class NOcrDb
     /// (no deep-seek or last-ditch guessing). One side may itself be a touching pair ("ryw").
     /// Only letters and digits count, so a stray mark can't make a split look good.
     /// </summary>
-    private NOcrChar? MatchTouchingLetters(NikseBitmap2 bitmap, int topMargin, int maxWrongPixels, int depth, out double rate)
+    private NOcrChar? MatchTouchingLetters(NikseBitmap2 bitmap, int topMargin, int maxWrongPixels, int depth, out double rate, bool returnStrokeEnds = false)
     {
         rate = double.MaxValue;
         var width = bitmap.Width;
@@ -719,7 +723,13 @@ public class NOcrDb
             .OrderBy(x => ink[x])
             .ThenBy(x => Math.Abs(x - width / 2))
             .ToList();
+        // Up to three cuts; for a straightened italic glyph (returnStrokeEnds) each is tried with
+        // and without a stroke end given back to its letter (see ReturnStrokeEnds; a cut through
+        // the dot of an "i" moves the dot's remainder too). The best fit over all of them wins
+        // rather than the first that fits: the thinnest column of "fw" is inside the "w".
         var tried = new List<int>();
+        NOcrChar? bestPair = null;
+        var bestPairRate = double.MaxValue;
         foreach (var cut in cuts)
         {
             if (tried.Count == 3)
@@ -733,51 +743,248 @@ public class NOcrDb
             }
 
             tried.Add(cut);
-            var left = TrimToInk(bitmap.CopyRectangle(new NikseRectangle(0, 0, cut, height)), out var leftTop);
-            var right = TrimToInk(bitmap.CopyRectangle(new NikseRectangle(cut + 1, 0, width - cut - 1, height)), out var rightTop);
-            if (left == null || right == null)
+            var plainLeft = bitmap.CopyRectangle(new NikseRectangle(0, 0, cut, height));
+            var plainRight = bitmap.CopyRectangle(new NikseRectangle(cut + 1, 0, width - cut - 1, height));
+            var returnedRight = returnStrokeEnds ? new NikseBitmap2(plainRight) : plainRight;
+            var returnedLeft = returnStrokeEnds ? ReturnStrokeEnds(bitmap, cut, plainLeft, returnedRight) : plainLeft;
+            var attempts = ReferenceEquals(returnedLeft, plainLeft)
+                ? new[] { (plainLeft, plainRight) }
+                : new[] { (returnedLeft, returnedRight), (plainLeft, plainRight) };
+            foreach (var (leftHalf, rightHalf) in attempts)
             {
-                continue;
+                var left = TrimToInk(leftHalf, out var leftTop);
+                var right = TrimToInk(rightHalf, out var rightTop);
+                if (left == null || right == null)
+                {
+                    continue;
+                }
+
+                var leftMatch = MatchLetterOrPair(left, topMargin + leftTop, maxWrongPixels, depth, out var leftRate, returnStrokeEnds);
+                if (leftMatch == null || leftRate >= bestPairRate)
+                {
+                    continue;
+                }
+
+                var rightMatch = MatchLetterOrPair(right, topMargin + rightTop, maxWrongPixels, depth, out var rightRate, returnStrokeEnds);
+                if (rightMatch == null ||
+                    leftMatch.Text.All(char.IsDigit) != rightMatch.Text.All(char.IsDigit))
+                {
+                    // Touching letters or touching digits, never one of each: an "M" cut in two
+                    // read as "b1" or "A4".
+                    continue;
+                }
+
+                var attemptRate = Math.Max(leftRate, rightRate);
+                if (attemptRate >= bestPairRate)
+                {
+                    continue;
+                }
+
+                // A "w" cut down its middle is two "v"s - it was one letter all along.
+                var text = HarmonizeCase(leftMatch.Text, rightMatch.Text, left, right, leftTop, rightTop) switch
+                {
+                    "vv" => "w",
+                    "VV" => "W",
+                    var pair => pair,
+                };
+
+                bestPairRate = attemptRate;
+                bestPair = new NOcrChar(text)
+                {
+                    Width = width,
+                    Height = height,
+                    MarginTop = topMargin,
+                    Italic = leftMatch.Italic && rightMatch.Italic,
+                };
             }
-
-            var leftMatch = MatchLetterOrPair(left, topMargin + leftTop, maxWrongPixels, depth, out var leftRate);
-            if (leftMatch == null)
-            {
-                continue;
-            }
-
-            var rightMatch = MatchLetterOrPair(right, topMargin + rightTop, maxWrongPixels, depth, out var rightRate);
-            if (rightMatch == null ||
-                leftMatch.Text.All(char.IsDigit) != rightMatch.Text.All(char.IsDigit))
-            {
-                // Touching letters or touching digits, never one of each: an "M" cut in two
-                // read as "b1" or "A4".
-                continue;
-            }
-
-            rate = Math.Max(leftRate, rightRate);
-
-            // A "w" cut down its middle is two "v"s - it was one letter all along.
-            var text = (leftMatch.Text + rightMatch.Text) switch
-            {
-                "vv" => "w",
-                "VV" => "W",
-                var pair => pair,
-            };
-
-            return new NOcrChar(text)
-            {
-                Width = width,
-                Height = height,
-                MarginTop = topMargin,
-                Italic = leftMatch.Italic && rightMatch.Italic,
-            };
         }
 
-        return null;
+        rate = bestPairRate;
+        return bestPair;
     }
 
-    private NOcrChar? MatchLetterOrPair(NikseBitmap2 part, int topMargin, int maxWrongPixels, int depth, out double rate)
+    // Letters whose capital is the same shape as the lowercase, only taller.
+    private const string SameShapeCapitals = "CKOPSUVWXZ";
+
+    /// <summary>
+    /// Each half is matched on its own, so a lowercase "s" the height of its neighbour "r" can
+    /// come back as a scaled "S" ("rS", "Vv"). Two halves of the same height and top are the
+    /// same case: a capital is taller than an x-height letter next to it.
+    /// </summary>
+    internal static string HarmonizeCase(string leftText, string rightText, NikseBitmap2 left, NikseBitmap2 right, int leftTop, int rightTop)
+    {
+        if (leftText.Length != 1 || rightText.Length != 1)
+        {
+            return leftText + rightText;
+        }
+
+        var tolerance = Math.Max(2, Math.Max(left.Height, right.Height) / 8);
+        var sameSize = Math.Abs(left.Height - right.Height) <= tolerance && Math.Abs(leftTop - rightTop) <= tolerance;
+        if (!sameSize)
+        {
+            return leftText + rightText;
+        }
+
+        var l = leftText[0];
+        var r = rightText[0];
+        if (char.IsLower(l) && char.IsUpper(r) && SameShapeCapitals.Contains(r))
+        {
+            r = char.ToLowerInvariant(r);
+        }
+        else if (char.IsUpper(l) && char.IsLower(r) && SameShapeCapitals.Contains(l))
+        {
+            l = char.ToLowerInvariant(l);
+        }
+
+        return string.Concat(l, r);
+    }
+
+    /// <summary>
+    /// The cut runs down a column, so the arm of an "f" or the crossbar of a "t" reaching over
+    /// the next letter leaves its end on that letter's side ("fa": a stub above the "a" that
+    /// reads as an accent, "Ià", while the "f" without its arm reads as "I"). A piece of ink in
+    /// the right half that is not that half's main body, touches the cut, and continues through
+    /// the cut column in the whole glyph is such a stroke end: it goes back to the left half.
+    /// The dot of an "i" or an accent next to the cut does not continue through it and stays.
+    /// </summary>
+    internal static NikseBitmap2 ReturnStrokeEnds(NikseBitmap2 whole, int cut, NikseBitmap2 left, NikseBitmap2 right)
+    {
+        var width = right.Width;
+        var height = right.Height;
+        if (width <= 0 || height <= 0)
+        {
+            return left;
+        }
+
+        var label = new int[width * height];
+        var sizes = new List<int> { 0 };
+        var continues = new List<bool> { false };
+        var maxX = new List<int> { 0 };
+        var minY = new List<int> { 0 };
+        var maxY = new List<int> { 0 };
+        var stack = new Stack<int>();
+        for (var start = 0; start < label.Length; start++)
+        {
+            if (label[start] != 0 || right.GetAlpha(start % width, start / width) <= 150)
+            {
+                continue;
+            }
+
+            var id = sizes.Count;
+            sizes.Add(0);
+            continues.Add(false);
+            maxX.Add(0);
+            minY.Add(height);
+            maxY.Add(0);
+            label[start] = id;
+            stack.Push(start);
+            while (stack.Count > 0)
+            {
+                var index = stack.Pop();
+                var x = index % width;
+                var y = index / width;
+                sizes[id]++;
+                maxX[id] = Math.Max(maxX[id], x);
+                minY[id] = Math.Min(minY[id], y);
+                maxY[id] = Math.Max(maxY[id], y);
+                if (x == 0 && whole.GetAlpha(cut, y) > 150)
+                {
+                    continues[id] = true;
+                }
+
+                for (var dy = -1; dy <= 1; dy++)
+                {
+                    for (var dx = -1; dx <= 1; dx++)
+                    {
+                        var nx = x + dx;
+                        var ny = y + dy;
+                        if (nx < 0 || ny < 0 || nx >= width || ny >= height)
+                        {
+                            continue;
+                        }
+
+                        var n = ny * width + nx;
+                        if (label[n] == 0 && right.GetAlpha(nx, ny) > 150)
+                        {
+                            label[n] = id;
+                            stack.Push(n);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (sizes.Count <= 2)
+        {
+            return left; // one piece: nothing to give back
+        }
+
+        var main = 1;
+        for (var id = 2; id < sizes.Count; id++)
+        {
+            if (sizes[id] > sizes[main])
+            {
+                main = id;
+            }
+        }
+
+        // A stroke end is a sliver: no taller than a stroke is thick and far smaller than the
+        // letter. The top curl of an "s" cut through its spine, or the middle of a "w", is
+        // neither and stays where it is.
+        var extent = 0;
+        for (var id = 1; id < sizes.Count; id++)
+        {
+            if (id != main && continues[id] && (maxY[id] - minY[id] + 1) * 4 <= height && sizes[id] * 4 <= sizes[main])
+            {
+                extent = Math.Max(extent, maxX[id] + 1);
+            }
+            else
+            {
+                continues[id] = false;
+            }
+        }
+
+        if (extent == 0)
+        {
+            return left;
+        }
+
+        // Widen the left half over the cut column and the stroke ends, and move them across.
+        var widened = new NikseBitmap2(cut + 1 + extent, height);
+        for (var y = 0; y < height; y++)
+        {
+            for (var x = 0; x < cut; x++)
+            {
+                var alpha = left.GetAlpha(x, y);
+                if (alpha > 0)
+                {
+                    widened.SetPixel(x, y, left.GetPixel(x, y));
+                }
+            }
+        }
+
+        for (var index = 0; index < label.Length; index++)
+        {
+            var id = label[index];
+            if (id == 0 || id == main || !continues[id])
+            {
+                continue;
+            }
+
+            var x = index % width;
+            var y = index / width;
+            widened.SetPixel(cut + 1 + x, y, right.GetPixel(x, y));
+            right.SetAlpha(x, y, 0);
+            if (x == 0 && whole.GetAlpha(cut, y) > 150)
+            {
+                widened.SetPixel(cut, y, whole.GetPixel(cut, y));
+            }
+        }
+
+        return widened;
+    }
+
+    private NOcrChar? MatchLetterOrPair(NikseBitmap2 part, int topMargin, int maxWrongPixels, int depth, out double rate, bool returnStrokeEnds)
     {
         var match = GetMatchSingle(part, topMargin, false, maxWrongPixels, false, false, BaselinePlacement.Unknown, out rate);
         if (match != null)
@@ -786,7 +993,7 @@ public class NOcrDb
         }
 
         rate = double.MaxValue;
-        return depth == 0 ? MatchTouchingLetters(part, topMargin, maxWrongPixels, depth + 1, out rate) : null;
+        return depth == 0 ? MatchTouchingLetters(part, topMargin, maxWrongPixels, depth + 1, out rate, returnStrokeEnds) : null;
     }
 
     /// <summary>The part of <paramref name="bitmap"/> that has ink, and how many rows were cut off its top.</summary>
