@@ -16,8 +16,8 @@ public class SeWaveform
     // scrubbing walks the waveform as one continuous strip.
     public bool CenterVideoPositionAlsoWhenPaused { get; set; }
 
-    // With the above on, also select the line under the cursor while scrubbing paused.
-    // Off by default: SE 4 never changed the selection while paused (#15513).
+    // Also select the line under the play-head when it moves while paused (scrubbing, seek/step
+    // commands), as long as "select current subtitle while playing" is on (#16048). Off by default: SE 4 never changed the selection while paused (#15513).
     public bool SelectCurrentSubtitleWhilePaused { get; set; }
 
     // Keep the main waveform's horizontal/vertical zoom across restarts (#15748).
