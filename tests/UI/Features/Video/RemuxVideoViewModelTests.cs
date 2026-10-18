@@ -405,6 +405,57 @@ public class RemuxVideoViewModelTests
     }
 
     /// <summary>
+    /// An .mp4 with "Subtitles as: CEA-608 in video (SEI)" gets the subtitles as A/53 captions
+    /// in the H.264/H.265 video afterwards (#16164): .scc, .mcc and .ass stay in the .mp4,
+    /// ffmpeg gets no subtitle streams, and the first two files show CC1/CC3.
+    /// </summary>
+    [AvaloniaFact]
+    public void Mp4WithCaptions_KeepsSubtitlesOutOfFfmpegAndStaysMp4()
+    {
+        var saved = Nikse.SubtitleEdit.Logic.Config.Se.Settings.Video.RemuxMp4SubtitlesAsCaptions;
+        try
+        {
+            var (vm, _, _) = BuildMixViewModel(true);
+            Assert.True(vm.IsSubtitlesAsVisible);
+            vm.SelectedSubtitlesAs = vm.SubtitlesAsOptions[1];
+            Assert.True(vm.IsMp4WithCaptions);
+            Assert.True(vm.IsMp4CaptionsHintVisible);
+
+            var scc = new RemuxFileItem(Path.Combine(Path.GetTempPath(), "remux-scc-does-not-exist.scc"));
+            var mcc = new RemuxFileItem(Path.Combine(Path.GetTempPath(), "remux-mcc-does-not-exist.mcc"));
+            var ass = new RemuxFileItem(Path.Combine(Path.GetTempPath(), "remux-ass-does-not-exist.ass"));
+            vm.SubtitleFiles.Add(scc);
+            vm.SubtitleFiles.Add(mcc);
+            vm.SubtitleFiles.Add(ass);
+
+            Assert.Equal(".mp4", vm.SelectedOutputFormat);
+            Assert.Equal(new[] { "CC1", "CC3", "" }, vm.SubtitleFiles.Select(f => f.CaptionChannel).ToArray());
+
+            var temp = Path.Combine(Path.GetTempPath(), "remux-mp4-temp.mp4");
+            var args = vm.BuildFfmpegArguments([.. vm.AudioFiles], [.. vm.SubtitleFiles], temp);
+            Assert.DoesNotContain("-c:s", args);
+            Assert.DoesNotContain(":s:0", args);
+            Assert.EndsWith($"\"{temp}\"", args);
+
+            // back to mov_text: the .mcc needs .mpg again - captions there too
+            vm.SelectedSubtitlesAs = vm.SubtitlesAsOptions[0];
+            Assert.False(vm.IsMp4WithCaptions);
+            Assert.Equal(".mpg", vm.SelectedOutputFormat);
+            Assert.False(vm.IsSubtitlesAsVisible);
+            Assert.Equal("CC1", vm.SubtitleFiles[0].CaptionChannel);
+
+            // no caption output: no channels
+            vm.SubtitleFiles.Remove(mcc);
+            vm.SelectedOutputFormat = ".mov";
+            Assert.All(vm.SubtitleFiles, f => Assert.False(f.HasCaptionChannel));
+        }
+        finally
+        {
+            Nikse.SubtitleEdit.Logic.Config.Se.Settings.Video.RemuxMp4SubtitlesAsCaptions = saved;
+        }
+    }
+
+    /// <summary>
     /// MacCaption (.mcc) can only be embedded in .mpg - with .scc too, .mpg wins over .mov.
     /// </summary>
     [AvaloniaFact]

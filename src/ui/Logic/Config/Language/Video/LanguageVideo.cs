@@ -62,6 +62,12 @@ public class LanguageVideo
     public string RemuxVideoVolumePercent { get; set; }
     public string RemuxVideoVolumeX { get; set; }
     public string RemuxVideoFastStart { get; set; }
+    public string RemuxVideoSubtitlesAs { get; set; }
+    public string RemuxVideoSubtitlesAsTracks { get; set; }
+    public string RemuxVideoSubtitlesAsCaptions { get; set; }
+    public string RemuxVideoMp4CaptionsHint { get; set; }
+    public string RemuxVideoMp4MaxTwoCaptionTracks { get; set; }
+    public string RemuxVideoMp4CaptionsNeedH264X { get; set; }
     public string EmbedSubtitlesDotDotDot { get; set; }
     public string SyncAudioTrackDotDotDot { get; set; }
     public string SyncAudioTrackTitle { get; set; }
@@ -266,6 +272,12 @@ public class LanguageVideo
         RemuxVideoVolumePercent = "Volume %:";
         RemuxVideoVolumeX = "Volume {0}%";
         RemuxVideoFastStart = "Optimize for web streaming (move index to front - slower)";
+        RemuxVideoSubtitlesAs = "Subtitles as:";
+        RemuxVideoSubtitlesAsTracks = "Subtitle tracks (mov_text)";
+        RemuxVideoSubtitlesAsCaptions = "CEA-608 in video (SEI)";
+        RemuxVideoMp4CaptionsHint = "Captions are written into the H.264/H.265 video as ATSC A/53 SEI user data - the first subtitle file is CC1, a second one CC3. Video and audio are copied, not re-encoded.";
+        RemuxVideoMp4MaxTwoCaptionTracks = "Closed captions in the video hold at most two tracks (CC1 and CC3) - remove subtitle files so that one or two are left.";
+        RemuxVideoMp4CaptionsNeedH264X = "Closed captions in an .mp4 file need H.264 or H.265 video, and the video is {0}. Choose subtitle tracks instead, or the .mpg output.";
         EmbedSubtitlesDotDotDot = "Add/remove embedded subtitles...";
         SyncAudioTrackDotDotDot = "Sync audio track...";
         SyncAudioTrackTitle = "Sync audio track";
