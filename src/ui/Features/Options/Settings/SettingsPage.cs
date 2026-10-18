@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -466,6 +466,7 @@ public class SettingsPage : UserControl
                 }
             }),
             new SettingsItem(Se.Language.Options.Settings.CpsLineLengthStyle, () => MakeComboBoxCpsLineLengthStyle()),
+            new SettingsItem(Se.Language.Options.Settings.CpsLineLengthIgnoreTagsRegex, () => UiUtil.MakeEditableComboBox(250, IgnoreTagsRegexPresets, _vm, nameof(_vm.CpsLineLengthIgnoreTagsRegex))),
         ]));
 
         sections.Add(new SettingsSection(Se.Language.General.General, IconNames.Cogs, "#8494a4",
@@ -1439,6 +1440,18 @@ public class SettingsPage : UserControl
 
         return cb;
     }
+
+    /// <summary>
+    /// Starting points for the "ignore custom tags" pattern (#16163): a client platform's own
+    /// markup like &lt;=title&gt;, &lt;@&gt; or &lt;?note&gt;, and every angle-bracket tag SE
+    /// does not strip itself. The field stays free text, so any other pattern can be typed.
+    /// </summary>
+    private static readonly string[] IgnoreTagsRegexPresets =
+    [
+        string.Empty,
+        "<[=?@][^<>]*>",
+        @"<[^\s<>][^<>]*>",
+    ];
 
     private ComboBox MakeComboBoxCpsLineLengthStyle()
     {

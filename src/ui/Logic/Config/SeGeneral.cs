@@ -30,6 +30,7 @@ public class SeGeneral
     public string DialogStyle { get; set; }
     public string ContinuationStyle { get; set; }
     public string CpsLineLengthStrategy { get; set; }
+    public string CpsLineLengthIgnoreTagsRegex { get; set; }
 
     public CustomContinuationStyle CustomContinuationStyle { get; set; }
     public bool FixContinuationStyleUncheckInsertsAllCaps { get; set; }
@@ -275,6 +276,7 @@ public class SeGeneral
         SubtitleMaximumWordsPerMinute = 400;
         DialogStyle = DialogType.DashBothLinesWithSpace.ToString();
         CpsLineLengthStrategy = nameof(CalcAll);
+        CpsLineLengthIgnoreTagsRegex = string.Empty;
         ContinuationStyle = Core.Enums.ContinuationStyle.None.ToString();
         CustomContinuationStyle = new CustomContinuationStyle();
         FixContinuationStyleUncheckInsertsAllCaps = true;
@@ -340,6 +342,7 @@ public class SeGeneral
         FavoriteSubtitleFormats = new SubRip().FriendlyName + ";" + new AdvancedSubStationAlpha().FriendlyName;
         FavoriteLanguages = string.Empty;
         CpsLineLengthStrategy = nameof(CalcAll);
+        CpsLineLengthIgnoreTagsRegex = string.Empty;
         RememberPositionAndSize = true;
 
         ColorDurationTooShort = true;
