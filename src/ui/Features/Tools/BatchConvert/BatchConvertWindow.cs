@@ -78,7 +78,7 @@ public class BatchConvertWindow : Window
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
         var progressStrip = EditorChrome.MakeProgressStrip(progressBar, nameof(vm.ProgressText), nameof(vm.IsConverting));
 
-        // The file list and the functions share the height (the functions up to what they need),
+        // The file list and the functions share the height, resizable with the splitter between them,
         // so both stay usable and the progress and the buttons reachable at the minimum height.
         var root = new Grid
         {
@@ -86,16 +86,28 @@ public class BatchConvertWindow : Window
             {
                 new RowDefinition(GridLength.Auto), // file toolbar + filter
                 new RowDefinition(new GridLength(1, GridUnitType.Star)) { MinHeight = 180 }, // file list, target format, output
-                new RowDefinition(new GridLength(1, GridUnitType.Star)) { MinHeight = 220, MaxHeight = 330 }, // functions + the selected function's settings
+                new RowDefinition(GridLength.Auto), // splitter
+                new RowDefinition(new GridLength(1, GridUnitType.Star)) { MinHeight = 220 }, // functions + the selected function's settings
                 new RowDefinition(GridLength.Auto), // progress, while converting
                 new RowDefinition(GridLength.Auto), // status + buttons
             },
         };
+
+        // The splitter doubles as the line between the file list and the functions.
+        var splitter = new GridSplitter
+        {
+            Height = 5,
+            Background = EditorChrome.LineBrush,
+            ResizeDirection = GridResizeDirection.Rows,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+        };
+
         root.Add(MakeToolbar(vm), 0, 0);
         root.Add(MakeFileView(vm), 1, 0);
-        root.Add(MakeFunctionsPanel(vm), 2, 0);
-        root.Add(progressStrip, 3, 0);
-        root.Add(buttonBar, 4, 0);
+        root.Add(splitter, 2, 0);
+        root.Add(MakeFunctionsPanel(vm), 3, 0);
+        root.Add(progressStrip, 4, 0);
+        root.Add(buttonBar, 5, 0);
 
         Content = root;
 
@@ -592,8 +604,6 @@ public class BatchConvertWindow : Window
         {
             Child = columns,
             Background = EditorChrome.PanelBrush,
-            BorderBrush = EditorChrome.LineBrush,
-            BorderThickness = new Thickness(0, 1, 0, 0),
         };
     }
 
