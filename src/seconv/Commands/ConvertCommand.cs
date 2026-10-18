@@ -61,7 +61,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public string? BurnInFfmpegArgs { get; init; }
 
         [CommandOption("--burn-in-effects")]
-        [Description("Comma-separated subtitle effects for the ass output, like the UI burn-in: fade (250 ms in/out; fade:<ms> for another length), font-kerning, font-size-change")]
+        [Description("Comma-separated subtitle effects for the ass output, the UI burn-in's effects: fade (250 ms in/out; fade:<ms> for another length), font-kerning, font-size-change, scroll-up, scroll-down, rotate-in, tilt-bounce, font-size-bounce-in, fix-rtl")]
         public string? BurnInEffects { get; init; }
 
         [CommandOption("--dcinema-font|--dcinemafont")]

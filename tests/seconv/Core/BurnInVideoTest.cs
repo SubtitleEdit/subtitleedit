@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using SeConv.Core;
 using Xunit;
 
@@ -70,10 +71,36 @@ public class BurnInVideoTest : IDisposable
         Assert.Contains(@"{\t(\fs60)}{\t(\fsp4)}{\fad(400,400)}WHITE TEXT", ass);
     }
 
+    [Fact]
+    public async Task ConvertAsync_BurnInEffects_PositionAndTimingEffectsUseResolutionFontSizeAndDuration()
+    {
+        var input = Path.Combine(_tempRoot, "in.srt");
+        await File.WriteAllTextAsync(input, SrtContent, TestContext.Current.CancellationToken); // one 2000 ms line
+
+        var result = await new SubtitleConverter().ConvertAsync(new ConversionOptions
+        {
+            Patterns = [input],
+            Format = "ass",
+            OutputFolder = _tempRoot,
+            Resolution = (1920, 1080),
+            BurnInEffects = BurnInRunner.ParseEffects("scroll-up,rotate-in,font-size-bounce-in"),
+        });
+
+        Assert.True(result.Success, string.Join("; ", result.Errors));
+        var ass = await File.ReadAllTextAsync(Path.Combine(_tempRoot, "in.ass"), TestContext.Current.CancellationToken);
+        var dialogue = ass.Split('\n').Single(l => l.StartsWith("Dialogue:")).TrimEnd('\r');
+        Assert.Contains(@"{\move(960,1020,960,1000)}", dialogue); // centered, 60 -> 80 px above the bottom of 1080
+        Assert.Contains(@"{\frx-30\t(0,1000,\frx0)}", dialogue); // straightens over half the 2000 ms line
+        var fontSize = (int)AdvancedSubStationAlpha.GetSsaStyle("Default", AdvancedSubStationAlpha.DefaultHeader).FontSize;
+        Assert.Contains($@"{{\fs{(int)(fontSize * 0.5)}\t(0,250,", dialogue); // bounce starts at half the style size
+        Assert.Contains($@"\t(750,2000,\fs{fontSize})}}", dialogue); // ...and settles on it by the line's end
+    }
+
     [Theory]
     [InlineData("glow")]
     [InlineData("fade:0")]
     [InlineData("fade:fast")]
+    [InlineData("scroll-left")]
     public void ParseEffects_RejectsUnknownEffectsAndBadFadeLengths(string value)
     {
         Assert.Throws<FormatException>(() => BurnInRunner.ParseEffects(value));

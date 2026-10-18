@@ -22,8 +22,12 @@ internal static class BurnInRunner
         return Path.Combine(folder, Path.GetFileNameWithoutExtension(assaFileName) + "_burn-in" + Path.GetExtension(videoFileName));
     }
 
-    /// <summary>Names accepted by <c>--burn-in-effects</c>.</summary>
-    public static readonly string[] EffectNames = ["fade", "font-kerning", "font-size-change"];
+    /// <summary>Names accepted by <c>--burn-in-effects</c>; one per effect in the UI's Burn in &gt; Effects.</summary>
+    public static readonly string[] EffectNames =
+    [
+        "fade", "font-kerning", "font-size-change", "scroll-up", "scroll-down",
+        "rotate-in", "tilt-bounce", "font-size-bounce-in", "fix-rtl",
+    ];
 
     /// <summary>
     /// "fade:500, font-kerning" -> ["fade:500", "font-kerning"]. A bare "fade" is 250 ms in and
@@ -59,36 +63,59 @@ internal static class BurnInRunner
     }
 
     /// <summary>
-    /// Prepends the effect override tags to every line, the way the UI's burn-in does
-    /// (BurnInEffectItem.ApplyEffect in the UI project). Call after the ASSA styles are final:
-    /// "font-size-change" grows each line to 120% of its style's font size.
+    /// Applies the effects to every line, the way the UI's burn-in does (BurnInEffectItem.ApplyEffect
+    /// in the UI project): each effect in turn, tags prepended. Call after the ASSA styles and
+    /// PlayResX/Y are final - the size effects scale from the line's style font size and the
+    /// scroll effects position against the script resolution.
     /// </summary>
     public static void ApplyEffects(Subtitle subtitle, IReadOnlyList<string> effects)
     {
+        var header = subtitle.Header ?? string.Empty;
+        var width = ParsePlayRes("PlayResX", header, AdvancedSubStationAlpha.DefaultWidth);
+        var height = ParsePlayRes("PlayResY", header, AdvancedSubStationAlpha.DefaultHeight);
+
         foreach (var p in subtitle.Paragraphs)
         {
+            var style = AdvancedSubStationAlpha.GetSsaStyle(string.IsNullOrEmpty(p.Extra) ? "Default" : p.Extra, header);
+            var fontSize = (int)style.FontSize;
+            var durationMs = (int)p.Duration.TotalMilliseconds;
             foreach (var effect in effects)
             {
-                p.Text = EffectTag(effect, subtitle.Header, p.Extra) + p.Text;
+                p.Text = ApplyEffect(effect, p.Text, width, height, fontSize, durationMs);
             }
         }
     }
 
-    private static string EffectTag(string effect, string? header, string? styleName)
+    private static int ParsePlayRes(string tag, string header, int fallback)
     {
+        var value = AdvancedSubStationAlpha.GetTagValueFromHeader(tag, "[Script Info]", header);
+        return int.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out var v) && v > 0 ? v : fallback;
+    }
+
+    internal static string ApplyEffect(string effect, string text, int width, int height, int fontSize, int durationMs)
+    {
+        const int step = 250;
         if (effect.StartsWith("fade", StringComparison.Ordinal))
         {
             var ms = effect.Contains(':') ? effect[5..] : "250";
-            return $"{{\\fad({ms},{ms})}}";
+            return $"{{\\fad({ms},{ms})}}{text}";
         }
 
-        if (effect == "font-kerning")
+        return effect switch
         {
-            return "{\\t(\\fsp4)}";
-        }
-
-        var style = AdvancedSubStationAlpha.GetSsaStyle(string.IsNullOrEmpty(styleName) ? "Default" : styleName, header ?? string.Empty);
-        return $"{{\\t(\\fs{(int)(style.FontSize * 1.2m)})}}";
+            "font-kerning" => $"{{\\t(\\fsp4)}}{text}",
+            "font-size-change" => $"{{\\t(\\fs{(int)(fontSize * 1.2)})}}{text}",
+            "scroll-up" => $"{{\\move({width / 2},{height - 60},{width / 2},{height - 80})}}{text}",
+            "scroll-down" => $"{{\\move({width / 2},{height - 80},{width / 2},{height - 60})}}{text}",
+            "rotate-in" => $"{{\\frx-30\\t(0,{durationMs / 2},\\frx0)}}{text}",
+            "tilt-bounce" => $"{{\\frz-10\\t(0,{step},\\frz10)\\t({step},{step * 2},\\frz-6)\\t({step * 2},{step * 3},\\frz4)" +
+                             $"\\t({step * 3},{step * 4},\\frz-2)\\t({step * 4},{step * 5},\\frz1)\\t({step * 5},{durationMs},\\frz0)}}{text}",
+            "font-size-bounce-in" => $"{{\\fs{(int)(fontSize * 0.5)}\\t(0,{step},\\fs{(int)(fontSize * 1.2)})" +
+                                     $"\\t({step},{step * 2},\\fs{(int)(fontSize * 0.9)})\\t({step * 2},{step * 3},\\fs{(int)(fontSize * 1.05)})" +
+                                     $"\\t({step * 3},{durationMs},\\fs{fontSize})}}{text}",
+            "fix-rtl" => Utilities.FixRtlViaUnicodeChars(text),
+            _ => throw new ArgumentOutOfRangeException(nameof(effect), effect, "unknown burn-in effect"),
+        };
     }
 
     public static string BuildArguments(string videoFileName, string outputFileName, string? ffmpegArgs)
