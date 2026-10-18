@@ -1191,38 +1191,54 @@ public class AudioVisualizer : Control
             return;
         }
 
-        if (_interactionMode is InteractionMode.Moving or InteractionMode.MovingSelection)
+        // One click-or-drag decision for the whole release (#15989). A press that never left
+        // ClickDragSlopPixels is a click, whatever mode the press tagged it with - a quick drag,
+        // or one that returned near its start, is still an edit. A move that did drag but left the
+        // cue exactly where it started (clamped against a neighbour with no room, or snapped back
+        // onto the frame it came from) edited nothing, so it still gives the seek/select a click does.
+        var isEditMode = _interactionMode is
+            InteractionMode.Moving or
+            InteractionMode.MovingSelection or
+            InteractionMode.ResizingLeft or
+            InteractionMode.ResizingRight or
+            InteractionMode.ResizingLeftOr or
+            InteractionMode.ResizingRightOr or
+            InteractionMode.ResizeLeftAnd or
+            InteractionMode.ResizeRightAnd;
+        var isMove = _interactionMode is InteractionMode.Moving or InteractionMode.MovingSelection;
+        var movedNothing = isMove && _activeParagraph != null &&
+                           Math.Abs(_originalStartSeconds - _activeParagraph.StartTime.TotalSeconds) < 0.0005;
+        var isClick = isEditMode && (!_dragThresholdExceeded || movedNothing);
+
+        if (isMove && isClick)
         {
-            // A quick drag, or one that returned near its start, is still an edit, not a click.
-            if (!_dragThresholdExceeded)
+            if (_isCtrlDown && !OperatingSystem.IsMacOS() && _activeParagraph != null && OnToggleSelection != null)
             {
-                if (_isCtrlDown && !OperatingSystem.IsMacOS() && _activeParagraph != null && OnToggleSelection != null)
-                {
-                    var videoPosition = RelativeXPositionToSeconds(pos.X);
-                    _audioVisualizerLastScroll = 0;
-                    OnToggleSelection.Invoke(this, new ParagraphEventArgs(videoPosition, _activeParagraph));
-                }
-                else if (_isShiftDown && OperatingSystem.IsMacOS() && _activeParagraph != null && OnToggleSelection != null)
-                {
-                    var videoPosition = RelativeXPositionToSeconds(pos.X);
-                    _audioVisualizerLastScroll = 0;
-                    OnToggleSelection.Invoke(this, new ParagraphEventArgs(videoPosition, _activeParagraph));
-                }
-                else if (OnVideoPositionChanged != null)
-                {
-                    var videoPosition = RelativeXPositionToSeconds(e.GetPosition(this).X);
-                    _audioVisualizerLastScroll = 0;
-                    OnVideoPositionChanged.Invoke(this, new PositionEventArgs { PositionInSeconds = videoPosition });
-                }
-
-                _activeParagraph = null;
-
-                _dragStack = null;
-                return;
+                var videoPosition = RelativeXPositionToSeconds(pos.X);
+                _audioVisualizerLastScroll = 0;
+                OnToggleSelection.Invoke(this, new ParagraphEventArgs(videoPosition, _activeParagraph));
             }
+            else if (_isShiftDown && OperatingSystem.IsMacOS() && _activeParagraph != null && OnToggleSelection != null)
+            {
+                var videoPosition = RelativeXPositionToSeconds(pos.X);
+                _audioVisualizerLastScroll = 0;
+                OnToggleSelection.Invoke(this, new ParagraphEventArgs(videoPosition, _activeParagraph));
+            }
+            else if (OnVideoPositionChanged != null)
+            {
+                var videoPosition = RelativeXPositionToSeconds(e.GetPosition(this).X);
+                _audioVisualizerLastScroll = 0;
+                OnVideoPositionChanged.Invoke(this, new PositionEventArgs { PositionInSeconds = videoPosition });
+            }
+
+            _activeParagraph = null;
+            _dragStack = null;
+            _selectionMoveSnapshot.Clear();
+            return;
         }
-        else if ((_interactionMode == InteractionMode.ResizingLeft || _interactionMode == InteractionMode.ResizingRight) && _activeParagraph != null &&
-                 _activeParagraph.Duration.TotalMilliseconds < 10)
+
+        if ((_interactionMode == InteractionMode.ResizingLeft || _interactionMode == InteractionMode.ResizingRight) && _activeParagraph != null &&
+            _activeParagraph.Duration.TotalMilliseconds < 10)
         {
             if (OnVideoPositionChanged != null)
             {
@@ -1237,25 +1253,14 @@ public class AudioVisualizer : Control
             return;
         }
 
-        if (_interactionMode is
-            InteractionMode.Moving or
-            InteractionMode.MovingSelection or
-            InteractionMode.ResizingLeft or
-            InteractionMode.ResizingRight or
-            InteractionMode.ResizingLeftOr or
-            InteractionMode.ResizingRightOr or
-            InteractionMode.ResizeLeftAnd or
-            InteractionMode.ResizeRightAnd)
+        if (isEditMode && !isClick)
         {
-            // Only suppress the follow-up Tapped (which selects/seeks) when the pointer
-            // actually dragged. A plain click that merely started within ResizeMargin of a
-            // paragraph edge is tagged as a resize on press but never moves; without this
-            // guard _preventNextTap would swallow OnTapped and the paragraph would not get
-            // selected (clicking near a boundary sometimes did not select).
-            if (_dragThresholdExceeded)
-            {
-                _preventNextTap = true;
-            }
+            // Only suppress the follow-up Tapped (which selects/seeks) after a real drag. A plain
+            // click that merely started within ResizeMargin of a paragraph edge is tagged as a
+            // resize on press but never moves; without this guard _preventNextTap would swallow
+            // OnTapped and the paragraph would not get selected (clicking near a boundary
+            // sometimes did not select).
+            _preventNextTap = true;
         }
 
         _interactionMode = InteractionMode.None;

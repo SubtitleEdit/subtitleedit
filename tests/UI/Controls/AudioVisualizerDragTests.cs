@@ -241,6 +241,79 @@ public class AudioVisualizerDragTests : IDisposable
     }
 
     [AvaloniaFact]
+    public void DragClampedByNeighbours_LeavesTimesUnchanged_AndStillSeeksOnRelease()
+    {
+        // The cue sits exactly one minimum gap from both neighbours, so a move has no room in
+        // either direction. The pointer did pass the slop, but nothing was edited, so release
+        // still behaves like a click (seek) instead of silently doing nothing.
+        Se.Settings.Waveform.SnapToFrames = false;
+        Se.Settings.Waveform.SnapToShotChanges = false;
+        var before = Line(0, 0.9);
+        var line = Line(1, 3);
+        var after = Line(3.1, 5);
+        var (window, av, _) = Open(before, line, after);
+        var seeks = new List<double>();
+        av.OnVideoPositionChanged += (_, e) => seeks.Add(e.PositionInSeconds);
+
+        window.MouseDown(new Point(252, 100), MouseButton.Left, RawInputModifiers.None);
+        window.MouseMove(new Point(258, 100), RawInputModifiers.LeftMouseButton);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(TimeSpan.FromSeconds(1), line.StartTime);
+        Assert.Equal(TimeSpan.FromSeconds(3), line.EndTime);
+
+        window.MouseUp(new Point(258, 100), MouseButton.Left, RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(TimeSpan.FromSeconds(1), line.StartTime);
+        Assert.Equal(TimeSpan.FromSeconds(3), line.EndTime);
+        Assert.Contains(seeks, position => Math.Abs(position - 258.0 / SampleRate) < 0.001);
+        window.Close();
+    }
+
+    [AvaloniaTheory]
+    [InlineData(-4)]
+    [InlineData(8)]
+    public void DragSharedEdge_ResizesTheCueOnTheDragSide_WithoutSeeking(double movement)
+    {
+        // Two cues share the edge at 3 s (x = 378). Pressing there is an "Or" resize: the
+        // direction of the first move past the slop decides which cue gets the edge.
+        Se.Settings.Waveform.SnapToFrames = false;
+        Se.Settings.Waveform.SnapToShotChanges = false;
+        var first = Line(1, 3);
+        var second = Line(3, 5);
+        var (window, av, _) = Open(first, second);
+        var seeks = 0;
+        av.OnVideoPositionChanged += (_, _) => seeks++;
+
+        window.MouseDown(new Point(378, 100), MouseButton.Left, RawInputModifiers.None);
+        // The switch to the other cue re-anchors the drag on its first move, so a second move
+        // is what actually resizes it.
+        window.MouseMove(new Point(378 + movement / 2, 100), RawInputModifiers.LeftMouseButton);
+        window.MouseMove(new Point(378 + movement, 100), RawInputModifiers.LeftMouseButton);
+        window.MouseUp(new Point(378 + movement, 100), MouseButton.Left, RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
+
+        if (movement < 0)
+        {
+            // The shared edge leaves no gap, so the pulled-back end is also clamped to the
+            // minimum gap before the second cue; either way it moved left and only it moved.
+            Assert.True(first.EndTime.TotalSeconds < 3, $"first end {first.EndTime.TotalSeconds}");
+            Assert.Equal(TimeSpan.FromSeconds(3), second.StartTime);
+        }
+        else
+        {
+            Assert.Equal(TimeSpan.FromSeconds(3), first.EndTime);
+            Assert.True(second.StartTime.TotalSeconds > 3, $"second start {second.StartTime.TotalSeconds}");
+        }
+
+        Assert.Equal(TimeSpan.FromSeconds(1), first.StartTime);
+        Assert.Equal(TimeSpan.FromSeconds(5), second.EndTime);
+        Assert.Equal(0, seeks);
+        window.Close();
+    }
+
+    [AvaloniaFact]
     public void Assa_Move_LinesWithTheSameTimes_MoveTogether()
     {
         // A clip art is one ASSA drawing line per layer, all 1-3 s; dragging one moved only that layer
