@@ -1160,6 +1160,11 @@ internal class SubtitleConverter
         // ASSA-only post-processing: resolution + style-file overlay
         LibSEIntegration.ApplyAssaPostProcess(subtitle, normalizedFormat, options.Resolution, options.AssaStyleFile);
 
+        if (options.BurnInEffects.Count > 0)
+        {
+            BurnInRunner.ApplyEffects(subtitle, options.BurnInEffects);
+        }
+
         LibSEIntegration.SaveSubtitle(
             subtitle,
             outputFile,
@@ -1393,6 +1398,9 @@ internal record class ConversionOptions
 
     /// <summary>--burn-in-ffmpeg-args: encoder arguments replacing <see cref="BurnInRunner.DefaultFfmpegArgs"/>.</summary>
     public string? BurnInFfmpegArgs { get; init; }
+
+    /// <summary>--burn-in-effects, parsed by <see cref="BurnInRunner.ParseEffects"/>; only used for the ass target.</summary>
+    public IReadOnlyList<string> BurnInEffects { get; init; } = [];
     public int? PacCodePage { get; init; }
 
     /// <summary>PAC code page for lines in another script, written flagged as "secondary code page".</summary>

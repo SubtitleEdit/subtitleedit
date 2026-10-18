@@ -1,5 +1,7 @@
 using System.Diagnostics;
+using System.Globalization;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace SeConv.Core;
 
@@ -18,6 +20,75 @@ internal static class BurnInRunner
     {
         var folder = Path.GetDirectoryName(Path.GetFullPath(assaFileName)) ?? string.Empty;
         return Path.Combine(folder, Path.GetFileNameWithoutExtension(assaFileName) + "_burn-in" + Path.GetExtension(videoFileName));
+    }
+
+    /// <summary>Names accepted by <c>--burn-in-effects</c>.</summary>
+    public static readonly string[] EffectNames = ["fade", "font-kerning", "font-size-change"];
+
+    /// <summary>
+    /// "fade:500, font-kerning" -> ["fade:500", "font-kerning"]. A bare "fade" is 250 ms in and
+    /// out, like the UI's "Fade in/out".
+    /// </summary>
+    public static List<string> ParseEffects(string? value)
+    {
+        var effects = new List<string>();
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return effects;
+        }
+
+        foreach (var item in value.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        {
+            var effect = item.ToLowerInvariant();
+            var name = effect.Split(':')[0];
+            if (!EffectNames.Contains(name))
+            {
+                throw new FormatException($"Unknown --burn-in-effects value '{item}'. Valid: {string.Join(", ", EffectNames)} (fade:<ms> sets the fade length).");
+            }
+
+            if (name == "fade" && effect.Contains(':') &&
+                !(int.TryParse(effect[5..], NumberStyles.None, CultureInfo.InvariantCulture, out var ms) && ms > 0))
+            {
+                throw new FormatException($"--burn-in-effects: fade length must be a positive number of milliseconds (got '{item}').");
+            }
+
+            effects.Add(effect);
+        }
+
+        return effects;
+    }
+
+    /// <summary>
+    /// Prepends the effect override tags to every line, the way the UI's burn-in does
+    /// (BurnInEffectItem.ApplyEffect in the UI project). Call after the ASSA styles are final:
+    /// "font-size-change" grows each line to 120% of its style's font size.
+    /// </summary>
+    public static void ApplyEffects(Subtitle subtitle, IReadOnlyList<string> effects)
+    {
+        foreach (var p in subtitle.Paragraphs)
+        {
+            foreach (var effect in effects)
+            {
+                p.Text = EffectTag(effect, subtitle.Header, p.Extra) + p.Text;
+            }
+        }
+    }
+
+    private static string EffectTag(string effect, string? header, string? styleName)
+    {
+        if (effect.StartsWith("fade", StringComparison.Ordinal))
+        {
+            var ms = effect.Contains(':') ? effect[5..] : "250";
+            return $"{{\\fad({ms},{ms})}}";
+        }
+
+        if (effect == "font-kerning")
+        {
+            return "{\\t(\\fsp4)}";
+        }
+
+        var style = AdvancedSubStationAlpha.GetSsaStyle(string.IsNullOrEmpty(styleName) ? "Default" : styleName, header ?? string.Empty);
+        return $"{{\\t(\\fs{(int)(style.FontSize * 1.2m)})}}";
     }
 
     public static string BuildArguments(string videoFileName, string outputFileName, string? ffmpegArgs)

@@ -40,6 +40,46 @@ public class BurnInVideoTest : IDisposable
     }
 
     [Fact]
+    public async Task ConvertAsync_BurnInEffects_WritesTheOverrideTagsIntoEveryLine()
+    {
+        var input = Path.Combine(_tempRoot, "in.srt");
+        await File.WriteAllTextAsync(input, SrtContent, TestContext.Current.CancellationToken);
+        var style = Path.Combine(_tempRoot, "style.ass");
+        await File.WriteAllTextAsync(style, """
+            [V4+ Styles]
+            Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+            Style: Default,Arial,50,&H00FFFFFF,&H0000FFFF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,2,0,2,10,10,10,1
+
+            [Events]
+            Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+            """, TestContext.Current.CancellationToken);
+
+        var result = await new SubtitleConverter().ConvertAsync(new ConversionOptions
+        {
+            Patterns = [input],
+            Format = "ass",
+            OutputFolder = _tempRoot,
+            AssaStyleFile = style,
+            BurnInEffects = BurnInRunner.ParseEffects("fade:400, font-kerning, font-size-change"),
+        });
+
+        Assert.True(result.Success, string.Join("; ", result.Errors));
+        var ass = await File.ReadAllTextAsync(Path.Combine(_tempRoot, "in.ass"), TestContext.Current.CancellationToken);
+        // Each effect is prepended in turn (as in the UI), so the last one listed comes first;
+        // the size change targets 120% of the style's 50.
+        Assert.Contains(@"{\t(\fs60)}{\t(\fsp4)}{\fad(400,400)}WHITE TEXT", ass);
+    }
+
+    [Theory]
+    [InlineData("glow")]
+    [InlineData("fade:0")]
+    [InlineData("fade:fast")]
+    public void ParseEffects_RejectsUnknownEffectsAndBadFadeLengths(string value)
+    {
+        Assert.Throws<FormatException>(() => BurnInRunner.ParseEffects(value));
+    }
+
+    [Fact]
     public async Task ConvertAsync_BurnInVideo_DrawsTheSubtitleOnTheVideo()
     {
         if (!FfmpegAvailable())

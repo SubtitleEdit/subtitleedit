@@ -60,6 +60,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("ffmpeg encoder arguments for --burn-in-video (default: \"" + BurnInRunner.DefaultFfmpegArgs + "\")")]
         public string? BurnInFfmpegArgs { get; init; }
 
+        [CommandOption("--burn-in-effects")]
+        [Description("Comma-separated subtitle effects for the ass output, like the UI burn-in: fade (250 ms in/out; fade:<ms> for another length), font-kerning, font-size-change")]
+        public string? BurnInEffects { get; init; }
+
         [CommandOption("--dcinema-font|--dcinemafont")]
         [Description("Font file (.ttf/.otf) embedded in dcinemasmpte2014mxf output")]
         public string? DCinemaFont { get; init; }
@@ -802,6 +806,21 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 }
             }
 
+            List<string> burnInEffects;
+            try
+            {
+                burnInEffects = BurnInRunner.ParseEffects(settings.BurnInEffects);
+            }
+            catch (FormatException ex)
+            {
+                return Fail(settings, ex.Message);
+            }
+
+            if (burnInEffects.Count > 0 && LibSEIntegration.NormalizeFormatName(settings.Format) != "AdvancedSubStationAlpha")
+            {
+                return Fail(settings, "--burn-in-effects needs the ass target format, e.g. seconv movie.srt ass --burn-in-effects:fade");
+            }
+
             // Parse PAC code page if supplied
             int? pacCodePage = null;
             if (!string.IsNullOrWhiteSpace(settings.PacCodepage))
@@ -863,6 +882,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 AssaStyleFile = settings.AssaStyleFile,
                 BurnInVideo = settings.BurnInVideo,
                 BurnInFfmpegArgs = settings.BurnInFfmpegArgs,
+                BurnInEffects = burnInEffects,
                 PacCodePage = pacCodePage,
                 PacSecondaryCodePage = pacSecondaryCodePage,
                 EbuHeaderFile = settings.EbuHeaderFile,
