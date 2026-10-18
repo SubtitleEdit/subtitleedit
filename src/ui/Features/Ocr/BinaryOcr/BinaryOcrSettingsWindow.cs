@@ -20,7 +20,7 @@ public class BinaryOcrSettingsWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.TextToolToggles | EditorWindowStyles.CompactSplitButtons);
         DataContext = vm;
 
         var labelTitle = new TextBlock
@@ -31,10 +31,11 @@ public class BinaryOcrSettingsWindow : Window
             HorizontalAlignment = HorizontalAlignment.Left,
         }.WithBindText(vm, nameof(vm.ActionText));
 
-        var buttonEdit = BinaryOcrChrome.MakeActionButton(Se.Language.General.Edit, IconNames.Pencil, vm.EditCommand);
-        var buttonDelete = BinaryOcrChrome.MakeActionButton(Se.Language.General.Delete, IconNames.Trash, vm.DeleteCommand);
-        var buttonRename = BinaryOcrChrome.MakeActionButton(Se.Language.General.Rename, IconNames.FormTextBox, vm.RenameCommand);
-        var buttonNew = BinaryOcrChrome.MakeActionButton(Se.Language.General.New, IconNames.Plus, vm.NewCommand);
+        // The same flat buttons, in the same order (Delete last), as the nOCR database dialog
+        var buttonEdit = EditorChrome.MakeTextToolButton(IconNames.Pencil, Se.Language.General.Edit, vm.EditCommand);
+        var buttonDelete = EditorChrome.MakeTextToolButton(IconNames.Trash, Se.Language.General.Delete, vm.DeleteCommand);
+        var buttonRename = EditorChrome.MakeTextToolButton(IconNames.FormTextBox, Se.Language.General.Rename, vm.RenameCommand);
+        var buttonNew = EditorChrome.MakeTextToolButton(IconNames.Plus, Se.Language.General.New, vm.NewCommand);
         var buttonCancel = EditorChrome.WithoutMargin(UiUtil.MakeButtonCancel(vm.CancelCommand));
 
         var panel = new StackPanel
@@ -46,8 +47,8 @@ public class BinaryOcrSettingsWindow : Window
                 new StackPanel
                 {
                     Orientation = Orientation.Horizontal,
-                    Spacing = 6,
-                    Children = { buttonEdit, buttonDelete, buttonRename, buttonNew },
+                    Spacing = 4,
+                    Children = { buttonEdit, buttonRename, buttonNew, buttonDelete },
                 },
             },
         };
