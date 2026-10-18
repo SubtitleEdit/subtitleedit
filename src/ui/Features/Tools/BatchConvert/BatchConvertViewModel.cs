@@ -73,6 +73,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private string? _selectedTargetFormat;
     [ObservableProperty] private ObservableCollection<BatchConvertFunction> _batchFunctions;
     [ObservableProperty] private BatchConvertFunction? _selectedBatchFunction;
+    [ObservableProperty] private string _functionSearchText;
     [ObservableProperty] private bool _isProgressVisible;
     [ObservableProperty] private bool _isConverting;
     [ObservableProperty] private bool _isAddingFiles;
@@ -385,6 +386,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         BatchItems = new ObservableCollection<BatchConvertItem>();
         _allBatchItems = new List<BatchConvertItem>();
         BatchFunctions = new ObservableCollection<BatchConvertFunction>();
+        VisibleBatchFunctions = new ObservableCollection<BatchConvertFunction>();
+        FunctionSearchText = string.Empty;
 
         TargetFormats = new ObservableCollection<string>(SubtitleFormatHelper.GetSubtitleFormatsWithFavoritesAtTop().Select(p => p.Name))
         {
@@ -493,6 +496,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         SelectedSortByOption = SortByOptions[0];
 
         BatchFunctions = new ObservableCollection<BatchConvertFunction>(BatchConvertFunction.List(this));
+        ApplyFunctionFilter();
 
         _cancellationTokenSource = new CancellationTokenSource();
         _cancellationToken = _cancellationTokenSource.Token;
@@ -3997,6 +4001,35 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                 Configuration.Settings.Tools.AutoTranslateDeepLFormality = Se.Settings.AutoTranslate.DeepLFormality;
             }
         }
+    }
+
+    /// <summary>
+    /// The functions shown in the list: <see cref="BatchFunctions"/> narrowed by <see cref="FunctionSearchText"/>.
+    /// Updated in place, so the list keeps its ItemsSource.
+    /// </summary>
+    public ObservableCollection<BatchConvertFunction> VisibleBatchFunctions { get; }
+
+    partial void OnFunctionSearchTextChanged(string value) => ApplyFunctionFilter();
+
+    private void ApplyFunctionFilter()
+    {
+        var terms = (FunctionSearchText ?? string.Empty).Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        var matches = BatchFunctions
+            .Where(f => terms.All(t => f.Name.Contains(t, StringComparison.CurrentCultureIgnoreCase)))
+            .ToList();
+
+        var selected = SelectedBatchFunction;
+        VisibleBatchFunctions.Clear();
+        foreach (var function in matches)
+        {
+            VisibleBatchFunctions.Add(function);
+        }
+
+        // Keep the settings beside the list in step with it: the selection stays when it still
+        // matches, otherwise the first match is shown.
+        SelectedBatchFunction = selected != null && matches.Contains(selected)
+            ? selected
+            : matches.FirstOrDefault();
     }
 
     internal void SelectedFunctionChanged()
