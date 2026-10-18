@@ -140,6 +140,7 @@ public class WaveformGuessTimeCodesWindow : Window
 
         void AddRow(string label, NumericUpDown field, Thickness? margin = null)
         {
+            field.Classes.Add("field"); // the compact field, not the theme's big spinner
             var row = grid.RowDefinitions.Count;
             grid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
             var text = EditorChrome.MakeDimLabel(label, margin ?? new Thickness(0));
