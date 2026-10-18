@@ -489,6 +489,7 @@ public class LanguageGeneral
     public string Reason { get; set; }
     public string RecentFiles { get; set; }
     public string RecentlyUsedVideoOffsets { get; set; }
+    public string Recent { get; set; }
     public string Redo { get; set; }
     public string Redownload { get; set; }
     public string Release { get; set; }
@@ -1391,6 +1392,7 @@ public class LanguageGeneral
         Reason = "Reason";
         RecentFiles = "Recent files";
         RecentlyUsedVideoOffsets = "Recently used video offsets";
+        Recent = "Recent";
         Redo = "Redo";
         Redownload = "Re-download...";
         Release = "Release";

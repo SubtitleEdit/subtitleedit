@@ -41,8 +41,10 @@ public class GoToLineNumberWindow : Window
         AutomationProperties.SetName(vm.UpDown, Se.Language.General.GoToLineNumber);
         vm.UpDown.KeyDown += (sender, args) => vm.OnKeyDown(args);
 
-        var row = EditorChrome.MakeLabeledRow(Se.Language.General.GoToLineNumber, vm.UpDown, 130);
-        row.Margin = new Thickness(16, 18, 16, 18);
+        // A section header over the field, like Go to video position
+        vm.UpDown.HorizontalAlignment = HorizontalAlignment.Left;
+        var row = EditorChrome.MakeEditorSection(Se.Language.General.GoToLineNumber, vm.UpDown, first: true);
+        row.MinWidth = 300;
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");

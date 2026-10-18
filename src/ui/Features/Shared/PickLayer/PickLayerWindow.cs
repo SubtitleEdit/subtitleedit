@@ -38,6 +38,7 @@ public class PickLayerWindow : Window
             Width = 140,
             HorizontalAlignment = HorizontalAlignment.Left,
         };
+        upDownLayer.Classes.Add("field"); // the compact field, not the theme's big spinner
         AutomationProperties.SetName(upDownLayer, Se.Language.General.Layer);
         if (Se.Settings.Appearance.ShowHints)
         {

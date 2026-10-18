@@ -35,14 +35,6 @@ public class ChangeSpeedWindow : Window
             Maximum = 1000,
             Increment = 0.1m,
             DataContext = vm,
-            InnerLeftContent = new TextBlock
-            {
-                Text = "%",
-                Foreground = EditorChrome.FaintTextBrush,
-                FontSize = 11,
-                VerticalAlignment = VerticalAlignment.Center,
-                Margin = new Thickness(8, 0, 0, 0),
-            },
             [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.SpeedPercent))
             {
                 Mode = BindingMode.TwoWay,
@@ -52,12 +44,21 @@ public class ChangeSpeedWindow : Window
         numericUpDownSpeed.Classes.Add("field");
         AutomationProperties.SetName(numericUpDownSpeed, Se.Language.Sync.SpeedInPercentage);
 
-        var buttonFromDropFrame = EditorChrome.MakeTextToolButton("fa-solid fa-film", Se.Language.Sync.FromDropFrameValue, vm.SetFromDropFrameValueCommand);
-        var buttonToDropFrame = EditorChrome.MakeTextToolButton("fa-solid fa-film", Se.Language.Sync.ToDropFrameValue, vm.SetToDropFrameValueCommand);
+        // Real (secondary) buttons: as flat text tool buttons they read as labels
+        var buttonFromDropFrame = UiUtil.MakeButton(Se.Language.Sync.FromDropFrameValue, vm.SetFromDropFrameValueCommand).WithFontSize(12);
+        var buttonToDropFrame = UiUtil.MakeButton(Se.Language.Sync.ToDropFrameValue, vm.SetToDropFrameValueCommand).WithFontSize(12);
+        foreach (var button in new[] { buttonFromDropFrame, buttonToDropFrame })
+        {
+            button.Margin = new Thickness(0);
+            button.MinHeight = 28;
+            button.HorizontalAlignment = HorizontalAlignment.Stretch;
+            button.HorizontalContentAlignment = HorizontalAlignment.Center;
+        }
+
         var panelFromToButtons = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            Spacing = 2,
+            Spacing = 6,
             Children =
             {
                 buttonFromDropFrame,

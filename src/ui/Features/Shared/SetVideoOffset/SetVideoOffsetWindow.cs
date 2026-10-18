@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
@@ -42,6 +43,13 @@ public class SetVideoOffsetWindow : Window
         // Wide enough for a time code, so the box does not shrink to an arrow stub while the
         // typed offset matches no entry and nothing is selected.
         comboBoxHistory.MinWidth = 130;
+
+        // Empty until an offset has been used - say so instead of showing a blank box
+        comboBoxHistory.PlaceholderText = Se.Language.General.Recent;
+        comboBoxHistory.Bind(ComboBox.IsEnabledProperty, new Binding($"{nameof(vm.OffsetHistory)}.Count")
+        {
+            Converter = new FuncValueConverter<int, bool>(count => count > 0),
+        });
         AutomationProperties.SetName(comboBoxHistory, Se.Language.General.RecentlyUsedVideoOffsets);
         if (Se.Settings.Appearance.ShowHints)
         {
