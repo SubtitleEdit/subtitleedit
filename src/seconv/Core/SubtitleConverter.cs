@@ -225,6 +225,7 @@ internal class SubtitleConverter
                     {
                         // Regular single-file path (text or binary subtitle file)
                         var outputFile = ResolveOutputFileName(inputFile, options, translateToSuffix, null, _usedOutputFileNames);
+                        EnsureBurnInWritable(outputFile, options);
                         if (!options.Quiet)
                         {
                             AnsiConsole.MarkupInterpolated($"[dim]{fileIndex}:[/] [cyan]{Path.GetFileName(inputFile)}[/] [dim]->[/] [green]{outputFile}[/]...");
@@ -242,6 +243,10 @@ internal class SubtitleConverter
                         if (!options.Quiet)
                         {
                             AnsiConsole.MarkupLine(" [green]done.[/]");
+                            if (!string.IsNullOrEmpty(options.BurnInVideo))
+                            {
+                                AnsiConsole.MarkupLineInterpolated($"   [dim]burned in ->[/] [green]{BurnInRunner.GetOutputFileName(outputFile, options.BurnInVideo)}[/]");
+                            }
                             foreach (var warning in warnings)
                             {
                                 AnsiConsole.MarkupLineInterpolated($"   [yellow]warning: {warning}[/]");
@@ -260,6 +265,7 @@ internal class SubtitleConverter
                         foreach (var track in tracks)
                         {
                             var outputFile = ResolveOutputFileName(inputFile, options, AppendForcedToken(translateToSuffix ?? LanguageToken(options, track.LanguageCode), track.IsForced), track.TrackNumber, _usedOutputFileNames);
+                            EnsureBurnInWritable(outputFile, options);
                             var trackLabel = track.TrackNumber.HasValue ? $"#{track.TrackNumber.Value} " : string.Empty;
                             var langLabel = string.IsNullOrEmpty(track.LanguageCode) ? string.Empty : $"[{track.LanguageCode}] ";
                             if (!options.Quiet)
@@ -273,6 +279,10 @@ internal class SubtitleConverter
                             if (!options.Quiet)
                             {
                                 AnsiConsole.MarkupLine(" [green]done.[/]");
+                                if (!string.IsNullOrEmpty(options.BurnInVideo))
+                                {
+                                    AnsiConsole.MarkupLineInterpolated($"   [dim]burned in ->[/] [green]{BurnInRunner.GetOutputFileName(outputFile, options.BurnInVideo)}[/]");
+                                }
                             }
                         }
                     }
@@ -1152,6 +1162,11 @@ internal class SubtitleConverter
         // ASSA-only post-processing: resolution + style-file overlay
         LibSEIntegration.ApplyAssaPostProcess(subtitle, normalizedFormat, options.Resolution, options.AssaStyleFile);
 
+        if (options.BurnInEffects.Count > 0)
+        {
+            BurnInRunner.ApplyEffects(subtitle, options.BurnInEffects);
+        }
+
         LibSEIntegration.SaveSubtitle(
             subtitle,
             outputFile,
@@ -1161,6 +1176,34 @@ internal class SubtitleConverter
             options.PacCodePage,
             options.EbuHeaderFile,
             options);
+
+        if (!string.IsNullOrEmpty(options.BurnInVideo))
+        {
+            Action<int, int>? progress = options.Quiet ? null : (done, total) => ProgressLine.Report("Burn-in seconds", done, total);
+            try
+            {
+                BurnInRunner.Run(outputFile, options.BurnInVideo, options.BurnInFfmpegArgs, options.Overwrite, progress);
+            }
+            finally
+            {
+                if (progress != null)
+                {
+                    ProgressLine.Finish();
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Refuses a burn-in that would overwrite an existing video before the .ass is written, so a
+    /// refused file leaves no .ass behind either.
+    /// </summary>
+    private static void EnsureBurnInWritable(string outputFile, ConversionOptions options)
+    {
+        if (!string.IsNullOrEmpty(options.BurnInVideo))
+        {
+            BurnInRunner.EnsureOutputWritable(outputFile, options.BurnInVideo, options.Overwrite);
+        }
     }
 
     /// <summary>
@@ -1374,6 +1417,15 @@ internal record class ConversionOptions
     /// <summary>Appended to the output file name stem (before any language/track suffix). Ignored with <see cref="OutputFilename"/>.</summary>
     public string? OutputFilenameAppend { get; init; }
     public string? AssaStyleFile { get; init; }
+
+    /// <summary>--burn-in-video: video the written ASSA file is burned into (see <see cref="BurnInRunner"/>).</summary>
+    public string? BurnInVideo { get; init; }
+
+    /// <summary>--burn-in-ffmpeg-args: encoder arguments replacing <see cref="BurnInRunner.DefaultFfmpegArgs"/>.</summary>
+    public string? BurnInFfmpegArgs { get; init; }
+
+    /// <summary>--burn-in-effects, parsed by <see cref="BurnInRunner.ParseEffects"/>; only used for the ass target.</summary>
+    public IReadOnlyList<string> BurnInEffects { get; init; } = [];
     public int? PacCodePage { get; init; }
 
     /// <summary>PAC code page for lines in another script, written flagged as "secondary code page".</summary>
