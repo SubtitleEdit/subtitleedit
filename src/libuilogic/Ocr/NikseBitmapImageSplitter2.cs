@@ -595,7 +595,9 @@ public class NikseBitmapImageSplitter2
             var bitmap = list[i].NikseBitmap;
             if (bitmap != null)
             {
-                glyphs.Add((list[i].Top + bitmap.Height, bitmap.Height * 10 < maxHeight * 3));
+                // Under 45% of the tallest glyph is a mark: quotes and apostrophes reach ~40%,
+                // x-height letters stay above ~55% (even beside tall brackets).
+                glyphs.Add((list[i].Top + bitmap.Height, bitmap.Height * 20 < maxHeight * 9));
             }
         }
 
