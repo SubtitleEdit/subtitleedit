@@ -15,12 +15,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
     public static class ProgramStreamClosedCaptionWriter
     {
         /// <summary>
-        /// A/53 allows 600 cc_data triplets per second (CEA-708's 9600 bit/s plus CEA-608):
-        /// cc_count 20 at 29.97 fps, 10 at 59.94, 25 at 23.976.
-        /// </summary>
-        private const double MaxTripletsPerMillisecond = 0.6;
-
-        /// <summary>
         /// Writes <paramref name="inputFileName"/> with captions to <paramref name="outputFileName"/>.
         /// Caption user data the video already has is replaced.
         /// </summary>
@@ -123,18 +117,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
         }
 
         /// <summary>
-        /// One caption user data block per frame, in front of its first slice. Every frame gets the
-        /// CEA-608 slots that start while it is shown (one per frame at 29.97 fps, sometimes two at
-        /// 23.976, none every other frame at 59.94), then the CEA-708 data that is due, as much as
-        /// fits. Frames are filled in display order - decoders put the cc_data in display order, so
-        /// that is the order the DTVCC bytes must have.
+        /// One caption user data block per frame, in front of its first slice (see
+        /// <see cref="A53CcDataBuilder"/>). Frames are filled in display order.
         /// </summary>
         private static List<Edit> BuildEdits(VideoAnalyzer analyzer, ClosedCaptionBytes captions)
         {
-            var pairs1 = ToDictionary(captions.Field1);
-            var pairs2 = ToDictionary(captions.Field2);
-            var dtvcc = captions.Dtvcc ?? new List<ClosedCaptionBytes.DtvccTriplet>();
-            var dtvccIndex = 0;
+            var builder = new A53CcDataBuilder(captions);
             var frameMs = analyzer.FrameMilliseconds;
 
             // display times: frames sorted by display position, each shown for its own number of frame periods
@@ -154,20 +142,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
                 var startMs = periods * frameMs;
                 periods += picture.Periods;
                 var endMs = periods * frameMs;
-                var firstSlot = (long)Math.Ceiling(startMs / SccBytePairs.SlotMilliseconds - 0.001);
-                var endSlot = (long)Math.Ceiling(endMs / SccBytePairs.SlotMilliseconds - 0.001);
-                var slotCount = (int)Math.Min(15, Math.Max(0, endSlot - firstSlot));
-
-                // CEA-708 data sent by now, up to the frame's share of the A/53 bandwidth
-                var maxCcCount = Math.Min(31, Math.Max(2 * slotCount + 1, (int)(MaxTripletsPerMillisecond * (endMs - startMs))));
-                var dtvccStart = dtvccIndex;
-                while (dtvccIndex < dtvcc.Count && dtvcc[dtvccIndex].Milliseconds < endMs && 2 * slotCount + dtvccIndex - dtvccStart < maxCcCount)
-                {
-                    dtvccIndex++;
-                }
-
-                var userData = MakeUserData(firstSlot, slotCount, pairs1, pairs2, dtvcc, dtvccStart, dtvccIndex - dtvccStart);
-                edits.Add(new Edit { Offset = picture.InsertOffset, Insert = userData });
+                edits.Add(new Edit { Offset = picture.InsertOffset, Insert = MakeUserData(builder.NextFrame(startMs, endMs)) });
             }
 
             // deletions before insertions at the same offset - both only touch the picture's user data
@@ -175,72 +150,16 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream
             return edits;
         }
 
-        private static Dictionary<long, SccBytePairs.TimedPair> ToDictionary(IReadOnlyList<SccBytePairs.TimedPair> pairs)
-        {
-            var result = new Dictionary<long, SccBytePairs.TimedPair>();
-            if (pairs != null)
-            {
-                foreach (var pair in pairs)
-                {
-                    result[pair.Slot] = pair;
-                }
-            }
-
-            return result;
-        }
-
         /// <summary>
-        /// ATSC A/53 picture user data: user_data_start_code, "GA94", user_data_type_code 3,
-        /// process_cc_data_flag + cc_count, em_data, cc_count x (marker/cc_valid/cc_type, two bytes),
-        /// marker_bits. CEA-608 comes first, one field 1 and one field 2 pair per slot - a slot with
-        /// no byte pair sends the null pair 0x80 0x80. A frame without slot or CEA-708 data gets
-        /// padding with cc_valid = 0.
+        /// ATSC A/53 picture user data: user_data_start_code and the caption data.
         /// </summary>
-        private static byte[] MakeUserData(long firstSlot, int slotCount, Dictionary<long, SccBytePairs.TimedPair> field1, Dictionary<long, SccBytePairs.TimedPair> field2,
-            List<ClosedCaptionBytes.DtvccTriplet> dtvcc, int dtvccStart, int dtvccCount)
+        private static byte[] MakeUserData(byte[] ccData)
         {
-            var padding = slotCount == 0 && dtvccCount == 0;
-            var ccCount = padding ? 2 : 2 * slotCount + dtvccCount;
-            var data = new byte[11 + ccCount * 3 + 1];
+            var data = new byte[4 + ccData.Length];
             data[2] = 1;
             data[3] = 0xB2;
-            data[4] = (byte)'G';
-            data[5] = (byte)'A';
-            data[6] = (byte)'9';
-            data[7] = (byte)'4';
-            data[8] = 0x03;
-            data[9] = (byte)(0xC0 | ccCount); // reserved, process_cc_data_flag, additional_data_flag = 0
-            data[10] = 0xFF; // em_data
-            var index = 11;
-            if (padding)
-            {
-                AddCcData(data, ref index, 0xF8, 0x80, 0x80);
-                AddCcData(data, ref index, 0xF9, 0x80, 0x80);
-            }
-
-            for (var slot = firstSlot; slot < firstSlot + slotCount; slot++)
-            {
-                var hasPair1 = field1.TryGetValue(slot, out var pair1);
-                AddCcData(data, ref index, 0xFC, hasPair1 ? pair1.Data1 : (byte)0x80, hasPair1 ? pair1.Data2 : (byte)0x80);
-                var hasPair2 = field2.TryGetValue(slot, out var pair2);
-                AddCcData(data, ref index, 0xFD, hasPair2 ? pair2.Data1 : (byte)0x80, hasPair2 ? pair2.Data2 : (byte)0x80);
-            }
-
-            for (var i = dtvccStart; i < dtvccStart + dtvccCount; i++)
-            {
-                var triplet = dtvcc[i];
-                AddCcData(data, ref index, (byte)(0xFC | triplet.Type), triplet.Data1, triplet.Data2);
-            }
-
-            data[index] = 0xFF; // marker_bits
+            Buffer.BlockCopy(ccData, 0, data, 4, ccData.Length);
             return data;
-        }
-
-        private static void AddCcData(byte[] data, ref int index, byte header, byte data1, byte data2)
-        {
-            data[index++] = header;
-            data[index++] = data1;
-            data[index++] = data2;
         }
 
         /// <summary>

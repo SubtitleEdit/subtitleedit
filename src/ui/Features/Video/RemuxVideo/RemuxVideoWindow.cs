@@ -277,8 +277,28 @@ public class RemuxVideoWindow : Window
         var fastStartRow = SwitchRow(switchFastStart, l.RemuxVideoFastStart);
         fastStartRow.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsFastStartVisible)));
 
+        // .mp4: the subtitles as mov_text tracks or as CEA-608 captions in the video (#16164)
+        var comboBoxSubtitlesAs = UiUtil.MakeComboBox(vm.SubtitlesAsOptions, vm, nameof(vm.SelectedSubtitlesAs));
+        comboBoxSubtitlesAs.Width = double.NaN;
+        comboBoxSubtitlesAs.HorizontalAlignment = HorizontalAlignment.Stretch;
+        comboBoxSubtitlesAs.Bind(ComboBox.IsEnabledProperty, NotRemuxing(vm));
+        AutomationProperties.SetName(comboBoxSubtitlesAs, Caption(l.RemuxVideoSubtitlesAs));
+        var subtitlesAsRow = Row(Caption(l.RemuxVideoSubtitlesAs), comboBoxSubtitlesAs);
+        subtitlesAsRow.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitlesAsVisible)));
+
+        var captionsHint = new TextBlock
+        {
+            Text = l.RemuxVideoMp4CaptionsHint,
+            FontSize = 11.5,
+            Foreground = EditorChrome.DimTextBrush,
+            TextWrapping = TextWrapping.Wrap,
+        };
+        captionsHint.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsMp4CaptionsHintVisible)));
+
         var outputRows = new StackPanel { Spacing = 8 };
         outputRows.Children.Add(Row(Caption(l.RemuxVideoOutputFormat), comboBoxFormat));
+        outputRows.Children.Add(subtitlesAsRow);
+        outputRows.Children.Add(captionsHint);
         outputRows.Children.Add(PathRow(textBoxOutput, buttonBrowseOutput));
         outputRows.Children.Add(fastStartRow);
 
@@ -444,16 +464,37 @@ public class RemuxVideoWindow : Window
 
                 // A Grid, not a horizontal StackPanel: the text column must be width-bound for
                 // the folder's prefix trimming to happen at all.
+                // CC1/CC3 when the subtitle file becomes closed captions in the video
+                var textChannel = new TextBlock
+                {
+                    FontSize = UiUtil.ScaledFontSize(10.5),
+                    FontWeight = FontWeight.SemiBold,
+                    VerticalAlignment = VerticalAlignment.Center,
+                };
+                textChannel.Bind(TextBlock.TextProperty, new Binding(nameof(RemuxFileItem.CaptionChannel)));
+                var channelBadge = new Border
+                {
+                    Background = EditorChrome.AccentSoftBrush,
+                    CornerRadius = new CornerRadius(9),
+                    Padding = new Thickness(7, 1),
+                    Margin = new Thickness(8, 0, 2, 0),
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Child = textChannel,
+                };
+                channelBadge.Bind(Visual.IsVisibleProperty, new Binding(nameof(RemuxFileItem.HasCaptionChannel)));
+
                 var row = new Grid
                 {
                     ColumnDefinitions =
                     {
                         new ColumnDefinition { Width = GridLength.Auto },
                         new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                        new ColumnDefinition { Width = GridLength.Auto },
                     },
                 };
                 row.Add(icon, 0, 0);
                 row.Add(textPanel, 0, 1);
+                row.Add(channelBadge, 0, 2);
                 return row;
             }, true),
         };
