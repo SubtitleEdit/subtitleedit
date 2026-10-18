@@ -590,7 +590,6 @@ public class AudioVisualizer : Control
     private SubtitleLineViewModel? _cachedHitParagraph;
     private bool _cachedIsNearLeftEdge;
     private bool _cachedIsNearRightEdge;
-    private long _lastPointerPressed = -1;
     private WaveformDisplayMode _displayMode = WaveformDisplayMode.OnlyWaveform;
     private SpectrogramData2? _spectrogram;
 
@@ -612,10 +611,10 @@ public class AudioVisualizer : Control
 
     public readonly double ResizeMargin = 5.0; // Margin for resizing paragraphs
 
-    // Horizontal pixels the pointer must travel between press and release before an
-    // interaction counts as a real drag (move/resize). Below this it is a plain
-    // click, so the follow-up Tapped (select/seek) must NOT be suppressed.
+    // Horizontal pixels the pointer must travel before a move/resize can edit times.
+    // Once crossed, it stays a drag even if the pointer returns near the press point.
     private const double ClickDragSlopPixels = 3.0;
+    private bool _dragThresholdExceeded;
     public bool IsScrolling => (Environment.TickCount64 - _audioVisualizerLastScroll) < 100;
 
     // Wall clock of the last pointer-driven time code edit (drag move/resize/new selection).
@@ -1192,42 +1191,54 @@ public class AudioVisualizer : Control
             return;
         }
 
-        if (_interactionMode is InteractionMode.Moving or InteractionMode.MovingSelection)
+        // One click-or-drag decision for the whole release (#15989). A press that never left
+        // ClickDragSlopPixels is a click, whatever mode the press tagged it with - a quick drag,
+        // or one that returned near its start, is still an edit. A move that did drag but left the
+        // cue exactly where it started (clamped against a neighbour with no room, or snapped back
+        // onto the frame it came from) edited nothing, so it still gives the seek/select a click does.
+        var isEditMode = _interactionMode is
+            InteractionMode.Moving or
+            InteractionMode.MovingSelection or
+            InteractionMode.ResizingLeft or
+            InteractionMode.ResizingRight or
+            InteractionMode.ResizingLeftOr or
+            InteractionMode.ResizingRightOr or
+            InteractionMode.ResizeLeftAnd or
+            InteractionMode.ResizeRightAnd;
+        var isMove = _interactionMode is InteractionMode.Moving or InteractionMode.MovingSelection;
+        var movedNothing = isMove && _activeParagraph != null &&
+                           Math.Abs(_originalStartSeconds - _activeParagraph.StartTime.TotalSeconds) < 0.0005;
+        var isClick = isEditMode && (!_dragThresholdExceeded || movedNothing);
+
+        if (isMove && isClick)
         {
-            // click on paragraph, but with no move
-            var ms = Environment.TickCount64 - _lastPointerPressed;
-            if (ms < 100 ||
-                (
-                    _activeParagraph != null &&
-                    Math.Abs(_originalStartSeconds - _activeParagraph.StartTime.TotalSeconds) < 0.01))
+            if (_isCtrlDown && !OperatingSystem.IsMacOS() && _activeParagraph != null && OnToggleSelection != null)
             {
-                if (_isCtrlDown && !OperatingSystem.IsMacOS() && _activeParagraph != null && OnToggleSelection != null)
-                {
-                    var videoPosition = RelativeXPositionToSeconds(pos.X);
-                    _audioVisualizerLastScroll = 0;
-                    OnToggleSelection.Invoke(this, new ParagraphEventArgs(videoPosition, _activeParagraph));
-                }
-                else if (_isShiftDown && OperatingSystem.IsMacOS() && _activeParagraph != null && OnToggleSelection != null)
-                {
-                    var videoPosition = RelativeXPositionToSeconds(pos.X);
-                    _audioVisualizerLastScroll = 0;
-                    OnToggleSelection.Invoke(this, new ParagraphEventArgs(videoPosition, _activeParagraph));
-                }
-                else if (OnVideoPositionChanged != null)
-                {
-                    var videoPosition = RelativeXPositionToSeconds(e.GetPosition(this).X);
-                    _audioVisualizerLastScroll = 0;
-                    OnVideoPositionChanged.Invoke(this, new PositionEventArgs { PositionInSeconds = videoPosition });
-                }
-
-                _activeParagraph = null;
-
-                _dragStack = null;
-                return;
+                var videoPosition = RelativeXPositionToSeconds(pos.X);
+                _audioVisualizerLastScroll = 0;
+                OnToggleSelection.Invoke(this, new ParagraphEventArgs(videoPosition, _activeParagraph));
             }
+            else if (_isShiftDown && OperatingSystem.IsMacOS() && _activeParagraph != null && OnToggleSelection != null)
+            {
+                var videoPosition = RelativeXPositionToSeconds(pos.X);
+                _audioVisualizerLastScroll = 0;
+                OnToggleSelection.Invoke(this, new ParagraphEventArgs(videoPosition, _activeParagraph));
+            }
+            else if (OnVideoPositionChanged != null)
+            {
+                var videoPosition = RelativeXPositionToSeconds(e.GetPosition(this).X);
+                _audioVisualizerLastScroll = 0;
+                OnVideoPositionChanged.Invoke(this, new PositionEventArgs { PositionInSeconds = videoPosition });
+            }
+
+            _activeParagraph = null;
+            _dragStack = null;
+            _selectionMoveSnapshot.Clear();
+            return;
         }
-        else if ((_interactionMode == InteractionMode.ResizingLeft || _interactionMode == InteractionMode.ResizingRight) && _activeParagraph != null &&
-                 _activeParagraph.Duration.TotalMilliseconds < 10)
+
+        if ((_interactionMode == InteractionMode.ResizingLeft || _interactionMode == InteractionMode.ResizingRight) && _activeParagraph != null &&
+            _activeParagraph.Duration.TotalMilliseconds < 10)
         {
             if (OnVideoPositionChanged != null)
             {
@@ -1242,25 +1253,14 @@ public class AudioVisualizer : Control
             return;
         }
 
-        if (_interactionMode is
-            InteractionMode.Moving or
-            InteractionMode.MovingSelection or
-            InteractionMode.ResizingLeft or
-            InteractionMode.ResizingRight or
-            InteractionMode.ResizingLeftOr or
-            InteractionMode.ResizingRightOr or
-            InteractionMode.ResizeLeftAnd or
-            InteractionMode.ResizeRightAnd)
+        if (isEditMode && !isClick)
         {
-            // Only suppress the follow-up Tapped (which selects/seeks) when the pointer
-            // actually dragged. A plain click that merely started within ResizeMargin of a
-            // paragraph edge is tagged as a resize on press but never moves; without this
-            // guard _preventNextTap would swallow OnTapped and the paragraph would not get
-            // selected (clicking near a boundary sometimes did not select).
-            if (Math.Abs(pos.X - _startPointerPosition.X) > ClickDragSlopPixels)
-            {
-                _preventNextTap = true;
-            }
+            // Only suppress the follow-up Tapped (which selects/seeks) after a real drag. A plain
+            // click that merely started within ResizeMargin of a paragraph edge is tagged as a
+            // resize on press but never moves; without this guard _preventNextTap would swallow
+            // OnTapped and the paragraph would not get selected (clicking near a boundary
+            // sometimes did not select).
+            _preventNextTap = true;
         }
 
         _interactionMode = InteractionMode.None;
@@ -1278,8 +1278,8 @@ public class AudioVisualizer : Control
         _isAltDown = e.KeyModifiers.HasFlag(KeyModifiers.Alt);
         _isMetaDown = e.KeyModifiers.HasFlag(KeyModifiers.Meta);
 
-        _lastPointerPressed = Environment.TickCount64;
         _preventNextTap = false;
+        _dragThresholdExceeded = false;
         e.Handled = true;
         var point = e.GetPosition(this);
         _startPointerPosition = point;
@@ -1682,20 +1682,27 @@ public class AudioVisualizer : Control
 
         var deltaX = point.X - _startPointerPosition.X;
 
-        // Absolute-time drag delta (SE4 parity, #13600): measured between the time now under the
-        // pointer and the time that was under it at press. With a static view this equals the
-        // pixel delta times seconds-per-pixel; when the view scrolls mid-drag it additionally
-        // carries the scroll, so the dragged edge keeps following the pointer (see
-        // _startPointerSeconds). deltaX stays pixel-based for the Or-mode direction slop below.
-        var dragDeltaSeconds = RelativeXPositionToSeconds(point.X) - _startPointerSeconds;
-
-        if (_interactionMode == InteractionMode.ResizingLeftOr && _activeParagraphPrevious != null)
+        // Small mouse/trackpad movements during a click must not snap or rewrite cue times
+        // before release decides whether to seek/select (#15989).
+        if (!_dragThresholdExceeded)
         {
-            if (Math.Abs(deltaX) < 3)
+            if (Math.Abs(deltaX) <= ClickDragSlopPixels)
             {
                 return;
             }
 
+            _dragThresholdExceeded = true;
+        }
+
+        // Absolute-time drag delta (SE4 parity, #13600): measured between the time now under the
+        // pointer and the time that was under it at press. With a static view this equals the
+        // pixel delta times seconds-per-pixel; when the view scrolls mid-drag it additionally
+        // carries the scroll, so the dragged edge keeps following the pointer (see
+        // _startPointerSeconds).
+        var dragDeltaSeconds = RelativeXPositionToSeconds(point.X) - _startPointerSeconds;
+
+        if (_interactionMode == InteractionMode.ResizingLeftOr && _activeParagraphPrevious != null)
+        {
             if (_startPointerPosition.X < point.X)
             {
                 _interactionMode = InteractionMode.ResizingLeft;
@@ -1716,11 +1723,6 @@ public class AudioVisualizer : Control
         }
         else if (_interactionMode == InteractionMode.ResizingRightOr && _activeParagraphNext != null)
         {
-            if (Math.Abs(deltaX) < 3)
-            {
-                return;
-            }
-
             if (_startPointerPosition.X > point.X)
             {
                 _interactionMode = InteractionMode.ResizingRight;
