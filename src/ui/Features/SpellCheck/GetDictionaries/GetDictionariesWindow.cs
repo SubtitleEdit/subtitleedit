@@ -125,20 +125,18 @@ public class GetDictionariesWindow : Window
             [!TextBlock.TextProperty] = new Binding(nameof(GetSpellCheckDictionaryDisplay.Description)),
         };
 
-        var folder = new TextBox
+        // Selectable (to copy), and a long path loses its middle ("…") instead of being cut off;
+        // the tooltip has all of it
+        var folder = new SelectableTextBlock
         {
-            IsReadOnly = true,
-            BorderThickness = new Thickness(0),
-            Background = Brushes.Transparent,
-            Padding = new Thickness(0),
-            MinHeight = 0,
             VerticalAlignment = VerticalAlignment.Center,
-            VerticalContentAlignment = VerticalAlignment.Center,
             FontSize = 12,
             Foreground = EditorChrome.DimTextBrush,
             MaxWidth = ContentWidth - 36,
             HorizontalAlignment = HorizontalAlignment.Left,
-            [!TextBox.TextProperty] = new Binding(nameof(vm.DictionariesFolder)),
+            TextTrimming = TextTrimming.PathSegmentEllipsis,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.DictionariesFolder)),
+            [!ToolTip.TipProperty] = new Binding(nameof(vm.DictionariesFolder)),
         };
         AutomationProperties.SetName(folder, Se.Language.General.InstallFolder);
 

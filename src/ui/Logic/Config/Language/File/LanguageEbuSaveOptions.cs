@@ -63,8 +63,8 @@ public class LanguageEbuSaveOptions
         TimeCodeStatus = "Time code status";
         TimeCodeStartOfProgramme = "Time code: Start of programme";
         RevisionNumber = "Revision number";
-        MaxNoOfDisplayableChars = "Max# of chars per row";
-        MaxNumberOfDisplayableRows = "Max# of rows";
+        MaxNoOfDisplayableChars = "Max. characters per row";
+        MaxNumberOfDisplayableRows = "Max. rows";
         DiskSequenceNumber = "Disk sequence number";
         TotalNumberOfDisks = "Total number of disks";
         TextAndTimingInformation = "Text and timing information";
