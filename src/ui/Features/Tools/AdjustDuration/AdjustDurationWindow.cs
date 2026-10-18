@@ -18,7 +18,8 @@ namespace Nikse.SubtitleEdit.Features.Tools.AdjustDuration;
 public class AdjustDurationWindow : Window
 {
     private const double LabelWidth = 200;
-    private const double FieldWidth = 110;
+    // The value field lines up with the "Adjust via" box above it
+    private const double FieldWidth = 180;
 
     public AdjustDurationWindow(AdjustDurationViewModel vm)
     {
@@ -35,7 +36,7 @@ public class AdjustDurationWindow : Window
             ItemsSource = vm.AdjustTypes,
             VerticalAlignment = VerticalAlignment.Center,
             HorizontalAlignment = HorizontalAlignment.Left,
-            MinWidth = 180,
+            Width = FieldWidth,
         };
         combo.Bind(SelectingItemsControl.SelectedValueProperty, new Binding
         {

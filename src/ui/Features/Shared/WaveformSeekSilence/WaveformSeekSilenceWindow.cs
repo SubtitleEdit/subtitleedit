@@ -34,6 +34,10 @@ public class WaveformSeekSilenceWindow : Window
         var numericUpDownMinSilenceDuration = UiUtil.MakeNumericUpDownThreeDecimals(0, 10000, 140, vm, nameof(vm.SilenceMinDuration));
         AutomationProperties.SetName(numericUpDownMinSilenceDuration, Se.Language.Waveform.MinSilenceDurationSeconds);
         var numericUpDownMaxSilenceVolume = UiUtil.MakeNumericUpDownTwoDecimals(0, 1, 140, vm, nameof(vm.SilenceMaxVolume));
+
+        // The compact fields of the other dialogs, not the theme's big spinners
+        numericUpDownMinSilenceDuration.Classes.Add("field");
+        numericUpDownMaxSilenceVolume.Classes.Add("field");
         AutomationProperties.SetName(numericUpDownMaxSilenceVolume, Se.Language.Waveform.MaxSilenceVolume);
 
         var gridSettings = new Grid

@@ -19,7 +19,8 @@ namespace Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustDuration;
 public class BinaryAdjustDurationWindow : Window
 {
     private const double LabelWidth = 200;
-    private const double NumericUpDownWidth = 110;
+    // The value field lines up with the "Adjust via" box above it
+    private const double NumericUpDownWidth = 180;
 
     public BinaryAdjustDurationWindow(BinaryAdjustDurationViewModel vm)
     {
@@ -36,7 +37,7 @@ public class BinaryAdjustDurationWindow : Window
             ItemsSource = vm.AdjustTypes,
             VerticalAlignment = VerticalAlignment.Center,
             HorizontalAlignment = HorizontalAlignment.Left,
-            MinWidth = 180,
+            Width = NumericUpDownWidth,
         };
         combo.Bind(SelectingItemsControl.SelectedValueProperty, new Binding
         {

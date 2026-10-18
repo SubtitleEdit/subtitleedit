@@ -907,7 +907,7 @@ public class LanguageAssa
         AttachmentsTitleX = "Attachments - {0}";
         SmartWrappingTopWide = "0: Smart wrapping (top wide)";
         EndOfLineWrapping = "1: End-of-line word wrapping, only \\N breaks";
-        NoWrapping = "2: No wrapping, both \\N an \\n breaks";
+        NoWrapping = "2: No wrapping, both \\N and \\n breaks";
         SmartWrappingBottomWide = "3: Smart wrapping (bottom wide)";
         FontsAndGraphics = "Fonts and graphics";
         WrapStyle = "Wrap style";

@@ -1177,7 +1177,7 @@ public class LanguageGeneral
         FrameRate = "Frame rate";
         Frames = "Frames";
         From = "From";
-        FromCurrentVideoPosition = "from current video position";
+        FromCurrentVideoPosition = "From current video position";
         FullScreen = "Full screen";
         Gap = "Gap";
         General = "General";
