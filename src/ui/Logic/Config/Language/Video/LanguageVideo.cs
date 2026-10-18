@@ -367,7 +367,7 @@ public class LanguageVideo
         EmbeddedTracksPickVideoHint = "Choose a video file, or drop one here, to see its subtitle tracks.";
         EmbeddedTracks = "Tracks";
         ViewMatroskaTrackX = "View Matroska track - {0}";
-        ResolutionSeparator = "x";
+        ResolutionSeparator = "×";
         OpenFromUrlTitle = "Open video file from URL";
         OpenFromUrlOpenOnline = "Open online";
         OpenFromUrlOpenOnlineDescription = "Stream the video directly. Fastest start.";

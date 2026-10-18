@@ -152,6 +152,7 @@ public class PickTeletextAlignmentWindow : Window
             Increment = 1,
             Width = 120,
         };
+        numericUpDown.Classes.Add("field"); // the compact field, not the theme's big spinner
         Avalonia.Automation.AutomationProperties.SetName(numericUpDown, accessibleName);
 
         numericUpDown.Bind(NumericUpDown.ValueProperty, new Binding(propertyName)

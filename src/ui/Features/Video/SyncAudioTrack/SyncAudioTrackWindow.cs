@@ -56,6 +56,7 @@ public class SyncAudioTrackWindow : Window
         var numericUpDownOffset = UiUtil.MakeNumericUpDownInt(-600000, 600000, 0, 130, vm, nameof(vm.OffsetMs))
             .WithAccessibleName(lang.SyncAudioTrackOffset);
         numericUpDownOffset.Increment = 10;
+        numericUpDownOffset.Classes.Add("field"); // the compact field, not the theme's big spinner
         var panelOffset = new StackPanel
         {
             Orientation = Orientation.Horizontal,
