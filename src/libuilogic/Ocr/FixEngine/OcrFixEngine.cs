@@ -172,7 +172,21 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         var fixedFirstWord = uppercaseLetter + firstWord.Substring(1);
         if (!_spellCheckManager.IsWordCorrect(fixedFirstWord) && !_spellCheckWordLists.HasName(fixedFirstWord))
         {
-            return text;
+            // A sans-serif capital I is a plain bar, so nOCR reads it as "l": "lk" / "ls" / "ln"
+            // (Dutch), "lt" / "lf" (English). Only for a whole word the dictionary knows with I.
+            if (uppercaseLetter != 'L' || firstWord.Length < 2 || !char.IsLower(firstWord[1]) ||
+                (firstWord.Length < st.StrippedText.Length && char.IsLetterOrDigit(st.StrippedText[firstWord.Length])))
+            {
+                return text;
+            }
+
+            var iWord = "I" + firstWord.Substring(1);
+            if (!_spellCheckManager.IsWordCorrect(iWord) && !_spellCheckWordLists.HasName(iWord))
+            {
+                return text;
+            }
+
+            fixedFirstWord = iWord;
         }
 
         st.StrippedText = fixedFirstWord + st.StrippedText.Substring(firstWord.Length);
