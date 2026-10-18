@@ -53,6 +53,9 @@ public class OcrFixSlashMisreadAsLTests : IDisposable
     [InlineData("see http://example.com/please")]
     [InlineData("8600 A/varado Street")]
     [InlineData("1/2 of it")]
+    [InlineData("<i>Heil</i> Hitler.")]
+    [InlineData("<i>One moment.</i>")]
+    [InlineData("<font color=\"red\">Hello</font>")]
     public void FixOcrErrors_RealSlash_IsLeftAlone(string input)
     {
         var engine = CreateEngine();
@@ -77,6 +80,8 @@ public class OcrFixSlashMisreadAsLTests : IDisposable
             "bird", "has", "flown", "a", "private", "jet", "will", "pick", "you", "up", "and", "was",
             "telling", "her", "keep", "all", "belongings", "only", "can", "tie", "others", "or",
             "back", "in", "black", "plays", "see", "street", "it", "AC", "DC",
+            // "li" is a dictionary word in Dutch; "</i>" must not become "<li>" because of it.
+            "li", "Heil", "Hitler", "hello",
         };
 
         public bool Initialize(string dictionaryFile, string twoLetterLanguageCode) => true;

@@ -252,8 +252,10 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
             .Replace('‘', '\'').Replace('’', '\'');
     }
 
-    // A run of letters with a slash touching a letter ("p/ease", "/itt/e", "wi/I").
-    [GeneratedRegex(@"(?<![\p{L}\d/'’])[\p{L}'’/]*(?:\p{L}/|/\p{L})[\p{L}'’/]*")]
+    // A run of letters with a slash touching a letter ("p/ease", "/itt/e", "wi/I"). A slash right
+    // after "<" is a closing tag ("</i>"), not a misread letter - "li" is a word in some
+    // dictionaries (Dutch), which turned every "</i>" into "<li>".
+    [GeneratedRegex(@"(?<![\p{L}\d/'’<])[\p{L}'’/]*(?:\p{L}/|/\p{L})[\p{L}'’/]*")]
     private static partial Regex WordWithSlash();
 
     /// <summary>
