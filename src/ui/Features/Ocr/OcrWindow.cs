@@ -1295,7 +1295,7 @@ public class OcrWindow : Window
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
 
         var statusText = EditorChrome.MakeBoundHint(nameof(vm.ProgressText), 12);
-        statusText.MaxWidth = 520;
+        statusText.HorizontalAlignment = HorizontalAlignment.Left;
 
         // Stable UI Automation ids for external automation (#15769)
         AutomationProperties.SetAutomationId(progressBar, "OcrProgressBar");
@@ -1303,16 +1303,16 @@ public class OcrWindow : Window
 
         var grid = new Grid
         {
-            ColumnSpacing = 12,
-            ColumnDefinitions =
+            RowSpacing = 4,
+            RowDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }, // progress bar
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) }, // status text
+                new RowDefinition { Height = GridLength.Auto }, // progress bar
+                new RowDefinition { Height = GridLength.Auto }, // status text
             },
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
         grid.Add(progressBar, 0, 0);
-        grid.Add(statusText, 0, 1);
+        grid.Add(statusText, 1, 0);
 
         var strip = EditorChrome.MakeProgressStrip(grid);
         strip.Bind(Border.IsVisibleProperty, new Binding(nameof(vm.IsOcrRunning)) { Source = vm });
