@@ -76,6 +76,73 @@ public class NOcrSpaceDetector
         return result;
     }
 
+    /// <summary>
+    /// Drops word spaces inside numbers. The narrow "1" leaves most of its advance width empty
+    /// on both sides, so the gap next to it beats the space threshold while the gaps between
+    /// the other digits of the same number do not ("1 5", "1 940", "61 1", "15 1"). Between two
+    /// digits (italic too), and from an upright "1" to a period, comma or colon ("1 .21",
+    /// "1 :18"), the gap may be up to twice the threshold (a real space there is rare); from an
+    /// upright "1" to anything else only slightly above it ("1 van" and "141 - RAF" have a
+    /// full word space). Other italic gaps are left alone: the slant already closes them.
+    /// <paramref name="pixelsAreSpace"/> is the threshold the line was split with.
+    /// </summary>
+    public static List<NOcrChar> RemoveFalseSpacesInNumbers(List<NOcrChar> matches, int pixelsAreSpace)
+    {
+        List<NOcrChar>? deleteItems = null;
+        for (var i = 0; i < matches.Count - 1; i++)
+        {
+            var match = matches[i];
+            if (match.Text.Length == 0 || !char.IsDigit(match.Text[match.Text.Length - 1]))
+            {
+                continue;
+            }
+
+            var nextMatch = matches[i + 1];
+            var space = nextMatch.ImageSplitterItem;
+            if (space == null || space.SpecialCharacter != " " || space.NikseBitmap != null)
+            {
+                continue;
+            }
+
+            var endsWithOne = match.Text.EndsWith('1');
+            var following = i + 2 < matches.Count ? matches[i + 2].Text : string.Empty;
+            var next = following.Length > 0 ? following[0] : '\0';
+            int limit;
+            if (char.IsDigit(next) && (endsWithOne || next == '1'))
+            {
+                limit = pixelsAreSpace * 2;
+            }
+            else if (match.Italic || !endsWithOne)
+            {
+                continue;
+            }
+            else if (next is '.' or ',' or ':')
+            {
+                limit = pixelsAreSpace * 2;
+            }
+            else
+            {
+                limit = pixelsAreSpace + Math.Max(1, (int)Math.Round(pixelsAreSpace * 0.3, MidpointRounding.AwayFromZero));
+            }
+
+            if (space.SpacePixels < limit)
+            {
+                deleteItems ??= new List<NOcrChar>();
+                deleteItems.Add(nextMatch);
+            }
+        }
+
+        if (deleteItems != null)
+        {
+            foreach (var deleteItem in deleteItems)
+            {
+                matches.Remove(deleteItem);
+            }
+        }
+
+        return matches;
+    }
+
     private double FindRelativeThreshold(List<ImageSplitterItem2> letters, List<(int Start, int End, int Height)> lines)
     {
         var gaps = new List<double>();
