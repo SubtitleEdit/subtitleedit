@@ -252,10 +252,10 @@ public class SsaStylesWindow : Window
         AutomationProperties.SetName(dataGrid, Se.Language.Assa.StylesInFile);
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.FileStyles;
-        dataGrid.Columns.Add(Column(Se.Language.General.Name, nameof(StyleDisplay.Name), new GridLength(1, GridUnitType.Star)));
-        dataGrid.Columns.Add(StylesDialogHelper.MakeFontNameColumn());
-        dataGrid.Columns.Add(Column(Se.Language.General.FontSize, nameof(StyleDisplay.FontSize), new GridLength(56)));
-        dataGrid.Columns.Add(Column(Se.Language.General.Usages, nameof(StyleDisplay.UsageCount), new GridLength(56)));
+        dataGrid.Columns.Add(Column(Se.Language.General.Name, nameof(StyleDisplay.Name), new GridLength(150)));
+        dataGrid.Columns.Add(StylesDialogHelper.MakeFontNameColumn(110));
+        dataGrid.Columns.Add(Column(Se.Language.General.FontSize, nameof(StyleDisplay.FontSize), new GridLength(70)));
+        dataGrid.Columns.Add(Column(Se.Language.General.Usages, nameof(StyleDisplay.UsageCount), new GridLength(70)));
         dataGrid.Columns.Add(StylesDialogHelper.MakeColorSampleColumn());
 
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedFileStyle)) { Source = vm });
@@ -305,7 +305,7 @@ public class SsaStylesWindow : Window
         dataGrid.ItemsSource = vm.StorageStyles;
         dataGrid.Columns.Add(Column(Se.Language.General.Name, nameof(StyleDisplay.Name), new GridLength(1, GridUnitType.Star)));
         dataGrid.Columns.Add(StylesDialogHelper.MakeFontNameColumn());
-        dataGrid.Columns.Add(Column(Se.Language.General.FontSize, nameof(StyleDisplay.FontSize), new GridLength(56)));
+        dataGrid.Columns.Add(Column(Se.Language.General.FontSize, nameof(StyleDisplay.FontSize), new GridLength(70)));
         dataGrid.Columns.Add(StylesDialogHelper.MakeColorSampleColumn());
 
         // The default style gets a yellow star instead of "True"/"False"

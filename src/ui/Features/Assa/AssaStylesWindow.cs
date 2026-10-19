@@ -259,16 +259,16 @@ public class AssaStylesWindow : Window
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Binding = new Binding(nameof(StyleDisplay.Name)),
-            Width = new GridLength(1, GridUnitType.Star),
+            Width = new GridLength(150),
         });
-        dataGrid.Columns.Add(StylesDialogHelper.MakeFontNameColumn());
+        dataGrid.Columns.Add(StylesDialogHelper.MakeFontNameColumn(110));
         dataGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.FontSize,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Binding = new Binding(nameof(StyleDisplay.FontSize)),
-            Width = new GridLength(56),
+            Width = new GridLength(70),
         });
         dataGrid.Columns.Add(new SeTableViewColumn
         {
@@ -276,7 +276,7 @@ public class AssaStylesWindow : Window
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Binding = new Binding(nameof(StyleDisplay.UsageCount)),
-            Width = new GridLength(56),
+            Width = new GridLength(70),
         });
         dataGrid.Columns.Add(StylesDialogHelper.MakeColorSampleColumn());
 
