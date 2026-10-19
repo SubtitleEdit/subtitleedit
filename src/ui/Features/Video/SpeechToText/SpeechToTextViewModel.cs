@@ -1396,8 +1396,19 @@ public partial class SpeechToTextViewModel : ObservableObject
             var words = new List<Qwen3AsrWord>();
             foreach (var word in jsonDoc.RootElement.GetProperty("words").EnumerateArray())
             {
+                // The model prefixes its output with "language <Name><asr_text>"; qwen3-asr.cpp
+                // v0.1.9+ strips it, but older builds leak the "<asr_text>" marker into the word
+                // list for GGUFs that store that token as an ordinary (non-control) token, so it
+                // showed up at the start of subtitle lines. Strip it here regardless of engine.
+                var wordText = (word.GetProperty("word").GetString() ?? string.Empty)
+                    .Replace("<asr_text>", string.Empty, StringComparison.Ordinal);
+                if (string.IsNullOrWhiteSpace(wordText))
+                {
+                    continue;
+                }
+
                 words.Add(new Qwen3AsrWord(
-                    word.GetProperty("word").GetString() ?? string.Empty,
+                    wordText,
                     word.GetProperty("start").GetDouble(),
                     word.GetProperty("end").GetDouble()));
             }
