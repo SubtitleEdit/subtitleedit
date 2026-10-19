@@ -32515,12 +32515,10 @@ public partial class MainViewModel :
         }
 
         var hasMisspelledWords = false;
-        var cell = pointerArgs == null ? null : GetSubtitleGridSpellCheckCell(pointerArgs);
-        if (cell != null)
+        var line = pointerArgs == null ? null : GetSubtitleGridSpellCheckLine(pointerArgs);
+        if (line != null)
         {
-            var (line, isOriginal) = cell.Value;
-            var text = isOriginal ? line.OriginalText : line.Text;
-            var words = GetMisspelledWords(text);
+            var words = GetMisspelledWords(line.Text);
             hasMisspelledWords = words.Count > 0;
 
             if (words.Count == 1)
@@ -32530,7 +32528,7 @@ public partial class MainViewModel :
                 // Add first 5 suggestions
                 foreach (var suggestion in _spellCheckManager.GetSuggestions(word).Take(5))
                 {
-                    flyout.Items.Insert(insertIndex++, MakeSuggestionMenuItem(line, isOriginal, word, suggestion));
+                    flyout.Items.Insert(insertIndex++, MakeSuggestionMenuItem(line, word, suggestion));
                 }
 
                 if (insertIndex > 0)
@@ -32546,7 +32544,7 @@ public partial class MainViewModel :
             {
                 foreach (var word in words.Take(MaxSpellCheckMenuWords))
                 {
-                    flyout.Items.Insert(insertIndex++, MakeMisspelledWordMenuItem(line, isOriginal, word));
+                    flyout.Items.Insert(insertIndex++, MakeMisspelledWordMenuItem(line, word));
                 }
 
                 // Add separator
@@ -32582,7 +32580,7 @@ public partial class MainViewModel :
     /// The suggestions are only looked up when the submenu is opened - asking hunspell for suggestions for
     /// every misspelled word in the line would make the context menu slow to open.
     /// </summary>
-    private MenuItem MakeMisspelledWordMenuItem(SubtitleLineViewModel line, bool isOriginal, string word)
+    private MenuItem MakeMisspelledWordMenuItem(SubtitleLineViewModel line, string word)
     {
         var wordItem = new MenuItem
         {
@@ -32605,7 +32603,7 @@ public partial class MainViewModel :
             var index = 0;
             foreach (var suggestion in _spellCheckManager.GetSuggestions(word).Take(5))
             {
-                wordItem.Items.Insert(index++, MakeSuggestionMenuItem(line, isOriginal, word, suggestion));
+                wordItem.Items.Insert(index++, MakeSuggestionMenuItem(line, word, suggestion));
             }
 
             if (index > 0)
@@ -32617,7 +32615,7 @@ public partial class MainViewModel :
         return wordItem;
     }
 
-    private MenuItem MakeSuggestionMenuItem(SubtitleLineViewModel line, bool isOriginal, string word, string suggestion)
+    private MenuItem MakeSuggestionMenuItem(SubtitleLineViewModel line, string word, string suggestion)
     {
         var suggestionItem = new MenuItem
         {
@@ -32625,7 +32623,7 @@ public partial class MainViewModel :
             FontWeight = FontWeight.Bold,
             Tag = "SpellCheck"
         };
-        suggestionItem.Click += (_, _) => { ReplaceSubtitleGridWord(line, isOriginal, word, suggestion); };
+        suggestionItem.Click += (_, _) => { ReplaceSubtitleGridWord(line, word, suggestion); };
         return suggestionItem;
     }
 
@@ -32682,10 +32680,12 @@ public partial class MainViewModel :
     }
 
     /// <summary>
-    /// The subtitle line and text column the pointer is over. Falls back to the text column of the
-    /// right-clicked row when the pointer is not over one of the two text columns.
+    /// The subtitle line whose text the spell check menu items act on. Falls back to the
+    /// right-clicked row when the pointer is not over one of the two text columns. The original
+    /// column gives nothing: the live dictionary is the working subtitle's, and in translation mode
+    /// the original is another language, so its "misspelled" words were just foreign words (#16211).
     /// </summary>
-    private (SubtitleLineViewModel Line, bool IsOriginal)? GetSubtitleGridSpellCheckCell(PointerEventArgs pointerArgs)
+    private SubtitleLineViewModel? GetSubtitleGridSpellCheckLine(PointerEventArgs pointerArgs)
     {
         if (SubtitleGrid == null)
         {
@@ -32694,13 +32694,20 @@ public partial class MainViewModel :
 
         var position = pointerArgs.GetPosition(SubtitleGrid);
         var textBlock = FindSubtitleGridTextBlock(position);
-        if (textBlock?.DataContext is SubtitleLineViewModel cellLine)
+        if (textBlock != null)
         {
-            return (cellLine, textBlock.Tag as string == InitListViewAndEditBox.SubtitleGridColumnKeys.OriginalText);
+            if (textBlock.Tag as string == InitListViewAndEditBox.SubtitleGridColumnKeys.OriginalText)
+            {
+                return null;
+            }
+
+            if (textBlock.DataContext is SubtitleLineViewModel cellLine)
+            {
+                return cellLine;
+            }
         }
 
-        var line = Subtitles.GetOrNull(GetDataGridRowIndexFromPoint(position));
-        return line == null ? null : (line, false);
+        return Subtitles.GetOrNull(GetDataGridRowIndexFromPoint(position));
     }
 
     private TextBlock? FindSubtitleGridTextBlock(Avalonia.Point pointerPosition)
@@ -32731,15 +32738,10 @@ public partial class MainViewModel :
     /// The menu offers each misspelled word once, so a word occurring twice in the line is corrected in both
     /// places - fixing only one of them would leave the other one underlined with no obvious way to fix it.
     /// </summary>
-    private void ReplaceSubtitleGridWord(SubtitleLineViewModel line, bool isOriginal, string word, string suggestion)
+    private void ReplaceSubtitleGridWord(SubtitleLineViewModel line, string word, string suggestion)
     {
-        if (isOriginal && !CanEditOriginal)
-        {
-            return;
-        }
-
         // Split the current text: the line may have been edited since the menu was opened
-        var text = isOriginal ? line.OriginalText : line.Text;
+        var text = line.Text;
         if (string.IsNullOrEmpty(text))
         {
             return;
@@ -32757,17 +32759,6 @@ public partial class MainViewModel :
         {
             var occurrence = occurrences[i];
             newText = newText.Remove(occurrence.Index, occurrence.Length).Insert(occurrence.Index, suggestion);
-        }
-
-        if (isOriginal)
-        {
-            line.OriginalText = newText;
-            if (ReferenceEquals(SelectedSubtitle, line) && EditTextBoxOriginal.Text != newText)
-            {
-                EditTextBoxOriginal.Text = newText;
-            }
-
-            return;
         }
 
         line.Text = newText;
