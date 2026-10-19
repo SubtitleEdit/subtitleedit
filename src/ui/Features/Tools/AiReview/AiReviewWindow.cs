@@ -287,18 +287,7 @@ public class AiReviewWindow : Window
                     Header = Se.Language.General.Apply,
                     CellTheme = UiUtil.TableViewNoPaddingCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-                    CellTemplate = new FuncDataTemplate<ReviewSuggestionItem>((item, _) => new Border
-                    {
-                        Background = Brushes.Transparent,
-                        Padding = new Thickness(4),
-                        Child = new CheckBox
-                        {
-                            Focusable = false,
-                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(ReviewSuggestionItem.IsSelected)),
-                            [!AutomationProperties.NameProperty] = new Binding(nameof(ReviewSuggestionItem.CategoryDisplay)),
-                            HorizontalAlignment = HorizontalAlignment.Center,
-                        },
-                    }),
+                    CellTemplate = TableViewExtras.MakeCheckBoxCellTemplate<ReviewSuggestionItem>(nameof(ReviewSuggestionItem.IsSelected), nameof(ReviewSuggestionItem.CategoryDisplay)),
                     Width = new GridLength(80), // content-sized (Auto) on the DataGrid; TableView treats Auto as star
                 },
                 new SeTableViewColumn

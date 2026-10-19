@@ -1,7 +1,5 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
-using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -77,18 +75,7 @@ public class BatchConvertFixCommonErrorsSettingsWindow : Window
                 Header = Se.Language.General.Enabled,
                 CellTheme = UiUtil.TableViewNoPaddingCellTheme,
                 HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-                CellTemplate = new FuncDataTemplate<FixRuleDisplayItem>((item, _) =>
-                    new Border
-                    {
-                        Background = Brushes.Transparent, // Prevents highlighting
-                        Padding = new Thickness(4),
-                        Child = new CheckBox
-                        {
-                            Focusable = false,
-                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(FixRuleDisplayItem.IsSelected)),
-                            HorizontalAlignment = HorizontalAlignment.Center
-                        }
-                    }),
+                CellTemplate = TableViewExtras.MakeCheckBoxCellTemplate<FixRuleDisplayItem>(nameof(FixRuleDisplayItem.IsSelected)),
                 Width = new GridLength(80), // content-sized (Auto) on the DataGrid; TableView treats Auto as star
             },
             new SeTableViewColumn

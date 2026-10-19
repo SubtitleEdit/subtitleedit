@@ -778,18 +778,7 @@ public class BinaryEditWindow : Window
             MinWidth = 80,
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            CellTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<BinarySubtitleItem>((_, _) =>
-                new Border
-                {
-                    Background = Brushes.Transparent, // Prevents highlighting
-                    Padding = new Thickness(4),
-                    Child = new CheckBox
-                    {
-                        [!ToggleButton.IsCheckedProperty] = new Binding(nameof(BinarySubtitleItem.IsForced)),
-                        HorizontalAlignment = HorizontalAlignment.Center,
-                        Focusable = false
-                    }
-                }),
+            CellTemplate = TableViewExtras.MakeCheckBoxCellTemplate<BinarySubtitleItem>(nameof(BinarySubtitleItem.IsForced)),
         });
 
         columnManager.Add(new SeTableViewColumn

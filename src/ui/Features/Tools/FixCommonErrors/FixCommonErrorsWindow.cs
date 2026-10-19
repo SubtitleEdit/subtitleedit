@@ -124,23 +124,7 @@ public class FixCommonErrorsWindow : Window
             Header = Se.Language.General.Enabled,
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            CellTemplate = new FuncDataTemplate<FixRuleDisplayItem>((item, _) =>
-            {
-                return new Border
-                {
-                    Background = Brushes.Transparent, // Prevents highlighting
-                    Padding = new Thickness(4),
-                    Child = new CheckBox
-                    {
-                        Focusable = false,
-                        [!ToggleButton.IsCheckedProperty] = new Binding(nameof(FixRuleDisplayItem.IsSelected)),
-                        // The checkbox is unfocusable, so name it after the rule it toggles so a
-                        // screen reader can tell which rule's enabled state it is on (#11745).
-                        [!AutomationProperties.NameProperty] = new Binding(nameof(FixRuleDisplayItem.Name)),
-                        HorizontalAlignment = HorizontalAlignment.Center
-                    }
-                };
-            }),
+            CellTemplate = TableViewExtras.MakeCheckBoxCellTemplate<FixRuleDisplayItem>(nameof(FixRuleDisplayItem.IsSelected), nameof(FixRuleDisplayItem.Name)),
             // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
             Width = new GridLength(80),
         };
@@ -405,23 +389,7 @@ public class FixCommonErrorsWindow : Window
             Header = Se.Language.General.Apply,
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            CellTemplate = new FuncDataTemplate<FixDisplayItem>((item, _) =>
-            {
-                return new Border
-                {
-                    Background = Brushes.Transparent, // Prevents highlighting
-                    Padding = new Thickness(4),
-                    Child = new CheckBox
-                    {
-                        Focusable = false,
-                        [!ToggleButton.IsCheckedProperty] = new Binding(nameof(FixDisplayItem.IsSelected)),
-                        // Unfocusable checkbox - name it after the fix it applies so a screen
-                        // reader can tell which fix's apply state it is on (#11745).
-                        [!AutomationProperties.NameProperty] = new Binding(nameof(FixDisplayItem.ActionDisplay)),
-                        HorizontalAlignment = HorizontalAlignment.Center
-                    }
-                };
-            }),
+            CellTemplate = TableViewExtras.MakeCheckBoxCellTemplate<FixDisplayItem>(nameof(FixDisplayItem.IsSelected), nameof(FixDisplayItem.ActionDisplay)),
             // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
             Width = new GridLength(80),
         };

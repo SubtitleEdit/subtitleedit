@@ -1,8 +1,6 @@
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
-using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -120,17 +118,7 @@ public class WebVttStylePickerWindow : Window
             Header = Se.Language.General.Enabled,
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            CellTemplate = new FuncDataTemplate<WebVttStyleDisplay>((_, _) =>
-                new Border
-                {
-                    Background = Brushes.Transparent, // Prevents highlighting
-                    Padding = new Thickness(4),
-                    Child = new CheckBox
-                    {
-                        [!ToggleButton.IsCheckedProperty] = new Binding(nameof(WebVttStyleDisplay.IsSelected)),
-                        HorizontalAlignment = HorizontalAlignment.Center,
-                    },
-                }),
+            CellTemplate = TableViewExtras.MakeCheckBoxCellTemplate<WebVttStyleDisplay>(nameof(WebVttStyleDisplay.IsSelected), focusable: true),
             Width = new GridLength(80),
         });
         dataGrid.Columns.Add(new SeTableViewColumn

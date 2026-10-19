@@ -1,7 +1,5 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
-using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -90,23 +88,9 @@ public class MergeShortLinesWindow : Window
                     Header = Se.Language.General.Apply,
                     CellTheme = UiUtil.TableViewNoPaddingCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-                    CellTemplate = new FuncDataTemplate<MergeShortLinesItem>((item, _) =>
-                        new Border
-                        {
-                            Background = Brushes.Transparent, // Prevents highlighting
-                            Padding = new Thickness(4),
-                            Child = new CheckBox
-                            {
-                                Focusable = false,
-                                [!ToggleButton.IsCheckedProperty] = new Binding(nameof(MergeShortLinesItem.Apply))
-                                {
-                                    Mode = BindingMode.TwoWay,
-                                },
-                                // The first line of a highlighted group is merged into, not merged: no checkbox.
-                                [!Visual.IsVisibleProperty] = new Binding(nameof(MergeShortLinesItem.CanToggle)),
-                                HorizontalAlignment = HorizontalAlignment.Center,
-                            }
-                        }),
+                    CellTemplate = TableViewExtras.MakeCheckBoxCellTemplate<MergeShortLinesItem>(nameof(MergeShortLinesItem.Apply),
+                        // The first line of a highlighted group is merged into, not merged: no checkbox.
+                        configure: cb => cb[!Visual.IsVisibleProperty] = new Binding(nameof(MergeShortLinesItem.CanToggle))),
                     Width = new GridLength(70),
                 },
                 new SeTableViewColumn
