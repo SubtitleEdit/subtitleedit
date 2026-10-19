@@ -88,6 +88,16 @@ public partial class RemuxVideoViewModel : ObservableObject
     [ObservableProperty] private bool _isMp4CaptionsHintVisible;
 
     /// <summary>
+    /// Taken off the caption times when the subtitle files become captions in the video (#16220):
+    /// broadcast .scc/.mcc files carry the time of day, usually from 01:00:00:00, while the video
+    /// starts at zero. Suggested from the first file until the user types a value.
+    /// </summary>
+    [ObservableProperty] private TimeSpan _captionOffset;
+    [ObservableProperty] private bool _isCaptionOffsetVisible;
+    private bool _isCaptionOffsetSuggested = true;
+    private bool _isSettingCaptionOffset;
+
+    /// <summary>
     /// For an .mpg: the video is not MPEG-2, and the user agreed to have it re-encoded.
     /// </summary>
     internal bool ReencodeVideoToMpeg2 { get; set; }
@@ -147,6 +157,7 @@ public partial class RemuxVideoViewModel : ObservableObject
             _videoDuration = duration;
         }
 
+        UpdateCaptionOffset();
         if (!string.IsNullOrWhiteSpace(VideoFileName) && File.Exists(VideoFileName))
         {
             try
@@ -329,6 +340,7 @@ public partial class RemuxVideoViewModel : ObservableObject
         EnforceMkvIfRequired();
         UpdateSubtitleListState();
         UpdateCaptionChannels();
+        UpdateCaptionOffset();
     }
 
     private void UpdateAudioListState()
@@ -631,6 +643,62 @@ public partial class RemuxVideoViewModel : ObservableObject
         IsSubtitlesAsVisible = IsMp4(SelectedOutputFormat);
         IsMp4CaptionsHintVisible = IsMp4WithCaptions;
         UpdateCaptionChannels();
+        UpdateCaptionOffset();
+    }
+
+    /// <summary>
+    /// Shows the caption time offset when the subtitle files become captions in the video, and
+    /// suggests one for a broadcast .scc/.mcc whose first caption lies at or past the end of the
+    /// video: its start-of-program hour (01:00:00:00 -> 1 h, 00:59:58:00 -> 0). A value the user
+    /// typed is kept.
+    /// </summary>
+    private void UpdateCaptionOffset()
+    {
+        IsCaptionOffsetVisible = IsCaptionOutput && SubtitleFiles.Count > 0;
+        if (!_isCaptionOffsetSuggested)
+        {
+            return;
+        }
+
+        var suggested = SubtitleFiles.Count > 0
+            ? SuggestCaptionOffset(SubtitleFiles[0].GetFirstCaptionTime(), _videoDuration)
+            : TimeSpan.Zero;
+        if (suggested != CaptionOffset)
+        {
+            _isSettingCaptionOffset = true;
+            CaptionOffset = suggested;
+            _isSettingCaptionOffset = false;
+        }
+    }
+
+    /// <summary>
+    /// The whole hours of <paramref name="firstCaptionTime"/> when the caption would come at or
+    /// after the end of a video of <paramref name="videoDuration"/> - else zero, as when either
+    /// is unknown.
+    /// </summary>
+    internal static TimeSpan SuggestCaptionOffset(TimeSpan? firstCaptionTime, TimeSpan? videoDuration)
+    {
+        if (firstCaptionTime == null || videoDuration == null || videoDuration.Value.TotalMilliseconds <= 0)
+        {
+            return TimeSpan.Zero;
+        }
+
+        var first = firstCaptionTime.Value;
+        if (first < videoDuration.Value || first.TotalHours < 1)
+        {
+            return TimeSpan.Zero;
+        }
+
+        return TimeSpan.FromHours((int)first.TotalHours);
+    }
+
+    partial void OnCaptionOffsetChanged(TimeSpan value)
+    {
+        IsCompleted = false;
+        if (!_isSettingCaptionOffset)
+        {
+            _isCaptionOffsetSuggested = false;
+        }
     }
 
     /// <summary>
@@ -1420,11 +1488,12 @@ public partial class RemuxVideoViewModel : ObservableObject
         UpdateProgressText(stopwatch.Elapsed);
         var outputFileName = OutputFileName;
         var isMpg = IsMpg(SelectedOutputFormat);
+        var captionOffset = CaptionOffset;
         try
         {
             await Task.Run(() =>
             {
-                var captions = GetClosedCaptionBytes(captionFiles);
+                var captions = GetClosedCaptionBytes(captionFiles, captionOffset);
                 Action<double> progress = fraction =>
                 {
                     if (_isCancelled)
@@ -1756,12 +1825,23 @@ public partial class RemuxVideoViewModel : ObservableObject
     /// </summary>
     internal static ClosedCaptionBytes GetClosedCaptionBytes(List<RemuxFileItem> captionFiles)
     {
+        return GetClosedCaptionBytes(captionFiles, TimeSpan.Zero);
+    }
+
+    /// <summary>
+    /// <see cref="GetClosedCaptionBytes(List{RemuxFileItem})"/> with <paramref name="offset"/>
+    /// taken off every caption time - the start-of-program timecode of a broadcast file (#16220).
+    /// Captions that would come before the video are dropped.
+    /// </summary>
+    internal static ClosedCaptionBytes GetClosedCaptionBytes(List<RemuxFileItem> captionFiles, TimeSpan offset)
+    {
         var captions = ClosedCaptionBytes.FromFile(captionFiles[0].FileName);
         if (captionFiles.Count > 1)
         {
             captions.Field2 = ClosedCaptionBytes.FromFile(captionFiles[1].FileName).Field1;
         }
 
+        captions.Shift(-offset.TotalMilliseconds);
         return captions;
     }
 

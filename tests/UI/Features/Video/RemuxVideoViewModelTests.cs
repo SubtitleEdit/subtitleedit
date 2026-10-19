@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Avalonia.Headless.XUnit;
 using Nikse.SubtitleEdit.Features.Video.RemuxVideo;
 using Nikse.SubtitleEdit.Logic;
@@ -494,6 +495,72 @@ public class RemuxVideoViewModelTests
             File.Delete(first);
             File.Delete(second);
         }
+    }
+
+    /// <summary>
+    /// The caption time offset is taken off every caption time, both files alike (#16220).
+    /// </summary>
+    [Fact]
+    public void GetClosedCaptionBytes_OffsetIsTakenOffBothFiles()
+    {
+        var first = Path.Combine(Path.GetTempPath(), "remux-cc-first-" + System.Guid.NewGuid() + ".scc");
+        var second = Path.Combine(Path.GetTempPath(), "remux-cc-second-" + System.Guid.NewGuid() + ".scc");
+        try
+        {
+            File.WriteAllText(first, "Scenarist_SCC V1.0\n\n01:00:01:00\t9420 9420\n");
+            File.WriteAllText(second, "Scenarist_SCC V1.0\n\n00:59:59:00\t942c 942c\n\n01:00:02:00\t942f\n");
+
+            var captions = RemuxVideoViewModel.GetClosedCaptionBytes([new RemuxFileItem(first), new RemuxFileItem(second)], TimeSpan.FromHours(1));
+
+            Assert.Equal(new long[] { 30, 31 }, captions.Field1.Select(p => p.Slot));
+            Assert.Equal(new long[] { 60 }, captions.Field2.Select(p => p.Slot)); // the pairs before the video are dropped
+        }
+        finally
+        {
+            File.Delete(first);
+            File.Delete(second);
+        }
+    }
+
+    /// <summary>
+    /// A broadcast file starting at 01:00:00:00 gets its hour suggested when the video is shorter;
+    /// one that starts at 00:59:58:00 (two seconds of pre-roll) gets nothing.
+    /// </summary>
+    [Theory]
+    [InlineData(3_600_000, 6_000, 3_600_000)]
+    [InlineData(3_600_033, 6_000, 3_600_000)]
+    [InlineData(7_200_000, 6_000, 7_200_000)]
+    [InlineData(3_598_000, 6_000, 0)]
+    [InlineData(3_600_000, 7_200_000, 0)]
+    [InlineData(5_000, 6_000, 0)]
+    public void SuggestCaptionOffset_WholeHourWhenPastTheVideo(int firstCaptionMs, int videoMs, int expectedMs)
+    {
+        var suggested = RemuxVideoViewModel.SuggestCaptionOffset(TimeSpan.FromMilliseconds(firstCaptionMs), TimeSpan.FromMilliseconds(videoMs));
+        Assert.Equal(TimeSpan.FromMilliseconds(expectedMs), suggested);
+    }
+
+    [Fact]
+    public void SuggestCaptionOffset_NothingWithoutDurationOrTimeCode()
+    {
+        Assert.Equal(TimeSpan.Zero, RemuxVideoViewModel.SuggestCaptionOffset(TimeSpan.FromHours(1), null));
+        Assert.Equal(TimeSpan.Zero, RemuxVideoViewModel.SuggestCaptionOffset(null, TimeSpan.FromSeconds(6)));
+    }
+
+    /// <summary>
+    /// The offset field only shows when the subtitle files become captions in the video.
+    /// </summary>
+    [AvaloniaFact]
+    public void CaptionOffset_VisibleForCaptionOutputOnly()
+    {
+        var (vm, _, _) = BuildMixViewModel(false);
+        Assert.False(vm.IsCaptionOffsetVisible);
+
+        vm.SubtitleFiles.Add(new RemuxFileItem(Path.Combine(Path.GetTempPath(), "remux-mcc-does-not-exist.mcc")));
+        Assert.Equal(".mpg", vm.SelectedOutputFormat);
+        Assert.True(vm.IsCaptionOffsetVisible);
+
+        vm.SubtitleFiles.Clear();
+        Assert.False(vm.IsCaptionOffsetVisible);
     }
 
     [Theory]
