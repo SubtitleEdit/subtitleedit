@@ -1712,7 +1712,19 @@
     "propertyTopExtent": "Top extent",
     "propertyBottomOrigin": "Bottom origin",
     "propertyBottomExtent": "Bottom extent",
-    "xProperties": "{0} properties"
+    "xProperties": "{0} properties",
+    "propertyHeaderSource": "Header source",
+    "propertyHeaderSourceCurrentFile": "Current file",
+    "propertyHeaderSourceTemplateFile": "Template file",
+    "propertyTemplateFile": "Template file",
+    "propertyTemplateFileHint": "Styles, regions and metadata are taken from this file for every saved file; frame rate follows the current video.",
+    "propertyTemplateSummaryX": "Language: {0}, styles: {1}, regions: {2}",
+    "propertyTemplateFileNotFound": "Template file not found",
+    "propertyTemplateFileInvalid": "Not a TTML file with a head and a body",
+    "propertyDefaultColor": "Default color",
+    "propertyDefaultColorTemplateHint": "Colors come from the template file",
+    "pickTemplateFile": "Pick template file",
+    "ttmlFiles": "Timed Text files"
   },
   "edit": {
     "modifySelection": {

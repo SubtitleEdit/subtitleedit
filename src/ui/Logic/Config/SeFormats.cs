@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Logic.Config;
+﻿using System.Collections.Generic;
+
+namespace Nikse.SubtitleEdit.Logic.Config;
 
 public class SeFormats
 {
@@ -44,6 +46,18 @@ public class SeFormats
     public string TimedTextItunesTimeCodeFormat { get; set; }
     public string TimedTextItunesStyleAttribute { get; set; }
     public string TimedTextItunesLanguage { get; set; }
+
+    // iTunes Timed Text export preset (#16257): the color of the built-in header's styles, the
+    // body's default style/region, and an optional template .itt/.xml whose header is used for
+    // every saved file instead of the source file's. Presets are named copies of all of these.
+    public string TimedTextItunesDefaultColor { get; set; }
+    public string TimedTextItunesDefaultStyle { get; set; }
+    public string TimedTextItunesDefaultRegion { get; set; }
+    public string TimedTextItunesHeaderSource { get; set; }
+    public string TimedTextItunesTemplateFile { get; set; }
+    public string TimedTextItunesSelectedPreset { get; set; }
+    public List<SeItunesTimedTextPreset> TimedTextItunesPresets { get; set; }
+
     public string TimedTextImsc11TimeCodeFormat { get; set; }
     public string TimedTextImsc11FileExtension { get; set; }
 
@@ -84,6 +98,13 @@ public class SeFormats
         TimedTextItunesTimeCodeFormat = "Frames";
         TimedTextItunesStyleAttribute = "tts:fontStyle";
         TimedTextItunesLanguage = string.Empty;
+        TimedTextItunesDefaultColor = "white";
+        TimedTextItunesDefaultStyle = string.Empty;
+        TimedTextItunesDefaultRegion = string.Empty;
+        TimedTextItunesHeaderSource = SeItunesTimedTextPreset.HeaderSourceCurrentFile;
+        TimedTextItunesTemplateFile = string.Empty;
+        TimedTextItunesSelectedPreset = string.Empty;
+        TimedTextItunesPresets = new List<SeItunesTimedTextPreset>();
         TimedTextImsc11TimeCodeFormat = "hh:mm:ss.ms";
         TimedTextImsc11FileExtension = ".xml";
     }

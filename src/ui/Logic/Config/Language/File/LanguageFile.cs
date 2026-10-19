@@ -95,6 +95,18 @@ public class LanguageFile
     public string PropertyBottomOrigin { get; set; }
     public string PropertyBottomExtent { get; set; }
     public string XProperties { get; set; }
+    public string PropertyHeaderSource { get; set; }
+    public string PropertyHeaderSourceCurrentFile { get; set; }
+    public string PropertyHeaderSourceTemplateFile { get; set; }
+    public string PropertyTemplateFile { get; set; }
+    public string PropertyTemplateFileHint { get; set; }
+    public string PropertyTemplateSummaryX { get; set; }
+    public string PropertyTemplateFileNotFound { get; set; }
+    public string PropertyTemplateFileInvalid { get; set; }
+    public string PropertyDefaultColor { get; set; }
+    public string PropertyDefaultColorTemplateHint { get; set; }
+    public string PickTemplateFile { get; set; }
+    public string TtmlFiles { get; set; }
 
     public LanguageFile()
     {
@@ -181,5 +193,17 @@ public class LanguageFile
         PropertyBottomOrigin = "Bottom origin";
         PropertyBottomExtent = "Bottom extent";
         XProperties = "{0} properties";
+        PropertyHeaderSource = "Header source";
+        PropertyHeaderSourceCurrentFile = "Current file";
+        PropertyHeaderSourceTemplateFile = "Template file";
+        PropertyTemplateFile = "Template file";
+        PropertyTemplateFileHint = "Styles, regions and metadata are taken from this file for every saved file; frame rate follows the current video.";
+        PropertyTemplateSummaryX = "Language: {0}, styles: {1}, regions: {2}";
+        PropertyTemplateFileNotFound = "Template file not found";
+        PropertyTemplateFileInvalid = "Not a TTML file with a head and a body";
+        PropertyDefaultColor = "Default color";
+        PropertyDefaultColorTemplateHint = "Colors come from the template file";
+        PickTemplateFile = "Pick template file";
+        TtmlFiles = "Timed Text files";
     }
 }
