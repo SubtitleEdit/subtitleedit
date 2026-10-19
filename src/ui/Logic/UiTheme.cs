@@ -40,6 +40,7 @@ public static class UiTheme
     public const string ThemeNameDark = "Dark";
     public const string ThemeNameClassic = "Classic";
     public const string ThemeNamePastel = "Pastel";
+    public const string ThemeNameNord = "Nord";
 
     public static FluentTheme? FluentTheme { get; set; }
 
@@ -70,9 +71,14 @@ public static class UiTheme
         }
     }
 
+    /// <summary>
+    /// True for every dark theme - Dark and Nord. Nord is a fixed-palette variant of Dark:
+    /// same Fluent dark variant, dark icons and dark syntax colors, its own colors.
+    /// </summary>
     public static bool IsDarkThemeEnabled()
     {
-        return ThemeName == ThemeNameDark;
+        var themeName = ThemeName;
+        return themeName == ThemeNameDark || themeName == ThemeNameNord;
     }
 
     /// <summary>
@@ -136,6 +142,12 @@ public static class UiTheme
         {
             Application.Current!.RequestedThemeVariant = ThemeVariant.Dark;
             ApplyLighterDark();
+        }
+        else if (themeSetting == ThemeNameNord)
+        {
+            Application.Current!.RequestedThemeVariant = ThemeVariant.Dark;
+            ApplyLighterDark();
+            ApplyNordAccent();
         }
         else if (themeSetting == ThemeNameClassic)
         {
@@ -826,6 +838,17 @@ public static class UiTheme
 
         _themeOverrideStyle = new Styles
         {
+            // Window background. The Fluent palette's RegionColor (UpdateRegionColor) only
+            // reaches windows when the theme variant changes, so switching between two dark
+            // themes - Dark and Nord - left the old background behind until a restart.
+            new Style(x => x.OfType<Window>())
+            {
+                Setters =
+                {
+                    new Setter(Window.BackgroundProperty, new SolidColorBrush(bgColor))
+                }
+            },
+
             // TextBox
             new Style(x => x.OfType<TextBox>())
             {
@@ -1074,6 +1097,72 @@ public static class UiTheme
             Application.Current!.Styles.Remove(_themeOverrideStyle);
             _themeOverrideStyle = null;
         }
+    }
+
+    /// <summary>
+    /// Nord's frost blues for everything Fluent derives from the accent (selection, focus
+    /// rings, check boxes, sliders, progress bars), and its polar-night shades for buttons and
+    /// headers. Runs after <see cref="ApplyLighterDark"/>, which already set the Nord window,
+    /// input and text colors through <see cref="GetDarkThemeBackgroundColor"/> - this adds to
+    /// its resource dictionary and style collection so RemoveLighterDark removes both.
+    /// </summary>
+    private static void ApplyNordAccent()
+    {
+        if (Application.Current == null || _resourceOverrides == null || _themeOverrideStyle is not Styles styles)
+        {
+            return;
+        }
+
+        var button = Color.FromRgb(0x43, 0x4C, 0x5E); // nord2
+        var buttonHover = Color.FromRgb(0x4C, 0x56, 0x6A); // nord3
+        var buttonPressed = Color.FromRgb(0x56, 0x61, 0x77);
+        var border = Color.FromRgb(0x4C, 0x56, 0x6A); // nord3
+        var header = Color.FromRgb(0x3B, 0x42, 0x52); // nord1
+        var frost = Color.FromRgb(0x88, 0xC0, 0xD0); // nord8
+
+        // The dark Fluent variant fills accent controls with the Light1-3 shades and puts
+        // dark text on them, so the brighter frost blues go there.
+        _resourceOverrides["SystemAccentColor"] = Color.FromRgb(0x5E, 0x81, 0xAC); // nord10
+        _resourceOverrides["SystemAccentColorLight1"] = Color.FromRgb(0x81, 0xA1, 0xC1); // nord9
+        _resourceOverrides["SystemAccentColorLight2"] = frost;
+        _resourceOverrides["SystemAccentColorLight3"] = Color.FromRgb(0x8F, 0xBC, 0xBB); // nord7
+        _resourceOverrides["SystemAccentColorDark1"] = Color.FromRgb(0x4F, 0x6F, 0x96);
+        _resourceOverrides["SystemAccentColorDark2"] = Color.FromRgb(0x42, 0x5E, 0x80);
+        _resourceOverrides["SystemAccentColorDark3"] = Color.FromRgb(0x35, 0x4C, 0x6A);
+
+        // Hover/pressed are template-level in Fluent, so a Background setter alone would
+        // leave them Fluent gray.
+        _resourceOverrides["ButtonBackground"] = new SolidColorBrush(button);
+        _resourceOverrides["ButtonBackgroundPointerOver"] = new SolidColorBrush(buttonHover);
+        _resourceOverrides["ButtonBackgroundPressed"] = new SolidColorBrush(buttonPressed);
+        _resourceOverrides["ButtonBorderBrushPointerOver"] = new SolidColorBrush(frost);
+        _resourceOverrides["ToggleButtonBackground"] = new SolidColorBrush(button);
+        _resourceOverrides["ToggleButtonBackgroundPointerOver"] = new SolidColorBrush(buttonHover);
+        _resourceOverrides["ToggleButtonBackgroundPressed"] = new SolidColorBrush(buttonPressed);
+
+        styles.Add(new Style(x => x.OfType<TableViewColumnHeader>())
+        {
+            Setters =
+            {
+                new Setter(TableViewColumnHeader.BackgroundProperty, new SolidColorBrush(header)),
+            }
+        });
+        styles.Add(new Style(x => x.OfType<ContextMenu>())
+        {
+            Setters =
+            {
+                new Setter(TemplatedControl.BackgroundProperty, new SolidColorBrush(header)),
+                new Setter(TemplatedControl.BorderBrushProperty, new SolidColorBrush(border)),
+            }
+        });
+        styles.Add(new Style(x => x.OfType<FlyoutPresenter>())
+        {
+            Setters =
+            {
+                new Setter(TemplatedControl.BackgroundProperty, new SolidColorBrush(header)),
+                new Setter(TemplatedControl.BorderBrushProperty, new SolidColorBrush(border)),
+            }
+        });
     }
 
     private static void ApplyWindowsClassicGray()
@@ -1358,8 +1447,16 @@ public static class UiTheme
         Application.Current.Styles.Add(_themeOverrideStyle);
     }
 
-    private static Color GetDarkThemeBackgroundColor()
+    /// <summary>
+    /// Nord ignores the user's dark-mode colors: its palette is the point of picking it.
+    /// </summary>
+    internal static Color GetDarkThemeBackgroundColor()
     {
+        if (Se.Settings.Appearance.Theme == ThemeNameNord)
+        {
+            return NordBackgroundColor;
+        }
+
         return Se.Settings.Appearance.DarkModeBackgroundColor.FromHexToColor();
     }
 
@@ -1402,9 +1499,33 @@ public static class UiTheme
 
     private static readonly Color ClassicBackgroundColor = Color.FromRgb(236, 233, 216);
     private static readonly Color PastelBackgroundColor = Color.FromRgb(240, 235, 255);
+    internal static readonly Color NordBackgroundColor = Color.FromRgb(0x2E, 0x34, 0x40); // nord0
+    internal static readonly Color NordForegroundColor = Color.FromRgb(0xE5, 0xE9, 0xF0); // nord5
+    private static readonly Color NordAlternatingRowColor = Color.FromRgb(0x34, 0x3B, 0x48);
+
+    /// <summary>
+    /// The subtitle grid's alternating row color. Nord has its own - the gray dark-theme
+    /// setting reads as stray gray stripes on Nord's blue-gray rows.
+    /// </summary>
+    public static string GetGridAlternatingRowColorHex(bool isDark)
+    {
+        if (!isDark)
+        {
+            return Se.Settings.Appearance.GridAlternatingRowColor;
+        }
+
+        return Se.Settings.Appearance.Theme == ThemeNameNord
+            ? NordAlternatingRowColor.FromColorToHex()
+            : Se.Settings.Appearance.GridAlternatingRowColorDark;
+    }
 
     public static Color GetDarkThemeForegroundColor()
     {
+        if (Se.Settings.Appearance.Theme == ThemeNameNord)
+        {
+            return NordForegroundColor;
+        }
+
         return Se.Settings.Appearance.DarkModeForegroundColor.FromHexToColor();
     }
 }

@@ -551,7 +551,7 @@ public partial class SettingsViewModel : ObservableObject
         ];
         SelectedUpdateChannel = UpdateChannels[0];
 
-        Themes = [Se.Language.General.System, Se.Language.General.Light, Se.Language.General.Dark, Se.Language.General.Classic, "Pastel"];
+        Themes = [Se.Language.General.System, Se.Language.General.Light, Se.Language.General.Dark, Se.Language.General.Classic, "Pastel", "Nord"];
         SelectedTheme = Themes[0];
 
         // Themes.zip is unpacked into the data folder at start-up; if that failed (or has not run)
@@ -1503,6 +1503,10 @@ public partial class SettingsViewModel : ObservableObject
         {
             return UiTheme.ThemeNamePastel;
         }
+        else if (translation == "Nord")
+        {
+            return UiTheme.ThemeNameNord;
+        }
         else
         {
             return UiTheme.ThemeNameSystem;
@@ -1530,6 +1534,10 @@ public partial class SettingsViewModel : ObservableObject
         else if (theme == UiTheme.ThemeNamePastel)
         {
             return "Pastel";
+        }
+        else if (theme == UiTheme.ThemeNameNord)
+        {
+            return "Nord";
         }
         else
         {

@@ -140,6 +140,34 @@ public class EditorChromePaletteTests
     }
 
     [AvaloniaFact]
+    public void NordTheme_IsDark_AndIgnoresTheDarkBackgroundSetting()
+    {
+        var application = Application.Current!;
+        var appearance = Se.Settings.Appearance;
+        var oldVariant = application.RequestedThemeVariant;
+        var oldTheme = appearance.Theme;
+        var oldBackground = appearance.DarkModeBackgroundColor;
+        try
+        {
+            appearance.Theme = UiTheme.ThemeNameNord;
+            application.RequestedThemeVariant = ThemeVariant.Dark;
+            appearance.DarkModeBackgroundColor = "#FF2A2020";
+            EditorChrome.InvalidatePalette();
+
+            Assert.True(UiTheme.IsDarkThemeEnabled());
+            Assert.Equal(Color.FromRgb(0x2E, 0x34, 0x40), UiTheme.GetThemeBackgroundColor());
+            Assert.Equal(Color.FromRgb(0x2E, 0x34, 0x40), Assert.IsAssignableFrom<ISolidColorBrush>(EditorChrome.WindowBrush).Color);
+        }
+        finally
+        {
+            appearance.Theme = oldTheme;
+            appearance.DarkModeBackgroundColor = oldBackground;
+            application.RequestedThemeVariant = oldVariant;
+            EditorChrome.InvalidatePalette();
+        }
+    }
+
+    [AvaloniaFact]
     public void PaletteBrushes_FollowTheLightThemeWindowColor()
     {
         var application = Application.Current!;

@@ -3134,7 +3134,7 @@ public static class UiUtil
 
     internal static Color GetDarkThemeBackgroundColor()
     {
-        return Se.Settings.Appearance.DarkModeBackgroundColor.FromHexToColor();
+        return UiTheme.GetDarkThemeBackgroundColor();
     }
 
     internal static void ReplaceControl(Control old, Control replacement)
