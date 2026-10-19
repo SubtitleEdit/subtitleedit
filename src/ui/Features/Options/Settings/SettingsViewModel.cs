@@ -1183,9 +1183,7 @@ public partial class SettingsViewModel : ObservableObject
         ProxyUseDefaultCredentials = Se.Settings.General.ProxyUseDefaultCredentials;
         ProxyBypassList = Se.Settings.General.ProxyBypassList ?? string.Empty;
         CheckForUpdatesOnStartup = Se.Settings.General.CheckForUpdatesOnStartup;
-        SelectedUpdateChannel = UpdateCheckService.IncludePrereleases()
-            ? Se.Language.Options.Settings.CheckForUpdatesChannelStableAndBeta
-            : Se.Language.Options.Settings.CheckForUpdatesChannelStable;
+        SelectedUpdateChannel = UpdateCheckService.ChannelDisplayName();
         _loadedUpdateChannel = SelectedUpdateChannel;
         SetFfmpegStatus();
         SetLibMpvStatus();
@@ -2061,9 +2059,7 @@ public partial class SettingsViewModel : ObservableObject
         {
             // Only an actual change is stored, so an untouched dropdown keeps the
             // "auto" default (beta users follow betas, stable users stable only).
-            general.CheckForUpdatesChannel = SelectedUpdateChannel == Se.Language.Options.Settings.CheckForUpdatesChannelStableAndBeta
-                ? UpdateCheckService.ChannelBeta
-                : UpdateCheckService.ChannelStable;
+            general.CheckForUpdatesChannel = UpdateCheckService.ChannelFromDisplayName(SelectedUpdateChannel);
         }
 
         general.CurrentProfile = SelectedProfile;

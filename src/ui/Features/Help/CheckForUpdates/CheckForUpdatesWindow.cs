@@ -133,11 +133,10 @@ public class CheckForUpdatesWindow : Window
 
         Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonOk));
 
-        Activated += async delegate
-        {
-            buttonOk.Focus();
-            await vm.CheckForUpdates();
-        };
+        // One check per window. A re-check after the gear dialog is the view model's call
+        // (only when the channel changed), not a side effect of the owner re-activating.
+        Opened += async delegate { await vm.CheckForUpdates(); };
+        Activated += delegate { buttonOk.Focus(); };
         KeyDown += vm.OnKeyDown;
         Closed += delegate { vm.OnClosed(); };
     }

@@ -12,7 +12,8 @@ namespace Tests.Features.Help;
 /// The gear in the check-for-updates window is an icon-only button built in code, so a dropped
 /// child would not show up in a build. These tests assert the button reaches the logical tree and
 /// that the dialog behind it saves the update settings the way the Settings window does -
-/// including leaving the channel on its "auto" default when the dropdown was not touched.
+/// including leaving the channel on its "auto" default when the dropdown was not touched - and
+/// that the re-check a channel change triggers cannot be overwritten by a slower earlier reply.
 /// </summary>
 public class CheckForUpdatesSettingsTests : IDisposable
 {
@@ -35,6 +36,19 @@ public class CheckForUpdatesSettingsTests : IDisposable
         public Task<UpdateCheckResult> CheckForUpdates() => Task.FromResult(new UpdateCheckResult());
     }
 
+    /// <summary>Hands out one pending check per call, so a test can complete them in any order.</summary>
+    private sealed class PendingUpdateService : IUpdateCheckService
+    {
+        public List<TaskCompletionSource<UpdateCheckResult>> Pending { get; } = new();
+
+        public Task<UpdateCheckResult> CheckForUpdates()
+        {
+            var tcs = new TaskCompletionSource<UpdateCheckResult>();
+            Pending.Add(tcs);
+            return tcs.Task;
+        }
+    }
+
     private sealed class NoAutoUpdateService : IAutoUpdateService
     {
         public AutoUpdateKind Kind => AutoUpdateKind.None;
@@ -55,6 +69,44 @@ public class CheckForUpdatesSettingsTests : IDisposable
 
         Assert.NotNull(button);
         Assert.Same(vm.OpenSettingsCommand, button!.Command);
+    }
+
+    [AvaloniaFact]
+    public void OpenSettings_IsDisabledWhileDownloading()
+    {
+        var vm = new CheckForUpdatesViewModel(new NeverCheckingUpdateService(), new NoAutoUpdateService(), new StubWindowService());
+
+        Assert.True(vm.OpenSettingsCommand.CanExecute(null));
+        vm.IsDownloading = true;
+        Assert.False(vm.OpenSettingsCommand.CanExecute(null));
+        vm.IsDownloading = false;
+        Assert.True(vm.OpenSettingsCommand.CanExecute(null));
+    }
+
+    /// <summary>
+    /// The channel can change (gear dialog) while the first check still waits on GitHub. The
+    /// check started last is the one whose result must stay on screen, whichever reply lands last.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task CheckForUpdates_LaterCheckWinsOverSlowerEarlierReply()
+    {
+        var service = new PendingUpdateService();
+        var vm = new CheckForUpdatesViewModel(service, new NoAutoUpdateService(), new StubWindowService());
+
+        var first = vm.CheckForUpdates();
+        var second = vm.CheckForUpdates();
+        Assert.Equal(2, service.Pending.Count);
+
+        service.Pending[1].SetResult(new UpdateCheckResult { ChangeLogText = "beta log", LatestVersion = "5.4.0-beta1", IsNewVersionAvailable = true });
+        await second;
+        Assert.Equal("beta log", vm.ChangeLogText);
+        Assert.True(vm.IsDownloadLinkVisible);
+
+        service.Pending[0].SetResult(new UpdateCheckResult { ChangeLogText = "stable log", LatestVersion = "5.3.0", IsNewVersionAvailable = false });
+        await first;
+        Assert.Equal("beta log", vm.ChangeLogText);
+        Assert.True(vm.IsDownloadLinkVisible);
+        Assert.Equal(string.Format(Se.Language.Help.CheckForUpdatesNewVersionAvailable, "5.4.0-beta1"), vm.StatusText);
     }
 
     [AvaloniaFact]

@@ -21,6 +21,7 @@ public partial class CheckForUpdatesViewModel : ObservableObject
     private readonly IWindowService _windowService;
     private string _latestVersion = string.Empty;
     private CancellationTokenSource? _downloadCancellation;
+    private int _checkGeneration;
 
     public CheckForUpdatesViewModel(IUpdateCheckService updateCheckService, IAutoUpdateService autoUpdateService, IWindowService windowService)
     {
@@ -39,7 +40,9 @@ public partial class CheckForUpdatesViewModel : ObservableObject
 
     [ObservableProperty] private bool _isInstallVisible;
 
-    [ObservableProperty] private bool _isDownloading;
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(OpenSettingsCommand))]
+    private bool _isDownloading;
 
     [ObservableProperty] private double _downloadProgress;
 
@@ -47,9 +50,12 @@ public partial class CheckForUpdatesViewModel : ObservableObject
     {
         if (IsDownloading)
         {
-            return; // re-activated while the update downloads
+            return; // the result on screen is the one being installed
         }
 
+        // A check started later (the channel changed in the gear dialog while the first one was
+        // still waiting on GitHub) wins: a slower earlier reply must not overwrite its result.
+        var generation = ++_checkGeneration;
         StatusText = Se.Language.Help.CheckForUpdatesChecking;
         IsDownloadLinkVisible = false;
         IsInstallVisible = false;
@@ -57,6 +63,11 @@ public partial class CheckForUpdatesViewModel : ObservableObject
         try
         {
             var result = await _updateCheckService.CheckForUpdates();
+            if (generation != _checkGeneration)
+            {
+                return;
+            }
+
             ChangeLogText = result.ChangeLogText;
 
             if (string.IsNullOrEmpty(result.LatestVersion))
@@ -86,7 +97,10 @@ public partial class CheckForUpdatesViewModel : ObservableObject
         }
         catch
         {
-            StatusText = Se.Language.Help.CheckForUpdatesUnableToCheck;
+            if (generation == _checkGeneration)
+            {
+                StatusText = Se.Language.Help.CheckForUpdatesUnableToCheck;
+            }
         }
     }
 
@@ -148,17 +162,21 @@ public partial class CheckForUpdatesViewModel : ObservableObject
         Dispatcher.UIThread.Post(MainWindowFactory.CloseAllMainWindows);
     }
 
-    [RelayCommand]
+    private bool CanOpenSettings => !IsDownloading;
+
+    [RelayCommand(CanExecute = nameof(CanOpenSettings))]
     private async Task OpenSettings()
     {
-        if (Window == null || IsDownloading)
+        if (Window == null)
         {
             return;
         }
 
-        // The window re-checks on re-activation (see CheckForUpdatesWindow), which happens when
-        // this dialog closes - so a changed channel shows its releases without a second call here.
-        await _windowService.ShowDialogAsync<CheckForUpdatesSettingsWindow, CheckForUpdatesSettingsViewModel>(Window, vm => vm.LoadValues());
+        var settings = await _windowService.ShowDialogAsync<CheckForUpdatesSettingsWindow, CheckForUpdatesSettingsViewModel>(Window, vm => vm.LoadValues());
+        if (settings.ChannelChanged)
+        {
+            await CheckForUpdates(); // show the releases of the channel just picked
+        }
     }
 
     public void OnClosed()

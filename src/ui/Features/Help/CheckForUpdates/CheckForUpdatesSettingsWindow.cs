@@ -41,20 +41,15 @@ public class CheckForUpdatesSettingsWindow : Window
 
         rows.Children.Add(EditorChrome.MakeLabeledRow(Se.Language.Options.Settings.CheckForUpdatesChannel, comboChannel, LabelWidth, spacing: 6));
 
-        var sections = new Grid
-        {
-            RowDefinitions = new RowDefinitions("Auto"),
-        };
-        sections.Add(EditorChrome.MakeEditorSection(Se.Language.Options.Settings.Updates, rows, first: true), 0, 0);
+        var section = EditorChrome.MakeEditorSection(Se.Language.Options.Settings.Updates, rows, first: true);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttonBar = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
-        Content = EditorChrome.MakeRoot(sections, buttonBar);
         // Sized to the settings, so the panel row must not ask for the rest of the height
-        ((Grid)Content).RowDefinitions[0].Height = GridLength.Auto;
+        Content = EditorChrome.MakeRoot(section, buttonBar, stretch: false);
 
         UiUtil.FocusOnFirstActivation(this, comboChannel); // initial focus on an input, not an action button - a focused button clicks on bare Space
     }

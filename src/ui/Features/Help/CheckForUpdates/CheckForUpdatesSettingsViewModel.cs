@@ -23,7 +23,7 @@ public partial class CheckForUpdatesSettingsViewModel : ObservableObject
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
 
-    /// <summary>True when the user picked another channel and pressed OK.</summary>
+    /// <summary>True when the user picked another channel and pressed OK - the opener re-checks then.</summary>
     public bool ChannelChanged { get; private set; }
 
     /// <summary>Store-managed installs (Flatpak) update through the store, so the startup check is hidden there.</summary>
@@ -43,9 +43,7 @@ public partial class CheckForUpdatesSettingsViewModel : ObservableObject
     public void LoadValues()
     {
         CheckForUpdatesOnStartup = Se.Settings.General.CheckForUpdatesOnStartup;
-        SelectedUpdateChannel = UpdateCheckService.IncludePrereleases()
-            ? Se.Language.Options.Settings.CheckForUpdatesChannelStableAndBeta
-            : Se.Language.Options.Settings.CheckForUpdatesChannelStable;
+        SelectedUpdateChannel = UpdateCheckService.ChannelDisplayName();
         _loadedUpdateChannel = SelectedUpdateChannel;
     }
 
@@ -58,9 +56,7 @@ public partial class CheckForUpdatesSettingsViewModel : ObservableObject
         {
             // Only an actual change is stored, so an untouched dropdown keeps the
             // "auto" default (beta users follow betas, stable users stable only).
-            general.CheckForUpdatesChannel = SelectedUpdateChannel == Se.Language.Options.Settings.CheckForUpdatesChannelStableAndBeta
-                ? UpdateCheckService.ChannelBeta
-                : UpdateCheckService.ChannelStable;
+            general.CheckForUpdatesChannel = UpdateCheckService.ChannelFromDisplayName(SelectedUpdateChannel);
             ChannelChanged = true;
         }
 
