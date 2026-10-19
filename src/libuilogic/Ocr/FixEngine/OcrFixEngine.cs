@@ -287,18 +287,24 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
             .Replace('‘', '\'').Replace('’', '\'');
     }
 
-    // A run of letters with a slash touching a letter ("p/ease", "/itt/e", "wi/I"). A slash right
-    // after "<" is a closing tag ("</i>"), not a misread letter - "li" is a word in some
+    // A run of letters with a slash touching a letter ("p/ease", "/itt/e", "wi/I", "/'m"). A slash
+    // right after "<" is a closing tag ("</i>"), not a misread letter - "li" is a word in some
     // dictionaries (Dutch), which turned every "</i>" into "<li>".
-    [GeneratedRegex(@"(?<![\p{L}\d/'’<])[\p{L}'’/]*(?:\p{L}/|/\p{L})[\p{L}'’/]*")]
+    [GeneratedRegex(@"(?<![\p{L}\d/'’<])[\p{L}'’/]*(?:\p{L}/|/['’]?\p{L})[\p{L}'’/]*")]
     private static partial Regex WordWithSlash();
 
+    // A slash standing alone between spaces (or at a line or tag edge): a slanted italic "I".
+    [GeneratedRegex(@"(?<![^\s>])/(?![^\s<])")]
+    private static partial Regex LoneSlash();
+
     /// <summary>
-    /// Image matchers read a slanted italic "l" as "/" ("p/ease", "re/igions", "/itt/e"). The line
-    /// splitter cuts words at the slash, so the per-word fixes never see the whole word - repair
-    /// it on the line: every slash to "l", and an "I" after a lowercase letter to "l" ("wi/I",
-    /// "teI/ing"), kept only when the dictionary or names list accepts the result. A real slash
-    /// between two words ("and/or", "AC/DC") is left alone.
+    /// Image matchers read a slanted italic "l" as "/" ("p/ease", "re/igions", "/itt/e"), and a
+    /// slanted "i" ("w/th", "do/ng") or "I" ("/t's", "/'m", "/ can") too. The line splitter cuts
+    /// words at the slash, so the per-word fixes never see the whole word - repair it on the
+    /// line: every slash to "l", and an "I" after a lowercase letter to "l" ("wi/I", "teI/ing");
+    /// failing that, the other readings of the slashes ("i" anywhere, "I" at the start of the
+    /// word). Each is kept only when the dictionary or names list accepts the result. A real
+    /// slash between two words ("and/or", "AC/DC") is left alone.
     /// </summary>
     private string FixSlashMisreadAsL(string text)
     {
@@ -307,10 +313,16 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
             return text;
         }
 
+        if (LoneSlash().IsMatch(text) && IsSpelledCorrect("I"))
+        {
+            text = LoneSlash().Replace(text, "I");
+        }
+
         return WordWithSlash().Replace(text, m =>
         {
             var token = m.Value;
-            if (token.Contains("//"))
+            // "//example.com" after "http:" is a URL; "a//", "wi//" and "ki//ing" are words.
+            if (token.StartsWith("//", StringComparison.Ordinal) || m.Index > 0 && text[m.Index - 1] == ':')
             {
                 return token;
             }
@@ -331,9 +343,115 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
             }
 
             var candidate = new string(chars);
-            var bare = candidate.Trim('\'', '’');
-            return bare.Length > 1 && (IsSpelledCorrect(bare) || _spellCheckWordLists.HasName(bare)) ? candidate : token;
+            if (IsWordOrName(candidate))
+            {
+                return candidate;
+            }
+
+            // The slanted stroke may be an "i" instead ("w/th", "aff/n/ty"), or a capital "I" at
+            // the start of the word ("/t's", "/'m"): try every reading of the slashes, "l"
+            // first, and keep the first one the dictionary knows.
+            var slashes = new List<int>();
+            for (var i = 0; i < token.Length && slashes.Count <= MaxSlashesToRead; i++)
+            {
+                if (token[i] == '/')
+                {
+                    slashes.Add(i);
+                }
+            }
+
+            if (slashes.Count > MaxSlashesToRead)
+            {
+                return token;
+            }
+
+            // "/t's" is "it's" mid-sentence and "It's" at the start of one.
+            var readings = new string[slashes.Count];
+            for (var k = 0; k < readings.Length; k++)
+            {
+                readings[k] = slashes[k] != 0 ? "li" : IsSentenceStart(text, m.Index) ? "lIi" : "liI";
+            }
+
+            foreach (var reading in ReadingsOf(readings))
+            {
+                for (var k = 0; k < slashes.Count; k++)
+                {
+                    chars[slashes[k]] = reading[k];
+                }
+
+                candidate = new string(chars);
+                if (IsWordOrName(candidate))
+                {
+                    return candidate;
+                }
+            }
+
+            return token;
         });
+    }
+
+    private const int MaxSlashesToRead = 4;
+
+    /// <summary>
+    /// Nothing but whitespace, dashes, quotes and tags between the start of the text or the end
+    /// of a sentence and <paramref name="index"/>.
+    /// </summary>
+    private static bool IsSentenceStart(string text, int index)
+    {
+        var i = index - 1;
+        while (i >= 0)
+        {
+            var c = text[i];
+            if (c == '>')
+            {
+                var open = text.LastIndexOf('<', i);
+                if (open < 0)
+                {
+                    return false;
+                }
+
+                i = open - 1;
+                continue;
+            }
+
+            if (char.IsWhiteSpace(c) || c is '-' or '–' or '"' or '\'' or '“' or '‘' or '«' or '(' or '[')
+            {
+                i--;
+                continue;
+            }
+
+            return c is '.' or '!' or '?' or '…' or ':';
+        }
+
+        return true;
+    }
+
+    /// <summary>Every combination of one letter per position, first letters first.</summary>
+    private static IEnumerable<string> ReadingsOf(string[] lettersPerPosition)
+    {
+        var picks = new int[lettersPerPosition.Length];
+        while (true)
+        {
+            yield return string.Concat(picks.Select((pick, k) => lettersPerPosition[k][pick]));
+
+            var position = picks.Length - 1;
+            while (position >= 0 && ++picks[position] == lettersPerPosition[position].Length)
+            {
+                picks[position] = 0;
+                position--;
+            }
+
+            if (position < 0)
+            {
+                yield break;
+            }
+        }
+    }
+
+    private bool IsWordOrName(string candidate)
+    {
+        var bare = candidate.Trim('\'', '’');
+        return bare.Length > 1 && (IsSpelledCorrect(bare) || _spellCheckWordLists.HasName(bare));
     }
 
     private string ReplaceLineFixes(int index, string text, List<string> wordsToIgnore)

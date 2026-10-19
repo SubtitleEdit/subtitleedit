@@ -38,7 +38,31 @@ public class OcrFixSlashMisreadAsLTests : IDisposable
     [InlineData("and was teI/ing her", "and was telling her")]
     [InlineData("keep a/I of your be/ongings", "keep all of your belongings")]
     [InlineData("<i>On/y I can tie others.</i>", "<i>Only I can tie others.</i>")]
+    [InlineData("<i>a// of them, we// done</i>", "<i>all of them, well done</i>")]
+    [InlineData("stop ki//ing", "stop killing")]
     public void FixOcrErrors_SlashMisreadAsL_IsFixed(string input, string expected)
+    {
+        var engine = CreateEngine();
+
+        var result = engine.FixOcrErrors(0, input, doTryToGuessUnknownWords: false);
+
+        Assert.Equal(expected, result.GetText());
+    }
+
+
+    // A slanted italic "i" or "I" is a slash too: "w/th", "aff/n/ty", and at the start of a word
+    // ("/t's", "/'m", "/n") or on its own ("/ can"). The "l" reading is tried first, so "/itt/e"
+    // still becomes "little".
+    [Theory]
+    [InlineData("<i>/t's according to plan.</i>", "<i>It's according to plan.</i>")]
+    [InlineData("<i>/'m doing nothing.</i>", "<i>I'm doing nothing.</i>")]
+    [InlineData("<i>/n the morning</i>", "<i>In the morning</i>")]
+    [InlineData("<i>/ can see it.</i>", "<i>I can see it.</i>")]
+    [InlineData("- /s it?\n- /t is.", "- Is it?\n- It is.")]
+    [InlineData("<i>You won /n poker w/th them.</i>", "<i>You won in poker with them.</i>")]
+    [InlineData("an aff/n/ty for clubs", "an affinity for clubs")]
+    [InlineData("<i>/'m do/ng noth/ng.</i>", "<i>I'm doing nothing.</i>")]
+    public void FixOcrErrors_SlashMisreadAsCapitalI_IsFixed(string input, string expected)
     {
         var engine = CreateEngine();
 
@@ -82,6 +106,8 @@ public class OcrFixSlashMisreadAsLTests : IDisposable
             "back", "in", "black", "plays", "see", "street", "it", "AC", "DC",
             // "li" is a dictionary word in Dutch; "</i>" must not become "<li>" because of it.
             "li", "Heil", "Hitler", "hello",
+            "it's", "according", "to", "plan", "I'm", "doing", "nothing", "morning", "is", "it", "seeing",
+            "won", "poker", "with", "them", "an", "affinity", "for", "clubs", "well", "done", "stop", "killing",
         };
 
         public bool Initialize(string dictionaryFile, string twoLetterLanguageCode) => true;
