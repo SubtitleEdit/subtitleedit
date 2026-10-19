@@ -25,10 +25,14 @@ public class Qwen3AsrCppDownloadService : IQwen3AsrCppDownloadService
     // an unreadable host pointer (issue #12815) — and bumps the ggml backend to 0.17.0. v0.1.8
     // fixes invalid JSON output ("start": 1,840) on Windows with comma-decimal regional formats
     // (French, German, ...): the v0.1.6 UTF-8 console setup let the user's LC_NUMERIC leak into
-    // the JSON timestamp formatting. CPU for every platform, plus Vulkan (GPU) for win64 and
+    // the JSON timestamp formatting. v0.1.9 fixes the mel filterbank (HTK scale → Slaney scale as
+    // in the Whisper feature extractor): the log-mel input was off by up to 1.6, which made the
+    // model mis-detect languages on short clips and cost ~9 WER points versus transformers; it
+    // also pads the trailing conv chunk like the reference and forces the language from the
+    // prompt when -l is given. CPU for every platform, plus Vulkan (GPU) for win64 and
     // linux-x64. When bumping: also prepend the new archive + executable hashes in
     // DownloadHashManager (Qwen3AsrCpp keys) so the update prompt fires for old installs.
-    private const string ReleaseUrlBase = "https://github.com/niksedk/qwen3-asr.cpp/releases/download/v0.1.8/";
+    private const string ReleaseUrlBase = "https://github.com/niksedk/qwen3-asr.cpp/releases/download/v0.1.9/";
     private const string WindowsUrl = ReleaseUrlBase + "qwen3-asr-cpp-win64.zip";
     private const string WindowsVulkanUrl = ReleaseUrlBase + "qwen3-asr-cpp-win64-vulkan.zip";
     private const string MacArmUrl = ReleaseUrlBase + "qwen3-asr-cpp-mac.zip";
