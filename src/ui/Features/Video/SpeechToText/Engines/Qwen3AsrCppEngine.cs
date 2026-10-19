@@ -60,7 +60,7 @@ public class Qwen3AsrCppEngine : ISpeechToTextEngine
     {
         get
         {
-            return new[]
+            var models = new[]
             {
                 new WhisperModel
                 {
@@ -99,9 +99,61 @@ public class Qwen3AsrCppEngine : ISpeechToTextEngine
                     ]
                 },
             }.ToList();
+
+            AddCustomModels(models);
+            return models;
         }
     }
 
+    /// <summary>
+    /// Lists any extra .gguf files the user dropped into the models folder (or imported via
+    /// "Add custom model...") that are not in the predefined list and are not the forced
+    /// aligner, so they show up in the model dropdown like whisper.cpp custom models do.
+    /// </summary>
+    private void AddCustomModels(List<WhisperModel> models)
+    {
+        var modelsFolder = GetAndCreateWhisperModelFolder(null);
+        if (!Directory.Exists(modelsFolder))
+        {
+            return;
+        }
+
+        var known = new HashSet<string>(models.Select(m => m.Name), StringComparer.OrdinalIgnoreCase)
+        {
+            ForcedAlignerModel.Name,
+        };
+
+        string[] files;
+        try
+        {
+            files = Directory.GetFiles(modelsFolder, "*.gguf", SearchOption.TopDirectoryOnly);
+        }
+        catch
+        {
+            return;
+        }
+
+        foreach (var file in files.OrderBy(f => f, StringComparer.OrdinalIgnoreCase))
+        {
+            var name = Path.GetFileName(file);
+            if (known.Contains(name) || name.StartsWith("qwen3-forced-aligner", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            if (new FileInfo(file).Length < MinimumModelFileSize)
+            {
+                continue;
+            }
+
+            models.Add(new WhisperModel
+            {
+                Name = name,
+                Size = "custom",
+                Urls = [],
+            });
+        }
+    }
 
     public WhisperModel ForcedAlignerModel => new WhisperModel
     {
@@ -112,6 +164,61 @@ public class Qwen3AsrCppEngine : ISpeechToTextEngine
 
     public string Extension => string.Empty;
     public string UnpackSkipFolder => string.Empty;
+
+    private const long MinimumModelFileSize = 10_000_000;
+
+    public bool SupportsCustomModels => true;
+
+    public bool CustomModelIsFolder => false;
+
+    public string CustomModelFileTypeName => "Qwen3 ASR GGUF model (*.gguf)";
+
+    public IReadOnlyList<string> CustomModelFilePatterns => ["*.gguf"];
+
+    public string CustomModelHelpText => Se.Language.Video.AudioToText.CustomModelHelpGguf;
+
+    /// <summary>
+    /// Copies a user-supplied qwen3-asr.cpp GGUF into the models folder. Rejects the other
+    /// "Qwen3-ASR GGUF" layouts (llama.cpp mmproj, transcribe.cpp, CapsWriter decoder-only)
+    /// up front, since the engine itself would just crash on them (issue #16232).
+    /// </summary>
+    public string ImportCustomModel(string sourcePath)
+    {
+        if (!File.Exists(sourcePath))
+        {
+            throw new FileNotFoundException("Model file not found.", sourcePath);
+        }
+
+        if (!sourcePath.EndsWith(".gguf", StringComparison.OrdinalIgnoreCase))
+        {
+            throw new Exception("A Qwen3 ASR CPP model must be a '.gguf' file.");
+        }
+
+        if (new FileInfo(sourcePath).Length < MinimumModelFileSize)
+        {
+            throw new Exception("The model file is too small (must be at least 10 MB) - is it really a Qwen3 ASR model?");
+        }
+
+        var reason = Qwen3AsrCppModelValidator.GetIncompatibilityReason(sourcePath);
+        if (reason != null)
+        {
+            throw new Exception(reason);
+        }
+
+        var fileName = Path.GetFileName(sourcePath);
+        if (fileName.StartsWith("qwen3-forced-aligner", StringComparison.OrdinalIgnoreCase))
+        {
+            throw new Exception("This is the forced aligner model, not a speech recognition model. Subtitle Edit downloads the aligner itself.");
+        }
+
+        var destination = Path.Combine(GetAndCreateWhisperModelFolder(null), fileName);
+        if (!string.Equals(Path.GetFullPath(sourcePath), Path.GetFullPath(destination), StringComparison.OrdinalIgnoreCase))
+        {
+            File.Copy(sourcePath, destination, true);
+        }
+
+        return fileName;
+    }
 
     public bool IsEngineInstalled()
     {
