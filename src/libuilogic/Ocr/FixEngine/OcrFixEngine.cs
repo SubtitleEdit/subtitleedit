@@ -959,9 +959,57 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
             isWordCorrect = IsSpelledCorrect(result) || _spellCheckWordLists.HasName(result.Trim('\'', '-'));
         }
 
+        // An overhanging f, r or t leans over the j, v or w next to it, so the space detector
+        // swallows the word space: "Hoorje", "kentje", "Vijfvan", "ofwe". Split there when the
+        // dictionary knows both halves (#16031).
+        if (!isWordCorrect && FixImageMatcherMisreads && TrySplitAtOverhang(result, out var splitAtOverhang))
+        {
+            result = splitAtOverhang;
+            word.GuessUsed = true;
+            isWordCorrect = true;
+        }
+
         word.FixedWord = result;
         word.IsSpellCheckedOk = isWordCorrect;
     }
+
+    /// <summary>
+    /// Splits a word of letters at the first "f", "r" or "t" followed by "j", "v" or "w" where both
+    /// halves are dictionary words or names and the right half is a short function word of at
+    /// most three letters ("je", "we", "van"): "Hoorje" -> "Hoor je", "Vijfvan" -> "Vijf van". The
+    /// length cap keeps an unlisted compound or interjection whole ("Getverdikkeme" is not "Get
+    /// verdikkeme"). A word with digits or punctuation is left alone.
+    /// </summary>
+    private bool TrySplitAtOverhang(string word, out string split)
+    {
+        split = word;
+        if (word.Length < 4 || !word.All(char.IsLetter))
+        {
+            return false;
+        }
+
+        for (var i = Math.Max(2, word.Length - MaxOverhangRightHalf); i <= word.Length - 2; i++)
+        {
+            var before = char.ToLowerInvariant(word[i - 1]);
+            var after = char.ToLowerInvariant(word[i]);
+            if (before is not ('f' or 'r' or 't') || after is not ('j' or 'v' or 'w'))
+            {
+                continue;
+            }
+
+            var left = word.Substring(0, i);
+            var right = word.Substring(i);
+            if (IsWordOrName(left) && IsWordOrName(right))
+            {
+                split = left + " " + right;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private const int MaxOverhangRightHalf = 3;
 
     /// <summary>
     /// Per run of letters in <paramref name="word"/>: in a run of capitals (two or more besides the
