@@ -3953,6 +3953,17 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return subtitle;
         }
 
+        // "Reverse RTL start/end" moves the punctuation of every line from the end to the start, and
+        // "Fix via Unicode" wraps every line in RTL control characters. Both are right for Hebrew or
+        // Arabic text in players without bidi support and wrong for anything else - a user who left
+        // the box ticked got ".Hello world" in 26 English files. A subtitle with no right-to-left
+        // letters at all has nothing for them to fix, so leave it alone. Removing control characters
+        // is harmless either way and still runs.
+        if (!_config.RightToLeft.RemoveUnicode && !ContainsRightToLeftLetter(subtitle))
+        {
+            return subtitle;
+        }
+
         if (_config.RightToLeft.FixViaUnicode)
         {
             foreach (var p in subtitle.Paragraphs)
@@ -3976,6 +3987,20 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
 
         return subtitle;
+    }
+
+    private static bool ContainsRightToLeftLetter(Subtitle subtitle)
+    {
+        // Every line, not just the first few: an RTL subtitle may well open with Latin credits.
+        foreach (var p in subtitle.Paragraphs)
+        {
+            if (LanguageAutoDetect.ContainsRightToLeftLetter(p.Text))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private Subtitle MergeLinesWithSameTimeCodes(Subtitle subtitle, string language)
