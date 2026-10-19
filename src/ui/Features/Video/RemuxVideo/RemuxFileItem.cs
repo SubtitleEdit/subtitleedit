@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using Nikse.SubtitleEdit.Core.Cea608;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -52,6 +53,32 @@ public partial class RemuxFileItem : ObservableObject
     private string _captionChannel = string.Empty;
 
     public bool HasCaptionChannel => !string.IsNullOrEmpty(CaptionChannel);
+
+    private bool _isFirstCaptionTimeRead;
+    private TimeSpan? _firstCaptionTime;
+
+    /// <summary>
+    /// The first timecode of a Scenarist (.scc) or MacCaption (.mcc) file - the start-of-program
+    /// time of a broadcast file, typically 01:00:00:00. Null for other formats and unreadable
+    /// files. Read once, on first use.
+    /// </summary>
+    public TimeSpan? GetFirstCaptionTime()
+    {
+        if (!_isFirstCaptionTimeRead)
+        {
+            _isFirstCaptionTimeRead = true;
+            try
+            {
+                _firstCaptionTime = ClosedCaptionBytes.GetFirstTimeCode(FileName);
+            }
+            catch
+            {
+                _firstCaptionTime = null;
+            }
+        }
+
+        return _firstCaptionTime;
+    }
 
     public RemuxFileItem(string fileName)
     {

@@ -132,6 +132,14 @@ public class RemuxVideoWindow : Window
                 new Setter(TextBox.VerticalContentAlignmentProperty, VerticalAlignment.Center),
             },
         });
+        Styles.Add(new Style(x => x.OfType<TimeCodeUpDown>())
+        {
+            Setters =
+            {
+                new Setter(TemplatedControl.FontSizeProperty, 12.5),
+                new Setter(TemplatedControl.MinHeightProperty, 28.0),
+            },
+        });
         Styles.Add(new Style(x => x.OfType<ListBox>().Class("files"))
         {
             Setters =
@@ -296,10 +304,34 @@ public class RemuxVideoWindow : Window
         };
         captionsHint.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsMp4CaptionsHintVisible)));
 
+        // Broadcast .scc/.mcc files start at the time of day (01:00:00:00); the offset is taken
+        // off the caption times so they land in the video (#16220)
+        var captionOffset = new TimeCodeUpDown
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            MinWidth = 150,
+            [!TimeCodeUpDown.ValueProperty] = new Binding(nameof(vm.CaptionOffset)) { Mode = BindingMode.TwoWay },
+        };
+        captionOffset.Bind(TimeCodeUpDown.IsEnabledProperty, NotRemuxing(vm));
+        AutomationProperties.SetName(captionOffset, Caption(l.RemuxVideoCaptionOffset));
+        var captionOffsetHint = new TextBlock
+        {
+            Text = l.RemuxVideoCaptionOffsetHint,
+            FontSize = 11.5,
+            Foreground = EditorChrome.DimTextBrush,
+            TextWrapping = TextWrapping.Wrap,
+        };
+        var captionOffsetRows = new StackPanel { Spacing = 4 };
+        captionOffsetRows.Children.Add(Row(Caption(l.RemuxVideoCaptionOffset), captionOffset));
+        captionOffsetRows.Children.Add(captionOffsetHint);
+        captionOffsetRows.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsCaptionOffsetVisible)));
+
         var outputRows = new StackPanel { Spacing = 8 };
         outputRows.Children.Add(Row(Caption(l.RemuxVideoOutputFormat), comboBoxFormat));
         outputRows.Children.Add(subtitlesAsRow);
         outputRows.Children.Add(captionsHint);
+        outputRows.Children.Add(captionOffsetRows);
         outputRows.Children.Add(PathRow(textBoxOutput, buttonBrowseOutput));
         outputRows.Children.Add(fastStartRow);
 

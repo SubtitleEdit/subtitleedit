@@ -1,6 +1,7 @@
 using Nikse.SubtitleEdit.Core.Cea608;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -59,6 +60,44 @@ public class Mp4ClosedCaptionWriterTest
             Assert.Equal("Second caption", cc1[1].Text);
             Assert.InRange(cc1[1].StartTime.TotalMilliseconds, 2960, 3045);
             Assert.InRange(cc1[1].EndTime.TotalMilliseconds, 4160, 4245);
+        }
+        finally
+        {
+            File.Delete(output);
+        }
+    }
+
+    /// <summary>
+    /// A broadcast .scc starts at the time of day, 01:00:00;01 here, so in a 6 s video its captions
+    /// never show (#16220). Shifted by that hour they come where the file's second-of-hour says.
+    /// </summary>
+    [Fact]
+    public void BroadcastSccWithStartOfProgramOffsetLandsInTheVideo()
+    {
+        var input = FilePath(H264File);
+        var scc = FilePath("scc_16038_pop_on.scc");
+        Assert.Equal(TimeSpan.FromHours(1) + TimeSpan.FromMilliseconds(1001.0 / 30), ClosedCaptionBytes.GetFirstTimeCode(scc));
+
+        var unshifted = Embed(input, ClosedCaptionBytes.FromFile(scc));
+        try
+        {
+            Assert.Empty(ReadCaptions(unshifted));
+        }
+        finally
+        {
+            File.Delete(unshifted);
+        }
+
+        var captions = ClosedCaptionBytes.FromFile(scc);
+        captions.Shift(-TimeSpan.FromHours(1).TotalMilliseconds);
+        var output = Embed(input, captions);
+        try
+        {
+            var cc1 = Assert.Single(ReadCaptions(output)).Value;
+            Assert.True(cc1.Count >= 2, "Expected the first captions of the file");
+            Assert.Contains("Behind me", cc1[0].Text);
+            Assert.InRange(cc1[0].StartTime.TotalMilliseconds, 0, 1500); // 01:00:00;01 load line, shown at its end-of-caption pair
+            Assert.InRange(cc1[1].StartTime.TotalMilliseconds, cc1[0].EndTime.TotalMilliseconds - 50, 6000);
         }
         finally
         {
