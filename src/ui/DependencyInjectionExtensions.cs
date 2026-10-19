@@ -455,6 +455,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<EditCustomTextFormatViewModel>();
         collection.AddTransient<EditEmbeddedTrackViewModel>();
         collection.AddTransient<EditRuleViewModel>();
+        collection.AddTransient<AddRulesViewModel>();
         collection.AddTransient<EditWholeTextViewModel>();
         collection.AddTransient<UseAlwaysListViewModel>();
         collection.AddTransient<ElevenLabsSettingsViewModel>();

@@ -76,11 +76,17 @@ public partial class MultipleReplaceViewModel : ObservableObject
 
     // Subtitle Edit 4 used Ctrl+Up/Down/Home/End for the four move commands on both the rules
     // and the groups list (#13523). Ctrl+Up/Down is Mission Control on macOS, so show Cmd there.
-    private static readonly KeyModifiers MoveModifier = OperatingSystem.IsMacOS() ? KeyModifiers.Meta : KeyModifiers.Control;
-    private static readonly KeyGesture MoveUpGesture = new(Key.Up, MoveModifier);
-    private static readonly KeyGesture MoveDownGesture = new(Key.Down, MoveModifier);
-    private static readonly KeyGesture MoveToTopGesture = new(Key.Home, MoveModifier);
-    private static readonly KeyGesture MoveToBottomGesture = new(Key.End, MoveModifier);
+    // The gestures are what the context menus advertise; OnKeyDown accepts Ctrl and Cmd alike.
+    private static readonly KeyModifiers CommandModifier = OperatingSystem.IsMacOS() ? KeyModifiers.Meta : KeyModifiers.Control;
+    private static readonly KeyGesture MoveUpGesture = new(Key.Up, CommandModifier);
+    private static readonly KeyGesture MoveDownGesture = new(Key.Down, CommandModifier);
+    private static readonly KeyGesture MoveToTopGesture = new(Key.Home, CommandModifier);
+    private static readonly KeyGesture MoveToBottomGesture = new(Key.End, CommandModifier);
+    private static readonly KeyGesture NewRuleGesture = new(Key.N, CommandModifier);
+    private static readonly KeyGesture AddRulesGesture = new(Key.N, CommandModifier | KeyModifiers.Shift);
+    private static readonly KeyGesture DuplicateGesture = new(Key.D, CommandModifier);
+    private static readonly KeyGesture EditGesture = new(Key.F2);
+    private static readonly KeyGesture DeleteGesture = new(Key.Delete);
 
     public MultipleReplaceViewModel(IWindowService windowService, IFileHelper fileHelper)
     {
@@ -403,7 +409,8 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 {
                     Header = Se.Language.General.EditDotDotDot,
                     Command = CategoryEditCommand,
-                    CommandParameter = node
+                    CommandParameter = node,
+                    InputGesture = EditGesture,
                 },
                 new Separator(),
                 new MenuItem
@@ -417,6 +424,14 @@ public partial class MultipleReplaceViewModel : ObservableObject
                     Header = Se.Language.Edit.MultipleReplace.NewRule,
                     Command = CategoryAddRuleCommand,
                     CommandParameter = node,
+                    InputGesture = NewRuleGesture,
+                },
+                new MenuItem
+                {
+                    Header = Se.Language.Edit.MultipleReplace.AddRulesDotDotDot,
+                    Command = CategoryAddRulesCommand,
+                    CommandParameter = node,
+                    InputGesture = AddRulesGesture,
                 },
                 new Separator(),
                 new MenuItem
@@ -576,11 +591,97 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 WholeWord = result.IsWholeWord,
             });
             node.SubNodes?.Add(rule);
-            node.IsExpanded = true;
-
-            SelectedNode = rule;
             _dirty = true;
+
+            // Expands the category and scrolls to the rule: at the end of a long category the
+            // new rule was selected but out of view (#16215).
+            NavigateToRule(rule);
         }
+    }
+
+    /// <summary>
+    /// Toolbar "New rule" and Ctrl+N: a rule at the end of the selected category, or right after
+    /// the selected rule.
+    /// </summary>
+    [RelayCommand]
+    private async Task AddRule()
+    {
+        var node = SelectedNode ?? Nodes.FirstOrDefault();
+        if (node == null)
+        {
+            return;
+        }
+
+        if (node.IsCategory)
+        {
+            await CategoryAddRule(node);
+        }
+        else
+        {
+            await NodeInsertAfter(node);
+        }
+    }
+
+    /// <summary>
+    /// "Add rules...": one window for a whole list of find/replace pairs, instead of a "New rule"
+    /// dialog per word (#16215). With a category the rules go at its end, with a rule right after
+    /// it; without a node (the toolbar button, Ctrl+Shift+N) the selection decides.
+    /// </summary>
+    [RelayCommand]
+    private async Task CategoryAddRules(RuleTreeNode? node)
+    {
+        node ??= SelectedNode ?? Nodes.FirstOrDefault();
+        if (node == null || Window == null)
+        {
+            return;
+        }
+
+        var category = node.IsCategory ? node : node.Parent;
+        if (category?.SubNodes == null)
+        {
+            return;
+        }
+
+        // A list of words usually shares type and whole-word with the rules around it.
+        var neighbour = node.IsCategory ? category.SubNodes.LastOrDefault() : node;
+        var result = await _windowService.ShowDialogAsync<AddRulesWindow, AddRulesViewModel>(Window, vm =>
+        {
+            vm.Initialize(category.CategoryName, neighbour?.Type ?? MultipleReplaceType.CaseInsensitive, neighbour?.IsWholeWordActive ?? false);
+        });
+
+        if (result.OkPressed)
+        {
+            InsertRules(node, result.Rules.ToList());
+        }
+    }
+
+    /// <summary>
+    /// Appends rules to a category, or inserts them right after a rule, in the given order, and
+    /// shows the last one.
+    /// </summary>
+    internal void InsertRules(RuleTreeNode anchor, IReadOnlyList<MultipleReplaceRule> rules)
+    {
+        var category = anchor.IsCategory ? anchor : anchor.Parent;
+        if (category?.SubNodes == null || rules.Count == 0)
+        {
+            return;
+        }
+
+        var index = anchor.IsCategory ? category.SubNodes.Count : category.SubNodes.IndexOf(anchor) + 1;
+        if (index <= 0 && !anchor.IsCategory)
+        {
+            index = category.SubNodes.Count;
+        }
+
+        RuleTreeNode? last = null;
+        foreach (var rule in rules)
+        {
+            last = new RuleTreeNode(category, rule);
+            category.SubNodes.Insert(index++, last);
+        }
+
+        _dirty = true;
+        NavigateToRule(last);
     }
 
     [RelayCommand]
@@ -813,7 +914,8 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 {
                     Header = Se.Language.Edit.MultipleReplace.EditRule,
                     Command = NodeEditCommand,
-                    CommandParameter = node
+                    CommandParameter = node,
+                    InputGesture = EditGesture,
                 },
                 new Separator(),
                 new MenuItem
@@ -821,6 +923,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
                     Header = Se.Language.General.Duplicate,
                     Command = NodeDuplicateCommand,
                     CommandParameter = node,
+                    InputGesture = DuplicateGesture,
                 },
                 new MenuItem
                 {
@@ -832,7 +935,15 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 {
                     Header = Se.Language.General.InsertAfter,
                     Command = NodeInsertAfterCommand,
-                    CommandParameter = node
+                    CommandParameter = node,
+                    InputGesture = NewRuleGesture,
+                },
+                new MenuItem
+                {
+                    Header = Se.Language.Edit.MultipleReplace.AddRulesDotDotDot,
+                    Command = CategoryAddRulesCommand,
+                    CommandParameter = node,
+                    InputGesture = AddRulesGesture,
                 },
                 new Separator(),
                 new MenuItem
@@ -869,7 +980,8 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 {
                     Header = Se.Language.General.Delete,
                     Command = NodeDeleteCommand,
-                    CommandParameter = node
+                    CommandParameter = node,
+                    InputGesture = DeleteGesture,
                 },
             }
         };
@@ -958,8 +1070,8 @@ public partial class MultipleReplaceViewModel : ObservableObject
             var index = nodes.IndexOf(node);
             var rule = MakeRuleTreeNode(node, result);
             nodes.Insert(index, rule);
-            SelectedNode = rule;
             _dirty = true;
+            NavigateToRule(rule);
         }
     }
 
@@ -980,8 +1092,8 @@ public partial class MultipleReplaceViewModel : ObservableObject
             var index = nodes.IndexOf(node);
             var rule = MakeRuleTreeNode(node, result);
             nodes.Insert(index + 1, rule);
-            SelectedNode = rule;
             _dirty = true;
+            NavigateToRule(rule);
         }
     }
 
@@ -1134,23 +1246,33 @@ public partial class MultipleReplaceViewModel : ObservableObject
             e.Handled = true;
             Ok();
         }
-        else if (e.Key == Key.N && e.KeyModifiers == KeyModifiers.Control)
+        else if (e.Key == Key.N && IsCommand(e))
         {
             e.Handled = true;
+            if (SelectedNode != null)
+            {
+                _ = AddRule();
+            }
+        }
+        else if (e.Key == Key.N && IsCommand(e, KeyModifiers.Shift))
+        {
+            e.Handled = true;
+            if (SelectedNode != null)
+            {
+                _ = CategoryAddRules(SelectedNode);
+            }
+        }
+        else if (e.Key == Key.F2 && e.KeyModifiers == KeyModifiers.None)
+        {
+            // Edit the selected rule, or rename the selected category - the usual "rename" key.
             var node = SelectedNode;
             if (node != null)
             {
-                if (node.IsCategory)
-                {
-                    _ = CategoryAddRule(node);
-                }
-                else
-                {
-                    _ = NodeInsertAfter(node);
-                }
+                e.Handled = true;
+                _ = node.IsCategory ? CategoryEdit(node) : NodeEdit(node);
             }
         }
-        else if (e.Key == Key.D && e.KeyModifiers == KeyModifiers.Control)
+        else if (e.Key == Key.D && IsCommand(e))
         {
             e.Handled = true;
             var node = SelectedNode;
@@ -1159,17 +1281,17 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 NodeDuplicate(node);
             }
         }
-        else if (e.Key == Key.F && e.KeyModifiers == KeyModifiers.Control)
+        else if (e.Key == Key.F && IsCommand(e))
         {
             e.Handled = true;
             _ = FindRule();
         }
-        else if ((e.Key == Key.OemMinus || e.Key == Key.Subtract) && e.KeyModifiers == (KeyModifiers.Control | KeyModifiers.Shift))
+        else if ((e.Key == Key.OemMinus || e.Key == Key.Subtract) && IsCommand(e, KeyModifiers.Shift))
         {
             e.Handled = true;
             CollapseAll();
         }
-        else if ((e.Key == Key.OemPlus || e.Key == Key.Add) && e.KeyModifiers == (KeyModifiers.Control | KeyModifiers.Shift))
+        else if ((e.Key == Key.OemPlus || e.Key == Key.Add) && IsCommand(e, KeyModifiers.Shift))
         {
             e.Handled = true;
             ExpandAll();
@@ -1179,6 +1301,15 @@ public partial class MultipleReplaceViewModel : ObservableObject
             e.Handled = true;
             UiUtil.ShowHelp("features/edit", "multiple-replace");
         }
+    }
+
+    /// <summary>
+    /// Ctrl on Windows/Linux, Cmd on macOS (Ctrl is accepted there too), with exactly
+    /// <paramref name="extra"/> held as well - so Ctrl+N is not also Ctrl+Shift+N.
+    /// </summary>
+    private static bool IsCommand(KeyEventArgs e, KeyModifiers extra = KeyModifiers.None)
+    {
+        return e.KeyModifiers == (KeyModifiers.Control | extra) || e.KeyModifiers == (KeyModifiers.Meta | extra);
     }
 
     private async Task FindRule()

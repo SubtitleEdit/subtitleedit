@@ -352,14 +352,20 @@ public class MultipleReplaceWindow : Window
             Padding = new Thickness(4),
         };
 
-        // New category and import were only on the right-click menu of the empty tree area.
+        // New category and import were only on the right-click menu of the empty tree area, and
+        // "New rule" only on the context menus (the "..." row buttons are off by default) - so a
+        // rule took a right-click each (#16215).
         var buttonNewCategory = EditorChrome.CreateToolButton("fa-solid fa-folder-plus", Se.Language.Edit.MultipleReplace.NewCategory, vm.CategoryAddCategoryCommand, 26);
+        var buttonNewRule = EditorChrome.CreateToolButton("fa-solid fa-circle-plus", Se.Language.Edit.MultipleReplace.NewRule, vm.AddRuleCommand, 26);
+        var buttonAddRules = EditorChrome.CreateToolButton("fa-solid fa-layer-group", Se.Language.Edit.MultipleReplace.AddRulesDotDotDot, vm.CategoryAddRulesCommand, 26);
         var buttonImport = EditorChrome.CreateToolButton("fa-solid fa-file-import", Se.Language.Edit.MultipleReplace.ImportReplaceRules, vm.CategoryImportCommand, 26);
         var buttonCollapseAll = EditorChrome.CreateToolButton("fa-solid fa-minus", Se.Language.General.Collapse, vm.CollapseAllCommand, 26);
         var buttonExpandAll = EditorChrome.CreateToolButton("fa-solid fa-plus", Se.Language.General.Expand, vm.ExpandAllCommand, 26);
 
         var actions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2, VerticalAlignment = VerticalAlignment.Center };
         actions.Children.Add(buttonNewCategory);
+        actions.Children.Add(buttonNewRule);
+        actions.Children.Add(buttonAddRules);
         actions.Children.Add(buttonImport);
         actions.Children.Add(EditorChrome.MakeToolbarSeparator());
         actions.Children.Add(buttonCollapseAll);

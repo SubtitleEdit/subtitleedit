@@ -84,7 +84,7 @@ The window is split into two resizable panels:
 
 | Panel | Description |
 |---|---|
-| **Left — Rules** | Tree of categories and their rules. Each rule shows its type icon, find pattern, replacement, and an optional description. |
+| **Left — Rules** | Tree of categories and their rules. Each rule shows its type icon, find pattern, replacement, and an optional description. The buttons above the tree add a category, add a rule, open **Add rules** (a whole list in one go), import rules, and collapse or expand all categories. |
 | **Right — Fixes** | Preview of all lines that will be changed. The **Before** column highlights removed characters in red and the **After** column highlights added characters in green. Selecting a row reveals an **Applied rules** detail panel at the bottom listing every rule that matched that line. |
 
 ### Choosing which fixes to apply
@@ -124,6 +124,7 @@ Right-click a category node to open its context menu:
 - **Edit** — rename the category
 - **New category** — add a sibling category
 - **New rule** — add a rule to this category
+- **Add rules...** — add a list of rules to this category in one go (see [Adding many rules at once](#adding-many-rules-at-once))
 - **Move up / Move down** — reorder categories
 - **Move to top / Move to bottom** — move the category to the first or last position
 - **Delete** — remove the category and all its rules
@@ -137,18 +138,32 @@ Right-click a rule node to open its context menu:
 - **Edit rule** — change find/replace text, type, and description
 - **Duplicate** — insert a copy of the rule above the current one
 - **Insert before / Insert after** — add a new rule relative to this one
+- **Add rules...** — add a list of rules right after this one (see [Adding many rules at once](#adding-many-rules-at-once))
 - **Move up / Move down** — reorder within the category
 - **Move to top / Move to bottom** — move the rule to the first or last position in the category
 - **Move to category** — move the rule to the end of another category
 - **Delete** — remove the rule
 
-Double-clicking a rule also opens the **Edit rule** dialog.
+Double-clicking a rule also opens the **Edit rule** dialog. A new rule is selected and scrolled into view, also at the end of a long category.
+
+### Adding many rules at once
+
+**Add rules** (the toolbar button, the context menu, or `Ctrl+Shift+N`) opens one window for a whole list of find/replace pairs - a word list does not need a **New rule** dialog per word. The rules go to the end of the selected category, or right after the selected rule.
+
+- Type the text in **Find what** and **Replace with** and press `Enter`: the pair is added to the list below and the cursor goes back to **Find what** for the next one. `Tab` moves between the two boxes.
+- The type (case insensitive, case sensitive, regular expression) and **Whole word** stay as set for every rule you enter. They start as the neighbouring rule's, so a list of words usually needs them set once.
+- Double-click a row in the list (or press `Enter` on it) to take it back into the boxes and correct it; `Delete` or the trash button removes it.
+- **OK** (or `Ctrl+Enter`) adds the list to the category; a pair still in the boxes is added too. **Cancel** asks before throwing away a list that was entered.
+
+The rules are added in the order they were entered, which is the order they run in.
 
 ### Keyboard shortcuts
 
 | Shortcut | Action |
 |---|---|
 | `Ctrl+N` | Add a new rule to the selected category, or insert after the selected rule |
+| `Ctrl+Shift+N` | Open **Add rules** for the selected category or rule |
+| `F2` | Edit the selected rule, or rename the selected category |
 | `Ctrl+D` | Duplicate the selected rule |
 | `Ctrl+F` | Find a rule by name / text |
 | `Ctrl+Up` / `Ctrl+Down` | Move the selected category or rule up / down (`Cmd` on macOS) |
@@ -159,6 +174,8 @@ Double-clicking a rule also opens the **Edit rule** dialog.
 | `Space` | Toggle the selected node (category or rule) on/off |
 | `Escape` | Close the window |
 | `F1` | Open help |
+
+On macOS `Cmd` works for every `Ctrl` shortcut above. The context menus show the shortcut next to each action.
 
 The expand/collapse buttons (`+` / `−`) above the tree expand or collapse all categories at once (`Ctrl+Shift++` / `Ctrl+Shift+-`).
 

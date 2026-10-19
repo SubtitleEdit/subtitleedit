@@ -103,18 +103,20 @@ public partial class RuleTreeNode : ObservableObject
 
     private void UpdateIconName()
     {
-        if (Type == MultipleReplaceType.RegularExpression)
+        IconName = GetIconName(Type);
+    }
+
+    /// <summary>
+    /// The icon the tree shows for a rule type - also used by lists that show plain rules.
+    /// </summary>
+    internal static string GetIconName(MultipleReplaceType type)
+    {
+        return type switch
         {
-            IconName = IconNames.Regex;
-        }
-        else if (Type == MultipleReplaceType.CaseInsensitive)
-        {
-            IconName = IconNames.FindReplace;
-        }
-        else if (Type == MultipleReplaceType.CaseSensitive)
-        {
-            IconName =  IconNames.CaseSensitiveAlt;
-        }
+            MultipleReplaceType.RegularExpression => IconNames.Regex,
+            MultipleReplaceType.CaseSensitive => IconNames.CaseSensitiveAlt,
+            _ => IconNames.FindReplace,
+        };
     }
 
     public RuleTreeNode(RuleTreeNode? parent, string categoryName, ObservableCollection<RuleTreeNode> subNodes, bool active)
