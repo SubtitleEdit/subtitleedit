@@ -1500,8 +1500,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
+            // Czech and Slovak on their own lists too (the shared list above may miss a plain
+            // line), but not on a single hit: "[Jj]a", "[Nn]e" and "[Dd]en" are everyday words
+            // in German, Dutch and the Scandinavian languages as well.
             count = counts.Get(AutoDetectWordsCzech);
-            if (count > bestCount)
+            if (count > bestCount && count > 1)
             {
                 var slovakWordsCount = counts.Get(AutoDetectWordsSlovak);
                 if (slovakWordsCount > count)
@@ -1515,7 +1518,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             count = counts.Get(AutoDetectWordsSlovak);
-            if (count > bestCount)
+            if (count > bestCount && count > 1)
             {
                 var czechWordsCount = counts.Get(AutoDetectWordsCzech);
                 if (czechWordsCount > count)
