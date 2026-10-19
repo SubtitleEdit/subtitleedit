@@ -1164,7 +1164,8 @@ public class NOcrDb
 
         foreach (var oc in candidates)
         {
-            if (Math.Abs(oc.MarginTop - topMargin) < 5 && FitsBaselinePlacement(oc, placement) && IsMatch(bitmap, oc, 0))
+            if ((Math.Abs(oc.MarginTop - topMargin) < 5 || MatchesByBaseline(bitmap, oc, placement)) &&
+                FitsBaselinePlacement(oc, placement) && IsMatch(bitmap, oc, 0))
             {
                 return oc;
             }
@@ -1237,7 +1238,7 @@ public class NOcrDb
             var bestLowerRate = double.MaxValue;
             foreach (var oc in OcrCharacters)
             {
-                if (!PassFilter(bitmap, heightToWidthPercent, oc, topMargin, pass) || !FitsBaselinePlacement(oc, placement) ||
+                if (!PassFilter(bitmap, heightToWidthPercent, oc, topMargin, pass, placement) || !FitsBaselinePlacement(oc, placement) ||
                     !hasRowGap && IsDottedOrAccentedI(oc.Text))
                 {
                     continue;
@@ -1432,7 +1433,22 @@ public class NOcrDb
     private const double SmallGlyphMaxAspectRatio = 2.0;
     private const int SmallGlyphMaxAreaRatio = 5;
 
-    private static bool PassFilter(NikseBitmap2 bitmap, double heightToWidthPercent, NOcrChar oc, int topMargin, in MatchPass pass)
+    /// <summary>
+    /// A period, comma or low quote sitting on the baseline is matched by that position instead of
+    /// by the top margin it was trained at. The trained margin is a line-height artefact - a "."
+    /// learnt in a 90 px line (top 54) can't fit a dot of the same pixel size in a 57 px line (top
+    /// 32) through any pass's top gate, although the baseline already says what it is. Only marks
+    /// that <see cref="FitsBaselinePlacement"/> keeps on the baseline anyway; dashes, apostrophes
+    /// and quotes still have to be at the right height, or a dash entry could claim a dot.
+    /// </summary>
+    private static bool MatchesByBaseline(NikseBitmap2 bitmap, NOcrChar oc, BaselinePlacement placement) =>
+        placement == BaselinePlacement.OnBaseline &&
+        bitmap.Width * bitmap.Height < SmallGlyphAreaLimit &&
+        IsBaselineMark(oc.Text);
+
+    private static bool IsBaselineMark(string text) => text is "." or "…" or "," or "„" or "_";
+
+    private static bool PassFilter(NikseBitmap2 bitmap, double heightToWidthPercent, NOcrChar oc, int topMargin, in MatchPass pass, BaselinePlacement placement)
     {
         // A small entry (dot, comma, apostrophe) carries only a few lines of evidence, and since
         // every gate below scales with the glyph, it fits a much bigger glyph once stretched
@@ -1491,7 +1507,7 @@ public class NOcrDb
         var scale = bitmap.Height / (double)oc.Height;
         var expectedTop = oc.MarginTop * scale;
         var topTolerance = pass.MarginTopMaxDelta * Math.Max(1.0, scale);
-        if (Math.Abs(expectedTop - topMargin) >= topTolerance)
+        if (Math.Abs(expectedTop - topMargin) >= topTolerance && !MatchesByBaseline(bitmap, oc, placement))
         {
             return false;
         }
