@@ -152,6 +152,11 @@ public static partial class InitListViewAndEditBox
         var notNullConverter = new NotNullConverter();
         var nullToOpacityConverter = new NullToOpacityConverter();
         var syntaxHighlightingConverter = new TextWithSubtitleSyntaxHighlightingConverter();
+        // The original column gets its own converter that is never armed with the spell checker:
+        // the live dictionary is the working subtitle's, and in translation mode the original is
+        // another language, so every French word was underlined against the Arabic dictionary
+        // (issue #16211). The original edit text box is not spell checked either.
+        var originalSyntaxHighlightingConverter = new TextWithSubtitleSyntaxHighlightingConverter();
         var textToFlowDirectionConverter = new TextToFlowDirectionConverter();
         vm.SubtitleDataGridSyntaxHighlighting = syntaxHighlightingConverter;
         // How the Text/Original cells fit their text to the window (feature #11590). Read once here;
@@ -482,10 +487,10 @@ public static partial class InitListViewAndEditBox
                     VerticalAlignment = VerticalAlignment.Center,
                     TextAlignment = gridTextAlignment,
 
-                    // Lets the subtitle grid context menu find the word under the pointer (live spell check)
+                    // Lets the subtitle grid context menu tell this cell from a Text cell
                     Tag = SubtitleGridColumnKeys.OriginalText,
                     [!Visual.EffectProperty] = new Binding(nameof(vm.SubtitleTextEffect)) { Source = vm, Mode = BindingMode.OneWay },
-                    [!TextBlock.InlinesProperty] = new Binding(nameof(SubtitleLineViewModel.OriginalText)) { Converter = syntaxHighlightingConverter, Mode = BindingMode.OneWay },
+                    [!TextBlock.InlinesProperty] = new Binding(nameof(SubtitleLineViewModel.OriginalText)) { Converter = originalSyntaxHighlightingConverter, Mode = BindingMode.OneWay },
                     [!TextBlock.FlowDirectionProperty] = new Binding(nameof(SubtitleLineViewModel.OriginalText)) { Converter = textToFlowDirectionConverter, Mode = BindingMode.OneWay },
                 };
                 SubtitleGridTextDisplayModeDisplay.ApplyTo(textBlock, gridTextDisplayMode);
