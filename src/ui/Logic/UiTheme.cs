@@ -152,6 +152,9 @@ public static class UiTheme
             Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
         }
 
+        // The editor palette follows the theme, the dark background color and the accent set above
+        EditorChrome.InvalidatePalette();
+
         ApplyFieldStyle();
         ApplyMenuScaleStyle(Se.Settings.Appearance.LayoutScale);
         ApplyTextSelectionStyle();
@@ -181,6 +184,7 @@ public static class UiTheme
             ApplyLighterDark();
         }
 
+        EditorChrome.InvalidatePalette();
         ApplyFieldStyle();
         ApplyTextSelectionStyle();
         ApplyProgressBarContrastStyle();
@@ -1379,7 +1383,15 @@ public static class UiTheme
             return Color.FromRgb(0x21, 0x21, 0x21);
         }
 
-        var themeSetting = Se.Settings.Appearance.Theme;
+        return GetLightThemeBackgroundColor(Se.Settings.Appearance.Theme);
+    }
+
+    /// <summary>
+    /// The window background of a light theme by its setting name: Classic and Pastel have
+    /// their own, every other light theme is white.
+    /// </summary>
+    internal static Color GetLightThemeBackgroundColor(string? themeSetting)
+    {
         if (themeSetting == ThemeNameClassic)
         {
             return ClassicBackgroundColor;
