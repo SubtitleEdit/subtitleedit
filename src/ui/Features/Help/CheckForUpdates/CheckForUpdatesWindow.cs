@@ -136,7 +136,7 @@ public class CheckForUpdatesWindow : Window
         // One check per window. A re-check after the gear dialog is the view model's call
         // (only when the channel changed), not a side effect of the owner re-activating.
         Opened += async delegate { await vm.CheckForUpdates(); };
-        Activated += delegate { buttonOk.Focus(); };
+        UiUtil.FocusOnFirstActivation(this, buttonOk); // Enter/Escape both close; the only input here is the read-only changelog
         KeyDown += vm.OnKeyDown;
         Closed += delegate { vm.OnClosed(); };
     }
