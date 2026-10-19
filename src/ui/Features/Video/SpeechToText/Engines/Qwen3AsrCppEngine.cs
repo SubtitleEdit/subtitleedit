@@ -82,6 +82,19 @@ public class Qwen3AsrCppEngine : ISpeechToTextEngine
                 },
                 new WhisperModel
                 {
+                    // Danish fine-tune of Qwen3-ASR-0.6B (LoRA on 399 h CoRal/NST/FTSpeech, merged):
+                    // 18.8 vs 43.1 WER for the stock 0.6B on 600 held-out Danish clips. Needs
+                    // qwen3-asr.cpp v0.1.9+ (mel filterbank fix). Apache-2.0 with CoRal's
+                    // OpenRAIL-D restrictions (no speech synthesis, no biometric identification).
+                    Name = "qwen3-asr-0.6b-da-q8_0.gguf",
+                    Size = "1.0 GB",
+                    Urls =
+                    [
+                        "https://huggingface.co/niksedk/qwen3-asr-0.6b-danish/resolve/main/qwen3-asr-0.6b-da-q8_0.gguf"
+                    ]
+                },
+                new WhisperModel
+                {
                     Name = "qwen3-asr-1.7b-f16.gguf",
                     Size = "4.4 GB",
                     Urls =
