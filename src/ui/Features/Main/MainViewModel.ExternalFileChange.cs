@@ -10,10 +10,19 @@ namespace Nikse.SubtitleEdit.Features.Main;
 // Picks up edits made to the open subtitle file by another program (#15828). No live file
 // watcher: the file's time stamp and size are compared when the main window is activated again,
 // which is when the user comes back from the other editor. Unchanged work is reloaded right
-// away, unsaved work is only replaced after asking.
+// away, unsaved work is only replaced after asking. Saving over a file another program wrote
+// in the meantime asks as well (#16216), like SE 4 did.
 public partial class MainViewModel
 {
+    /// <summary>The file as SE last read or wrote it - what the subtitle in memory came from.</summary>
     private SubtitleFileStamp? _subtitleFileStamp;
+
+    /// <summary>
+    /// The outside change the user chose not to reload, so it is not asked about again until
+    /// the file changes once more. <see cref="_subtitleFileStamp"/> stays at SE's own version,
+    /// which is what a later save is checked against.
+    /// </summary>
+    private SubtitleFileStamp? _declinedReloadStamp;
     private bool _checkingSubtitleFileChangedOutside;
 
     private sealed record SubtitleFileStamp(string FileName, DateTime LastWriteTimeUtc, long Length)
@@ -58,6 +67,7 @@ public partial class MainViewModel
     {
         var fileName = GetWatchedSubtitleFileName();
         _subtitleFileStamp = fileName == null ? null : SubtitleFileStamp.Read(fileName);
+        _declinedReloadStamp = null;
     }
 
     /// <summary>
@@ -70,12 +80,14 @@ public partial class MainViewModel
         if (fileName == null)
         {
             _subtitleFileStamp = null;
+            _declinedReloadStamp = null;
             return;
         }
 
         if (_subtitleFileStamp == null || !IsSameFile(_subtitleFileStamp.FileName, fileName))
         {
             _subtitleFileStamp = SubtitleFileStamp.Read(fileName);
+            _declinedReloadStamp = null;
         }
     }
 
@@ -102,7 +114,10 @@ public partial class MainViewModel
 
         // Ask once per change: answering "No" keeps the edits and does not ask again until the
         // file is changed outside once more.
-        _subtitleFileStamp = current;
+        if (_declinedReloadStamp != null && current.IsSameContentAs(_declinedReloadStamp))
+        {
+            return;
+        }
 
         _checkingSubtitleFileChangedOutside = true;
         try
@@ -114,6 +129,7 @@ public partial class MainViewModel
                     MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (answer != MessageBoxResult.Yes)
                 {
+                    _declinedReloadStamp = current;
                     return;
                 }
             }
@@ -125,6 +141,39 @@ public partial class MainViewModel
             _checkingSubtitleFileChangedOutside = false;
             _shortcutManager.ClearKeys();
         }
+    }
+
+    /// <summary>
+    /// Run before the subtitle is written back to its file: when another program wrote the file
+    /// since SE last read or wrote it, saving would silently throw those edits away. A manual save
+    /// asks first; the auto-save timer must not pop a dialog, so it skips this round and says so
+    /// in the status bar (the next manual save asks).
+    /// </summary>
+    private async Task<bool> ConfirmOverwriteFileChangedOutside(bool isAutoSave)
+    {
+        var fileName = GetWatchedSubtitleFileName();
+        if (fileName == null || _subtitleFileStamp is not { } stamp || !IsSameFile(stamp.FileName, fileName))
+        {
+            return true;
+        }
+
+        // A missing file is simply written again.
+        var current = SubtitleFileStamp.Read(fileName);
+        if (current == null || current.IsSameContentAs(stamp))
+        {
+            return true;
+        }
+
+        if (isAutoSave)
+        {
+            ShowStatus(string.Format(Se.Language.General.SubtitleFileChangedOutsideAutoSaveSkippedX, fileName));
+            return false;
+        }
+
+        var answer = await MessageBox.Show(Window, Se.Language.General.Warning,
+            string.Format(Se.Language.General.SubtitleFileChangedOutsideOverwriteX, fileName),
+            MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+        return answer == MessageBoxResult.Yes;
     }
 
     /// <summary>
