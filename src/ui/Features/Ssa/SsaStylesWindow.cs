@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Automation;
@@ -43,7 +43,7 @@ public class SsaStylesWindow : Window
             Mode = BindingMode.TwoWay,
         });
         CanResize = true;
-        Width = 1200;
+        Width = 1400;
         Height = 800;
         MinWidth = 1000;
         MinHeight = 600;
@@ -54,14 +54,8 @@ public class SsaStylesWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var content = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition(new GridLength(360)),
-                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
-            },
-        };
+        // Lists on the left, preview + editor on the right, a splitter between them (#16251)
+        var content = new Grid();
 
         var right = new Grid
         {
@@ -76,8 +70,7 @@ public class SsaStylesWindow : Window
         right.Add(MakeEditingBanner(vm), 1, 0);
         right.Add(MakeEditorPanel(vm), 2, 0);
 
-        content.Add(MakeListsPanel(vm), 0, 0);
-        content.Add(right, 0, 1);
+        StylesDialogHelper.AddListsSplitter(this, content, MakeListsPanel(vm), right);
 
         var mainGrid = new Grid
         {
@@ -260,8 +253,10 @@ public class SsaStylesWindow : Window
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.FileStyles;
         dataGrid.Columns.Add(Column(Se.Language.General.Name, nameof(StyleDisplay.Name), new GridLength(1, GridUnitType.Star)));
-        dataGrid.Columns.Add(Column(Se.Language.General.FontSize, nameof(StyleDisplay.FontSize), new GridLength(70)));
-        dataGrid.Columns.Add(Column(Se.Language.General.Usages, nameof(StyleDisplay.UsageCount), new GridLength(70)));
+        dataGrid.Columns.Add(StylesDialogHelper.MakeFontNameColumn());
+        dataGrid.Columns.Add(Column(Se.Language.General.FontSize, nameof(StyleDisplay.FontSize), new GridLength(56)));
+        dataGrid.Columns.Add(Column(Se.Language.General.Usages, nameof(StyleDisplay.UsageCount), new GridLength(56)));
+        dataGrid.Columns.Add(StylesDialogHelper.MakeColorSampleColumn());
 
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedFileStyle)) { Source = vm });
         dataGrid.SelectionChanged += vm.FileStylesChanged;
@@ -309,7 +304,9 @@ public class SsaStylesWindow : Window
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.StorageStyles;
         dataGrid.Columns.Add(Column(Se.Language.General.Name, nameof(StyleDisplay.Name), new GridLength(1, GridUnitType.Star)));
-        dataGrid.Columns.Add(Column(Se.Language.General.FontSize, nameof(StyleDisplay.FontSize), new GridLength(70)));
+        dataGrid.Columns.Add(StylesDialogHelper.MakeFontNameColumn());
+        dataGrid.Columns.Add(Column(Se.Language.General.FontSize, nameof(StyleDisplay.FontSize), new GridLength(56)));
+        dataGrid.Columns.Add(StylesDialogHelper.MakeColorSampleColumn());
 
         // The default style gets a yellow star instead of "True"/"False"
         dataGrid.Columns.Add(new SeTableViewColumn
@@ -330,7 +327,7 @@ public class SsaStylesWindow : Window
             {
                 Converter = new FuncValueConverter<bool, string>(isDefault => isDefault ? Se.Language.General.IsDefault : string.Empty),
             },
-            Width = new GridLength(70),
+            Width = new GridLength(44),
         });
 
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedStorageStyle)) { Source = vm });

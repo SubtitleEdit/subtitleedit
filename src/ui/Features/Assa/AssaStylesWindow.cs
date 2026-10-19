@@ -42,7 +42,7 @@ public class AssaStylesWindow : Window
             Mode = BindingMode.TwoWay,
         });
         CanResize = true;
-        Width = 1300;
+        Width = 1400;
         Height = 850;
         MinWidth = 1050;
         MinHeight = 600;
@@ -53,14 +53,9 @@ public class AssaStylesWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var content = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition(new GridLength(360)),
-                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
-            },
-        };
+        // Lists on the left, preview + editor on the right, a splitter between them: the lists
+        // show font names and colors too, so their width is the user's call (#16251)
+        var content = new Grid();
 
         // Right side: the preview across the full width on top (a 16:9 frame), the editor
         // sections in three columns under it - a tall preview column was mostly empty space
@@ -77,8 +72,7 @@ public class AssaStylesWindow : Window
         right.Add(MakeEditorPanel(vm), 2, 0);
         right.Add(MakeEditingBanner(vm), 1, 0);
 
-        content.Add(MakeListsPanel(vm), 0, 0);
-        content.Add(right, 0, 1);
+        StylesDialogHelper.AddListsSplitter(this, content, MakeListsPanel(vm), right);
 
         var mainGrid = new Grid
         {
@@ -267,13 +261,14 @@ public class AssaStylesWindow : Window
             Binding = new Binding(nameof(StyleDisplay.Name)),
             Width = new GridLength(1, GridUnitType.Star),
         });
+        dataGrid.Columns.Add(StylesDialogHelper.MakeFontNameColumn());
         dataGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.FontSize,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Binding = new Binding(nameof(StyleDisplay.FontSize)),
-            Width = new GridLength(70),
+            Width = new GridLength(56),
         });
         dataGrid.Columns.Add(new SeTableViewColumn
         {
@@ -281,8 +276,9 @@ public class AssaStylesWindow : Window
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Binding = new Binding(nameof(StyleDisplay.UsageCount)),
-            Width = new GridLength(70),
+            Width = new GridLength(56),
         });
+        dataGrid.Columns.Add(StylesDialogHelper.MakeColorSampleColumn());
 
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedFileStyle)) { Source = vm });
         dataGrid.SelectionChanged += vm.FileStylesChanged;
@@ -330,16 +326,48 @@ public class AssaStylesWindow : Window
 
     private static Grid MakeStorageStyles(AssaStylesViewModel vm)
     {
-        // No category picker: the list always shows every saved style (the category is a column).
-        // Creating or moving to a category switches the view model's filter - put it back.
-        vm.SelectedStorageCategory = Se.Language.Assa.AllCategories;
-        vm.PropertyChanged += (_, e) =>
+        // Category picker: saved styles are kept per series/project in categories, and with
+        // hundreds of them a flat list is unusable - the filter is back, with its actions (#16251)
+        var comboBoxCategory = UiUtil.MakeComboBox(vm.StorageCategories, vm, nameof(vm.SelectedStorageCategory));
+        comboBoxCategory.HorizontalAlignment = HorizontalAlignment.Stretch;
+        comboBoxCategory.MinWidth = 120;
+        AutomationProperties.SetName(comboBoxCategory, Se.Language.General.Category);
+
+        Button CategoryButton(string icon, string name, System.Windows.Input.ICommand command, bool needsCategory)
         {
-            if (e.PropertyName == nameof(vm.SelectedStorageCategory) && vm.SelectedStorageCategory != Se.Language.Assa.AllCategories)
+            var button = EditorChrome.CreateToolButton(icon, name, command, 24);
+            if (needsCategory)
             {
-                Avalonia.Threading.Dispatcher.UIThread.Post(() => vm.SelectedStorageCategory = Se.Language.Assa.AllCategories);
+                button.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.IsCategoryActionVisible)) { Source = vm });
             }
+
+            return button;
+        }
+
+        var categoryPicker = new Grid
+        {
+            ColumnSpacing = 2,
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(GridLength.Auto),
+            },
         };
+        categoryPicker.Add(new TextBlock
+        {
+            Text = Se.Language.General.Category,
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 0, 4, 0),
+        }, 0, 0);
+        categoryPicker.Add(comboBoxCategory, 0, 1);
+        categoryPicker.Add(CategoryButton("fa-solid fa-folder-plus", Se.Language.Assa.NewCategory, vm.NewCategoryCommand, false), 0, 2);
+        categoryPicker.Add(CategoryButton("fa-solid fa-pen", Se.Language.Assa.RenameCategory, vm.RenameCategoryCommand, true), 0, 3);
+        categoryPicker.Add(CategoryButton("fa-solid fa-folder-minus", Se.Language.Assa.DeleteCategory, vm.DeleteCategoryCommand, true), 0, 4);
 
         // No header sorting: the storage style order is persisted to settings in
         // list order on OK, so the collection order is not presentation-only.
@@ -356,14 +384,16 @@ public class AssaStylesWindow : Window
             Binding = new Binding(nameof(StyleDisplay.Name)),
             Width = new GridLength(1, GridUnitType.Star),
         });
+        dataGrid.Columns.Add(StylesDialogHelper.MakeFontNameColumn(120));
         dataGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Category,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Binding = new Binding(nameof(StyleDisplay.CategoryDisplay)),
-            Width = new GridLength(100),
+            Width = new GridLength(90),
         });
+        dataGrid.Columns.Add(StylesDialogHelper.MakeColorSampleColumn());
         // The default style gets a yellow star instead of "True"/"False"
         dataGrid.Columns.Add(new SeTableViewColumn
         {
@@ -383,7 +413,7 @@ public class AssaStylesWindow : Window
             {
                 Converter = new FuncValueConverter<bool, string>(isDefault => isDefault ? Se.Language.General.IsDefault : string.Empty),
             },
-            Width = new GridLength(70),
+            Width = new GridLength(44),
         });
 
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedStorageStyle)) { Source = vm });
@@ -418,7 +448,7 @@ public class AssaStylesWindow : Window
             MenuItem(Se.Language.General.Export, "fa-solid fa-file-export", vm.StorageExportCommand),
         ]));
 
-        return MakeListSection(Se.Language.Assa.StylesSaved, actions, null, dataGrid, first: false);
+        return MakeListSection(Se.Language.Assa.StylesSaved, actions, categoryPicker, dataGrid, first: false);
     }
 
     private static Border MakeEditorPanel(AssaStylesViewModel vm)
