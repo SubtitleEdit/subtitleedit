@@ -250,15 +250,23 @@ internal static partial class EditorChrome
                 new Setter(NumericUpDown.CornerRadiusProperty, new CornerRadius(6)),
             },
         });
+        // Remove Fluent's 32px minimum to fit compact fields.
+        styles.Add(new Style(x => x.OfType<NumericUpDown>().Class("field").Template().OfType<ButtonSpinner>())
+        {
+            Setters = { new Setter(ButtonSpinner.MinHeightProperty, 0.0) },
+        });
         styles.Add(new Style(x => x.OfType<NumericUpDown>().Class("field").Template().OfType<TextBox>())
         {
             Setters =
             {
                 new Setter(TextBox.MinHeightProperty, 0.0),
-                new Setter(TextBox.HeightProperty, FieldHeight),
                 new Setter(TextBox.PaddingProperty, new Thickness(6, 0)),
                 new Setter(TextBox.VerticalContentAlignmentProperty, VerticalAlignment.Center),
-                new Setter(TextBox.BackgroundProperty, FieldBrush),
+                new Setter(TextBox.BackgroundProperty, Brushes.Transparent),
+                new Setter(TextBox.CornerRadiusProperty, new Binding(nameof(NumericUpDown.CornerRadius))
+                {
+                    RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent),
+                }),
             },
         });
 
