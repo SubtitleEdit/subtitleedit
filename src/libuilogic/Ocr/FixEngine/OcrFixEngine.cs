@@ -455,9 +455,11 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         return IsAllCaps(before) && IsAllCaps(after);
     }
 
+    // Image matchers read the sans-serif capital "I" as "l" ("PlLOTEN"); the per-word rules only
+    // repair that after this runs, so an "l" counts as uppercase here.
     private static bool IsAllCaps(string word)
     {
-        return word.Any(char.IsUpper) && !word.Any(char.IsLower);
+        return word.Any(char.IsUpper) && word.All(c => !char.IsLower(c) || c == 'l');
     }
 
     /// <summary>

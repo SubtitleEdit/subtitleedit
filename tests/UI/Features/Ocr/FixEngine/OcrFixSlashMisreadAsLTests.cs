@@ -93,6 +93,7 @@ public class OcrFixSlashMisreadAsLTests : IDisposable
     // "PILOTEN / OMGEKOMEN" became "PILOTEN I OMGEKOMEN", #16031), not a slanted italic "I".
     [Theory]
     [InlineData("PILOTEN / OMGEKOMEN")]
+    [InlineData("PlLOTEN / OMGEKOMEN")] // capital I read as "l", repaired by a later rule
     [InlineData("<i>PILOTEN / OMGEKOMEN</i>")]
     [InlineData("PILOTEN /\nOMGEKOMEN")]
     [InlineData("AC / DC")]
