@@ -4788,9 +4788,17 @@ public partial class SpeechToTextViewModel : ObservableObject
             _engineExitCode = null;
             var qwen3ExtraArgs = engine.CommandLineParameter;
 
+            // qwen3-asr.cpp v0.1.9+ forces the spoken language from the prompt when -l is given
+            // (like the qwen-asr Python package); auto-detection is unreliable on short clips
+            // (Danish came out as Swedish or Chinese). Older builds only used -l for Korean word
+            // splitting, so passing it is harmless there. "auto" keeps detection.
+            var qwen3LanguageArg = string.IsNullOrWhiteSpace(language) || language.Equals("auto", StringComparison.OrdinalIgnoreCase)
+                ? string.Empty
+                : $"-l {language} ";
+
             var qwen3Params = string.IsNullOrWhiteSpace(qwen3ExtraArgs)
-                ? $"-m \"{qwen3Asr.GetModelForCmdLine(model)}\" --aligner-model \"{qwen3Asr.GetModelForCmdLine(alignerModel.Name)}\" -f \"{waveFileName}\" --transcribe-align -o \"{_qwen3AsrOutputJsonPath}\""
-                : $"{qwen3ExtraArgs} -m \"{qwen3Asr.GetModelForCmdLine(model)}\" --aligner-model \"{qwen3Asr.GetModelForCmdLine(alignerModel.Name)}\" -f \"{waveFileName}\" --transcribe-align -o \"{_qwen3AsrOutputJsonPath}\"";
+                ? $"{qwen3LanguageArg}-m \"{qwen3Asr.GetModelForCmdLine(model)}\" --aligner-model \"{qwen3Asr.GetModelForCmdLine(alignerModel.Name)}\" -f \"{waveFileName}\" --transcribe-align -o \"{_qwen3AsrOutputJsonPath}\""
+                : $"{qwen3ExtraArgs} {qwen3LanguageArg}-m \"{qwen3Asr.GetModelForCmdLine(model)}\" --aligner-model \"{qwen3Asr.GetModelForCmdLine(alignerModel.Name)}\" -f \"{waveFileName}\" --transcribe-align -o \"{_qwen3AsrOutputJsonPath}\"";
 
             return StartEngineProcess(exe, qwen3Params, dataReceivedHandler);
         }
