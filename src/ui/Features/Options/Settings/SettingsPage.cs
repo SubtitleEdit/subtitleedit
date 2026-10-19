@@ -207,7 +207,7 @@ public class SettingsPage : UserControl
         var label = new TextBlock
         {
             Text = section.Title,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
         };
@@ -215,7 +215,7 @@ public class SettingsPage : UserControl
         // Icon on a colored rounded square, matching the section header in the scroll view.
         var image = new ContentControl
         {
-            FontSize = 11,
+            FontSize = EditorChrome.ScaledFont(11),
             Foreground = Brushes.White,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,

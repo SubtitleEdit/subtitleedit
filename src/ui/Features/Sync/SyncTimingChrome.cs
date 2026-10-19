@@ -23,7 +23,7 @@ internal static class SyncTimingChrome
             var radioButton = new RadioButton
             {
                 Content = text,
-                FontSize = 12.5,
+                FontSize = EditorChrome.FieldFontSize,
                 [!RadioButton.IsCheckedProperty] = new Binding(property),
             };
             if (needsSelection && isSelectionAvailable != null)

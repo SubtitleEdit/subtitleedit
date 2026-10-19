@@ -112,7 +112,7 @@ public class VideoControlsItemsWindow : Window
         var eyeIcon = new Optris.Icons.Avalonia.Icon { Value = IconNames.Eye, Margin = new Thickness(0, 0, 6, 0), VerticalAlignment = VerticalAlignment.Center };
         var checkBoxVisible = new CheckBox
         {
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Content = new StackPanel
             {
                 Orientation = Orientation.Horizontal,

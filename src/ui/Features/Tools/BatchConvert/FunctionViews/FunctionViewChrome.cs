@@ -136,7 +136,7 @@ internal static class FunctionViewChrome
     /// </summary>
     internal static RadioButton Compact(RadioButton radioButton)
     {
-        radioButton.FontSize = 12.5;
+        radioButton.FontSize = EditorChrome.FieldFontSize;
         radioButton.VerticalAlignment = VerticalAlignment.Center;
         radioButton.Margin = new Thickness(0);
         if (radioButton.Content is string text)
@@ -185,11 +185,11 @@ internal static class FunctionViewChrome
             content.Children.Add(new Optris.Icons.Avalonia.Icon { Value = icon, FontSize = 13, VerticalAlignment = VerticalAlignment.Center });
         }
 
-        content.Children.Add(new TextBlock { Text = text, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center });
+        content.Children.Add(new TextBlock { Text = text, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center });
         var button = new Button
         {
             Content = content,
-            MinHeight = 30,
+            MinHeight = EditorChrome.ScaledSize(30),
             Padding = new Thickness(12, 4),
             Command = command,
             HorizontalAlignment = HorizontalAlignment.Left,
