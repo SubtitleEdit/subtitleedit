@@ -52,6 +52,7 @@ public class DownloadSpeechToTextModelsWindow : Window
             HorizontalAlignment = HorizontalAlignment.Left,
         };
         labelCustomModelHelp.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.SupportsCustomModels)));
+        labelCustomModelHelp.Bind(TextBlock.TextProperty, new Binding(nameof(vm.CustomModelHelpText)));
 
         var modelRows = new StackPanel { Spacing = 8 };
         modelRows.Children.Add(SpeechToTextChrome.WithTrailing(comboBoxModel, buttonOpenFolder));
