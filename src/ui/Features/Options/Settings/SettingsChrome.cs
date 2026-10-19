@@ -20,10 +20,10 @@ namespace Nikse.SubtitleEdit.Features.Options.Settings;
 internal static class SettingsChrome
 {
     /// <summary>Width of the label column, so the fields of every setting line up.</summary>
-    internal const double LabelWidth = 250;
+    internal static double LabelWidth => EditorChrome.ScaledSize(250);
 
     /// <summary>Width of a compact number field.</summary>
-    internal const double FieldWidth = 110;
+    internal static double FieldWidth => EditorChrome.ScaledSize(110);
 
     /// <summary>Class of the category rows in the side panel.</summary>
     internal const string NavClass = "settings-nav";
@@ -60,8 +60,8 @@ internal static class SettingsChrome
         {
             Setters =
             {
-                new Setter(TemplatedControl.FontSizeProperty, 12.5),
-                new Setter(Layoutable.MinHeightProperty, 28.0),
+                new Setter(TemplatedControl.FontSizeProperty, EditorChrome.FieldFontSize),
+                new Setter(Layoutable.MinHeightProperty, EditorChrome.FieldHeight),
                 new Setter(TemplatedControl.PaddingProperty, new Thickness(10, 5)),
             },
         });
@@ -71,8 +71,8 @@ internal static class SettingsChrome
         {
             Setters =
             {
-                new Setter(TemplatedControl.FontSizeProperty, 12.5),
-                new Setter(Layoutable.MinHeightProperty, 28.0),
+                new Setter(TemplatedControl.FontSizeProperty, EditorChrome.FieldFontSize),
+                new Setter(Layoutable.MinHeightProperty, EditorChrome.FieldHeight),
                 new Setter(TemplatedControl.PaddingProperty, new Thickness(12, 4)),
                 new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(6)),
                 new Setter(ContentControl.VerticalContentAlignmentProperty, VerticalAlignment.Center),
@@ -182,7 +182,7 @@ internal static class SettingsChrome
         return new TextBlock
         {
             Text = text,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextWrapping = TextWrapping.Wrap,

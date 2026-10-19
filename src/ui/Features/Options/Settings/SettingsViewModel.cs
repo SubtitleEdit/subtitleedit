@@ -3169,10 +3169,12 @@ public partial class SettingsViewModel : ObservableObject
         // rebuilds the layout (and the video player) a second time (issue #14218).
         AppliedSettingsSnapshot = SettingsChangeSnapshot.Take();
 
-        // Icon theme and recoloring can change without changing the actual theme variant.
+        // Icon theme and recoloring can change without changing the actual theme variant, and
+        // the editor styles bake in the font scale when applied (#16242) - follow both here.
         if (Window != null &&
             UiTheme.GetUnscaledContent(Window) is SettingsPage page)
         {
+            SettingsChrome.Apply(Window);
             page.RefreshSections();
         }
     }

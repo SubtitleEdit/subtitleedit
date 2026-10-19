@@ -47,9 +47,9 @@ internal static class BinaryEditChrome
                 new Setter(TemplatedControl.BorderThicknessProperty, new Thickness(0)),
                 new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(5)),
                 new Setter(TemplatedControl.ForegroundProperty, EditorChrome.IconBrush),
-                new Setter(TemplatedControl.FontSizeProperty, 12.5),
+                new Setter(TemplatedControl.FontSizeProperty, EditorChrome.FieldFontSize),
                 new Setter(TemplatedControl.PaddingProperty, new Thickness(12, 3)),
-                new Setter(Layoutable.MinHeightProperty, 24.0),
+                new Setter(Layoutable.MinHeightProperty, EditorChrome.ScaledSize(24)),
             },
         });
         styles.Add(Presenter(x => x.OfType<ToggleButton>().Class("segment").Class(":pointerover"),
@@ -64,8 +64,8 @@ internal static class BinaryEditChrome
         {
             Setters =
             {
-                new Setter(TemplatedControl.FontSizeProperty, 12.5),
-                new Setter(Layoutable.MinHeightProperty, 28.0),
+                new Setter(TemplatedControl.FontSizeProperty, EditorChrome.FieldFontSize),
+                new Setter(Layoutable.MinHeightProperty, EditorChrome.FieldHeight),
             },
         });
     }
@@ -139,7 +139,7 @@ internal static class BinaryEditChrome
         AutomationProperties.SetName(slider, title);
         var value = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.ScaledFont(12),
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(valueProperty),

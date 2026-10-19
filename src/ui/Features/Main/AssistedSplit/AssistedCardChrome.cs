@@ -56,14 +56,14 @@ internal static class AssistedCardChrome
     internal static Border MakeHeader(string heading, string currentText)
     {
         var labelHeader = EditorChrome.MakeDimLabel(heading, new Thickness(0));
-        labelHeader.FontSize = 12.5;
+        labelHeader.FontSize = EditorChrome.FieldFontSize;
         labelHeader.FontWeight = FontWeight.SemiBold;
         labelHeader.TextWrapping = TextWrapping.Wrap;
 
         var originalText = new TextBlock
         {
             Text = currentText,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             TextWrapping = TextWrapping.Wrap,
         };
         var frame = new Border
@@ -92,16 +92,16 @@ internal static class AssistedCardChrome
     {
         var badge = new Border
         {
-            Width = 30,
-            Height = 30,
-            CornerRadius = new CornerRadius(15),
+            Width = EditorChrome.ScaledSize(30),
+            Height = EditorChrome.ScaledSize(30),
+            CornerRadius = new CornerRadius(EditorChrome.ScaledSize(15)),
             Background = EditorChrome.AccentSoftBrush,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 0, 12, 0),
             Child = new TextBlock
             {
                 Text = number.ToString(),
-                FontSize = 15,
+                FontSize = EditorChrome.ScaledFont(15),
                 FontWeight = FontWeight.Bold,
                 Foreground = EditorChrome.AccentBrush,
                 HorizontalAlignment = HorizontalAlignment.Center,
@@ -117,7 +117,7 @@ internal static class AssistedCardChrome
         panelTexts.Children.Add(new TextBlock
         {
             Text = title,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             FontWeight = FontWeight.SemiBold,
             TextWrapping = TextWrapping.Wrap,
         });
@@ -158,14 +158,14 @@ internal static class AssistedCardChrome
         var textBlock = new TextBlock
         {
             Text = text,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             TextWrapping = TextWrapping.Wrap,
         };
 
         var infoBlock = new TextBlock
         {
             Text = info,
-            FontSize = 11,
+            FontSize = EditorChrome.ScaledFont(11),
             Foreground = EditorChrome.DimTextBrush,
             Margin = new Thickness(0, 3, 0, 0),
         };

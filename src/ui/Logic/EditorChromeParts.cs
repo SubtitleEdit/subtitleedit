@@ -149,8 +149,8 @@ internal static partial class EditorChrome
         {
             Setters =
             {
-                new Setter(TemplatedControl.FontSizeProperty, 12.5),
-                new Setter(TemplatedControl.MinHeightProperty, 28.0),
+                new Setter(TemplatedControl.FontSizeProperty, FieldFontSize),
+                new Setter(TemplatedControl.MinHeightProperty, FieldHeight),
                 new Setter(TemplatedControl.PaddingProperty, new Thickness(8, 2, 4, 2)),
                 new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(6)),
             },
@@ -195,8 +195,8 @@ internal static partial class EditorChrome
             {
                 Setters =
                 {
-                    new Setter(TemplatedControl.FontSizeProperty, 12.5),
-                    new Setter(TemplatedControl.MinHeightProperty, 28.0),
+                    new Setter(TemplatedControl.FontSizeProperty, FieldFontSize),
+                    new Setter(TemplatedControl.MinHeightProperty, FieldHeight),
                 },
             });
         }
@@ -256,11 +256,11 @@ internal static partial class EditorChrome
         {
             styles.Add(new Style(x => x.OfType<TimeCodeUpDown>().Descendant().OfType<TextBox>())
             {
-                Setters = { new Setter(TemplatedControl.MinHeightProperty, 26.0) },
+                Setters = { new Setter(TemplatedControl.MinHeightProperty, ScaledSize(26)) },
             });
             styles.Add(new Style(x => x.OfType<TimeCodeUpDown>().Descendant().OfType<ButtonSpinner>())
             {
-                Setters = { new Setter(TemplatedControl.MinHeightProperty, 26.0) },
+                Setters = { new Setter(TemplatedControl.MinHeightProperty, ScaledSize(26)) },
             });
         }
 
@@ -298,8 +298,8 @@ internal static partial class EditorChrome
             {
                 Setters =
                 {
-                    new Setter(TemplatedControl.FontSizeProperty, 12.5),
-                    new Setter(TemplatedControl.MinHeightProperty, 28.0),
+                    new Setter(TemplatedControl.FontSizeProperty, FieldFontSize),
+                    new Setter(TemplatedControl.MinHeightProperty, FieldHeight),
                     new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(6)),
                 },
             });
@@ -319,7 +319,7 @@ internal static partial class EditorChrome
                     new Setter(ListBoxItem.PaddingProperty, new Thickness(8, 3)),
                     new Setter(ListBoxItem.MarginProperty, new Thickness(2, 1)),
                     new Setter(ListBoxItem.CornerRadiusProperty, new CornerRadius(5)),
-                    new Setter(ListBoxItem.FontSizeProperty, 12.5),
+                    new Setter(ListBoxItem.FontSizeProperty, FieldFontSize),
                 },
             });
         }
@@ -333,8 +333,8 @@ internal static partial class EditorChrome
         var autoCompleteStyle = new Style(x => x.OfType<AutoCompleteBox>().Template().OfType<TextBox>());
         var setters = new System.Collections.Generic.List<Setter>
         {
-            new(TemplatedControl.FontSizeProperty, 12.5),
-            new(TemplatedControl.MinHeightProperty, 28.0),
+            new(TemplatedControl.FontSizeProperty, FieldFontSize),
+            new(TemplatedControl.MinHeightProperty, FieldHeight),
         };
         if (!bare)
         {
@@ -369,8 +369,8 @@ internal static partial class EditorChrome
         {
             Setters =
             {
-                new Setter(TemplatedControl.FontSizeProperty, 13.0),
-                new Setter(Layoutable.MinHeightProperty, minHeight),
+                new Setter(TemplatedControl.FontSizeProperty, ScaledFont(13)),
+                new Setter(Layoutable.MinHeightProperty, ScaledSize(minHeight)),
                 new Setter(TemplatedControl.PaddingProperty, new Thickness(12, 0)),
             },
         });
@@ -425,8 +425,8 @@ internal static partial class EditorChrome
         };
         if (forText)
         {
-            baseStyle.Setters.Add(new Setter(TemplatedControl.FontSizeProperty, 12.5));
-            baseStyle.Setters.Add(new Setter(TemplatedControl.MinHeightProperty, 28.0));
+            baseStyle.Setters.Add(new Setter(TemplatedControl.FontSizeProperty, FieldFontSize));
+            baseStyle.Setters.Add(new Setter(TemplatedControl.MinHeightProperty, FieldHeight));
             baseStyle.Setters.Add(new Setter(TemplatedControl.PaddingProperty, new Thickness(10, 3)));
             baseStyle.Setters.Add(new Setter(ContentControl.VerticalContentAlignmentProperty, VerticalAlignment.Center));
         }
@@ -480,8 +480,8 @@ internal static partial class EditorChrome
             {
                 new Setter(TemplatedControl.PaddingProperty, new Thickness(8, 4)),
                 new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(5)),
-                new Setter(TemplatedControl.FontSizeProperty, 12.5),
-                new Setter(Layoutable.MinHeightProperty, 26.0),
+                new Setter(TemplatedControl.FontSizeProperty, FieldFontSize),
+                new Setter(Layoutable.MinHeightProperty, ScaledSize(26)),
             },
         });
         foreach (var hover in new[] { false, true })
@@ -504,19 +504,19 @@ internal static partial class EditorChrome
         {
             Setters =
             {
-                new Setter(TemplatedControl.FontSizeProperty, 12.5),
-                new Setter(Layoutable.MinHeightProperty, 28.0),
+                new Setter(TemplatedControl.FontSizeProperty, FieldFontSize),
+                new Setter(Layoutable.MinHeightProperty, FieldHeight),
                 new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(6)),
             },
         });
         AddTabStyle(styles, 32);
         styles.Add(new Style(x => x.OfType<CheckBox>())
         {
-            Setters = { new Setter(TemplatedControl.FontSizeProperty, 12.5) },
+            Setters = { new Setter(TemplatedControl.FontSizeProperty, FieldFontSize) },
         });
         styles.Add(new Style(x => x.OfType<RadioButton>())
         {
-            Setters = { new Setter(TemplatedControl.FontSizeProperty, 12.5) },
+            Setters = { new Setter(TemplatedControl.FontSizeProperty, FieldFontSize) },
         });
     }
 
@@ -537,7 +537,7 @@ internal static partial class EditorChrome
     /// </summary>
     internal static Button MakeActionButton(string icon, string? text, System.Windows.Input.ICommand? command, string? textBinding = null)
     {
-        var label = new TextBlock { Text = text, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center };
+        var label = new TextBlock { Text = text, FontSize = FieldFontSize, VerticalAlignment = VerticalAlignment.Center };
         if (textBinding != null)
         {
             label.Bind(TextBlock.TextProperty, new Binding(textBinding) { Mode = BindingMode.OneWay });
@@ -549,7 +549,7 @@ internal static partial class EditorChrome
         var button = new Button
         {
             Content = content,
-            Height = 30,
+            Height = ScaledSize(30),
             Command = command,
             VerticalContentAlignment = VerticalAlignment.Center,
         };
@@ -577,12 +577,12 @@ internal static partial class EditorChrome
     {
         var content = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6, VerticalAlignment = VerticalAlignment.Center };
         content.Children.Add(new Optris.Icons.Avalonia.Icon { Value = icon, FontSize = 12, VerticalAlignment = VerticalAlignment.Center });
-        content.Children.Add(new AccessText { Text = text, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center });
+        content.Children.Add(new AccessText { Text = text, FontSize = FieldFontSize, VerticalAlignment = VerticalAlignment.Center });
         var button = new Button
         {
             Content = content,
             Command = command,
-            Height = 28,
+            Height = FieldHeight,
             Padding = new Thickness(8, 0),
             VerticalContentAlignment = VerticalAlignment.Center,
         };
@@ -599,9 +599,9 @@ internal static partial class EditorChrome
     internal static T AsFlatAction<T>(this T button) where T : Button
     {
         button.Classes.Add("tool");
-        button.Height = 30;
+        button.Height = ScaledSize(30);
         button.Padding = new Thickness(10, 0);
-        button.FontSize = 12.5;
+        button.FontSize = FieldFontSize;
         button.Margin = new Thickness(0);
         button.VerticalAlignment = VerticalAlignment.Center;
         return button;
@@ -619,7 +619,7 @@ internal static partial class EditorChrome
         button.MinWidth = 0;
         button.MinHeight = 0;
         button.Padding = new Thickness(0);
-        button.FontSize = 14;
+        button.FontSize = ScaledFont(14);
         return button;
     }
 
@@ -631,9 +631,9 @@ internal static partial class EditorChrome
     {
         button.Margin = new Thickness(0);
         button.MinWidth = 0;
-        button.MinHeight = 30;
+        button.MinHeight = ScaledSize(30);
         button.Padding = new Thickness(10, 5);
-        button.FontSize = 12.5;
+        button.FontSize = FieldFontSize;
         button.HorizontalAlignment = HorizontalAlignment.Stretch;
         button.HorizontalContentAlignment = HorizontalAlignment.Left;
         button.CornerRadius = new CornerRadius(6);
@@ -798,7 +798,7 @@ internal static partial class EditorChrome
         var text = new TextBlock
         {
             Foreground = DimTextBrush,
-            FontSize = 12.5,
+            FontSize = FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
             Margin = new Thickness(0, 0, 12, 0),
@@ -835,7 +835,7 @@ internal static partial class EditorChrome
     {
         progressBar.VerticalAlignment = VerticalAlignment.Center;
         var statusText = MakeBoundHint(textProperty);
-        statusText.FontSize = 12;
+        statusText.FontSize = ScaledFont(12);
         statusText.MaxWidth = 360;
 
         var grid = new Grid
@@ -1073,7 +1073,7 @@ internal static partial class EditorChrome
         panel.Children.Add(new TextBlock
         {
             Text = title,
-            FontSize = 16,
+            FontSize = ScaledFont(16),
             FontWeight = FontWeight.SemiBold,
             TextWrapping = TextWrapping.Wrap,
         });
@@ -1082,7 +1082,7 @@ internal static partial class EditorChrome
             panel.Children.Add(new TextBlock
             {
                 Text = description,
-                FontSize = 12.5,
+                FontSize = FieldFontSize,
                 Foreground = DimTextBrush,
                 TextWrapping = TextWrapping.Wrap,
                 MaxWidth = maxWidth,
@@ -1146,7 +1146,7 @@ internal static partial class EditorChrome
         if (styleLabel)
         {
             label.Foreground = DimTextBrush;
-            label.FontSize = 12;
+            label.FontSize = ScaledFont(12);
             label.VerticalAlignment = VerticalAlignment.Center;
             label.TextTrimming = TextTrimming.CharacterEllipsis;
             label.Margin = new Thickness(0);
@@ -1191,7 +1191,7 @@ internal static partial class EditorChrome
     internal static TextBlock MakeHint(string? text, double fontSize = 11.5) => new()
     {
         Text = text,
-        FontSize = fontSize,
+        FontSize = ScaledFont(fontSize),
         Foreground = DimTextBrush,
         TextWrapping = TextWrapping.Wrap,
     };
@@ -1201,7 +1201,7 @@ internal static partial class EditorChrome
     /// </summary>
     internal static TextBlock MakeBoundHint(string property, double fontSize = 11.5) => new()
     {
-        FontSize = fontSize,
+        FontSize = ScaledFont(fontSize),
         Foreground = DimTextBrush,
         VerticalAlignment = VerticalAlignment.Center,
         TextTrimming = TextTrimming.CharacterEllipsis,
@@ -1221,7 +1221,7 @@ internal static partial class EditorChrome
 
         return new TextBlock
         {
-            FontSize = fontSize,
+            FontSize = ScaledFont(fontSize),
             Foreground = DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
             [!TextBlock.TextProperty] = binding,
@@ -1365,7 +1365,7 @@ internal static partial class EditorChrome
     /// </summary>
     internal static Grid MakeSwitchRow(ToggleSwitch toggle, TextBlock label, params Control[] trailing)
     {
-        label.FontSize = 12.5;
+        label.FontSize = FieldFontSize;
         label.VerticalAlignment = VerticalAlignment.Center;
         label.TextWrapping = TextWrapping.Wrap;
         label.Margin = new Thickness(0);
@@ -1406,7 +1406,7 @@ internal static partial class EditorChrome
     internal static TextBlock MakeSwitchLabel(string? text) => new()
     {
         Text = text,
-        FontSize = 12.5,
+        FontSize = FieldFontSize,
         VerticalAlignment = VerticalAlignment.Center,
         TextWrapping = TextWrapping.Wrap,
     };
@@ -1436,7 +1436,7 @@ internal static partial class EditorChrome
         var text = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
-            FontSize = 12.5,
+            FontSize = FieldFontSize,
             FontWeight = FontWeight.SemiBold,
             Margin = new Thickness(8, 0, 0, 0),
             TextTrimming = TextTrimming.CharacterEllipsis,
@@ -1458,7 +1458,7 @@ internal static partial class EditorChrome
     internal static TextBlock MakeDownloadTitle(string? text = null) => new()
     {
         Text = text,
-        FontSize = 16,
+        FontSize = ScaledFont(16),
         FontWeight = FontWeight.SemiBold,
         TextWrapping = TextWrapping.Wrap,
         MaxWidth = 460,
@@ -1483,7 +1483,7 @@ internal static partial class EditorChrome
     /// </summary>
     internal static TextBlock MakeDownloadStatus(string textProperty) => new()
     {
-        FontSize = 12,
+        FontSize = ScaledFont(12),
         Foreground = DimTextBrush,
         TextTrimming = TextTrimming.CharacterEllipsis,
         MaxWidth = 460,
@@ -1500,7 +1500,7 @@ internal static partial class EditorChrome
         {
             Foreground = DownloadErrorBrush,
             TextWrapping = TextWrapping.Wrap,
-            FontSize = 12,
+            FontSize = ScaledFont(12),
             MaxWidth = 460,
             HorizontalAlignment = HorizontalAlignment.Left,
         };
@@ -1663,7 +1663,7 @@ internal static partial class EditorChrome
     {
         return new TextBlock
         {
-            FontSize = 12,
+            FontSize = ScaledFont(12),
             FontWeight = FontWeight.SemiBold,
             Foreground = DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
@@ -1775,7 +1775,7 @@ internal static partial class EditorChrome
             Child = new TextBlock
             {
                 [!TextBlock.TextProperty] = textBinding,
-                FontSize = 11,
+                FontSize = ScaledFont(11),
                 FontWeight = FontWeight.SemiBold,
                 Foreground = foreground,
                 VerticalAlignment = VerticalAlignment.Center,
@@ -1818,7 +1818,7 @@ internal static partial class EditorChrome
         return new TextBlock
         {
             Foreground = DimTextBrush,
-            FontSize = 12.5,
+            FontSize = FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
         };
@@ -1832,7 +1832,7 @@ internal static partial class EditorChrome
         return new TextBlock
         {
             Text = text,
-            FontSize = 12,
+            FontSize = ScaledFont(12),
             Foreground = DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,

@@ -23,7 +23,7 @@ internal static class TtsVoicesChrome
         panel.Children.Add(new TextBlock
         {
             Text = title,
-            FontSize = 17,
+            FontSize = EditorChrome.ScaledFont(17),
             FontWeight = FontWeight.SemiBold,
             TextWrapping = TextWrapping.Wrap,
         });
@@ -32,7 +32,7 @@ internal static class TtsVoicesChrome
             panel.Children.Add(new TextBlock
             {
                 Text = intro,
-                FontSize = 12.5,
+                FontSize = EditorChrome.FieldFontSize,
                 Foreground = EditorChrome.DimTextBrush,
                 TextWrapping = TextWrapping.Wrap,
             });

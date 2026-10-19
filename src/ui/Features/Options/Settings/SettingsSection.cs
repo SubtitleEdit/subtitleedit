@@ -57,7 +57,7 @@ public class SettingsSection
         // (and the group icons in the shortcuts window).
         var icon = new ContentControl
         {
-            FontSize = 11,
+            FontSize = EditorChrome.ScaledFont(11),
             Foreground = Brushes.White,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,

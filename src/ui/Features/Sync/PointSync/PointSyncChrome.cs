@@ -65,7 +65,7 @@ internal static class PointSyncChrome
     {
         var label = new TextBlock
         {
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
@@ -220,7 +220,7 @@ internal static class PointSyncChrome
     {
         var grid = new Grid
         {
-            MinHeight = 30,
+            MinHeight = EditorChrome.ScaledSize(30),
             ColumnSpacing = 8,
             ColumnDefinitions =
             {
