@@ -200,6 +200,31 @@ public class Se4SettingsXmlImporterTests : IDisposable
     }
 
     [Fact]
+    public void ApplyWaveform_MapsSelectCurrentSubtitleWhilePlayingFromGeneral()
+    {
+        // The toggle sits above the waveform in SE 4 but is stored in General, not in
+        // VideoControls - it must come along with the waveform category anyway (#16214).
+        var file = Parse(
+            "<Settings><General><SyncListViewWithVideoWhilePlaying>True</SyncListViewWithVideoWhilePlaying></General>" +
+            "<VideoControls><WaveformDrawGrid>True</WaveformDrawGrid></VideoControls></Settings>");
+
+        Se4SettingsXmlImporter.ApplyWaveform(file);
+
+        Assert.True(Se.Settings.General.SelectCurrentSubtitleWhilePlaying);
+    }
+
+    [Fact]
+    public void ApplyWaveform_KeepsSelectCurrentSubtitleWhilePlayingWhenSe4DidNotWriteIt()
+    {
+        Se.Settings.General.SelectCurrentSubtitleWhilePlaying = true;
+        var file = Parse("<Settings><VideoControls><WaveformDrawGrid>True</WaveformDrawGrid></VideoControls></Settings>");
+
+        Se4SettingsXmlImporter.ApplyWaveform(file);
+
+        Assert.True(Se.Settings.General.SelectCurrentSubtitleWhilePlaying);
+    }
+
+    [Fact]
     public void ApplyAppearance_MapsThemeFontsAndToolbarButtons()
     {
         var file = Parse(

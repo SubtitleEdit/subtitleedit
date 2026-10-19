@@ -180,6 +180,14 @@ public static class Se4SettingsXmlImporter
     /// </summary>
     public static void ApplyWaveform(Se4SettingsFile file)
     {
+        // SE 4 kept the "select current subtitle while playing" toggle (the check box above the
+        // waveform) in General; SE 5 shows it on the waveform toolbar, so it travels with the
+        // waveform category (#16214).
+        if (file.General != null)
+        {
+            SetBool(file.General, "SyncListViewWithVideoWhilePlaying", v => Se.Settings.General.SelectCurrentSubtitleWhilePlaying = v);
+        }
+
         var videoControls = file.VideoControls;
         if (videoControls == null)
         {

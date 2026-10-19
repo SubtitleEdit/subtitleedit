@@ -4942,6 +4942,18 @@ public partial class MainViewModel :
         _shortcutManager.ClearKeys();
     }
 
+    // Kept in sync on every change, not only through the toolbar button's IsCheckedChanged:
+    // the shortcut and the menu set the property too, and the button is not always there.
+    partial void OnSelectCurrentSubtitleWhilePlayingChanged(bool value)
+    {
+        Se.Settings.General.SelectCurrentSubtitleWhilePlaying = value;
+    }
+
+    partial void OnWaveformCenterChanged(bool value)
+    {
+        Se.Settings.Waveform.CenterVideoPosition = value;
+    }
+
     [RelayCommand]
     private void ToggleCurrentSubtitleWhilePlaying()
     {
@@ -15165,6 +15177,12 @@ public partial class MainViewModel :
         LockTimeCodes = Se.Settings.General.LockTimeCodes;
         UpdateTimeCodeModeText();
         IsWaveformToolbarVisible = Se.Settings.Waveform.ShowToolbar;
+
+        // The two waveform toolbar toggles are written back to the settings from the view model
+        // (on change and on close), so an import or a reset that changed them in Se.Settings
+        // was overwritten with the old on-screen state the moment the window closed (#16214).
+        SelectCurrentSubtitleWhilePlaying = Se.Settings.General.SelectCurrentSubtitleWhilePlaying;
+        WaveformCenter = Se.Settings.Waveform.CenterVideoPosition;
 
         // Frame mode may have just been toggled - refresh the waveform seek combo (frames vs
         // seconds) before SetLayout below rebuilds the toolbar and re-binds the combo.
