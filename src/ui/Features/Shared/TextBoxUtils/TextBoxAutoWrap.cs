@@ -12,6 +12,9 @@ namespace Nikse.SubtitleEdit.Features.Shared.TextBoxUtils;
 /// than the single line max length, the line is broken at its last space, so the next words go
 /// on line two. Only typed text triggers it - not paste, not the text swapping in when another
 /// row is selected - and only a single line, so a line the user broke by hand is left alone.
+/// Only the keystroke that pushes the line over the limit wraps: a line that was already too
+/// long when it landed in the box (a freshly opened file, or a profile that lowered the limit)
+/// is left as it is until the user breaks it - SE4 rewrapped it on the first edit (#16219).
 /// </summary>
 public static class TextBoxAutoWrap
 {
@@ -22,17 +25,38 @@ public static class TextBoxAutoWrap
     /// </summary>
     public static void Attach(TextBox textBox, Func<string> getLanguage)
     {
+        // The length before the typed text went in, measured in the tunnel pass - the TextBox
+        // inserts the text in between. -1 when the event carried no text (nothing was typed).
+        var lengthBeforeInput = -1;
+        textBox.AddHandler(InputElement.TextInputEvent, (_, e) =>
+        {
+            lengthBeforeInput = string.IsNullOrEmpty(e.Text)
+                ? -1
+                : HtmlUtil.RemoveHtmlTags(textBox.Text ?? string.Empty, true).Length;
+        }, RoutingStrategies.Tunnel, handledEventsToo: true);
+
         // TextBox handles TextInput itself, so listen to handled events too - by then the typed
         // character is in the text.
         textBox.AddHandler(InputElement.TextInputEvent, (_, _) =>
         {
+            var lengthBefore = lengthBeforeInput;
+            lengthBeforeInput = -1;
+
             if (!Se.Settings.General.SubtitleTextBoxAutoWrapWhileTyping || textBox.IsReadOnly)
             {
                 return;
             }
 
+            // Was the line within the limit before this keystroke? Otherwise it was already too
+            // long on its own, and wrapping it now would not be "while typing".
+            var maxLength = Se.Settings.General.SubtitleLineMaximumLength;
+            if (lengthBefore < 0 || lengthBefore > maxLength)
+            {
+                return;
+            }
+
             var text = textBox.Text ?? string.Empty;
-            if (TryWrap(text, textBox.CaretIndex, Se.Settings.General.SubtitleLineMaximumLength, getLanguage, out var newText, out var newCaret))
+            if (TryWrap(text, textBox.CaretIndex, maxLength, getLanguage, out var newText, out var newCaret))
             {
                 textBox.Text = newText;
                 textBox.CaretIndex = newCaret;

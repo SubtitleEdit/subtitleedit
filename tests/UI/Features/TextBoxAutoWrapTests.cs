@@ -93,10 +93,58 @@ public class TextBoxAutoWrapTests : IDisposable
         Type(textBox, "g");
         Assert.Equal("This is a line that is too long", textBox.Text);
 
+        // Back at the limit: the line is now 31 chars, and the gate only wraps the keystroke that
+        // crosses the limit (#16219), so put the 30-char text back before typing with it on.
+        textBox.Text = "This is a line that is too lon";
+        textBox.CaretIndex = textBox.Text.Length;
         Se.Settings.General.SubtitleTextBoxAutoWrapWhileTyping = true;
-        Type(textBox, "s");
-        Assert.Equal("This is a line that is too" + Environment.NewLine + "longs", textBox.Text);
+        Type(textBox, "g");
+        Assert.Equal("This is a line that is too" + Environment.NewLine + "long", textBox.Text);
         Assert.Equal(textBox.Text.Length, textBox.CaretIndex);
+    }
+
+    [AvaloniaFact]
+    public void Typing_IntoLineAlreadyTooLong_LeavesItAlone()
+    {
+        // A line that was too long when it landed in the box - a freshly opened file, or a
+        // profile that lowered the limit - is not rewrapped by the first edit (#16219).
+        Se.Settings.General.SubtitleLineMaximumLength = 30;
+        Se.Settings.General.SubtitleTextBoxAutoWrapWhileTyping = true;
+        var textBox = new TextBox { AcceptsReturn = true, Text = "This is a line that is already too long" };
+        textBox.CaretIndex = 4;
+        TextBoxAutoWrap.Attach(textBox, () => "en");
+
+        Type(textBox, "x");
+
+        Assert.Equal("Thisx is a line that is already too long", textBox.Text);
+    }
+
+    [AvaloniaFact]
+    public void Typing_TheCharacterThatOverflows_Wraps()
+    {
+        Se.Settings.General.SubtitleLineMaximumLength = 30;
+        Se.Settings.General.SubtitleTextBoxAutoWrapWhileTyping = true;
+        var textBox = new TextBox { AcceptsReturn = true, Text = "This is a line that is too lon" };
+        textBox.CaretIndex = textBox.Text.Length;
+        TextBoxAutoWrap.Attach(textBox, () => "en");
+
+        Type(textBox, "g");
+
+        Assert.Equal("This is a line that is too" + Environment.NewLine + "long", textBox.Text);
+    }
+
+    [AvaloniaFact]
+    public void EmptyTextInput_DoesNothing()
+    {
+        Se.Settings.General.SubtitleLineMaximumLength = 30;
+        Se.Settings.General.SubtitleTextBoxAutoWrapWhileTyping = true;
+        const string text = "This is a line that is already too long";
+        var textBox = new TextBox { AcceptsReturn = true, Text = text };
+        TextBoxAutoWrap.Attach(textBox, () => "en");
+
+        Type(textBox, string.Empty);
+
+        Assert.Equal(text, textBox.Text);
     }
 
     private static void Type(TextBox textBox, string text)
