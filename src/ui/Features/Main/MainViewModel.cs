@@ -28585,6 +28585,12 @@ public partial class MainViewModel :
             return result;
         }
 
+        // Another program may have written the file since it was loaded (#16216).
+        if (!await ConfirmOverwriteFileChangedOutside(isAutoSave))
+        {
+            return false;
+        }
+
         // Auto-save writes exactly what is on screen. AutoTrimWhiteSpaces() mutates the grid text,
         // which is fine for an explicit Ctrl+S but surprising for a background timer save - so skip it.
         if (!isAutoSave)
