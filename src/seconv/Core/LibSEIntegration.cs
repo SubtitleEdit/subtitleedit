@@ -904,9 +904,14 @@ internal static class LibSEIntegration
                 break;
 
             case "fixrtlviaunicodechars":
-                foreach (var p in subtitle.Paragraphs)
+                // Only meaningful for Hebrew/Arabic text; on a Latin-only subtitle it would just
+                // wrap every line in RTL control characters (same guard as Batch convert in the UI).
+                if (ContainsRightToLeftLetter(subtitle))
                 {
-                    p.Text = Utilities.FixRtlViaUnicodeChars(p.Text);
+                    foreach (var p in subtitle.Paragraphs)
+                    {
+                        p.Text = Utilities.FixRtlViaUnicodeChars(p.Text);
+                    }
                 }
                 break;
 
@@ -915,9 +920,14 @@ internal static class LibSEIntegration
                 break;
 
             case "reversertlstartend":
-                foreach (var p in subtitle.Paragraphs)
+                // Moves the punctuation of every line from the end to the start, which scrambles
+                // a Latin-only subtitle (".Hello world") - skip those (same guard as Batch convert).
+                if (ContainsRightToLeftLetter(subtitle))
                 {
-                    p.Text = Utilities.ReverseStartAndEndingForRightToLeft(p.Text);
+                    foreach (var p in subtitle.Paragraphs)
+                    {
+                        p.Text = Utilities.ReverseStartAndEndingForRightToLeft(p.Text);
+                    }
                 }
                 break;
 
@@ -925,6 +935,19 @@ internal static class LibSEIntegration
                 // Unknown operation - ignore or log warning
                 break;
         }
+    }
+
+    private static bool ContainsRightToLeftLetter(Subtitle subtitle)
+    {
+        foreach (var p in subtitle.Paragraphs)
+        {
+            if (LanguageAutoDetect.ContainsRightToLeftLetter(p.Text))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static void RemoveUnicodeControlChars(Subtitle subtitle)
