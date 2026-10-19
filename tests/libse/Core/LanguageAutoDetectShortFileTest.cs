@@ -156,6 +156,9 @@ public class LanguageAutoDetectShortFileTest
     // Cyrillic
     [InlineData("bg", "Какво правиш тук?", "Не знам, благодаря.")]
     [InlineData("sr", "Шта радиш овде?", "Не знам, хвала.")]
+    [InlineData("mk", "Што правиш тука?", "Не знам, благодарам.")]
+    [InlineData("mk", "Ќе дојдам утре.", "Не можам да верувам.")]      // only Bulgarian list words (не, да) - the ќ decides
+    [InlineData("sr", "Доћи ћу сутра.", "Не могу да верујем.")]         // ћ decides
     // Greek
     [InlineData("el", "Τι κάνεις εδώ;", "Δεν ξέρω, ευχαριστώ πολύ.")]
     // Middle East

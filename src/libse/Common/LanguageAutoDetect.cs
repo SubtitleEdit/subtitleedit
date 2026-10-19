@@ -118,6 +118,64 @@ namespace Nikse.SubtitleEdit.Core.Common
             return CountWords(text).Get(words);
         }
 
+        /// <summary>
+        /// Tells Macedonian or Serbian from the other Cyrillic languages by spelling: ј, љ, њ
+        /// and џ are written only in those two, and neither of them has ъ, ы, э, ё, й, щ, ь, ю
+        /// or я (which Bulgarian, Russian and Ukrainian use all the time). Within the pair, ќ,
+        /// ѓ and ѕ exist only in Macedonian and ћ and ђ only in Serbian. This beats the word
+        /// counts, where the short words all South Slavic languages share (не, да, за, нас, може,
+        /// така, беше, ...) let the Bulgarian and Russian lists win on Macedonian text.
+        /// </summary>
+        /// <param name="text">The text to look at.</param>
+        /// <param name="counts">Word counts of the same text, for a tie between the pair; null to count on demand.</param>
+        /// <returns>"mk", "sr", or null when the letters do not say Macedonian or Serbian.</returns>
+        private static string GetMacedonianOrSerbianByLetters(string text, WordListCounts? counts)
+        {
+            var macedonianOrSerbian = 0; // ј љ њ џ ќ ѓ ѕ ћ ђ
+            var bulgarianOrRussian = 0;  // ъ ы э ё й щ ь ю я
+            var macedonianOnly = 0;      // ќ ѓ ѕ
+            var serbianOnly = 0;         // ћ ђ
+            foreach (var c in text)
+            {
+                switch (c)
+                {
+                    case 'ј': case 'Ј': case 'љ': case 'Љ': case 'њ': case 'Њ': case 'џ': case 'Џ':
+                        macedonianOrSerbian++;
+                        break;
+                    case 'ќ': case 'Ќ': case 'ѓ': case 'Ѓ': case 'ѕ': case 'Ѕ':
+                        macedonianOrSerbian++;
+                        macedonianOnly++;
+                        break;
+                    case 'ћ': case 'Ћ': case 'ђ': case 'Ђ':
+                        macedonianOrSerbian++;
+                        serbianOnly++;
+                        break;
+                    case 'ъ': case 'Ъ': case 'ы': case 'Ы': case 'э': case 'Э': case 'ё': case 'Ё': case 'й': case 'Й':
+                    case 'щ': case 'Щ': case 'ь': case 'Ь': case 'ю': case 'Ю': case 'я': case 'Я':
+                        bulgarianOrRussian++;
+                        break;
+                }
+            }
+
+            // Strictly more, so that a few misread letters in an OCR'ed file cannot flip a
+            // Bulgarian or Russian text, where ъ/й/я/ю are everywhere.
+            if (macedonianOrSerbian == 0 || macedonianOrSerbian <= bulgarianOrRussian)
+            {
+                return null;
+            }
+
+            if (macedonianOnly != serbianOnly)
+            {
+                return macedonianOnly > serbianOnly ? "mk" : "sr";
+            }
+
+            // Neither ќ/ѓ/ѕ nor ћ/ђ, or as many of each (an OCR tie): the word lists decide.
+            var c2 = counts ?? CountWords(text);
+            var macedonianCount = c2.Get(AutoDetectWordsMacedonian);
+            var serbianCount = c2.Get(AutoDetectWordsSerbianCyrillic) + c2.Get(AutoDetectWordsSerbianCyrillicOnly);
+            return macedonianCount >= serbianCount ? "mk" : "sr";
+        }
+
         private static int GetCountContains(string text, params string[] words)
         {
             var count = 0;
@@ -430,12 +488,15 @@ namespace Nikse.SubtitleEdit.Core.Common
             "있어요", "보여줘", "괜찮아요", "목소릴", "기억이", "저주를", "좋아요"
         };
 
+        // Everyday Macedonian words, preferring the ones Bulgarian and Serbian spell
+        // differently (ќе/ще/ће, јас/аз/ја, тоа/това/то, зошто/защо/зашто, ...). The old list
+        // was mostly words from one space film plus OCR misreads with Latin letters in them.
         private static readonly string[] AutoDetectWordsMacedonian =
         {
-            "господине", "Нема", "господине", "работа", "вселената", "Може", "треба", "Треба", "слетување", "капсулата", "време", "Френдшип", "Прием", "Добро", "пресметки", "Благодарам", "нешто", "Благодарам", "орбитата", "инженер",
-            "Харисон", "Фала", "тоалет", "орбита", "знаеме", "Супервизор", "жени", "Добра", "требаат", "што", "дeкa", "eшe", "кучe", "Руиз", "кучeто", "кучињa", "Бјути", "имa", "многу", "кучињaтa", "AДЗЖ", "Животни", "моЖe", "мaчe",
-            "мecто", "имaмe", "мaчињa", "пpвото", "пpaвaт", "нeшто", "колку",
-            "што", "тоа", "дека", "Што", "Дали", "треба", "беше", "таму"
+            "ќе", "што", "тоа", "дека", "дали", "јас", "тој", "таа", "тие", "сум", "треба", "требаат", "нема", "може", "можеби", "мора",
+            "многу", "нешто", "ништо", "некој", "никој", "сите", "колку", "каде", "зошто", "затоа", "тука", "таму", "уште", "веќе",
+            "сега", "денес", "секогаш", "никогаш", "сакам", "мислам", "знаеме", "одиме", "правиш", "знаеш", "имаш", "беше", "време",
+            "работа", "луѓе", "жени", "добро", "добра", "благодарам", "фала", "господине", "тоалет", "инженер", "вселената", "орбитата",
         };
 
         private static readonly string[] AutoDetectWordsFinnish =
@@ -613,6 +674,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             var best = string.Empty;
             var bestScore = -1;
             var counts = CountWords(text);
+            var macedonianOrSerbianChecked = false;
+            string macedonianOrSerbianByLetters = null;
 
             void Consider(string languageCode, int score)
             {
@@ -621,6 +684,18 @@ namespace Nikse.SubtitleEdit.Core.Common
                     best = languageCode;
                     bestScore = score;
                 }
+            }
+
+            // "mk", "sr" or null, scanning the letters once no matter how many blocks ask.
+            string MacedonianOrSerbian()
+            {
+                if (!macedonianOrSerbianChecked)
+                {
+                    macedonianOrSerbianByLetters = GetMacedonianOrSerbianByLetters(text, counts);
+                    macedonianOrSerbianChecked = true;
+                }
+
+                return macedonianOrSerbianByLetters;
             }
 
             var count = counts.Get(AutoDetectWordsEnglish);
@@ -766,7 +841,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var bulgarianCount = counts.Get(AutoDetectWordsBulgarian);
                 var ukrainianCount = counts.Get(AutoDetectWordsUkrainian);
                 var macedonianCount = counts.Get(AutoDetectWordsMacedonian);
-                if (bulgarianCount > count)
+                var macedonianOrSerbian = MacedonianOrSerbian();
+                if (macedonianOrSerbian != null)
+                {
+                    Consider(macedonianOrSerbian, count);
+                }
+                else if (bulgarianCount > count)
                 {
                     if (ukrainianCount > bulgarianCount && ukrainianCount > macedonianCount)
                     {
@@ -814,7 +894,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (count > bestCount)
             {
                 var macedonianCount = counts.Get(AutoDetectWordsMacedonian);
-                if (macedonianCount > count)
+                var macedonianOrSerbian = MacedonianOrSerbian();
+                if (macedonianOrSerbian != null)
+                {
+                    Consider(macedonianOrSerbian, count);
+                }
+                else if (macedonianCount > count)
                 {
                     Consider("mk", count);
                 }
@@ -2520,24 +2605,26 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
-            if (topCount == 1)
+            var result = LanguageCodes[firstTop];
+            for (var p = 0; topCount > 1 && p < PriorityOrder.Length; p++)
             {
-                return LanguageCodes[firstTop];
-            }
-
-            // Priority order for tie-breaking
-            foreach (var lang in PriorityOrder)
-            {
-                for (var i = 0; i < languageScores.Length; i++)
+                // Priority order for tie-breaking
+                var i = Array.IndexOf(LanguageCodes, PriorityOrder[p]);
+                if (i >= 0 && languageScores[i] == maxScore)
                 {
-                    if (languageScores[i] == maxScore && LanguageCodes[i] == lang)
-                    {
-                        return lang;
-                    }
+                    result = PriorityOrder[p];
+                    break;
                 }
             }
 
-            return LanguageCodes[firstTop];
+            if (result == "ru")
+            {
+                // The Cyrillic letter set is Russian's, so every Cyrillic text lands here;
+                // Macedonian and Serbian have letters of their own that say otherwise.
+                return GetMacedonianOrSerbianByLetters(text, null) ?? "ru";
+            }
+
+            return result;
         }
 
         public static bool IsLanguageWithoutPeriods(string language)
