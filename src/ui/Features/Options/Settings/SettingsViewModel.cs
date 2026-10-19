@@ -488,6 +488,13 @@ public partial class SettingsViewModel : ObservableObject
     /// </summary>
     public bool SettingsImported { get; private set; }
 
+    /// <summary>
+    /// True once an import or a reset has replaced the settings wholesale. The main window then
+    /// applies the layout sizes and the waveform zoom *from* the settings instead of carrying its
+    /// current on-screen state over them, which is what a plain OK does (#16213).
+    /// </summary>
+    public bool SettingsReplaced { get; private set; }
+
     public Window? Window { get; internal set; }
     public ScrollViewer ScrollView { get; internal set; }
     public List<SettingsSection> Sections { get; internal set; }
@@ -3105,6 +3112,7 @@ public partial class SettingsViewModel : ObservableObject
 
         Se.SaveSettings();
         OkPressed = true;
+        SettingsReplaced = true;
         Window?.Close();
     }
 
@@ -3334,6 +3342,7 @@ public partial class SettingsViewModel : ObservableObject
             // Reload the settings from disk since they were updated
             LoadSettings();
             SettingsImported = true;
+            SettingsReplaced = true;
         }
     }
 
