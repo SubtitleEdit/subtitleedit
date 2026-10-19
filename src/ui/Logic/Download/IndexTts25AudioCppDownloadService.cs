@@ -24,8 +24,12 @@ public interface IIndexTts25AudioCppDownloadService
 
 /// <summary>
 /// Engine binaries come from SubtitleEdit's own support-files release (built from upstream
-/// audio.cpp by .github/workflows/build-audiocpp-indextts-release.yml, since upstream ships
-/// Windows prebuilts only). Model weights come straight from HuggingFace and are never
+/// audio.cpp by .github/workflows/build-audiocpp-indextts-release.yml). Upstream has published
+/// prebuilt archives for every platform since v0.9.0, but we keep building our own: a composite
+/// of just our engine families with portable CPU flags (upstream's Windows CPU and Vulkan builds
+/// are tuned to whichever CI runner they land on — v0.9.1 and v0.9.2 carry AVX-512 code — and
+/// its "portable" variants have no AVX2 at all), with the CUDA runtime bundled in one archive.
+/// Model weights come straight from HuggingFace and are never
 /// redistributed by us — they carry the bilibili Model Use License, which the user accepts in
 /// <see cref="Features.Video.TextToSpeech.IndexTts25License.IndexTts25LicenseWindow"/> first.
 /// </summary>
@@ -33,10 +37,11 @@ public class IndexTts25AudioCppDownloadService : IIndexTts25AudioCppDownloadServ
 {
     private readonly HttpClient _httpClient;
 
-    // 2026-10-16b: the 2026-10-16 build (upstream v0.9.2 @ 0097d365, index_tts2 + higgs_audio_tts
-    // + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts) plus voxtral_tts
-    // for Voxtral TTS. Same upstream commit, so the other families are unchanged.
-    private const string ReleaseTag = "audiocpp-indextts25-2026-10-16b";
+    // 2026-10-19: upstream v0.9.2-drama3-base-small @ 50749561 with the same nine families as
+    // 2026-10-16b (index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio
+    // + sidon + breeze_tts + voxtral_tts). A seeded KugelAudio A/B against 2026-10-16b was
+    // byte-identical; the bump brings the Fish DAC reference-encoding fixes (#936, #937).
+    private const string ReleaseTag = "audiocpp-indextts25-2026-10-19";
     private const string ReleaseBase =
         "https://github.com/SubtitleEdit/support-files/releases/download/" + ReleaseTag + "/";
 
