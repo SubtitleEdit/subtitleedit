@@ -173,9 +173,7 @@ public static partial class InitListViewAndEditBox
         if (Se.Settings.Appearance.GridAlternatingRows)
         {
             var isDark = Application.Current?.ActualThemeVariant == ThemeVariant.Dark;
-            var altColorHex = isDark
-                ? Se.Settings.Appearance.GridAlternatingRowColorDark
-                : Se.Settings.Appearance.GridAlternatingRowColor;
+            var altColorHex = UiTheme.GetGridAlternatingRowColorHex(isDark);
             try
             {
                 if (!string.IsNullOrWhiteSpace(altColorHex))

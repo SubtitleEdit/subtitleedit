@@ -84,6 +84,11 @@ internal static partial class EditorChrome
     {
         if (isDark)
         {
+            if (appearance?.Theme == UiTheme.ThemeNameNord)
+            {
+                return UiTheme.NordBackgroundColor;
+            }
+
             return appearance != null && Color.TryParse(appearance.DarkModeBackgroundColor, out var dark)
                 ? Color.FromRgb(dark.R, dark.G, dark.B)
                 : DefaultDarkBase;

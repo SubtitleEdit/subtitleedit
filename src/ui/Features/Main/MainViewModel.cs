@@ -15121,14 +15121,24 @@ public partial class MainViewModel :
     private void OnSystemThemeChanged()
     {
         RebuildToolbar();
+        UpdateAlternatingRowBrush();
 
+        // The syntax highlighting scheme is theme-dependent. The edit box re-colors itself
+        // (its presenter keys its caches on the theme), but the grid rows hold converted
+        // inlines - re-raise the text notifications so realized rows re-run the converter.
+        foreach (var subtitle in Subtitles)
+        {
+            subtitle.RefreshTextRendering();
+        }
+    }
+
+    private void UpdateAlternatingRowBrush()
+    {
         // The rows keep a shared brush, rather than a theme-resource binding. Updating its
         // Color notifies every realized row without rebuilding the grid (and losing its state).
         if (SubtitleGridAlternatingRowBrush != null)
         {
-            var colorHex = Application.Current?.ActualThemeVariant == ThemeVariant.Dark
-                ? Se.Settings.Appearance.GridAlternatingRowColorDark
-                : Se.Settings.Appearance.GridAlternatingRowColor;
+            var colorHex = UiTheme.GetGridAlternatingRowColorHex(Application.Current?.ActualThemeVariant == ThemeVariant.Dark);
             try
             {
                 SubtitleGridAlternatingRowBrush.Color = colorHex.FromHexToColor();
@@ -15137,14 +15147,6 @@ public partial class MainViewModel :
             {
                 // Keep the current brush color when the configured value is invalid.
             }
-        }
-
-        // The syntax highlighting scheme is theme-dependent. The edit box re-colors itself
-        // (its presenter keys its caches on the theme), but the grid rows hold converted
-        // inlines - re-raise the text notifications so realized rows re-run the converter.
-        foreach (var subtitle in Subtitles)
-        {
-            subtitle.RefreshTextRendering();
         }
     }
 
@@ -15199,6 +15201,10 @@ public partial class MainViewModel :
         }
 
         RebuildToolbar();
+
+        // Dark and Nord share the dark variant, so a switch between them does not rebuild
+        // anything theme-keyed - the row stripes follow the theme here.
+        UpdateAlternatingRowBrush();
 
         MenuPlugins.IsVisible = Se.Settings.Appearance.ShowPluginsMenu;
         if (OperatingSystem.IsMacOS())
