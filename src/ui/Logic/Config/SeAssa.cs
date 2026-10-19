@@ -69,6 +69,11 @@ public class SeAssa
     public bool HideLayersFromVideoPreview { get; set; }
     public bool FontCollectorTrimFonts { get; set; }
 
+    /// <summary>
+    /// ASSA/SSA styles windows: width of the style lists pane (left of the splitter), 0 = default.
+    /// </summary>
+    public int StylesListsWidth { get; set; }
+
     public SeAssa()
     {
         AutoSetResolution = true;

@@ -1,7 +1,11 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Input;
+using Avalonia.Layout;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
@@ -22,6 +26,97 @@ namespace Nikse.SubtitleEdit.Features.Assa;
 /// </summary>
 public static class StylesDialogHelper
 {
+
+    /// <summary>
+    /// Default and smallest width of the style lists pane, left of the splitter. The lists
+    /// show name, font name, size, usages/category and a color sample, so a narrow pane
+    /// cuts the names off (#16251).
+    /// </summary>
+    public const double DefaultListsWidth = 480;
+    public const double MinListsWidth = 300;
+
+    /// <summary>
+    /// "Font name" list column.
+    /// </summary>
+    public static SeTableViewColumn MakeFontNameColumn(double width = 130) => new()
+    {
+        Header = Se.Language.General.FontName,
+        CellTheme = UiUtil.TableViewCellTheme,
+        HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+        Binding = new Binding(nameof(StyleDisplay.FontName)),
+        Width = new GridLength(width),
+    };
+
+    /// <summary>
+    /// Color sample list column: "Aa" in the primary color on the outline color, so the
+    /// colors of every style show without selecting it - as SE4's advanced styles list did (#16251).
+    /// </summary>
+    public static SeTableViewColumn MakeColorSampleColumn() => new()
+    {
+        Header = Se.Language.General.Color,
+        CellTheme = UiUtil.TableViewCellTheme,
+        HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+        CellTemplate = new FuncDataTemplate<StyleDisplay>((_, _) => new Border
+        {
+            Width = 46,
+            Height = 18,
+            CornerRadius = new CornerRadius(3),
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!Border.BackgroundProperty] = new Binding(nameof(StyleDisplay.ColorOutline)) { Converter = ColorToBrush },
+            Child = new TextBlock
+            {
+                Text = "Aa",
+                FontSize = 11.5,
+                FontWeight = FontWeight.Bold,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                [!TextBlock.ForegroundProperty] = new Binding(nameof(StyleDisplay.ColorPrimary)) { Converter = ColorToBrush },
+                [!TextBlock.FontStyleProperty] = new Binding(nameof(StyleDisplay.Italic)) { Converter = ItalicToFontStyle },
+            },
+        }),
+        NameBinding = new Binding(nameof(StyleDisplay.ColorPrimary)) { Converter = ColorToName },
+        Width = new GridLength(58),
+    };
+
+    private static readonly IValueConverter ColorToBrush = new FuncValueConverter<Color, IBrush>(c => new SolidColorBrush(c));
+    private static readonly IValueConverter ItalicToFontStyle = new FuncValueConverter<bool, FontStyle>(italic => italic ? FontStyle.Italic : FontStyle.Normal);
+    private static readonly IValueConverter ColorToName = new FuncValueConverter<Color, string>(c => c.FromColorToHex(false));
+
+    /// <summary>
+    /// Puts the lists pane and the right side in <paramref name="content"/> with a draggable
+    /// splitter between them. The pane width is remembered across windows (ASSA and SSA share it)
+    /// and saved when <paramref name="window"/> closes.
+    /// </summary>
+    public static void AddListsSplitter(Window window, Grid content, Control lists, Control right)
+    {
+        var width = Se.Settings.Assa.StylesListsWidth >= MinListsWidth ? Se.Settings.Assa.StylesListsWidth : DefaultListsWidth;
+        content.ColumnDefinitions.Clear();
+        content.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(width)) { MinWidth = MinListsWidth });
+        content.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto));
+        content.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(1, GridUnitType.Star)) { MinWidth = 560 });
+
+        var splitter = new GridSplitter
+        {
+            Width = UiUtil.SplitterWidthOrHeight,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Stretch,
+            Background = EditorChrome.LineBrush,
+        };
+
+        content.Add(lists, 0, 0);
+        content.Add(splitter, 0, 1);
+        content.Add(right, 0, 2);
+
+        window.Closing += delegate
+        {
+            var actual = content.ColumnDefinitions[0].ActualWidth;
+            if (actual >= MinListsWidth)
+            {
+                Se.Settings.Assa.StylesListsWidth = (int)Math.Round(actual);
+            }
+        };
+    }
     /// <summary>
     /// Asks how to resolve a name clash: returns Custom1 (overwrite), Custom2 (keep both) or
     /// anything else (cancel), plus whether the answer applies to all remaining clashes.
