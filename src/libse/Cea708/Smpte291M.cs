@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Core.Cea708
 {
@@ -11,6 +12,10 @@ namespace Nikse.SubtitleEdit.Core.Cea708
         public int CaptionDistributionPacketDataCount { get; set; }
         public int CaptionDistributionPacketFramingRate { get; set; }
         public bool CaptionDistributionPacketTimeCodeAdded { get; set; }
+        /// <summary>
+        /// The four bytes of the optional time code section (SMPTE 334-2 section id 0x71), or null when the packet has none.
+        /// </summary>
+        public byte[] CaptionDistributionPacketTimeCode { get; set; }
         public bool CaptionDistributionPacketDataBlockAdded { get; set; }
         public bool CaptionDistributionPacketServiceInfoAdded { get; set; }
         public bool CaptionDistributionPacketServiceInfoStart { get; set; }
@@ -26,6 +31,9 @@ namespace Nikse.SubtitleEdit.Core.Cea708
         public int CaptionDistributionPacketFooterSection { get; set; }
         public int CaptionDistributionPacketHeaderSequenceCounter2 { get; set; }
         public int CaptionDistributionPacketChecksum { get; set; }
+
+        public const byte TimeCodeSectionId = 0x71;
+        public const byte CcDataSectionId = 0x72;
 
         public string GetFrameRateDisplay()
         {
@@ -84,19 +92,39 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             CaptionDistributionPacketContainsCaptions = (bytes[7] & 0b00000010) > 0;
             CaptionDistributionPacketHeaderSequenceCounter = (bytes[8] << 8) + bytes[9];
 
-            CcDataSectionCcData = new CcDataSection(bytes, 10);
+            var idx = 10;
 
-            var idx = 9 + CcDataSectionCcData.GetLength();
+            // Optional time code section (0x71 + 4 bytes) comes between the cdp header and the cc_data section
+            if (CaptionDistributionPacketTimeCodeAdded && idx + 5 <= bytes.Length && bytes[idx] == TimeCodeSectionId)
+            {
+                CaptionDistributionPacketTimeCode = new[] { bytes[idx + 1], bytes[idx + 2], bytes[idx + 3], bytes[idx + 4] };
+                idx += 5;
+            }
+
+            // Be tolerant: if the cc_data section is not where we expect it, look for its id further on
+            if (bytes[idx] != CcDataSectionId)
+            {
+                var ccDataIdx = Array.IndexOf(bytes, CcDataSectionId, idx);
+                if (ccDataIdx < 0)
+                {
+                    throw new InvalidOperationException("SMPTE 291M packet has no cc_data section (0x72)");
+                }
+
+                idx = ccDataIdx;
+            }
+
+            CcDataSectionCcData = new CcDataSection(bytes, idx);
+            idx += CcDataSectionCcData.GetLength();
 
             if (CaptionDistributionPacketServiceInfoAdded)
             {
-                CcServiceInfoSection = new CcServiceInfoSection(bytes, idx + 1);
+                CcServiceInfoSection = new CcServiceInfoSection(bytes, idx);
                 idx += CcServiceInfoSection.GetLength();
             }
 
-            CaptionDistributionPacketFooterSection = bytes[1 + idx];
-            CaptionDistributionPacketHeaderSequenceCounter2 = (bytes[2 + idx] << 8) + bytes[3 + idx];
-            CaptionDistributionPacketChecksum = bytes[4 + idx];
+            CaptionDistributionPacketFooterSection = bytes[idx];
+            CaptionDistributionPacketHeaderSequenceCounter2 = (bytes[idx + 1] << 8) + bytes[idx + 2];
+            CaptionDistributionPacketChecksum = bytes[idx + 3];
         }
 
         public string GetText(int lineIndex, bool flush, CommandState state)
@@ -106,9 +134,17 @@ namespace Nikse.SubtitleEdit.Core.Cea708
 
         public byte[] GetBytes()
         {
-            var flags = (byte)((CaptionDistributionPacketTimeCodeAdded ? 0b10000000 : 0) |
+            var timeCodeSection = CaptionDistributionPacketTimeCodeAdded && CaptionDistributionPacketTimeCode != null && CaptionDistributionPacketTimeCode.Length == 4
+                ? new[] { TimeCodeSectionId }.Concat(CaptionDistributionPacketTimeCode).ToArray()
+                : new byte[0];
+
+            var serviceInfoSection = CaptionDistributionPacketServiceInfoAdded && CcServiceInfoSection != null
+                ? CcServiceInfoSection.GetBytes()
+                : new byte[0];
+
+            var flags = (byte)((timeCodeSection.Length > 0 ? 0b10000000 : 0) |
                      (CaptionDistributionPacketDataBlockAdded ? 0b01000000 : 0) |
-                     (CaptionDistributionPacketServiceInfoAdded ? 0b00100000 : 0) |
+                     (serviceInfoSection.Length > 0 ? 0b00100000 : 0) |
                      (CaptionDistributionPacketServiceInfoStart ? 0b00010000 : 0) |
                      (CaptionDistributionPacketServiceInfoChanged ? 0b00001000 : 0) |
                      (CaptionDistributionPacketServiceInfoEnd ? 0b00000100 : 0) |
@@ -128,8 +164,9 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 (byte)(CaptionDistributionPacketHeaderSequenceCounter >> 8),
                 (byte)(CaptionDistributionPacketHeaderSequenceCounter & 0b0000000011111111),
             }
+                .Concat(timeCodeSection)
                 .Concat(CcDataSectionCcData.GetBytes())
-                .Concat(CcServiceInfoSection.GetBytes())
+                .Concat(serviceInfoSection)
                 .Concat(new byte[]
                 {
                     0x74, // footer id
