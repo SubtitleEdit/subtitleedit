@@ -461,6 +461,11 @@ public partial class MainViewModel :
     [ObservableProperty] private string _textBoxLookUpHeader = string.Empty;
     [ObservableProperty] private ObservableCollection<string> _speeds;
     [ObservableProperty] private string _selectedSpeed;
+
+    // Waveform toolbar rule-profile picker (#16236): the names from Settings > Rules, with the
+    // active one selected. Changing the selection applies that profile like Choose profile does.
+    [ObservableProperty] private ObservableCollection<string> _ruleProfiles;
+    [ObservableProperty] private string? _selectedRuleProfile;
     [ObservableProperty] private ObservableCollection<string> _videoSeekAmounts;
     [ObservableProperty] private string _selectedVideoSeekAmount;
     [ObservableProperty] private bool _showWaveformDisplayModeSeparator;
@@ -1200,6 +1205,9 @@ public partial class MainViewModel :
         VideoSeekAmounts = new ObservableCollection<string>();
         SelectedVideoSeekAmount = string.Empty;
         RefreshVideoSeekAmounts();
+
+        RuleProfiles = new ObservableCollection<string>();
+        RefreshRuleProfiles();
 
         WaveformAudioTracks = new ObservableCollection<WaveformAudioTrackItem>();
 
@@ -10843,13 +10851,38 @@ public partial class MainViewModel :
 
         if (result is { OkPressed: true, SelectedProfile: not null })
         {
-            var p = result.SelectedProfile.ToRulesProfile();
-            Se.ApplyRuleProfile(p);
-
-            SetLibSeSettings();
-
-            ShowStatus(string.Format(Se.Language.Main.RuleProfileIsX, p.Name));
+            ApplyRuleProfile(result.SelectedProfile.ToRulesProfile());
         }
+
+        // The picker's dialog can add, rename or delete profiles too.
+        RefreshRuleProfiles();
+    }
+
+    /// <summary>
+    /// Makes <paramref name="profile"/> the active rule profile - from the Choose profile dialog
+    /// or the waveform toolbar picker - and refreshes what depends on its limits: libse's copy
+    /// of the rules and the grid's CPS / line-length colouring, which is computed per row from
+    /// the settings and otherwise keeps the old profile's colours until a row is edited.
+    /// </summary>
+    private void ApplyRuleProfile(RulesProfile profile)
+    {
+        Se.ApplyRuleProfile(profile);
+        SetLibSeSettings();
+
+        foreach (var row in Subtitles)
+        {
+            row.ClearStrippedTextCaches();
+            row.RefreshAfterSettingsChanged();
+        }
+
+        if (AudioVisualizer != null)
+        {
+            AudioVisualizer.MinGapSeconds = Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / 1000.0;
+            AudioVisualizer.InvalidateVisual();
+        }
+
+        SelectedRuleProfile = profile.Name;
+        ShowStatus(string.Format(Se.Language.Main.RuleProfileIsX, profile.Name));
     }
 
     [RelayCommand]
@@ -15195,6 +15228,9 @@ public partial class MainViewModel :
         // Frame mode may have just been toggled - refresh the waveform seek combo (frames vs
         // seconds) before SetLayout below rebuilds the toolbar and re-binds the combo.
         RefreshVideoSeekAmounts();
+
+        // Profiles may have been added, renamed or switched in Settings > Rules.
+        RefreshRuleProfiles();
 
         if (AudioVisualizer != null)
         {
@@ -22847,6 +22883,46 @@ public partial class MainViewModel :
 
         VideoSeekAmounts = new ObservableCollection<string>(amounts);
         SelectedVideoSeekAmount = preferred;
+    }
+
+    /// <summary>
+    /// Rebuilds the waveform toolbar's profile list from the settings and selects the active
+    /// profile. The toolbar combo is rebuilt by SetLayout when settings close, so this only has to
+    /// keep the bound collection and selection current.
+    /// </summary>
+    private void RefreshRuleProfiles()
+    {
+        var names = Se.Settings.General.Profiles.Select(p => p.Name).ToList();
+        var current = Se.Settings.General.CurrentProfile;
+        if (!names.Contains(current))
+        {
+            current = names.FirstOrDefault();
+        }
+
+        if (!RuleProfiles.SequenceEqual(names))
+        {
+            RuleProfiles = new ObservableCollection<string>(names);
+        }
+
+        SelectedRuleProfile = current;
+    }
+
+    partial void OnSelectedRuleProfileChanged(string? value)
+    {
+        // Null while the combo swaps its items source; a re-selection of the active profile (the
+        // refresh above, or the Choose profile dialog having applied it already) is a no-op.
+        if (string.IsNullOrEmpty(value) || value == Se.Settings.General.CurrentProfile)
+        {
+            return;
+        }
+
+        var profile = Se.Settings.General.Profiles.FirstOrDefault(p => p.Name == value);
+        if (profile == null)
+        {
+            return;
+        }
+
+        ApplyRuleProfile(profile);
     }
 
     private int GetVideoSeekMs()

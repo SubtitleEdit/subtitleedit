@@ -27,6 +27,7 @@ public class LanguageMainWaveform
     public string SeekAmountHint { get; set; }
     public string SeekVideo { get; set; }
     public string ConfigureToolbarItems { get; set; }
+    public string RuleProfileHint { get; set; }
     public string TextPreviousHint { get; set; }
     public string TextPlayHint { get; set; }
     public string TextPauseHint { get; set; }
@@ -80,6 +81,7 @@ public class LanguageMainWaveform
         SeekBackHint = "Seek video backward {0}";
         SeekForwardHint = "Seek video forward {0}";
         SeekAmountHint = "Seek amount {0}";
+        RuleProfileHint = "Rule profile {0}";
         SeekVideo = "Seek video (<< >>)";
         ConfigureToolbarItems = "Configure toolbar items...";
         TextPreviousHint = "Play previous subtitle and stop at end {0}";

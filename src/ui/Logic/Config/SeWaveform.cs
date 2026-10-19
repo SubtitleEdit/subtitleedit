@@ -240,6 +240,7 @@ public class SeWaveform
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.AutoSelectOnPlay, IsVisible = true, SortOrder = 140 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.Center, IsVisible = true, SortOrder = 150 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.TimelineTrackGrouping, IsVisible = true, SortOrder = 155 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.RuleProfile, IsVisible = false, SortOrder = 157 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.More, IsVisible = true, SortOrder = 160 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.LineBreak1, IsVisible = false, SortOrder = 170 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.LineBreak2, IsVisible = false, SortOrder = 180 },
