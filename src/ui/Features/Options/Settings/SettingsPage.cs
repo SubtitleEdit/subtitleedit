@@ -490,6 +490,18 @@ public class SettingsPage : UserControl
                 new Binding(nameof(_vm.ShowRecentFiles)) { Source = _vm }),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoConvertToUtf8, nameof(_vm.AutoConvertToUtf8)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ForceCrLfOnSave, nameof(_vm.ForceCrLfOnSave)),
+            new SettingsItem(Se.Language.Options.Settings.FileChangedOutsideAction, () => new ComboBox
+            {
+                MinWidth = 250,
+                DataContext = _vm,
+                [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(_vm.FileChangedOutsideActions)),
+                [!SelectingItemsControl.SelectedItemProperty] = new Binding(nameof(_vm.SelectedFileChangedOutsideAction))
+                {
+                    Mode = BindingMode.TwoWay,
+                },
+                ItemTemplate = new FuncDataTemplate<FileChangedOutsideActionDisplay>((f, _) =>
+                    new TextBlock { Text = f?.Name }, true),
+            }),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowFormatLimitWarning, nameof(_vm.ShowFormatLimitWarning)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoTrimWhiteSpace, nameof(_vm.AutoTrimWhiteSpace)),
             MakeCheckboxSetting(Se.Language.Options.Settings.RemoveBlankLinesWhenOpening, nameof(_vm.RemoveBlankLinesWhenOpening)),

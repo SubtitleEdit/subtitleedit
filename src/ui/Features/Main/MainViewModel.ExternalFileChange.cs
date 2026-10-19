@@ -9,9 +9,10 @@ namespace Nikse.SubtitleEdit.Features.Main;
 
 // Picks up edits made to the open subtitle file by another program (#15828). No live file
 // watcher: the file's time stamp and size are compared when the main window is activated again,
-// which is when the user comes back from the other editor. Unchanged work is reloaded right
-// away, unsaved work is only replaced after asking. Saving over a file another program wrote
-// in the meantime asks as well (#16216), like SE 4 did.
+// which is when the user comes back from the other editor. By default unchanged work is reloaded
+// right away and unsaved work is only replaced after asking; the "file changed by another
+// program" setting can make it always ask, or leave the subtitle alone (#16216). Saving over a
+// file another program wrote in the meantime asks as well, like SE 4 did.
 public partial class MainViewModel
 {
     /// <summary>The file as SE last read or wrote it - what the subtitle in memory came from.</summary>
@@ -119,13 +120,20 @@ public partial class MainViewModel
             return;
         }
 
+        var action = Se.Settings.General.FileChangedOutsideAction;
+        if (action == nameof(FileChangedOutsideActionType.Never))
+        {
+            return;
+        }
+
         _checkingSubtitleFileChangedOutside = true;
         try
         {
-            if (HasChanges())
+            var hasChanges = HasChanges();
+            if (hasChanges || action == nameof(FileChangedOutsideActionType.AlwaysAsk))
             {
                 var answer = await MessageBox.Show(Window, Se.Language.General.Warning,
-                    string.Format(Se.Language.General.SubtitleFileChangedOutsideX, fileName),
+                    string.Format(hasChanges ? Se.Language.General.SubtitleFileChangedOutsideX : Se.Language.General.SubtitleFileChangedOutsideReloadX, fileName),
                     MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (answer != MessageBoxResult.Yes)
                 {

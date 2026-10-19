@@ -213,6 +213,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _defaultSaveLocationCustomFolder = string.Empty;
     [ObservableProperty] private bool _isDefaultSaveLocationCustomFolderEnabled;
     [ObservableProperty] private string _selectedSaveAsBehaviorType;
+    [ObservableProperty] private ObservableCollection<FileChangedOutsideActionDisplay> _fileChangedOutsideActions;
+    [ObservableProperty] private FileChangedOutsideActionDisplay _selectedFileChangedOutsideAction;
 
     [ObservableProperty] private ObservableCollection<string> _saveAsAppendLanguageCode;
     [ObservableProperty] private string _selectedSaveAsAppendLanguageCode;
@@ -700,6 +702,8 @@ public partial class SettingsViewModel : ObservableObject
             Se.Language.General.Name,
         ];
         SelectedSaveAsBehaviorType = SaveAsBehaviorTypes[0];
+        FileChangedOutsideActions = new ObservableCollection<FileChangedOutsideActionDisplay>(FileChangedOutsideActionDisplay.List());
+        SelectedFileChangedOutsideAction = FileChangedOutsideActions[0];
 
         DefaultSaveLocationTypes =
         [
@@ -869,6 +873,7 @@ public partial class SettingsViewModel : ObservableObject
         SelectedSubtitleDoubleClickActionType = MapFromSelectedSubtitleDoubleClickAction(Se.Settings.General.SubtitleDoubleClickAction);
         SubtitleGridCenterSelectedRow = Se.Settings.General.SubtitleGridCenterSelectedRow;
         SelectedSaveAsBehaviorType = MapFromSelectedSaveAsBehavior(Se.Settings.General.SaveAsBehavior);
+        SelectedFileChangedOutsideAction = FileChangedOutsideActions.FirstOrDefault(p => p.Action.ToString() == general.FileChangedOutsideAction) ?? FileChangedOutsideActions[0];
         SelectedSaveAsAppendLanguageCode = MapFromSelectedSaveAsAppendLanguageCode(Se.Settings.General.SaveAsAppendLanguageCode);
         SelectedDefaultSaveLocationType = MapFromDefaultSaveLocation(Se.Settings.General.DefaultSaveLocation);
         DefaultSaveLocationCustomFolder = Se.Settings.General.DefaultSaveLocationCustomFolder ?? string.Empty;
@@ -1797,6 +1802,7 @@ public partial class SettingsViewModel : ObservableObject
         general.SubtitleDoubleClickAction = MapToSelectedSubtitleDoubleClickAction(SelectedSubtitleDoubleClickActionType);
         general.SubtitleGridCenterSelectedRow = SubtitleGridCenterSelectedRow;
         general.SaveAsBehavior = MapToSaveAsBehavior(SelectedSaveAsBehaviorType);
+        general.FileChangedOutsideAction = SelectedFileChangedOutsideAction.Action.ToString();
         general.SaveAsAppendLanguageCode = MapToSaveAsAppendLanguageCode(SelectedSaveAsAppendLanguageCode);
         general.DefaultSaveLocation = MapToDefaultSaveLocation(SelectedDefaultSaveLocationType);
         general.DefaultSaveLocationCustomFolder = DefaultSaveLocationCustomFolder;
