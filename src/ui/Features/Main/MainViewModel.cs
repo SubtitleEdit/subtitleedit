@@ -14961,6 +14961,10 @@ public partial class MainViewModel :
     private bool _oldGenerateSpectrogram;
     private string _oldSpectrogramStyle = string.Empty;
 
+    // Set for the ApplySettings that follows a settings import or reset: the layout sizes and
+    // the waveform zoom then come from the settings, not from what is on screen (#16213).
+    private bool _applyLayoutAndZoomFromSettings;
+
     [RelayCommand]
     private async Task CommandShowSettings()
     {
@@ -15009,6 +15013,10 @@ public partial class MainViewModel :
             {
                 return;
             }
+
+            // Set only now, past the early return above, so it cannot linger for an unrelated
+            // ApplySettings later (e.g. a language change, which keeps the on-screen sizes).
+            _applyLayoutAndZoomFromSettings = viewModel.SettingsReplaced;
 
             // Defer to a fresh dispatcher cycle: ApplySettings rebuilds the layout, which
             // destroys and recreates the video player control (a native Win32 HWND on Windows
@@ -15261,10 +15269,27 @@ public partial class MainViewModel :
         }
         else
         {
-            Se.Settings.Appearance.CurrentLayoutPositions = InitLayout.SaveLayoutPositions(ContentGrid.Children.FirstOrDefault() as Grid);
+            // A plain OK keeps the panel sizes the user has on screen. After an import or a
+            // reset the sizes in the settings are the ones to show - taking the on-screen ones
+            // here silently threw the imported sizes away (#16213).
+            if (!_applyLayoutAndZoomFromSettings)
+            {
+                Se.Settings.Appearance.CurrentLayoutPositions = InitLayout.SaveLayoutPositions(ContentGrid.Children.FirstOrDefault() as Grid);
+            }
+
             SetLayout(Se.Settings.General.LayoutNumber);
             InitLayout.RestoreLayoutPositions(Se.Settings.Appearance.CurrentLayoutPositions, ContentGrid.Children.FirstOrDefault() as Grid);
         }
+
+        // The rebuilt waveform inherits the zoom of the one it replaces (CarryOverWaveformState);
+        // an imported zoom is only read when a waveform is first created, so push it here.
+        if (_applyLayoutAndZoomFromSettings && Se.Settings.Waveform.RememberZoom && AudioVisualizer != null)
+        {
+            AudioVisualizer.ZoomFactor = Math.Clamp(Se.Settings.Waveform.ZoomFactor, AudioVisualizer.MinZoomFactor, AudioVisualizer.MaxZoomFactor);
+            AudioVisualizer.VerticalZoomFactor = Math.Clamp(Se.Settings.Waveform.VerticalZoomFactor, AudioVisualizer.MinZoomFactor, AudioVisualizer.MaxZoomFactor);
+        }
+
+        _applyLayoutAndZoomFromSettings = false;
 
         _autoBackupService.StopAutobackup();
         _autoBackupService.StartAutoBackup(this);
