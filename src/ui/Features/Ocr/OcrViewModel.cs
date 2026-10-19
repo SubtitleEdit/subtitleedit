@@ -2699,8 +2699,12 @@ public partial class OcrViewModel : ObservableObject
 
             _ocrFixEngine.Initialize(_fixEngineSubtitle, threeLetterCode, SelectedDictionary);
 
-            // nOCR and binary image compare write "*" for a glyph they could not match.
-            _ocrFixEngine.FillUnknownCharacters = ocrEngine.EngineType is OcrEngineType.nOcr or OcrEngineType.BinaryImageCompare;
+            // nOCR and binary image compare write "*" for a glyph they could not match, and can
+            // fit a slanted "l"/"i"/"I" to "/" or an apostrophe to "#"; text engines never do,
+            // so their "/" and "#" are real (#16031: "PILOTEN / OMGEKOMEN" became "PILOTEN I OMGEKOMEN").
+            var isImageMatcher = ocrEngine.EngineType is OcrEngineType.nOcr or OcrEngineType.BinaryImageCompare;
+            _ocrFixEngine.FillUnknownCharacters = isImageMatcher;
+            _ocrFixEngine.FixImageMatcherMisreads = isImageMatcher;
         }
         else
         {
