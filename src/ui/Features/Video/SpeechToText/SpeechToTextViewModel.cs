@@ -4796,9 +4796,14 @@ public partial class SpeechToTextViewModel : ObservableObject
                 ? string.Empty
                 : $"-l {language} ";
 
+            // qwen3-asr.cpp v0.1.10+ beam search: beam 3 trims about 2 WER points for roughly
+            // twice the decode time (greedy = 1). Older engine builds reject unknown arguments,
+            // so the flag is only passed when the installed build advertises it.
+            var qwen3BeamArg = qwen3Asr.SupportsBeamSearch ? "--beam-size 3 " : string.Empty;
+
             var qwen3Params = string.IsNullOrWhiteSpace(qwen3ExtraArgs)
-                ? $"{qwen3LanguageArg}-m \"{qwen3Asr.GetModelForCmdLine(model)}\" --aligner-model \"{qwen3Asr.GetModelForCmdLine(alignerModel.Name)}\" -f \"{waveFileName}\" --transcribe-align -o \"{_qwen3AsrOutputJsonPath}\""
-                : $"{qwen3ExtraArgs} {qwen3LanguageArg}-m \"{qwen3Asr.GetModelForCmdLine(model)}\" --aligner-model \"{qwen3Asr.GetModelForCmdLine(alignerModel.Name)}\" -f \"{waveFileName}\" --transcribe-align -o \"{_qwen3AsrOutputJsonPath}\"";
+                ? $"{qwen3LanguageArg}{qwen3BeamArg}-m \"{qwen3Asr.GetModelForCmdLine(model)}\" --aligner-model \"{qwen3Asr.GetModelForCmdLine(alignerModel.Name)}\" -f \"{waveFileName}\" --transcribe-align -o \"{_qwen3AsrOutputJsonPath}\""
+                : $"{qwen3ExtraArgs} {qwen3LanguageArg}{qwen3BeamArg}-m \"{qwen3Asr.GetModelForCmdLine(model)}\" --aligner-model \"{qwen3Asr.GetModelForCmdLine(alignerModel.Name)}\" -f \"{waveFileName}\" --transcribe-align -o \"{_qwen3AsrOutputJsonPath}\"";
 
             return StartEngineProcess(exe, qwen3Params, dataReceivedHandler);
         }
