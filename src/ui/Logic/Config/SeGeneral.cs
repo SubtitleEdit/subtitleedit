@@ -92,6 +92,7 @@ public class SeGeneral
     public string SubtitleDoubleClickAction { get; set; }
     public bool SubtitleGridCenterSelectedRow { get; set; }
     public string SaveAsBehavior { get; set; }
+    public string FileChangedOutsideAction { get; set; }
     public string SaveAsAppendLanguageCode { get; set; }
     public string DefaultSaveLocation { get; set; }
     public string DefaultSaveLocationCustomFolder { get; set; }
@@ -316,6 +317,7 @@ public class SeGeneral
         SubtitleDoubleClickAction = nameof(SubtitleDoubleClickActionType.GoToSubtitleAndPause);
         SubtitleGridCenterSelectedRow = false;
         SaveAsBehavior = nameof(SaveAsBehaviourType.UseVideoFileNameThenSubtitleFileName);
+        FileChangedOutsideAction = nameof(FileChangedOutsideActionType.ReloadWhenUnmodified);
         DefaultSaveLocation = nameof(DefaultSaveLocationType.SourceFileFolder);
         DefaultSaveLocationCustomFolder = string.Empty;
         SaveAsAppendLanguageCode = nameof(SaveAsLanguageAppendType.None);

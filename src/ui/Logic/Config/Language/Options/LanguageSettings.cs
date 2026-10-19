@@ -284,6 +284,10 @@ public class LanguageSettings
     public string SubtitleDoubleClickAction { get; set; }
     public string SubtitleGridCenterSelectedRow { get; set; }
     public string SaveAsBehavior { get; set; }
+    public string FileChangedOutsideAction { get; set; }
+    public string FileChangedOutsideReloadWhenUnmodified { get; set; }
+    public string FileChangedOutsideAlwaysAsk { get; set; }
+    public string FileChangedOutsideNever { get; set; }
     public string DefaultSaveLocation { get; set; }
     public string DefaultSaveLocationSourceFileFolder { get; set; }
     public string DefaultSaveLocationLastUsedFolder { get; set; }
@@ -659,6 +663,10 @@ public class LanguageSettings
         SubtitleDoubleClickAction = "Subtitle grid double-click action";
         SubtitleGridCenterSelectedRow = "Subtitle grid, center when selecting prev/next row";
         SaveAsBehavior = "\"Save as\" behavior";
+        FileChangedOutsideAction = "Subtitle file changed by another program";
+        FileChangedOutsideReloadWhenUnmodified = "Reload if nothing is unsaved, otherwise ask";
+        FileChangedOutsideAlwaysAsk = "Always ask";
+        FileChangedOutsideNever = "Do nothing";
         DefaultSaveLocation = "Default save location";
         DefaultSaveLocationSourceFileFolder = "Folder of subtitle/video file";
         DefaultSaveLocationLastUsedFolder = "Last used folder";

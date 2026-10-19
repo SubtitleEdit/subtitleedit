@@ -660,6 +660,7 @@ public class LanguageGeneral
     public string Styles { get; set; }
     public string SubtitleFile { get; set; }
     public string SubtitleFileChangedOutsideX { get; set; }
+    public string SubtitleFileChangedOutsideReloadX { get; set; }
     public string SubtitleFileChangedOutsideOverwriteX { get; set; }
     public string SubtitleFileChangedOutsideAutoSaveSkippedX { get; set; }
     public string SubtitleFileName { get; set; }
@@ -1557,6 +1558,7 @@ public class LanguageGeneral
         Styles = "Styles";
         SubtitleFile = "Subtitle file";
         SubtitleFileChangedOutsideX = "The file \"{0}\" was changed outside Subtitle Edit." + Environment.NewLine + Environment.NewLine + "Reload it and lose your changes?";
+        SubtitleFileChangedOutsideReloadX = "The file \"{0}\" was changed outside Subtitle Edit." + Environment.NewLine + Environment.NewLine + "Reload it?";
         SubtitleFileChangedOutsideOverwriteX = "The file \"{0}\" was changed outside Subtitle Edit after it was loaded." + Environment.NewLine + Environment.NewLine + "Overwrite it with the subtitle in Subtitle Edit?";
         SubtitleFileChangedOutsideAutoSaveSkippedX = "Auto-save skipped: {0} was changed outside Subtitle Edit";
         SubtitleFileName = "Subtitle file name";
