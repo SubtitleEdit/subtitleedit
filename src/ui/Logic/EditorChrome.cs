@@ -21,9 +21,9 @@ namespace Nikse.SubtitleEdit.Logic;
 /// </summary>
 internal static partial class EditorChrome
 {
-    // The editor palette, in a dark and a light version. Each color is one shared brush whose color
-    // follows the app theme (also when it changes while windows are open), so everything built
-    // from it repaints without rebuilding. Accent colors are the same in both.
+    // The editor palette, derived from the theme and appearance settings (see EditorChromePalette.cs).
+    // Each color is one shared brush whose color follows the app theme (also when it changes while
+    // windows are open), so everything built from it repaints without rebuilding.
     internal static bool IsLightTheme => Application.Current?.ActualThemeVariant == ThemeVariant.Light;
 
     /// <summary>
@@ -61,56 +61,77 @@ internal static partial class EditorChrome
     /// </summary>
     internal static IBrush BadgeTextBrush => BadgeTextColor.Brush;
 
-    private static readonly ThemedBrush StrongTextColor = new(Colors.White, Colors.Black);
-    private static readonly ThemedBrush ThumbnailColor = new(Color.FromRgb(214, 218, 226), Color.FromRgb(72, 78, 92));
-    private static readonly ThemedBrush ThumbnailMutedColor = new(Color.FromRgb(96, 102, 116), Color.FromRgb(188, 193, 204));
-    private static readonly ThemedBrush WindowColor = new(Color.FromRgb(30, 31, 36), Color.FromRgb(243, 244, 247));
-    private static readonly ThemedBrush PanelColor = new(Color.FromRgb(36, 38, 44), Color.FromRgb(250, 250, 252));
-    private static readonly ThemedBrush StatusColor = new(Color.FromRgb(27, 28, 33), Color.FromRgb(236, 238, 242));
-    private static readonly ThemedBrush ButtonBarColor = new(Color.FromRgb(32, 34, 39), Color.FromRgb(238, 240, 244));
-    private static readonly ThemedBrush LineColor = new(Color.FromRgb(47, 50, 58), Color.FromRgb(222, 225, 232));
-    private static readonly ThemedBrush SeparatorColor = new(Color.FromRgb(55, 58, 67), Color.FromRgb(208, 212, 220));
-    private static readonly ThemedBrush DimTextColor = new(Color.FromRgb(140, 146, 160), Color.FromRgb(92, 98, 112));
-    private static readonly ThemedBrush FaintTextColor = new(Color.FromRgb(111, 117, 131), Color.FromRgb(122, 128, 142));
-    private static readonly ThemedBrush IconColor = new(Color.FromRgb(174, 180, 194), Color.FromRgb(70, 76, 90));
-    private static readonly ThemedBrush HoverColor = new(Color.FromRgb(51, 54, 63), Color.FromRgb(226, 229, 236));
-    private static readonly ThemedBrush PressedColor = new(Color.FromRgb(59, 62, 71), Color.FromRgb(214, 218, 227));
-    private static readonly ThemedBrush AccentColor = new(Color.FromRgb(76, 110, 245), Color.FromRgb(76, 110, 245));
-    private static readonly ThemedBrush AccentHoverColor = new(Color.FromRgb(92, 124, 250), Color.FromRgb(92, 124, 250));
-    private static readonly ThemedBrush AccentSoftColor = new(Color.FromArgb(70, 76, 110, 245), Color.FromArgb(46, 76, 110, 245));
-    private static readonly ThemedBrush FieldColor = new(Color.FromRgb(27, 28, 33), Color.FromRgb(255, 255, 255));
-    private static readonly ThemedBrush FieldBorderColor = new(Color.FromRgb(54, 57, 68), Color.FromRgb(204, 209, 219));
-    private static readonly ThemedBrush MenuColor = new(Color.FromRgb(42, 44, 51), Color.FromRgb(255, 255, 255));
-    private static readonly ThemedBrush MenuBorderColor = new(Color.FromRgb(66, 69, 79), Color.FromRgb(208, 212, 220));
-    private static readonly ThemedBrush BadgeTextColor = new(Colors.White, Color.FromRgb(76, 110, 245));
+    /// <summary>
+    /// Text and icons on an accent surface (active tool buttons, primary buttons): white, or
+    /// black when the theme's accent is too light for white.
+    /// </summary>
+    internal static IBrush OnAccentBrush => OnAccentColor.Brush;
+
+    private static readonly ThemedBrush StrongTextColor = new(p => p.StrongText);
+    private static readonly ThemedBrush ThumbnailColor = new(p => p.Thumbnail);
+    private static readonly ThemedBrush ThumbnailMutedColor = new(p => p.ThumbnailMuted);
+    private static readonly ThemedBrush WindowColor = new(p => p.Window);
+    private static readonly ThemedBrush PanelColor = new(p => p.Panel);
+    private static readonly ThemedBrush StatusColor = new(p => p.Status);
+    private static readonly ThemedBrush ButtonBarColor = new(p => p.ButtonBar);
+    private static readonly ThemedBrush LineColor = new(p => p.Line);
+    private static readonly ThemedBrush SeparatorColor = new(p => p.Separator);
+    private static readonly ThemedBrush DimTextColor = new(p => p.DimText);
+    private static readonly ThemedBrush FaintTextColor = new(p => p.FaintText);
+    private static readonly ThemedBrush IconColor = new(p => p.Icon);
+    private static readonly ThemedBrush HoverColor = new(p => p.Hover);
+    private static readonly ThemedBrush PressedColor = new(p => p.Pressed);
+    private static readonly ThemedBrush AccentColor = new(p => p.Accent);
+    private static readonly ThemedBrush AccentHoverColor = new(p => p.AccentHover);
+    private static readonly ThemedBrush AccentSoftColor = new(p => p.AccentSoft);
+    private static readonly ThemedBrush FieldColor = new(p => p.Field);
+    private static readonly ThemedBrush FieldBorderColor = new(p => p.FieldBorder);
+    private static readonly ThemedBrush MenuColor = new(p => p.Menu);
+    private static readonly ThemedBrush MenuBorderColor = new(p => p.MenuBorder);
+    private static readonly ThemedBrush BadgeTextColor = new(p => p.BadgeText);
+    private static readonly ThemedBrush OnAccentColor = new(p => p.OnAccent);
 
     /// <summary>
     /// A brush outside the palette that also follows the app theme (e.g. a status color with a
     /// darker light-theme version). Create it once - keep it in a static field - not per control.
     /// </summary>
-    internal static IBrush Themed(Color dark, Color light) => new ThemedBrush(dark, light).Brush;
+    internal static IBrush Themed(Color dark, Color light) => new ThemedBrush(p => p.IsDark ? dark : light).Brush;
 
     /// <summary>
     /// One palette entry: a single mutable brush shared by every control that uses it. Its color is
-    /// set from the current theme on first use and again whenever the app theme changes.
+    /// picked from the current palette on first use and again whenever the app theme changes or
+    /// the palette is invalidated.
     /// </summary>
     private sealed class ThemedBrush
     {
         private static readonly System.Collections.Generic.List<ThemedBrush> All = new();
         private static Application? _hookedApplication;
 
-        private readonly Color _dark;
-        private readonly Color _light;
+        private readonly Func<EditorPalette, Color> _pick;
         private readonly SolidColorBrush _brush;
 
-        public ThemedBrush(Color dark, Color light)
+        public ThemedBrush(Func<EditorPalette, Color> pick)
         {
-            _dark = dark;
-            _light = light;
-            _brush = new SolidColorBrush(dark);
+            _pick = pick;
+            _brush = new SolidColorBrush(pick(_palette ?? EditorPalette.Default));
             lock (All)
             {
                 All.Add(this);
+            }
+        }
+
+        /// <summary>Repaint every palette brush from the current palette (UI thread).</summary>
+        public static void RefreshAll()
+        {
+            ThemedBrush[] entries;
+            lock (All)
+            {
+                entries = All.ToArray();
+            }
+
+            foreach (var entry in entries)
+            {
+                entry.Refresh();
             }
         }
 
@@ -133,7 +154,7 @@ internal static partial class EditorChrome
 
         private void Refresh()
         {
-            var color = IsLightTheme ? _light : _dark;
+            var color = _pick(Palette);
             if (_brush.Color != color)
             {
                 _brush.Color = color;
@@ -149,19 +170,7 @@ internal static partial class EditorChrome
             }
 
             _hookedApplication = application;
-            application.ActualThemeVariantChanged += (_, _) =>
-            {
-                ThemedBrush[] entries;
-                lock (All)
-                {
-                    entries = All.ToArray();
-                }
-
-                foreach (var entry in entries)
-                {
-                    entry.Refresh();
-                }
-            };
+            application.ActualThemeVariantChanged += (_, _) => RefreshAll();
         }
     }
 
@@ -199,15 +208,15 @@ internal static partial class EditorChrome
         styles.Add(ToolPresenter(x => x.OfType<Button>().Class("tool").Class(":disabled"),
             (ContentPresenter.BackgroundProperty, Brushes.Transparent), (ContentPresenter.ForegroundProperty, SeparatorBrush)));
         styles.Add(ToolPresenter(x => x.OfType<Button>().Class("tool").Class("active"),
-            (ContentPresenter.BackgroundProperty, AccentBrush), (ContentPresenter.ForegroundProperty, Brushes.White)));
+            (ContentPresenter.BackgroundProperty, AccentBrush), (ContentPresenter.ForegroundProperty, OnAccentBrush)));
         styles.Add(ToolPresenter(x => x.OfType<Button>().Class("tool").Class("active").Class(":pointerover"),
-            (ContentPresenter.BackgroundProperty, AccentHoverBrush), (ContentPresenter.ForegroundProperty, Brushes.White)));
+            (ContentPresenter.BackgroundProperty, AccentHoverBrush), (ContentPresenter.ForegroundProperty, OnAccentBrush)));
 
         // Primary button (OK) in the editor accent
         styles.Add(ToolPresenter(x => x.OfType<Button>().Class("primary"),
-            (ContentPresenter.BackgroundProperty, AccentBrush), (ContentPresenter.ForegroundProperty, Brushes.White)));
+            (ContentPresenter.BackgroundProperty, AccentBrush), (ContentPresenter.ForegroundProperty, OnAccentBrush)));
         styles.Add(ToolPresenter(x => x.OfType<Button>().Class("primary").Class(":pointerover"),
-            (ContentPresenter.BackgroundProperty, AccentHoverBrush), (ContentPresenter.ForegroundProperty, Brushes.White)));
+            (ContentPresenter.BackgroundProperty, AccentHoverBrush), (ContentPresenter.ForegroundProperty, OnAccentBrush)));
 
         // Compact number fields
         styles.Add(new Style(x => x.OfType<NumericUpDown>().Class("field"))

@@ -392,7 +392,7 @@ internal static partial class EditorChrome
                 Setters =
                 {
                     new Setter(ContentPresenter.BackgroundProperty, isHover ? AccentHoverBrush : AccentBrush),
-                    new Setter(ContentPresenter.ForegroundProperty, Brushes.White),
+                    new Setter(ContentPresenter.ForegroundProperty, OnAccentBrush),
                 },
             });
         }
@@ -457,7 +457,7 @@ internal static partial class EditorChrome
                 {
                     new Setter(ContentPresenter.BackgroundProperty, isHover ? AccentHoverBrush : AccentBrush),
                     new Setter(ContentPresenter.BorderBrushProperty, isHover ? AccentHoverBrush : AccentBrush),
-                    new Setter(ContentPresenter.ForegroundProperty, Brushes.White),
+                    new Setter(ContentPresenter.ForegroundProperty, OnAccentBrush),
                 },
             });
         }

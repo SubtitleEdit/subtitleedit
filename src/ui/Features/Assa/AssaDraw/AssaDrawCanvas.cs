@@ -78,7 +78,7 @@ public class AssaDrawCanvas : Control
     private static readonly Color LightGuideColor = Color.FromArgb(170, 80, 88, 106);
     private static readonly Color DarkTextFrameColor = Color.FromArgb(150, 200, 200, 200);
     private static readonly Color LightTextFrameColor = Color.FromArgb(170, 70, 76, 90);
-    private static readonly Color AccentColor = Color.FromRgb(76, 110, 245);
+    private static Color AccentColor => EditorChrome.AccentColorValue;
     private static readonly Color HandleFillColor = Colors.White;
 
     private static bool IsLight => EditorChrome.IsLightTheme;
