@@ -30,6 +30,14 @@ public class LanguageAutoDetectShortFileTest
     }
 
     [Fact]
+    public void OneAmbiguousWordIsNotDetected()
+    {
+        // "Ja" is a Slovak list entry, and German, Dutch and Scandinavian "yes": a single such
+        // hit must not make the clip Slovak (the translate window then keeps its last source).
+        Assert.Null(Detect("Ja, klar."));
+    }
+
+    [Fact]
     public void ShortEnglish()
     {
         Assert.Equal("en", Detect(
