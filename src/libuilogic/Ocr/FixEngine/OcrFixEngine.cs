@@ -93,6 +93,7 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
             text = FillUnknownCharactersInWords(text);
         }
 
+        text = FixHashMisreadAsApostrophe(text);
         text = FixSlashMisreadAsL(text);
         var replacedLine = ReplaceLineFixes(index, text, wordsToIgnore);
         if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
@@ -285,6 +286,35 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         // but only that pair: a straight '' elsewhere on the line is not the OCR's doing.
         return text.Replace("'‘", "'").Replace("‘'", "'").Replace("'’", "'").Replace("’'", "'")
             .Replace('‘', '\'').Replace('’', '\'');
+    }
+
+    // A word with a "#" between two letters, or next to a slash ("He#s", "isn#t", "/#//").
+    [GeneratedRegex(@"(?<![\p{L}\d#/'’])[\p{L}'’/]*[\p{L}/]#[\p{L}/][\p{L}'’/#]*")]
+    private static partial Regex WordWithHash();
+
+    /// <summary>
+    /// A bold italic apostrophe fits a "#" entry ("He#s", "isn#t", "You#//"). No word has a hash
+    /// between two letters, so read it as an apostrophe when the dictionary or names list knows
+    /// the result; a word that also has slashes is left to the slash rule to judge.
+    /// </summary>
+    private string FixHashMisreadAsApostrophe(string text)
+    {
+        if (string.IsNullOrEmpty(text) || !text.Contains('#'))
+        {
+            return text;
+        }
+
+        return WordWithHash().Replace(text, m =>
+        {
+            var candidate = m.Value.Replace('#', '\'');
+            if (candidate.Contains('/'))
+            {
+                return candidate;
+            }
+
+            var bare = candidate.Trim('\'', '’');
+            return bare.Length > 1 && (IsSpelledCorrect(bare) || _spellCheckWordLists.HasName(bare)) ? candidate : m.Value;
+        });
     }
 
     // A run of letters with a slash touching a letter ("p/ease", "/itt/e", "wi/I", "/'m"). A slash
