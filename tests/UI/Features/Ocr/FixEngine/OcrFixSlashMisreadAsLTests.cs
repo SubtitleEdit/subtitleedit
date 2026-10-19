@@ -89,9 +89,44 @@ public class OcrFixSlashMisreadAsLTests : IDisposable
         Assert.Equal(input, result.GetText());
     }
 
-    private static IOcrFixEngine CreateEngine()
+    // A lone slash next to a number or between two all-caps words is a separator (a title card
+    // "PILOTEN / OMGEKOMEN" became "PILOTEN I OMGEKOMEN", #16031), not a slanted italic "I".
+    [Theory]
+    [InlineData("PILOTEN / OMGEKOMEN")]
+    [InlineData("<i>PILOTEN / OMGEKOMEN</i>")]
+    [InlineData("PILOTEN /\nOMGEKOMEN")]
+    [InlineData("AC / DC")]
+    [InlineData("1 / 2")]
+    [InlineData("Scene 3 / Take 2")]
+    public void FixOcrErrors_LoneSeparatorSlash_IsLeftAlone(string input)
     {
-        IOcrFixEngine engine = new OcrFixEngine(new FakeSpellChecker());
+        var engine = CreateEngine();
+
+        var result = engine.FixOcrErrors(0, input, doTryToGuessUnknownWords: false);
+
+        Assert.Equal(input, result.GetText());
+    }
+
+    // Only image matchers (nOCR, binary image compare) read a slanted stroke as "/"; text engines
+    // (Tesseract, Paddle, llama.cpp) never do, so the rule is off for their output and every
+    // slash they produce stays.
+    [Theory]
+    [InlineData("PILOTEN / OMGEKOMEN")]
+    [InlineData("<i>/ can see it.</i>")]
+    [InlineData("<i>One moment, p/ease.</i>")]
+    [InlineData("<i>/t's according to plan.</i>")]
+    public void FixOcrErrors_TextEngineOutput_SlashIsLeftAlone(string input)
+    {
+        var engine = CreateEngine(fixImageMatcherMisreads: false);
+
+        var result = engine.FixOcrErrors(0, input, doTryToGuessUnknownWords: false);
+
+        Assert.Equal(input, result.GetText());
+    }
+
+    private static IOcrFixEngine CreateEngine(bool fixImageMatcherMisreads = true)
+    {
+        IOcrFixEngine engine = new OcrFixEngine(new FakeSpellChecker()) { FixImageMatcherMisreads = fixImageMatcherMisreads };
         engine.Initialize(new Subtitle(), "eng", new SpellCheckDictionaryDisplay());
         return engine;
     }

@@ -60,7 +60,7 @@ public class OcrFixHashMisreadAsApostropheTests : IDisposable
 
     private static IOcrFixEngine CreateEngine()
     {
-        IOcrFixEngine engine = new OcrFixEngine(new FakeSpellChecker());
+        IOcrFixEngine engine = new OcrFixEngine(new FakeSpellChecker()) { FixImageMatcherMisreads = true };
         engine.Initialize(new Subtitle(), "eng", new SpellCheckDictionaryDisplay());
         return engine;
     }

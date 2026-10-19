@@ -26,6 +26,15 @@ public interface IOcrFixEngine
     /// makes it a dictionary word. Off by default - elsewhere "sh*t" is deliberate censoring.
     /// </summary>
     bool FillUnknownCharacters { get; set; }
+
+    /// <summary>
+    /// The text comes from an image matcher (nOCR, binary image compare) whose glyph entries can
+    /// fit the wrong character: a slanted italic "l", "i" or "I" read as "/" ("p/ease", "/ can"),
+    /// a bold italic apostrophe read as "#" ("He#s"). Off by default - text engines (Tesseract,
+    /// Paddle, llama.cpp) never produce those, so a "/" or "#" from them is the real thing
+    /// ("PILOTEN / OMGEKOMEN", "C#").
+    /// </summary>
+    bool FixImageMatcherMisreads { get; set; }
 }
 
 public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
@@ -46,6 +55,8 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
     private readonly ISpellChecker _spellCheckManager;
 
     public bool FillUnknownCharacters { get; set; }
+
+    public bool FixImageMatcherMisreads { get; set; }
 
     public OcrFixEngine(ISpellChecker spellCheckManager)
     {
@@ -93,8 +104,12 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
             text = FillUnknownCharactersInWords(text);
         }
 
-        text = FixHashMisreadAsApostrophe(text);
-        text = FixSlashMisreadAsL(text);
+        if (FixImageMatcherMisreads)
+        {
+            text = FixHashMisreadAsApostrophe(text);
+            text = FixSlashMisreadAsL(text);
+        }
+
         var replacedLine = ReplaceLineFixes(index, text, wordsToIgnore);
         if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
         {
@@ -334,7 +349,8 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
     /// line: every slash to "l", and an "I" after a lowercase letter to "l" ("wi/I", "teI/ing");
     /// failing that, the other readings of the slashes ("i" anywhere, "I" at the start of the
     /// word). Each is kept only when the dictionary or names list accepts the result. A real
-    /// slash between two words ("and/or", "AC/DC") is left alone.
+    /// slash between two words ("and/or", "AC/DC") is left alone, and so is a lone slash
+    /// separating numbers or two all-caps words ("1 / 2", "PILOTEN / OMGEKOMEN" on a title card).
     /// </summary>
     private string FixSlashMisreadAsL(string text)
     {
@@ -345,7 +361,7 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
 
         if (LoneSlash().IsMatch(text) && IsSpelledCorrect("I"))
         {
-            text = LoneSlash().Replace(text, "I");
+            text = LoneSlash().Replace(text, m => IsSeparatorSlash(text, m.Index) ? "/" : "I");
         }
 
         return WordWithSlash().Replace(text, m =>
@@ -421,6 +437,76 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
     }
 
     private const int MaxSlashesToRead = 4;
+
+    /// <summary>
+    /// A lone slash next to a number ("1 / 2") or between two all-caps words ("PILOTEN /
+    /// OMGEKOMEN") is a separator, not a slanted italic "I" - an italic "I" sits between
+    /// ordinary words ("/ can", "and / will").
+    /// </summary>
+    private static bool IsSeparatorSlash(string text, int index)
+    {
+        var before = NeighbourWord(text, index, -1);
+        var after = NeighbourWord(text, index, 1);
+        if (before.Any(char.IsDigit) || after.Any(char.IsDigit))
+        {
+            return true;
+        }
+
+        return IsAllCaps(before) && IsAllCaps(after);
+    }
+
+    private static bool IsAllCaps(string word)
+    {
+        return word.Any(char.IsUpper) && !word.Any(char.IsLower);
+    }
+
+    /// <summary>
+    /// The run of non-whitespace characters before (<paramref name="direction"/> -1) or after
+    /// (+1) <paramref name="index"/>, skipping whitespace and tags; empty at a line edge.
+    /// </summary>
+    private static string NeighbourWord(string text, int index, int direction)
+    {
+        var i = index + direction;
+        while (i >= 0 && i < text.Length)
+        {
+            if (char.IsWhiteSpace(text[i]))
+            {
+                i += direction;
+            }
+            else if (direction < 0 && text[i] == '>')
+            {
+                var open = text.LastIndexOf('<', i);
+                if (open < 0)
+                {
+                    break;
+                }
+
+                i = open - 1;
+            }
+            else if (direction > 0 && text[i] == '<')
+            {
+                var close = text.IndexOf('>', i);
+                if (close < 0)
+                {
+                    break;
+                }
+
+                i = close + 1;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        var end = i;
+        while (end >= 0 && end < text.Length && !char.IsWhiteSpace(text[end]) && text[end] != '<' && text[end] != '>')
+        {
+            end += direction;
+        }
+
+        return direction < 0 ? text.Substring(end + 1, i - end) : text.Substring(i, end - i);
+    }
 
     /// <summary>
     /// Nothing but whitespace, dashes, quotes and tags between the start of the text or the end
