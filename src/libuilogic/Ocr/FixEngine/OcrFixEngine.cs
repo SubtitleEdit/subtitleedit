@@ -108,6 +108,8 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         {
             text = FixHashMisreadAsApostrophe(text);
             text = FixSlashMisreadAsL(text);
+            text = FixSpacedThousandsSeparator(text);
+            text = FixSpaceBeforeClosingQuote(text);
         }
 
         var replacedLine = ReplaceLineFixes(index, text, wordsToIgnore);
@@ -437,6 +439,44 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
     }
 
     private const int MaxSlashesToRead = 4;
+
+    // "20. 000": a one-to-three digit group, a period, a space and a three-digit group. A four-digit
+    // number before the period ("1940. 300") is a year ending a sentence, not a thousands group.
+    [GeneratedRegex(@"(?<![\d.,])(\d{1,3})\. (\d{3})(?!\d)")]
+    private static partial Regex SpacedThousandsSeparator();
+
+    /// <summary>
+    /// Italic digits lean into the thousands separator, so the space detector puts a word space
+    /// after the period: "20. 000" -> "20.000", "klim tot 19. 000 voet" -> "19.000".
+    /// </summary>
+    internal static string FixSpacedThousandsSeparator(string text)
+    {
+        if (string.IsNullOrEmpty(text) || !text.Contains(". ", StringComparison.Ordinal))
+        {
+            return text;
+        }
+
+        return SpacedThousandsSeparator().Replace(text, "$1.$2");
+    }
+
+    // Sentence end, a space, then a closing quote followed by whitespace, a tag or the end.
+    [GeneratedRegex(@"([.!?…]) ([""'”’»])(?=\s|<|$)")]
+    private static partial Regex SpaceBeforeClosingQuote();
+
+    /// <summary>
+    /// A closing quote after an italic period gets a word space in front of it ("voorbij. '",
+    /// "beginnen. \""): drop it. A quote that opens the next word ("Kom.' 'Nee.'", "'s avonds")
+    /// is not followed by whitespace and stays.
+    /// </summary>
+    internal static string FixSpaceBeforeClosingQuote(string text)
+    {
+        if (string.IsNullOrEmpty(text) || !text.Contains(' '))
+        {
+            return text;
+        }
+
+        return SpaceBeforeClosingQuote().Replace(text, "$1$2");
+    }
 
     /// <summary>
     /// A lone slash next to a number ("1 / 2") or between two all-caps words ("PILOTEN /
@@ -906,8 +946,139 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
             }
         }
 
+        // An image matcher fits the sans-serif "I" and "l" to the same bar, so for a word nothing
+        // knows, the letters around the bar decide: a capital I after a lowercase letter, or
+        // between a capital and a lowercase letter at the start, is an "l" ("CowsIip", "controI",
+        // "FIight"); an "l" among capitals is an "I" ("JUNl", "lFF", "AUSTRALlERS"). Names that
+        // no dictionary has ("Cowslip", "Heinkels") only get this shape rule - the word was
+        // unknown before it too, and a real word never has that case pattern (Mc/Mac aside).
+        if (!isWordCorrect && FixImageMatcherMisreads && TryFixBarMisreadByCase(result, out var barFixed))
+        {
+            result = barFixed;
+            word.GuessUsed = true;
+            isWordCorrect = IsSpelledCorrect(result) || _spellCheckWordLists.HasName(result.Trim('\'', '-'));
+        }
+
         word.FixedWord = result;
         word.IsSpellCheckedOk = isWordCorrect;
+    }
+
+    /// <summary>
+    /// Per run of letters in <paramref name="word"/>: in a run of capitals (two or more besides the
+    /// bars, or one with a bar in front) every "l" becomes "I"; otherwise an "I" right after a lowercase letter, or as the
+    /// second letter between a capital and a lowercase letter, becomes "l". "Il", "lk" and
+    /// "McIntyre" are left alone.
+    /// </summary>
+    internal static bool TryFixBarMisreadByCase(string word, out string fixedWord)
+    {
+        fixedWord = word;
+        if (string.IsNullOrEmpty(word) || word.IndexOf('I') < 0 && word.IndexOf('l') < 0)
+        {
+            return false;
+        }
+
+        var chars = word.ToCharArray();
+        var start = 0;
+        while (start < chars.Length)
+        {
+            if (!char.IsLetter(chars[start]))
+            {
+                start++;
+                continue;
+            }
+
+            var end = start;
+            while (end < chars.Length && char.IsLetter(chars[end]))
+            {
+                end++;
+            }
+
+            FixBarsInLetterRun(chars, start, end);
+            start = end;
+        }
+
+        fixedWord = new string(chars);
+        return fixedWord != word;
+    }
+
+    private static void FixBarsInLetterRun(char[] chars, int start, int end)
+    {
+        var uppers = 0;
+        var lowersBesidesL = 0;
+        var bars = 0;
+        for (var i = start; i < end; i++)
+        {
+            var c = chars[i];
+            if (c == 'l')
+            {
+                bars++;
+            }
+            else if (char.IsUpper(c))
+            {
+                uppers++;
+            }
+            else if (char.IsLower(c))
+            {
+                lowersBesidesL++;
+            }
+        }
+
+        // Two capitals besides the bars make a run all-caps ("JUNl", "lFF"); with one, only a bar
+        // in front of the capital does ("lN", "lS") - "Il" is Italian and a roman numeral.
+        if (bars > 0 && lowersBesidesL == 0 && (uppers >= 2 || uppers == 1 && chars[start] == 'l'))
+        {
+            for (var i = start; i < end; i++)
+            {
+                if (chars[i] == 'l')
+                {
+                    chars[i] = 'I';
+                }
+            }
+
+            return;
+        }
+
+        if (lowersBesidesL == 0 && bars == 0)
+        {
+            return; // all caps without a bar, or "I" alone
+        }
+
+        for (var i = start; i < end; i++)
+        {
+            if (chars[i] != 'I')
+            {
+                continue;
+            }
+
+            if (i > start && char.IsLower(chars[i - 1]))
+            {
+                // "McIntyre", "MacIsaac": the capital belongs to the name.
+                var isMc = i - start >= 2 && chars[i - 2] == 'M' && chars[i - 1] == 'c';
+                var isMac = i - start >= 3 && chars[i - 3] == 'M' && chars[i - 2] == 'a' && chars[i - 1] == 'c';
+                if (!isMc && !isMac)
+                {
+                    chars[i] = 'l';
+                }
+            }
+            else if (i == start + 1 && char.IsUpper(chars[start]))
+            {
+                // "FIight", "AIvar", "AIIenwood": the bars between the capital and the first
+                // lowercase letter.
+                var j = i;
+                while (j < end && chars[j] == 'I')
+                {
+                    j++;
+                }
+
+                if (j < end && char.IsLower(chars[j]))
+                {
+                    for (var k = i; k < j; k++)
+                    {
+                        chars[k] = 'l';
+                    }
+                }
+            }
+        }
     }
 
     // Tries every combination of the word's 'i'/'I' letters replaced by 'l' (fewest swaps first)

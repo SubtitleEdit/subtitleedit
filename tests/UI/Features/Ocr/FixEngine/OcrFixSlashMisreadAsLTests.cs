@@ -93,7 +93,6 @@ public class OcrFixSlashMisreadAsLTests : IDisposable
     // "PILOTEN / OMGEKOMEN" became "PILOTEN I OMGEKOMEN", #16031), not a slanted italic "I".
     [Theory]
     [InlineData("PILOTEN / OMGEKOMEN")]
-    [InlineData("PlLOTEN / OMGEKOMEN")] // capital I read as "l", repaired by a later rule
     [InlineData("<i>PILOTEN / OMGEKOMEN</i>")]
     [InlineData("PILOTEN /\nOMGEKOMEN")]
     [InlineData("AC / DC")]
@@ -106,6 +105,18 @@ public class OcrFixSlashMisreadAsLTests : IDisposable
         var result = engine.FixOcrErrors(0, input, doTryToGuessUnknownWords: false);
 
         Assert.Equal(input, result.GetText());
+    }
+
+    // The capital I of the title card is read as "l"; the all-caps rule repairs that afterwards,
+    // so the slash guard has to count the "l" as a capital or the slash is gone before it runs.
+    [Fact]
+    public void FixOcrErrors_LoneSlashBetweenAllCapsWordsWithMisreadBar_KeepsSlash()
+    {
+        var engine = CreateEngine();
+
+        var result = engine.FixOcrErrors(0, "PlLOTEN / OMGEKOMEN", doTryToGuessUnknownWords: false);
+
+        Assert.Equal("PILOTEN / OMGEKOMEN", result.GetText());
     }
 
     // Only image matchers (nOCR, binary image compare) read a slanted stroke as "/"; text engines
